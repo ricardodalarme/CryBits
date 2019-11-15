@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Source\Client\Client.csproj", "{F0180377-345C-415C-8846-637E6D7D2CBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editors", "Source\Editors\Editors.csproj", "{8C3BB955-4C28-44D7-9255-17248A425087}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Source\Server\Server.csproj", "{AB392C7C-BCB0-4924-BBE4-FA7D2280BE11}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F0180377-345C-415C-8846-637E6D7D2CBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0180377-345C-415C-8846-637E6D7D2CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0180377-345C-415C-8846-637E6D7D2CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0180377-345C-415C-8846-637E6D7D2CBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C3BB955-4C28-44D7-9255-17248A425087}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C3BB955-4C28-44D7-9255-17248A425087}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C3BB955-4C28-44D7-9255-17248A425087}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C3BB955-4C28-44D7-9255-17248A425087}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB392C7C-BCB0-4924-BBE4-FA7D2280BE11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB392C7C-BCB0-4924-BBE4-FA7D2280BE11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB392C7C-BCB0-4924-BBE4-FA7D2280BE11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB392C7C-BCB0-4924-BBE4-FA7D2280BE11}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B64DA241-CE05-4921-9454-AC229B571322}
+	EndGlobalSection
+EndGlobal
