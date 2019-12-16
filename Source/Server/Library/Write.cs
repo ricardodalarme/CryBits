@@ -29,14 +29,14 @@ class Write
             Data.Write(Lists.Player[Index].Character[i].X);
             Data.Write(Lists.Player[Index].Character[i].Y);
             Data.Write((byte)Lists.Player[Index].Character[i].Direction);
-            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Player[Index].Character[i].Vital[n]);
-            for (byte n = 0; n < (byte)Game.Attributes.Amount ; n++) Data.Write(Lists.Player[Index].Character[i].Attribute[n]);
+            for (byte n = 0; n <= (byte)Game.Vitals.Amount - 1; n++) Data.Write(Lists.Player[Index].Character[i].Vital[n]);
+            for (byte n = 0; n <= (byte)Game.Attributes.Amount - 1; n++) Data.Write(Lists.Player[Index].Character[i].Attribute[n]);
             for (byte n = 1; n <= Game.Max_Inventory; n++)
             {
                 Data.Write(Lists.Player[Index].Character[i].Inventory[n].Item_Num);
                 Data.Write(Lists.Player[Index].Character[i].Inventory[n].Amount);
             }
-            for (byte n = 0; n < (byte)Game.Equipments.Amount; n++) Data.Write(Lists.Player[Index].Character[i].Equipment[n]);
+            for (byte n = 0; n <= (byte)Game.Equipments.Amount - 1; n++) Data.Write(Lists.Player[Index].Character[i].Equipment[n]);
             for (byte n = 1; n <= Game.Max_Hotbar; n++)
             {
                 Data.Write(Lists.Player[Index].Character[i].Hotbar[n].Type);
@@ -71,8 +71,6 @@ class Write
         // Descarrega o arquivo
         Data.Dispose();
     }
-
-
     public static void Server_Data()
     {
         // Cria um sistema binário para a manipulação dos dados
@@ -85,7 +83,7 @@ class Write
         Data.Write(Lists.Server_Data.Max_Players);
         Data.Write(Lists.Server_Data.Max_Characters);
         Data.Write(Lists.Server_Data.Num_Classes);
-        Data.Write(4); //tiles
+        Data.Write(Lists.Server_Data.Num_Tiles);
         Data.Write(Lists.Server_Data.Num_Maps);
         Data.Write(Lists.Server_Data.Num_NPCs);
         Data.Write(Lists.Server_Data.Num_Items);
@@ -142,9 +140,9 @@ class Write
         Data.Write(Lists.NPC[Index].SpawnTime);
         Data.Write(Lists.NPC[Index].Sight);
         Data.Write(Lists.NPC[Index].Experience);
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Data.Write(Lists.NPC[Index].Vital[i]);
-        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Data.Write(Lists.NPC[Index].Attribute[i]);
-        for (byte i = 0; i < Game.Max_NPC_Drop; i++)
+        for (byte i = 0; i <= (byte)Game.Vitals.Amount - 1; i++) Data.Write(Lists.NPC[Index].Vital[i]);
+        for (byte i = 0; i <= (byte)Game.Attributes.Amount - 1; i++) Data.Write(Lists.NPC[Index].Attribute[i]);
+        for (byte i = 0; i <= Game.Max_NPC_Drop - 1; i++)
         {
             Data.Write(Lists.NPC[Index].Drop[i].Item_Num);
             Data.Write(Lists.NPC[Index].Drop[i].Amount);
@@ -179,24 +177,12 @@ class Write
         Data.Write(Lists.Item[Index].Req_Level);
         Data.Write(Lists.Item[Index].Req_Class);
         Data.Write(Lists.Item[Index].Potion_Experience);
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Data.Write(Lists.Item[Index].Potion_Vital[i]);
+        for (byte i = 0; i <= (byte)Game.Vitals.Amount - 1; i++) Data.Write(Lists.Item[Index].Potion_Vital[i]);
         Data.Write(Lists.Item[Index].Equip_Type);
-        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Data.Write(Lists.Item[Index].Equip_Attribute[i]);
+        for (byte i = 0; i <= (byte)Game.Attributes.Amount - 1; i++) Data.Write(Lists.Item[Index].Equip_Attribute[i]);
         Data.Write(Lists.Item[Index].Weapon_Damage);
 
         // Fecha o sistema
         Data.Dispose();
-    }
-
-    public static void Maps()
-    {
-        // Escreve os dados
-        for (short Index = 1; Index <= Lists.Map.GetUpperBound(0); Index++)
-            Map(Index);
-    }
-
-    public static void Map(short Index)
-    {
-      
     }
 }

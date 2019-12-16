@@ -310,7 +310,7 @@ class Player
             return;
         }
 
-    @continue:
+        @continue:
         // Demonstra que aos outros jogadores o ataque
         Send.Player_Attack(Index, 0, 0);
         Character(Index).Attack_Timer = Environment.TickCount;

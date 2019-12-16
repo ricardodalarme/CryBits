@@ -47,7 +47,7 @@ partial class Receive
     public static void Server_Data(NetIncomingMessage Data)
     {
         // Lê os dados
-        Lists.Server_Data.Game_Name = Data.ReadString();
+        Lists.Server_Data.GameName = Data.ReadString();
         Lists.Server_Data.Welcome = Data.ReadString();
         Lists.Server_Data.Port = Data.ReadInt16();
         Lists.Server_Data.Max_Players = Data.ReadByte();

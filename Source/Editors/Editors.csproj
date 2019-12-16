@@ -31,7 +31,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>embedded</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Build\Editors\</OutputPath>
     <DefineConstants>
@@ -66,26 +66,21 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Lidgren.Network, Version=2011.3.12.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dev\Referências\Lidgren.Network.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\lidgren-network-gen3-master\Lidgren.Network\bin\Debug\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="sfmlnet-audio-2">
       <HintPath>..\Referências\sfmlnet-audio-2.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="sfmlnet-graphics-2">
       <HintPath>..\Referências\sfmlnet-graphics-2.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="sfmlnet-window-2">
       <HintPath>..\Referências\sfmlnet-window-2.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />

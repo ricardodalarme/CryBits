@@ -9,11 +9,11 @@ class Program
     [STAThread]
     static void Main()
     {
-        // Carrega as opções
-        Read.Options();
-
         // Inicia o dispositivo de rede
         Socket.Init();
+
+        // Carrega as opções
+        Read.Options();
 
         // Inicia a aplicação
         Login.Objects.Visible = true;

@@ -18,7 +18,7 @@ public partial class Editor_Tiles : Form
     public static void Open()
     {
         // Lê os dados e lista os itens
-        Read.Tiles();
+        Send.Request_Tiles();
 
         // Reseta os valores
         Objects.scrlTile.Value = 1;

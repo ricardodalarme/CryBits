@@ -1,5 +1,5 @@
-﻿using Lidgren.Network;
-using System.Drawing;
+﻿using System.Drawing;
+using Lidgren.Network;
 
 partial class Send
 {
@@ -481,6 +481,7 @@ partial class Send
 
     public static void Message_Private(byte Index, string Addressee_Name, string Texto)
     {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
         byte Addressee = Player.Find(Addressee_Name);
 
         // Verifica se o jogador está conectado
@@ -525,8 +526,8 @@ partial class Send
             Data.Write(Lists.Item[i].Req_Level);
             Data.Write(Lists.Item[i].Req_Class);
             Data.Write(Lists.Item[i].Potion_Experience);
-            for (byte n = 0; n <= (byte)Game.Vitals.Amount - 1; n++) Data.Write(Lists.Item[i].Potion_Vital[n]);
-            Data.Write(Lists.Item[i].Equip_Type);
+            for (byte n = 0;n<= (byte)Game.Vitals.Amount - 1; n++) Data.Write(Lists.Item[i].Potion_Vital[n]);
+            Data.Write(Lists.Item[i].Equip_Type );
             for (byte n = 0; n <= (byte)Game.Attributes.Amount - 1; n++) Data.Write(Lists.Item[i].Equip_Attribute[n]);
             Data.Write(Lists.Item[i].Weapon_Damage);
         }

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 public class Tools
 {
@@ -15,7 +15,7 @@ public class Tools
     public static Windows CurrentWindow;
 
     // Chat
-    public static bool Chat_Text_Visible;
+    public static bool Chat_Text_Visible ;
     public const byte Chat_Lines_Visible = 9;
     public static byte Chat_Line;
     public const byte Max_Chat_Lines = 50;
@@ -81,7 +81,7 @@ public class Tools
 
     public static void List(Types Type, byte Index)
     {
-        short Amount = (short)(Order.GetUpperBound(0) + 1);
+        short Amount =(short)( Order.GetUpperBound(0) + 1);
 
         // Se já estiver listado não é necessário listar de novo
         if (IsListed(Type, Index))
@@ -178,7 +178,7 @@ public class Tools
             Chat_Line = (byte)(i - Chat_Lines_Visible);
 
         // Torna as linhas visíveis
-        Chat_Text_Visible = true;
+        Chat_Text_Visible  = true;
     }
 
     public static void Chat_Add(string Message, SFML.Graphics.Color Color)

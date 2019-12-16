@@ -118,36 +118,4 @@ class Directories
         Graphics.LoadTextures();
         Audio.Sound.Load();
     }
-
-    public static void SetServer()
-    {
-        string Directory = Lists.Options.Directory_Server;
-
-        // Previne erros
-        if (!System.IO.Directory.Exists(Directory))
-        {
-            Lists.Options.Directory_Server = string.Empty;
-            Write.Options();
-            return;
-        }
-
-        // Define os diretórios
-        Server_Data = new FileInfo(Directory + @"\Data\General" + Format);
-        Classes_Data = new DirectoryInfo(Directory + @"\Data\Classes\");
-        Maps_Data = new DirectoryInfo(Directory + @"\Data\Maps\");
-        NPCs_Data = new DirectoryInfo(Directory + @"\Data\NPCs\");
-        Items_Data = new DirectoryInfo(Directory + @"\Data\Items\");
-        Tile_Data = new DirectoryInfo(Directory + @"\Data\Tiles\");
-
-        // Cria os diretórios
-        Server_Data.Directory.Create();
-        Classes_Data.Create();
-        NPCs_Data.Create();
-        Maps_Data.Create();
-        Items_Data.Create();
-        Tile_Data.Create();
-
-        // Lê os dados gerais do servidor
-        Read.Server_Data();
-    }
 }

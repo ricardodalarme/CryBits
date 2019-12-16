@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using System.IO;
+﻿using System.IO;
+using System.Drawing;
 
 class Write
 {
@@ -33,6 +33,7 @@ class Write
         // Fecha o sistema
         Data.Dispose();
     }
+
 
     public static void Tiles()
     {
@@ -68,102 +69,6 @@ class Write
         Data.Dispose();
     }
 
-    public static void Maps()
-    {
-        // Escreve os dados
-        for (short Index = 1; Index <= Lists.Map.GetUpperBound(0); Index++)
-            Map(Index);
-    }
-
-    public static void Map(short Index)
-    {
-        // Cria um arquivo temporário
-        FileInfo File = new FileInfo(Directories.Maps_Data.FullName + Index + Directories.Format);
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
-        // Escreve os dados
-        Data.Write((short)(Lists.Map[Index].Revision + 1));
-        Data.Write(Lists.Map[Index].Name);
-        Data.Write(Lists.Map[Index].Width);
-        Data.Write(Lists.Map[Index].Height);
-        Data.Write(Lists.Map[Index].Moral);
-        Data.Write(Lists.Map[Index].Panorama);
-        Data.Write(Lists.Map[Index].Music);
-        Data.Write(Lists.Map[Index].Color);
-        Data.Write(Lists.Map[Index].Weather.Type);
-        Data.Write(Lists.Map[Index].Weather.Intensity);
-        Data.Write(Lists.Map[Index].Fog.Texture);
-        Data.Write(Lists.Map[Index].Fog.Speed_X);
-        Data.Write(Lists.Map[Index].Fog.Speed_Y);
-        Data.Write(Lists.Map[Index].Fog.Alpha);
-        Data.Write(Lists.Map[Index].Light_Global);
-        Data.Write(Lists.Map[Index].Lighting);
-
-        // Ligações
-        for (short i = 0; i <= (short)Globals.Directions.Amount - 1; i++)
-            Data.Write(Lists.Map[Index].Link[i]);
-
-        // Camadas
-        Data.Write((byte)(Lists.Map[Index].Layer.Count - 1));
-        for (byte i = 0; i <= Lists.Map[Index].Layer.Count - 1; i++)
-        {
-            Data.Write(Lists.Map[Index].Layer[i].Name);
-            Data.Write(Lists.Map[Index].Layer[i].Type);
-
-            // Azulejos
-            for (byte x = 0; x <= Lists.Map[Index].Width; x++)
-                for (byte y = 0; y <= Lists.Map[Index].Height; y++)
-                {
-                    Data.Write(Lists.Map[Index].Layer[i].Tile[x, y].x);
-                    Data.Write(Lists.Map[Index].Layer[i].Tile[x, y].y);
-                    Data.Write(Lists.Map[Index].Layer[i].Tile[x, y].Tile);
-                    Data.Write(Lists.Map[Index].Layer[i].Tile[x, y].Auto);
-                }
-        }
-
-
-        // Lists.Map[Index] específicos dos azulejos
-        for (byte x = 0; x <= Lists.Map[Index].Width; x++)
-            for (byte y = 0; y <= Lists.Map[Index].Height; y++)
-            {
-                Data.Write(Lists.Map[Index].Tile[x, y].Attribute);
-                Data.Write(Lists.Map[Index].Tile[x, y].Data_1);
-                Data.Write(Lists.Map[Index].Tile[x, y].Data_2);
-                Data.Write(Lists.Map[Index].Tile[x, y].Data_3);
-                Data.Write(Lists.Map[Index].Tile[x, y].Data_4);
-                Data.Write(Lists.Map[Index].Tile[x, y].Zone);
-
-                // Bloqueio direcional
-                for (byte i = 0; i <= (byte)Globals.Directions.Amount - 1; i++)
-                    Data.Write(Lists.Map[Index].Tile[x, y].Block[i]);
-            }
-
-        // Luzes
-        Data.Write((byte)Lists.Map[Index].Light.Count);
-        if (Lists.Map[Index].Light.Count > 0)
-            for (byte i = 0; i <= Lists.Map[Index].Light.Count - 1; i++)
-            {
-                Data.Write(Lists.Map[Index].Light[i].X);
-                Data.Write(Lists.Map[Index].Light[i].Y);
-                Data.Write(Lists.Map[Index].Light[i].Width);
-                Data.Write(Lists.Map[Index].Light[i].Height);
-            }
-
-        // Itens
-        Data.Write((byte)Lists.Map[Index].NPC.Count);
-        if (Lists.Map[Index].NPC.Count > 0)
-            for (byte i = 0; i <= Lists.Map[Index].NPC.Count - 1; i++)
-            {
-                Data.Write(Lists.Map[Index].NPC[i].Index);
-                Data.Write(Lists.Map[Index].NPC[i].Zone);
-                Data.Write(Lists.Map[Index].NPC[i].Spawn);
-                Data.Write(Lists.Map[Index].NPC[i].X);
-                Data.Write(Lists.Map[Index].NPC[i].Y);
-            }
-
-        // Fecha o sistema
-        Data.Dispose();
-    }
 
     public static void Tools()
     {

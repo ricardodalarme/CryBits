@@ -31,6 +31,8 @@ class Program
 
     public static void Close()
     {
+        int Wait = Environment.TickCount;
+
         // Elimina todos os dispositivos que estão sendo usados
         Socket.Disconnect();
 

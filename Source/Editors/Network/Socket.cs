@@ -1,5 +1,5 @@
-﻿using Lidgren.Network;
-using System;
+﻿using System;
+using Lidgren.Network;
 
 class Socket
 {
@@ -78,8 +78,7 @@ class Socket
         return IsConnected();
     }
 
-    public static void Leave()
-    {
+    public static void Leave() { 
 
 
     }

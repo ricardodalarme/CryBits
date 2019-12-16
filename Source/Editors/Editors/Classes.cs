@@ -17,7 +17,7 @@ public partial class Editor_Classes : Form
     public static void Open()
     {
         // Lê os dados e lista os itens
-        Read.Classes();
+        Send.Request_Classes();
         List_Update();
 
         // Abre a janela
@@ -89,8 +89,8 @@ public partial class Editor_Classes : Form
     {
         // Salva a dimensão da estrutura
         Lists.Server_Data.Num_Classes = (byte)Lists.Class.GetUpperBound(0);
-        Write.Server_Data();
-        Write.Classes();
+        Send.Write_Server_Data();
+        Send.Write_Classes();
 
         // Volta à janela de seleção
         Visible = false;

@@ -17,8 +17,8 @@ public partial class Editor_NPCs : Form
     public static void Open()
     {
         // Lê os dados  e lista os itens
-        Read.NPCs();
-        Read.Items();
+        Send.Request_NPCs();
+        Send.Request_Items();
 
         // Lista de itens
         Objects.cmbDrop_Item.Items.Clear();
@@ -101,8 +101,8 @@ public partial class Editor_NPCs : Form
     {
         // Salva a dimensão da estrutura
         Lists.Server_Data.Num_NPCs = (byte)Lists.NPC.GetUpperBound(0);
-        Write.Server_Data();
-        Write.NPCs();
+        Send.Write_Server_Data();
+        Send.Write_NPCs();
 
         // Volta à janela de seleção
         Visible = false;

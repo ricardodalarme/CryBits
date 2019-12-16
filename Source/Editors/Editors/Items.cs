@@ -17,8 +17,8 @@ public partial class Editor_Items : Form
     public static void Open()
     {
         // Lê os dados
-        Read.Items();
-        Read.Classes();
+        Send.Request_Items();
+        Send.Request_Classes();
 
         // Lista de classes
         Objects.cmbReq_Class.Items.Clear();
@@ -104,8 +104,8 @@ public partial class Editor_Items : Form
     {
         // Salva a dimensão da estrutura
         Lists.Server_Data.Num_Items = (byte)Lists.Item.GetUpperBound(0);
-        Write.Server_Data();
-        Write.Items();
+        Send.Write_Server_Data();
+        Send.Write_Items();
 
         // Volta à janela de seleção
         Visible = false;

@@ -1,8 +1,8 @@
-﻿using SFML.Graphics;
-using SFML.Window;
-using System;
-using System.Drawing;
+﻿using System;
 using System.IO;
+using System.Drawing;
+using SFML.Graphics;
+using SFML.Window;
 
 partial class Graphics
 {
@@ -72,15 +72,14 @@ partial class Graphics
 
     public static void Render(Texture Texture, Rectangle Rec_Source, Rectangle Rec_Destiny, object Color = null, object Mode = null)
     {
-        // Define os dados
-        Sprite TmpImage = new Sprite(Texture)
-        {
-            TextureRect = new IntRect(Rec_Source.X, Rec_Source.Y, Rec_Source.Width, Rec_Source.Height),
-            Position = new Vector2f(Rec_Destiny.X, Rec_Destiny.Y),
-            Scale = new Vector2f(Rec_Destiny.Width / (float)Rec_Source.Width, Rec_Destiny.Height / (float)Rec_Source.Height)
-        };
+        Sprite TmpImage = new Sprite(Texture);
 
-        if (Color != null) TmpImage.Color = (SFML.Graphics.Color)Color;
+        // Define os dados
+        TmpImage.TextureRect = new IntRect(Rec_Source.X, Rec_Source.Y, Rec_Source.Width, Rec_Source.Height);
+        TmpImage.Position = new Vector2f(Rec_Destiny.X, Rec_Destiny.Y);
+        TmpImage.Scale = new Vector2f(Rec_Destiny.Width / (float)Rec_Source.Width, Rec_Destiny.Height / (float)Rec_Source.Height);
+        if (Color != null)
+            TmpImage.Color = (SFML.Graphics.Color)Color;
 
         // Renderiza a textura em forma de retângulo
         if (Mode == null) Mode = RenderStates.Default;
@@ -118,13 +117,12 @@ partial class Graphics
 
     private static void DrawText(string Text, int X, int Y, SFML.Graphics.Color Color)
     {
+        Text TempText = new Text(Text, Font_Default);
+
         // Define os dados
-        Text TempText = new Text(Text, Font_Default)
-        {
-            CharacterSize = 10,
-            Color = Color,
-            Position = new Vector2f(X, Y)
-        };
+        TempText.CharacterSize = 10;
+        TempText.Color = Color;
+        TempText.Position = new Vector2f(X, Y);
 
         // Desenha
         RenderWindow.Draw(TempText);
@@ -279,7 +277,7 @@ partial class Graphics
 
     public static void CheckBox(string Name)
     {
-        Rectangle Rec_Source = new Rectangle(), Rec_Destiny;
+        Rectangle Rec_Source = new Rectangle(), Rec_Destiny = new Rectangle();
         byte Index = CheckBoxes.FindIndex(Name);
 
         // Lista a ordem de renderização da ferramenta
@@ -719,7 +717,7 @@ partial class Graphics
         TextBox("Chat");
 
         // Renderiza as mensagens
-        if (Tools.Chat_Text_Visible)
+        if (Tools.Chat_Text_Visible )
             for (byte i = Tools.Chat_Line; i <= Tools.Chat_Lines_Visible + Tools.Chat_Line; i++)
                 if (Tools.Chat.Count > i)
                     DrawText(Tools.Chat[i].Text, 16, 461 + 11 * (i - Tools.Chat_Line), Tools.Chat[i].Color);
@@ -737,7 +735,7 @@ partial class Graphics
 
     public static void Character(short Textura, Point Position, Game.Directions Direction, byte Column, bool Hurt = false)
     {
-        Rectangle Rec_Source = new Rectangle(), Rec_Destiny;
+        Rectangle Rec_Source = new Rectangle(), Rec_Destiny = new Rectangle();
         Size Size = TSize(Tex_Character[Textura]);
         SFML.Graphics.Color Color = new SFML.Graphics.Color(255, 255, 255);
         byte Line = 0;

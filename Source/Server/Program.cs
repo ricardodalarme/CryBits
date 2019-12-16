@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Windows.Forms;
+using System.Threading;
 
 class General
 {
@@ -98,7 +98,7 @@ class General
 
                 // Salva os dados
                 Write.Player(Index);
-                Console.WriteLine((Game.Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
+                Console.WriteLine( (Game.Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
                 break;
             case "reload":
                 // Verifica se o que está digitado corretamente

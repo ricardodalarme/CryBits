@@ -1,6 +1,6 @@
-﻿using Lidgren.Network;
-using System;
+﻿using System;
 using System.IO;
+using Lidgren.Network;
 
 class NPC
 {

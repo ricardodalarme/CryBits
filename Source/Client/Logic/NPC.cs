@@ -1,7 +1,7 @@
-﻿using Lidgren.Network;
-using SFML.Graphics;
-using System;
+﻿using System;
 using System.Drawing;
+using SFML.Graphics;
+using Lidgren.Network;
 
 class NPC
 {

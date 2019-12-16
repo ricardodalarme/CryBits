@@ -34,12 +34,10 @@
     public static void Player_Character(byte Index, byte Char_Num)
     {
         // Limpa os dados
-        Lists.Player[Index].Character[Char_Num] = new Player.Character_Structure
-        {
-            Index = Index,
-            Inventory = new Lists.Structures.Inventories[Game.Max_Inventory + 1],
-            Equipment = new short[(byte)Game.Equipments.Amount],
-            Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1]
-        };
+        Lists.Player[Index].Character[Char_Num] = new Player.Character_Structure();
+        Lists.Player[Index].Character[Char_Num].Index = Index;
+        Lists.Player[Index].Character[Char_Num].Inventory = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
+        Lists.Player[Index].Character[Char_Num].Equipment = new short[(byte)Game.Equipments.Amount];
+        Lists.Player[Index].Character[Char_Num].Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
     }
 }

@@ -1,3 +1,5 @@
-﻿class Editor
+﻿using System;
+
+class Editor
 {
 }

@@ -26,7 +26,7 @@ public partial class Login : Form
         }
 
         // Tenta fazer login
-        Send.Connect();
+        Send.Connect(); 
     }
 
     private void Login_FormClosing(object sender, FormClosingEventArgs e)

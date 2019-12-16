@@ -13,10 +13,10 @@ public partial class Editor_Data : Form
     public static void Open()
     {
         // Lê os dados e lista os itens
-        Read.Server_Data();
+        Send.Request_Server_Data();
 
         // Define os valores
-        Objects.txtGame_Name.Text = Lists.Server_Data.Game_Name;
+        Objects.txtGame_Name.Text = Lists.Server_Data.GameName;
         Objects.txtWelcome.Text = Lists.Server_Data.Welcome;
         Objects.numPort.Value = Lists.Server_Data.Port;
         Objects.numMax_Players.Value = Lists.Server_Data.Max_Players;
@@ -30,12 +30,12 @@ public partial class Editor_Data : Form
     private void butSave_Click(object sender, System.EventArgs e)
     {
         // Salva os dados
-        Lists.Server_Data.Game_Name = Objects.txtGame_Name.Text;
+        Lists.Server_Data.GameName = Objects.txtGame_Name.Text;
         Lists.Server_Data.Welcome = Objects.txtWelcome.Text;
         Lists.Server_Data.Port = (short)Objects.numPort.Value;
         Lists.Server_Data.Max_Players = (byte)Objects.numMax_Players.Value;
         Lists.Server_Data.Max_Characters = (byte)Objects.numMax_Characters.Value;
-        Write.Server_Data();
+        Send.Write_Server_Data();
 
         // Volta à janela de seleção
         Visible = false;

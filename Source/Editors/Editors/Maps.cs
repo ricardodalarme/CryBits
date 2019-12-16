@@ -67,10 +67,10 @@ partial class Editor_Maps : Form
     public static void Open()
     {
         // Lê os dados e lista os itens
-        Read.Maps();
-        Read.NPCs();
-        Read.Tiles();
-        Read.Items();
+        Send.Request_Maps();
+        Send.Request_NPCs();
+        Send.Request_Tiles();
+        Send.Request_Items();
         Update_List();
         Update_List_Layers();
 
@@ -327,26 +327,26 @@ partial class Editor_Maps : Form
     {
         // Salva a dimensão da estrutura
         Lists.Server_Data.Num_Maps = (short)Lists.Map.GetUpperBound(0);
-        Write.Server_Data();
+        Send.Write_Server_Data();
 
         // Salva os dados
-        Write.Map(Selected);
+        Send.Write_Map(Selected);
     }
 
     private void butSaveAll_Click(object sender, EventArgs e)
     {
         // Salva a dimensão da estrutura
         Lists.Server_Data.Num_Maps = (short)Lists.Map.GetUpperBound(0);
-        Write.Server_Data();
+        Send.Write_Server_Data();
 
         // Salva todos os dados
-        Write.Maps();
+        Send.Write_Maps();
     }
 
     private void butReload_Click(object sender, EventArgs e)
     {
         // Recarrega o mapa
-        Read.Map(Selected);
+        Send.Request_Map(Selected);
         Update_List_Layers();
         Autotile.Update(Selected);
     }

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio\2019\community\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="16.0">
+ <Targets>
+  <Target Name="C:\Users\ricar\Desktop\CryBits\Dev\CryBits\Build\Server\Server.exe">
+   <Modules>
+    <Module Name="server.exe">
+     <Messages>
+      <Message TypeName="MarkAssembliesWithAssemblyVersion" Category="Microsoft.Design" CheckId="CA1016" Status="Active" Created="2019-12-10 14:49:53Z" FixCategory="NonBreaking">
+       <Issue Certainty="95" Level="Error">Adicione um atributo AssemblyVersion a 'Server.exe'.</Issue>
+      </Message>
+      <Message TypeName="MarkWindowsFormsEntryPointsWithStaThread" Category="Microsoft.Usage" CheckId="CA2232" Status="Active" Created="2019-12-10 14:49:53Z" FixCategory="NonBreaking">
+       <Issue Certainty="95" Level="Error" Path="C:\Users\ricar\Desktop\CryBits\Dev\CryBits\Source\Server" File="Program.cs" Line="8">Marque o método de ponto de entrada 'General.Main()' no assembly 'Server.exe' com um STAThreadAttribute.</Issue>
+      </Message>
+     </Messages>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="MarkAssembliesWithAssemblyVersion" Category="Microsoft.Design" CheckId="CA1016">
+   <Name>Marcar assemblies com AssemblyVersionAttribute</Name>
+   <Description>Os assemblies devem usar números de versão. O número da versão é considerado parte da identidade de um assembly. O controle de versão é aplicado por meio do atributo AssemblyVersion.</Description>
+   <Resolution Name="Default">Adicione um atributo AssemblyVersion a {0}.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182155.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="designrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="MarkWindowsFormsEntryPointsWithStaThread" Category="Microsoft.Usage" CheckId="CA2232">
+   <Name>Marcar pontos de entrada dos Formulários do Windows com STAThread</Name>
+   <Description>Assemblies que referenciam System.Windows.Forms devem ter o atributo STAThreadAttribute. Não aplicar esse atributo provavelmente resultará em um aplicativo que não funciona. Os Formulários do Windows dependem de vários componentes que usam o modelo STA.</Description>
+   <Resolution Name="Default">Marque o método de ponto de entrada {0} no assembly {1} com um STAThreadAttribute.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182351.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="usagerules.dll" Version="16.0.0.0" />
+  </Rule>
+ </Rules>
+ <Localized>
+  <String Key="Category">Categoria</String>
+  <String Key="Certainty">Certeza</String>
+  <String Key="CollapseAll">Recolher Tudo</String>
+  <String Key="CheckId">Verificar ID</String>
+  <String Key="Error">Erro</String>
+  <String Key="Errors">erro(s)</String>
+  <String Key="ExpandAll">Expandir Tudo</String>
+  <String Key="Help">Ajuda</String>
+  <String Key="Line">Linha</String>
+  <String Key="Messages">mensagem(ns)</String>
+  <String Key="LocationNotStoredInPdb">[Local não armazenado em Pdb]</String>
+  <String Key="Project">Projeto</String>
+  <String Key="Resolution">Resolução</String>
+  <String Key="Rule">Regra</String>
+  <String Key="RuleFile">Arquivo de Regra</String>
+  <String Key="RuleDescription">Descrição da Regra</String>
+  <String Key="Source">Origem</String>
+  <String Key="Status">Status</String>
+  <String Key="Target">Destino</String>
+  <String Key="Warning">Aviso</String>
+  <String Key="Warnings">aviso(s)</String>
+  <String Key="ReportTitle">Relatório de Análise de Código</String>
+ </Localized>
+</FxCopReport>

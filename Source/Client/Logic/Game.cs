@@ -151,7 +151,7 @@ public class Game
 
     public enum Hotbar
     {
-        None,
+        None, 
         Item
     }
     #endregion

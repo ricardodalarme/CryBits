@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Collections.Generic;
 
 class Lists
 {
@@ -40,7 +40,7 @@ class Lists
 
         public struct Server_Data
         {
-            public string Game_Name;
+            public string GameName;
             public string Welcome;
             public short Port;
             public byte Max_Players;
@@ -67,6 +67,7 @@ class Lists
 
         public struct TextBox
         {
+            public string Text;
             public short Max_Chars;
             public short Width;
             public bool Password;
