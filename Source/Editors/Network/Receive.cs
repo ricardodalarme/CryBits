@@ -10,11 +10,11 @@ partial class Receive
         Alert,
         Connect,
         Server_Data,
-        Class,
-        Tile,
-        Map,
-        NPC,
-        Item
+        Classes,
+        Tiles,
+        Maps,
+        NPCs,
+        Items
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -25,10 +25,10 @@ partial class Receive
             case Packets.Alert: Alert(Data); break;
             case Packets.Connect: Connect(); break;
             case Packets.Server_Data: Server_Data(Data); break;
-            case Packets.Class: Class(Data); break;
-            case Packets.Map: Map(Data); break;
-            case Packets.NPC: NPC(Data); break;
-            case Packets.Item: Item(Data); break;
+            case Packets.Classes: Class(Data); break;
+            case Packets.Maps: Map(Data); break;
+            case Packets.NPCs: NPC(Data); break;
+            case Packets.Items: Item(Data); break;
         }
     }
 

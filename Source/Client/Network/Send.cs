@@ -6,8 +6,8 @@ partial class Send
     // Pacotes do cliente
     public enum Packets
     {
-        Latency,
         Connect,
+        Latency,
         Register,
         CreateCharacter,
         Character_Use,

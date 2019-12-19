@@ -4,10 +4,10 @@ using System.IO;
 class Receive
 {
     // Pacotes do cliente
-    public enum Packets
+    public enum Client_Packets
     {
-        Latency,
         Connect,
+        Latency,
         Register,
         CreateCharacter,
         Character_Use,
@@ -29,33 +29,74 @@ class Receive
         Hotbar_Use
     }
 
+    // Pacotes do editor
+    public enum Editor_Packets
+    {
+        Connect,
+        Write_Server_Data,
+        Write_Classes,
+        Write_Tiles,
+        Write_Maps,
+        Write_NPCs,
+        Write_Items,
+        Request_Server_Data,
+        Request_Classes,
+        Request_Tiles,
+        Request_Map,
+        Request_Maps,
+        Request_NPCs,
+        Request_Items
+    }
+
     public static void Handle(byte Index, NetIncomingMessage Data)
     {
-        // Manuseia os dados recebidos
-        switch ((Packets)Data.ReadByte())
-        {
-            case Packets.Latency: Latency(Index); break;
-            case Packets.Connect: Connect(Index, Data); break;
-            case Packets.Register: Register(Index, Data); break;
-            case Packets.CreateCharacter: CreateCharacter(Index, Data); break;
-            case Packets.Character_Use: Character_Use(Index, Data); break;
-            case Packets.Character_Create: Character_Create(Index); break;
-            case Packets.Character_Delete: Character_Delete(Index, Data); break;
-            case Packets.Player_Direction: Player_Direction(Index, Data); break;
-            case Packets.Player_Move: Player_Move(Index, Data); break;
-            case Packets.Player_Attack: Player_Attack(Index); break;
-            case Packets.RequestMap: RequestMap(Index, Data); break;
-            case Packets.Message: Message(Index, Data); break;
-            case Packets.AddPoint: AddPoint(Index, Data); break;
-            case Packets.CollectItem: CollectItem(Index); break;
-            case Packets.DropItem: DropItem(Index, Data); break;
-            case Packets.Inventory_Change: Inventory_Change(Index, Data); break;
-            case Packets.Inventory_Use: Inventory_Use(Index, Data); break;
-            case Packets.Equipment_Remove: Equipment_Remove(Index, Data); break;
-            case Packets.Hotbar_Add: Hotbar_Add(Index, Data); break;
-            case Packets.Hotbar_Change: Hotbar_Change(Index, Data); break;
-            case Packets.Hotbar_Use: Hotbar_Use(Index, Data); break;
-        }
+        byte Packet_Num = Data.ReadByte();
+
+        // Pacote principal de conexão
+        if (Packet_Num == 0) Connect(Index, Data);
+        else if (!Lists.TempPlayer[Index].InEditor)
+            // Manuseia os dados recebidos do cliente
+            switch ((Client_Packets)Packet_Num)
+            {
+                case Client_Packets.Latency: Latency(Index); break;
+                case Client_Packets.Register: Register(Index, Data); break;
+                case Client_Packets.CreateCharacter: CreateCharacter(Index, Data); break;
+                case Client_Packets.Character_Use: Character_Use(Index, Data); break;
+                case Client_Packets.Character_Create: Character_Create(Index); break;
+                case Client_Packets.Character_Delete: Character_Delete(Index, Data); break;
+                case Client_Packets.Player_Direction: Player_Direction(Index, Data); break;
+                case Client_Packets.Player_Move: Player_Move(Index, Data); break;
+                case Client_Packets.Player_Attack: Player_Attack(Index); break;
+                case Client_Packets.RequestMap: RequestMap(Index, Data); break;
+                case Client_Packets.Message: Message(Index, Data); break;
+                case Client_Packets.AddPoint: AddPoint(Index, Data); break;
+                case Client_Packets.CollectItem: CollectItem(Index); break;
+                case Client_Packets.DropItem: DropItem(Index, Data); break;
+                case Client_Packets.Inventory_Change: Inventory_Change(Index, Data); break;
+                case Client_Packets.Inventory_Use: Inventory_Use(Index, Data); break;
+                case Client_Packets.Equipment_Remove: Equipment_Remove(Index, Data); break;
+                case Client_Packets.Hotbar_Add: Hotbar_Add(Index, Data); break;
+                case Client_Packets.Hotbar_Change: Hotbar_Change(Index, Data); break;
+                case Client_Packets.Hotbar_Use: Hotbar_Use(Index, Data); break;
+            }
+        else
+            // Manuseia os dados recebidos do editor
+            switch ((Editor_Packets)Packet_Num)
+            {
+                case Editor_Packets.Write_Server_Data: Write_Server_Data(Index, Data); break;
+                case Editor_Packets.Write_Classes: Write_Classes(Index, Data); break;
+                case Editor_Packets.Write_Tiles: Write_Tiles(Index, Data); break;
+                case Editor_Packets.Write_Maps: Write_Maps(Index, Data); break;
+                case Editor_Packets.Write_NPCs: Write_NPCs(Index, Data); break;
+                case Editor_Packets.Write_Items: Write_Items(Index, Data); break;
+                case Editor_Packets.Request_Server_Data: Request_Server_Data(Index, Data); break;
+                case Editor_Packets.Request_Classes: Request_Classes(Index, Data); break;
+                case Editor_Packets.Request_Tiles: Request_Tiles(Index, Data); break;
+                case Editor_Packets.Request_Map: Request_Map(Index, Data); break;
+                case Editor_Packets.Request_Maps: Request_Maps(Index, Data); break;
+                case Editor_Packets.Request_NPCs: Request_NPCs(Index, Data); break;
+                case Editor_Packets.Request_Items: Request_Items(Index, Data); break;
+            }
     }
 
     private static void Latency(byte Index)
@@ -102,6 +143,7 @@ class Receive
             }
 
             // Abre a janela de edição
+            Lists.TempPlayer[Index].InEditor = true;
             Send.Connect(Index);
         }
         else
@@ -464,5 +506,60 @@ class Receive
         // Usa o item
         if (Player.Character(Index).Hotbar[Hotbar_Slot].Type == (byte)Game.Hotbar.Item)
             Player.UseItem(Index, Player.Character(Index).Hotbar[Hotbar_Slot].Slot);
+    }
+
+    private static void Write_Server_Data(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Write_Classes(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Write_Tiles(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Write_Maps(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Write_NPCs(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Write_Items(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Request_Server_Data(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Request_Classes(byte Index, NetIncomingMessage Data)
+    {
+
+    }
+
+    private static void Request_Tiles(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Request_Map(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Request_Maps(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Request_NPCs(byte Index, NetIncomingMessage Data)
+    {
+
+    }
+
+    private static void Request_Items(byte Index, NetIncomingMessage Data)
+    {
+
     }
 }

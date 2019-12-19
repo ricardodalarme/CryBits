@@ -65,10 +65,6 @@ class Read
     }
 
 
-    #region Server
-   
-    #endregion
-
     #region Client
     public static void Tools()
     {

@@ -41,6 +41,7 @@ class Lists
             public bool Playing;
             public byte Using;
             public bool GettingMap;
+            public bool InEditor;
         }
 
         public struct Classes
