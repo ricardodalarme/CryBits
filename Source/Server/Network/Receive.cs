@@ -514,6 +514,26 @@ class Receive
 
     private static void Write_Classes(byte Index, NetIncomingMessage Data)
     {
+        // Quantidade
+        Lists.Class = new Lists.Structures.Classes[Data.ReadByte() + 1];
+
+        for (short i = 1; i <= Lists.Class.GetUpperBound(0); i++)
+        {
+            // Redimensiona os valores necessários 
+            Lists.Class[i].Vital = new short[(byte)Game.Vitals.Amount];
+            Lists.Class[i].Attribute = new short[(byte)Game.Attributes.Amount];
+
+            // Lê os dados
+            Lists.Class[i].Name = Data.ReadString();
+            Lists.Class[i].Texture_Male = Data.ReadInt16();
+            Lists.Class[i].Texture_Female = Data.ReadInt16();
+            Lists.Class[i].Spawn_Map = Data.ReadInt16();
+            Lists.Class[i].Spawn_Direction = Data.ReadByte();
+            Lists.Class[i].Spawn_X = Data.ReadByte();
+            Lists.Class[i].Spawn_Y = Data.ReadByte();
+            for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
+        }
     }
 
     private static void Write_Tiles(byte Index, NetIncomingMessage Data)
@@ -530,6 +550,31 @@ class Receive
 
     private static void Write_Items(byte Index, NetIncomingMessage Data)
     {
+        // Quantidade de itens
+        Lists.Item = new Lists.Structures.Items[Data.ReadInt16() + 1];
+
+        for (short i = 1; i <= Lists.Item.GetUpperBound(0); i++)
+        {
+            // Redimensiona os valores necessários 
+            Lists.Item[i].Potion_Vital = new short[(byte)Game.Vitals.Amount];
+            Lists.Item[i].Equip_Attribute = new short[(byte)Game.Attributes.Amount];
+
+            // Lê os dados
+            Lists.Item[i].Name = Data.ReadString();
+            Lists.Item[i].Description = Data.ReadString();
+            Lists.Item[i].Texture = Data.ReadInt16();
+            Lists.Item[i].Type = Data.ReadByte();
+            Lists.Item[i].Price = Data.ReadInt16();
+            Lists.Item[i].Stackable = Data.ReadBoolean();
+            Lists.Item[i].Bind = Data.ReadBoolean();
+            Lists.Item[i].Req_Level = Data.ReadInt16();
+            Lists.Item[i].Req_Class = Data.ReadByte();
+            Lists.Item[i].Potion_Experience = Data.ReadInt16();
+            for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
+            Lists.Item[i].Equip_Type = Data.ReadByte();
+            for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
+            Lists.Item[i].Weapon_Damage = Data.ReadInt16();
+        }
     }
 
     private static void Request_Server_Data(byte Index, NetIncomingMessage Data)
@@ -538,7 +583,7 @@ class Receive
 
     private static void Request_Classes(byte Index, NetIncomingMessage Data)
     {
-
+        Send.Classes(Index, Data.ReadBoolean());
     }
 
     private static void Request_Tiles(byte Index, NetIncomingMessage Data)
@@ -555,11 +600,11 @@ class Receive
 
     private static void Request_NPCs(byte Index, NetIncomingMessage Data)
     {
-
+        //Send.NPCs(Index, Data.ReadBoolean());
     }
 
     private static void Request_Items(byte Index, NetIncomingMessage Data)
     {
-
+        Send.Items(Index, Data.ReadBoolean());
     }
 }

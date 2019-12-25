@@ -14,12 +14,15 @@ public partial class Editor_Items : Form
         InitializeComponent();
     }
 
-    public static void Open()
+    public static void Request()
     {
         // Lê os dados
-        Send.Request_Items();
         Send.Request_Classes();
+        Send.Request_Items(true);
+    }
 
+    public static void Open()
+    {
         // Lista de classes
         Objects.cmbReq_Class.Items.Clear();
         Objects.cmbReq_Class.Items.Add("None");

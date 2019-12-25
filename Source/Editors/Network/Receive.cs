@@ -25,10 +25,10 @@ partial class Receive
             case Packets.Alert: Alert(Data); break;
             case Packets.Connect: Connect(); break;
             case Packets.Server_Data: Server_Data(Data); break;
-            case Packets.Classes: Class(Data); break;
-            case Packets.Maps: Map(Data); break;
-            case Packets.NPCs: NPC(Data); break;
-            case Packets.Items: Item(Data); break;
+            case Packets.Classes: Classes(Data); break;
+            case Packets.Maps: Maps(Data); break;
+            case Packets.NPCs: NPCs(Data); break;
+            case Packets.Items: Items(Data); break;
         }
     }
 
@@ -59,22 +59,34 @@ partial class Receive
         Lists.Server_Data.Num_Items = Data.ReadInt16();
     }
 
-    public static void Class(NetIncomingMessage Data)
+    public static void Classes(NetIncomingMessage Data)
     {
-        // Lê os dados
-        byte Index = Data.ReadByte();
-        Lists.Class[Index].Name = Data.ReadString();
-        Lists.Class[Index].Texture_Male = Data.ReadInt16();
-        Lists.Class[Index].Texture_Female = Data.ReadInt16();
-        Lists.Class[Index].Spawn_Map = Data.ReadInt16();
-        Lists.Class[Index].Spawn_Direction = Data.ReadByte();
-        Lists.Class[Index].Spawn_X = Data.ReadByte();
-        Lists.Class[Index].Spawn_Y = Data.ReadByte();
-        for (byte i = 0; i <= (byte)Globals.Vitals.Amount - 1; i++) Lists.Class[Index].Vital[i] = Data.ReadInt16();
-        for (byte i = 0; i <= (byte)Globals.Attributes.Amount - 1; i++) Lists.Class[Index].Attribute[i] = Data.ReadInt16();
+        // Quantidade
+        Lists.Class = new Lists.Structures.Class[Data.ReadByte() + 1];
+
+        for (short i = 1; i <= Lists.Class.GetUpperBound(0); i++)
+        {
+            // Redimensiona os valores necessários 
+            Lists.Class[i].Vital = new short[(byte)Globals.Vitals.Amount];
+            Lists.Class[i].Attribute = new short[(byte)Globals.Attributes.Amount];
+
+            // Lê os dados
+            Lists.Class[i].Name = Data.ReadString();
+            Lists.Class[i].Texture_Male = Data.ReadInt16();
+            Lists.Class[i].Texture_Female = Data.ReadInt16();
+            Lists.Class[i].Spawn_Map = Data.ReadInt16();
+            Lists.Class[i].Spawn_Direction = Data.ReadByte();
+            Lists.Class[i].Spawn_X = Data.ReadByte();
+            Lists.Class[i].Spawn_Y = Data.ReadByte();
+            for (byte v = 0; v < (byte)Globals.Vitals.Amount; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Globals.Attributes.Amount; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
+        }
+
+        // Abre o editor
+        if (Data.ReadBoolean()) Editor_Classes.Open();
     }
 
-    public static void Map(NetIncomingMessage Data)
+    public static void Maps(NetIncomingMessage Data)
     {
         // Lê os dados
         short Index = Data.ReadInt16();
@@ -166,43 +178,42 @@ partial class Receive
             }
     }
 
-    public static void NPC(NetIncomingMessage Data)
+    public static void NPCs(NetIncomingMessage Data)
     {
-        // Lê os dados
-        byte Index = Data.ReadByte();
-        Lists.NPC[Index].Name = Data.ReadString();
-        Lists.NPC[Index].Texture = Data.ReadInt16();
-        Lists.NPC[Index].Behaviour = Data.ReadByte();
-        Lists.NPC[Index].SpawnTime = Data.ReadByte();
-        Lists.NPC[Index].Sight = Data.ReadByte();
-        Lists.NPC[Index].Experience = Data.ReadByte();
-        for (byte i = 0; i <= (byte)Globals.Vitals.Amount - 1; i++) Lists.NPC[Index].Vital[i] = Data.ReadInt16();
-        for (byte i = 0; i <= (byte)Globals.Attributes.Amount - 1; i++) Lists.NPC[Index].Attribute[i] = Data.ReadInt16();
-        for (byte i = 0; i <= Globals.Max_NPC_Drop - 1; i++)
-        {
-            Lists.NPC[Index].Drop[i].Item_Num = Data.ReadInt16();
-            Lists.NPC[Index].Drop[i].Amount = Data.ReadInt16();
-            Lists.NPC[Index].Drop[i].Chance = Data.ReadByte();
-        }
+
+        // Abre o editor
+        if (Data.ReadBoolean()) Editor_NPCs.Open();
     }
 
-    public static void Item(NetIncomingMessage Data)
+    public static void Items(NetIncomingMessage Data)
     {
-        // Lê os dados
-        byte Index = Data.ReadByte();
-        Lists.Item[Index].Name = Data.ReadString();
-        Lists.Item[Index].Description = Data.ReadString();
-        Lists.Item[Index].Texture = Data.ReadInt16();
-        Lists.Item[Index].Type = Data.ReadByte();
-        Lists.Item[Index].Price = Data.ReadInt16();
-        Lists.Item[Index].Stackable = Data.ReadBoolean();
-        Lists.Item[Index].Bind = Data.ReadBoolean();
-        Lists.Item[Index].Req_Level = Data.ReadInt16();
-        Lists.Item[Index].Req_Class = Data.ReadByte();
-        Lists.Item[Index].Potion_Experience = Data.ReadInt16();
-        for (byte i = 0; i <= (byte)Globals.Vitals.Amount - 1; i++) Lists.Item[Index].Potion_Vital[i] = Data.ReadInt16();
-        Lists.Item[Index].Equip_Type = Data.ReadByte();
-        for (byte i = 0; i <= (byte)Globals.Attributes.Amount - 1; i++) Lists.Item[Index].Equip_Attribute[i] = Data.ReadInt16();
-        Lists.Item[Index].Weapon_Damage = Data.ReadInt16();
+        // Quantidade de itens
+        Lists.Item = new Lists.Structures.Item[Data.ReadInt16() + 1];
+
+        for (short i = 1; i <= Lists.Item.GetUpperBound(0); i++)
+        {
+            // Redimensiona os valores necessários 
+            Lists.Item[i].Potion_Vital = new short[(byte)Globals.Vitals.Amount];
+            Lists.Item[i].Equip_Attribute = new short[(byte)Globals.Attributes.Amount];
+
+            // Lê os dados
+            Lists.Item[i].Name = Data.ReadString();
+            Lists.Item[i].Description = Data.ReadString();
+            Lists.Item[i].Texture = Data.ReadInt16();
+            Lists.Item[i].Type = Data.ReadByte();
+            Lists.Item[i].Price = Data.ReadInt16();
+            Lists.Item[i].Stackable = Data.ReadBoolean();
+            Lists.Item[i].Bind = Data.ReadBoolean();
+            Lists.Item[i].Req_Level = Data.ReadInt16();
+            Lists.Item[i].Req_Class = Data.ReadByte();
+            Lists.Item[i].Potion_Experience = Data.ReadInt16();
+            for (byte v = 0; v < (byte)Globals.Vitals.Amount; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
+            Lists.Item[i].Equip_Type = Data.ReadByte();
+            for (byte a = 0; a < (byte)Globals.Attributes.Amount; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
+            Lists.Item[i].Weapon_Damage = Data.ReadInt16();
+        }
+
+        // Abre o editor
+        if (Data.ReadBoolean()) Editor_Items.Open();
     }
 }

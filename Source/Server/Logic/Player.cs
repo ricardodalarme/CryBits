@@ -255,7 +255,7 @@ class Player
         short Map_Old = Character(Index).Map;
 
         // Evita que o jogador seja transportado para fora do limite
-        if (Map == 0) return;
+        if (Map < 0 || Map > Lists.Map.GetUpperBound(0)) return;
         if (x > Lists.Map[Map].Width) x = Lists.Map[Map].Width;
         if (y > Lists.Map[Map].Height) y = Lists.Map[Map].Height;
         if (x < 0) x = 0;
@@ -411,7 +411,7 @@ class Player
         Lists.Structures.Classes Data = Lists.Class[Character(Index).Class];
 
         // Recupera os vitais
-        for (byte n = 0; n <= (byte)Game.Vitals.Amount - 1; n++)
+        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)
             Character(Index).Vital[n] = Character(Index).MaxVital(n);
 
         // Perde 10% da experiência
@@ -426,7 +426,7 @@ class Player
     public static void Logic()
     {
         // Lógica dos jogadores
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i <= Game.HigherIndex; i++)
         {
             // Não é necessário
             if (!IsPlaying(i)) continue;
@@ -602,7 +602,7 @@ class Player
     public static byte FindHotbar(byte Index, byte Type, byte Slot)
     {
         // Encontra algo especifico na hotbar
-        for (byte i = 1; i <= Game.Max_Hotbar; i++)
+        for (byte i = 0; i < Game.Max_Hotbar; i++)
             if (Character(Index).Hotbar[i].Type == Type && Character(Index).Hotbar[i].Slot == Slot)
                 return i;
 
@@ -612,7 +612,7 @@ class Player
     public static byte FindInventory(byte Index, short Item_Num)
     {
         // Encontra algo especifico na hotbar
-        for (byte i = 1; i <= Game.Max_Inventory; i++)
+        for (byte i = 0; i < Game.Max_Inventory; i++)
             if (Character(Index).Inventory[i].Item_Num == Item_Num)
                 return i;
 

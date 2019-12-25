@@ -14,12 +14,15 @@ public partial class Editor_NPCs : Form
         InitializeComponent();
     }
 
+    public static void Request()
+    {
+        // Lê os dados
+        Send.Request_Items();
+        Send.Request_NPCs(true);
+    }
+
     public static void Open()
     {
-        // Lê os dados  e lista os itens
-        Send.Request_NPCs();
-        Send.Request_Items();
-
         // Lista de itens
         Objects.cmbDrop_Item.Items.Clear();
         Objects.cmbDrop_Item.Items.Add("None");

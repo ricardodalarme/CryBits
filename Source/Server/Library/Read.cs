@@ -312,4 +312,44 @@ partial class Read
                 }
         }
     }
+
+    public static void NPCs()
+    {
+        Lists.NPC = new Lists.Structures.NPCs[Lists.Server_Data.Num_NPCs + 1];
+
+        // Lê os dados
+        for (byte i = 1; i <= Lists.NPC.GetUpperBound(0); i++)
+            NPC(i);
+    }
+
+    public static void NPC(byte Index)
+    {
+        // Cria um sistema binário para a manipulação dos dados
+        FileInfo File = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format);
+        BinaryReader Data = new BinaryReader(File.OpenRead());
+
+        // Redimensiona os valores necessários 
+        Lists.NPC[Index].Vital = new short[(byte)Game.Vitals.Amount];
+        Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Amount];
+        Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[Game.Max_NPC_Drop];
+
+        // Lê os dados
+        Lists.NPC[Index].Name = Data.ReadString();
+        Lists.NPC[Index].Texture = Data.ReadInt16();
+        Lists.NPC[Index].Behaviour = Data.ReadByte();
+        Lists.NPC[Index].SpawnTime = Data.ReadByte();
+        Lists.NPC[Index].Sight = Data.ReadByte();
+        Lists.NPC[Index].Experience = Data.ReadByte();
+        for (byte i = 0; i <= (byte)Game.Vitals.Amount - 1; i++) Lists.NPC[Index].Vital[i] = Data.ReadInt16();
+        for (byte i = 0; i <= (byte)Game.Attributes.Amount - 1; i++) Lists.NPC[Index].Attribute[i] = Data.ReadInt16();
+        for (byte i = 0; i <= Game.Max_NPC_Drop - 1; i++)
+        {
+            Lists.NPC[Index].Drop[i].Item_Num = Data.ReadInt16();
+            Lists.NPC[Index].Drop[i].Amount = Data.ReadInt16();
+            Lists.NPC[Index].Drop[i].Chance = Data.ReadByte();
+        }
+
+        // Fecha o sistema
+        Data.Dispose();
+    }
 }

@@ -107,7 +107,8 @@ partial class Send
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Data.Write((byte)Client_Packets.Alert);
+        if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.Alert);
+        else Data.Write((byte)Client_Packets.Alert);
         Data.Write(Message);
         ToPlayer(Index, Data);
 
@@ -130,7 +131,8 @@ partial class Send
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Data.Write((byte)Client_Packets.Connect);
+        if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.Connect);
+        else Data.Write((byte)Client_Packets.Connect);
         Data.Write(Index);
         ToPlayer(Index, Data);
     }
@@ -175,20 +177,33 @@ partial class Send
         ToPlayer(Index, Data);
     }
 
-    public static void Classes(byte Index)
+    public static void Classes(byte Index, bool OpenEditor = false)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Data.Write((byte)Client_Packets.Classes);
+        if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.Classes);
+        else Data.Write((byte)Client_Packets.Classes);
         Data.Write(Lists.Server_Data.Num_Classes);
 
         for (byte i = 1; i <= Lists.Class.GetUpperBound(0); i++)
         {
+            // Escreve os dados
             Data.Write(Lists.Class[i].Name);
             Data.Write(Lists.Class[i].Texture_Male);
             Data.Write(Lists.Class[i].Texture_Female);
+
+            // Apenas dados do editor
+            if (Lists.TempPlayer[Index].InEditor){
+                Data.Write(Lists.Class[i].Spawn_Map);
+                Data.Write(Lists.Class[i].Spawn_Direction);
+                Data.Write(Lists.Class[i].Spawn_X);
+                Data.Write(Lists.Class[i].Spawn_Y);
+                for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Data.Write(Lists.Class[i].Vital[v]);
+                for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Data.Write(Lists.Class[i].Attribute[a]);
+            }
         }
+        Data.Write(OpenEditor);
 
         // Envia os dados
         ToPlayer(Index, Data);
@@ -521,30 +536,33 @@ partial class Send
         ToMap(Player.Character(Index).Map, Data);
     }
 
-    public static void Items(byte Index)
+    public static void Items(byte Index, bool OpenEditor = false)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Data.Write((byte)Client_Packets.Items);
-        Data.Write((byte)Lists.Item.GetUpperBound(0));
-
-        for (byte i = 1; i <= Lists.Item.GetUpperBound(0); i++)
+        if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.Items);
+        else Data.Write((byte)Client_Packets.Items);
+        Data.Write((short)Lists.Item.GetUpperBound(0));
+        for (short i = 1; i <= Lists.Item.GetUpperBound(0); i++)
         {
-            // Geral
             Data.Write(Lists.Item[i].Name);
             Data.Write(Lists.Item[i].Description);
             Data.Write(Lists.Item[i].Texture);
             Data.Write(Lists.Item[i].Type);
+            Data.Write(Lists.Item[i].Price);
+            Data.Write(Lists.Item[i].Stackable);
+            Data.Write(Lists.Item[i].Bind);
             Data.Write(Lists.Item[i].Req_Level);
             Data.Write(Lists.Item[i].Req_Class);
             Data.Write(Lists.Item[i].Potion_Experience);
-            for (byte n = 0;n<= (byte)Game.Vitals.Amount - 1; n++) Data.Write(Lists.Item[i].Potion_Vital[n]);
-            Data.Write(Lists.Item[i].Equip_Type );
-            for (byte n = 0; n <= (byte)Game.Attributes.Amount - 1; n++) Data.Write(Lists.Item[i].Equip_Attribute[n]);
+            for (byte v= 0; v < (byte)Game.Vitals.Amount; v++) Data.Write(Lists.Item[i].Potion_Vital[v]);
+            Data.Write(Lists.Item[i].Equip_Type);
+            for (byte a = 0; a< (byte)Game.Attributes.Amount; a++) Data.Write(Lists.Item[i].Equip_Attribute[a]);
             Data.Write(Lists.Item[i].Weapon_Damage);
         }
-
+        Data.Write(OpenEditor);
+        
         // Envia os dados
         ToPlayer(Index, Data);
     }

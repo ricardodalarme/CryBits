@@ -57,7 +57,7 @@ public partial class Selection : Form
         if (Lists.Options.Directory_Server == String.Empty || Lists.Options.Directory_Client == String.Empty)
             MessageBox.Show("Select the directories.");
         else
-            Editor_Classes.Open();
+            Editor_Classes.Request();
     }
 
     private void butMaps_Click(object sender, EventArgs e)
@@ -84,15 +84,15 @@ public partial class Selection : Form
         if (Lists.Options.Directory_Server == String.Empty || Lists.Options.Directory_Client == String.Empty)
             MessageBox.Show("Select the directories.");
         else
-            Editor_NPCs.Open();
+            Editor_NPCs.Request();
     }
 
     private void butItems_Click(object sender, EventArgs e)
     {
         // Verifica se os diretórios foram selecionados
-        if (Lists.Options.Directory_Server == String.Empty || Lists.Options.Directory_Client == String.Empty)
+        if (Lists.Options.Directory_Client == String.Empty)
             MessageBox.Show("Select the directories.");
         else
-            Editor_Items.Open();
+            Editor_Items.Request();
     }
 }

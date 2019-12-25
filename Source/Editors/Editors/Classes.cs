@@ -14,10 +14,15 @@ public partial class Editor_Classes : Form
         InitializeComponent();
     }
 
+    public static void Request()
+    {
+        // Lê os dados
+        Send.Request_Classes(true);
+    }
+
     public static void Open()
     {
-        // Lê os dados e lista os itens
-        Send.Request_Classes();
+        // Lista os dados
         List_Update();
 
         // Abre a janela

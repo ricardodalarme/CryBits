@@ -77,7 +77,6 @@
   <ItemGroup>
     <Compile Include="Library\Clear.cs" />
     <Compile Include="Library\Directories.cs" />
-    <Compile Include="Logic\Editor.cs" />
     <Compile Include="Logic\Game.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Library\Lists.cs" />

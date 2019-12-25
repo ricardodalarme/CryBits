@@ -314,10 +314,10 @@ partial class Receive
 
     public static void Items(NetIncomingMessage Data)
     {
-        // Quantidade
-        Lists.Item = new Lists.Structures.Items[Data.ReadByte() + 1];
+        // Quantidade de itens
+        Lists.Item = new Lists.Structures.Items[Data.ReadInt16() + 1];
 
-        for (byte i = 1; i <= Lists.Item.GetUpperBound(0); i++)
+        for (short i = 1; i <= Lists.Item.GetUpperBound(0); i++)
         {
             // Redimensiona os valores necessários 
             Lists.Item[i].Potion_Vital = new short[(byte)Game.Vitals.Amount];
@@ -328,12 +328,15 @@ partial class Receive
             Lists.Item[i].Description = Data.ReadString();
             Lists.Item[i].Texture = Data.ReadInt16();
             Lists.Item[i].Type = Data.ReadByte();
+            Data.ReadInt16(); // Price
+            Data.ReadBoolean(); // Stackable
+            Data.ReadBoolean(); // Bind
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
             Lists.Item[i].Potion_Experience = Data.ReadInt16();
-            for (byte n = 0; n <= (byte)Game.Vitals.Amount - 1; n++) Lists.Item[i].Potion_Vital[n] = Data.ReadInt16();
+            for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();
-            for (byte n = 0; n <= (byte)Game.Attributes.Amount - 1; n++) Lists.Item[i].Equip_Attribute[n] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
             Lists.Item[i].Weapon_Damage = Data.ReadInt16();
         }
     }
