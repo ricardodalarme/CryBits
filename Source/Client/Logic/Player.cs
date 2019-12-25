@@ -208,7 +208,7 @@ public class Player
         if (Tools.CurrentWindow != Tools.Windows.Game) return;
 
         // Verifica se tem algum item nas coordenadas 
-        for (byte i = 1; i <= Lists.Map.Temp_Item.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Map.Temp_Item.Length; i++)
             if (Lists.Map.Temp_Item[i].X == Me.X && Lists.Map.Temp_Item[i].Y == Me.Y)
                 HasItem = true;
 

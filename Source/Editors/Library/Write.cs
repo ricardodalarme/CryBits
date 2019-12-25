@@ -38,7 +38,7 @@ class Write
     public static void Tiles()
     {
         // Escreve os dados
-        for (byte i = 1; i <= Lists.Tile.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Tile.Length; i++)
             Tile(i);
     }
 
@@ -61,7 +61,7 @@ class Write
                 Data.Write(Lists.Tile[Index].Data[x, y].Attribute);
 
                 // Bloqueio direcional
-                for (byte i = 0; i <= (byte)Globals.Directions.Amount - 1; i++)
+                for (byte i = 0; i < (byte)Globals.Directions.Amount; i++)
                     Data.Write(Lists.Tile[Index].Data[x, y].Block[i]);
             }
 
@@ -82,7 +82,7 @@ class Write
     public static void Buttons()
     {
         // Escreve os dados
-        for (byte Index = 1; Index <= Lists.Button.GetUpperBound(0); Index++)
+        for (byte Index = 1; Index < Lists.Button.Length; Index++)
             Button(Index);
     }
 
@@ -106,7 +106,7 @@ class Write
     public static void TextBoxes()
     {
         // Escreve os dados
-        for (byte Index = 1; Index <= Lists.TextBox.GetUpperBound(0); Index++)
+        for (byte Index = 1; Index < Lists.TextBox.Length; Index++)
             TextBox(Index);
     }
 
@@ -132,7 +132,7 @@ class Write
     public static void Panels()
     {
         // Escreve os dados
-        for (byte Index = 1; Index <= Lists.Panel.GetUpperBound(0); Index++)
+        for (byte Index = 1; Index < Lists.Panel.Length; Index++)
             Panel(Index);
     }
 
@@ -156,7 +156,7 @@ class Write
     public static void CheckBoxes()
     {
         // Escreve os dados
-        for (byte Index = 1; Index <= Lists.CheckBox.GetUpperBound(0); Index++)
+        for (byte Index = 1; Index < Lists.CheckBox.Length; Index++)
             CheckBox(Index);
     }
 

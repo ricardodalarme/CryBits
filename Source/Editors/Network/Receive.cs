@@ -41,6 +41,7 @@ partial class Receive
     private static void Connect()
     {
         // Abre a janela de edição
+        Login.Objects.Visible = false;
         Selection.Objects.Visible = true;
     }
 
@@ -64,7 +65,7 @@ partial class Receive
         // Quantidade
         Lists.Class = new Lists.Structures.Class[Data.ReadByte() + 1];
 
-        for (short i = 1; i <= Lists.Class.GetUpperBound(0); i++)
+        for (short i = 1; i < Lists.Class.Length; i++)
         {
             // Redimensiona os valores necessários 
             Lists.Class[i].Vital = new short[(byte)Globals.Vitals.Amount];
@@ -108,7 +109,7 @@ partial class Receive
         Lists.Map[Index].Lighting = Data.ReadByte();
 
         // Ligações
-        for (short i = 0; i <= (short)Globals.Directions.Amount - 1; i++)
+        for (short i = 0; i < (short)Globals.Directions.Amount; i++)
             Lists.Map[Index].Link[i] = Data.ReadInt16();
 
         // Quantidade de camadas
@@ -151,7 +152,7 @@ partial class Receive
                 Lists.Map[Index].Tile[x, y].Zone = Data.ReadByte();
                 Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Globals.Directions.Amount];
 
-                for (byte i = 0; i <= (byte)Globals.Directions.Amount - 1; i++)
+                for (byte i = 0; i < (byte)Globals.Directions.Amount; i++)
                     Lists.Map[Index].Tile[x, y].Block[i] = Data.ReadBoolean();
             }
 
@@ -159,7 +160,7 @@ partial class Receive
         byte Num_Lights = Data.ReadByte();
         Lists.Map[Index].Light = new System.Collections.Generic.List<Lists.Structures.Map_Light>();
         if (Num_Lights > 0)
-            for (byte i = 0; i <= Num_Lights - 1; i++)
+            for (byte i = 0; i < Num_Lights; i++)
                 Lists.Map[Index].Light.Add(new Lists.Structures.Map_Light(new Rectangle(Data.ReadByte(), Data.ReadByte(), Data.ReadByte(), Data.ReadByte())));
 
         // NPCs
@@ -167,7 +168,7 @@ partial class Receive
         Lists.Map[Index].NPC = new System.Collections.Generic.List<Lists.Structures.Map_NPC>();
         Lists.Structures.Map_NPC NPC = new Lists.Structures.Map_NPC();
         if (Num_NPCs > 0)
-            for (byte i = 0; i <= Num_NPCs - 1; i++)
+            for (byte i = 0; i < Num_NPCs; i++)
             {
                 NPC.Index = Data.ReadInt16();
                 NPC.Zone = Data.ReadByte();
@@ -180,6 +181,32 @@ partial class Receive
 
     public static void NPCs(NetIncomingMessage Data)
     {
+        // Quantidade de nocs
+        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16() + 1];
+
+        for (short i = 1; i < Lists.NPC.Length; i++)
+        {
+            // Redimensiona os valores necessários 
+            Lists.NPC[i].Vital = new short[(byte)Globals.Vitals.Amount];
+            Lists.NPC[i].Attribute = new short[(byte)Globals.Attributes.Amount];
+            Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Globals.Max_NPC_Drop];
+
+            // Lê os dados
+            Lists.NPC[i].Name = Data.ReadString();
+            Lists.NPC[i].Texture = Data.ReadInt16();
+            Lists.NPC[i].Behaviour = Data.ReadByte();
+            for (byte n = 0; n < (byte)Globals.Vitals.Amount; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
+            Lists.NPC[i].SpawnTime = Data.ReadByte();
+            Lists.NPC[i].Sight = Data.ReadByte();
+            Lists.NPC[i].Experience = Data.ReadByte();
+            for (byte n = 0; n < (byte)Globals.Attributes.Amount; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
+            for (byte n = 0; n < Globals.Max_NPC_Drop; n++)
+            {
+                Lists.NPC[i].Drop[n].Item_Num = Data.ReadInt16();
+                Lists.NPC[i].Drop[n].Amount = Data.ReadInt16();
+                Lists.NPC[i].Drop[n].Chance = Data.ReadByte();
+            }
+        }
 
         // Abre o editor
         if (Data.ReadBoolean()) Editor_NPCs.Open();
@@ -190,7 +217,7 @@ partial class Receive
         // Quantidade de itens
         Lists.Item = new Lists.Structures.Item[Data.ReadInt16() + 1];
 
-        for (short i = 1; i <= Lists.Item.GetUpperBound(0); i++)
+        for (short i = 1; i < Lists.Item.Length; i++)
         {
             // Redimensiona os valores necessários 
             Lists.Item[i].Potion_Vital = new short[(byte)Globals.Vitals.Amount];

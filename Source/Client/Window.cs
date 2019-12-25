@@ -25,7 +25,7 @@ public partial class Window : Form
     private void Window_MouseDown(object sender, MouseEventArgs e)
     {
         // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i <= Tools.Order.GetUpperBound(0); i++)
+        for (byte i = 0; i < Tools.Order.Length; i++)
             switch (Tools.Order[i].Type)
             {
                 case Tools.Types.Button: Buttons.Events.MouseDown(e, Tools.Order[i].Index); break;
@@ -47,7 +47,7 @@ public partial class Window : Form
         Tools.Mouse.Y = e.Y;
 
         // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i <= Tools.Order.GetUpperBound(0); i++)
+        for (byte i = 0; i < Tools.Order.Length; i++)
             switch (Tools.Order[i].Type)
             {
                 case Tools.Types.Button: Buttons.Events.MouseMove(e, Tools.Order[i].Index); break;
@@ -57,7 +57,7 @@ public partial class Window : Form
     private void Window_MouseUp(object sender, MouseEventArgs e)
     {
         // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i <= Tools.Order.GetUpperBound(0); i++)
+        for (byte i = 0; i < Tools.Order.Length; i++)
             switch (Tools.Order[i].Type)
             {
                 case Tools.Types.Button: Buttons.Events.MouseUp(e, Tools.Order[i].Index); break;

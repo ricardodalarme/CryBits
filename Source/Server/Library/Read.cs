@@ -65,14 +65,14 @@ partial class Read
                 Lists.Player[Index].Character[i].X = Data.ReadByte();
                 Lists.Player[Index].Character[i].Y = Data.ReadByte();
                 Lists.Player[Index].Character[i].Direction = (Game.Directions)Data.ReadByte();
-                for (byte n = 0; n <= (byte)Game.Vitals.Amount - 1; n++) Lists.Player[Index].Character[i].Vital[n] = Data.ReadInt16();
-                for (byte n = 0; n <= (byte)Game.Attributes.Amount - 1; n++) Lists.Player[Index].Character[i].Attribute[n] = Data.ReadInt16();
+                for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Lists.Player[Index].Character[i].Vital[n] = Data.ReadInt16();
+                for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) Lists.Player[Index].Character[i].Attribute[n] = Data.ReadInt16();
                 for (byte n = 1; n <= Game.Max_Inventory; n++)
                 {
                     Lists.Player[Index].Character[i].Inventory[n].Item_Num = Data.ReadInt16();
                     Lists.Player[Index].Character[i].Inventory[n].Amount = Data.ReadInt16();
                 }
-                for (byte n = 0; n <= (byte)Game.Equipments.Amount - 1; n++) Lists.Player[Index].Character[i].Equipment[n] = Data.ReadInt16();
+                for (byte n = 0; n < (byte)Game.Equipments.Amount; n++) Lists.Player[Index].Character[i].Equipment[n] = Data.ReadInt16();
                 for (byte n = 1; n <= Game.Max_Hotbar; n++)
                 {
                     Lists.Player[Index].Character[i].Hotbar[n].Type = Data.ReadByte();
@@ -127,7 +127,7 @@ partial class Read
         Lists.Class = new Lists.Structures.Classes[Lists.Server_Data.Num_Classes + 1];
 
         // Lê os dados
-        for (byte i = 1; i <= Lists.Class.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Class.Length; i++)
             Class(i);
     }
 
@@ -148,8 +148,8 @@ partial class Read
         Lists.Class[Index].Spawn_Direction = Data.ReadByte();
         Lists.Class[Index].Spawn_X = Data.ReadByte();
         Lists.Class[Index].Spawn_Y = Data.ReadByte();
-        for (byte i = 0; i <= (byte)Game.Vitals.Amount - 1; i++) Lists.Class[Index].Vital[i] = Data.ReadInt16();
-        for (byte i = 0; i <= (byte)Game.Attributes.Amount - 1; i++) Lists.Class[Index].Attribute[i] = Data.ReadInt16();
+        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Lists.Class[Index].Vital[i] = Data.ReadInt16();
+        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Lists.Class[Index].Attribute[i] = Data.ReadInt16();
 
         // Fecha o sistema
         Data.Dispose();
@@ -160,7 +160,7 @@ partial class Read
         Lists.Item = new Lists.Structures.Items[Lists.Server_Data.Num_Items + 1];
 
         // Lê os dados
-        for (byte i = 1; i <= Lists.Item.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Item.Length; i++)
             Item(i);
     }
 
@@ -184,9 +184,9 @@ partial class Read
         Lists.Item[Index].Req_Level = Data.ReadInt16();
         Lists.Item[Index].Req_Class = Data.ReadByte();
         Lists.Item[Index].Potion_Experience = Data.ReadInt16();
-        for (byte i = 0; i <= (byte)Game.Vitals.Amount - 1; i++) Lists.Item[Index].Potion_Vital[i] = Data.ReadInt16();
+        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Lists.Item[Index].Potion_Vital[i] = Data.ReadInt16();
         Lists.Item[Index].Equip_Type = Data.ReadByte();
-        for (byte i = 0; i <= (byte)Game.Attributes.Amount - 1; i++) Lists.Item[Index].Equip_Attribute[i] = Data.ReadInt16();
+        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Lists.Item[Index].Equip_Attribute[i] = Data.ReadInt16();
         Lists.Item[Index].Weapon_Damage = Data.ReadInt16();
 
         // Fecha o sistema
@@ -198,7 +198,7 @@ partial class Read
         Lists.Map = new Lists.Structures.Maps[Lists.Server_Data.Num_Maps + 1];
 
         // Lê os dados
-        for (short i = 1; i <= Lists.Map.GetUpperBound(0); i++)
+        for (short i = 1; i < Lists.Map.Length; i++)
             Map(i);
     }
 
@@ -227,7 +227,7 @@ partial class Read
 
         // Ligações
         Lists.Map[Index].Link = new short[(byte)Game.Directions.Amount];
-        for (short i = 0; i <= (short)Game.Directions.Amount - 1; i++)
+        for (short i = 0; i < (short)Game.Directions.Amount; i++)
             Lists.Map[Index].Link[i] = Data.ReadInt16();
 
         // Azulejos
@@ -246,14 +246,14 @@ partial class Read
 
                 // Bloqueio direcional
                 Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
-                for (byte i = 0; i <= (byte)Game.Directions.Amount - 1; i++)
+                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
                     Lists.Map[Index].Tile[x, y].Block[i] = Data.ReadBoolean();
             }
 
         // Luzes
         Lists.Map[Index].Light = new Lists.Structures.Map_Light[Data.ReadByte()];
         if (Lists.Map[Index].Light.GetUpperBound(0) > 0)
-            for (byte i = 0; i <= Lists.Map[Index].Light.GetUpperBound(0); i++)
+            for (byte i = 0; i < Lists.Map[Index].Light.Length; i++)
             {
                 Lists.Map[Index].Light[i].X = Data.ReadByte();
                 Lists.Map[Index].Light[i].Y = Data.ReadByte();
@@ -265,7 +265,7 @@ partial class Read
         Lists.Map[Index].NPC = new Lists.Structures.Map_NPC[Data.ReadByte() + 1];
         Lists.Map[Index].Temp_NPC = new Lists.Structures.Map_NPCs[Lists.Map[Index].NPC.GetUpperBound(0) + 1];
         if (Lists.Map[Index].NPC.GetUpperBound(0) > 0)
-            for (byte i = 1; i <= Lists.Map[Index].NPC.GetUpperBound(0); i++)
+            for (byte i = 1; i < Lists.Map[Index].NPC.Length; i++)
             {
                 Lists.Map[Index].NPC[i].Index = Data.ReadInt16();
                 Lists.Map[Index].NPC[i].Zone = Data.ReadByte();
@@ -318,7 +318,7 @@ partial class Read
         Lists.NPC = new Lists.Structures.NPCs[Lists.Server_Data.Num_NPCs + 1];
 
         // Lê os dados
-        for (byte i = 1; i <= Lists.NPC.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.NPC.Length; i++)
             NPC(i);
     }
 
@@ -340,9 +340,9 @@ partial class Read
         Lists.NPC[Index].SpawnTime = Data.ReadByte();
         Lists.NPC[Index].Sight = Data.ReadByte();
         Lists.NPC[Index].Experience = Data.ReadByte();
-        for (byte i = 0; i <= (byte)Game.Vitals.Amount - 1; i++) Lists.NPC[Index].Vital[i] = Data.ReadInt16();
-        for (byte i = 0; i <= (byte)Game.Attributes.Amount - 1; i++) Lists.NPC[Index].Attribute[i] = Data.ReadInt16();
-        for (byte i = 0; i <= Game.Max_NPC_Drop - 1; i++)
+        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Lists.NPC[Index].Vital[i] = Data.ReadInt16();
+        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Lists.NPC[Index].Attribute[i] = Data.ReadInt16();
+        for (byte i = 0; i < Game.Max_NPC_Drop; i++)
         {
             Lists.NPC[Index].Drop[i].Item_Num = Data.ReadInt16();
             Lists.NPC[Index].Drop[i].Amount = Data.ReadInt16();

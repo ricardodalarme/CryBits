@@ -61,7 +61,7 @@ class Read
         Buttons.List = new Buttons.Structure[Lists.Client_Data.Num_Buttons + 1];
 
         // Lê os dados
-        for (byte i = 1; i <= Buttons.List.GetUpperBound(0); i++)
+        for (byte i = 1; i < Buttons.List.Length; i++)
             Button_Data(i);
     }
 
@@ -90,7 +90,7 @@ class Read
         TextBoxes.List = new TextBoxes.Structure[Lists.Client_Data.Num_TextBoxes + 1];
 
         // Lê os dados
-        for (byte i = 1; i <= TextBoxes.List.GetUpperBound(0); i++)
+        for (byte i = 1; i < TextBoxes.List.Length; i++)
             TextBox_Data(i);
     }
 
@@ -121,7 +121,7 @@ class Read
         Panels.List = new Panels.Estrutura[Lists.Client_Data.Num_Panels + 1];
 
         // Lê os dados
-        for (byte i = 1; i <= Panels.List.GetUpperBound(0); i++)
+        for (byte i = 1; i < Panels.List.Length; i++)
             Panel_Data(i);
     }
 
@@ -150,7 +150,7 @@ class Read
         CheckBoxes.List = new CheckBoxes.Structure[Lists.Client_Data.Num_CheckBoxes + 1];
 
         // Lê os dados
-        for (byte i = 1; i <= CheckBoxes.List.GetUpperBound(0); i++)
+        for (byte i = 1; i < CheckBoxes.List.Length; i++)
             CheckBox_Data(i);
     }
 
@@ -237,7 +237,7 @@ class Read
         // Luzes
         Lists.Map.Light = new Lists.Structures.Map_Light[Data.ReadInt32() + 1];
         if (Lists.Map.Light.GetUpperBound(0) > 0)
-            for (byte i = 0; i <= Lists.Map.Light.GetUpperBound(0); i++)
+            for (byte i = 0; i < Lists.Map.Light.Length; i++)
             {
                 Lists.Map.Light[i].X = Data.ReadByte();
                 Lists.Map.Light[i].Y = Data.ReadByte();
@@ -249,7 +249,7 @@ class Read
         Lists.Map.NPC = new short[Data.ReadInt32() + 1];
         Lists.Map.Temp_NPC = new Lists.Structures.Map_NPCs  [Lists.Map.NPC.GetUpperBound(0) + 1];
         if (Lists.Map.NPC.GetUpperBound(0) > 0)
-            for (byte i =1; i <= Lists.Map.NPC.GetUpperBound(0); i++)
+            for (byte i =1; i < Lists.Map.NPC.Length; i++)
             {
                 Lists.Map.NPC[i] = Data.ReadInt16();
                 Lists.Map.Temp_NPC[i].Index = Lists.Map.NPC[i];

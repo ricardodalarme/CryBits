@@ -296,7 +296,7 @@ partial class Graphics
         if (Tile.X > Lists.Tile[Objects.scrlTile.Value].Data.GetUpperBound(0)) return;
         if (Tile.Y > Lists.Tile[Objects.scrlTile.Value].Data.GetUpperBound(1)) return;
 
-        for (byte i = 0; i <= (byte)Globals.Directions.Amount - 1; i++)
+        for (byte i = 0; i < (byte)Globals.Directions.Amount; i++)
         {
             // Estado do bloqueio
             if (Lists.Tile[Objects.scrlTile.Value].Data[Tile.X, Tile.Y].Block[i])
@@ -395,7 +395,7 @@ partial class Graphics
         SFML.Graphics.Color Color; System.Drawing.Color TempCor = System.Drawing.Color.FromArgb(Map.Color);
 
         // Desenha todos os azulejos
-        for (byte c = 0; c <= Map.Layer.Count - 1; c++)
+        for (byte c = 0; c < Map.Layer.Count; c++)
         {
             // Somente se necessário
             if (!Objects.lstLayers.Items[c].Checked) continue;
@@ -477,11 +477,10 @@ partial class Graphics
 
         // Dados
         byte x = 0;
-        Size Size = new Size(Editor_Maps.Zoom((Lists.Map[Index].Width + 1) * Globals.Grid), Editor_Maps.Zoom((Lists.Map[Index].Height + 1) * Globals.Grid));
         if (Lists.Map[Index].Weather.Type == (byte)Globals.Weathers.Snowing) x = 32;
 
         // Desenha as partículas
-        for (int i = 1; i <= Lists.Weather.GetUpperBound(0); i++)
+        for (int i = 1; i < Lists.Weather.Length; i++)
             if (Lists.Weather[i].Visible)
                 Render(Win_Map, Tex_Weather, new Rectangle(x, 0, 32, 32), Editor_Maps.Zoom(new Rectangle(Lists.Weather[i].x, Lists.Weather[i].y, 32, 32)), CColor(255, 255, 255, 150));
     }
@@ -501,7 +500,7 @@ partial class Graphics
 
         // Desenha o ponto iluminado
         if (Lists.Map[Index].Light.Count > 0)
-            for (byte i = 0; i <= Lists.Map[Index].Light.Count - 1; i++)
+            for (byte i = 0; i < Lists.Map[Index].Light.Count; i++)
                 Render(Win_Map_Lighting, Tex_Lighting, Editor_Maps.Zoom_Grid(Lists.Map[Index].Light[i].Rec), null, new RenderStates(BlendMode.Multiply));
 
         // Pré visualização
@@ -519,7 +518,7 @@ partial class Graphics
         // Ponto de remoção da luz
         if (Objects.butMLighting.Checked)
             if (Lists.Map[Index].Light.Count > 0)
-                for (byte i = 0; i <= Lists.Map[Index].Light.Count - 1; i++)
+                for (byte i = 0; i < Lists.Map[Index].Light.Count; i++)
                     RenderRectangle(Win_Map, Lists.Map[Index].Light[i].Rec.X * Globals.Grid_Zoom, Lists.Map[Index].Light[i].Rec.Y * Globals.Grid_Zoom, Globals.Grid_Zoom, Globals.Grid_Zoom, CColor(175, 42, 42, 175));
 
         // Trovoadas
@@ -554,8 +553,8 @@ partial class Graphics
                 Render(Win_Map, Tex_Tile[Objects.cmbTiles.SelectedIndex + 1], Source, Destiny);
             // Retângulo
             else if (Objects.butRectangle.Checked)
-                for (int x = Begin.X; x <= Begin.X + Editor_Maps.Map_Selection.Width - 1; x++)
-                    for (int y = Begin.Y; y <= Begin.Y + Editor_Maps.Map_Selection.Height - 1; y++)
+                for (int x = Begin.X; x < Begin.X + Editor_Maps.Map_Selection.Width; x++)
+                    for (int y = Begin.Y; y < Begin.Y + Editor_Maps.Map_Selection.Height; y++)
                         Render(Win_Map, Tex_Tile[Objects.cmbTiles.SelectedIndex + 1], Source, new Rectangle(Globals.Zoom(x, y), Destiny.Size));
 
         // Desenha a grade
@@ -623,7 +622,7 @@ partial class Graphics
         if (Tile.X > Lists.Map[Index].Tile.GetUpperBound(0)) return;
         if (Tile.Y > Lists.Map[Index].Tile.GetUpperBound(1)) return;
 
-        for (byte i = 0; i <= (byte)Globals.Directions.Amount - 1; i++)
+        for (byte i = 0; i < (byte)Globals.Directions.Amount; i++)
         {
             // Estado do bloqueio
             if (Lists.Map[Index].Tile[Tile.X, Tile.Y].Block[i])
@@ -639,7 +638,7 @@ partial class Graphics
     public static void Editor_Maps_Map_NPCs(short Index)
     {
         if (Editor_Maps.Objects.butMNPCs.Checked)
-            for (byte i = 0; i <= Lists.Map[Index].NPC.Count - 1; i++)
+            for (byte i = 0; i < Lists.Map[Index].NPC.Count; i++)
                 if (Lists.Map[Index].NPC[i].Spawn)
                 {
                     Point Position = new Point((Lists.Map[Index].NPC[i].X - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom, (Lists.Map[Index].NPC[i].Y - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom);

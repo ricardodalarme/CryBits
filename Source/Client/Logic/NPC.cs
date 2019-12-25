@@ -8,7 +8,7 @@ class NPC
     public static void Logic()
     {
         // Lógica dos NPCs
-        for (byte i = 1; i <= Lists.Map.Temp_NPC.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Map.Temp_NPC.Length; i++)
             if (Lists.Map.Temp_NPC[i].Index > 0)
             {
                 // Dano
@@ -77,10 +77,10 @@ partial class Receive
     public static void NPCs(NetIncomingMessage Data)
     {
         // Quantidade
-        Lists.NPC = new Lists.Structures.NPCs[Data.ReadByte() + 1];
+        Lists.NPC = new Lists.Structures.NPCs[Data.ReadInt16() + 1];
 
         // Lê os dados de todos
-        for (byte i = 1; i <= Lists.NPC.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.NPC.Length; i++)
         {
             // Geral
             Lists.NPC[i].Name = Data.ReadString();
@@ -98,7 +98,7 @@ partial class Receive
     {
         // Lê os dados
         Lists.Map.Temp_NPC = new Lists.Structures.Map_NPCs[Data.ReadInt16() + 1];
-        for (byte i = 1; i <= Lists.Map.Temp_NPC.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Map.Temp_NPC.Length; i++)
         {
             Lists.Map.Temp_NPC[i].X2 = 0;
             Lists.Map.Temp_NPC[i].Y2 = 0;

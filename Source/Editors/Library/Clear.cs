@@ -95,7 +95,7 @@ class Clear
         Lists.NPC[Index].Vital = new short[(byte)Globals.Vitals.Amount];
         Lists.NPC[Index].Attribute = new short[(byte)Globals.Attributes.Amount];
         Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[Globals.Max_NPC_Drop];
-        for (byte i = 0; i <= Globals.Max_NPC_Drop - 1; i++)
+        for (byte i = 0; i < Globals.Max_NPC_Drop; i++)
         {
             Lists.NPC[Index].Drop[i].Chance = 100;
             Lists.NPC[Index].Drop[i].Amount = 1;
@@ -141,7 +141,7 @@ class Clear
 
     public static void Map_Layers(short Index)
     {
-        for (byte c = 0; c <= Lists.Map[Index].Layer.Count - 1; c++)
+        for (byte c = 0; c < Lists.Map[Index].Layer.Count; c++)
         {
             // Redimensiona os azulejos
             Lists.Map[Index].Layer[c].Tile = new Lists.Structures.Map_Tile_Data[Lists.Map[Index].Width + 1, Lists.Map[Index].Height + 1];

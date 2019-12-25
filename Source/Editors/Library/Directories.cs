@@ -10,11 +10,6 @@ class Directories
     public static FileInfo Options = new FileInfo(Application.StartupPath + @"\Options" + Format);
 
     // Servidor
-    public static FileInfo Server_Data;
-    public static DirectoryInfo Classes_Data;
-    public static DirectoryInfo Maps_Data;
-    public static DirectoryInfo NPCs_Data;
-    public static DirectoryInfo Items_Data;
     public static DirectoryInfo Tile_Data;
 
     // Cliente

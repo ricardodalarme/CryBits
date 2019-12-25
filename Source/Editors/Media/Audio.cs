@@ -38,7 +38,7 @@ class Audio
             Array.Resize(ref List, (byte)Sounds.Amount);
 
             // Carrega todos os arquivos e os adiciona a lista
-            for (int i = 1; i <= List.GetUpperBound(0); i++)
+            for (int i = 1; i < List.Length; i++)
                 List[i] = new SFML.Audio.Sound(new SoundBuffer(Directories.Sounds.FullName + i + Format));
         }
 
@@ -59,7 +59,7 @@ class Audio
             if (List == null) return;
 
             // Para todos os sons
-            for (byte i = 1; i <= (byte)Sounds.Amount - 1; i++)
+            for (byte i = 1; i < (byte)Sounds.Amount; i++)
                 List[i].Stop();
         }
     }

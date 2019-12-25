@@ -75,7 +75,7 @@ class Write
         // Luzes
         Data.Write(Lists.Map.Light.GetUpperBound(0));
         if (Lists.Map.Light.GetUpperBound(0) > 0)
-            for (byte i = 0; i <= Lists.Map.Light.GetUpperBound(0); i++)
+            for (byte i = 0; i < Lists.Map.Light.Length; i++)
             {
                 Data.Write(Lists.Map.Light[i].X);
                 Data.Write(Lists.Map.Light[i].Y);

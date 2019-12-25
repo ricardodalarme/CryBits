@@ -114,7 +114,7 @@ class Map
     public static byte HasNPC(short X, short Y)
     {
         // Verifica se há algum npc na cordenada
-        for (byte i = 1; i <= Lists.Map.Temp_NPC.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Map.Temp_NPC.Length; i++)
             if (Lists.Map.Temp_NPC[i].Index > 0)
                 if (Lists.Map.Temp_NPC[i].X == X && Lists.Map.Temp_NPC[i].Y == Y)
                     return i;
@@ -224,7 +224,7 @@ class Map
             }
 
         // Adiciona uma nova partícula
-        for (short i = 1; i <= Lists.Weather.GetUpperBound(0); i++)
+        for (short i = 1; i < Lists.Weather.Length; i++)
             if (!Lists.Weather[i].Visible)
             {
                 if (Game.Random.Next(0, Max_Weather_Intensity - Lists.Map.Weather.Intensity) == 0)
@@ -664,7 +664,7 @@ partial class Graphics
         }
 
         // Desenha as partículas
-        for (int i = 1; i <= Lists.Weather.GetUpperBound(0); i++)
+        for (int i = 1; i < Lists.Weather.Length; i++)
             if (Lists.Weather[i].Visible)
                 Render(Tex_Weather, new Rectangle(x, 0, 32, 32), new Rectangle(Lists.Weather[i].x, Lists.Weather[i].y, 32, 32), CColor(255, 255, 255, 150));
 
@@ -693,7 +693,7 @@ partial class Graphics
     public static void Map_Items()
     {
         // Desenha todos os itens que estão no chão
-        for (byte i = 1; i <= Lists.Map.Temp_Item.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Map.Temp_Item.Length; i++)
         {
             Lists.Structures.Map_Items Data = Lists.Map.Temp_Item[i];
 

@@ -24,7 +24,7 @@ public class TextBoxes
     public static byte FindIndex(string Name)
     {
         // Lista os nomes das ferramentas
-        for (byte i = 1; i <= List.GetUpperBound(0); i++)
+        for (byte i = 1; i < List.Length; i++)
             if (List[i].General.Name == Name)
                 return i;
 
@@ -34,7 +34,7 @@ public class TextBoxes
     public static Structure Find(string Name)
     {
         // Lista os nomes das ferramentas
-        for (byte i = 1; i <= List.GetUpperBound(0); i++)
+        for (byte i = 1; i < List.Length; i++)
             if (List[i].General.Name == Name)
                 return List[i];
 
@@ -47,7 +47,7 @@ public class TextBoxes
         if (List[TexBox_Focus] != null && List[TexBox_Focus].General.Able) return;
 
         // Altera o digitalizador focado para o mais próximo
-        for (byte i = 1; i <= Tools.Order.GetUpperBound(0); i++)
+        for (byte i = 1; i < Tools.Order.Length; i++)
         {
             if (Tools.Order[i].Type != Tools.Types.TextBox)
                 continue;
@@ -63,7 +63,7 @@ public class TextBoxes
     public static void ChangeFocus()
     {
         // Altera o digitalizador focado para o próximo
-        for (byte i = 1; i <= Tools.Order.GetUpperBound(0); i++)
+        for (byte i = 1; i < Tools.Order.Length; i++)
         {
             if (Tools.Order[i].Type != Tools.Types.TextBox)
                 continue;
@@ -82,7 +82,7 @@ public class TextBoxes
         byte Index = 0;
 
         // Retorna o último digitalizador habilitado
-        for (byte i = 1; i <= Tools.Order.GetUpperBound(0); i++)
+        for (byte i = 1; i < Tools.Order.Length; i++)
             if (Tools.Order[i].Type == Tools.Types.TextBox)
                 if (List[Tools.Order[i].Index].General.Able)
                     Index = Tools.Order[i].Index;

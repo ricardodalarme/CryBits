@@ -26,7 +26,7 @@ public partial class Editor_NPCs : Form
         // Lista de itens
         Objects.cmbDrop_Item.Items.Clear();
         Objects.cmbDrop_Item.Items.Add("None");
-        for (byte i = 1; i <= Lists.Item.GetUpperBound(0); i++) Objects.cmbDrop_Item.Items.Add(Lists.Item[i].Name);
+        for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbDrop_Item.Items.Add(Lists.Item[i].Name);
 
         // Define os limites
         Objects.numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
@@ -44,7 +44,7 @@ public partial class Editor_NPCs : Form
         Objects.List.Items.Clear();
 
         // Adiciona os itens à lista
-        for (byte i = 1; i <= Lists.NPC.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.NPC.Length; i++)
             Objects.List.Items.Add(Globals.Numbering(i, Lists.NPC.GetUpperBound(0)) + ":" + Lists.NPC[i].Name);
 
         // Seleciona o primeiro item

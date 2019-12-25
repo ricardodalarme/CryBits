@@ -81,10 +81,10 @@ partial class Editor_Maps : Form
         Objects.cmbA_Item.Items.Clear();
 
         // Lista os itens
-        for (byte i = 0; i <= (byte)Globals.Layers.Amount - 1; i++) Objects.cmbLayers_Type.Items.Add(((Globals.Layers)i).ToString());
-        for (byte i = 1; i <= Graphics.Tex_Tile.GetUpperBound(0); i++) Objects.cmbTiles.Items.Add(i.ToString());
-        for (byte i = 1; i <= Lists.NPC.GetUpperBound(0); i++) Objects.cmbNPC.Items.Add(Lists.NPC[i].Name);
-        for (byte i = 1; i <= Lists.Item.GetUpperBound(0); i++) Objects.cmbA_Item.Items.Add(Lists.Item[i].Name);
+        for (byte i = 0; i < (byte)Globals.Layers.Amount; i++) Objects.cmbLayers_Type.Items.Add(((Globals.Layers)i).ToString());
+        for (byte i = 1; i < Graphics.Tex_Tile.Length; i++) Objects.cmbTiles.Items.Add(i.ToString());
+        for (byte i = 1; i < Lists.NPC.Length; i++) Objects.cmbNPC.Items.Add(Lists.NPC[i].Name);
+        for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbA_Item.Items.Add(Lists.Item[i].Name);
 
         // Reseta os valores
         Objects.cmbA_Warp_Direction.SelectedIndex = 0;
@@ -124,7 +124,7 @@ partial class Editor_Maps : Form
         Objects.cmbA_Warp_Map.Items.Clear();
 
         // Adiciona os itens às listas
-        for (byte i = 1; i <= Lists.Map.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Map.Length; i++)
         {
             Objects.cmbList.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0)) + ":" + Lists.Map[i].Name);
             Objects.cmbA_Warp_Map.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0)) + ":" + Lists.Map[i].Name);
@@ -284,7 +284,7 @@ partial class Editor_Maps : Form
         // Importa os dados padrões dos azulejos
         for (byte x = 0; x <= Lists.Map[Selected].Width; x++)
             for (byte y = 0; y <= Lists.Map[Selected].Height; y++)
-                for (byte c = 0; c <= Lists.Map[Selected].Layer.Count - 1; c++)
+                for (byte c = 0; c < Lists.Map[Selected].Layer.Count; c++)
                 {
                     // Dados do azulejo
                     Lists.Structures.Map_Tile_Data Data = Lists.Map[Selected].Layer[c].Tile[x, y];
@@ -296,7 +296,7 @@ partial class Editor_Maps : Form
                             Lists.Map[Selected].Tile[x, y].Attribute = Lists.Tile[Data.Tile].Data[Data.x, Data.y].Attribute;
 
                         // Bloqueio direcional
-                        for (byte b = 0; b <= (byte)Globals.Directions.Amount - 1; b++)
+                        for (byte b = 0; b < (byte)Globals.Directions.Amount; b++)
                             if (Lists.Tile[Data.Tile].Data[Data.x, Data.y].Block[b])
                                 Lists.Map[Selected].Tile[x, y].Block[b] = Lists.Tile[Data.Tile].Data[Data.x, Data.y].Block[b];
                     }
@@ -368,7 +368,7 @@ partial class Editor_Maps : Form
         Tiles_Copy.Area = Map_Selection;
 
         // Copia os dados das camadas
-        for (byte c = 0; c <= Tiles_Copy.Data.GetUpperBound(0); c++)
+        for (byte c = 0; c < Tiles_Copy.Data.Length; c++)
         {
             Tiles_Copy.Data[c] = new Lists.Structures.Map_Layer();
             Tiles_Copy.Data[c].Name = Lists.Map[Selected].Layer[c].Name;
@@ -395,9 +395,9 @@ partial class Editor_Maps : Form
         Copiar();
 
         // Remove os azulejos copiados
-        for (int x = Map_Selection.X; x <= Map_Selection.X + Map_Selection.Width - 1; x++)
-            for (int y = Map_Selection.Y; y <= Map_Selection.Y + Map_Selection.Height - 1; y++)
-                for (byte c = 0; c <= Lists.Map[Selected].Layer.Count - 1; c++)
+        for (int x = Map_Selection.X; x < Map_Selection.X + Map_Selection.Width; x++)
+            for (int y = Map_Selection.Y; y < Map_Selection.Y + Map_Selection.Height; y++)
+                for (byte c = 0; c < Lists.Map[Selected].Layer.Count; c++)
                 {
                     Lists.Map[Selected].Layer[c].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
                     Lists.Map[Selected].Layer[c].Tile[x, y].Mini = new Point[4];
@@ -410,9 +410,9 @@ partial class Editor_Maps : Form
     private void butPaste_Click(object sender, EventArgs e)
     {
         // Cola os azulejos
-        for (int x = Tiles_Copy.Area.X; x <= Tiles_Copy.Area.X + Tiles_Copy.Area.Width - 1; x++)
-            for (int y = Tiles_Copy.Area.Y; y <= Tiles_Copy.Area.Y + Tiles_Copy.Area.Height - 1; y++)
-                for (byte c = 0; c <= Tiles_Copy.Data.GetUpperBound(0); c++)
+        for (int x = Tiles_Copy.Area.X; x < Tiles_Copy.Area.X + Tiles_Copy.Area.Width; x++)
+            for (int y = Tiles_Copy.Area.Y; y < Tiles_Copy.Area.Y + Tiles_Copy.Area.Height; y++)
+                for (byte c = 0; c < Tiles_Copy.Data.Length; c++)
                 {
                     // Dados
                     int Layer = Find_Layer(Tiles_Copy.Data[c].Name);
@@ -937,7 +937,7 @@ partial class Editor_Maps : Form
         else if (butMAttributes.Checked && optA_DirBlock.Checked)
         {
             // Define o bloqueio direcional
-            for (byte i = 0; i <= (byte)Globals.Directions.Amount - 1; i++)
+            for (byte i = 0; i < (byte)Globals.Directions.Amount; i++)
                 if (Tile_Dif.X >= Globals.Block_Position(i).X && Tile_Dif.X <= Globals.Block_Position(i).X + 8)
                     if (Tile_Dif.Y >= Globals.Block_Position(i).Y && Tile_Dif.Y <= Globals.Block_Position(i).Y + 8)
                         // Altera o valor de bloqueio
@@ -969,7 +969,7 @@ partial class Editor_Maps : Form
     {
         // Encontra a luz que está nessa camada
         if (Lists.Map[Selected].Light.Count > 0)
-            for (byte i = 0; i <= Lists.Map[Selected].Light.Count - 1; i++)
+            for (byte i = 0; i < Lists.Map[Selected].Light.Count; i++)
                 if (Lists.Map[Selected].Light[i].X == Map_Selection.X)
                     if (Lists.Map[Selected].Light[i].Y == Map_Selection.Y)
                         Lists.Map[Selected].Light.RemoveAt(i);
@@ -992,8 +992,8 @@ partial class Editor_Maps : Form
         {
             if (Map_Selection.Width > 1 || Map_Selection.Height > 1)
                 // Define os azulejos
-                for (int x = Map_Selection.X; x <= Map_Selection.X + Map_Selection.Width - 1; x++)
-                    for (int y = Map_Selection.Y; y <= Map_Selection.Y + Map_Selection.Height - 1; y++)
+                for (int x = Map_Selection.X; x < Map_Selection.X + Map_Selection.Width; x++)
+                    for (int y = Map_Selection.Y; y < Map_Selection.Y + Map_Selection.Height; y++)
                     {
                         Lists.Map[Selected].Layer[Layer].Tile[x, y] = Set_Tile();
                         Autotile.Update(Selected, x, y, Layer);
@@ -1195,7 +1195,7 @@ partial class Editor_Maps : Form
         Objects.lstLayers.Items.Clear();
 
         // Adiciona os itens à lista
-        for (byte i = 0; i <= Lists.Map[Selected].Layer.Count - 1; i++)
+        for (byte i = 0; i < Lists.Map[Selected].Layer.Count; i++)
         {
             Objects.lstLayers.Items.Add(string.Empty);
             Objects.lstLayers.Items[i].Checked = true;
@@ -1264,8 +1264,8 @@ partial class Editor_Maps : Form
         List<Lists.Structures.Map_Layer> Temp = new List<Lists.Structures.Map_Layer>();
 
         // Reordena as camadas
-        for (byte n = 0; n <= (byte)Globals.Layers.Amount - 1; n++)
-            for (byte i = 0; i <= Lists.Map[Selected].Layer.Count - 1; i++)
+        for (byte n = 0; n < (byte)Globals.Layers.Amount; n++)
+            for (byte i = 0; i < Lists.Map[Selected].Layer.Count; i++)
                 if (Lists.Map[Selected].Layer[i].Type == n)
                     Temp.Add(Lists.Map[Selected].Layer[i]);
 
@@ -1307,7 +1307,7 @@ partial class Editor_Maps : Form
     public static int Find_Layer(string Nome)
     {
         // Encontra a camada
-        for (byte i = 0; i <= Lists.Map[Selected].Layer.Count - 1; i++)
+        for (byte i = 0; i < Lists.Map[Selected].Layer.Count; i++)
             if (Lists.Map[Selected].Layer[i].Name == Nome)
                 return i;
 
@@ -1509,7 +1509,7 @@ partial class Editor_Maps : Form
             // Atualiza os azulejos necessários
             for (byte x = 0; x <= Lists.Map[Map_Num].Width; x++)
                 for (byte y = 0; y <= Lists.Map[Map_Num].Height; y++)
-                    for (byte c = 0; c <= Lists.Map[Map_Num].Layer.Count - 1; c++)
+                    for (byte c = 0; c < Lists.Map[Map_Num].Layer.Count; c++)
                         if (Lists.Map[Map_Num].Layer[c].Tile[x, y].Auto)
                             // Faz os cálculos para a autocriação
                             Calculate(Map_Num, x, y, c);
@@ -1763,7 +1763,7 @@ partial class Editor_Maps : Form
         // Atualiza a lista de NPCs do mapa
         if (Lists.Map[Selected].NPC.Count > 0)
         {
-            for (byte i = 0; i <= Lists.Map[Selected].NPC.Count - 1; i++) Objects.lstNPC.Items.Add(i + 1 + ":" + Lists.NPC[Lists.Map[Selected].NPC[i].Index].Name);
+            for (byte i = 0; i < Lists.Map[Selected].NPC.Count; i++) Objects.lstNPC.Items.Add(i + 1 + ":" + Lists.NPC[Lists.Map[Selected].NPC[i].Index].Name);
             Objects.lstNPC.SelectedIndex = 0;
         }
     }

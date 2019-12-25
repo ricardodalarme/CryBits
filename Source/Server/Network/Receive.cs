@@ -234,7 +234,7 @@ class Receive
         Player.Character(Index).Direction = (Game.Directions)Lists.Class[Player.Character(Index).Class].Spawn_Direction;
         Player.Character(Index).X = Lists.Class[Player.Character(Index).Class].Spawn_X;
         Player.Character(Index).Y = Lists.Class[Player.Character(Index).Class].Spawn_Y;
-        for (byte i = 0; i <= (byte)Game.Vitals.Amount - 1; i++) Player.Character(Index).Vital[i] = Player.Character(Index).MaxVital(i);
+        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Player.Character(Index).Vital[i] = Player.Character(Index).MaxVital(i);
 
         // Salva a conta
         Write.Character(Name);
@@ -448,7 +448,7 @@ class Receive
         }
 
         // Remove o equipamento
-        for (byte i = 0; i <= (byte)Game.Attributes.Amount - 1; i++) Player.Character(Index).Attribute[i] -= Lists.Item[Player.Character(Index).Equipment[Slot]].Equip_Attribute[i];
+        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Player.Character(Index).Attribute[i] -= Lists.Item[Player.Character(Index).Equipment[Slot]].Equip_Attribute[i];
         Player.Character(Index).Equipment[Slot] = 0;
 
         // Envia os dados
@@ -517,7 +517,7 @@ class Receive
         // Quantidade
         Lists.Class = new Lists.Structures.Classes[Data.ReadByte() + 1];
 
-        for (short i = 1; i <= Lists.Class.GetUpperBound(0); i++)
+        for (short i = 1; i < Lists.Class.Length; i++)
         {
             // Redimensiona os valores necessários 
             Lists.Class[i].Vital = new short[(byte)Game.Vitals.Amount];
@@ -546,6 +546,32 @@ class Receive
 
     private static void Write_NPCs(byte Index, NetIncomingMessage Data)
     {
+        // Quantidade de npcs
+        Lists.NPC = new Lists.Structures.NPCs[Data.ReadInt16() + 1];
+
+        for (short i = 1; i < Lists.NPC.Length; i++)
+        {
+            // Redimensiona os valores necessários 
+            Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Amount];
+            Lists.NPC[i].Attribute = new short[(byte)Game.Attributes.Amount];
+            Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Game.Max_NPC_Drop];
+
+            // Lê os dados
+            Lists.NPC[i].Name = Data.ReadString();
+            Lists.NPC[i].Texture = Data.ReadInt16();
+            Lists.NPC[i].Behaviour = Data.ReadByte();
+            Lists.NPC[i].SpawnTime = Data.ReadByte();
+            Lists.NPC[i].Sight = Data.ReadByte();
+            Lists.NPC[i].Experience = Data.ReadByte();
+            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
+            for (byte n = 0; n < Game.Max_NPC_Drop; n++)
+            {
+                Lists.NPC[i].Drop[n].Item_Num = Data.ReadInt16();
+                Lists.NPC[i].Drop[n].Amount = Data.ReadInt16();
+                Lists.NPC[i].Drop[n].Chance = Data.ReadByte();
+            }
+        }
     }
 
     private static void Write_Items(byte Index, NetIncomingMessage Data)
@@ -553,7 +579,7 @@ class Receive
         // Quantidade de itens
         Lists.Item = new Lists.Structures.Items[Data.ReadInt16() + 1];
 
-        for (short i = 1; i <= Lists.Item.GetUpperBound(0); i++)
+        for (short i = 1; i < Lists.Item.Length; i++)
         {
             // Redimensiona os valores necessários 
             Lists.Item[i].Potion_Vital = new short[(byte)Game.Vitals.Amount];
@@ -600,7 +626,7 @@ class Receive
 
     private static void Request_NPCs(byte Index, NetIncomingMessage Data)
     {
-        //Send.NPCs(Index, Data.ReadBoolean());
+        Send.NPCs(Index, Data.ReadBoolean());
     }
 
     private static void Request_Items(byte Index, NetIncomingMessage Data)

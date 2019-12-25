@@ -36,8 +36,8 @@ public partial class Selection : Form
     private void butData_Click(object sender, EventArgs e)
     {
         // Verifica se os diretórios foram selecionados
-        if (Lists.Options.Directory_Server == String.Empty || Lists.Options.Directory_Client == String.Empty)
-            MessageBox.Show("Select the directories.");
+        if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
+            MessageBox.Show("Select the client directory.");
         else
             Editor_Data.Open();
     }
@@ -45,8 +45,8 @@ public partial class Selection : Form
     private void butTools_Click(object sender, EventArgs e)
     {
         // Verifica se os diretórios foram selecionados
-        if (Lists.Options.Directory_Server == String.Empty || Lists.Options.Directory_Client == String.Empty)
-            MessageBox.Show("Select the directories.");
+        if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
+            MessageBox.Show("Select the client directory.");
         else
             Editor_Tools.Open();
     }
@@ -54,8 +54,8 @@ public partial class Selection : Form
     private void butClasses_Click(object sender, EventArgs e)
     {
         // Verifica se os diretórios foram selecionados
-        if (Lists.Options.Directory_Server == String.Empty || Lists.Options.Directory_Client == String.Empty)
-            MessageBox.Show("Select the directories.");
+        if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
+            MessageBox.Show("Select the client directory.");
         else
             Editor_Classes.Request();
     }
@@ -63,8 +63,8 @@ public partial class Selection : Form
     private void butMaps_Click(object sender, EventArgs e)
     {
         // Verifica se os diretórios foram selecionados
-        if (Lists.Options.Directory_Server == String.Empty || Lists.Options.Directory_Client == String.Empty)
-            MessageBox.Show("Select the directories.");
+        if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
+            MessageBox.Show("Select the client directory.");
         else
             Editor_Maps.Open();
     }
@@ -72,8 +72,8 @@ public partial class Selection : Form
     private void butTiles_Click(object sender, EventArgs e)
     {
         // Verifica se os diretórios foram selecionados
-        if (Lists.Options.Directory_Server == String.Empty || Lists.Options.Directory_Client == String.Empty)
-            MessageBox.Show("Select the directories.");
+        if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
+            MessageBox.Show("Select the client directory.");
         else
             Editor_Tiles.Open();
     }
@@ -81,8 +81,8 @@ public partial class Selection : Form
     private void butNPCs_Click(object sender, EventArgs e)
     {
         // Verifica se os diretórios foram selecionados
-        if (Lists.Options.Directory_Server == String.Empty || Lists.Options.Directory_Client == String.Empty)
-            MessageBox.Show("Select the directories.");
+        if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
+            MessageBox.Show("Select the client directory.");
         else
             Editor_NPCs.Request();
     }
@@ -90,8 +90,8 @@ public partial class Selection : Form
     private void butItems_Click(object sender, EventArgs e)
     {
         // Verifica se os diretórios foram selecionados
-        if (Lists.Options.Directory_Client == String.Empty)
-            MessageBox.Show("Select the directories.");
+        if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
+            MessageBox.Show("Select the client directory.");
         else
             Editor_Items.Request();
     }

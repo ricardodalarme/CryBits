@@ -111,7 +111,7 @@ partial class Receive
         // Limpa a estrutura dos jogadores
         Lists.Player = new Lists.Structures.Player[Data.ReadByte() + 1];
 
-        for (byte i = 1; i <= Lists.Player.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Player.Length; i++)
             Clear.Player(i);
     }
 
@@ -138,10 +138,12 @@ partial class Receive
         for (byte i = 1; i <= Amount; i++)
         {
             // Recebe os dados do personagem
-            Lists.Class[i] = new Lists.Structures.Class();
-            Lists.Class[i].Name = Data.ReadString();
-            Lists.Class[i].Texture_Male = Data.ReadInt16();
-            Lists.Class[i].Texture_Female = Data.ReadInt16();
+            Lists.Class[i] = new Lists.Structures.Class
+            {
+                Name = Data.ReadString(),
+                Texture_Male = Data.ReadInt16(),
+                Texture_Female = Data.ReadInt16()
+            };
         }
     }
 
@@ -156,11 +158,13 @@ partial class Receive
         for (byte i = 1; i <= Amount; i++)
         {
             // Recebe os dados do personagem
-            Lists.Characters[i] = new Lists.Structures.Characters();
-            Lists.Characters[i].Name = Data.ReadString();
-            Lists.Characters[i].Class = Data.ReadByte();
-            Lists.Characters[i].Genre = Data.ReadBoolean();
-            Lists.Characters[i].Level = Data.ReadInt16();
+            Lists.Characters[i] = new Lists.Structures.Characters
+            {
+                Name = Data.ReadString(),
+                Class = Data.ReadByte(),
+                Genre = Data.ReadBoolean(),
+                Level = Data.ReadInt16()
+            };
         }
     }
 
@@ -267,7 +271,7 @@ partial class Receive
         // Luzes
         Lists.Map.Light = new Lists.Structures.Map_Light[Data.ReadInt32() + 1];
         if (Lists.Map.Light.GetUpperBound(0) > 0)
-            for (byte i = 0; i <= Lists.Map.Light.GetUpperBound(0); i++)
+            for (byte i = 0; i < Lists.Map.Light.Length; i++)
             {
                 Lists.Map.Light[i].X = Data.ReadByte();
                 Lists.Map.Light[i].Y = Data.ReadByte();
@@ -278,7 +282,7 @@ partial class Receive
         // NPCs
         Lists.Map.NPC = new short[Data.ReadInt16() + 1];
         if (Lists.Map.NPC.GetUpperBound(0) > 0)
-            for (byte i = 1; i <= Lists.Map.NPC.GetUpperBound(0); i++)
+            for (byte i = 1; i < Lists.Map.NPC.Length; i++)
                 Lists.Map.NPC[i] = Data.ReadInt16();
 
         // Salva o mapa
@@ -317,7 +321,7 @@ partial class Receive
         // Quantidade de itens
         Lists.Item = new Lists.Structures.Items[Data.ReadInt16() + 1];
 
-        for (short i = 1; i <= Lists.Item.GetUpperBound(0); i++)
+        for (short i = 1; i < Lists.Item.Length; i++)
         {
             // Redimensiona os valores necessários 
             Lists.Item[i].Potion_Vital = new short[(byte)Game.Vitals.Amount];
@@ -347,7 +351,7 @@ partial class Receive
         Lists.Map.Temp_Item = new Lists.Structures.Map_Items[Data.ReadInt16() + 1];
 
         // Lê os dados de todos
-        for (byte i = 1; i <= Lists.Map.Temp_Item.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Map.Temp_Item.Length; i++)
         {
             // Geral
             Lists.Map.Temp_Item[i].Index = Data.ReadInt16();

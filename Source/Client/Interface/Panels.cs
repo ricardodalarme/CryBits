@@ -13,7 +13,7 @@
     public static byte FindIndex(string Name)
     {
         // Lista os nomes das ferramentas
-        for (byte i = 1; i <= List.GetUpperBound(0); i++)
+        for (byte i = 1; i < List.Length; i++)
             if (List[i].General.Name == Name)
                 return i;
 
@@ -23,7 +23,7 @@
     public static Estrutura Find(string Name)
     {
         // Lista os nomes das ferramentas
-        for (byte i = 1; i <= List.GetUpperBound(0); i++)
+        for (byte i = 1; i < List.Length; i++)
             if (List[i].General.Name == Name)
                 return List[i];
 

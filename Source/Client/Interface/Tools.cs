@@ -98,7 +98,7 @@ public class Tools
     private static bool IsListed(Types Type, byte Index)
     {
         // Verifica se a ferramenta já está listada
-        for (short i = 1; i <= Order.GetUpperBound(0); i++)
+        for (short i = 1; i < Order.Length; i++)
             if (Order[i].Type == Type && Order[i].Index == Index)
                 return true;
 
@@ -119,7 +119,7 @@ public class Tools
     public static int Encontrar(Types Type, byte Index)
     {
         // Lista os nomes dos botões
-        for (byte i = 1; i <= Order.GetUpperBound(0); i++)
+        for (byte i = 1; i < Order.Length; i++)
             if (Order[i].Type == Type && Order[i].Index == Index)
                 return i;
 

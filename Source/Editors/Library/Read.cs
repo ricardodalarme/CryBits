@@ -80,7 +80,7 @@ class Read
         Lists.Button = new Lists.Structures.Button[Lists.Client_Data.Num_Buttons + 1];
 
         // Limpa e lê os dados
-        for (byte i = 1; i <= Lists.Button.GetUpperBound(0); i++)
+        for (byte i = 1; i <= Lists.Button.Length; i++)
         {
             Clear.Button(i);
             Button(i);
@@ -117,7 +117,7 @@ class Read
         Lists.TextBox = new Lists.Structures.TextBox[Lists.Client_Data.Num_TextBoxes + 1];
 
         // Limpa e lê os dados
-        for (byte i = 1; i <= Lists.TextBox.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.TextBox.Length; i++)
         {
             Clear.TextBox(i);
             TextBox(i);
@@ -156,7 +156,7 @@ class Read
         Lists.Panel = new Lists.Structures.Panel[Lists.Client_Data.Num_Panels + 1];
 
         // Limpa e lê os dados
-        for (byte i = 1; i <= Lists.Panel.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Panel.Length; i++)
         {
             Clear.Panel(i);
             Panel(i);
@@ -193,7 +193,7 @@ class Read
         Lists.CheckBox = new Lists.Structures.CheckBox[Lists.Client_Data.Num_CheckBoxes + 1];
 
         // Limpa e lê os dados
-        for (byte i = 1; i <= Lists.CheckBox.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.CheckBox.Length; i++)
         {
             Clear.CheckBox(i);
             CheckBox(i);

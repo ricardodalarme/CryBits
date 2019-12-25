@@ -36,7 +36,7 @@ public partial class Editor_Classes : Form
         Objects.List.Items.Clear();
 
         // Adiciona os itens à lista
-        for (byte i = 1; i <= Lists.Class.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Class.Length; i++)
             Objects.List.Items.Add(Globals.Numbering(i, Lists.Class.GetUpperBound(0)) + ":" + Lists.Class[i].Name);
 
         // Seleciona o primeiro item

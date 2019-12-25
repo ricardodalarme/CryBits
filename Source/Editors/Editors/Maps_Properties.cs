@@ -70,12 +70,9 @@ public partial class Editor_Maps_Properties : Form
         Objects.cmbMusic.Items.Add("None");
 
         // Lista os valores
-        for (byte i = 0; i <= (byte)Globals.Map_Morals.Amount - 1; i++)
-            Objects.cmbMoral.Items.Add((Globals.Map_Morals)i);
-        for (byte i = 0; i <= (byte)Globals.Weathers.Amount - 1; i++)
-            Objects.cmbWeather.Items.Add((Globals.Weathers)i);
-        for (byte i = 1; i <= (byte)Audio.Musics.Amount - 1; i++)
-            Objects.cmbMusic.Items.Add((Audio.Musics)i);
+        for (byte i = 0; i < (byte)Globals.Map_Morals.Amount; i++) Objects.cmbMoral.Items.Add((Globals.Map_Morals)i);
+        for (byte i = 0; i < (byte)Globals.Weathers.Amount; i++) Objects.cmbWeather.Items.Add((Globals.Weathers)i);
+        for (byte i = 1; i < (byte)Audio.Musics.Amount; i++) Objects.cmbMusic.Items.Add((Audio.Musics)i);
     }
 
     private void Map_Resize()
@@ -95,7 +92,7 @@ public partial class Editor_Maps_Properties : Form
         Height_Difference = Height_New - Lists.Map[Selected].Height;
 
         // Azulejo1
-        for (byte c = 0; c <= Lists.Map[Selected].Layer.Count - 1; c++)
+        for (byte c = 0; c < Lists.Map[Selected].Layer.Count; c++)
         {
             TempTile = new Lists.Structures.Map_Tile_Data[Width_New + 1, Height_New + 1];
 

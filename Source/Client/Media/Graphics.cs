@@ -208,7 +208,7 @@ partial class Graphics
         Map_Items();
 
         // Desenha os NPCs
-        for (byte i = 1; i <= Lists.Map.Temp_NPC.GetUpperBound(0); i++)
+        for (byte i = 1; i < Lists.Map.Temp_NPC.Length; i++)
             if (Lists.Map.Temp_NPC[i].Index > 0)
                 NPC(i);
 
@@ -735,7 +735,7 @@ partial class Graphics
 
     public static void Character(short Textura, Point Position, Game.Directions Direction, byte Column, bool Hurt = false)
     {
-        Rectangle Rec_Source = new Rectangle(), Rec_Destiny = new Rectangle();
+        Rectangle Rec_Source = new Rectangle(), Rec_Destiny;
         Size Size = TSize(Tex_Character[Textura]);
         SFML.Graphics.Color Color = new SFML.Graphics.Color(255, 255, 255);
         byte Line = 0;
