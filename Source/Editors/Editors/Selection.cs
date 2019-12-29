@@ -39,7 +39,7 @@ public partial class Selection : Form
         if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
             MessageBox.Show("Select the client directory.");
         else
-            Editor_Data.Open();
+            Editor_Data.Request();
     }
 
     private void butTools_Click(object sender, EventArgs e)
@@ -66,7 +66,7 @@ public partial class Selection : Form
         if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
             MessageBox.Show("Select the client directory.");
         else
-            Editor_Maps.Open();
+            Editor_Maps.Request();
     }
 
     private void butTiles_Click(object sender, EventArgs e)
@@ -75,7 +75,7 @@ public partial class Selection : Form
         if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
             MessageBox.Show("Select the client directory.");
         else
-            Editor_Tiles.Open();
+            Editor_Tiles.Request();
     }
 
     private void butNPCs_Click(object sender, EventArgs e)

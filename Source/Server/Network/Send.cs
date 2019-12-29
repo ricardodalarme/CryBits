@@ -756,4 +756,45 @@ partial class Send
         Data.Write(Index);
         ToMap(Map, Data);
     }
+
+    public static void Tiles(byte Index, bool OpenEditor = false)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Editor_Packets.Tiles);
+        Data.Write((byte)Lists.Tile.Length);
+        for (byte i = 1; i < Lists.Tile.Length; i++)
+        {
+            Data.Write(Lists.Tile[i].Width);
+            Data.Write(Lists.Tile[i].Height);
+
+            for (byte x = 0; x <= Lists.Tile[i].Width; x++)
+                for (byte y = 0; y <= Lists.Tile[i].Height; y++)
+                {
+                    Data.Write(Lists.Tile[i].Data[x, y].Attribute);
+
+                    // Bloqueio direcional
+                    for (byte d = 0; d < (byte)Game.Directions.Amount; d++)
+                        Data.Write(Lists.Tile[i].Data[x, y].Block[d]);
+                }
+        }
+        Data.Write(OpenEditor);
+        ToPlayer(Index, Data);
+    }
+
+    public static void Server_Data(byte Index, bool OpenEdtior)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Editor_Packets.Server_Data);
+        Data.Write(Lists.Server_Data.Game_Name);
+        Data.Write(Lists.Server_Data.Welcome);
+        Data.Write(Lists.Server_Data.Port);
+        Data.Write(Lists.Server_Data.Max_Players);
+        Data.Write(Lists.Server_Data.Max_Characters);
+        Data.Write(OpenEdtior);
+        ToPlayer(Index, Data);
+    }
 }

@@ -102,9 +102,7 @@ public partial class Editor_NPCs : Form
 
     private void butSave_Click(object sender, EventArgs e)
     {
-        // Salva a dimensão da estrutura
-        Lists.Server_Data.Num_NPCs = (byte)Lists.NPC.GetUpperBound(0);
-        Send.Write_Server_Data();
+        // Salva os dados
         Send.Write_NPCs();
 
         // Volta à janela de seleção

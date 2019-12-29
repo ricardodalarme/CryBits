@@ -28,10 +28,10 @@ public partial class Editor_Maps_Properties : Form
         Objects.numWidth.Minimum = Globals.Min_Map_Width;
         Objects.numHeight.Minimum = Globals.Min_Map_Height;
         Objects.numWeather_Intensity.Maximum = Globals.Max_Weather_Intensity;
-        Objects.numLink_Up.Maximum = Lists.Server_Data.Num_Maps;
-        Objects.numLink_Down.Maximum = Lists.Server_Data.Num_Maps;
-        Objects.numLink_Left.Maximum = Lists.Server_Data.Num_Maps;
-        Objects.numLink_Right.Maximum = Lists.Server_Data.Num_Maps;
+        Objects.numLink_Up.Maximum = Lists.Map.GetUpperBound(0);
+        Objects.numLink_Down.Maximum = Lists.Map.GetUpperBound(0);
+        Objects.numLink_Left.Maximum = Lists.Map.GetUpperBound(0);
+        Objects.numLink_Right.Maximum = Lists.Map.GetUpperBound(0);
         Objects.numLight_Global.Maximum = Graphics.Tex_Light.GetUpperBound(0);
 
         // Define os valores

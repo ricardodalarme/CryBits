@@ -93,8 +93,6 @@ public partial class Editor_Classes : Form
     private void butSave_Click(object sender, EventArgs e)
     {
         // Salva a dimensão da estrutura
-        Lists.Server_Data.Num_Classes = (byte)Lists.Class.GetUpperBound(0);
-        Send.Write_Server_Data();
         Send.Write_Classes();
 
         // Volta à janela de seleção

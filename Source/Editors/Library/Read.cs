@@ -79,7 +79,7 @@ class Read
         Lists.Button = new Lists.Structures.Button[Lists.Client_Data.Num_Buttons + 1];
 
         // Limpa e lê os dados
-        for (byte i = 1; i <= Lists.Button.Length; i++)
+        for (byte i = 1; i < Lists.Button.Length; i++)
         {
             Clear.Button(i);
             Button(i);

@@ -510,12 +510,20 @@ class Receive
 
     private static void Write_Server_Data(byte Index, NetIncomingMessage Data)
     {
+        // Lê os dados
+        Lists.Server_Data.Game_Name = Data.ReadString();
+        Lists.Server_Data.Welcome = Data.ReadString();
+        Lists.Server_Data.Port = Data.ReadInt16();
+        Lists.Server_Data.Max_Players = Data.ReadByte();
+        Lists.Server_Data.Max_Characters = Data.ReadByte();
     }
 
     private static void Write_Classes(byte Index, NetIncomingMessage Data)
     {
-        // Quantidade
+        // Quantidade de classes
         Lists.Class = new Lists.Structures.Classes[Data.ReadByte()];
+        Lists.Server_Data.Num_Classes = (byte)Lists.Class.GetUpperBound(0);
+        Write.Server_Data();
 
         for (short i = 1; i < Lists.Class.Length; i++)
         {
@@ -538,6 +546,32 @@ class Receive
 
     private static void Write_Tiles(byte Index, NetIncomingMessage Data)
     {
+        // Quantidade de tiles 
+        Lists.Tile = new Lists.Structures.Tile[Data.ReadByte()];
+        Lists.Server_Data.Num_Tiles = (byte)Lists.Tile.GetUpperBound(0);
+        Write.Server_Data();
+
+        for (byte i = 1; i < Lists.Tile.Length; i++)
+        {
+            // Dados básicos
+            Lists.Tile[i].Width = Data.ReadByte();
+            Lists.Tile[i].Height = Data.ReadByte();
+            Lists.Tile[i].Data = new Lists.Structures.Tile_Data[Lists.Tile[i].Width + 1, Lists.Tile[i].Height + 1];
+
+            for (byte x = 0; x <= Lists.Tile[i].Width; x++)
+                for (byte y = 0; y <= Lists.Tile[i].Height; y++)
+                {
+                    // Atributos
+                    Lists.Tile[i].Data[x, y].Attribute = Data.ReadByte();
+
+                    // Bloqueio direcional
+                    for (byte d = 0; d < (byte)Game.Directions.Amount; d++)
+                    {
+                        Lists.Tile[i].Data[x, y].Block = new bool[(byte)Game.Directions.Amount];
+                        Lists.Tile[i].Data[x, y].Block[d] = Data.ReadBoolean();
+                    }
+                }
+        }
     }
 
     private static void Write_Maps(byte Index, NetIncomingMessage Data)
@@ -548,6 +582,8 @@ class Receive
     {
         // Quantidade de npcs
         Lists.NPC = new Lists.Structures.NPCs[Data.ReadInt16()];
+        Lists.Server_Data.Num_NPCs = (byte)Lists.NPC.GetUpperBound(0);
+        Write.Server_Data();
 
         for (short i = 1; i < Lists.NPC.Length; i++)
         {
@@ -578,6 +614,8 @@ class Receive
     {
         // Quantidade de itens
         Lists.Item = new Lists.Structures.Items[Data.ReadInt16()];
+        Lists.Server_Data.Num_Items = (byte)Lists.Item.GetUpperBound(0);
+        Write.Server_Data();
 
         for (short i = 1; i < Lists.Item.Length; i++)
         {
@@ -605,6 +643,7 @@ class Receive
 
     private static void Request_Server_Data(byte Index, NetIncomingMessage Data)
     {
+        Send.Server_Data(Index, Data.ReadBoolean());
     }
 
     private static void Request_Classes(byte Index, NetIncomingMessage Data)
@@ -614,6 +653,7 @@ class Receive
 
     private static void Request_Tiles(byte Index, NetIncomingMessage Data)
     {
+        Send.Tiles(Index, Data.ReadBoolean());
     }
 
     private static void Request_Map(byte Index, NetIncomingMessage Data)

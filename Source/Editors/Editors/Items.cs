@@ -105,9 +105,7 @@ public partial class Editor_Items : Form
 
     private void butSave_Click(object sender, EventArgs e)
     {
-        // Salva a dimensão da estrutura
-        Lists.Server_Data.Num_Items = (byte)Lists.Item.GetUpperBound(0);
-        Send.Write_Server_Data();
+        // Salva os dados
         Send.Write_Items();
 
         // Volta à janela de seleção

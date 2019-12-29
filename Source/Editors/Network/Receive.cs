@@ -29,6 +29,7 @@ partial class Receive
             case Packets.Maps: Maps(Data); break;
             case Packets.NPCs: NPCs(Data); break;
             case Packets.Items: Items(Data); break;
+            case Packets.Tiles: Tiles(Data); break;
         }
     }
 
@@ -48,16 +49,14 @@ partial class Receive
     public static void Server_Data(NetIncomingMessage Data)
     {
         // Lê os dados
-        Lists.Server_Data.GameName = Data.ReadString();
+        Lists.Server_Data.Game_Name = Data.ReadString();
         Lists.Server_Data.Welcome = Data.ReadString();
         Lists.Server_Data.Port = Data.ReadInt16();
         Lists.Server_Data.Max_Players = Data.ReadByte();
         Lists.Server_Data.Max_Characters = Data.ReadByte();
-        Lists.Server_Data.Num_Classes = Data.ReadByte();
-        Lists.Server_Data.Num_Tiles = Data.ReadByte();
-        Lists.Server_Data.Num_Maps = Data.ReadInt16();
-        Lists.Server_Data.Num_NPCs = Data.ReadInt16();
-        Lists.Server_Data.Num_Items = Data.ReadInt16();
+
+        // Abre o editor
+        if (Data.ReadBoolean()) Editor_Data.Open();
     }
 
     public static void Classes(NetIncomingMessage Data)
@@ -242,5 +241,35 @@ partial class Receive
 
         // Abre o editor
         if (Data.ReadBoolean()) Editor_Items.Open();
+    }
+
+    public static void Tiles(NetIncomingMessage Data)
+    {
+        Lists.Tile = new Lists.Structures.Tile[Data.ReadByte()];
+
+        for (byte i = 1; i < Lists.Tile.Length; i++)
+        {
+            // Dados básicos
+            Lists.Tile[i].Width = Data.ReadByte();
+            Lists.Tile[i].Height = Data.ReadByte();
+            Lists.Tile[i].Data = new Lists.Structures.Tile_Data[Lists.Tile[i].Width + 1, Lists.Tile[i].Height + 1];
+
+            for (byte x = 0; x <= Lists.Tile[i].Width; x++)
+                for (byte y = 0; y <= Lists.Tile[i].Height; y++)
+                {
+                    // Atributos
+                    Lists.Tile[i].Data[x, y].Attribute = Data.ReadByte();
+
+                    // Bloqueio direcional
+                    for (byte d = 0; d < (byte)Globals.Directions.Amount; d++)
+                    {
+                        Lists.Tile[i].Data[x, y].Block = new bool[(byte)Globals.Directions.Amount];
+                        Lists.Tile[i].Data[x, y].Block[d] = Data.ReadBoolean();
+                    }
+                }
+        }
+
+        // Abre o editor
+        if (Data.ReadBoolean()) Editor_Tiles.Open();
     }
 }

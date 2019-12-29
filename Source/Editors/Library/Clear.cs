@@ -25,15 +25,15 @@ class Clear
     public static void Server_Data()
     {
         // Defini os dados das opções
-        Lists.Server_Data.GameName = "CryBits";
+        Lists.Server_Data.Game_Name = "CryBits";
         Lists.Server_Data.Welcome = "Welcome to CryBits.";
         Lists.Server_Data.Port = 7001;
         Lists.Server_Data.Max_Players = 15;
         Lists.Server_Data.Max_Characters = 3;
-        Lists.Server_Data.Num_Classes = 1;
-        Lists.Server_Data.Num_Maps = 1;
-        Lists.Server_Data.Num_Items = 1;
-        Lists.Server_Data.Num_NPCs = 1;
+        //Lists.Server_Data.Num_Classes = 1;
+        //Lists.Server_Data.Num_Maps = 1;
+       // Lists.Server_Data.Num_Items = 1;
+      //  Lists.Server_Data.Num_NPCs = 1;
     }
 
     public static void Button(byte Index)

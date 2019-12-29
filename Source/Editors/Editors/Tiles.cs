@@ -15,21 +15,20 @@ public partial class Editor_Tiles : Form
         InitializeComponent();
     }
 
+    public static void Request()
+    {
+        // Lê os dados
+        Send.Request_Tiles(true);
+    }
+
     public static void Open()
     {
-        // Lê os dados e lista os itens
-        Send.Request_Tiles();
-
         // Reseta os valores
         Objects.scrlTile.Value = 1;
 
         // Define os limites
         Objects.scrlTile.Maximum = Graphics.Tex_Tile.GetUpperBound(0);
         Update_Bounds();
-
-        // Abre a janela
-        Selection.Objects.Visible = false;
-        Objects.Visible = true;
     }
 
     private static void Update_Bounds()

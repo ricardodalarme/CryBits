@@ -64,13 +64,18 @@ partial class Editor_Maps : Form
         Update_Tile_Bounds();
     }
 
-    public static void Open()
+    public static void Request()
     {
-        // Lê os dados e lista os itens
-        Send.Request_Maps();
+        // Lê os dados
         Send.Request_NPCs();
         Send.Request_Tiles();
         Send.Request_Items();
+        Send.Request_Maps(true);
+    }
+
+    public static void Open()
+    {
+        // Lista os itens
         Update_List();
         Update_List_Layers();
 
@@ -325,20 +330,12 @@ partial class Editor_Maps : Form
     #region Toolbox
     private void butSave_Click(object sender, EventArgs e)
     {
-        // Salva a dimensão da estrutura
-        Lists.Server_Data.Num_Maps = (short)Lists.Map.GetUpperBound(0);
-        Send.Write_Server_Data();
-
         // Salva os dados
         Send.Write_Map(Selected);
     }
 
     private void butSaveAll_Click(object sender, EventArgs e)
     {
-        // Salva a dimensão da estrutura
-        Lists.Server_Data.Num_Maps = (short)Lists.Map.GetUpperBound(0);
-        Send.Write_Server_Data();
-
         // Salva todos os dados
         Send.Write_Maps();
     }

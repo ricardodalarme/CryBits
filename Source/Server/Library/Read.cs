@@ -16,6 +16,8 @@ partial class Read
         Console.WriteLine("Loaging items.");
         Maps();
         Console.WriteLine("Loaging maps.");
+        Tiles();
+        Console.WriteLine("Loaging tiles.");
     }
 
     public static void Server_Data()

@@ -40,16 +40,11 @@ class Lists
 
         public struct Server_Data
         {
-            public string GameName;
+            public string Game_Name;
             public string Welcome;
             public short Port;
             public byte Max_Players;
             public byte Max_Characters;
-            public byte Num_Classes;
-            public byte Num_Tiles;
-            public short Num_Maps;
-            public short Num_NPCs;
-            public short Num_Items;
         }
 
         public struct Tool
