@@ -1,7 +1,7 @@
-﻿using System;
-using System.Drawing;
+﻿using Lidgren.Network;
 using SFML.Graphics;
-using Lidgren.Network;
+using System;
+using System.Drawing;
 
 class NPC
 {
@@ -257,7 +257,6 @@ partial class Graphics
     public static void NPC_Bars(byte Index, int x, int y)
     {
         Lists.Structures.Map_NPCs NPC = Lists.Map.Temp_NPC[Index];
-        int Name_Size = Tools.MeasureString(Lists.NPC[NPC.Index].Name);
         Texture Texture = Tex_Character[Lists.NPC[NPC.Index].Texture];
         short Value = NPC.Vital[(byte)Game.Vitals.HP];
 

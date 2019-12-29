@@ -19,14 +19,14 @@ public partial class Login : Form
             MessageBox.Show("The server is currently unavailable.");
             return;
         }
-        if (txtName.Text == string.Empty || txtPassword.Text == string.Empty)
+        if (string.IsNullOrEmpty(txtName.Text) || string.IsNullOrEmpty(txtPassword.Text))
         {
             MessageBox.Show("Some field is empty.");
             return;
         }
 
         // Tenta fazer login
-        Send.Connect(); 
+        Send.Connect();
     }
 
     private void Login_FormClosing(object sender, FormClosingEventArgs e)

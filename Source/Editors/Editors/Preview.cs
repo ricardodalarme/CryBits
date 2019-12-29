@@ -43,7 +43,7 @@ public partial class Preview : Form
     {
         // Fecha a janela
         Pattern = (short)Objects.List.SelectedIndex;
-        this.Visible = false;
+        Visible = false;
     }
 
     private void Update_Bounds()

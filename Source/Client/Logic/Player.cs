@@ -1,7 +1,7 @@
-﻿using System;
-using System.Drawing;
+﻿using Lidgren.Network;
 using SFML.Graphics;
-using Lidgren.Network;
+using System;
+using System.Drawing;
 
 public class Player
 {
@@ -13,7 +13,7 @@ public class Player
     public static byte Inventory_Change;
 
     // Hotbar
-    public static Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar+1];
+    public static Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
     public static byte Hotbar_Change;
 
     // O próprio jogador
@@ -319,7 +319,7 @@ partial class Receive
         byte Index = Data.ReadByte();
 
         // Define os dados
-        for (byte i = 0; i <= (byte)Game.Equipments.Amount - 1; i++)  Lists.Player[Index].Equipment[i] = Data.ReadInt16();
+        for (byte i = 0; i <= (byte)Game.Equipments.Amount - 1; i++) Lists.Player[Index].Equipment[i] = Data.ReadInt16();
     }
 
     private static void Player_Leave(NetIncomingMessage Dados)

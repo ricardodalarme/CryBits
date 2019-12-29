@@ -87,7 +87,7 @@
             public byte Spawn_X;
             public byte Spawn_Y;
         }
-        
+
         public struct Maps
         {
             public short Revision;

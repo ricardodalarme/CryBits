@@ -7,7 +7,7 @@ class Write
         string Directory = Directories.Accounts.FullName + Lists.Player[Index].User + Directories.Format;
 
         // Evita erros
-        if (Lists.Player[Index].User == string.Empty) return;
+        if (string.IsNullOrEmpty(Lists.Player[Index].User)) return;
 
         // Cria um arquivo temporário
         BinaryWriter Data = new BinaryWriter(File.OpenWrite(Directory));
@@ -36,7 +36,7 @@ class Write
                 Data.Write(Lists.Player[Index].Character[i].Inventory[n].Item_Num);
                 Data.Write(Lists.Player[Index].Character[i].Inventory[n].Amount);
             }
-            for (byte n = 0; n < (byte)Game.Equipments.Amount ; n++) Data.Write(Lists.Player[Index].Character[i].Equipment[n]);
+            for (byte n = 0; n < (byte)Game.Equipments.Amount; n++) Data.Write(Lists.Player[Index].Character[i].Equipment[n]);
             for (byte n = 1; n <= Game.Max_Hotbar; n++)
             {
                 Data.Write(Lists.Player[Index].Character[i].Hotbar[n].Type);
@@ -181,6 +181,38 @@ class Write
         Data.Write(Lists.Item[Index].Equip_Type);
         for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Data.Write(Lists.Item[Index].Equip_Attribute[i]);
         Data.Write(Lists.Item[Index].Weapon_Damage);
+
+        // Fecha o sistema
+        Data.Dispose();
+    }
+
+    public static void Tiles()
+    {
+        // Escreve os dados
+        for (byte i = 1; i < Lists.Tile.Length; i++)
+            Tile(i);
+    }
+
+    public static void Tile(byte Index)
+    {
+        // Cria um arquivo temporário
+        FileInfo File = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format);
+        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
+
+        // Dados básicos
+        Data.Write(Lists.Tile[Index].Width);
+        Data.Write(Lists.Tile[Index].Height);
+
+        // Gerais
+        for (byte x = 0; x <= Lists.Tile[Index].Width; x++)
+            for (byte y = 0; y <= Lists.Tile[Index].Height; y++)
+            {
+                Data.Write(Lists.Tile[Index].Data[x, y].Attribute);
+
+                // Bloqueio direcional
+                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
+                    Data.Write(Lists.Tile[Index].Data[x, y].Block[i]);
+            }
 
         // Fecha o sistema
         Data.Dispose();

@@ -1,5 +1,4 @@
-﻿using System;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 
 partial class Send
 {
@@ -124,6 +123,20 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Write_Classes);
+        Data.Write((byte)Lists.Class.Length);
+        for (byte i = 1; i < Lists.Class.Length; i++)
+        {
+            // Escreve os dados
+            Data.Write(Lists.Class[i].Name);
+            Data.Write(Lists.Class[i].Texture_Male);
+            Data.Write(Lists.Class[i].Texture_Female);
+            Data.Write(Lists.Class[i].Spawn_Map);
+            Data.Write(Lists.Class[i].Spawn_Direction);
+            Data.Write(Lists.Class[i].Spawn_X);
+            Data.Write(Lists.Class[i].Spawn_Y);
+            for (byte v = 0; v < (byte)Globals.Vitals.Amount; v++) Data.Write(Lists.Class[i].Vital[v]);
+            for (byte a = 0; a < (byte)Globals.Attributes.Amount; a++) Data.Write(Lists.Class[i].Attribute[a]);
+        }
         Packet(Data);
     }
 
@@ -161,7 +174,7 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Write_NPCs);
-        Data.Write((short)Lists.NPC.GetUpperBound(0));
+        Data.Write((short)Lists.NPC.Length);
         for (short Index = 1; Index < Lists.NPC.Length; Index++)
         {
             Data.Write(Lists.NPC[Index].Name);
@@ -188,7 +201,7 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Write_Items);
-        Data.Write((short)Lists.Item.GetUpperBound(0));
+        Data.Write((short)Lists.Item.Length);
         for (short Index = 1; Index < Lists.Item.Length; Index++)
         {
             Data.Write(Lists.Item[Index].Name);

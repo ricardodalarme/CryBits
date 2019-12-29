@@ -198,7 +198,7 @@ class Map
 
     private static void Weather()
     {
-        bool Stop = false, Move = true;
+        bool Stop = false, Move;
         byte Thunder_First = (byte)Audio.Sounds.Thunder_1;
         byte Thunder_Last = (byte)Audio.Sounds.Thunder_4;
 

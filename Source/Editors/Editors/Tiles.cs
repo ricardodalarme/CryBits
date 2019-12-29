@@ -49,7 +49,7 @@ public partial class Editor_Tiles : Form
     private void butSave_Click(object sender, EventArgs e)
     {
         // Salva os dados
-        Write.Tiles();
+        Send.Write_Tiles();
 
         // Volta à janela de seleção
         Visible = false;

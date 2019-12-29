@@ -247,9 +247,9 @@ class Read
 
         // NPCs
         Lists.Map.NPC = new short[Data.ReadInt32() + 1];
-        Lists.Map.Temp_NPC = new Lists.Structures.Map_NPCs  [Lists.Map.NPC.GetUpperBound(0) + 1];
+        Lists.Map.Temp_NPC = new Lists.Structures.Map_NPCs[Lists.Map.NPC.GetUpperBound(0) + 1];
         if (Lists.Map.NPC.GetUpperBound(0) > 0)
-            for (byte i =1; i < Lists.Map.NPC.Length; i++)
+            for (byte i = 1; i < Lists.Map.NPC.Length; i++)
             {
                 Lists.Map.NPC[i] = Data.ReadInt16();
                 Lists.Map.Temp_NPC[i].Index = Lists.Map.NPC[i];

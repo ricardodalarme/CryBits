@@ -1,5 +1,6 @@
 ﻿using SFML.Audio;
 using System;
+using System.IO;
 
 class Audio
 {
@@ -76,14 +77,15 @@ class Audio
 
         public static void Play(Musics Index, bool Loop = false)
         {
-            string Diretório = Directories.Musics.FullName + (byte)Index + Format;
+            string Directory = Directories.Musics.FullName + (byte)Index + Format;
 
             // Apenas se necessário
             if (Device != null) return;
             if (!Lists.Options.Musics) return;
+            if (!File.Exists(Directory)) return;
 
             // Carrega o áudio
-            Device = new SFML.Audio.Music(Directories.Musics.FullName + (byte)Index + Format);
+            Device = new SFML.Audio.Music(Directory);
             Device.Loop = true;
             Device.Volume = 20;
             Device.Loop = Loop;

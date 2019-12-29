@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Threading;
+using System.Windows.Forms;
 
 class General
 {
+    [STAThread]
     public static void Main()
     {
         // Abre o servidor e define suas configurações
@@ -98,7 +99,7 @@ class General
 
                 // Salva os dados
                 Write.Player(Index);
-                Console.WriteLine( (Game.Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
+                Console.WriteLine((Game.Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
                 break;
             case "reload":
                 // Verifica se o que está digitado corretamente

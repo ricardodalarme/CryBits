@@ -10,6 +10,7 @@ class Lists
     public static Structures.Maps[] Map;
     public static Structures.NPCs[] NPC;
     public static Structures.Items[] Item;
+    public static Structures.Tile[] Tile;
 
     // Estrutura dos itens em gerais
     public class Structures
@@ -206,5 +207,19 @@ class Lists
             public byte Type;
             public byte Slot;
         }
+
+        public struct Tile
+        {
+            public byte Width;
+            public byte Height;
+            public Tile_Data[,] Data;
+        }
+
+        public struct Tile_Data
+        {
+            public byte Attribute;
+            public bool[] Block;
+        }
+
     }
 }

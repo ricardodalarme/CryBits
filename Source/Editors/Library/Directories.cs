@@ -9,9 +9,6 @@ class Directories
     // Editor
     public static FileInfo Options = new FileInfo(Application.StartupPath + @"\Options" + Format);
 
-    // Servidor
-    public static DirectoryInfo Tile_Data;
-
     // Cliente
     public static DirectoryInfo Fonts;
     public static DirectoryInfo Sounds;

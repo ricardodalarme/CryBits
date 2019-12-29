@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using Lidgren.Network;
+using System;
 using System.Drawing;
-using Lidgren.Network;
+using System.Windows.Forms;
 
 partial class Receive
 {

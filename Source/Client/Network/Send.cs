@@ -1,5 +1,5 @@
-﻿using System;
-using Lidgren.Network;
+﻿using Lidgren.Network;
+using System;
 
 partial class Send
 {

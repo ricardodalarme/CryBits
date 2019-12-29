@@ -1,5 +1,4 @@
 ﻿using System;
-using Lidgren.Network;
 
 class NPC
 {

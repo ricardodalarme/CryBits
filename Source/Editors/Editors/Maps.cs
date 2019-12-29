@@ -49,11 +49,11 @@ partial class Editor_Maps : Form
     private void Editor_Maps_FormClosing(object sender, FormClosingEventArgs e)
     {
         // Previne erros
-        if (!this.Visible) return;
+        if (!Visible) return;
 
         // Volta ao menu
         e.Cancel = true;
-        this.Visible = false;
+        Visible = false;
         global::Selection.Objects.Visible = true;
     }
 
@@ -1238,8 +1238,6 @@ partial class Editor_Maps : Form
 
     private void butLayer_Edit_Click(object sender, EventArgs e)
     {
-        Lists.Structures.Map_Layer Layer = new Lists.Structures.Map_Layer();
-
         // Evita erros
         if (lstLayers.SelectedItems.Count == 0) return;
         if (txtLayer_Name.Text.Length < 1 || txtLayer_Name.Text.Length > 12) return;

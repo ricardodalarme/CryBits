@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Drawing;
+﻿using System.Drawing;
+using System.IO;
 
 class Write
 {
@@ -33,42 +33,6 @@ class Write
         // Fecha o sistema
         Data.Dispose();
     }
-
-
-    public static void Tiles()
-    {
-        // Escreve os dados
-        for (byte i = 1; i < Lists.Tile.Length; i++)
-            Tile(i);
-    }
-
-    public static void Tile(byte Index)
-    {
-        Size Size = new Size(Lists.Tile[Index].Data.GetUpperBound(0), Lists.Tile[Index].Data.GetUpperBound(1));
-
-        // Cria um arquivo temporário
-        FileInfo File = new FileInfo(Directories.Tile_Data.FullName + Index + Directories.Format);
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
-        // Dados básicos
-        Data.Write((byte)Size.Width);
-        Data.Write((byte)Size.Height);
-
-        // Gerais
-        for (byte x = 0; x <= Size.Width; x++)
-            for (byte y = 0; y <= Size.Height; y++)
-            {
-                Data.Write(Lists.Tile[Index].Data[x, y].Attribute);
-
-                // Bloqueio direcional
-                for (byte i = 0; i < (byte)Globals.Directions.Amount; i++)
-                    Data.Write(Lists.Tile[Index].Data[x, y].Block[i]);
-            }
-
-        // Fecha o sistema
-        Data.Dispose();
-    }
-
 
     public static void Tools()
     {

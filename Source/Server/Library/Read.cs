@@ -352,4 +352,49 @@ partial class Read
         // Fecha o sistema
         Data.Dispose();
     }
+
+    public static void Tiles()
+    {
+        Lists.Tile = new Lists.Structures.Tile[Lists.Server_Data.Num_Tiles + 1];
+
+        // Limpa e lê os dados
+        for (byte i = 1; i < Lists.Tile.Length; i++)
+            Tile(i);
+    }
+
+    public static void Tile(byte Index)
+    {
+        FileInfo File = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format);
+
+        // Cria o arquivo caso ele não existir
+        if (!File.Exists)
+        {
+            Write.Tile(Index);
+            return;
+        }
+
+        // Cria um sistema binário para a manipulação dos dados
+        BinaryReader Data = new BinaryReader(File.OpenRead());
+
+        // Dados básicos
+        Lists.Tile[Index].Width = Data.ReadByte();
+        Lists.Tile[Index].Height = Data.ReadByte();
+        Lists.Tile[Index].Data = new Lists.Structures.Tile_Data[Lists.Tile[Index].Width + 1, Lists.Tile[Index].Height + 1];
+
+        for (byte x = 0; x <= Lists.Tile[Index].Width; x++)
+            for (byte y = 0; y <= Lists.Tile[Index].Height; y++)
+            {
+                // Atributos
+                Lists.Tile[Index].Data[x, y].Attribute = Data.ReadByte();
+
+                // Bloqueio direcional
+                for (byte i = 0; i < (byte)Game.Directions.Amount; i++){
+                    Lists.Tile[Index].Data[x, y].Block = new bool[(byte)Game.Directions.Amount];
+                    Lists.Tile[Index].Data[x, y].Block[i] = Data.ReadBoolean();
+                }
+            }
+
+        // Fecha o sistema
+        Data.Dispose();
+    }
 }

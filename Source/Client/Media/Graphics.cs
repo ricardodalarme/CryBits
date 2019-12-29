@@ -1,8 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Drawing;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.Window;
+using System;
+using System.Drawing;
+using System.IO;
 
 partial class Graphics
 {
@@ -86,7 +86,7 @@ partial class Graphics
         RenderWindow.Draw(TmpImage, (RenderStates)Mode);
     }
 
-    public static void Render(Texture Texture, int X, int Y, int Source_X, int Source_Y, int Source_Width, int Source_Height, object Color = null, RenderStates Mode = new RenderStates())
+    public static void Render(Texture Texture, int X, int Y, int Source_X, int Source_Y, int Source_Width, int Source_Height, object Color = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(Source_X, Source_Y), new Size(Source_Width, Source_Height));
@@ -96,7 +96,7 @@ partial class Graphics
         Render(Texture, Source, Destiny, Color);
     }
 
-    public static void Render(Texture Texture, Rectangle Destiny, object Color = null, RenderStates Mode = new RenderStates())
+    public static void Render(Texture Texture, Rectangle Destiny, object Color = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(0), TSize(Texture));
@@ -105,7 +105,7 @@ partial class Graphics
         Render(Texture, Source, Destiny, Color);
     }
 
-    public static void Render(Texture Texture, Point Position, object Color = null, RenderStates Mode = new RenderStates())
+    public static void Render(Texture Texture, Point Position, object Color = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(0), TSize(Texture));
@@ -277,7 +277,7 @@ partial class Graphics
 
     public static void CheckBox(string Name)
     {
-        Rectangle Rec_Source = new Rectangle(), Rec_Destiny = new Rectangle();
+        Rectangle Rec_Source = new Rectangle(), Rec_Destiny;
         byte Index = CheckBoxes.FindIndex(Name);
 
         // Lista a ordem de renderização da ferramenta
@@ -717,7 +717,7 @@ partial class Graphics
         TextBox("Chat");
 
         // Renderiza as mensagens
-        if (Tools.Chat_Text_Visible )
+        if (Tools.Chat_Text_Visible)
             for (byte i = Tools.Chat_Line; i <= Tools.Chat_Lines_Visible + Tools.Chat_Line; i++)
                 if (Tools.Chat.Count > i)
                     DrawText(Tools.Chat[i].Text, 16, 461 + 11 * (i - Tools.Chat_Line), Tools.Chat[i].Color);

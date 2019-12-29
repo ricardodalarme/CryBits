@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 public class TextBoxes
@@ -103,7 +102,7 @@ public class TextBoxes
         // Altera o foco do digitalizador
         if (Panels.Find("Chat").General.Visible)
         {
-            Tools.Chat_Text_Visible  = true;
+            Tools.Chat_Text_Visible = true;
             TexBox_Focus = Index;
             return;
         }
@@ -112,7 +111,6 @@ public class TextBoxes
 
         // Dados
         string Message = List[Index].Text;
-        string Player_Name = Player.Me.Name;
 
         // Somente se necessário
         if (Message.Length < 3)

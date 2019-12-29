@@ -86,7 +86,7 @@ class Write
         // NPCs
         Data.Write(Lists.Map.NPC.GetUpperBound(0));
         if (Lists.Map.NPC.GetUpperBound(0) > 0)
-            for (byte i = 1; i <= Lists.Map.NPC.GetUpperBound(0) ; i++)
+            for (byte i = 1; i <= Lists.Map.NPC.GetUpperBound(0); i++)
                 Data.Write(Lists.Map.NPC[i]);
 
         // Fecha o sistema

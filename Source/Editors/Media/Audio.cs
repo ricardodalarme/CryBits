@@ -1,5 +1,5 @@
-﻿using System;
-using SFML.Audio;
+﻿using SFML.Audio;
+using System;
 
 class Audio
 {

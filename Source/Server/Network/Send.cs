@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using Lidgren.Network;
+﻿using Lidgren.Network;
+using System.Drawing;
 
 partial class Send
 {
@@ -194,7 +194,8 @@ partial class Send
             Data.Write(Lists.Class[i].Texture_Female);
 
             // Apenas dados do editor
-            if (Lists.TempPlayer[Index].InEditor){
+            if (Lists.TempPlayer[Index].InEditor)
+            {
                 Data.Write(Lists.Class[i].Spawn_Map);
                 Data.Write(Lists.Class[i].Spawn_Direction);
                 Data.Write(Lists.Class[i].Spawn_X);
@@ -509,7 +510,6 @@ partial class Send
 
     public static void Message_Private(byte Index, string Addressee_Name, string Texto)
     {
-        NetOutgoingMessage Data = Socket.Device.CreateMessage();
         byte Addressee = Player.Find(Addressee_Name);
 
         // Verifica se o jogador está conectado
@@ -556,13 +556,13 @@ partial class Send
             Data.Write(Lists.Item[i].Req_Level);
             Data.Write(Lists.Item[i].Req_Class);
             Data.Write(Lists.Item[i].Potion_Experience);
-            for (byte v= 0; v < (byte)Game.Vitals.Amount; v++) Data.Write(Lists.Item[i].Potion_Vital[v]);
+            for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Data.Write(Lists.Item[i].Potion_Vital[v]);
             Data.Write(Lists.Item[i].Equip_Type);
-            for (byte a = 0; a< (byte)Game.Attributes.Amount; a++) Data.Write(Lists.Item[i].Equip_Attribute[a]);
+            for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Data.Write(Lists.Item[i].Equip_Attribute[a]);
             Data.Write(Lists.Item[i].Weapon_Damage);
         }
         Data.Write(OpenEditor);
-        
+
         // Envia os dados
         ToPlayer(Index, Data);
     }
