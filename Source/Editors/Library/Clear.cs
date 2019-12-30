@@ -32,8 +32,8 @@ class Clear
         Lists.Server_Data.Max_Characters = 3;
         //Lists.Server_Data.Num_Classes = 1;
         //Lists.Server_Data.Num_Maps = 1;
-       // Lists.Server_Data.Num_Items = 1;
-      //  Lists.Server_Data.Num_NPCs = 1;
+        //Lists.Server_Data.Num_Items = 1;
+        //Lists.Server_Data.Num_NPCs = 1;
     }
 
     public static void Button(byte Index)

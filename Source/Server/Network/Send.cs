@@ -385,6 +385,11 @@ partial class Send
         ToPlayer(Index, Data);
     }
 
+    public static void Maps(byte Index, bool OpenEditor = false)
+    {
+        
+    }
+
     public static void Map(byte Index, short Map)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();

@@ -217,4 +217,16 @@ class Write
         // Fecha o sistema
         Data.Dispose();
     }
+
+    public static void Maps()
+    {
+        // Escreve os dados
+        for (byte i = 1; i < Lists.Map.Length; i++)
+            Map(i);
+    }
+
+    public static void Map(byte Index)
+    {
+
+    }
 }

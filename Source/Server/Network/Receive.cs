@@ -36,7 +36,7 @@ class Receive
         Write_Server_Data,
         Write_Classes,
         Write_Tiles,
-        Write_Maps,
+        Write_Map,
         Write_NPCs,
         Write_Items,
         Request_Server_Data,
@@ -86,7 +86,7 @@ class Receive
                 case Editor_Packets.Write_Server_Data: Write_Server_Data(Index, Data); break;
                 case Editor_Packets.Write_Classes: Write_Classes(Index, Data); break;
                 case Editor_Packets.Write_Tiles: Write_Tiles(Index, Data); break;
-                case Editor_Packets.Write_Maps: Write_Maps(Index, Data); break;
+                case Editor_Packets.Write_Map: Write_Maps(Index, Data); break;
                 case Editor_Packets.Write_NPCs: Write_NPCs(Index, Data); break;
                 case Editor_Packets.Write_Items: Write_Items(Index, Data); break;
                 case Editor_Packets.Request_Server_Data: Request_Server_Data(Index, Data); break;
@@ -510,12 +510,15 @@ class Receive
 
     private static void Write_Server_Data(byte Index, NetIncomingMessage Data)
     {
-        // Lê os dados
+        // Altera os dados
         Lists.Server_Data.Game_Name = Data.ReadString();
         Lists.Server_Data.Welcome = Data.ReadString();
         Lists.Server_Data.Port = Data.ReadInt16();
         Lists.Server_Data.Max_Players = Data.ReadByte();
         Lists.Server_Data.Max_Characters = Data.ReadByte();
+
+        // Salva os dados
+        Write.Server_Data();
     }
 
     private static void Write_Classes(byte Index, NetIncomingMessage Data)
@@ -542,6 +545,9 @@ class Receive
             for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
         }
+
+        // Salva os dados
+        Write.Classes();
     }
 
     private static void Write_Tiles(byte Index, NetIncomingMessage Data)
@@ -572,10 +578,16 @@ class Receive
                     }
                 }
         }
+
+        // Salva os dados
+        Write.Tiles();
     }
 
     private static void Write_Maps(byte Index, NetIncomingMessage Data)
     {
+
+        // Salva os dados
+        Write.Maps();
     }
 
     private static void Write_NPCs(byte Index, NetIncomingMessage Data)
@@ -608,6 +620,9 @@ class Receive
                 Lists.NPC[i].Drop[n].Chance = Data.ReadByte();
             }
         }
+
+        // Salva os dados
+        Write.NPCs();
     }
 
     private static void Write_Items(byte Index, NetIncomingMessage Data)
@@ -639,6 +654,9 @@ class Receive
             for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
             Lists.Item[i].Weapon_Damage = Data.ReadInt16();
         }
+
+        // Salva os dados
+        Write.Items();
     }
 
     private static void Request_Server_Data(byte Index, NetIncomingMessage Data)
@@ -658,10 +676,12 @@ class Receive
 
     private static void Request_Map(byte Index, NetIncomingMessage Data)
     {
+        Send.Map(Index, Data.ReadInt16());
     }
 
     private static void Request_Maps(byte Index, NetIncomingMessage Data)
     {
+        Send.Maps(Index, Data.ReadBoolean());
     }
 
     private static void Request_NPCs(byte Index, NetIncomingMessage Data)

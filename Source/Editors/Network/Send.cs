@@ -9,7 +9,7 @@ partial class Send
         Write_Server_Data,
         Write_Classes,
         Write_Tiles,
-        Write_Maps,
+        Write_Map,
         Write_NPCs,
         Write_Items,
         Request_Server_Data,
@@ -176,18 +176,16 @@ partial class Send
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Data.Write((byte)Packets.Write_Maps);
+        Data.Write((byte)Packets.Write_Map);
         Data.Write(Map_Num);
         Packet(Data);
     }
 
     public static void Write_Maps()
     {
-        NetOutgoingMessage Data = Socket.Device.CreateMessage();
-
         // Envia os dados
-        Data.Write((byte)Packets.Write_Maps);
-        Packet(Data);
+        for (short i = 1; i <= Lists.Map.Length; i++)
+            Write_Map(i);
     }
 
     public static void Write_NPCs()
