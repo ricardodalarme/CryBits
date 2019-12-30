@@ -408,7 +408,7 @@ class Player
 
     public static void Died(byte Index)
     {
-        Lists.Structures.Classes Data = Lists.Class[Character(Index).Class];
+        Lists.Structures.Class Data = Lists.Class[Character(Index).Class];
 
         // Recupera os vitais
         for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)

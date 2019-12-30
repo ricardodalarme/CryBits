@@ -149,7 +149,7 @@ class Map
 
     public static void Spawn_Items(short Map_Num)
     {
-        Lists.Structures.Maps Data = Lists.Map[Map_Num];
+        Lists.Structures.Map Data = Lists.Map[Map_Num];
         Lists.Structures.Map_Items Item = new Lists.Structures.Map_Items();
 
         // Verifica se tem algum atributo de item no mapa

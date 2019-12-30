@@ -524,7 +524,7 @@ class Receive
     private static void Write_Classes(byte Index, NetIncomingMessage Data)
     {
         // Quantidade de classes
-        Lists.Class = new Lists.Structures.Classes[Data.ReadByte()];
+        Lists.Class = new Lists.Structures.Class[Data.ReadByte()];
         Lists.Server_Data.Num_Classes = (byte)Lists.Class.GetUpperBound(0);
         Write.Server_Data();
 
@@ -593,7 +593,7 @@ class Receive
     private static void Write_NPCs(byte Index, NetIncomingMessage Data)
     {
         // Quantidade de npcs
-        Lists.NPC = new Lists.Structures.NPCs[Data.ReadInt16()];
+        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16()];
         Lists.Server_Data.Num_NPCs = (byte)Lists.NPC.GetUpperBound(0);
         Write.Server_Data();
 
@@ -628,7 +628,7 @@ class Receive
     private static void Write_Items(byte Index, NetIncomingMessage Data)
     {
         // Quantidade de itens
-        Lists.Item = new Lists.Structures.Items[Data.ReadInt16()];
+        Lists.Item = new Lists.Structures.Item[Data.ReadInt16()];
         Lists.Server_Data.Num_Items = (byte)Lists.Item.GetUpperBound(0);
         Write.Server_Data();
 

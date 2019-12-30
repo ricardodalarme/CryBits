@@ -6,10 +6,10 @@ class Lists
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
     public static Structures.Player[] Player;
     public static Structures.TempPlayer[] TempPlayer;
-    public static Structures.Classes[] Class;
-    public static Structures.Maps[] Map;
-    public static Structures.NPCs[] NPC;
-    public static Structures.Items[] Item;
+    public static Structures.Class[] Class;
+    public static Structures.Map[] Map;
+    public static Structures.NPC[] NPC;
+    public static Structures.Item[] Item;
     public static Structures.Tile[] Tile;
 
     // Estrutura dos itens em gerais
@@ -45,7 +45,7 @@ class Lists
             public bool InEditor;
         }
 
-        public struct Classes
+        public struct Class
         {
             public string Name;
             public short Texture_Male;
@@ -58,7 +58,7 @@ class Lists
             public short[] Attribute;
         }
 
-        public struct Maps
+        public struct Map
         {
             public short Revision;
             public Map_Tile[,] Tile;
@@ -133,7 +133,7 @@ class Lists
             public byte Alpha;
         }
 
-        public struct NPCs
+        public struct NPC
         {
             public string Name;
             public short Texture;
@@ -167,7 +167,7 @@ class Lists
             public short Amount;
         }
 
-        public struct Items
+        public struct Item
         {
             // Geral
             public string Name;

@@ -16,7 +16,7 @@ class NPC
 
     public static short Regeneration(short Map_Num, byte Index, byte Vital)
     {
-        Lists.Structures.NPCs Data = Lists.NPC[Lists.Map[Map_Num].Temp_NPC[Index].Index];
+        Lists.Structures.NPC Data = Lists.NPC[Lists.Map[Map_Num].Temp_NPC[Index].Index];
 
         // Cálcula o máximo de vital que o NPC possui
         switch ((Game.Vitals)Vital)
@@ -34,7 +34,7 @@ class NPC
         for (byte i = 1; i < Lists.Map[Map_Num].Temp_NPC.Length; i++)
         {
             Lists.Structures.Map_NPCs Data = Lists.Map[Map_Num].Temp_NPC[i];
-            Lists.Structures.NPCs NPC_Data = Lists.NPC[Lists.Map[Map_Num].NPC[i].Index];
+            Lists.Structures.NPC NPC_Data = Lists.NPC[Lists.Map[Map_Num].NPC[i].Index];
 
             //////////////////
             // Aparecimento //
@@ -233,7 +233,7 @@ class NPC
 
     public static void Spawn(byte Index, short Map, byte x, byte y, Game.Directions Direction = 0)
     {
-        Lists.Structures.NPCs Data = Lists.NPC[Lists.Map[Map].NPC[Index].Index];
+        Lists.Structures.NPC Data = Lists.NPC[Lists.Map[Map].NPC[Index].Index];
 
         // Define os dados
         Lists.Map[Map].Temp_NPC[Index].Index = Lists.Map[Map].NPC[Index].Index;
@@ -323,7 +323,7 @@ class NPC
 
     public static void Died(short Map_Num, byte Index)
     {
-        Lists.Structures.NPCs NPC = Lists.NPC[Lists.Map[Map_Num].Temp_NPC[Index].Index];
+        Lists.Structures.NPC NPC = Lists.NPC[Lists.Map[Map_Num].Temp_NPC[Index].Index];
 
         // Solta os itens
         for (byte i = 0; i < Game.Max_NPC_Drop; i++)

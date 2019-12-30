@@ -126,7 +126,7 @@ partial class Read
 
     public static void Classes()
     {
-        Lists.Class = new Lists.Structures.Classes[Lists.Server_Data.Num_Classes + 1];
+        Lists.Class = new Lists.Structures.Class[Lists.Server_Data.Num_Classes + 1];
 
         // Lê os dados
         for (byte i = 1; i < Lists.Class.Length; i++)
@@ -159,7 +159,7 @@ partial class Read
 
     public static void Items()
     {
-        Lists.Item = new Lists.Structures.Items[Lists.Server_Data.Num_Items + 1];
+        Lists.Item = new Lists.Structures.Item[Lists.Server_Data.Num_Items + 1];
 
         // Lê os dados
         for (byte i = 1; i < Lists.Item.Length; i++)
@@ -197,7 +197,7 @@ partial class Read
 
     public static void Maps()
     {
-        Lists.Map = new Lists.Structures.Maps[Lists.Server_Data.Num_Maps + 1];
+        Lists.Map = new Lists.Structures.Map[Lists.Server_Data.Num_Maps + 1];
 
         // Lê os dados
         for (short i = 1; i < Lists.Map.Length; i++)
@@ -317,7 +317,7 @@ partial class Read
 
     public static void NPCs()
     {
-        Lists.NPC = new Lists.Structures.NPCs[Lists.Server_Data.Num_NPCs + 1];
+        Lists.NPC = new Lists.Structures.NPC[Lists.Server_Data.Num_NPCs + 1];
 
         // Lê os dados
         for (byte i = 1; i < Lists.NPC.Length; i++)
