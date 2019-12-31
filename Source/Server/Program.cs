@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 
-class General
+class Program
 {
     [STAThread]
     public static void Main()

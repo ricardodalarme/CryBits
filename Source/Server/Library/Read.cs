@@ -6,22 +6,32 @@ partial class Read
     public static void All()
     {
         // Carrega todos os dados
+        Console.WriteLine("Loading data.");
         Server_Data();
-        Console.WriteLine("Loaging data.");
+        Console.WriteLine("Loading classes.");
         Classes();
-        Console.WriteLine("Loaging classes.");
+        Console.WriteLine("Loading NPCs.");
         NPCs();
-        Console.WriteLine("Loaging NPCs.");
+        Console.WriteLine("Loading items.");
         Items();
-        Console.WriteLine("Loaging items.");
+        Console.WriteLine("Loading maps.");
         Maps();
-        Console.WriteLine("Loaging maps.");
+        Console.WriteLine("Loading tiles.");
         Tiles();
-        Console.WriteLine("Loaging tiles.");
     }
 
     public static void Server_Data()
     {
+        // Limpa os dados
+        Clear.Server_Data();
+
+        // Cria o arquivo caso ele não existir
+        if (!Directories.Server_Data.Exists)
+        {
+            Write.Server_Data();
+            return;
+        }
+
         // Cria um sistema binário para a manipulação dos dados
         BinaryReader Data = new BinaryReader(Directories.Server_Data.OpenRead());
 
@@ -130,17 +140,25 @@ partial class Read
 
         // Lê os dados
         for (byte i = 1; i < Lists.Class.Length; i++)
+        {
+            Clear.Class(i);
             Class(i);
+        }
     }
 
     public static void Class(byte Index)
     {
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryReader Data = new BinaryReader(new FileInfo(Directories.Classes.FullName + Index + Directories.Format).OpenRead());
+        FileInfo File = new FileInfo(Directories.Classes.FullName + Index + Directories.Format);
 
-        // Redimensiona os valores necessários 
-        Lists.Class[Index].Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.Class[Index].Attribute = new short[(byte)Game.Attributes.Amount];
+        // Cria o arquivo caso ele não existir
+        if (!File.Exists)
+        {
+            Write.Class(Index);
+            return;
+        }
+
+        // Cria um sistema binário para a manipulação dos dados
+        BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Lê os dados
         Lists.Class[Index].Name = Data.ReadString();
@@ -163,17 +181,25 @@ partial class Read
 
         // Lê os dados
         for (byte i = 1; i < Lists.Item.Length; i++)
+        {
+            Clear.Item(i);
             Item(i);
+        }
     }
 
     public static void Item(byte Index)
     {
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryReader Data = new BinaryReader(new FileInfo(Directories.Items.FullName + Index + Directories.Format).OpenRead());
+        FileInfo File = new FileInfo(Directories.Items.FullName + Index + Directories.Format);
 
-        // Redimensiona os valores necessários 
-        Lists.Item[Index].Potion_Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.Item[Index].Equip_Attribute = new short[(byte)Game.Attributes.Amount];
+        // Cria o arquivo caso ele não existir
+        if (!File.Exists)
+        {
+            Write.Item(Index);
+            return;
+        }
+
+        // Cria um sistema binário para a manipulação dos dados
+        BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Lê os dados
         Lists.Item[Index].Name = Data.ReadString();
@@ -201,13 +227,25 @@ partial class Read
 
         // Lê os dados
         for (short i = 1; i < Lists.Map.Length; i++)
+        {
+            Clear.Map(i);
             Map(i);
+        }
     }
 
     public static void Map(short Index)
     {
+        FileInfo File = new FileInfo(Directories.Maps.FullName + Index + Directories.Format);
+
+        // Cria o arquivo caso ele não existir
+        if (!File.Exists)
+        {
+            Write.Map(Index);
+            return;
+        }
+
         // Cria um sistema binário para a manipulação dos dados
-        BinaryReader Data = new BinaryReader(new FileInfo(Directories.Maps.FullName + Index + Directories.Format).OpenRead());
+        BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Lê os dados
         Lists.Map[Index].Revision = Data.ReadInt16();
@@ -312,19 +350,25 @@ partial class Read
 
         // Lê os dados
         for (byte i = 1; i < Lists.NPC.Length; i++)
+        {
+            Clear.NPC(i);
             NPC(i);
+        }
     }
 
     public static void NPC(byte Index)
     {
-        // Cria um sistema binário para a manipulação dos dados
         FileInfo File = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format);
-        BinaryReader Data = new BinaryReader(File.OpenRead());
 
-        // Redimensiona os valores necessários 
-        Lists.NPC[Index].Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Amount];
-        Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[Game.Max_NPC_Drop];
+        // Cria o arquivo caso ele não existir
+        if (!File.Exists)
+        {
+            Write.NPC(Index);
+            return;
+        }
+
+        // Cria um sistema binário para a manipulação dos dados
+        BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Lê os dados
         Lists.NPC[Index].Name = Data.ReadString();
@@ -359,12 +403,8 @@ partial class Read
     {
         FileInfo File = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format);
 
-        // Cria o arquivo caso ele não existir
-        if (!File.Exists)
-        {
-            Write.Tile(Index);
-            return;
-        }
+        // Evita erros
+        if (!File.Exists) return;
 
         // Cria um sistema binário para a manipulação dos dados
         BinaryReader Data = new BinaryReader(File.OpenRead());

@@ -24,7 +24,7 @@ class Lists
             public byte Max_Characters;
             public byte Num_Classes;
             public short Num_Maps;
-            public short Num_Tiles;
+            public byte Num_Tiles;
             public short Num_NPCs;
             public short Num_Items;
         }

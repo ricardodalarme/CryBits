@@ -47,7 +47,7 @@ class Loop
         }
 
         // Fecha a aplicação
-        General.Close();
+        Program.Close();
     }
 
     public static void Commands()
@@ -56,7 +56,7 @@ class Loop
         while (Working)
         {
             Console.Write("Execute: ");
-            General.ExecuteCommand(Console.ReadLine());
+            Program.ExecuteCommand(Console.ReadLine());
         }
     }
 }

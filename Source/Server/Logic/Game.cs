@@ -24,6 +24,9 @@ class Game
     public const byte Max_Inventory = 30;
     public const byte Max_Map_Items = 100;
     public const byte Max_Hotbar = 10;
+    public const byte Min_Map_Width = 24;
+    public const byte Min_Map_Height = 18;
+
 
     #region Nums
     public enum Directions
