@@ -432,8 +432,8 @@ class Map
 
             // Define a posição do mini azulejo
             Lists.Structures.Map_Tile_Data Data = Lists.Map.Tile[x, y].Data[Layer_Type, Layer_Num];
-            Lists.Map.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].X = Data.x * Game.Grid + Position.X;
-            Lists.Map.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].Y = Data.y * Game.Grid + Position.Y;
+            Lists.Map.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].X = Data.X * Game.Grid + Position.X;
+            Lists.Map.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].Y = Data.Y * Game.Grid + Position.Y;
         }
 
         public static bool Check(int X1, int Y1, int X2, int Y2, byte Layer_Num, byte Layer_Type)
@@ -450,8 +450,8 @@ class Map
             // Verifica se são os mesmo azulejos
             if (!Data2.Automatic) return false;
             if (Data1.Tile != Data2.Tile) return false;
-            if (Data1.x != Data2.x) return false;
-            if (Data1.y != Data2.y) return false;
+            if (Data1.X != Data2.X) return false;
+            if (Data1.Y != Data2.Y) return false;
 
             // Não há nada de errado
             return true;
@@ -598,8 +598,8 @@ partial class Graphics
                     for (byte q = 0; q <= Lists.Map.Tile[x, y].Data.GetUpperBound(1); q++)
                         if (Lists.Map.Tile[x, y].Data[c, q].Tile > 0)
                         {
-                            int x2 = Lists.Map.Tile[x, y].Data[c, q].x * Game.Grid;
-                            int y2 = Lists.Map.Tile[x, y].Data[c, q].y * Game.Grid;
+                            int x2 = Lists.Map.Tile[x, y].Data[c, q].X * Game.Grid;
+                            int y2 = Lists.Map.Tile[x, y].Data[c, q].Y * Game.Grid;
 
                             // Desenha o azulejo
                             if (!Lists.Map.Tile[x, y].Data[c, q].Automatic)

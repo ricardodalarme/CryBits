@@ -133,8 +133,8 @@
 
         public struct Map_Tile_Data
         {
-            public byte x;
-            public byte y;
+            public byte X;
+            public byte Y;
             public byte Tile;
             public bool Automatic;
             public System.Drawing.Point[] Mini;

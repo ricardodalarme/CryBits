@@ -216,8 +216,8 @@ class Read
                 for (byte c = 0; c <= (byte)global::Map.Layers.Amount - 1; c++)
                     for (byte q = 0; q <= NumLayers; q++)
                     {
-                        Lists.Map.Tile[x, y].Data[c, q].x = Data.ReadByte();
-                        Lists.Map.Tile[x, y].Data[c, q].y = Data.ReadByte();
+                        Lists.Map.Tile[x, y].Data[c, q].X = Data.ReadByte();
+                        Lists.Map.Tile[x, y].Data[c, q].Y = Data.ReadByte();
                         Lists.Map.Tile[x, y].Data[c, q].Tile = Data.ReadByte();
                         Lists.Map.Tile[x, y].Data[c, q].Automatic = Data.ReadBoolean();
                         Lists.Map.Tile[x, y].Data[c, q].Mini = new System.Drawing.Point[4];

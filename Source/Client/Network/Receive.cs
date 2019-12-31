@@ -214,7 +214,9 @@ partial class Receive
     public static void Map(NetIncomingMessage Data)
     {
         // Define os dados
-        short Mapa_Num = Data.ReadInt16();
+        short Map_Num = Data.ReadInt16();
+
+        // Lê os dados
         Lists.Map.Revision = Data.ReadInt16();
         Lists.Map.Name = Data.ReadString();
         Lists.Map.Width = Data.ReadByte();
@@ -229,47 +231,60 @@ partial class Receive
         Lists.Map.Fog.Speed_X = Data.ReadSByte();
         Lists.Map.Fog.Speed_Y = Data.ReadSByte();
         Lists.Map.Fog.Alpha = Data.ReadByte();
+        Data.ReadByte(); // Light global
+        Data.ReadByte(); // lighting
 
-        // Redimensiona as ligações
+        // Ligações
         Lists.Map.Link = new short[(byte)Game.Directions.Amount];
-
         for (short i = 0; i <= (short)Game.Directions.Amount - 1; i++)
             Lists.Map.Link[i] = Data.ReadInt16();
 
-        // Redimensiona os azulejos
-        Lists.Map.Tile = new Lists.Structures.Map_Tile[Lists.Map.Width + 1, Lists.Map.Height + 1];
+        // Azulejos
+        byte Num_Layers = Data.ReadByte();
 
-        // Lê os dados
-        byte NumLayers = Data.ReadByte();
+        // Redimensiona os dados
+        Lists.Map.Tile = new Lists.Structures.Map_Tile[Lists.Map.Width + 1, Lists.Map.Height + 1];
         for (byte x = 0; x <= Lists.Map.Width; x++)
             for (byte y = 0; y <= Lists.Map.Height; y++)
-            {
-                // Redimensiona os dados dos azulejos
-                Lists.Map.Tile[x, y].Data = new Lists.Structures.Map_Tile_Data[(byte)global::Map.Layers.Amount, NumLayers + 1];
+                Lists.Map.Tile[x, y].Data = new Lists.Structures.Map_Tile_Data[(byte)global::Map.Layers.Amount, Num_Layers + 1];
 
-                for (byte c = 0; c <= (byte)global::Map.Layers.Amount - 1; c++)
-                    for (byte q = 0; q <= NumLayers; q++)
-                    {
-                        Lists.Map.Tile[x, y].Data[c, q].x = Data.ReadByte();
-                        Lists.Map.Tile[x, y].Data[c, q].y = Data.ReadByte();
-                        Lists.Map.Tile[x, y].Data[c, q].Tile = Data.ReadByte();
-                        Lists.Map.Tile[x, y].Data[c, q].Automatic = Data.ReadBoolean();
-                        Lists.Map.Tile[x, y].Data[c, q].Mini = new Point[4];
-                    }
-            }
+        // Lê os azulejos
+        for (byte i = 0; i <= Num_Layers; i++)
+        {
+            // Dados básicos
+            Data.ReadString(); // Name
+            byte t = Data.ReadByte(); // Tipo
 
-        // Data específicos dos azulejos
+            // Azulejos
+            for (byte x = 0; x <= Lists.Map.Width; x++)
+                for (byte y = 0; y <= Lists.Map.Height; y++)
+                {
+                    Lists.Map.Tile[x, y].Data[t, i].X = Data.ReadByte();
+                    Lists.Map.Tile[x, y].Data[t, i].Y = Data.ReadByte();
+                    Lists.Map.Tile[x, y].Data[t, i].Tile = Data.ReadByte();
+                    Lists.Map.Tile[x, y].Data[t, i].Automatic = Data.ReadBoolean();
+                }
+        }
+
+        // Dados específicos dos azulejos
         for (byte x = 0; x <= Lists.Map.Width; x++)
             for (byte y = 0; y <= Lists.Map.Height; y++)
             {
                 Lists.Map.Tile[x, y].Attribute = Data.ReadByte();
+                Data.ReadInt16(); // Dado 1
+                Data.ReadInt16(); // Dado 2
+                Data.ReadInt16(); // Dado 3
+                Data.ReadInt16(); // Dado 4
+                Data.ReadByte(); // Zona
+
+                // Bloqueio direcional
                 Lists.Map.Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
                 for (byte i = 0; i <= (byte)Game.Directions.Amount - 1; i++)
                     Lists.Map.Tile[x, y].Block[i] = Data.ReadBoolean();
             }
 
         // Luzes
-        Lists.Map.Light = new Lists.Structures.Map_Light[Data.ReadInt32() + 1];
+        Lists.Map.Light = new Lists.Structures.Map_Light[Data.ReadByte()];
         if (Lists.Map.Light.GetUpperBound(0) > 0)
             for (byte i = 0; i < Lists.Map.Light.Length; i++)
             {
@@ -280,13 +295,18 @@ partial class Receive
             }
 
         // NPCs
-        Lists.Map.NPC = new short[Data.ReadInt16() + 1];
-        if (Lists.Map.NPC.GetUpperBound(0) > 0)
-            for (byte i = 1; i < Lists.Map.NPC.Length; i++)
-                Lists.Map.NPC[i] = Data.ReadInt16();
+        Lists.Map.NPC = new short[Data.ReadByte() + 1];
+        for (byte i = 1; i < Lists.Map.NPC.Length; i++)
+        {
+            Lists.Map.NPC[i] = Data.ReadInt16();
+            Data.ReadByte(); // Zone
+            Data.ReadBoolean(); // Spawn
+            Data.ReadByte(); // X
+            Data.ReadByte(); // Y
+        }
 
         // Salva o mapa
-        Write.Map(Mapa_Num);
+        Write.Map(Map_Num);
 
         // Redimensiona as partículas do clima
         global::Map.Weather_Update();

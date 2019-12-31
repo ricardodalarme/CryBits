@@ -57,8 +57,8 @@ class Write
                 for (byte c = 0; c <= (byte)global::Map.Layers.Amount - 1; c++)
                     for (byte q = 0; q <= Lists.Map.Tile[x, y].Data.GetUpperBound(1); q++)
                     {
-                        Data.Write(Lists.Map.Tile[x, y].Data[c, q].x);
-                        Data.Write(Lists.Map.Tile[x, y].Data[c, q].y);
+                        Data.Write(Lists.Map.Tile[x, y].Data[c, q].X);
+                        Data.Write(Lists.Map.Tile[x, y].Data[c, q].Y);
                         Data.Write(Lists.Map.Tile[x, y].Data[c, q].Tile);
                         Data.Write(Lists.Map.Tile[x, y].Data[c, q].Automatic);
                     }

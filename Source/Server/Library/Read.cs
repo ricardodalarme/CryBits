@@ -228,14 +228,38 @@ partial class Read
         Lists.Map[Index].Lighting = Data.ReadByte();
 
         // Ligações
-        Lists.Map[Index].Link = new short[(byte)Game.Directions.Amount];
+        Lists.Map[Index].Link = new short[(short)Game.Directions.Amount];
         for (short i = 0; i < (short)Game.Directions.Amount; i++)
             Lists.Map[Index].Link[i] = Data.ReadInt16();
 
-        // Azulejos
-        Map_Tile(Index, Data);
+        // Quantidade de camadas
+        byte Num_Layers = Data.ReadByte();
+        Lists.Map[Index].Layer = new System.Collections.Generic.List<Lists.Structures.Map_Layer>();
+
+        // Camadas
+        for (byte i = 0; i <= Num_Layers; i++)
+        {
+            // Dados básicos
+            Lists.Map[Index].Layer.Add(new Lists.Structures.Map_Layer());
+            Lists.Map[Index].Layer[i].Name = Data.ReadString();
+            Lists.Map[Index].Layer[i].Type = Data.ReadByte();
+
+            // Redimensiona os azulejos
+            Lists.Map[Index].Layer[i].Tile = new Lists.Structures.Map_Tile_Data[Lists.Map[Index].Width + 1, Lists.Map[Index].Height + 1];
+
+            // Azulejos
+            for (byte x = 0; x <= Lists.Map[Index].Width; x++)
+                for (byte y = 0; y <= Lists.Map[Index].Height; y++)
+                {
+                    Lists.Map[Index].Layer[i].Tile[x, y].X = Data.ReadByte();
+                    Lists.Map[Index].Layer[i].Tile[x, y].Y = Data.ReadByte();
+                    Lists.Map[Index].Layer[i].Tile[x, y].Tile = Data.ReadByte();
+                    Lists.Map[Index].Layer[i].Tile[x, y].Auto = Data.ReadBoolean();
+                }
+        }
 
         // Dados específicos dos azulejos
+        Lists.Map[Index].Tile = new Lists.Structures.Map_Tile[Lists.Map[Index].Width + 1, Lists.Map[Index].Height + 1];
         for (byte x = 0; x <= Lists.Map[Index].Width; x++)
             for (byte y = 0; y <= Lists.Map[Index].Height; y++)
             {
@@ -245,37 +269,33 @@ partial class Read
                 Lists.Map[Index].Tile[x, y].Data_3 = Data.ReadInt16();
                 Lists.Map[Index].Tile[x, y].Data_4 = Data.ReadInt16();
                 Lists.Map[Index].Tile[x, y].Zone = Data.ReadByte();
-
-                // Bloqueio direcional
                 Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
+
                 for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
                     Lists.Map[Index].Tile[x, y].Block[i] = Data.ReadBoolean();
             }
 
         // Luzes
         Lists.Map[Index].Light = new Lists.Structures.Map_Light[Data.ReadByte()];
-        if (Lists.Map[Index].Light.GetUpperBound(0) > 0)
-            for (byte i = 0; i < Lists.Map[Index].Light.Length; i++)
-            {
-                Lists.Map[Index].Light[i].X = Data.ReadByte();
-                Lists.Map[Index].Light[i].Y = Data.ReadByte();
-                Lists.Map[Index].Light[i].Width = Data.ReadByte();
-                Lists.Map[Index].Light[i].Height = Data.ReadByte();
-            }
+        for (byte i = 0; i < Lists.Map[Index].Light.Length; i++)
+        {
+            Lists.Map[Index].Light[i].X = Data.ReadByte();
+            Lists.Map[Index].Light[i].Y = Data.ReadByte();
+            Lists.Map[Index].Light[i].Width = Data.ReadByte();
+            Lists.Map[Index].Light[i].Height = Data.ReadByte();
+        }
 
         // NPCs
-        Lists.Map[Index].NPC = new Lists.Structures.Map_NPC[Data.ReadByte() + 1];
-        Lists.Map[Index].Temp_NPC = new Lists.Structures.Map_NPCs[Lists.Map[Index].NPC.GetUpperBound(0) + 1];
-        if (Lists.Map[Index].NPC.GetUpperBound(0) > 0)
-            for (byte i = 1; i < Lists.Map[Index].NPC.Length; i++)
-            {
-                Lists.Map[Index].NPC[i].Index = Data.ReadInt16();
-                Lists.Map[Index].NPC[i].Zone = Data.ReadByte();
-                Lists.Map[Index].NPC[i].Spawn = Data.ReadBoolean();
-                Lists.Map[Index].NPC[i].X = Data.ReadByte();
-                Lists.Map[Index].NPC[i].Y = Data.ReadByte();
-                global::NPC.Spawn(i, Index);
-            }
+        Lists.Map[Index].NPC = new Lists.Structures.Map_NPC[Data.ReadByte()];
+        Lists.Map[Index].Temp_NPC = new Lists.Structures.Map_NPCs[Lists.Map[Index].NPC.Length];
+        for (byte i = 0; i < Lists.Map[Index].NPC.Length; i++)
+        {
+            Lists.Map[Index].NPC[i].Index = Data.ReadInt16();
+            Lists.Map[Index].NPC[i].Zone = Data.ReadByte();
+            Lists.Map[Index].NPC[i].Spawn = Data.ReadBoolean();
+            Lists.Map[Index].NPC[i].X = Data.ReadByte();
+            Lists.Map[Index].NPC[i].Y = Data.ReadByte();
+        }
 
         // Items
         Lists.Map[Index].Temp_Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
@@ -284,35 +304,6 @@ partial class Read
 
         // Fecha o sistema
         Data.Dispose();
-    }
-
-    public static void Map_Tile(short Index, BinaryReader Binário)
-    {
-        byte Num_Layers = Binário.ReadByte();
-
-        // Redimensiona os dados
-        Lists.Map[Index].Tile = new Lists.Structures.Map_Tile[Lists.Map[Index].Width + 1, Lists.Map[Index].Height + 1];
-        for (byte x = 0; x <= Lists.Map[Index].Width; x++)
-            for (byte y = 0; y <= Lists.Map[Index].Height; y++)
-                Lists.Map[Index].Tile[x, y].Data = new Lists.Structures.Map_Tile_Data[(byte)global::Map.Layers.Amount, Num_Layers + 1];
-
-        // Lê os azulejos
-        for (byte i = 0; i <= Num_Layers; i++)
-        {
-            // Dados básicos
-            Binário.ReadString(); // Name
-            byte t = Binário.ReadByte(); // Tipo
-
-            // Azulejos
-            for (byte x = 0; x <= Lists.Map[Index].Width; x++)
-                for (byte y = 0; y <= Lists.Map[Index].Height; y++)
-                {
-                    Lists.Map[Index].Tile[x, y].Data[t, i].X = Binário.ReadByte();
-                    Lists.Map[Index].Tile[x, y].Data[t, i].Y = Binário.ReadByte();
-                    Lists.Map[Index].Tile[x, y].Data[t, i].Tile = Binário.ReadByte();
-                    Lists.Map[Index].Tile[x, y].Data[t, i].Automatic = Binário.ReadBoolean();
-                }
-        }
     }
 
     public static void NPCs()

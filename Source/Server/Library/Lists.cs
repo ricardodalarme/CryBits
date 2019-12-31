@@ -61,6 +61,7 @@ class Lists
         public struct Map
         {
             public short Revision;
+            public List<Map_Layer> Layer;
             public Map_Tile[,] Tile;
             public string Name;
             public byte Width;
@@ -82,6 +83,24 @@ class Lists
             public List<Map_Items> Temp_Item;
         }
 
+        public struct Map_Tile
+        {
+            public byte Attribute;
+            public short Data_1;
+            public short Data_2;
+            public short Data_3;
+            public short Data_4;
+            public byte Zone;
+            public bool[] Block;
+        }
+
+        public class Map_Layer
+        {
+            public string Name;
+            public byte Type;
+            public Map_Tile_Data[,] Tile;
+        }
+
         public struct Map_NPC
         {
             public short Index;
@@ -91,24 +110,13 @@ class Lists
             public byte Y;
         }
 
-        public struct Map_Tile
-        {
-            public byte Zone;
-            public byte Attribute;
-            public short Data_1;
-            public short Data_2;
-            public short Data_3;
-            public short Data_4;
-            public bool[] Block;
-            public Map_Tile_Data[,] Data;
-        }
 
         public struct Map_Tile_Data
         {
             public byte X;
             public byte Y;
             public byte Tile;
-            public bool Automatic;
+            public bool Auto;
         }
 
         public class Map_Light
