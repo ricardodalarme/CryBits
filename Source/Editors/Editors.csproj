@@ -136,7 +136,7 @@
     </Compile>
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Media\Audio.cs" />
-    <Compile Include="General\Globals.cs" />
+    <Compile Include="Logic\Globals.cs" />
     <Compile Include="Editors\Classes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,7 +173,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Library\Lists.cs" />
-    <Compile Include="General\Loop.cs" />
+    <Compile Include="Logic\Loop.cs" />
     <EmbeddedResource Include="Editors\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>

@@ -30,7 +30,7 @@
     public static void Panel(int Index)
     {
         // Limpa a estrutura
-        Panels.List[Index] = new Panels.Estrutura();
+        Panels.List[Index] = new Panels.Structure();
         Panels.List[Index].General = new Tools.Structure();
     }
 

@@ -75,10 +75,10 @@ class Read
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Lê os dados
-        Buttons.List[Index].General.Name = Data.ReadString();
-        Buttons.List[Index].General.Position.X = Data.ReadInt32();
-        Buttons.List[Index].General.Position.Y = Data.ReadInt32();
-        Buttons.List[Index].General.Visible = Data.ReadBoolean();
+        Buttons.List[Index].Name = Data.ReadString();
+        Buttons.List[Index].Position.X = Data.ReadInt32();
+        Buttons.List[Index].Position.Y = Data.ReadInt32();
+        Buttons.List[Index].Visible = Data.ReadBoolean();
         Buttons.List[Index].Texture = Data.ReadByte();
 
         // Fecha o sistema
@@ -104,10 +104,10 @@ class Read
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Lê os dados
-        TextBoxes.List[Index].General.Name = Data.ReadString();
-        TextBoxes.List[Index].General.Position.X = Data.ReadInt32();
-        TextBoxes.List[Index].General.Position.Y = Data.ReadInt32();
-        TextBoxes.List[Index].General.Visible = Data.ReadBoolean();
+        TextBoxes.List[Index].Name = Data.ReadString();
+        TextBoxes.List[Index].Position.X = Data.ReadInt32();
+        TextBoxes.List[Index].Position.Y = Data.ReadInt32();
+        TextBoxes.List[Index].Visible = Data.ReadBoolean();
         TextBoxes.List[Index].Lenght = Data.ReadInt16();
         TextBoxes.List[Index].Width = Data.ReadInt16();
         TextBoxes.List[Index].Password = Data.ReadBoolean();
@@ -118,7 +118,7 @@ class Read
 
     public static void Panels_Data()
     {
-        Panels.List = new Panels.Estrutura[Lists.Client_Data.Num_Panels + 1];
+        Panels.List = new Panels.Structure[Lists.Client_Data.Num_Panels + 1];
 
         // Lê os dados
         for (byte i = 1; i < Panels.List.Length; i++)
@@ -135,10 +135,10 @@ class Read
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Carrega os dados
-        Panels.List[Index].General.Name = Data.ReadString();
-        Panels.List[Index].General.Position.X = Data.ReadInt32();
-        Panels.List[Index].General.Position.Y = Data.ReadInt32();
-        Panels.List[Index].General.Visible = Data.ReadBoolean();
+        Panels.List[Index].Name = Data.ReadString();
+        Panels.List[Index].Position.X = Data.ReadInt32();
+        Panels.List[Index].Position.Y = Data.ReadInt32();
+        Panels.List[Index].Visible = Data.ReadBoolean();
         Panels.List[Index].Texture = Data.ReadByte();
 
         // Fecha o sistema
@@ -164,10 +164,10 @@ class Read
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Carrega os dados
-        CheckBoxes.List[Index].General.Name = Data.ReadString();
-        CheckBoxes.List[Index].General.Position.X = Data.ReadInt32();
-        CheckBoxes.List[Index].General.Position.Y = Data.ReadInt32();
-        CheckBoxes.List[Index].General.Visible = Data.ReadBoolean();
+        CheckBoxes.List[Index].Name = Data.ReadString();
+        CheckBoxes.List[Index].Position.X = Data.ReadInt32();
+        CheckBoxes.List[Index].Position.Y = Data.ReadInt32();
+        CheckBoxes.List[Index].Visible = Data.ReadBoolean();
         CheckBoxes.List[Index].Text = Data.ReadString();
         CheckBoxes.List[Index].State = Data.ReadBoolean();
 

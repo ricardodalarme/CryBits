@@ -11,20 +11,19 @@ public class TextBoxes
     public static bool Signal;
 
     // Estrutura da ferramenta
-    public class Structure
+    public class Structure : Tools.Structure
     {
         public string Text;
         public short Lenght;
         public short Width;
         public bool Password;
-        public Tools.Structure General;
     }
 
     public static byte FindIndex(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
-            if (List[i].General.Name == Name)
+            if (List[i].Name == Name)
                 return i;
 
         return 0;
@@ -34,7 +33,7 @@ public class TextBoxes
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
-            if (List[i].General.Name == Name)
+            if (List[i].Name == Name)
                 return List[i];
 
         return null;
@@ -43,14 +42,14 @@ public class TextBoxes
     public static void Focus()
     {
         // Se o digitalizador não estiver habilitado então isso não é necessário 
-        if (List[TexBox_Focus] != null && List[TexBox_Focus].General.Able) return;
+        if (List[TexBox_Focus] != null && List[TexBox_Focus].Able) return;
 
         // Altera o digitalizador focado para o mais próximo
         for (byte i = 1; i < Tools.Order.Length; i++)
         {
             if (Tools.Order[i].Type != Tools.Types.TextBox)
                 continue;
-            else if (!List[Tools.Order[i].Index].General.Able)
+            else if (!List[Tools.Order[i].Index].Able)
                 continue;
             else if (i == FindIndex("Chat"))
 
@@ -66,7 +65,7 @@ public class TextBoxes
         {
             if (Tools.Order[i].Type != Tools.Types.TextBox)
                 continue;
-            else if (!List[Tools.Order[i].Index].General.Able)
+            else if (!List[Tools.Order[i].Index].Able)
                 continue;
             if (TexBox_Focus != Last() && i <= Tools.Encontrar(Tools.Types.TextBox, TexBox_Focus))
                 continue;
@@ -83,7 +82,7 @@ public class TextBoxes
         // Retorna o último digitalizador habilitado
         for (byte i = 1; i < Tools.Order.Length; i++)
             if (Tools.Order[i].Type == Tools.Types.TextBox)
-                if (List[Tools.Order[i].Index].General.Able)
+                if (List[Tools.Order[i].Index].Able)
                     Index = Tools.Order[i].Index;
 
         return Index;
@@ -97,10 +96,10 @@ public class TextBoxes
         if (!Player.IsPlaying(Player.MyIndex)) return;
 
         // Altera a visiblidade da caixa
-        Panels.Find("Chat").General.Visible = !Panels.Find("Chat").General.Visible;
+        Panels.Find("Chat").Visible = !Panels.Find("Chat").Visible;
 
         // Altera o foco do digitalizador
-        if (Panels.Find("Chat").General.Visible)
+        if (Panels.Find("Chat").Visible)
         {
             Tools.Chat_Text_Visible = true;
             TexBox_Focus = Index;
@@ -154,8 +153,8 @@ public class TextBoxes
         public static void MouseUp(MouseEventArgs e, byte Index)
         {
             // Somente se necessário
-            if (!List[Index].General.Able) return;
-            if (!Tools.IsAbove(new Rectangle(List[Index].General.Position, new Size(List[Index].Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
+            if (!List[Index].Able) return;
+            if (!Tools.IsAbove(new Rectangle(List[Index].Position, new Size(List[Index].Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
 
             // Define o foco no Digitalizador
             TexBox_Focus = Index;

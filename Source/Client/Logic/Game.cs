@@ -196,7 +196,7 @@ public class Game
     public static void Disconnect()
     {
         // Não fechar os paineis se não for necessário
-        if (Panels.Find("Opções").General.Visible || Panels.Find("Conectar").General.Visible || Panels.Find("Registrar").General.Visible)
+        if (Panels.Find("Opções").Visible || Panels.Find("Conectar").Visible || Panels.Find("Registrar").Visible)
             return;
 
         // Limpa os valores
@@ -206,7 +206,7 @@ public class Game
         // Traz o jogador de volta ao menu
         Tools.CurrentWindow = Tools.Windows.Menu;
         Panels.Menu_Close();
-        Panels.Find("Conectar").General.Visible = true;
+        Panels.Find("Conectar").Visible = true;
     }
 
     public static void UpdateCamera()

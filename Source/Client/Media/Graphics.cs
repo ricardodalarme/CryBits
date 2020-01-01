@@ -242,7 +242,7 @@ partial class Graphics
         Tools.List(Tools.Types.Button, Index);
 
         // Não desenha a ferramenta se ela não for visível
-        if (!Buttons.List[Index].General.CheckEnable())
+        if (!Buttons.List[Index].CheckEnable())
             return;
 
         // Define a transparência do botão pelo seu estado
@@ -257,7 +257,7 @@ partial class Graphics
         }
 
         // Desenha o botão
-        Render(Tex_Button[Buttons.List[Index].Texture], Buttons.List[Index].General.Position, new SFML.Graphics.Color(255, 255, 225, Alpha));
+        Render(Tex_Button[Buttons.List[Index].Texture], Buttons.List[Index].Position, new SFML.Graphics.Color(255, 255, 225, Alpha));
     }
 
     public static void Panel(string Name)
@@ -268,11 +268,11 @@ partial class Graphics
         Tools.List(Tools.Types.Painel, Index);
 
         // Não desenha a ferramenta se ela não for visível
-        if (!Panels.List[Index].General.CheckEnable())
+        if (!Panels.List[Index].CheckEnable())
             return;
 
         // Desenha o painel
-        Render(Tex_Panel[Panels.List[Index].Texture], Panels.List[Index].General.Position);
+        Render(Tex_Panel[Panels.List[Index].Texture], Panels.List[Index].Position);
     }
 
     public static void CheckBox(string Name)
@@ -284,12 +284,12 @@ partial class Graphics
         Tools.List(Tools.Types.CheckBox, Index);
 
         // Não desenha a ferramenta se ela não for visível
-        if (!CheckBoxes.List[Index].General.CheckEnable())
+        if (!CheckBoxes.List[Index].CheckEnable())
             return;
 
         // Define as propriedades dos retângulos
         Rec_Source.Size = new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height);
-        Rec_Destiny = new Rectangle(CheckBoxes.Find(Name).General.Position, Rec_Source.Size);
+        Rec_Destiny = new Rectangle(CheckBoxes.Find(Name).Position, Rec_Source.Size);
 
         // Desenha a textura do marcador pelo seu estado 
         if (CheckBoxes.List[Index].State)
@@ -308,11 +308,11 @@ partial class Graphics
         Tools.List(Tools.Types.TextBox, Index);
 
         // Não desenha a ferramenta se ela não for visível
-        if (!TextBoxes.List[Index].General.CheckEnable())
+        if (!TextBoxes.List[Index].CheckEnable())
             return;
 
         // Desenha a ferramenta
-        Render_Box(Tex_TextBox, 3, TextBoxes.List[Index].General.Position, new Size(TextBoxes.List[Index].Width, TSize(Tex_TextBox).Height));
+        Render_Box(Tex_TextBox, 3, TextBoxes.List[Index].Position, new Size(TextBoxes.List[Index].Width, TSize(Tex_TextBox).Height));
 
         // Desenha o texto do digitalizador
         TextBox_Text(Index);
@@ -320,7 +320,7 @@ partial class Graphics
 
     public static void TextBox_Text(byte i)
     {
-        Point Position = TextBoxes.List[i].General.Position;
+        Point Position = TextBoxes.List[i].Position;
         string Text = TextBoxes.List[i].Text;
 
         // Altera todos os caracteres do texto para um em especifico, se for necessário
@@ -441,7 +441,7 @@ partial class Graphics
         string Text = "None";
 
         // Somente se necessário
-        if (!Panels.Find("SelecionarPersonagem").General.Able) return;
+        if (!Panels.Find("SelecionarPersonagem").Able) return;
         if (Lists.Characters == null) return;
 
         // Dados
@@ -478,7 +478,7 @@ partial class Graphics
         short Texture;
 
         // Não desenhar se o painel não for visível
-        if (!Panels.Find("CriarPersonagem").General.Able)
+        if (!Panels.Find("CriarPersonagem").Able)
             return;
 
         // Textura do personagem
@@ -518,7 +518,7 @@ partial class Graphics
     public static void Game_Hotbar()
     {
         string Indicator = string.Empty;
-        Point Panel_Position = Panels.Find("Hotbar").General.Position;
+        Point Panel_Position = Panels.Find("Hotbar").Position;
 
         // Desenha o painel 
         Panel("Hotbar");
@@ -569,10 +569,10 @@ partial class Graphics
 
     public static void Game_Menu_Character()
     {
-        Point Panel_Position = Panels.Find("Menu_Personagem").General.Position;
+        Point Panel_Position = Panels.Find("Menu_Personagem").Position;
 
         // Somente se necessário
-        if (!Panels.Find("Menu_Personagem").General.Visible) return;
+        if (!Panels.Find("Menu_Personagem").Visible) return;
 
         // Desenha o painel 
         Panel("Menu_Personagem");
@@ -616,10 +616,10 @@ partial class Graphics
     public static void Game_Menu_Inventory()
     {
         byte NumColumns = 5;
-        Point Panel_Position = Panels.Find("Menu_Inventário").General.Position;
+        Point Panel_Position = Panels.Find("Menu_Inventário").Position;
 
         // Somente se necessário
-        if (!Panels.Find("Menu_Inventário").General.Visible) return;
+        if (!Panels.Find("Menu_Inventário").Visible) return;
 
         // Desenha o painel 
         Panel("Menu_Inventário");
@@ -648,12 +648,12 @@ partial class Graphics
     public static void Painel_Informations(short Item_Num, int X, int Y)
     {
         // Desenha o painel 
-        Panels.Find("Menu_Informação").General.Position.X = X;
-        Panels.Find("Menu_Informação").General.Position.Y = Y;
+        Panels.Find("Menu_Informação").Position.X = X;
+        Panels.Find("Menu_Informação").Position.Y = Y;
         Panel("Menu_Informação");
 
         // Informações
-        Point Position = Panels.Find("Menu_Informação").General.Position;
+        Point Position = Panels.Find("Menu_Informação").Position;
         DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, SFML.Graphics.Color.Yellow);
         Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Position.X + 9, Position.Y + 21, 64, 64));
 
@@ -710,7 +710,7 @@ partial class Graphics
     public static void Game_Chat()
     {
         // Define a bisiblidade da caixa
-        Panels.Find("Chat").General.Visible = TextBoxes.TexBox_Focus == TextBoxes.FindIndex("Chat");
+        Panels.Find("Chat").Visible = TextBoxes.TexBox_Focus == TextBoxes.FindIndex("Chat");
 
         // Renderiza as caixas
         Panel("Chat");
@@ -723,8 +723,8 @@ partial class Graphics
                     DrawText(Tools.Chat[i].Text, 16, 461 + 11 * (i - Tools.Chat_Line), Tools.Chat[i].Color);
 
         // Dica de como abrir o chat
-        if (!Panels.Find("Chat").General.Visible)
-            DrawText("Press [Enter] to open chat.", TextBoxes.Find("Chat").General.Position.X + 5, TextBoxes.Find("Chat").General.Position.Y + 3, SFML.Graphics.Color.White);
+        if (!Panels.Find("Chat").Visible)
+            DrawText("Press [Enter] to open chat.", TextBoxes.Find("Chat").Position.X + 5, TextBoxes.Find("Chat").Position.Y + 3, SFML.Graphics.Color.White);
         else
         {
             Button("Chat_Subir");

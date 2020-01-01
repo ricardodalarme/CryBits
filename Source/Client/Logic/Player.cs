@@ -221,7 +221,7 @@ public class Player
         if (!HasItem) return;
         if (!HasSlot) return;
         if (Environment.TickCount <= Me.Collect_Timer + 250) return;
-        if (Panels.Find("Chat").General.Visible) return;
+        if (Panels.Find("Chat").Visible) return;
 
         // Coleta o item
         Send.CollectItem();

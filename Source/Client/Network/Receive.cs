@@ -99,7 +99,7 @@ partial class Receive
 
         // Abre o painel de seleção de personagens
         Panels.Menu_Close();
-        Panels.Find("SelecionarPersonagem").General.Visible = true;
+        Panels.Find("SelecionarPersonagem").Visible = true;
     }
 
     private static void Join(NetIncomingMessage Data)
@@ -125,7 +125,7 @@ partial class Receive
 
         // Abre o painel de criação de personagem
         Panels.Menu_Close();
-        Panels.Find("CriarPersonagem").General.Visible = true;
+        Panels.Find("CriarPersonagem").Visible = true;
     }
 
     private static void Classes(NetIncomingMessage Data)
@@ -173,7 +173,7 @@ partial class Receive
         // Reseta os valores
         Tools.Chat = new System.Collections.Generic.List<Tools.Chat_Structure>();
         TextBoxes.Find("Chat").Text = string.Empty;
-        Panels.Find("Chat").General.Visible = false;
+        Panels.Find("Chat").Visible = false;
         Tools.Chat_Line = 0;
 
         // Abre o jogo

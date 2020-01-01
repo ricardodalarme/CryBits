@@ -73,7 +73,7 @@ public class Tools
     public static void SetEnable(string Panel, Windows Window)
     {
         // Define a habilitação
-        if (CurrentWindow != Window || Panel != string.Empty && !Panels.Find(Panel).General.Visible)
+        if (CurrentWindow != Window || Panel != string.Empty && !Panels.Find(Panel).Visible)
             Able = false;
         else
             Able = true;
@@ -221,7 +221,7 @@ public class Tools
     public static byte Inventory_Mouse()
     {
         byte NumColumn = 5;
-        Point Panel_Position = Panels.Find("Menu_Inventário").General.Position;
+        Point Panel_Position = Panels.Find("Menu_Inventário").Position;
 
         for (byte i = 1; i <= Game.Max_Inventory; i++)
         {
@@ -262,7 +262,7 @@ public class Tools
 
     public static void Equipment_MouseDown(MouseEventArgs e)
     {
-        Point Panel_Position = Panels.Find("Menu_Personagem").General.Position;
+        Point Panel_Position = Panels.Find("Menu_Personagem").Position;
 
         for (byte i = 0; i <= (byte)Game.Equipments.Amount - 1; i++)
             if (IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
@@ -276,7 +276,7 @@ public class Tools
 
     public static byte Hotbar_Mouse()
     {
-        Point Panel_Position = Panels.Find("Hotbar").General.Position;
+        Point Panel_Position = Panels.Find("Hotbar").Position;
 
         for (byte i = 1; i <= Game.Max_Hotbar; i++)
         {

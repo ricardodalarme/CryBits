@@ -108,7 +108,7 @@ public partial class Window : Form
 
         // Em jogo
         if (Tools.CurrentWindow == Tools.Windows.Game)
-            if (!Panels.Find("Chat").General.Visible)
+            if (!Panels.Find("Chat").Visible)
             {
                 switch (e.KeyCode)
                 {

@@ -7,11 +7,10 @@ public class Buttons
     public static Structure[] List = new Structure[1];
 
     // Estrutura das ferramentas
-    public class Structure
+    public class Structure : Tools.Structure
     {
         public byte Texture;
         public States State;
-        public Tools.Structure General;
     }
 
     // Estados dos botões
@@ -26,7 +25,7 @@ public class Buttons
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
-            if (List[i].General.Name == Name)
+            if (List[i].Name == Name)
                 return i;
 
         return 0;
@@ -36,7 +35,7 @@ public class Buttons
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
-            if (List[i].General.Name == Name)
+            if (List[i].Name == Name)
                 return List[i];
 
         return null;
@@ -49,15 +48,15 @@ public class Buttons
             SFML.Graphics.Texture Texture = Graphics.Tex_Button[List[Index].Texture];
 
             // Somente se necessário
-            if (!List[Index].General.Able) return;
-            if (!Tools.IsAbove(new Rectangle(List[Index].General.Position, Graphics.TSize(Texture)))) return;
+            if (!List[Index].Able) return;
+            if (!Tools.IsAbove(new Rectangle(List[Index].Position, Graphics.TSize(Texture)))) return;
 
             // Altera o estado do botão
             Audio.Sound.Play(Audio.Sounds.Click);
             List[Index].State = States.Above;
 
             // Executa o evento
-            Execute(List[Index].General.Name);
+            Execute(List[Index].Name);
         }
 
         public static void MouseDown(MouseEventArgs e, byte Index)
@@ -66,10 +65,10 @@ public class Buttons
 
             // Somente se necessário
             if (e.Button == MouseButtons.Right) return;
-            if (!List[Index].General.Able) return;
+            if (!List[Index].Able) return;
 
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-            if (!Tools.IsAbove(new Rectangle(List[Index].General.Position, Graphics.TSize(Texture))))
+            if (!Tools.IsAbove(new Rectangle(List[Index].Position, Graphics.TSize(Texture))))
                 return;
 
             // Altera o estado do botão
@@ -82,10 +81,10 @@ public class Buttons
 
             // Somente se necessário
             if (e.Button == MouseButtons.Right) return;
-            if (!List[i].General.Able) return;
+            if (!List[i].Able) return;
 
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-            if (!Tools.IsAbove(new Rectangle(List[i].General.Position, Graphics.TSize(Texture))))
+            if (!Tools.IsAbove(new Rectangle(List[i].Position, Graphics.TSize(Texture))))
             {
                 List[i].State = States.Normal;
                 return;
@@ -137,16 +136,16 @@ public class Buttons
             bool Visibility = false;
 
             // Verifica apenas se o painel for visível
-            if (!Panels.Find("SelecionarPersonagem").General.Visible)
+            if (!Panels.Find("SelecionarPersonagem").Visible)
                 return;
 
             if (Lists.Characters[Game.SelectCharacter].Class != 0)
                 Visibility = true;
 
             // Altera os botões visíveis
-            Find("Personagem_Criar").General.Visible = !Visibility;
-            Find("Personagem_Deletar").General.Visible = Visibility;
-            Find("Personagem_Usar").General.Visible = Visibility;
+            Find("Personagem_Criar").Visible = !Visibility;
+            Find("Personagem_Deletar").Visible = Visibility;
+            Find("Personagem_Usar").Visible = Visibility;
         }
 
         public static void Connect()
@@ -156,7 +155,7 @@ public class Buttons
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Find("Conectar").General.Visible = true;
+            Panels.Find("Conectar").Visible = true;
         }
 
         public static void Register()
@@ -166,7 +165,7 @@ public class Buttons
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Find("Registrar").General.Visible = true;
+            Panels.Find("Registrar").Visible = true;
         }
 
         public static void Options()
@@ -176,7 +175,7 @@ public class Buttons
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Find("Opções").General.Visible = true;
+            Panels.Find("Opções").Visible = true;
         }
 
         public static void Menu_Return()
@@ -186,7 +185,7 @@ public class Buttons
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Find("Conectar").General.Visible = true;
+            Panels.Find("Conectar").Visible = true;
         }
 
         public static void Connect_Ok()
@@ -240,7 +239,7 @@ public class Buttons
         {
             // Abre o painel de personagens
             Panels.Menu_Close();
-            Panels.Find("SelecionarPersonagem").General.Visible = true;
+            Panels.Find("SelecionarPersonagem").Visible = true;
         }
 
         public static void Character_Use()
@@ -296,8 +295,8 @@ public class Buttons
         public static void Menu_Character()
         {
             // Altera a visibilidade do painel e fecha os outros
-            Panels.Find("Menu_Personagem").General.Visible = !Panels.Find("Menu_Personagem").General.Visible;
-            Panels.Find("Menu_Inventário").General.Visible = false;
+            Panels.Find("Menu_Personagem").Visible = !Panels.Find("Menu_Personagem").Visible;
+            Panels.Find("Menu_Inventário").Visible = false;
         }
 
         public static void Attribute_Strenght()
@@ -328,8 +327,8 @@ public class Buttons
         public static void Menu_Inventory()
         {
             // Altera a visibilidade do painel e fecha os outros
-            Panels.Find("Menu_Inventário").General.Visible = !Panels.Find("Menu_Inventário").General.Visible;
-            Panels.Find("Menu_Personagem").General.Visible = false;
+            Panels.Find("Menu_Inventário").Visible = !Panels.Find("Menu_Inventário").Visible;
+            Panels.Find("Menu_Personagem").Visible = false;
         }
     }
 }

@@ -10,18 +10,17 @@ public class CheckBoxes
     public const byte Margin = 4;
 
     // Estrutura da ferramenta
-    public class Structure
+    public class Structure : Tools.Structure
     {
         public string Text;
         public bool State;
-        public Tools.Structure General;
     }
 
     public static byte FindIndex(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
-            if (List[i].General.Name == Name)
+            if (List[i].Name == Name)
                 return i;
 
         return 0;
@@ -31,7 +30,7 @@ public class CheckBoxes
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
-            if (List[i].General.Name == Name)
+            if (List[i].Name == Name)
                 return List[i];
 
         return null;
@@ -44,7 +43,7 @@ public class CheckBoxes
             int Text_Width; Size Texture_Size; Size Box;
 
             // Somente se necessário
-            if (!List[Index].General.Able) return;
+            if (!List[Index].Able) return;
 
             // Tamanho do marcador
             Texture_Size = Graphics.TSize(Graphics.Tex_CheckBox);
@@ -52,13 +51,13 @@ public class CheckBoxes
             Box = new Size(Texture_Size.Width / 2 + Text_Width + Margin, Texture_Size.Height);
 
             // Somente se estiver sobrepondo a ferramenta
-            if (!Tools.IsAbove(new Rectangle(List[Index].General.Position, Box))) return;
+            if (!Tools.IsAbove(new Rectangle(List[Index].Position, Box))) return;
 
             // Altera o estado do marcador
             List[Index].State = !List[Index].State;
 
             // Executa o evento
-            Execute(List[Index].General.Name);
+            Execute(List[Index].Name);
             Audio.Sound.Play(Audio.Sounds.Click);
         }
 
