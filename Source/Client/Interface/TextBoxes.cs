@@ -13,10 +13,43 @@ public class TextBoxes
     // Estrutura da ferramenta
     public class Structure : Tools.Structure
     {
+        // Dados
         public string Text;
         public short Lenght;
         public short Width;
         public bool Password;
+
+        // Eventos
+        public void MouseUp()
+        {
+            // Somente se necessário
+            if (!IsAble) return;
+            if (!Tools.IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
+
+            // Define o foco no Digitalizador
+            TexBox_Focus = this;
+        }
+
+        public void KeyPress(KeyPressEventArgs e)
+        {
+            // Apaga a última letra do texto
+            if (!string.IsNullOrEmpty(Text))
+            {
+                if (e.KeyChar == '\b' && Text.Length > 0)
+                {
+                    Text = Text.Remove(Text.Length - 1);
+                    return;
+                }
+
+                // Não adicionar se já estiver no máximo de caracteres
+                if (Lenght > 0)
+                    if (Text.Length >= Lenght)
+                        return;
+            }
+
+            // Adiciona apenas os caractres válidos ao digitalizador
+            if (e.KeyChar >= 32 && e.KeyChar <= 126) Text += e.KeyChar.ToString();
+        }
     }
 
     public static Structure Get(string Name)
@@ -135,52 +168,5 @@ public class TextBoxes
 
         // Limpa a caixa de texto
         Tool.Text = string.Empty;
-    }
-
-    public class Events
-    {
-        public static void MouseUp(MouseEventArgs e, Structure Tool)
-        {
-            // Somente se necessário
-            if (!Tool.IsAble) return;
-            if (!Tools.IsAbove(new Rectangle(Tool.Position, new Size(Tool.Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
-
-            // Define o foco no Digitalizador
-            TexBox_Focus = Tool;
-        }
-
-        public static void KeyPress(KeyPressEventArgs e)
-        {
-            // Se não tiver nenhum focado então sair
-            if (TexBox_Focus == null) return;
-
-            // Altera o foco do digitalizador para o próximo
-            if (e.KeyChar == (char)Keys.Tab)
-            {
-                ChangeFocus();
-                return;
-            }
-
-            // Texto
-            string Text = TexBox_Focus.Text;
-
-            // Apaga a última letra do texto
-            if (!string.IsNullOrEmpty(Text))
-            {
-                if (e.KeyChar == '\b' && Text.Length > 0)
-                {
-                    TexBox_Focus.Text = Text.Remove(Text.Length - 1);
-                    return;
-                }
-
-                // Não adicionar se já estiver no máximo de caracteres
-                if (TexBox_Focus.Lenght > 0)
-                    if (Text.Length >= TexBox_Focus.Lenght)
-                        return;
-            }
-
-            // Adiciona apenas os caractres válidos ao digitalizador
-            if (e.KeyChar >= 32 && e.KeyChar <= 126) TexBox_Focus.Text += e.KeyChar.ToString();
-        }
     }
 }

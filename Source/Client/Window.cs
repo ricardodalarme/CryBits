@@ -26,7 +26,7 @@ public partial class Window : Form
     {
         // Executa o evento de acordo a sobreposição do ponteiro
         for (byte i = 0; i < Tools.Order.Length; i++)
-            if (Tools.Order[i] is Buttons.Structure) Buttons.Events.MouseDown(e, (Buttons.Structure)Tools.Order[i]);
+            if (Tools.Order[i] is Buttons.Structure) ((Buttons.Structure)Tools.Order[i]).MouseDown(e);
 
         // Eventos em jogo
         if (Tools.CurrentWindow == Tools.Windows.Game)
@@ -45,16 +45,16 @@ public partial class Window : Form
 
         // Executa o evento de acordo a sobreposição do ponteiro
         for (byte i = 0; i < Tools.Order.Length; i++)
-            if (Tools.Order[i] is Buttons.Structure) Buttons.Events.MouseMove(e, (Buttons.Structure)Tools.Order[i]);
+            if (Tools.Order[i] is Buttons.Structure) ((Buttons.Structure)Tools.Order[i]).MouseMove(e);
     }
 
     private void Window_MouseUp(object sender, MouseEventArgs e)
     {
         // Executa o evento de acordo a sobreposição do ponteiro
         for (byte i = 0; i < Tools.Order.Length; i++) {
-            if (Tools.Order[i] is Buttons.Structure) Buttons.Events.MouseUp((Buttons.Structure)Tools.Order[i]);
-            else if (Tools.Order[i] is CheckBoxes.Structure) CheckBoxes.Events.MouseUp((CheckBoxes.Structure)Tools.Order[i]);
-            else if (Tools.Order[i] is TextBoxes.Structure) TextBoxes.Events.MouseUp(e, (TextBoxes.Structure)Tools.Order[i]);
+            if (Tools.Order[i] is Buttons.Structure) ((Buttons.Structure)Tools.Order[i]).MouseUp();
+            else if (Tools.Order[i] is CheckBoxes.Structure) ((CheckBoxes.Structure)Tools.Order[i]).MouseUp();
+            else if (Tools.Order[i] is TextBoxes.Structure) ((TextBoxes.Structure)Tools.Order[i]).MouseUp();
         }
 
         // Eventos em jogo
@@ -80,8 +80,16 @@ public partial class Window : Form
 
     private void Window_KeyPress(object sender, KeyPressEventArgs e)
     {
+        // Altera o foco do digitalizador para o próximo
+        if (e.KeyChar == (char)Keys.Tab)
+        {
+            TextBoxes.ChangeFocus();
+            return;
+        }
+
         // Executa os eventos
-        TextBoxes.Events.KeyPress(e);
+        if (TextBoxes.TexBox_Focus != null)
+            TextBoxes.TexBox_Focus.KeyPress(e);
     }
 
     private void Window_KeyDown(object sender, KeyEventArgs e)

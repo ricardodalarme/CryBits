@@ -413,7 +413,7 @@ partial class Graphics
         Button("Personagem_TrocarEsquerda");
 
         // Eventos
-        Buttons.Events.Characters_Change_Buttons();
+        Buttons.Characters_Change_Buttons();
     }
 
     public static void Menu_CreateCharacter()
