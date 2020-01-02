@@ -28,7 +28,7 @@ public partial class Window : Form
         for (byte i = 0; i < Tools.Order.Length; i++)
             switch (Tools.Order[i].Type)
             {
-                case Tools.Types.Button: Buttons.Events.MouseDown(e, Tools.Order[i].Index); break;
+                case Tools.Types.Button: Buttons.List[Tools.Order[i].Index].MouseDown(e); break;
             }
 
         // Eventos em jogo
@@ -50,7 +50,7 @@ public partial class Window : Form
         for (byte i = 0; i < Tools.Order.Length; i++)
             switch (Tools.Order[i].Type)
             {
-                case Tools.Types.Button: Buttons.Events.MouseMove(e, Tools.Order[i].Index); break;
+                case Tools.Types.Button: Buttons.List[Tools.Order[i].Index].MouseMove(e); break;
             }
     }
 
@@ -60,8 +60,8 @@ public partial class Window : Form
         for (byte i = 0; i < Tools.Order.Length; i++)
             switch (Tools.Order[i].Type)
             {
-                case Tools.Types.Button: Buttons.Events.MouseUp(Tools.Order[i].Index); break;
-                case Tools.Types.CheckBox: CheckBoxes.Events.MouseUp(Tools.Order[i].Index); break;
+                case Tools.Types.Button: Buttons.List[Tools.Order[i].Index].MouseUp(); break;
+                case Tools.Types.CheckBox: CheckBoxes.List[Tools.Order[i].Index].MouseUp(); break;
                 case Tools.Types.TextBox: TextBoxes.Events.MouseUp(e, Tools.Order[i].Index); break;
             }
 

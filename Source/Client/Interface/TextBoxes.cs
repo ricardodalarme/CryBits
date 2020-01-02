@@ -42,14 +42,14 @@ public class TextBoxes
     public static void Focus()
     {
         // Se o digitalizador não estiver habilitado então isso não é necessário 
-        if (List[TexBox_Focus] != null && List[TexBox_Focus].Able) return;
+        if (List[TexBox_Focus] != null && List[TexBox_Focus].IsAble) return;
 
         // Altera o digitalizador focado para o mais próximo
         for (byte i = 1; i < Tools.Order.Length; i++)
         {
             if (Tools.Order[i].Type != Tools.Types.TextBox)
                 continue;
-            else if (!List[Tools.Order[i].Index].Able)
+            else if (!List[Tools.Order[i].Index].IsAble)
                 continue;
             else if (i == GetIndex("Chat"))
                 TexBox_Focus = Tools.Order[i].Index;
@@ -64,7 +64,7 @@ public class TextBoxes
         {
             if (Tools.Order[i].Type != Tools.Types.TextBox)
                 continue;
-            else if (!List[Tools.Order[i].Index].Able)
+            else if (!List[Tools.Order[i].Index].IsAble)
                 continue;
             if (TexBox_Focus != Last() && i <= Tools.Encontrar(Tools.Types.TextBox, TexBox_Focus))
                 continue;
@@ -81,7 +81,7 @@ public class TextBoxes
         // Retorna o último digitalizador habilitado
         for (byte i = 1; i < Tools.Order.Length; i++)
             if (Tools.Order[i].Type == Tools.Types.TextBox)
-                if (List[Tools.Order[i].Index].Able)
+                if (List[Tools.Order[i].Index].IsAble)
                     Index = Tools.Order[i].Index;
 
         return Index;
@@ -152,7 +152,7 @@ public class TextBoxes
         public static void MouseUp(MouseEventArgs e, byte Index)
         {
             // Somente se necessário
-            if (!List[Index].Able) return;
+            if (!List[Index].IsAble) return;
             if (!Tools.IsAbove(new Rectangle(List[Index].Position, new Size(List[Index].Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
 
             // Define o foco no Digitalizador

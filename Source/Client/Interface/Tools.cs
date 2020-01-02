@@ -35,15 +35,15 @@ public class Tools
         public string Name;
         public bool Visible;
         public Point Position;
-        public bool Able;
+        public bool IsAble;
 
         public bool CheckEnable()
         {
             // Define a habilitação da ferramenta
             if (!Visible || !Tools.Able)
-                return Able = false;
+                return IsAble = false;
             else
-                return Able = true;
+                return IsAble = true;
         }
     }
 

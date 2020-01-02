@@ -257,7 +257,7 @@ partial class Graphics
         }
 
         // Desenha o botão
-        Render(Tex_Button[Buttons.List[Index].Texture], Buttons.List[Index].Position, new SFML.Graphics.Color(255, 255, 225, Alpha));
+        Render(Tex_Button[Buttons.List[Index].Texture_Num], Buttons.List[Index].Position, new SFML.Graphics.Color(255, 255, 225, Alpha));
     }
 
     public static void Panel(string Name)
@@ -415,7 +415,7 @@ partial class Graphics
         Button("Personagem_TrocarEsquerda");
 
         // Eventos
-        Buttons.Events.Characters_Change_Buttons();
+        Buttons.Characters_Change_Buttons();
     }
 
     public static void Menu_CreateCharacter()
@@ -441,7 +441,7 @@ partial class Graphics
         string Text = "None";
 
         // Somente se necessário
-        if (!Panels.Get("SelecionarPersonagem").Able) return;
+        if (!Panels.Get("SelecionarPersonagem").IsAble) return;
         if (Lists.Characters == null) return;
 
         // Dados
@@ -478,7 +478,7 @@ partial class Graphics
         short Texture;
 
         // Não desenhar se o painel não for visível
-        if (!Panels.Get("CriarPersonagem").Able)
+        if (!Panels.Get("CriarPersonagem").IsAble)
             return;
 
         // Textura do personagem

@@ -79,7 +79,7 @@ class Read
         Buttons.List[Index].Position.X = Data.ReadInt32();
         Buttons.List[Index].Position.Y = Data.ReadInt32();
         Buttons.List[Index].Visible = Data.ReadBoolean();
-        Buttons.List[Index].Texture = Data.ReadByte();
+        Buttons.List[Index].Texture_Num = Data.ReadByte();
 
         // Fecha o sistema
         Data.Dispose();
