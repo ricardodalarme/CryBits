@@ -74,7 +74,7 @@ class TextBoxes
                 continue;
             else if (!Tools.Order[i].IsAble)
                 continue;
-            else if ((Structure)Tools.Order[i] == Get("Chat"))
+            else if ((Structure)Tools.Order[i] != Get("Chat"))
                 Focused = (Structure)Tools.Order[i];
             return;
         }
