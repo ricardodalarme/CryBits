@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-public class Tools
+class Tools
 {
     // Habilitação das ferramentas
     public static bool Able;
@@ -21,7 +21,7 @@ public class Tools
     public const byte Max_Chat_Lines = 50;
 
     // Ordem da renderização das ferramentas
-    public static Structure[] Order = new Structure[0];
+    public static List<Structure> Order = new List<Structure>();
     public static List<Chat_Structure> Chat = new List<Chat_Structure>();
 
     public class Structure
@@ -53,15 +53,6 @@ public class Tools
         Game
     }
 
-    // Tipos de ferramentas
-    public enum Types
-    {
-        Button,
-        Painel,
-        CheckBox,
-        TextBox
-    }
-
     public static void SetEnable(string Panel, Windows Window)
     {
         // Define a habilitação
@@ -73,22 +64,14 @@ public class Tools
 
     public static void List(Structure Tool)
     {
-        short Amount = (short)(Order.GetUpperBound(0) + 1);
-
-        // Se já estiver listado não é necessário listar de novo
-        if (IsListed(Tool)) return;
-
-        // Altera o tamanho da caixa
-        Array.Resize(ref Order, Amount + 1);
-
         // Adiciona à lista
-        Order[Amount] = Tool;
+        if (!IsListed(Tool))  Order.Add(Tool);
     }
 
     private static bool IsListed(Structure Tool)
     {
         // Verifica se a ferramenta já está listada
-        for (short i = 1; i < Order.Length; i++)
+        for (short i = 0; i < Order.Count; i++)
             if (Order[i] == Tool)
                 return true;
 
@@ -109,7 +92,7 @@ public class Tools
     public static int Get(Structure Tool)
     {
         // Lista os nomes dos botões
-        for (byte i = 1; i < Order.Length; i++)
+        for (byte i = 0; i < Order.Count; i++)
             if (Order[i] == Tool)
                 return i;
 

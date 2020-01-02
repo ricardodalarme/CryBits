@@ -25,7 +25,7 @@ public partial class Window : Form
     private void Window_MouseDown(object sender, MouseEventArgs e)
     {
         // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i < Tools.Order.Length; i++)
+        for (byte i = 0; i < Tools.Order.Count; i++)
             if (Tools.Order[i] is Buttons.Structure) ((Buttons.Structure)Tools.Order[i]).MouseDown(e);
 
         // Eventos em jogo
@@ -44,14 +44,14 @@ public partial class Window : Form
         Tools.Mouse.Y = e.Y;
 
         // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i < Tools.Order.Length; i++)
+        for (byte i = 0; i < Tools.Order.Count; i++)
             if (Tools.Order[i] is Buttons.Structure) ((Buttons.Structure)Tools.Order[i]).MouseMove(e);
     }
 
     private void Window_MouseUp(object sender, MouseEventArgs e)
     {
         // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i < Tools.Order.Length; i++) {
+        for (byte i = 0; i < Tools.Order.Count; i++) {
             if (Tools.Order[i] is Buttons.Structure) ((Buttons.Structure)Tools.Order[i]).MouseUp();
             else if (Tools.Order[i] is CheckBoxes.Structure) ((CheckBoxes.Structure)Tools.Order[i]).MouseUp();
             else if (Tools.Order[i] is TextBoxes.Structure) ((TextBoxes.Structure)Tools.Order[i]).MouseUp();
@@ -88,8 +88,8 @@ public partial class Window : Form
         }
 
         // Executa os eventos
-        if (TextBoxes.TexBox_Focus != null)
-            TextBoxes.TexBox_Focus.KeyPress(e);
+        if (TextBoxes.Focused != null)
+            TextBoxes.Focused.KeyPress(e);
     }
 
     private void Window_KeyDown(object sender, KeyEventArgs e)

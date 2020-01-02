@@ -1,13 +1,13 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-public class TextBoxes
+class TextBoxes
 {
     // Armazenamento de dados da ferramenta
     public static Structure[] List;
 
     // Digitalizador focado
-    public static Structure TexBox_Focus;
+    public static Structure Focused;
     public static bool Signal;
 
     // Estrutura da ferramenta
@@ -27,7 +27,7 @@ public class TextBoxes
             if (!Tools.IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
 
             // Define o foco no Digitalizador
-            TexBox_Focus = this;
+            Focused = this;
         }
 
         public void KeyPress(KeyPressEventArgs e)
@@ -65,17 +65,17 @@ public class TextBoxes
     public static void Focus()
     {
         // Se o digitalizador não estiver habilitado então isso não é necessário 
-        if (TexBox_Focus != null && TexBox_Focus.IsAble) return;
+        if (Focused != null && Focused.IsAble) return;
         
         // Altera o digitalizador focado para o mais próximo
-        for (byte i = 1; i < Tools.Order.Length; i++)
+        for (byte i = 0; i < Tools.Order.Count; i++)
         {
             if (!(Tools.Order[i] is Structure))
                 continue;
             else if (!Tools.Order[i].IsAble)
                 continue;
             else if ((Structure)Tools.Order[i] == Get("Chat"))
-                TexBox_Focus = (Structure)Tools.Order[i];
+                Focused = (Structure)Tools.Order[i];
             return;
         }
     }
@@ -83,16 +83,16 @@ public class TextBoxes
     public static void ChangeFocus()
     {
         // Altera o digitalizador focado para o próximo
-        for (byte i = 1; i < Tools.Order.Length; i++)
+        for (byte i = 0; i < Tools.Order.Count; i++)
         {
             if (!(Tools.Order[i] is Structure))
                 continue;
             else if (!Tools.Order[i].IsAble)
                 continue;
-            if (TexBox_Focus != Last() && i <= Tools.Get(TexBox_Focus))
+            if (Focused != Last() && i <= Tools.Get(Focused))
                 continue;
 
-            TexBox_Focus = (Structure)Tools.Order[i];
+            Focused = (Structure)Tools.Order[i];
             return;
         }
     }
@@ -102,7 +102,7 @@ public class TextBoxes
         Structure Tool = null;
 
         // Retorna o último digitalizador habilitado
-        for (byte i = 1; i < Tools.Order.Length; i++)
+        for (byte i = 0; i < Tools.Order.Count; i++)
             if (Tools.Order[i] is Structure)
                 if (Tools.Order[i].IsAble)
                     Tool = (Structure)Tools.Order[i];
@@ -124,11 +124,11 @@ public class TextBoxes
         if (Panels.Get("Chat").Visible)
         {
             Tools.Chat_Text_Visible = true;
-            TexBox_Focus = Tool;
+            Focused = Tool;
             return;
         }
         else
-            TexBox_Focus = null;
+            Focused = null;
 
         // Dados
         string Message = Tool.Text;

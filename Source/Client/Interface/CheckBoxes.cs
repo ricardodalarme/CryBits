@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-public class CheckBoxes
+class CheckBoxes
 {
     // Armazenamento dos dados da ferramenta
     public static Structure[] List;

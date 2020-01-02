@@ -1,4 +1,4 @@
-﻿public class Panels
+﻿class Panels
 {
     // Armazenamento dos dados da ferramenta
     public static Structure[] List;

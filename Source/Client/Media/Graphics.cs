@@ -329,7 +329,7 @@ partial class Graphics
         Text = Tools.TextBreak(Text, Tool.Width - 10);
 
         // Desenha o texto do digitalizador
-        if (TextBoxes.TexBox_Focus == Tool && TextBoxes.Signal)
+        if (TextBoxes.Focused == Tool && TextBoxes.Signal)
             DrawText(Text + "|", Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
         else
             DrawText(Text, Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
@@ -708,7 +708,7 @@ partial class Graphics
     public static void Game_Chat()
     {
         // Define a bisiblidade da caixa
-        Panels.Get("Chat").Visible = TextBoxes.TexBox_Focus == TextBoxes.Get("Chat");
+        Panels.Get("Chat").Visible = TextBoxes.Focused == TextBoxes.Get("Chat");
 
         // Renderiza as caixas
         Panel("Chat");

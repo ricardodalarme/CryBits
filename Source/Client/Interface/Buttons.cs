@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-public class Buttons
+class Buttons
 {
     // Aramazenamento de dados da ferramenta
     public static Structure[] List;
