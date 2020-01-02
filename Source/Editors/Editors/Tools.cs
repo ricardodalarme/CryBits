@@ -47,7 +47,7 @@ public partial class Editor_Tools : Form
     {
         // Adiciona os itens à lista
         for (byte i = 1; i <= Lists.Button.GetUpperBound(0); i++)
-            Objects.List.Items.Add(Globals.Numbering(i, Lists.Button.GetUpperBound(0)) + ":" + Lists.Button[i].General.Name);
+            Objects.List.Items.Add(Globals.Numbering(i, Lists.Button.GetUpperBound(0)) + ":" + Lists.Button[i].Name);
 
         // Abre o painel
         Objects.panButton.Visible = true;
@@ -57,7 +57,7 @@ public partial class Editor_Tools : Form
     {
         // Adiciona os itens à lista
         for (byte i = 1; i <= Lists.TextBox.GetUpperBound(0); i++)
-            Objects.List.Items.Add(Globals.Numbering(i, Lists.TextBox.GetUpperBound(0)) + ":" + Lists.TextBox[i].General.Name);
+            Objects.List.Items.Add(Globals.Numbering(i, Lists.TextBox.GetUpperBound(0)) + ":" + Lists.TextBox[i].Name);
 
         // Abre o painel
         Objects.panTextBox.Visible = true;
@@ -67,7 +67,7 @@ public partial class Editor_Tools : Form
     {
         // Adiciona os itens à lista
         for (byte i = 1; i <= Lists.Panel.GetUpperBound(0); i++)
-            Objects.List.Items.Add(Globals.Numbering(i, Lists.Panel.GetUpperBound(0)) + ":" + Lists.Panel[i].General.Name);
+            Objects.List.Items.Add(Globals.Numbering(i, Lists.Panel.GetUpperBound(0)) + ":" + Lists.Panel[i].Name);
 
         // Abre o painel
         Objects.panPanel.Visible = true;
@@ -77,7 +77,7 @@ public partial class Editor_Tools : Form
     {
         // Adiciona os itens à lista
         for (byte i = 1; i <= Lists.CheckBox.GetUpperBound(0); i++)
-            Objects.List.Items.Add(Globals.Numbering(i, Lists.CheckBox.GetUpperBound(0)) + ":" + Lists.CheckBox[i].General.Name);
+            Objects.List.Items.Add(Globals.Numbering(i, Lists.CheckBox.GetUpperBound(0)) + ":" + Lists.CheckBox[i].Name);
 
         // Abre o painel
         Objects.panCheckBox.Visible = true;
@@ -114,20 +114,20 @@ public partial class Editor_Tools : Form
     private void Update_Button()
     {
         // Lista as propriedades do botão
-        txtName.Text = Lists.Button[Selected].General.Name;
-        numX.Value = Lists.Button[Selected].General.Position.X;
-        numY.Value = Lists.Button[Selected].General.Position.Y;
-        chkVisible.Checked = Lists.Button[Selected].General.Visible;
+        txtName.Text = Lists.Button[Selected].Name;
+        numX.Value = Lists.Button[Selected].Position.X;
+        numY.Value = Lists.Button[Selected].Position.Y;
+        chkVisible.Checked = Lists.Button[Selected].Visible;
         lblButton_Texture.Text = "Texture: " + Lists.Button[Selected].Texture;
     }
 
     private void Update_TextBox()
     {
         // Lista as propriedades do digitalizador
-        txtName.Text = Lists.TextBox[Selected].General.Name;
-        numX.Value = Lists.TextBox[Selected].General.Position.X;
-        numY.Value = Lists.TextBox[Selected].General.Position.Y;
-        chkVisible.Checked = Lists.TextBox[Selected].General.Visible;
+        txtName.Text = Lists.TextBox[Selected].Name;
+        numX.Value = Lists.TextBox[Selected].Position.X;
+        numY.Value = Lists.TextBox[Selected].Position.Y;
+        chkVisible.Checked = Lists.TextBox[Selected].Visible;
         scrlTextBox_Max_Characters.Value = Lists.TextBox[Selected].Max_Chars;
         scrlTextBox_Width.Value = Lists.TextBox[Selected].Width;
     }
@@ -135,20 +135,20 @@ public partial class Editor_Tools : Form
     private void Update_CheckBox()
     {
         // Lista as propriedades do marcador
-        txtName.Text = Lists.CheckBox[Selected].General.Name;
-        numX.Value = Lists.CheckBox[Selected].General.Position.X;
-        numY.Value = Lists.CheckBox[Selected].General.Position.Y;
-        chkVisible.Checked = Lists.CheckBox[Selected].General.Visible;
+        txtName.Text = Lists.CheckBox[Selected].Name;
+        numX.Value = Lists.CheckBox[Selected].Position.X;
+        numY.Value = Lists.CheckBox[Selected].Position.Y;
+        chkVisible.Checked = Lists.CheckBox[Selected].Visible;
         txtCheckBox_Text.Text = Lists.CheckBox[Selected].Text;
     }
 
     private void Update_Panel()
     {
         // Lista as propriedades do painel
-        txtName.Text = Lists.Panel[Selected].General.Name;
-        numX.Value = Lists.Panel[Selected].General.Position.X;
-        numY.Value = Lists.Panel[Selected].General.Position.Y;
-        chkVisible.Checked = Lists.Panel[Selected].General.Visible;
+        txtName.Text = Lists.Panel[Selected].Name;
+        numX.Value = Lists.Panel[Selected].Position.X;
+        numY.Value = Lists.Panel[Selected].Position.Y;
+        chkVisible.Checked = Lists.Panel[Selected].Visible;
         lblPanel_Texture.Text = "Texture: " + Lists.Panel[Selected].Texture;
     }
 
@@ -305,10 +305,10 @@ public partial class Editor_Tools : Form
         // Define os valores
         switch ((Globals.Tools_Types)cmbTools.SelectedIndex)
         {
-            case Globals.Tools_Types.Button: Lists.Button[Selected].General.Name = txtName.Text; break;
-            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].General.Name = txtName.Text; break;
-            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].General.Name = txtName.Text; break;
-            case Globals.Tools_Types.Panel: Lists.Panel[Selected].General.Name = txtName.Text; break;
+            case Globals.Tools_Types.Button: Lists.Button[Selected].Name = txtName.Text; break;
+            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].Name = txtName.Text; break;
+            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].Name = txtName.Text; break;
+            case Globals.Tools_Types.Panel: Lists.Panel[Selected].Name = txtName.Text; break;
         }
 
         List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count) + ":" + txtName.Text;
@@ -319,10 +319,10 @@ public partial class Editor_Tools : Form
         // Define os valores
         switch ((Globals.Tools_Types)cmbTools.SelectedIndex)
         {
-            case Globals.Tools_Types.Button: Lists.Button[Selected].General.Position.X = (short)numX.Value; break;
-            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].General.Position.X = (short)numX.Value; break;
-            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].General.Position.X = (short)numX.Value; break;
-            case Globals.Tools_Types.Panel: Lists.Panel[Selected].General.Position.X = (short)numX.Value; break;
+            case Globals.Tools_Types.Button: Lists.Button[Selected].Position.X = (short)numX.Value; break;
+            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].Position.X = (short)numX.Value; break;
+            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].Position.X = (short)numX.Value; break;
+            case Globals.Tools_Types.Panel: Lists.Panel[Selected].Position.X = (short)numX.Value; break;
         }
     }
 
@@ -331,10 +331,10 @@ public partial class Editor_Tools : Form
         // Define os valores
         switch ((Globals.Tools_Types)cmbTools.SelectedIndex)
         {
-            case Globals.Tools_Types.Button: Lists.Button[Selected].General.Position.Y = (short)numY.Value; break;
-            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].General.Position.Y = (short)numY.Value; break;
-            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].General.Position.Y = (short)numY.Value; break;
-            case Globals.Tools_Types.Panel: Lists.Panel[Selected].General.Position.Y = (short)numY.Value; break;
+            case Globals.Tools_Types.Button: Lists.Button[Selected].Position.Y = (short)numY.Value; break;
+            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].Position.Y = (short)numY.Value; break;
+            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].Position.Y = (short)numY.Value; break;
+            case Globals.Tools_Types.Panel: Lists.Panel[Selected].Position.Y = (short)numY.Value; break;
         }
     }
 
@@ -343,10 +343,10 @@ public partial class Editor_Tools : Form
         // Define os valores
         switch ((Globals.Tools_Types)cmbTools.SelectedIndex)
         {
-            case Globals.Tools_Types.Button: Lists.Button[Selected].General.Visible = chkVisible.Checked; break;
-            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].General.Visible = chkVisible.Checked; break;
-            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].General.Visible = chkVisible.Checked; break;
-            case Globals.Tools_Types.Panel: Lists.Panel[Selected].General.Visible = chkVisible.Checked; break;
+            case Globals.Tools_Types.Button: Lists.Button[Selected].Visible = chkVisible.Checked; break;
+            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].Visible = chkVisible.Checked; break;
+            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].Visible = chkVisible.Checked; break;
+            case Globals.Tools_Types.Panel: Lists.Panel[Selected].Visible = chkVisible.Checked; break;
         }
     }
 

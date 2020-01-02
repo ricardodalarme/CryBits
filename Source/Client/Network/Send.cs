@@ -41,8 +41,8 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Connect);
-        Data.Write(TextBoxes.Find("Conectar_Usuário").Text);
-        Data.Write(TextBoxes.Find("Conectar_Senha").Text);
+        Data.Write(TextBoxes.Get("Conectar_Usuário").Text);
+        Data.Write(TextBoxes.Get("Conectar_Senha").Text);
         Data.Write(false); // Acesso pelo cliente
         Packet(Data);
     }
@@ -53,8 +53,8 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Register);
-        Data.Write(TextBoxes.Find("Registrar_Usuário").Text);
-        Data.Write(TextBoxes.Find("Registrar_Senha").Text);
+        Data.Write(TextBoxes.Get("Registrar_Usuário").Text);
+        Data.Write(TextBoxes.Get("Registrar_Senha").Text);
         Packet(Data);
     }
 
@@ -64,9 +64,9 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.CreateCharacter);
-        Data.Write(TextBoxes.Find("CriarPersonagem_Nome").Text);
+        Data.Write(TextBoxes.Get("CriarPersonagem_Nome").Text);
         Data.Write(Game.CreateCharacter_Class);
-        Data.Write(CheckBoxes.Find("GêneroMasculino").State);
+        Data.Write(CheckBoxes.Get("GêneroMasculino").State);
         Packet(Data);
     }
 

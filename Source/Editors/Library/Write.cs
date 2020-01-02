@@ -57,10 +57,10 @@ class Write
         BinaryWriter Data = new BinaryWriter(File.OpenWrite());
 
         // Escreve os dados
-        Data.Write(Lists.Button[Index].General.Name);
-        Data.Write(Lists.Button[Index].General.Position.X);
-        Data.Write(Lists.Button[Index].General.Position.Y);
-        Data.Write(Lists.Button[Index].General.Visible);
+        Data.Write(Lists.Button[Index].Name);
+        Data.Write(Lists.Button[Index].Position.X);
+        Data.Write(Lists.Button[Index].Position.Y);
+        Data.Write(Lists.Button[Index].Visible);
         Data.Write(Lists.Button[Index].Texture);
 
         // Fecha o sistema
@@ -81,10 +81,10 @@ class Write
         BinaryWriter Data = new BinaryWriter(File.OpenWrite());
 
         // Escreve os dados
-        Data.Write(Lists.TextBox[Index].General.Name);
-        Data.Write(Lists.TextBox[Index].General.Position.X);
-        Data.Write(Lists.TextBox[Index].General.Position.Y);
-        Data.Write(Lists.TextBox[Index].General.Visible);
+        Data.Write(Lists.TextBox[Index].Name);
+        Data.Write(Lists.TextBox[Index].Position.X);
+        Data.Write(Lists.TextBox[Index].Position.Y);
+        Data.Write(Lists.TextBox[Index].Visible);
         Data.Write(Lists.TextBox[Index].Max_Chars);
         Data.Write(Lists.TextBox[Index].Width);
         Data.Write(Lists.TextBox[Index].Password);
@@ -107,10 +107,10 @@ class Write
         BinaryWriter Data = new BinaryWriter(File.OpenWrite());
 
         // Escreve os dados
-        Data.Write(Lists.Panel[Index].General.Name);
-        Data.Write(Lists.Panel[Index].General.Position.X);
-        Data.Write(Lists.Panel[Index].General.Position.Y);
-        Data.Write(Lists.Panel[Index].General.Visible);
+        Data.Write(Lists.Panel[Index].Name);
+        Data.Write(Lists.Panel[Index].Position.X);
+        Data.Write(Lists.Panel[Index].Position.Y);
+        Data.Write(Lists.Panel[Index].Visible);
         Data.Write(Lists.Panel[Index].Texture);
 
         // Fecha o sistema
@@ -131,10 +131,10 @@ class Write
         BinaryWriter Data = new BinaryWriter(File.OpenWrite());
 
         // Escreve os dados
-        Data.Write(Lists.CheckBox[Index].General.Name);
-        Data.Write(Lists.CheckBox[Index].General.Position.X);
-        Data.Write(Lists.CheckBox[Index].General.Position.Y);
-        Data.Write(Lists.CheckBox[Index].General.Visible);
+        Data.Write(Lists.CheckBox[Index].Name);
+        Data.Write(Lists.CheckBox[Index].Position.X);
+        Data.Write(Lists.CheckBox[Index].Position.Y);
+        Data.Write(Lists.CheckBox[Index].Visible);
         Data.Write(Lists.CheckBox[Index].Text);
         Data.Write(Lists.CheckBox[Index].State);
 

@@ -60,8 +60,8 @@ public partial class Window : Form
         for (byte i = 0; i < Tools.Order.Length; i++)
             switch (Tools.Order[i].Type)
             {
-                case Tools.Types.Button: Buttons.Events.MouseUp(e, Tools.Order[i].Index); break;
-                case Tools.Types.CheckBox: CheckBoxes.Events.MouseUp(e, Tools.Order[i].Index); break;
+                case Tools.Types.Button: Buttons.Events.MouseUp(Tools.Order[i].Index); break;
+                case Tools.Types.CheckBox: CheckBoxes.Events.MouseUp(Tools.Order[i].Index); break;
                 case Tools.Types.TextBox: TextBoxes.Events.MouseUp(e, Tools.Order[i].Index); break;
             }
 
@@ -108,7 +108,7 @@ public partial class Window : Form
 
         // Em jogo
         if (Tools.CurrentWindow == Tools.Windows.Game)
-            if (!Panels.Find("Chat").Visible)
+            if (!Panels.Get("Chat").Visible)
             {
                 switch (e.KeyCode)
                 {

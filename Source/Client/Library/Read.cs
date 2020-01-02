@@ -35,10 +35,10 @@ class Read
         }
 
         // Adiciona os dados ao cache
-        CheckBoxes.Find("Sons").State = Lists.Options.Sounds;
-        CheckBoxes.Find("Músicas").State = Lists.Options.Musics;
-        CheckBoxes.Find("SalvarUsuário").State = Lists.Options.SaveUsername;
-        if (Lists.Options.SaveUsername) TextBoxes.Find("Conectar_Usuário").Text = Lists.Options.Username;
+        CheckBoxes.Get("Sons").State = Lists.Options.Sounds;
+        CheckBoxes.Get("Músicas").State = Lists.Options.Musics;
+        CheckBoxes.Get("SalvarUsuário").State = Lists.Options.SaveUsername;
+        if (Lists.Options.SaveUsername) TextBoxes.Get("Conectar_Usuário").Text = Lists.Options.Username;
     }
 
     public static void Client_Data()

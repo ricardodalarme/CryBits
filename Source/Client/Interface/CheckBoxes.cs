@@ -1,10 +1,9 @@
 ﻿using System.Drawing;
-using System.Windows.Forms;
 
 public class CheckBoxes
 {
     // Armazenamento dos dados da ferramenta
-    public static Structure[] List = new Structure[1];
+    public static Structure[] List;
 
     // Margem da textura até o texto
     public const byte Margin = 4;
@@ -16,7 +15,7 @@ public class CheckBoxes
         public bool State;
     }
 
-    public static byte FindIndex(string Name)
+    public static byte GetIndex(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
@@ -26,7 +25,7 @@ public class CheckBoxes
         return 0;
     }
 
-    public static Structure Find(string Name)
+    public static Structure Get(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
@@ -38,17 +37,15 @@ public class CheckBoxes
 
     public class Events
     {
-        public static void MouseUp(MouseEventArgs e, byte Index)
+        public static void MouseUp(byte Index)
         {
-            int Text_Width; Size Texture_Size; Size Box;
-
-            // Somente se necessário
+            // Somente se estiver disponível
             if (!List[Index].Able) return;
 
             // Tamanho do marcador
-            Texture_Size = Graphics.TSize(Graphics.Tex_CheckBox);
-            Text_Width = Tools.MeasureString(List[Index].Text);
-            Box = new Size(Texture_Size.Width / 2 + Text_Width + Margin, Texture_Size.Height);
+            Size Texture_Size = Graphics.TSize(Graphics.Tex_CheckBox);
+            int Text_Width = Tools.MeasureString(List[Index].Text);
+            Size Box = new Size(Texture_Size.Width / 2 + Text_Width + Margin, Texture_Size.Height);
 
             // Somente se estiver sobrepondo a ferramenta
             if (!Tools.IsAbove(new Rectangle(List[Index].Position, Box))) return;
@@ -61,10 +58,10 @@ public class CheckBoxes
             Audio.Sound.Play(Audio.Sounds.Click);
         }
 
-        public static void Execute(string name)
+        public static void Execute(string Name)
         {
             // Executa o evento do marcador
-            switch (name)
+            switch (Name)
             {
                 case "Sons": Sounds(); break;
                 case "Músicas": Musics(); break;
@@ -77,14 +74,14 @@ public class CheckBoxes
         public static void Sounds()
         {
             // Salva os dados
-            Lists.Options.Sounds = Find("Sons").State;
+            Lists.Options.Sounds = Get("Sons").State;
             Write.Options();
         }
 
         public static void Musics()
         {
             // Salva os dados
-            Lists.Options.Musics = Find("Músicas").State;
+            Lists.Options.Musics = Get("Músicas").State;
             Write.Options();
 
             // Para ou reproduz a música dependendo do estado do marcador
@@ -97,20 +94,20 @@ public class CheckBoxes
         public static void SaveUsername()
         {
             // Salva os dados
-            Lists.Options.SaveUsername = Find("SalvarUsuário").State;
+            Lists.Options.SaveUsername = Get("SalvarUsuário").State;
             Write.Options();
         }
 
         public static void GenreName()
         {
             // Altera o estado do marcador de outro gênero
-            Find("GêneroFeminino").State = !Find("GêneroMasculino").State;
+            Get("GêneroFeminino").State = !Get("GêneroMasculino").State;
         }
 
         public static void GenreFemale()
         {
             // Altera o estado do marcador de outro gênero
-            Find("GêneroMasculino").State = !Find("GêneroFeminino").State;
+            Get("GêneroMasculino").State = !Get("GêneroFeminino").State;
         }
     }
 }

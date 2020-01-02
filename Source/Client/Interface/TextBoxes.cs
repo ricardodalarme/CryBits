@@ -4,7 +4,7 @@ using System.Windows.Forms;
 public class TextBoxes
 {
     // Armazenamento de dados da ferramenta
-    public static Structure[] List = new Structure[1];
+    public static Structure[] List;
 
     // Digitalizador focado
     public static byte TexBox_Focus;
@@ -19,7 +19,7 @@ public class TextBoxes
         public bool Password;
     }
 
-    public static byte FindIndex(string Name)
+    public static byte GetIndex(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
@@ -29,7 +29,7 @@ public class TextBoxes
         return 0;
     }
 
-    public static Structure Find(string Name)
+    public static Structure Get(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
@@ -51,8 +51,7 @@ public class TextBoxes
                 continue;
             else if (!List[Tools.Order[i].Index].Able)
                 continue;
-            else if (i == FindIndex("Chat"))
-
+            else if (i == GetIndex("Chat"))
                 TexBox_Focus = Tools.Order[i].Index;
             return;
         }
@@ -90,16 +89,16 @@ public class TextBoxes
 
     public static void Chat_Type()
     {
-        byte Index = FindIndex("Chat");
+        byte Index = GetIndex("Chat");
 
         // Somente se necessário
         if (!Player.IsPlaying(Player.MyIndex)) return;
 
         // Altera a visiblidade da caixa
-        Panels.Find("Chat").Visible = !Panels.Find("Chat").Visible;
+        Panels.Get("Chat").Visible = !Panels.Get("Chat").Visible;
 
         // Altera o foco do digitalizador
-        if (Panels.Find("Chat").Visible)
+        if (Panels.Get("Chat").Visible)
         {
             Tools.Chat_Text_Visible = true;
             TexBox_Focus = Index;

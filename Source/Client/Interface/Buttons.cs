@@ -4,7 +4,7 @@ using System.Windows.Forms;
 public class Buttons
 {
     // Aramazenamento de dados da ferramenta
-    public static Structure[] List = new Structure[1];
+    public static Structure[] List;
 
     // Estrutura das ferramentas
     public class Structure : Tools.Structure
@@ -21,7 +21,7 @@ public class Buttons
         Above,
     }
 
-    public static byte FindIndex(string Name)
+    public static byte GetIndex(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
@@ -31,7 +31,7 @@ public class Buttons
         return 0;
     }
 
-    public static Structure Find(string Name)
+    public static Structure Get(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
@@ -43,7 +43,7 @@ public class Buttons
 
     public class Events
     {
-        public static void MouseUp(MouseEventArgs e, byte Index)
+        public static void MouseUp(byte Index)
         {
             SFML.Graphics.Texture Texture = Graphics.Tex_Button[List[Index].Texture];
 
@@ -136,16 +136,16 @@ public class Buttons
             bool Visibility = false;
 
             // Verifica apenas se o painel for visível
-            if (!Panels.Find("SelecionarPersonagem").Visible)
+            if (!Panels.Get("SelecionarPersonagem").Visible)
                 return;
 
             if (Lists.Characters[Game.SelectCharacter].Class != 0)
                 Visibility = true;
 
             // Altera os botões visíveis
-            Find("Personagem_Criar").Visible = !Visibility;
-            Find("Personagem_Deletar").Visible = Visibility;
-            Find("Personagem_Usar").Visible = Visibility;
+            Get("Personagem_Criar").Visible = !Visibility;
+            Get("Personagem_Deletar").Visible = Visibility;
+            Get("Personagem_Usar").Visible = Visibility;
         }
 
         public static void Connect()
@@ -155,7 +155,7 @@ public class Buttons
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Find("Conectar").Visible = true;
+            Panels.Get("Conectar").Visible = true;
         }
 
         public static void Register()
@@ -165,7 +165,7 @@ public class Buttons
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Find("Registrar").Visible = true;
+            Panels.Get("Registrar").Visible = true;
         }
 
         public static void Options()
@@ -175,7 +175,7 @@ public class Buttons
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Find("Opções").Visible = true;
+            Panels.Get("Opções").Visible = true;
         }
 
         public static void Menu_Return()
@@ -185,13 +185,13 @@ public class Buttons
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Find("Conectar").Visible = true;
+            Panels.Get("Conectar").Visible = true;
         }
 
         public static void Connect_Ok()
         {
             // Salva o nome do usuário
-            Lists.Options.Username = TextBoxes.Find("Conectar_Usuário").Text;
+            Lists.Options.Username = TextBoxes.Get("Conectar_Usuário").Text;
             Write.Options();
 
             // Conecta-se ao jogo
@@ -201,7 +201,7 @@ public class Buttons
         public static void Register_Ok()
         {
             // Regras de segurança
-            if (TextBoxes.Find("Registrar_Senha").Text != TextBoxes.Find("Registrar_RepetirSenha").Text)
+            if (TextBoxes.Get("Registrar_Senha").Text != TextBoxes.Get("Registrar_RepetirSenha").Text)
             {
                 MessageBox.Show("As senhas digitadas não são iquais.");
                 return;
@@ -239,7 +239,7 @@ public class Buttons
         {
             // Abre o painel de personagens
             Panels.Menu_Close();
-            Panels.Find("SelecionarPersonagem").Visible = true;
+            Panels.Get("SelecionarPersonagem").Visible = true;
         }
 
         public static void Character_Use()
@@ -295,8 +295,8 @@ public class Buttons
         public static void Menu_Character()
         {
             // Altera a visibilidade do painel e fecha os outros
-            Panels.Find("Menu_Personagem").Visible = !Panels.Find("Menu_Personagem").Visible;
-            Panels.Find("Menu_Inventário").Visible = false;
+            Panels.Get("Menu_Personagem").Visible = !Panels.Get("Menu_Personagem").Visible;
+            Panels.Get("Menu_Inventário").Visible = false;
         }
 
         public static void Attribute_Strenght()
@@ -327,8 +327,8 @@ public class Buttons
         public static void Menu_Inventory()
         {
             // Altera a visibilidade do painel e fecha os outros
-            Panels.Find("Menu_Inventário").Visible = !Panels.Find("Menu_Inventário").Visible;
-            Panels.Find("Menu_Personagem").Visible = false;
+            Panels.Get("Menu_Inventário").Visible = !Panels.Get("Menu_Inventário").Visible;
+            Panels.Get("Menu_Personagem").Visible = false;
         }
     }
 }

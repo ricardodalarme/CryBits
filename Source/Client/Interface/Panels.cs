@@ -1,7 +1,7 @@
 ﻿public class Panels
 {
     // Armazenamento dos dados da ferramenta
-    public static Structure[] List = new Structure[1];
+    public static Structure[] List;
 
     // Estrutura da ferramenta
     public class Structure : Tools.Structure
@@ -9,7 +9,7 @@
         public byte Texture;
     }
 
-    public static byte FindIndex(string Name)
+    public static byte GetIndex(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
@@ -19,7 +19,7 @@
         return 0;
     }
 
-    public static Structure Find(string Name)
+    public static Structure Get(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
@@ -32,10 +32,10 @@
     public static void Menu_Close()
     {
         // Fecha todos os paineis abertos
-        Find("Conectar").Visible = false;
-        Find("Registrar").Visible = false;
-        Find("Opções").Visible = false;
-        Find("SelecionarPersonagem").Visible = false;
-        Find("CriarPersonagem").Visible = false;
+        Get("Conectar").Visible = false;
+        Get("Registrar").Visible = false;
+        Get("Opções").Visible = false;
+        Get("SelecionarPersonagem").Visible = false;
+        Get("CriarPersonagem").Visible = false;
     }
 }

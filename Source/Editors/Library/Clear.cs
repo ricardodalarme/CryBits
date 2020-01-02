@@ -40,40 +40,36 @@ class Clear
     {
         // Limpa a estrutura
         Lists.Button[Index] = new Lists.Structures.Button();
-        Lists.Button[Index].General = new Lists.Structures.Tool();
 
         // Reseta os valores
-        Lists.Button[Index].General.Name = string.Empty;
+        Lists.Button[Index].Name = string.Empty;
     }
 
     public static void TextBox(byte Index)
     {
         // Limpa a estrutura
         Lists.TextBox[Index] = new Lists.Structures.TextBox();
-        Lists.TextBox[Index].General = new Lists.Structures.Tool();
 
         // Reseta os valores
-        Lists.TextBox[Index].General.Name = string.Empty;
+        Lists.TextBox[Index].Name = string.Empty;
     }
 
     public static void Panel(byte Index)
     {
         // Limpa a estrutura
         Lists.Panel[Index] = new Lists.Structures.Panel();
-        Lists.Panel[Index].General = new Lists.Structures.Tool();
 
         // Reseta os valores
-        Lists.Panel[Index].General.Name = string.Empty;
+        Lists.Panel[Index].Name = string.Empty;
     }
 
     public static void CheckBox(byte Index)
     {
         // Limpa a estrutura
         Lists.CheckBox[Index] = new Lists.Structures.CheckBox();
-        Lists.CheckBox[Index].General = new Lists.Structures.Tool();
 
         // Reseta os valores
-        Lists.CheckBox[Index].General.Name = string.Empty;
+        Lists.CheckBox[Index].Name = string.Empty;
         Lists.CheckBox[Index].Text = string.Empty;
     }
 

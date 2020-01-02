@@ -510,6 +510,13 @@ class Receive
 
     private static void Write_Server_Data(byte Index, NetIncomingMessage Data)
     {
+        // Verifica se o jogador realmente tem permissão 
+        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        {
+            Send.Alert(Index, "You aren't allowed to do this.");
+            return;
+        }
+
         // Altera os dados
         Lists.Server_Data.Game_Name = Data.ReadString();
         Lists.Server_Data.Welcome = Data.ReadString();
@@ -523,6 +530,13 @@ class Receive
 
     private static void Write_Classes(byte Index, NetIncomingMessage Data)
     {
+        // Verifica se o jogador realmente tem permissão 
+        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        {
+            Send.Alert(Index, "You aren't allowed to do this.");
+            return;
+        }
+
         // Quantidade de classes
         Lists.Class = new Lists.Structures.Class[Data.ReadByte()];
         Lists.Server_Data.Num_Classes = (byte)Lists.Class.GetUpperBound(0);
@@ -552,7 +566,14 @@ class Receive
 
     private static void Write_Tiles(byte Index, NetIncomingMessage Data)
     {
-        // Quantidade de tiles 
+        // Verifica se o jogador realmente tem permissão 
+        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        {
+            Send.Alert(Index, "You aren't allowed to do this.");
+            return;
+        }
+
+        // Quantidade de azulejos 
         Lists.Tile = new Lists.Structures.Tile[Data.ReadByte()];
         Lists.Server_Data.Num_Tiles = (byte)Lists.Tile.GetUpperBound(0);
         Write.Server_Data();
@@ -585,6 +606,107 @@ class Receive
 
     private static void Write_Maps(byte Index, NetIncomingMessage Data)
     {
+        // Verifica se o jogador realmente tem permissão 
+        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        {
+            Send.Alert(Index, "You aren't allowed to do this.");
+            return;
+        }
+
+        // Quantidade de mapas 
+        Lists.Map = new Lists.Structures.Map[Data.ReadInt16()];
+        Lists.Server_Data.Num_Maps = (short)Lists.Map.GetUpperBound(0);
+        Write.Server_Data();
+
+        for (short i = 1; i < Lists.Map.Length; i++)
+        {
+            Lists.Map[i].Revision = Data.ReadInt16();
+            Lists.Map[i].Name = Data.ReadString();
+            Lists.Map[i].Width = Data.ReadByte();
+            Lists.Map[i].Height = Data.ReadByte();
+            Lists.Map[i].Moral = Data.ReadByte();
+            Lists.Map[i].Panorama = Data.ReadByte();
+            Lists.Map[i].Music = Data.ReadByte();
+            Lists.Map[i].Color = Data.ReadInt32();
+            Lists.Map[i].Weather.Type = Data.ReadByte();
+            Lists.Map[i].Weather.Intensity = Data.ReadByte();
+            Lists.Map[i].Fog.Texture = Data.ReadByte();
+            Lists.Map[i].Fog.Speed_X = Data.ReadSByte();
+            Lists.Map[i].Fog.Speed_Y = Data.ReadSByte();
+            Lists.Map[i].Fog.Alpha = Data.ReadByte();
+            Lists.Map[i].Light_Global = Data.ReadByte();
+            Lists.Map[i].Lighting = Data.ReadByte();
+
+            // Ligações
+            Lists.Map[i].Link = new short[(short)Game.Directions.Amount];
+            for (short n = 0; n < (short)Game.Directions.Amount; n++)
+                Lists.Map[i].Link[n] = Data.ReadInt16();
+
+            // Quantidade de camadas
+            byte Num_Layers = Data.ReadByte();
+            Lists.Map[i].Layer = new System.Collections.Generic.List<Lists.Structures.Map_Layer>();
+
+            // Camadas
+            for (byte n = 0; n <= Num_Layers; n++)
+            {
+                // Dados básicos
+                Lists.Map[i].Layer.Add(new Lists.Structures.Map_Layer());
+                Lists.Map[i].Layer[n].Name = Data.ReadString();
+                Lists.Map[i].Layer[n].Type = Data.ReadByte();
+
+                // Redimensiona os azulejos
+                Lists.Map[i].Layer[n].Tile = new Lists.Structures.Map_Tile_Data[Lists.Map[i].Width + 1, Lists.Map[i].Height + 1];
+
+                // Azulejos
+                for (byte x = 0; x <= Lists.Map[i].Width; x++)
+                    for (byte y = 0; y <= Lists.Map[i].Height; y++)
+                    {
+                        Lists.Map[i].Layer[n].Tile[x, y].X = Data.ReadByte();
+                        Lists.Map[i].Layer[n].Tile[x, y].Y = Data.ReadByte();
+                        Lists.Map[i].Layer[n].Tile[x, y].Tile = Data.ReadByte();
+                        Lists.Map[i].Layer[n].Tile[x, y].Auto = Data.ReadBoolean();
+                    }
+            }
+
+            // Dados específicos dos azulejos
+            Lists.Map[i].Tile = new Lists.Structures.Map_Tile[Lists.Map[i].Width + 1, Lists.Map[i].Height + 1];
+            for (byte x = 0; x <= Lists.Map[i].Width; x++)
+                for (byte y = 0; y <= Lists.Map[i].Height; y++)
+                {
+                    Lists.Map[i].Tile[x, y].Attribute = Data.ReadByte();
+                    Lists.Map[i].Tile[x, y].Data_1 = Data.ReadInt16();
+                    Lists.Map[i].Tile[x, y].Data_2 = Data.ReadInt16();
+                    Lists.Map[i].Tile[x, y].Data_3 = Data.ReadInt16();
+                    Lists.Map[i].Tile[x, y].Data_4 = Data.ReadInt16();
+                    Lists.Map[i].Tile[x, y].Zone = Data.ReadByte();
+                    Lists.Map[i].Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
+
+                    for (byte n = 0; n < (byte)Game.Directions.Amount; n++)
+                        Lists.Map[i].Tile[x, y].Block[n] = Data.ReadBoolean();
+                }
+
+            // Luzes
+            Lists.Map[i].Light = new Lists.Structures.Map_Light[Data.ReadByte()];
+            for (byte n = 0; n < Lists.Map[i].Light.Length; n++)
+            {
+                Lists.Map[i].Light[n].X = Data.ReadByte();
+                Lists.Map[i].Light[n].Y = Data.ReadByte();
+                Lists.Map[i].Light[n].Width = Data.ReadByte();
+                Lists.Map[i].Light[n].Height = Data.ReadByte();
+            }
+
+            // NPCs
+            Lists.Map[i].NPC = new Lists.Structures.Map_NPC[Data.ReadByte()];
+            Lists.Map[i].Temp_NPC = new Lists.Structures.Map_NPCs[Lists.Map[i].NPC.Length];
+            for (byte n = 0; n < Lists.Map[i].NPC.Length; n++)
+            {
+                Lists.Map[i].NPC[n].Index = Data.ReadInt16();
+                Lists.Map[i].NPC[n].Zone = Data.ReadByte();
+                Lists.Map[i].NPC[n].Spawn = Data.ReadBoolean();
+                Lists.Map[i].NPC[n].X = Data.ReadByte();
+                Lists.Map[i].NPC[n].Y = Data.ReadByte();
+            }
+        }
 
         // Salva os dados
         Write.Maps();
@@ -592,6 +714,13 @@ class Receive
 
     private static void Write_NPCs(byte Index, NetIncomingMessage Data)
     {
+        // Verifica se o jogador realmente tem permissão 
+        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        {
+            Send.Alert(Index, "You aren't allowed to do this.");
+            return;
+        }
+
         // Quantidade de npcs
         Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16()];
         Lists.Server_Data.Num_NPCs = (byte)Lists.NPC.GetUpperBound(0);
@@ -627,6 +756,13 @@ class Receive
 
     private static void Write_Items(byte Index, NetIncomingMessage Data)
     {
+        // Verifica se o jogador realmente tem permissão 
+        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        {
+            Send.Alert(Index, "You aren't allowed to do this.");
+            return;
+        }
+
         // Quantidade de itens
         Lists.Item = new Lists.Structures.Item[Data.ReadInt16()];
         Lists.Server_Data.Num_Items = (byte)Lists.Item.GetUpperBound(0);

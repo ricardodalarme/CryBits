@@ -587,7 +587,8 @@ partial class Graphics
     {
         Point Position = new Point((x - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom);
         Globals.Tile_Attributes Attribute = (Globals.Tile_Attributes)Lists.Map[Index].Tile[x, y].Attribute;
-        SFML.Graphics.Color Color; string Letter = String.Empty;
+        SFML.Graphics.Color Color; 
+        string Letter;
 
         // Apenas se necessário
         if (!Editor_Maps.Objects.butMAttributes.Checked) return;

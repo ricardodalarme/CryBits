@@ -236,7 +236,7 @@ partial class Graphics
     public static void Button(string Name)
     {
         byte Alpha = 225;
-        byte Index = Buttons.FindIndex(Name);
+        byte Index = Buttons.GetIndex(Name);
 
         // Lista a ordem de renderização da ferramenta
         Tools.List(Tools.Types.Button, Index);
@@ -262,7 +262,7 @@ partial class Graphics
 
     public static void Panel(string Name)
     {
-        byte Index = Panels.FindIndex(Name);
+        byte Index = Panels.GetIndex(Name);
 
         // Lista a ordem de renderização da ferramenta
         Tools.List(Tools.Types.Painel, Index);
@@ -278,7 +278,7 @@ partial class Graphics
     public static void CheckBox(string Name)
     {
         Rectangle Rec_Source = new Rectangle(), Rec_Destiny;
-        byte Index = CheckBoxes.FindIndex(Name);
+        byte Index = CheckBoxes.GetIndex(Name);
 
         // Lista a ordem de renderização da ferramenta
         Tools.List(Tools.Types.CheckBox, Index);
@@ -289,7 +289,7 @@ partial class Graphics
 
         // Define as propriedades dos retângulos
         Rec_Source.Size = new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height);
-        Rec_Destiny = new Rectangle(CheckBoxes.Find(Name).Position, Rec_Source.Size);
+        Rec_Destiny = new Rectangle(CheckBoxes.Get(Name).Position, Rec_Source.Size);
 
         // Desenha a textura do marcador pelo seu estado 
         if (CheckBoxes.List[Index].State)
@@ -297,12 +297,12 @@ partial class Graphics
 
         // Desenha o marcador 
         Render(Tex_CheckBox, Rec_Source, Rec_Destiny);
-        DrawText(CheckBoxes.Find(Name).Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + CheckBoxes.Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
+        DrawText(CheckBoxes.Get(Name).Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + CheckBoxes.Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
     }
 
     public static void TextBox(string Name)
     {
-        byte Index = TextBoxes.FindIndex(Name);
+        byte Index = TextBoxes.GetIndex(Name);
 
         // Lista a ordem de renderização da ferramenta
         Tools.List(Tools.Types.TextBox, Index);
@@ -441,7 +441,7 @@ partial class Graphics
         string Text = "None";
 
         // Somente se necessário
-        if (!Panels.Find("SelecionarPersonagem").Able) return;
+        if (!Panels.Get("SelecionarPersonagem").Able) return;
         if (Lists.Characters == null) return;
 
         // Dados
@@ -478,11 +478,11 @@ partial class Graphics
         short Texture;
 
         // Não desenhar se o painel não for visível
-        if (!Panels.Find("CriarPersonagem").Able)
+        if (!Panels.Get("CriarPersonagem").Able)
             return;
 
         // Textura do personagem
-        if (CheckBoxes.Find("GêneroMasculino").State)
+        if (CheckBoxes.Get("GêneroMasculino").State)
             Texture = Lists.Class[Game.CreateCharacter_Class].Texture_Male;
         else
             Texture = Lists.Class[Game.CreateCharacter_Class].Texture_Female;
@@ -518,7 +518,7 @@ partial class Graphics
     public static void Game_Hotbar()
     {
         string Indicator = string.Empty;
-        Point Panel_Position = Panels.Find("Hotbar").Position;
+        Point Panel_Position = Panels.Get("Hotbar").Position;
 
         // Desenha o painel 
         Panel("Hotbar");
@@ -569,10 +569,10 @@ partial class Graphics
 
     public static void Game_Menu_Character()
     {
-        Point Panel_Position = Panels.Find("Menu_Personagem").Position;
+        Point Panel_Position = Panels.Get("Menu_Personagem").Position;
 
         // Somente se necessário
-        if (!Panels.Find("Menu_Personagem").Visible) return;
+        if (!Panels.Get("Menu_Personagem").Visible) return;
 
         // Desenha o painel 
         Panel("Menu_Personagem");
@@ -616,10 +616,10 @@ partial class Graphics
     public static void Game_Menu_Inventory()
     {
         byte NumColumns = 5;
-        Point Panel_Position = Panels.Find("Menu_Inventário").Position;
+        Point Panel_Position = Panels.Get("Menu_Inventário").Position;
 
         // Somente se necessário
-        if (!Panels.Find("Menu_Inventário").Visible) return;
+        if (!Panels.Get("Menu_Inventário").Visible) return;
 
         // Desenha o painel 
         Panel("Menu_Inventário");
@@ -648,12 +648,12 @@ partial class Graphics
     public static void Painel_Informations(short Item_Num, int X, int Y)
     {
         // Desenha o painel 
-        Panels.Find("Menu_Informação").Position.X = X;
-        Panels.Find("Menu_Informação").Position.Y = Y;
+        Panels.Get("Menu_Informação").Position.X = X;
+        Panels.Get("Menu_Informação").Position.Y = Y;
         Panel("Menu_Informação");
 
         // Informações
-        Point Position = Panels.Find("Menu_Informação").Position;
+        Point Position = Panels.Get("Menu_Informação").Position;
         DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, SFML.Graphics.Color.Yellow);
         Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Position.X + 9, Position.Y + 21, 64, 64));
 
@@ -710,7 +710,7 @@ partial class Graphics
     public static void Game_Chat()
     {
         // Define a bisiblidade da caixa
-        Panels.Find("Chat").Visible = TextBoxes.TexBox_Focus == TextBoxes.FindIndex("Chat");
+        Panels.Get("Chat").Visible = TextBoxes.TexBox_Focus == TextBoxes.GetIndex("Chat");
 
         // Renderiza as caixas
         Panel("Chat");
@@ -723,8 +723,8 @@ partial class Graphics
                     DrawText(Tools.Chat[i].Text, 16, 461 + 11 * (i - Tools.Chat_Line), Tools.Chat[i].Color);
 
         // Dica de como abrir o chat
-        if (!Panels.Find("Chat").Visible)
-            DrawText("Press [Enter] to open chat.", TextBoxes.Find("Chat").Position.X + 5, TextBoxes.Find("Chat").Position.Y + 3, SFML.Graphics.Color.White);
+        if (!Panels.Get("Chat").Visible)
+            DrawText("Press [Enter] to open chat.", TextBoxes.Get("Chat").Position.X + 5, TextBoxes.Get("Chat").Position.Y + 3, SFML.Graphics.Color.White);
         else
         {
             Button("Chat_Subir");

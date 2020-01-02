@@ -72,7 +72,7 @@ class Loop
         }
 
         // Chat
-        if (Tools.Chat_Text_Visible && !Panels.Find("Chat").Visible)
+        if (Tools.Chat_Text_Visible && !Panels.Get("Chat").Visible)
         {
             if (Chat_Timer < Environment.TickCount)
                 Tools.Chat_Text_Visible = false;

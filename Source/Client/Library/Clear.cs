@@ -17,28 +17,24 @@
     {
         // Limpa a estrutura
         Buttons.List[Index] = new Buttons.Structure();
-        Buttons.List[Index].General = new Tools.Structure();
     }
 
     public static void TextBox(int Index)
     {
         // Limpa a estrutura
         TextBoxes.List[Index] = new TextBoxes.Structure();
-        TextBoxes.List[Index].General = new Tools.Structure();
     }
 
     public static void Panel(int Index)
     {
         // Limpa a estrutura
         Panels.List[Index] = new Panels.Structure();
-        Panels.List[Index].General = new Tools.Structure();
     }
 
     public static void CheckBox(int Index)
     {
         // Limpa a estrutura
         CheckBoxes.List[Index] = new CheckBoxes.Structure();
-        CheckBoxes.List[Index].General = new Tools.Structure();
     }
 
     public static void Player(byte Index)

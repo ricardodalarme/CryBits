@@ -1064,7 +1064,7 @@ partial class Editor_Maps : Form
         if (e == MouseButtons.Left)
         {
             if (butPencil.Checked) Tile_Set(Layer);
-            if (butDiscover.Checked) Tile_Discover(Layer);
+            if (butDiscover.Checked) Tile_Discover();
         }
         else if (e == MouseButtons.Right)
         {
@@ -1100,7 +1100,7 @@ partial class Editor_Maps : Form
         return true;
     }
 
-    private void Tile_Discover(byte Layer_Num)
+    private void Tile_Discover()
     {
         Lists.Structures.Map_Tile_Data Data;
 

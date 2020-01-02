@@ -47,39 +47,35 @@ class Lists
             public byte Max_Characters;
         }
 
-        public struct Tool
+        public class Tool
         {
             public string Name;
             public bool Visible;
             public Point Position;
         }
 
-        public struct Button
+        public class Button : Tool
         {
             public byte Texture;
-            public Tool General;
         }
 
-        public struct TextBox
+        public class TextBox : Tool
         {
             public string Text;
             public short Max_Chars;
             public short Width;
             public bool Password;
-            public Tool General;
         }
 
-        public struct CheckBox
+        public class CheckBox : Tool
         {
             public string Text;
             public bool State;
-            public Tool General;
         }
 
-        public struct Panel
+        public class Panel : Tool
         {
             public byte Texture;
-            public Tool General;
         }
 
         public struct Class
