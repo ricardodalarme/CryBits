@@ -162,7 +162,7 @@ partial class Receive
                 Lists.Map[i].Tile[x, y].Zone = Data.ReadByte();
                 Lists.Map[i].Tile[x, y].Block = new bool[(byte)Globals.Directions.Amount];
 
-                for (byte n = 0; n < (byte)Globals.Directions.Amount ; n++)
+                for (byte n = 0; n < (byte)Globals.Directions.Amount; n++)
                     Lists.Map[i].Tile[x, y].Block[n] = Data.ReadBoolean();
             }
 

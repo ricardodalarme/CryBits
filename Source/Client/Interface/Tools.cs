@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -34,8 +33,8 @@ class Tools
         public bool CheckEnable()
         {
             // Define a habilitação da ferramenta
-            if (!Visible || !Tools.Able)  return IsAble = false;
-            else  return IsAble = true;
+            if (!Visible || !Tools.Able) return IsAble = false;
+            else return IsAble = true;
         }
     }
 
@@ -65,7 +64,7 @@ class Tools
     public static void List(Structure Tool)
     {
         // Adiciona à lista
-        if (!IsListed(Tool))  Order.Add(Tool);
+        if (!IsListed(Tool)) Order.Add(Tool);
     }
 
     private static bool IsListed(Structure Tool)

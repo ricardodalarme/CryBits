@@ -224,7 +224,7 @@ class Write
         for (byte i = 1; i < Lists.Map.Length; i++)
             Map(i);
     }
-    
+
     public static void Map(short Index)
     {
         // Cria um arquivo temporário

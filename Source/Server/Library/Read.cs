@@ -421,7 +421,8 @@ partial class Read
                 Lists.Tile[Index].Data[x, y].Attribute = Data.ReadByte();
 
                 // Bloqueio direcional
-                for (byte i = 0; i < (byte)Game.Directions.Amount; i++){
+                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
+                {
                     Lists.Tile[Index].Data[x, y].Block = new bool[(byte)Game.Directions.Amount];
                     Lists.Tile[Index].Data[x, y].Block[i] = Data.ReadBoolean();
                 }

@@ -271,7 +271,7 @@ partial class Graphics
         if (!Tool.CheckEnable()) return;
 
         // Desenha o painel
-        Render(Tex_Panel[Tool.Texture_Num],Tool.Position);
+        Render(Tex_Panel[Tool.Texture_Num], Tool.Position);
     }
 
     public static void CheckBox(string Name)
@@ -283,7 +283,7 @@ partial class Graphics
         Tools.List(Tool);
 
         // Não desenha a ferramenta se ela não for visível
-        if (!Tool.CheckEnable())  return;
+        if (!Tool.CheckEnable()) return;
 
         // Define as propriedades dos retângulos
         Rec_Source.Size = new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height);

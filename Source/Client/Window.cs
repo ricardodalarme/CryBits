@@ -51,7 +51,8 @@ public partial class Window : Form
     private void Window_MouseUp(object sender, MouseEventArgs e)
     {
         // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i < Tools.Order.Count; i++) {
+        for (byte i = 0; i < Tools.Order.Count; i++)
+        {
             if (Tools.Order[i] is Buttons.Structure) ((Buttons.Structure)Tools.Order[i]).MouseUp();
             else if (Tools.Order[i] is CheckBoxes.Structure) ((CheckBoxes.Structure)Tools.Order[i]).MouseUp();
             else if (Tools.Order[i] is TextBoxes.Structure) ((TextBoxes.Structure)Tools.Order[i]).MouseUp();

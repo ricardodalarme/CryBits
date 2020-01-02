@@ -66,7 +66,7 @@ class TextBoxes
     {
         // Se o digitalizador não estiver habilitado então isso não é necessário 
         if (Focused != null && Focused.IsAble) return;
-        
+
         // Altera o digitalizador focado para o mais próximo
         for (byte i = 0; i < Tools.Order.Count; i++)
         {

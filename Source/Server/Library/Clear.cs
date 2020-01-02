@@ -108,7 +108,7 @@
         Lists.Map[Index].Layer = new System.Collections.Generic.List<Lists.Structures.Map_Layer>();
         Lists.Map[Index].Layer.Add(new Lists.Structures.Map_Layer());
         Lists.Map[Index].Layer[0].Name = "Ground";
-        for (byte c = 0; c <= Lists.Map[Index].Layer.Count - 1; c++)  Lists.Map[Index].Layer[c].Tile = new Lists.Structures.Map_Tile_Data[Lists.Map[Index].Width + 1, Lists.Map[Index].Height + 1];
+        for (byte c = 0; c <= Lists.Map[Index].Layer.Count - 1; c++) Lists.Map[Index].Layer[c].Tile = new Lists.Structures.Map_Tile_Data[Lists.Map[Index].Width + 1, Lists.Map[Index].Height + 1];
         Lists.Map[Index].Tile = new Lists.Structures.Map_Tile[Lists.Map[Index].Width + 1, Lists.Map[Index].Height + 1];
         Lists.Map[Index].NPC = new Lists.Structures.Map_NPC[0];
         Lists.Map[Index].Temp_NPC = new Lists.Structures.Map_NPCs[0];
