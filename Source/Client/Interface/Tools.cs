@@ -21,14 +21,8 @@ public class Tools
     public const byte Max_Chat_Lines = 50;
 
     // Ordem da renderização das ferramentas
-    public static Identification[] Order = new Identification[0];
+    public static Structure[] Order = new Structure[0];
     public static List<Chat_Structure> Chat = new List<Chat_Structure>();
-
-    public struct Identification
-    {
-        public byte Index;
-        public Types Type;
-    }
 
     public class Structure
     {
@@ -40,10 +34,8 @@ public class Tools
         public bool CheckEnable()
         {
             // Define a habilitação da ferramenta
-            if (!Visible || !Tools.Able)
-                return IsAble = false;
-            else
-                return IsAble = true;
+            if (!Visible || !Tools.Able)  return IsAble = false;
+            else  return IsAble = true;
         }
     }
 
@@ -79,27 +71,25 @@ public class Tools
             Able = true;
     }
 
-    public static void List(Types Type, byte Index)
+    public static void List(Structure Tool)
     {
         short Amount = (short)(Order.GetUpperBound(0) + 1);
 
         // Se já estiver listado não é necessário listar de novo
-        if (IsListed(Type, Index))
-            return;
+        if (IsListed(Tool)) return;
 
         // Altera o tamanho da caixa
         Array.Resize(ref Order, Amount + 1);
 
         // Adiciona à lista
-        Order[Amount].Type = Type;
-        Order[Amount].Index = Index;
+        Order[Amount] = Tool;
     }
 
-    private static bool IsListed(Types Type, byte Index)
+    private static bool IsListed(Structure Tool)
     {
         // Verifica se a ferramenta já está listada
         for (short i = 1; i < Order.Length; i++)
-            if (Order[i].Type == Type && Order[i].Index == Index)
+            if (Order[i] == Tool)
                 return true;
 
         return false;
@@ -116,11 +106,11 @@ public class Tools
         return false;
     }
 
-    public static int Encontrar(Types Type, byte Index)
+    public static int Get(Structure Tool)
     {
         // Lista os nomes dos botões
         for (byte i = 1; i < Order.Length; i++)
-            if (Order[i].Type == Type && Order[i].Index == Index)
+            if (Order[i] == Tool)
                 return i;
 
         return 0;
@@ -173,7 +163,7 @@ public class Tools
 
     public static void Chat_Add(string Message, SFML.Graphics.Color Color)
     {
-        int Message_Width, Box_Width = Graphics.TSize(Graphics.Tex_Panel[Panels.Get("Chat").Texture]).Width - 16;
+        int Message_Width, Box_Width = Graphics.TSize(Graphics.Tex_Panel[Panels.Get("Chat").Texture_Num]).Width - 16;
         string Temp_Message; int Split;
 
         // Remove os espaços

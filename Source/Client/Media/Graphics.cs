@@ -236,17 +236,17 @@ partial class Graphics
     public static void Button(string Name)
     {
         byte Alpha = 225;
-        byte Index = Buttons.GetIndex(Name);
+        Buttons.Structure Tool = Buttons.Get(Name);
 
         // Lista a ordem de renderização da ferramenta
-        Tools.List(Tools.Types.Button, Index);
+        Tools.List(Tool);
 
         // Não desenha a ferramenta se ela não for visível
-        if (!Buttons.List[Index].CheckEnable())
+        if (!Tool.CheckEnable())
             return;
 
         // Define a transparência do botão pelo seu estado
-        switch (Buttons.List[Index].State)
+        switch (Tool.State)
         {
             case Buttons.States.Above:
                 Alpha = 250;
@@ -257,42 +257,40 @@ partial class Graphics
         }
 
         // Desenha o botão
-        Render(Tex_Button[Buttons.List[Index].Texture_Num], Buttons.List[Index].Position, new SFML.Graphics.Color(255, 255, 225, Alpha));
+        Render(Tex_Button[Tool.Texture_Num], Tool.Position, new SFML.Graphics.Color(255, 255, 225, Alpha));
     }
 
     public static void Panel(string Name)
     {
-        byte Index = Panels.GetIndex(Name);
+        Panels.Structure Tool = Panels.Get(Name);
 
         // Lista a ordem de renderização da ferramenta
-        Tools.List(Tools.Types.Painel, Index);
+        Tools.List(Tool);
 
         // Não desenha a ferramenta se ela não for visível
-        if (!Panels.List[Index].CheckEnable())
-            return;
+        if (!Tool.CheckEnable()) return;
 
         // Desenha o painel
-        Render(Tex_Panel[Panels.List[Index].Texture], Panels.List[Index].Position);
+        Render(Tex_Panel[Tool.Texture_Num],Tool.Position);
     }
 
     public static void CheckBox(string Name)
     {
         Rectangle Rec_Source = new Rectangle(), Rec_Destiny;
-        byte Index = CheckBoxes.GetIndex(Name);
+        CheckBoxes.Structure Tool = CheckBoxes.Get(Name);
 
         // Lista a ordem de renderização da ferramenta
-        Tools.List(Tools.Types.CheckBox, Index);
+        Tools.List(Tool);
 
         // Não desenha a ferramenta se ela não for visível
-        if (!CheckBoxes.List[Index].CheckEnable())
-            return;
+        if (!Tool.CheckEnable())  return;
 
         // Define as propriedades dos retângulos
         Rec_Source.Size = new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height);
         Rec_Destiny = new Rectangle(CheckBoxes.Get(Name).Position, Rec_Source.Size);
 
         // Desenha a textura do marcador pelo seu estado 
-        if (CheckBoxes.List[Index].State)
+        if (Tool.State)
             Rec_Source.Location = new Point(TSize(Tex_CheckBox).Width / 2, 0);
 
         // Desenha o marcador 
@@ -302,36 +300,36 @@ partial class Graphics
 
     public static void TextBox(string Name)
     {
-        byte Index = TextBoxes.GetIndex(Name);
+        TextBoxes.Structure Tool = TextBoxes.Get(Name);
 
         // Lista a ordem de renderização da ferramenta
-        Tools.List(Tools.Types.TextBox, Index);
+        Tools.List(Tool);
 
         // Não desenha a ferramenta se ela não for visível
-        if (!TextBoxes.List[Index].CheckEnable())
+        if (!Tool.CheckEnable())
             return;
 
         // Desenha a ferramenta
-        Render_Box(Tex_TextBox, 3, TextBoxes.List[Index].Position, new Size(TextBoxes.List[Index].Width, TSize(Tex_TextBox).Height));
+        Render_Box(Tex_TextBox, 3, Tool.Position, new Size(Tool.Width, TSize(Tex_TextBox).Height));
 
         // Desenha o texto do digitalizador
-        TextBox_Text(Index);
+        TextBox_Text(Tool);
     }
 
-    public static void TextBox_Text(byte i)
+    public static void TextBox_Text(TextBoxes.Structure Tool)
     {
-        Point Position = TextBoxes.List[i].Position;
-        string Text = TextBoxes.List[i].Text;
+        Point Position = Tool.Position;
+        string Text = Tool.Text;
 
         // Altera todos os caracteres do texto para um em especifico, se for necessário
-        if (TextBoxes.List[i].Password && !string.IsNullOrEmpty(Text))
+        if (Tool.Password && !string.IsNullOrEmpty(Text))
             Text = new String('•', Text.Length);
 
         // Quebra o texto para que caiba no digitalizador, se for necessário
-        Text = Tools.TextBreak(Text, TextBoxes.List[i].Width - 10);
+        Text = Tools.TextBreak(Text, Tool.Width - 10);
 
         // Desenha o texto do digitalizador
-        if (TextBoxes.TexBox_Focus == i && TextBoxes.Signal)
+        if (TextBoxes.TexBox_Focus == Tool && TextBoxes.Signal)
             DrawText(Text + "|", Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
         else
             DrawText(Text, Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
@@ -415,7 +413,7 @@ partial class Graphics
         Button("Personagem_TrocarEsquerda");
 
         // Eventos
-        Buttons.Characters_Change_Buttons();
+        Buttons.Events.Characters_Change_Buttons();
     }
 
     public static void Menu_CreateCharacter()
@@ -710,7 +708,7 @@ partial class Graphics
     public static void Game_Chat()
     {
         // Define a bisiblidade da caixa
-        Panels.Get("Chat").Visible = TextBoxes.TexBox_Focus == TextBoxes.GetIndex("Chat");
+        Panels.Get("Chat").Visible = TextBoxes.TexBox_Focus == TextBoxes.Get("Chat");
 
         // Renderiza as caixas
         Panel("Chat");

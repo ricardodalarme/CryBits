@@ -139,7 +139,7 @@ class Read
         Panels.List[Index].Position.X = Data.ReadInt32();
         Panels.List[Index].Position.Y = Data.ReadInt32();
         Panels.List[Index].Visible = Data.ReadBoolean();
-        Panels.List[Index].Texture = Data.ReadByte();
+        Panels.List[Index].Texture_Num = Data.ReadByte();
 
         // Fecha o sistema
         Data.Dispose();

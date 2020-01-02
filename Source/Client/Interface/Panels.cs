@@ -6,24 +6,14 @@
     // Estrutura da ferramenta
     public class Structure : Tools.Structure
     {
-        public byte Texture;
-    }
-
-    public static byte GetIndex(string Name)
-    {
-        // Lista os nomes das ferramentas
-        for (byte i = 1; i < List.Length; i++)
-            if (List[i].Name == Name)
-                return i;
-
-        return 0;
+        public byte Texture_Num;
     }
 
     public static Structure Get(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
-            if (List[i].Name == Name)
+            if (List[i].Name.Equals(Name))
                 return List[i];
 
         return null;

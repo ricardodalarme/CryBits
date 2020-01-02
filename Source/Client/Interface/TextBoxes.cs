@@ -7,7 +7,7 @@ public class TextBoxes
     public static Structure[] List;
 
     // Digitalizador focado
-    public static byte TexBox_Focus;
+    public static Structure TexBox_Focus;
     public static bool Signal;
 
     // Estrutura da ferramenta
@@ -19,21 +19,11 @@ public class TextBoxes
         public bool Password;
     }
 
-    public static byte GetIndex(string Name)
-    {
-        // Lista os nomes das ferramentas
-        for (byte i = 1; i < List.Length; i++)
-            if (List[i].Name == Name)
-                return i;
-
-        return 0;
-    }
-
     public static Structure Get(string Name)
     {
         // Lista os nomes das ferramentas
         for (byte i = 1; i < List.Length; i++)
-            if (List[i].Name == Name)
+            if (List[i].Name.Equals(Name))
                 return List[i];
 
         return null;
@@ -42,17 +32,17 @@ public class TextBoxes
     public static void Focus()
     {
         // Se o digitalizador não estiver habilitado então isso não é necessário 
-        if (List[TexBox_Focus] != null && List[TexBox_Focus].IsAble) return;
-
+        if (TexBox_Focus != null && TexBox_Focus.IsAble) return;
+        
         // Altera o digitalizador focado para o mais próximo
         for (byte i = 1; i < Tools.Order.Length; i++)
         {
-            if (Tools.Order[i].Type != Tools.Types.TextBox)
+            if (!(Tools.Order[i] is Structure))
                 continue;
-            else if (!List[Tools.Order[i].Index].IsAble)
+            else if (!Tools.Order[i].IsAble)
                 continue;
-            else if (i == GetIndex("Chat"))
-                TexBox_Focus = Tools.Order[i].Index;
+            else if ((Structure)Tools.Order[i] == Get("Chat"))
+                TexBox_Focus = (Structure)Tools.Order[i];
             return;
         }
     }
@@ -62,34 +52,34 @@ public class TextBoxes
         // Altera o digitalizador focado para o próximo
         for (byte i = 1; i < Tools.Order.Length; i++)
         {
-            if (Tools.Order[i].Type != Tools.Types.TextBox)
+            if (!(Tools.Order[i] is Structure))
                 continue;
-            else if (!List[Tools.Order[i].Index].IsAble)
+            else if (!Tools.Order[i].IsAble)
                 continue;
-            if (TexBox_Focus != Last() && i <= Tools.Encontrar(Tools.Types.TextBox, TexBox_Focus))
+            if (TexBox_Focus != Last() && i <= Tools.Get(TexBox_Focus))
                 continue;
 
-            TexBox_Focus = Tools.Order[i].Index;
+            TexBox_Focus = (Structure)Tools.Order[i];
             return;
         }
     }
 
-    public static byte Last()
+    public static Structure Last()
     {
-        byte Index = 0;
+        Structure Tool = null;
 
         // Retorna o último digitalizador habilitado
         for (byte i = 1; i < Tools.Order.Length; i++)
-            if (Tools.Order[i].Type == Tools.Types.TextBox)
-                if (List[Tools.Order[i].Index].IsAble)
-                    Index = Tools.Order[i].Index;
+            if (Tools.Order[i] is Structure)
+                if (Tools.Order[i].IsAble)
+                    Tool = (Structure)Tools.Order[i];
 
-        return Index;
+        return Tool;
     }
 
     public static void Chat_Type()
     {
-        byte Index = GetIndex("Chat");
+        Structure Tool = Get("Chat");
 
         // Somente se necessário
         if (!Player.IsPlaying(Player.MyIndex)) return;
@@ -101,19 +91,19 @@ public class TextBoxes
         if (Panels.Get("Chat").Visible)
         {
             Tools.Chat_Text_Visible = true;
-            TexBox_Focus = Index;
+            TexBox_Focus = Tool;
             return;
         }
         else
-            TexBox_Focus = 0;
+            TexBox_Focus = null;
 
         // Dados
-        string Message = List[Index].Text;
+        string Message = Tool.Text;
 
         // Somente se necessário
         if (Message.Length < 3)
         {
-            List[Index].Text = string.Empty;
+            Tool.Text = string.Empty;
             return;
         }
 
@@ -144,25 +134,25 @@ public class TextBoxes
             Send.Message(Message, Game.Messages.Map);
 
         // Limpa a caixa de texto
-        List[Index].Text = string.Empty;
+        Tool.Text = string.Empty;
     }
 
     public class Events
     {
-        public static void MouseUp(MouseEventArgs e, byte Index)
+        public static void MouseUp(MouseEventArgs e, Structure Tool)
         {
             // Somente se necessário
-            if (!List[Index].IsAble) return;
-            if (!Tools.IsAbove(new Rectangle(List[Index].Position, new Size(List[Index].Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
+            if (!Tool.IsAble) return;
+            if (!Tools.IsAbove(new Rectangle(Tool.Position, new Size(Tool.Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
 
             // Define o foco no Digitalizador
-            TexBox_Focus = Index;
+            TexBox_Focus = Tool;
         }
 
         public static void KeyPress(KeyPressEventArgs e)
         {
             // Se não tiver nenhum focado então sair
-            if (TexBox_Focus == 0) return;
+            if (TexBox_Focus == null) return;
 
             // Altera o foco do digitalizador para o próximo
             if (e.KeyChar == (char)Keys.Tab)
@@ -172,25 +162,25 @@ public class TextBoxes
             }
 
             // Texto
-            string Text = List[TexBox_Focus].Text;
+            string Text = TexBox_Focus.Text;
 
             // Apaga a última letra do texto
             if (!string.IsNullOrEmpty(Text))
             {
                 if (e.KeyChar == '\b' && Text.Length > 0)
                 {
-                    List[TexBox_Focus].Text = Text.Remove(Text.Length - 1);
+                    TexBox_Focus.Text = Text.Remove(Text.Length - 1);
                     return;
                 }
 
                 // Não adicionar se já estiver no máximo de caracteres
-                if (List[TexBox_Focus].Lenght > 0)
-                    if (Text.Length >= List[TexBox_Focus].Lenght)
+                if (TexBox_Focus.Lenght > 0)
+                    if (Text.Length >= TexBox_Focus.Lenght)
                         return;
             }
 
             // Adiciona apenas os caractres válidos ao digitalizador
-            if (e.KeyChar >= 32 && e.KeyChar <= 126) List[TexBox_Focus].Text += e.KeyChar.ToString();
+            if (e.KeyChar >= 32 && e.KeyChar <= 126) TexBox_Focus.Text += e.KeyChar.ToString();
         }
     }
 }

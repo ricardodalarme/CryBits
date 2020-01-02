@@ -26,10 +26,7 @@ public partial class Window : Form
     {
         // Executa o evento de acordo a sobreposição do ponteiro
         for (byte i = 0; i < Tools.Order.Length; i++)
-            switch (Tools.Order[i].Type)
-            {
-                case Tools.Types.Button: Buttons.List[Tools.Order[i].Index].MouseDown(e); break;
-            }
+            if (Tools.Order[i] is Buttons.Structure) Buttons.Events.MouseDown(e, (Buttons.Structure)Tools.Order[i]);
 
         // Eventos em jogo
         if (Tools.CurrentWindow == Tools.Windows.Game)
@@ -48,22 +45,17 @@ public partial class Window : Form
 
         // Executa o evento de acordo a sobreposição do ponteiro
         for (byte i = 0; i < Tools.Order.Length; i++)
-            switch (Tools.Order[i].Type)
-            {
-                case Tools.Types.Button: Buttons.List[Tools.Order[i].Index].MouseMove(e); break;
-            }
+            if (Tools.Order[i] is Buttons.Structure) Buttons.Events.MouseMove(e, (Buttons.Structure)Tools.Order[i]);
     }
 
     private void Window_MouseUp(object sender, MouseEventArgs e)
     {
         // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i < Tools.Order.Length; i++)
-            switch (Tools.Order[i].Type)
-            {
-                case Tools.Types.Button: Buttons.List[Tools.Order[i].Index].MouseUp(); break;
-                case Tools.Types.CheckBox: CheckBoxes.List[Tools.Order[i].Index].MouseUp(); break;
-                case Tools.Types.TextBox: TextBoxes.Events.MouseUp(e, Tools.Order[i].Index); break;
-            }
+        for (byte i = 0; i < Tools.Order.Length; i++) {
+            if (Tools.Order[i] is Buttons.Structure) Buttons.Events.MouseUp((Buttons.Structure)Tools.Order[i]);
+            else if (Tools.Order[i] is CheckBoxes.Structure) CheckBoxes.Events.MouseUp((CheckBoxes.Structure)Tools.Order[i]);
+            else if (Tools.Order[i] is TextBoxes.Structure) TextBoxes.Events.MouseUp(e, (TextBoxes.Structure)Tools.Order[i]);
+        }
 
         // Eventos em jogo
         if (Tools.CurrentWindow == Tools.Windows.Game)
