@@ -36,7 +36,7 @@
             this.butNPCs = new System.Windows.Forms.Button();
             this.butTiles = new System.Windows.Forms.Button();
             this.butData = new System.Windows.Forms.Button();
-            this.butTools = new System.Windows.Forms.Button();
+            this.butInterface = new System.Windows.Forms.Button();
             this.butMaps = new System.Windows.Forms.Button();
             this.butClasses = new System.Windows.Forms.Button();
             this.Directory_Server = new System.Windows.Forms.FolderBrowserDialog();
@@ -94,7 +94,7 @@
             this.groupBox2.Controls.Add(this.butNPCs);
             this.groupBox2.Controls.Add(this.butTiles);
             this.groupBox2.Controls.Add(this.butData);
-            this.groupBox2.Controls.Add(this.butTools);
+            this.groupBox2.Controls.Add(this.butInterface);
             this.groupBox2.Controls.Add(this.butMaps);
             this.groupBox2.Controls.Add(this.butClasses);
             this.groupBox2.Location = new System.Drawing.Point(12, 63);
@@ -144,15 +144,15 @@
             this.butData.UseVisualStyleBackColor = true;
             this.butData.Click += new System.EventHandler(this.butData_Click);
             // 
-            // butTools
+            // butInterface
             // 
-            this.butTools.Location = new System.Drawing.Point(106, 19);
-            this.butTools.Name = "butTools";
-            this.butTools.Size = new System.Drawing.Size(94, 26);
-            this.butTools.TabIndex = 8;
-            this.butTools.Text = "Tools";
-            this.butTools.UseVisualStyleBackColor = true;
-            this.butTools.Click += new System.EventHandler(this.butTools_Click);
+            this.butInterface.Location = new System.Drawing.Point(106, 19);
+            this.butInterface.Name = "butInterface";
+            this.butInterface.Size = new System.Drawing.Size(94, 26);
+            this.butInterface.TabIndex = 8;
+            this.butInterface.Text = "Interface";
+            this.butInterface.UseVisualStyleBackColor = true;
+            this.butInterface.Click += new System.EventHandler(this.butInterface_Click);
             // 
             // butMaps
             // 
@@ -210,7 +210,7 @@
     private System.Windows.Forms.Button butClasses;
     private System.Windows.Forms.Button butMaps;
     private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Button butTools;
+    private System.Windows.Forms.Button butInterface;
     private System.Windows.Forms.Button butData;
     private System.Windows.Forms.Button butTiles;
     private System.Windows.Forms.Button butNPCs;

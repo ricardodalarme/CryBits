@@ -102,10 +102,10 @@ class Read
 
         // Lê os dados
         Lists.Button[Index].Name = Data.ReadString();
-        Lists.Button[Index].Position.X = Data.ReadInt32();
-        Lists.Button[Index].Position.Y = Data.ReadInt32();
+        Lists.Button[Index].Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32());
         Lists.Button[Index].Visible = Data.ReadBoolean();
-        Lists.Button[Index].Texture = Data.ReadByte();
+        Lists.Button[Index].Window = (Globals.Windows)Data.ReadByte();
+        Lists.Button[Index].Texture_Num = Data.ReadByte();
 
         // Fecha o sistema
         Data.Dispose();
@@ -139,10 +139,10 @@ class Read
 
         // Lê os dados
         Lists.TextBox[Index].Name = Data.ReadString();
-        Lists.TextBox[Index].Position.X = Data.ReadInt32();
-        Lists.TextBox[Index].Position.Y = Data.ReadInt32();
+        Lists.TextBox[Index].Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32());
         Lists.TextBox[Index].Visible = Data.ReadBoolean();
-        Lists.TextBox[Index].Max_Chars = Data.ReadInt16();
+        Lists.TextBox[Index].Window = (Globals.Windows)Data.ReadByte();
+        Lists.TextBox[Index].Max_Characters = Data.ReadInt16();
         Lists.TextBox[Index].Width = Data.ReadInt16();
         Lists.TextBox[Index].Password = Data.ReadBoolean();
 
@@ -178,10 +178,10 @@ class Read
 
         // Carrega os dados
         Lists.Panel[Index].Name = Data.ReadString();
-        Lists.Panel[Index].Position.X = Data.ReadInt32();
-        Lists.Panel[Index].Position.Y = Data.ReadInt32();
+        Lists.Panel[Index].Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32());
         Lists.Panel[Index].Visible = Data.ReadBoolean();
-        Lists.Panel[Index].Texture = Data.ReadByte();
+        Lists.Panel[Index].Window = (Globals.Windows)Data.ReadByte();
+        Lists.Panel[Index].Texture_Num = Data.ReadByte();
 
         // Fecha o sistema
         Data.Dispose();
@@ -215,9 +215,9 @@ class Read
 
         // Carrega os dados
         Lists.CheckBox[Index].Name = Data.ReadString();
-        Lists.CheckBox[Index].Position.X = Data.ReadInt32();
-        Lists.CheckBox[Index].Position.Y = Data.ReadInt32();
+        Lists.CheckBox[Index].Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32());
         Lists.CheckBox[Index].Visible = Data.ReadBoolean();
+        Lists.CheckBox[Index].Window = (Globals.Windows)Data.ReadByte();
         Lists.CheckBox[Index].Text = Data.ReadString();
         Lists.CheckBox[Index].State = Data.ReadBoolean();
 

@@ -42,13 +42,13 @@ public partial class Selection : Form
             Editor_Data.Request();
     }
 
-    private void butTools_Click(object sender, EventArgs e)
+    private void butInterface_Click(object sender, EventArgs e)
     {
         // Verifica se os diretórios foram selecionados
         if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
             MessageBox.Show("Select the client directory.");
         else
-            Editor_Tools.Open();
+            Editor_Interface.Open();
     }
 
     private void butClasses_Click(object sender, EventArgs e)

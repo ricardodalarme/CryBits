@@ -276,7 +276,6 @@ partial class Graphics
 
     public static void CheckBox(string Name)
     {
-        Rectangle Rec_Source = new Rectangle(), Rec_Destiny;
         CheckBoxes.Structure Tool = CheckBoxes.Get(Name);
 
         // Lista a ordem de renderização da ferramenta
@@ -286,8 +285,8 @@ partial class Graphics
         if (!Tool.CheckEnable()) return;
 
         // Define as propriedades dos retângulos
-        Rec_Source.Size = new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height);
-        Rec_Destiny = new Rectangle(CheckBoxes.Get(Name).Position, Rec_Source.Size);
+        Rectangle Rec_Source = new Rectangle(new Point(), new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height));
+        Rectangle Rec_Destiny = new Rectangle(Tool.Position, Rec_Source.Size);
 
         // Desenha a textura do marcador pelo seu estado 
         if (Tool.State)
@@ -295,7 +294,7 @@ partial class Graphics
 
         // Desenha o marcador 
         Render(Tex_CheckBox, Rec_Source, Rec_Destiny);
-        DrawText(CheckBoxes.Get(Name).Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + CheckBoxes.Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
+        DrawText(Tool.Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + CheckBoxes.Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
     }
 
     public static void TextBox(string Name)

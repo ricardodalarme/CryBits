@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 
 class Lists
@@ -17,7 +18,8 @@ class Lists
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
-
+    public static List<Structures.Tool> Tool;
+    
     // Estrutura dos itens em gerais
     public class Structures
     {
@@ -49,33 +51,40 @@ class Lists
 
         public class Tool
         {
-            public string Name;
-            public bool Visible;
-            public Point Position;
+            public string Name { get; set; }
+            public Point Position { get; set; }
+            public bool Visible { get; set; }
+            public Globals.Windows Window { get; set; }
+            public bool Viewable
+            {
+                get
+                {
+                   return (Editor_Interface.Objects.cmbWIndows.SelectedIndex == (byte)Window) && Visible;
+                }
+            }
         }
 
         public class Button : Tool
         {
-            public byte Texture;
+            public byte Texture_Num { get; set; }
         }
 
         public class TextBox : Tool
         {
-            public string Text;
-            public short Max_Chars;
-            public short Width;
-            public bool Password;
+            public short Max_Characters { get; set; }
+            public short Width { get; set; }
+            public bool Password { get; set; }
         }
 
         public class CheckBox : Tool
         {
-            public string Text;
-            public bool State;
+            public string Text { get; set; }
+            public bool State { get; set; }
         }
 
         public class Panel : Tool
         {
-            public byte Texture;
+            public byte Texture_Num { get; set; }
         }
 
         public struct Class

@@ -60,7 +60,8 @@ class Write
         Data.Write(Lists.Button[Index].Position.X);
         Data.Write(Lists.Button[Index].Position.Y);
         Data.Write(Lists.Button[Index].Visible);
-        Data.Write(Lists.Button[Index].Texture);
+        Data.Write((byte)Lists.Button[Index].Window);
+        Data.Write(Lists.Button[Index].Texture_Num);
 
         // Fecha o sistema
         Data.Dispose();
@@ -84,7 +85,8 @@ class Write
         Data.Write(Lists.TextBox[Index].Position.X);
         Data.Write(Lists.TextBox[Index].Position.Y);
         Data.Write(Lists.TextBox[Index].Visible);
-        Data.Write(Lists.TextBox[Index].Max_Chars);
+        Data.Write((byte)Lists.TextBox[Index].Window);
+        Data.Write(Lists.TextBox[Index].Max_Characters);
         Data.Write(Lists.TextBox[Index].Width);
         Data.Write(Lists.TextBox[Index].Password);
 
@@ -110,7 +112,8 @@ class Write
         Data.Write(Lists.Panel[Index].Position.X);
         Data.Write(Lists.Panel[Index].Position.Y);
         Data.Write(Lists.Panel[Index].Visible);
-        Data.Write(Lists.Panel[Index].Texture);
+        Data.Write((byte)Lists.Panel[Index].Window);
+        Data.Write(Lists.Panel[Index].Texture_Num);
 
         // Fecha o sistema
         Data.Dispose();
@@ -134,6 +137,7 @@ class Write
         Data.Write(Lists.CheckBox[Index].Position.X);
         Data.Write(Lists.CheckBox[Index].Position.Y);
         Data.Write(Lists.CheckBox[Index].Visible);
+        Data.Write((byte)Lists.CheckBox[Index].Window);
         Data.Write(Lists.CheckBox[Index].Text);
         Data.Write(Lists.CheckBox[Index].State);
 

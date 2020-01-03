@@ -123,6 +123,12 @@ class Globals
         Amount
     }
 
+    public enum Windows
+    {
+        Menu,
+        Game
+    }
+
     public static void Weather_Update()
     {
         // Redimensiona a lista

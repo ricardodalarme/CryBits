@@ -8,6 +8,7 @@ partial class Graphics
 {
     // Locais de renderização
     public static RenderWindow Win_Preview;
+    public static RenderWindow Win_Interface = new RenderWindow(Editor_Interface.Objects.picWindow.Handle);
     public static RenderWindow Win_Tile = new RenderWindow(Editor_Tiles.Objects.picTile.Handle);
     public static RenderWindow Win_Map = new RenderWindow(Editor_Maps.Objects.picMap.Handle);
     public static RenderWindow Win_Map_Tile = new RenderWindow(Editor_Maps.Objects.picTile.Handle);
@@ -144,6 +145,19 @@ partial class Graphics
         RenderRectangle(Window, new Rectangle(x, y, Width, Height), Color);
     }
 
+    public static void Render_Box(RenderWindow Window, Texture Texture, byte Margin, Point Position, Size Size)
+    {
+        int Texture_Width = TSize(Texture).Width;
+        int Texture_Height = TSize(Texture).Height;
+
+        // Borda esquerda
+        Render(Window, Texture, new Rectangle(new Point(0), new Size(Margin, Texture_Width)), new Rectangle(Position, new Size(Margin, Texture_Height)));
+        // Borda direita
+        Render(Window, Texture, new Rectangle(new Point(Texture_Width - Margin, 0), new Size(Margin, Texture_Height)), new Rectangle(new Point(Position.X + Size.Width - Margin, Position.Y), new Size(Margin, Texture_Height)));
+        // Centro
+        Render(Window, Texture, new Rectangle(new Point(Margin, 0), new Size(Margin, Texture_Height)), new Rectangle(new Point(Position.X + Margin, Position.Y), new Size(Size.Width - Margin * 2, Texture_Height)));
+    }
+
     private static void DrawText(RenderWindow Window, string Text, int X, int Y, SFML.Graphics.Color Color)
     {
         Text TempText = new Text(Text, GameFont);
@@ -192,6 +206,7 @@ partial class Graphics
         Editor_Tile();
         Editor_Maps_Tile();
         Editor_Maps_Map();
+        Interface();
     }
 
     public static void Transparent(RenderWindow Window)
@@ -648,6 +663,73 @@ partial class Graphics
                     Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Globals.Grid_Zoom, Globals.Grid_Zoom)), CColor(0, 220, 0, 150));
                     DrawText(Win_Map, (i + 1).ToString(), Position.X + 10, Position.Y + 10, SFML.Graphics.Color.White);
                 }
+    }
+    #endregion
+
+    #region Interface Editor
+    public static void Interface()
+    {
+        // Limpa a área
+        Win_Interface.Clear();
+
+        // Desenha as interfaces
+        if (Editor_Interface.Objects.Visible)
+        {
+            for (byte i = 1; i < Lists.Panel.Length; i++) Panel(i);
+            for (byte i = 1; i < Lists.Button.Length; i++) Button(i);
+            for (byte i = 1; i < Lists.CheckBox.Length; i++) CheckBox(i);
+            for (byte i = 1; i < Lists.TextBox.Length; i++) TextBox(i);
+        }
+
+        // Exibe o que foi renderizado
+        Win_Interface.Display();
+    }
+
+    public static void Button(byte Index)
+    {
+        // Não desenha a ferramenta se ela não for visível
+        if (!Lists.Button[Index].Viewable) return;
+
+        // Desenha o botão
+        Render(Win_Interface, Tex_Button[Lists.Button[Index].Texture_Num], Lists.Button[Index].Position, new SFML.Graphics.Color(255, 255, 225, 225));
+    }
+
+    public static void Panel(byte Index)
+    {
+        // Não desenha a ferramenta se ela não for visível
+        if (!Lists.Panel[Index].Viewable) return;
+
+        // Desenha o painel
+        Render(Win_Interface, Tex_Panel[Lists.Panel[Index].Texture_Num], Lists.Panel[Index].Position);
+    }
+
+    public static void CheckBox(byte Index)
+    {
+        byte Margin = 4;
+
+        // Não desenha a ferramenta se ela não for visível
+        if (!Lists.CheckBox[Index].Viewable) return;
+
+        // Define as propriedades dos retângulos
+        Rectangle Rec_Source = new Rectangle(new Point(), new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height));
+        Rectangle Rec_Destiny = new Rectangle(Lists.CheckBox[Index].Position, Rec_Source.Size);
+
+        // Desenha a textura do marcador pelo seu estado 
+        if (Lists.CheckBox[Index].State)
+            Rec_Source.Location = new Point(TSize(Tex_CheckBox).Width / 2, 0);
+
+        // Desenha o marcador 
+        Render(Win_Interface, Tex_CheckBox, Rec_Source, Rec_Destiny);
+        DrawText(Win_Interface, Lists.CheckBox[Index].Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
+    }
+
+    public static void TextBox(byte Index)
+    {
+        // Não desenha a ferramenta se ela não for visível
+        if (!Lists.TextBox[Index].Viewable)  return;
+
+        // Desenha a ferramenta
+        Render_Box(Win_Interface, Tex_TextBox, 3, Lists.TextBox[Index].Position, new Size(Lists.TextBox[Index].Width, TSize(Tex_TextBox).Height));
     }
     #endregion
 }

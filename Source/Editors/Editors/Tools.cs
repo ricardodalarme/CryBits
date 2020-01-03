@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Drawing;
 
 public partial class Editor_Tools : Form
 {
@@ -118,7 +119,7 @@ public partial class Editor_Tools : Form
         numX.Value = Lists.Button[Selected].Position.X;
         numY.Value = Lists.Button[Selected].Position.Y;
         chkVisible.Checked = Lists.Button[Selected].Visible;
-        lblButton_Texture.Text = "Texture: " + Lists.Button[Selected].Texture;
+        lblButton_Texture.Text = "Texture: " + Lists.Button[Selected].Texture_Num;
     }
 
     private void Update_TextBox()
@@ -128,7 +129,7 @@ public partial class Editor_Tools : Form
         numX.Value = Lists.TextBox[Selected].Position.X;
         numY.Value = Lists.TextBox[Selected].Position.Y;
         chkVisible.Checked = Lists.TextBox[Selected].Visible;
-        scrlTextBox_Max_Characters.Value = Lists.TextBox[Selected].Max_Chars;
+        scrlTextBox_Max_Characters.Value = Lists.TextBox[Selected].Max_Characters;
         scrlTextBox_Width.Value = Lists.TextBox[Selected].Width;
     }
 
@@ -149,7 +150,7 @@ public partial class Editor_Tools : Form
         numX.Value = Lists.Panel[Selected].Position.X;
         numY.Value = Lists.Panel[Selected].Position.Y;
         chkVisible.Checked = Lists.Panel[Selected].Visible;
-        lblPanel_Texture.Text = "Texture: " + Lists.Panel[Selected].Texture;
+        lblPanel_Texture.Text = "Texture: " + Lists.Panel[Selected].Texture_Num;
     }
 
     private void Update_Data()
@@ -319,10 +320,10 @@ public partial class Editor_Tools : Form
         // Define os valores
         switch ((Globals.Tools_Types)cmbTools.SelectedIndex)
         {
-            case Globals.Tools_Types.Button: Lists.Button[Selected].Position.X = (short)numX.Value; break;
-            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].Position.X = (short)numX.Value; break;
-            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].Position.X = (short)numX.Value; break;
-            case Globals.Tools_Types.Panel: Lists.Panel[Selected].Position.X = (short)numX.Value; break;
+            case Globals.Tools_Types.Button: Lists.Button[Selected].Position = new Point((short)numX.Value, Lists.Button[Selected].Position.Y); break;
+            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].Position = new Point((short)numX.Value, Lists.Button[Selected].Position.Y); break;
+            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].Position = new Point((short)numX.Value, Lists.Button[Selected].Position.Y); break;
+            case Globals.Tools_Types.Panel: Lists.Panel[Selected].Position = new Point((short)numX.Value, Lists.Button[Selected].Position.Y); break;
         }
     }
 
@@ -331,10 +332,10 @@ public partial class Editor_Tools : Form
         // Define os valores
         switch ((Globals.Tools_Types)cmbTools.SelectedIndex)
         {
-            case Globals.Tools_Types.Button: Lists.Button[Selected].Position.Y = (short)numY.Value; break;
-            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].Position.Y = (short)numY.Value; break;
-            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].Position.Y = (short)numY.Value; break;
-            case Globals.Tools_Types.Panel: Lists.Panel[Selected].Position.Y = (short)numY.Value; break;
+            case Globals.Tools_Types.Button: Lists.Button[Selected].Position = new Point(Lists.Button[Selected].Position.X, (short)numY.Value); break;
+            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected].Position = new Point(Lists.Button[Selected].Position.X, (short)numY.Value); break;
+            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected].Position = new Point(Lists.Button[Selected].Position.X, (short)numY.Value); break;
+            case Globals.Tools_Types.Panel: Lists.Panel[Selected].Position = new Point(Lists.Button[Selected].Position.X, (short)numY.Value); break;
         }
     }
 
@@ -358,7 +359,7 @@ public partial class Editor_Tools : Form
         else
             lblTextBox_Max_Characters.Text = "Maximum characters: Infinity";
 
-        Lists.TextBox[Selected].Max_Chars = (short)scrlTextBox_Max_Characters.Value;
+        Lists.TextBox[Selected].Max_Characters = (short)scrlTextBox_Max_Characters.Value;
     }
 
     private void scrlTextBox_Width_ValueChanged(object sender, EventArgs e)
@@ -383,15 +384,15 @@ public partial class Editor_Tools : Form
     private void butPanel_Texture_Click(object sender, EventArgs e)
     {
         // Abre a pré visualização
-        Lists.Panel[Selected].Texture = (byte)Preview.Select(Graphics.Tex_Panel, Lists.Panel[Selected].Texture);
-        lblPanel_Texture.Text = "Texture: " + Lists.Panel[Selected].Texture;
+        Lists.Panel[Selected].Texture_Num = (byte)Preview.Select(Graphics.Tex_Panel, Lists.Panel[Selected].Texture_Num);
+        lblPanel_Texture.Text = "Texture: " + Lists.Panel[Selected].Texture_Num;
     }
 
     private void butButton_Texture_Click(object sender, EventArgs e)
     {
         // Abre a pré visualização
-        Lists.Button[Selected].Texture = (byte)Preview.Select(Graphics.Tex_Button, Lists.Button[Selected].Texture);
-        lblButton_Texture.Text = "Texture: " + Lists.Button[Selected].Texture;
+        Lists.Button[Selected].Texture_Num = (byte)Preview.Select(Graphics.Tex_Button, Lists.Button[Selected].Texture_Num);
+        lblButton_Texture.Text = "Texture: " + Lists.Button[Selected].Texture_Num;
     }
     #endregion
 }
