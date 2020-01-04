@@ -126,7 +126,9 @@ class Globals
     public enum Windows
     {
         Menu,
-        Game
+        Game,
+        Global,
+        Count
     }
 
     public static void Weather_Update()
@@ -200,5 +202,26 @@ class Globals
 
         // Se não, retornar um valor nulo
         return false;
+    }
+
+    public static void Add_Tools_Order()
+    {
+        // Adiciona todas as ferramentas
+        for (byte i = 1; i < Lists.Button.Length; i++) Add_Tool_Order(i, Globals.Tools_Types.Button);
+        for (byte i = 1; i < Lists.TextBox.Length; i++) Add_Tool_Order(i, Globals.Tools_Types.TextBox);
+        for (byte i = 1; i < Lists.Panel.Length; i++) Add_Tool_Order(i, Globals.Tools_Types.Panel);
+        for (byte i = 1; i < Lists.CheckBox.Length; i++) Add_Tool_Order(i, Globals.Tools_Types.CheckBox);
+        int size = Lists.Tool_Order.Count;
+    }
+
+    public static void Add_Tool_Order(byte Index, Globals.Tools_Types Type)
+    {
+        // Adiciona a ferramenta na lista de ordem
+        Lists.Structures.Tool_Order Temp = new Lists.Structures.Tool_Order
+        {
+            Index = Index,
+            Type = Type
+        };
+        Lists.Tool_Order.Add(Temp);
     }
 }

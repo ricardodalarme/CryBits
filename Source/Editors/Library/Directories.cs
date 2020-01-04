@@ -18,6 +18,7 @@ class Directories
     public static DirectoryInfo TextBoxes_Data;
     public static DirectoryInfo Panels_Data;
     public static DirectoryInfo CheckBoxes_Data;
+    public static FileInfo Tool_Order;
     public static DirectoryInfo Tex_Painel;
     public static FileInfo Tex_CheckBox;
     public static FileInfo Tex_TextBox;
@@ -60,6 +61,7 @@ class Directories
         TextBoxes_Data = new DirectoryInfo(Directory + @"\Data\Tools\TextBoxes\");
         Panels_Data = new DirectoryInfo(Directory + @"\Data\Tools\Panels\");
         CheckBoxes_Data = new DirectoryInfo(Directory + @"\Data\Tools\CheckBoxes\");
+        Tool_Order = new FileInfo(Directory + @"\Data\Tools\Order" + Format);
         Tex_Panoramas = new DirectoryInfo(Directory + @"\Graphics\Panoramas\");
         Tex_Lights = new DirectoryInfo(Directory + @"\Graphics\Lights\");
         Tex_Fogs = new DirectoryInfo(Directory + @"\Graphics\Fogs\");
@@ -87,6 +89,7 @@ class Directories
         TextBoxes_Data.Create();
         Panels_Data.Create();
         CheckBoxes_Data.Create();
+        Tool_Order.Directory.Create();
         Tex_Panoramas.Create();
         Tex_Fogs.Create();
         Tex_Lights.Create();

@@ -144,4 +144,29 @@ class Write
         // Fecha o sistema
         Data.Dispose();
     }
+
+    public static void Tool_Order()
+    {
+        // Cria um sistema binário para a manipulação dos dados
+        FileInfo File = new FileInfo(Directories.Tool_Order.FullName);
+        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
+
+        // Escreve os dados
+        Data.Write((short)Lists.Tool_Order.Count);
+        for (short n = 0; n < Lists.Tool_Order.Count; n++) Tree_Nodes(Lists.Tool_Order[n], Data);
+
+        // Fecha o sistema
+        Data.Dispose();
+    }
+
+    private static void Tree_Nodes(Lists.Structures.Tool_Order Tool, BinaryWriter Data)
+    {
+        // Escreve a ferramenta
+        Data.Write(Tool.Index);
+        Data.Write((byte)Tool.Type);
+
+        // Escreve os filhos
+        Data.Write((byte)Tool.Set.Count);
+        for (byte i = 0; i < Tool.Set.Count; i++)  Tree_Nodes(Tool.Set[i], Data);
+    }
 }

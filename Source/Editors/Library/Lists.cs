@@ -18,7 +18,7 @@ class Lists
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
-    public static List<Structures.Tool> Tool;
+    public static List<Structures.Tool_Order> Tool_Order;
     
     // Estrutura dos itens em gerais
     public class Structures
@@ -47,6 +47,35 @@ class Lists
             public short Port;
             public byte Max_Players;
             public byte Max_Characters;
+        }
+
+        public class Tool_Order
+        {
+            public byte Index;
+            public Globals.Tools_Types Type;
+            public Tool_Order Parent;
+            public List<Tool_Order> Set;
+
+            // Retorna a ferramenta
+            public Tool Data
+            {
+                get
+                {
+                    switch (Type)
+                    {
+                        case Globals.Tools_Types.Button: return Lists.Button[Index];
+                        case Globals.Tools_Types.TextBox: return Lists.TextBox[Index];
+                        case Globals.Tools_Types.Panel: return Lists.Panel[Index];
+                        case Globals.Tools_Types.CheckBox: return Lists.CheckBox[Index];
+                    }
+                    return null;
+                }
+            }
+
+            public Tool_Order()
+            {
+                Set = new List<Tool_Order>();
+            }
         }
 
         public class Tool

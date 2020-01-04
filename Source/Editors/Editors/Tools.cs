@@ -189,7 +189,7 @@ public partial class Editor_Tools : Form
         // Limpa os novos itens
         if (Quantity > Old)
             for (byte i = (byte)(Old + 1); i <= Quantity; i++)
-                Clear.Button(i);
+                Lists.Button[Selected] = new Lists.Structures.Button();
     }
 
     private static void Change_Quantity_TextBox()
@@ -203,7 +203,7 @@ public partial class Editor_Tools : Form
         // Limpa os novos itens
         if (Quantity > Old)
             for (byte i = (byte)(Old + 1); i <= Quantity; i++)
-                Clear.TextBox(i);
+                Lists.TextBox[Selected] = new Lists.Structures.TextBox();
     }
 
     private static void Change_Quantity_CheckBox()
@@ -217,7 +217,7 @@ public partial class Editor_Tools : Form
         // Limpa os novos itens
         if (Quantity > Old)
             for (byte i = (byte)(Old + 1); i <= Quantity; i++)
-                Clear.CheckBox(i);
+                Lists.CheckBox[Selected] = new Lists.Structures.CheckBox();
     }
 
     private static void Change_Quantity_Panel()
@@ -231,7 +231,7 @@ public partial class Editor_Tools : Form
         // Limpa os novos itens
         if (Quantity > Old)
             for (byte i = (byte)(Old + 1); i <= Quantity; i++)
-                Clear.Panel(i);
+                Lists.Panel[Selected] = new Lists.Structures.Panel();
     }
     #endregion
 
@@ -278,16 +278,7 @@ public partial class Editor_Tools : Form
 
     private void butClear_Click(object sender, EventArgs e)
     {
-        // Reseta os valores
-        switch ((Globals.Tools_Types)cmbTools.SelectedIndex)
-        {
-            case Globals.Tools_Types.Button: Clear.Button(Selected); break;
-            case Globals.Tools_Types.TextBox: Clear.TextBox(Selected); break;
-            case Globals.Tools_Types.Panel: Clear.Panel(Selected); break;
-            case Globals.Tools_Types.CheckBox: Clear.CheckBox(Selected); break;
-        }
-
-        Update_Data();
+       
     }
 
     private void butCancel_Click(object sender, EventArgs e)

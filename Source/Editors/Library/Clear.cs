@@ -30,47 +30,6 @@ class Clear
         Lists.Server_Data.Port = 7001;
         Lists.Server_Data.Max_Players = 15;
         Lists.Server_Data.Max_Characters = 3;
-        //Lists.Server_Data.Num_Classes = 1;
-        //Lists.Server_Data.Num_Maps = 1;
-        //Lists.Server_Data.Num_Items = 1;
-        //Lists.Server_Data.Num_NPCs = 1;
-    }
-
-    public static void Button(byte Index)
-    {
-        // Limpa a estrutura
-        Lists.Button[Index] = new Lists.Structures.Button();
-
-        // Reseta os valores
-        Lists.Button[Index].Name = string.Empty;
-    }
-
-    public static void TextBox(byte Index)
-    {
-        // Limpa a estrutura
-        Lists.TextBox[Index] = new Lists.Structures.TextBox();
-
-        // Reseta os valores
-        Lists.TextBox[Index].Name = string.Empty;
-    }
-
-    public static void Panel(byte Index)
-    {
-        // Limpa a estrutura
-        Lists.Panel[Index] = new Lists.Structures.Panel();
-
-        // Reseta os valores
-        Lists.Panel[Index].Name = string.Empty;
-    }
-
-    public static void CheckBox(byte Index)
-    {
-        // Limpa a estrutura
-        Lists.CheckBox[Index] = new Lists.Structures.CheckBox();
-
-        // Reseta os valores
-        Lists.CheckBox[Index].Name = string.Empty;
-        Lists.CheckBox[Index].Text = string.Empty;
     }
 
     public static void Class(byte Index)
