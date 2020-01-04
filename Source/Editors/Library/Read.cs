@@ -251,7 +251,6 @@ class Read
         for (byte i = 0; i < Size; i++)
         {
             Tool.Set.Add(new Lists.Structures.Tool_Order());
-            Tool.Parent = Tool;
             Tree_Nodes(Tool.Set[i], Data);
         }
     }

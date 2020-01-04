@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Forms;
 
 class Lists
 {
@@ -18,7 +19,7 @@ class Lists
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
-    public static List<Structures.Tool_Order> Tool_Order;
+    public static TreeNode Tool_Order;
     
     // Estrutura dos itens em gerais
     public class Structures
@@ -53,8 +54,6 @@ class Lists
         {
             public byte Index;
             public Globals.Tools_Types Type;
-            public Tool_Order Parent;
-            public List<Tool_Order> Set;
 
             // Retorna a ferramenta
             public Tool Data

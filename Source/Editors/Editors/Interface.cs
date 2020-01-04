@@ -24,7 +24,7 @@ public partial class Editor_Interface : Form
 
         // Adiciona os tipos de ferramentas à lista
         Objects.cmbTools.Items.Clear();
-        for (byte i = 0; i < (byte)Globals.Tools_Types.Amount; i++)  Objects.cmbTools.Items.Add((Globals.Tools_Types)i);
+        for (byte i = 0; i < (byte)Globals.Tools_Types.Amount; i++) Objects.cmbTools.Items.Add((Globals.Tools_Types)i);
         Objects.cmbTools.SelectedIndex = 0;
 
         // Adiciona as janelas à lista
@@ -120,14 +120,14 @@ public partial class Editor_Interface : Form
         // Lista as ferramentas e suas propriedades
         switch ((Globals.Tools_Types)Objects.cmbTools.SelectedIndex)
         {
-            case Globals.Tools_Types.Button: 
+            case Globals.Tools_Types.Button:
                 for (byte i = 1; i < Lists.Button.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.Button.GetUpperBound(0)) + ":" + Lists.Button[i].Name);
                 break;
-            case Globals.Tools_Types.TextBox: 
+            case Globals.Tools_Types.TextBox:
                 for (byte i = 1; i < Lists.TextBox.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.TextBox.GetUpperBound(0)) + ":" + Lists.TextBox[i].Name);
                 break;
-            case Globals.Tools_Types.Panel: 
-                for (byte i = 1; i < Lists.Panel.Length; i++)  Objects.List.Items.Add(Globals.Numbering(i, Lists.Panel.GetUpperBound(0)) + ":" + Lists.Panel[i].Name); 
+            case Globals.Tools_Types.Panel:
+                for (byte i = 1; i < Lists.Panel.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.Panel.GetUpperBound(0)) + ":" + Lists.Panel[i].Name);
                 break;
             case Globals.Tools_Types.CheckBox:
                 for (byte i = 1; i < Lists.CheckBox.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.CheckBox.GetUpperBound(0)) + ":" + Lists.CheckBox[i].Name);
@@ -164,10 +164,106 @@ public partial class Editor_Interface : Form
     private static void Tree_Nodes(Lists.Structures.Tool_Order Tool, TreeNode Node)
     {
         // Adiciona a ferramenta ao nó pai
-        TreeNode Child = Node.Nodes.Add("[" + Tool.Type.ToString() + "] " + Tool.Data.Name);
+        TreeNode Child = Node.Nodes.Add(Tool.Index.ToString(), "[" + Tool.Type.ToString() + "] " + Tool.Data.Name);
+        Node.LastNode.Tag = Tool;
 
         // Adiciona todos os netos ao nó filho
         for (short i = 0; i < Tool.Set.Count; i++)
             Tree_Nodes(Tool.Set[i], Child);
+    }
+
+    private void butOrder_Pin_Click(object sender, EventArgs e)
+    {
+        // Evita erros 
+        if (Objects.treOrder.SelectedNode == null) return;
+
+        // Dados
+        TreeNode Selected = Objects.treOrder.SelectedNode;
+        if (Selected.PrevNode != null)
+        {
+            // Fixa o nó
+            Selected.PrevNode.Nodes.Add((TreeNode)Selected.Clone());
+            Selected.PrevNode.Expand();
+            Objects.treOrder.SelectedNode = Selected.PrevNode.LastNode;
+            Selected.Remove();
+        }
+
+        // Foca o componente
+        Objects.treOrder.Focus();
+    }
+
+    private void butOrder_Unpin_Click(object sender, EventArgs e)
+    {
+        // Evita erros 
+        if (Objects.treOrder.SelectedNode == null) return;
+
+        // Dados
+        TreeNode Selected = Objects.treOrder.SelectedNode;
+        TreeNode Parent = Selected.Parent;
+        if (Parent != null && Parent.Parent != null)
+        {
+            // Desfixa o nó
+            Parent.Parent.Nodes.Insert(Parent.Index + 1, (TreeNode)Selected.Clone());
+            Objects.treOrder.SelectedNode = Selected.Parent.NextNode;
+            Selected.Remove();
+        }
+
+        // Foca o componente
+        Objects.treOrder.Focus();
+    }
+
+    private void butOrder_Up_Click(object sender, EventArgs e)
+    {
+        // Evita erros 
+        if (Objects.treOrder.SelectedNode == null) return;
+
+        // Dados
+        TreeNode Parent = Objects.treOrder.SelectedNode.Parent;
+        TreeNode Selected = Objects.treOrder.SelectedNode;
+        if (Selected != Parent.FirstNode && Parent != null && Parent.Nodes.Count > 1)
+        {
+            // Altera a posição dos nós
+            Parent.Nodes.Insert(Selected.Index - 1, (TreeNode)Selected.Clone());
+            Selected.Remove();
+            Objects.treOrder.SelectedNode = Parent.Nodes[Selected.Index - 1];
+        }
+
+        // Foca o componente
+        Objects.treOrder.Focus();
+    }
+
+    private void butOrder_Down_Click(object sender, EventArgs e)
+    {
+        // Evita erros 
+        if (Objects.treOrder.SelectedNode == null) return;
+
+        // Dados
+        TreeNode Parent = Objects.treOrder.SelectedNode.Parent;
+        TreeNode Selected = Objects.treOrder.SelectedNode;
+        if (Selected != Parent.LastNode && Parent != null && Parent.Nodes.Count > 1)
+        {
+            // Altera a posição dos nós
+            Parent.Nodes.Insert(Selected.Index - 1, (TreeNode)Selected.Clone());
+            Selected.Remove();
+            Objects.treOrder.SelectedNode = Parent.Nodes[Selected.Index - 1];
+        }
+
+        // Foca o componente
+        Objects.treOrder.Focus();
+    }
+
+    private void Update_Order()
+    {
+        Lists.Tool_Order = new List<Lists.Structures.Tool_Order>();
+
+        // Nós das janelas
+        for (byte i = 0; i < (byte)Globals.Windows.Count; i++)
+            for (short n = 0; n < treOrder.Nodes[i].Nodes.Count; n++)
+                Update_Order_Node(treOrder.Nodes[i]);
+    }
+
+    private static void Update_Order_Node(TreeNode Node)
+    {
+
     }
 }
