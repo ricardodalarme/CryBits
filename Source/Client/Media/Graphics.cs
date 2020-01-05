@@ -313,7 +313,7 @@ partial class Graphics
     public static void Interface_Specific(Tools.Structure Tool)
     {
         // Interações especificas
-        if (!(Tool is CheckBoxes.Structure)) return;
+        if (!(Tool is Panels.Structure)) return;
         if (Tool.Name.Equals("SelecionarPersonagem")) SelectCharacter_Class();
         if (Tool.Name.Equals("CriarPersonagem")) CreateCharacter_Class();
         if (Tool.Name.Equals("Hotbar")) Game_Hotbar((Panels.Structure)Tool);

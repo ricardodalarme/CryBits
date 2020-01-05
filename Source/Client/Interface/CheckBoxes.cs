@@ -18,9 +18,6 @@ class CheckBoxes
         // Eventos
         public void MouseUp()
         {
-            // Somente se estiver disponível
-            if (!Viewable) return;
-
             // Tamanho do marcador
             Size Texture_Size = Graphics.TSize(Graphics.Tex_CheckBox);
             int Text_Width = Tools.MeasureString(Text);

@@ -33,7 +33,7 @@ class Program
     {
         int Wait_Timer = Environment.TickCount;
 
-        // Elimina todos os dispositivos que estão sendo usados
+        // Desconecta da rede
         Socket.Disconnect();
 
         // Espera até que o jogador seja desconectado

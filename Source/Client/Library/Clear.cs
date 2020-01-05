@@ -13,30 +13,6 @@
         Write.Options();
     }
 
-    public static void Button(int Index)
-    {
-        // Limpa a estrutura
-        Buttons.List[Index] = new Buttons.Structure();
-    }
-
-    public static void TextBox(int Index)
-    {
-        // Limpa a estrutura
-        TextBoxes.List[Index] = new TextBoxes.Structure();
-    }
-
-    public static void Panel(int Index)
-    {
-        // Limpa a estrutura
-        Panels.List[Index] = new Panels.Structure();
-    }
-
-    public static void CheckBox(int Index)
-    {
-        // Limpa a estrutura
-        CheckBoxes.List[Index] = new CheckBoxes.Structure();
-    }
-
     public static void Player(byte Index)
     {
         // Limpa a estrutura

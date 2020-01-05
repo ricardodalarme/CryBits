@@ -23,7 +23,6 @@ class TextBoxes
         public void MouseUp()
         {
             // Somente se necessário
-            if (!Viewable) return;
             if (!Tools.IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
 
             // Define o foco no Digitalizador

@@ -69,14 +69,12 @@ class Read
 
     public static void Button_Data(byte Index)
     {
-        // Limpa os valores
-        Clear.Button(Index);
-
         // Cria um sistema binário para a manipulação dos dados
         FileInfo File = new FileInfo(Directories.Buttons_Data.FullName + Index + Directories.Format);
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Lê os dados
+        Buttons.List[Index] = new Buttons.Structure();
         Buttons.List[Index].Name = Data.ReadString();
         Buttons.List[Index].Position.X = Data.ReadInt32();
         Buttons.List[Index].Position.Y = Data.ReadInt32();
@@ -99,14 +97,12 @@ class Read
 
     public static void TextBox_Data(byte Index)
     {
-        // Limpa os valores
-        Clear.TextBox(Index);
-
         // Cria um sistema binário para a manipulação dos dados
         FileInfo File = new FileInfo(Directories.TextBoxes_Data.FullName + Index + Directories.Format);
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Lê os dados
+        TextBoxes.List[Index] = new TextBoxes.Structure();
         TextBoxes.List[Index].Name = Data.ReadString();
         TextBoxes.List[Index].Position.X = Data.ReadInt32();
         TextBoxes.List[Index].Position.Y = Data.ReadInt32();
@@ -131,14 +127,12 @@ class Read
 
     public static void Panel_Data(byte Index)
     {
-        // Limpa os valores
-        Clear.Panel(Index);
-
         // Cria um sistema binário para a manipulação dos dados
         FileInfo File = new FileInfo(Directories.Panels_Data.FullName + Index + Directories.Format);
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Carrega os dados
+        Panels.List[Index] = new Panels.Structure();
         Panels.List[Index].Name = Data.ReadString();
         Panels.List[Index].Position.X = Data.ReadInt32();
         Panels.List[Index].Position.Y = Data.ReadInt32();
@@ -161,14 +155,12 @@ class Read
 
     public static void CheckBox_Data(byte Index)
     {
-        // Limpa os valores
-        Clear.CheckBox(Index);
-
         // Cria um sistema binário para a manipulação dos dados
         FileInfo File = new FileInfo(Directories.CheckBoxes_Data.FullName + Index + Directories.Format);
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Carrega os dados
+        CheckBoxes.List[Index] = new CheckBoxes.Structure();
         CheckBoxes.List[Index].Name = Data.ReadString();
         CheckBoxes.List[Index].Position.X = Data.ReadInt32();
         CheckBoxes.List[Index].Position.Y = Data.ReadInt32();
