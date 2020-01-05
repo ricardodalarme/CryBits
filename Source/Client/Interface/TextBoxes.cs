@@ -26,7 +26,7 @@ class TextBoxes
             // Somente se necessário
             if (!Tools.IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
 
-            // Define o foco no Digitalizador
+            // Define o foco no digitalizador
             Focused = Order;
 
             // Altera o foco do digitalizador
@@ -115,15 +115,16 @@ class TextBoxes
     public static void Chat_Type()
     {
         Structure Tool = Get("Chat");
+        Panels.Structure Panel = Panels.Get("Chat");
 
         // Somente se necessário
         if (!Player.IsPlaying(Player.MyIndex)) return;
 
         // Altera a visiblidade da caixa
-        Panels.Get("Chat").Visible = !Panels.Get("Chat").Visible;
+        Panel.Visible = !Panel.Visible;
 
         // Altera o foco do digitalizador
-        if (Panels.Get("Chat").Visible)
+        if (Panel.Visible)
         {
             Tools.Chat_Text_Visible = true;
             Focused = Tools.Get(Tool);

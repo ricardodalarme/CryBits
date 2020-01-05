@@ -47,14 +47,14 @@ class Write
         Data.Write(Lists.Map.Fog.Alpha);
 
         // Ligação
-        for (short i = 0; i <= (short)Game.Directions.Amount - 1; i++)
+        for (short i = 0; i < (short)Game.Directions.Amount; i++)
             Data.Write(Lists.Map.Link[i]);
 
         // Azulejos
         Data.Write((byte)Lists.Map.Tile[0, 0].Data.GetUpperBound(1));
         for (byte x = 0; x <= Lists.Map.Width; x++)
             for (byte y = 0; y <= Lists.Map.Height; y++)
-                for (byte c = 0; c <= (byte)global::Map.Layers.Amount - 1; c++)
+                for (byte c = 0; c < (byte)global::Map.Layers.Amount; c++)
                     for (byte q = 0; q <= Lists.Map.Tile[x, y].Data.GetUpperBound(1); q++)
                     {
                         Data.Write(Lists.Map.Tile[x, y].Data[c, q].X);
@@ -68,7 +68,7 @@ class Write
             for (byte y = 0; y <= Lists.Map.Height; y++)
             {
                 Data.Write(Lists.Map.Tile[x, y].Attribute);
-                for (byte i = 0; i <= (byte)Game.Directions.Amount - 1; i++)
+                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
                     Data.Write(Lists.Map.Tile[x, y].Block[i]);
             }
 

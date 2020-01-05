@@ -34,10 +34,7 @@
 
         public struct Server_Data
         {
-            public byte Max_Players;
             public byte Max_Characters;
-            public byte Num_Classes;
-            public short Num_Maps;
         }
 
         public class Player

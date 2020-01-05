@@ -151,8 +151,9 @@ class Receive
             // Carrega os dados do jogador
             Read.Player(Index, User);
 
-            // Envia os dados das classes
+            // Envia os dados das classes e dos personagens ao jogador
             Send.Classes(Index);
+            Send.Characters(Index);
 
             // Se o jogador não tiver nenhum personagem então abrir o painel de criação de personagem
             if (!Player.HasCharacter(Index))
@@ -162,7 +163,6 @@ class Receive
             }
 
             // Abre a janela de seleção de personagens
-            Send.Characters(Index);
             Send.Connect(Index);
         }
     }

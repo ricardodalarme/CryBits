@@ -59,7 +59,7 @@ class Audio
             if (List == null) return;
 
             // Para todos os sons
-            for (byte i = 1; i <= (byte)Sounds.Amount - 1; i++)
+            for (byte i = 1; i < (byte)Sounds.Amount; i++)
                 List[i].Stop();
         }
     }

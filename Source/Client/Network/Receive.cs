@@ -236,7 +236,7 @@ partial class Receive
 
         // Ligações
         Lists.Map.Link = new short[(byte)Game.Directions.Amount];
-        for (short i = 0; i <= (short)Game.Directions.Amount - 1; i++)
+        for (short i = 0; i < (short)Game.Directions.Amount; i++)
             Lists.Map.Link[i] = Data.ReadInt16();
 
         // Azulejos
@@ -279,7 +279,7 @@ partial class Receive
 
                 // Bloqueio direcional
                 Lists.Map.Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
-                for (byte i = 0; i <= (byte)Game.Directions.Amount - 1; i++)
+                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
                     Lists.Map.Tile[x, y].Block[i] = Data.ReadBoolean();
             }
 

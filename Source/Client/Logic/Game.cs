@@ -15,7 +15,9 @@ public class Game
 
     // Interface
     public static byte CreateCharacter_Class = 1;
-    public static byte SelectCharacter = 1;
+    public static int SelectCharacter = 1;
+    public static short Infomation_Index;
+    public static int Need_Information = 0;
 
     // Jogador
     public const short Attack_Speed = 750;

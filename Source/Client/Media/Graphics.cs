@@ -314,27 +314,34 @@ partial class Graphics
     {
         // Interações especificas
         if (!(Tool is Panels.Structure)) return;
-        if (Tool.Name.Equals("SelecionarPersonagem")) SelectCharacter_Class();
-        if (Tool.Name.Equals("CriarPersonagem")) CreateCharacter_Class();
-        if (Tool.Name.Equals("Hotbar")) Game_Hotbar((Panels.Structure)Tool);
-        if (Tool.Name.Equals("Menu_Personagem")) Game_Menu_Character((Panels.Structure)Tool);
-        if (Tool.Name.Equals("Menu_Inventário")) Game_Menu_Inventory((Panels.Structure)Tool);
-        if (Tool.Name.Equals("Barras")) Game_Bars();
-        if (Tool.Name.Equals("Chat")) Game_Chat((Panels.Structure)Tool);
+        switch (Tool.Name)
+        {
+            case "SelecionarPersonagem": SelectCharacter_Class(); break;
+            case "CriarPersonagem": CreateCharacter_Class(); break;
+            case "Hotbar": Game_Hotbar((Panels.Structure)Tool); break;
+            case "Menu_Personagem": Game_Menu_Character((Panels.Structure)Tool); break;
+            case "Menu_Inventário": Game_Menu_Inventory((Panels.Structure)Tool); break;
+            case "Barras": Game_Bars(); break;
+            case "Chat": Game_Chat((Panels.Structure)Tool); break;
+            case "Menu_Informação": Panel_Informations(); break;
+        }
     }
 
     public static void SelectCharacter_Class()
     {
-        short Texture;
-        string Text = "None";
+        short Texture_Num;
+        Point Text_Position = new Point(399, 425);
+        string Text = "(" + Game.SelectCharacter + ") None";
 
         // Somente se necessário
-        if (Lists.Characters == null) return;
+        if (!Buttons.Characters_Change_Buttons()) {
+            DrawText(Text, Text_Position.X - Tools.MeasureString(Text) / 2, Text_Position.Y, SFML.Graphics.Color.White);
+            return;
+        }
 
         // Dados
         short Class = Lists.Characters[Game.SelectCharacter].Class;
-        Point Text_Position = new Point(399, 425);
-
+        
         // Verifica se o personagem existe
         if (Class == 0)
         {
@@ -344,19 +351,19 @@ partial class Graphics
 
         // Textura do personagem
         if (Lists.Characters[Game.SelectCharacter].Genre)
-            Texture = Lists.Class[Class].Texture_Male;
+            Texture_Num = Lists.Class[Class].Texture_Male;
         else
-            Texture = Lists.Class[Class].Texture_Female;
+            Texture_Num = Lists.Class[Class].Texture_Female;
 
         // Desenha o personagem
-        if (Texture > 0)
+        if (Texture_Num > 0)
         {
-            Render(Tex_Face[Texture], new Point(353, 442));
-            Character(Texture, new Point(356, 534 - TSize(Tex_Character[Texture]).Height / 4), Game.Directions.Down, Game.Animation_Stopped);
+            Render(Tex_Face[Texture_Num], new Point(353, 442));
+            Character(Texture_Num, new Point(356, 534 - TSize(Tex_Character[Texture_Num]).Height / 4), Game.Directions.Down, Game.Animation_Stopped);
         }
 
         // Desenha o nome da classe
-        Text = Lists.Characters[Game.SelectCharacter].Name;
+        Text = "(" + Game.SelectCharacter + ") " + Lists.Characters[Game.SelectCharacter].Name;
         DrawText(Text, Text_Position.X - Tools.MeasureString(Text) / 2, Text_Position.Y, SFML.Graphics.Color.White);
     }
 
@@ -386,6 +393,7 @@ partial class Graphics
     {
         string Indicator = string.Empty;
         Point Panel_Position = Tool.Position;
+        Game.Need_Information ^= 1;
 
         // Desenha os itens da hotbar
         for (byte i = 1; i <= Game.Max_Hotbar; i++)
@@ -399,7 +407,13 @@ partial class Graphics
                     // Desenha as visualizações do item
                     Point Position = new Point(Panel_Position.X + 8 + (i - 1) * 36, Panel_Position.Y + 6);
                     Render(Tex_Item[Lists.Item[Player.Inventory[Slot].Item_Num].Texture], Position);
-                    if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) Painel_Informations(Player.Inventory[Slot].Item_Num, Panel_Position.X, Panel_Position.Y + 42);
+                    if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32)))
+                    {
+                        Game.Infomation_Index = Player.Inventory[Slot].Item_Num;
+                        Panels.Get("Menu_Informação").Position = new Point(Panel_Position.X, Panel_Position.Y + 42);
+                        Panels.Get("Menu_Informação").Visible = true;
+                        Game.Need_Information |= 1;
+                    }
                 }
             }
 
@@ -415,11 +429,15 @@ partial class Graphics
         if (Player.Hotbar_Change > 0)
             if (Player.Hotbar[Player.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
                 Render(Tex_Item[Lists.Item[Player.Inventory[Player.Hotbar[Player.Hotbar_Change].Slot].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
+
+        // Fecha a janela de informa~ção caso necessário
+        if (Game.Need_Information == 0) Panels.Get("Menu_Informação").Visible = false;
     }
 
     public static void Game_Menu_Character(Panels.Structure Tool)
     {
         Point Panel_Position = Tool.Position;
+        Game.Need_Information ^= 1 << 1;
 
         // Dados básicos
         DrawText(Player.Me.Name, Panel_Position.X + 18, Panel_Position.Y + 52, SFML.Graphics.Color.White);
@@ -435,22 +453,32 @@ partial class Graphics
         DrawText("Points: " + Player.Me.Points, Panel_Position.X + 14, Panel_Position.Y + 228, SFML.Graphics.Color.White);
 
         // Equipamentos 
-        for (byte i = 0; i <= (byte)Game.Equipments.Amount - 1; i++)
+        for (byte i = 0; i < (byte)Game.Equipments.Amount; i++)
         {
             if (Player.Me.Equipment[i] == 0)
                 Render(Tex_Equipments, Panel_Position.X + 7 + i * 34, Panel_Position.Y + 247, i * 34, 0, 34, 34);
             else
             {
                 Render(Tex_Item[Lists.Item[Player.Me.Equipment[i]].Texture], Panel_Position.X + 8 + i * 35, Panel_Position.Y + 247, 0, 0, 34, 34);
-                if (Tools.IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32))) Painel_Informations(Player.Me.Equipment[i], Panel_Position.X - 186, Panel_Position.Y + 5);
+                if (Tools.IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
+                {
+                    Game.Infomation_Index = Player.Me.Equipment[i];
+                    Panels.Get("Menu_Informação").Position = new Point(Panel_Position.X - 186, Panel_Position.Y + 5);
+                    Panels.Get("Menu_Informação").Visible = true;
+                    Game.Need_Information |= 1 << 1;
+                }
             }
         }
+
+        // Fecha a janela de informa~ção caso necessário
+        if (Game.Need_Information == 0) Panels.Get("Menu_Informação").Visible = false;
     }
 
     public static void Game_Menu_Inventory(Panels.Structure Tool)
     {
         byte NumColumns = 5;
-        Point Panel_Position =  Tool.Position;
+        Point Panel_Position = Tool.Position;
+        Game.Need_Information ^= 1 << 2;
 
         // Desenha todos os itens do inventário
         for (byte i = 1; i <= Game.Max_Inventory; i++)
@@ -462,24 +490,30 @@ partial class Graphics
 
                 // Desenha as visualizações do item
                 Render(Tex_Item[Lists.Item[Player.Inventory[i].Item_Num].Texture], Position);
-                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) Painel_Informations(Player.Inventory[i].Item_Num, Panel_Position.X - 186, Panel_Position.Y + 3);
+                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32)))
+                {
+                    Game.Infomation_Index = Player.Inventory[i].Item_Num;
+                    Panels.Get("Menu_Informação").Position = new Point(Panel_Position.X - 186, Panel_Position.Y + 3);
+                    Panels.Get("Menu_Informação").Visible = true;
+                    Game.Need_Information |= 1 << 2;
+                }
 
                 // Quantidade
                 if (Player.Inventory[i].Amount > 1) DrawText(Player.Inventory[i].Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
             }
 
         // Movendo item
-        if (Player.Inventory_Change > 0)
-            Render(Tex_Item[Lists.Item[Player.Inventory[Player.Inventory_Change].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
+        if (Player.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Inventory[Player.Inventory_Change].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
+        if (Game.Need_Information == 0) Panels.Get("Menu_Informação").Visible = false;
     }
 
-    public static void Painel_Informations(short Item_Num, int X, int Y)
+    public static void Panel_Informations()
     {
-        // Desenha o painel 
-        Panels.Get("Menu_Informação").Position.X = X;
-        Panels.Get("Menu_Informação").Position.Y = Y;
-       // Panel("Menu_Informação");
-       // todo ajeitar essa porra e verificar o resto das interfaces suspeitas
+        short Item_Num = Game.Infomation_Index;
+
+        // Apenas se necessário
+        if (Item_Num == -1) return;
+
         // Informações
         Point Position = Panels.Get("Menu_Informação").Position;
         DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, SFML.Graphics.Color.Yellow);
@@ -498,13 +532,13 @@ partial class Graphics
         // Específicas 
         if (Lists.Item[Item_Num].Type == (byte)Game.Itens.Potion)
         {
-            for (byte n = 0; n <= (byte)Game.Vitals.Amount - 1; n++)
+            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)
                 DrawText(((Game.Vitals)n).ToString() + ": " + Lists.Item[Item_Num].Potion_Vital[n], Position.X + 100, Position.Y + 18 + 12 * n, SFML.Graphics.Color.White);
             DrawText("Exp: " + Lists.Item[Item_Num].Potion_Experience, Position.X + 100, Position.Y + 42, SFML.Graphics.Color.White);
         }
         else if (Lists.Item[Item_Num].Type == (byte)Game.Itens.Equipment)
         {
-            for (byte n = 0; n <= (byte)Game.Attributes.Amount - 1; n++) DrawText(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n], Position.X + 100, Position.Y + 18 + 12 * n, SFML.Graphics.Color.White);
+            for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) DrawText(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n], Position.X + 100, Position.Y + 18 + 12 * n, SFML.Graphics.Color.White);
             if (Lists.Item[Item_Num].Equip_Type == (byte)Game.Equipments.Weapon) DrawText("Dano: " + Lists.Item[Item_Num].Weapon_Damage, Position.X + 100, Position.Y + 18 + 60, SFML.Graphics.Color.White);
         }
     }

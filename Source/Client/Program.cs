@@ -21,9 +21,9 @@ class Program
         Socket.Init();
 
         // Abre a janela
+        Game.OpenMenu();
         Window.Objects.Text = Lists.Options.GameName;
         Window.Objects.Visible = true;
-        Game.OpenMenu();
 
         // Inicia a aplicação
         Loop.Main();

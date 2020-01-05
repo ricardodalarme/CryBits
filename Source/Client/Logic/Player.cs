@@ -90,13 +90,13 @@ public class Player
         if (Me.Movement > 0) return;
 
         // Move o personagem
-        if (Game.Press_Up) Movee(Game.Directions.Up);
-        else if (Game.Press_Down) Movee(Game.Directions.Down);
-        else if (Game.Press_Left) Movee(Game.Directions.Left);
-        else if (Game.Press_Right) Movee(Game.Directions.Right);
+        if (Game.Press_Up) Move(Game.Directions.Up);
+        else if (Game.Press_Down) Move(Game.Directions.Down);
+        else if (Game.Press_Left) Move(Game.Directions.Left);
+        else if (Game.Press_Right) Move(Game.Directions.Right);
     }
 
-    public static void Movee(Game.Directions Direction)
+    public static void Move(Game.Directions Direction)
     {
         // Verifica se o jogador pode se mover
         if (!CanMove()) return;
@@ -278,13 +278,13 @@ partial class Receive
         Lists.Player[Index].X = Data.ReadByte();
         Lists.Player[Index].Y = Data.ReadByte();
         Lists.Player[Index].Direction = (Game.Directions)Data.ReadByte();
-        for (byte n = 0; n <= (byte)Game.Vitals.Amount - 1; n++)
+        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)
         {
             Lists.Player[Index].Vital[n] = Data.ReadInt16();
             Lists.Player[Index].Max_Vital[n] = Data.ReadInt16();
         }
-        for (byte n = 0; n <= (byte)Game.Attributes.Amount - 1; n++) Lists.Player[Index].Attribute[n] = Data.ReadInt16();
-        for (byte n = 0; n <= (byte)Game.Equipments.Amount - 1; n++) Lists.Player[Index].Equipment[n] = Data.ReadInt16();
+        for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) Lists.Player[Index].Attribute[n] = Data.ReadInt16();
+        for (byte n = 0; n < (byte)Game.Equipments.Amount; n++) Lists.Player[Index].Equipment[n] = Data.ReadInt16();
     }
 
     private static void Player_Position(NetIncomingMessage Data)
@@ -307,7 +307,7 @@ partial class Receive
         byte Index = Data.ReadByte();
 
         // Define os dados
-        for (byte i = 0; i <= (byte)Game.Vitals.Amount - 1; i++)
+        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++)
         {
             Lists.Player[Index].Vital[i] = Data.ReadInt16();
             Lists.Player[Index].Max_Vital[i] = Data.ReadInt16();
@@ -319,7 +319,7 @@ partial class Receive
         byte Index = Data.ReadByte();
 
         // Define os dados
-        for (byte i = 0; i <= (byte)Game.Equipments.Amount - 1; i++) Lists.Player[Index].Equipment[i] = Data.ReadInt16();
+        for (byte i = 0; i < (byte)Game.Equipments.Amount; i++) Lists.Player[Index].Equipment[i] = Data.ReadInt16();
     }
 
     private static void Player_Leave(NetIncomingMessage Dados)

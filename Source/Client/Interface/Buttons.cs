@@ -113,18 +113,18 @@ class Buttons
         }
     }
 
-    public static void Characters_Change_Buttons()
+    public static bool Characters_Change_Buttons()
     {
-        bool Visibility = false;
+        bool Visibility = true;
 
         // Verifica apenas se o painel for visível
-        if (!Panels.Get("SelecionarPersonagem").Visible) return;
-        if (Lists.Characters[Game.SelectCharacter].Class != 0) Visibility = true;
+        if (Lists.Characters == null || Lists.Characters[Game.SelectCharacter].Class == 0) Visibility = false;
 
         // Altera os botões visíveis
         Get("Personagem_Criar").Visible = !Visibility;
         Get("Personagem_Deletar").Visible = Visibility;
         Get("Personagem_Usar").Visible = Visibility;
+        return Visibility;
     }
 
     public static void Connect()
@@ -245,7 +245,10 @@ class Buttons
         if (Game.SelectCharacter == Lists.Server_Data.Max_Characters)
             Game.SelectCharacter = 1;
         else
+        {
             Game.SelectCharacter += 1;
+            if (Game.SelectCharacter > Lists.Server_Data.Max_Characters) Game.SelectCharacter = 1;
+        }
     }
 
     public static void Character_Change_Left()
@@ -254,7 +257,10 @@ class Buttons
         if (Game.SelectCharacter == 1)
             Game.SelectCharacter = Lists.Server_Data.Max_Characters;
         else
+        {
             Game.SelectCharacter -= 1;
+            if (Game.SelectCharacter == 0) Game.SelectCharacter = Lists.Server_Data.Max_Characters;
+        }
     }
 
     public static void Chat_Up()

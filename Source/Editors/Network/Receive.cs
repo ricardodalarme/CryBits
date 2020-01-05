@@ -119,7 +119,7 @@ partial class Receive
 
         // Ligações
         Lists.Map[i].Link = new short[(short)Globals.Directions.Amount];
-        for (short n = 0; n <= (short)Globals.Directions.Amount - 1; n++)
+        for (short n = 0; n < (short)Globals.Directions.Amount; n++)
             Lists.Map[i].Link[n] = Data.ReadInt16();
 
         // Quantidade de camadas

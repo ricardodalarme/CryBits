@@ -375,7 +375,7 @@ class Map
             // Atualiza os azulejos necessários
             for (byte x = 0; x <= Lists.Map.Width; x++)
                 for (byte y = 0; y <= Lists.Map.Height; y++)
-                    for (byte c = 0; c <= (byte)Layers.Amount - 1; c++)
+                    for (byte c = 0; c < (byte)Layers.Amount; c++)
                         for (byte q = 0; q <= Lists.Map.Tile[x, y].Data.GetUpperBound(1); q++)
                             if (Lists.Map.Tile[x, y].Data[c, q].Automatic)
                                 // Faz os cálculos para a autocriação

@@ -241,7 +241,7 @@ class Read
 
         // Redimensiona as ligações
         Lists.Map.Link = new short[(byte)Game.Directions.Amount];
-        for (short i = 0; i <= (short)Game.Directions.Amount - 1; i++)
+        for (short i = 0; i < (short)Game.Directions.Amount; i++)
             Lists.Map.Link[i] = Data.ReadInt16();
 
         // Redimensiona os azulejos 
@@ -255,7 +255,7 @@ class Read
                 // Redimensiona os dados dos azulejos
                 Lists.Map.Tile[x, y].Data = new Lists.Structures.Map_Tile_Data[(byte)global::Map.Layers.Amount, NumLayers + 1];
 
-                for (byte c = 0; c <= (byte)global::Map.Layers.Amount - 1; c++)
+                for (byte c = 0; c < (byte)global::Map.Layers.Amount; c++)
                     for (byte q = 0; q <= NumLayers; q++)
                     {
                         Lists.Map.Tile[x, y].Data[c, q].X = Data.ReadByte();
@@ -272,7 +272,7 @@ class Read
             {
                 Lists.Map.Tile[x, y].Attribute = Data.ReadByte();
                 Lists.Map.Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
-                for (byte i = 0; i <= (byte)Game.Directions.Amount - 1; i++)
+                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
                     Lists.Map.Tile[x, y].Block[i] = Data.ReadBoolean();
             }
 
