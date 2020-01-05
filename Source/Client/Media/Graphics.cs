@@ -25,7 +25,6 @@ partial class Graphics
     public static Texture[] Tex_Item;
     public static Texture Tex_CheckBox;
     public static Texture Tex_TextBox;
-    public static Texture Tex_BackGround;
     public static Texture Tex_Weather;
     public static Texture Tex_Blanc;
     public static Texture Tex_Directions;
@@ -166,7 +165,6 @@ partial class Graphics
         Tex_Directions = new Texture(Directories.Tex_Directions.FullName + Format);
         Tex_CheckBox = new Texture(Directories.Tex_CheckBox.FullName + Format);
         Tex_TextBox = new Texture(Directories.Tex_TextBox.FullName + Format);
-        Tex_BackGround = new Texture(Directories.Tex_Background.FullName + Format);
         Tex_Directions = new Texture(Directories.Tex_Directions.FullName + Format);
         Tex_Shadow = new Texture(Directories.Tex_Shadow.FullName + Format);
         Tex_Bars = new Texture(Directories.Tex_Bars.FullName + Format);
@@ -179,9 +177,6 @@ partial class Graphics
     {
         // Limpa a área com um fundo preto
         RenderWindow.Clear(SFML.Graphics.Color.Black);
-
-        // Fundo do menu
-        if (Tools.CurrentWindow == Tools.Windows.Menu) Render(Tex_BackGround, new Point(0)); ;
 
         // Desenha as coisas em jogo
         InGame();

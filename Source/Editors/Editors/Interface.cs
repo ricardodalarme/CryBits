@@ -72,10 +72,10 @@ public partial class Editor_Interface : Form
         // Lista as ferramentas e suas propriedades
         switch ((Globals.Tools_Types)cmbTools.SelectedIndex)
         {
-            case Globals.Tools_Types.Button: Objects.prgProperties.SelectedObject = Lists.Button[Selected]; break;
-            case Globals.Tools_Types.TextBox: Objects.prgProperties.SelectedObject = Lists.TextBox[Selected]; break;
-            case Globals.Tools_Types.Panel: Objects.prgProperties.SelectedObject = Lists.Panel[Selected]; break;
-            case Globals.Tools_Types.CheckBox: Objects.prgProperties.SelectedObject = Lists.CheckBox[Selected]; break;
+            case Globals.Tools_Types.Button: prgProperties.SelectedObject = Lists.Button[Selected]; break;
+            case Globals.Tools_Types.TextBox: prgProperties.SelectedObject = Lists.TextBox[Selected]; break;
+            case Globals.Tools_Types.Panel: prgProperties.SelectedObject = Lists.Panel[Selected]; break;
+            case Globals.Tools_Types.CheckBox: prgProperties.SelectedObject = Lists.CheckBox[Selected]; break;
         }
     }
 
@@ -222,5 +222,10 @@ public partial class Editor_Interface : Form
 
         // Foca o componente
         Objects.treOrder.Focus();
+    }
+
+    private void prgProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+    {
+   //     if (e.ChangedItem.Label 
     }
 }

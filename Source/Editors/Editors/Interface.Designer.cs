@@ -41,12 +41,12 @@
             this.butOrder_Pin = new System.Windows.Forms.Button();
             this.treOrder = new System.Windows.Forms.TreeView();
             this.grpProperties = new System.Windows.Forms.GroupBox();
-            this.butCancel = new System.Windows.Forms.Button();
-            this.butSave = new System.Windows.Forms.Button();
             this.prgProperties = new System.Windows.Forms.PropertyGrid();
             this.optList = new System.Windows.Forms.RadioButton();
             this.optOrder = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.butCancel = new System.Windows.Forms.Button();
+            this.butSaveAll = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picWindow)).BeginInit();
             this.grpList.SuspendLayout();
             this.grpOrder.SuspendLayout();
@@ -141,7 +141,7 @@
             this.grpOrder.Controls.Add(this.treOrder);
             this.grpOrder.Location = new System.Drawing.Point(823, 61);
             this.grpOrder.Name = "grpOrder";
-            this.grpOrder.Size = new System.Drawing.Size(243, 308);
+            this.grpOrder.Size = new System.Drawing.Size(243, 554);
             this.grpOrder.TabIndex = 33;
             this.grpOrder.TabStop = false;
             this.grpOrder.Text = "Order";
@@ -149,7 +149,7 @@
             // 
             // butOrder_Down
             // 
-            this.butOrder_Down.Location = new System.Drawing.Point(181, 277);
+            this.butOrder_Down.Location = new System.Drawing.Point(181, 520);
             this.butOrder_Down.Name = "butOrder_Down";
             this.butOrder_Down.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Down.TabIndex = 30;
@@ -159,7 +159,7 @@
             // 
             // butOrder_Up
             // 
-            this.butOrder_Up.Location = new System.Drawing.Point(125, 277);
+            this.butOrder_Up.Location = new System.Drawing.Point(125, 520);
             this.butOrder_Up.Name = "butOrder_Up";
             this.butOrder_Up.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Up.TabIndex = 29;
@@ -169,7 +169,7 @@
             // 
             // butOrder_Unpin
             // 
-            this.butOrder_Unpin.Location = new System.Drawing.Point(68, 277);
+            this.butOrder_Unpin.Location = new System.Drawing.Point(68, 520);
             this.butOrder_Unpin.Name = "butOrder_Unpin";
             this.butOrder_Unpin.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Unpin.TabIndex = 28;
@@ -179,7 +179,7 @@
             // 
             // butOrder_Pin
             // 
-            this.butOrder_Pin.Location = new System.Drawing.Point(11, 277);
+            this.butOrder_Pin.Location = new System.Drawing.Point(11, 520);
             this.butOrder_Pin.Name = "butOrder_Pin";
             this.butOrder_Pin.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Pin.TabIndex = 27;
@@ -191,40 +191,18 @@
             // 
             this.treOrder.Location = new System.Drawing.Point(10, 19);
             this.treOrder.Name = "treOrder";
-            this.treOrder.Size = new System.Drawing.Size(221, 252);
+            this.treOrder.Size = new System.Drawing.Size(221, 495);
             this.treOrder.TabIndex = 0;
             // 
             // grpProperties
             // 
-            this.grpProperties.Controls.Add(this.butCancel);
-            this.grpProperties.Controls.Add(this.butSave);
             this.grpProperties.Controls.Add(this.prgProperties);
             this.grpProperties.Location = new System.Drawing.Point(823, 375);
             this.grpProperties.Name = "grpProperties";
-            this.grpProperties.Size = new System.Drawing.Size(243, 274);
+            this.grpProperties.Size = new System.Drawing.Size(243, 240);
             this.grpProperties.TabIndex = 34;
             this.grpProperties.TabStop = false;
             this.grpProperties.Text = "Properties";
-            // 
-            // butCancel
-            // 
-            this.butCancel.Location = new System.Drawing.Point(124, 237);
-            this.butCancel.Name = "butCancel";
-            this.butCancel.Size = new System.Drawing.Size(107, 25);
-            this.butCancel.TabIndex = 27;
-            this.butCancel.Text = "Cancel";
-            this.butCancel.UseVisualStyleBackColor = true;
-            this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
-            // 
-            // butSave
-            // 
-            this.butSave.Location = new System.Drawing.Point(11, 237);
-            this.butSave.Name = "butSave";
-            this.butSave.Size = new System.Drawing.Size(107, 25);
-            this.butSave.TabIndex = 26;
-            this.butSave.Text = "Save All";
-            this.butSave.UseVisualStyleBackColor = true;
-            this.butSave.Click += new System.EventHandler(this.butSaveAll_Click);
             // 
             // prgProperties
             // 
@@ -233,6 +211,7 @@
             this.prgProperties.Name = "prgProperties";
             this.prgProperties.Size = new System.Drawing.Size(221, 212);
             this.prgProperties.TabIndex = 25;
+            this.prgProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.prgProperties_PropertyValueChanged);
             // 
             // optList
             // 
@@ -269,18 +248,40 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Menu";
             // 
+            // butCancel
+            // 
+            this.butCancel.Location = new System.Drawing.Point(948, 621);
+            this.butCancel.Name = "butCancel";
+            this.butCancel.Size = new System.Drawing.Size(118, 25);
+            this.butCancel.TabIndex = 39;
+            this.butCancel.Text = "Cancel";
+            this.butCancel.UseVisualStyleBackColor = true;
+            this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
+            // 
+            // butSaveAll
+            // 
+            this.butSaveAll.Location = new System.Drawing.Point(822, 621);
+            this.butSaveAll.Name = "butSaveAll";
+            this.butSaveAll.Size = new System.Drawing.Size(118, 25);
+            this.butSaveAll.TabIndex = 38;
+            this.butSaveAll.Text = "Save All";
+            this.butSaveAll.UseVisualStyleBackColor = true;
+            this.butSaveAll.Click += new System.EventHandler(this.butSaveAll_Click);
+            // 
             // Editor_Interface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1078, 661);
             this.ControlBox = false;
+            this.Controls.Add(this.butCancel);
+            this.Controls.Add(this.butSaveAll);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.grpProperties);
-            this.Controls.Add(this.grpOrder);
             this.Controls.Add(this.grpList);
             this.Controls.Add(this.cmbWIndows);
             this.Controls.Add(this.picWindow);
+            this.Controls.Add(this.grpOrder);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MinimizeBox = false;
             this.Name = "Editor_Interface";
@@ -306,8 +307,6 @@
     private System.Windows.Forms.GroupBox grpList;
     private System.Windows.Forms.GroupBox grpOrder;
     private System.Windows.Forms.GroupBox grpProperties;
-    private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Button butSave;
     private System.Windows.Forms.PropertyGrid prgProperties;
     private System.Windows.Forms.RadioButton optList;
     private System.Windows.Forms.RadioButton optOrder;
@@ -317,4 +316,6 @@
     private System.Windows.Forms.Button butOrder_Up;
     private System.Windows.Forms.Button butOrder_Unpin;
     private System.Windows.Forms.Button butOrder_Pin;
+    private System.Windows.Forms.Button butCancel;
+    private System.Windows.Forms.Button butSaveAll;
 }
