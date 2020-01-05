@@ -39,7 +39,7 @@ class Globals
         Panel,
         CheckBox,
         TextBox,
-        Amount
+        Count
     }
 
     public enum Tile_Attributes
@@ -207,14 +207,13 @@ class Globals
     public static void Add_Tools_Order()
     {
         // Adiciona todas as ferramentas
-        for (byte i = 1; i < Lists.Button.Length; i++) Add_Tool_Order(i, Globals.Tools_Types.Button);
-        for (byte i = 1; i < Lists.TextBox.Length; i++) Add_Tool_Order(i, Globals.Tools_Types.TextBox);
-        for (byte i = 1; i < Lists.Panel.Length; i++) Add_Tool_Order(i, Globals.Tools_Types.Panel);
-        for (byte i = 1; i < Lists.CheckBox.Length; i++) Add_Tool_Order(i, Globals.Tools_Types.CheckBox);
-        int size = Lists.Tool_Order.Count;
+        for (byte i = 1; i < Lists.Button.Length; i++) Add_Tool_Order(i, Tools_Types.Button);
+        for (byte i = 1; i < Lists.TextBox.Length; i++) Add_Tool_Order(i, Tools_Types.TextBox);
+        for (byte i = 1; i < Lists.Panel.Length; i++) Add_Tool_Order(i, Tools_Types.Panel);
+        for (byte i = 1; i < Lists.CheckBox.Length; i++) Add_Tool_Order(i, Tools_Types.CheckBox);
     }
 
-    public static void Add_Tool_Order(byte Index, Globals.Tools_Types Type)
+    public static void Add_Tool_Order(byte Index, Tools_Types Type)
     {
         // Adiciona a ferramenta na lista de ordem
         Lists.Structures.Tool_Order Temp = new Lists.Structures.Tool_Order
@@ -222,6 +221,7 @@ class Globals
             Index = Index,
             Type = Type
         };
-        Lists.Tool_Order.Add(Temp);
+        Lists.Tool_Order.Nodes[(byte)Temp.Data.Window].Nodes.Add("[" + Temp.Type.ToString() + "] " + Temp.Data.Name);
+        Lists.Tool_Order.Nodes[(byte)Temp.Data.Window].LastNode.Tag = Temp;
     }
 }

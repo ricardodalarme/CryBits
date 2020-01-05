@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
+using System.Windows.Forms;
 
 class Read
 {
@@ -215,7 +215,8 @@ class Read
     public static void Tool_Order()
     {
         FileInfo File = new FileInfo(Directories.Tool_Order.FullName);
-        Lists.Tool_Order = new List<Lists.Structures.Tool_Order>();
+        Lists.Tool_Order = new TreeNode();
+        for (byte i = 0; i < (byte)Globals.Windows.Count; i++) Lists.Tool_Order.Nodes.Add(((Globals.Windows)i).ToString());
 
         // Cria o arquivo caso ele não existir
         if (!File.Exists)
@@ -229,29 +230,29 @@ class Read
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Lê todos os nós
-        short Size = Data.ReadInt16();
-        for (short n = 0; n < Size; n++)
-        {
-            Lists.Tool_Order.Add(new Lists.Structures.Tool_Order());
-            Tree_Nodes(Lists.Tool_Order[n], Data);
-        }
+        for (byte n = 0; n < Lists.Tool_Order.Nodes.Count; n++) Order_Nodes(Lists.Tool_Order.Nodes[n], Data);
 
         // Fecha o sistema
         Data.Dispose();
     }
 
-    private static void Tree_Nodes(Lists.Structures.Tool_Order Tool, BinaryReader Data)
+    private static void Order_Nodes(TreeNode Node, BinaryReader Data)
     {
-        // Lê a ferramenta
-        Tool.Index = Data.ReadByte();
-        Tool.Type = (Globals.Tools_Types)Data.ReadByte();
-
         // Lê todos os filhos
         byte Size = Data.ReadByte();
         for (byte i = 0; i < Size; i++)
         {
-            Tool.Set.Add(new Lists.Structures.Tool_Order());
-            Tree_Nodes(Tool.Set[i], Data);
+            // Lê a ferramenta
+            Lists.Structures.Tool_Order Temp = new Lists.Structures.Tool_Order();
+            Temp.Index = Data.ReadByte();
+            Temp.Type = (Globals.Tools_Types)Data.ReadByte();
+
+            // Adiciona o nó
+            Node.Nodes.Add("[" + Temp.Type.ToString() + "] " + Temp.Data.Name);
+            Node.LastNode.Tag = Temp;
+
+            // Pula pro próximo
+            Order_Nodes(Node.Nodes[i], Data);
         }
     }
 }

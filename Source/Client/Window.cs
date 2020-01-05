@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using System.Collections.Generic;
 
 public partial class Window : Form
 {
@@ -24,9 +25,21 @@ public partial class Window : Form
 
     private void Window_MouseDown(object sender, MouseEventArgs e)
     {
-        // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i < Tools.Order.Count; i++)
-            if (Tools.Order[i] is Buttons.Structure) ((Buttons.Structure)Tools.Order[i]).MouseDown(e);
+        // Percorre toda a árvore de ordem para executar o comando
+        Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
+        Stack.Push(Tools.Order);
+        while (Stack.Count != 0)
+        {
+            List<Tools.Order_Structure> Top = Stack.Pop();
+
+            for (byte i = 0; i < Top.Count; i++)
+                if (Top[i].Data.Visible)
+                {
+                    // Executa o comando
+                    if (Top[i].Data is Buttons.Structure) ((Buttons.Structure)Top[i].Data).MouseDown(e);
+                    Stack.Push(Top[i].Nodes);
+                }
+        }
 
         // Eventos em jogo
         if (Tools.CurrentWindow == Tools.Windows.Game)
@@ -43,19 +56,41 @@ public partial class Window : Form
         Tools.Mouse.X = e.X;
         Tools.Mouse.Y = e.Y;
 
-        // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i < Tools.Order.Count; i++)
-            if (Tools.Order[i] is Buttons.Structure) ((Buttons.Structure)Tools.Order[i]).MouseMove(e);
+        // Percorre toda a árvore de ordem para executar o comando
+        Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
+        Stack.Push(Tools.Order);
+        while (Stack.Count != 0)
+        {
+            List<Tools.Order_Structure> Top = Stack.Pop();
+
+            for (byte i = 0; i < Top.Count; i++)
+                if (Top[i].Data.Visible)
+                {
+                    // Executa o comando
+                    if (Top[i].Data is Buttons.Structure) ((Buttons.Structure)Top[i].Data).MouseMove(e);
+                    Stack.Push(Top[i].Nodes);
+                }
+        }
     }
 
     private void Window_MouseUp(object sender, MouseEventArgs e)
     {
-        // Executa o evento de acordo a sobreposição do ponteiro
-        for (byte i = 0; i < Tools.Order.Count; i++)
+        // Percorre toda a árvore de ordem para executar o comando
+        Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
+        Stack.Push(Tools.Order);
+        while (Stack.Count != 0)
         {
-            if (Tools.Order[i] is Buttons.Structure) ((Buttons.Structure)Tools.Order[i]).MouseUp();
-            else if (Tools.Order[i] is CheckBoxes.Structure) ((CheckBoxes.Structure)Tools.Order[i]).MouseUp();
-            else if (Tools.Order[i] is TextBoxes.Structure) ((TextBoxes.Structure)Tools.Order[i]).MouseUp();
+            List<Tools.Order_Structure> Top = Stack.Pop();
+
+            for (byte i = 0; i < Top.Count; i++)
+                if (Top[i].Data.Visible)
+                {
+                    // Executa o comando
+                    if (Top[i].Data is Buttons.Structure) ((Buttons.Structure)Top[i].Data).MouseUp();
+                    else if (Top[i].Data is CheckBoxes.Structure) ((CheckBoxes.Structure)Top[i].Data).MouseUp();
+                    else if (Top[i].Data is TextBoxes.Structure) ((TextBoxes.Structure)Top[i].Data).MouseUp();
+                    Stack.Push(Top[i].Nodes);
+                }
         }
 
         // Eventos em jogo

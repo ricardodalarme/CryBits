@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 class Read
 {
@@ -10,6 +11,7 @@ class Read
         TextBoxes_Data();
         Panels_Data();
         CheckBoxes_Data();
+        Tool_Order();
         Options();
     }
 
@@ -79,6 +81,7 @@ class Read
         Buttons.List[Index].Position.X = Data.ReadInt32();
         Buttons.List[Index].Position.Y = Data.ReadInt32();
         Buttons.List[Index].Visible = Data.ReadBoolean();
+        Buttons.List[Index].Window = (Tools.Windows)Data.ReadByte();
         Buttons.List[Index].Texture_Num = Data.ReadByte();
 
         // Fecha o sistema
@@ -108,6 +111,7 @@ class Read
         TextBoxes.List[Index].Position.X = Data.ReadInt32();
         TextBoxes.List[Index].Position.Y = Data.ReadInt32();
         TextBoxes.List[Index].Visible = Data.ReadBoolean();
+        TextBoxes.List[Index].Window = (Tools.Windows)Data.ReadByte();
         TextBoxes.List[Index].Lenght = Data.ReadInt16();
         TextBoxes.List[Index].Width = Data.ReadInt16();
         TextBoxes.List[Index].Password = Data.ReadBoolean();
@@ -139,6 +143,7 @@ class Read
         Panels.List[Index].Position.X = Data.ReadInt32();
         Panels.List[Index].Position.Y = Data.ReadInt32();
         Panels.List[Index].Visible = Data.ReadBoolean();
+        Panels.List[Index].Window = (Tools.Windows)Data.ReadByte();
         Panels.List[Index].Texture_Num = Data.ReadByte();
 
         // Fecha o sistema
@@ -168,11 +173,56 @@ class Read
         CheckBoxes.List[Index].Position.X = Data.ReadInt32();
         CheckBoxes.List[Index].Position.Y = Data.ReadInt32();
         CheckBoxes.List[Index].Visible = Data.ReadBoolean();
+        CheckBoxes.List[Index].Window = (Tools.Windows)Data.ReadByte();
         CheckBoxes.List[Index].Text = Data.ReadString();
         CheckBoxes.List[Index].State = Data.ReadBoolean();
 
         // Fecha o sistema
         Data.Dispose();
+    }
+
+    public static void Tool_Order()
+    {
+        FileInfo File = new FileInfo(Directories.Tool_Order.FullName);
+        for (byte i = 0; i < (byte)Tools.Windows.Count; i++) Tools.All_Order[i] = new List<Tools.Order_Structure>();
+
+        // Cria um sistema binário para a manipulação dos dados
+        BinaryReader Data = new BinaryReader(File.OpenRead());
+
+        // Lê todos os nós
+        for (byte n = 0; n < Tools.All_Order.Length; n++) Order_Nodes(null, ref Tools.All_Order[n], Data);
+
+        // Fecha o sistema
+        Data.Dispose();
+    }
+
+    private static void Order_Nodes(Tools.Order_Structure Parent, ref List<Tools.Order_Structure> Node, BinaryReader Data)
+    {
+        // Lê todos os filhos
+        byte Size = Data.ReadByte();
+
+        for (byte i = 0; i < Size; i++)
+        {
+            // Lê a ferramenta
+            byte Index = Data.ReadByte();
+            Tools.Types Type = (Tools.Types)Data.ReadByte();
+
+            // Adiciona à lista
+            Tools.Order_Structure Temp = new Tools.Order_Structure();
+            Temp.Parent = Parent;
+            Temp.Nodes = new List<Tools.Order_Structure>();
+            switch (Type)
+            {
+                case Tools.Types.Button: Temp.Data = Buttons.List[Index]; break;
+                case Tools.Types.TextBox: Temp.Data = TextBoxes.List[Index]; break;
+                case Tools.Types.Panel: Temp.Data = Panels.List[Index]; break;
+                case Tools.Types.CheckBox: Temp.Data = CheckBoxes.List[Index]; break;
+            }
+            Node.Add(Temp);
+
+            // Pula pro próximo
+            Order_Nodes(Node[i], ref Node[i].Nodes, Data);
+        }
     }
 
     public static void Map(int Index)

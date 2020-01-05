@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows.Forms;
 
 class Write
 {
@@ -152,21 +153,21 @@ class Write
         BinaryWriter Data = new BinaryWriter(File.OpenWrite());
 
         // Escreve os dados
-        Data.Write((short)Lists.Tool_Order.Count);
-        for (short n = 0; n < Lists.Tool_Order.Count; n++) Tree_Nodes(Lists.Tool_Order[n], Data);
+        for (short n = 0; n < Lists.Tool_Order.Nodes.Count; n++) Tree_Nodes(Lists.Tool_Order.Nodes[n], Data);
 
         // Fecha o sistema
         Data.Dispose();
     }
 
-    private static void Tree_Nodes(Lists.Structures.Tool_Order Tool, BinaryWriter Data)
+    private static void Tree_Nodes(TreeNode Node, BinaryWriter Data)
     {
         // Escreve a ferramenta
-        Data.Write(Tool.Index);
-        Data.Write((byte)Tool.Type);
-
-        // Escreve os filhos
-        Data.Write((byte)Tool.Set.Count);
-        for (byte i = 0; i < Tool.Set.Count; i++)  Tree_Nodes(Tool.Set[i], Data);
+        Data.Write((byte)Node.Nodes.Count);
+        for (byte i = 0; i < Node.Nodes.Count; i++)
+        {
+            Data.Write(((Lists.Structures.Tool_Order)Node.Nodes[i].Tag).Index);
+            Data.Write((byte)((Lists.Structures.Tool_Order)Node.Nodes[i].Tag).Type);
+            Tree_Nodes(Node.Nodes[i], Data);
+        }
     }
 }

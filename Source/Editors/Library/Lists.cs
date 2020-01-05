@@ -70,11 +70,6 @@ class Lists
                     return null;
                 }
             }
-
-            public Tool_Order()
-            {
-                Set = new List<Tool_Order>();
-            }
         }
 
         public class Tool
@@ -83,13 +78,6 @@ class Lists
             public Point Position { get; set; }
             public bool Visible { get; set; }
             public Globals.Windows Window { get; set; }
-            public bool Viewable
-            {
-                get
-                {
-                   return (Editor_Interface.Objects.cmbWIndows.SelectedIndex == (byte)Window) && Visible;
-                }
-            }
         }
 
         public class Button : Tool

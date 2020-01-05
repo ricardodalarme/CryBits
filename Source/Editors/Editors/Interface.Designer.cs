@@ -35,6 +35,10 @@
             this.cmbWIndows = new System.Windows.Forms.ComboBox();
             this.grpList = new System.Windows.Forms.GroupBox();
             this.grpOrder = new System.Windows.Forms.GroupBox();
+            this.butOrder_Down = new System.Windows.Forms.Button();
+            this.butOrder_Up = new System.Windows.Forms.Button();
+            this.butOrder_Unpin = new System.Windows.Forms.Button();
+            this.butOrder_Pin = new System.Windows.Forms.Button();
             this.treOrder = new System.Windows.Forms.TreeView();
             this.grpProperties = new System.Windows.Forms.GroupBox();
             this.butCancel = new System.Windows.Forms.Button();
@@ -43,10 +47,6 @@
             this.optList = new System.Windows.Forms.RadioButton();
             this.optOrder = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.butOrder_Pin = new System.Windows.Forms.Button();
-            this.butOrder_Unpin = new System.Windows.Forms.Button();
-            this.butOrder_Up = new System.Windows.Forms.Button();
-            this.butOrder_Down = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picWindow)).BeginInit();
             this.grpList.SuspendLayout();
             this.grpOrder.SuspendLayout();
@@ -116,6 +116,7 @@
             this.cmbWIndows.Name = "cmbWIndows";
             this.cmbWIndows.Size = new System.Drawing.Size(800, 21);
             this.cmbWIndows.TabIndex = 30;
+            this.cmbWIndows.SelectedIndexChanged += new System.EventHandler(this.cmbWIndows_SelectedIndexChanged);
             // 
             // grpList
             // 
@@ -145,6 +146,46 @@
             this.grpOrder.TabStop = false;
             this.grpOrder.Text = "Order";
             this.grpOrder.Visible = false;
+            // 
+            // butOrder_Down
+            // 
+            this.butOrder_Down.Location = new System.Drawing.Point(181, 277);
+            this.butOrder_Down.Name = "butOrder_Down";
+            this.butOrder_Down.Size = new System.Drawing.Size(50, 25);
+            this.butOrder_Down.TabIndex = 30;
+            this.butOrder_Down.Text = "Down";
+            this.butOrder_Down.UseVisualStyleBackColor = true;
+            this.butOrder_Down.Click += new System.EventHandler(this.butOrder_Down_Click);
+            // 
+            // butOrder_Up
+            // 
+            this.butOrder_Up.Location = new System.Drawing.Point(125, 277);
+            this.butOrder_Up.Name = "butOrder_Up";
+            this.butOrder_Up.Size = new System.Drawing.Size(50, 25);
+            this.butOrder_Up.TabIndex = 29;
+            this.butOrder_Up.Text = "Up";
+            this.butOrder_Up.UseVisualStyleBackColor = true;
+            this.butOrder_Up.Click += new System.EventHandler(this.butOrder_Up_Click);
+            // 
+            // butOrder_Unpin
+            // 
+            this.butOrder_Unpin.Location = new System.Drawing.Point(68, 277);
+            this.butOrder_Unpin.Name = "butOrder_Unpin";
+            this.butOrder_Unpin.Size = new System.Drawing.Size(50, 25);
+            this.butOrder_Unpin.TabIndex = 28;
+            this.butOrder_Unpin.Text = "Unpin";
+            this.butOrder_Unpin.UseVisualStyleBackColor = true;
+            this.butOrder_Unpin.Click += new System.EventHandler(this.butOrder_Unpin_Click);
+            // 
+            // butOrder_Pin
+            // 
+            this.butOrder_Pin.Location = new System.Drawing.Point(11, 277);
+            this.butOrder_Pin.Name = "butOrder_Pin";
+            this.butOrder_Pin.Size = new System.Drawing.Size(50, 25);
+            this.butOrder_Pin.TabIndex = 27;
+            this.butOrder_Pin.Text = "Pin";
+            this.butOrder_Pin.UseVisualStyleBackColor = true;
+            this.butOrder_Pin.Click += new System.EventHandler(this.butOrder_Pin_Click);
             // 
             // treOrder
             // 
@@ -227,46 +268,6 @@
             this.groupBox1.TabIndex = 37;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Menu";
-            // 
-            // butOrder_Pin
-            // 
-            this.butOrder_Pin.Location = new System.Drawing.Point(11, 277);
-            this.butOrder_Pin.Name = "butOrder_Pin";
-            this.butOrder_Pin.Size = new System.Drawing.Size(50, 25);
-            this.butOrder_Pin.TabIndex = 27;
-            this.butOrder_Pin.Text = "Pin";
-            this.butOrder_Pin.UseVisualStyleBackColor = true;
-            this.butOrder_Pin.Click += new System.EventHandler(this.butOrder_Pin_Click);
-            // 
-            // butOrder_Unpin
-            // 
-            this.butOrder_Unpin.Location = new System.Drawing.Point(68, 277);
-            this.butOrder_Unpin.Name = "butOrder_Unpin";
-            this.butOrder_Unpin.Size = new System.Drawing.Size(50, 25);
-            this.butOrder_Unpin.TabIndex = 28;
-            this.butOrder_Unpin.Text = "Unpin";
-            this.butOrder_Unpin.UseVisualStyleBackColor = true;
-            this.butOrder_Unpin.Click += new System.EventHandler(this.butOrder_Unpin_Click);
-            // 
-            // butOrder_Up
-            // 
-            this.butOrder_Up.Location = new System.Drawing.Point(125, 277);
-            this.butOrder_Up.Name = "butOrder_Up";
-            this.butOrder_Up.Size = new System.Drawing.Size(50, 25);
-            this.butOrder_Up.TabIndex = 29;
-            this.butOrder_Up.Text = "Up";
-            this.butOrder_Up.UseVisualStyleBackColor = true;
-            this.butOrder_Up.Click += new System.EventHandler(this.butOrder_Up_Click);
-            // 
-            // butOrder_Down
-            // 
-            this.butOrder_Down.Location = new System.Drawing.Point(181, 277);
-            this.butOrder_Down.Name = "butOrder_Down";
-            this.butOrder_Down.Size = new System.Drawing.Size(50, 25);
-            this.butOrder_Down.TabIndex = 30;
-            this.butOrder_Down.Text = "Down";
-            this.butOrder_Down.UseVisualStyleBackColor = true;
-            this.butOrder_Down.Click += new System.EventHandler(this.butOrder_Down_Click);
             // 
             // Editor_Interface
             // 

@@ -27,7 +27,7 @@ public partial class Editor_Tools : Form
         // Adiciona os tipos de ferramentas à lista
         Objects.cmbTools.Items.Clear();
 
-        for (byte i = 0; i < (byte)Globals.Tools_Types.Amount; i++)
+        for (byte i = 0; i < (byte)Globals.Tools_Types.Count; i++)
             Objects.cmbTools.Items.Add((Globals.Tools_Types)i);
 
         Objects.cmbTools.SelectedIndex = 0;

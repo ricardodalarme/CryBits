@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -179,11 +180,14 @@ partial class Graphics
         // Limpa a área com um fundo preto
         RenderWindow.Clear(SFML.Graphics.Color.Black);
 
-        // Desenha o menu
-        Menu();
+        // Fundo do menu
+        if (Tools.CurrentWindow == Tools.Windows.Menu) Render(Tex_BackGround, new Point(0)); ;
 
         // Desenha as coisas em jogo
         InGame();
+
+        // Interface do jogo
+        Interface(Tools.Order);
 
         // Desenha os dados do jogo
         DrawText("FPS: " + Game.FPS.ToString(), 8, 73, SFML.Graphics.Color.White);
@@ -227,102 +231,73 @@ partial class Graphics
         Map_Weather();
         Map_Fog();
         Map_Name();
-
-        // Interface do jogo
-        Game_Interface();
     }
 
     #region Tools
-    public static void Button(string Name)
+    private static void Interface(List<Tools.Order_Structure> Node)
+    {
+        for (byte i = 0; i < Node.Count; i++)
+            if (Node[i].Data.Visible)
+            {
+                // Desenha a ferramenta
+                if (Node[i].Data is Panels.Structure) Panel((Panels.Structure)Node[i].Data);
+                else if (Node[i].Data is TextBoxes.Structure) TextBox((TextBoxes.Structure)Node[i].Data);
+                else if (Node[i].Data is Buttons.Structure) Button((Buttons.Structure)Node[i].Data);
+                else if (Node[i].Data is CheckBoxes.Structure) CheckBox((CheckBoxes.Structure)Node[i].Data);
+
+                // Desenha algumas coisas mais específicas da interface
+                Interface_Specific(Node[i].Data);
+
+                // Pula pra próxima
+                Interface(Node[i].Nodes);
+            }
+    }
+
+    public static void Button(Buttons.Structure Tool)
     {
         byte Alpha = 225;
-        Buttons.Structure Tool = Buttons.Get(Name);
-
-        // Lista a ordem de renderização da ferramenta
-        Tools.List(Tool);
-
-        // Não desenha a ferramenta se ela não for visível
-        if (!Tool.CheckEnable())
-            return;
 
         // Define a transparência do botão pelo seu estado
         switch (Tool.State)
         {
-            case Buttons.States.Above:
-                Alpha = 250;
-                break;
-            case Buttons.States.Click:
-                Alpha = 200;
-                break;
+            case Buttons.States.Above:  Alpha = 250;   break;
+            case Buttons.States.Click:  Alpha = 200;  break;
         }
 
         // Desenha o botão
         Render(Tex_Button[Tool.Texture_Num], Tool.Position, new SFML.Graphics.Color(255, 255, 225, Alpha));
     }
 
-    public static void Panel(string Name)
+    public static void Panel(Panels.Structure Tool)
     {
-        Panels.Structure Tool = Panels.Get(Name);
-
-        // Lista a ordem de renderização da ferramenta
-        Tools.List(Tool);
-
-        // Não desenha a ferramenta se ela não for visível
-        if (!Tool.CheckEnable()) return;
-
         // Desenha o painel
         Render(Tex_Panel[Tool.Texture_Num], Tool.Position);
     }
 
-    public static void CheckBox(string Name)
+    public static void CheckBox(CheckBoxes.Structure Tool)
     {
-        CheckBoxes.Structure Tool = CheckBoxes.Get(Name);
-
-        // Lista a ordem de renderização da ferramenta
-        Tools.List(Tool);
-
-        // Não desenha a ferramenta se ela não for visível
-        if (!Tool.CheckEnable()) return;
-
         // Define as propriedades dos retângulos
         Rectangle Rec_Source = new Rectangle(new Point(), new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height));
         Rectangle Rec_Destiny = new Rectangle(Tool.Position, Rec_Source.Size);
 
         // Desenha a textura do marcador pelo seu estado 
-        if (Tool.State)
-            Rec_Source.Location = new Point(TSize(Tex_CheckBox).Width / 2, 0);
+        if (Tool.State) Rec_Source.Location = new Point(TSize(Tex_CheckBox).Width / 2, 0);
 
         // Desenha o marcador 
         Render(Tex_CheckBox, Rec_Source, Rec_Destiny);
         DrawText(Tool.Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + CheckBoxes.Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
     }
 
-    public static void TextBox(string Name)
-    {
-        TextBoxes.Structure Tool = TextBoxes.Get(Name);
-
-        // Lista a ordem de renderização da ferramenta
-        Tools.List(Tool);
-
-        // Não desenha a ferramenta se ela não for visível
-        if (!Tool.CheckEnable())
-            return;
-
-        // Desenha a ferramenta
-        Render_Box(Tex_TextBox, 3, Tool.Position, new Size(Tool.Width, TSize(Tex_TextBox).Height));
-
-        // Desenha o texto do digitalizador
-        TextBox_Text(Tool);
-    }
-
-    public static void TextBox_Text(TextBoxes.Structure Tool)
+    public static void TextBox(TextBoxes.Structure Tool)
     {
         Point Position = Tool.Position;
         string Text = Tool.Text;
 
+        // Desenha a ferramenta
+        Render_Box(Tex_TextBox, 3, Tool.Position, new Size(Tool.Width, TSize(Tex_TextBox).Height));
+
         // Altera todos os caracteres do texto para um em especifico, se for necessário
-        if (Tool.Password && !string.IsNullOrEmpty(Text))
-            Text = new String('•', Text.Length);
+        if (Tool.Password && !string.IsNullOrEmpty(Text)) Text = new String('•', Text.Length);
 
         // Quebra o texto para que caiba no digitalizador, se for necessário
         Text = Tools.TextBreak(Text, Tool.Width - 10);
@@ -335,101 +310,17 @@ partial class Graphics
     }
     #endregion
 
-    #region Menu
-    public static void Menu()
+    public static void Interface_Specific(Tools.Structure Tool)
     {
-        // Define a habilitação das ferramentas
-        Tools.SetEnable(string.Empty, Tools.Windows.Menu);
-
-        // Desenha o menu
-        Menu_Tools();
-        Menu_Connect();
-        Menu_Register();
-        Menu_Options();
-        Menu_SelectCharacter();
-        Menu_CreateCharacter();
-    }
-
-    public static void Menu_Tools()
-    {
-        // Desenha as ferramentas básicas do menu
-        if (Tools.Able) Render(Tex_BackGround, new Point(0));
-        Button("Opções");
-    }
-
-    public static void Menu_Connect()
-    {
-        // Define a habilitação das ferramentas
-        Tools.SetEnable("Conectar", Tools.Windows.Menu);
-
-        // Desenha o conjunto das ferramentas
-        Panel("Conectar");
-        TextBox("Conectar_Usuário");
-        TextBox("Conectar_Senha");
-        Button("Conectar_Pronto");
-        Button("Registrar");
-        CheckBox("SalvarUsuário");
-    }
-
-    public static void Menu_Register()
-    {
-        // Define a habilitação das ferramentas
-        Tools.SetEnable("Registrar", Tools.Windows.Menu);
-
-        // Desenha o conjunto das ferramentas
-        Panel("Registrar");
-        TextBox("Registrar_Usuário");
-        TextBox("Registrar_Senha");
-        TextBox("Registrar_RepetirSenha");
-        Button("Registrar_Pronto");
-        Button("Conectar");
-    }
-
-    public static void Menu_Options()
-    {
-        // Define a habilitação das ferramentas
-        Tools.SetEnable("Opções", Tools.Windows.Menu);
-
-        // Desenha o conjunto das ferramentas
-        Panel("Opções");
-        CheckBox("Sons");
-        CheckBox("Músicas");
-        Button("Opções_Retornar");
-    }
-
-    public static void Menu_SelectCharacter()
-    {
-        // Define a habilitação das ferramentas
-        Tools.SetEnable("SelecionarPersonagem", Tools.Windows.Menu);
-
-        // Desenha o conjunto das ferramentas
-        Panel("SelecionarPersonagem");
-        SelectCharacter_Class();
-        Button("Personagem_Criar");
-        Button("Personagem_Usar");
-        Button("Personagem_Deletar");
-        Button("Personagem_TrocarDireita");
-        Button("Personagem_TrocarEsquerda");
-
-        // Eventos
-        Buttons.Characters_Change_Buttons();
-    }
-
-    public static void Menu_CreateCharacter()
-    {
-        // Define a habilitação das ferramentas
-        Tools.SetEnable("CriarPersonagem", Tools.Windows.Menu);
-
-        // Desenha o conjunto das ferramentas
-        Panel("CriarPersonagem");
-        Button("CriarPersonagem");
-        TextBox("CriarPersonagem_Nome");
-        CreateCharacter_Class();
-        Button("CriarPersonagem_TrocarDireita");
-        Button("CriarPersonagem_TrocarEsquerda");
-        Button("CriarPersonagem_Retornar");
-        CheckBox("GêneroMasculino");
-        CheckBox("GêneroFeminino");
+        // Interações especificas
+        if (!(Tool is CheckBoxes.Structure)) return;
+        if (Tool.Name.Equals("SelecionarPersonagem")) SelectCharacter_Class();
+        if (Tool.Name.Equals("CriarPersonagem")) CreateCharacter_Class();
+        if (Tool.Name.Equals("Hotbar")) Game_Hotbar((Panels.Structure)Tool);
+        if (Tool.Name.Equals("Menu_Personagem")) Game_Menu_Character((Panels.Structure)Tool);
+        if (Tool.Name.Equals("Menu_Inventário")) Game_Menu_Inventory((Panels.Structure)Tool);
+        if (Tool.Name.Equals("Barras")) Game_Bars();
+        if (Tool.Name.Equals("Chat")) Game_Chat((Panels.Structure)Tool);
     }
 
     public static void SelectCharacter_Class()
@@ -438,7 +329,6 @@ partial class Graphics
         string Text = "None";
 
         // Somente se necessário
-        if (!Panels.Get("SelecionarPersonagem").IsAble) return;
         if (Lists.Characters == null) return;
 
         // Dados
@@ -474,10 +364,6 @@ partial class Graphics
     {
         short Texture;
 
-        // Não desenhar se o painel não for visível
-        if (!Panels.Get("CriarPersonagem").IsAble)
-            return;
-
         // Textura do personagem
         if (CheckBoxes.Get("GêneroMasculino").State)
             Texture = Lists.Class[Game.CreateCharacter_Class].Texture_Male;
@@ -495,30 +381,11 @@ partial class Graphics
         string Text = Lists.Class[Game.CreateCharacter_Class].Name;
         DrawText(Text, 471 - Tools.MeasureString(Text) / 2, 449, SFML.Graphics.Color.White);
     }
-    #endregion
 
-    #region Game
-    public static void Game_Interface()
-    {
-        // Define a habilitação das ferramentas
-        Tools.SetEnable(string.Empty, Tools.Windows.Game);
-
-        // Desenha o conjunto das ferramentas
-        Game_Menu();
-        Game_Chat();
-        Game_Bars();
-        Game_Hotbar();
-        Game_Menu_Character();
-        Game_Menu_Inventory();
-    }
-
-    public static void Game_Hotbar()
+    public static void Game_Hotbar(Panels.Structure Tool)
     {
         string Indicator = string.Empty;
-        Point Panel_Position = Panels.Get("Hotbar").Position;
-
-        // Desenha o painel 
-        Panel("Hotbar");
+        Point Panel_Position = Tool.Position;
 
         // Desenha os itens da hotbar
         for (byte i = 1; i <= Game.Max_Hotbar; i++)
@@ -537,10 +404,8 @@ partial class Graphics
             }
 
             // Números da hotbar
-            if (i < 10)
-                Indicator = i.ToString();
-            else if (i == 10)
-                Indicator = "0";
+            if (i < 10) Indicator = i.ToString();
+            else if (i == 10) Indicator = "0";
 
             // Desenha os números
             DrawText(Indicator, Panel_Position.X + 16 + 36 * (i - 1), Panel_Position.Y + 22, SFML.Graphics.Color.White);
@@ -552,42 +417,14 @@ partial class Graphics
                 Render(Tex_Item[Lists.Item[Player.Inventory[Player.Hotbar[Player.Hotbar_Change].Slot].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
     }
 
-    public static void Game_Menu()
+    public static void Game_Menu_Character(Panels.Structure Tool)
     {
-        // Desenha o conjunto das ferramentas
-        Panel("Menu");
-        Button("Menu_Personagem");
-        Button("Menu_Inventário");
-        Button("Menu_Feitiços");
-        Button("Menu_1");
-        Button("Menu_2");
-        Button("Menu_Opções");
-    }
-
-    public static void Game_Menu_Character()
-    {
-        Point Panel_Position = Panels.Get("Menu_Personagem").Position;
-
-        // Somente se necessário
-        if (!Panels.Get("Menu_Personagem").Visible) return;
-
-        // Desenha o painel 
-        Panel("Menu_Personagem");
+        Point Panel_Position = Tool.Position;
 
         // Dados básicos
         DrawText(Player.Me.Name, Panel_Position.X + 18, Panel_Position.Y + 52, SFML.Graphics.Color.White);
         DrawText(Player.Me.Level.ToString(), Panel_Position.X + 18, Panel_Position.Y + 79, SFML.Graphics.Color.White);
         Render(Tex_Face[Lists.Class[Player.Me.Class].Texture_Male], new Point(Panel_Position.X + 82, Panel_Position.Y + 37));
-
-        // Adicionar atributos
-        if (Player.Me.Points > 0)
-        {
-            Button("Atributos_Força");
-            Button("Atributos_Resistência");
-            Button("Atributos_Inteligência");
-            Button("Atributos_Agilidade");
-            Button("Atributos_Vitalidade");
-        }
 
         // Atributos
         DrawText("Strength: " + Player.Me.Attribute[(byte)Game.Attributes.Strength], Panel_Position.X + 32, Panel_Position.Y + 146, SFML.Graphics.Color.White);
@@ -610,16 +447,10 @@ partial class Graphics
         }
     }
 
-    public static void Game_Menu_Inventory()
+    public static void Game_Menu_Inventory(Panels.Structure Tool)
     {
         byte NumColumns = 5;
-        Point Panel_Position = Panels.Get("Menu_Inventário").Position;
-
-        // Somente se necessário
-        if (!Panels.Get("Menu_Inventário").Visible) return;
-
-        // Desenha o painel 
-        Panel("Menu_Inventário");
+        Point Panel_Position =  Tool.Position;
 
         // Desenha todos os itens do inventário
         for (byte i = 1; i <= Game.Max_Inventory; i++)
@@ -647,8 +478,8 @@ partial class Graphics
         // Desenha o painel 
         Panels.Get("Menu_Informação").Position.X = X;
         Panels.Get("Menu_Informação").Position.Y = Y;
-        Panel("Menu_Informação");
-
+       // Panel("Menu_Informação");
+       // todo ajeitar essa porra e verificar o resto das interfaces suspeitas
         // Informações
         Point Position = Panels.Get("Menu_Informação").Position;
         DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, SFML.Graphics.Color.Yellow);
@@ -684,9 +515,6 @@ partial class Graphics
         decimal MP_Percentage = Player.Me.Vital[(byte)Game.Vitals.MP] / (decimal)Player.Me.Max_Vital[(byte)Game.Vitals.MP];
         decimal Exp_Percentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
 
-        // Painel
-        Panel("Barras");
-
         // Barras
         Render(Tex_Bars_Panel, 14, 14, 0, 0, (int)(Tex_Bars_Panel.Size.X * HP_Percentage), 17);
         Render(Tex_Bars_Panel, 14, 32, 0, 18, (int)(Tex_Bars_Panel.Size.X * MP_Percentage), 17);
@@ -704,14 +532,10 @@ partial class Graphics
         DrawText("Position: " + Player.Me.X + "/" + Player.Me.Y, 8, 93, SFML.Graphics.Color.White);
     }
 
-    public static void Game_Chat()
+    public static void Game_Chat(Panels.Structure Tool)
     {
         // Define a bisiblidade da caixa
-        Panels.Get("Chat").Visible = TextBoxes.Focused == TextBoxes.Get("Chat");
-
-        // Renderiza as caixas
-        Panel("Chat");
-        TextBox("Chat");
+        Tool.Visible = TextBoxes.Focused == TextBoxes.Get("Chat");
 
         // Renderiza as mensagens
         if (Tools.Chat_Text_Visible)
@@ -720,15 +544,8 @@ partial class Graphics
                     DrawText(Tools.Chat[i].Text, 16, 461 + 11 * (i - Tools.Chat_Line), Tools.Chat[i].Color);
 
         // Dica de como abrir o chat
-        if (!Panels.Get("Chat").Visible)
-            DrawText("Press [Enter] to open chat.", TextBoxes.Get("Chat").Position.X + 5, TextBoxes.Get("Chat").Position.Y + 3, SFML.Graphics.Color.White);
-        else
-        {
-            Button("Chat_Subir");
-            Button("Chat_Descer");
-        }
+        if (!Tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.Get("Chat").Position.X + 5, TextBoxes.Get("Chat").Position.Y + 3, SFML.Graphics.Color.White);
     }
-    #endregion
 
     public static void Character(short Textura, Point Position, Game.Directions Direction, byte Column, bool Hurt = false)
     {

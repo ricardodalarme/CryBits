@@ -4,9 +4,6 @@ using System.Windows.Forms;
 
 class Tools
 {
-    // Habilitação das ferramentas
-    public static bool Able;
-
     // Posição do ponteiro do mouse
     public static Point Mouse;
 
@@ -20,21 +17,36 @@ class Tools
     public const byte Max_Chat_Lines = 50;
 
     // Ordem da renderização das ferramentas
-    public static List<Structure> Order = new List<Structure>();
+    public static List<Order_Structure>[] All_Order = new List<Order_Structure>[(byte)Windows.Count];
     public static List<Chat_Structure> Chat = new List<Chat_Structure>();
+
+    public class Order_Structure
+    {
+        public Structure Data;
+        public Order_Structure Parent;
+        public List<Order_Structure> Nodes;
+    }
 
     public class Structure
     {
         public string Name;
         public bool Visible;
         public Point Position;
-        public bool IsAble;
-
-        public bool CheckEnable()
+        public Windows Window;
+        public bool Viewable
         {
-            // Define a habilitação da ferramenta
-            if (!Visible || !Tools.Able) return IsAble = false;
-            else return IsAble = true;
+            get
+            {
+                return true;
+            }
+        }
+    }
+
+    public static List<Order_Structure> Order
+    {
+        get
+        {
+            return All_Order[(byte)CurrentWindow];
         }
     }
 
@@ -47,34 +59,20 @@ class Tools
     // Identificação das janelas do jogo
     public enum Windows
     {
-        None,
         Menu,
-        Game
+        Game,
+        Global,
+        Count
     }
 
-    public static void SetEnable(string Panel, Windows Window)
+    // Tipos de ferramentas
+    public enum Types
     {
-        // Define a habilitação
-        if (CurrentWindow != Window || !string.IsNullOrEmpty(Panel) && !Panels.Get(Panel).Visible)
-            Able = false;
-        else
-            Able = true;
-    }
-
-    public static void List(Structure Tool)
-    {
-        // Adiciona à lista
-        if (!IsListed(Tool)) Order.Add(Tool);
-    }
-
-    private static bool IsListed(Structure Tool)
-    {
-        // Verifica se a ferramenta já está listada
-        for (short i = 0; i < Order.Count; i++)
-            if (Order[i] == Tool)
-                return true;
-
-        return false;
+        Button,
+        Panel,
+        CheckBox,
+        TextBox,
+        Count
     }
 
     public static bool IsAbove(Rectangle Rectangle)
@@ -90,9 +88,10 @@ class Tools
 
     public static int Get(Structure Tool)
     {
+        // todo percorrer da forma certa
         // Lista os nomes dos botões
         for (byte i = 0; i < Order.Count; i++)
-            if (Order[i] == Tool)
+            if (Order[i].Data == Tool)
                 return i;
 
         return 0;

@@ -3,6 +3,7 @@ using SFML.Window;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 
 partial class Graphics
 {
@@ -669,67 +670,70 @@ partial class Graphics
     #region Interface Editor
     public static void Interface()
     {
-        // Limpa a área
+        // Apenas se necessário
+        if (!Editor_Interface.Objects.Visible) return;
+
+        // Desenha as ferramentas
         Win_Interface.Clear();
-
-        // Desenha as interfaces
-        if (Editor_Interface.Objects.Visible)
-        {
-            for (byte i = 1; i < Lists.Panel.Length; i++) Panel(i);
-            for (byte i = 1; i < Lists.Button.Length; i++) Button(i);
-            for (byte i = 1; i < Lists.CheckBox.Length; i++) CheckBox(i);
-            for (byte i = 1; i < Lists.TextBox.Length; i++) TextBox(i);
-        }
-
-        // Exibe o que foi renderizado
+        Interface_Order(Lists.Tool_Order.Nodes[(byte)Editor_Interface.Objects.cmbWIndows.SelectedIndex]);
         Win_Interface.Display();
     }
 
-    public static void Button(byte Index)
+    private static void Interface_Order(TreeNode Node)
     {
-        // Não desenha a ferramenta se ela não for visível
-        if (!Lists.Button[Index].Viewable) return;
+        for (byte i = 0; i < Node.Nodes.Count; i++)
+        {
+            // Desenha a ferramenta
+            Lists.Structures.Tool_Order Tool_Order = (Lists.Structures.Tool_Order)Node.Nodes[i].Tag;
+            if (Tool_Order.Data.Visible)
+            {
+                switch (Tool_Order.Type)
+                {
+                    case Globals.Tools_Types.Panel: Panel((Lists.Structures.Panel)Tool_Order.Data); break;
+                    case Globals.Tools_Types.TextBox: TextBox((Lists.Structures.TextBox)Tool_Order.Data); break;
+                    case Globals.Tools_Types.Button: Button((Lists.Structures.Button)Tool_Order.Data); break;
+                    case Globals.Tools_Types.CheckBox: CheckBox((Lists.Structures.CheckBox)Tool_Order.Data); break;
+                }
 
+                // Pula pra próxima
+                Interface_Order(Node.Nodes[i]);
+            }
+        }
+    }
+
+    public static void Button(Lists.Structures.Button Tool)
+    {
         // Desenha o botão
-        Render(Win_Interface, Tex_Button[Lists.Button[Index].Texture_Num], Lists.Button[Index].Position, new SFML.Graphics.Color(255, 255, 225, 225));
+        Render(Win_Interface, Tex_Button[Tool.Texture_Num], Tool.Position, new SFML.Graphics.Color(255, 255, 225, 225));
     }
 
-    public static void Panel(byte Index)
+    public static void Panel(Lists.Structures.Panel Tool)
     {
-        // Não desenha a ferramenta se ela não for visível
-        if (!Lists.Panel[Index].Viewable) return;
-
         // Desenha o painel
-        Render(Win_Interface, Tex_Panel[Lists.Panel[Index].Texture_Num], Lists.Panel[Index].Position);
+        Render(Win_Interface, Tex_Panel[Tool.Texture_Num],  Tool.Position);
     }
 
-    public static void CheckBox(byte Index)
+    public static void CheckBox(Lists.Structures.CheckBox Tool)
     {
         byte Margin = 4;
 
-        // Não desenha a ferramenta se ela não for visível
-        if (!Lists.CheckBox[Index].Viewable) return;
-
         // Define as propriedades dos retângulos
         Rectangle Rec_Source = new Rectangle(new Point(), new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height));
-        Rectangle Rec_Destiny = new Rectangle(Lists.CheckBox[Index].Position, Rec_Source.Size);
+        Rectangle Rec_Destiny = new Rectangle(Tool.Position, Rec_Source.Size);
 
         // Desenha a textura do marcador pelo seu estado 
-        if (Lists.CheckBox[Index].State)
+        if (Tool.State)
             Rec_Source.Location = new Point(TSize(Tex_CheckBox).Width / 2, 0);
 
         // Desenha o marcador 
         Render(Win_Interface, Tex_CheckBox, Rec_Source, Rec_Destiny);
-        DrawText(Win_Interface, Lists.CheckBox[Index].Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
+        DrawText(Win_Interface, Tool.Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
     }
 
-    public static void TextBox(byte Index)
+    public static void TextBox(Lists.Structures.TextBox Tool)
     {
-        // Não desenha a ferramenta se ela não for visível
-        if (!Lists.TextBox[Index].Viewable)  return;
-
         // Desenha a ferramenta
-        Render_Box(Win_Interface, Tex_TextBox, 3, Lists.TextBox[Index].Position, new Size(Lists.TextBox[Index].Width, TSize(Tex_TextBox).Height));
+        Render_Box(Win_Interface, Tex_TextBox, 3, Tool.Position, new Size(Tool.Width, TSize(Tex_TextBox).Height));
     }
     #endregion
 }

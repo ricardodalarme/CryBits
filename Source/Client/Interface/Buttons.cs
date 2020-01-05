@@ -18,7 +18,6 @@ class Buttons
             SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
 
             // Somente se necessário
-            if (!IsAble) return;
             if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture)))) return;
 
             // Altera o estado do botão
@@ -35,7 +34,6 @@ class Buttons
 
             // Somente se necessário
             if (e.Button == MouseButtons.Right) return;
-            if (!IsAble) return;
             if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture)))) return;
 
             // Altera o estado do botão
@@ -48,7 +46,6 @@ class Buttons
 
             // Somente se necessário
             if (e.Button == MouseButtons.Right) return;
-            if (!IsAble) return;
 
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
             if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture))))
@@ -121,11 +118,8 @@ class Buttons
         bool Visibility = false;
 
         // Verifica apenas se o painel for visível
-        if (!Panels.Get("SelecionarPersonagem").Visible)
-            return;
-
-        if (Lists.Characters[Game.SelectCharacter].Class != 0)
-            Visibility = true;
+        if (!Panels.Get("SelecionarPersonagem").Visible) return;
+        if (Lists.Characters[Game.SelectCharacter].Class != 0) Visibility = true;
 
         // Altera os botões visíveis
         Get("Personagem_Criar").Visible = !Visibility;

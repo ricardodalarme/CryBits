@@ -23,7 +23,7 @@ class TextBoxes
         public void MouseUp()
         {
             // Somente se necessário
-            if (!IsAble) return;
+            if (!Viewable) return;
             if (!Tools.IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
 
             // Define o foco no Digitalizador
@@ -64,35 +64,37 @@ class TextBoxes
 
     public static void Focus()
     {
+        // todo percorrer da forma certa
         // Se o digitalizador não estiver habilitado então isso não é necessário 
-        if (Focused != null && Focused.IsAble) return;
+        if (Focused != null && Focused.Viewable) return;
 
         // Altera o digitalizador focado para o mais próximo
         for (byte i = 0; i < Tools.Order.Count; i++)
         {
-            if (!(Tools.Order[i] is Structure))
+            if (!(Tools.Order[i].Data is Structure))
                 continue;
-            else if (!Tools.Order[i].IsAble)
+            else if (!Tools.Order[i].Data.Viewable)
                 continue;
-            else if ((Structure)Tools.Order[i] != Get("Chat"))
-                Focused = (Structure)Tools.Order[i];
+            else if ((Structure)Tools.Order[i].Data != Get("Chat"))
+                Focused = (Structure)Tools.Order[i].Data;
             return;
         }
     }
 
     public static void ChangeFocus()
     {
+        // todo percorrer da forma certa
         // Altera o digitalizador focado para o próximo
         for (byte i = 0; i < Tools.Order.Count; i++)
         {
-            if (!(Tools.Order[i] is Structure))
+            if (!(Tools.Order[i].Data is Structure))
                 continue;
-            else if (!Tools.Order[i].IsAble)
+            else if (!Tools.Order[i].Data.Viewable)
                 continue;
             if (Focused != Last() && i <= Tools.Get(Focused))
                 continue;
 
-            Focused = (Structure)Tools.Order[i];
+            Focused = (Structure)Tools.Order[i].Data;
             return;
         }
     }
@@ -100,12 +102,12 @@ class TextBoxes
     public static Structure Last()
     {
         Structure Tool = null;
-
+        // todo percorrer da forma certa
         // Retorna o último digitalizador habilitado
         for (byte i = 0; i < Tools.Order.Count; i++)
-            if (Tools.Order[i] is Structure)
-                if (Tools.Order[i].IsAble)
-                    Tool = (Structure)Tools.Order[i];
+            if (Tools.Order[i].Data is Structure)
+                if (Tools.Order[i].Data.Viewable)
+                    Tool = (Structure)Tools.Order[i].Data;
 
         return Tool;
     }
