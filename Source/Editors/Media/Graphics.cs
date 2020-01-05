@@ -75,12 +75,13 @@ partial class Graphics
 
     public static void Render(RenderWindow Window, Texture Texture, Rectangle Source, Rectangle Destiny, object Color = null, object Mode = null)
     {
-        Sprite TmpImage = new Sprite(Texture);
-
         // Define os dados
-        TmpImage.TextureRect = new IntRect(Source.X, Source.Y, Source.Width, Source.Height);
-        TmpImage.Position = new Vector2f(Destiny.X, Destiny.Y);
-        TmpImage.Scale = new Vector2f(Destiny.Width / (float)Source.Width, Destiny.Height / (float)Source.Height);
+        Sprite TmpImage = new Sprite(Texture)
+        {
+            TextureRect = new IntRect(Source.X, Source.Y, Source.Width, Source.Height),
+            Position = new Vector2f(Destiny.X, Destiny.Y),
+            Scale = new Vector2f(Destiny.Width / (float)Source.Width, Destiny.Height / (float)Source.Height)
+        };
         if (Color != null) TmpImage.Color = (SFML.Graphics.Color)Color;
 
         // Renderiza a textura em forma de retângulo
@@ -90,11 +91,12 @@ partial class Graphics
 
     public static void Render(RenderTexture Window, Texture Texture, Rectangle Destiny, object Color = null, object Mode = null)
     {
-        Sprite TmpImage = new Sprite(Texture);
-
         // Define os dados
-        TmpImage.Position = new Vector2f(Destiny.X, Destiny.Y);
-        TmpImage.Scale = new Vector2f(Destiny.Width / (float)TSize(Texture).Width, Destiny.Height / (float)TSize(Texture).Height);
+        Sprite TmpImage = new Sprite(Texture)
+        {
+            Position = new Vector2f(Destiny.X, Destiny.Y),
+            Scale = new Vector2f(Destiny.Width / (float)TSize(Texture).Width, Destiny.Height / (float)TSize(Texture).Height)
+        };
         if (Color != null) TmpImage.Color = (SFML.Graphics.Color)Color;
 
         // Renderiza a textura em forma de retângulo
@@ -161,12 +163,13 @@ partial class Graphics
 
     private static void DrawText(RenderWindow Window, string Text, int X, int Y, SFML.Graphics.Color Color)
     {
-        Text TempText = new Text(Text, GameFont);
-
         // Define os dados
-        TempText.CharacterSize = 10;
-        TempText.Color = Color;
-        TempText.Position = new Vector2f(X, Y);
+        Text TempText = new Text(Text, GameFont)
+        {
+            CharacterSize = 10,
+            Color = Color,
+            Position = new Vector2f(X, Y)
+        };
 
         // Desenha
         Window.Draw(TempText);
@@ -387,11 +390,13 @@ partial class Graphics
     {
         short Texture = Lists.Map[Index].Panorama;
         Size Size = TSize(Tex_Panorama[Texture]);
-        Size TempSize = new Size();
 
         // Limitações
-        TempSize.Width = (Lists.Map[Index].Width + 1 - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom;
-        TempSize.Height = (Lists.Map[Index].Height + 1 - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom;
+        Size TempSize = new Size
+        {
+            Width = (Lists.Map[Index].Width + 1 - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom,
+            Height = (Lists.Map[Index].Height + 1 - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom
+        };
 
         // Não permite que o tamanho ultrapasse a tela de jogo
         if (Size.Width > TempSize.Width) Size.Width = TempSize.Width;

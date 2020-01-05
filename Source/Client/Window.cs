@@ -88,7 +88,7 @@ public partial class Window : Form
                     // Executa o comando
                     if (Top[i].Data is Buttons.Structure) ((Buttons.Structure)Top[i].Data).MouseUp();
                     else if (Top[i].Data is CheckBoxes.Structure) ((CheckBoxes.Structure)Top[i].Data).MouseUp();
-                    else if (Top[i].Data is TextBoxes.Structure) ((TextBoxes.Structure)Top[i].Data).MouseUp();
+                    else if (Top[i].Data is TextBoxes.Structure) ((TextBoxes.Structure)Top[i].Data).MouseUp(Top[i]);
                     Stack.Push(Top[i].Nodes);
                 }
         }
@@ -124,8 +124,7 @@ public partial class Window : Form
         }
 
         // Executa os eventos
-        if (TextBoxes.Focused != null)
-            TextBoxes.Focused.KeyPress(e);
+        if (TextBoxes.Focused != null) ((TextBoxes.Structure)TextBoxes.Focused.Data).KeyPress(e);
     }
 
     private void Window_KeyDown(object sender, KeyEventArgs e)

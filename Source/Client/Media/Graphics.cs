@@ -303,7 +303,7 @@ partial class Graphics
         Text = Tools.TextBreak(Text, Tool.Width - 10);
 
         // Desenha o texto do digitalizador
-        if (TextBoxes.Focused == Tool && TextBoxes.Signal)
+        if (TextBoxes.Focused!= null && (TextBoxes.Structure)TextBoxes.Focused.Data == Tool && TextBoxes.Signal)
             DrawText(Text + "|", Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
         else
             DrawText(Text, Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
@@ -535,7 +535,7 @@ partial class Graphics
     public static void Game_Chat(Panels.Structure Tool)
     {
         // Define a bisiblidade da caixa
-        Tool.Visible = TextBoxes.Focused == TextBoxes.Get("Chat");
+        Tool.Visible = ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
 
         // Renderiza as mensagens
         if (Tools.Chat_Text_Visible)

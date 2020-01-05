@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 class TextBoxes
@@ -7,7 +8,7 @@ class TextBoxes
     public static Structure[] List;
 
     // Digitalizador focado
-    public static Structure Focused;
+    public static Tools.Order_Structure Focused;
     public static bool Signal;
 
     // Estrutura da ferramenta
@@ -20,13 +21,20 @@ class TextBoxes
         public bool Password;
 
         // Eventos
-        public void MouseUp()
+        public void MouseUp(Tools.Order_Structure Order)
         {
             // Somente se necessário
             if (!Tools.IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
 
             // Define o foco no Digitalizador
-            Focused = this;
+            Focused = Order;
+
+            // Altera o foco do digitalizador
+            if (((Structure)Order.Data).Name.Equals("Chat"))
+            {
+                Tools.Chat_Text_Visible = true;
+                Panels.Get("Chat").Visible = true;
+            }
         }
 
         public void KeyPress(KeyPressEventArgs e)
@@ -63,52 +71,45 @@ class TextBoxes
 
     public static void Focus()
     {
-        // todo percorrer da forma certa
         // Se o digitalizador não estiver habilitado então isso não é necessário 
         if (Focused != null && Focused.Viewable) return;
 
-        // Altera o digitalizador focado para o mais próximo
-        for (byte i = 0; i < Tools.Order.Count; i++)
+        // Percorre toda a árvore de ordem para executar o comando
+        Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
+        Stack.Push(Tools.Order);
+        while (Stack.Count != 0)
         {
-            if (!(Tools.Order[i].Data is Structure))
-                continue;
-            else if (!Tools.Order[i].Data.Viewable)
-                continue;
-            else if ((Structure)Tools.Order[i].Data != Get("Chat"))
-                Focused = (Structure)Tools.Order[i].Data;
-            return;
+            List<Tools.Order_Structure> Top = Stack.Pop();
+
+            for (byte i = 0; i < Top.Count; i++)
+                if (Top[i].Data.Visible)
+                {
+                    // Altera o digitalizador focado para o primeiro visível
+                    if (Top[i].Data is Structure && !Tools.Order[i].Data.Name.Equals("Chat"))
+                    {
+                        Focused = Top[i];
+                        return;
+                    }
+                    Stack.Push(Top[i].Nodes);
+                }
         }
     }
 
     public static void ChangeFocus()
     {
-        // todo percorrer da forma certa
+        int Index = Focused.Parent.Nodes.IndexOf(Focused), Temp = Index + 1;
+        
         // Altera o digitalizador focado para o próximo
-        for (byte i = 0; i < Tools.Order.Count; i++)
+        while (Temp != Index)
         {
-            if (!(Tools.Order[i].Data is Structure))
-                continue;
-            else if (!Tools.Order[i].Data.Viewable)
-                continue;
-            if (Focused != Last() && i <= Tools.Get(Focused))
-                continue;
-
-            Focused = (Structure)Tools.Order[i].Data;
-            return;
+            if (Temp == Focused.Parent.Nodes.Count) Temp = 0;
+            if (Focused.Parent.Nodes[Temp].Viewable && Focused.Parent.Nodes[Temp].Data is Structure)
+            {
+                Focused = Focused.Parent.Nodes[Temp];
+                return;
+            }
+            Temp++;
         }
-    }
-
-    public static Structure Last()
-    {
-        Structure Tool = null;
-        // todo percorrer da forma certa
-        // Retorna o último digitalizador habilitado
-        for (byte i = 0; i < Tools.Order.Count; i++)
-            if (Tools.Order[i].Data is Structure)
-                if (Tools.Order[i].Data.Viewable)
-                    Tool = (Structure)Tools.Order[i].Data;
-
-        return Tool;
     }
 
     public static void Chat_Type()
@@ -125,7 +126,7 @@ class TextBoxes
         if (Panels.Get("Chat").Visible)
         {
             Tools.Chat_Text_Visible = true;
-            Focused = Tool;
+            Focused = Tools.Get(Tool);
             return;
         }
         else

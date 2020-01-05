@@ -25,6 +25,10 @@ class Tools
         public Structure Data;
         public Order_Structure Parent;
         public List<Order_Structure> Nodes;
+        public bool Viewable
+        {
+            get {  return Viewable(this); }
+        }
     }
 
     public class Structure
@@ -33,13 +37,6 @@ class Tools
         public bool Visible;
         public Point Position;
         public Windows Window;
-        public bool Viewable
-        {
-            get
-            {
-                return true;
-            }
-        }
     }
 
     public static List<Order_Structure> Order
@@ -85,16 +82,25 @@ class Tools
         // Se não, retornar um valor nulo
         return false;
     }
-
-    public static int Get(Structure Tool)
+    public static bool Viewable(Order_Structure Order)
     {
-        // todo percorrer da forma certa
-        // Lista os nomes dos botões
-        for (byte i = 0; i < Order.Count; i++)
-            if (Order[i].Data == Tool)
-                return i;
+        // Verifica se a ferramenta está visível
+        if (Order == null) return true;
+        if (!Order.Data.Visible) return false;
+        return Viewable(Order.Parent);
+    }
 
-        return 0;
+    public static Order_Structure Get(Structure Tool, List<Order_Structure> Node = null)
+    {
+        if (Node == null) return Get(Tool, Order);
+
+        // Encontra a ferramenta na árvore de ordem
+        for (byte i = 0; i < Node.Count; i++)
+        {
+            if (Node[i].Data == Tool) return Node[i];
+            Get(Tool, Node[i].Nodes);
+        }
+        return null;
     }
 
     public static short MeasureString(string Text)

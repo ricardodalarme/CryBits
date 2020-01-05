@@ -13,7 +13,7 @@ class Loop
 
     public static void Main()
     {
-        int Count = 0;
+        int Count;
         int Timer_1000 = 0;
         short FPS = 0;
 
@@ -120,7 +120,7 @@ class Loop
 
     private static void Editor_Maps_Weather()
     {
-        bool Stop = false, Move = true;
+        bool Stop = false, Move;
         byte First_Thunder = (byte)Audio.Sounds.Thunder_1;
         byte Last_Thunder = (byte)Audio.Sounds.Thunder_4;
 
