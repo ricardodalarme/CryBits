@@ -281,6 +281,7 @@
             this.Controls.Add(this.grpList);
             this.Controls.Add(this.cmbWIndows);
             this.Controls.Add(this.picWindow);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MinimizeBox = false;
             this.Name = "Editor_Interface";
             this.Text = "Interface Editor";

@@ -378,6 +378,13 @@ partial class Receive
         Player.Me.Experience = Data.ReadInt16();
         Player.Me.ExpNeeded = Data.ReadInt16();
         Player.Me.Points = Data.ReadByte();
+
+        // Manipula a visibilidade dos botões
+        Buttons.Get("Atributos_Força").Visible = (Player.Me.Points>0);
+        Buttons.Get("Atributos_Resistência").Visible = (Player.Me.Points > 0);
+        Buttons.Get("Atributos_Inteligência").Visible = (Player.Me.Points > 0);
+        Buttons.Get("Atributos_Agilidade").Visible = (Player.Me.Points > 0);
+        Buttons.Get("Atributos_Vitalidade").Visible = (Player.Me.Points > 0);
     }
 
     private static void Player_Inventory(NetIncomingMessage Data)
