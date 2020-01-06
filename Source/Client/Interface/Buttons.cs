@@ -1,10 +1,11 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 class Buttons
 {
     // Aramazenamento de dados da ferramenta
-    public static Structure[] List;
+    public static List<Structure> List = new List<Structure>();
 
     // Estrutura das ferramentas
     public class Structure : Tools.Structure
@@ -74,7 +75,7 @@ class Buttons
     public static Structure Get(string Name)
     {
         // Lista os nomes das ferramentas
-        for (byte i = 1; i < List.Length; i++)
+        for (byte i = 0; i < List.Count; i++)
             if (List[i].Name.Equals(Name))
                 return List[i];
 

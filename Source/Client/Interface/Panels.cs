@@ -1,7 +1,9 @@
-﻿class Panels
+﻿using System.Collections.Generic;
+
+class Panels
 {
     // Armazenamento dos dados da ferramenta
-    public static Structure[] List;
+    public static List<Structure> List = new List<Structure>();
 
     // Estrutura da ferramenta
     public class Structure : Tools.Structure
@@ -12,7 +14,7 @@
     public static Structure Get(string Name)
     {
         // Lista os nomes das ferramentas
-        for (byte i = 1; i < List.Length; i++)
+        for (byte i = 0; i < List.Count; i++)
             if (List[i].Name.Equals(Name))
                 return List[i];
 

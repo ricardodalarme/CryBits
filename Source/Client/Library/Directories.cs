@@ -13,11 +13,7 @@ class Directories
     public static FileInfo Options = new FileInfo(Application.StartupPath + @"\Data\Options" + Format);
     public static FileInfo Client_Data = new FileInfo(Application.StartupPath + @"\Data\General" + Format);
     public static DirectoryInfo Maps_Data = new DirectoryInfo(Application.StartupPath + @"\Data\Maps\");
-    public static FileInfo Tool_Order = new FileInfo(Application.StartupPath + @"\Data\Tools\Order" + Format);
-    public static DirectoryInfo Buttons_Data = new DirectoryInfo(Application.StartupPath + @"\Data\Tools\Buttons\");
-    public static DirectoryInfo TextBoxes_Data = new DirectoryInfo(Application.StartupPath + @"\Data\Tools\TextBoxes\");
-    public static DirectoryInfo Panels_Data = new DirectoryInfo(Application.StartupPath + @"\Data\Tools\Panels\");
-    public static DirectoryInfo CheckBoxes_Data = new DirectoryInfo(Application.StartupPath + @"\Data\Tools\CheckBoxes\");
+    public static FileInfo Tools = new FileInfo(Application.StartupPath + @"\Data\Tools" + Format);
     public static FileInfo Tex_Background = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Background");
     public static FileInfo Tex_Chat = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Chat");
     public static FileInfo Tex_Equipments = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Equipments");
@@ -48,11 +44,7 @@ class Directories
         Musics.Create();
         Client_Data.Directory.Create();
         Maps_Data.Create();
-        Tool_Order.Directory.Create();
-        Buttons_Data.Create();
-        TextBoxes_Data.Create();
-        Panels_Data.Create();
-        CheckBoxes_Data.Create();
+        Tools.Directory.Create();
         Tex_Panoramas.Create();
         Tex_Fogs.Create();
         Tex_Characters.Create();

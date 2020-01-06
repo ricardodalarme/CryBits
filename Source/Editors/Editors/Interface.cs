@@ -95,7 +95,7 @@ public partial class Editor_Interface : Form
             case Globals.Tools_Types.CheckBox: Tool = new Lists.Structures.CheckBox(); break;
             case Globals.Tools_Types.TextBox: Tool = new Lists.Structures.TextBox(); break;
         }
-        Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add("[" + ((Globals.Tools_Types)cmbType.SelectedIndex).ToString() + "] " );
+        Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add("[" + ((Globals.Tools_Types)cmbType.SelectedIndex).ToString() + "] ");
         Lists.Tool.LastNode.Tag = Tool;
         grpNew.Visible = false;
     }

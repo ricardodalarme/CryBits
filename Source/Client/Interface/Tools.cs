@@ -27,7 +27,7 @@ class Tools
         public List<Order_Structure> Nodes;
         public bool Viewable
         {
-            get {  return Viewable(this); }
+            get { return Viewable(this); }
         }
     }
 

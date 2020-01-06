@@ -696,7 +696,7 @@ partial class Graphics
                 else if (Tool is Lists.Structures.TextBox) TextBox((Lists.Structures.TextBox)Tool);
                 else if (Tool is Lists.Structures.Button) Button((Lists.Structures.Button)Tool);
                 else if (Tool is Lists.Structures.CheckBox) CheckBox((Lists.Structures.CheckBox)Tool);
-                    
+
                 // Pula pra próxima
                 Interface_Order(Node.Nodes[i]);
             }
@@ -714,7 +714,7 @@ partial class Graphics
     {
         // Desenha o painel
         if (Tool.Texture_Num < Tex_Button.Length)
-            Render(Win_Interface, Tex_Panel[Tool.Texture_Num],  Tool.Position);
+            Render(Win_Interface, Tex_Panel[Tool.Texture_Num], Tool.Position);
     }
 
     public static void CheckBox(Lists.Structures.CheckBox Tool)

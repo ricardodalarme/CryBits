@@ -6,12 +6,7 @@ class Read
     public static void Data()
     {
         // Carrega todos os dados
-        Client_Data();
-        Buttons_Data();
-        TextBoxes_Data();
-        Panels_Data();
-        CheckBoxes_Data();
-        Tool_Order();
+        Tools();
         Options();
     }
 
@@ -43,152 +38,77 @@ class Read
         if (Lists.Options.SaveUsername) TextBoxes.Get("Conectar_Usuário").Text = Lists.Options.Username;
     }
 
-    public static void Client_Data()
+    public static Buttons.Structure Button(BinaryReader Data)
     {
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryReader Data = new BinaryReader(Directories.Client_Data.OpenRead());
-
         // Lê os dados
-        Lists.Client_Data.Num_Buttons = Data.ReadByte();
-        Lists.Client_Data.Num_TextBoxes = Data.ReadByte();
-        Lists.Client_Data.Num_Panels = Data.ReadByte();
-        Lists.Client_Data.Num_CheckBoxes = Data.ReadByte();
-
-        // Fecha o sistema
-        Data.Dispose();
+        Buttons.Structure Tool = new Buttons.Structure();
+        Tool.Name = Data.ReadString();
+        Tool.Position.X = Data.ReadInt32();
+        Tool.Position.Y = Data.ReadInt32();
+        Tool.Visible = Data.ReadBoolean();
+        Tool.Window = (Tools.Windows)Data.ReadByte();
+        Tool.Texture_Num = Data.ReadByte();
+        return Tool;
     }
 
-    public static void Buttons_Data()
+    public static TextBoxes.Structure TextBox(BinaryReader Data)
     {
-        Buttons.List = new Buttons.Structure[Lists.Client_Data.Num_Buttons + 1];
-
         // Lê os dados
-        for (byte i = 1; i < Buttons.List.Length; i++)
-            Button_Data(i);
+        TextBoxes.Structure Tool = new TextBoxes.Structure();
+        Tool.Name = Data.ReadString();
+        Tool.Position.X = Data.ReadInt32();
+        Tool.Position.Y = Data.ReadInt32();
+        Tool.Visible = Data.ReadBoolean();
+        Tool.Window = (Tools.Windows)Data.ReadByte();
+        Tool.Lenght = Data.ReadInt16();
+        Tool.Width = Data.ReadInt16();
+        Tool.Password = Data.ReadBoolean();
+        return Tool;
     }
 
-    public static void Button_Data(byte Index)
+    public static Panels.Structure Panel(BinaryReader Data)
     {
-        // Cria um sistema binário para a manipulação dos dados
-        FileInfo File = new FileInfo(Directories.Buttons_Data.FullName + Index + Directories.Format);
-        BinaryReader Data = new BinaryReader(File.OpenRead());
-
-        // Lê os dados
-        Buttons.List[Index] = new Buttons.Structure();
-        Buttons.List[Index].Name = Data.ReadString();
-        Buttons.List[Index].Position.X = Data.ReadInt32();
-        Buttons.List[Index].Position.Y = Data.ReadInt32();
-        Buttons.List[Index].Visible = Data.ReadBoolean();
-        Buttons.List[Index].Window = (Tools.Windows)Data.ReadByte();
-        Buttons.List[Index].Texture_Num = Data.ReadByte();
-
-        // Fecha o sistema
-        Data.Dispose();
-    }
-
-    public static void TextBoxes_Data()
-    {
-        TextBoxes.List = new TextBoxes.Structure[Lists.Client_Data.Num_TextBoxes + 1];
-
-        // Lê os dados
-        for (byte i = 1; i < TextBoxes.List.Length; i++)
-            TextBox_Data(i);
-    }
-
-    public static void TextBox_Data(byte Index)
-    {
-        // Cria um sistema binário para a manipulação dos dados
-        FileInfo File = new FileInfo(Directories.TextBoxes_Data.FullName + Index + Directories.Format);
-        BinaryReader Data = new BinaryReader(File.OpenRead());
-
-        // Lê os dados
-        TextBoxes.List[Index] = new TextBoxes.Structure();
-        TextBoxes.List[Index].Name = Data.ReadString();
-        TextBoxes.List[Index].Position.X = Data.ReadInt32();
-        TextBoxes.List[Index].Position.Y = Data.ReadInt32();
-        TextBoxes.List[Index].Visible = Data.ReadBoolean();
-        TextBoxes.List[Index].Window = (Tools.Windows)Data.ReadByte();
-        TextBoxes.List[Index].Lenght = Data.ReadInt16();
-        TextBoxes.List[Index].Width = Data.ReadInt16();
-        TextBoxes.List[Index].Password = Data.ReadBoolean();
-
-        // Fecha o sistema
-        Data.Dispose();
-    }
-
-    public static void Panels_Data()
-    {
-        Panels.List = new Panels.Structure[Lists.Client_Data.Num_Panels + 1];
-
-        // Lê os dados
-        for (byte i = 1; i < Panels.List.Length; i++)
-            Panel_Data(i);
-    }
-
-    public static void Panel_Data(byte Index)
-    {
-        // Cria um sistema binário para a manipulação dos dados
-        FileInfo File = new FileInfo(Directories.Panels_Data.FullName + Index + Directories.Format);
-        BinaryReader Data = new BinaryReader(File.OpenRead());
-
         // Carrega os dados
-        Panels.List[Index] = new Panels.Structure();
-        Panels.List[Index].Name = Data.ReadString();
-        Panels.List[Index].Position.X = Data.ReadInt32();
-        Panels.List[Index].Position.Y = Data.ReadInt32();
-        Panels.List[Index].Visible = Data.ReadBoolean();
-        Panels.List[Index].Window = (Tools.Windows)Data.ReadByte();
-        Panels.List[Index].Texture_Num = Data.ReadByte();
-
-        // Fecha o sistema
-        Data.Dispose();
+        Panels.Structure Tool = new Panels.Structure();
+        Tool.Name = Data.ReadString();
+        Tool.Position.X = Data.ReadInt32();
+        Tool.Position.Y = Data.ReadInt32();
+        Tool.Visible = Data.ReadBoolean();
+        Tool.Window = (Tools.Windows)Data.ReadByte();
+        Tool.Texture_Num = Data.ReadByte();
+        return Tool;
     }
 
-    public static void CheckBoxes_Data()
+    public static CheckBoxes.Structure CheckBox(BinaryReader Data)
     {
-        CheckBoxes.List = new CheckBoxes.Structure[Lists.Client_Data.Num_CheckBoxes + 1];
-
-        // Lê os dados
-        for (byte i = 1; i < CheckBoxes.List.Length; i++)
-            CheckBox_Data(i);
-    }
-
-    public static void CheckBox_Data(byte Index)
-    {
-        // Cria um sistema binário para a manipulação dos dados
-        FileInfo File = new FileInfo(Directories.CheckBoxes_Data.FullName + Index + Directories.Format);
-        BinaryReader Data = new BinaryReader(File.OpenRead());
-
         // Carrega os dados
-        CheckBoxes.List[Index] = new CheckBoxes.Structure();
-        CheckBoxes.List[Index].Name = Data.ReadString();
-        CheckBoxes.List[Index].Position.X = Data.ReadInt32();
-        CheckBoxes.List[Index].Position.Y = Data.ReadInt32();
-        CheckBoxes.List[Index].Visible = Data.ReadBoolean();
-        CheckBoxes.List[Index].Window = (Tools.Windows)Data.ReadByte();
-        CheckBoxes.List[Index].Text = Data.ReadString();
-        CheckBoxes.List[Index].State = Data.ReadBoolean();
-
-        // Fecha o sistema
-        Data.Dispose();
+        CheckBoxes.Structure Tool = new CheckBoxes.Structure();
+        Tool.Name = Data.ReadString();
+        Tool.Position.X = Data.ReadInt32();
+        Tool.Position.Y = Data.ReadInt32();
+        Tool.Visible = Data.ReadBoolean();
+        Tool.Window = (Tools.Windows)Data.ReadByte();
+        Tool.Text = Data.ReadString();
+        Tool.State = Data.ReadBoolean();
+        return Tool;
     }
 
-    public static void Tool_Order()
+    public static void Tools()
     {
-        FileInfo File = new FileInfo(Directories.Tool_Order.FullName);
-        for (byte i = 0; i < (byte)Tools.Windows.Count; i++) Tools.All_Order[i] = new List<Tools.Order_Structure>();
+        FileInfo File = new FileInfo(Directories.Tools.FullName);
+        for (byte i = 0; i < (byte)global::Tools.Windows.Count; i++) global::Tools.All_Order[i] = new List<Tools.Order_Structure>();
 
         // Cria um sistema binário para a manipulação dos dados
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Lê todos os nós
-        for (byte n = 0; n < Tools.All_Order.Length; n++) Order_Nodes(null, ref Tools.All_Order[n], Data);
+        for (byte n = 0; n < global::Tools.All_Order.Length; n++) Tools(null, ref global::Tools.All_Order[n], Data);
 
         // Fecha o sistema
         Data.Dispose();
     }
 
-    private static void Order_Nodes(Tools.Order_Structure Parent, ref List<Tools.Order_Structure> Node, BinaryReader Data)
+    private static void Tools(Tools.Order_Structure Parent, ref List<Tools.Order_Structure> Node, BinaryReader Data)
     {
         // Lê todos os filhos
         byte Size = Data.ReadByte();
@@ -196,24 +116,24 @@ class Read
         for (byte i = 0; i < Size; i++)
         {
             // Lê a ferramenta
-            byte Index = Data.ReadByte();
-            Tools.Types Type = (Tools.Types)Data.ReadByte();
+            Tools.Structure Temp_Tool = new Tools.Structure();
+            switch ((Tools.Types)Data.ReadByte())
+            {
+                case global::Tools.Types.Button: Temp_Tool = Button(Data); Buttons.List.Add((Buttons.Structure)Temp_Tool); break;
+                case global::Tools.Types.TextBox: Temp_Tool = TextBox(Data); TextBoxes.List.Add((TextBoxes.Structure)Temp_Tool); break;
+                case global::Tools.Types.Panel: Temp_Tool = Panel(Data); Panels.List.Add((Panels.Structure)Temp_Tool); break;
+                case global::Tools.Types.CheckBox: Temp_Tool = CheckBox(Data); CheckBoxes.List.Add((CheckBoxes.Structure)Temp_Tool); break;
+            }
 
             // Adiciona à lista
-            Tools.Order_Structure Temp = new Tools.Order_Structure();
-            Temp.Parent = Parent;
-            Temp.Nodes = new List<Tools.Order_Structure>();
-            switch (Type)
-            {
-                case Tools.Types.Button: Temp.Data = Buttons.List[Index]; break;
-                case Tools.Types.TextBox: Temp.Data = TextBoxes.List[Index]; break;
-                case Tools.Types.Panel: Temp.Data = Panels.List[Index]; break;
-                case Tools.Types.CheckBox: Temp.Data = CheckBoxes.List[Index]; break;
-            }
-            Node.Add(Temp);
+            Tools.Order_Structure Temp_Order = new Tools.Order_Structure();
+            Temp_Order.Nodes = new List<Tools.Order_Structure>();
+            Temp_Order.Parent = Parent;
+            Temp_Order.Data = Temp_Tool;
+            Node.Add(Temp_Order);
 
             // Pula pro próximo
-            Order_Nodes(Node[i], ref Node[i].Nodes, Data);
+            Tools(Node[i], ref Node[i].Nodes, Data);
         }
     }
 

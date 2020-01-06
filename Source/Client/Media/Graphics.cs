@@ -255,8 +255,8 @@ partial class Graphics
         // Define a transparência do botão pelo seu estado
         switch (Tool.State)
         {
-            case Buttons.States.Above:  Alpha = 250;   break;
-            case Buttons.States.Click:  Alpha = 200;  break;
+            case Buttons.States.Above: Alpha = 250; break;
+            case Buttons.States.Click: Alpha = 200; break;
         }
 
         // Desenha o botão
@@ -298,7 +298,7 @@ partial class Graphics
         Text = Tools.TextBreak(Text, Tool.Width - 10);
 
         // Desenha o texto do digitalizador
-        if (TextBoxes.Focused!= null && (TextBoxes.Structure)TextBoxes.Focused.Data == Tool && TextBoxes.Signal)
+        if (TextBoxes.Focused != null && (TextBoxes.Structure)TextBoxes.Focused.Data == Tool && TextBoxes.Signal)
             DrawText(Text + "|", Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
         else
             DrawText(Text, Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
@@ -329,14 +329,15 @@ partial class Graphics
         string Text = "(" + Game.SelectCharacter + ") None";
 
         // Somente se necessário
-        if (!Buttons.Characters_Change_Buttons()) {
+        if (!Buttons.Characters_Change_Buttons())
+        {
             DrawText(Text, Text_Position.X - Tools.MeasureString(Text) / 2, Text_Position.Y, SFML.Graphics.Color.White);
             return;
         }
 
         // Dados
         short Class = Lists.Characters[Game.SelectCharacter].Class;
-        
+
         // Verifica se o personagem existe
         if (Class == 0)
         {

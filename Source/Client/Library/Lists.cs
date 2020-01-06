@@ -2,7 +2,6 @@
 {
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
-    public static Structures.Client_Data Client_Data = new Structures.Client_Data();
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
     public static Structures.Player[] Player;
     public static Structures.Class[] Class;
@@ -22,14 +21,6 @@
             public bool Sounds;
             public bool Musics;
             public string Username;
-        }
-
-        public struct Client_Data
-        {
-            public byte Num_Buttons;
-            public byte Num_Panels;
-            public byte Num_CheckBoxes;
-            public byte Num_TextBoxes;
         }
 
         public struct Server_Data

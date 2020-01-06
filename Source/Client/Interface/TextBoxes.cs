@@ -5,7 +5,7 @@ using System.Windows.Forms;
 class TextBoxes
 {
     // Armazenamento de dados da ferramenta
-    public static Structure[] List;
+    public static List<Structure> List = new List<Structure>();
 
     // Digitalizador focado
     public static Tools.Order_Structure Focused;
@@ -62,7 +62,7 @@ class TextBoxes
     public static Structure Get(string Name)
     {
         // Lista os nomes das ferramentas
-        for (byte i = 1; i < List.Length; i++)
+        for (byte i = 0; i < List.Count; i++)
             if (List[i].Name.Equals(Name))
                 return List[i];
 
@@ -98,7 +98,7 @@ class TextBoxes
     public static void ChangeFocus()
     {
         int Index = Focused.Parent.Nodes.IndexOf(Focused), Temp = Index + 1;
-        
+
         // Altera o digitalizador focado para o próximo
         while (Temp != Index)
         {
