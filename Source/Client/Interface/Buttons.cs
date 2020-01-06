@@ -183,7 +183,7 @@ class Buttons
         // Regras de segurança
         if (TextBoxes.Get("Registrar_Senha").Text != TextBoxes.Get("Registrar_RepetirSenha").Text)
         {
-            MessageBox.Show("As senhas digitadas não são iquais.");
+            MessageBox.Show("The password don't match.");
             return;
         }
 

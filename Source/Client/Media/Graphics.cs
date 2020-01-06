@@ -449,7 +449,7 @@ partial class Graphics
         DrawText("Points: " + Player.Me.Points, Panel_Position.X + 14, Panel_Position.Y + 228, SFML.Graphics.Color.White);
 
         // Equipamentos 
-        for (byte i = 0; i < (byte)Game.Equipments.Amount; i++)
+        for (byte i = 0; i < (byte)Game.Equipments.Count; i++)
         {
             if (Player.Me.Equipment[i] == 0)
                 Render(Tex_Equipments, Panel_Position.X + 7 + i * 34, Panel_Position.Y + 247, i * 34, 0, 34, 34);
@@ -528,13 +528,13 @@ partial class Graphics
         // Específicas 
         if (Lists.Item[Item_Num].Type == (byte)Game.Itens.Potion)
         {
-            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
                 DrawText(((Game.Vitals)n).ToString() + ": " + Lists.Item[Item_Num].Potion_Vital[n], Position.X + 100, Position.Y + 18 + 12 * n, SFML.Graphics.Color.White);
             DrawText("Exp: " + Lists.Item[Item_Num].Potion_Experience, Position.X + 100, Position.Y + 42, SFML.Graphics.Color.White);
         }
         else if (Lists.Item[Item_Num].Type == (byte)Game.Itens.Equipment)
         {
-            for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) DrawText(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n], Position.X + 100, Position.Y + 18 + 12 * n, SFML.Graphics.Color.White);
+            for (byte n = 0; n < (byte)Game.Attributes.Count; n++) DrawText(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n], Position.X + 100, Position.Y + 18 + 12 * n, SFML.Graphics.Color.White);
             if (Lists.Item[Item_Num].Equip_Type == (byte)Game.Equipments.Weapon) DrawText("Dano: " + Lists.Item[Item_Num].Weapon_Damage, Position.X + 100, Position.Y + 18 + 60, SFML.Graphics.Color.White);
         }
     }

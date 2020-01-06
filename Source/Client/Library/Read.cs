@@ -160,8 +160,8 @@ class Read
         Lists.Map.Fog.Alpha = Data.ReadByte();
 
         // Redimensiona as ligações
-        Lists.Map.Link = new short[(byte)Game.Directions.Amount];
-        for (short i = 0; i < (short)Game.Directions.Amount; i++)
+        Lists.Map.Link = new short[(byte)Game.Directions.Count];
+        for (short i = 0; i < (short)Game.Directions.Count; i++)
             Lists.Map.Link[i] = Data.ReadInt16();
 
         // Redimensiona os azulejos 
@@ -191,8 +191,8 @@ class Read
             for (byte y = 0; y <= Lists.Map.Height; y++)
             {
                 Lists.Map.Tile[x, y].Attribute = Data.ReadByte();
-                Lists.Map.Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
-                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
+                Lists.Map.Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
+                for (byte i = 0; i < (byte)Game.Directions.Count; i++)
                     Lists.Map.Tile[x, y].Block[i] = Data.ReadBoolean();
             }
 

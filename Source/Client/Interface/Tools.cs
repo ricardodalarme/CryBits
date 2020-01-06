@@ -231,7 +231,7 @@ class Tools
     {
         Point Panel_Position = Panels.Get("Menu_Personagem").Position;
 
-        for (byte i = 0; i < (byte)Game.Equipments.Amount; i++)
+        for (byte i = 0; i < (byte)Game.Equipments.Count; i++)
             if (IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
                 // Remove o equipamento
                 if (e.Button == MouseButtons.Right)

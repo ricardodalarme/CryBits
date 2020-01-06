@@ -545,6 +545,7 @@ class Receive
         for (short i = 1; i < Lists.Class.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.Class[i] = new Lists.Structures.Class();
             Lists.Class[i].Vital = new short[(byte)Game.Vitals.Amount];
             Lists.Class[i].Attribute = new short[(byte)Game.Attributes.Amount];
 
@@ -592,9 +593,9 @@ class Receive
                     Lists.Tile[i].Data[x, y].Attribute = Data.ReadByte();
 
                     // Bloqueio direcional
-                    for (byte d = 0; d < (byte)Game.Directions.Amount; d++)
+                    for (byte d = 0; d < (byte)Game.Directions.Count; d++)
                     {
-                        Lists.Tile[i].Data[x, y].Block = new bool[(byte)Game.Directions.Amount];
+                        Lists.Tile[i].Data[x, y].Block = new bool[(byte)Game.Directions.Count];
                         Lists.Tile[i].Data[x, y].Block[d] = Data.ReadBoolean();
                     }
                 }
@@ -638,8 +639,8 @@ class Receive
             Lists.Map[i].Lighting = Data.ReadByte();
 
             // Ligações
-            Lists.Map[i].Link = new short[(short)Game.Directions.Amount];
-            for (short n = 0; n < (short)Game.Directions.Amount; n++)
+            Lists.Map[i].Link = new short[(short)Game.Directions.Count];
+            for (short n = 0; n < (short)Game.Directions.Count; n++)
                 Lists.Map[i].Link[n] = Data.ReadInt16();
 
             // Quantidade de camadas
@@ -679,9 +680,9 @@ class Receive
                     Lists.Map[i].Tile[x, y].Data_3 = Data.ReadInt16();
                     Lists.Map[i].Tile[x, y].Data_4 = Data.ReadInt16();
                     Lists.Map[i].Tile[x, y].Zone = Data.ReadByte();
-                    Lists.Map[i].Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
+                    Lists.Map[i].Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
 
-                    for (byte n = 0; n < (byte)Game.Directions.Amount; n++)
+                    for (byte n = 0; n < (byte)Game.Directions.Count; n++)
                         Lists.Map[i].Tile[x, y].Block[n] = Data.ReadBoolean();
                 }
 
@@ -729,6 +730,7 @@ class Receive
         for (short i = 1; i < Lists.NPC.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.NPC[i] = new Lists.Structures.NPC();
             Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Amount];
             Lists.NPC[i].Attribute = new short[(byte)Game.Attributes.Amount];
             Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Game.Max_NPC_Drop];
@@ -771,6 +773,7 @@ class Receive
         for (short i = 1; i < Lists.Item.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.Item[i] = new Lists.Structures.Item();
             Lists.Item[i].Potion_Vital = new short[(byte)Game.Vitals.Amount];
             Lists.Item[i].Equip_Attribute = new short[(byte)Game.Attributes.Amount];
 

@@ -30,9 +30,4 @@ class Panels
         Get("SelecionarPersonagem").Visible = false;
         Get("CriarPersonagem").Visible = false;
     }
-
-    public static void Execute()
-    {
-
-    }
 }

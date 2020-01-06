@@ -30,7 +30,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Maps));
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.tolStrip = new System.Windows.Forms.ToolStrip();
-            this.butSave = new System.Windows.Forms.ToolStripButton();
             this.butSaveAll = new System.Windows.Forms.ToolStripButton();
             this.butReload = new System.Windows.Forms.ToolStripButton();
             this.butClearAll = new System.Windows.Forms.ToolStripButton();
@@ -184,10 +183,9 @@
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
-            // Faixa
+            // tolStrip
             // 
             this.tolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.butSave,
             this.butSaveAll,
             this.butReload,
             this.butClearAll,
@@ -226,16 +224,6 @@
             this.tolStrip.Size = new System.Drawing.Size(1216, 25);
             this.tolStrip.TabIndex = 78;
             this.tolStrip.Text = "toolStrip2";
-            // 
-            // butSave
-            // 
-            this.butSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.butSave.Image = ((System.Drawing.Image)(resources.GetObject("butSave.Image")));
-            this.butSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.butSave.Name = "butSave";
-            this.butSave.Size = new System.Drawing.Size(23, 22);
-            this.butSave.Text = "Save";
-            this.butSave.Click += new System.EventHandler(this.butSave_Click);
             // 
             // butSaveAll
             // 
@@ -1570,7 +1558,6 @@
     #endregion
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     private System.Windows.Forms.ToolStrip tolStrip;
-    private System.Windows.Forms.ToolStripButton butSave;
     private System.Windows.Forms.ToolStripButton butSaveAll;
     private System.Windows.Forms.ToolStripButton butClearAll;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;

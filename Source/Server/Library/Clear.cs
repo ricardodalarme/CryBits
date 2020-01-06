@@ -76,6 +76,7 @@
         Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[Game.Max_NPC_Drop];
         for (byte i = 0; i < Game.Max_NPC_Drop; i++)
         {
+            Lists.NPC[Index].Drop[i] = new Lists.Structures.NPC_Drop();
             Lists.NPC[Index].Drop[i].Chance = 100;
             Lists.NPC[Index].Drop[i].Amount = 1;
         }
@@ -103,7 +104,7 @@
         Lists.Map[Index].Lighting = 100;
 
         // Redimensiona 
-        Lists.Map[Index].Link = new short[(byte)Game.Directions.Amount];
+        Lists.Map[Index].Link = new short[(byte)Game.Directions.Count];
         Lists.Map[Index].Light = new Lists.Structures.Map_Light[0];
         Lists.Map[Index].Layer = new System.Collections.Generic.List<Lists.Structures.Map_Layer>();
         Lists.Map[Index].Layer.Add(new Lists.Structures.Map_Layer());
@@ -116,6 +117,6 @@
         // Redimensiona os bloqueios
         for (byte x = 0; x <= Lists.Map[Index].Width; x++)
             for (byte y = 0; y <= Lists.Map[Index].Height; y++)
-                Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
+                Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
     }
 }

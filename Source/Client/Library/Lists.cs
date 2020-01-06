@@ -1,4 +1,4 @@
-﻿public class Lists
+﻿class Lists
 {
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();

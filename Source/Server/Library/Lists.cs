@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 class Lists
 {
@@ -45,7 +46,8 @@ class Lists
             public bool InEditor;
         }
 
-        public struct Class
+        [Serializable]
+        public class Class
         {
             public string Name;
             public short Texture_Male;
@@ -141,7 +143,8 @@ class Lists
             public byte Alpha;
         }
 
-        public struct NPC
+        [Serializable]
+        public class NPC
         {
             public string Name;
             public short Texture;
@@ -175,7 +178,8 @@ class Lists
             public short Amount;
         }
 
-        public struct Item
+        [Serializable]
+        public class Item
         {
             // Geral
             public string Name;
@@ -203,7 +207,8 @@ class Lists
             public short Amount;
         }
 
-        public struct NPC_Drop
+        [Serializable]
+        public class NPC_Drop
         {
             public short Item_Num;
             public short Amount;
@@ -216,18 +221,19 @@ class Lists
             public byte Slot;
         }
 
-        public struct Tile
+        [Serializable]
+        public class Tile
         {
             public byte Width;
             public byte Height;
             public Tile_Data[,] Data;
         }
 
-        public struct Tile_Data
+        [Serializable]
+        public class Tile_Data
         {
             public byte Attribute;
             public bool[] Block;
         }
-
     }
 }

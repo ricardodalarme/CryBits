@@ -141,8 +141,8 @@ partial class Receive
             for (byte x = 0; x <= Lists.Map[i].Width; x++)
                 for (byte y = 0; y <= Lists.Map[i].Height; y++)
                 {
-                    Lists.Map[i].Layer[n].Tile[x, y].x = Data.ReadByte();
-                    Lists.Map[i].Layer[n].Tile[x, y].y = Data.ReadByte();
+                    Lists.Map[i].Layer[n].Tile[x, y].X = Data.ReadByte();
+                    Lists.Map[i].Layer[n].Tile[x, y].Y = Data.ReadByte();
                     Lists.Map[i].Layer[n].Tile[x, y].Tile = Data.ReadByte();
                     Lists.Map[i].Layer[n].Tile[x, y].Auto = Data.ReadBoolean();
                     Lists.Map[i].Layer[n].Tile[x, y].Mini = new Point[4];

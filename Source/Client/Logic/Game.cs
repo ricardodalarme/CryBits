@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-public class Game
+class Game
 {
     // Números aleatórios
     public static Random Random = new Random();
@@ -79,7 +79,7 @@ public class Game
         Intelligence,
         Agility,
         Vitality,
-        Amount
+        Count
     }
 
     public enum Directions
@@ -88,7 +88,7 @@ public class Game
         Down,
         Left,
         Right,
-        Amount
+        Count
     }
 
     public enum Movements
@@ -118,7 +118,7 @@ public class Game
     {
         HP,
         MP,
-        Amount
+        Count
     }
 
     public enum NPCs
@@ -148,7 +148,7 @@ public class Game
         Helmet,
         Shield,
         Amulet,
-        Amount
+        Count
     }
 
     public enum Hotbar
@@ -304,7 +304,7 @@ public class Game
             case Directions.Down: return Directions.Up;
             case Directions.Left: return Directions.Right;
             case Directions.Right: return Directions.Left;
-            default: return Directions.Amount;
+            default: return Directions.Count;
         }
     }
 }

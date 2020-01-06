@@ -47,7 +47,7 @@ class Write
         Data.Write(Lists.Map.Fog.Alpha);
 
         // Ligação
-        for (short i = 0; i < (short)Game.Directions.Amount; i++)
+        for (short i = 0; i < (short)Game.Directions.Count; i++)
             Data.Write(Lists.Map.Link[i]);
 
         // Azulejos
@@ -68,7 +68,7 @@ class Write
             for (byte y = 0; y <= Lists.Map.Height; y++)
             {
                 Data.Write(Lists.Map.Tile[x, y].Attribute);
-                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
+                for (byte i = 0; i < (byte)Game.Directions.Count; i++)
                     Data.Write(Lists.Map.Tile[x, y].Block[i]);
             }
 

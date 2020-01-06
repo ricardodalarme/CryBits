@@ -17,10 +17,10 @@
     {
         // Limpa a estrutura
         Lists.Player[Index] = new Lists.Structures.Player();
-        Lists.Player[Index].Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.Player[Index].Max_Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.Player[Index].Attribute = new short[(byte)Game.Attributes.Amount];
-        Lists.Player[Index].Equipment = new short[(byte)Game.Equipments.Amount];
+        Lists.Player[Index].Vital = new short[(byte)Game.Vitals.Count];
+        Lists.Player[Index].Max_Vital = new short[(byte)Game.Vitals.Count];
+        Lists.Player[Index].Attribute = new short[(byte)Game.Attributes.Count];
+        Lists.Player[Index].Equipment = new short[(byte)Game.Equipments.Count];
 
         // Reseta os valores
         Lists.Player[Index].Name = string.Empty;

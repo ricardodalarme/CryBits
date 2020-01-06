@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 class Write
 {
@@ -101,127 +102,58 @@ class Write
 
     public static void Class(byte Index)
     {
-        // Cria um arquivo temporário
-        FileInfo File = new FileInfo(Directories.Classes.FullName + Index + Directories.Format);
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
         // Escreve os dados
-        Data.Write(Lists.Class[Index].Name);
-        Data.Write(Lists.Class[Index].Texture_Male);
-        Data.Write(Lists.Class[Index].Texture_Female);
-        Data.Write(Lists.Class[Index].Spawn_Map);
-        Data.Write(Lists.Class[Index].Spawn_Direction);
-        Data.Write(Lists.Class[Index].Spawn_X);
-        Data.Write(Lists.Class[Index].Spawn_Y);
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Data.Write(Lists.Class[Index].Vital[i]);
-        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Data.Write(Lists.Class[Index].Attribute[i]);
-
-        // Fecha o sistema
-        Data.Dispose();
+        FileStream Stream = new FileInfo(Directories.Classes.FullName + Index + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Lists.Class[Index]);
+        Stream.Close();
     }
 
     public static void NPCs()
     {
         // Escreve os dados
-        for (byte Index = 1; Index < Lists.NPC.Length; Index++)
-            NPC(Index);
+        for (byte Index = 1; Index < Lists.NPC.Length; Index++)  NPC(Index);
     }
 
     public static void NPC(byte Index)
     {
-        // Cria um arquivo temporário
-        FileInfo File = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format);
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
         // Escreve os dados
-        Data.Write(Lists.NPC[Index].Name);
-        Data.Write(Lists.NPC[Index].Texture);
-        Data.Write(Lists.NPC[Index].Behaviour);
-        Data.Write(Lists.NPC[Index].SpawnTime);
-        Data.Write(Lists.NPC[Index].Sight);
-        Data.Write(Lists.NPC[Index].Experience);
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Data.Write(Lists.NPC[Index].Vital[i]);
-        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Data.Write(Lists.NPC[Index].Attribute[i]);
-        for (byte i = 0; i < Game.Max_NPC_Drop; i++)
-        {
-            Data.Write(Lists.NPC[Index].Drop[i].Item_Num);
-            Data.Write(Lists.NPC[Index].Drop[i].Amount);
-            Data.Write(Lists.NPC[Index].Drop[i].Chance);
-        }
-
-        // Fecha o sistema
-        Data.Dispose();
+        FileStream Stream = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Lists.NPC[Index]);
+        Stream.Close();
     }
 
     public static void Items()
     {
         // Escreve os dados
-        for (byte Index = 1; Index < Lists.Item.Length; Index++)
-            Item(Index);
+        for (byte Index = 1; Index < Lists.Item.Length; Index++) Item(Index);
     }
 
     public static void Item(byte Index)
     {
-        // Cria um arquivo temporário
-        FileInfo File = new FileInfo(Directories.Items.FullName + Index + Directories.Format);
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
         // Escreve os dados
-        Data.Write(Lists.Item[Index].Name);
-        Data.Write(Lists.Item[Index].Description);
-        Data.Write(Lists.Item[Index].Texture);
-        Data.Write(Lists.Item[Index].Type);
-        Data.Write(Lists.Item[Index].Price);
-        Data.Write(Lists.Item[Index].Stackable);
-        Data.Write(Lists.Item[Index].Bind);
-        Data.Write(Lists.Item[Index].Req_Level);
-        Data.Write(Lists.Item[Index].Req_Class);
-        Data.Write(Lists.Item[Index].Potion_Experience);
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Data.Write(Lists.Item[Index].Potion_Vital[i]);
-        Data.Write(Lists.Item[Index].Equip_Type);
-        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Data.Write(Lists.Item[Index].Equip_Attribute[i]);
-        Data.Write(Lists.Item[Index].Weapon_Damage);
-
-        // Fecha o sistema
-        Data.Dispose();
+        FileStream Stream = new FileInfo(Directories.Items.FullName + Index + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Lists.Item[Index]);
+        Stream.Close();
     }
 
     public static void Tiles()
     {
         // Escreve os dados
-        for (byte i = 1; i < Lists.Tile.Length; i++)
-            Tile(i);
+        for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
     }
 
     public static void Tile(byte Index)
     {
-        // Cria um arquivo temporário
-        FileInfo File = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format);
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
-        // Dados básicos
-        Data.Write(Lists.Tile[Index].Width);
-        Data.Write(Lists.Tile[Index].Height);
-
-        // Gerais
-        for (byte x = 0; x <= Lists.Tile[Index].Width; x++)
-            for (byte y = 0; y <= Lists.Tile[Index].Height; y++)
-            {
-                Data.Write(Lists.Tile[Index].Data[x, y].Attribute);
-
-                // Bloqueio direcional
-                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
-                    Data.Write(Lists.Tile[Index].Data[x, y].Block[i]);
-            }
-
-        // Fecha o sistema
-        Data.Dispose();
+        // Escreve os dados
+        FileStream Stream = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Lists.Tile[Index]);
+        Stream.Close();
     }
 
     public static void Maps()
     {
         // Escreve os dados
-        for (byte i = 1; i < Lists.Map.Length; i++)
+        for (short i = 1; i < Lists.Map.Length; i++)
             Map(i);
     }
 
@@ -250,7 +182,7 @@ class Write
         Data.Write(Lists.Map[Index].Lighting);
 
         // Ligações
-        for (short i = 0; i < (short)Game.Directions.Amount; i++)
+        for (short i = 0; i < (short)Game.Directions.Count; i++)
             Data.Write(Lists.Map[Index].Link[i]);
 
         // Camadas
@@ -284,7 +216,7 @@ class Write
                 Data.Write(Lists.Map[Index].Tile[x, y].Zone);
 
                 // Bloqueio direcional
-                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
+                for (byte i = 0; i < (byte)Game.Directions.Count; i++)
                     Data.Write(Lists.Map[Index].Tile[x, y].Block[i]);
             }
 

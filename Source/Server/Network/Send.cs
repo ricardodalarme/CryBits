@@ -424,7 +424,7 @@ partial class Send
         Data.Write(Lists.Map[Map].Lighting);
 
         // Ligações
-        for (short i = 0; i < (short)Game.Directions.Amount; i++)
+        for (short i = 0; i < (short)Game.Directions.Count; i++)
             Data.Write(Lists.Map[Map].Link[i]);
 
         // Camadas
@@ -458,7 +458,7 @@ partial class Send
                 Data.Write(Lists.Map[Map].Tile[x, y].Zone);
 
                 // Bloqueio direcional
-                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
+                for (byte i = 0; i < (byte)Game.Directions.Count; i++)
                     Data.Write(Lists.Map[Map].Tile[x, y].Block[i]);
             }
 
@@ -808,7 +808,7 @@ partial class Send
                     Data.Write(Lists.Tile[i].Data[x, y].Attribute);
 
                     // Bloqueio direcional
-                    for (byte d = 0; d < (byte)Game.Directions.Amount; d++)
+                    for (byte d = 0; d < (byte)Game.Directions.Count; d++)
                         Data.Write(Lists.Tile[i].Data[x, y].Block[d]);
                 }
         }

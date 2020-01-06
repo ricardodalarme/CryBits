@@ -35,7 +35,7 @@ class Game
         Down,
         Left,
         Right,
-        Amount
+        Count
     }
 
     public enum Accesses
@@ -132,7 +132,7 @@ class Game
             case Directions.Down: return Directions.Up;
             case Directions.Left: return Directions.Right;
             case Directions.Right: return Directions.Left;
-            default: return Directions.Amount;
+            default: return Directions.Count;
         }
     }
 }

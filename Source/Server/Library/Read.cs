@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 partial class Read
 {
@@ -136,14 +137,9 @@ partial class Read
 
     public static void Classes()
     {
-        Lists.Class = new Lists.Structures.Class[Lists.Server_Data.Num_Classes + 1];
-
         // Lê os dados
-        for (byte i = 1; i < Lists.Class.Length; i++)
-        {
-            Clear.Class(i);
-            Class(i);
-        }
+        Lists.Class = new Lists.Structures.Class[Lists.Server_Data.Num_Classes + 1];
+        for (byte i = 1; i < Lists.Class.Length; i++) Class(i);
     }
 
     public static void Class(byte Index)
@@ -153,38 +149,22 @@ partial class Read
         // Cria o arquivo caso ele não existir
         if (!File.Exists)
         {
+            Clear.Class(Index);
             Write.Class(Index);
             return;
         }
 
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryReader Data = new BinaryReader(File.OpenRead());
-
         // Lê os dados
-        Lists.Class[Index].Name = Data.ReadString();
-        Lists.Class[Index].Texture_Male = Data.ReadInt16();
-        Lists.Class[Index].Texture_Female = Data.ReadInt16();
-        Lists.Class[Index].Spawn_Map = Data.ReadInt16();
-        Lists.Class[Index].Spawn_Direction = Data.ReadByte();
-        Lists.Class[Index].Spawn_X = Data.ReadByte();
-        Lists.Class[Index].Spawn_Y = Data.ReadByte();
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Lists.Class[Index].Vital[i] = Data.ReadInt16();
-        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Lists.Class[Index].Attribute[i] = Data.ReadInt16();
-
-        // Fecha o sistema
-        Data.Dispose();
+        FileStream Stream = File.OpenRead();
+        Lists.Class[Index] = (Lists.Structures.Class)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
     }
 
     public static void Items()
     {
-        Lists.Item = new Lists.Structures.Item[Lists.Server_Data.Num_Items + 1];
-
         // Lê os dados
-        for (byte i = 1; i < Lists.Item.Length; i++)
-        {
-            Clear.Item(i);
-            Item(i);
-        }
+        Lists.Item = new Lists.Structures.Item[Lists.Server_Data.Num_Items + 1];
+        for (byte i = 1; i < Lists.Item.Length; i++) Item(i);
     }
 
     public static void Item(byte Index)
@@ -194,31 +174,15 @@ partial class Read
         // Cria o arquivo caso ele não existir
         if (!File.Exists)
         {
+            Clear.Item(Index);
             Write.Item(Index);
             return;
         }
 
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryReader Data = new BinaryReader(File.OpenRead());
-
         // Lê os dados
-        Lists.Item[Index].Name = Data.ReadString();
-        Lists.Item[Index].Description = Data.ReadString();
-        Lists.Item[Index].Texture = Data.ReadInt16();
-        Lists.Item[Index].Type = Data.ReadByte();
-        Lists.Item[Index].Price = Data.ReadInt16();
-        Lists.Item[Index].Stackable = Data.ReadBoolean();
-        Lists.Item[Index].Bind = Data.ReadBoolean();
-        Lists.Item[Index].Req_Level = Data.ReadInt16();
-        Lists.Item[Index].Req_Class = Data.ReadByte();
-        Lists.Item[Index].Potion_Experience = Data.ReadInt16();
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Lists.Item[Index].Potion_Vital[i] = Data.ReadInt16();
-        Lists.Item[Index].Equip_Type = Data.ReadByte();
-        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Lists.Item[Index].Equip_Attribute[i] = Data.ReadInt16();
-        Lists.Item[Index].Weapon_Damage = Data.ReadInt16();
-
-        // Fecha o sistema
-        Data.Dispose();
+        FileStream Stream = File.OpenRead();
+        Lists.Item[Index] = (Lists.Structures.Item)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
     }
 
     public static void Maps()
@@ -266,8 +230,8 @@ partial class Read
         Lists.Map[Index].Lighting = Data.ReadByte();
 
         // Ligações
-        Lists.Map[Index].Link = new short[(short)Game.Directions.Amount];
-        for (short i = 0; i < (short)Game.Directions.Amount; i++)
+        Lists.Map[Index].Link = new short[(short)Game.Directions.Count];
+        for (short i = 0; i < (short)Game.Directions.Count; i++)
             Lists.Map[Index].Link[i] = Data.ReadInt16();
 
         // Quantidade de camadas
@@ -307,9 +271,9 @@ partial class Read
                 Lists.Map[Index].Tile[x, y].Data_3 = Data.ReadInt16();
                 Lists.Map[Index].Tile[x, y].Data_4 = Data.ReadInt16();
                 Lists.Map[Index].Tile[x, y].Zone = Data.ReadByte();
-                Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
+                Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
 
-                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
+                for (byte i = 0; i < (byte)Game.Directions.Count; i++)
                     Lists.Map[Index].Tile[x, y].Block[i] = Data.ReadBoolean();
             }
 
@@ -346,57 +310,34 @@ partial class Read
 
     public static void NPCs()
     {
-        Lists.NPC = new Lists.Structures.NPC[Lists.Server_Data.Num_NPCs + 1];
-
         // Lê os dados
-        for (byte i = 1; i < Lists.NPC.Length; i++)
-        {
-            Clear.NPC(i);
-            NPC(i);
-        }
+        Lists.NPC = new Lists.Structures.NPC[Lists.Server_Data.Num_NPCs + 1];
+        for (byte i = 1; i < Lists.NPC.Length; i++)  NPC(i);
     }
 
     public static void NPC(byte Index)
     {
         FileInfo File = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format);
-
+      
         // Cria o arquivo caso ele não existir
         if (!File.Exists)
         {
+            Clear.NPC(Index);
             Write.NPC(Index);
             return;
         }
 
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryReader Data = new BinaryReader(File.OpenRead());
-
         // Lê os dados
-        Lists.NPC[Index].Name = Data.ReadString();
-        Lists.NPC[Index].Texture = Data.ReadInt16();
-        Lists.NPC[Index].Behaviour = Data.ReadByte();
-        Lists.NPC[Index].SpawnTime = Data.ReadByte();
-        Lists.NPC[Index].Sight = Data.ReadByte();
-        Lists.NPC[Index].Experience = Data.ReadByte();
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Lists.NPC[Index].Vital[i] = Data.ReadInt16();
-        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Lists.NPC[Index].Attribute[i] = Data.ReadInt16();
-        for (byte i = 0; i < Game.Max_NPC_Drop; i++)
-        {
-            Lists.NPC[Index].Drop[i].Item_Num = Data.ReadInt16();
-            Lists.NPC[Index].Drop[i].Amount = Data.ReadInt16();
-            Lists.NPC[Index].Drop[i].Chance = Data.ReadByte();
-        }
-
-        // Fecha o sistema
-        Data.Dispose();
+        FileStream Stream = File.OpenRead();
+        Lists.NPC[Index] = (Lists.Structures.NPC)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
     }
 
     public static void Tiles()
     {
+        // Lê os dados
         Lists.Tile = new Lists.Structures.Tile[Lists.Server_Data.Num_Tiles + 1];
-
-        // Limpa e lê os dados
-        for (byte i = 1; i < Lists.Tile.Length; i++)
-            Tile(i);
+        for (byte i = 1; i < Lists.Tile.Length; i++)  Tile(i);
     }
 
     public static void Tile(byte Index)
@@ -406,29 +347,9 @@ partial class Read
         // Evita erros
         if (!File.Exists) return;
 
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryReader Data = new BinaryReader(File.OpenRead());
-
-        // Dados básicos
-        Lists.Tile[Index].Width = Data.ReadByte();
-        Lists.Tile[Index].Height = Data.ReadByte();
-        Lists.Tile[Index].Data = new Lists.Structures.Tile_Data[Lists.Tile[Index].Width + 1, Lists.Tile[Index].Height + 1];
-
-        for (byte x = 0; x <= Lists.Tile[Index].Width; x++)
-            for (byte y = 0; y <= Lists.Tile[Index].Height; y++)
-            {
-                // Atributos
-                Lists.Tile[Index].Data[x, y].Attribute = Data.ReadByte();
-
-                // Bloqueio direcional
-                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
-                {
-                    Lists.Tile[Index].Data[x, y].Block = new bool[(byte)Game.Directions.Amount];
-                    Lists.Tile[Index].Data[x, y].Block[i] = Data.ReadBoolean();
-                }
-            }
-
-        // Fecha o sistema
-        Data.Dispose();
+        // Lê os dados
+        FileStream Stream = File.OpenRead();
+        Lists.Tile[Index] = (Lists.Structures.Tile)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
     }
 }

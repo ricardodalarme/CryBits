@@ -88,8 +88,8 @@ partial class Receive
             Lists.NPC[i].Type = Data.ReadByte();
 
             // Vitais
-            Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Amount];
-            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)
+            Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
                 Lists.NPC[i].Vital[n] = Data.ReadInt16();
         }
     }
@@ -108,8 +108,8 @@ partial class Receive
             Lists.Map.Temp_NPC[i].Direction = (Game.Directions)Data.ReadByte();
 
             // Vitais
-            Lists.Map.Temp_NPC[i].Vital = new short[(byte)Game.Vitals.Amount];
-            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)
+            Lists.Map.Temp_NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
                 Lists.Map.Temp_NPC[i].Vital[n] = Data.ReadInt16();
         }
     }
@@ -122,7 +122,7 @@ partial class Receive
         Lists.Map.Temp_NPC[i].X = Data.ReadByte();
         Lists.Map.Temp_NPC[i].Y = Data.ReadByte();
         Lists.Map.Temp_NPC[i].Direction = (Game.Directions)Data.ReadByte();
-        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Lists.Map.Temp_NPC[i].Vital[n] = Data.ReadInt16();
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.Map.Temp_NPC[i].Vital[n] = Data.ReadInt16();
     }
 
     public static void Map_NPC_Movement(NetIncomingMessage Data)
@@ -178,7 +178,7 @@ partial class Receive
         byte Index = Data.ReadByte();
 
         // Define os vitais de determinado NPC
-        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
             Lists.Map.Temp_NPC[Index].Vital[n] = Data.ReadInt16();
     }
 
@@ -192,7 +192,7 @@ partial class Receive
         Lists.Map.Temp_NPC[i].Index = 0;
         Lists.Map.Temp_NPC[i].X = 0;
         Lists.Map.Temp_NPC[i].Y = 0;
-        Lists.Map.Temp_NPC[i].Vital = new short[(byte)Game.Vitals.Amount];
+        Lists.Map.Temp_NPC[i].Vital = new short[(byte)Game.Vitals.Count];
     }
 }
 

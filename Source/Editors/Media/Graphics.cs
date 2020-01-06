@@ -439,7 +439,7 @@ partial class Graphics
                     {
                         // Dados
                         Data = Map.Layer[c].Tile[x, y];
-                        Rectangle Source = new Rectangle(new Point(Data.x * Globals.Grid, Data.y * Globals.Grid), Globals.Grid_Size);
+                        Rectangle Source = new Rectangle(new Point(Data.X * Globals.Grid, Data.Y * Globals.Grid), Globals.Grid_Size);
                         Rectangle Destiny = new Rectangle(new Point((x - Begin_X) * Globals.Grid, (y - Begin_Y) * Globals.Grid), Globals.Grid_Size);
 
                         // Desenha o azulejo

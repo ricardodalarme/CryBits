@@ -212,15 +212,6 @@ class Loop
             }
     }
 
-    private static void Stop_Rain_Sound()
-    {
-        // Para o som da chuva se estiver reproduzindo
-        if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SFML.Audio.SoundStatus.Playing)
-        {
-            Audio.Sound.List[(byte)Audio.Sounds.Rain].Stop();
-        }
-    }
-
     private static void Weather_Rain_Create(int i)
     {
         // Define a velocidade e a posição da partícula

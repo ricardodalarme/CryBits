@@ -46,7 +46,7 @@ class NPC
             else
             {
                 byte TargetX = 0, TargetY = 0;
-                bool[] CanMove = new bool[(byte)Game.Directions.Amount];
+                bool[] CanMove = new bool[(byte)Game.Directions.Count];
                 short Distance_X, Distance_Y;
                 bool Moved = false;
                 bool Move = false;
@@ -156,12 +156,12 @@ class NPC
                     // Aleatoriza a forma que ele vai se movimentar até o alvo
                     if (Game.Random.Next(0, 2) == 0)
                     {
-                        for (byte d = 0; d < (byte)Game.Directions.Amount; d++)
+                        for (byte d = 0; d < (byte)Game.Directions.Count; d++)
                             if (!Moved && CanMove[d] && NPC.Move(Map_Num, i, (Game.Directions)d))
                                 Moved = true;
                     }
                     else
-                        for (short d = (byte)Game.Directions.Amount - 1; d >= 0; d--)
+                        for (short d = (byte)Game.Directions.Count - 1; d >= 0; d--)
                             if (!Moved && CanMove[d] && NPC.Move(Map_Num, i, (Game.Directions)d))
                                 Moved = true;
                 }

@@ -297,13 +297,13 @@ partial class Editor_Maps : Form
                     if (Data.Tile > 0)
                     {
                         // Atributos
-                        if (Lists.Tile[Data.Tile].Data[Data.x, Data.y].Attribute > 0)
-                            Lists.Map[Selected].Tile[x, y].Attribute = Lists.Tile[Data.Tile].Data[Data.x, Data.y].Attribute;
+                        if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute > 0)
+                            Lists.Map[Selected].Tile[x, y].Attribute = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute;
 
                         // Bloqueio direcional
                         for (byte b = 0; b < (byte)Globals.Directions.Count; b++)
-                            if (Lists.Tile[Data.Tile].Data[Data.x, Data.y].Block[b])
-                                Lists.Map[Selected].Tile[x, y].Block[b] = Lists.Tile[Data.Tile].Data[Data.x, Data.y].Block[b];
+                            if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b])
+                                Lists.Map[Selected].Tile[x, y].Block[b] = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b];
                     }
                 }
     }
@@ -328,12 +328,6 @@ partial class Editor_Maps : Form
     #endregion
 
     #region Toolbox
-    private void butSave_Click(object sender, EventArgs e)
-    {
-        // Salva os dados
-        Send.Write_Map(Selected);
-    }
-
     private void butSaveAll_Click(object sender, EventArgs e)
     {
         // Salva todos os dados
@@ -1115,7 +1109,7 @@ partial class Editor_Maps : Form
             // Define o azulejo
             cmbTiles.SelectedIndex = Data.Tile - 1;
             chkAuto.Checked = Data.Auto;
-            Def_Tiles_Selection = new Rectangle(Data.x, Data.y, 1, 1);
+            Def_Tiles_Selection = new Rectangle(Data.X, Data.Y, 1, 1);
             return;
         }
     }
@@ -1130,8 +1124,8 @@ partial class Editor_Maps : Form
 
         // Define os valores da camada
         Temp_Tile.Mini = new Point[4];
-        Temp_Tile.x = x;
-        Temp_Tile.y = y;
+        Temp_Tile.X = x;
+        Temp_Tile.Y = y;
         Temp_Tile.Tile = (byte)(cmbTiles.SelectedIndex + 1);
         Temp_Tile.Auto = chkAuto.Checked;
 
@@ -1560,8 +1554,8 @@ partial class Editor_Maps : Form
 
             // Define a posição do mini azulejo
             Lists.Structures.Map_Tile_Data Data = Lists.Map[Map_Num].Layer[Layer_Num].Tile[x, y];
-            Lists.Map[Map_Num].Layer[Layer_Num].Tile[x, y].Mini[Part].X = Data.x * Globals.Grid + Position.X;
-            Lists.Map[Map_Num].Layer[Layer_Num].Tile[x, y].Mini[Part].Y = Data.y * Globals.Grid + Position.Y;
+            Lists.Map[Map_Num].Layer[Layer_Num].Tile[x, y].Mini[Part].X = Data.X * Globals.Grid + Position.X;
+            Lists.Map[Map_Num].Layer[Layer_Num].Tile[x, y].Mini[Part].Y = Data.Y * Globals.Grid + Position.Y;
         }
 
         public static bool Check(short Map_Num, int X1, int Y1, int X2, int Y2, byte Layer_Num)
@@ -1578,8 +1572,8 @@ partial class Editor_Maps : Form
             // Verifica se são os mesmo azulejos
             if (!Data2.Auto) return false;
             if (Data1.Tile != Data2.Tile) return false;
-            if (Data1.x != Data2.x) return false;
-            if (Data1.y != Data2.y) return false;
+            if (Data1.X != Data2.X) return false;
+            if (Data1.Y != Data2.Y) return false;
 
             // Não há nada de errado
             return true;

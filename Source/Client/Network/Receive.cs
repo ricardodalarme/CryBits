@@ -50,10 +50,10 @@ partial class Receive
         switch ((Packets)Data.ReadByte())
         {
             case Packets.Alert: Alert(Data); break;
-            case Packets.Connect: Connect(Data); break;
+            case Packets.Connect: Connect(); break;
             case Packets.Join: Join(Data); break;
-            case Packets.CreateCharacter: CreateCharacter(Data); break;
-            case Packets.JoinGame: JoinGame(Data); break;
+            case Packets.CreateCharacter: CreateCharacter(); break;
+            case Packets.JoinGame: JoinGame(); break;
             case Packets.Classes: Classes(Data); break;
             case Packets.Characters: Characters(Data); break;
             case Packets.HigherIndex: HigherIndex(Data); break;
@@ -70,8 +70,8 @@ partial class Receive
             case Packets.Player_Hotbar: Player_Hotbar(Data); break;
             case Packets.Map_Revision: Map_Revision(Data); break;
             case Packets.Map: Map(Data); break;
-            case Packets.JoinMap: JoinMap(Data); break;
-            case Packets.Latency: Latency(Data); break;
+            case Packets.JoinMap: JoinMap(); break;
+            case Packets.Latency: Latency(); break;
             case Packets.Message: Message(Data); break;
             case Packets.NPCs: NPCs(Data); break;
             case Packets.Map_NPCs: Map_NPCs(Data); break;
@@ -92,7 +92,7 @@ partial class Receive
         MessageBox.Show(Data.ReadString());
     }
 
-    private static void Connect(NetIncomingMessage Data)
+    private static void Connect()
     {
         // Reseta os valores
         Game.SelectCharacter = 1;
@@ -115,7 +115,7 @@ partial class Receive
             Clear.Player(i);
     }
 
-    private static void CreateCharacter(NetIncomingMessage Data)
+    private static void CreateCharacter()
     {
         // Reseta os valores
         TextBoxes.Get("CriarPersonagem_Nome").Text = string.Empty;
@@ -168,7 +168,7 @@ partial class Receive
         }
     }
 
-    private static void JoinGame(NetIncomingMessage Data)
+    private static void JoinGame()
     {
         // Reseta os valores
         Tools.Chat = new System.Collections.Generic.List<Tools.Chat_Structure>();
@@ -235,8 +235,8 @@ partial class Receive
         Data.ReadByte(); // lighting
 
         // Ligações
-        Lists.Map.Link = new short[(byte)Game.Directions.Amount];
-        for (short i = 0; i < (short)Game.Directions.Amount; i++)
+        Lists.Map.Link = new short[(byte)Game.Directions.Count];
+        for (short i = 0; i < (short)Game.Directions.Count; i++)
             Lists.Map.Link[i] = Data.ReadInt16();
 
         // Azulejos
@@ -278,8 +278,8 @@ partial class Receive
                 Data.ReadByte(); // Zona
 
                 // Bloqueio direcional
-                Lists.Map.Tile[x, y].Block = new bool[(byte)Game.Directions.Amount];
-                for (byte i = 0; i < (byte)Game.Directions.Amount; i++)
+                Lists.Map.Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
+                for (byte i = 0; i < (byte)Game.Directions.Count; i++)
                     Lists.Map.Tile[x, y].Block[i] = Data.ReadBoolean();
             }
 
@@ -313,7 +313,7 @@ partial class Receive
         global::Map.Autotile.Update();
     }
 
-    public static void JoinMap(NetIncomingMessage Data)
+    public static void JoinMap()
     {
         // Se tiver, reproduz a música de fundo do mapa
         if (Lists.Map.Music > 0)
@@ -322,7 +322,7 @@ partial class Receive
             Audio.Music.Stop();
     }
 
-    public static void Latency(NetIncomingMessage Data)
+    public static void Latency()
     {
         // Define a latência
         Game.Latency = Environment.TickCount - Game.Latency_Send;
@@ -344,8 +344,8 @@ partial class Receive
         for (short i = 1; i < Lists.Item.Length; i++)
         {
             // Redimensiona os valores necessários 
-            Lists.Item[i].Potion_Vital = new short[(byte)Game.Vitals.Amount];
-            Lists.Item[i].Equip_Attribute = new short[(byte)Game.Attributes.Amount];
+            Lists.Item[i].Potion_Vital = new short[(byte)Game.Vitals.Count];
+            Lists.Item[i].Equip_Attribute = new short[(byte)Game.Attributes.Count];
 
             // Lê os dados
             Lists.Item[i].Name = Data.ReadString();
@@ -358,9 +358,9 @@ partial class Receive
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
             Lists.Item[i].Potion_Experience = Data.ReadInt16();
-            for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
+            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();
-            for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
             Lists.Item[i].Weapon_Damage = Data.ReadInt16();
         }
     }
