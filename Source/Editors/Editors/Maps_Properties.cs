@@ -70,8 +70,8 @@ public partial class Editor_Maps_Properties : Form
         Objects.cmbMusic.Items.Add("None");
 
         // Lista os valores
-        for (byte i = 0; i < (byte)Globals.Map_Morals.Amount; i++) Objects.cmbMoral.Items.Add((Globals.Map_Morals)i);
-        for (byte i = 0; i < (byte)Globals.Weathers.Amount; i++) Objects.cmbWeather.Items.Add((Globals.Weathers)i);
+        for (byte i = 0; i < (byte)Globals.Map_Morals.Count; i++) Objects.cmbMoral.Items.Add((Globals.Map_Morals)i);
+        for (byte i = 0; i < (byte)Globals.Weathers.Count; i++) Objects.cmbWeather.Items.Add((Globals.Weathers)i);
         for (byte i = 1; i < (byte)Audio.Musics.Amount; i++) Objects.cmbMusic.Items.Add((Audio.Musics)i);
     }
 

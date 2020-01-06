@@ -149,12 +149,6 @@
     <Compile Include="Editors\Classes.Designer.cs">
       <DependentUpon>Classes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Tools.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Editors\Tools.Designer.cs">
-      <DependentUpon>Tools.cs</DependentUpon>
-    </Compile>
     <Compile Include="Editors\Maps.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -197,10 +191,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\Data.resx">
       <DependentUpon>Data.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Tools.resx">
-      <DependentUpon>Tools.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\Maps.resx">
       <DependentUpon>Maps.cs</DependentUpon>

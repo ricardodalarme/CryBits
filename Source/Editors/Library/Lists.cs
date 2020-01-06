@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -7,20 +6,15 @@ class Lists
 {
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
-    public static Structures.Client_Data Client_Data = new Structures.Client_Data();
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
-    public static Structures.Button[] Button;
-    public static Structures.TextBox[] TextBox;
-    public static Structures.CheckBox[] CheckBox;
-    public static Structures.Panel[] Panel;
     public static Structures.Class[] Class;
     public static Structures.Tile[] Tile;
     public static Structures.Map[] Map;
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
-    public static TreeNode Tool_Order;
-    
+    public static TreeNode Tool;
+
     // Estrutura dos itens em gerais
     public class Structures
     {
@@ -33,14 +27,6 @@ class Lists
             public bool Pre_Map_Audio;
         }
 
-        public struct Client_Data
-        {
-            public byte Num_Buttons;
-            public byte Num_Panels;
-            public byte Num_CheckBoxes;
-            public byte Num_TextBoxes;
-        }
-
         public struct Server_Data
         {
             public string Game_Name;
@@ -48,28 +34,6 @@ class Lists
             public short Port;
             public byte Max_Players;
             public byte Max_Characters;
-        }
-
-        public class Tool_Order
-        {
-            public byte Index;
-            public Globals.Tools_Types Type;
-
-            // Retorna a ferramenta
-            public Tool Data
-            {
-                get
-                {
-                    switch (Type)
-                    {
-                        case Globals.Tools_Types.Button: return Lists.Button[Index];
-                        case Globals.Tools_Types.TextBox: return Lists.TextBox[Index];
-                        case Globals.Tools_Types.Panel: return Lists.Panel[Index];
-                        case Globals.Tools_Types.CheckBox: return Lists.CheckBox[Index];
-                    }
-                    return null;
-                }
-            }
         }
 
         public class Tool

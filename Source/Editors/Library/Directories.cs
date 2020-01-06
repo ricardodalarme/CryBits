@@ -13,12 +13,7 @@ class Directories
     public static DirectoryInfo Fonts;
     public static DirectoryInfo Sounds;
     public static DirectoryInfo Musics;
-    public static FileInfo Client_Data;
-    public static DirectoryInfo Buttons_Data;
-    public static DirectoryInfo TextBoxes_Data;
-    public static DirectoryInfo Panels_Data;
-    public static DirectoryInfo CheckBoxes_Data;
-    public static FileInfo Tool_Order;
+    public static FileInfo Tools;
     public static DirectoryInfo Tex_Painel;
     public static FileInfo Tex_CheckBox;
     public static FileInfo Tex_TextBox;
@@ -56,12 +51,7 @@ class Directories
         Fonts = new DirectoryInfo(Directory + @"\Fonts\");
         Sounds = new DirectoryInfo(Directory + @"\Audio\Sounds\");
         Musics = new DirectoryInfo(Directory + @"\Audio\Musics\");
-        Client_Data = new FileInfo(Directory + @"\Data\General" + Format);
-        Buttons_Data = new DirectoryInfo(Directory + @"\Data\Tools\Buttons\");
-        TextBoxes_Data = new DirectoryInfo(Directory + @"\Data\Tools\TextBoxes\");
-        Panels_Data = new DirectoryInfo(Directory + @"\Data\Tools\Panels\");
-        CheckBoxes_Data = new DirectoryInfo(Directory + @"\Data\Tools\CheckBoxes\");
-        Tool_Order = new FileInfo(Directory + @"\Data\Tools\Order" + Format);
+        Tools = new FileInfo(Directory + @"\Data\Tools" + Format);
         Tex_Panoramas = new DirectoryInfo(Directory + @"\Graphics\Panoramas\");
         Tex_Lights = new DirectoryInfo(Directory + @"\Graphics\Lights\");
         Tex_Fogs = new DirectoryInfo(Directory + @"\Graphics\Fogs\");
@@ -84,12 +74,7 @@ class Directories
         Fonts.Create();
         Sounds.Create();
         Musics.Create();
-        Client_Data.Directory.Create();
-        Buttons_Data.Create();
-        TextBoxes_Data.Create();
-        Panels_Data.Create();
-        CheckBoxes_Data.Create();
-        Tool_Order.Directory.Create();
+        Tools.Directory.Create();
         Tex_Panoramas.Create();
         Tex_Fogs.Create();
         Tex_Lights.Create();
@@ -109,7 +94,6 @@ class Directories
         Tex_Items.Create();
 
         // Lê os dados gerais do cliente
-        Read.Client_Data();
         Graphics.LoadTextures();
         Audio.Sound.Load();
     }

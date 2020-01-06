@@ -28,12 +28,9 @@
     {
             this.picWindow = new System.Windows.Forms.PictureBox();
             this.butClear = new System.Windows.Forms.Button();
-            this.cmbTools = new System.Windows.Forms.ComboBox();
-            this.List = new System.Windows.Forms.ListBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.cmbWIndows = new System.Windows.Forms.ComboBox();
-            this.grpList = new System.Windows.Forms.GroupBox();
+            this.butNew = new System.Windows.Forms.Button();
+            this.butRemove = new System.Windows.Forms.Button();
+            this.cmbWindows = new System.Windows.Forms.ComboBox();
             this.grpOrder = new System.Windows.Forms.GroupBox();
             this.butOrder_Down = new System.Windows.Forms.Button();
             this.butOrder_Up = new System.Windows.Forms.Button();
@@ -42,16 +39,16 @@
             this.treOrder = new System.Windows.Forms.TreeView();
             this.grpProperties = new System.Windows.Forms.GroupBox();
             this.prgProperties = new System.Windows.Forms.PropertyGrid();
-            this.optList = new System.Windows.Forms.RadioButton();
-            this.optOrder = new System.Windows.Forms.RadioButton();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.butCancel = new System.Windows.Forms.Button();
             this.butSaveAll = new System.Windows.Forms.Button();
+            this.grpNew = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cmbType = new System.Windows.Forms.ComboBox();
+            this.butConfirm = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picWindow)).BeginInit();
-            this.grpList.SuspendLayout();
             this.grpOrder.SuspendLayout();
             this.grpProperties.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.grpNew.SuspendLayout();
             this.SuspendLayout();
             // 
             // picWindow
@@ -65,7 +62,7 @@
             // 
             // butClear
             // 
-            this.butClear.Location = new System.Drawing.Point(161, 270);
+            this.butClear.Location = new System.Drawing.Point(163, 19);
             this.butClear.Name = "butClear";
             this.butClear.Size = new System.Drawing.Size(70, 25);
             this.butClear.TabIndex = 25;
@@ -73,83 +70,55 @@
             this.butClear.UseVisualStyleBackColor = true;
             this.butClear.Click += new System.EventHandler(this.butClear_Click);
             // 
-            // cmbTools
+            // butNew
             // 
-            this.cmbTools.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbTools.Location = new System.Drawing.Point(11, 23);
-            this.cmbTools.Name = "cmbTools";
-            this.cmbTools.Size = new System.Drawing.Size(220, 21);
-            this.cmbTools.TabIndex = 27;
-            this.cmbTools.SelectedIndexChanged += new System.EventHandler(this.cmbTools_SelectedIndexChanged);
+            this.butNew.Location = new System.Drawing.Point(11, 19);
+            this.butNew.Name = "butNew";
+            this.butNew.Size = new System.Drawing.Size(70, 25);
+            this.butNew.TabIndex = 28;
+            this.butNew.Text = "New";
+            this.butNew.UseVisualStyleBackColor = true;
+            this.butNew.Click += new System.EventHandler(this.butNew_Click);
             // 
-            // List
+            // butRemove
             // 
-            this.List.FormattingEnabled = true;
-            this.List.Location = new System.Drawing.Point(11, 52);
-            this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(220, 212);
-            this.List.TabIndex = 26;
-            this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
+            this.butRemove.Location = new System.Drawing.Point(87, 19);
+            this.butRemove.Name = "butRemove";
+            this.butRemove.Size = new System.Drawing.Size(70, 25);
+            this.butRemove.TabIndex = 29;
+            this.butRemove.Text = "Remove";
+            this.butRemove.UseVisualStyleBackColor = true;
+            this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
             // 
-            // button1
+            // cmbWindows
             // 
-            this.button1.Location = new System.Drawing.Point(11, 270);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(70, 25);
-            this.button1.TabIndex = 28;
-            this.button1.Text = "New";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(87, 270);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(70, 25);
-            this.button2.TabIndex = 29;
-            this.button2.Text = "Remove";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // cmbWIndows
-            // 
-            this.cmbWIndows.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbWIndows.Location = new System.Drawing.Point(12, 12);
-            this.cmbWIndows.Name = "cmbWIndows";
-            this.cmbWIndows.Size = new System.Drawing.Size(800, 21);
-            this.cmbWIndows.TabIndex = 30;
-            this.cmbWIndows.SelectedIndexChanged += new System.EventHandler(this.cmbWIndows_SelectedIndexChanged);
-            // 
-            // grpList
-            // 
-            this.grpList.Controls.Add(this.List);
-            this.grpList.Controls.Add(this.butClear);
-            this.grpList.Controls.Add(this.cmbTools);
-            this.grpList.Controls.Add(this.button2);
-            this.grpList.Controls.Add(this.button1);
-            this.grpList.Location = new System.Drawing.Point(823, 61);
-            this.grpList.Name = "grpList";
-            this.grpList.Size = new System.Drawing.Size(243, 308);
-            this.grpList.TabIndex = 32;
-            this.grpList.TabStop = false;
-            this.grpList.Text = "List";
+            this.cmbWindows.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbWindows.Location = new System.Drawing.Point(12, 12);
+            this.cmbWindows.Name = "cmbWindows";
+            this.cmbWindows.Size = new System.Drawing.Size(800, 21);
+            this.cmbWindows.TabIndex = 30;
+            this.cmbWindows.SelectedIndexChanged += new System.EventHandler(this.cmbWindows_SelectedIndexChanged);
             // 
             // grpOrder
             // 
             this.grpOrder.Controls.Add(this.butOrder_Down);
+            this.grpOrder.Controls.Add(this.butClear);
             this.grpOrder.Controls.Add(this.butOrder_Up);
+            this.grpOrder.Controls.Add(this.butRemove);
             this.grpOrder.Controls.Add(this.butOrder_Unpin);
+            this.grpOrder.Controls.Add(this.butNew);
             this.grpOrder.Controls.Add(this.butOrder_Pin);
             this.grpOrder.Controls.Add(this.treOrder);
-            this.grpOrder.Location = new System.Drawing.Point(823, 61);
+            this.grpOrder.Location = new System.Drawing.Point(823, 12);
             this.grpOrder.Name = "grpOrder";
-            this.grpOrder.Size = new System.Drawing.Size(243, 554);
+            this.grpOrder.Size = new System.Drawing.Size(243, 382);
             this.grpOrder.TabIndex = 33;
             this.grpOrder.TabStop = false;
             this.grpOrder.Text = "Order";
-            this.grpOrder.Visible = false;
             // 
             // butOrder_Down
             // 
-            this.butOrder_Down.Location = new System.Drawing.Point(181, 520);
+            this.butOrder_Down.Location = new System.Drawing.Point(183, 350);
             this.butOrder_Down.Name = "butOrder_Down";
             this.butOrder_Down.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Down.TabIndex = 30;
@@ -159,7 +128,7 @@
             // 
             // butOrder_Up
             // 
-            this.butOrder_Up.Location = new System.Drawing.Point(125, 520);
+            this.butOrder_Up.Location = new System.Drawing.Point(125, 350);
             this.butOrder_Up.Name = "butOrder_Up";
             this.butOrder_Up.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Up.TabIndex = 29;
@@ -169,7 +138,7 @@
             // 
             // butOrder_Unpin
             // 
-            this.butOrder_Unpin.Location = new System.Drawing.Point(68, 520);
+            this.butOrder_Unpin.Location = new System.Drawing.Point(68, 350);
             this.butOrder_Unpin.Name = "butOrder_Unpin";
             this.butOrder_Unpin.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Unpin.TabIndex = 28;
@@ -179,7 +148,7 @@
             // 
             // butOrder_Pin
             // 
-            this.butOrder_Pin.Location = new System.Drawing.Point(11, 520);
+            this.butOrder_Pin.Location = new System.Drawing.Point(12, 350);
             this.butOrder_Pin.Name = "butOrder_Pin";
             this.butOrder_Pin.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Pin.TabIndex = 27;
@@ -189,17 +158,18 @@
             // 
             // treOrder
             // 
-            this.treOrder.Location = new System.Drawing.Point(10, 19);
+            this.treOrder.Location = new System.Drawing.Point(12, 50);
             this.treOrder.Name = "treOrder";
-            this.treOrder.Size = new System.Drawing.Size(221, 495);
+            this.treOrder.Size = new System.Drawing.Size(221, 294);
             this.treOrder.TabIndex = 0;
+            this.treOrder.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treOrder_AfterSelect);
             // 
             // grpProperties
             // 
             this.grpProperties.Controls.Add(this.prgProperties);
-            this.grpProperties.Location = new System.Drawing.Point(823, 375);
+            this.grpProperties.Location = new System.Drawing.Point(823, 400);
             this.grpProperties.Name = "grpProperties";
-            this.grpProperties.Size = new System.Drawing.Size(243, 240);
+            this.grpProperties.Size = new System.Drawing.Size(243, 215);
             this.grpProperties.TabIndex = 34;
             this.grpProperties.TabStop = false;
             this.grpProperties.Text = "Properties";
@@ -207,46 +177,11 @@
             // prgProperties
             // 
             this.prgProperties.HelpVisible = false;
-            this.prgProperties.Location = new System.Drawing.Point(10, 19);
+            this.prgProperties.Location = new System.Drawing.Point(11, 19);
             this.prgProperties.Name = "prgProperties";
-            this.prgProperties.Size = new System.Drawing.Size(221, 212);
+            this.prgProperties.Size = new System.Drawing.Size(221, 182);
             this.prgProperties.TabIndex = 25;
             this.prgProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.prgProperties_PropertyValueChanged);
-            // 
-            // optList
-            // 
-            this.optList.AutoSize = true;
-            this.optList.Checked = true;
-            this.optList.Location = new System.Drawing.Point(24, 19);
-            this.optList.Name = "optList";
-            this.optList.Size = new System.Drawing.Size(41, 17);
-            this.optList.TabIndex = 35;
-            this.optList.TabStop = true;
-            this.optList.Text = "List";
-            this.optList.UseVisualStyleBackColor = true;
-            this.optList.CheckedChanged += new System.EventHandler(this.optList_CheckedChanged);
-            // 
-            // optOrder
-            // 
-            this.optOrder.AutoSize = true;
-            this.optOrder.Location = new System.Drawing.Point(155, 19);
-            this.optOrder.Name = "optOrder";
-            this.optOrder.Size = new System.Drawing.Size(51, 17);
-            this.optOrder.TabIndex = 36;
-            this.optOrder.Text = "Order";
-            this.optOrder.UseVisualStyleBackColor = true;
-            this.optOrder.CheckedChanged += new System.EventHandler(this.optOrder_CheckedChanged);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.optList);
-            this.groupBox1.Controls.Add(this.optOrder);
-            this.groupBox1.Location = new System.Drawing.Point(823, 4);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(243, 51);
-            this.groupBox1.TabIndex = 37;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Menu";
             // 
             // butCancel
             // 
@@ -268,49 +203,81 @@
             this.butSaveAll.UseVisualStyleBackColor = true;
             this.butSaveAll.Click += new System.EventHandler(this.butSaveAll_Click);
             // 
+            // grpNew
+            // 
+            this.grpNew.Controls.Add(this.butConfirm);
+            this.grpNew.Controls.Add(this.cmbType);
+            this.grpNew.Controls.Add(this.label1);
+            this.grpNew.Location = new System.Drawing.Point(822, 12);
+            this.grpNew.Name = "grpNew";
+            this.grpNew.Size = new System.Drawing.Size(244, 603);
+            this.grpNew.TabIndex = 31;
+            this.grpNew.TabStop = false;
+            this.grpNew.Text = "New";
+            this.grpNew.Visible = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(11, 282);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(34, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Type:";
+            // 
+            // cmbType
+            // 
+            this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbType.Location = new System.Drawing.Point(14, 298);
+            this.cmbType.Name = "cmbType";
+            this.cmbType.Size = new System.Drawing.Size(155, 21);
+            this.cmbType.TabIndex = 31;
+            // 
+            // butConfirm
+            // 
+            this.butConfirm.Location = new System.Drawing.Point(175, 296);
+            this.butConfirm.Name = "butConfirm";
+            this.butConfirm.Size = new System.Drawing.Size(59, 23);
+            this.butConfirm.TabIndex = 32;
+            this.butConfirm.Text = "Confirm";
+            this.butConfirm.UseVisualStyleBackColor = true;
+            this.butConfirm.Click += new System.EventHandler(this.butConfirm_Click);
+            // 
             // Editor_Interface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1078, 661);
+            this.ClientSize = new System.Drawing.Size(1075, 661);
             this.ControlBox = false;
+            this.Controls.Add(this.grpOrder);
+            this.Controls.Add(this.grpProperties);
             this.Controls.Add(this.butCancel);
             this.Controls.Add(this.butSaveAll);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.grpProperties);
-            this.Controls.Add(this.grpList);
-            this.Controls.Add(this.cmbWIndows);
+            this.Controls.Add(this.cmbWindows);
             this.Controls.Add(this.picWindow);
-            this.Controls.Add(this.grpOrder);
+            this.Controls.Add(this.grpNew);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MinimizeBox = false;
             this.Name = "Editor_Interface";
             this.Text = "Interface Editor";
             ((System.ComponentModel.ISupportInitialize)(this.picWindow)).EndInit();
-            this.grpList.ResumeLayout(false);
             this.grpOrder.ResumeLayout(false);
             this.grpProperties.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.grpNew.ResumeLayout(false);
+            this.grpNew.PerformLayout();
             this.ResumeLayout(false);
 
     }
 
     #endregion
     private System.Windows.Forms.Button butClear;
-    public System.Windows.Forms.ComboBox cmbTools;
-    public System.Windows.Forms.ListBox List;
-    private System.Windows.Forms.Button button1;
-    private System.Windows.Forms.Button button2;
-    public System.Windows.Forms.ComboBox cmbWIndows;
+    private System.Windows.Forms.Button butNew;
+    private System.Windows.Forms.Button butRemove;
+    public System.Windows.Forms.ComboBox cmbWindows;
     public System.Windows.Forms.PictureBox picWindow;
-    private System.Windows.Forms.GroupBox grpList;
     private System.Windows.Forms.GroupBox grpOrder;
     private System.Windows.Forms.GroupBox grpProperties;
     private System.Windows.Forms.PropertyGrid prgProperties;
-    private System.Windows.Forms.RadioButton optList;
-    private System.Windows.Forms.RadioButton optOrder;
-    private System.Windows.Forms.GroupBox groupBox1;
     public System.Windows.Forms.TreeView treOrder;
     private System.Windows.Forms.Button butOrder_Down;
     private System.Windows.Forms.Button butOrder_Up;
@@ -318,4 +285,8 @@
     private System.Windows.Forms.Button butOrder_Pin;
     private System.Windows.Forms.Button butCancel;
     private System.Windows.Forms.Button butSaveAll;
+    private System.Windows.Forms.GroupBox grpNew;
+    private System.Windows.Forms.Button butConfirm;
+    public System.Windows.Forms.ComboBox cmbType;
+    private System.Windows.Forms.Label label1;
 }

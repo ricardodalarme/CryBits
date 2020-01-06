@@ -19,155 +19,97 @@ class Write
         Data.Dispose();
     }
 
-    public static void Client_Data()
-    {
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryWriter Data = new BinaryWriter(Directories.Client_Data.OpenWrite());
-
-        // Escreve os dados
-        Data.Write(Lists.Client_Data.Num_Buttons);
-        Data.Write(Lists.Client_Data.Num_TextBoxes);
-        Data.Write(Lists.Client_Data.Num_Panels);
-        Data.Write(Lists.Client_Data.Num_CheckBoxes);
-
-        // Fecha o sistema
-        Data.Dispose();
-    }
-
     public static void Tools()
     {
-        // Escreve os dados de todas as ferramentas
-        Buttons();
-        TextBoxes();
-        Panels();
-        CheckBoxes();
-    }
-
-    public static void Buttons()
-    {
-        // Escreve os dados
-        for (byte Index = 1; Index < Lists.Button.Length; Index++)
-            Button(Index);
-    }
-
-    public static void Button(byte Index)
-    {
         // Cria um sistema binário para a manipulação dos dados
-        FileInfo File = new FileInfo(Directories.Buttons_Data.FullName + Index + Directories.Format);
+        FileInfo File = new FileInfo(Directories.Tools.FullName);
         BinaryWriter Data = new BinaryWriter(File.OpenWrite());
 
         // Escreve os dados
-        Data.Write(Lists.Button[Index].Name);
-        Data.Write(Lists.Button[Index].Position.X);
-        Data.Write(Lists.Button[Index].Position.Y);
-        Data.Write(Lists.Button[Index].Visible);
-        Data.Write((byte)Lists.Button[Index].Window);
-        Data.Write(Lists.Button[Index].Texture_Num);
+        for (short n = 0; n < Lists.Tool.Nodes.Count; n++) Tools(Lists.Tool.Nodes[n], Data);
 
         // Fecha o sistema
         Data.Dispose();
     }
 
-    public static void TextBoxes()
-    {
-        // Escreve os dados
-        for (byte Index = 1; Index < Lists.TextBox.Length; Index++)
-            TextBox(Index);
-    }
-
-    public static void TextBox(byte Index)
-    {
-        // Cria um sistema binário para a manipulação dos dados
-        FileInfo File = new FileInfo(Directories.TextBoxes_Data.FullName + Index + Directories.Format);
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
-        // Escreve os dados
-        Data.Write(Lists.TextBox[Index].Name);
-        Data.Write(Lists.TextBox[Index].Position.X);
-        Data.Write(Lists.TextBox[Index].Position.Y);
-        Data.Write(Lists.TextBox[Index].Visible);
-        Data.Write((byte)Lists.TextBox[Index].Window);
-        Data.Write(Lists.TextBox[Index].Max_Characters);
-        Data.Write(Lists.TextBox[Index].Width);
-        Data.Write(Lists.TextBox[Index].Password);
-
-        // Fecha o sistema
-        Data.Dispose();
-    }
-
-    public static void Panels()
-    {
-        // Escreve os dados
-        for (byte Index = 1; Index < Lists.Panel.Length; Index++)
-            Panel(Index);
-    }
-
-    public static void Panel(byte Index)
-    {
-        // Cria um sistema binário para a manipulação dos dados
-        FileInfo File = new FileInfo(Directories.Panels_Data.FullName + Index + Directories.Format);
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
-        // Escreve os dados
-        Data.Write(Lists.Panel[Index].Name);
-        Data.Write(Lists.Panel[Index].Position.X);
-        Data.Write(Lists.Panel[Index].Position.Y);
-        Data.Write(Lists.Panel[Index].Visible);
-        Data.Write((byte)Lists.Panel[Index].Window);
-        Data.Write(Lists.Panel[Index].Texture_Num);
-
-        // Fecha o sistema
-        Data.Dispose();
-    }
-
-    public static void CheckBoxes()
-    {
-        // Escreve os dados
-        for (byte Index = 1; Index < Lists.CheckBox.Length; Index++)
-            CheckBox(Index);
-    }
-
-    public static void CheckBox(byte Index)
-    {
-        // Cria um sistema binário para a manipulação dos dados
-        FileInfo File = new FileInfo(Directories.CheckBoxes_Data.FullName + Index + Directories.Format);
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
-        // Escreve os dados
-        Data.Write(Lists.CheckBox[Index].Name);
-        Data.Write(Lists.CheckBox[Index].Position.X);
-        Data.Write(Lists.CheckBox[Index].Position.Y);
-        Data.Write(Lists.CheckBox[Index].Visible);
-        Data.Write((byte)Lists.CheckBox[Index].Window);
-        Data.Write(Lists.CheckBox[Index].Text);
-        Data.Write(Lists.CheckBox[Index].State);
-
-        // Fecha o sistema
-        Data.Dispose();
-    }
-
-    public static void Tool_Order()
-    {
-        // Cria um sistema binário para a manipulação dos dados
-        FileInfo File = new FileInfo(Directories.Tool_Order.FullName);
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
-        // Escreve os dados
-        for (short n = 0; n < Lists.Tool_Order.Nodes.Count; n++) Tree_Nodes(Lists.Tool_Order.Nodes[n], Data);
-
-        // Fecha o sistema
-        Data.Dispose();
-    }
-
-    private static void Tree_Nodes(TreeNode Node, BinaryWriter Data)
+    private static void Tools(TreeNode Node, BinaryWriter Data)
     {
         // Escreve a ferramenta
         Data.Write((byte)Node.Nodes.Count);
         for (byte i = 0; i < Node.Nodes.Count; i++)
         {
-            Data.Write(((Lists.Structures.Tool_Order)Node.Nodes[i].Tag).Index);
-            Data.Write((byte)((Lists.Structures.Tool_Order)Node.Nodes[i].Tag).Type);
-            Tree_Nodes(Node.Nodes[i], Data);
+            // Salva de acordo com a ferramenta
+            Lists.Structures.Tool Tool = (Lists.Structures.Tool)Node.Nodes[i].Tag;
+            if (Tool is Lists.Structures.Button)
+            {
+                Data.Write((byte)Globals.Tools_Types.Button);
+                Button(Data, (Lists.Structures.Button)Tool);
+            }
+            else if (Tool is Lists.Structures.TextBox)
+            {
+                Data.Write((byte)Globals.Tools_Types.TextBox);
+                TextBox(Data, (Lists.Structures.TextBox)Tool);
+            }
+            else if (Tool is Lists.Structures.CheckBox)
+            {
+                Data.Write((byte)Globals.Tools_Types.CheckBox);
+                CheckBox(Data, (Lists.Structures.CheckBox)Tool);
+            }
+            else if (Tool is Lists.Structures.Panel)
+            {
+                Data.Write((byte)Globals.Tools_Types.Panel);
+                Panel(Data, (Lists.Structures.Panel)Tool);
+            }
+
+            // Pula pra próxima ferramenta
+            Tools(Node.Nodes[i], Data);
         }
+    }
+
+    public static void Button(BinaryWriter Data, Lists.Structures.Button Tool)
+    {
+        // Escreve os dados
+        Data.Write(Tool.Name);
+        Data.Write(Tool.Position.X);
+        Data.Write(Tool.Position.Y);
+        Data.Write(Tool.Visible);
+        Data.Write((byte)Tool.Window);
+        Data.Write(Tool.Texture_Num);
+    }
+
+    public static void TextBox(BinaryWriter Data, Lists.Structures.TextBox Tool)
+    {
+        // Escreve os dados
+        Data.Write(Tool.Name);
+        Data.Write(Tool.Position.X);
+        Data.Write(Tool.Position.Y);
+        Data.Write(Tool.Visible);
+        Data.Write((byte)Tool.Window);
+        Data.Write(Tool.Max_Characters);
+        Data.Write(Tool.Width);
+        Data.Write(Tool.Password);
+    }
+
+    public static void Panel(BinaryWriter Data, Lists.Structures.Panel Tool)
+    {
+        // Escreve os dados
+        Data.Write(Tool.Name);
+        Data.Write(Tool.Position.X);
+        Data.Write(Tool.Position.Y);
+        Data.Write(Tool.Visible);
+        Data.Write((byte)Tool.Window);
+        Data.Write(Tool.Texture_Num);
+    }
+
+    public static void CheckBox(BinaryWriter Data, Lists.Structures.CheckBox Tool)
+    {
+        // Escreve os dados
+        Data.Write(Tool.Name);
+        Data.Write(Tool.Position.X);
+        Data.Write(Tool.Position.Y);
+        Data.Write(Tool.Visible);
+        Data.Write((byte)Tool.Window);
+        Data.Write(Tool.Text);
+        Data.Write(Tool.State);
     }
 }

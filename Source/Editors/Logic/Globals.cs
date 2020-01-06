@@ -48,21 +48,21 @@ class Globals
         Block,
         Warp,
         Item,
-        Amount
+        Count
     }
 
     public enum Layers
     {
         Ground,
         Fringe,
-        Amount
+        Count
     }
 
     public enum Vitals
     {
         HP,
         MP,
-        Amount
+        Count
     }
     public enum Attributes
     {
@@ -71,14 +71,14 @@ class Globals
         Intelligence,
         Agility,
         Vitality,
-        Amount
+        Count
     }
 
     public enum Map_Morals
     {
         Pacific,
         Dangerous,
-        Amount
+        Count
     }
 
     public enum Weathers
@@ -87,7 +87,7 @@ class Globals
         Raining,
         Thundering,
         Snowing,
-        Amount
+        Count
     }
 
     public enum Directions
@@ -96,7 +96,7 @@ class Globals
         Down,
         Left,
         Right,
-        Amount
+        Count
     }
 
     public enum Tiles_Mode
@@ -128,7 +128,6 @@ class Globals
         Menu,
         Game,
         Global,
-        Count
     }
 
     public static void Weather_Update()
@@ -202,26 +201,5 @@ class Globals
 
         // Se não, retornar um valor nulo
         return false;
-    }
-
-    public static void Add_Tools_Order()
-    {
-        // Adiciona todas as ferramentas
-        for (byte i = 1; i < Lists.Button.Length; i++) Add_Tool_Order(i, Tools_Types.Button);
-        for (byte i = 1; i < Lists.TextBox.Length; i++) Add_Tool_Order(i, Tools_Types.TextBox);
-        for (byte i = 1; i < Lists.Panel.Length; i++) Add_Tool_Order(i, Tools_Types.Panel);
-        for (byte i = 1; i < Lists.CheckBox.Length; i++) Add_Tool_Order(i, Tools_Types.CheckBox);
-    }
-
-    public static void Add_Tool_Order(byte Index, Tools_Types Type)
-    {
-        // Adiciona a ferramenta na lista de ordem
-        Lists.Structures.Tool_Order Temp = new Lists.Structures.Tool_Order
-        {
-            Index = Index,
-            Type = Type
-        };
-        Lists.Tool_Order.Nodes[(byte)Temp.Data.Window].Nodes.Add("[" + Temp.Type.ToString() + "] " + Temp.Data.Name);
-        Lists.Tool_Order.Nodes[(byte)Temp.Data.Window].LastNode.Tag = Temp;
     }
 }

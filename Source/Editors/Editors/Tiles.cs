@@ -99,7 +99,7 @@ public partial class Editor_Tiles : Form
         // Bloqueio direcional
         else if (optDirBlock.Checked)
         {
-            for (byte i = 0; i < (byte)Globals.Directions.Amount; i++)
+            for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
                 if (Tile_Dif.X >= Globals.Block_Position(i).X && Tile_Dif.X <= Globals.Block_Position(i).X + 8)
                     if (Tile_Dif.Y >= Globals.Block_Position(i).Y && Tile_Dif.Y <= Globals.Block_Position(i).Y + 8)
                         // Altera o valor de bloqueio

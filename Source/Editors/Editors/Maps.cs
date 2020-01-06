@@ -86,7 +86,7 @@ partial class Editor_Maps : Form
         Objects.cmbA_Item.Items.Clear();
 
         // Lista os itens
-        for (byte i = 0; i < (byte)Globals.Layers.Amount; i++) Objects.cmbLayers_Type.Items.Add(((Globals.Layers)i).ToString());
+        for (byte i = 0; i < (byte)Globals.Layers.Count; i++) Objects.cmbLayers_Type.Items.Add(((Globals.Layers)i).ToString());
         for (byte i = 1; i < Graphics.Tex_Tile.Length; i++) Objects.cmbTiles.Items.Add(i.ToString());
         for (byte i = 1; i < Lists.NPC.Length; i++) Objects.cmbNPC.Items.Add(Lists.NPC[i].Name);
         for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbA_Item.Items.Add(Lists.Item[i].Name);
@@ -280,7 +280,7 @@ partial class Editor_Maps : Form
             for (byte y = 0; y <= Lists.Map[Selected].Height; y++)
             {
                 Lists.Map[Selected].Tile[x, y].Attribute = 0;
-                Lists.Map[Selected].Tile[x, y].Block = new bool[(byte)Globals.Directions.Amount];
+                Lists.Map[Selected].Tile[x, y].Block = new bool[(byte)Globals.Directions.Count];
             }
     }
 
@@ -301,7 +301,7 @@ partial class Editor_Maps : Form
                             Lists.Map[Selected].Tile[x, y].Attribute = Lists.Tile[Data.Tile].Data[Data.x, Data.y].Attribute;
 
                         // Bloqueio direcional
-                        for (byte b = 0; b < (byte)Globals.Directions.Amount; b++)
+                        for (byte b = 0; b < (byte)Globals.Directions.Count; b++)
                             if (Lists.Tile[Data.Tile].Data[Data.x, Data.y].Block[b])
                                 Lists.Map[Selected].Tile[x, y].Block[b] = Lists.Tile[Data.Tile].Data[Data.x, Data.y].Block[b];
                     }
@@ -934,7 +934,7 @@ partial class Editor_Maps : Form
         else if (butMAttributes.Checked && optA_DirBlock.Checked)
         {
             // Define o bloqueio direcional
-            for (byte i = 0; i < (byte)Globals.Directions.Amount; i++)
+            for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
                 if (Tile_Dif.X >= Globals.Block_Position(i).X && Tile_Dif.X <= Globals.Block_Position(i).X + 8)
                     if (Tile_Dif.Y >= Globals.Block_Position(i).Y && Tile_Dif.Y <= Globals.Block_Position(i).Y + 8)
                         // Altera o valor de bloqueio
@@ -1259,7 +1259,7 @@ partial class Editor_Maps : Form
         List<Lists.Structures.Map_Layer> Temp = new List<Lists.Structures.Map_Layer>();
 
         // Reordena as camadas
-        for (byte n = 0; n < (byte)Globals.Layers.Amount; n++)
+        for (byte n = 0; n < (byte)Globals.Layers.Count; n++)
             for (byte i = 0; i < Lists.Map[Selected].Layer.Count; i++)
                 if (Lists.Map[Selected].Layer[i].Type == n)
                     Temp.Add(Lists.Map[Selected].Layer[i]);

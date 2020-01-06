@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.ComponentModel;
-using System.Collections.Generic;
 
 public partial class Editor_Interface : Form
 {
@@ -9,7 +7,7 @@ public partial class Editor_Interface : Form
     public static Editor_Interface Objects = new Editor_Interface();
 
     // Index do item selecionado
-    public static byte Selected;
+    static Lists.Structures.Tool Selected;
 
     public Editor_Interface()
     {
@@ -20,76 +18,52 @@ public partial class Editor_Interface : Form
     {
         // Lê os dados
         Read.Tools();
-        Read.Tool_Order();
-
-        // Adiciona os tipos de ferramentas à lista
-        Objects.cmbTools.Items.Clear();
-        for (byte i = 0; i < (byte)Globals.Tools_Types.Count; i++) Objects.cmbTools.Items.Add((Globals.Tools_Types)i);
-        Objects.cmbTools.SelectedIndex = 0;
+        Read.Tools();
 
         // Adiciona as janelas à lista
-        for (byte i = 0; i < (byte)Globals.Windows.Count; i++) Objects.cmbWIndows.Items.Add((Globals.Windows)i);
-        Objects.cmbWIndows.SelectedIndex = 0;
+        Objects.cmbWindows.Items.AddRange(Enum.GetNames(typeof(Globals.Windows)));
+        Objects.cmbWindows.SelectedIndex = 0;
+
+        // Adiciona os tipos de ferramentas à lista
+        for (byte i = 0; i < (byte)Globals.Tools_Types.Count; i++) Objects.cmbType.Items.Add((Globals.Tools_Types)i);
 
         // Abre a janela
         Selection.Objects.Visible = false;
         Objects.Visible = true;
     }
 
-    private void cmbWIndows_SelectedIndexChanged(object sender, EventArgs e)
+    private void cmbWindows_SelectedIndexChanged(object sender, EventArgs e)
     {
         // Atualiza a lista de ordem
-        Objects.treOrder.Nodes.Clear();
-        Objects.treOrder.Nodes.Add(Lists.Tool_Order.Nodes[cmbWIndows.SelectedIndex]);
-        Objects.treOrder.ExpandAll();
+        treOrder.Nodes.Clear();
+        treOrder.Nodes.Add(Lists.Tool.Nodes[cmbWindows.SelectedIndex]);
+        treOrder.ExpandAll();
     }
 
-    private void cmbTools_SelectedIndexChanged(object sender, EventArgs e)
+    private void treOrder_AfterSelect(object sender, TreeViewEventArgs e)
     {
-        // Atualiza a lista
-        List_Update();
+        // Atualiza as informações
+        Selected = (Lists.Structures.Tool)treOrder.SelectedNode.Tag;
+        prgProperties.SelectedObject = Selected;
     }
 
-    private void optList_CheckedChanged(object sender, EventArgs e)
+    private void prgProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
     {
-        grpOrder.Visible = false;
-        grpList.Visible = true;
-    }
-
-    private void optOrder_CheckedChanged(object sender, EventArgs e)
-    {
-        grpList.Visible = false;
-        grpOrder.Visible = true;
-    }
-
-    private void List_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        Selected = (byte)(List.SelectedIndex + 1);
-
-        // Previne erros
-        if (Selected == 0) return;
-
-        // Lista as ferramentas e suas propriedades
-        switch ((Globals.Tools_Types)cmbTools.SelectedIndex)
+        // Troca a ferramenta de janela
+        if (e.ChangedItem.Label == "Window")
         {
-            case Globals.Tools_Types.Button: prgProperties.SelectedObject = Lists.Button[Selected]; break;
-            case Globals.Tools_Types.TextBox: prgProperties.SelectedObject = Lists.TextBox[Selected]; break;
-            case Globals.Tools_Types.Panel: prgProperties.SelectedObject = Lists.Panel[Selected]; break;
-            case Globals.Tools_Types.CheckBox: prgProperties.SelectedObject = Lists.CheckBox[Selected]; break;
+            byte Window = (byte)((Lists.Structures.Tool)treOrder.SelectedNode.Tag).Window;
+            Lists.Tool.Nodes[Window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
+            treOrder.SelectedNode.Remove();
+            cmbWindows.SelectedIndex = Window;
+            treOrder.SelectedNode = Lists.Tool.Nodes[Window].LastNode;
         }
     }
 
     private void butSaveAll_Click(object sender, EventArgs e)
     {
-
         // Salva a dimensão da estrutura
-        Lists.Client_Data.Num_Buttons = (byte)Lists.Button.GetUpperBound(0);
-        Lists.Client_Data.Num_TextBoxes = (byte)Lists.TextBox.GetUpperBound(0);
-        Lists.Client_Data.Num_Panels = (byte)Lists.Panel.GetUpperBound(0);
-        Lists.Client_Data.Num_CheckBoxes = (byte)Lists.CheckBox.GetUpperBound(0);
-        Write.Client_Data();
         Write.Tools();
-        Write.Tool_Order();
 
         // Volta à janela de seleção
         Visible = false;
@@ -103,129 +77,144 @@ public partial class Editor_Interface : Form
         Selection.Objects.Visible = true;
     }
 
-    private void butClear_Click(object sender, EventArgs e)
+    private void butNew_Click(object sender, EventArgs e)
     {
-        // Reseta os valores
-        switch ((Globals.Tools_Types)cmbTools.SelectedIndex)
-        {
-            case Globals.Tools_Types.Button: Lists.Button[Selected] = new Lists.Structures.Button(); break;
-            case Globals.Tools_Types.TextBox: Lists.TextBox[Selected] = new Lists.Structures.TextBox(); break;
-            case Globals.Tools_Types.Panel: Lists.Panel[Selected] = new Lists.Structures.Panel(); break;
-            case Globals.Tools_Types.CheckBox: Lists.CheckBox[Selected] = new Lists.Structures.CheckBox(); break;
-        }
-
-        List_Update();
+        // Abre o painel para seleção da ferramenta
+        cmbType.SelectedIndex = 0;
+        grpNew.Visible = true;
     }
 
-    private static void List_Update()
+    private void butConfirm_Click(object sender, EventArgs e)
     {
-        Selected = (byte)(Objects.List.SelectedIndex + 1);
-
-        // Limpa a lista
-        Objects.List.Items.Clear();
-
-        // Lista as ferramentas e suas propriedades
-        switch ((Globals.Tools_Types)Objects.cmbTools.SelectedIndex)
+        // Adiciona uma nova ferramenta
+        Lists.Structures.Tool Tool = new Lists.Structures.Tool();
+        switch ((Globals.Tools_Types)cmbType.SelectedIndex)
         {
-            case Globals.Tools_Types.Button:
-                for (byte i = 1; i < Lists.Button.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.Button.GetUpperBound(0)) + ":" + Lists.Button[i].Name);
-                break;
-            case Globals.Tools_Types.TextBox:
-                for (byte i = 1; i < Lists.TextBox.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.TextBox.GetUpperBound(0)) + ":" + Lists.TextBox[i].Name);
-                break;
-            case Globals.Tools_Types.Panel:
-                for (byte i = 1; i < Lists.Panel.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.Panel.GetUpperBound(0)) + ":" + Lists.Panel[i].Name);
-                break;
-            case Globals.Tools_Types.CheckBox:
-                for (byte i = 1; i < Lists.CheckBox.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.CheckBox.GetUpperBound(0)) + ":" + Lists.CheckBox[i].Name);
-                break;
+            case Globals.Tools_Types.Button: Tool = new Lists.Structures.Button(); break;
+            case Globals.Tools_Types.Panel: Tool = new Lists.Structures.Panel(); break;
+            case Globals.Tools_Types.CheckBox: Tool = new Lists.Structures.CheckBox(); break;
+            case Globals.Tools_Types.TextBox: Tool = new Lists.Structures.TextBox(); break;
+        }
+        Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add("[" + ((Globals.Tools_Types)cmbType.SelectedIndex).ToString() + "] " );
+        Lists.Tool.LastNode.Tag = Tool;
+        grpNew.Visible = false;
+    }
+
+    private void butRemove_Click(object sender, EventArgs e)
+    {
+        // Remove a ferramenta
+        if (treOrder.SelectedNode != null && treOrder.SelectedNode.Parent != null)
+            treOrder.SelectedNode.Remove();
+    }
+
+    private void butClear_Click(object sender, EventArgs e)
+    {
+        if (treOrder.SelectedNode.Parent != null)
+        {
+            // Reseta os valores
+            if (Selected is Lists.Structures.Button)
+            {
+                treOrder.SelectedNode.Text = "[" + Globals.Tools_Types.Button.ToString() + "] ";
+                treOrder.SelectedNode.Tag = new Lists.Structures.Button();
+            }
+            else if (Selected is Lists.Structures.TextBox)
+            {
+                treOrder.SelectedNode.Text = "[" + Globals.Tools_Types.TextBox.ToString() + "] ";
+                treOrder.SelectedNode.Tag = new Lists.Structures.TextBox();
+            }
+            else if (Selected is Lists.Structures.Panel)
+            {
+                treOrder.SelectedNode.Text = "[" + Globals.Tools_Types.Panel.ToString() + "] ";
+                treOrder.SelectedNode.Tag = new Lists.Structures.Panel();
+            }
+            else if (Selected is Lists.Structures.CheckBox)
+            {
+                treOrder.SelectedNode.Text = "[" + Globals.Tools_Types.Button.ToString() + "] ";
+                treOrder.SelectedNode.Tag = new Lists.Structures.CheckBox();
+            }
+
+            // Atualiza os componentes
+            Selected = (Lists.Structures.Tool)treOrder.SelectedNode.Tag;
+            prgProperties.SelectedObject = Selected;
         }
 
-        // Seleciona o primeiro item
-        if (Objects.List.Items.Count != 0) Objects.List.SelectedIndex = 0;
+        treOrder.Focus();
     }
 
     private void butOrder_Pin_Click(object sender, EventArgs e)
     {
-        // Evita erros 
-        if (Objects.treOrder.SelectedNode == null) return;
-
         // Dados
-        TreeNode Selected = Objects.treOrder.SelectedNode;
-        if (Selected.PrevNode != null)
-        {
-            // Fixa o nó
-            Selected.PrevNode.Nodes.Add((TreeNode)Selected.Clone());
-            Objects.treOrder.SelectedNode = Selected.PrevNode.LastNode;
-            Selected.Remove();
-        }
+        TreeNode Selected_Node = treOrder.SelectedNode;
+        if (treOrder.SelectedNode != null)
+            if (Selected_Node.PrevNode != null)
+            {
+                // Fixa o nó
+                Selected_Node.PrevNode.Nodes.Add((TreeNode)Selected_Node.Clone());
+                treOrder.SelectedNode = Selected_Node.PrevNode.LastNode;
+                Selected_Node.Remove();
+            }
 
         // Foca o componente
-        Objects.treOrder.Focus();
+        treOrder.Focus();
     }
 
     private void butOrder_Unpin_Click(object sender, EventArgs e)
     {
         // Evita erros 
-        if (Objects.treOrder.SelectedNode == null) return;
+        if (treOrder.SelectedNode == null) return;
 
         // Dados
-        TreeNode Selected = Objects.treOrder.SelectedNode;
+        TreeNode Selected = treOrder.SelectedNode;
         TreeNode Parent = Selected.Parent;
         if (Parent != null && Parent.Parent != null)
         {
             // Desfixa o nó
             Parent.Parent.Nodes.Insert(Parent.Index + 1, (TreeNode)Selected.Clone());
-            Objects.treOrder.SelectedNode = Selected.Parent.NextNode;
+            treOrder.SelectedNode = Selected.Parent.NextNode;
             Selected.Remove();
         }
 
         // Foca o componente
-        Objects.treOrder.Focus();
+        treOrder.Focus();
     }
 
     private void butOrder_Up_Click(object sender, EventArgs e)
     {
         // Evita erros 
-        if (Objects.treOrder.SelectedNode == null) return;
+        if (treOrder.SelectedNode == null) return;
 
         // Dados
-        TreeNode Parent = Objects.treOrder.SelectedNode.Parent;
-        TreeNode Selected = Objects.treOrder.SelectedNode;
+        TreeNode Parent = treOrder.SelectedNode.Parent;
+        TreeNode Selected = treOrder.SelectedNode;
         if (Parent != null && Selected != Parent.FirstNode && Parent.Nodes.Count > 1)
         {
             // Altera a posição dos nós
             Parent.Nodes.Insert(Selected.Index - 1, (TreeNode)Selected.Clone());
             Selected.Remove();
-            Objects.treOrder.SelectedNode = Parent.Nodes[Selected.Index - 2];
+            treOrder.SelectedNode = Parent.Nodes[Selected.Index - 2];
         }
 
         // Foca o componente
-        Objects.treOrder.Focus();
+        treOrder.Focus();
     }
 
     private void butOrder_Down_Click(object sender, EventArgs e)
     {
         // Evita erros 
-        if (Objects.treOrder.SelectedNode == null) return;
+        if (treOrder.SelectedNode == null) return;
 
         // Dados
-        TreeNode Parent = Objects.treOrder.SelectedNode.Parent;
-        TreeNode Selected = Objects.treOrder.SelectedNode;
+        TreeNode Parent = treOrder.SelectedNode.Parent;
+        TreeNode Selected = treOrder.SelectedNode;
         if (Parent != null && Selected != Parent.LastNode && Parent.Nodes.Count > 1)
         {
             // Altera a posição dos nós
             Parent.Nodes.Insert(Selected.Index + 2, (TreeNode)Selected.Clone());
             Selected.Remove();
-            Objects.treOrder.SelectedNode = Parent.Nodes[Selected.Index + 1];
+            treOrder.SelectedNode = Parent.Nodes[Selected.Index + 1];
         }
 
         // Foca o componente
-        Objects.treOrder.Focus();
-    }
-
-    private void prgProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-    {
-   //     if (e.ChangedItem.Label 
+        treOrder.Focus();
     }
 }

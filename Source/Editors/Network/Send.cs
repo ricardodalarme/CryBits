@@ -140,8 +140,8 @@ partial class Send
             Data.Write(Lists.Class[i].Spawn_Direction);
             Data.Write(Lists.Class[i].Spawn_X);
             Data.Write(Lists.Class[i].Spawn_Y);
-            for (byte v = 0; v < (byte)Globals.Vitals.Amount; v++) Data.Write(Lists.Class[i].Vital[v]);
-            for (byte a = 0; a < (byte)Globals.Attributes.Amount; a++) Data.Write(Lists.Class[i].Attribute[a]);
+            for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Data.Write(Lists.Class[i].Vital[v]);
+            for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Data.Write(Lists.Class[i].Attribute[a]);
         }
         Packet(Data);
     }
@@ -164,7 +164,7 @@ partial class Send
                     Data.Write(Lists.Tile[i].Data[x, y].Attribute);
 
                     // Bloqueio direcional
-                    for (byte d = 0; d < (byte)Globals.Directions.Amount; d++)
+                    for (byte d = 0; d < (byte)Globals.Directions.Count; d++)
                         Data.Write(Lists.Tile[i].Data[x, y].Block[d]);
                 }
         }
@@ -203,8 +203,8 @@ partial class Send
             Data.Write(Lists.NPC[Index].SpawnTime);
             Data.Write(Lists.NPC[Index].Sight);
             Data.Write(Lists.NPC[Index].Experience);
-            for (byte i = 0; i < (byte)Globals.Vitals.Amount; i++) Data.Write(Lists.NPC[Index].Vital[i]);
-            for (byte i = 0; i < (byte)Globals.Attributes.Amount; i++) Data.Write(Lists.NPC[Index].Attribute[i]);
+            for (byte i = 0; i < (byte)Globals.Vitals.Count; i++) Data.Write(Lists.NPC[Index].Vital[i]);
+            for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Lists.NPC[Index].Attribute[i]);
             for (byte i = 0; i < Globals.Max_NPC_Drop; i++)
             {
                 Data.Write(Lists.NPC[Index].Drop[i].Item_Num);
@@ -234,9 +234,9 @@ partial class Send
             Data.Write(Lists.Item[Index].Req_Level);
             Data.Write(Lists.Item[Index].Req_Class);
             Data.Write(Lists.Item[Index].Potion_Experience);
-            for (byte i = 0; i < (byte)Globals.Vitals.Amount; i++) Data.Write(Lists.Item[Index].Potion_Vital[i]);
+            for (byte i = 0; i < (byte)Globals.Vitals.Count; i++) Data.Write(Lists.Item[Index].Potion_Vital[i]);
             Data.Write(Lists.Item[Index].Equip_Type);
-            for (byte i = 0; i < (byte)Globals.Attributes.Amount; i++) Data.Write(Lists.Item[Index].Equip_Attribute[i]);
+            for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Lists.Item[Index].Equip_Attribute[i]);
             Data.Write(Lists.Item[Index].Weapon_Damage);
         }
         Packet(Data);

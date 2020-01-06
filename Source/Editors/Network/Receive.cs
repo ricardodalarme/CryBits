@@ -69,8 +69,8 @@ partial class Receive
         for (short i = 1; i < Lists.Class.Length; i++)
         {
             // Redimensiona os valores necessários 
-            Lists.Class[i].Vital = new short[(byte)Globals.Vitals.Amount];
-            Lists.Class[i].Attribute = new short[(byte)Globals.Attributes.Amount];
+            Lists.Class[i].Vital = new short[(byte)Globals.Vitals.Count];
+            Lists.Class[i].Attribute = new short[(byte)Globals.Attributes.Count];
 
             // Lê os dados
             Lists.Class[i].Name = Data.ReadString();
@@ -80,8 +80,8 @@ partial class Receive
             Lists.Class[i].Spawn_Direction = Data.ReadByte();
             Lists.Class[i].Spawn_X = Data.ReadByte();
             Lists.Class[i].Spawn_Y = Data.ReadByte();
-            for (byte v = 0; v < (byte)Globals.Vitals.Amount; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
-            for (byte a = 0; a < (byte)Globals.Attributes.Amount; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
+            for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
         }
 
         // Abre o editor
@@ -118,8 +118,8 @@ partial class Receive
         Lists.Map[i].Lighting = Data.ReadByte();
 
         // Ligações
-        Lists.Map[i].Link = new short[(short)Globals.Directions.Amount];
-        for (short n = 0; n < (short)Globals.Directions.Amount; n++)
+        Lists.Map[i].Link = new short[(short)Globals.Directions.Count];
+        for (short n = 0; n < (short)Globals.Directions.Count; n++)
             Lists.Map[i].Link[n] = Data.ReadInt16();
 
         // Quantidade de camadas
@@ -160,9 +160,9 @@ partial class Receive
                 Lists.Map[i].Tile[x, y].Data_3 = Data.ReadInt16();
                 Lists.Map[i].Tile[x, y].Data_4 = Data.ReadInt16();
                 Lists.Map[i].Tile[x, y].Zone = Data.ReadByte();
-                Lists.Map[i].Tile[x, y].Block = new bool[(byte)Globals.Directions.Amount];
+                Lists.Map[i].Tile[x, y].Block = new bool[(byte)Globals.Directions.Count];
 
-                for (byte n = 0; n < (byte)Globals.Directions.Amount; n++)
+                for (byte n = 0; n < (byte)Globals.Directions.Count; n++)
                     Lists.Map[i].Tile[x, y].Block[n] = Data.ReadBoolean();
             }
 
@@ -197,19 +197,19 @@ partial class Receive
         for (short i = 1; i < Lists.NPC.Length; i++)
         {
             // Redimensiona os valores necessários 
-            Lists.NPC[i].Vital = new short[(byte)Globals.Vitals.Amount];
-            Lists.NPC[i].Attribute = new short[(byte)Globals.Attributes.Amount];
+            Lists.NPC[i].Vital = new short[(byte)Globals.Vitals.Count];
+            Lists.NPC[i].Attribute = new short[(byte)Globals.Attributes.Count];
             Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Globals.Max_NPC_Drop];
 
             // Lê os dados
             Lists.NPC[i].Name = Data.ReadString();
             Lists.NPC[i].Texture = Data.ReadInt16();
             Lists.NPC[i].Behaviour = Data.ReadByte();
-            for (byte n = 0; n < (byte)Globals.Vitals.Amount; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Globals.Vitals.Count; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
             Lists.NPC[i].SpawnTime = Data.ReadByte();
             Lists.NPC[i].Sight = Data.ReadByte();
             Lists.NPC[i].Experience = Data.ReadByte();
-            for (byte n = 0; n < (byte)Globals.Attributes.Amount; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Globals.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
             for (byte n = 0; n < Globals.Max_NPC_Drop; n++)
             {
                 Lists.NPC[i].Drop[n].Item_Num = Data.ReadInt16();
@@ -230,8 +230,8 @@ partial class Receive
         for (short i = 1; i < Lists.Item.Length; i++)
         {
             // Redimensiona os valores necessários 
-            Lists.Item[i].Potion_Vital = new short[(byte)Globals.Vitals.Amount];
-            Lists.Item[i].Equip_Attribute = new short[(byte)Globals.Attributes.Amount];
+            Lists.Item[i].Potion_Vital = new short[(byte)Globals.Vitals.Count];
+            Lists.Item[i].Equip_Attribute = new short[(byte)Globals.Attributes.Count];
 
             // Lê os dados
             Lists.Item[i].Name = Data.ReadString();
@@ -244,9 +244,9 @@ partial class Receive
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
             Lists.Item[i].Potion_Experience = Data.ReadInt16();
-            for (byte v = 0; v < (byte)Globals.Vitals.Amount; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
+            for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();
-            for (byte a = 0; a < (byte)Globals.Attributes.Amount; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
             Lists.Item[i].Weapon_Damage = Data.ReadInt16();
         }
 
@@ -272,9 +272,9 @@ partial class Receive
                     Lists.Tile[i].Data[x, y].Attribute = Data.ReadByte();
 
                     // Bloqueio direcional
-                    for (byte d = 0; d < (byte)Globals.Directions.Amount; d++)
+                    for (byte d = 0; d < (byte)Globals.Directions.Count; d++)
                     {
-                        Lists.Tile[i].Data[x, y].Block = new bool[(byte)Globals.Directions.Amount];
+                        Lists.Tile[i].Data[x, y].Block = new bool[(byte)Globals.Directions.Count];
                         Lists.Tile[i].Data[x, y].Block[d] = Data.ReadBoolean();
                     }
                 }

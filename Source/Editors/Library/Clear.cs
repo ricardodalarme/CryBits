@@ -13,15 +13,6 @@ class Clear
         Write.Options();
     }
 
-    public static void Client_Data()
-    {
-        // Defini os dados das opções
-        Lists.Client_Data.Num_Buttons = 1;
-        Lists.Client_Data.Num_TextBoxes = 1;
-        Lists.Client_Data.Num_Panels = 1;
-        Lists.Client_Data.Num_CheckBoxes = 1;
-    }
-
     public static void Server_Data()
     {
         // Defini os dados das opções
@@ -37,8 +28,8 @@ class Clear
         // Reseta os valores
         Lists.Class[Index] = new Lists.Structures.Class();
         Lists.Class[Index].Name = string.Empty;
-        Lists.Class[Index].Vital = new short[(byte)Globals.Vitals.Amount];
-        Lists.Class[Index].Attribute = new short[(byte)Globals.Attributes.Amount];
+        Lists.Class[Index].Vital = new short[(byte)Globals.Vitals.Count];
+        Lists.Class[Index].Attribute = new short[(byte)Globals.Attributes.Count];
         Lists.Class[Index].Spawn_Map = 1;
     }
 
@@ -47,8 +38,8 @@ class Clear
         // Reseta os valores
         Lists.NPC[Index] = new Lists.Structures.NPC();
         Lists.NPC[Index].Name = string.Empty;
-        Lists.NPC[Index].Vital = new short[(byte)Globals.Vitals.Amount];
-        Lists.NPC[Index].Attribute = new short[(byte)Globals.Attributes.Amount];
+        Lists.NPC[Index].Vital = new short[(byte)Globals.Vitals.Count];
+        Lists.NPC[Index].Attribute = new short[(byte)Globals.Attributes.Count];
         Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[Globals.Max_NPC_Drop];
         for (byte i = 0; i < Globals.Max_NPC_Drop; i++)
         {
@@ -63,8 +54,8 @@ class Clear
         Lists.Item[Index] = new Lists.Structures.Item();
         Lists.Item[Index].Name = string.Empty;
         Lists.Item[Index].Description = string.Empty;
-        Lists.Item[Index].Potion_Vital = new short[(byte)Globals.Vitals.Amount];
-        Lists.Item[Index].Equip_Attribute = new short[(byte)Globals.Attributes.Amount];
+        Lists.Item[Index].Potion_Vital = new short[(byte)Globals.Vitals.Count];
+        Lists.Item[Index].Equip_Attribute = new short[(byte)Globals.Attributes.Count];
     }
 
     public static void Map(short Index)
@@ -79,7 +70,7 @@ class Clear
         Lists.Map[Index].Lighting = 100;
 
         // Redimensiona 
-        Lists.Map[Index].Link = new short[(byte)Globals.Directions.Amount];
+        Lists.Map[Index].Link = new short[(byte)Globals.Directions.Count];
         Lists.Map[Index].Light = new List<Lists.Structures.Map_Light>();
         Lists.Map[Index].Layer = new List<Lists.Structures.Map_Layer>();
         Lists.Map[Index].Layer.Add(new Lists.Structures.Map_Layer());
@@ -91,7 +82,7 @@ class Clear
         // Redimensiona os bloqueios
         for (byte x = 0; x <= Lists.Map[Index].Width; x++)
             for (byte y = 0; y <= Lists.Map[Index].Height; y++)
-                Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Globals.Directions.Amount];
+                Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Globals.Directions.Count];
     }
 
     public static void Map_Layers(short Index)
@@ -116,6 +107,6 @@ class Clear
 
         for (byte x = 0; x <= Size.Width; x++)
             for (byte y = 0; y <= Size.Height; y++)
-                Lists.Tile[Index].Data[x, y].Block = new bool[(byte)Globals.Directions.Amount];
+                Lists.Tile[Index].Data[x, y].Block = new bool[(byte)Globals.Directions.Count];
     }
 }

@@ -315,7 +315,7 @@ partial class Graphics
         if (Tile.X > Lists.Tile[Objects.scrlTile.Value].Data.GetUpperBound(0)) return;
         if (Tile.Y > Lists.Tile[Objects.scrlTile.Value].Data.GetUpperBound(1)) return;
 
-        for (byte i = 0; i < (byte)Globals.Directions.Amount; i++)
+        for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
         {
             // Estado do bloqueio
             if (Lists.Tile[Objects.scrlTile.Value].Data[Tile.X, Tile.Y].Block[i])
@@ -644,7 +644,7 @@ partial class Graphics
         if (Tile.X > Lists.Map[Index].Tile.GetUpperBound(0)) return;
         if (Tile.Y > Lists.Map[Index].Tile.GetUpperBound(1)) return;
 
-        for (byte i = 0; i < (byte)Globals.Directions.Amount; i++)
+        for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
         {
             // Estado do bloqueio
             if (Lists.Map[Index].Tile[Tile.X, Tile.Y].Block[i])
@@ -680,7 +680,7 @@ partial class Graphics
 
         // Desenha as ferramentas
         Win_Interface.Clear();
-        Interface_Order(Lists.Tool_Order.Nodes[(byte)Editor_Interface.Objects.cmbWIndows.SelectedIndex]);
+        Interface_Order(Lists.Tool.Nodes[(byte)Editor_Interface.Objects.cmbWindows.SelectedIndex]);
         Win_Interface.Display();
     }
 
@@ -689,17 +689,14 @@ partial class Graphics
         for (byte i = 0; i < Node.Nodes.Count; i++)
         {
             // Desenha a ferramenta
-            Lists.Structures.Tool_Order Tool_Order = (Lists.Structures.Tool_Order)Node.Nodes[i].Tag;
-            if (Tool_Order.Data.Visible)
+            Lists.Structures.Tool Tool = (Lists.Structures.Tool)Node.Nodes[i].Tag;
+            if (Tool.Visible)
             {
-                switch (Tool_Order.Type)
-                {
-                    case Globals.Tools_Types.Panel: Panel((Lists.Structures.Panel)Tool_Order.Data); break;
-                    case Globals.Tools_Types.TextBox: TextBox((Lists.Structures.TextBox)Tool_Order.Data); break;
-                    case Globals.Tools_Types.Button: Button((Lists.Structures.Button)Tool_Order.Data); break;
-                    case Globals.Tools_Types.CheckBox: CheckBox((Lists.Structures.CheckBox)Tool_Order.Data); break;
-                }
-
+                if (Tool is Lists.Structures.Panel) Panel((Lists.Structures.Panel)Tool);
+                else if (Tool is Lists.Structures.TextBox) TextBox((Lists.Structures.TextBox)Tool);
+                else if (Tool is Lists.Structures.Button) Button((Lists.Structures.Button)Tool);
+                else if (Tool is Lists.Structures.CheckBox) CheckBox((Lists.Structures.CheckBox)Tool);
+                    
                 // Pula pra próxima
                 Interface_Order(Node.Nodes[i]);
             }
@@ -709,13 +706,15 @@ partial class Graphics
     public static void Button(Lists.Structures.Button Tool)
     {
         // Desenha o botão
-        Render(Win_Interface, Tex_Button[Tool.Texture_Num], Tool.Position, new SFML.Graphics.Color(255, 255, 225, 225));
+        if (Tool.Texture_Num < Tex_Button.Length)
+            Render(Win_Interface, Tex_Button[Tool.Texture_Num], Tool.Position, new SFML.Graphics.Color(255, 255, 225, 225));
     }
 
     public static void Panel(Lists.Structures.Panel Tool)
     {
         // Desenha o painel
-        Render(Win_Interface, Tex_Panel[Tool.Texture_Num],  Tool.Position);
+        if (Tool.Texture_Num < Tex_Button.Length)
+            Render(Win_Interface, Tex_Panel[Tool.Texture_Num],  Tool.Position);
     }
 
     public static void CheckBox(Lists.Structures.CheckBox Tool)
