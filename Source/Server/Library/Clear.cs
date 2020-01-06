@@ -96,6 +96,7 @@
     {
         // Reseta 
         Lists.Map[Index] = new Lists.Structures.Map();
+        Lists.Temp_Map[Index] = new Lists.Structures.Temp_Map();
         Lists.Map[Index].Name = string.Empty;
         Lists.Map[Index].Width = Game.Min_Map_Width;
         Lists.Map[Index].Height = Game.Min_Map_Height;
@@ -112,7 +113,7 @@
         for (byte c = 0; c < Lists.Map[Index].Layer.Count; c++) Lists.Map[Index].Layer[c].Tile = new Lists.Structures.Map_Tile_Data[Lists.Map[Index].Width + 1, Lists.Map[Index].Height + 1];
         Lists.Map[Index].Tile = new Lists.Structures.Map_Tile[Lists.Map[Index].Width + 1, Lists.Map[Index].Height + 1];
         Lists.Map[Index].NPC = new Lists.Structures.Map_NPC[0];
-        Lists.Map[Index].Temp_NPC = new Lists.Structures.Map_NPCs[0];
+        Lists.Temp_Map[Index].NPC = new Lists.Structures.Map_NPCs[0];
 
         // Redimensiona os bloqueios
         for (byte x = 0; x <= Lists.Map[Index].Width; x++)

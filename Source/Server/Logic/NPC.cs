@@ -16,7 +16,7 @@ class NPC
 
     public static short Regeneration(short Map_Num, byte Index, byte Vital)
     {
-        Lists.Structures.NPC Data = Lists.NPC[Lists.Map[Map_Num].Temp_NPC[Index].Index];
+        Lists.Structures.NPC Data = Lists.NPC[Lists.Temp_Map[Map_Num].NPC[Index].Index];
 
         // Cálcula o máximo de vital que o NPC possui
         switch ((Game.Vitals)Vital)
@@ -31,9 +31,9 @@ class NPC
     public static void Logic(short Map_Num)
     {
         // Lógica dos NPCs
-        for (byte i = 1; i < Lists.Map[Map_Num].Temp_NPC.Length; i++)
+        for (byte i = 1; i < Lists.Temp_Map[Map_Num].NPC.Length; i++)
         {
-            Lists.Structures.Map_NPCs Data = Lists.Map[Map_Num].Temp_NPC[i];
+            Lists.Structures.Map_NPCs Data = Lists.Temp_Map[Map_Num].NPC[i];
             Lists.Structures.NPC NPC_Data = Lists.NPC[Lists.Map[Map_Num].NPC[i].Index];
 
             //////////////////
@@ -59,11 +59,11 @@ class NPC
                         if (Data.Vital[v] < NPC_Data.Vital[v])
                         {
                             // Renera os vitais
-                            Lists.Map[Map_Num].Temp_NPC[i].Vital[v] += Regeneration(Map_Num, i, v);
+                            Lists.Temp_Map[Map_Num].NPC[i].Vital[v] += Regeneration(Map_Num, i, v);
 
                             // Impede que o valor passe do limite
-                            if (Lists.Map[Map_Num].Temp_NPC[i].Vital[v] > NPC_Data.Vital[v])
-                                Lists.Map[Map_Num].Temp_NPC[i].Vital[v] = NPC_Data.Vital[v];
+                            if (Lists.Temp_Map[Map_Num].NPC[i].Vital[v] > NPC_Data.Vital[v])
+                                Lists.Temp_Map[Map_Num].NPC[i].Vital[v] = NPC_Data.Vital[v];
 
                             // Envia os dados aos jogadores do mapa
                             Send.Map_NPC_Vitals(Map_Num, i);
@@ -73,7 +73,7 @@ class NPC
                 // Movimento //
                 ///////////////
                 // Atacar ao ver
-                if (Lists.Map[Map_Num].Temp_NPC[i].Target_Index == 0 && NPC_Data.Behaviour == (byte)Behaviour.AttackOnSight)
+                if (Lists.Temp_Map[Map_Num].NPC[i].Target_Index == 0 && NPC_Data.Behaviour == (byte)Behaviour.AttackOnSight)
                     for (byte p = 1; p <= Game.HigherIndex; p++)
                     {
                         // Verifica se o jogador está jogando e no mesmo mapa que o NPC
@@ -89,9 +89,9 @@ class NPC
                         // Se estiver no alcance, ir atrás do jogador
                         if (Distance_X <= NPC_Data.Sight && Distance_Y <= NPC_Data.Sight)
                         {
-                            Lists.Map[Map_Num].Temp_NPC[i].Target_Type = (byte)Game.Target.Player;
-                            Lists.Map[Map_Num].Temp_NPC[i].Target_Index = p;
-                            Data = Lists.Map[Map_Num].Temp_NPC[i];
+                            Lists.Temp_Map[Map_Num].NPC[i].Target_Type = (byte)Game.Target.Player;
+                            Lists.Temp_Map[Map_Num].NPC[i].Target_Index = p;
+                            Data = Lists.Temp_Map[Map_Num].NPC[i];
                         }
                     }
 
@@ -100,14 +100,14 @@ class NPC
                     // Verifica se o jogador ainda está disponível
                     if (!Player.IsPlaying(Data.Target_Index) || Player.Character(Data.Target_Index).Map != Map_Num)
                     {
-                        Lists.Map[Map_Num].Temp_NPC[i].Target_Type = 0;
-                        Lists.Map[Map_Num].Temp_NPC[i].Target_Index = 0;
-                        Data = Lists.Map[Map_Num].Temp_NPC[i];
+                        Lists.Temp_Map[Map_Num].NPC[i].Target_Type = 0;
+                        Lists.Temp_Map[Map_Num].NPC[i].Target_Index = 0;
+                        Data = Lists.Temp_Map[Map_Num].NPC[i];
                     }
 
                     // Posição do alvo
-                    TargetX = Player.Character(Lists.Map[Map_Num].Temp_NPC[i].Target_Index).X;
-                    TargetY = Player.Character(Lists.Map[Map_Num].Temp_NPC[i].Target_Index).Y;
+                    TargetX = Player.Character(Lists.Temp_Map[Map_Num].NPC[i].Target_Index).X;
+                    TargetY = Player.Character(Lists.Temp_Map[Map_Num].NPC[i].Target_Index).Y;
                 }
 
                 // Distância entre o NPC e o alvo
@@ -119,9 +119,9 @@ class NPC
                 // Verifica se o alvo saiu do alcance
                 if (Distance_X > NPC_Data.Sight || Distance_Y > NPC_Data.Sight)
                 {
-                    Lists.Map[Map_Num].Temp_NPC[i].Target_Type = 0;
-                    Lists.Map[Map_Num].Temp_NPC[i].Target_Index = 0;
-                    Data = Lists.Map[Map_Num].Temp_NPC[i];
+                    Lists.Temp_Map[Map_Num].NPC[i].Target_Type = 0;
+                    Lists.Temp_Map[Map_Num].NPC[i].Target_Index = 0;
+                    Data = Lists.Temp_Map[Map_Num].NPC[i];
                 }
 
                 // Evita que ele se movimente sem sentido
@@ -231,30 +231,30 @@ class NPC
                 }
     }
 
-    public static void Spawn(byte Index, short Map, byte x, byte y, Game.Directions Direction = 0)
+    public static void Spawn(byte Index, short Map_Num, byte x, byte y, Game.Directions Direction = 0)
     {
-        Lists.Structures.NPC Data = Lists.NPC[Lists.Map[Map].NPC[Index].Index];
+        Lists.Structures.NPC Data = Lists.NPC[Lists.Map[Map_Num].NPC[Index].Index];
 
         // Define os dados
-        Lists.Map[Map].Temp_NPC[Index].Index = Lists.Map[Map].NPC[Index].Index;
-        Lists.Map[Map].Temp_NPC[Index].X = x;
-        Lists.Map[Map].Temp_NPC[Index].Y = y;
-        Lists.Map[Map].Temp_NPC[Index].Direction = Direction;
-        Lists.Map[Map].Temp_NPC[Index].Vital = new short[(byte)Game.Vitals.Amount];
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Lists.Map[Map].Temp_NPC[Index].Vital[i] = Data.Vital[i];
+        Lists.Temp_Map[Map_Num].NPC[Index].Index = Lists.Map[Map_Num].NPC[Index].Index;
+        Lists.Temp_Map[Map_Num].NPC[Index].X = x;
+        Lists.Temp_Map[Map_Num].NPC[Index].Y = y;
+        Lists.Temp_Map[Map_Num].NPC[Index].Direction = Direction;
+        Lists.Temp_Map[Map_Num].NPC[Index].Vital = new short[(byte)Game.Vitals.Amount];
+        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Lists.Temp_Map[Map_Num].NPC[Index].Vital[i] = Data.Vital[i];
 
         // Envia os dados aos jogadores
-        if (Socket.Device != null) Send.Map_NPC(Map, Index);
+        if (Socket.Device != null) Send.Map_NPC(Map_Num, Index);
     }
 
     public static bool Move(short Map_Num, byte Index, Game.Directions Direction, byte Movement = 1, bool CountZone = false)
     {
-        Lists.Structures.Map_NPCs Data = Lists.Map[Map_Num].Temp_NPC[Index];
+        Lists.Structures.Map_NPCs Data = Lists.Temp_Map[Map_Num].NPC[Index];
         byte x = Data.X, y = Data.Y;
         short Next_X = x, Next_Y = y;
 
         // Define a direção do NPC
-        Lists.Map[Map_Num].Temp_NPC[Index].Direction = Direction;
+        Lists.Temp_Map[Map_Num].NPC[Index].Direction = Direction;
         Send.Map_NPC_Direction(Map_Num, Index);
 
         // Próximo azulejo
@@ -270,15 +270,15 @@ class NPC
                 return false;
 
         // Movimenta o NPC
-        Lists.Map[Map_Num].Temp_NPC[Index].X = (byte)Next_X;
-        Lists.Map[Map_Num].Temp_NPC[Index].Y = (byte)Next_Y;
+        Lists.Temp_Map[Map_Num].NPC[Index].X = (byte)Next_X;
+        Lists.Temp_Map[Map_Num].NPC[Index].Y = (byte)Next_Y;
         Send.Map_NPC_Movement(Map_Num, Index, Movement);
         return true;
     }
 
     public static void Attack_Player(short Map_Num, byte Index, byte Victim)
     {
-        Lists.Structures.Map_NPCs Data = Lists.Map[Map_Num].Temp_NPC[Index];
+        Lists.Structures.Map_NPCs Data = Lists.Temp_Map[Map_Num].NPC[Index];
         short x = Data.X, y = Data.Y;
 
         // Define o azujelo a frente do NPC
@@ -294,7 +294,7 @@ class NPC
         if (Map.Tile_Blocked(Map_Num, Data.X, Data.Y, Data.Direction, false)) return;
 
         // Tempo de ataque 
-        Lists.Map[Map_Num].Temp_NPC[Index].Attack_Timer = Environment.TickCount;
+        Lists.Temp_Map[Map_Num].NPC[Index].Attack_Timer = Environment.TickCount;
 
         // Demonstra o ataque aos outros jogadores
         Send.Map_NPC_Attack(Map_Num, Index, Victim, (byte)Game.Target.Player);
@@ -313,8 +313,8 @@ class NPC
             else
             {
                 // Reseta o alvo do NPC
-                Lists.Map[Map_Num].Temp_NPC[Index].Target_Type = 0;
-                Lists.Map[Map_Num].Temp_NPC[Index].Target_Index = 0;
+                Lists.Temp_Map[Map_Num].NPC[Index].Target_Type = 0;
+                Lists.Temp_Map[Map_Num].NPC[Index].Target_Index = 0;
 
                 // Mata o jogador
                 Player.Died(Victim);
@@ -323,7 +323,7 @@ class NPC
 
     public static void Died(short Map_Num, byte Index)
     {
-        Lists.Structures.NPC NPC = Lists.NPC[Lists.Map[Map_Num].Temp_NPC[Index].Index];
+        Lists.Structures.NPC NPC = Lists.NPC[Lists.Temp_Map[Map_Num].NPC[Index].Index];
 
         // Solta os itens
         for (byte i = 0; i < Game.Max_NPC_Drop; i++)
@@ -334,22 +334,22 @@ class NPC
                     Lists.Structures.Map_Items Item = new Lists.Structures.Map_Items();
                     Item.Index = NPC.Drop[i].Item_Num;
                     Item.Amount = NPC.Drop[i].Amount;
-                    Item.X = Lists.Map[Map_Num].Temp_NPC[Index].X;
-                    Item.Y = Lists.Map[Map_Num].Temp_NPC[Index].Y;
+                    Item.X = Lists.Temp_Map[Map_Num].NPC[Index].X;
+                    Item.Y = Lists.Temp_Map[Map_Num].NPC[Index].Y;
 
                     // Solta
-                    Lists.Map[Map_Num].Temp_Item.Add(Item);
+                    Lists.Temp_Map[Map_Num].Item.Add(Item);
                 }
 
         // Envia os dados dos itens no chão para o mapa
         Send.Map_Items(Map_Num);
 
         // Reseta os dados do NPC 
-        Lists.Map[Map_Num].Temp_NPC[Index].Vital[(byte)Game.Vitals.HP] = 0;
-        Lists.Map[Map_Num].Temp_NPC[Index].Spawn_Timer = Environment.TickCount;
-        Lists.Map[Map_Num].Temp_NPC[Index].Index = 0;
-        Lists.Map[Map_Num].Temp_NPC[Index].Target_Type = 0;
-        Lists.Map[Map_Num].Temp_NPC[Index].Target_Index = 0;
+        Lists.Temp_Map[Map_Num].NPC[Index].Vital[(byte)Game.Vitals.HP] = 0;
+        Lists.Temp_Map[Map_Num].NPC[Index].Spawn_Timer = Environment.TickCount;
+        Lists.Temp_Map[Map_Num].NPC[Index].Index = 0;
+        Lists.Temp_Map[Map_Num].NPC[Index].Target_Type = 0;
+        Lists.Temp_Map[Map_Num].NPC[Index].Target_Index = 0;
         Send.Map_NPC_Died(Map_Num, Index);
     }
 }

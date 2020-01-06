@@ -92,10 +92,8 @@ partial class Receive
     {
         // Quantidade de mapas
         Lists.Map = new Lists.Structures.Map[Data.ReadInt16() + 1];
-
-        // Abre o editor
-        if (Data.ReadBoolean()) Editor_Maps.Open();
     }
+
     public static void Map(NetIncomingMessage Data)
     {
         // Dados básicos
@@ -187,6 +185,9 @@ partial class Receive
                 NPC.Y = Data.ReadByte();
                 Lists.Map[i].NPC.Add(NPC);
             }
+
+        // Abre o editor
+        if (Data.ReadBoolean()) Editor_Maps.Open();
     }
 
     public static void NPCs(NetIncomingMessage Data)

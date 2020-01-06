@@ -41,7 +41,7 @@ class Map
             // Faz reaparecer todos os itens do mapa
             if (Environment.TickCount > Loop.Timer_Map_Items + 300000)
             {
-                Lists.Map[i].Temp_Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
+                Lists.Temp_Map[i].Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
                 Spawn_Items(i);
                 Send.Map_Items(i);
             }
@@ -55,9 +55,9 @@ class Map
     public static byte HasNPC(short Map_Num, short X, short Y)
     {
         // Verifica se há algum npc na cordenada
-        for (byte i = 1; i < Lists.Map[Map_Num].Temp_NPC.Length; i++)
-            if (Lists.Map[Map_Num].Temp_NPC[i].Index > 0)
-                if (Lists.Map[Map_Num].Temp_NPC[i].X == X && Lists.Map[Map_Num].Temp_NPC[i].Y == Y)
+        for (byte i = 1; i < Lists.Temp_Map[Map_Num].NPC.Length; i++)
+            if (Lists.Temp_Map[Map_Num].NPC[i].Index > 0)
+                if (Lists.Temp_Map[Map_Num].NPC[i].X == X && Lists.Temp_Map[Map_Num].NPC[i].Y == Y)
                     return i;
 
         return 0;
@@ -88,8 +88,8 @@ class Map
     public static byte HasItem(short Map_Num, byte X, byte Y)
     {
         // Verifica se tem algum item nas coordenadas 
-        for (byte i = (byte)(Lists.Map[Map_Num].Temp_Item.Count - 1); i >= 1; i--)
-            if (Lists.Map[Map_Num].Temp_Item[i].X == X && Lists.Map[Map_Num].Temp_Item[i].Y == Y)
+        for (byte i = (byte)(Lists.Temp_Map[Map_Num].Item.Count - 1); i >= 1; i--)
+            if (Lists.Temp_Map[Map_Num].Item[i].X == X && Lists.Temp_Map[Map_Num].Item[i].Y == Y)
                 return i;
 
         return 0;
@@ -162,7 +162,7 @@ class Map
                     Item.Amount = Data.Tile[x, y].Data_2;
                     Item.X = x;
                     Item.Y = y;
-                    Lists.Map[Map_Num].Temp_Item.Add(Item);
+                    Lists.Temp_Map[Map_Num].Item.Add(Item);
                 }
     }
 }

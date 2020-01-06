@@ -36,7 +36,7 @@ class Receive
         Write_Server_Data,
         Write_Classes,
         Write_Tiles,
-        Write_Map,
+        Write_Maps,
         Write_NPCs,
         Write_Items,
         Request_Server_Data,
@@ -86,7 +86,7 @@ class Receive
                 case Editor_Packets.Write_Server_Data: Write_Server_Data(Index, Data); break;
                 case Editor_Packets.Write_Classes: Write_Classes(Index, Data); break;
                 case Editor_Packets.Write_Tiles: Write_Tiles(Index, Data); break;
-                case Editor_Packets.Write_Map: Write_Maps(Index, Data); break;
+                case Editor_Packets.Write_Maps: Write_Maps(Index, Data); break;
                 case Editor_Packets.Write_NPCs: Write_NPCs(Index, Data); break;
                 case Editor_Packets.Write_Items: Write_Items(Index, Data); break;
                 case Editor_Packets.Request_Server_Data: Request_Server_Data(Index, Data); break;
@@ -364,16 +364,16 @@ class Receive
     {
         short Map_Num = Player.Character(Index).Map;
         byte Map_Item = Map.HasItem(Map_Num, Player.Character(Index).X, Player.Character(Index).Y);
-        short Map_Item_Num = Lists.Map[Map_Num].Temp_Item[Map_Item].Index;
+        short Map_Item_Num = Lists.Temp_Map[Map_Num].Item[Map_Item].Index;
 
         // Somente se necessário
         if (Map_Item == 0) return;
 
         // Dá o item ao jogador
-        if (Player.GiveItem(Index, Map_Item_Num, Lists.Map[Map_Num].Temp_Item[Map_Item].Amount))
+        if (Player.GiveItem(Index, Map_Item_Num, Lists.Temp_Map[Map_Num].Item[Map_Item].Amount))
         {
             // Retira o item do mapa
-            Lists.Map[Map_Num].Temp_Item.RemoveAt(Map_Item);
+            Lists.Temp_Map[Map_Num].Item.RemoveAt(Map_Item);
             Send.Map_Items(Map_Num);
         }
     }
@@ -433,14 +433,14 @@ class Receive
         if (!Player.GiveItem(Index, Player.Character(Index).Equipment[Slot], 1))
         {
             // Somente se necessário
-            if (Lists.Map[Map_Num].Temp_Item.Count == Game.Max_Map_Items) return;
+            if (Lists.Temp_Map[Map_Num].Item.Count == Game.Max_Map_Items) return;
 
             // Solta o item no chão
             Map_Item.Index = Player.Character(Index).Equipment[Slot];
             Map_Item.Amount = 1;
             Map_Item.X = Player.Character(Index).X;
             Map_Item.Y = Player.Character(Index).Y;
-            Lists.Map[Map_Num].Temp_Item.Add(Map_Item);
+            Lists.Temp_Map[Map_Num].Item.Add(Map_Item);
 
             // Envia os dados
             Send.Map_Items(Map_Num);
@@ -698,7 +698,7 @@ class Receive
 
             // NPCs
             Lists.Map[i].NPC = new Lists.Structures.Map_NPC[Data.ReadByte()];
-            Lists.Map[i].Temp_NPC = new Lists.Structures.Map_NPCs[Lists.Map[i].NPC.Length];
+            Lists.Temp_Map[i].NPC = new Lists.Structures.Map_NPCs[Lists.Map[i].NPC.Length];
             for (byte n = 0; n < Lists.Map[i].NPC.Length; n++)
             {
                 Lists.Map[i].NPC[n].Index = Data.ReadInt16();

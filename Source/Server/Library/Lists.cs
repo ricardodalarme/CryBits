@@ -9,6 +9,7 @@ class Lists
     public static Structures.TempPlayer[] TempPlayer;
     public static Structures.Class[] Class;
     public static Structures.Map[] Map;
+    public static Structures.Temp_Map[] Temp_Map;
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
     public static Structures.Tile[] Tile;
@@ -60,6 +61,7 @@ class Lists
             public short[] Attribute;
         }
 
+        [Serializable]
         public struct Map
         {
             public short Revision;
@@ -79,12 +81,16 @@ class Lists
             public byte Lighting;
             public Map_Light[] Light;
             public Map_NPC[] NPC;
-
-            // Temporário
-            public Map_NPCs[] Temp_NPC;
-            public List<Map_Items> Temp_Item;
         }
 
+        public struct Temp_Map
+        {
+            // Temporário
+            public Map_NPCs[] NPC;
+            public List<Map_Items> Item;
+        }
+
+        [Serializable]
         public struct Map_Tile
         {
             public byte Attribute;
@@ -96,6 +102,7 @@ class Lists
             public bool[] Block;
         }
 
+        [Serializable]
         public class Map_Layer
         {
             public string Name;
@@ -103,6 +110,7 @@ class Lists
             public Map_Tile_Data[,] Tile;
         }
 
+        [Serializable]
         public struct Map_NPC
         {
             public short Index;
@@ -112,7 +120,7 @@ class Lists
             public byte Y;
         }
 
-
+        [Serializable]
         public struct Map_Tile_Data
         {
             public byte X;
@@ -121,6 +129,7 @@ class Lists
             public bool Auto;
         }
 
+        [Serializable]
         public class Map_Light
         {
             public byte X;
@@ -129,12 +138,14 @@ class Lists
             public byte Height;
         }
 
+        [Serializable]
         public struct Map_Weather
         {
             public byte Type;
             public byte Intensity;
         }
 
+        [Serializable]
         public struct Map_Fog
         {
             public byte Texture;

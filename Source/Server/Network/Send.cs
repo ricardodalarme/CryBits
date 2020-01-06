@@ -391,98 +391,99 @@ partial class Send
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Data.Write((byte)Editor_Packets.Map);
-        Data.Write(Lists.Map.Length);
-        for (short i = 0; i < Lists.Map.Length; i++) Map(Index, i);
-        Data.Write(OpenEditor);
+        Data.Write((byte)Editor_Packets.Maps);
+        Data.Write((short)Lists.Map.Length);
         ToPlayer(Index, Data);
+        for (short i = 1; i < Lists.Map.Length; i++) Map(Index, i, OpenEditor);
     }
 
-    public static void Map(byte Index, short Map)
+    public static void Map(byte Index, short Map_Num, bool OpenEditor = false)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.Map);
         else Data.Write((byte)Client_Packets.Map);
-        Data.Write(Map);
-        Data.Write(Lists.Map[Map].Revision);
-        Data.Write(Lists.Map[Map].Name);
-        Data.Write(Lists.Map[Map].Width);
-        Data.Write(Lists.Map[Map].Height);
-        Data.Write(Lists.Map[Map].Moral);
-        Data.Write(Lists.Map[Map].Panorama);
-        Data.Write(Lists.Map[Map].Music);
-        Data.Write(Lists.Map[Map].Color);
-        Data.Write(Lists.Map[Map].Weather.Type);
-        Data.Write(Lists.Map[Map].Weather.Intensity);
-        Data.Write(Lists.Map[Map].Fog.Texture);
-        Data.Write(Lists.Map[Map].Fog.Speed_X);
-        Data.Write(Lists.Map[Map].Fog.Speed_Y);
-        Data.Write(Lists.Map[Map].Fog.Alpha);
-        Data.Write(Lists.Map[Map].Light_Global);
-        Data.Write(Lists.Map[Map].Lighting);
+        Data.Write(Map_Num);
+        Data.Write(Lists.Map[Map_Num].Revision);
+        Data.Write(Lists.Map[Map_Num].Name);
+        Data.Write(Lists.Map[Map_Num].Width);
+        Data.Write(Lists.Map[Map_Num].Height);
+        Data.Write(Lists.Map[Map_Num].Moral);
+        Data.Write(Lists.Map[Map_Num].Panorama);
+        Data.Write(Lists.Map[Map_Num].Music);
+        Data.Write(Lists.Map[Map_Num].Color);
+        Data.Write(Lists.Map[Map_Num].Weather.Type);
+        Data.Write(Lists.Map[Map_Num].Weather.Intensity);
+        Data.Write(Lists.Map[Map_Num].Fog.Texture);
+        Data.Write(Lists.Map[Map_Num].Fog.Speed_X);
+        Data.Write(Lists.Map[Map_Num].Fog.Speed_Y);
+        Data.Write(Lists.Map[Map_Num].Fog.Alpha);
+        Data.Write(Lists.Map[Map_Num].Light_Global);
+        Data.Write(Lists.Map[Map_Num].Lighting);
 
         // Ligações
+
         for (short i = 0; i < (short)Game.Directions.Count; i++)
-            Data.Write(Lists.Map[Map].Link[i]);
+            Data.Write(Lists.Map[Map_Num].Link[i]);
 
         // Camadas
-        Data.Write((byte)(Lists.Map[Map].Layer.Count - 1));
-        for (byte i = 0; i < Lists.Map[Map].Layer.Count; i++)
+        Data.Write((byte)(Lists.Map[Map_Num].Layer.Count - 1));
+        for (byte i = 0; i < Lists.Map[Map_Num].Layer.Count; i++)
         {
-            Data.Write(Lists.Map[Map].Layer[i].Name);
-            Data.Write(Lists.Map[Map].Layer[i].Type);
+            Data.Write(Lists.Map[Map_Num].Layer[i].Name);
+            Data.Write(Lists.Map[Map_Num].Layer[i].Type);
 
             // Azulejos
-            for (byte x = 0; x <= Lists.Map[Map].Width; x++)
-                for (byte y = 0; y <= Lists.Map[Map].Height; y++)
+            for (byte x = 0; x <= Lists.Map[Map_Num].Width; x++)
+                for (byte y = 0; y <= Lists.Map[Map_Num].Height; y++)
                 {
-                    Data.Write(Lists.Map[Map].Layer[i].Tile[x, y].X);
-                    Data.Write(Lists.Map[Map].Layer[i].Tile[x, y].Y);
-                    Data.Write(Lists.Map[Map].Layer[i].Tile[x, y].Tile);
-                    Data.Write(Lists.Map[Map].Layer[i].Tile[x, y].Auto);
+                    Data.Write(Lists.Map[Map_Num].Layer[i].Tile[x, y].X);
+                    Data.Write(Lists.Map[Map_Num].Layer[i].Tile[x, y].Y);
+                    Data.Write(Lists.Map[Map_Num].Layer[i].Tile[x, y].Tile);
+                    Data.Write(Lists.Map[Map_Num].Layer[i].Tile[x, y].Auto);
                 }
         }
 
 
         // Dados específicos dos azulejos
-        for (byte x = 0; x <= Lists.Map[Map].Width; x++)
-            for (byte y = 0; y <= Lists.Map[Map].Height; y++)
+        for (byte x = 0; x <= Lists.Map[Map_Num].Width; x++)
+            for (byte y = 0; y <= Lists.Map[Map_Num].Height; y++)
             {
-                Data.Write(Lists.Map[Map].Tile[x, y].Attribute);
-                Data.Write(Lists.Map[Map].Tile[x, y].Data_1);
-                Data.Write(Lists.Map[Map].Tile[x, y].Data_2);
-                Data.Write(Lists.Map[Map].Tile[x, y].Data_3);
-                Data.Write(Lists.Map[Map].Tile[x, y].Data_4);
-                Data.Write(Lists.Map[Map].Tile[x, y].Zone);
+                Data.Write(Lists.Map[Map_Num].Tile[x, y].Attribute);
+                Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_1);
+                Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_2);
+                Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_3);
+                Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_4);
+                Data.Write(Lists.Map[Map_Num].Tile[x, y].Zone);
 
                 // Bloqueio direcional
                 for (byte i = 0; i < (byte)Game.Directions.Count; i++)
-                    Data.Write(Lists.Map[Map].Tile[x, y].Block[i]);
+                    Data.Write(Lists.Map[Map_Num].Tile[x, y].Block[i]);
             }
 
         // Luzes
-        Data.Write((byte)Lists.Map[Map].Light.Length);
-        for (byte i = 0; i < Lists.Map[Map].Light.Length; i++)
+        Data.Write((byte)Lists.Map[Map_Num].Light.Length);
+        for (byte i = 0; i < Lists.Map[Map_Num].Light.Length; i++)
         {
-            Data.Write(Lists.Map[Map].Light[i].X);
-            Data.Write(Lists.Map[Map].Light[i].Y);
-            Data.Write(Lists.Map[Map].Light[i].Width);
-            Data.Write(Lists.Map[Map].Light[i].Height);
+            Data.Write(Lists.Map[Map_Num].Light[i].X);
+            Data.Write(Lists.Map[Map_Num].Light[i].Y);
+            Data.Write(Lists.Map[Map_Num].Light[i].Width);
+            Data.Write(Lists.Map[Map_Num].Light[i].Height);
         }
 
         // NPCs
-        Data.Write((byte)Lists.Map[Map].NPC.Length);
-        for (byte i = 0; i < Lists.Map[Map].NPC.Length; i++)
+        Data.Write((byte)Lists.Map[Map_Num].NPC.Length);
+        for (byte i = 0; i < Lists.Map[Map_Num].NPC.Length; i++)
         {
-            Data.Write(Lists.Map[Map].NPC[i].Index);
-            Data.Write(Lists.Map[Map].NPC[i].Zone);
-            Data.Write(Lists.Map[Map].NPC[i].Spawn);
-            Data.Write(Lists.Map[Map].NPC[i].X);
-            Data.Write(Lists.Map[Map].NPC[i].Y);
+            Data.Write(Lists.Map[Map_Num].NPC[i].Index);
+            Data.Write(Lists.Map[Map_Num].NPC[i].Zone);
+            Data.Write(Lists.Map[Map_Num].NPC[i].Spawn);
+            Data.Write(Lists.Map[Map_Num].NPC[i].X);
+            Data.Write(Lists.Map[Map_Num].NPC[i].Y);
         }
-
+        if (Map_Num == Lists.Map.Length - 1) 
+            Data.Write(OpenEditor);
         ToPlayer(Index, Data);
     }
 
@@ -606,14 +607,14 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_Items);
-        Data.Write((short)(Lists.Map[Map_Num].Temp_Item.Count - 1));
+        Data.Write((short)(Lists.Temp_Map[Map_Num].Item.Count - 1));
 
-        for (byte i = 1; i < Lists.Map[Map_Num].Temp_Item.Count; i++)
+        for (byte i = 1; i < Lists.Temp_Map[Map_Num].Item.Count; i++)
         {
             // Geral
-            Data.Write(Lists.Map[Map_Num].Temp_Item[i].Index);
-            Data.Write(Lists.Map[Map_Num].Temp_Item[i].X);
-            Data.Write(Lists.Map[Map_Num].Temp_Item[i].Y);
+            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Index);
+            Data.Write(Lists.Temp_Map[Map_Num].Item[i].X);
+            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Y);
         }
 
         // Envia os dados
@@ -626,12 +627,12 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_Items);
-        Data.Write((short)(Lists.Map[Map_Num].Temp_Item.Count - 1));
-        for (byte i = 1; i < Lists.Map[Map_Num].Temp_Item.Count; i++)
+        Data.Write((short)(Lists.Temp_Map[Map_Num].Item.Count - 1));
+        for (byte i = 1; i < Lists.Temp_Map[Map_Num].Item.Count; i++)
         {
-            Data.Write(Lists.Map[Map_Num].Temp_Item[i].Index);
-            Data.Write(Lists.Map[Map_Num].Temp_Item[i].X);
-            Data.Write(Lists.Map[Map_Num].Temp_Item[i].Y);
+            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Index);
+            Data.Write(Lists.Temp_Map[Map_Num].Item[i].X);
+            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Y);
         }
         ToMap(Map_Num, Data);
     }
@@ -699,76 +700,76 @@ partial class Send
         ToPlayer(Index, Data);
     }
 
-    public static void Map_NPCs(byte Index, short Map)
+    public static void Map_NPCs(byte Index, short Map_Num)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPCs);
-        Data.Write((short)Lists.Map[Map].Temp_NPC.GetUpperBound(0));
-        for (byte i = 1; i < Lists.Map[Map].Temp_NPC.Length; i++)
+        Data.Write((short)Lists.Temp_Map[Map_Num].NPC.GetUpperBound(0));
+        for (byte i = 1; i < Lists.Temp_Map[Map_Num].NPC.Length; i++)
         {
-            Data.Write(Lists.Map[Map].Temp_NPC[i].Index);
-            Data.Write(Lists.Map[Map].Temp_NPC[i].X);
-            Data.Write(Lists.Map[Map].Temp_NPC[i].Y);
-            Data.Write((byte)Lists.Map[Map].Temp_NPC[i].Direction);
-            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Map[Map].Temp_NPC[i].Vital[n]);
+            Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Index);
+            Data.Write(Lists.Temp_Map[Map_Num].NPC[i].X);
+            Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Y);
+            Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[i].Direction);
+            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Vital[n]);
         }
         ToPlayer(Index, Data);
     }
 
-    public static void Map_NPC(short Map, byte Index)
+    public static void Map_NPC(short Map_Num, byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC);
         Data.Write(Index);
-        Data.Write(Lists.Map[Map].Temp_NPC[Index].Index);
-        Data.Write(Lists.Map[Map].Temp_NPC[Index].X);
-        Data.Write(Lists.Map[Map].Temp_NPC[Index].Y);
-        Data.Write((byte)Lists.Map[Map].Temp_NPC[Index].Direction);
-        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Map[Map].Temp_NPC[Index].Vital[n]);
-        ToMap(Map, Data);
+        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Index);
+        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].X);
+        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Y);
+        Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[Index].Direction);
+        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Vital[n]);
+        ToMap(Map_Num, Data);
     }
 
-    public static void Map_NPC_Movement(short Map, byte Index, byte Movimento)
+    public static void Map_NPC_Movement(short Map_Num, byte Index, byte Movimento)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Movement);
         Data.Write(Index);
-        Data.Write(Lists.Map[Map].Temp_NPC[Index].X);
-        Data.Write(Lists.Map[Map].Temp_NPC[Index].Y);
-        Data.Write((byte)Lists.Map[Map].Temp_NPC[Index].Direction);
+        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].X);
+        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Y);
+        Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[Index].Direction);
         Data.Write(Movimento);
-        ToMap(Map, Data);
+        ToMap(Map_Num, Data);
     }
 
-    public static void Map_NPC_Direction(short Map, byte Index)
+    public static void Map_NPC_Direction(short Map_Num, byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Direction);
         Data.Write(Index);
-        Data.Write((byte)Lists.Map[Map].Temp_NPC[Index].Direction);
-        ToMap(Map, Data);
+        Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[Index].Direction);
+        ToMap(Map_Num, Data);
     }
 
-    public static void Map_NPC_Vitals(short Map, byte Index)
+    public static void Map_NPC_Vitals(short Map_Num, byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Vitals);
         Data.Write(Index);
-        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Map[Map].Temp_NPC[Index].Vital[n]);
-        ToMap(Map, Data);
+        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Vital[n]);
+        ToMap(Map_Num, Data);
     }
 
-    public static void Map_NPC_Attack(short Map, byte Index, byte Victim, byte Victim_Type)
+    public static void Map_NPC_Attack(short Map_Num, byte Index, byte Victim, byte Victim_Type)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -777,17 +778,17 @@ partial class Send
         Data.Write(Index);
         Data.Write(Victim);
         Data.Write(Victim_Type);
-        ToMap(Map, Data);
+        ToMap(Map_Num, Data);
     }
 
-    public static void Map_NPC_Died(short Map, byte Index)
+    public static void Map_NPC_Died(short Map_Num, byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Died);
         Data.Write(Index);
-        ToMap(Map, Data);
+        ToMap(Map_Num, Data);
     }
 
     public static void Tiles(byte Index, bool OpenEditor = false)

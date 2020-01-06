@@ -366,7 +366,7 @@ class Player
     {
         short Damage;
         short x = Character(Index).X, y = Character(Index).Y;
-        Lists.Structures.Map_NPCs NPC = Lists.Map[Character(Index).Map].Temp_NPC[Victim];
+        Lists.Structures.Map_NPCs NPC = Lists.Temp_Map[Character(Index).Map].NPC[Victim];
 
         // Define o azujelo a frente do jogador
         Map.NextTile(Character(Index).Direction, ref x, ref y);
@@ -376,8 +376,8 @@ class Player
         if (Lists.NPC[NPC.Index].Behaviour == (byte)global::NPC.Behaviour.Friendly) return;
 
         // Define o alvo do NPC
-        Lists.Map[Character(Index).Map].Temp_NPC[Victim].Target_Index = Index;
-        Lists.Map[Character(Index).Map].Temp_NPC[Victim].Target_Type = (byte)Game.Target.Player;
+        Lists.Temp_Map[Character(Index).Map].NPC[Victim].Target_Index = Index;
+        Lists.Temp_Map[Character(Index).Map].NPC[Victim].Target_Type = (byte)Game.Target.Player;
 
         // Demonstra o ataque aos outros jogadores
         Send.Player_Attack(Index, Victim, (byte)Game.Target.NPC);
@@ -390,9 +390,9 @@ class Player
 
         // Dano não fatal
         if (Damage > 0)
-            if (Damage < Lists.Map[Character(Index).Map].Temp_NPC[Victim].Vital[(byte)Game.Vitals.HP])
+            if (Damage < Lists.Temp_Map[Character(Index).Map].NPC[Victim].Vital[(byte)Game.Vitals.HP])
             {
-                Lists.Map[Character(Index).Map].Temp_NPC[Victim].Vital[(byte)Game.Vitals.HP] -= Damage;
+                Lists.Temp_Map[Character(Index).Map].NPC[Victim].Vital[(byte)Game.Vitals.HP] -= Damage;
                 Send.Map_NPC_Vitals(Character(Index).Map, Victim);
             }
             // FATALITY
@@ -505,7 +505,7 @@ class Player
         Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
 
         // Somente se necessário
-        if (Lists.Map[Map_Num].Temp_Item.Count == Game.Max_Map_Items) return;
+        if (Lists.Temp_Map[Map_Num].Item.Count == Game.Max_Map_Items) return;
         if (Character(Index).Inventory[Slot].Item_Num == 0) return;
         if (Lists.Item[Character(Index).Inventory[Slot].Item_Num].Bind) return;
 
@@ -514,7 +514,7 @@ class Player
         Map_Item.Amount = Character(Index).Inventory[Slot].Amount;
         Map_Item.X = Character(Index).X;
         Map_Item.Y = Character(Index).Y;
-        Lists.Map[Map_Num].Temp_Item.Add(Map_Item);
+        Lists.Temp_Map[Map_Num].Item.Add(Map_Item);
         Send.Map_Items(Map_Num);
 
         // Retira o item do inventário do jogador 
