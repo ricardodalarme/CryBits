@@ -23,33 +23,18 @@ partial class Read
 
     public static void Server_Data()
     {
-        // Limpa os dados
-        Clear.Server_Data();
-
         // Cria o arquivo caso ele não existir
         if (!Directories.Server_Data.Exists)
         {
+            Clear.Server_Data();
             Write.Server_Data();
             return;
         }
 
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryReader Data = new BinaryReader(Directories.Server_Data.OpenRead());
-
         // Lê os dados
-        Lists.Server_Data.Game_Name = Data.ReadString();
-        Lists.Server_Data.Welcome = Data.ReadString();
-        Lists.Server_Data.Port = Data.ReadInt16();
-        Lists.Server_Data.Max_Players = Data.ReadByte();
-        Lists.Server_Data.Max_Characters = Data.ReadByte();
-        Lists.Server_Data.Num_Classes = Data.ReadByte();
-        Lists.Server_Data.Num_Tiles = Data.ReadByte();
-        Lists.Server_Data.Num_Maps = Data.ReadInt16();
-        Lists.Server_Data.Num_NPCs = Data.ReadInt16();
-        Lists.Server_Data.Num_Items = Data.ReadInt16();
-
-        // Fecha o sistema
-        Data.Dispose();
+        FileStream Stream = Directories.Server_Data.OpenRead();
+        Lists.Server_Data = (Lists.Structures.Server_Data)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
     }
 
     public static void Player(byte Index, string Name, bool ReadCharacter = true)

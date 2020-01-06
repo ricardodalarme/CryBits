@@ -74,30 +74,16 @@ class Write
     }
     public static void Server_Data()
     {
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryWriter Data = new BinaryWriter(Directories.Server_Data.OpenWrite());
-
         // Escreve os dados
-        Data.Write(Lists.Server_Data.Game_Name);
-        Data.Write(Lists.Server_Data.Welcome);
-        Data.Write(Lists.Server_Data.Port);
-        Data.Write(Lists.Server_Data.Max_Players);
-        Data.Write(Lists.Server_Data.Max_Characters);
-        Data.Write(Lists.Server_Data.Num_Classes);
-        Data.Write(Lists.Server_Data.Num_Tiles);
-        Data.Write(Lists.Server_Data.Num_Maps);
-        Data.Write(Lists.Server_Data.Num_NPCs);
-        Data.Write(Lists.Server_Data.Num_Items);
-
-        // Fecha o sistema
-        Data.Dispose();
+        FileStream Stream = Directories.Server_Data.OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Lists.Server_Data);
+        Stream.Close();
     }
 
     public static void Classes()
     {
         // Escreve os dados
-        for (byte Index = 1; Index < Lists.Class.Length; Index++)
-            Class(Index);
+        for (byte Index = 1; Index < Lists.Class.Length; Index++) Class(Index);
     }
 
     public static void Class(byte Index)

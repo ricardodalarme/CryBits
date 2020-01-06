@@ -17,6 +17,7 @@ class Lists
     // Estrutura dos itens em gerais
     public class Structures
     {
+        [Serializable]
         public struct Server_Data
         {
             public string Game_Name;
