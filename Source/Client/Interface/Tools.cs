@@ -188,7 +188,7 @@ class Tools
     public static byte Inventory_Mouse()
     {
         byte NumColumn = 5;
-        Point Panel_Position = Panels.Get("Menu_Inventário").Position;
+        Point Panel_Position = Panels.Get("Menu_Inventory").Position;
 
         for (byte i = 1; i <= Game.Max_Inventory; i++)
         {
@@ -229,7 +229,7 @@ class Tools
 
     public static void Equipment_MouseDown(MouseEventArgs e)
     {
-        Point Panel_Position = Panels.Get("Menu_Personagem").Position;
+        Point Panel_Position = Panels.Get("Menu_Character").Position;
 
         for (byte i = 0; i < (byte)Game.Equipments.Count; i++)
             if (IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))

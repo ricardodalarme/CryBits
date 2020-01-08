@@ -99,7 +99,7 @@ partial class Receive
 
         // Abre o painel de seleção de personagens
         Panels.Menu_Close();
-        Panels.Get("SelecionarPersonagem").Visible = true;
+        Panels.Get("SelectCharacter").Visible = true;
     }
 
     private static void Join(NetIncomingMessage Data)
@@ -119,13 +119,13 @@ partial class Receive
     {
         // Reseta os valores
         TextBoxes.Get("CriarPersonagem_Nome").Text = string.Empty;
-        CheckBoxes.Get("GêneroMasculino").State = true;
-        CheckBoxes.Get("GêneroFeminino").State = false;
+        CheckBoxes.Get("GenderMale").State = true;
+        CheckBoxes.Get("GenderFemale").State = false;
         Game.CreateCharacter_Class = 1;
 
         // Abre o painel de criação de personagem
         Panels.Menu_Close();
-        Panels.Get("CriarPersonagem").Visible = true;
+        Panels.Get("CreateCharacter").Visible = true;
     }
 
     private static void Classes(NetIncomingMessage Data)
@@ -175,6 +175,8 @@ partial class Receive
         TextBoxes.Get("Chat").Text = string.Empty;
         Panels.Get("Chat").Visible = false;
         Tools.Chat_Line = 0;
+        CheckBoxes.Get("Options_Sounds").State = Lists.Options.Sounds;
+        CheckBoxes.Get("Options_Music").State = Lists.Options.Musics;
 
         // Abre o jogo
         Audio.Music.Stop();

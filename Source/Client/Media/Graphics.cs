@@ -187,6 +187,7 @@ partial class Graphics
         // Desenha os dados do jogo
         DrawText("FPS: " + Game.FPS.ToString(), 8, 73, SFML.Graphics.Color.White);
         DrawText("Latency: " + Game.Latency.ToString(), 8, 83, SFML.Graphics.Color.White);
+        if (Tools.CurrentWindow == Tools.Windows.Game) Game_Chat();
 
         // Exibe o que foi renderizado
         RenderWindow.Display();
@@ -195,8 +196,7 @@ partial class Graphics
     public static void InGame()
     {
         // Não desenhar se não estiver em jogo
-        if (Tools.CurrentWindow != Tools.Windows.Game)
-            return;
+        if (Tools.CurrentWindow != Tools.Windows.Game) return;
 
         // Atualiza a câmera
         Game.UpdateCamera();
@@ -311,14 +311,13 @@ partial class Graphics
         if (!(Tool is Panels.Structure)) return;
         switch (Tool.Name)
         {
-            case "SelecionarPersonagem": SelectCharacter_Class(); break;
-            case "CriarPersonagem": CreateCharacter_Class(); break;
+            case "SelectCharacter": SelectCharacter_Class(); break;
+            case "CreateCharacter": CreateCharacter_Class(); break;
             case "Hotbar": Game_Hotbar((Panels.Structure)Tool); break;
-            case "Menu_Personagem": Game_Menu_Character((Panels.Structure)Tool); break;
-            case "Menu_Inventário": Game_Menu_Inventory((Panels.Structure)Tool); break;
-            case "Barras": Game_Bars(); break;
-            case "Chat": Game_Chat((Panels.Structure)Tool); break;
-            case "Menu_Informação": Panel_Informations(); break;
+            case "Menu_Character": Game_Menu_Character((Panels.Structure)Tool); break;
+            case "Menu_Inventory": Game_Menu_Inventory((Panels.Structure)Tool); break;
+            case "Bars": Game_Bars(); break;
+            case "Information": Panel_Informations(); break;
         }
     }
 
@@ -368,7 +367,7 @@ partial class Graphics
         short Texture;
 
         // Textura do personagem
-        if (CheckBoxes.Get("GêneroMasculino").State)
+        if (CheckBoxes.Get("GenderMale").State)
             Texture = Lists.Class[Game.CreateCharacter_Class].Texture_Male;
         else
             Texture = Lists.Class[Game.CreateCharacter_Class].Texture_Female;
@@ -406,8 +405,8 @@ partial class Graphics
                     if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32)))
                     {
                         Game.Infomation_Index = Player.Inventory[Slot].Item_Num;
-                        Panels.Get("Menu_Informação").Position = new Point(Panel_Position.X, Panel_Position.Y + 42);
-                        Panels.Get("Menu_Informação").Visible = true;
+                        Panels.Get("Information").Position = new Point(Panel_Position.X, Panel_Position.Y + 42);
+                        Panels.Get("Information").Visible = true;
                         Game.Need_Information |= 1;
                     }
                 }
@@ -427,7 +426,7 @@ partial class Graphics
                 Render(Tex_Item[Lists.Item[Player.Inventory[Player.Hotbar[Player.Hotbar_Change].Slot].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
 
         // Fecha a janela de informa~ção caso necessário
-        if (Game.Need_Information == 0) Panels.Get("Menu_Informação").Visible = false;
+        if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
 
     public static void Game_Menu_Character(Panels.Structure Tool)
@@ -459,15 +458,15 @@ partial class Graphics
                 if (Tools.IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
                 {
                     Game.Infomation_Index = Player.Me.Equipment[i];
-                    Panels.Get("Menu_Informação").Position = new Point(Panel_Position.X - 186, Panel_Position.Y + 5);
-                    Panels.Get("Menu_Informação").Visible = true;
+                    Panels.Get("Information").Position = new Point(Panel_Position.X - 186, Panel_Position.Y + 5);
+                    Panels.Get("Information").Visible = true;
                     Game.Need_Information |= 1 << 1;
                 }
             }
         }
 
         // Fecha a janela de informa~ção caso necessário
-        if (Game.Need_Information == 0) Panels.Get("Menu_Informação").Visible = false;
+        if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
 
     public static void Game_Menu_Inventory(Panels.Structure Tool)
@@ -489,8 +488,8 @@ partial class Graphics
                 if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32)))
                 {
                     Game.Infomation_Index = Player.Inventory[i].Item_Num;
-                    Panels.Get("Menu_Informação").Position = new Point(Panel_Position.X - 186, Panel_Position.Y + 3);
-                    Panels.Get("Menu_Informação").Visible = true;
+                    Panels.Get("Information").Position = new Point(Panel_Position.X - 186, Panel_Position.Y + 3);
+                    Panels.Get("Information").Visible = true;
                     Game.Need_Information |= 1 << 2;
                 }
 
@@ -500,7 +499,7 @@ partial class Graphics
 
         // Movendo item
         if (Player.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Inventory[Player.Inventory_Change].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
-        if (Game.Need_Information == 0) Panels.Get("Menu_Informação").Visible = false;
+        if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
 
     public static void Panel_Informations()
@@ -511,7 +510,7 @@ partial class Graphics
         if (Item_Num == -1) return;
 
         // Informações
-        Point Position = Panels.Get("Menu_Informação").Position;
+        Point Position = Panels.Get("Information").Position;
         DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, SFML.Graphics.Color.Yellow);
         Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Position.X + 9, Position.Y + 21, 64, 64));
 
@@ -562,10 +561,10 @@ partial class Graphics
         DrawText("Position: " + Player.Me.X + "/" + Player.Me.Y, 8, 93, SFML.Graphics.Color.White);
     }
 
-    public static void Game_Chat(Panels.Structure Tool)
+    public static void Game_Chat()
     {
-        // Define a bisiblidade da caixa
-        Tool.Visible = ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
+        Panels.Structure Tool = Panels.Get("Chat");
+        Tool.Visible = TextBoxes.Focused != null && ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
 
         // Renderiza as mensagens
         if (Tools.Chat_Text_Visible)

@@ -32,10 +32,10 @@ class Read
         }
 
         // Adiciona os dados ao cache
-        CheckBoxes.Get("Sons").State = Lists.Options.Sounds;
-        CheckBoxes.Get("Músicas").State = Lists.Options.Musics;
-        CheckBoxes.Get("SalvarUsuário").State = Lists.Options.SaveUsername;
-        if (Lists.Options.SaveUsername) TextBoxes.Get("Conectar_Usuário").Text = Lists.Options.Username;
+        CheckBoxes.Get("Sounds").State = Lists.Options.Sounds;
+        CheckBoxes.Get("Musics").State = Lists.Options.Musics;
+        CheckBoxes.Get("Connect_Save_Username").State = Lists.Options.SaveUsername;
+        if (Lists.Options.SaveUsername) TextBoxes.Get("Connect_Username").Text = Lists.Options.Username;
     }
 
     public static Buttons.Structure Button(BinaryReader Data)

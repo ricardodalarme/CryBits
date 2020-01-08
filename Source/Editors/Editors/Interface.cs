@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-public partial class Editor_Interface : Form
+partial class Editor_Interface : Form
 {
     // Usado para acessar os dados da janela
     public static Editor_Interface Objects = new Editor_Interface();
@@ -50,14 +50,26 @@ public partial class Editor_Interface : Form
 
     private void prgProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
     {
+        byte Window = (byte)((Lists.Structures.Tool)treOrder.SelectedNode.Tag).Window;
+
         // Troca a ferramenta de janela
         if (e.ChangedItem.Label == "Window")
         {
-            byte Window = (byte)((Lists.Structures.Tool)treOrder.SelectedNode.Tag).Window;
             Lists.Tool.Nodes[Window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
             treOrder.SelectedNode.Remove();
             cmbWindows.SelectedIndex = Window;
             treOrder.SelectedNode = Lists.Tool.Nodes[Window].LastNode;
+        }
+        // Troca o nome da ferramenta
+        else if (e.ChangedItem.Label == "Name")
+        {
+            string Text = string.Empty;
+            Lists.Structures.Tool Tool = ((Lists.Structures.Tool)treOrder.SelectedNode.Tag);
+            if (Tool is Lists.Structures.Button) Text = "[Button] ";
+            else if (Tool is Lists.Structures.CheckBox) Text = "[CheckBox] ";
+            else if (Tool is Lists.Structures.TextBox) Text = "[TextBox] ";
+            else if (Tool is Lists.Structures.Panel) Text = "[Panel] ";
+            treOrder.SelectedNode.Text = Text + Tool.Name;
         }
     }
 
@@ -82,6 +94,7 @@ public partial class Editor_Interface : Form
     {
         // Abre o painel para seleção da ferramenta
         cmbType.SelectedIndex = 0;
+        grpNew.BringToFront();
         grpNew.Visible = true;
     }
 
@@ -97,7 +110,7 @@ public partial class Editor_Interface : Form
             case Globals.Tools_Types.TextBox: Tool = new Lists.Structures.TextBox(); break;
         }
         Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add("[" + ((Globals.Tools_Types)cmbType.SelectedIndex).ToString() + "] ");
-        Lists.Tool.LastNode.Tag = Tool;
+        Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = Tool;
         grpNew.Visible = false;
     }
 

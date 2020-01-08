@@ -87,30 +87,31 @@ class Buttons
         // Executa o evento do botão
         switch (Name)
         {
-            case "Conectar": Connect(); break;
-            case "Registrar": Register(); break;
-            case "Opções": Options(); break;
-            case "Opções_Retornar": Menu_Return(); break;
-            case "Conectar_Pronto": Connect_Ok(); break;
-            case "Registrar_Pronto": Register_Ok(); break;
-            case "CriarPersonagem": CreateCharacter(); break;
-            case "CriarPersonagem_TrocarDireita": CreateCharacter_Change_Right(); break;
-            case "CriarPersonagem_TrocarEsquerda": CreateCharacter_Change_Left(); break;
-            case "CriarPersonagem_Retornar": CreateCharacter_Return(); break;
-            case "Personagem_Usar": Character_Use(); break;
-            case "Personagem_Criar": Character_Create(); break;
-            case "Personagem_Deletar": Character_Delete(); break;
-            case "Personagem_TrocarDireita": Character_Change_Right(); break;
-            case "Personagem_TrocarEsquerda": Character_Change_Left(); break;
-            case "Chat_Subir": Chat_Up(); break;
-            case "Chat_Descer": Chat_Down(); break;
-            case "Menu_Personagem": Menu_Character(); break;
-            case "Atributos_Força": Attribute_Strenght(); break;
-            case "Atributos_Resistência": Attribute_Resistance(); break;
-            case "Atributos_Inteligência": Attribute_Intelligence(); break;
-            case "Atributos_Agilidade": Attribute_Agility(); break;
-            case "Atributos_Vitalidade": Attribute_Vitality(); break;
-            case "Menu_Inventário": Menu_Inventory(); break;
+            case "Connect": Connect(); break;
+            case "Register": Register(); break;
+            case "Options": Options(); break;
+            case "Options_Back": Menu_Return(); break;
+            case "Connect_Confirm": Connect_Ok(); break;
+            case "Register_Confirm": Register_Ok(); break;
+            case "CreateCharacter": CreateCharacter(); break;
+            case "CreateCharacter_ChangeRight": CreateCharacter_Change_Right(); break;
+            case "CreateCharacter_ChangeLeft": CreateCharacter_Change_Left(); break;
+            case "CreateCharacter_Back": CreateCharacter_Return(); break;
+            case "Character_Use": Character_Use(); break;
+            case "Character_Create": Character_Create(); break;
+            case "Character_Delete": Character_Delete(); break;
+            case "Character_ChangeRight": Character_Change_Right(); break;
+            case "Character_ChangeLeft": Character_Change_Left(); break;
+            case "Chat_Up": Chat_Up(); break;
+            case "Chat_Down": Chat_Down(); break;
+            case "Menu_Character": Menu_Character(); break;
+            case "Attributes_Strength": Attribute_Strenght(); break;
+            case "Attributes_Resistance": Attribute_Resistance(); break;
+            case "Attributes_Intelligence": Attribute_Intelligence(); break;
+            case "Attributes_Agility": Attribute_Agility(); break;
+            case "Attributes_Vitality": Attribute_Vitality(); break;
+            case "Menu_Inventory": Menu_Inventory(); break;
+            case "Menu_Options": Menu_Options(); break;
         }
     }
 
@@ -122,9 +123,9 @@ class Buttons
         if (Lists.Characters == null || Lists.Characters[Game.SelectCharacter].Class == 0) Visibility = false;
 
         // Altera os botões visíveis
-        Get("Personagem_Criar").Visible = !Visibility;
-        Get("Personagem_Deletar").Visible = Visibility;
-        Get("Personagem_Usar").Visible = Visibility;
+        Get("Character_Create").Visible = !Visibility;
+        Get("Character_Delete").Visible = Visibility;
+        Get("Character_Use").Visible = Visibility;
         return Visibility;
     }
 
@@ -135,7 +136,7 @@ class Buttons
 
         // Abre o painel
         Panels.Menu_Close();
-        Panels.Get("Conectar").Visible = true;
+        Panels.Get("Connect").Visible = true;
     }
 
     public static void Register()
@@ -145,7 +146,7 @@ class Buttons
 
         // Abre o painel
         Panels.Menu_Close();
-        Panels.Get("Registrar").Visible = true;
+        Panels.Get("Register").Visible = true;
     }
 
     public static void Options()
@@ -155,7 +156,7 @@ class Buttons
 
         // Abre o painel
         Panels.Menu_Close();
-        Panels.Get("Opções").Visible = true;
+        Panels.Get("Options").Visible = true;
     }
 
     public static void Menu_Return()
@@ -165,13 +166,13 @@ class Buttons
 
         // Abre o painel
         Panels.Menu_Close();
-        Panels.Get("Conectar").Visible = true;
+        Panels.Get("Connect").Visible = true;
     }
 
     public static void Connect_Ok()
     {
         // Salva o nome do usuário
-        Lists.Options.Username = TextBoxes.Get("Conectar_Usuário").Text;
+        Lists.Options.Username = TextBoxes.Get("Connect_Username").Text;
         Write.Options();
 
         // Conecta-se ao jogo
@@ -181,7 +182,7 @@ class Buttons
     public static void Register_Ok()
     {
         // Regras de segurança
-        if (TextBoxes.Get("Registrar_Senha").Text != TextBoxes.Get("Registrar_RepetirSenha").Text)
+        if (TextBoxes.Get("Register_Password").Text != TextBoxes.Get("Register_Password2").Text)
         {
             MessageBox.Show("The password don't match.");
             return;
@@ -219,7 +220,7 @@ class Buttons
     {
         // Abre o painel de personagens
         Panels.Menu_Close();
-        Panels.Get("SelecionarPersonagem").Visible = true;
+        Panels.Get("SelectCharacter").Visible = true;
     }
 
     public static void Character_Use()
@@ -281,8 +282,9 @@ class Buttons
     public static void Menu_Character()
     {
         // Altera a visibilidade do painel e fecha os outros
-        Panels.Get("Menu_Personagem").Visible = !Panels.Get("Menu_Personagem").Visible;
-        Panels.Get("Menu_Inventário").Visible = false;
+        Panels.Get("Menu_Character").Visible = !Panels.Get("Menu_Character").Visible;
+        Panels.Get("Menu_Inventory").Visible = false;
+        Panels.Get("Menu_Options").Visible = false;
     }
 
     public static void Attribute_Strenght()
@@ -313,7 +315,16 @@ class Buttons
     public static void Menu_Inventory()
     {
         // Altera a visibilidade do painel e fecha os outros
-        Panels.Get("Menu_Inventário").Visible = !Panels.Get("Menu_Inventário").Visible;
-        Panels.Get("Menu_Personagem").Visible = false;
+        Panels.Get("Menu_Inventory").Visible = !Panels.Get("Menu_Inventory").Visible;
+        Panels.Get("Menu_Character").Visible = false;
+        Panels.Get("Menu_Options").Visible = false;
+    }
+
+    public static void Menu_Options()
+    {
+        // Altera a visibilidade do painel e fecha os outros
+        Panels.Get("Menu_Options").Visible = !Panels.Get("Menu_Options").Visible;
+        Panels.Get("Menu_Character").Visible = false;
+        Panels.Get("Menu_Inventory").Visible = false;
     }
 }

@@ -51,25 +51,27 @@ class CheckBoxes
         // Executa o evento do marcador
         switch (Name)
         {
-            case "Sons": Sounds(); break;
-            case "Músicas": Musics(); break;
-            case "SalvarUsuário": SaveUsername(); break;
-            case "GêneroMasculino": GenreName(); break;
-            case "GêneroFeminino": GenreFemale(); break;
+            case "Sounds": Sounds(); break;
+            case "Musics": Musics(); break;
+            case "Connect_Save_Username": SaveUsername(); break;
+            case "GenderMale": GenreName(); break;
+            case "GenderFemale": GenreFemale(); break;
+            case "Options_Sounds": Sounds(); break;
+            case "Options_Musics": Musics(); break;
         }
     }
 
     public static void Sounds()
     {
         // Salva os dados
-        Lists.Options.Sounds = Get("Sons").State;
+        Lists.Options.Sounds = !Lists.Options.Sounds;
         Write.Options();
     }
 
     public static void Musics()
     {
         // Salva os dados
-        Lists.Options.Musics = Get("Músicas").State;
+        Lists.Options.Musics = !Lists.Options.Musics;
         Write.Options();
 
         // Para ou reproduz a música dependendo do estado do marcador
@@ -82,19 +84,19 @@ class CheckBoxes
     public static void SaveUsername()
     {
         // Salva os dados
-        Lists.Options.SaveUsername = Get("SalvarUsuário").State;
+        Lists.Options.SaveUsername = Get("Connect_Save_Username").State;
         Write.Options();
     }
 
     public static void GenreName()
     {
         // Altera o estado do marcador de outro gênero
-        Get("GêneroFeminino").State = !Get("GêneroMasculino").State;
+        Get("GenderFemale").State = !Get("GenderMale").State;
     }
 
     public static void GenreFemale()
     {
         // Altera o estado do marcador de outro gênero
-        Get("GêneroMasculino").State = !Get("GêneroFeminino").State;
+        Get("GenderMale").State = !Get("GenderFemale").State;
     }
 }

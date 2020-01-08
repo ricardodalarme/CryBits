@@ -64,6 +64,7 @@ class Globals
         MP,
         Count
     }
+
     public enum Attributes
     {
         Strength,

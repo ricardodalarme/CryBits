@@ -24,10 +24,10 @@ class Panels
     public static void Menu_Close()
     {
         // Fecha todos os paineis abertos
-        Get("Conectar").Visible = false;
-        Get("Registrar").Visible = false;
-        Get("Opções").Visible = false;
-        Get("SelecionarPersonagem").Visible = false;
-        Get("CriarPersonagem").Visible = false;
+        Get("Connect").Visible = false;
+        Get("Register").Visible = false;
+        Get("Options").Visible = false;
+        Get("SelectCharacter").Visible = false;
+        Get("CreateCharacter").Visible = false;
     }
 }

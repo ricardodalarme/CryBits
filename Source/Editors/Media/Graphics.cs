@@ -713,14 +713,12 @@ partial class Graphics
     public static void Panel(Lists.Structures.Panel Tool)
     {
         // Desenha o painel
-        if (Tool.Texture_Num < Tex_Button.Length)
+        if (Tool.Texture_Num < Tex_Panel.Length)
             Render(Win_Interface, Tex_Panel[Tool.Texture_Num], Tool.Position);
     }
 
     public static void CheckBox(Lists.Structures.CheckBox Tool)
     {
-        byte Margin = 4;
-
         // Define as propriedades dos retângulos
         Rectangle Rec_Source = new Rectangle(new Point(), new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height));
         Rectangle Rec_Destiny = new Rectangle(Tool.Position, Rec_Source.Size);
@@ -730,6 +728,7 @@ partial class Graphics
             Rec_Source.Location = new Point(TSize(Tex_CheckBox).Width / 2, 0);
 
         // Desenha o marcador 
+        byte Margin = 4;
         Render(Win_Interface, Tex_CheckBox, Rec_Source, Rec_Destiny);
         DrawText(Win_Interface, Tool.Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
     }

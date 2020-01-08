@@ -63,7 +63,7 @@ class Game
     public static int Latency;
     public static int Latency_Send;
 
-    #region Numerators
+    #region Enums
     public enum Situations
     {
         Connect,
@@ -198,7 +198,7 @@ class Game
     public static void Disconnect()
     {
         // Não fechar os paineis se não for necessário
-        if (Panels.Get("Opções").Visible || Panels.Get("Conectar").Visible || Panels.Get("Registrar").Visible)
+        if (Panels.Get("Options").Visible || Panels.Get("Connect").Visible || Panels.Get("Register").Visible)
             return;
 
         // Limpa os valores
@@ -208,7 +208,7 @@ class Game
         // Traz o jogador de volta ao menu
         Tools.CurrentWindow = Tools.Windows.Menu;
         Panels.Menu_Close();
-        Panels.Get("Conectar").Visible = true;
+        Panels.Get("Connect").Visible = true;
     }
 
     public static void UpdateCamera()
@@ -284,15 +284,6 @@ class Game
     {
         // Converte o valor em uma posição adequada à camera
         return y - (Tile_Sight.Y * Grid) - Camera.Y;
-    }
-
-    public static bool Sight_Limit(int x, int y)
-    {
-        // Verifica se os valores estão no limite do que se está vendo
-        if (x >= Tile_Sight.X && y >= Tile_Sight.Y && x <= Tile_Sight.Width && y <= Tile_Sight.Height)
-            return true;
-        else
-            return false;
     }
 
     public static Directions ReverseDirection(Directions Direção)
