@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
 class Program
 {
+    // Usado pra detectar quando o console é fechado
+    [DllImport("Kernel32")]
+    private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
+    private delegate bool EventHandler();
+    static EventHandler Handler;
+
     [STAThread]
     public static void Main()
     {
@@ -11,6 +18,10 @@ class Program
         Console.Title = "Server";
         Logo();
         Console.WriteLine("[Starting]");
+
+        // Evento de saída do console
+        Handler += new EventHandler(Exit);
+        SetConsoleCtrlHandler(Handler, true);
 
         // Verifica se todos os diretórios existem, se não existirem então criá-los
         Directories.Create();
@@ -33,6 +44,20 @@ class Program
         Loop.Main();
     }
 
+    private static bool Exit()
+    {
+        // Salva os dados de todos os jogadores
+        Console.WriteLine("\n\n[SHUTTING DOWN]\nSaving players data.");
+        for (byte i = 1; i <= Game.HigherIndex; i++)
+            if (Player.IsPlaying(i)) Write.Player(i);
+
+        // Fecha o servidores
+        Socket.Device.Shutdown("Server was shut down.");
+        Console.WriteLine("Server was shut down.");
+        Thread.Sleep(1500);
+        return true;
+    }
+
     public static void Logo()
     {
         Console.WriteLine(@"  ______              _____     _
@@ -42,18 +67,6 @@ class Program
  |  |___ | |    | |  |     \| || |_ \__ \
  |______||_|    |_|  |_____/|_| \__||___/
                           2D orpg engine" + "\r\n");
-    }
-
-    public static void Close()
-    {
-        // Salva os dados de todos os jogadores
-        Console.WriteLine("Saving players data.");
-        for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (Player.IsPlaying(i)) Write.Player(i);
-
-        // Fecha o servidores
-        Socket.Device.Shutdown("Server was shut down.");
-        Application.Exit();
     }
 
     public static void ExecuteCommand(string Command)
