@@ -91,7 +91,7 @@ partial class Receive
     public static void Maps(NetIncomingMessage Data)
     {
         // Quantidade de mapas
-        Lists.Map = new Lists.Structures.Map[Data.ReadInt16() + 1];
+        Lists.Map = new Lists.Structures.Map[Data.ReadInt16()];
     }
 
     public static void Map(NetIncomingMessage Data)

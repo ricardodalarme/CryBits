@@ -203,7 +203,7 @@ class NPC
                     continue;
 
             // Define os dados
-            if (!global::Map.Tile_Blocked(Map_Num, x, y))
+            if (!Map.Tile_Blocked(Map_Num, x, y))
             {
                 Spawn(Index, Map_Num, x, y);
                 return;

@@ -493,7 +493,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Latency);
-       // ToPlayer(Index, Data);
+        ToPlayer(Index, Data);
     }
 
     public static void Message(byte Index, string Mensagem, Color Color)

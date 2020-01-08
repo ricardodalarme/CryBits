@@ -47,14 +47,11 @@ class Program
     private static bool Exit()
     {
         // Salva os dados de todos os jogadores
-        Console.WriteLine("\n\n[SHUTTING DOWN]\nSaving players data.");
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Player.IsPlaying(i)) Write.Player(i);
 
         // Fecha o servidores
         Socket.Device.Shutdown("Server was shut down.");
-        Console.WriteLine("Server was shut down.");
-        Thread.Sleep(1500);
         return true;
     }
 

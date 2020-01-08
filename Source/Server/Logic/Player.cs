@@ -48,7 +48,9 @@ class Player
         {
             get
             {
-                return (short)(Attribute[(byte)Game.Attributes.Strength] + Lists.Item[Equipment[(byte)Game.Equipments.Weapon]].Weapon_Damage);
+                short Value = Attribute[(byte)Game.Attributes.Strength];
+                if (Lists.Item[Equipment[(byte)Game.Equipments.Weapon]] != null) Value += Lists.Item[Equipment[(byte)Game.Equipments.Weapon]].Weapon_Damage;
+                return Value;
             }
         }
 
@@ -602,7 +604,7 @@ class Player
     public static byte FindHotbar(byte Index, byte Type, byte Slot)
     {
         // Encontra algo especifico na hotbar
-        for (byte i = 0; i < Game.Max_Hotbar; i++)
+        for (byte i = 1; i <= Game.Max_Hotbar; i++)
             if (Character(Index).Hotbar[i].Type == Type && Character(Index).Hotbar[i].Slot == Slot)
                 return i;
 
@@ -612,7 +614,7 @@ class Player
     public static byte FindInventory(byte Index, short Item_Num)
     {
         // Encontra algo especifico na hotbar
-        for (byte i = 0; i < Game.Max_Inventory; i++)
+        for (byte i = 1; i <= Game.Max_Inventory; i++)
             if (Character(Index).Inventory[i].Item_Num == Item_Num)
                 return i;
 

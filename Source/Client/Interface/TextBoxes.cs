@@ -97,15 +97,18 @@ class TextBoxes
 
     public static void ChangeFocus()
     {
-        int Index = Focused.Parent.Nodes.IndexOf(Focused), Temp = Index + 1;
+        List<Tools.Order_Structure> Parent;
+        if (Focused.Parent != null) Parent = Focused.Parent.Nodes;
+        else Parent = Tools.Order;
+        int Index = Parent.IndexOf(Focused), Temp = Index + 1;
 
         // Altera o digitalizador focado para o próximo
         while (Temp != Index)
         {
-            if (Temp == Focused.Parent.Nodes.Count) Temp = 0;
-            if (Focused.Parent.Nodes[Temp].Viewable && Focused.Parent.Nodes[Temp].Data is Structure)
+            if (Temp == Parent.Count) Temp = 0;
+            if (Parent[Temp].Viewable && Parent[Temp].Data is Structure)
             {
-                Focused = Focused.Parent.Nodes[Temp];
+                Focused = Parent[Temp];
                 return;
             }
             Temp++;
