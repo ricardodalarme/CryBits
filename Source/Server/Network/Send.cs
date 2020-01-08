@@ -1,7 +1,7 @@
 ﻿using Lidgren.Network;
 using System.Drawing;
 
-partial class Send
+class Send
 {
     // Pacotes do servidor para o cliente
     public enum Client_Packets

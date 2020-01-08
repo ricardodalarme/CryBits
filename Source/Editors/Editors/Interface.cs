@@ -21,6 +21,7 @@ public partial class Editor_Interface : Form
         Read.Tools();
 
         // Adiciona as janelas à lista
+        Objects.cmbWindows.Items.Clear();
         Objects.cmbWindows.Items.AddRange(Enum.GetNames(typeof(Globals.Windows)));
         Objects.cmbWindows.SelectedIndex = 0;
 

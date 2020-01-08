@@ -9,11 +9,6 @@ class NPC
         AttackWhenAttacked
     }
 
-    public static short[] MaxVital(byte Index, short Map)
-    {
-        return Lists.NPC[Lists.Map[Map].NPC[Index].Index].Vital;
-    }
-
     public static short Regeneration(short Map_Num, byte Index, byte Vital)
     {
         Lists.Structures.NPC Data = Lists.NPC[Lists.Temp_Map[Map_Num].NPC[Index].Index];

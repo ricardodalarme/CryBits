@@ -12,13 +12,6 @@ class Map
         Amount
     }
 
-    public enum Layers
-    {
-        Ground,
-        Fringe,
-        Amount
-    }
-
     public enum Attributes
     {
         None,

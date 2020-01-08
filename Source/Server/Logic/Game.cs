@@ -46,12 +46,6 @@ class Game
         Administrator
     }
 
-    public enum Genres
-    {
-        Male,
-        Female
-    }
-
     public enum Vitals
     {
         HP,
