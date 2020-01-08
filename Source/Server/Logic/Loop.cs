@@ -45,9 +45,6 @@ class Loop
             else
                 CPS += 1;
         }
-
-        // Fecha a aplicação
-        Program.Close();
     }
 
     public static void Commands()

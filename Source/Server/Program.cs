@@ -46,7 +46,12 @@ class Program
 
     public static void Close()
     {
-        // Disconeta todos os jogadores e fecha o servidor
+        // Salva os dados de todos os jogadores
+        Console.WriteLine("Saving players data.");
+        for (byte i = 1; i <= Game.HigherIndex; i++)
+            if (Player.IsPlaying(i)) Write.Player(i);
+
+        // Fecha o servidores
         Socket.Device.Shutdown("Server was shut down.");
         Application.Exit();
     }
