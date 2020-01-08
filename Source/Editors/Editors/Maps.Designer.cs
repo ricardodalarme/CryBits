@@ -1508,6 +1508,7 @@
             this.Controls.Add(this.scrlMapX);
             this.Controls.Add(this.scrlTileY);
             this.Controls.Add(this.grpLayers);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "Editor_Maps";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

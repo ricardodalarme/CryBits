@@ -27,6 +27,7 @@
     private void InitializeComponent()
     {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Preview));
             this.List = new System.Windows.Forms.ListBox();
             this.butSelecionar = new System.Windows.Forms.Button();
             this.chkTransparent = new System.Windows.Forms.CheckBox();
@@ -109,6 +110,7 @@
             this.Controls.Add(this.butSelecionar);
             this.Controls.Add(this.List);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Preview";

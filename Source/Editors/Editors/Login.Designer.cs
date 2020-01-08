@@ -26,6 +26,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
             this.txtName = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -37,7 +38,7 @@
             // 
             this.txtName.Location = new System.Drawing.Point(15, 25);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(141, 20);
+            this.txtName.Size = new System.Drawing.Size(175, 20);
             this.txtName.TabIndex = 0;
             // 
             // txtPassword
@@ -45,7 +46,7 @@
             this.txtPassword.Location = new System.Drawing.Point(15, 64);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(141, 20);
+            this.txtPassword.Size = new System.Drawing.Size(175, 20);
             this.txtPassword.TabIndex = 1;
             // 
             // label1
@@ -70,7 +71,7 @@
             // 
             this.butConnect.Location = new System.Drawing.Point(15, 90);
             this.butConnect.Name = "butConnect";
-            this.butConnect.Size = new System.Drawing.Size(141, 24);
+            this.butConnect.Size = new System.Drawing.Size(175, 24);
             this.butConnect.TabIndex = 4;
             this.butConnect.Text = "Connect";
             this.butConnect.UseVisualStyleBackColor = true;
@@ -80,13 +81,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(172, 127);
+            this.ClientSize = new System.Drawing.Size(204, 127);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.butConnect);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
