@@ -315,6 +315,13 @@ partial class Graphics
         if (Tile.X > Lists.Tile[Objects.scrlTile.Value].Data.GetUpperBound(0)) return;
         if (Tile.Y > Lists.Tile[Objects.scrlTile.Value].Data.GetUpperBound(1)) return;
 
+        // Bloqueio total
+        if (Lists.Tile[Objects.scrlTile.Value].Data[x, y].Attribute == (byte)Globals.Tile_Attributes.Block)
+        {
+            Editor_Tile_Attributes(x, y);
+            return;
+        }
+
         for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
         {
             // Estado do bloqueio

@@ -10,7 +10,6 @@ class Game
 
     // CPS do servidor
     public static int CPS;
-    public static bool CPS_Lock;
 
     // Bloqueio direcional
     public const byte Max_DirBlock = 3;

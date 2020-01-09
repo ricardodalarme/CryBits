@@ -585,6 +585,7 @@ class Receive
         for (byte i = 1; i < Lists.Tile.Length; i++)
         {
             // Dados básicos
+            Lists.Tile[i] = new Lists.Structures.Tile();
             Lists.Tile[i].Width = Data.ReadByte();
             Lists.Tile[i].Height = Data.ReadByte();
             Lists.Tile[i].Data = new Lists.Structures.Tile_Data[Lists.Tile[i].Width + 1, Lists.Tile[i].Height + 1];
@@ -593,14 +594,12 @@ class Receive
                 for (byte y = 0; y <= Lists.Tile[i].Height; y++)
                 {
                     // Atributos
+                    Lists.Tile[i].Data[x, y] = new Lists.Structures.Tile_Data();
                     Lists.Tile[i].Data[x, y].Attribute = Data.ReadByte();
+                    Lists.Tile[i].Data[x, y].Block = new bool[(byte)Game.Directions.Count];
 
                     // Bloqueio direcional
-                    for (byte d = 0; d < (byte)Game.Directions.Count; d++)
-                    {
-                        Lists.Tile[i].Data[x, y].Block = new bool[(byte)Game.Directions.Count];
-                        Lists.Tile[i].Data[x, y].Block[d] = Data.ReadBoolean();
-                    }
+                    for (byte d = 0; d < (byte)Game.Directions.Count; d++) Lists.Tile[i].Data[x, y].Block[d] = Data.ReadBoolean();
                 }
         }
 

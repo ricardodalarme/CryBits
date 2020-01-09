@@ -26,5 +26,6 @@ class Directories
         Maps.Create();
         NPCs.Create();
         Items.Create();
+        Tiles.Create();
     }
 }

@@ -262,26 +262,34 @@ partial class Receive
         for (byte i = 1; i < Lists.Tile.Length; i++)
         {
             // Dados básicos
-            Lists.Tile[i].Width = Data.ReadByte();
-            Lists.Tile[i].Height = Data.ReadByte();
-            Lists.Tile[i].Data = new Lists.Structures.Tile_Data[Lists.Tile[i].Width + 1, Lists.Tile[i].Height + 1];
+            byte Width = Data.ReadByte();
+            byte Height = Data.ReadByte();
 
-            for (byte x = 0; x <= Lists.Tile[i].Width; x++)
-                for (byte y = 0; y <= Lists.Tile[i].Height; y++)
+            // Dados de cada azulejo
+            Clear.Tile(i);
+            for (byte x = 0; x <= Width; x++)
+                for (byte y = 0; y <= Height; y++)
                 {
+                    // Faz a leitura correta caso alguma textura do azulejo tiver sido redimensionada
+                    if (x > Lists.Tile[i].Width || y > Lists.Tile[i].Height)
+                    {
+                        Data.ReadByte();
+                        for (byte d = 0; d < (byte)Globals.Directions.Count; d++) Data.ReadBoolean();
+                        continue;
+                    }
+
                     // Atributos
+                    Lists.Tile[i].Data[x, y] = new Lists.Structures.Tile_Data();
                     Lists.Tile[i].Data[x, y].Attribute = Data.ReadByte();
+                    Lists.Tile[i].Data[x, y].Block = new bool[(byte)Globals.Directions.Count];
 
                     // Bloqueio direcional
-                    for (byte d = 0; d < (byte)Globals.Directions.Count; d++)
-                    {
-                        Lists.Tile[i].Data[x, y].Block = new bool[(byte)Globals.Directions.Count];
-                        Lists.Tile[i].Data[x, y].Block[d] = Data.ReadBoolean();
-                    }
+                    for (byte d = 0; d < (byte)Globals.Directions.Count; d++) Lists.Tile[i].Data[x, y].Block[d] = Data.ReadBoolean();
                 }
         }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Tiles.Open();
+        if (Data.ReadBoolean()) 
+            Editor_Tiles.Open();
     }
 }

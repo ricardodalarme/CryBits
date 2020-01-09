@@ -29,6 +29,10 @@ public partial class Editor_Tiles : Form
         // Define os limites
         Objects.scrlTile.Maximum = Graphics.Tex_Tile.GetUpperBound(0);
         Update_Bounds();
+
+        // Abre a janela
+        Selection.Objects.Visible = false;
+        Objects.Visible = true;
     }
 
     private static void Update_Bounds()
@@ -102,8 +106,9 @@ public partial class Editor_Tiles : Form
             for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
                 if (Tile_Dif.X >= Globals.Block_Position(i).X && Tile_Dif.X <= Globals.Block_Position(i).X + 8)
                     if (Tile_Dif.Y >= Globals.Block_Position(i).Y && Tile_Dif.Y <= Globals.Block_Position(i).Y + 8)
-                        // Altera o valor de bloqueio
-                        Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i] = !Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i];
+                        if (Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Attribute != (byte)Globals.Tile_Attributes.Block)
+                            // Altera o valor de bloqueio
+                            Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i] = !Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i];
         }
 
     }

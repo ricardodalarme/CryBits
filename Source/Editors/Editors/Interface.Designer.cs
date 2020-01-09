@@ -42,9 +42,9 @@
             this.butCancel = new System.Windows.Forms.Button();
             this.butSaveAll = new System.Windows.Forms.Button();
             this.grpNew = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbType = new System.Windows.Forms.ComboBox();
             this.butConfirm = new System.Windows.Forms.Button();
+            this.cmbType = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picWindow)).BeginInit();
             this.grpOrder.SuspendLayout();
             this.grpProperties.SuspendLayout();
@@ -216,23 +216,6 @@
             this.grpNew.Text = "New";
             this.grpNew.Visible = false;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 282);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(34, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Type:";
-            // 
-            // cmbType
-            // 
-            this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbType.Location = new System.Drawing.Point(14, 298);
-            this.cmbType.Name = "cmbType";
-            this.cmbType.Size = new System.Drawing.Size(155, 21);
-            this.cmbType.TabIndex = 31;
-            // 
             // butConfirm
             // 
             this.butConfirm.Location = new System.Drawing.Point(175, 296);
@@ -242,6 +225,23 @@
             this.butConfirm.Text = "Confirm";
             this.butConfirm.UseVisualStyleBackColor = true;
             this.butConfirm.Click += new System.EventHandler(this.butConfirm_Click);
+            // 
+            // cmbType
+            // 
+            this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbType.Location = new System.Drawing.Point(14, 298);
+            this.cmbType.Name = "cmbType";
+            this.cmbType.Size = new System.Drawing.Size(155, 21);
+            this.cmbType.TabIndex = 31;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(11, 282);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(34, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Type:";
             // 
             // Editor_Interface
             // 
@@ -259,6 +259,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MinimizeBox = false;
             this.Name = "Editor_Interface";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Interface Editor";
             ((System.ComponentModel.ISupportInitialize)(this.picWindow)).EndInit();
             this.grpOrder.ResumeLayout(false);

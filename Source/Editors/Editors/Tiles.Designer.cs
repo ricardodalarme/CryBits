@@ -77,7 +77,7 @@
             // grpAttributes
             // 
             this.grpAttributes.Controls.Add(this.optBlock);
-            this.grpAttributes.Location = new System.Drawing.Point(303, 141);
+            this.grpAttributes.Location = new System.Drawing.Point(297, 141);
             this.grpAttributes.Name = "grpAttributes";
             this.grpAttributes.Size = new System.Drawing.Size(98, 264);
             this.grpAttributes.TabIndex = 71;
@@ -98,7 +98,7 @@
             // 
             // butClear
             // 
-            this.butClear.Location = new System.Drawing.Point(303, 431);
+            this.butClear.Location = new System.Drawing.Point(297, 431);
             this.butClear.Name = "butClear";
             this.butClear.Size = new System.Drawing.Size(97, 21);
             this.butClear.TabIndex = 74;
@@ -108,7 +108,7 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(303, 451);
+            this.butCancel.Location = new System.Drawing.Point(297, 451);
             this.butCancel.Name = "butCancel";
             this.butCancel.Size = new System.Drawing.Size(97, 21);
             this.butCancel.TabIndex = 73;
@@ -118,7 +118,7 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(303, 411);
+            this.butSave.Location = new System.Drawing.Point(297, 411);
             this.butSave.Name = "butSave";
             this.butSave.Size = new System.Drawing.Size(97, 21);
             this.butSave.TabIndex = 72;
@@ -131,7 +131,7 @@
             this.grpTile.Controls.Add(this.scrlTile);
             this.grpTile.Location = new System.Drawing.Point(12, 12);
             this.grpTile.Name = "grpTile";
-            this.grpTile.Size = new System.Drawing.Size(389, 49);
+            this.grpTile.Size = new System.Drawing.Size(382, 49);
             this.grpTile.TabIndex = 75;
             this.grpTile.TabStop = false;
             this.grpTile.Text = "Tile: 1";
@@ -142,7 +142,7 @@
             this.scrlTile.Location = new System.Drawing.Point(9, 18);
             this.scrlTile.Minimum = 1;
             this.scrlTile.Name = "scrlTile";
-            this.scrlTile.Size = new System.Drawing.Size(374, 19);
+            this.scrlTile.Size = new System.Drawing.Size(370, 19);
             this.scrlTile.TabIndex = 16;
             this.scrlTile.Value = 1;
             this.scrlTile.ValueChanged += new System.EventHandler(this.scrlTile_ValueChanged);
@@ -151,7 +151,7 @@
             // 
             this.groupBox2.Controls.Add(this.optAttributes);
             this.groupBox2.Controls.Add(this.optDirBlock);
-            this.groupBox2.Location = new System.Drawing.Point(303, 69);
+            this.groupBox2.Location = new System.Drawing.Point(297, 69);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(98, 66);
             this.groupBox2.TabIndex = 76;
@@ -186,7 +186,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(413, 487);
+            this.ClientSize = new System.Drawing.Size(406, 487);
             this.ControlBox = false;
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.butCancel);

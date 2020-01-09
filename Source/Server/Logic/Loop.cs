@@ -33,7 +33,6 @@ class Loop
 
             // Faz com que a aplicação se mantenha estável
             Application.DoEvents();
-            if (Game.CPS_Lock) System.Threading.Thread.Sleep(1);
 
             // Calcula o CPS
             if (Timer_1000 < Environment.TickCount)

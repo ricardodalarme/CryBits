@@ -240,7 +240,12 @@ partial class Read
         FileInfo File = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format);
 
         // Evita erros
-        if (!File.Exists) return;
+        if (!File.Exists)
+        {
+            Clear.Tile(Index);
+            Write.Tile(Index);
+            return;
+        }
 
         // Lê os dados
         FileStream Stream = File.OpenRead();

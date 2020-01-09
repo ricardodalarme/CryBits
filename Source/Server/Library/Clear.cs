@@ -117,11 +117,22 @@ class Clear
         for (byte x = 0; x <= Lists.Map[Index].Width; x++)
             for (byte y = 0; y <= Lists.Map[Index].Height; y++)
                 Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
-
+        
         // Dados temporários
         Lists.Temp_Map[Index] = new Lists.Structures.Temp_Map();
         Lists.Temp_Map[Index].NPC = Array.Empty<Lists.Structures.Map_NPCs>();
         Lists.Temp_Map[Index].Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
         Lists.Temp_Map[Index].Item.Add(new Lists.Structures.Map_Items());
+    }
+
+    public static void Tile(byte Index)
+    {
+        // Redimensiona os valores
+        Lists.Tile[Index] = new Lists.Structures.Tile();
+        Lists.Tile[Index].Width = 0;
+        Lists.Tile[Index].Height = 0;
+        Lists.Tile[Index].Data = new Lists.Structures.Tile_Data[1, 1];
+        Lists.Tile[Index].Data[0, 0] = new Lists.Structures.Tile_Data();
+        Lists.Tile[Index].Data[0, 0].Block = new bool[(byte)Game.Directions.Count];
     }
 }
