@@ -114,9 +114,9 @@ class Map
     public static byte HasNPC(short X, short Y)
     {
         // Verifica se há algum npc na cordenada
-        for (byte i = 1; i < Lists.Map.Temp_NPC.Length; i++)
-            if (Lists.Map.Temp_NPC[i].Index > 0)
-                if (Lists.Map.Temp_NPC[i].X == X && Lists.Map.Temp_NPC[i].Y == Y)
+        for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
+            if (Lists.Temp_Map.NPC[i].Index > 0)
+                if (Lists.Temp_Map.NPC[i].X == X && Lists.Temp_Map.NPC[i].Y == Y)
                     return i;
 
         return 0;
@@ -693,9 +693,9 @@ partial class Graphics
     public static void Map_Items()
     {
         // Desenha todos os itens que estão no chão
-        for (byte i = 1; i < Lists.Map.Temp_Item.Length; i++)
+        for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)
         {
-            Lists.Structures.Map_Items Data = Lists.Map.Temp_Item[i];
+            Lists.Structures.Map_Items Data = Lists.Temp_Map.Item[i];
 
             // Somente se necessário
             if (Data.Index == 0) continue;

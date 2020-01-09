@@ -370,15 +370,15 @@ partial class Receive
     public static void Map_Items(NetIncomingMessage Data)
     {
         // Quantidade
-        Lists.Map.Temp_Item = new Lists.Structures.Map_Items[Data.ReadInt16() + 1];
+        Lists.Temp_Map.Item = new Lists.Structures.Map_Items[Data.ReadInt16() + 1];
 
         // Lê os dados de todos
-        for (byte i = 1; i < Lists.Map.Temp_Item.Length; i++)
+        for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)
         {
             // Geral
-            Lists.Map.Temp_Item[i].Index = Data.ReadInt16();
-            Lists.Map.Temp_Item[i].X = Data.ReadByte();
-            Lists.Map.Temp_Item[i].Y = Data.ReadByte();
+            Lists.Temp_Map.Item[i].Index = Data.ReadInt16();
+            Lists.Temp_Map.Item[i].X = Data.ReadByte();
+            Lists.Temp_Map.Item[i].Y = Data.ReadByte();
         }
     }
 }

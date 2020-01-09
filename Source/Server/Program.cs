@@ -52,6 +52,7 @@ class Program
 
         // Fecha o servidores
         Socket.Device.Shutdown("Server was shut down.");
+        Thread.Sleep(200);
         return true;
     }
 

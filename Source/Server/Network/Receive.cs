@@ -746,6 +746,7 @@ class Receive
             for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
             for (byte n = 0; n < Game.Max_NPC_Drop; n++)
             {
+                Lists.NPC[i].Drop[n] = new Lists.Structures.NPC_Drop();
                 Lists.NPC[i].Drop[n].Item_Num = Data.ReadInt16();
                 Lists.NPC[i].Drop[n].Amount = Data.ReadInt16();
                 Lists.NPC[i].Drop[n].Chance = Data.ReadByte();

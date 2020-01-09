@@ -1,4 +1,6 @@
-﻿class Lists
+﻿using System;
+
+class Lists
 {
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
@@ -7,6 +9,7 @@
     public static Structures.Class[] Class;
     public static Structures.Characters[] Characters;
     public static Structures.Maps Map;
+    public static Structures.Temp_Map Temp_Map;
     public static Structures.Weather[] Weather;
     public static Structures.NPCs[] NPC;
     public static Structures.Items[] Item;
@@ -70,12 +73,9 @@
             public string Name;
             public short Texture_Male;
             public short Texture_Female;
-            public short Spawn_Map;
-            public byte Spawn_Direction;
-            public byte Spawn_X;
-            public byte Spawn_Y;
         }
 
+        [Serializable]
         public struct Maps
         {
             public short Revision;
@@ -92,18 +92,22 @@
             public Map_Tile[,] Tile;
             public Map_Light[] Light;
             public short[] NPC;
-
-            // Temporário
-            public Map_NPCs[] Temp_NPC;
-            public Map_Items[] Temp_Item;
         }
 
+        public struct Temp_Map 
+        { 
+            public Map_NPCs[] NPC;
+            public Map_Items[] Item;
+        }
+
+        [Serializable]
         public struct Map_Weather
         {
             public byte Type;
             public byte Intensity;
         }
 
+        [Serializable]
         public struct Map_Fog
         {
             public byte Texture;
@@ -112,6 +116,7 @@
             public byte Alpha;
         }
 
+        [Serializable]
         public struct Map_Tile
         {
             public byte Attribute;
@@ -119,6 +124,7 @@
             public Map_Tile_Data[,] Data;
         }
 
+        [Serializable]
         public struct Map_Tile_Data
         {
             public byte X;
@@ -128,7 +134,8 @@
             public System.Drawing.Point[] Mini;
         }
 
-        public class Map_Light
+        [Serializable]
+        public struct Map_Light
         {
             public byte X;
             public byte Y;

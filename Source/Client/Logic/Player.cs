@@ -208,8 +208,8 @@ class Player
         if (Tools.CurrentWindow != Tools.Windows.Game) return;
 
         // Verifica se tem algum item nas coordenadas 
-        for (byte i = 1; i < Lists.Map.Temp_Item.Length; i++)
-            if (Lists.Map.Temp_Item[i].X == Me.X && Lists.Map.Temp_Item[i].Y == Me.Y)
+        for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)
+            if (Lists.Temp_Map.Item[i].X == Me.X && Lists.Temp_Map.Item[i].Y == Me.Y)
                 HasItem = true;
 
         // Verifica se tem algum espaço vazio no inventário
@@ -368,7 +368,7 @@ partial class Receive
             if (Victim_Type == (byte)Game.Target.Player)
                 Lists.Player[Victim].Hurt = Environment.TickCount;
             else if (Victim_Type == (byte)Game.Target.NPC)
-                Lists.Map.Temp_NPC[Victim].Hurt = Environment.TickCount;
+                Lists.Temp_Map.NPC[Victim].Hurt = Environment.TickCount;
     }
 
     public static void Player_Experience(NetIncomingMessage Data)

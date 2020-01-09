@@ -207,8 +207,8 @@ partial class Graphics
         Map_Items();
 
         // Desenha os NPCs
-        for (byte i = 1; i < Lists.Map.Temp_NPC.Length; i++)
-            if (Lists.Map.Temp_NPC[i].Index > 0)
+        for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
+            if (Lists.Temp_Map.NPC[i].Index > 0)
                 NPC(i);
 
         // Desenha os jogadores

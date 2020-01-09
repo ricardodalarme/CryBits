@@ -40,23 +40,24 @@ class TextBoxes
         public void KeyPress(KeyPressEventArgs e)
         {
             // Apaga a última letra do texto
-            if (!string.IsNullOrEmpty(Text))
-            {
-                if (e.KeyChar == '\b' && Text.Length > 0)
+            if (Tools.Viewable(Tools.Get(this)))
+                if (!string.IsNullOrEmpty(Text))
                 {
-                    Text = Text.Remove(Text.Length - 1);
-                    return;
+                    if (e.KeyChar == '\b' && Text.Length > 0)
+                    {
+                        Text = Text.Remove(Text.Length - 1);
+                        return;
+                    }
+
+                    // Não adicionar se já estiver no máximo de caracteres
+                    if (Lenght > 0)
+                        if (Text.Length >= Lenght)
+                            return;
                 }
 
-                // Não adicionar se já estiver no máximo de caracteres
-                if (Lenght > 0)
-                    if (Text.Length >= Lenght)
-                        return;
+                // Adiciona apenas os caractres válidos ao digitalizador
+                if (e.KeyChar >= 32 && e.KeyChar <= 126) Text += e.KeyChar.ToString();
             }
-
-            // Adiciona apenas os caractres válidos ao digitalizador
-            if (e.KeyChar >= 32 && e.KeyChar <= 126) Text += e.KeyChar.ToString();
-        }
     }
 
     public static Structure Get(string Name)

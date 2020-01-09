@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using System;
+using System.Windows.Forms;
 
 class Socket
 {
@@ -55,10 +56,7 @@ class Socket
     public static bool IsConnected()
     {
         // Retorna um valor de acordo com o estado da conexão do jogador
-        if (Device.ConnectionStatus == NetConnectionStatus.Connected)
-            return true;
-        else
-            return false;
+        return Device.ConnectionStatus == NetConnectionStatus.Connected;
     }
 
     public static bool TryConnect()
@@ -80,7 +78,8 @@ class Socket
 
     public static void Leave()
     {
-
-
+        // Fecha todas as janelas abertar e abre o menu de login
+        for (int i = 0; i < Application.OpenForms.Count; i++) Application.OpenForms[i].Visible = false;
+        Login.Objects.Visible = true;
     }
 }

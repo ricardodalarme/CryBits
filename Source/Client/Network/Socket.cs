@@ -55,10 +55,7 @@ class Socket
     public static bool IsConnected()
     {
         // Retorna um valor de acordo com o estado da conexão do jogador
-        if (Device.ConnectionStatus == NetConnectionStatus.Connected)
-            return true;
-        else
-            return false;
+        return Device.ConnectionStatus == NetConnectionStatus.Connected;
     }
 
     public static bool TryConnect()

@@ -86,10 +86,7 @@ class Socket
             return false;
 
         // Retorna um valor de acordo com a conexão do jogador
-        if (Connection[Index].Status == NetConnectionStatus.Connected)
-            return true;
-        else
-            return false;
+        return Connection[Index].Status == NetConnectionStatus.Connected;
     }
 
     public static byte FindConnection(NetConnection Data)

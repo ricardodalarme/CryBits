@@ -247,10 +247,7 @@ class Buttons
         if (Game.SelectCharacter == Lists.Server_Data.Max_Characters)
             Game.SelectCharacter = 1;
         else
-        {
             Game.SelectCharacter += 1;
-            if (Game.SelectCharacter > Lists.Server_Data.Max_Characters) Game.SelectCharacter = 1;
-        }
     }
 
     public static void Character_Change_Left()
@@ -259,10 +256,7 @@ class Buttons
         if (Game.SelectCharacter == 1)
             Game.SelectCharacter = Lists.Server_Data.Max_Characters;
         else
-        {
             Game.SelectCharacter -= 1;
-            if (Game.SelectCharacter == 0) Game.SelectCharacter = Lists.Server_Data.Max_Characters;
-        }
     }
 
     public static void Chat_Up()
