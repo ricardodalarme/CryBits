@@ -64,7 +64,7 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.CreateCharacter);
-        Data.Write(TextBoxes.Get("CriarPersonagem_Nome").Text);
+        Data.Write(TextBoxes.Get("CreateCharacter_Name").Text);
         Data.Write(Game.CreateCharacter_Class);
         Data.Write(CheckBoxes.Get("GenderMale").State);
         Packet(Data);

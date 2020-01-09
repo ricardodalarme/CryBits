@@ -118,7 +118,7 @@ partial class Receive
     private static void CreateCharacter()
     {
         // Reseta os valores
-        TextBoxes.Get("CriarPersonagem_Nome").Text = string.Empty;
+        TextBoxes.Get("CreateCharacter_Name").Text = string.Empty;
         CheckBoxes.Get("GenderMale").State = true;
         CheckBoxes.Get("GenderFemale").State = false;
         Game.CreateCharacter_Class = 1;

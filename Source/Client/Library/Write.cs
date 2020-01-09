@@ -3,12 +3,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 class Write
 {
-    public static void Data()
-    {
-        // Salva todos os dados
-        Options();
-    }
-
     public static void Options()
     {
         // Cria um arquivo temporário

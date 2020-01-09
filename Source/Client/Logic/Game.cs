@@ -98,14 +98,6 @@ class Game
         Moving
     }
 
-    public enum Access
-    {
-        None,
-        Moderator,
-        Editor,
-        Administrator
-    }
-
     public enum Messages
     {
         Game,

@@ -561,8 +561,11 @@ class Receive
             for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
         }
 
-        // Salva os dados
+        // Salva os dados e envia pra todos jogadores conectados
         Write.Classes();
+        for (byte i = 1; i <= Game.HigherIndex; i++)
+            if (i != Index)
+                Send.Classes(i);
     }
 
     private static void Write_Tiles(byte Index, NetIncomingMessage Data)
@@ -601,8 +604,11 @@ class Receive
                 }
         }
 
-        // Salva os dados
+        // Salva os dados e envia pra todos jogadores conectados
         Write.Tiles();
+        for (byte i = 1; i <= Game.HigherIndex; i++)
+            if (i != Index) 
+                Send.Tiles(i);
     }
 
     private static void Write_Maps(byte Index, NetIncomingMessage Data)
@@ -707,6 +713,11 @@ class Receive
                 Lists.Map[i].NPC[n].X = Data.ReadByte();
                 Lists.Map[i].NPC[n].Y = Data.ReadByte();
             }
+
+            // Envia o mapa para todos os jogadores que estão nele
+            for (byte n = 1; n <= Game.HigherIndex;n++) 
+                if (n != Index)
+                    if (Player.Character(n).Map == i || Lists.TempPlayer[n].InEditor) Send.Map(n, i);
         }
 
         // Salva os dados
@@ -753,8 +764,10 @@ class Receive
             }
         }
 
-        // Salva os dados
+        // Salva os dados e envia pra todos jogadores conectados
         Write.NPCs();
+        for (byte i = 1; i <= Game.HigherIndex; i++) 
+            if (i != Index) Send.NPCs(i);
     }
 
     private static void Write_Items(byte Index, NetIncomingMessage Data)
@@ -795,8 +808,11 @@ class Receive
             Lists.Item[i].Weapon_Damage = Data.ReadInt16();
         }
 
-        // Salva os dados
+        // Salva os dados e envia pra todos jogadores conectados
         Write.Items();
+        for (byte i = 1; i <= Game.HigherIndex; i++)
+            if (i != Index) 
+                Send.Items(i);
     }
 
     private static void Request_Server_Data(byte Index, NetIncomingMessage Data)
