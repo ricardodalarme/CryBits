@@ -77,13 +77,13 @@
             this.chkAuto = new System.Windows.Forms.CheckBox();
             this.cmbTiles = new System.Windows.Forms.ComboBox();
             this.grpLayers = new System.Windows.Forms.GroupBox();
-            this.Strip_Layers = new System.Windows.Forms.ToolStrip();
+            this.Faixa_Camadas = new System.Windows.Forms.ToolStrip();
             this.butLayers_Add = new System.Windows.Forms.ToolStripButton();
             this.butLayers_Remove = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.butLayers_Up = new System.Windows.Forms.ToolStripButton();
             this.butLayers_Down = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.butLayers_Edit = new System.Windows.Forms.ToolStripButton();
             this.lstLayers = new System.Windows.Forms.ListView();
             this.colVisible = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -156,7 +156,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
             this.Strip.SuspendLayout();
             this.grpLayers.SuspendLayout();
-            this.Strip_Layers.SuspendLayout();
+            this.Faixa_Camadas.SuspendLayout();
             this.grpLayer_Add.SuspendLayout();
             this.grpZones.SuspendLayout();
             this.grpLighting.SuspendLayout();
@@ -694,7 +694,7 @@
             // grpLayers
             // 
             this.grpLayers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.grpLayers.Controls.Add(this.Strip_Layers);
+            this.grpLayers.Controls.Add(this.Faixa_Camadas);
             this.grpLayers.Controls.Add(this.lstLayers);
             this.grpLayers.Location = new System.Drawing.Point(12, 512);
             this.grpLayers.Name = "grpLayers";
@@ -703,80 +703,82 @@
             this.grpLayers.TabStop = false;
             this.grpLayers.Text = "Layers";
             // 
-            // Strip_Layers
+            // Faixa_Camadas
             // 
-            this.Strip_Layers.Dock = System.Windows.Forms.DockStyle.None;
-            this.Strip_Layers.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Faixa_Camadas.Dock = System.Windows.Forms.DockStyle.None;
+            this.Faixa_Camadas.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.butLayers_Add,
             this.butLayers_Remove,
-            this.toolStripSeparator4,
+            this.toolStripSeparator12,
             this.butLayers_Up,
             this.butLayers_Down,
-            this.toolStripSeparator7,
+            this.toolStripSeparator13,
             this.butLayers_Edit});
-            this.Strip_Layers.Location = new System.Drawing.Point(6, 133);
-            this.Strip_Layers.Name = "Strip_Layers";
-            this.Strip_Layers.Size = new System.Drawing.Size(139, 25);
-            this.Strip_Layers.TabIndex = 80;
+            this.Faixa_Camadas.Location = new System.Drawing.Point(6, 135);
+            this.Faixa_Camadas.Name = "Faixa_Camadas";
+            this.Faixa_Camadas.Size = new System.Drawing.Size(170, 25);
+            this.Faixa_Camadas.TabIndex = 109;
             // 
             // butLayers_Add
             // 
             this.butLayers_Add.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Add.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Add.Image")));
             this.butLayers_Add.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butLayers_Add.Name = "butLayers_Add";
             this.butLayers_Add.Size = new System.Drawing.Size(23, 22);
-            this.butLayers_Add.Text = "Add";
+            this.butLayers_Add.Text = "Adicionar";
             this.butLayers_Add.Click += new System.EventHandler(this.butLayers_Add_Click);
             // 
             // butLayers_Remove
             // 
             this.butLayers_Remove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Remove.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Remove.Image")));
             this.butLayers_Remove.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butLayers_Remove.Name = "butLayers_Remove";
             this.butLayers_Remove.Size = new System.Drawing.Size(23, 22);
-            this.butLayers_Remove.ToolTipText = "Remove";
+            this.butLayers_Remove.ToolTipText = "Remover";
             this.butLayers_Remove.Click += new System.EventHandler(this.butLayers_Remove_Click);
             // 
-            // toolStripSeparator4
+            // toolStripSeparator12
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(6, 25);
             // 
             // butLayers_Up
             // 
             this.butLayers_Up.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Up.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Up.Image")));
             this.butLayers_Up.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butLayers_Up.Name = "butLayers_Up";
             this.butLayers_Up.Size = new System.Drawing.Size(23, 22);
-            this.butLayers_Up.ToolTipText = "Up";
+            this.butLayers_Up.ToolTipText = "Acima";
             this.butLayers_Up.Click += new System.EventHandler(this.butLayers_Up_Click);
             // 
             // butLayers_Down
             // 
             this.butLayers_Down.BackColor = System.Drawing.Color.Transparent;
-            this.butLayers_Down.Checked = true;
-            this.butLayers_Down.CheckOnClick = true;
-            this.butLayers_Down.CheckState = System.Windows.Forms.CheckState.Checked;
             this.butLayers_Down.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Down.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Down.Image")));
             this.butLayers_Down.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butLayers_Down.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
             this.butLayers_Down.Name = "butLayers_Down";
             this.butLayers_Down.Size = new System.Drawing.Size(23, 22);
-            this.butLayers_Down.ToolTipText = "Down";
+            this.butLayers_Down.ToolTipText = "Abaixo";
             this.butLayers_Down.Click += new System.EventHandler(this.butLayers_Down_Click);
             // 
-            // toolStripSeparator7
+            // toolStripSeparator13
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator13.Name = "toolStripSeparator13";
+            this.toolStripSeparator13.Size = new System.Drawing.Size(6, 25);
             // 
             // butLayers_Edit
             // 
             this.butLayers_Edit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Edit.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Edit.Image")));
             this.butLayers_Edit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butLayers_Edit.Name = "butLayers_Edit";
             this.butLayers_Edit.Size = new System.Drawing.Size(23, 22);
-            this.butLayers_Edit.ToolTipText = "Edit";
+            this.butLayers_Edit.ToolTipText = "Editar";
             this.butLayers_Edit.Click += new System.EventHandler(this.butLayers_Edit_Click);
             // 
             // lstLayers
@@ -1487,11 +1489,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1216, 708);
-            this.Controls.Add(this.grpNPCs);
-            this.Controls.Add(this.grpAttributes);
-            this.Controls.Add(this.grpLighting);
             this.Controls.Add(this.grpAttributes_Set);
-            this.Controls.Add(this.grpZones);
             this.Controls.Add(this.picTile_Background);
             this.Controls.Add(this.picMap);
             this.Controls.Add(this.picBackground);
@@ -1500,7 +1498,6 @@
             this.Controls.Add(this.cmbTiles);
             this.Controls.Add(this.butQuantity);
             this.Controls.Add(this.cmbList);
-            this.Controls.Add(this.grpLayer_Add);
             this.Controls.Add(this.Strip);
             this.Controls.Add(this.tolStrip);
             this.Controls.Add(this.scrlTileX);
@@ -1508,6 +1505,11 @@
             this.Controls.Add(this.scrlMapX);
             this.Controls.Add(this.scrlTileY);
             this.Controls.Add(this.grpLayers);
+            this.Controls.Add(this.grpNPCs);
+            this.Controls.Add(this.grpAttributes);
+            this.Controls.Add(this.grpLighting);
+            this.Controls.Add(this.grpZones);
+            this.Controls.Add(this.grpLayer_Add);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "Editor_Maps";
@@ -1523,8 +1525,8 @@
             this.Strip.PerformLayout();
             this.grpLayers.ResumeLayout(false);
             this.grpLayers.PerformLayout();
-            this.Strip_Layers.ResumeLayout(false);
-            this.Strip_Layers.PerformLayout();
+            this.Faixa_Camadas.ResumeLayout(false);
+            this.Faixa_Camadas.PerformLayout();
             this.grpLayer_Add.ResumeLayout(false);
             this.grpLayer_Add.PerformLayout();
             this.grpZones.ResumeLayout(false);
@@ -1600,14 +1602,6 @@
     private System.Windows.Forms.Button butLayer_Edit;
     private System.Windows.Forms.Button butQuantity;
     public System.Windows.Forms.ComboBox cmbList;
-    private System.Windows.Forms.ToolStrip Strip_Layers;
-    private System.Windows.Forms.ToolStripButton butLayers_Add;
-    private System.Windows.Forms.ToolStripButton butLayers_Remove;
-    private System.Windows.Forms.ToolStripButton butLayers_Up;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-    public System.Windows.Forms.ToolStripButton butLayers_Down;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-    private System.Windows.Forms.ToolStripButton butLayers_Edit;
     public System.Windows.Forms.ListView lstLayers;
     public System.Windows.Forms.ToolStripButton butDiscover;
     public System.Windows.Forms.ToolStripButton butRectangle;
@@ -1680,4 +1674,12 @@
     private System.Windows.Forms.ComboBox cmbA_Item;
     private System.Windows.Forms.Label label15;
     private System.Windows.Forms.Label label16;
+    private System.Windows.Forms.ToolStrip Faixa_Camadas;
+    private System.Windows.Forms.ToolStripButton butLayers_Add;
+    private System.Windows.Forms.ToolStripButton butLayers_Remove;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+    private System.Windows.Forms.ToolStripButton butLayers_Up;
+    public System.Windows.Forms.ToolStripButton butLayers_Down;
+    private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
+    private System.Windows.Forms.ToolStripButton butLayers_Edit;
 }

@@ -118,7 +118,7 @@ partial class Editor_Maps : Form
         Update_Data();
 
         // Abre a janela
-        global::Selection.Objects.Visible = false;
+        Selection.Objects.Visible = false;
         Objects.Visible = true;
     }
 
@@ -1273,6 +1273,7 @@ partial class Editor_Maps : Form
         butLayer_Add.Visible = true;
         butLayer_Edit.Visible = false;
         grpLayer_Add.Text = "Add layer";
+        grpLayer_Add.BringToFront();
         grpLayer_Add.Visible = true;
     }
 
@@ -1368,6 +1369,7 @@ partial class Editor_Maps : Form
         butLayer_Add.Visible = false;
         butLayer_Edit.Visible = true;
         grpLayer_Add.Text = "Edit layer";
+        grpLayer_Add.BringToFront();
         grpLayer_Add.Visible = true;
     }
     #endregion
