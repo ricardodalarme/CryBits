@@ -65,6 +65,7 @@ class CheckBoxes
     {
         // Salva os dados
         Lists.Options.Sounds = !Lists.Options.Sounds;
+        if (!Lists.Options.Sounds) Audio.Sound.Stop_All();
         Write.Options();
     }
 
@@ -77,8 +78,10 @@ class CheckBoxes
         // Para ou reproduz a música dependendo do estado do marcador
         if (!Lists.Options.Musics)
             Audio.Music.Stop();
-        else
+        else if (Tools.CurrentWindow == Tools.Windows.Menu)
             Audio.Music.Play(Audio.Musics.Menu);
+        else if (Tools.CurrentWindow == Tools.Windows.Game)
+            Audio.Music.Play((Audio.Musics)Lists.Map.Music);
     }
 
     public static void SaveUsername()
