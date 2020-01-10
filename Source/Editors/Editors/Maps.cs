@@ -332,6 +332,7 @@ partial class Editor_Maps : Form
     {
         // Salva todos os dados
         Send.Write_Maps();
+        MessageBox.Show("All maps have been saved");
     }
 
     private void butReload_Click(object sender, EventArgs e)

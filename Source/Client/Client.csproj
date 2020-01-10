@@ -16,12 +16,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>embedded</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Build\Client\</OutputPath>
     <DefineConstants>
     </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
+    <ErrorReport>none</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
