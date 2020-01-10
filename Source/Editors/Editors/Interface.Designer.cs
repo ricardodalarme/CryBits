@@ -26,6 +26,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Interface));
             this.picWindow = new System.Windows.Forms.PictureBox();
             this.butClear = new System.Windows.Forms.Button();
             this.butNew = new System.Windows.Forms.Button();
@@ -257,6 +258,7 @@
             this.Controls.Add(this.picWindow);
             this.Controls.Add(this.grpNew);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimizeBox = false;
             this.Name = "Editor_Interface";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

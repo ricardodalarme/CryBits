@@ -26,6 +26,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Tiles));
             this.scrlTileX = new System.Windows.Forms.HScrollBar();
             this.scrlTileY = new System.Windows.Forms.VScrollBar();
             this.picTile = new System.Windows.Forms.PictureBox();
@@ -198,6 +199,7 @@
             this.Controls.Add(this.scrlTileY);
             this.Controls.Add(this.picTile);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Editor_Tiles";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tile Editor";
