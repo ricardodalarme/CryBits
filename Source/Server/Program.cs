@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Windows.Forms;
 
 class Program
 {
@@ -82,17 +81,16 @@ class Program
             case "help":
                 Console.WriteLine(@"     List of available commands:
      defineaccess               - sets a level of access for a given player
-     cps                        - shows the current server cps
-     reload                     - reload certain data ");
+     cps                        - shows the current server cps");
                 break;
             case "cps":
                 Console.WriteLine("CPS: " + Game.CPS);
                 break;
             case "defineaccess":
-                byte Acess;
+                byte Access;
 
                 // Verifica se o que está digitado corretamente
-                if (Parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(Parts[1]) || !Byte.TryParse(Parts[2], out Acess))
+                if (Parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(Parts[1]) || !Byte.TryParse(Parts[2], out Access))
                 {
                     Console.WriteLine("Use: defineaccess 'Player Name' 'Access' ");
                     return;
@@ -108,43 +106,11 @@ class Program
                 }
 
                 // Define o acesso do jogador
-                Lists.Player[Index].Acess = (Game.Accesses)Convert.ToByte(Parts[2]);
+                Lists.Player[Index].Acess = (Game.Accesses)Access;
 
                 // Salva os dados
                 Write.Player(Index);
                 Console.WriteLine((Game.Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
-                break;
-            case "reload":
-                // Verifica se o que está digitado corretamente
-                if (Parts.GetUpperBound(0) < 1 || string.IsNullOrEmpty(Parts[1]))
-                {
-                    Console.WriteLine("Use: reload 'Item desired'");
-                    return;
-                }
-
-                switch (Parts[1])
-                {
-                    // Recarrega os mapas
-                    case "maps":
-                        Read.Maps();
-                        Console.WriteLine("Reloaded maps");
-                        break;
-                    // Recarrega as classes
-                    case "classes":
-                        Read.Classes();
-                        Console.WriteLine("Reloaded classes");
-                        break;
-                    // Recarrega os NPCs
-                    case "npcs":
-                        Read.NPCs();
-                        Console.WriteLine("Reloaded npcs");
-                        break;
-                    // Recarrega os itens
-                    case "items":
-                        Read.Items();
-                        Console.WriteLine("Reloaded items");
-                        break;
-                }
                 break;
             // Se o comando não existir mandar uma mensagem de ajuda
             default:
