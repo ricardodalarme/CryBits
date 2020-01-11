@@ -73,9 +73,6 @@ class Program
         if (string.IsNullOrEmpty(Command))
             return;
 
-        // Transforma o comando em letras minúsculas
-        Command = Command.ToLower();
-
         // Separa os comandos em partes
         string[] Parts = Command.Split(' ');
 
@@ -102,7 +99,7 @@ class Program
                 }
 
                 // Encontra o jogador
-                byte Index = Player.Find(Parts[1]);
+                byte Index = Player.FindUser(Parts[1]);
 
                 if (Index == 0)
                 {

@@ -152,6 +152,17 @@ class Player
         return false;
     }
 
+    public static byte FindUser(string Name)
+    {
+        // Encontra o usuário
+        for (byte i = 1; i <= Game.HigherIndex; i++)
+            if (IsPlaying(i))
+                if (Lists.Player[i].User == Name)
+                    return i;
+
+        return 0;
+    }
+
     public static byte Find(string Name)
     {
         // Encontra o usuário
