@@ -79,6 +79,7 @@
     <Compile Include="Network\Receive.cs" />
     <Compile Include="Network\Send.cs" />
     <Compile Include="Network\Socket.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Window.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,8 +92,6 @@
     <Analyzer Include="..\..\Build\Client\sfmlnet-graphics-2.dll" />
     <Analyzer Include="..\..\Build\Client\sfmlnet-window-2.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
