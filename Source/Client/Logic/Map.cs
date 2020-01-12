@@ -379,17 +379,7 @@ class Map
                         for (byte q = 0; q <= Lists.Map.Tile[x, y].Data.GetUpperBound(1); q++)
                             if (Lists.Map.Tile[x, y].Data[c, q].Automatic)
                                 // Faz os cálculos para a autocriação
-                                Calculate(x, y, c, q);
-        }
-
-        public static void Update(int x, int y, byte Layer_Num, byte Layer_Type)
-        {
-            // Atualiza os azulejos necessários
-            for (int x2 = x - 2; x2 <= x + 2; x2++)
-                for (int y2 = y - 2; y2 <= y + 2; y2++)
-                    if (x2 >= 0 && x2 <= Lists.Map.Width && y2 >= 0 && y2 <= Lists.Map.Height)
-                        // Faz os cálculos para a autocriação
-                        Calculate((byte)x2, (byte)y2, Layer_Num, Layer_Type);
+                                Calculate(x, y, q, c);
         }
 
         public static void Set(byte x, byte y, byte Layer_Num, byte Layer_Type, byte Part, string Index)

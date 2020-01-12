@@ -508,9 +508,7 @@ partial class Graphics
 
         // Apenas se necessário
         if (Item_Num == -1) return;
-        if (Game.Need_Information == 0)
-            Item_Num = Item_Num;
-        // hotbar - char - inv
+
         // Informações
         Point Position = Panels.Get("Information").Position;
         DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, SFML.Graphics.Color.Yellow);

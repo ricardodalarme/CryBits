@@ -266,6 +266,7 @@ partial class Receive
                     Lists.Map.Tile[x, y].Data[t, i].Y = Data.ReadByte();
                     Lists.Map.Tile[x, y].Data[t, i].Tile = Data.ReadByte();
                     Lists.Map.Tile[x, y].Data[t, i].Automatic = Data.ReadBoolean();
+                    Lists.Map.Tile[x, y].Data[t, i].Mini = new Point[4];
                 }
         }
 
