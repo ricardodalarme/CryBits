@@ -11,7 +11,6 @@ class Directories
     public static DirectoryInfo Musics = new DirectoryInfo(Application.StartupPath + @"\Audio\Musics\");
     public static DirectoryInfo Fonts = new DirectoryInfo(Application.StartupPath + @"\Fonts\");
     public static FileInfo Options = new FileInfo(Application.StartupPath + @"\Data\Options" + Format);
-    public static FileInfo Client_Data = new FileInfo(Application.StartupPath + @"\Data\General" + Format);
     public static DirectoryInfo Maps_Data = new DirectoryInfo(Application.StartupPath + @"\Data\Maps\");
     public static FileInfo Tools = new FileInfo(Application.StartupPath + @"\Data\Tools" + Format);
     public static FileInfo Tex_Background = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Background");
@@ -42,7 +41,6 @@ class Directories
         Fonts.Create();
         Sounds.Create();
         Musics.Create();
-        Client_Data.Directory.Create();
         Maps_Data.Create();
         Tools.Directory.Create();
         Tex_Panoramas.Create();
