@@ -172,11 +172,12 @@ partial class Receive
     {
         // Reseta os valores
         Tools.Chat = new System.Collections.Generic.List<Tools.Chat_Structure>();
+        Tools.Chat_Line = 0;
         TextBoxes.Get("Chat").Text = string.Empty;
         Panels.Get("Chat").Visible = false;
-        Tools.Chat_Line = 0;
         CheckBoxes.Get("Options_Sounds").State = Lists.Options.Sounds;
         CheckBoxes.Get("Options_Music").State = Lists.Options.Musics;
+        Game.Need_Information = 0;
 
         // Abre o jogo
         Audio.Music.Stop();

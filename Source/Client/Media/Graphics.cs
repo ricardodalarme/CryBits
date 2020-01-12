@@ -383,12 +383,12 @@ partial class Graphics
         string Text = Lists.Class[Game.CreateCharacter_Class].Name;
         DrawText(Text, 471 - Tools.MeasureString(Text) / 2, 449, SFML.Graphics.Color.White);
     }
-
+   
     public static void Game_Hotbar(Panels.Structure Tool)
     {
         string Indicator = string.Empty;
         Point Panel_Position = Tool.Position;
-        Game.Need_Information ^= 1;
+        Game.Need_Information &= ~(1);
 
         // Desenha os itens da hotbar
         for (byte i = 1; i <= Game.Max_Hotbar; i++)
@@ -428,11 +428,11 @@ partial class Graphics
         // Fecha a janela de informa~ção caso necessário
         if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
-
+   
     public static void Game_Menu_Character(Panels.Structure Tool)
     {
         Point Panel_Position = Tool.Position;
-        Game.Need_Information ^= 1 << 1;
+        Game.Need_Information &= ~(1 << 1);
 
         // Dados básicos
         DrawText(Player.Me.Name, Panel_Position.X + 18, Panel_Position.Y + 52, SFML.Graphics.Color.White);
@@ -473,7 +473,7 @@ partial class Graphics
     {
         byte NumColumns = 5;
         Point Panel_Position = Tool.Position;
-        Game.Need_Information ^= 1 << 2;
+        Game.Need_Information &= ~(1 << 2);
 
         // Desenha todos os itens do inventário
         for (byte i = 1; i <= Game.Max_Inventory; i++)
@@ -508,7 +508,9 @@ partial class Graphics
 
         // Apenas se necessário
         if (Item_Num == -1) return;
-
+        if (Game.Need_Information == 0)
+            Item_Num = Item_Num;
+        // hotbar - char - inv
         // Informações
         Point Position = Panels.Get("Information").Position;
         DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, SFML.Graphics.Color.Yellow);
@@ -519,9 +521,9 @@ partial class Graphics
         {
             DrawText("Req level: " + Lists.Item[Item_Num].Req_Level, Position.X + 9, Position.Y + 90, SFML.Graphics.Color.White);
             if (Lists.Item[Item_Num].Req_Class > 0)
-                DrawText("Req classe: " + Lists.Class[Lists.Item[Item_Num].Req_Class].Name, Position.X + 9, Position.Y + 102, SFML.Graphics.Color.White);
+                DrawText("Req class: " + Lists.Class[Lists.Item[Item_Num].Req_Class].Name, Position.X + 9, Position.Y + 102, SFML.Graphics.Color.White);
             else
-                DrawText("Req classe: Nenhuma", Position.X + 9, Position.Y + 102, SFML.Graphics.Color.White);
+                DrawText("Req class: None", Position.X + 9, Position.Y + 102, SFML.Graphics.Color.White);
         }
 
         // Específicas 
