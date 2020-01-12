@@ -41,6 +41,7 @@ class TextBoxes
         {
             // Apaga a última letra do texto
             if (Tools.Viewable(Tools.Get(this)))
+            {
                 if (!string.IsNullOrEmpty(Text))
                 {
                     if (e.KeyChar == '\b' && Text.Length > 0)
@@ -58,6 +59,7 @@ class TextBoxes
                 // Adiciona apenas os caractres válidos ao digitalizador
                 if (e.KeyChar >= 32 && e.KeyChar <= 126) Text += e.KeyChar.ToString();
             }
+        }
     }
 
     public static Structure Get(string Name)

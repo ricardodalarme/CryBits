@@ -145,6 +145,8 @@ public partial class Window : Form
         if (Tools.CurrentWindow == Tools.Windows.Game)
             if (!Panels.Get("Chat").Visible)
             {
+            //    Panels.Get("Information").Visible = false;
+
                 switch (e.KeyCode)
                 {
                     case Keys.Space: Player.CollectItem(); break;
