@@ -117,7 +117,7 @@ class Clear
         for (byte x = 0; x <= Lists.Map[Index].Width; x++)
             for (byte y = 0; y <= Lists.Map[Index].Height; y++)
                 Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
-        
+
         // Dados temporários
         Lists.Temp_Map[Index] = new Lists.Structures.Temp_Map();
         Lists.Temp_Map[Index].NPC = Array.Empty<Lists.Structures.Map_NPCs>();

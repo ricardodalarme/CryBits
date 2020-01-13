@@ -606,7 +606,7 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.Tiles();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Index) 
+            if (i != Index)
                 Send.Tiles(i);
     }
 
@@ -714,7 +714,7 @@ class Receive
             }
 
             // Envia o mapa para todos os jogadores que estão nele
-            for (byte n = 1; n <= Game.HigherIndex;n++) 
+            for (byte n = 1; n <= Game.HigherIndex; n++)
                 if (n != Index)
                     if (Player.Character(n).Map == i || Lists.TempPlayer[n].InEditor) Send.Map(n, i);
         }
@@ -765,7 +765,7 @@ class Receive
 
         // Salva os dados e envia pra todos jogadores conectados
         Write.NPCs();
-        for (byte i = 1; i <= Game.HigherIndex; i++) 
+        for (byte i = 1; i <= Game.HigherIndex; i++)
             if (i != Index) Send.NPCs(i);
     }
 
@@ -810,7 +810,7 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.Items();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Index) 
+            if (i != Index)
                 Send.Items(i);
     }
 

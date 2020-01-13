@@ -289,7 +289,7 @@ partial class Receive
         }
 
         // Abre o editor
-        if (Data.ReadBoolean()) 
+        if (Data.ReadBoolean())
             Editor_Tiles.Open();
     }
 }

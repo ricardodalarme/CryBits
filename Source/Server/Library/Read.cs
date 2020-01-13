@@ -207,13 +207,13 @@ partial class Read
     {
         // Lê os dados
         Lists.NPC = new Lists.Structures.NPC[Lists.Server_Data.Num_NPCs + 1];
-        for (byte i = 1; i < Lists.NPC.Length; i++)  NPC(i);
+        for (byte i = 1; i < Lists.NPC.Length; i++) NPC(i);
     }
 
     public static void NPC(byte Index)
     {
         FileInfo File = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format);
-      
+
         // Cria o arquivo caso ele não existir
         if (!File.Exists)
         {
@@ -232,7 +232,7 @@ partial class Read
     {
         // Lê os dados
         Lists.Tile = new Lists.Structures.Tile[Lists.Server_Data.Num_Tiles + 1];
-        for (byte i = 1; i < Lists.Tile.Length; i++)  Tile(i);
+        for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
     }
 
     public static void Tile(byte Index)

@@ -482,7 +482,7 @@ class Send
             Data.Write(Lists.Map[Map_Num].NPC[i].X);
             Data.Write(Lists.Map[Map_Num].NPC[i].Y);
         }
-        if (Map_Num == Lists.Map.Length - 1) 
+        if (Map_Num == Lists.Map.Length - 1)
             Data.Write(OpenEditor);
         ToPlayer(Index, Data);
     }

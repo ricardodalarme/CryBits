@@ -383,7 +383,7 @@ partial class Graphics
         string Text = Lists.Class[Game.CreateCharacter_Class].Name;
         DrawText(Text, 471 - Tools.MeasureString(Text) / 2, 449, SFML.Graphics.Color.White);
     }
-   
+
     public static void Game_Hotbar(Panels.Structure Tool)
     {
         string Indicator = string.Empty;
@@ -428,7 +428,7 @@ partial class Graphics
         // Fecha a janela de informa~ção caso necessário
         if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
-   
+
     public static void Game_Menu_Character(Panels.Structure Tool)
     {
         Point Panel_Position = Tool.Position;

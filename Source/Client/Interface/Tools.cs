@@ -85,8 +85,7 @@ class Tools
     public static bool Viewable(Order_Structure Order)
     {
         // Verifica se a ferramenta está visível
-        if (Order == null) 
-            return true;
+        if (Order == null) return true;
         if (Order.Data.Window != CurrentWindow) return false;
         if (!Order.Data.Visible) return false;
         return Viewable(Order.Parent);
@@ -96,14 +95,14 @@ class Tools
     {
         // Percorre toda a árvore de ordem para encontrar a ferramenta
         Stack<List<Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
-        for (byte i = 0; i < All_Order.Length; i++)  Stack.Push(All_Order[i]);
+        for (byte i = 0; i < All_Order.Length; i++) Stack.Push(All_Order[i]);
         while (Stack.Count != 0)
         {
             List<Order_Structure> Top = Stack.Pop();
 
             for (byte i = 0; i < Top.Count; i++)
             {
-                if (Top[i].Data == Tool)  
+                if (Top[i].Data == Tool)
                     return Top[i];
                 Stack.Push(Top[i].Nodes);
             }

@@ -94,8 +94,8 @@ class Lists
             public short[] NPC;
         }
 
-        public struct Temp_Map 
-        { 
+        public struct Temp_Map
+        {
             public Map_NPCs[] NPC;
             public Map_Items[] Item;
         }
