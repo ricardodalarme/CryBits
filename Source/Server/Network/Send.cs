@@ -191,8 +191,11 @@ class Send
         {
             // Escreve os dados
             Data.Write(Lists.Class[i].Name);
-            Data.Write(Lists.Class[i].Texture_Male);
-            Data.Write(Lists.Class[i].Texture_Female);
+            Data.Write(Lists.Class[i].Description);
+            Data.Write((byte)Lists.Class[i].Tex_Male.Length);
+            for (byte t = 0; t < Lists.Class[i].Tex_Male.Length;t++) Data.Write(Lists.Class[i].Tex_Male[t]);
+            Data.Write((byte)Lists.Class[i].Tex_Female.Length);
+            for (byte t = 0; t < Lists.Class[i].Tex_Female.Length; t++) Data.Write(Lists.Class[i].Tex_Female[t]);
 
             // Apenas dados do editor
             if (Lists.TempPlayer[Index].InEditor)
@@ -201,8 +204,13 @@ class Send
                 Data.Write(Lists.Class[i].Spawn_Direction);
                 Data.Write(Lists.Class[i].Spawn_X);
                 Data.Write(Lists.Class[i].Spawn_Y);
-                for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Data.Write(Lists.Class[i].Vital[v]);
-                for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Data.Write(Lists.Class[i].Attribute[a]);
+                for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Class[i].Vital[n]);
+                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.Class[i].Attribute[n]);
+                Data.Write(Lists.Class[i].Evolve_To);
+                Data.Write(Lists.Class[i].Evolve_Level);
+                Data.Write((byte)Lists.Class[i].Item.Length);
+                for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++) Data.Write(Lists.Class[i].Item[n]);
+                for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Lists.Class[i].Equipment[n]);
             }
         }
         Data.Write(OpenEditor);
@@ -240,8 +248,8 @@ class Send
             Data.Write(Player.Character(Index).Vital[n]);
             Data.Write(Player.Character(Index).MaxVital(n));
         }
-        for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) Data.Write(Player.Character(Index).Attribute[n]);
-        for (byte n = 0; n < (byte)Game.Equipments.Amount; n++) Data.Write(Player.Character(Index).Equipment[n]);
+        for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Player.Character(Index).Attribute[n]);
+        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Player.Character(Index).Equipment[n]);
 
         return Data;
     }
@@ -339,7 +347,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Equipments);
         Data.Write(Index);
-        for (byte i = 0; i < (byte)Game.Equipments.Amount; i++) Data.Write(Player.Character(Index).Equipment[i]);
+        for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Data.Write(Player.Character(Index).Equipment[i]);
         ToMap(Player.Character(Index).Map, Data);
     }
 
@@ -587,12 +595,13 @@ class Send
             Data.Write(Lists.Item[i].Price);
             Data.Write(Lists.Item[i].Stackable);
             Data.Write(Lists.Item[i].Bind);
+            Data.Write(Lists.Item[i].Rarity);
             Data.Write(Lists.Item[i].Req_Level);
             Data.Write(Lists.Item[i].Req_Class);
             Data.Write(Lists.Item[i].Potion_Experience);
             for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Data.Write(Lists.Item[i].Potion_Vital[v]);
             Data.Write(Lists.Item[i].Equip_Type);
-            for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Data.Write(Lists.Item[i].Equip_Attribute[a]);
+            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Data.Write(Lists.Item[i].Equip_Attribute[a]);
             Data.Write(Lists.Item[i].Weapon_Damage);
         }
         Data.Write(OpenEditor);
@@ -677,6 +686,7 @@ class Send
         {
             // Geral
             Data.Write(Lists.NPC[i].Name);
+            Data.Write(Lists.NPC[i].SayMsg);
             Data.Write(Lists.NPC[i].Texture);
             Data.Write(Lists.NPC[i].Behaviour);
             for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.NPC[i].Vital[n]);
@@ -687,7 +697,7 @@ class Send
                 Data.Write(Lists.NPC[i].SpawnTime);
                 Data.Write(Lists.NPC[i].Sight);
                 Data.Write(Lists.NPC[i].Experience);
-                for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) Data.Write(Lists.NPC[i].Attribute[n]);
+                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.NPC[i].Attribute[n]);
                 for (byte n = 0; n < Game.Max_NPC_Drop; n++)
                 {
                     Data.Write(Lists.NPC[i].Drop[n].Item_Num);

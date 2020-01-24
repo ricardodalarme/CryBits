@@ -20,7 +20,7 @@ class Player
         private short experience;
         public byte Points;
         public short[] Vital = new short[(byte)Game.Vitals.Amount];
-        public short[] Attribute = new short[(byte)Game.Attributes.Amount];
+        public short[] Attribute = new short[(byte)Game.Attributes.Count];
         public short Map;
         public byte X;
         public byte Y;
@@ -99,7 +99,7 @@ class Player
             {
                 short Total = 0;
                 // Amount de experiência para passar para o próximo level
-                for (byte i = 0; i <= (byte)(Game.Attributes.Amount - 1); i++) Total += Attribute[i];
+                for (byte i = 0; i <= (byte)(Game.Attributes.Count - 1); i++) Total += Attribute[i];
                 return (short)((Level + 1) * 2.5 + (Total + Points) / 2);
             }
         }
@@ -523,7 +523,7 @@ class Player
         // Somente se necessário
         if (Lists.Temp_Map[Map_Num].Item.Count == Game.Max_Map_Items) return;
         if (Character(Index).Inventory[Slot].Item_Num == 0) return;
-        if (Lists.Item[Character(Index).Inventory[Slot].Item_Num].Bind) return;
+        if (Lists.Item[Character(Index).Inventory[Slot].Item_Num].Bind == (byte)Game.BindOn.Pickup) return;
 
         // Solta o item no chão
         Map_Item.Index = Character(Index).Inventory[Slot].Item_Num;
@@ -575,7 +575,7 @@ class Player
 
             // Equipa o item
             Character(Index).Equipment[Lists.Item[Item_Num].Equip_Type] = Item_Num;
-            for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Character(Index).Attribute[i] += Lists.Item[Item_Num].Equip_Attribute[i];
+            for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Character(Index).Attribute[i] += Lists.Item[Item_Num].Equip_Attribute[i];
 
             // Envia os dados
             Send.Player_Inventory(Index);

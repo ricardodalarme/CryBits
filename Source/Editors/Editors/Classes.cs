@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 public partial class Editor_Classes : Form
@@ -6,7 +7,10 @@ public partial class Editor_Classes : Form
     // Usado para acessar os dados da janela
     public static Editor_Classes Objects = new Editor_Classes();
 
-    // Index do item selecionado
+    // Dados
+    private static List<short> Equipments;
+
+    // Índice do item selecionado
     public byte Selected;
 
     public Editor_Classes()
@@ -17,11 +21,21 @@ public partial class Editor_Classes : Form
     public static void Request()
     {
         // Lê os dados
+        Send.Request_Items();
         Send.Request_Classes(true);
     }
 
     public static void Open()
     {
+        // Lista de equipamentos
+        Equipments = new List<short>();
+        Objects.cmbEquip_Type.Items.Clear();
+        for (byte i = 1; i < (byte)Globals.Equipments.Count; i++) Objects.cmbEquip_Type.Items.Add((Globals.Equipments)i);
+
+        // Lista de itens
+        Objects.cmbItems.Items.Clear();
+        for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbItems.Items.Add(Globals.Numbering(i, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[i].Name);
+
         // Lista os dados
         List_Update();
 
@@ -32,15 +46,22 @@ public partial class Editor_Classes : Form
 
     private static void List_Update()
     {
-        // Limpa a lista
+        // Limpa as listas
         Objects.List.Items.Clear();
+        Objects.cmbEvolve_Class.Items.Clear();
+        Objects.cmbEvolve_Class.Items.Add("None");
 
-        // Adiciona os itens à lista
+        // Adiciona os itens às listas
         for (byte i = 1; i < Lists.Class.Length; i++)
-            Objects.List.Items.Add(Globals.Numbering(i, Lists.Class.GetUpperBound(0)) + ":" + Lists.Class[i].Name);
+        {
+            string Text = Globals.Numbering(i, Lists.Class.GetUpperBound(0)) + ":" + Lists.Class[i].Name;
+            Objects.List.Items.Add(Text);
+            Objects.cmbEvolve_Class.Items.Add(Text);
+        }
 
-        // Seleciona o primeiro item
+        // Seleciona os primeiros itens
         Objects.List.SelectedIndex = 0;
+        Objects.cmbEvolve_Class.SelectedIndex = Lists.Class[1].Evolve_To;
     }
 
     private void Update_Data()
@@ -50,10 +71,13 @@ public partial class Editor_Classes : Form
         // Previne erros
         if (Selected == 0) return;
 
+        // Limpa os dados necessários
+        lstMale.Items.Clear();
+        lstFemale.Items.Clear();
+
         // Lista os dados
         txtName.Text = Lists.Class[Selected].Name;
-        lblMTexture.Text = "Male: " + Lists.Class[Selected].Texture_Male;
-        lblFTexture.Text = "Female: " + Lists.Class[Selected].Texture_Female;
+        txtDescription.Text = Lists.Class[Selected].Description;
         numHP.Value = Lists.Class[Selected].Vital[(byte)Globals.Vitals.HP];
         numMP.Value = Lists.Class[Selected].Vital[(byte)Globals.Vitals.MP];
         numStrength.Value = Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Strength];
@@ -65,6 +89,15 @@ public partial class Editor_Classes : Form
         cmbSpawn_Direction.SelectedIndex = Lists.Class[Selected].Spawn_Direction;
         numSpawn_X.Value = Lists.Class[Selected].Spawn_X;
         numSpawn_Y.Value = Lists.Class[Selected].Spawn_Y;
+        for (byte i = 0; i < Lists.Class[Selected].Tex_Male.Count; i++) lstMale.Items.Add(Lists.Class[Selected].Tex_Male[i]);
+        for (byte i = 0; i < Lists.Class[Selected].Tex_Female.Count; i++) lstFemale.Items.Add(Lists.Class[Selected].Tex_Female[i]);
+        cmbEvolve_Class.SelectedIndex = Lists.Class[Selected].Evolve_To;
+        numEvolve_Level.Value = Lists.Class[Selected].Evolve_Level;
+
+        // Seleciona os primeiros itens
+        if (lstMale.Items.Count > 0) lstMale.SelectedIndex = 0;
+        if (lstFemale.Items.Count > 0) lstFemale.SelectedIndex = 0;
+        cmbEquip_Type.SelectedIndex = 0;
     }
 
     public static void Change_Quantity()
@@ -83,7 +116,6 @@ public partial class Editor_Classes : Form
         List_Update();
     }
 
-    #region 
     private void List_SelectedIndexChanged(object sender, EventArgs e)
     {
         // Atualiza a lista
@@ -129,88 +161,189 @@ public partial class Editor_Classes : Form
         if (Selected > 0)
         {
             Lists.Class[Selected].Name = txtName.Text;
-            List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count) + ":" + txtName.Text;
+            string Text = Globals.Numbering(Selected, List.Items.Count) + ":" + txtName.Text;
+            List.Items[Selected - 1] = Text;
+            cmbEvolve_Class.Items[Selected - 1] = Text;
         }
     }
 
     private void numHP_ValueChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Vital[(byte)Globals.Vitals.HP] = (short)numHP.Value;
     }
 
     private void numMP_ValueChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Vital[(byte)Globals.Vitals.MP] = (short)numMP.Value;
     }
 
     private void numStrength_ValueChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Strength] = (short)numStrength.Value;
     }
 
     private void numResistance_ValueChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Resistance] = (short)numResistance.Value;
     }
 
     private void numIntelligence_ValueChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Intelligence] = (short)numIntelligence.Value;
     }
 
     private void numAgility_ValueChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Agility] = (short)numAgility.Value;
     }
 
     private void numVitality_ValueChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Vitality] = (short)numVitality.Value;
     }
 
     private void butMTexture_Click(object sender, EventArgs e)
     {
-        // Abre a pré visualização
-        Lists.Class[Selected].Texture_Male = Preview.Select(Graphics.Tex_Character, Lists.Class[Selected].Texture_Male);
-        lblMTexture.Text = "Male: " + Lists.Class[Selected].Texture_Male;
+        // Adiciona a textura
+        short Texture_Num = Preview.Select(Graphics.Tex_Character, 0);
+        if (Texture_Num != 0)
+        {
+            Lists.Class[Selected].Tex_Male.Add(Texture_Num);
+            lstMale.Items.Add(Texture_Num);
+        }
     }
 
     private void butFTexture_Click(object sender, EventArgs e)
     {
-        // Abre a pré visualização
-        Lists.Class[Selected].Texture_Female = Preview.Select(Graphics.Tex_Character, Lists.Class[Selected].Texture_Female);
-        lblFTexture.Text = "Female: " + Lists.Class[Selected].Texture_Female;
+        // Adiciona a textura
+        short Texture_Num = Preview.Select(Graphics.Tex_Character, 0);
+        if (Texture_Num != 0)
+        {
+            Lists.Class[Selected].Tex_Female.Add(Texture_Num);
+            lstFemale.Items.Add(Texture_Num);
+        }
+    }
+
+    private void butMDelete_Click(object sender, EventArgs e)
+    {
+        // Deleta a textura
+        short Selected_Item = (short)lstMale.SelectedIndex;
+        if (Selected_Item != -1)
+        {
+            lstMale.Items.RemoveAt(Selected_Item);
+            Lists.Class[Selected].Tex_Male.RemoveAt(Selected_Item);
+        }
+    }
+
+    private void butFDelete_Click(object sender, EventArgs e)
+    {
+        // Deleta a textura
+        short Selected_Item = (short)lstFemale.SelectedIndex;
+        if (Selected_Item != -1)
+        {
+            lstFemale.Items.RemoveAt(Selected_Item);
+            Lists.Class[Selected].Tex_Female.RemoveAt(Selected_Item);
+        }
     }
 
     private void numSpawn_Map_ValueChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Spawn_Map = (short)numSpawn_Map.Value;
     }
 
     private void cmbSpawn_Direction_SelectedIndexChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Spawn_Direction = (byte)cmbSpawn_Direction.SelectedIndex;
     }
 
     private void numSpawn_X_ValueChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Spawn_X = (byte)numSpawn_X.Value;
     }
 
     private void numSpawn_Y_ValueChanged(object sender, EventArgs e)
     {
-        // Define os valores
+        // Define o valor
         Lists.Class[Selected].Spawn_Y = (byte)numSpawn_Y.Value;
     }
-    #endregion
+
+    private void txtDescription_Validated(object sender, EventArgs e)
+    {
+        // Define o valor
+        Lists.Class[Selected].Description = txtDescription.Text;
+    }
+
+    private void butItem_Add_Click(object sender, EventArgs e)
+    {
+        // Abre a janela para adicionar o item
+        cmbItems.SelectedIndex = 0;
+        grpItem_Add.Visible = true;
+    }
+
+    private void butItem_Ok_Click(object sender, EventArgs e)
+    {
+        // Adiciona o item
+        if (cmbItems.SelectedIndex >= 0)
+        {
+            lstItems.Items.Add(Globals.Numbering(cmbItems.SelectedIndex + 1, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[cmbItems.SelectedIndex + 1].Name);
+            Lists.Class[Selected].Item.Add((byte)(cmbItems.SelectedIndex + 1));
+            grpItem_Add.Visible = false;
+        }
+    }
+
+    private void butItem_Delete_Click(object sender, EventArgs e)
+    {
+        // Deleta a textura
+        short Selected_Item = (short)lstItems.SelectedIndex;
+        if (Selected_Item != -1)
+        {
+            lstItems.Items.RemoveAt(Selected_Item);
+            Lists.Class[Selected].Item.RemoveAt(Selected_Item);
+        }
+    }
+
+    private void cmbEvolve_Class_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        // Define o valor
+        Lists.Class[Selected].Evolve_To = (byte)cmbEvolve_Class.SelectedIndex;
+    }
+
+    private void numEvolve_Level_ValueChanged(object sender, EventArgs e)
+    {
+        // Define o valor
+        Lists.Class[Selected].Evolve_Level = (short)numEvolve_Level.Value;
+    }
+
+    private void cmbEquip_Type_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        // Lista os equipamentos
+        cmbEquip_Num.Items.Clear();
+        cmbEquip_Num.Items.Add("None");
+        Equipments.Add(0);
+        for (byte i = 1; i < Lists.Item.Length; i++)
+            if (Lists.Item[i].Type == (byte)Globals.Items.Equipment && Lists.Item[i].Equip_Type == cmbEquip_Type.SelectedIndex)
+            {
+                Objects.cmbEquip_Num.Items.Add(Globals.Numbering(i, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[i].Name);
+                Equipments.Add(i);
+            }
+
+        // Seleciona o equipamento
+        cmbEquip_Num.SelectedIndex = Equipments.FindIndex(x => x == Lists.Class[Selected].Equipment[cmbEquip_Type.SelectedIndex]);
+    }
+
+    private void cmbEquip_Num_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        // Define o valor
+        Lists.Class[Selected].Equipment[cmbEquip_Type.SelectedIndex] = Equipments[cmbEquip_Num.SelectedIndex];
+    }
 }

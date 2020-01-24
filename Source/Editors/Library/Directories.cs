@@ -62,12 +62,12 @@ class Directories
         Tex_CheckBox = new FileInfo(Directory + @"\Graphics\Interface\Tools\CheckBox");
         Tex_TextBox = new FileInfo(Directory + @"\Graphics\Interface\Tools\TextBox");
         Tex_Tiles = new DirectoryInfo(Directory + @"\Graphics\Tiles\");
-        Tex_Grid = new FileInfo(Directory + @"\Graphics\Grid");
-        Tex_Weather = new FileInfo(Directory + @"\Graphics\Weather");
-        Tex_Blanc = new FileInfo(Directory + @"\Graphics\Blank");
-        Tex_Directions = new FileInfo(Directory + @"\Graphics\Directions");
-        Tex_Transparent = new FileInfo(Directory + @"\Graphics\Transparent");
-        Tex_Lighting = new FileInfo(Directory + @"\Graphics\Lighting");
+        Tex_Grid = new FileInfo(Directory + @"\Graphics\Misc\Grid");
+        Tex_Weather = new FileInfo(Directory + @"\Graphics\Misc\Weather");
+        Tex_Blanc = new FileInfo(Directory + @"\Graphics\Misc\Blank");
+        Tex_Directions = new FileInfo(Directory + @"\Graphics\Misc\Directions");
+        Tex_Transparent = new FileInfo(Directory + @"\Graphics\Misc\Transparent");
+        Tex_Lighting = new FileInfo(Directory + @"\Graphics\Misc\Lighting");
         Tex_Items = new DirectoryInfo(Directory + @"\Graphics\Items\");
 
         // Cria os diretórios

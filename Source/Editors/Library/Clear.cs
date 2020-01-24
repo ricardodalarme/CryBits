@@ -30,6 +30,10 @@ class Clear
         Lists.Class[Index].Name = string.Empty;
         Lists.Class[Index].Vital = new short[(byte)Globals.Vitals.Count];
         Lists.Class[Index].Attribute = new short[(byte)Globals.Attributes.Count];
+        Lists.Class[Index].Tex_Male = new List<short>();
+        Lists.Class[Index].Tex_Female = new List<short>();
+        Lists.Class[Index].Item = new List<short>();
+        Lists.Class[Index].Equipment = new short[(byte)Globals.Equipments.Count];
         Lists.Class[Index].Spawn_Map = 1;
     }
 

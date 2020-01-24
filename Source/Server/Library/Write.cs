@@ -31,13 +31,13 @@ class Write
             Data.Write(Lists.Player[Index].Character[i].Y);
             Data.Write((byte)Lists.Player[Index].Character[i].Direction);
             for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Player[Index].Character[i].Vital[n]);
-            for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) Data.Write(Lists.Player[Index].Character[i].Attribute[n]);
+            for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.Player[Index].Character[i].Attribute[n]);
             for (byte n = 1; n <= Game.Max_Inventory; n++)
             {
                 Data.Write(Lists.Player[Index].Character[i].Inventory[n].Item_Num);
                 Data.Write(Lists.Player[Index].Character[i].Inventory[n].Amount);
             }
-            for (byte n = 0; n < (byte)Game.Equipments.Amount; n++) Data.Write(Lists.Player[Index].Character[i].Equipment[n]);
+            for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Lists.Player[Index].Character[i].Equipment[n]);
             for (byte n = 1; n <= Game.Max_Hotbar; n++)
             {
                 Data.Write(Lists.Player[Index].Character[i].Hotbar[n].Type);

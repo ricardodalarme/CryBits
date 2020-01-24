@@ -59,7 +59,7 @@ class Game
         Intelligence,
         Agility,
         Vitality,
-        Amount
+        Count
     }
 
     public enum Messages
@@ -90,13 +90,21 @@ class Game
         Helmet,
         Shield,
         Amulet,
-        Amount
+        Count
     }
 
     public enum Hotbar
     {
         None,
         Item
+    }
+
+    public enum BindOn
+    {
+        None,
+        Pickup,
+        Equip,
+        Count
     }
     #endregion
 

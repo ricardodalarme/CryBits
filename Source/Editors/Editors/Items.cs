@@ -28,6 +28,14 @@ public partial class Editor_Items : Form
         Objects.cmbReq_Class.Items.Add("None");
         for (byte i = 1; i <= Lists.Class.GetUpperBound(0); i++) Objects.cmbReq_Class.Items.Add(Lists.Class[i].Name);
 
+        // Lista de raridades
+        Objects.cmbRarity.Items.Clear();
+        for (byte i = 0; i < (byte)Globals.Rarity.Count; i++) Objects.cmbRarity.Items.Add((Globals.Rarity)i);
+
+        // Lista de preensão
+        Objects.cmbBind.Items.Clear();
+        for (byte i = 0; i < (byte)Globals.BindOn.Count; i++) Objects.cmbBind.Items.Add((Globals.Rarity)i);
+
         // Lista os itens
         Update_List();
 
@@ -66,7 +74,8 @@ public partial class Editor_Items : Form
         cmbType.SelectedIndex = Lists.Item[Selected].Type;
         numPrice.Value = Lists.Item[Selected].Price;
         chkStackable.Checked = Lists.Item[Selected].Stackable;
-        chkBind.Checked = Lists.Item[Selected].Bind;
+        cmbBind.SelectedIndex = Lists.Item[Selected].Bind;
+        cmbRarity.SelectedIndex = Lists.Item[Selected].Rarity;
         numReq_Level.Value = Lists.Item[Selected].Req_Level;
         cmbReq_Class.SelectedIndex = Lists.Item[Selected].Req_Class;
         numPotion_Experience.Value = Lists.Item[Selected].Potion_Experience;
@@ -223,12 +232,6 @@ public partial class Editor_Items : Form
     {
         Lists.Item[Selected].Equip_Attribute[(byte)Globals.Attributes.Vitality] = (short)numEquip_Vitality.Value;
     }
-
-    private void chkBind_CheckedChanged(object sender, EventArgs e)
-    {
-        Lists.Item[Selected].Bind = chkBind.Checked;
-    }
-
     private void numPrice_ValueChanged(object sender, EventArgs e)
     {
         Lists.Item[Selected].Price = (short)numPrice.Value;
@@ -258,5 +261,15 @@ public partial class Editor_Items : Form
     private void txtDescription_Validated(object sender, EventArgs e)
     {
         Lists.Item[Selected].Description = txtDescription.Text;
+    }
+
+    private void cmbRarity_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Lists.Item[Selected].Rarity = (byte)cmbRarity.SelectedIndex;
+    }
+
+    private void cmbBind_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Lists.Item[Selected].Bind = (byte)cmbBind.SelectedIndex;
     }
 }

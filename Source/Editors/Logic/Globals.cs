@@ -121,7 +121,7 @@ class Globals
         Helmet,
         Shield,
         Amulet,
-        Amount
+        Count
     }
 
     public enum Windows
@@ -129,6 +129,24 @@ class Globals
         Menu,
         Game,
         Global,
+    }
+
+    public enum Rarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary,
+        Count
+    }
+
+    public enum BindOn
+    {
+        None,
+        Pickup,
+        Equip,
+        Count
     }
 
     public static void Weather_Update()

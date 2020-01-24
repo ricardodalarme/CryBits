@@ -505,13 +505,24 @@ partial class Graphics
     public static void Panel_Informations()
     {
         short Item_Num = Game.Infomation_Index;
+        SFML.Graphics.Color Text_Color;
 
         // Apenas se necessário
         if (Item_Num == -1) return;
 
+        // Define a cor de acordo com a raridade
+        switch ((Game.Rarity) Lists.Item[Item_Num].Rarity)
+        {
+            case Game.Rarity.Uncommon: Text_Color = CColor(204, 255, 153); break; // Verde
+            case Game.Rarity.Rare: Text_Color = CColor(102, 153, 255); break; // Azul
+            case Game.Rarity.Epic: Text_Color = CColor(153, 0, 204); break; // Roxo
+            case Game.Rarity.Legendary: Text_Color = CColor(255, 255, 77); break; // Amarelo
+            default: Text_Color = CColor(255, 255, 255); break; // Branco
+        }
+
         // Informações
         Point Position = Panels.Get("Information").Position;
-        DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, SFML.Graphics.Color.Yellow);
+        DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, Text_Color);
         Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Position.X + 9, Position.Y + 21, 64, 64));
 
         // Requerimentos

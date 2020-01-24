@@ -225,16 +225,19 @@ class Receive
         Lists.TempPlayer[Index].Using = Character;
 
         // Define os valores iniciais do personagem
+        Lists.Structures.Class Class = Lists.Class[Player.Character(Index).Class];
         Player.Character(Index).Name = Name;
         Player.Character(Index).Level = 1;
         Player.Character(Index).Class = Data.ReadByte();
         Player.Character(Index).Genre = Data.ReadBoolean();
-        Player.Character(Index).Attribute = Lists.Class[Player.Character(Index).Class].Attribute;
-        Player.Character(Index).Map = Lists.Class[Player.Character(Index).Class].Spawn_Map;
-        Player.Character(Index).Direction = (Game.Directions)Lists.Class[Player.Character(Index).Class].Spawn_Direction;
-        Player.Character(Index).X = Lists.Class[Player.Character(Index).Class].Spawn_X;
-        Player.Character(Index).Y = Lists.Class[Player.Character(Index).Class].Spawn_Y;
+        Player.Character(Index).Attribute = Class.Attribute;
+        Player.Character(Index).Map = Class.Spawn_Map;
+        Player.Character(Index).Direction = (Game.Directions)Class.Spawn_Direction;
+        Player.Character(Index).X = Class.Spawn_X;
+        Player.Character(Index).Y = Class.Spawn_Y;
         for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Player.Character(Index).Vital[i] = Player.Character(Index).MaxVital(i);
+        Player.Character(Index).Equipment = Class.Equipment;
+        for (byte i = 1; i <= (byte)Class.Item.Length; i++)  Player.Character(Index).Inventory[i].Item_Num = Class.Item[i-1];
 
         // Salva a conta
         Write.Character(Name);
@@ -428,6 +431,7 @@ class Receive
 
         // Apenas se necessário
         if (Player.Character(Index).Equipment[Slot] == 0) return;
+        if (Lists.Item[Player.Character(Index).Equipment[Slot]].Bind == (byte)Game.BindOn.Equip) return;
 
         // Adiciona o equipamento ao inventário
         if (!Player.GiveItem(Index, Player.Character(Index).Equipment[Slot], 1))
@@ -448,7 +452,7 @@ class Receive
         }
 
         // Remove o equipamento
-        for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Player.Character(Index).Attribute[i] -= Lists.Item[Player.Character(Index).Equipment[Slot]].Equip_Attribute[i];
+        for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Player.Character(Index).Attribute[i] -= Lists.Item[Player.Character(Index).Equipment[Slot]].Equip_Attribute[i];
         Player.Character(Index).Equipment[Slot] = 0;
 
         // Envia os dados
@@ -547,18 +551,27 @@ class Receive
             // Redimensiona os valores necessários 
             Lists.Class[i] = new Lists.Structures.Class();
             Lists.Class[i].Vital = new short[(byte)Game.Vitals.Amount];
-            Lists.Class[i].Attribute = new short[(byte)Game.Attributes.Amount];
+            Lists.Class[i].Attribute = new short[(byte)Game.Attributes.Count];
+            Lists.Class[i].Equipment = new short[(byte)Game.Equipments.Count];
+            Lists.Class[i].Tex_Male = new short[Data.ReadByte()];
+            Lists.Class[i].Tex_Female = new short[Data.ReadByte()];
+            Lists.Class[i].Item = new short[Data.ReadByte()];
 
             // Lê os dados
             Lists.Class[i].Name = Data.ReadString();
-            Lists.Class[i].Texture_Male = Data.ReadInt16();
-            Lists.Class[i].Texture_Female = Data.ReadInt16();
+            Lists.Class[i].Description = Data.ReadString();
+            for (byte t = 0; t < Lists.Class[i].Tex_Male.Length;t++) Lists.Class[i].Tex_Male[t] = Data.ReadInt16();
+            for (byte t = 0; t < Lists.Class[i].Tex_Female.Length; t++) Lists.Class[i].Tex_Female[t] = Data.ReadInt16();
             Lists.Class[i].Spawn_Map = Data.ReadInt16();
             Lists.Class[i].Spawn_Direction = Data.ReadByte();
             Lists.Class[i].Spawn_X = Data.ReadByte();
             Lists.Class[i].Spawn_Y = Data.ReadByte();
             for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
-            for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
+            Lists.Class[i].Evolve_To = Data.ReadByte();
+            Lists.Class[i].Evolve_Level = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++) Lists.Class[i].Item[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Lists.Class[i].Equipment[n] = Data.ReadInt16();
         }
 
         // Salva os dados e envia pra todos jogadores conectados
@@ -742,18 +755,19 @@ class Receive
             // Redimensiona os valores necessários 
             Lists.NPC[i] = new Lists.Structures.NPC();
             Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Amount];
-            Lists.NPC[i].Attribute = new short[(byte)Game.Attributes.Amount];
+            Lists.NPC[i].Attribute = new short[(byte)Game.Attributes.Count];
             Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Game.Max_NPC_Drop];
 
             // Lê os dados
             Lists.NPC[i].Name = Data.ReadString();
+            Lists.NPC[i].SayMsg = Data.ReadString();
             Lists.NPC[i].Texture = Data.ReadInt16();
             Lists.NPC[i].Behaviour = Data.ReadByte();
             Lists.NPC[i].SpawnTime = Data.ReadByte();
             Lists.NPC[i].Sight = Data.ReadByte();
             Lists.NPC[i].Experience = Data.ReadByte();
             for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
-            for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
             for (byte n = 0; n < Game.Max_NPC_Drop; n++)
             {
                 Lists.NPC[i].Drop[n] = new Lists.Structures.NPC_Drop();
@@ -788,7 +802,7 @@ class Receive
             // Redimensiona os valores necessários 
             Lists.Item[i] = new Lists.Structures.Item();
             Lists.Item[i].Potion_Vital = new short[(byte)Game.Vitals.Amount];
-            Lists.Item[i].Equip_Attribute = new short[(byte)Game.Attributes.Amount];
+            Lists.Item[i].Equip_Attribute = new short[(byte)Game.Attributes.Count];
 
             // Lê os dados
             Lists.Item[i].Name = Data.ReadString();
@@ -797,13 +811,14 @@ class Receive
             Lists.Item[i].Type = Data.ReadByte();
             Lists.Item[i].Price = Data.ReadInt16();
             Lists.Item[i].Stackable = Data.ReadBoolean();
-            Lists.Item[i].Bind = Data.ReadBoolean();
+            Lists.Item[i].Bind = Data.ReadByte();
+            Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
             Lists.Item[i].Potion_Experience = Data.ReadInt16();
             for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();
-            for (byte a = 0; a < (byte)Game.Attributes.Amount; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
             Lists.Item[i].Weapon_Damage = Data.ReadInt16();
         }
 

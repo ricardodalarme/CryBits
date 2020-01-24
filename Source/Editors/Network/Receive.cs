@@ -71,17 +71,29 @@ partial class Receive
             // Redimensiona os valores necessários 
             Lists.Class[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.Class[i].Attribute = new short[(byte)Globals.Attributes.Count];
+            Lists.Class[i].Tex_Male = new System.Collections.Generic.List<short>();
+            Lists.Class[i].Tex_Female = new System.Collections.Generic.List<short>();
+            Lists.Class[i].Item = new System.Collections.Generic.List<short>();
+            Lists.Class[i].Equipment = new short[(byte)Globals.Equipments.Count];
 
             // Lê os dados
             Lists.Class[i].Name = Data.ReadString();
-            Lists.Class[i].Texture_Male = Data.ReadInt16();
-            Lists.Class[i].Texture_Female = Data.ReadInt16();
+            Lists.Class[i].Description = Data.ReadString();
+            byte Num_Tex_Male = Data.ReadByte();
+            for (byte t = 0; t < Num_Tex_Male; t++) Lists.Class[i].Tex_Male.Add(Data.ReadInt16());
+            byte Num_Tex_Female = Data.ReadByte();
+            for (byte t = 0; t < Num_Tex_Female; t++) Lists.Class[i].Tex_Female.Add(Data.ReadInt16());
             Lists.Class[i].Spawn_Map = Data.ReadInt16();
             Lists.Class[i].Spawn_Direction = Data.ReadByte();
             Lists.Class[i].Spawn_X = Data.ReadByte();
             Lists.Class[i].Spawn_Y = Data.ReadByte();
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
+            Lists.Class[i].Evolve_To = Data.ReadByte();
+            Lists.Class[i].Evolve_Level = Data.ReadInt16();
+            byte Num_Items = Data.ReadByte();
+            for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(Data.ReadInt16());
+            for (byte a = 0; a < (byte)Globals.Equipments.Count; a++) Lists.Class[i].Equipment[a] = Data.ReadInt16();
         }
 
         // Abre o editor
@@ -241,7 +253,8 @@ partial class Receive
             Lists.Item[i].Type = Data.ReadByte();
             Lists.Item[i].Price = Data.ReadInt16();
             Lists.Item[i].Stackable = Data.ReadBoolean();
-            Lists.Item[i].Bind = Data.ReadBoolean();
+            Lists.Item[i].Bind = Data.ReadByte();
+            Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
             Lists.Item[i].Potion_Experience = Data.ReadInt16();

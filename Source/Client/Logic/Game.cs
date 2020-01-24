@@ -148,6 +148,16 @@ class Game
         None,
         Item
     }
+
+    public enum Rarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary,
+        Count
+    }
     #endregion
 
     public static void OpenMenu()

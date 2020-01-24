@@ -70,14 +70,19 @@ class Lists
         public struct Class
         {
             public string Name;
-            public short Texture_Male;
-            public short Texture_Female;
+            public string Description;
+            public List<short> Tex_Male;
+            public List<short> Tex_Female;
             public short Spawn_Map;
             public byte Spawn_Direction;
             public byte Spawn_X;
             public byte Spawn_Y;
             public short[] Vital;
             public short[] Attribute;
+            public byte Evolve_To;
+            public short Evolve_Level;
+            public List<short> Item;
+            public short[] Equipment;
         }
 
         public struct Tile
@@ -202,6 +207,7 @@ class Lists
         public struct NPC
         {
             public string Name;
+            public string SayMsg;
             public short Texture;
             public byte Behaviour;
             public byte SpawnTime;
@@ -221,7 +227,8 @@ class Lists
             public byte Type;
             public short Price;
             public bool Stackable;
-            public bool Bind;
+            public byte Bind;
+            public byte Rarity;
             // Requerimentos
             public short Req_Level;
             public byte Req_Class;

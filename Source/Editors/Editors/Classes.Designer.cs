@@ -29,6 +29,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Classes));
             this.List = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numEvolve_Level = new System.Windows.Forms.NumericUpDown();
+            this.cmbEvolve_Class = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.txtDescription = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.butSave = new System.Windows.Forms.Button();
@@ -50,6 +56,10 @@
             this.lblMP = new System.Windows.Forms.Label();
             this.lblHP = new System.Windows.Forms.Label();
             this.grpTexture = new System.Windows.Forms.GroupBox();
+            this.butFDelete = new System.Windows.Forms.Button();
+            this.butMDelete = new System.Windows.Forms.Button();
+            this.lstFemale = new System.Windows.Forms.ListBox();
+            this.lstMale = new System.Windows.Forms.ListBox();
             this.lblFTexture = new System.Windows.Forms.Label();
             this.butFTexture = new System.Windows.Forms.Button();
             this.lblMTexture = new System.Windows.Forms.Label();
@@ -64,7 +74,21 @@
             this.label8 = new System.Windows.Forms.Label();
             this.numSpawn_Map = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.butItem_Delete = new System.Windows.Forms.Button();
+            this.lstItems = new System.Windows.Forms.ListBox();
+            this.butItem_Add = new System.Windows.Forms.Button();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.cmbEquip_Num = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.cmbEquip_Type = new System.Windows.Forms.ComboBox();
+            this.grpItem_Add = new System.Windows.Forms.GroupBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.butItem_Ok = new System.Windows.Forms.Button();
+            this.cmbItems = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numEvolve_Level)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numVitality)).BeginInit();
@@ -78,6 +102,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Y)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).BeginInit();
+            this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.grpItem_Add.SuspendLayout();
             this.SuspendLayout();
             // 
             // List
@@ -85,33 +112,93 @@
             this.List.FormattingEnabled = true;
             this.List.Location = new System.Drawing.Point(11, 12);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 446);
+            this.List.Size = new System.Drawing.Size(202, 498);
             this.List.TabIndex = 9;
             this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.numEvolve_Level);
+            this.groupBox1.Controls.Add(this.cmbEvolve_Class);
+            this.groupBox1.Controls.Add(this.label15);
+            this.groupBox1.Controls.Add(this.label14);
+            this.groupBox1.Controls.Add(this.txtDescription);
+            this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.txtName);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(219, 12);
+            this.groupBox1.Location = new System.Drawing.Point(221, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(304, 70);
+            this.groupBox1.Size = new System.Drawing.Size(304, 201);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General";
             // 
+            // numEvolve_Level
+            // 
+            this.numEvolve_Level.Location = new System.Drawing.Point(152, 174);
+            this.numEvolve_Level.Name = "numEvolve_Level";
+            this.numEvolve_Level.Size = new System.Drawing.Size(139, 20);
+            this.numEvolve_Level.TabIndex = 33;
+            this.numEvolve_Level.ValueChanged += new System.EventHandler(this.numEvolve_Level_ValueChanged);
+            // 
+            // cmbEvolve_Class
+            // 
+            this.cmbEvolve_Class.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbEvolve_Class.FormattingEnabled = true;
+            this.cmbEvolve_Class.Location = new System.Drawing.Point(9, 174);
+            this.cmbEvolve_Class.Name = "cmbEvolve_Class";
+            this.cmbEvolve_Class.Size = new System.Drawing.Size(139, 21);
+            this.cmbEvolve_Class.TabIndex = 32;
+            this.cmbEvolve_Class.SelectedIndexChanged += new System.EventHandler(this.cmbEvolve_Class_SelectedIndexChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(149, 158);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(45, 13);
+            this.label15.TabIndex = 31;
+            this.label15.Text = "At level:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 158);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(55, 13);
+            this.label14.TabIndex = 30;
+            this.label14.Text = "Evolve to:";
+            // 
+            // txtDescription
+            // 
+            this.txtDescription.Location = new System.Drawing.Point(9, 81);
+            this.txtDescription.Multiline = true;
+            this.txtDescription.Name = "txtDescription";
+            this.txtDescription.Size = new System.Drawing.Size(285, 69);
+            this.txtDescription.TabIndex = 12;
+            this.txtDescription.Validated += new System.EventHandler(this.txtDescription_Validated);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 65);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(63, 13);
+            this.label11.TabIndex = 11;
+            this.label11.Text = "Description:";
+            // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(15, 37);
+            this.txtName.Location = new System.Drawing.Point(9, 37);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(273, 20);
+            this.txtName.Size = new System.Drawing.Size(285, 20);
             this.txtName.TabIndex = 10;
             this.txtName.Validated += new System.EventHandler(this.txtName_Validated);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 19);
+            this.label3.Location = new System.Drawing.Point(6, 21);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 13);
             this.label3.TabIndex = 9;
@@ -119,9 +206,9 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(219, 467);
+            this.butSave.Location = new System.Drawing.Point(219, 522);
             this.butSave.Name = "butSave";
-            this.butSave.Size = new System.Drawing.Size(97, 25);
+            this.butSave.Size = new System.Drawing.Size(201, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save";
             this.butSave.UseVisualStyleBackColor = true;
@@ -129,9 +216,9 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(426, 467);
+            this.butCancel.Location = new System.Drawing.Point(634, 522);
             this.butCancel.Name = "butCancel";
-            this.butCancel.Size = new System.Drawing.Size(97, 25);
+            this.butCancel.Size = new System.Drawing.Size(201, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
@@ -139,9 +226,9 @@
             // 
             // butClear
             // 
-            this.butClear.Location = new System.Drawing.Point(323, 467);
+            this.butClear.Location = new System.Drawing.Point(427, 522);
             this.butClear.Name = "butClear";
-            this.butClear.Size = new System.Drawing.Size(97, 25);
+            this.butClear.Size = new System.Drawing.Size(201, 25);
             this.butClear.TabIndex = 18;
             this.butClear.Text = "Clear";
             this.butClear.UseVisualStyleBackColor = true;
@@ -163,7 +250,7 @@
             this.groupBox2.Controls.Add(this.numHP);
             this.groupBox2.Controls.Add(this.lblMP);
             this.groupBox2.Controls.Add(this.lblHP);
-            this.groupBox2.Location = new System.Drawing.Point(219, 276);
+            this.groupBox2.Location = new System.Drawing.Point(219, 219);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(304, 185);
             this.groupBox2.TabIndex = 20;
@@ -291,58 +378,98 @@
             // 
             // grpTexture
             // 
+            this.grpTexture.Controls.Add(this.butFDelete);
+            this.grpTexture.Controls.Add(this.butMDelete);
+            this.grpTexture.Controls.Add(this.lstFemale);
+            this.grpTexture.Controls.Add(this.lstMale);
             this.grpTexture.Controls.Add(this.lblFTexture);
             this.grpTexture.Controls.Add(this.butFTexture);
             this.grpTexture.Controls.Add(this.lblMTexture);
             this.grpTexture.Controls.Add(this.butMTexture);
-            this.grpTexture.Location = new System.Drawing.Point(219, 88);
+            this.grpTexture.Location = new System.Drawing.Point(531, 12);
             this.grpTexture.Name = "grpTexture";
-            this.grpTexture.Size = new System.Drawing.Size(304, 70);
+            this.grpTexture.Size = new System.Drawing.Size(304, 201);
             this.grpTexture.TabIndex = 19;
             this.grpTexture.TabStop = false;
             this.grpTexture.Text = "Textures:";
             // 
+            // butFDelete
+            // 
+            this.butFDelete.Location = new System.Drawing.Point(225, 172);
+            this.butFDelete.Name = "butFDelete";
+            this.butFDelete.Size = new System.Drawing.Size(68, 20);
+            this.butFDelete.TabIndex = 35;
+            this.butFDelete.Text = "Delete";
+            this.butFDelete.UseVisualStyleBackColor = true;
+            this.butFDelete.Click += new System.EventHandler(this.butFDelete_Click);
+            // 
+            // butMDelete
+            // 
+            this.butMDelete.Location = new System.Drawing.Point(79, 172);
+            this.butMDelete.Name = "butMDelete";
+            this.butMDelete.Size = new System.Drawing.Size(68, 20);
+            this.butMDelete.TabIndex = 34;
+            this.butMDelete.Text = "Delete";
+            this.butMDelete.UseVisualStyleBackColor = true;
+            this.butMDelete.Click += new System.EventHandler(this.butMDelete_Click);
+            // 
+            // lstFemale
+            // 
+            this.lstFemale.FormattingEnabled = true;
+            this.lstFemale.Location = new System.Drawing.Point(155, 40);
+            this.lstFemale.Name = "lstFemale";
+            this.lstFemale.Size = new System.Drawing.Size(139, 121);
+            this.lstFemale.TabIndex = 33;
+            // 
+            // lstMale
+            // 
+            this.lstMale.FormattingEnabled = true;
+            this.lstMale.Location = new System.Drawing.Point(9, 40);
+            this.lstMale.Name = "lstMale";
+            this.lstMale.Size = new System.Drawing.Size(139, 121);
+            this.lstMale.TabIndex = 32;
+            // 
             // lblFTexture
             // 
             this.lblFTexture.AutoSize = true;
-            this.lblFTexture.Location = new System.Drawing.Point(12, 51);
+            this.lblFTexture.Location = new System.Drawing.Point(152, 24);
             this.lblFTexture.Name = "lblFTexture";
-            this.lblFTexture.Size = new System.Drawing.Size(53, 13);
+            this.lblFTexture.Size = new System.Drawing.Size(47, 13);
             this.lblFTexture.TabIndex = 31;
-            this.lblFTexture.Text = "Female: 0";
+            this.lblFTexture.Text = "Female: ";
             // 
             // butFTexture
             // 
-            this.butFTexture.Location = new System.Drawing.Point(104, 44);
+            this.butFTexture.Location = new System.Drawing.Point(154, 172);
             this.butFTexture.Name = "butFTexture";
-            this.butFTexture.Size = new System.Drawing.Size(189, 20);
+            this.butFTexture.Size = new System.Drawing.Size(68, 20);
             this.butFTexture.TabIndex = 30;
-            this.butFTexture.Text = "Select";
+            this.butFTexture.Text = "Add";
             this.butFTexture.UseVisualStyleBackColor = true;
             this.butFTexture.Click += new System.EventHandler(this.butFTexture_Click);
             // 
             // lblMTexture
             // 
             this.lblMTexture.AutoSize = true;
-            this.lblMTexture.Location = new System.Drawing.Point(12, 26);
+            this.lblMTexture.Location = new System.Drawing.Point(7, 24);
             this.lblMTexture.Name = "lblMTexture";
-            this.lblMTexture.Size = new System.Drawing.Size(42, 13);
+            this.lblMTexture.Size = new System.Drawing.Size(33, 13);
             this.lblMTexture.TabIndex = 29;
-            this.lblMTexture.Text = "Male: 0";
+            this.lblMTexture.Text = "Male:";
             // 
             // butMTexture
             // 
-            this.butMTexture.Location = new System.Drawing.Point(104, 19);
+            this.butMTexture.Location = new System.Drawing.Point(8, 172);
             this.butMTexture.Name = "butMTexture";
-            this.butMTexture.Size = new System.Drawing.Size(189, 20);
+            this.butMTexture.Size = new System.Drawing.Size(68, 20);
             this.butMTexture.TabIndex = 28;
-            this.butMTexture.Text = "Select";
+            this.butMTexture.Text = "Add";
             this.butMTexture.UseVisualStyleBackColor = true;
             this.butMTexture.Click += new System.EventHandler(this.butMTexture_Click);
             // 
             // butQuantity
             // 
-            this.butQuantity.Location = new System.Drawing.Point(11, 467);
+            this.butQuantity.Location = new System.Drawing.Point(12, 522);
             this.butQuantity.Name = "butQuantity";
             this.butQuantity.Size = new System.Drawing.Size(202, 25);
             this.butQuantity.TabIndex = 15;
@@ -360,7 +487,7 @@
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.numSpawn_Map);
             this.groupBox3.Controls.Add(this.label7);
-            this.groupBox3.Location = new System.Drawing.Point(219, 164);
+            this.groupBox3.Location = new System.Drawing.Point(219, 410);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(304, 106);
             this.groupBox3.TabIndex = 35;
@@ -399,10 +526,10 @@
             this.cmbSpawn_Direction.TabIndex = 28;
             this.cmbSpawn_Direction.SelectedIndexChanged += new System.EventHandler(this.cmbSpawn_Direction_SelectedIndexChanged);
             // 
-            // numSpawn_Y
+            // c
             // 
             this.numSpawn_Y.Location = new System.Drawing.Point(155, 78);
-            this.numSpawn_Y.Name = "numSpawn_Y";
+            this.numSpawn_Y.Name = "c";
             this.numSpawn_Y.Size = new System.Drawing.Size(138, 20);
             this.numSpawn_Y.TabIndex = 27;
             this.numSpawn_Y.ValueChanged += new System.EventHandler(this.numSpawn_Y_ValueChanged);
@@ -452,12 +579,147 @@
             this.label7.TabIndex = 22;
             this.label7.Text = "Map:";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.butItem_Delete);
+            this.groupBox4.Controls.Add(this.lstItems);
+            this.groupBox4.Controls.Add(this.butItem_Add);
+            this.groupBox4.Location = new System.Drawing.Point(531, 219);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(304, 185);
+            this.groupBox4.TabIndex = 36;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Initial Items";
+            // 
+            // butItem_Delete
+            // 
+            this.butItem_Delete.Location = new System.Drawing.Point(155, 157);
+            this.butItem_Delete.Name = "butItem_Delete";
+            this.butItem_Delete.Size = new System.Drawing.Size(139, 20);
+            this.butItem_Delete.TabIndex = 35;
+            this.butItem_Delete.Text = "Delete";
+            this.butItem_Delete.UseVisualStyleBackColor = true;
+            this.butItem_Delete.Click += new System.EventHandler(this.butItem_Delete_Click);
+            // 
+            // lstItems
+            // 
+            this.lstItems.FormattingEnabled = true;
+            this.lstItems.Location = new System.Drawing.Point(10, 16);
+            this.lstItems.Name = "lstItems";
+            this.lstItems.Size = new System.Drawing.Size(284, 134);
+            this.lstItems.TabIndex = 34;
+            // 
+            // butItem_Add
+            // 
+            this.butItem_Add.Location = new System.Drawing.Point(10, 157);
+            this.butItem_Add.Name = "butItem_Add";
+            this.butItem_Add.Size = new System.Drawing.Size(138, 20);
+            this.butItem_Add.TabIndex = 33;
+            this.butItem_Add.Text = "Add";
+            this.butItem_Add.UseVisualStyleBackColor = true;
+            this.butItem_Add.Click += new System.EventHandler(this.butItem_Add_Click);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.cmbEquip_Type);
+            this.groupBox5.Controls.Add(this.cmbEquip_Num);
+            this.groupBox5.Controls.Add(this.label13);
+            this.groupBox5.Controls.Add(this.label12);
+            this.groupBox5.Location = new System.Drawing.Point(531, 410);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(304, 106);
+            this.groupBox5.TabIndex = 37;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Initial Equipments";
+            // 
+            // cmbEquip_Num
+            // 
+            this.cmbEquip_Num.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbEquip_Num.FormattingEnabled = true;
+            this.cmbEquip_Num.Location = new System.Drawing.Point(9, 77);
+            this.cmbEquip_Num.Name = "cmbEquip_Num";
+            this.cmbEquip_Num.Size = new System.Drawing.Size(284, 21);
+            this.cmbEquip_Num.TabIndex = 32;
+            this.cmbEquip_Num.SelectedIndexChanged += new System.EventHandler(this.cmbEquip_Num_SelectedIndexChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 19);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(34, 13);
+            this.label13.TabIndex = 31;
+            this.label13.Text = "Type:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(7, 62);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(37, 13);
+            this.label12.TabIndex = 30;
+            this.label12.Text = "Equip:";
+            // 
+            // cmbEquip_Type
+            // 
+            this.cmbEquip_Type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbEquip_Type.FormattingEnabled = true;
+            this.cmbEquip_Type.Location = new System.Drawing.Point(10, 35);
+            this.cmbEquip_Type.Name = "cmbEquip_Type";
+            this.cmbEquip_Type.Size = new System.Drawing.Size(284, 21);
+            this.cmbEquip_Type.TabIndex = 29;
+            this.cmbEquip_Type.SelectedIndexChanged += new System.EventHandler(this.cmbEquip_Type_SelectedIndexChanged);
+            // 
+            // grpItem_Add
+            // 
+            this.grpItem_Add.Controls.Add(this.cmbItems);
+            this.grpItem_Add.Controls.Add(this.label16);
+            this.grpItem_Add.Controls.Add(this.butItem_Ok);
+            this.grpItem_Add.Location = new System.Drawing.Point(531, 219);
+            this.grpItem_Add.Name = "grpItem_Add";
+            this.grpItem_Add.Size = new System.Drawing.Size(304, 185);
+            this.grpItem_Add.TabIndex = 38;
+            this.grpItem_Add.TabStop = false;
+            this.grpItem_Add.Text = "Add Item";
+            this.grpItem_Add.Visible = false;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(26, 56);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(30, 13);
+            this.label16.TabIndex = 30;
+            this.label16.Text = "Item:";
+            // 
+            // butItem_Ok
+            // 
+            this.butItem_Ok.Location = new System.Drawing.Point(29, 102);
+            this.butItem_Ok.Name = "butItem_Ok";
+            this.butItem_Ok.Size = new System.Drawing.Size(251, 20);
+            this.butItem_Ok.TabIndex = 29;
+            this.butItem_Ok.Text = "Ok";
+            this.butItem_Ok.UseVisualStyleBackColor = true;
+            this.butItem_Ok.Click += new System.EventHandler(this.butItem_Ok_Click);
+            // 
+            // cmbItems
+            // 
+            this.cmbItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbItems.FormattingEnabled = true;
+            this.cmbItems.Location = new System.Drawing.Point(29, 71);
+            this.cmbItems.Name = "cmbItems";
+            this.cmbItems.Size = new System.Drawing.Size(251, 21);
+            this.cmbItems.TabIndex = 0;
+            // 
             // Editor_Classes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(535, 497);
+            this.ClientSize = new System.Drawing.Size(847, 556);
             this.ControlBox = false;
+            this.Controls.Add(this.grpItem_Add);
+            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.butQuantity);
             this.Controls.Add(this.groupBox2);
@@ -472,9 +734,10 @@
             this.MaximizeBox = false;
             this.Name = "Editor_Classes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Class Editor";
+            this.Text = "Item Editor";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numEvolve_Level)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).EndInit();
@@ -491,6 +754,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Y)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            this.grpItem_Add.ResumeLayout(false);
+            this.grpItem_Add.PerformLayout();
             this.ResumeLayout(false);
 
     }
@@ -533,4 +801,27 @@
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.NumericUpDown numSpawn_Map;
     private System.Windows.Forms.Label label7;
+    public System.Windows.Forms.TextBox txtDescription;
+    private System.Windows.Forms.Label label11;
+    private System.Windows.Forms.Button butFDelete;
+    private System.Windows.Forms.Button butMDelete;
+    public System.Windows.Forms.ListBox lstFemale;
+    public System.Windows.Forms.ListBox lstMale;
+    private System.Windows.Forms.GroupBox groupBox4;
+    private System.Windows.Forms.Button butItem_Delete;
+    public System.Windows.Forms.ListBox lstItems;
+    private System.Windows.Forms.Button butItem_Add;
+    private System.Windows.Forms.GroupBox groupBox5;
+    private System.Windows.Forms.Label label12;
+    private System.Windows.Forms.ComboBox cmbEquip_Type;
+    private System.Windows.Forms.Label label13;
+    private System.Windows.Forms.ComboBox cmbEquip_Num;
+    private System.Windows.Forms.Label label15;
+    private System.Windows.Forms.Label label14;
+    private System.Windows.Forms.NumericUpDown numEvolve_Level;
+    private System.Windows.Forms.ComboBox cmbEvolve_Class;
+    private System.Windows.Forms.GroupBox grpItem_Add;
+    private System.Windows.Forms.Label label16;
+    private System.Windows.Forms.Button butItem_Ok;
+    private System.Windows.Forms.ComboBox cmbItems;
 }

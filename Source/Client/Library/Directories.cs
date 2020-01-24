@@ -25,15 +25,15 @@ class Directories
     public static DirectoryInfo Tex_Faces = new DirectoryInfo(Application.StartupPath + @"\Graphics\Faces\");
     public static DirectoryInfo Tex_Panoramas = new DirectoryInfo(Application.StartupPath + @"\Graphics\Panoramas\");
     public static DirectoryInfo Tex_Fogs = new DirectoryInfo(Application.StartupPath + @"\Graphics\Fogs\");
-    public static FileInfo Tex_Weather = new FileInfo(Application.StartupPath + @"\Graphics\Weather");
-    public static FileInfo Tex_Blank = new FileInfo(Application.StartupPath + @"\Graphics\Blank");
-    public static FileInfo Tex_Directions = new FileInfo(Application.StartupPath + @"\Graphics\Directions");
-    public static FileInfo Tex_Shadow = new FileInfo(Application.StartupPath + @"\Graphics\Shadow");
-    public static FileInfo Tex_Bars = new FileInfo(Application.StartupPath + @"\Graphics\Bars");
-    public static FileInfo Tex_Bars_Panel = new FileInfo(Application.StartupPath + @"\Graphics\Bars_Panel");
-    public static DirectoryInfo Tex_Lights = new DirectoryInfo(Application.StartupPath + @"\Graphics\Lights\");
-    public static DirectoryInfo Tex_Items = new DirectoryInfo(Application.StartupPath + @"\Graphics\Items\");
-    public static FileInfo Tex_Grid = new FileInfo(Application.StartupPath + @"\Graphics\Grid");
+    public static FileInfo Tex_Weather = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Weather");
+    public static FileInfo Tex_Blank = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Blank");
+    public static FileInfo Tex_Directions = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Directions");
+    public static FileInfo Tex_Shadow = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Shadow");
+    public static FileInfo Tex_Bars = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Bars");
+    public static FileInfo Tex_Bars_Panel = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Bars_Panel");
+    public static DirectoryInfo Tex_Lights = new DirectoryInfo(Application.StartupPath + @"\Graphics\Misc\Lights\");
+    public static DirectoryInfo Tex_Items = new DirectoryInfo(Application.StartupPath + @"\Graphics\Misc\Items\");
+    public static FileInfo Tex_Grid = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Grid");
 
     public static void Create()
     {

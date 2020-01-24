@@ -71,6 +71,7 @@ class Lists
         public class Class
         {
             public string Name;
+            public string Description;
             public short Texture_Male;
             public short Texture_Female;
         }
@@ -152,10 +153,11 @@ class Lists
             public int Start;
             public bool Back;
         }
-
+        
         public struct NPCs
         {
             public string Name;
+            public string SayMsg;
             public short Texture;
             public byte Type;
             public short[] Vital;
@@ -193,6 +195,7 @@ class Lists
             public string Description;
             public short Texture;
             public byte Type;
+            public byte Rarity;
             // Requerimentos
             public short Req_Level;
             public byte Req_Class;

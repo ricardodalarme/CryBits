@@ -39,7 +39,7 @@ class Clear
         Lists.Player[Index].Character[Char_Num] = new Player.Character_Structure();
         Lists.Player[Index].Character[Char_Num].Index = Index;
         Lists.Player[Index].Character[Char_Num].Inventory = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
-        Lists.Player[Index].Character[Char_Num].Equipment = new short[(byte)Game.Equipments.Amount];
+        Lists.Player[Index].Character[Char_Num].Equipment = new short[(byte)Game.Equipments.Count];
         Lists.Player[Index].Character[Char_Num].Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
     }
 
@@ -64,7 +64,11 @@ class Clear
         Lists.Class[Index] = new Lists.Structures.Class();
         Lists.Class[Index].Name = string.Empty;
         Lists.Class[Index].Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.Class[Index].Attribute = new short[(byte)Game.Attributes.Amount];
+        Lists.Class[Index].Attribute = new short[(byte)Game.Attributes.Count];
+        Lists.Class[Index].Tex_Male = new short[0];
+        Lists.Class[Index].Tex_Female = new short[0];
+        Lists.Class[Index].Item = new short[0];
+        Lists.Class[Index].Equipment = new short[(byte)Game.Equipments.Count];
         Lists.Class[Index].Spawn_Map = 1;
     }
 
@@ -74,7 +78,7 @@ class Clear
         Lists.NPC[Index] = new Lists.Structures.NPC();
         Lists.NPC[Index].Name = string.Empty;
         Lists.NPC[Index].Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Amount];
+        Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Count];
         Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[Game.Max_NPC_Drop];
         for (byte i = 0; i < Game.Max_NPC_Drop; i++)
         {
@@ -91,7 +95,7 @@ class Clear
         Lists.Item[Index].Name = string.Empty;
         Lists.Item[Index].Description = string.Empty;
         Lists.Item[Index].Potion_Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.Item[Index].Equip_Attribute = new short[(byte)Game.Attributes.Amount];
+        Lists.Item[Index].Equip_Attribute = new short[(byte)Game.Attributes.Count];
     }
 
     public static void Map(short Index)

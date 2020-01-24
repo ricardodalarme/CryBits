@@ -84,6 +84,7 @@ partial class Receive
         {
             // Geral
             Lists.NPC[i].Name = Data.ReadString();
+            Lists.NPC[i].SayMsg = Data.ReadString();
             Lists.NPC[i].Texture = Data.ReadInt16();
             Lists.NPC[i].Type = Data.ReadByte();
 

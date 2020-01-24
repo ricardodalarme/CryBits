@@ -359,6 +359,7 @@ partial class Receive
             Data.ReadInt16(); // Price
             Data.ReadBoolean(); // Stackable
             Data.ReadBoolean(); // Bind
+            Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
             Lists.Item[i].Potion_Experience = Data.ReadInt16();

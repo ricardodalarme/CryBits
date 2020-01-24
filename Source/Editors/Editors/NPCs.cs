@@ -60,6 +60,7 @@ public partial class Editor_NPCs : Form
 
         // Lista os dados
         txtName.Text = Lists.NPC[Selected].Name;
+        txtSayMsg.Text = Lists.NPC[Selected].SayMsg;
         numTexture.Value = Lists.NPC[Selected].Texture;
         cmbBehavior.SelectedIndex = Lists.NPC[Selected].Behaviour;
         numSpawn.Value = Lists.NPC[Selected].SpawnTime;
@@ -93,7 +94,6 @@ public partial class Editor_NPCs : Form
         Update_List();
     }
 
-    #region 
     private void List_SelectedIndexChanged(object sender, EventArgs e)
     {
         // Atualiza a lista
@@ -141,6 +141,11 @@ public partial class Editor_NPCs : Form
             Lists.NPC[Selected].Name = txtName.Text;
             List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count) + ":" + txtName.Text;
         }
+    }
+
+    private void txtSayMsg_Validated(object sender, EventArgs e)
+    {
+        Lists.NPC[Selected].SayMsg = txtSayMsg.Text;
     }
 
     private void butTexture_Click(object sender, EventArgs e)
@@ -236,5 +241,4 @@ public partial class Editor_NPCs : Form
     {
         Lists.NPC[Selected].Drop[scrlDrop.Value].Chance = (byte)numDrop_Chance.Value;
     }
-    #endregion
 }

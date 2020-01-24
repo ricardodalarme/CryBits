@@ -133,15 +133,23 @@ partial class Send
         for (byte i = 1; i < Lists.Class.Length; i++)
         {
             // Escreve os dados
+            Data.Write((byte)Lists.Class[i].Tex_Male.Count);
+            Data.Write((byte)Lists.Class[i].Tex_Female.Count);
+            Data.Write((byte)Lists.Class[i].Item.Count);
             Data.Write(Lists.Class[i].Name);
-            Data.Write(Lists.Class[i].Texture_Male);
-            Data.Write(Lists.Class[i].Texture_Female);
+            Data.Write(Lists.Class[i].Description);
+            for (byte t = 0; t < Lists.Class[i].Tex_Male.Count; t++) Data.Write(Lists.Class[i].Tex_Male[t]);
+            for (byte t = 0; t < Lists.Class[i].Tex_Female.Count; t++) Data.Write(Lists.Class[i].Tex_Female[t]);
             Data.Write(Lists.Class[i].Spawn_Map);
             Data.Write(Lists.Class[i].Spawn_Direction);
             Data.Write(Lists.Class[i].Spawn_X);
             Data.Write(Lists.Class[i].Spawn_Y);
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Data.Write(Lists.Class[i].Vital[v]);
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Data.Write(Lists.Class[i].Attribute[a]);
+            Data.Write(Lists.Class[i].Evolve_To);
+            Data.Write(Lists.Class[i].Evolve_Level);
+            for (byte a = 0; a < Lists.Class[i].Item.Count; a++) Data.Write(Lists.Class[i].Item[a]);
+            for (byte a = 0; a < (byte)Globals.Equipments.Count; a++) Data.Write(Lists.Class[i].Equipment[a]);
         }
         Packet(Data);
     }
@@ -303,6 +311,7 @@ partial class Send
             Data.Write(Lists.Item[Index].Price);
             Data.Write(Lists.Item[Index].Stackable);
             Data.Write(Lists.Item[Index].Bind);
+            Data.Write(Lists.Item[Index].Rarity);
             Data.Write(Lists.Item[Index].Req_Level);
             Data.Write(Lists.Item[Index].Req_Class);
             Data.Write(Lists.Item[Index].Potion_Experience);
