@@ -7,9 +7,6 @@ public partial class Editor_Classes : Form
     // Usado para acessar os dados da janela
     public static Editor_Classes Objects = new Editor_Classes();
 
-    // Dados
-    private static List<short> Equipments;
-
     // Índice do item selecionado
     public byte Selected;
 
@@ -27,11 +24,6 @@ public partial class Editor_Classes : Form
 
     public static void Open()
     {
-        // Lista de equipamentos
-        Equipments = new List<short>();
-        Objects.cmbEquip_Type.Items.Clear();
-        for (byte i = 1; i < (byte)Globals.Equipments.Count; i++) Objects.cmbEquip_Type.Items.Add((Globals.Equipments)i);
-
         // Lista de itens
         Objects.cmbItems.Items.Clear();
         for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbItems.Items.Add(Globals.Numbering(i, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[i].Name);
@@ -97,7 +89,6 @@ public partial class Editor_Classes : Form
         // Seleciona os primeiros itens
         if (lstMale.Items.Count > 0) lstMale.SelectedIndex = 0;
         if (lstFemale.Items.Count > 0) lstFemale.SelectedIndex = 0;
-        cmbEquip_Type.SelectedIndex = 0;
     }
 
     public static void Change_Quantity()
@@ -322,28 +313,5 @@ public partial class Editor_Classes : Form
     {
         // Define o valor
         Lists.Class[Selected].Evolve_Level = (short)numEvolve_Level.Value;
-    }
-
-    private void cmbEquip_Type_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        // Lista os equipamentos
-        cmbEquip_Num.Items.Clear();
-        cmbEquip_Num.Items.Add("None");
-        Equipments.Add(0);
-        for (byte i = 1; i < Lists.Item.Length; i++)
-            if (Lists.Item[i].Type == (byte)Globals.Items.Equipment && Lists.Item[i].Equip_Type == cmbEquip_Type.SelectedIndex)
-            {
-                Objects.cmbEquip_Num.Items.Add(Globals.Numbering(i, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[i].Name);
-                Equipments.Add(i);
-            }
-
-        // Seleciona o equipamento
-        cmbEquip_Num.SelectedIndex = Equipments.FindIndex(x => x == Lists.Class[Selected].Equipment[cmbEquip_Type.SelectedIndex]);
-    }
-
-    private void cmbEquip_Num_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        // Define o valor
-        Lists.Class[Selected].Equipment[cmbEquip_Type.SelectedIndex] = Equipments[cmbEquip_Num.SelectedIndex];
     }
 }

@@ -30,7 +30,7 @@ class Write
             Data.Write(Lists.Player[Index].Character[i].X);
             Data.Write(Lists.Player[Index].Character[i].Y);
             Data.Write((byte)Lists.Player[Index].Character[i].Direction);
-            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Player[Index].Character[i].Vital[n]);
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Player[Index].Character[i].Vital[n]);
             for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.Player[Index].Character[i].Attribute[n]);
             for (byte n = 1; n <= Game.Max_Inventory; n++)
             {

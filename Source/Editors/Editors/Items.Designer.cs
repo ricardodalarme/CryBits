@@ -111,10 +111,10 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label20);
-            this.groupBox1.Controls.Add(this.label19);
             this.groupBox1.Controls.Add(this.cmbRarity);
             this.groupBox1.Controls.Add(this.cmbBind);
+            this.groupBox1.Controls.Add(this.label20);
+            this.groupBox1.Controls.Add(this.label19);
             this.groupBox1.Controls.Add(this.numPrice);
             this.groupBox1.Controls.Add(this.label18);
             this.groupBox1.Controls.Add(this.txtDescription);
@@ -154,6 +154,7 @@
             // 
             // cmbRarity
             // 
+            this.cmbRarity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRarity.FormattingEnabled = true;
             this.cmbRarity.Location = new System.Drawing.Point(278, 118);
             this.cmbRarity.Name = "cmbRarity";
@@ -163,6 +164,7 @@
             // 
             // cmbBind
             // 
+            this.cmbBind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbBind.FormattingEnabled = true;
             this.cmbBind.Location = new System.Drawing.Point(190, 154);
             this.cmbBind.Name = "cmbBind";

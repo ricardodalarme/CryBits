@@ -74,7 +74,6 @@ partial class Receive
             Lists.Class[i].Tex_Male = new System.Collections.Generic.List<short>();
             Lists.Class[i].Tex_Female = new System.Collections.Generic.List<short>();
             Lists.Class[i].Item = new System.Collections.Generic.List<short>();
-            Lists.Class[i].Equipment = new short[(byte)Globals.Equipments.Count];
 
             // Lê os dados
             Lists.Class[i].Name = Data.ReadString();
@@ -93,7 +92,6 @@ partial class Receive
             Lists.Class[i].Evolve_Level = Data.ReadInt16();
             byte Num_Items = Data.ReadByte();
             for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(Data.ReadInt16());
-            for (byte a = 0; a < (byte)Globals.Equipments.Count; a++) Lists.Class[i].Equipment[a] = Data.ReadInt16();
         }
 
         // Abre o editor
@@ -216,6 +214,7 @@ partial class Receive
 
             // Lê os dados
             Lists.NPC[i].Name = Data.ReadString();
+            Lists.NPC[i].SayMsg = Data.ReadString();
             Lists.NPC[i].Texture = Data.ReadInt16();
             Lists.NPC[i].Behaviour = Data.ReadByte();
             for (byte n = 0; n < (byte)Globals.Vitals.Count; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();

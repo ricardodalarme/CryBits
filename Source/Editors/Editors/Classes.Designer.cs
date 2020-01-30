@@ -75,18 +75,14 @@
             this.numSpawn_Map = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.butItem_Delete = new System.Windows.Forms.Button();
             this.lstItems = new System.Windows.Forms.ListBox();
             this.butItem_Add = new System.Windows.Forms.Button();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.cmbEquip_Num = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.cmbEquip_Type = new System.Windows.Forms.ComboBox();
             this.grpItem_Add = new System.Windows.Forms.GroupBox();
+            this.cmbItems = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.butItem_Ok = new System.Windows.Forms.Button();
-            this.cmbItems = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEvolve_Level)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -103,7 +99,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Y)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).BeginInit();
             this.groupBox4.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.grpItem_Add.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -112,7 +107,7 @@
             this.List.FormattingEnabled = true;
             this.List.Location = new System.Drawing.Point(11, 12);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 498);
+            this.List.Size = new System.Drawing.Size(202, 459);
             this.List.TabIndex = 9;
             this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
             // 
@@ -206,7 +201,7 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(219, 522);
+            this.butSave.Location = new System.Drawing.Point(219, 477);
             this.butSave.Name = "butSave";
             this.butSave.Size = new System.Drawing.Size(201, 25);
             this.butSave.TabIndex = 16;
@@ -216,7 +211,7 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(634, 522);
+            this.butCancel.Location = new System.Drawing.Point(634, 477);
             this.butCancel.Name = "butCancel";
             this.butCancel.Size = new System.Drawing.Size(201, 25);
             this.butCancel.TabIndex = 17;
@@ -226,7 +221,7 @@
             // 
             // butClear
             // 
-            this.butClear.Location = new System.Drawing.Point(427, 522);
+            this.butClear.Location = new System.Drawing.Point(427, 477);
             this.butClear.Name = "butClear";
             this.butClear.Size = new System.Drawing.Size(201, 25);
             this.butClear.TabIndex = 18;
@@ -252,31 +247,31 @@
             this.groupBox2.Controls.Add(this.lblHP);
             this.groupBox2.Location = new System.Drawing.Point(219, 219);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(304, 185);
+            this.groupBox2.Size = new System.Drawing.Size(304, 140);
             this.groupBox2.TabIndex = 20;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Base Attributes";
             // 
             // numAgility
             // 
-            this.numAgility.Location = new System.Drawing.Point(154, 118);
+            this.numAgility.Location = new System.Drawing.Point(9, 113);
             this.numAgility.Name = "numAgility";
-            this.numAgility.Size = new System.Drawing.Size(139, 20);
+            this.numAgility.Size = new System.Drawing.Size(90, 20);
             this.numAgility.TabIndex = 32;
             this.numAgility.ValueChanged += new System.EventHandler(this.numAgility_ValueChanged);
             // 
             // numVitality
             // 
-            this.numVitality.Location = new System.Drawing.Point(10, 159);
+            this.numVitality.Location = new System.Drawing.Point(106, 113);
             this.numVitality.Name = "numVitality";
-            this.numVitality.Size = new System.Drawing.Size(138, 20);
+            this.numVitality.Size = new System.Drawing.Size(90, 20);
             this.numVitality.TabIndex = 34;
             this.numVitality.ValueChanged += new System.EventHandler(this.numVitality_ValueChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 143);
+            this.label4.Location = new System.Drawing.Point(103, 96);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(40, 13);
             this.label4.TabIndex = 33;
@@ -285,7 +280,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(151, 102);
+            this.label6.Location = new System.Drawing.Point(8, 97);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(37, 13);
             this.label6.TabIndex = 31;
@@ -293,16 +288,16 @@
             // 
             // numIntelligence
             // 
-            this.numIntelligence.Location = new System.Drawing.Point(10, 117);
+            this.numIntelligence.Location = new System.Drawing.Point(203, 71);
             this.numIntelligence.Name = "numIntelligence";
-            this.numIntelligence.Size = new System.Drawing.Size(138, 20);
+            this.numIntelligence.Size = new System.Drawing.Size(90, 20);
             this.numIntelligence.TabIndex = 29;
             this.numIntelligence.ValueChanged += new System.EventHandler(this.numIntelligence_ValueChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 101);
+            this.label5.Location = new System.Drawing.Point(200, 55);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(64, 13);
             this.label5.TabIndex = 27;
@@ -310,9 +305,9 @@
             // 
             // numResistance
             // 
-            this.numResistance.Location = new System.Drawing.Point(154, 72);
+            this.numResistance.Location = new System.Drawing.Point(106, 71);
             this.numResistance.Name = "numResistance";
-            this.numResistance.Size = new System.Drawing.Size(139, 20);
+            this.numResistance.Size = new System.Drawing.Size(90, 20);
             this.numResistance.TabIndex = 26;
             this.numResistance.ValueChanged += new System.EventHandler(this.numResistance_ValueChanged);
             // 
@@ -320,14 +315,14 @@
             // 
             this.numStrength.Location = new System.Drawing.Point(10, 72);
             this.numStrength.Name = "numStrength";
-            this.numStrength.Size = new System.Drawing.Size(138, 20);
+            this.numStrength.Size = new System.Drawing.Size(90, 20);
             this.numStrength.TabIndex = 25;
             this.numStrength.ValueChanged += new System.EventHandler(this.numStrength_ValueChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(151, 56);
+            this.label1.Location = new System.Drawing.Point(103, 55);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 13);
             this.label1.TabIndex = 24;
@@ -469,7 +464,7 @@
             // 
             // butQuantity
             // 
-            this.butQuantity.Location = new System.Drawing.Point(12, 522);
+            this.butQuantity.Location = new System.Drawing.Point(12, 477);
             this.butQuantity.Name = "butQuantity";
             this.butQuantity.Size = new System.Drawing.Size(202, 25);
             this.butQuantity.TabIndex = 15;
@@ -479,15 +474,15 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.label9);
-            this.groupBox3.Controls.Add(this.numSpawn_X);
-            this.groupBox3.Controls.Add(this.cmbSpawn_Direction);
             this.groupBox3.Controls.Add(this.numSpawn_Y);
+            this.groupBox3.Controls.Add(this.numSpawn_X);
+            this.groupBox3.Controls.Add(this.numSpawn_Map);
+            this.groupBox3.Controls.Add(this.label9);
+            this.groupBox3.Controls.Add(this.cmbSpawn_Direction);
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Controls.Add(this.label8);
-            this.groupBox3.Controls.Add(this.numSpawn_Map);
             this.groupBox3.Controls.Add(this.label7);
-            this.groupBox3.Location = new System.Drawing.Point(219, 410);
+            this.groupBox3.Location = new System.Drawing.Point(221, 365);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(304, 106);
             this.groupBox3.TabIndex = 35;
@@ -526,10 +521,10 @@
             this.cmbSpawn_Direction.TabIndex = 28;
             this.cmbSpawn_Direction.SelectedIndexChanged += new System.EventHandler(this.cmbSpawn_Direction_SelectedIndexChanged);
             // 
-            // c
+            // numSpawn_Y
             // 
             this.numSpawn_Y.Location = new System.Drawing.Point(155, 78);
-            this.numSpawn_Y.Name = "c";
+            this.numSpawn_Y.Name = "numSpawn_Y";
             this.numSpawn_Y.Size = new System.Drawing.Size(138, 20);
             this.numSpawn_Y.TabIndex = 27;
             this.numSpawn_Y.ValueChanged += new System.EventHandler(this.numSpawn_Y_ValueChanged);
@@ -581,19 +576,30 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label12);
             this.groupBox4.Controls.Add(this.butItem_Delete);
             this.groupBox4.Controls.Add(this.lstItems);
             this.groupBox4.Controls.Add(this.butItem_Add);
             this.groupBox4.Location = new System.Drawing.Point(531, 219);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(304, 185);
+            this.groupBox4.Size = new System.Drawing.Size(304, 252);
             this.groupBox4.TabIndex = 36;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Initial Items";
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(59, 205);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(184, 12);
+            this.label12.TabIndex = 36;
+            this.label12.Text = "(Equipments will be automatically equipped)";
+            // 
             // butItem_Delete
             // 
-            this.butItem_Delete.Location = new System.Drawing.Point(155, 157);
+            this.butItem_Delete.Location = new System.Drawing.Point(154, 222);
             this.butItem_Delete.Name = "butItem_Delete";
             this.butItem_Delete.Size = new System.Drawing.Size(139, 20);
             this.butItem_Delete.TabIndex = 35;
@@ -606,69 +612,18 @@
             this.lstItems.FormattingEnabled = true;
             this.lstItems.Location = new System.Drawing.Point(10, 16);
             this.lstItems.Name = "lstItems";
-            this.lstItems.Size = new System.Drawing.Size(284, 134);
+            this.lstItems.Size = new System.Drawing.Size(284, 186);
             this.lstItems.TabIndex = 34;
             // 
             // butItem_Add
             // 
-            this.butItem_Add.Location = new System.Drawing.Point(10, 157);
+            this.butItem_Add.Location = new System.Drawing.Point(9, 222);
             this.butItem_Add.Name = "butItem_Add";
             this.butItem_Add.Size = new System.Drawing.Size(138, 20);
             this.butItem_Add.TabIndex = 33;
             this.butItem_Add.Text = "Add";
             this.butItem_Add.UseVisualStyleBackColor = true;
             this.butItem_Add.Click += new System.EventHandler(this.butItem_Add_Click);
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.cmbEquip_Type);
-            this.groupBox5.Controls.Add(this.cmbEquip_Num);
-            this.groupBox5.Controls.Add(this.label13);
-            this.groupBox5.Controls.Add(this.label12);
-            this.groupBox5.Location = new System.Drawing.Point(531, 410);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(304, 106);
-            this.groupBox5.TabIndex = 37;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Initial Equipments";
-            // 
-            // cmbEquip_Num
-            // 
-            this.cmbEquip_Num.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEquip_Num.FormattingEnabled = true;
-            this.cmbEquip_Num.Location = new System.Drawing.Point(9, 77);
-            this.cmbEquip_Num.Name = "cmbEquip_Num";
-            this.cmbEquip_Num.Size = new System.Drawing.Size(284, 21);
-            this.cmbEquip_Num.TabIndex = 32;
-            this.cmbEquip_Num.SelectedIndexChanged += new System.EventHandler(this.cmbEquip_Num_SelectedIndexChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 19);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(34, 13);
-            this.label13.TabIndex = 31;
-            this.label13.Text = "Type:";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(7, 62);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(37, 13);
-            this.label12.TabIndex = 30;
-            this.label12.Text = "Equip:";
-            // 
-            // cmbEquip_Type
-            // 
-            this.cmbEquip_Type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEquip_Type.FormattingEnabled = true;
-            this.cmbEquip_Type.Location = new System.Drawing.Point(10, 35);
-            this.cmbEquip_Type.Name = "cmbEquip_Type";
-            this.cmbEquip_Type.Size = new System.Drawing.Size(284, 21);
-            this.cmbEquip_Type.TabIndex = 29;
-            this.cmbEquip_Type.SelectedIndexChanged += new System.EventHandler(this.cmbEquip_Type_SelectedIndexChanged);
             // 
             // grpItem_Add
             // 
@@ -677,16 +632,25 @@
             this.grpItem_Add.Controls.Add(this.butItem_Ok);
             this.grpItem_Add.Location = new System.Drawing.Point(531, 219);
             this.grpItem_Add.Name = "grpItem_Add";
-            this.grpItem_Add.Size = new System.Drawing.Size(304, 185);
+            this.grpItem_Add.Size = new System.Drawing.Size(304, 252);
             this.grpItem_Add.TabIndex = 38;
             this.grpItem_Add.TabStop = false;
             this.grpItem_Add.Text = "Add Item";
             this.grpItem_Add.Visible = false;
             // 
+            // cmbItems
+            // 
+            this.cmbItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbItems.FormattingEnabled = true;
+            this.cmbItems.Location = new System.Drawing.Point(29, 112);
+            this.cmbItems.Name = "cmbItems";
+            this.cmbItems.Size = new System.Drawing.Size(251, 21);
+            this.cmbItems.TabIndex = 0;
+            // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(26, 56);
+            this.label16.Location = new System.Drawing.Point(26, 97);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(30, 13);
             this.label16.TabIndex = 30;
@@ -694,7 +658,7 @@
             // 
             // butItem_Ok
             // 
-            this.butItem_Ok.Location = new System.Drawing.Point(29, 102);
+            this.butItem_Ok.Location = new System.Drawing.Point(29, 143);
             this.butItem_Ok.Name = "butItem_Ok";
             this.butItem_Ok.Size = new System.Drawing.Size(251, 20);
             this.butItem_Ok.TabIndex = 29;
@@ -702,23 +666,13 @@
             this.butItem_Ok.UseVisualStyleBackColor = true;
             this.butItem_Ok.Click += new System.EventHandler(this.butItem_Ok_Click);
             // 
-            // cmbItems
-            // 
-            this.cmbItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbItems.FormattingEnabled = true;
-            this.cmbItems.Location = new System.Drawing.Point(29, 71);
-            this.cmbItems.Name = "cmbItems";
-            this.cmbItems.Size = new System.Drawing.Size(251, 21);
-            this.cmbItems.TabIndex = 0;
-            // 
             // Editor_Classes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(847, 556);
+            this.ClientSize = new System.Drawing.Size(847, 511);
             this.ControlBox = false;
             this.Controls.Add(this.grpItem_Add);
-            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.butQuantity);
@@ -734,7 +688,7 @@
             this.MaximizeBox = false;
             this.Name = "Editor_Classes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Item Editor";
+            this.Text = "Class Editor";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEvolve_Level)).EndInit();
@@ -755,8 +709,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Y)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).EndInit();
             this.groupBox4.ResumeLayout(false);
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
+            this.groupBox4.PerformLayout();
             this.grpItem_Add.ResumeLayout(false);
             this.grpItem_Add.PerformLayout();
             this.ResumeLayout(false);
@@ -811,11 +764,6 @@
     private System.Windows.Forms.Button butItem_Delete;
     public System.Windows.Forms.ListBox lstItems;
     private System.Windows.Forms.Button butItem_Add;
-    private System.Windows.Forms.GroupBox groupBox5;
-    private System.Windows.Forms.Label label12;
-    private System.Windows.Forms.ComboBox cmbEquip_Type;
-    private System.Windows.Forms.Label label13;
-    private System.Windows.Forms.ComboBox cmbEquip_Num;
     private System.Windows.Forms.Label label15;
     private System.Windows.Forms.Label label14;
     private System.Windows.Forms.NumericUpDown numEvolve_Level;
@@ -824,4 +772,5 @@
     private System.Windows.Forms.Label label16;
     private System.Windows.Forms.Button butItem_Ok;
     private System.Windows.Forms.ComboBox cmbItems;
+    private System.Windows.Forms.Label label12;
 }

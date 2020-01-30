@@ -204,13 +204,12 @@ class Send
                 Data.Write(Lists.Class[i].Spawn_Direction);
                 Data.Write(Lists.Class[i].Spawn_X);
                 Data.Write(Lists.Class[i].Spawn_Y);
-                for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Class[i].Vital[n]);
+                for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Class[i].Vital[n]);
                 for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.Class[i].Attribute[n]);
                 Data.Write(Lists.Class[i].Evolve_To);
                 Data.Write(Lists.Class[i].Evolve_Level);
                 Data.Write((byte)Lists.Class[i].Item.Length);
                 for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++) Data.Write(Lists.Class[i].Item[n]);
-                for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Lists.Class[i].Equipment[n]);
             }
         }
         Data.Write(OpenEditor);
@@ -243,7 +242,7 @@ class Send
         Data.Write(Player.Character(Index).X);
         Data.Write(Player.Character(Index).Y);
         Data.Write((byte)Player.Character(Index).Direction);
-        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
         {
             Data.Write(Player.Character(Index).Vital[n]);
             Data.Write(Player.Character(Index).MaxVital(n));
@@ -274,7 +273,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Vitals);
         Data.Write(Index);
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++)
+        for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
         {
             Data.Write(Player.Character(Index).Vital[i]);
             Data.Write(Player.Character(Index).MaxVital(i));
@@ -599,7 +598,7 @@ class Send
             Data.Write(Lists.Item[i].Req_Level);
             Data.Write(Lists.Item[i].Req_Class);
             Data.Write(Lists.Item[i].Potion_Experience);
-            for (byte v = 0; v < (byte)Game.Vitals.Amount; v++) Data.Write(Lists.Item[i].Potion_Vital[v]);
+            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Data.Write(Lists.Item[i].Potion_Vital[v]);
             Data.Write(Lists.Item[i].Equip_Type);
             for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Data.Write(Lists.Item[i].Equip_Attribute[a]);
             Data.Write(Lists.Item[i].Weapon_Damage);
@@ -689,7 +688,7 @@ class Send
             Data.Write(Lists.NPC[i].SayMsg);
             Data.Write(Lists.NPC[i].Texture);
             Data.Write(Lists.NPC[i].Behaviour);
-            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.NPC[i].Vital[n]);
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.NPC[i].Vital[n]);
 
             // Dados apenas do editor
             if (Lists.TempPlayer[Index].InEditor)
@@ -723,7 +722,7 @@ class Send
             Data.Write(Lists.Temp_Map[Map_Num].NPC[i].X);
             Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Y);
             Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[i].Direction);
-            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Vital[n]);
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Vital[n]);
         }
         ToPlayer(Index, Data);
     }
@@ -739,7 +738,7 @@ class Send
         Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].X);
         Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Y);
         Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[Index].Direction);
-        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Vital[n]);
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Vital[n]);
         ToMap(Map_Num, Data);
     }
 
@@ -775,7 +774,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Vitals);
         Data.Write(Index);
-        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Vital[n]);
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Vital[n]);
         ToMap(Map_Num, Data);
     }
 

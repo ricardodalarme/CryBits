@@ -39,17 +39,6 @@ class Player
             return false;
     }
 
-    public static short Player_Texture(byte Index)
-    {
-        byte Class = Lists.Player[Index].Class;
-
-        // Retorna com o valor da textura
-        if (Lists.Player[Index].Genre)
-            return Lists.Class[Class].Texture_Male;
-        else
-            return Lists.Class[Class].Texture_Female;
-    }
-
     public static void Logic()
     {
         // Verificações
@@ -423,7 +412,7 @@ partial class Graphics
         int x = Lists.Player[Index].X * Game.Grid + Lists.Player[Index].X2, y = Lists.Player[Index].Y * Game.Grid + Lists.Player[Index].Y2;
         short x2 = Lists.Player[Index].X2, y2 = Lists.Player[Index].Y2;
         bool Hurt = false;
-        short Texture = Player.Player_Texture(Index);
+        short Texture = Lists.Player[Index].Texture_Num;
 
         // Previne sobrecargas
         if (Texture <= 0 || Texture > Tex_Character.GetUpperBound(0)) return;
@@ -448,7 +437,7 @@ partial class Graphics
 
     public static void Player_Bars(byte Index)
     {
-        Size Chracater_Size = TSize(Tex_Character[Player.Player_Texture(Index)]);
+        Size Chracater_Size = TSize(Tex_Character[Lists.Player[Index].Texture_Num]);
         int x = Lists.Player[Index].X * Game.Grid + Lists.Player[Index].X2, y = Lists.Player[Index].Y * Game.Grid + Lists.Player[Index].Y2;
         Point Position = new Point(Game.ConvertX(x), Game.ConvertY(y) + Chracater_Size.Height / Game.Animation_Amount + 4);
         int FullWidth = Chracater_Size.Width / Game.Animation_Amount;
@@ -467,7 +456,7 @@ partial class Graphics
 
     public static void Player_Name(byte Index)
     {
-        Texture Texture = Tex_Character[Player.Player_Texture(Index)];
+        Texture Texture = Tex_Character[Lists.Player[Index].Texture_Num];
         int Name_Size = Tools.MeasureString(Lists.Player[Index].Name);
         int x = Lists.Player[Index].X * Game.Grid + Lists.Player[Index].X2, y = Lists.Player[Index].Y * Game.Grid + Lists.Player[Index].Y2;
 

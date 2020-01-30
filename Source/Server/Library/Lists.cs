@@ -64,7 +64,6 @@ class Lists
             public byte Evolve_To;
             public short Evolve_Level;
             public short[] Item;
-            public short[] Equipment;
         }
 
         [Serializable]

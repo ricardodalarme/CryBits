@@ -323,7 +323,6 @@ partial class Graphics
 
     public static void SelectCharacter_Class()
     {
-        short Texture_Num;
         Point Text_Position = new Point(399, 425);
         string Text = "(" + Game.SelectCharacter + ") None";
 
@@ -344,13 +343,8 @@ partial class Graphics
             return;
         }
 
-        // Textura do personagem
-        if (Lists.Characters[Game.SelectCharacter].Genre)
-            Texture_Num = Lists.Class[Class].Texture_Male;
-        else
-            Texture_Num = Lists.Class[Class].Texture_Female;
-
         // Desenha o personagem
+        short Texture_Num = Lists.Characters[Game.SelectCharacter].Texture_Num;
         if (Texture_Num > 0)
         {
             Render(Tex_Face[Texture_Num], new Point(353, 442));
@@ -364,23 +358,24 @@ partial class Graphics
 
     public static void CreateCharacter_Class()
     {
-        short Texture;
+        short Texture_Num = 0;
+        Lists.Structures.Class Class = Lists.Class[Game.CreateCharacter_Class];
 
         // Textura do personagem
-        if (CheckBoxes.Get("GenderMale").State)
-            Texture = Lists.Class[Game.CreateCharacter_Class].Texture_Male;
-        else
-            Texture = Lists.Class[Game.CreateCharacter_Class].Texture_Female;
+        if (CheckBoxes.Get("GenderMale").State && Class.Tex_Male.Length > 0)
+            Texture_Num = Class.Tex_Male[Game.CreateCharacter_Tex];
+        else if (Class.Tex_Female.Length > 0)
+            Texture_Num = Class.Tex_Female[Game.CreateCharacter_Tex];
 
         // Desenha o personagem
-        if (Texture > 0)
+        if (Texture_Num > 0)
         {
-            Render(Tex_Face[Texture], new Point(425, 467));
-            Character(Texture, new Point(430, 527), Game.Directions.Down, Game.Animation_Stopped);
+            Render(Tex_Face[Texture_Num], new Point(425, 467));
+            Character(Texture_Num, new Point(430, 527), Game.Directions.Down, Game.Animation_Stopped);
         }
 
         // Desenha o nome da classe
-        string Text = Lists.Class[Game.CreateCharacter_Class].Name;
+        string Text = Class.Name;
         DrawText(Text, 471 - Tools.MeasureString(Text) / 2, 449, SFML.Graphics.Color.White);
     }
 
@@ -437,7 +432,7 @@ partial class Graphics
         // Dados básicos
         DrawText(Player.Me.Name, Panel_Position.X + 18, Panel_Position.Y + 52, SFML.Graphics.Color.White);
         DrawText(Player.Me.Level.ToString(), Panel_Position.X + 18, Panel_Position.Y + 79, SFML.Graphics.Color.White);
-        Render(Tex_Face[Lists.Class[Player.Me.Class].Texture_Male], new Point(Panel_Position.X + 82, Panel_Position.Y + 37));
+        Render(Tex_Face[Player.Me.Texture_Num], new Point(Panel_Position.X + 82, Panel_Position.Y + 37));
 
         // Atributos
         DrawText("Strength: " + Player.Me.Attribute[(byte)Game.Attributes.Strength], Panel_Position.X + 32, Panel_Position.Y + 146, SFML.Graphics.Color.White);

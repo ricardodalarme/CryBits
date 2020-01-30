@@ -15,6 +15,7 @@ class Game
 
     // Interface
     public static byte CreateCharacter_Class = 1;
+    public static byte CreateCharacter_Tex = 0;
     public static int SelectCharacter = 1;
     public static short Infomation_Index;
     public static int Need_Information = 0;

@@ -82,7 +82,6 @@ class Lists
             public byte Evolve_To;
             public short Evolve_Level;
             public List<short> Item;
-            public short[] Equipment;
         }
 
         public struct Tile

@@ -63,7 +63,7 @@ partial class Read
                 Lists.Player[Index].Character[i].X = Data.ReadByte();
                 Lists.Player[Index].Character[i].Y = Data.ReadByte();
                 Lists.Player[Index].Character[i].Direction = (Game.Directions)Data.ReadByte();
-                for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Lists.Player[Index].Character[i].Vital[n] = Data.ReadInt16();
+                for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.Player[Index].Character[i].Vital[n] = Data.ReadInt16();
                 for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.Player[Index].Character[i].Attribute[n] = Data.ReadInt16();
                 for (byte n = 1; n <= Game.Max_Inventory; n++)
                 {

@@ -149,7 +149,6 @@ partial class Send
             Data.Write(Lists.Class[i].Evolve_To);
             Data.Write(Lists.Class[i].Evolve_Level);
             for (byte a = 0; a < Lists.Class[i].Item.Count; a++) Data.Write(Lists.Class[i].Item[a]);
-            for (byte a = 0; a < (byte)Globals.Equipments.Count; a++) Data.Write(Lists.Class[i].Equipment[a]);
         }
         Packet(Data);
     }

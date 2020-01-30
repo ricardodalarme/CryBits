@@ -19,7 +19,7 @@ class Player
         public short Level;
         private short experience;
         public byte Points;
-        public short[] Vital = new short[(byte)Game.Vitals.Amount];
+        public short[] Vital = new short[(byte)Game.Vitals.Count];
         public short[] Attribute = new short[(byte)Game.Attributes.Count];
         public short Map;
         public byte X;
@@ -427,7 +427,7 @@ class Player
         Lists.Structures.Class Data = Lists.Class[Character(Index).Class];
 
         // Recupera os vitais
-        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
             Character(Index).Vital[n] = Character(Index).MaxVital(n);
 
         // Perde 10% da experiência
@@ -451,7 +451,7 @@ class Player
             // Reneração // 
             ///////////////
             if (Environment.TickCount > Loop.Timer_Player_Regen + 5000)
-                for (byte v = 0; v < (byte)Game.Vitals.Amount; v++)
+                for (byte v = 0; v < (byte)Game.Vitals.Count; v++)
                     if (Character(i).Vital[v] < Character(i).MaxVital(v))
                     {
                         // Renera a vida do jogador
@@ -588,7 +588,7 @@ class Player
             bool HadEffect = false;
             Character(Index).Experience += Lists.Item[Item_Num].Potion_Experience;
             if (Character(Index).Experience < 0) Character(Index).Experience = 0;
-            for (byte i = 0; i < (byte)Game.Vitals.Amount; i++)
+            for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
             {
                 // Verifica se o item causou algum efeito 
                 if (Character(Index).Vital[i] < Character(Index).MaxVital(i) && Lists.Item[Item_Num].Potion_Vital[i] != 0) HadEffect = true;

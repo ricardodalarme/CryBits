@@ -31,8 +31,8 @@ class Directories
     public static FileInfo Tex_Shadow = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Shadow");
     public static FileInfo Tex_Bars = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Bars");
     public static FileInfo Tex_Bars_Panel = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Bars_Panel");
-    public static DirectoryInfo Tex_Lights = new DirectoryInfo(Application.StartupPath + @"\Graphics\Misc\Lights\");
-    public static DirectoryInfo Tex_Items = new DirectoryInfo(Application.StartupPath + @"\Graphics\Misc\Items\");
+    public static DirectoryInfo Tex_Lights = new DirectoryInfo(Application.StartupPath + @"\Graphics\Lights\");
+    public static DirectoryInfo Tex_Items = new DirectoryInfo(Application.StartupPath + @"\Graphics\Items\");
     public static FileInfo Tex_Grid = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Grid");
 
     public static void Create()

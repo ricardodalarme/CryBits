@@ -138,12 +138,13 @@ partial class Receive
         for (byte i = 1; i <= Amount; i++)
         {
             // Recebe os dados do personagem
-            Lists.Class[i] = new Lists.Structures.Class
-            {
-                Name = Data.ReadString(),
-                Texture_Male = Data.ReadInt16(),
-                Texture_Female = Data.ReadInt16()
-            };
+            Lists.Class[i] = new Lists.Structures.Class();
+            Lists.Class[i].Name = Data.ReadString();
+            Lists.Class[i].Description = Data.ReadString();
+            Lists.Class[i].Tex_Male = new short[Data.ReadByte()];
+            for (byte n = 0; n < Lists.Class[i].Tex_Male.Length; n++) Lists.Class[i].Tex_Male[n] = Data.ReadInt16();
+            Lists.Class[i].Tex_Female = new short[Data.ReadByte()];
+            for (byte n = 0; n < Lists.Class[i].Tex_Female.Length; n++) Lists.Class[i].Tex_Female[n] = Data.ReadInt16();
         }
     }
 
@@ -358,7 +359,7 @@ partial class Receive
             Lists.Item[i].Type = Data.ReadByte();
             Data.ReadInt16(); // Price
             Data.ReadBoolean(); // Stackable
-            Data.ReadBoolean(); // Bind
+            Data.ReadByte(); // Bind
             Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();

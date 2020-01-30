@@ -50,7 +50,7 @@ class NPC
                 // Regeneração //
                 /////////////////
                 if (Environment.TickCount > Loop.Timer_NPC_Regen + 5000)
-                    for (byte v = 0; v < (byte)Game.Vitals.Amount; v++)
+                    for (byte v = 0; v < (byte)Game.Vitals.Count; v++)
                         if (Data.Vital[v] < NPC_Data.Vital[v])
                         {
                             // Renera os vitais
@@ -235,8 +235,8 @@ class NPC
         Lists.Temp_Map[Map_Num].NPC[Index].X = x;
         Lists.Temp_Map[Map_Num].NPC[Index].Y = y;
         Lists.Temp_Map[Map_Num].NPC[Index].Direction = Direction;
-        Lists.Temp_Map[Map_Num].NPC[Index].Vital = new short[(byte)Game.Vitals.Amount];
-        for (byte i = 0; i < (byte)Game.Vitals.Amount; i++) Lists.Temp_Map[Map_Num].NPC[Index].Vital[i] = Data.Vital[i];
+        Lists.Temp_Map[Map_Num].NPC[Index].Vital = new short[(byte)Game.Vitals.Count];
+        for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Lists.Temp_Map[Map_Num].NPC[Index].Vital[i] = Data.Vital[i];
 
         // Envia os dados aos jogadores
         if (Socket.Device != null) Send.Map_NPC(Map_Num, Index);

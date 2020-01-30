@@ -45,6 +45,7 @@ class Lists
             // Geral
             public string Name;
             public byte Class;
+            public short Texture_Num;
             public bool Genre;
             public short Level;
             public short Experience;
@@ -66,14 +67,15 @@ class Lists
             public byte Class;
             public bool Genre;
             public short Level;
+            public short Texture_Num;
         }
 
         public class Class
         {
             public string Name;
             public string Description;
-            public short Texture_Male;
-            public short Texture_Female;
+            public short[] Tex_Male;
+            public short[] Tex_Female;
         }
 
         [Serializable]

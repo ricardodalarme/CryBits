@@ -49,7 +49,7 @@ class Game
     {
         HP,
         MP,
-        Amount
+        Count
     }
 
     public enum Attributes

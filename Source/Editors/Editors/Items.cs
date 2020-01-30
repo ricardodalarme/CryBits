@@ -34,7 +34,7 @@ public partial class Editor_Items : Form
 
         // Lista de preensão
         Objects.cmbBind.Items.Clear();
-        for (byte i = 0; i < (byte)Globals.BindOn.Count; i++) Objects.cmbBind.Items.Add((Globals.Rarity)i);
+        for (byte i = 0; i < (byte)Globals.BindOn.Count; i++) Objects.cmbBind.Items.Add((Globals.BindOn)i);
 
         // Lista os itens
         Update_List();
