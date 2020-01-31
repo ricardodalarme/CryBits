@@ -79,10 +79,8 @@
             this.cmbItems = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.butItem_Ok = new System.Windows.Forms.Button();
-            this.label15 = new System.Windows.Forms.Label();
-            this.numEvolve_Level = new System.Windows.Forms.NumericUpDown();
-            this.label14 = new System.Windows.Forms.Label();
-            this.cmbEvolve_Class = new System.Windows.Forms.ComboBox();
+            this.numItem_Amount = new System.Windows.Forms.NumericUpDown();
+            this.label13 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).BeginInit();
@@ -99,7 +97,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.grpItem_Add.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numEvolve_Level)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numItem_Amount)).BeginInit();
             this.SuspendLayout();
             // 
             // List
@@ -107,23 +105,19 @@
             this.List.FormattingEnabled = true;
             this.List.Location = new System.Drawing.Point(11, 12);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 459);
+            this.List.Size = new System.Drawing.Size(202, 420);
             this.List.TabIndex = 9;
             this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.numEvolve_Level);
-            this.groupBox1.Controls.Add(this.cmbEvolve_Class);
-            this.groupBox1.Controls.Add(this.label15);
-            this.groupBox1.Controls.Add(this.label14);
             this.groupBox1.Controls.Add(this.txtDescription);
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.txtName);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(221, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(304, 201);
+            this.groupBox1.Size = new System.Drawing.Size(304, 161);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General";
@@ -165,7 +159,7 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(219, 477);
+            this.butSave.Location = new System.Drawing.Point(219, 437);
             this.butSave.Name = "butSave";
             this.butSave.Size = new System.Drawing.Size(201, 25);
             this.butSave.TabIndex = 16;
@@ -175,7 +169,7 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(634, 477);
+            this.butCancel.Location = new System.Drawing.Point(634, 437);
             this.butCancel.Name = "butCancel";
             this.butCancel.Size = new System.Drawing.Size(201, 25);
             this.butCancel.TabIndex = 17;
@@ -185,7 +179,7 @@
             // 
             // butClear
             // 
-            this.butClear.Location = new System.Drawing.Point(427, 477);
+            this.butClear.Location = new System.Drawing.Point(427, 437);
             this.butClear.Name = "butClear";
             this.butClear.Size = new System.Drawing.Size(201, 25);
             this.butClear.TabIndex = 18;
@@ -209,7 +203,7 @@
             this.groupBox2.Controls.Add(this.numHP);
             this.groupBox2.Controls.Add(this.lblMP);
             this.groupBox2.Controls.Add(this.lblHP);
-            this.groupBox2.Location = new System.Drawing.Point(219, 219);
+            this.groupBox2.Location = new System.Drawing.Point(221, 179);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(304, 140);
             this.groupBox2.TabIndex = 20;
@@ -428,7 +422,7 @@
             // 
             // butQuantity
             // 
-            this.butQuantity.Location = new System.Drawing.Point(12, 477);
+            this.butQuantity.Location = new System.Drawing.Point(12, 438);
             this.butQuantity.Name = "butQuantity";
             this.butQuantity.Size = new System.Drawing.Size(202, 25);
             this.butQuantity.TabIndex = 15;
@@ -446,7 +440,7 @@
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.label7);
-            this.groupBox3.Location = new System.Drawing.Point(221, 365);
+            this.groupBox3.Location = new System.Drawing.Point(221, 325);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(304, 106);
             this.groupBox3.TabIndex = 35;
@@ -546,7 +540,7 @@
             this.groupBox4.Controls.Add(this.butItem_Add);
             this.groupBox4.Location = new System.Drawing.Point(531, 219);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(304, 252);
+            this.groupBox4.Size = new System.Drawing.Size(304, 212);
             this.groupBox4.TabIndex = 36;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Initial Items";
@@ -555,7 +549,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(59, 205);
+            this.label12.Location = new System.Drawing.Point(61, 166);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(184, 12);
             this.label12.TabIndex = 36;
@@ -563,7 +557,7 @@
             // 
             // butItem_Delete
             // 
-            this.butItem_Delete.Location = new System.Drawing.Point(154, 222);
+            this.butItem_Delete.Location = new System.Drawing.Point(152, 184);
             this.butItem_Delete.Name = "butItem_Delete";
             this.butItem_Delete.Size = new System.Drawing.Size(139, 20);
             this.butItem_Delete.TabIndex = 35;
@@ -576,12 +570,12 @@
             this.lstItems.FormattingEnabled = true;
             this.lstItems.Location = new System.Drawing.Point(10, 16);
             this.lstItems.Name = "lstItems";
-            this.lstItems.Size = new System.Drawing.Size(284, 186);
+            this.lstItems.Size = new System.Drawing.Size(284, 147);
             this.lstItems.TabIndex = 34;
             // 
             // butItem_Add
             // 
-            this.butItem_Add.Location = new System.Drawing.Point(9, 222);
+            this.butItem_Add.Location = new System.Drawing.Point(8, 184);
             this.butItem_Add.Name = "butItem_Add";
             this.butItem_Add.Size = new System.Drawing.Size(138, 20);
             this.butItem_Add.TabIndex = 33;
@@ -591,12 +585,14 @@
             // 
             // grpItem_Add
             // 
+            this.grpItem_Add.Controls.Add(this.numItem_Amount);
+            this.grpItem_Add.Controls.Add(this.label13);
             this.grpItem_Add.Controls.Add(this.cmbItems);
             this.grpItem_Add.Controls.Add(this.label16);
             this.grpItem_Add.Controls.Add(this.butItem_Ok);
             this.grpItem_Add.Location = new System.Drawing.Point(531, 219);
             this.grpItem_Add.Name = "grpItem_Add";
-            this.grpItem_Add.Size = new System.Drawing.Size(304, 252);
+            this.grpItem_Add.Size = new System.Drawing.Size(304, 212);
             this.grpItem_Add.TabIndex = 38;
             this.grpItem_Add.TabStop = false;
             this.grpItem_Add.Text = "Add Item";
@@ -606,7 +602,7 @@
             // 
             this.cmbItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbItems.FormattingEnabled = true;
-            this.cmbItems.Location = new System.Drawing.Point(29, 112);
+            this.cmbItems.Location = new System.Drawing.Point(29, 79);
             this.cmbItems.Name = "cmbItems";
             this.cmbItems.Size = new System.Drawing.Size(251, 21);
             this.cmbItems.TabIndex = 0;
@@ -614,7 +610,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(26, 97);
+            this.label16.Location = new System.Drawing.Point(26, 64);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(30, 13);
             this.label16.TabIndex = 30;
@@ -630,47 +626,27 @@
             this.butItem_Ok.UseVisualStyleBackColor = true;
             this.butItem_Ok.Click += new System.EventHandler(this.butItem_Ok_Click);
             // 
-            // label15
+            // numItem_Amount
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(149, 158);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(45, 13);
-            this.label15.TabIndex = 31;
-            this.label15.Text = "At level:";
+            this.numItem_Amount.Location = new System.Drawing.Point(29, 117);
+            this.numItem_Amount.Name = "numItem_Amount";
+            this.numItem_Amount.Size = new System.Drawing.Size(251, 20);
+            this.numItem_Amount.TabIndex = 32;
             // 
-            // numEvolve_Level
+            // label13
             // 
-            this.numEvolve_Level.Location = new System.Drawing.Point(152, 174);
-            this.numEvolve_Level.Name = "numEvolve_Level";
-            this.numEvolve_Level.Size = new System.Drawing.Size(139, 20);
-            this.numEvolve_Level.TabIndex = 33;
-            this.numEvolve_Level.ValueChanged += new System.EventHandler(this.numEvolve_Level_ValueChanged);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 158);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(55, 13);
-            this.label14.TabIndex = 30;
-            this.label14.Text = "Evolve to:";
-            // 
-            // cmbEvolve_Class
-            // 
-            this.cmbEvolve_Class.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEvolve_Class.FormattingEnabled = true;
-            this.cmbEvolve_Class.Location = new System.Drawing.Point(9, 174);
-            this.cmbEvolve_Class.Name = "cmbEvolve_Class";
-            this.cmbEvolve_Class.Size = new System.Drawing.Size(139, 21);
-            this.cmbEvolve_Class.TabIndex = 32;
-            this.cmbEvolve_Class.SelectedIndexChanged += new System.EventHandler(this.cmbEvolve_Class_SelectedIndexChanged);
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(26, 103);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(46, 13);
+            this.label13.TabIndex = 31;
+            this.label13.Text = "Amount:";
             // 
             // Editor_Classes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(847, 511);
+            this.ClientSize = new System.Drawing.Size(847, 475);
             this.ControlBox = false;
             this.Controls.Add(this.grpItem_Add);
             this.Controls.Add(this.groupBox4);
@@ -711,7 +687,7 @@
             this.groupBox4.PerformLayout();
             this.grpItem_Add.ResumeLayout(false);
             this.grpItem_Add.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numEvolve_Level)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numItem_Amount)).EndInit();
             this.ResumeLayout(false);
 
     }
@@ -769,8 +745,6 @@
     private System.Windows.Forms.Button butItem_Ok;
     private System.Windows.Forms.ComboBox cmbItems;
     private System.Windows.Forms.Label label12;
-    private System.Windows.Forms.NumericUpDown numEvolve_Level;
-    private System.Windows.Forms.ComboBox cmbEvolve_Class;
-    private System.Windows.Forms.Label label15;
-    private System.Windows.Forms.Label label14;
+    private System.Windows.Forms.NumericUpDown numItem_Amount;
+    private System.Windows.Forms.Label label13;
 }

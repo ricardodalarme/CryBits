@@ -88,8 +88,6 @@ partial class Receive
             Lists.Class[i].Spawn_Y = Data.ReadByte();
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
-            Lists.Class[i].Evolve_To = Data.ReadByte();
-            Lists.Class[i].Evolve_Level = Data.ReadInt16();
             byte Num_Items = Data.ReadByte();
             for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(Data.ReadInt16());
         }

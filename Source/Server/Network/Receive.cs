@@ -574,8 +574,6 @@ class Receive
             Lists.Class[i].Spawn_Y = Data.ReadByte();
             for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
-            Lists.Class[i].Evolve_To = Data.ReadByte();
-            Lists.Class[i].Evolve_Level = Data.ReadInt16();
             for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++) Lists.Class[i].Item[n] = Data.ReadInt16();
         }
 

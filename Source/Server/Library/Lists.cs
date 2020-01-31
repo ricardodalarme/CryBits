@@ -61,8 +61,6 @@ class Lists
             public byte Spawn_Y;
             public short[] Vital;
             public short[] Attribute;
-            public byte Evolve_To;
-            public short Evolve_Level;
             public short[] Item;
         }
 

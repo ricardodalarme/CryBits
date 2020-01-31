@@ -206,8 +206,6 @@ class Send
                 Data.Write(Lists.Class[i].Spawn_Y);
                 for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Class[i].Vital[n]);
                 for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.Class[i].Attribute[n]);
-                Data.Write(Lists.Class[i].Evolve_To);
-                Data.Write(Lists.Class[i].Evolve_Level);
                 Data.Write((byte)Lists.Class[i].Item.Length);
                 for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++) Data.Write(Lists.Class[i].Item[n]);
             }

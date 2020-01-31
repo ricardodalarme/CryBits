@@ -40,20 +40,16 @@ public partial class Editor_Classes : Form
     {
         // Limpa as listas
         Objects.List.Items.Clear();
-        Objects.cmbEvolve_Class.Items.Clear();
-        Objects.cmbEvolve_Class.Items.Add("None");
 
         // Adiciona os itens às listas
         for (byte i = 1; i < Lists.Class.Length; i++)
         {
             string Text = Globals.Numbering(i, Lists.Class.GetUpperBound(0)) + ":" + Lists.Class[i].Name;
             Objects.List.Items.Add(Text);
-            Objects.cmbEvolve_Class.Items.Add(Text);
         }
 
         // Seleciona os primeiros itens
         Objects.List.SelectedIndex = 0;
-        Objects.cmbEvolve_Class.SelectedIndex = Lists.Class[1].Evolve_To;
     }
 
     private void Update_Data()
@@ -85,8 +81,6 @@ public partial class Editor_Classes : Form
         for (byte i = 0; i < Lists.Class[Selected].Tex_Male.Count; i++) lstMale.Items.Add(Lists.Class[Selected].Tex_Male[i]);
         for (byte i = 0; i < Lists.Class[Selected].Tex_Female.Count; i++) lstFemale.Items.Add(Lists.Class[Selected].Tex_Female[i]);
         for (byte i = 0; i < Lists.Class[Selected].Item.Count; i++) lstItems.Items.Add(Globals.Numbering(Lists.Class[Selected].Item[i], Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[Lists.Class[Selected].Item[i]].Name);
-        cmbEvolve_Class.SelectedIndex = Lists.Class[Selected].Evolve_To;
-        numEvolve_Level.Value = Lists.Class[Selected].Evolve_Level;
 
         // Seleciona os primeiros itens
         if (lstMale.Items.Count > 0) lstMale.SelectedIndex = 0;
@@ -156,7 +150,6 @@ public partial class Editor_Classes : Form
             Lists.Class[Selected].Name = txtName.Text;
             string Text = Globals.Numbering(Selected, List.Items.Count) + ":" + txtName.Text;
             List.Items[Selected - 1] = Text;
-            cmbEvolve_Class.Items[Selected - 1] = Text;
         }
     }
 
@@ -303,17 +296,5 @@ public partial class Editor_Classes : Form
             lstItems.Items.RemoveAt(Selected_Item);
             Lists.Class[Selected].Item.RemoveAt(Selected_Item);
         }
-    }
-
-    private void cmbEvolve_Class_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        // Define o valor
-        Lists.Class[Selected].Evolve_To = (byte)cmbEvolve_Class.SelectedIndex;
-    }
-
-    private void numEvolve_Level_ValueChanged(object sender, EventArgs e)
-    {
-        // Define o valor
-        Lists.Class[Selected].Evolve_Level = (short)numEvolve_Level.Value;
     }
 }
