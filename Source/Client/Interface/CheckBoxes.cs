@@ -95,11 +95,13 @@ class CheckBoxes
     {
         // Altera o estado do marcador de outro gênero
         Get("GenderFemale").State = !Get("GenderMale").State;
+        Game.CreateCharacter_Tex = 0;
     }
 
     public static void GenreFemale()
     {
         // Altera o estado do marcador de outro gênero
         Get("GenderMale").State = !Get("GenderFemale").State;
+        Game.CreateCharacter_Tex = 0;
     }
 }

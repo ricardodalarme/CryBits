@@ -50,26 +50,29 @@ partial class Editor_Interface : Form
 
     private void prgProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
     {
-        byte Window = (byte)((Lists.Structures.Tool)treOrder.SelectedNode.Tag).Window;
+        if (treOrder.SelectedNode == null)
+        {
+            byte Window = (byte)((Lists.Structures.Tool)treOrder.SelectedNode.Tag).Window;
 
-        // Troca a ferramenta de janela
-        if (e.ChangedItem.Label == "Window")
-        {
-            Lists.Tool.Nodes[Window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
-            treOrder.SelectedNode.Remove();
-            cmbWindows.SelectedIndex = Window;
-            treOrder.SelectedNode = Lists.Tool.Nodes[Window].LastNode;
-        }
-        // Troca o nome da ferramenta
-        else if (e.ChangedItem.Label == "Name")
-        {
-            string Text = string.Empty;
-            Lists.Structures.Tool Tool = ((Lists.Structures.Tool)treOrder.SelectedNode.Tag);
-            if (Tool is Lists.Structures.Button) Text = "[Button] ";
-            else if (Tool is Lists.Structures.CheckBox) Text = "[CheckBox] ";
-            else if (Tool is Lists.Structures.TextBox) Text = "[TextBox] ";
-            else if (Tool is Lists.Structures.Panel) Text = "[Panel] ";
-            treOrder.SelectedNode.Text = Text + Tool.Name;
+            // Troca a ferramenta de janela
+            if (e.ChangedItem.Label == "Window")
+            {
+                Lists.Tool.Nodes[Window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
+                treOrder.SelectedNode.Remove();
+                cmbWindows.SelectedIndex = Window;
+                treOrder.SelectedNode = Lists.Tool.Nodes[Window].LastNode;
+            }
+            // Troca o nome da ferramenta
+            else if (e.ChangedItem.Label == "Name")
+            {
+                string Text = string.Empty;
+                Lists.Structures.Tool Tool = ((Lists.Structures.Tool)treOrder.SelectedNode.Tag);
+                if (Tool is Lists.Structures.Button) Text = "[Button] ";
+                else if (Tool is Lists.Structures.CheckBox) Text = "[CheckBox] ";
+                else if (Tool is Lists.Structures.TextBox) Text = "[TextBox] ";
+                else if (Tool is Lists.Structures.Panel) Text = "[Panel] ";
+                treOrder.SelectedNode.Text = Text + Tool.Name;
+            }
         }
     }
 

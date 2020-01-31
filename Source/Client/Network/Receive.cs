@@ -122,6 +122,7 @@ partial class Receive
         CheckBoxes.Get("GenderMale").State = true;
         CheckBoxes.Get("GenderFemale").State = false;
         Game.CreateCharacter_Class = 1;
+        Game.CreateCharacter_Tex = 0;
 
         // Abre o painel de criação de personagem
         Panels.Menu_Close();

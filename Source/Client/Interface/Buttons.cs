@@ -94,8 +94,10 @@ class Buttons
             case "Connect_Confirm": Connect_Ok(); break;
             case "Register_Confirm": Register_Ok(); break;
             case "CreateCharacter": CreateCharacter(); break;
-            case "CreateCharacter_ChangeRight": CreateCharacter_Change_Right(); break;
-            case "CreateCharacter_ChangeLeft": CreateCharacter_Change_Left(); break;
+            case "CreateCharacter_ChangeRight": CreateCharacter_ChangeRight(); break;
+            case "CreateCharacter_ChangeLeft": CreateCharacter_ChangeLeft(); break;
+            case "CreateCharacter_Texture_ChangeLeft": CreateCharacter_Texture_ChangeLeft(); break;
+            case "CreateCharacter_Texture_ChangeRight": CreateCharacter_Texture_ChangeRight(); break;
             case "CreateCharacter_Back": CreateCharacter_Return(); break;
             case "Character_Use": Character_Use(); break;
             case "Character_Create": Character_Create(); break;
@@ -198,7 +200,7 @@ class Buttons
         Game.SetSituation(Game.Situations.CreateCharacter);
     }
 
-    public static void CreateCharacter_Change_Right()
+    public static void CreateCharacter_ChangeRight()
     {
         // Altera a classe selecionada pelo jogador
         if (Game.CreateCharacter_Class == Lists.Class.GetUpperBound(0))
@@ -207,13 +209,46 @@ class Buttons
             Game.CreateCharacter_Class += 1;
     }
 
-    public static void CreateCharacter_Change_Left()
+    public static void CreateCharacter_ChangeLeft()
     {
         // Altera a classe selecionada pelo jogador
         if (Game.CreateCharacter_Class == 1)
             Game.CreateCharacter_Class = (byte)Lists.Class.GetUpperBound(0);
         else
             Game.CreateCharacter_Class -= 1;
+    }
+
+
+    public static void CreateCharacter_Texture_ChangeRight()
+    {
+        // Lista de texturas
+        short[] Tex_List;
+        if (CheckBoxes.Get("GenderMale").State == true)
+            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Male;
+        else
+            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Female;
+
+        // Altera a classe selecionada pelo jogador
+        if (Game.CreateCharacter_Tex == Tex_List.Length - 1)
+            Game.CreateCharacter_Tex = 0;
+        else
+            Game.CreateCharacter_Tex += 1;
+    }
+
+    public static void CreateCharacter_Texture_ChangeLeft()
+    {
+        // Lista de texturas
+        short[] Tex_List;
+        if (CheckBoxes.Get("GenderMale").State == true)
+            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Male;
+        else
+            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Female;
+
+        // Altera a classe selecionada pelo jogador
+        if (Game.CreateCharacter_Tex == 0)
+            Game.CreateCharacter_Tex = (byte)(Tex_List.Length - 1);
+        else
+            Game.CreateCharacter_Tex -= 1;
     }
 
     public static void CreateCharacter_Return()

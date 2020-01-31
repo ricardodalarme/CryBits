@@ -370,13 +370,13 @@ partial class Graphics
         // Desenha o personagem
         if (Texture_Num > 0)
         {
-            Render(Tex_Face[Texture_Num], new Point(425, 467));
-            Character(Texture_Num, new Point(430, 527), Game.Directions.Down, Game.Animation_Stopped);
+            Render(Tex_Face[Texture_Num], new Point(425, 440));
+            Character(Texture_Num, new Point(433, 501), Game.Directions.Down, Game.Animation_Stopped);
         }
 
         // Desenha o nome da classe
         string Text = Class.Name;
-        DrawText(Text, 471 - Tools.MeasureString(Text) / 2, 449, SFML.Graphics.Color.White);
+        DrawText(Text, 347 - Tools.MeasureString(Text) / 2, 509, SFML.Graphics.Color.White);
     }
 
     public static void Game_Hotbar(Panels.Structure Tool)
