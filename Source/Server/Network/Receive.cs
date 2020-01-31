@@ -231,9 +231,9 @@ class Receive
         Lists.Structures.Class Class = Lists.Class[Player.Character(Index).Class];
         Player.Character(Index).Genre = Data.ReadBoolean();
         if (Player.Character(Index).Genre)
-            Player.Character(Index).Tex_Num = Class.Tex_Male[Data.ReadByte()];
+            Player.Character(Index).Texture_Num = Class.Tex_Male[Data.ReadByte()];
         else
-            Player.Character(Index).Tex_Num = Class.Tex_Female[Data.ReadByte()];
+            Player.Character(Index).Texture_Num = Class.Tex_Female[Data.ReadByte()];
         Player.Character(Index).Attribute = Class.Attribute;
         Player.Character(Index).Map = Class.Spawn_Map;
         Player.Character(Index).Direction = (Game.Directions)Class.Spawn_Direction;
@@ -241,10 +241,10 @@ class Receive
         Player.Character(Index).Y = Class.Spawn_Y;
         for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Player.Character(Index).Vital[i] = Player.Character(Index).MaxVital(i);
         for (byte i = 0; i < (byte)Class.Item.Length; i++)
-            if (Lists.Item[Class.Item[i]].Type == (byte)Game.Items.Equipment && Player.Character(Index).Equipment[(byte)Lists.Item[Class.Item[i]].Equip_Type] == 0)
-                Player.Character(Index).Equipment[Lists.Item[Class.Item[i]].Equip_Type] = Class.Item[i];
+            if (Lists.Item[Class.Item[i].Item1].Type == (byte)Game.Items.Equipment && Player.Character(Index).Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] == 0)
+                Player.Character(Index).Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] = Class.Item[i].Item1;
             else
-                Player.GiveItem(Index, Class.Item[i], 1);
+                Player.GiveItem(Index, Class.Item[i].Item1, Class.Item[i].Item2);
 
         // Salva a conta
         Write.Character(Name);
@@ -561,7 +561,7 @@ class Receive
             Lists.Class[i].Attribute = new short[(byte)Game.Attributes.Count];
             Lists.Class[i].Tex_Male = new short[Data.ReadByte()];
             Lists.Class[i].Tex_Female = new short[Data.ReadByte()];
-            Lists.Class[i].Item = new short[Data.ReadByte()];
+            Lists.Class[i].Item = new System.Tuple<short, short>[Data.ReadByte()];
 
             // Lê os dados
             Lists.Class[i].Name = Data.ReadString();
@@ -574,7 +574,7 @@ class Receive
             Lists.Class[i].Spawn_Y = Data.ReadByte();
             for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
-            for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++) Lists.Class[i].Item[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++) Lists.Class[i].Item[n] = new System.Tuple<short, short>(Data.ReadInt16(), Data.ReadInt16());
         }
 
         // Salva os dados e envia pra todos jogadores conectados

@@ -164,6 +164,7 @@ partial class Receive
             {
                 Name = Data.ReadString(),
                 Class = Data.ReadByte(),
+                Texture_Num = Data.ReadInt16(),
                 Genre = Data.ReadBoolean(),
                 Level = Data.ReadInt16()
             };

@@ -22,7 +22,7 @@ class Write
         {
             Data.Write(Lists.Player[Index].Character[i].Name);
             Data.Write(Lists.Player[Index].Character[i].Class);
-            Data.Write(Lists.Player[Index].Character[i].Tex_Num);
+            Data.Write(Lists.Player[Index].Character[i].Texture_Num);
             Data.Write(Lists.Player[Index].Character[i].Genre);
             Data.Write(Lists.Player[Index].Character[i].Level);
             Data.Write(Lists.Player[Index].Character[i].Experience);

@@ -298,7 +298,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.grpDrop);
             this.groupBox2.Controls.Add(this.groupBox4);
             this.groupBox2.Controls.Add(this.numExperience);
             this.groupBox2.Controls.Add(this.label9);
@@ -306,9 +305,9 @@
             this.groupBox2.Controls.Add(this.numHP);
             this.groupBox2.Controls.Add(this.lblMP);
             this.groupBox2.Controls.Add(this.lblHP);
-            this.groupBox2.Location = new System.Drawing.Point(219, 257);
+            this.groupBox2.Location = new System.Drawing.Point(529, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(304, 294);
+            this.groupBox2.Size = new System.Drawing.Size(304, 160);
             this.groupBox2.TabIndex = 21;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Combat:";
@@ -322,9 +321,9 @@
             this.grpDrop.Controls.Add(this.numDrop_Chance);
             this.grpDrop.Controls.Add(this.label11);
             this.grpDrop.Controls.Add(this.scrlDrop);
-            this.grpDrop.Location = new System.Drawing.Point(9, 163);
+            this.grpDrop.Location = new System.Drawing.Point(219, 257);
             this.grpDrop.Name = "grpDrop";
-            this.grpDrop.Size = new System.Drawing.Size(284, 118);
+            this.grpDrop.Size = new System.Drawing.Size(304, 240);
             this.grpDrop.TabIndex = 22;
             this.grpDrop.TabStop = false;
             this.grpDrop.Text = "Drop - 1";
@@ -570,8 +569,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(535, 592);
+            this.ClientSize = new System.Drawing.Size(930, 592);
             this.ControlBox = false;
+            this.Controls.Add(this.grpDrop);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.butQuantity);
             this.Controls.Add(this.butClear);

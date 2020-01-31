@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -73,7 +74,7 @@ partial class Receive
             Lists.Class[i].Attribute = new short[(byte)Globals.Attributes.Count];
             Lists.Class[i].Tex_Male = new System.Collections.Generic.List<short>();
             Lists.Class[i].Tex_Female = new System.Collections.Generic.List<short>();
-            Lists.Class[i].Item = new System.Collections.Generic.List<short>();
+            Lists.Class[i].Item = new System.Collections.Generic.List<Tuple<short, short>>();
 
             // Lê os dados
             Lists.Class[i].Name = Data.ReadString();
@@ -89,7 +90,7 @@ partial class Receive
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
             byte Num_Items = Data.ReadByte();
-            for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(Data.ReadInt16());
+            for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(new Tuple<short, short> (Data.ReadInt16(), Data.ReadInt16()));
         }
 
         // Abre o editor

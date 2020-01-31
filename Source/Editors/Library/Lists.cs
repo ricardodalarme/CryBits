@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -79,7 +80,7 @@ class Lists
             public byte Spawn_Y;
             public short[] Vital;
             public short[] Attribute;
-            public List<short> Item;
+            public List< Tuple<short, short> > Item;
         }
 
         public struct Tile

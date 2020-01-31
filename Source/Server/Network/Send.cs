@@ -171,6 +171,7 @@ class Send
         {
             Data.Write(Lists.Player[Index].Character[i].Name);
             Data.Write(Lists.Player[Index].Character[i].Class);
+            Data.Write(Lists.Player[Index].Character[i].Texture_Num);
             Data.Write(Lists.Player[Index].Character[i].Genre);
             Data.Write(Lists.Player[Index].Character[i].Level);
         }
@@ -207,7 +208,11 @@ class Send
                 for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Class[i].Vital[n]);
                 for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.Class[i].Attribute[n]);
                 Data.Write((byte)Lists.Class[i].Item.Length);
-                for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++) Data.Write(Lists.Class[i].Item[n]);
+                for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++)
+                {
+                    Data.Write(Lists.Class[i].Item[n].Item1);
+                    Data.Write(Lists.Class[i].Item[n].Item2);
+                }
             }
         }
         Data.Write(OpenEditor);
@@ -234,7 +239,7 @@ class Send
         Data.Write(Index);
         Data.Write(Player.Character(Index).Name);
         Data.Write(Player.Character(Index).Class);
-        Data.Write(Player.Character(Index).Tex_Num);
+        Data.Write(Player.Character(Index).Texture_Num);
         Data.Write(Player.Character(Index).Genre);
         Data.Write(Player.Character(Index).Level);
         Data.Write(Player.Character(Index).Map);

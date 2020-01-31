@@ -76,11 +76,11 @@
             this.lstItems = new System.Windows.Forms.ListBox();
             this.butItem_Add = new System.Windows.Forms.Button();
             this.grpItem_Add = new System.Windows.Forms.GroupBox();
+            this.numItem_Amount = new System.Windows.Forms.NumericUpDown();
+            this.label13 = new System.Windows.Forms.Label();
             this.cmbItems = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.butItem_Ok = new System.Windows.Forms.Button();
-            this.numItem_Amount = new System.Windows.Forms.NumericUpDown();
-            this.label13 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).BeginInit();
@@ -598,6 +598,32 @@
             this.grpItem_Add.Text = "Add Item";
             this.grpItem_Add.Visible = false;
             // 
+            // numItem_Amount
+            // 
+            this.numItem_Amount.Location = new System.Drawing.Point(29, 117);
+            this.numItem_Amount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numItem_Amount.Name = "numItem_Amount";
+            this.numItem_Amount.Size = new System.Drawing.Size(251, 20);
+            this.numItem_Amount.TabIndex = 32;
+            this.numItem_Amount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(26, 103);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(46, 13);
+            this.label13.TabIndex = 31;
+            this.label13.Text = "Amount:";
+            // 
             // cmbItems
             // 
             this.cmbItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -606,6 +632,7 @@
             this.cmbItems.Name = "cmbItems";
             this.cmbItems.Size = new System.Drawing.Size(251, 21);
             this.cmbItems.TabIndex = 0;
+            this.cmbItems.SelectedIndexChanged += new System.EventHandler(this.cmbItems_SelectedIndexChanged);
             // 
             // label16
             // 
@@ -625,22 +652,6 @@
             this.butItem_Ok.Text = "Ok";
             this.butItem_Ok.UseVisualStyleBackColor = true;
             this.butItem_Ok.Click += new System.EventHandler(this.butItem_Ok_Click);
-            // 
-            // numItem_Amount
-            // 
-            this.numItem_Amount.Location = new System.Drawing.Point(29, 117);
-            this.numItem_Amount.Name = "numItem_Amount";
-            this.numItem_Amount.Size = new System.Drawing.Size(251, 20);
-            this.numItem_Amount.TabIndex = 32;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(26, 103);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(46, 13);
-            this.label13.TabIndex = 31;
-            this.label13.Text = "Amount:";
             // 
             // Editor_Classes
             // 

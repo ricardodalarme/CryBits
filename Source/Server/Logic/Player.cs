@@ -15,7 +15,7 @@ class Player
         public byte Index;
         public string Name = string.Empty;
         public byte Class;
-        public short Tex_Num;
+        public short Texture_Num;
         public bool Genre;
         public short Level;
         private short experience;

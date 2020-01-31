@@ -32,7 +32,7 @@ class Clear
         Lists.Class[Index].Attribute = new short[(byte)Globals.Attributes.Count];
         Lists.Class[Index].Tex_Male = new List<short>();
         Lists.Class[Index].Tex_Female = new List<short>();
-        Lists.Class[Index].Item = new List<short>();
+        Lists.Class[Index].Item = new List<System.Tuple<short, short>>();
         Lists.Class[Index].Spawn_Map = 1;
     }
 

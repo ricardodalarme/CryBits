@@ -67,7 +67,7 @@ class Clear
         Lists.Class[Index].Attribute = new short[(byte)Game.Attributes.Count];
         Lists.Class[Index].Tex_Male = new short[0];
         Lists.Class[Index].Tex_Female = new short[0];
-        Lists.Class[Index].Item = new short[0];
+        Lists.Class[Index].Item = new Tuple<short, short>[0];
         Lists.Class[Index].Spawn_Map = 1;
     }
 

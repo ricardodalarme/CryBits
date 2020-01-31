@@ -146,7 +146,11 @@ partial class Send
             Data.Write(Lists.Class[i].Spawn_Y);
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Data.Write(Lists.Class[i].Vital[v]);
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Data.Write(Lists.Class[i].Attribute[a]);
-            for (byte a = 0; a < Lists.Class[i].Item.Count; a++) Data.Write(Lists.Class[i].Item[a]);
+            for (byte a = 0; a < Lists.Class[i].Item.Count; a++)
+            {
+                Data.Write(Lists.Class[i].Item[a].Item1);
+                Data.Write(Lists.Class[i].Item[a].Item2);
+            }
         }
         Packet(Data);
     }

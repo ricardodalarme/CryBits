@@ -61,7 +61,7 @@ class Lists
             public byte Spawn_Y;
             public short[] Vital;
             public short[] Attribute;
-            public short[] Item;
+            public Tuple<short, short>[] Item;
         }
 
         [Serializable]
