@@ -29,10 +29,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Classes));
             this.List = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.numEvolve_Level = new System.Windows.Forms.NumericUpDown();
-            this.cmbEvolve_Class = new System.Windows.Forms.ComboBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
@@ -66,13 +62,13 @@
             this.butMTexture = new System.Windows.Forms.Button();
             this.butQuantity = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numSpawn_X = new System.Windows.Forms.NumericUpDown();
-            this.cmbSpawn_Direction = new System.Windows.Forms.ComboBox();
             this.numSpawn_Y = new System.Windows.Forms.NumericUpDown();
+            this.numSpawn_X = new System.Windows.Forms.NumericUpDown();
+            this.numSpawn_Map = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
+            this.cmbSpawn_Direction = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.numSpawn_Map = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -83,8 +79,11 @@
             this.cmbItems = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.butItem_Ok = new System.Windows.Forms.Button();
+            this.label15 = new System.Windows.Forms.Label();
+            this.numEvolve_Level = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.cmbEvolve_Class = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numEvolve_Level)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numVitality)).BeginInit();
@@ -95,11 +94,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.numHP)).BeginInit();
             this.grpTexture.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpawn_X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Y)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpawn_X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.grpItem_Add.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numEvolve_Level)).BeginInit();
             this.SuspendLayout();
             // 
             // List
@@ -127,42 +127,6 @@
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General";
-            // 
-            // numEvolve_Level
-            // 
-            this.numEvolve_Level.Location = new System.Drawing.Point(152, 174);
-            this.numEvolve_Level.Name = "numEvolve_Level";
-            this.numEvolve_Level.Size = new System.Drawing.Size(139, 20);
-            this.numEvolve_Level.TabIndex = 33;
-            this.numEvolve_Level.ValueChanged += new System.EventHandler(this.numEvolve_Level_ValueChanged);
-            // 
-            // cmbEvolve_Class
-            // 
-            this.cmbEvolve_Class.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEvolve_Class.FormattingEnabled = true;
-            this.cmbEvolve_Class.Location = new System.Drawing.Point(9, 174);
-            this.cmbEvolve_Class.Name = "cmbEvolve_Class";
-            this.cmbEvolve_Class.Size = new System.Drawing.Size(139, 21);
-            this.cmbEvolve_Class.TabIndex = 32;
-            this.cmbEvolve_Class.SelectedIndexChanged += new System.EventHandler(this.cmbEvolve_Class_SelectedIndexChanged);
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(149, 158);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(45, 13);
-            this.label15.TabIndex = 31;
-            this.label15.Text = "At level:";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 158);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(55, 13);
-            this.label14.TabIndex = 30;
-            this.label14.Text = "Evolve to:";
             // 
             // txtDescription
             // 
@@ -489,38 +453,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Spawn";
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 62);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(17, 13);
-            this.label9.TabIndex = 26;
-            this.label9.Text = "X:";
-            // 
-            // numSpawn_X
-            // 
-            this.numSpawn_X.Location = new System.Drawing.Point(9, 78);
-            this.numSpawn_X.Name = "numSpawn_X";
-            this.numSpawn_X.Size = new System.Drawing.Size(139, 20);
-            this.numSpawn_X.TabIndex = 27;
-            this.numSpawn_X.ValueChanged += new System.EventHandler(this.numSpawn_X_ValueChanged);
-            // 
-            // cmbSpawn_Direction
-            // 
-            this.cmbSpawn_Direction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSpawn_Direction.FormattingEnabled = true;
-            this.cmbSpawn_Direction.Items.AddRange(new object[] {
-            "Up",
-            "Down",
-            "Left",
-            "Rigth"});
-            this.cmbSpawn_Direction.Location = new System.Drawing.Point(154, 35);
-            this.cmbSpawn_Direction.Name = "cmbSpawn_Direction";
-            this.cmbSpawn_Direction.Size = new System.Drawing.Size(139, 21);
-            this.cmbSpawn_Direction.TabIndex = 28;
-            this.cmbSpawn_Direction.SelectedIndexChanged += new System.EventHandler(this.cmbSpawn_Direction_SelectedIndexChanged);
-            // 
             // numSpawn_Y
             // 
             this.numSpawn_Y.Location = new System.Drawing.Point(155, 78);
@@ -529,23 +461,13 @@
             this.numSpawn_Y.TabIndex = 27;
             this.numSpawn_Y.ValueChanged += new System.EventHandler(this.numSpawn_Y_ValueChanged);
             // 
-            // label10
+            // numSpawn_X
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(152, 62);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(17, 13);
-            this.label10.TabIndex = 26;
-            this.label10.Text = "Y:";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(151, 20);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(52, 13);
-            this.label8.TabIndex = 24;
-            this.label8.Text = "Direction:";
+            this.numSpawn_X.Location = new System.Drawing.Point(9, 78);
+            this.numSpawn_X.Name = "numSpawn_X";
+            this.numSpawn_X.Size = new System.Drawing.Size(139, 20);
+            this.numSpawn_X.TabIndex = 27;
+            this.numSpawn_X.ValueChanged += new System.EventHandler(this.numSpawn_X_ValueChanged);
             // 
             // numSpawn_Map
             // 
@@ -564,6 +486,48 @@
             0,
             0});
             this.numSpawn_Map.ValueChanged += new System.EventHandler(this.numSpawn_Map_ValueChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 62);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(17, 13);
+            this.label9.TabIndex = 26;
+            this.label9.Text = "X:";
+            // 
+            // cmbSpawn_Direction
+            // 
+            this.cmbSpawn_Direction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSpawn_Direction.FormattingEnabled = true;
+            this.cmbSpawn_Direction.Items.AddRange(new object[] {
+            "Up",
+            "Down",
+            "Left",
+            "Rigth"});
+            this.cmbSpawn_Direction.Location = new System.Drawing.Point(154, 35);
+            this.cmbSpawn_Direction.Name = "cmbSpawn_Direction";
+            this.cmbSpawn_Direction.Size = new System.Drawing.Size(139, 21);
+            this.cmbSpawn_Direction.TabIndex = 28;
+            this.cmbSpawn_Direction.SelectedIndexChanged += new System.EventHandler(this.cmbSpawn_Direction_SelectedIndexChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(152, 62);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(17, 13);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "Y:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(151, 20);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(52, 13);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "Direction:";
             // 
             // label7
             // 
@@ -666,6 +630,42 @@
             this.butItem_Ok.UseVisualStyleBackColor = true;
             this.butItem_Ok.Click += new System.EventHandler(this.butItem_Ok_Click);
             // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(149, 158);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(45, 13);
+            this.label15.TabIndex = 31;
+            this.label15.Text = "At level:";
+            // 
+            // numEvolve_Level
+            // 
+            this.numEvolve_Level.Location = new System.Drawing.Point(152, 174);
+            this.numEvolve_Level.Name = "numEvolve_Level";
+            this.numEvolve_Level.Size = new System.Drawing.Size(139, 20);
+            this.numEvolve_Level.TabIndex = 33;
+            this.numEvolve_Level.ValueChanged += new System.EventHandler(this.numEvolve_Level_ValueChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 158);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(55, 13);
+            this.label14.TabIndex = 30;
+            this.label14.Text = "Evolve to:";
+            // 
+            // cmbEvolve_Class
+            // 
+            this.cmbEvolve_Class.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbEvolve_Class.FormattingEnabled = true;
+            this.cmbEvolve_Class.Location = new System.Drawing.Point(9, 174);
+            this.cmbEvolve_Class.Name = "cmbEvolve_Class";
+            this.cmbEvolve_Class.Size = new System.Drawing.Size(139, 21);
+            this.cmbEvolve_Class.TabIndex = 32;
+            this.cmbEvolve_Class.SelectedIndexChanged += new System.EventHandler(this.cmbEvolve_Class_SelectedIndexChanged);
+            // 
             // Editor_Classes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -691,7 +691,6 @@
             this.Text = "Class Editor";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numEvolve_Level)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).EndInit();
@@ -705,13 +704,14 @@
             this.grpTexture.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpawn_X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Y)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSpawn_X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.grpItem_Add.ResumeLayout(false);
             this.grpItem_Add.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numEvolve_Level)).EndInit();
             this.ResumeLayout(false);
 
     }
@@ -764,13 +764,13 @@
     private System.Windows.Forms.Button butItem_Delete;
     public System.Windows.Forms.ListBox lstItems;
     private System.Windows.Forms.Button butItem_Add;
-    private System.Windows.Forms.Label label15;
-    private System.Windows.Forms.Label label14;
-    private System.Windows.Forms.NumericUpDown numEvolve_Level;
-    private System.Windows.Forms.ComboBox cmbEvolve_Class;
     private System.Windows.Forms.GroupBox grpItem_Add;
     private System.Windows.Forms.Label label16;
     private System.Windows.Forms.Button butItem_Ok;
     private System.Windows.Forms.ComboBox cmbItems;
     private System.Windows.Forms.Label label12;
+    private System.Windows.Forms.NumericUpDown numEvolve_Level;
+    private System.Windows.Forms.ComboBox cmbEvolve_Class;
+    private System.Windows.Forms.Label label15;
+    private System.Windows.Forms.Label label14;
 }

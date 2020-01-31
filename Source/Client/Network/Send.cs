@@ -67,6 +67,7 @@ partial class Send
         Data.Write(TextBoxes.Get("CreateCharacter_Name").Text);
         Data.Write(Game.CreateCharacter_Class);
         Data.Write(CheckBoxes.Get("GenderMale").State);
+        Data.Write(Game.CreateCharacter_Tex);
         Packet(Data);
     }
 

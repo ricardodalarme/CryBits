@@ -230,13 +230,21 @@ class Receive
         Player.Character(Index).Class = Data.ReadByte();
         Lists.Structures.Class Class = Lists.Class[Player.Character(Index).Class];
         Player.Character(Index).Genre = Data.ReadBoolean();
+        if (Player.Character(Index).Genre)
+            Player.Character(Index).Tex_Num = Class.Tex_Male[Data.ReadByte()];
+        else
+            Player.Character(Index).Tex_Num = Class.Tex_Female[Data.ReadByte()];
         Player.Character(Index).Attribute = Class.Attribute;
         Player.Character(Index).Map = Class.Spawn_Map;
         Player.Character(Index).Direction = (Game.Directions)Class.Spawn_Direction;
         Player.Character(Index).X = Class.Spawn_X;
         Player.Character(Index).Y = Class.Spawn_Y;
         for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Player.Character(Index).Vital[i] = Player.Character(Index).MaxVital(i);
-        for (byte i = 1; i <= (byte)Class.Item.Length; i++)  Player.Character(Index).Inventory[i].Item_Num = Class.Item[i-1];
+        for (byte i = 0; i < (byte)Class.Item.Length; i++)
+            if (Lists.Item[Class.Item[i]].Type == (byte)Game.Items.Equipment && Player.Character(Index).Equipment[(byte)Lists.Item[Class.Item[i]].Equip_Type] == 0)
+                Player.Character(Index).Equipment[Lists.Item[Class.Item[i]].Equip_Type] = Class.Item[i];
+            else
+                Player.GiveItem(Index, Class.Item[i], 1);
 
         // Salva a conta
         Write.Character(Name);

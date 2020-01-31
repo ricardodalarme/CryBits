@@ -66,6 +66,7 @@ public partial class Editor_Classes : Form
         // Limpa os dados necessários
         lstMale.Items.Clear();
         lstFemale.Items.Clear();
+        lstItems.Items.Clear();
 
         // Lista os dados
         txtName.Text = Lists.Class[Selected].Name;
@@ -83,6 +84,7 @@ public partial class Editor_Classes : Form
         numSpawn_Y.Value = Lists.Class[Selected].Spawn_Y;
         for (byte i = 0; i < Lists.Class[Selected].Tex_Male.Count; i++) lstMale.Items.Add(Lists.Class[Selected].Tex_Male[i]);
         for (byte i = 0; i < Lists.Class[Selected].Tex_Female.Count; i++) lstFemale.Items.Add(Lists.Class[Selected].Tex_Female[i]);
+        for (byte i = 0; i < Lists.Class[Selected].Item.Count; i++) lstItems.Items.Add(Globals.Numbering(Lists.Class[Selected].Item[i], Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[Lists.Class[Selected].Item[i]].Name);
         cmbEvolve_Class.SelectedIndex = Lists.Class[Selected].Evolve_To;
         numEvolve_Level.Value = Lists.Class[Selected].Evolve_Level;
 

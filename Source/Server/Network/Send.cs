@@ -236,6 +236,7 @@ class Send
         Data.Write(Index);
         Data.Write(Player.Character(Index).Name);
         Data.Write(Player.Character(Index).Class);
+        Data.Write(Player.Character(Index).Tex_Num);
         Data.Write(Player.Character(Index).Genre);
         Data.Write(Player.Character(Index).Level);
         Data.Write(Player.Character(Index).Map);

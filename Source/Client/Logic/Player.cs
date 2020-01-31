@@ -260,6 +260,7 @@ partial class Receive
         // Defini os dados do jogador
         Lists.Player[Index].Name = Data.ReadString();
         Lists.Player[Index].Class = Data.ReadByte();
+        Lists.Player[Index].Texture_Num = Data.ReadInt16();
         Lists.Player[Index].Genre = Data.ReadBoolean();
         Lists.Player[Index].Level = Data.ReadInt16();
         Lists.Player[Index].Map = Data.ReadInt16();

@@ -55,6 +55,7 @@ partial class Read
             {
                 Lists.Player[Index].Character[i].Name = Data.ReadString();
                 Lists.Player[Index].Character[i].Class = Data.ReadByte();
+                Lists.Player[Index].Character[i].Tex_Num = Data.ReadInt16();
                 Lists.Player[Index].Character[i].Genre = Data.ReadBoolean();
                 Lists.Player[Index].Character[i].Level = Data.ReadInt16();
                 Lists.Player[Index].Character[i].Experience = Data.ReadInt16();

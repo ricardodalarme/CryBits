@@ -377,6 +377,9 @@ partial class Graphics
         // Desenha o nome da classe
         string Text = Class.Name;
         DrawText(Text, 347 - Tools.MeasureString(Text) / 2, 509, SFML.Graphics.Color.White);
+
+        // Descrição
+        DrawText(Class.Description, 282, 526, SFML.Graphics.Color.White);
     }
 
     public static void Game_Hotbar(Panels.Structure Tool)
