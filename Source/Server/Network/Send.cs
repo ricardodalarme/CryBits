@@ -507,13 +507,13 @@ class Send
         ToPlayer(Index, Data);
     }
 
-    public static void Message(byte Index, string Mensagem, Color Color)
+    public static void Message(byte Index, string Text, Color Color)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Message);
-        Data.Write(Mensagem);
+        Data.Write(Text);
         Data.Write(Color.ToArgb());
         ToPlayer(Index, Data);
     }
@@ -534,17 +534,6 @@ class Send
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
         string Message = "[Global] " + Player.Character(Index).Name + ": " + Text;
-
-        // Envia os dados
-        Data.Write((byte)Client_Packets.Message);
-        Data.Write(Message);
-        Data.Write(Color.Yellow.ToArgb());
-        ToAll(Data);
-    }
-
-    public static void Mensagem_Global(string Message)
-    {
-        NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Message);

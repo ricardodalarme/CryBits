@@ -383,14 +383,19 @@ class Player
     {
         short Damage;
         short x = Character(Index).X, y = Character(Index).Y;
-        Lists.Structures.Map_NPCs NPC = Lists.Temp_Map[Character(Index).Map].NPC[Victim];
+        Lists.Structures.Map_NPCs Map_NPC = Lists.Temp_Map[Character(Index).Map].NPC[Victim];
 
         // Define o azujelo a frente do jogador
         Map.NextTile(Character(Index).Direction, ref x, ref y);
 
         // Verifica se a vítima pode ser atacada
-        if (NPC.X != x || NPC.Y != y) return;
-        if (Lists.NPC[NPC.Index].Behaviour == (byte)global::NPC.Behaviour.Friendly) return;
+        if (Map_NPC.X != x || Map_NPC.Y != y) return;
+
+        // Mensagem
+        if (Map_NPC.Target_Index != Index) Send.Message(Index, Lists.NPC[Map_NPC.Index].Name + ": " + Lists.NPC[Map_NPC.Index].SayMsg, Color.White);
+        
+        // Não executa o combate com um NPC amigavel
+        if (Lists.NPC[Map_NPC.Index].Behaviour == (byte)global::NPC.Behaviour.Friendly) return;
 
         // Define o alvo do NPC
         Lists.Temp_Map[Character(Index).Map].NPC[Victim].Target_Index = Index;
@@ -403,11 +408,11 @@ class Player
         Character(Index).Attack_Timer = Environment.TickCount;
 
         // Cálculo de dano
-        Damage = (short)(Character(Index).Damage - Lists.NPC[NPC.Index].Attribute[(byte)Game.Attributes.Resistance]);
+        Damage = (short)(Character(Index).Damage - Lists.NPC[Map_NPC.Index].Attribute[(byte)Game.Attributes.Resistance]);
 
         // Dano não fatal
         if (Damage > 0)
-            if (Damage < Lists.Temp_Map[Character(Index).Map].NPC[Victim].Vital[(byte)Game.Vitals.HP])
+            if (Damage < Map_NPC.Vital[(byte)Game.Vitals.HP])
             {
                 Lists.Temp_Map[Character(Index).Map].NPC[Victim].Vital[(byte)Game.Vitals.HP] -= Damage;
                 Send.Map_NPC_Vitals(Character(Index).Map, Victim);
@@ -416,7 +421,7 @@ class Player
             else
             {
                 // Experiência ganhada
-                Character(Index).Experience += Lists.NPC[NPC.Index].Experience;
+                Character(Index).Experience += Lists.NPC[Map_NPC.Index].Experience;
 
                 // Reseta os dados do NPC 
                 global::NPC.Died(Character(Index).Map, Victim);

@@ -69,15 +69,15 @@ class NPC
                 ///////////////
                 // Atacar ao ver
                 if (Lists.Temp_Map[Map_Num].NPC[i].Target_Index == 0 && NPC_Data.Behaviour == (byte)Behaviour.AttackOnSight)
-                    for (byte p = 1; p <= Game.HigherIndex; p++)
+                    for (byte Player_Index = 1; Player_Index <= Game.HigherIndex; Player_Index++)
                     {
                         // Verifica se o jogador está jogando e no mesmo mapa que o NPC
-                        if (!Player.IsPlaying(p)) continue;
-                        if (Player.Character(p).Map != Map_Num) continue;
+                        if (!Player.IsPlaying(Player_Index)) continue;
+                        if (Player.Character(Player_Index).Map != Map_Num) continue;
 
                         // Distância entre o NPC e o jogador
-                        Distance_X = (short)(Data.X - Player.Character(p).X);
-                        Distance_Y = (short)(Data.Y - Player.Character(p).Y);
+                        Distance_X = (short)(Data.X - Player.Character(Player_Index).X);
+                        Distance_Y = (short)(Data.Y - Player.Character(Player_Index).Y);
                         if (Distance_X < 0) Distance_X *= -1;
                         if (Distance_Y < 0) Distance_Y *= -1;
 
@@ -85,8 +85,11 @@ class NPC
                         if (Distance_X <= NPC_Data.Sight && Distance_Y <= NPC_Data.Sight)
                         {
                             Lists.Temp_Map[Map_Num].NPC[i].Target_Type = (byte)Game.Target.Player;
-                            Lists.Temp_Map[Map_Num].NPC[i].Target_Index = p;
+                            Lists.Temp_Map[Map_Num].NPC[i].Target_Index = Player_Index;
                             Data = Lists.Temp_Map[Map_Num].NPC[i];
+
+                            // Mensagem
+                            Send.Message(Player_Index, Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].Name + ": " + Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg, System.Drawing.Color.White);
                         }
                     }
 
