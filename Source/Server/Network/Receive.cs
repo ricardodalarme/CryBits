@@ -759,7 +759,6 @@ class Receive
             Lists.NPC[i] = new Lists.Structures.NPC();
             Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
             Lists.NPC[i].Attribute = new short[(byte)Game.Attributes.Count];
-            Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Game.Max_NPC_Drop];
 
             // Lê os dados
             Lists.NPC[i].Name = Data.ReadString();
@@ -771,13 +770,8 @@ class Receive
             Lists.NPC[i].Experience = Data.ReadByte();
             for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
             for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
-            for (byte n = 0; n < Game.Max_NPC_Drop; n++)
-            {
-                Lists.NPC[i].Drop[n] = new Lists.Structures.NPC_Drop();
-                Lists.NPC[i].Drop[n].Item_Num = Data.ReadInt16();
-                Lists.NPC[i].Drop[n].Amount = Data.ReadInt16();
-                Lists.NPC[i].Drop[n].Chance = Data.ReadByte();
-            }
+            Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Data.ReadByte()];
+            for (byte n = 0; n < Lists.NPC[i].Drop.Length; n++)  Lists.NPC[i].Drop[n] = new Lists.Structures.NPC_Drop(Data.ReadInt16(), Data.ReadInt16(), Data.ReadByte());
         }
 
         // Salva os dados e envia pra todos jogadores conectados

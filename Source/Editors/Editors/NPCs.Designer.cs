@@ -47,14 +47,6 @@
             this.butClear = new System.Windows.Forms.Button();
             this.butQuantity = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.grpDrop = new System.Windows.Forms.GroupBox();
-            this.cmbDrop_Amount = new System.Windows.Forms.NumericUpDown();
-            this.label13 = new System.Windows.Forms.Label();
-            this.cmbDrop_Item = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.numDrop_Chance = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.scrlDrop = new System.Windows.Forms.HScrollBar();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.numResistance = new System.Windows.Forms.NumericUpDown();
             this.numIntelligence = new System.Windows.Forms.NumericUpDown();
@@ -72,14 +64,23 @@
             this.numHP = new System.Windows.Forms.NumericUpDown();
             this.lblMP = new System.Windows.Forms.Label();
             this.lblHP = new System.Windows.Forms.Label();
+            this.numDrop_Amount = new System.Windows.Forms.NumericUpDown();
+            this.cmbDrop_Item = new System.Windows.Forms.ComboBox();
+            this.numDrop_Chance = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.butDrop_Delete = new System.Windows.Forms.Button();
+            this.lstDrop = new System.Windows.Forms.ListBox();
+            this.butDrop_Add = new System.Windows.Forms.Button();
+            this.grpDrop_Add = new System.Windows.Forms.GroupBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.butItem_Ok = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numRange)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.grpDrop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDrop_Amount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numDrop_Chance)).BeginInit();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numResistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIntelligence)).BeginInit();
@@ -89,6 +90,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numExperience)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHP)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDrop_Amount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDrop_Chance)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            this.grpDrop_Add.SuspendLayout();
             this.SuspendLayout();
             // 
             // List
@@ -96,7 +101,7 @@
             this.List.FormattingEnabled = true;
             this.List.Location = new System.Drawing.Point(11, 12);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 537);
+            this.List.Size = new System.Drawing.Size(202, 407);
             this.List.TabIndex = 9;
             this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
             // 
@@ -258,9 +263,9 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(219, 557);
+            this.butSave.Location = new System.Drawing.Point(219, 425);
             this.butSave.Name = "butSave";
-            this.butSave.Size = new System.Drawing.Size(97, 25);
+            this.butSave.Size = new System.Drawing.Size(201, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save";
             this.butSave.UseVisualStyleBackColor = true;
@@ -268,9 +273,9 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(426, 557);
+            this.butCancel.Location = new System.Drawing.Point(632, 425);
             this.butCancel.Name = "butCancel";
-            this.butCancel.Size = new System.Drawing.Size(97, 25);
+            this.butCancel.Size = new System.Drawing.Size(201, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
@@ -278,9 +283,9 @@
             // 
             // butClear
             // 
-            this.butClear.Location = new System.Drawing.Point(323, 557);
+            this.butClear.Location = new System.Drawing.Point(426, 425);
             this.butClear.Name = "butClear";
-            this.butClear.Size = new System.Drawing.Size(97, 25);
+            this.butClear.Size = new System.Drawing.Size(201, 25);
             this.butClear.TabIndex = 18;
             this.butClear.Text = "Clear";
             this.butClear.UseVisualStyleBackColor = true;
@@ -288,7 +293,7 @@
             // 
             // butQuantity
             // 
-            this.butQuantity.Location = new System.Drawing.Point(11, 557);
+            this.butQuantity.Location = new System.Drawing.Point(12, 425);
             this.butQuantity.Name = "butQuantity";
             this.butQuantity.Size = new System.Drawing.Size(202, 25);
             this.butQuantity.TabIndex = 15;
@@ -305,110 +310,12 @@
             this.groupBox2.Controls.Add(this.numHP);
             this.groupBox2.Controls.Add(this.lblMP);
             this.groupBox2.Controls.Add(this.lblHP);
-            this.groupBox2.Location = new System.Drawing.Point(529, 12);
+            this.groupBox2.Location = new System.Drawing.Point(219, 257);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(304, 160);
             this.groupBox2.TabIndex = 21;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Combat:";
-            // 
-            // grpDrop
-            // 
-            this.grpDrop.Controls.Add(this.cmbDrop_Amount);
-            this.grpDrop.Controls.Add(this.label13);
-            this.grpDrop.Controls.Add(this.cmbDrop_Item);
-            this.grpDrop.Controls.Add(this.label12);
-            this.grpDrop.Controls.Add(this.numDrop_Chance);
-            this.grpDrop.Controls.Add(this.label11);
-            this.grpDrop.Controls.Add(this.scrlDrop);
-            this.grpDrop.Location = new System.Drawing.Point(219, 257);
-            this.grpDrop.Name = "grpDrop";
-            this.grpDrop.Size = new System.Drawing.Size(304, 240);
-            this.grpDrop.TabIndex = 22;
-            this.grpDrop.TabStop = false;
-            this.grpDrop.Text = "Drop - 1";
-            // 
-            // cmbDrop_Amount
-            // 
-            this.cmbDrop_Amount.Location = new System.Drawing.Point(145, 48);
-            this.cmbDrop_Amount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.cmbDrop_Amount.Name = "cmbDrop_Amount";
-            this.cmbDrop_Amount.Size = new System.Drawing.Size(130, 20);
-            this.cmbDrop_Amount.TabIndex = 37;
-            this.cmbDrop_Amount.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.cmbDrop_Amount.ValueChanged += new System.EventHandler(this.cmbDrop_Amount_ValueChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(142, 32);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(46, 13);
-            this.label13.TabIndex = 36;
-            this.label13.Text = "Amount:";
-            // 
-            // cmbDrop_Item
-            // 
-            this.cmbDrop_Item.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbDrop_Item.FormattingEnabled = true;
-            this.cmbDrop_Item.Location = new System.Drawing.Point(9, 48);
-            this.cmbDrop_Item.Name = "cmbDrop_Item";
-            this.cmbDrop_Item.Size = new System.Drawing.Size(130, 21);
-            this.cmbDrop_Item.TabIndex = 35;
-            this.cmbDrop_Item.SelectedIndexChanged += new System.EventHandler(this.cmbDrop_Item_SelectedIndexChanged);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(7, 32);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(30, 13);
-            this.label12.TabIndex = 34;
-            this.label12.Text = "Item:";
-            // 
-            // numDrop_Chance
-            // 
-            this.numDrop_Chance.Location = new System.Drawing.Point(9, 87);
-            this.numDrop_Chance.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numDrop_Chance.Name = "numDrop_Chance";
-            this.numDrop_Chance.Size = new System.Drawing.Size(266, 20);
-            this.numDrop_Chance.TabIndex = 33;
-            this.numDrop_Chance.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numDrop_Chance.ValueChanged += new System.EventHandler(this.numDrop_Chance_ValueChanged);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 71);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(64, 13);
-            this.label11.TabIndex = 32;
-            this.label11.Text = "Chance: (%)";
-            // 
-            // scrlDrop
-            // 
-            this.scrlDrop.LargeChange = 1;
-            this.scrlDrop.Location = new System.Drawing.Point(7, 16);
-            this.scrlDrop.Name = "scrlDrop";
-            this.scrlDrop.Size = new System.Drawing.Size(265, 16);
-            this.scrlDrop.TabIndex = 0;
-            this.scrlDrop.ValueChanged += new System.EventHandler(this.scrlDrop_ValueChanged);
             // 
             // groupBox4
             // 
@@ -565,13 +472,156 @@
             this.lblHP.TabIndex = 1;
             this.lblHP.Text = "HP:";
             // 
+            // numDrop_Amount
+            // 
+            this.numDrop_Amount.Location = new System.Drawing.Point(29, 119);
+            this.numDrop_Amount.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numDrop_Amount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numDrop_Amount.Name = "numDrop_Amount";
+            this.numDrop_Amount.Size = new System.Drawing.Size(122, 20);
+            this.numDrop_Amount.TabIndex = 37;
+            this.numDrop_Amount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // cmbDrop_Item
+            // 
+            this.cmbDrop_Item.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDrop_Item.FormattingEnabled = true;
+            this.cmbDrop_Item.Location = new System.Drawing.Point(29, 80);
+            this.cmbDrop_Item.Name = "cmbDrop_Item";
+            this.cmbDrop_Item.Size = new System.Drawing.Size(251, 21);
+            this.cmbDrop_Item.TabIndex = 35;
+            // 
+            // numDrop_Chance
+            // 
+            this.numDrop_Chance.Location = new System.Drawing.Point(158, 119);
+            this.numDrop_Chance.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numDrop_Chance.Name = "numDrop_Chance";
+            this.numDrop_Chance.Size = new System.Drawing.Size(122, 20);
+            this.numDrop_Chance.TabIndex = 33;
+            this.numDrop_Chance.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(155, 103);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(64, 13);
+            this.label11.TabIndex = 32;
+            this.label11.Text = "Chance: (%)";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.butDrop_Delete);
+            this.groupBox3.Controls.Add(this.lstDrop);
+            this.groupBox3.Controls.Add(this.butDrop_Add);
+            this.groupBox3.Location = new System.Drawing.Point(529, 12);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(304, 211);
+            this.groupBox3.TabIndex = 37;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Drop items";
+            // 
+            // butDrop_Delete
+            // 
+            this.butDrop_Delete.Location = new System.Drawing.Point(152, 184);
+            this.butDrop_Delete.Name = "butDrop_Delete";
+            this.butDrop_Delete.Size = new System.Drawing.Size(139, 20);
+            this.butDrop_Delete.TabIndex = 35;
+            this.butDrop_Delete.Text = "Delete";
+            this.butDrop_Delete.UseVisualStyleBackColor = true;
+            this.butDrop_Delete.Click += new System.EventHandler(this.butDrop_Delete_Click);
+            // 
+            // lstDrop
+            // 
+            this.lstDrop.FormattingEnabled = true;
+            this.lstDrop.Location = new System.Drawing.Point(10, 16);
+            this.lstDrop.Name = "lstDrop";
+            this.lstDrop.Size = new System.Drawing.Size(284, 160);
+            this.lstDrop.TabIndex = 34;
+            // 
+            // butDrop_Add
+            // 
+            this.butDrop_Add.Location = new System.Drawing.Point(8, 184);
+            this.butDrop_Add.Name = "butDrop_Add";
+            this.butDrop_Add.Size = new System.Drawing.Size(138, 20);
+            this.butDrop_Add.TabIndex = 33;
+            this.butDrop_Add.Text = "Add";
+            this.butDrop_Add.UseVisualStyleBackColor = true;
+            this.butDrop_Add.Click += new System.EventHandler(this.butDrop_Add_Click);
+            // 
+            // grpDrop_Add
+            // 
+            this.grpDrop_Add.Controls.Add(this.numDrop_Amount);
+            this.grpDrop_Add.Controls.Add(this.label15);
+            this.grpDrop_Add.Controls.Add(this.numDrop_Chance);
+            this.grpDrop_Add.Controls.Add(this.label11);
+            this.grpDrop_Add.Controls.Add(this.cmbDrop_Item);
+            this.grpDrop_Add.Controls.Add(this.label16);
+            this.grpDrop_Add.Controls.Add(this.butItem_Ok);
+            this.grpDrop_Add.Location = new System.Drawing.Point(529, 12);
+            this.grpDrop_Add.Name = "grpDrop_Add";
+            this.grpDrop_Add.Size = new System.Drawing.Size(304, 212);
+            this.grpDrop_Add.TabIndex = 38;
+            this.grpDrop_Add.TabStop = false;
+            this.grpDrop_Add.Text = "Add Item";
+            this.grpDrop_Add.Visible = false;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(26, 103);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(46, 13);
+            this.label15.TabIndex = 31;
+            this.label15.Text = "Amount:";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(26, 64);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(30, 13);
+            this.label16.TabIndex = 30;
+            this.label16.Text = "Item:";
+            // 
+            // butItem_Ok
+            // 
+            this.butItem_Ok.Location = new System.Drawing.Point(29, 143);
+            this.butItem_Ok.Name = "butItem_Ok";
+            this.butItem_Ok.Size = new System.Drawing.Size(251, 20);
+            this.butItem_Ok.TabIndex = 29;
+            this.butItem_Ok.Text = "Ok";
+            this.butItem_Ok.UseVisualStyleBackColor = true;
+            this.butItem_Ok.Click += new System.EventHandler(this.butItem_Ok_Click);
+            // 
             // Editor_NPCs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(930, 592);
+            this.ClientSize = new System.Drawing.Size(843, 460);
             this.ControlBox = false;
-            this.Controls.Add(this.grpDrop);
+            this.Controls.Add(this.grpDrop_Add);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.butQuantity);
             this.Controls.Add(this.butClear);
@@ -592,10 +642,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numRange)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.grpDrop.ResumeLayout(false);
-            this.grpDrop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDrop_Amount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numDrop_Chance)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numResistance)).EndInit();
@@ -606,6 +652,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numExperience)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMP)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHP)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDrop_Amount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDrop_Chance)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.grpDrop_Add.ResumeLayout(false);
+            this.grpDrop_Add.PerformLayout();
             this.ResumeLayout(false);
 
     }
@@ -645,15 +696,19 @@
     private System.Windows.Forms.NumericUpDown numVitality;
     private System.Windows.Forms.Label label10;
     private System.Windows.Forms.NumericUpDown numTexture;
-    private System.Windows.Forms.GroupBox grpDrop;
-    private System.Windows.Forms.NumericUpDown cmbDrop_Amount;
-    private System.Windows.Forms.Label label13;
+    private System.Windows.Forms.NumericUpDown numDrop_Amount;
     private System.Windows.Forms.ComboBox cmbDrop_Item;
-    private System.Windows.Forms.Label label12;
     private System.Windows.Forms.NumericUpDown numDrop_Chance;
     private System.Windows.Forms.Label label11;
-    private System.Windows.Forms.HScrollBar scrlDrop;
     private System.Windows.Forms.GroupBox groupBox4;
     public System.Windows.Forms.TextBox txtSayMsg;
     private System.Windows.Forms.Label label14;
+    private System.Windows.Forms.GroupBox groupBox3;
+    private System.Windows.Forms.GroupBox grpDrop_Add;
+    private System.Windows.Forms.Label label15;
+    private System.Windows.Forms.Label label16;
+    private System.Windows.Forms.Button butItem_Ok;
+    private System.Windows.Forms.Button butDrop_Delete;
+    public System.Windows.Forms.ListBox lstDrop;
+    private System.Windows.Forms.Button butDrop_Add;
 }

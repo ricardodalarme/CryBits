@@ -701,7 +701,8 @@ class Send
                 Data.Write(Lists.NPC[i].Sight);
                 Data.Write(Lists.NPC[i].Experience);
                 for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.NPC[i].Attribute[n]);
-                for (byte n = 0; n < Game.Max_NPC_Drop; n++)
+                Data.Write((byte)Lists.NPC[i].Drop.Length);
+                for (byte n = 0; n < Lists.NPC[i].Drop.Length; n++)
                 {
                     Data.Write(Lists.NPC[i].Drop[n].Item_Num);
                     Data.Write(Lists.NPC[i].Drop[n].Amount);

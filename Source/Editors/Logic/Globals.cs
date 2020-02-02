@@ -27,9 +27,6 @@ class Globals
     public const byte Snow_Movement = 10;
     public static byte Lightning;
 
-    // Limites em geral
-    public const byte Max_NPC_Drop = 4;
-
     // Números aleAmountatórios
     public static Random GameRandom = new Random();
 

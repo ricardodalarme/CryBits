@@ -209,7 +209,7 @@ partial class Receive
             // Redimensiona os valores necessários 
             Lists.NPC[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.NPC[i].Attribute = new short[(byte)Globals.Attributes.Count];
-            Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Globals.Max_NPC_Drop];
+            Lists.NPC[i].Drop = new System.Collections.Generic.List<Lists.Structures.NPC_Drop>();
 
             // Lê os dados
             Lists.NPC[i].Name = Data.ReadString();
@@ -221,12 +221,8 @@ partial class Receive
             Lists.NPC[i].Sight = Data.ReadByte();
             Lists.NPC[i].Experience = Data.ReadByte();
             for (byte n = 0; n < (byte)Globals.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
-            for (byte n = 0; n < Globals.Max_NPC_Drop; n++)
-            {
-                Lists.NPC[i].Drop[n].Item_Num = Data.ReadInt16();
-                Lists.NPC[i].Drop[n].Amount = Data.ReadInt16();
-                Lists.NPC[i].Drop[n].Chance = Data.ReadByte();
-            }
+            byte Num_Drops = Data.ReadByte();
+            for (byte n = 0; n < Num_Drops; n++) Lists.NPC[i].Drop.Add(new Lists.Structures.NPC_Drop(Data.ReadInt16(), Data.ReadInt16(), Data.ReadByte()));
         }
 
         // Abre o editor

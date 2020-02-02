@@ -86,6 +86,7 @@ public partial class Editor_Classes : Form
         // Seleciona os primeiros itens
         if (lstMale.Items.Count > 0) lstMale.SelectedIndex = 0;
         if (lstFemale.Items.Count > 0) lstFemale.SelectedIndex = 0;
+        if (lstItems.Items.Count > 0) lstItems.SelectedIndex = 0;
     }
 
     public static void Change_Quantity()

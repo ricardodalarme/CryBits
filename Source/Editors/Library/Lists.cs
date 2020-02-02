@@ -213,7 +213,7 @@ class Lists
             public byte Experience;
             public short[] Vital;
             public short[] Attribute;
-            public NPC_Drop[] Drop;
+            public List<NPC_Drop> Drop;
         }
 
         public struct Item
@@ -239,11 +239,18 @@ class Lists
             public short Weapon_Damage;
         }
 
-        public struct NPC_Drop
+        public class NPC_Drop
         {
             public short Item_Num;
             public short Amount;
             public byte Chance;
+
+            public NPC_Drop(short Item_Num, short Amount, byte Chance)
+            {
+                this.Item_Num = Item_Num;
+                this.Amount = Amount;
+                this.Chance = Chance;
+            }
         }
     }
 }

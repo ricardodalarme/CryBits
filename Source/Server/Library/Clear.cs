@@ -78,13 +78,7 @@ class Clear
         Lists.NPC[Index].Name = string.Empty;
         Lists.NPC[Index].Vital = new short[(byte)Game.Vitals.Count];
         Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Count];
-        Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[Game.Max_NPC_Drop];
-        for (byte i = 0; i < Game.Max_NPC_Drop; i++)
-        {
-            Lists.NPC[Index].Drop[i] = new Lists.Structures.NPC_Drop();
-            Lists.NPC[Index].Drop[i].Chance = 100;
-            Lists.NPC[Index].Drop[i].Amount = 1;
-        }
+        Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[0];
     }
 
     public static void Item(byte Index)

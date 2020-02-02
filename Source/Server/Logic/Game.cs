@@ -19,7 +19,6 @@ class Game
     public const byte Min_Name_Length = 3;
 
     // Limites em geral
-    public const byte Max_NPC_Drop = 4;
     public const byte Max_Inventory = 30;
     public const byte Max_Map_Items = 100;
     public const byte Max_Hotbar = 10;

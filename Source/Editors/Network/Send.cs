@@ -279,6 +279,7 @@ partial class Send
         for (short Index = 1; Index < Lists.NPC.Length; Index++)
         {
             Data.Write(Lists.NPC[Index].Name);
+            Data.Write(Lists.NPC[Index].SayMsg);
             Data.Write(Lists.NPC[Index].Texture);
             Data.Write(Lists.NPC[Index].Behaviour);
             Data.Write(Lists.NPC[Index].SpawnTime);
@@ -286,7 +287,8 @@ partial class Send
             Data.Write(Lists.NPC[Index].Experience);
             for (byte i = 0; i < (byte)Globals.Vitals.Count; i++) Data.Write(Lists.NPC[Index].Vital[i]);
             for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Lists.NPC[Index].Attribute[i]);
-            for (byte i = 0; i < Globals.Max_NPC_Drop; i++)
+            Data.Write((byte)Lists.NPC[Index].Drop.Count);
+            for (byte i = 0; i < Lists.NPC[Index].Drop.Count; i++)
             {
                 Data.Write(Lists.NPC[Index].Drop[i].Item_Num);
                 Data.Write(Lists.NPC[Index].Drop[i].Amount);

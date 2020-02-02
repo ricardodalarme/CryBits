@@ -226,9 +226,18 @@ class Lists
         [Serializable]
         public class NPC_Drop
         {
+            // Dados
             public short Item_Num;
             public short Amount;
             public byte Chance;
+
+            // Construtor    
+            public NPC_Drop(short Item_Num, short Amount, byte Chance)
+            {
+                this.Item_Num = Item_Num;
+                this.Amount = Amount;
+                this.Chance = Chance;
+            }
         }
 
         public struct Hotbar

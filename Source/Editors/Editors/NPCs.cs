@@ -25,12 +25,10 @@ public partial class Editor_NPCs : Form
     {
         // Lista de itens
         Objects.cmbDrop_Item.Items.Clear();
-        Objects.cmbDrop_Item.Items.Add("None");
         for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbDrop_Item.Items.Add(Lists.Item[i].Name);
 
         // Define os limites
         Objects.numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
-        Objects.scrlDrop.Maximum = Globals.Max_NPC_Drop - 1;
         Update_List();
 
         // Abre a janela
@@ -58,6 +56,10 @@ public partial class Editor_NPCs : Form
         // Previne erros
         if (Selected == 0) return;
 
+        // Reseta os dados necessários
+        grpDrop_Add.Visible = false;
+        lstDrop.Items.Clear();
+
         // Lista os dados
         txtName.Text = Lists.NPC[Selected].Name;
         txtSayMsg.Text = Lists.NPC[Selected].SayMsg;
@@ -73,9 +75,10 @@ public partial class Editor_NPCs : Form
         numIntelligence.Value = Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Intelligence];
         numAgility.Value = Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Agility];
         numVitality.Value = Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Vitality];
-        if (cmbDrop_Item.Items.Count > 0) cmbDrop_Item.SelectedIndex = Lists.NPC[Selected].Drop[scrlDrop.Value].Item_Num;
-        cmbDrop_Amount.Value = Lists.NPC[Selected].Drop[scrlDrop.Value].Amount;
-        numDrop_Chance.Value = Lists.NPC[Selected].Drop[scrlDrop.Value].Chance;
+        for (byte i = 0; i < Lists.NPC[Selected].Drop.Count; i++) lstDrop.Items.Add(Drop_String(Lists.NPC[Selected].Drop[i]));
+
+        // Seleciona os primeiros itens
+        if (lstDrop.Items.Count > 0) lstDrop.SelectedIndex = 0;
     }
 
     public static void Change_Quantity()
@@ -215,30 +218,40 @@ public partial class Editor_NPCs : Form
         Lists.NPC[Selected].Experience = (byte)numExperience.Value;
     }
 
-    private void scrlDrop_ValueChanged(object sender, EventArgs e)
+    private void butDrop_Add_Click(object sender, EventArgs e)
     {
-        // Previne erros
-        if (Selected <= 0) return;
-
-        // Atualiza os valores
-        grpDrop.Text = "Drop - " + (scrlDrop.Value + 1);
-        cmbDrop_Item.SelectedIndex = Lists.NPC[Selected].Drop[scrlDrop.Value].Item_Num;
-        cmbDrop_Amount.Value = Lists.NPC[Selected].Drop[scrlDrop.Value].Amount;
-        numDrop_Chance.Value = Lists.NPC[Selected].Drop[scrlDrop.Value].Chance;
+        // Reseta os valores e abre a janela para adicionar o item
+        cmbDrop_Item.SelectedIndex = 0;
+        numDrop_Amount.Value = 1;
+        numDrop_Chance.Value = 100;
+        grpDrop_Add.Visible = true;
     }
 
-    private void cmbDrop_Item_SelectedIndexChanged(object sender, EventArgs e)
+    private void butDrop_Delete_Click(object sender, EventArgs e)
     {
-        if (Selected > 0) Lists.NPC[Selected].Drop[scrlDrop.Value].Item_Num = (short)cmbDrop_Item.SelectedIndex;
+        // Deleta a textura
+        short Selected_Item = (short)lstDrop.SelectedIndex;
+        if (Selected_Item != -1)
+        {
+            lstDrop.Items.RemoveAt(Selected_Item);
+            Lists.NPC[Selected].Drop.RemoveAt(Selected_Item);
+        }
     }
 
-    private void cmbDrop_Amount_ValueChanged(object sender, EventArgs e)
+    private void butItem_Ok_Click(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Drop[scrlDrop.Value].Amount = (short)cmbDrop_Amount.Value;
+        // Adiciona o item
+        if (cmbDrop_Item.SelectedIndex >= 0)
+        {
+            Lists.Structures.NPC_Drop Drop = new Lists.Structures.NPC_Drop((short)(cmbDrop_Item.SelectedIndex + 1), (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value);
+            Lists.NPC[Selected].Drop.Add(Drop);
+            lstDrop.Items.Add(Drop_String(Drop));
+            grpDrop_Add.Visible = false;
+        }
     }
 
-    private void numDrop_Chance_ValueChanged(object sender, EventArgs e)
+    private string Drop_String(Lists.Structures.NPC_Drop Drop)
     {
-        Lists.NPC[Selected].Drop[scrlDrop.Value].Chance = (byte)numDrop_Chance.Value;
+        return Globals.Numbering(Drop.Item_Num, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[Drop.Item_Num].Name + " [" + Drop.Amount + "x, " + Drop.Chance + "%]";
     }
 }
