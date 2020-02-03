@@ -23,6 +23,7 @@ class Lists
             public bool SaveUsername;
             public bool Sounds;
             public bool Musics;
+            public bool Chat;
             public string Username;
         }
 

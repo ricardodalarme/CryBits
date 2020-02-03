@@ -72,12 +72,12 @@ class Loop
         }
 
         // Chat
-        if (Tools.Chat_Text_Visible && !Panels.Get("Chat").Visible)
+        if ((Tools.Chat_Text_Visible && !Panels.Get("Chat").Visible))
         {
             if (Chat_Timer < Environment.TickCount)
                 Tools.Chat_Text_Visible = false;
         }
-        else
+        else if (!CheckBoxes.Get("Options_Chat").Checked)
             Chat_Timer = Chat_Timer = Environment.TickCount + 10000;
     }
 }

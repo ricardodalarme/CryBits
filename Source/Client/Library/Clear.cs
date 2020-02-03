@@ -8,6 +8,7 @@
         Lists.Options.Musics = true;
         Lists.Options.Sounds = true;
         Lists.Options.Username = string.Empty;
+        Lists.Options.Chat = true;
 
         // Salva o que foi modificado
         Write.Options();

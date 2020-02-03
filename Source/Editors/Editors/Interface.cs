@@ -18,7 +18,6 @@ partial class Editor_Interface : Form
     {
         // Lê os dados
         Read.Tools();
-        Read.Tools();
 
         // Adiciona as janelas à lista
         Objects.cmbWindows.Items.Clear();

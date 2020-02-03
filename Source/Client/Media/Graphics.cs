@@ -33,6 +33,7 @@ partial class Graphics
     public static Texture Tex_Bars_Panel;
     public static Texture Tex_Grid;
     public static Texture Tex_Equipments;
+    public static Texture Tex_Blood;
 
     // Formato das texturas
     public const string Format = ".png";
@@ -171,6 +172,7 @@ partial class Graphics
         Tex_Bars_Panel = new Texture(Directories.Tex_Bars_Panel.FullName + Format);
         Tex_Grid = new Texture(Directories.Tex_Grid.FullName + Format);
         Tex_Equipments = new Texture(Directories.Tex_Equipments.FullName + Format);
+        Tex_Blood = new Texture(Directories.Tex_Blood.FullName + Format);
     }
 
     public static void Present()
@@ -276,7 +278,7 @@ partial class Graphics
         Rectangle Rec_Destiny = new Rectangle(Tool.Position, Rec_Source.Size);
 
         // Desenha a textura do marcador pelo seu estado 
-        if (Tool.State) Rec_Source.Location = new Point(TSize(Tex_CheckBox).Width / 2, 0);
+        if (Tool.Checked) Rec_Source.Location = new Point(TSize(Tex_CheckBox).Width / 2, 0);
 
         // Desenha o marcador 
         Render(Tex_CheckBox, Rec_Source, Rec_Destiny);
@@ -362,7 +364,7 @@ partial class Graphics
         Lists.Structures.Class Class = Lists.Class[Game.CreateCharacter_Class];
 
         // Textura do personagem
-        if (CheckBoxes.Get("GenderMale").State && Class.Tex_Male.Length > 0)
+        if (CheckBoxes.Get("GenderMale").Checked && Class.Tex_Male.Length > 0)
             Texture_Num = Class.Tex_Male[Game.CreateCharacter_Tex];
         else if (Class.Tex_Female.Length > 0)
             Texture_Num = Class.Tex_Female[Game.CreateCharacter_Tex];
@@ -576,7 +578,7 @@ partial class Graphics
         Tool.Visible = TextBoxes.Focused != null && ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
 
         // Renderiza as mensagens
-        if (Tools.Chat_Text_Visible)
+        if (Tool.Visible || (Tools.Chat_Text_Visible && CheckBoxes.Get("Options_Chat").Checked))
             for (byte i = Tools.Chat_Line; i <= Tools.Chat_Lines_Visible + Tools.Chat_Line; i++)
                 if (Tools.Chat.Count > i)
                     DrawText(Tools.Chat[i].Text, 16, 461 + 11 * (i - Tools.Chat_Line), Tools.Chat[i].Color);

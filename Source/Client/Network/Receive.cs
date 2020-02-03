@@ -119,8 +119,8 @@ partial class Receive
     {
         // Reseta os valores
         TextBoxes.Get("CreateCharacter_Name").Text = string.Empty;
-        CheckBoxes.Get("GenderMale").State = true;
-        CheckBoxes.Get("GenderFemale").State = false;
+        CheckBoxes.Get("GenderMale").Checked = true;
+        CheckBoxes.Get("GenderFemale").Checked = false;
         Game.CreateCharacter_Class = 1;
         Game.CreateCharacter_Tex = 0;
 
@@ -178,8 +178,8 @@ partial class Receive
         Tools.Chat_Line = 0;
         TextBoxes.Get("Chat").Text = string.Empty;
         Panels.Get("Chat").Visible = false;
-        CheckBoxes.Get("Options_Sounds").State = Lists.Options.Sounds;
-        CheckBoxes.Get("Options_Music").State = Lists.Options.Musics;
+        CheckBoxes.Get("Options_Sounds").Checked = Lists.Options.Sounds;
+        CheckBoxes.Get("Options_Music").Checked = Lists.Options.Musics;
         Game.Need_Information = 0;
 
         // Fecha os paineis 

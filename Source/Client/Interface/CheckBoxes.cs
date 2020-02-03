@@ -14,7 +14,7 @@ class CheckBoxes
     {
         // Dados
         public string Text;
-        public bool State;
+        public bool Checked;
 
         // Eventos
         public void MouseUp()
@@ -28,7 +28,7 @@ class CheckBoxes
             if (!Tools.IsAbove(new Rectangle(Position, Box))) return;
 
             // Altera o estado do marcador
-            State = !State;
+            Checked = !Checked;
 
             // Executa o evento
             Execute(Name);
@@ -58,9 +58,10 @@ class CheckBoxes
             case "GenderFemale": GenreFemale(); break;
             case "Options_Sounds": Sounds(); break;
             case "Options_Musics": Musics(); break;
+            case "Options_Chat": Chat(); break;
         }
     }
-
+    
     public static void Sounds()
     {
         // Salva os dados
@@ -87,21 +88,27 @@ class CheckBoxes
     public static void SaveUsername()
     {
         // Salva os dados
-        Lists.Options.SaveUsername = Get("Connect_Save_Username").State;
+        Lists.Options.SaveUsername = Get("Connect_Save_Username").Checked;
         Write.Options();
     }
 
     public static void GenreName()
     {
         // Altera o estado do marcador de outro gênero
-        Get("GenderFemale").State = !Get("GenderMale").State;
+        Get("GenderFemale").Checked = !Get("GenderMale").Checked;
         Game.CreateCharacter_Tex = 0;
     }
 
     public static void GenreFemale()
     {
         // Altera o estado do marcador de outro gênero
-        Get("GenderMale").State = !Get("GenderFemale").State;
+        Get("GenderMale").Checked = !Get("GenderFemale").Checked;
         Game.CreateCharacter_Tex = 0;
+    }
+
+    public static void Chat()
+    {
+        // Desabilita a prévia do chat
+        Tools.Chat_Text_Visible = Get("Options_Chat").Checked;
     }
 }

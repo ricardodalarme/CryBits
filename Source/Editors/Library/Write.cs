@@ -110,6 +110,6 @@ class Write
         Data.Write(Tool.Visible);
         Data.Write((byte)Tool.Window);
         Data.Write(Tool.Text);
-        Data.Write(Tool.State);
+        Data.Write(Tool.Checked);
     }
 }

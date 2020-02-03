@@ -23,19 +23,20 @@ class Read
 
             // Carrega os dados
             Lists.Options.GameName = File.ReadString();
+            Lists.Options.Username = File.ReadString();
             Lists.Options.SaveUsername = File.ReadBoolean();
             Lists.Options.Sounds = File.ReadBoolean();
             Lists.Options.Musics = File.ReadBoolean();
-            Lists.Options.Username = File.ReadString();
+            Lists.Options.Chat = File.ReadBoolean();
 
             // Descarrega o arquivo
             File.Dispose();
         }
 
         // Adiciona os dados ao cache
-        CheckBoxes.Get("Sounds").State = Lists.Options.Sounds;
-        CheckBoxes.Get("Musics").State = Lists.Options.Musics;
-        CheckBoxes.Get("Connect_Save_Username").State = Lists.Options.SaveUsername;
+        CheckBoxes.Get("Sounds").Checked = Lists.Options.Sounds;
+        CheckBoxes.Get("Musics").Checked = Lists.Options.Musics;
+        CheckBoxes.Get("Connect_Save_Username").Checked = Lists.Options.SaveUsername;
         if (Lists.Options.SaveUsername) TextBoxes.Get("Connect_Username").Text = Lists.Options.Username;
     }
 
@@ -90,7 +91,7 @@ class Read
         Tool.Visible = Data.ReadBoolean();
         Tool.Window = (Tools.Windows)Data.ReadByte();
         Tool.Text = Data.ReadString();
-        Tool.State = Data.ReadBoolean();
+        Tool.Checked = Data.ReadBoolean();
         return Tool;
     }
 

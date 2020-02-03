@@ -143,7 +143,7 @@ class Read
             Visible = Data.ReadBoolean(),
             Window = (Globals.Windows)Data.ReadByte(),
             Text = Data.ReadString(),
-            State = Data.ReadBoolean()
+            Checked = Data.ReadBoolean()
         };
         return Tool;
     }

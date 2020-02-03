@@ -225,7 +225,7 @@ class Buttons
     {
         // Lista de texturas
         short[] Tex_List;
-        if (CheckBoxes.Get("GenderMale").State == true)
+        if (CheckBoxes.Get("GenderMale").Checked == true)
             Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Male;
         else
             Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Female;
@@ -241,7 +241,7 @@ class Buttons
     {
         // Lista de texturas
         short[] Tex_List;
-        if (CheckBoxes.Get("GenderMale").State == true)
+        if (CheckBoxes.Get("GenderMale").Checked == true)
             Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Male;
         else
             Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Female;

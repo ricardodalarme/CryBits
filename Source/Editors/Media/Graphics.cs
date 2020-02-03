@@ -731,7 +731,7 @@ partial class Graphics
         Rectangle Rec_Destiny = new Rectangle(Tool.Position, Rec_Source.Size);
 
         // Desenha a textura do marcador pelo seu estado 
-        if (Tool.State)
+        if (Tool.Checked)
             Rec_Source.Location = new Point(TSize(Tex_CheckBox).Width / 2, 0);
 
         // Desenha o marcador 

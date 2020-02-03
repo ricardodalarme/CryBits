@@ -10,10 +10,11 @@ class Write
 
         // Carrega todas as opções
         Data.Write(Lists.Options.GameName);
+        Data.Write(Lists.Options.Username);
         Data.Write(Lists.Options.SaveUsername);
         Data.Write(Lists.Options.Sounds);
         Data.Write(Lists.Options.Musics);
-        Data.Write(Lists.Options.Username);
+        Data.Write(Lists.Options.Chat);
 
         // Fecha o arquivo
         Data.Dispose();

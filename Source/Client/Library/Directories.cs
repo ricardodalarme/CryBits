@@ -34,6 +34,7 @@ class Directories
     public static DirectoryInfo Tex_Lights = new DirectoryInfo(Application.StartupPath + @"\Graphics\Lights\");
     public static DirectoryInfo Tex_Items = new DirectoryInfo(Application.StartupPath + @"\Graphics\Items\");
     public static FileInfo Tex_Grid = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Grid");
+    public static FileInfo Tex_Blood = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Blood");
 
     public static void Create()
     {
@@ -64,5 +65,6 @@ class Directories
         Tex_Items.Create();
         Tex_Grid.Directory.Create();
         Tex_Equipments.Directory.Create();
+        Tex_Blood.Directory.Create();
     }
 }

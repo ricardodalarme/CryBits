@@ -60,7 +60,7 @@ class Lists
         public class CheckBox : Tool
         {
             public string Text { get; set; }
-            public bool State { get; set; }
+            public bool Checked { get; set; }
         }
 
         public class Panel : Tool
