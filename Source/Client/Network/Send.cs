@@ -153,13 +153,14 @@ partial class Send
         Packet(Data);
     }
 
-    public static void DropItem(byte Slot)
+    public static void DropItem(byte Slot, short Amount)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.DropItem);
         Data.Write(Slot);
+        Data.Write(Amount);
         Packet(Data);
     }
 

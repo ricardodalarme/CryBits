@@ -19,6 +19,7 @@ class Game
     public static int SelectCharacter = 1;
     public static short Infomation_Index;
     public static int Need_Information = 0;
+    public static byte Drop_Slot = 0;
 
     // Jogador
     public const short Attack_Speed = 750;
@@ -157,6 +158,14 @@ class Game
         Rare,
         Epic,
         Legendary,
+        Count
+    }
+
+    public enum BindOn
+    {
+        None,
+        Pickup,
+        Equip,
         Count
     }
     #endregion

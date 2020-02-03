@@ -50,7 +50,7 @@ partial class Editor_Interface : Form
 
     private void prgProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
     {
-        if (treOrder.SelectedNode == null)
+        if (treOrder.SelectedNode != null)
         {
             byte Window = (byte)((Lists.Structures.Tool)treOrder.SelectedNode.Tag).Window;
 
@@ -113,6 +113,7 @@ partial class Editor_Interface : Form
             case Globals.Tools_Types.TextBox: Tool = new Lists.Structures.TextBox(); break;
         }
         Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add("[" + ((Globals.Tools_Types)cmbType.SelectedIndex).ToString() + "] ");
+        Tool.Window = (Globals.Windows)cmbWindows.SelectedIndex;
         Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = Tool;
         grpNew.Visible = false;
     }

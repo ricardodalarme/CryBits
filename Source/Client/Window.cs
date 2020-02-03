@@ -143,10 +143,7 @@ public partial class Window : Form
 
         // Em jogo
         if (Tools.CurrentWindow == Tools.Windows.Game)
-            if (!Panels.Get("Chat").Visible)
-            {
-                //    Panels.Get("Information").Visible = false;
-
+            if (TextBoxes.Focused == null)
                 switch (e.KeyCode)
                 {
                     case Keys.Space: Player.CollectItem(); break;
@@ -161,7 +158,6 @@ public partial class Window : Form
                     case Keys.D9: Send.Hotbar_Use(9); break;
                     case Keys.D0: Send.Hotbar_Use(0); break;
                 }
-            }
     }
 
     private void Window_KeyUp(object sender, KeyEventArgs e)

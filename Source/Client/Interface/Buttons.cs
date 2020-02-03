@@ -114,6 +114,8 @@ class Buttons
             case "Attributes_Vitality": Attribute_Vitality(); break;
             case "Menu_Inventory": Menu_Inventory(); break;
             case "Menu_Options": Menu_Options(); break;
+            case "Drop_Confirm": Drop_Confirm(); break;
+            case "Drop_Cancel": Drop_Cancel(); break;
         }
     }
 
@@ -355,5 +357,28 @@ class Buttons
         Panels.Get("Menu_Options").Visible = !Panels.Get("Menu_Options").Visible;
         Panels.Get("Menu_Character").Visible = false;
         Panels.Get("Menu_Inventory").Visible = false;
+    }
+
+    public static void Drop_Confirm()
+    {
+        // Quantidade
+        short.TryParse(TextBoxes.Get("Drop_Amount").Text, out short Amount);
+
+        // Verifica se o valor digitado é válidp
+        if (Amount == 0)
+        {
+            MessageBox.Show("Enter a valid value!");
+            return;
+        }
+
+        // Solta o item
+        Send.DropItem(Game.Drop_Slot, Amount);
+        Panels.Get("Drop").Visible = false;
+    }
+
+    public static void Drop_Cancel()
+    {
+        // Fecha o painel
+        Panels.Get("Drop").Visible = false;
     }
 }

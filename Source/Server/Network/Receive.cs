@@ -390,7 +390,7 @@ class Receive
 
     private static void DropItem(byte Index, NetIncomingMessage Data)
     {
-        Player.DropItem(Index, Data.ReadByte());
+        Player.DropItem(Index, Data.ReadByte(), Data.ReadInt16());
     }
 
     private static void Inventory_Change(byte Index, NetIncomingMessage Data)

@@ -198,6 +198,7 @@ class Lists
             public short Texture;
             public byte Type;
             public byte Rarity;
+            public Game.BindOn Bind;
             // Requerimentos
             public short Req_Level;
             public byte Req_Class;

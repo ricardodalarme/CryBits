@@ -96,6 +96,7 @@ class TextBoxes
                     Stack.Push(Top[i].Nodes);
                 }
         }
+        Focused = null;
     }
 
     public static void ChangeFocus()

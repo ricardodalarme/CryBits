@@ -223,8 +223,19 @@ class Tools
         // Solta item
         if (e.Button == MouseButtons.Right)
         {
-            Send.DropItem(Slot);
-            return;
+            if (Lists.Item[Player.Inventory[Slot].Item_Num].Bind != Game.BindOn.Pickup)
+                if (Player.Inventory[Slot].Amount != 1)
+                {
+                    Game.Drop_Slot = Slot;
+                    TextBoxes.Get("Drop_Amount").Text = string.Empty;
+                    Panels.Get("Drop").Visible = true;
+                    return;
+                }
+                else
+                {
+                    Send.DropItem(Slot, 1);
+                    return;
+                }
         }
         // Seleciona o item
         else if (e.Button == MouseButtons.Left)
@@ -242,10 +253,11 @@ class Tools
             if (IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
                 // Remove o equipamento
                 if (e.Button == MouseButtons.Right)
-                {
-                    Send.Equipment_Remove(i);
-                    return;
-                }
+                    if (Lists.Item[Player.Me.Equipment[i]].Bind != Game.BindOn.Equip)
+                    {
+                        Send.Equipment_Remove(i);
+                        return;
+                    }
     }
 
     public static byte Hotbar_Mouse()

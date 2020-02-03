@@ -521,7 +521,7 @@ class Player
         return true;
     }
 
-    public static void DropItem(byte Index, byte Slot)
+    public static void DropItem(byte Index, byte Slot, short Amount)
     {
         short Map_Num = Character(Index).Map;
         Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
@@ -531,17 +531,20 @@ class Player
         if (Character(Index).Inventory[Slot].Item_Num == 0) return;
         if (Lists.Item[Character(Index).Inventory[Slot].Item_Num].Bind == (byte)Game.BindOn.Pickup) return;
 
+        // Verifica se não está dropando mais do que tem
+        if (Amount > Character(Index).Inventory[Slot].Amount) Amount = Character(Index).Inventory[Slot].Amount;
+
         // Solta o item no chão
         Map_Item.Index = Character(Index).Inventory[Slot].Item_Num;
-        Map_Item.Amount = Character(Index).Inventory[Slot].Amount;
+        Map_Item.Amount = Amount;
         Map_Item.X = Character(Index).X;
         Map_Item.Y = Character(Index).Y;
         Lists.Temp_Map[Map_Num].Item.Add(Map_Item);
         Send.Map_Items(Map_Num);
 
         // Retira o item do inventário do jogador 
-        Character(Index).Inventory[Slot].Item_Num = 0;
-        Character(Index).Inventory[Slot].Amount = 0;
+        if (Amount == Character(Index).Inventory[Slot].Amount) Character(Index).Inventory[Slot].Item_Num = 0;
+        Character(Index).Inventory[Slot].Amount = (short)(Character(Index).Inventory[Slot].Amount - Amount);
         Send.Player_Inventory(Index);
     }
 

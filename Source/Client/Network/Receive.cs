@@ -182,6 +182,9 @@ partial class Receive
         CheckBoxes.Get("Options_Music").State = Lists.Options.Musics;
         Game.Need_Information = 0;
 
+        // Fecha os paineis 
+        Panels.Get("Drop").Visible = false;
+
         // Abre o jogo
         Audio.Music.Stop();
         Tools.CurrentWindow = Tools.Windows.Game;
@@ -361,7 +364,7 @@ partial class Receive
             Lists.Item[i].Type = Data.ReadByte();
             Data.ReadInt16(); // Price
             Data.ReadBoolean(); // Stackable
-            Data.ReadByte(); // Bind
+            Lists.Item[i].Bind = (Game.BindOn)Data.ReadByte();
             Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
