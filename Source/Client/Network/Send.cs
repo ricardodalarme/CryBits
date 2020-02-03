@@ -173,6 +173,9 @@ partial class Send
         Data.Write(Old);
         Data.Write(New);
         Packet(Data);
+
+        // Fecha o painel de soltar item
+        Panels.Get("Drop").Visible = false;
     }
 
     public static void Inventory_Use(byte Slot)
@@ -183,6 +186,9 @@ partial class Send
         Data.Write((byte)Packets.Inventory_Use);
         Data.Write(Slot);
         Packet(Data);
+
+        // Fecha o painel de soltar item
+        Panels.Get("Drop").Visible = false;
     }
 
     public static void Equipment_Remove(byte Slot)
@@ -226,5 +232,8 @@ partial class Send
         Data.Write((byte)Packets.Hotbar_Use);
         Data.Write(Slot);
         Packet(Data);
+
+        // Fecha o painel de soltar item
+        Panels.Get("Drop").Visible = false;
     }
 }
