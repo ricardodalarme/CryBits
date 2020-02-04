@@ -57,10 +57,10 @@ class Directories
         Tex_Fogs = new DirectoryInfo(Directory + @"\Graphics\Fogs\");
         Tex_Characters = new DirectoryInfo(Directory + @"\Graphics\Characters\");
         Tex_Faces = new DirectoryInfo(Directory + @"\Graphics\Faces\");
-        Tex_Painel = new DirectoryInfo(Directory + @"\Graphics\Interface\Tools\Panels\");
-        Tex_Buttons = new DirectoryInfo(Directory + @"\Graphics\Interface\Tools\Buttons\");
-        Tex_CheckBox = new FileInfo(Directory + @"\Graphics\Interface\Tools\CheckBox");
-        Tex_TextBox = new FileInfo(Directory + @"\Graphics\Interface\Tools\TextBox");
+        Tex_Painel = new DirectoryInfo(Directory + @"\Graphics\Interface\Panels\");
+        Tex_Buttons = new DirectoryInfo(Directory + @"\Graphics\Interface\Buttons\");
+        Tex_CheckBox = new FileInfo(Directory + @"\Graphics\Interface\CheckBox");
+        Tex_TextBox = new FileInfo(Directory + @"\Graphics\Interface\TextBox");
         Tex_Tiles = new DirectoryInfo(Directory + @"\Graphics\Tiles\");
         Tex_Grid = new FileInfo(Directory + @"\Graphics\Misc\Grid");
         Tex_Weather = new FileInfo(Directory + @"\Graphics\Misc\Weather");

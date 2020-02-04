@@ -16,10 +16,10 @@ class Directories
     public static FileInfo Tex_Background = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Background");
     public static FileInfo Tex_Chat = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Chat");
     public static FileInfo Tex_Equipments = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Equipments");
-    public static DirectoryInfo Tex_Panels = new DirectoryInfo(Application.StartupPath + @"\Graphics\Interface\Tools\Panels\");
-    public static DirectoryInfo Tex_Buttons = new DirectoryInfo(Application.StartupPath + @"\Graphics\Interface\Tools\Buttons\");
-    public static FileInfo Tex_CheckBox = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Tools\CheckBox");
-    public static FileInfo Tex_TextBox = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Tools\TextBox");
+    public static DirectoryInfo Tex_Panels = new DirectoryInfo(Application.StartupPath + @"\Graphics\Interface\Panels\");
+    public static DirectoryInfo Tex_Buttons = new DirectoryInfo(Application.StartupPath + @"\Graphics\Interface\Buttons\");
+    public static FileInfo Tex_CheckBox = new FileInfo(Application.StartupPath + @"\Graphics\Interface\CheckBox");
+    public static FileInfo Tex_TextBox = new FileInfo(Application.StartupPath + @"\Graphics\Interface\TextBox");
     public static DirectoryInfo Tex_Characters = new DirectoryInfo(Application.StartupPath + @"\Graphics\Characters\");
     public static DirectoryInfo Tex_Tiles = new DirectoryInfo(Application.StartupPath + @"\Graphics\Tiles\");
     public static DirectoryInfo Tex_Faces = new DirectoryInfo(Application.StartupPath + @"\Graphics\Faces\");
