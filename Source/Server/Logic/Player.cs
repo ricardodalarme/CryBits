@@ -135,15 +135,15 @@ class Player
 
     public static void Leave(byte Index)
     {
-        // Limpa os dados do jogador
-        Clear.Player(Index);
-
         // Salva os dados do e envia atualiza os demais jogadores da desconexão
         if (!Lists.TempPlayer[Index].InEditor)
         {
             Write.Player(Index);
             Send.Player_Leave(Index);
         }
+
+        // Limpa os dados do jogador
+        Clear.Player(Index);
     }
 
     public static bool IsPlaying(byte Index)
