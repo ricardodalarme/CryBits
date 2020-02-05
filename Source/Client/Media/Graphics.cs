@@ -129,6 +129,40 @@ partial class Graphics
         RenderWindow.Draw(TempText);
     }
 
+    private static void DrawText(string Text, int X, int Y, SFML.Graphics.Color Color, int Max_Width, bool Cut = true)
+    {
+        string Temp_Text;
+        int Message_Width = Tools.MeasureString(Text), Split = -1;
+
+        // Caso couber, adiciona a mensagem normalmente
+        if (Message_Width < Max_Width)
+            DrawText(Text, X, Y, Color);
+        else
+            for (int i = 0; i < Text.Length; i++)
+            {
+                // Verifica se o caráctere é um separável 
+                switch (Text[i])
+                {
+                    case '-':
+                    case '_':
+                    case ' ': Split = i; break;
+                }
+
+                // Desenha a parte do texto que cabe
+                Temp_Text = Text.Substring(0, i);
+                if (Tools.MeasureString(Temp_Text) > Max_Width)
+                {
+                    // Divide o texto novamente caso tenha encontrado um ponto de divisão
+                    if (Cut && Split != -1) Temp_Text = Text.Substring(0, Split + 1);
+
+                    // Desenha o texto cortado
+                    DrawText(Temp_Text, X, Y, Color);
+                    DrawText(Text.Substring(Temp_Text.Length), X, Y + 12, Color, Max_Width);
+                    return;
+                }
+            }
+    }
+
     public static void Render_Box(Texture Texture, byte Margin, Point Position, Size Size)
     {
         int Texture_Width = TSize(Texture).Width;
@@ -381,7 +415,7 @@ partial class Graphics
         DrawText(Text, 347 - Tools.MeasureString(Text) / 2, 509, SFML.Graphics.Color.White);
 
         // Descrição
-        DrawText(Class.Description, 282, 526, SFML.Graphics.Color.White);
+        DrawText(Class.Description, 282, 526, SFML.Graphics.Color.White, 123);
     }
 
     public static void Game_Hotbar(Panels.Structure Tool)
@@ -511,7 +545,7 @@ partial class Graphics
         if (Item_Num == -1) return;
 
         // Define a cor de acordo com a raridade
-        switch ((Game.Rarity) Lists.Item[Item_Num].Rarity)
+        switch ((Game.Rarity)Lists.Item[Item_Num].Rarity)
         {
             case Game.Rarity.Uncommon: Text_Color = CColor(204, 255, 153); break; // Verde
             case Game.Rarity.Rare: Text_Color = CColor(102, 153, 255); break; // Azul
@@ -525,27 +559,34 @@ partial class Graphics
         DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, Text_Color);
         Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Position.X + 9, Position.Y + 21, 64, 64));
 
-        // Requerimentos
-        if (Lists.Item[Item_Num].Type != (byte)Game.Itens.None)
-        {
-            DrawText("Req level: " + Lists.Item[Item_Num].Req_Level, Position.X + 9, Position.Y + 90, SFML.Graphics.Color.White);
-            if (Lists.Item[Item_Num].Req_Class > 0)
-                DrawText("Req class: " + Lists.Class[Lists.Item[Item_Num].Req_Class].Name, Position.X + 9, Position.Y + 102, SFML.Graphics.Color.White);
-            else
-                DrawText("Req class: None", Position.X + 9, Position.Y + 102, SFML.Graphics.Color.White);
-        }
+        // Descrição
+        DrawText(Lists.Item[Item_Num].Description, Position.X + 82, Position.Y + 20, SFML.Graphics.Color.White, 86);
 
-        // Específicas 
-        if (Lists.Item[Item_Num].Type == (byte)Game.Itens.Potion)
+        // Posições
+        Point[] Positions = { new Point(Position.X + 10, Position.Y + 90), new Point(Position.X + 10, Position.Y + 102), new Point(Position.X + 10, Position.Y + 114), new Point(Position.X + 96, Position.Y + 90), new Point(Position.X + 96, Position.Y + 102), new Point(Position.X + 96, Position.Y + 114) };
+        byte p = 0; // iterador
+
+        // Informações específicas 
+        switch ((Game.Items)Lists.Item[Item_Num].Type)
         {
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
-                DrawText(((Game.Vitals)n).ToString() + ": " + Lists.Item[Item_Num].Potion_Vital[n], Position.X + 100, Position.Y + 18 + 12 * n, SFML.Graphics.Color.White);
-            DrawText("Exp: " + Lists.Item[Item_Num].Potion_Experience, Position.X + 100, Position.Y + 42, SFML.Graphics.Color.White);
-        }
-        else if (Lists.Item[Item_Num].Type == (byte)Game.Itens.Equipment)
-        {
-            for (byte n = 0; n < (byte)Game.Attributes.Count; n++) DrawText(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n], Position.X + 100, Position.Y + 18 + 12 * n, SFML.Graphics.Color.White);
-            if (Lists.Item[Item_Num].Equip_Type == (byte)Game.Equipments.Weapon) DrawText("Dano: " + Lists.Item[Item_Num].Weapon_Damage, Position.X + 100, Position.Y + 18 + 60, SFML.Graphics.Color.White);
+            // Poção
+            case Game.Items.Potion:
+                for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+                    if (Lists.Item[Item_Num].Potion_Vital[n] != 0)
+                        DrawText(((Game.Vitals)n).ToString() + ": " + Lists.Item[Item_Num].Potion_Vital[n], Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+
+                if (Lists.Item[Item_Num].Potion_Experience != 0) DrawText("Experience: " + Lists.Item[Item_Num].Potion_Experience, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+                break;
+            // Equipamentos
+            case Game.Items.Equipment:
+                if (Lists.Item[Item_Num].Equip_Type == (byte)Game.Equipments.Weapon)
+                    if (Lists.Item[Item_Num].Weapon_Damage != 0)
+                        DrawText("Damage: " + Lists.Item[Item_Num].Weapon_Damage, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+
+                for (byte n = 0; n < (byte)Game.Attributes.Count; n++)
+                    if (Lists.Item[Item_Num].Equip_Attribute[n] != 0)
+                        DrawText(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n], Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+                break;
         }
     }
 

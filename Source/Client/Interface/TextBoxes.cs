@@ -165,11 +165,11 @@ class TextBoxes
             else
             {
                 // Dados
-                string Destinatário = Message.Substring(1, Parts[0].Length - 1);
+                string Destiny = Message.Substring(1, Parts[0].Length - 1);
                 Message = Message.Substring(Parts[0].Length + 1);
 
                 // Envia a mensagem
-                Send.Message(Message, Game.Messages.Private, Destinatário);
+                Send.Message(Message, Game.Messages.Private, Destiny);
             }
         }
         // Mapa

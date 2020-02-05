@@ -48,10 +48,10 @@ class Directories
         Selection.Objects.txtDirectory_Client.Text = Directory;
 
         // Cliente
-        Fonts = new DirectoryInfo(Directory + @"\Fonts\");
         Sounds = new DirectoryInfo(Directory + @"\Audio\Sounds\");
         Musics = new DirectoryInfo(Directory + @"\Audio\Musics\");
         Tools = new FileInfo(Directory + @"\Data\Tools" + Format);
+        Fonts = new DirectoryInfo(Directory + @"\Graphics\Fonts\");
         Tex_Panoramas = new DirectoryInfo(Directory + @"\Graphics\Panoramas\");
         Tex_Lights = new DirectoryInfo(Directory + @"\Graphics\Lights\");
         Tex_Fogs = new DirectoryInfo(Directory + @"\Graphics\Fogs\");

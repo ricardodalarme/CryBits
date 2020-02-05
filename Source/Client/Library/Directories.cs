@@ -9,10 +9,10 @@ class Directories
     // Diretório dos arquivos
     public static DirectoryInfo Sounds = new DirectoryInfo(Application.StartupPath + @"\Audio\Sounds\");
     public static DirectoryInfo Musics = new DirectoryInfo(Application.StartupPath + @"\Audio\Musics\");
-    public static DirectoryInfo Fonts = new DirectoryInfo(Application.StartupPath + @"\Fonts\");
+    public static DirectoryInfo Fonts = new DirectoryInfo(Application.StartupPath + @"\Graphics\Fonts\");
     public static FileInfo Options = new FileInfo(Application.StartupPath + @"\Data\Options" + Format);
     public static DirectoryInfo Maps_Data = new DirectoryInfo(Application.StartupPath + @"\Data\Maps\");
-    public static FileInfo Tools = new FileInfo(Application.StartupPath + @"\Data\Tools" + Format);
+    public static FileInfo Tools_Data = new FileInfo(Application.StartupPath + @"\Data\Tools" + Format);
     public static FileInfo Tex_Background = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Background");
     public static FileInfo Tex_Chat = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Chat");
     public static FileInfo Tex_Equipments = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Equipments");
@@ -43,7 +43,7 @@ class Directories
         Sounds.Create();
         Musics.Create();
         Maps_Data.Create();
-        Tools.Directory.Create();
+        Tools_Data.Directory.Create();
         Tex_Panoramas.Create();
         Tex_Fogs.Create();
         Tex_Characters.Create();

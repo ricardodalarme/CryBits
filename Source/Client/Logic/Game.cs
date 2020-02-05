@@ -128,7 +128,7 @@ class Game
         NPC
     }
 
-    public enum Itens
+    public enum Items
     {
         None,
         Equipment,
@@ -210,17 +210,16 @@ class Game
     public static void Disconnect()
     {
         // Não fechar os paineis se não for necessário
-        if (Panels.Get("Options").Visible || Panels.Get("Connect").Visible || Panels.Get("Register").Visible)
-            return;
+        if (Panels.Get("Options").Visible || Panels.Get("Connect").Visible || Panels.Get("Register").Visible)  return;
 
         // Limpa os valores
         Audio.Sound.Stop_All();
         Player.MyIndex = 0;
 
         // Traz o jogador de volta ao menu
-        Tools.CurrentWindow = Tools.Windows.Menu;
         Panels.Menu_Close();
         Panels.Get("Connect").Visible = true;
+        Tools.CurrentWindow = Tools.Windows.Menu;
     }
 
     public static void UpdateCamera()
