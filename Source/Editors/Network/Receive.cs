@@ -210,6 +210,7 @@ partial class Receive
             Lists.NPC[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.NPC[i].Attribute = new short[(byte)Globals.Attributes.Count];
             Lists.NPC[i].Drop = new System.Collections.Generic.List<Lists.Structures.NPC_Drop>();
+            Lists.NPC[i].Allie = new System.Collections.Generic.List<short>();
 
             // Lê os dados
             Lists.NPC[i].Name = Data.ReadString();
@@ -223,6 +224,11 @@ partial class Receive
             for (byte n = 0; n < (byte)Globals.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
             byte Num_Drops = Data.ReadByte();
             for (byte n = 0; n < Num_Drops; n++) Lists.NPC[i].Drop.Add(new Lists.Structures.NPC_Drop(Data.ReadInt16(), Data.ReadInt16(), Data.ReadByte()));
+            Lists.NPC[i].AttackNPC = Data.ReadBoolean();
+            byte Num_Allies = Data.ReadByte();
+            for (byte n = 0; n < Num_Allies; n++) Lists.NPC[i].Allie.Add(Data.ReadInt16());
+            Lists.NPC[i].Movement = (Globals.NPC_Movements)Data.ReadByte();
+            Lists.NPC[i].Flee_Helth = Data.ReadByte();
         }
 
         // Abre o editor

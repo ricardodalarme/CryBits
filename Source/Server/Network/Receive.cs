@@ -771,7 +771,12 @@ class Receive
             for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
             for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
             Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Data.ReadByte()];
-            for (byte n = 0; n < Lists.NPC[i].Drop.Length; n++)  Lists.NPC[i].Drop[n] = new Lists.Structures.NPC_Drop(Data.ReadInt16(), Data.ReadInt16(), Data.ReadByte());
+            for (byte n = 0; n < Lists.NPC[i].Drop.Length; n++) Lists.NPC[i].Drop[n] = new Lists.Structures.NPC_Drop(Data.ReadInt16(), Data.ReadInt16(), Data.ReadByte());
+            Lists.NPC[i].AttackNPC = Data.ReadBoolean();
+            Lists.NPC[i].Allie = new short[Data.ReadByte()];
+            for (byte n = 0; n < Lists.NPC[i].Allie.Length; n++) Lists.NPC[i].Allie[n] = Data.ReadInt16();
+            Lists.NPC[i].Movement = (NPC.Movements)Data.ReadByte();
+            Lists.NPC[i].Flee_Helth = Data.ReadByte();
         }
 
         // Salva os dados e envia pra todos jogadores conectados

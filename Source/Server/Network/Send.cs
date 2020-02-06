@@ -697,6 +697,11 @@ class Send
                     Data.Write(Lists.NPC[i].Drop[n].Amount);
                     Data.Write(Lists.NPC[i].Drop[n].Chance);
                 }
+                Data.Write(Lists.NPC[i].AttackNPC);
+                Data.Write((byte)Lists.NPC[i].Allie.Length);
+                for (byte n = 0; n < Lists.NPC[i].Allie.Length; n++) Data.Write(Lists.NPC[i].Allie[n]);
+                Data.Write((byte)Lists.NPC[i].Movement);
+                Data.Write(Lists.NPC[i].Flee_Helth);
             }
         }
         Data.Write(OpenEditor);

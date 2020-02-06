@@ -92,6 +92,5 @@
     <Analyzer Include="..\..\Build\Client\sfmlnet-graphics-2.dll" />
     <Analyzer Include="..\..\Build\Client\sfmlnet-window-2.dll" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

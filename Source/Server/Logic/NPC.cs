@@ -9,6 +9,12 @@ class NPC
         AttackWhenAttacked
     }
 
+    public enum Movements
+    {
+        Randomly,
+        Still
+    }
+
     public static short Regeneration(short Map_Num, byte Index, byte Vital)
     {
         Lists.Structures.NPC Data = Lists.NPC[Lists.Temp_Map[Map_Num].NPC[Index].Index];

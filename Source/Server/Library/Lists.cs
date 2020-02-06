@@ -170,6 +170,10 @@ class Lists
             public short[] Vital;
             public short[] Attribute;
             public NPC_Drop[] Drop;
+            public bool AttackNPC;
+            public short[] Allie;
+            public global::NPC.Movements Movement;
+            public byte Flee_Helth;
         }
 
         public struct Map_NPCs

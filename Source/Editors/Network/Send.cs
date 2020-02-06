@@ -294,6 +294,11 @@ partial class Send
                 Data.Write(Lists.NPC[Index].Drop[i].Amount);
                 Data.Write(Lists.NPC[Index].Drop[i].Chance);
             }
+            Data.Write(Lists.NPC[Index].AttackNPC);
+            Data.Write((byte)Lists.NPC[Index].Allie.Count);
+            for (byte i = 0; i < Lists.NPC[Index].Allie.Count; i++) Data.Write(Lists.NPC[Index].Allie[i]);
+            Data.Write((byte)Lists.NPC[Index].Movement);
+            Data.Write(Lists.NPC[Index].Flee_Helth);
         }
         Packet(Data);
     }

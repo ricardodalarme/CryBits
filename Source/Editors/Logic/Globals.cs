@@ -146,6 +146,12 @@ class Globals
         Count
     }
 
+    public enum NPC_Movements
+    {
+        Randomly,
+        Still
+    }
+
     public static void Weather_Update()
     {
         // Redimensiona a lista

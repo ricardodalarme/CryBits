@@ -214,6 +214,10 @@ class Lists
             public short[] Vital;
             public short[] Attribute;
             public List<NPC_Drop> Drop;
+            public bool AttackNPC;
+            public List<short> Allie;
+            public Globals.NPC_Movements Movement;
+            public byte Flee_Helth;
         }
 
         public struct Item

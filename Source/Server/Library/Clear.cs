@@ -79,6 +79,7 @@ class Clear
         Lists.NPC[Index].Vital = new short[(byte)Game.Vitals.Count];
         Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Count];
         Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[0];
+        Lists.NPC[Index].Allie = new short[0];
     }
 
     public static void Item(byte Index)
