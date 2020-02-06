@@ -690,8 +690,9 @@
             this.cmbMovement.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbMovement.FormattingEnabled = true;
             this.cmbMovement.Items.AddRange(new object[] {
-            "Randomly",
-            "Still"});
+            "Move Randomly",
+            "Turn Randomly",
+            "Stand Still"});
             this.cmbMovement.Location = new System.Drawing.Point(13, 63);
             this.cmbMovement.Name = "cmbMovement";
             this.cmbMovement.Size = new System.Drawing.Size(279, 21);

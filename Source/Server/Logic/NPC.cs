@@ -11,8 +11,9 @@ class NPC
 
     public enum Movements
     {
-        Randomly,
-        Still
+        MoveRandomly,
+        TurnRandomly,
+        StandStill
     }
 
     public static short Regeneration(short Map_Num, byte Index, byte Vital)
@@ -173,7 +174,15 @@ class NPC
                 // Move-se aleatoriamente
                 if (NPC_Data.Behaviour == (byte)Behaviour.Friendly || Data.Target_Index == 0)
                     if (Game.Random.Next(0, 3) == 0 && !Moved)
-                        NPC.Move(Map_Num, i, (Game.Directions)Game.Random.Next(0, 4), 1, true);
+                        if (NPC_Data.Movement == Movements.MoveRandomly)
+                        {
+                            NPC.Move(Map_Num, i, (Game.Directions)Game.Random.Next(0, 4), 1, true);
+                        }
+                        else if (NPC_Data.Movement == Movements.TurnRandomly)
+                        {
+                            Lists.Temp_Map[Map_Num].NPC[i].Direction = (Game.Directions)Game.Random.Next(0, 4);
+                            Send.Map_NPC_Direction(Map_Num, i);
+                        }
             }
 
             ////////////
@@ -251,7 +260,7 @@ class NPC
         if (Socket.Device != null) Send.Map_NPC(Map_Num, Index);
     }
 
-    public static bool Move(short Map_Num, byte Index, Game.Directions Direction, byte Movement = 1, bool CountZone = false)
+    public static bool Move(short Map_Num, byte Index, Game.Directions Direction, byte Movement = 1, bool CheckZone = false)
     {
         Lists.Structures.Map_NPCs Data = Lists.Temp_Map[Map_Num].NPC[Index];
         byte x = Data.X, y = Data.Y;
@@ -269,7 +278,7 @@ class NPC
         if (Map.Tile_Blocked(Map_Num, x, y, Direction)) return false;
 
         // Verifica se está dentro da zona
-        if (CountZone)
+        if (CheckZone)
             if (Lists.Map[Map_Num].Tile[Next_X, Next_Y].Zone != Lists.Map[Map_Num].NPC[Index].Zone)
                 return false;
 

@@ -148,8 +148,9 @@ class Globals
 
     public enum NPC_Movements
     {
-        Randomly,
-        Still
+        MoveRandomly,
+        TurnRandomly,
+        StandStill
     }
 
     public static void Weather_Update()

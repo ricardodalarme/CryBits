@@ -62,6 +62,11 @@ public partial class Editor_NPCs : Form
         lstAllies.Items.Clear();
         grpAllie_Add.Visible = false;
 
+        // Remove o NPC dos aliados caso ele não existir
+        for (byte i = 0; i < Lists.NPC[Selected].Allie.Count; i++)
+            if (Lists.NPC[Selected].Allie[i] >= Lists.NPC.Length)
+                Lists.NPC[Selected].Allie.RemoveAt(i);
+
         // Lista os dados
         txtName.Text = Lists.NPC[Selected].Name;
         txtSayMsg.Text = Lists.NPC[Selected].SayMsg;
