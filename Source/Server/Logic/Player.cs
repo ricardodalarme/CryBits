@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 class Player
@@ -30,6 +31,7 @@ class Player
         public Lists.Structures.Inventories[] Inventory;
         public short[] Equipment;
         public Lists.Structures.Hotbar[] Hotbar;
+        public List<short> Party;
 
         public short Experience
         {

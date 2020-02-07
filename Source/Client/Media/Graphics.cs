@@ -8,7 +8,7 @@ using System.IO;
 partial class Graphics
 {
     // Locais de renderização
-    public static RenderWindow RenderWindow;
+    private static RenderWindow RenderWindow;
 
     // Fonte principal
     public static SFML.Graphics.Font Font_Default;
@@ -34,12 +34,13 @@ partial class Graphics
     public static Texture Tex_Grid;
     public static Texture Tex_Equipments;
     public static Texture Tex_Blood;
+    public static Texture Tex_Party_Bars;
 
     // Formato das texturas
     public const string Format = ".png";
 
     #region Engine
-    public static Texture[] LoadTextures(string Directory)
+    private static Texture[] LoadTextures(string Directory)
     {
         short i = 1;
         Texture[] TempTex = new Texture[0];
@@ -65,13 +66,13 @@ partial class Graphics
             return new Size(0, 0);
     }
 
-    public static SFML.Graphics.Color CColor(byte R = 255, byte G = 255, byte B = 255, byte A = 255)
+    private static SFML.Graphics.Color CColor(byte R = 255, byte G = 255, byte B = 255, byte A = 255)
     {
         // Retorna com a cor
         return new SFML.Graphics.Color(R, G, B, A);
     }
 
-    public static void Render(Texture Texture, Rectangle Rec_Source, Rectangle Rec_Destiny, object Color = null, object Mode = null)
+    private static void Render(Texture Texture, Rectangle Rec_Source, Rectangle Rec_Destiny, object Color = null, object Mode = null)
     {
         Sprite TmpImage = new Sprite(Texture);
 
@@ -87,7 +88,7 @@ partial class Graphics
         RenderWindow.Draw(TmpImage, (RenderStates)Mode);
     }
 
-    public static void Render(Texture Texture, int X, int Y, int Source_X, int Source_Y, int Source_Width, int Source_Height, object Color = null)
+    private static void Render(Texture Texture, int X, int Y, int Source_X, int Source_Y, int Source_Width, int Source_Height, object Color = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(Source_X, Source_Y), new Size(Source_Width, Source_Height));
@@ -97,7 +98,7 @@ partial class Graphics
         Render(Texture, Source, Destiny, Color);
     }
 
-    public static void Render(Texture Texture, Rectangle Destiny, object Color = null)
+    private static void Render(Texture Texture, Rectangle Destiny, object Color = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(0), TSize(Texture));
@@ -106,7 +107,7 @@ partial class Graphics
         Render(Texture, Source, Destiny, Color);
     }
 
-    public static void Render(Texture Texture, Point Position, object Color = null)
+    private static void Render(Texture Texture, Point Position, object Color = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(0), TSize(Texture));
@@ -163,7 +164,7 @@ partial class Graphics
             }
     }
 
-    public static void Render_Box(Texture Texture, byte Margin, Point Position, Size Size)
+    private static void Render_Box(Texture Texture, byte Margin, Point Position, Size Size)
     {
         int Texture_Width = TSize(Texture).Width;
         int Texture_Height = TSize(Texture).Height;
@@ -207,6 +208,7 @@ partial class Graphics
         Tex_Grid = new Texture(Directories.Tex_Grid.FullName + Format);
         Tex_Equipments = new Texture(Directories.Tex_Equipments.FullName + Format);
         Tex_Blood = new Texture(Directories.Tex_Blood.FullName + Format);
+        Tex_Party_Bars = new Texture(Directories.Tex_Party_Bars.FullName + Format);
     }
 
     public static void Present()
@@ -221,15 +223,15 @@ partial class Graphics
         Interface(Tools.Order);
 
         // Desenha os dados do jogo
-        DrawText("FPS: " + Game.FPS.ToString(), 8, 73, SFML.Graphics.Color.White);
-        DrawText("Latency: " + Game.Latency.ToString(), 8, 83, SFML.Graphics.Color.White);
+        DrawText("FPS: " + Game.FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
+        DrawText("Latency: " + Game.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
         if (Tools.CurrentWindow == Tools.Windows.Game) Game_Chat();
 
         // Exibe o que foi renderizado
         RenderWindow.Display();
     }
 
-    public static void InGame()
+    private static void InGame()
     {
         // Não desenhar se não estiver em jogo
         if (Tools.CurrentWindow != Tools.Windows.Game) return;
@@ -263,6 +265,9 @@ partial class Graphics
         Map_Weather();
         Map_Fog();
         Map_Name();
+
+        // Desenha os membros da party
+        Player_Party();
     }
 
     #region Tools
@@ -285,7 +290,7 @@ partial class Graphics
             }
     }
 
-    public static void Button(Buttons.Structure Tool)
+    private static void Button(Buttons.Structure Tool)
     {
         byte Alpha = 225;
 
@@ -300,13 +305,13 @@ partial class Graphics
         Render(Tex_Button[Tool.Texture_Num], Tool.Position, new SFML.Graphics.Color(255, 255, 225, Alpha));
     }
 
-    public static void Panel(Panels.Structure Tool)
+    private static void Panel(Panels.Structure Tool)
     {
         // Desenha o painel
         Render(Tex_Panel[Tool.Texture_Num], Tool.Position);
     }
 
-    public static void CheckBox(CheckBoxes.Structure Tool)
+    private static void CheckBox(CheckBoxes.Structure Tool)
     {
         // Define as propriedades dos retângulos
         Rectangle Rec_Source = new Rectangle(new Point(), new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height));
@@ -320,7 +325,7 @@ partial class Graphics
         DrawText(Tool.Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + CheckBoxes.Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
     }
 
-    public static void TextBox(TextBoxes.Structure Tool)
+    private static void TextBox(TextBoxes.Structure Tool)
     {
         Point Position = Tool.Position;
         string Text = Tool.Text;
@@ -342,7 +347,7 @@ partial class Graphics
     }
     #endregion
 
-    public static void Interface_Specific(Tools.Structure Tool)
+    private static void Interface_Specific(Tools.Structure Tool)
     {
         // Interações especificas
         if (!(Tool is Panels.Structure)) return;
@@ -358,7 +363,7 @@ partial class Graphics
         }
     }
 
-    public static void SelectCharacter_Class()
+    private static void SelectCharacter_Class()
     {
         Point Text_Position = new Point(399, 425);
         string Text = "(" + Game.SelectCharacter + ") None";
@@ -393,7 +398,7 @@ partial class Graphics
         DrawText(Text, Text_Position.X - Tools.MeasureString(Text) / 2, Text_Position.Y, SFML.Graphics.Color.White);
     }
 
-    public static void CreateCharacter_Class()
+    private static void CreateCharacter_Class()
     {
         short Texture_Num = 0;
         Lists.Structures.Class Class = Lists.Class[Game.CreateCharacter_Class];
@@ -419,7 +424,7 @@ partial class Graphics
         DrawText(Class.Description, 282, 526, SFML.Graphics.Color.White, 123);
     }
 
-    public static void Game_Hotbar(Panels.Structure Tool)
+    private static void Game_Hotbar(Panels.Structure Tool)
     {
         string Indicator = string.Empty;
         Point Panel_Position = Tool.Position;
@@ -464,7 +469,7 @@ partial class Graphics
         if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
 
-    public static void Game_Menu_Character(Panels.Structure Tool)
+    private static void Game_Menu_Character(Panels.Structure Tool)
     {
         Point Panel_Position = Tool.Position;
         Game.Need_Information &= ~(1 << 1);
@@ -504,7 +509,7 @@ partial class Graphics
         if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
 
-    public static void Game_Menu_Inventory(Panels.Structure Tool)
+    private static void Game_Menu_Inventory(Panels.Structure Tool)
     {
         byte NumColumns = 5;
         Point Panel_Position = Tool.Position;
@@ -537,7 +542,7 @@ partial class Graphics
         if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
 
-    public static void Panel_Informations()
+    private static void Panel_Informations()
     {
         short Item_Num = Game.Infomation_Index;
         SFML.Graphics.Color Text_Color;
@@ -591,7 +596,7 @@ partial class Graphics
         }
     }
 
-    public static void Game_Bars()
+    private static void Game_Bars()
     {
         decimal HP_Percentage = Player.Me.Vital[(byte)Game.Vitals.HP] / (decimal)Player.Me.Max_Vital[(byte)Game.Vitals.HP];
         decimal MP_Percentage = Player.Me.Vital[(byte)Game.Vitals.MP] / (decimal)Player.Me.Max_Vital[(byte)Game.Vitals.MP];
@@ -611,10 +616,10 @@ partial class Graphics
         DrawText(Player.Me.Vital[(byte)Game.Vitals.HP] + "/" + Player.Me.Max_Vital[(byte)Game.Vitals.HP], 70, 15, SFML.Graphics.Color.White);
         DrawText(Player.Me.Vital[(byte)Game.Vitals.MP] + "/" + Player.Me.Max_Vital[(byte)Game.Vitals.MP], 70, 33, SFML.Graphics.Color.White);
         DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, 70, 51, SFML.Graphics.Color.White);
-        DrawText("Position: " + Player.Me.X + "/" + Player.Me.Y, 8, 93, SFML.Graphics.Color.White);
+        DrawText("Position: " + Player.Me.X + "/" + Player.Me.Y, 176, 31, SFML.Graphics.Color.White);
     }
 
-    public static void Game_Chat()
+    private static void Game_Chat()
     {
         Panels.Structure Tool = Panels.Get("Chat");
         Tool.Visible = TextBoxes.Focused != null && ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
@@ -629,10 +634,10 @@ partial class Graphics
         if (!Tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.Get("Chat").Position.X + 5, TextBoxes.Get("Chat").Position.Y + 3, SFML.Graphics.Color.White);
     }
 
-    public static void Character(short Textura, Point Position, Game.Directions Direction, byte Column, bool Hurt = false)
+    private static void Character(short Texture_Num, Point Position, Game.Directions Direction, byte Column, bool Hurt = false)
     {
         Rectangle Rec_Source = new Rectangle(), Rec_Destiny;
-        Size Size = TSize(Tex_Character[Textura]);
+        Size Size = TSize(Tex_Character[Texture_Num]);
         SFML.Graphics.Color Color = new SFML.Graphics.Color(255, 255, 255);
         byte Line = 0;
 
@@ -657,6 +662,25 @@ partial class Graphics
 
         // Desenha o personagem e sua sombra
         Render(Tex_Shadow, Rec_Destiny.Location.X, Rec_Destiny.Location.Y + Size.Height / Game.Animation_Amount - TSize(Tex_Shadow).Height + 5, 0, 0, Size.Width / Game.Animation_Amount, TSize(Tex_Shadow).Height);
-        Render(Tex_Character[Textura], Rec_Source, Rec_Destiny, Color);
+        Render(Tex_Character[Texture_Num], Rec_Source, Rec_Destiny, Color);
+    }
+
+    private static void Player_Party()
+    {
+        Player.Me.Party = new short[] { 1, 1 ,1,1};
+
+        for (byte i = 0; i < Player.Me.Party.Length; i++)
+        {
+            Lists.Structures.Player Member = Lists.Player[Player.Me.Party[i]];
+
+            // Barras do membro
+            Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 0, 82, 8); // HP Cinza
+            Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 0, 82, 8); // MP Cinza
+            Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 8, (Member.Vital[(byte)Game.Vitals.HP] * 82) / Member.Max_Vital[(byte)Game.Vitals.HP], 8); // HP 
+            Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 16, (Member.Vital[(byte)Game.Vitals.MP] * 82) / Member.Max_Vital[(byte)Game.Vitals.MP], 8); // MP 
+
+            // Nome do membro
+            DrawText(Lists.Player[Player.Me.Party[i]].Name, 10, 79 + (27 * i), SFML.Graphics.Color.White);
+        }
     }
 }

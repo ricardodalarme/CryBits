@@ -250,8 +250,8 @@ partial class Receive
         Lists.Map.Fog.Speed_X = Data.ReadSByte();
         Lists.Map.Fog.Speed_Y = Data.ReadSByte();
         Lists.Map.Fog.Alpha = Data.ReadByte();
-        Data.ReadByte(); // Light global
-        Data.ReadByte(); // lighting
+        Data.ReadByte(); // Luz global
+        Data.ReadByte(); // Iluminação
 
         // Ligações
         Lists.Map.Link = new short[(byte)Game.Directions.Count];
