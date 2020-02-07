@@ -360,6 +360,7 @@ partial class Graphics
             case "Menu_Inventory": Game_Menu_Inventory((Panels.Structure)Tool); break;
             case "Bars": Game_Bars(); break;
             case "Information": Panel_Informations(); break;
+            case "Party_Invitation": Party_Invitation((Panels.Structure)Tool); break;
         }
     }
 
@@ -665,10 +666,13 @@ partial class Graphics
         Render(Tex_Character[Texture_Num], Rec_Source, Rec_Destiny, Color);
     }
 
+    private static void Party_Invitation(Panels.Structure Tool)
+    {
+        DrawText(Game.Party_Invitation + " has invite you to a party.  Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+    }
+
     private static void Player_Party()
     {
-        Player.Me.Party = new short[] { 1, 1 ,1,1};
-
         for (byte i = 0; i < Player.Me.Party.Length; i++)
         {
             Lists.Structures.Player Member = Lists.Player[Player.Me.Party[i]];
@@ -676,8 +680,8 @@ partial class Graphics
             // Barras do membro
             Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 0, 82, 8); // HP Cinza
             Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 0, 82, 8); // MP Cinza
-            Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 8, (Member.Vital[(byte)Game.Vitals.HP] * 82) / Member.Max_Vital[(byte)Game.Vitals.HP], 8); // HP 
-            Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 16, (Member.Vital[(byte)Game.Vitals.MP] * 82) / Member.Max_Vital[(byte)Game.Vitals.MP], 8); // MP 
+            if (Member.Vital[(byte)Game.Vitals.HP] > 0) Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 8, (Member.Vital[(byte)Game.Vitals.HP] * 82) / Member.Max_Vital[(byte)Game.Vitals.HP], 8); // HP 
+            if (Member.Vital[(byte)Game.Vitals.MP] > 0) Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 16, (Member.Vital[(byte)Game.Vitals.MP] * 82) / Member.Max_Vital[(byte)Game.Vitals.MP], 8); // MP 
 
             // Nome do membro
             DrawText(Lists.Player[Player.Me.Party[i]].Name, 10, 79 + (27 * i), SFML.Graphics.Color.White);

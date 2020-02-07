@@ -7,7 +7,7 @@ class Player
     public static Character_Structure Character(byte Index)
     {
         // Retorna com os valores do personagem atual
-        return Lists.Player[Index].Character[Lists.TempPlayer[Index].Using];
+        return Lists.Player[Index].Character[Lists.Temp_Player[Index].Using];
     }
 
     public class Character_Structure
@@ -31,7 +31,7 @@ class Player
         public Lists.Structures.Inventories[] Inventory;
         public short[] Equipment;
         public Lists.Structures.Hotbar[] Hotbar;
-        public List<short> Party;
+        public List<byte> Party;
 
         public short Experience
         {
@@ -115,7 +115,7 @@ class Player
             return;
 
         // Define que o jogador está dentro do jogo
-        Lists.TempPlayer[Index].Playing = true;
+        Lists.Temp_Player[Index].Playing = true;
 
         // Envia todos os dados necessários
         Send.Join(Index);
@@ -137,8 +137,12 @@ class Player
 
     public static void Leave(byte Index)
     {
+        // Sai do grupo
+        if (Lists.Temp_Player[Index].Playing)
+            Party_Leave(Index);
+
         // Salva os dados do e envia atualiza os demais jogadores da desconexão
-        if (!Lists.TempPlayer[Index].InEditor)
+        if (!Lists.Temp_Player[Index].InEditor)
         {
             Write.Player(Index);
             Send.Player_Leave(Index);
@@ -152,7 +156,7 @@ class Player
     {
         // Verifica se o jogador está dentro do jogo
         if (Socket.IsConnected(Index))
-            if (Lists.TempPlayer[Index].Playing)
+            if (Lists.Temp_Player[Index].Playing)
                 return true;
 
         return false;
@@ -220,7 +224,7 @@ class Player
 
         // Previne erros
         if (Movimento < 1 || Movimento > 2) return;
-        if (Lists.TempPlayer[Index].GettingMap) return;
+        if (Lists.Temp_Player[Index].GettingMap) return;
 
         // Próximo azulejo
         Map.NextTile(Character(Index).Direction, ref Next_X, ref Next_Y);
@@ -295,7 +299,7 @@ class Player
         Send.Player_Position(Index);
 
         // Atualiza os valores
-        Lists.TempPlayer[Index].GettingMap = true;
+        Lists.Temp_Player[Index].GettingMap = true;
 
         // Verifica se será necessário enviar os dados do mapa para o jogador
         Send.Map_Revision(Index, Map);
@@ -345,7 +349,7 @@ class Player
 
         // Verifica se a vítima pode ser atacada
         if (!IsPlaying(Victim)) return;
-        if (Lists.TempPlayer[Victim].GettingMap) return;
+        if (Lists.Temp_Player[Victim].GettingMap) return;
         if (Character(Index).Map != Character(Victim).Map) return;
         if (Character(Victim).X != x || Character(Victim).Y != y) return;
         if (Lists.Map[Character(Index).Map].Moral == (byte)Map.Morals.Pacific)
@@ -402,7 +406,7 @@ class Player
 
         // Mensagem
         if (Map_NPC.Target_Index != Index) Send.Message(Index, Lists.NPC[Map_NPC.Index].Name + ": " + Lists.NPC[Map_NPC.Index].SayMsg, Color.White);
-        
+
         // Não executa o combate com um NPC amigavel
         if (Lists.NPC[Map_NPC.Index].Behaviour == (byte)global::NPC.Behaviour.Friendly) return;
 
@@ -658,5 +662,23 @@ class Player
                 return i;
 
         return 0;
+    }
+
+    public static void Party_Leave(byte Index)
+    {
+        // Desfaz o grupo caso só tiver mais um membro
+        if (Character(Index).Party.Count == 1)
+        {
+            Character(Character(Index).Party[0]).Party.Clear();
+            Character(Index).Party.Clear();
+        }
+        // Retira o jogador do grupo
+        else
+            for (byte i = 0; i < Character(Index).Party.Count; i++)
+                Character(Character(Index).Party[i]).Party.Remove(Index);
+
+        // Envia o dados para todos os membros do grupo
+        Send.Party(Index);
+        for (byte i = 0; i < Character(Index).Party.Count; i++) Send.Party(Character(Index).Party[i]);
     }
 }

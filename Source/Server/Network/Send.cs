@@ -110,7 +110,7 @@ class Send
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.Alert);
+        if (Lists.Temp_Player[Index].InEditor) Data.Write((byte)Editor_Packets.Alert);
         else Data.Write((byte)Client_Packets.Alert);
         Data.Write(Message);
         ToPlayer(Index, Data);
@@ -134,7 +134,7 @@ class Send
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.Connect);
+        if (Lists.Temp_Player[Index].InEditor) Data.Write((byte)Editor_Packets.Connect);
         else Data.Write((byte)Client_Packets.Connect);
         Data.Write(Index);
         ToPlayer(Index, Data);
@@ -186,7 +186,7 @@ class Send
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.Classes);
+        if (Lists.Temp_Player[Index].InEditor) Data.Write((byte)Editor_Packets.Classes);
         else Data.Write((byte)Client_Packets.Classes);
         Data.Write(Lists.Server_Data.Num_Classes);
 
@@ -201,7 +201,7 @@ class Send
             for (byte t = 0; t < Lists.Class[i].Tex_Female.Length; t++) Data.Write(Lists.Class[i].Tex_Female[t]);
 
             // Apenas dados do editor
-            if (Lists.TempPlayer[Index].InEditor)
+            if (Lists.Temp_Player[Index].InEditor)
             {
                 Data.Write(Lists.Class[i].Spawn_Map);
                 Data.Write(Lists.Class[i].Spawn_Direction);
@@ -415,7 +415,7 @@ class Send
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.Map);
+        if (Lists.Temp_Player[Index].InEditor) Data.Write((byte)Editor_Packets.Map);
         else Data.Write((byte)Client_Packets.Map);
         Data.Write(Map_Num);
         Data.Write(Lists.Map[Map_Num].Revision);
@@ -577,7 +577,7 @@ class Send
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.Items);
+        if (Lists.Temp_Player[Index].InEditor) Data.Write((byte)Editor_Packets.Items);
         else Data.Write((byte)Client_Packets.Items);
         Data.Write((short)Lists.Item.GetUpperBound(0));
         for (short i = 1; i < Lists.Item.Length; i++)
@@ -673,7 +673,7 @@ class Send
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        if (Lists.TempPlayer[Index].InEditor) Data.Write((byte)Editor_Packets.NPCs);
+        if (Lists.Temp_Player[Index].InEditor) Data.Write((byte)Editor_Packets.NPCs);
         else Data.Write((byte)Client_Packets.NPCs);
         Data.Write((short)Lists.NPC.GetUpperBound(0));
         for (byte i = 1; i < Lists.NPC.Length; i++)
@@ -686,7 +686,7 @@ class Send
             for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.NPC[i].Vital[n]);
 
             // Dados apenas do editor
-            if (Lists.TempPlayer[Index].InEditor)
+            if (Lists.Temp_Player[Index].InEditor)
             {
                 Data.Write(Lists.NPC[i].SpawnTime);
                 Data.Write(Lists.NPC[i].Sight);
@@ -848,15 +848,18 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Party);
+        Data.Write((byte)Player.Character(Index).Party.Count);
+        for (byte i = 0; i < Player.Character(Index).Party.Count; i++) Data.Write(Player.Character(Index).Party[i]);
         ToPlayer(Index, Data);
     }
 
-    public static void Party_Invitation(byte Index)
+    public static void Party_Invitation(byte Index, string Player_Invitation)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Party_Invitation);
+        Data.Write(Player_Invitation);
         ToPlayer(Index, Data);
     }
 }

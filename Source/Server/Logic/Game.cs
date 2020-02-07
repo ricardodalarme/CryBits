@@ -24,7 +24,7 @@ class Game
     public const byte Max_Hotbar = 10;
     public const byte Min_Map_Width = 24;
     public const byte Min_Map_Height = 18;
-
+    public const byte Max_Party_Members = 3;
 
     #region Nums
     public enum Directions

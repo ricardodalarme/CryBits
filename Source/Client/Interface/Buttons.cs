@@ -397,6 +397,7 @@ class Buttons
     private static void Party_No()
     {
         // Fecha o painel
+        Send.Party_Decline();
         Panels.Get("Party_Invitation").Visible = false;
     }
 }

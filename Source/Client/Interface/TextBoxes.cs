@@ -150,33 +150,45 @@ class TextBoxes
             return;
         }
 
+        // Limpa a caixa de texto
+        Tool.Text = string.Empty;
+
         // Separa as mensagens em partes
         string[] Parts = Message.Split(' ');
 
-        // Global
-        if (Message.Substring(0, 1) == "'")
-            Send.Message(Message.Substring(1), Game.Messages.Global);
-        // Particular
-        else if (Message.Substring(0, 1) == "!")
+        // Comandos
+        switch (Parts[0].ToLower())
         {
-            // Previne erros 
-            if (Parts.GetUpperBound(0) < 1)
-                Tools.Chat_Add("Use: '!' + Addressee + 'Message'", SFML.Graphics.Color.White);
-            else
-            {
-                // Dados
-                string Destiny = Message.Substring(1, Parts[0].Length - 1);
-                Message = Message.Substring(Parts[0].Length + 1);
+            case "/party":
+                if (Parts.Length > 1) Send.Party_Invite(Parts[1]);
+                break;
+            case "/partyleave":
+                Send.Party_Leave();
+                break;
+            default:
+                // Mensagem lobal
+                if (Message.Substring(0, 1) == "'")
+                    Send.Message(Message.Substring(1), Game.Messages.Global);
+                // Mensagem particular
+                else if (Message.Substring(0, 1) == "!")
+                {
+                    // Previne erros 
+                    if (Parts.GetUpperBound(0) < 1)
+                        Tools.Chat_Add("Use: '!' + Addressee + 'Message'", SFML.Graphics.Color.White);
+                    else
+                    {
+                        // Dados
+                        string Destiny = Message.Substring(1, Parts[0].Length - 1);
+                        Message = Message.Substring(Parts[0].Length + 1);
 
-                // Envia a mensagem
-                Send.Message(Message, Game.Messages.Private, Destiny);
-            }
+                        // Envia a mensagem
+                        Send.Message(Message, Game.Messages.Private, Destiny);
+                    }
+                }
+                // Mensagem mapa
+                else
+                    Send.Message(Message, Game.Messages.Map);
+                break;
         }
-        // Mapa
-        else
-            Send.Message(Message, Game.Messages.Map);
-
-        // Limpa a caixa de texto
-        Tool.Text = string.Empty;
     }
 }

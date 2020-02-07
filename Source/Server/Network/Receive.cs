@@ -29,6 +29,7 @@ class Receive
         Hotbar_Use,
         Party_Invite,
         Party_Leave,
+        Party_Decline,
         Party_Accept
     }
 
@@ -57,7 +58,7 @@ class Receive
 
         // Pacote principal de conexão
         if (Packet_Num == 0) Connect(Index, Data);
-        else if (!Lists.TempPlayer[Index].InEditor)
+        else if (!Lists.Temp_Player[Index].InEditor)
             // Manuseia os dados recebidos do cliente
             switch ((Client_Packets)Packet_Num)
             {
@@ -83,6 +84,7 @@ class Receive
                 case Client_Packets.Hotbar_Use: Hotbar_Use(Index, Data); break;
                 case Client_Packets.Party_Invite: Party_Invite(Index, Data); break;
                 case Client_Packets.Party_Accept: Party_Accept(Index); break;
+                case Client_Packets.Party_Decline: Party_Decline(Index); break;
                 case Client_Packets.Party_Leave: Party_Leave(Index); break;
             }
         else
@@ -149,7 +151,7 @@ class Receive
             }
 
             // Abre a janela de edição
-            Lists.TempPlayer[Index].InEditor = true;
+            Lists.Temp_Player[Index].InEditor = true;
             Send.Connect(Index);
         }
         else
@@ -228,7 +230,7 @@ class Receive
         }
 
         // Define o personagem que será usado
-        Lists.TempPlayer[Index].Using = Character;
+        Lists.Temp_Player[Index].Using = Character;
 
         // Define os valores iniciais do personagem
         Player.Character(Index).Name = Name;
@@ -263,7 +265,7 @@ class Receive
     private static void Character_Use(byte Index, NetIncomingMessage Data)
     {
         // Define o personagem que será usado
-        Lists.TempPlayer[Index].Using = Data.ReadByte();
+        Lists.Temp_Player[Index].Using = Data.ReadByte();
 
         // Entra no jogo
         Player.Join(Index);
@@ -307,7 +309,7 @@ class Receive
 
         // Previne erros
         if (Direction < Game.Directions.Up || Direction > Game.Directions.Right) return;
-        if (Lists.TempPlayer[Index].GettingMap) return;
+        if (Lists.Temp_Player[Index].GettingMap) return;
 
         // Defini a direção do jogador
         Player.Character(Index).Direction = Direction;
@@ -334,7 +336,7 @@ class Receive
         Send.Map_Players(Index);
 
         // Entra no mapa
-        Lists.TempPlayer[Index].GettingMap = false;
+        Lists.Temp_Player[Index].GettingMap = false;
         Send.JoinMap(Index);
     }
 
@@ -738,7 +740,7 @@ class Receive
             // Envia o mapa para todos os jogadores que estão nele
             for (byte n = 1; n <= Game.HigherIndex; n++)
                 if (n != Index)
-                    if (Player.Character(n).Map == i || Lists.TempPlayer[n].InEditor) Send.Map(n, i);
+                    if (Player.Character(n).Map == i || Lists.Temp_Player[n].InEditor) Send.Map(n, i);
         }
 
         // Salva os dados
@@ -874,13 +876,98 @@ class Receive
 
     private static void Party_Invite(byte Index, NetIncomingMessage Data)
     {
+        string Name = Data.ReadString();
+
+        // Encontra o jogador
+        byte Invited = Player.Find(Name);
+
+        // Verifica se o jogador está convectado
+        if (Invited == 0)
+        {
+            Send.Message(Index, "The player ins't connected.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se não está tentando se convidar
+        if (Invited == Index)
+        {
+            Send.Message(Index, "You can't be invited.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se já tem um grupo
+        if (Player.Character(Index).Party.Count != 0)
+        {
+            Send.Message(Index, "The player is already part of a party.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se o jogador já está analisando um convite para algum grupo
+        if (!string.IsNullOrEmpty(Lists.Temp_Player[Index].Party_Invitation))
+        {
+            Send.Message(Index, "The player is analyzing an invitation to another party.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se o grupo está cheio
+        if (Player.Character(Index).Party.Count == Game.Max_Party_Members - 1)
+        {
+            Send.Message(Index, "Your party is full.", System.Drawing.Color.White);
+            return;
+        }
+
+        // Convida o jogador
+        Lists.Temp_Player[Invited].Party_Invitation = Player.Character(Index).Name;
+        Send.Party_Invitation(Invited, Player.Character(Index).Name);
     }
 
     private static void Party_Accept(byte Index)
     {
+        byte Invitation = Player.Find(Lists.Temp_Player[Index].Party_Invitation);
+
+        // Verifica se já tem um grupo
+        if (Player.Character(Index).Party.Count != 0)
+        {
+            Send.Message(Index, "You are already part of a party.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se quem chamou ainda está disponível
+        if (Invitation == 0)
+        {
+            Send.Message(Index, "Who invited you is no longer avaliable.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se o grupo está cheio
+        if (Player.Character(Invitation).Party.Count == Game.Max_Party_Members - 1)
+        {
+            Send.Message(Index, "The party is full.", System.Drawing.Color.White);
+            return;
+        }
+
+        // Entra na festa
+        for (byte i = 0; i < Player.Character(Invitation).Party.Count; i++)
+        {
+            Player.Character(Player.Character(Invitation).Party[i]).Party.Add(Index);
+            Player.Character(Index).Party.Add(Player.Character(Invitation).Party[i]);
+        }
+        Player.Character(Index).Party.Insert(0, Invitation);
+        Player.Character(Invitation).Party.Add(Index);
+        Lists.Temp_Player[Index].Party_Invitation = string.Empty;
+        Send.Message(Invitation, Player.Character(Index).Name + " joined the party.", System.Drawing.Color.White);
+
+        // Envia os dados para o grupo
+        Send.Party(Index);
+        for (byte i = 0; i < Player.Character(Index).Party.Count; i++) Send.Party(Player.Character(Index).Party[i]);
+    }
+
+    private static void Party_Decline(byte Index)
+    {
+        byte Invitation = Player.Find(Lists.Temp_Player[Index].Party_Invitation);
+
+        // Recusa o convite
+        if (Invitation != 0) Send.Message(Invitation, Player.Character(Index).Name + " joined the party.", System.Drawing.Color.White);
+        Lists.Temp_Player[Index].Party_Invitation = string.Empty;
     }
 
     private static void Party_Leave(byte Index)
     {
+        // Sai do grupo
+        Player.Party_Leave(Index);
     }
 }

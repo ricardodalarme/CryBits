@@ -42,7 +42,6 @@ partial class Receive
         Map_NPC_Died,
         Items,
         Map_Items,
-        Blood,
         Party,
         Party_Invitation
     }
@@ -187,6 +186,7 @@ partial class Receive
         CheckBoxes.Get("Options_Chat").Checked = Tools.Chat_Text_Visible = Lists.Options.Chat;
         Game.Need_Information = 0;
         Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
+        Player.Me.Party = new byte[0];
 
         // Fecha os paineis 
         Panels.Get("Menu_Character").Visible = false;
@@ -408,13 +408,14 @@ partial class Receive
     private static void Party(NetIncomingMessage Data)
     {
         // Lê os dados do grupo
-        Player.Me.Party = new short[Data.ReadByte()];
+        Player.Me.Party = new byte[Data.ReadByte()];
         for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Data.ReadByte();
     }
     
     private static void Party_Invitation(NetIncomingMessage Data)
     {
         // Abre a janela de convite para o grupo
+        Game.Party_Invitation = Data.ReadString();
         Panels.Get("Party_Invitation").Visible = true;
     }
 }

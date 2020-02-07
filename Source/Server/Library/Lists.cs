@@ -6,7 +6,7 @@ class Lists
     // Armazenamento de dados
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
     public static Structures.Player[] Player;
-    public static Structures.TempPlayer[] TempPlayer;
+    public static Structures.TempPlayer[] Temp_Player;
     public static Structures.Class[] Class;
     public static Structures.Map[] Map;
     public static Structures.Temp_Map[] Temp_Map;
@@ -46,6 +46,7 @@ class Lists
             public byte Using;
             public bool GettingMap;
             public bool InEditor;
+            public string Party_Invitation;
         }
 
         [Serializable]

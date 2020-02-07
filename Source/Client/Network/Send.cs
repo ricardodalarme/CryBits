@@ -28,6 +28,7 @@ partial class Send
         Hotbar_Change,
         Hotbar_Use,
         Party_Invite,
+        Party_Decline,
         Party_Leave,
         Party_Accept
     }
@@ -256,6 +257,15 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Party_Accept);
+        Packet(Data);
+    }
+
+    public static void Party_Decline()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Party_Decline);
         Packet(Data);
     }
 
