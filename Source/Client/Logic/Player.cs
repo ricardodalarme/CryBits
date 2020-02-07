@@ -356,9 +356,15 @@ partial class Receive
         // Sofrendo dano
         if (Victim > 0)
             if (Victim_Type == (byte)Game.Target.Player)
+            {
                 Lists.Player[Victim].Hurt = Environment.TickCount;
+                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Player[Victim].X, Lists.Player[Victim].Y, Environment.TickCount));
+            }
             else if (Victim_Type == (byte)Game.Target.NPC)
+            {
                 Lists.Temp_Map.NPC[Victim].Hurt = Environment.TickCount;
+                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Temp_Map.NPC[Victim].X, Lists.Temp_Map.NPC[Victim].Y, Environment.TickCount));
+            }
     }
 
     public static void Player_Experience(NetIncomingMessage Data)

@@ -4,7 +4,7 @@ using System.IO;
 class Receive
 {
     // Pacotes do cliente
-    public enum Client_Packets
+    private enum Client_Packets
     {
         Connect,
         Latency,
@@ -30,7 +30,7 @@ class Receive
     }
 
     // Pacotes do editor
-    public enum Editor_Packets
+    private enum Editor_Packets
     {
         Connect,
         Write_Server_Data,

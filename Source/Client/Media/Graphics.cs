@@ -240,6 +240,7 @@ partial class Graphics
         // Desenhos abaixo do jogador
         Map_Panorama();
         Map_Tiles((byte)Map.Layers.Ground);
+        Map_Blood();
         Map_Items();
 
         // Desenha os NPCs

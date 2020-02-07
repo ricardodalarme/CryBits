@@ -309,14 +309,15 @@ class NPC
         // Tempo de ataque 
         Lists.Temp_Map[Map_Num].NPC[Index].Attack_Timer = Environment.TickCount;
 
-        // Demonstra o ataque aos outros jogadores
-        Send.Map_NPC_Attack(Map_Num, Index, Victim, (byte)Game.Target.Player);
-
         // Cálculo de dano
         short Damage = (short)(Lists.NPC[Data.Index].Attribute[(byte)Game.Attributes.Strength] - Player.Character(Victim).Player_Defense);
 
         // Dano não fatal
         if (Damage > 0)
+        {
+            // Demonstra o ataque aos outros jogadores
+            Send.Map_NPC_Attack(Map_Num, Index, Victim, (byte)Game.Target.Player);
+
             if (Damage < Player.Character(Victim).Vital[(byte)Game.Vitals.HP])
             {
                 Player.Character(Victim).Vital[(byte)Game.Vitals.HP] -= Damage;
@@ -332,6 +333,12 @@ class NPC
                 // Mata o jogador
                 Player.Died(Victim);
             }
+        }
+        else
+        {
+            // Demonstra o ataque aos outros jogadores
+            Send.Map_NPC_Attack(Map_Num, Index);
+        }
     }
 
     public static void Died(short Map_Num, byte Index)

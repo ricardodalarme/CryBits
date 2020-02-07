@@ -6,7 +6,7 @@ using System.Windows.Forms;
 partial class Receive
 {
     // Pacotes do servidor
-    public enum Packets
+    private enum Packets
     {
         Alert,
         Connect,
@@ -49,7 +49,7 @@ partial class Receive
         Selection.Objects.Visible = true;
     }
 
-    public static void Server_Data(NetIncomingMessage Data)
+    private static void Server_Data(NetIncomingMessage Data)
     {
         // Lê os dados
         Lists.Server_Data.Game_Name = Data.ReadString();
@@ -62,7 +62,7 @@ partial class Receive
         if (Data.ReadBoolean()) Editor_Data.Open();
     }
 
-    public static void Classes(NetIncomingMessage Data)
+    private static void Classes(NetIncomingMessage Data)
     {
         // Quantidade de classes
         Lists.Class = new Lists.Structures.Class[Data.ReadByte() + 1];
@@ -97,13 +97,13 @@ partial class Receive
         if (Data.ReadBoolean()) Editor_Classes.Open();
     }
 
-    public static void Maps(NetIncomingMessage Data)
+    private static void Maps(NetIncomingMessage Data)
     {
         // Quantidade de mapas
         Lists.Map = new Lists.Structures.Map[Data.ReadInt16()];
     }
 
-    public static void Map(NetIncomingMessage Data)
+    private static void Map(NetIncomingMessage Data)
     {
         // Dados básicos
         short i = Data.ReadInt16();
@@ -199,7 +199,7 @@ partial class Receive
         if (Data.ReadBoolean()) Editor_Maps.Open();
     }
 
-    public static void NPCs(NetIncomingMessage Data)
+    private static void NPCs(NetIncomingMessage Data)
     {
         // Quantidade de nocs
         Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16() + 1];
@@ -235,7 +235,7 @@ partial class Receive
         if (Data.ReadBoolean()) Editor_NPCs.Open();
     }
 
-    public static void Items(NetIncomingMessage Data)
+    private static void Items(NetIncomingMessage Data)
     {
         // Quantidade de itens
         Lists.Item = new Lists.Structures.Item[Data.ReadInt16() + 1];
@@ -268,7 +268,7 @@ partial class Receive
         if (Data.ReadBoolean()) Editor_Items.Open();
     }
 
-    public static void Tiles(NetIncomingMessage Data)
+    private static void Tiles(NetIncomingMessage Data)
     {
         Lists.Tile = new Lists.Structures.Tile[Data.ReadByte()];
 

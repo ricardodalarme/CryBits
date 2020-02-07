@@ -58,9 +58,17 @@ class Map
 
     public static void Logic()
     {
+        // Somente se necessário
+        if (Tools.CurrentWindow != Tools.Windows.Game) return;
+
         // Toda a lógica do mapa
         Fog();
         Weather();
+
+        // Retira os sangues do chão depois de um determinado tempo
+        for (short i = 0; i < Lists.Temp_Map.Blood.Count; i++)
+            if (Lists.Temp_Map.Blood[i].Timer + 20000 < Environment.TickCount)
+                Lists.Temp_Map.Blood.RemoveAt(i);
     }
 
     public static void NextTile(Game.Directions Direction, ref short X, ref short Y)
@@ -693,6 +701,16 @@ partial class Graphics
             // Desenha o item
             Point Position = new Point(Game.ConvertX(Data.X * Game.Grid), Game.ConvertY(Data.Y * Game.Grid));
             Render(Tex_Item[Lists.Item[Data.Index].Texture], Position);
+        }
+    }
+
+    public static void Map_Blood()
+    {
+        // Desenha todos os sangues
+        for (byte i = 0; i < Lists.Temp_Map.Blood.Count; i++)
+        {
+            Lists.Structures.Map_Blood Data = Lists.Temp_Map.Blood[i];
+            Render(Tex_Blood, Game.ConvertX(Data.X * Game.Grid), Game.ConvertY(Data.Y * Game.Grid), Data.Texture_Num * 32, 0, 32, 32);
         }
     }
 }

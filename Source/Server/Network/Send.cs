@@ -558,7 +558,7 @@ class Send
         Message(Addressee, "[From] " + Player.Character(Index).Name + ": " + Texto, Color.Pink);
     }
 
-    public static void Player_Attack(byte Index, byte Victim, byte Victim_Type)
+    public static void Player_Attack(byte Index, byte Victim = 0, byte Victim_Type = 0)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -777,7 +777,7 @@ class Send
         ToMap(Map_Num, Data);
     }
 
-    public static void Map_NPC_Attack(short Map_Num, byte Index, byte Victim, byte Victim_Type)
+    public static void Map_NPC_Attack(short Map_Num, byte Index, byte Victim = 0, byte Victim_Type = 0)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

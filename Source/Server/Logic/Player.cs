@@ -352,8 +352,7 @@ class Player
             return;
         }
 
-        // Demonstra o ataque aos outros jogadores
-        Send.Player_Attack(Index, Victim, (byte)Game.Target.Player);
+
 
         // Tempo de ataque 
         Character(Index).Attack_Timer = Environment.TickCount;
@@ -363,6 +362,10 @@ class Player
 
         // Dano não fatal
         if (Damage > 0)
+        {
+            // Demonstra o ataque aos outros jogadores
+            Send.Player_Attack(Index, Victim, (byte)Game.Target.Player);
+
             if (Damage <= Character(Victim).MaxVital((byte)Game.Vitals.HP))
             {
                 Character(Victim).Vital[(byte)Game.Vitals.HP] -= Damage;
@@ -377,6 +380,10 @@ class Player
                 // Mata a vítima
                 Died(Victim);
             }
+        }
+        else
+            // Demonstra o ataque aos outros jogadores
+            Send.Player_Attack(Index);
     }
 
     public static void Attack_NPC(byte Index, byte Victim)
@@ -401,17 +408,20 @@ class Player
         Lists.Temp_Map[Character(Index).Map].NPC[Victim].Target_Index = Index;
         Lists.Temp_Map[Character(Index).Map].NPC[Victim].Target_Type = (byte)Game.Target.Player;
 
-        // Demonstra o ataque aos outros jogadores
-        Send.Player_Attack(Index, Victim, (byte)Game.Target.NPC);
-
         // Tempo de ataque 
         Character(Index).Attack_Timer = Environment.TickCount;
 
         // Cálculo de dano
         Damage = (short)(Character(Index).Damage - Lists.NPC[Map_NPC.Index].Attribute[(byte)Game.Attributes.Resistance]);
 
+        // Demonstra o ataque aos outros jogadores
+
         // Dano não fatal
         if (Damage > 0)
+        {
+            // Demonstra o ataque aos outros jogadores
+            Send.Player_Attack(Index, Victim, (byte)Game.Target.NPC);
+
             if (Damage < Map_NPC.Vital[(byte)Game.Vitals.HP])
             {
                 Lists.Temp_Map[Character(Index).Map].NPC[Victim].Vital[(byte)Game.Vitals.HP] -= Damage;
@@ -424,8 +434,12 @@ class Player
                 Character(Index).Experience += Lists.NPC[Map_NPC.Index].Experience;
 
                 // Reseta os dados do NPC 
-                global::NPC.Died(Character(Index).Map, Victim);
+                NPC.Died(Character(Index).Map, Victim);
             }
+        }
+        else
+            // Demonstra o ataque aos outros jogadores
+            Send.Player_Attack(Index);
     }
 
     public static void Died(byte Index)

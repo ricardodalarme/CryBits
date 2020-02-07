@@ -6,7 +6,7 @@ using System.Windows.Forms;
 partial class Receive
 {
     // Pacotes do servidor
-    public enum Packets
+    private enum Packets
     {
         Alert,
         Connect,
@@ -41,7 +41,8 @@ partial class Receive
         Map_NPC_Attack,
         Map_NPC_Died,
         Items,
-        Map_Items
+        Map_Items,
+        Blood
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -196,7 +197,7 @@ partial class Receive
         Player.HigherIndex = Data.ReadByte();
     }
 
-    public static void Map_Revision(NetIncomingMessage Data)
+    private static void Map_Revision(NetIncomingMessage Data)
     {
         bool Needed = false;
         short Map_Num = Data.ReadInt16();
@@ -218,9 +219,12 @@ partial class Receive
 
         // Solicita os dados do mapa
         Send.RequestMap(Needed);
+
+        // Reseta os sangues do mapa
+        Lists.Temp_Map.Blood = new System.Collections.Generic.List<Lists.Structures.Map_Blood>();
     }
 
-    public static void Map(NetIncomingMessage Data)
+    private static void Map(NetIncomingMessage Data)
     {
         // Define os dados
         short Map_Num = Data.ReadInt16();
@@ -323,7 +327,7 @@ partial class Receive
         global::Map.Autotile.Update();
     }
 
-    public static void JoinMap()
+    private static void JoinMap()
     {
         // Se tiver, reproduz a música de fundo do mapa
         if (Lists.Map.Music > 0)
@@ -332,13 +336,13 @@ partial class Receive
             Audio.Music.Stop();
     }
 
-    public static void Latency()
+    private static void Latency()
     {
         // Define a latência
         Game.Latency = Environment.TickCount - Game.Latency_Send;
     }
 
-    public static void Message(NetIncomingMessage Data)
+    private static void Message(NetIncomingMessage Data)
     {
         // Adiciona a mensagem
         string Text = Data.ReadString();
@@ -346,7 +350,7 @@ partial class Receive
         Tools.Chat_Add(Text, new SFML.Graphics.Color(Color.R, Color.G, Color.B));
     }
 
-    public static void Items(NetIncomingMessage Data)
+    private static void Items(NetIncomingMessage Data)
     {
         // Quantidade de itens
         Lists.Item = new Lists.Structures.Items[Data.ReadInt16() + 1];
@@ -376,7 +380,7 @@ partial class Receive
         }
     }
 
-    public static void Map_Items(NetIncomingMessage Data)
+    private static void Map_Items(NetIncomingMessage Data)
     {
         // Quantidade
         Lists.Temp_Map.Item = new Lists.Structures.Map_Items[Data.ReadInt16() + 1];

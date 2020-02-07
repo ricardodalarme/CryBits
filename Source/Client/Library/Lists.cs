@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 class Lists
 {
@@ -102,6 +103,7 @@ class Lists
         {
             public Map_NPCs[] NPC;
             public Map_Items[] Item;
+            public List<Map_Blood> Blood;
         }
 
         [Serializable]
@@ -156,7 +158,7 @@ class Lists
             public int Start;
             public bool Back;
         }
-        
+
         public struct NPCs
         {
             public string Name;
@@ -222,6 +224,24 @@ class Lists
         {
             public byte Type;
             public byte Slot;
+        }
+
+        public class Map_Blood
+        {
+            // Dados
+            public byte Texture_Num;
+            public short X;
+            public short Y;
+            public int Timer;
+
+            // Construtor
+            public Map_Blood(byte Texture_Num, short X, short Y, int Timer)
+            {
+                this.Texture_Num = Texture_Num;
+                this.X = X;
+                this.Y = Y;
+                this.Timer = Timer;
+            }
         }
     }
 }
