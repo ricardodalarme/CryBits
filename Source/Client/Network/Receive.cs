@@ -42,7 +42,9 @@ partial class Receive
         Map_NPC_Died,
         Items,
         Map_Items,
-        Blood
+        Blood,
+        Party,
+        Party_Invitation
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -84,6 +86,8 @@ partial class Receive
             case Packets.Map_NPC_Died: Map_NPC_Died(Data); break;
             case Packets.Items: Items(Data); break;
             case Packets.Map_Items: Map_Items(Data); break;
+            case Packets.Party: Party(Data); break;
+            case Packets.Party_Invitation: Party_Invitation(Data); break;
         }
     }
 
@@ -399,5 +403,18 @@ partial class Receive
             Lists.Temp_Map.Item[i].X = Data.ReadByte();
             Lists.Temp_Map.Item[i].Y = Data.ReadByte();
         }
+    }
+
+    private static void Party(NetIncomingMessage Data)
+    {
+        // Lê os dados do grupo
+        Player.Me.Party = new short[Data.ReadByte()];
+        for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Data.ReadByte();
+    }
+    
+    private static void Party_Invitation(NetIncomingMessage Data)
+    {
+        // Abre a janela de convite para o grupo
+        Panels.Get("Party_Invitation").Visible = true;
     }
 }

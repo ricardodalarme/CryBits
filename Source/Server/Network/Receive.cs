@@ -26,7 +26,10 @@ class Receive
         Equipment_Remove,
         Hotbar_Add,
         Hotbar_Change,
-        Hotbar_Use
+        Hotbar_Use,
+        Party_Invite,
+        Party_Leave,
+        Party_Accept
     }
 
     // Pacotes do editor
@@ -78,6 +81,9 @@ class Receive
                 case Client_Packets.Hotbar_Add: Hotbar_Add(Index, Data); break;
                 case Client_Packets.Hotbar_Change: Hotbar_Change(Index, Data); break;
                 case Client_Packets.Hotbar_Use: Hotbar_Use(Index, Data); break;
+                case Client_Packets.Party_Invite: Party_Invite(Index, Data); break;
+                case Client_Packets.Party_Accept: Party_Accept(Index); break;
+                case Client_Packets.Party_Leave: Party_Leave(Index); break;
             }
         else
             // Manuseia os dados recebidos do editor
@@ -566,7 +572,7 @@ class Receive
             // Lê os dados
             Lists.Class[i].Name = Data.ReadString();
             Lists.Class[i].Description = Data.ReadString();
-            for (byte t = 0; t < Lists.Class[i].Tex_Male.Length;t++) Lists.Class[i].Tex_Male[t] = Data.ReadInt16();
+            for (byte t = 0; t < Lists.Class[i].Tex_Male.Length; t++) Lists.Class[i].Tex_Male[t] = Data.ReadInt16();
             for (byte t = 0; t < Lists.Class[i].Tex_Female.Length; t++) Lists.Class[i].Tex_Female[t] = Data.ReadInt16();
             Lists.Class[i].Spawn_Map = Data.ReadInt16();
             Lists.Class[i].Spawn_Direction = Data.ReadByte();
@@ -864,5 +870,17 @@ class Receive
     private static void Request_Items(byte Index, NetIncomingMessage Data)
     {
         Send.Items(Index, Data.ReadBoolean());
+    }
+
+    private static void Party_Invite(byte Index, NetIncomingMessage Data)
+    {
+    }
+
+    private static void Party_Accept(byte Index)
+    {
+    }
+
+    private static void Party_Leave(byte Index)
+    {
     }
 }

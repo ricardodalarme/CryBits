@@ -116,6 +116,8 @@ class Buttons
             case "Menu_Options": Menu_Options(); break;
             case "Drop_Confirm": Drop_Confirm(); break;
             case "Drop_Cancel": Drop_Cancel(); break;
+            case "Party_Yes": Party_Yes(); break;
+            case "Party_No": Party_No(); break;
         }
     }
 
@@ -379,9 +381,22 @@ class Buttons
         Panels.Get("Drop").Visible = false;
     }
 
-    public static void Drop_Cancel()
+    private static void Drop_Cancel()
     {
         // Fecha o painel
         Panels.Get("Drop").Visible = false;
+    }
+
+    private static void Party_Yes()
+    {
+        // Aceita o grupo e fecha o painel
+        Send.Party_Accept();
+        Panels.Get("Party_Invitation").Visible = false;
+    }
+
+    private static void Party_No()
+    {
+        // Fecha o painel
+        Panels.Get("Party_Invitation").Visible = false;
     }
 }

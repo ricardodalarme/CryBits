@@ -40,6 +40,8 @@ class Send
         Map_NPC_Died,
         Items,
         Map_Items,
+        Party,
+        Party_Invitation
     }
 
     // Pacotes do servidor para o editor
@@ -194,7 +196,7 @@ class Send
             Data.Write(Lists.Class[i].Name);
             Data.Write(Lists.Class[i].Description);
             Data.Write((byte)Lists.Class[i].Tex_Male.Length);
-            for (byte t = 0; t < Lists.Class[i].Tex_Male.Length;t++) Data.Write(Lists.Class[i].Tex_Male[t]);
+            for (byte t = 0; t < Lists.Class[i].Tex_Male.Length; t++) Data.Write(Lists.Class[i].Tex_Male[t]);
             Data.Write((byte)Lists.Class[i].Tex_Female.Length);
             for (byte t = 0; t < Lists.Class[i].Tex_Female.Length; t++) Data.Write(Lists.Class[i].Tex_Female[t]);
 
@@ -837,6 +839,24 @@ class Send
         Data.Write(Lists.Server_Data.Max_Players);
         Data.Write(Lists.Server_Data.Max_Characters);
         Data.Write(OpenEdtior);
+        ToPlayer(Index, Data);
+    }
+
+    public static void Party(byte Index)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Client_Packets.Party);
+        ToPlayer(Index, Data);
+    }
+
+    public static void Party_Invitation(byte Index)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Client_Packets.Party_Invitation);
         ToPlayer(Index, Data);
     }
 }

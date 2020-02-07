@@ -26,7 +26,10 @@ partial class Send
         Equipment_Remove,
         Hotbar_Add,
         Hotbar_Change,
-        Hotbar_Use
+        Hotbar_Use,
+        Party_Invite,
+        Party_Leave,
+        Party_Accept
     }
 
     public static void Packet(NetOutgoingMessage Data)
@@ -235,5 +238,33 @@ partial class Send
 
         // Fecha o painel de soltar item
         Panels.Get("Drop").Visible = false;
+    }
+
+    public static void Party_Invite(string Player_Name)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Party_Invite);
+        Data.Write(Player_Name);
+        Packet(Data);
+    }
+
+    public static void Party_Accept()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Party_Accept);
+        Packet(Data);
+    }
+
+    public static void Party_Leave()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Party_Leave);
+        Packet(Data);
     }
 }

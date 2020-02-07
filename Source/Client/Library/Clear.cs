@@ -22,6 +22,7 @@
         Lists.Player[Index].Max_Vital = new short[(byte)Game.Vitals.Count];
         Lists.Player[Index].Attribute = new short[(byte)Game.Attributes.Count];
         Lists.Player[Index].Equipment = new short[(byte)Game.Equipments.Count];
+        Lists.Player[Index].Party = new short[0];
 
         // Reseta os valores
         Lists.Player[Index].Name = string.Empty;
