@@ -158,6 +158,10 @@ class Buttons
         // Termina a conexão
         Socket.Disconnect();
 
+        // Define as marcações corretas
+        CheckBoxes.Get("Sounds").Checked = Lists.Options.Sounds;
+        CheckBoxes.Get("Musics").Checked = Lists.Options.Musics;
+
         // Abre o painel
         Panels.Menu_Close();
         Panels.Get("Options").Visible = true;
@@ -219,7 +223,6 @@ class Buttons
         else
             Game.CreateCharacter_Class -= 1;
     }
-
 
     public static void CreateCharacter_Texture_ChangeRight()
     {

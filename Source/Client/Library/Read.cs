@@ -34,8 +34,6 @@ class Read
         }
 
         // Adiciona os dados ao cache
-        CheckBoxes.Get("Sounds").Checked = Lists.Options.Sounds;
-        CheckBoxes.Get("Musics").Checked = Lists.Options.Musics;
         CheckBoxes.Get("Connect_Save_Username").Checked = Lists.Options.SaveUsername;
         if (Lists.Options.SaveUsername) TextBoxes.Get("Connect_Username").Text = Lists.Options.Username;
     }

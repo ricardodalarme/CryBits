@@ -5,7 +5,7 @@ class Loop
 {
     // Contagens
     private static int TextBox_Timer = 0;
-    private static int Chat_Timer = 0;
+    public static int Chat_Timer = 0;
 
     public static void Main()
     {
@@ -77,7 +77,7 @@ class Loop
             if (Chat_Timer < Environment.TickCount)
                 Tools.Chat_Text_Visible = false;
         }
-        else if (!CheckBoxes.Get("Options_Chat").Checked)
+        else if (!Lists.Options.Chat)
             Chat_Timer = Chat_Timer = Environment.TickCount + 10000;
     }
 }

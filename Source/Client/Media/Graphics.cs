@@ -620,7 +620,7 @@ partial class Graphics
         Tool.Visible = TextBoxes.Focused != null && ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
 
         // Renderiza as mensagens
-        if (Tool.Visible || (Tools.Chat_Text_Visible && CheckBoxes.Get("Options_Chat").Checked))
+        if (Tool.Visible || (Tools.Chat_Text_Visible && Lists.Options.Chat))
             for (byte i = Tools.Chat_Line; i <= Tools.Chat_Lines_Visible + Tools.Chat_Line; i++)
                 if (Tools.Chat.Count > i)
                     DrawText(Tools.Chat[i].Text, 16, 461 + 11 * (i - Tools.Chat_Line), Tools.Chat[i].Color);

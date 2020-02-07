@@ -178,13 +178,19 @@ partial class Receive
         Tools.Chat = new System.Collections.Generic.List<Tools.Chat_Structure>();
         Tools.Chat_Line = 0;
         TextBoxes.Get("Chat").Text = string.Empty;
-        Panels.Get("Chat").Visible = false;
         CheckBoxes.Get("Options_Sounds").Checked = Lists.Options.Sounds;
-        CheckBoxes.Get("Options_Music").Checked = Lists.Options.Musics;
+        CheckBoxes.Get("Options_Musics").Checked = Lists.Options.Musics;
+        CheckBoxes.Get("Options_Chat").Checked = Tools.Chat_Text_Visible = Lists.Options.Chat;
         Game.Need_Information = 0;
+        Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
 
         // Fecha os paineis 
+        Panels.Get("Menu_Character").Visible = false;
+        Panels.Get("Menu_Inventory").Visible = false;
+        Panels.Get("Menu_Options").Visible = false;
+        Panels.Get("Chat").Visible = false;
         Panels.Get("Drop").Visible = false;
+        Panels.Get("Party_Invitation").Visible = false;
 
         // Abre o jogo
         Audio.Music.Stop();
