@@ -181,7 +181,7 @@ partial class Graphics
     public static void Init()
     {
         // Inicia a janela
-        RenderWindow = new RenderWindow(new VideoMode(800, 608), Lists.Options.GameName,Styles.Close);
+        RenderWindow = new RenderWindow(new VideoMode(800, 608), Lists.Options.Game_Name,Styles.Close);
         RenderWindow.Closed += new EventHandler(Window.OnClosed);
         RenderWindow.MouseButtonPressed += new EventHandler< MouseButtonEventArgs>(Window.OnMouseButtonPressed);
         RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Window.OnMouseMoved);

@@ -20,7 +20,7 @@ class Lists
     {
         public struct Options
         {
-            public string GameName;
+            public string Game_Name;
             public bool SaveUsername;
             public bool Sounds;
             public bool Musics;

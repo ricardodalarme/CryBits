@@ -9,7 +9,7 @@ class Write
         BinaryWriter Data = new BinaryWriter(File.OpenWrite(Directories.Options.FullName));
 
         // Carrega todas as opções
-        Data.Write(Lists.Options.GameName);
+        Data.Write(Lists.Options.Game_Name);
         Data.Write(Lists.Options.Username);
         Data.Write(Lists.Options.SaveUsername);
         Data.Write(Lists.Options.Sounds);

@@ -3,7 +3,7 @@
     public static void Options()
     {
         // Defini os dados das opções
-        Lists.Options.GameName = "CryBits";
+        Lists.Options.Game_Name = "CryBits";
         Lists.Options.SaveUsername = true;
         Lists.Options.Musics = true;
         Lists.Options.Sounds = true;

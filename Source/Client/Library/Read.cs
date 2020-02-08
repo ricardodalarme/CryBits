@@ -22,7 +22,7 @@ class Read
             BinaryReader File = new BinaryReader(System.IO.File.OpenRead(Directories.Options.FullName));
 
             // Carrega os dados
-            Lists.Options.GameName = File.ReadString();
+            Lists.Options.Game_Name = File.ReadString();
             Lists.Options.Username = File.ReadString();
             Lists.Options.SaveUsername = File.ReadBoolean();
             Lists.Options.Sounds = File.ReadBoolean();
