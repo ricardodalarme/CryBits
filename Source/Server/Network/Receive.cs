@@ -894,13 +894,13 @@ class Receive
             return;
         }
         // Verifica se já tem um grupo
-        if (Player.Character(Index).Party.Count != 0)
+        if (Player.Character(Invited).Party.Count != 0)
         {
             Send.Message(Index, "The player is already part of a party.", System.Drawing.Color.White);
             return;
         }
         // Verifica se o jogador já está analisando um convite para algum grupo
-        if (!string.IsNullOrEmpty(Lists.Temp_Player[Index].Party_Invitation))
+        if (!string.IsNullOrEmpty(Lists.Temp_Player[Invited].Party_Invitation))
         {
             Send.Message(Index, "The player is analyzing an invitation to another party.", System.Drawing.Color.White);
             return;
