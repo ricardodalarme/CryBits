@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SFML.Window;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 
 class TextBoxes
 {
@@ -37,7 +37,7 @@ class TextBoxes
             }
         }
 
-        public void TextEntered(SFML.Window.TextEventArgs e)
+        public void TextEntered(TextEventArgs e)
         {
             // Apaga a última letra do texto
             if (Tools.Viewable(Tools.Get(this)))

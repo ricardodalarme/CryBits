@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SFML.Window;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -29,7 +30,7 @@ class Buttons
             Execute(Name);
         }
 
-        public void MouseDown(SFML.Window.MouseButtonEventArgs e)
+        public void MouseDown(MouseButtonEventArgs e)
         {
             SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
 
