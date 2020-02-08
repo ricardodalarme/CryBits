@@ -42,7 +42,7 @@ class Buttons
             State = States.Click;
         }
 
-        public void MouseMove(SFML.Window.MouseMoveEventArgs e)
+        public void MouseMove()
         {
             SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
 

@@ -126,7 +126,7 @@ class Window
                 if (Top[i].Data.Visible)
                 {
                     // Executa o comando
-                    if (Top[i].Data is Buttons.Structure) ((Buttons.Structure)Top[i].Data).MouseMove(e);
+                    if (Top[i].Data is Buttons.Structure) ((Buttons.Structure)Top[i].Data).MouseMove();
                     Stack.Push(Top[i].Nodes);
                 }
         }
