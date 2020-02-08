@@ -29,24 +29,21 @@ class Buttons
             Execute(Name);
         }
 
-        public void MouseDown(MouseEventArgs e)
+        public void MouseDown(SFML.Window.MouseButtonEventArgs e)
         {
             SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
 
             // Somente se necessário
-            if (e.Button == MouseButtons.Right) return;
+            if (e.Button == SFML.Window.Mouse.Button.Right) return;
             if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture)))) return;
 
             // Altera o estado do botão
             State = States.Click;
         }
 
-        public void MouseMove(MouseEventArgs e)
+        public void MouseMove(SFML.Window.MouseMoveEventArgs e)
         {
             SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
-
-            // Somente se necessário
-            if (e.Button == MouseButtons.Right) return;
 
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
             if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture))))

@@ -230,15 +230,18 @@ partial class Send
 
     public static void Hotbar_Use(byte Slot)
     {
-        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+        if (TextBoxes.Focused == null)
+        {
+            NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
-        // Envia os dados
-        Data.Write((byte)Packets.Hotbar_Use);
-        Data.Write(Slot);
-        Packet(Data);
+            // Envia os dados
+            Data.Write((byte)Packets.Hotbar_Use);
+            Data.Write(Slot);
+            Packet(Data);
 
-        // Fecha o painel de soltar item
-        Panels.Get("Drop").Visible = false;
+            // Fecha o painel de soltar item
+            Panels.Get("Drop").Visible = false;
+        }
     }
 
     public static void Party_Invite(string Player_Name)

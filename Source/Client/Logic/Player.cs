@@ -2,6 +2,7 @@
 using SFML.Graphics;
 using System;
 using System.Drawing;
+using SFML.Window;
 
 class Player
 {
@@ -56,15 +57,6 @@ class Player
         }
     }
 
-    public static bool TryingMove()
-    {
-        // Se estiver pressionando alguma tecla, está tentando se mover
-        if (Game.Press_Up || Game.Press_Down || Game.Press_Left || Game.Press_Right)
-            return true;
-        else
-            return false;
-    }
-
     public static bool CanMove()
     {
         // Não mover se já estiver tentando movimentar-se
@@ -79,10 +71,10 @@ class Player
         if (Me.Movement > 0) return;
 
         // Move o personagem
-        if (Game.Press_Up) Move(Game.Directions.Up);
-        else if (Game.Press_Down) Move(Game.Directions.Down);
-        else if (Game.Press_Left) Move(Game.Directions.Left);
-        else if (Game.Press_Right) Move(Game.Directions.Right);
+        if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Game.Directions.Up);
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Game.Directions.Down);
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Game.Directions.Left);
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Game.Directions.Right);
     }
 
     public static void Move(Game.Directions Direction)
@@ -101,7 +93,7 @@ class Player
         if (Map.Tile_Blocked(Lists.Player[MyIndex].Map, Lists.Player[MyIndex].X, Lists.Player[MyIndex].Y, Direction)) return;
 
         // Define a velocidade que o jogador se move
-        if (Game.Press_Shift)
+        if (Keyboard.IsKeyPressed(Keyboard.Key.LShift))
             Lists.Player[MyIndex].Movement = Game.Movements.Moving;
         else
             Lists.Player[MyIndex].Movement = Game.Movements.Walking;
@@ -181,7 +173,7 @@ class Player
         }
 
         // Somente se estiver pressionando a tecla de ataque e não estiver atacando
-        if (!Game.Press_Control) return;
+        if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl)) return;
         if (Me.Attack_Timer > 0) return;
 
         // Envia os dados para o servidor
@@ -194,7 +186,7 @@ class Player
         bool HasItem = false, HasSlot = false;
 
         // Previne erros
-        if (Tools.CurrentWindow != Tools.Windows.Game) return;
+        if (TextBoxes.Focused != null) return;
 
         // Verifica se tem algum item nas coordenadas 
         for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)

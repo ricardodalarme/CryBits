@@ -37,14 +37,14 @@ class TextBoxes
             }
         }
 
-        public void KeyPress(KeyPressEventArgs e)
+        public void TextEntered(SFML.Window.TextEventArgs e)
         {
             // Apaga a última letra do texto
             if (Tools.Viewable(Tools.Get(this)))
             {
                 if (!string.IsNullOrEmpty(Text))
                 {
-                    if (e.KeyChar == '\b' && Text.Length > 0)
+                    if (e.Unicode == "\b" && Text.Length > 0)
                     {
                         Text = Text.Remove(Text.Length - 1);
                         return;
@@ -55,9 +55,9 @@ class TextBoxes
                         if (Text.Length >= Lenght)
                             return;
                 }
-
-                // Adiciona apenas os caractres válidos ao digitalizador
-                if (e.KeyChar >= 32 && e.KeyChar <= 126) Text += e.KeyChar.ToString();
+        
+                // Adiciona o caracter à caixa de texto
+                if (char.IsLetterOrDigit(e.Unicode,0)) Text += e.Unicode;
             }
         }
     }

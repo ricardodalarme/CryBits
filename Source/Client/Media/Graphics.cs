@@ -8,7 +8,7 @@ using System.IO;
 partial class Graphics
 {
     // Locais de renderização
-    private static RenderWindow RenderWindow;
+    public static RenderWindow RenderWindow;
 
     // Fonte principal
     public static SFML.Graphics.Font Font_Default;
@@ -178,12 +178,27 @@ partial class Graphics
     }
     #endregion
 
-    public static void LoadTextures()
+    public static void Init()
     {
-        // Inicia os dispositivos
-        RenderWindow = new RenderWindow(Window.Objects.Handle);
+        // Inicia a janela
+        RenderWindow = new RenderWindow(new VideoMode(800, 608), Lists.Options.GameName,Styles.Close);
+        RenderWindow.Closed += new EventHandler(Window.OnClosed);
+        RenderWindow.MouseButtonPressed += new EventHandler< MouseButtonEventArgs>(Window.OnMouseButtonPressed);
+        RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Window.OnMouseMoved);
+        RenderWindow.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonReleased);
+        RenderWindow.KeyPressed += new EventHandler<KeyEventArgs>(Window.OnKeyPressed);
+        RenderWindow.KeyReleased += new EventHandler<KeyEventArgs>(Window.OnKeyReleased);
+        RenderWindow.TextEntered += new EventHandler<TextEventArgs>(Window.OnTextEntered);
+
+        // Carrega a fonte
         Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
 
+        // Carrega as texturas
+        LoadTextures();
+    }
+
+    public static void LoadTextures()
+    {
         // Conjuntos
         Tex_Character = LoadTextures(Directories.Tex_Characters.FullName);
         Tex_Tile = LoadTextures(Directories.Tex_Tiles.FullName);

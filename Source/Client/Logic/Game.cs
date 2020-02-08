@@ -25,14 +25,6 @@ class Game
     // Jogador
     public const short Attack_Speed = 750;
 
-    // Pressionamento das teclas
-    public static bool Press_Up;
-    public static bool Press_Down;
-    public static bool Press_Left;
-    public static bool Press_Right;
-    public static bool Press_Shift;
-    public static bool Press_Control;
-
     // Animação
     public const byte Animation_Amount = 4;
     public const byte Animation_Stopped = 1;

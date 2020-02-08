@@ -212,7 +212,7 @@ class Tools
         return 0;
     }
 
-    public static void Inventory_MouseDown(MouseEventArgs e)
+    public static void Inventory_MouseDown(SFML.Window.MouseButtonEventArgs e)
     {
         byte Slot = Inventory_Mouse();
 
@@ -221,7 +221,7 @@ class Tools
         if (Player.Inventory[Slot].Item_Num == 0) return;
 
         // Solta item
-        if (e.Button == MouseButtons.Right)
+        if (e.Button == SFML.Window.Mouse.Button.Right)
         {
             if (Lists.Item[Player.Inventory[Slot].Item_Num].Bind != Game.BindOn.Pickup)
                 if (Player.Inventory[Slot].Amount != 1)
@@ -238,21 +238,21 @@ class Tools
                 }
         }
         // Seleciona o item
-        else if (e.Button == MouseButtons.Left)
+        else if (e.Button == SFML.Window.Mouse.Button.Left)
         {
             Player.Inventory_Change = Slot;
             return;
         }
     }
 
-    public static void Equipment_MouseDown(MouseEventArgs e)
+    public static void Equipment_MouseDown(SFML.Window.MouseButtonEventArgs e)
     {
         Point Panel_Position = Panels.Get("Menu_Character").Position;
 
         for (byte i = 0; i < (byte)Game.Equipments.Count; i++)
             if (IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
                 // Remove o equipamento
-                if (e.Button == MouseButtons.Right)
+                if (e.Button ==SFML.Window.Mouse.Button.Right)
                     if (Lists.Item[Player.Me.Equipment[i]].Bind != Game.BindOn.Equip)
                     {
                         Send.Equipment_Remove(i);
@@ -277,7 +277,7 @@ class Tools
         return 0;
     }
 
-    public static void Hotbar_MouseDown(MouseEventArgs e)
+    public static void Hotbar_MouseDown(SFML.Window.MouseButtonEventArgs e)
     {
         byte Slot = Hotbar_Mouse();
 
@@ -286,13 +286,13 @@ class Tools
         if (Player.Hotbar[Slot].Slot == 0) return;
 
         // Solta item
-        if (e.Button == MouseButtons.Right)
+        if (e.Button ==SFML.Window.Mouse.Button.Right)
         {
             Send.Hotbar_Add(Slot, 0, 0);
             return;
         }
         // Seleciona o item
-        else if (e.Button == MouseButtons.Left)
+        else if (e.Button ==SFML.Window.Mouse.Button.Left)
         {
             Player.Hotbar_Change = Slot;
             return;

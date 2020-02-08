@@ -15,15 +15,13 @@ class Program
         // Carrega todos os dados
         Read.Data();
 
-        // Inicializa todos os dispositivos
-        Graphics.LoadTextures();
-        Audio.Sound.Load();
-        Socket.Init();
-
         // Abre a janela
         Game.OpenMenu();
-        Window.Objects.Text = Lists.Options.GameName;
-        Window.Objects.Visible = true;
+
+        // Inicializa todos os dispositivos
+        Graphics.Init();
+        Audio.Sound.Load();
+        Socket.Init();
 
         // Inicia a aplicação
         Loop.Main();
