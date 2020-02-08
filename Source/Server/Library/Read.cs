@@ -58,7 +58,7 @@ partial class Read
                 Lists.Player[Index].Character[i].Texture_Num = Data.ReadInt16();
                 Lists.Player[Index].Character[i].Genre = Data.ReadBoolean();
                 Lists.Player[Index].Character[i].Level = Data.ReadInt16();
-                Lists.Player[Index].Character[i].Experience = Data.ReadInt16();
+                Lists.Player[Index].Character[i].Experience = Data.ReadInt32();
                 Lists.Player[Index].Character[i].Points = Data.ReadByte();
                 Lists.Player[Index].Character[i].Map = Data.ReadInt16();
                 Lists.Player[Index].Character[i].X = Data.ReadByte();

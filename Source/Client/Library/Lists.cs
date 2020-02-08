@@ -50,8 +50,8 @@ class Lists
             public short Texture_Num;
             public bool Genre;
             public short Level;
-            public short Experience;
-            public short ExpNeeded;
+            public int Experience;
+            public int ExpNeeded;
             public short Points;
             public short[] Vital;
             public short[] Attribute;
@@ -207,7 +207,7 @@ class Lists
             public short Req_Level;
             public byte Req_Class;
             // Poção
-            public short Potion_Experience;
+            public int Potion_Experience;
             public short[] Potion_Vital;
             // Equipamento
             public byte Equip_Type;

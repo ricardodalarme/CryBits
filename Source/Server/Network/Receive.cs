@@ -775,7 +775,7 @@ class Receive
             Lists.NPC[i].Behaviour = Data.ReadByte();
             Lists.NPC[i].SpawnTime = Data.ReadByte();
             Lists.NPC[i].Sight = Data.ReadByte();
-            Lists.NPC[i].Experience = Data.ReadByte();
+            Lists.NPC[i].Experience = Data.ReadInt32();
             for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
             for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
             Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Data.ReadByte()];
@@ -825,7 +825,7 @@ class Receive
             Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
-            Lists.Item[i].Potion_Experience = Data.ReadInt16();
+            Lists.Item[i].Potion_Experience = Data.ReadInt32();
             for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();
             for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();

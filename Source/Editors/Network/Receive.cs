@@ -220,7 +220,7 @@ partial class Receive
             for (byte n = 0; n < (byte)Globals.Vitals.Count; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
             Lists.NPC[i].SpawnTime = Data.ReadByte();
             Lists.NPC[i].Sight = Data.ReadByte();
-            Lists.NPC[i].Experience = Data.ReadByte();
+            Lists.NPC[i].Experience = Data.ReadInt32();
             for (byte n = 0; n < (byte)Globals.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
             byte Num_Drops = Data.ReadByte();
             for (byte n = 0; n < Num_Drops; n++) Lists.NPC[i].Drop.Add(new Lists.Structures.NPC_Drop(Data.ReadInt16(), Data.ReadInt16(), Data.ReadByte()));
@@ -257,7 +257,7 @@ partial class Receive
             Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
-            Lists.Item[i].Potion_Experience = Data.ReadInt16();
+            Lists.Item[i].Potion_Experience = Data.ReadInt32();
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();

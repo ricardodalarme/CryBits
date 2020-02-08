@@ -370,8 +370,8 @@ partial class Receive
     public static void Player_Experience(NetIncomingMessage Data)
     {
         // Define os dados
-        Player.Me.Experience = Data.ReadInt16();
-        Player.Me.ExpNeeded = Data.ReadInt16();
+        Player.Me.Experience = Data.ReadInt32();
+        Player.Me.ExpNeeded = Data.ReadInt32();
         Player.Me.Points = Data.ReadByte();
 
         // Manipula a visibilidade dos botões

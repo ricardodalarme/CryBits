@@ -205,7 +205,7 @@ public partial class Editor_Items : Form
 
     private void numEquip_Experience_ValueChanged(object sender, EventArgs e)
     {
-        Lists.Item[Selected].Potion_Experience = (short)numPotion_Experience.Value;
+        Lists.Item[Selected].Potion_Experience = (int)numPotion_Experience.Value;
     }
 
     private void numEquip_Strength_ValueChanged(object sender, EventArgs e)

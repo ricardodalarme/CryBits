@@ -234,7 +234,7 @@ public partial class Editor_NPCs : Form
 
     private void numExperience_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Experience = (byte)numExperience.Value;
+        Lists.NPC[Selected].Experience = (int)numExperience.Value;
     }
 
     private void butDrop_Add_Click(object sender, EventArgs e)

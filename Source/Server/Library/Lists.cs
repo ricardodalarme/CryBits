@@ -167,7 +167,7 @@ class Lists
             public byte Behaviour;
             public byte SpawnTime;
             public byte Sight;
-            public byte Experience;
+            public int Experience;
             public short[] Vital;
             public short[] Attribute;
             public NPC_Drop[] Drop;
@@ -214,7 +214,7 @@ class Lists
             public short Req_Level;
             public byte Req_Class;
             // Poção
-            public short Potion_Experience;
+            public int Potion_Experience;
             public short[] Potion_Vital;
             // Equipamento
             public byte Equip_Type;

@@ -19,7 +19,7 @@ class Player
         public short Texture_Num;
         public bool Genre;
         public short Level;
-        private short experience;
+        public int Experience;
         public byte Points;
         public short[] Vital = new short[(byte)Game.Vitals.Count];
         public short[] Attribute = new short[(byte)Game.Attributes.Count];
@@ -33,17 +33,17 @@ class Player
         public Lists.Structures.Hotbar[] Hotbar;
         public List<byte> Party;
 
-        public short Experience
+        public void GiveExperience(int Value)
         {
-            get
-            {
-                return experience;
-            }
-            set
-            {
-                experience = value;
-                CheckLevelUp(Index);
-            }
+            // Dá a experiência ao jogador, caso ele estiver em um grupo divide a experiência entre os membros
+            if (Party.Count > 0 && Value > 0) Party_SplitXP(Index, Value);
+            else Experience += Value;
+
+            // Verifica se a experiência não ficou negtiva
+            if (Character(Index).Experience < 0) Character(Index).Experience = 0;
+
+            // Verifica se passou de level
+            CheckLevelUp(Index);
         }
 
         // Cálcula o dano do jogador
@@ -96,14 +96,14 @@ class Player
             return 0;
         }
 
-        public short ExpNeeded
+        public int ExpNeeded
         {
             get
             {
                 short Total = 0;
-                // Amount de experiência para passar para o próximo level
-                for (byte i = 0; i <= (byte)(Game.Attributes.Count - 1); i++) Total += Attribute[i];
-                return (short)((Level + 1) * 2.5 + (Total + Points) / 2);
+                // Quantidade de experiência para passar para o próximo level
+                for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Total += Attribute[i];
+                return (int)((Level + 1) * 2.5 + (Total + Points) / 2);
             }
         }
     }
@@ -381,7 +381,7 @@ class Player
             else
             {
                 // Dá 10% da experiência da vítima ao atacante
-                Character(Index).Experience += (short)(Character(Victim).Experience / 10);
+                Character(Index).GiveExperience(Character(Victim).Experience / 10);
 
                 // Mata a vítima
                 Died(Victim);
@@ -437,7 +437,7 @@ class Player
             else
             {
                 // Experiência ganhada
-                Character(Index).Experience += Lists.NPC[Map_NPC.Index].Experience;
+                Character(Index).GiveExperience(Lists.NPC[Map_NPC.Index].Experience);
 
                 // Reseta os dados do NPC 
                 NPC.Died(Character(Index).Map, Victim);
@@ -495,7 +495,7 @@ class Player
 
     public static void CheckLevelUp(byte Index)
     {
-        byte NumLevel = 0; short ExpRest;
+        byte NumLevel = 0; int ExpRest;
 
         // Previne erros
         if (!IsPlaying(Index)) return;
@@ -503,7 +503,7 @@ class Player
         while (Character(Index).Experience >= Character(Index).ExpNeeded)
         {
             NumLevel += 1;
-            ExpRest = (short)(Character(Index).Experience - Character(Index).ExpNeeded);
+            ExpRest = Character(Index).Experience - Character(Index).ExpNeeded;
 
             // Define os dados
             Character(Index).Level += 1;
@@ -615,8 +615,7 @@ class Player
         {
             // Efeitos
             bool HadEffect = false;
-            Character(Index).Experience += Lists.Item[Item_Num].Potion_Experience;
-            if (Character(Index).Experience < 0) Character(Index).Experience = 0;
+            Character(Index).GiveExperience(Lists.Item[Item_Num].Potion_Experience);
             for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
             {
                 // Verifica se o item causou algum efeito 
@@ -666,19 +665,56 @@ class Player
 
     public static void Party_Leave(byte Index)
     {
-        // Desfaz o grupo caso só tiver mais um membro
-        if (Character(Index).Party.Count == 1)
-        {
-            Character(Character(Index).Party[0]).Party.Clear();
-            Character(Index).Party.Clear();
-        }
         // Retira o jogador do grupo
-        else
-            for (byte i = 0; i < Character(Index).Party.Count; i++)
-                Character(Character(Index).Party[i]).Party.Remove(Index);
+        for (byte i = 0; i < Character(Index).Party.Count; i++)
+            Character(Character(Index).Party[i]).Party.Remove(Index);
 
         // Envia o dados para todos os membros do grupo
-        Send.Party(Index);
         for (byte i = 0; i < Character(Index).Party.Count; i++) Send.Party(Character(Index).Party[i]);
+        Character(Index).Party.Clear();
+        Send.Party(Index);
+    }
+
+    public static void Party_SplitXP(byte Index, int Experience)
+    {
+        // Somatório do level de todos os jogadores do grupo
+        int Given_Experience, Experience_Sum = 0, Difference;
+        double[] Diff = new double[Character(Index).Party.Count];
+        double Diff_Sum = 0, k;
+
+        // Cálcula a diferença dos leveis entre os jogadores
+        for (byte i = 0; i < Character(Index).Party.Count; i++)
+        {
+            Difference = Math.Abs(Character(Index).Level - Character(Character(Index).Party[i]).Level);
+
+            // Constante para a diminuir potêncialmente a experiência que diferenças altas ganhariam
+            if (Difference < 3) k = 1.15;
+            else if (Difference < 6) k = 1.55;
+            else if (Difference < 10) k = 1.85;
+            else k = 2.3;
+
+            // Transforma o valor em fração
+            Diff[i] = 1 / Math.Pow(k, Math.Min(15, Difference));
+            Diff_Sum += Diff[i];
+        }
+
+        // Divide a experiência pro grupo com base na diferença dos leveis 
+        for (byte i = 0; i < Character(Index).Party.Count; i++)
+        {
+            // Caso a somatório for maior que um (100%) balanceia os valores
+            if (Diff_Sum > 1) Diff[i] *= (1 / Diff_Sum);
+
+            // Divide a experiência
+            Given_Experience = (int)((Experience / 2) * Diff[i]);
+            Experience_Sum += Given_Experience;
+            Character(Character(Index).Party[i]).Experience+= Given_Experience;
+            CheckLevelUp(Character(Index).Party[i]);
+            Send.Player_Experience(Character(Index).Party[i]);
+        }
+
+        // Dá ao jogador principal o restante da experiência
+        Character(Index).Experience += Experience - Experience_Sum;
+        CheckLevelUp(Index);
+        Send.Player_Experience(Index);
     }
 }

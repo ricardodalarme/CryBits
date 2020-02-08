@@ -96,7 +96,8 @@ class NPC
                             Data = Lists.Temp_Map[Map_Num].NPC[i];
 
                             // Mensagem
-                            Send.Message(Player_Index, Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].Name + ": " + Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg, System.Drawing.Color.White);
+                            if (!string.IsNullOrEmpty(Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg))
+                                Send.Message(Player_Index, Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].Name + ": " + Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg, System.Drawing.Color.White);
                         }
                     }
 

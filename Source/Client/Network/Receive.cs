@@ -382,7 +382,7 @@ partial class Receive
             Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
-            Lists.Item[i].Potion_Experience = Data.ReadInt16();
+            Lists.Item[i].Potion_Experience = Data.ReadInt32();
             for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();
             for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
