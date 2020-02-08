@@ -123,7 +123,7 @@ partial class Graphics
 
         // Define os dados
         TempText.CharacterSize = 10;
-        TempText.Color = Color;
+        TempText.FillColor = Color;
         TempText.Position = new SFML.System.Vector2f(X, Y);
 
         // Desenha

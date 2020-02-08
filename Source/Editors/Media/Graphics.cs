@@ -167,7 +167,7 @@ partial class Graphics
         Text TempText = new Text(Text, GameFont)
         {
             CharacterSize = 10,
-            Color = Color,
+            FillColor = Color,
             Position = new Vector2f(X, Y)
         };
 
