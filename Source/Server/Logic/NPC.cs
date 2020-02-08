@@ -44,6 +44,7 @@ class NPC
             if (Data.Index == 0)
             {
                 if (Environment.TickCount > Data.Spawn_Timer + (NPC_Data.SpawnTime * 1000)) Spawn(i, Map_Num);
+                continue;
             }
             else
             {
@@ -184,17 +185,17 @@ class NPC
                             Lists.Temp_Map[Map_Num].NPC[i].Direction = (Game.Directions)Game.Random.Next(0, 4);
                             Send.Map_NPC_Direction(Map_Num, i);
                         }
-            }
-
-            ////////////
-            // Ataque //
-            ////////////
-            short Next_X = Data.X, Next_Y = Data.Y;
-            Map.NextTile(Data.Direction, ref Next_X, ref Next_Y);
-            if (Data.Target_Type == (byte)Game.Target.Player)
-            {
-                // Verifica se o jogador está na frente do NPC
-                if (Map.HasPlayer(Map_Num, Next_X, Next_Y) == Data.Target_Index) Attack_Player(Map_Num, i, Data.Target_Index);
+                
+                ////////////
+                // Ataque //
+                ////////////
+                short Next_X = Data.X, Next_Y = Data.Y;
+                Map.NextTile(Data.Direction, ref Next_X, ref Next_Y);
+                if (Data.Target_Type == (byte)Game.Target.Player)
+                {
+                    // Verifica se o jogador está na frente do NPC
+                    if (Map.HasPlayer(Map_Num, Next_X, Next_Y) == Data.Target_Index) Attack_Player(Map_Num, i, Data.Target_Index);
+                }
             }
         }
     }
