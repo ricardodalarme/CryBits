@@ -78,8 +78,8 @@ partial class Graphics
 
         // Define os dados
         TmpImage.TextureRect = new IntRect(Rec_Source.X, Rec_Source.Y, Rec_Source.Width, Rec_Source.Height);
-        TmpImage.Position = new Vector2f(Rec_Destiny.X, Rec_Destiny.Y);
-        TmpImage.Scale = new Vector2f(Rec_Destiny.Width / (float)Rec_Source.Width, Rec_Destiny.Height / (float)Rec_Source.Height);
+        TmpImage.Position = new SFML.System.Vector2f(Rec_Destiny.X, Rec_Destiny.Y);
+        TmpImage.Scale = new SFML.System.Vector2f(Rec_Destiny.Width / (float)Rec_Source.Width, Rec_Destiny.Height / (float)Rec_Source.Height);
         if (Color != null)
             TmpImage.Color = (SFML.Graphics.Color)Color;
 
@@ -124,7 +124,7 @@ partial class Graphics
         // Define os dados
         TempText.CharacterSize = 10;
         TempText.Color = Color;
-        TempText.Position = new Vector2f(X, Y);
+        TempText.Position = new SFML.System.Vector2f(X, Y);
 
         // Desenha
         RenderWindow.Draw(TempText);
