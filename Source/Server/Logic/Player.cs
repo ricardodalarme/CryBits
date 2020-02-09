@@ -405,7 +405,7 @@ class Player
         if (Map_NPC.X != x || Map_NPC.Y != y) return;
 
         // Mensagem
-        if (Map_NPC.Target_Index != Index) Send.Message(Index, Lists.NPC[Map_NPC.Index].Name + ": " + Lists.NPC[Map_NPC.Index].SayMsg, Color.White);
+        if (Map_NPC.Target_Index != Index && !string.IsNullOrEmpty(Lists.NPC[Map_NPC.Index].SayMsg)) Send.Message(Index, Lists.NPC[Map_NPC.Index].Name + ": " + Lists.NPC[Map_NPC.Index].SayMsg, Color.White);
 
         // Não executa o combate com um NPC amigavel
         if (Lists.NPC[Map_NPC.Index].Behaviour == (byte)global::NPC.Behaviour.Friendly) return;
