@@ -1,0 +1,163 @@
+﻿using System;
+using System.Windows.Forms;
+
+partial class Editor_Sprites : Form
+{
+    // Usado para acessar os dados da janela
+    public static Editor_Sprites Objects = new Editor_Sprites();
+
+    // Índice do item selecionado
+    public Lists.Structures.Sprite Selected;
+    public Lists.Structures.Sprite_Movement Selected_Movement;
+
+    public Editor_Sprites()
+    {
+        InitializeComponent();
+    }
+
+    public static void Request()
+    {
+        // Solicita os dados
+        Send.Request_Sprites(true);
+    }
+
+    public static void Open()
+    {
+        // Lista de texturas
+        Objects.List.Items.Clear();
+        for (short i = 1; i < Graphics.Tex_Character.Length; i++) Objects.List.Items.Add(i);
+        Objects.List.SelectedIndex = 0;
+
+        // Lista de sons
+        Objects.cmbSound.Items.Clear();
+        Objects.List.Items.Add("None");
+        for (byte i = 0; i < (byte)Audio.Sounds.Count; i++) Objects.List.Items.Add(((Audio.Sounds)i).ToString());
+
+        // Abre o editor
+        Selection.Objects.Visible = false;
+        Objects.Visible = true;
+    }
+
+    private void Update_Data()
+    {
+        // Reseta os valores necessários
+        cmbMovement.SelectedIndex = 0;
+        Update_Movement_Data();
+
+        // Atualiza os dados
+        numWidth.Value = Selected.Frame_Width;
+        numHeight.Value = Selected.Frame_Height;
+    }
+
+    private void Update_Movement_Data()
+    {
+        // Atualiza os dados dos movimentos
+        Selected_Movement = Selected.Movement[cmbMovement.SelectedIndex];
+        cmbSound.SelectedIndex = Selected_Movement.Sound;
+        numStartX.Value = Selected_Movement.StartX;
+        numStartY.Value = Selected_Movement.StartY;
+        numFrames.Value = Selected_Movement.Frames;
+        numDuration.Value = Selected_Movement.Duration;
+    }
+
+    private void List_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        // Atualiza os dados
+        Update_Data();
+    }
+
+    private void butSave_Click(object sender, EventArgs e)
+    {
+        // Salva os dados
+        Send.Write_Sprites();
+
+        // Volta à janela de seleção
+        Visible = false;
+        Selection.Objects.Visible = true;
+    }
+
+    private void butCancel_Click(object sender, EventArgs e)
+    {
+        // Volta à janela de seleção
+        Visible = false;
+        Selection.Objects.Visible = true;
+    }
+
+    private void butStyle_Use_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void butStyle_Remove_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void butStyle_Save_Click(object sender, EventArgs e)
+    {
+        // Abre a janela para salvar o estilo
+        txtStyle_Name.Text = string.Empty;
+        grpStyle_Save.Visible = true;
+    }
+
+    private void butStyle_Confirm_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void numWidth_ValueChanged(object sender, EventArgs e)
+    {
+        Selected.Frame_Width = (byte)numWidth.Value;
+    }
+
+    private void numHeight_ValueChanged(object sender, EventArgs e)
+    {
+        Selected.Frame_Height = (byte)numHeight.Value;
+    }
+
+    private void cmbMovement_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        // Atualiza os dados dos movimentos
+        Update_Movement_Data();
+    }
+
+    private void cmbSound_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Selected_Movement.Sound = (byte)cmbSound.SelectedIndex;
+    }
+
+    private void cmbAlignment_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Selected_Movement.Alignment = (byte)cmbAlignment.SelectedIndex;
+    }
+
+    private void numStartX_ValueChanged(object sender, EventArgs e)
+    {
+        Selected_Movement.StartX = (byte)numStartX.Value;
+    }
+
+    private void numStartY_ValueChanged(object sender, EventArgs e)
+    {
+        Selected_Movement.StartY = (byte)numStartY.Value;
+    }
+
+    private void numFrames_ValueChanged(object sender, EventArgs e)
+    {
+        Selected_Movement.Frames = (byte)numFrames.Value;
+    }
+
+    private void numDuration_ValueChanged(object sender, EventArgs e)
+    {
+        Selected_Movement.Duration = (short)numDuration.Value;
+    }
+
+    private void butPlay_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void butStop_Click(object sender, EventArgs e)
+    {
+
+    }
+}

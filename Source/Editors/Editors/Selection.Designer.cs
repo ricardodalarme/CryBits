@@ -33,6 +33,7 @@
             this.butDirectory_Client = new System.Windows.Forms.Button();
             this.Directory_Client = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.butCharacter = new System.Windows.Forms.Button();
             this.butItems = new System.Windows.Forms.Button();
             this.butNPCs = new System.Windows.Forms.Button();
             this.butTiles = new System.Windows.Forms.Button();
@@ -91,6 +92,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.butCharacter);
             this.groupBox2.Controls.Add(this.butItems);
             this.groupBox2.Controls.Add(this.butNPCs);
             this.groupBox2.Controls.Add(this.butTiles);
@@ -105,9 +107,19 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Editors";
             // 
+            // butCharacter
+            // 
+            this.butCharacter.Location = new System.Drawing.Point(206, 19);
+            this.butCharacter.Name = "butCharacter";
+            this.butCharacter.Size = new System.Drawing.Size(94, 26);
+            this.butCharacter.TabIndex = 13;
+            this.butCharacter.Text = "Sprites";
+            this.butCharacter.UseVisualStyleBackColor = true;
+            this.butCharacter.Click += new System.EventHandler(this.butCharacter_Click);
+            // 
             // butItems
             // 
-            this.butItems.Location = new System.Drawing.Point(6, 83);
+            this.butItems.Location = new System.Drawing.Point(106, 83);
             this.butItems.Name = "butItems";
             this.butItems.Size = new System.Drawing.Size(94, 26);
             this.butItems.TabIndex = 12;
@@ -117,7 +129,7 @@
             // 
             // butNPCs
             // 
-            this.butNPCs.Location = new System.Drawing.Point(206, 51);
+            this.butNPCs.Location = new System.Drawing.Point(106, 51);
             this.butNPCs.Name = "butNPCs";
             this.butNPCs.Size = new System.Drawing.Size(94, 26);
             this.butNPCs.TabIndex = 11;
@@ -127,7 +139,7 @@
             // 
             // butTiles
             // 
-            this.butTiles.Location = new System.Drawing.Point(6, 51);
+            this.butTiles.Location = new System.Drawing.Point(206, 51);
             this.butTiles.Name = "butTiles";
             this.butTiles.Size = new System.Drawing.Size(94, 26);
             this.butTiles.TabIndex = 10;
@@ -157,7 +169,7 @@
             // 
             // butMaps
             // 
-            this.butMaps.Location = new System.Drawing.Point(106, 51);
+            this.butMaps.Location = new System.Drawing.Point(6, 83);
             this.butMaps.Name = "butMaps";
             this.butMaps.Size = new System.Drawing.Size(94, 26);
             this.butMaps.TabIndex = 7;
@@ -167,7 +179,7 @@
             // 
             // butClasses
             // 
-            this.butClasses.Location = new System.Drawing.Point(206, 19);
+            this.butClasses.Location = new System.Drawing.Point(6, 51);
             this.butClasses.Name = "butClasses";
             this.butClasses.Size = new System.Drawing.Size(94, 26);
             this.butClasses.TabIndex = 6;
@@ -217,4 +229,5 @@
     private System.Windows.Forms.Button butTiles;
     private System.Windows.Forms.Button butNPCs;
     private System.Windows.Forms.Button butItems;
+    private System.Windows.Forms.Button butCharacter;
 }

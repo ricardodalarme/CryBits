@@ -14,6 +14,7 @@ class Lists
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
+    public static Structures.Sprite[] Sprite;
     public static TreeNode Tool;
 
     // Estrutura dos itens em gerais
@@ -68,7 +69,7 @@ class Lists
             public byte Texture_Num { get; set; }
         }
 
-        public struct Class
+        public class Class
         {
             public string Name;
             public string Description;
@@ -80,7 +81,7 @@ class Lists
             public byte Spawn_Y;
             public short[] Vital;
             public short[] Attribute;
-            public List< Tuple<short, short> > Item;
+            public List<Tuple<short, short>> Item;
         }
 
         public struct Tile
@@ -202,7 +203,7 @@ class Lists
             public bool Back;
         }
 
-        public struct NPC
+        public class NPC
         {
             public string Name;
             public string SayMsg;
@@ -220,7 +221,7 @@ class Lists
             public byte Flee_Helth;
         }
 
-        public struct Item
+        public class Item
         {
             // Geral
             public string Name;
@@ -255,6 +256,23 @@ class Lists
                 this.Amount = Amount;
                 this.Chance = Chance;
             }
+        }
+
+        public struct Sprite_Movement
+        {
+            public byte Sound;
+            public byte Alignment;
+            public byte StartX;
+            public byte StartY;
+            public byte Frames;
+            public short Duration;
+        }
+
+        public struct Sprite
+        {
+            public byte Frame_Width;
+            public byte Frame_Height;
+            public Sprite_Movement[] Movement;
         }
     }
 }

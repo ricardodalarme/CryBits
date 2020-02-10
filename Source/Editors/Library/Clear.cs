@@ -36,7 +36,7 @@ class Clear
         Lists.Class[Index].Spawn_Map = 1;
     }
 
-    public static void NPC(byte Index)
+    public static void NPC(short Index)
     {
         // Reseta os valores
         Lists.NPC[Index] = new Lists.Structures.NPC();
@@ -47,7 +47,7 @@ class Clear
         Lists.NPC[Index].Allie = new List<short>();
     }
 
-    public static void Item(byte Index)
+    public static void Item(short Index)
     {
         // Reseta os valores
         Lists.Item[Index] = new Lists.Structures.Item();

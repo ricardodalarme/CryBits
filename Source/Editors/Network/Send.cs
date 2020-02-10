@@ -12,13 +12,15 @@ partial class Send
         Write_Maps,
         Write_NPCs,
         Write_Items,
+        Write_Sprites,
         Request_Server_Data,
         Request_Classes,
         Request_Tiles,
         Request_Map,
         Request_Maps,
         Request_NPCs,
-        Request_Items
+        Request_Items,
+        Request_Sprites
     }
 
     public static void Packet(NetOutgoingMessage Data)
@@ -105,6 +107,16 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Items);
+        Data.Write(OpenEditor);
+        Packet(Data);
+    }
+
+    public static void Request_Sprites(bool OpenEditor = false)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Request_Sprites);
         Data.Write(OpenEditor);
         Packet(Data);
     }
@@ -327,6 +339,21 @@ partial class Send
             Data.Write(Lists.Item[Index].Equip_Type);
             for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Lists.Item[Index].Equip_Attribute[i]);
             Data.Write(Lists.Item[Index].Weapon_Damage);
+        }
+        Packet(Data);
+    }
+
+    public static void Write_Sprites()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Write_Sprites);
+        Data.Write((short)Lists.Sprite.Length);
+        for (short Index = 1; Index < Lists.Sprite.Length; Index++)
+        {
+            Data.Write(Lists.Sprite[Index].Frame_Width);
+            Data.Write(Lists.Sprite[Index].Frame_Height);
         }
         Packet(Data);
     }

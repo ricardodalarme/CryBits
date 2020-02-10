@@ -129,7 +129,7 @@
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.Size = new System.Drawing.Size(285, 69);
             this.txtDescription.TabIndex = 12;
-            this.txtDescription.Validated += new System.EventHandler(this.txtDescription_Validated);
+            this.txtDescription.TextChanged += new System.EventHandler(this.txtDescription_TextChanged);
             // 
             // label11
             // 
@@ -163,7 +163,7 @@
             this.butSave.Name = "butSave";
             this.butSave.Size = new System.Drawing.Size(201, 25);
             this.butSave.TabIndex = 16;
-            this.butSave.Text = "Save";
+            this.butSave.Text = "Save All";
             this.butSave.UseVisualStyleBackColor = true;
             this.butSave.Click += new System.EventHandler(this.butSave_Click);
             // 

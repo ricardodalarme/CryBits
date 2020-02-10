@@ -6,8 +6,8 @@ partial class Editor_Interface : Form
     // Usado para acessar os dados da janela
     public static Editor_Interface Objects = new Editor_Interface();
 
-    // Index do item selecionado
-    static Lists.Structures.Tool Selected;
+    // Ferramenta selecionada
+    private Lists.Structures.Tool Selected;
 
     public Editor_Interface()
     {

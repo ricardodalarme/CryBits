@@ -153,6 +153,12 @@ class Globals
         StandStill
     }
 
+    public enum Alignment
+    {
+        Horizontal,
+        Vertical
+    }
+
     public static void Weather_Update()
     {
         // Redimensiona a lista

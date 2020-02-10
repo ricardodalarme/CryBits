@@ -13,7 +13,7 @@ class Audio
         Thunder_2,
         Thunder_3,
         Thunder_4,
-        Amount
+        Count
     }
 
 
@@ -21,7 +21,7 @@ class Audio
     public enum Musics
     {
         Menu = 1,
-        Amount
+        Count
     }
 
     public class Sound
@@ -35,7 +35,7 @@ class Audio
         public static void Load()
         {
             // Redimensiona a lista
-            Array.Resize(ref List, (byte)Sounds.Amount);
+            Array.Resize(ref List, (byte)Sounds.Count);
 
             // Carrega todos os arquivos e os adiciona a lista
             for (int i = 1; i < List.Length; i++)
@@ -59,7 +59,7 @@ class Audio
             if (List == null) return;
 
             // Para todos os sons
-            for (byte i = 1; i < (byte)Sounds.Amount; i++)
+            for (byte i = 1; i < (byte)Sounds.Count; i++)
                 List[i].Stop();
         }
     }

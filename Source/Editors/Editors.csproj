@@ -91,8 +91,15 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editors\Sprites.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\Sprites.Designer.cs">
+      <DependentUpon>Sprites.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\Interface.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,6 +186,9 @@
     <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Editors\Sprites.resx">
+      <DependentUpon>Sprites.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\Interface.resx">
       <DependentUpon>Interface.cs</DependentUpon>
     </EmbeddedResource>

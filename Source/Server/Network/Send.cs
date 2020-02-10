@@ -55,7 +55,8 @@ class Send
         Maps,
         Map,
         NPCs,
-        Items
+        Items,
+        Sprites
     }
 
     public static void ToPlayer(byte Index, NetOutgoingMessage Data)
@@ -860,6 +861,16 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Party_Invitation);
         Data.Write(Player_Invitation);
+        ToPlayer(Index, Data);
+    }
+
+    public static void Sprites(byte Index, bool OpenEdtior)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Editor_Packets.Sprites);
+        Data.Write(OpenEdtior);
         ToPlayer(Index, Data);
     }
 }

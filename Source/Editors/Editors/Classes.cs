@@ -6,8 +6,8 @@ partial class Editor_Classes : Form
     // Usado para acessar os dados da janela
     public static Editor_Classes Objects = new Editor_Classes();
 
-    // Índice do item selecionado
-    public Lists.Structures.Class Selected;
+    // Classe selecionada
+    private Lists.Structures.Class Selected;
 
     public Editor_Classes()
     {
@@ -37,23 +37,16 @@ partial class Editor_Classes : Form
 
     private static void List_Update()
     {
-        // Limpa as listas
+        // Adiciona as classes às listas
         Objects.List.Items.Clear();
-
-        // Adiciona os itens às listas
-        for (byte i = 1; i < Lists.Class.Length; i++)
-        {
-            string Text = Globals.Numbering(i, Lists.Class.GetUpperBound(0)) + ":" + Lists.Class[i].Name;
-            Objects.List.Items.Add(Text);
-        }
-
-        // Seleciona os primeiros itens
+        for (byte i = 1; i < Lists.Class.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.Class.GetUpperBound(0)) + ":" + Lists.Class[i].Name);
         Objects.List.SelectedIndex = 0;
     }
 
     private void Update_Data()
     {
-        Selected = Lists.Class[List.SelectedIndex + 1];
+        // Previne erros
+        if (List.SelectedIndex == -1) return;
 
         // Limpa os dados necessários
         lstMale.Items.Clear();
@@ -104,6 +97,7 @@ partial class Editor_Classes : Form
     private void List_SelectedIndexChanged(object sender, EventArgs e)
     {
         // Atualiza a lista
+        Selected = Lists.Class[List.SelectedIndex + 1];
         Update_Data();
     }
 
@@ -120,10 +114,10 @@ partial class Editor_Classes : Form
     private void butClear_Click(object sender, EventArgs e)
     {
         // Limpa os dados
-        Clear.Class((byte)(List.SelectedIndex  + 1));
+        Clear.Class((byte)(List.SelectedIndex + 1));
 
         // Atualiza os valores
-        List.SelectedItem = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count) + ":";
+        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count) + ":";
         Update_Data();
     }
 
@@ -144,7 +138,7 @@ partial class Editor_Classes : Form
     {
         // Atualiza a lista
         Selected.Name = txtName.Text;
-        List.SelectedItem = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count) + ":" + txtName.Text;
+        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count) + ":" + txtName.Text;
     }
 
     private void numHP_ValueChanged(object sender, EventArgs e)
@@ -246,7 +240,7 @@ partial class Editor_Classes : Form
         Selected.Spawn_Y = (byte)numSpawn_Y.Value;
     }
 
-    private void txtDescription_Validated(object sender, EventArgs e)
+    private void txtDescription_TextChanged(object sender, EventArgs e)
     {
         Selected.Description = txtDescription.Text;
     }

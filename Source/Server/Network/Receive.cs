@@ -43,13 +43,15 @@ class Receive
         Write_Maps,
         Write_NPCs,
         Write_Items,
+        Write_Sprites,
         Request_Server_Data,
         Request_Classes,
         Request_Tiles,
         Request_Map,
         Request_Maps,
         Request_NPCs,
-        Request_Items
+        Request_Items,
+        Request_Sprites
     }
 
     public static void Handle(byte Index, NetIncomingMessage Data)
@@ -97,6 +99,7 @@ class Receive
                 case Editor_Packets.Write_Maps: Write_Maps(Index, Data); break;
                 case Editor_Packets.Write_NPCs: Write_NPCs(Index, Data); break;
                 case Editor_Packets.Write_Items: Write_Items(Index, Data); break;
+                case Editor_Packets.Write_Sprites: Write_Sprites(Index, Data); break;
                 case Editor_Packets.Request_Server_Data: Request_Server_Data(Index, Data); break;
                 case Editor_Packets.Request_Classes: Request_Classes(Index, Data); break;
                 case Editor_Packets.Request_Tiles: Request_Tiles(Index, Data); break;
@@ -104,6 +107,7 @@ class Receive
                 case Editor_Packets.Request_Maps: Request_Maps(Index, Data); break;
                 case Editor_Packets.Request_NPCs: Request_NPCs(Index, Data); break;
                 case Editor_Packets.Request_Items: Request_Items(Index, Data); break;
+                case Editor_Packets.Request_Sprites: Request_Sprites(Index, Data); break;
             }
     }
 
@@ -839,6 +843,17 @@ class Receive
                 Send.Items(i);
     }
 
+    private static void Write_Sprites(byte Index, NetIncomingMessage Data)
+    {
+        // Verifica se o jogador realmente tem permissão 
+        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        {
+            Send.Alert(Index, "You aren't allowed to do this.");
+            return;
+        }
+
+    }
+
     private static void Request_Server_Data(byte Index, NetIncomingMessage Data)
     {
         Send.Server_Data(Index, Data.ReadBoolean());
@@ -872,6 +887,11 @@ class Receive
     private static void Request_Items(byte Index, NetIncomingMessage Data)
     {
         Send.Items(Index, Data.ReadBoolean());
+    }
+
+    private static void Request_Sprites(byte Index, NetIncomingMessage Data)
+    {
+        Send.Sprites(Index, Data.ReadBoolean());
     }
 
     private static void Party_Invite(byte Index, NetIncomingMessage Data)

@@ -16,7 +16,8 @@ partial class Receive
         Maps,
         Map,
         NPCs,
-        Items
+        Items,
+        Sprites
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -33,6 +34,7 @@ partial class Receive
             case Packets.NPCs: NPCs(Data); break;
             case Packets.Items: Items(Data); break;
             case Packets.Tiles: Tiles(Data); break;
+            case Packets.Sprites: Sprites(Data); break;
         }
     }
 
@@ -70,6 +72,7 @@ partial class Receive
         for (short i = 1; i < Lists.Class.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.Class[i] = new Lists.Structures.Class();
             Lists.Class[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.Class[i].Attribute = new short[(byte)Globals.Attributes.Count];
             Lists.Class[i].Tex_Male = new System.Collections.Generic.List<short>();
@@ -90,7 +93,7 @@ partial class Receive
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
             byte Num_Items = Data.ReadByte();
-            for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(new Tuple<short, short> (Data.ReadInt16(), Data.ReadInt16()));
+            for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(new Tuple<short, short>(Data.ReadInt16(), Data.ReadInt16()));
         }
 
         // Abre o editor
@@ -207,6 +210,7 @@ partial class Receive
         for (short i = 1; i < Lists.NPC.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.NPC[i] = new Lists.Structures.NPC();
             Lists.NPC[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.NPC[i].Attribute = new short[(byte)Globals.Attributes.Count];
             Lists.NPC[i].Drop = new System.Collections.Generic.List<Lists.Structures.NPC_Drop>();
@@ -243,6 +247,7 @@ partial class Receive
         for (short i = 1; i < Lists.Item.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.Item[i] = new Lists.Structures.Item();
             Lists.Item[i].Potion_Vital = new short[(byte)Globals.Vitals.Count];
             Lists.Item[i].Equip_Attribute = new short[(byte)Globals.Attributes.Count];
 
@@ -304,5 +309,11 @@ partial class Receive
         // Abre o editor
         if (Data.ReadBoolean())
             Editor_Tiles.Open();
+    }
+
+    private static void Sprites(NetIncomingMessage Data)
+    {
+        // Abre o editor
+        if (Data.ReadBoolean()) Editor_Sprites.Open();
     }
 }
