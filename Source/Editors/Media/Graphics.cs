@@ -16,7 +16,7 @@ partial class Graphics
     public static RenderTexture Win_Map_Lighting = new RenderTexture((uint)Editor_Maps.Objects.Width, (uint)Editor_Maps.Objects.Height);
 
     // Fonte principal
-    public static SFML.Graphics.Font GameFont;
+    private static SFML.Graphics.Font GameFont;
 
     // Texturas
     public static Texture[] Tex_Character;
@@ -41,7 +41,7 @@ partial class Graphics
     public const string Format = ".png";
 
     #region Engine
-    public static Texture[] AddTextures(string Directory)
+    private static Texture[] AddTextures(string Directory)
     {
         short i = 1;
         Texture[] TempTex = new Texture[0];
@@ -73,7 +73,7 @@ partial class Graphics
         return new SFML.Graphics.Color(R, G, B, A);
     }
 
-    public static void Render(RenderWindow Window, Texture Texture, Rectangle Source, Rectangle Destiny, object Color = null, object Mode = null)
+    private static void Render(RenderWindow Window, Texture Texture, Rectangle Source, Rectangle Destiny, object Color = null, object Mode = null)
     {
         // Define os dados
         Sprite TmpImage = new Sprite(Texture)
@@ -89,7 +89,7 @@ partial class Graphics
         Window.Draw(TmpImage, (RenderStates)Mode);
     }
 
-    public static void Render(RenderTexture Window, Texture Texture, Rectangle Destiny, object Color = null, object Mode = null)
+    private static void Render(RenderTexture Window, Texture Texture, Rectangle Destiny, object Color = null, object Mode = null)
     {
         // Define os dados
         Sprite TmpImage = new Sprite(Texture)
@@ -104,7 +104,7 @@ partial class Graphics
         Window.Draw(TmpImage, (RenderStates)Mode);
     }
 
-    public static void Render(RenderWindow Window, Texture Texture, int X, int Y, int Source_X, int Source_Y, int Source_Width, int Source_Height, object Color = null, object Mode = null)
+    private static void Render(RenderWindow Window, Texture Texture, int X, int Y, int Source_X, int Source_Y, int Source_Width, int Source_Height, object Color = null, object Mode = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(Source_X, Source_Y), new Size(Source_Width, Source_Height));
@@ -114,7 +114,7 @@ partial class Graphics
         Render(Window, Texture, Source, Destiny, Color, Mode);
     }
 
-    public static void Render(RenderWindow Window, Texture Texture, Rectangle Destiny, object Color = null, object Mode = null)
+    private static void Render(RenderWindow Window, Texture Texture, Rectangle Destiny, object Color = null, object Mode = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(0), TSize(Texture));
@@ -123,7 +123,7 @@ partial class Graphics
         Render(Window, Texture, Source, Destiny, Color, Mode);
     }
 
-    public static void Render(RenderWindow Window, Texture Texture, Point Point, object Color = null, object Mode = null)
+    private static void Render(RenderWindow Window, Texture Texture, Point Point, object Color = null, object Mode = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(0), TSize(Texture));
@@ -133,7 +133,7 @@ partial class Graphics
         Render(Window, Texture, Source, Destiny, Color, Mode);
     }
 
-    public static void RenderRectangle(RenderWindow Window, Rectangle Rectangle, object Color = null)
+    private static void RenderRectangle(RenderWindow Window, Rectangle Rectangle, object Color = null)
     {
         // Desenha a caixa
         Render(Window, Tex_Grid, Rectangle.X, Rectangle.Y, 0, 0, Rectangle.Width, 1, Color);
@@ -142,13 +142,13 @@ partial class Graphics
         Render(Window, Tex_Grid, Rectangle.X + Rectangle.Width - 1, Rectangle.Y, 0, 0, 1, Rectangle.Height, Color);
     }
 
-    public static void RenderRectangle(RenderWindow Window, int x, int y, int Width, int Height, object Color = null)
+    private static void RenderRectangle(RenderWindow Window, int x, int y, int Width, int Height, object Color = null)
     {
         // Desenha a caixa
         RenderRectangle(Window, new Rectangle(x, y, Width, Height), Color);
     }
 
-    public static void Render_Box(RenderWindow Window, Texture Texture, byte Margin, Point Position, Size Size)
+    private static void Render_Box(RenderWindow Window, Texture Texture, byte Margin, Point Position, Size Size)
     {
         int Texture_Width = TSize(Texture).Width;
         int Texture_Height = TSize(Texture).Height;

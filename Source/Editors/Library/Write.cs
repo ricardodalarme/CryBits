@@ -40,26 +40,10 @@ class Write
         {
             // Salva de acordo com a ferramenta
             Lists.Structures.Tool Tool = (Lists.Structures.Tool)Node.Nodes[i].Tag;
-            if (Tool is Lists.Structures.Button)
-            {
-                Data.Write((byte)Globals.Tools_Types.Button);
-                Button(Data, (Lists.Structures.Button)Tool);
-            }
-            else if (Tool is Lists.Structures.TextBox)
-            {
-                Data.Write((byte)Globals.Tools_Types.TextBox);
-                TextBox(Data, (Lists.Structures.TextBox)Tool);
-            }
-            else if (Tool is Lists.Structures.CheckBox)
-            {
-                Data.Write((byte)Globals.Tools_Types.CheckBox);
-                CheckBox(Data, (Lists.Structures.CheckBox)Tool);
-            }
-            else if (Tool is Lists.Structures.Panel)
-            {
-                Data.Write((byte)Globals.Tools_Types.Panel);
-                Panel(Data, (Lists.Structures.Panel)Tool);
-            }
+            if (Tool is Lists.Structures.Button)  Button(Data, (Lists.Structures.Button)Tool);
+            else if (Tool is Lists.Structures.TextBox) TextBox(Data, (Lists.Structures.TextBox)Tool);
+            else if (Tool is Lists.Structures.CheckBox) CheckBox(Data, (Lists.Structures.CheckBox)Tool);
+            else if (Tool is Lists.Structures.Panel) Panel(Data, (Lists.Structures.Panel)Tool);
 
             // Pula pra próxima ferramenta
             Tools(Node.Nodes[i], Data);
@@ -69,6 +53,7 @@ class Write
     public static void Button(BinaryWriter Data, Lists.Structures.Button Tool)
     {
         // Escreve os dados
+        Data.Write((byte)Globals.Tools_Types.Button);
         Data.Write(Tool.Name);
         Data.Write(Tool.Position.X);
         Data.Write(Tool.Position.Y);
@@ -80,6 +65,7 @@ class Write
     public static void TextBox(BinaryWriter Data, Lists.Structures.TextBox Tool)
     {
         // Escreve os dados
+        Data.Write((byte)Globals.Tools_Types.TextBox);
         Data.Write(Tool.Name);
         Data.Write(Tool.Position.X);
         Data.Write(Tool.Position.Y);
@@ -93,6 +79,7 @@ class Write
     public static void Panel(BinaryWriter Data, Lists.Structures.Panel Tool)
     {
         // Escreve os dados
+        Data.Write((byte)Globals.Tools_Types.Panel);
         Data.Write(Tool.Name);
         Data.Write(Tool.Position.X);
         Data.Write(Tool.Position.Y);
@@ -104,6 +91,7 @@ class Write
     public static void CheckBox(BinaryWriter Data, Lists.Structures.CheckBox Tool)
     {
         // Escreve os dados
+        Data.Write((byte)Globals.Tools_Types.CheckBox);
         Data.Write(Tool.Name);
         Data.Write(Tool.Position.X);
         Data.Write(Tool.Position.Y);

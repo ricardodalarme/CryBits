@@ -55,7 +55,7 @@ class Program
         return true;
     }
 
-    public static void Logo()
+    private static void Logo()
     {
         Console.WriteLine(@"  ______              _____     _
  |   ___|            |     \   | |

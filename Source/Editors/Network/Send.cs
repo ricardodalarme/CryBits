@@ -3,7 +3,7 @@
 partial class Send
 {
     // Pacotes do cliente
-    public enum Packets
+    private enum Packets
     {
         Connect,
         Write_Server_Data,
@@ -23,7 +23,7 @@ partial class Send
         Request_Sprites
     }
 
-    public static void Packet(NetOutgoingMessage Data)
+    private static void Packet(NetOutgoingMessage Data)
     {
         // Envia os dados ao servidor
         Socket.Device.SendMessage(Data, NetDeliveryMethod.ReliableOrdered);

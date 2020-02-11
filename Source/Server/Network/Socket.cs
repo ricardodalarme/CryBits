@@ -47,7 +47,7 @@ class Socket
                         Connect(Data);
                     // Conexão perdida, disconecta o jogador do jogo
                     else if (Status == NetConnectionStatus.Disconnected)
-                        Disconnect(Index);
+                        Player.Leave(Index);
 
                     break;
                 // Recebe e manuseia os dados recebidos
@@ -60,7 +60,7 @@ class Socket
         }
     }
 
-    public static void Connect(NetIncomingMessage IncomingMsg)
+    private static void Connect(NetIncomingMessage IncomingMsg)
     {
         // Define a conexão do jogador
         Connection[FindConnection(null)] = IncomingMsg.SenderConnection;
@@ -69,14 +69,14 @@ class Socket
         Game.SetHigherIndex();
     }
 
-    public static void Disconnect(byte Index)
+    private static byte FindConnection(NetConnection Data)
     {
-        // Redefine o maior índice dos jogadores
-        Game.SetHigherIndex();
+        // Encontra uma determinada conexão
+        for (byte i = 1; i <= Lists.Server_Data.Max_Players; i++)
+            if (Connection[i] == Data)
+                return i;
 
-        // Acaba com a conexão e restabelece os dados do jogador
-        Connection[Index] = null;
-        Player.Leave(Index);
+        return 0;
     }
 
     public static bool IsConnected(byte Index)
@@ -87,15 +87,5 @@ class Socket
 
         // Retorna um valor de acordo com a conexão do jogador
         return Connection[Index].Status == NetConnectionStatus.Connected;
-    }
-
-    public static byte FindConnection(NetConnection Data)
-    {
-        // Encontra uma determinada conexão
-        for (byte i = 1; i <= Lists.Server_Data.Max_Players; i++)
-            if (Connection[i] == Data)
-                return i;
-
-        return 0;
     }
 }

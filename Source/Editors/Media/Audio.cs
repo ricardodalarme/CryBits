@@ -27,7 +27,7 @@ class Audio
     public class Sound
     {
         // Formato em que o dispositivo irá ler os sons
-        public const string Format = ".wav";
+        private const string Format = ".wav";
 
         // Dispositivo sonoro
         public static SFML.Audio.Sound[] List;
@@ -67,12 +67,12 @@ class Audio
     public class Music
     {
         // Formato em o dispositivo irá ler as músicas
-        public const string Format = ".ogg";
+        private const string Format = ".ogg";
 
         // Lista das músicas
         public static SFML.Audio.Music Device;
 
-        // Index da música reproduzida atualmente
+        // Índice da música reproduzida atualmente
         public static byte Current;
 
         public static void Play(Musics Index, bool Loop = false)

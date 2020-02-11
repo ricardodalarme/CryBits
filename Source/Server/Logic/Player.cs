@@ -138,8 +138,7 @@ class Player
     public static void Leave(byte Index)
     {
         // Sai do grupo
-        if (Lists.Temp_Player[Index].Playing)
-            Party_Leave(Index);
+        if (Lists.Temp_Player[Index].Playing) Party_Leave(Index);
 
         // Salva os dados do e envia atualiza os demais jogadores da desconexão
         if (!Lists.Temp_Player[Index].InEditor)
@@ -150,6 +149,12 @@ class Player
 
         // Limpa os dados do jogador
         Clear.Player(Index);
+
+        // Redefine o maior índice dos jogadores
+        Game.SetHigherIndex();
+
+        // Finaliza a conexão
+        Socket.Connection[Index] = null;
     }
 
     public static bool IsPlaying(byte Index)
