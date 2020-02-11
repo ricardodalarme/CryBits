@@ -224,7 +224,7 @@ class Send
         ToPlayer(Index, Data);
     }
 
-    public static NetOutgoingMessage Player_Data_Cache(byte Index)
+    private static NetOutgoingMessage Player_Data_Cache(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

@@ -11,7 +11,7 @@ class Program
     static EventHandler Handler;
 
     [STAThread]
-    public static void Main()
+    static void Main()
     {
         // Abre o servidor e define suas configurações
         Console.Title = "Server";

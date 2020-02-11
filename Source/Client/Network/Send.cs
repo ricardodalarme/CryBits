@@ -33,7 +33,7 @@ partial class Send
         Party_Accept
     }
 
-    public static void Packet(NetOutgoingMessage Data)
+    private static void Packet(NetOutgoingMessage Data)
     {
         // Envia os dados ao servidor
         Socket.Device.SendMessage(Data, NetDeliveryMethod.ReliableOrdered);
@@ -279,5 +279,36 @@ partial class Send
         // Envia os dados
         Data.Write((byte)Packets.Party_Leave);
         Packet(Data);
+    }
+
+    public static void Player_Direction()
+    {
+        NetOutgoingMessage Dados = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Dados.Write((byte)Packets.Player_Direction);
+        Dados.Write((byte)Player.Me.Direction);
+        Packet(Dados);
+    }
+
+    public static void Player_Move()
+    {
+        NetOutgoingMessage Dados = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Dados.Write((byte)Packets.Player_Move);
+        Dados.Write(Player.Me.X);
+        Dados.Write(Player.Me.Y);
+        Dados.Write((byte)Player.Me.Movement);
+        Packet(Dados);
+    }
+
+    public static void Player_Attack()
+    {
+        NetOutgoingMessage Dados = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Dados.Write((byte)Packets.Player_Attack);
+        Packet(Dados);
     }
 }

@@ -9,7 +9,6 @@ class Loop
     private static int FogY_Timer = 0;
     private static int Snow_Timer = 0;
     private static int Thundering_Timer = 0;
-    public static byte Anim = 0;
 
     public static void Main()
     {

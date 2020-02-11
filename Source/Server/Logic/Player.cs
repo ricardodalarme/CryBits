@@ -344,7 +344,7 @@ class Player
         Character(Index).Attack_Timer = Environment.TickCount;
     }
 
-    public static void Attack_Player(byte Index, byte Victim)
+    private static void Attack_Player(byte Index, byte Victim)
     {
         short Damage;
         short x = Character(Index).X, y = Character(Index).Y;
@@ -397,7 +397,7 @@ class Player
             Send.Player_Attack(Index);
     }
 
-    public static void Attack_NPC(byte Index, byte Victim)
+    private static void Attack_NPC(byte Index, byte Victim)
     {
         short Damage;
         short x = Character(Index).X, y = Character(Index).Y;
@@ -498,7 +498,7 @@ class Player
         if (Environment.TickCount > Loop.Timer_Player_Regen + 5000) Loop.Timer_Player_Regen = Environment.TickCount;
     }
 
-    public static void CheckLevelUp(byte Index)
+    private static void CheckLevelUp(byte Index)
     {
         byte NumLevel = 0; int ExpRest;
 
@@ -680,7 +680,7 @@ class Player
         Send.Party(Index);
     }
 
-    public static void Party_SplitXP(byte Index, int Experience)
+    private static void Party_SplitXP(byte Index, int Experience)
     {
         // Somatório do level de todos os jogadores do grupo
         int Given_Experience, Experience_Sum = 0, Difference;

@@ -81,6 +81,7 @@ class Tools
         // Se não, retornar um valor nulo
         return false;
     }
+
     public static bool Viewable(Order_Structure Order)
     {
         // Verifica se a ferramenta está visível
@@ -136,13 +137,13 @@ class Tools
         return Text;
     }
 
-    public static void Chat_AddLine(string Mensagem, SFML.Graphics.Color Cor)
+    private static void Chat_AddLine(string Text, SFML.Graphics.Color Cor)
     {
         Chat.Add(new Chat_Structure());
         int i = Chat.Count - 1;
 
         // Adiciona a mensagem em uma linha vazia
-        Chat[i].Text = Mensagem;
+        Chat[i].Text = Text;
         Chat[i].Color = Cor;
 
         // Remove uma linha se necessário
@@ -154,37 +155,37 @@ class Tools
         Chat_Text_Visible = true;
     }
 
-    public static void Chat_Add(string Message, SFML.Graphics.Color Color)
+    public static void Chat_Add(string Text, SFML.Graphics.Color Color)
     {
         int Message_Width, Box_Width = Graphics.TSize(Graphics.Tex_Panel[Panels.Get("Chat").Texture_Num]).Width - 16;
         string Temp_Message; int Split;
 
         // Remove os espaços
-        Message = Message.Trim();
-        Message_Width = MeasureString(Message);
+        Text = Text.Trim();
+        Message_Width = MeasureString(Text);
 
         // Caso couber, adiciona a mensagem normalmente
         if (Message_Width < Box_Width)
-            Chat_AddLine(Message, Color);
+            Chat_AddLine(Text, Color);
         else
         {
-            for (int i = 0; i <= Message.Length; i++)
+            for (int i = 0; i <= Text.Length; i++)
             {
                 // Verifica se o próximo caráctere é um separável 
-                switch (Message[i])
+                switch (Text[i])
                 {
                     case '-':
                     case '_':
                     case ' ': Split = i; break;
                 }
 
-                Temp_Message = Message.Substring(0, i);
+                Temp_Message = Text.Substring(0, i);
 
                 // Adiciona o texto à caixa
                 if (MeasureString(Temp_Message) > Box_Width)
                 {
                     Chat_AddLine(Temp_Message, Color);
-                    Chat_Add(Message.Substring(Temp_Message.Length), Color);
+                    Chat_Add(Text.Substring(Temp_Message.Length), Color);
                     return;
                 }
             }

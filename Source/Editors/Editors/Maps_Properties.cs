@@ -8,7 +8,7 @@ public partial class Editor_Maps_Properties : Form
     public static Editor_Maps_Properties Objects = new Editor_Maps_Properties();
 
     // Dados temporários
-    public static int Selected;
+    private static int Selected;
 
     public Editor_Maps_Properties()
     {

@@ -97,13 +97,6 @@ class Globals
         Count
     }
 
-    public enum Tiles_Mode
-    {
-        Normal,
-        Automatic,
-        Automatic_Animated
-    }
-
     public enum Items
     {
         None,

@@ -197,7 +197,7 @@ partial class Graphics
         RenderWindow.TextEntered += new EventHandler<TextEventArgs>(Window.OnTextEntered);
     }
 
-    public static void LoadTextures()
+    private static void LoadTextures()
     {
         // Conjuntos
         Tex_Character = LoadTextures(Directories.Tex_Characters.FullName);
@@ -288,21 +288,29 @@ partial class Graphics
     #region Tools
     private static void Interface(List<Tools.Order_Structure> Node)
     {
-        for (byte i = 0; i < Node.Count; i++)
-            if (Node[i].Data.Visible)
-            {
-                // Desenha a ferramenta
-                if (Node[i].Data is Panels.Structure) Panel((Panels.Structure)Node[i].Data);
-                else if (Node[i].Data is TextBoxes.Structure) TextBox((TextBoxes.Structure)Node[i].Data);
-                else if (Node[i].Data is Buttons.Structure) Button((Buttons.Structure)Node[i].Data);
-                else if (Node[i].Data is CheckBoxes.Structure) CheckBox((CheckBoxes.Structure)Node[i].Data);
+        // Percorre toda a árvore de ordem para desenhar a interface
+        Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
+        Stack.Push(Tools.Order);
+        while (Stack.Count != 0)
+        {
+            List<Tools.Order_Structure> Top = Stack.Pop();
 
-                // Desenha algumas coisas mais específicas da interface
-                Interface_Specific(Node[i].Data);
+            for (byte i = 0; i < Top.Count; i++)
+                if (Top[i].Data.Visible)
+                {
+                    // Desenha a ferramenta
+                    if (Top[i].Data is Panels.Structure) Panel((Panels.Structure)Top[i].Data);
+                    else if (Top[i].Data is TextBoxes.Structure) TextBox((TextBoxes.Structure)Top[i].Data);
+                    else if (Top[i].Data is Buttons.Structure) Button((Buttons.Structure)Top[i].Data);
+                    else if (Top[i].Data is CheckBoxes.Structure) CheckBox((CheckBoxes.Structure)Top[i].Data);
 
-                // Pula pra próxima
-                Interface(Node[i].Nodes);
-            }
+                    // Desenha algumas coisas mais específicas da interface
+                    Interface_Specific(Top[i].Data);
+
+                    // Adiciona os filhos à pilha
+                    Stack.Push(Top[i].Nodes);
+                }
+        }
     }
 
     private static void Button(Buttons.Structure Tool)

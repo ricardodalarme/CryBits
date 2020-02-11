@@ -50,7 +50,7 @@ class Write
         }
     }
 
-    public static void Button(BinaryWriter Data, Lists.Structures.Button Tool)
+    private static void Button(BinaryWriter Data, Lists.Structures.Button Tool)
     {
         // Escreve os dados
         Data.Write((byte)Globals.Tools_Types.Button);
@@ -62,7 +62,7 @@ class Write
         Data.Write(Tool.Texture_Num);
     }
 
-    public static void TextBox(BinaryWriter Data, Lists.Structures.TextBox Tool)
+    private static void TextBox(BinaryWriter Data, Lists.Structures.TextBox Tool)
     {
         // Escreve os dados
         Data.Write((byte)Globals.Tools_Types.TextBox);
@@ -76,7 +76,7 @@ class Write
         Data.Write(Tool.Password);
     }
 
-    public static void Panel(BinaryWriter Data, Lists.Structures.Panel Tool)
+    private static void Panel(BinaryWriter Data, Lists.Structures.Panel Tool)
     {
         // Escreve os dados
         Data.Write((byte)Globals.Tools_Types.Panel);
@@ -88,7 +88,7 @@ class Write
         Data.Write(Tool.Texture_Num);
     }
 
-    public static void CheckBox(BinaryWriter Data, Lists.Structures.CheckBox Tool)
+    private static void CheckBox(BinaryWriter Data, Lists.Structures.CheckBox Tool)
     {
         // Escreve os dados
         Data.Write((byte)Globals.Tools_Types.CheckBox);

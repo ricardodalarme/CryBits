@@ -418,4 +418,281 @@ partial class Receive
         Game.Party_Invitation = Data.ReadString();
         Panels.Get("Party_Invitation").Visible = true;
     }
+
+    private static void NPCs(NetIncomingMessage Data)
+    {
+        // Quantidade
+        Lists.NPC = new Lists.Structures.NPCs[Data.ReadInt16() + 1];
+
+        // Lê os dados de todos
+        for (byte i = 1; i < Lists.NPC.Length; i++)
+        {
+            // Geral
+            Lists.NPC[i].Name = Data.ReadString();
+            Lists.NPC[i].SayMsg = Data.ReadString();
+            Lists.NPC[i].Texture = Data.ReadInt16();
+            Lists.NPC[i].Type = Data.ReadByte();
+
+            // Vitais
+            Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+                Lists.NPC[i].Vital[n] = Data.ReadInt16();
+        }
+    }
+
+    private static void Map_NPCs(NetIncomingMessage Data)
+    {
+        // Lê os dados
+        Lists.Temp_Map.NPC = new Lists.Structures.Map_NPCs[Data.ReadInt16() + 1];
+        for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
+        {
+            Lists.Temp_Map.NPC[i].X2 = 0;
+            Lists.Temp_Map.NPC[i].Y2 = 0;
+            Lists.Temp_Map.NPC[i].Index = Data.ReadInt16();
+            Lists.Temp_Map.NPC[i].X = Data.ReadByte();
+            Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
+            Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+
+            // Vitais
+            Lists.Temp_Map.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+                Lists.Temp_Map.NPC[i].Vital[n] = Data.ReadInt16();
+        }
+    }
+
+    private static void Map_NPC(NetIncomingMessage Data)
+    {
+        // Lê os dados
+        byte i = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Index = Data.ReadInt16();
+        Lists.Temp_Map.NPC[i].X = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.Temp_Map.NPC[i].Vital[n] = Data.ReadInt16();
+    }
+
+    private static void Map_NPC_Movement(NetIncomingMessage Data)
+    {
+        // Lê os dados
+        byte i = Data.ReadByte();
+        byte x = Lists.Temp_Map.NPC[i].X, y = Lists.Temp_Map.NPC[i].Y;
+        Lists.Temp_Map.NPC[i].X2 = 0;
+        Lists.Temp_Map.NPC[i].Y2 = 0;
+        Lists.Temp_Map.NPC[i].X = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Movement = (Game.Movements)Data.ReadByte();
+
+        // Posição exata do jogador
+        if (x != Lists.Temp_Map.NPC[i].X || y != Lists.Temp_Map.NPC[i].Y)
+            switch (Lists.Temp_Map.NPC[i].Direction)
+            {
+                case Game.Directions.Up: Lists.Temp_Map.NPC[i].Y2 = Game.Grid; break;
+                case Game.Directions.Down: Lists.Temp_Map.NPC[i].Y2 = Game.Grid * -1; break;
+                case Game.Directions.Right: Lists.Temp_Map.NPC[i].X2 = Game.Grid * -1; break;
+                case Game.Directions.Left: Lists.Temp_Map.NPC[i].X2 = Game.Grid; break;
+            }
+    }
+
+    private static void Map_NPC_Attack(NetIncomingMessage Data)
+    {
+        byte Index = Data.ReadByte(), Victim = Data.ReadByte(), Victim_Type = Data.ReadByte();
+
+        // Inicia o ataque
+        Lists.Temp_Map.NPC[Index].Attacking = true;
+        Lists.Temp_Map.NPC[Index].Attack_Timer = Environment.TickCount;
+
+        // Sofrendo dano
+        if (Victim > 0)
+            if (Victim_Type == (byte)Game.Target.Player)
+            {
+                Lists.Player[Victim].Hurt = Environment.TickCount;
+                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Player[Victim].X, Lists.Player[Victim].Y, Environment.TickCount));
+            }
+            else if (Victim_Type == (byte)Game.Target.NPC)
+            {
+                Lists.Temp_Map.NPC[Victim].Hurt = Environment.TickCount;
+                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Temp_Map.NPC[Victim].X, Lists.Temp_Map.NPC[Victim].Y, Environment.TickCount));
+            }
+    }
+
+    private static void Map_NPC_Direction(NetIncomingMessage Data)
+    {
+        // Define a direção de determinado NPC
+        byte i = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+        Lists.Temp_Map.NPC[i].X2 = 0;
+        Lists.Temp_Map.NPC[i].Y2 = 0;
+    }
+
+    private static void Map_NPC_Vitals(NetIncomingMessage Data)
+    {
+        byte Index = Data.ReadByte();
+
+        // Define os vitais de determinado NPC
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+            Lists.Temp_Map.NPC[Index].Vital[n] = Data.ReadInt16();
+    }
+
+    private static void Map_NPC_Died(NetIncomingMessage Data)
+    {
+        byte i = Data.ReadByte();
+
+        // Limpa os dados do NPC
+        Lists.Temp_Map.NPC[i].X2 = 0;
+        Lists.Temp_Map.NPC[i].Y2 = 0;
+        Lists.Temp_Map.NPC[i].Index = 0;
+        Lists.Temp_Map.NPC[i].X = 0;
+        Lists.Temp_Map.NPC[i].Y = 0;
+        Lists.Temp_Map.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+    }
+
+    private static void Player_Data(NetIncomingMessage Data)
+    {
+        byte Index = Data.ReadByte();
+
+        // Defini os dados do jogador
+        Lists.Player[Index].Name = Data.ReadString();
+        Lists.Player[Index].Class = Data.ReadByte();
+        Lists.Player[Index].Texture_Num = Data.ReadInt16();
+        Lists.Player[Index].Genre = Data.ReadBoolean();
+        Lists.Player[Index].Level = Data.ReadInt16();
+        Lists.Player[Index].Map = Data.ReadInt16();
+        Lists.Player[Index].X = Data.ReadByte();
+        Lists.Player[Index].Y = Data.ReadByte();
+        Lists.Player[Index].Direction = (Game.Directions)Data.ReadByte();
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+        {
+            Lists.Player[Index].Vital[n] = Data.ReadInt16();
+            Lists.Player[Index].Max_Vital[n] = Data.ReadInt16();
+        }
+        for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.Player[Index].Attribute[n] = Data.ReadInt16();
+        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Lists.Player[Index].Equipment[n] = Data.ReadInt16();
+    }
+
+    private static void Player_Position(NetIncomingMessage Data)
+    {
+        byte Index = Data.ReadByte();
+
+        // Defini os dados do jogador
+        Lists.Player[Index].X = Data.ReadByte();
+        Lists.Player[Index].Y = Data.ReadByte();
+        Lists.Player[Index].Direction = (Game.Directions)Data.ReadByte();
+
+        // Para a movimentação
+        Lists.Player[Index].X2 = 0;
+        Lists.Player[Index].Y2 = 0;
+        Lists.Player[Index].Movement = Game.Movements.Stopped;
+    }
+
+    private static void Player_Vitals(NetIncomingMessage Data)
+    {
+        byte Index = Data.ReadByte();
+
+        // Define os dados
+        for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
+        {
+            Lists.Player[Index].Vital[i] = Data.ReadInt16();
+            Lists.Player[Index].Max_Vital[i] = Data.ReadInt16();
+        }
+    }
+
+    private static void Player_Equipments(NetIncomingMessage Data)
+    {
+        byte Index = Data.ReadByte();
+
+        // Define os dados
+        for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Lists.Player[Index].Equipment[i] = Data.ReadInt16();
+    }
+
+    private static void Player_Leave(NetIncomingMessage Dados)
+    {
+        // Limpa os dados do jogador
+        Clear.Player(Dados.ReadByte());
+    }
+
+    private static void Player_Move(NetIncomingMessage Data)
+    {
+        byte Index = Data.ReadByte();
+
+        // Move o jogador
+        Lists.Player[Index].X = Data.ReadByte();
+        Lists.Player[Index].Y = Data.ReadByte();
+        Lists.Player[Index].Direction = (Game.Directions)Data.ReadByte();
+        Lists.Player[Index].Movement = (Game.Movements)Data.ReadByte();
+        Lists.Player[Index].X2 = 0;
+        Lists.Player[Index].Y2 = 0;
+
+        // Posição exata do jogador
+        switch (Lists.Player[Index].Direction)
+        {
+            case Game.Directions.Up: Lists.Player[Index].Y2 = Game.Grid; break;
+            case Game.Directions.Down: Lists.Player[Index].Y2 = Game.Grid * -1; break;
+            case Game.Directions.Right: Lists.Player[Index].X2 = Game.Grid * -1; break;
+            case Game.Directions.Left: Lists.Player[Index].X2 = Game.Grid; break;
+        }
+    }
+
+    private static void Player_Direction(NetIncomingMessage Data)
+    {
+        // Define a direção de determinado jogador
+        Lists.Player[Data.ReadByte()].Direction = (Game.Directions)Data.ReadByte();
+    }
+
+    private static void Player_Attack(NetIncomingMessage Data)
+    {
+        byte Index = Data.ReadByte(), Victim = Data.ReadByte(), Victim_Type = Data.ReadByte();
+
+        // Inicia o ataque
+        Lists.Player[Index].Attacking = true;
+        Lists.Player[Index].Attack_Timer = Environment.TickCount;
+
+        // Sofrendo dano
+        if (Victim > 0)
+            if (Victim_Type == (byte)Game.Target.Player)
+            {
+                Lists.Player[Victim].Hurt = Environment.TickCount;
+                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Player[Victim].X, Lists.Player[Victim].Y, Environment.TickCount));
+            }
+            else if (Victim_Type == (byte)Game.Target.NPC)
+            {
+                Lists.Temp_Map.NPC[Victim].Hurt = Environment.TickCount;
+                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Temp_Map.NPC[Victim].X, Lists.Temp_Map.NPC[Victim].Y, Environment.TickCount));
+            }
+    }
+
+    private static void Player_Experience(NetIncomingMessage Data)
+    {
+        // Define os dados
+        Player.Me.Experience = Data.ReadInt32();
+        Player.Me.ExpNeeded = Data.ReadInt32();
+        Player.Me.Points = Data.ReadByte();
+
+        // Manipula a visibilidade dos botões
+        Buttons.Get("Attributes_Strength").Visible = (Player.Me.Points > 0);
+        Buttons.Get("Attributes_Resistance").Visible = (Player.Me.Points > 0);
+        Buttons.Get("Attributes_Intelligence").Visible = (Player.Me.Points > 0);
+        Buttons.Get("Attributes_Agility").Visible = (Player.Me.Points > 0);
+        Buttons.Get("Attributes_Vitality").Visible = (Player.Me.Points > 0);
+    }
+
+    private static void Player_Inventory(NetIncomingMessage Data)
+    {
+        // Define os dados
+        for (byte i = 1; i <= Game.Max_Inventory; i++)
+        {
+            Player.Inventory[i].Item_Num = Data.ReadInt16();
+            Player.Inventory[i].Amount = Data.ReadInt16();
+        }
+    }
+
+    private static void Player_Hotbar(NetIncomingMessage Data)
+    {
+        // Define os dados
+        for (byte i = 1; i <= Game.Max_Hotbar; i++)
+        {
+            Player.Hotbar[i].Type = Data.ReadByte();
+            Player.Hotbar[i].Slot = Data.ReadByte();
+        }
+    }
 }

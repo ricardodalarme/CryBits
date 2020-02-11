@@ -89,7 +89,7 @@ class Read
         }
     }
 
-    public static Lists.Structures.Button Button(BinaryReader Data)
+    private static Lists.Structures.Button Button(BinaryReader Data)
     {
         // Lê os dados
         Lists.Structures.Button Tool = new Lists.Structures.Button
@@ -103,7 +103,7 @@ class Read
         return Tool;
     }
 
-    public static Lists.Structures.TextBox TextBox(BinaryReader Data)
+    private static Lists.Structures.TextBox TextBox(BinaryReader Data)
     {
         // Lê os dados
         Lists.Structures.TextBox Tool = new Lists.Structures.TextBox
@@ -119,7 +119,7 @@ class Read
         return Tool;
     }
 
-    public static Lists.Structures.Panel Panel(BinaryReader Data)
+    private static Lists.Structures.Panel Panel(BinaryReader Data)
     {
         // Carrega os dados
         Lists.Structures.Panel Tool = new Lists.Structures.Panel
@@ -133,7 +133,7 @@ class Read
         return Tool;
     }
 
-    public static Lists.Structures.CheckBox CheckBox(BinaryReader Data)
+    private static Lists.Structures.CheckBox CheckBox(BinaryReader Data)
     {
         // Carrega os dados
         Lists.Structures.CheckBox Tool = new Lists.Structures.CheckBox

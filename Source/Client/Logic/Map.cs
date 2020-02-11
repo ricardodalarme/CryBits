@@ -71,7 +71,7 @@ class Map
                 Lists.Temp_Map.Blood.RemoveAt(i);
     }
 
-    public static void NextTile(Game.Directions Direction, ref short X, ref short Y)
+    private static void NextTile(Game.Directions Direction, ref short X, ref short Y)
     {
         // Próximo azulejo
         switch (Direction)
@@ -390,7 +390,7 @@ class Map
                                 Calculate(x, y, q, c);
         }
 
-        public static void Set(byte x, byte y, byte Layer_Num, byte Layer_Type, byte Part, string Index)
+        private static void Set(byte x, byte y, byte Layer_Num, byte Layer_Type, byte Part, string Index)
         {
             Point Position = new Point(0);
 
@@ -434,7 +434,7 @@ class Map
             Lists.Map.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].Y = Data.Y * Game.Grid + Position.Y;
         }
 
-        public static bool Check(int X1, int Y1, int X2, int Y2, byte Layer_Num, byte Layer_Type)
+        private static bool Check(int X1, int Y1, int X2, int Y2, byte Layer_Num, byte Layer_Type)
         {
             Lists.Structures.Map_Tile_Data Data1, Data2;
 
@@ -455,7 +455,7 @@ class Map
             return true;
         }
 
-        public static void Calculate(byte x, byte y, byte Layer_Num, byte Layer_Type)
+        private static void Calculate(byte x, byte y, byte Layer_Num, byte Layer_Type)
         {
             // Calcula as quatros partes do azulejo
             Calculate_NW(x, y, Layer_Num, Layer_Type);
@@ -464,7 +464,7 @@ class Map
             Calculate_SE(x, y, Layer_Num, Layer_Type);
         }
 
-        public static void Calculate_NW(byte x, byte y, byte Layer_Num, byte Layer_Type)
+        private static void Calculate_NW(byte x, byte y, byte Layer_Num, byte Layer_Type)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
@@ -492,7 +492,7 @@ class Map
             }
         }
 
-        public static void Calculate_NE(byte x, byte y, byte Layer_Num, byte Layer_Type)
+        private static void Calculate_NE(byte x, byte y, byte Layer_Num, byte Layer_Type)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
@@ -520,7 +520,7 @@ class Map
             }
         }
 
-        public static void Calculate_SW(byte x, byte y, byte Layer_Num, byte Layer_Type)
+        private static void Calculate_SW(byte x, byte y, byte Layer_Num, byte Layer_Type)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
@@ -548,7 +548,7 @@ class Map
             }
         }
 
-        public static void Calculate_SE(byte x, byte y, byte Layer_Num, byte Layer_Type)
+        private static void Calculate_SE(byte x, byte y, byte Layer_Num, byte Layer_Type)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
@@ -580,7 +580,7 @@ class Map
 
 partial class Graphics
 {
-    public static void Map_Tiles(byte c)
+    private static void Map_Tiles(byte c)
     {
         // Previne erros
         if (Lists.Map.Name == null) return;
@@ -607,7 +607,7 @@ partial class Graphics
                         }
     }
 
-    public static void Map_Autotile(Point Position, Lists.Structures.Map_Tile_Data Dados, SFML.Graphics.Color Cor)
+    private static void Map_Autotile(Point Position, Lists.Structures.Map_Tile_Data Dados, SFML.Graphics.Color Cor)
     {
         // Desenha os 4 mini azulejos
         for (byte i = 0; i <= 3; i++)
@@ -627,14 +627,14 @@ partial class Graphics
         }
     }
 
-    public static void Map_Panorama()
+    private static void Map_Panorama()
     {
         // Desenha o panorama
         if (Lists.Map.Panorama > 0)
             Render(Tex_Panorama[Lists.Map.Panorama], new Point(0));
     }
 
-    public static void Map_Fog()
+    private static void Map_Fog()
     {
         Lists.Structures.Map_Fog Data = Lists.Map.Fog;
         Size Texture_Size = TSize(Tex_Fog[Data.Texture]);
@@ -648,7 +648,7 @@ partial class Graphics
                 Render(Tex_Fog[Data.Texture], new Point(x * Texture_Size.Width + Map.Fog_X, y * Texture_Size.Height + Map.Fog_Y), new SFML.Graphics.Color(255, 255, 255, Data.Alpha));
     }
 
-    public static void Map_Weather()
+    private static void Map_Weather()
     {
         byte x = 0;
 
@@ -670,7 +670,7 @@ partial class Graphics
         Render(Tex_Blanc, 0, 0, 0, 0, Game.Screen_Width, Game.Screen_Height, new SFML.Graphics.Color(255, 255, 255, Map.Lightning));
     }
 
-    public static void Map_Name()
+    private static void Map_Name()
     {
         SFML.Graphics.Color Color;
 
@@ -688,7 +688,7 @@ partial class Graphics
         DrawText(Lists.Map.Name, 463, 48, Color);
     }
 
-    public static void Map_Items()
+    private static void Map_Items()
     {
         // Desenha todos os itens que estão no chão
         for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)
@@ -704,7 +704,7 @@ partial class Graphics
         }
     }
 
-    public static void Map_Blood()
+    private static void Map_Blood()
     {
         // Desenha todos os sangues
         for (byte i = 0; i < Lists.Temp_Map.Blood.Count; i++)

@@ -73,6 +73,7 @@ class Write
         // Descarrega o arquivo
         Data.Dispose();
     }
+
     public static void Server_Data()
     {
         // Escreve os dados
