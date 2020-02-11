@@ -180,6 +180,12 @@ partial class Graphics
 
     public static void Init()
     {
+        // Carrega as texturas
+        LoadTextures();
+
+        // Carrega a fonte
+        Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
+
         // Inicia a janela
         RenderWindow = new RenderWindow(new VideoMode(800, 608), Lists.Options.Game_Name,Styles.Close);
         RenderWindow.Closed += new EventHandler(Window.OnClosed);
@@ -189,12 +195,6 @@ partial class Graphics
         RenderWindow.KeyPressed += new EventHandler<KeyEventArgs>(Window.OnKeyPressed);
         RenderWindow.KeyReleased += new EventHandler<KeyEventArgs>(Window.OnKeyReleased);
         RenderWindow.TextEntered += new EventHandler<TextEventArgs>(Window.OnTextEntered);
-
-        // Carrega a fonte
-        Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
-
-        // Carrega as texturas
-        LoadTextures();
     }
 
     public static void LoadTextures()
