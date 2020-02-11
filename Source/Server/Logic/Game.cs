@@ -20,11 +20,9 @@ class Game
 
     // Limites em geral
     public const byte Max_Inventory = 30;
-    public const byte Max_Map_Items = 100;
     public const byte Max_Hotbar = 10;
     public const byte Min_Map_Width = 24;
     public const byte Min_Map_Height = 18;
-    public const byte Max_Party_Members = 3;
 
     #region Nums
     public enum Directions

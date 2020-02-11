@@ -248,9 +248,11 @@ class NPC
 
     public static void Spawn(byte Index, short Map_Num, byte x, byte y, Game.Directions Direction = 0)
     {
-        Lists.Structures.NPC Data = Lists.NPC[Lists.Map[Map_Num].NPC[Index].Index];
+        // Previne erros
+        if (Lists.Map[Map_Num].NPC[Index].Index >= Lists.NPC.Length) return;
 
         // Define os dados
+        Lists.Structures.NPC Data = Lists.NPC[Lists.Map[Map_Num].NPC[Index].Index];
         Lists.Temp_Map[Map_Num].NPC[Index].Index = Lists.Map[Map_Num].NPC[Index].Index;
         Lists.Temp_Map[Map_Num].NPC[Index].X = x;
         Lists.Temp_Map[Map_Num].NPC[Index].Y = y;

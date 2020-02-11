@@ -552,7 +552,7 @@ class Player
         Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
 
         // Somente se necessário
-        if (Lists.Temp_Map[Map_Num].Item.Count == Game.Max_Map_Items) return;
+        if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
         if (Character(Index).Inventory[Slot].Item_Num == 0) return;
         if (Lists.Item[Character(Index).Inventory[Slot].Item_Num].Bind == (byte)Game.BindOn.Pickup) return;
 
