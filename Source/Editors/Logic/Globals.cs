@@ -146,12 +146,21 @@ class Globals
         StandStill
     }
 
-    public enum Alignment
+    public enum Alignments
     {
         Horizontal,
-        Vertical
+        Vertical,
+        Count
     }
 
+    public enum Movements
+    {
+        Walking,
+        Running,
+        Attacking,
+        Count
+    }
+    
     public static void Weather_Update()
     {
         // Redimensiona a lista

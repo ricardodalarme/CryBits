@@ -8,7 +8,7 @@ partial class Editor_Sprites : Form
 
     // Índice do item selecionado
     public Lists.Structures.Sprite Selected;
-    public Lists.Structures.Sprite_Movement Selected_Movement;
+    public Lists.Structures.Sprite_Movement_Direction Selected_Movement;
 
     public Editor_Sprites()
     {
@@ -23,15 +23,29 @@ partial class Editor_Sprites : Form
 
     public static void Open()
     {
-        // Lista de texturas
-        Objects.List.Items.Clear();
-        for (short i = 1; i < Graphics.Tex_Character.Length; i++) Objects.List.Items.Add(i);
-        Objects.List.SelectedIndex = 0;
+        // Reseta todos os valores
+        Lists.Sprite = new Lists.Structures.Sprite[Graphics.Tex_Character.Length];
+        for (short i = 0; i < Graphics.Tex_Character.Length; i++) Clear.Sprite(i);
 
-        // Lista de sons
+        // Limpa todas as listas
+        Objects.List.Items.Clear();
         Objects.cmbSound.Items.Clear();
-        Objects.List.Items.Add("None");
-        for (byte i = 0; i < (byte)Audio.Sounds.Count; i++) Objects.List.Items.Add(((Audio.Sounds)i).ToString());
+        Objects.cmbSound.Items.Add("None");
+        Objects.cmbMovement.Items.Clear();
+        Objects.cmbDirection.Items.Clear();
+        Objects.cmbAlignment.Items.Clear();
+
+        // Lista todos os itens
+        for (short i = 1; i < Graphics.Tex_Character.Length; i++) Objects.List.Items.Add(i);
+        for (byte i = 1; i < (byte)Audio.Sounds.Count; i++) Objects.cmbSound.Items.Add(((Audio.Sounds)i).ToString());
+        for (byte i = 0; i < (byte)Globals.Movements.Count; i++) Objects.cmbMovement.Items.Add(((Globals.Movements)i).ToString());
+        for (byte i = 0; i < (byte)Globals.Directions.Count; i++) Objects.cmbDirection.Items.Add(((Globals.Directions)i).ToString());
+        for (byte i = 0; i < (byte)Globals.Alignments.Count; i++) Objects.cmbAlignment.Items.Add(((Globals.Alignments)i).ToString());
+
+        // Seleciona os primeiros indices
+        Objects.List.SelectedIndex = 0;
+        Objects.cmbMovement.SelectedIndex = 0;
+        Objects.cmbDirection.SelectedIndex = 0;
 
         // Abre o editor
         Selection.Objects.Visible = false;
@@ -51,9 +65,12 @@ partial class Editor_Sprites : Form
 
     private void Update_Movement_Data()
     {
+        // Previne erros
+        if (cmbMovement.SelectedIndex == -1 || cmbDirection.SelectedIndex == -1) return;
+
         // Atualiza os dados dos movimentos
-        Selected_Movement = Selected.Movement[cmbMovement.SelectedIndex];
-        cmbSound.SelectedIndex = Selected_Movement.Sound;
+        Selected_Movement = Selected.Movement[cmbMovement.SelectedIndex].Direction[cmbDirection.SelectedIndex];
+        cmbSound.SelectedIndex = Selected.Movement[cmbMovement.SelectedIndex].Sound;
         numStartX.Value = Selected_Movement.StartX;
         numStartY.Value = Selected_Movement.StartY;
         numFrames.Value = Selected_Movement.Frames;
@@ -63,6 +80,7 @@ partial class Editor_Sprites : Form
     private void List_SelectedIndexChanged(object sender, EventArgs e)
     {
         // Atualiza os dados
+        Selected = Lists.Sprite[List.SelectedIndex + 1];
         Update_Data();
     }
 
@@ -121,9 +139,15 @@ partial class Editor_Sprites : Form
         Update_Movement_Data();
     }
 
+    private void cmbDirection_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        // Atualiza os dados dos movimentos
+        Update_Movement_Data();
+    }
+
     private void cmbSound_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected_Movement.Sound = (byte)cmbSound.SelectedIndex;
+        Selected.Movement[cmbMovement.SelectedIndex].Sound = (byte)cmbSound.SelectedIndex;
     }
 
     private void cmbAlignment_SelectedIndexChanged(object sender, EventArgs e)

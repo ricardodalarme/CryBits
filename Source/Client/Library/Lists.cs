@@ -14,6 +14,7 @@ class Lists
     public static Structures.Weather[] Weather;
     public static Structures.NPCs[] NPC;
     public static Structures.Items[] Item;
+    public static Structures.Sprite[] Sprite;
 
     // Estrutura dos itens em gerais
     public class Structures
@@ -243,6 +244,23 @@ class Lists
                 this.Y = Y;
                 this.Timer = Timer;
             }
+        }
+
+        public struct Sprite
+        {
+            public byte Frame_Width;
+            public byte Frame_Height;
+            public Sprite_Movement[,] Movement;
+        }
+
+        public struct Sprite_Movement
+        {
+            public byte Sound;
+            public byte Alignment;
+            public byte StartX;
+            public byte StartY;
+            public byte Frames;
+            public short Duration;
         }
     }
 }

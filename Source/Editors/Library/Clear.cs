@@ -113,4 +113,19 @@ class Clear
                 Lists.Tile[Index].Data[x, y].Block = new bool[(byte)Globals.Directions.Count];
             }
     }
+
+    public static void Sprite(short Index)
+    {
+        // Reseta os valores
+        Lists.Sprite[Index] = new Lists.Structures.Sprite();
+        Lists.Sprite[Index].Frame_Width = 32;
+        Lists.Sprite[Index].Frame_Height = 32;
+        Lists.Sprite[Index].Movement = new Lists.Structures.Sprite_Movement[(byte)Globals.Movements.Count];
+        for (byte i = 0; i < (byte)Globals.Movements.Count; i++)
+        {
+            Lists.Sprite[Index].Movement[i] = new Lists.Structures.Sprite_Movement();
+            Lists.Sprite[Index].Movement[i].Direction = new Lists.Structures.Sprite_Movement_Direction[(byte)Globals.Directions.Count];
+            for (byte n = 0; n < (byte)Globals.Directions.Count; n++) Lists.Sprite[Index].Movement[i].Direction[n] = new Lists.Structures.Sprite_Movement_Direction();
+        }
+    }
 }

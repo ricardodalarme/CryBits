@@ -260,21 +260,26 @@ class Lists
             }
         }
 
-        public struct Sprite_Movement
+        public class Sprite
+        {
+            public byte Frame_Width;
+            public byte Frame_Height;
+            public Sprite_Movement[] Movement;
+        }
+
+        public class Sprite_Movement
         {
             public byte Sound;
+            public Sprite_Movement_Direction[] Direction;
+        }
+
+        public class Sprite_Movement_Direction
+        {
             public byte Alignment;
             public byte StartX;
             public byte StartY;
             public byte Frames;
             public short Duration;
-        }
-
-        public struct Sprite
-        {
-            public byte Frame_Width;
-            public byte Frame_Height;
-            public Sprite_Movement[] Movement;
         }
     }
 }

@@ -14,6 +14,8 @@ partial class Graphics
     public static RenderWindow Win_Map = new RenderWindow(Editor_Maps.Objects.picMap.Handle);
     public static RenderWindow Win_Map_Tile = new RenderWindow(Editor_Maps.Objects.picTile.Handle);
     public static RenderTexture Win_Map_Lighting = new RenderTexture((uint)Editor_Maps.Objects.Width, (uint)Editor_Maps.Objects.Height);
+    public static RenderWindow Win_Sprite_Texture = new RenderWindow(Editor_Sprites.Objects.picTexture.Handle);
+    public static RenderWindow Win_Sprite_Preview = new RenderWindow(Editor_Sprites.Objects.picPreview.Handle);
 
     // Fonte principal
     private static SFML.Graphics.Font GameFont;
@@ -211,6 +213,8 @@ partial class Graphics
         Editor_Maps_Tile();
         Editor_Maps_Map();
         Interface();
+        Sprite_Preview();
+        Sprite_Texture();
     }
 
     private static void Transparent(RenderWindow Window)
@@ -744,6 +748,31 @@ partial class Graphics
     {
         // Desenha a ferramenta
         Render_Box(Win_Interface, Tex_TextBox, 3, Tool.Position, new Size(Tool.Width, TSize(Tex_TextBox).Height));
+    }
+    #endregion
+
+    #region Sprite Editor
+    private static void Sprite_Preview()
+    {
+        // Somente se necessário
+        if (!Editor_Sprites.Objects.Visible) return;
+
+        // Desenha a prévia do movimento
+        Win_Sprite_Preview.Clear();
+        
+        Win_Sprite_Preview.Display();
+    }
+    
+    private static void Sprite_Texture()
+    {
+        // Somente se necessário
+        if (!Editor_Sprites.Objects.Visible) return;
+
+        // Desenha a textura completa
+        Win_Sprite_Texture.Clear();
+        Render(Win_Sprite_Texture, Tex_Transparent, new Point(0));
+        Render(Win_Sprite_Texture, Tex_Character[Editor_Sprites.Objects.List.SelectedIndex + 1], new Point(0));
+        Win_Sprite_Texture.Display();
     }
     #endregion
 }
