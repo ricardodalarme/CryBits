@@ -26,6 +26,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Sprites));
             this.butCancel = new System.Windows.Forms.Button();
             this.butSave = new System.Windows.Forms.Button();
             this.List = new System.Windows.Forms.ListBox();
@@ -36,8 +37,16 @@
             this.cmbStyle = new System.Windows.Forms.ComboBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.cmbSound = new System.Windows.Forms.ComboBox();
+            this.cmbMovement = new System.Windows.Forms.ComboBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.cmbAlignment = new System.Windows.Forms.ComboBox();
             this.cmbDirection = new System.Windows.Forms.ComboBox();
+            this.numStartY = new System.Windows.Forms.NumericUpDown();
+            this.numFrames = new System.Windows.Forms.NumericUpDown();
+            this.numStartX = new System.Windows.Forms.NumericUpDown();
+            this.numDuration = new System.Windows.Forms.NumericUpDown();
             this.butStop = new System.Windows.Forms.Button();
             this.picPreview = new System.Windows.Forms.PictureBox();
             this.butPlay = new System.Windows.Forms.Button();
@@ -45,18 +54,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.cmbAlignment = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.numStartY = new System.Windows.Forms.NumericUpDown();
-            this.numFrames = new System.Windows.Forms.NumericUpDown();
-            this.numStartX = new System.Windows.Forms.NumericUpDown();
-            this.numDuration = new System.Windows.Forms.NumericUpDown();
-            this.cmbSound = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.cmbMovement = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.numHeight = new System.Windows.Forms.NumericUpDown();
             this.numWidth = new System.Windows.Forms.NumericUpDown();
+            this.numHeight = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.grpStyle_Save = new System.Windows.Forms.GroupBox();
@@ -67,20 +69,20 @@
             ((System.ComponentModel.ISupportInitialize)(this.picTexture)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numFrames)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numHeight)).BeginInit();
             this.grpStyle_Save.SuspendLayout();
             this.SuspendLayout();
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(407, 589);
+            this.butCancel.Location = new System.Drawing.Point(407, 564);
             this.butCancel.Name = "butCancel";
             this.butCancel.Size = new System.Drawing.Size(180, 25);
             this.butCancel.TabIndex = 21;
@@ -90,7 +92,7 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(221, 589);
+            this.butSave.Location = new System.Drawing.Point(221, 564);
             this.butSave.Name = "butSave";
             this.butSave.Size = new System.Drawing.Size(180, 25);
             this.butSave.TabIndex = 20;
@@ -103,7 +105,7 @@
             this.List.FormattingEnabled = true;
             this.List.Location = new System.Drawing.Point(12, 12);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 602);
+            this.List.Size = new System.Drawing.Size(202, 576);
             this.List.TabIndex = 19;
             this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
             // 
@@ -161,7 +163,7 @@
             // 
             // picTexture
             // 
-            this.picTexture.Location = new System.Drawing.Point(221, 438);
+            this.picTexture.Location = new System.Drawing.Point(222, 413);
             this.picTexture.Name = "picTexture";
             this.picTexture.Size = new System.Drawing.Size(365, 145);
             this.picTexture.TabIndex = 24;
@@ -169,21 +171,54 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.cmbSound);
             this.groupBox2.Controls.Add(this.cmbMovement);
+            this.groupBox2.Controls.Add(this.label10);
+            this.groupBox2.Controls.Add(this.cmbSound);
             this.groupBox2.Controls.Add(this.groupBox4);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Location = new System.Drawing.Point(221, 160);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(365, 272);
+            this.groupBox2.Size = new System.Drawing.Size(365, 247);
             this.groupBox2.TabIndex = 25;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Movement";
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 23);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(34, 13);
+            this.label10.TabIndex = 29;
+            this.label10.Text = "Type:";
+            // 
+            // cmbSound
+            // 
+            this.cmbSound.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSound.FormattingEnabled = true;
+            this.cmbSound.Location = new System.Drawing.Point(249, 39);
+            this.cmbSound.Name = "cmbSound";
+            this.cmbSound.Size = new System.Drawing.Size(110, 21);
+            this.cmbSound.TabIndex = 26;
+            this.cmbSound.SelectedIndexChanged += new System.EventHandler(this.cmbSound_SelectedIndexChanged);
+            // 
+            // cmbMovement
+            // 
+            this.cmbMovement.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbMovement.FormattingEnabled = true;
+            this.cmbMovement.Items.AddRange(new object[] {
+            "uno",
+            "dos"});
+            this.cmbMovement.Location = new System.Drawing.Point(10, 39);
+            this.cmbMovement.Name = "cmbMovement";
+            this.cmbMovement.Size = new System.Drawing.Size(234, 21);
+            this.cmbMovement.TabIndex = 0;
+            this.cmbMovement.SelectedIndexChanged += new System.EventHandler(this.cmbMovement_SelectedIndexChanged);
+            // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.cmbDirection);
             this.groupBox4.Controls.Add(this.cmbAlignment);
+            this.groupBox4.Controls.Add(this.cmbDirection);
             this.groupBox4.Controls.Add(this.numStartY);
             this.groupBox4.Controls.Add(this.numFrames);
             this.groupBox4.Controls.Add(this.numStartX);
@@ -196,89 +231,12 @@
             this.groupBox4.Controls.Add(this.label3);
             this.groupBox4.Controls.Add(this.label4);
             this.groupBox4.Controls.Add(this.label7);
-            this.groupBox4.Location = new System.Drawing.Point(12, 90);
+            this.groupBox4.Location = new System.Drawing.Point(9, 66);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(347, 172);
+            this.groupBox4.Size = new System.Drawing.Size(351, 172);
             this.groupBox4.TabIndex = 28;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Direction";
-            // 
-            // cmbDirection
-            // 
-            this.cmbDirection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbDirection.FormattingEnabled = true;
-            this.cmbDirection.Items.AddRange(new object[] {
-            "uno",
-            "dos"});
-            this.cmbDirection.Location = new System.Drawing.Point(6, 19);
-            this.cmbDirection.Name = "cmbDirection";
-            this.cmbDirection.Size = new System.Drawing.Size(335, 21);
-            this.cmbDirection.TabIndex = 30;
-            this.cmbDirection.SelectedIndexChanged += new System.EventHandler(this.cmbDirection_SelectedIndexChanged);
-            // 
-            // butStop
-            // 
-            this.butStop.Location = new System.Drawing.Point(294, 144);
-            this.butStop.Name = "butStop";
-            this.butStop.Size = new System.Drawing.Size(47, 20);
-            this.butStop.TabIndex = 29;
-            this.butStop.Text = "Stop";
-            this.butStop.UseVisualStyleBackColor = true;
-            this.butStop.Click += new System.EventHandler(this.butStop_Click);
-            // 
-            // picPreview
-            // 
-            this.picPreview.Location = new System.Drawing.Point(245, 46);
-            this.picPreview.Name = "picPreview";
-            this.picPreview.Size = new System.Drawing.Size(96, 96);
-            this.picPreview.TabIndex = 25;
-            this.picPreview.TabStop = false;
-            // 
-            // butPlay
-            // 
-            this.butPlay.Location = new System.Drawing.Point(245, 144);
-            this.butPlay.Name = "butPlay";
-            this.butPlay.Size = new System.Drawing.Size(47, 20);
-            this.butPlay.TabIndex = 28;
-            this.butPlay.Text = "Play";
-            this.butPlay.UseVisualStyleBackColor = true;
-            this.butPlay.Click += new System.EventHandler(this.butPlay_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(123, 128);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(72, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Duration (ms):";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 128);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Frames:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 89);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Start X:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(123, 89);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(42, 13);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Start Y:";
             // 
             // cmbAlignment
             // 
@@ -293,14 +251,18 @@
             this.cmbAlignment.TabIndex = 9;
             this.cmbAlignment.SelectedIndexChanged += new System.EventHandler(this.cmbAlignment_SelectedIndexChanged);
             // 
-            // label7
+            // cmbDirection
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 49);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(56, 13);
-            this.label7.TabIndex = 10;
-            this.label7.Text = "Alignment:";
+            this.cmbDirection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDirection.FormattingEnabled = true;
+            this.cmbDirection.Items.AddRange(new object[] {
+            "uno",
+            "dos"});
+            this.cmbDirection.Location = new System.Drawing.Point(6, 19);
+            this.cmbDirection.Name = "cmbDirection";
+            this.cmbDirection.Size = new System.Drawing.Size(339, 21);
+            this.cmbDirection.TabIndex = 30;
+            this.cmbDirection.SelectedIndexChanged += new System.EventHandler(this.cmbDirection_SelectedIndexChanged);
             // 
             // numStartY
             // 
@@ -334,42 +296,92 @@
             this.numDuration.TabIndex = 3;
             this.numDuration.ValueChanged += new System.EventHandler(this.numDuration_ValueChanged);
             // 
-            // cmbSound
+            // butStop
             // 
-            this.cmbSound.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSound.FormattingEnabled = true;
-            this.cmbSound.Location = new System.Drawing.Point(10, 58);
-            this.cmbSound.Name = "cmbSound";
-            this.cmbSound.Size = new System.Drawing.Size(349, 21);
-            this.cmbSound.TabIndex = 26;
-            this.cmbSound.SelectedIndexChanged += new System.EventHandler(this.cmbSound_SelectedIndexChanged);
+            this.butStop.Location = new System.Drawing.Point(298, 144);
+            this.butStop.Name = "butStop";
+            this.butStop.Size = new System.Drawing.Size(47, 20);
+            this.butStop.TabIndex = 29;
+            this.butStop.Text = "Stop";
+            this.butStop.UseVisualStyleBackColor = true;
+            this.butStop.Click += new System.EventHandler(this.butStop_Click);
+            // 
+            // picPreview
+            // 
+            this.picPreview.Location = new System.Drawing.Point(249, 46);
+            this.picPreview.Name = "picPreview";
+            this.picPreview.Size = new System.Drawing.Size(96, 96);
+            this.picPreview.TabIndex = 25;
+            this.picPreview.TabStop = false;
+            // 
+            // butPlay
+            // 
+            this.butPlay.Location = new System.Drawing.Point(249, 144);
+            this.butPlay.Name = "butPlay";
+            this.butPlay.Size = new System.Drawing.Size(47, 20);
+            this.butPlay.TabIndex = 28;
+            this.butPlay.Text = "Play";
+            this.butPlay.UseVisualStyleBackColor = true;
+            this.butPlay.Click += new System.EventHandler(this.butPlay_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(123, 128);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(104, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Frame Duration (ms):";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 128);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(44, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Frames:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 89);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(42, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Start X:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(123, 89);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(42, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Start Y:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 49);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(56, 13);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "Alignment:";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 43);
+            this.label9.Location = new System.Drawing.Point(247, 23);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(41, 13);
             this.label9.TabIndex = 27;
             this.label9.Text = "Sound:";
             // 
-            // cmbMovement
-            // 
-            this.cmbMovement.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbMovement.FormattingEnabled = true;
-            this.cmbMovement.Items.AddRange(new object[] {
-            "uno",
-            "dos"});
-            this.cmbMovement.Location = new System.Drawing.Point(10, 19);
-            this.cmbMovement.Name = "cmbMovement";
-            this.cmbMovement.Size = new System.Drawing.Size(349, 21);
-            this.cmbMovement.TabIndex = 0;
-            this.cmbMovement.SelectedIndexChanged += new System.EventHandler(this.cmbMovement_SelectedIndexChanged);
-            // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.numHeight);
             this.groupBox3.Controls.Add(this.numWidth);
+            this.groupBox3.Controls.Add(this.numHeight);
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Location = new System.Drawing.Point(221, 94);
@@ -379,14 +391,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Frame Size";
             // 
-            // numHeight
-            // 
-            this.numHeight.Location = new System.Drawing.Point(190, 34);
-            this.numHeight.Name = "numHeight";
-            this.numHeight.Size = new System.Drawing.Size(169, 20);
-            this.numHeight.TabIndex = 13;
-            this.numHeight.ValueChanged += new System.EventHandler(this.numHeight_ValueChanged);
-            // 
             // numWidth
             // 
             this.numWidth.Location = new System.Drawing.Point(10, 34);
@@ -394,6 +398,14 @@
             this.numWidth.Size = new System.Drawing.Size(169, 20);
             this.numWidth.TabIndex = 9;
             this.numWidth.ValueChanged += new System.EventHandler(this.numWidth_ValueChanged);
+            // 
+            // numHeight
+            // 
+            this.numHeight.Location = new System.Drawing.Point(190, 34);
+            this.numHeight.Name = "numHeight";
+            this.numHeight.Size = new System.Drawing.Size(169, 20);
+            this.numHeight.TabIndex = 13;
+            this.numHeight.ValueChanged += new System.EventHandler(this.numHeight_ValueChanged);
             // 
             // label5
             // 
@@ -456,7 +468,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(598, 626);
+            this.ClientSize = new System.Drawing.Size(598, 601);
             this.ControlBox = false;
             this.Controls.Add(this.grpStyle_Save);
             this.Controls.Add(this.groupBox3);
@@ -467,6 +479,7 @@
             this.Controls.Add(this.butSave);
             this.Controls.Add(this.List);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Editor_Sprites";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Sprite Editor";
@@ -476,15 +489,15 @@
             this.groupBox2.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numFrames)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numHeight)).EndInit();
             this.grpStyle_Save.ResumeLayout(false);
             this.grpStyle_Save.PerformLayout();
             this.ResumeLayout(false);
@@ -501,7 +514,6 @@
     private System.Windows.Forms.Button butStyle_Use;
     private System.Windows.Forms.ComboBox cmbStyle;
     private System.Windows.Forms.GroupBox groupBox2;
-    private System.Windows.Forms.ComboBox cmbMovement;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.NumericUpDown numDuration;
     private System.Windows.Forms.Label label1;
@@ -512,9 +524,7 @@
     private System.Windows.Forms.NumericUpDown numStartX;
     private System.Windows.Forms.GroupBox groupBox3;
     private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.NumericUpDown numHeight;
     private System.Windows.Forms.Label label6;
-    private System.Windows.Forms.NumericUpDown numWidth;
     private System.Windows.Forms.Label label7;
     private System.Windows.Forms.ComboBox cmbAlignment;
     private System.Windows.Forms.GroupBox grpStyle_Save;
@@ -525,8 +535,12 @@
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.Button butStop;
     private System.Windows.Forms.Button butPlay;
-    private System.Windows.Forms.ComboBox cmbDirection;
     private System.Windows.Forms.GroupBox groupBox4;
     public System.Windows.Forms.PictureBox picTexture;
     public System.Windows.Forms.PictureBox picPreview;
+    private System.Windows.Forms.ComboBox cmbDirection;
+    private System.Windows.Forms.Label label10;
+    private System.Windows.Forms.ComboBox cmbMovement;
+    private System.Windows.Forms.NumericUpDown numHeight;
+    private System.Windows.Forms.NumericUpDown numWidth;
 }

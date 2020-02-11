@@ -757,21 +757,57 @@ partial class Graphics
         // Somente se necessário
         if (!Editor_Sprites.Objects.Visible) return;
 
-        // Desenha a prévia do movimento
+        // Limpa a janela
         Win_Sprite_Preview.Clear();
-        
+        Render(Win_Sprite_Preview, Tex_Transparent, new Point(0));
+
+        // Tamanho do frame
+        byte Width = Editor_Sprites.Selected.Frame_Width;
+        byte Height = Editor_Sprites.Selected.Frame_Height;
+
+        // Desenha a prévia do personagem
+        Rectangle Source = new Rectangle
+        {
+            X = Editor_Sprites.Selected_Movement.StartX * Width, 
+            Y = Editor_Sprites.Selected_Movement.StartY * Height,
+            Width = Width,
+            Height = Height
+        };
+        Render(Win_Sprite_Preview, Tex_Character[Editor_Sprites.Objects.List.SelectedIndex + 1], 0, 0, Source.X, Source.Y, Source.Width, Source.Height);
+
+        // Exibe o que foi renderizado
         Win_Sprite_Preview.Display();
     }
-    
+
     private static void Sprite_Texture()
     {
         // Somente se necessário
         if (!Editor_Sprites.Objects.Visible) return;
 
-        // Desenha a textura completa
+        // Limpa a janela
         Win_Sprite_Texture.Clear();
         Render(Win_Sprite_Texture, Tex_Transparent, new Point(0));
+
+        // Tamanho do frame
+        byte Width = Editor_Sprites.Selected.Frame_Width;
+        byte Height = Editor_Sprites.Selected.Frame_Height;
+
+        // Desenha uma grade representando quais frames fazem parte do movimento
+        Rectangle Destiny = new Rectangle
+        {
+            X = Editor_Sprites.Selected_Movement.StartX * Width,
+            Y = Editor_Sprites.Selected_Movement.StartY * Height,
+            Width = Width,
+            Height = Height
+        };
+        if (Editor_Sprites.Selected_Movement.Alignment == (byte)Globals.Alignments.Horizontal) Destiny.Width *= Editor_Sprites.Selected_Movement.Frames;
+        else Destiny.Height *= Editor_Sprites.Selected_Movement.Frames;
+        RenderRectangle(Win_Sprite_Texture, Destiny, SFML.Graphics.Color.Red);
+
+        // Desenha a textura completa
         Render(Win_Sprite_Texture, Tex_Character[Editor_Sprites.Objects.List.SelectedIndex + 1], new Point(0));
+
+        // Exibe o que foi renderizado
         Win_Sprite_Texture.Display();
     }
     #endregion

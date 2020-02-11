@@ -7,8 +7,8 @@ partial class Editor_Sprites : Form
     public static Editor_Sprites Objects = new Editor_Sprites();
 
     // Índice do item selecionado
-    public Lists.Structures.Sprite Selected;
-    public Lists.Structures.Sprite_Movement_Direction Selected_Movement;
+    public static Lists.Structures.Sprite Selected;
+    public static Lists.Structures.Sprite_Movement_Direction Selected_Movement;
 
     public Editor_Sprites()
     {
@@ -71,6 +71,7 @@ partial class Editor_Sprites : Form
         // Atualiza os dados dos movimentos
         Selected_Movement = Selected.Movement[cmbMovement.SelectedIndex].Direction[cmbDirection.SelectedIndex];
         cmbSound.SelectedIndex = Selected.Movement[cmbMovement.SelectedIndex].Sound;
+        cmbAlignment.SelectedIndex = Selected_Movement.Alignment;
         numStartX.Value = Selected_Movement.StartX;
         numStartY.Value = Selected_Movement.StartY;
         numFrames.Value = Selected_Movement.Frames;
