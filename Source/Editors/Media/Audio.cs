@@ -45,6 +45,7 @@ class Audio
         public static void Play(Sounds Index, bool Loop = false)
         {
             // Somente se necessário
+            if ((byte)Index == 0) return; 
             if (Editor_Maps.Objects.Visible && !Editor_Maps.Objects.butAudio.Checked) return;
 
             // Reproduz o áudio

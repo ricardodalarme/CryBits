@@ -28,7 +28,7 @@ class Globals
     public static byte Lightning;
 
     // Sprite
-    public static byte Sprite_Frame;
+    public static sbyte Sprite_Frame;
 
     // Números aleAmountatórios
     public static Random GameRandom = new Random();

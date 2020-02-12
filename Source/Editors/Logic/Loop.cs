@@ -292,14 +292,20 @@ class Loop
 
     private static void Sprite_Preview()
     {
-        if (Editor_Sprites.Objects.Visible)
+        if (Editor_Sprites.Objects.Visible && Editor_Sprites.Selected_Movement_Dir.Frames > 1)
             if (Spriteg_Timer < Environment.TickCount)
             {
-                // Toca o som da animação toda vez que ela reseta
-                if (Editor_Sprites.Objects.chkSound.Checked && Globals.Sprite_Frame == 0) Audio.Sound.Play((Audio.Sounds)Editor_Sprites.Selected_Movement.Sound); 
+                // Som da animação 
+                if (Editor_Sprites.Objects.chkSound.Checked && Globals.Sprite_Frame == 0) Audio.Sound.Play((Audio.Sounds)Editor_Sprites.Selected_Movement.Sound);
 
                 // Altea o frame da animação
-                Globals.Sprite_Frame = (byte)((Globals.Sprite_Frame + 1) % Editor_Sprites.Selected_Movement_Dir.Frames);
+                if (++Globals.Sprite_Frame == Editor_Sprites.Selected_Movement_Dir.Frames)
+                    if (Editor_Sprites.Selected_Movement_Dir.Backwards)
+                        Globals.Sprite_Frame = (sbyte)((Editor_Sprites.Selected_Movement_Dir.Frames - 2) * -1);
+                    else
+                        Globals.Sprite_Frame = 0;
+
+                // Duração do frame
                 Spriteg_Timer = Environment.TickCount + Editor_Sprites.Selected_Movement_Dir.Duration;
             }
     }

@@ -281,6 +281,7 @@ class Lists
             public byte StartY;
             public byte Frames;
             public short Duration;
+            public bool Backwards;
         }
     }
 }

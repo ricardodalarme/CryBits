@@ -71,12 +71,14 @@ partial class Editor_Sprites : Form
         if (cmbMovement.SelectedIndex == -1 || cmbDirection.SelectedIndex == -1) return;
 
         // Atualiza os dados dos movimentos
+        Color Render_Color = Color.FromArgb(Selected_Movement.Color);
         Selected_Movement = Selected.Movement[cmbMovement.SelectedIndex];
         Selected_Movement_Dir = Selected_Movement.Direction[cmbDirection.SelectedIndex];
         cmbSound.SelectedIndex = Selected_Movement.Sound;
-        numColor_Red.Value = Color.FromArgb(Selected_Movement.Color).R;
-        numColor_Green.Value = Color.FromArgb(Selected_Movement.Color).G;
-        numColor_Blue.Value = Color.FromArgb(Selected_Movement.Color).B;
+        numColor_Red.Value = Render_Color.R;
+        numColor_Green.Value = Render_Color.G;
+        numColor_Blue.Value = Render_Color.B;
+        chkBackwards.Checked = Selected_Movement_Dir.Backwards;
         cmbAlignment.SelectedIndex = Selected_Movement_Dir.Alignment;
         numStartX.Value = Selected_Movement_Dir.StartX;
         numStartY.Value = Selected_Movement_Dir.StartY;
@@ -157,6 +159,22 @@ partial class Editor_Sprites : Form
         Selected.Movement[cmbMovement.SelectedIndex].Sound = (byte)cmbSound.SelectedIndex;
     }
 
+    private void numColor_Red_ValueChanged(object sender, EventArgs e)
+    {
+        Selected_Movement.Color =  Color.FromArgb((byte)numColor_Red.Value, (byte)numColor_Green.Value, (byte)numColor_Blue.Value).ToArgb();
+    }
+
+    private void numColor_Green_ValueChanged(object sender, EventArgs e)
+    {
+        Selected_Movement.Color =  Color.FromArgb((byte)numColor_Red.Value, (byte)numColor_Green.Value, (byte)numColor_Blue.Value).ToArgb();
+    }
+
+    private void numColor_Blue_ValueChanged(object sender, EventArgs e)
+    {
+        Selected_Movement.Color = Color.FromArgb((byte)numColor_Red.Value, (byte)numColor_Green.Value, (byte)numColor_Blue.Value).ToArgb();
+    }
+
+
     private void cmbAlignment_SelectedIndexChanged(object sender, EventArgs e)
     {
         Selected_Movement_Dir.Alignment = (byte)cmbAlignment.SelectedIndex;
@@ -181,19 +199,8 @@ partial class Editor_Sprites : Form
     {
         Selected_Movement_Dir.Duration = (short)numDuration.Value;
     }
-
-    private void numColor_Red_ValueChanged(object sender, EventArgs e)
+    private void chkBackwards_CheckedChanged(object sender, EventArgs e)
     {
-        Selected_Movement.Color =  Color.FromArgb((byte)numColor_Red.Value, (byte)numColor_Green.Value, (byte)numColor_Blue.Value).ToArgb();
-    }
-
-    private void numColor_Green_ValueChanged(object sender, EventArgs e)
-    {
-        Selected_Movement.Color =  Color.FromArgb((byte)numColor_Red.Value, (byte)numColor_Green.Value, (byte)numColor_Blue.Value).ToArgb();
-    }
-
-    private void numColor_Blue_ValueChanged(object sender, EventArgs e)
-    {
-        Selected_Movement.Color = Color.FromArgb((byte)numColor_Red.Value, (byte)numColor_Green.Value, (byte)numColor_Blue.Value).ToArgb();
+        Selected_Movement_Dir.Backwards = chkBackwards.Enabled;
     }
 }

@@ -767,6 +767,7 @@ partial class Graphics
 
         // Dados da renderização
         System.Drawing.Color Render_Color = System.Drawing.Color.FromArgb(Editor_Sprites.Selected_Movement.Color);
+        Point Destiny = new Point((Editor_Sprites.Objects.picPreview.Width - Width) / 2, (Editor_Sprites.Objects.picPreview.Height - Height) / 2);
         Rectangle Source = new Rectangle
         {
             X = Editor_Sprites.Selected_Movement_Dir.StartX * Width, 
@@ -774,11 +775,11 @@ partial class Graphics
             Width = Width,
             Height = Height
         };
-        if (Editor_Sprites.Selected_Movement_Dir.Alignment == (byte)Globals.Alignments.Horizontal) Source.X += (Globals.Sprite_Frame * Width);
-        else Source.Y += (Globals.Sprite_Frame * Height);
+        if (Editor_Sprites.Selected_Movement_Dir.Alignment == (byte)Globals.Alignments.Horizontal) Source.X += Math.Abs(Globals.Sprite_Frame) * Width;
+        else Source.Y += Math.Abs(Globals.Sprite_Frame) * Height;
 
         // Desenha a prévia do personagem
-        Render(Win_Sprite_Preview, Tex_Character[Editor_Sprites.Objects.List.SelectedIndex + 1], 0, 0, Source.X, Source.Y, Source.Width, Source.Height, CColor(Render_Color.R, Render_Color.G, Render_Color.B));
+        Render(Win_Sprite_Preview, Tex_Character[Editor_Sprites.Objects.List.SelectedIndex + 1], Destiny.X, Destiny.Y, Source.X, Source.Y, Source.Width, Source.Height, CColor(Render_Color.R, Render_Color.G, Render_Color.B));
 
         // Exibe o que foi renderizado
         Win_Sprite_Preview.Display();
