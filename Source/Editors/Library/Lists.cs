@@ -270,6 +270,7 @@ class Lists
         public class Sprite_Movement
         {
             public byte Sound;
+            public int Color;
             public Sprite_Movement_Direction[] Direction;
         }
 

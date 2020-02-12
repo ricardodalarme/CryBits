@@ -296,12 +296,11 @@ class Loop
             if (Spriteg_Timer < Environment.TickCount)
             {
                 // Toca o som da animação toda vez que ela reseta
-                if (Editor_Sprites.Objects.chkSound.Checked && Globals.Sprite_Frame == 0) 
-                     Audio.Sound.Play((Audio.Sounds)Editor_Sprites.Selected.Movement[Editor_Sprites.Objects.cmbMovement.SelectedIndex].Sound); 
+                if (Editor_Sprites.Objects.chkSound.Checked && Globals.Sprite_Frame == 0) Audio.Sound.Play((Audio.Sounds)Editor_Sprites.Selected_Movement.Sound); 
 
                 // Altea o frame da animação
-                Globals.Sprite_Frame = (byte)((Globals.Sprite_Frame + 1) % Editor_Sprites.Selected_Movement.Frames);
-                Spriteg_Timer = Environment.TickCount + Editor_Sprites.Selected_Movement.Duration;
+                Globals.Sprite_Frame = (byte)((Globals.Sprite_Frame + 1) % Editor_Sprites.Selected_Movement_Dir.Frames);
+                Spriteg_Timer = Environment.TickCount + Editor_Sprites.Selected_Movement_Dir.Duration;
             }
     }
 }

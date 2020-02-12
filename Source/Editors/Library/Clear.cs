@@ -125,6 +125,7 @@ class Clear
         {
             Lists.Sprite[Index].Movement[i] = new Lists.Structures.Sprite_Movement();
             Lists.Sprite[Index].Movement[i].Direction = new Lists.Structures.Sprite_Movement_Direction[(byte)Globals.Directions.Count];
+            Lists.Sprite[Index].Movement[i].Color = Color.FromArgb(255, 255, 255).ToArgb();
             for (byte n = 0; n < (byte)Globals.Directions.Count; n++)
             {
                 Lists.Sprite[Index].Movement[i].Direction[n] = new Lists.Structures.Sprite_Movement_Direction();

@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Drawing;
 
 partial class Editor_Sprites : Form
 {
     // Usado para acessar os dados da janela
     public static Editor_Sprites Objects = new Editor_Sprites();
 
-    // Índice do item selecionado
+    // Itens selecionados
     public static Lists.Structures.Sprite Selected;
-    public static Lists.Structures.Sprite_Movement_Direction Selected_Movement;
+    public static Lists.Structures.Sprite_Movement Selected_Movement;
+    public static Lists.Structures.Sprite_Movement_Direction Selected_Movement_Dir;
 
     public Editor_Sprites()
     {
@@ -69,13 +71,17 @@ partial class Editor_Sprites : Form
         if (cmbMovement.SelectedIndex == -1 || cmbDirection.SelectedIndex == -1) return;
 
         // Atualiza os dados dos movimentos
-        Selected_Movement = Selected.Movement[cmbMovement.SelectedIndex].Direction[cmbDirection.SelectedIndex];
-        cmbSound.SelectedIndex = Selected.Movement[cmbMovement.SelectedIndex].Sound;
-        cmbAlignment.SelectedIndex = Selected_Movement.Alignment;
-        numStartX.Value = Selected_Movement.StartX;
-        numStartY.Value = Selected_Movement.StartY;
-        numFrames.Value = Selected_Movement.Frames;
-        numDuration.Value = Selected_Movement.Duration;
+        Selected_Movement = Selected.Movement[cmbMovement.SelectedIndex];
+        Selected_Movement_Dir = Selected_Movement.Direction[cmbDirection.SelectedIndex];
+        cmbSound.SelectedIndex = Selected_Movement.Sound;
+        numColor_Red.Value = Color.FromArgb(Selected_Movement.Color).R;
+        numColor_Green.Value = Color.FromArgb(Selected_Movement.Color).G;
+        numColor_Blue.Value = Color.FromArgb(Selected_Movement.Color).B;
+        cmbAlignment.SelectedIndex = Selected_Movement_Dir.Alignment;
+        numStartX.Value = Selected_Movement_Dir.StartX;
+        numStartY.Value = Selected_Movement_Dir.StartY;
+        numFrames.Value = Selected_Movement_Dir.Frames;
+        numDuration.Value = Selected_Movement_Dir.Duration;
     }
 
     private void List_SelectedIndexChanged(object sender, EventArgs e)
@@ -153,36 +159,41 @@ partial class Editor_Sprites : Form
 
     private void cmbAlignment_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected_Movement.Alignment = (byte)cmbAlignment.SelectedIndex;
+        Selected_Movement_Dir.Alignment = (byte)cmbAlignment.SelectedIndex;
     }
 
     private void numStartX_ValueChanged(object sender, EventArgs e)
     {
-        Selected_Movement.StartX = (byte)numStartX.Value;
+        Selected_Movement_Dir.StartX = (byte)numStartX.Value;
     }
 
     private void numStartY_ValueChanged(object sender, EventArgs e)
     {
-        Selected_Movement.StartY = (byte)numStartY.Value;
+        Selected_Movement_Dir.StartY = (byte)numStartY.Value;
     }
 
     private void numFrames_ValueChanged(object sender, EventArgs e)
     {
-        Selected_Movement.Frames = (byte)numFrames.Value;
+        Selected_Movement_Dir.Frames = (byte)numFrames.Value;
     }
 
     private void numDuration_ValueChanged(object sender, EventArgs e)
     {
-        Selected_Movement.Duration = (short)numDuration.Value;
+        Selected_Movement_Dir.Duration = (short)numDuration.Value;
     }
 
-    private void butPlay_Click(object sender, EventArgs e)
+    private void numColor_Red_ValueChanged(object sender, EventArgs e)
     {
-        
+        Selected_Movement.Color =  Color.FromArgb((byte)numColor_Red.Value, (byte)numColor_Green.Value, (byte)numColor_Blue.Value).ToArgb();
     }
 
-    private void butStop_Click(object sender, EventArgs e)
+    private void numColor_Green_ValueChanged(object sender, EventArgs e)
     {
+        Selected_Movement.Color =  Color.FromArgb((byte)numColor_Red.Value, (byte)numColor_Green.Value, (byte)numColor_Blue.Value).ToArgb();
+    }
 
+    private void numColor_Blue_ValueChanged(object sender, EventArgs e)
+    {
+        Selected_Movement.Color = Color.FromArgb((byte)numColor_Red.Value, (byte)numColor_Green.Value, (byte)numColor_Blue.Value).ToArgb();
     }
 }

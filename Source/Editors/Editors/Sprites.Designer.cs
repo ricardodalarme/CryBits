@@ -41,6 +41,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.cmbSound = new System.Windows.Forms.ComboBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.chkSound = new System.Windows.Forms.CheckBox();
             this.cmbAlignment = new System.Windows.Forms.ComboBox();
             this.cmbDirection = new System.Windows.Forms.ComboBox();
             this.numStartY = new System.Windows.Forms.NumericUpDown();
@@ -63,7 +64,10 @@
             this.butStyle_Confirm = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.txtStyle_Name = new System.Windows.Forms.TextBox();
-            this.chkSound = new System.Windows.Forms.CheckBox();
+            this.numColor_Blue = new System.Windows.Forms.NumericUpDown();
+            this.numColor_Green = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
+            this.numColor_Red = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTexture)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -77,11 +81,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.numWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHeight)).BeginInit();
             this.grpStyle_Save.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numColor_Blue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numColor_Green)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numColor_Red)).BeginInit();
             this.SuspendLayout();
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(407, 564);
+            this.butCancel.Location = new System.Drawing.Point(406, 574);
             this.butCancel.Name = "butCancel";
             this.butCancel.Size = new System.Drawing.Size(180, 25);
             this.butCancel.TabIndex = 21;
@@ -91,7 +98,7 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(221, 564);
+            this.butSave.Location = new System.Drawing.Point(220, 574);
             this.butSave.Name = "butSave";
             this.butSave.Size = new System.Drawing.Size(180, 25);
             this.butSave.TabIndex = 20;
@@ -104,7 +111,7 @@
             this.List.FormattingEnabled = true;
             this.List.Location = new System.Drawing.Point(12, 12);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 576);
+            this.List.Size = new System.Drawing.Size(202, 589);
             this.List.TabIndex = 19;
             this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
             // 
@@ -162,14 +169,18 @@
             // 
             // picTexture
             // 
-            this.picTexture.Location = new System.Drawing.Point(222, 413);
+            this.picTexture.Location = new System.Drawing.Point(221, 445);
             this.picTexture.Name = "picTexture";
-            this.picTexture.Size = new System.Drawing.Size(365, 145);
+            this.picTexture.Size = new System.Drawing.Size(365, 123);
             this.picTexture.TabIndex = 24;
             this.picTexture.TabStop = false;
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.numColor_Blue);
+            this.groupBox2.Controls.Add(this.numColor_Green);
+            this.groupBox2.Controls.Add(this.label11);
+            this.groupBox2.Controls.Add(this.numColor_Red);
             this.groupBox2.Controls.Add(this.cmbMovement);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.cmbSound);
@@ -177,7 +188,7 @@
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Location = new System.Drawing.Point(221, 160);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(365, 247);
+            this.groupBox2.Size = new System.Drawing.Size(365, 279);
             this.groupBox2.TabIndex = 25;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Movement";
@@ -191,7 +202,7 @@
             "dos"});
             this.cmbMovement.Location = new System.Drawing.Point(10, 39);
             this.cmbMovement.Name = "cmbMovement";
-            this.cmbMovement.Size = new System.Drawing.Size(234, 21);
+            this.cmbMovement.Size = new System.Drawing.Size(349, 21);
             this.cmbMovement.TabIndex = 0;
             this.cmbMovement.SelectedIndexChanged += new System.EventHandler(this.cmbMovement_SelectedIndexChanged);
             // 
@@ -208,9 +219,9 @@
             // 
             this.cmbSound.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSound.FormattingEnabled = true;
-            this.cmbSound.Location = new System.Drawing.Point(249, 39);
+            this.cmbSound.Location = new System.Drawing.Point(246, 79);
             this.cmbSound.Name = "cmbSound";
-            this.cmbSound.Size = new System.Drawing.Size(110, 21);
+            this.cmbSound.Size = new System.Drawing.Size(113, 21);
             this.cmbSound.TabIndex = 26;
             this.cmbSound.SelectedIndexChanged += new System.EventHandler(this.cmbSound_SelectedIndexChanged);
             // 
@@ -229,12 +240,23 @@
             this.groupBox4.Controls.Add(this.label3);
             this.groupBox4.Controls.Add(this.label4);
             this.groupBox4.Controls.Add(this.label7);
-            this.groupBox4.Location = new System.Drawing.Point(9, 66);
+            this.groupBox4.Location = new System.Drawing.Point(9, 106);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(351, 172);
+            this.groupBox4.Size = new System.Drawing.Size(351, 166);
             this.groupBox4.TabIndex = 28;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Direction";
+            // 
+            // chkSound
+            // 
+            this.chkSound.AutoSize = true;
+            this.chkSound.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkSound.Location = new System.Drawing.Point(282, 143);
+            this.chkSound.Name = "chkSound";
+            this.chkSound.Size = new System.Drawing.Size(63, 17);
+            this.chkSound.TabIndex = 31;
+            this.chkSound.Text = "Sound?";
+            this.chkSound.UseVisualStyleBackColor = true;
             // 
             // cmbAlignment
             // 
@@ -243,9 +265,9 @@
             this.cmbAlignment.Items.AddRange(new object[] {
             "Horizontal",
             "Vertical"});
-            this.cmbAlignment.Location = new System.Drawing.Point(6, 65);
+            this.cmbAlignment.Location = new System.Drawing.Point(6, 58);
             this.cmbAlignment.Name = "cmbAlignment";
-            this.cmbAlignment.Size = new System.Drawing.Size(233, 21);
+            this.cmbAlignment.Size = new System.Drawing.Size(237, 21);
             this.cmbAlignment.TabIndex = 9;
             this.cmbAlignment.SelectedIndexChanged += new System.EventHandler(this.cmbAlignment_SelectedIndexChanged);
             // 
@@ -264,38 +286,38 @@
             // 
             // numStartY
             // 
-            this.numStartY.Location = new System.Drawing.Point(126, 105);
+            this.numStartY.Location = new System.Drawing.Point(121, 98);
             this.numStartY.Name = "numStartY";
-            this.numStartY.Size = new System.Drawing.Size(113, 20);
+            this.numStartY.Size = new System.Drawing.Size(106, 20);
             this.numStartY.TabIndex = 7;
             this.numStartY.ValueChanged += new System.EventHandler(this.numStartY_ValueChanged);
             // 
             // numFrames
             // 
-            this.numFrames.Location = new System.Drawing.Point(6, 144);
+            this.numFrames.Location = new System.Drawing.Point(6, 137);
             this.numFrames.Name = "numFrames";
-            this.numFrames.Size = new System.Drawing.Size(113, 20);
+            this.numFrames.Size = new System.Drawing.Size(106, 20);
             this.numFrames.TabIndex = 1;
             this.numFrames.ValueChanged += new System.EventHandler(this.numFrames_ValueChanged);
             // 
             // numStartX
             // 
-            this.numStartX.Location = new System.Drawing.Point(6, 105);
+            this.numStartX.Location = new System.Drawing.Point(6, 98);
             this.numStartX.Name = "numStartX";
-            this.numStartX.Size = new System.Drawing.Size(113, 20);
+            this.numStartX.Size = new System.Drawing.Size(106, 20);
             this.numStartX.TabIndex = 5;
             this.numStartX.ValueChanged += new System.EventHandler(this.numStartX_ValueChanged);
             // 
             // numDuration
             // 
-            this.numDuration.Location = new System.Drawing.Point(126, 144);
+            this.numDuration.Location = new System.Drawing.Point(121, 137);
             this.numDuration.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.numDuration.Name = "numDuration";
-            this.numDuration.Size = new System.Drawing.Size(113, 20);
+            this.numDuration.Size = new System.Drawing.Size(106, 20);
             this.numDuration.TabIndex = 3;
             this.numDuration.ValueChanged += new System.EventHandler(this.numDuration_ValueChanged);
             // 
@@ -310,7 +332,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(123, 128);
+            this.label2.Location = new System.Drawing.Point(118, 121);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(104, 13);
             this.label2.TabIndex = 4;
@@ -319,7 +341,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 128);
+            this.label1.Location = new System.Drawing.Point(3, 121);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 2;
@@ -328,7 +350,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 89);
+            this.label3.Location = new System.Drawing.Point(3, 82);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 13);
             this.label3.TabIndex = 6;
@@ -337,7 +359,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(123, 89);
+            this.label4.Location = new System.Drawing.Point(118, 82);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(42, 13);
             this.label4.TabIndex = 8;
@@ -346,7 +368,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 49);
+            this.label7.Location = new System.Drawing.Point(3, 42);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(56, 13);
             this.label7.TabIndex = 10;
@@ -355,7 +377,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(247, 23);
+            this.label9.Location = new System.Drawing.Point(244, 63);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(41, 13);
             this.label9.TabIndex = 27;
@@ -447,21 +469,56 @@
             this.txtStyle_Name.Size = new System.Drawing.Size(241, 20);
             this.txtStyle_Name.TabIndex = 0;
             // 
-            // chkSound
+            // numColor_Blue
             // 
-            this.chkSound.AutoSize = true;
-            this.chkSound.Location = new System.Drawing.Point(249, 148);
-            this.chkSound.Name = "chkSound";
-            this.chkSound.Size = new System.Drawing.Size(63, 17);
-            this.chkSound.TabIndex = 31;
-            this.chkSound.Text = "Sound?";
-            this.chkSound.UseVisualStyleBackColor = true;
+            this.numColor_Blue.Location = new System.Drawing.Point(169, 80);
+            this.numColor_Blue.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numColor_Blue.Name = "numColor_Blue";
+            this.numColor_Blue.Size = new System.Drawing.Size(71, 20);
+            this.numColor_Blue.TabIndex = 40;
+            // 
+            // numColor_Green
+            // 
+            this.numColor_Green.Location = new System.Drawing.Point(90, 80);
+            this.numColor_Green.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numColor_Green.Name = "numColor_Green";
+            this.numColor_Green.Size = new System.Drawing.Size(71, 20);
+            this.numColor_Green.TabIndex = 39;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 64);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(71, 13);
+            this.label11.TabIndex = 38;
+            this.label11.Text = "Colors (RGB):";
+            // 
+            // numColor_Red
+            // 
+            this.numColor_Red.Location = new System.Drawing.Point(12, 80);
+            this.numColor_Red.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numColor_Red.Name = "numColor_Red";
+            this.numColor_Red.Size = new System.Drawing.Size(71, 20);
+            this.numColor_Red.TabIndex = 37;
             // 
             // Editor_Sprites
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(598, 601);
+            this.ClientSize = new System.Drawing.Size(598, 609);
             this.ControlBox = false;
             this.Controls.Add(this.grpStyle_Save);
             this.Controls.Add(this.groupBox3);
@@ -493,6 +550,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numHeight)).EndInit();
             this.grpStyle_Save.ResumeLayout(false);
             this.grpStyle_Save.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numColor_Blue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numColor_Green)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numColor_Red)).EndInit();
             this.ResumeLayout(false);
 
     }
@@ -535,4 +595,8 @@
     private System.Windows.Forms.NumericUpDown numWidth;
     public System.Windows.Forms.CheckBox chkSound;
     public System.Windows.Forms.ComboBox cmbMovement;
+    private System.Windows.Forms.NumericUpDown numColor_Blue;
+    private System.Windows.Forms.NumericUpDown numColor_Green;
+    private System.Windows.Forms.Label label11;
+    private System.Windows.Forms.NumericUpDown numColor_Red;
 }
