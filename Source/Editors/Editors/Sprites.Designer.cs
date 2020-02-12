@@ -37,9 +37,9 @@
             this.cmbStyle = new System.Windows.Forms.ComboBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cmbMovement = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.cmbSound = new System.Windows.Forms.ComboBox();
-            this.cmbMovement = new System.Windows.Forms.ComboBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.cmbAlignment = new System.Windows.Forms.ComboBox();
             this.cmbDirection = new System.Windows.Forms.ComboBox();
@@ -47,9 +47,7 @@
             this.numFrames = new System.Windows.Forms.NumericUpDown();
             this.numStartX = new System.Windows.Forms.NumericUpDown();
             this.numDuration = new System.Windows.Forms.NumericUpDown();
-            this.butStop = new System.Windows.Forms.Button();
             this.picPreview = new System.Windows.Forms.PictureBox();
-            this.butPlay = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -65,6 +63,7 @@
             this.butStyle_Confirm = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.txtStyle_Name = new System.Windows.Forms.TextBox();
+            this.chkSound = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTexture)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -183,6 +182,19 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Movement";
             // 
+            // cmbMovement
+            // 
+            this.cmbMovement.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbMovement.FormattingEnabled = true;
+            this.cmbMovement.Items.AddRange(new object[] {
+            "uno",
+            "dos"});
+            this.cmbMovement.Location = new System.Drawing.Point(10, 39);
+            this.cmbMovement.Name = "cmbMovement";
+            this.cmbMovement.Size = new System.Drawing.Size(234, 21);
+            this.cmbMovement.TabIndex = 0;
+            this.cmbMovement.SelectedIndexChanged += new System.EventHandler(this.cmbMovement_SelectedIndexChanged);
+            // 
             // label10
             // 
             this.label10.AutoSize = true;
@@ -202,30 +214,16 @@
             this.cmbSound.TabIndex = 26;
             this.cmbSound.SelectedIndexChanged += new System.EventHandler(this.cmbSound_SelectedIndexChanged);
             // 
-            // cmbMovement
-            // 
-            this.cmbMovement.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbMovement.FormattingEnabled = true;
-            this.cmbMovement.Items.AddRange(new object[] {
-            "uno",
-            "dos"});
-            this.cmbMovement.Location = new System.Drawing.Point(10, 39);
-            this.cmbMovement.Name = "cmbMovement";
-            this.cmbMovement.Size = new System.Drawing.Size(234, 21);
-            this.cmbMovement.TabIndex = 0;
-            this.cmbMovement.SelectedIndexChanged += new System.EventHandler(this.cmbMovement_SelectedIndexChanged);
-            // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.chkSound);
             this.groupBox4.Controls.Add(this.cmbAlignment);
             this.groupBox4.Controls.Add(this.cmbDirection);
             this.groupBox4.Controls.Add(this.numStartY);
             this.groupBox4.Controls.Add(this.numFrames);
             this.groupBox4.Controls.Add(this.numStartX);
             this.groupBox4.Controls.Add(this.numDuration);
-            this.groupBox4.Controls.Add(this.butStop);
             this.groupBox4.Controls.Add(this.picPreview);
-            this.groupBox4.Controls.Add(this.butPlay);
             this.groupBox4.Controls.Add(this.label2);
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.label3);
@@ -291,20 +289,15 @@
             // numDuration
             // 
             this.numDuration.Location = new System.Drawing.Point(126, 144);
+            this.numDuration.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.numDuration.Name = "numDuration";
             this.numDuration.Size = new System.Drawing.Size(113, 20);
             this.numDuration.TabIndex = 3;
             this.numDuration.ValueChanged += new System.EventHandler(this.numDuration_ValueChanged);
-            // 
-            // butStop
-            // 
-            this.butStop.Location = new System.Drawing.Point(298, 144);
-            this.butStop.Name = "butStop";
-            this.butStop.Size = new System.Drawing.Size(47, 20);
-            this.butStop.TabIndex = 29;
-            this.butStop.Text = "Stop";
-            this.butStop.UseVisualStyleBackColor = true;
-            this.butStop.Click += new System.EventHandler(this.butStop_Click);
             // 
             // picPreview
             // 
@@ -313,16 +306,6 @@
             this.picPreview.Size = new System.Drawing.Size(96, 96);
             this.picPreview.TabIndex = 25;
             this.picPreview.TabStop = false;
-            // 
-            // butPlay
-            // 
-            this.butPlay.Location = new System.Drawing.Point(249, 144);
-            this.butPlay.Name = "butPlay";
-            this.butPlay.Size = new System.Drawing.Size(47, 20);
-            this.butPlay.TabIndex = 28;
-            this.butPlay.Text = "Play";
-            this.butPlay.UseVisualStyleBackColor = true;
-            this.butPlay.Click += new System.EventHandler(this.butPlay_Click);
             // 
             // label2
             // 
@@ -464,6 +447,16 @@
             this.txtStyle_Name.Size = new System.Drawing.Size(241, 20);
             this.txtStyle_Name.TabIndex = 0;
             // 
+            // chkSound
+            // 
+            this.chkSound.AutoSize = true;
+            this.chkSound.Location = new System.Drawing.Point(249, 148);
+            this.chkSound.Name = "chkSound";
+            this.chkSound.Size = new System.Drawing.Size(63, 17);
+            this.chkSound.TabIndex = 31;
+            this.chkSound.Text = "Sound?";
+            this.chkSound.UseVisualStyleBackColor = true;
+            // 
             // Editor_Sprites
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -533,14 +526,13 @@
     private System.Windows.Forms.Button butStyle_Confirm;
     private System.Windows.Forms.ComboBox cmbSound;
     private System.Windows.Forms.Label label9;
-    private System.Windows.Forms.Button butStop;
-    private System.Windows.Forms.Button butPlay;
     private System.Windows.Forms.GroupBox groupBox4;
     public System.Windows.Forms.PictureBox picTexture;
     public System.Windows.Forms.PictureBox picPreview;
     private System.Windows.Forms.ComboBox cmbDirection;
     private System.Windows.Forms.Label label10;
-    private System.Windows.Forms.ComboBox cmbMovement;
     private System.Windows.Forms.NumericUpDown numHeight;
     private System.Windows.Forms.NumericUpDown numWidth;
+    public System.Windows.Forms.CheckBox chkSound;
+    public System.Windows.Forms.ComboBox cmbMovement;
 }

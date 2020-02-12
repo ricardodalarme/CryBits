@@ -773,6 +773,8 @@ partial class Graphics
             Width = Width,
             Height = Height
         };
+        if (Editor_Sprites.Selected_Movement.Alignment == (byte)Globals.Alignments.Horizontal) Source.X += (Globals.Sprite_Frame * Width);
+        else Source.Y += (Globals.Sprite_Frame * Height);
         Render(Win_Sprite_Preview, Tex_Character[Editor_Sprites.Objects.List.SelectedIndex + 1], 0, 0, Source.X, Source.Y, Source.Width, Source.Height);
 
         // Exibe o que foi renderizado

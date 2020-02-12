@@ -125,7 +125,11 @@ class Clear
         {
             Lists.Sprite[Index].Movement[i] = new Lists.Structures.Sprite_Movement();
             Lists.Sprite[Index].Movement[i].Direction = new Lists.Structures.Sprite_Movement_Direction[(byte)Globals.Directions.Count];
-            for (byte n = 0; n < (byte)Globals.Directions.Count; n++) Lists.Sprite[Index].Movement[i].Direction[n] = new Lists.Structures.Sprite_Movement_Direction();
+            for (byte n = 0; n < (byte)Globals.Directions.Count; n++)
+            {
+                Lists.Sprite[Index].Movement[i].Direction[n] = new Lists.Structures.Sprite_Movement_Direction();
+                Lists.Sprite[Index].Movement[i].Direction[n].Frames = 1;
+            }
         }
     }
 }

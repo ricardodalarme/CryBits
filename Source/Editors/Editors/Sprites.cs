@@ -178,7 +178,7 @@ partial class Editor_Sprites : Form
 
     private void butPlay_Click(object sender, EventArgs e)
     {
-
+        
     }
 
     private void butStop_Click(object sender, EventArgs e)

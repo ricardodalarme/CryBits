@@ -9,6 +9,7 @@ class Loop
     private static int FogY_Timer = 0;
     private static int Snow_Timer = 0;
     private static int Thundering_Timer = 0;
+    private static int Spriteg_Timer = 0;
 
     public static void Main()
     {
@@ -24,9 +25,10 @@ class Loop
             Socket.HandleData();
 
             // Eventos
-            Editor_Maps_Fog();
-            Editor_Maps_Weather();
-            Editor_Maps_Music();
+            Map_Fog();
+            Map_Weather();
+            Map_Music();
+            Sprite_Preview();
 
             // Desenha os gráficos
             Graphics.Present();
@@ -53,17 +55,17 @@ class Loop
         Program.Close();
     }
 
-    private static void Editor_Maps_Fog()
+    private static void Map_Fog()
     {
         // Faz a movimentação
         if (Editor_Maps.Objects.Visible)
         {
-            Editor_Maps_Fog_X();
-            Editor_Maps_Fog_Y();
+            Map_Fog_X();
+            Map_Fog_Y();
         }
     }
 
-    private static void Editor_Maps_Fog_X()
+    private static void Map_Fog_X()
     {
         Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Lists.Map[Editor_Maps.Selected].Fog.Texture]);
         int Speed = Lists.Map[Editor_Maps.Selected].Fog.Speed_X;
@@ -90,7 +92,7 @@ class Loop
         FogX_Timer = Environment.TickCount + 50 - Speed;
     }
 
-    private static void Editor_Maps_Fog_Y()
+    private static void Map_Fog_Y()
     {
         Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Lists.Map[Editor_Maps.Selected].Fog.Texture]);
         int Speed = Lists.Map[Editor_Maps.Selected].Fog.Speed_Y;
@@ -117,7 +119,7 @@ class Loop
         FogY_Timer = Environment.TickCount + 50 - Speed;
     }
 
-    private static void Editor_Maps_Weather()
+    private static void Map_Weather()
     {
         bool Stop = false, Move;
         byte First_Thunder = (byte)Audio.Sounds.Thunder_1;
@@ -175,8 +177,8 @@ class Loop
                         switch ((Globals.Weathers)Weather.Type)
                         {
                             case Globals.Weathers.Thundering:
-                            case Globals.Weathers.Raining: Weather_Rain_Create(i); break;
-                            case Globals.Weathers.Snowing: Weather_Snow_Create(i); break;
+                            case Globals.Weathers.Raining: Map_Weather_Rain_Create(i); break;
+                            case Globals.Weathers.Snowing: Map_Weather_Snow_Create(i); break;
                         }
                     }
                 }
@@ -189,8 +191,8 @@ class Loop
                 switch ((Globals.Weathers)Weather.Type)
                 {
                     case Globals.Weathers.Thundering:
-                    case Globals.Weathers.Raining: Weather_Rain_Movement(i); break;
-                    case Globals.Weathers.Snowing: Weather_Snow_Movement(i, Move); break;
+                    case Globals.Weathers.Raining: Map_Weather_Rain_Movement(i); break;
+                    case Globals.Weathers.Snowing: Map_Weather_Snow_Movement(i, Move); break;
                 }
 
                 // Reseta a partícula
@@ -211,7 +213,7 @@ class Loop
             }
     }
 
-    private static void Weather_Rain_Create(int i)
+    private static void Map_Weather_Rain_Create(int i)
     {
         // Define a velocidade e a posição da partícula
         Lists.Weather[i].Speed = Globals.GameRandom.Next(8, 13);
@@ -228,14 +230,14 @@ class Loop
         }
     }
 
-    private static void Weather_Rain_Movement(int i)
+    private static void Map_Weather_Rain_Movement(int i)
     {
         // Movimenta a partícula
         Lists.Weather[i].x += Lists.Weather[i].Speed;
         Lists.Weather[i].y += Lists.Weather[i].Speed;
     }
 
-    private static void Weather_Snow_Create(int i)
+    private static void Map_Weather_Snow_Create(int i)
     {
         // Define a velocidade e a posição da partícula
         Lists.Weather[i].Speed = Globals.GameRandom.Next(1, 3);
@@ -249,7 +251,7 @@ class Loop
             Lists.Weather[i].Back = true;
     }
 
-    private static void Weather_Snow_Movement(int i, bool Move = true)
+    private static void Map_Weather_Snow_Movement(int i, bool Move = true)
     {
         int Difference = Globals.GameRandom.Next(0, Globals.Snow_Movement / 3);
         int x1 = Lists.Weather[i].Start + Globals.Snow_Movement + Difference;
@@ -271,7 +273,7 @@ class Loop
                 Lists.Weather[i].x += 1;
     }
 
-    private static void Editor_Maps_Music()
+    private static void Map_Music()
     {
         // Apenas se necessário
         if (!Editor_Maps.Objects.Visible) goto stop;
@@ -286,5 +288,20 @@ class Loop
     stop:
         // Para a música
         if (Audio.Music.Device != null) Audio.Music.Stop();
+    }
+
+    private static void Sprite_Preview()
+    {
+        if (Editor_Sprites.Objects.Visible)
+            if (Spriteg_Timer < Environment.TickCount)
+            {
+                // Toca o som da animação toda vez que ela reseta
+                if (Editor_Sprites.Objects.chkSound.Checked && Globals.Sprite_Frame == 0) 
+                     Audio.Sound.Play((Audio.Sounds)Editor_Sprites.Selected.Movement[Editor_Sprites.Objects.cmbMovement.SelectedIndex].Sound); 
+
+                // Altea o frame da animação
+                Globals.Sprite_Frame = (byte)((Globals.Sprite_Frame + 1) % Editor_Sprites.Selected_Movement.Frames);
+                Spriteg_Timer = Environment.TickCount + Editor_Sprites.Selected_Movement.Duration;
+            }
     }
 }

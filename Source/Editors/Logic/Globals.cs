@@ -27,6 +27,9 @@ class Globals
     public const byte Snow_Movement = 10;
     public static byte Lightning;
 
+    // Sprite
+    public static byte Sprite_Frame;
+
     // Números aleAmountatórios
     public static Random GameRandom = new Random();
 
