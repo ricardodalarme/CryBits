@@ -357,9 +357,19 @@
             // numFrames
             // 
             this.numFrames.Location = new System.Drawing.Point(6, 137);
+            this.numFrames.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numFrames.Name = "numFrames";
             this.numFrames.Size = new System.Drawing.Size(85, 20);
             this.numFrames.TabIndex = 1;
+            this.numFrames.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numFrames.ValueChanged += new System.EventHandler(this.numFrames_ValueChanged);
             // 
             // numStartX

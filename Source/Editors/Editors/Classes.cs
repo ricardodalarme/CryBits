@@ -17,8 +17,9 @@ partial class Editor_Classes : Form
     public static void Request()
     {
         // Lê os dados
+        Globals.OpenEditor = Objects;
         Send.Request_Items();
-        Send.Request_Classes(true);
+        Send.Request_Classes();
     }
 
     public static void Open()

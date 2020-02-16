@@ -60,10 +60,7 @@ class Player
     private static bool CanMove()
     {
         // Não mover se já estiver tentando movimentar-se
-        if (Lists.Player[MyIndex].Movement != Game.Movements.Stopped)
-            return false;
-
-        return true;
+        return Lists.Player[MyIndex].Movement == Game.Movements.Stopped;
     }
 
     private static void CheckMovement()
@@ -91,10 +88,10 @@ class Player
 
         // Verifica se o azulejo seguinte está livre
         if (Map.Tile_Blocked(Lists.Player[MyIndex].Map, Lists.Player[MyIndex].X, Lists.Player[MyIndex].Y, Direction)) return;
-
+        
         // Define a velocidade que o jogador se move
         if (Keyboard.IsKeyPressed(Keyboard.Key.LShift))
-            Lists.Player[MyIndex].Movement = Game.Movements.Moving;
+            Lists.Player[MyIndex].Movement = Game.Movements.Running;
         else
             Lists.Player[MyIndex].Movement = Game.Movements.Walking;
 
@@ -113,17 +110,18 @@ class Player
 
     private static void ProcessMovement(byte Index)
     {
+        // VOLTAR AQUI
         byte Speed = 0;
         short x = Lists.Player[Index].X2, y = Lists.Player[Index].Y2;
 
         // Reseta a animação se necessário
-        if (Lists.Player[Index].Animation == Game.Animation_Stopped) Lists.Player[Index].Animation = Game.Animation_Right;
+        //if (Lists.Player[Index].Animation == Game.Animation_Stopped) Lists.Player[Index].Animation = Game.Animation_Right;
 
         // Define a velocidade que o jogador se move
         switch (Lists.Player[Index].Movement)
         {
             case Game.Movements.Walking: Speed = 2; break;
-            case Game.Movements.Moving: Speed = 3; break;
+            case Game.Movements.Running: Speed = 3; break;
             case Game.Movements.Stopped:
                 // Reseta os dados
                 Lists.Player[Index].X2 = 0;
@@ -155,12 +153,12 @@ class Player
         else if (Lists.Player[Index].X2 > 0 || Lists.Player[Index].Y2 > 0)
             return;
 
-        // Define as animações
+        //// Define as animações
         Lists.Player[Index].Movement = Game.Movements.Stopped;
-        if (Lists.Player[Index].Animation == Game.Animation_Left)
-            Lists.Player[Index].Animation = Game.Animation_Right;
-        else
-            Lists.Player[Index].Animation = Game.Animation_Left;
+        //if (Lists.Player[Index].Animation == Game.Animation_Left)
+        //    Lists.Player[Index].Animation = Game.Animation_Right;
+        //else
+        //    Lists.Player[Index].Animation = Game.Animation_Left;
     }
 
     private static void CheckAttack()
@@ -221,39 +219,40 @@ partial class Graphics
 
     private static void Player_Texture(byte Index)
     {
-        byte Column = Game.Animation_Stopped;
+        // VOLTAR AQUI
+        //byte Column = Game.Animation_Stopped;
         int x = Lists.Player[Index].X * Game.Grid + Lists.Player[Index].X2, y = Lists.Player[Index].Y * Game.Grid + Lists.Player[Index].Y2;
-        short x2 = Lists.Player[Index].X2, y2 = Lists.Player[Index].Y2;
-        bool Hurt = false;
-        short Texture = Lists.Player[Index].Texture_Num;
+        //short x2 = Lists.Player[Index].X2, y2 = Lists.Player[Index].Y2;
+        //bool Hurt = false;
+        short Texture_Num = Lists.Player[Index].Texture_Num;
 
-        // Previne sobrecargas
-        if (Texture <= 0 || Texture > Tex_Character.GetUpperBound(0)) return;
+        //// Previne sobrecargas
+        //if (Texture <= 0 || Texture > Tex_Character.GetUpperBound(0)) return;
 
-        // Define a animação
-        if (Lists.Player[Index].Attacking && Lists.Player[Index].Attack_Timer + Game.Attack_Speed / 2 > Environment.TickCount)
-            Column = Game.Animation_Attack;
-        else
-        {
-            if (x2 > 8 && x2 < Game.Grid) Column = Lists.Player[Index].Animation;
-            if (x2 < -8 && x2 > Game.Grid * -1) Column = Lists.Player[Index].Animation;
-            if (y2 > 8 && y2 < Game.Grid) Column = Lists.Player[Index].Animation;
-            if (y2 < -8 && y2 > Game.Grid * -1) Column = Lists.Player[Index].Animation;
-        }
+        //// Define a animação
+        //if (Lists.Player[Index].Attacking && Lists.Player[Index].Attack_Timer + Game.Attack_Speed / 2 > Environment.TickCount)
+        //    Column = Game.Animation_Attack;
+        //else
+        //{
+        //    if (x2 > 8 && x2 < Game.Grid) Column = Lists.Player[Index].Animation;
+        //    if (x2 < -8 && x2 > Game.Grid * -1) Column = Lists.Player[Index].Animation;
+        //    if (y2 > 8 && y2 < Game.Grid) Column = Lists.Player[Index].Animation;
+        //    if (y2 < -8 && y2 > Game.Grid * -1) Column = Lists.Player[Index].Animation;
+        //}
 
-        // Demonstra que o personagem está sofrendo dano
-        if (Lists.Player[Index].Hurt > 0) Hurt = true;
+        //// Demonstra que o personagem está sofrendo dano
+        //if (Lists.Player[Index].Hurt > 0) Hurt = true;
 
-        // Desenha o jogador
-        Character(Texture, new Point(Game.ConvertX(x), Game.ConvertY(y)), Lists.Player[Index].Direction, Column, Hurt);
+        //// Desenha o jogador
+        Character(Texture_Num, new Point(Game.ConvertX(x), Game.ConvertY(y)), Game.Movements.Stopped, Lists.Player[Index].Direction);
     }
 
     private static void Player_Bars(byte Index)
     {
-        Size Chracater_Size = TSize(Tex_Character[Lists.Player[Index].Texture_Num]);
+        short Texture_Num = Lists.Player[Index].Texture_Num;
         int x = Lists.Player[Index].X * Game.Grid + Lists.Player[Index].X2, y = Lists.Player[Index].Y * Game.Grid + Lists.Player[Index].Y2;
-        Point Position = new Point(Game.ConvertX(x), Game.ConvertY(y) + Chracater_Size.Height / Game.Animation_Amount + 4);
-        int FullWidth = Chracater_Size.Width / Game.Animation_Amount;
+        Point Position = new Point(Game.ConvertX(x), Game.ConvertY(y) + Lists.Sprite[Texture_Num].Frame_Height + 4);
+        int FullWidth = Lists.Sprite[Texture_Num].Frame_Width;
         short Value = Lists.Player[Index].Vital[(byte)Game.Vitals.HP];
 
         // Apenas se necessário
@@ -269,21 +268,18 @@ partial class Graphics
 
     private static void Player_Name(byte Index)
     {
-        Texture Texture = Tex_Character[Lists.Player[Index].Texture_Num];
-        int Name_Size = Tools.MeasureString(Lists.Player[Index].Name);
+        short Texture_Num = Lists.Player[Index].Texture_Num;
         int x = Lists.Player[Index].X * Game.Grid + Lists.Player[Index].X2, y = Lists.Player[Index].Y * Game.Grid + Lists.Player[Index].Y2;
 
         // Posição do texto
         Point Position = new Point();
-        Position.X = x + TSize(Texture).Width / Game.Animation_Amount / 2 - Name_Size / 2;
-        Position.Y = y - TSize(Texture).Height / Game.Animation_Amount / 2;
+        Position.X = x + (Lists.Sprite[Texture_Num].Frame_Width - Tools.MeasureString(Lists.Player[Index].Name)) / 2;
+        Position.Y = y - Lists.Sprite[Texture_Num].Frame_Height / 2;
 
         // Cor do texto
         SFML.Graphics.Color Color;
-        if (Index == Player.MyIndex)
-            Color = SFML.Graphics.Color.Yellow;
-        else
-            Color = SFML.Graphics.Color.White;
+        if (Index == Player.MyIndex) Color = SFML.Graphics.Color.Yellow;
+        else Color = SFML.Graphics.Color.White;
 
         // Desenha o texto
         DrawText(Lists.Player[Index].Name, Game.ConvertX(Position.X), Game.ConvertY(Position.Y), Color);

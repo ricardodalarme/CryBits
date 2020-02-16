@@ -67,10 +67,11 @@ partial class Editor_Maps : Form
     public static void Request()
     {
         // Lê os dados
+        Globals.OpenEditor = Objects;
         Send.Request_NPCs();
         Send.Request_Tiles();
         Send.Request_Items();
-        Send.Request_Maps(true);
+        Send.Request_Maps();
     }
 
     public static void Open()

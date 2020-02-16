@@ -43,7 +43,8 @@ partial class Receive
         Items,
         Map_Items,
         Party,
-        Party_Invitation
+        Party_Invitation,
+        Sprites
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -87,6 +88,7 @@ partial class Receive
             case Packets.Map_Items: Map_Items(Data); break;
             case Packets.Party: Party(Data); break;
             case Packets.Party_Invitation: Party_Invitation(Data); break;
+            case Packets.Sprites: Sprites(Data); break;
         }
     }
 
@@ -693,6 +695,37 @@ partial class Receive
         {
             Player.Hotbar[i].Type = Data.ReadByte();
             Player.Hotbar[i].Slot = Data.ReadByte();
+        }
+    }
+
+    private static void Sprites(NetIncomingMessage Data)
+    {
+        // Lê todos os dados dos sprites
+        Lists.Sprite = new Lists.Structures.Sprite[Data.ReadInt16()];
+        for (short i = 1; i < Lists.Sprite.Length; i++)
+        {
+            Lists.Sprite[i] = new Lists.Structures.Sprite();
+            Lists.Sprite[i].Frame_Width = Data.ReadByte();
+            Lists.Sprite[i].Frame_Height = Data.ReadByte();
+            Lists.Sprite[i].Movement = new Lists.Structures.Sprite_Movement[(byte)Game.Movements.Count];
+            for (byte m = 0; m < (byte)Game.Movements.Count; m++)
+            {
+                Lists.Sprite[i].Movement[m] = new Lists.Structures.Sprite_Movement();
+                Lists.Sprite[i].Movement[m].Sound = Data.ReadByte();
+                Lists.Sprite[i].Movement[m].Color = Data.ReadInt32();
+                Lists.Sprite[i].Movement[m].Direction = new Lists.Structures.Sprite_Movement_Direction[(byte)Game.Directions.Count];
+
+                for (byte d = 0; d < (byte)Game.Directions.Count; d++)
+                {
+                    Lists.Sprite[i].Movement[m].Direction[d] = new Lists.Structures.Sprite_Movement_Direction();
+                    Lists.Sprite[i].Movement[m].Direction[d].StartX = Data.ReadByte();
+                    Lists.Sprite[i].Movement[m].Direction[d].StartY = Data.ReadByte();
+                    Lists.Sprite[i].Movement[m].Direction[d].Alignment = Data.ReadByte();
+                    Lists.Sprite[i].Movement[m].Direction[d].Frames = Data.ReadByte();
+                    Lists.Sprite[i].Movement[m].Direction[d].Duration = Data.ReadInt16();
+                    Lists.Sprite[i].Movement[m].Direction[d].Backwards = Data.ReadBoolean();
+                }
+            }
         }
     }
 }

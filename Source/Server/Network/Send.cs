@@ -41,7 +41,8 @@ class Send
         Items,
         Map_Items,
         Party,
-        Party_Invitation
+        Party_Invitation,
+        Sprites
     }
 
     // Pacotes do servidor para o editor
@@ -173,7 +174,7 @@ class Send
         ToPlayer(Index, Data);
     }
 
-    public static void Classes(byte Index, bool OpenEditor = false)
+    public static void Classes(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -209,7 +210,6 @@ class Send
                 }
             }
         }
-        Data.Write(OpenEditor);
 
         // Envia os dados
         ToPlayer(Index, Data);
@@ -391,7 +391,7 @@ class Send
         ToPlayer(Index, Data);
     }
 
-    public static void Maps(byte Index, bool OpenEditor = false)
+    public static void Maps(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -399,10 +399,10 @@ class Send
         Data.Write((byte)Editor_Packets.Maps);
         Data.Write((short)Lists.Map.Length);
         ToPlayer(Index, Data);
-        for (short i = 1; i < Lists.Map.Length; i++) Map(Index, i, OpenEditor);
+        for (short i = 1; i < Lists.Map.Length; i++) Map(Index, i);
     }
 
-    public static void Map(byte Index, short Map_Num, bool OpenEditor = false)
+    public static void Map(byte Index, short Map_Num)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -487,8 +487,6 @@ class Send
             Data.Write(Lists.Map[Map_Num].NPC[i].X);
             Data.Write(Lists.Map[Map_Num].NPC[i].Y);
         }
-        if (Map_Num == Lists.Map.Length - 1)
-            Data.Write(OpenEditor);
         ToPlayer(Index, Data);
     }
 
@@ -564,7 +562,7 @@ class Send
         ToMap(Player.Character(Index).Map, Data);
     }
 
-    public static void Items(byte Index, bool OpenEditor = false)
+    public static void Items(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -590,7 +588,6 @@ class Send
             for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Data.Write(Lists.Item[i].Equip_Attribute[a]);
             Data.Write(Lists.Item[i].Weapon_Damage);
         }
-        Data.Write(OpenEditor);
 
         // Envia os dados
         ToPlayer(Index, Data);
@@ -660,7 +657,7 @@ class Send
         ToPlayer(Index, Data);
     }
 
-    public static void NPCs(byte Index, bool OpenEditor = false)
+    public static void NPCs(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -698,7 +695,6 @@ class Send
                 Data.Write(Lists.NPC[i].Flee_Helth);
             }
         }
-        Data.Write(OpenEditor);
         ToPlayer(Index, Data);
     }
 
@@ -793,7 +789,7 @@ class Send
         ToMap(Map_Num, Data);
     }
 
-    public static void Tiles(byte Index, bool OpenEditor = false)
+    public static void Tiles(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -815,11 +811,10 @@ class Send
                         Data.Write(Lists.Tile[i].Data[x, y].Block[d]);
                 }
         }
-        Data.Write(OpenEditor);
         ToPlayer(Index, Data);
     }
 
-    public static void Server_Data(byte Index, bool OpenEdtior)
+    public static void Server_Data(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -832,7 +827,6 @@ class Send
         Data.Write(Lists.Server_Data.Max_Characters);
         Data.Write(Lists.Server_Data.Max_Party_Members);
         Data.Write(Lists.Server_Data.Max_Map_Items);
-        Data.Write(OpenEdtior);
         ToPlayer(Index, Data);
     }
 
@@ -857,13 +851,35 @@ class Send
         ToPlayer(Index, Data);
     }
 
-    public static void Sprites(byte Index, bool OpenEdtior)
+    public static void Sprites(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Data.Write((byte)Editor_Packets.Sprites);
-        Data.Write(OpenEdtior);
+        if (Lists.Temp_Player[Index].InEditor) Data.Write((byte)Editor_Packets.Sprites);
+        else Data.Write((byte)Client_Packets.Sprites);
+        Data.Write((short)Lists.Sprite.Length);
+        for (short i = 1; i < Lists.Sprite.Length; i++)
+        {
+            Data.Write(Lists.Sprite[i].Frame_Width);
+            Data.Write(Lists.Sprite[i].Frame_Height);
+
+            for (byte m = 0; m < (byte)Game.Movements.Count; m++)
+            {
+                Data.Write(Lists.Sprite[i].Movement[m].Sound);
+                Data.Write(Lists.Sprite[i].Movement[m].Color);
+
+                for (byte d = 0; d < (byte)Game.Directions.Count; d++)
+                {
+                    Data.Write(Lists.Sprite[i].Movement[m].Direction[d].StartX);
+                    Data.Write(Lists.Sprite[i].Movement[m].Direction[d].StartY);
+                    Data.Write(Lists.Sprite[i].Movement[m].Direction[d].Alignment);
+                    Data.Write(Lists.Sprite[i].Movement[m].Direction[d].Frames);
+                    Data.Write(Lists.Sprite[i].Movement[m].Direction[d].Duration);
+                    Data.Write(Lists.Sprite[i].Movement[m].Direction[d].Backwards);
+                }
+            }
+        }
         ToPlayer(Index, Data);
     }
 }

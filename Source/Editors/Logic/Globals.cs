@@ -10,6 +10,9 @@ class Globals
     // Medida de calculo do atraso do jogo
     public static short FPS;
 
+    // Editor que será aberto
+    public static System.Windows.Forms.Form OpenEditor;
+
     // Limitações dos mapas
     public const byte Max_Map_Layers = 3;
     public const byte Min_Map_Width = 24;
@@ -158,9 +161,12 @@ class Globals
 
     public enum Movements
     {
+        Stopped,
         Walking,
         Running,
-        Attacking,
+        Attacking_1,
+        Attacking_2,
+        Pain,
         Count
     }
     

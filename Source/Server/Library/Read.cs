@@ -19,6 +19,8 @@ partial class Read
         Maps();
         Console.WriteLine("Loading tiles.");
         Tiles();
+        Console.WriteLine("Loading sprites.");
+        Sprites();
     }
 
     private static void Server_Data()
@@ -251,6 +253,31 @@ partial class Read
         // Lê os dados
         FileStream Stream = File.OpenRead();
         Lists.Tile[Index] = (Lists.Structures.Tile)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
+    }
+
+    private static void Sprites()
+    {
+        // Lê os dados
+        Lists.Sprite = new Lists.Structures.Sprite[Lists.Server_Data.Num_Sprites + 1];
+        for (byte i = 1; i < Lists.Sprite.Length; i++) Sprite(i);
+    }
+
+    private static void Sprite(byte Index)
+    {
+        FileInfo File = new FileInfo(Directories.Sprites.FullName + Index + Directories.Format);
+
+        // Evita erros
+        if (!File.Exists)
+        {
+            Clear.Sprite(Index);
+            Write.Sprite(Index);
+            return;
+        }
+
+        // Lê os dados
+        FileStream Stream = File.OpenRead();
+        Lists.Sprite[Index] = (Lists.Structures.Sprite)new BinaryFormatter().Deserialize(Stream);
         Stream.Close();
     }
 }

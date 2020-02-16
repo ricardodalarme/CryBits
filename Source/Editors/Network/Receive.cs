@@ -201,7 +201,7 @@ partial class Receive
             }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Maps.Open();
+        if (Globals.OpenEditor == Editor_Maps.Objects && i == Lists.Map.Length - 1) Editor_Maps.Open();
     }
 
     private static void NPCs(NetIncomingMessage Data)
@@ -238,7 +238,7 @@ partial class Receive
         }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_NPCs.Open();
+        if (Globals.OpenEditor == Editor_NPCs.Objects) Editor_NPCs.Open();
     }
 
     private static void Items(NetIncomingMessage Data)
@@ -272,7 +272,7 @@ partial class Receive
         }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Items.Open();
+        if (Globals.OpenEditor == Editor_Items.Objects) Editor_Items.Open();
     }
 
     private static void Tiles(NetIncomingMessage Data)
@@ -309,13 +309,46 @@ partial class Receive
         }
 
         // Abre o editor
-        if (Data.ReadBoolean())
-            Editor_Tiles.Open();
+        if (Globals.OpenEditor == Editor_Tiles.Objects) Editor_Tiles.Open();
     }
 
     private static void Sprites(NetIncomingMessage Data)
     {
+        Lists.Sprite = new Lists.Structures.Sprite[Graphics.Tex_Character.Length];
+        short Size = Data.ReadInt16();
+
+        for (short Index = 1; Index < Lists.Sprite.Length; Index++)
+            // Lê todos os dados dos sprites
+            if (Index < Size)
+            {
+                Lists.Sprite[Index] = new Lists.Structures.Sprite();
+                Lists.Sprite[Index].Frame_Width = Data.ReadByte();
+                Lists.Sprite[Index].Frame_Height = Data.ReadByte();
+                Lists.Sprite[Index].Movement = new Lists.Structures.Sprite_Movement[(byte)Globals.Movements.Count];
+                for (byte m = 0; m < (byte)Globals.Movements.Count; m++)
+                {
+                    Lists.Sprite[Index].Movement[m] = new Lists.Structures.Sprite_Movement();
+                    Lists.Sprite[Index].Movement[m].Sound = Data.ReadByte();
+                    Lists.Sprite[Index].Movement[m].Color = Data.ReadInt32();
+                    Lists.Sprite[Index].Movement[m].Direction = new Lists.Structures.Sprite_Movement_Direction[(byte)Globals.Directions.Count];
+
+                    for (byte d = 0; d < (byte)Globals.Directions.Count; d++)
+                    {
+                        Lists.Sprite[Index].Movement[m].Direction[d] = new Lists.Structures.Sprite_Movement_Direction();
+                        Lists.Sprite[Index].Movement[m].Direction[d].StartX = Data.ReadByte();
+                        Lists.Sprite[Index].Movement[m].Direction[d].StartY = Data.ReadByte();
+                        Lists.Sprite[Index].Movement[m].Direction[d].Alignment = Data.ReadByte();
+                        Lists.Sprite[Index].Movement[m].Direction[d].Frames = Data.ReadByte();
+                        Lists.Sprite[Index].Movement[m].Direction[d].Duration = Data.ReadInt16();
+                        Lists.Sprite[Index].Movement[m].Direction[d].Backwards = Data.ReadBoolean();
+                    }
+                }
+
+            }
+            // Limpa o restante dos dados caso o´número de texturas for maior do que a quantidade recebida do servidor
+            else Clear.Sprite(Index);
+
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Sprites.Open();
+        if (Globals.OpenEditor == Editor_Sprites.Objects) Editor_Sprites.Open();
     }
 }

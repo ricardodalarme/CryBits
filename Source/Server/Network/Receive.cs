@@ -166,6 +166,7 @@ class Receive
             // Envia os dados das classes e dos personagens ao jogador
             Send.Classes(Index);
             Send.Characters(Index);
+            Send.Sprites(Index);
 
             // Se o jogador não tiver nenhum personagem então abrir o painel de criação de personagem
             if (!Player.HasCharacter(Index))
@@ -852,21 +853,53 @@ class Receive
             return;
         }
 
+        // Lê todos os dados dos sprites
+        Lists.Sprite = new Lists.Structures.Sprite[Data.ReadInt16()];
+        for (short i = 1; i < Lists.Sprite.Length; i++)
+        {
+            Lists.Sprite[i] = new Lists.Structures.Sprite();
+            Lists.Sprite[i].Frame_Width = Data.ReadByte();
+            Lists.Sprite[i].Frame_Height = Data.ReadByte();
+            Lists.Sprite[i].Movement = new Lists.Structures.Sprite_Movement[(byte)Game.Movements.Count];
+            for (byte m = 0; m < (byte)Game.Movements.Count; m++)
+            {
+                Lists.Sprite[i].Movement[m] = new Lists.Structures.Sprite_Movement();
+                Lists.Sprite[i].Movement[m].Sound = Data.ReadByte();
+                Lists.Sprite[i].Movement[m].Color = Data.ReadInt32();
+                Lists.Sprite[i].Movement[m].Direction = new Lists.Structures.Sprite_Movement_Direction[(byte)Game.Directions.Count];
+
+                for (byte d = 0; d < (byte)Game.Directions.Count; d++)
+                {
+                    Lists.Sprite[i].Movement[m].Direction[d] = new Lists.Structures.Sprite_Movement_Direction();
+                    Lists.Sprite[i].Movement[m].Direction[d].StartX = Data.ReadByte();
+                    Lists.Sprite[i].Movement[m].Direction[d].StartY = Data.ReadByte();
+                    Lists.Sprite[i].Movement[m].Direction[d].Alignment = Data.ReadByte();
+                    Lists.Sprite[i].Movement[m].Direction[d].Frames = Data.ReadByte();
+                    Lists.Sprite[i].Movement[m].Direction[d].Duration = Data.ReadInt16();
+                    Lists.Sprite[i].Movement[m].Direction[d].Backwards = Data.ReadBoolean();
+                }
+            }
+        }
+
+        // Salva os dados e envia pra todos jogadores conectados
+        Lists.Server_Data.Num_Sprites = (short)Lists.Sprite.GetUpperBound(0);
+        Write.Server_Data();
+        Write.Sprites();
     }
 
     private static void Request_Server_Data(byte Index, NetIncomingMessage Data)
     {
-        Send.Server_Data(Index, Data.ReadBoolean());
+        Send.Server_Data(Index);
     }
 
     private static void Request_Classes(byte Index, NetIncomingMessage Data)
     {
-        Send.Classes(Index, Data.ReadBoolean());
+        Send.Classes(Index);
     }
 
     private static void Request_Tiles(byte Index, NetIncomingMessage Data)
     {
-        Send.Tiles(Index, Data.ReadBoolean());
+        Send.Tiles(Index);
     }
 
     private static void Request_Map(byte Index, NetIncomingMessage Data)
@@ -876,22 +909,22 @@ class Receive
 
     private static void Request_Maps(byte Index, NetIncomingMessage Data)
     {
-        Send.Maps(Index, Data.ReadBoolean());
+        Send.Maps(Index);
     }
 
     private static void Request_NPCs(byte Index, NetIncomingMessage Data)
     {
-        Send.NPCs(Index, Data.ReadBoolean());
+        Send.NPCs(Index);
     }
 
     private static void Request_Items(byte Index, NetIncomingMessage Data)
     {
-        Send.Items(Index, Data.ReadBoolean());
+        Send.Items(Index);
     }
 
     private static void Request_Sprites(byte Index, NetIncomingMessage Data)
     {
-        Send.Sprites(Index, Data.ReadBoolean());
+        Send.Sprites(Index);
     }
 
     private static void Party_Invite(byte Index, NetIncomingMessage Data)

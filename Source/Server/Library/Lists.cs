@@ -13,6 +13,7 @@ class Lists
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
     public static Structures.Tile[] Tile;
+    public static Structures.Sprite[] Sprite;
 
     // Estrutura dos itens em gerais
     public class Structures
@@ -32,6 +33,7 @@ class Lists
             public byte Num_Tiles;
             public short Num_NPCs;
             public short Num_Items;
+            public short Num_Sprites;
         }
 
         public struct Player
@@ -266,6 +268,33 @@ class Lists
         {
             public byte Attribute;
             public bool[] Block;
+        }
+
+        [Serializable]
+        public class Sprite
+        {
+            public byte Frame_Width;
+            public byte Frame_Height;
+            public Sprite_Movement[] Movement;
+        }
+
+        [Serializable]
+        public class Sprite_Movement
+        {
+            public byte Sound;
+            public int Color;
+            public Sprite_Movement_Direction[] Direction;
+        }
+
+        [Serializable]
+        public class Sprite_Movement_Direction
+        {
+            public byte Alignment;
+            public byte StartX;
+            public byte StartY;
+            public byte Frames;
+            public short Duration;
+            public bool Backwards;
         }
     }
 }

@@ -25,19 +25,6 @@ class Game
     // Jogador
     public const short Attack_Speed = 750;
 
-    // Animação
-    public const byte Animation_Amount = 4;
-    public const byte Animation_Stopped = 1;
-    public const byte Animation_Right = 0;
-    public const byte Animation_Left = 2;
-    public const byte Animation_Attack = 2;
-
-    // Movimentação
-    public const byte Movement_Up = 3;
-    public const byte Movement_Down = 0;
-    public const byte Movement_Left = 1;
-    public const byte Movement_Right = 2;
-
     // Visão do jogador
     public static Rectangle Camera;
     public static Rectangle Tile_Sight;
@@ -84,13 +71,6 @@ class Game
         Left,
         Right,
         Count
-    }
-
-    public enum Movements
-    {
-        Stopped,
-        Walking,
-        Moving
     }
 
     public enum Messages
@@ -159,6 +139,17 @@ class Game
         None,
         Pickup,
         Equip,
+        Count
+    }
+
+    public enum Movements
+    {
+        Stopped,
+        Walking,
+        Running,
+        Attacking_1,
+        Attacking_2,
+        Pain,
         Count
     }
     #endregion
@@ -290,10 +281,10 @@ class Game
         return y - (Tile_Sight.Y * Grid) - Camera.Y;
     }
 
-    public static Directions ReverseDirection(Directions Direção)
+    public static Directions ReverseDirection(Directions Direction)
     {
         // Retorna a direção inversa
-        switch (Direção)
+        switch (Direction)
         {
             case Directions.Up: return Directions.Down;
             case Directions.Down: return Directions.Up;

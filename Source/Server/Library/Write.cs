@@ -151,4 +151,18 @@ class Write
         new BinaryFormatter().Serialize(Stream, Lists.Map[Index]);
         Stream.Close();
     }
+
+    public static void Sprites()
+    {
+        // Escreve os dados
+        for (short i = 1; i < Lists.Sprite.Length; i++) Sprite(i);
+    }
+
+    public static void Sprite(short Index)
+    {
+        // Escreve os dados
+        FileStream Stream = new FileInfo(Directories.Sprites.FullName + Index + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Lists.Sprite[Index]);
+        Stream.Close();
+    }
 }

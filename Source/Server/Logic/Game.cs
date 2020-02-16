@@ -103,6 +103,17 @@ class Game
         Equip,
         Count
     }
+
+    public enum Movements
+    {
+        Stopped,
+        Walking,
+        Running,
+        Attacking_1,
+        Attacking_2,
+        Pain,
+        Count
+    }
     #endregion
 
     public static void SetHigherIndex()

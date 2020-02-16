@@ -41,33 +41,30 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Request_Server_Data(bool OpenEditor = false)
+    public static void Request_Server_Data()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Server_Data);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
-    public static void Request_Classes(bool OpenEditor = false)
+    public static void Request_Classes()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Classes);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
-    public static void Request_Tiles(bool OpenEditor = false)
+    public static void Request_Tiles()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Tiles);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
@@ -77,47 +74,42 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Map);
-        Data.Write(Map_Num);
         Packet(Data);
     }
 
-    public static void Request_Maps(bool OpenEditor = false)
+    public static void Request_Maps()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Maps);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
-    public static void Request_NPCs(bool OpenEditor = false)
+    public static void Request_NPCs()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_NPCs);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
-    public static void Request_Items(bool OpenEditor = false)
+    public static void Request_Items()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Items);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
-    public static void Request_Sprites(bool OpenEditor = false)
+    public static void Request_Sprites()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Sprites);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
@@ -354,6 +346,22 @@ partial class Send
         {
             Data.Write(Lists.Sprite[Index].Frame_Width);
             Data.Write(Lists.Sprite[Index].Frame_Height);
+
+            for (byte m = 0; m < (byte)Globals.Movements.Count; m++)
+            {
+                Data.Write(Lists.Sprite[Index].Movement[m].Sound);
+                Data.Write(Lists.Sprite[Index].Movement[m].Color);
+
+                for (byte d = 0; d < (byte)Globals.Directions.Count; d++)
+                {
+                    Data.Write(Lists.Sprite[Index].Movement[m].Direction[d].StartX);
+                    Data.Write(Lists.Sprite[Index].Movement[m].Direction[d].StartY);
+                    Data.Write(Lists.Sprite[Index].Movement[m].Direction[d].Alignment);
+                    Data.Write(Lists.Sprite[Index].Movement[m].Direction[d].Frames);
+                    Data.Write(Lists.Sprite[Index].Movement[m].Direction[d].Duration);
+                    Data.Write(Lists.Sprite[Index].Movement[m].Direction[d].Backwards);
+                }
+            }
         }
         Packet(Data);
     }

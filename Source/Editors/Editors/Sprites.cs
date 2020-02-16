@@ -20,15 +20,12 @@ partial class Editor_Sprites : Form
     public static void Request()
     {
         // Solicita os dados
-        Send.Request_Sprites(true);
+        Globals.OpenEditor = Objects;
+        Send.Request_Sprites();
     }
 
     public static void Open()
     {
-        // Reseta todos os valores
-        Lists.Sprite = new Lists.Structures.Sprite[Graphics.Tex_Character.Length];
-        for (short i = 0; i < Graphics.Tex_Character.Length; i++) Clear.Sprite(i);
-
         // Limpa todas as listas
         Objects.List.Items.Clear();
         Objects.cmbSound.Items.Clear();
@@ -38,7 +35,7 @@ partial class Editor_Sprites : Form
         Objects.cmbAlignment.Items.Clear();
 
         // Lista todos os itens
-        for (short i = 1; i < Graphics.Tex_Character.Length; i++) Objects.List.Items.Add(i);
+        for (short i = 1; i < Graphics.Tex_Character.Length; i++) Objects.List.Items.Add(i + Graphics.Format); ;
         for (byte i = 1; i < (byte)Audio.Sounds.Count; i++) Objects.cmbSound.Items.Add(((Audio.Sounds)i).ToString());
         for (byte i = 0; i < (byte)Globals.Movements.Count; i++) Objects.cmbMovement.Items.Add(((Globals.Movements)i).ToString());
         for (byte i = 0; i < (byte)Globals.Directions.Count; i++) Objects.cmbDirection.Items.Add(((Globals.Directions)i).ToString());
@@ -71,10 +68,10 @@ partial class Editor_Sprites : Form
         if (cmbMovement.SelectedIndex == -1 || cmbDirection.SelectedIndex == -1) return;
 
         // Atualiza os dados dos movimentos
-        Color Render_Color = Color.FromArgb(Selected_Movement.Color);
         Selected_Movement = Selected.Movement[cmbMovement.SelectedIndex];
         Selected_Movement_Dir = Selected_Movement.Direction[cmbDirection.SelectedIndex];
         cmbSound.SelectedIndex = Selected_Movement.Sound;
+        Color Render_Color = Color.FromArgb(Selected_Movement.Color);
         numColor_Red.Value = Render_Color.R;
         numColor_Green.Value = Render_Color.G;
         numColor_Blue.Value = Render_Color.B;

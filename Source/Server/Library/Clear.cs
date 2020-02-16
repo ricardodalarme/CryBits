@@ -59,6 +59,7 @@ class Clear
         Lists.Server_Data.Num_Items = 1;
         Lists.Server_Data.Num_NPCs = 1;
         Lists.Server_Data.Num_Tiles = 0;
+        Lists.Server_Data.Num_Sprites = 0;
     }
 
     public static void Class(byte Index)
@@ -135,5 +136,25 @@ class Clear
         Lists.Tile[Index].Data = new Lists.Structures.Tile_Data[1, 1];
         Lists.Tile[Index].Data[0, 0] = new Lists.Structures.Tile_Data();
         Lists.Tile[Index].Data[0, 0].Block = new bool[(byte)Game.Directions.Count];
+    }
+
+    public static void Sprite(short Index)
+    {
+        // Reseta os valores
+        Lists.Sprite[Index] = new Lists.Structures.Sprite();
+        Lists.Sprite[Index].Frame_Width = 32;
+        Lists.Sprite[Index].Frame_Height = 32;
+        Lists.Sprite[Index].Movement = new Lists.Structures.Sprite_Movement[(byte)Game.Movements.Count];
+        for (byte i = 0; i < (byte)Game.Movements.Count; i++)
+        {
+            Lists.Sprite[Index].Movement[i] = new Lists.Structures.Sprite_Movement();
+            Lists.Sprite[Index].Movement[i].Direction = new Lists.Structures.Sprite_Movement_Direction[(byte)Game.Directions.Count];
+            Lists.Sprite[Index].Movement[i].Color = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
+            for (byte n = 0; n < (byte)Game.Directions.Count; n++)
+            {
+                Lists.Sprite[Index].Movement[i].Direction[n] = new Lists.Structures.Sprite_Movement_Direction();
+                Lists.Sprite[Index].Movement[i].Direction[n].Frames = 1;
+            }
+        }
     }
 }

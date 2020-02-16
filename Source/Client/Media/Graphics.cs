@@ -414,7 +414,7 @@ partial class Graphics
         if (Texture_Num > 0)
         {
             Render(Tex_Face[Texture_Num], new Point(353, 442));
-            Character(Texture_Num, new Point(356, 534 - TSize(Tex_Character[Texture_Num]).Height / 4), Game.Directions.Down, Game.Animation_Stopped);
+            Character(Texture_Num, new Point(356, 534 - Lists.Sprite[Texture_Num].Frame_Height), Game.Movements.Stopped, Game.Directions.Down);
         }
 
         // Desenha o nome da classe
@@ -437,7 +437,7 @@ partial class Graphics
         if (Texture_Num > 0)
         {
             Render(Tex_Face[Texture_Num], new Point(425, 440));
-            Character(Texture_Num, new Point(433, 501), Game.Directions.Down, Game.Animation_Stopped);
+            Character(Texture_Num, new Point(433, 501),Game.Movements.Stopped, Game.Directions.Down);
         }
 
         // Desenha o nome da classe
@@ -658,35 +658,34 @@ partial class Graphics
         if (!Tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.Get("Chat").Position.X + 5, TextBoxes.Get("Chat").Position.Y + 3, SFML.Graphics.Color.White);
     }
 
-    private static void Character(short Texture_Num, Point Position, Game.Directions Direction, byte Column, bool Hurt = false)
+    private static void Character(short Texture_Num, Point Position, Game.Movements Movement, Game.Directions Direction, bool Hurt = false)
     {
-        Rectangle Rec_Source = new Rectangle(), Rec_Destiny;
-        Size Size = TSize(Tex_Character[Texture_Num]);
-        SFML.Graphics.Color Color = new SFML.Graphics.Color(255, 255, 255);
-        byte Line = 0;
+        // Dados da animação
+        Lists.Structures.Sprite_Movement_Direction Sprite_Data = Lists.Sprite[Texture_Num].Movement[(byte)Movement].Direction[(byte)Direction];
+        byte Width = Lists.Sprite[Texture_Num].Frame_Width;
+        byte Height = Lists.Sprite[Texture_Num].Frame_Height;
 
-        // Direção
-        switch (Direction)
+        // Define as propriedades da renderização
+        Rectangle Rec_Source = new Rectangle
         {
-            case Game.Directions.Up: Line = Game.Movement_Up; break;
-            case Game.Directions.Down: Line = Game.Movement_Down; break;
-            case Game.Directions.Left: Line = Game.Movement_Left; break;
-            case Game.Directions.Right: Line = Game.Movement_Right; break;
-        }
+            X = Sprite_Data.StartX * Width,
+            Y = Sprite_Data.StartY * Height,
+            Width = Width,
+            Height = Height
+        };
+        Rectangle Rec_Destiny = new Rectangle(Position, Rec_Source.Size);
+        SFML.Graphics.Color Render_Color = new SFML.Graphics.Color((uint)Lists.Sprite[Texture_Num].Movement[(byte)Movement].Color);
+        // VOLTAR AQUI
+        //if (Sprite_Data.Alignment == (byte)Game.Alignments.Horizontal) Rec_Source.X += Math.Abs(Globals.Sprite_Frame) * Width;
+        //else Rec_Source.Y += Math.Abs(Globals.Sprite_Frame) * Height;
 
-        // Define as propriedades dos retângulos
-        Rec_Source.X = Column * Size.Width / Game.Animation_Amount;
-        Rec_Source.Y = Line * Size.Height / Game.Animation_Amount;
-        Rec_Source.Width = Size.Width / Game.Animation_Amount;
-        Rec_Source.Height = Size.Height / Game.Animation_Amount;
-        Rec_Destiny = new Rectangle(Position, Rec_Source.Size);
 
         // Demonstra que o personagem está sofrendo dano
-        if (Hurt) Color = new SFML.Graphics.Color(205, 125, 125);
+        if (Hurt) Render_Color = new SFML.Graphics.Color(205, 125, 125);
 
         // Desenha o personagem e sua sombra
-        Render(Tex_Shadow, Rec_Destiny.Location.X, Rec_Destiny.Location.Y + Size.Height / Game.Animation_Amount - TSize(Tex_Shadow).Height + 5, 0, 0, Size.Width / Game.Animation_Amount, TSize(Tex_Shadow).Height);
-        Render(Tex_Character[Texture_Num], Rec_Source, Rec_Destiny, Color);
+        Render(Tex_Shadow, Rec_Destiny.Location.X, Rec_Destiny.Location.Y + Height - TSize(Tex_Shadow).Height + 5, 0, 0, Width, TSize(Tex_Shadow).Height);
+        Render(Tex_Character[Texture_Num], Rec_Source, Rec_Destiny, Render_Color);
     }
 
     private static void Party_Invitation(Panels.Structure Tool)

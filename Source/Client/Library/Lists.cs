@@ -39,7 +39,7 @@ class Lists
             // Apenas na parte do cliente
             public short X2;
             public short Y2;
-            public byte Animation;
+            //public byte Animation;
             public bool Attacking;
             public int Attack_Timer;
             public int Hurt;
@@ -245,22 +245,28 @@ class Lists
                 this.Timer = Timer;
             }
         }
-
-        public struct Sprite
+        public class Sprite
         {
             public byte Frame_Width;
             public byte Frame_Height;
-            public Sprite_Movement[,] Movement;
+            public Sprite_Movement[] Movement;
         }
 
-        public struct Sprite_Movement
+        public class Sprite_Movement
         {
             public byte Sound;
+            public int Color;
+            public Sprite_Movement_Direction[] Direction;
+        }
+
+        public class Sprite_Movement_Direction
+        {
             public byte Alignment;
             public byte StartX;
             public byte StartY;
             public byte Frames;
             public short Duration;
+            public bool Backwards;
         }
     }
 }
