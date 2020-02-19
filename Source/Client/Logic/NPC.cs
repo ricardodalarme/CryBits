@@ -19,7 +19,7 @@ class NPC
             }
     }
 
-    public static void ProcessMovement(byte Index)
+    private static void ProcessMovement(byte Index)
     {
         byte Speed = 0;
         short x = Lists.Temp_Map.NPC[Index].X2, y = Lists.Temp_Map.NPC[Index].Y2;
@@ -74,7 +74,7 @@ class NPC
 
 partial class Receive
 {
-    public static void NPCs(NetIncomingMessage Data)
+    private static void NPCs(NetIncomingMessage Data)
     {
         // Quantidade
         Lists.NPC = new Lists.Structures.NPCs[Data.ReadInt16() + 1];
@@ -95,7 +95,7 @@ partial class Receive
         }
     }
 
-    public static void Map_NPCs(NetIncomingMessage Data)
+    private static void Map_NPCs(NetIncomingMessage Data)
     {
         // Lê os dados
         Lists.Temp_Map.NPC = new Lists.Structures.Map_NPCs[Data.ReadInt16() + 1];
@@ -115,7 +115,7 @@ partial class Receive
         }
     }
 
-    public static void Map_NPC(NetIncomingMessage Data)
+    private static void Map_NPC(NetIncomingMessage Data)
     {
         // Lê os dados
         byte i = Data.ReadByte();
@@ -126,7 +126,7 @@ partial class Receive
         for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.Temp_Map.NPC[i].Vital[n] = Data.ReadInt16();
     }
 
-    public static void Map_NPC_Movement(NetIncomingMessage Data)
+    private static void Map_NPC_Movement(NetIncomingMessage Data)
     {
         // Lê os dados
         byte i = Data.ReadByte();
@@ -149,7 +149,7 @@ partial class Receive
             }
     }
 
-    public static void Map_NPC_Attack(NetIncomingMessage Data)
+    private static void Map_NPC_Attack(NetIncomingMessage Data)
     {
         byte Index = Data.ReadByte(), Victim = Data.ReadByte(), Victim_Type = Data.ReadByte();
 
@@ -171,7 +171,7 @@ partial class Receive
             }
     }
 
-    public static void Map_NPC_Direction(NetIncomingMessage Data)
+    private static void Map_NPC_Direction(NetIncomingMessage Data)
     {
         // Define a direção de determinado NPC
         byte i = Data.ReadByte();
@@ -180,7 +180,7 @@ partial class Receive
         Lists.Temp_Map.NPC[i].Y2 = 0;
     }
 
-    public static void Map_NPC_Vitals(NetIncomingMessage Data)
+    private static void Map_NPC_Vitals(NetIncomingMessage Data)
     {
         byte Index = Data.ReadByte();
 
@@ -189,7 +189,7 @@ partial class Receive
             Lists.Temp_Map.NPC[Index].Vital[n] = Data.ReadInt16();
     }
 
-    public static void Map_NPC_Died(NetIncomingMessage Data)
+    private static void Map_NPC_Died(NetIncomingMessage Data)
     {
         byte i = Data.ReadByte();
 
@@ -205,7 +205,7 @@ partial class Receive
 
 partial class Graphics
 {
-    public static void NPC(byte Index)
+    private static void NPC(byte Index)
     {
         int x2 = Lists.Temp_Map.NPC[Index].X2, y2 = Lists.Temp_Map.NPC[Index].Y2;
         byte Column = 0;
@@ -237,7 +237,7 @@ partial class Graphics
         NPC_Bars(Index, x, y);
     }
 
-    public static void NPC_Name(byte Index, int x, int y)
+    private static void NPC_Name(byte Index, int x, int y)
     {
         Point Position = new Point(); SFML.Graphics.Color Color;
         short NPC_Num = Lists.Temp_Map.NPC[Index].Index;
@@ -261,7 +261,7 @@ partial class Graphics
         DrawText(Lists.NPC[NPC_Num].Name, Game.ConvertX(Position.X), Game.ConvertY(Position.Y), Color);
     }
 
-    public static void NPC_Bars(byte Index, int x, int y)
+    private static void NPC_Bars(byte Index, int x, int y)
     {
         Lists.Structures.Map_NPCs NPC = Lists.Temp_Map.NPC[Index];
         Texture Texture = Tex_Character[Lists.NPC[NPC.Index].Texture];

@@ -7,7 +7,7 @@ class Program
     public static bool Working = true;
 
     [STAThread]
-    public static void Main()
+    static void Main()
     {
         // Verifica se todos os diretórios existem, se não existirem então criá-los
         Directories.Create();
@@ -24,7 +24,7 @@ class Program
         Socket.Init();
 
         // Inicia a aplicação
-        Loop.Main();
+        Loop.Init();
     }
 
     public static void Close()

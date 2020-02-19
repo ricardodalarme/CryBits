@@ -84,7 +84,7 @@ class Clear
                 Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Globals.Directions.Count];
     }
 
-    public static void Map_Layers(short Index)
+    private static void Map_Layers(short Index)
     {
         for (byte c = 0; c < Lists.Map[Index].Layer.Count; c++)
         {

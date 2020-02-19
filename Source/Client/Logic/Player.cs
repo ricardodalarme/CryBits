@@ -57,7 +57,7 @@ class Player
         }
     }
 
-    public static bool CanMove()
+    private static bool CanMove()
     {
         // Não mover se já estiver tentando movimentar-se
         if (Lists.Player[MyIndex].Movement != Game.Movements.Stopped)
@@ -66,7 +66,7 @@ class Player
         return true;
     }
 
-    public static void CheckMovement()
+    private static void CheckMovement()
     {
         if (Me.Movement > 0) return;
 
@@ -77,7 +77,7 @@ class Player
         else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Game.Directions.Right);
     }
 
-    public static void Move(Game.Directions Direction)
+    private static void Move(Game.Directions Direction)
     {
         // Verifica se o jogador pode se mover
         if (!CanMove()) return;
@@ -111,7 +111,7 @@ class Player
         }
     }
 
-    public static void ProcessMovement(byte Index)
+    private static void ProcessMovement(byte Index)
     {
         byte Speed = 0;
         short x = Lists.Player[Index].X2, y = Lists.Player[Index].Y2;
@@ -163,7 +163,7 @@ class Player
             Lists.Player[Index].Animation = Game.Animation_Left;
     }
 
-    public static void CheckAttack()
+    private static void CheckAttack()
     {
         // Reseta o ataque
         if (Me.Attack_Timer + Game.Attack_Speed < Environment.TickCount)
@@ -206,40 +206,6 @@ class Player
         // Coleta o item
         Send.CollectItem();
         Me.Collect_Timer = Environment.TickCount;
-    }
-}
-
-partial class Send
-{
-    public static void Player_Direction()
-    {
-        NetOutgoingMessage Dados = Socket.Device.CreateMessage();
-
-        // Envia os dados
-        Dados.Write((byte)Packets.Player_Direction);
-        Dados.Write((byte)Player.Me.Direction);
-        Packet(Dados);
-    }
-
-    public static void Player_Move()
-    {
-        NetOutgoingMessage Dados = Socket.Device.CreateMessage();
-
-        // Envia os dados
-        Dados.Write((byte)Packets.Player_Move);
-        Dados.Write(Player.Me.X);
-        Dados.Write(Player.Me.Y);
-        Dados.Write((byte)Player.Me.Movement);
-        Packet(Dados);
-    }
-
-    public static void Player_Attack()
-    {
-        NetOutgoingMessage Dados = Socket.Device.CreateMessage();
-
-        // Envia os dados
-        Dados.Write((byte)Packets.Player_Attack);
-        Packet(Dados);
     }
 }
 
@@ -309,7 +275,7 @@ partial class Receive
         Clear.Player(Dados.ReadByte());
     }
 
-    public static void Player_Move(NetIncomingMessage Data)
+    private static void Player_Move(NetIncomingMessage Data)
     {
         byte Index = Data.ReadByte();
 
@@ -331,13 +297,13 @@ partial class Receive
         }
     }
 
-    public static void Player_Direction(NetIncomingMessage Data)
+    private static void Player_Direction(NetIncomingMessage Data)
     {
         // Define a direção de determinado jogador
         Lists.Player[Data.ReadByte()].Direction = (Game.Directions)Data.ReadByte();
     }
 
-    public static void Player_Attack(NetIncomingMessage Data)
+    private static void Player_Attack(NetIncomingMessage Data)
     {
         byte Index = Data.ReadByte(), Victim = Data.ReadByte(), Victim_Type = Data.ReadByte();
 
@@ -359,7 +325,7 @@ partial class Receive
             }
     }
 
-    public static void Player_Experience(NetIncomingMessage Data)
+    private static void Player_Experience(NetIncomingMessage Data)
     {
         // Define os dados
         Player.Me.Experience = Data.ReadInt32();
@@ -397,7 +363,7 @@ partial class Receive
 
 partial class Graphics
 {
-    public static void Player_Character(byte Index)
+    private static void Player_Character(byte Index)
     {
         // Desenha o jogador
         Player_Texture(Index);
@@ -405,7 +371,7 @@ partial class Graphics
         Player_Bars(Index);
     }
 
-    public static void Player_Texture(byte Index)
+    private static void Player_Texture(byte Index)
     {
         byte Column = Game.Animation_Stopped;
         int x = Lists.Player[Index].X * Game.Grid + Lists.Player[Index].X2, y = Lists.Player[Index].Y * Game.Grid + Lists.Player[Index].Y2;
@@ -434,7 +400,7 @@ partial class Graphics
         Character(Texture, new Point(Game.ConvertX(x), Game.ConvertY(y)), Lists.Player[Index].Direction, Column, Hurt);
     }
 
-    public static void Player_Bars(byte Index)
+    private static void Player_Bars(byte Index)
     {
         Size Chracater_Size = TSize(Tex_Character[Lists.Player[Index].Texture_Num]);
         int x = Lists.Player[Index].X * Game.Grid + Lists.Player[Index].X2, y = Lists.Player[Index].Y * Game.Grid + Lists.Player[Index].Y2;
@@ -453,7 +419,7 @@ partial class Graphics
         Render(Tex_Bars, Position.X, Position.Y, 0, 0, Width, 4);
     }
 
-    public static void Player_Name(byte Index)
+    private static void Player_Name(byte Index)
     {
         Texture Texture = Tex_Character[Lists.Player[Index].Texture_Num];
         int Name_Size = Tools.MeasureString(Lists.Player[Index].Name);

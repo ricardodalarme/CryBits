@@ -46,7 +46,7 @@ class CheckBoxes
         return null;
     }
 
-    public static void Execute(string Name)
+    private static void Execute(string Name)
     {
         // Executa o evento do marcador
         switch (Name)
@@ -62,7 +62,7 @@ class CheckBoxes
         }
     }
     
-    public static void Sounds()
+    private static void Sounds()
     {
         // Salva os dados
         Lists.Options.Sounds = !Lists.Options.Sounds;
@@ -70,7 +70,7 @@ class CheckBoxes
         Write.Options();
     }
 
-    public static void Musics()
+    private static void Musics()
     {
         // Salva os dados
         Lists.Options.Musics = !Lists.Options.Musics;
@@ -85,28 +85,28 @@ class CheckBoxes
             Audio.Music.Play((Audio.Musics)Lists.Map.Music);
     }
 
-    public static void SaveUsername()
+    private static void SaveUsername()
     {
         // Salva os dados
         Lists.Options.SaveUsername = Get("Connect_Save_Username").Checked;
         Write.Options();
     }
 
-    public static void GenreName()
+    private static void GenreName()
     {
         // Altera o estado do marcador de outro gênero
         Get("GenderFemale").Checked = !Get("GenderMale").Checked;
         Game.CreateCharacter_Tex = 0;
     }
 
-    public static void GenreFemale()
+    private static void GenreFemale()
     {
         // Altera o estado do marcador de outro gênero
         Get("GenderMale").Checked = !Get("GenderFemale").Checked;
         Game.CreateCharacter_Tex = 0;
     }
 
-    public static void Chat()
+    private static void Chat()
     {
         // Desabilita a prévia do chat
         Lists.Options.Chat = Tools.Chat_Text_Visible = Get("Options_Chat").Checked;

@@ -180,24 +180,24 @@ partial class Graphics
 
     public static void Init()
     {
-        // Inicia a janela
-        RenderWindow = new RenderWindow(new VideoMode(800, 608), Lists.Options.Game_Name,Styles.Close);
-        RenderWindow.Closed += new EventHandler(Window.OnClosed);
-        RenderWindow.MouseButtonPressed += new EventHandler< MouseButtonEventArgs>(Window.OnMouseButtonPressed);
-        RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Window.OnMouseMoved);
-        RenderWindow.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonReleased);
-        RenderWindow.KeyPressed += new EventHandler<KeyEventArgs>(Window.OnKeyPressed);
-        RenderWindow.KeyReleased += new EventHandler<KeyEventArgs>(Window.OnKeyReleased);
-        RenderWindow.TextEntered += new EventHandler<TextEventArgs>(Window.OnTextEntered);
-
         // Carrega a fonte
         Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
 
         // Carrega as texturas
         LoadTextures();
+
+        // Inicia a janela
+        RenderWindow = new RenderWindow(new VideoMode(800, 608), Lists.Options.Game_Name, Styles.Close);
+        RenderWindow.Closed += new EventHandler(Window.OnClosed);
+        RenderWindow.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonPressed);
+        RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Window.OnMouseMoved);
+        RenderWindow.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonReleased);
+        RenderWindow.KeyPressed += new EventHandler<KeyEventArgs>(Window.OnKeyPressed);
+        RenderWindow.KeyReleased += new EventHandler<KeyEventArgs>(Window.OnKeyReleased);
+        RenderWindow.TextEntered += new EventHandler<TextEventArgs>(Window.OnTextEntered);
     }
 
-    public static void LoadTextures()
+    private static void LoadTextures()
     {
         // Conjuntos
         Tex_Character = LoadTextures(Directories.Tex_Characters.FullName);

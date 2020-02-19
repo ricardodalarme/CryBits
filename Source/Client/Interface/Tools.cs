@@ -13,7 +13,7 @@ class Tools
     public static bool Chat_Text_Visible;
     public const byte Chat_Lines_Visible = 9;
     public static byte Chat_Line;
-    public const byte Max_Chat_Lines = 50;
+    private const byte Max_Chat_Lines = 50;
 
     // Ordem da renderização das ferramentas
     public static List<Order_Structure>[] All_Order = new List<Order_Structure>[(byte)Windows.Count];
@@ -81,6 +81,7 @@ class Tools
         // Se não, retornar um valor nulo
         return false;
     }
+
     public static bool Viewable(Order_Structure Order)
     {
         // Verifica se a ferramenta está visível
@@ -136,7 +137,7 @@ class Tools
         return Text;
     }
 
-    public static void Chat_AddLine(string Mensagem, SFML.Graphics.Color Cor)
+    private static void Chat_AddLine(string Mensagem, SFML.Graphics.Color Cor)
     {
         Chat.Add(new Chat_Structure());
         int i = Chat.Count - 1;

@@ -21,7 +21,7 @@ partial class Send
         Request_Items
     }
 
-    public static void Packet(NetOutgoingMessage Data)
+    private static void Packet(NetOutgoingMessage Data)
     {
         // Envia os dados ao servidor
         Socket.Device.SendMessage(Data, NetDeliveryMethod.ReliableOrdered);

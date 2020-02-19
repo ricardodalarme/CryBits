@@ -39,7 +39,7 @@ class Game
     public const byte Movement_Right = 2;
 
     // Visão do jogador
-    public static Rectangle Camera;
+    private static Rectangle Camera;
     public static Rectangle Tile_Sight;
 
     // Bloqueio direcional

@@ -2,12 +2,6 @@
 
 class Clear
 {
-    public static void All()
-    {
-        // Limpa todos os dados necessários
-        Players();
-    }
-
     public static void Players()
     {
         // Redimensiona a lista

@@ -21,7 +21,7 @@ partial class Graphics
     // Texturas
     public static Texture[] Tex_Character;
     public static Texture[] Tex_Tile;
-    public static Texture[] Tex_Face;
+    private static Texture[] Tex_Face;
     public static Texture[] Tex_Panel;
     public static Texture[] Tex_Button;
     public static Texture[] Tex_Panorama;
@@ -41,7 +41,7 @@ partial class Graphics
     public const string Format = ".png";
 
     #region Engine
-    public static Texture[] AddTextures(string Directory)
+    private static Texture[] AddTextures(string Directory)
     {
         short i = 1;
         Texture[] TempTex = new Texture[0];
@@ -67,13 +67,13 @@ partial class Graphics
             return new Size(0, 0);
     }
 
-    public static SFML.Graphics.Color CColor(byte R = 255, byte G = 255, byte B = 255, byte A = 255)
+    private static SFML.Graphics.Color CColor(byte R = 255, byte G = 255, byte B = 255, byte A = 255)
     {
         // Retorna com a cor
         return new SFML.Graphics.Color(R, G, B, A);
     }
 
-    public static void Render(RenderWindow Window, Texture Texture, Rectangle Source, Rectangle Destiny, object Color = null, object Mode = null)
+    private static void Render(RenderWindow Window, Texture Texture, Rectangle Source, Rectangle Destiny, object Color = null, object Mode = null)
     {
         // Define os dados
         Sprite TmpImage = new Sprite(Texture)
@@ -89,7 +89,7 @@ partial class Graphics
         Window.Draw(TmpImage, (RenderStates)Mode);
     }
 
-    public static void Render(RenderTexture Window, Texture Texture, Rectangle Destiny, object Color = null, object Mode = null)
+    private static void Render(RenderTexture Window, Texture Texture, Rectangle Destiny, object Color = null, object Mode = null)
     {
         // Define os dados
         Sprite TmpImage = new Sprite(Texture)
@@ -104,7 +104,7 @@ partial class Graphics
         Window.Draw(TmpImage, (RenderStates)Mode);
     }
 
-    public static void Render(RenderWindow Window, Texture Texture, int X, int Y, int Source_X, int Source_Y, int Source_Width, int Source_Height, object Color = null, object Mode = null)
+    private static void Render(RenderWindow Window, Texture Texture, int X, int Y, int Source_X, int Source_Y, int Source_Width, int Source_Height, object Color = null, object Mode = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(Source_X, Source_Y), new Size(Source_Width, Source_Height));
@@ -114,7 +114,7 @@ partial class Graphics
         Render(Window, Texture, Source, Destiny, Color, Mode);
     }
 
-    public static void Render(RenderWindow Window, Texture Texture, Rectangle Destiny, object Color = null, object Mode = null)
+    private static void Render(RenderWindow Window, Texture Texture, Rectangle Destiny, object Color = null, object Mode = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(0), TSize(Texture));
@@ -123,7 +123,7 @@ partial class Graphics
         Render(Window, Texture, Source, Destiny, Color, Mode);
     }
 
-    public static void Render(RenderWindow Window, Texture Texture, Point Point, object Color = null, object Mode = null)
+    private static void Render(RenderWindow Window, Texture Texture, Point Point, object Color = null, object Mode = null)
     {
         // Define as propriedades dos retângulos
         Rectangle Source = new Rectangle(new Point(0), TSize(Texture));
@@ -133,7 +133,7 @@ partial class Graphics
         Render(Window, Texture, Source, Destiny, Color, Mode);
     }
 
-    public static void RenderRectangle(RenderWindow Window, Rectangle Rectangle, object Color = null)
+    private static void RenderRectangle(RenderWindow Window, Rectangle Rectangle, object Color = null)
     {
         // Desenha a caixa
         Render(Window, Tex_Grid, Rectangle.X, Rectangle.Y, 0, 0, Rectangle.Width, 1, Color);
@@ -142,13 +142,13 @@ partial class Graphics
         Render(Window, Tex_Grid, Rectangle.X + Rectangle.Width - 1, Rectangle.Y, 0, 0, 1, Rectangle.Height, Color);
     }
 
-    public static void RenderRectangle(RenderWindow Window, int x, int y, int Width, int Height, object Color = null)
+    private static void RenderRectangle(RenderWindow Window, int x, int y, int Width, int Height, object Color = null)
     {
         // Desenha a caixa
         RenderRectangle(Window, new Rectangle(x, y, Width, Height), Color);
     }
 
-    public static void Render_Box(RenderWindow Window, Texture Texture, byte Margin, Point Position, Size Size)
+    private static void Render_Box(RenderWindow Window, Texture Texture, byte Margin, Point Position, Size Size)
     {
         int Texture_Width = TSize(Texture).Width;
         int Texture_Height = TSize(Texture).Height;
@@ -213,7 +213,7 @@ partial class Graphics
         Interface();
     }
 
-    public static void Transparent(RenderWindow Window)
+    private static void Transparent(RenderWindow Window)
     {
         Size Tamanho = TSize(Tex_Transparent);
 
@@ -248,7 +248,7 @@ partial class Graphics
     #endregion
 
     #region Tile Editor
-    public static void Editor_Tile()
+    private static void Editor_Tile()
     {
         Editor_Tiles Objects = Editor_Tiles.Objects;
 
@@ -285,7 +285,7 @@ partial class Graphics
         Win_Tile.Display();
     }
 
-    public static void Editor_Tile_Attributes(byte x, byte y)
+    private static void Editor_Tile_Attributes(byte x, byte y)
     {
         Editor_Tiles Objects = Editor_Tiles.Objects;
         Point Tile = new Point(Objects.scrlTileX.Value + x, Objects.scrlTileY.Value + y);
@@ -305,7 +305,7 @@ partial class Graphics
         }
     }
 
-    public static void Editor_Tile_DirBlock(byte x, byte y)
+    private static void Editor_Tile_DirBlock(byte x, byte y)
     {
         Editor_Tiles Objects = Editor_Tiles.Objects;
         Point Tile = new Point(Objects.scrlTileX.Value + x, Objects.scrlTileY.Value + y);
@@ -337,7 +337,7 @@ partial class Graphics
     #endregion
 
     #region Map Editor
-    public static void Editor_Maps_Tile()
+    private static void Editor_Maps_Tile()
     {
         Editor_Maps Objects = Editor_Maps.Objects;
 
@@ -369,7 +369,7 @@ partial class Graphics
         Win_Map_Tile.Display();
     }
 
-    public static void Editor_Maps_Map()
+    private static void Editor_Maps_Map()
     {
         short Index = Editor_Maps.Selected;
 
@@ -393,7 +393,7 @@ partial class Graphics
         Win_Map.Display();
     }
 
-    public static void Editor_Maps_Map_Panorama(short Index)
+    private static void Editor_Maps_Map_Panorama(short Index)
     {
         short Texture = Lists.Map[Index].Panorama;
         Size Size = TSize(Tex_Panorama[Texture]);
@@ -414,7 +414,7 @@ partial class Graphics
             Render(Win_Map, Tex_Panorama[Texture], Editor_Maps.Zoom(new Rectangle(new Point(0), Size)));
     }
 
-    public static void Editor_Maps_Map_Tiles(short Index)
+    private static void Editor_Maps_Map_Tiles(short Index)
     {
         Editor_Maps Objects = Editor_Maps.Objects;
         Lists.Structures.Map Map = Lists.Map[Index];
@@ -458,7 +458,7 @@ partial class Graphics
         }
     }
 
-    public static void Editor_Maps_AutoTile(Point Position, Lists.Structures.Map_Tile_Data Data, SFML.Graphics.Color Color)
+    private static void Editor_Maps_AutoTile(Point Position, Lists.Structures.Map_Tile_Data Data, SFML.Graphics.Color Color)
     {
         // Desenha os 4 mini azulejos
         for (byte i = 0; i <= 3; i++)
@@ -478,7 +478,7 @@ partial class Graphics
         }
     }
 
-    public static void Editor_Maps_Map_Fog(short Index)
+    private static void Editor_Maps_Map_Fog(short Index)
     {
         Lists.Structures.Map_Fog Data = Lists.Map[Index].Fog;
         Point Position;
@@ -498,7 +498,7 @@ partial class Graphics
             }
     }
 
-    public static void Editor_Maps_Map_Weather(short Index)
+    private static void Editor_Maps_Map_Weather(short Index)
     {
         // Somente se necessário
         if (!Editor_Maps.Objects.butVisualization.Checked || Lists.Map[Index].Weather.Type == (byte)Globals.Weathers.Normal) return;
@@ -513,7 +513,7 @@ partial class Graphics
                 Render(Win_Map, Tex_Weather, new Rectangle(x, 0, 32, 32), Editor_Maps.Zoom(new Rectangle(Lists.Weather[i].x, Lists.Weather[i].y, 32, 32)), CColor(255, 255, 255, 150));
     }
 
-    public static void Editor_Maps_Map_Light(short Index)
+    private static void Editor_Maps_Map_Light(short Index)
     {
         Editor_Maps Objects = Editor_Maps.Objects;
         byte GlobalLight_Tex = Lists.Map[Index].Light_Global;
@@ -554,7 +554,7 @@ partial class Graphics
         Render(Win_Map, Tex_Blank, 0, 0, 0, 0, Size.Width, Size.Height, CColor(255, 255, 255, Globals.Lightning));
     }
 
-    public static void Editor_Maps_Map_Grids(short Index)
+    private static void Editor_Maps_Map_Grids(short Index)
     {
         Editor_Maps Objects = Editor_Maps.Objects;
         Rectangle Source = Editor_Maps.Tile_Source, Destiny = new Rectangle();
@@ -590,7 +590,7 @@ partial class Graphics
             RenderRectangle(Win_Map, Destiny.X, Destiny.Y, Editor_Maps.Map_Selection.Width * Globals.Grid_Zoom, Editor_Maps.Map_Selection.Height * Globals.Grid_Zoom);
     }
 
-    public static void Editor_Maps_Map_Zones(short Index, byte x, byte y)
+    private static void Editor_Maps_Map_Zones(short Index, byte x, byte y)
     {
         Point Position = new Point((x - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom);
         byte Zone_Num = Lists.Map[Index].Tile[x, y].Zone;
@@ -611,7 +611,7 @@ partial class Graphics
         DrawText(Win_Map, Zone_Num.ToString(), Position.X, Position.Y, SFML.Graphics.Color.White);
     }
 
-    public static void Editor_Maps_Map_Attributes(short Index, byte x, byte y)
+    private static void Editor_Maps_Map_Attributes(short Index, byte x, byte y)
     {
         Point Position = new Point((x - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom);
         Globals.Tile_Attributes Attribute = (Globals.Tile_Attributes)Lists.Map[Index].Tile[x, y].Attribute;
@@ -638,7 +638,7 @@ partial class Graphics
         DrawText(Win_Map, Letter, Position.X, Position.Y, SFML.Graphics.Color.White);
     }
 
-    public static void Editor_Maps_Map_DirBlock(short Index, byte x, byte y)
+    private static void Editor_Maps_Map_DirBlock(short Index, byte x, byte y)
     {
         Point Tile = new Point(Editor_Maps.Objects.scrlMapX.Value + x, Editor_Maps.Objects.scrlMapY.Value + y);
         byte Y;
@@ -664,7 +664,7 @@ partial class Graphics
         }
     }
 
-    public static void Editor_Maps_Map_NPCs(short Index)
+    private static void Editor_Maps_Map_NPCs(short Index)
     {
         if (Editor_Maps.Objects.butMNPCs.Checked)
             for (byte i = 0; i < Lists.Map[Index].NPC.Count; i++)
@@ -680,7 +680,7 @@ partial class Graphics
     #endregion
 
     #region Interface Editor
-    public static void Interface()
+    private static void Interface()
     {
         // Apenas se necessário
         if (!Editor_Interface.Objects.Visible) return;
@@ -710,21 +710,21 @@ partial class Graphics
         }
     }
 
-    public static void Button(Lists.Structures.Button Tool)
+    private static void Button(Lists.Structures.Button Tool)
     {
         // Desenha o botão
         if (Tool.Texture_Num < Tex_Button.Length)
             Render(Win_Interface, Tex_Button[Tool.Texture_Num], Tool.Position, new SFML.Graphics.Color(255, 255, 225, 225));
     }
 
-    public static void Panel(Lists.Structures.Panel Tool)
+    private static void Panel(Lists.Structures.Panel Tool)
     {
         // Desenha o painel
         if (Tool.Texture_Num < Tex_Panel.Length)
             Render(Win_Interface, Tex_Panel[Tool.Texture_Num], Tool.Position);
     }
 
-    public static void CheckBox(Lists.Structures.CheckBox Tool)
+    private static void CheckBox(Lists.Structures.CheckBox Tool)
     {
         // Define as propriedades dos retângulos
         Rectangle Rec_Source = new Rectangle(new Point(), new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height));
@@ -740,7 +740,7 @@ partial class Graphics
         DrawText(Win_Interface, Tool.Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
     }
 
-    public static void TextBox(Lists.Structures.TextBox Tool)
+    private static void TextBox(Lists.Structures.TextBox Tool)
     {
         // Desenha a ferramenta
         Render_Box(Win_Interface, Tex_TextBox, 3, Tool.Position, new Size(Tool.Width, TSize(Tex_TextBox).Height));

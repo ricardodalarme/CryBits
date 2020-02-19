@@ -11,7 +11,7 @@ class Program
     static EventHandler Handler;
 
     [STAThread]
-    public static void Main()
+    private static void Main()
     {
         // Abre o servidor e define suas configurações
         Console.Title = "Server";
@@ -26,9 +26,11 @@ class Program
         Directories.Create();
         Console.WriteLine("Directories created.");
 
-        // Limpa e carrega todos os dados necessários
+        // Carrega todos os dados necessários
         Read.All();
-        Clear.All();
+
+        // Limpa os dados dos jogadores
+        Clear.Players();
 
         // Cria os dispositivos da rede
         Socket.Init();
@@ -40,7 +42,7 @@ class Program
         // Inicia os laços
         Thread Console_Loop = new Thread(Loop.Commands);
         Console_Loop.Start();
-        Loop.Main();
+        Loop.Init();
     }
 
     private static bool Exit()
@@ -55,7 +57,7 @@ class Program
         return true;
     }
 
-    public static void Logo()
+    private static void Logo()
     {
         Console.WriteLine(@"  ______              _____     _
  |   ___|            |     \   | |

@@ -21,7 +21,7 @@ partial class Read
         Tiles();
     }
 
-    public static void Server_Data()
+    private static void Server_Data()
     {
         // Cria o arquivo caso ele não existir
         if (!Directories.Server_Data.Exists)
@@ -121,14 +121,14 @@ partial class Read
         return Characters;
     }
 
-    public static void Classes()
+    private static void Classes()
     {
         // Lê os dados
         Lists.Class = new Lists.Structures.Class[Lists.Server_Data.Num_Classes + 1];
         for (byte i = 1; i < Lists.Class.Length; i++) Class(i);
     }
 
-    public static void Class(byte Index)
+    private static void Class(byte Index)
     {
         FileInfo File = new FileInfo(Directories.Classes.FullName + Index + Directories.Format);
 
@@ -146,14 +146,14 @@ partial class Read
         Stream.Close();
     }
 
-    public static void Items()
+    private static void Items()
     {
         // Lê os dados
         Lists.Item = new Lists.Structures.Item[Lists.Server_Data.Num_Items + 1];
         for (byte i = 1; i < Lists.Item.Length; i++) Item(i);
     }
 
-    public static void Item(byte Index)
+    private static void Item(byte Index)
     {
         FileInfo File = new FileInfo(Directories.Items.FullName + Index + Directories.Format);
 
@@ -171,7 +171,7 @@ partial class Read
         Stream.Close();
     }
 
-    public static void Maps()
+    private static void Maps()
     {
         // Lê os dados1
         Lists.Map = new Lists.Structures.Map[Lists.Server_Data.Num_Maps + 1];
@@ -179,7 +179,7 @@ partial class Read
         for (short i = 1; i < Lists.Map.Length; i++) Map(i);
     }
 
-    public static void Map(short Index)
+    private static void Map(short Index)
     {
         FileInfo File = new FileInfo(Directories.Maps.FullName + Index + Directories.Format);
 
@@ -204,14 +204,14 @@ partial class Read
         global::Map.Spawn_Items(Index);
     }
 
-    public static void NPCs()
+    private static void NPCs()
     {
         // Lê os dados
         Lists.NPC = new Lists.Structures.NPC[Lists.Server_Data.Num_NPCs + 1];
         for (byte i = 1; i < Lists.NPC.Length; i++) NPC(i);
     }
 
-    public static void NPC(byte Index)
+    private static void NPC(byte Index)
     {
         FileInfo File = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format);
 
@@ -229,14 +229,14 @@ partial class Read
         Stream.Close();
     }
 
-    public static void Tiles()
+    private static void Tiles()
     {
         // Lê os dados
         Lists.Tile = new Lists.Structures.Tile[Lists.Server_Data.Num_Tiles + 1];
         for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
     }
 
-    public static void Tile(byte Index)
+    private static void Tile(byte Index)
     {
         FileInfo File = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format);
 

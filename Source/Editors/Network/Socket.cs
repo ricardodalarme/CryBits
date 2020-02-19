@@ -8,7 +8,7 @@ class Socket
     public static NetClient Device;
 
     // Manuseamento dos dados
-    public static NetIncomingMessage Data;
+    private static NetIncomingMessage Data;
 
     // Dados para a conexão com o servidor
     public const string IP = "localhost";
@@ -76,7 +76,7 @@ class Socket
         return IsConnected();
     }
 
-    public static void Leave()
+    private static void Leave()
     {
         // Fecha todas as janelas abertar e abre o menu de login
         for (int i = 0; i < Application.OpenForms.Count; i++) Application.OpenForms[i].Visible = false;

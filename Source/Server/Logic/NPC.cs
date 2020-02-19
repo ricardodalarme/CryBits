@@ -16,7 +16,7 @@ class NPC
         StandStill
     }
 
-    public static short Regeneration(short Map_Num, byte Index, byte Vital)
+    private static short Regeneration(short Map_Num, byte Index, byte Vital)
     {
         Lists.Structures.NPC Data = Lists.NPC[Lists.Temp_Map[Map_Num].NPC[Index].Index];
 
@@ -233,7 +233,7 @@ class NPC
         // Em último caso, tentar no primeiro lugar possível
         for (byte x2 = 0; x2 <= Lists.Map[Map_Num].Width; x2++)
             for (byte y2 = 0; y2 <= Lists.Map[Map_Num].Height; y2++)
-                if (!global::Map.Tile_Blocked(Map_Num, x2, y2))
+                if (!Map.Tile_Blocked(Map_Num, x2, y2))
                 {
                     // Verifica se está dentro da zona
                     if (Lists.Map[Map_Num].NPC[Index].Zone > 0)
@@ -246,7 +246,7 @@ class NPC
                 }
     }
 
-    public static void Spawn(byte Index, short Map_Num, byte x, byte y, Game.Directions Direction = 0)
+    private static void Spawn(byte Index, short Map_Num, byte x, byte y, Game.Directions Direction = 0)
     {
         Lists.Structures.NPC Data = Lists.NPC[Lists.Map[Map_Num].NPC[Index].Index];
 
@@ -262,7 +262,7 @@ class NPC
         if (Socket.Device != null) Send.Map_NPC(Map_Num, Index);
     }
 
-    public static bool Move(short Map_Num, byte Index, Game.Directions Direction, byte Movement = 1, bool CheckZone = false)
+    private static bool Move(short Map_Num, byte Index, Game.Directions Direction, byte Movement = 1, bool CheckZone = false)
     {
         Lists.Structures.Map_NPCs Data = Lists.Temp_Map[Map_Num].NPC[Index];
         byte x = Data.X, y = Data.Y;
@@ -291,7 +291,7 @@ class NPC
         return true;
     }
 
-    public static void Attack_Player(short Map_Num, byte Index, byte Victim)
+    private static void Attack_Player(short Map_Num, byte Index, byte Victim)
     {
         Lists.Structures.Map_NPCs Data = Lists.Temp_Map[Map_Num].NPC[Index];
         short x = Data.X, y = Data.Y;

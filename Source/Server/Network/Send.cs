@@ -58,7 +58,7 @@ class Send
         Items
     }
 
-    public static void ToPlayer(byte Index, NetOutgoingMessage Data)
+    private static void ToPlayer(byte Index, NetOutgoingMessage Data)
     {
         // Previne sobrecarga
         if (!Socket.IsConnected(Index)) return;
@@ -69,7 +69,7 @@ class Send
         Socket.Device.SendMessage(Data_Send, Socket.Connection[Index], NetDeliveryMethod.ReliableOrdered);
     }
 
-    public static void ToAll(NetOutgoingMessage Data)
+    private static void ToAll(NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados
         for (byte i = 1; i <= Game.HigherIndex; i++)
@@ -77,7 +77,7 @@ class Send
                 ToPlayer(i, Data);
     }
 
-    public static void ToAllBut(byte Index, NetOutgoingMessage Data)
+    private static void ToAllBut(byte Index, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)
@@ -86,7 +86,7 @@ class Send
                     ToPlayer(i, Data);
     }
 
-    public static void ToMap(short Map, NetOutgoingMessage Data)
+    private static void ToMap(short Map, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)
@@ -95,7 +95,7 @@ class Send
                     ToPlayer(i, Data);
     }
 
-    public static void ToMapBut(short Map, byte Index, NetOutgoingMessage Data)
+    private static void ToMapBut(short Map, byte Index, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)

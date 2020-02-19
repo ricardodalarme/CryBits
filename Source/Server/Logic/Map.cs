@@ -91,10 +91,7 @@ class Map
     public static bool OutLimit(short Map_Num, short X, short Y)
     {
         // Verifica se as coordenas estão no limite do mapa
-        if (X > Lists.Map[Map_Num].Width || Y > Lists.Map[Map_Num].Height || X < 0 || Y < 0)
-            return true;
-        else
-            return false;
+        return X > Lists.Map[Map_Num].Width || Y > Lists.Map[Map_Num].Height || X < 0 || Y < 0;
     }
 
     public static void NextTile(Game.Directions Direction, ref short X, ref short Y)
@@ -112,11 +109,8 @@ class Map
     public static bool Tile_Blocked(short Map_Num, short X, short Y)
     {
         // Verifica se o azulejo está bloqueado
-        if (OutLimit(Map_Num, X, Y))
-            return true;
-        else if (Lists.Map[Map_Num].Tile[X, Y].Attribute == (byte)Attributes.Block)
-            return true;
-
+        if (OutLimit(Map_Num, X, Y)) return true;
+        if (Lists.Map[Map_Num].Tile[X, Y].Attribute == (byte)Attributes.Block) return true;
         return false;
     }
 
@@ -128,15 +122,10 @@ class Map
         NextTile(Direction, ref Next_X, ref Next_Y);
 
         // Verifica se o azulejo está bloqueado
-        if (Tile_Blocked(Map_Num, (byte)Next_X, (byte)Next_Y))
-            return true;
-        else if (Lists.Map[Map_Num].Tile[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)])
-            return true;
-        else if (Lists.Map[Map_Num].Tile[X, Y].Block[(byte)Direction])
-            return true;
-        else if (CountEntities && (HasPlayer(Map_Num, Next_X, Next_Y) > 0 || HasNPC(Map_Num, Next_X, Next_Y) > 0))
-            return true;
-
+        if (Tile_Blocked(Map_Num, (byte)Next_X, (byte)Next_Y)) return true;
+        if (Lists.Map[Map_Num].Tile[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
+        if (Lists.Map[Map_Num].Tile[X, Y].Block[(byte)Direction]) return true;
+        if (CountEntities && (HasPlayer(Map_Num, Next_X, Next_Y) > 0 || HasNPC(Map_Num, Next_X, Next_Y) > 0)) return true;
         return false;
     }
 

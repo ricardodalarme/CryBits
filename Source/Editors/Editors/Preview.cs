@@ -8,7 +8,7 @@ public partial class Preview : Form
 
     // Imagens
     public static SFML.Graphics.Texture[] Texture;
-    public static short Pattern;
+    private static short Pattern;
 
     public Preview()
     {

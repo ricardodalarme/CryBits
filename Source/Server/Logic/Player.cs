@@ -111,8 +111,7 @@ class Player
     public static void Join(byte Index)
     {
         // Previne que alguém que já está online de logar
-        if (IsPlaying(Index))
-            return;
+        if (IsPlaying(Index)) return;
 
         // Define que o jogador está dentro do jogo
         Lists.Temp_Player[Index].Playing = true;
@@ -273,7 +272,7 @@ class Player
             Send.Player_Position(Index);
     }
 
-    public static void Warp(byte Index, short Map, byte x, byte y)
+    private static void Warp(byte Index, short Map, byte x, byte y)
     {
         short Map_Old = Character(Index).Map;
 
@@ -339,7 +338,7 @@ class Player
         Character(Index).Attack_Timer = Environment.TickCount;
     }
 
-    public static void Attack_Player(byte Index, byte Victim)
+    private static void Attack_Player(byte Index, byte Victim)
     {
         short Damage;
         short x = Character(Index).X, y = Character(Index).Y;
@@ -354,11 +353,9 @@ class Player
         if (Character(Victim).X != x || Character(Victim).Y != y) return;
         if (Lists.Map[Character(Index).Map].Moral == (byte)Map.Morals.Pacific)
         {
-            Send.Message(Index, "This is a peaceful area..", Color.White);
+            Send.Message(Index, "This is a peaceful area.", Color.White);
             return;
         }
-
-
 
         // Tempo de ataque 
         Character(Index).Attack_Timer = Environment.TickCount;
@@ -392,7 +389,7 @@ class Player
             Send.Player_Attack(Index);
     }
 
-    public static void Attack_NPC(byte Index, byte Victim)
+    private static void Attack_NPC(byte Index, byte Victim)
     {
         short Damage;
         short x = Character(Index).X, y = Character(Index).Y;
@@ -493,7 +490,7 @@ class Player
         if (Environment.TickCount > Loop.Timer_Player_Regen + 5000) Loop.Timer_Player_Regen = Environment.TickCount;
     }
 
-    public static void CheckLevelUp(byte Index)
+    private static void CheckLevelUp(byte Index)
     {
         byte NumLevel = 0; int ExpRest;
 
@@ -675,7 +672,7 @@ class Player
         Send.Party(Index);
     }
 
-    public static void Party_SplitXP(byte Index, int Experience)
+    private static void Party_SplitXP(byte Index, int Experience)
     {
         // Somatório do level de todos os jogadores do grupo
         int Given_Experience, Experience_Sum = 0, Difference;

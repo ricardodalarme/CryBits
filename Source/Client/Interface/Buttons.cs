@@ -80,7 +80,7 @@ class Buttons
         return null;
     }
 
-    public static void Execute(string Name)
+    private static void Execute(string Name)
     {
         // Executa o evento do botão
         switch (Name)
@@ -133,7 +133,7 @@ class Buttons
         return Visibility;
     }
 
-    public static void Connect()
+    private static void Connect()
     {
         // Termina a conexão
         Socket.Disconnect();
@@ -143,7 +143,7 @@ class Buttons
         Panels.Get("Connect").Visible = true;
     }
 
-    public static void Register()
+    private static void Register()
     {
         // Termina a conexão
         Socket.Disconnect();
@@ -153,7 +153,7 @@ class Buttons
         Panels.Get("Register").Visible = true;
     }
 
-    public static void Options()
+    private static void Options()
     {
         // Termina a conexão
         Socket.Disconnect();
@@ -167,7 +167,7 @@ class Buttons
         Panels.Get("Options").Visible = true;
     }
 
-    public static void Menu_Return()
+    private static void Menu_Return()
     {
         // Termina a conexão
         Socket.Disconnect();
@@ -177,7 +177,7 @@ class Buttons
         Panels.Get("Connect").Visible = true;
     }
 
-    public static void Connect_Ok()
+    private static void Connect_Ok()
     {
         // Salva o nome do usuário
         Lists.Options.Username = TextBoxes.Get("Connect_Username").Text;
@@ -187,7 +187,7 @@ class Buttons
         Game.SetSituation(Game.Situations.Connect);
     }
 
-    public static void Register_Ok()
+    private static void Register_Ok()
     {
         // Regras de segurança
         if (TextBoxes.Get("Register_Password").Text != TextBoxes.Get("Register_Password2").Text)
@@ -200,13 +200,13 @@ class Buttons
         Game.SetSituation(Game.Situations.Registrar);
     }
 
-    public static void CreateCharacter()
+    private static void CreateCharacter()
     {
         // Abre a criação de personagem
         Game.SetSituation(Game.Situations.CreateCharacter);
     }
 
-    public static void CreateCharacter_ChangeRight()
+    private static void CreateCharacter_ChangeRight()
     {
         // Altera a classe selecionada pelo jogador
         if (Game.CreateCharacter_Class == Lists.Class.GetUpperBound(0))
@@ -215,7 +215,7 @@ class Buttons
             Game.CreateCharacter_Class += 1;
     }
 
-    public static void CreateCharacter_ChangeLeft()
+    private static void CreateCharacter_ChangeLeft()
     {
         // Altera a classe selecionada pelo jogador
         if (Game.CreateCharacter_Class == 1)
@@ -224,7 +224,7 @@ class Buttons
             Game.CreateCharacter_Class -= 1;
     }
 
-    public static void CreateCharacter_Texture_ChangeRight()
+    private static void CreateCharacter_Texture_ChangeRight()
     {
         // Lista de texturas
         short[] Tex_List;
@@ -240,7 +240,7 @@ class Buttons
             Game.CreateCharacter_Tex += 1;
     }
 
-    public static void CreateCharacter_Texture_ChangeLeft()
+    private static void CreateCharacter_Texture_ChangeLeft()
     {
         // Lista de texturas
         short[] Tex_List;
@@ -256,32 +256,32 @@ class Buttons
             Game.CreateCharacter_Tex -= 1;
     }
 
-    public static void CreateCharacter_Return()
+    private static void CreateCharacter_Return()
     {
         // Abre o painel de personagens
         Panels.Menu_Close();
         Panels.Get("SelectCharacter").Visible = true;
     }
 
-    public static void Character_Use()
+    private static void Character_Use()
     {
         // Usa o personagem selecionado
         Send.Character_Use();
     }
 
-    public static void Character_Delete()
+    private static void Character_Delete()
     {
         // Deleta o personagem selecionado
         Send.Character_Delete();
     }
 
-    public static void Character_Create()
+    private static void Character_Create()
     {
         // Abre a criação de personagem
         Send.Character_Create();
     }
 
-    public static void Character_Change_Right()
+    private static void Character_Change_Right()
     {
         // Altera o personagem selecionado pelo jogador
         if (Game.SelectCharacter == Lists.Server_Data.Max_Characters)
@@ -290,7 +290,7 @@ class Buttons
             Game.SelectCharacter += 1;
     }
 
-    public static void Character_Change_Left()
+    private static void Character_Change_Left()
     {
         // Altera o personagem selecionado pelo jogador
         if (Game.SelectCharacter == 1)
@@ -299,21 +299,21 @@ class Buttons
             Game.SelectCharacter -= 1;
     }
 
-    public static void Chat_Up()
+    private static void Chat_Up()
     {
         // Sobe as linhas do chat
         if (Tools.Chat_Line > 0)
             Tools.Chat_Line -= 1;
     }
 
-    public static void Chat_Down()
+    private static void Chat_Down()
     {
         // Sobe as linhas do chat
         if (Tools.Chat.Count - 1 - Tools.Chat_Line - Tools.Chat_Lines_Visible > 0)
             Tools.Chat_Line += 1;
     }
 
-    public static void Menu_Character()
+    private static void Menu_Character()
     {
         // Altera a visibilidade do painel e fecha os outros
         Panels.Get("Menu_Character").Visible = !Panels.Get("Menu_Character").Visible;
@@ -321,32 +321,32 @@ class Buttons
         Panels.Get("Menu_Options").Visible = false;
     }
 
-    public static void Attribute_Strenght()
+    private static void Attribute_Strenght()
     {
         Send.AddPoint(Game.Attributes.Strength);
     }
 
-    public static void Attribute_Resistance()
+    private static void Attribute_Resistance()
     {
         Send.AddPoint(Game.Attributes.Resistance);
     }
 
-    public static void Attribute_Intelligence()
+    private static void Attribute_Intelligence()
     {
         Send.AddPoint(Game.Attributes.Intelligence);
     }
 
-    public static void Attribute_Agility()
+    private static void Attribute_Agility()
     {
         Send.AddPoint(Game.Attributes.Agility);
     }
 
-    public static void Attribute_Vitality()
+    private static void Attribute_Vitality()
     {
         Send.AddPoint(Game.Attributes.Vitality);
     }
 
-    public static void Menu_Inventory()
+    private static void Menu_Inventory()
     {
         // Altera a visibilidade do painel e fecha os outros
         Panels.Get("Menu_Inventory").Visible = !Panels.Get("Menu_Inventory").Visible;
@@ -354,7 +354,7 @@ class Buttons
         Panels.Get("Menu_Options").Visible = false;
     }
 
-    public static void Menu_Options()
+    private static void Menu_Options()
     {
         // Altera a visibilidade do painel e fecha os outros
         Panels.Get("Menu_Options").Visible = !Panels.Get("Menu_Options").Visible;
@@ -362,7 +362,7 @@ class Buttons
         Panels.Get("Menu_Inventory").Visible = false;
     }
 
-    public static void Drop_Confirm()
+    private static void Drop_Confirm()
     {
         // Quantidade
         short.TryParse(TextBoxes.Get("Drop_Amount").Text, out short Amount);

@@ -4,10 +4,10 @@ using System.Windows.Forms;
 class Loop
 {
     // Contagens
-    private static int TextBox_Timer = 0;
+    public static int TextBox_Timer = 0;
     public static int Chat_Timer = 0;
 
-    public static void Main()
+    public static void Init()
     {
         int Count;
         int Timer_1000 = 0;

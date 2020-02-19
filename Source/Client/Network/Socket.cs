@@ -7,7 +7,7 @@ class Socket
     public static NetClient Device;
 
     // Manuseamento dos dados
-    public static NetIncomingMessage Data;
+    private static NetIncomingMessage Data;
 
     // Dados para a conexão com o servidor
     public const string IP = "localhost";
