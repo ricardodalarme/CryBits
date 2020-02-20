@@ -19,7 +19,7 @@ class Window
     public static void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
     {
         // Clique duplo
-        if (Environment.TickCount < DoubleClick_Timer + 255)
+        if (Environment.TickCount < DoubleClick_Timer + 142)
         {
             if (Tools.CurrentWindow == Tools.Windows.Game)
             {
