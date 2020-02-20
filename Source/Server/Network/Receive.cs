@@ -238,10 +238,8 @@ class Receive
         Player.Character(Index).Class = Data.ReadByte();
         Lists.Structures.Class Class = Lists.Class[Player.Character(Index).Class];
         Player.Character(Index).Genre = Data.ReadBoolean();
-        if (Player.Character(Index).Genre)
-            Player.Character(Index).Texture_Num = Class.Tex_Male[Data.ReadByte()];
-        else
-            Player.Character(Index).Texture_Num = Class.Tex_Female[Data.ReadByte()];
+        if (Player.Character(Index).Genre) Player.Character(Index).Texture_Num = Class.Tex_Male[Data.ReadByte()];
+        else Player.Character(Index).Texture_Num = Class.Tex_Female[Data.ReadByte()];
         Player.Character(Index).Attribute = Class.Attribute;
         Player.Character(Index).Map = Class.Spawn_Map;
         Player.Character(Index).Direction = (Game.Directions)Class.Spawn_Direction;
@@ -404,31 +402,16 @@ class Receive
     private static void Inventory_Change(byte Index, NetIncomingMessage Data)
     {
         byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
-        byte Hotbar_Old = Player.FindHotbar(Index, (byte)Game.Hotbar.Item, Slot_Old), Hotbar_New = Player.FindHotbar(Index, (byte)Game.Hotbar.Item, Slot_New);
-        Lists.Structures.Inventories Old = Player.Character(Index).Inventory[Slot_Old];
+        byte Hotbar_Slot = Player.FindHotbar(Index, (byte)Game.Hotbar.Item, Slot_Old);
 
         // Somente se necessário
         if (Player.Character(Index).Inventory[Slot_Old].Item_Num == 0) return;
         if (Slot_Old == Slot_New) return;
 
-        // Caso houver um item no novo slot, trocar ele para o velho
-        if (Player.Character(Index).Inventory[Slot_New].Item_Num > 0)
-        {
-            // Inventário
-            Player.Character(Index).Inventory[Slot_Old].Item_Num = Player.Character(Index).Inventory[Slot_New].Item_Num;
-            Player.Character(Index).Inventory[Slot_Old].Amount = Player.Character(Index).Inventory[Slot_New].Amount;
-            Player.Character(Index).Hotbar[Hotbar_New].Slot = Slot_Old;
-        }
-        else
-        {
-            Player.Character(Index).Inventory[Slot_Old].Item_Num = 0;
-            Player.Character(Index).Inventory[Slot_Old].Amount = 0;
-        }
-
         // Muda o item de slot
-        Player.Character(Index).Inventory[Slot_New].Item_Num = Old.Item_Num;
-        Player.Character(Index).Inventory[Slot_New].Amount = Old.Amount;
-        Player.Character(Index).Hotbar[Hotbar_Old].Slot = Slot_New;
+        (Player.Character(Index).Inventory[Slot_Old].Item_Num, Player.Character(Index).Inventory[Slot_New].Item_Num) = (Player.Character(Index).Inventory[Slot_New].Item_Num, Player.Character(Index).Inventory[Slot_Old].Item_Num);
+        (Player.Character(Index).Inventory[Slot_Old].Amount, Player.Character(Index).Inventory[Slot_New].Amount) = (Player.Character(Index).Inventory[Slot_New].Amount, Player.Character(Index).Inventory[Slot_Old].Amount);
+        Player.Character(Index).Hotbar[Hotbar_Slot].Slot = Slot_New;
         Send.Player_Inventory(Index);
         Send.Player_Hotbar(Index);
     }
@@ -494,27 +477,14 @@ class Receive
     private static void Hotbar_Change(byte Index, NetIncomingMessage Data)
     {
         byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
-        Lists.Structures.Hotbar Old = Player.Character(Index).Hotbar[Slot_Old];
 
         // Somente se necessário
         if (Player.Character(Index).Hotbar[Slot_Old].Slot == 0) return;
         if (Slot_Old == Slot_New) return;
 
-        // Caso houver um item no novo slot, trocar ele para o velho
-        if (Player.Character(Index).Hotbar[Slot_New].Slot > 0)
-        {
-            Player.Character(Index).Hotbar[Slot_Old].Slot = Player.Character(Index).Hotbar[Slot_New].Slot;
-            Player.Character(Index).Hotbar[Slot_Old].Type = Player.Character(Index).Hotbar[Slot_New].Type;
-        }
-        else
-        {
-            Player.Character(Index).Hotbar[Slot_Old].Slot = 0;
-            Player.Character(Index).Hotbar[Slot_Old].Type = 0;
-        }
-
         // Muda o item de slot
-        Player.Character(Index).Hotbar[Slot_New].Slot = Old.Slot;
-        Player.Character(Index).Hotbar[Slot_New].Type = Old.Type;
+        (Player.Character(Index).Hotbar[Slot_Old].Slot, Player.Character(Index).Hotbar[Slot_New].Slot) = (Player.Character(Index).Hotbar[Slot_New].Slot, Player.Character(Index).Hotbar[Slot_Old].Slot);
+        (Player.Character(Index).Hotbar[Slot_Old].Type, Player.Character(Index).Hotbar[Slot_New].Type) = (Player.Character(Index).Hotbar[Slot_New].Type, Player.Character(Index).Hotbar[Slot_Old].Type);
         Send.Player_Hotbar(Index);
     }
 
