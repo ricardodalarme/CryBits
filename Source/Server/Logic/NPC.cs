@@ -248,15 +248,18 @@ class NPC
 
     private static void Spawn(byte Index, short Map_Num, byte x, byte y, Game.Directions Direction = 0)
     {
-        Lists.Structures.NPC Data = Lists.NPC[Lists.Map[Map_Num].NPC[Index].Index];
+        short NPC_Index = Lists.Map[Map_Num].NPC[Index].Index;
+
+        // Previni erros
+        if (NPC_Index >= Lists.NPC.Length) return;
 
         // Define os dados
-        Lists.Temp_Map[Map_Num].NPC[Index].Index = Lists.Map[Map_Num].NPC[Index].Index;
+        Lists.Temp_Map[Map_Num].NPC[Index].Index = NPC_Index;
         Lists.Temp_Map[Map_Num].NPC[Index].X = x;
         Lists.Temp_Map[Map_Num].NPC[Index].Y = y;
         Lists.Temp_Map[Map_Num].NPC[Index].Direction = Direction;
         Lists.Temp_Map[Map_Num].NPC[Index].Vital = new short[(byte)Game.Vitals.Count];
-        for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Lists.Temp_Map[Map_Num].NPC[Index].Vital[i] = Data.Vital[i];
+        for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Lists.Temp_Map[Map_Num].NPC[Index].Vital[i] = Lists.NPC[NPC_Index].Vital[i];
 
         // Envia os dados aos jogadores
         if (Socket.Device != null) Send.Map_NPC(Map_Num, Index);

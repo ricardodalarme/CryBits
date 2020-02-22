@@ -35,6 +35,8 @@ class Lists
             public short Port;
             public byte Max_Players;
             public byte Max_Characters;
+            public byte Max_Party_Members;
+            public byte Max_Map_Items;
         }
 
         public class Tool

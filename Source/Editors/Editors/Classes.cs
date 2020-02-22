@@ -142,6 +142,11 @@ partial class Editor_Classes : Form
         List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, txtName.Text);
     }
 
+    private void txtDescription_TextChanged(object sender, EventArgs e)
+    {
+        Selected.Description = txtDescription.Text;
+    }
+
     private void numHP_ValueChanged(object sender, EventArgs e)
     {
         Selected.Vital[(byte)Globals.Vitals.HP] = (short)numHP.Value;
@@ -240,12 +245,6 @@ partial class Editor_Classes : Form
     {
         Selected.Spawn_Y = (byte)numSpawn_Y.Value;
     }
-
-    private void txtDescription_TextChanged(object sender, EventArgs e)
-    {
-        Selected.Description = txtDescription.Text;
-    }
-
     private void butItem_Add_Click(object sender, EventArgs e)
     {
         // Abre a janela para adicionar o item

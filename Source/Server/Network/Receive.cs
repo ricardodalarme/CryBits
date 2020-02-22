@@ -435,7 +435,7 @@ class Receive
         if (!Player.GiveItem(Index, Player.Character(Index).Equipment[Slot], 1))
         {
             // Somente se necessário
-            if (Lists.Temp_Map[Map_Num].Item.Count == Game.Max_Map_Items) return;
+            if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
 
             // Solta o item no chão
             Map_Item.Index = Player.Character(Index).Equipment[Slot];
@@ -512,6 +512,8 @@ class Receive
         Lists.Server_Data.Port = Data.ReadInt16();
         Lists.Server_Data.Max_Players = Data.ReadByte();
         Lists.Server_Data.Max_Characters = Data.ReadByte();
+        Lists.Server_Data.Max_Party_Members = Data.ReadByte();
+        Lists.Server_Data.Max_Map_Items = Data.ReadByte();
 
         // Salva os dados
         Write.Server_Data();
@@ -876,7 +878,7 @@ class Receive
             return;
         }
         // Verifica se o grupo está cheio
-        if (Player.Character(Index).Party.Count == Game.Max_Party_Members - 1)
+        if (Player.Character(Index).Party.Count == Lists.Server_Data.Max_Party_Members - 1)
         {
             Send.Message(Index, "Your party is full.", System.Drawing.Color.White);
             return;
@@ -904,7 +906,7 @@ class Receive
             return;
         }
         // Verifica se o grupo está cheio
-        if (Player.Character(Invitation).Party.Count == Game.Max_Party_Members - 1)
+        if (Player.Character(Invitation).Party.Count == Lists.Server_Data.Max_Party_Members - 1)
         {
             Send.Message(Index, "The party is full.", System.Drawing.Color.White);
             return;
