@@ -52,7 +52,7 @@ public partial class Editor_Items : Form
 
         // Adiciona os itens à lista
         for (byte i = 1; i <= Lists.Item.GetUpperBound(0); i++)
-            Objects.List.Items.Add(Globals.Numbering(i, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[i].Name);
+            Objects.List.Items.Add(Globals.Numbering(i, Lists.Item.GetUpperBound(0), Lists.Item[i].Name));
 
         // Seleciona o primeiro item
         Objects.List.SelectedIndex = 0;
@@ -129,7 +129,7 @@ public partial class Editor_Items : Form
         Clear.Item(Selected);
 
         // Atualiza os valores
-        List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count) + ":";
+        List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count,string.Empty);
         Update_Data();
     }
 
@@ -152,7 +152,7 @@ public partial class Editor_Items : Form
         if (Selected > 0)
         {
             Lists.Item[Selected].Name = txtName.Text;
-            List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count) + ":" + txtName.Text;
+            List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count, txtName.Text);
         }
     }
 

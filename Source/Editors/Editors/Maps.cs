@@ -132,8 +132,8 @@ partial class Editor_Maps : Form
         // Adiciona os itens às listas
         for (byte i = 1; i < Lists.Map.Length; i++)
         {
-            Objects.cmbList.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0)) + ":" + Lists.Map[i].Name);
-            Objects.cmbA_Warp_Map.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0)) + ":" + Lists.Map[i].Name);
+            Objects.cmbList.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0), Lists.Map[i].Name));
+            Objects.cmbA_Warp_Map.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0) , Lists.Map[i].Name));
         }
 
         // Seleciona o primeiro item
@@ -350,7 +350,7 @@ partial class Editor_Maps : Form
         Clear.Map(Selected);
 
         // Atualiza os valores
-        cmbList.Items[Selected - 1] = Globals.Numbering(Selected, cmbList.Items.Count) + ":";
+        cmbList.Items[Selected - 1] = Globals.Numbering(Selected, cmbList.Items.Count,string.Empty);
     }
 
     private void Copiar()

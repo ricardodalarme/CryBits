@@ -167,15 +167,12 @@ class Globals
         }
     }
 
-    public static string Numbering(int Number, int Limit)
+    public static string Numbering(int Number, int Limit, string Text)
     {
         int Amount = Limit.ToString().Length - Number.ToString().Length;
 
         // Retorna com a numeração
-        if (Amount > 0)
-            return new string('0', Amount) + Number;
-        else
-            return Number.ToString();
+        return new string('0', Amount) + Number + ":" + Text;
     }
 
     public static Point Block_Position(byte Direction)

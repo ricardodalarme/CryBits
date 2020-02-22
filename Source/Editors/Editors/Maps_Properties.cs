@@ -186,7 +186,7 @@ public partial class Editor_Maps_Properties : Form
         Editor_Maps.Update_Data();
 
         // Altera o nome na lista
-        Editor_Maps.Objects.cmbList.Items[Selected - 1] = Globals.Numbering(Selected, Editor_Maps.Objects.cmbList.Items.Count) + ":" + txtName.Text;
+        Editor_Maps.Objects.cmbList.Items[Selected - 1] = Globals.Numbering(Selected, Editor_Maps.Objects.cmbList.Items.Count, txtName.Text);
 
         // Reseta os valores
         Globals.Weather_Update();

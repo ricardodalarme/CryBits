@@ -27,7 +27,7 @@ public partial class Editor_Classes : Form
     {
         // Lista de itens
         Objects.cmbItems.Items.Clear();
-        for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbItems.Items.Add(Globals.Numbering(i, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[i].Name);
+        for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbItems.Items.Add(Globals.Numbering(i, Lists.Item.GetUpperBound(0), Lists.Item[i].Name));
 
         // Lista os dados
         List_Update();
@@ -45,7 +45,7 @@ public partial class Editor_Classes : Form
         // Adiciona os itens às listas
         for (byte i = 1; i < Lists.Class.Length; i++)
         {
-            string Text = Globals.Numbering(i, Lists.Class.GetUpperBound(0)) + ":" + Lists.Class[i].Name;
+            string Text = Globals.Numbering(i, Lists.Class.GetUpperBound(0), Lists.Class[i].Name);
             Objects.List.Items.Add(Text);
         }
 
@@ -82,7 +82,7 @@ public partial class Editor_Classes : Form
         numSpawn_Y.Value = Lists.Class[Selected].Spawn_Y;
         for (byte i = 0; i < Lists.Class[Selected].Tex_Male.Count; i++) lstMale.Items.Add(Lists.Class[Selected].Tex_Male[i]);
         for (byte i = 0; i < Lists.Class[Selected].Tex_Female.Count; i++) lstFemale.Items.Add(Lists.Class[Selected].Tex_Female[i]);
-        for (byte i = 0; i < Lists.Class[Selected].Item.Count; i++) lstItems.Items.Add(Globals.Numbering(Lists.Class[Selected].Item[i].Item1, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[Lists.Class[Selected].Item[i].Item1].Name + " [" + Lists.Class[Selected].Item[i].Item2 + "x]");
+        for (byte i = 0; i < Lists.Class[Selected].Item.Count; i++) lstItems.Items.Add(Globals.Numbering(Lists.Class[Selected].Item[i].Item1, Lists.Item.GetUpperBound(0), Lists.Item[Lists.Class[Selected].Item[i].Item1].Name + " [" + Lists.Class[Selected].Item[i].Item2 + "x]"));
 
         // Seleciona os primeiros itens
         if (lstMale.Items.Count > 0) lstMale.SelectedIndex = 0;
@@ -128,7 +128,7 @@ public partial class Editor_Classes : Form
         Clear.Class(Selected);
 
         // Atualiza os valores
-        List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count) + ":";
+        List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count, string.Empty);
         Update_Data();
     }
 
@@ -151,7 +151,7 @@ public partial class Editor_Classes : Form
         if (Selected > 0)
         {
             Lists.Class[Selected].Name = txtName.Text;
-            string Text = Globals.Numbering(Selected, List.Items.Count) + ":" + txtName.Text;
+            string Text = Globals.Numbering(Selected, List.Items.Count, txtName.Text);
             List.Items[Selected - 1] = Text;
         }
     }
@@ -285,7 +285,7 @@ public partial class Editor_Classes : Form
         // Adiciona o item
         if (cmbItems.SelectedIndex >= 0)
         {
-            lstItems.Items.Add(Globals.Numbering(cmbItems.SelectedIndex + 1, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[cmbItems.SelectedIndex + 1].Name + " [" + numItem_Amount.Value + "x]");
+            lstItems.Items.Add(Globals.Numbering(cmbItems.SelectedIndex + 1, Lists.Item.GetUpperBound(0), Lists.Item[cmbItems.SelectedIndex + 1].Name + " [" + numItem_Amount.Value + "x]"));
             Lists.Class[Selected].Item.Add(new Tuple<short, short>((short)(cmbItems.SelectedIndex + 1), (short)numItem_Amount.Value));
             grpItem_Add.Visible = false;
         }

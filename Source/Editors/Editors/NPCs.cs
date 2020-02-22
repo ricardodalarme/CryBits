@@ -44,7 +44,7 @@ public partial class Editor_NPCs : Form
 
         // Adiciona os itens à lista
         for (byte i = 1; i < Lists.NPC.Length; i++)
-            Objects.List.Items.Add(Globals.Numbering(i, Lists.NPC.GetUpperBound(0)) + ":" + Lists.NPC[i].Name);
+            Objects.List.Items.Add(Globals.Numbering(i, Lists.NPC.GetUpperBound(0), Lists.NPC[i].Name));
 
         // Seleciona o primeiro item
         Objects.List.SelectedIndex = 0;
@@ -86,7 +86,7 @@ public partial class Editor_NPCs : Form
         for (byte i = 0; i < Lists.NPC[Selected].Drop.Count; i++) lstDrop.Items.Add(Drop_String(Lists.NPC[Selected].Drop[i]));
         cmbMovement.SelectedIndex = (byte)Lists.NPC[Selected].Movement;
         numFlee_Health.Value = Lists.NPC[Selected].Flee_Helth;
-        for (byte i = 0; i < Lists.NPC[Selected].Allie.Count; i++) lstAllies.Items.Add(Globals.Numbering(Lists.NPC[Selected].Allie[i], Lists.NPC.GetUpperBound(0)) + ":" + Lists.NPC[Lists.NPC[Selected].Allie[i]].Name);
+        for (byte i = 0; i < Lists.NPC[Selected].Allie.Count; i++) lstAllies.Items.Add(Globals.Numbering(Lists.NPC[Selected].Allie[i], Lists.NPC.GetUpperBound(0),  Lists.NPC[Lists.NPC[Selected].Allie[i]].Name));
 
         // Seleciona os primeiros itens
         if (lstDrop.Items.Count > 0) lstDrop.SelectedIndex = 0;
@@ -130,7 +130,7 @@ public partial class Editor_NPCs : Form
         Clear.NPC(Selected);
 
         // Atualiza os valores
-        List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count) + ":";
+        List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count, string.Empty);
         Update_Data();
     }
 
@@ -154,13 +154,13 @@ public partial class Editor_NPCs : Form
         {
             // Edita o nome
             Lists.NPC[Selected].Name = txtName.Text;
-            List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count) + ":" + txtName.Text;
+            List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count, txtName.Text);
 
             // Altera o nome na lista de aliados
             short Position = (short)(Lists.NPC[Selected].Allie.Find(x => x == Selected) - 1);
             if (Position != -1)
             {
-                lstAllies.Items.Insert(Position, Globals.Numbering(Lists.NPC[Selected].Allie[Position], List.Items.Count) + ":" + Lists.NPC[Lists.NPC[Selected].Allie[Position]].Name);
+                lstAllies.Items.Insert(Position, Globals.Numbering(Lists.NPC[Selected].Allie[Position], List.Items.Count, Lists.NPC[Lists.NPC[Selected].Allie[Position]].Name));
                 lstAllies.Items.RemoveAt(Position);
             }
         }
@@ -272,7 +272,7 @@ public partial class Editor_NPCs : Form
 
     private string Drop_String(Lists.Structures.NPC_Drop Drop)
     {
-        return Globals.Numbering(Drop.Item_Num, Lists.Item.GetUpperBound(0)) + ":" + Lists.Item[Drop.Item_Num].Name + " [" + Drop.Amount + "x, " + Drop.Chance + "%]";
+        return Globals.Numbering(Drop.Item_Num, Lists.Item.GetUpperBound(0), Lists.Item[Drop.Item_Num].Name + " [" + Drop.Amount + "x, " + Drop.Chance + "%]");
     }
 
     private void chkAttackNPC_CheckedChanged(object sender, EventArgs e)
@@ -285,7 +285,7 @@ public partial class Editor_NPCs : Form
     {
         // Adiciona os NPCs
         cmbAllie_NPC.Items.Clear();
-        for (short i = 1; i < Lists.NPC.Length; i++) cmbAllie_NPC.Items.Add(Globals.Numbering(i, Lists.NPC.GetUpperBound(0)) + ":" + Lists.NPC[i].Name);
+        for (short i = 1; i < Lists.NPC.Length; i++) cmbAllie_NPC.Items.Add(Globals.Numbering(i, Lists.NPC.GetUpperBound(0), Lists.NPC[i].Name));
         cmbAllie_NPC.SelectedIndex = 0;
 
         // Abre a janela para adicionar o aliado
@@ -309,7 +309,7 @@ public partial class Editor_NPCs : Form
         if (cmbAllie_NPC.SelectedIndex >= 0)
         {
             Lists.NPC[Selected].Allie.Add((short)(cmbAllie_NPC.SelectedIndex + 1));
-            lstAllies.Items.Add(Globals.Numbering(cmbAllie_NPC.SelectedIndex + 1, Lists.NPC.GetUpperBound(0)) + ":" + Lists.NPC[cmbAllie_NPC.SelectedIndex + 1].Name);
+            lstAllies.Items.Add(Globals.Numbering(cmbAllie_NPC.SelectedIndex + 1, Lists.NPC.GetUpperBound(0), Lists.NPC[cmbAllie_NPC.SelectedIndex + 1].Name));
             grpAllie_Add.Visible = false;
         }
     }
