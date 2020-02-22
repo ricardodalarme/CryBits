@@ -208,6 +208,7 @@ partial class Receive
         for (short i = 1; i < Lists.NPC.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.NPC[i] = new Lists.Structures.NPC();
             Lists.NPC[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.NPC[i].Attribute = new short[(byte)Globals.Attributes.Count];
             Lists.NPC[i].Drop = new System.Collections.Generic.List<Lists.Structures.NPC_Drop>();
@@ -244,6 +245,7 @@ partial class Receive
         for (short i = 1; i < Lists.Item.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.Item[i] = new Lists.Structures.Item();
             Lists.Item[i].Potion_Vital = new short[(byte)Globals.Vitals.Count];
             Lists.Item[i].Equip_Attribute = new short[(byte)Globals.Attributes.Count];
 

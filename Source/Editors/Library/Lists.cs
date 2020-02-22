@@ -202,7 +202,7 @@ class Lists
             public bool Back;
         }
 
-        public struct NPC
+        public class NPC
         {
             public string Name;
             public string SayMsg;
@@ -220,7 +220,7 @@ class Lists
             public byte Flee_Helth;
         }
 
-        public struct Item
+        public class Item
         {
             // Geral
             public string Name;

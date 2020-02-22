@@ -7,7 +7,7 @@ public partial class Editor_NPCs : Form
     public static Editor_NPCs Objects = new Editor_NPCs();
 
     // Index do item selecionado
-    public byte Selected;
+    private Lists.Structures.NPC Selected;
 
     public Editor_NPCs()
     {
@@ -39,23 +39,16 @@ public partial class Editor_NPCs : Form
 
     private static void Update_List()
     {
-        // Limpa a lista
-        Objects.List.Items.Clear();
-
         // Adiciona os itens à lista
-        for (byte i = 1; i < Lists.NPC.Length; i++)
-            Objects.List.Items.Add(Globals.Numbering(i, Lists.NPC.GetUpperBound(0), Lists.NPC[i].Name));
-
-        // Seleciona o primeiro item
+        Objects.List.Items.Clear();
+        for (byte i = 1; i < Lists.NPC.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.NPC.GetUpperBound(0), Lists.NPC[i].Name));
         Objects.List.SelectedIndex = 0;
     }
 
     private void Update_Data()
     {
-        Selected = (byte)(List.SelectedIndex + 1);
-
         // Previne erros
-        if (Selected == 0) return;
+        if (List.SelectedIndex == -1) return;
 
         // Reseta os dados necessários
         lstDrop.Items.Clear();
@@ -64,30 +57,31 @@ public partial class Editor_NPCs : Form
         grpAllie_Add.Visible = false;
 
         // Remove o NPC dos aliados caso ele não existir
-        for (byte i = 0; i < Lists.NPC[Selected].Allie.Count; i++)
-            if (Lists.NPC[Selected].Allie[i] >= Lists.NPC.Length)
-                Lists.NPC[Selected].Allie.RemoveAt(i);
+        for (byte i = 0; i < Selected.Allie.Count; i++)
+            if (Selected.Allie[i] >= Lists.NPC.Length)
+                Selected.Allie.RemoveAt(i);
 
         // Lista os dados
-        txtName.Text = Lists.NPC[Selected].Name;
-        txtSayMsg.Text = Lists.NPC[Selected].SayMsg;
-        numTexture.Value = Lists.NPC[Selected].Texture;
-        cmbBehavior.SelectedIndex = Lists.NPC[Selected].Behaviour;
-        numSpawn.Value = Lists.NPC[Selected].SpawnTime;
-        numRange.Value = Lists.NPC[Selected].Sight;
-        numExperience.Value = Lists.NPC[Selected].Experience;
-        numHP.Value = Lists.NPC[Selected].Vital[(byte)Globals.Vitals.HP];
-        numMP.Value = Lists.NPC[Selected].Vital[(byte)Globals.Vitals.MP];
-        numStrength.Value = Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Strength];
-        numResistance.Value = Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Resistance];
-        numIntelligence.Value = Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Intelligence];
-        numAgility.Value = Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Agility];
-        numVitality.Value = Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Vitality];
-        for (byte i = 0; i < Lists.NPC[Selected].Drop.Count; i++) lstDrop.Items.Add(Drop_String(Lists.NPC[Selected].Drop[i]));
-        cmbMovement.SelectedIndex = (byte)Lists.NPC[Selected].Movement;
-        numFlee_Health.Value = Lists.NPC[Selected].Flee_Helth;
-        for (byte i = 0; i < Lists.NPC[Selected].Allie.Count; i++) lstAllies.Items.Add(Globals.Numbering(Lists.NPC[Selected].Allie[i], Lists.NPC.GetUpperBound(0),  Lists.NPC[Lists.NPC[Selected].Allie[i]].Name));
+        txtName.Text = Selected.Name;
+        txtSayMsg.Text = Selected.SayMsg;
+        numTexture.Value = Selected.Texture;
+        cmbBehavior.SelectedIndex = Selected.Behaviour;
+        numSpawn.Value = Selected.SpawnTime;
+        numRange.Value = Selected.Sight;
+        numExperience.Value = Selected.Experience;
+        numHP.Value = Selected.Vital[(byte)Globals.Vitals.HP];
+        numMP.Value = Selected.Vital[(byte)Globals.Vitals.MP];
+        numStrength.Value = Selected.Attribute[(byte)Globals.Attributes.Strength];
+        numResistance.Value = Selected.Attribute[(byte)Globals.Attributes.Resistance];
+        numIntelligence.Value = Selected.Attribute[(byte)Globals.Attributes.Intelligence];
+        numAgility.Value = Selected.Attribute[(byte)Globals.Attributes.Agility];
+        numVitality.Value = Selected.Attribute[(byte)Globals.Attributes.Vitality];
+        for (byte i = 0; i < Selected.Drop.Count; i++) lstDrop.Items.Add(Drop_String(Selected.Drop[i]));
+        cmbMovement.SelectedIndex = (byte)Selected.Movement;
+        numFlee_Health.Value = Selected.Flee_Helth;
+        for (byte i = 0; i < Selected.Allie.Count; i++) lstAllies.Items.Add(Globals.Numbering(Selected.Allie[i], Lists.NPC.GetUpperBound(0), Lists.NPC[Selected.Allie[i]].Name));
 
+        lstAllies.Update();
         // Seleciona os primeiros itens
         if (lstDrop.Items.Count > 0) lstDrop.SelectedIndex = 0;
     }
@@ -111,6 +105,7 @@ public partial class Editor_NPCs : Form
     private void List_SelectedIndexChanged(object sender, EventArgs e)
     {
         // Atualiza a lista
+        Selected = Lists.NPC[List.SelectedIndex + 1];
         Update_Data();
     }
 
@@ -127,10 +122,10 @@ public partial class Editor_NPCs : Form
     private void butClear_Click(object sender, EventArgs e)
     {
         // Limpa os dados
-        Clear.NPC(Selected);
+        Clear.NPC((short)(List.SelectedIndex + 1));
 
         // Atualiza os valores
-        List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count, string.Empty);
+        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, string.Empty);
         Update_Data();
     }
 
@@ -150,92 +145,80 @@ public partial class Editor_NPCs : Form
     private void txtName_Validated(object sender, EventArgs e)
     {
         // Atualiza a lista
-        if (Selected > 0)
-        {
-            // Edita o nome
-            Lists.NPC[Selected].Name = txtName.Text;
-            List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count, txtName.Text);
-
-            // Altera o nome na lista de aliados
-            short Position = (short)(Lists.NPC[Selected].Allie.Find(x => x == Selected) - 1);
-            if (Position != -1)
-            {
-                lstAllies.Items.Insert(Position, Globals.Numbering(Lists.NPC[Selected].Allie[Position], List.Items.Count, Lists.NPC[Lists.NPC[Selected].Allie[Position]].Name));
-                lstAllies.Items.RemoveAt(Position);
-            }
-        }
+        Selected.Name = txtName.Text;
+        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, txtName.Text);
     }
 
-    private void txtSayMsg_Validated(object sender, EventArgs e)
+    private void txtSayMsg_TextChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].SayMsg = txtSayMsg.Text;
+        Selected.SayMsg = txtSayMsg.Text;
     }
 
     private void butTexture_Click(object sender, EventArgs e)
     {
         // Abre a pré visualização
-        Lists.NPC[Selected].Texture = Preview.Select(Graphics.Tex_Character, Lists.NPC[Selected].Texture);
-        numTexture.Value = Lists.NPC[Selected].Texture;
+        Selected.Texture = Preview.Select(Graphics.Tex_Character, Selected.Texture);
+        numTexture.Value = Selected.Texture;
     }
 
     private void numTexture_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Texture = (byte)numTexture.Value;
+        Selected.Texture = (byte)numTexture.Value;
     }
 
     private void numRange_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Sight = (byte)numRange.Value;
+        Selected.Sight = (byte)numRange.Value;
     }
 
     private void cmbBehavior_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Behaviour = (byte)cmbBehavior.SelectedIndex;
+        Selected.Behaviour = (byte)cmbBehavior.SelectedIndex;
     }
 
     private void numHP_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Vital[(byte)Globals.Vitals.HP] = (short)numHP.Value;
+        Selected.Vital[(byte)Globals.Vitals.HP] = (short)numHP.Value;
     }
 
     private void numMP_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Vital[(byte)Globals.Vitals.MP] = (short)numMP.Value;
+        Selected.Vital[(byte)Globals.Vitals.MP] = (short)numMP.Value;
     }
 
     private void numStrength_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Strength] = (short)numStrength.Value;
+        Selected.Attribute[(byte)Globals.Attributes.Strength] = (short)numStrength.Value;
     }
 
     private void numResistance_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Resistance] = (short)numResistance.Value;
+        Selected.Attribute[(byte)Globals.Attributes.Resistance] = (short)numResistance.Value;
     }
 
     private void numIntelligence_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Intelligence] = (short)numIntelligence.Value;
+        Selected.Attribute[(byte)Globals.Attributes.Intelligence] = (short)numIntelligence.Value;
     }
 
     private void numAgility_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Agility] = (short)numAgility.Value;
+        Selected.Attribute[(byte)Globals.Attributes.Agility] = (short)numAgility.Value;
     }
 
     private void numVitality_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Attribute[(byte)Globals.Attributes.Vitality] = (short)numVitality.Value;
+        Selected.Attribute[(byte)Globals.Attributes.Vitality] = (short)numVitality.Value;
     }
 
     private void numSpawn_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].SpawnTime = (byte)numSpawn.Value;
+        Selected.SpawnTime = (byte)numSpawn.Value;
     }
 
     private void numExperience_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Experience = (int)numExperience.Value;
+        Selected.Experience = (int)numExperience.Value;
     }
 
     private void butDrop_Add_Click(object sender, EventArgs e)
@@ -254,7 +237,7 @@ public partial class Editor_NPCs : Form
         if (Selected_Item != -1)
         {
             lstDrop.Items.RemoveAt(Selected_Item);
-            Lists.NPC[Selected].Drop.RemoveAt(Selected_Item);
+            Selected.Drop.RemoveAt(Selected_Item);
         }
     }
 
@@ -264,7 +247,7 @@ public partial class Editor_NPCs : Form
         if (cmbDrop_Item.SelectedIndex >= 0)
         {
             Lists.Structures.NPC_Drop Drop = new Lists.Structures.NPC_Drop((short)(cmbDrop_Item.SelectedIndex + 1), (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value);
-            Lists.NPC[Selected].Drop.Add(Drop);
+            Selected.Drop.Add(Drop);
             lstDrop.Items.Add(Drop_String(Drop));
             grpDrop_Add.Visible = false;
         }
@@ -277,7 +260,7 @@ public partial class Editor_NPCs : Form
 
     private void chkAttackNPC_CheckedChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].AttackNPC = chkAttackNPC.Checked;
+        Selected.AttackNPC = chkAttackNPC.Checked;
         lstAllies.Enabled = chkAttackNPC.Checked;
     }
 
@@ -299,7 +282,7 @@ public partial class Editor_NPCs : Form
         if (Selected_Item != -1)
         {
             lstAllies.Items.RemoveAt(Selected_Item);
-            Lists.NPC[Selected].Allie.RemoveAt(Selected_Item);
+            Selected.Allie.RemoveAt(Selected_Item);
         }
     }
 
@@ -308,7 +291,7 @@ public partial class Editor_NPCs : Form
         // Adiciona o aliado
         if (cmbAllie_NPC.SelectedIndex >= 0)
         {
-            Lists.NPC[Selected].Allie.Add((short)(cmbAllie_NPC.SelectedIndex + 1));
+            Selected.Allie.Add((short)(cmbAllie_NPC.SelectedIndex + 1));
             lstAllies.Items.Add(Globals.Numbering(cmbAllie_NPC.SelectedIndex + 1, Lists.NPC.GetUpperBound(0), Lists.NPC[cmbAllie_NPC.SelectedIndex + 1].Name));
             grpAllie_Add.Visible = false;
         }
@@ -316,11 +299,11 @@ public partial class Editor_NPCs : Form
 
     private void cmbMovement_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Movement = (Globals.NPC_Movements)cmbMovement.SelectedIndex;
+        Selected.Movement = (Globals.NPC_Movements)cmbMovement.SelectedIndex;
     }
 
     private void numFlee_Health_ValueChanged(object sender, EventArgs e)
     {
-        Lists.NPC[Selected].Flee_Helth = (byte)numFlee_Health.Value;
+        Selected.Flee_Helth = (byte)numFlee_Health.Value;
     }
 }
