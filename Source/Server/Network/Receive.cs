@@ -811,17 +811,17 @@ class Receive
 
     private static void Request_Server_Data(byte Index, NetIncomingMessage Data)
     {
-        Send.Server_Data(Index, Data.ReadBoolean());
+        Send.Server_Data(Index);
     }
 
     private static void Request_Classes(byte Index, NetIncomingMessage Data)
     {
-        Send.Classes(Index, Data.ReadBoolean());
+        Send.Classes(Index);
     }
 
     private static void Request_Tiles(byte Index, NetIncomingMessage Data)
     {
-        Send.Tiles(Index, Data.ReadBoolean());
+        Send.Tiles(Index);
     }
 
     private static void Request_Map(byte Index, NetIncomingMessage Data)
@@ -836,12 +836,12 @@ class Receive
 
     private static void Request_NPCs(byte Index, NetIncomingMessage Data)
     {
-        Send.NPCs(Index, Data.ReadBoolean());
+        Send.NPCs(Index);
     }
 
     private static void Request_Items(byte Index, NetIncomingMessage Data)
     {
-        Send.Items(Index, Data.ReadBoolean());
+        Send.Items(Index);
     }
 
     private static void Party_Invite(byte Index, NetIncomingMessage Data)

@@ -59,7 +59,7 @@ partial class Receive
         Lists.Server_Data.Max_Characters = Data.ReadByte();
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Data.Open();
+        if (Globals.OpenEditor == Editor_Data.Objects) Editor_Data.Open();
     }
 
     private static void Classes(NetIncomingMessage Data)
@@ -94,7 +94,7 @@ partial class Receive
         }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Classes.Open();
+        if (Globals.OpenEditor == Editor_Classes.Objects) Editor_Classes.Open();
     }
 
     private static void Maps(NetIncomingMessage Data)
@@ -232,7 +232,7 @@ partial class Receive
         }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_NPCs.Open();
+        if (Globals.OpenEditor == Editor_NPCs.Objects) Editor_NPCs.Open();
     }
 
     private static void Items(NetIncomingMessage Data)
@@ -265,7 +265,7 @@ partial class Receive
         }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Items.Open();
+        if (Globals.OpenEditor == Editor_Items.Objects) Editor_Items.Open();
     }
 
     private static void Tiles(NetIncomingMessage Data)
@@ -302,7 +302,6 @@ partial class Receive
         }
 
         // Abre o editor
-        if (Data.ReadBoolean())
-            Editor_Tiles.Open();
+        if (Globals.OpenEditor == Editor_Tiles.Objects) Editor_Tiles.Open();
     }
 }

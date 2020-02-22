@@ -7,6 +7,9 @@ class Globals
     public const byte Grid = 32;
     public static Size Grid_Size = new Size(Grid, Grid);
 
+    // Editor que será aberto
+    public static System.Windows.Forms.Form OpenEditor;
+
     // Medida de calculo do atraso do jogo
     public static short FPS;
 

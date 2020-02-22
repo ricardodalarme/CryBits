@@ -54,7 +54,7 @@ partial class Editor_Maps : Form
         // Volta ao menu
         e.Cancel = true;
         Visible = false;
-        global::Selection.Objects.Visible = true;
+        Selection.Objects.Visible = true;
     }
 
     private void Editor_Maps_SizeChanged(object sender, EventArgs e)
@@ -67,6 +67,7 @@ partial class Editor_Maps : Form
     public static void Request()
     {
         // Lê os dados
+        Globals.OpenEditor = Objects;
         Send.Request_NPCs();
         Send.Request_Tiles();
         Send.Request_Items();

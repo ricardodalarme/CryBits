@@ -39,33 +39,30 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Request_Server_Data(bool OpenEditor = false)
+    public static void Request_Server_Data()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Server_Data);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
-    public static void Request_Classes(bool OpenEditor = false)
+    public static void Request_Classes()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Classes);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
-    public static void Request_Tiles(bool OpenEditor = false)
+    public static void Request_Tiles()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Tiles);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
@@ -89,23 +86,21 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Request_NPCs(bool OpenEditor = false)
+    public static void Request_NPCs()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_NPCs);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
-    public static void Request_Items(bool OpenEditor = false)
+    public static void Request_Items()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Items);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 

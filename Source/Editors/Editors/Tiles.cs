@@ -18,7 +18,8 @@ public partial class Editor_Tiles : Form
     public static void Request()
     {
         // Lê os dados
-        Send.Request_Tiles(true);
+        Globals.OpenEditor = Objects;
+        Send.Request_Tiles();
     }
 
     public static void Open()

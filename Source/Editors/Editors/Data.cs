@@ -13,7 +13,8 @@ public partial class Editor_Data : Form
     public static void Request()
     {
         // Lê os dados
-        Send.Request_Server_Data(true);
+        Globals.OpenEditor = Objects;
+        Send.Request_Server_Data();
     }
 
     public static void Open()

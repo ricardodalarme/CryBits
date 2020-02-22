@@ -181,7 +181,7 @@ class Send
         ToPlayer(Index, Data);
     }
 
-    public static void Classes(byte Index, bool OpenEditor = false)
+    public static void Classes(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -217,7 +217,6 @@ class Send
                 }
             }
         }
-        Data.Write(OpenEditor);
 
         // Envia os dados
         ToPlayer(Index, Data);
@@ -572,7 +571,7 @@ class Send
         ToMap(Player.Character(Index).Map, Data);
     }
 
-    public static void Items(byte Index, bool OpenEditor = false)
+    public static void Items(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -598,7 +597,6 @@ class Send
             for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Data.Write(Lists.Item[i].Equip_Attribute[a]);
             Data.Write(Lists.Item[i].Weapon_Damage);
         }
-        Data.Write(OpenEditor);
 
         // Envia os dados
         ToPlayer(Index, Data);
@@ -668,7 +666,7 @@ class Send
         ToPlayer(Index, Data);
     }
 
-    public static void NPCs(byte Index, bool OpenEditor = false)
+    public static void NPCs(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -706,7 +704,6 @@ class Send
                 Data.Write(Lists.NPC[i].Flee_Helth);
             }
         }
-        Data.Write(OpenEditor);
         ToPlayer(Index, Data);
     }
 
@@ -801,7 +798,7 @@ class Send
         ToMap(Map_Num, Data);
     }
 
-    public static void Tiles(byte Index, bool OpenEditor = false)
+    public static void Tiles(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -823,11 +820,10 @@ class Send
                         Data.Write(Lists.Tile[i].Data[x, y].Block[d]);
                 }
         }
-        Data.Write(OpenEditor);
         ToPlayer(Index, Data);
     }
 
-    public static void Server_Data(byte Index, bool OpenEdtior)
+    public static void Server_Data(byte Index)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -838,7 +834,6 @@ class Send
         Data.Write(Lists.Server_Data.Port);
         Data.Write(Lists.Server_Data.Max_Players);
         Data.Write(Lists.Server_Data.Max_Characters);
-        Data.Write(OpenEdtior);
         ToPlayer(Index, Data);
     }
 

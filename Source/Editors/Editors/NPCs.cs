@@ -17,8 +17,9 @@ public partial class Editor_NPCs : Form
     public static void Request()
     {
         // Lê os dados
+        Globals.OpenEditor = Objects;
         Send.Request_Items();
-        Send.Request_NPCs(true);
+        Send.Request_NPCs();
     }
 
     public static void Open()
