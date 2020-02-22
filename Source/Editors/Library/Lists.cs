@@ -68,7 +68,7 @@ class Lists
             public byte Texture_Num { get; set; }
         }
 
-        public struct Class
+        public class Class
         {
             public string Name;
             public string Description;
@@ -80,7 +80,7 @@ class Lists
             public byte Spawn_Y;
             public short[] Vital;
             public short[] Attribute;
-            public List< Tuple<short, short> > Item;
+            public List<Tuple<short, short>> Item;
         }
 
         public struct Tile

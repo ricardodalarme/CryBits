@@ -129,7 +129,7 @@
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.Size = new System.Drawing.Size(285, 69);
             this.txtDescription.TabIndex = 12;
-            this.txtDescription.Validated += new System.EventHandler(this.txtDescription_Validated);
+            this.txtDescription.TextChanged += new System.EventHandler(this.txtDescription_TextChanged);
             // 
             // label11
             // 

@@ -70,6 +70,7 @@ partial class Receive
         for (short i = 1; i < Lists.Class.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.Class[i] = new Lists.Structures.Class();
             Lists.Class[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.Class[i].Attribute = new short[(byte)Globals.Attributes.Count];
             Lists.Class[i].Tex_Male = new System.Collections.Generic.List<short>();

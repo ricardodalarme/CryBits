@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
-public partial class Editor_Classes : Form
+partial class Editor_Classes : Form
 {
     // Usado para acessar os dados da janela
     public static Editor_Classes Objects = new Editor_Classes();
 
-    // Índice do item selecionado
-    public byte Selected;
+    // Classe selecionada
+    private Lists.Structures.Class Selected;
 
     public Editor_Classes()
     {
@@ -39,26 +38,16 @@ public partial class Editor_Classes : Form
 
     private static void List_Update()
     {
-        // Limpa as listas
+        // Adiciona as classes às listas
         Objects.List.Items.Clear();
-
-        // Adiciona os itens às listas
-        for (byte i = 1; i < Lists.Class.Length; i++)
-        {
-            string Text = Globals.Numbering(i, Lists.Class.GetUpperBound(0), Lists.Class[i].Name);
-            Objects.List.Items.Add(Text);
-        }
-
-        // Seleciona os primeiros itens
+        for (byte i = 1; i < Lists.Class.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.Class.GetUpperBound(0), Lists.Class[i].Name));
         Objects.List.SelectedIndex = 0;
     }
 
     private void Update_Data()
     {
-        Selected = (byte)(List.SelectedIndex + 1);
-
         // Previne erros
-        if (Selected == 0) return;
+        if (List.SelectedIndex == -1) return;
 
         // Limpa os dados necessários
         lstMale.Items.Clear();
@@ -67,22 +56,22 @@ public partial class Editor_Classes : Form
         grpItem_Add.Visible = false;
 
         // Lista os dados
-        txtName.Text = Lists.Class[Selected].Name;
-        txtDescription.Text = Lists.Class[Selected].Description;
-        numHP.Value = Lists.Class[Selected].Vital[(byte)Globals.Vitals.HP];
-        numMP.Value = Lists.Class[Selected].Vital[(byte)Globals.Vitals.MP];
-        numStrength.Value = Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Strength];
-        numResistance.Value = Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Resistance];
-        numIntelligence.Value = Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Intelligence];
-        numAgility.Value = Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Agility];
-        numVitality.Value = Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Vitality];
-        numSpawn_Map.Value = Lists.Class[Selected].Spawn_Map;
-        cmbSpawn_Direction.SelectedIndex = Lists.Class[Selected].Spawn_Direction;
-        numSpawn_X.Value = Lists.Class[Selected].Spawn_X;
-        numSpawn_Y.Value = Lists.Class[Selected].Spawn_Y;
-        for (byte i = 0; i < Lists.Class[Selected].Tex_Male.Count; i++) lstMale.Items.Add(Lists.Class[Selected].Tex_Male[i]);
-        for (byte i = 0; i < Lists.Class[Selected].Tex_Female.Count; i++) lstFemale.Items.Add(Lists.Class[Selected].Tex_Female[i]);
-        for (byte i = 0; i < Lists.Class[Selected].Item.Count; i++) lstItems.Items.Add(Globals.Numbering(Lists.Class[Selected].Item[i].Item1, Lists.Item.GetUpperBound(0), Lists.Item[Lists.Class[Selected].Item[i].Item1].Name + " [" + Lists.Class[Selected].Item[i].Item2 + "x]"));
+        txtName.Text = Selected.Name;
+        txtDescription.Text = Selected.Description;
+        numHP.Value = Selected.Vital[(byte)Globals.Vitals.HP];
+        numMP.Value = Selected.Vital[(byte)Globals.Vitals.MP];
+        numStrength.Value = Selected.Attribute[(byte)Globals.Attributes.Strength];
+        numResistance.Value = Selected.Attribute[(byte)Globals.Attributes.Resistance];
+        numIntelligence.Value = Selected.Attribute[(byte)Globals.Attributes.Intelligence];
+        numAgility.Value = Selected.Attribute[(byte)Globals.Attributes.Agility];
+        numVitality.Value = Selected.Attribute[(byte)Globals.Attributes.Vitality];
+        numSpawn_Map.Value = Selected.Spawn_Map;
+        cmbSpawn_Direction.SelectedIndex = Selected.Spawn_Direction;
+        numSpawn_X.Value = Selected.Spawn_X;
+        numSpawn_Y.Value = Selected.Spawn_Y;
+        for (byte i = 0; i < Selected.Tex_Male.Count; i++) lstMale.Items.Add(Selected.Tex_Male[i]);
+        for (byte i = 0; i < Selected.Tex_Female.Count; i++) lstFemale.Items.Add(Selected.Tex_Female[i]);
+        for (byte i = 0; i < Selected.Item.Count; i++) lstItems.Items.Add(Globals.Numbering(Selected.Item[i].Item1, Lists.Item.GetUpperBound(0), Lists.Item[Selected.Item[i].Item1].Name + " [" + Selected.Item[i].Item2 + "x]"));
 
         // Seleciona os primeiros itens
         if (lstMale.Items.Count > 0) lstMale.SelectedIndex = 0;
@@ -109,6 +98,7 @@ public partial class Editor_Classes : Form
     private void List_SelectedIndexChanged(object sender, EventArgs e)
     {
         // Atualiza a lista
+        Selected = Lists.Class[List.SelectedIndex + 1];
         Update_Data();
     }
 
@@ -125,10 +115,10 @@ public partial class Editor_Classes : Form
     private void butClear_Click(object sender, EventArgs e)
     {
         // Limpa os dados
-        Clear.Class(Selected);
+        Clear.Class((byte)(List.SelectedIndex + 1));
 
         // Atualiza os valores
-        List.Items[Selected - 1] = Globals.Numbering(Selected, List.Items.Count, string.Empty);
+        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, string.Empty);
         Update_Data();
     }
 
@@ -148,54 +138,43 @@ public partial class Editor_Classes : Form
     private void txtName_Validated(object sender, EventArgs e)
     {
         // Atualiza a lista
-        if (Selected > 0)
-        {
-            Lists.Class[Selected].Name = txtName.Text;
-            string Text = Globals.Numbering(Selected, List.Items.Count, txtName.Text);
-            List.Items[Selected - 1] = Text;
-        }
+        Selected.Name = txtName.Text;
+        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, txtName.Text);
     }
 
     private void numHP_ValueChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Vital[(byte)Globals.Vitals.HP] = (short)numHP.Value;
+        Selected.Vital[(byte)Globals.Vitals.HP] = (short)numHP.Value;
     }
 
     private void numMP_ValueChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Vital[(byte)Globals.Vitals.MP] = (short)numMP.Value;
+        Selected.Vital[(byte)Globals.Vitals.MP] = (short)numMP.Value;
     }
 
     private void numStrength_ValueChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Strength] = (short)numStrength.Value;
+        Selected.Attribute[(byte)Globals.Attributes.Strength] = (short)numStrength.Value;
     }
 
     private void numResistance_ValueChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Resistance] = (short)numResistance.Value;
+        Selected.Attribute[(byte)Globals.Attributes.Resistance] = (short)numResistance.Value;
     }
 
     private void numIntelligence_ValueChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Intelligence] = (short)numIntelligence.Value;
+        Selected.Attribute[(byte)Globals.Attributes.Intelligence] = (short)numIntelligence.Value;
     }
 
     private void numAgility_ValueChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Agility] = (short)numAgility.Value;
+        Selected.Attribute[(byte)Globals.Attributes.Agility] = (short)numAgility.Value;
     }
 
     private void numVitality_ValueChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Attribute[(byte)Globals.Attributes.Vitality] = (short)numVitality.Value;
+        Selected.Attribute[(byte)Globals.Attributes.Vitality] = (short)numVitality.Value;
     }
 
     private void butMTexture_Click(object sender, EventArgs e)
@@ -204,7 +183,7 @@ public partial class Editor_Classes : Form
         short Texture_Num = Preview.Select(Graphics.Tex_Character, 0);
         if (Texture_Num != 0)
         {
-            Lists.Class[Selected].Tex_Male.Add(Texture_Num);
+            Selected.Tex_Male.Add(Texture_Num);
             lstMale.Items.Add(Texture_Num);
         }
     }
@@ -215,7 +194,7 @@ public partial class Editor_Classes : Form
         short Texture_Num = Preview.Select(Graphics.Tex_Character, 0);
         if (Texture_Num != 0)
         {
-            Lists.Class[Selected].Tex_Female.Add(Texture_Num);
+            Selected.Tex_Female.Add(Texture_Num);
             lstFemale.Items.Add(Texture_Num);
         }
     }
@@ -227,7 +206,7 @@ public partial class Editor_Classes : Form
         if (Selected_Item != -1)
         {
             lstMale.Items.RemoveAt(Selected_Item);
-            Lists.Class[Selected].Tex_Male.RemoveAt(Selected_Item);
+            Selected.Tex_Male.RemoveAt(Selected_Item);
         }
     }
 
@@ -238,38 +217,33 @@ public partial class Editor_Classes : Form
         if (Selected_Item != -1)
         {
             lstFemale.Items.RemoveAt(Selected_Item);
-            Lists.Class[Selected].Tex_Female.RemoveAt(Selected_Item);
+            Selected.Tex_Female.RemoveAt(Selected_Item);
         }
     }
 
     private void numSpawn_Map_ValueChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Spawn_Map = (short)numSpawn_Map.Value;
+        Selected.Spawn_Map = (short)numSpawn_Map.Value;
     }
 
     private void cmbSpawn_Direction_SelectedIndexChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Spawn_Direction = (byte)cmbSpawn_Direction.SelectedIndex;
+        Selected.Spawn_Direction = (byte)cmbSpawn_Direction.SelectedIndex;
     }
 
     private void numSpawn_X_ValueChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Spawn_X = (byte)numSpawn_X.Value;
+        Selected.Spawn_X = (byte)numSpawn_X.Value;
     }
 
     private void numSpawn_Y_ValueChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Spawn_Y = (byte)numSpawn_Y.Value;
+        Selected.Spawn_Y = (byte)numSpawn_Y.Value;
     }
 
-    private void txtDescription_Validated(object sender, EventArgs e)
+    private void txtDescription_TextChanged(object sender, EventArgs e)
     {
-        // Define o valor
-        Lists.Class[Selected].Description = txtDescription.Text;
+        Selected.Description = txtDescription.Text;
     }
 
     private void butItem_Add_Click(object sender, EventArgs e)
@@ -286,7 +260,7 @@ public partial class Editor_Classes : Form
         if (cmbItems.SelectedIndex >= 0)
         {
             lstItems.Items.Add(Globals.Numbering(cmbItems.SelectedIndex + 1, Lists.Item.GetUpperBound(0), Lists.Item[cmbItems.SelectedIndex + 1].Name + " [" + numItem_Amount.Value + "x]"));
-            Lists.Class[Selected].Item.Add(new Tuple<short, short>((short)(cmbItems.SelectedIndex + 1), (short)numItem_Amount.Value));
+            Selected.Item.Add(new Tuple<short, short>((short)(cmbItems.SelectedIndex + 1), (short)numItem_Amount.Value));
             grpItem_Add.Visible = false;
         }
     }
@@ -298,7 +272,7 @@ public partial class Editor_Classes : Form
         if (Selected_Item != -1)
         {
             lstItems.Items.RemoveAt(Selected_Item);
-            Lists.Class[Selected].Item.RemoveAt(Selected_Item);
+            Selected.Item.RemoveAt(Selected_Item);
         }
     }
 
