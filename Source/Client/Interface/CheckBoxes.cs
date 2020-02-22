@@ -21,8 +21,7 @@ class CheckBoxes
         {
             // Tamanho do marcador
             Size Texture_Size = Graphics.TSize(Graphics.Tex_CheckBox);
-            int Text_Width = Tools.MeasureString(Text);
-            Size Box = new Size(Texture_Size.Width / 2 + Text_Width + Margin, Texture_Size.Height);
+            Size Box = new Size(Texture_Size.Width / 2 + Tools.MeasureString(Text) + Margin, Texture_Size.Height);
 
             // Somente se estiver sobrepondo a ferramenta
             if (!Tools.IsAbove(new Rectangle(Position, Box))) return;
@@ -38,12 +37,8 @@ class CheckBoxes
 
     public static Structure Get(string Name)
     {
-        // Lista os nomes das ferramentas
-        for (byte i = 0; i < List.Count; i++)
-            if (List[i].Name.Equals(Name))
-                return List[i];
-
-        return null;
+        // Retorna a caixa de marcação procurada
+        return List.Find(x => x.Name.Equals(Name));
     }
 
     private static void Execute(string Name)

@@ -64,12 +64,8 @@ class TextBoxes
 
     public static Structure Get(string Name)
     {
-        // Lista os nomes das ferramentas
-        for (byte i = 0; i < List.Count; i++)
-            if (List[i].Name.Equals(Name))
-                return List[i];
-
-        return null;
+        // Retorna a caixa de texto procurada
+        return List.Find(x => x.Name.Equals(Name));
     }
 
     public static void Focus()

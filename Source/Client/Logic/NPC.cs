@@ -77,7 +77,7 @@ partial class Receive
     private static void NPCs(NetIncomingMessage Data)
     {
         // Quantidade
-        Lists.NPC = new Lists.Structures.NPCs[Data.ReadInt16() + 1];
+        Lists.NPC = new Lists.Structures.NPCs[Data.ReadInt16()];
 
         // Lê os dados de todos
         for (byte i = 1; i < Lists.NPC.Length; i++)
@@ -98,7 +98,7 @@ partial class Receive
     private static void Map_NPCs(NetIncomingMessage Data)
     {
         // Lê os dados
-        Lists.Temp_Map.NPC = new Lists.Structures.Map_NPCs[Data.ReadInt16() + 1];
+        Lists.Temp_Map.NPC = new Lists.Structures.Map_NPCs[Data.ReadInt16()];
         for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
         {
             Lists.Temp_Map.NPC[i].X2 = 0;

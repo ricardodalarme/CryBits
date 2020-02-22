@@ -17,10 +17,8 @@ class Buttons
 
         public void MouseUp()
         {
-            SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
-
             // Somente se necessário
-            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture)))) return;
+            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
 
             // Altera o estado do botão
             Audio.Sound.Play(Audio.Sounds.Click);
@@ -32,11 +30,9 @@ class Buttons
 
         public void MouseDown(MouseButtonEventArgs e)
         {
-            SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
-
             // Somente se necessário
             if (e.Button == SFML.Window.Mouse.Button.Right) return;
-            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture)))) return;
+            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
 
             // Altera o estado do botão
             State = States.Click;
@@ -44,10 +40,8 @@ class Buttons
 
         public void MouseMove()
         {
-            SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
-
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture))))
+            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num]))))
             {
                 State = States.Normal;
                 return;
@@ -72,12 +66,8 @@ class Buttons
 
     public static Structure Get(string Name)
     {
-        // Lista os nomes das ferramentas
-        for (byte i = 0; i < List.Count; i++)
-            if (List[i].Name.Equals(Name))
-                return List[i];
-
-        return null;
+        // Retorna o botão procurado
+        return List.Find(x => x.Name.Equals(Name));
     }
 
     private static void Execute(string Name)

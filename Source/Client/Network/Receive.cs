@@ -363,7 +363,7 @@ partial class Receive
     private static void Items(NetIncomingMessage Data)
     {
         // Quantidade de itens
-        Lists.Item = new Lists.Structures.Items[Data.ReadInt16() + 1];
+        Lists.Item = new Lists.Structures.Items[Data.ReadInt16()];
 
         for (short i = 1; i < Lists.Item.Length; i++)
         {

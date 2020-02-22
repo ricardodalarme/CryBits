@@ -19,9 +19,9 @@ class Program
         Game.OpenMenu();
 
         // Inicializa todos os dispositivos
-        Graphics.Init();
-        Audio.Sound.Load();
         Socket.Init();
+        Audio.Sound.Load();
+        Graphics.Init();
 
         // Inicia a aplicação
         Loop.Init();

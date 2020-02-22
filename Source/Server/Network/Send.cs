@@ -579,7 +579,7 @@ class Send
         // Envia os dados
         if (Lists.Temp_Player[Index].InEditor) Data.Write((byte)Editor_Packets.Items);
         else Data.Write((byte)Client_Packets.Items);
-        Data.Write((short)Lists.Item.GetUpperBound(0));
+        Data.Write((short)Lists.Item.Length);
         for (short i = 1; i < Lists.Item.Length; i++)
         {
             Data.Write(Lists.Item[i].Name);
@@ -675,7 +675,7 @@ class Send
         // Envia os dados
         if (Lists.Temp_Player[Index].InEditor) Data.Write((byte)Editor_Packets.NPCs);
         else Data.Write((byte)Client_Packets.NPCs);
-        Data.Write((short)Lists.NPC.GetUpperBound(0));
+        Data.Write((short)Lists.NPC.Length);
         for (byte i = 1; i < Lists.NPC.Length; i++)
         {
             // Geral
@@ -716,7 +716,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPCs);
-        Data.Write((short)Lists.Temp_Map[Map_Num].NPC.GetUpperBound(0));
+        Data.Write((short)Lists.Temp_Map[Map_Num].NPC.Length);
         for (byte i = 1; i < Lists.Temp_Map[Map_Num].NPC.Length; i++)
         {
             Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Index);

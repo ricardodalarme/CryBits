@@ -202,7 +202,7 @@ partial class Receive
     private static void NPCs(NetIncomingMessage Data)
     {
         // Quantidade de nocs
-        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16() + 1];
+        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16()];
 
         for (short i = 1; i < Lists.NPC.Length; i++)
         {
@@ -238,7 +238,7 @@ partial class Receive
     private static void Items(NetIncomingMessage Data)
     {
         // Quantidade de itens
-        Lists.Item = new Lists.Structures.Item[Data.ReadInt16() + 1];
+        Lists.Item = new Lists.Structures.Item[Data.ReadInt16()];
 
         for (short i = 1; i < Lists.Item.Length; i++)
         {
