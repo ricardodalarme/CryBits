@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SFML.Graphics;
+using System.Collections.Generic;
 
 class Chat
 {
@@ -15,10 +16,10 @@ class Chat
     public class Structure
     {
         public string Text;
-        public SFML.Graphics.Color Color;
+        public Color Color;
     }
 
-    private static void AddLine(string Text, SFML.Graphics.Color Color)
+    private static void AddLine(string Text, Color Color)
     {
         Order.Add(new Structure());
         int i = Order.Count - 1;
@@ -36,7 +37,7 @@ class Chat
         Text_Visible = true;
     }
 
-    public static void AddText(string Message, SFML.Graphics.Color Color)
+    public static void AddText(string Message, Color Color)
     {
         int Message_Width, Box_Width = Graphics.TSize(Graphics.Tex_Panel[Panels.Get("Chat").Texture_Num]).Width - 16;
         string Temp_Message;
@@ -118,7 +119,7 @@ class Chat
                 {
                     // Previne erros 
                     if (Parts.GetUpperBound(0) < 1)
-                        AddText("Use: '!' + Addressee + 'Message'", SFML.Graphics.Color.White);
+                        AddText("Use: '!' + Addressee + 'Message'", Color.White);
                     else
                     {
                         // Dados
