@@ -104,7 +104,7 @@ class CheckBoxes
     private static void Chat()
     {
         // Desabilita a prévia do chat
-        Lists.Options.Chat = Tools.Chat_Text_Visible = Get("Options_Chat").Checked;
+        Lists.Options.Chat = global::Chat.Text_Visible = Get("Options_Chat").Checked;
         Write.Options();
     }
 }

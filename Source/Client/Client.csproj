@@ -65,6 +65,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interface\Chat.cs" />
     <Compile Include="Interface\Window.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Interface\Buttons.cs" />

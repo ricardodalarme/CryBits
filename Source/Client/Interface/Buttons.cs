@@ -288,15 +288,15 @@ class Buttons
     private static void Chat_Up()
     {
         // Sobe as linhas do chat
-        if (Tools.Chat_Line > 0)
-            Tools.Chat_Line -= 1;
+        if (Chat.Lines_First > 0)
+            Chat.Lines_First -= 1;
     }
 
     private static void Chat_Down()
     {
         // Sobe as linhas do chat
-        if (Tools.Chat.Count - 1 - Tools.Chat_Line - Tools.Chat_Lines_Visible > 0)
-            Tools.Chat_Line += 1;
+        if (Chat.Order.Count - 1 - Chat.Lines_First - Chat.Lines_Visible > 0)
+            Chat.Lines_First += 1;
     }
 
     private static void Menu_Character()

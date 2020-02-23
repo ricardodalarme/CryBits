@@ -641,10 +641,10 @@ partial class Graphics
         Tool.Visible = TextBoxes.Focused != null && ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
 
         // Renderiza as mensagens
-        if (Tool.Visible || (Tools.Chat_Text_Visible && Lists.Options.Chat))
-            for (byte i = Tools.Chat_Line; i <= Tools.Chat_Lines_Visible + Tools.Chat_Line; i++)
-                if (Tools.Chat.Count > i)
-                    DrawText(Tools.Chat[i].Text, 16, 461 + 11 * (i - Tools.Chat_Line), Tools.Chat[i].Color);
+        if (Tool.Visible || (Chat.Text_Visible && Lists.Options.Chat))
+            for (byte i = Chat.Lines_First; i <= Chat.Lines_Visible + Chat.Lines_First; i++)
+                if (Chat.Order.Count > i)
+                    DrawText(Chat.Order[i].Text, 16, 461 + 11 * (i - Chat.Lines_First), Chat.Order[i].Color);
 
         // Dica de como abrir o chat
         if (!Tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.Get("Chat").Position.X + 5, TextBoxes.Get("Chat").Position.Y + 3, SFML.Graphics.Color.White);

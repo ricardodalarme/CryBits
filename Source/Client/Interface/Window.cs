@@ -147,7 +147,7 @@ class Window
         if (Tools.CurrentWindow == Tools.Windows.Game)
             switch (e.Code)
             {
-                case Keyboard.Key.Enter: TextBoxes.Chat_Type(); break;
+                case Keyboard.Key.Enter: Chat.Type(); break;
                 case Keyboard.Key.Space: Player.CollectItem(); break;
                 case Keyboard.Key.Num1: Send.Hotbar_Use(1); break;
                 case Keyboard.Key.Num2: Send.Hotbar_Use(2); break;

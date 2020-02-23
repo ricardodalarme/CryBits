@@ -75,10 +75,10 @@ class Loop
         }
 
         // Chat
-        if ((Tools.Chat_Text_Visible && !Panels.Get("Chat").Visible))
+        if ((Chat.Text_Visible && !Panels.Get("Chat").Visible))
         {
             if (Chat_Timer < Environment.TickCount)
-                Tools.Chat_Text_Visible = false;
+                Chat.Text_Visible = false;
         }
         else if (!Lists.Options.Chat)
             Chat_Timer = Chat_Timer = Environment.TickCount + 10000;

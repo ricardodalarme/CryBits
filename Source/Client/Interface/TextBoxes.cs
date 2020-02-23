@@ -32,7 +32,7 @@ class TextBoxes
             // Altera o foco do digitalizador
             if (((Structure)Order.Data).Name.Equals("Chat"))
             {
-                Tools.Chat_Text_Visible = true;
+                Chat.Text_Visible = true;
                 Panels.Get("Chat").Visible = true;
             }
         }
@@ -112,79 +112,6 @@ class TextBoxes
                 return;
             }
             Temp++;
-        }
-    }
-
-    public static void Chat_Type()
-    {
-        Structure Tool = Get("Chat");
-        Panels.Structure Panel = Panels.Get("Chat");
-
-        // Somente se necessário
-        if (!Player.IsPlaying(Player.MyIndex)) return;
-
-        // Altera a visiblidade da caixa
-        Panel.Visible = !Panel.Visible;
-
-        // Altera o foco do digitalizador
-        if (Panel.Visible)
-        {
-            Tools.Chat_Text_Visible = true;
-            Focused = Tools.Get(Tool);
-            return;
-        }
-        else
-            Focused = null;
-
-        // Dados
-        string Message = Tool.Text;
-
-        // Somente se necessário
-        if (Message.Length < 3)
-        {
-            Tool.Text = string.Empty;
-            return;
-        }
-
-        // Limpa a caixa de texto
-        Tool.Text = string.Empty;
-
-        // Separa as mensagens em partes
-        string[] Parts = Message.Split(' ');
-
-        // Comandos
-        switch (Parts[0].ToLower())
-        {
-            case "/party":
-                if (Parts.Length > 1) Send.Party_Invite(Parts[1]);
-                break;
-            case "/partyleave":
-                Send.Party_Leave();
-                break;
-            default:
-                // Mensagem lobal
-                if (Message.Substring(0, 1) == "'")
-                    Send.Message(Message.Substring(1), Game.Messages.Global);
-                // Mensagem particular
-                else if (Message.Substring(0, 1) == "!")
-                {
-                    // Previne erros 
-                    if (Parts.GetUpperBound(0) < 1)
-                        Tools.Chat_Add("Use: '!' + Addressee + 'Message'", SFML.Graphics.Color.White);
-                    else
-                    {
-                        // Dados
-                        string Destiny = Message.Substring(1, Parts[0].Length - 1);
-                        Message = Message.Substring(Parts[0].Length + 1);
-
-                        // Envia a mensagem
-                        Send.Message(Message, Game.Messages.Private, Destiny);
-                    }
-                }
-                // Mensagem mapa
-                else
-                    Send.Message(Message, Game.Messages.Map);
-                break;
         }
     }
 }

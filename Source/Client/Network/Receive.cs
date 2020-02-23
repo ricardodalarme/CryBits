@@ -178,12 +178,12 @@ partial class Receive
     private static void JoinGame()
     {
         // Reseta os valores
-        Tools.Chat = new System.Collections.Generic.List<Tools.Chat_Structure>();
-        Tools.Chat_Line = 0;
+        Chat.Order = new System.Collections.Generic.List<Chat.Structure>();
+        Chat.Lines_First = 0;
         TextBoxes.Get("Chat").Text = string.Empty;
         CheckBoxes.Get("Options_Sounds").Checked = Lists.Options.Sounds;
         CheckBoxes.Get("Options_Musics").Checked = Lists.Options.Musics;
-        CheckBoxes.Get("Options_Chat").Checked = Tools.Chat_Text_Visible = Lists.Options.Chat;
+        CheckBoxes.Get("Options_Chat").Checked = Chat.Text_Visible = Lists.Options.Chat;
         Game.Need_Information = 0;
         Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
         Player.Me.Party = new byte[0];
@@ -357,7 +357,7 @@ partial class Receive
         // Adiciona a mensagem
         string Text = Data.ReadString();
         Color Color = Color.FromArgb(Data.ReadInt32());
-        Tools.Chat_Add(Text, new SFML.Graphics.Color(Color.R, Color.G, Color.B));
+        Chat.AddText(Text, new SFML.Graphics.Color(Color.R, Color.G, Color.B));
     }
 
     private static void Items(NetIncomingMessage Data)
