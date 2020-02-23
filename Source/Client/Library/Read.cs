@@ -15,25 +15,19 @@ class Read
     {
         // Cria o arquivo se ele não existir
         if (!Directories.Options.Exists)
+        {
             Clear.Options();
+            Write.Options();
+        }
+        // Lê os dados
         else
         {
-            // Cria um arquivo temporário
-            BinaryReader File = new BinaryReader(System.IO.File.OpenRead(Directories.Options.FullName));
-
-            // Carrega os dados
-            Lists.Options.Game_Name = File.ReadString();
-            Lists.Options.Username = File.ReadString();
-            Lists.Options.SaveUsername = File.ReadBoolean();
-            Lists.Options.Sounds = File.ReadBoolean();
-            Lists.Options.Musics = File.ReadBoolean();
-            Lists.Options.Chat = File.ReadBoolean();
-
-            // Descarrega o arquivo
-            File.Dispose();
+            FileStream Stream = Directories.Options.OpenRead();
+            Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);
+            Stream.Close();
         }
 
-        // Adiciona os dados ao cache
+        // Eventos
         CheckBoxes.Get("Connect_Save_Username").Checked = Lists.Options.SaveUsername;
         if (Lists.Options.SaveUsername) TextBoxes.Get("Connect_Username").Text = Lists.Options.Username;
     }
@@ -98,13 +92,9 @@ class Read
         FileInfo File = new FileInfo(Directories.Tools_Data.FullName);
         for (byte i = 0; i < (byte)global::Tools.Windows.Count; i++) global::Tools.All_Order[i] = new List<Tools.Order_Structure>();
 
-        // Cria um sistema binário para a manipulação dos dados
+        // Lê todas as ferramentas
         BinaryReader Data = new BinaryReader(File.OpenRead());
-
-        // Lê todos os nós
         for (byte n = 0; n < global::Tools.All_Order.Length; n++) Tools(null, ref global::Tools.All_Order[n], Data);
-
-        // Fecha o sistema
         Data.Dispose();
     }
 

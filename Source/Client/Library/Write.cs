@@ -5,19 +5,10 @@ class Write
 {
     public static void Options()
     {
-        // Cria um arquivo temporário
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite(Directories.Options.FullName));
-
-        // Carrega todas as opções
-        Data.Write(Lists.Options.Game_Name);
-        Data.Write(Lists.Options.Username);
-        Data.Write(Lists.Options.SaveUsername);
-        Data.Write(Lists.Options.Sounds);
-        Data.Write(Lists.Options.Musics);
-        Data.Write(Lists.Options.Chat);
-
-        // Fecha o arquivo
-        Data.Dispose();
+        // Escreve os dados
+        FileStream Stream = new FileInfo(Directories.Options.FullName).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Lists.Options);
+        Stream.Close();
     }
 
     public static void Map(short Index)

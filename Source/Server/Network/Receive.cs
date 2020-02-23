@@ -98,12 +98,12 @@ class Receive
                 case Editor_Packets.Write_NPCs: Write_NPCs(Index, Data); break;
                 case Editor_Packets.Write_Items: Write_Items(Index, Data); break;
                 case Editor_Packets.Request_Server_Data: Request_Server_Data(Index, Data); break;
-                case Editor_Packets.Request_Classes: Request_Classes(Index, Data); break;
-                case Editor_Packets.Request_Tiles: Request_Tiles(Index, Data); break;
+                case Editor_Packets.Request_Classes: Request_Classes(Index); break;
+                case Editor_Packets.Request_Tiles: Request_Tiles(Index); break;
                 case Editor_Packets.Request_Map: Request_Map(Index, Data); break;
                 case Editor_Packets.Request_Maps: Request_Maps(Index, Data); break;
-                case Editor_Packets.Request_NPCs: Request_NPCs(Index, Data); break;
-                case Editor_Packets.Request_Items: Request_Items(Index, Data); break;
+                case Editor_Packets.Request_NPCs: Request_NPCs(Index); break;
+                case Editor_Packets.Request_Items: Request_Items(Index); break;
             }
     }
 
@@ -816,12 +816,12 @@ class Receive
         Send.Server_Data(Index);
     }
 
-    private static void Request_Classes(byte Index, NetIncomingMessage Data)
+    private static void Request_Classes(byte Index)
     {
         Send.Classes(Index);
     }
 
-    private static void Request_Tiles(byte Index, NetIncomingMessage Data)
+    private static void Request_Tiles(byte Index)
     {
         Send.Tiles(Index);
     }
@@ -836,12 +836,12 @@ class Receive
         Send.Maps(Index, Data.ReadBoolean());
     }
 
-    private static void Request_NPCs(byte Index, NetIncomingMessage Data)
+    private static void Request_NPCs(byte Index)
     {
         Send.NPCs(Index);
     }
 
-    private static void Request_Items(byte Index, NetIncomingMessage Data)
+    private static void Request_Items(byte Index)
     {
         Send.Items(Index);
     }

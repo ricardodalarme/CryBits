@@ -31,7 +31,7 @@ class Buttons
         public void MouseDown(MouseButtonEventArgs e)
         {
             // Somente se necessário
-            if (e.Button == SFML.Window.Mouse.Button.Right) return;
+            if (e.Button == Mouse.Button.Right) return;
             if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
 
             // Altera o estado do botão
@@ -111,12 +111,8 @@ class Buttons
 
     public static bool Characters_Change_Buttons()
     {
-        bool Visibility = true;
-
-        // Verifica apenas se o painel for visível
-        if (Lists.Characters == null || Lists.Characters[Game.SelectCharacter].Class == 0) Visibility = false;
-
         // Altera os botões visíveis
+        bool Visibility = Lists.Characters != null && Lists.Characters[Game.SelectCharacter].Class > 0;
         Get("Character_Create").Visible = !Visibility;
         Get("Character_Delete").Visible = Visibility;
         Get("Character_Use").Visible = Visibility;

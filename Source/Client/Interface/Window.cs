@@ -24,13 +24,13 @@ class Window
             if (Tools.CurrentWindow == Tools.Windows.Game)
             {
                 // Usar item
-                byte Slot = Tools.Inventory_Mouse();
+                byte Slot = Panels.Inventory_Mouse();
                 if (Slot > 0)
                     if (Player.Inventory[Slot].Item_Num > 0)
                         Send.Inventory_Use(Slot);
 
                 // Usar o que estiver na hotbar
-                Slot = Tools.Hotbar_Mouse();
+                Slot = Panels.Hotbar_Mouse();
                 if (Slot > 0)
                     if (Player.Hotbar[Slot].Slot > 0)
                         Send.Hotbar_Use(Slot);
@@ -58,9 +58,9 @@ class Window
             // Eventos em jogo
             if (Tools.CurrentWindow == Tools.Windows.Game)
             {
-                Tools.Inventory_MouseDown(e);
-                Tools.Equipment_MouseDown(e);
-                Tools.Hotbar_MouseDown(e);
+                Panels.Inventory_MouseDown(e);
+                Panels.Equipment_MouseDown(e);
+                Panels.Hotbar_MouseDown(e);
             }
         }
     }
@@ -93,14 +93,14 @@ class Window
         {
             // Muda o slot do item
             if (Player.Inventory_Change > 0)
-                if (Tools.Inventory_Mouse() > 0)
-                    Send.Inventory_Change(Player.Inventory_Change, Tools.Inventory_Mouse());
+                if (Panels.Inventory_Mouse() > 0)
+                    Send.Inventory_Change(Player.Inventory_Change, Panels.Inventory_Mouse());
 
             // Muda o slot da hotbar
-            if (Tools.Hotbar_Mouse() > 0)
+            if (Panels.Hotbar_Mouse() > 0)
             {
-                if (Player.Hotbar_Change > 0) Send.Hotbar_Change(Player.Hotbar_Change, Tools.Hotbar_Mouse());
-                if (Player.Inventory_Change > 0) Send.Hotbar_Add(Tools.Hotbar_Mouse(), (byte)Game.Hotbar.Item, Player.Inventory_Change);
+                if (Player.Hotbar_Change > 0) Send.Hotbar_Change(Player.Hotbar_Change, Panels.Hotbar_Mouse());
+                if (Player.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Mouse(), (byte)Game.Hotbar.Item, Player.Inventory_Change);
             }
 
             // Reseta a movimentação
