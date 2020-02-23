@@ -6,7 +6,7 @@ class Tools
     // Posição do ponteiro do mouse
     public static Point Mouse;
 
-    // Janela que está focada
+    // Janela que está aberta
     public static Windows CurrentWindow;
 
     // Chat
@@ -94,7 +94,7 @@ class Tools
     public static Order_Structure Get(Structure Tool)
     {
         // Percorre toda a árvore de ordem para encontrar a ferramenta
-        Stack<List<Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
+        Stack<List<Order_Structure>> Stack = new Stack<List<Order_Structure>>();
         for (byte i = 0; i < All_Order.Length; i++) Stack.Push(All_Order[i]);
         while (Stack.Count != 0)
         {
@@ -102,8 +102,7 @@ class Tools
 
             for (byte i = 0; i < Top.Count; i++)
             {
-                if (Top[i].Data == Tool)
-                    return Top[i];
+                if (Top[i].Data == Tool) return Top[i];
                 Stack.Push(Top[i].Nodes);
             }
         }
@@ -121,13 +120,12 @@ class Tools
     public static string TextBreak(string Text, int Width)
     {
         // Previne sobrecargas
-        if (string.IsNullOrEmpty(Text))
-            return Text;
+        if (string.IsNullOrEmpty(Text)) return Text;
 
-        // Usado para fazer alguns calculos
+        // Usado para fazer alguns calculosk
         int Text_Width = MeasureString(Text);
 
-        // Diminui o tamanho do texto até que ele possa caber no digitalizador
+        // Diminui o tamanho do texto até que ele caiba no digitalizador
         while (Text_Width - Width >= 0)
         {
             Text = Text.Substring(1);
@@ -158,7 +156,7 @@ class Tools
     public static void Chat_Add(string Message, SFML.Graphics.Color Color)
     {
         int Message_Width, Box_Width = Graphics.TSize(Graphics.Tex_Panel[Panels.Get("Chat").Texture_Num]).Width - 16;
-        string Temp_Message; int Split;
+        string Temp_Message;
 
         // Remove os espaços
         Message = Message.Trim();
@@ -168,17 +166,8 @@ class Tools
         if (Message_Width < Box_Width)
             Chat_AddLine(Message, Color);
         else
-        {
             for (int i = 0; i <= Message.Length; i++)
             {
-                // Verifica se o próximo caráctere é um separável 
-                switch (Message[i])
-                {
-                    case '-':
-                    case '_':
-                    case ' ': Split = i; break;
-                }
-
                 Temp_Message = Message.Substring(0, i);
 
                 // Adiciona o texto à caixa
@@ -189,6 +178,5 @@ class Tools
                     return;
                 }
             }
-        }
     }
 }
