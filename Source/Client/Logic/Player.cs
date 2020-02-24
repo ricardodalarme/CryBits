@@ -34,7 +34,7 @@ class Player
     public static bool IsPlaying(byte Index)
     {
         // Verifica se o jogador está dentro do jogo
-        return MyIndex > 0 && !string.IsNullOrEmpty(Lists.Player[Index].Name)
+        return MyIndex > 0 && !string.IsNullOrEmpty(Lists.Player[Index].Name);
     }
 
     public static void Logic()

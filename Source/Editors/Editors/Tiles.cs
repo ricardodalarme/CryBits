@@ -103,15 +103,12 @@ public partial class Editor_Tiles : Form
         }
         // Bloqueio direcional
         else if (optDirBlock.Checked)
-        {
             for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
                 if (Tile_Dif.X >= Globals.Block_Position(i).X && Tile_Dif.X <= Globals.Block_Position(i).X + 8)
                     if (Tile_Dif.Y >= Globals.Block_Position(i).Y && Tile_Dif.Y <= Globals.Block_Position(i).Y + 8)
                         if (Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Attribute != (byte)Globals.Tile_Attributes.Block)
                             // Altera o valor de bloqueio
                             Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i] = !Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i];
-        }
-
     }
 
     private void optBlock_CheckedChanged(object sender, EventArgs e)
