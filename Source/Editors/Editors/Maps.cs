@@ -1459,10 +1459,7 @@ partial class Editor_Maps : Form
     public bool OutLimit(short Map_Num, short x, short y)
     {
         // Verifica se as coordenas estão no limite do mapa
-        if (x > Lists.Map[Map_Num].Width || y > Lists.Map[Map_Num].Height || x < 0 || y < 0)
-            return true;
-        else
-            return false;
+        return x > Lists.Map[Map_Num].Width || y > Lists.Map[Map_Num].Height || x < 0 || y < 0;
     }
 
     public static Size Map_Size

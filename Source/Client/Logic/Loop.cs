@@ -29,9 +29,10 @@ class Loop
 
             // Eventos
             TextBox();
-            Map.Logic();
 
             if (Player.MyIndex > 0 && Tools.CurrentWindow == Tools.Windows.Game)
+            {
+                Map.Logic();
                 if (Timer_30 < Environment.TickCount)
                 {
                     // Lógicas
@@ -41,6 +42,7 @@ class Loop
                     // Reinicia a contagem
                     Timer_30 = Environment.TickCount + 30;
                 }
+            }
 
             // Faz com que a aplicação se mantenha estável
             Application.DoEvents();

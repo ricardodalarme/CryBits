@@ -58,9 +58,6 @@ class Map
 
     public static void Logic()
     {
-        // Somente se necessário
-        if (Tools.CurrentWindow != Tools.Windows.Game) return;
-
         // Toda a lógica do mapa
         Fog();
         Weather();
@@ -86,31 +83,24 @@ class Map
     public static bool OutOfLimit(short x, short y)
     {
         // Verifica se as coordenas estão no limite do mapa
-        if (x > Lists.Map.Width || y > Lists.Map.Height || x < 0 || y < 0)
-            return true;
-        else
-            return false;
+        return x > Lists.Map.Width || y > Lists.Map.Height || x < 0 || y < 0;
     }
 
     public static bool Tile_Blocked(short Map, byte X, byte Y, Game.Directions Direction)
     {
-        short Próximo_X = X, Próximo_Y = Y;
+        short Next_X = X, Next_Y = Y;
 
         // Próximo azulejo
-        NextTile(Direction, ref Próximo_X, ref Próximo_Y);
+        NextTile(Direction, ref Next_X, ref Next_Y);
 
         // Verifica se está indo para uma ligação
-        if (OutOfLimit(Próximo_X, Próximo_Y))
-            if (Lists.Map.Link[(byte)Direction] == 0)
-                return true;
-            else
-                return false;
+        if (OutOfLimit(Next_X, Next_Y)) return Lists.Map.Link[(byte)Direction] == 0;
 
         // Verifica se o azulejo está bloqueado
-        if (Lists.Map.Tile[Próximo_X, Próximo_Y].Attribute == (byte)Layer_Attributes.Block) return true;
-        if (Lists.Map.Tile[Próximo_X, Próximo_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
+        if (Lists.Map.Tile[Next_X, Next_Y].Attribute == (byte)Layer_Attributes.Block) return true;
+        if (Lists.Map.Tile[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
         if (Lists.Map.Tile[X, Y].Block[(byte)Direction]) return true;
-        if (HasPlayer(Map, Próximo_X, Próximo_Y) > 0 || HasNPC(Próximo_X, Próximo_Y) > 0) return true;
+        if (HasPlayer(Map, Next_X, Next_Y) > 0 || HasNPC(Next_X, Next_Y) > 0) return true;
         return false;
     }
 

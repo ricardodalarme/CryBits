@@ -18,6 +18,7 @@ class Lists
     // Estrutura dos itens em gerais
     public class Structures
     {
+        [Serializable]
         public struct Options
         {
             public string Game_Name;

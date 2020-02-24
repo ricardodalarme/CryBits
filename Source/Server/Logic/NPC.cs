@@ -250,7 +250,7 @@ class NPC
     {
         short NPC_Index = Lists.Map[Map_Num].NPC[Index].Index;
 
-        // Previni erros
+        // Previne erros
         if (NPC_Index >= Lists.NPC.Length) return;
 
         // Define os dados

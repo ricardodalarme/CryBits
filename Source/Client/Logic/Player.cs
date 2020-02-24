@@ -34,10 +34,7 @@ class Player
     public static bool IsPlaying(byte Index)
     {
         // Verifica se o jogador está dentro do jogo
-        if (MyIndex > 0 && !string.IsNullOrEmpty(Lists.Player[Index].Name))
-            return true;
-        else
-            return false;
+        return MyIndex > 0 && !string.IsNullOrEmpty(Lists.Player[Index].Name)
     }
 
     public static void Logic()
@@ -47,7 +44,7 @@ class Player
         CheckAttack();
 
         // Lógica dos jogadores
-        for (byte i = 1; i <= Player.HigherIndex; i++)
+        for (byte i = 1; i <= HigherIndex; i++)
         {
             // Dano
             if (Lists.Player[i].Hurt + 325 < Environment.TickCount) Lists.Player[i].Hurt = 0;
@@ -60,10 +57,7 @@ class Player
     private static bool CanMove()
     {
         // Não mover se já estiver tentando movimentar-se
-        if (Lists.Player[MyIndex].Movement != Game.Movements.Stopped)
-            return false;
-
-        return true;
+        return Lists.Player[MyIndex].Movement == Game.Movements.Stopped;
     }
 
     private static void CheckMovement()
