@@ -79,9 +79,9 @@ public partial class Editor_NPCs : Form
         for (byte i = 0; i < Selected.Drop.Count; i++) lstDrop.Items.Add(Drop_String(Selected.Drop[i]));
         cmbMovement.SelectedIndex = (byte)Selected.Movement;
         numFlee_Health.Value = Selected.Flee_Helth;
+        chkAttackNPC.Checked = Selected.AttackNPC;
         for (byte i = 0; i < Selected.Allie.Count; i++) lstAllies.Items.Add(Globals.Numbering(Selected.Allie[i], Lists.NPC.GetUpperBound(0), Lists.NPC[Selected.Allie[i]].Name));
 
-        lstAllies.Update();
         // Seleciona os primeiros itens
         if (lstDrop.Items.Count > 0) lstDrop.SelectedIndex = 0;
     }
@@ -260,8 +260,7 @@ public partial class Editor_NPCs : Form
 
     private void chkAttackNPC_CheckedChanged(object sender, EventArgs e)
     {
-        Selected.AttackNPC = chkAttackNPC.Checked;
-        lstAllies.Enabled = chkAttackNPC.Checked;
+        Selected.AttackNPC = lstAllies.Enabled = chkAttackNPC.Checked;
     }
 
     private void butAllie_Add_Click(object sender, EventArgs e)

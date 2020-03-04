@@ -213,7 +213,7 @@ class Player
         return false;
     }
 
-    public static void Move(byte Index, byte Movimento)
+    public static void Move(byte Index, byte Movement)
     {
         byte x = Character(Index).X, y = Character(Index).Y;
         short Map_Num = Character(Index).Map;
@@ -222,7 +222,7 @@ class Player
         bool SecondMovement = false;
 
         // Previne erros
-        if (Movimento < 1 || Movimento > 2) return;
+        if (Movement < 1 || Movement > 2) return;
         if (Lists.Temp_Player[Index].GettingMap) return;
 
         // Próximo azulejo
@@ -234,10 +234,10 @@ class Player
             if (Link > 0)
                 switch (Character(Index).Direction)
                 {
-                    case Game.Directions.Up: Warp(Index, Link, x, Lists.Map[Map_Num].Height); break;
-                    case Game.Directions.Down: Warp(Index, Link, x, 0); break;
-                    case Game.Directions.Right: Warp(Index, Link, 0, y); break;
-                    case Game.Directions.Left: Warp(Index, Link, Lists.Map[Map_Num].Width, y); break;
+                    case Game.Directions.Up: Warp(Index, Link, x, Lists.Map[Map_Num].Height); return;
+                    case Game.Directions.Down: Warp(Index, Link, x, 0); return;
+                    case Game.Directions.Right: Warp(Index, Link, 0, y); return;
+                    case Game.Directions.Left: Warp(Index, Link, Lists.Map[Map_Num].Width, y); return;
                 }
             else
             {
@@ -267,7 +267,7 @@ class Player
 
         // Envia os dados
         if (!SecondMovement && (x != Character(Index).X || y != Character(Index).Y))
-            Send.Player_Move(Index, Movimento);
+            Send.Player_Move(Index, Movement);
         else
             Send.Player_Position(Index);
     }
@@ -425,7 +425,7 @@ class Player
             // Demonstra o ataque aos outros jogadores
             Send.Player_Attack(Index, Victim, (byte)Game.Target.NPC);
 
-            if (Damage < Map_NPC.Vital[(byte)Game.Vitals.HP])
+            if (Damage <= Map_NPC.Vital[(byte)Game.Vitals.HP])
             {
                 Lists.Temp_Map[Character(Index).Map].NPC[Victim].Vital[(byte)Game.Vitals.HP] -= Damage;
                 Send.Map_NPC_Vitals(Character(Index).Map, Victim);

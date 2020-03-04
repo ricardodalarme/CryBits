@@ -617,6 +617,7 @@ class Receive
 
         // Quantidade de mapas 
         Lists.Map = new Lists.Structures.Map[Data.ReadInt16()];
+        Lists.Temp_Map = new Lists.Structures.Temp_Map[Lists.Map.Length];
         Lists.Server_Data.Num_Maps = (short)Lists.Map.GetUpperBound(0);
         Write.Server_Data();
 
@@ -707,7 +708,13 @@ class Receive
                 Lists.Map[i].NPC[n].Spawn = Data.ReadBoolean();
                 Lists.Map[i].NPC[n].X = Data.ReadByte();
                 Lists.Map[i].NPC[n].Y = Data.ReadByte();
+                NPC.Spawn(n, i);
             }
+
+            // Itens
+            Lists.Temp_Map[i].Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
+            Lists.Temp_Map[i].Item.Add(new Lists.Structures.Map_Items());
+            Map.Spawn_Items(i);
 
             // Envia o mapa para todos os jogadores que estão nele
             for (byte n = 1; n <= Game.HigherIndex; n++)

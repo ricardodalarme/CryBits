@@ -38,9 +38,9 @@ class NPC
             Lists.Structures.Map_NPCs Data = Lists.Temp_Map[Map_Num].NPC[i];
             Lists.Structures.NPC NPC_Data = Lists.NPC[Lists.Map[Map_Num].NPC[i].Index];
 
-            //////////////////
-            // Aparecimento //
-            //////////////////
+            ////////////////
+            // Surgimento //
+            ////////////////
             if (Data.Index == 0)
             {
                 if (Environment.TickCount > Data.Spawn_Timer + (NPC_Data.SpawnTime * 1000)) Spawn(i, Map_Num);
@@ -50,7 +50,7 @@ class NPC
             {
                 byte TargetX = 0, TargetY = 0;
                 bool[] CanMove = new bool[(byte)Game.Directions.Count];
-                short Distance_X, Distance_Y;
+                short Distance;
                 bool Moved = false;
                 bool Move = false;
 
@@ -72,35 +72,54 @@ class NPC
                             Send.Map_NPC_Vitals(Map_Num, i);
                         }
 
-                ///////////////
-                // Movimento //
-                ///////////////
+                //////////////////
+                // Movimentação //
+                //////////////////
                 // Atacar ao ver
-                if (Lists.Temp_Map[Map_Num].NPC[i].Target_Index == 0 && NPC_Data.Behaviour == (byte)Behaviour.AttackOnSight)
-                    for (byte Player_Index = 1; Player_Index <= Game.HigherIndex; Player_Index++)
-                    {
-                        // Verifica se o jogador está jogando e no mesmo mapa que o NPC
-                        if (!Player.IsPlaying(Player_Index)) continue;
-                        if (Player.Character(Player_Index).Map != Map_Num) continue;
-
-                        // Distância entre o NPC e o jogador
-                        Distance_X = (short)(Data.X - Player.Character(Player_Index).X);
-                        Distance_Y = (short)(Data.Y - Player.Character(Player_Index).Y);
-                        if (Distance_X < 0) Distance_X *= -1;
-                        if (Distance_Y < 0) Distance_Y *= -1;
-
-                        // Se estiver no alcance, ir atrás do jogador
-                        if (Distance_X <= NPC_Data.Sight && Distance_Y <= NPC_Data.Sight)
+                if (NPC_Data.Behaviour == (byte)Behaviour.AttackOnSight)
+                {
+                    // Jogador
+                    if (Lists.Temp_Map[Map_Num].NPC[i].Target_Index == 0)
+                        for (byte Player_Index = 1; Player_Index <= Game.HigherIndex; Player_Index++)
                         {
-                            Lists.Temp_Map[Map_Num].NPC[i].Target_Type = (byte)Game.Target.Player;
-                            Lists.Temp_Map[Map_Num].NPC[i].Target_Index = Player_Index;
-                            Data = Lists.Temp_Map[Map_Num].NPC[i];
+                            // Verifica se o jogador está jogando e no mesmo mapa que o NPC
+                            if (!Player.IsPlaying(Player_Index)) continue;
+                            if (Player.Character(Player_Index).Map != Map_Num) continue;
 
-                            // Mensagem
-                            if (!string.IsNullOrEmpty(Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg))
-                                Send.Message(Player_Index, Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].Name + ": " + Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg, System.Drawing.Color.White);
+                            // Se o jogador estiver no alcance do NPC, ir atrás do jogador
+                            Distance = (short)Math.Sqrt(Math.Pow(Data.X - Player.Character(Player_Index).X, 2) + Math.Pow(Data.Y - Player.Character(Player_Index).Y, 2));
+                            if (Distance <= NPC_Data.Sight)
+                            {
+                                Lists.Temp_Map[Map_Num].NPC[i].Target_Type = (byte)Game.Target.Player;
+                                Lists.Temp_Map[Map_Num].NPC[i].Target_Index = Player_Index;
+                                Data = Lists.Temp_Map[Map_Num].NPC[i];
+
+                                // Mensagem
+                                if (!string.IsNullOrEmpty(Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg))
+                                    Send.Message(Player_Index, Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].Name + ": " + Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg, System.Drawing.Color.White);
+                                break;
+                            }
                         }
-                    }
+
+                    // NPC
+                    if (NPC_Data.AttackNPC && Lists.Temp_Map[Map_Num].NPC[i].Target_Index == 0)
+                        for (byte NPC_Index = 1; NPC_Index < Lists.Temp_Map[Map_Num].NPC.Length; NPC_Index++)
+                        {
+                            // Verifica se pode atacar
+                            if (NPC_Index == i) continue;
+                            if (Lists.Temp_Map[Map_Num].NPC[NPC_Index].Index == 0) continue;
+
+                            // Se o jogador estiver no alcance do NPC, ir atrás do jogador
+                            Distance = (short)Math.Sqrt(Math.Pow(Data.X - Lists.Temp_Map[Map_Num].NPC[NPC_Index].X, 2) + Math.Pow(Data.Y - Lists.Temp_Map[Map_Num].NPC[NPC_Index].Y, 2));
+                            if (Distance <= NPC_Data.Sight)
+                            {
+                                Lists.Temp_Map[Map_Num].NPC[i].Target_Type = (byte)Game.Target.NPC;
+                                Lists.Temp_Map[Map_Num].NPC[i].Target_Index = NPC_Index;
+                                Data = Lists.Temp_Map[Map_Num].NPC[i];
+                                break;
+                            }
+                        }
+                }
 
                 if (Data.Target_Type == (byte)Game.Target.Player)
                 {
@@ -113,18 +132,19 @@ class NPC
                     }
 
                     // Posição do alvo
-                    TargetX = Player.Character(Lists.Temp_Map[Map_Num].NPC[i].Target_Index).X;
-                    TargetY = Player.Character(Lists.Temp_Map[Map_Num].NPC[i].Target_Index).Y;
+                    TargetX = Player.Character(Data.Target_Index).X;
+                    TargetY = Player.Character(Data.Target_Index).Y;
+                }
+                else if (Data.Target_Type == (byte)Game.Target.NPC)
+                {
+                    // Posição do alvo
+                    TargetX = Lists.Temp_Map[Map_Num].NPC[Data.Target_Index].X;
+                    TargetY = Lists.Temp_Map[Map_Num].NPC[Data.Target_Index].Y;
                 }
 
-                // Distância entre o NPC e o alvo
-                Distance_X = (short)(Data.X - TargetX);
-                Distance_Y = (short)(Data.Y - TargetY);
-                if (Distance_X < 0) Distance_X *= -1;
-                if (Distance_Y < 0) Distance_Y *= -1;
-
-                // Verifica se o alvo saiu do alcance
-                if (Distance_X > NPC_Data.Sight || Distance_Y > NPC_Data.Sight)
+                // Verifica se o alvo saiu do alcance do NPC
+                Distance = (short)Math.Sqrt(Math.Pow(Data.X - TargetX, 2) + Math.Pow(Data.Y - TargetY, 2));
+                if (Distance > NPC_Data.Sight)
                 {
                     Lists.Temp_Map[Map_Num].NPC[i].Target_Type = 0;
                     Lists.Temp_Map[Map_Num].NPC[i].Target_Index = 0;
@@ -136,7 +156,7 @@ class NPC
                     Move = true;
                 else
                 {
-                    // Define o alvo até a zona do NPC
+                    // Define o alvo a zona do NPC
                     if (Lists.Map[Map_Num].NPC[i].Zone > 0)
                         if (Lists.Map[Map_Num].Tile[Data.X, Data.Y].Zone != Lists.Map[Map_Num].NPC[i].Zone)
                             for (byte x2 = 0; x2 <= Lists.Map[Map_Num].Width; x2++)
@@ -185,7 +205,7 @@ class NPC
                             Lists.Temp_Map[Map_Num].NPC[i].Direction = (Game.Directions)Game.Random.Next(0, 4);
                             Send.Map_NPC_Direction(Map_Num, i);
                         }
-                
+
                 ////////////
                 // Ataque //
                 ////////////
@@ -195,6 +215,11 @@ class NPC
                 {
                     // Verifica se o jogador está na frente do NPC
                     if (Map.HasPlayer(Map_Num, Next_X, Next_Y) == Data.Target_Index) Attack_Player(Map_Num, i, Data.Target_Index);
+                }
+                else if (Data.Target_Type == (byte)Game.Target.NPC)
+                {
+                    // Verifica se o NPC alvo está na frente do NPC
+                    if (Map.HasNPC(Map_Num, Next_X, Next_Y) == Data.Target_Index) Attack_NPC(Map_Num, i, Data.Target_Index);
                 }
             }
         }
@@ -323,7 +348,7 @@ class NPC
             // Demonstra o ataque aos outros jogadores
             Send.Map_NPC_Attack(Map_Num, Index, Victim, (byte)Game.Target.Player);
 
-            if (Damage < Player.Character(Victim).Vital[(byte)Game.Vitals.HP])
+            if (Damage <= Player.Character(Victim).Vital[(byte)Game.Vitals.HP])
             {
                 Player.Character(Victim).Vital[(byte)Game.Vitals.HP] -= Damage;
                 Send.Player_Vitals(Victim);
@@ -339,11 +364,62 @@ class NPC
                 Player.Died(Victim);
             }
         }
+        // Demonstra o ataque aos outros jogadores
         else
+            Send.Map_NPC_Attack(Map_Num, Index);
+    }
+
+    private static void Attack_NPC(short Map_Num, byte Index, byte Victim)
+    {
+        Lists.Structures.Map_NPCs Data = Lists.Temp_Map[Map_Num].NPC[Index], Victim_Data = Lists.Temp_Map[Map_Num].NPC[Victim];
+        short x = Data.X, y = Data.Y;
+
+        // Define o azujelo a frente do NPC
+        Map.NextTile(Data.Direction, ref x, ref y);
+
+        // Verifica se a vítima pode ser atacada
+        if (Data.Index == 0) return;
+        if (Victim_Data.Index == 0) return;
+        if (Environment.TickCount < Data.Attack_Timer + 750) return;
+        if (Victim_Data.X != x || Victim_Data.Y != y) return;
+        if (Map.Tile_Blocked(Map_Num, Data.X, Data.Y, Data.Direction, false)) return;
+        if (IsAlied(Data.Index, Victim_Data.Index)) return;
+
+        // Tempo de ataque 
+        Lists.Temp_Map[Map_Num].NPC[Index].Attack_Timer = Environment.TickCount;
+
+        // Define o alvo do NPC
+        Lists.Temp_Map[Map_Num].NPC[Victim].Target_Index = Index;
+        Lists.Temp_Map[Map_Num].NPC[Victim].Target_Type = (byte)Game.Target.NPC;
+
+        // Cálculo de dano
+        short Damage = (short)(Lists.NPC[Data.Index].Attribute[(byte)Game.Attributes.Strength] - Lists.NPC[Victim_Data.Index].Attribute[(byte)Game.Attributes.Resistance]);
+
+        // Dano não fatal
+        if (Damage > 0)
         {
             // Demonstra o ataque aos outros jogadores
-            Send.Map_NPC_Attack(Map_Num, Index);
+            Send.Map_NPC_Attack(Map_Num, Index, Victim, (byte)Game.Target.NPC);
+
+            if (Damage <= Victim_Data.Vital[(byte)Game.Vitals.HP])
+            {
+                Lists.Temp_Map[Map_Num].NPC[Victim].Vital[(byte)Game.Vitals.HP] -= Damage;
+                Send.Map_NPC_Vitals(Map_Num, Victim);
+            }
+            // FATALITY
+            else
+            {
+                // Reseta o alvo do NPC
+                Lists.Temp_Map[Map_Num].NPC[Index].Target_Type = 0;
+                Lists.Temp_Map[Map_Num].NPC[Index].Target_Index = 0;
+
+                // Mata o NPC
+                Died(Map_Num, Victim);
+            }
         }
+        // Demonstra o ataque aos outros jogadores
+        else
+            Send.Map_NPC_Attack(Map_Num, Index);
     }
 
     public static void Died(short Map_Num, byte Index)
@@ -376,5 +452,14 @@ class NPC
         Lists.Temp_Map[Map_Num].NPC[Index].Target_Type = 0;
         Lists.Temp_Map[Map_Num].NPC[Index].Target_Index = 0;
         Send.Map_NPC_Died(Map_Num, Index);
+    }
+
+    public static bool IsAlied(short Index, short Allie)
+    {
+        // Verifica se o NPC é aliado do outro
+        for (byte i = 0; i < Lists.NPC[Index].Allie.Length; i++)
+            if (Lists.NPC[Index].Allie[i] == Allie)
+                return true;
+        return false;
     }
 }
