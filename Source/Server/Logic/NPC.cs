@@ -130,16 +130,28 @@ class NPC
                         Lists.Temp_Map[Map_Num].NPC[i].Target_Index = 0;
                         Data = Lists.Temp_Map[Map_Num].NPC[i];
                     }
-
                     // Posição do alvo
-                    TargetX = Player.Character(Data.Target_Index).X;
-                    TargetY = Player.Character(Data.Target_Index).Y;
+                    else
+                    {
+                        TargetX = Player.Character(Data.Target_Index).X;
+                        TargetY = Player.Character(Data.Target_Index).Y;
+                    }
                 }
                 else if (Data.Target_Type == (byte)Game.Target.NPC)
                 {
+                    // Verifica se o NPC ainda está disponível
+                    if (Lists.Temp_Map[Map_Num].NPC[Data.Target_Index].Index == 0)
+                    {
+                        Lists.Temp_Map[Map_Num].NPC[i].Target_Type = 0;
+                        Lists.Temp_Map[Map_Num].NPC[i].Target_Index = 0;
+                        Data = Lists.Temp_Map[Map_Num].NPC[i];
+                    }
                     // Posição do alvo
-                    TargetX = Lists.Temp_Map[Map_Num].NPC[Data.Target_Index].X;
-                    TargetY = Lists.Temp_Map[Map_Num].NPC[Data.Target_Index].Y;
+                    else
+                    {
+                        TargetX = Lists.Temp_Map[Map_Num].NPC[Data.Target_Index].X;
+                        TargetY = Lists.Temp_Map[Map_Num].NPC[Data.Target_Index].Y;
+                    }
                 }
 
                 // Verifica se o alvo saiu do alcance do NPC
@@ -171,14 +183,26 @@ class NPC
                                         }
                 }
 
-                // Movimenta o NPC até mais perto do alvo
+                // Movimenta o NPC
                 if (Move)
                 {
-                    // Verifica como pode se mover até o alvo
-                    if (Data.Y > TargetY) CanMove[(byte)Game.Directions.Up] = true;
-                    if (Data.Y < TargetY) CanMove[(byte)Game.Directions.Down] = true;
-                    if (Data.X > TargetX) CanMove[(byte)Game.Directions.Left] = true;
-                    if (Data.X < TargetX) CanMove[(byte)Game.Directions.Right] = true;
+                    // Verifica como o NPC pode se mover
+                    if (NPC_Data.Flee_Helth == 0 || Data.Vital[(byte)Game.Vitals.HP] > NPC_Data.Vital[(byte)Game.Vitals.HP] * (NPC_Data.Flee_Helth / 100.0))
+                    {
+                        // Para perto do alvo
+                        CanMove[(byte)Game.Directions.Up] = Data.Y > TargetY;
+                        CanMove[(byte)Game.Directions.Down] = Data.Y < TargetY;
+                        CanMove[(byte)Game.Directions.Left] = Data.X > TargetX;
+                        CanMove[(byte)Game.Directions.Right] = Data.X < TargetX;
+                    }
+                    else
+                    {
+                        // Para longe do alvo
+                        CanMove[(byte)Game.Directions.Up] = Data.Y < TargetY;
+                        CanMove[(byte)Game.Directions.Down] = Data.Y > TargetY;
+                        CanMove[(byte)Game.Directions.Left] = Data.X < TargetX;
+                        CanMove[(byte)Game.Directions.Right] = Data.X > TargetX;
+                    }
 
                     // Aleatoriza a forma que ele vai se movimentar até o alvo
                     if (Game.Random.Next(0, 2) == 0)
@@ -197,9 +221,7 @@ class NPC
                 if (NPC_Data.Behaviour == (byte)Behaviour.Friendly || Data.Target_Index == 0)
                     if (Game.Random.Next(0, 3) == 0 && !Moved)
                         if (NPC_Data.Movement == Movements.MoveRandomly)
-                        {
                             NPC.Move(Map_Num, i, (Game.Directions)Game.Random.Next(0, 4), 1, true);
-                        }
                         else if (NPC_Data.Movement == Movements.TurnRandomly)
                         {
                             Lists.Temp_Map[Map_Num].NPC[i].Direction = (Game.Directions)Game.Random.Next(0, 4);
