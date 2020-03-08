@@ -35,6 +35,7 @@ partial class Graphics
     public static Texture Tex_Equipments;
     public static Texture Tex_Blood;
     public static Texture Tex_Party_Bars;
+    public static Texture Tex_Intro;
 
     // Formato das texturas
     public const string Format = ".png";
@@ -224,12 +225,16 @@ partial class Graphics
         Tex_Equipments = new Texture(Directories.Tex_Equipments.FullName + Format);
         Tex_Blood = new Texture(Directories.Tex_Blood.FullName + Format);
         Tex_Party_Bars = new Texture(Directories.Tex_Party_Bars.FullName + Format);
+        Tex_Intro = new Texture(Directories.Tex_Intro.FullName + Format);
     }
 
     public static void Present()
     {
         // Limpa a área com um fundo preto
         RenderWindow.Clear(SFML.Graphics.Color.Black);
+
+        // Introdução
+        Intro();
 
         // Desenha as coisas em jogo
         InGame();
@@ -361,6 +366,11 @@ partial class Graphics
             DrawText(Text, Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
     }
     #endregion
+
+    private static void Intro()
+    {
+        Render(Tex_Intro, new Point(0));
+    }
 
     private static void Interface_Specific(Tools.Structure Tool)
     {

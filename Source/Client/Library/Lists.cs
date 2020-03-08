@@ -27,7 +27,7 @@ class Lists
             public bool Musics;
             public bool Chat;
             public string Username;
-            public bool Presentation;
+            public bool SkipIntro;
         }
 
         public struct Server_Data

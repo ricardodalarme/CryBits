@@ -36,6 +36,7 @@ class Directories
     public static FileInfo Tex_Grid = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Grid");
     public static FileInfo Tex_Blood = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Blood");
     public static FileInfo Tex_Party_Bars = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Party_Bars");
+    public static FileInfo Tex_Intro = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Intro");
 
     public static void Create()
     {
