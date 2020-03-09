@@ -86,7 +86,7 @@ class NPC
                             if (!Player.IsPlaying(Player_Index)) continue;
                             if (Player.Character(Player_Index).Map != Map_Num) continue;
 
-                            // Se o jogador estiver no alcance do NPC, ir atrás do jogador
+                            // Se o jogador estiver no alcance do NPC, ir atrás dele
                             Distance = (short)Math.Sqrt(Math.Pow(Data.X - Player.Character(Player_Index).X, 2) + Math.Pow(Data.Y - Player.Character(Player_Index).Y, 2));
                             if (Distance <= NPC_Data.Sight)
                             {
@@ -95,8 +95,7 @@ class NPC
                                 Data = Lists.Temp_Map[Map_Num].NPC[i];
 
                                 // Mensagem
-                                if (!string.IsNullOrEmpty(Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg))
-                                    Send.Message(Player_Index, Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].Name + ": " + Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg, System.Drawing.Color.White);
+                                if (!string.IsNullOrEmpty(Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg)) Send.Message(Player_Index, Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].Name + ": " + Lists.NPC[Lists.Temp_Map[Map_Num].NPC[i].Index].SayMsg, System.Drawing.Color.White);
                                 break;
                             }
                         }
@@ -108,8 +107,9 @@ class NPC
                             // Verifica se pode atacar
                             if (NPC_Index == i) continue;
                             if (Lists.Temp_Map[Map_Num].NPC[NPC_Index].Index == 0) continue;
+                            if (IsAlied(Data.Index, Lists.Temp_Map[Map_Num].NPC[NPC_Index].Index)) continue;
 
-                            // Se o jogador estiver no alcance do NPC, ir atrás do jogador
+                            // Se o NPC estiver no alcance do NPC, ir atrás dele
                             Distance = (short)Math.Sqrt(Math.Pow(Data.X - Lists.Temp_Map[Map_Num].NPC[NPC_Index].X, 2) + Math.Pow(Data.Y - Lists.Temp_Map[Map_Num].NPC[NPC_Index].Y, 2));
                             if (Distance <= NPC_Data.Sight)
                             {
@@ -405,7 +405,6 @@ class NPC
         if (Environment.TickCount < Data.Attack_Timer + 750) return;
         if (Victim_Data.X != x || Victim_Data.Y != y) return;
         if (Map.Tile_Blocked(Map_Num, Data.X, Data.Y, Data.Direction, false)) return;
-        if (IsAlied(Data.Index, Victim_Data.Index)) return;
 
         // Tempo de ataque 
         Lists.Temp_Map[Map_Num].NPC[Index].Attack_Timer = Environment.TickCount;
