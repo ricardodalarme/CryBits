@@ -370,7 +370,7 @@ class NPC
             // Demonstra o ataque aos outros jogadores
             Send.Map_NPC_Attack(Map_Num, Index, Victim, (byte)Game.Target.Player);
 
-            if (Damage <= Player.Character(Victim).Vital[(byte)Game.Vitals.HP])
+            if (Damage < Player.Character(Victim).Vital[(byte)Game.Vitals.HP])
             {
                 Player.Character(Victim).Vital[(byte)Game.Vitals.HP] -= Damage;
                 Send.Player_Vitals(Victim);
@@ -423,7 +423,7 @@ class NPC
             // Demonstra o ataque aos outros jogadores
             Send.Map_NPC_Attack(Map_Num, Index, Victim, (byte)Game.Target.NPC);
 
-            if (Damage <= Victim_Data.Vital[(byte)Game.Vitals.HP])
+            if (Damage < Victim_Data.Vital[(byte)Game.Vitals.HP])
             {
                 Lists.Temp_Map[Map_Num].NPC[Victim].Vital[(byte)Game.Vitals.HP] -= Damage;
                 Send.Map_NPC_Vitals(Map_Num, Victim);
