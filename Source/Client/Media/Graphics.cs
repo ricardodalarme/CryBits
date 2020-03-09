@@ -233,9 +233,6 @@ partial class Graphics
         // Limpa a área com um fundo preto
         RenderWindow.Clear(SFML.Graphics.Color.Black);
 
-        // Introdução
-        Intro();
-
         // Desenha as coisas em jogo
         InGame();
 
@@ -366,11 +363,6 @@ partial class Graphics
             DrawText(Text, Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
     }
     #endregion
-
-    private static void Intro()
-    {
-        Render(Tex_Intro, new Point(0));
-    }
 
     private static void Interface_Specific(Tools.Structure Tool)
     {

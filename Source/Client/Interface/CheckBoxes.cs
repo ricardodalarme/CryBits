@@ -54,7 +54,6 @@ class CheckBoxes
             case "Options_Sounds": Sounds(); break;
             case "Options_Musics": Musics(); break;
             case "Options_Chat": Chat(); break;
-            case "SkipIntro": SkipIntro(); break;
         }
     }
     
@@ -106,13 +105,6 @@ class CheckBoxes
     {
         // Desabilita a prévia do chat
         Lists.Options.Chat = global::Chat.Text_Visible = Get("Options_Chat").Checked;
-        Write.Options();
-    }
-
-    private static void SkipIntro()
-    {
-        // Desabilita a prévia do chat
-        Get("SkipIntro").Checked = !Get("SkipIntro").Checked;
         Write.Options();
     }
 }
