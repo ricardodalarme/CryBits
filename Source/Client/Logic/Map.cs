@@ -670,7 +670,7 @@ partial class Graphics
         }
 
         // Desenha o nome do mapa
-        DrawText(Lists.Map.Name, 463, 48, Color);
+        DrawText(Lists.Map.Name, 426, 48, Color);
     }
 
     private static void Map_Items()
