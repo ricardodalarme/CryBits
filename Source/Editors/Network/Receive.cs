@@ -275,16 +275,18 @@ partial class Receive
 
     private static void Tiles(NetIncomingMessage Data)
     {
-        Lists.Tile = new Lists.Structures.Tile[Data.ReadByte()];
+        // Limpa os dados dos azulejos
+        Lists.Tile = new Lists.Structures.Tile[Graphics.Tex_Tile.Length];
+        for (byte i = 1; i < Graphics.Tex_Tile.Length; i++) Clear.Tile(i);
 
-        for (byte i = 1; i < Lists.Tile.Length; i++)
+        // Lê os dados
+        byte Num_Tiles = Data.ReadByte();
+        for (byte i = 1; i < Num_Tiles; i++)
         {
             // Dados básicos
             byte Width = Data.ReadByte();
             byte Height = Data.ReadByte();
 
-            // Dados de cada azulejo
-            Clear.Tile(i);
             for (byte x = 0; x <= Width; x++)
                 for (byte y = 0; y <= Height; y++)
                 {

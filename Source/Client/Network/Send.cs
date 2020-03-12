@@ -283,32 +283,32 @@ partial class Send
 
     public static void Player_Direction()
     {
-        NetOutgoingMessage Dados = Socket.Device.CreateMessage();
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Dados.Write((byte)Packets.Player_Direction);
-        Dados.Write((byte)Player.Me.Direction);
-        Packet(Dados);
+        Data.Write((byte)Packets.Player_Direction);
+        Data.Write((byte)Player.Me.Direction);
+        Packet(Data);
     }
 
     public static void Player_Move()
     {
-        NetOutgoingMessage Dados = Socket.Device.CreateMessage();
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Dados.Write((byte)Packets.Player_Move);
-        Dados.Write(Player.Me.X);
-        Dados.Write(Player.Me.Y);
-        Dados.Write((byte)Player.Me.Movement);
-        Packet(Dados);
+        Data.Write((byte)Packets.Player_Move);
+        Data.Write(Player.Me.X);
+        Data.Write(Player.Me.Y);
+        Data.Write((byte)Player.Me.Movement);
+        Packet(Data);
     }
 
     public static void Player_Attack()
     {
-        NetOutgoingMessage Dados = Socket.Device.CreateMessage();
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Dados.Write((byte)Packets.Player_Attack);
-        Packet(Dados);
+        Data.Write((byte)Packets.Player_Attack);
+        Packet(Data);
     }
 }
