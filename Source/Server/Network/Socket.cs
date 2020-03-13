@@ -60,7 +60,7 @@ class Socket
         }
     }
 
-    public static void Connect(NetIncomingMessage IncomingMsg)
+    private static void Connect(NetIncomingMessage IncomingMsg)
     {
         // Define a conexão do jogador
         Connection[FindConnection(null)] = IncomingMsg.SenderConnection;
@@ -69,7 +69,7 @@ class Socket
         Game.SetHigherIndex();
     }
 
-    public static void Disconnect(byte Index)
+    private static void Disconnect(byte Index)
     {
         // Redefine o maior índice dos jogadores
         Game.SetHigherIndex();
@@ -89,7 +89,7 @@ class Socket
         return Connection[Index].Status == NetConnectionStatus.Connected;
     }
 
-    public static byte FindConnection(NetConnection Data)
+    private static byte FindConnection(NetConnection Data)
     {
         // Encontra uma determinada conexão
         for (byte i = 1; i <= Lists.Server_Data.Max_Players; i++)

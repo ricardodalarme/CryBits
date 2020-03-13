@@ -331,3 +331,5 @@ ASALocalRun/
 
 # Dev things
 Dev/
+Build/Server/Data/Accounts
+Build/Server/Data/Characters.dat

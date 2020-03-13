@@ -26,10 +26,14 @@ partial class Send
         Equipment_Remove,
         Hotbar_Add,
         Hotbar_Change,
-        Hotbar_Use
+        Hotbar_Use,
+        Party_Invite,
+        Party_Decline,
+        Party_Leave,
+        Party_Accept
     }
 
-    public static void Packet(NetOutgoingMessage Data)
+    private static void Packet(NetOutgoingMessage Data)
     {
         // Envia os dados ao servidor
         Socket.Device.SendMessage(Data, NetDeliveryMethod.ReliableOrdered);
@@ -66,7 +70,8 @@ partial class Send
         Data.Write((byte)Packets.CreateCharacter);
         Data.Write(TextBoxes.Get("CreateCharacter_Name").Text);
         Data.Write(Game.CreateCharacter_Class);
-        Data.Write(CheckBoxes.Get("GenderMale").State);
+        Data.Write(CheckBoxes.Get("GenderMale").Checked);
+        Data.Write(Game.CreateCharacter_Tex);
         Packet(Data);
     }
 
@@ -152,13 +157,14 @@ partial class Send
         Packet(Data);
     }
 
-    public static void DropItem(byte Slot)
+    public static void DropItem(byte Slot, short Amount)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.DropItem);
         Data.Write(Slot);
+        Data.Write(Amount);
         Packet(Data);
     }
 
@@ -171,6 +177,9 @@ partial class Send
         Data.Write(Old);
         Data.Write(New);
         Packet(Data);
+
+        // Fecha o painel de soltar item
+        Panels.Get("Drop").Visible = false;
     }
 
     public static void Inventory_Use(byte Slot)
@@ -181,6 +190,9 @@ partial class Send
         Data.Write((byte)Packets.Inventory_Use);
         Data.Write(Slot);
         Packet(Data);
+
+        // Fecha o painel de soltar item
+        Panels.Get("Drop").Visible = false;
     }
 
     public static void Equipment_Remove(byte Slot)
@@ -218,11 +230,85 @@ partial class Send
 
     public static void Hotbar_Use(byte Slot)
     {
+        if (TextBoxes.Focused == null)
+        {
+            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+            // Envia os dados
+            Data.Write((byte)Packets.Hotbar_Use);
+            Data.Write(Slot);
+            Packet(Data);
+
+            // Fecha o painel de soltar item
+            Panels.Get("Drop").Visible = false;
+        }
+    }
+
+    public static void Party_Invite(string Player_Name)
+    {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Data.Write((byte)Packets.Hotbar_Use);
-        Data.Write(Slot);
+        Data.Write((byte)Packets.Party_Invite);
+        Data.Write(Player_Name);
+        Packet(Data);
+    }
+
+    public static void Party_Accept()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Party_Accept);
+        Packet(Data);
+    }
+
+    public static void Party_Decline()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Party_Decline);
+        Packet(Data);
+    }
+
+    public static void Party_Leave()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Party_Leave);
+        Packet(Data);
+    }
+
+    public static void Player_Direction()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Player_Direction);
+        Data.Write((byte)Player.Me.Direction);
+        Packet(Data);
+    }
+
+    public static void Player_Move()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Player_Move);
+        Data.Write(Player.Me.X);
+        Data.Write(Player.Me.Y);
+        Data.Write((byte)Player.Me.Movement);
+        Packet(Data);
+    }
+
+    public static void Player_Attack()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Player_Attack);
         Packet(Data);
     }
 }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Editors</RootNamespace>
     <AssemblyName>Editors</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publicar\</PublishUrl>
@@ -71,14 +71,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lidgren-network-gen3-master\Lidgren.Network\bin\Debug\Lidgren.Network.dll</HintPath>
     </Reference>
-    <Reference Include="sfmlnet-audio-2">
-      <HintPath>..\Referências\sfmlnet-audio-2.dll</HintPath>
+    <Reference Include="SFML.Audio">
+      <HintPath>..\..\Dev\Referências\SFML.Audio.dll</HintPath>
     </Reference>
-    <Reference Include="sfmlnet-graphics-2">
-      <HintPath>..\Referências\sfmlnet-graphics-2.dll</HintPath>
+    <Reference Include="SFML.Graphics">
+      <HintPath>..\..\Dev\Referências\SFML.Graphics.dll</HintPath>
     </Reference>
-    <Reference Include="sfmlnet-window-2">
-      <HintPath>..\Referências\sfmlnet-window-2.dll</HintPath>
+    <Reference Include="SFML.System">
+      <HintPath>..\..\Dev\Referências\SFML.System.dll</HintPath>
+    </Reference>
+    <Reference Include="SFML.Window">
+      <HintPath>..\..\Dev\Referências\SFML.Window.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
@@ -88,7 +91,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Editors\Interface.cs">
@@ -228,7 +230,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="icon.ico" />
   </ItemGroup>

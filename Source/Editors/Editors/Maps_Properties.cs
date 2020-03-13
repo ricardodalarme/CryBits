@@ -5,10 +5,10 @@ using System.Windows.Forms;
 public partial class Editor_Maps_Properties : Form
 {
     // Usado para acessar os dados da janela
-    public static Editor_Maps_Properties Objects = new Editor_Maps_Properties();
+    private static Editor_Maps_Properties Objects = new Editor_Maps_Properties();
 
     // Dados temporários
-    public static int Selected;
+    private static int Selected;
 
     public Editor_Maps_Properties()
     {
@@ -186,7 +186,7 @@ public partial class Editor_Maps_Properties : Form
         Editor_Maps.Update_Data();
 
         // Altera o nome na lista
-        Editor_Maps.Objects.cmbList.Items[Selected - 1] = Globals.Numbering(Selected, Editor_Maps.Objects.cmbList.Items.Count) + ":" + txtName.Text;
+        Editor_Maps.Objects.cmbList.Items[Selected - 1] = Globals.Numbering(Selected, Editor_Maps.Objects.cmbList.Items.Count, txtName.Text);
 
         // Reseta os valores
         Globals.Weather_Update();

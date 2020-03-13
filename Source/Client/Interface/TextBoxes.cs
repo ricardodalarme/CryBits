@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SFML.Window;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 
 class TextBoxes
 {
@@ -32,19 +32,19 @@ class TextBoxes
             // Altera o foco do digitalizador
             if (((Structure)Order.Data).Name.Equals("Chat"))
             {
-                Tools.Chat_Text_Visible = true;
+                Chat.Text_Visible = true;
                 Panels.Get("Chat").Visible = true;
             }
         }
 
-        public void KeyPress(KeyPressEventArgs e)
+        public void TextEntered(TextEventArgs e)
         {
             // Apaga a última letra do texto
             if (Tools.Viewable(Tools.Get(this)))
             {
                 if (!string.IsNullOrEmpty(Text))
                 {
-                    if (e.KeyChar == '\b' && Text.Length > 0)
+                    if (e.Unicode == "\b" && Text.Length > 0)
                     {
                         Text = Text.Remove(Text.Length - 1);
                         return;
@@ -55,21 +55,17 @@ class TextBoxes
                         if (Text.Length >= Lenght)
                             return;
                 }
-
-                // Adiciona apenas os caractres válidos ao digitalizador
-                if (e.KeyChar >= 32 && e.KeyChar <= 126) Text += e.KeyChar.ToString();
+        
+                // Adiciona o caracter à caixa de texto
+                if (char.IsLetterOrDigit(e.Unicode,0)) Text += e.Unicode;
             }
         }
     }
 
     public static Structure Get(string Name)
     {
-        // Lista os nomes das ferramentas
-        for (byte i = 0; i < List.Count; i++)
-            if (List[i].Name.Equals(Name))
-                return List[i];
-
-        return null;
+        // Retorna a caixa de texto procurada
+        return List.Find(x => x.Name.Equals(Name));
     }
 
     public static void Focus()
@@ -96,6 +92,7 @@ class TextBoxes
                     Stack.Push(Top[i].Nodes);
                 }
         }
+        Focused = null;
     }
 
     public static void ChangeFocus()
@@ -116,66 +113,5 @@ class TextBoxes
             }
             Temp++;
         }
-    }
-
-    public static void Chat_Type()
-    {
-        Structure Tool = Get("Chat");
-        Panels.Structure Panel = Panels.Get("Chat");
-
-        // Somente se necessário
-        if (!Player.IsPlaying(Player.MyIndex)) return;
-
-        // Altera a visiblidade da caixa
-        Panel.Visible = !Panel.Visible;
-
-        // Altera o foco do digitalizador
-        if (Panel.Visible)
-        {
-            Tools.Chat_Text_Visible = true;
-            Focused = Tools.Get(Tool);
-            return;
-        }
-        else
-            Focused = null;
-
-        // Dados
-        string Message = Tool.Text;
-
-        // Somente se necessário
-        if (Message.Length < 3)
-        {
-            Tool.Text = string.Empty;
-            return;
-        }
-
-        // Separa as mensagens em partes
-        string[] Parts = Message.Split(' ');
-
-        // Global
-        if (Message.Substring(0, 1) == "'")
-            Send.Message(Message.Substring(1), Game.Messages.Global);
-        // Particular
-        else if (Message.Substring(0, 1) == "!")
-        {
-            // Previne erros 
-            if (Parts.GetUpperBound(0) < 1)
-                Tools.Chat_Add("Use: '!' + Addressee + 'Message'", SFML.Graphics.Color.White);
-            else
-            {
-                // Dados
-                string Destinatário = Message.Substring(1, Parts[0].Length - 1);
-                Message = Message.Substring(Parts[0].Length + 1);
-
-                // Envia a mensagem
-                Send.Message(Message, Game.Messages.Private, Destinatário);
-            }
-        }
-        // Mapa
-        else
-            Send.Message(Message, Game.Messages.Map);
-
-        // Limpa a caixa de texto
-        Tool.Text = string.Empty;
     }
 }

@@ -30,7 +30,7 @@ class Audio
         public const string Format = ".wav";
 
         // Dispositivo sonoro
-        public static SFML.Audio.Sound[] List;
+        private static SFML.Audio.Sound[] List;
 
         public static void Load()
         {
@@ -70,10 +70,10 @@ class Audio
         public const string Format = ".ogg";
 
         // Lista das músicas
-        public static SFML.Audio.Music Device;
+        private static SFML.Audio.Music Device;
 
         // Index da música reproduzida atualmente
-        public static byte Current;
+        private static byte Current;
 
         public static void Play(Musics Index, bool Loop = false)
         {

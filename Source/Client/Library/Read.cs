@@ -11,35 +11,28 @@ class Read
         Options();
     }
 
-    public static void Options()
+    private static void Options()
     {
         // Cria o arquivo se ele não existir
         if (!Directories.Options.Exists)
+        {
             Clear.Options();
+            Write.Options();
+        }
+        // Lê os dados
         else
         {
-            // Cria um arquivo temporário
-            BinaryReader File = new BinaryReader(System.IO.File.OpenRead(Directories.Options.FullName));
-
-            // Carrega os dados
-            Lists.Options.GameName = File.ReadString();
-            Lists.Options.SaveUsername = File.ReadBoolean();
-            Lists.Options.Sounds = File.ReadBoolean();
-            Lists.Options.Musics = File.ReadBoolean();
-            Lists.Options.Username = File.ReadString();
-
-            // Descarrega o arquivo
-            File.Dispose();
+            FileStream Stream = Directories.Options.OpenRead();
+            Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);
+            Stream.Close();
         }
 
-        // Adiciona os dados ao cache
-        CheckBoxes.Get("Sounds").State = Lists.Options.Sounds;
-        CheckBoxes.Get("Musics").State = Lists.Options.Musics;
-        CheckBoxes.Get("Connect_Save_Username").State = Lists.Options.SaveUsername;
+        // Eventos
+        CheckBoxes.Get("Connect_Save_Username").Checked = Lists.Options.SaveUsername;
         if (Lists.Options.SaveUsername) TextBoxes.Get("Connect_Username").Text = Lists.Options.Username;
     }
 
-    public static Buttons.Structure Button(BinaryReader Data)
+    private static Buttons.Structure Button(BinaryReader Data)
     {
         // Lê os dados
         Buttons.Structure Tool = new Buttons.Structure();
@@ -52,7 +45,7 @@ class Read
         return Tool;
     }
 
-    public static TextBoxes.Structure TextBox(BinaryReader Data)
+    private static TextBoxes.Structure TextBox(BinaryReader Data)
     {
         // Lê os dados
         TextBoxes.Structure Tool = new TextBoxes.Structure();
@@ -67,7 +60,7 @@ class Read
         return Tool;
     }
 
-    public static Panels.Structure Panel(BinaryReader Data)
+    private static Panels.Structure Panel(BinaryReader Data)
     {
         // Carrega os dados
         Panels.Structure Tool = new Panels.Structure();
@@ -80,7 +73,7 @@ class Read
         return Tool;
     }
 
-    public static CheckBoxes.Structure CheckBox(BinaryReader Data)
+    private static CheckBoxes.Structure CheckBox(BinaryReader Data)
     {
         // Carrega os dados
         CheckBoxes.Structure Tool = new CheckBoxes.Structure();
@@ -90,22 +83,18 @@ class Read
         Tool.Visible = Data.ReadBoolean();
         Tool.Window = (Tools.Windows)Data.ReadByte();
         Tool.Text = Data.ReadString();
-        Tool.State = Data.ReadBoolean();
+        Tool.Checked = Data.ReadBoolean();
         return Tool;
     }
 
-    public static void Tools()
+    private static void Tools()
     {
-        FileInfo File = new FileInfo(Directories.Tools.FullName);
+        FileInfo File = new FileInfo(Directories.Tools_Data.FullName);
         for (byte i = 0; i < (byte)global::Tools.Windows.Count; i++) global::Tools.All_Order[i] = new List<Tools.Order_Structure>();
 
-        // Cria um sistema binário para a manipulação dos dados
+        // Lê todas as ferramentas
         BinaryReader Data = new BinaryReader(File.OpenRead());
-
-        // Lê todos os nós
         for (byte n = 0; n < global::Tools.All_Order.Length; n++) Tools(null, ref global::Tools.All_Order[n], Data);
-
-        // Fecha o sistema
         Data.Dispose();
     }
 

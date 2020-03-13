@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 class Lists
 {
@@ -17,12 +18,14 @@ class Lists
     // Estrutura dos itens em gerais
     public class Structures
     {
+        [Serializable]
         public struct Options
         {
-            public string GameName;
+            public string Game_Name;
             public bool SaveUsername;
             public bool Sounds;
             public bool Musics;
+            public bool Chat;
             public string Username;
         }
 
@@ -45,10 +48,11 @@ class Lists
             // Geral
             public string Name;
             public byte Class;
+            public short Texture_Num;
             public bool Genre;
             public short Level;
-            public short Experience;
-            public short ExpNeeded;
+            public int Experience;
+            public int ExpNeeded;
             public short Points;
             public short[] Vital;
             public short[] Attribute;
@@ -58,6 +62,7 @@ class Lists
             public Game.Directions Direction;
             public Game.Movements Movement;
             public short[] Equipment;
+            public byte[] Party;
         }
 
         public class Characters
@@ -66,13 +71,15 @@ class Lists
             public byte Class;
             public bool Genre;
             public short Level;
+            public short Texture_Num;
         }
 
         public class Class
         {
             public string Name;
-            public short Texture_Male;
-            public short Texture_Female;
+            public string Description;
+            public short[] Tex_Male;
+            public short[] Tex_Female;
         }
 
         [Serializable]
@@ -98,6 +105,7 @@ class Lists
         {
             public Map_NPCs[] NPC;
             public Map_Items[] Item;
+            public List<Map_Blood> Blood;
         }
 
         [Serializable]
@@ -156,6 +164,7 @@ class Lists
         public struct NPCs
         {
             public string Name;
+            public string SayMsg;
             public short Texture;
             public byte Type;
             public short[] Vital;
@@ -193,11 +202,13 @@ class Lists
             public string Description;
             public short Texture;
             public byte Type;
+            public byte Rarity;
+            public Game.BindOn Bind;
             // Requerimentos
             public short Req_Level;
             public byte Req_Class;
             // Poção
-            public short Potion_Experience;
+            public int Potion_Experience;
             public short[] Potion_Vital;
             // Equipamento
             public byte Equip_Type;
@@ -215,6 +226,24 @@ class Lists
         {
             public byte Type;
             public byte Slot;
+        }
+
+        public class Map_Blood
+        {
+            // Dados
+            public byte Texture_Num;
+            public short X;
+            public short Y;
+            public int Timer;
+
+            // Construtor
+            public Map_Blood(byte Texture_Num, short X, short Y, int Timer)
+            {
+                this.Texture_Num = Texture_Num;
+                this.X = X;
+                this.Y = Y;
+                this.Timer = Timer;
+            }
         }
     }
 }

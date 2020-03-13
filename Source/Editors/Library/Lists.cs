@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -34,6 +35,8 @@ class Lists
             public short Port;
             public byte Max_Players;
             public byte Max_Characters;
+            public byte Max_Party_Members;
+            public byte Max_Map_Items;
         }
 
         public class Tool
@@ -59,7 +62,7 @@ class Lists
         public class CheckBox : Tool
         {
             public string Text { get; set; }
-            public bool State { get; set; }
+            public bool Checked { get; set; }
         }
 
         public class Panel : Tool
@@ -67,17 +70,19 @@ class Lists
             public byte Texture_Num { get; set; }
         }
 
-        public struct Class
+        public class Class
         {
             public string Name;
-            public short Texture_Male;
-            public short Texture_Female;
+            public string Description;
+            public List<short> Tex_Male;
+            public List<short> Tex_Female;
             public short Spawn_Map;
             public byte Spawn_Direction;
             public byte Spawn_X;
             public byte Spawn_Y;
             public short[] Vital;
             public short[] Attribute;
+            public List<Tuple<short, short>> Item;
         }
 
         public struct Tile
@@ -199,20 +204,25 @@ class Lists
             public bool Back;
         }
 
-        public struct NPC
+        public class NPC
         {
             public string Name;
+            public string SayMsg;
             public short Texture;
             public byte Behaviour;
             public byte SpawnTime;
             public byte Sight;
-            public byte Experience;
+            public int Experience;
             public short[] Vital;
             public short[] Attribute;
-            public NPC_Drop[] Drop;
+            public List<NPC_Drop> Drop;
+            public bool AttackNPC;
+            public List<short> Allie;
+            public Globals.NPC_Movements Movement;
+            public byte Flee_Helth;
         }
 
-        public struct Item
+        public class Item
         {
             // Geral
             public string Name;
@@ -221,12 +231,13 @@ class Lists
             public byte Type;
             public short Price;
             public bool Stackable;
-            public bool Bind;
+            public byte Bind;
+            public byte Rarity;
             // Requerimentos
             public short Req_Level;
             public byte Req_Class;
             // Poção
-            public short Potion_Experience;
+            public int Potion_Experience;
             public short[] Potion_Vital;
             // Equipamento
             public byte Equip_Type;
@@ -234,11 +245,18 @@ class Lists
             public short Weapon_Damage;
         }
 
-        public struct NPC_Drop
+        public class NPC_Drop
         {
             public short Item_Num;
             public short Amount;
             public byte Chance;
+
+            public NPC_Drop(short Item_Num, short Amount, byte Chance)
+            {
+                this.Item_Num = Item_Num;
+                this.Amount = Amount;
+                this.Chance = Chance;
+            }
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Lidgren.Network;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 partial class Receive
 {
     // Pacotes do servidor
-    public enum Packets
+    private enum Packets
     {
         Alert,
         Connect,
@@ -48,7 +49,7 @@ partial class Receive
         Selection.Objects.Visible = true;
     }
 
-    public static void Server_Data(NetIncomingMessage Data)
+    private static void Server_Data(NetIncomingMessage Data)
     {
         // Lê os dados
         Lists.Server_Data.Game_Name = Data.ReadString();
@@ -56,12 +57,14 @@ partial class Receive
         Lists.Server_Data.Port = Data.ReadInt16();
         Lists.Server_Data.Max_Players = Data.ReadByte();
         Lists.Server_Data.Max_Characters = Data.ReadByte();
+        Lists.Server_Data.Max_Party_Members = Data.ReadByte();
+        Lists.Server_Data.Max_Map_Items = Data.ReadByte();
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Data.Open();
+        if (Globals.OpenEditor == Editor_Data.Objects) Editor_Data.Open();
     }
 
-    public static void Classes(NetIncomingMessage Data)
+    private static void Classes(NetIncomingMessage Data)
     {
         // Quantidade de classes
         Lists.Class = new Lists.Structures.Class[Data.ReadByte() + 1];
@@ -69,32 +72,41 @@ partial class Receive
         for (short i = 1; i < Lists.Class.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.Class[i] = new Lists.Structures.Class();
             Lists.Class[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.Class[i].Attribute = new short[(byte)Globals.Attributes.Count];
+            Lists.Class[i].Tex_Male = new System.Collections.Generic.List<short>();
+            Lists.Class[i].Tex_Female = new System.Collections.Generic.List<short>();
+            Lists.Class[i].Item = new System.Collections.Generic.List<Tuple<short, short>>();
 
             // Lê os dados
             Lists.Class[i].Name = Data.ReadString();
-            Lists.Class[i].Texture_Male = Data.ReadInt16();
-            Lists.Class[i].Texture_Female = Data.ReadInt16();
+            Lists.Class[i].Description = Data.ReadString();
+            byte Num_Tex_Male = Data.ReadByte();
+            for (byte t = 0; t < Num_Tex_Male; t++) Lists.Class[i].Tex_Male.Add(Data.ReadInt16());
+            byte Num_Tex_Female = Data.ReadByte();
+            for (byte t = 0; t < Num_Tex_Female; t++) Lists.Class[i].Tex_Female.Add(Data.ReadInt16());
             Lists.Class[i].Spawn_Map = Data.ReadInt16();
             Lists.Class[i].Spawn_Direction = Data.ReadByte();
             Lists.Class[i].Spawn_X = Data.ReadByte();
             Lists.Class[i].Spawn_Y = Data.ReadByte();
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
+            byte Num_Items = Data.ReadByte();
+            for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(new Tuple<short, short> (Data.ReadInt16(), Data.ReadInt16()));
         }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Classes.Open();
+        if (Globals.OpenEditor == Editor_Classes.Objects) Editor_Classes.Open();
     }
 
-    public static void Maps(NetIncomingMessage Data)
+    private static void Maps(NetIncomingMessage Data)
     {
         // Quantidade de mapas
         Lists.Map = new Lists.Structures.Map[Data.ReadInt16()];
     }
 
-    public static void Map(NetIncomingMessage Data)
+    private static void Map(NetIncomingMessage Data)
     {
         // Dados básicos
         short i = Data.ReadInt16();
@@ -190,47 +202,52 @@ partial class Receive
         if (Data.ReadBoolean()) Editor_Maps.Open();
     }
 
-    public static void NPCs(NetIncomingMessage Data)
+    private static void NPCs(NetIncomingMessage Data)
     {
         // Quantidade de nocs
-        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16() + 1];
+        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16()];
 
         for (short i = 1; i < Lists.NPC.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.NPC[i] = new Lists.Structures.NPC();
             Lists.NPC[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.NPC[i].Attribute = new short[(byte)Globals.Attributes.Count];
-            Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Globals.Max_NPC_Drop];
+            Lists.NPC[i].Drop = new System.Collections.Generic.List<Lists.Structures.NPC_Drop>();
+            Lists.NPC[i].Allie = new System.Collections.Generic.List<short>();
 
             // Lê os dados
             Lists.NPC[i].Name = Data.ReadString();
+            Lists.NPC[i].SayMsg = Data.ReadString();
             Lists.NPC[i].Texture = Data.ReadInt16();
             Lists.NPC[i].Behaviour = Data.ReadByte();
             for (byte n = 0; n < (byte)Globals.Vitals.Count; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
             Lists.NPC[i].SpawnTime = Data.ReadByte();
             Lists.NPC[i].Sight = Data.ReadByte();
-            Lists.NPC[i].Experience = Data.ReadByte();
+            Lists.NPC[i].Experience = Data.ReadInt32();
             for (byte n = 0; n < (byte)Globals.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
-            for (byte n = 0; n < Globals.Max_NPC_Drop; n++)
-            {
-                Lists.NPC[i].Drop[n].Item_Num = Data.ReadInt16();
-                Lists.NPC[i].Drop[n].Amount = Data.ReadInt16();
-                Lists.NPC[i].Drop[n].Chance = Data.ReadByte();
-            }
+            byte Num_Drops = Data.ReadByte();
+            for (byte n = 0; n < Num_Drops; n++) Lists.NPC[i].Drop.Add(new Lists.Structures.NPC_Drop(Data.ReadInt16(), Data.ReadInt16(), Data.ReadByte()));
+            Lists.NPC[i].AttackNPC = Data.ReadBoolean();
+            byte Num_Allies = Data.ReadByte();
+            for (byte n = 0; n < Num_Allies; n++) Lists.NPC[i].Allie.Add(Data.ReadInt16());
+            Lists.NPC[i].Movement = (Globals.NPC_Movements)Data.ReadByte();
+            Lists.NPC[i].Flee_Helth = Data.ReadByte();
         }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_NPCs.Open();
+        if (Globals.OpenEditor == Editor_NPCs.Objects) Editor_NPCs.Open();
     }
 
-    public static void Items(NetIncomingMessage Data)
+    private static void Items(NetIncomingMessage Data)
     {
         // Quantidade de itens
-        Lists.Item = new Lists.Structures.Item[Data.ReadInt16() + 1];
+        Lists.Item = new Lists.Structures.Item[Data.ReadInt16()];
 
         for (short i = 1; i < Lists.Item.Length; i++)
         {
             // Redimensiona os valores necessários 
+            Lists.Item[i] = new Lists.Structures.Item();
             Lists.Item[i].Potion_Vital = new short[(byte)Globals.Vitals.Count];
             Lists.Item[i].Equip_Attribute = new short[(byte)Globals.Attributes.Count];
 
@@ -241,10 +258,11 @@ partial class Receive
             Lists.Item[i].Type = Data.ReadByte();
             Lists.Item[i].Price = Data.ReadInt16();
             Lists.Item[i].Stackable = Data.ReadBoolean();
-            Lists.Item[i].Bind = Data.ReadBoolean();
+            Lists.Item[i].Bind = Data.ReadByte();
+            Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
-            Lists.Item[i].Potion_Experience = Data.ReadInt16();
+            Lists.Item[i].Potion_Experience = Data.ReadInt32();
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
@@ -252,21 +270,23 @@ partial class Receive
         }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Items.Open();
+        if (Globals.OpenEditor == Editor_Items.Objects) Editor_Items.Open();
     }
 
-    public static void Tiles(NetIncomingMessage Data)
+    private static void Tiles(NetIncomingMessage Data)
     {
-        Lists.Tile = new Lists.Structures.Tile[Data.ReadByte()];
+        // Limpa os dados dos azulejos
+        Lists.Tile = new Lists.Structures.Tile[Graphics.Tex_Tile.Length];
+        for (byte i = 1; i < Graphics.Tex_Tile.Length; i++) Clear.Tile(i);
 
-        for (byte i = 1; i < Lists.Tile.Length; i++)
+        // Lê os dados
+        byte Num_Tiles = Data.ReadByte();
+        for (byte i = 1; i < Num_Tiles; i++)
         {
             // Dados básicos
             byte Width = Data.ReadByte();
             byte Height = Data.ReadByte();
 
-            // Dados de cada azulejo
-            Clear.Tile(i);
             for (byte x = 0; x <= Width; x++)
                 for (byte y = 0; y <= Height; y++)
                 {
@@ -289,7 +309,6 @@ partial class Receive
         }
 
         // Abre o editor
-        if (Data.ReadBoolean())
-            Editor_Tiles.Open();
+        if (Globals.OpenEditor == Editor_Tiles.Objects) Editor_Tiles.Open();
     }
 }

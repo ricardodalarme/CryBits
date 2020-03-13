@@ -7,7 +7,7 @@ class Program
     public static bool Working = true;
 
     [STAThread]
-    public static void Main()
+    static void Main()
     {
         // Verifica se todos os diretórios existem, se não existirem então criá-los
         Directories.Create();
@@ -15,18 +15,16 @@ class Program
         // Carrega todos os dados
         Read.Data();
 
-        // Inicializa todos os dispositivos
-        Graphics.LoadTextures();
-        Audio.Sound.Load();
-        Socket.Init();
-
         // Abre a janela
         Game.OpenMenu();
-        Window.Objects.Text = Lists.Options.GameName;
-        Window.Objects.Visible = true;
+
+        // Inicializa todos os dispositivos
+        Socket.Init();
+        Audio.Sound.Load();
+        Graphics.Init();
 
         // Inicia a aplicação
-        Loop.Main();
+        Loop.Init();
     }
 
     public static void Close()

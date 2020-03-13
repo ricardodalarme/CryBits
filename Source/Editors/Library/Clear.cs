@@ -30,25 +30,24 @@ class Clear
         Lists.Class[Index].Name = string.Empty;
         Lists.Class[Index].Vital = new short[(byte)Globals.Vitals.Count];
         Lists.Class[Index].Attribute = new short[(byte)Globals.Attributes.Count];
+        Lists.Class[Index].Tex_Male = new List<short>();
+        Lists.Class[Index].Tex_Female = new List<short>();
+        Lists.Class[Index].Item = new List<System.Tuple<short, short>>();
         Lists.Class[Index].Spawn_Map = 1;
     }
 
-    public static void NPC(byte Index)
+    public static void NPC(short Index)
     {
         // Reseta os valores
         Lists.NPC[Index] = new Lists.Structures.NPC();
         Lists.NPC[Index].Name = string.Empty;
         Lists.NPC[Index].Vital = new short[(byte)Globals.Vitals.Count];
         Lists.NPC[Index].Attribute = new short[(byte)Globals.Attributes.Count];
-        Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[Globals.Max_NPC_Drop];
-        for (byte i = 0; i < Globals.Max_NPC_Drop; i++)
-        {
-            Lists.NPC[Index].Drop[i].Chance = 100;
-            Lists.NPC[Index].Drop[i].Amount = 1;
-        }
+        Lists.NPC[Index].Drop = new List<Lists.Structures.NPC_Drop>();
+        Lists.NPC[Index].Allie = new List<short>();
     }
 
-    public static void Item(byte Index)
+    public static void Item(short Index)
     {
         // Reseta os valores
         Lists.Item[Index] = new Lists.Structures.Item();
@@ -85,7 +84,7 @@ class Clear
                 Lists.Map[Index].Tile[x, y].Block = new bool[(byte)Globals.Directions.Count];
     }
 
-    public static void Map_Layers(short Index)
+    private static void Map_Layers(short Index)
     {
         for (byte c = 0; c < Lists.Map[Index].Layer.Count; c++)
         {

@@ -4,10 +4,10 @@ using System.Windows.Forms;
 class Loop
 {
     // Contagens
-    private static int TextBox_Timer = 0;
-    private static int Chat_Timer = 0;
+    public static int TextBox_Timer = 0;
+    public static int Chat_Timer = 0;
 
-    public static void Main()
+    public static void Init()
     {
         int Count;
         int Timer_1000 = 0;
@@ -21,14 +21,18 @@ class Loop
             // Manuseia os dados recebidos
             Socket.HandleData();
 
+            // Processa os eventos da janela
+            Graphics.RenderWindow.DispatchEvents();
+
             // Apresenta os gráficos à tela
             Graphics.Present();
 
             // Eventos
             TextBox();
-            Map.Logic();
 
             if (Player.MyIndex > 0 && Tools.CurrentWindow == Tools.Windows.Game)
+            {
+                Map.Logic();
                 if (Timer_30 < Environment.TickCount)
                 {
                     // Lógicas
@@ -38,6 +42,7 @@ class Loop
                     // Reinicia a contagem
                     Timer_30 = Environment.TickCount + 30;
                 }
+            }
 
             // Faz com que a aplicação se mantenha estável
             Application.DoEvents();
@@ -72,12 +77,12 @@ class Loop
         }
 
         // Chat
-        if (Tools.Chat_Text_Visible && !Panels.Get("Chat").Visible)
+        if ((Chat.Text_Visible && !Panels.Get("Chat").Visible))
         {
             if (Chat_Timer < Environment.TickCount)
-                Tools.Chat_Text_Visible = false;
+                Chat.Text_Visible = false;
         }
-        else
+        else if (!Lists.Options.Chat)
             Chat_Timer = Chat_Timer = Environment.TickCount + 10000;
     }
 }

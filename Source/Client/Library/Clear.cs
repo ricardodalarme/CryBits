@@ -3,11 +3,12 @@
     public static void Options()
     {
         // Defini os dados das opções
-        Lists.Options.GameName = "CryBits";
+        Lists.Options.Game_Name = "CryBits";
         Lists.Options.SaveUsername = true;
         Lists.Options.Musics = true;
         Lists.Options.Sounds = true;
         Lists.Options.Username = string.Empty;
+        Lists.Options.Chat = true;
 
         // Salva o que foi modificado
         Write.Options();
@@ -21,6 +22,7 @@
         Lists.Player[Index].Max_Vital = new short[(byte)Game.Vitals.Count];
         Lists.Player[Index].Attribute = new short[(byte)Game.Attributes.Count];
         Lists.Player[Index].Equipment = new short[(byte)Game.Equipments.Count];
+        Lists.Player[Index].Party = new byte[0];
 
         // Reseta os valores
         Lists.Player[Index].Name = string.Empty;

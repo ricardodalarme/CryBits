@@ -28,6 +28,10 @@
     {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Data));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numMax_Map_Items = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.numMax_Party_Members = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
             this.txtWelcome = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.numPort = new System.Windows.Forms.NumericUpDown();
@@ -41,6 +45,8 @@
             this.butCancel = new System.Windows.Forms.Button();
             this.butSalve = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numMax_Map_Items)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMax_Party_Members)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Characters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Players)).BeginInit();
@@ -48,6 +54,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.numMax_Map_Items);
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.numMax_Party_Members);
+            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.txtWelcome);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.numPort);
@@ -60,16 +70,58 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(263, 196);
+            this.groupBox1.Size = new System.Drawing.Size(288, 233);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General";
+            // 
+            // numMax_Map_Items
+            // 
+            this.numMax_Map_Items.Location = new System.Drawing.Point(147, 200);
+            this.numMax_Map_Items.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numMax_Map_Items.Name = "numMax_Map_Items";
+            this.numMax_Map_Items.Size = new System.Drawing.Size(129, 20);
+            this.numMax_Map_Items.TabIndex = 12;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(144, 184);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(104, 13);
+            this.label7.TabIndex = 11;
+            this.label7.Text = "Maximum map items:";
+            // 
+            // numMax_Party_Members
+            // 
+            this.numMax_Party_Members.Location = new System.Drawing.Point(9, 200);
+            this.numMax_Party_Members.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numMax_Party_Members.Name = "numMax_Party_Members";
+            this.numMax_Party_Members.Size = new System.Drawing.Size(132, 20);
+            this.numMax_Party_Members.TabIndex = 10;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 184);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(125, 13);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "Maximum party members:";
             // 
             // txtWelcome
             // 
             this.txtWelcome.Location = new System.Drawing.Point(9, 80);
             this.txtWelcome.Name = "txtWelcome";
-            this.txtWelcome.Size = new System.Drawing.Size(246, 20);
+            this.txtWelcome.Size = new System.Drawing.Size(267, 20);
             this.txtWelcome.TabIndex = 2;
             // 
             // label5
@@ -90,7 +142,7 @@
             0,
             0});
             this.numPort.Name = "numPort";
-            this.numPort.Size = new System.Drawing.Size(246, 20);
+            this.numPort.Size = new System.Drawing.Size(267, 20);
             this.numPort.TabIndex = 3;
             // 
             // label4
@@ -106,7 +158,7 @@
             // 
             this.txtGame_Name.Location = new System.Drawing.Point(9, 41);
             this.txtGame_Name.Name = "txtGame_Name";
-            this.txtGame_Name.Size = new System.Drawing.Size(246, 20);
+            this.txtGame_Name.Size = new System.Drawing.Size(267, 20);
             this.txtGame_Name.TabIndex = 1;
             // 
             // label3
@@ -120,15 +172,25 @@
             // 
             // numMax_Characters
             // 
-            this.numMax_Characters.Location = new System.Drawing.Point(135, 161);
+            this.numMax_Characters.Location = new System.Drawing.Point(147, 161);
+            this.numMax_Characters.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numMax_Characters.Name = "numMax_Characters";
-            this.numMax_Characters.Size = new System.Drawing.Size(120, 20);
+            this.numMax_Characters.Size = new System.Drawing.Size(129, 20);
             this.numMax_Characters.TabIndex = 5;
+            this.numMax_Characters.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(132, 145);
+            this.label2.Location = new System.Drawing.Point(144, 145);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(107, 13);
             this.label2.TabIndex = 2;
@@ -137,9 +199,19 @@
             // numMax_Players
             // 
             this.numMax_Players.Location = new System.Drawing.Point(9, 161);
+            this.numMax_Players.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numMax_Players.Name = "numMax_Players";
-            this.numMax_Players.Size = new System.Drawing.Size(120, 20);
+            this.numMax_Players.Size = new System.Drawing.Size(132, 20);
             this.numMax_Players.TabIndex = 4;
+            this.numMax_Players.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // label1
             // 
@@ -152,9 +224,9 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(150, 214);
+            this.butCancel.Location = new System.Drawing.Point(163, 251);
             this.butCancel.Name = "butCancel";
-            this.butCancel.Size = new System.Drawing.Size(125, 25);
+            this.butCancel.Size = new System.Drawing.Size(137, 25);
             this.butCancel.TabIndex = 20;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
@@ -162,9 +234,9 @@
             // 
             // butSalve
             // 
-            this.butSalve.Location = new System.Drawing.Point(12, 214);
+            this.butSalve.Location = new System.Drawing.Point(12, 251);
             this.butSalve.Name = "butSalve";
-            this.butSalve.Size = new System.Drawing.Size(129, 25);
+            this.butSalve.Size = new System.Drawing.Size(140, 25);
             this.butSalve.TabIndex = 19;
             this.butSalve.Text = "Save";
             this.butSalve.UseVisualStyleBackColor = true;
@@ -174,7 +246,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(288, 250);
+            this.ClientSize = new System.Drawing.Size(312, 287);
             this.ControlBox = false;
             this.Controls.Add(this.butCancel);
             this.Controls.Add(this.butSalve);
@@ -187,6 +259,8 @@
             this.Text = "Data Editor";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numMax_Map_Items)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMax_Party_Members)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Characters)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Players)).EndInit();
@@ -209,4 +283,8 @@
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label5;
     public System.Windows.Forms.TextBox txtWelcome;
+    public System.Windows.Forms.NumericUpDown numMax_Party_Members;
+    private System.Windows.Forms.Label label6;
+    public System.Windows.Forms.NumericUpDown numMax_Map_Items;
+    private System.Windows.Forms.Label label7;
 }

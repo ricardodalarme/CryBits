@@ -48,26 +48,26 @@ class Directories
         Selection.Objects.txtDirectory_Client.Text = Directory;
 
         // Cliente
-        Fonts = new DirectoryInfo(Directory + @"\Fonts\");
         Sounds = new DirectoryInfo(Directory + @"\Audio\Sounds\");
         Musics = new DirectoryInfo(Directory + @"\Audio\Musics\");
         Tools = new FileInfo(Directory + @"\Data\Tools" + Format);
+        Fonts = new DirectoryInfo(Directory + @"\Graphics\Fonts\");
         Tex_Panoramas = new DirectoryInfo(Directory + @"\Graphics\Panoramas\");
         Tex_Lights = new DirectoryInfo(Directory + @"\Graphics\Lights\");
         Tex_Fogs = new DirectoryInfo(Directory + @"\Graphics\Fogs\");
         Tex_Characters = new DirectoryInfo(Directory + @"\Graphics\Characters\");
         Tex_Faces = new DirectoryInfo(Directory + @"\Graphics\Faces\");
-        Tex_Painel = new DirectoryInfo(Directory + @"\Graphics\Interface\Tools\Panels\");
-        Tex_Buttons = new DirectoryInfo(Directory + @"\Graphics\Interface\Tools\Buttons\");
-        Tex_CheckBox = new FileInfo(Directory + @"\Graphics\Interface\Tools\CheckBox");
-        Tex_TextBox = new FileInfo(Directory + @"\Graphics\Interface\Tools\TextBox");
+        Tex_Painel = new DirectoryInfo(Directory + @"\Graphics\Interface\Panels\");
+        Tex_Buttons = new DirectoryInfo(Directory + @"\Graphics\Interface\Buttons\");
+        Tex_CheckBox = new FileInfo(Directory + @"\Graphics\Interface\CheckBox");
+        Tex_TextBox = new FileInfo(Directory + @"\Graphics\Interface\TextBox");
         Tex_Tiles = new DirectoryInfo(Directory + @"\Graphics\Tiles\");
-        Tex_Grid = new FileInfo(Directory + @"\Graphics\Grid");
-        Tex_Weather = new FileInfo(Directory + @"\Graphics\Weather");
-        Tex_Blanc = new FileInfo(Directory + @"\Graphics\Blank");
-        Tex_Directions = new FileInfo(Directory + @"\Graphics\Directions");
-        Tex_Transparent = new FileInfo(Directory + @"\Graphics\Transparent");
-        Tex_Lighting = new FileInfo(Directory + @"\Graphics\Lighting");
+        Tex_Grid = new FileInfo(Directory + @"\Graphics\Misc\Grid");
+        Tex_Weather = new FileInfo(Directory + @"\Graphics\Misc\Weather");
+        Tex_Blanc = new FileInfo(Directory + @"\Graphics\Misc\Blank");
+        Tex_Directions = new FileInfo(Directory + @"\Graphics\Misc\Directions");
+        Tex_Transparent = new FileInfo(Directory + @"\Graphics\Misc\Transparent");
+        Tex_Lighting = new FileInfo(Directory + @"\Graphics\Misc\Lighting");
         Tex_Items = new DirectoryInfo(Directory + @"\Graphics\Items\");
 
         // Cria os diretórios

@@ -14,21 +14,20 @@ class CheckBoxes
     {
         // Dados
         public string Text;
-        public bool State;
+        public bool Checked;
 
         // Eventos
         public void MouseUp()
         {
             // Tamanho do marcador
             Size Texture_Size = Graphics.TSize(Graphics.Tex_CheckBox);
-            int Text_Width = Tools.MeasureString(Text);
-            Size Box = new Size(Texture_Size.Width / 2 + Text_Width + Margin, Texture_Size.Height);
+            Size Box = new Size(Texture_Size.Width / 2 + Tools.MeasureString(Text) + Margin, Texture_Size.Height);
 
             // Somente se estiver sobrepondo a ferramenta
             if (!Tools.IsAbove(new Rectangle(Position, Box))) return;
 
             // Altera o estado do marcador
-            State = !State;
+            Checked = !Checked;
 
             // Executa o evento
             Execute(Name);
@@ -38,15 +37,11 @@ class CheckBoxes
 
     public static Structure Get(string Name)
     {
-        // Lista os nomes das ferramentas
-        for (byte i = 0; i < List.Count; i++)
-            if (List[i].Name.Equals(Name))
-                return List[i];
-
-        return null;
+        // Retorna a caixa de marcação procurada
+        return List.Find(x => x.Name.Equals(Name));
     }
 
-    public static void Execute(string Name)
+    private static void Execute(string Name)
     {
         // Executa o evento do marcador
         switch (Name)
@@ -58,10 +53,11 @@ class CheckBoxes
             case "GenderFemale": GenreFemale(); break;
             case "Options_Sounds": Sounds(); break;
             case "Options_Musics": Musics(); break;
+            case "Options_Chat": Chat(); break;
         }
     }
-
-    public static void Sounds()
+    
+    private static void Sounds()
     {
         // Salva os dados
         Lists.Options.Sounds = !Lists.Options.Sounds;
@@ -69,7 +65,7 @@ class CheckBoxes
         Write.Options();
     }
 
-    public static void Musics()
+    private static void Musics()
     {
         // Salva os dados
         Lists.Options.Musics = !Lists.Options.Musics;
@@ -84,22 +80,31 @@ class CheckBoxes
             Audio.Music.Play((Audio.Musics)Lists.Map.Music);
     }
 
-    public static void SaveUsername()
+    private static void SaveUsername()
     {
         // Salva os dados
-        Lists.Options.SaveUsername = Get("Connect_Save_Username").State;
+        Lists.Options.SaveUsername = Get("Connect_Save_Username").Checked;
         Write.Options();
     }
 
-    public static void GenreName()
+    private static void GenreName()
     {
         // Altera o estado do marcador de outro gênero
-        Get("GenderFemale").State = !Get("GenderMale").State;
+        Get("GenderFemale").Checked = !Get("GenderMale").Checked;
+        Game.CreateCharacter_Tex = 0;
     }
 
-    public static void GenreFemale()
+    private static void GenreFemale()
     {
         // Altera o estado do marcador de outro gênero
-        Get("GenderMale").State = !Get("GenderFemale").State;
+        Get("GenderMale").Checked = !Get("GenderFemale").Checked;
+        Game.CreateCharacter_Tex = 0;
+    }
+
+    private static void Chat()
+    {
+        // Desabilita a prévia do chat
+        Lists.Options.Chat = global::Chat.Text_Visible = Get("Options_Chat").Checked;
+        Write.Options();
     }
 }

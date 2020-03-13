@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 class Player
@@ -6,7 +7,7 @@ class Player
     public static Character_Structure Character(byte Index)
     {
         // Retorna com os valores do personagem atual
-        return Lists.Player[Index].Character[Lists.TempPlayer[Index].Using];
+        return Lists.Player[Index].Character[Lists.Temp_Player[Index].Using];
     }
 
     public class Character_Structure
@@ -15,12 +16,13 @@ class Player
         public byte Index;
         public string Name = string.Empty;
         public byte Class;
+        public short Texture_Num;
         public bool Genre;
         public short Level;
-        private short experience;
+        public int Experience;
         public byte Points;
-        public short[] Vital = new short[(byte)Game.Vitals.Amount];
-        public short[] Attribute = new short[(byte)Game.Attributes.Amount];
+        public short[] Vital = new short[(byte)Game.Vitals.Count];
+        public short[] Attribute = new short[(byte)Game.Attributes.Count];
         public short Map;
         public byte X;
         public byte Y;
@@ -29,18 +31,19 @@ class Player
         public Lists.Structures.Inventories[] Inventory;
         public short[] Equipment;
         public Lists.Structures.Hotbar[] Hotbar;
+        public List<byte> Party;
 
-        public short Experience
+        public void GiveExperience(int Value)
         {
-            get
-            {
-                return experience;
-            }
-            set
-            {
-                experience = value;
-                CheckLevelUp(Index);
-            }
+            // Dá a experiência ao jogador, caso ele estiver em um grupo divide a experiência entre os membros
+            if (Party.Count > 0 && Value > 0) Party_SplitXP(Index, Value);
+            else Experience += Value;
+
+            // Verifica se a experiência não ficou negtiva
+            if (Character(Index).Experience < 0) Character(Index).Experience = 0;
+
+            // Verifica se passou de level
+            CheckLevelUp(Index);
         }
 
         // Cálcula o dano do jogador
@@ -93,14 +96,14 @@ class Player
             return 0;
         }
 
-        public short ExpNeeded
+        public int ExpNeeded
         {
             get
             {
                 short Total = 0;
-                // Amount de experiência para passar para o próximo level
-                for (byte i = 0; i <= (byte)(Game.Attributes.Amount - 1); i++) Total += Attribute[i];
-                return (short)((Level + 1) * 2.5 + (Total + Points) / 2);
+                // Quantidade de experiência para passar para o próximo level
+                for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Total += Attribute[i];
+                return (int)((Level + 1) * 2.5 + (Total + Points) / 2);
             }
         }
     }
@@ -108,11 +111,10 @@ class Player
     public static void Join(byte Index)
     {
         // Previne que alguém que já está online de logar
-        if (IsPlaying(Index))
-            return;
+        if (IsPlaying(Index)) return;
 
         // Define que o jogador está dentro do jogo
-        Lists.TempPlayer[Index].Playing = true;
+        Lists.Temp_Player[Index].Playing = true;
 
         // Envia todos os dados necessários
         Send.Join(Index);
@@ -134,22 +136,26 @@ class Player
 
     public static void Leave(byte Index)
     {
-        // Limpa os dados do jogador
-        Clear.Player(Index);
+        // Sai do grupo
+        if (Lists.Temp_Player[Index].Playing)
+            Party_Leave(Index);
 
         // Salva os dados do e envia atualiza os demais jogadores da desconexão
-        if (!Lists.TempPlayer[Index].InEditor)
+        if (!Lists.Temp_Player[Index].InEditor)
         {
             Write.Player(Index);
             Send.Player_Leave(Index);
         }
+
+        // Limpa os dados do jogador
+        Clear.Player(Index);
     }
 
     public static bool IsPlaying(byte Index)
     {
         // Verifica se o jogador está dentro do jogo
         if (Socket.IsConnected(Index))
-            if (Lists.TempPlayer[Index].Playing)
+            if (Lists.Temp_Player[Index].Playing)
                 return true;
 
         return false;
@@ -207,7 +213,7 @@ class Player
         return false;
     }
 
-    public static void Move(byte Index, byte Movimento)
+    public static void Move(byte Index, byte Movement)
     {
         byte x = Character(Index).X, y = Character(Index).Y;
         short Map_Num = Character(Index).Map;
@@ -216,8 +222,8 @@ class Player
         bool SecondMovement = false;
 
         // Previne erros
-        if (Movimento < 1 || Movimento > 2) return;
-        if (Lists.TempPlayer[Index].GettingMap) return;
+        if (Movement < 1 || Movement > 2) return;
+        if (Lists.Temp_Player[Index].GettingMap) return;
 
         // Próximo azulejo
         Map.NextTile(Character(Index).Direction, ref Next_X, ref Next_Y);
@@ -228,10 +234,10 @@ class Player
             if (Link > 0)
                 switch (Character(Index).Direction)
                 {
-                    case Game.Directions.Up: Warp(Index, Link, x, Lists.Map[Map_Num].Height); break;
-                    case Game.Directions.Down: Warp(Index, Link, x, 0); break;
-                    case Game.Directions.Right: Warp(Index, Link, 0, y); break;
-                    case Game.Directions.Left: Warp(Index, Link, Lists.Map[Map_Num].Width, y); break;
+                    case Game.Directions.Up: Warp(Index, Link, x, Lists.Map[Map_Num].Height); return;
+                    case Game.Directions.Down: Warp(Index, Link, x, 0); return;
+                    case Game.Directions.Right: Warp(Index, Link, 0, y); return;
+                    case Game.Directions.Left: Warp(Index, Link, Lists.Map[Map_Num].Width, y); return;
                 }
             else
             {
@@ -261,12 +267,12 @@ class Player
 
         // Envia os dados
         if (!SecondMovement && (x != Character(Index).X || y != Character(Index).Y))
-            Send.Player_Move(Index, Movimento);
+            Send.Player_Move(Index, Movement);
         else
             Send.Player_Position(Index);
     }
 
-    public static void Warp(byte Index, short Map, byte x, byte y)
+    private static void Warp(byte Index, short Map, byte x, byte y)
     {
         short Map_Old = Character(Index).Map;
 
@@ -292,7 +298,7 @@ class Player
         Send.Player_Position(Index);
 
         // Atualiza os valores
-        Lists.TempPlayer[Index].GettingMap = true;
+        Lists.Temp_Player[Index].GettingMap = true;
 
         // Verifica se será necessário enviar os dados do mapa para o jogador
         Send.Map_Revision(Index, Map);
@@ -332,7 +338,7 @@ class Player
         Character(Index).Attack_Timer = Environment.TickCount;
     }
 
-    public static void Attack_Player(byte Index, byte Victim)
+    private static void Attack_Player(byte Index, byte Victim)
     {
         short Damage;
         short x = Character(Index).X, y = Character(Index).Y;
@@ -342,17 +348,14 @@ class Player
 
         // Verifica se a vítima pode ser atacada
         if (!IsPlaying(Victim)) return;
-        if (Lists.TempPlayer[Victim].GettingMap) return;
+        if (Lists.Temp_Player[Victim].GettingMap) return;
         if (Character(Index).Map != Character(Victim).Map) return;
         if (Character(Victim).X != x || Character(Victim).Y != y) return;
         if (Lists.Map[Character(Index).Map].Moral == (byte)Map.Morals.Pacific)
         {
-            Send.Message(Index, "This is a peaceful area..", Color.White);
+            Send.Message(Index, "This is a peaceful area.", Color.White);
             return;
         }
-
-        // Demonstra o ataque aos outros jogadores
-        Send.Player_Attack(Index, Victim, (byte)Game.Target.Player);
 
         // Tempo de ataque 
         Character(Index).Attack_Timer = Environment.TickCount;
@@ -362,7 +365,11 @@ class Player
 
         // Dano não fatal
         if (Damage > 0)
-            if (Damage <= Character(Victim).MaxVital((byte)Game.Vitals.HP))
+        {
+            // Demonstra o ataque aos outros jogadores
+            Send.Player_Attack(Index, Victim, (byte)Game.Target.Player);
+
+            if (Damage < Character(Victim).MaxVital((byte)Game.Vitals.HP))
             {
                 Character(Victim).Vital[(byte)Game.Vitals.HP] -= Damage;
                 Send.Player_Vitals(Victim);
@@ -371,42 +378,54 @@ class Player
             else
             {
                 // Dá 10% da experiência da vítima ao atacante
-                Character(Index).Experience += (short)(Character(Victim).Experience / 10);
+                Character(Index).GiveExperience(Character(Victim).Experience / 10);
 
                 // Mata a vítima
                 Died(Victim);
             }
+        }
+        else
+            // Demonstra o ataque aos outros jogadores
+            Send.Player_Attack(Index);
     }
 
-    public static void Attack_NPC(byte Index, byte Victim)
+    private static void Attack_NPC(byte Index, byte Victim)
     {
         short Damage;
         short x = Character(Index).X, y = Character(Index).Y;
-        Lists.Structures.Map_NPCs NPC = Lists.Temp_Map[Character(Index).Map].NPC[Victim];
+        Lists.Structures.Map_NPCs Map_NPC = Lists.Temp_Map[Character(Index).Map].NPC[Victim];
 
         // Define o azujelo a frente do jogador
         Map.NextTile(Character(Index).Direction, ref x, ref y);
 
         // Verifica se a vítima pode ser atacada
-        if (NPC.X != x || NPC.Y != y) return;
-        if (Lists.NPC[NPC.Index].Behaviour == (byte)global::NPC.Behaviour.Friendly) return;
+        if (Map_NPC.X != x || Map_NPC.Y != y) return;
+
+        // Mensagem
+        if (Map_NPC.Target_Index != Index && !string.IsNullOrEmpty(Lists.NPC[Map_NPC.Index].SayMsg)) Send.Message(Index, Lists.NPC[Map_NPC.Index].Name + ": " + Lists.NPC[Map_NPC.Index].SayMsg, Color.White);
+
+        // Não executa o combate com um NPC amigavel
+        if (Lists.NPC[Map_NPC.Index].Behaviour == (byte)global::NPC.Behaviour.Friendly) return;
 
         // Define o alvo do NPC
         Lists.Temp_Map[Character(Index).Map].NPC[Victim].Target_Index = Index;
         Lists.Temp_Map[Character(Index).Map].NPC[Victim].Target_Type = (byte)Game.Target.Player;
 
-        // Demonstra o ataque aos outros jogadores
-        Send.Player_Attack(Index, Victim, (byte)Game.Target.NPC);
-
         // Tempo de ataque 
         Character(Index).Attack_Timer = Environment.TickCount;
 
         // Cálculo de dano
-        Damage = (short)(Character(Index).Damage - Lists.NPC[NPC.Index].Attribute[(byte)Game.Attributes.Resistance]);
+        Damage = (short)(Character(Index).Damage - Lists.NPC[Map_NPC.Index].Attribute[(byte)Game.Attributes.Resistance]);
+
+        // Demonstra o ataque aos outros jogadores
 
         // Dano não fatal
         if (Damage > 0)
-            if (Damage < Lists.Temp_Map[Character(Index).Map].NPC[Victim].Vital[(byte)Game.Vitals.HP])
+        {
+            // Demonstra o ataque aos outros jogadores
+            Send.Player_Attack(Index, Victim, (byte)Game.Target.NPC);
+
+            if (Damage < Map_NPC.Vital[(byte)Game.Vitals.HP])
             {
                 Lists.Temp_Map[Character(Index).Map].NPC[Victim].Vital[(byte)Game.Vitals.HP] -= Damage;
                 Send.Map_NPC_Vitals(Character(Index).Map, Victim);
@@ -415,11 +434,15 @@ class Player
             else
             {
                 // Experiência ganhada
-                Character(Index).Experience += Lists.NPC[NPC.Index].Experience;
+                Character(Index).GiveExperience(Lists.NPC[Map_NPC.Index].Experience);
 
                 // Reseta os dados do NPC 
-                global::NPC.Died(Character(Index).Map, Victim);
+                NPC.Died(Character(Index).Map, Victim);
             }
+        }
+        else
+            // Demonstra o ataque aos outros jogadores
+            Send.Player_Attack(Index);
     }
 
     public static void Died(byte Index)
@@ -427,7 +450,7 @@ class Player
         Lists.Structures.Class Data = Lists.Class[Character(Index).Class];
 
         // Recupera os vitais
-        for (byte n = 0; n < (byte)Game.Vitals.Amount; n++)
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
             Character(Index).Vital[n] = Character(Index).MaxVital(n);
 
         // Perde 10% da experiência
@@ -451,7 +474,7 @@ class Player
             // Reneração // 
             ///////////////
             if (Environment.TickCount > Loop.Timer_Player_Regen + 5000)
-                for (byte v = 0; v < (byte)Game.Vitals.Amount; v++)
+                for (byte v = 0; v < (byte)Game.Vitals.Count; v++)
                     if (Character(i).Vital[v] < Character(i).MaxVital(v))
                     {
                         // Renera a vida do jogador
@@ -467,9 +490,9 @@ class Player
         if (Environment.TickCount > Loop.Timer_Player_Regen + 5000) Loop.Timer_Player_Regen = Environment.TickCount;
     }
 
-    public static void CheckLevelUp(byte Index)
+    private static void CheckLevelUp(byte Index)
     {
-        byte NumLevel = 0; short ExpRest;
+        byte NumLevel = 0; int ExpRest;
 
         // Previne erros
         if (!IsPlaying(Index)) return;
@@ -477,7 +500,7 @@ class Player
         while (Character(Index).Experience >= Character(Index).ExpNeeded)
         {
             NumLevel += 1;
-            ExpRest = (short)(Character(Index).Experience - Character(Index).ExpNeeded);
+            ExpRest = Character(Index).Experience - Character(Index).ExpNeeded;
 
             // Define os dados
             Character(Index).Level += 1;
@@ -515,27 +538,30 @@ class Player
         return true;
     }
 
-    public static void DropItem(byte Index, byte Slot)
+    public static void DropItem(byte Index, byte Slot, short Amount)
     {
         short Map_Num = Character(Index).Map;
         Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
 
         // Somente se necessário
-        if (Lists.Temp_Map[Map_Num].Item.Count == Game.Max_Map_Items) return;
+        if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
         if (Character(Index).Inventory[Slot].Item_Num == 0) return;
-        if (Lists.Item[Character(Index).Inventory[Slot].Item_Num].Bind) return;
+        if (Lists.Item[Character(Index).Inventory[Slot].Item_Num].Bind == (byte)Game.BindOn.Pickup) return;
+
+        // Verifica se não está dropando mais do que tem
+        if (Amount > Character(Index).Inventory[Slot].Amount) Amount = Character(Index).Inventory[Slot].Amount;
 
         // Solta o item no chão
         Map_Item.Index = Character(Index).Inventory[Slot].Item_Num;
-        Map_Item.Amount = Character(Index).Inventory[Slot].Amount;
+        Map_Item.Amount = Amount;
         Map_Item.X = Character(Index).X;
         Map_Item.Y = Character(Index).Y;
         Lists.Temp_Map[Map_Num].Item.Add(Map_Item);
         Send.Map_Items(Map_Num);
 
         // Retira o item do inventário do jogador 
-        Character(Index).Inventory[Slot].Item_Num = 0;
-        Character(Index).Inventory[Slot].Amount = 0;
+        if (Amount == Character(Index).Inventory[Slot].Amount) Character(Index).Inventory[Slot].Item_Num = 0;
+        Character(Index).Inventory[Slot].Amount = (short)(Character(Index).Inventory[Slot].Amount - Amount);
         Send.Player_Inventory(Index);
     }
 
@@ -575,7 +601,7 @@ class Player
 
             // Equipa o item
             Character(Index).Equipment[Lists.Item[Item_Num].Equip_Type] = Item_Num;
-            for (byte i = 0; i < (byte)Game.Attributes.Amount; i++) Character(Index).Attribute[i] += Lists.Item[Item_Num].Equip_Attribute[i];
+            for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Character(Index).Attribute[i] += Lists.Item[Item_Num].Equip_Attribute[i];
 
             // Envia os dados
             Send.Player_Inventory(Index);
@@ -586,9 +612,8 @@ class Player
         {
             // Efeitos
             bool HadEffect = false;
-            Character(Index).Experience += Lists.Item[Item_Num].Potion_Experience;
-            if (Character(Index).Experience < 0) Character(Index).Experience = 0;
-            for (byte i = 0; i < (byte)Game.Vitals.Amount; i++)
+            Character(Index).GiveExperience(Lists.Item[Item_Num].Potion_Experience);
+            for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
             {
                 // Verifica se o item causou algum efeito 
                 if (Character(Index).Vital[i] < Character(Index).MaxVital(i) && Lists.Item[Item_Num].Potion_Vital[i] != 0) HadEffect = true;
@@ -633,5 +658,60 @@ class Player
                 return i;
 
         return 0;
+    }
+
+    public static void Party_Leave(byte Index)
+    {
+        // Retira o jogador do grupo
+        for (byte i = 0; i < Character(Index).Party.Count; i++)
+            Character(Character(Index).Party[i]).Party.Remove(Index);
+
+        // Envia o dados para todos os membros do grupo
+        for (byte i = 0; i < Character(Index).Party.Count; i++) Send.Party(Character(Index).Party[i]);
+        Character(Index).Party.Clear();
+        Send.Party(Index);
+    }
+
+    private static void Party_SplitXP(byte Index, int Experience)
+    {
+        // Somatório do level de todos os jogadores do grupo
+        int Given_Experience, Experience_Sum = 0, Difference;
+        double[] Diff = new double[Character(Index).Party.Count];
+        double Diff_Sum = 0, k;
+
+        // Cálcula a diferença dos leveis entre os jogadores
+        for (byte i = 0; i < Character(Index).Party.Count; i++)
+        {
+            Difference = Math.Abs(Character(Index).Level - Character(Character(Index).Party[i]).Level);
+
+            // Constante para a diminuir potêncialmente a experiência que diferenças altas ganhariam
+            if (Difference < 3) k = 1.15;
+            else if (Difference < 6) k = 1.55;
+            else if (Difference < 10) k = 1.85;
+            else k = 2.3;
+
+            // Transforma o valor em fração
+            Diff[i] = 1 / Math.Pow(k, Math.Min(15, Difference));
+            Diff_Sum += Diff[i];
+        }
+
+        // Divide a experiência pro grupo com base na diferença dos leveis 
+        for (byte i = 0; i < Character(Index).Party.Count; i++)
+        {
+            // Caso a somatório for maior que um (100%) balanceia os valores
+            if (Diff_Sum > 1) Diff[i] *= (1 / Diff_Sum);
+
+            // Divide a experiência
+            Given_Experience = (int)((Experience / 2) * Diff[i]);
+            Experience_Sum += Given_Experience;
+            Character(Character(Index).Party[i]).Experience+= Given_Experience;
+            CheckLevelUp(Character(Index).Party[i]);
+            Send.Player_Experience(Character(Index).Party[i]);
+        }
+
+        // Dá ao jogador principal o restante da experiência
+        Character(Index).Experience += Experience - Experience_Sum;
+        CheckLevelUp(Index);
+        Send.Player_Experience(Index);
     }
 }

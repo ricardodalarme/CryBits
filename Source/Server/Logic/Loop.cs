@@ -12,7 +12,7 @@ class Loop
     public static int Timer_NPC_Regen = 0;
     public static int Timer_Map_Items = 0;
 
-    public static void Main()
+    public static void Init()
     {
         int CPS = 0;
 

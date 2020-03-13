@@ -17,11 +17,11 @@ partial class Editor_Maps : Form
 
     // Posição do mouse
     public static Point Tile_Mouse;
-    public static Point Map_Mouse;
+    private static Point Map_Mouse;
 
     // Seleção retângular
-    public static Rectangle Def_Tiles_Selection = new Rectangle(0, 0, 1, 1);
-    public static Rectangle Def_Map_Selection = new Rectangle(0, 0, 1, 1);
+    private static Rectangle Def_Tiles_Selection = new Rectangle(0, 0, 1, 1);
+    private static Rectangle Def_Map_Selection = new Rectangle(0, 0, 1, 1);
 
     // Dados dos atributos
     private static short AData_1;
@@ -30,7 +30,7 @@ partial class Editor_Maps : Form
     private static short AData_4;
 
     // Azulejos copiados
-    public static Copy_Struct Tiles_Copy = new Copy_Struct();
+    private static Copy_Struct Tiles_Copy = new Copy_Struct();
 
     public struct Copy_Struct
     {
@@ -54,7 +54,7 @@ partial class Editor_Maps : Form
         // Volta ao menu
         e.Cancel = true;
         Visible = false;
-        global::Selection.Objects.Visible = true;
+        Selection.Objects.Visible = true;
     }
 
     private void Editor_Maps_SizeChanged(object sender, EventArgs e)
@@ -67,6 +67,7 @@ partial class Editor_Maps : Form
     public static void Request()
     {
         // Lê os dados
+        Globals.OpenEditor = Objects;
         Send.Request_NPCs();
         Send.Request_Tiles();
         Send.Request_Items();
@@ -131,8 +132,8 @@ partial class Editor_Maps : Form
         // Adiciona os itens às listas
         for (byte i = 1; i < Lists.Map.Length; i++)
         {
-            Objects.cmbList.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0)) + ":" + Lists.Map[i].Name);
-            Objects.cmbA_Warp_Map.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0)) + ":" + Lists.Map[i].Name);
+            Objects.cmbList.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0), Lists.Map[i].Name));
+            Objects.cmbA_Warp_Map.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0) , Lists.Map[i].Name));
         }
 
         // Seleciona o primeiro item
@@ -349,7 +350,7 @@ partial class Editor_Maps : Form
         Clear.Map(Selected);
 
         // Atualiza os valores
-        cmbList.Items[Selected - 1] = Globals.Numbering(Selected, cmbList.Items.Count) + ":";
+        cmbList.Items[Selected - 1] = Globals.Numbering(Selected, cmbList.Items.Count,string.Empty);
     }
 
     private void Copiar()
@@ -1295,7 +1296,7 @@ partial class Editor_Maps : Form
         }
     }
 
-    public static int Find_Layer(string Nome)
+    private static int Find_Layer(string Nome)
     {
         // Encontra a camada
         for (byte i = 0; i < Lists.Map[Selected].Layer.Count; i++)
@@ -1378,7 +1379,7 @@ partial class Editor_Maps : Form
     #region Calculations
     #region Zoom
     // Retângulo da seleção de azulejos
-    public static Rectangle Tiles_Selection // Somente para obter
+    private static Rectangle Tiles_Selection // Somente para obter
     {
         get
         {
@@ -1420,7 +1421,7 @@ partial class Editor_Maps : Form
         return new Rectangle(new Point(Value.X / Zoom(), Value.Y / Zoom()), new Size(Value.Width / Zoom(), Value.Height / Zoom()));
     }
 
-    public static byte Grid_Zoom
+    private static byte Grid_Zoom
     {
         // Tamanho da grade com o zoom
         get
@@ -1436,7 +1437,7 @@ partial class Editor_Maps : Form
     }
     #endregion
 
-    public static Rectangle Selection_Rec(Rectangle Temp)
+    private static Rectangle Selection_Rec(Rectangle Temp)
     {
         // Largura
         if (Temp.Width <= 0)
@@ -1458,10 +1459,7 @@ partial class Editor_Maps : Form
     public bool OutLimit(short Map_Num, short x, short y)
     {
         // Verifica se as coordenas estão no limite do mapa
-        if (x > Lists.Map[Map_Num].Width || y > Lists.Map[Map_Num].Height || x < 0 || y < 0)
-            return true;
-        else
-            return false;
+        return x > Lists.Map[Map_Num].Width || y > Lists.Map[Map_Num].Height || x < 0 || y < 0;
     }
 
     public static Size Map_Size
@@ -1517,7 +1515,7 @@ partial class Editor_Maps : Form
                         Calculate(Map_Num, (byte)x2, (byte)y2, Layer_Num);
         }
 
-        public static void Set(short Map_Num, byte x, byte y, byte Layer_Num, byte Part, string Index)
+        private static void Set(short Map_Num, byte x, byte y, byte Layer_Num, byte Part, string Index)
         {
             Point Position = new Point(0);
 
@@ -1561,7 +1559,7 @@ partial class Editor_Maps : Form
             Lists.Map[Map_Num].Layer[Layer_Num].Tile[x, y].Mini[Part].Y = Data.Y * Globals.Grid + Position.Y;
         }
 
-        public static bool Check(short Map_Num, int X1, int Y1, int X2, int Y2, byte Layer_Num)
+        private static bool Check(short Map_Num, int X1, int Y1, int X2, int Y2, byte Layer_Num)
         {
             Lists.Structures.Map_Tile_Data Data1, Data2;
 
@@ -1582,7 +1580,7 @@ partial class Editor_Maps : Form
             return true;
         }
 
-        public static void Calculate(short Map_Num, byte x, byte y, byte Layer_Num)
+        private static void Calculate(short Map_Num, byte x, byte y, byte Layer_Num)
         {
             // Calcula as quatros partes do azulejo
             Calculate_NW(Map_Num, x, y, Layer_Num);
@@ -1591,7 +1589,7 @@ partial class Editor_Maps : Form
             Calculate_SE(Map_Num, x, y, Layer_Num);
         }
 
-        public static void Calculate_NW(short Map_Num, byte x, byte y, byte Layer_Num)
+        private static void Calculate_NW(short Map_Num, byte x, byte y, byte Layer_Num)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
@@ -1619,7 +1617,7 @@ partial class Editor_Maps : Form
             }
         }
 
-        public static void Calculate_NE(short Map_Num, byte x, byte y, byte Layer_Num)
+        private static void Calculate_NE(short Map_Num, byte x, byte y, byte Layer_Num)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
@@ -1647,7 +1645,7 @@ partial class Editor_Maps : Form
             }
         }
 
-        public static void Calculate_SW(short Map_Num, byte x, byte y, byte Layer_Num)
+        private static void Calculate_SW(short Map_Num, byte x, byte y, byte Layer_Num)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
@@ -1675,7 +1673,7 @@ partial class Editor_Maps : Form
             }
         }
 
-        public static void Calculate_SE(short Map_Num, byte x, byte y, byte Layer_Num)
+        private static void Calculate_SE(short Map_Num, byte x, byte y, byte Layer_Num)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;

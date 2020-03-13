@@ -7,6 +7,9 @@ class Globals
     public const byte Grid = 32;
     public static Size Grid_Size = new Size(Grid, Grid);
 
+    // Editor que será aberto
+    public static System.Windows.Forms.Form OpenEditor;
+
     // Medida de calculo do atraso do jogo
     public static short FPS;
 
@@ -26,9 +29,6 @@ class Globals
     public const byte Max_Weather_Intensity = 10;
     public const byte Snow_Movement = 10;
     public static byte Lightning;
-
-    // Limites em geral
-    public const byte Max_NPC_Drop = 4;
 
     // Números aleAmountatórios
     public static Random GameRandom = new Random();
@@ -121,7 +121,7 @@ class Globals
         Helmet,
         Shield,
         Amulet,
-        Amount
+        Count
     }
 
     public enum Windows
@@ -129,6 +129,31 @@ class Globals
         Menu,
         Game,
         Global,
+    }
+
+    public enum Rarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary,
+        Count
+    }
+
+    public enum BindOn
+    {
+        None,
+        Pickup,
+        Equip,
+        Count
+    }
+
+    public enum NPC_Movements
+    {
+        MoveRandomly,
+        TurnRandomly,
+        StandStill
     }
 
     public static void Weather_Update()
@@ -142,15 +167,12 @@ class Globals
         }
     }
 
-    public static string Numbering(int Number, int Limit)
+    public static string Numbering(int Number, int Limit, string Text)
     {
         int Amount = Limit.ToString().Length - Number.ToString().Length;
 
         // Retorna com a numeração
-        if (Amount > 0)
-            return new string('0', Amount) + Number;
-        else
-            return Number.ToString();
+        return new string('0', Amount) + Number + ":" + Text;
     }
 
     public static Point Block_Position(byte Direction)

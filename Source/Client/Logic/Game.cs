@@ -15,20 +15,15 @@ class Game
 
     // Interface
     public static byte CreateCharacter_Class = 1;
+    public static byte CreateCharacter_Tex = 0;
     public static int SelectCharacter = 1;
     public static short Infomation_Index;
     public static int Need_Information = 0;
+    public static byte Drop_Slot = 0;
+    public static string Party_Invitation;
 
     // Jogador
     public const short Attack_Speed = 750;
-
-    // Pressionamento das teclas
-    public static bool Press_Up;
-    public static bool Press_Down;
-    public static bool Press_Left;
-    public static bool Press_Right;
-    public static bool Press_Shift;
-    public static bool Press_Control;
 
     // Animação
     public const byte Animation_Amount = 4;
@@ -44,7 +39,7 @@ class Game
     public const byte Movement_Right = 2;
 
     // Visão do jogador
-    public static Rectangle Camera;
+    private static Rectangle Camera;
     public static Rectangle Tile_Sight;
 
     // Bloqueio direcional
@@ -126,7 +121,7 @@ class Game
         NPC
     }
 
-    public enum Itens
+    public enum Items
     {
         None,
         Equipment,
@@ -147,6 +142,24 @@ class Game
     {
         None,
         Item
+    }
+
+    public enum Rarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary,
+        Count
+    }
+
+    public enum BindOn
+    {
+        None,
+        Pickup,
+        Equip,
+        Count
     }
     #endregion
 
@@ -190,17 +203,16 @@ class Game
     public static void Disconnect()
     {
         // Não fechar os paineis se não for necessário
-        if (Panels.Get("Options").Visible || Panels.Get("Connect").Visible || Panels.Get("Register").Visible)
-            return;
+        if (Panels.Get("Options").Visible || Panels.Get("Connect").Visible || Panels.Get("Register").Visible)  return;
 
         // Limpa os valores
         Audio.Sound.Stop_All();
         Player.MyIndex = 0;
 
         // Traz o jogador de volta ao menu
-        Tools.CurrentWindow = Tools.Windows.Menu;
         Panels.Menu_Close();
         Panels.Get("Connect").Visible = true;
+        Tools.CurrentWindow = Tools.Windows.Menu;
     }
 
     public static void UpdateCamera()

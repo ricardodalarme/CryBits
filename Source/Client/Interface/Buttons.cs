@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SFML.Window;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -16,10 +17,8 @@ class Buttons
 
         public void MouseUp()
         {
-            SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
-
             // Somente se necessário
-            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture)))) return;
+            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
 
             // Altera o estado do botão
             Audio.Sound.Play(Audio.Sounds.Click);
@@ -29,27 +28,20 @@ class Buttons
             Execute(Name);
         }
 
-        public void MouseDown(MouseEventArgs e)
+        public void MouseDown(MouseButtonEventArgs e)
         {
-            SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
-
             // Somente se necessário
-            if (e.Button == MouseButtons.Right) return;
-            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture)))) return;
+            if (e.Button == Mouse.Button.Right) return;
+            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
 
             // Altera o estado do botão
             State = States.Click;
         }
 
-        public void MouseMove(MouseEventArgs e)
+        public void MouseMove()
         {
-            SFML.Graphics.Texture Texture = Graphics.Tex_Button[Texture_Num];
-
-            // Somente se necessário
-            if (e.Button == MouseButtons.Right) return;
-
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Texture))))
+            if (!Tools.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num]))))
             {
                 State = States.Normal;
                 return;
@@ -74,15 +66,11 @@ class Buttons
 
     public static Structure Get(string Name)
     {
-        // Lista os nomes das ferramentas
-        for (byte i = 0; i < List.Count; i++)
-            if (List[i].Name.Equals(Name))
-                return List[i];
-
-        return null;
+        // Retorna o botão procurado
+        return List.Find(x => x.Name.Equals(Name));
     }
 
-    public static void Execute(string Name)
+    private static void Execute(string Name)
     {
         // Executa o evento do botão
         switch (Name)
@@ -94,8 +82,10 @@ class Buttons
             case "Connect_Confirm": Connect_Ok(); break;
             case "Register_Confirm": Register_Ok(); break;
             case "CreateCharacter": CreateCharacter(); break;
-            case "CreateCharacter_ChangeRight": CreateCharacter_Change_Right(); break;
-            case "CreateCharacter_ChangeLeft": CreateCharacter_Change_Left(); break;
+            case "CreateCharacter_ChangeRight": CreateCharacter_ChangeRight(); break;
+            case "CreateCharacter_ChangeLeft": CreateCharacter_ChangeLeft(); break;
+            case "CreateCharacter_Texture_ChangeLeft": CreateCharacter_Texture_ChangeLeft(); break;
+            case "CreateCharacter_Texture_ChangeRight": CreateCharacter_Texture_ChangeRight(); break;
             case "CreateCharacter_Back": CreateCharacter_Return(); break;
             case "Character_Use": Character_Use(); break;
             case "Character_Create": Character_Create(); break;
@@ -112,24 +102,24 @@ class Buttons
             case "Attributes_Vitality": Attribute_Vitality(); break;
             case "Menu_Inventory": Menu_Inventory(); break;
             case "Menu_Options": Menu_Options(); break;
+            case "Drop_Confirm": Drop_Confirm(); break;
+            case "Drop_Cancel": Drop_Cancel(); break;
+            case "Party_Yes": Party_Yes(); break;
+            case "Party_No": Party_No(); break;
         }
     }
 
     public static bool Characters_Change_Buttons()
     {
-        bool Visibility = true;
-
-        // Verifica apenas se o painel for visível
-        if (Lists.Characters == null || Lists.Characters[Game.SelectCharacter].Class == 0) Visibility = false;
-
         // Altera os botões visíveis
+        bool Visibility = Lists.Characters != null && Lists.Characters[Game.SelectCharacter].Class > 0;
         Get("Character_Create").Visible = !Visibility;
         Get("Character_Delete").Visible = Visibility;
         Get("Character_Use").Visible = Visibility;
         return Visibility;
     }
 
-    public static void Connect()
+    private static void Connect()
     {
         // Termina a conexão
         Socket.Disconnect();
@@ -139,7 +129,7 @@ class Buttons
         Panels.Get("Connect").Visible = true;
     }
 
-    public static void Register()
+    private static void Register()
     {
         // Termina a conexão
         Socket.Disconnect();
@@ -149,17 +139,21 @@ class Buttons
         Panels.Get("Register").Visible = true;
     }
 
-    public static void Options()
+    private static void Options()
     {
         // Termina a conexão
         Socket.Disconnect();
+
+        // Define as marcações corretas
+        CheckBoxes.Get("Sounds").Checked = Lists.Options.Sounds;
+        CheckBoxes.Get("Musics").Checked = Lists.Options.Musics;
 
         // Abre o painel
         Panels.Menu_Close();
         Panels.Get("Options").Visible = true;
     }
 
-    public static void Menu_Return()
+    private static void Menu_Return()
     {
         // Termina a conexão
         Socket.Disconnect();
@@ -169,7 +163,7 @@ class Buttons
         Panels.Get("Connect").Visible = true;
     }
 
-    public static void Connect_Ok()
+    private static void Connect_Ok()
     {
         // Salva o nome do usuário
         Lists.Options.Username = TextBoxes.Get("Connect_Username").Text;
@@ -179,7 +173,7 @@ class Buttons
         Game.SetSituation(Game.Situations.Connect);
     }
 
-    public static void Register_Ok()
+    private static void Register_Ok()
     {
         // Regras de segurança
         if (TextBoxes.Get("Register_Password").Text != TextBoxes.Get("Register_Password2").Text)
@@ -192,13 +186,13 @@ class Buttons
         Game.SetSituation(Game.Situations.Registrar);
     }
 
-    public static void CreateCharacter()
+    private static void CreateCharacter()
     {
         // Abre a criação de personagem
         Game.SetSituation(Game.Situations.CreateCharacter);
     }
 
-    public static void CreateCharacter_Change_Right()
+    private static void CreateCharacter_ChangeRight()
     {
         // Altera a classe selecionada pelo jogador
         if (Game.CreateCharacter_Class == Lists.Class.GetUpperBound(0))
@@ -207,7 +201,7 @@ class Buttons
             Game.CreateCharacter_Class += 1;
     }
 
-    public static void CreateCharacter_Change_Left()
+    private static void CreateCharacter_ChangeLeft()
     {
         // Altera a classe selecionada pelo jogador
         if (Game.CreateCharacter_Class == 1)
@@ -216,32 +210,64 @@ class Buttons
             Game.CreateCharacter_Class -= 1;
     }
 
-    public static void CreateCharacter_Return()
+    private static void CreateCharacter_Texture_ChangeRight()
+    {
+        // Lista de texturas
+        short[] Tex_List;
+        if (CheckBoxes.Get("GenderMale").Checked == true)
+            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Male;
+        else
+            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Female;
+
+        // Altera a classe selecionada pelo jogador
+        if (Game.CreateCharacter_Tex == Tex_List.Length - 1)
+            Game.CreateCharacter_Tex = 0;
+        else
+            Game.CreateCharacter_Tex += 1;
+    }
+
+    private static void CreateCharacter_Texture_ChangeLeft()
+    {
+        // Lista de texturas
+        short[] Tex_List;
+        if (CheckBoxes.Get("GenderMale").Checked == true)
+            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Male;
+        else
+            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Female;
+
+        // Altera a classe selecionada pelo jogador
+        if (Game.CreateCharacter_Tex == 0)
+            Game.CreateCharacter_Tex = (byte)(Tex_List.Length - 1);
+        else
+            Game.CreateCharacter_Tex -= 1;
+    }
+
+    private static void CreateCharacter_Return()
     {
         // Abre o painel de personagens
         Panels.Menu_Close();
         Panels.Get("SelectCharacter").Visible = true;
     }
 
-    public static void Character_Use()
+    private static void Character_Use()
     {
         // Usa o personagem selecionado
         Send.Character_Use();
     }
 
-    public static void Character_Delete()
+    private static void Character_Delete()
     {
         // Deleta o personagem selecionado
         Send.Character_Delete();
     }
 
-    public static void Character_Create()
+    private static void Character_Create()
     {
         // Abre a criação de personagem
         Send.Character_Create();
     }
 
-    public static void Character_Change_Right()
+    private static void Character_Change_Right()
     {
         // Altera o personagem selecionado pelo jogador
         if (Game.SelectCharacter == Lists.Server_Data.Max_Characters)
@@ -250,7 +276,7 @@ class Buttons
             Game.SelectCharacter += 1;
     }
 
-    public static void Character_Change_Left()
+    private static void Character_Change_Left()
     {
         // Altera o personagem selecionado pelo jogador
         if (Game.SelectCharacter == 1)
@@ -259,21 +285,21 @@ class Buttons
             Game.SelectCharacter -= 1;
     }
 
-    public static void Chat_Up()
+    private static void Chat_Up()
     {
         // Sobe as linhas do chat
-        if (Tools.Chat_Line > 0)
-            Tools.Chat_Line -= 1;
+        if (Chat.Lines_First > 0)
+            Chat.Lines_First -= 1;
     }
 
-    public static void Chat_Down()
+    private static void Chat_Down()
     {
         // Sobe as linhas do chat
-        if (Tools.Chat.Count - 1 - Tools.Chat_Line - Tools.Chat_Lines_Visible > 0)
-            Tools.Chat_Line += 1;
+        if (Chat.Order.Count - 1 - Chat.Lines_First - Chat.Lines_Visible > 0)
+            Chat.Lines_First += 1;
     }
 
-    public static void Menu_Character()
+    private static void Menu_Character()
     {
         // Altera a visibilidade do painel e fecha os outros
         Panels.Get("Menu_Character").Visible = !Panels.Get("Menu_Character").Visible;
@@ -281,32 +307,32 @@ class Buttons
         Panels.Get("Menu_Options").Visible = false;
     }
 
-    public static void Attribute_Strenght()
+    private static void Attribute_Strenght()
     {
         Send.AddPoint(Game.Attributes.Strength);
     }
 
-    public static void Attribute_Resistance()
+    private static void Attribute_Resistance()
     {
         Send.AddPoint(Game.Attributes.Resistance);
     }
 
-    public static void Attribute_Intelligence()
+    private static void Attribute_Intelligence()
     {
         Send.AddPoint(Game.Attributes.Intelligence);
     }
 
-    public static void Attribute_Agility()
+    private static void Attribute_Agility()
     {
         Send.AddPoint(Game.Attributes.Agility);
     }
 
-    public static void Attribute_Vitality()
+    private static void Attribute_Vitality()
     {
         Send.AddPoint(Game.Attributes.Vitality);
     }
 
-    public static void Menu_Inventory()
+    private static void Menu_Inventory()
     {
         // Altera a visibilidade do painel e fecha os outros
         Panels.Get("Menu_Inventory").Visible = !Panels.Get("Menu_Inventory").Visible;
@@ -314,11 +340,48 @@ class Buttons
         Panels.Get("Menu_Options").Visible = false;
     }
 
-    public static void Menu_Options()
+    private static void Menu_Options()
     {
         // Altera a visibilidade do painel e fecha os outros
         Panels.Get("Menu_Options").Visible = !Panels.Get("Menu_Options").Visible;
         Panels.Get("Menu_Character").Visible = false;
         Panels.Get("Menu_Inventory").Visible = false;
+    }
+
+    private static void Drop_Confirm()
+    {
+        // Quantidade
+        short.TryParse(TextBoxes.Get("Drop_Amount").Text, out short Amount);
+
+        // Verifica se o valor digitado é válidp
+        if (Amount == 0)
+        {
+            MessageBox.Show("Enter a valid value!");
+            return;
+        }
+
+        // Solta o item
+        Send.DropItem(Game.Drop_Slot, Amount);
+        Panels.Get("Drop").Visible = false;
+    }
+
+    private static void Drop_Cancel()
+    {
+        // Fecha o painel
+        Panels.Get("Drop").Visible = false;
+    }
+
+    private static void Party_Yes()
+    {
+        // Aceita o grupo e fecha o painel
+        Send.Party_Accept();
+        Panels.Get("Party_Invitation").Visible = false;
+    }
+
+    private static void Party_No()
+    {
+        // Fecha o painel
+        Send.Party_Decline();
+        Panels.Get("Party_Invitation").Visible = false;
     }
 }

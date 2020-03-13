@@ -2,17 +2,11 @@
 
 class Clear
 {
-    public static void All()
-    {
-        // Limpa todos os dados necessários
-        Players();
-    }
-
     public static void Players()
     {
         // Redimensiona a lista
         Lists.Player = new Lists.Structures.Player[Lists.Server_Data.Max_Players + 1];
-        Lists.TempPlayer = new Lists.Structures.TempPlayer[Lists.Server_Data.Max_Players + 1];
+        Lists.Temp_Player = new Lists.Structures.TempPlayer[Lists.Server_Data.Max_Players + 1];
 
         // Limpa os dados de todos jogadores
         for (byte i = 1; i <= Lists.Server_Data.Max_Players; i++)
@@ -23,7 +17,7 @@ class Clear
     {
         // Limpa os dados do jogador
         Lists.Player[Index] = new Lists.Structures.Player();
-        Lists.TempPlayer[Index] = new Lists.Structures.TempPlayer();
+        Lists.Temp_Player[Index] = new Lists.Structures.TempPlayer();
         Lists.Player[Index].User = string.Empty;
         Lists.Player[Index].Password = string.Empty;
         Lists.Player[Index].Character = new Player.Character_Structure[Lists.Server_Data.Max_Characters + 1];
@@ -39,8 +33,9 @@ class Clear
         Lists.Player[Index].Character[Char_Num] = new Player.Character_Structure();
         Lists.Player[Index].Character[Char_Num].Index = Index;
         Lists.Player[Index].Character[Char_Num].Inventory = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
-        Lists.Player[Index].Character[Char_Num].Equipment = new short[(byte)Game.Equipments.Amount];
+        Lists.Player[Index].Character[Char_Num].Equipment = new short[(byte)Game.Equipments.Count];
         Lists.Player[Index].Character[Char_Num].Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
+        Lists.Player[Index].Character[Char_Num].Party = new System.Collections.Generic.List<byte>();
     }
 
     public static void Server_Data()
@@ -51,6 +46,8 @@ class Clear
         Lists.Server_Data.Port = 7001;
         Lists.Server_Data.Max_Players = 15;
         Lists.Server_Data.Max_Characters = 3;
+        Lists.Server_Data.Max_Party_Members = 3;
+        Lists.Server_Data.Max_Map_Items = 100;
         Lists.Server_Data.Num_Classes = 1;
         Lists.Server_Data.Num_Maps = 1;
         Lists.Server_Data.Num_Items = 1;
@@ -63,8 +60,11 @@ class Clear
         // Reseta os valores
         Lists.Class[Index] = new Lists.Structures.Class();
         Lists.Class[Index].Name = string.Empty;
-        Lists.Class[Index].Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.Class[Index].Attribute = new short[(byte)Game.Attributes.Amount];
+        Lists.Class[Index].Vital = new short[(byte)Game.Vitals.Count];
+        Lists.Class[Index].Attribute = new short[(byte)Game.Attributes.Count];
+        Lists.Class[Index].Tex_Male = new short[0];
+        Lists.Class[Index].Tex_Female = new short[0];
+        Lists.Class[Index].Item = new Tuple<short, short>[0];
         Lists.Class[Index].Spawn_Map = 1;
     }
 
@@ -73,15 +73,10 @@ class Clear
         // Reseta os valores
         Lists.NPC[Index] = new Lists.Structures.NPC();
         Lists.NPC[Index].Name = string.Empty;
-        Lists.NPC[Index].Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Amount];
-        Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[Game.Max_NPC_Drop];
-        for (byte i = 0; i < Game.Max_NPC_Drop; i++)
-        {
-            Lists.NPC[Index].Drop[i] = new Lists.Structures.NPC_Drop();
-            Lists.NPC[Index].Drop[i].Chance = 100;
-            Lists.NPC[Index].Drop[i].Amount = 1;
-        }
+        Lists.NPC[Index].Vital = new short[(byte)Game.Vitals.Count];
+        Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Count];
+        Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[0];
+        Lists.NPC[Index].Allie = new short[0];
     }
 
     public static void Item(byte Index)
@@ -90,8 +85,8 @@ class Clear
         Lists.Item[Index] = new Lists.Structures.Item();
         Lists.Item[Index].Name = string.Empty;
         Lists.Item[Index].Description = string.Empty;
-        Lists.Item[Index].Potion_Vital = new short[(byte)Game.Vitals.Amount];
-        Lists.Item[Index].Equip_Attribute = new short[(byte)Game.Attributes.Amount];
+        Lists.Item[Index].Potion_Vital = new short[(byte)Game.Vitals.Count];
+        Lists.Item[Index].Equip_Attribute = new short[(byte)Game.Attributes.Count];
     }
 
     public static void Map(short Index)

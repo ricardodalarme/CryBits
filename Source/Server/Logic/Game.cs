@@ -19,13 +19,10 @@ class Game
     public const byte Min_Name_Length = 3;
 
     // Limites em geral
-    public const byte Max_NPC_Drop = 4;
     public const byte Max_Inventory = 30;
-    public const byte Max_Map_Items = 100;
     public const byte Max_Hotbar = 10;
     public const byte Min_Map_Width = 24;
     public const byte Min_Map_Height = 18;
-
 
     #region Nums
     public enum Directions
@@ -49,7 +46,7 @@ class Game
     {
         HP,
         MP,
-        Amount
+        Count
     }
 
     public enum Attributes
@@ -59,7 +56,7 @@ class Game
         Intelligence,
         Agility,
         Vitality,
-        Amount
+        Count
     }
 
     public enum Messages
@@ -90,13 +87,21 @@ class Game
         Helmet,
         Shield,
         Amulet,
-        Amount
+        Count
     }
 
     public enum Hotbar
     {
         None,
         Item
+    }
+
+    public enum BindOn
+    {
+        None,
+        Pickup,
+        Equip,
+        Count
     }
     #endregion
 

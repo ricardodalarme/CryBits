@@ -18,7 +18,7 @@ class Program
         // Inicia a aplicação
         Login.Objects.Visible = true;
         Application.EnableVisualStyles();
-        Loop.Main();
+        Loop.Init();
     }
 
     public static void Close()

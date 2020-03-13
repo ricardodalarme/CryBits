@@ -6,7 +6,7 @@ using System.Windows.Forms;
 partial class Receive
 {
     // Pacotes do servidor
-    public enum Packets
+    private enum Packets
     {
         Alert,
         Connect,
@@ -41,7 +41,9 @@ partial class Receive
         Map_NPC_Attack,
         Map_NPC_Died,
         Items,
-        Map_Items
+        Map_Items,
+        Party,
+        Party_Invitation
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -83,6 +85,8 @@ partial class Receive
             case Packets.Map_NPC_Died: Map_NPC_Died(Data); break;
             case Packets.Items: Items(Data); break;
             case Packets.Map_Items: Map_Items(Data); break;
+            case Packets.Party: Party(Data); break;
+            case Packets.Party_Invitation: Party_Invitation(Data); break;
         }
     }
 
@@ -119,9 +123,10 @@ partial class Receive
     {
         // Reseta os valores
         TextBoxes.Get("CreateCharacter_Name").Text = string.Empty;
-        CheckBoxes.Get("GenderMale").State = true;
-        CheckBoxes.Get("GenderFemale").State = false;
+        CheckBoxes.Get("GenderMale").Checked = true;
+        CheckBoxes.Get("GenderFemale").Checked = false;
         Game.CreateCharacter_Class = 1;
+        Game.CreateCharacter_Tex = 0;
 
         // Abre o painel de criação de personagem
         Panels.Menu_Close();
@@ -138,12 +143,13 @@ partial class Receive
         for (byte i = 1; i <= Amount; i++)
         {
             // Recebe os dados do personagem
-            Lists.Class[i] = new Lists.Structures.Class
-            {
-                Name = Data.ReadString(),
-                Texture_Male = Data.ReadInt16(),
-                Texture_Female = Data.ReadInt16()
-            };
+            Lists.Class[i] = new Lists.Structures.Class();
+            Lists.Class[i].Name = Data.ReadString();
+            Lists.Class[i].Description = Data.ReadString();
+            Lists.Class[i].Tex_Male = new short[Data.ReadByte()];
+            for (byte n = 0; n < Lists.Class[i].Tex_Male.Length; n++) Lists.Class[i].Tex_Male[n] = Data.ReadInt16();
+            Lists.Class[i].Tex_Female = new short[Data.ReadByte()];
+            for (byte n = 0; n < Lists.Class[i].Tex_Female.Length; n++) Lists.Class[i].Tex_Female[n] = Data.ReadInt16();
         }
     }
 
@@ -162,6 +168,7 @@ partial class Receive
             {
                 Name = Data.ReadString(),
                 Class = Data.ReadByte(),
+                Texture_Num = Data.ReadInt16(),
                 Genre = Data.ReadBoolean(),
                 Level = Data.ReadInt16()
             };
@@ -171,13 +178,23 @@ partial class Receive
     private static void JoinGame()
     {
         // Reseta os valores
-        Tools.Chat = new System.Collections.Generic.List<Tools.Chat_Structure>();
-        Tools.Chat_Line = 0;
+        Chat.Order = new System.Collections.Generic.List<Chat.Structure>();
+        Chat.Lines_First = 0;
         TextBoxes.Get("Chat").Text = string.Empty;
-        Panels.Get("Chat").Visible = false;
-        CheckBoxes.Get("Options_Sounds").State = Lists.Options.Sounds;
-        CheckBoxes.Get("Options_Music").State = Lists.Options.Musics;
+        CheckBoxes.Get("Options_Sounds").Checked = Lists.Options.Sounds;
+        CheckBoxes.Get("Options_Musics").Checked = Lists.Options.Musics;
+        CheckBoxes.Get("Options_Chat").Checked = Chat.Text_Visible = Lists.Options.Chat;
         Game.Need_Information = 0;
+        Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
+        Player.Me.Party = new byte[0];
+
+        // Fecha os paineis 
+        Panels.Get("Menu_Character").Visible = false;
+        Panels.Get("Menu_Inventory").Visible = false;
+        Panels.Get("Menu_Options").Visible = false;
+        Panels.Get("Chat").Visible = false;
+        Panels.Get("Drop").Visible = false;
+        Panels.Get("Party_Invitation").Visible = false;
 
         // Abre o jogo
         Audio.Music.Stop();
@@ -190,7 +207,7 @@ partial class Receive
         Player.HigherIndex = Data.ReadByte();
     }
 
-    public static void Map_Revision(NetIncomingMessage Data)
+    private static void Map_Revision(NetIncomingMessage Data)
     {
         bool Needed = false;
         short Map_Num = Data.ReadInt16();
@@ -212,9 +229,12 @@ partial class Receive
 
         // Solicita os dados do mapa
         Send.RequestMap(Needed);
+
+        // Reseta os sangues do mapa
+        Lists.Temp_Map.Blood = new System.Collections.Generic.List<Lists.Structures.Map_Blood>();
     }
 
-    public static void Map(NetIncomingMessage Data)
+    private static void Map(NetIncomingMessage Data)
     {
         // Define os dados
         short Map_Num = Data.ReadInt16();
@@ -234,8 +254,8 @@ partial class Receive
         Lists.Map.Fog.Speed_X = Data.ReadSByte();
         Lists.Map.Fog.Speed_Y = Data.ReadSByte();
         Lists.Map.Fog.Alpha = Data.ReadByte();
-        Data.ReadByte(); // Light global
-        Data.ReadByte(); // lighting
+        Data.ReadByte(); // Luz global
+        Data.ReadByte(); // Iluminação
 
         // Ligações
         Lists.Map.Link = new short[(byte)Game.Directions.Count];
@@ -317,7 +337,7 @@ partial class Receive
         global::Map.Autotile.Update();
     }
 
-    public static void JoinMap()
+    private static void JoinMap()
     {
         // Se tiver, reproduz a música de fundo do mapa
         if (Lists.Map.Music > 0)
@@ -326,24 +346,24 @@ partial class Receive
             Audio.Music.Stop();
     }
 
-    public static void Latency()
+    private static void Latency()
     {
         // Define a latência
         Game.Latency = Environment.TickCount - Game.Latency_Send;
     }
 
-    public static void Message(NetIncomingMessage Data)
+    private static void Message(NetIncomingMessage Data)
     {
         // Adiciona a mensagem
         string Text = Data.ReadString();
         Color Color = Color.FromArgb(Data.ReadInt32());
-        Tools.Chat_Add(Text, new SFML.Graphics.Color(Color.R, Color.G, Color.B));
+        Chat.AddText(Text, new SFML.Graphics.Color(Color.R, Color.G, Color.B));
     }
 
-    public static void Items(NetIncomingMessage Data)
+    private static void Items(NetIncomingMessage Data)
     {
         // Quantidade de itens
-        Lists.Item = new Lists.Structures.Items[Data.ReadInt16() + 1];
+        Lists.Item = new Lists.Structures.Items[Data.ReadInt16()];
 
         for (short i = 1; i < Lists.Item.Length; i++)
         {
@@ -358,10 +378,11 @@ partial class Receive
             Lists.Item[i].Type = Data.ReadByte();
             Data.ReadInt16(); // Price
             Data.ReadBoolean(); // Stackable
-            Data.ReadBoolean(); // Bind
+            Lists.Item[i].Bind = (Game.BindOn)Data.ReadByte();
+            Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
             Lists.Item[i].Req_Class = Data.ReadByte();
-            Lists.Item[i].Potion_Experience = Data.ReadInt16();
+            Lists.Item[i].Potion_Experience = Data.ReadInt32();
             for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();
             for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
@@ -369,7 +390,7 @@ partial class Receive
         }
     }
 
-    public static void Map_Items(NetIncomingMessage Data)
+    private static void Map_Items(NetIncomingMessage Data)
     {
         // Quantidade
         Lists.Temp_Map.Item = new Lists.Structures.Map_Items[Data.ReadInt16() + 1];
@@ -382,5 +403,19 @@ partial class Receive
             Lists.Temp_Map.Item[i].X = Data.ReadByte();
             Lists.Temp_Map.Item[i].Y = Data.ReadByte();
         }
+    }
+
+    private static void Party(NetIncomingMessage Data)
+    {
+        // Lê os dados do grupo
+        Player.Me.Party = new byte[Data.ReadByte()];
+        for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Data.ReadByte();
+    }
+    
+    private static void Party_Invitation(NetIncomingMessage Data)
+    {
+        // Abre a janela de convite para o grupo
+        Game.Party_Invitation = Data.ReadString();
+        Panels.Get("Party_Invitation").Visible = true;
     }
 }

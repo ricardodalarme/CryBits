@@ -22,6 +22,7 @@ class Write
         {
             Data.Write(Lists.Player[Index].Character[i].Name);
             Data.Write(Lists.Player[Index].Character[i].Class);
+            Data.Write(Lists.Player[Index].Character[i].Texture_Num);
             Data.Write(Lists.Player[Index].Character[i].Genre);
             Data.Write(Lists.Player[Index].Character[i].Level);
             Data.Write(Lists.Player[Index].Character[i].Experience);
@@ -30,14 +31,14 @@ class Write
             Data.Write(Lists.Player[Index].Character[i].X);
             Data.Write(Lists.Player[Index].Character[i].Y);
             Data.Write((byte)Lists.Player[Index].Character[i].Direction);
-            for (byte n = 0; n < (byte)Game.Vitals.Amount; n++) Data.Write(Lists.Player[Index].Character[i].Vital[n]);
-            for (byte n = 0; n < (byte)Game.Attributes.Amount; n++) Data.Write(Lists.Player[Index].Character[i].Attribute[n]);
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Player[Index].Character[i].Vital[n]);
+            for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.Player[Index].Character[i].Attribute[n]);
             for (byte n = 1; n <= Game.Max_Inventory; n++)
             {
                 Data.Write(Lists.Player[Index].Character[i].Inventory[n].Item_Num);
                 Data.Write(Lists.Player[Index].Character[i].Inventory[n].Amount);
             }
-            for (byte n = 0; n < (byte)Game.Equipments.Amount; n++) Data.Write(Lists.Player[Index].Character[i].Equipment[n]);
+            for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Lists.Player[Index].Character[i].Equipment[n]);
             for (byte n = 1; n <= Game.Max_Hotbar; n++)
             {
                 Data.Write(Lists.Player[Index].Character[i].Hotbar[n].Type);
@@ -72,6 +73,7 @@ class Write
         // Descarrega o arquivo
         Data.Dispose();
     }
+
     public static void Server_Data()
     {
         // Escreve os dados
