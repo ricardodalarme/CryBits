@@ -62,7 +62,7 @@ class Player
 
     private static void CheckMovement()
     {
-        if (Me.Movement > 0) return;
+        if (Me.Movement > 0  || !Graphics.RenderWindow.HasFocus()) return;
 
         // Move o personagem
         if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Game.Directions.Up);
@@ -87,7 +87,7 @@ class Player
         if (Map.Tile_Blocked(Lists.Player[MyIndex].Map, Lists.Player[MyIndex].X, Lists.Player[MyIndex].Y, Direction)) return;
 
         // Define a velocidade que o jogador se move
-        if (Keyboard.IsKeyPressed(Keyboard.Key.LShift))
+        if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Graphics.RenderWindow.HasFocus())
             Lists.Player[MyIndex].Movement = Game.Movements.Moving;
         else
             Lists.Player[MyIndex].Movement = Game.Movements.Walking;
@@ -167,7 +167,7 @@ class Player
         }
 
         // Somente se estiver pressionando a tecla de ataque e não estiver atacando
-        if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl)) return;
+        if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Graphics.RenderWindow.HasFocus()) return;
         if (Me.Attack_Timer > 0) return;
 
         // Envia os dados para o servidor
