@@ -8,7 +8,7 @@ CryBits is a completely open-source 2D ORPG game engine written in C#.
 
 ## Screenshots
 <p align="center">
-  <img src="https://i.ibb.co/P6CJ704/Post.jpg">
+  <img src="https://i.ibb.co/34rgmYm/Post.jpg">
 </p>
 
 ## Contributing
