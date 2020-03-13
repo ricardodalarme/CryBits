@@ -4,7 +4,7 @@
 
 CryBits is a completely open-source 2D ORPG game engine written in C#.
 
-[![GitHub version](https://badge.fury.io/gh/ricardodalarme%2FCryBits.svg)](https://travis-ci.org/ricardodalarme/CryBits)
+[![GitHub version](https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=0.7.0&x2=0)](https://github.com/ricardodalarme/CryBits/releases/tag/0.7.0)
 
 ## Screenshots
 <p align="center">
