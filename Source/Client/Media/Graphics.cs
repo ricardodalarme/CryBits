@@ -126,6 +126,8 @@ partial class Graphics
         TempText.CharacterSize = 10;
         TempText.FillColor = Color;
         TempText.Position = new SFML.System.Vector2f(X, Y);
+        TempText.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 75);
+        TempText.OutlineThickness = 1;
 
         // Desenha
         RenderWindow.Draw(TempText);
