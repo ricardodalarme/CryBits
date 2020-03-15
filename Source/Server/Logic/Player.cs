@@ -180,8 +180,9 @@ class Player
     {
         // Encontra o usuário
         for (byte i = 1; i < Lists.Player.Length; i++)
-            if (Character(i).Name == Name)
-                return i;
+            if (IsPlaying(i))
+                if (Character(i).Name == Name)
+                    return i;
 
         return 0;
     }

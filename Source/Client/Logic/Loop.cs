@@ -21,11 +21,12 @@ class Loop
             // Manuseia os dados recebidos
             Socket.HandleData();
 
-            // Processa os eventos da janela
-            Graphics.RenderWindow.DispatchEvents();
 
             // Apresenta os gráficos à tela
             Graphics.Present();
+
+            // Processa os eventos da janela
+            Graphics.RenderWindow.DispatchEvents();
 
             // Eventos
             TextBox();
@@ -75,14 +76,5 @@ class Loop
             // Se necessário foca o digitalizador de novo
             TextBoxes.Focus();
         }
-
-        // Chat
-        if ((Chat.Text_Visible && !Panels.Get("Chat").Visible))
-        {
-            if (Chat_Timer < Environment.TickCount)
-                Chat.Text_Visible = false;
-        }
-        else if (!Lists.Options.Chat)
-            Chat_Timer = Chat_Timer = Environment.TickCount + 10000;
     }
 }

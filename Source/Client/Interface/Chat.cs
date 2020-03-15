@@ -7,10 +7,11 @@ class Chat
     public static List<Structure> Order = new List<Structure>();
 
     // Chat
-    public static bool Text_Visible;
+    //public static bool Text_Visible;
     public const byte Lines_Visible = 9;
     public static byte Lines_First;
     private const byte Max_Lines = 50;
+    public const short Sleep_Timer = 10000;
 
     // Estrutura do chat
     public class Structure
@@ -34,7 +35,7 @@ class Chat
             Lines_First = (byte)(i - Lines_Visible);
 
         // Torna as linhas visíveis
-        Text_Visible = true;
+        Loop.Chat_Timer = System.Environment.TickCount + 10000;;
     }
 
     public static void AddText(string Message, Color Color)
@@ -78,7 +79,7 @@ class Chat
         // Altera o foco do digitalizador
         if (Panel.Visible)
         {
-            Text_Visible = true;
+            Loop.Chat_Timer = System.Environment.TickCount + Sleep_Timer;
             TextBoxes.Focused = Tools.Get(Tool);
             return;
         }
