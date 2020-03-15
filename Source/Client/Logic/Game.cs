@@ -21,6 +21,7 @@ class Game
     public static int Need_Information = 0;
     public static byte Drop_Slot = 0;
     public static string Party_Invitation;
+    public static string Trade_Invitation;
 
     // Jogador
     public const short Attack_Speed = 750;

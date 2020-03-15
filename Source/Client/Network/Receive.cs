@@ -43,7 +43,9 @@ partial class Receive
         Items,
         Map_Items,
         Party,
-        Party_Invitation
+        Party_Invitation,
+        Trade,
+        Trade_Invitation
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -87,6 +89,8 @@ partial class Receive
             case Packets.Map_Items: Map_Items(Data); break;
             case Packets.Party: Party(Data); break;
             case Packets.Party_Invitation: Party_Invitation(Data); break;
+            case Packets.Trade: Trade(Data); break;
+            case Packets.Trade_Invitation: Trade_Invitation(Data); break;
         }
     }
 
@@ -417,5 +421,19 @@ partial class Receive
         // Abre a janela de convite para o grupo
         Game.Party_Invitation = Data.ReadString();
         Panels.Get("Party_Invitation").Visible = true;
+    }
+
+    private static void Trade(NetIncomingMessage Data)
+    {
+        // Abre ou fecha a troca
+        Player.Me.Trade = Data.ReadByte();
+        Panels.Get("Trade").Visible = Player.Me.Trade != 0;
+    }
+
+    private static void Trade_Invitation(NetIncomingMessage Data)
+    {
+        // Abre a janela de convite para o grupo
+        Game.Trade_Invitation = Data.ReadString();
+        Panels.Get("Trade_Invitation").Visible = true;
     }
 }

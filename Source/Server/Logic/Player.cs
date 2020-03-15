@@ -32,6 +32,7 @@ class Player
         public short[] Equipment;
         public Lists.Structures.Hotbar[] Hotbar;
         public List<byte> Party;
+        public byte Trade;
 
         public void GiveExperience(int Value)
         {
@@ -136,15 +137,18 @@ class Player
 
     public static void Leave(byte Index)
     {
-        // Sai do grupo
-        if (Lists.Temp_Player[Index].Playing)
-            Party_Leave(Index);
-
-        // Salva os dados do e envia atualiza os demais jogadores da desconexão
         if (!Lists.Temp_Player[Index].InEditor)
         {
+            // Salva os dados do e envia atualiza os demais jogadores da desconexão
             Write.Player(Index);
             Send.Player_Leave(Index);
+
+            // Sai do grupo
+            if (Lists.Temp_Player[Index].Playing)
+            {
+                Party_Leave(Index);
+                Trade_Leave(Index);
+            }
         }
 
         // Limpa os dados do jogador
@@ -662,14 +666,17 @@ class Player
 
     public static void Party_Leave(byte Index)
     {
-        // Retira o jogador do grupo
-        for (byte i = 0; i < Character(Index).Party.Count; i++)
-            Character(Character(Index).Party[i]).Party.Remove(Index);
+        if (Character(Index).Party.Count > 0)
+        {
+            // Retira o jogador do grupo
+            for (byte i = 0; i < Character(Index).Party.Count; i++)
+                Character(Character(Index).Party[i]).Party.Remove(Index);
 
-        // Envia o dados para todos os membros do grupo
-        for (byte i = 0; i < Character(Index).Party.Count; i++) Send.Party(Character(Index).Party[i]);
-        Character(Index).Party.Clear();
-        Send.Party(Index);
+            // Envia o dados para todos os membros do grupo
+            for (byte i = 0; i < Character(Index).Party.Count; i++) Send.Party(Character(Index).Party[i]);
+            Character(Index).Party.Clear();
+            Send.Party(Index);
+        }
     }
 
     private static void Party_SplitXP(byte Index, int Experience)
@@ -704,7 +711,7 @@ class Player
             // Divide a experiência
             Given_Experience = (int)((Experience / 2) * Diff[i]);
             Experience_Sum += Given_Experience;
-            Character(Character(Index).Party[i]).Experience+= Given_Experience;
+            Character(Character(Index).Party[i]).Experience += Given_Experience;
             CheckLevelUp(Character(Index).Party[i]);
             Send.Player_Experience(Character(Index).Party[i]);
         }
@@ -713,5 +720,18 @@ class Player
         Character(Index).Experience += Experience - Experience_Sum;
         CheckLevelUp(Index);
         Send.Player_Experience(Index);
+    }
+
+    public static void Trade_Leave(byte Index)
+    {
+        byte Trade_Player = Character(Index).Trade;
+
+        // Cancela a troca
+        if (Trade_Player > 0)
+        {
+            Character(Trade_Player).Trade = 0;
+            Character(Index).Trade = 0;
+            Send.Trade(Trade_Player);
+        }
     }
 }

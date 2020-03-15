@@ -63,6 +63,7 @@ class Lists
             public Game.Movements Movement;
             public short[] Equipment;
             public byte[] Party;
+            public byte Trade;
         }
 
         public class Characters

@@ -41,7 +41,9 @@ class Send
         Items,
         Map_Items,
         Party,
-        Party_Invitation
+        Party_Invitation,
+        Trade,
+        Trade_Invitation
     }
 
     // Pacotes do servidor para o editor
@@ -856,6 +858,26 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Party_Invitation);
+        Data.Write(Player_Invitation);
+        ToPlayer(Index, Data);
+    }
+
+    public static void Trade(byte Index)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Client_Packets.Trade);
+        Data.Write(Player.Character(Index).Trade);
+        ToPlayer(Index, Data);
+    }
+
+    public static void Trade_Invitation(byte Index, string Player_Invitation)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Client_Packets.Trade_Invitation);
         Data.Write(Player_Invitation);
         ToPlayer(Index, Data);
     }

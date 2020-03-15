@@ -187,7 +187,7 @@ class NPC
                 if (Move)
                 {
                     // Verifica como o NPC pode se mover
-                    if (NPC_Data.Flee_Helth == 0 || Data.Vital[(byte)Game.Vitals.HP] > NPC_Data.Vital[(byte)Game.Vitals.HP] * (NPC_Data.Flee_Helth / 100.0))
+                    if (Data.Vital[(byte)Game.Vitals.HP] > NPC_Data.Vital[(byte)Game.Vitals.HP] * (NPC_Data.Flee_Helth / 100.0))
                     {
                         // Para perto do alvo
                         CanMove[(byte)Game.Directions.Up] = Data.Y > TargetY;

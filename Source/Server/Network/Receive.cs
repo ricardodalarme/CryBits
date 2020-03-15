@@ -28,9 +28,16 @@ class Receive
         Hotbar_Change,
         Hotbar_Use,
         Party_Invite,
-        Party_Leave,
+        Party_Accept,
         Party_Decline,
-        Party_Accept
+        Party_Leave,
+        Trade_Invite,
+        Trade_Accept,
+        Trade_Decline,
+        Trade_Leave,
+        Trade_Offer,
+        Trade_Offer_Accept,
+        Trade_Offer_Decline
     }
 
     // Pacotes do editor
@@ -86,6 +93,13 @@ class Receive
                 case Client_Packets.Party_Accept: Party_Accept(Index); break;
                 case Client_Packets.Party_Decline: Party_Decline(Index); break;
                 case Client_Packets.Party_Leave: Party_Leave(Index); break;
+                case Client_Packets.Trade_Invite: Trade_Invite(Index, Data); break;
+                case Client_Packets.Trade_Accept: Trade_Accept(Index); break;
+                case Client_Packets.Trade_Decline: Trade_Decline(Index); break;
+                case Client_Packets.Trade_Leave: Trade_Leave(Index); break;
+                case Client_Packets.Trade_Offer: Trade_Offer(Index, Data); break;
+                case Client_Packets.Trade_Offer_Accept: Trade_Offer_Accept(Index); break;
+                case Client_Packets.Trade_Offer_Decline: Trade_Offer_Decline(Index); break;
             }
         else
             // Manuseia os dados recebidos do editor
@@ -906,6 +920,7 @@ class Receive
             Send.Message(Index, "You are already part of a party.", System.Drawing.Color.White);
             return;
         }
+
         // Verifica se quem chamou ainda está disponível
         if (Invitation == 0)
         {
@@ -940,7 +955,7 @@ class Receive
         byte Invitation = Player.Find(Lists.Temp_Player[Index].Party_Invitation);
 
         // Recusa o convite
-        if (Invitation != 0) Send.Message(Invitation, Player.Character(Index).Name + " joined the party.", System.Drawing.Color.White);
+        if (Invitation != 0) Send.Message(Invitation, Player.Character(Index).Name + " decline the party.", System.Drawing.Color.White);
         Lists.Temp_Player[Index].Party_Invitation = string.Empty;
     }
 
@@ -948,5 +963,105 @@ class Receive
     {
         // Sai do grupo
         Player.Party_Leave(Index);
+    }
+
+    private static void Trade_Invite(byte Index, NetIncomingMessage Data)
+    {
+        string Name = Data.ReadString();
+
+        // Encontra o jogador
+        byte Invited = Player.Find(Name);
+
+        // Verifica se o jogador está convectado
+        if (Invited == 0)
+        {
+            Send.Message(Index, "The player ins't connected.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se não está tentando se convidar
+        if (Invited == Index)
+        {
+            Send.Message(Index, "You can't be invited.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se já tem um grupo
+        if (Player.Character(Invited).Trade != 0)
+        {
+            Send.Message(Index, "The player is already part of a trade.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se o jogador já está analisando um convite para algum grupo
+        if (!string.IsNullOrEmpty(Lists.Temp_Player[Invited].Trade_Invitation))
+        {
+            Send.Message(Index, "The player is analyzing an invitation to another trade.", System.Drawing.Color.White);
+            return;
+        }
+
+        // Convida o jogador
+        Lists.Temp_Player[Invited].Trade_Invitation = Player.Character(Index).Name;
+        Send.Trade_Invitation(Invited, Player.Character(Index).Name);
+    }
+
+    private static void Trade_Accept(byte Index)
+    {
+        byte Invitation = Player.Find(Lists.Temp_Player[Index].Trade_Invitation);
+
+        // Verifica se já tem um grupo
+        if (Player.Character(Index).Trade != 0)
+        {
+            Send.Message(Index, "You are already part of a trade.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se quem chamou ainda está disponível
+        if (Invitation == 0)
+        {
+            Send.Message(Index, "Who invited you is no longer avaliable.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se quem chamou não está trocando com outra pessoa
+        if (Invitation == 0)
+        {
+            Send.Message(Index, "Who invited you is already in a trade.", System.Drawing.Color.White);
+            return;
+        }
+
+        // Entra na troca
+        Player.Character(Index).Trade = Invitation;
+        Player.Character(Invitation).Trade = Index;
+        Lists.Temp_Player[Index].Trade_Invitation = string.Empty;
+        Send.Message(Invitation, Player.Character(Index).Name + " accepted the trade.", System.Drawing.Color.White);
+
+        // Envia os dados para o grupo
+        Send.Trade(Index);
+        Send.Trade(Invitation);
+    }
+
+    private static void Trade_Decline(byte Index)
+    {
+        byte Invitation = Player.Find(Lists.Temp_Player[Index].Trade_Invitation);
+
+        // Recusa o convite
+        if (Invitation != 0) Send.Message(Invitation, Player.Character(Index).Name + " decline the trade.", System.Drawing.Color.White);
+        Lists.Temp_Player[Index].Trade_Invitation = string.Empty;
+    }
+
+    private static void Trade_Leave(byte Index)
+    {
+        Player.Trade_Leave(Index);
+    }
+
+    private static void Trade_Offer(byte Index, NetIncomingMessage Data)
+    {
+
+    }
+
+    private static void Trade_Offer_Accept(byte Index)
+    {
+
+    }
+
+    private static void Trade_Offer_Decline(byte Index)
+    {
+
     }
 }

@@ -126,7 +126,7 @@ partial class Graphics
         TempText.CharacterSize = 10;
         TempText.FillColor = Color;
         TempText.Position = new SFML.System.Vector2f(X, Y);
-        TempText.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 75);
+        TempText.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 70);
         TempText.OutlineThickness = 1;
 
         // Desenha
@@ -380,6 +380,7 @@ partial class Graphics
             case "Bars": Game_Bars(); break;
             case "Information": Panel_Informations(); break;
             case "Party_Invitation": Party_Invitation((Panels.Structure)Tool); break;
+            case "Trade_Invitation": Trade_Invitation((Panels.Structure)Tool); break;
         }
     }
 
@@ -688,6 +689,11 @@ partial class Graphics
     private static void Party_Invitation(Panels.Structure Tool)
     {
         DrawText(Game.Party_Invitation + " has invite you to a party.  Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+    }
+
+    private static void Trade_Invitation(Panels.Structure Tool)
+    {
+        DrawText(Game.Trade_Invitation + " has invite you to a trade.  Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
     }
 
     private static void Player_Party()

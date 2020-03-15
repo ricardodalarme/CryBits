@@ -49,6 +49,7 @@ class Lists
             public bool GettingMap;
             public bool InEditor;
             public string Party_Invitation;
+            public string Trade_Invitation;
         }
 
         [Serializable]

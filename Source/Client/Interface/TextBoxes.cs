@@ -57,7 +57,7 @@ class TextBoxes
                 }
         
                 // Adiciona o caracter à caixa de texto
-                if (char.IsLetterOrDigit(e.Unicode,0)) Text += e.Unicode;
+                if (char.IsLetterOrDigit(e.Unicode,0) || e.Unicode == "/" || e.Unicode == " ") Text += e.Unicode;
             }
         }
     }

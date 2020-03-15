@@ -28,9 +28,16 @@ partial class Send
         Hotbar_Change,
         Hotbar_Use,
         Party_Invite,
+        Party_Accept,
         Party_Decline,
         Party_Leave,
-        Party_Accept
+        Trade_Invite,
+        Trade_Accept,
+        Trade_Decline,
+        Trade_Leave,
+        Trade_Offer,
+        Trade_Offer_Accept,
+        Trade_Offer_Decline
     }
 
     private static void Packet(NetOutgoingMessage Data)
@@ -309,6 +316,72 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Player_Attack);
+        Packet(Data);
+    }
+
+    public static void Trade_Invite(string Player_Name)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Trade_Invite);
+        Data.Write(Player_Name);
+        Packet(Data);
+    }
+
+    public static void Trade_Accept()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Trade_Accept);
+        Packet(Data);
+    }
+
+    public static void Trade_Decline()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Trade_Decline);
+        Packet(Data);
+    }
+
+    public static void Trade_Leave()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Trade_Leave);
+        Packet(Data);
+    }
+
+    public static void Trade_Offer(byte Slot, short Amount)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Trade_Leave);
+        Data.Write(Slot);
+        Data.Write(Amount);
+        Packet(Data);
+    }
+
+    public static void Trade_Offer_Accept()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Trade_Offer_Accept);
+        Packet(Data);
+    }
+
+    public static void Trade_Offer_Decline()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Trade_Offer_Decline);
         Packet(Data);
     }
 }

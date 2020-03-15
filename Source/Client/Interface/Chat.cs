@@ -110,6 +110,9 @@ class Chat
             case "/partyleave":
                 Send.Party_Leave();
                 break;
+            case "/trade":
+                if (Parts.Length > 1) Send.Trade_Invite(Parts[1]);
+                break;
             default:
                 // Mensagem lobal
                 if (Message.Substring(0, 1) == "'")

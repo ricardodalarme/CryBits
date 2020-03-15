@@ -162,9 +162,17 @@ class Window
             }
     }
 
+    static int aa=0, bb=0;
+
     public static void OnTextEntered(object sender, TextEventArgs e)
     {
+        aa += 1;
         // Executa os eventos
-        if (TextBoxes.Focused != null) ((TextBoxes.Structure)TextBoxes.Focused.Data).TextEntered(e);
+        if (TextBoxes.Focused != null)
+        {
+            ((TextBoxes.Structure)TextBoxes.Focused.Data).TextEntered(e);
+            bb += 1;
+        }
+        Graphics.RenderWindow.SetTitle(aa + "/" + bb);
     }
 }

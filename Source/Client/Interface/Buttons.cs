@@ -106,6 +106,11 @@ class Buttons
             case "Drop_Cancel": Drop_Cancel(); break;
             case "Party_Yes": Party_Yes(); break;
             case "Party_No": Party_No(); break;
+            case "Trade_Yes": Trade_Yes(); break;
+            case "Trade_No": Trade_No(); break;
+            case "Trade_Leave": Trade_Leave(); break;
+            case "Trade_Offer_Accept": Trade_Offer_Accept(); break;
+            case "Trade_Offer_Decline": Trade_Offer_Decline(); break;
         }
     }
 
@@ -383,5 +388,35 @@ class Buttons
         // Fecha o painel
         Send.Party_Decline();
         Panels.Get("Party_Invitation").Visible = false;
+    }
+
+    private static void Trade_Yes()
+    {
+        // Aceita o grupo e fecha o painel
+        Send.Trade_Accept();
+        Panels.Get("Trade_Invitation").Visible = false;
+    }
+
+    private static void Trade_No()
+    {
+        // Fecha o painel
+        Send.Trade_Decline();
+        Panels.Get("Trade_Invitation").Visible = false;
+    }
+
+    private static void Trade_Leave()
+    {
+        // Fecha o painel
+        Player.Me.Trade = 0;
+        Send.Trade_Leave();
+        Panels.Get("Trade").Visible = false;
+    }
+
+    private static void Trade_Offer_Accept()
+    {
+    }
+
+    private static void Trade_Offer_Decline()
+    {
     }
 }
