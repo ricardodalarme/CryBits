@@ -21,11 +21,12 @@ class Loop
             // Manuseia os dados recebidos
             Socket.HandleData();
 
-            // Processa os eventos da janela
-            Graphics.RenderWindow.DispatchEvents();
 
             // Apresenta os gráficos à tela
             Graphics.Present();
+
+            // Processa os eventos da janela
+            Graphics.RenderWindow.DispatchEvents();
 
             // Eventos
             TextBox();

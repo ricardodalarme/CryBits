@@ -1,4 +1,5 @@
 ﻿using SFML.Window;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -55,9 +56,10 @@ class TextBoxes
                         if (Text.Length >= Lenght)
                             return;
                 }
-        
+
                 // Adiciona o caracter à caixa de texto
-                if (char.IsLetterOrDigit(e.Unicode,0)) Text += e.Unicode;
+                char Char = Convert.ToChar(e.Unicode);
+                if (Char > 31 && Char < 128) Text += e.Unicode;
             }
         }
     }
