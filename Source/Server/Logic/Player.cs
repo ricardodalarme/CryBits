@@ -176,8 +176,9 @@ class Player
     {
         // Encontra o usuário
         for (byte i = 1; i < Lists.Player.Length; i++)
-            if (Character(i).Name == Name)
-                return i;
+            if (IsPlaying(i))
+                if (Character(i).Name == Name)
+                    return i;
 
         return 0;
     }
@@ -704,7 +705,7 @@ class Player
             // Divide a experiência
             Given_Experience = (int)((Experience / 2) * Diff[i]);
             Experience_Sum += Given_Experience;
-            Character(Character(Index).Party[i]).Experience+= Given_Experience;
+            Character(Character(Index).Party[i]).Experience += Given_Experience;
             CheckLevelUp(Character(Index).Party[i]);
             Send.Player_Experience(Character(Index).Party[i]);
         }
