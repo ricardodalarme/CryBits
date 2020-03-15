@@ -126,6 +126,8 @@ partial class Graphics
         TempText.CharacterSize = 10;
         TempText.FillColor = Color;
         TempText.Position = new SFML.System.Vector2f(X, Y);
+        TempText.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 70);
+        TempText.OutlineThickness = 1;
 
         // Desenha
         RenderWindow.Draw(TempText);
@@ -643,7 +645,7 @@ partial class Graphics
         Tool.Visible = TextBoxes.Focused != null && ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
 
         // Renderiza as mensagens
-        if (Tool.Visible || (Chat.Text_Visible && Lists.Options.Chat))
+        if (Tool.Visible || (Loop.Chat_Timer >= Environment.TickCount && Lists.Options.Chat))
             for (byte i = Chat.Lines_First; i <= Chat.Lines_Visible + Chat.Lines_First; i++)
                 if (Chat.Order.Count > i)
                     DrawText(Chat.Order[i].Text, 16, 461 + 11 * (i - Chat.Lines_First), Chat.Order[i].Color);

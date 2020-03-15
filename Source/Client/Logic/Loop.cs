@@ -76,14 +76,5 @@ class Loop
             // Se necessário foca o digitalizador de novo
             TextBoxes.Focus();
         }
-
-        // Chat
-        if ((Chat.Text_Visible && !Panels.Get("Chat").Visible))
-        {
-            if (Chat_Timer < Environment.TickCount)
-                Chat.Text_Visible = false;
-        }
-        else if (!Lists.Options.Chat)
-            Chat_Timer = Chat_Timer = Environment.TickCount + 10000;
     }
 }

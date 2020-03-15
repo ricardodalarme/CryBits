@@ -33,7 +33,7 @@ class TextBoxes
             // Altera o foco do digitalizador
             if (((Structure)Order.Data).Name.Equals("Chat"))
             {
-                Chat.Text_Visible = true;
+                Loop.Chat_Timer = Environment.TickCount + Chat.Sleep_Timer;
                 Panels.Get("Chat").Visible = true;
             }
         }
