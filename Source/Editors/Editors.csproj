@@ -144,6 +144,7 @@
     <Compile Include="Editors\Quantity.Designer.cs">
       <DependentUpon>Quantity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logic\Map.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Media\Audio.cs" />
     <Compile Include="Logic\Globals.cs" />
