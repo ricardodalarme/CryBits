@@ -27,17 +27,14 @@ class Player
         public byte X;
         public byte Y;
         public Game.Directions Direction;
-        public int Attack_Timer;
         public Lists.Structures.Inventories[] Inventory;
         public short[] Equipment;
         public Lists.Structures.Hotbar[] Hotbar;
-        public List<byte> Party;
-        public byte Trade;
 
         public void GiveExperience(int Value)
         {
             // Dá a experiência ao jogador, caso ele estiver em um grupo divide a experiência entre os membros
-            if (Party.Count > 0 && Value > 0) Party_SplitXP(Index, Value);
+            if (Lists.Temp_Player[Index].Party.Count > 0 && Value > 0) Party_SplitXP(Index, Value);
             else Experience += Value;
 
             // Verifica se a experiência não ficou negtiva
@@ -318,7 +315,7 @@ class Player
         Map.NextTile(Character(Index).Direction, ref Next_X, ref Next_Y);
 
         // Apenas se necessário
-        if (Environment.TickCount < Character(Index).Attack_Timer + 750) return;
+        if (Environment.TickCount < Lists.Temp_Player[Index].Attack_Timer + 750) return;
         if (Map.Tile_Blocked(Character(Index).Map, Character(Index).X, Character(Index).Y, Character(Index).Direction, false)) goto @continue;
 
         // Ataca um jogador
@@ -340,7 +337,7 @@ class Player
     @continue:
         // Demonstra que aos outros jogadores o ataque
         Send.Player_Attack(Index, 0, 0);
-        Character(Index).Attack_Timer = Environment.TickCount;
+        Lists.Temp_Player[Index].Attack_Timer = Environment.TickCount;
     }
 
     private static void Attack_Player(byte Index, byte Victim)
@@ -363,7 +360,7 @@ class Player
         }
 
         // Tempo de ataque 
-        Character(Index).Attack_Timer = Environment.TickCount;
+        Lists.Temp_Player[Index].Attack_Timer = Environment.TickCount;
 
         // Cálculo de dano
         Damage = (short)(Character(Index).Damage - Character(Victim).Player_Defense);
@@ -417,7 +414,7 @@ class Player
         Lists.Temp_Map[Character(Index).Map].NPC[Victim].Target_Type = (byte)Game.Target.Player;
 
         // Tempo de ataque 
-        Character(Index).Attack_Timer = Environment.TickCount;
+        Lists.Temp_Player[Index].Attack_Timer = Environment.TickCount;
 
         // Cálculo de dano
         Damage = (short)(Character(Index).Damage - Lists.NPC[Map_NPC.Index].Attribute[(byte)Game.Attributes.Resistance]);
@@ -667,15 +664,15 @@ class Player
 
     public static void Party_Leave(byte Index)
     {
-        if (Character(Index).Party.Count > 0)
+        if (Lists.Temp_Player[Index].Party.Count > 0)
         {
             // Retira o jogador do grupo
-            for (byte i = 0; i < Character(Index).Party.Count; i++)
-                Character(Character(Index).Party[i]).Party.Remove(Index);
+            for (byte i = 0; i < Lists.Temp_Player[Index].Party.Count; i++)
+                Lists.Temp_Player[Lists.Temp_Player[Index].Party[i]].Party.Remove(Index);
 
             // Envia o dados para todos os membros do grupo
-            for (byte i = 0; i < Character(Index).Party.Count; i++) Send.Party(Character(Index).Party[i]);
-            Character(Index).Party.Clear();
+            for (byte i = 0; i < Lists.Temp_Player[Index].Party.Count; i++) Send.Party(Lists.Temp_Player[Index].Party[i]);
+            Lists.Temp_Player[Index].Party.Clear();
             Send.Party(Index);
         }
     }
@@ -684,13 +681,13 @@ class Player
     {
         // Somatório do level de todos os jogadores do grupo
         int Given_Experience, Experience_Sum = 0, Difference;
-        double[] Diff = new double[Character(Index).Party.Count];
+        double[] Diff = new double[Lists.Temp_Player[Index].Party.Count];
         double Diff_Sum = 0, k;
 
         // Cálcula a diferença dos leveis entre os jogadores
-        for (byte i = 0; i < Character(Index).Party.Count; i++)
+        for (byte i = 0; i < Lists.Temp_Player[Index].Party.Count; i++)
         {
-            Difference = Math.Abs(Character(Index).Level - Character(Character(Index).Party[i]).Level);
+            Difference = Math.Abs(Character(Index).Level - Character(Lists.Temp_Player[Index].Party[i]).Level);
 
             // Constante para a diminuir potêncialmente a experiência que diferenças altas ganhariam
             if (Difference < 3) k = 1.15;
@@ -704,7 +701,7 @@ class Player
         }
 
         // Divide a experiência pro grupo com base na diferença dos leveis 
-        for (byte i = 0; i < Character(Index).Party.Count; i++)
+        for (byte i = 0; i < Lists.Temp_Player[Index].Party.Count; i++)
         {
             // Caso a somatório for maior que um (100%) balanceia os valores
             if (Diff_Sum > 1) Diff[i] *= (1 / Diff_Sum);
@@ -712,9 +709,9 @@ class Player
             // Divide a experiência
             Given_Experience = (int)((Experience / 2) * Diff[i]);
             Experience_Sum += Given_Experience;
-            Character(Character(Index).Party[i]).Experience += Given_Experience;
-            CheckLevelUp(Character(Index).Party[i]);
-            Send.Player_Experience(Character(Index).Party[i]);
+            Character(Lists.Temp_Player[Index].Party[i]).Experience += Given_Experience;
+            CheckLevelUp(Lists.Temp_Player[Index].Party[i]);
+            Send.Player_Experience(Lists.Temp_Player[Index].Party[i]);
         }
 
         // Dá ao jogador principal o restante da experiência
@@ -725,13 +722,13 @@ class Player
 
     public static void Trade_Leave(byte Index)
     {
-        byte Trade_Player = Character(Index).Trade;
+        byte Trade_Player = Lists.Temp_Player[Index].Trade;
 
         // Cancela a troca
         if (Trade_Player > 0)
         {
-            Character(Trade_Player).Trade = 0;
-            Character(Index).Trade = 0;
+            Lists.Temp_Player[Trade_Player].Trade = 0;
+            Lists.Temp_Player[Index].Trade = 0;
             Send.Trade(Trade_Player);
         }
     }

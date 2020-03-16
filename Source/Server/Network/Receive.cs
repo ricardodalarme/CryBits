@@ -885,7 +885,7 @@ class Receive
             return;
         }
         // Verifica se já tem um grupo
-        if (Player.Character(Invited).Party.Count != 0)
+        if (Lists.Temp_Player[Invited].Party.Count != 0)
         {
             Send.Message(Index, "The player is already part of a party.", System.Drawing.Color.White);
             return;
@@ -897,7 +897,7 @@ class Receive
             return;
         }
         // Verifica se o grupo está cheio
-        if (Player.Character(Index).Party.Count == Lists.Server_Data.Max_Party_Members - 1)
+        if (Lists.Temp_Player[Index].Party.Count == Lists.Server_Data.Max_Party_Members - 1)
         {
             Send.Message(Index, "Your party is full.", System.Drawing.Color.White);
             return;
@@ -913,7 +913,7 @@ class Receive
         byte Invitation = Player.Find(Lists.Temp_Player[Index].Party_Invitation);
 
         // Verifica se já tem um grupo
-        if (Player.Character(Index).Party.Count != 0)
+        if (Lists.Temp_Player[Index].Party.Count != 0)
         {
             Send.Message(Index, "You are already part of a party.", System.Drawing.Color.White);
             return;
@@ -926,26 +926,26 @@ class Receive
             return;
         }
         // Verifica se o grupo está cheio
-        if (Player.Character(Invitation).Party.Count == Lists.Server_Data.Max_Party_Members - 1)
+        if (Lists.Temp_Player[Invitation].Party.Count == Lists.Server_Data.Max_Party_Members - 1)
         {
             Send.Message(Index, "The party is full.", System.Drawing.Color.White);
             return;
         }
 
         // Entra na festa
-        for (byte i = 0; i < Player.Character(Invitation).Party.Count; i++)
+        for (byte i = 0; i < Lists.Temp_Player[Invitation].Party.Count; i++)
         {
-            Player.Character(Player.Character(Invitation).Party[i]).Party.Add(Index);
-            Player.Character(Index).Party.Add(Player.Character(Invitation).Party[i]);
+            Lists.Temp_Player[Lists.Temp_Player[Invitation].Party[i]].Party.Add(Index);
+            Lists.Temp_Player[Index].Party.Add(Lists.Temp_Player[Invitation].Party[i]);
         }
-        Player.Character(Index).Party.Insert(0, Invitation);
-        Player.Character(Invitation).Party.Add(Index);
+        Lists.Temp_Player[Index].Party.Insert(0, Invitation);
+        Lists.Temp_Player[Invitation].Party.Add(Index);
         Lists.Temp_Player[Index].Party_Invitation = string.Empty;
         Send.Message(Invitation, Player.Character(Index).Name + " joined the party.", System.Drawing.Color.White);
 
         // Envia os dados para o grupo
         Send.Party(Index);
-        for (byte i = 0; i < Player.Character(Index).Party.Count; i++) Send.Party(Player.Character(Index).Party[i]);
+        for (byte i = 0; i < Lists.Temp_Player[Index].Party.Count; i++) Send.Party(Lists.Temp_Player[Index].Party[i]);
     }
 
     private static void Party_Decline(byte Index)
@@ -983,7 +983,7 @@ class Receive
             return;
         }
         // Verifica se já tem um grupo
-        if (Player.Character(Invited).Trade != 0)
+        if (Lists.Temp_Player[Invited].Trade != 0)
         {
             Send.Message(Index, "The player is already part of a trade.", System.Drawing.Color.White);
             return;
@@ -1005,7 +1005,7 @@ class Receive
         byte Invitation = Player.Find(Lists.Temp_Player[Index].Trade_Invitation);
 
         // Verifica se já tem um grupo
-        if (Player.Character(Index).Trade != 0)
+        if (Lists.Temp_Player[Index].Trade != 0)
         {
             Send.Message(Index, "You are already part of a trade.", System.Drawing.Color.White);
             return;
@@ -1024,8 +1024,8 @@ class Receive
         }
 
         // Entra na troca
-        Player.Character(Index).Trade = Invitation;
-        Player.Character(Invitation).Trade = Index;
+        Lists.Temp_Player[Index].Trade = Invitation;
+        Lists.Temp_Player[Invitation].Trade = Index;
         Lists.Temp_Player[Index].Trade_Invitation = string.Empty;
         Send.Message(Invitation, Player.Character(Index).Name + " accepted the trade.", System.Drawing.Color.White);
 
@@ -1068,6 +1068,6 @@ class Receive
         }
 
         // Envia os dados
-        Send.Trade_State(Player.Character(Index).Trade, Game.Trade_Status.Accepted);
+        Send.Trade_State(Lists.Temp_Player[Index].Trade, Game.Trade_Status.Accepted);
     }
 }

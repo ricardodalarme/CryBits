@@ -48,8 +48,12 @@ class Lists
             public byte Using;
             public bool GettingMap;
             public bool InEditor;
+            public int Attack_Timer;
+            public List<byte> Party;
+            public byte Trade;
             public string Party_Invitation;
             public string Trade_Invitation;
+            public Inventories[] Trade_Offer;
         }
 
         [Serializable]

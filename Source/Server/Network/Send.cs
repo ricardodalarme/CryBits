@@ -848,8 +848,8 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Party);
-        Data.Write((byte)Player.Character(Index).Party.Count);
-        for (byte i = 0; i < Player.Character(Index).Party.Count; i++) Data.Write(Player.Character(Index).Party[i]);
+        Data.Write((byte)Lists.Temp_Player[Index].Party.Count);
+        for (byte i = 0; i < Lists.Temp_Player[Index].Party.Count; i++) Data.Write(Lists.Temp_Player[Index].Party[i]);
         ToPlayer(Index, Data);
     }
 
@@ -869,7 +869,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Trade);
-        Data.Write(Player.Character(Index).Trade);
+        Data.Write(Lists.Temp_Player[Index].Trade);
         ToPlayer(Index, Data);
     }
 

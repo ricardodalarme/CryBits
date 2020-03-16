@@ -17,7 +17,6 @@ class Clear
     {
         // Limpa os dados do jogador
         Lists.Player[Index] = new Lists.Structures.Player();
-        Lists.Temp_Player[Index] = new Lists.Structures.TempPlayer();
         Lists.Player[Index].User = string.Empty;
         Lists.Player[Index].Password = string.Empty;
         Lists.Player[Index].Character = new Player.Character_Structure[Lists.Server_Data.Max_Characters + 1];
@@ -25,6 +24,10 @@ class Clear
         // Limpa os dados do personagem
         for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
             Player_Character(Index, i);
+
+        // Dados temporários
+        Lists.Temp_Player[Index] = new Lists.Structures.TempPlayer();
+        Lists.Temp_Player[Index].Party = new System.Collections.Generic.List<byte>();
     }
 
     public static void Player_Character(byte Index, byte Char_Num)
@@ -35,7 +38,6 @@ class Clear
         Lists.Player[Index].Character[Char_Num].Inventory = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
         Lists.Player[Index].Character[Char_Num].Equipment = new short[(byte)Game.Equipments.Count];
         Lists.Player[Index].Character[Char_Num].Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
-        Lists.Player[Index].Character[Char_Num].Party = new System.Collections.Generic.List<byte>();
     }
 
     public static void Server_Data()
