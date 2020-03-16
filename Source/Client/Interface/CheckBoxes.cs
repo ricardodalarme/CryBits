@@ -35,11 +35,8 @@ class CheckBoxes
         }
     }
 
-    public static Structure Get(string Name)
-    {
-        // Retorna a caixa de marcação procurada
-        return List.Find(x => x.Name.Equals(Name));
-    }
+    // Retorna a caixa de marcação procurada
+    public static Structure Get(string Name) => List.Find(x => x.Name.Equals(Name));
 
     private static void Execute(string Name)
     {
@@ -56,7 +53,7 @@ class CheckBoxes
             case "Options_Chat": Chat(); break;
         }
     }
-    
+
     private static void Sounds()
     {
         // Salva os dados

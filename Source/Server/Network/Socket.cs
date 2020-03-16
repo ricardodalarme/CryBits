@@ -82,8 +82,7 @@ class Socket
     public static bool IsConnected(byte Index)
     {
         // Previne sobrecarga
-        if (Connection[Index] == null)
-            return false;
+        if (Connection[Index] == null) return false;
 
         // Retorna um valor de acordo com a conexão do jogador
         return Connection[Index].Status == NetConnectionStatus.Connected;

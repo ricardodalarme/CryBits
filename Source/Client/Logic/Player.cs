@@ -19,23 +19,10 @@ class Player
 
     // O próprio jogador
     public static byte MyIndex;
-    public static Lists.Structures.Player Me
-    {
-        get
-        {
-            return Lists.Player[MyIndex];
-        }
-        set
-        {
-            Lists.Player[MyIndex] = value;
-        }
-    }
+    public static Lists.Structures.Player Me => Lists.Player[MyIndex];
 
-    public static bool IsPlaying(byte Index)
-    {
-        // Verifica se o jogador está dentro do jogo
-        return MyIndex > 0 && !string.IsNullOrEmpty(Lists.Player[Index].Name);
-    }
+    // Verifica se o jogador está dentro do jogo
+    public static bool IsPlaying(byte Index) => MyIndex > 0 && !string.IsNullOrEmpty(Lists.Player[Index].Name);
 
     public static void Logic()
     {
@@ -54,15 +41,12 @@ class Player
         }
     }
 
-    private static bool CanMove()
-    {
-        // Não mover se já estiver tentando movimentar-se
-        return Lists.Player[MyIndex].Movement == Game.Movements.Stopped;
-    }
+    // Não mover se já estiver tentando movimentar-se
+    private static bool CanMove() => Lists.Player[MyIndex].Movement == Game.Movements.Stopped;
 
     private static void CheckMovement()
     {
-        if (Me.Movement > 0  || !Graphics.RenderWindow.HasFocus()) return;
+        if (Me.Movement > 0 || !Graphics.RenderWindow.HasFocus()) return;
 
         // Move o personagem
         if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Game.Directions.Up);

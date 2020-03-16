@@ -64,11 +64,8 @@ class Buttons
         Above,
     }
 
-    public static Structure Get(string Name)
-    {
-        // Retorna o botão procurado
-        return List.Find(x => x.Name.Equals(Name));
-    }
+    // Retorna o botão procurado
+    public static Structure Get(string Name) => List.Find(x => x.Name.Equals(Name));
 
     private static void Execute(string Name)
     {

@@ -188,32 +188,10 @@ class Globals
         }
     }
 
-    public static byte Grid_Zoom
-    {
-        // Tamanho da grade com o zoom
-        get
-        {
-            return (byte)(Grid / Editor_Maps.Zoom());
-        }
-    }
-
-    public static int Zoom(int Value)
-    {
-        // Tamanho da grade com o zoom
-        return Value * Grid_Zoom;
-    }
-
-    public static Point Zoom(int X, int Y)
-    {
-        // Tamanho da grade com o zoom
-        return new Point(X * Grid_Zoom, Y * Grid_Zoom);
-    }
-
-    public static Rectangle Zoom(Rectangle Rectangle)
-    {
-        // Tamanho da grade com o zoom
-        return new Rectangle(Rectangle.X * Grid_Zoom, Rectangle.Y * Grid_Zoom, Rectangle.Width * Grid_Zoom, Rectangle.Height * Grid_Zoom);
-    }
+    // Tamanho da grade com o zoom
+    public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Zoom());
+    public static Point Zoom(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
+    public static Rectangle Zoom(Rectangle Rectangle) => new Rectangle(Rectangle.X* Grid_Zoom, Rectangle.Y* Grid_Zoom, Rectangle.Width* Grid_Zoom, Rectangle.Height* Grid_Zoom);
 
     public static bool IsAbove(Point Point, Rectangle Rectangle)
     {

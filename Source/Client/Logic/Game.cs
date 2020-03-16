@@ -213,7 +213,7 @@ class Game
     public static void Disconnect()
     {
         // Não fechar os paineis se não for necessário
-        if (Panels.Get("Options").Visible || Panels.Get("Connect").Visible || Panels.Get("Register").Visible)  return;
+        if (Panels.Get("Options").Visible || Panels.Get("Connect").Visible || Panels.Get("Register").Visible) return;
 
         // Limpa os valores
         Audio.Sound.Stop_All();
@@ -288,22 +288,14 @@ class Game
         Camera.Width = Camera.X + Screen_Width;
     }
 
-    public static int ConvertX(int x)
-    {
-        // Converte o valor em uma posição adequada à camera
-        return x - (Tile_Sight.X * Grid) - Camera.X;
-    }
+    // Converte o valor em uma posição adequada à camera
+    public static int ConvertX(int x) => x - (Tile_Sight.X * Grid) - Camera.X;
+    public static int ConvertY(int y) => y - (Tile_Sight.Y * Grid) - Camera.Y;
 
-    public static int ConvertY(int y)
-    {
-        // Converte o valor em uma posição adequada à camera
-        return y - (Tile_Sight.Y * Grid) - Camera.Y;
-    }
-
-    public static Directions ReverseDirection(Directions Direção)
+    public static Directions ReverseDirection(Directions Direction)
     {
         // Retorna a direção inversa
-        switch (Direção)
+        switch (Direction)
         {
             case Directions.Up: return Directions.Down;
             case Directions.Down: return Directions.Up;

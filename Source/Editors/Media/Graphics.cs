@@ -67,11 +67,8 @@ partial class Graphics
             return new Size(0, 0);
     }
 
-    private static SFML.Graphics.Color CColor(byte R = 255, byte G = 255, byte B = 255, byte A = 255)
-    {
-        // Retorna com a cor
-        return new SFML.Graphics.Color(R, G, B, A);
-    }
+    // Retorna a cor
+    private static SFML.Graphics.Color CColor(byte R = 255, byte G = 255, byte B = 255, byte A = 255) => new SFML.Graphics.Color(R, G, B, A);
 
     private static void Render(RenderWindow Window, Texture Texture, Rectangle Source, Rectangle Destiny, object Color = null, object Mode = null)
     {

@@ -28,13 +28,8 @@ class Tools
         public Windows Window;
     }
 
-    public static List<Order_Structure> Order
-    {
-        get
-        {
-            return All_Order[(byte)CurrentWindow];
-        }
-    }
+    // Ordem que as ferramentas são renderizadas
+    public static List<Order_Structure> Order => All_Order[(byte)CurrentWindow];
 
     // Identificação das janelas do jogo
     public enum Windows

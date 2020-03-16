@@ -481,6 +481,7 @@ class NPC
         for (byte i = 0; i < Lists.NPC[Index].Allie.Length; i++)
             if (Lists.NPC[Index].Allie[i] == Allie)
                 return true;
+
         return false;
     }
 }

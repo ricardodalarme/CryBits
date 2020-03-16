@@ -12,11 +12,8 @@ class Panels
         public byte Texture_Num;
     }
 
-    public static Structure Get(string Name)
-    {
-        // Retorna o painel procurado
-        return List.Find(x => x.Name.Equals(Name));
-    }
+    // Retorna o painel procurado
+    public static Structure Get(string Name) => List.Find(x => x.Name.Equals(Name));
 
     public static void Menu_Close()
     {

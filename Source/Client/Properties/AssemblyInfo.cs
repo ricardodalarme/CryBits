@@ -5,4 +5,4 @@
 [assembly: AssemblyProduct("CryBits")]
 [assembly: AssemblyCopyright("Copyright (c) 2020 Ricardo Dalarme")]
 [assembly: AssemblyDescription("ORPG Game Engine")]
-[assembly: AssemblyVersion("0.7.0")]
+[assembly: AssemblyVersion("0.8.0")]
