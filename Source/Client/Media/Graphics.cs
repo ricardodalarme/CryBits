@@ -370,11 +370,11 @@ partial class Graphics
         {
             case "SelectCharacter": SelectCharacter_Class(); break;
             case "CreateCharacter": CreateCharacter_Class(); break;
-            case "Hotbar": Game_Hotbar((Panels.Structure)Tool); break;
-            case "Menu_Character": Game_Menu_Character((Panels.Structure)Tool); break;
-            case "Menu_Inventory": Game_Menu_Inventory((Panels.Structure)Tool); break;
-            case "Bars": Game_Bars(); break;
-            case "Information": Panel_Informations(); break;
+            case "Hotbar": Hotbar((Panels.Structure)Tool); break;
+            case "Menu_Character": Menu_Character((Panels.Structure)Tool); break;
+            case "Menu_Inventory": Menu_Inventory((Panels.Structure)Tool); break;
+            case "Bars": Bars(); break;
+            case "Information": Informations(); break;
             case "Party_Invitation": Party_Invitation((Panels.Structure)Tool); break;
             case "Trade_Invitation": Trade_Invitation((Panels.Structure)Tool); break;
             case "Trade": Trade((Panels.Structure)Tool); break;
@@ -442,7 +442,7 @@ partial class Graphics
         DrawText(Class.Description, 282, 526, SFML.Graphics.Color.White, 123);
     }
 
-    private static void Game_Hotbar(Panels.Structure Tool)
+    private static void Hotbar(Panels.Structure Tool)
     {
         string Indicator = string.Empty;
         Point Panel_Position = Tool.Position;
@@ -487,7 +487,7 @@ partial class Graphics
         if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
 
-    private static void Game_Menu_Character(Panels.Structure Tool)
+    private static void Menu_Character(Panels.Structure Tool)
     {
         Point Panel_Position = Tool.Position;
         Game.Need_Information &= ~(1 << 1);
@@ -527,7 +527,7 @@ partial class Graphics
         if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
 
-    private static void Game_Menu_Inventory(Panels.Structure Tool)
+    private static void Menu_Inventory(Panels.Structure Tool)
     {
         byte NumColumns = 5;
         Point Panel_Position = Tool.Position;
@@ -560,7 +560,7 @@ partial class Graphics
         if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
 
-    private static void Panel_Informations()
+    private static void Informations()
     {
         short Item_Num = Game.Infomation_Index;
         SFML.Graphics.Color Text_Color;
@@ -614,7 +614,7 @@ partial class Graphics
         }
     }
 
-    private static void Game_Bars()
+    private static void Bars()
     {
         decimal HP_Percentage = Player.Me.Vital[(byte)Game.Vitals.HP] / (decimal)Player.Me.Max_Vital[(byte)Game.Vitals.HP];
         decimal MP_Percentage = Player.Me.Vital[(byte)Game.Vitals.MP] / (decimal)Player.Me.Max_Vital[(byte)Game.Vitals.MP];
@@ -695,7 +695,31 @@ partial class Graphics
 
     private static void Trade(Panels.Structure Tool)
     {
+        byte NumColumns = 5, Line, Column;
+        Point Panel_Position = Tool.Position, Position;
 
+        for (byte i = 1; i <= Game.Max_Inventory; i++)
+        {
+            // Posição do item
+            Line = (byte)((i - 1) / NumColumns);
+            Column = (byte)(i - (Line * 5) - 1);
+
+            // Oferta do jogador
+            if (Player.Trade_Offer[i].Item_Num > 0)
+            {
+                Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 50 + Line * 36);
+                Render(Tex_Item[Lists.Item[Player.Trade_Offer[i].Item_Num].Texture], Position);
+                if (Player.Trade_Offer[i].Amount > 1) DrawText(Player.Trade_Offer[i].Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
+            }
+
+            // Oferta do outro jogador
+            if (Player.Trade_Their_Offer[i].Item_Num > 0)
+            {
+                Position = new Point(Panel_Position.X + 192 + Column * 36, Panel_Position.Y + 50 + Line * 36);
+                Render(Tex_Item[Lists.Item[Player.Trade_Their_Offer[i].Item_Num].Texture], Position);
+                if (Player.Trade_Their_Offer[i].Amount > 1) DrawText(Player.Trade_Offer[i].Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
+            }
+        }
     }
 
     private static void Player_Party()

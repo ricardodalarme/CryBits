@@ -421,7 +421,7 @@ partial class Receive
         Player.Me.Party = new byte[Data.ReadByte()];
         for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Data.ReadByte();
     }
-    
+
     private static void Party_Invitation(NetIncomingMessage Data)
     {
         // Abre a janela de convite para o grupo
@@ -431,11 +431,12 @@ partial class Receive
 
     private static void Trade(NetIncomingMessage Data)
     {
-        // Abre ou fecha a troca
+        // Abre o painel da troca e limpa os dados
         Player.Me.Trade = Data.ReadByte();
         Panels.Get("Trade").Visible = Player.Me.Trade != 0;
         Buttons.Get("Trade_Offer_Confirm").Visible = true;
         Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
+        Player.Trade_Offer = Player.Trade_Their_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
     }
 
     private static void Trade_Invitation(NetIncomingMessage Data)

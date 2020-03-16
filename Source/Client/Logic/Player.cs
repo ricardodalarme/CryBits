@@ -17,6 +17,10 @@ class Player
     public static Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
     public static byte Hotbar_Change;
 
+    // Troca
+    public static Lists.Structures.Inventory[] Trade_Offer;
+    public static Lists.Structures.Inventory[] Trade_Their_Offer;
+
     // O próprio jogador
     public static byte MyIndex;
     public static Lists.Structures.Player Me => Lists.Player[MyIndex];
