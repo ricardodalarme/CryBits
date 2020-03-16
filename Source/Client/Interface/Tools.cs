@@ -17,10 +17,7 @@ class Tools
         public Structure Data;
         public Order_Structure Parent;
         public List<Order_Structure> Nodes;
-        public bool Viewable
-        {
-            get { return Viewable(this); }
-        }
+        public bool Viewable => Viewable(this);
     }
 
     public class Structure

@@ -36,8 +36,7 @@ class Receive
         Trade_Decline,
         Trade_Leave,
         Trade_Offer,
-        Trade_Offer_Accept,
-        Trade_Offer_Decline
+        Trade_Offer_State
     }
 
     // Pacotes do editor
@@ -98,8 +97,7 @@ class Receive
                 case Client_Packets.Trade_Decline: Trade_Decline(Index); break;
                 case Client_Packets.Trade_Leave: Trade_Leave(Index); break;
                 case Client_Packets.Trade_Offer: Trade_Offer(Index, Data); break;
-                case Client_Packets.Trade_Offer_Accept: Trade_Offer_Accept(Index); break;
-                case Client_Packets.Trade_Offer_Decline: Trade_Offer_Decline(Index); break;
+                case Client_Packets.Trade_Offer_State: Trade_Offer_State(Index, Data); break;
             }
         else
             // Manuseia os dados recebidos do editor
@@ -1055,13 +1053,21 @@ class Receive
 
     }
 
-    private static void Trade_Offer_Accept(byte Index)
+    private static void Trade_Offer_State(byte Index, NetIncomingMessage Data)
     {
+        Game.Trade_Status State = (Game.Trade_Status)Data.ReadByte();
 
-    }
+        switch (State)
+        {
+            case Game.Trade_Status.Accepted:
+                break;
+            case Game.Trade_Status.Declined:
+                break;
+            case Game.Trade_Status.Waiting:
+                break;
+        }
 
-    private static void Trade_Offer_Decline(byte Index)
-    {
-
+        // Envia os dados
+        Send.Trade_State(Player.Character(Index).Trade, Game.Trade_Status.Accepted);
     }
 }

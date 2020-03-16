@@ -381,6 +381,7 @@ partial class Graphics
             case "Information": Panel_Informations(); break;
             case "Party_Invitation": Party_Invitation((Panels.Structure)Tool); break;
             case "Trade_Invitation": Trade_Invitation((Panels.Structure)Tool); break;
+            case "Trade": Trade((Panels.Structure)Tool); break;
         }
     }
 
@@ -694,6 +695,11 @@ partial class Graphics
     private static void Trade_Invitation(Panels.Structure Tool)
     {
         DrawText(Game.Trade_Invitation + " has invite you to a trade.  Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+    }
+
+    private static void Trade(Panels.Structure Tool)
+    {
+
     }
 
     private static void Player_Party()

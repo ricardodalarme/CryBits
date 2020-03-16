@@ -103,6 +103,14 @@ class Game
         Equip,
         Count
     }
+
+    public enum Trade_Status
+    {
+        None,
+        Waiting,
+        Accepted,
+        Declined
+    }
     #endregion
 
     public static void SetHigherIndex()

@@ -7,7 +7,6 @@ class Chat
     public static List<Structure> Order = new List<Structure>();
 
     // Chat
-    //public static bool Text_Visible;
     public const byte Lines_Visible = 9;
     public static byte Lines_First;
     private const byte Max_Lines = 50;

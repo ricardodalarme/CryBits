@@ -36,8 +36,7 @@ partial class Send
         Trade_Decline,
         Trade_Leave,
         Trade_Offer,
-        Trade_Offer_Accept,
-        Trade_Offer_Decline
+        Trade_Offer_State
     }
 
     private static void Packet(NetOutgoingMessage Data)
@@ -367,21 +366,13 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Trade_Offer_Accept()
+    public static void Trade_Offer_State(Game.Trade_Status State)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Data.Write((byte)Packets.Trade_Offer_Accept);
-        Packet(Data);
-    }
-
-    public static void Trade_Offer_Decline()
-    {
-        NetOutgoingMessage Data = Socket.Device.CreateMessage();
-
-        // Envia os dados
-        Data.Write((byte)Packets.Trade_Offer_Decline);
+        Data.Write((byte)Packets.Trade_Offer_State);
+        Data.Write((byte)State);
         Packet(Data);
     }
 }

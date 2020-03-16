@@ -45,7 +45,8 @@ partial class Receive
         Party,
         Party_Invitation,
         Trade,
-        Trade_Invitation
+        Trade_Invitation,
+        Trade_State
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -91,6 +92,7 @@ partial class Receive
             case Packets.Party_Invitation: Party_Invitation(Data); break;
             case Packets.Trade: Trade(Data); break;
             case Packets.Trade_Invitation: Trade_Invitation(Data); break;
+            case Packets.Trade_State: Trade_State(Data); break;
         }
     }
 
@@ -192,14 +194,17 @@ partial class Receive
         Game.Need_Information = 0;
         Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
         Player.Me.Party = new byte[0];
+        Game.Trade_State = Game.Trade_Status.Waiting;
 
-        // Fecha os paineis 
+        // Reseta a interface
         Panels.Get("Menu_Character").Visible = false;
         Panels.Get("Menu_Inventory").Visible = false;
         Panels.Get("Menu_Options").Visible = false;
         Panels.Get("Chat").Visible = false;
         Panels.Get("Drop").Visible = false;
         Panels.Get("Party_Invitation").Visible = false;
+        Buttons.Get("Trade_Offer_Confirm").Visible = true;
+        Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
 
         // Abre o jogo
         Audio.Music.Stop();
@@ -429,6 +434,8 @@ partial class Receive
         // Abre ou fecha a troca
         Player.Me.Trade = Data.ReadByte();
         Panels.Get("Trade").Visible = Player.Me.Trade != 0;
+        Buttons.Get("Trade_Offer_Confirm").Visible = true;
+        Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
     }
 
     private static void Trade_Invitation(NetIncomingMessage Data)
@@ -436,5 +443,11 @@ partial class Receive
         // Abre a janela de convite para o grupo
         Game.Trade_Invitation = Data.ReadString();
         Panels.Get("Trade_Invitation").Visible = true;
+    }
+
+    private static void Trade_State(NetIncomingMessage Data)
+    {
+        // Altera a visibilidade dos botões
+        Buttons.Trade_Buttons();
     }
 }

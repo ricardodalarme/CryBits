@@ -117,7 +117,7 @@ class Panels
             return;
         }
         // Seleciona o item
-        else if (e.Button == SFML.Window.Mouse.Button.Left)
+        if (e.Button == SFML.Window.Mouse.Button.Left)
         {
             Player.Hotbar_Change = Slot;
             return;

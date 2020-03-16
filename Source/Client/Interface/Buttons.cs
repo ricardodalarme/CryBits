@@ -108,9 +108,10 @@ class Buttons
             case "Party_No": Party_No(); break;
             case "Trade_Yes": Trade_Yes(); break;
             case "Trade_No": Trade_No(); break;
-            case "Trade_Leave": Trade_Leave(); break;
+            case "Trade_Close": Trade_Close(); break;
             case "Trade_Offer_Accept": Trade_Offer_Accept(); break;
             case "Trade_Offer_Decline": Trade_Offer_Decline(); break;
+            case "Trade_Offer_Confirm": Trade_Offer_Confirm(); break;
         }
     }
 
@@ -404,7 +405,7 @@ class Buttons
         Panels.Get("Trade_Invitation").Visible = false;
     }
 
-    private static void Trade_Leave()
+    private static void Trade_Close()
     {
         // Fecha o painel
         Player.Me.Trade = 0;
@@ -414,9 +415,24 @@ class Buttons
 
     private static void Trade_Offer_Accept()
     {
+        Send.Trade_Offer_State(Game.Trade_Status.Accepted);
     }
 
     private static void Trade_Offer_Decline()
     {
+        Send.Trade_Offer_State(Game.Trade_Status.Declined);
+    }
+
+    public static void Trade_Offer_Confirm()
+    {
+        Send.Trade_Offer_State(Game.Trade_Status.Confirmed);
+    }
+
+    public static void Trade_Buttons()
+    {
+        // Troca a visibilidade dos botões
+        Get("Trade_Offer_Confirm").Visible = !Get("Trade_Offer_Confirm").Visible;
+        Get("Trade_Offer_Accept").Visible = !Get("Trade_Offer_Accept").Visible;
+        Get("Trade_Offer_Decline").Visible = !Get("Trade_Offer_Decline").Visible;
     }
 }

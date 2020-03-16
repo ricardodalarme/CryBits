@@ -43,7 +43,8 @@ class Send
         Party,
         Party_Invitation,
         Trade,
-        Trade_Invitation
+        Trade_Invitation,
+        Trade_State
     }
 
     // Pacotes do servidor para o editor
@@ -879,6 +880,16 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Trade_Invitation);
         Data.Write(Player_Invitation);
+        ToPlayer(Index, Data);
+    }
+
+    public static void Trade_State(byte Index, Game.Trade_Status State)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Client_Packets.Trade_State);
+        Data.Write((byte)State);
         ToPlayer(Index, Data);
     }
 }
