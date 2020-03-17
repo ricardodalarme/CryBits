@@ -371,7 +371,7 @@ class Player
             // Demonstra o ataque aos outros jogadores
             Send.Player_Attack(Index, Victim, (byte)Game.Target.Player);
 
-            if (Damage < Character(Victim).MaxVital((byte)Game.Vitals.HP))
+            if (Damage < Character(Victim).Vital[(byte)Game.Vitals.HP])
             {
                 Character(Victim).Vital[(byte)Game.Vitals.HP] -= Damage;
                 Send.Player_Vitals(Victim);
