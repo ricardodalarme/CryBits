@@ -717,7 +717,7 @@ partial class Graphics
             {
                 Position = new Point(Panel_Position.X + 192 + Column * 36, Panel_Position.Y + 50 + Line * 36);
                 Render(Tex_Item[Lists.Item[Player.Trade_Their_Offer[i].Item_Num].Texture], Position);
-                if (Player.Trade_Their_Offer[i].Amount > 1) DrawText(Player.Trade_Offer[i].Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
+                if (Player.Trade_Their_Offer[i].Amount > 1) DrawText(Player.Trade_Their_Offer[i].Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
             }
         }
     }

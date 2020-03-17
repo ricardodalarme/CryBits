@@ -106,8 +106,8 @@ class Game
 
     public enum Trade_Status
     {
-        None,
         Waiting,
+        Confirmed,
         Accepted,
         Declined
     }

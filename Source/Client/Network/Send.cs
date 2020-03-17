@@ -355,14 +355,14 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Trade_Offer(byte Slot, short Amount)
+    public static void Trade_Offer(byte Slot, byte Inventory_Slot)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
-        Data.Write((byte)Packets.Trade_Leave);
+        Data.Write((byte)Packets.Trade_Offer);
         Data.Write(Slot);
-        Data.Write(Amount);
+        Data.Write(Inventory_Slot);
         Packet(Data);
     }
 

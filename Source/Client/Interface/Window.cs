@@ -61,6 +61,7 @@ class Window
                 Panels.Inventory_MouseDown(e);
                 Panels.Equipment_MouseDown(e);
                 Panels.Hotbar_MouseDown(e);
+                Panels.Trade_MouseDown(e);
             }
         }
     }
@@ -92,15 +93,24 @@ class Window
         if (Tools.CurrentWindow == Tools.Windows.Game)
         {
             // Muda o slot do item
-            if (Player.Inventory_Change > 0)
-                if (Panels.Inventory_Mouse() > 0)
-                    Send.Inventory_Change(Player.Inventory_Change, Panels.Inventory_Mouse());
-
+            if (Panels.Inventory_Mouse() > 0)
+            {
+                if (Player.Inventory_Change > 0) Send.Inventory_Change(Player.Inventory_Change, Panels.Inventory_Mouse());
+            }
             // Muda o slot da hotbar
-            if (Panels.Hotbar_Mouse() > 0)
+            else if (Panels.Hotbar_Mouse() > 0)
             {
                 if (Player.Hotbar_Change > 0) Send.Hotbar_Change(Player.Hotbar_Change, Panels.Hotbar_Mouse());
                 if (Player.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Mouse(), (byte)Game.Hotbar.Item, Player.Inventory_Change);
+            }
+            // Adiciona um item à troca
+            else if (Panels.Trade_Mouse() > 0)
+            {
+                if (Player.Inventory_Change > 0)
+                {
+                    Player.Trade_Offer[Panels.Trade_Mouse()].Item_Num = Player.Inventory[Player.Inventory_Change].Item_Num;
+                    Send.Trade_Offer(Panels.Trade_Mouse(), Player.Inventory_Change);
+                }
             }
 
             // Reseta a movimentação

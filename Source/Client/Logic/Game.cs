@@ -22,7 +22,6 @@ class Game
     public static byte Drop_Slot = 0;
     public static string Party_Invitation;
     public static string Trade_Invitation;
-    public static Trade_Status Trade_State;
 
     // Jogador
     public const short Attack_Speed = 750;

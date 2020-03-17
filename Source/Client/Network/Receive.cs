@@ -46,7 +46,8 @@ partial class Receive
         Party_Invitation,
         Trade,
         Trade_Invitation,
-        Trade_State
+        Trade_State,
+        Trade_Offer
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -93,6 +94,7 @@ partial class Receive
             case Packets.Trade: Trade(Data); break;
             case Packets.Trade_Invitation: Trade_Invitation(Data); break;
             case Packets.Trade_State: Trade_State(Data); break;
+            case Packets.Trade_Offer: Trade_Offer(Data); break;
         }
     }
 
@@ -194,7 +196,6 @@ partial class Receive
         Game.Need_Information = 0;
         Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
         Player.Me.Party = new byte[0];
-        Game.Trade_State = Game.Trade_Status.Waiting;
 
         // Reseta a interface
         Panels.Get("Menu_Character").Visible = false;
@@ -436,7 +437,8 @@ partial class Receive
         Panels.Get("Trade").Visible = Player.Me.Trade != 0;
         Buttons.Get("Trade_Offer_Confirm").Visible = true;
         Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
-        Player.Trade_Offer = Player.Trade_Their_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
+        Player.Trade_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
+        Player.Trade_Their_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
     }
 
     private static void Trade_Invitation(NetIncomingMessage Data)
@@ -448,7 +450,34 @@ partial class Receive
 
     private static void Trade_State(NetIncomingMessage Data)
     {
-        // Altera a visibilidade dos botões
-        Buttons.Trade_Buttons();
+        switch ((Game.Trade_Status)Data.ReadByte())
+        {
+            case Game.Trade_Status.Accepted:
+            case Game.Trade_Status.Declined:
+                Buttons.Get("Trade_Offer_Confirm").Visible = true;
+                Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
+                break;
+            case Game.Trade_Status.Confirmed:
+                Buttons.Get("Trade_Offer_Confirm").Visible = false;
+                Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = true;
+                break;
+        }
+    }
+
+    private static void Trade_Offer(NetIncomingMessage Data)
+    {
+        // Recebe os dados da oferta
+        if (Data.ReadBoolean())
+            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            {
+                Player.Trade_Offer[i].Item_Num = Data.ReadInt16();
+                Player.Trade_Offer[i].Amount = Data.ReadInt16();
+            }
+        else
+            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            {
+                Player.Trade_Their_Offer[i].Item_Num = Data.ReadInt16();
+                Player.Trade_Their_Offer[i].Amount = Data.ReadInt16();
+            }
     }
 }

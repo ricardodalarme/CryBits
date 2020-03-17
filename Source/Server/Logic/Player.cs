@@ -730,6 +730,7 @@ class Player
             Lists.Temp_Player[Trade_Player].Trade = 0;
             Lists.Temp_Player[Index].Trade = 0;
             Send.Trade(Trade_Player);
+            Send.Trade(Index);
         }
     }
 }

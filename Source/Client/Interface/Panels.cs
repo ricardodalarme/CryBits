@@ -120,4 +120,41 @@ class Panels
             return;
         }
     }
+
+    public static byte Trade_Mouse()
+    {
+        byte NumColumn = 5;
+        Point Panel_Position = Get("Trade").Position;
+
+        for (byte i = 1; i <= Game.Max_Inventory; i++)
+        {
+            // Posição do item
+            byte Line = (byte)((i - 1) / NumColumn);
+            int Column = i - (Line * 5) - 1;
+            Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 50 + Line * 36);
+
+            // Retorna o slot em que o mouse está por cima
+            if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
+        }
+
+        return 0;
+    }
+
+    public static void Trade_MouseDown(SFML.Window.MouseButtonEventArgs e)
+    {
+        byte Slot = Trade_Mouse();
+
+        // Somente se necessário
+        if (!Get("Trade").Visible) return;
+        if (Slot == 0) return;
+        if (Player.Trade_Offer[Slot].Item_Num == 0) return;
+
+        // Solta item
+        if (e.Button == SFML.Window.Mouse.Button.Right)
+        {
+            Player.Trade_Offer[Slot].Item_Num = 0;
+            Player.Trade_Offer[Slot].Amount = 0;
+            Send.Trade_Offer(Slot, 0);
+        }
+    }
 }

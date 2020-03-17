@@ -412,24 +412,28 @@ class Buttons
 
     private static void Trade_Offer_Accept()
     {
+        // Aceita a oferta
+        Get("Trade_Offer_Confirm").Visible = true;
+        Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
         Send.Trade_Offer_State(Game.Trade_Status.Accepted);
+
+        // Limpa os dados da oferta
+        Player.Trade_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
+        Player.Trade_Their_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
     }
 
     private static void Trade_Offer_Decline()
     {
+        // Recusa a oferta
+        Get("Trade_Offer_Confirm").Visible = true;
+        Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
         Send.Trade_Offer_State(Game.Trade_Status.Declined);
     }
 
     public static void Trade_Offer_Confirm()
     {
+        // Confirma a oferta
+        Get("Trade_Offer_Confirm").Visible = Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
         Send.Trade_Offer_State(Game.Trade_Status.Confirmed);
-    }
-
-    public static void Trade_Buttons()
-    {
-        // Troca a visibilidade dos botões
-        Get("Trade_Offer_Confirm").Visible = !Get("Trade_Offer_Confirm").Visible;
-        Get("Trade_Offer_Accept").Visible = !Get("Trade_Offer_Accept").Visible;
-        Get("Trade_Offer_Decline").Visible = !Get("Trade_Offer_Decline").Visible;
     }
 }

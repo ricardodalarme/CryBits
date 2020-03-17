@@ -44,7 +44,8 @@ class Send
         Party_Invitation,
         Trade,
         Trade_Invitation,
-        Trade_State
+        Trade_State,
+        Trade_Offer
     }
 
     // Pacotes do servidor para o editor
@@ -890,6 +891,22 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Trade_State);
         Data.Write((byte)State);
+        ToPlayer(Index, Data);
+    }
+
+    public static void Trade_Offer(byte Index, bool Own = true)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+        byte To = Own ? Index : Lists.Temp_Player[Index].Trade;
+
+        // Envia os dados
+        Data.Write((byte)Client_Packets.Trade_Offer);
+        Data.Write(Own);
+        for (byte i = 1; i <= Game.Max_Inventory; i++)
+        {
+            Data.Write(Lists.Temp_Player[To].Trade_Offer[i].Item_Num);
+            Data.Write(Lists.Temp_Player[To].Trade_Offer[i].Amount);
+        }
         ToPlayer(Index, Data);
     }
 }
