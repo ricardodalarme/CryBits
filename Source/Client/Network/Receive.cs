@@ -204,6 +204,8 @@ partial class Receive
         Panels.Get("Chat").Visible = false;
         Panels.Get("Drop").Visible = false;
         Panels.Get("Party_Invitation").Visible = false;
+        Panels.Get("Trade").Visible = false;
+        Panels.Get("Trade_Amount").Visible = false;
         Buttons.Get("Trade_Offer_Confirm").Visible = true;
         Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
 

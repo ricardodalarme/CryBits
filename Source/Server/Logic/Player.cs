@@ -548,6 +548,13 @@ class Player
         if (Character(Index).Inventory[Slot].Item_Num == 0) return;
         if (Lists.Item[Character(Index).Inventory[Slot].Item_Num].Bind == (byte)Game.BindOn.Pickup) return;
 
+        // Verifica se não está em uma troca
+        if (Lists.Temp_Player[Index].Trade != 0)
+        {
+            Send.Message(Index, "You can't drop item while in a trade.", Color.Red);
+            return;
+        }
+
         // Verifica se não está dropando mais do que tem
         if (Amount > Character(Index).Inventory[Slot].Amount) Amount = Character(Index).Inventory[Slot].Amount;
 
@@ -731,7 +738,6 @@ class Player
             Send.Trade(Index);
         }
     }
-
 
     public static byte Total_Trade_Items(byte Index)
     {

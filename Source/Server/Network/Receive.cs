@@ -1079,22 +1079,43 @@ class Receive
                 // Verifica se os jogadores têm espaço disponivel para trocar os itens
                 if (Player.Total_Trade_Items(Index) > Player.Total_Inventory_Free(Invitation))
                 {
-                    Send.Message(Invitation, "The offer was accepted.", System.Drawing.Color.Red);
+                    Send.Message(Invitation, Player.Character(Invitation).Name + " don't have enought space in their inventory to do this trade.", System.Drawing.Color.Red);
                     break;
                 }
                 if (Player.Total_Trade_Items(Invitation) > Player.Total_Inventory_Free(Index))
                 {
-                    Send.Message(Invitation, "The offer was accepted.", System.Drawing.Color.Red);
+                    Send.Message(Invitation, "You don't have enought space in your inventory to do this trade.", System.Drawing.Color.Red);
                     break;
                 }
 
-
+                // Mensagem de confirmação
                 Send.Message(Invitation, "The offer was accepted.", System.Drawing.Color.Green);
 
-                // Remove os itens do inventário
+                // Dados da oferta
+                Lists.Structures.Inventories[] Your_Inventory = (Lists.Structures.Inventories[])Player.Character(Index).Inventory.Clone(),
+                    Their_Inventory = (Lists.Structures.Inventories[])Player.Character(Invitation).Inventory.Clone();
 
+                // Remove os itens do inventário dos jogadores
+                for (byte j = 0, To = Index; j < 2; j++, To = (To == Index ? Invitation : Index))
+                    for (byte i = 1; i <= Game.Max_Inventory; i++)
+                    {
+                        Slot = Lists.Temp_Player[To].Trade_Offer[i].Item_Num;
+                        Amount = Lists.Temp_Player[To].Trade_Offer[i].Amount;
+                        if (Slot > 0)
+                            if (Amount == 1 || Amount == Player.Character(To).Inventory[Slot].Amount)
+                                Player.Character(To).Inventory[Slot] = new Lists.Structures.Inventories();
+                            else
+                                Player.Character(To).Inventory[Slot].Amount -= Amount;
+                    }
 
+                // Dá os itens aos jogadores
+                for (byte i = 1; i <= Game.Max_Inventory; i++)
+                {
+                    if (Lists.Temp_Player[Index].Trade_Offer[i].Item_Num > 0) Player.GiveItem(Invitation, Your_Inventory[Lists.Temp_Player[Index].Trade_Offer[i].Item_Num].Item_Num, Lists.Temp_Player[Index].Trade_Offer[i].Amount);
+                    if (Lists.Temp_Player[Invitation].Trade_Offer[i].Item_Num > 0) Player.GiveItem(Index, Their_Inventory[Lists.Temp_Player[Invitation].Trade_Offer[i].Item_Num].Item_Num, Lists.Temp_Player[Index].Trade_Offer[i].Amount);
+                }
 
+                // Envia os dados do inventário aos jogadores
                 Send.Player_Inventory(Index);
                 Send.Player_Inventory(Invitation);
 
