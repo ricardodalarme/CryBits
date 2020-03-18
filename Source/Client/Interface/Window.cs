@@ -107,10 +107,15 @@ class Window
             else if (Panels.Trade_Mouse() > 0)
             {
                 if (Player.Inventory_Change > 0)
-                {
-                    Player.Trade_Offer[Panels.Trade_Mouse()].Item_Num = Player.Inventory[Player.Inventory_Change].Item_Num;
-                    Send.Trade_Offer(Panels.Trade_Mouse(), Player.Inventory_Change);
-                }
+                    if (Player.Inventory[Player.Inventory_Change].Amount == 1) 
+                        Send.Trade_Offer(Panels.Trade_Mouse(), Player.Inventory_Change);
+                    else
+                    {
+                        Game.Trade_Slot = Panels.Trade_Mouse();
+                        Game.Trade_Inventory_Slot = Player.Inventory_Change;
+                        TextBoxes.Get("Trade_Amount").Text = string.Empty;
+                        Panels.Get("Trade_Amount").Visible = true;
+                    }
             }
 
             // Reseta a movimentação

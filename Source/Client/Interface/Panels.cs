@@ -150,11 +150,6 @@ class Panels
         if (Player.Trade_Offer[Slot].Item_Num == 0) return;
 
         // Solta item
-        if (e.Button == SFML.Window.Mouse.Button.Right)
-        {
-            Player.Trade_Offer[Slot].Item_Num = 0;
-            Player.Trade_Offer[Slot].Amount = 0;
-            Send.Trade_Offer(Slot, 0);
-        }
+        if (e.Button == SFML.Window.Mouse.Button.Right) Send.Trade_Offer(Slot, 0);
     }
 }

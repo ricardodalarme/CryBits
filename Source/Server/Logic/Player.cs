@@ -419,8 +419,6 @@ class Player
         // Cálculo de dano
         Damage = (short)(Character(Index).Damage - Lists.NPC[Map_NPC.Index].Attribute[(byte)Game.Attributes.Resistance]);
 
-        // Demonstra o ataque aos outros jogadores
-
         // Dano não fatal
         if (Damage > 0)
         {
@@ -732,5 +730,28 @@ class Player
             Send.Trade(Trade_Player);
             Send.Trade(Index);
         }
+    }
+
+
+    public static byte Total_Trade_Items(byte Index)
+    {
+        byte Total = 0;
+
+        // Retorna a quantidade de itens oferecidos na troca
+        for (byte i = 1; i <= Game.Max_Inventory; i++)
+            if (Lists.Temp_Player[Index].Trade_Offer[i].Item_Num > 0)
+                Total++;
+        return Total;
+    }
+
+    public static byte Total_Inventory_Free(byte Index)
+    {
+        byte Total = 0;
+
+        // Retorna a quantidade de itens oferecidos na troca
+        for (byte i = 1; i <= Game.Max_Inventory; i++)
+            if (Character(Index).Inventory[i].Item_Num == 0)
+                Total++;
+        return Total;
     }
 }

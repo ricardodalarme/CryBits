@@ -52,7 +52,7 @@ class Lists
             public List<byte> Party;
             public byte Trade;
             public string Party_Invitation;
-            public string Trade_Invitation;
+            public string Trade_Request;
             public Inventories[] Trade_Offer;
         }
 

@@ -904,7 +904,7 @@ class Send
         Data.Write(Own);
         for (byte i = 1; i <= Game.Max_Inventory; i++)
         {
-            Data.Write(Lists.Temp_Player[To].Trade_Offer[i].Item_Num);
+            Data.Write(Player.Character(To).Inventory[Lists.Temp_Player[To].Trade_Offer[i].Item_Num].Item_Num);
             Data.Write(Lists.Temp_Player[To].Trade_Offer[i].Amount);
         }
         ToPlayer(Index, Data);

@@ -109,6 +109,8 @@ class Buttons
             case "Trade_Offer_Accept": Trade_Offer_Accept(); break;
             case "Trade_Offer_Decline": Trade_Offer_Decline(); break;
             case "Trade_Offer_Confirm": Trade_Offer_Confirm(); break;
+            case "Trade_Amount_Confirm": Trade_Amount_Confirm(); break;
+            case "Trade_Amount_Cancel": Trade_Amount_Cancel(); break;
         }
     }
 
@@ -435,5 +437,28 @@ class Buttons
         // Confirma a oferta
         Get("Trade_Offer_Confirm").Visible = Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
         Send.Trade_Offer_State(Game.Trade_Status.Confirmed);
+    }
+
+    private static void Trade_Amount_Confirm()
+    {
+        // Quantidade
+        short.TryParse(TextBoxes.Get("Trade_Amount").Text, out short Amount);
+
+        // Verifica se o valor digitado é válido
+        if (Amount <= 0 )
+        {
+            MessageBox.Show("Enter a valid value!");
+            return;
+        }
+
+        // Solta o item
+        Send.Trade_Offer(Game.Trade_Slot, Game.Trade_Inventory_Slot, Amount);
+        Panels.Get("Trade_Amount").Visible = false;
+    }
+
+    private static void Trade_Amount_Cancel()
+    {
+        // Fecha o painel
+        Panels.Get("Trade_Amount").Visible = false;
     }
 }

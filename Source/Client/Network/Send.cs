@@ -355,7 +355,7 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Trade_Offer(byte Slot, byte Inventory_Slot)
+    public static void Trade_Offer(byte Slot, byte Inventory_Slot, short Amount = 1)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -363,6 +363,7 @@ partial class Send
         Data.Write((byte)Packets.Trade_Offer);
         Data.Write(Slot);
         Data.Write(Inventory_Slot);
+        Data.Write(Amount);
         Packet(Data);
     }
 

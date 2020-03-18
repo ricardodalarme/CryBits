@@ -432,11 +432,13 @@ partial class Receive
 
     private static void Trade(NetIncomingMessage Data)
     {
-        // Abre o painel da troca e limpa os dados
+        // Abre o painel da troca 
         Player.Me.Trade = Data.ReadByte();
-        Panels.Get("Trade").Visible = Player.Me.Trade != 0;
+        Panels.Get("Trade").Visible =  Player.Me.Trade != 0;
         Buttons.Get("Trade_Offer_Confirm").Visible = true;
-        Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
+        Panels.Get("Trade_Amount").Visible = Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
+
+        // Limpa os dados
         Player.Trade_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
         Player.Trade_Their_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
     }
