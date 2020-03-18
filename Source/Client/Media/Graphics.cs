@@ -44,7 +44,7 @@ partial class Graphics
     private static Texture[] LoadTextures(string Directory)
     {
         short i = 1;
-        Texture[] TempTex = new Texture[0];
+        Texture[] TempTex = Array.Empty<Texture>();
 
         while (File.Exists(Directory + i + Format))
         {

@@ -21,7 +21,7 @@ partial class Graphics
     // Texturas
     public static Texture[] Tex_Character;
     public static Texture[] Tex_Tile;
-    private static Texture[] Tex_Face;
+    public static Texture[] Tex_Face;
     public static Texture[] Tex_Panel;
     public static Texture[] Tex_Button;
     public static Texture[] Tex_Panorama;
@@ -44,7 +44,7 @@ partial class Graphics
     private static Texture[] AddTextures(string Directory)
     {
         short i = 1;
-        Texture[] TempTex = new Texture[0];
+        Texture[] TempTex = Array.Empty<Texture>();
 
         while (File.Exists(Directory + i + Format))
         {

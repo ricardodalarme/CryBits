@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 class Clear
 {
@@ -27,7 +28,7 @@ class Clear
 
         // Dados temporários
         Lists.Temp_Player[Index] = new Lists.Structures.TempPlayer();
-        Lists.Temp_Player[Index].Party = new System.Collections.Generic.List<byte>();
+        Lists.Temp_Player[Index].Party = new List<byte>();
     }
 
     public static void Player_Character(byte Index, byte Char_Num)
@@ -64,9 +65,9 @@ class Clear
         Lists.Class[Index].Name = string.Empty;
         Lists.Class[Index].Vital = new short[(byte)Game.Vitals.Count];
         Lists.Class[Index].Attribute = new short[(byte)Game.Attributes.Count];
-        Lists.Class[Index].Tex_Male = new short[0];
-        Lists.Class[Index].Tex_Female = new short[0];
-        Lists.Class[Index].Item = new Tuple<short, short>[0];
+        Lists.Class[Index].Tex_Male = Array.Empty<short>();
+        Lists.Class[Index].Tex_Female = Array.Empty<short>();
+        Lists.Class[Index].Item = Array.Empty<Tuple<short, short>>();
         Lists.Class[Index].Spawn_Map = 1;
     }
 
@@ -77,8 +78,8 @@ class Clear
         Lists.NPC[Index].Name = string.Empty;
         Lists.NPC[Index].Vital = new short[(byte)Game.Vitals.Count];
         Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Count];
-        Lists.NPC[Index].Drop = new Lists.Structures.NPC_Drop[0];
-        Lists.NPC[Index].Allie = new short[0];
+        Lists.NPC[Index].Drop = Array.Empty<Lists.Structures.NPC_Drop>();
+        Lists.NPC[Index].Allie = Array.Empty<short>();
     }
 
     public static void Item(byte Index)
@@ -103,7 +104,7 @@ class Clear
         Lists.Map[Index].Lighting = 100;
         Lists.Map[Index].Link = new short[(byte)Game.Directions.Count];
         Lists.Map[Index].Light = Array.Empty<Lists.Structures.Map_Light>();
-        Lists.Map[Index].Layer = new System.Collections.Generic.List<Lists.Structures.Map_Layer>();
+        Lists.Map[Index].Layer = new List<Lists.Structures.Map_Layer>();
         Lists.Map[Index].Layer.Add(new Lists.Structures.Map_Layer());
         Lists.Map[Index].Layer[0].Name = "Ground";
         for (byte c = 0; c < Lists.Map[Index].Layer.Count; c++) Lists.Map[Index].Layer[c].Tile = new Lists.Structures.Map_Tile_Data[Lists.Map[Index].Width + 1, Lists.Map[Index].Height + 1];
@@ -118,7 +119,7 @@ class Clear
         // Dados temporários
         Lists.Temp_Map[Index] = new Lists.Structures.Temp_Map();
         Lists.Temp_Map[Index].NPC = Array.Empty<Lists.Structures.Map_NPCs>();
-        Lists.Temp_Map[Index].Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
+        Lists.Temp_Map[Index].Item = new List<Lists.Structures.Map_Items>();
         Lists.Temp_Map[Index].Item.Add(new Lists.Structures.Map_Items());
     }
 

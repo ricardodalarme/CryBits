@@ -195,7 +195,7 @@ partial class Receive
         CheckBoxes.Get("Options_Chat").Checked = Lists.Options.Chat;
         Game.Need_Information = 0;
         Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
-        Player.Me.Party = new byte[0];
+        Player.Me.Party = Array.Empty<byte>();
 
         // Reseta a interface
         Panels.Get("Menu_Character").Visible = false;
