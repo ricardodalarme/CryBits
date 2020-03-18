@@ -1102,7 +1102,7 @@ class Receive
                         Slot = Lists.Temp_Player[To].Trade_Offer[i].Item_Num;
                         Amount = Lists.Temp_Player[To].Trade_Offer[i].Amount;
                         if (Slot > 0)
-                            if (Amount == 1 || Amount == Player.Character(To).Inventory[Slot].Amount)
+                            if (Amount == Player.Character(To).Inventory[Slot].Amount)
                                 Player.Character(To).Inventory[Slot] = new Lists.Structures.Inventories();
                             else
                                 Player.Character(To).Inventory[Slot].Amount -= Amount;
@@ -1112,7 +1112,7 @@ class Receive
                 for (byte i = 1; i <= Game.Max_Inventory; i++)
                 {
                     if (Lists.Temp_Player[Index].Trade_Offer[i].Item_Num > 0) Player.GiveItem(Invitation, Your_Inventory[Lists.Temp_Player[Index].Trade_Offer[i].Item_Num].Item_Num, Lists.Temp_Player[Index].Trade_Offer[i].Amount);
-                    if (Lists.Temp_Player[Invitation].Trade_Offer[i].Item_Num > 0) Player.GiveItem(Index, Their_Inventory[Lists.Temp_Player[Invitation].Trade_Offer[i].Item_Num].Item_Num, Lists.Temp_Player[Index].Trade_Offer[i].Amount);
+                    if (Lists.Temp_Player[Invitation].Trade_Offer[i].Item_Num > 0) Player.GiveItem(Index, Their_Inventory[Lists.Temp_Player[Invitation].Trade_Offer[i].Item_Num].Item_Num, Lists.Temp_Player[Invitation].Trade_Offer[i].Amount);
                 }
 
                 // Envia os dados do inventário aos jogadores
