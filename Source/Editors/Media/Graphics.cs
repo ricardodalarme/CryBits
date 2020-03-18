@@ -16,7 +16,7 @@ partial class Graphics
     public static RenderTexture Win_Map_Lighting = new RenderTexture((uint)Editor_Maps.Objects.Width, (uint)Editor_Maps.Objects.Height);
 
     // Fonte principal
-    public static SFML.Graphics.Font GameFont;
+    public static SFML.Graphics.Font Font_Default;
 
     // Texturas
     public static Texture[] Tex_Character;
@@ -160,13 +160,14 @@ partial class Graphics
 
     private static void DrawText(RenderWindow Window, string Text, int X, int Y, SFML.Graphics.Color Color)
     {
+        Text TempText = new Text(Text, Font_Default);
+
         // Define os dados
-        Text TempText = new Text(Text, GameFont)
-        {
-            CharacterSize = 10,
-            FillColor = Color,
-            Position = new Vector2f(X, Y)
-        };
+        TempText.CharacterSize = 10;
+        TempText.FillColor = Color;
+        TempText.Position = new Vector2f(X, Y);
+        TempText.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 70);
+        TempText.OutlineThickness = 1;
 
         // Desenha
         Window.Draw(TempText);
@@ -197,7 +198,7 @@ partial class Graphics
         Tex_Lighting = new Texture(Directories.Tex_Lighting.FullName + Format);
 
         // Fontes
-        GameFont = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
+        Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
     }
 
     public static void Present()
