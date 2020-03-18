@@ -109,7 +109,7 @@ class Receive
                 case Editor_Packets.Write_Maps: Write_Maps(Index, Data); break;
                 case Editor_Packets.Write_NPCs: Write_NPCs(Index, Data); break;
                 case Editor_Packets.Write_Items: Write_Items(Index, Data); break;
-                case Editor_Packets.Request_Server_Data: Request_Server_Data(Index, Data); break;
+                case Editor_Packets.Request_Server_Data: Request_Server_Data(Index); break;
                 case Editor_Packets.Request_Classes: Request_Classes(Index); break;
                 case Editor_Packets.Request_Tiles: Request_Tiles(Index); break;
                 case Editor_Packets.Request_Map: Request_Map(Index, Data); break;
@@ -830,7 +830,7 @@ class Receive
                 Send.Items(i);
     }
 
-    private static void Request_Server_Data(byte Index, NetIncomingMessage Data)
+    private static void Request_Server_Data(byte Index)
     {
         Send.Server_Data(Index);
     }

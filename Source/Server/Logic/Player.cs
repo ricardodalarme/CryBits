@@ -530,7 +530,7 @@ class Player
         else
         {
             Character(Index).Inventory[Slot_Empty].Item_Num = Item_Num;
-            Character(Index).Inventory[Slot_Empty].Amount = Amount;
+            Character(Index).Inventory[Slot_Empty].Amount = Lists.Item[Item_Num].Stackable ? Amount : (byte)1;
         }
 
         // Envia os dados ao jogador
