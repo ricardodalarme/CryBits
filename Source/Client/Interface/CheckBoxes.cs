@@ -51,6 +51,8 @@ class CheckBoxes
             case "Options_Sounds": Sounds(); break;
             case "Options_Musics": Musics(); break;
             case "Options_Chat": Chat(); break;
+            case "Options_FPS": FPS(); break;
+            case "Options_Latency": Latency(); break;
         }
     }
 
@@ -104,5 +106,19 @@ class CheckBoxes
         Lists.Options.Chat = Get("Options_Chat").Checked;
         Write.Options();
         if (Lists.Options.Chat) Loop.Chat_Timer = System.Environment.TickCount + global::Chat.Sleep_Timer;
+    }
+
+    private static void FPS()
+    {
+        // Desabilita a prévia do chat
+        Lists.Options.FPS= Get("Options_FPS").Checked;
+        Write.Options();
+    }
+
+    private static void Latency()
+    {
+        // Desabilita a prévia do chat
+        Lists.Options.Latency = Get("Options_Latency").Checked;
+        Write.Options();
     }
 }

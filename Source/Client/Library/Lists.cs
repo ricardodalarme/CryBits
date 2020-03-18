@@ -26,6 +26,8 @@ class Lists
             public bool Sounds;
             public bool Musics;
             public bool Chat;
+            public bool FPS;
+            public bool Latency;
             public string Username;
         }
 

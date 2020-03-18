@@ -237,11 +237,6 @@ partial class Graphics
         // Interface do jogo
         Interface(Tools.Order);
 
-        // Desenha os dados do jogo
-        DrawText("FPS: " + Game.FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
-        DrawText("Latency: " + Game.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
-        if (Tools.CurrentWindow == Tools.Windows.Game) Game_Chat();
-
         // Exibe o que foi renderizado
         RenderWindow.Display();
     }
@@ -283,6 +278,13 @@ partial class Graphics
 
         // Desenha os membros da party
         Player_Party();
+
+        // Desenha o chat 
+        Game_Chat();
+
+        // Desenha os dados do jogo
+        if (Lists.Options.FPS) DrawText("FPS: " + Game.FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
+        if (Lists.Options.Latency) DrawText("Latency: " + Game.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
     }
 
     #region Tools
@@ -634,7 +636,6 @@ partial class Graphics
         DrawText(Player.Me.Vital[(byte)Game.Vitals.HP] + "/" + Player.Me.Max_Vital[(byte)Game.Vitals.HP], 70, 15, SFML.Graphics.Color.White);
         DrawText(Player.Me.Vital[(byte)Game.Vitals.MP] + "/" + Player.Me.Max_Vital[(byte)Game.Vitals.MP], 70, 33, SFML.Graphics.Color.White);
         DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, 70, 51, SFML.Graphics.Color.White);
-        DrawText("Position: " + Player.Me.X + "/" + Player.Me.Y, 176, 31, SFML.Graphics.Color.White);
     }
 
     private static void Game_Chat()

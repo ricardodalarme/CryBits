@@ -9,6 +9,8 @@
         Lists.Options.Sounds = true;
         Lists.Options.Username = string.Empty;
         Lists.Options.Chat = true;
+        Lists.Options.FPS = false;
+        Lists.Options.Latency = false;
 
         // Salva o que foi modificado
         Write.Options();
