@@ -193,6 +193,10 @@ partial class Receive
         CheckBoxes.Get("Options_Sounds").Checked = Lists.Options.Sounds;
         CheckBoxes.Get("Options_Musics").Checked = Lists.Options.Musics;
         CheckBoxes.Get("Options_Chat").Checked = Lists.Options.Chat;
+        CheckBoxes.Get("Options_FPS").Checked = Lists.Options.FPS;
+        CheckBoxes.Get("Options_Latency").Checked = Lists.Options.Latency;
+        CheckBoxes.Get("Options_Trade").Checked = Lists.Options.Trade;
+        CheckBoxes.Get("Options_Party").Checked = Lists.Options.Party;
         Game.Need_Information = 0;
         Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
         Player.Me.Party = Array.Empty<byte>();
