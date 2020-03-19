@@ -237,6 +237,9 @@ partial class Graphics
         // Interface do jogo
         Interface(Tools.Order);
 
+        // Desenha o chat 
+        if (Tools.CurrentWindow == Tools.Windows.Game) Game_Chat();
+
         // Exibe o que foi renderizado
         RenderWindow.Display();
     }
@@ -278,9 +281,6 @@ partial class Graphics
 
         // Desenha os membros da party
         Player_Party();
-
-        // Desenha o chat 
-        Game_Chat();
 
         // Desenha os dados do jogo
         if (Lists.Options.FPS) DrawText("FPS: " + Game.FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
