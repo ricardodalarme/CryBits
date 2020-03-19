@@ -53,6 +53,8 @@ class CheckBoxes
             case "Options_Chat": Chat(); break;
             case "Options_FPS": FPS(); break;
             case "Options_Latency": Latency(); break;
+            case "Options_Party": Party(); break;
+            case "Options_Trade": Trade(); break;
         }
     }
 
@@ -102,7 +104,7 @@ class CheckBoxes
 
     private static void Chat()
     {
-        // Desabilita a prévia do chat
+        // Salva os dado
         Lists.Options.Chat = Get("Options_Chat").Checked;
         Write.Options();
         if (Lists.Options.Chat) Loop.Chat_Timer = System.Environment.TickCount + global::Chat.Sleep_Timer;
@@ -110,7 +112,7 @@ class CheckBoxes
 
     private static void FPS()
     {
-        // Desabilita a prévia do chat
+        // Salva os dado
         Lists.Options.FPS= Get("Options_FPS").Checked;
         Write.Options();
     }
@@ -119,6 +121,20 @@ class CheckBoxes
     {
         // Desabilita a prévia do chat
         Lists.Options.Latency = Get("Options_Latency").Checked;
+        Write.Options();
+    }
+
+    private static void Party()
+    {
+        // Salva os dado
+        Lists.Options.Party = Get("Options_Party").Checked;
+        Write.Options();
+    }
+
+    private static void Trade()
+    {
+        // Salva os dado
+        Lists.Options.Trade = Get("Options_Trade").Checked;
         Write.Options();
     }
 }

@@ -427,6 +427,13 @@ partial class Receive
 
     private static void Party_Invitation(NetIncomingMessage Data)
     {
+        // Nega o pedido caso o jogador não quiser receber convites
+        if (!Lists.Options.Party)
+        {
+            Send.Party_Decline();
+            return;
+        }
+
         // Abre a janela de convite para o grupo
         Game.Party_Invitation = Data.ReadString();
         Panels.Get("Party_Invitation").Visible = true;
@@ -447,6 +454,13 @@ partial class Receive
 
     private static void Trade_Invitation(NetIncomingMessage Data)
     {
+        // Nega o pedido caso o jogador não quiser receber convites
+        if (!Lists.Options.Trade)
+        {
+            Send.Trade_Decline();
+            return;
+        }
+
         // Abre a janela de convite para o grupo
         Game.Trade_Invitation = Data.ReadString();
         Panels.Get("Trade_Invitation").Visible = true;

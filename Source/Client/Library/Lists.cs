@@ -28,6 +28,8 @@ class Lists
             public bool Chat;
             public bool FPS;
             public bool Latency;
+            public bool Party;
+            public bool Trade;
             public string Username;
         }
 

@@ -55,14 +55,15 @@ class Panels
         // Solta item
         if (e.Button == SFML.Window.Mouse.Button.Right)
         {
-            if (Lists.Item[Player.Inventory[Slot].Item_Num].Bind != Game.BindOn.Pickup)
-                if (Player.Inventory[Slot].Amount != 1)
-                {
-                    Game.Drop_Slot = Slot;
-                    TextBoxes.Get("Drop_Amount").Text = string.Empty;
-                    Get("Drop").Visible = true;
-                }
-                else Send.DropItem(Slot, 1);
+            if (!Get("Trade").Visible)
+                if (Lists.Item[Player.Inventory[Slot].Item_Num].Bind != Game.BindOn.Pickup)
+                    if (Player.Inventory[Slot].Amount != 1)
+                    {
+                        Game.Drop_Slot = Slot;
+                        TextBoxes.Get("Drop_Amount").Text = string.Empty;
+                        Get("Drop").Visible = true;
+                    }
+                    else Send.DropItem(Slot, 1);
         }
         // Seleciona o item
         else if (e.Button == SFML.Window.Mouse.Button.Left) Player.Inventory_Change = Slot;

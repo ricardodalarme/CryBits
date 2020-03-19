@@ -226,6 +226,7 @@ class Player
         // Previne erros
         if (Movement < 1 || Movement > 2) return;
         if (Lists.Temp_Player[Index].GettingMap) return;
+        if (Lists.Temp_Player[Index].Trade != 0) return;
 
         // Próximo azulejo
         Map.NextTile(Character(Index).Direction, ref Next_X, ref Next_Y);
@@ -315,6 +316,7 @@ class Player
         Map.NextTile(Character(Index).Direction, ref Next_X, ref Next_Y);
 
         // Apenas se necessário
+        if (Lists.Temp_Player[Index].Trade != 0) return;
         if (Environment.TickCount < Lists.Temp_Player[Index].Attack_Timer + 750) return;
         if (Map.Tile_Blocked(Character(Index).Map, Character(Index).X, Character(Index).Y, Character(Index).Direction, false)) goto @continue;
 
@@ -547,13 +549,7 @@ class Player
         if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
         if (Character(Index).Inventory[Slot].Item_Num == 0) return;
         if (Lists.Item[Character(Index).Inventory[Slot].Item_Num].Bind == (byte)Game.BindOn.Pickup) return;
-
-        // Verifica se não está em uma troca
-        if (Lists.Temp_Player[Index].Trade != 0)
-        {
-            Send.Message(Index, "You can't drop item while in a trade.", Color.Red);
-            return;
-        }
+        if (Lists.Temp_Player[Index].Trade != 0) return;
 
         // Verifica se não está dropando mais do que tem
         if (Amount > Character(Index).Inventory[Slot].Amount) Amount = Character(Index).Inventory[Slot].Amount;
@@ -578,6 +574,7 @@ class Player
 
         // Somente se necessário
         if (Item_Num == 0) return;
+        if (Lists.Temp_Player[Index].Trade != 0) return;
 
         // Requerimentos
         if (Character(Index).Level < Lists.Item[Item_Num].Req_Level)
