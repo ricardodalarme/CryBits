@@ -14,5 +14,9 @@ CryBits is a completely open-source 2D ORPG game engine written in C#.
 ## Contributing
 Pull requests are very welcome. You can check the project [roadmap page](https://github.com/ricardodalarme/CryBits/projects/) to check the planned resources to try to implement them. For other changes, please open an issue first to discuss what you would like to change. Bug fixes are always welcome too.
 
+You can also help the project by donating. This is a great incentive to continue and it would help me a lot. In return for that, I promise to bring even more updates to CryBits.
+
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8X5BJ9BRRALQE&source=url)
+
 ## Support
 For help you can access the [official project page](https://www.ascensiongamedev.com/topic/2588-c-crybits-v060/), start a discussion or even send me an [email](ricardoweasley@hotmail.com), I am always able to help!
