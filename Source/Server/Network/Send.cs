@@ -45,7 +45,8 @@ class Send
         Trade,
         Trade_Invitation,
         Trade_State,
-        Trade_Offer
+        Trade_Offer,
+        Shops
     }
 
     // Pacotes do servidor para o editor
@@ -59,7 +60,8 @@ class Send
         Maps,
         Map,
         NPCs,
-        Items
+        Items,
+        Shops
     }
 
     private static void ToPlayer(byte Index, NetOutgoingMessage Data)
@@ -906,6 +908,37 @@ class Send
         {
             Data.Write(Player.Character(To).Inventory[Lists.Temp_Player[To].Trade_Offer[i].Item_Num].Item_Num);
             Data.Write(Lists.Temp_Player[To].Trade_Offer[i].Amount);
+        }
+        ToPlayer(Index, Data);
+    }
+
+    public static void Shops(byte Index)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        if (Lists.Temp_Player[Index].InEditor) Data.Write((byte)Editor_Packets.Shops);
+        else Data.Write((byte)Client_Packets.Shops);
+        Data.Write((short)Lists.Shop.Length);
+        for (short i = 1; i < Lists.Shop.Length; i++)
+        {
+            // Geral
+            Data.Write((byte)Lists.Shop[i].Sold.Length);
+            Data.Write((byte)Lists.Shop[i].Bought.Length);
+            Data.Write(Lists.Shop[i].Name);
+            Data.Write(Lists.Shop[i].Currency);
+            for (byte j = 0; j < Lists.Shop[i].Sold.Length; j++)
+            {
+                Data.Write(Lists.Shop[i].Sold[j].Item_Num);
+                Data.Write(Lists.Shop[i].Sold[j].Amount);
+                Data.Write(Lists.Shop[i].Sold[j].Price);
+            }
+            for (byte j = 0; j < Lists.Shop[i].Bought.Length; j++)
+            {
+                Data.Write(Lists.Shop[i].Bought[j].Item_Num);
+                Data.Write(Lists.Shop[i].Bought[j].Amount);
+                Data.Write(Lists.Shop[i].Bought[j].Price);
+            }
         }
         ToPlayer(Index, Data);
     }

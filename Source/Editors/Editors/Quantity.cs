@@ -32,6 +32,7 @@ public partial class Editor_Quantity : Form
         if (Editor_Maps.Objects.Visible) Editor_Maps.Change_Quantity();
         if (Editor_NPCs.Objects.Visible) Editor_NPCs.Change_Quantity();
         if (Editor_Items.Objects.Visible) Editor_Items.Change_Quantity();
+        if (Editor_Shops.Objects.Visible) Editor_Shops.Change_Quantity();
 
         // Fecha a janela
         Visible = false;

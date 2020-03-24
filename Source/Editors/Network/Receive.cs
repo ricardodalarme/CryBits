@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 partial class Receive
 {
@@ -16,7 +17,8 @@ partial class Receive
         Maps,
         Map,
         NPCs,
-        Items
+        Items,
+        Shops
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -33,6 +35,7 @@ partial class Receive
             case Packets.NPCs: NPCs(Data); break;
             case Packets.Items: Items(Data); break;
             case Packets.Tiles: Tiles(Data); break;
+            case Packets.Shops: Shops(Data); break;
         }
     }
 
@@ -75,9 +78,9 @@ partial class Receive
             Lists.Class[i] = new Lists.Structures.Class();
             Lists.Class[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.Class[i].Attribute = new short[(byte)Globals.Attributes.Count];
-            Lists.Class[i].Tex_Male = new System.Collections.Generic.List<short>();
-            Lists.Class[i].Tex_Female = new System.Collections.Generic.List<short>();
-            Lists.Class[i].Item = new System.Collections.Generic.List<Tuple<short, short>>();
+            Lists.Class[i].Tex_Male = new List<short>();
+            Lists.Class[i].Tex_Female = new List<short>();
+            Lists.Class[i].Item = new List<Tuple<short, short>>();
 
             // Lê os dados
             Lists.Class[i].Name = Data.ReadString();
@@ -93,7 +96,7 @@ partial class Receive
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
             byte Num_Items = Data.ReadByte();
-            for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(new Tuple<short, short> (Data.ReadInt16(), Data.ReadInt16()));
+            for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(new Tuple<short, short>(Data.ReadInt16(), Data.ReadInt16()));
         }
 
         // Abre o editor
@@ -134,7 +137,7 @@ partial class Receive
 
         // Quantidade de camadas
         byte Num_Layers = Data.ReadByte();
-        Lists.Map[i].Layer = new System.Collections.Generic.List<Lists.Structures.Map_Layer>();
+        Lists.Map[i].Layer = new List<Lists.Structures.Map_Layer>();
 
         // Camadas
         for (byte n = 0; n <= Num_Layers; n++)
@@ -178,14 +181,14 @@ partial class Receive
 
         // Luzes
         byte Num_Lights = Data.ReadByte();
-        Lists.Map[i].Light = new System.Collections.Generic.List<Lists.Structures.Map_Light>();
+        Lists.Map[i].Light = new List<Lists.Structures.Map_Light>();
         if (Num_Lights > 0)
             for (byte n = 0; n < Num_Lights; n++)
                 Lists.Map[i].Light.Add(new Lists.Structures.Map_Light(new Rectangle(Data.ReadByte(), Data.ReadByte(), Data.ReadByte(), Data.ReadByte())));
 
         // NPCs
         byte Num_NPCs = Data.ReadByte();
-        Lists.Map[i].NPC = new System.Collections.Generic.List<Lists.Structures.Map_NPC>();
+        Lists.Map[i].NPC = new List<Lists.Structures.Map_NPC>();
         Lists.Structures.Map_NPC NPC = new Lists.Structures.Map_NPC();
         if (Num_NPCs > 0)
             for (byte n = 0; n < Num_NPCs; n++)
@@ -213,8 +216,8 @@ partial class Receive
             Lists.NPC[i] = new Lists.Structures.NPC();
             Lists.NPC[i].Vital = new short[(byte)Globals.Vitals.Count];
             Lists.NPC[i].Attribute = new short[(byte)Globals.Attributes.Count];
-            Lists.NPC[i].Drop = new System.Collections.Generic.List<Lists.Structures.NPC_Drop>();
-            Lists.NPC[i].Allie = new System.Collections.Generic.List<short>();
+            Lists.NPC[i].Drop = new List<Lists.Structures.NPC_Drop>();
+            Lists.NPC[i].Allie = new List<short>();
 
             // Lê os dados
             Lists.NPC[i].Name = Data.ReadString();
@@ -310,5 +313,28 @@ partial class Receive
 
         // Abre o editor
         if (Globals.OpenEditor == Editor_Tiles.Objects) Editor_Tiles.Open();
+    }
+
+    private static void Shops(NetIncomingMessage Data)
+    {
+        // Quantidade de lojas
+        Lists.Shop = new Lists.Structures.Shop[Data.ReadInt16()];
+
+        for (short i = 1; i < Lists.Shop.Length; i++)
+        {
+            // Redimensiona os valores necessários 
+            Lists.Shop[i] = new Lists.Structures.Shop();
+            Lists.Shop[i].Sold = new List<Lists.Structures.Shop_Item>(Data.ReadByte());
+            Lists.Shop[i].Bought = new List<Lists.Structures.Shop_Item>(Data.ReadByte());
+
+            // Lê os dados
+            Lists.Shop[i].Name = Data.ReadString();
+            Lists.Shop[i].Currency = Data.ReadInt16();
+            for (byte j = 0; j < Lists.Shop[i].Sold.Capacity; j++) Lists.Shop[i].Sold.Add(new Lists.Structures.Shop_Item(Data.ReadInt16(), Data.ReadInt16(), Data.ReadInt16()));
+            for (byte j = 0; j < Lists.Shop[i].Bought.Capacity; j++) Lists.Shop[i].Bought.Add(new Lists.Structures.Shop_Item(Data.ReadInt16(), Data.ReadInt16(), Data.ReadInt16()));
+        }
+
+        // Abre o editor
+        if (Globals.OpenEditor == Editor_Shops.Objects) Editor_Shops.Open();
     }
 }

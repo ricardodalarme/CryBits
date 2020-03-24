@@ -113,4 +113,13 @@ class Clear
                 Lists.Tile[Index].Data[x, y].Block = new bool[(byte)Globals.Directions.Count];
             }
     }
+
+    public static void Shop(short Index)
+    {
+        // Redimensiona os valores
+        Lists.Shop[Index] = new Lists.Structures.Shop();
+        Lists.Shop[Index].Currency = 1;
+        Lists.Shop[Index].Sold = new List<Lists.Structures.Shop_Item>();
+        Lists.Shop[Index].Bought = new List<Lists.Structures.Shop_Item>();
+    }
 }

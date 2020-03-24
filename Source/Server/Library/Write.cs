@@ -102,7 +102,7 @@ class Write
         for (byte Index = 1; Index < Lists.NPC.Length; Index++) NPC(Index);
     }
 
-    public static void NPC(byte Index)
+    public static void NPC(short Index)
     {
         // Escreve os dados
         FileStream Stream = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format).OpenWrite();
@@ -149,6 +149,20 @@ class Write
         // Escreve os dados
         FileStream Stream = new FileInfo(Directories.Maps.FullName + Index + Directories.Format).OpenWrite();
         new BinaryFormatter().Serialize(Stream, Lists.Map[Index]);
+        Stream.Close();
+    }
+
+    public static void Shops()
+    {
+        // Escreve os dados
+        for (short i = 1; i < Lists.Shop.Length; i++) Shop(i);
+    }
+
+    public static void Shop(short Index)
+    {
+        // Escreve os dados
+        FileStream Stream = new FileInfo(Directories.Shops.FullName + Index + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Lists.Shop[Index]);
         Stream.Close();
     }
 }

@@ -91,8 +91,15 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editors\Shop .cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\Shop .Designer.cs">
+      <DependentUpon>Shop .cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\Interface.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,6 +187,9 @@
     <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Editors\Shop .resx">
+      <DependentUpon>Shop .cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\Interface.resx">
       <DependentUpon>Interface.cs</DependentUpon>
     </EmbeddedResource>

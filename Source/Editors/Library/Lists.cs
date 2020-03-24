@@ -14,6 +14,7 @@ class Lists
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
+    public static Structures.Shop[] Shop;
     public static TreeNode Tool;
 
     // Estrutura dos itens em gerais
@@ -256,6 +257,28 @@ class Lists
                 this.Item_Num = Item_Num;
                 this.Amount = Amount;
                 this.Chance = Chance;
+            }
+        }
+
+        public class Shop
+        {
+            public string Name;
+            public short Currency;
+            public List<Shop_Item> Sold;
+            public List<Shop_Item> Bought;
+        }
+
+        public class Shop_Item
+        {
+            public short Item_Num;
+            public short Amount;
+            public short Price;
+
+            public Shop_Item(short Item_Num, short Amount, short Price)
+            {
+                this.Item_Num = Item_Num;
+                this.Amount = Amount;
+                this.Price = Price;
             }
         }
     }

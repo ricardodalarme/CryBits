@@ -71,7 +71,7 @@ class Clear
         Lists.Class[Index].Spawn_Map = 1;
     }
 
-    public static void NPC(byte Index)
+    public static void NPC(short Index)
     {
         // Reseta os valores
         Lists.NPC[Index] = new Lists.Structures.NPC();
@@ -132,5 +132,14 @@ class Clear
         Lists.Tile[Index].Data = new Lists.Structures.Tile_Data[1, 1];
         Lists.Tile[Index].Data[0, 0] = new Lists.Structures.Tile_Data();
         Lists.Tile[Index].Data[0, 0].Block = new bool[(byte)Game.Directions.Count];
+    }
+
+    public static void Shop(short Index)
+    {
+        // Redimensiona os valores
+        Lists.Shop[Index] = new Lists.Structures.Shop();
+        Lists.Shop[Index].Currency = 1;
+        Lists.Shop[Index].Sold = Array.Empty<Lists.Structures.Shop_Item>();
+        Lists.Shop[Index].Bought = Array.Empty<Lists.Structures.Shop_Item>();
     }
 }

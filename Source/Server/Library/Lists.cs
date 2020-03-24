@@ -13,6 +13,7 @@ class Lists
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
     public static Structures.Tile[] Tile;
+    public static Structures.Shop[] Shop;
 
     // Estrutura dos itens em gerais
     public class Structures
@@ -32,6 +33,7 @@ class Lists
             public byte Num_Tiles;
             public short Num_NPCs;
             public short Num_Items;
+            public short Num_Shops;
         }
 
         public struct Player
@@ -271,6 +273,25 @@ class Lists
         {
             public byte Attribute;
             public bool[] Block;
+        }
+
+
+        [Serializable]
+
+        public class Shop
+        {
+            public string Name;
+            public short Currency;
+            public Shop_Item[] Sold;
+            public Shop_Item[] Bought;
+        }
+
+        [Serializable]
+        public class Shop_Item
+        {
+            public short Item_Num;
+            public short Amount;
+            public short Price;
         }
     }
 }

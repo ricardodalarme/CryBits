@@ -133,7 +133,7 @@ class Read
 
         // Lê os dados
         FileStream Stream = File.OpenRead();
-        Lists.Map = (Lists.Structures.Maps)new BinaryFormatter().Deserialize(Stream);
+        Lists.Map = (Lists.Structures.Map)new BinaryFormatter().Deserialize(Stream);
         Stream.Close();
 
         // Redimensiona as partículas do clima

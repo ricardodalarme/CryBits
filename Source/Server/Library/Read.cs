@@ -19,6 +19,8 @@ partial class Read
         Maps();
         Console.WriteLine("Loading tiles.");
         Tiles();
+        Console.WriteLine("Loading shops.");
+        Shops();
     }
 
     private static void Server_Data()
@@ -208,10 +210,10 @@ partial class Read
     {
         // Lê os dados
         Lists.NPC = new Lists.Structures.NPC[Lists.Server_Data.Num_NPCs + 1];
-        for (byte i = 1; i < Lists.NPC.Length; i++) NPC(i);
+        for (short i = 1; i < Lists.NPC.Length; i++) NPC(i);
     }
 
-    private static void NPC(byte Index)
+    private static void NPC(short Index)
     {
         FileInfo File = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format);
 
@@ -251,6 +253,31 @@ partial class Read
         // Lê os dados
         FileStream Stream = File.OpenRead();
         Lists.Tile[Index] = (Lists.Structures.Tile)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
+    }
+
+    private static void Shops()
+    {
+        // Lê os dados
+        Lists.Shop = new Lists.Structures.Shop[Lists.Server_Data.Num_Shops + 1];
+        for (short i = 1; i < Lists.Shop.Length; i++) Shop(i);
+    }
+
+    private static void Shop(short Index)
+    {
+        FileInfo File = new FileInfo(Directories.Shops.FullName + Index + Directories.Format);
+
+        // Cria o arquivo caso ele não existir
+        if (!File.Exists)
+        {
+            Clear.Shop(Index);
+            Write.Shop(Index);
+            return;
+        }
+
+        // Lê os dados
+        FileStream Stream = File.OpenRead();
+        Lists.Shop[Index] = (Lists.Structures.Shop)new BinaryFormatter().Deserialize(Stream);
         Stream.Close();
     }
 }

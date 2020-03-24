@@ -41,6 +41,7 @@
             this.butMaps = new System.Windows.Forms.Button();
             this.butClasses = new System.Windows.Forms.Button();
             this.Directory_Server = new System.Windows.Forms.FolderBrowserDialog();
+            this.butShops = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -91,6 +92,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.butShops);
             this.groupBox2.Controls.Add(this.butItems);
             this.groupBox2.Controls.Add(this.butNPCs);
             this.groupBox2.Controls.Add(this.butTiles);
@@ -180,6 +182,16 @@
             this.Directory_Server.Description = "Select the server directory";
             this.Directory_Server.Tag = "";
             // 
+            // butShops
+            // 
+            this.butShops.Location = new System.Drawing.Point(106, 83);
+            this.butShops.Name = "butShops";
+            this.butShops.Size = new System.Drawing.Size(94, 26);
+            this.butShops.TabIndex = 13;
+            this.butShops.Text = "Shops";
+            this.butShops.UseVisualStyleBackColor = true;
+            this.butShops.Click += new System.EventHandler(this.butShops_Click);
+            // 
             // Selection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -217,4 +229,5 @@
     private System.Windows.Forms.Button butTiles;
     private System.Windows.Forms.Button butNPCs;
     private System.Windows.Forms.Button butItems;
+    private System.Windows.Forms.Button butShops;
 }

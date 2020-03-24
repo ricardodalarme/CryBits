@@ -167,12 +167,12 @@ partial class Receive
 
         // Redimensiona a lista
         Lists.Server_Data.Max_Characters = Amount;
-        Lists.Characters = new Lists.Structures.Characters[Amount + 1];
+        Lists.Characters = new Lists.Structures.Character[Amount + 1];
 
         for (byte i = 1; i <= Amount; i++)
         {
             // Recebe os dados do personagem
-            Lists.Characters[i] = new Lists.Structures.Characters
+            Lists.Characters[i] = new Lists.Structures.Character
             {
                 Name = Data.ReadString(),
                 Class = Data.ReadByte(),
@@ -380,7 +380,7 @@ partial class Receive
     private static void Items(NetIncomingMessage Data)
     {
         // Quantidade de itens
-        Lists.Item = new Lists.Structures.Items[Data.ReadInt16()];
+        Lists.Item = new Lists.Structures.Item[Data.ReadInt16()];
 
         for (short i = 1; i < Lists.Item.Length; i++)
         {

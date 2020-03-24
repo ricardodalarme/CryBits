@@ -111,6 +111,8 @@ class Buttons
             case "Trade_Offer_Confirm": Trade_Offer_Confirm(); break;
             case "Trade_Amount_Confirm": Trade_Amount_Confirm(); break;
             case "Trade_Amount_Cancel": Trade_Amount_Cancel(); break;
+            case "Shop_Close": Shop_Close(); break;
+            case "Shop_Buy": Shop_Buy(); break;
         }
     }
 
@@ -460,5 +462,15 @@ class Buttons
     {
         // Fecha o painel
         Panels.Get("Trade_Amount").Visible = false;
+    }
+    private static void Shop_Close()
+    {
+        // Fecha o painel
+        Panels.Get("Shop").Visible = false;
+    }
+
+    private static void Shop_Buy()
+    {
+
     }
 }

@@ -77,7 +77,7 @@ partial class Receive
     private static void NPCs(NetIncomingMessage Data)
     {
         // Quantidade
-        Lists.NPC = new Lists.Structures.NPCs[Data.ReadInt16()];
+        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16()];
 
         // Lê os dados de todos
         for (byte i = 1; i < Lists.NPC.Length; i++)

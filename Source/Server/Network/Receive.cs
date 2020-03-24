@@ -36,7 +36,7 @@ class Receive
         Trade_Decline,
         Trade_Leave,
         Trade_Offer,
-        Trade_Offer_State
+        Trade_Offer_State,
     }
 
     // Pacotes do editor
@@ -49,13 +49,15 @@ class Receive
         Write_Maps,
         Write_NPCs,
         Write_Items,
+        Write_Shops,
         Request_Server_Data,
         Request_Classes,
         Request_Tiles,
         Request_Map,
         Request_Maps,
         Request_NPCs,
-        Request_Items
+        Request_Items,
+        Request_Shops
     }
 
     public static void Handle(byte Index, NetIncomingMessage Data)
@@ -109,6 +111,7 @@ class Receive
                 case Editor_Packets.Write_Maps: Write_Maps(Index, Data); break;
                 case Editor_Packets.Write_NPCs: Write_NPCs(Index, Data); break;
                 case Editor_Packets.Write_Items: Write_Items(Index, Data); break;
+                case Editor_Packets.Write_Shops: Write_Shops(Index, Data); break;
                 case Editor_Packets.Request_Server_Data: Request_Server_Data(Index); break;
                 case Editor_Packets.Request_Classes: Request_Classes(Index); break;
                 case Editor_Packets.Request_Tiles: Request_Tiles(Index); break;
@@ -116,6 +119,7 @@ class Receive
                 case Editor_Packets.Request_Maps: Request_Maps(Index, Data); break;
                 case Editor_Packets.Request_NPCs: Request_NPCs(Index); break;
                 case Editor_Packets.Request_Items: Request_Items(Index); break;
+                case Editor_Packets.Request_Shops: Request_Shops(Index); break;
             }
     }
 
@@ -831,6 +835,53 @@ class Receive
                 Send.Items(i);
     }
 
+    private static void Write_Shops(byte Index, NetIncomingMessage Data)
+    {
+        // Verifica se o jogador realmente tem permissão 
+        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        {
+            Send.Alert(Index, "You aren't allowed to do this.");
+            return;
+        }
+
+        // Quantidade de lojas
+        Lists.Shop = new Lists.Structures.Shop[Data.ReadInt16()];
+        Lists.Server_Data.Num_Shops = (byte)Lists.Shop.GetUpperBound(0);
+        Write.Server_Data();
+
+        for (short i = 1; i < Lists.Shop.Length; i++)
+        {
+            // Redimensiona os valores necessários 
+            Lists.Shop[i] = new Lists.Structures.Shop();
+            Lists.Shop[i].Sold = new Lists.Structures.Shop_Item[Data.ReadByte()];
+            Lists.Shop[i].Bought = new Lists.Structures.Shop_Item[Data.ReadByte()];
+
+            // Lê os dados
+            Lists.Shop[i].Name = Data.ReadString();
+            Lists.Shop[i].Currency = Data.ReadInt16();
+            for (byte j = 0; j < Lists.Shop[i].Sold.Length; j++)
+            {
+                Lists.Shop[i].Sold[j] = new Lists.Structures.Shop_Item();
+                Lists.Shop[i].Sold[j].Item_Num = Data.ReadInt16();
+                Lists.Shop[i].Sold[j].Amount = Data.ReadInt16();
+                Lists.Shop[i].Sold[j].Price = Data.ReadInt16();
+            }
+            for (byte j = 0; j < Lists.Shop[i].Bought.Length; j++)
+            {
+                Lists.Shop[i].Bought[j] = new Lists.Structures.Shop_Item();
+                Lists.Shop[i].Bought[j].Item_Num = Data.ReadInt16();
+                Lists.Shop[i].Bought[j].Amount = Data.ReadInt16();
+                Lists.Shop[i].Bought[j].Price = Data.ReadInt16();
+            }
+        }
+
+        // Salva os dados e envia pra todos jogadores conectados
+        Write.Shops();
+        for (byte i = 1; i <= Game.HigherIndex; i++)
+            if (i != Index)
+                Send.Shops(i);
+    }
+
     private static void Request_Server_Data(byte Index)
     {
         Send.Server_Data(Index);
@@ -864,6 +915,11 @@ class Receive
     private static void Request_Items(byte Index)
     {
         Send.Items(Index);
+    }
+    
+    private static void Request_Shops(byte Index)
+    {
+        Send.Shops(Index);
     }
 
     private static void Party_Invite(byte Index, NetIncomingMessage Data)

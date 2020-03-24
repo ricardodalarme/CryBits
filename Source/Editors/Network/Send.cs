@@ -12,13 +12,15 @@ partial class Send
         Write_Maps,
         Write_NPCs,
         Write_Items,
+        Write_Shops,
         Request_Server_Data,
         Request_Classes,
         Request_Tiles,
         Request_Map,
         Request_Maps,
         Request_NPCs,
-        Request_Items
+        Request_Items,
+        Request_Shops
     }
 
     private static void Packet(NetOutgoingMessage Data)
@@ -101,6 +103,15 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Items);
+        Packet(Data);
+    }
+    
+    public static void Request_Shops()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Request_Shops);
         Packet(Data);
     }
 
@@ -324,6 +335,36 @@ partial class Send
             Data.Write(Lists.Item[Index].Equip_Type);
             for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Lists.Item[Index].Equip_Attribute[i]);
             Data.Write(Lists.Item[Index].Weapon_Damage);
+        }
+        Packet(Data);
+    }
+
+    public static void Write_Shops()
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Write_Shops);
+        Data.Write((short)Lists.Shop.Length);
+        for (short i = 1; i < Lists.Shop.Length; i++)
+        {
+            // Geral
+            Data.Write((byte)Lists.Shop[i].Sold.Count);
+            Data.Write((byte)Lists.Shop[i].Bought.Count);
+            Data.Write(Lists.Shop[i].Name);
+            Data.Write(Lists.Shop[i].Currency);
+            for (byte j = 0; j < Lists.Shop[i].Sold.Count; j++)
+            {
+                Data.Write(Lists.Shop[i].Sold[j].Item_Num);
+                Data.Write(Lists.Shop[i].Sold[j].Amount);
+                Data.Write(Lists.Shop[i].Sold[j].Price);
+            }
+            for (byte j = 0; j < Lists.Shop[i].Bought.Count; j++)
+            {
+                Data.Write(Lists.Shop[i].Bought[j].Item_Num);
+                Data.Write(Lists.Shop[i].Bought[j].Amount);
+                Data.Write(Lists.Shop[i].Bought[j].Price);
+            }
         }
         Packet(Data);
     }

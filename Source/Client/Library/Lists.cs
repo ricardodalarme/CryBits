@@ -8,12 +8,13 @@ class Lists
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
     public static Structures.Player[] Player;
     public static Structures.Class[] Class;
-    public static Structures.Characters[] Characters;
-    public static Structures.Maps Map;
+    public static Structures.Character[] Characters;
+    public static Structures.Map Map;
     public static Structures.Temp_Map Temp_Map;
     public static Structures.Weather[] Weather;
-    public static Structures.NPCs[] NPC;
-    public static Structures.Items[] Item;
+    public static Structures.NPC[] NPC;
+    public static Structures.Item[] Item;
+    public static Structures.Shop[] Shop;
 
     // Estrutura dos itens em gerais
     public class Structures
@@ -70,7 +71,7 @@ class Lists
             public byte Trade;
         }
 
-        public class Characters
+        public class Character
         {
             public string Name;
             public byte Class;
@@ -88,7 +89,7 @@ class Lists
         }
 
         [Serializable]
-        public struct Maps
+        public struct Map
         {
             public short Revision;
             public string Name;
@@ -166,7 +167,7 @@ class Lists
             public bool Back;
         }
 
-        public struct NPCs
+        public struct NPC
         {
             public string Name;
             public string SayMsg;
@@ -200,7 +201,7 @@ class Lists
             public byte Y;
         }
 
-        public struct Items
+        public struct Item
         {
             // Geral
             public string Name;
@@ -249,6 +250,21 @@ class Lists
                 this.Y = Y;
                 this.Timer = Timer;
             }
+        }
+
+        public class Shop
+        {
+            public string Name;
+            public short Currency;
+            public List<Shop_Item> Sold;
+            public List<Shop_Item> Bought;
+        }
+
+        public class Shop_Item
+        {
+            public short Item_Num;
+            public short Amount;
+            public short Price;
         }
     }
 }

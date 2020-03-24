@@ -35,11 +35,7 @@ public partial class Selection : Form
 
     private void butData_Click(object sender, EventArgs e)
     {
-        // Verifica se os diretórios foram selecionados
-        if (string.IsNullOrEmpty(Lists.Options.Directory_Client))
-            MessageBox.Show("Select the client directory.");
-        else
-            Editor_Data.Request();
+        Editor_Data.Request();
     }
 
     private void butInterface_Click(object sender, EventArgs e)
@@ -94,5 +90,10 @@ public partial class Selection : Form
             MessageBox.Show("Select the client directory.");
         else
             Editor_Items.Request();
+    }
+
+    private void butShops_Click(object sender, EventArgs e)
+    {
+        Editor_Shops.Request();
     }
 }
