@@ -6,7 +6,8 @@ class NPC
     {
         Friendly,
         AttackOnSight,
-        AttackWhenAttacked
+        AttackWhenAttacked,
+        ShopKeeper
     }
 
     public enum Movements

@@ -47,7 +47,9 @@ partial class Receive
         Trade,
         Trade_Invitation,
         Trade_State,
-        Trade_Offer
+        Trade_Offer,
+        Shops,
+        Shop_Open
     }
 
     public static void Handle(NetIncomingMessage Data)
@@ -95,6 +97,8 @@ partial class Receive
             case Packets.Trade_Invitation: Trade_Invitation(Data); break;
             case Packets.Trade_State: Trade_State(Data); break;
             case Packets.Trade_Offer: Trade_Offer(Data); break;
+            case Packets.Shops: Shops(Data); break;
+            case Packets.Shop_Open: Shop_Open(Data); break;
         }
     }
 
@@ -209,9 +213,9 @@ partial class Receive
         Panels.Get("Drop").Visible = false;
         Panels.Get("Party_Invitation").Visible = false;
         Panels.Get("Trade").Visible = false;
-        Panels.Get("Trade_Amount").Visible = false;
         Buttons.Get("Trade_Offer_Confirm").Visible = true;
         Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
+        Panels.Get("Shop").Visible = false;
 
         // Abre o jogo
         Audio.Music.Stop();
@@ -447,7 +451,7 @@ partial class Receive
     {
         // Abre o painel da troca 
         Player.Me.Trade = Data.ReadByte();
-        Panels.Get("Trade").Visible =  Player.Me.Trade != 0;
+        Panels.Get("Trade").Visible = Player.Me.Trade != 0;
         Buttons.Get("Trade_Offer_Confirm").Visible = true;
         Panels.Get("Trade_Amount").Visible = Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
 
@@ -501,5 +505,44 @@ partial class Receive
                 Player.Trade_Their_Offer[i].Item_Num = Data.ReadInt16();
                 Player.Trade_Their_Offer[i].Amount = Data.ReadInt16();
             }
+    }
+
+    private static void Shops(NetIncomingMessage Data)
+    {
+        // Quantidade de lojas
+        Lists.Shop = new Lists.Structures.Shop[Data.ReadInt16()];
+
+        for (short i = 1; i < Lists.Shop.Length; i++)
+        {
+            // Redimensiona os valores necessários 
+            Lists.Shop[i] = new Lists.Structures.Shop();
+            Lists.Shop[i].Sold = new Lists.Structures.Shop_Item[Data.ReadByte()];
+            Lists.Shop[i].Bought = new Lists.Structures.Shop_Item[Data.ReadByte()];
+
+            // Lê os dados
+            Lists.Shop[i].Name = Data.ReadString();
+            Lists.Shop[i].Currency = Data.ReadInt16();
+            for (byte j = 0; j < Lists.Shop[i].Sold.Length; j++)
+            {
+                Lists.Shop[i].Sold[j] = new Lists.Structures.Shop_Item();
+                Lists.Shop[i].Sold[j].Item_Num = Data.ReadInt16();
+                Lists.Shop[i].Sold[j].Amount = Data.ReadInt16();
+                Lists.Shop[i].Sold[j].Price = Data.ReadInt16();
+            }
+            for (byte j = 0; j < Lists.Shop[i].Bought.Length; j++)
+            {
+                Lists.Shop[i].Bought[j] = new Lists.Structures.Shop_Item();
+                Lists.Shop[i].Bought[j].Item_Num = Data.ReadInt16();
+                Lists.Shop[i].Bought[j].Amount = Data.ReadInt16();
+                Lists.Shop[i].Bought[j].Price = Data.ReadInt16();
+            }
+        }
+    }
+
+    private static void Shop_Open(NetIncomingMessage Data)
+    {
+        // Abre a loja
+        Game.Shop_Open = Data.ReadInt16();
+        Panels.Get("Shop").Visible = true;
     }
 }

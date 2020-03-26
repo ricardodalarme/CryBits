@@ -123,6 +123,7 @@ class Player
         Send.Items(Index);
         Send.NPCs(Index);
         Send.Map_Items(Index, Character(Index).Map);
+        Send.Shops(Index);
 
         // Transporta o jogador para a sua determinada Posição
         Warp(Index, Character(Index).Map, Character(Index).X, Character(Index).Y);
@@ -409,7 +410,11 @@ class Player
         if (Map_NPC.Target_Index != Index && !string.IsNullOrEmpty(Lists.NPC[Map_NPC.Index].SayMsg)) Send.Message(Index, Lists.NPC[Map_NPC.Index].Name + ": " + Lists.NPC[Map_NPC.Index].SayMsg, Color.White);
 
         // Não executa o combate com um NPC amigavel
-        if (Lists.NPC[Map_NPC.Index].Behaviour == (byte)global::NPC.Behaviour.Friendly) return;
+        switch ((NPC.Behaviour)Lists.NPC[Map_NPC.Index].Behaviour)
+        {
+            case NPC.Behaviour.Friendly: return;
+            case NPC.Behaviour.ShopKeeper: Lists.Temp_Player[Index].Shop = 1; Send.Shop_Open(Index, 1); return;
+        }
 
         // Define o alvo do NPC
         Lists.Temp_Map[Character(Index).Map].NPC[Victim].Target_Index = Index;
@@ -538,6 +543,19 @@ class Player
         // Envia os dados ao jogador
         Send.Player_Inventory(Index);
         return true;
+    }
+
+    public static void TakeItem(byte Index, byte Slot, short Amount)
+    {
+        // Tira o item do jogaor
+        if (Slot > 0)
+            if (Amount == Character(Index).Inventory[Slot].Amount)
+                Character(Index).Inventory[Slot] = new Lists.Structures.Inventories();
+            else
+                Character(Index).Inventory[Slot].Amount -= Amount;
+
+        // Atualiza o inventário
+        Send.Player_Inventory(Index);
     }
 
     public static void DropItem(byte Index, byte Slot, short Amount)

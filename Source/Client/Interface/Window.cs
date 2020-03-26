@@ -34,6 +34,12 @@ class Window
                 if (Slot > 0)
                     if (Player.Hotbar[Slot].Slot > 0)
                         Send.Hotbar_Use(Slot);
+
+                // Compra o item da loja
+                Slot = Panels.Shop_Mouse();
+                if (Slot > 0)
+                    if (Game.Shop_Open > 0)
+                        Send.Shop_Buy(Slot);
             }
         }
         // Clique único

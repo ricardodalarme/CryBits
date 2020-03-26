@@ -36,7 +36,9 @@ partial class Send
         Trade_Decline,
         Trade_Leave,
         Trade_Offer,
-        Trade_Offer_State
+        Trade_Offer_State,
+        Shop_Buy,
+        Shop_Sell
     }
 
     private static void Packet(NetOutgoingMessage Data)
@@ -374,6 +376,26 @@ partial class Send
         // Envia os dados
         Data.Write((byte)Packets.Trade_Offer_State);
         Data.Write((byte)State);
+        Packet(Data);
+    }
+
+    public static void Shop_Buy(byte Slot)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Shop_Buy);
+        Data.Write(Slot);
+        Packet(Data);
+    }
+
+    public static void Shop_Sell(byte Slot)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Shop_Sell);
+        Data.Write(Slot);
         Packet(Data);
     }
 }

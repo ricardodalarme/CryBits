@@ -37,6 +37,8 @@ class Receive
         Trade_Leave,
         Trade_Offer,
         Trade_Offer_State,
+        Shop_Buy,
+        Shop_Sell
     }
 
     // Pacotes do editor
@@ -100,6 +102,8 @@ class Receive
                 case Client_Packets.Trade_Leave: Trade_Leave(Index); break;
                 case Client_Packets.Trade_Offer: Trade_Offer(Index, Data); break;
                 case Client_Packets.Trade_Offer_State: Trade_Offer_State(Index, Data); break;
+                case Client_Packets.Shop_Buy: Shop_Buy(Index, Data); break;
+                case Client_Packets.Shop_Sell: Shop_Sell(Index, Data); break;
             }
         else
             // Manuseia os dados recebidos do editor
@@ -916,7 +920,7 @@ class Receive
     {
         Send.Items(Index);
     }
-    
+
     private static void Request_Shops(byte Index)
     {
         Send.Shops(Index);
@@ -1120,7 +1124,7 @@ class Receive
     {
         byte Slot = Data.ReadByte(), Inventory_Slot = Data.ReadByte();
         short Amount = System.Math.Min(Data.ReadInt16(), Player.Character(Index).Inventory[Inventory_Slot].Amount);
-        
+
         // Adiciona o item à troca
         if (Inventory_Slot != 0)
         {
@@ -1145,7 +1149,6 @@ class Receive
     {
         Game.Trade_Status State = (Game.Trade_Status)Data.ReadByte();
         byte Invited = Lists.Temp_Player[Index].Trade;
-        short Slot, Amount;
 
         switch (State)
         {
@@ -1172,15 +1175,7 @@ class Receive
                 // Remove os itens do inventário dos jogadores
                 for (byte j = 0, To = Index; j < 2; j++, To = (To == Index ? Invited : Index))
                     for (byte i = 1; i <= Game.Max_Inventory; i++)
-                    {
-                        Slot = Lists.Temp_Player[To].Trade_Offer[i].Item_Num;
-                        Amount = Lists.Temp_Player[To].Trade_Offer[i].Amount;
-                        if (Slot > 0)
-                            if (Amount == Player.Character(To).Inventory[Slot].Amount)
-                                Player.Character(To).Inventory[Slot] = new Lists.Structures.Inventories();
-                            else
-                                Player.Character(To).Inventory[Slot].Amount -= Amount;
-                    }
+                        Player.TakeItem(To, (byte)Lists.Temp_Player[To].Trade_Offer[i].Item_Num, Lists.Temp_Player[To].Trade_Offer[i].Amount);
 
                 // Dá os itens aos jogadores
                 for (byte i = 1; i <= Game.Max_Inventory; i++)
@@ -1209,5 +1204,32 @@ class Receive
 
         // Envia os dados
         Send.Trade_State(Invited, State);
+    }
+
+    private static void Shop_Buy(byte Index, NetIncomingMessage Data)
+    {
+        Lists.Structures.Shop_Item Shop_Sold = Lists.Shop[Lists.Temp_Player[Index].Shop].Sold[Data.ReadByte() - 1];
+        byte Inventory_Slot = Player.FindInventory(Index, Lists.Shop[Lists.Temp_Player[Index].Shop].Currency);
+
+        // Verifica se o jogador tem dinheiro
+        if (Inventory_Slot == 0 || Player.Character(Index).Inventory[Inventory_Slot].Amount < Shop_Sold.Price)
+        {
+            Send.Message(Index, "You don't have enough money to buy the item.", System.Drawing.Color.Red);
+            return;
+        }
+        if (Player.Total_Inventory_Free(Index) == 0 && Player.Character(Index).Inventory[Inventory_Slot].Amount > Shop_Sold.Price)
+        {
+            Send.Message(Index, "You do not have space in your bag.", System.Drawing.Color.Red);
+            return;
+        }
+
+        // Realiza a compra do item
+        Player.TakeItem(Index, Inventory_Slot, Shop_Sold.Price);
+        Player.GiveItem(Index, Shop_Sold.Item_Num, Shop_Sold.Amount);
+        Send.Message(Index, "You bought " + Shop_Sold.Price + "x " + Lists.Item[Shop_Sold.Item_Num].Name + ".", System.Drawing.Color.Green);
+    }
+
+    private static void Shop_Sell(byte Index, NetIncomingMessage Data)
+    {
     }
 }

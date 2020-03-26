@@ -380,6 +380,7 @@ partial class Graphics
             case "Party_Invitation": Party_Invitation((Panels.Structure)Tool); break;
             case "Trade_Invitation": Trade_Invitation((Panels.Structure)Tool); break;
             case "Trade": Trade((Panels.Structure)Tool); break;
+            case "Shop": Shop((Panels.Structure)Tool); break;
         }
     }
 
@@ -697,7 +698,6 @@ partial class Graphics
     private static void Trade(Panels.Structure Tool)
     {
         byte NumColumns = 5, Line, Column;
-        Point Panel_Position = Tool.Position, Position;
 
         for (byte i = 1; i <= Game.Max_Inventory; i++)
         {
@@ -705,21 +705,26 @@ partial class Graphics
             Line = (byte)((i - 1) / NumColumns);
             Column = (byte)(i - (Line * 5) - 1);
 
-            // Oferta do jogador
-            if (Player.Trade_Offer[i].Item_Num > 0)
-            {
-                Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 50 + Line * 36);
-                Render(Tex_Item[Lists.Item[Player.Trade_Offer[i].Item_Num].Texture], Position);
-                if (Player.Trade_Offer[i].Amount > 1) DrawText(Player.Trade_Offer[i].Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
-            }
+            // Desenha os itens das ofertas
+            Item(Player.Trade_Offer[i].Item_Num, Player.Trade_Offer[i].Amount, new Point(Tool.Position.X + 7 + Column * 36, Tool.Position.Y + 50 + Line * 36));
+            Item(Player.Trade_Their_Offer[i].Item_Num, Player.Trade_Their_Offer[i].Amount, new Point(Tool.Position.X + 192 + Column * 36, Tool.Position.Y + 50 + Line * 36));
+        }
+    }
 
-            // Oferta do outro jogador
-            if (Player.Trade_Their_Offer[i].Item_Num > 0)
-            {
-                Position = new Point(Panel_Position.X + 192 + Column * 36, Panel_Position.Y + 50 + Line * 36);
-                Render(Tex_Item[Lists.Item[Player.Trade_Their_Offer[i].Item_Num].Texture], Position);
-                if (Player.Trade_Their_Offer[i].Amount > 1) DrawText(Player.Trade_Their_Offer[i].Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
-            }
+    private static void Shop(Panels.Structure Tool)
+    {
+        byte NumColumns = 7, Line, Column;
+
+        // Nome da loja
+        string Name = Lists.Shop[Game.Shop_Open].Name;
+        DrawText(Name, Tool.Position.X + 131 - (Tools.MeasureString(Name) / 2), Tool.Position.Y + 28, SFML.Graphics.Color.White);
+
+        // Desenha os itens
+        for (byte i = 0; i < Lists.Shop[Game.Shop_Open].Sold.Length; i++)
+        {
+            Line = (byte)(i / NumColumns);
+            Column = (byte)(i - (Line * NumColumns));
+            Item(Lists.Shop[Game.Shop_Open].Sold[i].Item_Num, Lists.Shop[Game.Shop_Open].Sold[i].Amount, new Point(Tool.Position.X + 7 + Column * 36, Tool.Position.Y + 50 + Line * 36));
         }
     }
 
@@ -737,6 +742,16 @@ partial class Graphics
 
             // Nome do membro
             DrawText(Lists.Player[Player.Me.Party[i]].Name, 10, 79 + (27 * i), SFML.Graphics.Color.White);
+        }
+    }
+
+    private static void Item(short Item_Num, short Amount, Point Position)
+    {
+        // Desenha o item
+        if (Item_Num > 0)
+        {
+            Render(Tex_Item[Lists.Item[Item_Num].Texture], Position);
+            if (Amount > 1) DrawText(Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
         }
     }
 }

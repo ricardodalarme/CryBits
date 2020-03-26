@@ -63,7 +63,7 @@ partial class Editor_Shops : Form
         txtName.Text = Selected.Name;
         cmbCurrency.SelectedIndex = Selected.Currency - 1;
         for (byte i = 0; i < Selected.Sold.Count; i++) lstSold.Items.Add(List_Text(Selected.Sold[i]));
-        for (byte i = 0; i < Selected.Bought.Count; i++) lstSold.Items.Add(List_Text(Selected.Bought[i]));
+        for (byte i = 0; i < Selected.Bought.Count; i++) lstBought.Items.Add(List_Text(Selected.Bought[i]));
     }
 
     public static void Change_Quantity()

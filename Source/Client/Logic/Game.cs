@@ -24,6 +24,7 @@ class Game
     public static string Trade_Invitation;
     public static byte Trade_Slot = 0;
     public static byte Trade_Inventory_Slot = 0;
+    public static short Shop_Open = 0;
 
     // Jogador
     public const short Attack_Speed = 750;
@@ -115,7 +116,8 @@ class Game
     {
         Friendly,
         AttackOnSight,
-        AttackWhenAttacked
+        AttackWhenAttacked,
+        ShopKeeper
     }
 
     public enum Target

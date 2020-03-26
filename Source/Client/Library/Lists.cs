@@ -256,8 +256,8 @@ class Lists
         {
             public string Name;
             public short Currency;
-            public List<Shop_Item> Sold;
-            public List<Shop_Item> Bought;
+            public Shop_Item[] Sold;
+            public Shop_Item[] Bought;
         }
 
         public class Shop_Item

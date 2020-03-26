@@ -46,7 +46,8 @@ class Send
         Trade_Invitation,
         Trade_State,
         Trade_Offer,
-        Shops
+        Shops,
+        Shop_Open
     }
 
     // Pacotes do servidor para o editor
@@ -940,6 +941,16 @@ class Send
                 Data.Write(Lists.Shop[i].Bought[j].Price);
             }
         }
+        ToPlayer(Index, Data);
+    }
+
+    public static void Shop_Open(byte Index, short Shop_Num)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Client_Packets.Shop_Open);
+        Data.Write(Shop_Num);
         ToPlayer(Index, Data);
     }
 }

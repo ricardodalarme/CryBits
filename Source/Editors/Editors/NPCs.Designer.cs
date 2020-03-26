@@ -79,6 +79,7 @@
             this.butAllie_Add = new System.Windows.Forms.Button();
             this.lstAllies = new System.Windows.Forms.ListBox();
             this.label12 = new System.Windows.Forms.Label();
+            this.chkAttackNPC = new System.Windows.Forms.CheckBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.cmbMovement = new System.Windows.Forms.ComboBox();
             this.numFlee_Health = new System.Windows.Forms.NumericUpDown();
@@ -88,7 +89,6 @@
             this.cmbAllie_NPC = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
             this.butAllie_Ok = new System.Windows.Forms.Button();
-            this.chkAttackNPC = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn)).BeginInit();
@@ -253,7 +253,8 @@
             this.cmbBehavior.Items.AddRange(new object[] {
             "Friendly",
             "Attack On Sight",
-            "Attack When Attacked"});
+            "Attack When Attacked",
+            "Shop Keeper"});
             this.cmbBehavior.Location = new System.Drawing.Point(13, 18);
             this.cmbBehavior.Name = "cmbBehavior";
             this.cmbBehavior.Size = new System.Drawing.Size(279, 21);
@@ -654,6 +655,17 @@
             this.label12.TabIndex = 1;
             this.label12.Text = "Allies:";
             // 
+            // chkAttackNPC
+            // 
+            this.chkAttackNPC.AutoSize = true;
+            this.chkAttackNPC.Location = new System.Drawing.Point(10, 19);
+            this.chkAttackNPC.Name = "chkAttackNPC";
+            this.chkAttackNPC.Size = new System.Drawing.Size(71, 17);
+            this.chkAttackNPC.TabIndex = 0;
+            this.chkAttackNPC.Text = "Enabled?";
+            this.chkAttackNPC.UseVisualStyleBackColor = true;
+            this.chkAttackNPC.CheckedChanged += new System.EventHandler(this.chkAttackNPC_CheckedChanged);
+            // 
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.txtSayMsg);
@@ -754,17 +766,6 @@
             this.butAllie_Ok.Text = "Ok";
             this.butAllie_Ok.UseVisualStyleBackColor = true;
             this.butAllie_Ok.Click += new System.EventHandler(this.butAllie_Ok_Click);
-            // 
-            // chkAttackNPC
-            // 
-            this.chkAttackNPC.AutoSize = true;
-            this.chkAttackNPC.Location = new System.Drawing.Point(10, 19);
-            this.chkAttackNPC.Name = "chkAttackNPC";
-            this.chkAttackNPC.Size = new System.Drawing.Size(71, 17);
-            this.chkAttackNPC.TabIndex = 0;
-            this.chkAttackNPC.Text = "Enabled?";
-            this.chkAttackNPC.UseVisualStyleBackColor = true;
-            this.chkAttackNPC.CheckedChanged += new System.EventHandler(this.chkAttackNPC_CheckedChanged);
             // 
             // Editor_NPCs
             // 

@@ -56,6 +56,7 @@ class Lists
             public string Party_Invitation;
             public string Trade_Request;
             public Inventories[] Trade_Offer;
+            public short Shop;
         }
 
         [Serializable]

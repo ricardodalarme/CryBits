@@ -30,16 +30,17 @@ class Panels
         byte NumColumn = 5;
         Point Panel_Position = Get("Menu_Inventory").Position;
 
-        for (byte i = 1; i <= Game.Max_Inventory; i++)
-        {
-            // Posição do item
-            byte Line = (byte)((i - 1) / NumColumn);
-            int Column = i - (Line * 5) - 1;
-            Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 30 + Line * 36);
+        if (Get("Menu_Inventory").Visible)
+            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            {
+                // Posição do item
+                byte Line = (byte)((i - 1) / NumColumn);
+                int Column = i - (Line * 5) - 1;
+                Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 30 + Line * 36);
 
-            // Retorna o slot em que o mouse está por cima
-            if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
-        }
+                // Retorna o slot em que o mouse está por cima
+                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
+            }
 
         return 0;
     }
@@ -88,14 +89,15 @@ class Panels
     {
         Point Panel_Position = Get("Hotbar").Position;
 
-        for (byte i = 1; i <= Game.Max_Hotbar; i++)
-        {
-            // Posição do slot
-            Point Position = new Point(Panel_Position.X + 8 + (i - 1) * 36, Panel_Position.Y + 6);
+        if (Get("Hotbar").Visible)
+            for (byte i = 1; i <= Game.Max_Hotbar; i++)
+            {
+                // Posição do slot
+                Point Position = new Point(Panel_Position.X + 8 + (i - 1) * 36, Panel_Position.Y + 6);
 
-            // Retorna o slot em que o mouse está por cima
-            if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
-        }
+                // Retorna o slot em que o mouse está por cima
+                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
+            }
 
         return 0;
     }
@@ -127,16 +129,17 @@ class Panels
         byte NumColumn = 5;
         Point Panel_Position = Get("Trade").Position;
 
-        for (byte i = 1; i <= Game.Max_Inventory; i++)
-        {
-            // Posição do item
-            byte Line = (byte)((i - 1) / NumColumn);
-            int Column = i - (Line * 5) - 1;
-            Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 50 + Line * 36);
+        if (Get("Trade").Visible)
+            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            {
+                // Posição do item
+                byte Line = (byte)((i - 1) / NumColumn);
+                int Column = i - (Line * 5) - 1;
+                Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 50 + Line * 36);
 
-            // Retorna o slot em que o mouse está por cima
-            if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
-        }
+                // Retorna o slot em que o mouse está por cima
+                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
+            }
 
         return 0;
     }
@@ -152,5 +155,25 @@ class Panels
 
         // Solta item
         if (e.Button == SFML.Window.Mouse.Button.Right) Send.Trade_Offer(Slot, 0);
+    }
+
+    public static byte Shop_Mouse()
+    {
+        Point Panel_Position = Get("Shop").Position;
+        byte NumColumn = 7;
+
+        if (Get("Shop").Visible)
+            for (byte i = 1; i <= Lists.Shop[Game.Shop_Open].Sold.Length; i++)
+            {
+                // Posição do item
+                byte Line = (byte)((i - 1) / NumColumn);
+                int Column = i - (Line * 5) - 1;
+                Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 50 + Line * 36);
+
+                // Retorna o slot em que o mouse está por cima
+                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
+            }
+
+        return 0;
     }
 }
