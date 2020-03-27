@@ -413,7 +413,7 @@ class Player
         switch ((NPC.Behaviour)Lists.NPC[Map_NPC.Index].Behaviour)
         {
             case NPC.Behaviour.Friendly: return;
-            case NPC.Behaviour.ShopKeeper: Lists.Temp_Player[Index].Shop = 1; Send.Shop_Open(Index, 1); return;
+            case NPC.Behaviour.ShopKeeper: Shop_Open(Index, Lists.NPC[Map_NPC.Index].Shop); return ;
         }
 
         // Define o alvo do NPC
@@ -774,5 +774,12 @@ class Player
             if (Character(Index).Inventory[i].Item_Num == 0)
                 Total++;
         return Total;
+    }
+
+    public static void Shop_Open(byte Index, short Shop_Num)
+    {
+        // Abre a loja
+        Lists.Temp_Player[Index].Shop = Shop_Num; 
+        Send.Shop_Open(Index, Shop_Num);
     }
 }

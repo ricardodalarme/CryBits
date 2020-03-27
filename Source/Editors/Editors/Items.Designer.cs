@@ -33,8 +33,6 @@
             this.cmbBind = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
-            this.numPrice = new System.Windows.Forms.NumericUpDown();
-            this.label18 = new System.Windows.Forms.Label();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.chkStackable = new System.Windows.Forms.CheckBox();
@@ -80,7 +78,6 @@
             this.cmbEquipment_Type = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numPrice)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numReq_Level)).BeginInit();
@@ -103,7 +100,7 @@
             this.List.FormattingEnabled = true;
             this.List.Location = new System.Drawing.Point(11, 12);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 446);
+            this.List.Size = new System.Drawing.Size(202, 420);
             this.List.TabIndex = 9;
             this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
             // 
@@ -113,8 +110,6 @@
             this.groupBox1.Controls.Add(this.cmbBind);
             this.groupBox1.Controls.Add(this.label20);
             this.groupBox1.Controls.Add(this.label19);
-            this.groupBox1.Controls.Add(this.numPrice);
-            this.groupBox1.Controls.Add(this.label18);
             this.groupBox1.Controls.Add(this.txtDescription);
             this.groupBox1.Controls.Add(this.label15);
             this.groupBox1.Controls.Add(this.chkStackable);
@@ -127,7 +122,7 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(219, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(359, 187);
+            this.groupBox1.Size = new System.Drawing.Size(359, 170);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General";
@@ -136,7 +131,7 @@
             // 
             this.cmbRarity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRarity.FormattingEnabled = true;
-            this.cmbRarity.Location = new System.Drawing.Point(272, 118);
+            this.cmbRarity.Location = new System.Drawing.Point(184, 117);
             this.cmbRarity.Name = "cmbRarity";
             this.cmbRarity.Size = new System.Drawing.Size(80, 21);
             this.cmbRarity.TabIndex = 27;
@@ -146,7 +141,7 @@
             // 
             this.cmbBind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbBind.FormattingEnabled = true;
-            this.cmbBind.Location = new System.Drawing.Point(184, 156);
+            this.cmbBind.Location = new System.Drawing.Point(270, 117);
             this.cmbBind.Name = "cmbBind";
             this.cmbBind.Size = new System.Drawing.Size(80, 21);
             this.cmbBind.TabIndex = 26;
@@ -155,7 +150,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(269, 102);
+            this.label20.Location = new System.Drawing.Point(181, 101);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(37, 13);
             this.label20.TabIndex = 29;
@@ -164,35 +159,18 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(181, 141);
+            this.label19.Location = new System.Drawing.Point(267, 102);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(31, 13);
             this.label19.TabIndex = 28;
             this.label19.Text = "Bind:";
-            // 
-            // numPrice
-            // 
-            this.numPrice.Location = new System.Drawing.Point(184, 118);
-            this.numPrice.Name = "numPrice";
-            this.numPrice.Size = new System.Drawing.Size(80, 20);
-            this.numPrice.TabIndex = 25;
-            this.numPrice.ValueChanged += new System.EventHandler(this.numPrice_ValueChanged);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(181, 102);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(34, 13);
-            this.label18.TabIndex = 24;
-            this.label18.Text = "Price:";
             // 
             // txtDescription
             // 
             this.txtDescription.Location = new System.Drawing.Point(7, 78);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(169, 98);
+            this.txtDescription.Size = new System.Drawing.Size(169, 83);
             this.txtDescription.TabIndex = 23;
             this.txtDescription.TextChanged += new System.EventHandler(this.txtDescription_TextChanged);
             // 
@@ -208,7 +186,7 @@
             // chkStackable
             // 
             this.chkStackable.AutoSize = true;
-            this.chkStackable.Location = new System.Drawing.Point(272, 160);
+            this.chkStackable.Location = new System.Drawing.Point(184, 144);
             this.chkStackable.Name = "chkStackable";
             this.chkStackable.Size = new System.Drawing.Size(74, 17);
             this.chkStackable.TabIndex = 20;
@@ -285,9 +263,9 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(219, 463);
+            this.butSave.Location = new System.Drawing.Point(218, 446);
             this.butSave.Name = "butSave";
-            this.butSave.Size = new System.Drawing.Size(119, 25);
+            this.butSave.Size = new System.Drawing.Size(118, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
             this.butSave.UseVisualStyleBackColor = true;
@@ -295,9 +273,9 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(465, 463);
+            this.butCancel.Location = new System.Drawing.Point(460, 446);
             this.butCancel.Name = "butCancel";
-            this.butCancel.Size = new System.Drawing.Size(119, 25);
+            this.butCancel.Size = new System.Drawing.Size(118, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
@@ -305,9 +283,9 @@
             // 
             // butClear
             // 
-            this.butClear.Location = new System.Drawing.Point(342, 463);
+            this.butClear.Location = new System.Drawing.Point(339, 446);
             this.butClear.Name = "butClear";
-            this.butClear.Size = new System.Drawing.Size(119, 25);
+            this.butClear.Size = new System.Drawing.Size(118, 25);
             this.butClear.TabIndex = 18;
             this.butClear.Text = "Clear";
             this.butClear.UseVisualStyleBackColor = true;
@@ -315,9 +293,9 @@
             // 
             // butQuantity
             // 
-            this.butQuantity.Location = new System.Drawing.Point(12, 464);
+            this.butQuantity.Location = new System.Drawing.Point(11, 446);
             this.butQuantity.Name = "butQuantity";
-            this.butQuantity.Size = new System.Drawing.Size(202, 25);
+            this.butQuantity.Size = new System.Drawing.Size(203, 25);
             this.butQuantity.TabIndex = 15;
             this.butQuantity.Text = "Change Quantity";
             this.butQuantity.UseVisualStyleBackColor = true;
@@ -329,7 +307,7 @@
             this.groupBox2.Controls.Add(this.numReq_Level);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(219, 205);
+            this.groupBox2.Location = new System.Drawing.Point(219, 188);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(359, 63);
             this.groupBox2.TabIndex = 19;
@@ -618,7 +596,7 @@
             this.grpPotion.Controls.Add(this.lblMP);
             this.grpPotion.Controls.Add(this.label12);
             this.grpPotion.Controls.Add(this.label9);
-            this.grpPotion.Location = new System.Drawing.Point(218, 274);
+            this.grpPotion.Location = new System.Drawing.Point(218, 257);
             this.grpPotion.Name = "grpPotion";
             this.grpPotion.Size = new System.Drawing.Size(360, 77);
             this.grpPotion.TabIndex = 21;
@@ -641,7 +619,7 @@
             this.grpEquipment.Controls.Add(this.cmbEquipment_Type);
             this.grpEquipment.Controls.Add(this.label16);
             this.grpEquipment.Controls.Add(this.grpEquip_Bonus);
-            this.grpEquipment.Location = new System.Drawing.Point(218, 274);
+            this.grpEquipment.Location = new System.Drawing.Point(218, 257);
             this.grpEquipment.Name = "grpEquipment";
             this.grpEquipment.Size = new System.Drawing.Size(360, 183);
             this.grpEquipment.TabIndex = 22;
@@ -677,7 +655,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(589, 499);
+            this.ClientSize = new System.Drawing.Size(589, 483);
             this.ControlBox = false;
             this.Controls.Add(this.grpEquipment);
             this.Controls.Add(this.grpPotion);
@@ -696,7 +674,6 @@
             this.Text = "Item Editor";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numPrice)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -765,8 +742,6 @@
     private System.Windows.Forms.GroupBox grpEquipment;
     private System.Windows.Forms.Label label16;
     private System.Windows.Forms.ComboBox cmbEquipment_Type;
-    private System.Windows.Forms.NumericUpDown numPrice;
-    private System.Windows.Forms.Label label18;
     private System.Windows.Forms.Label label20;
     private System.Windows.Forms.Label label19;
     private System.Windows.Forms.ComboBox cmbRarity;

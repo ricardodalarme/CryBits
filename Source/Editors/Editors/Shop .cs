@@ -139,6 +139,7 @@ partial class Editor_Shops : Form
         // Abre o painel para adicionar o item
         cmbItems.SelectedIndex = 0;
         numAmount.Value = 1;
+        numAmount.Enabled = true;
         numPrice.Value = 0;
         grpAddItem.Tag = lstSold;
         grpAddItem.Visible = true;
@@ -159,6 +160,7 @@ partial class Editor_Shops : Form
         // Abre o painel para adicionar o item
         cmbItems.SelectedIndex = 0;
         numAmount.Value = 1;
+        numAmount.Enabled = false;
         numPrice.Value = 0;
         grpAddItem.Tag = lstBought;
         grpAddItem.Visible = true;

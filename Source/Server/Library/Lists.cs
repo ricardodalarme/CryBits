@@ -185,6 +185,7 @@ class Lists
             public short[] Allie;
             public global::NPC.Movements Movement;
             public byte Flee_Helth;
+            public short Shop;
         }
 
         public struct Map_NPCs
@@ -216,7 +217,6 @@ class Lists
             public string Description;
             public short Texture;
             public byte Type;
-            public short Price;
             public bool Stackable;
             public byte Bind;
             public byte Rarity;

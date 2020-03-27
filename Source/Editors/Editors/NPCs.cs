@@ -28,6 +28,10 @@ public partial class Editor_NPCs : Form
         Objects.cmbDrop_Item.Items.Clear();
         for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbDrop_Item.Items.Add(Lists.Item[i].Name);
 
+        // Lista de lojas
+        Objects.cmbShop.Items.Clear();
+        for (byte i = 1; i < Lists.Shop.Length; i++) Objects.cmbShop.Items.Add(Lists.Shop[i].Name);
+
         // Define os limites
         Objects.numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
         Update_List();
@@ -81,6 +85,7 @@ public partial class Editor_NPCs : Form
         numFlee_Health.Value = Selected.Flee_Helth;
         chkAttackNPC.Checked = Selected.AttackNPC;
         for (byte i = 0; i < Selected.Allie.Count; i++) lstAllies.Items.Add(Globals.Numbering(Selected.Allie[i], Lists.NPC.GetUpperBound(0), Lists.NPC[Selected.Allie[i]].Name));
+        cmbShop.SelectedIndex = Selected.Shop;
 
         // Seleciona os primeiros itens
         if (lstDrop.Items.Count > 0) lstDrop.SelectedIndex = 0;
@@ -174,6 +179,9 @@ public partial class Editor_NPCs : Form
     private void cmbBehavior_SelectedIndexChanged(object sender, EventArgs e)
     {
         Selected.Behaviour = (byte)cmbBehavior.SelectedIndex;
+
+        // Eventos especificos
+        cmbShop.Enabled = Selected.Behaviour == (byte)Globals.NPC_Behaviour.ShopKeeper;
     }
 
     private void numHP_ValueChanged(object sender, EventArgs e)

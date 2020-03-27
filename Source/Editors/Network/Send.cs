@@ -307,6 +307,7 @@ partial class Send
             for (byte i = 0; i < Lists.NPC[Index].Allie.Count; i++) Data.Write(Lists.NPC[Index].Allie[i]);
             Data.Write((byte)Lists.NPC[Index].Movement);
             Data.Write(Lists.NPC[Index].Flee_Helth);
+            Data.Write(Lists.NPC[Index].Shop);
         }
         Packet(Data);
     }
@@ -324,7 +325,6 @@ partial class Send
             Data.Write(Lists.Item[Index].Description);
             Data.Write(Lists.Item[Index].Texture);
             Data.Write(Lists.Item[Index].Type);
-            Data.Write(Lists.Item[Index].Price);
             Data.Write(Lists.Item[Index].Stackable);
             Data.Write(Lists.Item[Index].Bind);
             Data.Write(Lists.Item[Index].Rarity);

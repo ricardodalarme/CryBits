@@ -38,7 +38,8 @@ class Receive
         Trade_Offer,
         Trade_Offer_State,
         Shop_Buy,
-        Shop_Sell
+        Shop_Sell,
+        Shop_Close
     }
 
     // Pacotes do editor
@@ -104,6 +105,7 @@ class Receive
                 case Client_Packets.Trade_Offer_State: Trade_Offer_State(Index, Data); break;
                 case Client_Packets.Shop_Buy: Shop_Buy(Index, Data); break;
                 case Client_Packets.Shop_Sell: Shop_Sell(Index, Data); break;
+                case Client_Packets.Shop_Close: Shop_Close(Index); break;
             }
         else
             // Manuseia os dados recebidos do editor
@@ -785,6 +787,7 @@ class Receive
             for (byte n = 0; n < Lists.NPC[i].Allie.Length; n++) Lists.NPC[i].Allie[n] = Data.ReadInt16();
             Lists.NPC[i].Movement = (NPC.Movements)Data.ReadByte();
             Lists.NPC[i].Flee_Helth = Data.ReadByte();
+            Lists.NPC[i].Shop = Data.ReadInt16();
         }
 
         // Salva os dados e envia pra todos jogadores conectados
@@ -819,7 +822,6 @@ class Receive
             Lists.Item[i].Description = Data.ReadString();
             Lists.Item[i].Texture = Data.ReadInt16();
             Lists.Item[i].Type = Data.ReadByte();
-            Lists.Item[i].Price = Data.ReadInt16();
             Lists.Item[i].Stackable = Data.ReadBoolean();
             Lists.Item[i].Bind = Data.ReadByte();
             Lists.Item[i].Rarity = Data.ReadByte();
@@ -1217,9 +1219,10 @@ class Receive
             Send.Message(Index, "You don't have enough money to buy the item.", System.Drawing.Color.Red);
             return;
         }
+        // Verifica se há espaço no inventário
         if (Player.Total_Inventory_Free(Index) == 0 && Player.Character(Index).Inventory[Inventory_Slot].Amount > Shop_Sold.Price)
         {
-            Send.Message(Index, "You do not have space in your bag.", System.Drawing.Color.Red);
+            Send.Message(Index, "You  don't have space in your bag.", System.Drawing.Color.Red);
             return;
         }
 
@@ -1231,5 +1234,31 @@ class Receive
 
     private static void Shop_Sell(byte Index, NetIncomingMessage Data)
     {
+        byte Inventory_Slot = Data.ReadByte();
+        short Amount = Data.ReadInt16();
+        Lists.Structures.Shop_Item Buy = Game.Shop_Buy(Lists.Temp_Player[Index].Shop, Player.Character(Index).Inventory[Inventory_Slot].Item_Num);
+
+        // Verifica se a loja vende o item
+        if (Buy == null)
+        {
+            Send.Message(Index, "The store doesn't sell this item", System.Drawing.Color.Red);
+            return;
+        }
+        // Verifica se há espaço no inventário
+        if (Player.Total_Inventory_Free(Index) == 0 && Player.Character(Index).Inventory[Inventory_Slot].Amount > Amount)
+        {
+            Send.Message(Index, "You don't have space in your bag.", System.Drawing.Color.Red);
+            return;
+        }
+
+        // Realiza a venda do item
+        Player.TakeItem(Index, Inventory_Slot, Amount);
+        Player.GiveItem(Index, Lists.Shop[Lists.Temp_Player[Index].Shop].Currency, (short)(Buy.Price * Amount));
+        Send.Message(Index, "You sold " + Lists.Item[Inventory_Slot].Name + "x " + Amount + "for .", System.Drawing.Color.Green);
+    }
+
+    private static void Shop_Close(byte Index)
+    {
+        Lists.Temp_Player[Index].Shop = 0;
     }
 }

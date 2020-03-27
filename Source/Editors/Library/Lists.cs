@@ -221,6 +221,7 @@ class Lists
             public List<short> Allie;
             public Globals.NPC_Movements Movement;
             public byte Flee_Helth;
+            public short Shop;
         }
 
         public class Item
@@ -230,7 +231,6 @@ class Lists
             public string Description;
             public short Texture;
             public byte Type;
-            public short Price;
             public bool Stackable;
             public byte Bind;
             public byte Rarity;

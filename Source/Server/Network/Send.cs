@@ -592,7 +592,6 @@ class Send
             Data.Write(Lists.Item[i].Description);
             Data.Write(Lists.Item[i].Texture);
             Data.Write(Lists.Item[i].Type);
-            Data.Write(Lists.Item[i].Price);
             Data.Write(Lists.Item[i].Stackable);
             Data.Write(Lists.Item[i].Bind);
             Data.Write(Lists.Item[i].Rarity);
@@ -709,6 +708,7 @@ class Send
                 for (byte n = 0; n < Lists.NPC[i].Allie.Length; n++) Data.Write(Lists.NPC[i].Allie[n]);
                 Data.Write((byte)Lists.NPC[i].Movement);
                 Data.Write(Lists.NPC[i].Flee_Helth);
+                Data.Write(Lists.NPC[i].Shop);
             }
         }
         ToPlayer(Index, Data);

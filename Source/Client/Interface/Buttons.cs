@@ -462,9 +462,11 @@ class Buttons
         // Fecha o painel
         Panels.Get("Trade_Amount").Visible = false;
     }
+
     private static void Shop_Close()
     {
         // Fecha o painel
         Panels.Get("Shop").Visible = false;
+        Send.Shop_Close();
     }
 }

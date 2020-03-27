@@ -141,4 +141,13 @@ class Game
             default: return Directions.Count;
         }
     }
+
+    public static Lists.Structures.Shop_Item Shop_Buy(short Index, short Item_Num)
+    {
+        // Verifica se a loja vende determinado item
+        for (byte i = 0; i < Lists.Shop[Index].Bought.Length; i++)
+            if (Lists.Shop[Index].Bought[i].Item_Num == Item_Num)
+                return Lists.Shop[Index].Bought[i];
+        return null;
+    }
 }

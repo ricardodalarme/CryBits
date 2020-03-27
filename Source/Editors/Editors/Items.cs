@@ -71,7 +71,6 @@ partial class Editor_Items : Form
         txtDescription.Text = Selected.Description;
         numTexture.Value = Selected.Texture;
         cmbType.SelectedIndex = Selected.Type;
-        numPrice.Value = Selected.Price;
         chkStackable.Checked = Selected.Stackable;
         cmbBind.SelectedIndex = Selected.Bind;
         cmbRarity.SelectedIndex = Selected.Rarity;
@@ -223,10 +222,6 @@ partial class Editor_Items : Form
     private void numEquip_Vitality_ValueChanged(object sender, EventArgs e)
     {
         Selected.Equip_Attribute[(byte)Globals.Attributes.Vitality] = (short)numEquip_Vitality.Value;
-    }
-    private void numPrice_ValueChanged(object sender, EventArgs e)
-    {
-        Selected.Price = (short)numPrice.Value;
     }
 
     private void chkStackable_CheckedChanged(object sender, EventArgs e)

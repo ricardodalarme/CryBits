@@ -236,6 +236,7 @@ partial class Receive
             for (byte n = 0; n < Num_Allies; n++) Lists.NPC[i].Allie.Add(Data.ReadInt16());
             Lists.NPC[i].Movement = (Globals.NPC_Movements)Data.ReadByte();
             Lists.NPC[i].Flee_Helth = Data.ReadByte();
+            Lists.NPC[i].Shop = Data.ReadInt16();
         }
 
         // Abre o editor
@@ -259,7 +260,6 @@ partial class Receive
             Lists.Item[i].Description = Data.ReadString();
             Lists.Item[i].Texture = Data.ReadInt16();
             Lists.Item[i].Type = Data.ReadByte();
-            Lists.Item[i].Price = Data.ReadInt16();
             Lists.Item[i].Stackable = Data.ReadBoolean();
             Lists.Item[i].Bind = Data.ReadByte();
             Lists.Item[i].Rarity = Data.ReadByte();
