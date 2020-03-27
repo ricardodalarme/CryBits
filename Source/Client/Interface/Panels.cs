@@ -169,23 +169,23 @@ class Panels
         if (e.Button == SFML.Window.Mouse.Button.Right) Send.Trade_Offer(Slot, 0);
     }
 
-    public static byte Shop_Mouse()
+    public static short Shop_Mouse()
     {
         Point Panel_Position = Get("Shop").Position;
         byte NumColumn = 7;
 
         if (Get("Shop").Visible)
-            for (byte i = 1; i <= Lists.Shop[Game.Shop_Open].Sold.Length; i++)
+            for (byte i = 0; i < Lists.Shop[Game.Shop_Open].Sold.Length; i++)
             {
                 // Posição do item
-                byte Line = (byte)((i - 1) / NumColumn);
-                int Column = i - (Line * 5) - 1;
+                byte Line = (byte)(i  / NumColumn); 
+                int Column = i - Line * 5;
                 Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 50 + Line * 36);
 
                 // Retorna o slot em que o mouse está por cima
                 if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
             }
 
-        return 0;
+        return -1;
     }
 }

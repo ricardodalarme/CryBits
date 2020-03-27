@@ -24,22 +24,22 @@ class Window
             if (Tools.CurrentWindow == Tools.Windows.Game)
             {
                 // Usar item
-                byte Slot = Panels.Inventory_Mouse();
+                short Slot = Panels.Inventory_Mouse();
                 if (Slot > 0)
                     if (Player.Inventory[Slot].Item_Num > 0)
-                        Send.Inventory_Use(Slot);
+                        Send.Inventory_Use((byte)Slot);
 
                 // Usar o que estiver na hotbar
                 Slot = Panels.Hotbar_Mouse();
                 if (Slot > 0)
                     if (Player.Hotbar[Slot].Slot > 0)
-                        Send.Hotbar_Use(Slot);
+                        Send.Hotbar_Use((byte)Slot);
 
                 // Compra o item da loja
                 Slot = Panels.Shop_Mouse();
-                if (Slot > 0)
+                if (Slot >= 0)
                     if (Game.Shop_Open > 0)
-                        Send.Shop_Buy(Slot);
+                        Send.Shop_Buy((byte)Slot);
             }
         }
         // Clique único

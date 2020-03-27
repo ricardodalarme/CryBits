@@ -590,8 +590,16 @@ partial class Graphics
         DrawText(Lists.Item[Item_Num].Description, Position.X + 82, Position.Y + 20, SFML.Graphics.Color.White, 86);
 
         // Posições
-        Point[] Positions = { new Point(Position.X + 10, Position.Y + 90), new Point(Position.X + 10, Position.Y + 102), new Point(Position.X + 10, Position.Y + 114), new Point(Position.X + 96, Position.Y + 90), new Point(Position.X + 96, Position.Y + 102), new Point(Position.X + 96, Position.Y + 114) };
+        Point[] Positions = { new Point(Position.X + 10, Position.Y + 90), new Point(Position.X + 10, Position.Y + 102), new Point(Position.X + 10, Position.Y + 114), new Point(Position.X + 96, Position.Y + 90), new Point(Position.X + 96, Position.Y + 102), new Point(Position.X + 96, Position.Y + 114), new Point(Position.X + 96, Position.Y + 126) };
         byte p = 0; // iterador
+
+        // Loja
+        if (Panels.Get("Shop").Visible)
+            if (Panels.Shop_Mouse() > 0)
+                DrawText("Price: " + Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Mouse()].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+            else if (Panels.Inventory_Mouse() > 0)
+                if (Game.Find_Shop_Bought(Item_Num) >= 0)
+                    DrawText("Sale price: " + Lists.Shop[Game.Shop_Open].Bought[Game.Find_Shop_Bought(Item_Num)].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
 
         // Informações específicas 
         switch ((Game.Items)Lists.Item[Item_Num].Type)
@@ -714,6 +722,7 @@ partial class Graphics
     private static void Shop(Panels.Structure Tool)
     {
         byte NumColumns = 7, Line, Column;
+        Game.Need_Information &= ~(1 << 3);
 
         // Dados da loja
         string Name = Lists.Shop[Game.Shop_Open].Name;
@@ -725,7 +734,16 @@ partial class Graphics
         {
             Line = (byte)(i / NumColumns);
             Column = (byte)(i - (Line * NumColumns));
-            Item(Lists.Shop[Game.Shop_Open].Sold[i].Item_Num, Lists.Shop[Game.Shop_Open].Sold[i].Amount, new Point(Tool.Position.X + 7 + Column * 36, Tool.Position.Y + 50 + Line * 36));
+            Point Position = new Point(Tool.Position.X + 7 + Column * 36, Tool.Position.Y + 50 + Line * 36);
+            Item(Lists.Shop[Game.Shop_Open].Sold[i].Item_Num, Lists.Shop[Game.Shop_Open].Sold[i].Amount, Position);
+
+            if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32)))
+            {
+                Game.Infomation_Index = Lists.Shop[Game.Shop_Open].Sold[i].Item_Num;
+                Panels.Get("Information").Position = new Point(Tool.Position.X - 186, Tool.Position.Y + 5);
+                Panels.Get("Information").Visible = true;
+                Game.Need_Information |= 1 << 3;
+            }
         }
     }
 

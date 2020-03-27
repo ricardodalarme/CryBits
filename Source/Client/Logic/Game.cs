@@ -308,4 +308,13 @@ class Game
             default: return Directions.Count;
         }
     }
+
+    public static short Find_Shop_Bought(short Item_Num)
+    {
+        for (byte i = 0; i < Lists.Shop[Shop_Open].Bought.Length; i++)
+            if (Lists.Shop[Shop_Open].Bought[i].Item_Num == Item_Num)
+                return i;
+
+        return -1;
+    }
 }

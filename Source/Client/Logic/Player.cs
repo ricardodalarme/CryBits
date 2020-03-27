@@ -46,7 +46,7 @@ class Player
     }
 
     // Não mover se já estiver tentando movimentar-se
-    private static bool CanMove() => Lists.Player[MyIndex].Movement == Game.Movements.Stopped &&  !Panels.Get("Trade").Visible;
+    private static bool CanMove() => Lists.Player[MyIndex].Movement == Game.Movements.Stopped &&  !Panels.Get("Trade").Visible && !Panels.Get("Shop").Visible;
 
     private static void CheckMovement()
     {

@@ -189,7 +189,7 @@ class Player
     {
         // Encontra o personagem
         for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
-            if (Lists.Player[Index].Character[i].Name == Name)
+            if (Lists.Player[Index].Character[i].Name.Equals(Name))
                 return i;
 
         return 0;
@@ -210,7 +210,7 @@ class Player
         // Verifica se já há alguém conectado com essa conta
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Socket.IsConnected(i))
-                if (Lists.Player[i].User == User)
+                if (Lists.Player[i].User.Equals(User))
                     return true;
 
         return false;
@@ -228,6 +228,7 @@ class Player
         if (Movement < 1 || Movement > 2) return;
         if (Lists.Temp_Player[Index].GettingMap) return;
         if (Lists.Temp_Player[Index].Trade != 0) return;
+        if (Lists.Temp_Player[Index].Shop != 0) return;
 
         // Próximo azulejo
         Map.NextTile(Character(Index).Direction, ref Next_X, ref Next_Y);

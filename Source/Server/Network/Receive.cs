@@ -1057,12 +1057,24 @@ class Receive
             Send.Message(Index, "The player is analyzing an invitation of another trade.", System.Drawing.Color.White);
             return;
         }
+        // Verifica se os jogadores não estão em com a loja aberta
+        if (Lists.Temp_Player[Index].Shop > 0)
+        {
+            Send.Message(Index, "You can't start a trade while in the shop.", System.Drawing.Color.White);
+            return;
+        }
+        if (Lists.Temp_Player[Invited].Shop > 0)
+        {
+            Send.Message(Index, "The player is in the shop.", System.Drawing.Color.White);
+            return;
+        }
         // Verifica se os jogadores estão pertods um do outro
         if (System.Math.Abs(Player.Character(Index).X - Player.Character(Invited).X) + System.Math.Abs(Player.Character(Index).Y - Player.Character(Invited).Y) != 1)
         {
             Send.Message(Index, "You need to be close to the player to start trade.", System.Drawing.Color.White);
             return;
         }
+
 
         // Convida o jogador
         Lists.Temp_Player[Invited].Trade_Request = Player.Character(Index).Name;
@@ -1089,6 +1101,12 @@ class Receive
         if (System.Math.Abs(Player.Character(Index).X - Player.Character(Invited).X) + System.Math.Abs(Player.Character(Index).Y - Player.Character(Invited).Y) != 1)
         {
             Send.Message(Index, "You need to be close to the player to accept the trade.", System.Drawing.Color.White);
+            return;
+        }
+        // Verifica se  os jogadores não estão em com a loja aberta
+        if (Lists.Temp_Player[Invited].Shop > 0)
+        {
+            Send.Message(Index, "Who invited you is in the shop.", System.Drawing.Color.White);
             return;
         }
 
@@ -1210,7 +1228,7 @@ class Receive
 
     private static void Shop_Buy(byte Index, NetIncomingMessage Data)
     {
-        Lists.Structures.Shop_Item Shop_Sold = Lists.Shop[Lists.Temp_Player[Index].Shop].Sold[Data.ReadByte() - 1];
+        Lists.Structures.Shop_Item Shop_Sold = Lists.Shop[Lists.Temp_Player[Index].Shop].Sold[Data.ReadByte()];
         byte Inventory_Slot = Player.FindInventory(Index, Lists.Shop[Lists.Temp_Player[Index].Shop].Currency);
 
         // Verifica se o jogador tem dinheiro
