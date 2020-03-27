@@ -112,6 +112,8 @@ class Buttons
             case "Trade_Amount_Confirm": Trade_Amount_Confirm(); break;
             case "Trade_Amount_Cancel": Trade_Amount_Cancel(); break;
             case "Shop_Close": Shop_Close(); break;
+            case "Shop_Sell_Confirm": Shop_Sell_Confirm(); break;
+            case "Shop_Sell_Cancel": Shop_Sell_Cancel(); break;
         }
     }
 
@@ -418,6 +420,7 @@ class Buttons
         // Aceita a oferta
         Get("Trade_Offer_Confirm").Visible = true;
         Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
+        Panels.Get("Trade_Offer_Disable").Visible = false;
         Send.Trade_Offer_State(Game.Trade_Status.Accepted);
 
         // Limpa os dados da oferta
@@ -430,6 +433,7 @@ class Buttons
         // Recusa a oferta
         Get("Trade_Offer_Confirm").Visible = true;
         Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
+        Panels.Get("Trade_Offer_Disable").Visible = false;
         Send.Trade_Offer_State(Game.Trade_Status.Declined);
     }
 
@@ -437,6 +441,7 @@ class Buttons
     {
         // Confirma a oferta
         Get("Trade_Offer_Confirm").Visible = Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
+        Panels.Get("Trade_Offer_Disable").Visible = true;
         Send.Trade_Offer_State(Game.Trade_Status.Confirmed);
     }
 
@@ -468,5 +473,28 @@ class Buttons
         // Fecha o painel
         Panels.Get("Shop").Visible = false;
         Send.Shop_Close();
+    }
+
+    private static void Shop_Sell_Confirm()
+    {
+        // Quantidade
+        short.TryParse(TextBoxes.Get("Shop_Sell_Amount").Text, out short Amount);
+
+        // Verifica se o valor digitado é válido
+        if (Amount <= 0)
+        {
+            MessageBox.Show("Enter a valid value!");
+            return;
+        }
+
+        // Vende o item
+        Send.Shop_Sell(Game.Shop_Inventory_Slot, Amount);
+        Panels.Get("Shop_Sell").Visible = false;
+    }
+
+    private static void Shop_Sell_Cancel()
+    {
+        // Fecha o painel
+        Panels.Get("Shop_Sell").Visible = false;
     }
 }

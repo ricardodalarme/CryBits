@@ -56,8 +56,20 @@ class Panels
         // Solta item
         if (e.Button == SFML.Window.Mouse.Button.Right)
         {
-            if (!Get("Trade").Visible)
-                if (Lists.Item[Player.Inventory[Slot].Item_Num].Bind != Game.BindOn.Pickup)
+            if (Lists.Item[Player.Inventory[Slot].Item_Num].Bind != Game.BindOn.Pickup)
+                // Vende o item
+                if (Get("Shop").Visible)
+                {
+                    if (Player.Inventory[Slot].Amount != 1)
+                    {
+                        Game.Shop_Inventory_Slot = Slot;
+                        TextBoxes.Get("Shop_Sell_Amount").Text = string.Empty;
+                        Get("Shop_Sell").Visible = true;
+                    }
+                    else Send.Shop_Sell(Slot, 1);
+                }
+                // Solta o item
+                else if (!Get("Trade").Visible)
                     if (Player.Inventory[Slot].Amount != 1)
                     {
                         Game.Drop_Slot = Slot;

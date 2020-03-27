@@ -715,9 +715,10 @@ partial class Graphics
     {
         byte NumColumns = 7, Line, Column;
 
-        // Nome da loja
+        // Dados da loja
         string Name = Lists.Shop[Game.Shop_Open].Name;
         DrawText(Name, Tool.Position.X + 131 - (Tools.MeasureString(Name) / 2), Tool.Position.Y + 28, SFML.Graphics.Color.White);
+        DrawText("Currency: " + Lists.Item[Lists.Shop[Game.Shop_Open].Currency].Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
 
         // Desenha os itens
         for (byte i = 0; i < Lists.Shop[Game.Shop_Open].Sold.Length; i++)

@@ -1235,7 +1235,7 @@ class Receive
     private static void Shop_Sell(byte Index, NetIncomingMessage Data)
     {
         byte Inventory_Slot = Data.ReadByte();
-        short Amount = Data.ReadInt16();
+        short Amount = System.Math.Min(Data.ReadInt16(), Player.Character(Index).Inventory[Inventory_Slot].Amount);
         Lists.Structures.Shop_Item Buy = Game.Shop_Buy(Lists.Temp_Player[Index].Shop, Player.Character(Index).Inventory[Inventory_Slot].Item_Num);
 
         // Verifica se a loja vende o item

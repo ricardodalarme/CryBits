@@ -80,6 +80,7 @@ class Clear
         Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Count];
         Lists.NPC[Index].Drop = Array.Empty<Lists.Structures.NPC_Drop>();
         Lists.NPC[Index].Allie = Array.Empty<short>();
+        Lists.NPC[Index].Shop = 1;
     }
 
     public static void Item(byte Index)

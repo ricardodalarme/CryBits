@@ -45,6 +45,7 @@ class Clear
         Lists.NPC[Index].Attribute = new short[(byte)Globals.Attributes.Count];
         Lists.NPC[Index].Drop = new List<Lists.Structures.NPC_Drop>();
         Lists.NPC[Index].Allie = new List<short>();
+        Lists.NPC[Index].Shop = 1;
     }
 
     public static void Item(short Index)

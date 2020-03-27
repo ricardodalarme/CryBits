@@ -21,7 +21,6 @@ class Loop
             // Manuseia os dados recebidos
             Socket.HandleData();
 
-
             // Apresenta os gráficos à tela
             Graphics.Present();
 

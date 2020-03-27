@@ -276,36 +276,36 @@ class Player
             Send.Player_Position(Index);
     }
 
-    private static void Warp(byte Index, short Map, byte x, byte y)
+    private static void Warp(byte Index, short Map_Num, byte x, byte y)
     {
         short Map_Old = Character(Index).Map;
 
         // Evita que o jogador seja transportado para fora do limite
-        if (Map < 0 || Map > Lists.Map.GetUpperBound(0)) return;
-        if (x > Lists.Map[Map].Width) x = Lists.Map[Map].Width;
-        if (y > Lists.Map[Map].Height) y = Lists.Map[Map].Height;
+        if (Map_Num < 0 || Map_Num > Lists.Map.GetUpperBound(0)) return;
+        if (x > Lists.Map[Map_Num].Width) x = Lists.Map[Map_Num].Width;
+        if (y > Lists.Map[Map_Num].Height) y = Lists.Map[Map_Num].Height;
         if (x < 0) x = 0;
         if (y < 0) y = 0;
 
         // Define a Posição do jogador
-        Character(Index).Map = Map;
+        Character(Index).Map = Map_Num;
         Character(Index).X = x;
         Character(Index).Y = y;
 
         // Envia os dados dos NPCs
-        Send.Map_NPCs(Index, Map);
+        Send.Map_NPCs(Index, Map_Num);
 
         // Envia os dados para os outros jogadores
-        if (Map_Old != Map)
+        if (Map_Old != Map_Num)
             Send.Player_LeaveMap(Index, Map_Old);
-
-        Send.Player_Position(Index);
+        else
+            Send.Player_Position(Index);
 
         // Atualiza os valores
         Lists.Temp_Player[Index].GettingMap = true;
 
         // Verifica se será necessário enviar os dados do mapa para o jogador
-        Send.Map_Revision(Index, Map);
+        Send.Map_Revision(Index, Map_Num);
     }
 
     public static void Attack(byte Index)
@@ -413,7 +413,7 @@ class Player
         switch ((NPC.Behaviour)Lists.NPC[Map_NPC.Index].Behaviour)
         {
             case NPC.Behaviour.Friendly: return;
-            case NPC.Behaviour.ShopKeeper: Shop_Open(Index, Lists.NPC[Map_NPC.Index].Shop); return ;
+            case NPC.Behaviour.ShopKeeper: Shop_Open(Index, Lists.NPC[Map_NPC.Index].Shop); return;
         }
 
         // Define o alvo do NPC
@@ -779,7 +779,7 @@ class Player
     public static void Shop_Open(byte Index, short Shop_Num)
     {
         // Abre a loja
-        Lists.Temp_Player[Index].Shop = Shop_Num; 
+        Lists.Temp_Player[Index].Shop = Shop_Num;
         Send.Shop_Open(Index, Shop_Num);
     }
 }

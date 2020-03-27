@@ -215,7 +215,9 @@ partial class Receive
         Panels.Get("Trade").Visible = false;
         Buttons.Get("Trade_Offer_Confirm").Visible = true;
         Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
+        Panels.Get("Trade_Offer_Disable").Visible = false;
         Panels.Get("Shop").Visible = false;
+        Panels.Get("Shop_Sell").Visible = false;
 
         // Abre o jogo
         Audio.Music.Stop();
@@ -397,7 +399,6 @@ partial class Receive
             Lists.Item[i].Description = Data.ReadString();
             Lists.Item[i].Texture = Data.ReadInt16();
             Lists.Item[i].Type = Data.ReadByte();
-            Data.ReadInt16(); // Price
             Data.ReadBoolean(); // Stackable
             Lists.Item[i].Bind = (Game.BindOn)Data.ReadByte();
             Lists.Item[i].Rarity = Data.ReadByte();
@@ -454,6 +455,7 @@ partial class Receive
         Panels.Get("Trade").Visible = Player.Me.Trade != 0;
         Buttons.Get("Trade_Offer_Confirm").Visible = true;
         Panels.Get("Trade_Amount").Visible = Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
+        Panels.Get("Trade_Offer_Disable").Visible = false;
 
         // Limpa os dados
         Player.Trade_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
@@ -482,10 +484,12 @@ partial class Receive
             case Game.Trade_Status.Declined:
                 Buttons.Get("Trade_Offer_Confirm").Visible = true;
                 Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
+                Panels.Get("Trade_Offer_Disable").Visible = false;
                 break;
             case Game.Trade_Status.Confirmed:
                 Buttons.Get("Trade_Offer_Confirm").Visible = false;
                 Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = true;
+                Panels.Get("Trade_Offer_Disable").Visible = false;
                 break;
         }
     }

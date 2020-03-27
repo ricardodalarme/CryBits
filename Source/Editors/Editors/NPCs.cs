@@ -19,6 +19,7 @@ public partial class Editor_NPCs : Form
         // Lê os dados
         Globals.OpenEditor = Objects;
         Send.Request_Items();
+        Send.Request_Shops();
         Send.Request_NPCs();
     }
 
@@ -85,7 +86,7 @@ public partial class Editor_NPCs : Form
         numFlee_Health.Value = Selected.Flee_Helth;
         chkAttackNPC.Checked = Selected.AttackNPC;
         for (byte i = 0; i < Selected.Allie.Count; i++) lstAllies.Items.Add(Globals.Numbering(Selected.Allie[i], Lists.NPC.GetUpperBound(0), Lists.NPC[Selected.Allie[i]].Name));
-        cmbShop.SelectedIndex = Selected.Shop;
+        cmbShop.SelectedIndex = Selected.Shop - 1;
 
         // Seleciona os primeiros itens
         if (lstDrop.Items.Count > 0) lstDrop.SelectedIndex = 0;
@@ -312,5 +313,10 @@ public partial class Editor_NPCs : Form
     private void numFlee_Health_ValueChanged(object sender, EventArgs e)
     {
         Selected.Flee_Helth = (byte)numFlee_Health.Value;
+    }
+
+    private void cmbShop_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Selected.Shop = (short)(cmbShop.SelectedIndex + 1);
     }
 }

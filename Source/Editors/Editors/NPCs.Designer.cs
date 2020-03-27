@@ -783,6 +783,7 @@
             this.cmbShop.Name = "cmbShop";
             this.cmbShop.Size = new System.Drawing.Size(280, 21);
             this.cmbShop.TabIndex = 42;
+            this.cmbShop.SelectedIndexChanged += new System.EventHandler(this.cmbShop_SelectedIndexChanged);
             // 
             // label18
             // 
