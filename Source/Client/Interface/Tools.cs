@@ -113,4 +113,17 @@ class Tools
 
         return Text;
     }
+
+    public static byte GetSlot(Point Start, int Lines, int Columns, byte Grid = 32, byte Gap = 4)
+    {
+        int Size = Grid + Gap;
+        Point Slot = new Point((Mouse.X - Start.X) / Size, (Mouse.Y - Start.Y) / Size);
+
+        // Verifica se o mouse está sobre o slot
+        if (Slot.Y < 0 || Slot.X < 0 || Slot.X >= Columns || Slot.Y >= Lines) return 0;
+        if (!IsAbove(new Rectangle(Start.X + Slot.X * Size, Start.Y + Slot.Y * Size, Grid, Grid))) return 0;
+
+        // Retorna o slot
+        return (byte)(Slot.Y * Columns + Slot.X + 1);
+    }
 }

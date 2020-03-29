@@ -536,6 +536,8 @@ partial class Graphics
         Point Panel_Position = Tool.Position;
         Game.Need_Information &= ~(1 << 2);
 
+        Panels.GetSlot(new Point(Tool.Position.X +7, Tool.Position.Y + 29), 6, 5);
+
         // Desenha todos os itens do inventário
         for (byte i = 1; i <= Game.Max_Inventory; i++)
             if (Player.Inventory[i].Item_Num > 0)
@@ -595,9 +597,9 @@ partial class Graphics
 
         // Loja
         if (Panels.Get("Shop").Visible)
-            if (Panels.Shop_Mouse() > 0)
-                DrawText("Price: " + Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Mouse()].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-            else if (Panels.Inventory_Mouse() > 0)
+            if (Panels.Shop_Slot > 0)
+                DrawText("Price: " + Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Slot].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+            else if (Panels.Inventory_Slot > 0)
                 if (Game.Find_Shop_Bought(Item_Num) >= 0)
                     DrawText("Sale price: " + Lists.Shop[Game.Shop_Open].Bought[Game.Find_Shop_Bought(Item_Num)].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
 

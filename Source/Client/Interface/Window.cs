@@ -24,19 +24,19 @@ class Window
             if (Tools.CurrentWindow == Tools.Windows.Game)
             {
                 // Usar item
-                short Slot = Panels.Inventory_Mouse();
+                short Slot = Panels.Inventory_Slot;
                 if (Slot > 0)
                     if (Player.Inventory[Slot].Item_Num > 0)
                         Send.Inventory_Use((byte)Slot);
 
                 // Usar o que estiver na hotbar
-                Slot = Panels.Hotbar_Mouse();
+                Slot = Panels.Hotbar_Slot;
                 if (Slot > 0)
                     if (Player.Hotbar[Slot].Slot > 0)
                         Send.Hotbar_Use((byte)Slot);
 
                 // Compra o item da loja
-                Slot = Panels.Shop_Mouse();
+                Slot = Panels.Shop_Slot;
                 if (Slot >= 0)
                     if (Game.Shop_Open > 0)
                         Send.Shop_Buy((byte)Slot);
@@ -99,25 +99,25 @@ class Window
         if (Tools.CurrentWindow == Tools.Windows.Game)
         {
             // Muda o slot do item
-            if (Panels.Inventory_Mouse() > 0)
+            if (Panels.Inventory_Slot > 0)
             {
-                if (Player.Inventory_Change > 0) Send.Inventory_Change(Player.Inventory_Change, Panels.Inventory_Mouse());
+                if (Player.Inventory_Change > 0) Send.Inventory_Change(Player.Inventory_Change, Panels.Inventory_Slot);
             }
             // Muda o slot da hotbar
-            else if (Panels.Hotbar_Mouse() > 0)
+            else if (Panels.Hotbar_Slot > 0)
             {
-                if (Player.Hotbar_Change > 0) Send.Hotbar_Change(Player.Hotbar_Change, Panels.Hotbar_Mouse());
-                if (Player.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Mouse(), (byte)Game.Hotbar.Item, Player.Inventory_Change);
+                if (Player.Hotbar_Change > 0) Send.Hotbar_Change(Player.Hotbar_Change, Panels.Hotbar_Slot);
+                if (Player.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Game.Hotbar.Item, Player.Inventory_Change);
             }
             // Adiciona um item à troca
-            else if (Panels.Trade_Mouse() > 0)
+            else if (Panels.Trade_Slot > 0)
             {
                 if (Player.Inventory_Change > 0)
                     if (Player.Inventory[Player.Inventory_Change].Amount == 1) 
-                        Send.Trade_Offer(Panels.Trade_Mouse(), Player.Inventory_Change);
+                        Send.Trade_Offer(Panels.Trade_Slot, Player.Inventory_Change);
                     else
                     {
-                        Game.Trade_Slot = Panels.Trade_Mouse();
+                        Game.Trade_Slot = Panels.Trade_Slot;
                         Game.Trade_Inventory_Slot = Player.Inventory_Change;
                         TextBoxes.Get("Trade_Amount").Text = string.Empty;
                         Panels.Get("Trade_Amount").Visible = true;

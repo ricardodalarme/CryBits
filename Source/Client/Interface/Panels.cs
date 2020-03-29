@@ -25,29 +25,15 @@ class Panels
         Get("CreateCharacter").Visible = false;
     }
 
-    public static byte Inventory_Mouse()
-    {
-        byte NumColumn = 5;
-        Point Panel_Position = Get("Menu_Inventory").Position;
-
-        if (Get("Menu_Inventory").Visible)
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
-            {
-                // Posição do item
-                byte Line = (byte)((i - 1) / NumColumn);
-                int Column = i - (Line * 5) - 1;
-                Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 30 + Line * 36);
-
-                // Retorna o slot em que o mouse está por cima
-                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
-            }
-
-        return 0;
-    }
+    // Retorna em qual slot o mouse está sobrepondo
+    public static byte Inventory_Slot => Tools.GetSlot(Get("Menu_Inventory").Position + new Size(7, 29), 6, 5);
+    public static byte Hotbar_Slot => Tools.GetSlot(Get("Hotbar").Position + new Size(8, 6), 1, 10);
+    public static byte Trade_Slot => Tools.GetSlot(Get("Trade").Position + new Size(7, 50), 6, 5);
+    public static short Shop_Slot => (short)(Tools.GetSlot(Get("Shop").Position + new Size(7, 50), 4, 7) + 1);
 
     public static void Inventory_MouseDown(SFML.Window.MouseButtonEventArgs e)
     {
-        byte Slot = Inventory_Mouse();
+        byte Slot = Inventory_Slot;
 
         // Somente se necessário
         if (Slot == 0) return;
@@ -97,26 +83,9 @@ class Panels
                     }
     }
 
-    public static byte Hotbar_Mouse()
-    {
-        Point Panel_Position = Get("Hotbar").Position;
-
-        if (Get("Hotbar").Visible)
-            for (byte i = 1; i <= Game.Max_Hotbar; i++)
-            {
-                // Posição do slot
-                Point Position = new Point(Panel_Position.X + 8 + (i - 1) * 36, Panel_Position.Y + 6);
-
-                // Retorna o slot em que o mouse está por cima
-                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
-            }
-
-        return 0;
-    }
-
     public static void Hotbar_MouseDown(SFML.Window.MouseButtonEventArgs e)
     {
-        byte Slot = Hotbar_Mouse();
+        byte Slot = Hotbar_Slot;
 
         // Somente se necessário
         if (Slot == 0) return;
@@ -136,29 +105,9 @@ class Panels
         }
     }
 
-    public static byte Trade_Mouse()
-    {
-        byte NumColumn = 5;
-        Point Panel_Position = Get("Trade").Position;
-
-        if (Get("Trade").Visible)
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
-            {
-                // Posição do item
-                byte Line = (byte)((i - 1) / NumColumn);
-                int Column = i - (Line * 5) - 1;
-                Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 50 + Line * 36);
-
-                // Retorna o slot em que o mouse está por cima
-                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
-            }
-
-        return 0;
-    }
-
     public static void Trade_MouseDown(SFML.Window.MouseButtonEventArgs e)
     {
-        byte Slot = Trade_Mouse();
+        byte Slot = Trade_Slot;
 
         // Somente se necessário
         if (!Get("Trade").Visible) return;
@@ -167,25 +116,5 @@ class Panels
 
         // Solta item
         if (e.Button == SFML.Window.Mouse.Button.Right) Send.Trade_Offer(Slot, 0);
-    }
-
-    public static short Shop_Mouse()
-    {
-        Point Panel_Position = Get("Shop").Position;
-        byte NumColumn = 7;
-
-        if (Get("Shop").Visible)
-            for (byte i = 0; i < Lists.Shop[Game.Shop_Open].Sold.Length; i++)
-            {
-                // Posição do item
-                byte Line = (byte)(i  / NumColumn); 
-                int Column = i - Line * 5;
-                Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 50 + Line * 36);
-
-                // Retorna o slot em que o mouse está por cima
-                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32))) return i;
-            }
-
-        return -1;
     }
 }

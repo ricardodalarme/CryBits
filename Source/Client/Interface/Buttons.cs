@@ -221,11 +221,7 @@ class Buttons
     private static void CreateCharacter_Texture_ChangeRight()
     {
         // Lista de texturas
-        short[] Tex_List;
-        if (CheckBoxes.Get("GenderMale").Checked == true)
-            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Male;
-        else
-            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Female;
+        short[] Tex_List = CheckBoxes.Get("GenderMale").Checked ? Lists.Class[Game.CreateCharacter_Class].Tex_Male : Lists.Class[Game.CreateCharacter_Class].Tex_Female;
 
         // Altera a classe selecionada pelo jogador
         if (Game.CreateCharacter_Tex == Tex_List.Length - 1)
@@ -237,11 +233,7 @@ class Buttons
     private static void CreateCharacter_Texture_ChangeLeft()
     {
         // Lista de texturas
-        short[] Tex_List;
-        if (CheckBoxes.Get("GenderMale").Checked == true)
-            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Male;
-        else
-            Tex_List = Lists.Class[Game.CreateCharacter_Class].Tex_Female;
+        short[] Tex_List = CheckBoxes.Get("GenderMale").Checked ? Lists.Class[Game.CreateCharacter_Class].Tex_Male : Lists.Class[Game.CreateCharacter_Class].Tex_Female;
 
         // Altera a classe selecionada pelo jogador
         if (Game.CreateCharacter_Tex == 0)
@@ -451,7 +443,7 @@ class Buttons
         short.TryParse(TextBoxes.Get("Trade_Amount").Text, out short Amount);
 
         // Verifica se o valor digitado é válido
-        if (Amount <= 0 )
+        if (Amount <= 0)
         {
             MessageBox.Show("Enter a valid value!");
             return;
