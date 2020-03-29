@@ -536,8 +536,6 @@ partial class Graphics
         Point Panel_Position = Tool.Position;
         Game.Need_Information &= ~(1 << 2);
 
-        Panels.GetSlot(new Point(Tool.Position.X +7, Tool.Position.Y + 29), 6, 5);
-
         // Desenha todos os itens do inventário
         for (byte i = 1; i <= Game.Max_Inventory; i++)
             if (Player.Inventory[i].Item_Num > 0)
