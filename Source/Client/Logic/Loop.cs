@@ -42,6 +42,9 @@ class Loop
                     // Reinicia a contagem
                     Timer_30 = Environment.TickCount + 30;
                 }
+
+                // Verifica se é necessário mostrar o painel de informações
+                Tools.CheckInformations();
             }
 
             // Faz com que a aplicação se mantenha estável

@@ -34,7 +34,7 @@ class Chat
             Lines_First = (byte)(i - Lines_Visible);
 
         // Torna as linhas visíveis
-        Loop.Chat_Timer = System.Environment.TickCount + 10000;;
+        Loop.Chat_Timer = System.Environment.TickCount + 10000; ;
     }
 
     public static void AddText(string Message, Color Color)

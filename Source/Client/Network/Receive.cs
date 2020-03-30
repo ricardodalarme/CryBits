@@ -201,9 +201,9 @@ partial class Receive
         CheckBoxes.Get("Options_Latency").Checked = Lists.Options.Latency;
         CheckBoxes.Get("Options_Trade").Checked = Lists.Options.Trade;
         CheckBoxes.Get("Options_Party").Checked = Lists.Options.Party;
-        Game.Need_Information = 0;
         Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
         Player.Me.Party = Array.Empty<byte>();
+        Game.Infomation_Index = 0; 
 
         // Reseta a interface
         Panels.Get("Menu_Character").Visible = false;

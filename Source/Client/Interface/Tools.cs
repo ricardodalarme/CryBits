@@ -47,7 +47,14 @@ class Tools
         Panel,
         CheckBox,
         TextBox,
-        Count
+    }
+
+    // Tipos de informações do painel
+    public enum Informations
+    {
+        Hotbar,
+        Inventory,
+        Shop
     }
 
     public static bool IsAbove(Rectangle Rectangle)
@@ -114,16 +121,59 @@ class Tools
         return Text;
     }
 
-    public static byte GetSlot(Point Start, int Lines, int Columns, byte Grid = 32, byte Gap = 4)
+    public static byte Slot(Panels.Structure Panel, byte OffX, byte OffY, byte Lines, byte Columns, byte Grid = 32, byte Gap = 4)
     {
         int Size = Grid + Gap;
+        Point Start = Panel.Position + new Size(OffX, OffY);
         Point Slot = new Point((Mouse.X - Start.X) / Size, (Mouse.Y - Start.Y) / Size);
 
         // Verifica se o mouse está sobre o slot
         if (Slot.Y < 0 || Slot.X < 0 || Slot.X >= Columns || Slot.Y >= Lines) return 0;
         if (!IsAbove(new Rectangle(Start.X + Slot.X * Size, Start.Y + Slot.Y * Size, Grid, Grid))) return 0;
+        if (!Panel.Visible) return 0;
 
         // Retorna o slot
         return (byte)(Slot.Y * Columns + Slot.X + 1);
+    }
+
+    public static Point Slot_Position(Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)
+    {
+        int Size = Grid + Gap;
+        byte Line = (byte)(Slot / Columns);
+        byte Column = (byte)(Slot - (Line * Columns));
+        return new Point(Start.X + Column * Size, Start.Y + Line * Size);
+    }
+
+    public static void CheckInformations()
+    {
+        Point Position = new Point();
+        short Data_Index = 0;
+
+        // Define as informações do painel com base no que o mouse está sobrepondo
+        if (Panels.Hotbar_Slot > 0)
+        {
+            Position = Panels.Get("Hotbar").Position + new Size(0, 42);
+            Data_Index = Player.Inventory[Player.Hotbar[Panels.Hotbar_Slot].Slot].Item_Num;
+        }
+        else if (Panels.Inventory_Slot > 0)
+        {
+            Position = Panels.Get("Menu_Inventory").Position + new Size(-186, 3);
+            Data_Index = Player.Inventory[Panels.Inventory_Slot].Item_Num;
+        }
+        else if (Panels.Equipment_Slot >= 0)
+        {
+            Position = Panels.Get("Menu_Character").Position + new Size(-186, 5);
+            Data_Index = Player.Me.Equipment[Panels.Equipment_Slot];
+        }
+        else if (Panels.Shop_Slot >= 0)
+        {
+            Position = new Point(Panels.Get("Shop").Position.X - 186, Panels.Get("Shop").Position.Y + 5);
+            Data_Index = Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Slot].Item_Num;
+        }
+
+        // Define os dados do painel de informações
+        Panels.Get("Information").Visible = !Position.IsEmpty && Data_Index > 0;
+        Panels.Get("Information").Position = Position;
+        Game.Infomation_Index = Data_Index;
     }
 }

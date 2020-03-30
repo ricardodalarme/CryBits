@@ -113,7 +113,7 @@ class Window
             else if (Panels.Trade_Slot > 0)
             {
                 if (Player.Inventory_Change > 0)
-                    if (Player.Inventory[Player.Inventory_Change].Amount == 1) 
+                    if (Player.Inventory[Player.Inventory_Change].Amount == 1)
                         Send.Trade_Offer(Panels.Trade_Slot, Player.Inventory_Change);
                     else
                     {

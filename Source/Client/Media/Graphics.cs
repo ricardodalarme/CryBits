@@ -40,7 +40,63 @@ partial class Graphics
     // Formato das texturas
     public const string Format = ".png";
 
+    public enum Alignments
+    {
+        Left,
+        Center,
+        Right
+    }
+
     #region Engine
+    public static void Init()
+    {
+        // Carrega a fonte
+        Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
+
+        // Carrega as texturas
+        LoadTextures();
+
+        // Inicia a janela
+        RenderWindow = new RenderWindow(new VideoMode(800, 608), Lists.Options.Game_Name, Styles.Close);
+        RenderWindow.Closed += new EventHandler(Window.OnClosed);
+        RenderWindow.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonPressed);
+        RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Window.OnMouseMoved);
+        RenderWindow.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonReleased);
+        RenderWindow.KeyPressed += new EventHandler<KeyEventArgs>(Window.OnKeyPressed);
+        RenderWindow.KeyReleased += new EventHandler<KeyEventArgs>(Window.OnKeyReleased);
+        RenderWindow.TextEntered += new EventHandler<TextEventArgs>(Window.OnTextEntered);
+    }
+
+    private static void LoadTextures()
+    {
+        // Conjuntos
+        Tex_Character = LoadTextures(Directories.Tex_Characters.FullName);
+        Tex_Tile = LoadTextures(Directories.Tex_Tiles.FullName);
+        Tex_Face = LoadTextures(Directories.Tex_Faces.FullName);
+        Tex_Panel = LoadTextures(Directories.Tex_Panels.FullName);
+        Tex_Button = LoadTextures(Directories.Tex_Buttons.FullName);
+        Tex_Panorama = LoadTextures(Directories.Tex_Panoramas.FullName);
+        Tex_Fog = LoadTextures(Directories.Tex_Fogs.FullName);
+        Tex_Light = LoadTextures(Directories.Tex_Lights.FullName);
+        Tex_Item = LoadTextures(Directories.Tex_Items.FullName);
+
+        // Únicas
+        Tex_Weather = new Texture(Directories.Tex_Weather.FullName + Format);
+        Tex_Blanc = new Texture(Directories.Tex_Blank.FullName + Format);
+        Tex_Directions = new Texture(Directories.Tex_Directions.FullName + Format);
+        Tex_CheckBox = new Texture(Directories.Tex_CheckBox.FullName + Format);
+        Tex_TextBox = new Texture(Directories.Tex_TextBox.FullName + Format);
+        Tex_Directions = new Texture(Directories.Tex_Directions.FullName + Format);
+        Tex_Shadow = new Texture(Directories.Tex_Shadow.FullName + Format);
+        Tex_Bars = new Texture(Directories.Tex_Bars.FullName + Format);
+        Tex_Bars_Panel = new Texture(Directories.Tex_Bars_Panel.FullName + Format);
+        Tex_Grid = new Texture(Directories.Tex_Grid.FullName + Format);
+        Tex_Equipments = new Texture(Directories.Tex_Equipments.FullName + Format);
+        Tex_Blood = new Texture(Directories.Tex_Blood.FullName + Format);
+        Tex_Party_Bars = new Texture(Directories.Tex_Party_Bars.FullName + Format);
+        Tex_Intro = new Texture(Directories.Tex_Intro.FullName + Format);
+    }
+
     private static Texture[] LoadTextures(string Directory)
     {
         short i = 1;
@@ -114,9 +170,16 @@ partial class Graphics
         Render(Texture, Source, Destiny, Color);
     }
 
-    private static void DrawText(string Text, int X, int Y, SFML.Graphics.Color Color)
+    private static void DrawText(string Text, int X, int Y, SFML.Graphics.Color Color, Alignments Alignment = Alignments.Left)
     {
         Text TempText = new Text(Text, Font_Default);
+
+        // Alinhamento do texto
+        switch (Alignment)
+        {
+            case Alignments.Center: X -= Tools.MeasureString(Text) / 2; break;
+            case Alignments.Right: X -= Tools.MeasureString(Text); break;
+        }
 
         // Define os dados
         TempText.CharacterSize = 10;
@@ -176,55 +239,6 @@ partial class Graphics
         Render(Texture, new Rectangle(new Point(Margin, 0), new Size(Margin, Texture_Height)), new Rectangle(new Point(Position.X + Margin, Position.Y), new Size(Size.Width - Margin * 2, Texture_Height)));
     }
     #endregion
-
-    public static void Init()
-    {
-        // Carrega a fonte
-        Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
-
-        // Carrega as texturas
-        LoadTextures();
-
-        // Inicia a janela
-        RenderWindow = new RenderWindow(new VideoMode(800, 608), Lists.Options.Game_Name, Styles.Close);
-        RenderWindow.Closed += new EventHandler(Window.OnClosed);
-        RenderWindow.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonPressed);
-        RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Window.OnMouseMoved);
-        RenderWindow.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonReleased);
-        RenderWindow.KeyPressed += new EventHandler<KeyEventArgs>(Window.OnKeyPressed);
-        RenderWindow.KeyReleased += new EventHandler<KeyEventArgs>(Window.OnKeyReleased);
-        RenderWindow.TextEntered += new EventHandler<TextEventArgs>(Window.OnTextEntered);
-    }
-
-    private static void LoadTextures()
-    {
-        // Conjuntos
-        Tex_Character = LoadTextures(Directories.Tex_Characters.FullName);
-        Tex_Tile = LoadTextures(Directories.Tex_Tiles.FullName);
-        Tex_Face = LoadTextures(Directories.Tex_Faces.FullName);
-        Tex_Panel = LoadTextures(Directories.Tex_Panels.FullName);
-        Tex_Button = LoadTextures(Directories.Tex_Buttons.FullName);
-        Tex_Panorama = LoadTextures(Directories.Tex_Panoramas.FullName);
-        Tex_Fog = LoadTextures(Directories.Tex_Fogs.FullName);
-        Tex_Light = LoadTextures(Directories.Tex_Lights.FullName);
-        Tex_Item = LoadTextures(Directories.Tex_Items.FullName);
-
-        // Únicas
-        Tex_Weather = new Texture(Directories.Tex_Weather.FullName + Format);
-        Tex_Blanc = new Texture(Directories.Tex_Blank.FullName + Format);
-        Tex_Directions = new Texture(Directories.Tex_Directions.FullName + Format);
-        Tex_CheckBox = new Texture(Directories.Tex_CheckBox.FullName + Format);
-        Tex_TextBox = new Texture(Directories.Tex_TextBox.FullName + Format);
-        Tex_Directions = new Texture(Directories.Tex_Directions.FullName + Format);
-        Tex_Shadow = new Texture(Directories.Tex_Shadow.FullName + Format);
-        Tex_Bars = new Texture(Directories.Tex_Bars.FullName + Format);
-        Tex_Bars_Panel = new Texture(Directories.Tex_Bars_Panel.FullName + Format);
-        Tex_Grid = new Texture(Directories.Tex_Grid.FullName + Format);
-        Tex_Equipments = new Texture(Directories.Tex_Equipments.FullName + Format);
-        Tex_Blood = new Texture(Directories.Tex_Blood.FullName + Format);
-        Tex_Party_Bars = new Texture(Directories.Tex_Party_Bars.FullName + Format);
-        Tex_Intro = new Texture(Directories.Tex_Intro.FullName + Format);
-    }
 
     public static void Present()
     {
@@ -392,7 +406,7 @@ partial class Graphics
         // Somente se necessário
         if (!Buttons.Characters_Change_Buttons())
         {
-            DrawText(Text, Text_Position.X - Tools.MeasureString(Text) / 2, Text_Position.Y, SFML.Graphics.Color.White);
+            DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
             return;
         }
 
@@ -402,7 +416,7 @@ partial class Graphics
         // Verifica se o personagem existe
         if (Class == 0)
         {
-            DrawText(Text, Text_Position.X - Tools.MeasureString(Text) / 2, Text_Position.Y, SFML.Graphics.Color.White);
+            DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
             return;
         }
 
@@ -416,7 +430,7 @@ partial class Graphics
 
         // Desenha o nome da classe
         Text = "(" + Game.SelectCharacter + ") " + Lists.Characters[Game.SelectCharacter].Name;
-        DrawText(Text, Text_Position.X - Tools.MeasureString(Text) / 2, Text_Position.Y, SFML.Graphics.Color.White);
+        DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
     }
 
     private static void CreateCharacter_Class()
@@ -439,7 +453,7 @@ partial class Graphics
 
         // Desenha o nome da classe
         string Text = Class.Name;
-        DrawText(Text, 347 - Tools.MeasureString(Text) / 2, 509, SFML.Graphics.Color.White);
+        DrawText(Text, 347, 509, SFML.Graphics.Color.White, Alignments.Center);
 
         // Descrição
         DrawText(Class.Description, 282, 526, SFML.Graphics.Color.White, 123);
@@ -448,8 +462,6 @@ partial class Graphics
     private static void Hotbar(Panels.Structure Tool)
     {
         string Indicator = string.Empty;
-        Point Panel_Position = Tool.Position;
-        Game.Need_Information &= ~(1);
 
         // Desenha os itens da hotbar
         for (byte i = 1; i <= Game.Max_Hotbar; i++)
@@ -461,15 +473,8 @@ partial class Graphics
                 if (Player.Hotbar[i].Type == (byte)Game.Hotbar.Item)
                 {
                     // Desenha as visualizações do item
-                    Point Position = new Point(Panel_Position.X + 8 + (i - 1) * 36, Panel_Position.Y + 6);
+                    Point Position = new Point(Tool.Position.X + 8 + (i - 1) * 36, Tool.Position.Y + 6);
                     Render(Tex_Item[Lists.Item[Player.Inventory[Slot].Item_Num].Texture], Position);
-                    if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32)))
-                    {
-                        Game.Infomation_Index = Player.Inventory[Slot].Item_Num;
-                        Panels.Get("Information").Position = new Point(Panel_Position.X, Panel_Position.Y + 42);
-                        Panels.Get("Information").Visible = true;
-                        Game.Need_Information |= 1;
-                    }
                 }
             }
 
@@ -478,63 +483,41 @@ partial class Graphics
             else if (i == 10) Indicator = "0";
 
             // Desenha os números
-            DrawText(Indicator, Panel_Position.X + 16 + 36 * (i - 1), Panel_Position.Y + 22, SFML.Graphics.Color.White);
+            DrawText(Indicator, Tool.Position.X + 16 + 36 * (i - 1), Tool.Position.Y + 22, SFML.Graphics.Color.White);
         }
 
         // Movendo slot
         if (Player.Hotbar_Change > 0)
             if (Player.Hotbar[Player.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
                 Render(Tex_Item[Lists.Item[Player.Inventory[Player.Hotbar[Player.Hotbar_Change].Slot].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
-
-        // Fecha a janela de informa~ção caso necessário
-        if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
     }
 
     private static void Menu_Character(Panels.Structure Tool)
     {
-        Point Panel_Position = Tool.Position;
-        Game.Need_Information &= ~(1 << 1);
-
         // Dados básicos
-        DrawText(Player.Me.Name, Panel_Position.X + 18, Panel_Position.Y + 52, SFML.Graphics.Color.White);
-        DrawText(Player.Me.Level.ToString(), Panel_Position.X + 18, Panel_Position.Y + 79, SFML.Graphics.Color.White);
-        Render(Tex_Face[Player.Me.Texture_Num], new Point(Panel_Position.X + 82, Panel_Position.Y + 37));
+        DrawText(Player.Me.Name, Tool.Position.X + 18, Tool.Position.Y + 52, SFML.Graphics.Color.White);
+        DrawText(Player.Me.Level.ToString(), Tool.Position.X + 18, Tool.Position.Y + 79, SFML.Graphics.Color.White);
+        Render(Tex_Face[Player.Me.Texture_Num], new Point(Tool.Position.X + 82, Tool.Position.Y + 37));
 
         // Atributos
-        DrawText("Strength: " + Player.Me.Attribute[(byte)Game.Attributes.Strength], Panel_Position.X + 32, Panel_Position.Y + 146, SFML.Graphics.Color.White);
-        DrawText("Resistance: " + Player.Me.Attribute[(byte)Game.Attributes.Resistance], Panel_Position.X + 32, Panel_Position.Y + 162, SFML.Graphics.Color.White);
-        DrawText("Intelligence: " + Player.Me.Attribute[(byte)Game.Attributes.Intelligence], Panel_Position.X + 32, Panel_Position.Y + 178, SFML.Graphics.Color.White);
-        DrawText("Agility: " + +Player.Me.Attribute[(byte)Game.Attributes.Agility], Panel_Position.X + 32, Panel_Position.Y + 194, SFML.Graphics.Color.White);
-        DrawText("Vitality: " + +Player.Me.Attribute[(byte)Game.Attributes.Vitality], Panel_Position.X + 32, Panel_Position.Y + 210, SFML.Graphics.Color.White);
-        DrawText("Points: " + Player.Me.Points, Panel_Position.X + 14, Panel_Position.Y + 228, SFML.Graphics.Color.White);
+        DrawText("Strength: " + Player.Me.Attribute[(byte)Game.Attributes.Strength], Tool.Position.X + 32, Tool.Position.Y + 146, SFML.Graphics.Color.White);
+        DrawText("Resistance: " + Player.Me.Attribute[(byte)Game.Attributes.Resistance], Tool.Position.X + 32, Tool.Position.Y + 162, SFML.Graphics.Color.White);
+        DrawText("Intelligence: " + Player.Me.Attribute[(byte)Game.Attributes.Intelligence], Tool.Position.X + 32, Tool.Position.Y + 178, SFML.Graphics.Color.White);
+        DrawText("Agility: " + Player.Me.Attribute[(byte)Game.Attributes.Agility], Tool.Position.X + 32, Tool.Position.Y + 194, SFML.Graphics.Color.White);
+        DrawText("Vitality: " + Player.Me.Attribute[(byte)Game.Attributes.Vitality], Tool.Position.X + 32, Tool.Position.Y + 210, SFML.Graphics.Color.White);
+        DrawText("Points: " + Player.Me.Points, Tool.Position.X + 14, Tool.Position.Y + 228, SFML.Graphics.Color.White);
 
         // Equipamentos 
         for (byte i = 0; i < (byte)Game.Equipments.Count; i++)
-        {
             if (Player.Me.Equipment[i] == 0)
-                Render(Tex_Equipments, Panel_Position.X + 7 + i * 34, Panel_Position.Y + 247, i * 34, 0, 34, 34);
+                Render(Tex_Equipments, Tool.Position.X + 7 + i * 34, Tool.Position.Y + 247, i * 34, 0, 32, 32);
             else
-            {
-                Render(Tex_Item[Lists.Item[Player.Me.Equipment[i]].Texture], Panel_Position.X + 8 + i * 35, Panel_Position.Y + 247, 0, 0, 34, 34);
-                if (Tools.IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
-                {
-                    Game.Infomation_Index = Player.Me.Equipment[i];
-                    Panels.Get("Information").Position = new Point(Panel_Position.X - 186, Panel_Position.Y + 5);
-                    Panels.Get("Information").Visible = true;
-                    Game.Need_Information |= 1 << 1;
-                }
-            }
-        }
-
-        // Fecha a janela de informa~ção caso necessário
-        if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
+                Render(Tex_Item[Lists.Item[Player.Me.Equipment[i]].Texture], Tool.Position.X + 8 + i * 35, Tool.Position.Y + 247, 0, 0, 34, 34);
     }
 
     private static void Menu_Inventory(Panels.Structure Tool)
     {
         byte NumColumns = 5;
-        Point Panel_Position = Tool.Position;
-        Game.Need_Information &= ~(1 << 2);
 
         // Desenha todos os itens do inventário
         for (byte i = 1; i <= Game.Max_Inventory; i++)
@@ -542,87 +525,14 @@ partial class Graphics
             {
                 byte Line = (byte)((i - 1) / NumColumns);
                 int Column = i - (Line * 5) - 1;
-                Point Position = new Point(Panel_Position.X + 7 + Column * 36, Panel_Position.Y + 30 + Line * 36);
+                Point Position = new Point(Tool.Position.X + 7 + Column * 36, Tool.Position.Y + 30 + Line * 36);
 
-                // Desenha as visualizações do item
-                Render(Tex_Item[Lists.Item[Player.Inventory[i].Item_Num].Texture], Position);
-                if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32)))
-                {
-                    Game.Infomation_Index = Player.Inventory[i].Item_Num;
-                    Panels.Get("Information").Position = new Point(Panel_Position.X - 186, Panel_Position.Y + 3);
-                    Panels.Get("Information").Visible = true;
-                    Game.Need_Information |= 1 << 2;
-                }
-
-                // Quantidade
-                if (Player.Inventory[i].Amount > 1) DrawText(Player.Inventory[i].Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
+                // Desenha o item
+                Item(Player.Inventory[i].Item_Num, Player.Inventory[i].Amount, Position);
             }
 
         // Movendo item
         if (Player.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Inventory[Player.Inventory_Change].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
-        if (Game.Need_Information == 0) Panels.Get("Information").Visible = false;
-    }
-
-    private static void Informations()
-    {
-        short Item_Num = Game.Infomation_Index;
-        SFML.Graphics.Color Text_Color;
-
-        // Apenas se necessário
-        if (Item_Num == -1) return;
-
-        // Define a cor de acordo com a raridade
-        switch ((Game.Rarity)Lists.Item[Item_Num].Rarity)
-        {
-            case Game.Rarity.Uncommon: Text_Color = CColor(204, 255, 153); break; // Verde
-            case Game.Rarity.Rare: Text_Color = CColor(102, 153, 255); break; // Azul
-            case Game.Rarity.Epic: Text_Color = CColor(153, 0, 204); break; // Roxo
-            case Game.Rarity.Legendary: Text_Color = CColor(255, 255, 77); break; // Amarelo
-            default: Text_Color = CColor(255, 255, 255); break; // Branco
-        }
-
-        // Informações
-        Point Position = Panels.Get("Information").Position;
-        DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, Text_Color);
-        Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Position.X + 9, Position.Y + 21, 64, 64));
-
-        // Descrição
-        DrawText(Lists.Item[Item_Num].Description, Position.X + 82, Position.Y + 20, SFML.Graphics.Color.White, 86);
-
-        // Posições
-        Point[] Positions = { new Point(Position.X + 10, Position.Y + 90), new Point(Position.X + 10, Position.Y + 102), new Point(Position.X + 10, Position.Y + 114), new Point(Position.X + 96, Position.Y + 90), new Point(Position.X + 96, Position.Y + 102), new Point(Position.X + 96, Position.Y + 114), new Point(Position.X + 96, Position.Y + 126) };
-        byte p = 0; // iterador
-
-        // Loja
-        if (Panels.Get("Shop").Visible)
-            if (Panels.Shop_Slot > 0)
-                DrawText("Price: " + Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Slot].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-            else if (Panels.Inventory_Slot > 0)
-                if (Game.Find_Shop_Bought(Item_Num) >= 0)
-                    DrawText("Sale price: " + Lists.Shop[Game.Shop_Open].Bought[Game.Find_Shop_Bought(Item_Num)].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-
-        // Informações específicas 
-        switch ((Game.Items)Lists.Item[Item_Num].Type)
-        {
-            // Poção
-            case Game.Items.Potion:
-                for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
-                    if (Lists.Item[Item_Num].Potion_Vital[n] != 0)
-                        DrawText(((Game.Vitals)n).ToString() + ": " + Lists.Item[Item_Num].Potion_Vital[n], Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-
-                if (Lists.Item[Item_Num].Potion_Experience != 0) DrawText("Experience: " + Lists.Item[Item_Num].Potion_Experience, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-                break;
-            // Equipamentos
-            case Game.Items.Equipment:
-                if (Lists.Item[Item_Num].Equip_Type == (byte)Game.Equipments.Weapon)
-                    if (Lists.Item[Item_Num].Weapon_Damage != 0)
-                        DrawText("Damage: " + Lists.Item[Item_Num].Weapon_Damage, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-
-                for (byte n = 0; n < (byte)Game.Attributes.Count; n++)
-                    if (Lists.Item[Item_Num].Equip_Attribute[n] != 0)
-                        DrawText(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n], Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-                break;
-        }
     }
 
     private static void Bars()
@@ -695,12 +605,12 @@ partial class Graphics
 
     private static void Party_Invitation(Panels.Structure Tool)
     {
-        DrawText(Game.Party_Invitation + " has invite you to a party.  Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+        DrawText(Game.Party_Invitation + " has invite you to a party. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
     }
 
     private static void Trade_Invitation(Panels.Structure Tool)
     {
-        DrawText(Game.Trade_Invitation + " has invite you to a trade.  Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+        DrawText(Game.Trade_Invitation + " has invite you to a trade. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
     }
 
     private static void Trade(Panels.Structure Tool)
@@ -722,11 +632,10 @@ partial class Graphics
     private static void Shop(Panels.Structure Tool)
     {
         byte NumColumns = 7, Line, Column;
-        Game.Need_Information &= ~(1 << 3);
 
         // Dados da loja
         string Name = Lists.Shop[Game.Shop_Open].Name;
-        DrawText(Name, Tool.Position.X + 131 - (Tools.MeasureString(Name) / 2), Tool.Position.Y + 28, SFML.Graphics.Color.White);
+        DrawText(Name, Tool.Position.X + 131, Tool.Position.Y + 28, SFML.Graphics.Color.White, Alignments.Center);
         DrawText("Currency: " + Lists.Item[Lists.Shop[Game.Shop_Open].Currency].Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
 
         // Desenha os itens
@@ -736,14 +645,6 @@ partial class Graphics
             Column = (byte)(i - (Line * NumColumns));
             Point Position = new Point(Tool.Position.X + 7 + Column * 36, Tool.Position.Y + 50 + Line * 36);
             Item(Lists.Shop[Game.Shop_Open].Sold[i].Item_Num, Lists.Shop[Game.Shop_Open].Sold[i].Amount, Position);
-
-            if (Tools.IsAbove(new Rectangle(Position.X, Position.Y, 32, 32)))
-            {
-                Game.Infomation_Index = Lists.Shop[Game.Shop_Open].Sold[i].Item_Num;
-                Panels.Get("Information").Position = new Point(Tool.Position.X - 186, Tool.Position.Y + 5);
-                Panels.Get("Information").Visible = true;
-                Game.Need_Information |= 1 << 3;
-            }
         }
     }
 
@@ -771,6 +672,68 @@ partial class Graphics
         {
             Render(Tex_Item[Lists.Item[Item_Num].Texture], Position);
             if (Amount > 1) DrawText(Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
+        }
+    }
+
+    private static void Informations()
+    {
+        short Item_Num = Game.Infomation_Index;
+        SFML.Graphics.Color Text_Color;
+
+        // Apenas se necessário
+        if (Item_Num <= 0) return;
+
+        // Define a cor de acordo com a raridade
+        switch ((Game.Rarity)Lists.Item[Item_Num].Rarity)
+        {
+            case Game.Rarity.Uncommon: Text_Color = CColor(204, 255, 153); break; // Verde
+            case Game.Rarity.Rare: Text_Color = CColor(102, 153, 255); break; // Azul
+            case Game.Rarity.Epic: Text_Color = CColor(153, 0, 204); break; // Roxo
+            case Game.Rarity.Legendary: Text_Color = CColor(255, 255, 77); break; // Amarelo
+            default: Text_Color = CColor(255, 255, 255); break; // Branco
+        }
+
+        // Informações
+        Point Position = Panels.Get("Information").Position;
+        DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, Text_Color);
+        Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Position.X + 9, Position.Y + 21, 64, 64));
+
+        // Descrição
+        DrawText(Lists.Item[Item_Num].Description, Position.X + 82, Position.Y + 20, SFML.Graphics.Color.White, 86);
+
+        // Posições
+        Point[] Positions = { new Point(Position.X + 10, Position.Y + 90), new Point(Position.X + 10, Position.Y + 102), new Point(Position.X + 10, Position.Y + 114), new Point(Position.X + 96, Position.Y + 90), new Point(Position.X + 96, Position.Y + 102), new Point(Position.X + 96, Position.Y + 114), new Point(Position.X + 96, Position.Y + 126) };
+        byte p = 0; // iterador
+
+        // Loja
+        if (Panels.Get("Shop").Visible)
+            if (Panels.Shop_Slot > 0)
+                DrawText("Price: " + Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Slot].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+            else if (Panels.Inventory_Slot > 0)
+                if (Game.Find_Shop_Bought(Item_Num) >= 0)
+                    DrawText("Sale price: " + Lists.Shop[Game.Shop_Open].Bought[Game.Find_Shop_Bought(Item_Num)].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+
+        // Informações específicas 
+        switch ((Game.Items)Lists.Item[Item_Num].Type)
+        {
+            // Poção
+            case Game.Items.Potion:
+                for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+                    if (Lists.Item[Item_Num].Potion_Vital[n] != 0)
+                        DrawText(((Game.Vitals)n).ToString() + ": " + Lists.Item[Item_Num].Potion_Vital[n], Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+
+                if (Lists.Item[Item_Num].Potion_Experience != 0) DrawText("Experience: " + Lists.Item[Item_Num].Potion_Experience, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+                break;
+            // Equipamentos
+            case Game.Items.Equipment:
+                if (Lists.Item[Item_Num].Equip_Type == (byte)Game.Equipments.Weapon)
+                    if (Lists.Item[Item_Num].Weapon_Damage != 0)
+                        DrawText("Damage: " + Lists.Item[Item_Num].Weapon_Damage, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+
+                for (byte n = 0; n < (byte)Game.Attributes.Count; n++)
+                    if (Lists.Item[Item_Num].Equip_Attribute[n] != 0)
+                        DrawText(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n], Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
+                break;
         }
     }
 }

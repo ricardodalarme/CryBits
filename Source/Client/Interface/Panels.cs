@@ -26,10 +26,11 @@ class Panels
     }
 
     // Retorna em qual slot o mouse está sobrepondo
-    public static byte Inventory_Slot => Tools.GetSlot(Get("Menu_Inventory").Position + new Size(7, 29), 6, 5);
-    public static byte Hotbar_Slot => Tools.GetSlot(Get("Hotbar").Position + new Size(8, 6), 1, 10);
-    public static byte Trade_Slot => Tools.GetSlot(Get("Trade").Position + new Size(7, 50), 6, 5);
-    public static short Shop_Slot => (short)(Tools.GetSlot(Get("Shop").Position + new Size(7, 50), 4, 7) + 1);
+    public static byte Inventory_Slot => Tools.Slot(Get("Menu_Inventory"), 7, 29, 6, 5);
+    public static byte Hotbar_Slot => Tools.Slot(Get("Hotbar"), 8, 6, 1, 10);
+    public static byte Trade_Slot => Tools.Slot(Get("Trade"), 7, 50, 6, 5);
+    public static short Shop_Slot => (short)(Tools.Slot(Get("Shop"), 7, 50, 4, 7) - 1);
+    public static short Equipment_Slot => (short)(Tools.Slot(Get("Menu_Character"), 7, 248, 1, 5) - 1);
 
     public static void Inventory_MouseDown(SFML.Window.MouseButtonEventArgs e)
     {

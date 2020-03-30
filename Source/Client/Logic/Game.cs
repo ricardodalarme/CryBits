@@ -18,7 +18,6 @@ class Game
     public static byte CreateCharacter_Tex = 0;
     public static int SelectCharacter = 1;
     public static short Infomation_Index;
-    public static int Need_Information = 0;
     public static byte Drop_Slot = 0;
     public static string Party_Invitation;
     public static string Trade_Invitation;
@@ -182,6 +181,10 @@ class Game
         // Reproduz a música de fundo
         if (Lists.Options.Musics)
             Audio.Music.Play(Audio.Musics.Menu);
+
+        // Reseta os dados
+        CheckBoxes.Get("Connect_Save_Username").Checked = Lists.Options.SaveUsername;
+        if (Lists.Options.SaveUsername) TextBoxes.Get("Connect_Username").Text = Lists.Options.Username;
 
         // Abre o menu
         Tools.CurrentWindow = Tools.Windows.Menu;

@@ -64,8 +64,8 @@ class TextBoxes
         }
     }
 
-        // Retorna a caixa de texto procurada
-    public static Structure Get(string Name) =>List.Find(x => x.Name.Equals(Name));
+    // Retorna a caixa de texto procurada
+    public static Structure Get(string Name) => List.Find(x => x.Name.Equals(Name));
 
     public static void Focus()
     {

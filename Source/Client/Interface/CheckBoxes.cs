@@ -113,7 +113,7 @@ class CheckBoxes
     private static void FPS()
     {
         // Salva os dado
-        Lists.Options.FPS= Get("Options_FPS").Checked;
+        Lists.Options.FPS = Get("Options_FPS").Checked;
         Write.Options();
     }
 

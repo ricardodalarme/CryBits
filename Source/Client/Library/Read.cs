@@ -18,18 +18,13 @@ class Read
         {
             Clear.Options();
             Write.Options();
-        }
-        // Lê os dados
-        else
-        {
-            FileStream Stream = Directories.Options.OpenRead();
-            Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);
-            Stream.Close();
+            return;
         }
 
-        // Eventos
-        CheckBoxes.Get("Connect_Save_Username").Checked = Lists.Options.SaveUsername;
-        if (Lists.Options.SaveUsername) TextBoxes.Get("Connect_Username").Text = Lists.Options.Username;
+        // Lê os dados
+        FileStream Stream = Directories.Options.OpenRead();
+        Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
     }
 
     private static Buttons.Structure Button(BinaryReader Data)
