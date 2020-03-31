@@ -51,6 +51,7 @@ class Clear
         Lists.Server_Data.Max_Characters = 3;
         Lists.Server_Data.Max_Party_Members = 3;
         Lists.Server_Data.Max_Map_Items = 100;
+        Lists.Server_Data.Num_Points = 3;
         Lists.Server_Data.Num_Classes = 1;
         Lists.Server_Data.Num_Maps = 1;
         Lists.Server_Data.Num_Items = 1;

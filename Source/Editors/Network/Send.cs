@@ -128,6 +128,7 @@ partial class Send
         Data.Write(Lists.Server_Data.Max_Characters);
         Data.Write(Lists.Server_Data.Max_Party_Members);
         Data.Write(Lists.Server_Data.Max_Map_Items);
+        Data.Write(Lists.Server_Data.Num_Points);
         Packet(Data);
     }
 

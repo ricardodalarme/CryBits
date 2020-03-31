@@ -506,12 +506,12 @@ class Player
 
         while (Character(Index).Experience >= Character(Index).ExpNeeded)
         {
-            NumLevel += 1;
+            NumLevel++;
             ExpRest = Character(Index).Experience - Character(Index).ExpNeeded;
 
             // Define os dados
             Character(Index).Level++;
-            Character(Index).Points += 3;
+            Character(Index).Points += Lists.Server_Data.Num_Points;
             Character(Index).Experience = ExpRest;
         }
 

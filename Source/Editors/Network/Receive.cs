@@ -62,6 +62,7 @@ partial class Receive
         Lists.Server_Data.Max_Characters = Data.ReadByte();
         Lists.Server_Data.Max_Party_Members = Data.ReadByte();
         Lists.Server_Data.Max_Map_Items = Data.ReadByte();
+        Lists.Server_Data.Num_Points = Data.ReadByte();
 
         // Abre o editor
         if (Globals.OpenEditor == Editor_Data.Objects) Editor_Data.Open();

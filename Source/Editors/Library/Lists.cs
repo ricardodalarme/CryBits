@@ -38,6 +38,7 @@ class Lists
             public byte Max_Characters;
             public byte Max_Party_Members;
             public byte Max_Map_Items;
+            public byte Num_Points;
         }
 
         public class Tool

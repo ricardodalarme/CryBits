@@ -44,16 +44,21 @@
             this.label1 = new System.Windows.Forms.Label();
             this.butCancel = new System.Windows.Forms.Button();
             this.butSalve = new System.Windows.Forms.Button();
+            this.numPoints = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Map_Items)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Party_Members)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Characters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Players)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPoints)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.numPoints);
+            this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.numMax_Map_Items);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.numMax_Party_Members);
@@ -70,7 +75,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(288, 233);
+            this.groupBox1.Size = new System.Drawing.Size(288, 272);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General";
@@ -224,7 +229,7 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(163, 251);
+            this.butCancel.Location = new System.Drawing.Point(164, 290);
             this.butCancel.Name = "butCancel";
             this.butCancel.Size = new System.Drawing.Size(137, 25);
             this.butCancel.TabIndex = 20;
@@ -234,7 +239,7 @@
             // 
             // butSalve
             // 
-            this.butSalve.Location = new System.Drawing.Point(12, 251);
+            this.butSalve.Location = new System.Drawing.Point(13, 290);
             this.butSalve.Name = "butSalve";
             this.butSalve.Size = new System.Drawing.Size(140, 25);
             this.butSalve.TabIndex = 19;
@@ -242,11 +247,32 @@
             this.butSalve.UseVisualStyleBackColor = true;
             this.butSalve.Click += new System.EventHandler(this.butSave_Click);
             // 
+            // numPoints
+            // 
+            this.numPoints.Location = new System.Drawing.Point(9, 242);
+            this.numPoints.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numPoints.Name = "numPoints";
+            this.numPoints.Size = new System.Drawing.Size(132, 20);
+            this.numPoints.TabIndex = 14;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 226);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(141, 13);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "Points earned when levelup:";
+            // 
             // Editor_Data
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(312, 287);
+            this.ClientSize = new System.Drawing.Size(312, 326);
             this.ControlBox = false;
             this.Controls.Add(this.butCancel);
             this.Controls.Add(this.butSalve);
@@ -264,6 +290,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Characters)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Players)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPoints)).EndInit();
             this.ResumeLayout(false);
 
     }
@@ -287,4 +314,6 @@
     private System.Windows.Forms.Label label6;
     public System.Windows.Forms.NumericUpDown numMax_Map_Items;
     private System.Windows.Forms.Label label7;
+    public System.Windows.Forms.NumericUpDown numPoints;
+    private System.Windows.Forms.Label label8;
 }

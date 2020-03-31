@@ -27,6 +27,7 @@ public partial class Editor_Data : Form
         Objects.numMax_Characters.Value = Lists.Server_Data.Max_Characters;
         Objects.numMax_Party_Members.Value = Lists.Server_Data.Max_Party_Members;
         Objects.numMax_Map_Items.Value = Lists.Server_Data.Max_Map_Items;
+        Objects.numPoints.Value = Lists.Server_Data.Num_Points;
 
         // Abre a janela
         Selection.Objects.Visible = false;
@@ -43,6 +44,7 @@ public partial class Editor_Data : Form
         Lists.Server_Data.Max_Characters = (byte)Objects.numMax_Characters.Value;
         Lists.Server_Data.Max_Party_Members = (byte)Objects.numMax_Party_Members.Value;
         Lists.Server_Data.Max_Map_Items = (byte)Objects.numMax_Map_Items.Value;
+        Lists.Server_Data.Num_Points = (byte)Objects.numPoints.Value;
         Send.Write_Server_Data();
 
         // Volta à janela de seleção

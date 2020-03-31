@@ -28,6 +28,7 @@ class Lists
             public byte Max_Characters;
             public byte Max_Party_Members;
             public byte Max_Map_Items;
+            public byte Num_Points;
             public byte Num_Classes;
             public short Num_Maps;
             public byte Num_Tiles;
