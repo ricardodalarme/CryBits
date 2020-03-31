@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 class Player
@@ -137,7 +136,7 @@ class Player
     {
         if (!Lists.Temp_Player[Index].InEditor)
         {
-            // Salva os dados do e envia atualiza os demais jogadores da desconexão
+            // Salva os dados do jogador e atualiza os demais jogadores da desconexão
             Write.Player(Index);
             Send.Player_Leave(Index);
 
@@ -511,7 +510,7 @@ class Player
             ExpRest = Character(Index).Experience - Character(Index).ExpNeeded;
 
             // Define os dados
-            Character(Index).Level += 1;
+            Character(Index).Level++;
             Character(Index).Points += 3;
             Character(Index).Experience = ExpRest;
         }
@@ -548,12 +547,26 @@ class Player
 
     public static void TakeItem(byte Index, byte Slot, short Amount)
     {
+        // Previne erros
+        if (Slot <= 0) return;
+        if (Amount < 0) Amount = 1;
+
         // Tira o item do jogaor
-        if (Slot > 0)
-            if (Amount == Character(Index).Inventory[Slot].Amount)
-                Character(Index).Inventory[Slot] = new Lists.Structures.Inventories();
-            else
-                Character(Index).Inventory[Slot].Amount -= Amount;
+        if (Amount == Character(Index).Inventory[Slot].Amount)
+        {
+            Character(Index).Inventory[Slot] = new Lists.Structures.Inventories();
+
+            // Retira o item da hotbar caso estier
+            byte HotbarSlot = FindHotbar(Index, (byte)Game.Hotbar.Item, Slot);
+            if (HotbarSlot > 0)
+            {
+                Character(Index).Hotbar[HotbarSlot] = new Lists.Structures.Hotbar();
+                Send.Player_Hotbar(Index);
+            }
+        }
+        // Apenas desconta a quantidade
+        else
+            Character(Index).Inventory[Slot].Amount -= Amount;
 
         // Atualiza o inventário
         Send.Player_Inventory(Index);
@@ -582,9 +595,7 @@ class Player
         Send.Map_Items(Map_Num);
 
         // Retira o item do inventário do jogador 
-        if (Amount == Character(Index).Inventory[Slot].Amount) Character(Index).Inventory[Slot].Item_Num = 0;
-        Character(Index).Inventory[Slot].Amount = (short)(Character(Index).Inventory[Slot].Amount - Amount);
-        Send.Player_Inventory(Index);
+        TakeItem(Index, Slot, Amount);
     }
 
     public static void UseItem(byte Index, byte Slot)
@@ -610,14 +621,8 @@ class Player
 
         if (Lists.Item[Item_Num].Type == (byte)Game.Items.Equipment)
         {
-            // Retira o item da hotbar
-            byte HotbarSlot = FindHotbar(Index, (byte)Game.Hotbar.Item, Slot);
-            Character(Index).Hotbar[HotbarSlot].Type = 0;
-            Character(Index).Hotbar[HotbarSlot].Slot = 0;
-
             // Retira o item do inventário
-            Character(Index).Inventory[Slot].Item_Num = 0;
-            Character(Index).Inventory[Slot].Amount = 0;
+            TakeItem(Index, Slot, 1);
 
             // Caso já estiver com algum equipamento, desequipa ele
             if (Character(Index).Equipment[Lists.Item[Item_Num].Equip_Type] > 0) GiveItem(Index, Item_Num, 1);
@@ -653,13 +658,7 @@ class Player
             if (Character(Index).Vital[(byte)Game.Vitals.HP] == 0) Died(Index);
 
             // Remove o item caso tenha tido algum efeito
-            if (Lists.Item[Item_Num].Potion_Experience > 0 || HadEffect)
-            {
-                Character(Index).Inventory[Slot].Item_Num = 0;
-                Character(Index).Inventory[Slot].Amount = 0;
-                Send.Player_Inventory(Index);
-                Send.Player_Vitals(Index);
-            }
+            if (Lists.Item[Item_Num].Potion_Experience > 0 || HadEffect) TakeItem(Index, Slot, 1);
         }
     }
 
