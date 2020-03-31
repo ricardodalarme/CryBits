@@ -278,7 +278,7 @@ class Player
             Send.Player_Position(Index);
     }
 
-    private static void Warp(byte Index, short Map_Num, byte x, byte y)
+    public static void Warp(byte Index, short Map_Num, byte x, byte y)
     {
         short Map_Old = Character(Index).Map;
 

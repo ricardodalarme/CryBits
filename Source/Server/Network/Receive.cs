@@ -39,7 +39,8 @@ class Receive
         Trade_Offer_State,
         Shop_Buy,
         Shop_Sell,
-        Shop_Close
+        Shop_Close,
+        Warp
     }
 
     // Pacotes do editor
@@ -106,6 +107,7 @@ class Receive
                 case Client_Packets.Shop_Buy: Shop_Buy(Index, Data); break;
                 case Client_Packets.Shop_Sell: Shop_Sell(Index, Data); break;
                 case Client_Packets.Shop_Close: Shop_Close(Index); break;
+                case Client_Packets.Warp: Warp(Index, Data); break;
             }
         else
             // Manuseia os dados recebidos do editor
@@ -1279,5 +1281,18 @@ class Receive
     private static void Shop_Close(byte Index)
     {
         Lists.Temp_Player[Index].Shop = 0;
+    }
+
+    private static void Warp(byte Index, NetIncomingMessage Data)
+    {
+        // Verifica se o jogador realmente tem permissão 
+        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        {
+            Send.Alert(Index, "You aren't allowed to do this.");
+            return;
+        }
+
+        // Teletransporta o jogador para o mapa
+        Player.Warp(Index, Data.ReadInt16(), Data.ReadByte(), Data.ReadByte());
     }
 }

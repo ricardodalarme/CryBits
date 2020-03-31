@@ -39,7 +39,8 @@ partial class Send
         Trade_Offer_State,
         Shop_Buy,
         Shop_Sell,
-        Shop_Close
+        Shop_Close,
+        Warp
     }
 
     private static void Packet(NetOutgoingMessage Data)
@@ -407,6 +408,18 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Shop_Close);
+        Packet(Data);
+    }
+
+    public static void Warp(short Map_Num, byte X, byte Y)
+    {
+        NetOutgoingMessage Data = Socket.Device.CreateMessage();
+
+        // Envia os dados
+        Data.Write((byte)Packets.Warp);
+        Data.Write(Map_Num);
+        Data.Write(X);
+        Data.Write(Y);
         Packet(Data);
     }
 }
