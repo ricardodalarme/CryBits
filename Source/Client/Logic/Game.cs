@@ -26,7 +26,7 @@ class Game
     public static short Shop_Open = 0;
     public static byte Shop_Inventory_Slot = 0;
 
-    // Jogador
+    // Ataque
     public const short Attack_Speed = 750;
 
     // Animação
@@ -55,12 +55,7 @@ class Game
 
     // Limites em geral
     public const byte Max_Inventory = 30;
-    public const byte Max_Map_Items = 100;
     public const byte Max_Hotbar = 10;
-
-    // Latência
-    public static int Latency;
-    public static int Latency_Send;
 
     #region Enums
     public enum Situations

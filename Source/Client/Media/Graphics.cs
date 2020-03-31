@@ -298,7 +298,7 @@ partial class Graphics
 
         // Desenha os dados do jogo
         if (Lists.Options.FPS) DrawText("FPS: " + Game.FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
-        if (Lists.Options.Latency) DrawText("Latency: " + Game.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
+        if (Lists.Options.Latency) DrawText("Latency: " + Socket.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
     }
 
     #region Tools

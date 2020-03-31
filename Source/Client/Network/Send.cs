@@ -132,7 +132,7 @@ partial class Send
         Packet(Data);
 
         // Define a contaem na hora do envio
-        Game.Latency_Send = Environment.TickCount;
+        Socket.Latency_Send = Environment.TickCount;
     }
 
     public static void Message(string Message, Game.Messages Type, string Addressee = "")

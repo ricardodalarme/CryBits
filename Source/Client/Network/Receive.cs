@@ -372,7 +372,7 @@ partial class Receive
     private static void Latency()
     {
         // Define a latência
-        Game.Latency = Environment.TickCount - Game.Latency_Send;
+        Socket.Latency = Environment.TickCount - Socket.Latency_Send;
     }
 
     private static void Message(NetIncomingMessage Data)

@@ -13,6 +13,10 @@ class Socket
     public const string IP = "localhost";
     public const short Port = 7001;
 
+    // Latência
+    public static int Latency;
+    public static int Latency_Send;
+
     public static void Init()
     {
         NetPeerConfiguration Config = new NetPeerConfiguration("CryBits");
