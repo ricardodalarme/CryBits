@@ -22,6 +22,9 @@ class Map
     private static int Snow_Timer = 0;
     private static int Lightning_Timer = 0;
 
+    // Sangue
+    private static int Blood_Timer;
+
     ////////////////
     // Numerações //
     ////////////////
@@ -63,9 +66,13 @@ class Map
         Weather();
 
         // Retira os sangues do chão depois de um determinado tempo
-        for (short i = 0; i < Lists.Temp_Map.Blood.Count; i++)
-            if (Lists.Temp_Map.Blood[i].Timer + 20000 < Environment.TickCount)
-                Lists.Temp_Map.Blood.RemoveAt(i);
+        if (Blood_Timer < Environment.TickCount)
+            for (short i = 0; i < Lists.Temp_Map.Blood.Count; i++)
+            {
+                Lists.Temp_Map.Blood[i].Opacity -= 1;
+                if (Lists.Temp_Map.Blood[i].Opacity == 0) Lists.Temp_Map.Blood.RemoveAt(i);
+                Blood_Timer = Environment.TickCount + 100;
+            }
     }
 
     private static void NextTile(Game.Directions Direction, ref short X, ref short Y)
@@ -695,7 +702,7 @@ partial class Graphics
         for (byte i = 0; i < Lists.Temp_Map.Blood.Count; i++)
         {
             Lists.Structures.Map_Blood Data = Lists.Temp_Map.Blood[i];
-            Render(Tex_Blood, Game.ConvertX(Data.X * Game.Grid), Game.ConvertY(Data.Y * Game.Grid), Data.Texture_Num * 32, 0, 32, 32);
+            Render(Tex_Blood, Game.ConvertX(Data.X * Game.Grid), Game.ConvertY(Data.Y * Game.Grid), Data.Texture_Num * 32, 0, 32, 32, CColor(255, 255, 255, Data.Opacity));
         }
     }
 }

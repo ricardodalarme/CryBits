@@ -240,15 +240,15 @@ class Lists
             public byte Texture_Num;
             public short X;
             public short Y;
-            public int Timer;
+            public byte Opacity;
 
             // Construtor
-            public Map_Blood(byte Texture_Num, short X, short Y, int Timer)
+            public Map_Blood(byte Texture_Num, short X, short Y, byte Opacity)
             {
                 this.Texture_Num = Texture_Num;
                 this.X = X;
                 this.Y = Y;
-                this.Timer = Timer;
+                this.Opacity = Opacity;
             }
         }
 
