@@ -144,8 +144,8 @@ partial class Graphics
     private static void Render(Texture Texture, int X, int Y, int Source_X, int Source_Y, int Source_Width, int Source_Height, object Color = null)
     {
         // Define as propriedades dos retângulos
-        Rectangle Source = new Rectangle(new Point(Source_X, Source_Y), new Size(Source_Width, Source_Height));
-        Rectangle Destiny = new Rectangle(new Point(X, Y), new Size(Source_Width, Source_Height));
+        Rectangle Source = new Rectangle(Source_X, Source_Y, Source_Width, Source_Height);
+        Rectangle Destiny = new Rectangle(X, Y, Source_Width, Source_Height);
 
         // Desenha a textura
         Render(Texture, Source, Destiny, Color);
@@ -252,7 +252,7 @@ partial class Graphics
         Interface(Tools.Order);
 
         // Desenha o chat 
-        if (Tools.CurrentWindow == Tools.Windows.Game) Game_Chat();
+        if (Tools.CurrentWindow == Tools.Windows.Game) Chat();
 
         // Exibe o que foi renderizado
         RenderWindow.Display();
@@ -294,7 +294,7 @@ partial class Graphics
         Map_Name();
 
         // Desenha os membros da party
-        Player_Party();
+        Party();
 
         // Desenha os dados do jogo
         if (Lists.Options.FPS) DrawText("FPS: " + Game.FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
@@ -365,18 +365,16 @@ partial class Graphics
         Render_Box(Tex_TextBox, 3, Tool.Position, new Size(Tool.Width, TSize(Tex_TextBox).Height));
 
         // Altera todos os caracteres do texto para um em especifico, se for necessário
-        if (Tool.Password && !string.IsNullOrEmpty(Text)) Text = new String('•', Text.Length);
+        if (Tool.Password && !string.IsNullOrEmpty(Text)) Text = new string('•', Text.Length);
 
         // Quebra o texto para que caiba no digitalizador, se for necessário
         Text = Tools.TextBreak(Text, Tool.Width - 10);
 
         // Desenha o texto do digitalizador
-        if (TextBoxes.Focused != null && (TextBoxes.Structure)TextBoxes.Focused.Data == Tool && TextBoxes.Signal)
-            DrawText(Text + "|", Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
-        else
-            DrawText(Text, Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
+        if (TextBoxes.Focused != null && (TextBoxes.Structure)TextBoxes.Focused.Data == Tool && TextBoxes.Signal) Text += "|";
+        DrawText(Text, Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
     }
-    #endregion
+
 
     private static void Interface_Specific(Tools.Structure Tool)
     {
@@ -389,15 +387,17 @@ partial class Graphics
             case "Hotbar": Hotbar((Panels.Structure)Tool); break;
             case "Menu_Character": Menu_Character((Panels.Structure)Tool); break;
             case "Menu_Inventory": Menu_Inventory((Panels.Structure)Tool); break;
-            case "Bars": Bars(); break;
-            case "Information": Informations(); break;
+            case "Bars": Bars((Panels.Structure)Tool); break;
+            case "Information": Informations((Panels.Structure)Tool); break;
             case "Party_Invitation": Party_Invitation((Panels.Structure)Tool); break;
             case "Trade_Invitation": Trade_Invitation((Panels.Structure)Tool); break;
             case "Trade": Trade((Panels.Structure)Tool); break;
             case "Shop": Shop((Panels.Structure)Tool); break;
         }
     }
+    #endregion
 
+    #region Menu
     private static void SelectCharacter_Class()
     {
         Point Text_Position = new Point(399, 425);
@@ -458,31 +458,123 @@ partial class Graphics
         // Descrição
         DrawText(Class.Description, 282, 526, SFML.Graphics.Color.White, 123);
     }
+    #endregion
+
+    private static void Bars(Panels.Structure Tool)
+    {
+        decimal HP_Percentage = Player.Me.Vital[(byte)Game.Vitals.HP] / (decimal)Player.Me.Max_Vital[(byte)Game.Vitals.HP];
+        decimal MP_Percentage = Player.Me.Vital[(byte)Game.Vitals.MP] / (decimal)Player.Me.Max_Vital[(byte)Game.Vitals.MP];
+        decimal Exp_Percentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
+
+        // Barras
+        Render(Tex_Bars_Panel, Tool.Position.X + 6, Tool.Position.Y + 6, 0, 0, (int)(Tex_Bars_Panel.Size.X * HP_Percentage), 17);
+        Render(Tex_Bars_Panel, Tool.Position.X + 6, Tool.Position.Y + 24, 0, 18, (int)(Tex_Bars_Panel.Size.X * MP_Percentage), 17);
+        Render(Tex_Bars_Panel, Tool.Position.X + 6, Tool.Position.Y + 42, 0, 36, (int)(Tex_Bars_Panel.Size.X * Exp_Percentage), 17);
+
+        // Textos 
+        DrawText("HP", Tool.Position.X + 10, Tool.Position.Y + 3, SFML.Graphics.Color.White);
+        DrawText("MP", Tool.Position.X + 10, Tool.Position.Y + 21, SFML.Graphics.Color.White);
+        DrawText("Exp", Tool.Position.X + 10, Tool.Position.Y + 39, SFML.Graphics.Color.White);
+
+        // Indicadores
+        DrawText(Player.Me.Vital[(byte)Game.Vitals.HP] + "/" + Player.Me.Max_Vital[(byte)Game.Vitals.HP], Tool.Position.X + 76, Tool.Position.Y + 7, SFML.Graphics.Color.White, Alignments.Center);
+        DrawText(Player.Me.Vital[(byte)Game.Vitals.MP] + "/" + Player.Me.Max_Vital[(byte)Game.Vitals.MP], Tool.Position.X + 76, Tool.Position.Y + 25, SFML.Graphics.Color.White, Alignments.Center);
+        DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, Tool.Position.X + 76, Tool.Position.Y + 43, SFML.Graphics.Color.White, Alignments.Center);
+    }
+
+    private static void Chat()
+    {
+        Panels.Structure Tool = Panels.Get("Chat");
+        Tool.Visible = TextBoxes.Focused != null && ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
+
+        // Renderiza as mensagens
+        if (Tool.Visible || (Loop.Chat_Timer >= Environment.TickCount && Lists.Options.Chat))
+            for (byte i = global::Chat.Lines_First; i <= global::Chat.Lines_Visible + global::Chat.Lines_First; i++)
+                if (global::Chat.Order.Count > i)
+                    DrawText(global::Chat.Order[i].Text, 16, 461 + 11 * (i - global::Chat.Lines_First), global::Chat.Order[i].Color);
+
+        // Dica de como abrir o chat
+        if (!Tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.Get("Chat").Position.X + 5, TextBoxes.Get("Chat").Position.Y + 3, SFML.Graphics.Color.White);
+    }
+
+    private static void Informations(Panels.Structure Tool)
+    {
+        short Item_Num = Game.Infomation_Index;
+        SFML.Graphics.Color Text_Color;
+        List<string> Data = new List<string>();
+
+        // Apenas se necessário
+        if (Item_Num <= 0) return;
+
+        // Define a cor de acordo com a raridade
+        switch ((Game.Rarity)Lists.Item[Item_Num].Rarity)
+        {
+            case Game.Rarity.Uncommon: Text_Color = CColor(204, 255, 153); break; // Verde
+            case Game.Rarity.Rare: Text_Color = CColor(102, 153, 255); break; // Azul
+            case Game.Rarity.Epic: Text_Color = CColor(153, 0, 204); break; // Roxo
+            case Game.Rarity.Legendary: Text_Color = CColor(255, 255, 77); break; // Amarelo
+            default: Text_Color = CColor(255, 255, 255); break; // Branco
+        }
+
+        // Nome, descrição e icone do item
+        DrawText(Lists.Item[Item_Num].Name, Tool.Position.X + 41, Tool.Position.Y + 6, Text_Color,Alignments.Center);
+        DrawText(Lists.Item[Item_Num].Description, Tool.Position.X + 82, Tool.Position.Y + 20, SFML.Graphics.Color.White, 86);
+        Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Tool.Position.X + 9, Tool.Position.Y + 21, 64, 64));
+
+        // Informações da Loja
+        if (Panels.Get("Shop").Visible)
+            if (Panels.Shop_Slot >= 0)
+                Data.Add("Price: " + Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Slot].Price);
+            else if (Panels.Inventory_Slot > 0)
+                if (Game.Find_Shop_Bought(Item_Num) >= 0)
+                    Data.Add("Sale price: " + Lists.Shop[Game.Shop_Open].Bought[Game.Find_Shop_Bought(Item_Num)].Price);
+
+        // Informações específicas dos itens
+        switch ((Game.Items)Lists.Item[Item_Num].Type)
+        {
+            // Poção
+            case Game.Items.Potion:
+                for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+                    if (Lists.Item[Item_Num].Potion_Vital[n] != 0)
+                        Data.Add(((Game.Vitals)n).ToString() + ": " + Lists.Item[Item_Num].Potion_Vital[n]);
+
+                if (Lists.Item[Item_Num].Potion_Experience != 0) Data.Add("Experience: " + Lists.Item[Item_Num].Potion_Experience);
+                break;
+            // Equipamentos
+            case Game.Items.Equipment:
+                if (Lists.Item[Item_Num].Equip_Type == (byte)Game.Equipments.Weapon)
+                    if (Lists.Item[Item_Num].Weapon_Damage != 0)
+                        Data.Add("Damage: " + Lists.Item[Item_Num].Weapon_Damage);
+
+                for (byte n = 0; n < (byte)Game.Attributes.Count; n++)
+                    if (Lists.Item[Item_Num].Equip_Attribute[n] != 0)
+                        Data.Add(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n]);
+                break;
+        }
+
+        // Desenha todos os dados necessários
+        Point[] Positions = { new Point(Tool.Position.X + 10, Tool.Position.Y + 90), new Point(Tool.Position.X + 10, Tool.Position.Y + 102), new Point(Tool.Position.X + 10, Tool.Position.Y + 114), new Point(Tool.Position.X + 96, Tool.Position.Y + 90), new Point(Tool.Position.X + 96, Tool.Position.Y + 102), new Point(Tool.Position.X + 96, Tool.Position.Y + 114), new Point(Tool.Position.X + 96, Tool.Position.Y + 126) };
+        for (byte i = 0; i < Data.Count; i++) DrawText(Data[i], Positions[i].X, Positions[i].Y, SFML.Graphics.Color.White);
+    }
 
     private static void Hotbar(Panels.Structure Tool)
     {
         string Indicator = string.Empty;
 
-        // Desenha os itens da hotbar
+        // Desenha os objetos da hotbar
         for (byte i = 1; i <= Game.Max_Hotbar; i++)
         {
             byte Slot = Player.Hotbar[i].Slot;
             if (Slot > 0)
-            {
-                // Itens
-                if (Player.Hotbar[i].Type == (byte)Game.Hotbar.Item)
+                switch ((Game.Hotbar)Player.Hotbar[i].Type)
                 {
-                    // Desenha as visualizações do item
-                    Point Position = new Point(Tool.Position.X + 8 + (i - 1) * 36, Tool.Position.Y + 6);
-                    Render(Tex_Item[Lists.Item[Player.Inventory[Slot].Item_Num].Texture], Position);
+                    // Itens
+                    case Game.Hotbar.Item: Item(Player.Inventory[Slot].Item_Num, 1, Tool.Position + new Size(8, 6), i, 10); break;
                 }
-            }
 
-            // Números da hotbar
+            // Desenha os números de cada slot
             if (i < 10) Indicator = i.ToString();
             else if (i == 10) Indicator = "0";
-
-            // Desenha os números
             DrawText(Indicator, Tool.Position.X + 16 + 36 * (i - 1), Tool.Position.Y + 22, SFML.Graphics.Color.White);
         }
 
@@ -521,55 +613,74 @@ partial class Graphics
 
         // Desenha todos os itens do inventário
         for (byte i = 1; i <= Game.Max_Inventory; i++)
-            if (Player.Inventory[i].Item_Num > 0)
-            {
-                byte Line = (byte)((i - 1) / NumColumns);
-                int Column = i - (Line * 5) - 1;
-                Point Position = new Point(Tool.Position.X + 7 + Column * 36, Tool.Position.Y + 30 + Line * 36);
-
-                // Desenha o item
-                Item(Player.Inventory[i].Item_Num, Player.Inventory[i].Amount, Position);
-            }
+            Item(Player.Inventory[i].Item_Num, Player.Inventory[i].Amount, Tool.Position + new Size(7, 30), i, NumColumns);
 
         // Movendo item
         if (Player.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Inventory[Player.Inventory_Change].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
     }
 
-    private static void Bars()
+    private static void Party_Invitation(Panels.Structure Tool)
     {
-        decimal HP_Percentage = Player.Me.Vital[(byte)Game.Vitals.HP] / (decimal)Player.Me.Max_Vital[(byte)Game.Vitals.HP];
-        decimal MP_Percentage = Player.Me.Vital[(byte)Game.Vitals.MP] / (decimal)Player.Me.Max_Vital[(byte)Game.Vitals.MP];
-        decimal Exp_Percentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
-
-        // Barras
-        Render(Tex_Bars_Panel, 14, 14, 0, 0, (int)(Tex_Bars_Panel.Size.X * HP_Percentage), 17);
-        Render(Tex_Bars_Panel, 14, 32, 0, 18, (int)(Tex_Bars_Panel.Size.X * MP_Percentage), 17);
-        Render(Tex_Bars_Panel, 14, 50, 0, 36, (int)(Tex_Bars_Panel.Size.X * Exp_Percentage), 17);
-
-        // Textos 
-        DrawText("HP", 18, 11, SFML.Graphics.Color.White);
-        DrawText("MP", 18, 29, SFML.Graphics.Color.White);
-        DrawText("Exp", 18, 47, SFML.Graphics.Color.White);
-
-        // Indicadores
-        DrawText(Player.Me.Vital[(byte)Game.Vitals.HP] + "/" + Player.Me.Max_Vital[(byte)Game.Vitals.HP], 70, 15, SFML.Graphics.Color.White);
-        DrawText(Player.Me.Vital[(byte)Game.Vitals.MP] + "/" + Player.Me.Max_Vital[(byte)Game.Vitals.MP], 70, 33, SFML.Graphics.Color.White);
-        DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, 70, 51, SFML.Graphics.Color.White);
+        DrawText(Game.Party_Invitation + " has invite you to a party. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
     }
 
-    private static void Game_Chat()
+    private static void Party()
     {
-        Panels.Structure Tool = Panels.Get("Chat");
-        Tool.Visible = TextBoxes.Focused != null && ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
+        for (byte i = 0; i < Player.Me.Party.Length; i++)
+        {
+            Lists.Structures.Player Member = Lists.Player[Player.Me.Party[i]];
 
-        // Renderiza as mensagens
-        if (Tool.Visible || (Loop.Chat_Timer >= Environment.TickCount && Lists.Options.Chat))
-            for (byte i = Chat.Lines_First; i <= Chat.Lines_Visible + Chat.Lines_First; i++)
-                if (Chat.Order.Count > i)
-                    DrawText(Chat.Order[i].Text, 16, 461 + 11 * (i - Chat.Lines_First), Chat.Order[i].Color);
+            // Barras do membro
+            Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 0, 82, 8); // HP Cinza
+            Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 0, 82, 8); // MP Cinza
+            if (Member.Vital[(byte)Game.Vitals.HP] > 0) Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 8, (Member.Vital[(byte)Game.Vitals.HP] * 82) / Member.Max_Vital[(byte)Game.Vitals.HP], 8); // HP 
+            if (Member.Vital[(byte)Game.Vitals.MP] > 0) Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 16, (Member.Vital[(byte)Game.Vitals.MP] * 82) / Member.Max_Vital[(byte)Game.Vitals.MP], 8); // MP 
 
-        // Dica de como abrir o chat
-        if (!Tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.Get("Chat").Position.X + 5, TextBoxes.Get("Chat").Position.Y + 3, SFML.Graphics.Color.White);
+            // Nome do membro
+            DrawText(Lists.Player[Player.Me.Party[i]].Name, 10, 79 + (27 * i), SFML.Graphics.Color.White);
+        }
+    }
+
+    private static void Trade_Invitation(Panels.Structure Tool)
+    {
+        DrawText(Game.Trade_Invitation + " has invite you to a trade. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+    }
+
+    private static void Trade(Panels.Structure Tool)
+    {
+        // Desenha os itens das ofertas
+        for (byte i = 1; i <= Game.Max_Inventory; i++)
+        {
+            Item(Player.Trade_Offer[i].Item_Num, Player.Trade_Offer[i].Amount, Tool.Position + new Size(7, 50), i, 5);
+            Item(Player.Trade_Their_Offer[i].Item_Num, Player.Trade_Their_Offer[i].Amount, Tool.Position + new Size(192, 50), i, 5);
+        }
+    }
+
+    private static void Shop(Panels.Structure Tool)
+    {
+        // Dados da loja
+        string Name = Lists.Shop[Game.Shop_Open].Name;
+        DrawText(Name, Tool.Position.X + 131, Tool.Position.Y + 28, SFML.Graphics.Color.White, Alignments.Center);
+        DrawText("Currency: " + Lists.Item[Lists.Shop[Game.Shop_Open].Currency].Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
+
+        // Desenha os itens
+        for (byte i = 0; i < Lists.Shop[Game.Shop_Open].Sold.Length; i++)
+            Item(Lists.Shop[Game.Shop_Open].Sold[i].Item_Num, Lists.Shop[Game.Shop_Open].Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
+    }
+
+    private static void Item(short Item_Num, short Amount, Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)
+    {
+        // Somente se necessário
+        if (Item_Num <= 0) return;
+
+        // Posição do item baseado no slot
+        int Line = (Slot - 1) / Columns;
+        int Column = Slot - (Line * 5) - 1;
+        Point Position = Start + new Size(Column * (Grid + Gap), Line * (Grid + Gap));
+
+        // Desenha o item e sua quantidade
+        Render(Tex_Item[Lists.Item[Item_Num].Texture], Position);
+        if (Amount > 1) DrawText(Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
     }
 
     private static void Character(short Texture_Num, Point Position, Game.Directions Direction, byte Column, bool Hurt = false)
@@ -601,139 +712,5 @@ partial class Graphics
         // Desenha o personagem e sua sombra
         Render(Tex_Shadow, Rec_Destiny.Location.X, Rec_Destiny.Location.Y + Size.Height / Game.Animation_Amount - TSize(Tex_Shadow).Height + 5, 0, 0, Size.Width / Game.Animation_Amount, TSize(Tex_Shadow).Height);
         Render(Tex_Character[Texture_Num], Rec_Source, Rec_Destiny, Color);
-    }
-
-    private static void Party_Invitation(Panels.Structure Tool)
-    {
-        DrawText(Game.Party_Invitation + " has invite you to a party. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
-    }
-
-    private static void Trade_Invitation(Panels.Structure Tool)
-    {
-        DrawText(Game.Trade_Invitation + " has invite you to a trade. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
-    }
-
-    private static void Trade(Panels.Structure Tool)
-    {
-        byte NumColumns = 5, Line, Column;
-
-        for (byte i = 1; i <= Game.Max_Inventory; i++)
-        {
-            // Posição do item
-            Line = (byte)((i - 1) / NumColumns);
-            Column = (byte)(i - (Line * 5) - 1);
-
-            // Desenha os itens das ofertas
-            Item(Player.Trade_Offer[i].Item_Num, Player.Trade_Offer[i].Amount, new Point(Tool.Position.X + 7 + Column * 36, Tool.Position.Y + 50 + Line * 36));
-            Item(Player.Trade_Their_Offer[i].Item_Num, Player.Trade_Their_Offer[i].Amount, new Point(Tool.Position.X + 192 + Column * 36, Tool.Position.Y + 50 + Line * 36));
-        }
-    }
-
-    private static void Shop(Panels.Structure Tool)
-    {
-        byte NumColumns = 7, Line, Column;
-
-        // Dados da loja
-        string Name = Lists.Shop[Game.Shop_Open].Name;
-        DrawText(Name, Tool.Position.X + 131, Tool.Position.Y + 28, SFML.Graphics.Color.White, Alignments.Center);
-        DrawText("Currency: " + Lists.Item[Lists.Shop[Game.Shop_Open].Currency].Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
-
-        // Desenha os itens
-        for (byte i = 0; i < Lists.Shop[Game.Shop_Open].Sold.Length; i++)
-        {
-            Line = (byte)(i / NumColumns);
-            Column = (byte)(i - (Line * NumColumns));
-            Point Position = new Point(Tool.Position.X + 7 + Column * 36, Tool.Position.Y + 50 + Line * 36);
-            Item(Lists.Shop[Game.Shop_Open].Sold[i].Item_Num, Lists.Shop[Game.Shop_Open].Sold[i].Amount, Position);
-        }
-    }
-
-    private static void Player_Party()
-    {
-        for (byte i = 0; i < Player.Me.Party.Length; i++)
-        {
-            Lists.Structures.Player Member = Lists.Player[Player.Me.Party[i]];
-
-            // Barras do membro
-            Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 0, 82, 8); // HP Cinza
-            Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 0, 82, 8); // MP Cinza
-            if (Member.Vital[(byte)Game.Vitals.HP] > 0) Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 8, (Member.Vital[(byte)Game.Vitals.HP] * 82) / Member.Max_Vital[(byte)Game.Vitals.HP], 8); // HP 
-            if (Member.Vital[(byte)Game.Vitals.MP] > 0) Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 16, (Member.Vital[(byte)Game.Vitals.MP] * 82) / Member.Max_Vital[(byte)Game.Vitals.MP], 8); // MP 
-
-            // Nome do membro
-            DrawText(Lists.Player[Player.Me.Party[i]].Name, 10, 79 + (27 * i), SFML.Graphics.Color.White);
-        }
-    }
-
-    private static void Item(short Item_Num, short Amount, Point Position)
-    {
-        // Desenha o item
-        if (Item_Num > 0)
-        {
-            Render(Tex_Item[Lists.Item[Item_Num].Texture], Position);
-            if (Amount > 1) DrawText(Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
-        }
-    }
-
-    private static void Informations()
-    {
-        short Item_Num = Game.Infomation_Index;
-        SFML.Graphics.Color Text_Color;
-
-        // Apenas se necessário
-        if (Item_Num <= 0) return;
-
-        // Define a cor de acordo com a raridade
-        switch ((Game.Rarity)Lists.Item[Item_Num].Rarity)
-        {
-            case Game.Rarity.Uncommon: Text_Color = CColor(204, 255, 153); break; // Verde
-            case Game.Rarity.Rare: Text_Color = CColor(102, 153, 255); break; // Azul
-            case Game.Rarity.Epic: Text_Color = CColor(153, 0, 204); break; // Roxo
-            case Game.Rarity.Legendary: Text_Color = CColor(255, 255, 77); break; // Amarelo
-            default: Text_Color = CColor(255, 255, 255); break; // Branco
-        }
-
-        // Informações
-        Point Position = Panels.Get("Information").Position;
-        DrawText(Lists.Item[Item_Num].Name, Position.X + 9, Position.Y + 6, Text_Color);
-        Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Position.X + 9, Position.Y + 21, 64, 64));
-
-        // Descrição
-        DrawText(Lists.Item[Item_Num].Description, Position.X + 82, Position.Y + 20, SFML.Graphics.Color.White, 86);
-
-        // Posições
-        Point[] Positions = { new Point(Position.X + 10, Position.Y + 90), new Point(Position.X + 10, Position.Y + 102), new Point(Position.X + 10, Position.Y + 114), new Point(Position.X + 96, Position.Y + 90), new Point(Position.X + 96, Position.Y + 102), new Point(Position.X + 96, Position.Y + 114), new Point(Position.X + 96, Position.Y + 126) };
-        byte p = 0; // iterador
-
-        // Loja
-        if (Panels.Get("Shop").Visible)
-            if (Panels.Shop_Slot > 0)
-                DrawText("Price: " + Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Slot].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-            else if (Panels.Inventory_Slot > 0)
-                if (Game.Find_Shop_Bought(Item_Num) >= 0)
-                    DrawText("Sale price: " + Lists.Shop[Game.Shop_Open].Bought[Game.Find_Shop_Bought(Item_Num)].Price, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-
-        // Informações específicas 
-        switch ((Game.Items)Lists.Item[Item_Num].Type)
-        {
-            // Poção
-            case Game.Items.Potion:
-                for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
-                    if (Lists.Item[Item_Num].Potion_Vital[n] != 0)
-                        DrawText(((Game.Vitals)n).ToString() + ": " + Lists.Item[Item_Num].Potion_Vital[n], Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-
-                if (Lists.Item[Item_Num].Potion_Experience != 0) DrawText("Experience: " + Lists.Item[Item_Num].Potion_Experience, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-                break;
-            // Equipamentos
-            case Game.Items.Equipment:
-                if (Lists.Item[Item_Num].Equip_Type == (byte)Game.Equipments.Weapon)
-                    if (Lists.Item[Item_Num].Weapon_Damage != 0)
-                        DrawText("Damage: " + Lists.Item[Item_Num].Weapon_Damage, Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-
-                for (byte n = 0; n < (byte)Game.Attributes.Count; n++)
-                    if (Lists.Item[Item_Num].Equip_Attribute[n] != 0)
-                        DrawText(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n], Positions[p].X, Positions[p++].Y, SFML.Graphics.Color.White);
-                break;
-        }
     }
 }

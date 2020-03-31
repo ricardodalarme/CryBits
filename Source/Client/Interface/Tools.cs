@@ -49,14 +49,6 @@ class Tools
         TextBox,
     }
 
-    // Tipos de informações do painel
-    public enum Informations
-    {
-        Hotbar,
-        Inventory,
-        Shop
-    }
-
     public static bool IsAbove(Rectangle Rectangle)
     {
         // Verficia se o mouse está sobre o objeto
@@ -136,14 +128,6 @@ class Tools
         return (byte)(Slot.Y * Columns + Slot.X + 1);
     }
 
-    public static Point Slot_Position(Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)
-    {
-        int Size = Grid + Gap;
-        byte Line = (byte)(Slot / Columns);
-        byte Column = (byte)(Slot - (Line * Columns));
-        return new Point(Start.X + Column * Size, Start.Y + Line * Size);
-    }
-
     public static void CheckInformations()
     {
         Point Position = new Point();
@@ -165,7 +149,7 @@ class Tools
             Position = Panels.Get("Menu_Character").Position + new Size(-186, 5);
             Data_Index = Player.Me.Equipment[Panels.Equipment_Slot];
         }
-        else if (Panels.Shop_Slot >= 0)
+        else if (Panels.Shop_Slot >= 0 && Panels.Shop_Slot < Lists.Shop[Game.Shop_Open].Sold.Length)
         {
             Position = new Point(Panels.Get("Shop").Position.X - 186, Panels.Get("Shop").Position.Y + 5);
             Data_Index = Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Slot].Item_Num;
