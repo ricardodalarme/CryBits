@@ -124,7 +124,7 @@ class Player
         Send.Shops(Index);
 
         // Transporta o jogador para a sua determinada Posição
-        Warp(Index, Character(Index).Map, Character(Index).X, Character(Index).Y);
+        Warp(Index, Character(Index).Map, Character(Index).X, Character(Index).Y, true);
 
         // Entra no jogo
         Send.JoinGame(Index);
@@ -229,7 +229,7 @@ class Player
         // Cancela a troca ou a loja
         if (Lists.Temp_Player[Index].Trade != 0) Trade_Leave(Index);
         if (Lists.Temp_Player[Index].Shop != 0) Shop_Leave(Index);
-         
+
         // Próximo azulejo
         Map.NextTile(Character(Index).Direction, ref Next_X, ref Next_Y);
 
@@ -277,7 +277,7 @@ class Player
             Send.Player_Position(Index);
     }
 
-    public static void Warp(byte Index, short Map_Num, byte x, byte y)
+    public static void Warp(byte Index, short Map_Num, byte x, byte y, bool NeedUpdate = false)
     {
         short Map_Old = Character(Index).Map;
 
@@ -297,23 +297,23 @@ class Player
         Character(Index).X = x;
         Character(Index).Y = y;
 
-        // Envia os dados dos NPCs
-        Send.Map_NPCs(Index, Map_Num);
-
-        // Envia os dados para os outros jogadores
-        if (Map_Old != Map_Num)
+        // Altera o mapa
+        if (Map_Old != Map_Num || NeedUpdate)
+        {
+            // Sai do mapa antigo
             Send.Player_LeaveMap(Index, Map_Old);
+
+            // Inviabiliza o jogador de algumas ações até que ele receba os dados necessários
+            Lists.Temp_Player[Index].GettingMap = true;
+
+            // Envia dados necessários do mapa
+            Send.Map_Revision(Index, Map_Num);
+            Send.Map_Items(Index, Character(Index).Map);
+            Send.Map_NPCs(Index, Map_Num);
+        }
+        // Apenas atualiza a posição do jogador
         else
             Send.Player_Position(Index);
-
-        // Atualiza os valores
-        Lists.Temp_Player[Index].GettingMap = true;
-
-        // Verifica se será necessário enviar os dados do mapa para o jogador
-        Send.Map_Revision(Index, Map_Num);
-
-        // Envia dados temporários do mapa
-        Send.Map_Items(Index, Character(Index).Map);
     }
 
     public static void Attack(byte Index)
