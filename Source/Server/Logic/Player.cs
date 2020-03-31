@@ -121,7 +121,6 @@ class Player
         Send.Player_Hotbar(Index);
         Send.Items(Index);
         Send.NPCs(Index);
-        Send.Map_Items(Index, Character(Index).Map);
         Send.Shops(Index);
 
         // Transporta o jogador para a sua determinada Posição
@@ -312,6 +311,9 @@ class Player
 
         // Verifica se será necessário enviar os dados do mapa para o jogador
         Send.Map_Revision(Index, Map_Num);
+
+        // Envia dados temporários do mapa
+        Send.Map_Items(Index, Character(Index).Map);
     }
 
     public static void Attack(byte Index)
