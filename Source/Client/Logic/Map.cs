@@ -575,8 +575,8 @@ partial class Graphics
         SFML.Graphics.Color Color = CColor(TempColor.R, TempColor.G, TempColor.B);
 
         // Desenha todas as camadas dos azulejos
-        for (short x = (short)Game.Tile_Sight.X; x <= Game.Tile_Sight.Width; x++)
-            for (short y = (short)Game.Tile_Sight.Y; y <= Game.Tile_Sight.Height; y++)
+        for (short x = (short)Game.Sight.X; x <= Game.Sight.Width; x++)
+            for (short y = (short)Game.Sight.Y; y <= Game.Sight.Height; y++)
                 if (!Map.OutOfLimit(x, y))
                     for (byte q = 0; q <= Lists.Map.Tile[x, y].Data.GetUpperBound(1); q++)
                         if (Lists.Map.Tile[x, y].Data[c, q].Tile > 0)
