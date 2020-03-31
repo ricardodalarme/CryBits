@@ -239,10 +239,10 @@ class Player
             if (Link > 0)
                 switch (Character(Index).Direction)
                 {
-                    case Game.Directions.Up: Warp(Index, Link, x, Lists.Map[Map_Num].Height); return;
+                    case Game.Directions.Up: Warp(Index, Link, x, Lists.Map[Link].Height); return;
                     case Game.Directions.Down: Warp(Index, Link, x, 0); return;
                     case Game.Directions.Right: Warp(Index, Link, 0, y); return;
-                    case Game.Directions.Left: Warp(Index, Link, Lists.Map[Map_Num].Width, y); return;
+                    case Game.Directions.Left: Warp(Index, Link, Lists.Map[Link].Width, y); return;
                 }
             else
             {
