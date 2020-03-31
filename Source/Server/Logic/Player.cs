@@ -226,9 +226,11 @@ class Player
         // Previne erros
         if (Movement < 1 || Movement > 2) return;
         if (Lists.Temp_Player[Index].GettingMap) return;
-        if (Lists.Temp_Player[Index].Trade != 0) return;
-        if (Lists.Temp_Player[Index].Shop != 0) return;
 
+        // Cancela a troca ou a loja
+        if (Lists.Temp_Player[Index].Trade != 0) Trade_Leave(Index);
+        if (Lists.Temp_Player[Index].Shop != 0) Shop_Leave(Index);
+         
         // Próximo azulejo
         Map.NextTile(Character(Index).Direction, ref Next_X, ref Next_Y);
 
@@ -280,6 +282,10 @@ class Player
     {
         short Map_Old = Character(Index).Map;
 
+        // Cancela a troca ou a loja
+        if (Lists.Temp_Player[Index].Trade != 0) Trade_Leave(Index);
+        if (Lists.Temp_Player[Index].Shop != 0) Shop_Leave(Index);
+
         // Evita que o jogador seja transportado para fora do limite
         if (Map_Num < 0 || Map_Num > Lists.Map.GetUpperBound(0)) return;
         if (x > Lists.Map[Map_Num].Width) x = Lists.Map[Map_Num].Width;
@@ -318,6 +324,7 @@ class Player
 
         // Apenas se necessário
         if (Lists.Temp_Player[Index].Trade != 0) return;
+        if (Lists.Temp_Player[Index].Shop != 0) return;
         if (Environment.TickCount < Lists.Temp_Player[Index].Attack_Timer + 750) return;
         if (Map.Tile_Blocked(Character(Index).Map, Character(Index).X, Character(Index).Y, Character(Index).Direction, false)) goto @continue;
 
@@ -781,5 +788,12 @@ class Player
         // Abre a loja
         Lists.Temp_Player[Index].Shop = Shop_Num;
         Send.Shop_Open(Index, Shop_Num);
+    }
+
+    public static void Shop_Leave(byte Index)
+    {
+        // Fecha a loja
+        Lists.Temp_Player[Index].Shop = 0;
+        Send.Shop_Open(Index, 0);
     }
 }

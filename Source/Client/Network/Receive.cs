@@ -547,6 +547,6 @@ partial class Receive
     {
         // Abre a loja
         Game.Shop_Open = Data.ReadInt16();
-        Panels.Get("Shop").Visible = true;
+        Panels.Get("Shop").Visible = Game.Shop_Open != 0;
     }
 }

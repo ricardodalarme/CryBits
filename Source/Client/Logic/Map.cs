@@ -4,8 +4,8 @@ using System.Drawing;
 class Map
 {
     // Limitações dos mapas
-    public const byte Min_Width = 24;
-    public const byte Min_Height = 18;
+    public const byte Min_Width = 25;
+    public const byte Min_Height = 19;
 
     // Fumaças
     public static int Fog_X;

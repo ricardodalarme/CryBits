@@ -46,7 +46,7 @@ class Player
     }
 
     // Não mover se já estiver tentando movimentar-se
-    private static bool CanMove() => Lists.Player[MyIndex].Movement == Game.Movements.Stopped &&  !Panels.Get("Trade").Visible && !Panels.Get("Shop").Visible;
+    private static bool CanMove() => Lists.Player[MyIndex].Movement == Game.Movements.Stopped;
 
     private static void CheckMovement()
     {
@@ -158,6 +158,7 @@ class Player
         if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Graphics.RenderWindow.HasFocus()) return;
         if (Me.Attack_Timer > 0) return;
         if (Panels.Get("Trade").Visible) return;
+        if (Panels.Get("Shop").Visible) return;
 
         // Envia os dados para o servidor
         Me.Attack_Timer = Environment.TickCount;
