@@ -4,7 +4,7 @@
 
 CryBits is a completely open-source 2D ORPG game engine written in C#.
 
-![FreeMMORPGMaker](https://camo.githubusercontent.com/d1b480e947fc554688fcefd0226fcb4a9a6f9b69/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f486f6d652d467265652532304d4d4f5250472532304d616b65722d696e666f726d6174696f6e616c) [![Community](https://camo.githubusercontent.com/5801d7158bceb0aad21b8a8065e3159cf598c2ec/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f436f6d6d756e6974792d417363656e73696f6e25323047616d652532304465762d6f72616e6765)](https://www.ascensiongamedev.com/topic/2588-c-crybits-v071/)  [![GitHub version](https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=0.7.1&x2=0)](https://github.com/ricardodalarme/CryBits/releases/tag/0.7.1)
+[![GitHub version](https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=6&v=0.7.1&x2=0)](https://github.com/ricardodalarme/CryBits/releases/tag/0.7.1) ![FreeMMORPGMaker](https://camo.githubusercontent.com/d1b480e947fc554688fcefd0226fcb4a9a6f9b69/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f486f6d652d467265652532304d4d4f5250472532304d616b65722d696e666f726d6174696f6e616c) [![Community](https://camo.githubusercontent.com/5801d7158bceb0aad21b8a8065e3159cf598c2ec/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f436f6d6d756e6974792d417363656e73696f6e25323047616d652532304465762d6f72616e6765)](https://www.ascensiongamedev.com/topic/2588-c-crybits-v071/)  
 
 ## Screenshots
 <p align="center">
