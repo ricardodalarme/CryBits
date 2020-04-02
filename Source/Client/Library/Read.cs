@@ -9,6 +9,7 @@ class Read
         // Carrega todos os dados
         Tools();
         Options();
+        Sprites();
     }
 
     private static void Options()
@@ -134,5 +135,29 @@ class Read
         // Redimensiona as partículas do clima
         global::Map.Weather_Update();
         global::Map.Autotile.Update();
+    }
+
+    public static void Sprites()
+    {
+        // Lê os dados
+        Lists.Sprite = new Lists.Structures.Sprite[Graphics.Tex_Character.Length];
+        for (byte i = 1; i < Lists.Sprite.Length; i++) Sprite(i);
+    }
+
+    private static void Sprite(byte Index)
+    {
+        FileInfo File = new FileInfo(Directories.Sprites.FullName + Index + Directories.Format);
+
+        // Evita erros
+        if (!File.Exists)
+        {
+            Clear.Sprite(Index);
+            return;
+        }
+
+        // Lê os dados
+        FileStream Stream = File.OpenRead();
+        Lists.Sprite[Index] = (Lists.Structures.Sprite)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
     }
 }

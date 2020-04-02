@@ -33,6 +33,7 @@
             this.butDirectory_Client = new System.Windows.Forms.Button();
             this.Directory_Client = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.butShops = new System.Windows.Forms.Button();
             this.butItems = new System.Windows.Forms.Button();
             this.butNPCs = new System.Windows.Forms.Button();
             this.butTiles = new System.Windows.Forms.Button();
@@ -41,7 +42,7 @@
             this.butMaps = new System.Windows.Forms.Button();
             this.butClasses = new System.Windows.Forms.Button();
             this.Directory_Server = new System.Windows.Forms.FolderBrowserDialog();
-            this.butShops = new System.Windows.Forms.Button();
+            this.butSprites = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -92,6 +93,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.butSprites);
             this.groupBox2.Controls.Add(this.butShops);
             this.groupBox2.Controls.Add(this.butItems);
             this.groupBox2.Controls.Add(this.butNPCs);
@@ -106,6 +108,16 @@
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Editors";
+            // 
+            // butShops
+            // 
+            this.butShops.Location = new System.Drawing.Point(106, 83);
+            this.butShops.Name = "butShops";
+            this.butShops.Size = new System.Drawing.Size(94, 26);
+            this.butShops.TabIndex = 13;
+            this.butShops.Text = "Shops";
+            this.butShops.UseVisualStyleBackColor = true;
+            this.butShops.Click += new System.EventHandler(this.butShops_Click);
             // 
             // butItems
             // 
@@ -182,15 +194,15 @@
             this.Directory_Server.Description = "Select the server directory";
             this.Directory_Server.Tag = "";
             // 
-            // butShops
+            // butSprites
             // 
-            this.butShops.Location = new System.Drawing.Point(106, 83);
-            this.butShops.Name = "butShops";
-            this.butShops.Size = new System.Drawing.Size(94, 26);
-            this.butShops.TabIndex = 13;
-            this.butShops.Text = "Shops";
-            this.butShops.UseVisualStyleBackColor = true;
-            this.butShops.Click += new System.EventHandler(this.butShops_Click);
+            this.butSprites.Location = new System.Drawing.Point(206, 83);
+            this.butSprites.Name = "butSprites";
+            this.butSprites.Size = new System.Drawing.Size(94, 26);
+            this.butSprites.TabIndex = 14;
+            this.butSprites.Text = "Sprites";
+            this.butSprites.UseVisualStyleBackColor = true;
+            this.butSprites.Click += new System.EventHandler(this.butSprites_Click);
             // 
             // Selection
             // 
@@ -230,4 +242,5 @@
     private System.Windows.Forms.Button butNPCs;
     private System.Windows.Forms.Button butItems;
     private System.Windows.Forms.Button butShops;
+    private System.Windows.Forms.Button butSprites;
 }

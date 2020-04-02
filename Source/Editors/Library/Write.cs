@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
 class Write
@@ -111,5 +112,19 @@ class Write
         Data.Write((byte)Tool.Window);
         Data.Write(Tool.Text);
         Data.Write(Tool.Checked);
+    }
+
+    public static void Sprites()
+    {
+        // Escreve os dados
+        for (short i = 1; i < Lists.Sprite.Length; i++) Sprite(i);
+    }
+
+    public static void Sprite(short Index)
+    {
+        // Escreve os dados
+        FileStream Stream = new FileInfo(Directories.Sprites.FullName + Index + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Lists.Sprite[Index]);
+        Stream.Close();
     }
 }

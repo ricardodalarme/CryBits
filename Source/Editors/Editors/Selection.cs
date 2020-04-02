@@ -96,4 +96,9 @@ public partial class Selection : Form
     {
         Editor_Shops.Request();
     }
+
+    private void butSprites_Click(object sender, EventArgs e)
+    {
+        Editor_Sprites.Request();
+    }
 }

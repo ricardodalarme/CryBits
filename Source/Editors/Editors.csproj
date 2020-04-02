@@ -112,6 +112,12 @@
     <Compile Include="Editors\Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\Sprites.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\Sprites.Designer.cs">
+      <DependentUpon>Sprites.cs</DependentUpon>
+    </Compile>
     <Compile Include="Library\Directories.cs" />
     <Compile Include="Library\Write.cs" />
     <Compile Include="Library\Clear.cs" />
@@ -195,6 +201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Sprites.resx">
+      <DependentUpon>Sprites.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\Tiles.resx">
       <DependentUpon>Tiles.cs</DependentUpon>

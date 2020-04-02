@@ -37,6 +37,7 @@ class Directories
     public static FileInfo Tex_Blood = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Blood");
     public static FileInfo Tex_Party_Bars = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Party_Bars");
     public static FileInfo Tex_Intro = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Intro");
+    public static DirectoryInfo Sprites = new DirectoryInfo(Application.StartupPath + @"\Data\Sprites\");
 
     public static void Create()
     {
@@ -69,5 +70,6 @@ class Directories
         Tex_Equipments.Directory.Create();
         Tex_Blood.Directory.Create();
         Tex_Party_Bars.Directory.Create();
+        Sprites.Create();
     }
 }

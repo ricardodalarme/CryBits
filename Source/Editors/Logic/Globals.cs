@@ -30,6 +30,9 @@ class Globals
     public const byte Snow_Movement = 10;
     public static byte Lightning;
 
+    // Sprite
+    public static sbyte Sprite_Frame;
+
     // Números aleAmountatórios
     public static Random GameRandom = new Random();
 
@@ -162,6 +165,23 @@ class Globals
         MoveRandomly,
         TurnRandomly,
         StandStill
+    }
+
+    public enum Alignments
+    {
+        Horizontal,
+        Vertical,
+        Count
+    }
+
+    public enum Movements
+    {
+        Stopped,
+        Walking,
+        Running,
+        Attacking_1,
+        Attacking_2,
+        Count
     }
 
     public static void Weather_Update()
