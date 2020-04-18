@@ -15,7 +15,6 @@ class Lists
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
     public static Structures.Shop[] Shop;
-    public static Structures.Sprite[] Sprite;
 
     // Estrutura dos itens em gerais
     public class Structures
@@ -266,30 +265,6 @@ class Lists
             public short Item_Num;
             public short Amount;
             public short Price;
-        }
-
-        public class Sprite
-        {
-            public byte Frame_Width;
-            public byte Frame_Height;
-            public Sprite_Movement[] Movement;
-        }
-
-        public class Sprite_Movement
-        {
-            public byte Sound;
-            public int Color;
-            public Sprite_Movement_Direction[] Direction;
-        }
-
-        public class Sprite_Movement_Direction
-        {
-            public byte Alignment;
-            public byte StartX;
-            public byte StartY;
-            public byte Frames;
-            public short Duration;
-            public bool Backwards;
         }
     }
 }

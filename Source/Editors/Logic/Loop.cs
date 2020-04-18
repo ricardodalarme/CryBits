@@ -9,7 +9,6 @@ class Loop
     private static int FogY_Timer = 0;
     private static int Snow_Timer = 0;
     private static int Thundering_Timer = 0;
-    private static int Spriteg_Timer = 0;
 
     public static void Init()
     {
@@ -25,10 +24,9 @@ class Loop
             Socket.HandleData();
 
             // Eventos
-            Map_Fog();
-            Map_Weather();
-            Map_Music();
-            Sprite_Preview();
+            Editor_Maps_Fog();
+            Editor_Maps_Weather();
+            Editor_Maps_Music();
 
             // Desenha os gráficos
             Graphics.Present();
@@ -55,7 +53,7 @@ class Loop
         Program.Close();
     }
 
-    private static void Map_Fog()
+    private static void Editor_Maps_Fog()
     {
         // Faz a movimentação
         if (Editor_Maps.Objects.Visible)
@@ -119,7 +117,7 @@ class Loop
         FogY_Timer = Environment.TickCount + 50 - Speed;
     }
 
-    private static void Map_Weather()
+    private static void Editor_Maps_Weather()
     {
         bool Stop = false, Move;
         byte First_Thunder = (byte)Audio.Sounds.Thunder_1;
@@ -273,7 +271,7 @@ class Loop
                 Lists.Weather[i].x += 1;
     }
 
-    private static void Map_Music()
+    private static void Editor_Maps_Music()
     {
         // Apenas se necessário
         if (!Editor_Maps.Objects.Visible) goto stop;
@@ -288,25 +286,5 @@ class Loop
     stop:
         // Para a música
         if (Audio.Music.Device != null) Audio.Music.Stop();
-    }
-
-    private static void Sprite_Preview()
-    {
-        if (Editor_Sprites.Objects.Visible && Editor_Sprites.Selected_Movement_Dir.Frames > 1)
-            if (Spriteg_Timer < Environment.TickCount)
-            {
-                // Som da animação 
-                if (Editor_Sprites.Objects.chkSound.Checked && Globals.Sprite_Frame == 0) Audio.Sound.Play((Audio.Sounds)Editor_Sprites.Selected_Movement.Sound);
-
-                // Altea o frame da animação
-                if (++Globals.Sprite_Frame == Editor_Sprites.Selected_Movement_Dir.Frames)
-                    if (Editor_Sprites.Selected_Movement_Dir.Backwards)
-                        Globals.Sprite_Frame = (sbyte)((Editor_Sprites.Selected_Movement_Dir.Frames - 2) * -1);
-                    else
-                        Globals.Sprite_Frame = 0;
-
-                // Duração do frame
-                Spriteg_Timer = Environment.TickCount + Editor_Sprites.Selected_Movement_Dir.Duration;
-            }
     }
 }

@@ -123,41 +123,4 @@ class Clear
         Lists.Shop[Index].Sold = new List<Lists.Structures.Shop_Item>();
         Lists.Shop[Index].Bought = new List<Lists.Structures.Shop_Item>();
     }
-
-    public static void Sprite(short Index)
-    {
-        // Reseta os valores
-        Lists.Sprite[Index] = new Lists.Structures.Sprite();
-        Lists.Sprite[Index].Frame_Width = 32;
-        Lists.Sprite[Index].Frame_Height = 32;
-        Lists.Sprite[Index].Movement = new Lists.Structures.Sprite_Movement[(byte)Globals.Movements.Count];
-        for (byte i = 0; i < (byte)Globals.Movements.Count; i++)
-        {
-            Lists.Sprite[Index].Movement[i] = new Lists.Structures.Sprite_Movement();
-            Lists.Sprite[Index].Movement[i].Direction = new Lists.Structures.Sprite_Movement_Direction[(byte)Globals.Directions.Count];
-            Lists.Sprite[Index].Movement[i].Color = Color.FromArgb(255, 255, 255).ToArgb();
-            for (byte n = 0; n < (byte)Globals.Directions.Count; n++)
-            {
-                Lists.Sprite[Index].Movement[i].Direction[n] = new Lists.Structures.Sprite_Movement_Direction();
-                Lists.Structures.Sprite_Movement_Direction Data = Lists.Sprite[Index].Movement[i].Direction[n];
-
-                // Reseta os valores do padrão do RPG Maker VX
-                if (i != (byte)Globals.Movements.Stopped)
-                {
-                    Data.Frames = 3;
-                    Data.Duration = 225;
-                    Data.Backwards = true;
-                }
-                else
-                    Data.Frames = 1;
-
-                switch ((Globals.Directions)n)
-                {
-                    case Globals.Directions.Up: Data.StartY = 3; break;
-                    case Globals.Directions.Left: Data.StartY = 1; break;
-                    case Globals.Directions.Right: Data.StartY = 2; break;
-                }
-            }
-        }
-    }
 }

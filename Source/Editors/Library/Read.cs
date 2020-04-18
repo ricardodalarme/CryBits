@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
 class Read
@@ -147,30 +146,5 @@ class Read
             Checked = Data.ReadBoolean()
         };
         return Tool;
-    }
-
-    public static void Sprites()
-    {
-        // Lê os dados
-        Lists.Sprite = new Lists.Structures.Sprite[Graphics.Tex_Character.Length];
-        for (byte i = 1; i < Lists.Sprite.Length; i++) Sprite(i);
-    }
-
-    private static void Sprite(byte Index)
-    {
-        FileInfo File = new FileInfo(Directories.Sprites.FullName + Index + Directories.Format);
-
-        // Evita erros
-        if (!File.Exists)
-        {
-            Clear.Sprite(Index);
-            Write.Sprite(Index);
-            return;
-        }
-
-        // Lê os dados
-        FileStream Stream = File.OpenRead();
-        Lists.Sprite[Index] = (Lists.Structures.Sprite)new BinaryFormatter().Deserialize(Stream);
-        Stream.Close();
     }
 }

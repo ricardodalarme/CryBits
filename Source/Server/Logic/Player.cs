@@ -634,7 +634,8 @@ class Player
             TakeItem(Index, Slot, 1);
 
             // Caso já estiver com algum equipamento, desequipa ele
-            if (Character(Index).Equipment[Lists.Item[Item_Num].Equip_Type] > 0) GiveItem(Index, Item_Num, 1);
+            short Current_Equip = Character(Index).Equipment[Lists.Item[Item_Num].Equip_Type];
+            if (Current_Equip > 0) GiveItem(Index, Current_Equip, 1);
 
             // Equipa o item
             Character(Index).Equipment[Lists.Item[Item_Num].Equip_Type] = Item_Num;

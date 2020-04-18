@@ -119,10 +119,13 @@ partial class Receive
     {
         // Lê os dados
         byte i = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].X2 = 0;
+        Lists.Temp_Map.NPC[i].Y2 = 0;
         Lists.Temp_Map.NPC[i].Index = Data.ReadInt16();
         Lists.Temp_Map.NPC[i].X = Data.ReadByte();
         Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
         Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
         for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.Temp_Map.NPC[i].Vital[n] = Data.ReadInt16();
     }
 

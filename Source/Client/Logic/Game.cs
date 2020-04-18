@@ -89,8 +89,7 @@ class Game
     {
         Stopped,
         Walking,
-        Moving,
-        Count
+        Moving
     }
 
     public enum Messages

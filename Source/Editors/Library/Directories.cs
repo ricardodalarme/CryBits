@@ -13,7 +13,6 @@ class Directories
     public static DirectoryInfo Fonts;
     public static DirectoryInfo Sounds;
     public static DirectoryInfo Musics;
-    public static DirectoryInfo Sprites;
     public static FileInfo Tools;
     public static DirectoryInfo Tex_Painel;
     public static FileInfo Tex_CheckBox;
@@ -70,7 +69,6 @@ class Directories
         Tex_Transparent = new FileInfo(Directory + @"\Graphics\Misc\Transparent");
         Tex_Lighting = new FileInfo(Directory + @"\Graphics\Misc\Lighting");
         Tex_Items = new DirectoryInfo(Directory + @"\Graphics\Items\");
-        Sprites = new DirectoryInfo(Directory + @"\Data\Sprites\");
 
         // Cria os diretórios
         Fonts.Create();
@@ -94,7 +92,6 @@ class Directories
         Tex_Transparent.Directory.Create();
         Tex_Lighting.Directory.Create();
         Tex_Items.Create();
-        Sprites.Create();
 
         // Lê os dados gerais do cliente
         Graphics.LoadTextures();

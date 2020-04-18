@@ -451,7 +451,7 @@ class NPC
         // Solta os itens
         for (byte i = 0; i < NPC.Drop.Length; i++)
             if (NPC.Drop[i].Item_Num > 0)
-                if (Game.Random.Next(NPC.Drop[i].Chance, 101) == 100)
+                if (Game.Random.Next(1, 99) <= NPC.Drop[i].Chance)
                 {
                     // Dados do item
                     Lists.Structures.Map_Items Item = new Lists.Structures.Map_Items();

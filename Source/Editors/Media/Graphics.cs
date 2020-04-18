@@ -14,8 +14,6 @@ partial class Graphics
     public static RenderWindow Win_Map = new RenderWindow(Editor_Maps.Objects.picMap.Handle);
     public static RenderWindow Win_Map_Tile = new RenderWindow(Editor_Maps.Objects.picTile.Handle);
     public static RenderTexture Win_Map_Lighting = new RenderTexture((uint)Editor_Maps.Objects.Width, (uint)Editor_Maps.Objects.Height);
-    public static RenderWindow Win_Sprite_Texture = new RenderWindow(Editor_Sprites.Objects.picTexture.Handle);
-    public static RenderWindow Win_Sprite_Preview = new RenderWindow(Editor_Sprites.Objects.picPreview.Handle);
 
     // Fonte principal
     public static SFML.Graphics.Font Font_Default;
@@ -43,33 +41,6 @@ partial class Graphics
     public const string Format = ".png";
 
     #region Engine
-    public static void LoadTextures()
-    {
-        // Conjuntos
-        Tex_Character = AddTextures(Directories.Tex_Characters.FullName);
-        Tex_Tile = AddTextures(Directories.Tex_Tiles.FullName);
-        Tex_Face = AddTextures(Directories.Tex_Faces.FullName);
-        Tex_Panel = AddTextures(Directories.Tex_Painel.FullName);
-        Tex_Button = AddTextures(Directories.Tex_Buttons.FullName);
-        Tex_Panorama = AddTextures(Directories.Tex_Panoramas.FullName);
-        Tex_Fog = AddTextures(Directories.Tex_Fogs.FullName);
-        Tex_Light = AddTextures(Directories.Tex_Lights.FullName);
-        Tex_Item = AddTextures(Directories.Tex_Items.FullName);
-
-        // Únicas
-        Tex_Weather = new Texture(Directories.Tex_Weather.FullName + Format);
-        Tex_Blank = new Texture(Directories.Tex_Blanc.FullName + Format);
-        Tex_Directions = new Texture(Directories.Tex_Directions.FullName + Format);
-        Tex_Transparent = new Texture(Directories.Tex_Transparent.FullName + Format);
-        Tex_Grid = new Texture(Directories.Tex_Grid.FullName + Format);
-        Tex_CheckBox = new Texture(Directories.Tex_CheckBox.FullName + Format);
-        Tex_TextBox = new Texture(Directories.Tex_TextBox.FullName + Format);
-        Tex_Lighting = new Texture(Directories.Tex_Lighting.FullName + Format);
-
-        // Fontes
-        Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
-    }
-
     private static Texture[] AddTextures(string Directory)
     {
         short i = 1;
@@ -203,16 +174,41 @@ partial class Graphics
     }
     #endregion
 
+    public static void LoadTextures()
+    {
+        // Conjuntos
+        Tex_Character = AddTextures(Directories.Tex_Characters.FullName);
+        Tex_Tile = AddTextures(Directories.Tex_Tiles.FullName);
+        Tex_Face = AddTextures(Directories.Tex_Faces.FullName);
+        Tex_Panel = AddTextures(Directories.Tex_Painel.FullName);
+        Tex_Button = AddTextures(Directories.Tex_Buttons.FullName);
+        Tex_Panorama = AddTextures(Directories.Tex_Panoramas.FullName);
+        Tex_Fog = AddTextures(Directories.Tex_Fogs.FullName);
+        Tex_Light = AddTextures(Directories.Tex_Lights.FullName);
+        Tex_Item = AddTextures(Directories.Tex_Items.FullName);
+
+        // Únicas
+        Tex_Weather = new Texture(Directories.Tex_Weather.FullName + Format);
+        Tex_Blank = new Texture(Directories.Tex_Blanc.FullName + Format);
+        Tex_Directions = new Texture(Directories.Tex_Directions.FullName + Format);
+        Tex_Transparent = new Texture(Directories.Tex_Transparent.FullName + Format);
+        Tex_Grid = new Texture(Directories.Tex_Grid.FullName + Format);
+        Tex_CheckBox = new Texture(Directories.Tex_CheckBox.FullName + Format);
+        Tex_TextBox = new Texture(Directories.Tex_TextBox.FullName + Format);
+        Tex_Lighting = new Texture(Directories.Tex_Lighting.FullName + Format);
+
+        // Fontes
+        Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
+    }
+
     public static void Present()
     {
         // Desenha 
         Preview_Image();
         Editor_Tile();
-        Map();
-        Map_Tile();
+        Editor_Maps_Tile();
+        Editor_Maps_Map();
         Interface();
-        Sprite_Preview();
-        Sprite_Texture();
     }
 
     private static void Transparent(RenderWindow Window)
@@ -339,7 +335,7 @@ partial class Graphics
     #endregion
 
     #region Map Editor
-    private static void Map_Tile()
+    private static void Editor_Maps_Tile()
     {
         Editor_Maps Objects = Editor_Maps.Objects;
 
@@ -371,7 +367,7 @@ partial class Graphics
         Win_Map_Tile.Display();
     }
 
-    private static void Map()
+    private static void Editor_Maps_Map()
     {
         short Index = Editor_Maps.Selected;
 
@@ -746,73 +742,6 @@ partial class Graphics
     {
         // Desenha a ferramenta
         Render_Box(Win_Interface, Tex_TextBox, 3, Tool.Position, new Size(Tool.Width, TSize(Tex_TextBox).Height));
-    }
-    #endregion
-
-    #region Sprite Editor
-    private static void Sprite_Preview()
-    {
-        // Somente se necessário
-        if (!Editor_Sprites.Objects.Visible) return;
-
-        // Limpa a janela
-        Win_Sprite_Preview.Clear();
-        Render(Win_Sprite_Preview, Tex_Transparent, new Point(0));
-
-        // Tamanho do frame
-        byte Width = Editor_Sprites.Selected.Frame_Width;
-        byte Height = Editor_Sprites.Selected.Frame_Height;
-
-        // Dados da renderização
-        System.Drawing.Color Render_Color = System.Drawing.Color.FromArgb(Editor_Sprites.Selected_Movement.Color);
-        Point Destiny = new Point((Editor_Sprites.Objects.picPreview.Width - Width) / 2, (Editor_Sprites.Objects.picPreview.Height - Height) / 2);
-        Rectangle Source = new Rectangle
-        {
-            X = Editor_Sprites.Selected_Movement_Dir.StartX * Width,
-            Y = Editor_Sprites.Selected_Movement_Dir.StartY * Height,
-            Width = Width,
-            Height = Height
-        };
-        if (Editor_Sprites.Selected_Movement_Dir.Alignment == (byte)Globals.Alignments.Horizontal) Source.X += Math.Abs(Globals.Sprite_Frame) * Width;
-        else Source.Y += Math.Abs(Globals.Sprite_Frame) * Height;
-
-        // Desenha a prévia do personagem
-        Render(Win_Sprite_Preview, Tex_Character[Editor_Sprites.Objects.List.SelectedIndex + 1], Destiny.X, Destiny.Y, Source.X, Source.Y, Source.Width, Source.Height, CColor(Render_Color.R, Render_Color.G, Render_Color.B));
-
-        // Exibe o que foi renderizado
-        Win_Sprite_Preview.Display();
-    }
-
-    private static void Sprite_Texture()
-    {
-        // Somente se necessário
-        if (!Editor_Sprites.Objects.Visible) return;
-
-        // Limpa a janela
-        Win_Sprite_Texture.Clear();
-        Render(Win_Sprite_Texture, Tex_Transparent, new Point(0));
-
-        // Tamanho do frame
-        byte Width = Editor_Sprites.Selected.Frame_Width;
-        byte Height = Editor_Sprites.Selected.Frame_Height;
-
-        // Desenha uma grade representando quais frames fazem parte do movimento
-        Rectangle Destiny = new Rectangle
-        {
-            X = Editor_Sprites.Selected_Movement_Dir.StartX * Width,
-            Y = Editor_Sprites.Selected_Movement_Dir.StartY * Height,
-            Width = Width,
-            Height = Height
-        };
-        if (Editor_Sprites.Selected_Movement_Dir.Alignment == (byte)Globals.Alignments.Horizontal) Destiny.Width *= Editor_Sprites.Selected_Movement_Dir.Frames;
-        else Destiny.Height *= Editor_Sprites.Selected_Movement_Dir.Frames;
-        RenderRectangle(Win_Sprite_Texture, Destiny, SFML.Graphics.Color.Red);
-
-        // Desenha a textura completa
-        Render(Win_Sprite_Texture, Tex_Character[Editor_Sprites.Objects.List.SelectedIndex + 1], new Point(0));
-
-        // Exibe o que foi renderizado
-        Win_Sprite_Texture.Display();
     }
     #endregion
 }
