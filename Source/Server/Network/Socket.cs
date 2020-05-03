@@ -76,16 +76,13 @@ class Socket
 
         // Acaba com a conexão e restabelece os dados do jogador
         Connection[Index] = null;
-        Player.Leave(Index);
+        Player.Character(Index).Leave();
     }
 
     public static bool IsConnected(byte Index)
     {
-        // Previne sobrecarga
-        if (Connection[Index] == null) return false;
-
         // Retorna um valor de acordo com a conexão do jogador
-        return Connection[Index].Status == NetConnectionStatus.Connected;
+        return Connection[Index] != null && Connection[Index].Status == NetConnectionStatus.Connected;
     }
 
     private static byte FindConnection(NetConnection Data)

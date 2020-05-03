@@ -259,13 +259,13 @@ class Receive
         // Define os valores iniciais do personagem
         Player.Character(Index).Name = Name;
         Player.Character(Index).Level = 1;
-        Player.Character(Index).Class = Data.ReadByte();
-        Lists.Structures.Class Class = Lists.Class[Player.Character(Index).Class];
+        Player.Character(Index).Class_Num = Data.ReadByte();
+        Lists.Structures.Class Class = Lists.Class[Player.Character(Index).Class_Num];
         Player.Character(Index).Genre = Data.ReadBoolean();
         if (Player.Character(Index).Genre) Player.Character(Index).Texture_Num = Class.Tex_Male[Data.ReadByte()];
         else Player.Character(Index).Texture_Num = Class.Tex_Female[Data.ReadByte()];
         Player.Character(Index).Attribute = Class.Attribute;
-        Player.Character(Index).Map = Class.Spawn_Map;
+        Player.Character(Index).Map_Num = Class.Spawn_Map;
         Player.Character(Index).Direction = (Game.Directions)Class.Spawn_Direction;
         Player.Character(Index).X = Class.Spawn_X;
         Player.Character(Index).Y = Class.Spawn_Y;
@@ -274,14 +274,14 @@ class Receive
             if (Lists.Item[Class.Item[i].Item1].Type == (byte)Game.Items.Equipment && Player.Character(Index).Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] == 0)
                 Player.Character(Index).Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] = Class.Item[i].Item1;
             else
-                Player.GiveItem(Index, Class.Item[i].Item1, Class.Item[i].Item2);
+                Player.Character(Index).GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
 
         // Salva a conta
         Write.Character(Name);
         Write.Player(Index);
 
         // Entra no jogo
-        Player.Join(Index);
+        Player.Character(Index).Join();
     }
 
     private static void Character_Use(byte Index, NetIncomingMessage Data)
@@ -290,7 +290,7 @@ class Receive
         Lists.Temp_Player[Index].Using = Data.ReadByte();
 
         // Entra no jogo
-        Player.Join(Index);
+        Player.Character(Index).Join();
     }
 
     private static void Character_Create(byte Index)
@@ -346,13 +346,13 @@ class Receive
         if (Player.Character(Index).X != X || Player.Character(Index).Y != Y)
             Send.Player_Position(Index);
         else
-            Player.Move(Index, Data.ReadByte());
+            Player.Character(Index).Move(Data.ReadByte());
     }
 
     private static void RequestMap(byte Index, NetIncomingMessage Data)
     {
         // Se necessário enviar as informações do mapa ao jogador
-        if (Data.ReadBoolean()) Send.Map(Index, Player.Character(Index).Map);
+        if (Data.ReadBoolean()) Send.Map(Index, Player.Character(Index).Map_Num);
 
         // Envia a informação aos outros jogadores
         Send.Map_Players(Index);
@@ -383,7 +383,7 @@ class Receive
     private static void Player_Attack(byte Index)
     {
         // Ataca
-        Player.Attack(Index);
+        Player.Character(Index).Attack();
     }
 
     private static void AddPoint(byte Index, NetIncomingMessage Data)
@@ -402,7 +402,7 @@ class Receive
 
     private static void CollectItem(byte Index)
     {
-        short Map_Num = Player.Character(Index).Map;
+        short Map_Num = Player.Character(Index).Map_Num;
         byte Map_Item = Map.HasItem(Map_Num, Player.Character(Index).X, Player.Character(Index).Y);
         short Map_Item_Num = Lists.Temp_Map[Map_Num].Item[Map_Item].Index;
 
@@ -410,7 +410,7 @@ class Receive
         if (Map_Item == 0) return;
 
         // Dá o item ao jogador
-        if (Player.GiveItem(Index, Map_Item_Num, Lists.Temp_Map[Map_Num].Item[Map_Item].Amount))
+        if (Player.Character(Index).GiveItem(Map_Item_Num, Lists.Temp_Map[Map_Num].Item[Map_Item].Amount))
         {
             // Retira o item do mapa
             Lists.Temp_Map[Map_Num].Item.RemoveAt(Map_Item);
@@ -420,13 +420,13 @@ class Receive
 
     private static void DropItem(byte Index, NetIncomingMessage Data)
     {
-        Player.DropItem(Index, Data.ReadByte(), Data.ReadInt16());
+        Player.Character(Index).DropItem(Data.ReadByte(), Data.ReadInt16());
     }
 
     private static void Inventory_Change(byte Index, NetIncomingMessage Data)
     {
         byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
-        byte Hotbar_Slot = Player.FindHotbar(Index, (byte)Game.Hotbar.Item, Slot_Old);
+        byte Hotbar_Slot = Player.Character(Index).FindHotbar((byte)Game.Hotbar.Item, Slot_Old);
 
         // Somente se necessário
         if (Player.Character(Index).Inventory[Slot_Old].Item_Num == 0) return;
@@ -443,13 +443,13 @@ class Receive
 
     private static void Inventory_Use(byte Index, NetIncomingMessage Data)
     {
-        Player.UseItem(Index, Data.ReadByte());
+        Player.Character(Index).UseItem(Data.ReadByte());
     }
 
     private static void Equipment_Remove(byte Index, NetIncomingMessage Data)
     {
         byte Slot = Data.ReadByte();
-        short Map_Num = Player.Character(Index).Map;
+        short Map_Num = Player.Character(Index).Map_Num;
         Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
 
         // Apenas se necessário
@@ -457,7 +457,7 @@ class Receive
         if (Lists.Item[Player.Character(Index).Equipment[Slot]].Bind == (byte)Game.BindOn.Equip) return;
 
         // Adiciona o equipamento ao inventário
-        if (!Player.GiveItem(Index, Player.Character(Index).Equipment[Slot], 1))
+        if (!Player.Character(Index).GiveItem(Player.Character(Index).Equipment[Slot], 1))
         {
             // Somente se necessário
             if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
@@ -489,7 +489,7 @@ class Receive
         byte Slot = Data.ReadByte();
 
         // Somente se necessário
-        if (Slot != 0 && Player.FindHotbar(Index, Type, Slot) > 0) return;
+        if (Slot != 0 && Player.Character(Index).FindHotbar(Type, Slot) > 0) return;
 
         // Define os dados
         Player.Character(Index).Hotbar[Hotbar_Slot].Slot = Slot;
@@ -519,7 +519,7 @@ class Receive
 
         // Usa o item
         if (Player.Character(Index).Hotbar[Hotbar_Slot].Type == (byte)Game.Hotbar.Item)
-            Player.UseItem(Index, Player.Character(Index).Hotbar[Hotbar_Slot].Slot);
+            Player.Character(Index).UseItem(Player.Character(Index).Hotbar[Hotbar_Slot].Slot);
     }
 
     private static void Write_Server_Data(byte Index, NetIncomingMessage Data)
@@ -745,7 +745,7 @@ class Receive
             // Envia o mapa para todos os jogadores que estão nele
             for (byte n = 1; n <= Game.HigherIndex; n++)
                 if (n != Index)
-                    if (Player.Character(n).Map == i || Lists.Temp_Player[n].InEditor) Send.Map(n, i);
+                    if (Player.Character(n).Map_Num == i || Lists.Temp_Player[n].InEditor) Send.Map(n, i);
         }
 
         // Salva os dados
@@ -1026,7 +1026,7 @@ class Receive
     private static void Party_Leave(byte Index)
     {
         // Sai do grupo
-        Player.Party_Leave(Index);
+        Player.Character(Index).Party_Leave();
     }
 
     private static void Trade_Invite(byte Index, NetIncomingMessage Data)
@@ -1140,7 +1140,7 @@ class Receive
 
     private static void Trade_Leave(byte Index)
     {
-        Player.Trade_Leave(Index);
+        Player.Character(Index).Trade_Leave();
     }
 
     private static void Trade_Offer(byte Index, NetIncomingMessage Data)
@@ -1177,12 +1177,12 @@ class Receive
         {
             case Game.Trade_Status.Accepted:
                 // Verifica se os jogadores têm espaço disponivel para trocar os itens
-                if (Player.Total_Trade_Items(Index) > Player.Total_Inventory_Free(Invited))
+                if (Player.Character(Index).Total_Trade_Items() > Player.Character(Invited).Total_Inventory_Free())
                 {
                     Send.Message(Invited, Player.Character(Invited).Name + " don't have enought space in their inventory to do this trade.", System.Drawing.Color.Red);
                     break;
                 }
-                if (Player.Total_Trade_Items(Invited) > Player.Total_Inventory_Free(Index))
+                if (Player.Character(Invited).Total_Trade_Items() > Player.Character(Index).Total_Inventory_Free())
                 {
                     Send.Message(Invited, "You don't have enought space in your inventory to do this trade.", System.Drawing.Color.Red);
                     break;
@@ -1198,13 +1198,13 @@ class Receive
                 // Remove os itens do inventário dos jogadores
                 for (byte j = 0, To = Index; j < 2; j++, To = (To == Index ? Invited : Index))
                     for (byte i = 1; i <= Game.Max_Inventory; i++)
-                        Player.TakeItem(To, (byte)Lists.Temp_Player[To].Trade_Offer[i].Item_Num, Lists.Temp_Player[To].Trade_Offer[i].Amount);
+                        Player.Character(To).TakeItem((byte)Lists.Temp_Player[To].Trade_Offer[i].Item_Num, Lists.Temp_Player[To].Trade_Offer[i].Amount);
 
                 // Dá os itens aos jogadores
                 for (byte i = 1; i <= Game.Max_Inventory; i++)
                 {
-                    if (Lists.Temp_Player[Index].Trade_Offer[i].Item_Num > 0) Player.GiveItem(Invited, Your_Inventory[Lists.Temp_Player[Index].Trade_Offer[i].Item_Num].Item_Num, Lists.Temp_Player[Index].Trade_Offer[i].Amount);
-                    if (Lists.Temp_Player[Invited].Trade_Offer[i].Item_Num > 0) Player.GiveItem(Index, Their_Inventory[Lists.Temp_Player[Invited].Trade_Offer[i].Item_Num].Item_Num, Lists.Temp_Player[Invited].Trade_Offer[i].Amount);
+                    if (Lists.Temp_Player[Index].Trade_Offer[i].Item_Num > 0) Player.Character(Invited).GiveItem(Your_Inventory[Lists.Temp_Player[Index].Trade_Offer[i].Item_Num].Item_Num, Lists.Temp_Player[Index].Trade_Offer[i].Amount);
+                    if (Lists.Temp_Player[Invited].Trade_Offer[i].Item_Num > 0) Player.Character(Index).GiveItem(Their_Inventory[Lists.Temp_Player[Invited].Trade_Offer[i].Item_Num].Item_Num, Lists.Temp_Player[Invited].Trade_Offer[i].Amount);
                 }
 
                 // Envia os dados do inventário aos jogadores
@@ -1232,7 +1232,7 @@ class Receive
     private static void Shop_Buy(byte Index, NetIncomingMessage Data)
     {
         Lists.Structures.Shop_Item Shop_Sold = Lists.Shop[Lists.Temp_Player[Index].Shop].Sold[Data.ReadByte()];
-        byte Inventory_Slot = Player.FindInventory(Index, Lists.Shop[Lists.Temp_Player[Index].Shop].Currency);
+        byte Inventory_Slot = Player.Character(Index).FindInventory(Lists.Shop[Lists.Temp_Player[Index].Shop].Currency);
 
         // Verifica se o jogador tem dinheiro
         if (Inventory_Slot == 0 || Player.Character(Index).Inventory[Inventory_Slot].Amount < Shop_Sold.Price)
@@ -1241,15 +1241,15 @@ class Receive
             return;
         }
         // Verifica se há espaço no inventário
-        if (Player.Total_Inventory_Free(Index) == 0 && Player.Character(Index).Inventory[Inventory_Slot].Amount > Shop_Sold.Price)
+        if (Player.Character(Index).Total_Inventory_Free() == 0 && Player.Character(Index).Inventory[Inventory_Slot].Amount > Shop_Sold.Price)
         {
             Send.Message(Index, "You  don't have space in your bag.", System.Drawing.Color.Red);
             return;
         }
 
         // Realiza a compra do item
-        Player.TakeItem(Index, Inventory_Slot, Shop_Sold.Price);
-        Player.GiveItem(Index, Shop_Sold.Item_Num, Shop_Sold.Amount);
+        Player.Character(Index).TakeItem(Inventory_Slot, Shop_Sold.Price);
+        Player.Character(Index).GiveItem(Shop_Sold.Item_Num, Shop_Sold.Amount);
         Send.Message(Index, "You bought " + Shop_Sold.Price + "x " + Lists.Item[Shop_Sold.Item_Num].Name + ".", System.Drawing.Color.Green);
     }
 
@@ -1266,15 +1266,15 @@ class Receive
             return;
         }
         // Verifica se há espaço no inventário
-        if (Player.Total_Inventory_Free(Index) == 0 && Player.Character(Index).Inventory[Inventory_Slot].Amount > Amount)
+        if (Player.Character(Index).Total_Inventory_Free() == 0 && Player.Character(Index).Inventory[Inventory_Slot].Amount > Amount)
         {
             Send.Message(Index, "You don't have space in your bag.", System.Drawing.Color.Red);
             return;
         }
 
         // Realiza a venda do item
-        Player.TakeItem(Index, Inventory_Slot, Amount);
-        Player.GiveItem(Index, Lists.Shop[Lists.Temp_Player[Index].Shop].Currency, (short)(Buy.Price * Amount));
+        Player.Character(Index).TakeItem(Inventory_Slot, Amount);
+        Player.Character(Index).GiveItem(Lists.Shop[Lists.Temp_Player[Index].Shop].Currency, (short)(Buy.Price * Amount));
         Send.Message(Index, "You sold " + Lists.Item[Inventory_Slot].Name + "x " + Amount + "for .", System.Drawing.Color.Green);
     }
 
@@ -1293,6 +1293,6 @@ class Receive
         }
 
         // Teletransporta o jogador para o mapa
-        Player.Warp(Index, Data.ReadInt16(), Data.ReadByte(), Data.ReadByte());
+        Player.Character(Index).Warp(Data.ReadInt16(), Data.ReadByte(), Data.ReadByte());
     }
 }

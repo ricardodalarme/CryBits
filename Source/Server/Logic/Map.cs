@@ -61,7 +61,7 @@ class Map
         // Verifica se há algum Jogador na cordenada
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Player.IsPlaying(i))
-                if (Player.Character(i).X == X && Player.Character(i).Y == Y && Player.Character(i).Map == Map_Num)
+                if (Player.Character(i).X == X && Player.Character(i).Y == Y && Player.Character(i).Map_Num == Map_Num)
                     return i;
 
         return 0;
@@ -72,7 +72,7 @@ class Map
         // Verifica se tem algum jogador no mapa
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Player.IsPlaying(i))
-                if (Player.Character(i).Map == Map_Num)
+                if (Player.Character(i).Map_Num == Map_Num)
                     return true;
 
         return false;

@@ -36,9 +36,6 @@ class Clear
         // Limpa os dados
         Lists.Player[Index].Character[Char_Num] = new Player.Character_Structure();
         Lists.Player[Index].Character[Char_Num].Index = Index;
-        Lists.Player[Index].Character[Char_Num].Inventory = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
-        Lists.Player[Index].Character[Char_Num].Equipment = new short[(byte)Game.Equipments.Count];
-        Lists.Player[Index].Character[Char_Num].Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
     }
 
     public static void Server_Data()

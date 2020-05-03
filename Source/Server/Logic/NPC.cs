@@ -85,7 +85,7 @@ class NPC
                         {
                             // Verifica se o jogador está jogando e no mesmo mapa que o NPC
                             if (!Player.IsPlaying(Player_Index)) continue;
-                            if (Player.Character(Player_Index).Map != Map_Num) continue;
+                            if (Player.Character(Player_Index).Map_Num != Map_Num) continue;
 
                             // Se o jogador estiver no alcance do NPC, ir atrás dele
                             Distance = (short)Math.Sqrt(Math.Pow(Data.X - Player.Character(Player_Index).X, 2) + Math.Pow(Data.Y - Player.Character(Player_Index).Y, 2));
@@ -125,7 +125,7 @@ class NPC
                 if (Data.Target_Type == (byte)Game.Target.Player)
                 {
                     // Verifica se o jogador ainda está disponível
-                    if (!Player.IsPlaying(Data.Target_Index) || Player.Character(Data.Target_Index).Map != Map_Num)
+                    if (!Player.IsPlaying(Data.Target_Index) || Player.Character(Data.Target_Index).Map_Num != Map_Num)
                     {
                         Lists.Temp_Map[Map_Num].NPC[i].Target_Type = 0;
                         Lists.Temp_Map[Map_Num].NPC[i].Target_Index = 0;
@@ -355,7 +355,7 @@ class NPC
         if (Environment.TickCount < Data.Attack_Timer + 750) return;
         if (!Player.IsPlaying(Victim)) return;
         if (Lists.Temp_Player[Victim].GettingMap) return;
-        if (Map_Num != Player.Character(Victim).Map) return;
+        if (Map_Num != Player.Character(Victim).Map_Num) return;
         if (Player.Character(Victim).X != x || Player.Character(Victim).Y != y) return;
         if (Map.Tile_Blocked(Map_Num, Data.X, Data.Y, Data.Direction, false)) return;
 
@@ -384,7 +384,7 @@ class NPC
                 Lists.Temp_Map[Map_Num].NPC[Index].Target_Index = 0;
 
                 // Mata o jogador
-                Player.Died(Victim);
+                Player.Character(Victim).Died();
             }
         }
         // Demonstra o ataque aos outros jogadores

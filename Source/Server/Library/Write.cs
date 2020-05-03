@@ -21,13 +21,13 @@ class Write
         for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
         {
             Data.Write(Lists.Player[Index].Character[i].Name);
-            Data.Write(Lists.Player[Index].Character[i].Class);
+            Data.Write(Lists.Player[Index].Character[i].Class_Num);
             Data.Write(Lists.Player[Index].Character[i].Texture_Num);
             Data.Write(Lists.Player[Index].Character[i].Genre);
             Data.Write(Lists.Player[Index].Character[i].Level);
             Data.Write(Lists.Player[Index].Character[i].Experience);
             Data.Write(Lists.Player[Index].Character[i].Points);
-            Data.Write(Lists.Player[Index].Character[i].Map);
+            Data.Write(Lists.Player[Index].Character[i].Map_Num);
             Data.Write(Lists.Player[Index].Character[i].X);
             Data.Write(Lists.Player[Index].Character[i].Y);
             Data.Write((byte)Lists.Player[Index].Character[i].Direction);

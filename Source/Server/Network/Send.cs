@@ -98,7 +98,7 @@ class Send
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Player.IsPlaying(i))
-                if (Player.Character(i).Map == Map)
+                if (Player.Character(i).Map_Num == Map)
                     ToPlayer(i, Data);
     }
 
@@ -107,7 +107,7 @@ class Send
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Player.IsPlaying(i))
-                if (Player.Character(i).Map == Map)
+                if (Player.Character(i).Map_Num == Map)
                     if (Index != i)
                         ToPlayer(i, Data);
     }
@@ -179,7 +179,7 @@ class Send
         for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
         {
             Data.Write(Lists.Player[Index].Character[i].Name);
-            Data.Write(Lists.Player[Index].Character[i].Class);
+            Data.Write(Lists.Player[Index].Character[i].Class_Num);
             Data.Write(Lists.Player[Index].Character[i].Texture_Num);
             Data.Write(Lists.Player[Index].Character[i].Genre);
             Data.Write(Lists.Player[Index].Character[i].Level);
@@ -246,11 +246,11 @@ class Send
         Data.Write((byte)Client_Packets.Player_Data);
         Data.Write(Index);
         Data.Write(Player.Character(Index).Name);
-        Data.Write(Player.Character(Index).Class);
+        Data.Write(Player.Character(Index).Class_Num);
         Data.Write(Player.Character(Index).Texture_Num);
         Data.Write(Player.Character(Index).Genre);
         Data.Write(Player.Character(Index).Level);
-        Data.Write(Player.Character(Index).Map);
+        Data.Write(Player.Character(Index).Map_Num);
         Data.Write(Player.Character(Index).X);
         Data.Write(Player.Character(Index).Y);
         Data.Write((byte)Player.Character(Index).Direction);
@@ -275,7 +275,7 @@ class Send
         Data.Write(Player.Character(Index).X);
         Data.Write(Player.Character(Index).Y);
         Data.Write((byte)Player.Character(Index).Direction);
-        ToMap(Player.Character(Index).Map, Data);
+        ToMap(Player.Character(Index).Map_Num, Data);
     }
 
     public static void Player_Vitals(byte Index)
@@ -291,7 +291,7 @@ class Send
             Data.Write(Player.Character(Index).MaxVital(i));
         }
 
-        ToMap(Player.Character(Index).Map, Data);
+        ToMap(Player.Character(Index).Map_Num, Data);
     }
 
     public static void Player_Leave(byte Index)
@@ -325,7 +325,7 @@ class Send
         Data.Write(Player.Character(Index).Y);
         Data.Write((byte)Player.Character(Index).Direction);
         Data.Write(Movement);
-        ToMapBut(Player.Character(Index).Map, Index, Data);
+        ToMapBut(Player.Character(Index).Map_Num, Index, Data);
     }
 
     public static void Player_Direction(byte Index)
@@ -336,7 +336,7 @@ class Send
         Data.Write((byte)Client_Packets.Player_Direction);
         Data.Write(Index);
         Data.Write((byte)Player.Character(Index).Direction);
-        ToMapBut(Player.Character(Index).Map, Index, Data);
+        ToMapBut(Player.Character(Index).Map_Num, Index, Data);
     }
 
     public static void Player_Experience(byte Index)
@@ -359,7 +359,7 @@ class Send
         Data.Write((byte)Client_Packets.Player_Equipments);
         Data.Write(Index);
         for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Data.Write(Player.Character(Index).Equipment[i]);
-        ToMap(Player.Character(Index).Map, Data);
+        ToMap(Player.Character(Index).Map_Num, Data);
     }
 
     public static void Map_Players(byte Index)
@@ -368,11 +368,11 @@ class Send
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Player.IsPlaying(i))
                 if (Index != i)
-                    if (Player.Character(i).Map == Player.Character(Index).Map)
+                    if (Player.Character(i).Map_Num == Player.Character(Index).Map_Num)
                         ToPlayer(Index, Player_Data_Cache(i));
 
         // Envia os dados do jogador
-        ToMap(Player.Character(Index).Map, Player_Data_Cache(Index));
+        ToMap(Player.Character(Index).Map_Num, Player_Data_Cache(Index));
     }
 
     public static void JoinMap(byte Index)
@@ -535,7 +535,7 @@ class Send
         Data.Write((byte)Client_Packets.Message);
         Data.Write(Message);
         Data.Write(Color.White.ToArgb());
-        ToMap(Player.Character(Index).Map, Data);
+        ToMap(Player.Character(Index).Map_Num, Data);
     }
 
     public static void Message_Global(byte Index, string Text)
@@ -575,7 +575,7 @@ class Send
         Data.Write(Index);
         Data.Write(Victim);
         Data.Write(Victim_Type);
-        ToMap(Player.Character(Index).Map, Data);
+        ToMap(Player.Character(Index).Map_Num, Data);
     }
 
     public static void Items(byte Index)
