@@ -42,7 +42,7 @@ class Lists
             public string User;
             public string Password;
             public Game.Accesses Acess;
-            public global::Player.Character_Structure[] Character;
+            public Character[] Character;
         }
 
         public struct TempPlayer
@@ -101,7 +101,7 @@ class Lists
         public struct Temp_Map
         {
             // Temporário
-            public Map_NPCs[] NPC;
+            public global::NPC.Structure[] NPC;
             public List<Map_Items> Item;
         }
 
@@ -187,19 +187,6 @@ class Lists
             public global::NPC.Movements Movement;
             public byte Flee_Helth;
             public short Shop;
-        }
-
-        public struct Map_NPCs
-        {
-            public short Index;
-            public byte X;
-            public byte Y;
-            public Game.Directions Direction;
-            public byte Target_Type;
-            public byte Target_Index;
-            public short[] Vital;
-            public int Spawn_Timer;
-            public int Attack_Timer;
         }
 
         public struct Map_Items

@@ -726,7 +726,7 @@ class Receive
 
             // NPCs
             Lists.Map[i].NPC = new Lists.Structures.Map_NPC[Data.ReadByte()];
-            Lists.Temp_Map[i].NPC = new Lists.Structures.Map_NPCs[Lists.Map[i].NPC.Length];
+            Lists.Temp_Map[i].NPC = new NPC.Structure[Lists.Map[i].NPC.Length];
             for (byte n = 0; n < Lists.Map[i].NPC.Length; n++)
             {
                 Lists.Map[i].NPC[n].Index = Data.ReadInt16();

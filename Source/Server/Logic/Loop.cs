@@ -25,7 +25,12 @@ class Loop
             {
                 // Lógicas do mapa
                 Map.Logic();
-                Player.Logic();
+
+                // Lógica dos jogadores
+                for (byte i = 0; i <= Game.HigherIndex; i++)
+                    if (Player.IsPlaying(i))
+                        Player.Character(i);
+                if (Environment.TickCount > Timer_Player_Regen + 5000) Timer_Player_Regen = Environment.TickCount;
 
                 // Reinicia a contagem
                 Timer_500 = Environment.TickCount + 500;

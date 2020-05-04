@@ -723,7 +723,7 @@ class Send
         Data.Write((short)Lists.Temp_Map[Map_Num].NPC.Length);
         for (byte i = 1; i < Lists.Temp_Map[Map_Num].NPC.Length; i++)
         {
-            Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Index);
+            Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Data_Index);
             Data.Write(Lists.Temp_Map[Map_Num].NPC[i].X);
             Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Y);
             Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[i].Direction);
@@ -739,7 +739,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC);
         Data.Write(Index);
-        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Index);
+        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Data_Index);
         Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].X);
         Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Y);
         Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[Index].Direction);

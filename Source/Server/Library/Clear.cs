@@ -20,22 +20,15 @@ class Clear
         Lists.Player[Index] = new Lists.Structures.Player();
         Lists.Player[Index].User = string.Empty;
         Lists.Player[Index].Password = string.Empty;
-        Lists.Player[Index].Character = new Player.Character_Structure[Lists.Server_Data.Max_Characters + 1];
+        Lists.Player[Index].Character = new Character[Lists.Server_Data.Max_Characters + 1];
 
         // Limpa os dados do personagem
         for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
-            Player_Character(Index, i);
+            Lists.Player[Index].Character[i] = new Character(Index);
 
         // Dados temporários
         Lists.Temp_Player[Index] = new Lists.Structures.TempPlayer();
         Lists.Temp_Player[Index].Party = new List<byte>();
-    }
-
-    public static void Player_Character(byte Index, byte Char_Num)
-    {
-        // Limpa os dados
-        Lists.Player[Index].Character[Char_Num] = new Player.Character_Structure();
-        Lists.Player[Index].Character[Char_Num].Index = Index;
     }
 
     public static void Server_Data()
@@ -117,7 +110,7 @@ class Clear
 
         // Dados temporários
         Lists.Temp_Map[Index] = new Lists.Structures.Temp_Map();
-        Lists.Temp_Map[Index].NPC = Array.Empty<Lists.Structures.Map_NPCs>();
+        Lists.Temp_Map[Index].NPC = Array.Empty<NPC.Structure>();
         Lists.Temp_Map[Index].Item = new List<Lists.Structures.Map_Items>();
         Lists.Temp_Map[Index].Item.Add(new Lists.Structures.Map_Items());
     }
@@ -126,8 +119,6 @@ class Clear
     {
         // Redimensiona os valores
         Lists.Tile[Index] = new Lists.Structures.Tile();
-        Lists.Tile[Index].Width = 0;
-        Lists.Tile[Index].Height = 0;
         Lists.Tile[Index].Data = new Lists.Structures.Tile_Data[1, 1];
         Lists.Tile[Index].Data[0, 0] = new Lists.Structures.Tile_Data();
         Lists.Tile[Index].Data[0, 0].Block = new bool[(byte)Game.Directions.Count];

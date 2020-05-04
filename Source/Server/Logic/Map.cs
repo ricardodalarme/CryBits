@@ -24,12 +24,12 @@ class Map
     public static void Logic()
     {
         for (byte i = 1; i < Lists.Map.Length; i++)
-        {
+        { 
             // Não é necessário fazer todos os cálculos se não houver nenhum jogador no mapa
             if (!HasPlayers(i)) continue;
 
             // Lógica dos NPCs
-            NPC.Logic(i);
+            for (byte j = 1; j < Lists.Temp_Map[i].NPC.Length; j++) Lists.Temp_Map[i].NPC[j].Logic();
 
             // Faz reaparecer todos os itens do mapa
             if (Environment.TickCount > Loop.Timer_Map_Items + 300000)
@@ -49,7 +49,7 @@ class Map
     {
         // Verifica se há algum npc na cordenada
         for (byte i = 1; i < Lists.Temp_Map[Map_Num].NPC.Length; i++)
-            if (Lists.Temp_Map[Map_Num].NPC[i].Index > 0)
+            if (Lists.Temp_Map[Map_Num].NPC[i].Data_Index > 0)
                 if (Lists.Temp_Map[Map_Num].NPC[i].X == X && Lists.Temp_Map[Map_Num].NPC[i].Y == Y)
                     return i;
 

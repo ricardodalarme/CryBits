@@ -199,7 +199,7 @@ partial class Read
         Stream.Close();
 
         // Dados temporários
-        Lists.Temp_Map[Index].NPC = new Lists.Structures.Map_NPCs[Lists.Map[Index].NPC.Length];
+        Lists.Temp_Map[Index].NPC = new NPC.Structure[Lists.Map[Index].NPC.Length];
         Lists.Temp_Map[Index].Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
         for (byte i = 1; i < Lists.Temp_Map[Index].NPC.Length; i++) global::NPC.Spawn(i, Index);
         Lists.Temp_Map[Index].Item.Add(new Lists.Structures.Map_Items());
