@@ -105,7 +105,7 @@ class Character
                     if (Vital[v] > MaxVital(v)) Vital[v] = MaxVital(v);
 
                     // Envia os dados aos jogadores
-                    Send.Player_Vitals(Index);
+                    Send.Player_Vitals(this);
                 }
     }
 
@@ -118,21 +118,21 @@ class Character
         Lists.Player[Index].Playing = true;
 
         // Envia todos os dados necessários
-        Send.Join(Index);
-        Send.Map_Players(Index);
-        Send.Player_Experience(Index);
-        Send.Player_Inventory(Index);
-        Send.Player_Hotbar(Index);
-        Send.Items(Index);
-        Send.NPCs(Index);
-        Send.Shops(Index);
+        Send.Join(this);
+        Send.Map_Players(this);
+        Send.Player_Experience(this);
+        Send.Player_Inventory(this);
+        Send.Player_Hotbar(this);
+        Send.Items(this);
+        Send.NPCs(this);
+        Send.Shops(this);
 
         // Transporta o jogador para a sua determinada Posição
         Warp(Map_Num, X, Y, true);
 
         // Entra no jogo
-        Send.JoinGame(Index);
-        Send.Message(Index, Lists.Server_Data.Welcome, Color.Blue);
+        Send.JoinGame(this);
+        Send.Message(this, Lists.Server_Data.Welcome, Color.Blue);
     }
 
     public void Leave()
@@ -141,7 +141,7 @@ class Character
         {
             // Salva os dados do jogador e atualiza os demais jogadores da desconexão
             Write.Player(Index);
-            Send.Player_Leave(Index);
+            Send.Player_Leave(this);
 
             // Sai do grupo
             if (Lists.Player[Index].Playing)
@@ -179,19 +179,19 @@ class Character
         if (Map_Old != Map_Num || NeedUpdate)
         {
             // Sai do mapa antigo
-            Send.Player_LeaveMap(Index, Map_Old);
+            Send.Player_LeaveMap(this, Map_Old);
 
             // Inviabiliza o jogador de algumas ações até que ele receba os dados necessários
             GettingMap = true;
 
             // Envia dados necessários do mapa
-            Send.Map_Revision(Index, Map_Num);
-            Send.Map_Items(Index, Map_Num);
-            Send.Map_NPCs(Index, Map_Num);
+            Send.Map_Revision(this, Map_Num);
+            Send.Map_Items(this, Map_Num);
+            Send.Map_NPCs(this, Map_Num);
         }
         // Apenas atualiza a posição do jogador
         else
-            Send.Player_Position(Index);
+            Send.Player_Position(this);
     }
 
     public void Move(byte Movement)
@@ -225,7 +225,7 @@ class Character
                 }
             else
             {
-                Send.Player_Position(Index);
+                Send.Player_Position(this);
                 return;
             }
         }
@@ -251,20 +251,20 @@ class Character
 
         // Envia os dados
         if (!SecondMovement && (Old_X != X || Old_Y != Y))
-            Send.Player_Move(Index, Movement);
+            Send.Player_Move(this, Movement);
         else
-            Send.Player_Position(Index);
+            Send.Player_Position(this);
     }
 
     public void Died()
     {
         // Recupera os vitais
         for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Vital[n] = MaxVital(n);
-        Send.Player_Vitals(Index);
+        Send.Player_Vitals(this);
 
         // Perde 10% da experiência
         Experience /= 10;
-        Send.Player_Experience(Index);
+        Send.Player_Experience(this);
 
         // Retorna para o ínicio
         Lists.Structures.Class Data = Lists.Class[Class_Num];
@@ -304,7 +304,7 @@ class Character
 
     @continue:
         // Demonstra que aos outros jogadores o ataque
-        Send.Player_Attack(Index, 0, 0);
+        Send.Player_Attack(this, 0, 0);
         Attack_Timer = Environment.TickCount;
     }
 
@@ -323,7 +323,7 @@ class Character
         if (Victim.X != Next_X || Victim.Y != Next_Y) return;
         if (Lists.Map[Map_Num].Moral == (byte)Map.Morals.Pacific)
         {
-            Send.Message(Index, "This is a peaceful area.", Color.White);
+            Send.Message(this, "This is a peaceful area.", Color.White);
             return;
         }
 
@@ -337,12 +337,12 @@ class Character
         if (Attack_Damage > 0)
         {
             // Demonstra o ataque aos outros jogadores
-            Send.Player_Attack(Index, Victim.Index, (byte)Game.Target.Player);
+            Send.Player_Attack(this, Victim.Index, (byte)Game.Target.Player);
 
             if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
             {
                 Victim.Vital[(byte)Game.Vitals.HP] -= Attack_Damage;
-                Send.Player_Vitals(Victim.Index);
+                Send.Player_Vitals(Victim);
             }
             // FATALITY
             else
@@ -356,7 +356,7 @@ class Character
         }
         else
             // Demonstra o ataque aos outros jogadores
-            Send.Player_Attack(Index);
+            Send.Player_Attack(this);
     }
 
     private void Attack_NPC(NPC.Structure Victim)
@@ -371,7 +371,7 @@ class Character
         if (Victim.X != Next_X || Victim.Y != Next_Y) return;
 
         // Mensagem
-        if (Victim.Target_Index != Index && !string.IsNullOrEmpty(Lists.NPC[Victim.Data_Index].SayMsg)) Send.Message(Index, Lists.NPC[Victim.Data_Index].Name + ": " + Lists.NPC[Victim.Data_Index].SayMsg, Color.White);
+        if (Victim.Target_Index != Index && !string.IsNullOrEmpty(Lists.NPC[Victim.Data_Index].SayMsg)) Send.Message(this, Lists.NPC[Victim.Data_Index].Name + ": " + Lists.NPC[Victim.Data_Index].SayMsg, Color.White);
 
         // Não executa o combate com um NPC amigavel
         switch ((NPC.Behaviour)Lists.NPC[Victim.Data_Index].Behaviour)
@@ -394,7 +394,7 @@ class Character
         if (Attack_Damage > 0)
         {
             // Demonstra o ataque aos outros jogadores
-            Send.Player_Attack(Index, Victim.Index, (byte)Game.Target.NPC);
+            Send.Player_Attack(this, Victim.Index, (byte)Game.Target.NPC);
 
             if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
             {
@@ -413,7 +413,7 @@ class Character
         }
         else
             // Demonstra o ataque aos outros jogadores
-            Send.Player_Attack(Index);
+            Send.Player_Attack(this);
     }
 
     public void GiveExperience(int Value)
@@ -448,8 +448,8 @@ class Character
         }
 
         // Envia os dados
-        Send.Player_Experience(Index);
-        if (NumLevel > 0) Send.Map_Players(Index);
+        Send.Player_Experience(this);
+        if (NumLevel > 0) Send.Map_Players(this);
     }
 
     public bool GiveItem(short Item_Num, short Amount)
@@ -473,7 +473,7 @@ class Character
         }
 
         // Envia os dados ao jogador
-        Send.Player_Inventory(Index);
+        Send.Player_Inventory(this);
         return true;
     }
 
@@ -493,7 +493,7 @@ class Character
             if (HotbarSlot > 0)
             {
                 Hotbar[HotbarSlot] = new Lists.Structures.Hotbar();
-                Send.Player_Hotbar(Index);
+                Send.Player_Hotbar(this);
             }
         }
         // Apenas desconta a quantidade
@@ -501,7 +501,7 @@ class Character
             Inventory[Slot].Amount -= Amount;
 
         // Atualiza o inventário
-        Send.Player_Inventory(Index);
+        Send.Player_Inventory(this);
     }
 
     public void DropItem(byte Slot, short Amount)
@@ -540,13 +540,13 @@ class Character
         // Requerimentos
         if (Level < Lists.Item[Item_Num].Req_Level)
         {
-            Send.Message(Index, "You do not have the level required to use this item.", Color.White);
+            Send.Message(this, "You do not have the level required to use this item.", Color.White);
             return;
         }
         if (Lists.Item[Item_Num].Req_Class > 0)
             if (Class_Num != Lists.Item[Item_Num].Req_Class)
             {
-                Send.Message(Index, "You can not use this item.", Color.White);
+                Send.Message(this, "You can not use this item.", Color.White);
                 return;
             }
 
@@ -564,9 +564,9 @@ class Character
             for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Attribute[i] += Lists.Item[Item_Num].Equip_Attribute[i];
 
             // Envia os dados
-            Send.Player_Inventory(Index);
-            Send.Player_Equipments(Index);
-            Send.Player_Hotbar(Index);
+            Send.Player_Inventory(this);
+            Send.Player_Equipments(this);
+            Send.Player_Hotbar(this);
         }
         else if (Lists.Item[Item_Num].Type == (byte)Game.Items.Potion)
         {
@@ -635,9 +635,9 @@ class Character
                 Player.Character(Party[i]).Party.Remove(Index);
 
             // Envia o dados para todos os membros do grupo
-            for (byte i = 0; i < Party.Count; i++) Send.Party(Party[i]);
+            for (byte i = 0; i < Party.Count; i++) Send.Party(Player.Character(Party[i]));
             Party.Clear();
-            Send.Party(Index);
+            Send.Party(this);
         }
     }
 
@@ -675,13 +675,13 @@ class Character
             Experience_Sum += Given_Experience;
             Player.Character(Party[i]).Experience += Given_Experience;
             Player.Character(Party[i]).CheckLevelUp();
-            Send.Player_Experience(Party[i]);
+            Send.Player_Experience(Player.Character(Party[i]));
         }
 
         // Dá ao jogador principal o restante da experiência
         Experience += Value - Experience_Sum;
         CheckLevelUp();
-        Send.Player_Experience(Index);
+        Send.Player_Experience(this);
     }
 
     public void Trade_Leave()
@@ -691,8 +691,8 @@ class Character
         {
             Player.Character(Trade).Trade = 0;
             Trade = 0;
-            Send.Trade(Trade);
-            Send.Trade(Index);
+            Send.Trade(Player.Character(Trade));
+            Send.Trade(this);
         }
     }
 
@@ -712,13 +712,13 @@ class Character
     {
         // Abre a loja
         Shop = Shop_Num;
-        Send.Shop_Open(Index, Shop_Num);
+        Send.Shop_Open(this, Shop_Num);
     }
 
     public void Shop_Leave()
     {
         // Fecha a loja
         Shop = 0;
-        Send.Shop_Open(Index, 0);
+        Send.Shop_Open(this, 0);
     }
 }

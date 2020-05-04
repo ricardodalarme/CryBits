@@ -109,7 +109,7 @@ class NPC
                                 Target_Index = Player_Index;
 
                                 // Mensagem
-                                if (!string.IsNullOrEmpty(NPC_Data.SayMsg)) Send.Message(Player_Index, NPC_Data.Name + ": " + NPC_Data.SayMsg, System.Drawing.Color.White);
+                                if (!string.IsNullOrEmpty(NPC_Data.SayMsg)) Send.Message(Player.Character(Player_Index), NPC_Data.Name + ": " + NPC_Data.SayMsg, System.Drawing.Color.White);
                                 break;
                             }
                         }
@@ -314,7 +314,7 @@ class NPC
                 if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
                 {
                     Victim.Vital[(byte)Game.Vitals.HP] -= Attack_Damage;
-                    Send.Player_Vitals(Victim.Index);
+                    Send.Player_Vitals(Victim);
                 }
                 // FATALITY
                 else

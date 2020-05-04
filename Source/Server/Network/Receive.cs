@@ -67,6 +67,7 @@ class Receive
     public static void Handle(byte Index, NetIncomingMessage Data)
     {
         byte Packet_Num = Data.ReadByte();
+        Character Player = global::Player.Character(Index);
 
         // Pacote principal de conexão
         if (Packet_Num == 0) Connect(Index, Data);
@@ -80,54 +81,54 @@ class Receive
                 case Client_Packets.Character_Use: Character_Use(Index, Data); break;
                 case Client_Packets.Character_Create: Character_Create(Index); break;
                 case Client_Packets.Character_Delete: Character_Delete(Index, Data); break;
-                case Client_Packets.Player_Direction: Player_Direction(Index, Data); break;
-                case Client_Packets.Player_Move: Player_Move(Index, Data); break;
-                case Client_Packets.Player_Attack: Player_Attack(Index); break;
-                case Client_Packets.RequestMap: RequestMap(Index, Data); break;
-                case Client_Packets.Message: Message(Index, Data); break;
-                case Client_Packets.AddPoint: AddPoint(Index, Data); break;
-                case Client_Packets.CollectItem: CollectItem(Index); break;
-                case Client_Packets.DropItem: DropItem(Index, Data); break;
-                case Client_Packets.Inventory_Change: Inventory_Change(Index, Data); break;
-                case Client_Packets.Inventory_Use: Inventory_Use(Index, Data); break;
-                case Client_Packets.Equipment_Remove: Equipment_Remove(Index, Data); break;
-                case Client_Packets.Hotbar_Add: Hotbar_Add(Index, Data); break;
-                case Client_Packets.Hotbar_Change: Hotbar_Change(Index, Data); break;
-                case Client_Packets.Hotbar_Use: Hotbar_Use(Index, Data); break;
-                case Client_Packets.Party_Invite: Party_Invite(Index, Data); break;
-                case Client_Packets.Party_Accept: Party_Accept(Index); break;
-                case Client_Packets.Party_Decline: Party_Decline(Index); break;
-                case Client_Packets.Party_Leave: Party_Leave(Index); break;
-                case Client_Packets.Trade_Invite: Trade_Invite(Index, Data); break;
-                case Client_Packets.Trade_Accept: Trade_Accept(Index); break;
-                case Client_Packets.Trade_Decline: Trade_Decline(Index); break;
-                case Client_Packets.Trade_Leave: Trade_Leave(Index); break;
-                case Client_Packets.Trade_Offer: Trade_Offer(Index, Data); break;
-                case Client_Packets.Trade_Offer_State: Trade_Offer_State(Index, Data); break;
-                case Client_Packets.Shop_Buy: Shop_Buy(Index, Data); break;
-                case Client_Packets.Shop_Sell: Shop_Sell(Index, Data); break;
-                case Client_Packets.Shop_Close: Shop_Close(Index); break;
-                case Client_Packets.Warp: Warp(Index, Data); break;
+                case Client_Packets.Player_Direction: Player_Direction(Player, Data); break;
+                case Client_Packets.Player_Move: Player_Move(Player, Data); break;
+                case Client_Packets.Player_Attack: Player_Attack(Player); break;
+                case Client_Packets.RequestMap: RequestMap(Player, Data); break;
+                case Client_Packets.Message: Message(Player, Data); break;
+                case Client_Packets.AddPoint: AddPoint(Player, Data); break;
+                case Client_Packets.CollectItem: CollectItem(Player); break;
+                case Client_Packets.DropItem: DropItem(Player, Data); break;
+                case Client_Packets.Inventory_Change: Inventory_Change(Player, Data); break;
+                case Client_Packets.Inventory_Use: Inventory_Use(Player, Data); break;
+                case Client_Packets.Equipment_Remove: Equipment_Remove(Player, Data); break;
+                case Client_Packets.Hotbar_Add: Hotbar_Add(Player, Data); break;
+                case Client_Packets.Hotbar_Change: Hotbar_Change(Player, Data); break;
+                case Client_Packets.Hotbar_Use: Hotbar_Use(Player, Data); break;
+                case Client_Packets.Party_Invite: Party_Invite(Player, Data); break;
+                case Client_Packets.Party_Accept: Party_Accept(Player); break;
+                case Client_Packets.Party_Decline: Party_Decline(Player); break;
+                case Client_Packets.Party_Leave: Party_Leave(Player); break;
+                case Client_Packets.Trade_Invite: Trade_Invite(Player, Data); break;
+                case Client_Packets.Trade_Accept: Trade_Accept(Player); break;
+                case Client_Packets.Trade_Decline: Trade_Decline(Player); break;
+                case Client_Packets.Trade_Leave: Trade_Leave(Player); break;
+                case Client_Packets.Trade_Offer: Trade_Offer(Player, Data); break;
+                case Client_Packets.Trade_Offer_State: Trade_Offer_State(Player, Data); break;
+                case Client_Packets.Shop_Buy: Shop_Buy(Player, Data); break;
+                case Client_Packets.Shop_Sell: Shop_Sell(Player, Data); break;
+                case Client_Packets.Shop_Close: Shop_Close(Player); break;
+                case Client_Packets.Warp: Warp(Player, Data); break;
             }
         else
             // Manuseia os dados recebidos do editor
             switch ((Editor_Packets)Packet_Num)
             {
-                case Editor_Packets.Write_Server_Data: Write_Server_Data(Index, Data); break;
-                case Editor_Packets.Write_Classes: Write_Classes(Index, Data); break;
-                case Editor_Packets.Write_Tiles: Write_Tiles(Index, Data); break;
-                case Editor_Packets.Write_Maps: Write_Maps(Index, Data); break;
-                case Editor_Packets.Write_NPCs: Write_NPCs(Index, Data); break;
-                case Editor_Packets.Write_Items: Write_Items(Index, Data); break;
-                case Editor_Packets.Write_Shops: Write_Shops(Index, Data); break;
-                case Editor_Packets.Request_Server_Data: Request_Server_Data(Index); break;
-                case Editor_Packets.Request_Classes: Request_Classes(Index); break;
-                case Editor_Packets.Request_Tiles: Request_Tiles(Index); break;
-                case Editor_Packets.Request_Map: Request_Map(Index, Data); break;
-                case Editor_Packets.Request_Maps: Request_Maps(Index, Data); break;
-                case Editor_Packets.Request_NPCs: Request_NPCs(Index); break;
-                case Editor_Packets.Request_Items: Request_Items(Index); break;
-                case Editor_Packets.Request_Shops: Request_Shops(Index); break;
+                case Editor_Packets.Write_Server_Data: Write_Server_Data(Player, Data); break;
+                case Editor_Packets.Write_Classes: Write_Classes(Player, Data); break;
+                case Editor_Packets.Write_Tiles: Write_Tiles(Player, Data); break;
+                case Editor_Packets.Write_Maps: Write_Maps(Player, Data); break;
+                case Editor_Packets.Write_NPCs: Write_NPCs(Player, Data); break;
+                case Editor_Packets.Write_Items: Write_Items(Player, Data); break;
+                case Editor_Packets.Write_Shops: Write_Shops(Player, Data); break;
+                case Editor_Packets.Request_Server_Data: Request_Server_Data(Player); break;
+                case Editor_Packets.Request_Classes: Request_Classes(Player); break;
+                case Editor_Packets.Request_Tiles: Request_Tiles(Player); break;
+                case Editor_Packets.Request_Map: Request_Map(Player, Data); break;
+                case Editor_Packets.Request_Maps: Request_Maps(Player, Data); break;
+                case Editor_Packets.Request_NPCs: Request_NPCs(Player); break;
+                case Editor_Packets.Request_Items: Request_Items(Player); break;
+                case Editor_Packets.Request_Shops: Request_Shops(Player); break;
             }
     }
 
@@ -325,44 +326,44 @@ class Receive
         Write.Player(Index);
     }
 
-    private static void Player_Direction(byte Index, NetIncomingMessage Data)
+    private static void Player_Direction(Character Player, NetIncomingMessage Data)
     {
         Game.Directions Direction = (Game.Directions)Data.ReadByte();
 
         // Previne erros
         if (Direction < Game.Directions.Up || Direction > Game.Directions.Right) return;
-        if (Player.Character(Index).GettingMap) return;
+        if (Player.GettingMap) return;
 
         // Defini a direção do jogador
-        Player.Character(Index).Direction = Direction;
-        Send.Player_Direction(Index);
+        Player.Direction = Direction;
+        Send.Player_Direction(Player);
     }
 
-    private static void Player_Move(byte Index, NetIncomingMessage Data)
+    private static void Player_Move(Character Player, NetIncomingMessage Data)
     {
         byte X = Data.ReadByte(), Y = Data.ReadByte();
 
         // Move o jogador se necessário
-        if (Player.Character(Index).X != X || Player.Character(Index).Y != Y)
-            Send.Player_Position(Index);
+        if (Player.X != X || Player.Y != Y)
+            Send.Player_Position(Player);
         else
-            Player.Character(Index).Move(Data.ReadByte());
+            Player.Move(Data.ReadByte());
     }
 
-    private static void RequestMap(byte Index, NetIncomingMessage Data)
+    private static void RequestMap(Character Player, NetIncomingMessage Data)
     {
         // Se necessário enviar as informações do mapa ao jogador
-        if (Data.ReadBoolean()) Send.Map(Index, Player.Character(Index).Map_Num);
+        if (Data.ReadBoolean()) Send.Map(Player, Player.Map_Num);
 
         // Envia a informação aos outros jogadores
-        Send.Map_Players(Index);
+        Send.Map_Players(Player);
 
         // Entra no mapa
-        Player.Character(Index).GettingMap = false;
-        Send.JoinMap(Index);
+        Player.GettingMap = false;
+        Send.JoinMap(Player);
     }
 
-    private static void Message(byte Index, NetIncomingMessage Data)
+    private static void Message(Character Player, NetIncomingMessage Data)
     {
         string Message = Data.ReadString();
 
@@ -374,43 +375,43 @@ class Receive
         // Envia a mensagem para os outros jogadores
         switch ((Game.Messages)Data.ReadByte())
         {
-            case Game.Messages.Map: Send.Message_Map(Index, Message); break;
-            case Game.Messages.Global: Send.Message_Global(Index, Message); break;
-            case Game.Messages.Private: Send.Message_Private(Index, Data.ReadString(), Message); break;
+            case Game.Messages.Map: Send.Message_Map(Player, Message); break;
+            case Game.Messages.Global: Send.Message_Global(Player, Message); break;
+            case Game.Messages.Private: Send.Message_Private(Player, Data.ReadString(), Message); break;
         }
     }
 
-    private static void Player_Attack(byte Index)
+    private static void Player_Attack(Character Player)
     {
         // Ataca
-        Player.Character(Index).Attack();
+        Player.Attack();
     }
 
-    private static void AddPoint(byte Index, NetIncomingMessage Data)
+    private static void AddPoint(Character Player, NetIncomingMessage Data)
     {
         byte Attribute_Num = Data.ReadByte();
 
         // Adiciona um ponto a determinado atributo
-        if (Player.Character(Index).Points > 0)
+        if (Player.Points > 0)
         {
-            Player.Character(Index).Attribute[Attribute_Num] += 1;
-            Player.Character(Index).Points -= 1;
-            Send.Player_Experience(Index);
-            Send.Map_Players(Index);
+            Player.Attribute[Attribute_Num] += 1;
+            Player.Points -= 1;
+            Send.Player_Experience(Player);
+            Send.Map_Players(Player);
         }
     }
 
-    private static void CollectItem(byte Index)
+    private static void CollectItem(Character Player)
     {
-        short Map_Num = Player.Character(Index).Map_Num;
-        byte Map_Item = Map.HasItem(Map_Num, Player.Character(Index).X, Player.Character(Index).Y);
+        short Map_Num = Player.Map_Num;
+        byte Map_Item = Map.HasItem(Map_Num, Player.X, Player.Y);
         short Map_Item_Num = Lists.Temp_Map[Map_Num].Item[Map_Item].Index;
 
         // Somente se necessário
         if (Map_Item == 0) return;
 
         // Dá o item ao jogador
-        if (Player.Character(Index).GiveItem(Map_Item_Num, Lists.Temp_Map[Map_Num].Item[Map_Item].Amount))
+        if (Player.GiveItem(Map_Item_Num, Lists.Temp_Map[Map_Num].Item[Map_Item].Amount))
         {
             // Retira o item do mapa
             Lists.Temp_Map[Map_Num].Item.RemoveAt(Map_Item);
@@ -418,116 +419,116 @@ class Receive
         }
     }
 
-    private static void DropItem(byte Index, NetIncomingMessage Data)
+    private static void DropItem(Character Player, NetIncomingMessage Data)
     {
-        Player.Character(Index).DropItem(Data.ReadByte(), Data.ReadInt16());
+        Player.DropItem(Data.ReadByte(), Data.ReadInt16());
     }
 
-    private static void Inventory_Change(byte Index, NetIncomingMessage Data)
+    private static void Inventory_Change(Character Player, NetIncomingMessage Data)
     {
         byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
-        byte Hotbar_Slot = Player.Character(Index).FindHotbar((byte)Game.Hotbar.Item, Slot_Old);
+        byte Hotbar_Slot = Player.FindHotbar((byte)Game.Hotbar.Item, Slot_Old);
 
         // Somente se necessário
-        if (Player.Character(Index).Inventory[Slot_Old].Item_Num == 0) return;
+        if (Player.Inventory[Slot_Old].Item_Num == 0) return;
         if (Slot_Old == Slot_New) return;
-        if (Player.Character(Index).Trade != 0) return;
+        if (Player.Trade != 0) return;
 
         // Muda o item de slot
-        (Player.Character(Index).Inventory[Slot_Old].Item_Num, Player.Character(Index).Inventory[Slot_New].Item_Num) = (Player.Character(Index).Inventory[Slot_New].Item_Num, Player.Character(Index).Inventory[Slot_Old].Item_Num);
-        (Player.Character(Index).Inventory[Slot_Old].Amount, Player.Character(Index).Inventory[Slot_New].Amount) = (Player.Character(Index).Inventory[Slot_New].Amount, Player.Character(Index).Inventory[Slot_Old].Amount);
-        Player.Character(Index).Hotbar[Hotbar_Slot].Slot = Slot_New;
-        Send.Player_Inventory(Index);
-        Send.Player_Hotbar(Index);
+        (Player.Inventory[Slot_Old].Item_Num, Player.Inventory[Slot_New].Item_Num) = (Player.Inventory[Slot_New].Item_Num, Player.Inventory[Slot_Old].Item_Num);
+        (Player.Inventory[Slot_Old].Amount, Player.Inventory[Slot_New].Amount) = (Player.Inventory[Slot_New].Amount, Player.Inventory[Slot_Old].Amount);
+        Player.Hotbar[Hotbar_Slot].Slot = Slot_New;
+        Send.Player_Inventory(Player);
+        Send.Player_Hotbar(Player);
     }
 
-    private static void Inventory_Use(byte Index, NetIncomingMessage Data)
+    private static void Inventory_Use(Character Player, NetIncomingMessage Data)
     {
-        Player.Character(Index).UseItem(Data.ReadByte());
+        Player.UseItem(Data.ReadByte());
     }
 
-    private static void Equipment_Remove(byte Index, NetIncomingMessage Data)
+    private static void Equipment_Remove(Character Player, NetIncomingMessage Data)
     {
         byte Slot = Data.ReadByte();
-        short Map_Num = Player.Character(Index).Map_Num;
+        short Map_Num = Player.Map_Num;
         Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
 
         // Apenas se necessário
-        if (Player.Character(Index).Equipment[Slot] == 0) return;
-        if (Lists.Item[Player.Character(Index).Equipment[Slot]].Bind == (byte)Game.BindOn.Equip) return;
+        if (Player.Equipment[Slot] == 0) return;
+        if (Lists.Item[Player.Equipment[Slot]].Bind == (byte)Game.BindOn.Equip) return;
 
         // Adiciona o equipamento ao inventário
-        if (!Player.Character(Index).GiveItem(Player.Character(Index).Equipment[Slot], 1))
+        if (!Player.GiveItem(Player.Equipment[Slot], 1))
         {
             // Somente se necessário
             if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
 
             // Solta o item no chão
-            Map_Item.Index = Player.Character(Index).Equipment[Slot];
+            Map_Item.Index = Player.Equipment[Slot];
             Map_Item.Amount = 1;
-            Map_Item.X = Player.Character(Index).X;
-            Map_Item.Y = Player.Character(Index).Y;
+            Map_Item.X = Player.X;
+            Map_Item.Y = Player.Y;
             Lists.Temp_Map[Map_Num].Item.Add(Map_Item);
 
             // Envia os dados
             Send.Map_Items(Map_Num);
-            Send.Player_Inventory(Index);
+            Send.Player_Inventory(Player);
         }
 
         // Remove o equipamento
-        for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Player.Character(Index).Attribute[i] -= Lists.Item[Player.Character(Index).Equipment[Slot]].Equip_Attribute[i];
-        Player.Character(Index).Equipment[Slot] = 0;
+        for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Player.Attribute[i] -= Lists.Item[Player.Equipment[Slot]].Equip_Attribute[i];
+        Player.Equipment[Slot] = 0;
 
         // Envia os dados
-        Send.Player_Equipments(Index);
+        Send.Player_Equipments(Player);
     }
 
-    private static void Hotbar_Add(byte Index, NetIncomingMessage Data)
+    private static void Hotbar_Add(Character Player, NetIncomingMessage Data)
     {
         byte Hotbar_Slot = Data.ReadByte();
         byte Type = Data.ReadByte();
         byte Slot = Data.ReadByte();
 
         // Somente se necessário
-        if (Slot != 0 && Player.Character(Index).FindHotbar(Type, Slot) > 0) return;
+        if (Slot != 0 && Player.FindHotbar(Type, Slot) > 0) return;
 
         // Define os dados
-        Player.Character(Index).Hotbar[Hotbar_Slot].Slot = Slot;
-        Player.Character(Index).Hotbar[Hotbar_Slot].Type = Type;
+        Player.Hotbar[Hotbar_Slot].Slot = Slot;
+        Player.Hotbar[Hotbar_Slot].Type = Type;
 
         // Envia os dados
-        Send.Player_Hotbar(Index);
+        Send.Player_Hotbar(Player);
     }
 
-    private static void Hotbar_Change(byte Index, NetIncomingMessage Data)
+    private static void Hotbar_Change(Character Player, NetIncomingMessage Data)
     {
         byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
 
         // Somente se necessário
-        if (Player.Character(Index).Hotbar[Slot_Old].Slot == 0) return;
+        if (Player.Hotbar[Slot_Old].Slot == 0) return;
         if (Slot_Old == Slot_New) return;
 
         // Muda o item de slot
-        (Player.Character(Index).Hotbar[Slot_Old].Slot, Player.Character(Index).Hotbar[Slot_New].Slot) = (Player.Character(Index).Hotbar[Slot_New].Slot, Player.Character(Index).Hotbar[Slot_Old].Slot);
-        (Player.Character(Index).Hotbar[Slot_Old].Type, Player.Character(Index).Hotbar[Slot_New].Type) = (Player.Character(Index).Hotbar[Slot_New].Type, Player.Character(Index).Hotbar[Slot_Old].Type);
-        Send.Player_Hotbar(Index);
+        (Player.Hotbar[Slot_Old].Slot, Player.Hotbar[Slot_New].Slot) = (Player.Hotbar[Slot_New].Slot, Player.Hotbar[Slot_Old].Slot);
+        (Player.Hotbar[Slot_Old].Type, Player.Hotbar[Slot_New].Type) = (Player.Hotbar[Slot_New].Type, Player.Hotbar[Slot_Old].Type);
+        Send.Player_Hotbar(Player);
     }
 
-    private static void Hotbar_Use(byte Index, NetIncomingMessage Data)
+    private static void Hotbar_Use(Character Player, NetIncomingMessage Data)
     {
         byte Hotbar_Slot = Data.ReadByte();
 
         // Usa o item
-        if (Player.Character(Index).Hotbar[Hotbar_Slot].Type == (byte)Game.Hotbar.Item)
-            Player.Character(Index).UseItem(Player.Character(Index).Hotbar[Hotbar_Slot].Slot);
+        if (Player.Hotbar[Hotbar_Slot].Type == (byte)Game.Hotbar.Item)
+            Player.UseItem(Player.Hotbar[Hotbar_Slot].Slot);
     }
 
-    private static void Write_Server_Data(byte Index, NetIncomingMessage Data)
+    private static void Write_Server_Data(Character Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        if (Lists.Player[Player.Index].Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Index, "You aren't allowed to do this.");
+            Send.Alert(Player.Index, "You aren't allowed to do this.");
             return;
         }
 
@@ -545,12 +546,12 @@ class Receive
         Write.Server_Data();
     }
 
-    private static void Write_Classes(byte Index, NetIncomingMessage Data)
+    private static void Write_Classes(Character Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        if (Lists.Player[Player.Index].Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Index, "You aren't allowed to do this.");
+            Send.Alert(Player.Index, "You aren't allowed to do this.");
             return;
         }
 
@@ -586,16 +587,16 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.Classes();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Index)
+            if (i != Player.Index)
                 Send.Classes(i);
     }
 
-    private static void Write_Tiles(byte Index, NetIncomingMessage Data)
+    private static void Write_Tiles(Character Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        if (Lists.Player[Player.Index].Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Index, "You aren't allowed to do this.");
+            Send.Alert(Player.Index, "You aren't allowed to do this.");
             return;
         }
 
@@ -628,16 +629,16 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.Tiles();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Index)
-                Send.Tiles(i);
+            if (i != Player.Index)
+                Send.Tiles(global::Player.Character(i));
     }
 
-    private static void Write_Maps(byte Index, NetIncomingMessage Data)
+    private static void Write_Maps(Character Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        if (Lists.Player[Player.Index].Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Index, "You aren't allowed to do this.");
+            Send.Alert(Player.Index, "You aren't allowed to do this.");
             return;
         }
 
@@ -744,20 +745,20 @@ class Receive
 
             // Envia o mapa para todos os jogadores que estão nele
             for (byte n = 1; n <= Game.HigherIndex; n++)
-                if (n != Index)
-                    if (Player.Character(n).Map_Num == i || Lists.Player[n].InEditor) Send.Map(n, i);
+                if (n != Player.Index)
+                    if (global::Player.Character(n).Map_Num == i || Lists.Player[n].InEditor) Send.Map(global::Player.Character(n), i);
         }
 
         // Salva os dados
         Write.Maps();
     }
 
-    private static void Write_NPCs(byte Index, NetIncomingMessage Data)
+    private static void Write_NPCs(Character Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        if (Lists.Player[Player.Index].Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Index, "You aren't allowed to do this.");
+            Send.Alert(Player.Index, "You aren't allowed to do this.");
             return;
         }
 
@@ -796,15 +797,15 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.NPCs();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Index) Send.NPCs(i);
+            if (i != Player.Index) Send.NPCs(global::Player.Character(i));
     }
 
-    private static void Write_Items(byte Index, NetIncomingMessage Data)
+    private static void Write_Items(Character Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        if (Lists.Player[Player.Index].Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Index, "You aren't allowed to do this.");
+            Send.Alert(Player.Index, "You aren't allowed to do this.");
             return;
         }
 
@@ -840,16 +841,16 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.Items();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Index)
-                Send.Items(i);
+            if (i != Player.Index)
+                Send.Items(global::Player.Character(i));
     }
 
-    private static void Write_Shops(byte Index, NetIncomingMessage Data)
+    private static void Write_Shops(Character Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        if (Lists.Player[Player.Index].Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Index, "You aren't allowed to do this.");
+            Send.Alert(Player.Index, "You aren't allowed to do this.");
             return;
         }
 
@@ -887,302 +888,301 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.Shops();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Index)
-                Send.Shops(i);
+            if (i != Player.Index)
+                Send.Shops(global::Player.Character(i));
     }
 
-    private static void Request_Server_Data(byte Index)
+    private static void Request_Server_Data(Character Player)
     {
-        Send.Server_Data(Index);
+        Send.Server_Data(Player);
     }
 
-    private static void Request_Classes(byte Index)
+    private static void Request_Classes(Character Player)
     {
-        Send.Classes(Index);
+        Send.Classes(Player.Index);
     }
 
-    private static void Request_Tiles(byte Index)
+    private static void Request_Tiles(Character Player)
     {
-        Send.Tiles(Index);
+        Send.Tiles(Player);
     }
 
-    private static void Request_Map(byte Index, NetIncomingMessage Data)
+    private static void Request_Map(Character Player, NetIncomingMessage Data)
     {
-        Send.Map(Index, Data.ReadInt16());
+        Send.Map(Player, Data.ReadInt16());
     }
 
-    private static void Request_Maps(byte Index, NetIncomingMessage Data)
+    private static void Request_Maps(Character Player, NetIncomingMessage Data)
     {
-        Send.Maps(Index, Data.ReadBoolean());
+        Send.Maps(Player, Data.ReadBoolean());
     }
 
-    private static void Request_NPCs(byte Index)
+    private static void Request_NPCs(Character Player)
     {
-        Send.NPCs(Index);
+        Send.NPCs(Player);
     }
 
-    private static void Request_Items(byte Index)
+    private static void Request_Items(Character Player)
     {
-        Send.Items(Index);
+        Send.Items(Player);
     }
 
-    private static void Request_Shops(byte Index)
+    private static void Request_Shops(Character Player)
     {
-        Send.Shops(Index);
+        Send.Shops(Player);
     }
 
-    private static void Party_Invite(byte Index, NetIncomingMessage Data)
+    private static void Party_Invite(Character Player, NetIncomingMessage Data)
     {
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        byte Invited = Player.Find(Name);
+        byte Invited = global::Player.Find(Name);
 
         // Verifica se o jogador está convectado
         if (Invited == 0)
         {
-            Send.Message(Index, "The player ins't connected.", System.Drawing.Color.White);
+            Send.Message(Player, "The player ins't connected.", System.Drawing.Color.White);
             return;
         }
         // Verifica se não está tentando se convidar
-        if (Invited == Index)
+        if (Invited == Player.Index)
         {
-            Send.Message(Index, "You can't be invited.", System.Drawing.Color.White);
+            Send.Message(Player, "You can't be invited.", System.Drawing.Color.White);
             return;
         }
         // Verifica se já tem um grupo
-        if (Player.Character(Invited).Party.Count != 0)
+        if (global::Player.Character(Invited).Party.Count != 0)
         {
-            Send.Message(Index, "The player is already part of a party.", System.Drawing.Color.White);
+            Send.Message(Player, "The player is already part of a party.", System.Drawing.Color.White);
             return;
         }
         // Verifica se o jogador já está analisando um convite para algum grupo
-        if (!string.IsNullOrEmpty(Player.Character(Invited).Party_Invitation))
+        if (!string.IsNullOrEmpty(global::Player.Character(Invited).Party_Invitation))
         {
-            Send.Message(Index, "The player is analyzing an invitation to another party.", System.Drawing.Color.White);
+            Send.Message(Player, "The player is analyzing an invitation to another party.", System.Drawing.Color.White);
             return;
         }
         // Verifica se o grupo está cheio
-        if (Player.Character(Index).Party.Count == Lists.Server_Data.Max_Party_Members - 1)
+        if (Player.Party.Count == Lists.Server_Data.Max_Party_Members - 1)
         {
-            Send.Message(Index, "Your party is full.", System.Drawing.Color.White);
+            Send.Message(Player, "Your party is full.", System.Drawing.Color.White);
             return;
         }
 
         // Convida o jogador
-        Player.Character(Invited).Party_Invitation = Player.Character(Index).Name;
-        Send.Party_Invitation(Invited, Player.Character(Index).Name);
+        global::Player.Character(Invited).Party_Invitation = Player.Name;
+        Send.Party_Invitation(global::Player.Character(Invited), Player.Name);
     }
 
-    private static void Party_Accept(byte Index)
+    private static void Party_Accept(Character Player)
     {
-        byte Invitation = Player.Find(Player.Character(Index).Party_Invitation);
+        byte Invitation = global::Player.Find(Player.Party_Invitation);
 
         // Verifica se já tem um grupo
-        if (Player.Character(Index).Party.Count != 0)
+        if (Player.Party.Count != 0)
         {
-            Send.Message(Index, "You are already part of a party.", System.Drawing.Color.White);
+            Send.Message(Player, "You are already part of a party.", System.Drawing.Color.White);
             return;
         }
 
         // Verifica se quem chamou ainda está disponível
         if (Invitation == 0)
         {
-            Send.Message(Index, "Who invited you is no longer avaliable.", System.Drawing.Color.White);
+            Send.Message(Player, "Who invited you is no longer avaliable.", System.Drawing.Color.White);
             return;
         }
         // Verifica se o grupo está cheio
-        if (Player.Character(Invitation).Party.Count == Lists.Server_Data.Max_Party_Members - 1)
+        if (global::Player.Character(Invitation).Party.Count == Lists.Server_Data.Max_Party_Members - 1)
         {
-            Send.Message(Index, "The party is full.", System.Drawing.Color.White);
+            Send.Message(Player, "The party is full.", System.Drawing.Color.White);
             return;
         }
 
         // Entra na festa
-        for (byte i = 0; i < Player.Character(Invitation).Party.Count; i++)
+        for (byte i = 0; i < global::Player.Character(Invitation).Party.Count; i++)
         {
-            Player.Character(Player.Character(Invitation).Party[i]).Party.Add(Index);
-            Player.Character(Index).Party.Add(Player.Character(Invitation).Party[i]);
+            global::Player.Character(global::Player.Character(Invitation).Party[i]).Party.Add(Player.Index);
+            Player.Party.Add(global::Player.Character(Invitation).Party[i]);
         }
-        Player.Character(Index).Party.Insert(0, Invitation);
-        Player.Character(Invitation).Party.Add(Index);
-        Player.Character(Index).Party_Invitation = string.Empty;
-        Send.Message(Invitation, Player.Character(Index).Name + " joined the party.", System.Drawing.Color.White);
+        Player.Party.Insert(0, Invitation);
+        global::Player.Character(Invitation).Party.Add(Player.Index);
+        Player.Party_Invitation = string.Empty;
+        Send.Message(global::Player.Character(Invitation), Player.Name + " joined the party.", System.Drawing.Color.White);
 
         // Envia os dados para o grupo
-        Send.Party(Index);
-        for (byte i = 0; i < Player.Character(Index).Party.Count; i++) Send.Party(Player.Character(Index).Party[i]);
+        Send.Party(Player);
+        for (byte i = 0; i < Player.Party.Count; i++) Send.Party(global::Player.Character(Player.Party[i]));
     }
 
-    private static void Party_Decline(byte Index)
+    private static void Party_Decline(Character Player)
     {
-        byte Invitation = Player.Find(Player.Character(Index).Party_Invitation);
+        byte Invitation = global::Player.Find(Player.Party_Invitation);
 
         // Recusa o convite
-        if (Invitation != 0) Send.Message(Invitation, Player.Character(Index).Name + " decline the party.", System.Drawing.Color.White);
-        Player.Character(Index).Party_Invitation = string.Empty;
+        if (Invitation != 0) Send.Message(global::Player.Character(Invitation), Player.Name + " decline the party.", System.Drawing.Color.White);
+        Player.Party_Invitation = string.Empty;
     }
 
-    private static void Party_Leave(byte Index)
+    private static void Party_Leave(Character Player)
     {
         // Sai do grupo
-        Player.Character(Index).Party_Leave();
+        Player.Party_Leave();
     }
 
-    private static void Trade_Invite(byte Index, NetIncomingMessage Data)
+    private static void Trade_Invite(Character Player, NetIncomingMessage Data)
     {
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        byte Invited = Player.Find(Name);
+        byte Invited = global::Player.Find(Name);
 
         // Verifica se o jogador está convectado
         if (Invited == 0)
         {
-            Send.Message(Index, "The player ins't connected.", System.Drawing.Color.White);
+            Send.Message(Player, "The player ins't connected.", System.Drawing.Color.White);
             return;
         }
         // Verifica se não está tentando se convidar
-        if (Invited == Index)
+        if (Invited == Player.Index)
         {
-            Send.Message(Index, "You can't be invited.", System.Drawing.Color.White);
+            Send.Message(Player, "You can't be invited.", System.Drawing.Color.White);
             return;
         }
         // Verifica se já tem um grupo
-        if (Player.Character(Invited).Trade != 0)
+        if (global::Player.Character(Invited).Trade != 0)
         {
-            Send.Message(Index, "The player is already part of a trade.", System.Drawing.Color.White);
+            Send.Message(Player, "The player is already part of a trade.", System.Drawing.Color.White);
             return;
         }
         // Verifica se o jogador já está analisando um convite para algum grupo
-        if (!string.IsNullOrEmpty(Player.Character(Invited).Trade_Request))
+        if (!string.IsNullOrEmpty(global::Player.Character(Invited).Trade_Request))
         {
-            Send.Message(Index, "The player is analyzing an invitation of another trade.", System.Drawing.Color.White);
+            Send.Message(Player, "The player is analyzing an invitation of another trade.", System.Drawing.Color.White);
             return;
         }
         // Verifica se os jogadores não estão em com a loja aberta
-        if (Player.Character(Index).Shop > 0)
+        if (Player.Shop > 0)
         {
-            Send.Message(Index, "You can't start a trade while in the shop.", System.Drawing.Color.White);
+            Send.Message(Player, "You can't start a trade while in the shop.", System.Drawing.Color.White);
             return;
         }
-        if (Player.Character(Invited).Shop > 0)
+        if (global::Player.Character(Invited).Shop > 0)
         {
-            Send.Message(Index, "The player is in the shop.", System.Drawing.Color.White);
+            Send.Message(Player, "The player is in the shop.", System.Drawing.Color.White);
             return;
         }
         // Verifica se os jogadores estão pertods um do outro
-        if (System.Math.Abs(Player.Character(Index).X - Player.Character(Invited).X) + System.Math.Abs(Player.Character(Index).Y - Player.Character(Invited).Y) != 1)
+        if (System.Math.Abs(Player.X - global::Player.Character(Invited).X) + System.Math.Abs(Player.Y - global::Player.Character(Invited).Y) != 1)
         {
-            Send.Message(Index, "You need to be close to the player to start trade.", System.Drawing.Color.White);
+            Send.Message(Player, "You need to be close to the player to start trade.", System.Drawing.Color.White);
             return;
         }
 
-
         // Convida o jogador
-        Player.Character(Invited).Trade_Request = Player.Character(Index).Name;
-        Send.Trade_Invitation(Invited, Player.Character(Index).Name);
+        global::Player.Character(Invited).Trade_Request = Player.Name;
+        Send.Trade_Invitation(global::Player.Character(Invited), Player.Name);
     }
 
-    private static void Trade_Accept(byte Index)
+    private static void Trade_Accept(Character Player)
     {
-        byte Invited = Player.Find(Player.Character(Index).Trade_Request);
+        byte Invited = global::Player.Find(Player.Trade_Request);
 
         // Verifica se já tem um grupo
-        if (Player.Character(Index).Trade != 0)
+        if (Player.Trade != 0)
         {
-            Send.Message(Index, "You are already part of a trade.", System.Drawing.Color.White);
+            Send.Message(Player, "You are already part of a trade.", System.Drawing.Color.White);
             return;
         }
         // Verifica se quem chamou ainda está disponível
         if (Invited == 0)
         {
-            Send.Message(Index, "Who invited you is no longer avaliable.", System.Drawing.Color.White);
+            Send.Message(Player, "Who invited you is no longer avaliable.", System.Drawing.Color.White);
             return;
         }
         // Verifica se os jogadores estão pertods um do outro
-        if (System.Math.Abs(Player.Character(Index).X - Player.Character(Invited).X) + System.Math.Abs(Player.Character(Index).Y - Player.Character(Invited).Y) != 1)
+        if (System.Math.Abs(Player.X - global::Player.Character(Invited).X) + System.Math.Abs(Player.Y - global::Player.Character(Invited).Y) != 1)
         {
-            Send.Message(Index, "You need to be close to the player to accept the trade.", System.Drawing.Color.White);
+            Send.Message(Player, "You need to be close to the player to accept the trade.", System.Drawing.Color.White);
             return;
         }
         // Verifica se  os jogadores não estão em com a loja aberta
-        if (Player.Character(Invited).Shop > 0)
+        if (global::Player.Character(Invited).Shop > 0)
         {
-            Send.Message(Index, "Who invited you is in the shop.", System.Drawing.Color.White);
+            Send.Message(Player, "Who invited you is in the shop.", System.Drawing.Color.White);
             return;
         }
 
         // Entra na troca
-        Player.Character(Index).Trade = Invited;
-        Player.Character(Invited).Trade = Index;
-        Send.Message(Index, "You have accepted " + Player.Character(Invited).Name + "'s trade request.", System.Drawing.Color.White);
-        Send.Message(Invited, Player.Character(Index).Name + " has accepted your trade request.", System.Drawing.Color.White);
+        Player.Trade = Invited;
+        global::Player.Character(Invited).Trade = Player.Index;
+        Send.Message(Player, "You have accepted " + global::Player.Character(Invited).Name + "'s trade request.", System.Drawing.Color.White);
+        Send.Message(global::Player.Character(Invited), Player.Name + " has accepted your trade request.", System.Drawing.Color.White);
 
         // Limpa os dadoss
-        Player.Character(Index).Trade_Request = string.Empty;
-        Player.Character(Index).Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
-        Player.Character(Invited).Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
+        Player.Trade_Request = string.Empty;
+        Player.Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
+        global::Player.Character(Invited).Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
 
         // Envia os dados para o grupo
-        Send.Trade(Index);
-        Send.Trade(Invited);
+        Send.Trade(Player);
+        Send.Trade(global::Player.Character(Invited));
     }
 
-    private static void Trade_Decline(byte Index)
+    private static void Trade_Decline(Character Player)
     {
-        byte Invited = Player.Find(Player.Character(Index).Trade_Request);
+        byte Invited = global::Player.Find(Player.Trade_Request);
 
         // Recusa o convite
-        if (Invited != 0) Send.Message(Invited, Player.Character(Index).Name + " decline the trade.", System.Drawing.Color.White);
-        Player.Character(Index).Trade_Request = string.Empty;
+        if (Invited != 0) Send.Message(global::Player.Character(Invited), Player.Name + " decline the trade.", System.Drawing.Color.White);
+        Player.Trade_Request = string.Empty;
     }
 
-    private static void Trade_Leave(byte Index)
+    private static void Trade_Leave(Character Player)
     {
-        Player.Character(Index).Trade_Leave();
+        Player.Trade_Leave();
     }
 
-    private static void Trade_Offer(byte Index, NetIncomingMessage Data)
+    private static void Trade_Offer(Character Player, NetIncomingMessage Data)
     {
         byte Slot = Data.ReadByte(), Inventory_Slot = Data.ReadByte();
-        short Amount = System.Math.Min(Data.ReadInt16(), Player.Character(Index).Inventory[Inventory_Slot].Amount);
+        short Amount = System.Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
 
         // Adiciona o item à troca
         if (Inventory_Slot != 0)
         {
             // Evita itens repetidos
             for (byte i = 1; i <= Game.Max_Inventory; i++)
-                if (Player.Character(Index).Trade_Offer[i].Item_Num == Inventory_Slot)
+                if (Player.Trade_Offer[i].Item_Num == Inventory_Slot)
                     return;
 
-            Player.Character(Index).Trade_Offer[Slot].Item_Num = Inventory_Slot;
-            Player.Character(Index).Trade_Offer[Slot].Amount = Amount;
+            Player.Trade_Offer[Slot].Item_Num = Inventory_Slot;
+            Player.Trade_Offer[Slot].Amount = Amount;
         }
         // Remove o item da troca
         else
-            Player.Character(Index).Trade_Offer[Slot] = new Lists.Structures.Inventories();
+            Player.Trade_Offer[Slot] = new Lists.Structures.Inventories();
 
         // Envia os dados ao outro jogador
-        Send.Trade_Offer(Index);
-        Send.Trade_Offer(Player.Character(Index).Trade, false);
+        Send.Trade_Offer(Player);
+        Send.Trade_Offer(global::Player.Character(Player.Trade), false);
     }
 
-    private static void Trade_Offer_State(byte Index, NetIncomingMessage Data)
+    private static void Trade_Offer_State(Character Player, NetIncomingMessage Data)
     {
         Game.Trade_Status State = (Game.Trade_Status)Data.ReadByte();
-        byte Invited = Player.Character(Index).Trade;
+        Character Invited = global::Player.Character(Player.Trade);
 
         switch (State)
         {
             case Game.Trade_Status.Accepted:
                 // Verifica se os jogadores têm espaço disponivel para trocar os itens
-                if (Player.Character(Index).Total_Trade_Items() > Player.Character(Invited).Total_Inventory_Free())
+                if (Player.Total_Trade_Items() > Invited.Total_Inventory_Free())
                 {
-                    Send.Message(Invited, Player.Character(Invited).Name + " don't have enought space in their inventory to do this trade.", System.Drawing.Color.Red);
+                    Send.Message(Invited, Invited.Name + " don't have enought space in their inventory to do this trade.", System.Drawing.Color.Red);
                     break;
                 }
-                if (Player.Character(Invited).Total_Trade_Items() > Player.Character(Index).Total_Inventory_Free())
+                if (Invited.Total_Trade_Items() > Player.Total_Inventory_Free())
                 {
                     Send.Message(Invited, "You don't have enought space in your inventory to do this trade.", System.Drawing.Color.Red);
                     break;
@@ -1192,28 +1192,28 @@ class Receive
                 Send.Message(Invited, "The offer was accepted.", System.Drawing.Color.Green);
 
                 // Dados da oferta
-                Lists.Structures.Inventories[] Your_Inventory = (Lists.Structures.Inventories[])Player.Character(Index).Inventory.Clone(),
-                    Their_Inventory = (Lists.Structures.Inventories[])Player.Character(Invited).Inventory.Clone();
+                Lists.Structures.Inventories[] Your_Inventory = (Lists.Structures.Inventories[])Player.Inventory.Clone(),
+                    Their_Inventory = (Lists.Structures.Inventories[])Invited.Inventory.Clone();
 
                 // Remove os itens do inventário dos jogadores
-                for (byte j = 0, To = Index; j < 2; j++, To = (To == Index ? Invited : Index))
+                for (byte j = 0, To = Player.Index; j < 2; j++, To = (To == Player.Index ? Invited.Index : Player.Index))
                     for (byte i = 1; i <= Game.Max_Inventory; i++)
-                        Player.Character(To).TakeItem((byte)Player.Character(To).Trade_Offer[i].Item_Num, Player.Character(To).Trade_Offer[i].Amount);
+                        global::Player.Character(To).TakeItem((byte)global::Player.Character(To).Trade_Offer[i].Item_Num, global::Player.Character(To).Trade_Offer[i].Amount);
 
                 // Dá os itens aos jogadores
                 for (byte i = 1; i <= Game.Max_Inventory; i++)
                 {
-                    if (Player.Character(Index).Trade_Offer[i].Item_Num > 0) Player.Character(Invited).GiveItem(Your_Inventory[Player.Character(Index).Trade_Offer[i].Item_Num].Item_Num, Player.Character(Index).Trade_Offer[i].Amount);
-                    if (Player.Character(Invited).Trade_Offer[i].Item_Num > 0) Player.Character(Index).GiveItem(Their_Inventory[Player.Character(Invited).Trade_Offer[i].Item_Num].Item_Num, Player.Character(Invited).Trade_Offer[i].Amount);
+                    if (Player.Trade_Offer[i].Item_Num > 0) Invited.GiveItem(Your_Inventory[Player.Trade_Offer[i].Item_Num].Item_Num, Player.Trade_Offer[i].Amount);
+                    if (Invited.Trade_Offer[i].Item_Num > 0) Player.GiveItem(Their_Inventory[Invited.Trade_Offer[i].Item_Num].Item_Num, Invited.Trade_Offer[i].Amount);
                 }
 
                 // Envia os dados do inventário aos jogadores
-                Send.Player_Inventory(Index);
+                Send.Player_Inventory(Player);
                 Send.Player_Inventory(Invited);
 
                 // Limpa a troca
-                Player.Character(Index).Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
-                Player.Character(Invited).Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
+                Player.Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
+                Invited.Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
                 Send.Trade_Offer(Invited);
                 Send.Trade_Offer(Invited, false);
                 break;
@@ -1221,7 +1221,7 @@ class Receive
                 Send.Message(Invited, "The offer was declined.", System.Drawing.Color.Red);
                 break;
             case Game.Trade_Status.Waiting:
-                Send.Message(Invited, Player.Character(Index).Name + " send you a offer.", System.Drawing.Color.White);
+                Send.Message(Invited, Player.Name + " send you a offer.", System.Drawing.Color.White);
                 break;
         }
 
@@ -1229,70 +1229,70 @@ class Receive
         Send.Trade_State(Invited, State);
     }
 
-    private static void Shop_Buy(byte Index, NetIncomingMessage Data)
+    private static void Shop_Buy(Character Player, NetIncomingMessage Data)
     {
-        Lists.Structures.Shop_Item Shop_Sold = Lists.Shop[Player.Character(Index).Shop].Sold[Data.ReadByte()];
-        byte Inventory_Slot = Player.Character(Index).FindInventory(Lists.Shop[Player.Character(Index).Shop].Currency);
+        Lists.Structures.Shop_Item Shop_Sold = Lists.Shop[Player.Shop].Sold[Data.ReadByte()];
+        byte Inventory_Slot = Player.FindInventory(Lists.Shop[Player.Shop].Currency);
 
         // Verifica se o jogador tem dinheiro
-        if (Inventory_Slot == 0 || Player.Character(Index).Inventory[Inventory_Slot].Amount < Shop_Sold.Price)
+        if (Inventory_Slot == 0 || Player.Inventory[Inventory_Slot].Amount < Shop_Sold.Price)
         {
-            Send.Message(Index, "You don't have enough money to buy the item.", System.Drawing.Color.Red);
+            Send.Message(Player, "You don't have enough money to buy the item.", System.Drawing.Color.Red);
             return;
         }
         // Verifica se há espaço no inventário
-        if (Player.Character(Index).Total_Inventory_Free() == 0 && Player.Character(Index).Inventory[Inventory_Slot].Amount > Shop_Sold.Price)
+        if (Player.Total_Inventory_Free() == 0 && Player.Inventory[Inventory_Slot].Amount > Shop_Sold.Price)
         {
-            Send.Message(Index, "You  don't have space in your bag.", System.Drawing.Color.Red);
+            Send.Message(Player, "You  don't have space in your bag.", System.Drawing.Color.Red);
             return;
         }
 
         // Realiza a compra do item
-        Player.Character(Index).TakeItem(Inventory_Slot, Shop_Sold.Price);
-        Player.Character(Index).GiveItem(Shop_Sold.Item_Num, Shop_Sold.Amount);
-        Send.Message(Index, "You bought " + Shop_Sold.Price + "x " + Lists.Item[Shop_Sold.Item_Num].Name + ".", System.Drawing.Color.Green);
+        Player.TakeItem(Inventory_Slot, Shop_Sold.Price);
+        Player.GiveItem(Shop_Sold.Item_Num, Shop_Sold.Amount);
+        Send.Message(Player, "You bought " + Shop_Sold.Price + "x " + Lists.Item[Shop_Sold.Item_Num].Name + ".", System.Drawing.Color.Green);
     }
 
-    private static void Shop_Sell(byte Index, NetIncomingMessage Data)
+    private static void Shop_Sell(Character Player, NetIncomingMessage Data)
     {
         byte Inventory_Slot = Data.ReadByte();
-        short Amount = System.Math.Min(Data.ReadInt16(), Player.Character(Index).Inventory[Inventory_Slot].Amount);
-        Lists.Structures.Shop_Item Buy = Game.Shop_Buy(Player.Character(Index).Shop, Player.Character(Index).Inventory[Inventory_Slot].Item_Num);
+        short Amount = System.Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
+        Lists.Structures.Shop_Item Buy = Game.Shop_Buy(Player.Shop, Player.Inventory[Inventory_Slot].Item_Num);
 
         // Verifica se a loja vende o item
         if (Buy == null)
         {
-            Send.Message(Index, "The store doesn't sell this item", System.Drawing.Color.Red);
+            Send.Message(Player, "The store doesn't sell this item", System.Drawing.Color.Red);
             return;
         }
         // Verifica se há espaço no inventário
-        if (Player.Character(Index).Total_Inventory_Free() == 0 && Player.Character(Index).Inventory[Inventory_Slot].Amount > Amount)
+        if (Player.Total_Inventory_Free() == 0 && Player.Inventory[Inventory_Slot].Amount > Amount)
         {
-            Send.Message(Index, "You don't have space in your bag.", System.Drawing.Color.Red);
+            Send.Message(Player, "You don't have space in your bag.", System.Drawing.Color.Red);
             return;
         }
 
         // Realiza a venda do item
-        Player.Character(Index).TakeItem(Inventory_Slot, Amount);
-        Player.Character(Index).GiveItem(Lists.Shop[Player.Character(Index).Shop].Currency, (short)(Buy.Price * Amount));
-        Send.Message(Index, "You sold " + Lists.Item[Inventory_Slot].Name + "x " + Amount + "for .", System.Drawing.Color.Green);
+        Player.TakeItem(Inventory_Slot, Amount);
+        Player.GiveItem(Lists.Shop[Player.Shop].Currency, (short)(Buy.Price * Amount));
+        Send.Message(Player, "You sold " + Lists.Item[Inventory_Slot].Name + "x " + Amount + "for .", System.Drawing.Color.Green);
     }
 
-    private static void Shop_Close(byte Index)
+    private static void Shop_Close(Character Player)
     {
-        Player.Character(Index).Shop = 0;
+        Player.Shop = 0;
     }
 
-    private static void Warp(byte Index, NetIncomingMessage Data)
+    private static void Warp(Character Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Player[Index].Acess < Game.Accesses.Editor)
+        if (Lists.Player[Player.Index].Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Index, "You aren't allowed to do this.");
+            Send.Alert(Player.Index, "You aren't allowed to do this.");
             return;
         }
 
         // Teletransporta o jogador para o mapa
-        Player.Character(Index).Warp(Data.ReadInt16(), Data.ReadByte(), Data.ReadByte());
+        Player.Warp(Data.ReadInt16(), Data.ReadByte(), Data.ReadByte());
     }
 }
