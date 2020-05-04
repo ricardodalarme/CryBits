@@ -690,8 +690,8 @@ class Player
         if (Trade > 0)
         {
             Account.Character(Trade).Trade = 0;
-            Trade = 0;
             Send.Trade(Account.Character(Trade));
+            Trade = 0;
             Send.Trade(this);
         }
     }
