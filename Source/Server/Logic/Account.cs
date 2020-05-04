@@ -27,15 +27,15 @@
         return 0;
     }
 
-    public static byte Find(string Name)
+    public static Player Find(string Name)
     {
         // Encontra o usuário
         for (byte i = 1; i < Lists.Account.Length; i++)
             if (IsPlaying(i))
                 if (Character(i).Name == Name)
-                    return i;
+                    return Character(i);
 
-        return 0;
+        return null;
     }
 
     public static bool MultipleAccounts(string User)

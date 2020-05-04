@@ -461,7 +461,6 @@ class NPC
                 }
     }
 
-
     private static void Spawn(byte Index, short Map_Num, byte x, byte y, Game.Directions Direction = 0)
     {
         short NPC_Index = Lists.Map[Map_Num].NPC[Index].Index;

@@ -67,7 +67,7 @@ class Receive
     public static void Handle(byte Index, NetIncomingMessage Data)
     {
         byte Packet_Num = Data.ReadByte();
-        Player Player = global::Account.Character(Index);
+        Player Player = Account.Character(Index);
 
         // Pacote principal de conexão
         if (Packet_Num == 0) Connect(Index, Data);
@@ -341,10 +341,8 @@ class Receive
 
     private static void Player_Move(Player Player, NetIncomingMessage Data)
     {
-        byte X = Data.ReadByte(), Y = Data.ReadByte();
-
         // Move o jogador se necessário
-        if (Player.X != X || Player.Y != Y)
+        if (Player.X != Data.ReadByte() || Player.Y != Data.ReadByte())
             Send.Player_Position(Player);
         else
             Player.Move(Data.ReadByte());
@@ -630,7 +628,7 @@ class Receive
         Write.Tiles();
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (i != Player.Index)
-                Send.Tiles(global::Account.Character(i));
+                Send.Tiles(Account.Character(i));
     }
 
     private static void Write_Maps(Player Player, NetIncomingMessage Data)
@@ -746,7 +744,7 @@ class Receive
             // Envia o mapa para todos os jogadores que estão nele
             for (byte n = 1; n <= Game.HigherIndex; n++)
                 if (n != Player.Index)
-                    if (global::Account.Character(n).Map_Num == i || Lists.Account[n].InEditor) Send.Map(global::Account.Character(n), i);
+                    if (Account.Character(n).Map_Num == i || Lists.Account[n].InEditor) Send.Map(Account.Character(n), i);
         }
 
         // Salva os dados
@@ -797,7 +795,7 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.NPCs();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Player.Index) Send.NPCs(global::Account.Character(i));
+            if (i != Player.Index) Send.NPCs(Account.Character(i));
     }
 
     private static void Write_Items(Player Player, NetIncomingMessage Data)
@@ -842,7 +840,7 @@ class Receive
         Write.Items();
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (i != Player.Index)
-                Send.Items(global::Account.Character(i));
+                Send.Items(Account.Character(i));
     }
 
     private static void Write_Shops(Player Player, NetIncomingMessage Data)
@@ -889,7 +887,7 @@ class Receive
         Write.Shops();
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (i != Player.Index)
-                Send.Shops(global::Account.Character(i));
+                Send.Shops(Account.Character(i));
     }
 
     private static void Request_Server_Data(Player Player)
@@ -937,28 +935,28 @@ class Receive
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        byte Invited = global::Account.Find(Name);
+        Player Invited = Account.Find(Name);
 
         // Verifica se o jogador está convectado
-        if (Invited == 0)
+        if (Invited == null)
         {
             Send.Message(Player, "The player ins't connected.", System.Drawing.Color.White);
             return;
         }
         // Verifica se não está tentando se convidar
-        if (Invited == Player.Index)
+        if (Invited == Player)
         {
             Send.Message(Player, "You can't be invited.", System.Drawing.Color.White);
             return;
         }
         // Verifica se já tem um grupo
-        if (global::Account.Character(Invited).Party.Count != 0)
+        if (Invited.Party.Count != 0)
         {
             Send.Message(Player, "The player is already part of a party.", System.Drawing.Color.White);
             return;
         }
         // Verifica se o jogador já está analisando um convite para algum grupo
-        if (!string.IsNullOrEmpty(global::Account.Character(Invited).Party_Invitation))
+        if (!string.IsNullOrEmpty(Invited.Party_Invitation))
         {
             Send.Message(Player, "The player is analyzing an invitation to another party.", System.Drawing.Color.White);
             return;
@@ -971,13 +969,13 @@ class Receive
         }
 
         // Convida o jogador
-        global::Account.Character(Invited).Party_Invitation = Player.Name;
-        Send.Party_Invitation(global::Account.Character(Invited), Player.Name);
+        Invited.Party_Invitation = Player.Name;
+        Send.Party_Invitation(Invited, Player.Name);
     }
 
     private static void Party_Accept(Player Player)
     {
-        byte Invitation = global::Account.Find(Player.Party_Invitation);
+        Player Invitation = Account.Find(Player.Party_Invitation);
 
         // Verifica se já tem um grupo
         if (Player.Party.Count != 0)
@@ -987,40 +985,40 @@ class Receive
         }
 
         // Verifica se quem chamou ainda está disponível
-        if (Invitation == 0)
+        if (Invitation == null)
         {
             Send.Message(Player, "Who invited you is no longer avaliable.", System.Drawing.Color.White);
             return;
         }
         // Verifica se o grupo está cheio
-        if (global::Account.Character(Invitation).Party.Count == Lists.Server_Data.Max_Party_Members - 1)
+        if (Invitation.Party.Count == Lists.Server_Data.Max_Party_Members - 1)
         {
             Send.Message(Player, "The party is full.", System.Drawing.Color.White);
             return;
         }
 
         // Entra na festa
-        for (byte i = 0; i < global::Account.Character(Invitation).Party.Count; i++)
+        for (byte i = 0; i < Invitation.Party.Count; i++)
         {
-            global::Account.Character(global::Account.Character(Invitation).Party[i]).Party.Add(Player.Index);
-            Player.Party.Add(global::Account.Character(Invitation).Party[i]);
+            Account.Character(Invitation.Party[i]).Party.Add(Player.Index);
+            Player.Party.Add(Invitation.Party[i]);
         }
-        Player.Party.Insert(0, Invitation);
-        global::Account.Character(Invitation).Party.Add(Player.Index);
+        Player.Party.Insert(0, Invitation.Index);
+        Invitation.Party.Add(Player.Index);
         Player.Party_Invitation = string.Empty;
-        Send.Message(global::Account.Character(Invitation), Player.Name + " joined the party.", System.Drawing.Color.White);
+        Send.Message(Invitation, Player.Name + " joined the party.", System.Drawing.Color.White);
 
         // Envia os dados para o grupo
         Send.Party(Player);
-        for (byte i = 0; i < Player.Party.Count; i++) Send.Party(global::Account.Character(Player.Party[i]));
+        for (byte i = 0; i < Player.Party.Count; i++) Send.Party(Account.Character(Player.Party[i]));
     }
 
     private static void Party_Decline(Player Player)
     {
-        byte Invitation = global::Account.Find(Player.Party_Invitation);
+        Player Invitation = Account.Find(Player.Party_Invitation);
 
         // Recusa o convite
-        if (Invitation != 0) Send.Message(global::Account.Character(Invitation), Player.Name + " decline the party.", System.Drawing.Color.White);
+        if (Invitation != null) Send.Message(Invitation, Player.Name + " decline the party.", System.Drawing.Color.White);
         Player.Party_Invitation = string.Empty;
     }
 
@@ -1035,28 +1033,28 @@ class Receive
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        byte Invited = global::Account.Find(Name);
+        Player Invited = Account.Find(Name);
 
         // Verifica se o jogador está convectado
-        if (Invited == 0)
+        if (Invited == null)
         {
             Send.Message(Player, "The player ins't connected.", System.Drawing.Color.White);
             return;
         }
         // Verifica se não está tentando se convidar
-        if (Invited == Player.Index)
+        if (Invited == Player)
         {
             Send.Message(Player, "You can't be invited.", System.Drawing.Color.White);
             return;
         }
         // Verifica se já tem um grupo
-        if (global::Account.Character(Invited).Trade != 0)
+        if (Invited.Trade != 0)
         {
             Send.Message(Player, "The player is already part of a trade.", System.Drawing.Color.White);
             return;
         }
         // Verifica se o jogador já está analisando um convite para algum grupo
-        if (!string.IsNullOrEmpty(global::Account.Character(Invited).Trade_Request))
+        if (!string.IsNullOrEmpty(Invited.Trade_Request))
         {
             Send.Message(Player, "The player is analyzing an invitation of another trade.", System.Drawing.Color.White);
             return;
@@ -1067,26 +1065,26 @@ class Receive
             Send.Message(Player, "You can't start a trade while in the shop.", System.Drawing.Color.White);
             return;
         }
-        if (global::Account.Character(Invited).Shop > 0)
+        if (Invited.Shop > 0)
         {
             Send.Message(Player, "The player is in the shop.", System.Drawing.Color.White);
             return;
         }
         // Verifica se os jogadores estão pertods um do outro
-        if (System.Math.Abs(Player.X - global::Account.Character(Invited).X) + System.Math.Abs(Player.Y - global::Account.Character(Invited).Y) != 1)
+        if (System.Math.Abs(Player.X - Invited.X) + System.Math.Abs(Player.Y - Invited.Y) != 1)
         {
             Send.Message(Player, "You need to be close to the player to start trade.", System.Drawing.Color.White);
             return;
         }
 
         // Convida o jogador
-        global::Account.Character(Invited).Trade_Request = Player.Name;
-        Send.Trade_Invitation(global::Account.Character(Invited), Player.Name);
+        Invited.Trade_Request = Player.Name;
+        Send.Trade_Invitation(Invited, Player.Name);
     }
 
     private static void Trade_Accept(Player Player)
     {
-        byte Invited = global::Account.Find(Player.Trade_Request);
+        Player Invited = Account.Find(Player.Trade_Request);
 
         // Verifica se já tem um grupo
         if (Player.Trade != 0)
@@ -1095,46 +1093,46 @@ class Receive
             return;
         }
         // Verifica se quem chamou ainda está disponível
-        if (Invited == 0)
+        if (Invited == null)
         {
             Send.Message(Player, "Who invited you is no longer avaliable.", System.Drawing.Color.White);
             return;
         }
         // Verifica se os jogadores estão pertods um do outro
-        if (System.Math.Abs(Player.X - global::Account.Character(Invited).X) + System.Math.Abs(Player.Y - global::Account.Character(Invited).Y) != 1)
+        if (System.Math.Abs(Player.X - Invited.X) + System.Math.Abs(Player.Y - Invited.Y) != 1)
         {
             Send.Message(Player, "You need to be close to the player to accept the trade.", System.Drawing.Color.White);
             return;
         }
         // Verifica se  os jogadores não estão em com a loja aberta
-        if (global::Account.Character(Invited).Shop > 0)
+        if (Invited.Shop > 0)
         {
             Send.Message(Player, "Who invited you is in the shop.", System.Drawing.Color.White);
             return;
         }
 
         // Entra na troca
-        Player.Trade = Invited;
-        global::Account.Character(Invited).Trade = Player.Index;
-        Send.Message(Player, "You have accepted " + global::Account.Character(Invited).Name + "'s trade request.", System.Drawing.Color.White);
-        Send.Message(global::Account.Character(Invited), Player.Name + " has accepted your trade request.", System.Drawing.Color.White);
+        Player.Trade = Invited.Index;
+        Invited.Trade = Player.Index;
+        Send.Message(Player, "You have accepted " + Invited.Name + "'s trade request.", System.Drawing.Color.White);
+        Send.Message(Invited, Player.Name + " has accepted your trade request.", System.Drawing.Color.White);
 
         // Limpa os dadoss
         Player.Trade_Request = string.Empty;
         Player.Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
-        global::Account.Character(Invited).Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
+        Invited.Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
 
         // Envia os dados para o grupo
         Send.Trade(Player);
-        Send.Trade(global::Account.Character(Invited));
+        Send.Trade(Invited);
     }
 
     private static void Trade_Decline(Player Player)
     {
-        byte Invited = global::Account.Find(Player.Trade_Request);
+        Player Invited = Account.Find(Player.Trade_Request);
 
         // Recusa o convite
-        if (Invited != 0) Send.Message(global::Account.Character(Invited), Player.Name + " decline the trade.", System.Drawing.Color.White);
+        if (Invited != null) Send.Message(Invited, Player.Name + " decline the trade.", System.Drawing.Color.White);
         Player.Trade_Request = string.Empty;
     }
 
@@ -1165,13 +1163,13 @@ class Receive
 
         // Envia os dados ao outro jogador
         Send.Trade_Offer(Player);
-        Send.Trade_Offer(global::Account.Character(Player.Trade), false);
+        Send.Trade_Offer(Account.Character(Player.Trade), false);
     }
 
     private static void Trade_Offer_State(Player Player, NetIncomingMessage Data)
     {
         Game.Trade_Status State = (Game.Trade_Status)Data.ReadByte();
-        Player Invited = global::Account.Character(Player.Trade);
+        Player Invited = Account.Character(Player.Trade);
 
         switch (State)
         {
@@ -1198,7 +1196,7 @@ class Receive
                 // Remove os itens do inventário dos jogadores
                 for (byte j = 0, To = Player.Index; j < 2; j++, To = (To == Player.Index ? Invited.Index : Player.Index))
                     for (byte i = 1; i <= Game.Max_Inventory; i++)
-                        global::Account.Character(To).TakeItem((byte)global::Account.Character(To).Trade_Offer[i].Item_Num, global::Account.Character(To).Trade_Offer[i].Amount);
+                        Account.Character(To).TakeItem((byte)Account.Character(To).Trade_Offer[i].Item_Num, Account.Character(To).Trade_Offer[i].Amount);
 
                 // Dá os itens aos jogadores
                 for (byte i = 1; i <= Game.Max_Inventory; i++)

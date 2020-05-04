@@ -86,16 +86,16 @@ class Send
         // Envia os dados para todos conectados
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Account.IsPlaying(i))
-                ToPlayer(global::Account.Character(i), Data);
+                ToPlayer(Account.Character(i), Data);
     }
 
     private static void ToAllBut(Player Player, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (global::Account.IsPlaying(i))
+            if (Account.IsPlaying(i))
                 if (Player.Index != i)
-                    ToPlayer(global::Account.Character(i), Data);
+                    ToPlayer(Account.Character(i), Data);
     }
 
     private static void ToMap(short Map, NetOutgoingMessage Data)
@@ -111,10 +111,10 @@ class Send
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (global::Account.IsPlaying(i))
-                if (global::Account.Character(i).Map_Num == Map)
+            if (Account.IsPlaying(i))
+                if (Account.Character(i).Map_Num == Map)
                     if (Player.Index != i)
-                        ToPlayer(global::Account.Character(i), Data);
+                        ToPlayer(Account.Character(i), Data);
     }
 
     public static void Alert(byte Index, string Message, bool Disconnect = true)
@@ -362,10 +362,10 @@ class Send
     {
         // Envia os dados dos outros jogadores 
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (global::Account.IsPlaying(i))
+            if (Account.IsPlaying(i))
                 if (Player.Index != i)
-                    if (global::Account.Character(i).Map_Num == Player.Map_Num)
-                        ToPlayer(Player, Player_Data_Cache(global::Account.Character(i)));
+                    if (Account.Character(i).Map_Num == Player.Map_Num)
+                        ToPlayer(Player, Player_Data_Cache(Account.Character(i)));
 
         // Envia os dados do jogador
         ToMap(Player.Map_Num, Player_Data_Cache(Player));
@@ -548,10 +548,10 @@ class Send
 
     public static void Message_Private(Player Player, string Addressee_Name, string Texto)
     {
-        byte Addressee = global::Account.Find(Addressee_Name);
+        Player Addressee = Account.Find(Addressee_Name);
 
         // Verifica se o jogador está conectado
-        if (Addressee == 0)
+        if (Addressee == null)
         {
             Message(Player, Addressee_Name + " is currently offline.", Color.Blue);
             return;
@@ -559,7 +559,7 @@ class Send
 
         // Envia as mensagens
         Message(Player, "[To] " + Addressee_Name + ": " + Texto, Color.Pink);
-        Message(global::Account.Character(Addressee), "[From] " + Player.Name + ": " + Texto, Color.Pink);
+        Message(Addressee, "[From] " + Player.Name + ": " + Texto, Color.Pink);
     }
 
     public static void Player_Attack(Player Player, byte Victim = 0, byte Victim_Type = 0)
@@ -897,7 +897,7 @@ class Send
     public static void Trade_Offer(Player Player, bool Own = true)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
-        Player To = Own ? Player : global::Account.Character(Player.Trade);
+        Player To = Own ? Player : Account.Character(Player.Trade);
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Trade_Offer);
