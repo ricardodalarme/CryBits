@@ -118,7 +118,7 @@ class Game
         // Redefine o índice máximo de jogadores
         HigherIndex = 0;
 
-        for (byte i = (byte)Lists.Player.GetUpperBound(0); i >= 1; i -= 1)
+        for (byte i = (byte)Lists.Account.GetUpperBound(0); i >= 1; i -= 1)
             if (Socket.IsConnected(i))
             {
                 HigherIndex = i;

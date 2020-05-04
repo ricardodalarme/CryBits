@@ -3,27 +3,27 @@ using System.Collections.Generic;
 
 class Clear
 {
-    public static void Players()
+    public static void Accounts()
     {
         // Redimensiona a lista
-        Lists.Player = new Lists.Structures.Player[Lists.Server_Data.Max_Players + 1];
+        Lists.Account = new Account.Structure[Lists.Server_Data.Max_Players + 1];
 
         // Limpa os dados de todos jogadores
         for (byte i = 1; i <= Lists.Server_Data.Max_Players; i++)
-            Player(i);
+            Account(i);
     }
 
-    public static void Player(byte Index)
+    public static void Account(byte Index)
     {
         // Limpa os dados do jogador
-        Lists.Player[Index] = new Lists.Structures.Player();
-        Lists.Player[Index].User = string.Empty;
-        Lists.Player[Index].Password = string.Empty;
-        Lists.Player[Index].Character = new Character[Lists.Server_Data.Max_Characters + 1];
+        Lists.Account[Index] = new Account.Structure();
+        Lists.Account[Index].User = string.Empty;
+        Lists.Account[Index].Password = string.Empty;
+        Lists.Account[Index].Character = new Player[Lists.Server_Data.Max_Characters + 1];
 
         // Limpa os dados do personagem
         for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
-            Lists.Player[Index].Character[i] = new Character(Index);
+            Lists.Account[Index].Character[i] = new Player(Index);
     }
 
     public static void Server_Data()

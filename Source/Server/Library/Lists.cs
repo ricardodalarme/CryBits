@@ -5,7 +5,7 @@ class Lists
 {
     // Armazenamento de dados
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
-    public static Structures.Player[] Player;
+    public static Account.Structure[] Account;
     public static Structures.Class[] Class;
     public static Structures.Map[] Map;
     public static Structures.Temp_Map[] Temp_Map;
@@ -34,17 +34,6 @@ class Lists
             public short Num_NPCs;
             public short Num_Items;
             public short Num_Shops;
-        }
-
-        public struct Player
-        {
-            public string User;
-            public string Password;
-            public Game.Accesses Acess;
-            public Character[] Character;
-            public byte Using;
-            public bool InEditor;
-            public bool Playing;
         }
 
         [Serializable]

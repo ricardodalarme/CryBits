@@ -76,7 +76,7 @@ class Socket
 
         // Acaba com a conexão e restabelece os dados do jogador
         Connection[Index] = null;
-        Player.Character(Index).Leave();
+        Account.Character(Index).Leave();
     }
 
     public static bool IsConnected(byte Index)

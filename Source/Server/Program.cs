@@ -30,7 +30,7 @@ class Program
         Read.All();
 
         // Limpa os dados dos jogadores
-        Clear.Players();
+        Clear.Accounts();
 
         // Cria os dispositivos da rede
         Socket.Init();
@@ -49,7 +49,7 @@ class Program
     {
         // Salva os dados de todos os jogadores
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (Player.IsPlaying(i)) Write.Player(i);
+            if (Account.IsPlaying(i)) Write.Account(i);
 
         // Fecha o servidores
         Socket.Device.Shutdown("Server was shut down.");
@@ -99,7 +99,7 @@ class Program
                 }
 
                 // Encontra o jogador
-                byte Index = Player.FindUser(Parts[1]);
+                byte Index = Account.FindUser(Parts[1]);
 
                 if (Index == 0)
                 {
@@ -108,10 +108,10 @@ class Program
                 }
 
                 // Define o acesso do jogador
-                Lists.Player[Index].Acess = (Game.Accesses)Access;
+                Lists.Account[Index].Acess = (Game.Accesses)Access;
 
                 // Salva os dados
-                Write.Player(Index);
+                Write.Account(Index);
                 Console.WriteLine((Game.Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
                 break;
             // Se o comando não existir mandar uma mensagem de ajuda

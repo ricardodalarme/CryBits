@@ -39,7 +39,7 @@ partial class Read
         Stream.Close();
     }
 
-    public static void Player(byte Index, string Name, bool ReadCharacter = true)
+    public static void Account(byte Index, string Name, bool ReadCharacter = true)
     {
         string Directory = Directories.Accounts.FullName + Name + Directories.Format;
 
@@ -47,37 +47,37 @@ partial class Read
         BinaryReader Data = new BinaryReader(File.OpenRead(Directory));
 
         // Carrega os dados e os adiciona ao cache
-        Lists.Player[Index].User = Data.ReadString();
-        Lists.Player[Index].Password = Data.ReadString();
-        Lists.Player[Index].Acess = (Game.Accesses)Data.ReadByte();
+        Lists.Account[Index].User = Data.ReadString();
+        Lists.Account[Index].Password = Data.ReadString();
+        Lists.Account[Index].Acess = (Game.Accesses)Data.ReadByte();
 
         // Dados do personagem
         if (ReadCharacter)
             for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
             {
-                Lists.Player[Index].Character[i].Name = Data.ReadString();
-                Lists.Player[Index].Character[i].Class_Num = Data.ReadByte();
-                Lists.Player[Index].Character[i].Texture_Num = Data.ReadInt16();
-                Lists.Player[Index].Character[i].Genre = Data.ReadBoolean();
-                Lists.Player[Index].Character[i].Level = Data.ReadInt16();
-                Lists.Player[Index].Character[i].Experience = Data.ReadInt32();
-                Lists.Player[Index].Character[i].Points = Data.ReadByte();
-                Lists.Player[Index].Character[i].Map_Num = Data.ReadInt16();
-                Lists.Player[Index].Character[i].X = Data.ReadByte();
-                Lists.Player[Index].Character[i].Y = Data.ReadByte();
-                Lists.Player[Index].Character[i].Direction = (Game.Directions)Data.ReadByte();
-                for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.Player[Index].Character[i].Vital[n] = Data.ReadInt16();
-                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.Player[Index].Character[i].Attribute[n] = Data.ReadInt16();
+                Lists.Account[Index].Character[i].Name = Data.ReadString();
+                Lists.Account[Index].Character[i].Class_Num = Data.ReadByte();
+                Lists.Account[Index].Character[i].Texture_Num = Data.ReadInt16();
+                Lists.Account[Index].Character[i].Genre = Data.ReadBoolean();
+                Lists.Account[Index].Character[i].Level = Data.ReadInt16();
+                Lists.Account[Index].Character[i].Experience = Data.ReadInt32();
+                Lists.Account[Index].Character[i].Points = Data.ReadByte();
+                Lists.Account[Index].Character[i].Map_Num = Data.ReadInt16();
+                Lists.Account[Index].Character[i].X = Data.ReadByte();
+                Lists.Account[Index].Character[i].Y = Data.ReadByte();
+                Lists.Account[Index].Character[i].Direction = (Game.Directions)Data.ReadByte();
+                for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.Account[Index].Character[i].Vital[n] = Data.ReadInt16();
+                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.Account[Index].Character[i].Attribute[n] = Data.ReadInt16();
                 for (byte n = 1; n <= Game.Max_Inventory; n++)
                 {
-                    Lists.Player[Index].Character[i].Inventory[n].Item_Num = Data.ReadInt16();
-                    Lists.Player[Index].Character[i].Inventory[n].Amount = Data.ReadInt16();
+                    Lists.Account[Index].Character[i].Inventory[n].Item_Num = Data.ReadInt16();
+                    Lists.Account[Index].Character[i].Inventory[n].Amount = Data.ReadInt16();
                 }
-                for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Lists.Player[Index].Character[i].Equipment[n] = Data.ReadInt16();
+                for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Lists.Account[Index].Character[i].Equipment[n] = Data.ReadInt16();
                 for (byte n = 1; n <= Game.Max_Hotbar; n++)
                 {
-                    Lists.Player[Index].Character[i].Hotbar[n].Type = Data.ReadByte();
-                    Lists.Player[Index].Character[i].Hotbar[n].Slot = Data.ReadByte();
+                    Lists.Account[Index].Character[i].Hotbar[n].Type = Data.ReadByte();
+                    Lists.Account[Index].Character[i].Hotbar[n].Slot = Data.ReadByte();
                 }
             }
 
@@ -85,7 +85,7 @@ partial class Read
         Data.Dispose();
     }
 
-    public static string Player_Password(string User)
+    public static string Account_Password(string User)
     {
         // Cria um arquivo temporário
         BinaryReader Data = new BinaryReader(File.OpenRead(Directories.Accounts.FullName + User + Directories.Format));

@@ -80,14 +80,14 @@
   <ItemGroup>
     <Compile Include="Library\Clear.cs" />
     <Compile Include="Library\Directories.cs" />
-    <Compile Include="Logic\Character.cs" />
+    <Compile Include="Logic\Player.cs" />
     <Compile Include="Logic\Game.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Logic\Map.cs" />
     <Compile Include="Logic\NPC.cs" />
-    <Compile Include="Logic\Player.cs" />
+    <Compile Include="Logic\Account.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Network\Receive.cs" />
     <Compile Include="Network\Send.cs" />
