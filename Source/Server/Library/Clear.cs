@@ -7,7 +7,6 @@ class Clear
     {
         // Redimensiona a lista
         Lists.Player = new Lists.Structures.Player[Lists.Server_Data.Max_Players + 1];
-        Lists.Temp_Player = new Lists.Structures.TempPlayer[Lists.Server_Data.Max_Players + 1];
 
         // Limpa os dados de todos jogadores
         for (byte i = 1; i <= Lists.Server_Data.Max_Players; i++)
@@ -25,10 +24,6 @@ class Clear
         // Limpa os dados do personagem
         for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
             Lists.Player[Index].Character[i] = new Character(Index);
-
-        // Dados temporários
-        Lists.Temp_Player[Index] = new Lists.Structures.TempPlayer();
-        Lists.Temp_Player[Index].Party = new List<byte>();
     }
 
     public static void Server_Data()

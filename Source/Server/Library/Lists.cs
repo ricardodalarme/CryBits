@@ -6,7 +6,6 @@ class Lists
     // Armazenamento de dados
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
     public static Structures.Player[] Player;
-    public static Structures.TempPlayer[] Temp_Player;
     public static Structures.Class[] Class;
     public static Structures.Map[] Map;
     public static Structures.Temp_Map[] Temp_Map;
@@ -43,21 +42,9 @@ class Lists
             public string Password;
             public Game.Accesses Acess;
             public Character[] Character;
-        }
-
-        public struct TempPlayer
-        {
-            public bool Playing;
             public byte Using;
-            public bool GettingMap;
             public bool InEditor;
-            public int Attack_Timer;
-            public List<byte> Party;
-            public byte Trade;
-            public string Party_Invitation;
-            public string Trade_Request;
-            public Inventories[] Trade_Offer;
-            public short Shop;
+            public bool Playing;
         }
 
         [Serializable]

@@ -3,14 +3,14 @@
     public static Character Character(byte Index)
     {
         // Retorna com os valores do personagem atual
-        return Lists.Player[Index].Character[Lists.Temp_Player[Index].Using];
+        return Lists.Player[Index].Character[Lists.Player[Index].Using];
     }
 
     public static bool IsPlaying(byte Index)
     {
         // Verifica se o jogador está dentro do jogo
         if (Socket.IsConnected(Index))
-            if (Lists.Temp_Player[Index].Playing)
+            if (Lists.Player[Index].Playing)
                 return true;
 
         return false;

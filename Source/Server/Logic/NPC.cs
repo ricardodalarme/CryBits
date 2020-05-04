@@ -294,7 +294,7 @@ class NPC
             if (!Alive) return;
             if (Environment.TickCount < Attack_Timer + 750) return;
             if (!Player.IsPlaying(Victim.Index)) return;
-            if (Lists.Temp_Player[Victim.Index].GettingMap) return;
+            if (Victim.GettingMap) return;
             if (Map_Num != Victim.Map_Num) return;
             if (Victim.X != Next_X || Victim.Y != Next_Y) return;
             if (Map.Tile_Blocked(Map_Num, X, Y, Direction, false)) return;

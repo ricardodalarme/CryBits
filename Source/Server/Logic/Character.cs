@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
 
 class Character
 {
-    // Dados básicos
-    public byte Index;
+    // Dados permantes
     public string Name;
     public byte Class_Num;
     public short Texture_Num;
@@ -23,10 +23,18 @@ class Character
     public Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
 
     // Dados temporários
-
+    public byte Index;
+    public bool GettingMap;
+    public int Attack_Timer;
+    public List<byte> Party = new List<byte>();
+    public string Party_Invitation;
+    public byte Trade;
+    public string Trade_Request;
+    public Lists.Structures.Inventories[] Trade_Offer;
+    public short Shop;
 
     // Constutor
-    public Character (byte Index)
+    public Character(byte Index)
     {
         this.Index = Index;
     }
@@ -107,7 +115,7 @@ class Character
         if (Player.IsPlaying(Index)) return;
 
         // Define que o jogador está dentro do jogo
-        Lists.Temp_Player[Index].Playing = true;
+        Lists.Player[Index].Playing = true;
 
         // Envia todos os dados necessários
         Send.Join(Index);
@@ -129,14 +137,14 @@ class Character
 
     public void Leave()
     {
-        if (!Lists.Temp_Player[Index].InEditor)
+        if (!Lists.Player[Index].InEditor)
         {
             // Salva os dados do jogador e atualiza os demais jogadores da desconexão
             Write.Player(Index);
             Send.Player_Leave(Index);
 
             // Sai do grupo
-            if (Lists.Temp_Player[Index].Playing)
+            if (Lists.Player[Index].Playing)
             {
                 Party_Leave();
                 Trade_Leave();
@@ -152,8 +160,8 @@ class Character
         short Map_Old = this.Map_Num;
 
         // Cancela a troca ou a loja
-        if (Lists.Temp_Player[Index].Trade != 0) Trade_Leave();
-        if (Lists.Temp_Player[Index].Shop != 0) Shop_Leave();
+        if (Trade != 0) Trade_Leave();
+        if (Shop != 0) Shop_Leave();
 
         // Evita que o jogador seja transportado para fora do limite
         if (Map_Num < 0 || Map_Num >= Lists.Map.Length) return;
@@ -174,7 +182,7 @@ class Character
             Send.Player_LeaveMap(Index, Map_Old);
 
             // Inviabiliza o jogador de algumas ações até que ele receba os dados necessários
-            Lists.Temp_Player[Index].GettingMap = true;
+            GettingMap = true;
 
             // Envia dados necessários do mapa
             Send.Map_Revision(Index, Map_Num);
@@ -195,11 +203,11 @@ class Character
 
         // Previne erros
         if (Movement < 1 || Movement > 2) return;
-        if (Lists.Temp_Player[Index].GettingMap) return;
+        if (GettingMap) return;
 
         // Cancela a troca ou a loja
-        if (Lists.Temp_Player[Index].Trade != 0) Trade_Leave();
-        if (Lists.Temp_Player[Index].Shop != 0) Shop_Leave();
+        if (Trade != 0) Trade_Leave();
+        if (Shop != 0) Shop_Leave();
 
         // Próximo azulejo
         Map.NextTile(Direction, ref Next_X, ref Next_Y);
@@ -273,9 +281,9 @@ class Character
         Map.NextTile(Direction, ref Next_X, ref Next_Y);
 
         // Apenas se necessário
-        if (Lists.Temp_Player[Index].Trade != 0) return;
-        if (Lists.Temp_Player[Index].Shop != 0) return;
-        if (Environment.TickCount < Lists.Temp_Player[Index].Attack_Timer + 750) return;
+        if (Trade != 0) return;
+        if (Shop != 0) return;
+        if (Environment.TickCount < Attack_Timer + 750) return;
         if (Map.Tile_Blocked(Map_Num, X, Y, Direction, false)) goto @continue;
 
         // Ataca um jogador
@@ -297,7 +305,7 @@ class Character
     @continue:
         // Demonstra que aos outros jogadores o ataque
         Send.Player_Attack(Index, 0, 0);
-        Lists.Temp_Player[Index].Attack_Timer = Environment.TickCount;
+        Attack_Timer = Environment.TickCount;
     }
 
     private void Attack_Player(Character Victim)
@@ -310,7 +318,7 @@ class Character
 
         // Verifica se a vítima pode ser atacada
         if (!Player.IsPlaying(Victim.Index)) return;
-        if (Lists.Temp_Player[Victim.Index].GettingMap) return;
+        if (Player.Character(Victim.Index).GettingMap) return;
         if (Map_Num != Victim.Map_Num) return;
         if (Victim.X != Next_X || Victim.Y != Next_Y) return;
         if (Lists.Map[Map_Num].Moral == (byte)Map.Morals.Pacific)
@@ -320,7 +328,7 @@ class Character
         }
 
         // Tempo de ataque 
-        Lists.Temp_Player[Index].Attack_Timer = Environment.TickCount;
+        Attack_Timer = Environment.TickCount;
 
         // Cálculo de dano
         Attack_Damage = (short)(Damage - Victim.Player_Defense);
@@ -377,7 +385,7 @@ class Character
         Victim.Target_Type = (byte)Game.Target.Player;
 
         // Tempo de ataque 
-        Lists.Temp_Player[Index].Attack_Timer = Environment.TickCount;
+        Attack_Timer = Environment.TickCount;
 
         // Cálculo de dano
         Attack_Damage = (short)(Damage - Lists.NPC[Victim.Data_Index].Attribute[(byte)Game.Attributes.Resistance]);
@@ -411,7 +419,7 @@ class Character
     public void GiveExperience(int Value)
     {
         // Dá a experiência ao jogador, caso ele estiver em um grupo divide a experiência entre os membros
-        if (Lists.Temp_Player[Index].Party.Count > 0 && Value > 0) Party_SplitXP(Value);
+        if (Party.Count > 0 && Value > 0) Party_SplitXP(Value);
         else Experience += Value;
 
         // Verifica se a experiência não ficou negtiva
@@ -504,7 +512,7 @@ class Character
         if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
         if (Inventory[Slot].Item_Num == 0) return;
         if (Lists.Item[Inventory[Slot].Item_Num].Bind == (byte)Game.BindOn.Pickup) return;
-        if (Lists.Temp_Player[Index].Trade != 0) return;
+        if (Trade != 0) return;
 
         // Verifica se não está dropando mais do que tem
         if (Amount > Inventory[Slot].Amount) Amount = Inventory[Slot].Amount;
@@ -527,7 +535,7 @@ class Character
 
         // Somente se necessário
         if (Item_Num == 0) return;
-        if (Lists.Temp_Player[Index].Trade != 0) return;
+        if (Trade != 0) return;
 
         // Requerimentos
         if (Level < Lists.Item[Item_Num].Req_Level)
@@ -620,15 +628,15 @@ class Character
 
     public void Party_Leave()
     {
-        if (Lists.Temp_Player[Index].Party.Count > 0)
+        if (Party.Count > 0)
         {
             // Retira o jogador do grupo
-            for (byte i = 0; i < Lists.Temp_Player[Index].Party.Count; i++)
-                Lists.Temp_Player[Lists.Temp_Player[Index].Party[i]].Party.Remove(Index);
+            for (byte i = 0; i < Party.Count; i++)
+                Player.Character(Party[i]).Party.Remove(Index);
 
             // Envia o dados para todos os membros do grupo
-            for (byte i = 0; i < Lists.Temp_Player[Index].Party.Count; i++) Send.Party(Lists.Temp_Player[Index].Party[i]);
-            Lists.Temp_Player[Index].Party.Clear();
+            for (byte i = 0; i < Party.Count; i++) Send.Party(Party[i]);
+            Party.Clear();
             Send.Party(Index);
         }
     }
@@ -637,13 +645,13 @@ class Character
     {
         // Somatório do level de todos os jogadores do grupo
         int Given_Experience, Experience_Sum = 0, Difference;
-        double[] Diff = new double[Lists.Temp_Player[Index].Party.Count];
+        double[] Diff = new double[Party.Count];
         double Diff_Sum = 0, k;
 
         // Cálcula a diferença dos leveis entre os jogadores
-        for (byte i = 0; i < Lists.Temp_Player[Index].Party.Count; i++)
+        for (byte i = 0; i < Party.Count; i++)
         {
-            Difference = Math.Abs(Level - Player.Character(Lists.Temp_Player[Index].Party[i]).Level);
+            Difference = Math.Abs(Level - Player.Character(Party[i]).Level);
 
             // Constante para a diminuir potêncialmente a experiência que diferenças altas ganhariam
             if (Difference < 3) k = 1.15;
@@ -657,7 +665,7 @@ class Character
         }
 
         // Divide a experiência pro grupo com base na diferença dos leveis 
-        for (byte i = 0; i < Lists.Temp_Player[Index].Party.Count; i++)
+        for (byte i = 0; i < Party.Count; i++)
         {
             // Caso a somatório for maior que um (100%) balanceia os valores
             if (Diff_Sum > 1) Diff[i] *= 1 / Diff_Sum;
@@ -665,9 +673,9 @@ class Character
             // Divide a experiência
             Given_Experience = (int)((Value / 2) * Diff[i]);
             Experience_Sum += Given_Experience;
-            Player.Character(Lists.Temp_Player[Index].Party[i]).Experience += Given_Experience;
-            Player.Character(Lists.Temp_Player[Index].Party[i]).CheckLevelUp();
-            Send.Player_Experience(Lists.Temp_Player[Index].Party[i]);
+            Player.Character(Party[i]).Experience += Given_Experience;
+            Player.Character(Party[i]).CheckLevelUp();
+            Send.Player_Experience(Party[i]);
         }
 
         // Dá ao jogador principal o restante da experiência
@@ -678,14 +686,12 @@ class Character
 
     public void Trade_Leave()
     {
-        byte Trade_Player = Lists.Temp_Player[Index].Trade;
-
         // Cancela a troca
-        if (Trade_Player > 0)
+        if (Trade > 0)
         {
-            Lists.Temp_Player[Trade_Player].Trade = 0;
-            Lists.Temp_Player[Index].Trade = 0;
-            Send.Trade(Trade_Player);
+            Player.Character(Trade).Trade = 0;
+            Trade = 0;
+            Send.Trade(Trade);
             Send.Trade(Index);
         }
     }
@@ -696,7 +702,7 @@ class Character
 
         // Retorna a quantidade de itens oferecidos na troca
         for (byte i = 1; i <= Game.Max_Inventory; i++)
-            if (Lists.Temp_Player[Index].Trade_Offer[i].Item_Num > 0)
+            if (Trade_Offer[i].Item_Num > 0)
                 Total++;
 
         return Total;
@@ -705,14 +711,14 @@ class Character
     public void Shop_Open(short Shop_Num)
     {
         // Abre a loja
-        Lists.Temp_Player[Index].Shop = Shop_Num;
+        Shop = Shop_Num;
         Send.Shop_Open(Index, Shop_Num);
     }
 
     public void Shop_Leave()
     {
         // Fecha a loja
-        Lists.Temp_Player[Index].Shop = 0;
+        Shop = 0;
         Send.Shop_Open(Index, 0);
     }
 }
