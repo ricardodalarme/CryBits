@@ -52,13 +52,22 @@
     public class Structure
     {
         // Dados básicos
-        public string User;
-        public string Password;
+        public byte Index;
+        public string User = string.Empty;
+        public string Password = string.Empty;
         public Game.Accesses Acess;
         public byte Using;
         public bool InEditor;
         public bool Playing;
-        public Player[] Character;
+        public Player[] Character = new Player[Lists.Server_Data.Max_Characters + 1];
+
+        // Construtor
+        public Structure(byte Index)
+        {
+            // Inicializa os personagens
+            for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++) Character[i] = new Player(Index);
+            this.Index = Index;
+        }
 
         public bool HasCharacter()
         {

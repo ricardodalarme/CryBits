@@ -201,7 +201,7 @@ partial class Read
         // Dados temporários
         Lists.Temp_Map[Index].NPC = new NPC.Structure[Lists.Map[Index].NPC.Length];
         Lists.Temp_Map[Index].Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
-        for (byte i = 1; i < Lists.Temp_Map[Index].NPC.Length; i++) global::NPC.Spawn(i, Index);
+        for (byte i = 1; i < Lists.Temp_Map[Index].NPC.Length; i++) Lists.Temp_Map[Index].NPC[i] = new NPC.Structure(i, Index, Lists.Map[Index].NPC[i].Index);
         Lists.Temp_Map[Index].Item.Add(new Lists.Structures.Map_Items());
         global::Map.Spawn_Items(Index);
     }

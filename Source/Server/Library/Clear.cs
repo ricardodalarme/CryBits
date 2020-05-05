@@ -5,25 +5,9 @@ class Clear
 {
     public static void Accounts()
     {
-        // Redimensiona a lista
-        Lists.Account = new Account.Structure[Lists.Server_Data.Max_Players + 1];
-
         // Limpa os dados de todos jogadores
-        for (byte i = 1; i <= Lists.Server_Data.Max_Players; i++)
-            Account(i);
-    }
-
-    public static void Account(byte Index)
-    {
-        // Limpa os dados do jogador
-        Lists.Account[Index] = new Account.Structure();
-        Lists.Account[Index].User = string.Empty;
-        Lists.Account[Index].Password = string.Empty;
-        Lists.Account[Index].Character = new Player[Lists.Server_Data.Max_Characters + 1];
-
-        // Limpa os dados do personagem
-        for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
-            Lists.Account[Index].Character[i] = new Player(Index);
+        Lists.Account = new Account.Structure[Lists.Server_Data.Max_Players + 1];
+        for (byte i = 1; i < Lists.Account.Length; i++) Lists.Account[i] = new Account.Structure(i);
     }
 
     public static void Server_Data()

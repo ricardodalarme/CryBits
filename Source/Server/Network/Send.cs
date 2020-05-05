@@ -728,77 +728,77 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Map_NPC(short Map_Num, byte Index)
+    public static void Map_NPC(NPC.Structure NPC)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC);
-        Data.Write(Index);
-        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Data_Index);
-        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].X);
-        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Y);
-        Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[Index].Direction);
-        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Vital[n]);
-        ToMap(Map_Num, Data);
+        Data.Write(NPC.Index);
+        Data.Write(NPC.Data_Index);
+        Data.Write(NPC.X);
+        Data.Write(NPC.Y);
+        Data.Write((byte)NPC.Direction);
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(NPC.Vital[n]);
+        ToMap(NPC.Map_Num, Data);
     }
 
-    public static void Map_NPC_Movement(short Map_Num, byte Index, byte Movimento)
+    public static void Map_NPC_Movement(NPC.Structure NPC, byte Movement)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Movement);
-        Data.Write(Index);
-        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].X);
-        Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Y);
-        Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[Index].Direction);
-        Data.Write(Movimento);
-        ToMap(Map_Num, Data);
+        Data.Write(NPC.Index);
+        Data.Write(NPC.X);
+        Data.Write(NPC.Y);
+        Data.Write((byte)NPC.Direction);
+        Data.Write(Movement);
+        ToMap(NPC.Map_Num, Data);
     }
 
-    public static void Map_NPC_Direction(short Map_Num, byte Index)
+    public static void Map_NPC_Direction(NPC.Structure NPC)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Direction);
-        Data.Write(Index);
-        Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[Index].Direction);
-        ToMap(Map_Num, Data);
+        Data.Write(NPC.Index);
+        Data.Write((byte)NPC.Direction);
+        ToMap(NPC.Map_Num, Data);
     }
 
-    public static void Map_NPC_Vitals(short Map_Num, byte Index)
+    public static void Map_NPC_Vitals(NPC.Structure NPC)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Vitals);
-        Data.Write(Index);
-        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[Index].Vital[n]);
-        ToMap(Map_Num, Data);
+        Data.Write(NPC.Index);
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(NPC.Vital[n]);
+        ToMap(NPC.Map_Num, Data);
     }
 
-    public static void Map_NPC_Attack(short Map_Num, byte Index, byte Victim = 0, byte Victim_Type = 0)
+    public static void Map_NPC_Attack(NPC.Structure NPC, byte Victim = 0, byte Victim_Type = 0)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Attack);
-        Data.Write(Index);
+        Data.Write(NPC.Index);
         Data.Write(Victim);
         Data.Write(Victim_Type);
-        ToMap(Map_Num, Data);
+        ToMap(NPC.Map_Num, Data);
     }
 
-    public static void Map_NPC_Died(short Map_Num, byte Index)
+    public static void Map_NPC_Died(NPC.Structure NPC)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Died);
-        Data.Write(Index);
-        ToMap(Map_Num, Data);
+        Data.Write(NPC.Index);
+        ToMap(NPC.Map_Num, Data);
     }
 
     public static void Tiles(Player Player)

@@ -29,7 +29,7 @@ class NPC
         public Game.Directions Direction;
         public byte Target_Type;
         public byte Target_Index;
-        public short[] Vital;
+        public short[] Vital = new short[(byte)Game.Vitals.Count];
         public int Spawn_Timer;
         public int Attack_Timer;
 
@@ -47,6 +47,14 @@ class NPC
             return 0;
         }
 
+        // Construtor
+        public Structure(byte Index, short Map_Num, short Data_Index)
+        {
+            this.Index = Index;
+            this.Map_Num = Map_Num;
+            this.Data_Index = Data_Index;
+        }
+
         /////////////
         // Funções //
         /////////////
@@ -59,7 +67,7 @@ class NPC
             ////////////////
             if (!Alive)
             {
-                if (Environment.TickCount > Spawn_Timer + (NPC_Data.SpawnTime * 1000)) Spawn(Index, Map_Num);
+                if (Environment.TickCount > Spawn_Timer + (NPC_Data.SpawnTime * 1000)) Spawn();
                 return;
             }
             else
@@ -84,7 +92,7 @@ class NPC
                             if (Vital[v] > NPC_Data.Vital[v]) Vital[v] = NPC_Data.Vital[v];
 
                             // Envia os dados aos jogadores do mapa
-                            Send.Map_NPC_Vitals(Map_Num, Index);
+                            Send.Map_NPC_Vitals(this);
                         }
 
                 //////////////////
@@ -121,7 +129,7 @@ class NPC
                             // Verifica se pode atacar
                             if (NPC_Index == Index) continue;
                             if (!Lists.Temp_Map[Map_Num].NPC[NPC_Index].Alive) continue;
-                            if (IsAlied(Data_Index, Lists.Temp_Map[Map_Num].NPC[NPC_Index].Data_Index)) continue;
+                            if (Lists.NPC[Data_Index].IsAlied(Lists.Temp_Map[Map_Num].NPC[NPC_Index].Data_Index)) continue;
 
                             // Se o NPC estiver no alcance do NPC, ir atrás dele
                             Distance = (short)Math.Sqrt(Math.Pow(X - Lists.Temp_Map[Map_Num].NPC[NPC_Index].X, 2) + Math.Pow(Y - Lists.Temp_Map[Map_Num].NPC[NPC_Index].Y, 2));
@@ -152,7 +160,7 @@ class NPC
                 else if (Target_Type == (byte)Game.Target.NPC)
                 {
                     // Verifica se o NPC ainda está disponível
-                    if (!Lists.Temp_Map[Map_Num].NPC[Target_Index].Alive )
+                    if (!Lists.Temp_Map[Map_Num].NPC[Target_Index].Alive)
                     {
                         Target_Type = 0;
                         Target_Index = 0;
@@ -235,25 +243,73 @@ class NPC
                         else if (NPC_Data.Movement == Movements.TurnRandomly)
                         {
                             Direction = (Game.Directions)Game.Random.Next(0, 4);
-                            Send.Map_NPC_Direction(Map_Num, Index);
+                            Send.Map_NPC_Direction(this);
                         }
 
                 ////////////
                 // Ataque //
                 ////////////
-                short Next_X = X, Next_Y = Y;
-                Map.NextTile(Direction, ref Next_X, ref Next_Y);
-                if (Target_Type == (byte)Game.Target.Player)
+                Attack();
+            }
+        }
+
+        private void Spawn(byte X, byte Y, Game.Directions Direction = 0)
+        {
+            // Faz o NPC surgir no mapa
+            Alive = true;
+            this.X = X;
+            this.Y = Y;
+            this.Direction = Direction;
+            for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Vital[i] = Lists.NPC[Data_Index].Vital[i];
+
+            // Envia os dados aos jogadores
+            Send.Map_NPC(Lists.Temp_Map[Map_Num].NPC[Index]);
+        }
+
+        public void Spawn()
+        {
+            byte x, y;
+
+            // Antes verifica se tem algum local de aparecimento específico
+            if (Lists.Map[Map_Num].NPC[Index].Spawn)
+            {
+                Spawn(Lists.Map[Map_Num].NPC[Index].X, Lists.Map[Map_Num].NPC[Index].Y);
+                return;
+            }
+
+            // Faz com que ele apareça em um local aleatório
+            for (byte i = 0; i < 50; i++) // tenta 50 vezes com que ele apareça em um local aleatório
+            {
+                x = (byte)Game.Random.Next(0, Lists.Map[Map_Num].Width);
+                y = (byte)Game.Random.Next(0, Lists.Map[Map_Num].Height);
+
+                // Verifica se está dentro da zona
+                if (Lists.Map[Map_Num].NPC[Index].Zone > 0)
+                    if (Lists.Map[Map_Num].Tile[x, y].Zone != Lists.Map[Map_Num].NPC[Index].Zone)
+                        continue;
+
+                // Define os dados
+                if (!Map.Tile_Blocked(Map_Num, x, y))
                 {
-                    // Verifica se o jogador está na frente do NPC
-                    if (Map.HasPlayer(Map_Num, Next_X, Next_Y) == Target_Index) Attack_Player(Account.Character(Target_Index));
-                }
-                else if (Target_Type == (byte)Game.Target.NPC)
-                {
-                    // Verifica se o NPC alvo está na frente do NPC
-                    if (Map.HasNPC(Map_Num, Next_X, Next_Y) == Target_Index) Attack_NPC(Lists.Temp_Map[Map_Num].NPC[Target_Index]);
+                    Spawn(x, y);
+                    return;
                 }
             }
+
+            // Em último caso, tentar no primeiro lugar possível
+            for (byte x2 = 0; x2 <= Lists.Map[Map_Num].Width; x2++)
+                for (byte y2 = 0; y2 <= Lists.Map[Map_Num].Height; y2++)
+                    if (!Map.Tile_Blocked(Map_Num, x2, y2))
+                    {
+                        // Verifica se está dentro da zona
+                        if (Lists.Map[Map_Num].NPC[Index].Zone > 0)
+                            if (Lists.Map[Map_Num].Tile[x2, y2].Zone != Lists.Map[Map_Num].NPC[Index].Zone)
+                                continue;
+
+                        // Define os dados
+                        Spawn(x2, y2);
+                        return;
+                    }
         }
 
         private bool Move(Game.Directions Direction, byte Movement = 1, bool CheckZone = false)
@@ -262,7 +318,7 @@ class NPC
 
             // Define a direção do NPC
             this.Direction = Direction;
-            Send.Map_NPC_Direction(Map_Num, Index);
+            Send.Map_NPC_Direction(this);
 
             // Próximo azulejo
             Map.NextTile(Direction, ref Next_X, ref Next_Y);
@@ -279,25 +335,33 @@ class NPC
             // Movimenta o NPC
             X = (byte)Next_X;
             Y = (byte)Next_Y;
-            Send.Map_NPC_Movement(Map_Num, Index, Movement);
+            Send.Map_NPC_Movement(this, Movement);
             return true;
+        }
+
+        private void Attack()
+        {
+            short Next_X = X, Next_Y = Y;
+            Map.NextTile(Direction, ref Next_X, ref Next_Y);
+
+            // Apenas se necessário
+            if (!Alive) return;
+            if (Environment.TickCount < Attack_Timer + 750) return;
+            if (Map.Tile_Blocked(Map_Num, X, Y, Direction, false)) return;
+
+            // Verifica se o jogador está na frente do NPC
+            if (Target_Type == (byte)Game.Target.Player && Map.HasPlayer(Map_Num, Next_X, Next_Y) == Target_Index)
+                Attack_Player(Account.Character(Target_Index));
+            // Verifica se o NPC alvo está na frente do NPC
+            else if (Target_Type == (byte)Game.Target.NPC && Map.HasNPC(Map_Num, Next_X, Next_Y) == Target_Index)
+                Attack_NPC(Lists.Temp_Map[Map_Num].NPC[Target_Index]);
         }
 
         private void Attack_Player(Player Victim)
         {
-            short Next_X = X, Next_Y = Y;
-
-            // Define o azujelo a frente do NPC
-            Map.NextTile(Direction, ref Next_X, ref Next_Y);
-
             // Verifica se a vítima pode ser atacada
-            if (!Alive) return;
-            if (Environment.TickCount < Attack_Timer + 750) return;
             if (!Account.IsPlaying(Victim.Index)) return;
             if (Victim.GettingMap) return;
-            if (Map_Num != Victim.Map_Num) return;
-            if (Victim.X != Next_X || Victim.Y != Next_Y) return;
-            if (Map.Tile_Blocked(Map_Num, X, Y, Direction, false)) return;
 
             // Tempo de ataque 
             Attack_Timer = Environment.TickCount;
@@ -309,7 +373,7 @@ class NPC
             if (Attack_Damage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Map_NPC_Attack(Map_Num, Index, Victim.Index, (byte)Game.Target.Player);
+                Send.Map_NPC_Attack(this, Victim.Index, (byte)Game.Target.Player);
 
                 if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
                 {
@@ -329,22 +393,13 @@ class NPC
             }
             // Demonstra o ataque aos outros jogadores
             else
-                Send.Map_NPC_Attack(Map_Num, Index);
+                Send.Map_NPC_Attack(this);
         }
 
         private void Attack_NPC(Structure Victim)
         {
-            short Next_X = X, Next_Y = Y;
-
-            // Define o azujelo a frente do NPC
-            Map.NextTile(Direction, ref Next_X, ref Next_Y);
-
             // Verifica se a vítima pode ser atacada
-            if (!Alive) return;
             if (!Victim.Alive) return;
-            if (Environment.TickCount < Attack_Timer + 750) return;
-            if (Victim.X != Next_X || Victim.Y != Next_Y) return;
-            if (Map.Tile_Blocked(Map_Num, X, Y, Direction, false)) return;
 
             // Tempo de ataque 
             Attack_Timer = Environment.TickCount;
@@ -360,12 +415,12 @@ class NPC
             if (Attack_Damage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Map_NPC_Attack(Map_Num, Index, Victim.Index, (byte)Game.Target.NPC);
+                Send.Map_NPC_Attack(this, Victim.Index, (byte)Game.Target.NPC);
 
                 if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
                 {
                     Victim.Vital[(byte)Game.Vitals.HP] -= Attack_Damage;
-                    Send.Map_NPC_Vitals(Map_Num, Victim.Index);
+                    Send.Map_NPC_Vitals(Victim);
                 }
                 // FATALITY
                 else
@@ -380,7 +435,7 @@ class NPC
             }
             // Demonstra o ataque aos outros jogadores
             else
-                Send.Map_NPC_Attack(Map_Num, Index);
+                Send.Map_NPC_Attack(this);
         }
 
         public void Died()
@@ -411,86 +466,7 @@ class NPC
             Target_Type = 0;
             Target_Index = 0;
             Alive = false;
-            Send.Map_NPC_Died(Map_Num, Index);
+            Send.Map_NPC_Died(this);
         }
-    }
-
-    public static void Spawn(byte Index, short Map_Num)
-    {
-        byte x, y;
-
-        // Antes verifica se tem algum local de aparecimento específico
-        if (Lists.Map[Map_Num].NPC[Index].Spawn)
-        {
-            Spawn(Index, Map_Num, Lists.Map[Map_Num].NPC[Index].X, Lists.Map[Map_Num].NPC[Index].Y);
-            return;
-        }
-
-        // Faz com que ele apareça em um local aleatório
-        for (byte i = 0; i <= 50; i++) // tenta 50 vezes com que ele apareça em um local aleatório
-        {
-            x = (byte)Game.Random.Next(0, Lists.Map[Map_Num].Width);
-            y = (byte)Game.Random.Next(0, Lists.Map[Map_Num].Height);
-
-            // Verifica se está dentro da zona
-            if (Lists.Map[Map_Num].NPC[Index].Zone > 0)
-                if (Lists.Map[Map_Num].Tile[x, y].Zone != Lists.Map[Map_Num].NPC[Index].Zone)
-                    continue;
-
-            // Define os dados
-            if (!Map.Tile_Blocked(Map_Num, x, y))
-            {
-                Spawn(Index, Map_Num, x, y);
-                return;
-            }
-        }
-
-        // Em último caso, tentar no primeiro lugar possível
-        for (byte x2 = 0; x2 <= Lists.Map[Map_Num].Width; x2++)
-            for (byte y2 = 0; y2 <= Lists.Map[Map_Num].Height; y2++)
-                if (!Map.Tile_Blocked(Map_Num, x2, y2))
-                {
-                    // Verifica se está dentro da zona
-                    if (Lists.Map[Map_Num].NPC[Index].Zone > 0)
-                        if (Lists.Map[Map_Num].Tile[x2, y2].Zone != Lists.Map[Map_Num].NPC[Index].Zone)
-                            continue;
-
-                    // Define os dados
-                    Spawn(Index, Map_Num, x2, y2);
-                    return;
-                }
-    }
-
-    private static void Spawn(byte Index, short Map_Num, byte x, byte y, Game.Directions Direction = 0)
-    {
-        short NPC_Index = Lists.Map[Map_Num].NPC[Index].Index;
-
-        // Previne erros
-        if (NPC_Index >= Lists.NPC.Length) return;
-
-        // Define os dados
-        Lists.Temp_Map[Map_Num].NPC[Index] = new Structure();
-        Lists.Temp_Map[Map_Num].NPC[Index].Index = Index;
-        Lists.Temp_Map[Map_Num].NPC[Index].Map_Num = Map_Num;
-        Lists.Temp_Map[Map_Num].NPC[Index].Data_Index = NPC_Index;
-        Lists.Temp_Map[Map_Num].NPC[Index].Alive = true;
-        Lists.Temp_Map[Map_Num].NPC[Index].X = x;
-        Lists.Temp_Map[Map_Num].NPC[Index].Y = y;
-        Lists.Temp_Map[Map_Num].NPC[Index].Direction = Direction;
-        Lists.Temp_Map[Map_Num].NPC[Index].Vital = new short[(byte)Game.Vitals.Count];
-        for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Lists.Temp_Map[Map_Num].NPC[Index].Vital[i] = Lists.NPC[NPC_Index].Vital[i];
-
-        // Envia os dados aos jogadores
-        if (Socket.Device != null) Send.Map_NPC(Map_Num, Index);
-    }
-
-    public static bool IsAlied(short Index, short Allie)
-    {
-        // Verifica se o NPC é aliado do outro
-        for (byte i = 0; i < Lists.NPC[Index].Allie.Length; i++)
-            if (Lists.NPC[Index].Allie[i] == Allie)
-                return true;
-
-        return false;
     }
 }

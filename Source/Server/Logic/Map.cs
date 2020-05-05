@@ -49,7 +49,7 @@ class Map
     {
         // Verifica se há algum npc na cordenada
         for (byte i = 1; i < Lists.Temp_Map[Map_Num].NPC.Length; i++)
-            if (Lists.Temp_Map[Map_Num].NPC[i].Data_Index > 0)
+            if (Lists.Temp_Map[Map_Num].NPC[i].Alive)
                 if (Lists.Temp_Map[Map_Num].NPC[i].X == X && Lists.Temp_Map[Map_Num].NPC[i].Y == Y)
                     return i;
 

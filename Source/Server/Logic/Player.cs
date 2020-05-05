@@ -152,7 +152,7 @@ class Player
         }
 
         // Limpa os dados do jogador
-        Clear.Account(Index);
+        Lists.Account[Index] = new Account.Structure(Index);
     }
 
     public void Warp(short Map_Num, byte x, byte y, bool NeedUpdate = false)
@@ -310,17 +310,9 @@ class Player
 
     private void Attack_Player(Player Victim)
     {
-        short Attack_Damage;
-        short Next_X = X, Next_Y = Y;
-
-        // Define o azujelo a frente do jogador
-        Map.NextTile(Direction, ref Next_X, ref Next_Y);
-
         // Verifica se a vítima pode ser atacada
         if (!Account.IsPlaying(Victim.Index)) return;
         if (Account.Character(Victim.Index).GettingMap) return;
-        if (Map_Num != Victim.Map_Num) return;
-        if (Victim.X != Next_X || Victim.Y != Next_Y) return;
         if (Lists.Map[Map_Num].Moral == (byte)Map.Morals.Pacific)
         {
             Send.Message(this, "This is a peaceful area.", Color.White);
@@ -331,7 +323,7 @@ class Player
         Attack_Timer = Environment.TickCount;
 
         // Cálculo de dano
-        Attack_Damage = (short)(Damage - Victim.Player_Defense);
+        short Attack_Damage = (short)(Damage - Victim.Player_Defense);
 
         // Dano não fatal
         if (Attack_Damage > 0)
@@ -361,15 +353,6 @@ class Player
 
     private void Attack_NPC(NPC.Structure Victim)
     {
-        short Attack_Damage;
-        short Next_X = X, Next_Y = Y;
-
-        // Define o azujelo a frente do jogador
-        Map.NextTile(Direction, ref Next_X, ref Next_Y);
-
-        // Verifica se a vítima pode ser atacada
-        if (Victim.X != Next_X || Victim.Y != Next_Y) return;
-
         // Mensagem
         if (Victim.Target_Index != Index && !string.IsNullOrEmpty(Lists.NPC[Victim.Data_Index].SayMsg)) Send.Message(this, Lists.NPC[Victim.Data_Index].Name + ": " + Lists.NPC[Victim.Data_Index].SayMsg, Color.White);
 
@@ -388,7 +371,7 @@ class Player
         Attack_Timer = Environment.TickCount;
 
         // Cálculo de dano
-        Attack_Damage = (short)(Damage - Lists.NPC[Victim.Data_Index].Attribute[(byte)Game.Attributes.Resistance]);
+        short Attack_Damage = (short)(Damage - Lists.NPC[Victim.Data_Index].Attribute[(byte)Game.Attributes.Resistance]);
 
         // Dano não fatal
         if (Attack_Damage > 0)
@@ -399,7 +382,7 @@ class Player
             if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
             {
                 Victim.Vital[(byte)Game.Vitals.HP] -= Attack_Damage;
-                Send.Map_NPC_Vitals(Map_Num, Victim.Index);
+                Send.Map_NPC_Vitals(Victim);
             }
             // FATALITY
             else

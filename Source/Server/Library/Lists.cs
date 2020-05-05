@@ -163,6 +163,16 @@ class Lists
             public global::NPC.Movements Movement;
             public byte Flee_Helth;
             public short Shop;
+
+            public bool IsAlied(short Index)
+            {
+                // Verifica se o NPC é aliado do outro
+                for (byte i = 0; i < Allie.Length; i++)
+                    if (Allie[i] == Index)
+                        return true;
+
+                return false;
+            }
         }
 
         public struct Map_Items

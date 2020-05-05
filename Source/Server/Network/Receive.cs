@@ -170,7 +170,7 @@ class Receive
             // Verifica se o jogador tem permissão para fazer entrar no modo edição
             if (Lists.Account[Index].Acess < Game.Accesses.Editor)
             {
-                Clear.Account(Index);
+                Lists.Account[Index] = new Account.Structure(Index);
                 Send.Alert(Index, "You're not allowed to do this.");
                 return;
             }
@@ -733,7 +733,7 @@ class Receive
                 Lists.Map[i].NPC[n].Spawn = Data.ReadBoolean();
                 Lists.Map[i].NPC[n].X = Data.ReadByte();
                 Lists.Map[i].NPC[n].Y = Data.ReadByte();
-                NPC.Spawn(n, i);
+                Lists.Temp_Map[i].NPC[n].Spawn();
             }
 
             // Itens
