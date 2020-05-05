@@ -1004,17 +1004,17 @@ class Receive
         // Entra na festa
         for (byte i = 0; i < Invitation.Party.Count; i++)
         {
-            Lists.Account[Invitation.Party[i]].Character.Party.Add(Player.Index);
+            Invitation.Party[i].Party.Add(Player);
             Player.Party.Add(Invitation.Party[i]);
         }
-        Player.Party.Insert(0, Invitation.Index);
-        Invitation.Party.Add(Player.Index);
+        Player.Party.Insert(0, Invitation);
+        Invitation.Party.Add(Player);
         Player.Party_Request = string.Empty;
         Send.Message(Invitation, Player.Name + " joined the party.", System.Drawing.Color.White);
 
         // Envia os dados para o grupo
         Send.Party(Player);
-        for (byte i = 0; i < Player.Party.Count; i++) Send.Party(Lists.Account[Player.Party[i]].Character);
+        for (byte i = 0; i < Player.Party.Count; i++) Send.Party(Player.Party[i]);
     }
 
     private static void Party_Decline(Player Player)

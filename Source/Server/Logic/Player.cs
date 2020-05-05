@@ -26,7 +26,7 @@ class Player
     public byte Index;
     public bool GettingMap;
     public int Attack_Timer;
-    public List<byte> Party = new List<byte>();
+    public List<Player> Party = new List<Player>();
     public string Party_Request;
     public Player Trade;
     public string Trade_Request;
@@ -606,10 +606,10 @@ class Player
         {
             // Retira o jogador do grupo
             for (byte i = 0; i < Party.Count; i++)
-                Lists.Account[Party[i]].Character.Party.Remove(Index);
+                Party[i].Party.Remove(this);
 
             // Envia o dados para todos os membros do grupo
-            for (byte i = 0; i < Party.Count; i++) Send.Party(Lists.Account[Party[i]].Character);
+            for (byte i = 0; i < Party.Count; i++) Send.Party(Party[i]);
             Party.Clear();
             Send.Party(this);
         }
@@ -625,7 +625,7 @@ class Player
         // Cálcula a diferença dos leveis entre os jogadores
         for (byte i = 0; i < Party.Count; i++)
         {
-            Difference = Math.Abs(Level - Lists.Account[Party[i]].Character.Level);
+            Difference = Math.Abs(Level - Party[i].Level);
 
             // Constante para a diminuir potêncialmente a experiência que diferenças altas ganhariam
             if (Difference < 3) k = 1.15;
@@ -647,9 +647,8 @@ class Player
             // Divide a experiência
             Given_Experience = (int)((Value / 2) * Diff[i]);
             Experience_Sum += Given_Experience;
-            Lists.Account[Party[i]].Character.Experience += Given_Experience;
-            Lists.Account[Party[i]].Character.CheckLevelUp();
-            Send.Player_Experience(Lists.Account[Party[i]].Character);
+            Party[i].GiveExperience(Given_Experience);
+            Send.Player_Experience(Party[i]);
         }
 
         // Dá ao jogador principal o restante da experiência

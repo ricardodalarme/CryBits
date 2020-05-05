@@ -851,7 +851,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Party);
         Data.Write((byte)Player.Party.Count);
-        for (byte i = 0; i < Player.Party.Count; i++) Data.Write(Player.Party[i]);
+        for (byte i = 0; i < Player.Party.Count; i++) Data.Write(Player.Party[i].Index);
         ToPlayer(Player, Data);
     }
 
