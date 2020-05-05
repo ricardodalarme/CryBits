@@ -222,10 +222,16 @@ partial class Read
         Lists.Map[Index] = (Lists.Structures.Map)new BinaryFormatter().Deserialize(Stream);
         Stream.Close();
 
-        // Dados temporários
+        // NPCs do mapa
         Lists.Temp_Map[Index].NPC = new NPC.Structure[Lists.Map[Index].NPC.Length];
+        for (byte i = 1; i < Lists.Temp_Map[Index].NPC.Length; i++)
+        {
+            Lists.Temp_Map[Index].NPC[i] = new NPC.Structure(i, Index, Lists.Map[Index].NPC[i].Index);
+            Lists.Temp_Map[Index].NPC[i].Spawn();
+        }
+
+        // Itens do mapa
         Lists.Temp_Map[Index].Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
-        for (byte i = 1; i < Lists.Temp_Map[Index].NPC.Length; i++) Lists.Temp_Map[Index].NPC[i] = new NPC.Structure(i, Index, Lists.Map[Index].NPC[i].Index);
         Lists.Temp_Map[Index].Item.Add(new Lists.Structures.Map_Items());
         global::Map.Spawn_Items(Index);
     }

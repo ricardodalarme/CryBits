@@ -93,26 +93,26 @@ class Program
                 byte Access;
 
                 // Verifica se o que está digitado corretamente
-                if (Parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(Parts[1]) || !Byte.TryParse(Parts[2], out Access))
+                if (Parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(Parts[1]) || !byte.TryParse(Parts[2], out Access))
                 {
                     Console.WriteLine("Use: defineaccess 'Player Name' 'Access' ");
                     return;
                 }
 
                 // Encontra o jogador
-                byte Index = Account.FindUser(Parts[1]);
+                Account.Structure Account = global::Account.Find(Parts[1]);
 
-                if (Index == 0)
+                if (Account == null)
                 {
                     Console.WriteLine("This player is either offline or doesn't exist.");
                     return;
                 }
 
                 // Define o acesso do jogador
-                Lists.Account[Index].Acess = (Game.Accesses)Access;
+                Account.Acess = (Game.Accesses)Access;
 
                 // Salva os dados
-                Write.Account(Lists.Account[Index]);
+                Write.Account(Account);
                 Console.WriteLine((Game.Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
                 break;
             // Se o comando não existir mandar uma mensagem de ajuda

@@ -549,7 +549,7 @@ class Send
 
     public static void Message_Private(Player Player, string Addressee_Name, string Texto)
     {
-        Player Addressee = Account.Find(Addressee_Name);
+        Player Addressee = Account.FindPlayer(Addressee_Name);
 
         // Verifica se o jogador está conectado
         if (Addressee == null)

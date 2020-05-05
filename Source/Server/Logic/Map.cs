@@ -24,7 +24,7 @@ class Map
     public static void Logic()
     {
         for (byte i = 1; i < Lists.Map.Length; i++)
-        { 
+        {
             // Não é necessário fazer todos os cálculos se não houver nenhum jogador no mapa
             if (!HasPlayers(i)) continue;
 
@@ -45,26 +45,26 @@ class Map
         if (Environment.TickCount > Loop.Timer_Map_Items + 300000) Loop.Timer_Map_Items = Environment.TickCount;
     }
 
-    public static byte HasNPC(short Map_Num, short X, short Y)
+    public static NPC.Structure HasNPC(short Map_Num, short X, short Y)
     {
         // Verifica se há algum npc na cordenada
         for (byte i = 1; i < Lists.Temp_Map[Map_Num].NPC.Length; i++)
             if (Lists.Temp_Map[Map_Num].NPC[i].Alive)
                 if (Lists.Temp_Map[Map_Num].NPC[i].X == X && Lists.Temp_Map[Map_Num].NPC[i].Y == Y)
-                    return i;
+                    return Lists.Temp_Map[Map_Num].NPC[i];
 
-        return 0;
+        return null;
     }
 
-    public static byte HasPlayer(short Map_Num, short X, short Y)
+    public static Player HasPlayer(short Map_Num, short X, short Y)
     {
         // Verifica se há algum Jogador na cordenada
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Lists.Account[i].IsPlaying)
                 if (Lists.Account[i].Character.X == X && Lists.Account[i].Character.Y == Y && Lists.Account[i].Character.Map_Num == Map_Num)
-                    return i;
+                    return Lists.Account[i].Character;
 
-        return 0;
+        return null;
     }
 
     public static bool HasPlayers(short Map_Num)
@@ -125,7 +125,7 @@ class Map
         if (Tile_Blocked(Map_Num, (byte)Next_X, (byte)Next_Y)) return true;
         if (Lists.Map[Map_Num].Tile[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
         if (Lists.Map[Map_Num].Tile[X, Y].Block[(byte)Direction]) return true;
-        if (CountEntities && (HasPlayer(Map_Num, Next_X, Next_Y) > 0 || HasNPC(Map_Num, Next_X, Next_Y) > 0)) return true;
+        if (CountEntities && (HasPlayer(Map_Num, Next_X, Next_Y) != null || HasNPC(Map_Num, Next_X, Next_Y) != null)) return true;
         return false;
     }
 

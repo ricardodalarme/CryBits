@@ -940,7 +940,7 @@ class Receive
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        Player Invited = Account.Find(Name);
+        Player Invited = Account.FindPlayer(Name);
 
         // Verifica se o jogador está convectado
         if (Invited == null)
@@ -980,7 +980,7 @@ class Receive
 
     private static void Party_Accept(Player Player)
     {
-        Player Invitation = Account.Find(Player.Party_Invitation);
+        Player Invitation = Account.FindPlayer(Player.Party_Invitation);
 
         // Verifica se já tem um grupo
         if (Player.Party.Count != 0)
@@ -1020,7 +1020,7 @@ class Receive
 
     private static void Party_Decline(Player Player)
     {
-        Player Invitation = Account.Find(Player.Party_Invitation);
+        Player Invitation = Account.FindPlayer(Player.Party_Invitation);
 
         // Recusa o convite
         if (Invitation != null) Send.Message(Invitation, Player.Name + " decline the party.", System.Drawing.Color.White);
@@ -1038,7 +1038,7 @@ class Receive
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        Player Invited = Account.Find(Name);
+        Player Invited = Account.FindPlayer(Name);
 
         // Verifica se o jogador está convectado
         if (Invited == null)
@@ -1089,7 +1089,7 @@ class Receive
 
     private static void Trade_Accept(Player Player)
     {
-        Player Invited = Account.Find(Player.Trade_Request);
+        Player Invited = Account.FindPlayer(Player.Trade_Request);
 
         // Verifica se já tem um grupo
         if (Player.Trade != 0)
@@ -1134,7 +1134,7 @@ class Receive
 
     private static void Trade_Decline(Player Player)
     {
-        Player Invited = Account.Find(Player.Trade_Request);
+        Player Invited = Account.FindPlayer(Player.Trade_Request);
 
         // Recusa o convite
         if (Invited != null) Send.Message(Invited, Player.Name + " decline the trade.", System.Drawing.Color.White);
@@ -1199,9 +1199,10 @@ class Receive
                     Their_Inventory = (Lists.Structures.Inventories[])Invited.Inventory.Clone();
 
                 // Remove os itens do inventário dos jogadores
-                for (byte j = 0, To = Player.Index; j < 2; j++, To = (To == Player.Index ? Invited.Index : Player.Index))
+                Player To = Player;
+                for (byte j = 0; j < 2; j++, To = To == Player ? Invited : Player)
                     for (byte i = 1; i <= Game.Max_Inventory; i++)
-                        Lists.Account[To].Character.TakeItem((byte)Lists.Account[To].Character.Trade_Offer[i].Item_Num, Lists.Account[To].Character.Trade_Offer[i].Amount);
+                        To.TakeItem((byte)To.Trade_Offer[i].Item_Num, To.Trade_Offer[i].Amount);
 
                 // Dá os itens aos jogadores
                 for (byte i = 1; i <= Game.Max_Inventory; i++)

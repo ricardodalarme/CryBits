@@ -71,20 +71,13 @@ class Socket
 
     private static void Disconnect(byte Index)
     {
-        // Redefine o maior índice dos jogadores
-        Game.SetHigherIndex();
-
         // Acaba com a conexão e restabelece os dados do jogador
         Connection[Index] = null;
-        if (Lists.Account[Index].IsPlaying) Lists.Account[Index].Character.Leave();
-        Lists.Account[Index] = new Account.Structure(Index);
+        Lists.Account[Index].Leave();
     }
 
-    public static bool IsConnected(byte Index)
-    {
-        // Retorna um valor de acordo com a conexão do jogador
-        return Connection[Index] != null && Connection[Index].Status == NetConnectionStatus.Connected;
-    }
+    // Retorna o estado da conexão do jogador
+    public static bool IsConnected(byte Index) => Connection[Index] != null && Connection[Index].Status == NetConnectionStatus.Connected;
 
     private static byte FindConnection(NetConnection Data)
     {

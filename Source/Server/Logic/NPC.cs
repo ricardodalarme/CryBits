@@ -350,16 +350,17 @@ class NPC
             if (Map.Tile_Blocked(Map_Num, X, Y, Direction, false)) return;
 
             // Verifica se o jogador está na frente do NPC
-            if (Target_Type == (byte)Game.Target.Player && Map.HasPlayer(Map_Num, Next_X, Next_Y) == Target_Index)
-                Attack_Player(Lists.Account[Target_Index].Character);
+            if (Target_Type == (byte)Game.Target.Player)
+                Attack_Player(Map.HasPlayer(Map_Num, Next_X, Next_Y));
             // Verifica se o NPC alvo está na frente do NPC
-            else if (Target_Type == (byte)Game.Target.NPC && Map.HasNPC(Map_Num, Next_X, Next_Y) == Target_Index)
-                Attack_NPC(Lists.Temp_Map[Map_Num].NPC[Target_Index]);
+            else if (Target_Type == (byte)Game.Target.NPC)
+                Attack_NPC(Map.HasNPC(Map_Num, Next_X, Next_Y));
         }
 
         private void Attack_Player(Player Victim)
         {
             // Verifica se a vítima pode ser atacada
+            if (Victim == null) return;
             if (!Victim.Account.IsPlaying) return;
             if (Victim.GettingMap) return;
 
@@ -399,6 +400,7 @@ class NPC
         private void Attack_NPC(Structure Victim)
         {
             // Verifica se a vítima pode ser atacada
+            if (Victim == null) return;
             if (!Victim.Alive) return;
 
             // Tempo de ataque 

@@ -117,9 +117,6 @@ class Player
         // Previne que alguém que já está online de logar
         if (Account.IsPlaying) return;
 
-        // Define que o jogador está dentro do jogo
-        Account.Playing = true;
-
         // Envia todos os dados necessários
         Send.Join(this);
         Send.Map_Players(this);
@@ -140,22 +137,13 @@ class Player
 
     public void Leave()
     {
-        if (!Lists.Account[Index].InEditor)
-        {
-            // Salva os dados do jogador e atualiza os demais jogadores da desconexão
-            Write.Account(Lists.Account[Index]);
-            Send.Player_Leave(this);
+        // Salva os dados do jogador e atualiza os demais jogadores da desconexão
+        Write.Character(Account);
+        Send.Player_Leave(this);
 
-            // Sai do grupo
-            if (Lists.Account[Index].Playing)
-            {
-                Party_Leave();
-                Trade_Leave();
-            }
-        }
-
-        // Limpa os dados do jogador
-        Lists.Account[Index] = new Account.Structure(Index);
+        // Sai dos grupos
+        Party_Leave();
+        Trade_Leave();
     }
 
     public void Warp(short Map_Num, byte x, byte y, bool NeedUpdate = false)
@@ -278,7 +266,7 @@ class Player
     public void Attack()
     {
         short Next_X = X, Next_Y = Y;
-        byte Victim_Index;
+        object Victim;
 
         // Próximo azulejo
         Map.NextTile(Direction, ref Next_X, ref Next_Y);
@@ -290,18 +278,18 @@ class Player
         if (Map.Tile_Blocked(Map_Num, X, Y, Direction, false)) goto @continue;
 
         // Ataca um jogador
-        Victim_Index = Map.HasPlayer(Map_Num, Next_X, Next_Y);
-        if (Victim_Index > 0)
+        Victim = Map.HasPlayer(Map_Num, Next_X, Next_Y);
+        if (Victim != null)
         {
-            Attack_Player(Lists.Account[Victim_Index].Character);
+            Attack_Player((Player)Victim);
             return;
         }
 
         // Ataca um NPC
-        Victim_Index = Map.HasNPC(Map_Num, Next_X, Next_Y);
-        if (Victim_Index > 0)
+        Victim = Map.HasNPC(Map_Num, Next_X, Next_Y);
+        if (Victim != null)
         {
-            Attack_NPC(Lists.Temp_Map[Map_Num].NPC[Victim_Index]);
+            Attack_NPC((NPC.Structure)Victim);
             return;
         }
 

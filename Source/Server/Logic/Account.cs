@@ -2,18 +2,18 @@
 
 class Account
 {
-    public static byte FindUser(string Name)
+    public static Structure Find(string Name)
     {
         // Encontra o usuário
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Lists.Account[i].IsPlaying)
                 if (Lists.Account[i].User.Equals(Name))
-                    return i;
+                    return Lists.Account[i];
 
-        return 0;
+        return null;
     }
 
-    public static Player Find(string Name)
+    public static Player FindPlayer(string Name)
     {
         // Encontra o usuário
         for (byte i = 1; i <= Game.HigherIndex; i++)
@@ -43,7 +43,6 @@ class Account
         public string Password = string.Empty;
         public Game.Accesses Acess;
         public bool InEditor;
-        public bool Playing;
         public Player Character;
         public List<TempCharacter> Characters = new List<TempCharacter>();
         public struct TempCharacter
@@ -61,6 +60,16 @@ class Account
         }
 
         // Verifica se o jogador está dentro do jogo
-        public bool IsPlaying => Socket.IsConnected(Index) && Playing;
+        public bool IsPlaying => Socket.IsConnected(Index) && Character != null;
+
+        public void Leave()
+        {
+            // Redefine o maior índice dos jogadores
+            Game.SetHigherIndex();
+
+            // Limpa os dados do jogador
+            if (Character != null) Character.Leave();
+            Lists.Account[Index] = new Structure(Index);
+        }
     }
 }
