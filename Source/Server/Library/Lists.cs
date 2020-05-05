@@ -250,15 +250,22 @@ class Lists
             public bool[] Block;
         }
 
-
         [Serializable]
-
         public class Shop
         {
             public string Name;
             public short Currency;
             public Shop_Item[] Sold;
             public Shop_Item[] Bought;
+
+            public Shop_Item BoughtItem(short Item_Num)
+            {
+                // Verifica se a loja vende determinado item
+                for (byte i = 0; i < Bought.Length; i++)
+                    if (Bought[i].Item_Num == Item_Num)
+                        return Bought[i];
+                return null;
+            }
         }
 
         [Serializable]

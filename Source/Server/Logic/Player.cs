@@ -126,9 +126,9 @@ class Player
         Send.Player_Experience(this);
         Send.Player_Inventory(this);
         Send.Player_Hotbar(this);
-        Send.Items(this);
-        Send.NPCs(this);
-        Send.Shops(this);
+        Send.Items(Account);
+        Send.NPCs(Account);
+        Send.Shops(Account);
 
         // Transporta o jogador para a sua determinada Posição
         Warp(Map_Num, X, Y, true);
@@ -143,7 +143,7 @@ class Player
         if (!Lists.Account[Index].InEditor)
         {
             // Salva os dados do jogador e atualiza os demais jogadores da desconexão
-            Write.Account(Index);
+            Write.Account(Lists.Account[Index]);
             Send.Player_Leave(this);
 
             // Sai do grupo

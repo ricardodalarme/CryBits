@@ -61,6 +61,6 @@ class Account
         }
 
         // Verifica se o jogador está dentro do jogo
-        public bool IsPlaying => Socket.IsConnected(Index) && Lists.Account[Index].Playing;
+        public bool IsPlaying => Socket.IsConnected(Index) && Playing;
     }
 }

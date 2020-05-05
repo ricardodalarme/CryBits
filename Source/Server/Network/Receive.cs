@@ -67,20 +67,21 @@ class Receive
     public static void Handle(byte Index, NetIncomingMessage Data)
     {
         byte Packet_Num = Data.ReadByte();
-        Player Player = Lists.Account[Index].Character;
+        Account.Structure Account = Lists.Account[Index];
+        Player Player = Account.Character;
 
         // Pacote principal de conexão
-        if (Packet_Num == 0) Connect(Index, Data);
-        else if (!Lists.Account[Index].InEditor)
+        if (Packet_Num == 0) Connect(Account, Data);
+        else if (!Account.InEditor)
             // Manuseia os dados recebidos do cliente
             switch ((Client_Packets)Packet_Num)
             {
                 case Client_Packets.Latency: Latency(Index); break;
-                case Client_Packets.Register: Register(Index, Data); break;
-                case Client_Packets.CreateCharacter: CreateCharacter(Index, Data); break;
-                case Client_Packets.Character_Use: Character_Use(Index, Data); break;
-                case Client_Packets.Character_Create: Character_Create(Index); break;
-                case Client_Packets.Character_Delete: Character_Delete(Index, Data); break;
+                case Client_Packets.Register: Register(Account, Data); break;
+                case Client_Packets.CreateCharacter: CreateCharacter(Account, Data); break;
+                case Client_Packets.Character_Use: Character_Use(Account, Data); break;
+                case Client_Packets.Character_Create: Character_Create(Account); break;
+                case Client_Packets.Character_Delete: Character_Delete(Account, Data); break;
                 case Client_Packets.Player_Direction: Player_Direction(Player, Data); break;
                 case Client_Packets.Player_Move: Player_Move(Player, Data); break;
                 case Client_Packets.Player_Attack: Player_Attack(Player); break;
@@ -114,21 +115,21 @@ class Receive
             // Manuseia os dados recebidos do editor
             switch ((Editor_Packets)Packet_Num)
             {
-                case Editor_Packets.Write_Server_Data: Write_Server_Data(Player, Data); break;
-                case Editor_Packets.Write_Classes: Write_Classes(Player, Data); break;
-                case Editor_Packets.Write_Tiles: Write_Tiles(Player, Data); break;
-                case Editor_Packets.Write_Maps: Write_Maps(Player, Data); break;
-                case Editor_Packets.Write_NPCs: Write_NPCs(Player, Data); break;
-                case Editor_Packets.Write_Items: Write_Items(Player, Data); break;
-                case Editor_Packets.Write_Shops: Write_Shops(Player, Data); break;
-                case Editor_Packets.Request_Server_Data: Request_Server_Data(Player); break;
-                case Editor_Packets.Request_Classes: Request_Classes(Player); break;
-                case Editor_Packets.Request_Tiles: Request_Tiles(Player); break;
-                case Editor_Packets.Request_Map: Request_Map(Player, Data); break;
-                case Editor_Packets.Request_Maps: Request_Maps(Player, Data); break;
-                case Editor_Packets.Request_NPCs: Request_NPCs(Player); break;
-                case Editor_Packets.Request_Items: Request_Items(Player); break;
-                case Editor_Packets.Request_Shops: Request_Shops(Player); break;
+                case Editor_Packets.Write_Server_Data: Write_Server_Data(Account, Data); break;
+                case Editor_Packets.Write_Classes: Write_Classes(Account, Data); break;
+                case Editor_Packets.Write_Tiles: Write_Tiles(Account, Data); break;
+                case Editor_Packets.Write_Maps: Write_Maps(Account, Data); break;
+                case Editor_Packets.Write_NPCs: Write_NPCs(Account, Data); break;
+                case Editor_Packets.Write_Items: Write_Items(Account, Data); break;
+                case Editor_Packets.Write_Shops: Write_Shops(Account, Data); break;
+                case Editor_Packets.Request_Server_Data: Request_Server_Data(Account); break;
+                case Editor_Packets.Request_Classes: Request_Classes(Account); break;
+                case Editor_Packets.Request_Tiles: Request_Tiles(Account); break;
+                case Editor_Packets.Request_Map: Request_Map(Account, Data); break;
+                case Editor_Packets.Request_Maps: Request_Maps(Account, Data); break;
+                case Editor_Packets.Request_NPCs: Request_NPCs(Account); break;
+                case Editor_Packets.Request_Items: Request_Items(Account); break;
+                case Editor_Packets.Request_Shops: Request_Shops(Account); break;
             }
     }
 
@@ -138,7 +139,7 @@ class Receive
         Send.Latency(Index);
     }
 
-    private static void Connect(byte Index, NetIncomingMessage Data)
+    private static void Connect(Account.Structure Account, NetIncomingMessage Data)
     {
         // Lê os dados
         string User = Data.ReadString().Trim();
@@ -148,60 +149,60 @@ class Receive
         // Verifica se está tudo certo
         if (!Directory.Exists(Directories.Accounts.FullName + User))
         {
-            Send.Alert(Index, "This username isn't registered.");
+            Send.Alert(Account, "This username isn't registered.");
             return;
         }
-        if (Account.MultipleAccounts(User))
+        if (global::Account.MultipleAccounts(User))
         {
-            Send.Alert(Index, "Someone already signed in to this account.");
+            Send.Alert(Account, "Someone already signed in to this account.");
             return;
         }
 
         // Carrega os dados da conta
-        Read.Account(Index, User);
+        Read.Account(Account.Index, User);
 
         // Verifica se a senha está correta
-        if (!Lists.Account[Index].Password.Equals(Password))
+        if (!Account.Password.Equals(Password))
         {
-            Send.Alert(Index, "Password is incorrect.");
+            Send.Alert(Account, "Password is incorrect.");
             return;
         }
 
         if (Editor)
         {
             // Verifica se o jogador tem permissão para fazer entrar no modo edição
-            if (Lists.Account[Index].Acess < Game.Accesses.Editor)
+            if (Account.Acess < Game.Accesses.Editor)
             {
-                Send.Alert(Index, "You're not allowed to do this.");
+                Send.Alert(Account, "You're not allowed to do this.");
                 return;
             }
 
             // Abre a janela de edição
-            Lists.Account[Index].InEditor = true;
-            Send.Connect(Index);
+            Account.InEditor = true;
+            Send.Connect(Account);
         }
         else
         {
             // Carrega os dados do jogador
-            Read.Characters(Lists.Account[Index]);
+            Read.Characters(Account);
 
             // Envia os dados das classes e dos personagens ao jogador
-            Send.Classes(Index);
-            Send.Characters(Index);
+            Send.Classes(Account);
+            Send.Characters(Account);
 
             // Se o jogador não tiver nenhum personagem então abrir o painel de criação de personagem
-            if (Lists.Account[Index].Characters.Count == 0)
+            if (Account.Characters.Count == 0)
             {
-                Send.CreateCharacter(Index);
+                Send.CreateCharacter(Account);
                 return;
             }
 
             // Abre a janela de seleção de personagens
-            Send.Connect(Index);
+            Send.Connect(Account);
         }
     }
 
-    private static void Register(byte Index, NetIncomingMessage Data)
+    private static void Register(Account.Structure Account, NetIncomingMessage Data)
     {
         // Lê os dados
         string User = Data.ReadString().Trim();
@@ -210,28 +211,28 @@ class Receive
         // Verifica se está tudo certo
         if (User.Length < Game.Min_Name_Length || User.Length > Game.Max_Name_Length || Password.Length < Game.Min_Name_Length || Password.Length > Game.Max_Name_Length)
         {
-            Send.Alert(Index, "The username and password must contain between " + Game.Min_Name_Length + " and " + Game.Max_Name_Length + " characters.");
+            Send.Alert(Account, "The username and password must contain between " + Game.Min_Name_Length + " and " + Game.Max_Name_Length + " characters.");
             return;
         }
         if (File.Exists(Directories.Accounts.FullName + User + Directories.Format))
         {
-            Send.Alert(Index, "There is already someone registered with this name.");
+            Send.Alert(Account, "There is already someone registered with this name.");
             return;
         }
 
         // Cria a conta
-        Lists.Account[Index].User = User;
-        Lists.Account[Index].Password = Password;
+        Account.User = User;
+        Account.Password = Password;
 
         // Salva a conta
-        Write.Account(Index);
+        Write.Account(Account);
 
         // Abre a janela de seleção de personagens
-        Send.Classes(Index);
-        Send.CreateCharacter(Index);
+        Send.Classes(Account);
+        Send.CreateCharacter(Account);
     }
 
-    private static void CreateCharacter(byte Index, NetIncomingMessage Data)
+    private static void CreateCharacter(Account.Structure Account, NetIncomingMessage Data)
     {
         // Lê os dados
         string Name = Data.ReadString().Trim();
@@ -239,93 +240,93 @@ class Receive
         // Verifica se está tudo certo
         if (Name.Length < Game.Min_Name_Length || Name.Length > Game.Max_Name_Length)
         {
-            Send.Alert(Index, "The character name must contain between " + Game.Min_Name_Length + " and " + Game.Max_Name_Length + " characters.", false);
+            Send.Alert(Account, "The character name must contain between " + Game.Min_Name_Length + " and " + Game.Max_Name_Length + " characters.", false);
             return;
         }
         if (Name.Contains(";") || Name.Contains(":"))
         {
-            Send.Alert(Index, "Can't contain ';' and ':' in the character name.", false);
+            Send.Alert(Account, "Can't contain ';' and ':' in the character name.", false);
             return;
         }
         if (Read.Characters_Name().Contains(";" + Name + ":"))
         {
-            Send.Alert(Index, "A character with this name already exists", false);
+            Send.Alert(Account, "A character with this name already exists", false);
             return;
         }
 
         // Define os valores iniciais do personagem
-        Lists.Account[Index].Character = new Player(Index);
-        Lists.Account[Index].Character.Name = Name;
-        Lists.Account[Index].Character.Level = 1;
-        Lists.Account[Index].Character.Class_Num = Data.ReadByte();
-        Lists.Structures.Class Class = Lists.Class[Lists.Account[Index].Character.Class_Num];
-        Lists.Account[Index].Character.Genre = Data.ReadBoolean();
-        if (Lists.Account[Index].Character.Genre) Lists.Account[Index].Character.Texture_Num = Class.Tex_Male[Data.ReadByte()];
-        else Lists.Account[Index].Character.Texture_Num = Class.Tex_Female[Data.ReadByte()];
-        Lists.Account[Index].Character.Attribute = Class.Attribute;
-        Lists.Account[Index].Character.Map_Num = Class.Spawn_Map;
-        Lists.Account[Index].Character.Direction = (Game.Directions)Class.Spawn_Direction;
-        Lists.Account[Index].Character.X = Class.Spawn_X;
-        Lists.Account[Index].Character.Y = Class.Spawn_Y;
-        for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Lists.Account[Index].Character.Vital[i] = Lists.Account[Index].Character.MaxVital(i);
+        Account.Character = new Player(Account.Index);
+        Account.Character.Name = Name;
+        Account.Character.Level = 1;
+        Account.Character.Class_Num = Data.ReadByte();
+        Lists.Structures.Class Class = Lists.Class[Account.Character.Class_Num];
+        Account.Character.Genre = Data.ReadBoolean();
+        if (Account.Character.Genre) Account.Character.Texture_Num = Class.Tex_Male[Data.ReadByte()];
+        else Account.Character.Texture_Num = Class.Tex_Female[Data.ReadByte()];
+        Account.Character.Attribute = Class.Attribute;
+        Account.Character.Map_Num = Class.Spawn_Map;
+        Account.Character.Direction = (Game.Directions)Class.Spawn_Direction;
+        Account.Character.X = Class.Spawn_X;
+        Account.Character.Y = Class.Spawn_Y;
+        for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Account.Character.Vital[i] = Account.Character.MaxVital(i);
         for (byte i = 0; i < (byte)Class.Item.Length; i++)
-            if (Lists.Item[Class.Item[i].Item1].Type == (byte)Game.Items.Equipment && Lists.Account[Index].Character.Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] == 0)
-                Lists.Account[Index].Character.Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] = Class.Item[i].Item1;
+            if (Lists.Item[Class.Item[i].Item1].Type == (byte)Game.Items.Equipment && Account.Character.Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] == 0)
+                Account.Character.Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] = Class.Item[i].Item1;
             else
-                Lists.Account[Index].Character.GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
+                Account.Character.GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
 
         // Salva a conta
         Write.Character_Name(Name);
-        Write.Character(Lists.Account[Index]);
+        Write.Character(Account);
 
         // Entra no jogo
-        Lists.Account[Index].Character.Join();
+        Account.Character.Join();
     }
 
-    private static void Character_Use(byte Index, NetIncomingMessage Data)
+    private static void Character_Use(Account.Structure Account, NetIncomingMessage Data)
     {
         byte Character = Data.ReadByte();
 
         // Verifica se o personagem existe
-        if (Character < 0 || Character >= Lists.Account[Index].Characters.Count) return;
+        if (Character < 0 || Character >= Account.Characters.Count) return;
 
         // Entra no jogo
-        Read.Character(Lists.Account[Index], Lists.Account[Index].Characters[Character].Name);
-        Lists.Account[Index].Characters.Clear();
-        Lists.Account[Index].Character.Join();
+        Read.Character(Account, Account.Characters[Character].Name);
+        Account.Characters.Clear();
+        Account.Character.Join();
     }
 
-    private static void Character_Create(byte Index)
+    private static void Character_Create(Account.Structure Account)
     {
         // Verifica se o jogador já criou o máximo de personagens possíveis
-        if (Lists.Account[Index].Characters.Count == Lists.Server_Data.Max_Characters)
+        if (Account.Characters.Count == Lists.Server_Data.Max_Characters)
         {
-            Send.Alert(Index, "You can only have " + Lists.Server_Data.Max_Characters + " characters.", false);
+            Send.Alert(Account, "You can only have " + Lists.Server_Data.Max_Characters + " characters.", false);
             return;
         }
 
         // Abre a janela de seleção de personagens
-        Send.Classes(Index);
-        Send.CreateCharacter(Index);
+        Send.Classes(Account);
+        Send.CreateCharacter(Account);
     }
 
-    private static void Character_Delete(byte Index, NetIncomingMessage Data)
+    private static void Character_Delete(Account.Structure Account, NetIncomingMessage Data)
     {
         byte Character = Data.ReadByte();
 
         // Verifica se o personagem existe
-        if (Character < 0 || Character >= Lists.Account[Index].Characters.Count) return;
+        if (Character < 0 || Character >= Account.Characters.Count) return;
 
         // Deleta o personagem
-        string Name = Lists.Account[Index].Characters[Character].Name;
-        Send.Alert(Index, "The character '" + Name + "' has been deleted.", false);
+        string Name = Account.Characters[Character].Name;
+        Send.Alert(Account, "The character '" + Name + "' has been deleted.", false);
         Write.Characters_Name(Read.Characters_Name().Replace(":;" + Name + ":", ":"));
-        Lists.Account[Index].Characters.RemoveAt(Character);
-        File.Delete(Directories.Accounts.FullName + Lists.Account[Index].User + "\\Characters\\" + Name + Directories.Format);
+        Account.Characters.RemoveAt(Character);
+        File.Delete(Directories.Accounts.FullName + Account.User + "\\Characters\\" + Name + Directories.Format);
 
         // Salva o personagem
-        Send.Characters(Index);
-        Write.Account(Index);
+        Send.Characters(Account);
+        Write.Account(Account);
     }
 
     private static void Player_Direction(Player Player, NetIncomingMessage Data)
@@ -353,7 +354,7 @@ class Receive
     private static void RequestMap(Player Player, NetIncomingMessage Data)
     {
         // Se necessário enviar as informações do mapa ao jogador
-        if (Data.ReadBoolean()) Send.Map(Player, Player.Map_Num);
+        if (Data.ReadBoolean()) Send.Map(Player.Account, Player.Map_Num);
 
         // Envia a informação aos outros jogadores
         Send.Map_Players(Player);
@@ -523,12 +524,12 @@ class Receive
             Player.UseItem(Player.Hotbar[Hotbar_Slot].Slot);
     }
 
-    private static void Write_Server_Data(Player Player, NetIncomingMessage Data)
+    private static void Write_Server_Data(Account.Structure Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Account[Player.Index].Acess < Game.Accesses.Editor)
+        if (Account.Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Player.Index, "You aren't allowed to do this.");
+            Send.Alert(Account, "You aren't allowed to do this.");
             return;
         }
 
@@ -546,12 +547,12 @@ class Receive
         Write.Server_Data();
     }
 
-    private static void Write_Classes(Player Player, NetIncomingMessage Data)
+    private static void Write_Classes(Account.Structure Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Account[Player.Index].Acess < Game.Accesses.Editor)
+        if (Account.Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Player.Index, "You aren't allowed to do this.");
+            Send.Alert(Account, "You aren't allowed to do this.");
             return;
         }
 
@@ -587,16 +588,16 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.Classes();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Player.Index)
-                Send.Classes(i);
+            if (i != Account.Index)
+                Send.Classes(Lists.Account[i]);
     }
 
-    private static void Write_Tiles(Player Player, NetIncomingMessage Data)
+    private static void Write_Tiles(Account.Structure Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Account[Player.Index].Acess < Game.Accesses.Editor)
+        if (Account.Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Player.Index, "You aren't allowed to do this.");
+            Send.Alert(Account, "You aren't allowed to do this.");
             return;
         }
 
@@ -629,16 +630,16 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.Tiles();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Player.Index)
-                Send.Tiles(Lists.Account[i].Character);
+            if (i != Account.Index)
+                Send.Tiles(Lists.Account[i]);
     }
 
-    private static void Write_Maps(Player Player, NetIncomingMessage Data)
+    private static void Write_Maps(Account.Structure Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Account[Player.Index].Acess < Game.Accesses.Editor)
+        if (Account.Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Player.Index, "You aren't allowed to do this.");
+            Send.Alert(Account, "You aren't allowed to do this.");
             return;
         }
 
@@ -745,21 +746,21 @@ class Receive
 
             // Envia o mapa para todos os jogadores que estão nele
             for (byte n = 1; n <= Game.HigherIndex; n++)
-                if (n != Player.Index)
-                    if (Lists.Account[n].Character.Map_Num == i || Lists.Account[n].InEditor) 
-                        Send.Map(Lists.Account[n].Character, i);
+                if (n != Account.Index)
+                    if (Lists.Account[n].Character.Map_Num == i || Lists.Account[n].InEditor)
+                        Send.Map(Lists.Account[n], i);
         }
 
         // Salva os dados
         Write.Maps();
     }
 
-    private static void Write_NPCs(Player Player, NetIncomingMessage Data)
+    private static void Write_NPCs(Account.Structure Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Account[Player.Index].Acess < Game.Accesses.Editor)
+        if (Account.Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Player.Index, "You aren't allowed to do this.");
+            Send.Alert(Account, "You aren't allowed to do this.");
             return;
         }
 
@@ -798,16 +799,16 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.NPCs();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Player.Index) 
-                Send.NPCs(Lists.Account[i].Character);
+            if (i != Account.Index)
+                Send.NPCs(Lists.Account[i]);
     }
 
-    private static void Write_Items(Player Player, NetIncomingMessage Data)
+    private static void Write_Items(Account.Structure Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Account[Player.Index].Acess < Game.Accesses.Editor)
+        if (Account.Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Player.Index, "You aren't allowed to do this.");
+            Send.Alert(Account, "You aren't allowed to do this.");
             return;
         }
 
@@ -843,16 +844,16 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.Items();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Player.Index)
-                Send.Items(Lists.Account[i].Character);
+            if (i != Account.Index)
+                Send.Items(Lists.Account[i]);
     }
 
-    private static void Write_Shops(Player Player, NetIncomingMessage Data)
+    private static void Write_Shops(Account.Structure Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Account[Player.Index].Acess < Game.Accesses.Editor)
+        if (Account.Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Player.Index, "You aren't allowed to do this.");
+            Send.Alert(Account, "You aren't allowed to do this.");
             return;
         }
 
@@ -890,48 +891,48 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.Shops();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Player.Index)
-                Send.Shops(Lists.Account[i].Character);
+            if (i != Account.Index)
+                Send.Shops(Lists.Account[i]);
     }
 
-    private static void Request_Server_Data(Player Player)
+    private static void Request_Server_Data(Account.Structure Account)
     {
-        Send.Server_Data(Player);
+        Send.Server_Data(Account);
     }
 
-    private static void Request_Classes(Player Player)
+    private static void Request_Classes(Account.Structure Account)
     {
-        Send.Classes(Player.Index);
+        Send.Classes(Account);
     }
 
-    private static void Request_Tiles(Player Player)
+    private static void Request_Tiles(Account.Structure Account)
     {
-        Send.Tiles(Player);
+        Send.Tiles(Account);
     }
 
-    private static void Request_Map(Player Player, NetIncomingMessage Data)
+    private static void Request_Map(Account.Structure Account, NetIncomingMessage Data)
     {
-        Send.Map(Player, Data.ReadInt16());
+        Send.Map(Account, Data.ReadInt16());
     }
 
-    private static void Request_Maps(Player Player, NetIncomingMessage Data)
+    private static void Request_Maps(Account.Structure Account, NetIncomingMessage Data)
     {
-        Send.Maps(Player, Data.ReadBoolean());
+        Send.Maps(Account, Data.ReadBoolean());
     }
 
-    private static void Request_NPCs(Player Player)
+    private static void Request_NPCs(Account.Structure Account)
     {
-        Send.NPCs(Player);
+        Send.NPCs(Account);
     }
 
-    private static void Request_Items(Player Player)
+    private static void Request_Items(Account.Structure Account)
     {
-        Send.Items(Player);
+        Send.Items(Account);
     }
 
-    private static void Request_Shops(Player Player)
+    private static void Request_Shops(Account.Structure Account)
     {
-        Send.Shops(Player);
+        Send.Shops(Account);
     }
 
     private static void Party_Invite(Player Player, NetIncomingMessage Data)
@@ -1259,7 +1260,7 @@ class Receive
     {
         byte Inventory_Slot = Data.ReadByte();
         short Amount = System.Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
-        Lists.Structures.Shop_Item Buy = Game.Shop_Buy(Player.Shop, Player.Inventory[Inventory_Slot].Item_Num);
+        Lists.Structures.Shop_Item Buy = Lists.Shop[Player.Shop].BoughtItem(Player.Inventory[Inventory_Slot].Item_Num);
 
         // Verifica se a loja vende o item
         if (Buy == null)
@@ -1288,9 +1289,9 @@ class Receive
     private static void Warp(Player Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Lists.Account[Player.Index].Acess < Game.Accesses.Editor)
+        if (Player.Account.Acess < Game.Accesses.Editor)
         {
-            Send.Alert(Player.Index, "You aren't allowed to do this.");
+            Send.Alert(Player.Account, "You aren't allowed to do this.");
             return;
         }
 

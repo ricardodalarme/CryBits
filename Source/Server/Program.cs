@@ -112,7 +112,7 @@ class Program
                 Lists.Account[Index].Acess = (Game.Accesses)Access;
 
                 // Salva os dados
-                Write.Account(Index);
+                Write.Account(Lists.Account[Index]);
                 Console.WriteLine((Game.Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
                 break;
             // Se o comando não existir mandar uma mensagem de ajuda

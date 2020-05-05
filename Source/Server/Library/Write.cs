@@ -3,9 +3,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 class Write
 {
-    public static void Account(byte Index)
+    public static void Account(Account.Structure Account)
     {
-        FileInfo File = new FileInfo(Directories.Accounts.FullName + Lists.Account[Index].User + "\\Data" + Directories.Format);
+        FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Data" + Directories.Format);
 
         // Evita erros
         if (!File.Directory.Exists) File.Directory.Create();
@@ -14,9 +14,9 @@ class Write
         BinaryWriter Data = new BinaryWriter(File.OpenWrite());
 
         // Salva os dados no arquivo
-        Data.Write(Lists.Account[Index].User);
-        Data.Write(Lists.Account[Index].Password);
-        Data.Write((byte)Lists.Account[Index].Acess);
+        Data.Write(Account.User);
+        Data.Write(Account.Password);
+        Data.Write((byte)Account.Acess);
 
         // Descarrega o arquivo
         Data.Dispose();
