@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 partial class Graphics
 {
@@ -401,7 +402,7 @@ partial class Graphics
     private static void SelectCharacter_Class()
     {
         Point Text_Position = new Point(399, 425);
-        string Text = "(" + Game.SelectCharacter + ") None";
+        string Text = "(" + (Game.SelectCharacter + 1) + ") None";
 
         // Somente se necessário
         if (!Buttons.Characters_Change_Buttons())
@@ -410,11 +411,8 @@ partial class Graphics
             return;
         }
 
-        // Dados
-        short Class = Lists.Characters[Game.SelectCharacter].Class;
-
         // Verifica se o personagem existe
-        if (Class == 0)
+        if (Game.SelectCharacter >= Lists.Characters.Length)
         {
             DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
             return;
@@ -429,7 +427,7 @@ partial class Graphics
         }
 
         // Desenha o nome da classe
-        Text = "(" + Game.SelectCharacter + ") " + Lists.Characters[Game.SelectCharacter].Name;
+        Text = "(" + (Game.SelectCharacter + 1) + ") " + Lists.Characters[Game.SelectCharacter].Name;
         DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
     }
 
@@ -517,7 +515,7 @@ partial class Graphics
         }
 
         // Nome, descrição e icone do item
-        DrawText(Lists.Item[Item_Num].Name, Tool.Position.X + 41, Tool.Position.Y + 6, Text_Color,Alignments.Center);
+        DrawText(Lists.Item[Item_Num].Name, Tool.Position.X + 41, Tool.Position.Y + 6, Text_Color, Alignments.Center);
         DrawText(Lists.Item[Item_Num].Description, Tool.Position.X + 82, Tool.Position.Y + 20, SFML.Graphics.Color.White, 86);
         Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Tool.Position.X + 9, Tool.Position.Y + 21, 64, 64));
 

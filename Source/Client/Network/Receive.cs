@@ -111,7 +111,7 @@ partial class Receive
     private static void Connect()
     {
         // Reseta os valores
-        Game.SelectCharacter = 1;
+        Game.SelectCharacter = 0;
 
         // Abre o painel de seleção de personagens
         Panels.Menu_Close();
@@ -167,21 +167,16 @@ partial class Receive
 
     private static void Characters(NetIncomingMessage Data)
     {
-        byte Amount = Data.ReadByte();
-
         // Redimensiona a lista
-        Lists.Server_Data.Max_Characters = Amount;
-        Lists.Characters = new Lists.Structures.Character[Amount + 1];
+        Lists.Characters = new Lists.Structures.Character[Data.ReadByte()];
 
-        for (byte i = 1; i <= Amount; i++)
+        for (byte i = 0; i < Lists.Characters.Length; i++)
         {
             // Recebe os dados do personagem
             Lists.Characters[i] = new Lists.Structures.Character
             {
                 Name = Data.ReadString(),
-                Class = Data.ReadByte(),
                 Texture_Num = Data.ReadInt16(),
-                Genre = Data.ReadBoolean(),
                 Level = Data.ReadInt16()
             };
         }

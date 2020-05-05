@@ -1,9 +1,11 @@
-﻿class Account
+﻿using System.Collections.Generic;
+
+class Account
 {
     public static Player Character(byte Index)
     {
         // Retorna com os valores do personagem atual
-        return Lists.Account[Index].Character[Lists.Account[Index].Using];
+        return Lists.Account[Index].Character;
     }
 
     public static bool IsPlaying(byte Index)
@@ -59,34 +61,24 @@
         public byte Using;
         public bool InEditor;
         public bool Playing;
-        public Player[] Character = new Player[Lists.Server_Data.Max_Characters + 1];
+        public Player Character;
+        public List<TempCharacter> Characters = new List<TempCharacter>();
 
         // Construtor
         public Structure(byte Index)
         {
             // Inicializa os personagens
-            for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++) Character[i] = new Player(Index);
             this.Index = Index;
         }
 
-        public bool HasCharacter()
+        // Encontra o personagem
+      //  public byte FindCharacter(string Name) => Characters.Find(x => x.Name.Equals(Name));
+
+        public struct TempCharacter
         {
-            // Verifica se o jogador tem algum personagem
-            for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
-                if (!string.IsNullOrEmpty(Character[i].Name))
-                    return true;
-
-            return false;
-        }
-
-        public byte FindCharacter(string Name)
-        {
-            // Encontra o personagem
-            for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
-                if (Character[i].Name.Equals(Name))
-                    return i;
-
-            return 0;
+            public string Name;
+            public short Texture_Num;
+            public short Level;
         }
     }
 }

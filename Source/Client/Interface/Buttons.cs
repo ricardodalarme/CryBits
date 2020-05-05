@@ -120,7 +120,7 @@ class Buttons
     public static bool Characters_Change_Buttons()
     {
         // Altera os botões visíveis
-        bool Visibility = Lists.Characters != null && Lists.Characters[Game.SelectCharacter].Class > 0;
+        bool Visibility = Lists.Characters != null && Game.SelectCharacter < Lists.Characters.Length;
         Get("Character_Create").Visible = !Visibility;
         Get("Character_Delete").Visible = Visibility;
         Get("Character_Use").Visible = Visibility;
@@ -270,8 +270,8 @@ class Buttons
     private static void Character_Change_Right()
     {
         // Altera o personagem selecionado pelo jogador
-        if (Game.SelectCharacter == Lists.Server_Data.Max_Characters)
-            Game.SelectCharacter = 1;
+        if (Game.SelectCharacter == Lists.Characters.Length)
+            Game.SelectCharacter = 0;
         else
             Game.SelectCharacter += 1;
     }
@@ -279,8 +279,8 @@ class Buttons
     private static void Character_Change_Left()
     {
         // Altera o personagem selecionado pelo jogador
-        if (Game.SelectCharacter == 1)
-            Game.SelectCharacter = Lists.Server_Data.Max_Characters;
+        if (Game.SelectCharacter == 0)
+            Game.SelectCharacter = Lists.Characters.Length;
         else
             Game.SelectCharacter -= 1;
     }

@@ -5,7 +5,6 @@ class Lists
 {
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
-    public static Structures.Server_Data Server_Data = new Structures.Server_Data();
     public static Structures.Player[] Player;
     public static Structures.Class[] Class;
     public static Structures.Character[] Characters;
@@ -32,11 +31,6 @@ class Lists
             public bool Party;
             public bool Trade;
             public string Username;
-        }
-
-        public struct Server_Data
-        {
-            public byte Max_Characters;
         }
 
         public class Player
@@ -74,8 +68,6 @@ class Lists
         public class Character
         {
             public string Name;
-            public byte Class;
-            public bool Genre;
             public short Level;
             public short Texture_Num;
         }

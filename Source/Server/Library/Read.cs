@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
 partial class Read
@@ -39,9 +40,9 @@ partial class Read
         Stream.Close();
     }
 
-    public static void Account(byte Index, string Name, bool ReadCharacter = true)
+    public static void Account(byte Index, string Name)
     {
-        string Directory = Directories.Accounts.FullName + Name + Directories.Format;
+        string Directory = Directories.Accounts.FullName + Name + "\\Data" + Directories.Format;
 
         // Cria um arquivo temporário
         BinaryReader Data = new BinaryReader(File.OpenRead(Directory));
@@ -51,54 +52,77 @@ partial class Read
         Lists.Account[Index].Password = Data.ReadString();
         Lists.Account[Index].Acess = (Game.Accesses)Data.ReadByte();
 
-        // Dados do personagem
-        if (ReadCharacter)
-            for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
-            {
-                Lists.Account[Index].Character[i].Name = Data.ReadString();
-                Lists.Account[Index].Character[i].Class_Num = Data.ReadByte();
-                Lists.Account[Index].Character[i].Texture_Num = Data.ReadInt16();
-                Lists.Account[Index].Character[i].Genre = Data.ReadBoolean();
-                Lists.Account[Index].Character[i].Level = Data.ReadInt16();
-                Lists.Account[Index].Character[i].Experience = Data.ReadInt32();
-                Lists.Account[Index].Character[i].Points = Data.ReadByte();
-                Lists.Account[Index].Character[i].Map_Num = Data.ReadInt16();
-                Lists.Account[Index].Character[i].X = Data.ReadByte();
-                Lists.Account[Index].Character[i].Y = Data.ReadByte();
-                Lists.Account[Index].Character[i].Direction = (Game.Directions)Data.ReadByte();
-                for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.Account[Index].Character[i].Vital[n] = Data.ReadInt16();
-                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.Account[Index].Character[i].Attribute[n] = Data.ReadInt16();
-                for (byte n = 1; n <= Game.Max_Inventory; n++)
-                {
-                    Lists.Account[Index].Character[i].Inventory[n].Item_Num = Data.ReadInt16();
-                    Lists.Account[Index].Character[i].Inventory[n].Amount = Data.ReadInt16();
-                }
-                for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Lists.Account[Index].Character[i].Equipment[n] = Data.ReadInt16();
-                for (byte n = 1; n <= Game.Max_Hotbar; n++)
-                {
-                    Lists.Account[Index].Character[i].Hotbar[n].Type = Data.ReadByte();
-                    Lists.Account[Index].Character[i].Hotbar[n].Slot = Data.ReadByte();
-                }
-            }
-
         // Descarrega o arquivo
         Data.Dispose();
     }
 
-    public static string Account_Password(string User)
+    public static void Characters(Account.Structure Account)
     {
-        // Cria um arquivo temporário
-        BinaryReader Data = new BinaryReader(File.OpenRead(Directories.Accounts.FullName + User + Directories.Format));
+        DirectoryInfo Directory = new DirectoryInfo(Directories.Accounts.FullName + Account.User.ToString() + "\\Characters");
 
-        // Encontra a senha da conta
-        Data.ReadString();
-        string Password = Data.ReadString();
+        // Previne erros
+        if (!Directory.Exists) Directory.Create();
+
+        // Lê odos os personagens
+        FileInfo[] File = Directory.GetFiles();
+        for (byte i = 0; i < File.Length; i++)
+        {
+            // Cria um arquivo temporário
+            BinaryReader Data = new BinaryReader(File[i].OpenRead());
+
+            // Carrega os dados e os adiciona ao cache
+            Account.Structure.TempCharacter Temp = new Account.Structure.TempCharacter
+            {
+                Name = Data.ReadString(),
+                Texture_Num = Data.ReadInt16(),
+                Level = Data.ReadInt16()
+            };
+            Account.Characters.Add(Temp);
+
+            // Descarrega o arquivo
+            Data.Dispose();
+        };
+    }
+
+    public static void Character(Account.Structure Account, string Name)
+    {
+        FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Characters\\" + Name + Directories.Format);
+
+        // Verifica se o diretório existe
+        if (!File.Directory.Exists) return;
+
+        // Cria um arquivo temporário
+        BinaryReader Data = new BinaryReader(File.OpenRead());
+
+        // Carrega os dados e os adiciona ao cache
+        Account.Character = new Player(Account.Index);
+        Account.Character.Name = Data.ReadString();
+        Account.Character.Texture_Num = Data.ReadInt16();
+        Account.Character.Level = Data.ReadInt16();
+        Account.Character.Class_Num = Data.ReadByte();
+        Account.Character.Genre = Data.ReadBoolean();
+        Account.Character.Experience = Data.ReadInt32();
+        Account.Character.Points = Data.ReadByte();
+        Account.Character.Map_Num = Data.ReadInt16();
+        Account.Character.X = Data.ReadByte();
+        Account.Character.Y = Data.ReadByte();
+        Account.Character.Direction = (Game.Directions)Data.ReadByte();
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Account.Character.Vital[n] = Data.ReadInt16();
+        for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Account.Character.Attribute[n] = Data.ReadInt16();
+        for (byte n = 1; n <= Game.Max_Inventory; n++)
+        {
+            Account.Character.Inventory[n].Item_Num = Data.ReadInt16();
+            Account.Character.Inventory[n].Amount = Data.ReadInt16();
+        }
+        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Account.Character.Equipment[n] = Data.ReadInt16();
+        for (byte n = 1; n <= Game.Max_Hotbar; n++)
+        {
+            Account.Character.Hotbar[n].Type = Data.ReadByte();
+            Account.Character.Hotbar[n].Slot = Data.ReadByte();
+        }
 
         // Descarrega o arquivo
         Data.Dispose();
-
-        // Retorna o valor da função
-        return Password;
     }
 
     public static string Characters_Name()
@@ -106,7 +130,7 @@ partial class Read
         // Cria o arquivo caso ele não existir
         if (!Directories.Characters.Exists)
         {
-            Write.Characters(string.Empty);
+            Write.Characters_Name(string.Empty);
             return string.Empty;
         }
 

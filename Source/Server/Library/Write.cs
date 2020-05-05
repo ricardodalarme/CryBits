@@ -5,52 +5,64 @@ class Write
 {
     public static void Account(byte Index)
     {
-        string Directory = Directories.Accounts.FullName + Lists.Account[Index].User + Directories.Format;
+        FileInfo File = new FileInfo(Directories.Accounts.FullName + Lists.Account[Index].User + "\\Data" + Directories.Format);
 
         // Evita erros
-        if (string.IsNullOrEmpty(Lists.Account[Index].User)) return;
+        if (!File.Directory.Exists) File.Directory.Create();
 
         // Cria um arquivo temporário
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite(Directory));
+        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
 
         // Salva os dados no arquivo
         Data.Write(Lists.Account[Index].User);
         Data.Write(Lists.Account[Index].Password);
         Data.Write((byte)Lists.Account[Index].Acess);
 
-        for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
+        // Descarrega o arquivo
+        Data.Dispose();
+    }
+
+    public static void Character(Account.Structure Account)
+    {
+        string Directory = Directories.Accounts.FullName + Account.User + "\\Characters\\" + Account.Character.Name + Directories.Format;
+
+        // Evita erros
+        if (string.IsNullOrEmpty(Account.User)) return;
+
+        // Cria um arquivo temporário
+        BinaryWriter Data = new BinaryWriter(File.OpenWrite(Directory));
+
+        // Salva os dados no arquivo
+        Data.Write(Account.Character.Name);
+        Data.Write(Account.Character.Texture_Num);
+        Data.Write(Account.Character.Level);
+        Data.Write(Account.Character.Class_Num);
+        Data.Write(Account.Character.Genre);
+        Data.Write(Account.Character.Experience);
+        Data.Write(Account.Character.Points);
+        Data.Write(Account.Character.Map_Num);
+        Data.Write(Account.Character.X);
+        Data.Write(Account.Character.Y);
+        Data.Write((byte)Account.Character.Direction);
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Account.Character.Vital[n]);
+        for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Account.Character.Attribute[n]);
+        for (byte n = 1; n <= Game.Max_Inventory; n++)
         {
-            Data.Write(Lists.Account[Index].Character[i].Name);
-            Data.Write(Lists.Account[Index].Character[i].Class_Num);
-            Data.Write(Lists.Account[Index].Character[i].Texture_Num);
-            Data.Write(Lists.Account[Index].Character[i].Genre);
-            Data.Write(Lists.Account[Index].Character[i].Level);
-            Data.Write(Lists.Account[Index].Character[i].Experience);
-            Data.Write(Lists.Account[Index].Character[i].Points);
-            Data.Write(Lists.Account[Index].Character[i].Map_Num);
-            Data.Write(Lists.Account[Index].Character[i].X);
-            Data.Write(Lists.Account[Index].Character[i].Y);
-            Data.Write((byte)Lists.Account[Index].Character[i].Direction);
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Account[Index].Character[i].Vital[n]);
-            for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.Account[Index].Character[i].Attribute[n]);
-            for (byte n = 1; n <= Game.Max_Inventory; n++)
-            {
-                Data.Write(Lists.Account[Index].Character[i].Inventory[n].Item_Num);
-                Data.Write(Lists.Account[Index].Character[i].Inventory[n].Amount);
-            }
-            for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Lists.Account[Index].Character[i].Equipment[n]);
-            for (byte n = 1; n <= Game.Max_Hotbar; n++)
-            {
-                Data.Write(Lists.Account[Index].Character[i].Hotbar[n].Type);
-                Data.Write(Lists.Account[Index].Character[i].Hotbar[n].Slot);
-            }
+            Data.Write(Account.Character.Inventory[n].Item_Num);
+            Data.Write(Account.Character.Inventory[n].Amount);
+        }
+        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Account.Character.Equipment[n]);
+        for (byte n = 1; n <= Game.Max_Hotbar; n++)
+        {
+            Data.Write(Account.Character.Hotbar[n].Type);
+            Data.Write(Account.Character.Hotbar[n].Slot);
         }
 
         // Descarrega o arquivo
         Data.Dispose();
     }
 
-    public static void Character(string Name)
+    public static void Character_Name(string Name)
     {
         // Cria um arquivo temporário
         StreamWriter Data = new StreamWriter(Directories.Characters.FullName, true);
@@ -62,7 +74,7 @@ class Write
         Data.Dispose();
     }
 
-    public static void Characters(string Characters_Name)
+    public static void Characters_Name(string Characters_Name)
     {
         // Cria um arquivo temporário
         StreamWriter Data = new StreamWriter(Directories.Characters.FullName);

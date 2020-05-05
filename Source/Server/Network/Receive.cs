@@ -146,7 +146,7 @@ class Receive
         bool Editor = Data.ReadBoolean();
 
         // Verifica se está tudo certo
-        if (!File.Exists(Directories.Accounts.FullName + User + Directories.Format))
+        if (!Directory.Exists(Directories.Accounts.FullName + User))
         {
             Send.Alert(Index, "This username isn't registered.");
             return;
@@ -156,7 +156,12 @@ class Receive
             Send.Alert(Index, "Someone already signed in to this account.");
             return;
         }
-        if (Password != Read.Account_Password(User))
+
+        // Carrega os dados da conta
+        Read.Account(Index, User);
+
+        // Verifica se a senha está correta
+        if (!Lists.Account[Index].Password.Equals(Password))
         {
             Send.Alert(Index, "Password is incorrect.");
             return;
@@ -164,13 +169,9 @@ class Receive
 
         if (Editor)
         {
-            // Carrega somente os dados importantes do jogador
-            Read.Account(Index, User, false);
-
             // Verifica se o jogador tem permissão para fazer entrar no modo edição
             if (Lists.Account[Index].Acess < Game.Accesses.Editor)
             {
-                Lists.Account[Index] = new Account.Structure(Index);
                 Send.Alert(Index, "You're not allowed to do this.");
                 return;
             }
@@ -182,14 +183,14 @@ class Receive
         else
         {
             // Carrega os dados do jogador
-            Read.Account(Index, User);
+            Read.Characters(Lists.Account[Index]);
 
             // Envia os dados das classes e dos personagens ao jogador
             Send.Classes(Index);
             Send.Characters(Index);
 
             // Se o jogador não tiver nenhum personagem então abrir o painel de criação de personagem
-            if (!Lists.Account[Index].HasCharacter())
+            if (Lists.Account[Index].Characters.Count == 0)
             {
                 Send.CreateCharacter(Index);
                 return;
@@ -232,8 +233,6 @@ class Receive
 
     private static void CreateCharacter(byte Index, NetIncomingMessage Data)
     {
-        byte Character = Lists.Account[Index].FindCharacter(string.Empty);
-
         // Lê os dados
         string Name = Data.ReadString().Trim();
 
@@ -254,10 +253,8 @@ class Receive
             return;
         }
 
-        // Define o personagem que será usado
-        Lists.Account[Index].Using = Character;
-
         // Define os valores iniciais do personagem
+        Lists.Account[Index].Character = new Player(Index);
         Account.Character(Index).Name = Name;
         Account.Character(Index).Level = 1;
         Account.Character(Index).Class_Num = Data.ReadByte();
@@ -278,8 +275,8 @@ class Receive
                 Account.Character(Index).GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
 
         // Salva a conta
-        Write.Character(Name);
-        Write.Account(Index);
+        Write.Character_Name(Name);
+        Write.Character(Lists.Account[Index]);
 
         // Entra no jogo
         Account.Character(Index).Join();
@@ -287,17 +284,21 @@ class Receive
 
     private static void Character_Use(byte Index, NetIncomingMessage Data)
     {
-        // Define o personagem que será usado
-        Lists.Account[Index].Using = Data.ReadByte();
+        byte Character = Data.ReadByte();
+
+        // Verifica se o personagem existe
+        if (Character < 0 || Character >= Lists.Account[Index].Characters.Count) return;
 
         // Entra no jogo
+        Read.Character(Lists.Account[Index], Lists.Account[Index].Characters[Character].Name);
+        Lists.Account[Index].Characters.Clear();
         Account.Character(Index).Join();
     }
 
     private static void Character_Create(byte Index)
     {
         // Verifica se o jogador já criou o máximo de personagens possíveis
-        if (Lists.Account[Index].FindCharacter(string.Empty) == 0)
+        if (Lists.Account[Index].Characters.Count == Lists.Server_Data.Max_Characters)
         {
             Send.Alert(Index, "You can only have " + Lists.Server_Data.Max_Characters + " characters.", false);
             return;
@@ -311,15 +312,16 @@ class Receive
     private static void Character_Delete(byte Index, NetIncomingMessage Data)
     {
         byte Character = Data.ReadByte();
-        string Name = Lists.Account[Index].Character[Character].Name;
 
         // Verifica se o personagem existe
-        if (string.IsNullOrEmpty(Name)) return;
+        if (Character < 0 || Character >= Lists.Account[Index].Characters.Count) return;
 
         // Deleta o personagem
+        string Name = Lists.Account[Index].Characters[Character].Name;
         Send.Alert(Index, "The character '" + Name + "' has been deleted.", false);
-        Write.Characters(Read.Characters_Name().Replace(":;" + Name + ":", ":"));
-        Lists.Account[Index].Character[Character] = new Player(Index);
+        Write.Characters_Name(Read.Characters_Name().Replace(":;" + Name + ":", ":"));
+        Lists.Account[Index].Characters.RemoveAt(Character);
+        File.Delete(Directories.Accounts.FullName + Lists.Account[Index].User + "\\Characters\\" + Name + Directories.Format);
 
         // Salva o personagem
         Send.Characters(Index);

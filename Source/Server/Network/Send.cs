@@ -170,15 +170,13 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Characters);
-        Data.Write(Lists.Server_Data.Max_Characters);
+        Data.Write((byte)Lists.Account[Index].Characters.Count);
 
-        for (byte i = 1; i <= Lists.Server_Data.Max_Characters; i++)
+        for (byte i = 0; i < Lists.Account[Index].Characters.Count; i++)
         {
-            Data.Write(Lists.Account[Index].Character[i].Name);
-            Data.Write(Lists.Account[Index].Character[i].Class_Num);
-            Data.Write(Lists.Account[Index].Character[i].Texture_Num);
-            Data.Write(Lists.Account[Index].Character[i].Genre);
-            Data.Write(Lists.Account[Index].Character[i].Level);
+            Data.Write(Lists.Account[Index].Characters[i].Name);
+            Data.Write(Lists.Account[Index].Characters[i].Texture_Num);
+            Data.Write(Lists.Account[Index].Characters[i].Level);
         }
 
         ToPlayer(Index, Data);
