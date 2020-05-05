@@ -21,7 +21,7 @@
         // Encontra o usuário
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (IsPlaying(i))
-                if (Lists.Account[i].User == Name)
+                if (Lists.Account[i].User.Equals(Name))
                     return i;
 
         return 0;
@@ -30,9 +30,9 @@
     public static Player Find(string Name)
     {
         // Encontra o usuário
-        for (byte i = 1; i < Lists.Account.Length; i++)
+        for (byte i = 1; i <= Game.HigherIndex; i++)
             if (IsPlaying(i))
-                if (Character(i).Name == Name)
+                if (Character(i).Name.Equals(Name))
                     return Character(i);
 
         return null;

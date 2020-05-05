@@ -5,7 +5,7 @@ using System.Collections.Generic;
 class Player
 {
     // Dados permantes
-    public string Name;
+    public string Name = string.Empty;
     public byte Class_Num;
     public short Texture_Num;
     public bool Genre;
@@ -312,7 +312,7 @@ class Player
     {
         // Verifica se a vítima pode ser atacada
         if (!Account.IsPlaying(Victim.Index)) return;
-        if (Account.Character(Victim.Index).GettingMap) return;
+        if (Victim.GettingMap) return;
         if (Lists.Map[Map_Num].Moral == (byte)Map.Morals.Pacific)
         {
             Send.Message(this, "This is a peaceful area.", Color.White);
