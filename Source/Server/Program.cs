@@ -49,7 +49,8 @@ class Program
     {
         // Salva os dados de todos os jogadores
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (Account.IsPlaying(i)) Write.Account(i);
+            if (Lists.Account[i].IsPlaying)
+                Write.Character(Lists.Account[i]);
 
         // Fecha o servidores
         Socket.Device.Shutdown("Server was shut down.");

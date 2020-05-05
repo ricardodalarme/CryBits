@@ -67,7 +67,7 @@ class Receive
     public static void Handle(byte Index, NetIncomingMessage Data)
     {
         byte Packet_Num = Data.ReadByte();
-        Player Player = Account.Character(Index);
+        Player Player = Lists.Account[Index].Character;
 
         // Pacote principal de conexão
         if (Packet_Num == 0) Connect(Index, Data);
@@ -255,31 +255,31 @@ class Receive
 
         // Define os valores iniciais do personagem
         Lists.Account[Index].Character = new Player(Index);
-        Account.Character(Index).Name = Name;
-        Account.Character(Index).Level = 1;
-        Account.Character(Index).Class_Num = Data.ReadByte();
-        Lists.Structures.Class Class = Lists.Class[Account.Character(Index).Class_Num];
-        Account.Character(Index).Genre = Data.ReadBoolean();
-        if (Account.Character(Index).Genre) Account.Character(Index).Texture_Num = Class.Tex_Male[Data.ReadByte()];
-        else Account.Character(Index).Texture_Num = Class.Tex_Female[Data.ReadByte()];
-        Account.Character(Index).Attribute = Class.Attribute;
-        Account.Character(Index).Map_Num = Class.Spawn_Map;
-        Account.Character(Index).Direction = (Game.Directions)Class.Spawn_Direction;
-        Account.Character(Index).X = Class.Spawn_X;
-        Account.Character(Index).Y = Class.Spawn_Y;
-        for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Account.Character(Index).Vital[i] = Account.Character(Index).MaxVital(i);
+        Lists.Account[Index].Character.Name = Name;
+        Lists.Account[Index].Character.Level = 1;
+        Lists.Account[Index].Character.Class_Num = Data.ReadByte();
+        Lists.Structures.Class Class = Lists.Class[Lists.Account[Index].Character.Class_Num];
+        Lists.Account[Index].Character.Genre = Data.ReadBoolean();
+        if (Lists.Account[Index].Character.Genre) Lists.Account[Index].Character.Texture_Num = Class.Tex_Male[Data.ReadByte()];
+        else Lists.Account[Index].Character.Texture_Num = Class.Tex_Female[Data.ReadByte()];
+        Lists.Account[Index].Character.Attribute = Class.Attribute;
+        Lists.Account[Index].Character.Map_Num = Class.Spawn_Map;
+        Lists.Account[Index].Character.Direction = (Game.Directions)Class.Spawn_Direction;
+        Lists.Account[Index].Character.X = Class.Spawn_X;
+        Lists.Account[Index].Character.Y = Class.Spawn_Y;
+        for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Lists.Account[Index].Character.Vital[i] = Lists.Account[Index].Character.MaxVital(i);
         for (byte i = 0; i < (byte)Class.Item.Length; i++)
-            if (Lists.Item[Class.Item[i].Item1].Type == (byte)Game.Items.Equipment && Account.Character(Index).Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] == 0)
-                Account.Character(Index).Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] = Class.Item[i].Item1;
+            if (Lists.Item[Class.Item[i].Item1].Type == (byte)Game.Items.Equipment && Lists.Account[Index].Character.Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] == 0)
+                Lists.Account[Index].Character.Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] = Class.Item[i].Item1;
             else
-                Account.Character(Index).GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
+                Lists.Account[Index].Character.GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
 
         // Salva a conta
         Write.Character_Name(Name);
         Write.Character(Lists.Account[Index]);
 
         // Entra no jogo
-        Account.Character(Index).Join();
+        Lists.Account[Index].Character.Join();
     }
 
     private static void Character_Use(byte Index, NetIncomingMessage Data)
@@ -292,7 +292,7 @@ class Receive
         // Entra no jogo
         Read.Character(Lists.Account[Index], Lists.Account[Index].Characters[Character].Name);
         Lists.Account[Index].Characters.Clear();
-        Account.Character(Index).Join();
+        Lists.Account[Index].Character.Join();
     }
 
     private static void Character_Create(byte Index)
@@ -630,7 +630,7 @@ class Receive
         Write.Tiles();
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (i != Player.Index)
-                Send.Tiles(Account.Character(i));
+                Send.Tiles(Lists.Account[i].Character);
     }
 
     private static void Write_Maps(Player Player, NetIncomingMessage Data)
@@ -746,7 +746,8 @@ class Receive
             // Envia o mapa para todos os jogadores que estão nele
             for (byte n = 1; n <= Game.HigherIndex; n++)
                 if (n != Player.Index)
-                    if (Account.Character(n).Map_Num == i || Lists.Account[n].InEditor) Send.Map(Account.Character(n), i);
+                    if (Lists.Account[n].Character.Map_Num == i || Lists.Account[n].InEditor) 
+                        Send.Map(Lists.Account[n].Character, i);
         }
 
         // Salva os dados
@@ -797,7 +798,8 @@ class Receive
         // Salva os dados e envia pra todos jogadores conectados
         Write.NPCs();
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Player.Index) Send.NPCs(Account.Character(i));
+            if (i != Player.Index) 
+                Send.NPCs(Lists.Account[i].Character);
     }
 
     private static void Write_Items(Player Player, NetIncomingMessage Data)
@@ -842,7 +844,7 @@ class Receive
         Write.Items();
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (i != Player.Index)
-                Send.Items(Account.Character(i));
+                Send.Items(Lists.Account[i].Character);
     }
 
     private static void Write_Shops(Player Player, NetIncomingMessage Data)
@@ -889,7 +891,7 @@ class Receive
         Write.Shops();
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (i != Player.Index)
-                Send.Shops(Account.Character(i));
+                Send.Shops(Lists.Account[i].Character);
     }
 
     private static void Request_Server_Data(Player Player)
@@ -1002,7 +1004,7 @@ class Receive
         // Entra na festa
         for (byte i = 0; i < Invitation.Party.Count; i++)
         {
-            Account.Character(Invitation.Party[i]).Party.Add(Player.Index);
+            Lists.Account[Invitation.Party[i]].Character.Party.Add(Player.Index);
             Player.Party.Add(Invitation.Party[i]);
         }
         Player.Party.Insert(0, Invitation.Index);
@@ -1012,7 +1014,7 @@ class Receive
 
         // Envia os dados para o grupo
         Send.Party(Player);
-        for (byte i = 0; i < Player.Party.Count; i++) Send.Party(Account.Character(Player.Party[i]));
+        for (byte i = 0; i < Player.Party.Count; i++) Send.Party(Lists.Account[Player.Party[i]].Character);
     }
 
     private static void Party_Decline(Player Player)
@@ -1165,13 +1167,13 @@ class Receive
 
         // Envia os dados ao outro jogador
         Send.Trade_Offer(Player);
-        Send.Trade_Offer(Account.Character(Player.Trade), false);
+        Send.Trade_Offer(Lists.Account[Player.Trade].Character, false);
     }
 
     private static void Trade_Offer_State(Player Player, NetIncomingMessage Data)
     {
         Game.Trade_Status State = (Game.Trade_Status)Data.ReadByte();
-        Player Invited = Account.Character(Player.Trade);
+        Player Invited = Lists.Account[Player.Trade].Character;
 
         switch (State)
         {
@@ -1198,7 +1200,7 @@ class Receive
                 // Remove os itens do inventário dos jogadores
                 for (byte j = 0, To = Player.Index; j < 2; j++, To = (To == Player.Index ? Invited.Index : Player.Index))
                     for (byte i = 1; i <= Game.Max_Inventory; i++)
-                        Account.Character(To).TakeItem((byte)Account.Character(To).Trade_Offer[i].Item_Num, Account.Character(To).Trade_Offer[i].Amount);
+                        Lists.Account[To].Character.TakeItem((byte)Lists.Account[To].Character.Trade_Offer[i].Item_Num, Lists.Account[To].Character.Trade_Offer[i].Amount);
 
                 // Dá os itens aos jogadores
                 for (byte i = 1; i <= Game.Max_Inventory; i++)

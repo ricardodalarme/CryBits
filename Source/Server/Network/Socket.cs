@@ -76,7 +76,7 @@ class Socket
 
         // Acaba com a conexão e restabelece os dados do jogador
         Connection[Index] = null;
-        if (Account.IsPlaying(Index)) Account.Character(Index).Leave();
+        if (Lists.Account[Index].IsPlaying) Lists.Account[Index].Character.Leave();
         Lists.Account[Index] = new Account.Structure(Index);
     }
 

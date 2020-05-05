@@ -106,18 +106,18 @@ class NPC
                         for (byte Player_Index = 1; Player_Index <= Game.HigherIndex; Player_Index++)
                         {
                             // Verifica se o jogador está jogando e no mesmo mapa que o NPC
-                            if (!Account.IsPlaying(Player_Index)) continue;
-                            if (Account.Character(Player_Index).Map_Num != Map_Num) continue;
+                            if (!Lists.Account[Player_Index].IsPlaying) continue;
+                            if (Lists.Account[Player_Index].Character.Map_Num != Map_Num) continue;
 
                             // Se o jogador estiver no alcance do NPC, ir atrás dele
-                            Distance = (short)Math.Sqrt(Math.Pow(X - Account.Character(Player_Index).X, 2) + Math.Pow(Y - Account.Character(Player_Index).Y, 2));
+                            Distance = (short)Math.Sqrt(Math.Pow(X - Lists.Account[Player_Index].Character.X, 2) + Math.Pow(Y - Lists.Account[Player_Index].Character.Y, 2));
                             if (Distance <= NPC_Data.Sight)
                             {
                                 Target_Type = (byte)Game.Target.Player;
                                 Target_Index = Player_Index;
 
                                 // Mensagem
-                                if (!string.IsNullOrEmpty(NPC_Data.SayMsg)) Send.Message(Account.Character(Player_Index), NPC_Data.Name + ": " + NPC_Data.SayMsg, System.Drawing.Color.White);
+                                if (!string.IsNullOrEmpty(NPC_Data.SayMsg)) Send.Message(Lists.Account[Player_Index].Character, NPC_Data.Name + ": " + NPC_Data.SayMsg, System.Drawing.Color.White);
                                 break;
                             }
                         }
@@ -145,7 +145,7 @@ class NPC
                 if (Target_Type == (byte)Game.Target.Player)
                 {
                     // Verifica se o jogador ainda está disponível
-                    if (!Account.IsPlaying(Target_Index) || Account.Character(Target_Index).Map_Num != Map_Num)
+                    if (!Lists.Account[Target_Index].IsPlaying || Lists.Account[Target_Index].Character.Map_Num != Map_Num)
                     {
                         Target_Type = 0;
                         Target_Index = 0;
@@ -153,8 +153,8 @@ class NPC
                     // Posição do alvo
                     else
                     {
-                        TargetX = Account.Character(Target_Index).X;
-                        TargetY = Account.Character(Target_Index).Y;
+                        TargetX = Lists.Account[Target_Index].Character.X;
+                        TargetY = Lists.Account[Target_Index].Character.Y;
                     }
                 }
                 else if (Target_Type == (byte)Game.Target.NPC)
@@ -351,7 +351,7 @@ class NPC
 
             // Verifica se o jogador está na frente do NPC
             if (Target_Type == (byte)Game.Target.Player && Map.HasPlayer(Map_Num, Next_X, Next_Y) == Target_Index)
-                Attack_Player(Account.Character(Target_Index));
+                Attack_Player(Lists.Account[Target_Index].Character);
             // Verifica se o NPC alvo está na frente do NPC
             else if (Target_Type == (byte)Game.Target.NPC && Map.HasNPC(Map_Num, Next_X, Next_Y) == Target_Index)
                 Attack_NPC(Lists.Temp_Map[Map_Num].NPC[Target_Index]);
@@ -360,7 +360,7 @@ class NPC
         private void Attack_Player(Player Victim)
         {
             // Verifica se a vítima pode ser atacada
-            if (!Account.IsPlaying(Victim.Index)) return;
+            if (!Victim.Account.IsPlaying) return;
             if (Victim.GettingMap) return;
 
             // Tempo de ataque 

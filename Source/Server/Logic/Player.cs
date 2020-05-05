@@ -90,6 +90,9 @@ class Player
         }
     }
 
+    // Conta do jogador
+    public Account.Structure Account => Lists.Account[Index];
+
     /////////////
     // Funções //
     /////////////
@@ -112,10 +115,10 @@ class Player
     public void Join()
     {
         // Previne que alguém que já está online de logar
-        if (Account.IsPlaying(Index)) return;
+        if (Account.IsPlaying) return;
 
         // Define que o jogador está dentro do jogo
-        Lists.Account[Index].Playing = true;
+        Account.Playing = true;
 
         // Envia todos os dados necessários
         Send.Join(this);
@@ -290,7 +293,7 @@ class Player
         Victim_Index = Map.HasPlayer(Map_Num, Next_X, Next_Y);
         if (Victim_Index > 0)
         {
-            Attack_Player(Account.Character(Victim_Index));
+            Attack_Player(Lists.Account[Victim_Index].Character);
             return;
         }
 
@@ -311,7 +314,7 @@ class Player
     private void Attack_Player(Player Victim)
     {
         // Verifica se a vítima pode ser atacada
-        if (!Account.IsPlaying(Victim.Index)) return;
+        if (!Victim.Account.IsPlaying) return;
         if (Victim.GettingMap) return;
         if (Lists.Map[Map_Num].Moral == (byte)Map.Morals.Pacific)
         {
@@ -417,7 +420,7 @@ class Player
         byte NumLevel = 0; int ExpRest;
 
         // Previne erros
-        if (!Account.IsPlaying(Index)) return;
+        if (!Account.IsPlaying) return;
 
         while (Experience >= ExpNeeded)
         {
@@ -615,10 +618,10 @@ class Player
         {
             // Retira o jogador do grupo
             for (byte i = 0; i < Party.Count; i++)
-                Account.Character(Party[i]).Party.Remove(Index);
+                Lists.Account[Party[i]].Character.Party.Remove(Index);
 
             // Envia o dados para todos os membros do grupo
-            for (byte i = 0; i < Party.Count; i++) Send.Party(Account.Character(Party[i]));
+            for (byte i = 0; i < Party.Count; i++) Send.Party(Lists.Account[Party[i]].Character);
             Party.Clear();
             Send.Party(this);
         }
@@ -634,7 +637,7 @@ class Player
         // Cálcula a diferença dos leveis entre os jogadores
         for (byte i = 0; i < Party.Count; i++)
         {
-            Difference = Math.Abs(Level - Account.Character(Party[i]).Level);
+            Difference = Math.Abs(Level - Lists.Account[Party[i]].Character.Level);
 
             // Constante para a diminuir potêncialmente a experiência que diferenças altas ganhariam
             if (Difference < 3) k = 1.15;
@@ -656,9 +659,9 @@ class Player
             // Divide a experiência
             Given_Experience = (int)((Value / 2) * Diff[i]);
             Experience_Sum += Given_Experience;
-            Account.Character(Party[i]).Experience += Given_Experience;
-            Account.Character(Party[i]).CheckLevelUp();
-            Send.Player_Experience(Account.Character(Party[i]));
+            Lists.Account[Party[i]].Character.Experience += Given_Experience;
+            Lists.Account[Party[i]].Character.CheckLevelUp();
+            Send.Player_Experience(Lists.Account[Party[i]].Character);
         }
 
         // Dá ao jogador principal o restante da experiência
@@ -672,8 +675,8 @@ class Player
         // Cancela a troca
         if (Trade > 0)
         {
-            Account.Character(Trade).Trade = 0;
-            Send.Trade(Account.Character(Trade));
+            Lists.Account[Trade].Character.Trade = 0;
+            Send.Trade(Lists.Account[Trade].Character);
             Trade = 0;
             Send.Trade(this);
         }

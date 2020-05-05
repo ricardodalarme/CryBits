@@ -85,36 +85,36 @@ class Send
     {
         // Envia os dados para todos conectados
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (Account.IsPlaying(i))
-                ToPlayer(Account.Character(i), Data);
+            if (Lists.Account[i].IsPlaying)
+                ToPlayer(Lists.Account[i].Character, Data);
     }
 
     private static void ToAllBut(Player Player, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (Account.IsPlaying(i))
+            if (Lists.Account[i].IsPlaying)
                 if (Player.Index != i)
-                    ToPlayer(Account.Character(i), Data);
+                    ToPlayer(Lists.Account[i].Character, Data);
     }
 
     private static void ToMap(short Map, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (Account.IsPlaying(i))
-                if (Account.Character(i).Map_Num == Map)
-                    ToPlayer(Account.Character(i), Data);
+            if (Lists.Account[i].IsPlaying)
+                if (Lists.Account[i].Character.Map_Num == Map)
+                    ToPlayer(Lists.Account[i].Character, Data);
     }
 
     private static void ToMapBut(short Map, Player Player, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (Account.IsPlaying(i))
-                if (Account.Character(i).Map_Num == Map)
+            if (Lists.Account[i].IsPlaying)
+                if (Lists.Account[i].Character.Map_Num == Map)
                     if (Player.Index != i)
-                        ToPlayer(Account.Character(i), Data);
+                        ToPlayer(Lists.Account[i].Character, Data);
     }
 
     public static void Alert(byte Index, string Message, bool Disconnect = true)
@@ -360,10 +360,10 @@ class Send
     {
         // Envia os dados dos outros jogadores 
         for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (Account.IsPlaying(i))
+            if (Lists.Account[i].IsPlaying)
                 if (Player.Index != i)
-                    if (Account.Character(i).Map_Num == Player.Map_Num)
-                        ToPlayer(Player, Player_Data_Cache(Account.Character(i)));
+                    if (Lists.Account[i].Character.Map_Num == Player.Map_Num)
+                        ToPlayer(Player, Player_Data_Cache(Lists.Account[i].Character));
 
         // Envia os dados do jogador
         ToMap(Player.Map_Num, Player_Data_Cache(Player));
@@ -895,7 +895,7 @@ class Send
     public static void Trade_Offer(Player Player, bool Own = true)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
-        Player To = Own ? Player : Account.Character(Player.Trade);
+        Player To = Own ? Player : Lists.Account[Player.Trade].Character;
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Trade_Offer);
