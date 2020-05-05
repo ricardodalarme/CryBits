@@ -292,7 +292,6 @@ class Receive
 
         // Entra no jogo
         Read.Character(Account, Account.Characters[Character].Name);
-        Account.Characters.Clear();
         Account.Character.Join();
     }
 
@@ -433,7 +432,7 @@ class Receive
         // Somente se necessário
         if (Player.Inventory[Slot_Old].Item_Num == 0) return;
         if (Slot_Old == Slot_New) return;
-        if (Player.Trade != 0) return;
+        if (Player.Trade != null) return;
 
         // Muda o item de slot
         (Player.Inventory[Slot_Old].Item_Num, Player.Inventory[Slot_New].Item_Num) = (Player.Inventory[Slot_New].Item_Num, Player.Inventory[Slot_Old].Item_Num);
@@ -961,7 +960,7 @@ class Receive
             return;
         }
         // Verifica se o jogador já está analisando um convite para algum grupo
-        if (!string.IsNullOrEmpty(Invited.Party_Invitation))
+        if (!string.IsNullOrEmpty(Invited.Party_Request))
         {
             Send.Message(Player, "The player is analyzing an invitation to another party.", System.Drawing.Color.White);
             return;
@@ -974,13 +973,13 @@ class Receive
         }
 
         // Convida o jogador
-        Invited.Party_Invitation = Player.Name;
+        Invited.Party_Request = Player.Name;
         Send.Party_Invitation(Invited, Player.Name);
     }
 
     private static void Party_Accept(Player Player)
     {
-        Player Invitation = Account.FindPlayer(Player.Party_Invitation);
+        Player Invitation = Account.FindPlayer(Player.Party_Request);
 
         // Verifica se já tem um grupo
         if (Player.Party.Count != 0)
@@ -1010,7 +1009,7 @@ class Receive
         }
         Player.Party.Insert(0, Invitation.Index);
         Invitation.Party.Add(Player.Index);
-        Player.Party_Invitation = string.Empty;
+        Player.Party_Request = string.Empty;
         Send.Message(Invitation, Player.Name + " joined the party.", System.Drawing.Color.White);
 
         // Envia os dados para o grupo
@@ -1020,11 +1019,11 @@ class Receive
 
     private static void Party_Decline(Player Player)
     {
-        Player Invitation = Account.FindPlayer(Player.Party_Invitation);
+        Player Invitation = Account.FindPlayer(Player.Party_Request);
 
         // Recusa o convite
         if (Invitation != null) Send.Message(Invitation, Player.Name + " decline the party.", System.Drawing.Color.White);
-        Player.Party_Invitation = string.Empty;
+        Player.Party_Request = string.Empty;
     }
 
     private static void Party_Leave(Player Player)
@@ -1053,7 +1052,7 @@ class Receive
             return;
         }
         // Verifica se já tem um grupo
-        if (Invited.Trade != 0)
+        if (Invited.Trade != null)
         {
             Send.Message(Player, "The player is already part of a trade.", System.Drawing.Color.White);
             return;
@@ -1092,7 +1091,7 @@ class Receive
         Player Invited = Account.FindPlayer(Player.Trade_Request);
 
         // Verifica se já tem um grupo
-        if (Player.Trade != 0)
+        if (Player.Trade != null)
         {
             Send.Message(Player, "You are already part of a trade.", System.Drawing.Color.White);
             return;
@@ -1117,8 +1116,8 @@ class Receive
         }
 
         // Entra na troca
-        Player.Trade = Invited.Index;
-        Invited.Trade = Player.Index;
+        Player.Trade = Invited;
+        Invited.Trade = Player;
         Send.Message(Player, "You have accepted " + Invited.Name + "'s trade request.", System.Drawing.Color.White);
         Send.Message(Invited, Player.Name + " has accepted your trade request.", System.Drawing.Color.White);
 
@@ -1168,13 +1167,13 @@ class Receive
 
         // Envia os dados ao outro jogador
         Send.Trade_Offer(Player);
-        Send.Trade_Offer(Lists.Account[Player.Trade].Character, false);
+        Send.Trade_Offer(Player.Trade, false);
     }
 
     private static void Trade_Offer_State(Player Player, NetIncomingMessage Data)
     {
         Game.Trade_Status State = (Game.Trade_Status)Data.ReadByte();
-        Player Invited = Lists.Account[Player.Trade].Character;
+        Player Invited = Player.Trade;
 
         switch (State)
         {

@@ -27,8 +27,8 @@ class Player
     public bool GettingMap;
     public int Attack_Timer;
     public List<byte> Party = new List<byte>();
-    public string Party_Invitation;
-    public byte Trade;
+    public string Party_Request;
+    public Player Trade;
     public string Trade_Request;
     public Lists.Structures.Inventories[] Trade_Offer;
     public short Shop;
@@ -107,15 +107,15 @@ class Player
                     Vital[v] += Regeneration(v);
                     if (Vital[v] > MaxVital(v)) Vital[v] = MaxVital(v);
 
-                    // Envia os dados aos jogadores
+                    // Env ia os dados aos jogadores
                     Send.Player_Vitals(this);
                 }
     }
 
     public void Join()
     {
-        // Previne que alguém que já está online de logar
-        if (Account.IsPlaying) return;
+        // Limpa os dados dos outros personagens
+        Account.Characters = null;
 
         // Envia todos os dados necessários
         Send.Join(this);
@@ -151,7 +151,7 @@ class Player
         short Map_Old = this.Map_Num;
 
         // Cancela a troca ou a loja
-        if (Trade != 0) Trade_Leave();
+        if (Trade != null) Trade_Leave();
         if (Shop != 0) Shop_Leave();
 
         // Evita que o jogador seja transportado para fora do limite
@@ -197,7 +197,7 @@ class Player
         if (GettingMap) return;
 
         // Cancela a troca ou a loja
-        if (Trade != 0) Trade_Leave();
+        if (Trade != null) Trade_Leave();
         if (Shop != 0) Shop_Leave();
 
         // Próximo azulejo
@@ -272,7 +272,7 @@ class Player
         Map.NextTile(Direction, ref Next_X, ref Next_Y);
 
         // Apenas se necessário
-        if (Trade != 0) return;
+        if (Trade != null) return;
         if (Shop != 0) return;
         if (Environment.TickCount < Attack_Timer + 750) return;
         if (Map.Tile_Blocked(Map_Num, X, Y, Direction, false)) goto @continue;
@@ -486,7 +486,7 @@ class Player
         if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
         if (Inventory[Slot].Item_Num == 0) return;
         if (Lists.Item[Inventory[Slot].Item_Num].Bind == (byte)Game.BindOn.Pickup) return;
-        if (Trade != 0) return;
+        if (Trade != null) return;
 
         // Verifica se não está dropando mais do que tem
         if (Amount > Inventory[Slot].Amount) Amount = Inventory[Slot].Amount;
@@ -509,7 +509,7 @@ class Player
 
         // Somente se necessário
         if (Item_Num == 0) return;
-        if (Trade != 0) return;
+        if (Trade != null) return;
 
         // Requerimentos
         if (Level < Lists.Item[Item_Num].Req_Level)
@@ -661,11 +661,11 @@ class Player
     public void Trade_Leave()
     {
         // Cancela a troca
-        if (Trade > 0)
+        if (Trade != null)
         {
-            Lists.Account[Trade].Character.Trade = 0;
-            Send.Trade(Lists.Account[Trade].Character);
-            Trade = 0;
+            Trade.Trade = null;
+            Send.Trade(Trade);
+            Trade = null;
             Send.Trade(this);
         }
     }

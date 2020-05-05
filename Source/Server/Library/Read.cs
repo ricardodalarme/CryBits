@@ -42,10 +42,10 @@ partial class Read
 
     public static void Account(byte Index, string Name)
     {
-        string Directory = Directories.Accounts.FullName + Name + "\\Data" + Directories.Format;
+        FileInfo File = new FileInfo(Directories.Accounts.FullName + Name + "\\Data" + Directories.Format);
 
         // Cria um arquivo temporário
-        BinaryReader Data = new BinaryReader(File.OpenRead(Directory));
+        BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Carrega os dados e os adiciona ao cache
         Lists.Account[Index].User = Data.ReadString();
@@ -65,6 +65,7 @@ partial class Read
 
         // Lê odos os personagens
         FileInfo[] File = Directory.GetFiles();
+        Account.Characters = new System.Collections.Generic.List<Account.Structure.TempCharacter>();
         for (byte i = 0; i < File.Length; i++)
         {
             // Cria um arquivo temporário

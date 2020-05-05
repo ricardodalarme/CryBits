@@ -871,7 +871,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Trade);
-        Data.Write(Player.Trade);
+        Data.Write(Player.Trade == null ? 0 : Player.Trade.Index);
         ToPlayer(Player, Data);
     }
 
@@ -898,7 +898,7 @@ class Send
     public static void Trade_Offer(Player Player, bool Own = true)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
-        Player To = Own ? Player : Lists.Account[Player.Trade].Character;
+        Player To = Own ? Player : Player.Trade;
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Trade_Offer);

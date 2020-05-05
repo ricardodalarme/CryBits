@@ -24,13 +24,13 @@ class Write
 
     public static void Character(Account.Structure Account)
     {
-        string Directory = Directories.Accounts.FullName + Account.User + "\\Characters\\" + Account.Character.Name + Directories.Format;
+        FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Characters\\" + Account.Character.Name + Directories.Format);
 
         // Evita erros
-        if (string.IsNullOrEmpty(Account.User)) return;
+        if (!File.Directory.Exists) File.Directory.Create();
 
         // Cria um arquivo temporário
-        BinaryWriter Data = new BinaryWriter(File.OpenWrite(Directory));
+        BinaryWriter Data = new BinaryWriter(File.OpenWrite());
 
         // Salva os dados no arquivo
         Data.Write(Account.Character.Name);

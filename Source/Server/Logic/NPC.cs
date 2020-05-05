@@ -263,7 +263,7 @@ class NPC
             for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Vital[i] = Lists.NPC[Data_Index].Vital[i];
 
             // Envia os dados aos jogadores
-            Send.Map_NPC(Lists.Temp_Map[Map_Num].NPC[Index]);
+            if (Socket.Device != null) Send.Map_NPC(Lists.Temp_Map[Map_Num].NPC[Index]);
         }
 
         public void Spawn()
