@@ -40,7 +40,7 @@ partial class Read
         Stream.Close();
     }
 
-    public static void Account(byte Index, string Name)
+    public static void Account(Account.Structure Account, string Name)
     {
         FileInfo File = new FileInfo(Directories.Accounts.FullName + Name + "\\Data" + Directories.Format);
 
@@ -48,9 +48,9 @@ partial class Read
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Carrega os dados e os adiciona ao cache
-        Lists.Account[Index].User = Data.ReadString();
-        Lists.Account[Index].Password = Data.ReadString();
-        Lists.Account[Index].Acess = (Game.Accesses)Data.ReadByte();
+        Account.User = Data.ReadString();
+        Account.Password = Data.ReadString();
+        Account.Acess = (Game.Accesses)Data.ReadByte();
 
         // Descarrega o arquivo
         Data.Dispose();
@@ -96,7 +96,7 @@ partial class Read
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Carrega os dados e os adiciona ao cache
-        Account.Character = new Player(Account.Index);
+        Account.Character = new Player(Account);
         Account.Character.Name = Data.ReadString();
         Account.Character.Texture_Num = Data.ReadInt16();
         Account.Character.Level = Data.ReadInt16();

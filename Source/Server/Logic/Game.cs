@@ -5,9 +5,6 @@ class Game
     // Números aleatórios
     public static Random Random = new Random();
 
-    // O maior índice dos jogadores conectados
-    public static byte HigherIndex;
-
     // CPS do servidor
     public static int CPS;
 
@@ -112,22 +109,6 @@ class Game
         Declined
     }
     #endregion
-
-    public static void SetHigherIndex()
-    {
-        // Redefine o índice máximo de jogadores
-        HigherIndex = 0;
-
-        for (byte i = (byte)Lists.Account.GetUpperBound(0); i >= 1; i -= 1)
-            if (Socket.IsConnected(i))
-            {
-                HigherIndex = i;
-                break;
-            }
-
-        // Envia os dados para os jogadores
-        Send.HigherIndex();
-    }
 
     public static Directions ReverseDirection(Directions Direction)
     {

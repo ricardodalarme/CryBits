@@ -29,9 +29,6 @@ class Program
         // Carrega todos os dados necessários
         Read.All();
 
-        // Limpa os dados dos jogadores
-        Clear.Accounts();
-
         // Cria os dispositivos da rede
         Socket.Init();
         Console.WriteLine("Network started. Port: " + Socket.Device.Port);
@@ -48,7 +45,7 @@ class Program
     private static bool Exit()
     {
         // Salva os dados de todos os jogadores
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
                 Write.Character(Lists.Account[i]);
 

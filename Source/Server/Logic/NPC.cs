@@ -96,8 +96,8 @@ class NPC
                 {
                     // Jogador
                     if (Target == null)
-                        for (byte Player_Index = 1; Player_Index <= Game.HigherIndex; Player_Index++)
-                        {
+                        for (byte Player_Index = 0; Player_Index < Lists.Account.Count; Player_Index++) 
+                            {
                             // Verifica se o jogador está jogando e no mesmo mapa que o NPC
                             if (!Lists.Account[Player_Index].IsPlaying) continue;
                             if (Lists.Account[Player_Index].Character.Map_Num != Map_Num) continue;

@@ -59,7 +59,7 @@ class Map
     public static Player HasPlayer(short Map_Num, short X, short Y)
     {
         // Verifica se há algum Jogador na cordenada
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
                 if (Lists.Account[i].Character.X == X && Lists.Account[i].Character.Y == Y && Lists.Account[i].Character.Map_Num == Map_Num)
                     return Lists.Account[i].Character;
@@ -70,7 +70,7 @@ class Map
     public static bool HasPlayers(short Map_Num)
     {
         // Verifica se tem algum jogador no mapa
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
                 if (Lists.Account[i].Character.Map_Num == Map_Num)
                     return true;

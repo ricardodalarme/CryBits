@@ -64,10 +64,9 @@ class Receive
         Request_Shops
     }
 
-    public static void Handle(byte Index, NetIncomingMessage Data)
+    public static void Handle(Account.Structure Account, NetIncomingMessage Data)
     {
         byte Packet_Num = Data.ReadByte();
-        Account.Structure Account = Lists.Account[Index];
         Player Player = Account.Character;
 
         // Pacote principal de conexão
@@ -76,7 +75,7 @@ class Receive
             // Manuseia os dados recebidos do cliente
             switch ((Client_Packets)Packet_Num)
             {
-                case Client_Packets.Latency: Latency(Index); break;
+                case Client_Packets.Latency: Latency(Account); break;
                 case Client_Packets.Register: Register(Account, Data); break;
                 case Client_Packets.CreateCharacter: CreateCharacter(Account, Data); break;
                 case Client_Packets.Character_Use: Character_Use(Account, Data); break;
@@ -133,10 +132,10 @@ class Receive
             }
     }
 
-    private static void Latency(byte Index)
+    private static void Latency(Account.Structure Account)
     {
         // Envia o pacote para a contagem da latência
-        Send.Latency(Index);
+        Send.Latency(Account);
     }
 
     private static void Connect(Account.Structure Account, NetIncomingMessage Data)
@@ -159,7 +158,7 @@ class Receive
         }
 
         // Carrega os dados da conta
-        Read.Account(Account.Index, User);
+        Read.Account(Account, User);
 
         // Verifica se a senha está correta
         if (!Account.Password.Equals(Password))
@@ -255,7 +254,7 @@ class Receive
         }
 
         // Define os valores iniciais do personagem
-        Account.Character = new Player(Account.Index);
+        Account.Character = new Player(Account);
         Account.Character.Name = Name;
         Account.Character.Level = 1;
         Account.Character.Class_Num = Data.ReadByte();
@@ -586,8 +585,8 @@ class Receive
 
         // Salva os dados e envia pra todos jogadores conectados
         Write.Classes();
-        for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Account.Index)
+        for (byte i = 0; i < Lists.Account.Count; i++)
+            if (Lists.Account[i] != Account)
                 Send.Classes(Lists.Account[i]);
     }
 
@@ -628,8 +627,8 @@ class Receive
 
         // Salva os dados e envia pra todos jogadores conectados
         Write.Tiles();
-        for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Account.Index)
+        for (byte i = 0; i < Lists.Account.Count; i++)
+            if (Lists.Account[i] != Account)
                 Send.Tiles(Lists.Account[i]);
     }
 
@@ -744,8 +743,8 @@ class Receive
             Map.Spawn_Items(i);
 
             // Envia o mapa para todos os jogadores que estão nele
-            for (byte n = 1; n <= Game.HigherIndex; n++)
-                if (n != Account.Index)
+            for (byte n = 0; n < Lists.Account.Count; n++)
+                if (Lists.Account[n] != Account)
                     if (Lists.Account[n].Character.Map_Num == i || Lists.Account[n].InEditor)
                         Send.Map(Lists.Account[n], i);
         }
@@ -797,8 +796,8 @@ class Receive
 
         // Salva os dados e envia pra todos jogadores conectados
         Write.NPCs();
-        for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Account.Index)
+        for (byte i = 0; i < Lists.Account.Count; i++)
+            if (Lists.Account[i] != Account)
                 Send.NPCs(Lists.Account[i]);
     }
 
@@ -842,8 +841,8 @@ class Receive
 
         // Salva os dados e envia pra todos jogadores conectados
         Write.Items();
-        for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Account.Index)
+        for (byte i = 0; i < Lists.Account.Count; i++)
+            if (Lists.Account[i] != Account)
                 Send.Items(Lists.Account[i]);
     }
 
@@ -889,8 +888,8 @@ class Receive
 
         // Salva os dados e envia pra todos jogadores conectados
         Write.Shops();
-        for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (i != Account.Index)
+        for (byte i = 0; i < Lists.Account.Count; i++)
+            if (Lists.Account[i] != Account)
                 Send.Shops(Lists.Account[i]);
     }
 

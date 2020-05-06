@@ -3,13 +3,6 @@ using System.Collections.Generic;
 
 class Clear
 {
-    public static void Accounts()
-    {
-        // Limpa os dados de todos jogadores
-        Lists.Account = new Account.Structure[Lists.Server_Data.Max_Players + 1];
-        for (byte i = 1; i < Lists.Account.Length; i++) Lists.Account[i] = new Account.Structure(i);
-    }
-
     public static void Server_Data()
     {
         // Defini os dados das opções

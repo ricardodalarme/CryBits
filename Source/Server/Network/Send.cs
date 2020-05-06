@@ -13,7 +13,6 @@ class Send
         Classes,
         Characters,
         JoinGame,
-        HigherIndex,
         Player_Data,
         Player_Position,
         Player_Vitals,
@@ -65,31 +64,26 @@ class Send
         Shops
     }
 
-    private static void ToPlayer(byte Index, NetOutgoingMessage Data)
+    private static void ToPlayer(Account.Structure Account, NetOutgoingMessage Data)
     {
         // Previne sobrecarga
-        if (!Socket.IsConnected(Index)) return;
+        if (!Socket.IsConnected(Account)) return;
 
         // Recria o pacote e o envia
         NetOutgoingMessage Data_Send = Socket.Device.CreateMessage(Data.LengthBytes);
         Data_Send.Write(Data);
-        Socket.Device.SendMessage(Data_Send, Socket.Connection[Index], NetDeliveryMethod.ReliableOrdered);
+        Socket.Device.SendMessage(Data_Send, Account.Connection, NetDeliveryMethod.ReliableOrdered);
     }
 
     private static void ToPlayer(Player Player, NetOutgoingMessage Data)
     {
-        ToPlayer(Player.Index, Data);
-    }
-
-    private static void ToPlayer(Account.Structure Account, NetOutgoingMessage Data)
-    {
-        ToPlayer(Account.Index, Data);
+        ToPlayer(Player.Account, Data);
     }
 
     private static void ToAll(NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
                 ToPlayer(Lists.Account[i].Character, Data);
     }
@@ -97,27 +91,27 @@ class Send
     private static void ToAllBut(Player Player, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
                 if (Player != Lists.Account[i].Character)
                     ToPlayer(Lists.Account[i].Character, Data);
     }
 
-    private static void ToMap(short Map, NetOutgoingMessage Data)
+    private static void ToMap(short Map_Num, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
-                if (Lists.Account[i].Character.Map_Num == Map)
+                if (Lists.Account[i].Character.Map_Num == Map_Num)
                     ToPlayer(Lists.Account[i].Character, Data);
     }
 
-    private static void ToMapBut(short Map, Player Player, NetOutgoingMessage Data)
+    private static void ToMapBut(short Map_Num, Player Player, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
-                if (Lists.Account[i].Character.Map_Num == Map)
+                if (Lists.Account[i].Character.Map_Num == Map_Num)
                     if (Player != Lists.Account[i].Character)
                         ToPlayer(Lists.Account[i].Character, Data);
     }
@@ -133,8 +127,7 @@ class Send
         ToPlayer(Account, Data);
 
         // Desconecta o jogador
-        if (Disconnect)
-            Socket.Connection[Account.Index].Disconnect(string.Empty);
+        if (Disconnect) Account.Connection.Disconnect(string.Empty);
     }
 
     public static void Connect(Account.Structure Account)
@@ -144,7 +137,6 @@ class Send
         // Envia os dados
         if (Account.InEditor) Data.Write((byte)Editor_Packets.Connect);
         else Data.Write((byte)Client_Packets.Connect);
-        Data.Write(Account.Index);
         ToPlayer(Account, Data);
     }
 
@@ -164,8 +156,6 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Join);
         Data.Write(Player.Index);
-        Data.Write(Game.HigherIndex);
-        Data.Write(Lists.Server_Data.Max_Players);
         ToPlayer(Player, Data);
     }
 
@@ -303,16 +293,6 @@ class Send
         ToAllBut(Player, Data);
     }
 
-    public static void HigherIndex()
-    {
-        NetOutgoingMessage Data = Socket.Device.CreateMessage();
-
-        // Envia os dados
-        Data.Write((byte)Client_Packets.HigherIndex);
-        Data.Write(Game.HigherIndex);
-        ToAll(Data);
-    }
-
     public static void Player_Move(Player Player, byte Movement)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
@@ -364,7 +344,7 @@ class Send
     public static void Map_Players(Player Player)
     {
         // Envia os dados dos outros jogadores 
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
                 if (Player != Lists.Account[i].Character)
                     if (Lists.Account[i].Character.Map_Num == Player.Map_Num)
@@ -503,13 +483,13 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void Latency(byte Index)
+    public static void Latency(Account.Structure Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Latency);
-        ToPlayer(Index, Data);
+        ToPlayer(Account, Data);
     }
 
     public static void Message(Player Player, string Text, Color Color)

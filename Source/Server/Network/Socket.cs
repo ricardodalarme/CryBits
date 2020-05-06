@@ -5,13 +5,9 @@ class Socket
     // Protocolo do controle de transmissão
     public static NetServer Device;
 
-    // Lista dos jogadores conectados
-    public static NetConnection[] Connection;
-
     public static void Init()
     {
         NetPeerConfiguration Config;
-        Connection = new NetConnection[Lists.Server_Data.Max_Players + 1];
 
         // Define algumas configurações da rede
         Config = new NetPeerConfiguration("CryBits")
@@ -29,13 +25,13 @@ class Socket
     public static void HandleData()
     {
         NetIncomingMessage Data;
-        byte Index;
+        Account.Structure Account;
 
         // Lê e direciona todos os dados recebidos
         while ((Data = Device.ReadMessage()) != null)
         {
             // Jogador que está a enviar os dados
-            Index = FindConnection(Data.SenderConnection);
+            Account = FindConnection(Data.SenderConnection);
 
             switch (Data.MessageType)
             {
@@ -47,12 +43,12 @@ class Socket
                         Connect(Data);
                     // Conexão perdida, disconecta o jogador do jogo
                     else if (Status == NetConnectionStatus.Disconnected)
-                        Disconnect(Index);
+                        Disconnect(Account);
 
                     break;
                 // Recebe e manuseia os dados recebidos
                 case NetIncomingMessageType.Data:
-                    Receive.Handle(Index, Data);
+                    Receive.Handle(Account, Data);
                     break;
             }
 
@@ -63,29 +59,26 @@ class Socket
     private static void Connect(NetIncomingMessage IncomingMsg)
     {
         // Define a conexão do jogador
-        Connection[FindConnection(null)] = IncomingMsg.SenderConnection;
-
-        // Redefine o índice máximo de jogadores
-        Game.SetHigherIndex();
+        Lists.Account.Add(new Account.Structure(IncomingMsg.SenderConnection));
     }
 
-    private static void Disconnect(byte Index)
+    private static void Disconnect(Account.Structure Account)
     {
         // Acaba com a conexão e restabelece os dados do jogador
-        Connection[Index] = null;
-        Lists.Account[Index].Leave();
+        Account.Leave();
+        Lists.Account.Remove(Account);
     }
 
     // Retorna o estado da conexão do jogador
-    public static bool IsConnected(byte Index) => Connection[Index] != null && Connection[Index].Status == NetConnectionStatus.Connected;
+    public static bool IsConnected(Account.Structure Account) => Account.Connection != null && Account.Connection.Status == NetConnectionStatus.Connected;
 
-    private static byte FindConnection(NetConnection Data)
+    private static Account.Structure FindConnection(NetConnection Data)
     {
         // Encontra uma determinada conexão
-        for (byte i = 1; i <= Lists.Server_Data.Max_Players; i++)
-            if (Connection[i] == Data)
-                return i;
+        for (byte i = 0; i < Lists.Account.Count; i++)
+            if (Lists.Account[i].Connection == Data)
+                return Lists.Account[i];
 
-        return 0;
+        return null;
     }
 }

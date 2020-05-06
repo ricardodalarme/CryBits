@@ -5,7 +5,7 @@ class Lists
 {
     // Armazenamento de dados
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
-    public static Account.Structure[] Account;
+    public static List<Account.Structure> Account = new List<Account.Structure>();
     public static Structures.Class[] Class;
     public static Structures.Map[] Map;
     public static Structures.Temp_Map[] Temp_Map;

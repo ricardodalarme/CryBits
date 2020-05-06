@@ -5,7 +5,7 @@ class Account
     public static Structure Find(string Name)
     {
         // Encontra o usuário
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
                 if (Lists.Account[i].User.Equals(Name))
                     return Lists.Account[i];
@@ -16,7 +16,7 @@ class Account
     public static Player FindPlayer(string Name)
     {
         // Encontra o usuário
-        for (byte i = 1; i <= Game.HigherIndex; i++)
+        for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
                 if (Lists.Account[i].Character.Name.Equals(Name))
                     return Lists.Account[i].Character;
@@ -27,8 +27,8 @@ class Account
     public static bool MultipleAccounts(string User)
     {
         // Verifica se já há alguém conectado com essa conta
-        for (byte i = 1; i <= Game.HigherIndex; i++)
-            if (Socket.IsConnected(i))
+        for (byte i = 0; i < Lists.Account.Count; i++)
+            if (Socket.IsConnected(Lists.Account[i]))
                 if (Lists.Account[i].User.Equals(User))
                     return true;
 
@@ -38,7 +38,7 @@ class Account
     public class Structure
     {
         // Dados básicos
-        public byte Index;
+        public Lidgren.Network.NetConnection Connection;
         public string User = string.Empty;
         public string Password = string.Empty;
         public Game.Accesses Acess;
@@ -53,23 +53,18 @@ class Account
         }
 
         // Construtor
-        public Structure(byte Index)
+        public Structure(Lidgren.Network.NetConnection Connection)
         {
-            // Inicializa os personagens
-            this.Index = Index;
+            this.Connection = Connection;
         }
 
         // Verifica se o jogador está dentro do jogo
-        public bool IsPlaying => Socket.IsConnected(Index) && Character != null;
+        public bool IsPlaying => Socket.IsConnected(this) && Character != null;
 
         public void Leave()
         {
-            // Redefine o maior índice dos jogadores
-            Game.SetHigherIndex();
-
             // Limpa os dados do jogador
             if (Character != null) Character.Leave();
-            Lists.Account[Index] = new Structure(Index);
         }
     }
 }

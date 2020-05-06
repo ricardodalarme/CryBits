@@ -26,11 +26,12 @@ class Player:Character
     public string Trade_Request;
     public Lists.Structures.Inventories[] Trade_Offer;
     public short Shop;
+    public Account.Structure Account;
 
     // Constutor
-    public Player(byte Index)
+    public Player(Account.Structure Account)
     {
-        this.Index = Index;
+        this.Account = Account;
     }
 
     // Cálcula o dano do jogador
@@ -83,9 +84,6 @@ class Player:Character
             return (int)((Level + 1) * 2.5 + (Total + Points) / 2);
         }
     }
-
-    // Conta do jogador
-    public Account.Structure Account => Lists.Account[Index];
 
     /////////////
     // Funções //
