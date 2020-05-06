@@ -21,11 +21,8 @@ class Tools
     // Posição do ponteiro do mouse
     public static Point Mouse;
 
-    // Janela que está aberta
-    public static Windows CurrentWindow;
-
     // Ordem da renderização das ferramentas
-    public static List<Order_Structure>[] All_Order = new List<Order_Structure>[(byte)Windows.Count];
+    public static List<Order_Structure>[] All_Order = new List<Order_Structure>[(byte)Window.Types.Count];
 
     public class Order_Structure
     {
@@ -40,20 +37,11 @@ class Tools
         public string Name;
         public bool Visible;
         public Point Position;
-        public Windows Window;
+        public Window.Types Window;
     }
 
     // Ordem que as ferramentas são renderizadas
-    public static List<Order_Structure> Order => All_Order[(byte)CurrentWindow];
-
-    // Identificação das janelas do jogo
-    public enum Windows
-    {
-        Menu,
-        Game,
-        Global,
-        Count
-    }
+    public static List<Order_Structure> Order => All_Order[(byte)Window.Current];
 
     // Tipos de ferramentas
     public enum Types
@@ -79,7 +67,7 @@ class Tools
     {
         // Verifica se a ferramenta está visível
         if (Order == null) return true;
-        if (Order.Data.Window != CurrentWindow) return false;
+        if (Order.Data.Window != Window.Current) return false;
         if (!Order.Data.Visible) return false;
         return Viewable(Order.Parent);
     }

@@ -35,7 +35,7 @@ class Read
         Tool.Position.X = Data.ReadInt32();
         Tool.Position.Y = Data.ReadInt32();
         Tool.Visible = Data.ReadBoolean();
-        Tool.Window = (Tools.Windows)Data.ReadByte();
+        Tool.Window = (Window.Types)Data.ReadByte();
         Tool.Texture_Num = Data.ReadByte();
         return Tool;
     }
@@ -48,7 +48,7 @@ class Read
         Tool.Position.X = Data.ReadInt32();
         Tool.Position.Y = Data.ReadInt32();
         Tool.Visible = Data.ReadBoolean();
-        Tool.Window = (Tools.Windows)Data.ReadByte();
+        Tool.Window = (Window.Types)Data.ReadByte();
         Tool.Lenght = Data.ReadInt16();
         Tool.Width = Data.ReadInt16();
         Tool.Password = Data.ReadBoolean();
@@ -63,7 +63,7 @@ class Read
         Tool.Position.X = Data.ReadInt32();
         Tool.Position.Y = Data.ReadInt32();
         Tool.Visible = Data.ReadBoolean();
-        Tool.Window = (Tools.Windows)Data.ReadByte();
+        Tool.Window = (Window.Types)Data.ReadByte();
         Tool.Texture_Num = Data.ReadByte();
         return Tool;
     }
@@ -76,7 +76,7 @@ class Read
         Tool.Position.X = Data.ReadInt32();
         Tool.Position.Y = Data.ReadInt32();
         Tool.Visible = Data.ReadBoolean();
-        Tool.Window = (Tools.Windows)Data.ReadByte();
+        Tool.Window = (Window.Types)Data.ReadByte();
         Tool.Text = Data.ReadString();
         Tool.Checked = Data.ReadBoolean();
         return Tool;
@@ -85,7 +85,7 @@ class Read
     private static void Tools()
     {
         FileInfo File = new FileInfo(Directories.Tools_Data.FullName);
-        for (byte i = 0; i < (byte)global::Tools.Windows.Count; i++) global::Tools.All_Order[i] = new List<Tools.Order_Structure>();
+        for (byte i = 0; i < (byte)global::Window.Types.Count; i++) global::Tools.All_Order[i] = new List<Tools.Order_Structure>();
 
         // Lê todas as ferramentas
         BinaryReader Data = new BinaryReader(File.OpenRead());

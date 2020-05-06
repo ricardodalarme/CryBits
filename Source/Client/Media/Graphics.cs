@@ -253,7 +253,7 @@ partial class Graphics
         Interface(Tools.Order);
 
         // Desenha o chat 
-        if (Tools.CurrentWindow == Tools.Windows.Game) Chat();
+        if (Window.Current == Window.Types.Game) Chat();
 
         // Exibe o que foi renderizado
         RenderWindow.Display();
@@ -262,7 +262,7 @@ partial class Graphics
     private static void InGame()
     {
         // Não desenhar se não estiver em jogo
-        if (Tools.CurrentWindow != Tools.Windows.Game) return;
+        if (Window.Current != Window.Types.Game) return;
 
         // Atualiza a câmera
         Game.UpdateCamera();

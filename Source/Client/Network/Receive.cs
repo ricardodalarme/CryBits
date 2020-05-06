@@ -207,7 +207,7 @@ partial class Receive
 
         // Abre o jogo
         Audio.Music.Stop();
-        Tools.CurrentWindow = Tools.Windows.Game;
+        Window.Current = Window.Types.Game;
     }
 
     private static void Player_Data(NetIncomingMessage Data)

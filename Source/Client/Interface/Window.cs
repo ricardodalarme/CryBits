@@ -4,13 +4,25 @@ using SFML.Window;
 
 class Window
 {
+    // Janela que está aberta
+    public static Types Current;
+
     // Detecção de duplo clique
     private static int DoubleClick_Timer;
+
+    // Identificação das janelas do jogo
+    public enum Types
+    {
+        Menu,
+        Game,
+        Global,
+        Count
+    }
 
     public static void OnClosed(object sender, EventArgs e)
     {
         // Fecha o jogo
-        if (Tools.CurrentWindow == Tools.Windows.Game)
+        if (Current == Types.Game)
             Socket.Disconnect();
         else
             Program.Working = false;
@@ -21,7 +33,7 @@ class Window
         // Clique duplo
         if (Environment.TickCount < DoubleClick_Timer + 142)
         {
-            if (Tools.CurrentWindow == Tools.Windows.Game)
+            if (Current == Types.Game)
             {
                 // Usar item
                 short Slot = Panels.Inventory_Slot;
@@ -62,7 +74,7 @@ class Window
             }
 
             // Eventos em jogo
-            if (Tools.CurrentWindow == Tools.Windows.Game)
+            if (Current == Types.Game)
             {
                 Panels.Inventory_MouseDown(e);
                 Panels.Equipment_MouseDown(e);
@@ -96,7 +108,7 @@ class Window
         }
 
         // Eventos em jogo
-        if (Tools.CurrentWindow == Tools.Windows.Game)
+        if (Current == Types.Game)
         {
             // Muda o slot do item
             if (Panels.Inventory_Slot > 0)
@@ -165,7 +177,7 @@ class Window
     public static void OnKeyReleased(object sender, KeyEventArgs e)
     {
         // Define se um botão está sendo pressionado
-        if (Tools.CurrentWindow == Tools.Windows.Game)
+        if (Current == Types.Game)
             switch (e.Code)
             {
                 case Keyboard.Key.Enter: Chat.Type(); break;
@@ -198,6 +210,6 @@ class Window
         // Traz o jogador de volta ao menu
         Panels.Menu_Close();
         Panels.Get("Connect").Visible = true;
-        Tools.CurrentWindow = Tools.Windows.Menu;
+        Current = Types.Menu;
     }
 }

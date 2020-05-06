@@ -75,9 +75,9 @@ class CheckBoxes
         // Para ou reproduz a música dependendo do estado do marcador
         if (!Lists.Options.Musics)
             Audio.Music.Stop();
-        else if (Tools.CurrentWindow == Tools.Windows.Menu)
+        else if (Window.Current == Window.Types.Menu)
             Audio.Music.Play(Audio.Musics.Menu);
-        else if (Tools.CurrentWindow == Tools.Windows.Game)
+        else if (Window.Current == Window.Types.Game)
             Audio.Music.Play((Audio.Musics)Lists.Map.Music);
     }
 
