@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://camo.githubusercontent.com/28b7bc2cc8b19a661d442f25e2cc538071c2057b/687474703a2f2f696d673931302e696d616765736861636b2e75732f696d673931302f383237332f6b526d3561732e706e67" width="63%" height="63%" />
+  <img src="https://camo.githubusercontent.com/28b7bc2cc8b19a661d442f25e2cc538071c2057b/687474703a2f2f696d673931302e696d616765736861636b2e75732f696d673931302f383237332f6b526d3561732e706e67" width="60%" height="60%" />
 </p>
 
 CryBits is a project developed with the aim of helping indie developers to create their own 2D ORPG games. It's a complete open source engine written in C# that is powered by [SFML](https://github.com/SFML/SFML) and [Lidgren.Network](https://github.com/lidgren/lidgren-network-gen3).
