@@ -402,7 +402,6 @@ class Buttons
     private static void Trade_Close()
     {
         // Fecha o painel
-        Player.Me.Trade = 0;
         Send.Trade_Leave();
         Panels.Get("Trade").Visible = false;
     }
@@ -416,8 +415,8 @@ class Buttons
         Send.Trade_Offer_State(Game.Trade_Status.Accepted);
 
         // Limpa os dados da oferta
-        Player.Trade_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
-        Player.Trade_Their_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
+        Player.Me.Trade_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
+        Player.Me.Trade_Their_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
     }
 
     private static void Trade_Offer_Decline()

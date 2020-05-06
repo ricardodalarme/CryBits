@@ -107,7 +107,7 @@ class Map
         if (Lists.Map.Tile[Next_X, Next_Y].Attribute == (byte)Layer_Attributes.Block) return true;
         if (Lists.Map.Tile[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
         if (Lists.Map.Tile[X, Y].Block[(byte)Direction]) return true;
-        if (HasPlayer(Map, Next_X, Next_Y) > 0 || HasNPC(Next_X, Next_Y) > 0) return true;
+        if (HasPlayer(Map, Next_X, Next_Y) != null || HasNPC(Next_X, Next_Y) > 0) return true;
         return false;
     }
 
@@ -122,24 +122,21 @@ class Map
         return 0;
     }
 
-    private static byte HasPlayer(short Num, short X, short Y)
+    private static Player.Structure HasPlayer(short Num, short X, short Y)
     {
         // Verifica se há algum Jogador na cordenada
-        for (byte i = 1; i <= Player.HigherIndex; i++)
-            if (Lists.Player[i].X == X && Lists.Player[i].Y == Y && Lists.Player[i].Map == Num)
-                return i;
+        for (byte i = 0; i < Lists.Player.Count; i++)
+            if (Lists.Player[i].X == X && Lists.Player[i].Y == Y && Lists.Player[i].Map_Num == Num)
+                return Lists.Player[i];
 
-        return 0;
+        return null;
     }
 
     private static void Fog()
     {
         // Faz a movimentação
-        if (Player.IsPlaying(Player.MyIndex))
-        {
-            Calculate_Fog_X();
-            Calculate_Fog_Y();
-        }
+        Calculate_Fog_X();
+        Calculate_Fog_Y();
     }
 
     private static void Calculate_Fog_X()
@@ -203,7 +200,6 @@ class Map
         byte Thunder_Last = (byte)Audio.Sounds.Thunder_4;
 
         // Somente se necessário
-        if (!Player.IsPlaying(Player.MyIndex)) return;
         if (Lists.Map.Weather.Type == 0) return;
 
         // Contagem da neve

@@ -25,6 +25,8 @@ class Game
     public static byte Trade_Inventory_Slot = 0;
     public static short Shop_Open = 0;
     public static byte Shop_Inventory_Slot = 0;
+    public static byte Hotbar_Change;
+    public static byte Inventory_Change;
 
     // Ataque
     public const short Attack_Speed = 750;
@@ -219,13 +221,14 @@ class Game
 
         // Limpa os valores
         Audio.Sound.Stop_All();
-        Player.MyIndex = 0;
+        Player.Me = null;
 
         // Traz o jogador de volta ao menu
         Panels.Menu_Close();
         Panels.Get("Connect").Visible = true;
         Tools.CurrentWindow = Tools.Windows.Menu;
     }
+
     public static void UpdateCamera()
     {
         // Offset da tela

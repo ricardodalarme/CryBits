@@ -15,18 +15,4 @@
         // Salva o que foi modificado
         Write.Options();
     }
-
-    public static void Player(byte Index)
-    {
-        // Limpa a estrutura
-        Lists.Player[Index] = new Lists.Structures.Player();
-        Lists.Player[Index].Vital = new short[(byte)Game.Vitals.Count];
-        Lists.Player[Index].Max_Vital = new short[(byte)Game.Vitals.Count];
-        Lists.Player[Index].Attribute = new short[(byte)Game.Attributes.Count];
-        Lists.Player[Index].Equipment = new short[(byte)Game.Equipments.Count];
-        Lists.Player[Index].Party = System.Array.Empty<byte>();
-
-        // Reseta os valores
-        Lists.Player[Index].Name = string.Empty;
-    }
 }

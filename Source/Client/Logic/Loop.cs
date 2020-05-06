@@ -30,7 +30,7 @@ class Loop
             // Eventos
             TextBox();
 
-            if (Player.MyIndex > 0 && Tools.CurrentWindow == Tools.Windows.Game)
+            if (Tools.CurrentWindow == Tools.Windows.Game)
             {
                 Map.Logic();
                 if (Timer_30 < Environment.TickCount)

@@ -20,6 +20,7 @@ class NPC
     public class Structure : Character
     {
         // Dados básicos
+        public byte Index;
         public short Data_Index;
         public bool Alive;
         public Character Target;
@@ -342,7 +343,7 @@ class NPC
             if (Attack_Damage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Map_NPC_Attack(this, Victim.Index, (byte)Game.Target.Player);
+                Send.Map_NPC_Attack(this, Victim.Name, Game.Target.Player);
 
                 if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
                 {
@@ -383,7 +384,7 @@ class NPC
             if (Attack_Damage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Map_NPC_Attack(this, Victim.Index, (byte)Game.Target.NPC);
+                Send.Map_NPC_Attack(this, Victim.Index.ToString(),Game.Target.NPC);
 
                 if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
                 {

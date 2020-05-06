@@ -279,14 +279,13 @@ partial class Graphics
                 NPC(i);
 
         // Desenha os jogadores
-        for (byte i = 1; i <= Player.HigherIndex; i++)
-            if (Player.IsPlaying(i))
-                if (i != Player.MyIndex)
-                    if (Lists.Player[i].Map == Player.Me.Map)
-                        Player_Character(i);
+        for (byte i = 0; i < Lists.Player.Count; i++)
+            if (Lists.Player[i] != Player.Me)
+                if (Lists.Player[i].Map_Num == Player.Me.Map_Num)
+                    Player_Character(Lists.Player[i]);
 
         // Desenha o próprio jogador
-        Player_Character(Player.MyIndex);
+        Player_Character(Player.Me);
 
         // Desenhos acima do jogador
         Map_Tiles((byte)Map.Layers.Fringe);
@@ -562,12 +561,12 @@ partial class Graphics
         // Desenha os objetos da hotbar
         for (byte i = 1; i <= Game.Max_Hotbar; i++)
         {
-            byte Slot = Player.Hotbar[i].Slot;
+            byte Slot = Player.Me.Hotbar[i].Slot;
             if (Slot > 0)
-                switch ((Game.Hotbar)Player.Hotbar[i].Type)
+                switch ((Game.Hotbar)Player.Me.Hotbar[i].Type)
                 {
                     // Itens
-                    case Game.Hotbar.Item: Item(Player.Inventory[Slot].Item_Num, 1, Tool.Position + new Size(8, 6), i, 10); break;
+                    case Game.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item_Num, 1, Tool.Position + new Size(8, 6), i, 10); break;
                 }
 
             // Desenha os números de cada slot
@@ -577,9 +576,9 @@ partial class Graphics
         }
 
         // Movendo slot
-        if (Player.Hotbar_Change > 0)
-            if (Player.Hotbar[Player.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
-                Render(Tex_Item[Lists.Item[Player.Inventory[Player.Hotbar[Player.Hotbar_Change].Slot].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
+        if (Game.Hotbar_Change > 0)
+            if (Player.Me.Hotbar[Game.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
+                Render(Tex_Item[Lists.Item[Player.Me.Inventory[Player.Me.Hotbar[Game.Hotbar_Change].Slot].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
     }
 
     private static void Menu_Character(Panels.Structure Tool)
@@ -611,10 +610,10 @@ partial class Graphics
 
         // Desenha todos os itens do inventário
         for (byte i = 1; i <= Game.Max_Inventory; i++)
-            Item(Player.Inventory[i].Item_Num, Player.Inventory[i].Amount, Tool.Position + new Size(7, 30), i, NumColumns);
+            Item(Player.Me.Inventory[i].Item_Num, Player.Me.Inventory[i].Amount, Tool.Position + new Size(7, 30), i, NumColumns);
 
         // Movendo item
-        if (Player.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Inventory[Player.Inventory_Change].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
+        if (Game.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Me.Inventory[Game.Inventory_Change].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
     }
 
     private static void Party_Invitation(Panels.Structure Tool)
@@ -626,16 +625,16 @@ partial class Graphics
     {
         for (byte i = 0; i < Player.Me.Party.Length; i++)
         {
-            Lists.Structures.Player Member = Lists.Player[Player.Me.Party[i]];
-
             // Barras do membro
             Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 0, 82, 8); // HP Cinza
             Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 0, 82, 8); // MP Cinza
-            if (Member.Vital[(byte)Game.Vitals.HP] > 0) Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 8, (Member.Vital[(byte)Game.Vitals.HP] * 82) / Member.Max_Vital[(byte)Game.Vitals.HP], 8); // HP 
-            if (Member.Vital[(byte)Game.Vitals.MP] > 0) Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 16, (Member.Vital[(byte)Game.Vitals.MP] * 82) / Member.Max_Vital[(byte)Game.Vitals.MP], 8); // MP 
+            if (Player.Me.Party[i].Vital[(byte)Game.Vitals.HP] > 0)
+                Render(Tex_Party_Bars, 10, 92 + (27 * i), 0, 8, (Player.Me.Party[i].Vital[(byte)Game.Vitals.HP] * 82) / Player.Me.Party[i].Max_Vital[(byte)Game.Vitals.HP], 8); // HP 
+            if (Player.Me.Party[i].Vital[(byte)Game.Vitals.MP] > 0)
+                Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 16, (Player.Me.Party[i].Vital[(byte)Game.Vitals.MP] * 82) / Player.Me.Party[i].Max_Vital[(byte)Game.Vitals.MP], 8); // MP 
 
             // Nome do membro
-            DrawText(Lists.Player[Player.Me.Party[i]].Name, 10, 79 + (27 * i), SFML.Graphics.Color.White);
+            DrawText(Player.Me.Party[i].Name, 10, 79 + (27 * i), SFML.Graphics.Color.White);
         }
     }
 
@@ -649,8 +648,8 @@ partial class Graphics
         // Desenha os itens das ofertas
         for (byte i = 1; i <= Game.Max_Inventory; i++)
         {
-            Item(Player.Trade_Offer[i].Item_Num, Player.Trade_Offer[i].Amount, Tool.Position + new Size(7, 50), i, 5);
-            Item(Player.Trade_Their_Offer[i].Item_Num, Player.Trade_Their_Offer[i].Amount, Tool.Position + new Size(192, 50), i, 5);
+            Item(Player.Me.Trade_Offer[i].Item_Num, Player.Me.Trade_Offer[i].Amount, Tool.Position + new Size(7, 50), i, 5);
+            Item(Player.Me.Trade_Their_Offer[i].Item_Num, Player.Me.Trade_Their_Offer[i].Amount, Tool.Position + new Size(192, 50), i, 5);
         }
     }
 
@@ -710,5 +709,86 @@ partial class Graphics
         // Desenha o personagem e sua sombra
         Render(Tex_Shadow, Rec_Destiny.Location.X, Rec_Destiny.Location.Y + Size.Height / Game.Animation_Amount - TSize(Tex_Shadow).Height + 5, 0, 0, Size.Width / Game.Animation_Amount, TSize(Tex_Shadow).Height);
         Render(Tex_Character[Texture_Num], Rec_Source, Rec_Destiny, Color);
+    }
+
+    private static void Player_Character(Player.Structure Player)
+    {
+        // Desenha o jogador
+        Player_Texture(Player);
+        Player_Name(Player);
+        Player_Bars(Player);
+    }
+
+    private static void Player_Texture(Player.Structure Player)
+    {
+        byte Column = Game.Animation_Stopped;
+        bool Hurt = false;
+
+        // Previne sobrecargas
+        if (Player.Texture_Num <= 0 || Player.Texture_Num > Tex_Character.GetUpperBound(0)) return;
+
+        // Define a animação
+        if (Player.Attacking && Player.Attack_Timer + Game.Attack_Speed / 2 > Environment.TickCount)
+            Column = Game.Animation_Attack;
+        else
+        {
+            if (Player.X2 > 8 && Player.X2 < Game.Grid) Column = Player.Animation;
+            if (Player.X2 < -8 && Player.X2 > Game.Grid * -1) Column = Player.Animation;
+            if (Player.Y2 > 8 && Player.Y2 < Game.Grid) Column = Player.Animation;
+            if (Player.Y2 < -8 && Player.Y2 > Game.Grid * -1) Column = Player.Animation;
+        }
+
+        // Demonstra que o personagem está sofrendo dano
+        if (Player.Hurt > 0) Hurt = true;
+
+        // Desenha o jogador
+        Character(Player.Texture_Num, new Point(Game.ConvertX(Player.Pixel_X), Game.ConvertY(Player.Pixel_Y)), Player.Direction, Column, Hurt);
+    }
+
+    private static void Player_Bars(Player.Structure Player)
+    {
+        short Value = Player.Vital[(byte)Game.Vitals.HP];
+
+        // Apenas se necessário
+        if (Value <= 0 || Value >= Player.Max_Vital[(byte)Game.Vitals.HP]) return;
+
+        // Cálcula a largura da barra
+        Size Chracater_Size = TSize(Tex_Character[Player.Texture_Num]);
+        int FullWidth = Chracater_Size.Width / Game.Animation_Amount;
+        int Width = (Value * FullWidth) / Player.Max_Vital[(byte)Game.Vitals.HP];
+
+        // Posição das barras
+        Point Position = new Point
+        {
+            X = Game.ConvertX(Player.Pixel_X),
+            Y = Game.ConvertY(Player.Pixel_Y) + Chracater_Size.Height / Game.Animation_Amount + 4
+        };
+
+        // Desenha as barras 
+        Render(Tex_Bars, Position.X, Position.Y, 0, 4, FullWidth, 4);
+        Render(Tex_Bars, Position.X, Position.Y, 0, 0, Width, 4);
+    }
+
+    private static void Player_Name(Player.Structure Player)
+    {
+        Texture Texture = Tex_Character[Player.Texture_Num];
+        int Name_Size = Tools.MeasureString(Player.Name);
+
+        // Posição do texto
+        Point Position = new Point
+        {
+            X = Player.Pixel_X + TSize(Texture).Width / Game.Animation_Amount / 2 - Name_Size / 2,
+            Y = Player.Pixel_Y - TSize(Texture).Height / Game.Animation_Amount / 2
+        };
+
+        // Cor do texto
+        SFML.Graphics.Color Color;
+        if (Player == global::Player.Me)
+            Color = SFML.Graphics.Color.Yellow;
+        else
+            Color = SFML.Graphics.Color.White;
+
+        // Desenha o texto
+        DrawText(Player.Name, Game.ConvertX(Position.X), Game.ConvertY(Position.Y), Color);
     }
 }

@@ -38,16 +38,16 @@ class Panels
 
         // Somente se necessário
         if (Slot == 0) return;
-        if (Player.Inventory[Slot].Item_Num == 0) return;
+        if (Player.Me.Inventory[Slot].Item_Num == 0) return;
 
         // Solta item
         if (e.Button == SFML.Window.Mouse.Button.Right)
         {
-            if (Lists.Item[Player.Inventory[Slot].Item_Num].Bind != Game.BindOn.Pickup)
+            if (Lists.Item[Player.Me.Inventory[Slot].Item_Num].Bind != Game.BindOn.Pickup)
                 // Vende o item
                 if (Get("Shop").Visible)
                 {
-                    if (Player.Inventory[Slot].Amount != 1)
+                    if (Player.Me.Inventory[Slot].Amount != 1)
                     {
                         Game.Shop_Inventory_Slot = Slot;
                         TextBoxes.Get("Shop_Sell_Amount").Text = string.Empty;
@@ -57,7 +57,7 @@ class Panels
                 }
                 // Solta o item
                 else if (!Get("Trade").Visible)
-                    if (Player.Inventory[Slot].Amount != 1)
+                    if (Player.Me.Inventory[Slot].Amount != 1)
                     {
                         Game.Drop_Slot = Slot;
                         TextBoxes.Get("Drop_Amount").Text = string.Empty;
@@ -66,7 +66,7 @@ class Panels
                     else Send.DropItem(Slot, 1);
         }
         // Seleciona o item
-        else if (e.Button == SFML.Window.Mouse.Button.Left) Player.Inventory_Change = Slot;
+        else if (e.Button == SFML.Window.Mouse.Button.Left) Game.Inventory_Change = Slot;
     }
 
     public static void Equipment_MouseDown(SFML.Window.MouseButtonEventArgs e)
@@ -90,7 +90,7 @@ class Panels
 
         // Somente se necessário
         if (Slot == 0) return;
-        if (Player.Hotbar[Slot].Slot == 0) return;
+        if (Player.Me.Hotbar[Slot].Slot == 0) return;
 
         // Solta item
         if (e.Button == SFML.Window.Mouse.Button.Right)
@@ -101,7 +101,7 @@ class Panels
         // Seleciona o item
         if (e.Button == SFML.Window.Mouse.Button.Left)
         {
-            Player.Hotbar_Change = Slot;
+            Game.Hotbar_Change = Slot;
             return;
         }
     }
@@ -113,7 +113,7 @@ class Panels
         // Somente se necessário
         if (!Get("Trade").Visible) return;
         if (Slot == 0) return;
-        if (Player.Trade_Offer[Slot].Item_Num == 0) return;
+        if (Player.Me.Trade_Offer[Slot].Item_Num == 0) return;
 
         // Solta item
         if (e.Button == SFML.Window.Mouse.Button.Right) Send.Trade_Offer(Slot, 0);

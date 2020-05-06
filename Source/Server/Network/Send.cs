@@ -155,7 +155,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Join);
-        Data.Write(Player.Index);
+        Data.Write(Player.Name);
         ToPlayer(Player, Data);
     }
 
@@ -233,11 +233,8 @@ class Send
 
         // Escreve os dados
         Data.Write((byte)Client_Packets.Player_Data);
-        Data.Write(Player.Index);
         Data.Write(Player.Name);
-        Data.Write(Player.Class_Num);
         Data.Write(Player.Texture_Num);
-        Data.Write(Player.Genre);
         Data.Write(Player.Level);
         Data.Write(Player.Map_Num);
         Data.Write(Player.X);
@@ -260,7 +257,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Position);
-        Data.Write(Player.Index);
+        Data.Write(Player.Name);
         Data.Write(Player.X);
         Data.Write(Player.Y);
         Data.Write((byte)Player.Direction);
@@ -273,7 +270,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Vitals);
-        Data.Write(Player.Index);
+        Data.Write(Player.Name);
         for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
         {
             Data.Write(Player.Vital[i]);
@@ -289,7 +286,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Leave);
-        Data.Write(Player.Index);
+        Data.Write(Player.Name);
         ToAllBut(Player, Data);
     }
 
@@ -299,7 +296,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Move);
-        Data.Write(Player.Index);
+        Data.Write(Player.Name);
         Data.Write(Player.X);
         Data.Write(Player.Y);
         Data.Write((byte)Player.Direction);
@@ -313,7 +310,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Direction);
-        Data.Write(Player.Index);
+        Data.Write(Player.Name);
         Data.Write((byte)Player.Direction);
         ToMapBut(Player.Map_Num, Player, Data);
     }
@@ -336,7 +333,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Equipments);
-        Data.Write(Player.Index);
+        Data.Write(Player.Name);
         for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Data.Write(Player.Equipment[i]);
         ToMap(Player.Map_Num, Data);
     }
@@ -369,7 +366,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Leave);
-        Data.Write(Player.Index);
+        Data.Write(Player.Name);
         ToMapBut(Map, Player, Data);
     }
 
@@ -543,15 +540,15 @@ class Send
         Message(Addressee, "[From] " + Player.Name + ": " + Texto, Color.Pink);
     }
 
-    public static void Player_Attack(Player Player, byte Victim = 0, byte Victim_Type = 0)
+    public static void Player_Attack(Player Player, string Victim = "", Game.Target Victim_Type = 0)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Attack);
-        Data.Write(Player.Index);
+        Data.Write(Player.Name);
         Data.Write(Victim);
-        Data.Write(Victim_Type);
+        Data.Write((byte)Victim_Type);
         ToMap(Player.Map_Num, Data);
     }
 
@@ -760,7 +757,7 @@ class Send
         ToMap(NPC.Map_Num, Data);
     }
 
-    public static void Map_NPC_Attack(NPC.Structure NPC, byte Victim = 0, byte Victim_Type = 0)
+    public static void Map_NPC_Attack(NPC.Structure NPC, string Victim = "", Game.Target Victim_Type = 0)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -768,7 +765,7 @@ class Send
         Data.Write((byte)Client_Packets.Map_NPC_Attack);
         Data.Write(NPC.Index);
         Data.Write(Victim);
-        Data.Write(Victim_Type);
+        Data.Write((byte)Victim_Type);
         ToMap(NPC.Map_Num, Data);
     }
 
@@ -831,7 +828,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Party);
         Data.Write((byte)Player.Party.Count);
-        for (byte i = 0; i < Player.Party.Count; i++) Data.Write(Player.Party[i].Index);
+        for (byte i = 0; i < Player.Party.Count; i++) Data.Write(Player.Party[i].Name);
         ToPlayer(Player, Data);
     }
 
@@ -845,13 +842,13 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Trade(Player Player)
+    public static void Trade(Player Player, bool State)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Trade);
-        Data.Write(Player.Trade == null ? 0 : Player.Trade.Index);
+        Data.Write(State);
         ToPlayer(Player, Data);
     }
 

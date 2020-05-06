@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 
-class Player:Character
+class Player : Character
 {
     // Dados permantes
     public string Name = string.Empty;
@@ -287,7 +287,7 @@ class Player:Character
 
     @continue:
         // Demonstra que aos outros jogadores o ataque
-        Send.Player_Attack(this, 0, 0);
+        Send.Player_Attack(this, null);
         Attack_Timer = Environment.TickCount;
     }
 
@@ -312,7 +312,7 @@ class Player:Character
         if (Attack_Damage > 0)
         {
             // Demonstra o ataque aos outros jogadores
-            Send.Player_Attack(this, Victim.Index, (byte)Game.Target.Player);
+            Send.Player_Attack(this, Victim.Name, Game.Target.Player);
 
             if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
             {
@@ -359,7 +359,7 @@ class Player:Character
         if (Attack_Damage > 0)
         {
             // Demonstra o ataque aos outros jogadores
-            Send.Player_Attack(this, Victim.Index, (byte)Game.Target.NPC);
+            Send.Player_Attack(this, Victim.Index.ToString(), Game.Target.NPC);
 
             if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
             {
@@ -654,9 +654,9 @@ class Player:Character
         if (Trade != null)
         {
             Trade.Trade = null;
-            Send.Trade(Trade);
+            Send.Trade(Trade, false);
             Trade = null;
-            Send.Trade(this);
+            Send.Trade(this, false);
         }
     }
 

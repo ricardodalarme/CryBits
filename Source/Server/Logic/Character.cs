@@ -1,6 +1,6 @@
 ﻿class Character
 {
-    public byte Index;
+    // Dados
     public short Map_Num;
     public byte X;
     public byte Y;

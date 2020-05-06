@@ -154,23 +154,26 @@ partial class Receive
 
     private static void Map_NPC_Attack(NetIncomingMessage Data)
     {
-        byte Index = Data.ReadByte(), Victim = Data.ReadByte(), Victim_Type = Data.ReadByte();
+        byte Index = Data.ReadByte();
+        string Victim = Data.ReadString();
+        byte Victim_Type = Data.ReadByte();
 
         // Inicia o ataque
         Lists.Temp_Map.NPC[Index].Attacking = true;
         Lists.Temp_Map.NPC[Index].Attack_Timer = Environment.TickCount;
 
         // Sofrendo dano
-        if (Victim > 0)
+        if (Victim != string.Empty)
             if (Victim_Type == (byte)Game.Target.Player)
             {
-                Lists.Player[Victim].Hurt = Environment.TickCount;
-                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Player[Victim].X, Lists.Player[Victim].Y, 255));
+                Player.Structure Victim_Data = Player.Get(Victim);
+                Victim_Data.Hurt = Environment.TickCount;
+                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
             }
             else if (Victim_Type == (byte)Game.Target.NPC)
             {
-                Lists.Temp_Map.NPC[Victim].Hurt = Environment.TickCount;
-                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Temp_Map.NPC[Victim].X, Lists.Temp_Map.NPC[Victim].Y, 255));
+                Lists.Temp_Map.NPC[byte.Parse(Victim)].Hurt = Environment.TickCount;
+                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Temp_Map.NPC[byte.Parse(Victim)].X, Lists.Temp_Map.NPC[byte.Parse(Victim)].Y, 255));
             }
     }
 

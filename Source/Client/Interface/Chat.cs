@@ -69,9 +69,6 @@ class Chat
         TextBoxes.Structure Tool = TextBoxes.Get("Chat");
         Panels.Structure Panel = Panels.Get("Chat");
 
-        // Somente se necessário
-        if (!Player.IsPlaying(Player.MyIndex)) return;
-
         // Altera a visiblidade da caixa
         Panel.Visible = !Panel.Visible;
 

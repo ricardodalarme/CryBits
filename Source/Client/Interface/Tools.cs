@@ -137,12 +137,12 @@ class Tools
         if (Panels.Hotbar_Slot > 0)
         {
             Position = Panels.Get("Hotbar").Position + new Size(0, 42);
-            Data_Index = Player.Inventory[Player.Hotbar[Panels.Hotbar_Slot].Slot].Item_Num;
+            Data_Index = Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Slot].Slot].Item_Num;
         }
         else if (Panels.Inventory_Slot > 0)
         {
             Position = Panels.Get("Menu_Inventory").Position + new Size(-186, 3);
-            Data_Index = Player.Inventory[Panels.Inventory_Slot].Item_Num;
+            Data_Index = Player.Me.Inventory[Panels.Inventory_Slot].Item_Num;
         }
         else if (Panels.Equipment_Slot >= 0)
         {

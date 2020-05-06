@@ -5,7 +5,7 @@ class Lists
 {
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
-    public static Structures.Player[] Player;
+    public static List<Player.Structure> Player = new List<Player.Structure>();
     public static Structures.Class[] Class;
     public static Structures.Character[] Characters;
     public static Structures.Map Map;
@@ -31,38 +31,6 @@ class Lists
             public bool Party;
             public bool Trade;
             public string Username;
-        }
-
-        public class Player
-        {
-            // Apenas na parte do cliente
-            public short X2;
-            public short Y2;
-            public byte Animation;
-            public bool Attacking;
-            public int Attack_Timer;
-            public int Hurt;
-            public short[] Max_Vital;
-            public int Collect_Timer;
-            // Geral
-            public string Name;
-            public byte Class;
-            public short Texture_Num;
-            public bool Genre;
-            public short Level;
-            public int Experience;
-            public int ExpNeeded;
-            public short Points;
-            public short[] Vital;
-            public short[] Attribute;
-            public short Map;
-            public byte X;
-            public byte Y;
-            public Game.Directions Direction;
-            public Game.Movements Movement;
-            public short[] Equipment;
-            public byte[] Party;
-            public byte Trade;
         }
 
         public class Character

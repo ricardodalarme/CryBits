@@ -1126,8 +1126,8 @@ class Receive
         Invited.Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
 
         // Envia os dados para o grupo
-        Send.Trade(Player);
-        Send.Trade(Invited);
+        Send.Trade(Player, true);
+        Send.Trade(Invited, true);
     }
 
     private static void Trade_Decline(Player Player)
