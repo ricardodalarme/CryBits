@@ -120,7 +120,7 @@ class Buttons
     public static bool Characters_Change_Buttons()
     {
         // Altera os botões visíveis
-        bool Visibility = Lists.Characters != null && Game.SelectCharacter < Lists.Characters.Length;
+        bool Visibility = Lists.Characters != null && Tools.SelectCharacter < Lists.Characters.Length;
         Get("Character_Create").Visible = !Visibility;
         Get("Character_Delete").Visible = Visibility;
         Get("Character_Use").Visible = Visibility;
@@ -178,7 +178,7 @@ class Buttons
         Write.Options();
 
         // Conecta-se ao jogo
-        Game.SetSituation(Game.Situations.Connect);
+        if (Socket.TryConnect()) Send.Connect();
     }
 
     private static void Register_Ok()
@@ -191,55 +191,55 @@ class Buttons
         }
 
         // Registra o jogador, se estiver tudo certo
-        Game.SetSituation(Game.Situations.Registrar);
+        if (Socket.TryConnect()) Send.Register();
     }
 
     private static void CreateCharacter()
     {
         // Abre a criação de personagem
-        Game.SetSituation(Game.Situations.CreateCharacter);
+        if (Socket.TryConnect()) Send.CreateCharacter();
     }
 
     private static void CreateCharacter_ChangeRight()
     {
         // Altera a classe selecionada pelo jogador
-        if (Game.CreateCharacter_Class == Lists.Class.GetUpperBound(0))
-            Game.CreateCharacter_Class = 1;
+        if (Tools.CreateCharacter_Class == Lists.Class.GetUpperBound(0))
+            Tools.CreateCharacter_Class = 1;
         else
-            Game.CreateCharacter_Class += 1;
+            Tools.CreateCharacter_Class += 1;
     }
 
     private static void CreateCharacter_ChangeLeft()
     {
         // Altera a classe selecionada pelo jogador
-        if (Game.CreateCharacter_Class == 1)
-            Game.CreateCharacter_Class = (byte)Lists.Class.GetUpperBound(0);
+        if (Tools.CreateCharacter_Class == 1)
+            Tools.CreateCharacter_Class = (byte)Lists.Class.GetUpperBound(0);
         else
-            Game.CreateCharacter_Class -= 1;
+            Tools.CreateCharacter_Class -= 1;
     }
 
     private static void CreateCharacter_Texture_ChangeRight()
     {
         // Lista de texturas
-        short[] Tex_List = CheckBoxes.Get("GenderMale").Checked ? Lists.Class[Game.CreateCharacter_Class].Tex_Male : Lists.Class[Game.CreateCharacter_Class].Tex_Female;
+        short[] Tex_List = CheckBoxes.Get("GenderMale").Checked ? Lists.Class[Tools.CreateCharacter_Class].Tex_Male : Lists.Class[Tools.CreateCharacter_Class].Tex_Female;
 
         // Altera a classe selecionada pelo jogador
-        if (Game.CreateCharacter_Tex == Tex_List.Length - 1)
-            Game.CreateCharacter_Tex = 0;
+        if (Tools.CreateCharacter_Tex == Tex_List.Length - 1)
+            Tools.CreateCharacter_Tex = 0;
         else
-            Game.CreateCharacter_Tex += 1;
+            Tools.CreateCharacter_Tex += 1;
     }
 
     private static void CreateCharacter_Texture_ChangeLeft()
     {
         // Lista de texturas
-        short[] Tex_List = CheckBoxes.Get("GenderMale").Checked ? Lists.Class[Game.CreateCharacter_Class].Tex_Male : Lists.Class[Game.CreateCharacter_Class].Tex_Female;
+        short[] Tex_List = CheckBoxes.Get("GenderMale").Checked ? Lists.Class[Tools.CreateCharacter_Class].Tex_Male : Lists.Class[Tools.CreateCharacter_Class].Tex_Female;
 
         // Altera a classe selecionada pelo jogador
-        if (Game.CreateCharacter_Tex == 0)
-            Game.CreateCharacter_Tex = (byte)(Tex_List.Length - 1);
+        if (Tools.CreateCharacter_Tex == 0)
+            Tools.CreateCharacter_Tex = (byte)(Tex_List.Length - 1);
         else
-            Game.CreateCharacter_Tex -= 1;
+            Tools.CreateCharacter_Tex -= 1;
     }
 
     private static void CreateCharacter_Return()
@@ -270,19 +270,19 @@ class Buttons
     private static void Character_Change_Right()
     {
         // Altera o personagem selecionado pelo jogador
-        if (Game.SelectCharacter == Lists.Characters.Length)
-            Game.SelectCharacter = 0;
+        if (Tools.SelectCharacter == Lists.Characters.Length)
+            Tools.SelectCharacter = 0;
         else
-            Game.SelectCharacter += 1;
+            Tools.SelectCharacter += 1;
     }
 
     private static void Character_Change_Left()
     {
         // Altera o personagem selecionado pelo jogador
-        if (Game.SelectCharacter == 0)
-            Game.SelectCharacter = Lists.Characters.Length;
+        if (Tools.SelectCharacter == 0)
+            Tools.SelectCharacter = Lists.Characters.Length;
         else
-            Game.SelectCharacter -= 1;
+            Tools.SelectCharacter -= 1;
     }
 
     private static void Chat_Up()
@@ -361,7 +361,7 @@ class Buttons
         }
 
         // Solta o item
-        Send.DropItem(Game.Drop_Slot, Amount);
+        Send.DropItem(Tools.Drop_Slot, Amount);
         Panels.Get("Drop").Visible = false;
     }
 
@@ -449,7 +449,7 @@ class Buttons
         }
 
         // Solta o item
-        Send.Trade_Offer(Game.Trade_Slot, Game.Trade_Inventory_Slot, Amount);
+        Send.Trade_Offer(Tools.Trade_Slot, Tools.Trade_Inventory_Slot, Amount);
         Panels.Get("Trade_Amount").Visible = false;
     }
 
@@ -479,7 +479,7 @@ class Buttons
         }
 
         // Vende o item
-        Send.Shop_Sell(Game.Shop_Inventory_Slot, Amount);
+        Send.Shop_Sell(Tools.Shop_Inventory_Slot, Amount);
         Panels.Get("Shop_Sell").Visible = false;
     }
 

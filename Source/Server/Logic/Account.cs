@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Lidgren.Network;
+using System.Collections.Generic;
 
 class Account
 {
@@ -28,9 +29,8 @@ class Account
     {
         // Verifica se já há alguém conectado com essa conta
         for (byte i = 0; i < Lists.Account.Count; i++)
-            if (Socket.IsConnected(Lists.Account[i]))
-                if (Lists.Account[i].User.Equals(User))
-                    return true;
+            if (Lists.Account[i].User.Equals(User))
+                return true;
 
         return false;
     }
@@ -38,7 +38,7 @@ class Account
     public class Structure
     {
         // Dados básicos
-        public Lidgren.Network.NetConnection Connection;
+        public NetConnection Connection;
         public string User = string.Empty;
         public string Password = string.Empty;
         public Game.Accesses Acess;
@@ -53,18 +53,19 @@ class Account
         }
 
         // Construtor
-        public Structure(Lidgren.Network.NetConnection Connection)
+        public Structure(NetConnection Connection)
         {
             this.Connection = Connection;
         }
 
         // Verifica se o jogador está dentro do jogo
-        public bool IsPlaying => Socket.IsConnected(this) && Character != null;
+        public bool IsPlaying => Character != null;
 
         public void Leave()
         {
             // Limpa os dados do jogador
             if (Character != null) Character.Leave();
+            Lists.Account.Remove(this);
         }
     }
 }

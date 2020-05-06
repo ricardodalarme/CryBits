@@ -66,9 +66,6 @@ class Send
 
     private static void ToPlayer(Account.Structure Account, NetOutgoingMessage Data)
     {
-        // Previne sobrecarga
-        if (!Socket.IsConnected(Account)) return;
-
         // Recria o pacote e o envia
         NetOutgoingMessage Data_Send = Socket.Device.CreateMessage(Data.LengthBytes);
         Data_Send.Write(Data);

@@ -3,6 +3,21 @@ using System.Drawing;
 
 class Tools
 {
+    // Dados temporários
+    public static byte CreateCharacter_Class = 1;
+    public static byte CreateCharacter_Tex = 0;
+    public static int SelectCharacter = 1;
+    public static short Infomation_Index;
+    public static byte Drop_Slot = 0;
+    public static string Party_Invitation;
+    public static string Trade_Invitation;
+    public static byte Trade_Slot = 0;
+    public static byte Trade_Inventory_Slot = 0;
+    public static short Shop_Open = 0;
+    public static byte Shop_Inventory_Slot = 0;
+    public static byte Hotbar_Change;
+    public static byte Inventory_Change;
+
     // Posição do ponteiro do mouse
     public static Point Mouse;
 
@@ -149,15 +164,15 @@ class Tools
             Position = Panels.Get("Menu_Character").Position + new Size(-186, 5);
             Data_Index = Player.Me.Equipment[Panels.Equipment_Slot];
         }
-        else if (Panels.Shop_Slot >= 0 && Panels.Shop_Slot < Lists.Shop[Game.Shop_Open].Sold.Length)
+        else if (Panels.Shop_Slot >= 0 && Panels.Shop_Slot < Lists.Shop[Shop_Open].Sold.Length)
         {
             Position = new Point(Panels.Get("Shop").Position.X - 186, Panels.Get("Shop").Position.Y + 5);
-            Data_Index = Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Slot].Item_Num;
+            Data_Index = Lists.Shop[Shop_Open].Sold[Panels.Shop_Slot].Item_Num;
         }
 
         // Define os dados do painel de informações
         Panels.Get("Information").Visible = !Position.IsEmpty && Data_Index > 0;
         Panels.Get("Information").Position = Position;
-        Game.Infomation_Index = Data_Index;
+        Infomation_Index = Data_Index;
     }
 }

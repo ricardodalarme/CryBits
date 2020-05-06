@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
 
 class Game
 {
@@ -12,21 +11,6 @@ class Game
 
     // Medida de calculo do atraso do jogo
     public static short FPS;
-
-    // Interface
-    public static byte CreateCharacter_Class = 1;
-    public static byte CreateCharacter_Tex = 0;
-    public static int SelectCharacter = 1;
-    public static short Infomation_Index;
-    public static byte Drop_Slot = 0;
-    public static string Party_Invitation;
-    public static string Trade_Invitation;
-    public static byte Trade_Slot = 0;
-    public static byte Trade_Inventory_Slot = 0;
-    public static short Shop_Open = 0;
-    public static byte Shop_Inventory_Slot = 0;
-    public static byte Hotbar_Change;
-    public static byte Inventory_Change;
 
     // Ataque
     public const short Attack_Speed = 750;
@@ -58,15 +42,6 @@ class Game
     // Limites em geral
     public const byte Max_Inventory = 30;
     public const byte Max_Hotbar = 10;
-
-    #region Enums
-    public enum Situations
-    {
-        Connect,
-        Registrar,
-        SelectCharacter,
-        CreateCharacter
-    }
 
     public enum Attributes
     {
@@ -171,62 +146,32 @@ class Game
         Accepted,
         Declined
     }
-    #endregion
 
-    public static void OpenMenu()
+
+    // Converte o valor em uma posição adequada à camera
+    public static int ConvertX(int x) => x - (Sight.X * Grid) - Sight_Offset.X;
+    public static int ConvertY(int y) => y - (Sight.Y * Grid) - Sight_Offset.Y;
+
+    public static Directions ReverseDirection(Directions Direction)
     {
-        // Reproduz a música de fundo
-        if (Lists.Options.Musics)
-            Audio.Music.Play(Audio.Musics.Menu);
-
-        // Reseta os dados
-        CheckBoxes.Get("Connect_Save_Username").Checked = Lists.Options.SaveUsername;
-        if (Lists.Options.SaveUsername) TextBoxes.Get("Connect_Username").Text = Lists.Options.Username;
-
-        // Abre o menu
-        Tools.CurrentWindow = Tools.Windows.Menu;
-    }
-
-    public static void Leave()
-    {
-        // Volta ao menu
-        OpenMenu();
-
-        // Termina a conexão
-        Socket.Disconnect();
-    }
-
-    public static void SetSituation(Situations Situation)
-    {
-        // Verifica se é possível se conectar ao servidor
-        if (!Socket.TryConnect())
+        // Retorna a direção inversa
+        switch (Direction)
         {
-            MessageBox.Show("The server is currently unavailable.");
-            return;
-        }
-
-        // Envia os dados
-        switch (Situation)
-        {
-            case Situations.Connect: Send.Connect(); break;
-            case Situations.Registrar: Send.Register(); break;
-            case Situations.CreateCharacter: Send.CreateCharacter(); break;
+            case Directions.Up: return Directions.Down;
+            case Directions.Down: return Directions.Up;
+            case Directions.Left: return Directions.Right;
+            case Directions.Right: return Directions.Left;
+            default: return Directions.Count;
         }
     }
 
-    public static void Disconnect()
+    public static short Find_Shop_Bought(short Item_Num)
     {
-        // Não fechar os paineis se não for necessário
-        if (Panels.Get("Options").Visible || Panels.Get("Connect").Visible || Panels.Get("Register").Visible) return;
+        for (byte i = 0; i < Lists.Shop[Tools.Shop_Open].Bought.Length; i++)
+            if (Lists.Shop[Tools.Shop_Open].Bought[i].Item_Num == Item_Num)
+                return i;
 
-        // Limpa os valores
-        Audio.Sound.Stop_All();
-        Player.Me = null;
-
-        // Traz o jogador de volta ao menu
-        Panels.Menu_Close();
-        Panels.Get("Connect").Visible = true;
-        Tools.CurrentWindow = Tools.Windows.Menu;
+        return -1;
     }
 
     public static void UpdateCamera()
@@ -276,31 +221,5 @@ class Game
             Sight.Height = Lists.Map.Height;
             Sight.Y = Sight.Height - Map.Min_Height;
         }
-    }
-
-    // Converte o valor em uma posição adequada à camera
-    public static int ConvertX(int x) => x - (Sight.X * Grid) - Sight_Offset.X;
-    public static int ConvertY(int y) => y - (Sight.Y * Grid) - Sight_Offset.Y;
-
-    public static Directions ReverseDirection(Directions Direction)
-    {
-        // Retorna a direção inversa
-        switch (Direction)
-        {
-            case Directions.Up: return Directions.Down;
-            case Directions.Down: return Directions.Up;
-            case Directions.Left: return Directions.Right;
-            case Directions.Right: return Directions.Left;
-            default: return Directions.Count;
-        }
-    }
-
-    public static short Find_Shop_Bought(short Item_Num)
-    {
-        for (byte i = 0; i < Lists.Shop[Shop_Open].Bought.Length; i++)
-            if (Lists.Shop[Shop_Open].Bought[i].Item_Num == Item_Num)
-                return i;
-
-        return -1;
     }
 }

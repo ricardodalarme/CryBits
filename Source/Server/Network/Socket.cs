@@ -43,7 +43,7 @@ class Socket
                         Connect(Data);
                     // Conexão perdida, disconecta o jogador do jogo
                     else if (Status == NetConnectionStatus.Disconnected)
-                        Disconnect(Account);
+                        Account.Leave();
 
                     break;
                 // Recebe e manuseia os dados recebidos
@@ -61,16 +61,6 @@ class Socket
         // Define a conexão do jogador
         Lists.Account.Add(new Account.Structure(IncomingMsg.SenderConnection));
     }
-
-    private static void Disconnect(Account.Structure Account)
-    {
-        // Acaba com a conexão e restabelece os dados do jogador
-        Account.Leave();
-        Lists.Account.Remove(Account);
-    }
-
-    // Retorna o estado da conexão do jogador
-    public static bool IsConnected(Account.Structure Account) => Account.Connection != null && Account.Connection.Status == NetConnectionStatus.Connected;
 
     private static Account.Structure FindConnection(NetConnection Data)
     {

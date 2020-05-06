@@ -49,7 +49,7 @@ class Panels
                 {
                     if (Player.Me.Inventory[Slot].Amount != 1)
                     {
-                        Game.Shop_Inventory_Slot = Slot;
+                        Tools.Shop_Inventory_Slot = Slot;
                         TextBoxes.Get("Shop_Sell_Amount").Text = string.Empty;
                         Get("Shop_Sell").Visible = true;
                     }
@@ -59,14 +59,14 @@ class Panels
                 else if (!Get("Trade").Visible)
                     if (Player.Me.Inventory[Slot].Amount != 1)
                     {
-                        Game.Drop_Slot = Slot;
+                        Tools.Drop_Slot = Slot;
                         TextBoxes.Get("Drop_Amount").Text = string.Empty;
                         Get("Drop").Visible = true;
                     }
                     else Send.DropItem(Slot, 1);
         }
         // Seleciona o item
-        else if (e.Button == SFML.Window.Mouse.Button.Left) Game.Inventory_Change = Slot;
+        else if (e.Button == SFML.Window.Mouse.Button.Left) Tools.Inventory_Change = Slot;
     }
 
     public static void Equipment_MouseDown(SFML.Window.MouseButtonEventArgs e)
@@ -101,7 +101,7 @@ class Panels
         // Seleciona o item
         if (e.Button == SFML.Window.Mouse.Button.Left)
         {
-            Game.Hotbar_Change = Slot;
+            Tools.Hotbar_Change = Slot;
             return;
         }
     }

@@ -79,9 +79,9 @@ partial class Send
         // Envia os dados
         Data.Write((byte)Packets.CreateCharacter);
         Data.Write(TextBoxes.Get("CreateCharacter_Name").Text);
-        Data.Write(Game.CreateCharacter_Class);
+        Data.Write(Tools.CreateCharacter_Class);
         Data.Write(CheckBoxes.Get("GenderMale").Checked);
-        Data.Write(Game.CreateCharacter_Tex);
+        Data.Write(Tools.CreateCharacter_Tex);
         Packet(Data);
     }
 
@@ -91,7 +91,7 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Character_Use);
-        Data.Write(Game.SelectCharacter);
+        Data.Write(Tools.SelectCharacter);
         Packet(Data);
     }
 
@@ -110,7 +110,7 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Character_Delete);
-        Data.Write(Game.SelectCharacter);
+        Data.Write(Tools.SelectCharacter);
         Packet(Data);
     }
 

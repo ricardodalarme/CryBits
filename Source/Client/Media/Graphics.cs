@@ -401,7 +401,7 @@ partial class Graphics
     private static void SelectCharacter_Class()
     {
         Point Text_Position = new Point(399, 425);
-        string Text = "(" + (Game.SelectCharacter + 1) + ") None";
+        string Text = "(" + (Tools.SelectCharacter + 1) + ") None";
 
         // Somente se necessário
         if (!Buttons.Characters_Change_Buttons())
@@ -411,14 +411,14 @@ partial class Graphics
         }
 
         // Verifica se o personagem existe
-        if (Game.SelectCharacter >= Lists.Characters.Length)
+        if (Tools.SelectCharacter >= Lists.Characters.Length)
         {
             DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
             return;
         }
 
         // Desenha o personagem
-        short Texture_Num = Lists.Characters[Game.SelectCharacter].Texture_Num;
+        short Texture_Num = Lists.Characters[Tools.SelectCharacter].Texture_Num;
         if (Texture_Num > 0)
         {
             Render(Tex_Face[Texture_Num], new Point(353, 442));
@@ -426,20 +426,20 @@ partial class Graphics
         }
 
         // Desenha o nome da classe
-        Text = "(" + (Game.SelectCharacter + 1) + ") " + Lists.Characters[Game.SelectCharacter].Name;
+        Text = "(" + (Tools.SelectCharacter + 1) + ") " + Lists.Characters[Tools.SelectCharacter].Name;
         DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
     }
 
     private static void CreateCharacter_Class()
     {
         short Texture_Num = 0;
-        Lists.Structures.Class Class = Lists.Class[Game.CreateCharacter_Class];
+        Lists.Structures.Class Class = Lists.Class[Tools.CreateCharacter_Class];
 
         // Textura do personagem
         if (CheckBoxes.Get("GenderMale").Checked && Class.Tex_Male.Length > 0)
-            Texture_Num = Class.Tex_Male[Game.CreateCharacter_Tex];
+            Texture_Num = Class.Tex_Male[Tools.CreateCharacter_Tex];
         else if (Class.Tex_Female.Length > 0)
-            Texture_Num = Class.Tex_Female[Game.CreateCharacter_Tex];
+            Texture_Num = Class.Tex_Female[Tools.CreateCharacter_Tex];
 
         // Desenha o personagem
         if (Texture_Num > 0)
@@ -496,7 +496,7 @@ partial class Graphics
 
     private static void Informations(Panels.Structure Tool)
     {
-        short Item_Num = Game.Infomation_Index;
+        short Item_Num = Tools.Infomation_Index;
         SFML.Graphics.Color Text_Color;
         List<string> Data = new List<string>();
 
@@ -521,10 +521,10 @@ partial class Graphics
         // Informações da Loja
         if (Panels.Get("Shop").Visible)
             if (Panels.Shop_Slot >= 0)
-                Data.Add("Price: " + Lists.Shop[Game.Shop_Open].Sold[Panels.Shop_Slot].Price);
+                Data.Add("Price: " + Lists.Shop[Tools.Shop_Open].Sold[Panels.Shop_Slot].Price);
             else if (Panels.Inventory_Slot > 0)
                 if (Game.Find_Shop_Bought(Item_Num) >= 0)
-                    Data.Add("Sale price: " + Lists.Shop[Game.Shop_Open].Bought[Game.Find_Shop_Bought(Item_Num)].Price);
+                    Data.Add("Sale price: " + Lists.Shop[Tools.Shop_Open].Bought[Game.Find_Shop_Bought(Item_Num)].Price);
 
         // Informações específicas dos itens
         switch ((Game.Items)Lists.Item[Item_Num].Type)
@@ -576,9 +576,9 @@ partial class Graphics
         }
 
         // Movendo slot
-        if (Game.Hotbar_Change > 0)
-            if (Player.Me.Hotbar[Game.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
-                Render(Tex_Item[Lists.Item[Player.Me.Inventory[Player.Me.Hotbar[Game.Hotbar_Change].Slot].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
+        if (Tools.Hotbar_Change > 0)
+            if (Player.Me.Hotbar[Tools.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
+                Render(Tex_Item[Lists.Item[Player.Me.Inventory[Player.Me.Hotbar[Tools.Hotbar_Change].Slot].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
     }
 
     private static void Menu_Character(Panels.Structure Tool)
@@ -613,12 +613,12 @@ partial class Graphics
             Item(Player.Me.Inventory[i].Item_Num, Player.Me.Inventory[i].Amount, Tool.Position + new Size(7, 30), i, NumColumns);
 
         // Movendo item
-        if (Game.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Me.Inventory[Game.Inventory_Change].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
+        if (Tools.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Me.Inventory[Tools.Inventory_Change].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
     }
 
     private static void Party_Invitation(Panels.Structure Tool)
     {
-        DrawText(Game.Party_Invitation + " has invite you to a party. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+        DrawText(Tools.Party_Invitation + " has invite you to a party. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
     }
 
     private static void Party()
@@ -640,7 +640,7 @@ partial class Graphics
 
     private static void Trade_Invitation(Panels.Structure Tool)
     {
-        DrawText(Game.Trade_Invitation + " has invite you to a trade. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+        DrawText(Tools.Trade_Invitation + " has invite you to a trade. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
     }
 
     private static void Trade(Panels.Structure Tool)
@@ -656,13 +656,13 @@ partial class Graphics
     private static void Shop(Panels.Structure Tool)
     {
         // Dados da loja
-        string Name = Lists.Shop[Game.Shop_Open].Name;
+        string Name = Lists.Shop[Tools.Shop_Open].Name;
         DrawText(Name, Tool.Position.X + 131, Tool.Position.Y + 28, SFML.Graphics.Color.White, Alignments.Center);
-        DrawText("Currency: " + Lists.Item[Lists.Shop[Game.Shop_Open].Currency].Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
+        DrawText("Currency: " + Lists.Item[Lists.Shop[Tools.Shop_Open].Currency].Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
 
         // Desenha os itens
-        for (byte i = 0; i < Lists.Shop[Game.Shop_Open].Sold.Length; i++)
-            Item(Lists.Shop[Game.Shop_Open].Sold[i].Item_Num, Lists.Shop[Game.Shop_Open].Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
+        for (byte i = 0; i < Lists.Shop[Tools.Shop_Open].Sold.Length; i++)
+            Item(Lists.Shop[Tools.Shop_Open].Sold[i].Item_Num, Lists.Shop[Tools.Shop_Open].Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
     }
 
     private static void Item(short Item_Num, short Amount, Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)

@@ -11,7 +11,7 @@ class Window
     {
         // Fecha o jogo
         if (Tools.CurrentWindow == Tools.Windows.Game)
-            Game.Leave();
+            Socket.Disconnect();
         else
             Program.Working = false;
     }
@@ -38,7 +38,7 @@ class Window
                 // Compra o item da loja
                 Slot = Panels.Shop_Slot;
                 if (Slot >= 0)
-                    if (Game.Shop_Open > 0)
+                    if (Tools.Shop_Open > 0)
                         Send.Shop_Buy((byte)Slot);
             }
         }
@@ -101,32 +101,32 @@ class Window
             // Muda o slot do item
             if (Panels.Inventory_Slot > 0)
             {
-                if (Game.Inventory_Change > 0) Send.Inventory_Change(Game.Inventory_Change, Panels.Inventory_Slot);
+                if (Tools.Inventory_Change > 0) Send.Inventory_Change(Tools.Inventory_Change, Panels.Inventory_Slot);
             }
             // Muda o slot da hotbar
             else if (Panels.Hotbar_Slot > 0)
             {
-                if (Game.Hotbar_Change > 0) Send.Hotbar_Change(Game.Hotbar_Change, Panels.Hotbar_Slot);
-                if (Game.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Game.Hotbar.Item, Game.Inventory_Change);
+                if (Tools.Hotbar_Change > 0) Send.Hotbar_Change(Tools.Hotbar_Change, Panels.Hotbar_Slot);
+                if (Tools.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Game.Hotbar.Item, Tools.Inventory_Change);
             }
             // Adiciona um item à troca
             else if (Panels.Trade_Slot > 0)
             {
-                if (Game.Inventory_Change > 0)
-                    if (Player.Me.Inventory[Game.Inventory_Change].Amount == 1)
-                        Send.Trade_Offer(Panels.Trade_Slot, Game.Inventory_Change);
+                if (Tools.Inventory_Change > 0)
+                    if (Player.Me.Inventory[Tools.Inventory_Change].Amount == 1)
+                        Send.Trade_Offer(Panels.Trade_Slot, Tools.Inventory_Change);
                     else
                     {
-                        Game.Trade_Slot = Panels.Trade_Slot;
-                        Game.Trade_Inventory_Slot = Game.Inventory_Change;
+                        Tools.Trade_Slot = Panels.Trade_Slot;
+                        Tools.Trade_Inventory_Slot = Tools.Inventory_Change;
                         TextBoxes.Get("Trade_Amount").Text = string.Empty;
                         Panels.Get("Trade_Amount").Visible = true;
                     }
             }
 
             // Reseta a movimentação
-            Game.Inventory_Change = 0;
-            Game.Hotbar_Change = 0;
+            Tools.Inventory_Change = 0;
+            Tools.Hotbar_Change = 0;
         }
     }
 
@@ -169,7 +169,7 @@ class Window
             switch (e.Code)
             {
                 case Keyboard.Key.Enter: Chat.Type(); break;
-                case Keyboard.Key.Space: Player.CollectItem(); break;
+                case Keyboard.Key.Space: Player.Me.CollectItem(); break;
                 case Keyboard.Key.Num1: Send.Hotbar_Use(1); break;
                 case Keyboard.Key.Num2: Send.Hotbar_Use(2); break;
                 case Keyboard.Key.Num3: Send.Hotbar_Use(3); break;
@@ -187,5 +187,17 @@ class Window
     {
         // Executa os eventos
         if (TextBoxes.Focused != null) ((TextBoxes.Structure)TextBoxes.Focused.Data).TextEntered(e);
+    }
+
+    public static void OpenMenu()
+    {
+        // Reproduz a música de fundo
+        Audio.Sound.Stop_All();
+        if (Lists.Options.Musics) Audio.Music.Play(Audio.Musics.Menu);
+
+        // Traz o jogador de volta ao menu
+        Panels.Menu_Close();
+        Panels.Get("Connect").Visible = true;
+        Tools.CurrentWindow = Tools.Windows.Menu;
     }
 }

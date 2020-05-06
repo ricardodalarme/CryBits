@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using System;
+using System.Windows.Forms;
 
 class Socket
 {
@@ -47,7 +48,8 @@ class Socket
                 // Desconectar o jogador caso o servidor seja desligado
                 case NetIncomingMessageType.StatusChanged:
                     if ((NetConnectionStatus)Data.ReadByte() == NetConnectionStatus.Disconnected)
-                        Game.Disconnect();
+                        if (Player.Me != null) 
+                            Player.Me.Leave();
 
                     break;
             }
@@ -61,8 +63,6 @@ class Socket
 
     public static bool TryConnect()
     {
-        int Wait_Timer = Environment.TickCount;
-
         // Se o jogador já estiver conectado, então isso não é mais necessário
         if (IsConnected()) return true;
 
@@ -70,9 +70,17 @@ class Socket
         Device.Connect(IP, Port);
 
         // Espere até que o jogador se conecte
+        int Wait_Timer = Environment.TickCount;
         while (!IsConnected() && Environment.TickCount <= Wait_Timer + 1000)
             HandleData();
 
-        return IsConnected();
+        // Retorna uma mensagem caso não conseguir se conectar
+        if (!IsConnected())
+        {
+            MessageBox.Show("The server is currently unavailable.");
+            return false;
+        }
+
+        return true;
     }
 }

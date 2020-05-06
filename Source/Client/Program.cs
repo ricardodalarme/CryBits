@@ -16,7 +16,7 @@ class Program
         Read.Data();
 
         // Abre a janela
-        Game.OpenMenu();
+        Window.OpenMenu();
 
         // Inicializa todos os dispositivos
         Socket.Init();
