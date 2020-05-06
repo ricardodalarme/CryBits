@@ -18,9 +18,6 @@ class Tools
     public static byte Hotbar_Change;
     public static byte Inventory_Change;
 
-    // Posição do ponteiro do mouse
-    public static Point Mouse;
-
     // Ordem da renderização das ferramentas
     public static List<Order_Structure>[] All_Order = new List<Order_Structure>[(byte)Window.Types.Count];
 
@@ -54,9 +51,9 @@ class Tools
 
     public static bool IsAbove(Rectangle Rectangle)
     {
-        // Verficia se o mouse está sobre o objeto
-        if (Mouse.X >= Rectangle.X && Mouse.X <= Rectangle.X + Rectangle.Width)
-            if (Mouse.Y >= Rectangle.Y && Mouse.Y <= Rectangle.Y + Rectangle.Height)
+        // Verficia se o Window.Mouse está sobre o objeto
+        if (Window.Mouse.X >= Rectangle.X && Window.Mouse.X <= Rectangle.X + Rectangle.Width)
+            if (Window.Mouse.Y >= Rectangle.Y && Window.Mouse.Y <= Rectangle.Y + Rectangle.Height)
                 return true;
 
         // Se não, retornar um valor nulo
@@ -120,9 +117,9 @@ class Tools
     {
         int Size = Grid + Gap;
         Point Start = Panel.Position + new Size(OffX, OffY);
-        Point Slot = new Point((Mouse.X - Start.X) / Size, (Mouse.Y - Start.Y) / Size);
+        Point Slot = new Point((Window.Mouse.X - Start.X) / Size, (Window.Mouse.Y - Start.Y) / Size);
 
-        // Verifica se o mouse está sobre o slot
+        // Verifica se o Window.Mouse está sobre o slot
         if (Slot.Y < 0 || Slot.X < 0 || Slot.X >= Columns || Slot.Y >= Lines) return 0;
         if (!IsAbove(new Rectangle(Start.X + Slot.X * Size, Start.Y + Slot.Y * Size, Grid, Grid))) return 0;
         if (!Panel.Visible) return 0;
@@ -136,7 +133,7 @@ class Tools
         Point Position = new Point();
         short Data_Index = 0;
 
-        // Define as informações do painel com base no que o mouse está sobrepondo
+        // Define as informações do painel com base no que o Window.Mouse está sobrepondo
         if (Panels.Hotbar_Slot > 0)
         {
             Position = Panels.Get("Hotbar").Position + new Size(0, 42);

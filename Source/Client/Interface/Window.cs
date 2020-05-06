@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using SFML.Window;
 
 class Window
@@ -9,6 +10,9 @@ class Window
 
     // Detecção de duplo clique
     private static int DoubleClick_Timer;
+
+    // Posição do ponteiro do mouse
+    public static Point Mouse;
 
     // Identificação das janelas do jogo
     public enum Types
@@ -145,8 +149,8 @@ class Window
     public static void OnMouseMoved(object sender, MouseMoveEventArgs e)
     {
         // Define a posição do mouse à váriavel
-        Tools.Mouse.X = e.X;
-        Tools.Mouse.Y = e.Y;
+        Window.Mouse.X = e.X;
+        Window.Mouse.Y = e.Y;
 
         // Percorre toda a árvore de ordem para executar o comando
         Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();

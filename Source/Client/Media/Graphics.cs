@@ -578,7 +578,7 @@ partial class Graphics
         // Movendo slot
         if (Tools.Hotbar_Change > 0)
             if (Player.Me.Hotbar[Tools.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
-                Render(Tex_Item[Lists.Item[Player.Me.Inventory[Player.Me.Hotbar[Tools.Hotbar_Change].Slot].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
+                Render(Tex_Item[Lists.Item[Player.Me.Inventory[Player.Me.Hotbar[Tools.Hotbar_Change].Slot].Item_Num].Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
     }
 
     private static void Menu_Character(Panels.Structure Tool)
@@ -613,7 +613,7 @@ partial class Graphics
             Item(Player.Me.Inventory[i].Item_Num, Player.Me.Inventory[i].Amount, Tool.Position + new Size(7, 30), i, NumColumns);
 
         // Movendo item
-        if (Tools.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Me.Inventory[Tools.Inventory_Change].Item_Num].Texture], new Point(Tools.Mouse.X + 6, Tools.Mouse.Y + 6));
+        if (Tools.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Me.Inventory[Tools.Inventory_Change].Item_Num].Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
     }
 
     private static void Party_Invitation(Panels.Structure Tool)
