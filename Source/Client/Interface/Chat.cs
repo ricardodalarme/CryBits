@@ -44,7 +44,7 @@ class Chat
 
         // Remove os espaços
         Message = Message.Trim();
-        Message_Width = Tools.MeasureString(Message);
+        Message_Width = Utilities.MeasureString(Message);
 
         // Caso couber, adiciona a mensagem normalmente
         if (Message_Width < Box_Width)
@@ -55,7 +55,7 @@ class Chat
                 Temp_Message = Message.Substring(0, i);
 
                 // Adiciona o texto à caixa
-                if (Tools.MeasureString(Temp_Message) > Box_Width)
+                if (Utilities.MeasureString(Temp_Message) > Box_Width)
                 {
                     AddLine(Temp_Message, Color);
                     AddText(Message.Substring(Temp_Message.Length), Color);

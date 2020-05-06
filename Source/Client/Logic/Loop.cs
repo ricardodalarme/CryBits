@@ -44,7 +44,7 @@ class Loop
                 }
 
                 // Verifica se é necessário mostrar o painel de informações
-                Tools.CheckInformations();
+                Utilities.CheckInformations();
             }
 
             // Faz com que a aplicação se mantenha estável

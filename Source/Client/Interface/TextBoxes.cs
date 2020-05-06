@@ -25,7 +25,7 @@ class TextBoxes
         public void MouseUp(Tools.Order_Structure Order)
         {
             // Somente se necessário
-            if (!Tools.IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
+            if (!Utilities.IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
 
             // Define o foco no digitalizador
             Focused = Order;

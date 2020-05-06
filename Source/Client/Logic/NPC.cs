@@ -247,7 +247,7 @@ partial class Graphics
     {
         Point Position = new Point(); SFML.Graphics.Color Color;
         short NPC_Num = Lists.Temp_Map.NPC[Index].Index;
-        int Name_Size = Tools.MeasureString(Lists.NPC[NPC_Num].Name);
+        int Name_Size = Utilities.MeasureString(Lists.NPC[NPC_Num].Name);
         Texture Texture = Tex_Character[Lists.NPC[NPC_Num].Texture];
 
         // Posição do texto

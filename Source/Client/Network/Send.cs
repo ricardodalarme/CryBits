@@ -79,9 +79,9 @@ partial class Send
         // Envia os dados
         Data.Write((byte)Packets.CreateCharacter);
         Data.Write(TextBoxes.Get("CreateCharacter_Name").Text);
-        Data.Write(Tools.CreateCharacter_Class);
+        Data.Write(Utilities.CreateCharacter_Class);
         Data.Write(CheckBoxes.Get("GenderMale").Checked);
-        Data.Write(Tools.CreateCharacter_Tex);
+        Data.Write(Utilities.CreateCharacter_Tex);
         Packet(Data);
     }
 
@@ -91,7 +91,7 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Character_Use);
-        Data.Write(Tools.SelectCharacter);
+        Data.Write(Utilities.SelectCharacter);
         Packet(Data);
     }
 
@@ -110,7 +110,7 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Character_Delete);
-        Data.Write(Tools.SelectCharacter);
+        Data.Write(Utilities.SelectCharacter);
         Packet(Data);
     }
 

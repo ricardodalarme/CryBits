@@ -54,7 +54,7 @@ class Window
                 // Compra o item da loja
                 Slot = Panels.Shop_Slot;
                 if (Slot >= 0)
-                    if (Tools.Shop_Open > 0)
+                    if (Utilities.Shop_Open > 0)
                         Send.Shop_Buy((byte)Slot);
             }
         }
@@ -117,32 +117,32 @@ class Window
             // Muda o slot do item
             if (Panels.Inventory_Slot > 0)
             {
-                if (Tools.Inventory_Change > 0) Send.Inventory_Change(Tools.Inventory_Change, Panels.Inventory_Slot);
+                if (Utilities.Inventory_Change > 0) Send.Inventory_Change(Utilities.Inventory_Change, Panels.Inventory_Slot);
             }
             // Muda o slot da hotbar
             else if (Panels.Hotbar_Slot > 0)
             {
-                if (Tools.Hotbar_Change > 0) Send.Hotbar_Change(Tools.Hotbar_Change, Panels.Hotbar_Slot);
-                if (Tools.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Game.Hotbar.Item, Tools.Inventory_Change);
+                if (Utilities.Hotbar_Change > 0) Send.Hotbar_Change(Utilities.Hotbar_Change, Panels.Hotbar_Slot);
+                if (Utilities.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Game.Hotbar.Item, Utilities.Inventory_Change);
             }
             // Adiciona um item à troca
             else if (Panels.Trade_Slot > 0)
             {
-                if (Tools.Inventory_Change > 0)
-                    if (Player.Me.Inventory[Tools.Inventory_Change].Amount == 1)
-                        Send.Trade_Offer(Panels.Trade_Slot, Tools.Inventory_Change);
+                if (Utilities.Inventory_Change > 0)
+                    if (Player.Me.Inventory[Utilities.Inventory_Change].Amount == 1)
+                        Send.Trade_Offer(Panels.Trade_Slot, Utilities.Inventory_Change);
                     else
                     {
-                        Tools.Trade_Slot = Panels.Trade_Slot;
-                        Tools.Trade_Inventory_Slot = Tools.Inventory_Change;
+                        Utilities.Trade_Slot = Panels.Trade_Slot;
+                        Utilities.Trade_Inventory_Slot = Utilities.Inventory_Change;
                         TextBoxes.Get("Trade_Amount").Text = string.Empty;
                         Panels.Get("Trade_Amount").Visible = true;
                     }
             }
 
             // Reseta a movimentação
-            Tools.Inventory_Change = 0;
-            Tools.Hotbar_Change = 0;
+            Utilities.Inventory_Change = 0;
+            Utilities.Hotbar_Change = 0;
         }
     }
 

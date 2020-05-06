@@ -109,7 +109,7 @@ partial class Receive
     private static void Connect()
     {
         // Reseta os valores
-        Tools.SelectCharacter = 0;
+        Utilities.SelectCharacter = 0;
 
         // Abre o painel de seleção de personagens
         Panels.Menu_Close();
@@ -129,8 +129,8 @@ partial class Receive
         TextBoxes.Get("CreateCharacter_Name").Text = string.Empty;
         CheckBoxes.Get("GenderMale").Checked = true;
         CheckBoxes.Get("GenderFemale").Checked = false;
-        Tools.CreateCharacter_Class = 1;
-        Tools.CreateCharacter_Tex = 0;
+        Utilities.CreateCharacter_Class = 1;
+        Utilities.CreateCharacter_Tex = 0;
 
         // Abre o painel de criação de personagem
         Panels.Menu_Close();
@@ -189,7 +189,7 @@ partial class Receive
         CheckBoxes.Get("Options_Trade").Checked = Lists.Options.Trade;
         CheckBoxes.Get("Options_Party").Checked = Lists.Options.Party;
         Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
-        Tools.Infomation_Index = 0;
+        Utilities.Infomation_Index = 0;
 
         // Reseta a interface
         Panels.Get("Menu_Character").Visible = false;
@@ -583,7 +583,7 @@ partial class Receive
         }
 
         // Abre a janela de convite para o grupo
-        Tools.Party_Invitation = Data.ReadString();
+        Utilities.Party_Invitation = Data.ReadString();
         Panels.Get("Party_Invitation").Visible = true;
     }
 
@@ -623,7 +623,7 @@ partial class Receive
         }
 
         // Abre a janela de convite para o grupo
-        Tools.Trade_Invitation = Data.ReadString();
+        Utilities.Trade_Invitation = Data.ReadString();
         Panels.Get("Trade_Invitation").Visible = true;
     }
 
@@ -697,7 +697,7 @@ partial class Receive
     private static void Shop_Open(NetIncomingMessage Data)
     {
         // Abre a loja
-        Tools.Shop_Open = Data.ReadInt16();
-        Panels.Get("Shop").Visible = Tools.Shop_Open != 0;
+        Utilities.Shop_Open = Data.ReadInt16();
+        Panels.Get("Shop").Visible = Utilities.Shop_Open != 0;
     }
 }
