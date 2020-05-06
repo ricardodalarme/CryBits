@@ -405,7 +405,7 @@ class Receive
     {
         short Map_Num = Player.Map_Num;
         byte Map_Item = Map.HasItem(Map_Num, Player.X, Player.Y);
-        short Map_Item_Num = Lists.Temp_Map[Map_Num].Item[Map_Item].Index;
+        short Map_Item_Num = Lists.Temp_Map[Map_Num].Item[Map_Item].Item_Num;
 
         // Somente se necessário
         if (Map_Item == 0) return;
@@ -464,7 +464,7 @@ class Receive
             if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
 
             // Solta o item no chão
-            Map_Item.Index = Player.Equipment[Slot];
+            Map_Item.Item_Num = Player.Equipment[Slot];
             Map_Item.Amount = 1;
             Map_Item.X = Player.X;
             Map_Item.Y = Player.Y;

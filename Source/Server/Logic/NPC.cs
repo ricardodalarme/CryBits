@@ -451,7 +451,7 @@ class NPC
                     {
                         // Dados do item
                         Lists.Structures.Map_Items Item = new Lists.Structures.Map_Items();
-                        Item.Index = NPC.Drop[i].Item_Num;
+                        Item.Item_Num = NPC.Drop[i].Item_Num;
                         Item.Amount = NPC.Drop[i].Amount;
                         Item.X = X;
                         Item.Y = Y;

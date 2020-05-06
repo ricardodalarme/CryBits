@@ -99,7 +99,7 @@ class Send
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Lists.Account[i].IsPlaying)
-                if (Player.Index != i)
+                if (Player != Lists.Account[i].Character)
                     ToPlayer(Lists.Account[i].Character, Data);
     }
 
@@ -118,7 +118,7 @@ class Send
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Lists.Account[i].IsPlaying)
                 if (Lists.Account[i].Character.Map_Num == Map)
-                    if (Player.Index != i)
+                    if (Player != Lists.Account[i].Character)
                         ToPlayer(Lists.Account[i].Character, Data);
     }
 
@@ -366,7 +366,7 @@ class Send
         // Envia os dados dos outros jogadores 
         for (byte i = 1; i <= Game.HigherIndex; i++)
             if (Lists.Account[i].IsPlaying)
-                if (Player.Index != i)
+                if (Player != Lists.Account[i].Character)
                     if (Lists.Account[i].Character.Map_Num == Player.Map_Num)
                         ToPlayer(Player, Player_Data_Cache(Lists.Account[i].Character));
 
@@ -616,7 +616,7 @@ class Send
         for (byte i = 1; i < Lists.Temp_Map[Map_Num].Item.Count; i++)
         {
             // Geral
-            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Index);
+            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Item_Num);
             Data.Write(Lists.Temp_Map[Map_Num].Item[i].X);
             Data.Write(Lists.Temp_Map[Map_Num].Item[i].Y);
         }
@@ -634,7 +634,7 @@ class Send
         Data.Write((short)(Lists.Temp_Map[Map_Num].Item.Count - 1));
         for (byte i = 1; i < Lists.Temp_Map[Map_Num].Item.Count; i++)
         {
-            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Index);
+            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Item_Num);
             Data.Write(Lists.Temp_Map[Map_Num].Item[i].X);
             Data.Write(Lists.Temp_Map[Map_Num].Item[i].Y);
         }

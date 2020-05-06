@@ -140,7 +140,7 @@ class Map
                 if (Data.Tile[x, y].Attribute == (byte)Attributes.Item)
                 {
                     // Faz o item aparecer
-                    Item.Index = Data.Tile[x, y].Data_1;
+                    Item.Item_Num = Data.Tile[x, y].Data_1;
                     Item.Amount = Data.Tile[x, y].Data_2;
                     Item.X = x;
                     Item.Y = y;

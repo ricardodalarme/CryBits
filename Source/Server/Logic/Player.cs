@@ -492,7 +492,7 @@ class Player
         if (Amount > Inventory[Slot].Amount) Amount = Inventory[Slot].Amount;
 
         // Solta o item no chão
-        Map_Item.Index = Inventory[Slot].Item_Num;
+        Map_Item.Item_Num = Inventory[Slot].Item_Num;
         Map_Item.Amount = Amount;
         Map_Item.X = X;
         Map_Item.Y = Y;

@@ -177,7 +177,7 @@ class Lists
 
         public struct Map_Items
         {
-            public short Index;
+            public short Item_Num;
             public byte X;
             public byte Y;
             public short Amount;
