@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 
-class Player
+class Player:Character
 {
     // Dados permantes
     public string Name = string.Empty;
@@ -12,18 +12,12 @@ class Player
     public short Level;
     public int Experience;
     public byte Points;
-    public short[] Vital = new short[(byte)Game.Vitals.Count];
     public short[] Attribute = new short[(byte)Game.Attributes.Count];
-    public short Map_Num;
-    public byte X;
-    public byte Y;
-    public Game.Directions Direction;
     public Lists.Structures.Inventories[] Inventory = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
     public short[] Equipment = new short[(byte)Game.Equipments.Count];
     public Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
 
     // Dados temporários
-    public byte Index;
     public bool GettingMap;
     public int Attack_Timer;
     public List<Player> Party = new List<Player>();
@@ -345,7 +339,7 @@ class Player
     private void Attack_NPC(NPC.Structure Victim)
     {
         // Mensagem
-        if (Victim.Target_Index != Index && !string.IsNullOrEmpty(Lists.NPC[Victim.Data_Index].SayMsg)) Send.Message(this, Lists.NPC[Victim.Data_Index].Name + ": " + Lists.NPC[Victim.Data_Index].SayMsg, Color.White);
+        if (Victim.Target != this && !string.IsNullOrEmpty(Lists.NPC[Victim.Data_Index].SayMsg)) Send.Message(this, Lists.NPC[Victim.Data_Index].Name + ": " + Lists.NPC[Victim.Data_Index].SayMsg, Color.White);
 
         // Não executa o combate com um NPC amigavel
         switch ((NPC.Behaviour)Lists.NPC[Victim.Data_Index].Behaviour)
@@ -355,8 +349,7 @@ class Player
         }
 
         // Define o alvo do NPC
-        Victim.Target_Index = Index;
-        Victim.Target_Type = (byte)Game.Target.Player;
+        Victim.Target = this;
 
         // Tempo de ataque 
         Attack_Timer = Environment.TickCount;

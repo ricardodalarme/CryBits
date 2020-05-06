@@ -17,19 +17,12 @@ class NPC
         StandStill
     }
 
-    public class Structure
+    public class Structure : Character
     {
         // Dados básicos
-        public byte Index;
-        public short Map_Num;
         public short Data_Index;
         public bool Alive;
-        public byte X;
-        public byte Y;
-        public Game.Directions Direction;
-        public byte Target_Type;
-        public byte Target_Index;
-        public short[] Vital = new short[(byte)Game.Vitals.Count];
+        public Character Target;
         public int Spawn_Timer;
         public int Attack_Timer;
 
@@ -102,7 +95,7 @@ class NPC
                 if (NPC_Data.Behaviour == (byte)Behaviour.AttackOnSight)
                 {
                     // Jogador
-                    if (Target_Index == 0)
+                    if (Target == null)
                         for (byte Player_Index = 1; Player_Index <= Game.HigherIndex; Player_Index++)
                         {
                             // Verifica se o jogador está jogando e no mesmo mapa que o NPC
@@ -113,8 +106,7 @@ class NPC
                             Distance = (short)Math.Sqrt(Math.Pow(X - Lists.Account[Player_Index].Character.X, 2) + Math.Pow(Y - Lists.Account[Player_Index].Character.Y, 2));
                             if (Distance <= NPC_Data.Sight)
                             {
-                                Target_Type = (byte)Game.Target.Player;
-                                Target_Index = Player_Index;
+                                Target = Lists.Account[Player_Index].Character;
 
                                 // Mensagem
                                 if (!string.IsNullOrEmpty(NPC_Data.SayMsg)) Send.Message(Lists.Account[Player_Index].Character, NPC_Data.Name + ": " + NPC_Data.SayMsg, System.Drawing.Color.White);
@@ -123,7 +115,7 @@ class NPC
                         }
 
                     // NPC
-                    if (NPC_Data.AttackNPC && Target_Index == 0)
+                    if (NPC_Data.AttackNPC && Target == null)
                         for (byte NPC_Index = 1; NPC_Index < Lists.Temp_Map[Map_Num].NPC.Length; NPC_Index++)
                         {
                             // Verifica se pode atacar
@@ -135,55 +127,31 @@ class NPC
                             Distance = (short)Math.Sqrt(Math.Pow(X - Lists.Temp_Map[Map_Num].NPC[NPC_Index].X, 2) + Math.Pow(Y - Lists.Temp_Map[Map_Num].NPC[NPC_Index].Y, 2));
                             if (Distance <= NPC_Data.Sight)
                             {
-                                Target_Type = (byte)Game.Target.NPC;
-                                Target_Index = NPC_Index;
+                                Target = Lists.Temp_Map[Map_Num].NPC[NPC_Index];
                                 break;
                             }
                         }
                 }
 
-                if (Target_Type == (byte)Game.Target.Player)
-                {
-                    // Verifica se o jogador ainda está disponível
-                    if (!Lists.Account[Target_Index].IsPlaying || Lists.Account[Target_Index].Character.Map_Num != Map_Num)
-                    {
-                        Target_Type = 0;
-                        Target_Index = 0;
-                    }
-                    // Posição do alvo
-                    else
-                    {
-                        TargetX = Lists.Account[Target_Index].Character.X;
-                        TargetY = Lists.Account[Target_Index].Character.Y;
-                    }
-                }
-                else if (Target_Type == (byte)Game.Target.NPC)
-                {
-                    // Verifica se o NPC ainda está disponível
-                    if (!Lists.Temp_Map[Map_Num].NPC[Target_Index].Alive)
-                    {
-                        Target_Type = 0;
-                        Target_Index = 0;
-                    }
-                    // Posição do alvo
-                    else
-                    {
-                        TargetX = Lists.Temp_Map[Map_Num].NPC[Target_Index].X;
-                        TargetY = Lists.Temp_Map[Map_Num].NPC[Target_Index].Y;
-                    }
-                }
-
-                // Verifica se o alvo saiu do alcance do NPC
-                Distance = (short)Math.Sqrt(Math.Pow(X - TargetX, 2) + Math.Pow(Y - TargetY, 2));
-                if (Distance > NPC_Data.Sight)
-                {
-                    Target_Type = 0;
-                    Target_Index = 0;
-                }
+                // Verifica se o alvo ainda está disponível
+                if (Target != null)
+                    if (Target is Player && !((Player)Target).Account.IsPlaying || Target.Map_Num != Map_Num)
+                        Target = null;
+                    else if (Target is Structure && !((Structure)Target).Alive)
+                        Target = null;
 
                 // Evita que ele se movimente sem sentido
-                if (Target_Index > 0)
-                    Move = true;
+                if (Target != null)
+                {
+                    TargetX = Target.X;
+                    TargetY = Target.Y;
+
+                    // Verifica se o alvo saiu do alcance do NPC
+                    if (NPC_Data.Sight < Math.Sqrt(Math.Pow(X - TargetX, 2) + Math.Pow(Y - TargetY, 2)))
+                        Target = null;
+                    else
+                        Move = true;
+                }
                 else
                 {
                     // Define o alvo a zona do NPC
@@ -236,7 +204,7 @@ class NPC
                 }
 
                 // Move-se aleatoriamente
-                if (NPC_Data.Behaviour == (byte)Behaviour.Friendly || Target_Index == 0)
+                if (NPC_Data.Behaviour == (byte)Behaviour.Friendly || Target == null)
                     if (Game.Random.Next(0, 3) == 0 && !Moved)
                         if (NPC_Data.Movement == Movements.MoveRandomly)
                             this.Move((Game.Directions)Game.Random.Next(0, 4), 1, true);
@@ -350,10 +318,10 @@ class NPC
             if (Map.Tile_Blocked(Map_Num, X, Y, Direction, false)) return;
 
             // Verifica se o jogador está na frente do NPC
-            if (Target_Type == (byte)Game.Target.Player)
+            if (Target is Player)
                 Attack_Player(Map.HasPlayer(Map_Num, Next_X, Next_Y));
             // Verifica se o NPC alvo está na frente do NPC
-            else if (Target_Type == (byte)Game.Target.NPC)
+            else if (Target is Structure)
                 Attack_NPC(Map.HasNPC(Map_Num, Next_X, Next_Y));
         }
 
@@ -385,8 +353,7 @@ class NPC
                 else
                 {
                     // Reseta o alvo do NPC
-                    Target_Type = 0;
-                    Target_Index = 0;
+                    Target = null;
 
                     // Mata o jogador
                     Victim.Died();
@@ -407,8 +374,7 @@ class NPC
             Attack_Timer = Environment.TickCount;
 
             // Define o alvo do NPC
-            Victim.Target_Index = Index;
-            Victim.Target_Type = (byte)Game.Target.NPC;
+            Victim.Target = this;
 
             // Cálculo de dano
             short Attack_Damage = (short)(Lists.NPC[Data_Index].Attribute[(byte)Game.Attributes.Strength] - Lists.NPC[Victim.Data_Index].Attribute[(byte)Game.Attributes.Resistance]);
@@ -428,8 +394,7 @@ class NPC
                 else
                 {
                     // Reseta o alvo do NPC
-                    Target_Type = 0;
-                    Target_Index = 0;
+                    Target = null;
 
                     // Mata o NPC
                     Victim.Died();
@@ -465,8 +430,7 @@ class NPC
 
             // Reseta os dados do NPC 
             Spawn_Timer = Environment.TickCount;
-            Target_Type = 0;
-            Target_Index = 0;
+            Target = null;
             Alive = false;
             Send.Map_NPC_Died(this);
         }

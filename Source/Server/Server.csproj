@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Library\Clear.cs" />
     <Compile Include="Library\Directories.cs" />
+    <Compile Include="Logic\Character.cs" />
     <Compile Include="Logic\Player.cs" />
     <Compile Include="Logic\Game.cs" />
     <Compile Include="Program.cs" />
