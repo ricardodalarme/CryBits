@@ -276,7 +276,7 @@ partial class Graphics
         // Desenha os NPCs
         for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
             if (Lists.Temp_Map.NPC[i].Index > 0)
-                NPC(i);
+                NPC(Lists.Temp_Map.NPC[i]);
 
         // Desenha os jogadores
         for (byte i = 0; i < Lists.Player.Count; i++)
@@ -790,5 +790,76 @@ partial class Graphics
 
         // Desenha o texto
         DrawText(Player.Name, Game.ConvertX(Position.X), Game.ConvertY(Position.Y), Color);
+    }
+
+    private static void NPC(NPC NPC)
+    {
+        byte Column = 0;
+        bool Hurt = false;
+        short Texture = Lists.NPC[NPC.Index].Texture;
+
+        // Previne sobrecargas
+        if (Texture <= 0 || Texture > Tex_Character.GetUpperBound(0)) return;
+
+        // Define a animação
+        if (NPC.Attacking && NPC.Attack_Timer + Game.Attack_Speed / 2 > Environment.TickCount)
+            Column = Game.Animation_Attack;
+        else
+        {
+            if (NPC.X2 > 8 && NPC.X2 < Game.Grid) Column = NPC.Animation;
+            else if (NPC.X2 < -8 && NPC.X2 > Game.Grid * -1) Column = NPC.Animation;
+            else if (NPC.Y2 > 8 && NPC.Y2 < Game.Grid) Column = NPC.Animation;
+            else if (NPC.Y2 < -8 && NPC.Y2 > Game.Grid * -1) Column = NPC.Animation;
+        }
+
+        // Demonstra que o personagem está sofrendo dano
+        if (NPC.Hurt > 0) Hurt = true;
+
+        // Desenha o jogador
+        Character(Texture, new Point(Game.ConvertX(NPC.Pixel_X), Game.ConvertY(NPC.Pixel_Y)), NPC.Direction, Column, Hurt);
+        NPC_Name(NPC);
+        NPC_Bars(NPC);
+    }
+
+    private static void NPC_Name(NPC NPC)
+    {
+        Point Position = new Point();
+        SFML.Graphics.Color Color;
+        int Name_Size = Utilities.MeasureString(Lists.NPC[NPC.Index].Name);
+        Texture Texture = Tex_Character[Lists.NPC[NPC.Index].Texture];
+
+        // Posição do texto
+        Position.X = NPC.Pixel_X + TSize(Texture).Width / Game.Animation_Amount / 2 - Name_Size / 2;
+        Position.Y = NPC.Pixel_Y - TSize(Texture).Height / Game.Animation_Amount / 2;
+
+        // Cor do texto
+        switch ((Game.NPCs)Lists.NPC[NPC.Index].Type)
+        {
+            case Game.NPCs.Friendly: Color = SFML.Graphics.Color.White; break;
+            case Game.NPCs.AttackOnSight: Color = SFML.Graphics.Color.Red; break;
+            case Game.NPCs.AttackWhenAttacked: Color = new SFML.Graphics.Color(228, 120, 51); break;
+            default: Color = SFML.Graphics.Color.White; break;
+        }
+
+        // Desenha o texto
+        DrawText(Lists.NPC[NPC.Index].Name, Game.ConvertX(Position.X), Game.ConvertY(Position.Y), Color);
+    }
+
+    private static void NPC_Bars(NPC NPC)
+    {
+        Texture Texture = Tex_Character[Lists.NPC[NPC.Index].Texture];
+        short Value = NPC.Vital[(byte)Game.Vitals.HP];
+
+        // Apenas se necessário
+        if (Value <= 0 || Value >= Lists.NPC[NPC.Index].Vital[(byte)Game.Vitals.HP]) return;
+
+        // Posição
+        Point Position = new Point(Game.ConvertX(NPC.Pixel_X), Game.ConvertY(NPC.Pixel_Y) + TSize(Texture).Height / Game.Animation_Amount + 4);
+        int FullWidth = TSize(Texture).Width / Game.Animation_Amount;
+        int Width = (Value * FullWidth) / Lists.NPC[NPC.Index].Vital[(byte)Game.Vitals.HP];
+
+        // Desenha a barra 
+        Render(Tex_Bars, Position.X, Position.Y, 0, 4, FullWidth, 4);
+        Render(Tex_Bars, Position.X, Position.Y, 0, 0, Width, 4);
     }
 }

@@ -294,7 +294,6 @@ class Player : Character
     private void Attack_Player(Player Victim)
     {
         // Verifica se a vítima pode ser atacada
-        if (!Victim.Account.IsPlaying) return;
         if (Victim.GettingMap) return;
         if (Lists.Map[Map_Num].Moral == (byte)Map.Morals.Pacific)
         {
@@ -397,9 +396,6 @@ class Player : Character
     private void CheckLevelUp()
     {
         byte NumLevel = 0; int ExpRest;
-
-        // Previne erros
-        if (!Account.IsPlaying) return;
 
         while (Experience >= ExpNeeded)
         {

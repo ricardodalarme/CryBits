@@ -330,7 +330,6 @@ class NPC
         {
             // Verifica se a vítima pode ser atacada
             if (Victim == null) return;
-            if (!Victim.Account.IsPlaying) return;
             if (Victim.GettingMap) return;
 
             // Tempo de ataque 

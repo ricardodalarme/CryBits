@@ -535,11 +535,12 @@ class Receive
         Lists.Server_Data.Game_Name = Data.ReadString();
         Lists.Server_Data.Welcome = Data.ReadString();
         Lists.Server_Data.Port = Data.ReadInt16();
-        Lists.Server_Data.Max_Players = Data.ReadByte();
+        Lists.Server_Data.Max_Players =  Data.ReadByte();
         Lists.Server_Data.Max_Characters = Data.ReadByte();
         Lists.Server_Data.Max_Party_Members = Data.ReadByte();
         Lists.Server_Data.Max_Map_Items = Data.ReadByte();
         Lists.Server_Data.Num_Points = Data.ReadByte();
+        Socket.Device.Configuration.MaximumConnections = Lists.Server_Data.Max_Players;
 
         // Salva os dados
         Write.Server_Data();

@@ -69,7 +69,7 @@ class Lists
 
         public struct Temp_Map
         {
-            public Map_NPCs[] NPC;
+            public global::NPC[] NPC;
             public Map_Items[] Item;
             public List<Map_Blood> Blood;
         }
@@ -133,24 +133,6 @@ class Lists
             public string SayMsg;
             public short Texture;
             public byte Type;
-            public short[] Vital;
-        }
-
-        public struct Map_NPCs
-        {
-            // Apenas na parte do cliente
-            public short X2;
-            public short Y2;
-            public byte Animation;
-            public bool Attacking;
-            public int Attack_Timer;
-            public int Hurt;
-            // Geral
-            public short Index;
-            public byte X;
-            public byte Y;
-            public Game.Directions Direction;
-            public Game.Movements Movement;
             public short[] Vital;
         }
 

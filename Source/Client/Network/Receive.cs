@@ -3,7 +3,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-partial class Receive
+class Receive
 {
     // Pacotes do servidor
     private enum Packets
@@ -699,5 +699,140 @@ partial class Receive
         // Abre a loja
         Utilities.Shop_Open = Data.ReadInt16();
         Panels.Get("Shop").Visible = Utilities.Shop_Open != 0;
+    }
+
+    private static void NPCs(NetIncomingMessage Data)
+    {
+        // Quantidade
+        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16()];
+
+        // Lê os dados de todos
+        for (byte i = 1; i < Lists.NPC.Length; i++)
+        {
+            // Geral
+            Lists.NPC[i].Name = Data.ReadString();
+            Lists.NPC[i].SayMsg = Data.ReadString();
+            Lists.NPC[i].Texture = Data.ReadInt16();
+            Lists.NPC[i].Type = Data.ReadByte();
+
+            // Vitais
+            Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+                Lists.NPC[i].Vital[n] = Data.ReadInt16();
+        }
+    }
+
+    private static void Map_NPCs(NetIncomingMessage Data)
+    {
+        // Lê os dados
+        Lists.Temp_Map.NPC = new NPC[Data.ReadInt16()];
+        for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
+        {
+            Lists.Temp_Map.NPC[i] = new NPC();
+            Lists.Temp_Map.NPC[i].X2 = 0;
+            Lists.Temp_Map.NPC[i].Y2 = 0;
+            Lists.Temp_Map.NPC[i].Index = Data.ReadInt16();
+            Lists.Temp_Map.NPC[i].X = Data.ReadByte();
+            Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
+            Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+
+            // Vitais
+            Lists.Temp_Map.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+                Lists.Temp_Map.NPC[i].Vital[n] = Data.ReadInt16();
+        }
+    }
+
+    private static void Map_NPC(NetIncomingMessage Data)
+    {
+        // Lê os dados
+        byte i = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].X2 = 0;
+        Lists.Temp_Map.NPC[i].Y2 = 0;
+        Lists.Temp_Map.NPC[i].Index = Data.ReadInt16();
+        Lists.Temp_Map.NPC[i].X = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.Temp_Map.NPC[i].Vital[n] = Data.ReadInt16();
+    }
+
+    private static void Map_NPC_Movement(NetIncomingMessage Data)
+    {
+        // Lê os dados
+        byte i = Data.ReadByte();
+        byte x = Lists.Temp_Map.NPC[i].X, y = Lists.Temp_Map.NPC[i].Y;
+        Lists.Temp_Map.NPC[i].X2 = 0;
+        Lists.Temp_Map.NPC[i].Y2 = 0;
+        Lists.Temp_Map.NPC[i].X = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Movement = (Game.Movements)Data.ReadByte();
+
+        // Posição exata do jogador
+        if (x != Lists.Temp_Map.NPC[i].X || y != Lists.Temp_Map.NPC[i].Y)
+            switch (Lists.Temp_Map.NPC[i].Direction)
+            {
+                case Game.Directions.Up: Lists.Temp_Map.NPC[i].Y2 = Game.Grid; break;
+                case Game.Directions.Down: Lists.Temp_Map.NPC[i].Y2 = Game.Grid * -1; break;
+                case Game.Directions.Right: Lists.Temp_Map.NPC[i].X2 = Game.Grid * -1; break;
+                case Game.Directions.Left: Lists.Temp_Map.NPC[i].X2 = Game.Grid; break;
+            }
+    }
+
+    private static void Map_NPC_Attack(NetIncomingMessage Data)
+    {
+        byte Index = Data.ReadByte();
+        string Victim = Data.ReadString();
+        byte Victim_Type = Data.ReadByte();
+
+        // Inicia o ataque
+        Lists.Temp_Map.NPC[Index].Attacking = true;
+        Lists.Temp_Map.NPC[Index].Attack_Timer = Environment.TickCount;
+
+        // Sofrendo dano
+        if (Victim != string.Empty)
+            if (Victim_Type == (byte)Game.Target.Player)
+            {
+                Player.Structure Victim_Data = Player.Get(Victim);
+                Victim_Data.Hurt = Environment.TickCount;
+                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
+            }
+            else if (Victim_Type == (byte)Game.Target.NPC)
+            {
+                Lists.Temp_Map.NPC[byte.Parse(Victim)].Hurt = Environment.TickCount;
+                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Temp_Map.NPC[byte.Parse(Victim)].X, Lists.Temp_Map.NPC[byte.Parse(Victim)].Y, 255));
+            }
+    }
+
+    private static void Map_NPC_Direction(NetIncomingMessage Data)
+    {
+        // Define a direção de determinado NPC
+        byte i = Data.ReadByte();
+        Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+        Lists.Temp_Map.NPC[i].X2 = 0;
+        Lists.Temp_Map.NPC[i].Y2 = 0;
+    }
+
+    private static void Map_NPC_Vitals(NetIncomingMessage Data)
+    {
+        byte Index = Data.ReadByte();
+
+        // Define os vitais de determinado NPC
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+            Lists.Temp_Map.NPC[Index].Vital[n] = Data.ReadInt16();
+    }
+
+    private static void Map_NPC_Died(NetIncomingMessage Data)
+    {
+        byte i = Data.ReadByte();
+
+        // Limpa os dados do NPC
+        Lists.Temp_Map.NPC[i].X2 = 0;
+        Lists.Temp_Map.NPC[i].Y2 = 0;
+        Lists.Temp_Map.NPC[i].Index = 0;
+        Lists.Temp_Map.NPC[i].X = 0;
+        Lists.Temp_Map.NPC[i].Y = 0;
+        Lists.Temp_Map.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
     }
 }

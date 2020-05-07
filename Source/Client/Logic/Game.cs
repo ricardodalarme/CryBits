@@ -147,7 +147,6 @@ class Game
         Declined
     }
 
-
     // Converte o valor em uma posição adequada à camera
     public static int ConvertX(int x) => x - (Sight.X * Grid) - Sight_Offset.X;
     public static int ConvertY(int y) => y - (Sight.Y * Grid) - Sight_Offset.Y;

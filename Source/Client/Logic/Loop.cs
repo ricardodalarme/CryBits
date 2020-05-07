@@ -35,9 +35,14 @@ class Loop
                 Map.Logic();
                 if (Timer_30 < Environment.TickCount)
                 {
-                    // Lógicas
-                    Player.Logic();
-                    NPC.Logic();
+                    // Lógica dos jogadores
+                    for (byte i = 0; i < Lists.Player.Count; i++) 
+                        Lists.Player[i].Logic();
+
+                    // Lógica dos NPCs
+                    for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
+                        if (Lists.Temp_Map.NPC[i].Index > 0)
+                            Lists.Temp_Map.NPC[i].Logic();
 
                     // Reinicia a contagem
                     Timer_30 = Environment.TickCount + 30;

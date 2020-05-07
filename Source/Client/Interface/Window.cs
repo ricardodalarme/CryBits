@@ -211,6 +211,10 @@ class Window
         Audio.Sound.Stop_All();
         if (Lists.Options.Musics) Audio.Music.Play(Audio.Musics.Menu);
 
+        // Nome do usuário salvo
+        CheckBoxes.Get("Connect_Save_Username").Checked = Lists.Options.SaveUsername;
+        if (Lists.Options.SaveUsername) TextBoxes.Get("Connect_Username").Text = Lists.Options.Username;
+
         // Traz o jogador de volta ao menu
         Panels.Menu_Close();
         Panels.Get("Connect").Visible = true;
