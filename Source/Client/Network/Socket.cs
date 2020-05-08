@@ -48,9 +48,11 @@ class Socket
                 // Desconectar o jogador caso o servidor seja desligado
                 case NetIncomingMessageType.StatusChanged:
                     if ((NetConnectionStatus)Data.ReadByte() == NetConnectionStatus.Disconnected)
-                        if (Player.Me != null) 
-                            Player.Me.Leave();
-
+                    {
+                        // Apaga os dados e volta ao menu
+                        if (Player.Me != null) Player.Me.Leave();
+                        Window.OpenMenu();
+                    }
                     break;
             }
 

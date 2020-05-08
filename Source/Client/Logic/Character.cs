@@ -1,6 +1,4 @@
-﻿using System;
-
-class Character
+﻿class Character
 {
     // Geral
     public short[] Vital = new short[(byte)Game.Vitals.Count];

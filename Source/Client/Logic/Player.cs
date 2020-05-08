@@ -158,9 +158,6 @@ class Player
             // Reseta os dados
             Lists.Player.Clear();
             Me = null;
-
-            // Volta ao menu
-            Window.OpenMenu();
         }
     }
 }
