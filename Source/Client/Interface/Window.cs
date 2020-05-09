@@ -54,7 +54,7 @@ class Window
                 // Compra o item da loja
                 Slot = Panels.Shop_Slot;
                 if (Slot >= 0)
-                    if (Utilities.Shop_Open > 0)
+                    if (Utilities.Shop_Open != null)
                         Send.Shop_Buy((byte)Slot);
             }
         }

@@ -166,8 +166,8 @@ class Game
 
     public static short Find_Shop_Bought(short Item_Num)
     {
-        for (byte i = 0; i < Lists.Shop[Utilities.Shop_Open].Bought.Length; i++)
-            if (Lists.Shop[Utilities.Shop_Open].Bought[i].Item_Num == Item_Num)
+        for (byte i = 0; i < Utilities.Shop_Open.Bought.Length; i++)
+            if (Utilities.Shop_Open.Bought[i].Item_Num == Item_Num)
                 return i;
 
         return -1;

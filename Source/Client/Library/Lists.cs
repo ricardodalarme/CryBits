@@ -13,11 +13,34 @@ class Lists
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
-    public static Structures.Shop[] Shop;
+    public static Dictionary<Guid, Structures.Shop> Shop;
+
+    public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
+    {
+        if (Dictionary.ContainsKey(ID))
+            return Dictionary[ID];
+        else
+            return null;
+    }
+
+    public static string GetID(object Object)
+    {
+        return Object == null ? Guid.Empty.ToString() : ((Structures.Data)Object).ID.ToString();
+    }
 
     // Estrutura dos itens em gerais
     public class Structures
     {
+        public class Data
+        {
+            public Guid ID;
+
+            public Data(Guid ID)
+            {
+                this.ID = ID;
+            }
+        }
+
         [Serializable]
         public struct Options
         {
@@ -194,12 +217,14 @@ class Lists
             }
         }
 
-        public class Shop
+        public class Shop: Data
         {
             public string Name;
             public short Currency;
             public Shop_Item[] Sold;
             public Shop_Item[] Bought;
+
+            public Shop(Guid ID) : base(ID) { }
         }
 
         public class Shop_Item

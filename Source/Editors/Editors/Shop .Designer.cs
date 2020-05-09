@@ -27,21 +27,18 @@
     private void InitializeComponent()
     {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Shops));
-            this.List = new System.Windows.Forms.ListBox();
             this.butSave = new System.Windows.Forms.Button();
             this.butCancel = new System.Windows.Forms.Button();
-            this.butClear = new System.Windows.Forms.Button();
-            this.butQuantity = new System.Windows.Forms.Button();
             this.txtName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.lstSold = new System.Windows.Forms.ListBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grpGeneral = new System.Windows.Forms.GroupBox();
             this.cmbCurrency = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.grpSold = new System.Windows.Forms.GroupBox();
             this.butSold_Remove = new System.Windows.Forms.Button();
             this.butSold_Add = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.grpBought = new System.Windows.Forms.GroupBox();
             this.butBought_Remove = new System.Windows.Forms.Button();
             this.butBought_Add = new System.Windows.Forms.Button();
             this.lstBought = new System.Windows.Forms.ListBox();
@@ -53,28 +50,22 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.butNew = new System.Windows.Forms.Button();
+            this.butRemove = new System.Windows.Forms.Button();
+            this.List = new System.Windows.Forms.TreeView();
+            this.grpGeneral.SuspendLayout();
+            this.grpSold.SuspendLayout();
+            this.grpBought.SuspendLayout();
             this.grpAddItem.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPrice)).BeginInit();
             this.SuspendLayout();
             // 
-            // List
-            // 
-            this.List.FormattingEnabled = true;
-            this.List.Location = new System.Drawing.Point(11, 12);
-            this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 394);
-            this.List.TabIndex = 9;
-            this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
-            // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(219, 413);
+            this.butSave.Location = new System.Drawing.Point(219, 412);
             this.butSave.Name = "butSave";
-            this.butSave.Size = new System.Drawing.Size(166, 25);
+            this.butSave.Size = new System.Drawing.Size(250, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
             this.butSave.UseVisualStyleBackColor = true;
@@ -82,33 +73,13 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(559, 413);
+            this.butCancel.Location = new System.Drawing.Point(475, 412);
             this.butCancel.Name = "butCancel";
-            this.butCancel.Size = new System.Drawing.Size(166, 25);
+            this.butCancel.Size = new System.Drawing.Size(250, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
-            // 
-            // butClear
-            // 
-            this.butClear.Location = new System.Drawing.Point(389, 413);
-            this.butClear.Name = "butClear";
-            this.butClear.Size = new System.Drawing.Size(166, 25);
-            this.butClear.TabIndex = 18;
-            this.butClear.Text = "Clear";
-            this.butClear.UseVisualStyleBackColor = true;
-            this.butClear.Click += new System.EventHandler(this.butClear_Click);
-            // 
-            // butQuantity
-            // 
-            this.butQuantity.Location = new System.Drawing.Point(11, 413);
-            this.butQuantity.Name = "butQuantity";
-            this.butQuantity.Size = new System.Drawing.Size(202, 25);
-            this.butQuantity.TabIndex = 15;
-            this.butQuantity.Text = "Change Quantity";
-            this.butQuantity.UseVisualStyleBackColor = true;
-            this.butQuantity.Click += new System.EventHandler(this.butQuantity_Click);
             // 
             // txtName
             // 
@@ -116,7 +87,7 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(242, 20);
             this.txtName.TabIndex = 20;
-            this.txtName.Validated += new System.EventHandler(this.txtName_Validated);
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // label3
             // 
@@ -135,18 +106,19 @@
             this.lstSold.Size = new System.Drawing.Size(238, 264);
             this.lstSold.TabIndex = 22;
             // 
-            // groupBox1
+            // grpGeneral
             // 
-            this.groupBox1.Controls.Add(this.cmbCurrency);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.txtName);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(219, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(506, 68);
-            this.groupBox1.TabIndex = 23;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "General";
+            this.grpGeneral.Controls.Add(this.cmbCurrency);
+            this.grpGeneral.Controls.Add(this.label5);
+            this.grpGeneral.Controls.Add(this.txtName);
+            this.grpGeneral.Controls.Add(this.label3);
+            this.grpGeneral.Location = new System.Drawing.Point(219, 12);
+            this.grpGeneral.Name = "grpGeneral";
+            this.grpGeneral.Size = new System.Drawing.Size(506, 68);
+            this.grpGeneral.TabIndex = 23;
+            this.grpGeneral.TabStop = false;
+            this.grpGeneral.Text = "General";
+            this.grpGeneral.Visible = false;
             // 
             // cmbCurrency
             // 
@@ -167,17 +139,18 @@
             this.label5.TabIndex = 21;
             this.label5.Text = "Default currency:";
             // 
-            // groupBox2
+            // grpSold
             // 
-            this.groupBox2.Controls.Add(this.butSold_Remove);
-            this.groupBox2.Controls.Add(this.butSold_Add);
-            this.groupBox2.Controls.Add(this.lstSold);
-            this.groupBox2.Location = new System.Drawing.Point(219, 86);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(250, 321);
-            this.groupBox2.TabIndex = 24;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Items Sold";
+            this.grpSold.Controls.Add(this.butSold_Remove);
+            this.grpSold.Controls.Add(this.butSold_Add);
+            this.grpSold.Controls.Add(this.lstSold);
+            this.grpSold.Location = new System.Drawing.Point(219, 86);
+            this.grpSold.Name = "grpSold";
+            this.grpSold.Size = new System.Drawing.Size(250, 321);
+            this.grpSold.TabIndex = 24;
+            this.grpSold.TabStop = false;
+            this.grpSold.Text = "Items Sold";
+            this.grpSold.Visible = false;
             // 
             // butSold_Remove
             // 
@@ -199,17 +172,18 @@
             this.butSold_Add.UseVisualStyleBackColor = true;
             this.butSold_Add.Click += new System.EventHandler(this.butSold_Add_Click);
             // 
-            // groupBox3
+            // grpBought
             // 
-            this.groupBox3.Controls.Add(this.butBought_Remove);
-            this.groupBox3.Controls.Add(this.butBought_Add);
-            this.groupBox3.Controls.Add(this.lstBought);
-            this.groupBox3.Location = new System.Drawing.Point(475, 87);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(250, 320);
-            this.groupBox3.TabIndex = 25;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Items Bought";
+            this.grpBought.Controls.Add(this.butBought_Remove);
+            this.grpBought.Controls.Add(this.butBought_Add);
+            this.grpBought.Controls.Add(this.lstBought);
+            this.grpBought.Location = new System.Drawing.Point(475, 87);
+            this.grpBought.Name = "grpBought";
+            this.grpBought.Size = new System.Drawing.Size(250, 320);
+            this.grpBought.TabIndex = 25;
+            this.grpBought.TabStop = false;
+            this.grpBought.Text = "Items Bought";
+            this.grpBought.Visible = false;
             // 
             // butBought_Remove
             // 
@@ -326,31 +300,60 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Item:";
             // 
+            // butNew
+            // 
+            this.butNew.Location = new System.Drawing.Point(12, 12);
+            this.butNew.Name = "butNew";
+            this.butNew.Size = new System.Drawing.Size(98, 25);
+            this.butNew.TabIndex = 27;
+            this.butNew.Text = "New";
+            this.butNew.UseVisualStyleBackColor = true;
+            this.butNew.Click += new System.EventHandler(this.butNew_Click);
+            // 
+            // butRemove
+            // 
+            this.butRemove.Location = new System.Drawing.Point(116, 12);
+            this.butRemove.Name = "butRemove";
+            this.butRemove.Size = new System.Drawing.Size(98, 25);
+            this.butRemove.TabIndex = 28;
+            this.butRemove.Text = "Remove";
+            this.butRemove.UseVisualStyleBackColor = true;
+            this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
+            // 
+            // List
+            // 
+            this.List.HideSelection = false;
+            this.List.Location = new System.Drawing.Point(12, 43);
+            this.List.Name = "List";
+            this.List.Size = new System.Drawing.Size(201, 394);
+            this.List.TabIndex = 23;
+            this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
+            // 
             // Editor_Shops
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(735, 450);
+            this.ClientSize = new System.Drawing.Size(737, 447);
             this.ControlBox = false;
+            this.Controls.Add(this.List);
+            this.Controls.Add(this.butRemove);
+            this.Controls.Add(this.butNew);
             this.Controls.Add(this.grpAddItem);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.butQuantity);
-            this.Controls.Add(this.butClear);
+            this.Controls.Add(this.grpBought);
+            this.Controls.Add(this.grpSold);
+            this.Controls.Add(this.grpGeneral);
             this.Controls.Add(this.butCancel);
             this.Controls.Add(this.butSave);
-            this.Controls.Add(this.List);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Editor_Shops";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Shop Editor";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
+            this.grpGeneral.ResumeLayout(false);
+            this.grpGeneral.PerformLayout();
+            this.grpSold.ResumeLayout(false);
+            this.grpBought.ResumeLayout(false);
             this.grpAddItem.ResumeLayout(false);
             this.grpAddItem.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAmount)).EndInit();
@@ -360,17 +363,14 @@
     }
 
     #endregion
-    public System.Windows.Forms.ListBox List;
     private System.Windows.Forms.Button butSave;
     private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Button butClear;
-    private System.Windows.Forms.Button butQuantity;
     public System.Windows.Forms.TextBox txtName;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.ListBox lstSold;
-    private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.GroupBox groupBox2;
-    private System.Windows.Forms.GroupBox groupBox3;
+    private System.Windows.Forms.GroupBox grpGeneral;
+    private System.Windows.Forms.GroupBox grpSold;
+    private System.Windows.Forms.GroupBox grpBought;
     private System.Windows.Forms.ListBox lstBought;
     private System.Windows.Forms.Button butSold_Remove;
     private System.Windows.Forms.Button butSold_Add;
@@ -386,4 +386,7 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.ComboBox cmbCurrency;
+    private System.Windows.Forms.Button butNew;
+    private System.Windows.Forms.Button butRemove;
+    private System.Windows.Forms.TreeView List;
 }

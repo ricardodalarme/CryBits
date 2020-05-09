@@ -14,12 +14,36 @@ class Lists
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
-    public static Structures.Shop[] Shop;
+    public static Dictionary<Guid, Structures.Shop> Shop;
     public static TreeNode Tool;
+
+    public static string GetID(object Object)
+    {
+        return Object == null ? Guid.Empty.ToString() : ((Structures.Data)Object).ID.ToString();
+    }
+
+    public static object SetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
+    {
+        if (Dictionary.ContainsKey(ID))
+            return Dictionary[ID];
+        else
+            return null;
+    }
+
 
     // Estrutura dos itens em gerais
     public class Structures
     {
+        public class Data
+        {
+            public Guid ID;
+
+            public Data(Guid ID)
+            {
+                this.ID = ID;
+            }
+        }
+
         public struct Options
         {
             public string Directory_Client;
@@ -222,7 +246,7 @@ class Lists
             public List<short> Allie;
             public Globals.NPC_Movements Movement;
             public byte Flee_Helth;
-            public short Shop;
+            public Shop Shop;
         }
 
         public class Item
@@ -261,12 +285,17 @@ class Lists
             }
         }
 
-        public class Shop
+        public class Shop : Data
         {
-            public string Name;
+            public string Name = string.Empty;
             public short Currency;
-            public List<Shop_Item> Sold;
-            public List<Shop_Item> Bought;
+            public List<Shop_Item> Sold = new List<Shop_Item>();
+            public List<Shop_Item> Bought = new List<Shop_Item>();
+
+            public Shop(Guid ID) : base(ID) { }
+
+
+            public override string ToString() => Name;
         }
 
         public class Shop_Item

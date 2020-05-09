@@ -31,7 +31,8 @@ public partial class Editor_NPCs : Form
 
         // Lista de lojas
         Objects.cmbShop.Items.Clear();
-        for (byte i = 1; i < Lists.Shop.Length; i++) Objects.cmbShop.Items.Add(Lists.Shop[i].Name);
+        Objects.cmbShop.Items.Add("None");
+        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values) Objects.cmbShop.Items.Add(Shop);
 
         // Define os limites
         Objects.numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
@@ -86,7 +87,8 @@ public partial class Editor_NPCs : Form
         numFlee_Health.Value = Selected.Flee_Helth;
         chkAttackNPC.Checked = Selected.AttackNPC;
         for (byte i = 0; i < Selected.Allie.Count; i++) lstAllies.Items.Add(Globals.Numbering(Selected.Allie[i], Lists.NPC.GetUpperBound(0), Lists.NPC[Selected.Allie[i]].Name));
-        cmbShop.SelectedIndex = Selected.Shop - 1;
+        if (Selected.Shop != null) cmbShop.SelectedIndex = cmbShop.Items.IndexOf(Selected.Shop);
+        else cmbShop.SelectedIndex = 0;
 
         // Seleciona os primeiros itens
         if (lstDrop.Items.Count > 0) lstDrop.SelectedIndex = 0;
@@ -317,6 +319,9 @@ public partial class Editor_NPCs : Form
 
     private void cmbShop_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected.Shop = (short)(cmbShop.SelectedIndex + 1);
+        if (cmbShop.SelectedIndex == 0)
+            Selected.Shop = null;
+        else
+            Selected.Shop = (Lists.Structures.Shop)cmbShop.SelectedItem;
     }
 }

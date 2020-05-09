@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -121,6 +122,9 @@ class Receive
         // Definir os valores que são enviados do servidor
         Player.Me = new Player.Me_Structure(Data.ReadString());
         Lists.Player.Add(Player.Me);
+
+        // Reseta alguns valores
+        Lists.Shop = new Dictionary<Guid, Lists.Structures.Shop>();
     }
 
     private static void CreateCharacter()
@@ -664,41 +668,61 @@ class Receive
 
     private static void Shops(NetIncomingMessage Data)
     {
-        // Quantidade de lojas
-        Lists.Shop = new Lists.Structures.Shop[Data.ReadInt16()];
+        // Lojas a serem removidas
+        Dictionary<Guid, Lists.Structures.Shop> ToRemove = new Dictionary<Guid, Lists.Structures.Shop>(Lists.Shop);
 
-        for (short i = 1; i < Lists.Shop.Length; i++)
+        // Quantidade de lojas
+        short Count = Data.ReadInt16();
+
+        while (--Count >= 0)
         {
+            Guid ID = new Guid(Data.ReadString());
+            Lists.Structures.Shop Shop;
+
+            // Obtém o dado
+            if (Lists.Shop.ContainsKey(ID))
+            {
+                Shop = Lists.Shop[ID];
+                ToRemove.Remove(ID);
+            }
+            else
+            {
+                Shop = new Lists.Structures.Shop(ID);
+                Lists.Shop.Add(Shop.ID, Shop);
+            }
+
             // Redimensiona os valores necessários 
-            Lists.Shop[i] = new Lists.Structures.Shop();
-            Lists.Shop[i].Sold = new Lists.Structures.Shop_Item[Data.ReadByte()];
-            Lists.Shop[i].Bought = new Lists.Structures.Shop_Item[Data.ReadByte()];
+            Shop.Sold = new Lists.Structures.Shop_Item[Data.ReadByte()];
+            Shop.Bought = new Lists.Structures.Shop_Item[Data.ReadByte()];
 
             // Lê os dados
-            Lists.Shop[i].Name = Data.ReadString();
-            Lists.Shop[i].Currency = Data.ReadInt16();
-            for (byte j = 0; j < Lists.Shop[i].Sold.Length; j++)
-            {
-                Lists.Shop[i].Sold[j] = new Lists.Structures.Shop_Item();
-                Lists.Shop[i].Sold[j].Item_Num = Data.ReadInt16();
-                Lists.Shop[i].Sold[j].Amount = Data.ReadInt16();
-                Lists.Shop[i].Sold[j].Price = Data.ReadInt16();
-            }
-            for (byte j = 0; j < Lists.Shop[i].Bought.Length; j++)
-            {
-                Lists.Shop[i].Bought[j] = new Lists.Structures.Shop_Item();
-                Lists.Shop[i].Bought[j].Item_Num = Data.ReadInt16();
-                Lists.Shop[i].Bought[j].Amount = Data.ReadInt16();
-                Lists.Shop[i].Bought[j].Price = Data.ReadInt16();
-            }
+            Shop.Name = Data.ReadString();
+            Shop.Currency = Data.ReadInt16();
+            for (byte j = 0; j < Shop.Sold.Length; j++)
+                Shop.Sold[j] = new Lists.Structures.Shop_Item
+                {
+                    Item_Num = Data.ReadInt16(),
+                    Amount = Data.ReadInt16(),
+                    Price = Data.ReadInt16()
+                };
+            for (byte j = 0; j < Shop.Bought.Length; j++)
+                Shop.Bought[j] = new Lists.Structures.Shop_Item
+                {
+                    Item_Num = Data.ReadInt16(),
+                    Amount = Data.ReadInt16(),
+                    Price = Data.ReadInt16()
+                };
         }
+
+        // Remove as lojas que não tiveram os dados atualizados
+        foreach (Guid Remove in ToRemove.Keys) Lists.Shop.Remove(Remove);
     }
 
     private static void Shop_Open(NetIncomingMessage Data)
     {
         // Abre a loja
-        Utilities.Shop_Open = Data.ReadInt16();
-        Panels.Get("Shop").Visible = Utilities.Shop_Open != 0;
+        Utilities.Shop_Open = (Lists.Structures.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+        Panels.Get("Shop").Visible = Utilities.Shop_Open != null;
     }
 
     private static void NPCs(NetIncomingMessage Data)

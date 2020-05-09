@@ -26,6 +26,7 @@ partial class Editor_Shops : Form
     {
         // Lista os itens
         Objects.cmbCurrency.Items.Clear();
+        Objects.cmbCurrency.Items.Add("Free");
         Objects.cmbItems.Items.Clear();
         for (short i = 1; i < Lists.Item.Length; i++)
         {
@@ -33,26 +34,32 @@ partial class Editor_Shops : Form
             Objects.cmbItems.Items.Add(Lists.Item[i].Name);
         }
 
-        // Lista os dados
-        List_Update();
+        // Lista as lojas
+        Objects.List.Nodes.Clear();
+        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values)
+        {
+            Objects.List.Nodes.Add(Shop.Name);
+            Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = Shop.ID;
+        }
+        if (Objects.List.Nodes.Count > 0) Objects.List.SelectedNode = Objects.List.Nodes[0];
 
         // Abre a janela
         Selection.Objects.Visible = false;
         Objects.Visible = true;
     }
 
-    private static void List_Update()
+    private void Groups_Visibility()
     {
-        // Adiciona as classes às listas
-        Objects.List.Items.Clear();
-        for (byte i = 1; i < Lists.Shop.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.Shop.GetUpperBound(0), Lists.Shop[i].Name));
-        Objects.List.SelectedIndex = 0;
+        // Atualiza a visiblidade dos paineis
+        grpGeneral.Visible = grpBought.Visible = grpSold.Visible = List.SelectedNode != null;
+        grpAddItem.Visible = false;
+        List.Focus();
     }
 
-    private void Update_Data()
+    private void List_AfterSelect(object sender, TreeViewEventArgs e)
     {
-        // Previne erros
-        if (List.SelectedIndex == -1) return;
+        // Atualiza o valor da loja selecionada
+        Selected = Lists.Shop[(Guid)List.SelectedNode.Tag];
 
         // Limpa os dados necessários
         lstSold.Items.Clear();
@@ -61,32 +68,37 @@ partial class Editor_Shops : Form
 
         // Lista os dados
         txtName.Text = Selected.Name;
-        cmbCurrency.SelectedIndex = Selected.Currency - 1;
+        cmbCurrency.SelectedIndex = Selected.Currency;
         for (byte i = 0; i < Selected.Sold.Count; i++) lstSold.Items.Add(List_Text(Selected.Sold[i]));
         for (byte i = 0; i < Selected.Bought.Count; i++) lstBought.Items.Add(List_Text(Selected.Bought[i]));
+
+        // Altera a visibilidade dos grupos se necessário
+        Groups_Visibility();
     }
 
-    public static void Change_Quantity()
+    private void butNew_Click(object sender, EventArgs e)
     {
-        int Quantity = (int)Editor_Quantity.Objects.numQuantity.Value;
-        int Old = Lists.Shop.GetUpperBound(0);
+        // Adiciona uma loja nova
+        Lists.Structures.Shop Shop = new Lists.Structures.Shop(Guid.NewGuid());
+        Shop.Name = "New shop";
+        Lists.Shop.Add(Shop.ID, Shop);
 
-        // Altera a quantidade de itens
-        Array.Resize(ref Lists.Shop, Quantity + 1);
-
-        // Limpa os novos itens
-        if (Quantity > Old)
-            for (byte i = (byte)(Old + 1); i <= Quantity; i++)
-                Clear.Shop(i);
-
-        List_Update();
+        // Adiciona na lista
+        TreeNode Node = new TreeNode(Shop.Name);
+        Node.Tag = Shop.ID;
+        List.Nodes.Add(Node);
+        List.SelectedNode = Node;
     }
 
-    private void List_SelectedIndexChanged(object sender, EventArgs e)
+    private void butRemove_Click(object sender, EventArgs e)
     {
-        // Atualiza a lista
-        Selected = Lists.Shop[List.SelectedIndex + 1];
-        Update_Data();
+        // Remove a loja selecionada
+        if (List.SelectedNode != null)
+        {
+            Lists.Shop.Remove(Selected.ID);
+            List.SelectedNode.Remove();
+            Groups_Visibility();
+        }
     }
 
     private void butSave_Click(object sender, EventArgs e)
@@ -99,39 +111,26 @@ partial class Editor_Shops : Form
         Selection.Objects.Visible = true;
     }
 
-    private void butClear_Click(object sender, EventArgs e)
-    {
-        // Limpa os dados
-        Clear.Shop((byte)(List.SelectedIndex + 1));
-
-        // Atualiza os valores
-        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, string.Empty);
-        Update_Data();
-    }
-
     private void butCancel_Click(object sender, EventArgs e)
     {
+        // Limpa os dados
+        Lists.Shop = null;
+
         // Volta ao menu
         Visible = false;
         Selection.Objects.Visible = true;
     }
 
-    private void butQuantity_Click(object sender, EventArgs e)
-    {
-        // Abre a janela de alteração
-        Editor_Quantity.Open(Lists.Shop.GetUpperBound(0));
-    }
-
-    private void txtName_Validated(object sender, EventArgs e)
+    private void txtName_TextChanged(object sender, EventArgs e)
     {
         // Atualiza a lista
         Selected.Name = txtName.Text;
-        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, txtName.Text);
+        List.SelectedNode.Text = txtName.Text;
     }
 
     private void cmbCurrency_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected.Currency = (short)(cmbCurrency.SelectedIndex + 1);
+        Selected.Currency = (short)cmbCurrency.SelectedIndex;
     }
 
     private void butSold_Add_Click(object sender, EventArgs e)
@@ -143,6 +142,7 @@ partial class Editor_Shops : Form
         numPrice.Value = 0;
         grpAddItem.Tag = lstSold;
         grpAddItem.Visible = true;
+        grpAddItem.BringToFront();
     }
 
     private void butSold_Remove_Click(object sender, EventArgs e)
@@ -164,6 +164,7 @@ partial class Editor_Shops : Form
         numPrice.Value = 0;
         grpAddItem.Tag = lstBought;
         grpAddItem.Visible = true;
+        grpAddItem.BringToFront();
     }
 
     private void butBought_Remove_Click(object sender, EventArgs e)
@@ -180,7 +181,7 @@ partial class Editor_Shops : Form
     {
         // Adiciona o item
         Lists.Structures.Shop_Item Data = new Lists.Structures.Shop_Item((short)(cmbItems.SelectedIndex + 1), (short)numAmount.Value, (short)numPrice.Value);
-        if (grpAddItem.Tag == lstSold) 
+        if (grpAddItem.Tag == lstSold)
         {
             Selected.Sold.Add(Data);
             lstSold.Items.Add(List_Text(Data));

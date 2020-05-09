@@ -237,7 +237,7 @@ partial class Receive
             for (byte n = 0; n < Num_Allies; n++) Lists.NPC[i].Allie.Add(Data.ReadInt16());
             Lists.NPC[i].Movement = (Globals.NPC_Movements)Data.ReadByte();
             Lists.NPC[i].Flee_Helth = Data.ReadByte();
-            Lists.NPC[i].Shop = Data.ReadInt16();
+            Lists.NPC[i].Shop = (Lists.Structures.Shop)Lists.SetData(Lists.Shop, new Guid(Data.ReadString()));
         }
 
         // Abre o editor
@@ -319,20 +319,25 @@ partial class Receive
     private static void Shops(NetIncomingMessage Data)
     {
         // Quantidade de lojas
-        Lists.Shop = new Lists.Structures.Shop[Data.ReadInt16()];
+        short Count = Data.ReadInt16();
+        Lists.Shop = new Dictionary<Guid, Lists.Structures.Shop>();
 
-        for (short i = 1; i < Lists.Shop.Length; i++)
+        for (short i = 0; i < Count; i++)
         {
+            // Adiciona a loja na lista
+            string ID = Data.ReadString();
+            Lists.Structures.Shop Shop = new Lists.Structures.Shop(new Guid(ID));
+            Lists.Shop.Add(Shop.ID, Shop);
+
             // Redimensiona os valores necessários 
-            Lists.Shop[i] = new Lists.Structures.Shop();
-            Lists.Shop[i].Sold = new List<Lists.Structures.Shop_Item>(Data.ReadByte());
-            Lists.Shop[i].Bought = new List<Lists.Structures.Shop_Item>(Data.ReadByte());
+            Shop.Sold = new List<Lists.Structures.Shop_Item>(Data.ReadByte());
+            Shop.Bought = new List<Lists.Structures.Shop_Item>(Data.ReadByte());
 
             // Lê os dados
-            Lists.Shop[i].Name = Data.ReadString();
-            Lists.Shop[i].Currency = Data.ReadInt16();
-            for (byte j = 0; j < Lists.Shop[i].Sold.Capacity; j++) Lists.Shop[i].Sold.Add(new Lists.Structures.Shop_Item(Data.ReadInt16(), Data.ReadInt16(), Data.ReadInt16()));
-            for (byte j = 0; j < Lists.Shop[i].Bought.Capacity; j++) Lists.Shop[i].Bought.Add(new Lists.Structures.Shop_Item(Data.ReadInt16(), Data.ReadInt16(), Data.ReadInt16()));
+            Shop.Name = Data.ReadString();
+            Shop.Currency = Data.ReadInt16();
+            for (byte j = 0; j < Shop.Sold.Capacity; j++) Shop.Sold.Add(new Lists.Structures.Shop_Item(Data.ReadInt16(), Data.ReadInt16(), Data.ReadInt16()));
+            for (byte j = 0; j < Shop.Bought.Capacity; j++) Shop.Bought.Add(new Lists.Structures.Shop_Item(Data.ReadInt16(), Data.ReadInt16(), Data.ReadInt16()));
         }
 
         // Abre o editor

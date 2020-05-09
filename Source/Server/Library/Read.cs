@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 
 partial class Read
@@ -290,25 +290,13 @@ partial class Read
     private static void Shops()
     {
         // Lê os dados
-        Lists.Shop = new Lists.Structures.Shop[Lists.Server_Data.Num_Shops + 1];
-        for (short i = 1; i < Lists.Shop.Length; i++) Shop(i);
-    }
-
-    private static void Shop(short Index)
-    {
-        FileInfo File = new FileInfo(Directories.Shops.FullName + Index + Directories.Format);
-
-        // Cria o arquivo caso ele não existir
-        if (!File.Exists)
+        Lists.Shop = new Dictionary<Guid, Lists.Structures.Shop>();
+        FileInfo[] File = Directories.Shops.GetFiles();
+        for (byte i = 0; i < File.Length; i++)
         {
-            Clear.Shop(Index);
-            Write.Shop(Index);
-            return;
-        }
-
-        // Lê os dados
-        FileStream Stream = File.OpenRead();
-        Lists.Shop[Index] = (Lists.Structures.Shop)new BinaryFormatter().Deserialize(Stream);
-        Stream.Close();
+            FileStream Stream = File[i].OpenRead();
+            Lists.Shop.Add(new Guid(File[i].Name.Remove(36)), (Lists.Structures.Shop)new BinaryFormatter().Deserialize(Stream));
+            Stream.Close();
+        };
     }
 }

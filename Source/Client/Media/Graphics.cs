@@ -521,10 +521,10 @@ partial class Graphics
         // Informações da Loja
         if (Panels.Get("Shop").Visible)
             if (Panels.Shop_Slot >= 0)
-                Data.Add("Price: " + Lists.Shop[Utilities.Shop_Open].Sold[Panels.Shop_Slot].Price);
+                Data.Add("Price: " + Utilities.Shop_Open.Sold[Panels.Shop_Slot].Price);
             else if (Panels.Inventory_Slot > 0)
                 if (Game.Find_Shop_Bought(Item_Num) >= 0)
-                    Data.Add("Sale price: " + Lists.Shop[Utilities.Shop_Open].Bought[Game.Find_Shop_Bought(Item_Num)].Price);
+                    Data.Add("Sale price: " + Utilities.Shop_Open.Bought[Game.Find_Shop_Bought(Item_Num)].Price);
 
         // Informações específicas dos itens
         switch ((Game.Items)Lists.Item[Item_Num].Type)
@@ -656,13 +656,13 @@ partial class Graphics
     private static void Shop(Panels.Structure Tool)
     {
         // Dados da loja
-        string Name = Lists.Shop[Utilities.Shop_Open].Name;
+        string Name = Utilities.Shop_Open.Name;
         DrawText(Name, Tool.Position.X + 131, Tool.Position.Y + 28, SFML.Graphics.Color.White, Alignments.Center);
-        DrawText("Currency: " + Lists.Item[Lists.Shop[Utilities.Shop_Open].Currency].Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
+        DrawText("Currency: " + Lists.Item[Utilities.Shop_Open.Currency].Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
 
         // Desenha os itens
-        for (byte i = 0; i < Lists.Shop[Utilities.Shop_Open].Sold.Length; i++)
-            Item(Lists.Shop[Utilities.Shop_Open].Sold[i].Item_Num, Lists.Shop[Utilities.Shop_Open].Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
+        for (byte i = 0; i < Utilities.Shop_Open.Sold.Length; i++)
+            Item(Utilities.Shop_Open.Sold[i].Item_Num, Utilities.Shop_Open.Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
     }
 
     private static void Item(short Item_Num, short Amount, Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)

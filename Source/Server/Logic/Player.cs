@@ -25,7 +25,7 @@ class Player : Character
     public Player Trade;
     public string Trade_Request;
     public Lists.Structures.Inventories[] Trade_Offer;
-    public short Shop;
+    public Lists.Structures.Shop Shop;
     public Account.Structure Account;
 
     // Constutor
@@ -74,12 +74,12 @@ class Player : Character
         return 0;
     }
 
+    // Quantidade de experiência para passar para o próximo level
     public int ExpNeeded
     {
         get
         {
             short Total = 0;
-            // Quantidade de experiência para passar para o próximo level
             for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Total += Attribute[i];
             return (int)((Level + 1) * 2.5 + (Total + Points) / 2);
         }
@@ -144,7 +144,7 @@ class Player : Character
 
         // Cancela a troca ou a loja
         if (Trade != null) Trade_Leave();
-        if (Shop != 0) Shop_Leave();
+        if (Shop != null) Shop_Leave();
 
         // Evita que o jogador seja transportado para fora do limite
         if (Map_Num < 0 || Map_Num >= Lists.Map.Length) return;
@@ -190,7 +190,7 @@ class Player : Character
 
         // Cancela a troca ou a loja
         if (Trade != null) Trade_Leave();
-        if (Shop != 0) Shop_Leave();
+        if (Shop != null) Shop_Leave();
 
         // Próximo azulejo
         Map.NextTile(Direction, ref Next_X, ref Next_Y);
@@ -265,7 +265,7 @@ class Player : Character
 
         // Apenas se necessário
         if (Trade != null) return;
-        if (Shop != 0) return;
+        if (Shop != null) return;
         if (Environment.TickCount < Attack_Timer + 750) return;
         if (Map.Tile_Blocked(Map_Num, X, Y, Direction, false)) goto @continue;
 
@@ -668,17 +668,17 @@ class Player : Character
         return Total;
     }
 
-    public void Shop_Open(short Shop_Num)
+    public void Shop_Open(Lists.Structures.Shop Shop)
     {
         // Abre a loja
-        Shop = Shop_Num;
-        Send.Shop_Open(this, Shop_Num);
+        this.Shop = Shop;
+        Send.Shop_Open(this, Shop);
     }
 
     public void Shop_Leave()
     {
         // Fecha a loja
-        Shop = 0;
-        Send.Shop_Open(this, 0);
+        Shop = null;
+        Send.Shop_Open(this, null);
     }
 }

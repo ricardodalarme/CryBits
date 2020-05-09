@@ -12,7 +12,7 @@ class Utilities
     public static string Trade_Invitation;
     public static byte Trade_Slot = 0;
     public static byte Trade_Inventory_Slot = 0;
-    public static short Shop_Open = 0;
+    public static Lists.Structures.Shop Shop_Open;
     public static byte Shop_Inventory_Slot = 0;
     public static byte Hotbar_Change;
     public static byte Inventory_Change;
@@ -90,10 +90,10 @@ class Utilities
             Position = Panels.Get("Menu_Character").Position + new Size(-186, 5);
             Data_Index = Player.Me.Equipment[Panels.Equipment_Slot];
         }
-        else if (Panels.Shop_Slot >= 0 && Panels.Shop_Slot < Lists.Shop[Shop_Open].Sold.Length)
+        else if (Panels.Shop_Slot >= 0 && Panels.Shop_Slot < Shop_Open.Sold.Length)
         {
             Position = new Point(Panels.Get("Shop").Position.X - 186, Panels.Get("Shop").Position.Y + 5);
-            Data_Index = Lists.Shop[Shop_Open].Sold[Panels.Shop_Slot].Item_Num;
+            Data_Index = Shop_Open.Sold[Panels.Shop_Slot].Item_Num;
         }
 
         // Define os dados do painel de informações

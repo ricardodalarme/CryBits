@@ -1,4 +1,7 @@
 ﻿using Lidgren.Network;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 class Receive
@@ -535,7 +538,7 @@ class Receive
         Lists.Server_Data.Game_Name = Data.ReadString();
         Lists.Server_Data.Welcome = Data.ReadString();
         Lists.Server_Data.Port = Data.ReadInt16();
-        Lists.Server_Data.Max_Players =  Data.ReadByte();
+        Lists.Server_Data.Max_Players = Data.ReadByte();
         Lists.Server_Data.Max_Characters = Data.ReadByte();
         Lists.Server_Data.Max_Party_Members = Data.ReadByte();
         Lists.Server_Data.Max_Map_Items = Data.ReadByte();
@@ -792,7 +795,7 @@ class Receive
             for (byte n = 0; n < Lists.NPC[i].Allie.Length; n++) Lists.NPC[i].Allie[n] = Data.ReadInt16();
             Lists.NPC[i].Movement = (NPC.Movements)Data.ReadByte();
             Lists.NPC[i].Flee_Helth = Data.ReadByte();
-            Lists.NPC[i].Shop = Data.ReadInt16();
+            Lists.NPC[i].Shop = (Lists.Structures.Shop)Lists.SetData(Lists.Shop, new Guid(Data.ReadString()));
         }
 
         // Salva os dados e envia pra todos jogadores conectados
@@ -856,39 +859,63 @@ class Receive
             return;
         }
 
-        // Quantidade de lojas
-        Lists.Shop = new Lists.Structures.Shop[Data.ReadInt16()];
-        Lists.Server_Data.Num_Shops = (byte)Lists.Shop.GetUpperBound(0);
-        Write.Server_Data();
+        // Lojas a serem removidas
+        Dictionary<Guid, Lists.Structures.Shop> ToRemove = new Dictionary<Guid, Lists.Structures.Shop>(Lists.Shop);
 
-        for (short i = 1; i < Lists.Shop.Length; i++)
+        // Quantidade de lojas
+        short Count = Data.ReadInt16();
+
+        while (--Count >= 0)
         {
+            Guid ID = new Guid(Data.ReadString());
+            Lists.Structures.Shop Shop;
+
+            // Obtém o dado
+            if (Lists.Shop.ContainsKey(ID))
+            {
+                Shop = Lists.Shop[ID];
+                ToRemove.Remove(ID);
+            }
+            else
+            {
+                Shop = new Lists.Structures.Shop(ID);
+                Lists.Shop.Add(Shop.ID, Shop);
+            }
+
             // Redimensiona os valores necessários 
-            Lists.Shop[i] = new Lists.Structures.Shop();
-            Lists.Shop[i].Sold = new Lists.Structures.Shop_Item[Data.ReadByte()];
-            Lists.Shop[i].Bought = new Lists.Structures.Shop_Item[Data.ReadByte()];
+            Shop.Sold = new Lists.Structures.Shop_Item[Data.ReadByte()];
+            Shop.Bought = new Lists.Structures.Shop_Item[Data.ReadByte()];
 
             // Lê os dados
-            Lists.Shop[i].Name = Data.ReadString();
-            Lists.Shop[i].Currency = Data.ReadInt16();
-            for (byte j = 0; j < Lists.Shop[i].Sold.Length; j++)
-            {
-                Lists.Shop[i].Sold[j] = new Lists.Structures.Shop_Item();
-                Lists.Shop[i].Sold[j].Item_Num = Data.ReadInt16();
-                Lists.Shop[i].Sold[j].Amount = Data.ReadInt16();
-                Lists.Shop[i].Sold[j].Price = Data.ReadInt16();
-            }
-            for (byte j = 0; j < Lists.Shop[i].Bought.Length; j++)
-            {
-                Lists.Shop[i].Bought[j] = new Lists.Structures.Shop_Item();
-                Lists.Shop[i].Bought[j].Item_Num = Data.ReadInt16();
-                Lists.Shop[i].Bought[j].Amount = Data.ReadInt16();
-                Lists.Shop[i].Bought[j].Price = Data.ReadInt16();
-            }
+            Shop.Name = Data.ReadString();
+            Shop.Currency = Data.ReadInt16();
+            for (byte j = 0; j < Shop.Sold.Length; j++)
+                Shop.Sold[j] = new Lists.Structures.Shop_Item
+                {
+                    Item_Num = Data.ReadInt16(),
+                    Amount = Data.ReadInt16(),
+                    Price = Data.ReadInt16()
+                };
+            for (byte j = 0; j < Shop.Bought.Length; j++)
+                Shop.Bought[j] = new Lists.Structures.Shop_Item
+                {
+                    Item_Num = Data.ReadInt16(),
+                    Amount = Data.ReadInt16(),
+                    Price = Data.ReadInt16()
+                };
+
+            // Salva a loja
+            Write.Shop(Shop);
+        }
+
+        // Remove as lojas que não tiveram os dados atualizados
+        foreach (Guid Remove in ToRemove.Keys)
+        {
+            Lists.Shop.Remove(Remove);
+            File.Delete(Directories.Shops.FullName + Remove.ToString() + Directories.Format);
         }
 
         // Salva os dados e envia pra todos jogadores conectados
-        Write.Shops();
         for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i] != Account)
                 Send.Shops(Lists.Account[i]);
@@ -1064,12 +1091,12 @@ class Receive
             return;
         }
         // Verifica se os jogadores não estão em com a loja aberta
-        if (Player.Shop > 0)
+        if (Player.Shop != null)
         {
             Send.Message(Player, "You can't start a trade while in the shop.", System.Drawing.Color.White);
             return;
         }
-        if (Invited.Shop > 0)
+        if (Invited.Shop != null)
         {
             Send.Message(Player, "The player is in the shop.", System.Drawing.Color.White);
             return;
@@ -1109,7 +1136,7 @@ class Receive
             return;
         }
         // Verifica se  os jogadores não estão em com a loja aberta
-        if (Invited.Shop > 0)
+        if (Invited.Shop != null)
         {
             Send.Message(Player, "Who invited you is in the shop.", System.Drawing.Color.White);
             return;
@@ -1234,8 +1261,8 @@ class Receive
 
     private static void Shop_Buy(Player Player, NetIncomingMessage Data)
     {
-        Lists.Structures.Shop_Item Shop_Sold = Lists.Shop[Player.Shop].Sold[Data.ReadByte()];
-        byte Inventory_Slot = Player.FindInventory(Lists.Shop[Player.Shop].Currency);
+        Lists.Structures.Shop_Item Shop_Sold = Player.Shop.Sold[Data.ReadByte()];
+        byte Inventory_Slot = Player.FindInventory(Player.Shop.Currency);
 
         // Verifica se o jogador tem dinheiro
         if (Inventory_Slot == 0 || Player.Inventory[Inventory_Slot].Amount < Shop_Sold.Price)
@@ -1260,7 +1287,7 @@ class Receive
     {
         byte Inventory_Slot = Data.ReadByte();
         short Amount = System.Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
-        Lists.Structures.Shop_Item Buy = Lists.Shop[Player.Shop].BoughtItem(Player.Inventory[Inventory_Slot].Item_Num);
+        Lists.Structures.Shop_Item Buy = Player.Shop.BoughtItem(Player.Inventory[Inventory_Slot].Item_Num);
 
         // Verifica se a loja vende o item
         if (Buy == null)
@@ -1277,13 +1304,13 @@ class Receive
 
         // Realiza a venda do item
         Player.TakeItem(Inventory_Slot, Amount);
-        Player.GiveItem(Lists.Shop[Player.Shop].Currency, (short)(Buy.Price * Amount));
+        Player.GiveItem(Player.Shop.Currency, (short)(Buy.Price * Amount));
         Send.Message(Player, "You sold " + Lists.Item[Inventory_Slot].Name + "x " + Amount + "for .", System.Drawing.Color.Green);
     }
 
     private static void Shop_Close(Player Player)
     {
-        Player.Shop = 0;
+        Player.Shop = null;
     }
 
     private static void Warp(Player Player, NetIncomingMessage Data)

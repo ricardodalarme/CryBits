@@ -164,17 +164,11 @@ class Write
         Stream.Close();
     }
 
-    public static void Shops()
+    public static void Shop(Lists.Structures.Shop Shop)
     {
         // Escreve os dados
-        for (short i = 1; i < Lists.Shop.Length; i++) Shop(i);
-    }
-
-    public static void Shop(short Index)
-    {
-        // Escreve os dados
-        FileStream Stream = new FileInfo(Directories.Shops.FullName + Index + Directories.Format).OpenWrite();
-        new BinaryFormatter().Serialize(Stream, Lists.Shop[Index]);
+        FileStream Stream = new FileInfo(Directories.Shops.FullName + Shop.ID + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Shop);
         Stream.Close();
     }
 }

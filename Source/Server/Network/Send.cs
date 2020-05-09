@@ -679,7 +679,7 @@ class Send
                 for (byte n = 0; n < Lists.NPC[i].Allie.Length; n++) Data.Write(Lists.NPC[i].Allie[n]);
                 Data.Write((byte)Lists.NPC[i].Movement);
                 Data.Write(Lists.NPC[i].Flee_Helth);
-                Data.Write(Lists.NPC[i].Shop);
+                Data.Write(Lists.GetID(Lists.NPC[i].Shop));
             }
         }
         ToPlayer(Account, Data);
@@ -892,37 +892,38 @@ class Send
         // Envia os dados
         if (Account.InEditor) Data.Write((byte)Editor_Packets.Shops);
         else Data.Write((byte)Client_Packets.Shops);
-        Data.Write((short)Lists.Shop.Length);
-        for (short i = 1; i < Lists.Shop.Length; i++)
+        Data.Write((short)Lists.Shop.Count);
+        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values)
         {
             // Geral
-            Data.Write((byte)Lists.Shop[i].Sold.Length);
-            Data.Write((byte)Lists.Shop[i].Bought.Length);
-            Data.Write(Lists.Shop[i].Name);
-            Data.Write(Lists.Shop[i].Currency);
-            for (byte j = 0; j < Lists.Shop[i].Sold.Length; j++)
+            Data.Write(Shop.ID.ToString());
+            Data.Write((byte)Shop.Sold.Length);
+            Data.Write((byte)Shop.Bought.Length);
+            Data.Write(Shop.Name);
+            Data.Write(Shop.Currency);
+            for (byte j = 0; j < Shop.Sold.Length; j++)
             {
-                Data.Write(Lists.Shop[i].Sold[j].Item_Num);
-                Data.Write(Lists.Shop[i].Sold[j].Amount);
-                Data.Write(Lists.Shop[i].Sold[j].Price);
+                Data.Write(Shop.Sold[j].Item_Num);
+                Data.Write(Shop.Sold[j].Amount);
+                Data.Write(Shop.Sold[j].Price);
             }
-            for (byte j = 0; j < Lists.Shop[i].Bought.Length; j++)
+            for (byte j = 0; j < Shop.Bought.Length; j++)
             {
-                Data.Write(Lists.Shop[i].Bought[j].Item_Num);
-                Data.Write(Lists.Shop[i].Bought[j].Amount);
-                Data.Write(Lists.Shop[i].Bought[j].Price);
+                Data.Write(Shop.Bought[j].Item_Num);
+                Data.Write(Shop.Bought[j].Amount);
+                Data.Write(Shop.Bought[j].Price);
             }
         }
         ToPlayer(Account, Data);
     }
 
-    public static void Shop_Open(Player Player, short Shop_Num)
+    public static void Shop_Open(Player Player, Lists.Structures.Shop Shop)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Shop_Open);
-        Data.Write(Shop_Num);
+        Data.Write(Lists.GetID(Shop));
         ToPlayer(Player, Data);
     }
 }
