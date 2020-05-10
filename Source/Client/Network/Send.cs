@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using System;
+using System.Linq;
 
 partial class Send
 {
@@ -79,7 +80,7 @@ partial class Send
         // Envia os dados
         Data.Write((byte)Packets.CreateCharacter);
         Data.Write(TextBoxes.Get("CreateCharacter_Name").Text);
-        Data.Write(Utilities.CreateCharacter_Class);
+        Data.Write(Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value.ID.ToString());
         Data.Write(CheckBoxes.Get("GenderMale").Checked);
         Data.Write(Utilities.CreateCharacter_Tex);
         Packet(Data);

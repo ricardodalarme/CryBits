@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 class Receive
@@ -111,6 +112,7 @@ class Receive
     {
         // Reseta os valores
         Utilities.SelectCharacter = 0;
+        Lists.Class = new Dictionary<Guid, Lists.Structures.Class>();
 
         // Abre o painel de seleção de personagens
         Panels.Menu_Close();
@@ -133,7 +135,7 @@ class Receive
         TextBoxes.Get("CreateCharacter_Name").Text = string.Empty;
         CheckBoxes.Get("GenderMale").Checked = true;
         CheckBoxes.Get("GenderFemale").Checked = false;
-        Utilities.CreateCharacter_Class = 1;
+        Utilities.CreateCharacter_Class = 0;
         Utilities.CreateCharacter_Tex = 0;
 
         // Abre o painel de criação de personagem
@@ -143,22 +145,40 @@ class Receive
 
     private static void Classes(NetIncomingMessage Data)
     {
-        int Amount = Data.ReadByte();
+        // Classes a serem removidas
+        Dictionary<Guid, Lists.Structures.Class> ToRemove = new Dictionary<Guid, Lists.Structures.Class>(Lists.Class);
 
-        // Recebe os dados das classes
-        Lists.Class = new Lists.Structures.Class[Amount + 1];
+        // Quantidade de classes
+        short Count = Data.ReadByte();
 
-        for (byte i = 1; i <= Amount; i++)
+        while (--Count >= 0)
         {
+            Guid ID = new Guid(Data.ReadString());
+            Lists.Structures.Class Class;
+
+            // Obtém o dado
+            if (Lists.Class.ContainsKey(ID))
+            {
+                Class = Lists.Class[ID];
+                ToRemove.Remove(ID);
+            }
+            else
+            {
+                Class = new Lists.Structures.Class(ID);
+                Lists.Class.Add(Class.ID, Class);
+            }
+
             // Recebe os dados do personagem
-            Lists.Class[i] = new Lists.Structures.Class();
-            Lists.Class[i].Name = Data.ReadString();
-            Lists.Class[i].Description = Data.ReadString();
-            Lists.Class[i].Tex_Male = new short[Data.ReadByte()];
-            for (byte n = 0; n < Lists.Class[i].Tex_Male.Length; n++) Lists.Class[i].Tex_Male[n] = Data.ReadInt16();
-            Lists.Class[i].Tex_Female = new short[Data.ReadByte()];
-            for (byte n = 0; n < Lists.Class[i].Tex_Female.Length; n++) Lists.Class[i].Tex_Female[n] = Data.ReadInt16();
+            Class.Name = Data.ReadString();
+            Class.Description = Data.ReadString();
+            Class.Tex_Male = new short[Data.ReadByte()];
+            for (byte n = 0; n < Class.Tex_Male.Length; n++) Class.Tex_Male[n] = Data.ReadInt16();
+            Class.Tex_Female = new short[Data.ReadByte()];
+            for (byte n = 0; n < Class.Tex_Female.Length; n++) Class.Tex_Female[n] = Data.ReadInt16();
         }
+
+        // Remove as lojas que não tiveram os dados atualizados
+        foreach (Guid Remove in ToRemove.Keys) Lists.Shop.Remove(Remove);
     }
 
     private static void Characters(NetIncomingMessage Data)
@@ -546,7 +566,7 @@ class Receive
             Lists.Item[i].Bind = (Game.BindOn)Data.ReadByte();
             Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
-            Lists.Item[i].Req_Class = Data.ReadByte();
+            Lists.Item[i].Req_Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
             Lists.Item[i].Potion_Experience = Data.ReadInt32();
             for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();

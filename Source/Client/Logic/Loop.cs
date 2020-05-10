@@ -36,7 +36,7 @@ class Loop
                 if (Timer_30 < Environment.TickCount)
                 {
                     // Lógica dos jogadores
-                    for (byte i = 0; i < Lists.Player.Count; i++) 
+                    for (byte i = 0; i < Lists.Player.Count; i++)
                         Lists.Player[i].Logic();
 
                     // Lógica dos NPCs
@@ -54,7 +54,7 @@ class Loop
 
             // Faz com que a aplicação se mantenha estável
             Application.DoEvents();
-            while (Environment.TickCount < Count + 15) System.Threading.Thread.Sleep(1);
+            System.Threading.Thread.Sleep(1);
 
             // Cálcula o FPS
             if (Timer_1000 < Environment.TickCount)

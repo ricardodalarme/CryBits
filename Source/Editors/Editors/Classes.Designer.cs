@@ -27,16 +27,14 @@
     private void InitializeComponent()
     {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Classes));
-            this.List = new System.Windows.Forms.ListBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grpGeneral = new System.Windows.Forms.GroupBox();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.butSave = new System.Windows.Forms.Button();
             this.butCancel = new System.Windows.Forms.Button();
-            this.butClear = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.grpAttributes = new System.Windows.Forms.GroupBox();
             this.numAgility = new System.Windows.Forms.NumericUpDown();
             this.numVitality = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
@@ -60,8 +58,7 @@
             this.butFTexture = new System.Windows.Forms.Button();
             this.lblMTexture = new System.Windows.Forms.Label();
             this.butMTexture = new System.Windows.Forms.Button();
-            this.butQuantity = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.grpSpawn = new System.Windows.Forms.GroupBox();
             this.numSpawn_Y = new System.Windows.Forms.NumericUpDown();
             this.numSpawn_X = new System.Windows.Forms.NumericUpDown();
             this.numSpawn_Map = new System.Windows.Forms.NumericUpDown();
@@ -70,7 +67,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.grpDrop = new System.Windows.Forms.GroupBox();
             this.label12 = new System.Windows.Forms.Label();
             this.butItem_Delete = new System.Windows.Forms.Button();
             this.lstItems = new System.Windows.Forms.ListBox();
@@ -81,8 +78,11 @@
             this.cmbItems = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.butItem_Ok = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.butRemove = new System.Windows.Forms.Button();
+            this.butNew = new System.Windows.Forms.Button();
+            this.List = new System.Windows.Forms.TreeView();
+            this.grpGeneral.SuspendLayout();
+            this.grpAttributes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numVitality)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIntelligence)).BeginInit();
@@ -91,36 +91,27 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHP)).BeginInit();
             this.grpTexture.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.grpSpawn.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Y)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).BeginInit();
-            this.groupBox4.SuspendLayout();
+            this.grpDrop.SuspendLayout();
             this.grpItem_Add.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numItem_Amount)).BeginInit();
             this.SuspendLayout();
             // 
-            // List
+            // grpGeneral
             // 
-            this.List.FormattingEnabled = true;
-            this.List.Location = new System.Drawing.Point(11, 12);
-            this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 420);
-            this.List.TabIndex = 9;
-            this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.txtDescription);
-            this.groupBox1.Controls.Add(this.label11);
-            this.groupBox1.Controls.Add(this.txtName);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(221, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(304, 161);
-            this.groupBox1.TabIndex = 14;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "General";
+            this.grpGeneral.Controls.Add(this.txtDescription);
+            this.grpGeneral.Controls.Add(this.label11);
+            this.grpGeneral.Controls.Add(this.txtName);
+            this.grpGeneral.Controls.Add(this.label3);
+            this.grpGeneral.Location = new System.Drawing.Point(221, 12);
+            this.grpGeneral.Name = "grpGeneral";
+            this.grpGeneral.Size = new System.Drawing.Size(304, 161);
+            this.grpGeneral.TabIndex = 14;
+            this.grpGeneral.TabStop = false;
+            this.grpGeneral.Text = "General";
             // 
             // txtDescription
             // 
@@ -146,7 +137,7 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(285, 20);
             this.txtName.TabIndex = 10;
-            this.txtName.Validated += new System.EventHandler(this.txtName_Validated);
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // label3
             // 
@@ -159,9 +150,9 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(219, 437);
+            this.butSave.Location = new System.Drawing.Point(219, 438);
             this.butSave.Name = "butSave";
-            this.butSave.Size = new System.Drawing.Size(201, 25);
+            this.butSave.Size = new System.Drawing.Size(306, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
             this.butSave.UseVisualStyleBackColor = true;
@@ -169,46 +160,36 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(634, 437);
+            this.butCancel.Location = new System.Drawing.Point(531, 438);
             this.butCancel.Name = "butCancel";
-            this.butCancel.Size = new System.Drawing.Size(201, 25);
+            this.butCancel.Size = new System.Drawing.Size(304, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
             // 
-            // butClear
+            // grpAttributes
             // 
-            this.butClear.Location = new System.Drawing.Point(427, 437);
-            this.butClear.Name = "butClear";
-            this.butClear.Size = new System.Drawing.Size(201, 25);
-            this.butClear.TabIndex = 18;
-            this.butClear.Text = "Clear";
-            this.butClear.UseVisualStyleBackColor = true;
-            this.butClear.Click += new System.EventHandler(this.butClear_Click);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.numAgility);
-            this.groupBox2.Controls.Add(this.numVitality);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.numIntelligence);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.numResistance);
-            this.groupBox2.Controls.Add(this.numStrength);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.numMP);
-            this.groupBox2.Controls.Add(this.numHP);
-            this.groupBox2.Controls.Add(this.lblMP);
-            this.groupBox2.Controls.Add(this.lblHP);
-            this.groupBox2.Location = new System.Drawing.Point(221, 179);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(304, 140);
-            this.groupBox2.TabIndex = 20;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Base Attributes";
+            this.grpAttributes.Controls.Add(this.numAgility);
+            this.grpAttributes.Controls.Add(this.numVitality);
+            this.grpAttributes.Controls.Add(this.label4);
+            this.grpAttributes.Controls.Add(this.label6);
+            this.grpAttributes.Controls.Add(this.numIntelligence);
+            this.grpAttributes.Controls.Add(this.label5);
+            this.grpAttributes.Controls.Add(this.numResistance);
+            this.grpAttributes.Controls.Add(this.numStrength);
+            this.grpAttributes.Controls.Add(this.label1);
+            this.grpAttributes.Controls.Add(this.label2);
+            this.grpAttributes.Controls.Add(this.numMP);
+            this.grpAttributes.Controls.Add(this.numHP);
+            this.grpAttributes.Controls.Add(this.lblMP);
+            this.grpAttributes.Controls.Add(this.lblHP);
+            this.grpAttributes.Location = new System.Drawing.Point(221, 179);
+            this.grpAttributes.Name = "grpAttributes";
+            this.grpAttributes.Size = new System.Drawing.Size(304, 140);
+            this.grpAttributes.TabIndex = 20;
+            this.grpAttributes.TabStop = false;
+            this.grpAttributes.Text = "Base Attributes";
             // 
             // numAgility
             // 
@@ -420,32 +401,22 @@
             this.butMTexture.UseVisualStyleBackColor = true;
             this.butMTexture.Click += new System.EventHandler(this.butMTexture_Click);
             // 
-            // butQuantity
+            // grpSpawn
             // 
-            this.butQuantity.Location = new System.Drawing.Point(12, 438);
-            this.butQuantity.Name = "butQuantity";
-            this.butQuantity.Size = new System.Drawing.Size(202, 25);
-            this.butQuantity.TabIndex = 15;
-            this.butQuantity.Text = "Change Quantity";
-            this.butQuantity.UseVisualStyleBackColor = true;
-            this.butQuantity.Click += new System.EventHandler(this.butQuantity_Click);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.numSpawn_Y);
-            this.groupBox3.Controls.Add(this.numSpawn_X);
-            this.groupBox3.Controls.Add(this.numSpawn_Map);
-            this.groupBox3.Controls.Add(this.label9);
-            this.groupBox3.Controls.Add(this.cmbSpawn_Direction);
-            this.groupBox3.Controls.Add(this.label10);
-            this.groupBox3.Controls.Add(this.label8);
-            this.groupBox3.Controls.Add(this.label7);
-            this.groupBox3.Location = new System.Drawing.Point(221, 325);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(304, 106);
-            this.groupBox3.TabIndex = 35;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Spawn";
+            this.grpSpawn.Controls.Add(this.numSpawn_Y);
+            this.grpSpawn.Controls.Add(this.numSpawn_X);
+            this.grpSpawn.Controls.Add(this.numSpawn_Map);
+            this.grpSpawn.Controls.Add(this.label9);
+            this.grpSpawn.Controls.Add(this.cmbSpawn_Direction);
+            this.grpSpawn.Controls.Add(this.label10);
+            this.grpSpawn.Controls.Add(this.label8);
+            this.grpSpawn.Controls.Add(this.label7);
+            this.grpSpawn.Location = new System.Drawing.Point(221, 325);
+            this.grpSpawn.Name = "grpSpawn";
+            this.grpSpawn.Size = new System.Drawing.Size(304, 106);
+            this.grpSpawn.TabIndex = 35;
+            this.grpSpawn.TabStop = false;
+            this.grpSpawn.Text = "Spawn";
             // 
             // numSpawn_Y
             // 
@@ -532,18 +503,18 @@
             this.label7.TabIndex = 22;
             this.label7.Text = "Map:";
             // 
-            // groupBox4
+            // grpDrop
             // 
-            this.groupBox4.Controls.Add(this.label12);
-            this.groupBox4.Controls.Add(this.butItem_Delete);
-            this.groupBox4.Controls.Add(this.lstItems);
-            this.groupBox4.Controls.Add(this.butItem_Add);
-            this.groupBox4.Location = new System.Drawing.Point(531, 219);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(304, 212);
-            this.groupBox4.TabIndex = 36;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Initial Items";
+            this.grpDrop.Controls.Add(this.label12);
+            this.grpDrop.Controls.Add(this.butItem_Delete);
+            this.grpDrop.Controls.Add(this.lstItems);
+            this.grpDrop.Controls.Add(this.butItem_Add);
+            this.grpDrop.Location = new System.Drawing.Point(531, 219);
+            this.grpDrop.Name = "grpDrop";
+            this.grpDrop.Size = new System.Drawing.Size(304, 212);
+            this.grpDrop.TabIndex = 36;
+            this.grpDrop.TabStop = false;
+            this.grpDrop.Text = "Initial Items";
             // 
             // label12
             // 
@@ -653,33 +624,62 @@
             this.butItem_Ok.UseVisualStyleBackColor = true;
             this.butItem_Ok.Click += new System.EventHandler(this.butItem_Ok_Click);
             // 
+            // butRemove
+            // 
+            this.butRemove.Location = new System.Drawing.Point(115, 12);
+            this.butRemove.Name = "butRemove";
+            this.butRemove.Size = new System.Drawing.Size(98, 25);
+            this.butRemove.TabIndex = 40;
+            this.butRemove.Text = "Remove";
+            this.butRemove.UseVisualStyleBackColor = true;
+            this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
+            // 
+            // butNew
+            // 
+            this.butNew.Location = new System.Drawing.Point(11, 12);
+            this.butNew.Name = "butNew";
+            this.butNew.Size = new System.Drawing.Size(98, 25);
+            this.butNew.TabIndex = 39;
+            this.butNew.Text = "New";
+            this.butNew.UseVisualStyleBackColor = true;
+            this.butNew.Click += new System.EventHandler(this.butNew_Click);
+            // 
+            // List
+            // 
+            this.List.HideSelection = false;
+            this.List.Location = new System.Drawing.Point(12, 43);
+            this.List.Name = "List";
+            this.List.Size = new System.Drawing.Size(201, 419);
+            this.List.TabIndex = 41;
+            this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
+            // 
             // Editor_Classes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(847, 475);
             this.ControlBox = false;
+            this.Controls.Add(this.List);
+            this.Controls.Add(this.butRemove);
+            this.Controls.Add(this.butNew);
             this.Controls.Add(this.grpItem_Add);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.butQuantity);
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.grpDrop);
+            this.Controls.Add(this.grpSpawn);
+            this.Controls.Add(this.grpAttributes);
             this.Controls.Add(this.grpTexture);
-            this.Controls.Add(this.butClear);
             this.Controls.Add(this.butCancel);
             this.Controls.Add(this.butSave);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.List);
+            this.Controls.Add(this.grpGeneral);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Editor_Classes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Class Editor";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.grpGeneral.ResumeLayout(false);
+            this.grpGeneral.PerformLayout();
+            this.grpAttributes.ResumeLayout(false);
+            this.grpAttributes.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numVitality)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIntelligence)).EndInit();
@@ -689,13 +689,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numHP)).EndInit();
             this.grpTexture.ResumeLayout(false);
             this.grpTexture.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.grpSpawn.ResumeLayout(false);
+            this.grpSpawn.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Y)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).EndInit();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
+            this.grpDrop.ResumeLayout(false);
+            this.grpDrop.PerformLayout();
             this.grpItem_Add.ResumeLayout(false);
             this.grpItem_Add.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numItem_Amount)).EndInit();
@@ -704,14 +704,12 @@
     }
 
     #endregion
-    public System.Windows.Forms.ListBox List;
-    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.GroupBox grpGeneral;
     public System.Windows.Forms.TextBox txtName;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Button butSave;
     private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Button butClear;
-    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.GroupBox grpAttributes;
     private System.Windows.Forms.Label lblMP;
     private System.Windows.Forms.Label lblHP;
     private System.Windows.Forms.GroupBox grpTexture;
@@ -725,14 +723,13 @@
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.NumericUpDown numMP;
     private System.Windows.Forms.NumericUpDown numHP;
-    private System.Windows.Forms.Button butQuantity;
     private System.Windows.Forms.NumericUpDown numVitality;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label lblFTexture;
     private System.Windows.Forms.Button butFTexture;
     private System.Windows.Forms.Label lblMTexture;
     private System.Windows.Forms.Button butMTexture;
-    private System.Windows.Forms.GroupBox groupBox3;
+    private System.Windows.Forms.GroupBox grpSpawn;
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.NumericUpDown numSpawn_X;
     private System.Windows.Forms.ComboBox cmbSpawn_Direction;
@@ -747,7 +744,7 @@
     private System.Windows.Forms.Button butMDelete;
     public System.Windows.Forms.ListBox lstFemale;
     public System.Windows.Forms.ListBox lstMale;
-    private System.Windows.Forms.GroupBox groupBox4;
+    private System.Windows.Forms.GroupBox grpDrop;
     private System.Windows.Forms.Button butItem_Delete;
     public System.Windows.Forms.ListBox lstItems;
     private System.Windows.Forms.Button butItem_Add;
@@ -758,4 +755,7 @@
     private System.Windows.Forms.Label label12;
     private System.Windows.Forms.NumericUpDown numItem_Amount;
     private System.Windows.Forms.Label label13;
+    private System.Windows.Forms.Button butRemove;
+    private System.Windows.Forms.Button butNew;
+    private System.Windows.Forms.TreeView List;
 }

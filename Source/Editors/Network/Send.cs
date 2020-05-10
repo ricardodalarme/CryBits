@@ -138,27 +138,28 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Write_Classes);
-        Data.Write((byte)Lists.Class.Length);
-        for (byte i = 1; i < Lists.Class.Length; i++)
+        Data.Write((byte)Lists.Class.Count);
+        foreach (Lists.Structures.Class Class in Lists.Class.Values)
         {
             // Escreve os dados
-            Data.Write((byte)Lists.Class[i].Tex_Male.Count);
-            Data.Write((byte)Lists.Class[i].Tex_Female.Count);
-            Data.Write((byte)Lists.Class[i].Item.Count);
-            Data.Write(Lists.Class[i].Name);
-            Data.Write(Lists.Class[i].Description);
-            for (byte t = 0; t < Lists.Class[i].Tex_Male.Count; t++) Data.Write(Lists.Class[i].Tex_Male[t]);
-            for (byte t = 0; t < Lists.Class[i].Tex_Female.Count; t++) Data.Write(Lists.Class[i].Tex_Female[t]);
-            Data.Write(Lists.Class[i].Spawn_Map);
-            Data.Write(Lists.Class[i].Spawn_Direction);
-            Data.Write(Lists.Class[i].Spawn_X);
-            Data.Write(Lists.Class[i].Spawn_Y);
-            for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Data.Write(Lists.Class[i].Vital[v]);
-            for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Data.Write(Lists.Class[i].Attribute[a]);
-            for (byte a = 0; a < Lists.Class[i].Item.Count; a++)
+            Data.Write(Class.ID.ToString());
+            Data.Write((byte)Class.Tex_Male.Count);
+            Data.Write((byte)Class.Tex_Female.Count);
+            Data.Write((byte)Class.Item.Count);
+            Data.Write(Class.Name);
+            Data.Write(Class.Description);
+            for (byte i = 0; i < Class.Tex_Male.Count; i++) Data.Write(Class.Tex_Male[i]);
+            for (byte i = 0; i < Class.Tex_Female.Count; i++) Data.Write(Class.Tex_Female[i]);
+            Data.Write(Class.Spawn_Map);
+            Data.Write(Class.Spawn_Direction);
+            Data.Write(Class.Spawn_X);
+            Data.Write(Class.Spawn_Y);
+            for (byte i = 0; i < (byte)Globals.Vitals.Count; i++) Data.Write(Class.Vital[i]);
+            for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Class.Attribute[i]);
+            for (byte i = 0; i < Class.Item.Count; i++)
             {
-                Data.Write(Lists.Class[i].Item[a].Item1);
-                Data.Write(Lists.Class[i].Item[a].Item2);
+                Data.Write(Class.Item[i].Item1);
+                Data.Write(Class.Item[i].Item2);
             }
         }
         Packet(Data);
@@ -330,7 +331,7 @@ partial class Send
             Data.Write(Lists.Item[Index].Bind);
             Data.Write(Lists.Item[Index].Rarity);
             Data.Write(Lists.Item[Index].Req_Level);
-            Data.Write(Lists.Item[Index].Req_Class);
+            Data.Write(Lists.GetID(Lists.Item[Index].Req_Class));
             Data.Write(Lists.Item[Index].Potion_Experience);
             for (byte i = 0; i < (byte)Globals.Vitals.Count; i++) Data.Write(Lists.Item[Index].Potion_Vital[i]);
             Data.Write(Lists.Item[Index].Equip_Type);

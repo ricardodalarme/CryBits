@@ -6,10 +6,10 @@ class Lists
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
     public static List<Player.Structure> Player = new List<Player.Structure>();
-    public static Structures.Class[] Class;
+    public static Dictionary<Guid, Structures.Class> Class = new Dictionary<Guid, Structures.Class>() ;
     public static Structures.Character[] Characters;
     public static Structures.Map Map;
-    public static Structures.Temp_Map Temp_Map;
+    public static Structures.Temp_Map Temp_Map = new Structures.Temp_Map();
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
     public static Structures.Item[] Item;
@@ -63,12 +63,14 @@ class Lists
             public short Texture_Num;
         }
 
-        public class Class
+        public class Class : Data
         {
             public string Name;
             public string Description;
             public short[] Tex_Male;
             public short[] Tex_Female;
+
+            public Class(Guid ID) : base(ID) { }
         }
 
         [Serializable]
@@ -177,7 +179,7 @@ class Lists
             public Game.BindOn Bind;
             // Requerimentos
             public short Req_Level;
-            public byte Req_Class;
+            public Class Req_Class;
             // Poção
             public int Potion_Experience;
             public short[] Potion_Vital;
@@ -217,7 +219,7 @@ class Lists
             }
         }
 
-        public class Shop: Data
+        public class Shop : Data
         {
             public string Name;
             public short Currency;

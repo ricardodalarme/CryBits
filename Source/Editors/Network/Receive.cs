@@ -71,33 +71,38 @@ partial class Receive
     private static void Classes(NetIncomingMessage Data)
     {
         // Quantidade de classes
-        Lists.Class = new Lists.Structures.Class[Data.ReadByte() + 1];
+        short Count = Data.ReadByte();
+        Lists.Class = new Dictionary<Guid, Lists.Structures.Class>();
 
-        for (short i = 1; i < Lists.Class.Length; i++)
+        for (short i = 0; i < Count; i++)
         {
+            // Adiciona a loja na lista
+            string ID = Data.ReadString();
+            Lists.Structures.Class Class = new Lists.Structures.Class(new Guid(ID));
+            Lists.Class.Add(Class.ID, Class);
+
             // Redimensiona os valores necessários 
-            Lists.Class[i] = new Lists.Structures.Class();
-            Lists.Class[i].Vital = new short[(byte)Globals.Vitals.Count];
-            Lists.Class[i].Attribute = new short[(byte)Globals.Attributes.Count];
-            Lists.Class[i].Tex_Male = new List<short>();
-            Lists.Class[i].Tex_Female = new List<short>();
-            Lists.Class[i].Item = new List<Tuple<short, short>>();
+            Class.Vital = new short[(byte)Globals.Vitals.Count];
+            Class.Attribute = new short[(byte)Globals.Attributes.Count];
+            Class.Tex_Male = new List<short>();
+            Class.Tex_Female = new List<short>();
+            Class.Item = new List<Tuple<short, short>>();
 
             // Lê os dados
-            Lists.Class[i].Name = Data.ReadString();
-            Lists.Class[i].Description = Data.ReadString();
+            Class.Name = Data.ReadString();
+            Class.Description = Data.ReadString();
             byte Num_Tex_Male = Data.ReadByte();
-            for (byte t = 0; t < Num_Tex_Male; t++) Lists.Class[i].Tex_Male.Add(Data.ReadInt16());
+            for (byte t = 0; t < Num_Tex_Male; t++) Class.Tex_Male.Add(Data.ReadInt16());
             byte Num_Tex_Female = Data.ReadByte();
-            for (byte t = 0; t < Num_Tex_Female; t++) Lists.Class[i].Tex_Female.Add(Data.ReadInt16());
-            Lists.Class[i].Spawn_Map = Data.ReadInt16();
-            Lists.Class[i].Spawn_Direction = Data.ReadByte();
-            Lists.Class[i].Spawn_X = Data.ReadByte();
-            Lists.Class[i].Spawn_Y = Data.ReadByte();
-            for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
-            for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
+            for (byte t = 0; t < Num_Tex_Female; t++) Class.Tex_Female.Add(Data.ReadInt16());
+            Class.Spawn_Map = Data.ReadInt16();
+            Class.Spawn_Direction = Data.ReadByte();
+            Class.Spawn_X = Data.ReadByte();
+            Class.Spawn_Y = Data.ReadByte();
+            for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Class.Vital[v] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Class.Attribute[a] = Data.ReadInt16();
             byte Num_Items = Data.ReadByte();
-            for (byte a = 0; a < Num_Items; a++) Lists.Class[i].Item.Add(new Tuple<short, short>(Data.ReadInt16(), Data.ReadInt16()));
+            for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new Tuple<short, short>(Data.ReadInt16(), Data.ReadInt16()));
         }
 
         // Abre o editor
@@ -237,7 +242,7 @@ partial class Receive
             for (byte n = 0; n < Num_Allies; n++) Lists.NPC[i].Allie.Add(Data.ReadInt16());
             Lists.NPC[i].Movement = (Globals.NPC_Movements)Data.ReadByte();
             Lists.NPC[i].Flee_Helth = Data.ReadByte();
-            Lists.NPC[i].Shop = (Lists.Structures.Shop)Lists.SetData(Lists.Shop, new Guid(Data.ReadString()));
+            Lists.NPC[i].Shop = (Lists.Structures.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
         }
 
         // Abre o editor
@@ -265,7 +270,8 @@ partial class Receive
             Lists.Item[i].Bind = Data.ReadByte();
             Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
-            Lists.Item[i].Req_Class = Data.ReadByte();
+            Data.ReadString();
+            //Lists.Item[i].Req_Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
             Lists.Item[i].Potion_Experience = Data.ReadInt32();
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();

@@ -36,7 +36,7 @@ class Write
         Data.Write(Account.Character.Name);
         Data.Write(Account.Character.Texture_Num);
         Data.Write(Account.Character.Level);
-        Data.Write(Account.Character.Class_Num);
+        Data.Write(Lists.GetID(Account.Character.Class));
         Data.Write(Account.Character.Genre);
         Data.Write(Account.Character.Experience);
         Data.Write(Account.Character.Points);
@@ -94,17 +94,11 @@ class Write
         Stream.Close();
     }
 
-    public static void Classes()
+    public static void Class(Lists.Structures.Class Class)
     {
         // Escreve os dados
-        for (byte Index = 1; Index < Lists.Class.Length; Index++) Class(Index);
-    }
-
-    public static void Class(byte Index)
-    {
-        // Escreve os dados
-        FileStream Stream = new FileInfo(Directories.Classes.FullName + Index + Directories.Format).OpenWrite();
-        new BinaryFormatter().Serialize(Stream, Lists.Class[Index]);
+        FileStream Stream = new FileInfo(Directories.Classes.FullName + Class.ID + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Class);
         Stream.Close();
     }
 

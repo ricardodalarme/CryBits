@@ -14,24 +14,10 @@ class Clear
         Lists.Server_Data.Max_Party_Members = 3;
         Lists.Server_Data.Max_Map_Items = 100;
         Lists.Server_Data.Num_Points = 3;
-        Lists.Server_Data.Num_Classes = 1;
         Lists.Server_Data.Num_Maps = 1;
         Lists.Server_Data.Num_Items = 1;
         Lists.Server_Data.Num_NPCs = 1;
         Lists.Server_Data.Num_Tiles = 0;
-    }
-
-    public static void Class(byte Index)
-    {
-        // Reseta os valores
-        Lists.Class[Index] = new Lists.Structures.Class();
-        Lists.Class[Index].Name = string.Empty;
-        Lists.Class[Index].Vital = new short[(byte)Game.Vitals.Count];
-        Lists.Class[Index].Attribute = new short[(byte)Game.Attributes.Count];
-        Lists.Class[Index].Tex_Male = Array.Empty<short>();
-        Lists.Class[Index].Tex_Female = Array.Empty<short>();
-        Lists.Class[Index].Item = Array.Empty<Tuple<short, short>>();
-        Lists.Class[Index].Spawn_Map = 1;
     }
 
     public static void NPC(short Index)

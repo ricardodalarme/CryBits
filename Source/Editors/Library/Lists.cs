@@ -8,7 +8,7 @@ class Lists
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
-    public static Structures.Class[] Class;
+    public static Dictionary<Guid, Structures.Class> Class;
     public static Structures.Tile[] Tile;
     public static Structures.Map[] Map;
     public static Structures.Weather[] Weather;
@@ -22,7 +22,7 @@ class Lists
         return Object == null ? Guid.Empty.ToString() : ((Structures.Data)Object).ID.ToString();
     }
 
-    public static object SetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
+    public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
     {
         if (Dictionary.ContainsKey(ID))
             return Dictionary[ID];
@@ -96,19 +96,22 @@ class Lists
             public byte Texture_Num { get; set; }
         }
 
-        public class Class
+        public class Class : Data
         {
-            public string Name;
+            public string Name = string.Empty;
             public string Description;
-            public List<short> Tex_Male;
-            public List<short> Tex_Female;
-            public short Spawn_Map;
+            public List<short> Tex_Male = new List<short>();
+            public List<short> Tex_Female = new List<short>();
+            public short Spawn_Map = 1;
             public byte Spawn_Direction;
             public byte Spawn_X;
             public byte Spawn_Y;
-            public short[] Vital;
-            public short[] Attribute;
-            public List<Tuple<short, short>> Item;
+            public short[] Vital = new short[(byte)Globals.Vitals.Count];
+            public short[] Attribute = new short[(byte)Globals.Attributes.Count];
+            public List<Tuple<short, short>> Item = new List<Tuple<short, short>>();
+
+            public Class(Guid ID) : base(ID) { }
+            public override string ToString() => Name;
         }
 
         public struct Tile
@@ -261,7 +264,7 @@ class Lists
             public byte Rarity;
             // Requerimentos
             public short Req_Level;
-            public byte Req_Class;
+            public Class Req_Class;
             // Poção
             public int Potion_Experience;
             public short[] Potion_Vital;

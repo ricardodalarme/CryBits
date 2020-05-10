@@ -1,6 +1,7 @@
 ﻿using SFML.Window;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 class Buttons
@@ -203,8 +204,8 @@ class Buttons
     private static void CreateCharacter_ChangeRight()
     {
         // Altera a classe selecionada pelo jogador
-        if (Utilities.CreateCharacter_Class == Lists.Class.GetUpperBound(0))
-            Utilities.CreateCharacter_Class = 1;
+        if (Utilities.CreateCharacter_Class == Lists.Class.Count - 1)
+            Utilities.CreateCharacter_Class = 0;
         else
             Utilities.CreateCharacter_Class += 1;
     }
@@ -212,8 +213,8 @@ class Buttons
     private static void CreateCharacter_ChangeLeft()
     {
         // Altera a classe selecionada pelo jogador
-        if (Utilities.CreateCharacter_Class == 1)
-            Utilities.CreateCharacter_Class = (byte)Lists.Class.GetUpperBound(0);
+        if (Utilities.CreateCharacter_Class == 0)
+            Utilities.CreateCharacter_Class = (byte)Lists.Class.Count;
         else
             Utilities.CreateCharacter_Class -= 1;
     }
@@ -221,7 +222,11 @@ class Buttons
     private static void CreateCharacter_Texture_ChangeRight()
     {
         // Lista de texturas
-        short[] Tex_List = CheckBoxes.Get("GenderMale").Checked ? Lists.Class[Utilities.CreateCharacter_Class].Tex_Male : Lists.Class[Utilities.CreateCharacter_Class].Tex_Female;
+        short[] Tex_List;
+        if (CheckBoxes.Get("GenderMale").Checked)
+            Tex_List = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value.Tex_Male;
+        else
+            Tex_List = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value.Tex_Female;
 
         // Altera a classe selecionada pelo jogador
         if (Utilities.CreateCharacter_Tex == Tex_List.Length - 1)
@@ -233,7 +238,11 @@ class Buttons
     private static void CreateCharacter_Texture_ChangeLeft()
     {
         // Lista de texturas
-        short[] Tex_List = CheckBoxes.Get("GenderMale").Checked ? Lists.Class[Utilities.CreateCharacter_Class].Tex_Male : Lists.Class[Utilities.CreateCharacter_Class].Tex_Female;
+        short[] Tex_List;
+        if (CheckBoxes.Get("GenderMale").Checked)
+            Tex_List = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value.Tex_Male;
+        else
+            Tex_List = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value.Tex_Female;
 
         // Altera a classe selecionada pelo jogador
         if (Utilities.CreateCharacter_Tex == 0)

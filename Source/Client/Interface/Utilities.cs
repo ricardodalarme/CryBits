@@ -3,7 +3,7 @@
 class Utilities
 {
     // Dados temporários
-    public static byte CreateCharacter_Class = 1;
+    public static byte CreateCharacter_Class = 0;
     public static byte CreateCharacter_Tex = 0;
     public static int SelectCharacter = 1;
     public static short Infomation_Index;

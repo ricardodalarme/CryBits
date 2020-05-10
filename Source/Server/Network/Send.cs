@@ -181,32 +181,33 @@ class Send
         // Envia os dados
         if (Account.InEditor) Data.Write((byte)Editor_Packets.Classes);
         else Data.Write((byte)Client_Packets.Classes);
-        Data.Write(Lists.Server_Data.Num_Classes);
+        Data.Write((byte)Lists.Class.Count);
 
-        for (byte i = 1; i < Lists.Class.Length; i++)
+        foreach (Lists.Structures.Class Class in Lists.Class.Values)
         {
             // Escreve os dados
-            Data.Write(Lists.Class[i].Name);
-            Data.Write(Lists.Class[i].Description);
-            Data.Write((byte)Lists.Class[i].Tex_Male.Length);
-            for (byte t = 0; t < Lists.Class[i].Tex_Male.Length; t++) Data.Write(Lists.Class[i].Tex_Male[t]);
-            Data.Write((byte)Lists.Class[i].Tex_Female.Length);
-            for (byte t = 0; t < Lists.Class[i].Tex_Female.Length; t++) Data.Write(Lists.Class[i].Tex_Female[t]);
+            Data.Write(Class.ID.ToString());
+            Data.Write(Class.Name);
+            Data.Write(Class.Description);
+            Data.Write((byte)Class.Tex_Male.Length);
+            for (byte t = 0; t < Class.Tex_Male.Length; t++) Data.Write(Class.Tex_Male[t]);
+            Data.Write((byte)Class.Tex_Female.Length);
+            for (byte t = 0; t < Class.Tex_Female.Length; t++) Data.Write(Class.Tex_Female[t]);
 
             // Apenas dados do editor
             if (Account.InEditor)
             {
-                Data.Write(Lists.Class[i].Spawn_Map);
-                Data.Write(Lists.Class[i].Spawn_Direction);
-                Data.Write(Lists.Class[i].Spawn_X);
-                Data.Write(Lists.Class[i].Spawn_Y);
-                for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Class[i].Vital[n]);
-                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.Class[i].Attribute[n]);
-                Data.Write((byte)Lists.Class[i].Item.Length);
-                for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++)
+                Data.Write(Class.Spawn_Map);
+                Data.Write(Class.Spawn_Direction);
+                Data.Write(Class.Spawn_X);
+                Data.Write(Class.Spawn_Y);
+                for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Class.Vital[n]);
+                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Class.Attribute[n]);
+                Data.Write((byte)Class.Item.Length);
+                for (byte n = 0; n < (byte)Class.Item.Length; n++)
                 {
-                    Data.Write(Lists.Class[i].Item[n].Item1);
-                    Data.Write(Lists.Class[i].Item[n].Item2);
+                    Data.Write(Class.Item[n].Item1);
+                    Data.Write(Class.Item[n].Item2);
                 }
             }
         }
@@ -567,7 +568,7 @@ class Send
             Data.Write(Lists.Item[i].Bind);
             Data.Write(Lists.Item[i].Rarity);
             Data.Write(Lists.Item[i].Req_Level);
-            Data.Write(Lists.Item[i].Req_Class);
+            Data.Write(Lists.GetID(Lists.Item[i].Req_Class));
             Data.Write(Lists.Item[i].Potion_Experience);
             for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Data.Write(Lists.Item[i].Potion_Vital[v]);
             Data.Write(Lists.Item[i].Equip_Type);

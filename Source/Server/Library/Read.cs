@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
 
 partial class Read
 {
@@ -100,7 +101,7 @@ partial class Read
         Account.Character.Name = Data.ReadString();
         Account.Character.Texture_Num = Data.ReadInt16();
         Account.Character.Level = Data.ReadInt16();
-        Account.Character.Class_Num = Data.ReadByte();
+        Account.Character.Class = Lists.Class.ElementAt(0).Value;
         Account.Character.Genre = Data.ReadBoolean();
         Account.Character.Experience = Data.ReadInt32();
         Account.Character.Points = Data.ReadByte();
@@ -150,27 +151,26 @@ partial class Read
 
     private static void Classes()
     {
+        Lists.Class = new Dictionary<Guid, Lists.Structures.Class>();
+        FileInfo[] File = Directories.Classes.GetFiles();
+
         // Lê os dados
-        Lists.Class = new Lists.Structures.Class[Lists.Server_Data.Num_Classes + 1];
-        for (byte i = 1; i < Lists.Class.Length; i++) Class(i);
-    }
-
-    private static void Class(byte Index)
-    {
-        FileInfo File = new FileInfo(Directories.Classes.FullName + Index + Directories.Format);
-
-        // Cria o arquivo caso ele não existir
-        if (!File.Exists)
+        if (File.Length > 0)
+            for (byte i = 0; i < File.Length; i++)
+            {
+                FileStream Stream = File[i].OpenRead();
+                Lists.Class.Add(new Guid(File[i].Name.Remove(36)), (Lists.Structures.Class)new BinaryFormatter().Deserialize(Stream));
+                Stream.Close();
+            }
+        // Cria uma classe caso não houver nenhuma
+        else
         {
-            Clear.Class(Index);
-            Write.Class(Index);
-            return;
+            Lists.Structures.Class Class = new Lists.Structures.Class(Guid.NewGuid());
+            Class.Tex_Male = Class.Tex_Female = new short[1];
+            Class.Tex_Male[0] = Class.Tex_Female[0] = 1;
+            Lists.Class.Add(Class.ID, Class);
+            Write.Class(Class);
         }
-
-        // Lê os dados
-        FileStream Stream = File.OpenRead();
-        Lists.Class[Index] = (Lists.Structures.Class)new BinaryFormatter().Deserialize(Stream);
-        Stream.Close();
     }
 
     private static void Items()

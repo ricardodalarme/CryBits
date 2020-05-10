@@ -6,7 +6,7 @@ class Player : Character
 {
     // Dados permantes
     public string Name = string.Empty;
-    public byte Class_Num;
+    public Lists.Structures.Class Class;
     public short Texture_Num;
     public bool Genre;
     public short Level;
@@ -50,7 +50,7 @@ class Player : Character
 
     public short MaxVital(byte Vital)
     {
-        short[] Base = Lists.Class[Class_Num].Vital;
+        short[] Base = Class.Vital;
 
         // Cálcula o máximo de vital que um jogador possui
         switch ((Game.Vitals)Vital)
@@ -250,9 +250,8 @@ class Player : Character
         Send.Player_Experience(this);
 
         // Retorna para o ínicio
-        Lists.Structures.Class Data = Lists.Class[Class_Num];
-        Direction = (Game.Directions)Data.Spawn_Direction;
-        Warp(Data.Spawn_Map, Data.Spawn_X, Data.Spawn_Y);
+        Direction = (Game.Directions)Class.Spawn_Direction;
+        Warp(Class.Spawn_Map, Class.Spawn_X, Class.Spawn_Y);
     }
 
     public void Attack()
@@ -504,8 +503,8 @@ class Player : Character
             Send.Message(this, "You do not have the level required to use this item.", Color.White);
             return;
         }
-        if (Lists.Item[Item_Num].Req_Class > 0)
-            if (Class_Num != Lists.Item[Item_Num].Req_Class)
+        if (Lists.Item[Item_Num].Req_Class != null)
+            if (Class != Lists.Item[Item_Num].Req_Class)
             {
                 Send.Message(this, "You can not use this item.", Color.White);
                 return;

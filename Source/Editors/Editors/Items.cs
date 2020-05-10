@@ -27,7 +27,7 @@ partial class Editor_Items : Form
         // Lista de classes
         Objects.cmbReq_Class.Items.Clear();
         Objects.cmbReq_Class.Items.Add("None");
-        for (byte i = 1; i <= Lists.Class.GetUpperBound(0); i++) Objects.cmbReq_Class.Items.Add(Lists.Class[i].Name);
+        foreach (Lists.Structures.Class Class in Lists.Class.Values) Objects.cmbReq_Class.Items.Add(Class);
 
         // Lista de raridades
         Objects.cmbRarity.Items.Clear();
@@ -75,7 +75,8 @@ partial class Editor_Items : Form
         cmbBind.SelectedIndex = Selected.Bind;
         cmbRarity.SelectedIndex = Selected.Rarity;
         numReq_Level.Value = Selected.Req_Level;
-        cmbReq_Class.SelectedIndex = Selected.Req_Class;
+        if (Selected.Req_Class != null) cmbReq_Class.SelectedIndex = cmbReq_Class.Items.IndexOf(Selected.Req_Class);
+        else cmbReq_Class.SelectedIndex = 0;
         numPotion_Experience.Value = Selected.Potion_Experience;
         numPotion_HP.Value = Selected.Potion_Vital[(byte)Globals.Vitals.HP];
         numPotion_MP.Value = Selected.Potion_Vital[(byte)Globals.Vitals.MP];
@@ -181,7 +182,10 @@ partial class Editor_Items : Form
 
     private void cmbReq_Class_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected.Req_Class = (byte)cmbReq_Class.SelectedIndex;
+        if (cmbReq_Class.SelectedIndex == 0)
+            Selected.Req_Class = null;
+        else
+            Selected.Req_Class = (Lists.Structures.Class)cmbReq_Class.SelectedItem;
     }
 
     private void numEquip_Vida_ValueChanged(object sender, EventArgs e)

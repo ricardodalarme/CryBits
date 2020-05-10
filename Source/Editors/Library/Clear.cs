@@ -23,19 +23,6 @@ class Clear
         Lists.Server_Data.Max_Characters = 3;
     }
 
-    public static void Class(byte Index)
-    {
-        // Reseta os valores
-        Lists.Class[Index] = new Lists.Structures.Class();
-        Lists.Class[Index].Name = string.Empty;
-        Lists.Class[Index].Vital = new short[(byte)Globals.Vitals.Count];
-        Lists.Class[Index].Attribute = new short[(byte)Globals.Attributes.Count];
-        Lists.Class[Index].Tex_Male = new List<short>();
-        Lists.Class[Index].Tex_Female = new List<short>();
-        Lists.Class[Index].Item = new List<System.Tuple<short, short>>();
-        Lists.Class[Index].Spawn_Map = 1;
-    }
-
     public static void NPC(short Index)
     {
         // Reseta os valores

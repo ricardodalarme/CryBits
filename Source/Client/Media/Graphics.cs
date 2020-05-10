@@ -433,7 +433,7 @@ partial class Graphics
     private static void CreateCharacter_Class()
     {
         short Texture_Num = 0;
-        Lists.Structures.Class Class = Lists.Class[Utilities.CreateCharacter_Class];
+        Lists.Structures.Class Class = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value;
 
         // Textura do personagem
         if (CheckBoxes.Get("GenderMale").Checked && Class.Tex_Male.Length > 0)

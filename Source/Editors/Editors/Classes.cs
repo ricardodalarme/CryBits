@@ -28,26 +28,32 @@ partial class Editor_Classes : Form
         Objects.cmbItems.Items.Clear();
         for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbItems.Items.Add(Globals.Numbering(i, Lists.Item.GetUpperBound(0), Lists.Item[i].Name));
 
-        // Lista os dados
-        List_Update();
+        // Lista as classes
+        Objects.List.Nodes.Clear();
+        foreach (Lists.Structures.Class Class in Lists.Class.Values)
+        {
+            Objects.List.Nodes.Add(Class.Name);
+            Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = Class.ID;
+        }
+        if (Objects.List.Nodes.Count > 0) Objects.List.SelectedNode = Objects.List.Nodes[0];
 
         // Abre a janela
         Selection.Objects.Visible = false;
         Objects.Visible = true;
     }
 
-    private static void List_Update()
+    private void Groups_Visibility()
     {
-        // Adiciona as classes às listas
-        Objects.List.Items.Clear();
-        for (byte i = 1; i < Lists.Class.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.Class.GetUpperBound(0), Lists.Class[i].Name));
-        Objects.List.SelectedIndex = 0;
+        // Atualiza a visiblidade dos paineis
+        grpGeneral.Visible = grpAttributes.Visible = grpSpawn.Visible = grpTexture.Visible = grpDrop.Visible = List.SelectedNode != null;
+        grpItem_Add.Visible = false;
+        List.Focus();
     }
 
-    private void Update_Data()
+    private void List_AfterSelect(object sender, TreeViewEventArgs e)
     {
-        // Previne erros
-        if (List.SelectedIndex == -1) return;
+        // Atualiza o valor da loja selecionada
+        Selected = Lists.Class[(Guid)List.SelectedNode.Tag];
 
         // Limpa os dados necessários
         lstMale.Items.Clear();
@@ -77,29 +83,34 @@ partial class Editor_Classes : Form
         if (lstMale.Items.Count > 0) lstMale.SelectedIndex = 0;
         if (lstFemale.Items.Count > 0) lstFemale.SelectedIndex = 0;
         if (lstItems.Items.Count > 0) lstItems.SelectedIndex = 0;
+
+        // Altera a visibilidade dos grupos se necessário
+        Groups_Visibility();
     }
 
-    public static void Change_Quantity()
+    private void butNew_Click(object sender, EventArgs e)
     {
-        int Quantity = (int)Editor_Quantity.Objects.numQuantity.Value;
-        int Old = Lists.Class.GetUpperBound(0);
+        // Adiciona uma loja nova
+        Lists.Structures.Class Class = new Lists.Structures.Class(Guid.NewGuid());
+        Class.Name = "New class";
+        Lists.Class.Add(Class.ID, Class);
 
-        // Altera a quantidade de itens
-        Array.Resize(ref Lists.Class, Quantity + 1);
-
-        // Limpa os novos itens
-        if (Quantity > Old)
-            for (byte i = (byte)(Old + 1); i <= Quantity; i++)
-                Clear.Class(i);
-
-        List_Update();
+        // Adiciona na lista
+        TreeNode Node = new TreeNode(Class.Name);
+        Node.Tag = Class.ID;
+        List.Nodes.Add(Node);
+        List.SelectedNode = Node;
     }
 
-    private void List_SelectedIndexChanged(object sender, EventArgs e)
+    private void butRemove_Click(object sender, EventArgs e)
     {
-        // Atualiza a lista
-        Selected = Lists.Class[List.SelectedIndex + 1];
-        Update_Data();
+        // Remove a loja selecionada
+        if (List.SelectedNode != null)
+        {
+            Lists.Class.Remove(Selected.ID);
+            List.SelectedNode.Remove();
+            Groups_Visibility();
+        }
     }
 
     private void butSave_Click(object sender, EventArgs e)
@@ -112,16 +123,6 @@ partial class Editor_Classes : Form
         Selection.Objects.Visible = true;
     }
 
-    private void butClear_Click(object sender, EventArgs e)
-    {
-        // Limpa os dados
-        Clear.Class((byte)(List.SelectedIndex + 1));
-
-        // Atualiza os valores
-        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, string.Empty);
-        Update_Data();
-    }
-
     private void butCancel_Click(object sender, EventArgs e)
     {
         // Volta ao menu
@@ -129,17 +130,11 @@ partial class Editor_Classes : Form
         Selection.Objects.Visible = true;
     }
 
-    private void butQuantity_Click(object sender, EventArgs e)
-    {
-        // Abre a janela de alteração
-        Editor_Quantity.Open(Lists.Class.GetUpperBound(0));
-    }
-
-    private void txtName_Validated(object sender, EventArgs e)
+    private void txtName_TextChanged(object sender, EventArgs e)
     {
         // Atualiza a lista
         Selected.Name = txtName.Text;
-        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, txtName.Text);
+        List.SelectedNode.Text = txtName.Text;
     }
 
     private void txtDescription_TextChanged(object sender, EventArgs e)

@@ -6,7 +6,7 @@ class Lists
     // Armazenamento de dados
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
     public static List<Account.Structure> Account = new List<Account.Structure>();
-    public static Structures.Class[] Class;
+    public static Dictionary<Guid, Structures.Class> Class = new Dictionary<Guid, Structures.Class>();
     public static Structures.Map[] Map;
     public static Structures.Temp_Map[] Temp_Map;
     public static Structures.NPC[] NPC;
@@ -19,7 +19,7 @@ class Lists
         return Object == null ? Guid.Empty.ToString() : ((Structures.Data)Object).ID.ToString();
     }
 
-    public static object SetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
+    public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
     {
         if (Dictionary.ContainsKey(ID))
             return Dictionary[ID];
@@ -41,7 +41,6 @@ class Lists
             public byte Max_Party_Members;
             public byte Max_Map_Items;
             public byte Num_Points;
-            public byte Num_Classes;
             public short Num_Maps;
             public byte Num_Tiles;
             public short Num_NPCs;
@@ -60,19 +59,21 @@ class Lists
         }
 
         [Serializable]
-        public class Class
+        public class Class : Data
         {
             public string Name;
             public string Description;
-            public short[] Tex_Male;
-            public short[] Tex_Female;
-            public short Spawn_Map;
+            public short[] Tex_Male = Array.Empty<short>();
+            public short[] Tex_Female = Array.Empty<short>();
+            public short Spawn_Map = 1;
             public byte Spawn_Direction;
             public byte Spawn_X;
             public byte Spawn_Y;
-            public short[] Vital;
-            public short[] Attribute;
-            public Tuple<short, short>[] Item;
+            public short[] Vital = new short[(byte)Game.Vitals.Count];
+            public short[] Attribute = new short[(byte)Game.Attributes.Count];
+            public Tuple<short, short>[] Item = Array.Empty<Tuple<short, short>>();
+
+            public Class(Guid ID) : base(ID) { }
         }
 
         [Serializable]
@@ -189,7 +190,7 @@ class Lists
 
             public Shop Shop
             {
-                get => (Shop)SetData(Lists.Shop, shop);
+                get => (Shop)GetData(Lists.Shop, shop);
                 set => shop = new Guid(GetID(value));
             }
 
@@ -225,7 +226,12 @@ class Lists
             public byte Rarity;
             // Requerimentos
             public short Req_Level;
-            public byte Req_Class;
+            private Guid req_Class;
+            public Class Req_Class
+            {
+                get => (Class)GetData(Lists.Shop, req_Class);
+                set => req_Class = new Guid(GetID(value));
+            }
             // Poção
             public int Potion_Experience;
             public short[] Potion_Vital;

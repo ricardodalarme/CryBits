@@ -257,11 +257,11 @@ class Receive
         }
 
         // Define os valores iniciais do personagem
+        Lists.Structures.Class Class;
         Account.Character = new Player(Account);
         Account.Character.Name = Name;
         Account.Character.Level = 1;
-        Account.Character.Class_Num = Data.ReadByte();
-        Lists.Structures.Class Class = Lists.Class[Account.Character.Class_Num];
+        Account.Character.Class = Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
         Account.Character.Genre = Data.ReadBoolean();
         if (Account.Character.Genre) Account.Character.Texture_Num = Class.Tex_Male[Data.ReadByte()];
         else Account.Character.Texture_Num = Class.Tex_Female[Data.ReadByte()];
@@ -558,37 +558,56 @@ class Receive
             return;
         }
 
-        // Quantidade de classes
-        Lists.Class = new Lists.Structures.Class[Data.ReadByte()];
-        Lists.Server_Data.Num_Classes = (byte)Lists.Class.GetUpperBound(0);
-        Write.Server_Data();
+        // Classes a serem removidas
+        Dictionary<Guid, Lists.Structures.Class> ToRemove = new Dictionary<Guid, Lists.Structures.Class>(Lists.Class);
 
-        for (short i = 1; i < Lists.Class.Length; i++)
+        // Quantidade de classes
+        short Count = Data.ReadByte();
+
+        while (--Count >= 0)
         {
+            Guid ID = new Guid(Data.ReadString());
+            Lists.Structures.Class Class;
+
+            // Obtém o dado
+            if (Lists.Class.ContainsKey(ID))
+            {
+                Class = Lists.Class[ID];
+                ToRemove.Remove(ID);
+            }
+            else
+            {
+                Class = new Lists.Structures.Class(ID);
+                Lists.Class.Add(Class.ID, Class);
+            }
+
             // Redimensiona os valores necessários 
-            Lists.Class[i] = new Lists.Structures.Class();
-            Lists.Class[i].Vital = new short[(byte)Game.Vitals.Count];
-            Lists.Class[i].Attribute = new short[(byte)Game.Attributes.Count];
-            Lists.Class[i].Tex_Male = new short[Data.ReadByte()];
-            Lists.Class[i].Tex_Female = new short[Data.ReadByte()];
-            Lists.Class[i].Item = new System.Tuple<short, short>[Data.ReadByte()];
+            Class.Tex_Male = new short[Data.ReadByte()];
+            Class.Tex_Female = new short[Data.ReadByte()];
+            Class.Item = new Tuple<short, short>[Data.ReadByte()];
 
             // Lê os dados
-            Lists.Class[i].Name = Data.ReadString();
-            Lists.Class[i].Description = Data.ReadString();
-            for (byte t = 0; t < Lists.Class[i].Tex_Male.Length; t++) Lists.Class[i].Tex_Male[t] = Data.ReadInt16();
-            for (byte t = 0; t < Lists.Class[i].Tex_Female.Length; t++) Lists.Class[i].Tex_Female[t] = Data.ReadInt16();
-            Lists.Class[i].Spawn_Map = Data.ReadInt16();
-            Lists.Class[i].Spawn_Direction = Data.ReadByte();
-            Lists.Class[i].Spawn_X = Data.ReadByte();
-            Lists.Class[i].Spawn_Y = Data.ReadByte();
-            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Class[i].Vital[v] = Data.ReadInt16();
-            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Class[i].Attribute[a] = Data.ReadInt16();
-            for (byte n = 0; n < (byte)Lists.Class[i].Item.Length; n++) Lists.Class[i].Item[n] = new System.Tuple<short, short>(Data.ReadInt16(), Data.ReadInt16());
+            Class.Name = Data.ReadString();
+            Class.Description = Data.ReadString();
+            for (byte t = 0; t < Class.Tex_Male.Length; t++) Class.Tex_Male[t] = Data.ReadInt16();
+            for (byte t = 0; t < Class.Tex_Female.Length; t++) Class.Tex_Female[t] = Data.ReadInt16();
+            Class.Spawn_Map = Data.ReadInt16();
+            Class.Spawn_Direction = Data.ReadByte();
+            Class.Spawn_X = Data.ReadByte();
+            Class.Spawn_Y = Data.ReadByte();
+            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Class.Vital[v] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Class.Attribute[a] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Class.Item.Length; n++) Class.Item[n] = new System.Tuple<short, short>(Data.ReadInt16(), Data.ReadInt16());
+        }
+
+        // Remove as lojas que não tiveram os dados atualizados
+        foreach (Guid Remove in ToRemove.Keys)
+        {
+            Lists.Class.Remove(Remove);
+            File.Delete(Directories.Classes.FullName + Remove.ToString() + Directories.Format);
         }
 
         // Salva os dados e envia pra todos jogadores conectados
-        Write.Classes();
         for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i] != Account)
                 Send.Classes(Lists.Account[i]);
@@ -677,7 +696,7 @@ class Receive
 
             // Quantidade de camadas
             byte Num_Layers = Data.ReadByte();
-            Lists.Map[i].Layer = new System.Collections.Generic.List<Lists.Structures.Map_Layer>();
+            Lists.Map[i].Layer = new List<Lists.Structures.Map_Layer>();
 
             // Camadas
             for (byte n = 0; n <= Num_Layers; n++)
@@ -795,7 +814,7 @@ class Receive
             for (byte n = 0; n < Lists.NPC[i].Allie.Length; n++) Lists.NPC[i].Allie[n] = Data.ReadInt16();
             Lists.NPC[i].Movement = (NPC.Movements)Data.ReadByte();
             Lists.NPC[i].Flee_Helth = Data.ReadByte();
-            Lists.NPC[i].Shop = (Lists.Structures.Shop)Lists.SetData(Lists.Shop, new Guid(Data.ReadString()));
+            Lists.NPC[i].Shop = (Lists.Structures.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
         }
 
         // Salva os dados e envia pra todos jogadores conectados
@@ -835,7 +854,7 @@ class Receive
             Lists.Item[i].Bind = Data.ReadByte();
             Lists.Item[i].Rarity = Data.ReadByte();
             Lists.Item[i].Req_Level = Data.ReadInt16();
-            Lists.Item[i].Req_Class = Data.ReadByte();
+            Lists.Item[i].Req_Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
             Lists.Item[i].Potion_Experience = Data.ReadInt32();
             for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
             Lists.Item[i].Equip_Type = Data.ReadByte();

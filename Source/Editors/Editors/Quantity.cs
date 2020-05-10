@@ -28,7 +28,6 @@ public partial class Editor_Quantity : Form
     private void butOk_Click(object sender, EventArgs e)
     {
         // Define o nova quantidade
-        if (Editor_Classes.Objects.Visible) Editor_Classes.Change_Quantity();
         if (Editor_Maps.Objects.Visible) Editor_Maps.Change_Quantity();
         if (Editor_NPCs.Objects.Visible) Editor_NPCs.Change_Quantity();
         if (Editor_Items.Objects.Visible) Editor_Items.Change_Quantity();
