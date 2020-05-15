@@ -168,6 +168,7 @@ partial class Read
             Lists.Structures.Class Class = new Lists.Structures.Class(Guid.NewGuid());
             Class.Tex_Male = Class.Tex_Female = new short[1];
             Class.Tex_Male[0] = Class.Tex_Female[0] = 1;
+            Class.Spawn_Map = 1;
             Lists.Class.Add(Class.ID, Class);
             Write.Class(Class);
         }
