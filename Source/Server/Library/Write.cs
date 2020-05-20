@@ -48,10 +48,10 @@ class Write
         for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Account.Character.Attribute[n]);
         for (byte n = 1; n <= Game.Max_Inventory; n++)
         {
-            Data.Write(Account.Character.Inventory[n].Item_Num);
+            Data.Write(Lists.GetID(Account.Character.Inventory[n].Item));
             Data.Write(Account.Character.Inventory[n].Amount);
         }
-        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Account.Character.Equipment[n]);
+        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Lists.GetID(Account.Character.Equipment[n]));
         for (byte n = 1; n <= Game.Max_Hotbar; n++)
         {
             Data.Write(Account.Character.Hotbar[n].Type);
@@ -94,7 +94,7 @@ class Write
         Stream.Close();
     }
 
-    public static void Class(Lists.Structures.Class Class)
+    public static void Class(Objects.Class Class)
     {
         // Escreve os dados
         FileStream Stream = new FileInfo(Directories.Classes.FullName + Class.ID + Directories.Format).OpenWrite();
@@ -116,17 +116,11 @@ class Write
         Stream.Close();
     }
 
-    public static void Items()
+    public static void Item(Objects.Item Item)
     {
         // Escreve os dados
-        for (byte Index = 1; Index < Lists.Item.Length; Index++) Item(Index);
-    }
-
-    public static void Item(byte Index)
-    {
-        // Escreve os dados
-        FileStream Stream = new FileInfo(Directories.Items.FullName + Index + Directories.Format).OpenWrite();
-        new BinaryFormatter().Serialize(Stream, Lists.Item[Index]);
+        FileStream Stream = new FileInfo(Directories.Items.FullName + Item.ID + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Item);
         Stream.Close();
     }
 
@@ -158,7 +152,7 @@ class Write
         Stream.Close();
     }
 
-    public static void Shop(Lists.Structures.Shop Shop)
+    public static void Shop(Objects.Shop Shop)
     {
         // Escreve os dados
         FileStream Stream = new FileInfo(Directories.Shops.FullName + Shop.ID + Directories.Format).OpenWrite();

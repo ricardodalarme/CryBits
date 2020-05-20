@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using System;
 using System.Drawing;
 
 class Send
@@ -183,7 +184,7 @@ class Send
         else Data.Write((byte)Client_Packets.Classes);
         Data.Write((byte)Lists.Class.Count);
 
-        foreach (Lists.Structures.Class Class in Lists.Class.Values)
+        foreach (Objects.Class Class in Lists.Class.Values)
         {
             // Escreve os dados
             Data.Write(Class.ID.ToString());
@@ -206,7 +207,7 @@ class Send
                 Data.Write((byte)Class.Item.Length);
                 for (byte n = 0; n < (byte)Class.Item.Length; n++)
                 {
-                    Data.Write(Class.Item[n].Item1);
+                    Data.Write(Lists.GetID(Class.Item[n].Item1));
                     Data.Write(Class.Item[n].Item2);
                 }
             }
@@ -244,7 +245,7 @@ class Send
             Data.Write(Player.MaxVital(n));
         }
         for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Player.Attribute[n]);
-        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Player.Equipment[n]);
+        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Lists.GetID(Player.Equipment[n]));
 
         return Data;
     }
@@ -332,7 +333,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Equipments);
         Data.Write(Player.Name);
-        for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Data.Write(Player.Equipment[i]);
+        for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Data.Write(Lists.GetID(Player.Equipment[i]));
         ToMap(Player.Map_Num, Data);
     }
 
@@ -446,6 +447,7 @@ class Send
                 Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_2);
                 Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_3);
                 Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_4);
+                Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_5);
                 Data.Write(Lists.Map[Map_Num].Tile[x, y].Zone);
 
                 // Bloqueio direcional
@@ -557,23 +559,23 @@ class Send
         // Envia os dados
         if (Account.InEditor) Data.Write((byte)Editor_Packets.Items);
         else Data.Write((byte)Client_Packets.Items);
-        Data.Write((short)Lists.Item.Length);
-        for (short i = 1; i < Lists.Item.Length; i++)
+        Data.Write((short)Lists.Item.Count);
+        foreach (Objects.Item Item in Lists.Item.Values)
         {
-            Data.Write(Lists.Item[i].Name);
-            Data.Write(Lists.Item[i].Description);
-            Data.Write(Lists.Item[i].Texture);
-            Data.Write(Lists.Item[i].Type);
-            Data.Write(Lists.Item[i].Stackable);
-            Data.Write(Lists.Item[i].Bind);
-            Data.Write(Lists.Item[i].Rarity);
-            Data.Write(Lists.Item[i].Req_Level);
-            Data.Write(Lists.GetID(Lists.Item[i].Req_Class));
-            Data.Write(Lists.Item[i].Potion_Experience);
-            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Data.Write(Lists.Item[i].Potion_Vital[v]);
-            Data.Write(Lists.Item[i].Equip_Type);
-            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Data.Write(Lists.Item[i].Equip_Attribute[a]);
-            Data.Write(Lists.Item[i].Weapon_Damage);
+            Data.Write(Item.Name);
+            Data.Write(Item.Description);
+            Data.Write(Item.Texture);
+            Data.Write(Item.Type);
+            Data.Write(Item.Stackable);
+            Data.Write(Item.Bind);
+            Data.Write(Item.Rarity);
+            Data.Write(Item.Req_Level);
+            Data.Write(Lists.GetID(Item.Req_Class));
+            Data.Write(Item.Potion_Experience);
+            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Data.Write(Item.Potion_Vital[v]);
+            Data.Write(Item.Equip_Type);
+            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Data.Write(Item.Equip_Attribute[a]);
+            Data.Write(Item.Weapon_Damage);
         }
 
         // Envia os dados
@@ -591,7 +593,7 @@ class Send
         for (byte i = 1; i < Lists.Temp_Map[Map_Num].Item.Count; i++)
         {
             // Geral
-            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Item_Num);
+            Data.Write(Lists.GetID(Lists.Temp_Map[Map_Num].Item[i].Item));
             Data.Write(Lists.Temp_Map[Map_Num].Item[i].X);
             Data.Write(Lists.Temp_Map[Map_Num].Item[i].Y);
         }
@@ -609,7 +611,7 @@ class Send
         Data.Write((short)(Lists.Temp_Map[Map_Num].Item.Count - 1));
         for (byte i = 1; i < Lists.Temp_Map[Map_Num].Item.Count; i++)
         {
-            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Item_Num);
+            Data.Write(Lists.GetID(Lists.Temp_Map[Map_Num].Item[i].Item));
             Data.Write(Lists.Temp_Map[Map_Num].Item[i].X);
             Data.Write(Lists.Temp_Map[Map_Num].Item[i].Y);
         }
@@ -624,7 +626,7 @@ class Send
         Data.Write((byte)Client_Packets.Player_Inventory);
         for (byte i = 1; i <= Game.Max_Inventory; i++)
         {
-            Data.Write(Player.Inventory[i].Item_Num);
+            Data.Write(Lists.GetID(Player.Inventory[i].Item));
             Data.Write(Player.Inventory[i].Amount);
         }
         ToPlayer(Player, Data);
@@ -671,7 +673,7 @@ class Send
                 Data.Write((byte)Lists.NPC[i].Drop.Length);
                 for (byte n = 0; n < Lists.NPC[i].Drop.Length; n++)
                 {
-                    Data.Write(Lists.NPC[i].Drop[n].Item_Num);
+                    Data.Write(Lists.GetID(Lists.NPC[i].Drop[n].Item));
                     Data.Write(Lists.NPC[i].Drop[n].Amount);
                     Data.Write(Lists.NPC[i].Drop[n].Chance);
                 }
@@ -880,7 +882,7 @@ class Send
         Data.Write(Own);
         for (byte i = 1; i <= Game.Max_Inventory; i++)
         {
-            Data.Write(To.Inventory[To.Trade_Offer[i].Item_Num].Item_Num);
+            Data.Write(Lists.GetID(To.Inventory[To.Trade_Offer[i].Slot_Num].Item));
             Data.Write(To.Trade_Offer[i].Amount);
         }
         ToPlayer(Player, Data);
@@ -894,23 +896,23 @@ class Send
         if (Account.InEditor) Data.Write((byte)Editor_Packets.Shops);
         else Data.Write((byte)Client_Packets.Shops);
         Data.Write((short)Lists.Shop.Count);
-        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values)
+        foreach (Objects.Shop Shop in Lists.Shop.Values)
         {
             // Geral
             Data.Write(Shop.ID.ToString());
             Data.Write((byte)Shop.Sold.Length);
             Data.Write((byte)Shop.Bought.Length);
             Data.Write(Shop.Name);
-            Data.Write(Shop.Currency);
+            Data.Write(Lists.GetID(Shop.Currency));
             for (byte j = 0; j < Shop.Sold.Length; j++)
             {
-                Data.Write(Shop.Sold[j].Item_Num);
+                Data.Write(Lists.GetID(Shop.Sold[j].Item));
                 Data.Write(Shop.Sold[j].Amount);
                 Data.Write(Shop.Sold[j].Price);
             }
             for (byte j = 0; j < Shop.Bought.Length; j++)
             {
-                Data.Write(Shop.Bought[j].Item_Num);
+                Data.Write(Lists.GetID(Shop.Bought[j].Item));
                 Data.Write(Shop.Bought[j].Amount);
                 Data.Write(Shop.Bought[j].Price);
             }
@@ -918,7 +920,7 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void Shop_Open(Player Player, Lists.Structures.Shop Shop)
+    public static void Shop_Open(Player Player, Objects.Shop Shop)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

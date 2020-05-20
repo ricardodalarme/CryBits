@@ -3,16 +3,7 @@ using System.Collections.Generic;
 
 class Account
 {
-    public static Structure Find(string Name)
-    {
-        // Encontra o usuário
-        for (byte i = 0; i < Lists.Account.Count; i++)
-            if (Lists.Account[i].IsPlaying)
-                if (Lists.Account[i].User.Equals(Name))
-                    return Lists.Account[i];
-
-        return null;
-    }
+    public static Structure Find(string Name) => Lists.Account.Find(x => x.User.Equals(Name));
 
     public static Player FindPlayer(string Name)
     {
@@ -23,16 +14,6 @@ class Account
                     return Lists.Account[i].Character;
 
         return null;
-    }
-
-    public static bool MultipleAccounts(string User)
-    {
-        // Verifica se já há alguém conectado com essa conta
-        for (byte i = 0; i < Lists.Account.Count; i++)
-            if (Lists.Account[i].User.Equals(User))
-                return true;
-
-        return false;
     }
 
     public class Structure

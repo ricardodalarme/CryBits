@@ -80,9 +80,13 @@
   <ItemGroup>
     <Compile Include="Library\Clear.cs" />
     <Compile Include="Library\Directories.cs" />
-    <Compile Include="Logic\Character.cs" />
-    <Compile Include="Logic\Player.cs" />
+    <Compile Include="Objects\Character.cs" />
+    <Compile Include="Objects\Class.cs" />
+    <Compile Include="Objects\Item.cs" />
+    <Compile Include="Objects\NPC.cs" />
+    <Compile Include="Objects\Player.cs" />
     <Compile Include="Logic\Game.cs" />
+    <Compile Include="Objects\Shop.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
@@ -111,5 +115,6 @@
   <ItemGroup>
     <Content Include="icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

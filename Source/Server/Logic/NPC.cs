@@ -29,7 +29,7 @@ class NPC
 
         private short Regeneration(byte Vital)
         {
-            Lists.Structures.NPC Data = Lists.NPC[Data_Index];
+            Objects.NPC Data = Lists.NPC[Data_Index];
 
             // Cálcula o máximo de vital que o NPC possui
             switch ((Game.Vitals)Vital)
@@ -54,7 +54,7 @@ class NPC
         /////////////
         public void Logic()
         {
-            Lists.Structures.NPC NPC_Data = Lists.NPC[Data_Index];
+            Objects.NPC NPC_Data = Lists.NPC[Data_Index];
 
             ////////////////
             // Surgimento //
@@ -97,8 +97,8 @@ class NPC
                 {
                     // Jogador
                     if (Target == null)
-                        for (byte Player_Index = 0; Player_Index < Lists.Account.Count; Player_Index++) 
-                            {
+                        for (byte Player_Index = 0; Player_Index < Lists.Account.Count; Player_Index++)
+                        {
                             // Verifica se o jogador está jogando e no mesmo mapa que o NPC
                             if (!Lists.Account[Player_Index].IsPlaying) continue;
                             if (Lists.Account[Player_Index].Character.Map_Num != Map_Num) continue;
@@ -383,7 +383,7 @@ class NPC
             if (Attack_Damage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Map_NPC_Attack(this, Victim.Index.ToString(),Game.Target.NPC);
+                Send.Map_NPC_Attack(this, Victim.Index.ToString(), Game.Target.NPC);
 
                 if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
                 {
@@ -407,22 +407,22 @@ class NPC
 
         public void Died()
         {
-            Lists.Structures.NPC NPC = Lists.NPC[Data_Index];
+            Objects.NPC NPC = Lists.NPC[Data_Index];
 
             // Solta os itens
             for (byte i = 0; i < NPC.Drop.Length; i++)
-                if (NPC.Drop[i].Item_Num > 0)
+                if (NPC.Drop[i].Item != null)
                     if (Game.Random.Next(1, 99) <= NPC.Drop[i].Chance)
                     {
                         // Dados do item
-                        Lists.Structures.Map_Items Item = new Lists.Structures.Map_Items();
-                        Item.Item_Num = NPC.Drop[i].Item_Num;
-                        Item.Amount = NPC.Drop[i].Amount;
-                        Item.X = X;
-                        Item.Y = Y;
+                        Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
+                        Map_Item.Item = NPC.Drop[i].Item;
+                        Map_Item.Amount = NPC.Drop[i].Amount;
+                        Map_Item.X = X;
+                        Map_Item.Y = Y;
 
                         // Solta o item
-                        Lists.Temp_Map[Map_Num].Item.Add(Item);
+                        Lists.Temp_Map[Map_Num].Item.Add(Map_Item);
                     }
 
             // Envia os dados dos itens no chão para o mapa

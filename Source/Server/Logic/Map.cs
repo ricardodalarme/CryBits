@@ -132,7 +132,7 @@ class Map
     public static void Spawn_Items(short Map_Num)
     {
         Lists.Structures.Map Data = Lists.Map[Map_Num];
-        Lists.Structures.Map_Items Item = new Lists.Structures.Map_Items();
+        Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
 
         // Verifica se tem algum atributo de item no mapa
         for (byte x = 0; x <= Data.Width; x++)
@@ -140,11 +140,11 @@ class Map
                 if (Data.Tile[x, y].Attribute == (byte)Attributes.Item)
                 {
                     // Faz o item aparecer
-                    Item.Item_Num = Data.Tile[x, y].Data_1;
-                    Item.Amount = Data.Tile[x, y].Data_2;
-                    Item.X = x;
-                    Item.Y = y;
-                    Lists.Temp_Map[Map_Num].Item.Add(Item);
+                    Map_Item.Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.Tile[x, y].Data_5));
+                    Map_Item.Amount = Data.Tile[x, y].Data_2;
+                    Map_Item.X = x;
+                    Map_Item.Y = y;
+                    Lists.Temp_Map[Map_Num].Item.Add(Map_Item);
                 }
     }
 }

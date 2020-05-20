@@ -6,7 +6,7 @@ class Player : Character
 {
     // Dados permantes
     public string Name = string.Empty;
-    public Lists.Structures.Class Class;
+    public Objects.Class Class;
     public short Texture_Num;
     public bool Genre;
     public short Level;
@@ -14,7 +14,7 @@ class Player : Character
     public byte Points;
     public short[] Attribute = new short[(byte)Game.Attributes.Count];
     public Lists.Structures.Inventories[] Inventory = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
-    public short[] Equipment = new short[(byte)Game.Equipments.Count];
+    public Objects.Item[] Equipment = new Objects.Item[(byte)Game.Equipments.Count];
     public Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
 
     // Dados temporários
@@ -24,8 +24,8 @@ class Player : Character
     public string Party_Request;
     public Player Trade;
     public string Trade_Request;
-    public Lists.Structures.Inventories[] Trade_Offer;
-    public Lists.Structures.Shop Shop;
+    public Lists.Structures.Trade_Slot[] Trade_Offer;
+    public Objects.Shop Shop;
     public Account.Structure Account;
 
     // Constutor
@@ -40,7 +40,7 @@ class Player : Character
         get
         {
             short Value = Attribute[(byte)Game.Attributes.Strength];
-            if (Lists.Item[Equipment[(byte)Game.Equipments.Weapon]] != null) Value += Lists.Item[Equipment[(byte)Game.Equipments.Weapon]].Weapon_Damage;
+            if (Equipment[(byte)Game.Equipments.Weapon] != null) Value += Equipment[(byte)Game.Equipments.Weapon].Weapon_Damage;
             return Value;
         }
     }
@@ -412,24 +412,24 @@ class Player : Character
         if (NumLevel > 0) Send.Map_Players(this);
     }
 
-    public bool GiveItem(short Item_Num, short Amount)
+    public bool GiveItem(Objects.Item Item, short Amount)
     {
-        byte Slot_Item = FindInventory(Item_Num);
-        byte Slot_Empty = FindInventory(0);
+        byte Slot_Item = FindInventory(Item);
+        byte Slot_Empty = FindInventory(null);
 
         // Somente se necessário
-        if (Item_Num == 0) return false;
+        if (Item == null) return false;
         if (Slot_Empty == 0) return false;
         if (Amount == 0) Amount = 1;
 
         // Empilhável
-        if (Slot_Item > 0 && Lists.Item[Item_Num].Stackable)
+        if (Slot_Item > 0 && Item.Stackable)
             Inventory[Slot_Item].Amount += Amount;
         // Não empilhável
         else
         {
-            Inventory[Slot_Empty].Item_Num = Item_Num;
-            Inventory[Slot_Empty].Amount = Lists.Item[Item_Num].Stackable ? Amount : (byte)1;
+            Inventory[Slot_Empty].Item = Item;
+            Inventory[Slot_Empty].Amount = Item.Stackable ? Amount : (byte)1;
         }
 
         // Envia os dados ao jogador
@@ -470,15 +470,15 @@ class Player : Character
 
         // Somente se necessário
         if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
-        if (Inventory[Slot].Item_Num == 0) return;
-        if (Lists.Item[Inventory[Slot].Item_Num].Bind == (byte)Game.BindOn.Pickup) return;
+        if (Inventory[Slot].Item == null) return;
+        if (Inventory[Slot].Item.Bind == (byte)Game.BindOn.Pickup) return;
         if (Trade != null) return;
 
         // Verifica se não está dropando mais do que tem
         if (Amount > Inventory[Slot].Amount) Amount = Inventory[Slot].Amount;
 
         // Solta o item no chão
-        Map_Item.Item_Num = Inventory[Slot].Item_Num;
+        Map_Item.Item = Inventory[Slot].Item;
         Map_Item.Amount = Amount;
         Map_Item.X = X;
         Map_Item.Y = Y;
@@ -491,55 +491,55 @@ class Player : Character
 
     public void UseItem(byte Slot)
     {
-        short Item_Num = Inventory[Slot].Item_Num;
+        Objects.Item Item = Inventory[Slot].Item;
 
         // Somente se necessário
-        if (Item_Num == 0) return;
+        if (Item == null) return;
         if (Trade != null) return;
 
         // Requerimentos
-        if (Level < Lists.Item[Item_Num].Req_Level)
+        if (Level <  Item.Req_Level)
         {
             Send.Message(this, "You do not have the level required to use this item.", Color.White);
             return;
         }
-        if (Lists.Item[Item_Num].Req_Class != null)
-            if (Class != Lists.Item[Item_Num].Req_Class)
+        if (Item.Req_Class != null)
+            if (Class != Item.Req_Class)
             {
                 Send.Message(this, "You can not use this item.", Color.White);
                 return;
             }
 
-        if (Lists.Item[Item_Num].Type == (byte)Game.Items.Equipment)
+        if (Item.Type == (byte)Game.Items.Equipment)
         {
             // Retira o item do inventário
             TakeItem(Slot, 1);
 
             // Caso já estiver com algum equipamento, desequipa ele
-            short Current_Equip = Equipment[Lists.Item[Item_Num].Equip_Type];
-            if (Current_Equip > 0) GiveItem(Current_Equip, 1);
+            Objects.Item Current_Equip = Equipment[Item.Equip_Type];
+            if (Current_Equip != null) GiveItem(Current_Equip, 1);
 
             // Equipa o item
-            Equipment[Lists.Item[Item_Num].Equip_Type] = Item_Num;
-            for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Attribute[i] += Lists.Item[Item_Num].Equip_Attribute[i];
+            Equipment[Item.Equip_Type] = Item;
+            for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Attribute[i] += Item.Equip_Attribute[i];
 
             // Envia os dados
             Send.Player_Inventory(this);
             Send.Player_Equipments(this);
             Send.Player_Hotbar(this);
         }
-        else if (Lists.Item[Item_Num].Type == (byte)Game.Items.Potion)
+        else if (Item.Type == (byte)Game.Items.Potion)
         {
             // Efeitos
             bool HadEffect = false;
-            GiveExperience(Lists.Item[Item_Num].Potion_Experience);
+            GiveExperience(Item.Potion_Experience);
             for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
             {
                 // Verifica se o item causou algum efeito 
-                if (Vital[i] < MaxVital(i) && Lists.Item[Item_Num].Potion_Vital[i] != 0) HadEffect = true;
+                if (Vital[i] < MaxVital(i) && Item.Potion_Vital[i] != 0) HadEffect = true;
 
                 // Efeito
-                Vital[i] += Lists.Item[Item_Num].Potion_Vital[i];
+                Vital[i] += Item.Potion_Vital[i];
 
                 // Impede que passe dos limites
                 if (Vital[i] < 0) Vital[i] = 0;
@@ -550,7 +550,7 @@ class Player : Character
             if (Vital[(byte)Game.Vitals.HP] == 0) Died();
 
             // Remove o item caso tenha tido algum efeito
-            if (Lists.Item[Item_Num].Potion_Experience > 0 || HadEffect) TakeItem(Slot, 1);
+            if (Item.Potion_Experience > 0 || HadEffect) TakeItem(Slot, 1);
         }
     }
 
@@ -564,11 +564,11 @@ class Player : Character
         return 0;
     }
 
-    public byte FindInventory(short Item_Num)
+    public byte FindInventory(Objects.Item Item)
     {
         // Encontra algo especifico na hotbar
         for (byte i = 1; i <= Game.Max_Inventory; i++)
-            if (Inventory[i].Item_Num == Item_Num)
+            if (Inventory[i].Item == Item)
                 return i;
 
         return 0;
@@ -580,7 +580,7 @@ class Player : Character
 
         // Retorna a quantidade de itens oferecidos na troca
         for (byte i = 1; i <= Game.Max_Inventory; i++)
-            if (Inventory[i].Item_Num == 0)
+            if (Inventory[i].Item == null)
                 Total++;
 
         return Total;
@@ -661,13 +661,13 @@ class Player : Character
 
         // Retorna a quantidade de itens oferecidos na troca
         for (byte i = 1; i <= Game.Max_Inventory; i++)
-            if (Trade_Offer[i].Item_Num > 0)
+            if (Trade_Offer[i].Slot_Num != 0)
                 Total++;
 
         return Total;
     }
 
-    public void Shop_Open(Lists.Structures.Shop Shop)
+    public void Shop_Open(Objects.Shop Shop)
     {
         // Abre a loja
         this.Shop = Shop;

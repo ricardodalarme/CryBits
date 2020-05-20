@@ -154,7 +154,7 @@ class Receive
             Send.Alert(Account, "This username isn't registered.");
             return;
         }
-        if (global::Account.MultipleAccounts(User))
+        if (global::Account.Find(User) != null)
         {
             Send.Alert(Account, "Someone already signed in to this account.");
             return;
@@ -257,11 +257,11 @@ class Receive
         }
 
         // Define os valores iniciais do personagem
-        Lists.Structures.Class Class;
+        Objects.Class Class;
         Account.Character = new Player(Account);
         Account.Character.Name = Name;
         Account.Character.Level = 1;
-        Account.Character.Class = Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
+        Account.Character.Class = Class = (Objects.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
         Account.Character.Genre = Data.ReadBoolean();
         if (Account.Character.Genre) Account.Character.Texture_Num = Class.Tex_Male[Data.ReadByte()];
         else Account.Character.Texture_Num = Class.Tex_Female[Data.ReadByte()];
@@ -272,8 +272,8 @@ class Receive
         Account.Character.Y = Class.Spawn_Y;
         for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Account.Character.Vital[i] = Account.Character.MaxVital(i);
         for (byte i = 0; i < (byte)Class.Item.Length; i++)
-            if (Lists.Item[Class.Item[i].Item1].Type == (byte)Game.Items.Equipment && Account.Character.Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] == 0)
-                Account.Character.Equipment[Lists.Item[Class.Item[i].Item1].Equip_Type] = Class.Item[i].Item1;
+            if (Class.Item[i].Item1.Type == (byte)Game.Items.Equipment && Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] == null)
+                Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] = Class.Item[i].Item1;
             else
                 Account.Character.GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
 
@@ -407,13 +407,13 @@ class Receive
     {
         short Map_Num = Player.Map_Num;
         byte Map_Item = Map.HasItem(Map_Num, Player.X, Player.Y);
-        short Map_Item_Num = Lists.Temp_Map[Map_Num].Item[Map_Item].Item_Num;
+        Objects.Item Item = Lists.Temp_Map[Map_Num].Item[Map_Item].Item;
 
         // Somente se necessário
         if (Map_Item == 0) return;
 
         // Dá o item ao jogador
-        if (Player.GiveItem(Map_Item_Num, Lists.Temp_Map[Map_Num].Item[Map_Item].Amount))
+        if (Player.GiveItem(Item, Lists.Temp_Map[Map_Num].Item[Map_Item].Amount))
         {
             // Retira o item do mapa
             Lists.Temp_Map[Map_Num].Item.RemoveAt(Map_Item);
@@ -432,12 +432,12 @@ class Receive
         byte Hotbar_Slot = Player.FindHotbar((byte)Game.Hotbar.Item, Slot_Old);
 
         // Somente se necessário
-        if (Player.Inventory[Slot_Old].Item_Num == 0) return;
+        if (Player.Inventory[Slot_Old].Item == null) return;
         if (Slot_Old == Slot_New) return;
         if (Player.Trade != null) return;
 
         // Muda o item de slot
-        (Player.Inventory[Slot_Old].Item_Num, Player.Inventory[Slot_New].Item_Num) = (Player.Inventory[Slot_New].Item_Num, Player.Inventory[Slot_Old].Item_Num);
+        (Player.Inventory[Slot_Old].Item, Player.Inventory[Slot_New].Item) = (Player.Inventory[Slot_New].Item, Player.Inventory[Slot_Old].Item);
         (Player.Inventory[Slot_Old].Amount, Player.Inventory[Slot_New].Amount) = (Player.Inventory[Slot_New].Amount, Player.Inventory[Slot_Old].Amount);
         Player.Hotbar[Hotbar_Slot].Slot = Slot_New;
         Send.Player_Inventory(Player);
@@ -456,8 +456,8 @@ class Receive
         Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
 
         // Apenas se necessário
-        if (Player.Equipment[Slot] == 0) return;
-        if (Lists.Item[Player.Equipment[Slot]].Bind == (byte)Game.BindOn.Equip) return;
+        if (Player.Equipment[Slot] == null) return;
+        if (Player.Equipment[Slot].Bind == (byte)Game.BindOn.Equip) return;
 
         // Adiciona o equipamento ao inventário
         if (!Player.GiveItem(Player.Equipment[Slot], 1))
@@ -466,7 +466,7 @@ class Receive
             if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
 
             // Solta o item no chão
-            Map_Item.Item_Num = Player.Equipment[Slot];
+            Map_Item.Item = Player.Equipment[Slot];
             Map_Item.Amount = 1;
             Map_Item.X = Player.X;
             Map_Item.Y = Player.Y;
@@ -478,8 +478,8 @@ class Receive
         }
 
         // Remove o equipamento
-        for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Player.Attribute[i] -= Lists.Item[Player.Equipment[Slot]].Equip_Attribute[i];
-        Player.Equipment[Slot] = 0;
+        for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Player.Attribute[i] -= Player.Equipment[Slot].Equip_Attribute[i];
+        Player.Equipment[Slot] = null;
 
         // Envia os dados
         Send.Player_Equipments(Player);
@@ -559,7 +559,7 @@ class Receive
         }
 
         // Classes a serem removidas
-        Dictionary<Guid, Lists.Structures.Class> ToRemove = new Dictionary<Guid, Lists.Structures.Class>(Lists.Class);
+        Dictionary<Guid, Objects.Class> ToRemove = new Dictionary<Guid, Objects.Class>(Lists.Class);
 
         // Quantidade de classes
         short Count = Data.ReadByte();
@@ -567,7 +567,7 @@ class Receive
         while (--Count >= 0)
         {
             Guid ID = new Guid(Data.ReadString());
-            Lists.Structures.Class Class;
+            Objects.Class Class;
 
             // Obtém o dado
             if (Lists.Class.ContainsKey(ID))
@@ -577,14 +577,14 @@ class Receive
             }
             else
             {
-                Class = new Lists.Structures.Class(ID);
+                Class = new Objects.Class(ID);
                 Lists.Class.Add(Class.ID, Class);
             }
 
             // Redimensiona os valores necessários 
             Class.Tex_Male = new short[Data.ReadByte()];
             Class.Tex_Female = new short[Data.ReadByte()];
-            Class.Item = new Tuple<short, short>[Data.ReadByte()];
+            Class.Item = new Tuple<Objects.Item, short>[Data.ReadByte()];
 
             // Lê os dados
             Class.Name = Data.ReadString();
@@ -597,7 +597,10 @@ class Receive
             Class.Spawn_Y = Data.ReadByte();
             for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Class.Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Class.Attribute[a] = Data.ReadInt16();
-            for (byte n = 0; n < (byte)Class.Item.Length; n++) Class.Item[n] = new System.Tuple<short, short>(Data.ReadInt16(), Data.ReadInt16());
+            for (byte n = 0; n < (byte)Class.Item.Length; n++) Class.Item[n] = new Tuple<Objects.Item, short>((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16());
+
+            // Salva os dados das classes
+            Write.Class(Class);
         }
 
         // Remove as lojas que não tiveram os dados atualizados
@@ -730,6 +733,7 @@ class Receive
                     Lists.Map[i].Tile[x, y].Data_2 = Data.ReadInt16();
                     Lists.Map[i].Tile[x, y].Data_3 = Data.ReadInt16();
                     Lists.Map[i].Tile[x, y].Data_4 = Data.ReadInt16();
+                    Lists.Map[i].Tile[x, y].Data_5 = Data.ReadString();
                     Lists.Map[i].Tile[x, y].Zone = Data.ReadByte();
                     Lists.Map[i].Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
 
@@ -786,14 +790,14 @@ class Receive
         }
 
         // Quantidade de npcs
-        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16()];
+        Lists.NPC = new Objects.NPC[Data.ReadInt16()];
         Lists.Server_Data.Num_NPCs = (byte)Lists.NPC.GetUpperBound(0);
         Write.Server_Data();
 
         for (short i = 1; i < Lists.NPC.Length; i++)
         {
             // Redimensiona os valores necessários 
-            Lists.NPC[i] = new Lists.Structures.NPC();
+            Lists.NPC[i] = new Objects.NPC();
             Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
             Lists.NPC[i].Attribute = new short[(byte)Game.Attributes.Count];
 
@@ -807,14 +811,14 @@ class Receive
             Lists.NPC[i].Experience = Data.ReadInt32();
             for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
             for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
-            Lists.NPC[i].Drop = new Lists.Structures.NPC_Drop[Data.ReadByte()];
-            for (byte n = 0; n < Lists.NPC[i].Drop.Length; n++) Lists.NPC[i].Drop[n] = new Lists.Structures.NPC_Drop(Data.ReadInt16(), Data.ReadInt16(), Data.ReadByte());
+            Lists.NPC[i].Drop = new Objects.NPC_Drop[Data.ReadByte()];
+            for (byte n = 0; n < Lists.NPC[i].Drop.Length; n++) Lists.NPC[i].Drop[n] = new Objects.NPC_Drop((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
             Lists.NPC[i].AttackNPC = Data.ReadBoolean();
             Lists.NPC[i].Allie = new short[Data.ReadByte()];
             for (byte n = 0; n < Lists.NPC[i].Allie.Length; n++) Lists.NPC[i].Allie[n] = Data.ReadInt16();
             Lists.NPC[i].Movement = (NPC.Movements)Data.ReadByte();
             Lists.NPC[i].Flee_Helth = Data.ReadByte();
-            Lists.NPC[i].Shop = (Lists.Structures.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+            Lists.NPC[i].Shop = (Objects.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
         }
 
         // Salva os dados e envia pra todos jogadores conectados
@@ -833,37 +837,58 @@ class Receive
             return;
         }
 
-        // Quantidade de itens
-        Lists.Item = new Lists.Structures.Item[Data.ReadInt16()];
-        Lists.Server_Data.Num_Items = (byte)Lists.Item.GetUpperBound(0);
-        Write.Server_Data();
 
-        for (short i = 1; i < Lists.Item.Length; i++)
+        // Lojas a serem removidas
+        Dictionary<Guid, Objects.Shop> ToRemove = new Dictionary<Guid, Objects.Shop>(Lists.Shop);
+
+        // Quantidade de lojas
+        short Count = Data.ReadInt16();
+
+        while (--Count >= 0)
         {
-            // Redimensiona os valores necessários 
-            Lists.Item[i] = new Lists.Structures.Item();
-            Lists.Item[i].Potion_Vital = new short[(byte)Game.Vitals.Count];
-            Lists.Item[i].Equip_Attribute = new short[(byte)Game.Attributes.Count];
+            Guid ID = new Guid(Data.ReadString());
+            Objects.Item Item;
+
+            // Obtém o dado
+            if (Lists.Item.ContainsKey(ID))
+            {
+                Item = Lists.Item[ID];
+                ToRemove.Remove(ID);
+            }
+            else
+            {
+                Item = new Objects.Item(ID);
+                Lists.Item.Add(Item.ID, Item);
+            }
 
             // Lê os dados
-            Lists.Item[i].Name = Data.ReadString();
-            Lists.Item[i].Description = Data.ReadString();
-            Lists.Item[i].Texture = Data.ReadInt16();
-            Lists.Item[i].Type = Data.ReadByte();
-            Lists.Item[i].Stackable = Data.ReadBoolean();
-            Lists.Item[i].Bind = Data.ReadByte();
-            Lists.Item[i].Rarity = Data.ReadByte();
-            Lists.Item[i].Req_Level = Data.ReadInt16();
-            Lists.Item[i].Req_Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
-            Lists.Item[i].Potion_Experience = Data.ReadInt32();
-            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
-            Lists.Item[i].Equip_Type = Data.ReadByte();
-            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
-            Lists.Item[i].Weapon_Damage = Data.ReadInt16();
+            Item.Name = Data.ReadString();
+            Item.Description = Data.ReadString();
+            Item.Texture = Data.ReadInt16();
+            Item.Type = Data.ReadByte();
+            Item.Stackable = Data.ReadBoolean();
+            Item.Bind = Data.ReadByte();
+            Item.Rarity = Data.ReadByte();
+            Item.Req_Level = Data.ReadInt16();
+            Item.Req_Class = (Objects.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
+            Item.Potion_Experience = Data.ReadInt32();
+            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
+            Item.Equip_Type = Data.ReadByte();
+            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
+            Item.Weapon_Damage = Data.ReadInt16();
+
+            // Salva os dados do item
+            Write.Item(Item);
+        }
+
+        // Remove as lojas que não tiveram os dados atualizados
+        foreach (Guid Remove in ToRemove.Keys)
+        {
+            Lists.Item.Remove(Remove);
+            File.Delete(Directories.Items.FullName + Remove.ToString() + Directories.Format);
         }
 
         // Salva os dados e envia pra todos jogadores conectados
-        Write.Items();
         for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i] != Account)
                 Send.Items(Lists.Account[i]);
@@ -879,7 +904,7 @@ class Receive
         }
 
         // Lojas a serem removidas
-        Dictionary<Guid, Lists.Structures.Shop> ToRemove = new Dictionary<Guid, Lists.Structures.Shop>(Lists.Shop);
+        Dictionary<Guid, Objects.Shop> ToRemove = new Dictionary<Guid, Objects.Shop>(Lists.Shop);
 
         // Quantidade de lojas
         short Count = Data.ReadInt16();
@@ -887,7 +912,7 @@ class Receive
         while (--Count >= 0)
         {
             Guid ID = new Guid(Data.ReadString());
-            Lists.Structures.Shop Shop;
+            Objects.Shop Shop;
 
             // Obtém o dado
             if (Lists.Shop.ContainsKey(ID))
@@ -897,33 +922,33 @@ class Receive
             }
             else
             {
-                Shop = new Lists.Structures.Shop(ID);
+                Shop = new Objects.Shop(ID);
                 Lists.Shop.Add(Shop.ID, Shop);
             }
 
             // Redimensiona os valores necessários 
-            Shop.Sold = new Lists.Structures.Shop_Item[Data.ReadByte()];
-            Shop.Bought = new Lists.Structures.Shop_Item[Data.ReadByte()];
+            Shop.Sold = new Objects.Shop_Item[Data.ReadByte()];
+            Shop.Bought = new Objects.Shop_Item[Data.ReadByte()];
 
             // Lê os dados
             Shop.Name = Data.ReadString();
-            Shop.Currency = Data.ReadInt16();
+            Shop.Currency = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             for (byte j = 0; j < Shop.Sold.Length; j++)
-                Shop.Sold[j] = new Lists.Structures.Shop_Item
+                Shop.Sold[j] = new Objects.Shop_Item
                 {
-                    Item_Num = Data.ReadInt16(),
+                    Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
                     Amount = Data.ReadInt16(),
                     Price = Data.ReadInt16()
                 };
             for (byte j = 0; j < Shop.Bought.Length; j++)
-                Shop.Bought[j] = new Lists.Structures.Shop_Item
+                Shop.Bought[j] = new Objects.Shop_Item
                 {
-                    Item_Num = Data.ReadInt16(),
+                    Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
                     Amount = Data.ReadInt16(),
                     Price = Data.ReadInt16()
                 };
 
-            // Salva a loja
+            // Salva os dados da loja
             Write.Shop(Shop);
         }
 
@@ -1169,8 +1194,8 @@ class Receive
 
         // Limpa os dadoss
         Player.Trade_Request = string.Empty;
-        Player.Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
-        Invited.Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
+        Player.Trade_Offer = new Lists.Structures.Trade_Slot[Game.Max_Inventory + 1];
+        Invited.Trade_Offer = new Lists.Structures.Trade_Slot[Game.Max_Inventory + 1];
 
         // Envia os dados para o grupo
         Send.Trade(Player, true);
@@ -1201,15 +1226,15 @@ class Receive
         {
             // Evita itens repetidos
             for (byte i = 1; i <= Game.Max_Inventory; i++)
-                if (Player.Trade_Offer[i].Item_Num == Inventory_Slot)
+                if (Player.Trade_Offer[i].Slot_Num == Inventory_Slot)
                     return;
 
-            Player.Trade_Offer[Slot].Item_Num = Inventory_Slot;
+            Player.Trade_Offer[Slot].Slot_Num = Inventory_Slot;
             Player.Trade_Offer[Slot].Amount = Amount;
         }
         // Remove o item da troca
         else
-            Player.Trade_Offer[Slot] = new Lists.Structures.Inventories();
+            Player.Trade_Offer[Slot] = new Lists.Structures.Trade_Slot();
 
         // Envia os dados ao outro jogador
         Send.Trade_Offer(Player);
@@ -1247,13 +1272,13 @@ class Receive
                 Player To = Player;
                 for (byte j = 0; j < 2; j++, To = To == Player ? Invited : Player)
                     for (byte i = 1; i <= Game.Max_Inventory; i++)
-                        To.TakeItem((byte)To.Trade_Offer[i].Item_Num, To.Trade_Offer[i].Amount);
+                        To.TakeItem((byte)To.Trade_Offer[i].Slot_Num, To.Trade_Offer[i].Amount);
 
                 // Dá os itens aos jogadores
                 for (byte i = 1; i <= Game.Max_Inventory; i++)
                 {
-                    if (Player.Trade_Offer[i].Item_Num > 0) Invited.GiveItem(Your_Inventory[Player.Trade_Offer[i].Item_Num].Item_Num, Player.Trade_Offer[i].Amount);
-                    if (Invited.Trade_Offer[i].Item_Num > 0) Player.GiveItem(Their_Inventory[Invited.Trade_Offer[i].Item_Num].Item_Num, Invited.Trade_Offer[i].Amount);
+                    if (Player.Trade_Offer[i].Slot_Num > 0) Invited.GiveItem(Your_Inventory[Player.Trade_Offer[i].Slot_Num].Item, Player.Trade_Offer[i].Amount);
+                    if (Invited.Trade_Offer[i].Slot_Num > 0) Player.GiveItem(Their_Inventory[Invited.Trade_Offer[i].Slot_Num].Item, Invited.Trade_Offer[i].Amount);
                 }
 
                 // Envia os dados do inventário aos jogadores
@@ -1261,8 +1286,8 @@ class Receive
                 Send.Player_Inventory(Invited);
 
                 // Limpa a troca
-                Player.Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
-                Invited.Trade_Offer = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
+                Player.Trade_Offer = new Lists.Structures.Trade_Slot[Game.Max_Inventory + 1];
+                Invited.Trade_Offer = new Lists.Structures.Trade_Slot[Game.Max_Inventory + 1];
                 Send.Trade_Offer(Invited);
                 Send.Trade_Offer(Invited, false);
                 break;
@@ -1280,7 +1305,7 @@ class Receive
 
     private static void Shop_Buy(Player Player, NetIncomingMessage Data)
     {
-        Lists.Structures.Shop_Item Shop_Sold = Player.Shop.Sold[Data.ReadByte()];
+        Objects.Shop_Item Shop_Sold = Player.Shop.Sold[Data.ReadByte()];
         byte Inventory_Slot = Player.FindInventory(Player.Shop.Currency);
 
         // Verifica se o jogador tem dinheiro
@@ -1298,15 +1323,15 @@ class Receive
 
         // Realiza a compra do item
         Player.TakeItem(Inventory_Slot, Shop_Sold.Price);
-        Player.GiveItem(Shop_Sold.Item_Num, Shop_Sold.Amount);
-        Send.Message(Player, "You bought " + Shop_Sold.Price + "x " + Lists.Item[Shop_Sold.Item_Num].Name + ".", System.Drawing.Color.Green);
+        Player.GiveItem(Shop_Sold.Item, Shop_Sold.Amount);
+        Send.Message(Player, "You bought " + Shop_Sold.Price + "x " + Shop_Sold.Item.Name + ".", System.Drawing.Color.Green);
     }
 
     private static void Shop_Sell(Player Player, NetIncomingMessage Data)
     {
         byte Inventory_Slot = Data.ReadByte();
-        short Amount = System.Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
-        Lists.Structures.Shop_Item Buy = Player.Shop.BoughtItem(Player.Inventory[Inventory_Slot].Item_Num);
+        short Amount = Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
+        Objects.Shop_Item Buy = Player.Shop.BoughtItem(Player.Inventory[Inventory_Slot].Item);
 
         // Verifica se a loja vende o item
         if (Buy == null)
@@ -1322,9 +1347,9 @@ class Receive
         }
 
         // Realiza a venda do item
+        Send.Message(Player, "You sold " + Player.Inventory[Inventory_Slot].Item.Name + "x " + Amount + "for .", System.Drawing.Color.Green);
         Player.TakeItem(Inventory_Slot, Amount);
         Player.GiveItem(Player.Shop.Currency, (short)(Buy.Price * Amount));
-        Send.Message(Player, "You sold " + Lists.Item[Inventory_Slot].Name + "x " + Amount + "for .", System.Drawing.Color.Green);
     }
 
     private static void Shop_Close(Player Player)

@@ -23,22 +23,12 @@ class Clear
     public static void NPC(short Index)
     {
         // Reseta os valores
-        Lists.NPC[Index] = new Lists.Structures.NPC();
+        Lists.NPC[Index] = new Objects.NPC();
         Lists.NPC[Index].Name = string.Empty;
         Lists.NPC[Index].Vital = new short[(byte)Game.Vitals.Count];
         Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Count];
-        Lists.NPC[Index].Drop = Array.Empty<Lists.Structures.NPC_Drop>();
+        Lists.NPC[Index].Drop = Array.Empty<Objects.NPC_Drop>();
         Lists.NPC[Index].Allie = Array.Empty<short>();
-    }
-
-    public static void Item(byte Index)
-    {
-        // Reseta os valores
-        Lists.Item[Index] = new Lists.Structures.Item();
-        Lists.Item[Index].Name = string.Empty;
-        Lists.Item[Index].Description = string.Empty;
-        Lists.Item[Index].Potion_Vital = new short[(byte)Game.Vitals.Count];
-        Lists.Item[Index].Equip_Attribute = new short[(byte)Game.Attributes.Count];
     }
 
     public static void Map(short Index)
