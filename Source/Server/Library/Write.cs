@@ -124,20 +124,6 @@ class Write
         Stream.Close();
     }
 
-    public static void Tiles()
-    {
-        // Escreve os dados
-        for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
-    }
-
-    public static void Tile(byte Index)
-    {
-        // Escreve os dados
-        FileStream Stream = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format).OpenWrite();
-        new BinaryFormatter().Serialize(Stream, Lists.Tile[Index]);
-        Stream.Close();
-    }
-
     public static void Maps()
     {
         // Escreve os dados

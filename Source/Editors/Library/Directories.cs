@@ -13,6 +13,7 @@ class Directories
     public static DirectoryInfo Fonts;
     public static DirectoryInfo Sounds;
     public static DirectoryInfo Musics;
+    public static DirectoryInfo Tiles;
     public static FileInfo Tools;
     public static DirectoryInfo Tex_Painel;
     public static FileInfo Tex_CheckBox;
@@ -51,6 +52,7 @@ class Directories
         Sounds = new DirectoryInfo(Directory + @"\Audio\Sounds\");
         Musics = new DirectoryInfo(Directory + @"\Audio\Musics\");
         Tools = new FileInfo(Directory + @"\Data\Tools" + Format);
+        Tiles = new DirectoryInfo(Directory + @"\Data\Tiles\");
         Fonts = new DirectoryInfo(Directory + @"\Graphics\Fonts\");
         Tex_Panoramas = new DirectoryInfo(Directory + @"\Graphics\Panoramas\");
         Tex_Lights = new DirectoryInfo(Directory + @"\Graphics\Lights\");
@@ -74,6 +76,7 @@ class Directories
         Fonts.Create();
         Sounds.Create();
         Musics.Create();
+        Tiles.Create();
         Tools.Directory.Create();
         Tex_Panoramas.Create();
         Tex_Fogs.Create();

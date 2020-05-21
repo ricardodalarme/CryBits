@@ -19,7 +19,8 @@ public partial class Editor_Tiles : Form
     {
         // Lê os dados
         Globals.OpenEditor = Objects;
-        Send.Request_Tiles();
+        Read.Tiles();
+        Open();
     }
 
     public static void Open()
@@ -53,7 +54,7 @@ public partial class Editor_Tiles : Form
     private void butSave_Click(object sender, EventArgs e)
     {
         // Salva os dados
-        Send.Write_Tiles();
+        Write.Tiles();
 
         // Volta à janela de seleção
         Visible = false;

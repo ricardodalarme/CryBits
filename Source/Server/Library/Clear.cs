@@ -15,9 +15,7 @@ class Clear
         Lists.Server_Data.Max_Map_Items = 100;
         Lists.Server_Data.Num_Points = 3;
         Lists.Server_Data.Num_Maps = 1;
-        Lists.Server_Data.Num_Items = 1;
         Lists.Server_Data.Num_NPCs = 1;
-        Lists.Server_Data.Num_Tiles = 0;
     }
 
     public static void NPC(short Index)
@@ -60,14 +58,5 @@ class Clear
         Lists.Temp_Map[Index].NPC = Array.Empty<NPC.Structure>();
         Lists.Temp_Map[Index].Item = new List<Lists.Structures.Map_Items>();
         Lists.Temp_Map[Index].Item.Add(new Lists.Structures.Map_Items());
-    }
-
-    public static void Tile(byte Index)
-    {
-        // Redimensiona os valores
-        Lists.Tile[Index] = new Lists.Structures.Tile();
-        Lists.Tile[Index].Data = new Lists.Structures.Tile_Data[1, 1];
-        Lists.Tile[Index].Data[0, 0] = new Lists.Structures.Tile_Data();
-        Lists.Tile[Index].Data[0, 0].Block = new bool[(byte)Game.Directions.Count];
     }
 }

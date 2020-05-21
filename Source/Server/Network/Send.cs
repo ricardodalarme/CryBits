@@ -57,7 +57,6 @@ class Send
         Connect,
         Server_Data,
         Classes,
-        Tiles,
         Maps,
         Map,
         NPCs,
@@ -776,31 +775,6 @@ class Send
         Data.Write((byte)Client_Packets.Map_NPC_Died);
         Data.Write(NPC.Index);
         ToMap(NPC.Map_Num, Data);
-    }
-
-    public static void Tiles(Account.Structure Account)
-    {
-        NetOutgoingMessage Data = Socket.Device.CreateMessage();
-
-        // Envia os dados
-        Data.Write((byte)Editor_Packets.Tiles);
-        Data.Write((byte)Lists.Tile.Length);
-        for (byte i = 1; i < Lists.Tile.Length; i++)
-        {
-            Data.Write(Lists.Tile[i].Width);
-            Data.Write(Lists.Tile[i].Height);
-
-            for (byte x = 0; x <= Lists.Tile[i].Width; x++)
-                for (byte y = 0; y <= Lists.Tile[i].Height; y++)
-                {
-                    Data.Write(Lists.Tile[i].Data[x, y].Attribute);
-
-                    // Bloqueio direcional
-                    for (byte d = 0; d < (byte)Game.Directions.Count; d++)
-                        Data.Write(Lists.Tile[i].Data[x, y].Block[d]);
-                }
-        }
-        ToPlayer(Account, Data);
     }
 
     public static void Server_Data(Account.Structure Account)

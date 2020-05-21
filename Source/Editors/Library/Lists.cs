@@ -114,6 +114,7 @@ class Lists
             public override string ToString() => Name;
         }
 
+        [Serializable]
         public struct Tile
         {
             public byte Width;
@@ -121,6 +122,7 @@ class Lists
             public Tile_Data[,] Data;
         }
 
+        [Serializable]
         public struct Tile_Data
         {
             public byte Attribute;

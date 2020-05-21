@@ -8,14 +8,12 @@ partial class Send
         Connect,
         Write_Server_Data,
         Write_Classes,
-        Write_Tiles,
         Write_Maps,
         Write_NPCs,
         Write_Items,
         Write_Shops,
         Request_Server_Data,
         Request_Classes,
-        Request_Tiles,
         Request_Map,
         Request_Maps,
         Request_NPCs,
@@ -56,15 +54,6 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Classes);
-        Packet(Data);
-    }
-
-    public static void Request_Tiles()
-    {
-        NetOutgoingMessage Data = Socket.Device.CreateMessage();
-
-        // Envia os dados
-        Data.Write((byte)Packets.Request_Tiles);
         Packet(Data);
     }
 
@@ -160,31 +149,6 @@ partial class Send
                 Data.Write(Lists.GetID(Class.Item[i].Item1));
                 Data.Write(Class.Item[i].Item2);
             }
-        }
-        Packet(Data);
-    }
-
-    public static void Write_Tiles()
-    {
-        NetOutgoingMessage Data = Socket.Device.CreateMessage();
-
-        // Envia os dados
-        Data.Write((byte)Packets.Write_Tiles);
-        Data.Write((byte)Lists.Tile.Length);
-        for (byte i = 1; i < Lists.Tile.Length; i++)
-        {
-            Data.Write(Lists.Tile[i].Width);
-            Data.Write(Lists.Tile[i].Height);
-
-            for (byte x = 0; x <= Lists.Tile[i].Width; x++)
-                for (byte y = 0; y <= Lists.Tile[i].Height; y++)
-                {
-                    Data.Write(Lists.Tile[i].Data[x, y].Attribute);
-
-                    // Bloqueio direcional
-                    for (byte d = 0; d < (byte)Globals.Directions.Count; d++)
-                        Data.Write(Lists.Tile[i].Data[x, y].Block[d]);
-                }
         }
         Packet(Data);
     }

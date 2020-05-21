@@ -12,7 +12,6 @@ class Lists
     public static Objects.NPC[] NPC;
     public static Structures.Map[] Map;
     public static Structures.Temp_Map[] Temp_Map;
-    public static Structures.Tile[] Tile;
 
     public static string GetID(Structures.Data Object)
     {
@@ -42,9 +41,7 @@ class Lists
             public byte Max_Map_Items;
             public byte Num_Points;
             public short Num_Maps;
-            public byte Num_Tiles;
             public short Num_NPCs;
-            public short Num_Items;
         }
 
         [Serializable]
@@ -178,21 +175,6 @@ class Lists
         {
             public byte Type;
             public byte Slot;
-        }
-
-        [Serializable]
-        public class Tile
-        {
-            public byte Width;
-            public byte Height;
-            public Tile_Data[,] Data;
-        }
-
-        [Serializable]
-        public class Tile_Data
-        {
-            public byte Attribute;
-            public bool[] Block;
         }
     }
 }

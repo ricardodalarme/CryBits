@@ -69,8 +69,9 @@ partial class Editor_Maps : Form
     {
         // Lê os dados
         Globals.OpenEditor = Objects;
+        Read.Tiles();
+        Send.Request_Classes();
         Send.Request_NPCs();
-        Send.Request_Tiles();
         Send.Request_Items();
         Send.Request_Maps();
     }

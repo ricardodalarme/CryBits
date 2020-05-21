@@ -52,14 +52,12 @@ class Receive
         Connect,
         Write_Server_Data,
         Write_Classes,
-        Write_Tiles,
         Write_Maps,
         Write_NPCs,
         Write_Items,
         Write_Shops,
         Request_Server_Data,
         Request_Classes,
-        Request_Tiles,
         Request_Map,
         Request_Maps,
         Request_NPCs,
@@ -119,14 +117,12 @@ class Receive
             {
                 case Editor_Packets.Write_Server_Data: Write_Server_Data(Account, Data); break;
                 case Editor_Packets.Write_Classes: Write_Classes(Account, Data); break;
-                case Editor_Packets.Write_Tiles: Write_Tiles(Account, Data); break;
                 case Editor_Packets.Write_Maps: Write_Maps(Account, Data); break;
                 case Editor_Packets.Write_NPCs: Write_NPCs(Account, Data); break;
                 case Editor_Packets.Write_Items: Write_Items(Account, Data); break;
                 case Editor_Packets.Write_Shops: Write_Shops(Account, Data); break;
                 case Editor_Packets.Request_Server_Data: Request_Server_Data(Account); break;
                 case Editor_Packets.Request_Classes: Request_Classes(Account); break;
-                case Editor_Packets.Request_Tiles: Request_Tiles(Account); break;
                 case Editor_Packets.Request_Map: Request_Map(Account, Data); break;
                 case Editor_Packets.Request_Maps: Request_Maps(Account, Data); break;
                 case Editor_Packets.Request_NPCs: Request_NPCs(Account); break;
@@ -618,48 +614,6 @@ class Receive
                 Send.Classes(Lists.Account[i]);
     }
 
-    private static void Write_Tiles(Account.Structure Account, NetIncomingMessage Data)
-    {
-        // Verifica se o jogador realmente tem permissão 
-        if (Account.Acess < Game.Accesses.Editor)
-        {
-            Send.Alert(Account, "You aren't allowed to do this.");
-            return;
-        }
-
-        // Quantidade de azulejos 
-        Lists.Tile = new Lists.Structures.Tile[Data.ReadByte()];
-        Lists.Server_Data.Num_Tiles = (byte)Lists.Tile.GetUpperBound(0);
-        Write.Server_Data();
-
-        for (byte i = 1; i < Lists.Tile.Length; i++)
-        {
-            // Dados básicos
-            Lists.Tile[i] = new Lists.Structures.Tile();
-            Lists.Tile[i].Width = Data.ReadByte();
-            Lists.Tile[i].Height = Data.ReadByte();
-            Lists.Tile[i].Data = new Lists.Structures.Tile_Data[Lists.Tile[i].Width + 1, Lists.Tile[i].Height + 1];
-
-            for (byte x = 0; x <= Lists.Tile[i].Width; x++)
-                for (byte y = 0; y <= Lists.Tile[i].Height; y++)
-                {
-                    // Atributos
-                    Lists.Tile[i].Data[x, y] = new Lists.Structures.Tile_Data();
-                    Lists.Tile[i].Data[x, y].Attribute = Data.ReadByte();
-                    Lists.Tile[i].Data[x, y].Block = new bool[(byte)Game.Directions.Count];
-
-                    // Bloqueio direcional
-                    for (byte d = 0; d < (byte)Game.Directions.Count; d++) Lists.Tile[i].Data[x, y].Block[d] = Data.ReadBoolean();
-                }
-        }
-
-        // Salva os dados e envia pra todos jogadores conectados
-        Write.Tiles();
-        for (byte i = 0; i < Lists.Account.Count; i++)
-            if (Lists.Account[i] != Account)
-                Send.Tiles(Lists.Account[i]);
-    }
-
     private static void Write_Maps(Account.Structure Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
@@ -974,11 +928,6 @@ class Receive
     private static void Request_Classes(Account.Structure Account)
     {
         Send.Classes(Account);
-    }
-
-    private static void Request_Tiles(Account.Structure Account)
-    {
-        Send.Tiles(Account);
     }
 
     private static void Request_Map(Account.Structure Account, NetIncomingMessage Data)

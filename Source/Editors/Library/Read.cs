@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Runtime.Serialization.Formatters.Binary;
 
 class Read
 {
@@ -146,5 +147,31 @@ class Read
             Checked = Data.ReadBoolean()
         };
         return Tool;
+    }
+
+
+    public static void Tiles()
+    {
+        // Lê os dados
+        Lists.Tile = new Lists.Structures.Tile[Graphics.Tex_Tile.Length];
+        for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
+    }
+
+    public static void Tile(byte Index)
+    {
+        FileInfo File = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format);
+
+        // Evita erros
+        if (!File.Exists)
+        {
+            Clear.Tile(Index);
+            Write.Tile(Index);
+            return;
+        }
+
+        // Lê os dados
+        FileStream Stream = File.OpenRead();
+        Lists.Tile[Index] = (Lists.Structures.Tile)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
     }
 }

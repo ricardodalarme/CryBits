@@ -19,8 +19,6 @@ partial class Read
         Items();
         Console.WriteLine("Loading maps.");
         Maps();
-        Console.WriteLine("Loading tiles.");
-        Tiles();
         Console.WriteLine("Loading shops.");
         Shops();
     }
@@ -248,31 +246,6 @@ partial class Read
         // Lê os dados
         FileStream Stream = File.OpenRead();
         Lists.NPC[Index] = (Objects.NPC)new BinaryFormatter().Deserialize(Stream);
-        Stream.Close();
-    }
-
-    private static void Tiles()
-    {
-        // Lê os dados
-        Lists.Tile = new Lists.Structures.Tile[Lists.Server_Data.Num_Tiles + 1];
-        for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
-    }
-
-    private static void Tile(byte Index)
-    {
-        FileInfo File = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format);
-
-        // Evita erros
-        if (!File.Exists)
-        {
-            Clear.Tile(Index);
-            Write.Tile(Index);
-            return;
-        }
-
-        // Lê os dados
-        FileStream Stream = File.OpenRead();
-        Lists.Tile[Index] = (Lists.Structures.Tile)new BinaryFormatter().Deserialize(Stream);
         Stream.Close();
     }
 

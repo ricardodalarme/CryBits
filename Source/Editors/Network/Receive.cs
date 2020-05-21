@@ -13,7 +13,6 @@ partial class Receive
         Connect,
         Server_Data,
         Classes,
-        Tiles,
         Maps,
         Map,
         NPCs,
@@ -34,7 +33,6 @@ partial class Receive
             case Packets.Map: Map(Data); break;
             case Packets.NPCs: NPCs(Data); break;
             case Packets.Items: Items(Data); break;
-            case Packets.Tiles: Tiles(Data); break;
             case Packets.Shops: Shops(Data); break;
         }
     }
@@ -275,45 +273,6 @@ partial class Receive
 
         // Abre o editor
         if (Globals.OpenEditor == Editor_Items.Objects) Editor_Items.Open();
-    }
-
-    private static void Tiles(NetIncomingMessage Data)
-    {
-        // Limpa os dados dos azulejos
-        Lists.Tile = new Lists.Structures.Tile[Graphics.Tex_Tile.Length];
-        for (byte i = 1; i < Graphics.Tex_Tile.Length; i++) Clear.Tile(i);
-
-        // Lê os dados
-        byte Num_Tiles = Data.ReadByte();
-        for (byte i = 1; i < Num_Tiles; i++)
-        {
-            // Dados básicos
-            byte Width = Data.ReadByte();
-            byte Height = Data.ReadByte();
-
-            for (byte x = 0; x <= Width; x++)
-                for (byte y = 0; y <= Height; y++)
-                {
-                    // Faz a leitura correta caso alguma textura do azulejo tiver sido redimensionada
-                    if (x > Lists.Tile[i].Width || y > Lists.Tile[i].Height)
-                    {
-                        Data.ReadByte();
-                        for (byte d = 0; d < (byte)Globals.Directions.Count; d++) Data.ReadBoolean();
-                        continue;
-                    }
-
-                    // Atributos
-                    Lists.Tile[i].Data[x, y] = new Lists.Structures.Tile_Data();
-                    Lists.Tile[i].Data[x, y].Attribute = Data.ReadByte();
-                    Lists.Tile[i].Data[x, y].Block = new bool[(byte)Globals.Directions.Count];
-
-                    // Bloqueio direcional
-                    for (byte d = 0; d < (byte)Globals.Directions.Count; d++) Lists.Tile[i].Data[x, y].Block[d] = Data.ReadBoolean();
-                }
-        }
-
-        // Abre o editor
-        if (Globals.OpenEditor == Editor_Tiles.Objects) Editor_Tiles.Open();
     }
 
     private static void Shops(NetIncomingMessage Data)
