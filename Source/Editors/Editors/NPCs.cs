@@ -18,6 +18,7 @@ public partial class Editor_NPCs : Form
     {
         // Lê os dados
         Globals.OpenEditor = Objects;
+        Send.Request_Classes();
         Send.Request_Items();
         Send.Request_Shops();
         Send.Request_NPCs();
@@ -27,7 +28,7 @@ public partial class Editor_NPCs : Form
     {
         // Lista de itens
         Objects.cmbDrop_Item.Items.Clear();
-        for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbDrop_Item.Items.Add(Lists.Item[i].Name);
+        foreach (Lists.Structures.Item Item in Lists.Item.Values) Objects.cmbDrop_Item.Items.Add(Item);
 
         // Lista de lojas
         Objects.cmbShop.Items.Clear();
@@ -257,7 +258,7 @@ public partial class Editor_NPCs : Form
         // Adiciona o item
         if (cmbDrop_Item.SelectedIndex >= 0)
         {
-            Lists.Structures.NPC_Drop Drop = new Lists.Structures.NPC_Drop((short)(cmbDrop_Item.SelectedIndex + 1), (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value);
+            Lists.Structures.NPC_Drop Drop = new Lists.Structures.NPC_Drop((Lists.Structures.Item)cmbDrop_Item.SelectedItem, (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value);
             Selected.Drop.Add(Drop);
             lstDrop.Items.Add(Drop_String(Drop));
             grpDrop_Add.Visible = false;
@@ -266,7 +267,7 @@ public partial class Editor_NPCs : Form
 
     private string Drop_String(Lists.Structures.NPC_Drop Drop)
     {
-        return Globals.Numbering(Drop.Item_Num, Lists.Item.GetUpperBound(0), Lists.Item[Drop.Item_Num].Name + " [" + Drop.Amount + "x, " + Drop.Chance + "%]");
+        return Drop.Item.Name + " [" + Drop.Amount + "x, " + Drop.Chance + "%]";
     }
 
     private void chkAttackNPC_CheckedChanged(object sender, EventArgs e)

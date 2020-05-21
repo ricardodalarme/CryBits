@@ -27,8 +27,7 @@
     private void InitializeComponent()
     {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Items));
-            this.List = new System.Windows.Forms.ListBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grpGeneral = new System.Windows.Forms.GroupBox();
             this.cmbRarity = new System.Windows.Forms.ComboBox();
             this.cmbBind = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
@@ -45,9 +44,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.butSave = new System.Windows.Forms.Button();
             this.butCancel = new System.Windows.Forms.Button();
-            this.butClear = new System.Windows.Forms.Button();
-            this.butQuantity = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.grpRequirements = new System.Windows.Forms.GroupBox();
             this.cmbReq_Class = new System.Windows.Forms.ComboBox();
             this.numReq_Level = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
@@ -77,9 +74,12 @@
             this.grpEquipment = new System.Windows.Forms.GroupBox();
             this.cmbEquipment_Type = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
+            this.List = new System.Windows.Forms.TreeView();
+            this.butRemove = new System.Windows.Forms.Button();
+            this.butNew = new System.Windows.Forms.Button();
+            this.grpGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
-            this.groupBox2.SuspendLayout();
+            this.grpRequirements.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numReq_Level)).BeginInit();
             this.grpEquip_Bonus.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numWeapon_Damage)).BeginInit();
@@ -95,37 +95,29 @@
             this.grpEquipment.SuspendLayout();
             this.SuspendLayout();
             // 
-            // List
+            // grpGeneral
             // 
-            this.List.FormattingEnabled = true;
-            this.List.Location = new System.Drawing.Point(11, 12);
-            this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 420);
-            this.List.TabIndex = 9;
-            this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.cmbRarity);
-            this.groupBox1.Controls.Add(this.cmbBind);
-            this.groupBox1.Controls.Add(this.label20);
-            this.groupBox1.Controls.Add(this.label19);
-            this.groupBox1.Controls.Add(this.txtDescription);
-            this.groupBox1.Controls.Add(this.label15);
-            this.groupBox1.Controls.Add(this.chkStackable);
-            this.groupBox1.Controls.Add(this.cmbType);
-            this.groupBox1.Controls.Add(this.numTexture);
-            this.groupBox1.Controls.Add(this.txtName);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.butTexture);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(219, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(359, 170);
-            this.groupBox1.TabIndex = 14;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "General";
+            this.grpGeneral.Controls.Add(this.cmbRarity);
+            this.grpGeneral.Controls.Add(this.cmbBind);
+            this.grpGeneral.Controls.Add(this.label20);
+            this.grpGeneral.Controls.Add(this.label19);
+            this.grpGeneral.Controls.Add(this.txtDescription);
+            this.grpGeneral.Controls.Add(this.label15);
+            this.grpGeneral.Controls.Add(this.chkStackable);
+            this.grpGeneral.Controls.Add(this.cmbType);
+            this.grpGeneral.Controls.Add(this.numTexture);
+            this.grpGeneral.Controls.Add(this.txtName);
+            this.grpGeneral.Controls.Add(this.label2);
+            this.grpGeneral.Controls.Add(this.butTexture);
+            this.grpGeneral.Controls.Add(this.label1);
+            this.grpGeneral.Controls.Add(this.label3);
+            this.grpGeneral.Location = new System.Drawing.Point(219, 7);
+            this.grpGeneral.Name = "grpGeneral";
+            this.grpGeneral.Size = new System.Drawing.Size(359, 170);
+            this.grpGeneral.TabIndex = 14;
+            this.grpGeneral.TabStop = false;
+            this.grpGeneral.Text = "General";
+            this.grpGeneral.Visible = false;
             // 
             // cmbRarity
             // 
@@ -222,7 +214,7 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(169, 20);
             this.txtName.TabIndex = 10;
-            this.txtName.Validated += new System.EventHandler(this.txtName_Validated);
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // label2
             // 
@@ -263,9 +255,9 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(218, 446);
+            this.butSave.Location = new System.Drawing.Point(218, 441);
             this.butSave.Name = "butSave";
-            this.butSave.Size = new System.Drawing.Size(118, 25);
+            this.butSave.Size = new System.Drawing.Size(177, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
             this.butSave.UseVisualStyleBackColor = true;
@@ -273,46 +265,27 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(460, 446);
+            this.butCancel.Location = new System.Drawing.Point(400, 441);
             this.butCancel.Name = "butCancel";
-            this.butCancel.Size = new System.Drawing.Size(118, 25);
+            this.butCancel.Size = new System.Drawing.Size(177, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
             // 
-            // butClear
+            // grpRequirements
             // 
-            this.butClear.Location = new System.Drawing.Point(339, 446);
-            this.butClear.Name = "butClear";
-            this.butClear.Size = new System.Drawing.Size(118, 25);
-            this.butClear.TabIndex = 18;
-            this.butClear.Text = "Clear";
-            this.butClear.UseVisualStyleBackColor = true;
-            this.butClear.Click += new System.EventHandler(this.butClear_Click);
-            // 
-            // butQuantity
-            // 
-            this.butQuantity.Location = new System.Drawing.Point(11, 446);
-            this.butQuantity.Name = "butQuantity";
-            this.butQuantity.Size = new System.Drawing.Size(203, 25);
-            this.butQuantity.TabIndex = 15;
-            this.butQuantity.Text = "Change Quantity";
-            this.butQuantity.UseVisualStyleBackColor = true;
-            this.butQuantity.Click += new System.EventHandler(this.butQuantity_Click);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.cmbReq_Class);
-            this.groupBox2.Controls.Add(this.numReq_Level);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(219, 188);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(359, 63);
-            this.groupBox2.TabIndex = 19;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Requirements";
+            this.grpRequirements.Controls.Add(this.cmbReq_Class);
+            this.grpRequirements.Controls.Add(this.numReq_Level);
+            this.grpRequirements.Controls.Add(this.label5);
+            this.grpRequirements.Controls.Add(this.label4);
+            this.grpRequirements.Location = new System.Drawing.Point(219, 183);
+            this.grpRequirements.Name = "grpRequirements";
+            this.grpRequirements.Size = new System.Drawing.Size(359, 63);
+            this.grpRequirements.TabIndex = 19;
+            this.grpRequirements.TabStop = false;
+            this.grpRequirements.Text = "Requirements";
+            this.grpRequirements.Visible = false;
             // 
             // cmbReq_Class
             // 
@@ -379,6 +352,7 @@
             this.grpEquip_Bonus.TabIndex = 20;
             this.grpEquip_Bonus.TabStop = false;
             this.grpEquip_Bonus.Text = "Bonus:";
+            this.grpEquip_Bonus.Visible = false;
             // 
             // numWeapon_Damage
             // 
@@ -596,7 +570,7 @@
             this.grpPotion.Controls.Add(this.lblMP);
             this.grpPotion.Controls.Add(this.label12);
             this.grpPotion.Controls.Add(this.label9);
-            this.grpPotion.Location = new System.Drawing.Point(218, 257);
+            this.grpPotion.Location = new System.Drawing.Point(218, 252);
             this.grpPotion.Name = "grpPotion";
             this.grpPotion.Size = new System.Drawing.Size(360, 77);
             this.grpPotion.TabIndex = 21;
@@ -619,12 +593,13 @@
             this.grpEquipment.Controls.Add(this.cmbEquipment_Type);
             this.grpEquipment.Controls.Add(this.label16);
             this.grpEquipment.Controls.Add(this.grpEquip_Bonus);
-            this.grpEquipment.Location = new System.Drawing.Point(218, 257);
+            this.grpEquipment.Location = new System.Drawing.Point(218, 252);
             this.grpEquipment.Name = "grpEquipment";
             this.grpEquipment.Size = new System.Drawing.Size(360, 183);
             this.grpEquipment.TabIndex = 22;
             this.grpEquipment.TabStop = false;
             this.grpEquipment.Text = "Equipment";
+            this.grpEquipment.Visible = false;
             // 
             // cmbEquipment_Type
             // 
@@ -651,32 +626,61 @@
             this.label16.TabIndex = 23;
             this.label16.Text = "Type:";
             // 
+            // List
+            // 
+            this.List.HideSelection = false;
+            this.List.Location = new System.Drawing.Point(11, 43);
+            this.List.Name = "List";
+            this.List.Size = new System.Drawing.Size(201, 423);
+            this.List.TabIndex = 44;
+            this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
+            // 
+            // butRemove
+            // 
+            this.butRemove.Location = new System.Drawing.Point(114, 12);
+            this.butRemove.Name = "butRemove";
+            this.butRemove.Size = new System.Drawing.Size(98, 25);
+            this.butRemove.TabIndex = 43;
+            this.butRemove.Text = "Remove";
+            this.butRemove.UseVisualStyleBackColor = true;
+            this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
+            // 
+            // butNew
+            // 
+            this.butNew.Location = new System.Drawing.Point(10, 12);
+            this.butNew.Name = "butNew";
+            this.butNew.Size = new System.Drawing.Size(98, 25);
+            this.butNew.TabIndex = 42;
+            this.butNew.Text = "New";
+            this.butNew.UseVisualStyleBackColor = true;
+            this.butNew.Click += new System.EventHandler(this.butNew_Click);
+            // 
             // Editor_Items
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(589, 483);
+            this.ClientSize = new System.Drawing.Size(589, 478);
             this.ControlBox = false;
+            this.Controls.Add(this.List);
+            this.Controls.Add(this.butRemove);
+            this.Controls.Add(this.butNew);
             this.Controls.Add(this.grpEquipment);
             this.Controls.Add(this.grpPotion);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.butQuantity);
-            this.Controls.Add(this.butClear);
+            this.Controls.Add(this.grpRequirements);
             this.Controls.Add(this.butCancel);
             this.Controls.Add(this.butSave);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.List);
+            this.Controls.Add(this.grpGeneral);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Editor_Items";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Item Editor";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.grpGeneral.ResumeLayout(false);
+            this.grpGeneral.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.grpRequirements.ResumeLayout(false);
+            this.grpRequirements.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numReq_Level)).EndInit();
             this.grpEquip_Bonus.ResumeLayout(false);
             this.grpEquip_Bonus.PerformLayout();
@@ -698,20 +702,17 @@
     }
 
     #endregion
-    public System.Windows.Forms.ListBox List;
-    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.GroupBox grpGeneral;
     public System.Windows.Forms.TextBox txtName;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Button butSave;
     private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Button butClear;
-    private System.Windows.Forms.Button butQuantity;
     private System.Windows.Forms.Button butTexture;
     private System.Windows.Forms.NumericUpDown numTexture;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.ComboBox cmbType;
-    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.GroupBox grpRequirements;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.ComboBox cmbReq_Class;
     private System.Windows.Forms.NumericUpDown numReq_Level;
@@ -748,4 +749,7 @@
     private System.Windows.Forms.ComboBox cmbBind;
     private System.Windows.Forms.NumericUpDown numWeapon_Damage;
     public System.Windows.Forms.Label lblWeapon_Damage;
+    private System.Windows.Forms.TreeView List;
+    private System.Windows.Forms.Button butRemove;
+    private System.Windows.Forms.Button butNew;
 }

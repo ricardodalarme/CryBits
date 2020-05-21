@@ -83,7 +83,7 @@ class Lists
         public struct Temp_Map
         {
             // Temporário
-            public global::NPC.Structure[] NPC;
+            public NPC.Structure[] NPC;
             public List<Map_Items> Item;
         }
 

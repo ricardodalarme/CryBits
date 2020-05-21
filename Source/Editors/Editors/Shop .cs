@@ -18,20 +18,27 @@ partial class Editor_Shops : Form
     {
         // Lê os dados
         Globals.OpenEditor = Objects;
+        Send.Request_Classes();
         Send.Request_Items();
         Send.Request_Shops();
     }
 
     public static void Open()
     {
+        // Verifica se é possível abrir
+        if (Lists.Item.Count == 0)
+        {
+            MessageBox.Show("It must have at least one item registered to open the store editor.");
+            return;
+        }
+
         // Lista os itens
         Objects.cmbCurrency.Items.Clear();
-        Objects.cmbCurrency.Items.Add("Free");
         Objects.cmbItems.Items.Clear();
-        for (short i = 1; i < Lists.Item.Length; i++)
+        foreach (Lists.Structures.Item Item in Lists.Item.Values)
         {
-            Objects.cmbCurrency.Items.Add(Lists.Item[i].Name);
-            Objects.cmbItems.Items.Add(Lists.Item[i].Name);
+            Objects.cmbItems.Items.Add(Item);
+            Objects.cmbCurrency.Items.Add(Item);
         }
 
         // Lista as lojas
@@ -68,7 +75,7 @@ partial class Editor_Shops : Form
 
         // Lista os dados
         txtName.Text = Selected.Name;
-        cmbCurrency.SelectedIndex = Selected.Currency;
+        cmbCurrency.SelectedItem = Selected.Currency;
         for (byte i = 0; i < Selected.Sold.Count; i++) lstSold.Items.Add(List_Text(Selected.Sold[i]));
         for (byte i = 0; i < Selected.Bought.Count; i++) lstBought.Items.Add(List_Text(Selected.Bought[i]));
 
@@ -130,7 +137,7 @@ partial class Editor_Shops : Form
 
     private void cmbCurrency_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected.Currency = (short)cmbCurrency.SelectedIndex;
+        Selected.Currency = (Lists.Structures.Item)cmbCurrency.SelectedItem;
     }
 
     private void butSold_Add_Click(object sender, EventArgs e)
@@ -180,7 +187,7 @@ partial class Editor_Shops : Form
     private void butConfirm_Click(object sender, EventArgs e)
     {
         // Adiciona o item
-        Lists.Structures.Shop_Item Data = new Lists.Structures.Shop_Item((short)(cmbItems.SelectedIndex + 1), (short)numAmount.Value, (short)numPrice.Value);
+        Lists.Structures.Shop_Item Data = new Lists.Structures.Shop_Item((Lists.Structures.Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
         if (grpAddItem.Tag == lstSold)
         {
             Selected.Sold.Add(Data);
@@ -196,5 +203,5 @@ partial class Editor_Shops : Form
         grpAddItem.Visible = false;
     }
 
-    private string List_Text(Lists.Structures.Shop_Item Data) => Lists.Item[Data.Item_Num].Name + " - " + Data.Amount + "x [$" + Data.Price + "]";
+    private string List_Text(Lists.Structures.Shop_Item Data) =>  Data.Item.Name + " - " + Data.Amount + "x [$" + Data.Price + "]";
 }

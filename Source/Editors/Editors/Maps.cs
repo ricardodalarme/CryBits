@@ -28,6 +28,7 @@ partial class Editor_Maps : Form
     private static short AData_2;
     private static short AData_3;
     private static short AData_4;
+    private static string AData_5;
 
     // Azulejos copiados
     private static Copy_Struct Tiles_Copy = new Copy_Struct();
@@ -71,7 +72,7 @@ partial class Editor_Maps : Form
         Send.Request_NPCs();
         Send.Request_Tiles();
         Send.Request_Items();
-        Send.Request_Maps(true);
+        Send.Request_Maps();
     }
 
     public static void Open()
@@ -90,7 +91,7 @@ partial class Editor_Maps : Form
         for (byte i = 0; i < (byte)Globals.Layers.Count; i++) Objects.cmbLayers_Type.Items.Add(((Globals.Layers)i).ToString());
         for (byte i = 1; i < Graphics.Tex_Tile.Length; i++) Objects.cmbTiles.Items.Add(i.ToString());
         for (byte i = 1; i < Lists.NPC.Length; i++) Objects.cmbNPC.Items.Add(Lists.NPC[i].Name);
-        for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbA_Item.Items.Add(Lists.Item[i].Name);
+        foreach (Lists.Structures.Item Item in Lists.Item.Values) Objects.cmbA_Item.Items.Add(Item);
 
         // Reseta os valores
         Objects.cmbA_Warp_Direction.SelectedIndex = 0;
@@ -1499,6 +1500,7 @@ partial class Editor_Maps : Form
             Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_2 = AData_2;
             Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_3 = AData_3;
             Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_4 = AData_4;
+            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_5 = AData_5;
             Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Attribute = (byte)Attribute_Selected();
         }
         // Limpa os dados
@@ -1508,6 +1510,7 @@ partial class Editor_Maps : Form
             Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_2 = 0;
             Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_3 = 0;
             Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_4 = 0;
+            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_5 = string.Empty;
             Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Attribute = 0;
         }
     }
@@ -1584,7 +1587,7 @@ partial class Editor_Maps : Form
     {
         // Fecha a janela e define os dodos
         grpAttributes_Set.Visible = false;
-        AData_1 = (short)(cmbA_Item.SelectedIndex + 1);
+        AData_5 = Lists.GetID(cmbA_Item.SelectedItem);
         AData_2 = (short)cmbA_Item_Amount.Value;
 
         // Reseta as ferramentas

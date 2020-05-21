@@ -8,13 +8,13 @@ class Lists
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
-    public static Dictionary<Guid, Structures.Class> Class;
+    public static Dictionary<Guid, Structures.Class> Class = new Dictionary<Guid, Structures.Class>();
     public static Structures.Tile[] Tile;
     public static Structures.Map[] Map;
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
-    public static Structures.Item[] Item;
-    public static Dictionary<Guid, Structures.Shop> Shop;
+    public static Dictionary<Guid, Structures.Item> Item = new Dictionary<Guid, Structures.Item>();
+    public static Dictionary<Guid, Structures.Shop> Shop = new Dictionary<Guid, Structures.Shop>();
     public static TreeNode Tool;
 
     public static string GetID(object Object)
@@ -108,7 +108,7 @@ class Lists
             public byte Spawn_Y;
             public short[] Vital = new short[(byte)Globals.Vitals.Count];
             public short[] Attribute = new short[(byte)Globals.Attributes.Count];
-            public List<Tuple<short, short>> Item = new List<Tuple<short, short>>();
+            public List<Tuple<Item, short>> Item = new List<Tuple<Item, short>>();
 
             public Class(Guid ID) : base(ID) { }
             public override string ToString() => Name;
@@ -155,6 +155,7 @@ class Lists
             public short Data_2;
             public short Data_3;
             public short Data_4;
+            public string Data_5;
             public byte Zone;
             public bool[] Block;
         }
@@ -252,11 +253,11 @@ class Lists
             public Shop Shop;
         }
 
-        public class Item
+        public class Item : Data
         {
             // Geral
-            public string Name;
-            public string Description;
+            public string Name = string.Empty;
+            public string Description = string.Empty;
             public short Texture;
             public byte Type;
             public bool Stackable;
@@ -267,22 +268,30 @@ class Lists
             public Class Req_Class;
             // Poção
             public int Potion_Experience;
-            public short[] Potion_Vital;
+            public short[] Potion_Vital = new short[(byte)Globals.Vitals.Count];
             // Equipamento
             public byte Equip_Type;
-            public short[] Equip_Attribute;
+            public short[] Equip_Attribute = new short[(byte)Globals.Attributes.Count];
             public short Weapon_Damage;
+
+            public Item(Guid ID) : base(ID) { }
+            public override string ToString() => Name;
         }
 
         public class NPC_Drop
         {
-            public short Item_Num;
+            private Guid item;
+            public Item Item
+            {
+                get => (Item)Lists.GetData(Lists.Item, item);
+                set => item = new Guid(GetID(value));
+            }
             public short Amount;
             public byte Chance;
 
-            public NPC_Drop(short Item_Num, short Amount, byte Chance)
+            public NPC_Drop(Item Item, short Amount, byte Chance)
             {
-                this.Item_Num = Item_Num;
+                this.Item = Item;
                 this.Amount = Amount;
                 this.Chance = Chance;
             }
@@ -291,25 +300,23 @@ class Lists
         public class Shop : Data
         {
             public string Name = string.Empty;
-            public short Currency;
+            public Item Currency;
             public List<Shop_Item> Sold = new List<Shop_Item>();
             public List<Shop_Item> Bought = new List<Shop_Item>();
 
             public Shop(Guid ID) : base(ID) { }
-
-
             public override string ToString() => Name;
         }
 
         public class Shop_Item
         {
-            public short Item_Num;
+            public Item Item;
             public short Amount;
             public short Price;
 
-            public Shop_Item(short Item_Num, short Amount, short Price)
+            public Shop_Item(Item Item, short Amount, short Price)
             {
-                this.Item_Num = Item_Num;
+                this.Item = Item;
                 this.Amount = Amount;
                 this.Price = Price;
             }

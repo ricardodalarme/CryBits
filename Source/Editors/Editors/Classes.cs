@@ -26,7 +26,7 @@ partial class Editor_Classes : Form
     {
         // Lista de itens
         Objects.cmbItems.Items.Clear();
-        for (byte i = 1; i < Lists.Item.Length; i++) Objects.cmbItems.Items.Add(Globals.Numbering(i, Lists.Item.GetUpperBound(0), Lists.Item[i].Name));
+        foreach (Lists.Structures.Item Item in Lists.Item.Values) Objects.cmbItems.Items.Add(Item);
 
         // Lista as classes
         Objects.List.Nodes.Clear();
@@ -55,6 +55,9 @@ partial class Editor_Classes : Form
         // Atualiza o valor da loja selecionada
         Selected = Lists.Class[(Guid)List.SelectedNode.Tag];
 
+        // Altera a visibilidade dos grupos se necessário
+        Groups_Visibility();
+
         // Limpa os dados necessários
         lstMale.Items.Clear();
         lstFemale.Items.Clear();
@@ -77,15 +80,12 @@ partial class Editor_Classes : Form
         numSpawn_Y.Value = Selected.Spawn_Y;
         for (byte i = 0; i < Selected.Tex_Male.Count; i++) lstMale.Items.Add(Selected.Tex_Male[i]);
         for (byte i = 0; i < Selected.Tex_Female.Count; i++) lstFemale.Items.Add(Selected.Tex_Female[i]);
-        for (byte i = 0; i < Selected.Item.Count; i++) lstItems.Items.Add(Globals.Numbering(Selected.Item[i].Item1, Lists.Item.GetUpperBound(0), Lists.Item[Selected.Item[i].Item1].Name + " [" + Selected.Item[i].Item2 + "x]"));
+        for (byte i = 0; i < Selected.Item.Count; i++) lstItems.Items.Add(Selected.Item[i].Item1.Name + " [" + Selected.Item[i].Item2 + "x]");
 
         // Seleciona os primeiros itens
         if (lstMale.Items.Count > 0) lstMale.SelectedIndex = 0;
         if (lstFemale.Items.Count > 0) lstFemale.SelectedIndex = 0;
         if (lstItems.Items.Count > 0) lstItems.SelectedIndex = 0;
-
-        // Altera a visibilidade dos grupos se necessário
-        Groups_Visibility();
     }
 
     private void butNew_Click(object sender, EventArgs e)
@@ -240,6 +240,7 @@ partial class Editor_Classes : Form
     {
         Selected.Spawn_Y = (byte)numSpawn_Y.Value;
     }
+
     private void butItem_Add_Click(object sender, EventArgs e)
     {
         // Abre a janela para adicionar o item
@@ -253,8 +254,8 @@ partial class Editor_Classes : Form
         // Adiciona o item
         if (cmbItems.SelectedIndex >= 0)
         {
-            lstItems.Items.Add(Globals.Numbering(cmbItems.SelectedIndex + 1, Lists.Item.GetUpperBound(0), Lists.Item[cmbItems.SelectedIndex + 1].Name + " [" + numItem_Amount.Value + "x]"));
-            Selected.Item.Add(new Tuple<short, short>((short)(cmbItems.SelectedIndex + 1), (short)numItem_Amount.Value));
+            lstItems.Items.Add(((Lists.Structures.Item)cmbItems.SelectedItem).Name + " [" + numItem_Amount.Value + "x]");
+            Selected.Item.Add(new Tuple<Lists.Structures.Item, short>((Lists.Structures.Item)cmbItems.SelectedItem, (short)numItem_Amount.Value));
             grpItem_Add.Visible = false;
         }
     }
@@ -273,7 +274,7 @@ partial class Editor_Classes : Form
     private void cmbItems_SelectedIndexChanged(object sender, EventArgs e)
     {
         // Quantidade de itens
-        if (cmbItems.SelectedIndex >= 0) numItem_Amount.Enabled = Lists.Item[cmbItems.SelectedIndex + 1].Stackable;
+        if (cmbItems.SelectedIndex >= 0) numItem_Amount.Enabled = ((Lists.Structures.Item)cmbItems.SelectedItem).Stackable;
         numItem_Amount.Value = 1;
     }
 }

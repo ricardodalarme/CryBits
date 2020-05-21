@@ -388,10 +388,10 @@ class Send
         Data.Write((byte)Editor_Packets.Maps);
         Data.Write((short)Lists.Map.Length);
         ToPlayer(Account, Data);
-        for (short i = 1; i < Lists.Map.Length; i++) Map(Account, i, OpenEditor);
+        for (short i = 1; i < Lists.Map.Length; i++) Map(Account, i);
     }
 
-    public static void Map(Account.Structure Account, short Map_Num, bool OpenEditor = false)
+    public static void Map(Account.Structure Account, short Map_Num)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -475,8 +475,6 @@ class Send
             Data.Write(Lists.Map[Map_Num].NPC[i].X);
             Data.Write(Lists.Map[Map_Num].NPC[i].Y);
         }
-        if (Map_Num == Lists.Map.Length - 1)
-            Data.Write(OpenEditor);
         ToPlayer(Account, Data);
     }
 
@@ -562,6 +560,7 @@ class Send
         Data.Write((short)Lists.Item.Count);
         foreach (Objects.Item Item in Lists.Item.Values)
         {
+            Data.Write(Item.ID.ToString());
             Data.Write(Item.Name);
             Data.Write(Item.Description);
             Data.Write(Item.Texture);

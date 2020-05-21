@@ -34,16 +34,6 @@ class Clear
         Lists.NPC[Index].Allie = new List<short>();
     }
 
-    public static void Item(short Index)
-    {
-        // Reseta os valores
-        Lists.Item[Index] = new Lists.Structures.Item();
-        Lists.Item[Index].Name = string.Empty;
-        Lists.Item[Index].Description = string.Empty;
-        Lists.Item[Index].Potion_Vital = new short[(byte)Globals.Vitals.Count];
-        Lists.Item[Index].Equip_Attribute = new short[(byte)Globals.Attributes.Count];
-    }
-
     public static void Map(short Index)
     {
         // Reseta 

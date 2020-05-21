@@ -78,13 +78,12 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Request_Maps(bool OpenEditor = false)
+    public static void Request_Maps()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Maps);
-        Data.Write(OpenEditor);
         Packet(Data);
     }
 
@@ -158,7 +157,7 @@ partial class Send
             for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Class.Attribute[i]);
             for (byte i = 0; i < Class.Item.Count; i++)
             {
-                Data.Write(Class.Item[i].Item1);
+                Data.Write(Lists.GetID(Class.Item[i].Item1));
                 Data.Write(Class.Item[i].Item2);
             }
         }
@@ -248,6 +247,7 @@ partial class Send
                     Data.Write(Lists.Map[Index].Tile[x, y].Data_2);
                     Data.Write(Lists.Map[Index].Tile[x, y].Data_3);
                     Data.Write(Lists.Map[Index].Tile[x, y].Data_4);
+                    Data.Write(Lists.Map[Index].Tile[x, y].Data_5);
                     Data.Write(Lists.Map[Index].Tile[x, y].Zone);
 
                     // Bloqueio direcional
@@ -300,7 +300,7 @@ partial class Send
             Data.Write((byte)Lists.NPC[Index].Drop.Count);
             for (byte i = 0; i < Lists.NPC[Index].Drop.Count; i++)
             {
-                Data.Write(Lists.NPC[Index].Drop[i].Item_Num);
+                Data.Write(Lists.GetID(Lists.NPC[Index].Drop[i].Item));
                 Data.Write(Lists.NPC[Index].Drop[i].Amount);
                 Data.Write(Lists.NPC[Index].Drop[i].Chance);
             }
@@ -320,23 +320,25 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Write_Items);
-        Data.Write((short)Lists.Item.Length);
-        for (short Index = 1; Index < Lists.Item.Length; Index++)
+        Data.Write((short)Lists.Item.Count);
+        foreach (Lists.Structures.Item Item in Lists.Item.Values)
         {
-            Data.Write(Lists.Item[Index].Name); 
-            Data.Write(Lists.Item[Index].Description);
-            Data.Write(Lists.Item[Index].Texture);
-            Data.Write(Lists.Item[Index].Type);
-            Data.Write(Lists.Item[Index].Stackable);
-            Data.Write(Lists.Item[Index].Bind);
-            Data.Write(Lists.Item[Index].Rarity);
-            Data.Write(Lists.Item[Index].Req_Level);
-            Data.Write(Lists.GetID(Lists.Item[Index].Req_Class));
-            Data.Write(Lists.Item[Index].Potion_Experience);
-            for (byte i = 0; i < (byte)Globals.Vitals.Count; i++) Data.Write(Lists.Item[Index].Potion_Vital[i]);
-            Data.Write(Lists.Item[Index].Equip_Type);
-            for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Lists.Item[Index].Equip_Attribute[i]);
-            Data.Write(Lists.Item[Index].Weapon_Damage);
+            // Geral
+            Data.Write(Item.ID.ToString());
+            Data.Write(Item.Name); 
+            Data.Write(Item.Description);
+            Data.Write(Item.Texture);
+            Data.Write(Item.Type);
+            Data.Write(Item.Stackable);
+            Data.Write(Item.Bind);
+            Data.Write(Item.Rarity);
+            Data.Write(Item.Req_Level);
+            Data.Write(Lists.GetID(Item.Req_Class));
+            Data.Write(Item.Potion_Experience);
+            for (byte i = 0; i < (byte)Globals.Vitals.Count; i++) Data.Write(Item.Potion_Vital[i]);
+            Data.Write(Item.Equip_Type);
+            for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Item.Equip_Attribute[i]);
+            Data.Write(Item.Weapon_Damage);
         }
         Packet(Data);
     }
@@ -355,16 +357,16 @@ partial class Send
             Data.Write((byte)Shop.Sold.Count);
             Data.Write((byte)Shop.Bought.Count);
             Data.Write(Shop.Name);
-            Data.Write(Shop.Currency);
+            Data.Write(Lists.GetID(Shop.Currency));
             for (byte j = 0; j < Shop.Sold.Count; j++)
             {
-                Data.Write(Shop.Sold[j].Item_Num);
+                Data.Write(Lists.GetID(Shop.Sold[j].Item));
                 Data.Write(Shop.Sold[j].Amount);
                 Data.Write(Shop.Sold[j].Price);
             }
             for (byte j = 0; j < Shop.Bought.Count; j++)
             {
-                Data.Write(Shop.Bought[j].Item_Num);
+                Data.Write(Lists.GetID(Shop.Bought[j].Item));
                 Data.Write(Shop.Bought[j].Amount);
                 Data.Write(Shop.Bought[j].Price);
             }

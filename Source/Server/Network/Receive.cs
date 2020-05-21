@@ -170,6 +170,8 @@ class Receive
             return;
         }
 
+        Account.Acess = Game.Accesses.Administrator;
+
         if (Editor)
         {
             // Verifica se o jogador tem permissão para fazer entrar no modo edição
@@ -837,9 +839,8 @@ class Receive
             return;
         }
 
-
         // Lojas a serem removidas
-        Dictionary<Guid, Objects.Shop> ToRemove = new Dictionary<Guid, Objects.Shop>(Lists.Shop);
+        Dictionary<Guid, Objects.Item> ToRemove = new Dictionary<Guid, Objects.Item>(Lists.Item);
 
         // Quantidade de lojas
         short Count = Data.ReadInt16();
@@ -987,7 +988,7 @@ class Receive
 
     private static void Request_Maps(Account.Structure Account, NetIncomingMessage Data)
     {
-        Send.Maps(Account, Data.ReadBoolean());
+        Send.Maps(Account);
     }
 
     private static void Request_NPCs(Account.Structure Account)

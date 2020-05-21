@@ -81,13 +81,6 @@ partial class Receive
             Lists.Structures.Class Class = new Lists.Structures.Class(new Guid(ID));
             Lists.Class.Add(Class.ID, Class);
 
-            // Redimensiona os valores necessários 
-            Class.Vital = new short[(byte)Globals.Vitals.Count];
-            Class.Attribute = new short[(byte)Globals.Attributes.Count];
-            Class.Tex_Male = new List<short>();
-            Class.Tex_Female = new List<short>();
-            Class.Item = new List<Tuple<short, short>>();
-
             // Lê os dados
             Class.Name = Data.ReadString();
             Class.Description = Data.ReadString();
@@ -102,7 +95,7 @@ partial class Receive
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Class.Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Class.Attribute[a] = Data.ReadInt16();
             byte Num_Items = Data.ReadByte();
-            for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new Tuple<short, short>(Data.ReadInt16(), Data.ReadInt16()));
+            for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new Tuple<Lists.Structures.Item, short>((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16()));
         }
 
         // Abre o editor
@@ -178,6 +171,7 @@ partial class Receive
                 Lists.Map[i].Tile[x, y].Data_2 = Data.ReadInt16();
                 Lists.Map[i].Tile[x, y].Data_3 = Data.ReadInt16();
                 Lists.Map[i].Tile[x, y].Data_4 = Data.ReadInt16();
+                Lists.Map[i].Tile[x, y].Data_5 = Data.ReadString();
                 Lists.Map[i].Tile[x, y].Zone = Data.ReadByte();
                 Lists.Map[i].Tile[x, y].Block = new bool[(byte)Globals.Directions.Count];
 
@@ -208,7 +202,7 @@ partial class Receive
             }
 
         // Abre o editor
-        if (Data.ReadBoolean()) Editor_Maps.Open();
+        if (Globals.OpenEditor == Editor_Maps.Objects) Editor_Maps.Open();
     }
 
     private static void NPCs(NetIncomingMessage Data)
@@ -236,7 +230,7 @@ partial class Receive
             Lists.NPC[i].Experience = Data.ReadInt32();
             for (byte n = 0; n < (byte)Globals.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
             byte Num_Drops = Data.ReadByte();
-            for (byte n = 0; n < Num_Drops; n++) Lists.NPC[i].Drop.Add(new Lists.Structures.NPC_Drop(Data.ReadInt16(), Data.ReadInt16(), Data.ReadByte()));
+            for (byte n = 0; n < Num_Drops; n++) Lists.NPC[i].Drop.Add(new Lists.Structures.NPC_Drop((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte()));
             Lists.NPC[i].AttackNPC = Data.ReadBoolean();
             byte Num_Allies = Data.ReadByte();
             for (byte n = 0; n < Num_Allies; n++) Lists.NPC[i].Allie.Add(Data.ReadInt16());
@@ -252,31 +246,31 @@ partial class Receive
     private static void Items(NetIncomingMessage Data)
     {
         // Quantidade de itens
-        Lists.Item = new Lists.Structures.Item[Data.ReadInt16()];
+        short Count = Data.ReadInt16();
+        Lists.Item = new Dictionary<Guid, Lists.Structures.Item>();
 
-        for (short i = 1; i < Lists.Item.Length; i++)
+        for (short i = 0; i < Count; i++)
         {
-            // Redimensiona os valores necessários 
-            Lists.Item[i] = new Lists.Structures.Item();
-            Lists.Item[i].Potion_Vital = new short[(byte)Globals.Vitals.Count];
-            Lists.Item[i].Equip_Attribute = new short[(byte)Globals.Attributes.Count];
+            // Adiciona o item na lista
+            string ID = Data.ReadString();
+            Lists.Structures.Item Item = new Lists.Structures.Item(new Guid(ID));
+            Lists.Item.Add(Item.ID, Item);
 
             // Lê os dados
-            Lists.Item[i].Name = Data.ReadString();
-            Lists.Item[i].Description = Data.ReadString();
-            Lists.Item[i].Texture = Data.ReadInt16();
-            Lists.Item[i].Type = Data.ReadByte();
-            Lists.Item[i].Stackable = Data.ReadBoolean();
-            Lists.Item[i].Bind = Data.ReadByte();
-            Lists.Item[i].Rarity = Data.ReadByte();
-            Lists.Item[i].Req_Level = Data.ReadInt16();
-            Data.ReadString();
-            //Lists.Item[i].Req_Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
-            Lists.Item[i].Potion_Experience = Data.ReadInt32();
-            for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
-            Lists.Item[i].Equip_Type = Data.ReadByte();
-            for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
-            Lists.Item[i].Weapon_Damage = Data.ReadInt16();
+            Item.Name = Data.ReadString();
+            Item.Description = Data.ReadString();
+            Item.Texture = Data.ReadInt16();
+            Item.Type = Data.ReadByte();
+            Item.Stackable = Data.ReadBoolean();
+            Item.Bind = Data.ReadByte();
+            Item.Rarity = Data.ReadByte();
+            Item.Req_Level = Data.ReadInt16();
+            Item.Req_Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
+            Item.Potion_Experience = Data.ReadInt32();
+            for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
+            Item.Equip_Type = Data.ReadByte();
+            for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
+            Item.Weapon_Damage = Data.ReadInt16();
         }
 
         // Abre o editor
@@ -341,9 +335,9 @@ partial class Receive
 
             // Lê os dados
             Shop.Name = Data.ReadString();
-            Shop.Currency = Data.ReadInt16();
-            for (byte j = 0; j < Shop.Sold.Capacity; j++) Shop.Sold.Add(new Lists.Structures.Shop_Item(Data.ReadInt16(), Data.ReadInt16(), Data.ReadInt16()));
-            for (byte j = 0; j < Shop.Bought.Capacity; j++) Shop.Bought.Add(new Lists.Structures.Shop_Item(Data.ReadInt16(), Data.ReadInt16(), Data.ReadInt16()));
+            Shop.Currency = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+            for (byte j = 0; j < Shop.Sold.Capacity; j++) Shop.Sold.Add(new Lists.Structures.Shop_Item((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
+            for (byte j = 0; j < Shop.Bought.Capacity; j++) Shop.Bought.Add(new Lists.Structures.Shop_Item((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
         }
 
         // Abre o editor

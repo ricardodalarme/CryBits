@@ -30,7 +30,6 @@ public partial class Editor_Quantity : Form
         // Define o nova quantidade
         if (Editor_Maps.Objects.Visible) Editor_Maps.Change_Quantity();
         if (Editor_NPCs.Objects.Visible) Editor_NPCs.Change_Quantity();
-        if (Editor_Items.Objects.Visible) Editor_Items.Change_Quantity();
 
         // Fecha a janela
         Visible = false;
