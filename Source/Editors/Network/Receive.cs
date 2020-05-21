@@ -191,7 +191,7 @@ partial class Receive
         if (Num_NPCs > 0)
             for (byte n = 0; n < Num_NPCs; n++)
             {
-                NPC.Index = Data.ReadInt16();
+                NPC.NPC = (Lists.Structures.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
                 NPC.Zone = Data.ReadByte();
                 NPC.Spawn = Data.ReadBoolean();
                 NPC.X = Data.ReadByte();
@@ -205,36 +205,35 @@ partial class Receive
 
     private static void NPCs(NetIncomingMessage Data)
     {
-        // Quantidade de nocs
-        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16()];
+        // Quantidade de itens
+        short Count = Data.ReadInt16();
+        Lists.NPC = new Dictionary<Guid, Lists.Structures.NPC>();
 
-        for (short i = 1; i < Lists.NPC.Length; i++)
+        for (short i = 0; i < Count; i++)
         {
-            // Redimensiona os valores necessários 
-            Lists.NPC[i] = new Lists.Structures.NPC();
-            Lists.NPC[i].Vital = new short[(byte)Globals.Vitals.Count];
-            Lists.NPC[i].Attribute = new short[(byte)Globals.Attributes.Count];
-            Lists.NPC[i].Drop = new List<Lists.Structures.NPC_Drop>();
-            Lists.NPC[i].Allie = new List<short>();
+            // Adiciona o item na lista
+            string ID = Data.ReadString();
+            Lists.Structures.NPC NPC = new Lists.Structures.NPC(new Guid(ID));
+            Lists.NPC.Add(NPC.ID, NPC);
 
             // Lê os dados
-            Lists.NPC[i].Name = Data.ReadString();
-            Lists.NPC[i].SayMsg = Data.ReadString();
-            Lists.NPC[i].Texture = Data.ReadInt16();
-            Lists.NPC[i].Behaviour = Data.ReadByte();
-            for (byte n = 0; n < (byte)Globals.Vitals.Count; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
-            Lists.NPC[i].SpawnTime = Data.ReadByte();
-            Lists.NPC[i].Sight = Data.ReadByte();
-            Lists.NPC[i].Experience = Data.ReadInt32();
-            for (byte n = 0; n < (byte)Globals.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
+            NPC.Name = Data.ReadString();
+            NPC.SayMsg = Data.ReadString();
+            NPC.Texture = Data.ReadInt16();
+            NPC.Behaviour = Data.ReadByte();
+            for (byte n = 0; n < (byte)Globals.Vitals.Count; n++) NPC.Vital[n] = Data.ReadInt16();
+            NPC.SpawnTime = Data.ReadByte();
+            NPC.Sight = Data.ReadByte();
+            NPC.Experience = Data.ReadInt32();
+            for (byte n = 0; n < (byte)Globals.Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
             byte Num_Drops = Data.ReadByte();
-            for (byte n = 0; n < Num_Drops; n++) Lists.NPC[i].Drop.Add(new Lists.Structures.NPC_Drop((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte()));
-            Lists.NPC[i].AttackNPC = Data.ReadBoolean();
+            for (byte n = 0; n < Num_Drops; n++) NPC.Drop.Add(new Lists.Structures.NPC_Drop((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte()));
+            NPC.AttackNPC = Data.ReadBoolean();
             byte Num_Allies = Data.ReadByte();
-            for (byte n = 0; n < Num_Allies; n++) Lists.NPC[i].Allie.Add(Data.ReadInt16());
-            Lists.NPC[i].Movement = (Globals.NPC_Movements)Data.ReadByte();
-            Lists.NPC[i].Flee_Helth = Data.ReadByte();
-            Lists.NPC[i].Shop = (Lists.Structures.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+            for (byte n = 0; n < Num_Allies; n++) NPC.Allie.Add((Lists.Structures.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString())));
+            NPC.Movement = (Globals.NPC_Movements)Data.ReadByte();
+            NPC.Flee_Helth = Data.ReadByte();
+            NPC.Shop = (Lists.Structures.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
         }
 
         // Abre o editor

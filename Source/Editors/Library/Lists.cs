@@ -12,7 +12,7 @@ class Lists
     public static Structures.Tile[] Tile;
     public static Structures.Map[] Map;
     public static Structures.Weather[] Weather;
-    public static Structures.NPC[] NPC;
+    public static Dictionary<Guid, Structures.NPC> NPC = new Dictionary<Guid, Structures.NPC>();
     public static Dictionary<Guid, Structures.Item> Item = new Dictionary<Guid, Structures.Item>();
     public static Dictionary<Guid, Structures.Shop> Shop = new Dictionary<Guid, Structures.Shop>();
     public static TreeNode Tool;
@@ -219,7 +219,7 @@ class Lists
 
         public struct Map_NPC
         {
-            public short Index;
+            public NPC NPC;
             public byte Zone;
             public bool Spawn;
             public byte X;
@@ -236,23 +236,26 @@ class Lists
             public bool Back;
         }
 
-        public class NPC
+        public class NPC : Data
         {
-            public string Name;
-            public string SayMsg;
+            public string Name = string.Empty;
+            public string SayMsg = string.Empty;
             public short Texture;
             public byte Behaviour;
             public byte SpawnTime;
             public byte Sight;
             public int Experience;
-            public short[] Vital;
-            public short[] Attribute;
-            public List<NPC_Drop> Drop;
+            public short[] Vital = new short[(byte)Globals.Vitals.Count];
+            public short[] Attribute = new short[(byte)Globals.Attributes.Count];
+            public List<NPC_Drop> Drop = new List<NPC_Drop>();
             public bool AttackNPC;
-            public List<short> Allie;
+            public List<NPC> Allie = new List<NPC>();
             public Globals.NPC_Movements Movement;
             public byte Flee_Helth;
             public Shop Shop;
+
+            public NPC(Guid ID) : base(ID) { }
+            public override string ToString() => Name;
         }
 
         public class Item : Data

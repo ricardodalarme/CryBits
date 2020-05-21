@@ -37,36 +37,42 @@ public partial class Editor_NPCs : Form
 
         // Define os limites
         Objects.numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
-        Update_List();
+
+        // Lista os NPCs
+        Objects.List.Nodes.Clear();
+        foreach (Lists.Structures.NPC NPC in Lists.NPC.Values)
+        {
+            Objects.List.Nodes.Add(NPC.Name);
+            Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = NPC.ID;
+        }
+        if (Objects.List.Nodes.Count > 0) Objects.List.SelectedNode = Objects.List.Nodes[0];
 
         // Abre a janela
         Selection.Objects.Visible = false;
         Objects.Visible = true;
     }
 
-    private static void Update_List()
+    private void Groups_Visibility()
     {
-        // Adiciona os itens à lista
-        Objects.List.Items.Clear();
-        for (byte i = 1; i < Lists.NPC.Length; i++) Objects.List.Items.Add(Globals.Numbering(i, Lists.NPC.GetUpperBound(0), Lists.NPC[i].Name));
-        Objects.List.SelectedIndex = 0;
+        // Atualiza a visiblidade dos paineis
+        grpGeneral.Visible = grpAttributes.Visible = grpBehaviour.Visible = grpDrop.Visible = grpAllies.Visible=  List.SelectedNode != null;
+        grpAllie_Add.Visible = grpDrop_Add.Visible = false;
+        List.Focus();
     }
 
-    private void Update_Data()
+    private void List_AfterSelect(object sender, TreeViewEventArgs e)
     {
-        // Previne erros
-        if (List.SelectedIndex == -1) return;
+        // Atualiza o valor da loja selecionada
+        Selected = Lists.NPC[(Guid)List.SelectedNode.Tag];
+
+        // Altera a visibilidade dos grupos se necessário
+        Groups_Visibility();
 
         // Reseta os dados necessários
         lstDrop.Items.Clear();
         grpDrop_Add.Visible = false;
         lstAllies.Items.Clear();
         grpAllie_Add.Visible = false;
-
-        // Remove o NPC dos aliados caso ele não existir
-        for (byte i = 0; i < Selected.Allie.Count; i++)
-            if (Selected.Allie[i] >= Lists.NPC.Length)
-                Selected.Allie.RemoveAt(i);
 
         // Lista os dados
         txtName.Text = Selected.Name;
@@ -87,7 +93,7 @@ public partial class Editor_NPCs : Form
         cmbMovement.SelectedIndex = (byte)Selected.Movement;
         numFlee_Health.Value = Selected.Flee_Helth;
         chkAttackNPC.Checked = Selected.AttackNPC;
-        for (byte i = 0; i < Selected.Allie.Count; i++) lstAllies.Items.Add(Globals.Numbering(Selected.Allie[i], Lists.NPC.GetUpperBound(0), Lists.NPC[Selected.Allie[i]].Name));
+        for (byte i = 0; i < Selected.Allie.Count; i++) lstAllies.Items.Add(Selected.Allie[i].Name);
         if (Selected.Shop != null) cmbShop.SelectedIndex = cmbShop.Items.IndexOf(Selected.Shop);
         else cmbShop.SelectedIndex = 0;
 
@@ -95,27 +101,29 @@ public partial class Editor_NPCs : Form
         if (lstDrop.Items.Count > 0) lstDrop.SelectedIndex = 0;
     }
 
-    public static void Change_Quantity()
+    private void butNew_Click(object sender, EventArgs e)
     {
-        int Quantity = (int)Editor_Quantity.Objects.numQuantity.Value;
-        int Old = Lists.NPC.GetUpperBound(0);
+        // Adiciona uma loja nova
+        Lists.Structures.NPC NPC = new Lists.Structures.NPC(Guid.NewGuid());
+        NPC.Name = "New NPC";
+        Lists.NPC.Add(NPC.ID, NPC);
 
-        // Altera a quantidade de itens
-        Array.Resize(ref Lists.NPC, Quantity + 1);
-
-        // Limpa os novos itens
-        if (Quantity > Old)
-            for (byte i = (byte)(Old + 1); i <= Quantity; i++)
-                Clear.NPC(i);
-
-        Update_List();
+        // Adiciona na lista
+        TreeNode Node = new TreeNode(NPC.Name);
+        Node.Tag = NPC.ID;
+        List.Nodes.Add(Node);
+        List.SelectedNode = Node;
     }
 
-    private void List_SelectedIndexChanged(object sender, EventArgs e)
+    private void butRemove_Click(object sender, EventArgs e)
     {
-        // Atualiza a lista
-        Selected = Lists.NPC[List.SelectedIndex + 1];
-        Update_Data();
+        // Remove a loja selecionada
+        if (List.SelectedNode != null)
+        {
+            Lists.Item.Remove(Selected.ID);
+            List.SelectedNode.Remove();
+            Groups_Visibility();
+        }
     }
 
     private void butSave_Click(object sender, EventArgs e)
@@ -128,16 +136,6 @@ public partial class Editor_NPCs : Form
         Selection.Objects.Visible = true;
     }
 
-    private void butClear_Click(object sender, EventArgs e)
-    {
-        // Limpa os dados
-        Clear.NPC((short)(List.SelectedIndex + 1));
-
-        // Atualiza os valores
-        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, string.Empty);
-        Update_Data();
-    }
-
     private void butCancel_Click(object sender, EventArgs e)
     {
         // Volta ao menu
@@ -145,17 +143,11 @@ public partial class Editor_NPCs : Form
         Selection.Objects.Visible = true;
     }
 
-    private void butQuantity_Click(object sender, EventArgs e)
-    {
-        // Abre a janela de alteração
-        Editor_Quantity.Open(Lists.NPC.GetUpperBound(0));
-    }
-
-    private void txtName_Validated(object sender, EventArgs e)
+    private void txtName_TextChanged(object sender, EventArgs e)
     {
         // Atualiza a lista
         Selected.Name = txtName.Text;
-        List.Items[List.SelectedIndex] = Globals.Numbering(List.SelectedIndex + 1, List.Items.Count, txtName.Text);
+        List.SelectedNode.Text = txtName.Text;
     }
 
     private void txtSayMsg_TextChanged(object sender, EventArgs e)
@@ -279,7 +271,7 @@ public partial class Editor_NPCs : Form
     {
         // Adiciona os NPCs
         cmbAllie_NPC.Items.Clear();
-        for (short i = 1; i < Lists.NPC.Length; i++) cmbAllie_NPC.Items.Add(Globals.Numbering(i, Lists.NPC.GetUpperBound(0), Lists.NPC[i].Name));
+        foreach (Lists.Structures.NPC NPC in Lists.NPC.Values) Objects.cmbAllie_NPC.Items.Add(NPC);
         cmbAllie_NPC.SelectedIndex = 0;
 
         // Abre a janela para adicionar o aliado
@@ -302,8 +294,8 @@ public partial class Editor_NPCs : Form
         // Adiciona o aliado
         if (cmbAllie_NPC.SelectedIndex >= 0)
         {
-            Selected.Allie.Add((short)(cmbAllie_NPC.SelectedIndex + 1));
-            lstAllies.Items.Add(Globals.Numbering(cmbAllie_NPC.SelectedIndex + 1, Lists.NPC.GetUpperBound(0), Lists.NPC[cmbAllie_NPC.SelectedIndex + 1].Name));
+            Selected.Allie.Add((Lists.Structures.NPC)cmbAllie_NPC.SelectedItem);
+            lstAllies.Items.Add(((Lists.Structures.NPC)cmbAllie_NPC.SelectedItem).Name);
             grpAllie_Add.Visible = false;
         }
     }

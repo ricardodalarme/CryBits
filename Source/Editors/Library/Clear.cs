@@ -23,17 +23,6 @@ class Clear
         Lists.Server_Data.Max_Characters = 3;
     }
 
-    public static void NPC(short Index)
-    {
-        // Reseta os valores
-        Lists.NPC[Index] = new Lists.Structures.NPC();
-        Lists.NPC[Index].Name = string.Empty;
-        Lists.NPC[Index].Vital = new short[(byte)Globals.Vitals.Count];
-        Lists.NPC[Index].Attribute = new short[(byte)Globals.Attributes.Count];
-        Lists.NPC[Index].Drop = new List<Lists.Structures.NPC_Drop>();
-        Lists.NPC[Index].Allie = new List<short>();
-    }
-
     public static void Map(short Index)
     {
         // Reseta 

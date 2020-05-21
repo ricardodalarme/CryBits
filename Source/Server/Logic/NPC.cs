@@ -21,7 +21,7 @@ class NPC
     {
         // Dados básicos
         public byte Index;
-        public short Data_Index;
+        public Objects.NPC Data;
         public bool Alive;
         public Character Target;
         public int Spawn_Timer;
@@ -29,8 +29,6 @@ class NPC
 
         private short Regeneration(byte Vital)
         {
-            Objects.NPC Data = Lists.NPC[Data_Index];
-
             // Cálcula o máximo de vital que o NPC possui
             switch ((Game.Vitals)Vital)
             {
@@ -42,11 +40,11 @@ class NPC
         }
 
         // Construtor
-        public Structure(byte Index, short Map_Num, short Data_Index)
+        public Structure(byte Index, short Map_Num, Objects.NPC Data)
         {
             this.Index = Index;
             this.Map_Num = Map_Num;
-            this.Data_Index = Data_Index;
+            this.Data = Data;
         }
 
         /////////////
@@ -54,14 +52,12 @@ class NPC
         /////////////
         public void Logic()
         {
-            Objects.NPC NPC_Data = Lists.NPC[Data_Index];
-
             ////////////////
             // Surgimento //
             ////////////////
             if (!Alive)
             {
-                if (Environment.TickCount > Spawn_Timer + (NPC_Data.SpawnTime * 1000)) Spawn();
+                if (Environment.TickCount > Spawn_Timer + (Data.SpawnTime * 1000)) Spawn();
                 return;
             }
             else
@@ -77,13 +73,13 @@ class NPC
                 /////////////////
                 if (Environment.TickCount > Loop.Timer_NPC_Regen + 5000)
                     for (byte v = 0; v < (byte)Game.Vitals.Count; v++)
-                        if (Vital[v] < NPC_Data.Vital[v])
+                        if (Vital[v] < Data.Vital[v])
                         {
                             // Renera os vitais
                             Vital[v] += Regeneration(v);
 
                             // Impede que o valor passe do limite
-                            if (Vital[v] > NPC_Data.Vital[v]) Vital[v] = NPC_Data.Vital[v];
+                            if (Vital[v] > Data.Vital[v]) Vital[v] = Data.Vital[v];
 
                             // Envia os dados aos jogadores do mapa
                             Send.Map_NPC_Vitals(this);
@@ -93,7 +89,7 @@ class NPC
                 // Movimentação //
                 //////////////////
                 // Atacar ao ver
-                if (NPC_Data.Behaviour == (byte)Behaviour.AttackOnSight)
+                if (Data.Behaviour == (byte)Behaviour.AttackOnSight)
                 {
                     // Jogador
                     if (Target == null)
@@ -105,28 +101,28 @@ class NPC
 
                             // Se o jogador estiver no alcance do NPC, ir atrás dele
                             Distance = (short)Math.Sqrt(Math.Pow(X - Lists.Account[Player_Index].Character.X, 2) + Math.Pow(Y - Lists.Account[Player_Index].Character.Y, 2));
-                            if (Distance <= NPC_Data.Sight)
+                            if (Distance <= Data.Sight)
                             {
                                 Target = Lists.Account[Player_Index].Character;
 
                                 // Mensagem
-                                if (!string.IsNullOrEmpty(NPC_Data.SayMsg)) Send.Message(Lists.Account[Player_Index].Character, NPC_Data.Name + ": " + NPC_Data.SayMsg, System.Drawing.Color.White);
+                                if (!string.IsNullOrEmpty(Data.SayMsg)) Send.Message(Lists.Account[Player_Index].Character, Data.Name + ": " + Data.SayMsg, System.Drawing.Color.White);
                                 break;
                             }
                         }
 
                     // NPC
-                    if (NPC_Data.AttackNPC && Target == null)
+                    if (Data.AttackNPC && Target == null)
                         for (byte NPC_Index = 1; NPC_Index < Lists.Temp_Map[Map_Num].NPC.Length; NPC_Index++)
                         {
                             // Verifica se pode atacar
                             if (NPC_Index == Index) continue;
                             if (!Lists.Temp_Map[Map_Num].NPC[NPC_Index].Alive) continue;
-                            if (Lists.NPC[Data_Index].IsAlied(Lists.Temp_Map[Map_Num].NPC[NPC_Index].Data_Index)) continue;
+                            if (Data.IsAlied(Lists.Temp_Map[Map_Num].NPC[NPC_Index].Data)) continue;
 
                             // Se o NPC estiver no alcance do NPC, ir atrás dele
                             Distance = (short)Math.Sqrt(Math.Pow(X - Lists.Temp_Map[Map_Num].NPC[NPC_Index].X, 2) + Math.Pow(Y - Lists.Temp_Map[Map_Num].NPC[NPC_Index].Y, 2));
-                            if (Distance <= NPC_Data.Sight)
+                            if (Distance <= Data.Sight)
                             {
                                 Target = Lists.Temp_Map[Map_Num].NPC[NPC_Index];
                                 break;
@@ -148,7 +144,7 @@ class NPC
                     TargetY = Target.Y;
 
                     // Verifica se o alvo saiu do alcance do NPC
-                    if (NPC_Data.Sight < Math.Sqrt(Math.Pow(X - TargetX, 2) + Math.Pow(Y - TargetY, 2)))
+                    if (Data.Sight < Math.Sqrt(Math.Pow(X - TargetX, 2) + Math.Pow(Y - TargetY, 2)))
                         Target = null;
                     else
                         Move = true;
@@ -174,7 +170,7 @@ class NPC
                 if (Move)
                 {
                     // Verifica como o NPC pode se mover
-                    if (Vital[(byte)Game.Vitals.HP] > NPC_Data.Vital[(byte)Game.Vitals.HP] * (NPC_Data.Flee_Helth / 100.0))
+                    if (Vital[(byte)Game.Vitals.HP] > Data.Vital[(byte)Game.Vitals.HP] * (Data.Flee_Helth / 100.0))
                     {
                         // Para perto do alvo
                         CanMove[(byte)Game.Directions.Up] = Y > TargetY;
@@ -205,11 +201,11 @@ class NPC
                 }
 
                 // Move-se aleatoriamente
-                if (NPC_Data.Behaviour == (byte)Behaviour.Friendly || Target == null)
+                if (Data.Behaviour == (byte)Behaviour.Friendly || Target == null)
                     if (Game.Random.Next(0, 3) == 0 && !Moved)
-                        if (NPC_Data.Movement == Movements.MoveRandomly)
+                        if (Data.Movement == Movements.MoveRandomly)
                             this.Move((Game.Directions)Game.Random.Next(0, 4), 1, true);
-                        else if (NPC_Data.Movement == Movements.TurnRandomly)
+                        else if (Data.Movement == Movements.TurnRandomly)
                         {
                             Direction = (Game.Directions)Game.Random.Next(0, 4);
                             Send.Map_NPC_Direction(this);
@@ -229,7 +225,7 @@ class NPC
             this.X = X;
             this.Y = Y;
             this.Direction = Direction;
-            for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Vital[i] = Lists.NPC[Data_Index].Vital[i];
+            for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Vital[i] = Data.Vital[i];
 
             // Envia os dados aos jogadores
             if (Socket.Device != null) Send.Map_NPC(Lists.Temp_Map[Map_Num].NPC[Index]);
@@ -336,7 +332,7 @@ class NPC
             Attack_Timer = Environment.TickCount;
 
             // Cálculo de dano
-            short Attack_Damage = (short)(Lists.NPC[Data_Index].Attribute[(byte)Game.Attributes.Strength] - Victim.Player_Defense);
+            short Attack_Damage = (short)(Data.Attribute[(byte)Game.Attributes.Strength] - Victim.Player_Defense);
 
             // Dano não fatal
             if (Attack_Damage > 0)
@@ -377,7 +373,7 @@ class NPC
             Victim.Target = this;
 
             // Cálculo de dano
-            short Attack_Damage = (short)(Lists.NPC[Data_Index].Attribute[(byte)Game.Attributes.Strength] - Lists.NPC[Victim.Data_Index].Attribute[(byte)Game.Attributes.Resistance]);
+            short Attack_Damage = (short)(Data.Attribute[(byte)Game.Attributes.Strength] - Victim.Data.Attribute[(byte)Game.Attributes.Resistance]);
 
             // Dano não fatal
             if (Attack_Damage > 0)
@@ -407,17 +403,15 @@ class NPC
 
         public void Died()
         {
-            Objects.NPC NPC = Lists.NPC[Data_Index];
-
             // Solta os itens
-            for (byte i = 0; i < NPC.Drop.Length; i++)
-                if (NPC.Drop[i].Item != null)
-                    if (Game.Random.Next(1, 99) <= NPC.Drop[i].Chance)
+            for (byte i = 0; i < Data.Drop.Length; i++)
+                if (Data.Drop[i].Item != null)
+                    if (Game.Random.Next(1, 99) <= Data.Drop[i].Chance)
                     {
                         // Dados do item
                         Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
-                        Map_Item.Item = NPC.Drop[i].Item;
-                        Map_Item.Amount = NPC.Drop[i].Amount;
+                        Map_Item.Item = Data.Drop[i].Item;
+                        Map_Item.Amount = Data.Drop[i].Amount;
                         Map_Item.X = X;
                         Map_Item.Y = Y;
 

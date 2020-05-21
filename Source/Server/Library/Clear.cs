@@ -15,18 +15,6 @@ class Clear
         Lists.Server_Data.Max_Map_Items = 100;
         Lists.Server_Data.Num_Points = 3;
         Lists.Server_Data.Num_Maps = 1;
-        Lists.Server_Data.Num_NPCs = 1;
-    }
-
-    public static void NPC(short Index)
-    {
-        // Reseta os valores
-        Lists.NPC[Index] = new Objects.NPC();
-        Lists.NPC[Index].Name = string.Empty;
-        Lists.NPC[Index].Vital = new short[(byte)Game.Vitals.Count];
-        Lists.NPC[Index].Attribute = new short[(byte)Game.Attributes.Count];
-        Lists.NPC[Index].Drop = Array.Empty<Objects.NPC_Drop>();
-        Lists.NPC[Index].Allie = Array.Empty<short>();
     }
 
     public static void Map(short Index)

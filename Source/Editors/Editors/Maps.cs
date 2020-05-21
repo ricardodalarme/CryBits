@@ -91,7 +91,7 @@ partial class Editor_Maps : Form
         // Lista os itens
         for (byte i = 0; i < (byte)Globals.Layers.Count; i++) Objects.cmbLayers_Type.Items.Add(((Globals.Layers)i).ToString());
         for (byte i = 1; i < Graphics.Tex_Tile.Length; i++) Objects.cmbTiles.Items.Add(i.ToString());
-        for (byte i = 1; i < Lists.NPC.Length; i++) Objects.cmbNPC.Items.Add(Lists.NPC[i].Name);
+        foreach (Lists.Structures.NPC NPC in Lists.NPC.Values) Objects.cmbNPC.Items.Add(NPC);
         foreach (Lists.Structures.Item Item in Lists.Item.Values) Objects.cmbA_Item.Items.Add(Item);
 
         // Reseta os valores
@@ -1466,7 +1466,7 @@ partial class Editor_Maps : Form
         Lists.Structures.Map_NPC Data = new Lists.Structures.Map_NPC();
 
         // Define os dados
-        Data.Index = (short)(Objects.cmbNPC.SelectedIndex + 1);
+        Data.NPC = (Lists.Structures.NPC)Objects.cmbNPC.SelectedItem;
         Data.Zone = (byte)Objects.numNPC_Zone.Value;
         Data.Spawn = Posição;
         Data.X = X;
@@ -1489,7 +1489,7 @@ partial class Editor_Maps : Form
         // Atualiza a lista de NPCs do mapa
         if (Lists.Map[Selected].NPC.Count > 0)
         {
-            for (byte i = 0; i < Lists.Map[Selected].NPC.Count; i++) Objects.lstNPC.Items.Add(i + 1 + ":" + Lists.NPC[Lists.Map[Selected].NPC[i].Index].Name);
+            for (byte i = 0; i < Lists.Map[Selected].NPC.Count; i++) Objects.lstNPC.Items.Add(i + 1 + ":" + Lists.Map[Selected].NPC[i].NPC.Name);
             Objects.lstNPC.SelectedIndex = 0;
         }
     }

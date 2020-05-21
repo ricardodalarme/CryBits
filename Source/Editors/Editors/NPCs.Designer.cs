@@ -27,8 +27,7 @@
     private void InitializeComponent()
     {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_NPCs));
-            this.List = new System.Windows.Forms.ListBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grpGeneral = new System.Windows.Forms.GroupBox();
             this.numTexture = new System.Windows.Forms.NumericUpDown();
             this.txtName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -43,9 +42,7 @@
             this.cmbBehavior = new System.Windows.Forms.ComboBox();
             this.butSave = new System.Windows.Forms.Button();
             this.butCancel = new System.Windows.Forms.Button();
-            this.butClear = new System.Windows.Forms.Button();
-            this.butQuantity = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.grpAttributes = new System.Windows.Forms.GroupBox();
             this.numResistance = new System.Windows.Forms.NumericUpDown();
             this.numExperience = new System.Windows.Forms.NumericUpDown();
             this.numIntelligence = new System.Windows.Forms.NumericUpDown();
@@ -66,7 +63,7 @@
             this.cmbDrop_Item = new System.Windows.Forms.ComboBox();
             this.numDrop_Chance = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.grpDrop = new System.Windows.Forms.GroupBox();
             this.butDrop_Delete = new System.Windows.Forms.Button();
             this.lstDrop = new System.Windows.Forms.ListBox();
             this.butDrop_Add = new System.Windows.Forms.Button();
@@ -74,14 +71,16 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.butItem_Ok = new System.Windows.Forms.Button();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.grpAllies = new System.Windows.Forms.GroupBox();
             this.butAllie_Delete = new System.Windows.Forms.Button();
             this.butAllie_Add = new System.Windows.Forms.Button();
             this.lstAllies = new System.Windows.Forms.ListBox();
             this.label12 = new System.Windows.Forms.Label();
             this.chkAttackNPC = new System.Windows.Forms.CheckBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.grpBehaviour = new System.Windows.Forms.GroupBox();
             this.cmbMovement = new System.Windows.Forms.ComboBox();
+            this.cmbShop = new System.Windows.Forms.ComboBox();
+            this.label18 = new System.Windows.Forms.Label();
             this.numFlee_Health = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -89,13 +88,14 @@
             this.cmbAllie_NPC = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
             this.butAllie_Ok = new System.Windows.Forms.Button();
-            this.cmbShop = new System.Windows.Forms.ComboBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
+            this.List = new System.Windows.Forms.TreeView();
+            this.butRemove = new System.Windows.Forms.Button();
+            this.butNew = new System.Windows.Forms.Button();
+            this.grpGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numRange)).BeginInit();
-            this.groupBox2.SuspendLayout();
+            this.grpAttributes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numResistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numExperience)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIntelligence)).BeginInit();
@@ -106,36 +106,28 @@
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDrop_Amount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDrop_Chance)).BeginInit();
-            this.groupBox3.SuspendLayout();
+            this.grpDrop.SuspendLayout();
             this.grpDrop_Add.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            this.groupBox6.SuspendLayout();
+            this.grpAllies.SuspendLayout();
+            this.grpBehaviour.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFlee_Health)).BeginInit();
             this.grpAllie_Add.SuspendLayout();
             this.SuspendLayout();
             // 
-            // List
+            // grpGeneral
             // 
-            this.List.FormattingEnabled = true;
-            this.List.Location = new System.Drawing.Point(11, 12);
-            this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(202, 498);
-            this.List.TabIndex = 9;
-            this.List.SelectedIndexChanged += new System.EventHandler(this.List_SelectedIndexChanged);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.numTexture);
-            this.groupBox1.Controls.Add(this.txtName);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.lblTexture);
-            this.groupBox1.Controls.Add(this.butTexture);
-            this.groupBox1.Location = new System.Drawing.Point(219, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(304, 103);
-            this.groupBox1.TabIndex = 14;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "General";
+            this.grpGeneral.Controls.Add(this.numTexture);
+            this.grpGeneral.Controls.Add(this.txtName);
+            this.grpGeneral.Controls.Add(this.label3);
+            this.grpGeneral.Controls.Add(this.lblTexture);
+            this.grpGeneral.Controls.Add(this.butTexture);
+            this.grpGeneral.Location = new System.Drawing.Point(220, 7);
+            this.grpGeneral.Name = "grpGeneral";
+            this.grpGeneral.Size = new System.Drawing.Size(304, 103);
+            this.grpGeneral.TabIndex = 14;
+            this.grpGeneral.TabStop = false;
+            this.grpGeneral.Text = "General";
+            this.grpGeneral.Visible = false;
             // 
             // numTexture
             // 
@@ -156,7 +148,7 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(279, 20);
             this.txtName.TabIndex = 10;
-            this.txtName.Validated += new System.EventHandler(this.txtName_Validated);
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // label3
             // 
@@ -265,9 +257,9 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(219, 523);
+            this.butSave.Location = new System.Drawing.Point(220, 518);
             this.butSave.Name = "butSave";
-            this.butSave.Size = new System.Drawing.Size(201, 25);
+            this.butSave.Size = new System.Drawing.Size(304, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
             this.butSave.UseVisualStyleBackColor = true;
@@ -275,58 +267,39 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(632, 523);
+            this.butCancel.Location = new System.Drawing.Point(530, 518);
             this.butCancel.Name = "butCancel";
-            this.butCancel.Size = new System.Drawing.Size(201, 25);
+            this.butCancel.Size = new System.Drawing.Size(304, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
             // 
-            // butClear
+            // grpAttributes
             // 
-            this.butClear.Location = new System.Drawing.Point(425, 523);
-            this.butClear.Name = "butClear";
-            this.butClear.Size = new System.Drawing.Size(201, 25);
-            this.butClear.TabIndex = 18;
-            this.butClear.Text = "Clear";
-            this.butClear.UseVisualStyleBackColor = true;
-            this.butClear.Click += new System.EventHandler(this.butClear_Click);
-            // 
-            // butQuantity
-            // 
-            this.butQuantity.Location = new System.Drawing.Point(12, 523);
-            this.butQuantity.Name = "butQuantity";
-            this.butQuantity.Size = new System.Drawing.Size(202, 25);
-            this.butQuantity.TabIndex = 15;
-            this.butQuantity.Text = "Change Quantity";
-            this.butQuantity.UseVisualStyleBackColor = true;
-            this.butQuantity.Click += new System.EventHandler(this.butQuantity_Click);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.numResistance);
-            this.groupBox2.Controls.Add(this.numExperience);
-            this.groupBox2.Controls.Add(this.numIntelligence);
-            this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.numVitality);
-            this.groupBox2.Controls.Add(this.numMP);
-            this.groupBox2.Controls.Add(this.label10);
-            this.groupBox2.Controls.Add(this.numHP);
-            this.groupBox2.Controls.Add(this.numStrength);
-            this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.lblMP);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.lblHP);
-            this.groupBox2.Controls.Add(this.numAgility);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Location = new System.Drawing.Point(219, 380);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(304, 137);
-            this.groupBox2.TabIndex = 21;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Base Attributes";
+            this.grpAttributes.Controls.Add(this.numResistance);
+            this.grpAttributes.Controls.Add(this.numExperience);
+            this.grpAttributes.Controls.Add(this.numIntelligence);
+            this.grpAttributes.Controls.Add(this.label9);
+            this.grpAttributes.Controls.Add(this.numVitality);
+            this.grpAttributes.Controls.Add(this.numMP);
+            this.grpAttributes.Controls.Add(this.label10);
+            this.grpAttributes.Controls.Add(this.numHP);
+            this.grpAttributes.Controls.Add(this.numStrength);
+            this.grpAttributes.Controls.Add(this.label7);
+            this.grpAttributes.Controls.Add(this.lblMP);
+            this.grpAttributes.Controls.Add(this.label4);
+            this.grpAttributes.Controls.Add(this.lblHP);
+            this.grpAttributes.Controls.Add(this.numAgility);
+            this.grpAttributes.Controls.Add(this.label5);
+            this.grpAttributes.Controls.Add(this.label6);
+            this.grpAttributes.Location = new System.Drawing.Point(220, 375);
+            this.grpAttributes.Name = "grpAttributes";
+            this.grpAttributes.Size = new System.Drawing.Size(304, 137);
+            this.grpAttributes.TabIndex = 21;
+            this.grpAttributes.TabStop = false;
+            this.grpAttributes.Text = "Base Attributes";
+            this.grpAttributes.Visible = false;
             // 
             // numResistance
             // 
@@ -521,17 +494,18 @@
             this.label11.TabIndex = 32;
             this.label11.Text = "Chance: (%)";
             // 
-            // groupBox3
+            // grpDrop
             // 
-            this.groupBox3.Controls.Add(this.butDrop_Delete);
-            this.groupBox3.Controls.Add(this.lstDrop);
-            this.groupBox3.Controls.Add(this.butDrop_Add);
-            this.groupBox3.Location = new System.Drawing.Point(529, 271);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(304, 246);
-            this.groupBox3.TabIndex = 37;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Drop items";
+            this.grpDrop.Controls.Add(this.butDrop_Delete);
+            this.grpDrop.Controls.Add(this.lstDrop);
+            this.grpDrop.Controls.Add(this.butDrop_Add);
+            this.grpDrop.Location = new System.Drawing.Point(530, 266);
+            this.grpDrop.Name = "grpDrop";
+            this.grpDrop.Size = new System.Drawing.Size(304, 246);
+            this.grpDrop.TabIndex = 37;
+            this.grpDrop.TabStop = false;
+            this.grpDrop.Text = "Drop items";
+            this.grpDrop.Visible = false;
             // 
             // butDrop_Delete
             // 
@@ -570,7 +544,7 @@
             this.grpDrop_Add.Controls.Add(this.cmbDrop_Item);
             this.grpDrop_Add.Controls.Add(this.label16);
             this.grpDrop_Add.Controls.Add(this.butItem_Ok);
-            this.grpDrop_Add.Location = new System.Drawing.Point(529, 271);
+            this.grpDrop_Add.Location = new System.Drawing.Point(530, 266);
             this.grpDrop_Add.Name = "grpDrop_Add";
             this.grpDrop_Add.Size = new System.Drawing.Size(304, 246);
             this.grpDrop_Add.TabIndex = 38;
@@ -606,19 +580,20 @@
             this.butItem_Ok.UseVisualStyleBackColor = true;
             this.butItem_Ok.Click += new System.EventHandler(this.butItem_Ok_Click);
             // 
-            // groupBox5
+            // grpAllies
             // 
-            this.groupBox5.Controls.Add(this.butAllie_Delete);
-            this.groupBox5.Controls.Add(this.butAllie_Add);
-            this.groupBox5.Controls.Add(this.lstAllies);
-            this.groupBox5.Controls.Add(this.label12);
-            this.groupBox5.Controls.Add(this.chkAttackNPC);
-            this.groupBox5.Location = new System.Drawing.Point(531, 12);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(304, 253);
-            this.groupBox5.TabIndex = 39;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "NPC vs NPC";
+            this.grpAllies.Controls.Add(this.butAllie_Delete);
+            this.grpAllies.Controls.Add(this.butAllie_Add);
+            this.grpAllies.Controls.Add(this.lstAllies);
+            this.grpAllies.Controls.Add(this.label12);
+            this.grpAllies.Controls.Add(this.chkAttackNPC);
+            this.grpAllies.Location = new System.Drawing.Point(532, 7);
+            this.grpAllies.Name = "grpAllies";
+            this.grpAllies.Size = new System.Drawing.Size(304, 253);
+            this.grpAllies.TabIndex = 39;
+            this.grpAllies.TabStop = false;
+            this.grpAllies.Text = "NPC vs NPC";
+            this.grpAllies.Visible = false;
             // 
             // butAllie_Delete
             // 
@@ -668,27 +643,28 @@
             this.chkAttackNPC.UseVisualStyleBackColor = true;
             this.chkAttackNPC.CheckedChanged += new System.EventHandler(this.chkAttackNPC_CheckedChanged);
             // 
-            // groupBox6
+            // grpBehaviour
             // 
-            this.groupBox6.Controls.Add(this.cmbMovement);
-            this.groupBox6.Controls.Add(this.cmbShop);
-            this.groupBox6.Controls.Add(this.label18);
-            this.groupBox6.Controls.Add(this.txtSayMsg);
-            this.groupBox6.Controls.Add(this.numFlee_Health);
-            this.groupBox6.Controls.Add(this.cmbBehavior);
-            this.groupBox6.Controls.Add(this.numSpawn);
-            this.groupBox6.Controls.Add(this.numRange);
-            this.groupBox6.Controls.Add(this.label14);
-            this.groupBox6.Controls.Add(this.label13);
-            this.groupBox6.Controls.Add(this.label1);
-            this.groupBox6.Controls.Add(this.label2);
-            this.groupBox6.Controls.Add(this.label8);
-            this.groupBox6.Location = new System.Drawing.Point(219, 121);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(304, 253);
-            this.groupBox6.TabIndex = 40;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Behaviour";
+            this.grpBehaviour.Controls.Add(this.cmbMovement);
+            this.grpBehaviour.Controls.Add(this.cmbShop);
+            this.grpBehaviour.Controls.Add(this.label18);
+            this.grpBehaviour.Controls.Add(this.txtSayMsg);
+            this.grpBehaviour.Controls.Add(this.numFlee_Health);
+            this.grpBehaviour.Controls.Add(this.cmbBehavior);
+            this.grpBehaviour.Controls.Add(this.numSpawn);
+            this.grpBehaviour.Controls.Add(this.numRange);
+            this.grpBehaviour.Controls.Add(this.label14);
+            this.grpBehaviour.Controls.Add(this.label13);
+            this.grpBehaviour.Controls.Add(this.label1);
+            this.grpBehaviour.Controls.Add(this.label2);
+            this.grpBehaviour.Controls.Add(this.label8);
+            this.grpBehaviour.Location = new System.Drawing.Point(220, 116);
+            this.grpBehaviour.Name = "grpBehaviour";
+            this.grpBehaviour.Size = new System.Drawing.Size(304, 253);
+            this.grpBehaviour.TabIndex = 40;
+            this.grpBehaviour.TabStop = false;
+            this.grpBehaviour.Text = "Behaviour";
+            this.grpBehaviour.Visible = false;
             // 
             // cmbMovement
             // 
@@ -703,6 +679,29 @@
             this.cmbMovement.Size = new System.Drawing.Size(278, 21);
             this.cmbMovement.TabIndex = 40;
             this.cmbMovement.SelectedIndexChanged += new System.EventHandler(this.cmbMovement_SelectedIndexChanged);
+            // 
+            // cmbShop
+            // 
+            this.cmbShop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbShop.FormattingEnabled = true;
+            this.cmbShop.Items.AddRange(new object[] {
+            "Move Randomly",
+            "Turn Randomly",
+            "Stand Still"});
+            this.cmbShop.Location = new System.Drawing.Point(13, 226);
+            this.cmbShop.Name = "cmbShop";
+            this.cmbShop.Size = new System.Drawing.Size(280, 21);
+            this.cmbShop.TabIndex = 42;
+            this.cmbShop.SelectedIndexChanged += new System.EventHandler(this.cmbShop_SelectedIndexChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(11, 210);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(35, 13);
+            this.label18.TabIndex = 41;
+            this.label18.Text = "Shop:";
             // 
             // numFlee_Health
             // 
@@ -735,7 +734,7 @@
             this.grpAllie_Add.Controls.Add(this.cmbAllie_NPC);
             this.grpAllie_Add.Controls.Add(this.label17);
             this.grpAllie_Add.Controls.Add(this.butAllie_Ok);
-            this.grpAllie_Add.Location = new System.Drawing.Point(531, 12);
+            this.grpAllie_Add.Location = new System.Drawing.Point(532, 7);
             this.grpAllie_Add.Name = "grpAllie_Add";
             this.grpAllie_Add.Size = new System.Drawing.Size(304, 253);
             this.grpAllie_Add.TabIndex = 41;
@@ -771,60 +770,66 @@
             this.butAllie_Ok.UseVisualStyleBackColor = true;
             this.butAllie_Ok.Click += new System.EventHandler(this.butAllie_Ok_Click);
             // 
-            // cmbShop
+            // List
             // 
-            this.cmbShop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbShop.FormattingEnabled = true;
-            this.cmbShop.Items.AddRange(new object[] {
-            "Move Randomly",
-            "Turn Randomly",
-            "Stand Still"});
-            this.cmbShop.Location = new System.Drawing.Point(13, 226);
-            this.cmbShop.Name = "cmbShop";
-            this.cmbShop.Size = new System.Drawing.Size(280, 21);
-            this.cmbShop.TabIndex = 42;
-            this.cmbShop.SelectedIndexChanged += new System.EventHandler(this.cmbShop_SelectedIndexChanged);
+            this.List.HideSelection = false;
+            this.List.Location = new System.Drawing.Point(13, 43);
+            this.List.Name = "List";
+            this.List.Size = new System.Drawing.Size(201, 500);
+            this.List.TabIndex = 44;
+            this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
             // 
-            // label18
+            // butRemove
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(11, 210);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(35, 13);
-            this.label18.TabIndex = 41;
-            this.label18.Text = "Shop:";
+            this.butRemove.Location = new System.Drawing.Point(116, 12);
+            this.butRemove.Name = "butRemove";
+            this.butRemove.Size = new System.Drawing.Size(98, 25);
+            this.butRemove.TabIndex = 43;
+            this.butRemove.Text = "Remove";
+            this.butRemove.UseVisualStyleBackColor = true;
+            this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
+            // 
+            // butNew
+            // 
+            this.butNew.Location = new System.Drawing.Point(12, 12);
+            this.butNew.Name = "butNew";
+            this.butNew.Size = new System.Drawing.Size(98, 25);
+            this.butNew.TabIndex = 42;
+            this.butNew.Text = "New";
+            this.butNew.UseVisualStyleBackColor = true;
+            this.butNew.Click += new System.EventHandler(this.butNew_Click);
             // 
             // Editor_NPCs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(845, 560);
+            this.ClientSize = new System.Drawing.Size(845, 553);
             this.ControlBox = false;
+            this.Controls.Add(this.List);
+            this.Controls.Add(this.butRemove);
+            this.Controls.Add(this.butNew);
             this.Controls.Add(this.grpAllie_Add);
-            this.Controls.Add(this.groupBox6);
-            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.grpBehaviour);
+            this.Controls.Add(this.grpAllies);
             this.Controls.Add(this.grpDrop_Add);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.butQuantity);
-            this.Controls.Add(this.butClear);
+            this.Controls.Add(this.grpDrop);
+            this.Controls.Add(this.grpAttributes);
             this.Controls.Add(this.butCancel);
             this.Controls.Add(this.butSave);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.List);
+            this.Controls.Add(this.grpGeneral);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Editor_NPCs";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NPC Editor";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.grpGeneral.ResumeLayout(false);
+            this.grpGeneral.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numRange)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.grpAttributes.ResumeLayout(false);
+            this.grpAttributes.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numResistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numExperience)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIntelligence)).EndInit();
@@ -835,13 +840,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDrop_Amount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDrop_Chance)).EndInit();
-            this.groupBox3.ResumeLayout(false);
+            this.grpDrop.ResumeLayout(false);
             this.grpDrop_Add.ResumeLayout(false);
             this.grpDrop_Add.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
+            this.grpAllies.ResumeLayout(false);
+            this.grpAllies.PerformLayout();
+            this.grpBehaviour.ResumeLayout(false);
+            this.grpBehaviour.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFlee_Health)).EndInit();
             this.grpAllie_Add.ResumeLayout(false);
             this.grpAllie_Add.PerformLayout();
@@ -850,20 +855,17 @@
     }
 
     #endregion
-    public System.Windows.Forms.ListBox List;
-    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.GroupBox grpGeneral;
     public System.Windows.Forms.TextBox txtName;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Button butSave;
     private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Button butClear;
-    private System.Windows.Forms.Button butQuantity;
     private System.Windows.Forms.Label lblTexture;
     private System.Windows.Forms.Button butTexture;
     private System.Windows.Forms.NumericUpDown numRange;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.ComboBox cmbBehavior;
-    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.GroupBox grpAttributes;
     private System.Windows.Forms.NumericUpDown numAgility;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.NumericUpDown numIntelligence;
@@ -889,7 +891,7 @@
     private System.Windows.Forms.Label label11;
     public System.Windows.Forms.TextBox txtSayMsg;
     private System.Windows.Forms.Label label14;
-    private System.Windows.Forms.GroupBox groupBox3;
+    private System.Windows.Forms.GroupBox grpDrop;
     private System.Windows.Forms.GroupBox grpDrop_Add;
     private System.Windows.Forms.Label label15;
     private System.Windows.Forms.Label label16;
@@ -897,12 +899,12 @@
     private System.Windows.Forms.Button butDrop_Delete;
     public System.Windows.Forms.ListBox lstDrop;
     private System.Windows.Forms.Button butDrop_Add;
-    private System.Windows.Forms.GroupBox groupBox5;
+    private System.Windows.Forms.GroupBox grpAllies;
     private System.Windows.Forms.ListBox lstAllies;
     private System.Windows.Forms.Label label12;
     private System.Windows.Forms.Button butAllie_Delete;
     private System.Windows.Forms.Button butAllie_Add;
-    private System.Windows.Forms.GroupBox groupBox6;
+    private System.Windows.Forms.GroupBox grpBehaviour;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.NumericUpDown numFlee_Health;
     private System.Windows.Forms.ComboBox cmbMovement;
@@ -914,4 +916,7 @@
     private System.Windows.Forms.CheckBox chkAttackNPC;
     private System.Windows.Forms.ComboBox cmbShop;
     private System.Windows.Forms.Label label18;
+    private System.Windows.Forms.TreeView List;
+    private System.Windows.Forms.Button butRemove;
+    private System.Windows.Forms.Button butNew;
 }

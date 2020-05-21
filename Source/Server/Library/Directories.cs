@@ -14,7 +14,6 @@ class Directories
     public static DirectoryInfo Maps = new DirectoryInfo(Application.StartupPath + @"\Data\Maps\");
     public static DirectoryInfo NPCs = new DirectoryInfo(Application.StartupPath + @"\Data\NPCs\");
     public static DirectoryInfo Items = new DirectoryInfo(Application.StartupPath + @"\Data\Items\");
-    public static DirectoryInfo Tiles = new DirectoryInfo(Application.StartupPath + @"\Data\Tiles\");
     public static DirectoryInfo Shops = new DirectoryInfo(Application.StartupPath + @"\Data\Shops\");
 
     public static void Create()
@@ -27,7 +26,6 @@ class Directories
         Maps.Create();
         NPCs.Create();
         Items.Create();
-        Tiles.Create();
         Shops.Create();
     }
 }

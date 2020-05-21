@@ -603,7 +603,7 @@ class Receive
         for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)
         {
             // Geral
-            Lists.Temp_Map.Item[i].Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())); 
+            Lists.Temp_Map.Item[i].Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             Lists.Temp_Map.Item[i].X = Data.ReadByte();
             Lists.Temp_Map.Item[i].Y = Data.ReadByte();
         }
@@ -766,23 +766,43 @@ class Receive
 
     private static void NPCs(NetIncomingMessage Data)
     {
-        // Quantidade
-        Lists.NPC = new Lists.Structures.NPC[Data.ReadInt16()];
+        // Lojas a serem removidas
+        Dictionary<Guid, Lists.Structures.NPC> ToRemove = new Dictionary<Guid, Lists.Structures.NPC>(Lists.NPC);
 
-        // Lê os dados de todos
-        for (byte i = 1; i < Lists.NPC.Length; i++)
+        // Quantidade de lojas
+        short Count = Data.ReadInt16();
+
+        while (--Count >= 0)
         {
+            Guid ID = new Guid(Data.ReadString());
+            Lists.Structures.NPC NPC;
+
+            // Obtém o dado
+            if (Lists.NPC.ContainsKey(ID))
+            {
+                NPC = Lists.NPC[ID];
+                ToRemove.Remove(ID);
+            }
+            else
+            {
+                NPC = new Lists.Structures.NPC(ID);
+                Lists.NPC.Add(NPC.ID, NPC);
+            }
+
             // Geral
-            Lists.NPC[i].Name = Data.ReadString();
-            Lists.NPC[i].SayMsg = Data.ReadString();
-            Lists.NPC[i].Texture = Data.ReadInt16();
-            Lists.NPC[i].Type = Data.ReadByte();
+            NPC.Name = Data.ReadString();
+            NPC.SayMsg = Data.ReadString();
+            NPC.Texture = Data.ReadInt16();
+            NPC.Type = Data.ReadByte();
 
             // Vitais
-            Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+            NPC.Vital = new short[(byte)Game.Vitals.Count];
             for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
-                Lists.NPC[i].Vital[n] = Data.ReadInt16();
+                NPC.Vital[n] = Data.ReadInt16();
         }
+
+        // Remove as lojas que não tiveram os dados atualizados
+        foreach (Guid Remove in ToRemove.Keys) Lists.NPC.Remove(Remove);
     }
 
     private static void Map_NPCs(NetIncomingMessage Data)
@@ -794,13 +814,12 @@ class Receive
             Lists.Temp_Map.NPC[i] = new NPC();
             Lists.Temp_Map.NPC[i].X2 = 0;
             Lists.Temp_Map.NPC[i].Y2 = 0;
-            Lists.Temp_Map.NPC[i].Index = Data.ReadInt16();
+            Lists.Temp_Map.NPC[i].Data = (Lists.Structures.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
             Lists.Temp_Map.NPC[i].X = Data.ReadByte();
             Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
             Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
 
             // Vitais
-            Lists.Temp_Map.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
             for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
                 Lists.Temp_Map.NPC[i].Vital[n] = Data.ReadInt16();
         }
@@ -812,7 +831,7 @@ class Receive
         byte i = Data.ReadByte();
         Lists.Temp_Map.NPC[i].X2 = 0;
         Lists.Temp_Map.NPC[i].Y2 = 0;
-        Lists.Temp_Map.NPC[i].Index = Data.ReadInt16();
+        Lists.Temp_Map.NPC[i].Data = (Lists.Structures.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
         Lists.Temp_Map.NPC[i].X = Data.ReadByte();
         Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
         Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
@@ -893,7 +912,7 @@ class Receive
         // Limpa os dados do NPC
         Lists.Temp_Map.NPC[i].X2 = 0;
         Lists.Temp_Map.NPC[i].Y2 = 0;
-        Lists.Temp_Map.NPC[i].Index = 0;
+        Lists.Temp_Map.NPC[i].Data = null;
         Lists.Temp_Map.NPC[i].X = 0;
         Lists.Temp_Map.NPC[i].Y = 0;
         Lists.Temp_Map.NPC[i].Vital = new short[(byte)Game.Vitals.Count];

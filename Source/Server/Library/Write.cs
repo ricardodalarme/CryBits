@@ -102,17 +102,11 @@ class Write
         Stream.Close();
     }
 
-    public static void NPCs()
+    public static void NPC(Objects.NPC NPC)
     {
         // Escreve os dados
-        for (byte Index = 1; Index < Lists.NPC.Length; Index++) NPC(Index);
-    }
-
-    public static void NPC(short Index)
-    {
-        // Escreve os dados
-        FileStream Stream = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format).OpenWrite();
-        new BinaryFormatter().Serialize(Stream, Lists.NPC[Index]);
+        FileStream Stream = new FileInfo(Directories.NPCs.FullName + NPC.ID + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, NPC);
         Stream.Close();
     }
 

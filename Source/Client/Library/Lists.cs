@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 class Lists
 {
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
     public static List<Player.Structure> Player = new List<Player.Structure>();
-    public static Dictionary<Guid, Structures.Class> Class = new Dictionary<Guid, Structures.Class>() ;
+    public static Dictionary<Guid, Structures.Class> Class = new Dictionary<Guid, Structures.Class>();
     public static Structures.Character[] Characters;
     public static Structures.Map Map;
     public static Structures.Temp_Map Temp_Map = new Structures.Temp_Map();
     public static Structures.Weather[] Weather;
-    public static Structures.NPC[] NPC;
+    public static Dictionary<Guid, Structures.NPC> NPC = new Dictionary<Guid, Structures.NPC>();
     public static Dictionary<Guid, Structures.Item> Item = new Dictionary<Guid, Structures.Item>();
     public static Dictionary<Guid, Structures.Shop> Shop = new Dictionary<Guid, Structures.Shop>();
 
@@ -152,13 +153,15 @@ class Lists
             public bool Back;
         }
 
-        public struct NPC
+        public class NPC : Data
         {
             public string Name;
             public string SayMsg;
             public short Texture;
             public byte Type;
-            public short[] Vital;
+            public short[] Vital = new short[(byte)Game.Vitals.Count];
+
+            public NPC(Guid ID) : base(ID) { }
         }
 
         public struct Map_Items

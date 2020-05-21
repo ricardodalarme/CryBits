@@ -42,21 +42,10 @@ partial class Editor_Classes : Form
         Objects.Visible = true;
     }
 
-    private void Groups_Visibility()
-    {
-        // Atualiza a visiblidade dos paineis
-        grpGeneral.Visible = grpAttributes.Visible = grpSpawn.Visible = grpTexture.Visible = grpDrop.Visible = List.SelectedNode != null;
-        grpItem_Add.Visible = false;
-        List.Focus();
-    }
-
     private void List_AfterSelect(object sender, TreeViewEventArgs e)
     {
         // Atualiza o valor da loja selecionada
         Selected = Lists.Class[(Guid)List.SelectedNode.Tag];
-
-        // Altera a visibilidade dos grupos se necessário
-        Groups_Visibility();
 
         // Limpa os dados necessários
         lstMale.Items.Clear();
@@ -109,7 +98,6 @@ partial class Editor_Classes : Form
         {
             Lists.Class.Remove(Selected.ID);
             List.SelectedNode.Remove();
-            Groups_Visibility();
         }
     }
 

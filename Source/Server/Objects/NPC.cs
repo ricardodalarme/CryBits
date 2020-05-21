@@ -3,7 +3,7 @@
 namespace Objects
 {
     [Serializable]
-    class NPC
+    class NPC : Lists.Structures.Data
     {
         public string Name;
         public string SayMsg;
@@ -12,11 +12,11 @@ namespace Objects
         public byte SpawnTime;
         public byte Sight;
         public int Experience;
-        public short[] Vital;
-        public short[] Attribute;
+        public short[] Vital = new short[(byte)Game.Vitals.Count];
+        public short[] Attribute = new short[(byte)Game.Attributes.Count];
         public NPC_Drop[] Drop;
         public bool AttackNPC;
-        public short[] Allie;
+        public NPC[] Allie;
         public global::NPC.Movements Movement;
         public byte Flee_Helth;
         private Guid shop;
@@ -27,11 +27,13 @@ namespace Objects
             set => shop = new Guid(Lists.GetID(value));
         }
 
-        public bool IsAlied(short Index)
+        public NPC(Guid ID) : base(ID) { }
+
+        public bool IsAlied(NPC NPC)
         {
             // Verifica se o NPC é aliado do outro
             for (byte i = 0; i < Allie.Length; i++)
-                if (Allie[i] == Index)
+                if (Allie[i] == NPC)
                     return true;
 
             return false;

@@ -3,7 +3,7 @@
 class NPC : Character
 {
     // Indice
-    public short Index;
+    public Lists.Structures.NPC Data;
 
     public void Logic()
     {

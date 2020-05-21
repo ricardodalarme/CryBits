@@ -712,7 +712,7 @@ class Receive
             Lists.Temp_Map[i].NPC = new NPC.Structure[Lists.Map[i].NPC.Length];
             for (byte n = 0; n < Lists.Map[i].NPC.Length; n++)
             {
-                Lists.Map[i].NPC[n].Index = Data.ReadInt16();
+                Lists.Map[i].NPC[n].NPC = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
                 Lists.Map[i].NPC[n].Zone = Data.ReadByte();
                 Lists.Map[i].NPC[n].Spawn = Data.ReadBoolean();
                 Lists.Map[i].NPC[n].X = Data.ReadByte();
@@ -745,40 +745,60 @@ class Receive
             return;
         }
 
-        // Quantidade de npcs
-        Lists.NPC = new Objects.NPC[Data.ReadInt16()];
-        Lists.Server_Data.Num_NPCs = (byte)Lists.NPC.GetUpperBound(0);
-        Write.Server_Data();
+        // Lojas a serem removidas
+        Dictionary<Guid, Objects.NPC> ToRemove = new Dictionary<Guid, Objects.NPC>(Lists.NPC);
 
-        for (short i = 1; i < Lists.NPC.Length; i++)
+        // Quantidade de lojas
+        short Count = Data.ReadInt16();
+
+        while (--Count >= 0)
         {
-            // Redimensiona os valores necessários 
-            Lists.NPC[i] = new Objects.NPC();
-            Lists.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
-            Lists.NPC[i].Attribute = new short[(byte)Game.Attributes.Count];
+            Guid ID = new Guid(Data.ReadString());
+            Objects.NPC NPC;
+
+            // Obtém o dado
+            if (Lists.NPC.ContainsKey(ID))
+            {
+                NPC = Lists.NPC[ID];
+                ToRemove.Remove(ID);
+            }
+            else
+            {
+                NPC = new Objects.NPC(ID);
+                Lists.NPC.Add(NPC.ID, NPC);
+            }
 
             // Lê os dados
-            Lists.NPC[i].Name = Data.ReadString();
-            Lists.NPC[i].SayMsg = Data.ReadString();
-            Lists.NPC[i].Texture = Data.ReadInt16();
-            Lists.NPC[i].Behaviour = Data.ReadByte();
-            Lists.NPC[i].SpawnTime = Data.ReadByte();
-            Lists.NPC[i].Sight = Data.ReadByte();
-            Lists.NPC[i].Experience = Data.ReadInt32();
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.NPC[i].Vital[n] = Data.ReadInt16();
-            for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Lists.NPC[i].Attribute[n] = Data.ReadInt16();
-            Lists.NPC[i].Drop = new Objects.NPC_Drop[Data.ReadByte()];
-            for (byte n = 0; n < Lists.NPC[i].Drop.Length; n++) Lists.NPC[i].Drop[n] = new Objects.NPC_Drop((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
-            Lists.NPC[i].AttackNPC = Data.ReadBoolean();
-            Lists.NPC[i].Allie = new short[Data.ReadByte()];
-            for (byte n = 0; n < Lists.NPC[i].Allie.Length; n++) Lists.NPC[i].Allie[n] = Data.ReadInt16();
-            Lists.NPC[i].Movement = (NPC.Movements)Data.ReadByte();
-            Lists.NPC[i].Flee_Helth = Data.ReadByte();
-            Lists.NPC[i].Shop = (Objects.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+            NPC.Name = Data.ReadString();
+            NPC.SayMsg = Data.ReadString();
+            NPC.Texture = Data.ReadInt16();
+            NPC.Behaviour = Data.ReadByte();
+            NPC.SpawnTime = Data.ReadByte();
+            NPC.Sight = Data.ReadByte();
+            NPC.Experience = Data.ReadInt32();
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) NPC.Vital[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Game.Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
+            NPC.Drop = new Objects.NPC_Drop[Data.ReadByte()];
+            for (byte n = 0; n < NPC.Drop.Length; n++) NPC.Drop[n] = new Objects.NPC_Drop((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
+            NPC.AttackNPC = Data.ReadBoolean();
+            NPC.Allie = new Objects.NPC[Data.ReadByte()];
+            for (byte n = 0; n < NPC.Allie.Length; n++) NPC.Allie[n] = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+            NPC.Movement = (NPC.Movements)Data.ReadByte();
+            NPC.Flee_Helth = Data.ReadByte();
+            NPC.Shop = (Objects.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+
+            // Salva os dados do item
+            Write.NPC(NPC);
+        }
+
+        // Remove as lojas que não tiveram os dados atualizados
+        foreach (Guid Remove in ToRemove.Keys)
+        {
+            Lists.NPC.Remove(Remove);
+            File.Delete(Directories.NPCs.FullName + Remove.ToString() + Directories.Format);
         }
 
         // Salva os dados e envia pra todos jogadores conectados
-        Write.NPCs();
         for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i] != Account)
                 Send.NPCs(Lists.Account[i]);

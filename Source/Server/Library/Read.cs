@@ -214,12 +214,12 @@ partial class Read
         Lists.Temp_Map[Index].NPC = new NPC.Structure[Lists.Map[Index].NPC.Length];
         for (byte i = 1; i < Lists.Temp_Map[Index].NPC.Length; i++)
         {
-            Lists.Temp_Map[Index].NPC[i] = new NPC.Structure(i, Index, Lists.Map[Index].NPC[i].Index);
+            Lists.Temp_Map[Index].NPC[i] = new NPC.Structure(i, Index, Lists.Map[Index].NPC[i].NPC);
             Lists.Temp_Map[Index].NPC[i].Spawn();
         }
 
         // Itens do mapa
-        Lists.Temp_Map[Index].Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
+        Lists.Temp_Map[Index].Item = new List<Lists.Structures.Map_Items>();
         Lists.Temp_Map[Index].Item.Add(new Lists.Structures.Map_Items());
         global::Map.Spawn_Items(Index);
     }
@@ -227,26 +227,14 @@ partial class Read
     private static void NPCs()
     {
         // Lê os dados
-        Lists.NPC = new Objects.NPC[Lists.Server_Data.Num_NPCs + 1];
-        for (short i = 1; i < Lists.NPC.Length; i++) NPC(i);
-    }
-
-    private static void NPC(short Index)
-    {
-        FileInfo File = new FileInfo(Directories.NPCs.FullName + Index + Directories.Format);
-
-        // Cria o arquivo caso ele não existir
-        if (!File.Exists)
+        Lists.NPC = new Dictionary<Guid, Objects.NPC>();
+        FileInfo[] File = Directories.NPCs.GetFiles();
+        for (byte i = 0; i < File.Length; i++)
         {
-            Clear.NPC(Index);
-            Write.NPC(Index);
-            return;
-        }
-
-        // Lê os dados
-        FileStream Stream = File.OpenRead();
-        Lists.NPC[Index] = (Objects.NPC)new BinaryFormatter().Deserialize(Stream);
-        Stream.Close();
+            FileStream Stream = File[i].OpenRead();
+            Lists.NPC.Add(new Guid(File[i].Name.Remove(36)), (Objects.NPC)new BinaryFormatter().Deserialize(Stream));
+            Stream.Close();
+        };
     }
 
     private static void Shops()

@@ -41,7 +41,7 @@ class Loop
 
                     // Lógica dos NPCs
                     for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
-                        if (Lists.Temp_Map.NPC[i].Index > 0)
+                        if (Lists.Temp_Map.NPC[i].Data != null)
                             Lists.Temp_Map.NPC[i].Logic();
 
                     // Reinicia a contagem

@@ -468,7 +468,7 @@ class Send
         Data.Write((byte)Lists.Map[Map_Num].NPC.Length);
         for (byte i = 0; i < Lists.Map[Map_Num].NPC.Length; i++)
         {
-            Data.Write(Lists.Map[Map_Num].NPC[i].Index);
+            Data.Write(Lists.GetID(Lists.Map[Map_Num].NPC[i].NPC));
             Data.Write(Lists.Map[Map_Num].NPC[i].Zone);
             Data.Write(Lists.Map[Map_Num].NPC[i].Spawn);
             Data.Write(Lists.Map[Map_Num].NPC[i].X);
@@ -651,36 +651,37 @@ class Send
         // Envia os dados
         if (Account.InEditor) Data.Write((byte)Editor_Packets.NPCs);
         else Data.Write((byte)Client_Packets.NPCs);
-        Data.Write((short)Lists.NPC.Length);
-        for (byte i = 1; i < Lists.NPC.Length; i++)
+        Data.Write((short)Lists.NPC.Count);
+        foreach (Objects.NPC NPC in Lists.NPC.Values)
         {
             // Geral
-            Data.Write(Lists.NPC[i].Name);
-            Data.Write(Lists.NPC[i].SayMsg);
-            Data.Write(Lists.NPC[i].Texture);
-            Data.Write(Lists.NPC[i].Behaviour);
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.NPC[i].Vital[n]);
+            Data.Write(NPC.ID.ToString());
+            Data.Write(NPC.Name);
+            Data.Write(NPC.SayMsg);
+            Data.Write(NPC.Texture);
+            Data.Write(NPC.Behaviour);
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(NPC.Vital[n]);
 
             // Dados apenas do editor
             if (Account.InEditor)
             {
-                Data.Write(Lists.NPC[i].SpawnTime);
-                Data.Write(Lists.NPC[i].Sight);
-                Data.Write(Lists.NPC[i].Experience);
-                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Lists.NPC[i].Attribute[n]);
-                Data.Write((byte)Lists.NPC[i].Drop.Length);
-                for (byte n = 0; n < Lists.NPC[i].Drop.Length; n++)
+                Data.Write(NPC.SpawnTime);
+                Data.Write(NPC.Sight);
+                Data.Write(NPC.Experience);
+                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(NPC.Attribute[n]);
+                Data.Write((byte)NPC.Drop.Length);
+                for (byte n = 0; n < NPC.Drop.Length; n++)
                 {
-                    Data.Write(Lists.GetID(Lists.NPC[i].Drop[n].Item));
-                    Data.Write(Lists.NPC[i].Drop[n].Amount);
-                    Data.Write(Lists.NPC[i].Drop[n].Chance);
+                    Data.Write(Lists.GetID(NPC.Drop[n].Item));
+                    Data.Write(NPC.Drop[n].Amount);
+                    Data.Write(NPC.Drop[n].Chance);
                 }
-                Data.Write(Lists.NPC[i].AttackNPC);
-                Data.Write((byte)Lists.NPC[i].Allie.Length);
-                for (byte n = 0; n < Lists.NPC[i].Allie.Length; n++) Data.Write(Lists.NPC[i].Allie[n]);
-                Data.Write((byte)Lists.NPC[i].Movement);
-                Data.Write(Lists.NPC[i].Flee_Helth);
-                Data.Write(Lists.GetID(Lists.NPC[i].Shop));
+                Data.Write(NPC.AttackNPC);
+                Data.Write((byte)NPC.Allie.Length);
+                for (byte n = 0; n < NPC.Allie.Length; n++) Data.Write(Lists.GetID(NPC.Allie[n]));
+                Data.Write((byte)NPC.Movement);
+                Data.Write(NPC.Flee_Helth);
+                Data.Write(Lists.GetID(NPC.Shop));
             }
         }
         ToPlayer(Account, Data);
@@ -695,7 +696,7 @@ class Send
         Data.Write((short)Lists.Temp_Map[Map_Num].NPC.Length);
         for (byte i = 1; i < Lists.Temp_Map[Map_Num].NPC.Length; i++)
         {
-            Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Data_Index);
+            Data.Write(Lists.GetID(Lists.Temp_Map[Map_Num].NPC[i].Data));
             Data.Write(Lists.Temp_Map[Map_Num].NPC[i].X);
             Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Y);
             Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[i].Direction);
@@ -711,7 +712,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC);
         Data.Write(NPC.Index);
-        Data.Write(NPC.Data_Index);
+        Data.Write(Lists.GetID(NPC.Data));
         Data.Write(NPC.X);
         Data.Write(NPC.Y);
         Data.Write((byte)NPC.Direction);

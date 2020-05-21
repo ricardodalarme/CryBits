@@ -335,13 +335,13 @@ class Player : Character
     private void Attack_NPC(NPC.Structure Victim)
     {
         // Mensagem
-        if (Victim.Target != this && !string.IsNullOrEmpty(Lists.NPC[Victim.Data_Index].SayMsg)) Send.Message(this, Lists.NPC[Victim.Data_Index].Name + ": " + Lists.NPC[Victim.Data_Index].SayMsg, Color.White);
+        if (Victim.Target != this && !string.IsNullOrEmpty(Victim.Data.SayMsg)) Send.Message(this, Victim.Data.Name + ": " + Victim.Data.SayMsg, Color.White);
 
         // Não executa o combate com um NPC amigavel
-        switch ((NPC.Behaviour)Lists.NPC[Victim.Data_Index].Behaviour)
+        switch ((NPC.Behaviour)Victim.Data.Behaviour)
         {
             case NPC.Behaviour.Friendly: return;
-            case NPC.Behaviour.ShopKeeper: Shop_Open(Lists.NPC[Victim.Data_Index].Shop); return;
+            case NPC.Behaviour.ShopKeeper: Shop_Open(Victim.Data.Shop); return;
         }
 
         // Define o alvo do NPC
@@ -351,7 +351,7 @@ class Player : Character
         Attack_Timer = Environment.TickCount;
 
         // Cálculo de dano
-        short Attack_Damage = (short)(Damage - Lists.NPC[Victim.Data_Index].Attribute[(byte)Game.Attributes.Resistance]);
+        short Attack_Damage = (short)(Damage - Victim.Data.Attribute[(byte)Game.Attributes.Resistance]);
 
         // Dano não fatal
         if (Attack_Damage > 0)
@@ -368,7 +368,7 @@ class Player : Character
             else
             {
                 // Experiência ganhada
-                GiveExperience(Lists.NPC[Victim.Data_Index].Experience);
+                GiveExperience(Victim.Data.Experience);
 
                 // Reseta os dados do NPC 
                 Victim.Died();

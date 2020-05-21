@@ -9,7 +9,7 @@ class Lists
     public static Dictionary<Guid, Objects.Class> Class = new Dictionary<Guid, Objects.Class>();
     public static Dictionary<Guid, Objects.Item> Item = new Dictionary<Guid, Objects.Item>();
     public static Dictionary<Guid, Objects.Shop> Shop = new Dictionary<Guid, Objects.Shop>();
-    public static Objects.NPC[] NPC;
+    public static Dictionary<Guid, Objects.NPC> NPC = new Dictionary<Guid, Objects.NPC>();
     public static Structures.Map[] Map;
     public static Structures.Temp_Map[] Temp_Map;
 
@@ -41,7 +41,6 @@ class Lists
             public byte Max_Map_Items;
             public byte Num_Points;
             public short Num_Maps;
-            public short Num_NPCs;
         }
 
         [Serializable]
@@ -108,7 +107,7 @@ class Lists
         [Serializable]
         public struct Map_NPC
         {
-            public short Index;
+            public Objects.NPC NPC;
             public byte Zone;
             public bool Spawn;
             public byte X;
@@ -148,8 +147,6 @@ class Lists
             public sbyte Speed_Y;
             public byte Alpha;
         }
-
-      
 
         public struct Map_Items
         {
