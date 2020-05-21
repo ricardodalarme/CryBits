@@ -127,24 +127,26 @@ partial class Editor_Maps : Form
     private static void Update_List()
     {
         // Limpa as listas
-        Objects.cmbList.Items.Clear();
+        Objects.List.Nodes.Clear();
         Objects.cmbA_Warp_Map.Items.Clear();
 
         // Adiciona os itens às listas
         for (byte i = 1; i < Lists.Map.Length; i++)
         {
-            Objects.cmbList.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0), Lists.Map[i].Name));
+            Objects.List.Nodes.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0), Lists.Map[i].Name));
+            Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = i;
             Objects.cmbA_Warp_Map.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0), Lists.Map[i].Name));
         }
 
         // Seleciona o primeiro item
-        Objects.cmbList.SelectedIndex = 0;
+        Objects.List.SelectedNode = Objects.List.Nodes[0];
         Objects.cmbA_Warp_Map.SelectedIndex = 0;
+        Update_Data();
     }
 
     public static void Update_Data()
     {
-        Selected = (short)(Objects.cmbList.SelectedIndex + 1);
+        Selected = short.Parse(Objects.List.SelectedNode.Tag.ToString());
 
         // Reseta o clima
         Globals.Weather_Update();
@@ -192,7 +194,7 @@ partial class Editor_Maps : Form
         Objects.Strip.Items[4].Text = "Position: {" + Map_Mouse.X + ";" + Map_Mouse.Y + "}"; ;
     }
 
-    private void cmbList_SelectedIndexChanged(object sender, EventArgs e)
+    private void List_AfterSelect(object sender, TreeViewEventArgs e)
     {
         // Atualiza a lista
         Update_Data();
@@ -345,13 +347,13 @@ partial class Editor_Maps : Form
         Map.Autotile.Update(Selected);
     }
 
-    private void butClearAllr_Click(object sender, EventArgs e)
+    private void butClearAll_Click(object sender, EventArgs e)
     {
         // Limpa os dados
         Clear.Map(Selected);
 
         // Atualiza os valores
-        cmbList.Items[Selected - 1] = Globals.Numbering(Selected, cmbList.Items.Count, string.Empty);
+        List.Nodes[Selected - 1].Text = Globals.Numbering(Selected, Lists.Map.Length, string.Empty);
     }
 
     private void Copiar()

@@ -98,7 +98,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtLayer_Name = new System.Windows.Forms.TextBox();
             this.butLayer_Add = new System.Windows.Forms.Button();
-            this.cmbList = new System.Windows.Forms.ComboBox();
             this.butQuantity = new System.Windows.Forms.Button();
             this.grpZones = new System.Windows.Forms.GroupBox();
             this.scrlZone_Clear = new System.Windows.Forms.Button();
@@ -151,6 +150,7 @@
             this.lstNPC = new System.Windows.Forms.ListBox();
             this.butNPC_Remove = new System.Windows.Forms.Button();
             this.butNPC_Clear = new System.Windows.Forms.Button();
+            this.List = new System.Windows.Forms.TreeView();
             this.tolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
@@ -221,7 +221,7 @@
             this.butProperties});
             this.tolStrip.Location = new System.Drawing.Point(0, 0);
             this.tolStrip.Name = "tolStrip";
-            this.tolStrip.Size = new System.Drawing.Size(1216, 25);
+            this.tolStrip.Size = new System.Drawing.Size(1366, 25);
             this.tolStrip.TabIndex = 78;
             this.tolStrip.Text = "toolStrip2";
             // 
@@ -253,7 +253,7 @@
             this.butClearAll.Name = "butClearAll";
             this.butClearAll.Size = new System.Drawing.Size(23, 22);
             this.butClearAll.Text = "Clear All";
-            this.butClearAll.Click += new System.EventHandler(this.butClearAllr_Click);
+            this.butClearAll.Click += new System.EventHandler(this.butClearAll_Click);
             // 
             // toolStripSeparator3
             // 
@@ -555,7 +555,7 @@
             this.picTile.BackColor = System.Drawing.Color.Black;
             this.picTile.Location = new System.Drawing.Point(0, 48);
             this.picTile.Name = "picTile";
-            this.picTile.Size = new System.Drawing.Size(256, 384);
+            this.picTile.Size = new System.Drawing.Size(256, 363);
             this.picTile.TabIndex = 2;
             this.picTile.TabStop = false;
             this.picTile.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picTile_MouseDown);
@@ -573,7 +573,7 @@
             this.scrlTileY.Location = new System.Drawing.Point(256, 48);
             this.scrlTileY.Maximum = 255;
             this.scrlTileY.Name = "scrlTileY";
-            this.scrlTileY.Size = new System.Drawing.Size(19, 384);
+            this.scrlTileY.Size = new System.Drawing.Size(19, 363);
             this.scrlTileY.SmallChange = 32;
             this.scrlTileY.TabIndex = 67;
             // 
@@ -582,9 +582,9 @@
             this.scrlMapX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scrlMapX.LargeChange = 1;
-            this.scrlMapX.Location = new System.Drawing.Point(279, 659);
+            this.scrlMapX.Location = new System.Drawing.Point(279, 637);
             this.scrlMapX.Name = "scrlMapX";
-            this.scrlMapX.Size = new System.Drawing.Size(914, 19);
+            this.scrlMapX.Size = new System.Drawing.Size(797, 19);
             this.scrlMapX.TabIndex = 68;
             // 
             // scrlMapY
@@ -593,17 +593,17 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scrlMapY.Cursor = System.Windows.Forms.Cursors.Default;
             this.scrlMapY.LargeChange = 1;
-            this.scrlMapY.Location = new System.Drawing.Point(1192, 51);
+            this.scrlMapY.Location = new System.Drawing.Point(1076, 28);
             this.scrlMapY.Maximum = 255;
             this.scrlMapY.Name = "scrlMapY";
-            this.scrlMapY.Size = new System.Drawing.Size(19, 608);
+            this.scrlMapY.Size = new System.Drawing.Size(19, 587);
             this.scrlMapY.TabIndex = 69;
             // 
             // scrlTileX
             // 
             this.scrlTileX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scrlTileX.LargeChange = 32;
-            this.scrlTileX.Location = new System.Drawing.Point(0, 432);
+            this.scrlTileX.Location = new System.Drawing.Point(0, 411);
             this.scrlTileX.Name = "scrlTileX";
             this.scrlTileX.Size = new System.Drawing.Size(256, 19);
             this.scrlTileX.SmallChange = 32;
@@ -616,9 +616,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.picMap.BackColor = System.Drawing.Color.Black;
             this.picMap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picMap.Location = new System.Drawing.Point(276, 51);
+            this.picMap.Location = new System.Drawing.Point(276, 28);
             this.picMap.Name = "picMap";
-            this.picMap.Size = new System.Drawing.Size(916, 608);
+            this.picMap.Size = new System.Drawing.Size(800, 608);
             this.picMap.TabIndex = 3;
             this.picMap.TabStop = false;
             this.picMap.SizeChanged += new System.EventHandler(this.picMap_SizeChanged);
@@ -635,9 +635,9 @@
             this.Revision,
             this.toolStripSeparator9,
             this.Position});
-            this.Strip.Location = new System.Drawing.Point(0, 685);
+            this.Strip.Location = new System.Drawing.Point(0, 664);
             this.Strip.Name = "Strip";
-            this.Strip.Size = new System.Drawing.Size(1216, 23);
+            this.Strip.Size = new System.Drawing.Size(1366, 23);
             this.Strip.TabIndex = 83;
             this.Strip.Text = "0";
             // 
@@ -696,7 +696,7 @@
             this.grpLayers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.grpLayers.Controls.Add(this.Faixa_Camadas);
             this.grpLayers.Controls.Add(this.lstLayers);
-            this.grpLayers.Location = new System.Drawing.Point(12, 512);
+            this.grpLayers.Location = new System.Drawing.Point(12, 491);
             this.grpLayers.Name = "grpLayers";
             this.grpLayers.Size = new System.Drawing.Size(258, 166);
             this.grpLayers.TabIndex = 97;
@@ -716,7 +716,7 @@
             this.butLayers_Edit});
             this.Faixa_Camadas.Location = new System.Drawing.Point(6, 135);
             this.Faixa_Camadas.Name = "Faixa_Camadas";
-            this.Faixa_Camadas.Size = new System.Drawing.Size(170, 25);
+            this.Faixa_Camadas.Size = new System.Drawing.Size(139, 25);
             this.Faixa_Camadas.TabIndex = 109;
             // 
             // butLayers_Add
@@ -830,7 +830,7 @@
             this.grpLayer_Add.Controls.Add(this.label1);
             this.grpLayer_Add.Controls.Add(this.txtLayer_Name);
             this.grpLayer_Add.Controls.Add(this.butLayer_Add);
-            this.grpLayer_Add.Location = new System.Drawing.Point(12, 512);
+            this.grpLayer_Add.Location = new System.Drawing.Point(12, 491);
             this.grpLayer_Add.Name = "grpLayer_Add";
             this.grpLayer_Add.Size = new System.Drawing.Size(258, 166);
             this.grpLayer_Add.TabIndex = 98;
@@ -902,27 +902,12 @@
             this.butLayer_Add.UseVisualStyleBackColor = true;
             this.butLayer_Add.Click += new System.EventHandler(this.butLayer_Add_Click);
             // 
-            // cmbList
-            // 
-            this.cmbList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbList.FormattingEnabled = true;
-            this.cmbList.Items.AddRange(new object[] {
-            "001: Floresta"});
-            this.cmbList.Location = new System.Drawing.Point(276, 27);
-            this.cmbList.Name = "cmbList";
-            this.cmbList.Size = new System.Drawing.Size(823, 21);
-            this.cmbList.TabIndex = 100;
-            this.cmbList.SelectedIndexChanged += new System.EventHandler(this.cmbList_SelectedIndexChanged);
-            // 
             // butQuantity
             // 
             this.butQuantity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.butQuantity.Location = new System.Drawing.Point(1101, 26);
             this.butQuantity.Name = "butQuantity";
-            this.butQuantity.Size = new System.Drawing.Size(108, 23);
+            this.butQuantity.Size = new System.Drawing.Size(258, 23);
             this.butQuantity.TabIndex = 101;
             this.butQuantity.Text = "Change Quantity";
             this.butQuantity.UseVisualStyleBackColor = true;
@@ -936,7 +921,7 @@
             this.grpZones.Controls.Add(this.scrlZone);
             this.grpZones.Location = new System.Drawing.Point(0, 27);
             this.grpZones.Name = "grpZones";
-            this.grpZones.Size = new System.Drawing.Size(275, 651);
+            this.grpZones.Size = new System.Drawing.Size(275, 630);
             this.grpZones.TabIndex = 103;
             this.grpZones.TabStop = false;
             this.grpZones.Text = "Zone: Null";
@@ -983,7 +968,7 @@
             this.grpLighting.Controls.Add(this.butLight_Clear);
             this.grpLighting.Location = new System.Drawing.Point(0, 27);
             this.grpLighting.Name = "grpLighting";
-            this.grpLighting.Size = new System.Drawing.Size(275, 651);
+            this.grpLighting.Size = new System.Drawing.Size(275, 630);
             this.grpLighting.TabIndex = 104;
             this.grpLighting.TabStop = false;
             this.grpLighting.Text = "Lighting";
@@ -1054,7 +1039,7 @@
             // 
             this.grpTile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.grpTile.Controls.Add(this.chkAuto);
-            this.grpTile.Location = new System.Drawing.Point(12, 456);
+            this.grpTile.Location = new System.Drawing.Point(12, 435);
             this.grpTile.Name = "grpTile";
             this.grpTile.Size = new System.Drawing.Size(252, 52);
             this.grpTile.TabIndex = 13;
@@ -1073,7 +1058,7 @@
             this.grpAttributes.Controls.Add(this.butAttributes_Clear);
             this.grpAttributes.Location = new System.Drawing.Point(0, 27);
             this.grpAttributes.Name = "grpAttributes";
-            this.grpAttributes.Size = new System.Drawing.Size(275, 651);
+            this.grpAttributes.Size = new System.Drawing.Size(275, 630);
             this.grpAttributes.TabIndex = 105;
             this.grpAttributes.TabStop = false;
             this.grpAttributes.Text = "Attributes";
@@ -1155,9 +1140,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grpAttributes_Set.Controls.Add(this.grpA_Item);
             this.grpAttributes_Set.Controls.Add(this.grpA_Warp);
-            this.grpAttributes_Set.Location = new System.Drawing.Point(276, 51);
+            this.grpAttributes_Set.Location = new System.Drawing.Point(276, 28);
             this.grpAttributes_Set.Name = "grpAttributes_Set";
-            this.grpAttributes_Set.Size = new System.Drawing.Size(935, 627);
+            this.grpAttributes_Set.Size = new System.Drawing.Size(819, 628);
             this.grpAttributes_Set.TabIndex = 108;
             this.grpAttributes_Set.TabStop = false;
             this.grpAttributes_Set.Text = "Set data";
@@ -1343,9 +1328,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.picBackground.BackColor = System.Drawing.Color.Black;
             this.picBackground.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picBackground.Location = new System.Drawing.Point(276, 51);
+            this.picBackground.Location = new System.Drawing.Point(276, 28);
             this.picBackground.Name = "picBackground";
-            this.picBackground.Size = new System.Drawing.Size(916, 608);
+            this.picBackground.Size = new System.Drawing.Size(800, 587);
             this.picBackground.TabIndex = 106;
             this.picBackground.TabStop = false;
             // 
@@ -1356,7 +1341,7 @@
             this.picTile_Background.BackColor = System.Drawing.Color.Black;
             this.picTile_Background.Location = new System.Drawing.Point(0, 48);
             this.picTile_Background.Name = "picTile_Background";
-            this.picTile_Background.Size = new System.Drawing.Size(256, 384);
+            this.picTile_Background.Size = new System.Drawing.Size(256, 363);
             this.picTile_Background.TabIndex = 107;
             this.picTile_Background.TabStop = false;
             // 
@@ -1368,7 +1353,7 @@
             this.grpNPCs.Controls.Add(this.groupBox1);
             this.grpNPCs.Location = new System.Drawing.Point(0, 26);
             this.grpNPCs.Name = "grpNPCs";
-            this.grpNPCs.Size = new System.Drawing.Size(275, 651);
+            this.grpNPCs.Size = new System.Drawing.Size(275, 630);
             this.grpNPCs.TabIndex = 104;
             this.grpNPCs.TabStop = false;
             this.grpNPCs.Text = "NPCs";
@@ -1483,12 +1468,24 @@
             this.butNPC_Clear.UseVisualStyleBackColor = true;
             this.butNPC_Clear.Click += new System.EventHandler(this.butNPC_Clear_Click);
             // 
+            // List
+            // 
+            this.List.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.List.HideSelection = false;
+            this.List.Location = new System.Drawing.Point(1101, 55);
+            this.List.Name = "List";
+            this.List.Size = new System.Drawing.Size(256, 601);
+            this.List.TabIndex = 109;
+            this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
+            // 
             // Editor_Maps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1216, 708);
+            this.ClientSize = new System.Drawing.Size(1366, 687);
+            this.Controls.Add(this.List);
             this.Controls.Add(this.grpAttributes_Set);
             this.Controls.Add(this.picTile_Background);
             this.Controls.Add(this.picMap);
@@ -1497,7 +1494,6 @@
             this.Controls.Add(this.grpTile);
             this.Controls.Add(this.cmbTiles);
             this.Controls.Add(this.butQuantity);
-            this.Controls.Add(this.cmbList);
             this.Controls.Add(this.Strip);
             this.Controls.Add(this.tolStrip);
             this.Controls.Add(this.scrlTileX);
@@ -1601,7 +1597,6 @@
     private System.Windows.Forms.Button butLayer_Cancel;
     private System.Windows.Forms.Button butLayer_Edit;
     private System.Windows.Forms.Button butQuantity;
-    public System.Windows.Forms.ComboBox cmbList;
     public System.Windows.Forms.ListView lstLayers;
     public System.Windows.Forms.ToolStripButton butDiscover;
     public System.Windows.Forms.ToolStripButton butRectangle;
@@ -1682,4 +1677,5 @@
     public System.Windows.Forms.ToolStripButton butLayers_Down;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
     private System.Windows.Forms.ToolStripButton butLayers_Edit;
+    public System.Windows.Forms.TreeView List;
 }
