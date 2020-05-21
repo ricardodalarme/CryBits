@@ -42,7 +42,7 @@ class Window
                 // Usar item
                 short Slot = Panels.Inventory_Slot;
                 if (Slot > 0)
-                    if (Player.Me.Inventory[Slot].Item_Num > 0)
+                    if (Player.Me.Inventory[Slot].Item != null)
                         Send.Inventory_Use((byte)Slot);
 
                 // Usar o que estiver na hotbar

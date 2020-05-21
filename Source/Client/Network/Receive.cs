@@ -126,6 +126,8 @@ class Receive
         Lists.Player.Add(Player.Me);
 
         // Reseta alguns valores
+        Lists.Class = new Dictionary<Guid, Lists.Structures.Class>();
+        Lists.Item = new Dictionary<Guid, Lists.Structures.Item>();
         Lists.Shop = new Dictionary<Guid, Lists.Structures.Shop>();
     }
 
@@ -213,7 +215,7 @@ class Receive
         CheckBoxes.Get("Options_Trade").Checked = Lists.Options.Trade;
         CheckBoxes.Get("Options_Party").Checked = Lists.Options.Party;
         Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
-        Utilities.Infomation_Index = 0;
+        Utilities.Infomation_ID = Guid.Empty.ToString();
 
         // Reseta a interface
         Panels.Get("Menu_Character").Visible = false;
@@ -261,7 +263,7 @@ class Receive
             Player.Max_Vital[n] = Data.ReadInt16();
         }
         for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Player.Attribute[n] = Data.ReadInt16();
-        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Player.Equipment[n] = Data.ReadInt16();
+        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Player.Equipment[n] = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
     }
 
     private static void Player_Position(NetIncomingMessage Data)
@@ -296,7 +298,7 @@ class Receive
         Player.Structure Player = global::Player.Get(Data.ReadString());
 
         // Altera os dados dos equipamentos do jogador
-        for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Player.Equipment[i] = Data.ReadInt16();
+        for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Player.Equipment[i] = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
     }
 
     private static void Player_Leave(NetIncomingMessage Data)
@@ -378,7 +380,7 @@ class Receive
         // Define os dados
         for (byte i = 1; i <= Game.Max_Inventory; i++)
         {
-            Player.Me.Inventory[i].Item_Num = Data.ReadInt16();
+            Player.Me.Inventory[i].Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             Player.Me.Inventory[i].Amount = Data.ReadInt16();
         }
     }
@@ -548,31 +550,48 @@ class Receive
 
     private static void Items(NetIncomingMessage Data)
     {
-        // Quantidade de itens
-        Lists.Item = new Lists.Structures.Item[Data.ReadInt16()];
+        // Itens a serem removidas
+        Dictionary<Guid, Lists.Structures.Item> ToRemove = new Dictionary<Guid, Lists.Structures.Item>(Lists.Item);
 
-        for (short i = 1; i < Lists.Item.Length; i++)
+        // Quantidade de lojas
+        short Count = Data.ReadInt16();
+
+        while (--Count >= 0)
         {
-            // Redimensiona os valores necessários 
-            Lists.Item[i].Potion_Vital = new short[(byte)Game.Vitals.Count];
-            Lists.Item[i].Equip_Attribute = new short[(byte)Game.Attributes.Count];
+            Guid ID = new Guid(Data.ReadString());
+            Lists.Structures.Item Item;
+
+            // Obtém o dado
+            if (Lists.Item.ContainsKey(ID))
+            {
+                Item = Lists.Item[ID];
+                ToRemove.Remove(ID);
+            }
+            else
+            {
+                Item = new Lists.Structures.Item(ID);
+                Lists.Item.Add(Item.ID, Item);
+            }
 
             // Lê os dados
-            Lists.Item[i].Name = Data.ReadString();
-            Lists.Item[i].Description = Data.ReadString();
-            Lists.Item[i].Texture = Data.ReadInt16();
-            Lists.Item[i].Type = Data.ReadByte();
+            Item.Name = Data.ReadString();
+            Item.Description = Data.ReadString();
+            Item.Texture = Data.ReadInt16();
+            Item.Type = Data.ReadByte();
             Data.ReadBoolean(); // Stackable
-            Lists.Item[i].Bind = (Game.BindOn)Data.ReadByte();
-            Lists.Item[i].Rarity = Data.ReadByte();
-            Lists.Item[i].Req_Level = Data.ReadInt16();
-            Lists.Item[i].Req_Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
-            Lists.Item[i].Potion_Experience = Data.ReadInt32();
-            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Lists.Item[i].Potion_Vital[v] = Data.ReadInt16();
-            Lists.Item[i].Equip_Type = Data.ReadByte();
-            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Lists.Item[i].Equip_Attribute[a] = Data.ReadInt16();
-            Lists.Item[i].Weapon_Damage = Data.ReadInt16();
+            Item.Bind = (Game.BindOn)Data.ReadByte();
+            Item.Rarity = Data.ReadByte();
+            Item.Req_Level = Data.ReadInt16();
+            Item.Req_Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
+            Item.Potion_Experience = Data.ReadInt32();
+            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
+            Item.Equip_Type = Data.ReadByte();
+            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
+            Item.Weapon_Damage = Data.ReadInt16();
         }
+
+        // Remove as lojas que não tiveram os dados atualizados
+        foreach (Guid Remove in ToRemove.Keys) Lists.Item.Remove(Remove);
     }
 
     private static void Map_Items(NetIncomingMessage Data)
@@ -584,7 +603,7 @@ class Receive
         for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)
         {
             // Geral
-            Lists.Temp_Map.Item[i].Index = Data.ReadInt16();
+            Lists.Temp_Map.Item[i].Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())); 
             Lists.Temp_Map.Item[i].X = Data.ReadByte();
             Lists.Temp_Map.Item[i].Y = Data.ReadByte();
         }
@@ -675,13 +694,13 @@ class Receive
         if (Data.ReadBoolean())
             for (byte i = 1; i <= Game.Max_Inventory; i++)
             {
-                Player.Me.Trade_Offer[i].Item_Num = Data.ReadInt16();
+                Player.Me.Trade_Offer[i].Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
                 Player.Me.Trade_Offer[i].Amount = Data.ReadInt16();
             }
         else
             for (byte i = 1; i <= Game.Max_Inventory; i++)
             {
-                Player.Me.Trade_Their_Offer[i].Item_Num = Data.ReadInt16();
+                Player.Me.Trade_Their_Offer[i].Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
                 Player.Me.Trade_Their_Offer[i].Amount = Data.ReadInt16();
             }
     }
@@ -717,18 +736,18 @@ class Receive
 
             // Lê os dados
             Shop.Name = Data.ReadString();
-            Shop.Currency = Data.ReadInt16();
+            Shop.Currency = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             for (byte j = 0; j < Shop.Sold.Length; j++)
                 Shop.Sold[j] = new Lists.Structures.Shop_Item
                 {
-                    Item_Num = Data.ReadInt16(),
+                    Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
                     Amount = Data.ReadInt16(),
                     Price = Data.ReadInt16()
                 };
             for (byte j = 0; j < Shop.Bought.Length; j++)
                 Shop.Bought[j] = new Lists.Structures.Shop_Item
                 {
-                    Item_Num = Data.ReadInt16(),
+                    Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
                     Amount = Data.ReadInt16(),
                     Price = Data.ReadInt16()
                 };

@@ -38,12 +38,12 @@ class Panels
 
         // Somente se necessário
         if (Slot == 0) return;
-        if (Player.Me.Inventory[Slot].Item_Num == 0) return;
+        if (Player.Me.Inventory[Slot].Item == null) return;
 
         // Solta item
         if (e.Button == SFML.Window.Mouse.Button.Right)
         {
-            if (Lists.Item[Player.Me.Inventory[Slot].Item_Num].Bind != Game.BindOn.Pickup)
+            if (Player.Me.Inventory[Slot].Item.Bind != Game.BindOn.Pickup)
                 // Vende o item
                 if (Get("Shop").Visible)
                 {
@@ -77,7 +77,7 @@ class Panels
             if (Utilities.IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
                 // Remove o equipamento
                 if (e.Button == SFML.Window.Mouse.Button.Right)
-                    if (Lists.Item[Player.Me.Equipment[i]].Bind != Game.BindOn.Equip)
+                    if (Player.Me.Equipment[i].Bind != Game.BindOn.Equip)
                     {
                         Send.Equipment_Remove(i);
                         return;
@@ -113,7 +113,7 @@ class Panels
         // Somente se necessário
         if (!Get("Trade").Visible) return;
         if (Slot == 0) return;
-        if (Player.Me.Trade_Offer[Slot].Item_Num == 0) return;
+        if (Player.Me.Trade_Offer[Slot].Item == null) return;
 
         // Solta item
         if (e.Button == SFML.Window.Mouse.Button.Right) Send.Trade_Offer(Slot, 0);

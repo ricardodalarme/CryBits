@@ -681,11 +681,11 @@ partial class Graphics
             Lists.Structures.Map_Items Data = Lists.Temp_Map.Item[i];
 
             // Somente se necessário
-            if (Data.Index == 0) continue;
+            if (Data.Item == null) continue;
 
             // Desenha o item
             Point Position = new Point(Game.ConvertX(Data.X * Game.Grid), Game.ConvertY(Data.Y * Game.Grid));
-            Render(Tex_Item[Lists.Item[Data.Index].Texture], Position);
+            Render(Tex_Item[Data.Item.Texture], Position);
         }
     }
 

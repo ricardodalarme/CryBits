@@ -164,10 +164,10 @@ class Game
         }
     }
 
-    public static short Find_Shop_Bought(short Item_Num)
+    public static short Find_Shop_Bought(Lists.Structures.Item Item)
     {
         for (byte i = 0; i < Utilities.Shop_Open.Bought.Length; i++)
-            if (Utilities.Shop_Open.Bought[i].Item_Num == Item_Num)
+            if (Utilities.Shop_Open.Bought[i].Item == Item)
                 return i;
 
         return -1;

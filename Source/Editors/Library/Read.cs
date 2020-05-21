@@ -149,7 +149,6 @@ class Read
         return Tool;
     }
 
-
     public static void Tiles()
     {
         // Lê os dados

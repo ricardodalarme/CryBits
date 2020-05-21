@@ -12,8 +12,8 @@ class Lists
     public static Structures.Temp_Map Temp_Map = new Structures.Temp_Map();
     public static Structures.Weather[] Weather;
     public static Structures.NPC[] NPC;
-    public static Structures.Item[] Item;
-    public static Dictionary<Guid, Structures.Shop> Shop;
+    public static Dictionary<Guid, Structures.Item> Item = new Dictionary<Guid, Structures.Item>();
+    public static Dictionary<Guid, Structures.Shop> Shop = new Dictionary<Guid, Structures.Shop>();
 
     public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
     {
@@ -163,16 +163,16 @@ class Lists
 
         public struct Map_Items
         {
-            public short Index;
+            public Item Item;
             public byte X;
             public byte Y;
         }
 
-        public struct Item
+        public class Item : Data
         {
             // Geral
-            public string Name;
-            public string Description;
+            public string Name = string.Empty;
+            public string Description = string.Empty;
             public short Texture;
             public byte Type;
             public byte Rarity;
@@ -182,16 +182,18 @@ class Lists
             public Class Req_Class;
             // Poção
             public int Potion_Experience;
-            public short[] Potion_Vital;
+            public short[] Potion_Vital = new short[(byte)Game.Vitals.Count];
             // Equipamento
             public byte Equip_Type;
-            public short[] Equip_Attribute;
+            public short[] Equip_Attribute = new short[(byte)Game.Equipments.Count];
             public short Weapon_Damage;
+
+            public Item(Guid ID) : base(ID) { }
         }
 
         public struct Inventory
         {
-            public short Item_Num;
+            public Item Item;
             public short Amount;
         }
 
@@ -222,7 +224,7 @@ class Lists
         public class Shop : Data
         {
             public string Name;
-            public short Currency;
+            public Item Currency;
             public Shop_Item[] Sold;
             public Shop_Item[] Bought;
 
@@ -231,7 +233,7 @@ class Lists
 
         public class Shop_Item
         {
-            public short Item_Num;
+            public Item Item;
             public short Amount;
             public short Price;
         }

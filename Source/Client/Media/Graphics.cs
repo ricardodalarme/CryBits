@@ -496,15 +496,15 @@ partial class Graphics
 
     private static void Informations(Panels.Structure Tool)
     {
-        short Item_Num = Utilities.Infomation_Index;
+        Lists.Structures.Item Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Utilities.Infomation_ID));
         SFML.Graphics.Color Text_Color;
         List<string> Data = new List<string>();
 
         // Apenas se necessário
-        if (Item_Num <= 0) return;
+        if (Item == null) return;
 
         // Define a cor de acordo com a raridade
-        switch ((Game.Rarity)Lists.Item[Item_Num].Rarity)
+        switch ((Game.Rarity)Item.Rarity)
         {
             case Game.Rarity.Uncommon: Text_Color = CColor(204, 255, 153); break; // Verde
             case Game.Rarity.Rare: Text_Color = CColor(102, 153, 255); break; // Azul
@@ -514,38 +514,38 @@ partial class Graphics
         }
 
         // Nome, descrição e icone do item
-        DrawText(Lists.Item[Item_Num].Name, Tool.Position.X + 41, Tool.Position.Y + 6, Text_Color, Alignments.Center);
-        DrawText(Lists.Item[Item_Num].Description, Tool.Position.X + 82, Tool.Position.Y + 20, SFML.Graphics.Color.White, 86);
-        Render(Tex_Item[Lists.Item[Item_Num].Texture], new Rectangle(Tool.Position.X + 9, Tool.Position.Y + 21, 64, 64));
+        DrawText(Item.Name, Tool.Position.X + 41, Tool.Position.Y + 6, Text_Color, Alignments.Center);
+        DrawText(Item.Description, Tool.Position.X + 82, Tool.Position.Y + 20, SFML.Graphics.Color.White, 86);
+        Render(Tex_Item[Item.Texture], new Rectangle(Tool.Position.X + 9, Tool.Position.Y + 21, 64, 64));
 
         // Informações da Loja
         if (Panels.Get("Shop").Visible)
             if (Panels.Shop_Slot >= 0)
                 Data.Add("Price: " + Utilities.Shop_Open.Sold[Panels.Shop_Slot].Price);
             else if (Panels.Inventory_Slot > 0)
-                if (Game.Find_Shop_Bought(Item_Num) >= 0)
-                    Data.Add("Sale price: " + Utilities.Shop_Open.Bought[Game.Find_Shop_Bought(Item_Num)].Price);
+                if (Game.Find_Shop_Bought(Item) >= 0)
+                    Data.Add("Sale price: " + Utilities.Shop_Open.Bought[Game.Find_Shop_Bought(Item)].Price);
 
         // Informações específicas dos itens
-        switch ((Game.Items)Lists.Item[Item_Num].Type)
+        switch ((Game.Items)Item.Type)
         {
             // Poção
             case Game.Items.Potion:
                 for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
-                    if (Lists.Item[Item_Num].Potion_Vital[n] != 0)
-                        Data.Add(((Game.Vitals)n).ToString() + ": " + Lists.Item[Item_Num].Potion_Vital[n]);
+                    if (Item.Potion_Vital[n] != 0)
+                        Data.Add(((Game.Vitals)n).ToString() + ": " + Item.Potion_Vital[n]);
 
-                if (Lists.Item[Item_Num].Potion_Experience != 0) Data.Add("Experience: " + Lists.Item[Item_Num].Potion_Experience);
+                if (Item.Potion_Experience != 0) Data.Add("Experience: " + Item.Potion_Experience);
                 break;
             // Equipamentos
             case Game.Items.Equipment:
-                if (Lists.Item[Item_Num].Equip_Type == (byte)Game.Equipments.Weapon)
-                    if (Lists.Item[Item_Num].Weapon_Damage != 0)
-                        Data.Add("Damage: " + Lists.Item[Item_Num].Weapon_Damage);
+                if (Item.Equip_Type == (byte)Game.Equipments.Weapon)
+                    if (Item.Weapon_Damage != 0)
+                        Data.Add("Damage: " + Item.Weapon_Damage);
 
                 for (byte n = 0; n < (byte)Game.Attributes.Count; n++)
-                    if (Lists.Item[Item_Num].Equip_Attribute[n] != 0)
-                        Data.Add(((Game.Attributes)n).ToString() + ": " + Lists.Item[Item_Num].Equip_Attribute[n]);
+                    if (Item.Equip_Attribute[n] != 0)
+                        Data.Add(((Game.Attributes)n).ToString() + ": " + Item.Equip_Attribute[n]);
                 break;
         }
 
@@ -566,7 +566,7 @@ partial class Graphics
                 switch ((Game.Hotbar)Player.Me.Hotbar[i].Type)
                 {
                     // Itens
-                    case Game.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item_Num, 1, Tool.Position + new Size(8, 6), i, 10); break;
+                    case Game.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), i, 10); break;
                 }
 
             // Desenha os números de cada slot
@@ -578,7 +578,7 @@ partial class Graphics
         // Movendo slot
         if (Utilities.Hotbar_Change > 0)
             if (Player.Me.Hotbar[Utilities.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
-                Render(Tex_Item[Lists.Item[Player.Me.Inventory[Player.Me.Hotbar[Utilities.Hotbar_Change].Slot].Item_Num].Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
+                Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Utilities.Hotbar_Change].Slot].Item.Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
     }
 
     private static void Menu_Character(Panels.Structure Tool)
@@ -598,10 +598,10 @@ partial class Graphics
 
         // Equipamentos 
         for (byte i = 0; i < (byte)Game.Equipments.Count; i++)
-            if (Player.Me.Equipment[i] == 0)
+            if (Player.Me.Equipment[i] == null)
                 Render(Tex_Equipments, Tool.Position.X + 7 + i * 34, Tool.Position.Y + 247, i * 34, 0, 32, 32);
             else
-                Render(Tex_Item[Lists.Item[Player.Me.Equipment[i]].Texture], Tool.Position.X + 8 + i * 35, Tool.Position.Y + 247, 0, 0, 34, 34);
+                Render(Tex_Item[Player.Me.Equipment[i].Texture], Tool.Position.X + 8 + i * 35, Tool.Position.Y + 247, 0, 0, 34, 34);
     }
 
     private static void Menu_Inventory(Panels.Structure Tool)
@@ -610,10 +610,10 @@ partial class Graphics
 
         // Desenha todos os itens do inventário
         for (byte i = 1; i <= Game.Max_Inventory; i++)
-            Item(Player.Me.Inventory[i].Item_Num, Player.Me.Inventory[i].Amount, Tool.Position + new Size(7, 30), i, NumColumns);
+            Item(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount, Tool.Position + new Size(7, 30), i, NumColumns);
 
         // Movendo item
-        if (Utilities.Inventory_Change > 0) Render(Tex_Item[Lists.Item[Player.Me.Inventory[Utilities.Inventory_Change].Item_Num].Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
+        if (Utilities.Inventory_Change > 0) Render(Tex_Item[Player.Me.Inventory[Utilities.Inventory_Change].Item.Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
     }
 
     private static void Party_Invitation(Panels.Structure Tool)
@@ -648,8 +648,8 @@ partial class Graphics
         // Desenha os itens das ofertas
         for (byte i = 1; i <= Game.Max_Inventory; i++)
         {
-            Item(Player.Me.Trade_Offer[i].Item_Num, Player.Me.Trade_Offer[i].Amount, Tool.Position + new Size(7, 50), i, 5);
-            Item(Player.Me.Trade_Their_Offer[i].Item_Num, Player.Me.Trade_Their_Offer[i].Amount, Tool.Position + new Size(192, 50), i, 5);
+            Item(Player.Me.Trade_Offer[i].Item, Player.Me.Trade_Offer[i].Amount, Tool.Position + new Size(7, 50), i, 5);
+            Item(Player.Me.Trade_Their_Offer[i].Item, Player.Me.Trade_Their_Offer[i].Amount, Tool.Position + new Size(192, 50), i, 5);
         }
     }
 
@@ -658,17 +658,17 @@ partial class Graphics
         // Dados da loja
         string Name = Utilities.Shop_Open.Name;
         DrawText(Name, Tool.Position.X + 131, Tool.Position.Y + 28, SFML.Graphics.Color.White, Alignments.Center);
-        DrawText("Currency: " + Lists.Item[Utilities.Shop_Open.Currency].Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
+        DrawText("Currency: " + Utilities.Shop_Open.Currency.Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
 
         // Desenha os itens
         for (byte i = 0; i < Utilities.Shop_Open.Sold.Length; i++)
-            Item(Utilities.Shop_Open.Sold[i].Item_Num, Utilities.Shop_Open.Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
+            Item(Utilities.Shop_Open.Sold[i].Item, Utilities.Shop_Open.Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
     }
 
-    private static void Item(short Item_Num, short Amount, Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)
+    private static void Item(Lists.Structures.Item Item, short Amount, Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)
     {
         // Somente se necessário
-        if (Item_Num <= 0) return;
+        if (Item == null) return;
 
         // Posição do item baseado no slot
         int Line = (Slot - 1) / Columns;
@@ -676,7 +676,7 @@ partial class Graphics
         Point Position = Start + new Size(Column * (Grid + Gap), Line * (Grid + Gap));
 
         // Desenha o item e sua quantidade
-        Render(Tex_Item[Lists.Item[Item_Num].Texture], Position);
+        Render(Tex_Item[Item.Texture], Position);
         if (Amount > 1) DrawText(Amount.ToString(), Position.X + 2, Position.Y + 17, SFML.Graphics.Color.White);
     }
 

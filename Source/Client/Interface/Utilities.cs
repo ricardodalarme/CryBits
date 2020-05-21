@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 class Utilities
 {
@@ -6,7 +7,7 @@ class Utilities
     public static byte CreateCharacter_Class = 0;
     public static byte CreateCharacter_Tex = 0;
     public static int SelectCharacter = 1;
-    public static short Infomation_Index;
+    public static string Infomation_ID;
     public static byte Drop_Slot = 0;
     public static string Party_Invitation;
     public static string Trade_Invitation;
@@ -72,33 +73,32 @@ class Utilities
     public static void CheckInformations()
     {
         Point Position = new Point();
-        short Data_Index = 0;
 
         // Define as informações do painel com base no que o Window.Mouse está sobrepondo
         if (Panels.Hotbar_Slot > 0)
         {
             Position = Panels.Get("Hotbar").Position + new Size(0, 42);
-            Data_Index = Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Slot].Slot].Item_Num;
+            Infomation_ID = Lists.GetID(Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Slot].Slot].Item);
         }
         else if (Panels.Inventory_Slot > 0)
         {
             Position = Panels.Get("Menu_Inventory").Position + new Size(-186, 3);
-            Data_Index = Player.Me.Inventory[Panels.Inventory_Slot].Item_Num;
+            Infomation_ID = Lists.GetID(Player.Me.Inventory[Panels.Inventory_Slot].Item);
         }
         else if (Panels.Equipment_Slot >= 0)
         {
             Position = Panels.Get("Menu_Character").Position + new Size(-186, 5);
-            Data_Index = Player.Me.Equipment[Panels.Equipment_Slot];
+            Infomation_ID = Lists.GetID(Player.Me.Equipment[Panels.Equipment_Slot]);
         }
         else if (Panels.Shop_Slot >= 0 && Panels.Shop_Slot < Shop_Open.Sold.Length)
         {
             Position = new Point(Panels.Get("Shop").Position.X - 186, Panels.Get("Shop").Position.Y + 5);
-            Data_Index = Shop_Open.Sold[Panels.Shop_Slot].Item_Num;
+            Infomation_ID = Lists.GetID(Shop_Open.Sold[Panels.Shop_Slot].Item);
         }
+        else Infomation_ID = Guid.Empty.ToString(); 
 
         // Define os dados do painel de informações
-        Panels.Get("Information").Visible = !Position.IsEmpty && Data_Index > 0;
+        Panels.Get("Information").Visible = !Position.IsEmpty && Infomation_ID != Guid.Empty.ToString();
         Panels.Get("Information").Position = Position;
-        Infomation_Index = Data_Index;
     }
 }

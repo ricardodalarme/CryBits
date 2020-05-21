@@ -18,7 +18,7 @@ class Player
         public short Level;
         public short[] Max_Vital = new short[(byte)Game.Vitals.Count];
         public short[] Attribute = new short[(byte)Game.Attributes.Count];
-        public short[] Equipment = new short[(byte)Game.Equipments.Count];
+        public Lists.Structures.Item[] Equipment = new Lists.Structures.Item[(byte)Game.Equipments.Count];
         public short Map_Num;
 
         public Structure(string Name)
@@ -140,7 +140,7 @@ class Player
 
             // Verifica se tem algum espaço vazio no inventário
             for (byte i = 1; i <= Game.Max_Inventory; i++)
-                if (Inventory[i].Item_Num == 0)
+                if (Inventory[i].Item == null)
                     HasSlot = true;
 
             // Somente se necessário
