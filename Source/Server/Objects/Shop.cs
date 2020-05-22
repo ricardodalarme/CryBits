@@ -5,6 +5,7 @@ namespace Objects
     [Serializable]
     class Shop : Lists.Structures.Data
     {
+        // Dados
         public string Name;
         private Guid currency;
         public Item Currency
@@ -15,6 +16,7 @@ namespace Objects
         public Shop_Item[] Bought = Array.Empty<Shop_Item>();
         public Shop_Item[] Sold = Array.Empty<Shop_Item>();
 
+        // Construtor
         public Shop(Guid ID) : base(ID) { }
 
         public Shop_Item BoughtItem(Item Item)

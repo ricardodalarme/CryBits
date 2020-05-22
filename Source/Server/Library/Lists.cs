@@ -13,10 +13,7 @@ class Lists
     public static Dictionary<Guid, Objects.Map> Map = new Dictionary<Guid, Objects.Map>();
     public static Dictionary<Guid, Objects.TMap> Temp_Map = new Dictionary<Guid, Objects.TMap>();
 
-    public static string GetID(Structures.Data Object)
-    {
-        return Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
-    }
+    public static string GetID(Structures.Data Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
 
     public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
     {
@@ -40,6 +37,13 @@ class Lists
             public byte Max_Party_Members = 3;
             public byte Max_Map_Items = 100;
             public byte Num_Points = 3;
+        }
+
+        public struct TempCharacter
+        {
+            public string Name;
+            public short Texture_Num;
+            public short Level;
         }
 
         [Serializable]

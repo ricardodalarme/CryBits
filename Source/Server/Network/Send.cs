@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using System;
 using System.Drawing;
 
 class Send
@@ -387,7 +386,7 @@ class Send
         Data.Write((byte)Editor_Packets.Maps);
         Data.Write((short)Lists.Map.Count);
         ToPlayer(Account, Data);
-        foreach(Objects.Map Map in Lists.Map.Values) Send.Map(Account, Map);
+        foreach (Objects.Map Map in Lists.Map.Values) Send.Map(Account, Map);
     }
 
     public static void Map(Objects.Account Account, Objects.Map Map)

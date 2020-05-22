@@ -6,6 +6,7 @@ namespace Objects
     [Serializable]
     class Map : Lists.Structures.Data
     {
+        // Dados
         public short Revision;
         public List<Map_Layer> Layer = new List<Map_Layer>();
         public Map_Tile[,] Tile;
@@ -24,13 +25,11 @@ namespace Objects
         public Map_Light[] Light = Array.Empty<Map_Light>();
         public Map_NPC[] NPC = Array.Empty<Map_NPC>();
 
+        // Construtor
         public Map(Guid ID) : base(ID) { }
 
-        public bool OutLimit(short X, short Y)
-        {
-            // Verifica se as coordenas estão no limite do mapa
-            return X > Width || Y > Height || X < 0 || Y < 0;
-        }
+        // Verifica se as coordenas estão no limite do mapa
+        public bool OutLimit(short X, short Y) => X > Width || Y > Height || X < 0 || Y < 0;
 
         public bool Tile_Blocked(short X, short Y)
         {
@@ -77,7 +76,7 @@ namespace Objects
     {
         public string Name;
         public byte Type;
-        public Map_Tile_Data[,] Tile ;
+        public Map_Tile_Data[,] Tile;
 
         public Map_Layer(byte Width, byte Height)
         {

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 
 partial class Read
 {
@@ -63,14 +63,14 @@ partial class Read
 
         // Lê odos os personagens
         FileInfo[] File = Directory.GetFiles();
-        Account.Characters = new System.Collections.Generic.List<Objects.Account.TempCharacter>();
+        Account.Characters = new List<Lists.Structures.TempCharacter>();
         for (byte i = 0; i < File.Length; i++)
         {
             // Cria um arquivo temporário
             BinaryReader Data = new BinaryReader(File[i].OpenRead());
 
             // Carrega os dados e os adiciona ao cache
-            Objects.Account.TempCharacter Temp = new Objects.Account.TempCharacter
+            Lists.Structures.TempCharacter Temp = new Lists.Structures.TempCharacter
             {
                 Name = Data.ReadString(),
                 Texture_Num = Data.ReadInt16(),

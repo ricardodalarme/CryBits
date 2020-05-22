@@ -239,7 +239,7 @@ namespace Objects
                         continue;
 
                 // Define os dados
-                if (!Map.Data.Tile_Blocked( x, y))
+                if (!Map.Data.Tile_Blocked(x, y))
                 {
                     Spawn(x, y);
                     return;
@@ -249,7 +249,7 @@ namespace Objects
             // Em último caso, tentar no primeiro lugar possível
             for (byte x2 = 0; x2 <= Map.Data.Width; x2++)
                 for (byte y2 = 0; y2 <= Map.Data.Height; y2++)
-                    if (!Map.Data.Tile_Blocked( x2, y2))
+                    if (!Map.Data.Tile_Blocked(x2, y2))
                     {
                         // Verifica se está dentro da zona
                         if (Map.Data.NPC[Index].Zone > 0)

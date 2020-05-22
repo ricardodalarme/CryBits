@@ -93,7 +93,7 @@ partial class Send
         Data.Write((byte)Packets.Request_Items);
         Packet(Data);
     }
-    
+
     public static void Request_Shops()
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
@@ -293,7 +293,7 @@ partial class Send
         {
             // Geral
             Data.Write(Item.ID.ToString());
-            Data.Write(Item.Name); 
+            Data.Write(Item.Name);
             Data.Write(Item.Description);
             Data.Write(Item.Texture);
             Data.Write(Item.Type);
@@ -339,7 +339,7 @@ partial class Send
                 Data.Write(Shop.Bought[j].Price);
             }
         }
-        
+
         Packet(Data);
     }
 }

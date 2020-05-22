@@ -11,14 +11,8 @@ namespace Objects
         public string Password = string.Empty;
         public Game.Accesses Acess;
         public bool InEditor;
-        public Objects.Player Character;
-        public List<TempCharacter> Characters = new List<TempCharacter>();
-        public struct TempCharacter
-        {
-            public string Name;
-            public short Texture_Num;
-            public short Level;
-        }
+        public Player Character;
+        public List<Lists.Structures.TempCharacter> Characters = new List<Lists.Structures.TempCharacter>();
 
         // Construtor
         public Account(NetConnection Connection)

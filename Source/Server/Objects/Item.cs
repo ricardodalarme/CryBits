@@ -30,7 +30,6 @@ namespace Objects
         public short Weapon_Damage;
 
         // Construtor
-        public Item(Guid ID ): base(ID) { }
+        public Item(Guid ID) : base(ID) { }
     }
 }
- 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 class Lists
@@ -103,7 +102,7 @@ class Lists
             public string Description;
             public List<short> Tex_Male = new List<short>();
             public List<short> Tex_Female = new List<short>();
-            public Map Spawn_Map ;
+            public Map Spawn_Map;
             public byte Spawn_Direction;
             public byte Spawn_X;
             public byte Spawn_Y;

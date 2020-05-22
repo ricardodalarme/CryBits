@@ -1,5 +1,5 @@
-﻿using System;
-using SFML.Window;
+﻿using SFML.Window;
+using System;
 
 class Player
 {

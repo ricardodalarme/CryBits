@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SFML.Window;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using SFML.Window;
 
 class Window
 {

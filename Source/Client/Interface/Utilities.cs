@@ -95,7 +95,7 @@ class Utilities
             Position = new Point(Panels.Get("Shop").Position.X - 186, Panels.Get("Shop").Position.Y + 5);
             Infomation_ID = Lists.GetID(Shop_Open.Sold[Panels.Shop_Slot].Item);
         }
-        else Infomation_ID = Guid.Empty.ToString(); 
+        else Infomation_ID = Guid.Empty.ToString();
 
         // Define os dados do painel de informações
         Panels.Get("Information").Visible = !Position.IsEmpty && Infomation_ID != Guid.Empty.ToString();

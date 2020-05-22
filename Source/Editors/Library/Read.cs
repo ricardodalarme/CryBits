@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Forms;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Forms;
 
 class Read
 {

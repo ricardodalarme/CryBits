@@ -87,8 +87,8 @@ class Map
         }
     }
 
-        // Verifica se as coordenas estão no limite do mapa
-    public static bool OutOfLimit(short x, short y)=>x > Lists.Map.Width || y > Lists.Map.Height || x < 0 || y < 0;
+    // Verifica se as coordenas estão no limite do mapa
+    public static bool OutOfLimit(short x, short y) => x > Lists.Map.Width || y > Lists.Map.Height || x < 0 || y < 0;
 
     public static bool Tile_Blocked(short Map, byte X, byte Y, Game.Directions Direction)
     {

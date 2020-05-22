@@ -199,7 +199,7 @@ class Globals
     // Tamanho da grade com o zoom
     public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Zoom());
     public static Point Zoom(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
-    public static Rectangle Zoom(Rectangle Rectangle) => new Rectangle(Rectangle.X* Grid_Zoom, Rectangle.Y* Grid_Zoom, Rectangle.Width* Grid_Zoom, Rectangle.Height* Grid_Zoom);
+    public static Rectangle Zoom(Rectangle Rectangle) => new Rectangle(Rectangle.X * Grid_Zoom, Rectangle.Y * Grid_Zoom, Rectangle.Width * Grid_Zoom, Rectangle.Height * Grid_Zoom);
 
     public static bool IsAbove(Point Point, Rectangle Rectangle)
     {

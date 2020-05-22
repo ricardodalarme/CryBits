@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Objects
 {
@@ -215,7 +215,7 @@ namespace Objects
                 }
             }
             // Bloqueio
-            else if (!Map.Tile_Blocked( Old_X, Old_Y, Direction))
+            else if (!Map.Tile_Blocked(Old_X, Old_Y, Direction))
             {
                 X = (byte)Next_X;
                 Y = (byte)Next_Y;

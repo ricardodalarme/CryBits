@@ -55,7 +55,7 @@ public partial class Editor_NPCs : Form
     private void Groups_Visibility()
     {
         // Atualiza a visiblidade dos paineis
-        grpGeneral.Visible = grpAttributes.Visible = grpBehaviour.Visible = grpDrop.Visible = grpAllies.Visible=  List.SelectedNode != null;
+        grpGeneral.Visible = grpAttributes.Visible = grpBehaviour.Visible = grpDrop.Visible = grpAllies.Visible = List.SelectedNode != null;
         grpAllie_Add.Visible = grpDrop_Add.Visible = false;
         List.Focus();
     }

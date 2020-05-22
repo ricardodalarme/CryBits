@@ -203,5 +203,5 @@ partial class Editor_Shops : Form
         grpAddItem.Visible = false;
     }
 
-    private string List_Text(Lists.Structures.Shop_Item Data) =>  Data.Item.Name + " - " + Data.Amount + "x [$" + Data.Price + "]";
+    private string List_Text(Lists.Structures.Shop_Item Data) => Data.Item.Name + " - " + Data.Amount + "x [$" + Data.Price + "]";
 }

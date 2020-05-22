@@ -5,6 +5,7 @@ namespace Objects
     [Serializable]
     class NPC : Lists.Structures.Data
     {
+        // Dados
         public string Name;
         public string SayMsg;
         public short Texture;
@@ -27,6 +28,7 @@ namespace Objects
             set => shop = new Guid(Lists.GetID(value));
         }
 
+        // Construtor
         public NPC(Guid ID) : base(ID) { }
 
         public bool IsAlied(NPC NPC)

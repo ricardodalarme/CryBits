@@ -30,13 +30,13 @@ class Loop
                 for (byte i = 0; i < Lists.Account.Count; i++)
                     if (Lists.Account[i].IsPlaying)
                         Lists.Account[i].Character.Logic();
-                if (Environment.TickCount > Timer_Player_Regen + 5000) Timer_Player_Regen = Environment.TickCount;
 
                 // Reinicia a contagem dos 500
                 Timer_500 = Environment.TickCount + 500;
             }
 
             // Reinicia algumas contagens
+            if (Environment.TickCount > Timer_Player_Regen + 5000) Timer_Player_Regen = Environment.TickCount;
             if (Environment.TickCount > Timer_NPC_Regen + 5000) Timer_NPC_Regen = Environment.TickCount;
             if (Environment.TickCount > Timer_Map_Items + 300000) Timer_Map_Items = Environment.TickCount;
 

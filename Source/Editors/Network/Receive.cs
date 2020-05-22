@@ -1,8 +1,8 @@
 ﻿using Lidgren.Network;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Collections.Generic;
 
 partial class Receive
 {
@@ -86,7 +86,7 @@ partial class Receive
             for (byte t = 0; t < Num_Tex_Male; t++) Class.Tex_Male.Add(Data.ReadInt16());
             byte Num_Tex_Female = Data.ReadByte();
             for (byte t = 0; t < Num_Tex_Female; t++) Class.Tex_Female.Add(Data.ReadInt16());
-            Class.Spawn_Map = (Lists.Structures.Map) Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
+            Class.Spawn_Map = (Lists.Structures.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
             Class.Spawn_Direction = Data.ReadByte();
             Class.Spawn_X = Data.ReadByte();
             Class.Spawn_Y = Data.ReadByte();

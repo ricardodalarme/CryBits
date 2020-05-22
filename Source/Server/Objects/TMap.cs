@@ -5,11 +5,12 @@ namespace Objects
 {
     class TMap : Lists.Structures.Data
     {
-        // Temporário
+        // Dados
         public Map Data;
         public TNPC[] NPC = Array.Empty<TNPC>();
         public List<TMap_Items> Item = new List<TMap_Items>();
 
+        // Construtor
         public TMap(Guid ID, Map Map) : base(ID)
         {
             Data = Map;

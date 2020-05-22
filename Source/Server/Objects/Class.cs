@@ -5,6 +5,7 @@ namespace Objects
     [Serializable]
     class Class : Lists.Structures.Data
     {
+        // Dados
         public string Name;
         public string Description;
         public short[] Tex_Male = Array.Empty<short>();
@@ -17,6 +18,7 @@ namespace Objects
         public short[] Attribute = new short[(byte)Game.Attributes.Count];
         public Tuple<Item, short>[] Item = Array.Empty<Tuple<Item, short>>();
 
+        // Construtor
         public Class(Guid ID) : base(ID) { }
     }
 }
