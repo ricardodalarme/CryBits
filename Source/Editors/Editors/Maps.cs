@@ -96,8 +96,8 @@ partial class Editor_Maps : Form
 
         // Reseta os valores
         Objects.cmbA_Warp_Direction.SelectedIndex = 0;
-        Objects.cmbNPC.SelectedIndex = 0;
-        Objects.cmbA_Item.SelectedIndex = 0;
+        if (Objects.cmbNPC.Items.Count > 0) Objects.cmbNPC.SelectedIndex = 0;
+        if (Objects.cmbA_Item.Items.Count > 0) Objects.cmbA_Item.SelectedIndex = 0;
         Objects.cmbTiles.SelectedIndex = 0;
         Objects.cmbLayers_Type.SelectedIndex = 0;
         Objects.picTile.BringToFront();
@@ -136,11 +136,11 @@ partial class Editor_Maps : Form
         {
             Objects.List.Nodes.Add(Map.Name);
             Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = Map.ID;
+            Objects.cmbA_Warp_Map.Items.Add(Map.Name);
 
             /* todo
             Objects.List.Nodes.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0), Lists.Map[i].Name));
             Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = i;
-            Objects.cmbA_Warp_Map.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0), Lists.Map[i].Name));
             */
         }
 
@@ -1412,7 +1412,7 @@ partial class Editor_Maps : Form
 
     // Retorna com o retângulo do azulejo em relação à fonte
     public static Rectangle Tile_Source => new Rectangle(Tiles_Selection.X * Globals.Grid, Tiles_Selection.Y * Globals.Grid, Tiles_Selection.Width * Globals.Grid, Tiles_Selection.Height * Globals.Grid);
-    
+
     private static Rectangle Selection_Rec(Rectangle Temp)
     {
         // Largura

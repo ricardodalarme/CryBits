@@ -140,6 +140,7 @@ class Game
         foreach (Objects.Map Map in Lists.Map.Values)
         {
             Objects.TMap Temp_Map = new Objects.TMap(Map.ID, Map);
+            Lists.Temp_Map.Add(Map.ID, Temp_Map);
 
             // NPCs do mapa
             Temp_Map.NPC = new Objects.TNPC[Map.NPC.Length];

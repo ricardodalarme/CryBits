@@ -113,7 +113,11 @@ partial class Receive
 
         // Obtém o dado
         if (Lists.Map.ContainsKey(ID)) Map = Lists.Map[ID];
-        else Map = new Lists.Structures.Map(ID);
+        else
+        {
+            Map = new Lists.Structures.Map(ID);
+            Lists.Map.Add(ID, Map);
+        }
 
         // Dados básicos
         Map.Revision = Data.ReadInt16();
@@ -155,6 +159,7 @@ partial class Receive
             for (byte x = 0; x <= Map.Width; x++)
                 for (byte y = 0; y <= Map.Height; y++)
                 {
+                    Map.Layer[n].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
                     Map.Layer[n].Tile[x, y].X = Data.ReadByte();
                     Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
                     Map.Layer[n].Tile[x, y].Tile = Data.ReadByte();
@@ -168,6 +173,7 @@ partial class Receive
         for (byte x = 0; x <= Map.Width; x++)
             for (byte y = 0; y <= Map.Height; y++)
             {
+                Map.Tile[x, y] = new Lists.Structures.Map_Tile();
                 Map.Tile[x, y].Attribute = Data.ReadByte();
                 Map.Tile[x, y].Data_1 = Data.ReadInt16();
                 Map.Tile[x, y].Data_2 = Data.ReadInt16();
