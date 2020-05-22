@@ -17,7 +17,7 @@ namespace Objects
         public NPC_Drop[] Drop;
         public bool AttackNPC;
         public NPC[] Allie;
-        public global::NPC.Movements Movement;
+        public Game.NPC_Movements Movement;
         public byte Flee_Helth;
         private Guid shop;
 

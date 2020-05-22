@@ -1,22 +1,9 @@
 ﻿using Lidgren.Network;
 using System.Collections.Generic;
 
-class Account
+namespace Objects
 {
-    public static Structure Find(string Name) => Lists.Account.Find(x => x.User.Equals(Name));
-
-    public static Objects.Player FindPlayer(string Name)
-    {
-        // Encontra o usuário
-        for (byte i = 0; i < Lists.Account.Count; i++)
-            if (Lists.Account[i].IsPlaying)
-                if (Lists.Account[i].Character.Name.Equals(Name))
-                    return Lists.Account[i].Character;
-
-        return null;
-    }
-
-    public class Structure
+    class Account
     {
         // Dados básicos
         public NetConnection Connection;
@@ -34,7 +21,7 @@ class Account
         }
 
         // Construtor
-        public Structure(NetConnection Connection)
+        public Account(NetConnection Connection)
         {
             this.Connection = Connection;
         }

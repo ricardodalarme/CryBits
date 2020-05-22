@@ -38,7 +38,7 @@ partial class Read
         Stream.Close();
     }
 
-    public static void Account(Account.Structure Account, string Name)
+    public static void Account(Objects.Account Account, string Name)
     {
         FileInfo File = new FileInfo(Directories.Accounts.FullName + Name + "\\Data" + Directories.Format);
 
@@ -54,7 +54,7 @@ partial class Read
         Data.Dispose();
     }
 
-    public static void Characters(Account.Structure Account)
+    public static void Characters(Objects.Account Account)
     {
         DirectoryInfo Directory = new DirectoryInfo(Directories.Accounts.FullName + Account.User.ToString() + "\\Characters");
 
@@ -63,14 +63,14 @@ partial class Read
 
         // Lê odos os personagens
         FileInfo[] File = Directory.GetFiles();
-        Account.Characters = new System.Collections.Generic.List<Account.Structure.TempCharacter>();
+        Account.Characters = new System.Collections.Generic.List<Objects.Account.TempCharacter>();
         for (byte i = 0; i < File.Length; i++)
         {
             // Cria um arquivo temporário
             BinaryReader Data = new BinaryReader(File[i].OpenRead());
 
             // Carrega os dados e os adiciona ao cache
-            Account.Structure.TempCharacter Temp = new Account.Structure.TempCharacter
+            Objects.Account.TempCharacter Temp = new Objects.Account.TempCharacter
             {
                 Name = Data.ReadString(),
                 Texture_Num = Data.ReadInt16(),
@@ -83,7 +83,7 @@ partial class Read
         };
     }
 
-    public static void Character(Account.Structure Account, string Name)
+    public static void Character(Objects.Account Account, string Name)
     {
         FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Characters\\" + Name + Directories.Format);
 
@@ -224,6 +224,9 @@ partial class Read
 
             // Escreve os dados
             Write.Map(Map);
+
+            // Cria o mapa temporário
+            Map.Create_Temporary();
         }
     }
 

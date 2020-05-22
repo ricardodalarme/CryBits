@@ -25,7 +25,7 @@ class Socket
     public static void HandleData()
     {
         NetIncomingMessage Data;
-        Account.Structure Account;
+        Objects.Account Account;
 
         // Lê e direciona todos os dados recebidos
         while ((Data = Device.ReadMessage()) != null)
@@ -59,10 +59,10 @@ class Socket
     private static void Connect(NetIncomingMessage IncomingMsg)
     {
         // Define a conexão do jogador
-        Lists.Account.Add(new Account.Structure(IncomingMsg.SenderConnection));
+        Lists.Account.Add(new Objects.Account(IncomingMsg.SenderConnection));
     }
 
-    private static Account.Structure FindConnection(NetConnection Data)
+    private static Objects.Account FindConnection(NetConnection Data)
     {
         // Encontra uma determinada conexão
         for (byte i = 0; i < Lists.Account.Count; i++)

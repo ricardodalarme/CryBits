@@ -28,10 +28,10 @@ namespace Objects
         public string Trade_Request;
         public Lists.Structures.Trade_Slot[] Trade_Offer;
         public Shop Shop;
-        public Account.Structure Account;
+        public Objects.Account Account;
 
         // Constutor
-        public Player(Account.Structure Account)
+        public Player(Objects.Account Account)
         {
             this.Account = Account;
         }
@@ -224,10 +224,10 @@ namespace Objects
             // Atributos
             Map_Tile Tile = Map.Data.Tile[Next_X, Next_Y];
 
-            switch ((global::Map.Attributes)Tile.Attribute)
+            switch ((Game.Tile_Attributes)Tile.Attribute)
             {
                 // Teletransporte
-                case global::Map.Attributes.Warp:
+                case Game.Tile_Attributes.Warp:
                     if (Tile.Data_4 > 0) Direction = (Game.Directions)Tile.Data_4 - 1;
                     Warp((TMap)Lists.GetData(Lists.Temp_Map, new Guid(Tile.Data_5)), (byte)Tile.Data_2, (byte)Tile.Data_3);
                     SecondMovement = true;
@@ -296,7 +296,7 @@ namespace Objects
         {
             // Verifica se a vítima pode ser atacada
             if (Victim.GettingMap) return;
-            if (Map.Data.Moral == (byte)global::Map.Morals.Pacific)
+            if (Map.Data.Moral == (byte)Game.Map_Morals.Pacific)
             {
                 Send.Message(this, "This is a peaceful area.", Color.White);
                 return;
@@ -340,10 +340,10 @@ namespace Objects
             if (Victim.Target != this && !string.IsNullOrEmpty(Victim.Data.SayMsg)) Send.Message(this, Victim.Data.Name + ": " + Victim.Data.SayMsg, Color.White);
 
             // Não executa o combate com um NPC amigavel
-            switch ((global::NPC.Behaviour)Victim.Data.Behaviour)
+            switch ((Game.NPC_Behaviour)Victim.Data.Behaviour)
             {
-                case global::NPC.Behaviour.Friendly: return;
-                case global::NPC.Behaviour.ShopKeeper: Shop_Open(Victim.Data.Shop); return;
+                case Game.NPC_Behaviour.Friendly: return;
+                case Game.NPC_Behaviour.ShopKeeper: Shop_Open(Victim.Data.Shop); return;
             }
 
             // Define o alvo do NPC

@@ -21,7 +21,6 @@ class Game
     public const byte Min_Map_Width = 24;
     public const byte Min_Map_Height = 18;
 
-    #region Nums
     public enum Directions
     {
         Up,
@@ -62,6 +61,37 @@ class Game
         Map,
         Global,
         Private
+    }
+
+    public enum Map_Morals
+    {
+        Pacific,
+        Dangerous,
+        Amount
+    }
+
+    public enum NPC_Behaviour
+    {
+        Friendly,
+        AttackOnSight,
+        AttackWhenAttacked,
+        ShopKeeper
+    }
+
+    public enum NPC_Movements
+    {
+        MoveRandomly,
+        TurnRandomly,
+        StandStill
+    }
+
+    public enum Tile_Attributes
+    {
+        None,
+        Block,
+        Warp,
+        Item,
+        Amount
     }
 
     public enum Target
@@ -108,7 +138,6 @@ class Game
         Accepted,
         Declined
     }
-    #endregion
 
     public static Directions ReverseDirection(Directions Direction)
     {
@@ -135,23 +164,14 @@ class Game
         }
     }
 
-    public static void Create_Maps()
+    public static Objects.Player FindPlayer(string Name)
     {
-        foreach (Objects.Map Map in Lists.Map.Values)
-        {
-            Objects.TMap Temp_Map = new Objects.TMap(Map.ID, Map);
-            Lists.Temp_Map.Add(Map.ID, Temp_Map);
+        // Encontra o usuário
+        for (byte i = 0; i < Lists.Account.Count; i++)
+            if (Lists.Account[i].IsPlaying)
+                if (Lists.Account[i].Character.Name.Equals(Name))
+                    return Lists.Account[i].Character;
 
-            // NPCs do mapa
-            Temp_Map.NPC = new Objects.TNPC[Map.NPC.Length];
-            for (byte i = 1; i < Temp_Map.NPC.Length; i++)
-            {
-                Temp_Map.NPC[i] = new Objects.TNPC(i, Temp_Map, Map.NPC[i].NPC);
-                Temp_Map.NPC[i].Spawn();
-            }
-
-            // Itens do mapa
-            Temp_Map.Spawn_Items();
-        }
+        return null;
     }
 }

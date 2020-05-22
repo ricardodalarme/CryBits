@@ -5,7 +5,7 @@ class Lists
 {
     // Armazenamento de dados
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
-    public static List<Account.Structure> Account = new List<Account.Structure>();
+    public static List<Objects.Account> Account = new List<Objects.Account>();
     public static Dictionary<Guid, Objects.Class> Class = new Dictionary<Guid, Objects.Class>();
     public static Dictionary<Guid, Objects.Item> Item = new Dictionary<Guid, Objects.Item>();
     public static Dictionary<Guid, Objects.Shop> Shop = new Dictionary<Guid, Objects.Shop>();

@@ -29,10 +29,6 @@ class Program
         // Carrega todos os dados necessários
         Read.All();
 
-        // Cria os mapas
-        Console.WriteLine("Creating maps.");
-        Game.Create_Maps();
-
         // Cria os dispositivos da rede
         Socket.Init();
         Console.WriteLine("Network started. Port: " + Socket.Device.Port);
@@ -101,7 +97,7 @@ class Program
                 }
 
                 // Encontra o jogador
-                Account.Structure Account = global::Account.Find(Parts[1]);
+                Objects.Account Account = Lists.Account.Find(x => x.User.Equals(Parts[1]));
 
                 if (Account == null)
                 {

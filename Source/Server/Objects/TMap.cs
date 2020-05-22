@@ -82,7 +82,7 @@ namespace Objects
             // Verifica se tem algum atributo de item no mapa
             for (byte x = 0; x <= Data.Width; x++)
                 for (byte y = 0; y <= Data.Height; y++)
-                    if (Data.Tile[x, y].Attribute == (byte)global::Map.Attributes.Item)
+                    if (Data.Tile[x, y].Attribute == (byte)Game.Tile_Attributes.Item)
                     {
                         // Faz o item aparecer
                         Map_Item.Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.Tile[x, y].Data_5));

@@ -65,7 +65,7 @@ class Receive
         Request_Shops
     }
 
-    public static void Handle(Account.Structure Account, NetIncomingMessage Data)
+    public static void Handle(Objects.Account Account, NetIncomingMessage Data)
     {
         byte Packet_Num = Data.ReadByte();
         Objects.Player Player = Account.Character;
@@ -131,13 +131,13 @@ class Receive
             }
     }
 
-    private static void Latency(Account.Structure Account)
+    private static void Latency(Objects.Account Account)
     {
         // Envia o pacote para a contagem da latência
         Send.Latency(Account);
     }
 
-    private static void Connect(Account.Structure Account, NetIncomingMessage Data)
+    private static void Connect(Objects.Account Account, NetIncomingMessage Data)
     {
         // Lê os dados
         string User = Data.ReadString().Trim();
@@ -150,7 +150,7 @@ class Receive
             Send.Alert(Account, "This username isn't registered.");
             return;
         }
-        if (global::Account.Find(User) != null)
+        if (Lists.Account.Find(x => x.User.Equals(User)) != null)
         {
             Send.Alert(Account, "Someone already signed in to this account.");
             return;
@@ -202,7 +202,7 @@ class Receive
         }
     }
 
-    private static void Register(Account.Structure Account, NetIncomingMessage Data)
+    private static void Register(Objects.Account Account, NetIncomingMessage Data)
     {
         // Lê os dados
         string User = Data.ReadString().Trim();
@@ -232,7 +232,7 @@ class Receive
         Send.CreateCharacter(Account);
     }
 
-    private static void CreateCharacter(Account.Structure Account, NetIncomingMessage Data)
+    private static void CreateCharacter(Objects.Account Account, NetIncomingMessage Data)
     {
         // Lê os dados
         string Name = Data.ReadString().Trim();
@@ -283,7 +283,7 @@ class Receive
         Account.Character.Join();
     }
 
-    private static void Character_Use(Account.Structure Account, NetIncomingMessage Data)
+    private static void Character_Use(Objects.Account Account, NetIncomingMessage Data)
     {
         byte Character = Data.ReadByte();
 
@@ -295,7 +295,7 @@ class Receive
         Account.Character.Join();
     }
 
-    private static void Character_Create(Account.Structure Account)
+    private static void Character_Create(Objects.Account Account)
     {
         // Verifica se o jogador já criou o máximo de personagens possíveis
         if (Account.Characters.Count == Lists.Server_Data.Max_Characters)
@@ -309,7 +309,7 @@ class Receive
         Send.CreateCharacter(Account);
     }
 
-    private static void Character_Delete(Account.Structure Account, NetIncomingMessage Data)
+    private static void Character_Delete(Objects.Account Account, NetIncomingMessage Data)
     {
         byte Character = Data.ReadByte();
 
@@ -521,7 +521,7 @@ class Receive
             Player.UseItem(Player.Hotbar[Hotbar_Slot].Slot);
     }
 
-    private static void Write_Server_Data(Account.Structure Account, NetIncomingMessage Data)
+    private static void Write_Server_Data(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (Account.Acess < Game.Accesses.Editor)
@@ -545,7 +545,7 @@ class Receive
         Write.Server_Data();
     }
 
-    private static void Write_Classes(Account.Structure Account, NetIncomingMessage Data)
+    private static void Write_Classes(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (Account.Acess < Game.Accesses.Editor)
@@ -612,7 +612,7 @@ class Receive
                 Send.Classes(Lists.Account[i]);
     }
 
-    private static void Write_Maps(Account.Structure Account, NetIncomingMessage Data)
+    private static void Write_Maps(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (Account.Acess < Game.Accesses.Editor)
@@ -631,23 +631,24 @@ class Receive
         {
             Guid ID = new Guid(Data.ReadString());
             Objects.Map Map;
-            Objects.TMap Temp_Map;
 
             // Obtém o dado
             if (Lists.Map.ContainsKey(ID))
             {
                 Map = Lists.Map[ID];
-                Temp_Map = Lists.Temp_Map[ID];
                 ToRemove.Remove(ID);
             }
             else
             {
                 Map = new Objects.Map(ID);
-                Temp_Map = new Objects.TMap(ID, Map);
                 Lists.Map.Add(Map.ID, Map);
-                Lists.Temp_Map.Add(Temp_Map.ID, Temp_Map);
+                Map.Create_Temporary();
             }
 
+            // Mapa temporário
+            Objects.TMap Temp_Map = Lists.Temp_Map[ID];
+
+            // Dados gerais
             Map.Revision = Data.ReadInt16();
             Map.Name = Data.ReadString();
             Map.Width = Data.ReadByte();
@@ -751,7 +752,7 @@ class Receive
         }
     }
 
-    private static void Write_NPCs(Account.Structure Account, NetIncomingMessage Data)
+    private static void Write_NPCs(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (Account.Acess < Game.Accesses.Editor)
@@ -798,7 +799,7 @@ class Receive
             NPC.AttackNPC = Data.ReadBoolean();
             NPC.Allie = new Objects.NPC[Data.ReadByte()];
             for (byte n = 0; n < NPC.Allie.Length; n++) NPC.Allie[n] = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
-            NPC.Movement = (NPC.Movements)Data.ReadByte();
+            NPC.Movement = (Game.NPC_Movements)Data.ReadByte();
             NPC.Flee_Helth = Data.ReadByte();
             NPC.Shop = (Objects.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
 
@@ -819,7 +820,7 @@ class Receive
                 Send.NPCs(Lists.Account[i]);
     }
 
-    private static void Write_Items(Account.Structure Account, NetIncomingMessage Data)
+    private static void Write_Items(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (Account.Acess < Game.Accesses.Editor)
@@ -884,7 +885,7 @@ class Receive
                 Send.Items(Lists.Account[i]);
     }
 
-    private static void Write_Shops(Account.Structure Account, NetIncomingMessage Data)
+    private static void Write_Shops(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (Account.Acess < Game.Accesses.Editor)
@@ -955,37 +956,37 @@ class Receive
                 Send.Shops(Lists.Account[i]);
     }
 
-    private static void Request_Server_Data(Account.Structure Account)
+    private static void Request_Server_Data(Objects.Account Account)
     {
         Send.Server_Data(Account);
     }
 
-    private static void Request_Classes(Account.Structure Account)
+    private static void Request_Classes(Objects.Account Account)
     {
         Send.Classes(Account);
     }
 
-    private static void Request_Map(Account.Structure Account, NetIncomingMessage Data)
+    private static void Request_Map(Objects.Account Account, NetIncomingMessage Data)
     {
         Send.Map(Account, (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString())));
     }
 
-    private static void Request_Maps(Account.Structure Account, NetIncomingMessage Data)
+    private static void Request_Maps(Objects.Account Account, NetIncomingMessage Data)
     {
         Send.Maps(Account);
     }
 
-    private static void Request_NPCs(Account.Structure Account)
+    private static void Request_NPCs(Objects.Account Account)
     {
         Send.NPCs(Account);
     }
 
-    private static void Request_Items(Account.Structure Account)
+    private static void Request_Items(Objects.Account Account)
     {
         Send.Items(Account);
     }
 
-    private static void Request_Shops(Account.Structure Account)
+    private static void Request_Shops(Objects.Account Account)
     {
         Send.Shops(Account);
     }
@@ -995,7 +996,7 @@ class Receive
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        Objects.Player Invited = Account.FindPlayer(Name);
+        Objects.Player Invited = Game.FindPlayer(Name);
 
         // Verifica se o jogador está convectado
         if (Invited == null)
@@ -1035,7 +1036,7 @@ class Receive
 
     private static void Party_Accept(Objects.Player Player)
     {
-        Objects.Player Invitation = Account.FindPlayer(Player.Party_Request);
+        Objects.Player Invitation = Game.FindPlayer(Player.Party_Request);
 
         // Verifica se já tem um grupo
         if (Player.Party.Count != 0)
@@ -1075,7 +1076,7 @@ class Receive
 
     private static void Party_Decline(Objects.Player Player)
     {
-        Objects.Player Invitation = Account.FindPlayer(Player.Party_Request);
+        Objects.Player Invitation = Game.FindPlayer(Player.Party_Request);
 
         // Recusa o convite
         if (Invitation != null) Send.Message(Invitation, Player.Name + " decline the party.", System.Drawing.Color.White);
@@ -1093,7 +1094,7 @@ class Receive
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        Objects.Player Invited = Account.FindPlayer(Name);
+        Objects.Player Invited = Game.FindPlayer(Name);
 
         // Verifica se o jogador está convectado
         if (Invited == null)
@@ -1144,7 +1145,7 @@ class Receive
 
     private static void Trade_Accept(Objects.Player Player)
     {
-        Objects.Player Invited = Account.FindPlayer(Player.Trade_Request);
+        Objects.Player Invited = Game.FindPlayer(Player.Trade_Request);
 
         // Verifica se já tem um grupo
         if (Player.Trade != null)
@@ -1189,7 +1190,7 @@ class Receive
 
     private static void Trade_Decline(Objects.Player Player)
     {
-        Objects.Player Invited = Account.FindPlayer(Player.Trade_Request);
+        Objects.Player Invited = Game.FindPlayer(Player.Trade_Request);
 
         // Recusa o convite
         if (Invited != null) Send.Message(Invited, Player.Name + " decline the trade.", System.Drawing.Color.White);

@@ -74,7 +74,7 @@ namespace Objects
                 // Movimentação //
                 //////////////////
                 // Atacar ao ver
-                if (Data.Behaviour == (byte)global::NPC.Behaviour.AttackOnSight)
+                if (Data.Behaviour == (byte)Game.NPC_Behaviour.AttackOnSight)
                 {
                     // Jogador
                     if (Target == null)
@@ -186,11 +186,11 @@ namespace Objects
                 }
 
                 // Move-se aleatoriamente
-                if (Data.Behaviour == (byte)global::NPC.Behaviour.Friendly || Target == null)
+                if (Data.Behaviour == (byte)Game.NPC_Behaviour.Friendly || Target == null)
                     if (Game.Random.Next(0, 3) == 0 && !Moved)
-                        if (Data.Movement == global::NPC.Movements.MoveRandomly)
+                        if (Data.Movement == Game.NPC_Movements.MoveRandomly)
                             this.Move((Game.Directions)Game.Random.Next(0, 4), 1, true);
-                        else if (Data.Movement == global::NPC.Movements.TurnRandomly)
+                        else if (Data.Movement == Game.NPC_Movements.TurnRandomly)
                         {
                             Direction = (Game.Directions)Game.Random.Next(0, 4);
                             Send.Map_NPC_Direction(this);

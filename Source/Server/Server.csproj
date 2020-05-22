@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Directories.cs" />
+    <Compile Include="Objects\Account.cs" />
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\Class.cs" />
     <Compile Include="Objects\Item.cs" />
@@ -92,9 +93,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
-    <Compile Include="Logic\Map.cs" />
-    <Compile Include="Logic\NPC.cs" />
-    <Compile Include="Logic\Account.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Network\Receive.cs" />
     <Compile Include="Network\Send.cs" />

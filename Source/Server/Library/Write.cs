@@ -3,7 +3,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 class Write
 {
-    public static void Account(Account.Structure Account)
+    public static void Account(Objects.Account Account)
     {
         FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Data" + Directories.Format);
 
@@ -22,7 +22,7 @@ class Write
         Data.Dispose();
     }
 
-    public static void Character(Account.Structure Account)
+    public static void Character(Objects.Account Account)
     {
         FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Characters\\" + Account.Character.Name + Directories.Format);
 

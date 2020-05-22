@@ -8,7 +8,7 @@ namespace Objects
     {
         public short Revision;
         public List<Map_Layer> Layer = new List<Map_Layer>();
-        public Map_Tile[,] Tile ;
+        public Map_Tile[,] Tile;
         public string Name = string.Empty;
         public byte Width = Game.Min_Map_Width;
         public byte Height = Game.Min_Map_Height;
@@ -36,8 +36,25 @@ namespace Objects
         {
             // Verifica se o azulejo está bloqueado
             if (OutLimit(X, Y)) return true;
-            if (Tile[X, Y].Attribute == (byte)global::Map.Attributes.Block) return true;
+            if (Tile[X, Y].Attribute == (byte)Game.Tile_Attributes.Block) return true;
             return false;
+        }
+
+        public void Create_Temporary()
+        {
+            TMap Temp_Map = new TMap(ID, this);
+            Lists.Temp_Map.Add(ID, Temp_Map);
+
+            // NPCs do mapa
+            Temp_Map.NPC = new TNPC[NPC.Length];
+            for (byte i = 1; i < Temp_Map.NPC.Length; i++)
+            {
+                Temp_Map.NPC[i] = new TNPC(i, Temp_Map, NPC[i].NPC);
+                Temp_Map.NPC[i].Spawn();
+            }
+
+            // Itens do mapa
+            Temp_Map.Spawn_Items();
         }
     }
 

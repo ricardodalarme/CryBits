@@ -64,7 +64,7 @@ class Send
         Shops
     }
 
-    private static void ToPlayer(Account.Structure Account, NetOutgoingMessage Data)
+    private static void ToPlayer(Objects.Account Account, NetOutgoingMessage Data)
     {
         // Recria o pacote e o envia
         NetOutgoingMessage Data_Send = Socket.Device.CreateMessage(Data.LengthBytes);
@@ -113,7 +113,7 @@ class Send
                         ToPlayer(Lists.Account[i].Character, Data);
     }
 
-    public static void Alert(Account.Structure Account, string Message, bool Disconnect = true)
+    public static void Alert(Objects.Account Account, string Message, bool Disconnect = true)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -127,7 +127,7 @@ class Send
         if (Disconnect) Account.Connection.Disconnect(string.Empty);
     }
 
-    public static void Connect(Account.Structure Account)
+    public static void Connect(Objects.Account Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -137,7 +137,7 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void CreateCharacter(Account.Structure Account)
+    public static void CreateCharacter(Objects.Account Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -156,7 +156,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Characters(Account.Structure Account)
+    public static void Characters(Objects.Account Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -174,7 +174,7 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void Classes(Account.Structure Account)
+    public static void Classes(Objects.Account Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -379,7 +379,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Maps(Account.Structure Account)
+    public static void Maps(Objects.Account Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -390,7 +390,7 @@ class Send
         foreach(Objects.Map Map in Lists.Map.Values) Send.Map(Account, Map);
     }
 
-    public static void Map(Account.Structure Account, Objects.Map Map)
+    public static void Map(Objects.Account Account, Objects.Map Map)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -477,7 +477,7 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void Latency(Account.Structure Account)
+    public static void Latency(Objects.Account Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -523,7 +523,7 @@ class Send
 
     public static void Message_Private(Objects.Player Player, string Addressee_Name, string Texto)
     {
-        Objects.Player Addressee = Account.FindPlayer(Addressee_Name);
+        Objects.Player Addressee = Game.FindPlayer(Addressee_Name);
 
         // Verifica se o jogador está conectado
         if (Addressee == null)
@@ -549,7 +549,7 @@ class Send
         ToMap(Player.Map, Data);
     }
 
-    public static void Items(Account.Structure Account)
+    public static void Items(Objects.Account Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -644,7 +644,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void NPCs(Account.Structure Account)
+    public static void NPCs(Objects.Account Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -778,7 +778,7 @@ class Send
         ToMap(NPC.Map, Data);
     }
 
-    public static void Server_Data(Account.Structure Account)
+    public static void Server_Data(Objects.Account Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -862,7 +862,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Shops(Account.Structure Account)
+    public static void Shops(Objects.Account Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
