@@ -68,7 +68,7 @@ class Receive
     public static void Handle(Account.Structure Account, NetIncomingMessage Data)
     {
         byte Packet_Num = Data.ReadByte();
-        Player Player = Account.Character;
+        Objects.Player Player = Account.Character;
 
         // Pacote principal de conexão
         if (Packet_Num == 0) Connect(Account, Data);
@@ -256,7 +256,7 @@ class Receive
 
         // Define os valores iniciais do personagem
         Objects.Class Class;
-        Account.Character = new Player(Account);
+        Account.Character = new Objects.Player(Account);
         Account.Character.Name = Name;
         Account.Character.Level = 1;
         Account.Character.Class = Class = (Objects.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
@@ -264,7 +264,7 @@ class Receive
         if (Account.Character.Genre) Account.Character.Texture_Num = Class.Tex_Male[Data.ReadByte()];
         else Account.Character.Texture_Num = Class.Tex_Female[Data.ReadByte()];
         Account.Character.Attribute = Class.Attribute;
-        Account.Character.Map_Num = Class.Spawn_Map;
+        Account.Character.Map = (Objects.TMap)Lists.GetData(Lists.Temp_Map, Class.Spawn_Map.ID);
         Account.Character.Direction = (Game.Directions)Class.Spawn_Direction;
         Account.Character.X = Class.Spawn_X;
         Account.Character.Y = Class.Spawn_Y;
@@ -328,7 +328,7 @@ class Receive
         Write.Account(Account);
     }
 
-    private static void Player_Direction(Player Player, NetIncomingMessage Data)
+    private static void Player_Direction(Objects.Player Player, NetIncomingMessage Data)
     {
         Game.Directions Direction = (Game.Directions)Data.ReadByte();
 
@@ -341,7 +341,7 @@ class Receive
         Send.Player_Direction(Player);
     }
 
-    private static void Player_Move(Player Player, NetIncomingMessage Data)
+    private static void Player_Move(Objects.Player Player, NetIncomingMessage Data)
     {
         // Move o jogador se necessário
         if (Player.X != Data.ReadByte() || Player.Y != Data.ReadByte())
@@ -350,10 +350,10 @@ class Receive
             Player.Move(Data.ReadByte());
     }
 
-    private static void RequestMap(Player Player, NetIncomingMessage Data)
+    private static void RequestMap(Objects.Player Player, NetIncomingMessage Data)
     {
         // Se necessário enviar as informações do mapa ao jogador
-        if (Data.ReadBoolean()) Send.Map(Player.Account, Player.Map_Num);
+        if (Data.ReadBoolean()) Send.Map(Player.Account, Player.Map.Data);
 
         // Envia a informação aos outros jogadores
         Send.Map_Players(Player);
@@ -363,7 +363,7 @@ class Receive
         Send.JoinMap(Player);
     }
 
-    private static void Message(Player Player, NetIncomingMessage Data)
+    private static void Message(Objects.Player Player, NetIncomingMessage Data)
     {
         string Message = Data.ReadString();
 
@@ -381,13 +381,13 @@ class Receive
         }
     }
 
-    private static void Player_Attack(Player Player)
+    private static void Player_Attack(Objects.Player Player)
     {
         // Ataca
         Player.Attack();
     }
 
-    private static void AddPoint(Player Player, NetIncomingMessage Data)
+    private static void AddPoint(Objects.Player Player, NetIncomingMessage Data)
     {
         byte Attribute_Num = Data.ReadByte();
 
@@ -401,30 +401,29 @@ class Receive
         }
     }
 
-    private static void CollectItem(Player Player)
+    private static void CollectItem(Objects.Player Player)
     {
-        short Map_Num = Player.Map_Num;
-        byte Map_Item = Map.HasItem(Map_Num, Player.X, Player.Y);
-        Objects.Item Item = Lists.Temp_Map[Map_Num].Item[Map_Item].Item;
+        byte Map_Item = Player.Map.HasItem(Player.X, Player.Y);
+        Objects.Item Item = Player.Map.Item[Map_Item].Item;
 
         // Somente se necessário
         if (Map_Item == 0) return;
 
         // Dá o item ao jogador
-        if (Player.GiveItem(Item, Lists.Temp_Map[Map_Num].Item[Map_Item].Amount))
+        if (Player.GiveItem(Item, Player.Map.Item[Map_Item].Amount))
         {
             // Retira o item do mapa
-            Lists.Temp_Map[Map_Num].Item.RemoveAt(Map_Item);
-            Send.Map_Items(Map_Num);
+            Player.Map.Item.RemoveAt(Map_Item);
+            Send.Map_Items(Player.Map);
         }
     }
 
-    private static void DropItem(Player Player, NetIncomingMessage Data)
+    private static void DropItem(Objects.Player Player, NetIncomingMessage Data)
     {
         Player.DropItem(Data.ReadByte(), Data.ReadInt16());
     }
 
-    private static void Inventory_Change(Player Player, NetIncomingMessage Data)
+    private static void Inventory_Change(Objects.Player Player, NetIncomingMessage Data)
     {
         byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
         byte Hotbar_Slot = Player.FindHotbar((byte)Game.Hotbar.Item, Slot_Old);
@@ -442,16 +441,15 @@ class Receive
         Send.Player_Hotbar(Player);
     }
 
-    private static void Inventory_Use(Player Player, NetIncomingMessage Data)
+    private static void Inventory_Use(Objects.Player Player, NetIncomingMessage Data)
     {
         Player.UseItem(Data.ReadByte());
     }
 
-    private static void Equipment_Remove(Player Player, NetIncomingMessage Data)
+    private static void Equipment_Remove(Objects.Player Player, NetIncomingMessage Data)
     {
         byte Slot = Data.ReadByte();
-        short Map_Num = Player.Map_Num;
-        Lists.Structures.Map_Items Map_Item = new Lists.Structures.Map_Items();
+        Objects.TMap_Items Map_Item = new Objects.TMap_Items();
 
         // Apenas se necessário
         if (Player.Equipment[Slot] == null) return;
@@ -461,17 +459,17 @@ class Receive
         if (!Player.GiveItem(Player.Equipment[Slot], 1))
         {
             // Somente se necessário
-            if (Lists.Temp_Map[Map_Num].Item.Count == Lists.Server_Data.Max_Map_Items) return;
+            if (Player.Map.Item.Count == Lists.Server_Data.Max_Map_Items) return;
 
             // Solta o item no chão
             Map_Item.Item = Player.Equipment[Slot];
             Map_Item.Amount = 1;
             Map_Item.X = Player.X;
             Map_Item.Y = Player.Y;
-            Lists.Temp_Map[Map_Num].Item.Add(Map_Item);
+            Player.Map.Item.Add(Map_Item);
 
             // Envia os dados
-            Send.Map_Items(Map_Num);
+            Send.Map_Items(Player.Map);
             Send.Player_Inventory(Player);
         }
 
@@ -483,7 +481,7 @@ class Receive
         Send.Player_Equipments(Player);
     }
 
-    private static void Hotbar_Add(Player Player, NetIncomingMessage Data)
+    private static void Hotbar_Add(Objects.Player Player, NetIncomingMessage Data)
     {
         byte Hotbar_Slot = Data.ReadByte();
         byte Type = Data.ReadByte();
@@ -500,7 +498,7 @@ class Receive
         Send.Player_Hotbar(Player);
     }
 
-    private static void Hotbar_Change(Player Player, NetIncomingMessage Data)
+    private static void Hotbar_Change(Objects.Player Player, NetIncomingMessage Data)
     {
         byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
 
@@ -514,7 +512,7 @@ class Receive
         Send.Player_Hotbar(Player);
     }
 
-    private static void Hotbar_Use(Player Player, NetIncomingMessage Data)
+    private static void Hotbar_Use(Objects.Player Player, NetIncomingMessage Data)
     {
         byte Hotbar_Slot = Data.ReadByte();
 
@@ -589,7 +587,7 @@ class Receive
             Class.Description = Data.ReadString();
             for (byte t = 0; t < Class.Tex_Male.Length; t++) Class.Tex_Male[t] = Data.ReadInt16();
             for (byte t = 0; t < Class.Tex_Female.Length; t++) Class.Tex_Female[t] = Data.ReadInt16();
-            Class.Spawn_Map = Data.ReadInt16();
+            Class.Spawn_Map = (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
             Class.Spawn_Direction = Data.ReadByte();
             Class.Spawn_X = Data.ReadByte();
             Class.Spawn_Y = Data.ReadByte();
@@ -601,7 +599,7 @@ class Receive
             Write.Class(Class);
         }
 
-        // Remove as lojas que não tiveram os dados atualizados
+        // Remove as classes que não tiveram os dados atualizados
         foreach (Guid Remove in ToRemove.Keys)
         {
             Lists.Class.Remove(Remove);
@@ -623,117 +621,134 @@ class Receive
             return;
         }
 
-        // Quantidade de mapas 
-        Lists.Map = new Lists.Structures.Map[Data.ReadInt16()];
-        Lists.Temp_Map = new Lists.Structures.Temp_Map[Lists.Map.Length];
-        Lists.Server_Data.Num_Maps = (short)Lists.Map.GetUpperBound(0);
-        Write.Server_Data();
+        // Classes a serem removidas
+        Dictionary<Guid, Objects.Map> ToRemove = new Dictionary<Guid, Objects.Map>(Lists.Map);
 
-        for (short i = 1; i < Lists.Map.Length; i++)
+        // Quantidade de classes
+        short Count = Data.ReadByte();
+
+        while (--Count >= 0)
         {
-            Lists.Map[i].Revision = Data.ReadInt16();
-            Lists.Map[i].Name = Data.ReadString();
-            Lists.Map[i].Width = Data.ReadByte();
-            Lists.Map[i].Height = Data.ReadByte();
-            Lists.Map[i].Moral = Data.ReadByte();
-            Lists.Map[i].Panorama = Data.ReadByte();
-            Lists.Map[i].Music = Data.ReadByte();
-            Lists.Map[i].Color = Data.ReadInt32();
-            Lists.Map[i].Weather.Type = Data.ReadByte();
-            Lists.Map[i].Weather.Intensity = Data.ReadByte();
-            Lists.Map[i].Fog.Texture = Data.ReadByte();
-            Lists.Map[i].Fog.Speed_X = Data.ReadSByte();
-            Lists.Map[i].Fog.Speed_Y = Data.ReadSByte();
-            Lists.Map[i].Fog.Alpha = Data.ReadByte();
-            Lists.Map[i].Light_Global = Data.ReadByte();
-            Lists.Map[i].Lighting = Data.ReadByte();
+            Guid ID = new Guid(Data.ReadString());
+            Objects.Map Map;
+            Objects.TMap Temp_Map;
+
+            // Obtém o dado
+            if (Lists.Map.ContainsKey(ID))
+            {
+                Map = Lists.Map[ID];
+                Temp_Map = Lists.Temp_Map[ID];
+                ToRemove.Remove(ID);
+            }
+            else
+            {
+                Map = new Objects.Map(ID);
+                Temp_Map = new Objects.TMap(ID, Map);
+                Lists.Map.Add(Map.ID, Map);
+                Lists.Temp_Map.Add(Temp_Map.ID, Temp_Map);
+            }
+
+            Map.Revision = Data.ReadInt16();
+            Map.Name = Data.ReadString();
+            Map.Width = Data.ReadByte();
+            Map.Height = Data.ReadByte();
+            Map.Moral = Data.ReadByte();
+            Map.Panorama = Data.ReadByte();
+            Map.Music = Data.ReadByte();
+            Map.Color = Data.ReadInt32();
+            Map.Weather.Type = Data.ReadByte();
+            Map.Weather.Intensity = Data.ReadByte();
+            Map.Fog.Texture = Data.ReadByte();
+            Map.Fog.Speed_X = Data.ReadSByte();
+            Map.Fog.Speed_Y = Data.ReadSByte();
+            Map.Fog.Alpha = Data.ReadByte();
+            Map.Light_Global = Data.ReadByte();
+            Map.Lighting = Data.ReadByte();
 
             // Ligações
-            Lists.Map[i].Link = new short[(short)Game.Directions.Count];
             for (short n = 0; n < (short)Game.Directions.Count; n++)
-                Lists.Map[i].Link[n] = Data.ReadInt16();
-
-            // Quantidade de camadas
-            byte Num_Layers = Data.ReadByte();
-            Lists.Map[i].Layer = new List<Lists.Structures.Map_Layer>();
+                Map.Link[n] = (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
 
             // Camadas
+            byte Num_Layers = Data.ReadByte();
             for (byte n = 0; n <= Num_Layers; n++)
             {
                 // Dados básicos
-                Lists.Map[i].Layer.Add(new Lists.Structures.Map_Layer());
-                Lists.Map[i].Layer[n].Name = Data.ReadString();
-                Lists.Map[i].Layer[n].Type = Data.ReadByte();
-
-                // Redimensiona os azulejos
-                Lists.Map[i].Layer[n].Tile = new Lists.Structures.Map_Tile_Data[Lists.Map[i].Width + 1, Lists.Map[i].Height + 1];
+                Map.Layer.Add(new Objects.Map_Layer(Map.Width, Map.Height));
+                Map.Layer[n].Name = Data.ReadString();
+                Map.Layer[n].Type = Data.ReadByte();
 
                 // Azulejos
-                for (byte x = 0; x <= Lists.Map[i].Width; x++)
-                    for (byte y = 0; y <= Lists.Map[i].Height; y++)
+                for (byte x = 0; x <= Map.Width; x++)
+                    for (byte y = 0; y <= Map.Height; y++)
                     {
-                        Lists.Map[i].Layer[n].Tile[x, y].X = Data.ReadByte();
-                        Lists.Map[i].Layer[n].Tile[x, y].Y = Data.ReadByte();
-                        Lists.Map[i].Layer[n].Tile[x, y].Tile = Data.ReadByte();
-                        Lists.Map[i].Layer[n].Tile[x, y].Auto = Data.ReadBoolean();
+                        Map.Layer[n].Tile[x, y].X = Data.ReadByte();
+                        Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
+                        Map.Layer[n].Tile[x, y].Tile = Data.ReadByte();
+                        Map.Layer[n].Tile[x, y].Auto = Data.ReadBoolean();
                     }
             }
 
             // Dados específicos dos azulejos
-            Lists.Map[i].Tile = new Lists.Structures.Map_Tile[Lists.Map[i].Width + 1, Lists.Map[i].Height + 1];
-            for (byte x = 0; x <= Lists.Map[i].Width; x++)
-                for (byte y = 0; y <= Lists.Map[i].Height; y++)
+            Map.Tile = new Objects.Map_Tile[Map.Width + 1, Map.Height + 1];
+            for (byte x = 0; x <= Map.Width; x++)
+                for (byte y = 0; y <= Map.Height; y++)
                 {
-                    Lists.Map[i].Tile[x, y].Attribute = Data.ReadByte();
-                    Lists.Map[i].Tile[x, y].Data_1 = Data.ReadInt16();
-                    Lists.Map[i].Tile[x, y].Data_2 = Data.ReadInt16();
-                    Lists.Map[i].Tile[x, y].Data_3 = Data.ReadInt16();
-                    Lists.Map[i].Tile[x, y].Data_4 = Data.ReadInt16();
-                    Lists.Map[i].Tile[x, y].Data_5 = Data.ReadString();
-                    Lists.Map[i].Tile[x, y].Zone = Data.ReadByte();
-                    Lists.Map[i].Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
+                    Map.Tile[x, y] = new Objects.Map_Tile();
+                    Map.Tile[x, y].Attribute = Data.ReadByte();
+                    Map.Tile[x, y].Data_1 = Data.ReadInt16();
+                    Map.Tile[x, y].Data_2 = Data.ReadInt16();
+                    Map.Tile[x, y].Data_3 = Data.ReadInt16();
+                    Map.Tile[x, y].Data_4 = Data.ReadInt16();
+                    Map.Tile[x, y].Data_5 = Data.ReadString();
+                    Map.Tile[x, y].Zone = Data.ReadByte();
 
                     for (byte n = 0; n < (byte)Game.Directions.Count; n++)
-                        Lists.Map[i].Tile[x, y].Block[n] = Data.ReadBoolean();
+                        Map.Tile[x, y].Block[n] = Data.ReadBoolean();
                 }
 
             // Luzes
-            Lists.Map[i].Light = new Lists.Structures.Map_Light[Data.ReadByte()];
-            for (byte n = 0; n < Lists.Map[i].Light.Length; n++)
+            Map.Light = new Objects.Map_Light[Data.ReadByte()];
+            for (byte n = 0; n < Map.Light.Length; n++)
             {
-                Lists.Map[i].Light[n].X = Data.ReadByte();
-                Lists.Map[i].Light[n].Y = Data.ReadByte();
-                Lists.Map[i].Light[n].Width = Data.ReadByte();
-                Lists.Map[i].Light[n].Height = Data.ReadByte();
+                Map.Light[n].X = Data.ReadByte();
+                Map.Light[n].Y = Data.ReadByte();
+                Map.Light[n].Width = Data.ReadByte();
+                Map.Light[n].Height = Data.ReadByte();
             }
 
             // NPCs
-            Lists.Map[i].NPC = new Lists.Structures.Map_NPC[Data.ReadByte()];
-            Lists.Temp_Map[i].NPC = new NPC.Structure[Lists.Map[i].NPC.Length];
-            for (byte n = 0; n < Lists.Map[i].NPC.Length; n++)
+            Map.NPC = new Objects.Map_NPC[Data.ReadByte()];
+            Temp_Map.NPC = new Objects.TNPC[Map.NPC.Length];
+            for (byte n = 0; n < Map.NPC.Length; n++)
             {
-                Lists.Map[i].NPC[n].NPC = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
-                Lists.Map[i].NPC[n].Zone = Data.ReadByte();
-                Lists.Map[i].NPC[n].Spawn = Data.ReadBoolean();
-                Lists.Map[i].NPC[n].X = Data.ReadByte();
-                Lists.Map[i].NPC[n].Y = Data.ReadByte();
-                Lists.Temp_Map[i].NPC[n].Spawn();
+                Map.NPC[n].NPC = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+                Map.NPC[n].Zone = Data.ReadByte();
+                Map.NPC[n].Spawn = Data.ReadBoolean();
+                Map.NPC[n].X = Data.ReadByte();
+                Map.NPC[n].Y = Data.ReadByte();
+                Temp_Map.NPC[n].Spawn();
             }
 
-            // Itens
-            Lists.Temp_Map[i].Item = new System.Collections.Generic.List<Lists.Structures.Map_Items>();
-            Lists.Temp_Map[i].Item.Add(new Lists.Structures.Map_Items());
-            Map.Spawn_Items(i);
+            // Itens do mapa
+            Temp_Map.Spawn_Items();
 
             // Envia o mapa para todos os jogadores que estão nele
             for (byte n = 0; n < Lists.Account.Count; n++)
                 if (Lists.Account[n] != Account)
-                    if (Lists.Account[n].Character.Map_Num == i || Lists.Account[n].InEditor)
-                        Send.Map(Lists.Account[n], i);
+                    if (Lists.Account[n].Character.Map == Temp_Map || Lists.Account[n].InEditor)
+                        Send.Map(Lists.Account[n], Temp_Map.Data);
+
+            // Salva os dados das classes
+            Write.Map(Map);
         }
 
-        // Salva os dados
-        Write.Maps();
+        // Remove os mapas que não tiveram os dados atualizados
+        foreach (Guid Remove in ToRemove.Keys)
+        {
+            Lists.Map.Remove(Remove);
+            File.Delete(Directories.Maps.FullName + Remove.ToString() + Directories.Format);
+        }
     }
 
     private static void Write_NPCs(Account.Structure Account, NetIncomingMessage Data)
@@ -952,7 +967,7 @@ class Receive
 
     private static void Request_Map(Account.Structure Account, NetIncomingMessage Data)
     {
-        Send.Map(Account, Data.ReadInt16());
+        Send.Map(Account, (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString())));
     }
 
     private static void Request_Maps(Account.Structure Account, NetIncomingMessage Data)
@@ -975,12 +990,12 @@ class Receive
         Send.Shops(Account);
     }
 
-    private static void Party_Invite(Player Player, NetIncomingMessage Data)
+    private static void Party_Invite(Objects.Player Player, NetIncomingMessage Data)
     {
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        Player Invited = Account.FindPlayer(Name);
+        Objects.Player Invited = Account.FindPlayer(Name);
 
         // Verifica se o jogador está convectado
         if (Invited == null)
@@ -1018,9 +1033,9 @@ class Receive
         Send.Party_Invitation(Invited, Player.Name);
     }
 
-    private static void Party_Accept(Player Player)
+    private static void Party_Accept(Objects.Player Player)
     {
-        Player Invitation = Account.FindPlayer(Player.Party_Request);
+        Objects.Player Invitation = Account.FindPlayer(Player.Party_Request);
 
         // Verifica se já tem um grupo
         if (Player.Party.Count != 0)
@@ -1058,27 +1073,27 @@ class Receive
         for (byte i = 0; i < Player.Party.Count; i++) Send.Party(Player.Party[i]);
     }
 
-    private static void Party_Decline(Player Player)
+    private static void Party_Decline(Objects.Player Player)
     {
-        Player Invitation = Account.FindPlayer(Player.Party_Request);
+        Objects.Player Invitation = Account.FindPlayer(Player.Party_Request);
 
         // Recusa o convite
         if (Invitation != null) Send.Message(Invitation, Player.Name + " decline the party.", System.Drawing.Color.White);
         Player.Party_Request = string.Empty;
     }
 
-    private static void Party_Leave(Player Player)
+    private static void Party_Leave(Objects.Player Player)
     {
         // Sai do grupo
         Player.Party_Leave();
     }
 
-    private static void Trade_Invite(Player Player, NetIncomingMessage Data)
+    private static void Trade_Invite(Objects.Player Player, NetIncomingMessage Data)
     {
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        Player Invited = Account.FindPlayer(Name);
+        Objects.Player Invited = Account.FindPlayer(Name);
 
         // Verifica se o jogador está convectado
         if (Invited == null)
@@ -1127,9 +1142,9 @@ class Receive
         Send.Trade_Invitation(Invited, Player.Name);
     }
 
-    private static void Trade_Accept(Player Player)
+    private static void Trade_Accept(Objects.Player Player)
     {
-        Player Invited = Account.FindPlayer(Player.Trade_Request);
+        Objects.Player Invited = Account.FindPlayer(Player.Trade_Request);
 
         // Verifica se já tem um grupo
         if (Player.Trade != null)
@@ -1172,21 +1187,21 @@ class Receive
         Send.Trade(Invited, true);
     }
 
-    private static void Trade_Decline(Player Player)
+    private static void Trade_Decline(Objects.Player Player)
     {
-        Player Invited = Account.FindPlayer(Player.Trade_Request);
+        Objects.Player Invited = Account.FindPlayer(Player.Trade_Request);
 
         // Recusa o convite
         if (Invited != null) Send.Message(Invited, Player.Name + " decline the trade.", System.Drawing.Color.White);
         Player.Trade_Request = string.Empty;
     }
 
-    private static void Trade_Leave(Player Player)
+    private static void Trade_Leave(Objects.Player Player)
     {
         Player.Trade_Leave();
     }
 
-    private static void Trade_Offer(Player Player, NetIncomingMessage Data)
+    private static void Trade_Offer(Objects.Player Player, NetIncomingMessage Data)
     {
         byte Slot = Data.ReadByte(), Inventory_Slot = Data.ReadByte();
         short Amount = System.Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
@@ -1211,10 +1226,10 @@ class Receive
         Send.Trade_Offer(Player.Trade, false);
     }
 
-    private static void Trade_Offer_State(Player Player, NetIncomingMessage Data)
+    private static void Trade_Offer_State(Objects.Player Player, NetIncomingMessage Data)
     {
         Game.Trade_Status State = (Game.Trade_Status)Data.ReadByte();
-        Player Invited = Player.Trade;
+        Objects.Player Invited = Player.Trade;
 
         switch (State)
         {
@@ -1239,7 +1254,7 @@ class Receive
                     Their_Inventory = (Lists.Structures.Inventories[])Invited.Inventory.Clone();
 
                 // Remove os itens do inventário dos jogadores
-                Player To = Player;
+                Objects.Player To = Player;
                 for (byte j = 0; j < 2; j++, To = To == Player ? Invited : Player)
                     for (byte i = 1; i <= Game.Max_Inventory; i++)
                         To.TakeItem((byte)To.Trade_Offer[i].Slot_Num, To.Trade_Offer[i].Amount);
@@ -1273,7 +1288,7 @@ class Receive
         Send.Trade_State(Invited, State);
     }
 
-    private static void Shop_Buy(Player Player, NetIncomingMessage Data)
+    private static void Shop_Buy(Objects.Player Player, NetIncomingMessage Data)
     {
         Objects.Shop_Item Shop_Sold = Player.Shop.Sold[Data.ReadByte()];
         byte Inventory_Slot = Player.FindInventory(Player.Shop.Currency);
@@ -1297,7 +1312,7 @@ class Receive
         Send.Message(Player, "You bought " + Shop_Sold.Price + "x " + Shop_Sold.Item.Name + ".", System.Drawing.Color.Green);
     }
 
-    private static void Shop_Sell(Player Player, NetIncomingMessage Data)
+    private static void Shop_Sell(Objects.Player Player, NetIncomingMessage Data)
     {
         byte Inventory_Slot = Data.ReadByte();
         short Amount = Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
@@ -1322,12 +1337,12 @@ class Receive
         Player.GiveItem(Player.Shop.Currency, (short)(Buy.Price * Amount));
     }
 
-    private static void Shop_Close(Player Player)
+    private static void Shop_Close(Objects.Player Player)
     {
         Player.Shop = null;
     }
 
-    private static void Warp(Player Player, NetIncomingMessage Data)
+    private static void Warp(Objects.Player Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (Player.Account.Acess < Game.Accesses.Editor)
@@ -1336,7 +1351,7 @@ class Receive
             return;
         }
 
-        // Teletransporta o jogador para o mapa
-        Player.Warp(Data.ReadInt16(), Data.ReadByte(), Data.ReadByte());
+        // Teletransporta o jogador para o mapa TODO
+        //   Player.Warp(Data.ReadInt16(), Data.ReadByte(), Data.ReadByte());
     }
 }

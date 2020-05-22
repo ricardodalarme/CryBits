@@ -232,15 +232,15 @@
   <data name="butCut.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH4SURBVDhPrU5PSJNhHH79PCphhGh9iiB9jGGydYklNZmb
-        6JqB+4pGrtMgvChUQqw39QsSFRTcQaRGJ/WgyIgOEf2jMdQQoV122iFYCQNXnru0t9/zvp+yYkmHHnh4
-        9/z77WP/BaZpXg2Hwy5bHgv00LelQiwW42AoFDr2CPLDrm0pGIbBs9msiEaj3OfzVT0CHzl66Nv2EVww
-        c7mcoE/kbrf7tyPQ8JHb46p/4nI4HDyfz4tgMMipKEt4oeEjRw/+3yCPFAoF4fV6ua7r1/FC/8tYobHD
-        5XQ6ebFYFIFA4E06nRbQ8O1GFdxarmPm2iC7tv6YmetPWPdEqq1neLdUKon6gYVdNrCUkr7MqYf+EXpJ
-        DC4/8ExmMvdTe98t61l59u2BuJPcFLX+uQP8BuEjRw99uZO4krzhib/7iJJxe+VTTd/8+6lX+0LrmUnX
-        +qcTeKHhN0WS29Ovvwn0sVMH/InFyvH48y9Cu2RltMuPIojxQsM/PMJXvv7ATu6ZZ+LluJUoI5x8sSe0
-        C/Et7eLDmypUgIYf3/gsj3SvffiJnUo7Rp52jawW8RU158d22NnIkAr+APnI49Z8GX3sVFCn+9i50STr
-        HN1mrX33yOkkGsQ2ok5sIbYTnay1/67soY+djTMVPE1sIp4iNhBP2DxJbCQ2Eyv6jP0CymjvzRjFTmYA
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH4SURBVDhPrU5fSFNRHD5eH40wQqyuIkSXMUy2XmKFTuYW
+        tmbgbtGo+TSIXhTSQOZJvUGholE+ROh91B6UGNFDRP9ojDJCcC972kOwEgatfPbFnX7fOVeZssQHP/g4
+        +/79dtmhwDTNq9Fo1OPIfYEe+o5USCQSHIxEIvseQb7ddSwFwzB4NpsV8XicBwKBqkfgI0cPfcfegQdm
+        LpcT9Inc6/XuOgINH7kzrvonHpfLxfP5vAiHw5yKsoQXGj5y9OD/D/JIoVAQfr+f67p+HS/0QcYKDa0e
+        t9vNi8WiCIVC79PptICG7zSqoG+hjplLveza8kNmLs+xzrFUS9ed1VKpJI70PF1lPc9T0pc59dDfwSUS
+        vQsjvvFMZji1/tey7PLUhw1x1/4iaoMzG/gNwkeOHvpyJ3HFvuFLfvyGknF7ca2m+/GnR29/C61rMl0b
+        nJjFCw2/MWavTLz7I9DHTh0Izj6rHI+++im0diujdTyIIcYLDX/7CF/8tYmd3DPf2JtR60kZ4fjrdaGd
+        T37VLty/qUIFaPjJlz/kkc6lz1vYqbS1f/5i/4sivqLm3L3v7Ezslgr2gHzkSWu6jD52KqjTA+zsgM3a
+        BlZYc/cQOW1Eg9hC1IlNxNNEN2u+PCh76GPn4FQFTxIbiceJ9cSjDo8RG4gniBV9xv4BwK7vxbIZgUQA
         AAAASUVORK5CYII=
 </value>
   </data>
@@ -449,6 +449,9 @@
   </data>
   <metadata name="Strip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>108, 17</value>
+  </metadata>
+  <metadata name="Faixa_Camadas.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>412, 17</value>
   </metadata>
   <metadata name="Faixa_Camadas.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>412, 17</value>

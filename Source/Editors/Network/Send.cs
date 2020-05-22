@@ -57,13 +57,13 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Request_Map(short Map_Num)
+    public static void Request_Map(Lists.Structures.Map Map)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Packets.Request_Map);
-        Data.Write(Map_Num);
+        Data.Write(Map.ID.ToString());
         Packet(Data);
     }
 
@@ -138,7 +138,7 @@ partial class Send
             Data.Write(Class.Description);
             for (byte i = 0; i < Class.Tex_Male.Count; i++) Data.Write(Class.Tex_Male[i]);
             for (byte i = 0; i < Class.Tex_Female.Count; i++) Data.Write(Class.Tex_Female[i]);
-            Data.Write(Class.Spawn_Map);
+            Data.Write(Lists.GetID(Class.Spawn_Map));
             Data.Write(Class.Spawn_Direction);
             Data.Write(Class.Spawn_X);
             Data.Write(Class.Spawn_Y);
@@ -159,85 +159,87 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Write_Maps);
-        Data.Write((short)Lists.Map.Length);
-        for (short Index = 1; Index < Lists.Map.Length; Index++)
+        Data.Write((byte)Lists.Map.Count);
+        foreach (Lists.Structures.Map Map in Lists.Map.Values)
         {
-            Data.Write((short)(Lists.Map[Index].Revision + 1));
-            Data.Write(Lists.Map[Index].Name);
-            Data.Write(Lists.Map[Index].Width);
-            Data.Write(Lists.Map[Index].Height);
-            Data.Write(Lists.Map[Index].Moral);
-            Data.Write(Lists.Map[Index].Panorama);
-            Data.Write(Lists.Map[Index].Music);
-            Data.Write(Lists.Map[Index].Color);
-            Data.Write(Lists.Map[Index].Weather.Type);
-            Data.Write(Lists.Map[Index].Weather.Intensity);
-            Data.Write(Lists.Map[Index].Fog.Texture);
-            Data.Write(Lists.Map[Index].Fog.Speed_X);
-            Data.Write(Lists.Map[Index].Fog.Speed_Y);
-            Data.Write(Lists.Map[Index].Fog.Alpha);
-            Data.Write(Lists.Map[Index].Light_Global);
-            Data.Write(Lists.Map[Index].Lighting);
+            // Escreve os dados
+            Data.Write(Map.ID.ToString());
+            Data.Write((short)(Map.Revision + 1));
+            Data.Write(Map.Name);
+            Data.Write(Map.Width);
+            Data.Write(Map.Height);
+            Data.Write(Map.Moral);
+            Data.Write(Map.Panorama);
+            Data.Write(Map.Music);
+            Data.Write(Map.Color);
+            Data.Write(Map.Weather.Type);
+            Data.Write(Map.Weather.Intensity);
+            Data.Write(Map.Fog.Texture);
+            Data.Write(Map.Fog.Speed_X);
+            Data.Write(Map.Fog.Speed_Y);
+            Data.Write(Map.Fog.Alpha);
+            Data.Write(Map.Light_Global);
+            Data.Write(Map.Lighting);
 
             // Ligações
             for (short i = 0; i < (short)Globals.Directions.Count; i++)
-                Data.Write(Lists.Map[Index].Link[i]);
+                Data.Write(Lists.GetID(Map.Link[i]));
 
             // Camadas
-            Data.Write((byte)(Lists.Map[Index].Layer.Count - 1));
-            for (byte i = 0; i < Lists.Map[Index].Layer.Count; i++)
+            Data.Write((byte)(Map.Layer.Count - 1));
+            for (byte i = 0; i < Map.Layer.Count; i++)
             {
-                Data.Write(Lists.Map[Index].Layer[i].Name);
-                Data.Write(Lists.Map[Index].Layer[i].Type);
+                Data.Write(Map.Layer[i].Name);
+                Data.Write(Map.Layer[i].Type);
 
                 // Azulejos
-                for (byte x = 0; x <= Lists.Map[Index].Width; x++)
-                    for (byte y = 0; y <= Lists.Map[Index].Height; y++)
+                for (byte x = 0; x <= Map.Width; x++)
+                    for (byte y = 0; y <= Map.Height; y++)
                     {
-                        Data.Write(Lists.Map[Index].Layer[i].Tile[x, y].X);
-                        Data.Write(Lists.Map[Index].Layer[i].Tile[x, y].Y);
-                        Data.Write(Lists.Map[Index].Layer[i].Tile[x, y].Tile);
-                        Data.Write(Lists.Map[Index].Layer[i].Tile[x, y].Auto);
+                        Data.Write(Map.Layer[i].Tile[x, y].X);
+                        Data.Write(Map.Layer[i].Tile[x, y].Y);
+                        Data.Write(Map.Layer[i].Tile[x, y].Tile);
+                        Data.Write(Map.Layer[i].Tile[x, y].Auto);
                     }
             }
 
 
             // Dados específicos dos azulejos
-            for (byte x = 0; x <= Lists.Map[Index].Width; x++)
-                for (byte y = 0; y <= Lists.Map[Index].Height; y++)
+            for (byte x = 0; x <= Map.Width; x++)
+                for (byte y = 0; y <= Map.Height; y++)
                 {
-                    Data.Write(Lists.Map[Index].Tile[x, y].Attribute);
-                    Data.Write(Lists.Map[Index].Tile[x, y].Data_1);
-                    Data.Write(Lists.Map[Index].Tile[x, y].Data_2);
-                    Data.Write(Lists.Map[Index].Tile[x, y].Data_3);
-                    Data.Write(Lists.Map[Index].Tile[x, y].Data_4);
-                    Data.Write(Lists.Map[Index].Tile[x, y].Data_5);
-                    Data.Write(Lists.Map[Index].Tile[x, y].Zone);
+                    Data.Write(Map.Tile[x, y].Attribute);
+                    Data.Write(Map.Tile[x, y].Data_1);
+                    Data.Write(Map.Tile[x, y].Data_2);
+                    Data.Write(Map.Tile[x, y].Data_3);
+                    Data.Write(Map.Tile[x, y].Data_4);
+                    Data.Write(Map.Tile[x, y].Data_5);
+                    Data.Write(Map.Tile[x, y].Zone);
 
                     // Bloqueio direcional
                     for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
-                        Data.Write(Lists.Map[Index].Tile[x, y].Block[i]);
+                        Data.Write(Map.Tile[x, y].Block[i]);
                 }
 
             // Luzes
-            Data.Write((byte)Lists.Map[Index].Light.Count);
-            for (byte i = 0; i < Lists.Map[Index].Light.Count; i++)
+            Data.Write((byte)Map.Light.Count);
+            for (byte i = 0; i < Map.Light.Count; i++)
             {
-                Data.Write(Lists.Map[Index].Light[i].X);
-                Data.Write(Lists.Map[Index].Light[i].Y);
-                Data.Write(Lists.Map[Index].Light[i].Width);
-                Data.Write(Lists.Map[Index].Light[i].Height);
+                Data.Write(Map.Light[i].X);
+                Data.Write(Map.Light[i].Y);
+                Data.Write(Map.Light[i].Width);
+                Data.Write(Map.Light[i].Height);
             }
 
             // NPCs
-            Data.Write((byte)Lists.Map[Index].NPC.Count);
-            for (byte i = 0; i < Lists.Map[Index].NPC.Count; i++)
+            Data.Write((byte)Map.NPC.Count);
+            for (byte i = 0; i < Map.NPC.Count; i++)
             {
-                Data.Write(Lists.GetID(Lists.Map[Index].NPC[i].NPC));
-                Data.Write(Lists.Map[Index].NPC[i].Zone);
-                Data.Write(Lists.Map[Index].NPC[i].Spawn);
-                Data.Write(Lists.Map[Index].NPC[i].X);
-                Data.Write(Lists.Map[Index].NPC[i].Y);
+                Data.Write(Lists.GetID(Map.NPC[i].NPC));
+                Data.Write(Map.NPC[i].Zone);
+                Data.Write(Map.NPC[i].Spawn);
+                Data.Write(Map.NPC[i].X);
+                Data.Write(Map.NPC[i].Y);
             }
         }
         Packet(Data);

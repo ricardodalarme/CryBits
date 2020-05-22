@@ -9,7 +9,7 @@ namespace Objects
         public string Description;
         public short[] Tex_Male = Array.Empty<short>();
         public short[] Tex_Female = Array.Empty<short>();
-        public short Spawn_Map = 1;
+        public Map Spawn_Map;
         public byte Spawn_Direction;
         public byte Spawn_X;
         public byte Spawn_Y;

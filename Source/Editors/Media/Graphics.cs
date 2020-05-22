@@ -369,38 +369,36 @@ partial class Graphics
 
     private static void Editor_Maps_Map()
     {
-        short Index = Editor_Maps.Selected;
-
         // Previne erros
         if (!Editor_Maps.Objects.Visible) return;
-        if (Lists.Map.GetUpperBound(0) <= 0) return;
+        if (Editor_Maps.Selected == null) return;
 
         // Limpa a área com um fundo preto
         Win_Map.Clear(SFML.Graphics.Color.Black);
 
         // Desenha o mapa
-        Editor_Maps_Map_Panorama(Index);
-        Editor_Maps_Map_Tiles(Index);
-        Editor_Maps_Map_Weather(Index);
-        Editor_Maps_Map_Light(Index);
-        Editor_Maps_Map_Fog(Index);
-        Editor_Maps_Map_Grids(Index);
-        Editor_Maps_Map_NPCs(Index);
+        Editor_Maps_Map_Panorama(Editor_Maps.Selected);
+        Editor_Maps_Map_Tiles(Editor_Maps.Selected);
+        Editor_Maps_Map_Weather(Editor_Maps.Selected);
+        Editor_Maps_Map_Light(Editor_Maps.Selected);
+        Editor_Maps_Map_Fog(Editor_Maps.Selected);
+        Editor_Maps_Map_Grids(Editor_Maps.Selected);
+        Editor_Maps_Map_NPCs(Editor_Maps.Selected);
 
         // Exibe o que foi renderizado
         Win_Map.Display();
     }
 
-    private static void Editor_Maps_Map_Panorama(short Index)
+    private static void Editor_Maps_Map_Panorama(Lists.Structures.Map Map)
     {
-        short Texture = Lists.Map[Index].Panorama;
+        short Texture = Map.Panorama;
         Size Size = TSize(Tex_Panorama[Texture]);
 
         // Limitações
         Size TempSize = new Size
         {
-            Width = (Lists.Map[Index].Width + 1 - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom,
-            Height = (Lists.Map[Index].Height + 1 - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom
+            Width = (Map.Width + 1 - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom,
+            Height = (Map.Height + 1 - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom
         };
 
         // Não permite que o tamanho ultrapasse a tela de jogo
@@ -408,14 +406,13 @@ partial class Graphics
         if (Size.Height > TempSize.Height) Size.Height = TempSize.Height;
 
         // Desenha o panorama
-        if (Editor_Maps.Objects.butVisualization.Checked && Lists.Map[Index].Panorama > 0)
+        if (Editor_Maps.Objects.butVisualization.Checked && Map.Panorama > 0)
             Render(Win_Map, Tex_Panorama[Texture], Editor_Maps.Zoom(new Rectangle(new Point(0), Size)));
     }
 
-    private static void Editor_Maps_Map_Tiles(short Index)
+    private static void Editor_Maps_Map_Tiles(Lists.Structures.Map Map)
     {
         Editor_Maps Objects = Editor_Maps.Objects;
-        Lists.Structures.Map Map = Lists.Map[Index];
         Lists.Structures.Map_Tile_Data Data;
         int Begin_X = Objects.scrlMapX.Value, Begin_Y = Objects.scrlMapY.Value;
         SFML.Graphics.Color Color; System.Drawing.Color TempCor = System.Drawing.Color.FromArgb(Map.Color);
@@ -476,9 +473,9 @@ partial class Graphics
         }
     }
 
-    private static void Editor_Maps_Map_Fog(short Index)
+    private static void Editor_Maps_Map_Fog(Lists.Structures.Map Map)
     {
-        Lists.Structures.Map_Fog Data = Lists.Map[Index].Fog;
+        Lists.Structures.Map_Fog Data = Map.Fog;
         Point Position;
 
         // Somente se necessário
@@ -496,14 +493,14 @@ partial class Graphics
             }
     }
 
-    private static void Editor_Maps_Map_Weather(short Index)
+    private static void Editor_Maps_Map_Weather(Lists.Structures.Map Map)
     {
         // Somente se necessário
-        if (!Editor_Maps.Objects.butVisualization.Checked || Lists.Map[Index].Weather.Type == (byte)Globals.Weathers.Normal) return;
+        if (!Editor_Maps.Objects.butVisualization.Checked || Map.Weather.Type == (byte)Globals.Weathers.Normal) return;
 
         // Dados
         byte x = 0;
-        if (Lists.Map[Index].Weather.Type == (byte)Globals.Weathers.Snowing) x = 32;
+        if (Map.Weather.Type == (byte)Globals.Weathers.Snowing) x = 32;
 
         // Desenha as partículas
         for (int i = 1; i < Lists.Weather.Length; i++)
@@ -511,12 +508,12 @@ partial class Graphics
                 Render(Win_Map, Tex_Weather, new Rectangle(x, 0, 32, 32), Editor_Maps.Zoom(new Rectangle(Lists.Weather[i].x, Lists.Weather[i].y, 32, 32)), CColor(255, 255, 255, 150));
     }
 
-    private static void Editor_Maps_Map_Light(short Index)
+    private static void Editor_Maps_Map_Light(Lists.Structures.Map Map)
     {
         Editor_Maps Objects = Editor_Maps.Objects;
-        byte GlobalLight_Tex = Lists.Map[Index].Light_Global;
+        byte GlobalLight_Tex = Map.Light_Global;
         Point Begin = Globals.Zoom(Editor_Maps.Objects.scrlMapX.Value, Editor_Maps.Objects.scrlMapY.Value);
-        byte Light = (byte)((255 * ((decimal)Lists.Map[Index].Lighting / 100) - 255) * -1);
+        byte Light = (byte)((255 * ((decimal)Map.Lighting / 100) - 255) * -1);
 
         // Somente se necessário
         if (!Editor_Maps.Objects.butVisualization.Checked) return;
@@ -525,9 +522,9 @@ partial class Graphics
         Win_Map_Lighting.Clear(CColor(0, 0, 0, Light));
 
         // Desenha o ponto iluminado
-        if (Lists.Map[Index].Light.Count > 0)
-            for (byte i = 0; i < Lists.Map[Index].Light.Count; i++)
-                Render(Win_Map_Lighting, Tex_Lighting, Editor_Maps.Zoom_Grid(Lists.Map[Index].Light[i].Rec), null, new RenderStates(BlendMode.Multiply));
+        if (Map.Light.Count > 0)
+            for (byte i = 0; i < Map.Light.Count; i++)
+                Render(Win_Map_Lighting, Tex_Lighting, Editor_Maps.Zoom_Grid(Map.Light[i].Rec), null, new RenderStates(BlendMode.Multiply));
 
         // Pré visualização
         if (Editor_Maps.Objects.butMLighting.Checked)
@@ -543,16 +540,16 @@ partial class Graphics
 
         // Ponto de remoção da luz
         if (Objects.butMLighting.Checked)
-            if (Lists.Map[Index].Light.Count > 0)
-                for (byte i = 0; i < Lists.Map[Index].Light.Count; i++)
-                    RenderRectangle(Win_Map, Lists.Map[Index].Light[i].Rec.X * Globals.Grid_Zoom, Lists.Map[Index].Light[i].Rec.Y * Globals.Grid_Zoom, Globals.Grid_Zoom, Globals.Grid_Zoom, CColor(175, 42, 42, 175));
+            if (Map.Light.Count > 0)
+                for (byte i = 0; i < Map.Light.Count; i++)
+                    RenderRectangle(Win_Map, Map.Light[i].Rec.X * Globals.Grid_Zoom, Map.Light[i].Rec.Y * Globals.Grid_Zoom, Globals.Grid_Zoom, Globals.Grid_Zoom, CColor(175, 42, 42, 175));
 
         // Trovoadas
-        Size Size = new Size(Editor_Maps.Zoom((Lists.Map[Index].Width + 1) * Globals.Grid), Editor_Maps.Zoom((Lists.Map[Index].Height + 1) * Globals.Grid));
+        Size Size = new Size(Editor_Maps.Zoom((Map.Width + 1) * Globals.Grid), Editor_Maps.Zoom((Map.Height + 1) * Globals.Grid));
         Render(Win_Map, Tex_Blank, 0, 0, 0, 0, Size.Width, Size.Height, CColor(255, 255, 255, Globals.Lightning));
     }
 
-    private static void Editor_Maps_Map_Grids(short Index)
+    private static void Editor_Maps_Map_Grids(Lists.Structures.Map Map)
     {
         Editor_Maps Objects = Editor_Maps.Objects;
         Rectangle Source = Editor_Maps.Tile_Source, Destiny = new Rectangle();
@@ -568,9 +565,9 @@ partial class Graphics
                 for (byte y = 0; y <= Editor_Maps.Map_Size.Height; y++)
                 {
                     RenderRectangle(Win_Map, x * Globals.Grid_Zoom, y * Globals.Grid_Zoom, Globals.Grid_Zoom, Globals.Grid_Zoom, CColor(25, 25, 25, 70));
-                    Editor_Maps_Map_Zones(Index, x, y);
-                    Editor_Maps_Map_Attributes(Index, x, y);
-                    Editor_Maps_Map_DirBlock(Index, x, y);
+                    Editor_Maps_Map_Zones(Map, x, y);
+                    Editor_Maps_Map_Attributes(Map, x, y);
+                    Editor_Maps_Map_DirBlock(Map, x, y);
                 }
 
         if (!Objects.chkAuto.Checked && Objects.butMNormal.Checked)
@@ -588,10 +585,10 @@ partial class Graphics
             RenderRectangle(Win_Map, Destiny.X, Destiny.Y, Editor_Maps.Map_Selection.Width * Globals.Grid_Zoom, Editor_Maps.Map_Selection.Height * Globals.Grid_Zoom);
     }
 
-    private static void Editor_Maps_Map_Zones(short Index, byte x, byte y)
+    private static void Editor_Maps_Map_Zones(Lists.Structures.Map Map, byte x, byte y)
     {
         Point Position = new Point((x - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom);
-        byte Zone_Num = Lists.Map[Index].Tile[x, y].Zone;
+        byte Zone_Num = Map.Tile[x, y].Zone;
         SFML.Graphics.Color Color;
 
         // Apenas se necessário
@@ -609,10 +606,10 @@ partial class Graphics
         DrawText(Win_Map, Zone_Num.ToString(), Position.X, Position.Y, SFML.Graphics.Color.White);
     }
 
-    private static void Editor_Maps_Map_Attributes(short Index, byte x, byte y)
+    private static void Editor_Maps_Map_Attributes(Lists.Structures.Map Map, byte x, byte y)
     {
         Point Position = new Point((x - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom);
-        Globals.Tile_Attributes Attribute = (Globals.Tile_Attributes)Lists.Map[Index].Tile[x, y].Attribute;
+        Globals.Tile_Attributes Attribute = (Globals.Tile_Attributes)Map.Tile[x, y].Attribute;
         SFML.Graphics.Color Color;
         string Letter;
 
@@ -636,7 +633,7 @@ partial class Graphics
         DrawText(Win_Map, Letter, Position.X, Position.Y, SFML.Graphics.Color.White);
     }
 
-    private static void Editor_Maps_Map_DirBlock(short Index, byte x, byte y)
+    private static void Editor_Maps_Map_DirBlock(Lists.Structures.Map Map, byte x, byte y)
     {
         Point Tile = new Point(Editor_Maps.Objects.scrlMapX.Value + x, Editor_Maps.Objects.scrlMapY.Value + y);
         byte Y;
@@ -646,13 +643,13 @@ partial class Graphics
         if (!Editor_Maps.Objects.optA_DirBlock.Checked) return;
 
         // Previne erros
-        if (Tile.X > Lists.Map[Index].Tile.GetUpperBound(0)) return;
-        if (Tile.Y > Lists.Map[Index].Tile.GetUpperBound(1)) return;
+        if (Tile.X > Map.Tile.GetUpperBound(0)) return;
+        if (Tile.Y > Map.Tile.GetUpperBound(1)) return;
 
         for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
         {
             // Estado do bloqueio
-            if (Lists.Map[Index].Tile[Tile.X, Tile.Y].Block[i])
+            if (Map.Tile[Tile.X, Tile.Y].Block[i])
                 Y = 8;
             else
                 Y = 0;
@@ -662,13 +659,13 @@ partial class Graphics
         }
     }
 
-    private static void Editor_Maps_Map_NPCs(short Index)
+    private static void Editor_Maps_Map_NPCs(Lists.Structures.Map Map)
     {
         if (Editor_Maps.Objects.butMNPCs.Checked)
-            for (byte i = 0; i < Lists.Map[Index].NPC.Count; i++)
-                if (Lists.Map[Index].NPC[i].Spawn)
+            for (byte i = 0; i < Map.NPC.Count; i++)
+                if (Map.NPC[i].Spawn)
                 {
-                    Point Position = new Point((Lists.Map[Index].NPC[i].X - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom, (Lists.Map[Index].NPC[i].Y - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom);
+                    Point Position = new Point((Map.NPC[i].X - Editor_Maps.Objects.scrlMapX.Value) * Globals.Grid_Zoom, (Map.NPC[i].Y - Editor_Maps.Objects.scrlMapY.Value) * Globals.Grid_Zoom);
 
                     // Desenha uma sinalização de onde os NPCs estão
                     Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Globals.Grid_Zoom, Globals.Grid_Zoom)), CColor(0, 220, 0, 150));

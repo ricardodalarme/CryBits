@@ -72,7 +72,7 @@ class Send
         Socket.Device.SendMessage(Data_Send, Account.Connection, NetDeliveryMethod.ReliableOrdered);
     }
 
-    private static void ToPlayer(Player Player, NetOutgoingMessage Data)
+    private static void ToPlayer(Objects.Player Player, NetOutgoingMessage Data)
     {
         ToPlayer(Player.Account, Data);
     }
@@ -85,7 +85,7 @@ class Send
                 ToPlayer(Lists.Account[i].Character, Data);
     }
 
-    private static void ToAllBut(Player Player, NetOutgoingMessage Data)
+    private static void ToAllBut(Objects.Player Player, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 0; i < Lists.Account.Count; i++)
@@ -94,21 +94,21 @@ class Send
                     ToPlayer(Lists.Account[i].Character, Data);
     }
 
-    private static void ToMap(short Map_Num, NetOutgoingMessage Data)
+    private static void ToMap(Objects.TMap Map, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
-                if (Lists.Account[i].Character.Map_Num == Map_Num)
+                if (Lists.Account[i].Character.Map == Map)
                     ToPlayer(Lists.Account[i].Character, Data);
     }
 
-    private static void ToMapBut(short Map_Num, Player Player, NetOutgoingMessage Data)
+    private static void ToMapBut(Objects.TMap Map, Objects.Player Player, NetOutgoingMessage Data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
-                if (Lists.Account[i].Character.Map_Num == Map_Num)
+                if (Lists.Account[i].Character.Map == Map)
                     if (Player != Lists.Account[i].Character)
                         ToPlayer(Lists.Account[i].Character, Data);
     }
@@ -146,7 +146,7 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void Join(Player Player)
+    public static void Join(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -197,7 +197,7 @@ class Send
             // Apenas dados do editor
             if (Account.InEditor)
             {
-                Data.Write(Class.Spawn_Map);
+                Data.Write(Lists.GetID(Class.Spawn_Map));
                 Data.Write(Class.Spawn_Direction);
                 Data.Write(Class.Spawn_X);
                 Data.Write(Class.Spawn_Y);
@@ -216,7 +216,7 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void JoinGame(Player Player)
+    public static void JoinGame(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -225,7 +225,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static NetOutgoingMessage Player_Data_Cache(Player Player)
+    public static NetOutgoingMessage Player_Data_Cache(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -234,7 +234,7 @@ class Send
         Data.Write(Player.Name);
         Data.Write(Player.Texture_Num);
         Data.Write(Player.Level);
-        Data.Write(Player.Map_Num);
+        Data.Write(Lists.GetID(Player.Map));
         Data.Write(Player.X);
         Data.Write(Player.Y);
         Data.Write((byte)Player.Direction);
@@ -249,7 +249,7 @@ class Send
         return Data;
     }
 
-    public static void Player_Position(Player Player)
+    public static void Player_Position(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -259,10 +259,10 @@ class Send
         Data.Write(Player.X);
         Data.Write(Player.Y);
         Data.Write((byte)Player.Direction);
-        ToMap(Player.Map_Num, Data);
+        ToMap(Player.Map, Data);
     }
 
-    public static void Player_Vitals(Player Player)
+    public static void Player_Vitals(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -275,10 +275,10 @@ class Send
             Data.Write(Player.MaxVital(i));
         }
 
-        ToMap(Player.Map_Num, Data);
+        ToMap(Player.Map, Data);
     }
 
-    public static void Player_Leave(Player Player)
+    public static void Player_Leave(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -288,7 +288,7 @@ class Send
         ToAllBut(Player, Data);
     }
 
-    public static void Player_Move(Player Player, byte Movement)
+    public static void Player_Move(Objects.Player Player, byte Movement)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -299,10 +299,10 @@ class Send
         Data.Write(Player.Y);
         Data.Write((byte)Player.Direction);
         Data.Write(Movement);
-        ToMapBut(Player.Map_Num, Player, Data);
+        ToMapBut(Player.Map, Player, Data);
     }
 
-    public static void Player_Direction(Player Player)
+    public static void Player_Direction(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -310,10 +310,10 @@ class Send
         Data.Write((byte)Client_Packets.Player_Direction);
         Data.Write(Player.Name);
         Data.Write((byte)Player.Direction);
-        ToMapBut(Player.Map_Num, Player, Data);
+        ToMapBut(Player.Map, Player, Data);
     }
 
-    public static void Player_Experience(Player Player)
+    public static void Player_Experience(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -325,7 +325,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Player_Equipments(Player Player)
+    public static void Player_Equipments(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -333,23 +333,23 @@ class Send
         Data.Write((byte)Client_Packets.Player_Equipments);
         Data.Write(Player.Name);
         for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Data.Write(Lists.GetID(Player.Equipment[i]));
-        ToMap(Player.Map_Num, Data);
+        ToMap(Player.Map, Data);
     }
 
-    public static void Map_Players(Player Player)
+    public static void Map_Players(Objects.Player Player)
     {
         // Envia os dados dos outros jogadores 
         for (byte i = 0; i < Lists.Account.Count; i++)
             if (Lists.Account[i].IsPlaying)
                 if (Player != Lists.Account[i].Character)
-                    if (Lists.Account[i].Character.Map_Num == Player.Map_Num)
+                    if (Lists.Account[i].Character.Map == Player.Map)
                         ToPlayer(Player, Player_Data_Cache(Lists.Account[i].Character));
 
         // Envia os dados do jogador
-        ToMap(Player.Map_Num, Player_Data_Cache(Player));
+        ToMap(Player.Map, Player_Data_Cache(Player));
     }
 
-    public static void JoinMap(Player Player)
+    public static void JoinMap(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -358,7 +358,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Player_LeaveMap(Player Player, short Map)
+    public static void Player_LeaveMap(Objects.Player Player, Objects.TMap Map)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -368,111 +368,111 @@ class Send
         ToMapBut(Map, Player, Data);
     }
 
-    public static void Map_Revision(Player Player, short Map)
+    public static void Map_Revision(Objects.Player Player, Objects.Map Map)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_Revision);
-        Data.Write(Map);
-        Data.Write(Lists.Map[Map].Revision);
+        Data.Write(Lists.GetID(Map));
+        Data.Write(Map.Revision);
         ToPlayer(Player, Data);
     }
 
-    public static void Maps(Account.Structure Account, bool OpenEditor = false)
+    public static void Maps(Account.Structure Account)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Editor_Packets.Maps);
-        Data.Write((short)Lists.Map.Length);
+        Data.Write((short)Lists.Map.Count);
         ToPlayer(Account, Data);
-        for (short i = 1; i < Lists.Map.Length; i++) Map(Account, i);
+        foreach(Objects.Map Map in Lists.Map.Values) Send.Map(Account, Map);
     }
 
-    public static void Map(Account.Structure Account, short Map_Num)
+    public static void Map(Account.Structure Account, Objects.Map Map)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         if (Account.InEditor) Data.Write((byte)Editor_Packets.Map);
         else Data.Write((byte)Client_Packets.Map);
-        Data.Write(Map_Num);
-        Data.Write(Lists.Map[Map_Num].Revision);
-        Data.Write(Lists.Map[Map_Num].Name);
-        Data.Write(Lists.Map[Map_Num].Width);
-        Data.Write(Lists.Map[Map_Num].Height);
-        Data.Write(Lists.Map[Map_Num].Moral);
-        Data.Write(Lists.Map[Map_Num].Panorama);
-        Data.Write(Lists.Map[Map_Num].Music);
-        Data.Write(Lists.Map[Map_Num].Color);
-        Data.Write(Lists.Map[Map_Num].Weather.Type);
-        Data.Write(Lists.Map[Map_Num].Weather.Intensity);
-        Data.Write(Lists.Map[Map_Num].Fog.Texture);
-        Data.Write(Lists.Map[Map_Num].Fog.Speed_X);
-        Data.Write(Lists.Map[Map_Num].Fog.Speed_Y);
-        Data.Write(Lists.Map[Map_Num].Fog.Alpha);
-        Data.Write(Lists.Map[Map_Num].Light_Global);
-        Data.Write(Lists.Map[Map_Num].Lighting);
+        Data.Write(Lists.GetID(Map));
+        Data.Write(Map.Revision);
+        Data.Write(Map.Name);
+        Data.Write(Map.Width);
+        Data.Write(Map.Height);
+        Data.Write(Map.Moral);
+        Data.Write(Map.Panorama);
+        Data.Write(Map.Music);
+        Data.Write(Map.Color);
+        Data.Write(Map.Weather.Type);
+        Data.Write(Map.Weather.Intensity);
+        Data.Write(Map.Fog.Texture);
+        Data.Write(Map.Fog.Speed_X);
+        Data.Write(Map.Fog.Speed_Y);
+        Data.Write(Map.Fog.Alpha);
+        Data.Write(Map.Light_Global);
+        Data.Write(Map.Lighting);
 
         // Ligações
         for (short i = 0; i < (short)Game.Directions.Count; i++)
-            Data.Write(Lists.Map[Map_Num].Link[i]);
+            Data.Write(Lists.GetID(Map.Link[i]));
 
         // Camadas
-        Data.Write((byte)(Lists.Map[Map_Num].Layer.Count - 1));
-        for (byte i = 0; i < Lists.Map[Map_Num].Layer.Count; i++)
+        Data.Write((byte)(Map.Layer.Count - 1));
+        for (byte i = 0; i < Map.Layer.Count; i++)
         {
-            Data.Write(Lists.Map[Map_Num].Layer[i].Name);
-            Data.Write(Lists.Map[Map_Num].Layer[i].Type);
+            Data.Write(Map.Layer[i].Name);
+            Data.Write(Map.Layer[i].Type);
 
             // Azulejos
-            for (byte x = 0; x <= Lists.Map[Map_Num].Width; x++)
-                for (byte y = 0; y <= Lists.Map[Map_Num].Height; y++)
+            for (byte x = 0; x <= Map.Width; x++)
+                for (byte y = 0; y <= Map.Height; y++)
                 {
-                    Data.Write(Lists.Map[Map_Num].Layer[i].Tile[x, y].X);
-                    Data.Write(Lists.Map[Map_Num].Layer[i].Tile[x, y].Y);
-                    Data.Write(Lists.Map[Map_Num].Layer[i].Tile[x, y].Tile);
-                    Data.Write(Lists.Map[Map_Num].Layer[i].Tile[x, y].Auto);
+                    Data.Write(Map.Layer[i].Tile[x, y].X);
+                    Data.Write(Map.Layer[i].Tile[x, y].Y);
+                    Data.Write(Map.Layer[i].Tile[x, y].Tile);
+                    Data.Write(Map.Layer[i].Tile[x, y].Auto);
                 }
         }
 
         // Dados específicos dos azulejos
-        for (byte x = 0; x <= Lists.Map[Map_Num].Width; x++)
-            for (byte y = 0; y <= Lists.Map[Map_Num].Height; y++)
+        for (byte x = 0; x <= Map.Width; x++)
+            for (byte y = 0; y <= Map.Height; y++)
             {
-                Data.Write(Lists.Map[Map_Num].Tile[x, y].Attribute);
-                Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_1);
-                Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_2);
-                Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_3);
-                Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_4);
-                Data.Write(Lists.Map[Map_Num].Tile[x, y].Data_5);
-                Data.Write(Lists.Map[Map_Num].Tile[x, y].Zone);
+                Data.Write(Map.Tile[x, y].Attribute);
+                Data.Write(Map.Tile[x, y].Data_1);
+                Data.Write(Map.Tile[x, y].Data_2);
+                Data.Write(Map.Tile[x, y].Data_3);
+                Data.Write(Map.Tile[x, y].Data_4);
+                Data.Write(Map.Tile[x, y].Data_5);
+                Data.Write(Map.Tile[x, y].Zone);
 
                 // Bloqueio direcional
                 for (byte i = 0; i < (byte)Game.Directions.Count; i++)
-                    Data.Write(Lists.Map[Map_Num].Tile[x, y].Block[i]);
+                    Data.Write(Map.Tile[x, y].Block[i]);
             }
 
         // Luzes
-        Data.Write((byte)Lists.Map[Map_Num].Light.Length);
-        for (byte i = 0; i < Lists.Map[Map_Num].Light.Length; i++)
+        Data.Write((byte)Map.Light.Length);
+        for (byte i = 0; i < Map.Light.Length; i++)
         {
-            Data.Write(Lists.Map[Map_Num].Light[i].X);
-            Data.Write(Lists.Map[Map_Num].Light[i].Y);
-            Data.Write(Lists.Map[Map_Num].Light[i].Width);
-            Data.Write(Lists.Map[Map_Num].Light[i].Height);
+            Data.Write(Map.Light[i].X);
+            Data.Write(Map.Light[i].Y);
+            Data.Write(Map.Light[i].Width);
+            Data.Write(Map.Light[i].Height);
         }
 
         // NPCs
-        Data.Write((byte)Lists.Map[Map_Num].NPC.Length);
-        for (byte i = 0; i < Lists.Map[Map_Num].NPC.Length; i++)
+        Data.Write((byte)Map.NPC.Length);
+        for (byte i = 0; i < Map.NPC.Length; i++)
         {
-            Data.Write(Lists.GetID(Lists.Map[Map_Num].NPC[i].NPC));
-            Data.Write(Lists.Map[Map_Num].NPC[i].Zone);
-            Data.Write(Lists.Map[Map_Num].NPC[i].Spawn);
-            Data.Write(Lists.Map[Map_Num].NPC[i].X);
-            Data.Write(Lists.Map[Map_Num].NPC[i].Y);
+            Data.Write(Lists.GetID(Map.NPC[i].NPC));
+            Data.Write(Map.NPC[i].Zone);
+            Data.Write(Map.NPC[i].Spawn);
+            Data.Write(Map.NPC[i].X);
+            Data.Write(Map.NPC[i].Y);
         }
         ToPlayer(Account, Data);
     }
@@ -486,7 +486,7 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void Message(Player Player, string Text, Color Color)
+    public static void Message(Objects.Player Player, string Text, Color Color)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -497,7 +497,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Message_Map(Player Player, string Text)
+    public static void Message_Map(Objects.Player Player, string Text)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
         string Message = "[Map] " + Player.Name + ": " + Text;
@@ -506,10 +506,10 @@ class Send
         Data.Write((byte)Client_Packets.Message);
         Data.Write(Message);
         Data.Write(Color.White.ToArgb());
-        ToMap(Player.Map_Num, Data);
+        ToMap(Player.Map, Data);
     }
 
-    public static void Message_Global(Player Player, string Text)
+    public static void Message_Global(Objects.Player Player, string Text)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
         string Message = "[Global] " + Player.Name + ": " + Text;
@@ -521,9 +521,9 @@ class Send
         ToAll(Data);
     }
 
-    public static void Message_Private(Player Player, string Addressee_Name, string Texto)
+    public static void Message_Private(Objects.Player Player, string Addressee_Name, string Texto)
     {
-        Player Addressee = Account.FindPlayer(Addressee_Name);
+        Objects.Player Addressee = Account.FindPlayer(Addressee_Name);
 
         // Verifica se o jogador está conectado
         if (Addressee == null)
@@ -537,7 +537,7 @@ class Send
         Message(Addressee, "[From] " + Player.Name + ": " + Texto, Color.Pink);
     }
 
-    public static void Player_Attack(Player Player, string Victim = "", Game.Target Victim_Type = 0)
+    public static void Player_Attack(Objects.Player Player, string Victim = "", Game.Target Victim_Type = 0)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -546,7 +546,7 @@ class Send
         Data.Write(Player.Name);
         Data.Write(Victim);
         Data.Write((byte)Victim_Type);
-        ToMap(Player.Map_Num, Data);
+        ToMap(Player.Map, Data);
     }
 
     public static void Items(Account.Structure Account)
@@ -580,43 +580,43 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void Map_Items(Player Player, short Map_Num)
+    public static void Map_Items(Objects.Player Player, Objects.TMap Map)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_Items);
-        Data.Write((short)(Lists.Temp_Map[Map_Num].Item.Count - 1));
+        Data.Write((short)(Map.Item.Count - 1));
 
-        for (byte i = 1; i < Lists.Temp_Map[Map_Num].Item.Count; i++)
+        for (byte i = 0; i < Map.Item.Count; i++)
         {
             // Geral
-            Data.Write(Lists.GetID(Lists.Temp_Map[Map_Num].Item[i].Item));
-            Data.Write(Lists.Temp_Map[Map_Num].Item[i].X);
-            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Y);
+            Data.Write(Lists.GetID(Map.Item[i].Item));
+            Data.Write(Map.Item[i].X);
+            Data.Write(Map.Item[i].Y);
         }
 
         // Envia os dados
         ToPlayer(Player, Data);
     }
 
-    public static void Map_Items(short Map_Num)
+    public static void Map_Items(Objects.TMap Map)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_Items);
-        Data.Write((short)(Lists.Temp_Map[Map_Num].Item.Count - 1));
-        for (byte i = 1; i < Lists.Temp_Map[Map_Num].Item.Count; i++)
+        Data.Write((short)(Map.Item.Count - 1));
+        for (byte i = 0; i < Map.Item.Count; i++)
         {
-            Data.Write(Lists.GetID(Lists.Temp_Map[Map_Num].Item[i].Item));
-            Data.Write(Lists.Temp_Map[Map_Num].Item[i].X);
-            Data.Write(Lists.Temp_Map[Map_Num].Item[i].Y);
+            Data.Write(Lists.GetID(Map.Item[i].Item));
+            Data.Write(Map.Item[i].X);
+            Data.Write(Map.Item[i].Y);
         }
-        ToMap(Map_Num, Data);
+        ToMap(Map, Data);
     }
 
-    public static void Player_Inventory(Player Player)
+    public static void Player_Inventory(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -630,7 +630,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Player_Hotbar(Player Player)
+    public static void Player_Hotbar(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -687,25 +687,25 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void Map_NPCs(Player Player, short Map_Num)
+    public static void Map_NPCs(Objects.Player Player, Objects.TMap Map)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPCs);
-        Data.Write((short)Lists.Temp_Map[Map_Num].NPC.Length);
-        for (byte i = 1; i < Lists.Temp_Map[Map_Num].NPC.Length; i++)
+        Data.Write((short)Map.NPC.Length);
+        for (byte i = 1; i < Map.NPC.Length; i++)
         {
-            Data.Write(Lists.GetID(Lists.Temp_Map[Map_Num].NPC[i].Data));
-            Data.Write(Lists.Temp_Map[Map_Num].NPC[i].X);
-            Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Y);
-            Data.Write((byte)Lists.Temp_Map[Map_Num].NPC[i].Direction);
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Lists.Temp_Map[Map_Num].NPC[i].Vital[n]);
+            Data.Write(Lists.GetID(Map.NPC[i].Data));
+            Data.Write(Map.NPC[i].X);
+            Data.Write(Map.NPC[i].Y);
+            Data.Write((byte)Map.NPC[i].Direction);
+            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Map.NPC[i].Vital[n]);
         }
         ToPlayer(Player, Data);
     }
 
-    public static void Map_NPC(NPC.Structure NPC)
+    public static void Map_NPC(Objects.TNPC NPC)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -717,10 +717,10 @@ class Send
         Data.Write(NPC.Y);
         Data.Write((byte)NPC.Direction);
         for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(NPC.Vital[n]);
-        ToMap(NPC.Map_Num, Data);
+        ToMap(NPC.Map, Data);
     }
 
-    public static void Map_NPC_Movement(NPC.Structure NPC, byte Movement)
+    public static void Map_NPC_Movement(Objects.TNPC NPC, byte Movement)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -731,10 +731,10 @@ class Send
         Data.Write(NPC.Y);
         Data.Write((byte)NPC.Direction);
         Data.Write(Movement);
-        ToMap(NPC.Map_Num, Data);
+        ToMap(NPC.Map, Data);
     }
 
-    public static void Map_NPC_Direction(NPC.Structure NPC)
+    public static void Map_NPC_Direction(Objects.TNPC NPC)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -742,10 +742,10 @@ class Send
         Data.Write((byte)Client_Packets.Map_NPC_Direction);
         Data.Write(NPC.Index);
         Data.Write((byte)NPC.Direction);
-        ToMap(NPC.Map_Num, Data);
+        ToMap(NPC.Map, Data);
     }
 
-    public static void Map_NPC_Vitals(NPC.Structure NPC)
+    public static void Map_NPC_Vitals(Objects.TNPC NPC)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -753,10 +753,10 @@ class Send
         Data.Write((byte)Client_Packets.Map_NPC_Vitals);
         Data.Write(NPC.Index);
         for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(NPC.Vital[n]);
-        ToMap(NPC.Map_Num, Data);
+        ToMap(NPC.Map, Data);
     }
 
-    public static void Map_NPC_Attack(NPC.Structure NPC, string Victim = "", Game.Target Victim_Type = 0)
+    public static void Map_NPC_Attack(Objects.TNPC NPC, string Victim = "", Game.Target Victim_Type = 0)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -765,17 +765,17 @@ class Send
         Data.Write(NPC.Index);
         Data.Write(Victim);
         Data.Write((byte)Victim_Type);
-        ToMap(NPC.Map_Num, Data);
+        ToMap(NPC.Map, Data);
     }
 
-    public static void Map_NPC_Died(NPC.Structure NPC)
+    public static void Map_NPC_Died(Objects.TNPC NPC)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Died);
         Data.Write(NPC.Index);
-        ToMap(NPC.Map_Num, Data);
+        ToMap(NPC.Map, Data);
     }
 
     public static void Server_Data(Account.Structure Account)
@@ -795,7 +795,7 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void Party(Player Player)
+    public static void Party(Objects.Player Player)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -806,7 +806,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Party_Invitation(Player Player, string Player_Invitation)
+    public static void Party_Invitation(Objects.Player Player, string Player_Invitation)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -816,7 +816,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Trade(Player Player, bool State)
+    public static void Trade(Objects.Player Player, bool State)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -826,7 +826,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Trade_Invitation(Player Player, string Player_Invitation)
+    public static void Trade_Invitation(Objects.Player Player, string Player_Invitation)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -836,7 +836,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Trade_State(Player Player, Game.Trade_Status State)
+    public static void Trade_State(Objects.Player Player, Game.Trade_Status State)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -846,10 +846,10 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Trade_Offer(Player Player, bool Own = true)
+    public static void Trade_Offer(Objects.Player Player, bool Own = true)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
-        Player To = Own ? Player : Player.Trade;
+        Objects.Player To = Own ? Player : Player.Trade;
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Trade_Offer);
@@ -894,7 +894,7 @@ class Send
         ToPlayer(Account, Data);
     }
 
-    public static void Shop_Open(Player Player, Objects.Shop Shop)
+    public static void Shop_Open(Objects.Player Player, Objects.Shop Shop)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

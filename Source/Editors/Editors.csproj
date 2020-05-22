@@ -145,12 +145,6 @@
     <Compile Include="Editors\Preview.Designer.cs">
       <DependentUpon>Preview.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Quantity.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Editors\Quantity.Designer.cs">
-      <DependentUpon>Quantity.cs</DependentUpon>
-    </Compile>
     <Compile Include="Logic\Map.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Media\Audio.cs" />
@@ -220,9 +214,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\Preview.resx">
       <DependentUpon>Preview.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Quantity.resx">
-      <DependentUpon>Quantity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\Selection.resx">
       <DependentUpon>Selection.cs</DependentUpon>

@@ -122,4 +122,35 @@ class Game
             default: return Directions.Count;
         }
     }
+
+    public static void NextTile(Directions Direction, ref short X, ref short Y)
+    {
+        // Próximo azulejo
+        switch (Direction)
+        {
+            case Directions.Up: Y -= 1; break;
+            case Directions.Down: Y += 1; break;
+            case Directions.Right: X += 1; break;
+            case Directions.Left: X -= 1; break;
+        }
+    }
+
+    public static void Create_Maps()
+    {
+        foreach (Objects.Map Map in Lists.Map.Values)
+        {
+            Objects.TMap Temp_Map = new Objects.TMap(Map.ID, Map);
+
+            // NPCs do mapa
+            Temp_Map.NPC = new Objects.TNPC[Map.NPC.Length];
+            for (byte i = 1; i < Temp_Map.NPC.Length; i++)
+            {
+                Temp_Map.NPC[i] = new Objects.TNPC(i, Temp_Map, Map.NPC[i].NPC);
+                Temp_Map.NPC[i].Spawn();
+            }
+
+            // Itens do mapa
+            Temp_Map.Spawn_Items();
+        }
+    }
 }

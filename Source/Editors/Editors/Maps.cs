@@ -10,7 +10,7 @@ partial class Editor_Maps : Form
     public static Editor_Maps Objects = new Editor_Maps();
 
     // Index do item selecionado
-    public static short Selected;
+    public static Lists.Structures.Map Selected;
 
     // Dados temporários
     private static bool Map_Pressed;
@@ -110,9 +110,9 @@ partial class Editor_Maps : Form
         Objects.butMNPCs.Checked = false;
         Objects.butMAttributes.Checked = false;
         Objects.butMLighting.Checked = false;
-        Objects.numLighting.Value = Lists.Map[Selected].Lighting;
+        Objects.numLighting.Value = Selected.Lighting;
         Objects.numLight_Global.Maximum = Graphics.Tex_Light.GetUpperBound(0);
-        Objects.numLight_Global.Value = Lists.Map[Selected].Light_Global;
+        Objects.numLight_Global.Value = Selected.Light_Global;
 
         // Define os limites
         Objects.scrlZone.Maximum = Globals.Num_Zones;
@@ -132,11 +132,16 @@ partial class Editor_Maps : Form
         Objects.cmbA_Warp_Map.Items.Clear();
 
         // Adiciona os itens às listas
-        for (byte i = 1; i < Lists.Map.Length; i++)
+        foreach (Lists.Structures.Map Map in Lists.Map.Values)
         {
+            Objects.List.Nodes.Add(Map.Name);
+            Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = Map.ID;
+
+            /* todo
             Objects.List.Nodes.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0), Lists.Map[i].Name));
             Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = i;
             Objects.cmbA_Warp_Map.Items.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0), Lists.Map[i].Name));
+            */
         }
 
         // Seleciona o primeiro item
@@ -147,7 +152,7 @@ partial class Editor_Maps : Form
 
     public static void Update_Data()
     {
-        Selected = short.Parse(Objects.List.SelectedNode.Tag.ToString());
+        Selected = Lists.Map[(Guid)Objects.List.SelectedNode.Tag];
 
         // Reseta o clima
         Globals.Weather_Update();
@@ -171,27 +176,11 @@ partial class Editor_Maps : Form
         }
     }
 
-    public static void Change_Quantity()
-    {
-        short Quantity = (short)Editor_Quantity.Objects.numQuantity.Value;
-        short Old = (short)Lists.Map.GetUpperBound(0);
-
-        // Altera a quantidade de itens
-        Array.Resize(ref Lists.Map, Quantity + 1);
-
-        // Limpa os novos itens
-        if (Quantity > Old)
-            for (short i = (short)(Old + 1); i <= Quantity; i++)
-                Clear.Map(i);
-
-        Update_List();
-    }
-
     private static void Update_Strip()
     {
         // Atualiza as informações da barra
         Objects.Strip.Items[0].Text = "FPS: " + Globals.FPS;
-        Objects.Strip.Items[2].Text = "Revision: " + Lists.Map[Selected].Revision;
+        Objects.Strip.Items[2].Text = "Revision: " + Selected.Revision;
         Objects.Strip.Items[4].Text = "Position: {" + Map_Mouse.X + ";" + Map_Mouse.Y + "}"; ;
     }
 
@@ -199,6 +188,30 @@ partial class Editor_Maps : Form
     {
         // Atualiza a lista
         Update_Data();
+    }
+
+    private void butNew_Click(object sender, EventArgs e)
+    {
+        // Adiciona uma loja nova
+        Lists.Structures.Map Map = new Lists.Structures.Map(Guid.NewGuid());
+        Map.Name = "New map";
+        Lists.Map.Add(Map.ID, Map);
+
+        // Adiciona na lista
+        TreeNode Node = new TreeNode(Map.Name);
+        Node.Tag = Map.ID;
+        List.Nodes.Add(Node);
+        List.SelectedNode = Node;
+    }
+
+    private void butRemove_Click(object sender, EventArgs e)
+    {
+        // Remove a loja selecionada
+        if (List.SelectedNode != null)
+        {
+            Lists.Map.Remove(Selected.ID);
+            List.SelectedNode.Remove();
+        }
     }
 
     private static void Update_Tile_Bounds()
@@ -220,8 +233,8 @@ partial class Editor_Maps : Form
 
     private static void Update_Map_Bounds()
     {
-        int Max_X = (Lists.Map[Selected].Width / Zoom() * Globals.Grid - Objects.picMap.Width) / Globals.Grid + 1;
-        int Max_Y = (Lists.Map[Selected].Height / Zoom() * Globals.Grid - Objects.picMap.Height) / Globals.Grid + 1;
+        int Max_X = (Selected.Width / Zoom() * Globals.Grid - Objects.picMap.Width) / Globals.Grid + 1;
+        int Max_Y = (Selected.Height / Zoom() * Globals.Grid - Objects.picMap.Height) / Globals.Grid + 1;
 
         // Valor máximo
         if (Max_X > 0) Objects.scrlMapX.Maximum = Max_X; else Objects.scrlMapX.Maximum = 0;
@@ -244,12 +257,6 @@ partial class Editor_Maps : Form
         Editor_Maps_Properties.Open();
     }
 
-    private void butQuantity_Click(object sender, EventArgs e)
-    {
-        // Abre a janela de alteração
-        Editor_Quantity.Open(Lists.Map.GetUpperBound(0));
-    }
-
     private void chkAuto_CheckedChanged(object sender, EventArgs e)
     {
         Update_Tile_Selected();
@@ -258,15 +265,15 @@ partial class Editor_Maps : Form
     private void scrlZone_Clear_Click(object sender, EventArgs e)
     {
         // Reseta todas as zonas
-        for (byte x = 0; x <= Lists.Map[Selected].Width; x++)
-            for (byte y = 0; x <= Lists.Map[Selected].Height; y++)
-                Lists.Map[Selected].Tile[x, y].Zone = 0;
+        for (byte x = 0; x <= Selected.Width; x++)
+            for (byte y = 0; x <= Selected.Height; y++)
+                Selected.Tile[x, y].Zone = 0;
     }
 
     private void butLight_Clear_Click(object sender, EventArgs e)
     {
         // Reseta todas as zonas
-        Lists.Map[Selected].Light = new List<Lists.Structures.Map_Light>();
+        Selected.Light = new List<Lists.Structures.Map_Light>();
     }
 
     private void scrlZone_ValueChanged(object sender, EventArgs e)
@@ -281,34 +288,34 @@ partial class Editor_Maps : Form
     private void butAttributes_Clear_Click(object sender, EventArgs e)
     {
         // Reseta todas os atributos
-        for (byte x = 0; x <= Lists.Map[Selected].Width; x++)
-            for (byte y = 0; y <= Lists.Map[Selected].Height; y++)
+        for (byte x = 0; x <= Selected.Width; x++)
+            for (byte y = 0; y <= Selected.Height; y++)
             {
-                Lists.Map[Selected].Tile[x, y].Attribute = 0;
-                Lists.Map[Selected].Tile[x, y].Block = new bool[(byte)Globals.Directions.Count];
+                Selected.Tile[x, y].Attribute = 0;
+                Selected.Tile[x, y].Block = new bool[(byte)Globals.Directions.Count];
             }
     }
 
     private void butAttributes_Import_Click(object sender, EventArgs e)
     {
         // Importa os dados padrões dos azulejos
-        for (byte x = 0; x <= Lists.Map[Selected].Width; x++)
-            for (byte y = 0; y <= Lists.Map[Selected].Height; y++)
-                for (byte c = 0; c < Lists.Map[Selected].Layer.Count; c++)
+        for (byte x = 0; x <= Selected.Width; x++)
+            for (byte y = 0; y <= Selected.Height; y++)
+                for (byte c = 0; c < Selected.Layer.Count; c++)
                 {
                     // Dados do azulejo
-                    Lists.Structures.Map_Tile_Data Data = Lists.Map[Selected].Layer[c].Tile[x, y];
+                    Lists.Structures.Map_Tile_Data Data = Selected.Layer[c].Tile[x, y];
 
                     if (Data.Tile > 0)
                     {
                         // Atributos
                         if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute > 0)
-                            Lists.Map[Selected].Tile[x, y].Attribute = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute;
+                            Selected.Tile[x, y].Attribute = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute;
 
                         // Bloqueio direcional
                         for (byte b = 0; b < (byte)Globals.Directions.Count; b++)
                             if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b])
-                                Lists.Map[Selected].Tile[x, y].Block[b] = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b];
+                                Selected.Tile[x, y].Block[b] = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b];
                     }
                 }
     }
@@ -316,13 +323,13 @@ partial class Editor_Maps : Form
     private void numLighting_ValueChanged(object sender, EventArgs e)
     {
         // Define os valores
-        Lists.Map[Selected].Lighting = (byte)numLighting.Value;
+        Selected.Lighting = (byte)numLighting.Value;
     }
 
     private void numLight_Global_ValueChanged(object sender, EventArgs e)
     {
         // Define os valores
-        Lists.Map[Selected].Light_Global = (byte)numLight_Global.Value;
+        Selected.Light_Global = (byte)numLight_Global.Value;
     }
 
     private void butLight_Global_Click(object sender, EventArgs e)
@@ -348,18 +355,9 @@ partial class Editor_Maps : Form
         Map.Autotile.Update(Selected);
     }
 
-    private void butClearAll_Click(object sender, EventArgs e)
+    private void Copy()
     {
-        // Limpa os dados
-        Clear.Map(Selected);
-
-        // Atualiza os valores
-        List.Nodes[Selected - 1].Text = Globals.Numbering(Selected, Lists.Map.Length, string.Empty);
-    }
-
-    private void Copiar()
-    {
-        Tiles_Copy.Data = new Lists.Structures.Map_Layer[Lists.Map[Selected].Layer.Count];
+        Tiles_Copy.Data = new Lists.Structures.Map_Layer[Selected.Layer.Count];
 
         // Seleção
         Tiles_Copy.Area = Map_Selection;
@@ -368,36 +366,36 @@ partial class Editor_Maps : Form
         for (byte c = 0; c < Tiles_Copy.Data.Length; c++)
         {
             Tiles_Copy.Data[c] = new Lists.Structures.Map_Layer();
-            Tiles_Copy.Data[c].Name = Lists.Map[Selected].Layer[c].Name;
+            Tiles_Copy.Data[c].Name = Selected.Layer[c].Name;
 
             // Tamanho da estrutura
-            Tiles_Copy.Data[c].Tile = new Lists.Structures.Map_Tile_Data[Lists.Map[Selected].Width + 1, Lists.Map[Selected].Height + 1];
+            Tiles_Copy.Data[c].Tile = new Lists.Structures.Map_Tile_Data[Selected.Width + 1, Selected.Height + 1];
 
             // Copia os dados dos azulejos
-            for (byte x = 0; x <= Lists.Map[Selected].Width; x++)
-                for (byte y = 0; y <= Lists.Map[Selected].Height; y++)
-                    Tiles_Copy.Data[c].Tile[x, y] = Lists.Map[Selected].Layer[c].Tile[x, y];
+            for (byte x = 0; x <= Selected.Width; x++)
+                for (byte y = 0; y <= Selected.Height; y++)
+                    Tiles_Copy.Data[c].Tile[x, y] = Selected.Layer[c].Tile[x, y];
         }
     }
 
     private void butCopy_Click(object sender, EventArgs e)
     {
         // Copia os dados
-        Copiar();
+        Copy();
     }
 
     private void butCut_Click(object sender, EventArgs e)
     {
         // Copia os dados
-        Copiar();
+        Copy();
 
         // Remove os azulejos copiados
         for (int x = Map_Selection.X; x < Map_Selection.X + Map_Selection.Width; x++)
             for (int y = Map_Selection.Y; y < Map_Selection.Y + Map_Selection.Height; y++)
-                for (byte c = 0; c < Lists.Map[Selected].Layer.Count; c++)
+                for (byte c = 0; c < Selected.Layer.Count; c++)
                 {
-                    Lists.Map[Selected].Layer[c].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
-                    Lists.Map[Selected].Layer[c].Tile[x, y].Mini = new Point[4];
+                    Selected.Layer[c].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
+                    Selected.Layer[c].Tile[x, y].Mini = new Point[4];
                 }
 
         // Atualiza os azulejos Autos 
@@ -418,11 +416,11 @@ partial class Editor_Maps : Form
 
                     // Previne erros
                     if (Layer < 0) continue;
-                    if (x2 > Lists.Map[Selected].Width) continue;
-                    if (y2 > Lists.Map[Selected].Height) continue;
+                    if (x2 > Selected.Width) continue;
+                    if (y2 > Selected.Height) continue;
 
                     // Cola
-                    Lists.Map[Selected].Layer[Layer].Tile[x2, y2] = Tiles_Copy.Data[c].Tile[x, y];
+                    Selected.Layer[Layer].Tile[x2, y2] = Tiles_Copy.Data[c].Tile[x, y];
                 }
 
         // Atualiza os azulejos Autos 
@@ -499,9 +497,9 @@ partial class Editor_Maps : Form
         if (lstLayers.SelectedItems.Count == 0) return;
 
         // Preenche todos os azulejos iguais ao selecionado com o mesmo azulejo
-        for (int x = 0; x <= Lists.Map[Selected].Width; x++)
-            for (int y = 0; y <= Lists.Map[Selected].Height; y++)
-                Lists.Map[Selected].Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = Set_Tile();
+        for (int x = 0; x <= Selected.Width; x++)
+            for (int y = 0; y <= Selected.Height; y++)
+                Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = Set_Tile();
 
         // Faz os cálculos da autocriação
         Map.Autotile.Update(Selected);
@@ -513,11 +511,11 @@ partial class Editor_Maps : Form
         if (lstLayers.SelectedItems.Count == 0) return;
 
         // Preenche todos os azulejos iguais ao selecionado com o mesmo azulejo
-        for (int x = 0; x <= Lists.Map[Selected].Width; x++)
-            for (int y = 0; y <= Lists.Map[Selected].Height; y++)
+        for (int x = 0; x <= Selected.Width; x++)
+            for (int y = 0; y <= Selected.Height; y++)
             {
-                Lists.Map[Selected].Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
-                Lists.Map[Selected].Layer[lstLayers.SelectedItems[0].Index].Tile[x, y].Mini = new Point[4];
+                Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
+                Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y].Mini = new Point[4];
             }
     }
 
@@ -920,8 +918,8 @@ partial class Editor_Maps : Form
         Point Tile_Dif = new Point(e.X - e.X / Globals.Grid * Globals.Grid, e.Y - e.Y / Globals.Grid * Globals.Grid);
 
         // Previne erros
-        if (Selected <= 0) return;
-        if (Map_Selection.X > Lists.Map[Selected].Width || Map_Selection.Y > Lists.Map[Selected].Height) return;
+        if (Selected == null) return;
+        if (Map_Selection.X > Selected.Width || Map_Selection.Y > Selected.Height) return;
 
         // Executa um evento de acordo com a ferramenta selecionada
         if (butMNormal.Checked)
@@ -938,7 +936,7 @@ partial class Editor_Maps : Form
                 if (Tile_Dif.X >= Globals.Block_Position(i).X && Tile_Dif.X <= Globals.Block_Position(i).X + 8)
                     if (Tile_Dif.Y >= Globals.Block_Position(i).Y && Tile_Dif.Y <= Globals.Block_Position(i).Y + 8)
                         // Altera o valor de bloqueio
-                        Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Block[i] = !Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Block[i];
+                        Selected.Tile[Map_Selection.X, Map_Selection.Y].Block[i] = !Selected.Tile[Map_Selection.X, Map_Selection.Y].Block[i];
         }
         else if (butMAttributes.Checked && !optA_DirBlock.Checked)
             Set_Attribute(e);
@@ -946,9 +944,9 @@ partial class Editor_Maps : Form
         {
             // Define as zonas
             if (e.Button == MouseButtons.Left)
-                Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Zone = (byte)scrlZone.Value;
+                Selected.Tile[Map_Selection.X, Map_Selection.Y].Zone = (byte)scrlZone.Value;
             else if (e.Button == MouseButtons.Right)
-                Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Zone = 0;
+                Selected.Tile[Map_Selection.X, Map_Selection.Y].Zone = 0;
         }
         else if (butMLighting.Checked)
         {
@@ -965,11 +963,11 @@ partial class Editor_Maps : Form
     private static void Lighting_Remove()
     {
         // Encontra a luz que está nessa camada
-        if (Lists.Map[Selected].Light.Count > 0)
-            for (byte i = 0; i < Lists.Map[Selected].Light.Count; i++)
-                if (Lists.Map[Selected].Light[i].X == Map_Selection.X)
-                    if (Lists.Map[Selected].Light[i].Y == Map_Selection.Y)
-                        Lists.Map[Selected].Light.RemoveAt(i);
+        if (Selected.Light.Count > 0)
+            for (byte i = 0; i < Selected.Light.Count; i++)
+                if (Selected.Light[i].X == Map_Selection.X)
+                    if (Selected.Light[i].Y == Map_Selection.Y)
+                        Selected.Light.RemoveAt(i);
     }
 
     private void picMap_MouseUp(object sender, MouseEventArgs e)
@@ -979,7 +977,7 @@ partial class Editor_Maps : Form
         // Somente se necessário
         if (e.Button != MouseButtons.Left) return;
         if (lstLayers.SelectedIndices.Count == 0) return;
-        if (Map_Selection.X > Lists.Map[Selected].Width || Map_Selection.Y > Lists.Map[Selected].Height) return;
+        if (Map_Selection.X > Selected.Width || Map_Selection.Y > Selected.Height) return;
 
         // Camada selecionada
         byte Layer = (byte)Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
@@ -992,13 +990,13 @@ partial class Editor_Maps : Form
                 for (int x = Map_Selection.X; x < Map_Selection.X + Map_Selection.Width; x++)
                     for (int y = Map_Selection.Y; y < Map_Selection.Y + Map_Selection.Height; y++)
                     {
-                        Lists.Map[Selected].Layer[Layer].Tile[x, y] = Set_Tile();
+                        Selected.Layer[Layer].Tile[x, y] = Set_Tile();
                         Map.Autotile.Update(Selected, x, y, Layer);
                     }
         }
         // Iluminação
         else if (butMLighting.Checked)
-            Lists.Map[Selected].Light.Add(new Lists.Structures.Map_Light(Map_Selection));
+            Selected.Light.Add(new Lists.Structures.Map_Light(Map_Selection));
         // Nenhum
         else
             return;
@@ -1016,11 +1014,11 @@ partial class Editor_Maps : Form
         // Impede que saia do limite da tela
         if (Map_Mouse.X < 0) Map_Mouse.X = 0;
         if (Map_Mouse.Y < 0) Map_Mouse.Y = 0;
-        if (Map_Mouse.X > Lists.Map[Selected].Width) Map_Mouse.X = Lists.Map[Selected].Width;
-        if (Map_Mouse.Y > Lists.Map[Selected].Height) Map_Mouse.Y = Lists.Map[Selected].Height;
+        if (Map_Mouse.X > Selected.Width) Map_Mouse.X = Selected.Width;
+        if (Map_Mouse.Y > Selected.Height) Map_Mouse.Y = Selected.Height;
 
         // Previne erros
-        if (Selected <= 0) return;
+        if (Selected == null) return;
 
         // Cria um retângulo
         if (Map_Rectangle(e)) return;
@@ -1038,17 +1036,17 @@ partial class Editor_Maps : Form
         {
             // Define as zonas
             if (e.Button == MouseButtons.Left)
-                Lists.Map[Selected].Tile[Map_Mouse.X, Map_Mouse.Y].Zone = (byte)scrlZone.Value;
+                Selected.Tile[Map_Mouse.X, Map_Mouse.Y].Zone = (byte)scrlZone.Value;
             else if (e.Button == MouseButtons.Right)
-                Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Zone = 0;
+                Selected.Tile[Map_Selection.X, Map_Selection.Y].Zone = 0;
         }
         else if (butMAttributes.Checked && !optA_DirBlock.Checked)
         {
             // Define as zonas
             if (e.Button == MouseButtons.Left)
-                Lists.Map[Selected].Tile[Map_Mouse.X, Map_Mouse.Y].Attribute = (byte)Attribute_Selected();
+                Selected.Tile[Map_Mouse.X, Map_Mouse.Y].Attribute = (byte)Attribute_Selected();
             else if (e.Button == MouseButtons.Right)
-                Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Attribute = 0;
+                Selected.Tile[Map_Selection.X, Map_Selection.Y].Attribute = 0;
         }
     }
 
@@ -1089,9 +1087,9 @@ partial class Editor_Maps : Form
 
         // Verifica se não passou do limite
         if (x < 0) x = 0;
-        if (x > Lists.Map[Selected].Width) x = Lists.Map[Selected].Width;
+        if (x > Selected.Width) x = Selected.Width;
         if (y < 0) y = 0;
-        if (y > Lists.Map[Selected].Height) y = Lists.Map[Selected].Height;
+        if (y > Selected.Height) y = Selected.Height;
 
         // Define o tamanho
         Def_Map_Selection.Width = x - Def_Map_Selection.X + 1;
@@ -1104,9 +1102,9 @@ partial class Editor_Maps : Form
     {
         Lists.Structures.Map_Tile_Data Data;
 
-        for (int c = Lists.Map[Selected].Layer.Count - 1; c >= 0; c--)
+        for (int c = Selected.Layer.Count - 1; c >= 0; c--)
         {
-            Data = Lists.Map[Selected].Layer[c].Tile[Map_Selection.X, Map_Selection.Y];
+            Data = Selected.Layer[c].Tile[Map_Selection.X, Map_Selection.Y];
 
             // Somente se necessário
             if (!Objects.lstLayers.Items[c].Checked) continue;
@@ -1146,7 +1144,7 @@ partial class Editor_Maps : Form
             Tile_Set_Multiples(Layer_Num);
 
         // Defini um único azulejo
-        Lists.Map[Selected].Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = Set_Tile();
+        Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = Set_Tile();
         Map.Autotile.Update(Selected, Map_Selection.X, Map_Selection.Y, Layer_Num);
     }
 
@@ -1165,9 +1163,9 @@ partial class Editor_Maps : Form
             for (int y = Map_Selection.Y; y <= Size.Height; y++)
             {
                 // Define os azulejos
-                if (!OutLimit(Selected, (short)x, (short)y))
+                if (!Selected.OutLimit((short)x, (short)y))
                 {
-                    Lists.Map[Selected].Layer[Layer_Num].Tile[x, y] = Set_Tile((byte)(Tiles_Selection.X + x2), (byte)(Tiles_Selection.Y + y2));
+                    Selected.Layer[Layer_Num].Tile[x, y] = Set_Tile((byte)(Tiles_Selection.X + x2), (byte)(Tiles_Selection.Y + y2));
                     Map.Autotile.Update(Selected, x, y, Layer_Num);
                 }
                 y2++;
@@ -1179,8 +1177,8 @@ partial class Editor_Maps : Form
     private void Tile_Clear(byte Layer_Num)
     {
         // Limpa a camada
-        Lists.Map[Selected].Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = new Lists.Structures.Map_Tile_Data();
-        Lists.Map[Selected].Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y].Mini = new Point[4];
+        Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = new Lists.Structures.Map_Tile_Data();
+        Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y].Mini = new Point[4];
         Map.Autotile.Update(Selected, Map_Selection.X, Map_Selection.Y, Layer_Num);
     }
     #endregion
@@ -1192,13 +1190,13 @@ partial class Editor_Maps : Form
         Objects.lstLayers.Items.Clear();
 
         // Adiciona os itens à lista
-        for (byte i = 0; i < Lists.Map[Selected].Layer.Count; i++)
+        for (byte i = 0; i < Selected.Layer.Count; i++)
         {
             Objects.lstLayers.Items.Add(string.Empty);
             Objects.lstLayers.Items[i].Checked = true;
             Objects.lstLayers.Items[i].SubItems.Add((i + 1).ToString());
-            Objects.lstLayers.Items[i].SubItems.Add(Lists.Map[Selected].Layer[i].Name);
-            Objects.lstLayers.Items[i].SubItems.Add(((Globals.Layers)Lists.Map[Selected].Layer[i].Type).ToString());
+            Objects.lstLayers.Items[i].SubItems.Add(Selected.Layer[i].Name);
+            Objects.lstLayers.Items[i].SubItems.Add(((Globals.Layers)Selected.Layer[i].Type).ToString());
         }
 
         // Seleciona o primeiro item
@@ -1220,13 +1218,13 @@ partial class Editor_Maps : Form
         // Define os dados
         Layer.Name = txtLayer_Name.Text;
         Layer.Type = (byte)cmbLayers_Type.SelectedIndex;
-        Layer.Tile = new Lists.Structures.Map_Tile_Data[Lists.Map[Selected].Width + 1, Lists.Map[Selected].Height + 1];
-        for (byte x = 0; x <= Lists.Map[Selected].Width; x++)
-            for (byte y = 0; y <= Lists.Map[Selected].Height; y++)
+        Layer.Tile = new Lists.Structures.Map_Tile_Data[Selected.Width + 1, Selected.Height + 1];
+        for (byte x = 0; x <= Selected.Width; x++)
+            for (byte y = 0; y <= Selected.Height; y++)
                 Layer.Tile[x, y].Mini = new Point[4];
 
         // Adiciona a camada
-        Lists.Map[Selected].Layer.Add(Layer);
+        Selected.Layer.Add(Layer);
 
         // Atualiza a lista
         Update_Layers();
@@ -1246,8 +1244,8 @@ partial class Editor_Maps : Form
             }
 
         // Define os dados
-        Lists.Map[Selected].Layer[lstLayers.SelectedItems[0].Index].Name = txtLayer_Name.Text;
-        Lists.Map[Selected].Layer[lstLayers.SelectedItems[0].Index].Type = (byte)cmbLayers_Type.SelectedIndex;
+        Selected.Layer[lstLayers.SelectedItems[0].Index].Name = txtLayer_Name.Text;
+        Selected.Layer[lstLayers.SelectedItems[0].Index].Type = (byte)cmbLayers_Type.SelectedIndex;
 
         // Atualiza a lista
         Update_Layers();
@@ -1260,12 +1258,12 @@ partial class Editor_Maps : Form
 
         // Reordena as camadas
         for (byte n = 0; n < (byte)Globals.Layers.Count; n++)
-            for (byte i = 0; i < Lists.Map[Selected].Layer.Count; i++)
-                if (Lists.Map[Selected].Layer[i].Type == n)
-                    Temp.Add(Lists.Map[Selected].Layer[i]);
+            for (byte i = 0; i < Selected.Layer.Count; i++)
+                if (Selected.Layer[i].Type == n)
+                    Temp.Add(Selected.Layer[i]);
 
         // Atualiza os valores
-        Lists.Map[Selected].Layer = Temp;
+        Selected.Layer = Temp;
         Update_List_Layers();
     }
 
@@ -1295,7 +1293,7 @@ partial class Editor_Maps : Form
         // Remove a camada
         if (Index >= 0)
         {
-            Lists.Map[Selected].Layer.RemoveAt(Index);
+            Selected.Layer.RemoveAt(Index);
             Update_List_Layers();
         }
     }
@@ -1303,8 +1301,8 @@ partial class Editor_Maps : Form
     private static int Find_Layer(string Nome)
     {
         // Encontra a camada
-        for (byte i = 0; i < Lists.Map[Selected].Layer.Count; i++)
-            if (Lists.Map[Selected].Layer[i].Name == Nome)
+        for (byte i = 0; i < Selected.Layer.Count; i++)
+            if (Selected.Layer[i].Name == Nome)
                 return i;
 
         return -1;
@@ -1324,15 +1322,15 @@ partial class Editor_Maps : Form
         if (lstLayers.SelectedItems[0].Index == 0) return;
 
         // Dados
-        List<Lists.Structures.Map_Layer> Temp = new List<Lists.Structures.Map_Layer>(Lists.Map[Selected].Layer);
+        List<Lists.Structures.Map_Layer> Temp = new List<Lists.Structures.Map_Layer>(Selected.Layer);
         int Layer_Num = lstLayers.SelectedItems[0].Index;
 
         if (Temp[Layer_Num - 1].Type == Temp[Layer_Num].Type)
         {
             // Altera as posições
-            Temp[Layer_Num - 1] = Lists.Map[Selected].Layer[Layer_Num];
-            Temp[Layer_Num] = Lists.Map[Selected].Layer[Layer_Num - 1];
-            Lists.Map[Selected].Layer = Temp;
+            Temp[Layer_Num - 1] = Selected.Layer[Layer_Num];
+            Temp[Layer_Num] = Selected.Layer[Layer_Num - 1];
+            Selected.Layer = Temp;
 
             // Atualiza a lista
             Update_List_Layers();
@@ -1347,15 +1345,15 @@ partial class Editor_Maps : Form
         if (lstLayers.SelectedItems[0].Index == lstLayers.Items.Count - 1) return;
 
         // Dados
-        List<Lists.Structures.Map_Layer> Temp = new List<Lists.Structures.Map_Layer>(Lists.Map[Selected].Layer);
+        List<Lists.Structures.Map_Layer> Temp = new List<Lists.Structures.Map_Layer>(Selected.Layer);
         int Layer_Num = lstLayers.SelectedItems[0].Index;
 
         if (Temp[Layer_Num + 1].Type == Temp[Layer_Num].Type)
         {
             // Altera as posições
-            Temp[Layer_Num + 1] = Lists.Map[Selected].Layer[Layer_Num];
-            Temp[Layer_Num] = Lists.Map[Selected].Layer[Layer_Num + 1];
-            Lists.Map[Selected].Layer = Temp;
+            Temp[Layer_Num + 1] = Selected.Layer[Layer_Num];
+            Temp[Layer_Num] = Selected.Layer[Layer_Num + 1];
+            Selected.Layer = Temp;
 
             // Atualiza a lista
             Update_List_Layers();
@@ -1368,8 +1366,8 @@ partial class Editor_Maps : Form
         if (lstLayers.SelectedItems.Count == 0) return;
 
         // Define os valores
-        txtLayer_Name.Text = Lists.Map[Selected].Layer[lstLayers.SelectedItems[0].Index].Name;
-        cmbLayers_Type.SelectedIndex = Lists.Map[Selected].Layer[lstLayers.SelectedItems[0].Index].Type;
+        txtLayer_Name.Text = Selected.Layer[lstLayers.SelectedItems[0].Index].Name;
+        cmbLayers_Type.SelectedIndex = Selected.Layer[lstLayers.SelectedItems[0].Index].Type;
 
         // Abre a janela em modo de edição
         butLayer_Add.Visible = false;
@@ -1409,11 +1407,8 @@ partial class Editor_Maps : Form
     private static byte Grid_Zoom => (byte)(Globals.Grid / Zoom());
     public static Rectangle Zoom_Grid(Rectangle Rectangle) => new Rectangle(Rectangle.X * Grid_Zoom, Rectangle.Y * Grid_Zoom, Rectangle.Width * Grid_Zoom, Rectangle.Height * Grid_Zoom);
 
-    // Verifica se as coordenas estão no limite do mapa
-    public bool OutLimit(short Map_Num, short x, short y) => x > Lists.Map[Map_Num].Width || y > Lists.Map[Map_Num].Height || x < 0 || y < 0;
-
     // Quantidade de azulejos visíveis
-    public static Size Map_Size => new Size(Lists.Map[Selected].Width, Lists.Map[Selected].Height);
+    public static Size Map_Size => new Size(Selected.Width, Selected.Height);
 
     // Retorna com o retângulo do azulejo em relação à fonte
     public static Rectangle Tile_Source => new Rectangle(Tiles_Selection.X * Globals.Grid, Tiles_Selection.Y * Globals.Grid, Tiles_Selection.Width * Globals.Grid, Tiles_Selection.Height * Globals.Grid);
@@ -1444,14 +1439,14 @@ partial class Editor_Maps : Form
         if (Objects.lstNPC.SelectedIndex < 0) return;
 
         // Limpa todos os NPCs do mapa
-        Lists.Map[Selected].NPC.RemoveAt(Objects.lstNPC.SelectedIndex);
+        Selected.NPC.RemoveAt(Objects.lstNPC.SelectedIndex);
         Update_NPCs();
     }
 
     private void butNPC_Clear_Click(object sender, EventArgs e)
     {
         // Limpa todos os NPCs do mapa
-        Lists.Map[Selected].NPC = new List<Lists.Structures.Map_NPC>();
+        Selected.NPC = new List<Lists.Structures.Map_NPC>();
         Update_NPCs();
     }
 
@@ -1473,7 +1468,7 @@ partial class Editor_Maps : Form
         Data.Y = Y;
 
         // Adiciona o NPC
-        Lists.Map[Selected].NPC.Add(Data);
+        Selected.NPC.Add(Data);
         Update_NPCs();
 
         // Limpa os valores
@@ -1487,9 +1482,9 @@ partial class Editor_Maps : Form
         Objects.lstNPC.Items.Clear();
 
         // Atualiza a lista de NPCs do mapa
-        if (Lists.Map[Selected].NPC.Count > 0)
+        if (Selected.NPC.Count > 0)
         {
-            for (byte i = 0; i < Lists.Map[Selected].NPC.Count; i++) Objects.lstNPC.Items.Add(i + 1 + ":" + Lists.Map[Selected].NPC[i].NPC.Name);
+            for (byte i = 0; i < Selected.NPC.Count; i++) Objects.lstNPC.Items.Add(i + 1 + ":" + Selected.NPC[i].NPC.Name);
             Objects.lstNPC.SelectedIndex = 0;
         }
     }
@@ -1499,22 +1494,22 @@ partial class Editor_Maps : Form
         // Define os Atributos
         if (e.Button == MouseButtons.Left)
         {
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_1 = AData_1;
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_2 = AData_2;
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_3 = AData_3;
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_4 = AData_4;
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_5 = AData_5;
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Attribute = (byte)Attribute_Selected();
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_1 = AData_1;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_2 = AData_2;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_3 = AData_3;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_4 = AData_4;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_5 = AData_5;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Attribute = (byte)Attribute_Selected();
         }
         // Limpa os dados
         else if (e.Button == MouseButtons.Right)
         {
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_1 = 0;
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_2 = 0;
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_3 = 0;
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_4 = 0;
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Data_5 = string.Empty;
-            Lists.Map[Selected].Tile[Map_Selection.X, Map_Selection.Y].Attribute = 0;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_1 = 0;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_2 = 0;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_3 = 0;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_4 = 0;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_5 = string.Empty;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Attribute = 0;
         }
     }
 
@@ -1565,9 +1560,11 @@ partial class Editor_Maps : Form
 
     private void cmbA_Warp_Map_SelectedIndexChanged(object sender, EventArgs e)
     {
+        /* todo
         // Define os limites
         cmbA_Warp_X.Maximum = Lists.Map[cmbA_Warp_Map.SelectedIndex + 1].Width;
         cmbA_Warp_Y.Maximum = Lists.Map[cmbA_Warp_Map.SelectedIndex + 1].Height;
+        */
     }
 
     private void butA_Warp_Click(object sender, EventArgs e)

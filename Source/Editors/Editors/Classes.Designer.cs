@@ -61,7 +61,6 @@
             this.grpSpawn = new System.Windows.Forms.GroupBox();
             this.numSpawn_Y = new System.Windows.Forms.NumericUpDown();
             this.numSpawn_X = new System.Windows.Forms.NumericUpDown();
-            this.numSpawn_Map = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.cmbSpawn_Direction = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -81,6 +80,7 @@
             this.butRemove = new System.Windows.Forms.Button();
             this.butNew = new System.Windows.Forms.Button();
             this.List = new System.Windows.Forms.TreeView();
+            this.cmbSpawn_Map = new System.Windows.Forms.ComboBox();
             this.grpGeneral.SuspendLayout();
             this.grpAttributes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).BeginInit();
@@ -94,7 +94,6 @@
             this.grpSpawn.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Y)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_X)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).BeginInit();
             this.grpDrop.SuspendLayout();
             this.grpItem_Add.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numItem_Amount)).BeginInit();
@@ -403,9 +402,9 @@
             // 
             // grpSpawn
             // 
+            this.grpSpawn.Controls.Add(this.cmbSpawn_Map);
             this.grpSpawn.Controls.Add(this.numSpawn_Y);
             this.grpSpawn.Controls.Add(this.numSpawn_X);
-            this.grpSpawn.Controls.Add(this.numSpawn_Map);
             this.grpSpawn.Controls.Add(this.label9);
             this.grpSpawn.Controls.Add(this.cmbSpawn_Direction);
             this.grpSpawn.Controls.Add(this.label10);
@@ -433,24 +432,6 @@
             this.numSpawn_X.Size = new System.Drawing.Size(139, 20);
             this.numSpawn_X.TabIndex = 27;
             this.numSpawn_X.ValueChanged += new System.EventHandler(this.numSpawn_X_ValueChanged);
-            // 
-            // numSpawn_Map
-            // 
-            this.numSpawn_Map.Location = new System.Drawing.Point(9, 36);
-            this.numSpawn_Map.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numSpawn_Map.Name = "numSpawn_Map";
-            this.numSpawn_Map.Size = new System.Drawing.Size(139, 20);
-            this.numSpawn_Map.TabIndex = 23;
-            this.numSpawn_Map.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numSpawn_Map.ValueChanged += new System.EventHandler(this.numSpawn_Map_ValueChanged);
             // 
             // label9
             // 
@@ -653,6 +634,21 @@
             this.List.TabIndex = 41;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
             // 
+            // cmbSpawn_Map
+            // 
+            this.cmbSpawn_Map.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSpawn_Map.FormattingEnabled = true;
+            this.cmbSpawn_Map.Items.AddRange(new object[] {
+            "Up",
+            "Down",
+            "Left",
+            "Rigth"});
+            this.cmbSpawn_Map.Location = new System.Drawing.Point(9, 35);
+            this.cmbSpawn_Map.Name = "cmbSpawn_Map";
+            this.cmbSpawn_Map.Size = new System.Drawing.Size(139, 21);
+            this.cmbSpawn_Map.TabIndex = 29;
+            this.cmbSpawn_Map.SelectedIndexChanged += new System.EventHandler(this.cmbSpawn_Map_SelectedIndexChanged);
+            // 
             // Editor_Classes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -693,7 +689,6 @@
             this.grpSpawn.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Y)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn_X)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numSpawn_Map)).EndInit();
             this.grpDrop.ResumeLayout(false);
             this.grpDrop.PerformLayout();
             this.grpItem_Add.ResumeLayout(false);
@@ -736,7 +731,6 @@
     private System.Windows.Forms.NumericUpDown numSpawn_Y;
     private System.Windows.Forms.Label label10;
     private System.Windows.Forms.Label label8;
-    private System.Windows.Forms.NumericUpDown numSpawn_Map;
     private System.Windows.Forms.Label label7;
     public System.Windows.Forms.TextBox txtDescription;
     private System.Windows.Forms.Label label11;
@@ -758,4 +752,5 @@
     private System.Windows.Forms.Button butRemove;
     private System.Windows.Forms.Button butNew;
     private System.Windows.Forms.TreeView List;
+    private System.Windows.Forms.ComboBox cmbSpawn_Map;
 }

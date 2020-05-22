@@ -5,7 +5,7 @@ class Account
 {
     public static Structure Find(string Name) => Lists.Account.Find(x => x.User.Equals(Name));
 
-    public static Player FindPlayer(string Name)
+    public static Objects.Player FindPlayer(string Name)
     {
         // Encontra o usuário
         for (byte i = 0; i < Lists.Account.Count; i++)
@@ -24,7 +24,7 @@ class Account
         public string Password = string.Empty;
         public Game.Accesses Acess;
         public bool InEditor;
-        public Player Character;
+        public Objects.Player Character;
         public List<TempCharacter> Characters = new List<TempCharacter>();
         public struct TempCharacter
         {

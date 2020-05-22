@@ -65,8 +65,8 @@ class Loop
 
     private static void Editor_Maps_Fog_X()
     {
-        Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Lists.Map[Editor_Maps.Selected].Fog.Texture]);
-        int Speed = Lists.Map[Editor_Maps.Selected].Fog.Speed_X;
+        Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Editor_Maps.Selected.Fog.Texture]);
+        int Speed = Editor_Maps.Selected.Fog.Speed_X;
 
         // Apenas se necessário
         if (FogX_Timer >= Environment.TickCount) return;
@@ -92,8 +92,8 @@ class Loop
 
     private static void Editor_Maps_Fog_Y()
     {
-        Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Lists.Map[Editor_Maps.Selected].Fog.Texture]);
-        int Speed = Lists.Map[Editor_Maps.Selected].Fog.Speed_Y;
+        Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Editor_Maps.Selected.Fog.Texture]);
+        int Speed = Editor_Maps.Selected.Fog.Speed_Y;
 
         // Apenas se necessário
         if (FogY_Timer >= Environment.TickCount) return;
@@ -124,7 +124,7 @@ class Loop
         byte Last_Thunder = (byte)Audio.Sounds.Thunder_4;
 
         // Somente se necessário
-        if (!Editor_Maps.Objects.Visible || Lists.Map[Editor_Maps.Selected].Weather.Type == 0 || !Editor_Maps.Objects.butVisualization.Checked)
+        if (!Editor_Maps.Objects.Visible || Editor_Maps.Selected.Weather.Type == 0 || !Editor_Maps.Objects.butVisualization.Checked)
         {
             if (Audio.Sound.List != null)
                 if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SFML.Audio.SoundStatus.Playing) Audio.Sound.Stop_All();
@@ -132,7 +132,7 @@ class Loop
         }
 
         // Clima do mapa
-        Lists.Structures.Map_Weather Weather = Lists.Map[Editor_Maps.Selected].Weather;
+        Lists.Structures.Map_Weather Weather = Editor_Maps.Selected.Weather;
 
         // Reproduz o som chuva
         if ((Globals.Weathers)Weather.Type == Globals.Weathers.Raining || (Globals.Weathers)Weather.Type == Globals.Weathers.Thundering)
@@ -277,11 +277,11 @@ class Loop
         if (!Editor_Maps.Objects.Visible) goto stop;
         if (!Editor_Maps.Objects.butAudio.Checked) goto stop;
         if (!Editor_Maps.Objects.butVisualization.Checked) goto stop;
-        if (Lists.Map[Editor_Maps.Selected].Music == 0) goto stop;
+        if (Editor_Maps.Selected.Music == 0) goto stop;
 
         // Inicia a música
-        if (Audio.Music.Device == null || Audio.Music.Current != Lists.Map[Editor_Maps.Selected].Music)
-            Audio.Music.Play((Audio.Musics)Lists.Map[Editor_Maps.Selected].Music);
+        if (Audio.Music.Device == null || Audio.Music.Current != Editor_Maps.Selected.Music)
+            Audio.Music.Play((Audio.Musics)Editor_Maps.Selected.Music);
         return;
     stop:
         // Para a música

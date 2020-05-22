@@ -40,7 +40,7 @@ class Write
         Data.Write(Account.Character.Genre);
         Data.Write(Account.Character.Experience);
         Data.Write(Account.Character.Points);
-        Data.Write(Account.Character.Map_Num);
+        Data.Write(Lists.GetID(Account.Character.Map));
         Data.Write(Account.Character.X);
         Data.Write(Account.Character.Y);
         Data.Write((byte)Account.Character.Direction);
@@ -118,17 +118,11 @@ class Write
         Stream.Close();
     }
 
-    public static void Maps()
+    public static void Map(Objects.Map Map)
     {
         // Escreve os dados
-        for (short i = 1; i < Lists.Map.Length; i++) Map(i);
-    }
-
-    public static void Map(short Index)
-    {
-        // Escreve os dados
-        FileStream Stream = new FileInfo(Directories.Maps.FullName + Index + Directories.Format).OpenWrite();
-        new BinaryFormatter().Serialize(Stream, Lists.Map[Index]);
+        FileStream Stream = new FileInfo(Directories.Maps.FullName + Map.ID + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Map);
         Stream.Close();
     }
 

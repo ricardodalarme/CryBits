@@ -28,6 +28,10 @@ partial class Editor_Classes : Form
         Objects.cmbItems.Items.Clear();
         foreach (Lists.Structures.Item Item in Lists.Item.Values) Objects.cmbItems.Items.Add(Item);
 
+        // Lista de mapas
+        Objects.cmbSpawn_Map.Items.Clear();
+        foreach (Lists.Structures.Map Map in Lists.Map.Values) Objects.cmbSpawn_Map.Items.Add(Map);
+
         // Lista as classes
         Objects.List.Nodes.Clear();
         foreach (Lists.Structures.Class Class in Lists.Class.Values)
@@ -63,7 +67,7 @@ partial class Editor_Classes : Form
         numIntelligence.Value = Selected.Attribute[(byte)Globals.Attributes.Intelligence];
         numAgility.Value = Selected.Attribute[(byte)Globals.Attributes.Agility];
         numVitality.Value = Selected.Attribute[(byte)Globals.Attributes.Vitality];
-        numSpawn_Map.Value = Selected.Spawn_Map;
+        cmbSpawn_Map.SelectedItem = Selected.Spawn_Map;
         cmbSpawn_Direction.SelectedIndex = Selected.Spawn_Direction;
         numSpawn_X.Value = Selected.Spawn_X;
         numSpawn_Y.Value = Selected.Spawn_Y;
@@ -209,9 +213,9 @@ partial class Editor_Classes : Form
         }
     }
 
-    private void numSpawn_Map_ValueChanged(object sender, EventArgs e)
+    private void cmbSpawn_Map_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected.Spawn_Map = (short)numSpawn_Map.Value;
+        Selected.Spawn_Map = (Lists.Structures.Map)cmbSpawn_Map.SelectedItem;
     }
 
     private void cmbSpawn_Direction_SelectedIndexChanged(object sender, EventArgs e)

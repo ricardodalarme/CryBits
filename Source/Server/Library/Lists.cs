@@ -10,8 +10,8 @@ class Lists
     public static Dictionary<Guid, Objects.Item> Item = new Dictionary<Guid, Objects.Item>();
     public static Dictionary<Guid, Objects.Shop> Shop = new Dictionary<Guid, Objects.Shop>();
     public static Dictionary<Guid, Objects.NPC> NPC = new Dictionary<Guid, Objects.NPC>();
-    public static Structures.Map[] Map;
-    public static Structures.Temp_Map[] Temp_Map;
+    public static Dictionary<Guid, Objects.Map> Map = new Dictionary<Guid, Objects.Map>();
+    public static Dictionary<Guid, Objects.TMap> Temp_Map = new Dictionary<Guid, Objects.TMap>();
 
     public static string GetID(Structures.Data Object)
     {
@@ -30,17 +30,16 @@ class Lists
     public class Structures
     {
         [Serializable]
-        public struct Server_Data
+        public class Server_Data
         {
-            public string Game_Name;
-            public string Welcome;
-            public short Port;
-            public byte Max_Players;
-            public byte Max_Characters;
-            public byte Max_Party_Members;
-            public byte Max_Map_Items;
-            public byte Num_Points;
-            public short Num_Maps;
+            public string Game_Name = "CryBits";
+            public string Welcome = "Welcome to CryBits.";
+            public short Port = 7001;
+            public byte Max_Players = 15;
+            public byte Max_Characters = 3;
+            public byte Max_Party_Members = 3;
+            public byte Max_Map_Items = 100;
+            public byte Num_Points = 3;
         }
 
         [Serializable]
@@ -52,108 +51,6 @@ class Lists
             {
                 this.ID = ID;
             }
-        }
-
-        [Serializable]
-        public struct Map
-        {
-            public short Revision;
-            public List<Map_Layer> Layer;
-            public Map_Tile[,] Tile;
-            public string Name;
-            public byte Width;
-            public byte Height;
-            public byte Moral;
-            public byte Panorama;
-            public byte Music;
-            public int Color;
-            public Map_Weather Weather;
-            public Map_Fog Fog;
-            public short[] Link;
-            public byte Light_Global;
-            public byte Lighting;
-            public Map_Light[] Light;
-            public Map_NPC[] NPC;
-        }
-
-        public struct Temp_Map
-        {
-            // Temporário
-            public NPC.Structure[] NPC;
-            public List<Map_Items> Item;
-        }
-
-        [Serializable]
-        public struct Map_Tile
-        {
-            public byte Attribute;
-            public short Data_1;
-            public short Data_2;
-            public short Data_3;
-            public short Data_4;
-            public string Data_5;
-            public byte Zone;
-            public bool[] Block;
-        }
-
-        [Serializable]
-        public class Map_Layer
-        {
-            public string Name;
-            public byte Type;
-            public Map_Tile_Data[,] Tile;
-        }
-
-        [Serializable]
-        public struct Map_NPC
-        {
-            public Objects.NPC NPC;
-            public byte Zone;
-            public bool Spawn;
-            public byte X;
-            public byte Y;
-        }
-
-        [Serializable]
-        public struct Map_Tile_Data
-        {
-            public byte X;
-            public byte Y;
-            public byte Tile;
-            public bool Auto;
-        }
-
-        [Serializable]
-        public class Map_Light
-        {
-            public byte X;
-            public byte Y;
-            public byte Width;
-            public byte Height;
-        }
-
-        [Serializable]
-        public struct Map_Weather
-        {
-            public byte Type;
-            public byte Intensity;
-        }
-
-        [Serializable]
-        public struct Map_Fog
-        {
-            public byte Texture;
-            public sbyte Speed_X;
-            public sbyte Speed_Y;
-            public byte Alpha;
-        }
-
-        public struct Map_Items
-        {
-            public Objects.Item Item;
-            public byte X;
-            public byte Y;
-            public short Amount;
         }
 
         public struct Inventories

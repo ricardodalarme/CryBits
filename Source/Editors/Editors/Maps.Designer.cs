@@ -98,7 +98,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtLayer_Name = new System.Windows.Forms.TextBox();
             this.butLayer_Add = new System.Windows.Forms.Button();
-            this.butQuantity = new System.Windows.Forms.Button();
             this.grpZones = new System.Windows.Forms.GroupBox();
             this.scrlZone_Clear = new System.Windows.Forms.Button();
             this.scrlZone = new System.Windows.Forms.HScrollBar();
@@ -151,6 +150,8 @@
             this.butNPC_Remove = new System.Windows.Forms.Button();
             this.butNPC_Clear = new System.Windows.Forms.Button();
             this.List = new System.Windows.Forms.TreeView();
+            this.butRemove = new System.Windows.Forms.Button();
+            this.butNew = new System.Windows.Forms.Button();
             this.tolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
@@ -253,7 +254,6 @@
             this.butClearAll.Name = "butClearAll";
             this.butClearAll.Size = new System.Drawing.Size(23, 22);
             this.butClearAll.Text = "Clear All";
-            this.butClearAll.Click += new System.EventHandler(this.butClearAll_Click);
             // 
             // toolStripSeparator3
             // 
@@ -902,17 +902,6 @@
             this.butLayer_Add.UseVisualStyleBackColor = true;
             this.butLayer_Add.Click += new System.EventHandler(this.butLayer_Add_Click);
             // 
-            // butQuantity
-            // 
-            this.butQuantity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.butQuantity.Location = new System.Drawing.Point(1101, 26);
-            this.butQuantity.Name = "butQuantity";
-            this.butQuantity.Size = new System.Drawing.Size(258, 23);
-            this.butQuantity.TabIndex = 101;
-            this.butQuantity.Text = "Change Quantity";
-            this.butQuantity.UseVisualStyleBackColor = true;
-            this.butQuantity.Click += new System.EventHandler(this.butQuantity_Click);
-            // 
             // grpZones
             // 
             this.grpZones.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1479,12 +1468,34 @@
             this.List.TabIndex = 109;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
             // 
+            // butRemove
+            // 
+            this.butRemove.Location = new System.Drawing.Point(1231, 27);
+            this.butRemove.Name = "butRemove";
+            this.butRemove.Size = new System.Drawing.Size(126, 25);
+            this.butRemove.TabIndex = 111;
+            this.butRemove.Text = "Remove";
+            this.butRemove.UseVisualStyleBackColor = true;
+            this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
+            // 
+            // butNew
+            // 
+            this.butNew.Location = new System.Drawing.Point(1101, 27);
+            this.butNew.Name = "butNew";
+            this.butNew.Size = new System.Drawing.Size(126, 25);
+            this.butNew.TabIndex = 110;
+            this.butNew.Text = "New";
+            this.butNew.UseVisualStyleBackColor = true;
+            this.butNew.Click += new System.EventHandler(this.butNew_Click);
+            // 
             // Editor_Maps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1366, 687);
+            this.Controls.Add(this.butRemove);
+            this.Controls.Add(this.butNew);
             this.Controls.Add(this.List);
             this.Controls.Add(this.grpAttributes_Set);
             this.Controls.Add(this.picTile_Background);
@@ -1493,7 +1504,6 @@
             this.Controls.Add(this.picTile);
             this.Controls.Add(this.grpTile);
             this.Controls.Add(this.cmbTiles);
-            this.Controls.Add(this.butQuantity);
             this.Controls.Add(this.Strip);
             this.Controls.Add(this.tolStrip);
             this.Controls.Add(this.scrlTileX);
@@ -1596,7 +1606,6 @@
     private System.Windows.Forms.ComboBox cmbLayers_Type;
     private System.Windows.Forms.Button butLayer_Cancel;
     private System.Windows.Forms.Button butLayer_Edit;
-    private System.Windows.Forms.Button butQuantity;
     public System.Windows.Forms.ListView lstLayers;
     public System.Windows.Forms.ToolStripButton butDiscover;
     public System.Windows.Forms.ToolStripButton butRectangle;
@@ -1678,4 +1687,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
     private System.Windows.Forms.ToolStripButton butLayers_Edit;
     public System.Windows.Forms.TreeView List;
+    private System.Windows.Forms.Button butRemove;
+    private System.Windows.Forms.Button butNew;
 }

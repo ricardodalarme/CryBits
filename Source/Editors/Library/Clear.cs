@@ -22,7 +22,7 @@ class Clear
         Lists.Server_Data.Max_Players = 15;
         Lists.Server_Data.Max_Characters = 3;
     }
-
+    /*
     public static void Map(short Index)
     {
         // Reseta 
@@ -61,7 +61,7 @@ class Clear
                     Lists.Map[Index].Layer[c].Tile[x, y].Mini = new Point[4];
         }
     }
-
+    */
     public static void Tile(byte Index)
     {
         Size Texture_Size = Graphics.TSize(Graphics.Tex_Tile[Index]);

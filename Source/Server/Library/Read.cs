@@ -11,14 +11,14 @@ partial class Read
         // Carrega todos os dados
         Console.WriteLine("Loading data.");
         Server_Data();
+        Console.WriteLine("Loading maps.");
+        Maps();
         Console.WriteLine("Loading classes.");
         Classes();
         Console.WriteLine("Loading NPCs.");
         NPCs();
         Console.WriteLine("Loading items.");
         Items();
-        Console.WriteLine("Loading maps.");
-        Maps();
         Console.WriteLine("Loading shops.");
         Shops();
     }
@@ -28,7 +28,6 @@ partial class Read
         // Cria o arquivo caso ele não existir
         if (!Directories.Server_Data.Exists)
         {
-            Clear.Server_Data();
             Write.Server_Data();
             return;
         }
@@ -95,15 +94,15 @@ partial class Read
         BinaryReader Data = new BinaryReader(File.OpenRead());
 
         // Carrega os dados e os adiciona ao cache
-        Account.Character = new Player(Account);
+        Account.Character = new Objects.Player(Account);
         Account.Character.Name = Data.ReadString();
         Account.Character.Texture_Num = Data.ReadInt16();
         Account.Character.Level = Data.ReadInt16();
-        Account.Character.Class = Lists.Class.ElementAt(0).Value;
+        Account.Character.Class = (Objects.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
         Account.Character.Genre = Data.ReadBoolean();
         Account.Character.Experience = Data.ReadInt32();
         Account.Character.Points = Data.ReadByte();
-        Account.Character.Map_Num = Data.ReadInt16();
+        Account.Character.Map = (Objects.TMap)Lists.GetData(Lists.Temp_Map, new Guid(Data.ReadString()));
         Account.Character.X = Data.ReadByte();
         Account.Character.Y = Data.ReadByte();
         Account.Character.Direction = (Game.Directions)Data.ReadByte();
@@ -166,7 +165,7 @@ partial class Read
             Objects.Class Class = new Objects.Class(Guid.NewGuid());
             Class.Tex_Male = Class.Tex_Female = new short[1];
             Class.Tex_Male[0] = Class.Tex_Female[0] = 1;
-            Class.Spawn_Map = 1;
+            Class.Spawn_Map = Lists.Map.ElementAt(0).Value;
             Lists.Class.Add(Class.ID, Class);
             Write.Class(Class);
         }
@@ -187,41 +186,41 @@ partial class Read
 
     private static void Maps()
     {
-        // Lê os dados1
-        Lists.Map = new Lists.Structures.Map[Lists.Server_Data.Num_Maps + 1];
-        Lists.Temp_Map = new Lists.Structures.Temp_Map[Lists.Server_Data.Num_Maps + 1];
-        for (short i = 1; i < Lists.Map.Length; i++) Map(i);
-    }
-
-    private static void Map(short Index)
-    {
-        FileInfo File = new FileInfo(Directories.Maps.FullName + Index + Directories.Format);
-
-        // Cria o arquivo caso ele não existir
-        if (!File.Exists)
-        {
-            Clear.Map(Index);
-            Write.Map(Index);
-            return;
-        }
+        // Lê os dados
+        Lists.Map = new Dictionary<Guid, Objects.Map>();
+        FileInfo[] File = Directories.Maps.GetFiles();
 
         // Lê os dados
-        FileStream Stream = File.OpenRead();
-        Lists.Map[Index] = (Lists.Structures.Map)new BinaryFormatter().Deserialize(Stream);
-        Stream.Close();
-
-        // NPCs do mapa
-        Lists.Temp_Map[Index].NPC = new NPC.Structure[Lists.Map[Index].NPC.Length];
-        for (byte i = 1; i < Lists.Temp_Map[Index].NPC.Length; i++)
+        if (File.Length > 0)
         {
-            Lists.Temp_Map[Index].NPC[i] = new NPC.Structure(i, Index, Lists.Map[Index].NPC[i].NPC);
-            Lists.Temp_Map[Index].NPC[i].Spawn();
+            for (byte i = 0; i < File.Length; i++)
+            {
+                FileStream Stream = File[i].OpenRead();
+                Lists.Map.Add(new Guid(File[i].Name.Remove(36)), (Objects.Map)new BinaryFormatter().Deserialize(Stream));
+                Stream.Close();
+            };
         }
+        // Cria um mapa novo caso não houver nenhuma
+        else
+        {
+            // Cria um mapa novo
+            Objects.Map Map = new Objects.Map(Guid.NewGuid());
+            Lists.Map.Add(Map.ID, Map);
+            
+            // Dados do mapa
+            Map.Width = Game.Min_Map_Width;
+            Map.Height = Game.Min_Map_Height;
+            Map.Layer.Add(new Objects.Map_Layer(Game.Min_Map_Width, Game.Min_Map_Height));
+            Map.Layer[0].Name = "Ground";
+            Map.Tile = new Objects.Map_Tile[Game.Min_Map_Width, Game.Min_Map_Height];
+            Map.Tile = new Objects.Map_Tile[Map.Width + 1, Map.Height + 1];
+            for (byte x = 0; x <= Map.Width; x++)
+                for (byte y = 0; y <= Map.Height; y++)
+                    Map.Tile[x, y] = new Objects.Map_Tile();
 
-        // Itens do mapa
-        Lists.Temp_Map[Index].Item = new List<Lists.Structures.Map_Items>();
-        Lists.Temp_Map[Index].Item.Add(new Lists.Structures.Map_Items());
-        global::Map.Spawn_Items(Index);
+            // Escreve os dados
+            Write.Map(Map);
+        }
     }
 
     private static void NPCs()

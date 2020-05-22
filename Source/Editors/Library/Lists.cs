@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 class Lists
@@ -10,7 +11,7 @@ class Lists
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
     public static Dictionary<Guid, Structures.Class> Class = new Dictionary<Guid, Structures.Class>();
     public static Structures.Tile[] Tile;
-    public static Structures.Map[] Map;
+    public static Dictionary<Guid, Structures.Map> Map = new Dictionary<Guid, Structures.Map>();
     public static Structures.Weather[] Weather;
     public static Dictionary<Guid, Structures.NPC> NPC = new Dictionary<Guid, Structures.NPC>();
     public static Dictionary<Guid, Structures.Item> Item = new Dictionary<Guid, Structures.Item>();
@@ -102,7 +103,7 @@ class Lists
             public string Description;
             public List<short> Tex_Male = new List<short>();
             public List<short> Tex_Female = new List<short>();
-            public short Spawn_Map = 1;
+            public Map Spawn_Map ;
             public byte Spawn_Direction;
             public byte Spawn_X;
             public byte Spawn_Y;
@@ -129,10 +130,10 @@ class Lists
             public bool[] Block;
         }
 
-        public struct Map
+        public class Map : Data
         {
             public short Revision;
-            public List<Map_Layer> Layer;
+            public List<Map_Layer> Layer = new List<Map_Layer>();
             public Map_Tile[,] Tile;
             public string Name;
             public byte Width;
@@ -141,16 +142,22 @@ class Lists
             public byte Panorama;
             public byte Music;
             public int Color;
-            public Map_Weather Weather;
-            public Map_Fog Fog;
-            public short[] Link;
+            public Map_Weather Weather = new Map_Weather();
+            public Map_Fog Fog = new Map_Fog();
+            public Map[] Link = new Map[(byte)Globals.Directions.Count];
             public byte Light_Global;
             public byte Lighting;
-            public List<Map_Light> Light;
-            public List<Map_NPC> NPC;
+            public List<Map_Light> Light = new List<Map_Light>();
+            public List<Map_NPC> NPC = new List<Map_NPC>();
+
+            public Map(Guid ID) : base(ID) { }
+            public override string ToString() => Name;
+
+            // Verifica se as coordenas estão no limite do mapa
+            public bool OutLimit(short x, short y) => x > Width || y > Height || x < 0 || y < 0;
         }
 
-        public struct Map_Tile
+        public class Map_Tile
         {
             public byte Attribute;
             public short Data_1;
@@ -159,7 +166,7 @@ class Lists
             public short Data_4;
             public string Data_5;
             public byte Zone;
-            public bool[] Block;
+            public bool[] Block = new bool[(byte)Globals.Directions.Count];
         }
 
         public class Map_Light
@@ -187,13 +194,13 @@ class Lists
             }
         }
 
-        public struct Map_Weather
+        public class Map_Weather
         {
             public byte Type;
             public byte Intensity;
         }
 
-        public struct Map_Fog
+        public class Map_Fog
         {
             public byte Texture;
             public sbyte Speed_X;
@@ -201,13 +208,13 @@ class Lists
             public byte Alpha;
         }
 
-        public struct Map_Tile_Data
+        public class Map_Tile_Data
         {
             public byte X;
             public byte Y;
             public byte Tile;
             public bool Auto;
-            public Point[] Mini;
+            public Point[] Mini = new Point[4];
         }
 
         public class Map_Layer
@@ -217,7 +224,7 @@ class Lists
             public Map_Tile_Data[,] Tile;
         }
 
-        public struct Map_NPC
+        public class Map_NPC
         {
             public NPC NPC;
             public byte Zone;

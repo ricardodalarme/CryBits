@@ -167,7 +167,7 @@ class Globals
     public static void Weather_Update()
     {
         // Redimensiona a lista
-        switch ((Weathers)Lists.Map[Editor_Maps.Selected].Weather.Type)
+        switch ((Weathers)Editor_Maps.Selected.Weather.Type)
         {
             case Weathers.Thundering:
             case Weathers.Raining: Lists.Weather = new Lists.Structures.Weather[Max_Rain_Particles + 1]; break;

@@ -8,7 +8,7 @@ public partial class Editor_Maps_Properties : Form
     private static Editor_Maps_Properties Objects = new Editor_Maps_Properties();
 
     // Dados temporários
-    private static int Selected;
+    private static Lists.Structures.Map Selected;
 
     public Editor_Maps_Properties()
     {
@@ -19,8 +19,28 @@ public partial class Editor_Maps_Properties : Form
     {
         Selected = Editor_Maps.Selected;
 
-        // Lista todos os valores
-        Update_List();
+        // Limpa as listas
+        Objects.cmbMoral.Items.Clear();
+        Objects.cmbWeather.Items.Clear();
+        Objects.cmbMusic.Items.Clear();
+        Objects.cmbMusic.Items.Add("None");
+        Objects.cmbLink_Down.Items.Clear();
+        Objects.cmbLink_Down.Items.Add("None");
+        Objects.cmbLink_Left.Items.Clear();
+        Objects.cmbLink_Left.Items.Add("None");
+        Objects.cmbLink_Right.Items.Clear();
+        Objects.cmbLink_Right.Items.Add("None");
+        Objects.cmbLink_Up.Items.Clear();
+        Objects.cmbLink_Up.Items.Add("None");
+
+        // Lista os dados
+        for (byte i = 0; i < (byte)Globals.Map_Morals.Count; i++) Objects.cmbMoral.Items.Add((Globals.Map_Morals)i);
+        for (byte i = 0; i < (byte)Globals.Weathers.Count; i++) Objects.cmbWeather.Items.Add((Globals.Weathers)i);
+        for (byte i = 1; i < (byte)Audio.Musics.Amount; i++) Objects.cmbMusic.Items.Add((Audio.Musics)i);
+        foreach (Lists.Structures.Map Map in Lists.Map.Values) Objects.cmbLink_Down.Items.Add(Map);
+        foreach (Lists.Structures.Map Map in Lists.Map.Values) Objects.cmbLink_Left.Items.Add(Map);
+        foreach (Lists.Structures.Map Map in Lists.Map.Values) Objects.cmbLink_Right.Items.Add(Map);
+        foreach (Lists.Structures.Map Map in Lists.Map.Values) Objects.cmbLink_Up.Items.Add(Map);
 
         // Limites
         Objects.numPanorama.Maximum = Graphics.Tex_Panorama.GetUpperBound(0);
@@ -28,51 +48,33 @@ public partial class Editor_Maps_Properties : Form
         Objects.numWidth.Minimum = Globals.Min_Map_Width;
         Objects.numHeight.Minimum = Globals.Min_Map_Height;
         Objects.numWeather_Intensity.Maximum = Globals.Max_Weather_Intensity;
-        Objects.numLink_Up.Maximum = Lists.Map.GetUpperBound(0);
-        Objects.numLink_Down.Maximum = Lists.Map.GetUpperBound(0);
-        Objects.numLink_Left.Maximum = Lists.Map.GetUpperBound(0);
-        Objects.numLink_Right.Maximum = Lists.Map.GetUpperBound(0);
         Objects.numLight_Global.Maximum = Graphics.Tex_Light.GetUpperBound(0);
 
         // Define os valores
-        Objects.txtName.Text = Lists.Map[Selected].Name;
-        Objects.numWidth.Value = Lists.Map[Selected].Width;
-        Objects.numHeight.Value = Lists.Map[Selected].Height;
-        Objects.cmbMoral.SelectedIndex = Lists.Map[Selected].Moral;
-        Objects.cmbMusic.SelectedIndex = Lists.Map[Selected].Music;
-        Objects.numPanorama.Value = Lists.Map[Selected].Panorama;
-        Objects.numColor_Red.Value = Color.FromArgb(Lists.Map[Selected].Color).R;
-        Objects.numColor_Green.Value = Color.FromArgb(Lists.Map[Selected].Color).G;
-        Objects.numColor_Blue.Value = Color.FromArgb(Lists.Map[Selected].Color).B;
-        Objects.cmbWeather.SelectedIndex = Lists.Map[Selected].Weather.Type;
-        Objects.numWeather_Intensity.Value = Lists.Map[Selected].Weather.Intensity;
-        Objects.numFog_Texture.Value = Lists.Map[Selected].Fog.Texture;
-        Objects.numFog_Speed_X.Value = Lists.Map[Selected].Fog.Speed_X;
-        Objects.numFog_Speed_Y.Value = Lists.Map[Selected].Fog.Speed_Y;
-        Objects.numFog_Transparency.Value = Lists.Map[Selected].Fog.Alpha;
-        Objects.numLink_Up.Value = Lists.Map[Selected].Link[(byte)Globals.Directions.Up];
-        Objects.numLink_Down.Value = Lists.Map[Selected].Link[(byte)Globals.Directions.Down];
-        Objects.numLink_Left.Value = Lists.Map[Selected].Link[(byte)Globals.Directions.Left];
-        Objects.numLink_Right.Value = Lists.Map[Selected].Link[(byte)Globals.Directions.Right];
-        Objects.numLight_Global.Value = Lists.Map[Selected].Light_Global;
-        Objects.numLighting.Value = Lists.Map[Selected].Lighting;
+        Objects.txtName.Text = Selected.Name;
+        Objects.numWidth.Value = Selected.Width;
+        Objects.numHeight.Value = Selected.Height;
+        Objects.cmbMoral.SelectedIndex = Selected.Moral;
+        Objects.cmbMusic.SelectedIndex = Selected.Music;
+        Objects.numPanorama.Value = Selected.Panorama;
+        Objects.numColor_Red.Value = Color.FromArgb(Selected.Color).R;
+        Objects.numColor_Green.Value = Color.FromArgb(Selected.Color).G;
+        Objects.numColor_Blue.Value = Color.FromArgb(Selected.Color).B;
+        Objects.cmbWeather.SelectedIndex = Selected.Weather.Type;
+        Objects.numWeather_Intensity.Value = Selected.Weather.Intensity;
+        Objects.numFog_Texture.Value = Selected.Fog.Texture;
+        Objects.numFog_Speed_X.Value = Selected.Fog.Speed_X;
+        Objects.numFog_Speed_Y.Value = Selected.Fog.Speed_Y;
+        Objects.numFog_Transparency.Value = Selected.Fog.Alpha;
+        Objects.cmbLink_Down.SelectedItem = Selected.Link[(byte)Globals.Directions.Up];
+        Objects.cmbLink_Left.SelectedItem = Selected.Link[(byte)Globals.Directions.Down];
+        Objects.cmbLink_Right.SelectedItem = Selected.Link[(byte)Globals.Directions.Left];
+        Objects.cmbLink_Up.SelectedItem = Selected.Link[(byte)Globals.Directions.Right];
+        Objects.numLight_Global.Value = Selected.Light_Global;
+        Objects.numLighting.Value = Selected.Lighting;
 
         // Abre a janela
         Objects.ShowDialog();
-    }
-
-    private static void Update_List()
-    {
-        // Limpa
-        Objects.cmbMoral.Items.Clear();
-        Objects.cmbWeather.Items.Clear();
-        Objects.cmbMusic.Items.Clear();
-        Objects.cmbMusic.Items.Add("None");
-
-        // Lista os valores
-        for (byte i = 0; i < (byte)Globals.Map_Morals.Count; i++) Objects.cmbMoral.Items.Add((Globals.Map_Morals)i);
-        for (byte i = 0; i < (byte)Globals.Weathers.Count; i++) Objects.cmbWeather.Items.Add((Globals.Weathers)i);
-        for (byte i = 1; i < (byte)Audio.Musics.Amount; i++) Objects.cmbMusic.Items.Add((Audio.Musics)i);
     }
 
     private void Map_Resize()
@@ -81,18 +83,18 @@ public partial class Editor_Maps_Properties : Form
         int Width_Difference, Height_Difference;
 
         // Somente se necessário
-        if (Lists.Map[Selected].Width == Width_New && Lists.Map[Selected].Height == Height_New) return;
+        if (Selected.Width == Width_New && Selected.Height == Height_New) return;
 
         // Redimensiona os azulejos
         Lists.Structures.Map_Tile_Data[,] TempTile;
         Lists.Structures.Map_Tile[,] TempTile2;
 
         // Calcula a diferença
-        Width_Difference = Width_New - Lists.Map[Selected].Width;
-        Height_Difference = Height_New - Lists.Map[Selected].Height;
+        Width_Difference = Width_New - Selected.Width;
+        Height_Difference = Height_New - Selected.Height;
 
         // Azulejo1
-        for (byte c = 0; c < Lists.Map[Selected].Layer.Count; c++)
+        for (byte c = 0; c < Selected.Layer.Count; c++)
         {
             TempTile = new Lists.Structures.Map_Tile_Data[Width_New + 1, Height_New + 1];
 
@@ -101,8 +103,8 @@ public partial class Editor_Maps_Properties : Form
                 {
                     // Redimensiona para frente
                     if (!chkReverse.Checked)
-                        if (x <= Lists.Map[Selected].Width && y <= Lists.Map[Selected].Height)
-                            TempTile[x, y] = Lists.Map[Selected].Layer[c].Tile[x, y];
+                        if (x <= Selected.Width && y <= Selected.Height)
+                            TempTile[x, y] = Selected.Layer[c].Tile[x, y];
                         else
                         {
                             TempTile[x, y] = new Lists.Structures.Map_Tile_Data();
@@ -117,12 +119,12 @@ public partial class Editor_Maps_Properties : Form
                             TempTile[x, y].Mini = new Point[4];
                         }
                         else
-                            TempTile[x, y] = Lists.Map[Selected].Layer[c].Tile[x - Width_Difference, y - Height_Difference];
+                            TempTile[x, y] = Selected.Layer[c].Tile[x - Width_Difference, y - Height_Difference];
                     }
                 }
 
             // Define os dados
-            Lists.Map[Selected].Layer[c].Tile = TempTile;
+            Selected.Layer[c].Tile = TempTile;
         }
 
         // Dados do azulejo
@@ -132,8 +134,8 @@ public partial class Editor_Maps_Properties : Form
             {
                 // Redimensiona para frente
                 if (!chkReverse.Checked)
-                    if (x <= Lists.Map[Selected].Width && y <= Lists.Map[Selected].Height)
-                        TempTile2[x, y] = Lists.Map[Selected].Tile[x, y];
+                    if (x <= Selected.Width && y <= Selected.Height)
+                        TempTile2[x, y] = Selected.Tile[x, y];
                     else
                     {
                         TempTile2[x, y] = new Lists.Structures.Map_Tile();
@@ -148,12 +150,12 @@ public partial class Editor_Maps_Properties : Form
                         TempTile2[x, y].Block = new bool[4];
                     }
                     else
-                        TempTile2[x, y] = Lists.Map[Selected].Tile[x - Width_Difference, y - Height_Difference];
+                        TempTile2[x, y] = Selected.Tile[x - Width_Difference, y - Height_Difference];
                 }
             }
 
         // Define os dados
-        Lists.Map[Selected].Tile = TempTile2;
+        Selected.Tile = TempTile2;
     }
 
     private void butSave_Click(object sender, EventArgs e)
@@ -162,36 +164,36 @@ public partial class Editor_Maps_Properties : Form
         Map_Resize();
 
         // Salva os valores
-        Lists.Map[Selected].Name = txtName.Text;
-        Lists.Map[Selected].Width = (byte)numWidth.Value;
-        Lists.Map[Selected].Height = (byte)numHeight.Value;
-        Lists.Map[Selected].Moral = (byte)Objects.cmbMoral.SelectedIndex;
-        Lists.Map[Selected].Music = (byte)Objects.cmbMusic.SelectedIndex;
-        Lists.Map[Selected].Panorama = (byte)Objects.numPanorama.Value;
-        Lists.Map[Selected].Weather.Type = (byte)Objects.cmbWeather.SelectedIndex;
-        Lists.Map[Selected].Weather.Intensity = (byte)Objects.numWeather_Intensity.Value;
-        Lists.Map[Selected].Fog.Texture = (byte)Objects.numFog_Texture.Value;
-        Lists.Map[Selected].Fog.Speed_X = (sbyte)Objects.numFog_Speed_X.Value;
-        Lists.Map[Selected].Fog.Speed_Y = (sbyte)Objects.numFog_Speed_Y.Value;
-        Lists.Map[Selected].Fog.Alpha = (byte)Objects.numFog_Transparency.Value;
-        Lists.Map[Selected].Color = Color.FromArgb((byte)Objects.numColor_Red.Value, (int)Objects.numColor_Green.Value, (int)Objects.numColor_Blue.Value).ToArgb();
-        Lists.Map[Selected].Link[(byte)Globals.Directions.Up] = (short)Objects.numLink_Up.Value;
-        Lists.Map[Selected].Link[(byte)Globals.Directions.Down] = (short)Objects.numLink_Down.Value;
-        Lists.Map[Selected].Link[(byte)Globals.Directions.Left] = (short)Objects.numLink_Left.Value;
-        Lists.Map[Selected].Link[(byte)Globals.Directions.Right] = (short)Objects.numLink_Right.Value;
-        Lists.Map[Selected].Light_Global = (byte)Objects.numLight_Global.Value;
-        Lists.Map[Selected].Lighting = (byte)Objects.numLighting.Value;
+        Selected.Name = txtName.Text;
+        Selected.Width = (byte)numWidth.Value;
+        Selected.Height = (byte)numHeight.Value;
+        Selected.Moral = (byte)Objects.cmbMoral.SelectedIndex;
+        Selected.Music = (byte)Objects.cmbMusic.SelectedIndex;
+        Selected.Panorama = (byte)Objects.numPanorama.Value;
+        Selected.Weather.Type = (byte)Objects.cmbWeather.SelectedIndex;
+        Selected.Weather.Intensity = (byte)Objects.numWeather_Intensity.Value;
+        Selected.Fog.Texture = (byte)Objects.numFog_Texture.Value;
+        Selected.Fog.Speed_X = (sbyte)Objects.numFog_Speed_X.Value;
+        Selected.Fog.Speed_Y = (sbyte)Objects.numFog_Speed_Y.Value;
+        Selected.Fog.Alpha = (byte)Objects.numFog_Transparency.Value;
+        Selected.Color = Color.FromArgb((byte)Objects.numColor_Red.Value, (int)Objects.numColor_Green.Value, (int)Objects.numColor_Blue.Value).ToArgb();
+        Selected.Link[(byte)Globals.Directions.Up] = (Lists.Structures.Map)Objects.cmbLink_Down.SelectedItem;
+        Selected.Link[(byte)Globals.Directions.Down] = (Lists.Structures.Map)Objects.cmbLink_Left.SelectedItem;
+        Selected.Link[(byte)Globals.Directions.Left] = (Lists.Structures.Map)Objects.cmbLink_Right.SelectedItem;
+        Selected.Link[(byte)Globals.Directions.Right] = (Lists.Structures.Map)Objects.cmbLink_Up.SelectedItem;
+        Selected.Light_Global = (byte)Objects.numLight_Global.Value;
+        Selected.Lighting = (byte)Objects.numLighting.Value;
 
         // Define a nova dimensão dos azulejos
         Editor_Maps.Update_Data();
 
         // Altera o nome na lista
-        Editor_Maps.Objects.List.Nodes[Selected - 1].Text = Globals.Numbering(Selected, Lists.Map.Length, txtName.Text);
+        Editor_Maps.Objects.List.SelectedNode.Text = txtName.Text;
 
         // Reseta os valores
         Globals.Weather_Update();
-        Editor_Maps.Objects.numLighting.Value = Lists.Map[Selected].Lighting;
-        Editor_Maps.Objects.numLight_Global.Value = Lists.Map[Selected].Light_Global;
+        Editor_Maps.Objects.numLighting.Value = Selected.Lighting;
+        Editor_Maps.Objects.numLight_Global.Value = Selected.Light_Global;
 
         // Volta ao editor de mapas
         Visible = false;
