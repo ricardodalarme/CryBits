@@ -45,12 +45,14 @@ class Lists
             }
         }
 
-        public struct Options
+        [Serializable]
+        public class Options
         {
             public string Directory_Client;
             public bool Pre_Map_Grid;
             public bool Pre_Map_View;
             public bool Pre_Map_Audio;
+            public string Username = string.Empty;
         }
 
         public struct Server_Data

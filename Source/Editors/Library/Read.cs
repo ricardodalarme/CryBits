@@ -7,20 +7,15 @@ class Read
 {
     public static void Options()
     {
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryReader Data = new BinaryReader(Directories.Options.OpenRead());
-
         // Lê os dados
-        Lists.Options.Directory_Client = Data.ReadString();
-        Lists.Options.Pre_Map_Grid = Data.ReadBoolean();
-        Lists.Options.Pre_Map_View = Data.ReadBoolean();
-        Lists.Options.Pre_Map_Audio = Data.ReadBoolean();
+        FileStream Stream = Directories.Options.OpenRead();
+        Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);
+        Stream.Close();
 
-        // Fecha o sistema
-        Data.Dispose();
-
-        // Define e cria os diretórios
+        // Define os dados
         Directories.SetClient();
+        Login.Form.txtUsername.Text = Lists.Options.Username;
+        Login.Form.chkUsername.Checked = Lists.Options.Username != string.Empty;
     }
 
     public static void Tools()

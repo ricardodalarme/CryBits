@@ -6,17 +6,10 @@ class Write
 {
     public static void Options()
     {
-        // Cria um sistema binário para a manipulação dos dados
-        BinaryWriter Data = new BinaryWriter(Directories.Options.OpenWrite());
-
         // Escreve os dados
-        Data.Write(Lists.Options.Directory_Client);
-        Data.Write(Lists.Options.Pre_Map_Grid);
-        Data.Write(Lists.Options.Pre_Map_View);
-        Data.Write(Lists.Options.Pre_Map_Audio);
-
-        // Fecha o sistema
-        Data.Dispose();
+        FileStream Stream = new FileInfo(Directories.Options.FullName).OpenWrite();
+        new BinaryFormatter().Serialize(Stream, Lists.Options);
+        Stream.Close();
     }
 
     public static void Tools()

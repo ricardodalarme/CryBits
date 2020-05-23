@@ -33,7 +33,7 @@ partial class Send
 
         // Envia os dados
         Data.Write((byte)Packets.Connect);
-        Data.Write(Login.Form.txtName.Text);
+        Data.Write(Login.Form.txtUsername.Text);
         Data.Write(Login.Form.txtPassword.Text);
         Data.Write(true); // Acesso pelo editor
         Packet(Data);

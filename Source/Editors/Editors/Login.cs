@@ -19,7 +19,7 @@ public partial class Login : Form
             MessageBox.Show("The server is currently unavailable.");
             return;
         }
-        if (string.IsNullOrEmpty(txtName.Text) || string.IsNullOrEmpty(txtPassword.Text))
+        if (string.IsNullOrEmpty(txtUsername.Text) || string.IsNullOrEmpty(txtPassword.Text))
         {
             MessageBox.Show("Some field is empty.");
             return;
@@ -27,6 +27,11 @@ public partial class Login : Form
 
         // Tenta fazer login
         Send.Connect();
+
+        // Salva o nome do usuário
+        if (chkUsername.Checked) Lists.Options.Username = txtUsername.Text;
+        else Lists.Options.Username = string.Empty;
+        Write.Options();
     }
 
     private void Login_FormClosing(object sender, FormClosingEventArgs e)
