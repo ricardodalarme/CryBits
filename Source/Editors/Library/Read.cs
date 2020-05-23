@@ -7,38 +7,20 @@ class Read
 {
     public static void Options()
     {
-        // Se o arquivo não existir, não é necessário carregá-lo
-        if (!Directories.Options.Exists)
-            Clear.Options();
-        else
-        {
-            // Cria um sistema binário para a manipulação dos dados
-            BinaryReader Data = new BinaryReader(Directories.Options.OpenRead());
+        // Cria um sistema binário para a manipulação dos dados
+        BinaryReader Data = new BinaryReader(Directories.Options.OpenRead());
 
-            // Lê os dados
-            Lists.Options.Directory_Client = Data.ReadString();
-            Lists.Options.Directory_Server = Data.ReadString();
-            Lists.Options.Pre_Map_Grid = Data.ReadBoolean();
-            Lists.Options.Pre_Map_View = Data.ReadBoolean();
-            Lists.Options.Pre_Map_Audio = Data.ReadBoolean();
+        // Lê os dados
+        Lists.Options.Directory_Client = Data.ReadString();
+        Lists.Options.Pre_Map_Grid = Data.ReadBoolean();
+        Lists.Options.Pre_Map_View = Data.ReadBoolean();
+        Lists.Options.Pre_Map_Audio = Data.ReadBoolean();
 
-            // Fecha o sistema
-            Data.Dispose();
-        }
+        // Fecha o sistema
+        Data.Dispose();
 
         // Define e cria os diretórios
         Directories.SetClient();
-        Send.Request_Server_Data();
-
-        // Atualiza os valores
-        Editor_Maps.Objects.butGrid.Checked = Lists.Options.Pre_Map_Grid;
-        Editor_Maps.Objects.butAudio.Checked = Lists.Options.Pre_Map_Audio;
-
-        if (!Lists.Options.Pre_Map_View)
-        {
-            Editor_Maps.Objects.butVisualization.Checked = false;
-            Editor_Maps.Objects.butEdition.Checked = true;
-        }
     }
 
     public static void Tools()

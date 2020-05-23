@@ -47,7 +47,6 @@ class Lists
         public struct Options
         {
             public string Directory_Client;
-            public string Directory_Server;
             public bool Pre_Map_Grid;
             public bool Pre_Map_View;
             public bool Pre_Map_Audio;

@@ -4,32 +4,27 @@ using System.Windows.Forms;
 partial class Editor_Interface : Form
 {
     // Usado para acessar os dados da janela
-    public static Editor_Interface Objects = new Editor_Interface();
+    public static Editor_Interface Form;
 
-    // Index do item selecionado
-    static Lists.Structures.Tool Selected;
+    // Ferramenta selecionada
+    private Lists.Structures.Tool Selected;
 
     public Editor_Interface()
     {
+        // Inicializa os componentes
         InitializeComponent();
-    }
-
-    public static void Open()
-    {
-        // Lê os dados
-        Read.Tools();
+        Graphics.Win_Interface = new SFML.Graphics.RenderWindow(picWindow.Handle);
 
         // Adiciona as janelas à lista
-        Objects.cmbWindows.Items.Clear();
-        Objects.cmbWindows.Items.AddRange(Enum.GetNames(typeof(Globals.Windows)));
-        Objects.cmbWindows.SelectedIndex = 0;
+         cmbWindows.Items.AddRange(Enum.GetNames(typeof(Globals.Windows)));
+         cmbWindows.SelectedIndex = 0;
 
         // Adiciona os tipos de ferramentas à lista
-        for (byte i = 0; i < (byte)Globals.Tools_Types.Count; i++) Objects.cmbType.Items.Add((Globals.Tools_Types)i);
+        for (byte i = 0; i < (byte)Globals.Tools_Types.Count; i++)  cmbType.Items.Add((Globals.Tools_Types)i);
 
         // Abre a janela
-        Selection.Objects.Visible = false;
-        Objects.Visible = true;
+        Editor_Maps.Form.Hide();
+        Show();
     }
 
     private void cmbWindows_SelectedIndexChanged(object sender, EventArgs e)
@@ -77,19 +72,17 @@ partial class Editor_Interface : Form
 
     private void butSaveAll_Click(object sender, EventArgs e)
     {
-        // Salva a dimensão da estrutura
+        // Salva os dados e volta à janela principal
         Write.Tools();
-
-        // Volta à janela de seleção
-        Visible = false;
-        Selection.Objects.Visible = true;
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void butCancel_Click(object sender, EventArgs e)
     {
-        // Volta ao menu
-        Visible = false;
-        Selection.Objects.Visible = true;
+        // Volta à janela principal
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void butNew_Click(object sender, EventArgs e)
@@ -233,5 +226,10 @@ partial class Editor_Interface : Form
 
         // Foca o componente
         treOrder.Focus();
+    }
+
+    private void tmrRender_Tick(object sender, EventArgs e)
+    {
+        Graphics.Interface();
     }
 }

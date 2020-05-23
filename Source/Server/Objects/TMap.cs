@@ -81,8 +81,8 @@ namespace Objects
             TMap_Items Map_Item = new TMap_Items();
 
             // Verifica se tem algum atributo de item no mapa
-            for (byte x = 0; x <= Data.Width; x++)
-                for (byte y = 0; y <= Data.Height; y++)
+            for (byte x = 0; x < Data.Width; x++)
+                for (byte y = 0; y < Data.Height; y++)
                     if (Data.Tile[x, y].Attribute == (byte)Game.Tile_Attributes.Item)
                     {
                         // Faz o item aparecer

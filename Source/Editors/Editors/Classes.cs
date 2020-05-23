@@ -4,46 +4,47 @@ using System.Windows.Forms;
 partial class Editor_Classes : Form
 {
     // Usado para acessar os dados da janela
-    public static Editor_Classes Objects = new Editor_Classes();
+    public static Editor_Classes Form;
 
     // Classe selecionada
     private Lists.Structures.Class Selected;
 
     public Editor_Classes()
     {
+        // Inicializa os componentes 
         InitializeComponent();
-    }
 
-    public static void Request()
-    {
-        // Lê os dados
-        Globals.OpenEditor = Objects;
-        Send.Request_Items();
-        Send.Request_Classes();
-    }
-
-    public static void Open()
-    {
-        // Lista de itens
-        Objects.cmbItems.Items.Clear();
-        foreach (Lists.Structures.Item Item in Lists.Item.Values) Objects.cmbItems.Items.Add(Item);
-
-        // Lista de mapas
-        Objects.cmbSpawn_Map.Items.Clear();
-        foreach (Lists.Structures.Map Map in Lists.Map.Values) Objects.cmbSpawn_Map.Items.Add(Map);
-
-        // Lista as classes
-        Objects.List.Nodes.Clear();
-        foreach (Lists.Structures.Class Class in Lists.Class.Values)
-        {
-            Objects.List.Nodes.Add(Class.Name);
-            Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = Class.ID;
-        }
-        if (Objects.List.Nodes.Count > 0) Objects.List.SelectedNode = Objects.List.Nodes[0];
+        // Lista os dados
+        foreach (Lists.Structures.Item Item in Lists.Item.Values) cmbItems.Items.Add(Item);
+        foreach (Lists.Structures.Map Map in Lists.Map.Values) cmbSpawn_Map.Items.Add(Map);
+        List_Update();
 
         // Abre a janela
-        Selection.Objects.Visible = false;
-        Objects.Visible = true;
+        Editor_Maps.Form.Hide();
+        Show();
+    }
+
+    private void Groups_Visibility()
+    {
+        // Atualiza a visiblidade dos paineis
+        grpGeneral.Visible = grpAttributes.Visible = grpDrop.Visible = grpSpawn.Visible = grpTexture.Visible = List.SelectedNode != null;
+        grpItem_Add.Visible = false;
+    }
+
+    private void List_Update()
+    {
+        // Lista as classes
+        List.Nodes.Clear();
+        foreach (Lists.Structures.Class Class in Lists.Class.Values)
+            if (Class.Name.StartsWith(txtFilter.Text))
+            {
+                List.Nodes.Add(Class.Name);
+                List.Nodes[List.Nodes.Count - 1].Tag = Class.ID;
+            }
+
+        // Seleciona o primeiro
+        if (List.Nodes.Count > 0) List.SelectedNode = List.Nodes[0];
+        Groups_Visibility();
     }
 
     private void List_AfterSelect(object sender, TreeViewEventArgs e)
@@ -81,6 +82,11 @@ partial class Editor_Classes : Form
         if (lstItems.Items.Count > 0) lstItems.SelectedIndex = 0;
     }
 
+    private void txtFilter_TextChanged(object sender, EventArgs e)
+    {
+        List_Update();
+    }
+
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
@@ -107,19 +113,17 @@ partial class Editor_Classes : Form
 
     private void butSave_Click(object sender, EventArgs e)
     {
-        // Salva a dimensão da estrutura
+        // Salva os dados e volta à janela principal
         Send.Write_Classes();
-
-        // Volta à janela de seleção
-        Visible = false;
-        Selection.Objects.Visible = true;
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void butCancel_Click(object sender, EventArgs e)
     {
-        // Volta ao menu
-        Visible = false;
-        Selection.Objects.Visible = true;
+        // Volta à janela principal
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void txtName_TextChanged(object sender, EventArgs e)

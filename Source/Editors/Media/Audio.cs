@@ -45,7 +45,7 @@ class Audio
         public static void Play(Sounds Index, bool Loop = false)
         {
             // Somente se necessário
-            if (Editor_Maps.Objects.Visible && !Editor_Maps.Objects.butAudio.Checked) return;
+            if (Editor_Maps.Form.Visible && !Editor_Maps.Form.butAudio.Checked) return;
 
             // Reproduz o áudio
             List[(byte)Index].Volume = 20;
@@ -81,7 +81,7 @@ class Audio
 
             // Apenas se necessário
             if (Device != null) return;
-            if (Editor_Maps.Objects.Visible && !Editor_Maps.Objects.butAudio.Checked) return;
+            if (Editor_Maps.Form.Visible && !Editor_Maps.Form.butAudio.Checked) return;
             if (!File.Exists) return;
 
             // Carrega o áudio

@@ -34,7 +34,7 @@
             this.scrlImageY = new System.Windows.Forms.VScrollBar();
             this.scrlImageX = new System.Windows.Forms.HScrollBar();
             this.picImage = new System.Windows.Forms.PictureBox();
-            this.tmpRender = new System.Windows.Forms.Timer(this.components);
+            this.tmrRender = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -92,11 +92,11 @@
             this.picImage.TabIndex = 27;
             this.picImage.TabStop = false;
             // 
-            // tmpRender
+            // tmrRender
             // 
-            this.tmpRender.Enabled = true;
-            this.tmpRender.Interval = 1;
-            this.tmpRender.Tick += new System.EventHandler(this.tmpRender_Tick);
+            this.tmrRender.Enabled = true;
+            this.tmrRender.Interval = 1;
+            this.tmrRender.Tick += new System.EventHandler(this.tmpRender_Tick);
             // 
             // Preview
             // 
@@ -131,5 +131,5 @@
     public System.Windows.Forms.HScrollBar scrlImageX;
     public System.Windows.Forms.PictureBox picImage;
     public System.Windows.Forms.CheckBox chkTransparent;
-    private System.Windows.Forms.Timer tmpRender;
+    private System.Windows.Forms.Timer tmrRender;
 }

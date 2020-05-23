@@ -33,20 +33,35 @@ class Directories
     public static FileInfo Tex_Transparent;
     public static FileInfo Tex_Lighting;
 
+    public static bool Select()
+    {
+        // Cria uma instância de um navegador de pastas
+        FolderBrowserDialog Browser = new FolderBrowserDialog
+        {
+            Description = "Select the client directory",
+            ShowNewFolderButton = false,
+        };
+        Browser.SelectedPath = Lists.Options.Directory_Client;
+
+        // Só permite continuar caso selecionar um diretório
+        if (Browser.ShowDialog() != DialogResult.OK)
+        {
+            MessageBox.Show("You need to select the client directory.", "Select the client directory", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+            return false;
+        }
+
+        // Salva os dados
+        Lists.Options.Directory_Client = Browser.SelectedPath;
+        Write.Options();
+
+        // Define e cria os diretórios
+        SetClient();
+        return true;
+    }
+
     public static void SetClient()
     {
         string Directory = Lists.Options.Directory_Client;
-
-        // Previne erros
-        if (!System.IO.Directory.Exists(Directory))
-        {
-            Lists.Options.Directory_Client = string.Empty;
-            Write.Options();
-            return;
-        }
-
-        // Demonstra o diretório
-        Selection.Objects.txtDirectory_Client.Text = Directory;
 
         // Cliente
         Sounds = new DirectoryInfo(Directory + @"\Audio\Sounds\");
@@ -96,8 +111,10 @@ class Directories
         Tex_Lighting.Directory.Create();
         Tex_Items.Create();
 
-        // Lê os dados gerais do cliente
-        Graphics.LoadTextures();
+        // Lê os dados do lado do cliente
+        Graphics.Init();
         Audio.Sound.Load();
+        Read.Tiles();
+        Read.Tools();
     }
 }

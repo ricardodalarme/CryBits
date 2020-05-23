@@ -62,6 +62,14 @@
             this.butAudio = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.butProperties = new System.Windows.Forms.ToolStripButton();
+            this.butEditors = new System.Windows.Forms.ToolStripDropDownButton();
+            this.butEditors_Classes = new System.Windows.Forms.ToolStripMenuItem();
+            this.butEditors_Data = new System.Windows.Forms.ToolStripMenuItem();
+            this.butEditors_Interface = new System.Windows.Forms.ToolStripMenuItem();
+            this.butEditors_Items = new System.Windows.Forms.ToolStripMenuItem();
+            this.butEditors_NPCs = new System.Windows.Forms.ToolStripMenuItem();
+            this.butEditors_Shops = new System.Windows.Forms.ToolStripMenuItem();
+            this.butEditors_Tiles = new System.Windows.Forms.ToolStripMenuItem();
             this.picTile = new System.Windows.Forms.PictureBox();
             this.scrlTileY = new System.Windows.Forms.VScrollBar();
             this.scrlMapX = new System.Windows.Forms.HScrollBar();
@@ -152,6 +160,7 @@
             this.List = new System.Windows.Forms.TreeView();
             this.butRemove = new System.Windows.Forms.Button();
             this.butNew = new System.Windows.Forms.Button();
+            this.txtFilter = new System.Windows.Forms.TextBox();
             this.tolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
@@ -219,7 +228,8 @@
             this.butGrid,
             this.butAudio,
             this.toolStripSeparator10,
-            this.butProperties});
+            this.butProperties,
+            this.butEditors});
             this.tolStrip.Location = new System.Drawing.Point(0, 0);
             this.tolStrip.Name = "tolStrip";
             this.tolStrip.Size = new System.Drawing.Size(1366, 25);
@@ -547,6 +557,72 @@
             this.butProperties.Size = new System.Drawing.Size(23, 22);
             this.butProperties.Text = "Properties";
             this.butProperties.Click += new System.EventHandler(this.butProperties_Click);
+            // 
+            // butEditors
+            // 
+            this.butEditors.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butEditors.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.butEditors_Classes,
+            this.butEditors_Data,
+            this.butEditors_Interface,
+            this.butEditors_Items,
+            this.butEditors_NPCs,
+            this.butEditors_Shops,
+            this.butEditors_Tiles});
+            this.butEditors.Image = ((System.Drawing.Image)(resources.GetObject("butEditors.Image")));
+            this.butEditors.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.butEditors.Name = "butEditors";
+            this.butEditors.Size = new System.Drawing.Size(29, 22);
+            this.butEditors.Text = "toolStripDropDownButton1";
+            // 
+            // butEditors_Classes
+            // 
+            this.butEditors_Classes.Name = "butEditors_Classes";
+            this.butEditors_Classes.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Classes.Text = "Classes";
+            this.butEditors_Classes.Click += new System.EventHandler(this.butEditors_Classes_Click);
+            // 
+            // butEditors_Data
+            // 
+            this.butEditors_Data.Name = "butEditors_Data";
+            this.butEditors_Data.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Data.Text = "Data";
+            this.butEditors_Data.Click += new System.EventHandler(this.butEditors_Data_Click);
+            // 
+            // butEditors_Interface
+            // 
+            this.butEditors_Interface.Name = "butEditors_Interface";
+            this.butEditors_Interface.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Interface.Text = "Interface";
+            this.butEditors_Interface.Click += new System.EventHandler(this.butEditors_Interface_Click);
+            // 
+            // butEditors_Items
+            // 
+            this.butEditors_Items.Name = "butEditors_Items";
+            this.butEditors_Items.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Items.Text = "Items";
+            this.butEditors_Items.Click += new System.EventHandler(this.butEditors_Items_Click);
+            // 
+            // butEditors_NPCs
+            // 
+            this.butEditors_NPCs.Name = "butEditors_NPCs";
+            this.butEditors_NPCs.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_NPCs.Text = "NPCs";
+            this.butEditors_NPCs.Click += new System.EventHandler(this.butEditors_NPCs_Click);
+            // 
+            // butEditors_Shops
+            // 
+            this.butEditors_Shops.Name = "butEditors_Shops";
+            this.butEditors_Shops.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Shops.Text = "Shops";
+            this.butEditors_Shops.Click += new System.EventHandler(this.butEditors_Shops_Click);
+            // 
+            // butEditors_Tiles
+            // 
+            this.butEditors_Tiles.Name = "butEditors_Tiles";
+            this.butEditors_Tiles.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Tiles.Text = "Tiles";
+            this.butEditors_Tiles.Click += new System.EventHandler(this.butEditors_Tiles_Click);
             // 
             // picTile
             // 
@@ -1462,15 +1538,15 @@
             this.List.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.List.HideSelection = false;
-            this.List.Location = new System.Drawing.Point(1101, 55);
+            this.List.Location = new System.Drawing.Point(1101, 51);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(256, 601);
+            this.List.Size = new System.Drawing.Size(256, 574);
             this.List.TabIndex = 109;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
             // 
             // butRemove
             // 
-            this.butRemove.Location = new System.Drawing.Point(1231, 27);
+            this.butRemove.Location = new System.Drawing.Point(1231, 631);
             this.butRemove.Name = "butRemove";
             this.butRemove.Size = new System.Drawing.Size(126, 25);
             this.butRemove.TabIndex = 111;
@@ -1480,7 +1556,7 @@
             // 
             // butNew
             // 
-            this.butNew.Location = new System.Drawing.Point(1101, 27);
+            this.butNew.Location = new System.Drawing.Point(1101, 631);
             this.butNew.Name = "butNew";
             this.butNew.Size = new System.Drawing.Size(126, 25);
             this.butNew.TabIndex = 110;
@@ -1488,12 +1564,22 @@
             this.butNew.UseVisualStyleBackColor = true;
             this.butNew.Click += new System.EventHandler(this.butNew_Click);
             // 
+            // txtFilter
+            // 
+            this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFilter.Location = new System.Drawing.Point(1101, 26);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(256, 20);
+            this.txtFilter.TabIndex = 112;
+            this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+            // 
             // Editor_Maps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1366, 687);
+            this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.butRemove);
             this.Controls.Add(this.butNew);
             this.Controls.Add(this.List);
@@ -1520,7 +1606,7 @@
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "Editor_Maps";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Map Editor";
+            this.Text = "CryBits Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Editor_Maps_FormClosing);
             this.SizeChanged += new System.EventHandler(this.Editor_Maps_SizeChanged);
             this.tolStrip.ResumeLayout(false);
@@ -1689,4 +1775,13 @@
     public System.Windows.Forms.TreeView List;
     private System.Windows.Forms.Button butRemove;
     private System.Windows.Forms.Button butNew;
+    private System.Windows.Forms.ToolStripDropDownButton butEditors;
+    private System.Windows.Forms.ToolStripMenuItem butEditors_Classes;
+    private System.Windows.Forms.ToolStripMenuItem butEditors_Data;
+    private System.Windows.Forms.ToolStripMenuItem butEditors_Interface;
+    private System.Windows.Forms.ToolStripMenuItem butEditors_Items;
+    private System.Windows.Forms.ToolStripMenuItem butEditors_NPCs;
+    private System.Windows.Forms.ToolStripMenuItem butEditors_Shops;
+    private System.Windows.Forms.ToolStripMenuItem butEditors_Tiles;
+    public System.Windows.Forms.TextBox txtFilter;
 }

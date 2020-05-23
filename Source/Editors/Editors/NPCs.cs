@@ -4,52 +4,28 @@ using System.Windows.Forms;
 public partial class Editor_NPCs : Form
 {
     // Usado para acessar os dados da janela
-    public static Editor_NPCs Objects = new Editor_NPCs();
+    public static Editor_NPCs Form;
 
-    // Index do item selecionado
+    // NPC selecionado
     private Lists.Structures.NPC Selected;
 
     public Editor_NPCs()
     {
+        // Inicializa os componentes
         InitializeComponent();
-    }
-
-    public static void Request()
-    {
-        // Lê os dados
-        Globals.OpenEditor = Objects;
-        Send.Request_Classes();
-        Send.Request_Items();
-        Send.Request_Shops();
-        Send.Request_NPCs();
-    }
-
-    public static void Open()
-    {
-        // Lista de itens
-        Objects.cmbDrop_Item.Items.Clear();
-        foreach (Lists.Structures.Item Item in Lists.Item.Values) Objects.cmbDrop_Item.Items.Add(Item);
-
-        // Lista de lojas
-        Objects.cmbShop.Items.Clear();
-        Objects.cmbShop.Items.Add("None");
-        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values) Objects.cmbShop.Items.Add(Shop);
 
         // Define os limites
-        Objects.numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
+        numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
 
-        // Lista os NPCs
-        Objects.List.Nodes.Clear();
-        foreach (Lists.Structures.NPC NPC in Lists.NPC.Values)
-        {
-            Objects.List.Nodes.Add(NPC.Name);
-            Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = NPC.ID;
-        }
-        if (Objects.List.Nodes.Count > 0) Objects.List.SelectedNode = Objects.List.Nodes[0];
+        // Lista os dados
+        cmbShop.Items.Add("None");
+        foreach (Lists.Structures.Item Item in Lists.Item.Values) cmbDrop_Item.Items.Add(Item);
+        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values) cmbShop.Items.Add(Shop);
+        List_Update();
 
         // Abre a janela
-        Selection.Objects.Visible = false;
-        Objects.Visible = true;
+        Editor_Maps.Form.Hide();
+        Show();
     }
 
     private void Groups_Visibility()
@@ -57,16 +33,28 @@ public partial class Editor_NPCs : Form
         // Atualiza a visiblidade dos paineis
         grpGeneral.Visible = grpAttributes.Visible = grpBehaviour.Visible = grpDrop.Visible = grpAllies.Visible = List.SelectedNode != null;
         grpAllie_Add.Visible = grpDrop_Add.Visible = false;
-        List.Focus();
+    }
+
+    private void List_Update()
+    {
+        // Lista os NPCs
+        List.Nodes.Clear();
+        foreach (Lists.Structures.NPC NPC in Lists.NPC.Values)
+            if (NPC.Name.StartsWith(txtFilter.Text))
+            {
+                List.Nodes.Add(NPC.Name);
+                List.Nodes[List.Nodes.Count - 1].Tag = NPC.ID;
+            }
+
+        // Seleciona o primeiro
+        if (List.Nodes.Count > 0) List.SelectedNode = List.Nodes[0];
+        Groups_Visibility(); 
     }
 
     private void List_AfterSelect(object sender, TreeViewEventArgs e)
     {
         // Atualiza o valor da loja selecionada
         Selected = Lists.NPC[(Guid)List.SelectedNode.Tag];
-
-        // Altera a visibilidade dos grupos se necessário
-        Groups_Visibility();
 
         // Reseta os dados necessários
         lstDrop.Items.Clear();
@@ -101,6 +89,11 @@ public partial class Editor_NPCs : Form
         if (lstDrop.Items.Count > 0) lstDrop.SelectedIndex = 0;
     }
 
+    private void txtFilter_TextChanged(object sender, EventArgs e)
+    {
+        List_Update();
+    }
+
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
@@ -113,6 +106,9 @@ public partial class Editor_NPCs : Form
         Node.Tag = NPC.ID;
         List.Nodes.Add(Node);
         List.SelectedNode = Node;
+
+        // Altera a visiblidade dos grupos caso necessários
+        Groups_Visibility();
     }
 
     private void butRemove_Click(object sender, EventArgs e)
@@ -120,7 +116,7 @@ public partial class Editor_NPCs : Form
         // Remove a loja selecionada
         if (List.SelectedNode != null)
         {
-            Lists.Item.Remove(Selected.ID);
+            Lists.NPC.Remove(Selected.ID);
             List.SelectedNode.Remove();
             Groups_Visibility();
         }
@@ -128,19 +124,17 @@ public partial class Editor_NPCs : Form
 
     private void butSave_Click(object sender, EventArgs e)
     {
-        // Salva os dados
+        // Salva os dados e volta à janela principal
         Send.Write_NPCs();
-
-        // Volta à janela de seleção
-        Visible = false;
-        Selection.Objects.Visible = true;
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void butCancel_Click(object sender, EventArgs e)
     {
-        // Volta ao menu
-        Visible = false;
-        Selection.Objects.Visible = true;
+        // Volta à janela principal
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void txtName_TextChanged(object sender, EventArgs e)
@@ -271,7 +265,7 @@ public partial class Editor_NPCs : Form
     {
         // Adiciona os NPCs
         cmbAllie_NPC.Items.Clear();
-        foreach (Lists.Structures.NPC NPC in Lists.NPC.Values) Objects.cmbAllie_NPC.Items.Add(NPC);
+        foreach (Lists.Structures.NPC NPC in Lists.NPC.Values) cmbAllie_NPC.Items.Add(NPC);
         cmbAllie_NPC.SelectedIndex = 0;
 
         // Abre a janela para adicionar o aliado

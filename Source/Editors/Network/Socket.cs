@@ -77,6 +77,6 @@ class Socket
     {
         // Fecha todas as janelas abertar e abre o menu de login
         for (int i = 0; i < Application.OpenForms.Count; i++) Application.OpenForms[i].Visible = false;
-        Login.Objects.Visible = true;
+        Login.Form.Visible = true;
     }
 }

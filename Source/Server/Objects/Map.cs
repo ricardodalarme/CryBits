@@ -8,7 +8,7 @@ namespace Objects
     {
         // Dados
         public short Revision;
-        public List<Map_Layer> Layer = new List<Map_Layer>();
+        public Map_Layer[] Layer = Array.Empty<Map_Layer>();
         public Map_Tile[,] Tile;
         public string Name = string.Empty;
         public byte Width = Game.Min_Map_Width;
@@ -29,7 +29,7 @@ namespace Objects
         public Map(Guid ID) : base(ID) { }
 
         // Verifica se as coordenas estão no limite do mapa
-        public bool OutLimit(short X, short Y) => X > Width || Y > Height || X < 0 || Y < 0;
+        public bool OutLimit(short X, short Y) => X >= Width || Y >= Height || X < 0 || Y < 0;
 
         public bool Tile_Blocked(short X, short Y)
         {
@@ -80,7 +80,7 @@ namespace Objects
 
         public Map_Layer(byte Width, byte Height)
         {
-            Tile = new Map_Tile_Data[Width + 1, Height + 1];
+            Tile = new Map_Tile_Data[Width, Height];
         }
     }
 

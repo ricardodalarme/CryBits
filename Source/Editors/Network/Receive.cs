@@ -45,9 +45,9 @@ partial class Receive
 
     private static void Connect()
     {
-        // Abre a janela de edição
-        Login.Objects.Visible = false;
-        Selection.Objects.Visible = true;
+        // Abre a janela principal
+        Login.Form.Visible = false;
+        Editor_Maps.Form = new Editor_Maps();
     }
 
     private static void Server_Data(NetIncomingMessage Data)
@@ -61,9 +61,6 @@ partial class Receive
         Lists.Server_Data.Max_Party_Members = Data.ReadByte();
         Lists.Server_Data.Max_Map_Items = Data.ReadByte();
         Lists.Server_Data.Num_Points = Data.ReadByte();
-
-        // Abre o editor
-        if (Globals.OpenEditor == Editor_Data.Objects) Editor_Data.Open();
     }
 
     private static void Classes(NetIncomingMessage Data)
@@ -95,9 +92,6 @@ partial class Receive
             byte Num_Items = Data.ReadByte();
             for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new Tuple<Lists.Structures.Item, short>((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16()));
         }
-
-        // Abre o editor
-        if (Globals.OpenEditor == Editor_Classes.Objects) Editor_Classes.Open();
     }
 
     private static void Maps(NetIncomingMessage Data)
@@ -145,7 +139,7 @@ partial class Receive
         byte Num_Layers = Data.ReadByte();
 
         // Camadas
-        for (byte n = 0; n <= Num_Layers; n++)
+        for (byte n = 0; n < Num_Layers; n++)
         {
             // Dados básicos
             Map.Layer.Add(new Lists.Structures.Map_Layer());
@@ -153,11 +147,11 @@ partial class Receive
             Map.Layer[n].Type = Data.ReadByte();
 
             // Redimensiona os azulejos
-            Map.Layer[n].Tile = new Lists.Structures.Map_Tile_Data[Map.Width + 1, Map.Height + 1];
+            Map.Layer[n].Tile = new Lists.Structures.Map_Tile_Data[Map.Width, Map.Height];
 
             // Azulejos
-            for (byte x = 0; x <= Map.Width; x++)
-                for (byte y = 0; y <= Map.Height; y++)
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                 {
                     Map.Layer[n].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
                     Map.Layer[n].Tile[x, y].X = Data.ReadByte();
@@ -169,9 +163,9 @@ partial class Receive
         }
 
         // Dados específicos dos azulejos
-        Map.Tile = new Lists.Structures.Map_Tile[Map.Width + 1, Map.Height + 1];
-        for (byte x = 0; x <= Map.Width; x++)
-            for (byte y = 0; y <= Map.Height; y++)
+        Map.Tile = new Lists.Structures.Map_Tile[Map.Width, Map.Height];
+        for (byte x = 0; x < Map.Width; x++)
+            for (byte y = 0; y < Map.Height; y++)
             {
                 Map.Tile[x, y] = new Lists.Structures.Map_Tile();
                 Map.Tile[x, y].Attribute = Data.ReadByte();
@@ -206,9 +200,6 @@ partial class Receive
                 NPC.Y = Data.ReadByte();
                 Map.NPC.Add(NPC);
             }
-
-        // Abre o editor
-        if (Globals.OpenEditor == Editor_Maps.Objects) Editor_Maps.Open();
     }
 
     private static void NPCs(NetIncomingMessage Data)
@@ -243,9 +234,6 @@ partial class Receive
             NPC.Flee_Helth = Data.ReadByte();
             NPC.Shop = (Lists.Structures.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
         }
-
-        // Abre o editor
-        if (Globals.OpenEditor == Editor_NPCs.Objects) Editor_NPCs.Open();
     }
 
     private static void Items(NetIncomingMessage Data)
@@ -277,9 +265,6 @@ partial class Receive
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
             Item.Weapon_Damage = Data.ReadInt16();
         }
-
-        // Abre o editor
-        if (Globals.OpenEditor == Editor_Items.Objects) Editor_Items.Open();
     }
 
     private static void Shops(NetIncomingMessage Data)
@@ -305,8 +290,5 @@ partial class Receive
             for (byte j = 0; j < Shop.Sold.Capacity; j++) Shop.Sold.Add(new Lists.Structures.Shop_Item((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
             for (byte j = 0; j < Shop.Bought.Capacity; j++) Shop.Bought.Add(new Lists.Structures.Shop_Item((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
         }
-
-        // Abre o editor
-        if (Globals.OpenEditor == Editor_Shops.Objects) Editor_Shops.Open();
     }
 }

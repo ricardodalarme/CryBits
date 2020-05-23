@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 class Globals
 {
+    // Usado para acessar os dados da janela
+    public static Editor_Tiles Tiles;
+
     // Dimensão das grades 
     public const byte Grid = 32;
     public static Size Grid_Size = new Size(Grid, Grid);
-
-    // Editor que será aberto
-    public static System.Windows.Forms.Form OpenEditor;
 
     // Medida de calculo do atraso do jogo
     public static short FPS;
@@ -166,8 +167,9 @@ class Globals
 
     public static void Weather_Update()
     {
+        return;
         // Redimensiona a lista
-        switch ((Weathers)Editor_Maps.Selected.Weather.Type)
+        switch ((Weathers)Editor_Maps.Form.Selected.Weather.Type)
         {
             case Weathers.Thundering:
             case Weathers.Raining: Lists.Weather = new Lists.Structures.Weather[Max_Rain_Particles + 1]; break;
@@ -197,7 +199,7 @@ class Globals
     }
 
     // Tamanho da grade com o zoom
-    public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Zoom());
+    public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Form.Zoom());
     public static Point Zoom(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
     public static Rectangle Zoom(Rectangle Rectangle) => new Rectangle(Rectangle.X * Grid_Zoom, Rectangle.Y * Grid_Zoom, Rectangle.Width * Grid_Zoom, Rectangle.Height * Grid_Zoom);
 

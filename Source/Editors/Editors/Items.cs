@@ -4,54 +4,29 @@ using System.Windows.Forms;
 partial class Editor_Items : Form
 {
     // Usado para acessar os dados da janela
-    public static Editor_Items Objects = new Editor_Items();
+    public static Editor_Items Form;
 
     // Item selecionado
     private Lists.Structures.Item Selected;
 
     public Editor_Items()
     {
+        // Inicializa os componentes
         InitializeComponent();
-    }
-
-    public static void Request()
-    {
-        // Lê os dados
-        Globals.OpenEditor = Objects;
-        Send.Request_Classes();
-        Send.Request_Items();
-    }
-
-    public static void Open()
-    {
-        // Lista de classes
-        Objects.cmbReq_Class.Items.Clear();
-        Objects.cmbReq_Class.Items.Add("None");
-        foreach (Lists.Structures.Class Class in Lists.Class.Values) Objects.cmbReq_Class.Items.Add(Class);
-
-        // Lista de raridades
-        Objects.cmbRarity.Items.Clear();
-        for (byte i = 0; i < (byte)Globals.Rarity.Count; i++) Objects.cmbRarity.Items.Add((Globals.Rarity)i);
-
-        // Lista de preensão
-        Objects.cmbBind.Items.Clear();
-        for (byte i = 0; i < (byte)Globals.BindOn.Count; i++) Objects.cmbBind.Items.Add((Globals.BindOn)i);
 
         // Define os limites
-        Objects.numTexture.Maximum = Graphics.Tex_Item.GetUpperBound(0);
+        numTexture.Maximum = Graphics.Tex_Item.GetUpperBound(0);
 
-        // Lista os itens
-        Objects.List.Nodes.Clear();
-        foreach (Lists.Structures.Item Item in Lists.Item.Values)
-        {
-            Objects.List.Nodes.Add(Item.Name);
-            Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = Item.ID;
-        }
-        if (Objects.List.Nodes.Count > 0) Objects.List.SelectedNode = Objects.List.Nodes[0];
+        // Lista os dados
+        cmbReq_Class.Items.Add("None");
+        foreach (Lists.Structures.Class Class in Lists.Class.Values) cmbReq_Class.Items.Add(Class);
+        for (byte i = 0; i < (byte)Globals.Rarity.Count; i++) cmbRarity.Items.Add((Globals.Rarity)i);
+        for (byte i = 0; i < (byte)Globals.BindOn.Count; i++) cmbBind.Items.Add((Globals.BindOn)i);
+        List_Update();
 
         // Abre a janela
-        Selection.Objects.Visible = false;
-        Objects.Visible = true;
+        Editor_Maps.Form.Hide();
+        Show();
     }
 
     private void Groups_Visibility()
@@ -59,16 +34,28 @@ partial class Editor_Items : Form
         // Atualiza a visiblidade dos paineis
         grpGeneral.Visible = grpRequirements.Visible = List.SelectedNode != null;
         grpEquipment.Visible = grpEquip_Bonus.Visible = grpPotion.Visible = false;
-        List.Focus();
+    }
+
+    private void List_Update()
+    {
+        // Lista os itens
+       List.Nodes.Clear();
+        foreach (Lists.Structures.Item Item in Lists.Item.Values)
+            if (Item.Name.StartsWith(txtFilter.Text))
+            {
+                List.Nodes.Add(Item.Name);
+                List.Nodes[List.Nodes.Count - 1].Tag = Item.ID;
+            }
+
+        // Seleciona o primeiro
+        if (List.Nodes.Count > 0) List.SelectedNode = List.Nodes[0];
+        Groups_Visibility();
     }
 
     private void List_AfterSelect(object sender, TreeViewEventArgs e)
     {
         // Atualiza o valor da loja selecionada
         Selected = Lists.Item[(Guid)List.SelectedNode.Tag];
-
-        // Altera a visibilidade dos grupos se necessário
-        Groups_Visibility();
 
         // Lista os dados
         txtName.Text = Selected.Name;
@@ -93,6 +80,11 @@ partial class Editor_Items : Form
         numWeapon_Damage.Value = Selected.Weapon_Damage;
     }
 
+    private void txtFilter_TextChanged(object sender, EventArgs e)
+    {
+        List_Update();
+    }
+
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
@@ -105,6 +97,9 @@ partial class Editor_Items : Form
         Node.Tag = Item.ID;
         List.Nodes.Add(Node);
         List.SelectedNode = Node;
+
+        // Altera a visiblidade dos grupos caso necessários
+        Groups_Visibility();
     }
 
     private void butRemove_Click(object sender, EventArgs e)
@@ -120,19 +115,17 @@ partial class Editor_Items : Form
 
     private void butSave_Click(object sender, EventArgs e)
     {
-        // Salva os dados
+        // Salva os dados e volta à janela principal
         Send.Write_Items();
-
-        // Volta à janela de seleção
-        Visible = false;
-        Selection.Objects.Visible = true;
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void butCancel_Click(object sender, EventArgs e)
     {
-        // Volta ao menu
-        Visible = false;
-        Selection.Objects.Visible = true;
+        // Volta à janela principal
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void txtName_TextChanged(object sender, EventArgs e)

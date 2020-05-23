@@ -26,6 +26,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Interface));
             this.picWindow = new System.Windows.Forms.PictureBox();
             this.butClear = new System.Windows.Forms.Button();
@@ -46,6 +47,7 @@
             this.butConfirm = new System.Windows.Forms.Button();
             this.cmbType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.tmrRender = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picWindow)).BeginInit();
             this.grpOrder.SuspendLayout();
             this.grpProperties.SuspendLayout();
@@ -244,6 +246,12 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Type:";
             // 
+            // tmrRender
+            // 
+            this.tmrRender.Enabled = true;
+            this.tmrRender.Interval = 1;
+            this.tmrRender.Tick += new System.EventHandler(this.tmrRender_Tick);
+            // 
             // Editor_Interface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -292,4 +300,5 @@
     private System.Windows.Forms.Button butConfirm;
     public System.Windows.Forms.ComboBox cmbType;
     private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Timer tmrRender;
 }

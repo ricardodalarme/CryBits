@@ -419,15 +419,15 @@ class Send
             Data.Write(Lists.GetID(Map.Link[i]));
 
         // Camadas
-        Data.Write((byte)(Map.Layer.Count - 1));
-        for (byte i = 0; i < Map.Layer.Count; i++)
+        Data.Write((byte)Map.Layer.Length);
+        for (byte i = 0; i < Map.Layer.Length; i++)
         {
             Data.Write(Map.Layer[i].Name);
             Data.Write(Map.Layer[i].Type);
 
             // Azulejos
-            for (byte x = 0; x <= Map.Width; x++)
-                for (byte y = 0; y <= Map.Height; y++)
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                 {
                     Data.Write(Map.Layer[i].Tile[x, y].X);
                     Data.Write(Map.Layer[i].Tile[x, y].Y);
@@ -437,8 +437,8 @@ class Send
         }
 
         // Dados específicos dos azulejos
-        for (byte x = 0; x <= Map.Width; x++)
-            for (byte y = 0; y <= Map.Height; y++)
+        for (byte x = 0; x < Map.Width; x++)
+            for (byte y = 0; y < Map.Height; y++)
             {
                 Data.Write(Map.Tile[x, y].Attribute);
                 Data.Write(Map.Tile[x, y].Data_1);

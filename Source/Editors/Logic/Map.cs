@@ -18,8 +18,8 @@ class Map
         public static void Update(Lists.Structures.Map Map)
         {
             // Atualiza os azulejos necessários
-            for (byte x = 0; x <= Map.Width; x++)
-                for (byte y = 0; y <= Map.Height; y++)
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                     for (byte c = 0; c < Map.Layer.Count; c++)
                         if (Map.Layer[c].Tile[x, y].Auto)
                             // Faz os cálculos para a autocriação
@@ -29,9 +29,9 @@ class Map
         public static void Update(Lists.Structures.Map Map, int x, int y, byte Layer_Num)
         {
             // Atualiza os azulejos necessários
-            for (int x2 = x - 2; x2 <= x + 2; x2++)
-                for (int y2 = y - 2; y2 <= y + 2; y2++)
-                    if (x2 >= 0 && x2 <= Map.Width && y2 >= 0 && y2 <= Map.Height)
+            for (int x2 = x - 2; x2 < x + 2; x2++)
+                for (int y2 = y - 2; y2 < y + 2; y2++)
+                    if (x2 >= 0 && x2 < Map.Width && y2 >= 0 && y2 < Map.Height)
                         // Faz os cálculos para a autocriação
                         Calculate(Map, (byte)x2, (byte)y2, Layer_Num);
         }
@@ -85,7 +85,8 @@ class Map
             Lists.Structures.Map_Tile_Data Data1, Data2;
 
             // Somente se necessário
-            if (X2 < 0 || X2 > Map.Width || Y2 < 0 || Y2 > Map.Height) return true;
+            if (X1 < 0 || X1 >= Map.Width || Y1 < 0 || Y1 >= Map.Height) return true;
+            if (X2 < 0 || X2 >= Map.Width || Y2 < 0 || Y2 >= Map.Height) return true;
 
             // Dados
             Data1 = Map.Layer[Layer_Num].Tile[X1, Y1];

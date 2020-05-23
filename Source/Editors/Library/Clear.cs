@@ -6,7 +6,6 @@ class Clear
     {
         // Defini os dados das opções
         Lists.Options.Directory_Client = string.Empty;
-        Lists.Options.Directory_Server = string.Empty;
 
         // Salva o que foi modificado
         Write.Options();

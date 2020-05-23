@@ -3,59 +3,50 @@
 public partial class Editor_Data : Form
 {
     // Usado para acessar os dados da janela
-    public static Editor_Data Objects = new Editor_Data();
+    public static Editor_Data Form;
 
     public Editor_Data()
     {
+        // Inicializa os componentes
         InitializeComponent();
-    }
 
-    public static void Request()
-    {
-        // Lê os dados
-        Globals.OpenEditor = Objects;
-        Send.Request_Server_Data();
-    }
-
-    public static void Open()
-    {
         // Define os valores
-        Objects.txtGame_Name.Text = Lists.Server_Data.Game_Name;
-        Objects.txtWelcome.Text = Lists.Server_Data.Welcome;
-        Objects.numPort.Value = Lists.Server_Data.Port;
-        Objects.numMax_Players.Value = Lists.Server_Data.Max_Players;
-        Objects.numMax_Characters.Value = Lists.Server_Data.Max_Characters;
-        Objects.numMax_Party_Members.Value = Lists.Server_Data.Max_Party_Members;
-        Objects.numMax_Map_Items.Value = Lists.Server_Data.Max_Map_Items;
-        Objects.numPoints.Value = Lists.Server_Data.Num_Points;
+        txtGame_Name.Text = Lists.Server_Data.Game_Name;
+        txtWelcome.Text = Lists.Server_Data.Welcome;
+        numPort.Value = Lists.Server_Data.Port;
+        numMax_Players.Value = Lists.Server_Data.Max_Players;
+        numMax_Characters.Value = Lists.Server_Data.Max_Characters;
+        numMax_Party_Members.Value = Lists.Server_Data.Max_Party_Members;
+        numMax_Map_Items.Value = Lists.Server_Data.Max_Map_Items;
+        numPoints.Value = Lists.Server_Data.Num_Points;
 
         // Abre a janela
-        Selection.Objects.Visible = false;
-        Objects.Visible = true;
+        Editor_Maps.Form.Hide();
+        Show();
     }
 
     private void butSave_Click(object sender, System.EventArgs e)
     {
         // Salva os dados
-        Lists.Server_Data.Game_Name = Objects.txtGame_Name.Text;
-        Lists.Server_Data.Welcome = Objects.txtWelcome.Text;
-        Lists.Server_Data.Port = (short)Objects.numPort.Value;
-        Lists.Server_Data.Max_Players = (byte)Objects.numMax_Players.Value;
-        Lists.Server_Data.Max_Characters = (byte)Objects.numMax_Characters.Value;
-        Lists.Server_Data.Max_Party_Members = (byte)Objects.numMax_Party_Members.Value;
-        Lists.Server_Data.Max_Map_Items = (byte)Objects.numMax_Map_Items.Value;
-        Lists.Server_Data.Num_Points = (byte)Objects.numPoints.Value;
+        Lists.Server_Data.Game_Name = txtGame_Name.Text;
+        Lists.Server_Data.Welcome = txtWelcome.Text;
+        Lists.Server_Data.Port = (short)numPort.Value;
+        Lists.Server_Data.Max_Players = (byte)numMax_Players.Value;
+        Lists.Server_Data.Max_Characters = (byte)numMax_Characters.Value;
+        Lists.Server_Data.Max_Party_Members = (byte)numMax_Party_Members.Value;
+        Lists.Server_Data.Max_Map_Items = (byte)numMax_Map_Items.Value;
+        Lists.Server_Data.Num_Points = (byte)numPoints.Value;
         Send.Write_Server_Data();
 
-        // Volta à janela de seleção
-        Visible = false;
-        Selection.Objects.Visible = true;
+        // Volta à janela principal
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void butCancel_Click(object sender, System.EventArgs e)
     {
-        // Volta à janela de seleção
-        Visible = false;
-        Selection.Objects.Visible = true;
+        // Volta à janela principal
+        Close();
+        Editor_Maps.Form.Show();
     }
 }

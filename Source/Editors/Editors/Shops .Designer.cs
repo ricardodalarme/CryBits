@@ -53,6 +53,7 @@
             this.butNew = new System.Windows.Forms.Button();
             this.butRemove = new System.Windows.Forms.Button();
             this.List = new System.Windows.Forms.TreeView();
+            this.txtFilter = new System.Windows.Forms.TextBox();
             this.grpGeneral.SuspendLayout();
             this.grpSold.SuspendLayout();
             this.grpBought.SuspendLayout();
@@ -302,7 +303,7 @@
             // 
             // butNew
             // 
-            this.butNew.Location = new System.Drawing.Point(12, 12);
+            this.butNew.Location = new System.Drawing.Point(12, 412);
             this.butNew.Name = "butNew";
             this.butNew.Size = new System.Drawing.Size(98, 25);
             this.butNew.TabIndex = 27;
@@ -312,7 +313,7 @@
             // 
             // butRemove
             // 
-            this.butRemove.Location = new System.Drawing.Point(116, 12);
+            this.butRemove.Location = new System.Drawing.Point(116, 412);
             this.butRemove.Name = "butRemove";
             this.butRemove.Size = new System.Drawing.Size(98, 25);
             this.butRemove.TabIndex = 28;
@@ -323,11 +324,20 @@
             // List
             // 
             this.List.HideSelection = false;
-            this.List.Location = new System.Drawing.Point(12, 43);
+            this.List.Location = new System.Drawing.Point(12, 38);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(201, 394);
+            this.List.Size = new System.Drawing.Size(201, 369);
             this.List.TabIndex = 23;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
+            // 
+            // txtFilter
+            // 
+            this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFilter.Location = new System.Drawing.Point(12, 12);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(201, 20);
+            this.txtFilter.TabIndex = 43;
+            this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
             // Editor_Shops
             // 
@@ -335,6 +345,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(737, 447);
             this.ControlBox = false;
+            this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.List);
             this.Controls.Add(this.butRemove);
             this.Controls.Add(this.butNew);
@@ -359,6 +370,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPrice)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
     }
 
@@ -389,4 +401,5 @@
     private System.Windows.Forms.Button butNew;
     private System.Windows.Forms.Button butRemove;
     private System.Windows.Forms.TreeView List;
+    public System.Windows.Forms.TextBox txtFilter;
 }

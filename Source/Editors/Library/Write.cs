@@ -11,7 +11,6 @@ class Write
 
         // Escreve os dados
         Data.Write(Lists.Options.Directory_Client);
-        Data.Write(Lists.Options.Directory_Server);
         Data.Write(Lists.Options.Pre_Map_Grid);
         Data.Write(Lists.Options.Pre_Map_View);
         Data.Write(Lists.Options.Pre_Map_Audio);

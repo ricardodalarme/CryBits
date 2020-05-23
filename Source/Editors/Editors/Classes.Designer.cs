@@ -59,6 +59,7 @@
             this.lblMTexture = new System.Windows.Forms.Label();
             this.butMTexture = new System.Windows.Forms.Button();
             this.grpSpawn = new System.Windows.Forms.GroupBox();
+            this.cmbSpawn_Map = new System.Windows.Forms.ComboBox();
             this.numSpawn_Y = new System.Windows.Forms.NumericUpDown();
             this.numSpawn_X = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
@@ -80,7 +81,7 @@
             this.butRemove = new System.Windows.Forms.Button();
             this.butNew = new System.Windows.Forms.Button();
             this.List = new System.Windows.Forms.TreeView();
-            this.cmbSpawn_Map = new System.Windows.Forms.ComboBox();
+            this.txtFilter = new System.Windows.Forms.TextBox();
             this.grpGeneral.SuspendLayout();
             this.grpAttributes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAgility)).BeginInit();
@@ -417,6 +418,21 @@
             this.grpSpawn.TabStop = false;
             this.grpSpawn.Text = "Spawn";
             // 
+            // cmbSpawn_Map
+            // 
+            this.cmbSpawn_Map.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSpawn_Map.FormattingEnabled = true;
+            this.cmbSpawn_Map.Items.AddRange(new object[] {
+            "Up",
+            "Down",
+            "Left",
+            "Rigth"});
+            this.cmbSpawn_Map.Location = new System.Drawing.Point(9, 35);
+            this.cmbSpawn_Map.Name = "cmbSpawn_Map";
+            this.cmbSpawn_Map.Size = new System.Drawing.Size(139, 21);
+            this.cmbSpawn_Map.TabIndex = 29;
+            this.cmbSpawn_Map.SelectedIndexChanged += new System.EventHandler(this.cmbSpawn_Map_SelectedIndexChanged);
+            // 
             // numSpawn_Y
             // 
             this.numSpawn_Y.Location = new System.Drawing.Point(155, 78);
@@ -607,7 +623,7 @@
             // 
             // butRemove
             // 
-            this.butRemove.Location = new System.Drawing.Point(115, 12);
+            this.butRemove.Location = new System.Drawing.Point(115, 438);
             this.butRemove.Name = "butRemove";
             this.butRemove.Size = new System.Drawing.Size(98, 25);
             this.butRemove.TabIndex = 40;
@@ -617,7 +633,7 @@
             // 
             // butNew
             // 
-            this.butNew.Location = new System.Drawing.Point(11, 12);
+            this.butNew.Location = new System.Drawing.Point(11, 438);
             this.butNew.Name = "butNew";
             this.butNew.Size = new System.Drawing.Size(98, 25);
             this.butNew.TabIndex = 39;
@@ -628,26 +644,20 @@
             // List
             // 
             this.List.HideSelection = false;
-            this.List.Location = new System.Drawing.Point(12, 43);
+            this.List.Location = new System.Drawing.Point(12, 39);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(201, 419);
+            this.List.Size = new System.Drawing.Size(201, 393);
             this.List.TabIndex = 41;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
             // 
-            // cmbSpawn_Map
+            // txtFilter
             // 
-            this.cmbSpawn_Map.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSpawn_Map.FormattingEnabled = true;
-            this.cmbSpawn_Map.Items.AddRange(new object[] {
-            "Up",
-            "Down",
-            "Left",
-            "Rigth"});
-            this.cmbSpawn_Map.Location = new System.Drawing.Point(9, 35);
-            this.cmbSpawn_Map.Name = "cmbSpawn_Map";
-            this.cmbSpawn_Map.Size = new System.Drawing.Size(139, 21);
-            this.cmbSpawn_Map.TabIndex = 29;
-            this.cmbSpawn_Map.SelectedIndexChanged += new System.EventHandler(this.cmbSpawn_Map_SelectedIndexChanged);
+            this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFilter.Location = new System.Drawing.Point(12, 13);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(201, 20);
+            this.txtFilter.TabIndex = 42;
+            this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
             // Editor_Classes
             // 
@@ -655,6 +665,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(847, 475);
             this.ControlBox = false;
+            this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.List);
             this.Controls.Add(this.butRemove);
             this.Controls.Add(this.butNew);
@@ -695,6 +706,7 @@
             this.grpItem_Add.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numItem_Amount)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
     }
 
@@ -753,4 +765,5 @@
     private System.Windows.Forms.Button butNew;
     private System.Windows.Forms.TreeView List;
     private System.Windows.Forms.ComboBox cmbSpawn_Map;
+    public System.Windows.Forms.TextBox txtFilter;
 }

@@ -29,6 +29,10 @@ class Program
         // Carrega todos os dados necessários
         Read.All();
 
+        // Cria os mapas temporários
+        Console.WriteLine("Creating temporary maps.");
+        foreach (Objects.Map Map in Lists.Map.Values) Map.Create_Temporary();
+
         // Cria os dispositivos da rede
         Socket.Init();
         Console.WriteLine("Network started. Port: " + Socket.Device.Port);

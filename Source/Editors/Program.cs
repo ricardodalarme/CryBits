@@ -9,14 +9,17 @@ class Program
     [STAThread]
     static void Main()
     {
+        // Abre a janela de seleção de diretório do cliente caso não houver um
+        if (!Directories.Options.Exists && !Directories.Select())
+            return;
+        else
+            Read.Options();
+
         // Inicia o dispositivo de rede
         Socket.Init();
 
-        // Carrega as opções
-        Read.Options();
-
         // Inicia a aplicação
-        Login.Objects.Visible = true;
+        Login.Form.Visible = true;
         Application.EnableVisualStyles();
         Loop.Init();
     }

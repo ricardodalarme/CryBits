@@ -176,8 +176,14 @@ class Receive
                 return;
             }
 
-            // Abre a janela de edição
+            // Envia todos os dados
             Account.InEditor = true;
+            Send.Server_Data(Account);
+            Send.Maps(Account);
+            Send.Items(Account);
+            Send.Shops(Account);
+            Send.Classes(Account);
+            Send.NPCs(Account);
             Send.Connect(Account);
         }
         else
@@ -670,18 +676,19 @@ class Receive
                 Map.Link[n] = (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
 
             // Camadas
-            byte Num_Layers = Data.ReadByte();
-            for (byte n = 0; n <= Num_Layers; n++)
+            Map.Layer = new Objects.Map_Layer[Data.ReadByte()];
+            for (byte n = 0; n < Map.Layer.Length; n++)
             {
                 // Dados básicos
-                Map.Layer.Add(new Objects.Map_Layer(Map.Width, Map.Height));
+                Map.Layer[n] = new Objects.Map_Layer(Game.Min_Map_Width, Game.Min_Map_Height);
                 Map.Layer[n].Name = Data.ReadString();
                 Map.Layer[n].Type = Data.ReadByte();
 
                 // Azulejos
-                for (byte x = 0; x <= Map.Width; x++)
-                    for (byte y = 0; y <= Map.Height; y++)
+                for (byte x = 0; x < Map.Width; x++)
+                    for (byte y = 0; y < Map.Height; y++)
                     {
+                        Map.Layer[n].Tile[x, y] = new Objects.Map_Tile_Data();
                         Map.Layer[n].Tile[x, y].X = Data.ReadByte();
                         Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
                         Map.Layer[n].Tile[x, y].Tile = Data.ReadByte();
@@ -690,9 +697,9 @@ class Receive
             }
 
             // Dados específicos dos azulejos
-            Map.Tile = new Objects.Map_Tile[Map.Width + 1, Map.Height + 1];
-            for (byte x = 0; x <= Map.Width; x++)
-                for (byte y = 0; y <= Map.Height; y++)
+            Map.Tile = new Objects.Map_Tile[Map.Width, Map.Height];
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                 {
                     Map.Tile[x, y] = new Objects.Map_Tile();
                     Map.Tile[x, y].Attribute = Data.ReadByte();

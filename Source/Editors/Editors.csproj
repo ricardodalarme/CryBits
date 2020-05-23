@@ -94,11 +94,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Editors\Shop .cs">
+    <Compile Include="Editors\Shops .cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Shop .Designer.cs">
-      <DependentUpon>Shop .cs</DependentUpon>
+    <Compile Include="Editors\Shops .Designer.cs">
+      <DependentUpon>Shops .cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\Interface.cs">
       <SubType>Form</SubType>
@@ -167,12 +167,6 @@
     <Compile Include="Editors\Maps_Properties.Designer.cs">
       <DependentUpon>Maps_Properties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Selection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Editors\Selection.Designer.cs">
-      <DependentUpon>Selection.cs</DependentUpon>
-    </Compile>
     <Compile Include="Network\Receive.cs" />
     <Compile Include="Network\Send.cs" />
     <Compile Include="Network\Socket.cs" />
@@ -181,8 +175,8 @@
     <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Editors\Shop .resx">
-      <DependentUpon>Shop .cs</DependentUpon>
+    <EmbeddedResource Include="Editors\Shops .resx">
+      <DependentUpon>Shops .cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\Interface.resx">
       <DependentUpon>Interface.cs</DependentUpon>
@@ -214,10 +208,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\Preview.resx">
       <DependentUpon>Preview.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Selection.resx">
-      <DependentUpon>Selection.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

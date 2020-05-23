@@ -56,7 +56,7 @@ class Loop
     private static void Editor_Maps_Fog()
     {
         // Faz a movimentação
-        if (Editor_Maps.Objects.Visible)
+        if (Editor_Maps.Form != null)
         {
             Editor_Maps_Fog_X();
             Editor_Maps_Fog_Y();
@@ -65,8 +65,8 @@ class Loop
 
     private static void Editor_Maps_Fog_X()
     {
-        Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Editor_Maps.Selected.Fog.Texture]);
-        int Speed = Editor_Maps.Selected.Fog.Speed_X;
+        Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Editor_Maps.Form.Selected.Fog.Texture]);
+        int Speed = Editor_Maps.Form.Selected.Fog.Speed_X;
 
         // Apenas se necessário
         if (FogX_Timer >= Environment.TickCount) return;
@@ -92,8 +92,8 @@ class Loop
 
     private static void Editor_Maps_Fog_Y()
     {
-        Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Editor_Maps.Selected.Fog.Texture]);
-        int Speed = Editor_Maps.Selected.Fog.Speed_Y;
+        Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Editor_Maps.Form.Selected.Fog.Texture]);
+        int Speed = Editor_Maps.Form.Selected.Fog.Speed_Y;
 
         // Apenas se necessário
         if (FogY_Timer >= Environment.TickCount) return;
@@ -124,7 +124,7 @@ class Loop
         byte Last_Thunder = (byte)Audio.Sounds.Thunder_4;
 
         // Somente se necessário
-        if (!Editor_Maps.Objects.Visible || Editor_Maps.Selected.Weather.Type == 0 || !Editor_Maps.Objects.butVisualization.Checked)
+        if (Editor_Maps.Form == null || Editor_Maps.Form.Selected.Weather.Type == 0 || !Editor_Maps.Form.butVisualization.Checked)
         {
             if (Audio.Sound.List != null)
                 if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SFML.Audio.SoundStatus.Playing) Audio.Sound.Stop_All();
@@ -132,7 +132,7 @@ class Loop
         }
 
         // Clima do mapa
-        Lists.Structures.Map_Weather Weather = Editor_Maps.Selected.Weather;
+        Lists.Structures.Map_Weather Weather = Editor_Maps.Form.Selected.Weather;
 
         // Reproduz o som chuva
         if ((Globals.Weathers)Weather.Type == Globals.Weathers.Raining || (Globals.Weathers)Weather.Type == Globals.Weathers.Thundering)
@@ -194,7 +194,7 @@ class Loop
                 }
 
                 // Reseta a partícula
-                if (Lists.Weather[i].x > Editor_Maps.Map_Size.Width * Globals.Grid || Lists.Weather[i].y > Editor_Maps.Map_Size.Height * Globals.Grid)
+                if (Lists.Weather[i].x > Editor_Maps.Form.Selected.Width * Globals.Grid || Lists.Weather[i].y > Editor_Maps.Form.Selected.Height * Globals.Grid)
                     Lists.Weather[i] = new Lists.Structures.Weather();
             }
 
@@ -219,11 +219,11 @@ class Loop
         if (Globals.GameRandom.Next(2) == 0)
         {
             Lists.Weather[i].x = -32;
-            Lists.Weather[i].y = Globals.GameRandom.Next(-32, Editor_Maps.Objects.picMap.Height);
+            Lists.Weather[i].y = Globals.GameRandom.Next(-32, Editor_Maps.Form.picMap.Height);
         }
         else
         {
-            Lists.Weather[i].x = Globals.GameRandom.Next(-32, Editor_Maps.Objects.picMap.Width);
+            Lists.Weather[i].x = Globals.GameRandom.Next(-32, Editor_Maps.Form.picMap.Width);
             Lists.Weather[i].y = -32;
         }
     }
@@ -240,7 +240,7 @@ class Loop
         // Define a velocidade e a posição da partícula
         Lists.Weather[i].Speed = Globals.GameRandom.Next(1, 3);
         Lists.Weather[i].y = -32;
-        Lists.Weather[i].x = Globals.GameRandom.Next(-32, Editor_Maps.Objects.picMap.Width);
+        Lists.Weather[i].x = Globals.GameRandom.Next(-32, Editor_Maps.Form.picMap.Width);
         Lists.Weather[i].Start = Lists.Weather[i].x;
 
         if (Globals.GameRandom.Next(2) == 0)
@@ -274,14 +274,14 @@ class Loop
     private static void Editor_Maps_Music()
     {
         // Apenas se necessário
-        if (!Editor_Maps.Objects.Visible) goto stop;
-        if (!Editor_Maps.Objects.butAudio.Checked) goto stop;
-        if (!Editor_Maps.Objects.butVisualization.Checked) goto stop;
-        if (Editor_Maps.Selected.Music == 0) goto stop;
+        if (Editor_Maps.Form == null) goto stop;
+        if (!Editor_Maps.Form.butAudio.Checked) goto stop;
+        if (!Editor_Maps.Form.butVisualization.Checked) goto stop;
+        if (Editor_Maps.Form.Selected.Music == 0) goto stop;
 
         // Inicia a música
-        if (Audio.Music.Device == null || Audio.Music.Current != Editor_Maps.Selected.Music)
-            Audio.Music.Play((Audio.Musics)Editor_Maps.Selected.Music);
+        if (Audio.Music.Device == null || Audio.Music.Current != Editor_Maps.Form.Selected.Music)
+            Audio.Music.Play((Audio.Musics)Editor_Maps.Form.Selected.Music);
         return;
     stop:
         // Para a música

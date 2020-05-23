@@ -4,26 +4,12 @@ using System.Windows.Forms;
 partial class Editor_Shops : Form
 {
     // Usado para acessar os dados da janela
-    public static Editor_Shops Objects = new Editor_Shops();
+    public static Editor_Shops Form;
 
     // Loja selecionada
     private Lists.Structures.Shop Selected;
 
     public Editor_Shops()
-    {
-        InitializeComponent();
-    }
-
-    public static void Request()
-    {
-        // Lê os dados
-        Globals.OpenEditor = Objects;
-        Send.Request_Classes();
-        Send.Request_Items();
-        Send.Request_Shops();
-    }
-
-    public static void Open()
     {
         // Verifica se é possível abrir
         if (Lists.Item.Count == 0)
@@ -32,27 +18,20 @@ partial class Editor_Shops : Form
             return;
         }
 
-        // Lista os itens
-        Objects.cmbCurrency.Items.Clear();
-        Objects.cmbItems.Items.Clear();
+        // Inicializa os componentes
+        InitializeComponent();
+
+        // Lista os dados
         foreach (Lists.Structures.Item Item in Lists.Item.Values)
         {
-            Objects.cmbItems.Items.Add(Item);
-            Objects.cmbCurrency.Items.Add(Item);
+            cmbItems.Items.Add(Item);
+            cmbCurrency.Items.Add(Item);
         }
-
-        // Lista as lojas
-        Objects.List.Nodes.Clear();
-        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values)
-        {
-            Objects.List.Nodes.Add(Shop.Name);
-            Objects.List.Nodes[Objects.List.Nodes.Count - 1].Tag = Shop.ID;
-        }
-        if (Objects.List.Nodes.Count > 0) Objects.List.SelectedNode = Objects.List.Nodes[0];
+        List_Update();
 
         // Abre a janela
-        Selection.Objects.Visible = false;
-        Objects.Visible = true;
+        Editor_Maps.Form.Hide();
+        Show();
     }
 
     private void Groups_Visibility()
@@ -60,7 +39,21 @@ partial class Editor_Shops : Form
         // Atualiza a visiblidade dos paineis
         grpGeneral.Visible = grpBought.Visible = grpSold.Visible = List.SelectedNode != null;
         grpAddItem.Visible = false;
-        List.Focus();
+    }
+
+    private void List_Update()
+    {
+        // Lista as lojas
+        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values)
+            if (Shop.Name.StartsWith(txtFilter.Text))
+            {
+                List.Nodes.Add(Shop.Name);
+                List.Nodes[List.Nodes.Count - 1].Tag = Shop.ID;
+            }
+
+        // Seleciona o primeiro
+        if (List.Nodes.Count > 0) List.SelectedNode = List.Nodes[0];
+        Groups_Visibility();
     }
 
     private void List_AfterSelect(object sender, TreeViewEventArgs e)
@@ -78,9 +71,11 @@ partial class Editor_Shops : Form
         cmbCurrency.SelectedItem = Selected.Currency;
         for (byte i = 0; i < Selected.Sold.Count; i++) lstSold.Items.Add(List_Text(Selected.Sold[i]));
         for (byte i = 0; i < Selected.Bought.Count; i++) lstBought.Items.Add(List_Text(Selected.Bought[i]));
+    }
 
-        // Altera a visibilidade dos grupos se necessário
-        Groups_Visibility();
+    private void txtFilter_TextChanged(object sender, EventArgs e)
+    {
+        List_Update();
     }
 
     private void butNew_Click(object sender, EventArgs e)
@@ -95,6 +90,9 @@ partial class Editor_Shops : Form
         Node.Tag = Shop.ID;
         List.Nodes.Add(Node);
         List.SelectedNode = Node;
+
+        // Altera a visiblidade dos grupos caso necessários
+        Groups_Visibility();
     }
 
     private void butRemove_Click(object sender, EventArgs e)
@@ -110,22 +108,17 @@ partial class Editor_Shops : Form
 
     private void butSave_Click(object sender, EventArgs e)
     {
-        // Salva a dimensão da estrutura
+        // Salva os dados e volta à janela principal
         Send.Write_Shops();
-
-        // Volta à janela de seleção
-        Visible = false;
-        Selection.Objects.Visible = true;
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void butCancel_Click(object sender, EventArgs e)
     {
-        // Limpa os dados
-        Lists.Shop = null;
-
-        // Volta ao menu
-        Visible = false;
-        Selection.Objects.Visible = true;
+        // Volta à janela principal
+        Close();
+        Editor_Maps.Form.Show();
     }
 
     private void txtName_TextChanged(object sender, EventArgs e)

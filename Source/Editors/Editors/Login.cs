@@ -4,7 +4,7 @@
 public partial class Login : Form
 {
     // Usado para acessar os dados da janela
-    public static Login Objects = new Login();
+    public static Login Form = new Login();
 
     public Login()
     {
