@@ -3,9 +3,6 @@ using System.Windows.Forms;
 
 partial class Editor_Items : Form
 {
-    // Usado para acessar os dados da janela
-    public static Editor_Items Form;
-
     // Item selecionado
     private Lists.Structures.Item Selected;
 
@@ -33,13 +30,13 @@ partial class Editor_Items : Form
     {
         // Atualiza a visiblidade dos paineis
         grpGeneral.Visible = grpRequirements.Visible = List.SelectedNode != null;
-        grpEquipment.Visible = grpEquip_Bonus.Visible = grpPotion.Visible = false;
+        grpEquipment.Visible = grpPotion.Visible = false;
     }
 
     private void List_Update()
     {
         // Lista os itens
-       List.Nodes.Clear();
+        List.Nodes.Clear();
         foreach (Lists.Structures.Item Item in Lists.Item.Values)
             if (Item.Name.StartsWith(txtFilter.Text))
             {

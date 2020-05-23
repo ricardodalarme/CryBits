@@ -487,8 +487,8 @@ partial class Editor_Maps : Form
         if (lstLayers.SelectedItems.Count == 0) return;
 
         // Preenche todos os azulejos iguais ao selecionado com o mesmo azulejo
-        for (int x = 0; x <= Selected.Width; x++)
-            for (int y = 0; y <= Selected.Height; y++)
+        for (int x = 0; x < Selected.Width; x++)
+            for (int y = 0; y < Selected.Height; y++)
                 Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = Set_Tile();
 
         // Faz os cálculos da autocriação
@@ -500,13 +500,10 @@ partial class Editor_Maps : Form
         // Somente se necessário
         if (lstLayers.SelectedItems.Count == 0) return;
 
-        // Preenche todos os azulejos iguais ao selecionado com o mesmo azulejo
-        for (int x = 0; x <= Selected.Width; x++)
-            for (int y = 0; y <= Selected.Height; y++)
-            {
+        // Reseta todos os azulejos
+        for (int x = 0; x < Selected.Width; x++)
+            for (int y = 0; y < Selected.Height; y++)
                 Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
-                Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y].Mini = new Point[4];
-            }
     }
 
     private void butEdition_Click(object sender, EventArgs e)
@@ -1586,12 +1583,12 @@ partial class Editor_Maps : Form
 
     private void butEditors_Classes_Click(object sender, EventArgs e)
     {
-        Editor_Classes.Form = new Editor_Classes();
+        new Editor_Classes();
     }
 
     private void butEditors_Data_Click(object sender, EventArgs e)
     {
-        Editor_Data.Form = new Editor_Data();
+        new Editor_Data();
     }
 
     private void butEditors_Interface_Click(object sender, EventArgs e)
@@ -1601,7 +1598,7 @@ partial class Editor_Maps : Form
 
     private void butEditors_Items_Click(object sender, EventArgs e)
     {
-        Editor_Items.Form = new Editor_Items();
+        new Editor_Items();
     }
 
     private void butEditors_NPCs_Click(object sender, EventArgs e)

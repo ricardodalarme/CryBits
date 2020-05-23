@@ -72,6 +72,10 @@
             this.label16 = new System.Windows.Forms.Label();
             this.butItem_Ok = new System.Windows.Forms.Button();
             this.grpAllies = new System.Windows.Forms.GroupBox();
+            this.grpAllie_Add = new System.Windows.Forms.GroupBox();
+            this.cmbAllie_NPC = new System.Windows.Forms.ComboBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.butAllie_Ok = new System.Windows.Forms.Button();
             this.butAllie_Delete = new System.Windows.Forms.Button();
             this.butAllie_Add = new System.Windows.Forms.Button();
             this.lstAllies = new System.Windows.Forms.ListBox();
@@ -84,10 +88,6 @@
             this.numFlee_Health = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.grpAllie_Add = new System.Windows.Forms.GroupBox();
-            this.cmbAllie_NPC = new System.Windows.Forms.ComboBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.butAllie_Ok = new System.Windows.Forms.Button();
             this.List = new System.Windows.Forms.TreeView();
             this.butRemove = new System.Windows.Forms.Button();
             this.butNew = new System.Windows.Forms.Button();
@@ -110,9 +110,9 @@
             this.grpDrop.SuspendLayout();
             this.grpDrop_Add.SuspendLayout();
             this.grpAllies.SuspendLayout();
+            this.grpAllie_Add.SuspendLayout();
             this.grpBehaviour.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFlee_Health)).BeginInit();
-            this.grpAllie_Add.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpGeneral
@@ -268,7 +268,7 @@
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(530, 518);
+            this.butCancel.Location = new System.Drawing.Point(532, 518);
             this.butCancel.Name = "butCancel";
             this.butCancel.Size = new System.Drawing.Size(304, 25);
             this.butCancel.TabIndex = 17;
@@ -500,7 +500,7 @@
             this.grpDrop.Controls.Add(this.butDrop_Delete);
             this.grpDrop.Controls.Add(this.lstDrop);
             this.grpDrop.Controls.Add(this.butDrop_Add);
-            this.grpDrop.Location = new System.Drawing.Point(530, 266);
+            this.grpDrop.Location = new System.Drawing.Point(532, 266);
             this.grpDrop.Name = "grpDrop";
             this.grpDrop.Size = new System.Drawing.Size(304, 246);
             this.grpDrop.TabIndex = 37;
@@ -510,7 +510,7 @@
             // 
             // butDrop_Delete
             // 
-            this.butDrop_Delete.Location = new System.Drawing.Point(155, 217);
+            this.butDrop_Delete.Location = new System.Drawing.Point(155, 219);
             this.butDrop_Delete.Name = "butDrop_Delete";
             this.butDrop_Delete.Size = new System.Drawing.Size(139, 20);
             this.butDrop_Delete.TabIndex = 35;
@@ -545,7 +545,7 @@
             this.grpDrop_Add.Controls.Add(this.cmbDrop_Item);
             this.grpDrop_Add.Controls.Add(this.label16);
             this.grpDrop_Add.Controls.Add(this.butItem_Ok);
-            this.grpDrop_Add.Location = new System.Drawing.Point(530, 266);
+            this.grpDrop_Add.Location = new System.Drawing.Point(532, 266);
             this.grpDrop_Add.Name = "grpDrop_Add";
             this.grpDrop_Add.Size = new System.Drawing.Size(304, 246);
             this.grpDrop_Add.TabIndex = 38;
@@ -596,6 +596,47 @@
             this.grpAllies.Text = "NPC vs NPC";
             this.grpAllies.Visible = false;
             // 
+            // grpAllie_Add
+            // 
+            this.grpAllie_Add.Controls.Add(this.cmbAllie_NPC);
+            this.grpAllie_Add.Controls.Add(this.label17);
+            this.grpAllie_Add.Controls.Add(this.butAllie_Ok);
+            this.grpAllie_Add.Location = new System.Drawing.Point(532, 7);
+            this.grpAllie_Add.Name = "grpAllie_Add";
+            this.grpAllie_Add.Size = new System.Drawing.Size(304, 253);
+            this.grpAllie_Add.TabIndex = 41;
+            this.grpAllie_Add.TabStop = false;
+            this.grpAllie_Add.Text = "Add Allie";
+            this.grpAllie_Add.Visible = false;
+            // 
+            // cmbAllie_NPC
+            // 
+            this.cmbAllie_NPC.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAllie_NPC.FormattingEnabled = true;
+            this.cmbAllie_NPC.Location = new System.Drawing.Point(26, 118);
+            this.cmbAllie_NPC.Name = "cmbAllie_NPC";
+            this.cmbAllie_NPC.Size = new System.Drawing.Size(251, 21);
+            this.cmbAllie_NPC.TabIndex = 38;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(23, 102);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(32, 13);
+            this.label17.TabIndex = 37;
+            this.label17.Text = "NPC:";
+            // 
+            // butAllie_Ok
+            // 
+            this.butAllie_Ok.Location = new System.Drawing.Point(26, 144);
+            this.butAllie_Ok.Name = "butAllie_Ok";
+            this.butAllie_Ok.Size = new System.Drawing.Size(251, 20);
+            this.butAllie_Ok.TabIndex = 36;
+            this.butAllie_Ok.Text = "Ok";
+            this.butAllie_Ok.UseVisualStyleBackColor = true;
+            this.butAllie_Ok.Click += new System.EventHandler(this.butAllie_Ok_Click);
+            // 
             // butAllie_Delete
             // 
             this.butAllie_Delete.Location = new System.Drawing.Point(155, 221);
@@ -618,6 +659,7 @@
             // 
             // lstAllies
             // 
+            this.lstAllies.Enabled = false;
             this.lstAllies.FormattingEnabled = true;
             this.lstAllies.Location = new System.Drawing.Point(10, 55);
             this.lstAllies.Name = "lstAllies";
@@ -685,13 +727,9 @@
             // 
             this.cmbShop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbShop.FormattingEnabled = true;
-            this.cmbShop.Items.AddRange(new object[] {
-            "Move Randomly",
-            "Turn Randomly",
-            "Stand Still"});
             this.cmbShop.Location = new System.Drawing.Point(13, 226);
             this.cmbShop.Name = "cmbShop";
-            this.cmbShop.Size = new System.Drawing.Size(280, 21);
+            this.cmbShop.Size = new System.Drawing.Size(278, 21);
             this.cmbShop.TabIndex = 42;
             this.cmbShop.SelectedIndexChanged += new System.EventHandler(this.cmbShop_SelectedIndexChanged);
             // 
@@ -729,47 +767,6 @@
             this.label1.Size = new System.Drawing.Size(79, 13);
             this.label1.TabIndex = 36;
             this.label1.Text = "Flee health (%):";
-            // 
-            // grpAllie_Add
-            // 
-            this.grpAllie_Add.Controls.Add(this.cmbAllie_NPC);
-            this.grpAllie_Add.Controls.Add(this.label17);
-            this.grpAllie_Add.Controls.Add(this.butAllie_Ok);
-            this.grpAllie_Add.Location = new System.Drawing.Point(532, 7);
-            this.grpAllie_Add.Name = "grpAllie_Add";
-            this.grpAllie_Add.Size = new System.Drawing.Size(304, 253);
-            this.grpAllie_Add.TabIndex = 41;
-            this.grpAllie_Add.TabStop = false;
-            this.grpAllie_Add.Text = "Add Allie";
-            this.grpAllie_Add.Visible = false;
-            // 
-            // cmbAllie_NPC
-            // 
-            this.cmbAllie_NPC.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAllie_NPC.FormattingEnabled = true;
-            this.cmbAllie_NPC.Location = new System.Drawing.Point(26, 118);
-            this.cmbAllie_NPC.Name = "cmbAllie_NPC";
-            this.cmbAllie_NPC.Size = new System.Drawing.Size(251, 21);
-            this.cmbAllie_NPC.TabIndex = 38;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(23, 102);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(32, 13);
-            this.label17.TabIndex = 37;
-            this.label17.Text = "NPC:";
-            // 
-            // butAllie_Ok
-            // 
-            this.butAllie_Ok.Location = new System.Drawing.Point(26, 144);
-            this.butAllie_Ok.Name = "butAllie_Ok";
-            this.butAllie_Ok.Size = new System.Drawing.Size(251, 20);
-            this.butAllie_Ok.TabIndex = 36;
-            this.butAllie_Ok.Text = "Ok";
-            this.butAllie_Ok.UseVisualStyleBackColor = true;
-            this.butAllie_Ok.Click += new System.EventHandler(this.butAllie_Ok_Click);
             // 
             // List
             // 
@@ -815,19 +812,19 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(845, 553);
             this.ControlBox = false;
+            this.Controls.Add(this.grpAllie_Add);
             this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.List);
             this.Controls.Add(this.butRemove);
             this.Controls.Add(this.butNew);
-            this.Controls.Add(this.grpAllie_Add);
             this.Controls.Add(this.grpBehaviour);
             this.Controls.Add(this.grpAllies);
-            this.Controls.Add(this.grpDrop_Add);
-            this.Controls.Add(this.grpDrop);
             this.Controls.Add(this.grpAttributes);
             this.Controls.Add(this.butCancel);
             this.Controls.Add(this.butSave);
             this.Controls.Add(this.grpGeneral);
+            this.Controls.Add(this.grpDrop_Add);
+            this.Controls.Add(this.grpDrop);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -856,11 +853,11 @@
             this.grpDrop_Add.PerformLayout();
             this.grpAllies.ResumeLayout(false);
             this.grpAllies.PerformLayout();
+            this.grpAllie_Add.ResumeLayout(false);
+            this.grpAllie_Add.PerformLayout();
             this.grpBehaviour.ResumeLayout(false);
             this.grpBehaviour.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFlee_Health)).EndInit();
-            this.grpAllie_Add.ResumeLayout(false);
-            this.grpAllie_Add.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

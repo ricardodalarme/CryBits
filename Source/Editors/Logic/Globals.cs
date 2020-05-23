@@ -128,8 +128,7 @@ class Globals
     public enum Windows
     {
         Menu,
-        Game,
-        Global,
+        Game
     }
 
     public enum Rarity

@@ -75,6 +75,8 @@ class Lists
         public class Button : Tool
         {
             public byte Texture_Num { get; set; }
+
+            public override string ToString() => "[Button] " + Name;
         }
 
         public class TextBox : Tool
@@ -82,17 +84,23 @@ class Lists
             public short Max_Characters { get; set; }
             public short Width { get; set; }
             public bool Password { get; set; }
+
+            public override string ToString() => "[TextBox] " + Name;
         }
 
         public class CheckBox : Tool
         {
             public string Text { get; set; }
             public bool Checked { get; set; }
+
+            public override string ToString() => "[CheckBox] " + Name;
         }
 
         public class Panel : Tool
         {
             public byte Texture_Num { get; set; }
+
+            public override string ToString() => "[Panel] " + Name;
         }
 
         public class Class : Data
@@ -293,7 +301,7 @@ class Lists
             private Guid item;
             public Item Item
             {
-                get => (Item)Lists.GetData(Lists.Item, item);
+                get => (Item)GetData(Lists.Item, item);
                 set => item = new Guid(GetID(value));
             }
             public short Amount;
@@ -305,6 +313,7 @@ class Lists
                 this.Amount = Amount;
                 this.Chance = Chance;
             }
+            public override string ToString() => Item.Name + " [" + Amount + "x, " + Chance + "%]";
         }
 
         public class Shop : Data
@@ -330,6 +339,8 @@ class Lists
                 this.Amount = Amount;
                 this.Price = Price;
             }
+
+            public override string ToString() => Item.Name + " - " + Amount + "x [$" + Price + "]";
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 partial class Editor_Shops : Form
@@ -69,8 +70,8 @@ partial class Editor_Shops : Form
         // Lista os dados
         txtName.Text = Selected.Name;
         cmbCurrency.SelectedItem = Selected.Currency;
-        for (byte i = 0; i < Selected.Sold.Count; i++) lstSold.Items.Add(List_Text(Selected.Sold[i]));
-        for (byte i = 0; i < Selected.Bought.Count; i++) lstBought.Items.Add(List_Text(Selected.Bought[i]));
+        for (byte i = 0; i < Selected.Sold.Count; i++) lstSold.Items.Add(Selected.Sold[i]);
+        for (byte i = 0; i < Selected.Bought.Count; i++) lstBought.Items.Add(Selected.Bought[i]);
     }
 
     private void txtFilter_TextChanged(object sender, EventArgs e)
@@ -83,6 +84,7 @@ partial class Editor_Shops : Form
         // Adiciona uma loja nova
         Lists.Structures.Shop Shop = new Lists.Structures.Shop(Guid.NewGuid());
         Shop.Name = "New shop";
+        Shop.Currency = Lists.Item.ElementAt(0).Value;
         Lists.Shop.Add(Shop.ID, Shop);
 
         // Adiciona na lista
@@ -138,7 +140,6 @@ partial class Editor_Shops : Form
         // Abre o painel para adicionar o item
         cmbItems.SelectedIndex = 0;
         numAmount.Value = 1;
-        numAmount.Enabled = true;
         numPrice.Value = 0;
         grpAddItem.Tag = lstSold;
         grpAddItem.Visible = true;
@@ -160,7 +161,6 @@ partial class Editor_Shops : Form
         // Abre o painel para adicionar o item
         cmbItems.SelectedIndex = 0;
         numAmount.Value = 1;
-        numAmount.Enabled = false;
         numPrice.Value = 0;
         grpAddItem.Tag = lstBought;
         grpAddItem.Visible = true;
@@ -184,17 +184,15 @@ partial class Editor_Shops : Form
         if (grpAddItem.Tag == lstSold)
         {
             Selected.Sold.Add(Data);
-            lstSold.Items.Add(List_Text(Data));
+            lstSold.Items.Add(Data);
         }
         else
         {
             Selected.Bought.Add(Data);
-            lstBought.Items.Add(List_Text(Data));
+            lstBought.Items.Add(Data);
         }
 
         // Fecha o painel
         grpAddItem.Visible = false;
     }
-
-    private string List_Text(Lists.Structures.Shop_Item Data) => Data.Item.Name + " - " + Data.Amount + "x [$" + Data.Price + "]";
 }

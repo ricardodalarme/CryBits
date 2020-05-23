@@ -1,11 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 partial class Editor_Classes : Form
 {
-    // Usado para acessar os dados da janela
-    public static Editor_Classes Form;
-
     // Classe selecionada
     private Lists.Structures.Class Selected;
 
@@ -91,8 +89,9 @@ partial class Editor_Classes : Form
     {
         // Adiciona uma loja nova
         Lists.Structures.Class Class = new Lists.Structures.Class(Guid.NewGuid());
-        Class.Name = "New class";
         Lists.Class.Add(Class.ID, Class);
+        Class.Name = "New class";
+        Class.Spawn_Map = Lists.Map.ElementAt(0).Value;
 
         // Adiciona na lista
         TreeNode Node = new TreeNode(Class.Name);
@@ -103,9 +102,16 @@ partial class Editor_Classes : Form
 
     private void butRemove_Click(object sender, EventArgs e)
     {
-        // Remove a loja selecionada
         if (List.SelectedNode != null)
         {
+            // Garante que sempre vai ter pelo menos uma classse
+            if (Lists.Class.Count == 1)
+            {
+                MessageBox.Show("It must have at least one class registered.");
+                return;
+            }
+
+            // Remove a classes selecionada
             Lists.Class.Remove(Selected.ID);
             List.SelectedNode.Remove();
         }
@@ -122,6 +128,7 @@ partial class Editor_Classes : Form
     private void butCancel_Click(object sender, EventArgs e)
     {
         // Volta à janela principal
+        Send.Request_Classes();
         Close();
         Editor_Maps.Form.Show();
     }
@@ -220,6 +227,8 @@ partial class Editor_Classes : Form
     private void cmbSpawn_Map_SelectedIndexChanged(object sender, EventArgs e)
     {
         Selected.Spawn_Map = (Lists.Structures.Map)cmbSpawn_Map.SelectedItem;
+        numSpawn_X.Maximum = Selected.Spawn_Map.Width - 1;
+        numSpawn_Y.Maximum = Selected.Spawn_Map.Height - 1;
     }
 
     private void cmbSpawn_Direction_SelectedIndexChanged(object sender, EventArgs e)
@@ -239,6 +248,13 @@ partial class Editor_Classes : Form
 
     private void butItem_Add_Click(object sender, EventArgs e)
     {
+        // Evita erros
+        if (Lists.Item.Count == 0)
+        {
+            MessageBox.Show("It must have at least one item registered add inital items.");
+            return;
+        }
+
         // Abre a janela para adicionar o item
         cmbItems.SelectedIndex = 0;
         numItem_Amount.Value = 1;
@@ -248,12 +264,9 @@ partial class Editor_Classes : Form
     private void butItem_Ok_Click(object sender, EventArgs e)
     {
         // Adiciona o item
-        if (cmbItems.SelectedIndex >= 0)
-        {
-            lstItems.Items.Add(((Lists.Structures.Item)cmbItems.SelectedItem).Name + " [" + numItem_Amount.Value + "x]");
-            Selected.Item.Add(new Tuple<Lists.Structures.Item, short>((Lists.Structures.Item)cmbItems.SelectedItem, (short)numItem_Amount.Value));
-            grpItem_Add.Visible = false;
-        }
+        lstItems.Items.Add(((Lists.Structures.Item)cmbItems.SelectedItem).Name + " [" + numItem_Amount.Value + "x]");
+        Selected.Item.Add(new Tuple<Lists.Structures.Item, short>((Lists.Structures.Item)cmbItems.SelectedItem, (short)numItem_Amount.Value));
+        grpItem_Add.Visible = false;
     }
 
     private void butItem_Delete_Click(object sender, EventArgs e)
@@ -270,7 +283,7 @@ partial class Editor_Classes : Form
     private void cmbItems_SelectedIndexChanged(object sender, EventArgs e)
     {
         // Quantidade de itens
-        if (cmbItems.SelectedIndex >= 0) numItem_Amount.Enabled = ((Lists.Structures.Item)cmbItems.SelectedItem).Stackable;
+        numItem_Amount.Enabled = ((Lists.Structures.Item)cmbItems.SelectedItem).Stackable;
         numItem_Amount.Value = 1;
     }
 }

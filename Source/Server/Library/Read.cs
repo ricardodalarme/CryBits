@@ -163,8 +163,7 @@ partial class Read
         else
         {
             Objects.Class Class = new Objects.Class(Guid.NewGuid());
-            Class.Tex_Male = Class.Tex_Female = new short[1];
-            Class.Tex_Male[0] = Class.Tex_Female[0] = 1;
+            Class.Name = "New class";
             Class.Spawn_Map = Lists.Map.ElementAt(0).Value;
             Lists.Class.Add(Class.ID, Class);
             Write.Class(Class);

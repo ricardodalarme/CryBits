@@ -186,11 +186,11 @@ class Send
         {
             // Escreve os dados
             Data.Write(Class.ID.ToString());
+            Data.Write((byte)Class.Tex_Male.Length);
+            Data.Write((byte)Class.Tex_Female.Length);
             Data.Write(Class.Name);
             Data.Write(Class.Description);
-            Data.Write((byte)Class.Tex_Male.Length);
             for (byte t = 0; t < Class.Tex_Male.Length; t++) Data.Write(Class.Tex_Male[t]);
-            Data.Write((byte)Class.Tex_Female.Length);
             for (byte t = 0; t < Class.Tex_Female.Length; t++) Data.Write(Class.Tex_Female[t]);
 
             // Apenas dados do editor

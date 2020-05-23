@@ -26,10 +26,8 @@
     /// </summary>
     private void InitializeComponent()
     {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Interface));
             this.picWindow = new System.Windows.Forms.PictureBox();
-            this.butClear = new System.Windows.Forms.Button();
             this.butNew = new System.Windows.Forms.Button();
             this.butRemove = new System.Windows.Forms.Button();
             this.cmbWindows = new System.Windows.Forms.ComboBox();
@@ -47,7 +45,6 @@
             this.butConfirm = new System.Windows.Forms.Button();
             this.cmbType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.tmrRender = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picWindow)).BeginInit();
             this.grpOrder.SuspendLayout();
             this.grpProperties.SuspendLayout();
@@ -63,21 +60,11 @@
             this.picWindow.TabIndex = 1;
             this.picWindow.TabStop = false;
             // 
-            // butClear
-            // 
-            this.butClear.Location = new System.Drawing.Point(163, 19);
-            this.butClear.Name = "butClear";
-            this.butClear.Size = new System.Drawing.Size(70, 25);
-            this.butClear.TabIndex = 25;
-            this.butClear.Text = "Clear";
-            this.butClear.UseVisualStyleBackColor = true;
-            this.butClear.Click += new System.EventHandler(this.butClear_Click);
-            // 
             // butNew
             // 
             this.butNew.Location = new System.Drawing.Point(11, 19);
             this.butNew.Name = "butNew";
-            this.butNew.Size = new System.Drawing.Size(70, 25);
+            this.butNew.Size = new System.Drawing.Size(109, 25);
             this.butNew.TabIndex = 28;
             this.butNew.Text = "New";
             this.butNew.UseVisualStyleBackColor = true;
@@ -85,9 +72,9 @@
             // 
             // butRemove
             // 
-            this.butRemove.Location = new System.Drawing.Point(87, 19);
+            this.butRemove.Location = new System.Drawing.Point(124, 19);
             this.butRemove.Name = "butRemove";
-            this.butRemove.Size = new System.Drawing.Size(70, 25);
+            this.butRemove.Size = new System.Drawing.Size(109, 25);
             this.butRemove.TabIndex = 29;
             this.butRemove.Text = "Remove";
             this.butRemove.UseVisualStyleBackColor = true;
@@ -105,7 +92,6 @@
             // grpOrder
             // 
             this.grpOrder.Controls.Add(this.butOrder_Down);
-            this.grpOrder.Controls.Add(this.butClear);
             this.grpOrder.Controls.Add(this.butOrder_Up);
             this.grpOrder.Controls.Add(this.butRemove);
             this.grpOrder.Controls.Add(this.butOrder_Unpin);
@@ -182,7 +168,7 @@
             this.prgProperties.HelpVisible = false;
             this.prgProperties.Location = new System.Drawing.Point(11, 19);
             this.prgProperties.Name = "prgProperties";
-            this.prgProperties.Size = new System.Drawing.Size(221, 182);
+            this.prgProperties.Size = new System.Drawing.Size(222, 182);
             this.prgProperties.TabIndex = 25;
             this.prgProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.prgProperties_PropertyValueChanged);
             // 
@@ -246,12 +232,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Type:";
             // 
-            // tmrRender
-            // 
-            this.tmrRender.Enabled = true;
-            this.tmrRender.Interval = 1;
-            this.tmrRender.Tick += new System.EventHandler(this.tmrRender_Tick);
-            // 
             // Editor_Interface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -281,7 +261,6 @@
     }
 
     #endregion
-    private System.Windows.Forms.Button butClear;
     private System.Windows.Forms.Button butNew;
     private System.Windows.Forms.Button butRemove;
     public System.Windows.Forms.ComboBox cmbWindows;
@@ -300,5 +279,4 @@
     private System.Windows.Forms.Button butConfirm;
     public System.Windows.Forms.ComboBox cmbType;
     private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Timer tmrRender;
 }

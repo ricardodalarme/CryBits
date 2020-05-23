@@ -16,11 +16,11 @@ partial class Editor_Interface : Form
         Graphics.Win_Interface = new SFML.Graphics.RenderWindow(picWindow.Handle);
 
         // Adiciona as janelas à lista
-         cmbWindows.Items.AddRange(Enum.GetNames(typeof(Globals.Windows)));
-         cmbWindows.SelectedIndex = 0;
+        cmbWindows.Items.AddRange(Enum.GetNames(typeof(Globals.Windows)));
+        cmbWindows.SelectedIndex = 0;
 
         // Adiciona os tipos de ferramentas à lista
-        for (byte i = 0; i < (byte)Globals.Tools_Types.Count; i++)  cmbType.Items.Add((Globals.Tools_Types)i);
+        for (byte i = 0; i < (byte)Globals.Tools_Types.Count; i++) cmbType.Items.Add((Globals.Tools_Types)i);
 
         // Abre a janela
         Editor_Maps.Form.Hide();
@@ -57,16 +57,7 @@ partial class Editor_Interface : Form
                 treOrder.SelectedNode = Lists.Tool.Nodes[Window].LastNode;
             }
             // Troca o nome da ferramenta
-            else if (e.ChangedItem.Label == "Name")
-            {
-                string Text = string.Empty;
-                Lists.Structures.Tool Tool = ((Lists.Structures.Tool)treOrder.SelectedNode.Tag);
-                if (Tool is Lists.Structures.Button) Text = "[Button] ";
-                else if (Tool is Lists.Structures.CheckBox) Text = "[CheckBox] ";
-                else if (Tool is Lists.Structures.TextBox) Text = "[TextBox] ";
-                else if (Tool is Lists.Structures.Panel) Text = "[Panel] ";
-                treOrder.SelectedNode.Text = Text + Tool.Name;
-            }
+            else if (e.ChangedItem.Label == "Name") treOrder.SelectedNode.Text = treOrder.SelectedNode.Tag.ToString();
         }
     }
 
@@ -97,6 +88,7 @@ partial class Editor_Interface : Form
     {
         // Adiciona uma nova ferramenta
         Lists.Structures.Tool Tool = new Lists.Structures.Tool();
+        Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = Tool;
         switch ((Globals.Tools_Types)cmbType.SelectedIndex)
         {
             case Globals.Tools_Types.Button: Tool = new Lists.Structures.Button(); break;
@@ -104,9 +96,8 @@ partial class Editor_Interface : Form
             case Globals.Tools_Types.CheckBox: Tool = new Lists.Structures.CheckBox(); break;
             case Globals.Tools_Types.TextBox: Tool = new Lists.Structures.TextBox(); break;
         }
-        Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add("[" + ((Globals.Tools_Types)cmbType.SelectedIndex).ToString() + "] ");
+        Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(Tool.ToString());
         Tool.Window = (Globals.Windows)cmbWindows.SelectedIndex;
-        Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = Tool;
         grpNew.Visible = false;
     }
 
@@ -115,40 +106,6 @@ partial class Editor_Interface : Form
         // Remove a ferramenta
         if (treOrder.SelectedNode != null && treOrder.SelectedNode.Parent != null)
             treOrder.SelectedNode.Remove();
-    }
-
-    private void butClear_Click(object sender, EventArgs e)
-    {
-        if (treOrder.SelectedNode.Parent != null)
-        {
-            // Reseta os valores
-            if (Selected is Lists.Structures.Button)
-            {
-                treOrder.SelectedNode.Text = "[" + Globals.Tools_Types.Button.ToString() + "] ";
-                treOrder.SelectedNode.Tag = new Lists.Structures.Button();
-            }
-            else if (Selected is Lists.Structures.TextBox)
-            {
-                treOrder.SelectedNode.Text = "[" + Globals.Tools_Types.TextBox.ToString() + "] ";
-                treOrder.SelectedNode.Tag = new Lists.Structures.TextBox();
-            }
-            else if (Selected is Lists.Structures.Panel)
-            {
-                treOrder.SelectedNode.Text = "[" + Globals.Tools_Types.Panel.ToString() + "] ";
-                treOrder.SelectedNode.Tag = new Lists.Structures.Panel();
-            }
-            else if (Selected is Lists.Structures.CheckBox)
-            {
-                treOrder.SelectedNode.Text = "[" + Globals.Tools_Types.Button.ToString() + "] ";
-                treOrder.SelectedNode.Tag = new Lists.Structures.CheckBox();
-            }
-
-            // Atualiza os componentes
-            Selected = (Lists.Structures.Tool)treOrder.SelectedNode.Tag;
-            prgProperties.SelectedObject = Selected;
-        }
-
-        treOrder.Focus();
     }
 
     private void butOrder_Pin_Click(object sender, EventArgs e)
@@ -226,10 +183,5 @@ partial class Editor_Interface : Form
 
         // Foca o componente
         treOrder.Focus();
-    }
-
-    private void tmrRender_Tick(object sender, EventArgs e)
-    {
-        Graphics.Interface();
     }
 }

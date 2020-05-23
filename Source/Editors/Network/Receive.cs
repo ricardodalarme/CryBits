@@ -29,7 +29,6 @@ partial class Receive
             case Packets.Connect: Connect(); break;
             case Packets.Server_Data: Server_Data(Data); break;
             case Packets.Classes: Classes(Data); break;
-            case Packets.Maps: Maps(Data); break;
             case Packets.Map: Map(Data); break;
             case Packets.NPCs: NPCs(Data); break;
             case Packets.Items: Items(Data); break;
@@ -65,24 +64,38 @@ partial class Receive
 
     private static void Classes(NetIncomingMessage Data)
     {
+        // Classes a serem removidas
+        Dictionary<Guid, Lists.Structures.Class> ToRemove = new Dictionary<Guid, Lists.Structures.Class>(Lists.Class);
+
         // Quantidade de classes
         short Count = Data.ReadByte();
-        Lists.Class = new Dictionary<Guid, Lists.Structures.Class>();
 
-        for (short i = 0; i < Count; i++)
+        while (--Count >= 0)
         {
-            // Adiciona a loja na lista
-            string ID = Data.ReadString();
-            Lists.Structures.Class Class = new Lists.Structures.Class(new Guid(ID));
-            Lists.Class.Add(Class.ID, Class);
+            Guid ID = new Guid(Data.ReadString());
+            Lists.Structures.Class Class;
+
+            // Obtém o dado
+            if (Lists.Class.ContainsKey(ID))
+            {
+                Class = Lists.Class[ID];
+                ToRemove.Remove(ID);
+            }
+            else
+            {
+                Class = new Lists.Structures.Class(ID);
+                Lists.Class.Add(Class.ID, Class);
+            }
+
+            // Redimensiona os valores necessários 
+            Class.Tex_Male = new List<short>(Data.ReadByte());
+            Class.Tex_Female = new List<short>(Data.ReadByte());
 
             // Lê os dados
             Class.Name = Data.ReadString();
             Class.Description = Data.ReadString();
-            byte Num_Tex_Male = Data.ReadByte();
-            for (byte t = 0; t < Num_Tex_Male; t++) Class.Tex_Male.Add(Data.ReadInt16());
-            byte Num_Tex_Female = Data.ReadByte();
-            for (byte t = 0; t < Num_Tex_Female; t++) Class.Tex_Female.Add(Data.ReadInt16());
+            for (byte t = 0; t < Class.Tex_Male.Capacity; t++) Class.Tex_Male.Add(Data.ReadInt16());
+            for (byte t = 0; t < Class.Tex_Female.Capacity; t++) Class.Tex_Female.Add(Data.ReadInt16());
             Class.Spawn_Map = (Lists.Structures.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
             Class.Spawn_Direction = Data.ReadByte();
             Class.Spawn_X = Data.ReadByte();
@@ -92,12 +105,9 @@ partial class Receive
             byte Num_Items = Data.ReadByte();
             for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new Tuple<Lists.Structures.Item, short>((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16()));
         }
-    }
 
-    private static void Maps(NetIncomingMessage Data)
-    {
-        // Quantidade de mapas
-        Lists.Map = new Dictionary<Guid, Lists.Structures.Map>();
+        // Remove as classes que não tiveram os dados atualizados
+        foreach (Guid Remove in ToRemove.Keys) Lists.Class.Remove(Remove);
     }
 
     private static void Map(NetIncomingMessage Data)
@@ -225,11 +235,11 @@ partial class Receive
             NPC.Sight = Data.ReadByte();
             NPC.Experience = Data.ReadInt32();
             for (byte n = 0; n < (byte)Globals.Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
-            byte Num_Drops = Data.ReadByte();
-            for (byte n = 0; n < Num_Drops; n++) NPC.Drop.Add(new Lists.Structures.NPC_Drop((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte()));
+            NPC.Drop = new List<Lists.Structures.NPC_Drop>(Data.ReadByte());
+            for (byte n = 0; n < NPC.Drop.Capacity; n++) NPC.Drop.Add(new Lists.Structures.NPC_Drop((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte()));
             NPC.AttackNPC = Data.ReadBoolean();
-            byte Num_Allies = Data.ReadByte();
-            for (byte n = 0; n < Num_Allies; n++) NPC.Allie.Add((Lists.Structures.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString())));
+            NPC.Allie = new List<Lists.Structures.NPC>(Data.ReadByte());
+            for (byte n = 0; n < NPC.Allie.Capacity; n++) NPC.Allie.Add((Lists.Structures.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString())));
             NPC.Movement = (Globals.NPC_Movements)Data.ReadByte();
             NPC.Flee_Helth = Data.ReadByte();
             NPC.Shop = (Lists.Structures.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));

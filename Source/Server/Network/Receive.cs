@@ -544,7 +544,6 @@ class Receive
         Lists.Server_Data.Max_Party_Members = Data.ReadByte();
         Lists.Server_Data.Max_Map_Items = Data.ReadByte();
         Lists.Server_Data.Num_Points = Data.ReadByte();
-        Socket.Device.Configuration.MaximumConnections = Lists.Server_Data.Max_Players;
 
         // Salva os dados
         Write.Server_Data();

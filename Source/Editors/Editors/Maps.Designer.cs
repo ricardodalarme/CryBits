@@ -578,49 +578,49 @@
             // butEditors_Classes
             // 
             this.butEditors_Classes.Name = "butEditors_Classes";
-            this.butEditors_Classes.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Classes.Size = new System.Drawing.Size(180, 22);
             this.butEditors_Classes.Text = "Classes";
             this.butEditors_Classes.Click += new System.EventHandler(this.butEditors_Classes_Click);
             // 
             // butEditors_Data
             // 
             this.butEditors_Data.Name = "butEditors_Data";
-            this.butEditors_Data.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Data.Size = new System.Drawing.Size(180, 22);
             this.butEditors_Data.Text = "Data";
             this.butEditors_Data.Click += new System.EventHandler(this.butEditors_Data_Click);
             // 
             // butEditors_Interface
             // 
             this.butEditors_Interface.Name = "butEditors_Interface";
-            this.butEditors_Interface.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Interface.Size = new System.Drawing.Size(180, 22);
             this.butEditors_Interface.Text = "Interface";
             this.butEditors_Interface.Click += new System.EventHandler(this.butEditors_Interface_Click);
             // 
             // butEditors_Items
             // 
             this.butEditors_Items.Name = "butEditors_Items";
-            this.butEditors_Items.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Items.Size = new System.Drawing.Size(180, 22);
             this.butEditors_Items.Text = "Items";
             this.butEditors_Items.Click += new System.EventHandler(this.butEditors_Items_Click);
             // 
             // butEditors_NPCs
             // 
             this.butEditors_NPCs.Name = "butEditors_NPCs";
-            this.butEditors_NPCs.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_NPCs.Size = new System.Drawing.Size(180, 22);
             this.butEditors_NPCs.Text = "NPCs";
             this.butEditors_NPCs.Click += new System.EventHandler(this.butEditors_NPCs_Click);
             // 
             // butEditors_Shops
             // 
             this.butEditors_Shops.Name = "butEditors_Shops";
-            this.butEditors_Shops.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Shops.Size = new System.Drawing.Size(180, 22);
             this.butEditors_Shops.Text = "Shops";
             this.butEditors_Shops.Click += new System.EventHandler(this.butEditors_Shops_Click);
             // 
             // butEditors_Tiles
             // 
             this.butEditors_Tiles.Name = "butEditors_Tiles";
-            this.butEditors_Tiles.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Tiles.Size = new System.Drawing.Size(180, 22);
             this.butEditors_Tiles.Text = "Tiles";
             this.butEditors_Tiles.Click += new System.EventHandler(this.butEditors_Tiles_Click);
             // 

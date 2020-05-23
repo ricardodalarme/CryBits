@@ -2,9 +2,6 @@
 
 public partial class Editor_Data : Form
 {
-    // Usado para acessar os dados da janela
-    public static Editor_Data Form;
-
     public Editor_Data()
     {
         // Inicializa os componentes
@@ -46,6 +43,7 @@ public partial class Editor_Data : Form
     private void butCancel_Click(object sender, System.EventArgs e)
     {
         // Volta à janela principal
+        Send.Request_Server_Data();
         Close();
         Editor_Maps.Form.Show();
     }
