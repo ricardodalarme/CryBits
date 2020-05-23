@@ -11,10 +11,6 @@ class Game
     // Bloqueio direcional
     public const byte Max_DirBlock = 3;
 
-    // Maximo e mínimo de caracteres permidos em alguns texto
-    public const byte Max_Name_Length = 12;
-    public const byte Min_Name_Length = 3;
-
     // Limites em geral
     public const byte Max_Inventory = 30;
     public const byte Max_Hotbar = 10;

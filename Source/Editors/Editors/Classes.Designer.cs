@@ -595,7 +595,6 @@
         this.cmbItems.Name = "cmbItems";
         this.cmbItems.Size = new System.Drawing.Size(251, 21);
         this.cmbItems.TabIndex = 0;
-        this.cmbItems.SelectedIndexChanged += new System.EventHandler(this.cmbItems_SelectedIndexChanged);
         // 
         // label16
         // 

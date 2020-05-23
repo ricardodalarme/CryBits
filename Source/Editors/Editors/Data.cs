@@ -16,6 +16,10 @@ public partial class Editor_Data : Form
         numMax_Party_Members.Value = Lists.Server_Data.Max_Party_Members;
         numMax_Map_Items.Value = Lists.Server_Data.Max_Map_Items;
         numPoints.Value = Lists.Server_Data.Num_Points;
+        numMin_Name.Value = Lists.Server_Data.Min_Name_Length;
+        numMax_Name.Value = Lists.Server_Data.Max_Name_Length;
+        numMin_Password.Value = Lists.Server_Data.Min_Password_Length;
+        numMax_Password.Value = Lists.Server_Data.Max_Password_Length;
 
         // Abre a janela
         Editor_Maps.Form.Hide();
@@ -33,6 +37,10 @@ public partial class Editor_Data : Form
         Lists.Server_Data.Max_Party_Members = (byte)numMax_Party_Members.Value;
         Lists.Server_Data.Max_Map_Items = (byte)numMax_Map_Items.Value;
         Lists.Server_Data.Num_Points = (byte)numPoints.Value;
+        Lists.Server_Data.Min_Name_Length = (byte)numMin_Name.Value;
+        Lists.Server_Data.Max_Name_Length = (byte)numMax_Name.Value;
+        Lists.Server_Data.Min_Password_Length = (byte)numMin_Password.Value;
+        Lists.Server_Data.Max_Password_Length = (byte)numMax_Password.Value;
         Send.Write_Server_Data();
 
         // Volta à janela principal

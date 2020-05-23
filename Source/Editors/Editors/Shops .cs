@@ -45,7 +45,7 @@ partial class Editor_Shops : Form
     private void List_Update()
     {
         // Lista as lojas
-        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values)
+        foreach (var Shop in Lists.Shop.Values)
             if (Shop.Name.StartsWith(txtFilter.Text))
             {
                 List.Nodes.Add(Shop.Name);
@@ -62,16 +62,14 @@ partial class Editor_Shops : Form
         // Atualiza o valor da loja selecionada
         Selected = Lists.Shop[(Guid)List.SelectedNode.Tag];
 
-        // Limpa os dados necessários
-        lstSold.Items.Clear();
-        lstBought.Items.Clear();
-        grpAddItem.Visible = false;
+        // Conecta as listas com os componentes
+        lstBought.DataSource = Selected.Bought;
+        lstSold.DataSource = Selected.Sold;
 
         // Lista os dados
         txtName.Text = Selected.Name;
         cmbCurrency.SelectedItem = Selected.Currency;
-        for (byte i = 0; i < Selected.Sold.Count; i++) lstSold.Items.Add(Selected.Sold[i]);
-        for (byte i = 0; i < Selected.Bought.Count; i++) lstBought.Items.Add(Selected.Bought[i]);
+        grpAddItem.Visible = false;
     }
 
     private void txtFilter_TextChanged(object sender, EventArgs e)
@@ -149,11 +147,7 @@ partial class Editor_Shops : Form
     private void butSold_Remove_Click(object sender, EventArgs e)
     {
         // Remove o item
-        if (lstSold.SelectedIndex >= 0)
-        {
-            Selected.Sold.RemoveAt(lstSold.SelectedIndex);
-            lstSold.Items.RemoveAt(lstSold.SelectedIndex);
-        }
+        if (lstSold.SelectedIndex >= 0) Selected.Sold.RemoveAt(lstSold.SelectedIndex);
     }
 
     private void butBought_Add_Click(object sender, EventArgs e)
@@ -170,27 +164,15 @@ partial class Editor_Shops : Form
     private void butBought_Remove_Click(object sender, EventArgs e)
     {
         // Remove o item
-        if (lstBought.SelectedIndex >= 0)
-        {
-            Selected.Bought.RemoveAt(lstSold.SelectedIndex);
-            lstBought.Items.RemoveAt(lstSold.SelectedIndex);
-        }
+        if (lstBought.SelectedIndex >= 0)  Selected.Bought.RemoveAt(lstSold.SelectedIndex);
     }
 
     private void butConfirm_Click(object sender, EventArgs e)
     {
         // Adiciona o item
         Lists.Structures.Shop_Item Data = new Lists.Structures.Shop_Item((Lists.Structures.Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
-        if (grpAddItem.Tag == lstSold)
-        {
-            Selected.Sold.Add(Data);
-            lstSold.Items.Add(Data);
-        }
-        else
-        {
-            Selected.Bought.Add(Data);
-            lstBought.Items.Add(Data);
-        }
+        if (grpAddItem.Tag == lstSold) Selected.Sold.Add(Data);
+        else Selected.Bought.Add(Data);
 
         // Fecha o painel
         grpAddItem.Visible = false;

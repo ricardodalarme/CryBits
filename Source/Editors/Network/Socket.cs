@@ -76,7 +76,9 @@ class Socket
     private static void Leave()
     {
         // Fecha todas as janelas abertar e abre o menu de login
-        for (int i = 0; i < Application.OpenForms.Count; i++) Application.OpenForms[i].Visible = false;
+        for (int i = 0; i < Application.OpenForms.Count; i++)
+            if (Application.OpenForms[i] != Login.Form)
+                Application.OpenForms[i].Close();
         Login.Form.Visible = true;
     }
 }

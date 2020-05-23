@@ -93,7 +93,7 @@ public partial class Editor_Maps_Properties : Form
         Width_Difference = Width_New - Selected.Width;
         Height_Difference = Height_New - Selected.Height;
 
-        // Azulejo1
+        // Azulejo
         for (byte c = 0; c < Selected.Layer.Count; c++)
         {
             TempTile = new Lists.Structures.Map_Tile_Data[Width_New + 1, Height_New + 1];

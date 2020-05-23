@@ -214,9 +214,14 @@ class Receive
         string Password = Data.ReadString();
 
         // Verifica se está tudo certo
-        if (User.Length < Game.Min_Name_Length || User.Length > Game.Max_Name_Length || Password.Length < Game.Min_Name_Length || Password.Length > Game.Max_Name_Length)
+        if (User.Length < Lists.Server_Data.Min_Name_Length || User.Length > Lists.Server_Data.Max_Name_Length)
         {
-            Send.Alert(Account, "The username and password must contain between " + Game.Min_Name_Length + " and " + Game.Max_Name_Length + " characters.");
+            Send.Alert(Account, "The username must contain between " + Lists.Server_Data.Min_Name_Length + " and " + Lists.Server_Data.Max_Name_Length + " characters.");
+            return;
+        }
+        if (Password.Length < Lists.Server_Data.Min_Name_Length || Password.Length > Lists.Server_Data.Max_Name_Length)
+        {
+            Send.Alert(Account, "The password must contain between " + Lists.Server_Data.Min_Name_Length + " and " + Lists.Server_Data.Max_Name_Length + " characters.");
             return;
         }
         if (File.Exists(Directories.Accounts.FullName + User + Directories.Format))
@@ -243,9 +248,9 @@ class Receive
         string Name = Data.ReadString().Trim();
 
         // Verifica se está tudo certo
-        if (Name.Length < Game.Min_Name_Length || Name.Length > Game.Max_Name_Length)
+        if (Name.Length < Lists.Server_Data.Min_Name_Length || Name.Length > Lists.Server_Data.Max_Name_Length)
         {
-            Send.Alert(Account, "The character name must contain between " + Game.Min_Name_Length + " and " + Game.Max_Name_Length + " characters.", false);
+            Send.Alert(Account, "The character name must contain between " + Lists.Server_Data.Min_Name_Length + " and " + Lists.Server_Data.Max_Name_Length + " characters.", false);
             return;
         }
         if (Name.Contains(";") || Name.Contains(":"))
@@ -544,6 +549,10 @@ class Receive
         Lists.Server_Data.Max_Party_Members = Data.ReadByte();
         Lists.Server_Data.Max_Map_Items = Data.ReadByte();
         Lists.Server_Data.Num_Points = Data.ReadByte();
+        Lists.Server_Data.Min_Name_Length = Data.ReadByte();
+        Lists.Server_Data.Max_Name_Length = Data.ReadByte();
+        Lists.Server_Data.Min_Password_Length = Data.ReadByte();
+        Lists.Server_Data.Max_Password_Length = Data.ReadByte();
 
         // Salva os dados
         Write.Server_Data();

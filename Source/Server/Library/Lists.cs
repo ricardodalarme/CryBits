@@ -37,6 +37,10 @@ class Lists
             public byte Max_Party_Members = 3;
             public byte Max_Map_Items = 100;
             public byte Num_Points = 3;
+            public byte Max_Name_Length = 12;
+            public byte Min_Name_Length = 3; 
+            public byte Max_Password_Length = 12;
+            public byte Min_Password_Length = 3;
         }
 
         public struct TempCharacter

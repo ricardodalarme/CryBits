@@ -16,7 +16,7 @@ partial class Editor_Items : Form
 
         // Lista os dados
         cmbReq_Class.Items.Add("None");
-        foreach (Lists.Structures.Class Class in Lists.Class.Values) cmbReq_Class.Items.Add(Class);
+        foreach (var Class in Lists.Class.Values) cmbReq_Class.Items.Add(Class);
         for (byte i = 0; i < (byte)Globals.Rarity.Count; i++) cmbRarity.Items.Add((Globals.Rarity)i);
         for (byte i = 0; i < (byte)Globals.BindOn.Count; i++) cmbBind.Items.Add((Globals.BindOn)i);
         List_Update();
@@ -37,7 +37,7 @@ partial class Editor_Items : Form
     {
         // Lista os itens
         List.Nodes.Clear();
-        foreach (Lists.Structures.Item Item in Lists.Item.Values)
+        foreach (var Item in Lists.Item.Values)
             if (Item.Name.StartsWith(txtFilter.Text))
             {
                 List.Nodes.Add(Item.Name);

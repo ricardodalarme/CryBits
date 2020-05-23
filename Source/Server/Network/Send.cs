@@ -186,11 +186,11 @@ class Send
         {
             // Escreve os dados
             Data.Write(Class.ID.ToString());
-            Data.Write((byte)Class.Tex_Male.Length);
-            Data.Write((byte)Class.Tex_Female.Length);
             Data.Write(Class.Name);
             Data.Write(Class.Description);
+            Data.Write((byte)Class.Tex_Male.Length);
             for (byte t = 0; t < Class.Tex_Male.Length; t++) Data.Write(Class.Tex_Male[t]);
+            Data.Write((byte)Class.Tex_Female.Length);
             for (byte t = 0; t < Class.Tex_Female.Length; t++) Data.Write(Class.Tex_Female[t]);
 
             // Apenas dados do editor
@@ -791,6 +791,10 @@ class Send
         Data.Write(Lists.Server_Data.Max_Party_Members);
         Data.Write(Lists.Server_Data.Max_Map_Items);
         Data.Write(Lists.Server_Data.Num_Points);
+        Data.Write(Lists.Server_Data.Min_Name_Length);
+        Data.Write(Lists.Server_Data.Max_Name_Length);
+        Data.Write(Lists.Server_Data.Min_Password_Length);
+        Data.Write(Lists.Server_Data.Max_Password_Length);
         ToPlayer(Account, Data);
     }
 
@@ -873,16 +877,16 @@ class Send
         {
             // Geral
             Data.Write(Shop.ID.ToString());
-            Data.Write((byte)Shop.Sold.Length);
-            Data.Write((byte)Shop.Bought.Length);
             Data.Write(Shop.Name);
             Data.Write(Lists.GetID(Shop.Currency));
+            Data.Write((byte)Shop.Sold.Length);
             for (byte j = 0; j < Shop.Sold.Length; j++)
             {
                 Data.Write(Lists.GetID(Shop.Sold[j].Item));
                 Data.Write(Shop.Sold[j].Amount);
                 Data.Write(Shop.Sold[j].Price);
             }
+            Data.Write((byte)Shop.Bought.Length);
             for (byte j = 0; j < Shop.Bought.Length; j++)
             {
                 Data.Write(Lists.GetID(Shop.Bought[j].Item));

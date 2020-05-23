@@ -117,6 +117,10 @@ partial class Send
         Data.Write(Lists.Server_Data.Max_Party_Members);
         Data.Write(Lists.Server_Data.Max_Map_Items);
         Data.Write(Lists.Server_Data.Num_Points);
+        Data.Write(Lists.Server_Data.Min_Name_Length);
+        Data.Write(Lists.Server_Data.Max_Name_Length);
+        Data.Write(Lists.Server_Data.Min_Password_Length);
+        Data.Write(Lists.Server_Data.Max_Password_Length);
         Packet(Data);
     }
 
@@ -146,8 +150,8 @@ partial class Send
             for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Class.Attribute[i]);
             for (byte i = 0; i < Class.Item.Count; i++)
             {
-                Data.Write(Lists.GetID(Class.Item[i].Item1));
-                Data.Write(Class.Item[i].Item2);
+                Data.Write(Lists.GetID(Class.Item[i].Item));
+                Data.Write(Class.Item[i].Amount);
             }
         }
         Packet(Data);

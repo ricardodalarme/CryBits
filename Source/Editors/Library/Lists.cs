@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -62,6 +63,10 @@ class Lists
             public byte Max_Party_Members;
             public byte Max_Map_Items;
             public byte Num_Points;
+            public byte Max_Name_Length;
+            public byte Min_Name_Length;
+            public byte Max_Password_Length;
+            public byte Min_Password_Length;
         }
 
         public class Tool
@@ -107,18 +112,31 @@ class Lists
         {
             public string Name = string.Empty;
             public string Description;
-            public List<short> Tex_Male = new List<short>();
-            public List<short> Tex_Female = new List<short>();
+            public BindingList<short> Tex_Male = new BindingList<short>();
+            public BindingList<short> Tex_Female = new BindingList<short>();
             public Map Spawn_Map;
             public byte Spawn_Direction;
             public byte Spawn_X;
             public byte Spawn_Y;
             public short[] Vital = new short[(byte)Globals.Vitals.Count];
             public short[] Attribute = new short[(byte)Globals.Attributes.Count];
-            public List<Tuple<Item, short>> Item = new List<Tuple<Item, short>>();
+            public BindingList<Inventory> Item = new BindingList<Inventory>();
 
             public Class(Guid ID) : base(ID) { }
             public override string ToString() => Name;
+        }
+
+        public class Inventory
+        {
+            public Item Item;
+            public short Amount;
+
+            public Inventory(Item Item, short Amount)
+            {
+                this.Item = Item;
+                this.Amount = Amount;
+            }
+            public override string ToString() => Item.Name + " - " + Amount + "x";
         }
 
         [Serializable]
@@ -260,9 +278,9 @@ class Lists
             public int Experience;
             public short[] Vital = new short[(byte)Globals.Vitals.Count];
             public short[] Attribute = new short[(byte)Globals.Attributes.Count];
-            public List<NPC_Drop> Drop = new List<NPC_Drop>();
+            public BindingList<NPC_Drop> Drop = new BindingList<NPC_Drop>();
             public bool AttackNPC;
-            public List<NPC> Allie = new List<NPC>();
+            public BindingList<NPC> Allie = new BindingList<NPC>();
             public Globals.NPC_Movements Movement;
             public byte Flee_Helth;
             public Shop Shop;
@@ -296,21 +314,12 @@ class Lists
             public override string ToString() => Name;
         }
 
-        public class NPC_Drop
+        public class NPC_Drop : Inventory
         {
-            private Guid item;
-            public Item Item
-            {
-                get => (Item)GetData(Lists.Item, item);
-                set => item = new Guid(GetID(value));
-            }
-            public short Amount;
             public byte Chance;
 
-            public NPC_Drop(Item Item, short Amount, byte Chance)
+            public NPC_Drop(Item Item, short Amount, byte Chance) : base(Item, Amount)
             {
-                this.Item = Item;
-                this.Amount = Amount;
                 this.Chance = Chance;
             }
             public override string ToString() => Item.Name + " [" + Amount + "x, " + Chance + "%]";
@@ -320,23 +329,19 @@ class Lists
         {
             public string Name = string.Empty;
             public Item Currency;
-            public List<Shop_Item> Sold = new List<Shop_Item>();
-            public List<Shop_Item> Bought = new List<Shop_Item>();
+            public BindingList<Shop_Item> Sold = new BindingList<Shop_Item>();
+            public BindingList<Shop_Item> Bought = new BindingList<Shop_Item>();
 
             public Shop(Guid ID) : base(ID) { }
             public override string ToString() => Name;
         }
 
-        public class Shop_Item
+        public class Shop_Item : Inventory
         {
-            public Item Item;
-            public short Amount;
             public short Price;
 
-            public Shop_Item(Item Item, short Amount, short Price)
+            public Shop_Item(Item Item, short Amount, short Price) : base(Item, Amount)
             {
-                this.Item = Item;
-                this.Amount = Amount;
                 this.Price = Price;
             }
 

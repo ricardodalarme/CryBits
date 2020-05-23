@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 public partial class Editor_NPCs : Form
 {
-    // Usado para acessar os dados da janela
-    public static Editor_NPCs Form;
-
     // NPC selecionado
     private Lists.Structures.NPC Selected;
 
@@ -19,8 +15,8 @@ public partial class Editor_NPCs : Form
         numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
 
         // Lista os dados
-        foreach (Lists.Structures.Item Item in Lists.Item.Values) cmbDrop_Item.Items.Add(Item);
-        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values) cmbShop.Items.Add(Shop);
+        foreach (var Item in Lists.Item.Values) cmbDrop_Item.Items.Add(Item);
+        foreach (var Shop in Lists.Shop.Values) cmbShop.Items.Add(Shop);
         List_Update();
 
         // Abre a janela
@@ -39,7 +35,7 @@ public partial class Editor_NPCs : Form
     {
         // Lista os NPCs
         List.Nodes.Clear();
-        foreach (Lists.Structures.NPC NPC in Lists.NPC.Values)
+        foreach (var NPC in Lists.NPC.Values)
             if (NPC.Name.StartsWith(txtFilter.Text))
             {
                 List.Nodes.Add(NPC.Name);
@@ -57,10 +53,12 @@ public partial class Editor_NPCs : Form
         Selected = Lists.NPC[(Guid)List.SelectedNode.Tag];
 
         // Reseta os dados necessários
-        lstDrop.Items.Clear();
         grpDrop_Add.Visible = false;
-        lstAllies.Items.Clear();
         grpAllie_Add.Visible = false;
+
+        // Conecta as listas com os componentes
+        lstDrop.DataSource = Selected.Drop;
+        lstAllies.DataSource = Selected.Allie;
 
         // Lista os dados
         txtName.Text = Selected.Name;
@@ -77,11 +75,9 @@ public partial class Editor_NPCs : Form
         numIntelligence.Value = Selected.Attribute[(byte)Globals.Attributes.Intelligence];
         numAgility.Value = Selected.Attribute[(byte)Globals.Attributes.Agility];
         numVitality.Value = Selected.Attribute[(byte)Globals.Attributes.Vitality];
-        for (byte i = 0; i < Selected.Drop.Count; i++) lstDrop.Items.Add(Selected.Drop[i]);
         cmbMovement.SelectedIndex = (byte)Selected.Movement;
         numFlee_Health.Value = Selected.Flee_Helth;
         chkAttackNPC.Checked = Selected.AttackNPC;
-        foreach (var Allie in Selected.Allie) lstAllies.Items.Add(Allie);
         if (Selected.Shop != null) cmbShop.SelectedItem = Selected.Shop;
         else cmbShop.SelectedIndex = -1;
 
@@ -252,29 +248,20 @@ public partial class Editor_NPCs : Form
         // Deleta a item
         short Selected_Item = (short)lstDrop.SelectedIndex;
         if (Selected_Item != -1)
-        {
-            lstDrop.Items.RemoveAt(Selected_Item);
             Selected.Drop.RemoveAt(Selected_Item);
-        }
     }
 
     private void butItem_Ok_Click(object sender, EventArgs e)
     {
         // Adiciona o item
-        Lists.Structures.NPC_Drop Drop = new Lists.Structures.NPC_Drop((Lists.Structures.Item)cmbDrop_Item.SelectedItem, (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value);
-        Selected.Drop.Add(Drop);
-        lstDrop.Items.Add(Drop);
+        Selected.Drop.Add(new Lists.Structures.NPC_Drop((Lists.Structures.Item)cmbDrop_Item.SelectedItem, (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value));
         grpDrop_Add.Visible = false;
     }
 
     private void chkAttackNPC_CheckedChanged(object sender, EventArgs e)
     {
         Selected.AttackNPC = lstAllies.Enabled = chkAttackNPC.Checked;
-        if (!Selected.AttackNPC)
-        {
-            Selected.Allie = new List<Lists.Structures.NPC>();
-            lstAllies.Items.Clear();
-        }
+        if (!Selected.AttackNPC) Selected.Allie.Clear();
     }
 
     private void butAllie_Add_Click(object sender, EventArgs e)
@@ -283,7 +270,7 @@ public partial class Editor_NPCs : Form
         {
             // Adiciona os NPCs
             cmbAllie_NPC.Items.Clear();
-            foreach (Lists.Structures.NPC NPC in Lists.NPC.Values) cmbAllie_NPC.Items.Add(NPC);
+            foreach (var NPC in Lists.NPC.Values) cmbAllie_NPC.Items.Add(NPC);
             cmbAllie_NPC.SelectedIndex = 0;
 
             // Abre a janela para adicionar o aliado
@@ -294,23 +281,14 @@ public partial class Editor_NPCs : Form
     private void butAllie_Delete_Click(object sender, EventArgs e)
     {
         // Deleta a aliado
-        var Selected_NPC = (Lists.Structures.NPC)lstAllies.SelectedItem;
-        if (Selected_NPC != null)
-        {
-            lstAllies.Items.Remove(Selected_NPC);
-            Selected.Allie.Remove(Selected_NPC);
-        }
+        if (lstAllies.SelectedItem != null) Selected.Allie.Remove((Lists.Structures.NPC)lstAllies.SelectedItem);
     }
 
     private void butAllie_Ok_Click(object sender, EventArgs e)
     {
         // Adiciona o aliado
         var Allie = (Lists.Structures.NPC)cmbAllie_NPC.SelectedItem;
-        if (!Selected.Allie.Contains(Allie))
-        {
-            Selected.Allie.Add(Allie);
-            lstAllies.Items.Add(cmbAllie_NPC.SelectedItem);
-        }
+        if (!Selected.Allie.Contains(Allie)) Selected.Allie.Add(Allie);
         grpAllie_Add.Visible = false;
     }
 

@@ -55,8 +55,8 @@ partial class Editor_Maps : Form
         Update_List_Layers();
         for (byte i = 0; i < (byte)Globals.Layers.Count; i++) cmbLayers_Type.Items.Add(((Globals.Layers)i).ToString());
         for (byte i = 1; i < Graphics.Tex_Tile.Length; i++) cmbTiles.Items.Add(i.ToString());
-        foreach (Lists.Structures.NPC NPC in Lists.NPC.Values) cmbNPC.Items.Add(NPC);
-        foreach (Lists.Structures.Item Item in Lists.Item.Values) cmbA_Item.Items.Add(Item);
+        foreach (var NPC in Lists.NPC.Values) cmbNPC.Items.Add(NPC);
+        foreach (var Item in Lists.Item.Values) cmbA_Item.Items.Add(Item);
 
         // Reseta os valores
         cmbA_Warp_Direction.SelectedIndex = 0;
@@ -1603,7 +1603,7 @@ partial class Editor_Maps : Form
 
     private void butEditors_NPCs_Click(object sender, EventArgs e)
     {
-        Editor_NPCs.Form = new Editor_NPCs();
+       new Editor_NPCs();
     }
 
     private void butEditors_Shops_Click(object sender, EventArgs e)

@@ -13,8 +13,8 @@ partial class Editor_Classes : Form
         InitializeComponent();
 
         // Lista os dados
-        foreach (Lists.Structures.Item Item in Lists.Item.Values) cmbItems.Items.Add(Item);
-        foreach (Lists.Structures.Map Map in Lists.Map.Values) cmbSpawn_Map.Items.Add(Map);
+        foreach (var Item in Lists.Item.Values) cmbItems.Items.Add(Item);
+        foreach (var Map in Lists.Map.Values) cmbSpawn_Map.Items.Add(Map);
         List_Update();
 
         // Abre a janela
@@ -33,7 +33,7 @@ partial class Editor_Classes : Form
     {
         // Lista as classes
         List.Nodes.Clear();
-        foreach (Lists.Structures.Class Class in Lists.Class.Values)
+        foreach (var Class in Lists.Class.Values)
             if (Class.Name.StartsWith(txtFilter.Text))
             {
                 List.Nodes.Add(Class.Name);
@@ -50,11 +50,10 @@ partial class Editor_Classes : Form
         // Atualiza o valor da loja selecionada
         Selected = Lists.Class[(Guid)List.SelectedNode.Tag];
 
-        // Limpa os dados necessários
-        lstMale.Items.Clear();
-        lstFemale.Items.Clear();
-        lstItems.Items.Clear();
-        grpItem_Add.Visible = false;
+        // Conecta as listas com os componentes
+        lstMale.DataSource = Selected.Tex_Male;
+        lstFemale.DataSource = Selected.Tex_Female;
+        lstItems.DataSource = Selected.Item;
 
         // Lista os dados
         txtName.Text = Selected.Name;
@@ -70,9 +69,7 @@ partial class Editor_Classes : Form
         cmbSpawn_Direction.SelectedIndex = Selected.Spawn_Direction;
         numSpawn_X.Value = Selected.Spawn_X;
         numSpawn_Y.Value = Selected.Spawn_Y;
-        for (byte i = 0; i < Selected.Tex_Male.Count; i++) lstMale.Items.Add(Selected.Tex_Male[i]);
-        for (byte i = 0; i < Selected.Tex_Female.Count; i++) lstFemale.Items.Add(Selected.Tex_Female[i]);
-        for (byte i = 0; i < Selected.Item.Count; i++) lstItems.Items.Add(Selected.Item[i].Item1.Name + " [" + Selected.Item[i].Item2 + "x]");
+        grpItem_Add.Visible = false;
 
         // Seleciona os primeiros itens
         if (lstMale.Items.Count > 0) lstMale.SelectedIndex = 0;
@@ -184,44 +181,28 @@ partial class Editor_Classes : Form
     {
         // Adiciona a textura
         short Texture_Num = Preview.Select(Graphics.Tex_Character, 0);
-        if (Texture_Num != 0)
-        {
-            Selected.Tex_Male.Add(Texture_Num);
-            lstMale.Items.Add(Texture_Num);
-        }
+        if (Texture_Num != 0) Selected.Tex_Male.Add(Texture_Num);
     }
 
     private void butFTexture_Click(object sender, EventArgs e)
     {
         // Adiciona a textura
         short Texture_Num = Preview.Select(Graphics.Tex_Character, 0);
-        if (Texture_Num != 0)
-        {
-            Selected.Tex_Female.Add(Texture_Num);
-            lstFemale.Items.Add(Texture_Num);
-        }
+        if (Texture_Num != 0) Selected.Tex_Female.Add(Texture_Num);
     }
 
     private void butMDelete_Click(object sender, EventArgs e)
     {
         // Deleta a textura
-        short Selected_Item = (short)lstMale.SelectedIndex;
-        if (Selected_Item != -1)
-        {
-            lstMale.Items.RemoveAt(Selected_Item);
-            Selected.Tex_Male.RemoveAt(Selected_Item);
-        }
+        if (lstMale.SelectedIndex != -1)
+            Selected.Tex_Male.RemoveAt(lstMale.SelectedIndex);
     }
 
     private void butFDelete_Click(object sender, EventArgs e)
     {
         // Deleta a textura
-        short Selected_Item = (short)lstFemale.SelectedIndex;
-        if (Selected_Item != -1)
-        {
-            lstFemale.Items.RemoveAt(Selected_Item);
-            Selected.Tex_Female.RemoveAt(Selected_Item);
-        }
+        if (lstFemale.SelectedIndex != -1)
+            Selected.Tex_Female.RemoveAt(lstFemale.SelectedIndex);
     }
 
     private void cmbSpawn_Map_SelectedIndexChanged(object sender, EventArgs e)
@@ -264,26 +245,14 @@ partial class Editor_Classes : Form
     private void butItem_Ok_Click(object sender, EventArgs e)
     {
         // Adiciona o item
-        lstItems.Items.Add(((Lists.Structures.Item)cmbItems.SelectedItem).Name + " [" + numItem_Amount.Value + "x]");
-        Selected.Item.Add(new Tuple<Lists.Structures.Item, short>((Lists.Structures.Item)cmbItems.SelectedItem, (short)numItem_Amount.Value));
+        Selected.Item.Add(new Lists.Structures.Inventory((Lists.Structures.Item)cmbItems.SelectedItem, (short)numItem_Amount.Value));
         grpItem_Add.Visible = false;
     }
 
     private void butItem_Delete_Click(object sender, EventArgs e)
     {
         // Deleta a textura
-        short Selected_Item = (short)lstItems.SelectedIndex;
-        if (Selected_Item != -1)
-        {
-            lstItems.Items.RemoveAt(Selected_Item);
-            Selected.Item.RemoveAt(Selected_Item);
-        }
-    }
-
-    private void cmbItems_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        // Quantidade de itens
-        numItem_Amount.Enabled = ((Lists.Structures.Item)cmbItems.SelectedItem).Stackable;
-        numItem_Amount.Value = 1;
+        if (lstItems.SelectedIndex != -1) 
+            Selected.Item.RemoveAt(lstItems.SelectedIndex);
     }
 }
