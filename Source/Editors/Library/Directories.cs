@@ -24,7 +24,6 @@ class Directories
     public static DirectoryInfo Tex_Panoramas;
     public static DirectoryInfo Tex_Fogs;
     public static DirectoryInfo Tex_Tiles;
-    public static DirectoryInfo Tex_Lights;
     public static DirectoryInfo Tex_Items;
     public static FileInfo Tex_Grid;
     public static FileInfo Tex_Weather;
@@ -70,7 +69,6 @@ class Directories
         Tiles = new DirectoryInfo(Directory + @"\Data\Tiles\");
         Fonts = new DirectoryInfo(Directory + @"\Graphics\Fonts\");
         Tex_Panoramas = new DirectoryInfo(Directory + @"\Graphics\Panoramas\");
-        Tex_Lights = new DirectoryInfo(Directory + @"\Graphics\Lights\");
         Tex_Fogs = new DirectoryInfo(Directory + @"\Graphics\Fogs\");
         Tex_Characters = new DirectoryInfo(Directory + @"\Graphics\Characters\");
         Tex_Faces = new DirectoryInfo(Directory + @"\Graphics\Faces\");
@@ -95,7 +93,6 @@ class Directories
         Tools.Directory.Create();
         Tex_Panoramas.Create();
         Tex_Fogs.Create();
-        Tex_Lights.Create();
         Tex_Characters.Create();
         Tex_Faces.Create();
         Tex_Painel.Create();

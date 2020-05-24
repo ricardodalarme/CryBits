@@ -4,7 +4,8 @@ using System.Windows.Forms;
 
 public partial class Editor_Tiles : Form
 {
-
+    // Usado para acessar os dados da janela
+    public static Editor_Tiles Form;
 
     // Atributo selecionado
     private Globals.Tile_Attributes Attributes;

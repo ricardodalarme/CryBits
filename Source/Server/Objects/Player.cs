@@ -229,7 +229,7 @@ namespace Objects
                 // Teletransporte
                 case Game.Tile_Attributes.Warp:
                     if (Tile.Data_4 > 0) Direction = (Game.Directions)Tile.Data_4 - 1;
-                    Warp((TMap)Lists.GetData(Lists.Temp_Map, new Guid(Tile.Data_5)), (byte)Tile.Data_2, (byte)Tile.Data_3);
+                    Warp((TMap)Lists.GetData(Lists.Temp_Map, new Guid(Tile.Data_1)), (byte)Tile.Data_2, (byte)Tile.Data_3);
                     SecondMovement = true;
                     break;
             }

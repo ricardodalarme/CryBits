@@ -143,7 +143,6 @@ partial class Receive
         Map.Fog.Speed_X = Data.ReadSByte();
         Map.Fog.Speed_Y = Data.ReadSByte();
         Map.Fog.Alpha = Data.ReadByte();
-        Map.Light_Global = Data.ReadByte();
         Map.Lighting = Data.ReadByte();
 
         // Ligações
@@ -173,7 +172,6 @@ partial class Receive
                     Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
                     Map.Layer[n].Tile[x, y].Tile = Data.ReadByte();
                     Map.Layer[n].Tile[x, y].Auto = Data.ReadBoolean();
-                    Map.Layer[n].Tile[x, y].Mini = new Point[4];
                 }
         }
 
@@ -184,11 +182,10 @@ partial class Receive
             {
                 Map.Tile[x, y] = new Lists.Structures.Map_Tile();
                 Map.Tile[x, y].Attribute = Data.ReadByte();
-                Map.Tile[x, y].Data_1 = Data.ReadInt16();
+                Map.Tile[x, y].Data_1 = Data.ReadString();
                 Map.Tile[x, y].Data_2 = Data.ReadInt16();
                 Map.Tile[x, y].Data_3 = Data.ReadInt16();
                 Map.Tile[x, y].Data_4 = Data.ReadInt16();
-                Map.Tile[x, y].Data_5 = Data.ReadString();
                 Map.Tile[x, y].Zone = Data.ReadByte();
 
                 for (byte n = 0; n < (byte)Globals.Directions.Count; n++)

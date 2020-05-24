@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
 
 class Globals
 {
-    // Usado para acessar os dados da janela
-    public static Editor_Tiles Tiles;
-
     // Dimensão das grades 
     public const byte Grid = 32;
     public static Size Grid_Size = new Size(Grid, Grid);
@@ -16,8 +12,8 @@ class Globals
 
     // Limitações dos mapas
     public const byte Max_Map_Layers = 3;
-    public const byte Min_Map_Width = 24;
-    public const byte Min_Map_Height = 18;
+    public const byte Min_Map_Width = 25;
+    public const byte Min_Map_Height = 19;
     public const byte Num_Zones = 20;
 
     // Fumaças
@@ -166,22 +162,14 @@ class Globals
 
     public static void Weather_Update()
     {
-        return;
         // Redimensiona a lista
-        switch ((Weathers)Editor_Maps.Form.Selected.Weather.Type)
-        {
-            case Weathers.Thundering:
-            case Weathers.Raining: Lists.Weather = new Lists.Structures.Weather[Max_Rain_Particles + 1]; break;
-            case Weathers.Snowing: Lists.Weather = new Lists.Structures.Weather[Max_Snow_Particles + 1]; break;
-        }
-    }
-
-    public static string Numbering(int Number, int Limit, string Text)
-    {
-        int Amount = Limit.ToString().Length - Number.ToString().Length;
-
-        // Retorna com a numeração
-        return new string('0', Amount) + Number + ":" + Text;
+        if (Editor_Maps.Form != null)
+            switch ((Weathers)Editor_Maps.Form.Selected.Weather.Type)
+            {
+                case Weathers.Thundering:
+                case Weathers.Raining: Lists.Weather = new Lists.Structures.Weather[Max_Rain_Particles + 1]; break;
+                case Weathers.Snowing: Lists.Weather = new Lists.Structures.Weather[Max_Snow_Particles + 1]; break;
+            }
     }
 
     public static Point Block_Position(byte Direction)
@@ -201,15 +189,4 @@ class Globals
     public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Form.Zoom());
     public static Point Zoom(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
     public static Rectangle Zoom(Rectangle Rectangle) => new Rectangle(Rectangle.X * Grid_Zoom, Rectangle.Y * Grid_Zoom, Rectangle.Width * Grid_Zoom, Rectangle.Height * Grid_Zoom);
-
-    public static bool IsAbove(Point Point, Rectangle Rectangle)
-    {
-        // Verficia se o mouse está sobre o objeto
-        if (Point.X >= Rectangle.X && Point.X <= Rectangle.X + Rectangle.Width)
-            if (Point.Y >= Rectangle.Y && Point.Y <= Rectangle.Y + Rectangle.Height)
-                return true;
-
-        // Se não, retornar um valor nulo
-        return false;
-    }
 }

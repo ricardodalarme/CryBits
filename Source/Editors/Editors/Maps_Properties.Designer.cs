@@ -66,18 +66,13 @@
             this.numWeather_Intensity = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.butCancel = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
-            this.numLighting = new System.Windows.Forms.NumericUpDown();
-            this.label12 = new System.Windows.Forms.Label();
-            this.butLight_Global = new System.Windows.Forms.Button();
-            this.butPanorama = new System.Windows.Forms.Button();
-            this.numLight_Global = new System.Windows.Forms.NumericUpDown();
-            this.numPanorama = new System.Windows.Forms.NumericUpDown();
-            this.cmbLink_Right = new System.Windows.Forms.ComboBox();
-            this.cmbLink_Left = new System.Windows.Forms.ComboBox();
-            this.cmbLink_Up = new System.Windows.Forms.ComboBox();
             this.cmbLink_Down = new System.Windows.Forms.ComboBox();
+            this.cmbLink_Up = new System.Windows.Forms.ComboBox();
+            this.cmbLink_Left = new System.Windows.Forms.ComboBox();
+            this.cmbLink_Right = new System.Windows.Forms.ComboBox();
+            this.butCancel = new System.Windows.Forms.Button();
+            this.butPanorama = new System.Windows.Forms.Button();
+            this.numPanorama = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numWidth)).BeginInit();
@@ -94,8 +89,6 @@
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numWeather_Intensity)).BeginInit();
             this.groupBox7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numLighting)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numLight_Global)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPanorama)).BeginInit();
             this.SuspendLayout();
             // 
@@ -131,7 +124,7 @@
             this.groupBox1.Controls.Add(this.numWidth);
             this.groupBox1.Controls.Add(this.lblHeight);
             this.groupBox1.Controls.Add(this.lblWidth);
-            this.groupBox1.Location = new System.Drawing.Point(15, 133);
+            this.groupBox1.Location = new System.Drawing.Point(15, 91);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(322, 64);
             this.groupBox1.TabIndex = 5;
@@ -173,7 +166,7 @@
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(15, 557);
+            this.butSave.Location = new System.Drawing.Point(15, 515);
             this.butSave.Name = "butSave";
             this.butSave.Size = new System.Drawing.Size(158, 24);
             this.butSave.TabIndex = 6;
@@ -189,7 +182,7 @@
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.numColor_Red);
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Location = new System.Drawing.Point(15, 203);
+            this.groupBox2.Location = new System.Drawing.Point(15, 161);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(322, 53);
             this.groupBox2.TabIndex = 7;
@@ -271,7 +264,7 @@
             this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Controls.Add(this.numFog_Texture);
             this.groupBox3.Controls.Add(this.label5);
-            this.groupBox3.Location = new System.Drawing.Point(15, 262);
+            this.groupBox3.Location = new System.Drawing.Point(15, 220);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(322, 83);
             this.groupBox3.TabIndex = 8;
@@ -392,7 +385,7 @@
             this.groupBox4.Controls.Add(this.cmbMusic);
             this.groupBox4.Controls.Add(this.butMusic_Stop);
             this.groupBox4.Controls.Add(this.butMusic_Play);
-            this.groupBox4.Location = new System.Drawing.Point(179, 352);
+            this.groupBox4.Location = new System.Drawing.Point(179, 310);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(158, 85);
             this.groupBox4.TabIndex = 8;
@@ -460,7 +453,7 @@
             this.groupBox6.Controls.Add(this.cmbWeather);
             this.groupBox6.Controls.Add(this.numWeather_Intensity);
             this.groupBox6.Controls.Add(this.label11);
-            this.groupBox6.Location = new System.Drawing.Point(15, 351);
+            this.groupBox6.Location = new System.Drawing.Point(15, 309);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(158, 86);
             this.groupBox6.TabIndex = 15;
@@ -498,58 +491,58 @@
             this.groupBox7.Controls.Add(this.cmbLink_Up);
             this.groupBox7.Controls.Add(this.cmbLink_Left);
             this.groupBox7.Controls.Add(this.cmbLink_Right);
-            this.groupBox7.Location = new System.Drawing.Point(15, 443);
+            this.groupBox7.Location = new System.Drawing.Point(15, 401);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(322, 108);
             this.groupBox7.TabIndex = 16;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Link";
             // 
+            // cmbLink_Down
+            // 
+            this.cmbLink_Down.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLink_Down.FormattingEnabled = true;
+            this.cmbLink_Down.Location = new System.Drawing.Point(111, 72);
+            this.cmbLink_Down.Name = "cmbLink_Down";
+            this.cmbLink_Down.Size = new System.Drawing.Size(100, 21);
+            this.cmbLink_Down.TabIndex = 18;
+            // 
+            // cmbLink_Up
+            // 
+            this.cmbLink_Up.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLink_Up.FormattingEnabled = true;
+            this.cmbLink_Up.Location = new System.Drawing.Point(111, 19);
+            this.cmbLink_Up.Name = "cmbLink_Up";
+            this.cmbLink_Up.Size = new System.Drawing.Size(100, 21);
+            this.cmbLink_Up.TabIndex = 17;
+            // 
+            // cmbLink_Left
+            // 
+            this.cmbLink_Left.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLink_Left.FormattingEnabled = true;
+            this.cmbLink_Left.Location = new System.Drawing.Point(9, 46);
+            this.cmbLink_Left.Name = "cmbLink_Left";
+            this.cmbLink_Left.Size = new System.Drawing.Size(100, 21);
+            this.cmbLink_Left.TabIndex = 16;
+            // 
+            // cmbLink_Right
+            // 
+            this.cmbLink_Right.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLink_Right.FormattingEnabled = true;
+            this.cmbLink_Right.Location = new System.Drawing.Point(214, 46);
+            this.cmbLink_Right.Name = "cmbLink_Right";
+            this.cmbLink_Right.Size = new System.Drawing.Size(100, 21);
+            this.cmbLink_Right.TabIndex = 15;
+            // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(179, 557);
+            this.butCancel.Location = new System.Drawing.Point(179, 515);
             this.butCancel.Name = "butCancel";
             this.butCancel.Size = new System.Drawing.Size(158, 24);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
             this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 91);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(62, 13);
-            this.label10.TabIndex = 20;
-            this.label10.Text = "Global light:";
-            // 
-            // numLighting
-            // 
-            this.numLighting.Location = new System.Drawing.Point(182, 107);
-            this.numLighting.Name = "numLighting";
-            this.numLighting.Size = new System.Drawing.Size(155, 20);
-            this.numLighting.TabIndex = 23;
-            this.numLighting.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(179, 91);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(64, 13);
-            this.label12.TabIndex = 22;
-            this.label12.Text = "Lighting (%):";
-            // 
-            // butLight_Global
-            // 
-            this.butLight_Global.Location = new System.Drawing.Point(54, 107);
-            this.butLight_Global.Name = "butLight_Global";
-            this.butLight_Global.Size = new System.Drawing.Size(116, 20);
-            this.butLight_Global.TabIndex = 24;
-            this.butLight_Global.Text = "Select";
-            this.butLight_Global.UseVisualStyleBackColor = true;
-            this.butLight_Global.Click += new System.EventHandler(this.butLight_Global_Click);
             // 
             // butPanorama
             // 
@@ -561,13 +554,6 @@
             this.butPanorama.UseVisualStyleBackColor = true;
             this.butPanorama.Click += new System.EventHandler(this.butPanorama_Click);
             // 
-            // numLight_Global
-            // 
-            this.numLight_Global.Location = new System.Drawing.Point(15, 107);
-            this.numLight_Global.Name = "numLight_Global";
-            this.numLight_Global.Size = new System.Drawing.Size(33, 20);
-            this.numLight_Global.TabIndex = 21;
-            // 
             // numPanorama
             // 
             this.numPanorama.Location = new System.Drawing.Point(182, 64);
@@ -575,54 +561,13 @@
             this.numPanorama.Size = new System.Drawing.Size(33, 20);
             this.numPanorama.TabIndex = 13;
             // 
-            // cmbLink_Right
-            // 
-            this.cmbLink_Right.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLink_Right.FormattingEnabled = true;
-            this.cmbLink_Right.Location = new System.Drawing.Point(214, 46);
-            this.cmbLink_Right.Name = "cmbLink_Right";
-            this.cmbLink_Right.Size = new System.Drawing.Size(100, 21);
-            this.cmbLink_Right.TabIndex = 15;
-            // 
-            // cmbLink_Left
-            // 
-            this.cmbLink_Left.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLink_Left.FormattingEnabled = true;
-            this.cmbLink_Left.Location = new System.Drawing.Point(9, 46);
-            this.cmbLink_Left.Name = "cmbLink_Left";
-            this.cmbLink_Left.Size = new System.Drawing.Size(100, 21);
-            this.cmbLink_Left.TabIndex = 16;
-            // 
-            // cmbLink_Up
-            // 
-            this.cmbLink_Up.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLink_Up.FormattingEnabled = true;
-            this.cmbLink_Up.Location = new System.Drawing.Point(111, 19);
-            this.cmbLink_Up.Name = "cmbLink_Up";
-            this.cmbLink_Up.Size = new System.Drawing.Size(100, 21);
-            this.cmbLink_Up.TabIndex = 17;
-            // 
-            // cmbLink_Down
-            // 
-            this.cmbLink_Down.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLink_Down.FormattingEnabled = true;
-            this.cmbLink_Down.Location = new System.Drawing.Point(111, 72);
-            this.cmbLink_Down.Name = "cmbLink_Down";
-            this.cmbLink_Down.Size = new System.Drawing.Size(100, 21);
-            this.cmbLink_Down.TabIndex = 18;
-            // 
             // Editor_Maps_Properties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(350, 591);
+            this.ClientSize = new System.Drawing.Size(350, 553);
             this.ControlBox = false;
             this.Controls.Add(this.butPanorama);
-            this.Controls.Add(this.butLight_Global);
-            this.Controls.Add(this.numLighting);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.numLight_Global);
-            this.Controls.Add(this.label10);
             this.Controls.Add(this.butCancel);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
@@ -663,8 +608,6 @@
             this.groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numWeather_Intensity)).EndInit();
             this.groupBox7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numLighting)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numLight_Global)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPanorama)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -708,14 +651,9 @@
     private System.Windows.Forms.Button butCancel;
     private System.Windows.Forms.ComboBox cmbMusic;
     private System.Windows.Forms.CheckBox chkReverse;
-    private System.Windows.Forms.Label label10;
-    private System.Windows.Forms.NumericUpDown numLighting;
-    private System.Windows.Forms.Label label12;
-    private System.Windows.Forms.Button butLight_Global;
     private System.Windows.Forms.Button butFog;
     private System.Windows.Forms.Button butPanorama;
     private System.Windows.Forms.NumericUpDown numFog_Texture;
-    private System.Windows.Forms.NumericUpDown numLight_Global;
     private System.Windows.Forms.NumericUpDown numPanorama;
     private System.Windows.Forms.NumericUpDown numFog_Speed_Y;
     private System.Windows.Forms.Label label13;

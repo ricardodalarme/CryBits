@@ -232,16 +232,16 @@
   <data name="butCut.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH4SURBVDhPrU5PSJNhHH79PBpihFh+ihB+jLFk8yJLajI3
-        sTkD9xWNmqeBdFGohFhvzi8oVlSQh5DaUTsoMaJDRP9ojDJCaJeddhBmwqCV5y7u7fe87zdZsUaHHnh4
-        9/z77WP/BaZpno5EIm5bNgV66NtSIR6PczAcDjc9grzWtS0FwzB4Pp8XsViM+/3+hkfgI0cPfdvehxtm
-        oVAQ9Inc4/H8dgQaPnJ73PBP3A6HgxeLRREKhTgVZQkvNHzk6MH/G+SRUqkkfD4f13X9LF7ofxkrdLrc
-        TqeTl8tlEQwGX2ezWQEN3240wPRKGzPXptiZ9ZvMXH/ERpKZvtGLm5VKRRyYfLDJJpcz0pc59dDfxxiJ
-        qZVr3sVc7mpm54dlLVfvvNkVl9IfRGvg3i5+g/CRo4e+3ElMpM95E28/oWTMrH5pGb//7tbLb0IbvZ1t
-        DaSW8ELD74qmN1Kvvgv0sVMHAksP68cLz7aFdsLKaSdvRBHjhYZfO8JXv/7ETu6ZN/liwbpbRbj4fEdo
-        Q4mP2vHr51WoAA0/8XRLHhlZe7+HnUpds4+HZ5+U8RUtg/OfWX/0ggr+APnIE1aqij52KmjT/ezYXJoN
-        zG2w3vEr5AwQDWIfUSf2EI8Snaz31GXZQx87G911PELsIh4idhDbbR4kdhIPE+v6jP0CrTrvtUwhfXoA
-        AAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH2SURBVDhPrU5PSJNhHH79PBqhhFh9ihB9jGGyeYkVOplb
+        2JyB+4pGzdMgvCj0B2K+qZ9gqKCQhwjdUT0oMcKDRP9ojDJCcJeddhCmwsCl5y759nve91OWLPHgAw/v
+        nn+/b+xMYJrmnXA47LLliUAPfVsqxGIxDoZCoROPID/s2paCYRg8k8mIaDTKfT5f2SPwkaOHvm0fwQUz
+        m80K+ovc7Xb/cwQaPnJ7XPYjLofDwXO5nAgGg5yKsoQXGj5y9OD/D/JIPp8XXq+X67p+Dy/0acYKtU0u
+        p9PJC4WCCAQCH1OplICGbzfKoHe+iplLPezu8hgzl2dZ+3CysaNvvVgsinPdr9ZZ95uk9GVOPfSPcItE
+        z/ygZySdfp7c2bOs0YPJT/viceKbqPRP7eM3CB85eujLnURX4r4n/vkHSsajhY2KzukvL9/vCq1jIlXp
+        H5/BCw2/LpJYG//wS6CPnTrgn3ldOh56tyW0ViuttY1GEOOFhn94hC9s/8ZO7plneHXIsg4QjqzsCO16
+        /Lt248UDFSpAw4+/3ZRH2pe+/sFOpU39czf7Fwv4FxUtz36yq5GHKjgG8pHH6WPoY6eCKt3Hrg0kWPPA
+        GmvofEpOM9EgNhJ1Yj3xCtHJGm4/kT30sbNxuYSXiHXEC8Rq4nmbNcRa4kViSZ+xv1WL73c08z2SAAAA
+        AElFTkSuQmCC
 </value>
   </data>
   <data name="butCopy.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -465,7 +465,7 @@
   <metadata name="Strip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>108, 17</value>
   </metadata>
-  <metadata name="Faixa_Camadas.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="Trip_Layers.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>412, 17</value>
   </metadata>
   <data name="butLayers_Add.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

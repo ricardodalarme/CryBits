@@ -4,9 +4,6 @@ using System.Windows.Forms;
 
 partial class Editor_Shops : Form
 {
-    // Usado para acessar os dados da janela
-    public static Editor_Shops Form;
-
     // Loja selecionada
     private Lists.Structures.Shop Selected;
 

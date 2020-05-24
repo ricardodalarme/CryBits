@@ -168,7 +168,7 @@ partial class Send
         {
             // Escreve os dados
             Data.Write(Map.ID.ToString());
-            Data.Write((short)(Map.Revision + 1));
+            Data.Write(++Map.Revision);
             Data.Write(Map.Name);
             Data.Write(Map.Width);
             Data.Write(Map.Height);
@@ -182,7 +182,6 @@ partial class Send
             Data.Write(Map.Fog.Speed_X);
             Data.Write(Map.Fog.Speed_Y);
             Data.Write(Map.Fog.Alpha);
-            Data.Write(Map.Light_Global);
             Data.Write(Map.Lighting);
 
             // Ligações
@@ -216,7 +215,6 @@ partial class Send
                     Data.Write(Map.Tile[x, y].Data_2);
                     Data.Write(Map.Tile[x, y].Data_3);
                     Data.Write(Map.Tile[x, y].Data_4);
-                    Data.Write(Map.Tile[x, y].Data_5);
                     Data.Write(Map.Tile[x, y].Zone);
 
                     // Bloqueio direcional

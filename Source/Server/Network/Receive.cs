@@ -676,7 +676,6 @@ class Receive
             Map.Fog.Speed_X = Data.ReadSByte();
             Map.Fog.Speed_Y = Data.ReadSByte();
             Map.Fog.Alpha = Data.ReadByte();
-            Map.Light_Global = Data.ReadByte();
             Map.Lighting = Data.ReadByte();
 
             // Ligações
@@ -711,11 +710,10 @@ class Receive
                 {
                     Map.Tile[x, y] = new Objects.Map_Tile();
                     Map.Tile[x, y].Attribute = Data.ReadByte();
-                    Map.Tile[x, y].Data_1 = Data.ReadInt16();
+                    Map.Tile[x, y].Data_1 = Data.ReadString();
                     Map.Tile[x, y].Data_2 = Data.ReadInt16();
                     Map.Tile[x, y].Data_3 = Data.ReadInt16();
                     Map.Tile[x, y].Data_4 = Data.ReadInt16();
-                    Map.Tile[x, y].Data_5 = Data.ReadString();
                     Map.Tile[x, y].Zone = Data.ReadByte();
 
                     for (byte n = 0; n < (byte)Game.Directions.Count; n++)

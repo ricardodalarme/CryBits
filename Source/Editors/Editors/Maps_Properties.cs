@@ -4,33 +4,20 @@ using System.Windows.Forms;
 
 public partial class Editor_Maps_Properties : Form
 {
-    // Usado para acessar os dados da janela
-    public static Editor_Maps_Properties Form = new Editor_Maps_Properties();
-
     // Dados temporários
     private Lists.Structures.Map Selected;
 
     public Editor_Maps_Properties()
     {
+        // Inicializa os componentes
         InitializeComponent();
-    }
-
-    public void Open()
-    {
         Selected = Editor_Maps.Form.Selected;
 
         // Limpa as listas
-        cmbMoral.Items.Clear();
-        cmbWeather.Items.Clear();
-        cmbMusic.Items.Clear();
         cmbMusic.Items.Add("None");
-        cmbLink_Down.Items.Clear();
         cmbLink_Down.Items.Add("None");
-        cmbLink_Left.Items.Clear();
         cmbLink_Left.Items.Add("None");
-        cmbLink_Right.Items.Clear();
         cmbLink_Right.Items.Add("None");
-        cmbLink_Up.Items.Clear();
         cmbLink_Up.Items.Add("None");
 
         // Lista os dados
@@ -48,7 +35,6 @@ public partial class Editor_Maps_Properties : Form
         numWidth.Minimum = Globals.Min_Map_Width;
         numHeight.Minimum = Globals.Min_Map_Height;
         numWeather_Intensity.Maximum = Globals.Max_Weather_Intensity;
-        numLight_Global.Maximum = Graphics.Tex_Light.GetUpperBound(0);
 
         // Define os valores
         txtName.Text = Selected.Name;
@@ -70,8 +56,6 @@ public partial class Editor_Maps_Properties : Form
         cmbLink_Left.SelectedItem = Selected.Link[(byte)Globals.Directions.Down];
         cmbLink_Right.SelectedItem = Selected.Link[(byte)Globals.Directions.Left];
         cmbLink_Up.SelectedItem = Selected.Link[(byte)Globals.Directions.Right];
-        numLight_Global.Value = Selected.Light_Global;
-        numLighting.Value = Selected.Lighting;
 
         // Abre a janela
         ShowDialog();
@@ -181,19 +165,13 @@ public partial class Editor_Maps_Properties : Form
         Selected.Link[(byte)Globals.Directions.Down] = (Lists.Structures.Map)cmbLink_Left.SelectedItem;
         Selected.Link[(byte)Globals.Directions.Left] = (Lists.Structures.Map)cmbLink_Right.SelectedItem;
         Selected.Link[(byte)Globals.Directions.Right] = (Lists.Structures.Map)cmbLink_Up.SelectedItem;
-        Selected.Light_Global = (byte)numLight_Global.Value;
-        Selected.Lighting = (byte)numLighting.Value;
-
-        // Define a nova dimensão dos azulejos
-        Editor_Maps.Form.Update_Data();
 
         // Altera o nome na lista
         Editor_Maps.Form.List.SelectedNode.Text = txtName.Text;
 
         // Reseta os valores
         Globals.Weather_Update();
-        Editor_Maps.Form.numLighting.Value = Selected.Lighting;
-        Editor_Maps.Form.numLight_Global.Value = Selected.Light_Global;
+        Editor_Maps.Form.Update_Map_Bounds();
 
         // Volta ao editor de mapas
         Visible = false;
@@ -220,12 +198,6 @@ public partial class Editor_Maps_Properties : Form
     {
         // Para a música
         Audio.Music.Stop();
-    }
-
-    private void butLight_Global_Click(object sender, EventArgs e)
-    {
-        // Abre a pré visualização
-        numLight_Global.Value = Preview.Select(Graphics.Tex_Light, (short)numLight_Global.Value);
     }
 
     private void butPanorama_Click(object sender, EventArgs e)

@@ -10,18 +10,15 @@ class Lists
     public static Structures.Options Options = new Structures.Options();
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
     public static Dictionary<Guid, Structures.Class> Class = new Dictionary<Guid, Structures.Class>();
-    public static Structures.Tile[] Tile;
     public static Dictionary<Guid, Structures.Map> Map = new Dictionary<Guid, Structures.Map>();
     public static Structures.Weather[] Weather;
+    public static Structures.Tile[] Tile;
     public static Dictionary<Guid, Structures.NPC> NPC = new Dictionary<Guid, Structures.NPC>();
     public static Dictionary<Guid, Structures.Item> Item = new Dictionary<Guid, Structures.Item>();
     public static Dictionary<Guid, Structures.Shop> Shop = new Dictionary<Guid, Structures.Shop>();
     public static TreeNode Tool;
 
-    public static string GetID(object Object)
-    {
-        return Object == null ? Guid.Empty.ToString() : ((Structures.Data)Object).ID.ToString();
-    }
+    public static string GetID(object Object)=>  Object == null ? Guid.Empty.ToString() : ((Structures.Data)Object).ID.ToString();
 
     public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
     {
@@ -142,7 +139,7 @@ class Lists
         }
 
         [Serializable]
-        public struct Tile
+        public class Tile
         {
             public byte Width;
             public byte Height;
@@ -150,10 +147,10 @@ class Lists
         }
 
         [Serializable]
-        public struct Tile_Data
+        public class Tile_Data
         {
             public byte Attribute;
-            public bool[] Block;
+            public bool[] Block = new bool[(byte)Globals.Directions.Count];
         }
 
         public class Map : Data
@@ -167,30 +164,28 @@ class Lists
             public byte Moral;
             public byte Panorama;
             public byte Music;
-            public int Color;
+            public int Color = -1;
             public Map_Weather Weather = new Map_Weather();
             public Map_Fog Fog = new Map_Fog();
             public Map[] Link = new Map[(byte)Globals.Directions.Count];
-            public byte Light_Global;
-            public byte Lighting;
+            public byte Lighting = 100;
             public List<Map_Light> Light = new List<Map_Light>();
-            public List<Map_NPC> NPC = new List<Map_NPC>();
+            public BindingList<Map_NPC> NPC = new BindingList<Map_NPC>();
 
             public Map(Guid ID) : base(ID) { }
             public override string ToString() => Name;
 
             // Verifica se as coordenas estão no limite do mapa
-            public bool OutLimit(short x, short y) => x > Width || y > Height || x < 0 || y < 0;
+            public bool OutLimit(short x, short y) => x >= Width || y >= Height || x < 0 || y < 0;
         }
 
         public class Map_Tile
         {
             public byte Attribute;
-            public short Data_1;
+            public string Data_1 = string.Empty;
             public short Data_2;
             public short Data_3;
             public short Data_4;
-            public string Data_5;
             public byte Zone;
             public bool[] Block = new bool[(byte)Globals.Directions.Count];
         }
@@ -257,6 +252,14 @@ class Lists
             public bool Spawn;
             public byte X;
             public byte Y;
+
+            public override string ToString()
+            {
+                string Text = NPC.Name;
+                if (Spawn) Text += " {" + X + ", " + Y + "}";
+                if ( Zone > 0)  Text += " {Zone: " + Zone+"}";
+                return Text;
+            }
         }
 
         public struct Weather

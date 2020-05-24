@@ -86,7 +86,7 @@ namespace Objects
                     if (Data.Tile[x, y].Attribute == (byte)Game.Tile_Attributes.Item)
                     {
                         // Faz o item aparecer
-                        Map_Item.Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.Tile[x, y].Data_5));
+                        Map_Item.Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.Tile[x, y].Data_1));
                         Map_Item.Amount = Data.Tile[x, y].Data_2;
                         Map_Item.X = x;
                         Map_Item.Y = y;

@@ -20,7 +20,6 @@ namespace Objects
         public Map_Weather Weather = new Map_Weather();
         public Map_Fog Fog = new Map_Fog();
         public Map[] Link = new Map[(byte)Game.Directions.Count];
-        public byte Light_Global;
         public byte Lighting = 100;
         public Map_Light[] Light = Array.Empty<Map_Light>();
         public Map_NPC[] NPC = Array.Empty<Map_NPC>();
@@ -62,11 +61,10 @@ namespace Objects
     class Map_Tile
     {
         public byte Attribute;
-        public short Data_1;
+        public string Data_1;
         public short Data_2;
         public short Data_3;
         public short Data_4;
-        public string Data_5;
         public byte Zone;
         public bool[] Block = new bool[(byte)Game.Directions.Count];
     }

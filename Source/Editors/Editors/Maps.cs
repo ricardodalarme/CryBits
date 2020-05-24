@@ -24,11 +24,10 @@ partial class Editor_Maps : Form
     private Rectangle Def_Map_Selection = new Rectangle(0, 0, 1, 1);
 
     // Dados dos atributos
-    private short AData_1;
+    private string AData_1;
     private short AData_2;
     private short AData_3;
     private short AData_4;
-    private string AData_5;
 
     // Azulejos copiados
     private Copy_Struct Tiles_Copy = new Copy_Struct();
@@ -50,51 +49,33 @@ partial class Editor_Maps : Form
         Graphics.Win_Map_Tile = new SFML.Graphics.RenderWindow(picTile.Handle);
         Graphics.Win_Map_Lighting = new SFML.Graphics.RenderTexture((uint)Width, (uint)Height);
 
-        // Lista os itens
-        Update_List();
-        Update_List_Layers();
+        // Lista os dados
         for (byte i = 0; i < (byte)Globals.Layers.Count; i++) cmbLayers_Type.Items.Add(((Globals.Layers)i).ToString());
         for (byte i = 1; i < Graphics.Tex_Tile.Length; i++) cmbTiles.Items.Add(i.ToString());
-        foreach (var NPC in Lists.NPC.Values) cmbNPC.Items.Add(NPC);
-        foreach (var Item in Lists.Item.Values) cmbA_Item.Items.Add(Item);
+        Update_List();
+
+        // Define os limites
+        scrlZone.Maximum = Globals.Num_Zones;
+        numNPC_Zone.Maximum = Globals.Num_Zones;
 
         // Reseta os valores
-        cmbA_Warp_Direction.SelectedIndex = 0;
-        if (cmbNPC.Items.Count > 0) cmbNPC.SelectedIndex = 0;
-        if (cmbA_Item.Items.Count > 0) cmbA_Item.SelectedIndex = 0;
-        cmbTiles.SelectedIndex = 0;
-        cmbLayers_Type.SelectedIndex = 0;
-        picTile.BringToFront();
+        grpAttributes.BringToFront();
         grpZones.BringToFront();
         grpNPCs.BringToFront();
-        grpAttributes.BringToFront();
         grpLighting.BringToFront();
-        butMNormal.Checked = true;
-        butMZones.Checked = false;
-        butMNPCs.Checked = false;
-        butMAttributes.Checked = false;
-        butMLighting.Checked = false;
-        numLighting.Value = Selected.Lighting;
-        numLight_Global.Maximum = Graphics.Tex_Light.GetUpperBound(0);
-        numLight_Global.Value = Selected.Light_Global;
+        cmbTiles.SelectedIndex = 0;
+        cmbLayers_Type.SelectedIndex = 0;
         butGrid.Checked = Lists.Options.Pre_Map_Grid;
         butAudio.Checked = Lists.Options.Pre_Map_Audio;
-
         if (!Lists.Options.Pre_Map_View)
         {
             butVisualization.Checked = false;
             butEdition.Checked = true;
         }
 
-        // Define os limites
-        scrlZone.Maximum = Globals.Num_Zones;
-        numNPC_Zone.Maximum = Globals.Num_Zones;
-        Update_Tile_Bounds();
-        Update_Data();
-
         // Abre a janela
         Login.Form.Visible = false;
-        Visible = true;
+        Show();
     }
 
     private void Editor_Maps_FormClosing(object sender, FormClosingEventArgs e)
@@ -117,27 +98,25 @@ partial class Editor_Maps : Form
 
         // Adiciona os itens às listas
         foreach (Lists.Structures.Map Map in Lists.Map.Values)
+        {
             if (Map.Name.StartsWith(txtFilter.Text))
             {
                 List.Nodes.Add(Map.Name);
                 List.Nodes[List.Nodes.Count - 1].Tag = Map.ID;
-                //cmbA_Warp_Map.Items.Add(Map.Name);
-
-                /* todo
-                 List.Nodes.Add(Globals.Numbering(i, Lists.Map.GetUpperBound(0), Lists.Map[i].Name));
-                 List.Nodes[ List.Nodes.Count - 1].Tag = i;
-                */
             }
+            cmbA_Warp_Map.Items.Add(Map);
+        }
 
         // Seleciona o primeiro item
         if (List.Nodes.Count > 0) List.SelectedNode = List.Nodes[0];
-        // cmbA_Warp_Map.SelectedIndex = 0;
-        Update_Data();
     }
 
-    public void Update_Data()
+    private void List_AfterSelect(object sender, TreeViewEventArgs e)
     {
         Selected = Lists.Map[(Guid)List.SelectedNode.Tag];
+
+        // Conecta as listas com os componentes
+        lstNPC.DataSource = Selected.NPC;
 
         // Reseta o clima
         Globals.Weather_Update();
@@ -148,31 +127,6 @@ partial class Editor_Maps : Form
         // Atualiza os dados
         Update_Map_Bounds();
         Update_List_Layers();
-        Update_NPCs();
-    }
-
-    private void Update_Tile_Selected()
-    {
-        // Altera o tamanho do azulejo selecionado
-        switch (chkAuto.Checked)
-        {
-            case false: Def_Tiles_Selection.Size = new Size(1, 1); break;
-            case true: Def_Tiles_Selection.Size = new Size(2, 3); break;
-        }
-    }
-
-    private void Update_Strip()
-    {
-        // Atualiza as informações da barra
-        Strip.Items[0].Text = "FPS: " + Globals.FPS;
-        Strip.Items[2].Text = "Revision: " + Selected.Revision;
-        Strip.Items[4].Text = "Position: {" + Map_Mouse.X + ";" + Map_Mouse.Y + "}"; ;
-    }
-
-    private void List_AfterSelect(object sender, TreeViewEventArgs e)
-    {
-        // Atualiza a lista
-        Update_Data();
     }
 
     private void txtFilter_TextChanged(object sender, EventArgs e)
@@ -184,8 +138,23 @@ partial class Editor_Maps : Form
     {
         // Adiciona uma loja nova
         Lists.Structures.Map Map = new Lists.Structures.Map(Guid.NewGuid());
-        Map.Name = "New map";
         Lists.Map.Add(Map.ID, Map);
+        cmbA_Warp_Map.Items.Add(Map);
+        Map.Name = "New map";
+        Map.Width = Globals.Min_Map_Width;
+        Map.Height = Globals.Min_Map_Height;
+        Map.Layer.Add(new Lists.Structures.Map_Layer());
+        Map.Layer[0].Name = "Ground";
+        Map.Layer[0].Tile = new Lists.Structures.Map_Tile_Data[Map.Width, Map.Height];
+        Map.Tile = new Lists.Structures.Map_Tile[Map.Width, Map.Height];
+
+        // Azulejos
+        for (byte x = 0; x < Map.Width; x++)
+            for (byte y = 0; y < Map.Height; y++)
+            {
+                Map.Layer[0].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
+                Map.Tile[x, y] = new Lists.Structures.Map_Tile();
+            }
 
         // Adiciona na lista
         TreeNode Node = new TreeNode(Map.Name);
@@ -196,136 +165,28 @@ partial class Editor_Maps : Form
 
     private void butRemove_Click(object sender, EventArgs e)
     {
-        // Remove a loja selecionada
         if (List.SelectedNode != null)
         {
+            // Garante que sempre vai ter pelo menos uma mapa
+            if (Lists.Map.Count == 1)
+            {
+                MessageBox.Show("It must have at least one map registered.");
+                return;
+            }
+
+            // Remove o mapa selecionado
+            cmbA_Warp_Map.Items.Remove(Selected);
             Lists.Map.Remove(Selected.ID);
             List.SelectedNode.Remove();
         }
     }
 
-    private void Update_Tile_Bounds()
+    private void Update_Strip()
     {
-        Size Tile_Size = Graphics.TSize(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]);
-        int Width = Tile_Size.Width - picTile.Width;
-        int Height = Tile_Size.Height - picTile.Height;
-
-        // Verifica se nada passou do limite minímo
-        if (Width < 0) Width = 0;
-        if (Height < 0) Height = 0;
-        if (Width > 0) Width += Globals.Grid;
-        if (Height > 0) Height += Globals.Grid;
-
-        // Define os limites
-        scrlTileX.Maximum = Width;
-        scrlTileY.Maximum = Height;
-    }
-
-    private void Update_Map_Bounds()
-    {
-        int Max_X = (Selected.Width / Zoom() * Globals.Grid - picMap.Width) / Globals.Grid + 1;
-        int Max_Y = (Selected.Height / Zoom() * Globals.Grid - picMap.Height) / Globals.Grid + 1;
-
-        // Valor máximo
-        if (Max_X > 0) scrlMapX.Maximum = Max_X; else scrlMapX.Maximum = 0;
-        if (Max_Y > 0) scrlMapY.Maximum = Max_Y; else scrlMapY.Maximum = 0;
-
-        // Reseta os valores
-        scrlMapX.Value = 0;
-        scrlMapY.Value = 0;
-    }
-    #endregion
-
-    #region Components
-    private void butProperties_Click(object sender, EventArgs e)
-    {
-        // Para os áudios
-        Audio.Sound.Stop_All();
-        Audio.Music.Stop();
-
-        // Abre as propriedades
-        Editor_Maps_Properties.Form.Open();
-    }
-
-    private void chkAuto_CheckedChanged(object sender, EventArgs e)
-    {
-        Update_Tile_Selected();
-    }
-
-    private void scrlZone_Clear_Click(object sender, EventArgs e)
-    {
-        // Reseta todas as zonas
-        for (byte x = 0; x <= Selected.Width; x++)
-            for (byte y = 0; x <= Selected.Height; y++)
-                Selected.Tile[x, y].Zone = 0;
-    }
-
-    private void butLight_Clear_Click(object sender, EventArgs e)
-    {
-        // Reseta todas as zonas
-        Selected.Light = new List<Lists.Structures.Map_Light>();
-    }
-
-    private void scrlZone_ValueChanged(object sender, EventArgs e)
-    {
-        // Atualiza os valores
-        if (scrlZone.Value == 0)
-            grpZones.Text = "Zone: Null";
-        else
-            grpZones.Text = "Zone: " + scrlZone.Value;
-    }
-
-    private void butAttributes_Clear_Click(object sender, EventArgs e)
-    {
-        // Reseta todas os atributos
-        for (byte x = 0; x <= Selected.Width; x++)
-            for (byte y = 0; y <= Selected.Height; y++)
-            {
-                Selected.Tile[x, y].Attribute = 0;
-                Selected.Tile[x, y].Block = new bool[(byte)Globals.Directions.Count];
-            }
-    }
-
-    private void butAttributes_Import_Click(object sender, EventArgs e)
-    {
-        // Importa os dados padrões dos azulejos
-        for (byte x = 0; x <= Selected.Width; x++)
-            for (byte y = 0; y <= Selected.Height; y++)
-                for (byte c = 0; c < Selected.Layer.Count; c++)
-                {
-                    // Dados do azulejo
-                    Lists.Structures.Map_Tile_Data Data = Selected.Layer[c].Tile[x, y];
-
-                    if (Data.Tile > 0)
-                    {
-                        // Atributos
-                        if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute > 0)
-                            Selected.Tile[x, y].Attribute = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute;
-
-                        // Bloqueio direcional
-                        for (byte b = 0; b < (byte)Globals.Directions.Count; b++)
-                            if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b])
-                                Selected.Tile[x, y].Block[b] = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b];
-                    }
-                }
-    }
-
-    private void numLighting_ValueChanged(object sender, EventArgs e)
-    {
-        // Define os valores
-        Selected.Lighting = (byte)numLighting.Value;
-    }
-
-    private void numLight_Global_ValueChanged(object sender, EventArgs e)
-    {
-        // Define os valores
-        Selected.Light_Global = (byte)numLight_Global.Value;
-    }
-
-    private void butLight_Global_Click(object sender, EventArgs e)
-    {
-        // Abre a pré visualização
-        numLight_Global.Value = Preview.Select(Graphics.Tex_Light, (short)numLight_Global.Value);
+        // Atualiza as informações da barra
+        Strip.Items[0].Text = "FPS: " + Globals.FPS;
+        Strip.Items[2].Text = "Revision: " + Selected.Revision;
+        Strip.Items[4].Text = "Position: {" + Map_Mouse.X + ";" + Map_Mouse.Y + "}"; ;
     }
     #endregion
 
@@ -334,7 +195,7 @@ partial class Editor_Maps : Form
     {
         // Salva todos os dados
         Send.Write_Maps();
-        MessageBox.Show("All maps have been saved");
+        MessageBox.Show("All maps has been saved");
     }
 
     private void butReload_Click(object sender, EventArgs e)
@@ -362,8 +223,8 @@ partial class Editor_Maps : Form
             Tiles_Copy.Data[c].Tile = new Lists.Structures.Map_Tile_Data[Selected.Width, Selected.Height];
 
             // Copia os dados dos azulejos
-            for (byte x = 0; x <= Selected.Width; x++)
-                for (byte y = 0; y <= Selected.Height; y++)
+            for (byte x = 0; x < Selected.Width; x++)
+                for (byte y = 0; y < Selected.Height; y++)
                     Tiles_Copy.Data[c].Tile[x, y] = Selected.Layer[c].Tile[x, y];
         }
     }
@@ -383,10 +244,7 @@ partial class Editor_Maps : Form
         for (int x = Map_Selection.X; x < Map_Selection.X + Map_Selection.Width; x++)
             for (int y = Map_Selection.Y; y < Map_Selection.Y + Map_Selection.Height; y++)
                 for (byte c = 0; c < Selected.Layer.Count; c++)
-                {
                     Selected.Layer[c].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
-                    Selected.Layer[c].Tile[x, y].Mini = new Point[4];
-                }
 
         // Atualiza os azulejos Autos 
         Map.Autotile.Update(Selected);
@@ -601,74 +459,57 @@ partial class Editor_Maps : Form
         Update_Map_Bounds();
     }
 
+    private void Modes_Visibiliy()
+    {
+        // Desmarca todos os botões
+        butMNormal.Checked = false;
+        butMZones.Checked = false;
+        butMLighting.Checked = false;
+        butMAttributes.Checked = false;
+        butMNPCs.Checked = false;
+    }
+
     private void butMNormal_Click(object sender, EventArgs e)
     {
-        // Reseta a marcação
-        if (butMNormal.Checked)
-        {
-            butMZones.Checked = false;
-            butMLighting.Checked = false;
-            butMAttributes.Checked = false;
-            butMNPCs.Checked = false;
-        }
-        else
-            butMNormal.Checked = true;
+        // Marca o botão
+        Modes_Visibiliy();
+        butMNormal.Checked = true;
     }
 
     private void butMAttributes_Click(object sender, EventArgs e)
     {
-        // Reseta a marcação
-        if (butMAttributes.Checked)
-        {
-            butMNormal.Checked = false;
-            butMLighting.Checked = false;
-            butMZones.Checked = false;
-            butMNPCs.Checked = false;
-        }
-        else
-            butMAttributes.Checked = true;
+        // Marca o botão
+        Modes_Visibiliy();
+        butMAttributes.Checked = true;
     }
 
     private void butMZones_Click(object sender, EventArgs e)
     {
-        // Reseta a marcação
-        if (butMZones.Checked)
-        {
-            butMNormal.Checked = false;
-            butMLighting.Checked = false;
-            butMAttributes.Checked = false;
-            butMNPCs.Checked = false;
-        }
-        else
-            butMZones.Checked = true;
+        // Marca o botão
+        Modes_Visibiliy();
+        butMZones.Checked = true;
     }
 
     private void butMLighting_Click(object sender, EventArgs e)
     {
-        // Reseta a marcação
-        if (butMLighting.Checked)
-        {
-            butMZones.Checked = false;
-            butMNormal.Checked = false;
-            butMAttributes.Checked = false;
-            butMNPCs.Checked = false;
-        }
-        else
-            butMLighting.Checked = true;
+        // Marca o botão
+        Modes_Visibiliy();
+        butMLighting.Checked = true;
+
+        // Abre a janela e atualiza os dados
+        numLighting.Value = Selected.Lighting;
     }
 
     private void butMNPCs_Click(object sender, EventArgs e)
     {
-        // Reseta a marcação
-        if (butMNPCs.Checked)
-        {
-            butMZones.Checked = false;
-            butMNormal.Checked = false;
-            butMAttributes.Checked = false;
-            butMLighting.Checked = false;
-        }
-        else
-            butMNPCs.Checked = true;
+        // Marca o botão
+        Modes_Visibiliy();
+        butMNPCs.Checked = true;
+
+        // Adiciona os NPCs e reseta os valores
+        foreach (var NPC in Lists.NPC.Values) cmbNPC.Items.Add(NPC);
+        cmbNPC.SelectedIndex = 0;
+        numNPC_Zone.Value = 0;
     }
 
     private void butMNormal_CheckedChanged(object sender, EventArgs e)
@@ -686,10 +527,59 @@ partial class Editor_Maps : Form
         Def_Map_Selection.Size = new Size(1, 1);
     }
 
+    private void butProperties_Click(object sender, EventArgs e)
+    {
+        // Para os áudios
+        Audio.Sound.Stop_All();
+        Audio.Music.Stop();
+
+        // Abre as propriedades
+        new Editor_Maps_Properties();
+    }
+
+    private void butEditors_Classes_Click(object sender, EventArgs e)
+    {
+        new Editor_Classes();
+    }
+
+    private void butEditors_Data_Click(object sender, EventArgs e)
+    {
+        new Editor_Data();
+    }
+
+    private void butEditors_Interface_Click(object sender, EventArgs e)
+    {
+        Editor_Interface.Form = new Editor_Interface();
+    }
+
+    private void butEditors_Items_Click(object sender, EventArgs e)
+    {
+        new Editor_Items();
+    }
+
+    private void butEditors_NPCs_Click(object sender, EventArgs e)
+    {
+        new Editor_NPCs();
+    }
+
+    private void butEditors_Shops_Click(object sender, EventArgs e)
+    {
+        new Editor_Shops();
+    }
+
+    private void butEditors_Tiles_Click(object sender, EventArgs e)
+    {
+        Editor_Tiles.Form = new Editor_Tiles();
+    }
+
     private void tmrUpdate_Tick(object sender, EventArgs e)
     {
-        // Apenas se necessário
-        if (!Visible) return;
+        if (Lists.NPC.Count == 0)
+        {
+            if (butMNPCs.Checked) butMNormal.Checked = true;
+            butMNPCs.Enabled = false;
+        }
+        else butMNPCs.Enabled = true;
 
         // Ferramentas em geral
         if (butMNormal.Checked)
@@ -697,7 +587,6 @@ partial class Editor_Maps : Form
             grpZones.Visible = false;
             grpLighting.Visible = false;
             grpAttributes.Visible = false;
-            grpAttributes_Set.Visible = false;
             grpNPCs.Visible = false;
             butPencil.Enabled = true;
             butRectangle.Enabled = true;
@@ -708,6 +597,19 @@ partial class Editor_Maps : Form
             butGrid.Enabled = true;
             butEdition.Enabled = true;
             butVisualization.Enabled = true;
+        }
+        else if (butMLighting.Checked)
+        {
+            butPencil.Enabled = false;
+            butRectangle.Enabled = false;
+            butArea.Enabled = false;
+            butDiscover.Enabled = false;
+            butEraser.Enabled = false;
+            butFill.Enabled = false;
+            butVisualization.Enabled = false;
+            butVisualization.Checked = true;
+            butEdition.Enabled = false;
+            butEdition.Checked = false;
         }
         else
         {
@@ -731,7 +633,6 @@ partial class Editor_Maps : Form
             grpLighting.Visible = true;
             grpZones.Visible = false;
             grpAttributes.Visible = false;
-            grpAttributes_Set.Visible = false;
             grpNPCs.Visible = false;
         }
         // Zonas
@@ -740,7 +641,6 @@ partial class Editor_Maps : Form
             grpZones.Visible = true;
             grpLighting.Visible = false;
             grpAttributes.Visible = false;
-            grpAttributes_Set.Visible = false;
             grpNPCs.Visible = false;
         }
         // Atributos
@@ -757,7 +657,6 @@ partial class Editor_Maps : Form
             grpNPCs.Visible = true;
             grpZones.Visible = false;
             grpAttributes.Visible = false;
-            grpAttributes_Set.Visible = false;
             grpLighting.Visible = false;
         }
 
@@ -782,7 +681,27 @@ partial class Editor_Maps : Form
     }
     #endregion
 
-    #region picTile
+    #region Tile
+    private void Update_Tile_Bounds()
+    {
+        Size Tile_Size = Graphics.TSize(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]);
+        int Width = Tile_Size.Width - picTile.Width;
+        int Height = Tile_Size.Height - picTile.Height;
+
+        // Verifica se nada passou do limite minímo
+        if (Width < 0) Width = 0;
+        if (Height < 0) Height = 0;
+        if (Width > 0) Width += Globals.Grid;
+        if (Height > 0) Height += Globals.Grid;
+
+        // Define os limites
+        scrlTileX.Maximum = Width;
+        scrlTileY.Maximum = Height;
+    }
+
+    // Altera o tamanho do azulejo selecionado
+    private void Update_Tile_Selected() => Def_Tiles_Selection.Size = chkAuto.Checked ? new Size(2, 3) : new Size(1, 1);
+
     private void picTile_MouseWheel(object sender, MouseEventArgs e)
     {
         // Previne erros
@@ -874,7 +793,20 @@ partial class Editor_Maps : Form
     }
     #endregion
 
-    #region picMap
+    #region Map
+    public void Update_Map_Bounds()
+    {
+        // Tamanho do scroll do mapa
+        scrlMapX.Maximum = Math.Max(0, (Selected.Width / Zoom() * Globals.Grid - picBackground.Width) / Globals.Grid);
+        scrlMapY.Maximum = Math.Max(0, (Selected.Height / Zoom() * Globals.Grid - picBackground.Height) / Globals.Grid);
+        scrlMapX.Value = 0;
+        scrlMapY.Value = 0;
+
+        // Tamanho da tela do mapa
+        picMap.Width = Math.Min(Selected.Width * Globals.Grid, Selected.Width / Zoom() * Globals.Grid);
+        picMap.Height = Math.Min(Selected.Height * Globals.Grid, Selected.Height / Zoom() * Globals.Grid);
+    }
+
     private void picMap_SizeChanged(object sender, EventArgs e)
     {
         // Recria as janelas de acordo com o novo tamanho
@@ -905,7 +837,6 @@ partial class Editor_Maps : Form
         Point Tile_Dif = new Point(e.X - e.X / Globals.Grid * Globals.Grid, e.Y - e.Y / Globals.Grid * Globals.Grid);
 
         // Previne erros
-        if (Selected == null) return;
         if (Map_Selection.X > Selected.Width || Map_Selection.Y > Selected.Height) return;
 
         // Executa um evento de acordo com a ferramenta selecionada
@@ -995,17 +926,14 @@ partial class Editor_Maps : Form
     private void picMap_MouseMove(object sender, MouseEventArgs e)
     {
         // Mouse
-        Map_Mouse.X = e.X / Globals.Grid_Zoom + scrlMapX.Value;
-        Map_Mouse.Y = e.Y / Globals.Grid_Zoom + scrlMapY.Value;
+        Map_Mouse.X = e.X / Grid_Zoom + scrlMapX.Value;
+        Map_Mouse.Y = e.Y / Grid_Zoom + scrlMapY.Value;
 
         // Impede que saia do limite da tela
         if (Map_Mouse.X < 0) Map_Mouse.X = 0;
         if (Map_Mouse.Y < 0) Map_Mouse.Y = 0;
         if (Map_Mouse.X >= Selected.Width) Map_Mouse.X = Selected.Width - 1;
         if (Map_Mouse.Y >= Selected.Height) Map_Mouse.Y = Selected.Height - 1;
-
-        // Previne erros
-        if (Selected == null) return;
 
         // Cria um retângulo
         if (Map_Rectangle(e)) return;
@@ -1059,7 +987,7 @@ partial class Editor_Maps : Form
 
     private bool Map_Rectangle(MouseEventArgs e)
     {
-        int x = e.X / Globals.Grid_Zoom + scrlMapX.Value, y = e.Y / Globals.Grid_Zoom + scrlMapY.Value;
+        int x = e.X / Grid_Zoom + scrlMapX.Value, y = e.Y / Grid_Zoom + scrlMapY.Value;
 
         // Somente se necessário
         if (e.Button != MouseButtons.Left) return false;
@@ -1138,16 +1066,15 @@ partial class Editor_Maps : Form
     private void Tile_Set_Multiples(byte Layer_Num)
     {
         byte x2 = 0, y2;
-        Size Size = new Size(Map_Selection.X + Tiles_Selection.Width - 1, Map_Selection.Y + Tiles_Selection.Height - 1);
 
         // Apenas se necessário
         if (chkAuto.Checked) return;
 
         // Define todos os azulejos selecionados
-        for (int x = Map_Selection.X; x <= Size.Width; x++)
+        for (int x = Map_Selection.X; x < Map_Selection.X + Tiles_Selection.Width; x++)
         {
             y2 = 0;
-            for (int y = Map_Selection.Y; y <= Size.Height; y++)
+            for (int y = Map_Selection.Y; y < Map_Selection.Y + Tiles_Selection.Height; y++)
             {
                 // Define os azulejos
                 if (!Selected.OutLimit((short)x, (short)y))
@@ -1171,6 +1098,11 @@ partial class Editor_Maps : Form
     #endregion
 
     #region Layers
+    private void chkAuto_CheckedChanged(object sender, EventArgs e)
+    {
+        Update_Tile_Selected();
+    }
+
     private void Update_List_Layers()
     {
         // Limpa a lista
@@ -1206,9 +1138,9 @@ partial class Editor_Maps : Form
         Layer.Name = txtLayer_Name.Text;
         Layer.Type = (byte)cmbLayers_Type.SelectedIndex;
         Layer.Tile = new Lists.Structures.Map_Tile_Data[Selected.Width, Selected.Height];
-        for (byte x = 0; x <= Selected.Width; x++)
-            for (byte y = 0; y <= Selected.Height; y++)
-                Layer.Tile[x, y].Mini = new Point[4];
+        for (byte x = 0; x < Selected.Width; x++)
+            for (byte y = 0; y < Selected.Height; y++)
+                Layer.Tile[x, y] = new Lists.Structures.Map_Tile_Data();
 
         // Adiciona a camada
         Selected.Layer.Add(Layer);
@@ -1226,7 +1158,7 @@ partial class Editor_Maps : Form
         if (lstLayers.SelectedItems[0].SubItems[2].Text != txtLayer_Name.Text)
             if (Find_Layer(txtLayer_Name.Text) >= 0)
             {
-                MessageBox.Show("There is already a layer with that name.");
+                MessageBox.Show("There is already a layer with this name.");
                 return;
             }
 
@@ -1365,38 +1297,201 @@ partial class Editor_Maps : Form
     }
     #endregion
 
-    #region Calculations
-    // Retângulo da seleção de azulejos
-    private Rectangle Tiles_Selection => Selection_Rec(Def_Tiles_Selection);
-
-    // Retângulo do mapa
-    public Rectangle Map_Selection
+    #region NPCs
+    private void AddNPC(bool FixedSpawn = false, byte X = 0, byte Y = 0)
     {
-        get
+        // Define os dados
+        Lists.Structures.Map_NPC Data = new Lists.Structures.Map_NPC
         {
-            if (chkAuto.Checked) return new Rectangle(Map_Mouse, new Size(1, 1));
-            if (butMNormal.Checked && butPencil.Checked) return new Rectangle(Map_Mouse, Tiles_Selection.Size);
-            return Selection_Rec(Def_Map_Selection);
-        }
-    }
+            NPC = (Lists.Structures.NPC)cmbNPC.SelectedItem,
+            Zone = (byte)numNPC_Zone.Value,
+            Spawn = FixedSpawn,
+            X = X,
+            Y = Y
+        };
 
-    public byte Zoom()
+        // Adiciona o NPC
+        Selected.NPC.Add(Data);
+    }
+    private void butNPC_Remove_Click(object sender, EventArgs e)
     {
-        // Retorna o valor do zoom
-        if (butZoom_2x.Checked) return 2;
-        if (butZoom_4x.Checked) return 4;
-        return 1;
+        // Remove o NPC
+        if (lstNPC.SelectedIndex >= 0) Selected.NPC.RemoveAt(lstNPC.SelectedIndex);
     }
 
-    // Retorna o valor com o zoom
-    public int Zoom(int Value) => Value /= Zoom();
-    public Rectangle Zoom(Rectangle Value) => new Rectangle(new Point(Value.X / Zoom(), Value.Y / Zoom()), new Size(Value.Width / Zoom(), Value.Height / Zoom()));
-    private byte Grid_Zoom => (byte)(Globals.Grid / Zoom());
-    public Rectangle Zoom_Grid(Rectangle Rectangle) => new Rectangle(Rectangle.X * Grid_Zoom, Rectangle.Y * Grid_Zoom, Rectangle.Width * Grid_Zoom, Rectangle.Height * Grid_Zoom);
+    private void butNPC_Clear_Click(object sender, EventArgs e)
+    {
+        // Limpa todos os NPCs do mapa
+        Selected.NPC.Clear();
+    }
 
-    // Retorna com o retângulo do azulejo em relação à fonte
-    public Rectangle Tile_Source => new Rectangle(Tiles_Selection.X * Globals.Grid, Tiles_Selection.Y * Globals.Grid, Tiles_Selection.Width * Globals.Grid, Tiles_Selection.Height * Globals.Grid);
+    private void butNPC_Add_Click(object sender, EventArgs e)
+    {
+        // Adiciona o NPC
+        AddNPC();
+    }
+    #endregion
 
+    #region Attributes
+    private void Set_Attribute(MouseEventArgs e)
+    {
+        // Define os Atributos
+        if (e.Button == MouseButtons.Left)
+        {
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_1 = AData_1;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_2 = AData_2;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_3 = AData_3;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_4 = AData_4;
+            Selected.Tile[Map_Selection.X, Map_Selection.Y].Attribute = (byte)Attribute_Selected();
+        }
+        // Limpa os dados
+        else if (e.Button == MouseButtons.Right)
+            Selected.Tile[Map_Selection.X, Map_Selection.Y] = new Lists.Structures.Map_Tile();
+    }
+
+    private void butAttributes_Clear_Click(object sender, EventArgs e)
+    {
+        // Reseta todas os atributos
+        for (byte x = 0; x < Selected.Width; x++)
+            for (byte y = 0; y < Selected.Height; y++)
+                Selected.Tile[x, y] = new Lists.Structures.Map_Tile();
+    }
+
+    private void butAttributes_Import_Click(object sender, EventArgs e)
+    {
+        // Importa os dados padrões dos azulejos
+        for (byte x = 0; x < Selected.Width; x++)
+            for (byte y = 0; y < Selected.Height; y++)
+                for (byte c = 0; c < Selected.Layer.Count; c++)
+                {
+                    // Dados do azulejo
+                    Lists.Structures.Map_Tile_Data Data = Selected.Layer[c].Tile[x, y];
+
+                    if (Data.Tile > 0)
+                    {
+                        // Atributos
+                        if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute > 0)
+                            Selected.Tile[x, y].Attribute = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute;
+
+                        // Bloqueio direcional
+                        for (byte b = 0; b < (byte)Globals.Directions.Count; b++)
+                            if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b])
+                                Selected.Tile[x, y].Block[b] = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b];
+                    }
+                }
+    }
+
+    private Globals.Tile_Attributes Attribute_Selected()
+    {
+        // Retorna com o atributo selecionado
+        if (optA_Block.Checked) return Globals.Tile_Attributes.Block;
+        else if (optA_Warp.Checked) return Globals.Tile_Attributes.Warp;
+        else if (optA_Item.Checked) return Globals.Tile_Attributes.Item;
+        else return Globals.Tile_Attributes.None;
+    }
+
+    private void optA_Warp_CheckedChanged(object sender, EventArgs e)
+    {
+        // Reseta os valores
+        cmbA_Warp_Map.SelectedIndex = 0;
+        cmbA_Warp_Direction.SelectedIndex = 0;
+        numA_Warp_X.Value = 0;
+        numA_Warp_Y.Value = 0;
+        cmbA_Warp_Direction.SelectedIndex = 0;
+        grpA_Warp.Visible = optA_Warp.Checked;
+    }
+
+    private void optA_Item_CheckedChanged(object sender, EventArgs e)
+    {
+        // Verifica se é possível usar o atributo
+        if (optA_Item.Checked)
+        {
+            if (Lists.Item.Count == 0)
+            {
+                MessageBox.Show("It must have at least one item registered to use this attribute.");
+                optA_Block.Checked = true;
+                return;
+            }
+
+            // Adiciona os itens
+            cmbA_Item.Items.Clear();
+            foreach (var Item in Lists.Item.Values) cmbA_Item.Items.Add(Item);
+            cmbA_Item.SelectedIndex = 0;
+            numA_Item_Amount.Value = 1;
+        }
+        grpA_Item.Visible = optA_Item.Checked;
+    }
+
+    private void cmbA_Warp_Map_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        // Reseta os valores
+        var Warp_Map = (Lists.Structures.Map)cmbA_Warp_Map.SelectedItem;
+        AData_1 = Lists.GetID(Warp_Map);
+        numA_Warp_X.Maximum = Warp_Map.Width - 1;
+        numA_Warp_Y.Maximum = Warp_Map.Height - 1;
+    }
+
+    private void numA_Warp_X_ValueChanged(object sender, EventArgs e)
+    {
+        AData_2 = (short)numA_Warp_X.Value;
+    }
+
+    private void numA_Warp_Y_ValueChanged(object sender, EventArgs e)
+    {
+        AData_3 = (short)numA_Warp_Y.Value;
+    }
+
+    private void cmbA_Warp_Direction_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        AData_4 = (short)cmbA_Warp_Direction.SelectedIndex;
+    }
+
+    private void cmbA_Item_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        AData_1 = Lists.GetID(cmbA_Item.SelectedItem);
+    }
+
+    private void numA_Item_Amount_ValueChanged(object sender, EventArgs e)
+    {
+        AData_2 = (short)numA_Item_Amount.Value;
+    }
+    #endregion
+
+    #region Zones
+    private void scrlZone_Clear_Click(object sender, EventArgs e)
+    {
+        // Reseta todas as zonas
+        for (byte x = 0; x < Selected.Width; x++)
+            for (byte y = 0; y < Selected.Height; y++)
+                Selected.Tile[x, y].Zone = 0;
+    }
+
+    private void scrlZone_ValueChanged(object sender, EventArgs e)
+    {
+        // Atualiza os valores
+        if (scrlZone.Value == 0)
+            grpZones.Text = "Zone: None";
+        else
+            grpZones.Text = "Zone: " + scrlZone.Value;
+    }
+    #endregion
+
+    #region Lighting
+    private void butLight_Clear_Click(object sender, EventArgs e)
+    {
+        // Reseta todas as zonas
+        Selected.Light = new List<Lists.Structures.Map_Light>();
+    }
+
+    private void numLighting_ValueChanged(object sender, EventArgs e)
+    {
+        // Define os valores
+        Selected.Lighting = (byte)numLighting.Value;
+    }
+    #endregion
+
+    #region Utils
+    // Usado pra movimentar as seleções
     private Rectangle Selection_Rec(Rectangle Temp)
     {
         // Largura
@@ -1415,204 +1510,36 @@ partial class Editor_Maps : Form
         // Retorna o valor do retângulo
         return Temp;
     }
+
+    // Retângulo da seleção de azulejos
+    private Rectangle Tiles_Selection => Selection_Rec(Def_Tiles_Selection);
+
+    // Retângulo do mapa
+    public Rectangle Map_Selection
+    {
+        get
+        {
+            if (chkAuto.Checked) return new Rectangle(Map_Mouse, new Size(1, 1));
+            if (butMNormal.Checked && butPencil.Checked) return new Rectangle(Map_Mouse, Tiles_Selection.Size);
+            return Selection_Rec(Def_Map_Selection);
+        }
+    }
+
+    // Retorna com o retângulo do azulejo ajustado à grade
+    public Rectangle Tile_Source => new Rectangle(Tiles_Selection.X * Globals.Grid, Tiles_Selection.Y * Globals.Grid, Tiles_Selection.Width * Globals.Grid, Tiles_Selection.Height * Globals.Grid);
+
+    // Retorna o valor com o zoom
+    public byte Zoom()
+    {
+        // Retorna o valor do zoom
+        if (butZoom_2x.Checked) return 2;
+        if (butZoom_4x.Checked) return 4;
+        return 1;
+    }
+
+    private byte Grid_Zoom => (byte)(Globals.Grid / Zoom());
+    public Rectangle Zoom(Rectangle Value) => new Rectangle(Value.X / Zoom(), Value.Y / Zoom(), Value.Width / Zoom(), Value.Height / Zoom());
+    public Rectangle Zoom_Grid(Rectangle Rectangle) => new Rectangle(Rectangle.X * Grid_Zoom, Rectangle.Y * Grid_Zoom, Rectangle.Width * Grid_Zoom, Rectangle.Height * Grid_Zoom);
+    public Point Zoom_Grid(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
     #endregion
-
-    private void butNPC_Remove_Click(object sender, EventArgs e)
-    {
-        // Previne erros
-        if (lstNPC.SelectedIndex < 0) return;
-
-        // Limpa todos os NPCs do mapa
-        Selected.NPC.RemoveAt(lstNPC.SelectedIndex);
-        Update_NPCs();
-    }
-
-    private void butNPC_Clear_Click(object sender, EventArgs e)
-    {
-        // Limpa todos os NPCs do mapa
-        Selected.NPC = new List<Lists.Structures.Map_NPC>();
-        Update_NPCs();
-    }
-
-    private void butNPC_Add_Click(object sender, EventArgs e)
-    {
-        // Adiciona o NPC
-        AddNPC();
-    }
-
-    private void AddNPC(bool Posição = false, byte X = 0, byte Y = 0)
-    {
-        Lists.Structures.Map_NPC Data = new Lists.Structures.Map_NPC();
-
-        // Define os dados
-        Data.NPC = (Lists.Structures.NPC)cmbNPC.SelectedItem;
-        Data.Zone = (byte)numNPC_Zone.Value;
-        Data.Spawn = Posição;
-        Data.X = X;
-        Data.Y = Y;
-
-        // Adiciona o NPC
-        Selected.NPC.Add(Data);
-        Update_NPCs();
-
-        // Limpa os valores
-        cmbNPC.SelectedIndex = 0;
-        numNPC_Zone.Value = 0;
-    }
-
-    private void Update_NPCs()
-    {
-        // Limpa a lista
-        lstNPC.Items.Clear();
-
-        // Atualiza a lista de NPCs do mapa
-        if (Selected.NPC.Count > 0)
-        {
-            for (byte i = 0; i < Selected.NPC.Count; i++) lstNPC.Items.Add(i + 1 + ":" + Selected.NPC[i].NPC.Name);
-            lstNPC.SelectedIndex = 0;
-        }
-    }
-
-    private void Set_Attribute(MouseEventArgs e)
-    {
-        // Define os Atributos
-        if (e.Button == MouseButtons.Left)
-        {
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_1 = AData_1;
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_2 = AData_2;
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_3 = AData_3;
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_4 = AData_4;
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_5 = AData_5;
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Attribute = (byte)Attribute_Selected();
-        }
-        // Limpa os dados
-        else if (e.Button == MouseButtons.Right)
-        {
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_1 = 0;
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_2 = 0;
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_3 = 0;
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_4 = 0;
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Data_5 = string.Empty;
-            Selected.Tile[Map_Selection.X, Map_Selection.Y].Attribute = 0;
-        }
-    }
-
-    private Globals.Tile_Attributes Attribute_Selected()
-    {
-        // Retorna com o atributo selecionado
-        if (optA_Block.Checked) return Globals.Tile_Attributes.Block;
-        else if (optA_Warp.Checked) return Globals.Tile_Attributes.Warp;
-        else if (optA_Item.Checked) return Globals.Tile_Attributes.Item;
-        else return Globals.Tile_Attributes.None;
-    }
-
-    private void optA_DirBlock_CheckedChanged(object sender, EventArgs e)
-    {
-        // Define a visibilidade do painel
-        if (optA_DirBlock.Checked) grpAttributes_Set.Visible = false;
-    }
-
-    private void optA_Block_CheckedChanged(object sender, EventArgs e)
-    {
-        // Define a visibilidade do painel
-        if (optA_Block.Checked) grpAttributes_Set.Visible = false;
-    }
-
-    private void optA_Warp_CheckedChanged(object sender, EventArgs e)
-    {
-        // Define a visibilidade do painel
-        if (optA_Warp.Checked)
-        {
-            grpA_Warp.Visible = true;
-            grpAttributes_Set.Visible = true;
-        }
-        else
-            grpA_Warp.Visible = false;
-    }
-
-    private void optA_Item_CheckedChanged(object sender, EventArgs e)
-    {
-        // Define a visibilidade do painel
-        if (optA_Item.Checked)
-        {
-            grpA_Item.Visible = true;
-            grpAttributes_Set.Visible = true;
-        }
-        else
-            grpA_Item.Visible = false;
-    }
-
-    private void cmbA_Warp_Map_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        /* todo
-        // Define os limites
-        cmbA_Warp_X.Maximum = Lists.Map[cmbA_Warp_Map.SelectedIndex + 1].Width;
-        cmbA_Warp_Y.Maximum = Lists.Map[cmbA_Warp_Map.SelectedIndex + 1].Height;
-        */
-    }
-
-    private void butA_Warp_Click(object sender, EventArgs e)
-    {
-        // Fecha a janela e define os dodos
-        grpAttributes_Set.Visible = false;
-        AData_1 = (short)(cmbA_Warp_Map.SelectedIndex + 1);
-        AData_2 = (short)cmbA_Warp_X.Value;
-        AData_3 = (short)cmbA_Warp_Y.Value;
-        AData_4 = (short)(cmbA_Warp_Direction.SelectedIndex);
-
-        // Reseta as ferramentas
-        cmbA_Warp_Map.SelectedIndex = 0;
-        cmbA_Warp_X.Value = 0;
-        cmbA_Warp_Y.Value = 0;
-        cmbA_Warp_Direction.SelectedIndex = 0;
-    }
-
-    private void butA_Item_Click(object sender, EventArgs e)
-    {
-        // Fecha a janela e define os dodos
-        grpAttributes_Set.Visible = false;
-        AData_5 = Lists.GetID(cmbA_Item.SelectedItem);
-        AData_2 = (short)cmbA_Item_Amount.Value;
-
-        // Reseta as ferramentas
-        cmbA_Warp_Map.SelectedIndex = 0;
-        cmbA_Warp_X.Value = 0;
-        cmbA_Warp_Y.Value = 0;
-        cmbA_Warp_Direction.SelectedIndex = 0;
-    }
-
-    private void butEditors_Classes_Click(object sender, EventArgs e)
-    {
-        new Editor_Classes();
-    }
-
-    private void butEditors_Data_Click(object sender, EventArgs e)
-    {
-        new Editor_Data();
-    }
-
-    private void butEditors_Interface_Click(object sender, EventArgs e)
-    {
-        Editor_Interface.Form = new Editor_Interface();
-    }
-
-    private void butEditors_Items_Click(object sender, EventArgs e)
-    {
-        new Editor_Items();
-    }
-
-    private void butEditors_NPCs_Click(object sender, EventArgs e)
-    {
-       new Editor_NPCs();
-    }
-
-    private void butEditors_Shops_Click(object sender, EventArgs e)
-    {
-        Editor_Shops.Form = new Editor_Shops();
-    }
-
-    private void butEditors_Tiles_Click(object sender, EventArgs e)
-    {
-        Globals.Tiles = new Editor_Tiles();
-    }
 }
