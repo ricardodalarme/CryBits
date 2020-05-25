@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using Objects;
 
 partial class Editor_Classes : Form
 {
     // Classe selecionada
-    private Lists.Structures.Class Selected;
+    private Class Selected;
 
     public Editor_Classes()
     {
@@ -85,14 +86,14 @@ partial class Editor_Classes : Form
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
-        Lists.Structures.Class Class = new Lists.Structures.Class(Guid.NewGuid());
-        Lists.Class.Add(Class.ID, Class);
-        Class.Name = "New class";
-        Class.Spawn_Map = Lists.Map.ElementAt(0).Value;
+        Class New = new Class(Guid.NewGuid());
+        Lists.Class.Add(New.ID, New);
+        New.Name = "New class";
+        New.Spawn_Map = Lists.Map.ElementAt(0).Value;
 
         // Adiciona na lista
-        TreeNode Node = new TreeNode(Class.Name);
-        Node.Tag = Class.ID;
+        TreeNode Node = new TreeNode(New.Name);
+        Node.Tag = New.ID;
         List.Nodes.Add(Node);
         List.SelectedNode = Node;
     }
@@ -207,7 +208,7 @@ partial class Editor_Classes : Form
 
     private void cmbSpawn_Map_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected.Spawn_Map = (Lists.Structures.Map)cmbSpawn_Map.SelectedItem;
+        Selected.Spawn_Map = (Map)cmbSpawn_Map.SelectedItem;
         numSpawn_X.Maximum = Selected.Spawn_Map.Width - 1;
         numSpawn_Y.Maximum = Selected.Spawn_Map.Height - 1;
     }
@@ -245,7 +246,7 @@ partial class Editor_Classes : Form
     private void butItem_Ok_Click(object sender, EventArgs e)
     {
         // Adiciona o item
-        Selected.Item.Add(new Lists.Structures.Inventory((Lists.Structures.Item)cmbItems.SelectedItem, (short)numItem_Amount.Value));
+        Selected.Item.Add(new Lists.Structures.Inventory((Item)cmbItems.SelectedItem, (short)numItem_Amount.Value));
         grpItem_Add.Visible = false;
     }
 

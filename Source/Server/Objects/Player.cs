@@ -28,10 +28,10 @@ namespace Objects
         public string Trade_Request;
         public Lists.Structures.Trade_Slot[] Trade_Offer;
         public Shop Shop;
-        public Objects.Account Account;
+        public Account Account;
 
         // Constutor
-        public Player(Objects.Account Account)
+        public Player(Account Account)
         {
             this.Account = Account;
         }

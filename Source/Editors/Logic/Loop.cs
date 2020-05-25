@@ -199,7 +199,7 @@ class Loop
             }
 
         // Trovoadas
-        if (Weather.Type == (byte)Globals.Weathers.Thundering)
+        if (Weather.Type == Globals.Weathers.Thundering)
             if (Globals.GameRandom.Next(0, Globals.Max_Weather_Intensity * 10 - Weather.Intensity * 2) == 0)
             {
                 // Som do trovão

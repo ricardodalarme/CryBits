@@ -369,7 +369,7 @@ partial class Graphics
         Win_Map.Clear(SFML.Graphics.Color.Black);
 
         // Desenha o mapa
-        Lists.Structures.Map Selected = Editor_Maps.Form.Selected;
+        Objects.Map Selected = Editor_Maps.Form.Selected;
         Editor_Maps_Map_Panorama(Selected);
         Editor_Maps_Map_Tiles(Selected);
         Editor_Maps_Map_Weather(Selected);
@@ -382,7 +382,7 @@ partial class Graphics
         Win_Map.Display();
     }
 
-    private static void Editor_Maps_Map_Panorama(Lists.Structures.Map Map)
+    private static void Editor_Maps_Map_Panorama(Objects.Map Map)
     {
         // Desenha o panorama
         if (Editor_Maps.Form.butVisualization.Checked && Map.Panorama > 0)
@@ -397,12 +397,12 @@ partial class Graphics
         }
     }
 
-    private static void Editor_Maps_Map_Tiles(Lists.Structures.Map Map)
+    private static void Editor_Maps_Map_Tiles(Objects.Map Map)
     {
         Editor_Maps Form = Editor_Maps.Form;
-        Lists.Structures.Map_Tile_Data Data;
+        Objects.Map_Tile_Data Data;
         int Begin_X = Form.scrlMapX.Value, Begin_Y = Form.scrlMapY.Value;
-        SFML.Graphics.Color Color; System.Drawing.Color TempCor = System.Drawing.Color.FromArgb(Map.Color);
+        SFML.Graphics.Color Color;
 
         // Desenha todos os azulejos
         for (byte c = 0; c < Map.Layer.Count; c++)
@@ -419,7 +419,7 @@ partial class Graphics
                         Color = CColor(255, 255, 255, 150);
             }
             else
-                Color = CColor(TempCor.R, TempCor.G, TempCor.B);
+                Color = CColor(Map.Color.R, Map.Color.G, Map.Color.B);
 
             // Continua
             for (int x = Begin_X; x < Form.Selected.Width; x++)
@@ -440,7 +440,7 @@ partial class Graphics
         }
     }
 
-    private static void Editor_Maps_AutoTile(Point Position, Lists.Structures.Map_Tile_Data Data, SFML.Graphics.Color Color)
+    private static void Editor_Maps_AutoTile(Point Position, Objects.Map_Tile_Data Data, SFML.Graphics.Color Color)
     {
         // Desenha todas as partes do azulejo
         for (byte i = 0; i < 4; i++)
@@ -455,7 +455,7 @@ partial class Graphics
         }
     }
 
-    private static void Editor_Maps_Map_Fog(Lists.Structures.Map Map)
+    private static void Editor_Maps_Map_Fog(Objects.Map Map)
     {
         // Somente se necessário
         if (Map.Fog.Texture <= 0) return;
@@ -471,14 +471,14 @@ partial class Graphics
             }
     }
 
-    private static void Editor_Maps_Map_Weather(Lists.Structures.Map Map)
+    private static void Editor_Maps_Map_Weather(Objects.Map Map)
     {
         // Somente se necessário
-        if (!Editor_Maps.Form.butVisualization.Checked || Map.Weather.Type == (byte)Globals.Weathers.Normal) return;
+        if (!Editor_Maps.Form.butVisualization.Checked || Map.Weather.Type == Globals.Weathers.Normal) return;
 
         // Dados
         byte x = 0;
-        if (Map.Weather.Type == (byte)Globals.Weathers.Snowing) x = 32;
+        if (Map.Weather.Type == Globals.Weathers.Snowing) x = 32;
 
         // Desenha as partículas
         for (int i = 0; i < Lists.Weather.Length; i++)
@@ -486,7 +486,7 @@ partial class Graphics
                 Render(Win_Map, Tex_Weather, new Rectangle(x, 0, 32, 32), Editor_Maps.Form.Zoom(new Rectangle(Lists.Weather[i].x, Lists.Weather[i].y, 32, 32)), CColor(255, 255, 255, 150));
     }
 
-    private static void Editor_Maps_Map_Light(Lists.Structures.Map Map)
+    private static void Editor_Maps_Map_Light(Objects.Map Map)
     {
         Editor_Maps Form = Editor_Maps.Form;
         byte Light = (byte)((255 * ((decimal)Map.Lighting / 100) - 255) * -1);
@@ -520,7 +520,7 @@ partial class Graphics
         Render(Win_Map, Tex_Blank, 0, 0, 0, 0, Form.picMap.Width, Form.picMap.Height, CColor(255, 255, 255, Globals.Lightning));
     }
 
-    private static void Editor_Maps_Map_Grids(Lists.Structures.Map Map)
+    private static void Editor_Maps_Map_Grids(Objects.Map Map)
     {
         Editor_Maps Form = Editor_Maps.Form;
         Rectangle Source = Form.Tile_Source, Destiny = new Rectangle();
@@ -556,7 +556,7 @@ partial class Graphics
             RenderRectangle(Win_Map, Destiny.X, Destiny.Y, Form.Map_Selection.Width * Globals.Grid_Zoom, Form.Map_Selection.Height * Globals.Grid_Zoom);
     }
 
-    private static void Editor_Maps_Map_Zones(Lists.Structures.Map Map, byte x, byte y)
+    private static void Editor_Maps_Map_Zones(Objects.Map Map, byte x, byte y)
     {
         Point Position = new Point((x - Editor_Maps.Form.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Globals.Grid_Zoom);
         byte Zone_Num = Map.Tile[x, y].Zone;
@@ -577,7 +577,7 @@ partial class Graphics
         DrawText(Win_Map, Zone_Num.ToString(), Position.X, Position.Y, SFML.Graphics.Color.White);
     }
 
-    private static void Editor_Maps_Map_Attributes(Lists.Structures.Map Map, byte x, byte y)
+    private static void Editor_Maps_Map_Attributes(Objects.Map Map, byte x, byte y)
     {
         Point Position = new Point((x - Editor_Maps.Form.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Globals.Grid_Zoom);
         Globals.Tile_Attributes Attribute = (Globals.Tile_Attributes)Map.Tile[x, y].Attribute;
@@ -604,7 +604,7 @@ partial class Graphics
         DrawText(Win_Map, Letter, Position.X, Position.Y, SFML.Graphics.Color.White);
     }
 
-    private static void Editor_Maps_Map_DirBlock(Lists.Structures.Map Map, byte x, byte y)
+    private static void Editor_Maps_Map_DirBlock(Objects.Map Map, byte x, byte y)
     {
         Point Tile = new Point(Editor_Maps.Form.scrlMapX.Value + x, Editor_Maps.Form.scrlMapY.Value + y);
         byte Y;
@@ -630,7 +630,7 @@ partial class Graphics
         }
     }
 
-    private static void Editor_Maps_Map_NPCs(Lists.Structures.Map Map)
+    private static void Editor_Maps_Map_NPCs(Objects.Map Map)
     {
         if (Editor_Maps.Form.butMNPCs.Checked)
             for (byte i = 0; i < Map.NPC.Count; i++)
@@ -662,13 +662,13 @@ partial class Graphics
         for (byte i = 0; i < Node.Nodes.Count; i++)
         {
             // Desenha a ferramenta
-            Lists.Structures.Tool Tool = (Lists.Structures.Tool)Node.Nodes[i].Tag;
+            Objects.Tool Tool = (Objects.Tool)Node.Nodes[i].Tag;
             if (Tool.Visible)
             {
-                if (Tool is Lists.Structures.Panel) Panel((Lists.Structures.Panel)Tool);
-                else if (Tool is Lists.Structures.TextBox) TextBox((Lists.Structures.TextBox)Tool);
-                else if (Tool is Lists.Structures.Button) Button((Lists.Structures.Button)Tool);
-                else if (Tool is Lists.Structures.CheckBox) CheckBox((Lists.Structures.CheckBox)Tool);
+                if (Tool is Objects.Panel) Panel((Objects.Panel)Tool);
+                else if (Tool is Objects.TextBox) TextBox((Objects.TextBox)Tool);
+                else if (Tool is Objects.Button) Button((Objects.Button)Tool);
+                else if (Tool is Objects.CheckBox) CheckBox((Objects.CheckBox)Tool);
 
                 // Pula pra próxima
                 Interface_Order(Node.Nodes[i]);
@@ -676,21 +676,21 @@ partial class Graphics
         }
     }
 
-    private static void Button(Lists.Structures.Button Tool)
+    private static void Button(Objects.Button Tool)
     {
         // Desenha o botão
         if (Tool.Texture_Num < Tex_Button.Length)
             Render(Win_Interface, Tex_Button[Tool.Texture_Num], Tool.Position, new SFML.Graphics.Color(255, 255, 225, 225));
     }
 
-    private static void Panel(Lists.Structures.Panel Tool)
+    private static void Panel(Objects.Panel Tool)
     {
         // Desenha o painel
         if (Tool.Texture_Num < Tex_Panel.Length)
             Render(Win_Interface, Tex_Panel[Tool.Texture_Num], Tool.Position);
     }
 
-    private static void CheckBox(Lists.Structures.CheckBox Tool)
+    private static void CheckBox(Objects.CheckBox Tool)
     {
         // Define as propriedades dos retângulos
         Rectangle Rec_Source = new Rectangle(new Point(), new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height));
@@ -706,7 +706,7 @@ partial class Graphics
         DrawText(Win_Interface, Tool.Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
     }
 
-    private static void TextBox(Lists.Structures.TextBox Tool)
+    private static void TextBox(Objects.TextBox Tool)
     {
         // Desenha a ferramenta
         Render_Box(Win_Interface, Tex_TextBox, 3, Tool.Position, new Size(Tool.Width, TSize(Tex_TextBox).Height));

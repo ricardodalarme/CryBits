@@ -133,11 +133,11 @@ partial class Receive
         Map.Name = Data.ReadString();
         Map.Width = Data.ReadByte();
         Map.Height = Data.ReadByte();
-        Map.Moral = Data.ReadByte();
+        Map.Moral = (Globals.Map_Morals)Data.ReadByte();
         Map.Panorama = Data.ReadByte();
-        Map.Music = Data.ReadByte();
-        Map.Color = Data.ReadInt32();
-        Map.Weather.Type = Data.ReadByte();
+        Map.Music = (Audio.Musics)Data.ReadByte();
+        Map.Color = Color.FromArgb(Data.ReadInt32());
+        Map.Weather.Type = (Globals.Weathers)Data.ReadByte();
         Map.Weather.Intensity = Data.ReadByte();
         Map.Fog.Texture = Data.ReadByte();
         Map.Fog.Speed_X = Data.ReadSByte();

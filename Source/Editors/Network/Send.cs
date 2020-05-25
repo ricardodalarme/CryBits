@@ -57,7 +57,7 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Request_Map(Lists.Structures.Map Map)
+    public static void Request_Map(Objects.Map Map)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -131,7 +131,7 @@ partial class Send
         // Envia os dados
         Data.Write((byte)Packets.Write_Classes);
         Data.Write((byte)Lists.Class.Count);
-        foreach (Lists.Structures.Class Class in Lists.Class.Values)
+        foreach (Objects.Class Class in Lists.Class.Values)
         {
             // Escreve os dados
             Data.Write(Class.ID.ToString());
@@ -164,7 +164,7 @@ partial class Send
         // Envia os dados
         Data.Write((byte)Packets.Write_Maps);
         Data.Write((byte)Lists.Map.Count);
-        foreach (Lists.Structures.Map Map in Lists.Map.Values)
+        foreach (Objects.Map Map in Lists.Map.Values)
         {
             // Escreve os dados
             Data.Write(Map.ID.ToString());
@@ -172,11 +172,11 @@ partial class Send
             Data.Write(Map.Name);
             Data.Write(Map.Width);
             Data.Write(Map.Height);
-            Data.Write(Map.Moral);
+            Data.Write((byte)Map.Moral);
             Data.Write(Map.Panorama);
-            Data.Write(Map.Music);
-            Data.Write(Map.Color);
-            Data.Write(Map.Weather.Type);
+            Data.Write((byte)Map.Music);
+            Data.Write(Map.Color.ToArgb());
+            Data.Write((byte)Map.Weather.Type);
             Data.Write(Map.Weather.Intensity);
             Data.Write(Map.Fog.Texture);
             Data.Write(Map.Fog.Speed_X);
@@ -253,7 +253,7 @@ partial class Send
         // Envia os dados
         Data.Write((byte)Packets.Write_NPCs);
         Data.Write((short)Lists.NPC.Count);
-        foreach (Lists.Structures.NPC NPC in Lists.NPC.Values)
+        foreach (Objects.NPC NPC in Lists.NPC.Values)
         {
             // Geral
             Data.Write(NPC.ID.ToString());
@@ -290,7 +290,7 @@ partial class Send
         // Envia os dados
         Data.Write((byte)Packets.Write_Items);
         Data.Write((short)Lists.Item.Count);
-        foreach (Lists.Structures.Item Item in Lists.Item.Values)
+        foreach (Objects.Item Item in Lists.Item.Values)
         {
             // Geral
             Data.Write(Item.ID.ToString());
@@ -319,7 +319,7 @@ partial class Send
         // Envia os dados
         Data.Write((byte)Packets.Write_Shops);
         Data.Write((short)Lists.Shop.Count);
-        foreach (Lists.Structures.Shop Shop in Lists.Shop.Values)
+        foreach (Objects.Shop Shop in Lists.Shop.Values)
         {
             // Geral
             Data.Write(Shop.ID.ToString());

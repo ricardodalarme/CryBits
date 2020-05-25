@@ -32,26 +32,26 @@ class Write
         for (byte i = 0; i < Node.Nodes.Count; i++)
         {
             // Salva de acordo com a ferramenta
-            Lists.Structures.Tool Tool = (Lists.Structures.Tool)Node.Nodes[i].Tag;
-            if (Tool is Lists.Structures.Button)
+            Objects.Tool Tool = (Objects.Tool)Node.Nodes[i].Tag;
+            if (Tool is Objects.Button)
             {
                 Data.Write((byte)Globals.Tools_Types.Button);
-                Button(Data, (Lists.Structures.Button)Tool);
+                Button(Data, (Objects.Button)Tool);
             }
-            else if (Tool is Lists.Structures.TextBox)
+            else if (Tool is Objects.TextBox)
             {
                 Data.Write((byte)Globals.Tools_Types.TextBox);
-                TextBox(Data, (Lists.Structures.TextBox)Tool);
+                TextBox(Data, (Objects.TextBox)Tool);
             }
-            else if (Tool is Lists.Structures.CheckBox)
+            else if (Tool is Objects.CheckBox)
             {
                 Data.Write((byte)Globals.Tools_Types.CheckBox);
-                CheckBox(Data, (Lists.Structures.CheckBox)Tool);
+                CheckBox(Data, (Objects.CheckBox)Tool);
             }
-            else if (Tool is Lists.Structures.Panel)
+            else if (Tool is Objects.Panel)
             {
                 Data.Write((byte)Globals.Tools_Types.Panel);
-                Panel(Data, (Lists.Structures.Panel)Tool);
+                Panel(Data, (Objects.Panel)Tool);
             }
 
             // Pula pra próxima ferramenta
@@ -59,7 +59,7 @@ class Write
         }
     }
 
-    private static void Button(BinaryWriter Data, Lists.Structures.Button Tool)
+    private static void Button(BinaryWriter Data, Objects.Button Tool)
     {
         // Escreve os dados
         Data.Write(Tool.Name);
@@ -70,7 +70,7 @@ class Write
         Data.Write(Tool.Texture_Num);
     }
 
-    private static void TextBox(BinaryWriter Data, Lists.Structures.TextBox Tool)
+    private static void TextBox(BinaryWriter Data, Objects.TextBox Tool)
     {
         // Escreve os dados
         Data.Write(Tool.Name);
@@ -83,7 +83,7 @@ class Write
         Data.Write(Tool.Password);
     }
 
-    private static void Panel(BinaryWriter Data, Lists.Structures.Panel Tool)
+    private static void Panel(BinaryWriter Data, Objects.Panel Tool)
     {
         // Escreve os dados
         Data.Write(Tool.Name);
@@ -94,7 +94,7 @@ class Write
         Data.Write(Tool.Texture_Num);
     }
 
-    private static void CheckBox(BinaryWriter Data, Lists.Structures.CheckBox Tool)
+    private static void CheckBox(BinaryWriter Data, Objects.CheckBox Tool)
     {
         // Escreve os dados
         Data.Write(Tool.Name);

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
+using Objects;
 
 public partial class Editor_NPCs : Form
 {
     // NPC selecionado
-    private Lists.Structures.NPC Selected;
+    private NPC Selected;
 
     public Editor_NPCs()
     {
@@ -93,13 +94,13 @@ public partial class Editor_NPCs : Form
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
-        Lists.Structures.NPC NPC = new Lists.Structures.NPC(Guid.NewGuid());
-        NPC.Name = "New NPC";
-        Lists.NPC.Add(NPC.ID, NPC);
+        NPC New = new NPC(Guid.NewGuid());
+        New.Name = "New NPC";
+        Lists.NPC.Add(New.ID, New);
 
         // Adiciona na lista
-        TreeNode Node = new TreeNode(NPC.Name);
-        Node.Tag = NPC.ID;
+        TreeNode Node = new TreeNode(New.Name);
+        Node.Tag = New.ID;
         List.Nodes.Add(Node);
         List.SelectedNode = Node;
 
@@ -254,7 +255,7 @@ public partial class Editor_NPCs : Form
     private void butItem_Ok_Click(object sender, EventArgs e)
     {
         // Adiciona o item
-        Selected.Drop.Add(new Lists.Structures.NPC_Drop((Lists.Structures.Item)cmbDrop_Item.SelectedItem, (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value));
+        Selected.Drop.Add(new NPC_Drop((Item)cmbDrop_Item.SelectedItem, (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value));
         grpDrop_Add.Visible = false;
     }
 
@@ -281,13 +282,13 @@ public partial class Editor_NPCs : Form
     private void butAllie_Delete_Click(object sender, EventArgs e)
     {
         // Deleta a aliado
-        if (lstAllies.SelectedItem != null) Selected.Allie.Remove((Lists.Structures.NPC)lstAllies.SelectedItem);
+        if (lstAllies.SelectedItem != null) Selected.Allie.Remove((NPC)lstAllies.SelectedItem);
     }
 
     private void butAllie_Ok_Click(object sender, EventArgs e)
     {
         // Adiciona o aliado
-        var Allie = (Lists.Structures.NPC)cmbAllie_NPC.SelectedItem;
+        var Allie = (NPC)cmbAllie_NPC.SelectedItem;
         if (!Selected.Allie.Contains(Allie)) Selected.Allie.Add(Allie);
         grpAllie_Add.Visible = false;
     }
@@ -304,6 +305,6 @@ public partial class Editor_NPCs : Form
 
     private void cmbShop_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected.Shop = (Lists.Structures.Shop)cmbShop.SelectedItem;
+        Selected.Shop = (Shop)cmbShop.SelectedItem;
     }
 }

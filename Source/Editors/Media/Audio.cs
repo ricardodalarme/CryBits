@@ -13,15 +13,15 @@ class Audio
         Thunder_2,
         Thunder_3,
         Thunder_4,
-        Amount
+        Count
     }
 
 
     // Listas das músicas
     public enum Musics
     {
-        Menu = 1,
-        Amount
+        None,
+        Menu 
     }
 
     public class Sound
@@ -35,7 +35,7 @@ class Audio
         public static void Load()
         {
             // Redimensiona a lista
-            Array.Resize(ref List, (byte)Sounds.Amount);
+            Array.Resize(ref List, (byte)Sounds.Count);
 
             // Carrega todos os arquivos e os adiciona a lista
             for (int i = 1; i < List.Length; i++)
@@ -59,7 +59,7 @@ class Audio
             if (List == null) return;
 
             // Para todos os sons
-            for (byte i = 1; i < (byte)Sounds.Amount; i++)
+            for (byte i = 1; i < (byte)Sounds.Count; i++)
                 List[i].Stop();
         }
     }
@@ -73,7 +73,7 @@ class Audio
         public static SFML.Audio.Music Device;
 
         // Index da música reproduzida atualmente
-        public static byte Current;
+        public static Musics Current;
 
         public static void Play(Musics Index, bool Loop = false)
         {
@@ -92,7 +92,7 @@ class Audio
 
             // Reproduz
             Device.Play();
-            Current = (byte)Index;
+            Current = Index;
         }
 
         public static void Stop()

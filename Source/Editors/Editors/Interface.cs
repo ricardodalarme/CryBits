@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Objects;
 
 partial class Editor_Interface : Form
 {
@@ -7,7 +8,7 @@ partial class Editor_Interface : Form
     public static Editor_Interface Form;
 
     // Ferramenta selecionada
-    private Lists.Structures.Tool Selected;
+    private Tool Selected;
 
     public Editor_Interface()
     {
@@ -38,7 +39,7 @@ partial class Editor_Interface : Form
     private void treOrder_AfterSelect(object sender, TreeViewEventArgs e)
     {
         // Atualiza as informações
-        Selected = (Lists.Structures.Tool)treOrder.SelectedNode.Tag;
+        Selected = (Tool)treOrder.SelectedNode.Tag;
         prgProperties.SelectedObject = Selected;
     }
 
@@ -46,7 +47,7 @@ partial class Editor_Interface : Form
     {
         if (treOrder.SelectedNode != null)
         {
-            byte Window = (byte)((Lists.Structures.Tool)treOrder.SelectedNode.Tag).Window;
+            byte Window = (byte)((Tool)treOrder.SelectedNode.Tag).Window;
 
             // Troca a ferramenta de janela
             if (e.ChangedItem.Label == "Window")
@@ -87,17 +88,17 @@ partial class Editor_Interface : Form
     private void butConfirm_Click(object sender, EventArgs e)
     {
         // Adiciona uma nova ferramenta
-        Lists.Structures.Tool Tool = new Lists.Structures.Tool();
-        Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = Tool;
+        Tool New = new Tool();
+        Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = New;
         switch ((Globals.Tools_Types)cmbType.SelectedIndex)
         {
-            case Globals.Tools_Types.Button: Tool = new Lists.Structures.Button(); break;
-            case Globals.Tools_Types.Panel: Tool = new Lists.Structures.Panel(); break;
-            case Globals.Tools_Types.CheckBox: Tool = new Lists.Structures.CheckBox(); break;
-            case Globals.Tools_Types.TextBox: Tool = new Lists.Structures.TextBox(); break;
+            case Globals.Tools_Types.Button: New = new Objects.Button(); break;
+            case Globals.Tools_Types.Panel: New = new Objects.Panel(); break;
+            case Globals.Tools_Types.CheckBox: New = new Objects.CheckBox(); break;
+            case Globals.Tools_Types.TextBox: New = new Objects.TextBox(); break;
         }
-        Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(Tool.ToString());
-        Tool.Window = (Globals.Windows)cmbWindows.SelectedIndex;
+        Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(New.ToString());
+        New.Window = (Globals.Windows)cmbWindows.SelectedIndex;
         grpNew.Visible = false;
     }
 

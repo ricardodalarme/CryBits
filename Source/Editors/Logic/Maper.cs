@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-class Map
+class Maper
 {
     public class Autotile
     {
@@ -15,7 +15,7 @@ class Map
             Fill
         }
 
-        public static void Update(Lists.Structures.Map Map)
+        public static void Update(Objects.Map Map)
         {
             // Atualiza os azulejos necessários
             for (byte x = 0; x < Map.Width; x++)
@@ -26,7 +26,7 @@ class Map
                             Calculate(Map, x, y, c);
         }
 
-        public static void Update(Lists.Structures.Map Map, int x, int y, byte Layer_Num)
+        public static void Update(Objects.Map Map, int x, int y, byte Layer_Num)
         {
             // Atualiza os azulejos necessários
             for (int x2 = x - 2; x2 < x + 2; x2++)
@@ -36,7 +36,7 @@ class Map
                         Calculate(Map, (byte)x2, (byte)y2, Layer_Num);
         }
 
-        private static void Set(Lists.Structures.Map Map, byte x, byte y, byte Layer_Num, byte Part, string Index)
+        private static void Set(Objects.Map Map, byte x, byte y, byte Layer_Num, byte Part, string Index)
         {
             Point Position = new Point(0);
 
@@ -75,14 +75,14 @@ class Map
             }
 
             // Define a posição do mini azulejo
-            Lists.Structures.Map_Tile_Data Data = Map.Layer[Layer_Num].Tile[x, y];
+            Objects.Map_Tile_Data Data = Map.Layer[Layer_Num].Tile[x, y];
             Map.Layer[Layer_Num].Tile[x, y].Mini[Part].X = Data.X * Globals.Grid + Position.X;
             Map.Layer[Layer_Num].Tile[x, y].Mini[Part].Y = Data.Y * Globals.Grid + Position.Y;
         }
 
-        private static bool Check(Lists.Structures.Map Map, int X1, int Y1, int X2, int Y2, byte Layer_Num)
+        private static bool Check(Objects.Map Map, int X1, int Y1, int X2, int Y2, byte Layer_Num)
         {
-            Lists.Structures.Map_Tile_Data Data1, Data2;
+            Objects.Map_Tile_Data Data1, Data2;
 
             // Somente se necessário
             if (X1 < 0 || X1 >= Map.Width || Y1 < 0 || Y1 >= Map.Height) return true;
@@ -102,7 +102,7 @@ class Map
             return true;
         }
 
-        private static void Calculate(Lists.Structures.Map Map, byte x, byte y, byte Layer_Num)
+        private static void Calculate(Objects.Map Map, byte x, byte y, byte Layer_Num)
         {
             // Calcula as quatros partes do azulejo
             Calculate_NW(Map, x, y, Layer_Num);
@@ -111,7 +111,7 @@ class Map
             Calculate_SE(Map, x, y, Layer_Num);
         }
 
-        private static void Calculate_NW(Lists.Structures.Map Map, byte x, byte y, byte Layer_Num)
+        private static void Calculate_NW(Objects.Map Map, byte x, byte y, byte Layer_Num)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
@@ -139,7 +139,7 @@ class Map
             }
         }
 
-        private static void Calculate_NE(Lists.Structures.Map Map, byte x, byte y, byte Layer_Num)
+        private static void Calculate_NE(Objects.Map Map, byte x, byte y, byte Layer_Num)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
@@ -167,7 +167,7 @@ class Map
             }
         }
 
-        private static void Calculate_SW(Lists.Structures.Map Map, byte x, byte y, byte Layer_Num)
+        private static void Calculate_SW(Objects.Map Map, byte x, byte y, byte Layer_Num)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
@@ -195,7 +195,7 @@ class Map
             }
         }
 
-        private static void Calculate_SE(Lists.Structures.Map Map, byte x, byte y, byte Layer_Num)
+        private static void Calculate_SE(Objects.Map Map, byte x, byte y, byte Layer_Num)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;

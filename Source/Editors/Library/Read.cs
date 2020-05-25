@@ -49,7 +49,7 @@ class Read
         byte Size = Data.ReadByte();
         for (byte i = 0; i < Size; i++)
         {
-            Lists.Structures.Tool Temp = new Lists.Structures.Tool();
+            Objects.Tool Temp = new Objects.Tool();
             Globals.Tools_Types Type = (Globals.Tools_Types)Data.ReadByte();
 
             // Lê a ferramenta
@@ -67,10 +67,10 @@ class Read
         }
     }
 
-    private static Lists.Structures.Button Button(BinaryReader Data)
+    private static Objects.Button Button(BinaryReader Data)
     {
         // Lê os dados
-        Lists.Structures.Button Tool = new Lists.Structures.Button
+        Objects.Button Tool = new Objects.Button
         {
             Name = Data.ReadString(),
             Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
@@ -81,10 +81,10 @@ class Read
         return Tool;
     }
 
-    private static Lists.Structures.TextBox TextBox(BinaryReader Data)
+    private static Objects.TextBox TextBox(BinaryReader Data)
     {
         // Lê os dados
-        Lists.Structures.TextBox Tool = new Lists.Structures.TextBox
+        Objects.TextBox Tool = new Objects.TextBox
         {
             Name = Data.ReadString(),
             Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
@@ -97,10 +97,10 @@ class Read
         return Tool;
     }
 
-    private static Lists.Structures.Panel Panel(BinaryReader Data)
+    private static Objects.Panel Panel(BinaryReader Data)
     {
         // Carrega os dados
-        Lists.Structures.Panel Tool = new Lists.Structures.Panel
+        Objects.Panel Tool = new Objects.Panel
         {
             Name = Data.ReadString(),
             Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
@@ -111,10 +111,10 @@ class Read
         return Tool;
     }
 
-    private static Lists.Structures.CheckBox CheckBox(BinaryReader Data)
+    private static Objects.CheckBox CheckBox(BinaryReader Data)
     {
         // Carrega os dados
-        Lists.Structures.CheckBox Tool = new Lists.Structures.CheckBox
+        Objects.CheckBox Tool = new Objects.CheckBox
         {
             Name = Data.ReadString(),
             Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),

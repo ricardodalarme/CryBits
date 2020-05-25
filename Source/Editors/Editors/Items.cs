@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
+using Objects;
 
 partial class Editor_Items : Form
 {
     // Item selecionado
-    private Lists.Structures.Item Selected;
+    private Item Selected;
 
     public Editor_Items()
     {
@@ -85,13 +86,13 @@ partial class Editor_Items : Form
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
-        Lists.Structures.Item Item = new Lists.Structures.Item(Guid.NewGuid());
-        Item.Name = "New item";
-        Lists.Item.Add(Item.ID, Item);
+        Item New = new Item(Guid.NewGuid());
+        New.Name = "New item";
+        Lists.Item.Add(New.ID, New);
 
         // Adiciona na lista
-        TreeNode Node = new TreeNode(Item.Name);
-        Node.Tag = Item.ID;
+        TreeNode Node = new TreeNode(New.Name);
+        Node.Tag = New.ID;
         List.Nodes.Add(Node);
         List.SelectedNode = Node;
 
@@ -165,7 +166,7 @@ partial class Editor_Items : Form
         if (cmbReq_Class.SelectedIndex == 0)
             Selected.Req_Class = null;
         else
-            Selected.Req_Class = (Lists.Structures.Class)cmbReq_Class.SelectedItem;
+            Selected.Req_Class = (Class)cmbReq_Class.SelectedItem;
     }
 
     private void numEquip_Vida_ValueChanged(object sender, EventArgs e)

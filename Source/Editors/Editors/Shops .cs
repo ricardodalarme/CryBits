@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using Objects;
 
 partial class Editor_Shops : Form
 {
     // Loja selecionada
-    private Lists.Structures.Shop Selected;
+    private Shop Selected;
 
     public Editor_Shops()
     {
@@ -20,7 +21,7 @@ partial class Editor_Shops : Form
         InitializeComponent();
 
         // Lista os dados
-        foreach (Lists.Structures.Item Item in Lists.Item.Values)
+        foreach (var Item in Lists.Item.Values)
         {
             cmbItems.Items.Add(Item);
             cmbCurrency.Items.Add(Item);
@@ -77,14 +78,14 @@ partial class Editor_Shops : Form
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
-        Lists.Structures.Shop Shop = new Lists.Structures.Shop(Guid.NewGuid());
-        Shop.Name = "New shop";
-        Shop.Currency = Lists.Item.ElementAt(0).Value;
-        Lists.Shop.Add(Shop.ID, Shop);
+        Shop New = new Shop(Guid.NewGuid());
+        New.Name = "New shop";
+        New.Currency = Lists.Item.ElementAt(0).Value;
+        Lists.Shop.Add(New.ID, New);
 
         // Adiciona na lista
-        TreeNode Node = new TreeNode(Shop.Name);
-        Node.Tag = Shop.ID;
+        TreeNode Node = new TreeNode(New.Name);
+        Node.Tag = New.ID;
         List.Nodes.Add(Node);
         List.SelectedNode = Node;
 
@@ -127,7 +128,7 @@ partial class Editor_Shops : Form
 
     private void cmbCurrency_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected.Currency = (Lists.Structures.Item)cmbCurrency.SelectedItem;
+        Selected.Currency = (Item)cmbCurrency.SelectedItem;
     }
 
     private void butSold_Add_Click(object sender, EventArgs e)
@@ -167,7 +168,7 @@ partial class Editor_Shops : Form
     private void butConfirm_Click(object sender, EventArgs e)
     {
         // Adiciona o item
-        Lists.Structures.Shop_Item Data = new Lists.Structures.Shop_Item((Lists.Structures.Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
+        Shop_Item Data = new Shop_Item((Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
         if (grpAddItem.Tag == lstSold) Selected.Sold.Add(Data);
         else Selected.Bought.Add(Data);
 

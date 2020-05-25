@@ -60,8 +60,6 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.butGrid = new System.Windows.Forms.ToolStripButton();
             this.butAudio = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
-            this.butProperties = new System.Windows.Forms.ToolStripButton();
             this.butEditors = new System.Windows.Forms.ToolStripDropDownButton();
             this.butEditors_Classes = new System.Windows.Forms.ToolStripMenuItem();
             this.butEditors_Data = new System.Windows.Forms.ToolStripMenuItem();
@@ -110,8 +108,6 @@
             this.scrlZone = new System.Windows.Forms.HScrollBar();
             this.butLight_Clear = new System.Windows.Forms.Button();
             this.grpLighting = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.numLighting = new System.Windows.Forms.NumericUpDown();
             this.tmrUpdate = new System.Windows.Forms.Timer(this.components);
             this.grpTile = new System.Windows.Forms.GroupBox();
             this.grpAttributes = new System.Windows.Forms.GroupBox();
@@ -154,6 +150,7 @@
             this.txtFilter = new System.Windows.Forms.TextBox();
             this.picBackground = new System.Windows.Forms.Panel();
             this.picMap = new System.Windows.Forms.PictureBox();
+            this.prgProperties = new System.Windows.Forms.PropertyGrid();
             this.tolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTile)).BeginInit();
             this.Strip.SuspendLayout();
@@ -162,7 +159,6 @@
             this.grpLayer_Add.SuspendLayout();
             this.grpZones.SuspendLayout();
             this.grpLighting.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numLighting)).BeginInit();
             this.grpTile.SuspendLayout();
             this.grpAttributes.SuspendLayout();
             this.grpA_Item.SuspendLayout();
@@ -218,8 +214,6 @@
             this.toolStripSeparator1,
             this.butGrid,
             this.butAudio,
-            this.toolStripSeparator10,
-            this.butProperties,
             this.butEditors});
             this.tolStrip.Location = new System.Drawing.Point(0, 0);
             this.tolStrip.Name = "tolStrip";
@@ -534,21 +528,6 @@
             this.butAudio.Text = "Audios";
             this.butAudio.Click += new System.EventHandler(this.butAudio_Click);
             // 
-            // toolStripSeparator10
-            // 
-            this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(6, 25);
-            // 
-            // butProperties
-            // 
-            this.butProperties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.butProperties.Image = ((System.Drawing.Image)(resources.GetObject("butProperties.Image")));
-            this.butProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.butProperties.Name = "butProperties";
-            this.butProperties.Size = new System.Drawing.Size(23, 22);
-            this.butProperties.Text = "Properties";
-            this.butProperties.Click += new System.EventHandler(this.butProperties_Click);
-            // 
             // butEditors
             // 
             this.butEditors.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -570,49 +549,49 @@
             // butEditors_Classes
             // 
             this.butEditors_Classes.Name = "butEditors_Classes";
-            this.butEditors_Classes.Size = new System.Drawing.Size(180, 22);
+            this.butEditors_Classes.Size = new System.Drawing.Size(120, 22);
             this.butEditors_Classes.Text = "Classes";
             this.butEditors_Classes.Click += new System.EventHandler(this.butEditors_Classes_Click);
             // 
             // butEditors_Data
             // 
             this.butEditors_Data.Name = "butEditors_Data";
-            this.butEditors_Data.Size = new System.Drawing.Size(180, 22);
+            this.butEditors_Data.Size = new System.Drawing.Size(120, 22);
             this.butEditors_Data.Text = "Data";
             this.butEditors_Data.Click += new System.EventHandler(this.butEditors_Data_Click);
             // 
             // butEditors_Interface
             // 
             this.butEditors_Interface.Name = "butEditors_Interface";
-            this.butEditors_Interface.Size = new System.Drawing.Size(180, 22);
+            this.butEditors_Interface.Size = new System.Drawing.Size(120, 22);
             this.butEditors_Interface.Text = "Interface";
             this.butEditors_Interface.Click += new System.EventHandler(this.butEditors_Interface_Click);
             // 
             // butEditors_Items
             // 
             this.butEditors_Items.Name = "butEditors_Items";
-            this.butEditors_Items.Size = new System.Drawing.Size(180, 22);
+            this.butEditors_Items.Size = new System.Drawing.Size(120, 22);
             this.butEditors_Items.Text = "Items";
             this.butEditors_Items.Click += new System.EventHandler(this.butEditors_Items_Click);
             // 
             // butEditors_NPCs
             // 
             this.butEditors_NPCs.Name = "butEditors_NPCs";
-            this.butEditors_NPCs.Size = new System.Drawing.Size(180, 22);
+            this.butEditors_NPCs.Size = new System.Drawing.Size(120, 22);
             this.butEditors_NPCs.Text = "NPCs";
             this.butEditors_NPCs.Click += new System.EventHandler(this.butEditors_NPCs_Click);
             // 
             // butEditors_Shops
             // 
             this.butEditors_Shops.Name = "butEditors_Shops";
-            this.butEditors_Shops.Size = new System.Drawing.Size(180, 22);
+            this.butEditors_Shops.Size = new System.Drawing.Size(120, 22);
             this.butEditors_Shops.Text = "Shops";
             this.butEditors_Shops.Click += new System.EventHandler(this.butEditors_Shops_Click);
             // 
             // butEditors_Tiles
             // 
             this.butEditors_Tiles.Name = "butEditors_Tiles";
-            this.butEditors_Tiles.Size = new System.Drawing.Size(180, 22);
+            this.butEditors_Tiles.Size = new System.Drawing.Size(120, 22);
             this.butEditors_Tiles.Text = "Tiles";
             this.butEditors_Tiles.Click += new System.EventHandler(this.butEditors_Tiles_Click);
             // 
@@ -990,7 +969,7 @@
             // 
             // butLight_Clear
             // 
-            this.butLight_Clear.Location = new System.Drawing.Point(8, 49);
+            this.butLight_Clear.Location = new System.Drawing.Point(7, 23);
             this.butLight_Clear.Name = "butLight_Clear";
             this.butLight_Clear.Size = new System.Drawing.Size(262, 24);
             this.butLight_Clear.TabIndex = 12;
@@ -1002,8 +981,6 @@
             // 
             this.grpLighting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.grpLighting.Controls.Add(this.label3);
-            this.grpLighting.Controls.Add(this.numLighting);
             this.grpLighting.Controls.Add(this.butLight_Clear);
             this.grpLighting.Location = new System.Drawing.Point(0, 27);
             this.grpLighting.Name = "grpLighting";
@@ -1012,24 +989,6 @@
             this.grpLighting.TabStop = false;
             this.grpLighting.Text = "Lighting";
             this.grpLighting.Visible = false;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(254, 25);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(15, 13);
-            this.label3.TabIndex = 105;
-            this.label3.Text = "%";
-            // 
-            // numLighting
-            // 
-            this.numLighting.Location = new System.Drawing.Point(8, 23);
-            this.numLighting.Name = "numLighting";
-            this.numLighting.Size = new System.Drawing.Size(245, 20);
-            this.numLighting.TabIndex = 108;
-            this.numLighting.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numLighting.ValueChanged += new System.EventHandler(this.numLighting_ValueChanged);
             // 
             // tmrUpdate
             // 
@@ -1431,14 +1390,14 @@
             this.List.HideSelection = false;
             this.List.Location = new System.Drawing.Point(1101, 51);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(256, 574);
+            this.List.Size = new System.Drawing.Size(256, 266);
             this.List.TabIndex = 109;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
             // 
             // butRemove
             // 
             this.butRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.butRemove.Location = new System.Drawing.Point(1231, 631);
+            this.butRemove.Location = new System.Drawing.Point(1231, 323);
             this.butRemove.Name = "butRemove";
             this.butRemove.Size = new System.Drawing.Size(126, 25);
             this.butRemove.TabIndex = 111;
@@ -1449,7 +1408,7 @@
             // butNew
             // 
             this.butNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.butNew.Location = new System.Drawing.Point(1101, 631);
+            this.butNew.Location = new System.Drawing.Point(1101, 323);
             this.butNew.Name = "butNew";
             this.butNew.Size = new System.Drawing.Size(126, 25);
             this.butNew.TabIndex = 110;
@@ -1498,14 +1457,22 @@
             this.picMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picMap_MouseUp);
             this.picMap.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.picMap_MouseWheel);
             // 
+            // prgProperties
+            // 
+            this.prgProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.prgProperties.HelpVisible = false;
+            this.prgProperties.Location = new System.Drawing.Point(1101, 354);
+            this.prgProperties.Name = "prgProperties";
+            this.prgProperties.Size = new System.Drawing.Size(256, 303);
+            this.prgProperties.TabIndex = 114;
+            // 
             // Editor_Maps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1366, 687);
-            this.Controls.Add(this.grpLighting);
-            this.Controls.Add(this.grpNPCs);
+            this.Controls.Add(this.prgProperties);
             this.Controls.Add(this.picBackground);
             this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.butRemove);
@@ -1525,6 +1492,8 @@
             this.Controls.Add(this.grpLayer_Add);
             this.Controls.Add(this.grpAttributes);
             this.Controls.Add(this.picTile_Background);
+            this.Controls.Add(this.grpLighting);
+            this.Controls.Add(this.grpNPCs);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "Editor_Maps";
@@ -1545,8 +1514,6 @@
             this.grpLayer_Add.PerformLayout();
             this.grpZones.ResumeLayout(false);
             this.grpLighting.ResumeLayout(false);
-            this.grpLighting.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numLighting)).EndInit();
             this.grpTile.ResumeLayout(false);
             this.grpTile.PerformLayout();
             this.grpAttributes.ResumeLayout(false);
@@ -1587,7 +1554,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     public System.Windows.Forms.ToolStripButton butGrid;
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-    private System.Windows.Forms.ToolStripButton butProperties;
     public System.Windows.Forms.PictureBox picTile;
     public System.Windows.Forms.VScrollBar scrlTileY;
     public System.Windows.Forms.HScrollBar scrlMapX;
@@ -1618,7 +1584,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
     private System.Windows.Forms.ToolStripButton butEraser;
     private System.Windows.Forms.ToolStripButton butArea;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
     public System.Windows.Forms.ToolStripButton butMNormal;
     public System.Windows.Forms.ToolStripButton butMZones;
     private System.Windows.Forms.GroupBox grpZones;
@@ -1633,10 +1598,8 @@
     private System.Windows.Forms.GroupBox grpLighting;
     public System.Windows.Forms.ComboBox cmbTiles;
     private System.Windows.Forms.Timer tmrUpdate;
-    private System.Windows.Forms.Label label3;
     private System.Windows.Forms.GroupBox grpTile;
     public System.Windows.Forms.ToolStripButton butAudio;
-    public System.Windows.Forms.NumericUpDown numLighting;
     private System.Windows.Forms.ToolStripButton butReload;
     public System.Windows.Forms.ToolStripButton butMAttributes;
     private System.Windows.Forms.GroupBox grpAttributes;
@@ -1698,4 +1661,5 @@
     private System.Windows.Forms.Label label16;
     private System.Windows.Forms.Panel picBackground;
     public System.Windows.Forms.PictureBox picMap;
+    private System.Windows.Forms.PropertyGrid prgProperties;
 }
