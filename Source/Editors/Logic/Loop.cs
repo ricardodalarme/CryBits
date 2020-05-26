@@ -132,10 +132,10 @@ class Loop
         }
 
         // Clima do mapa
-        Lists.Structures.Map_Weather Weather = Editor_Maps.Form.Selected.Weather;
+        Objects.Map_Weather Weather = Editor_Maps.Form.Selected.Weather;
 
         // Reproduz o som chuva
-        if ((Globals.Weathers)Weather.Type == Globals.Weathers.Raining || (Globals.Weathers)Weather.Type == Globals.Weathers.Thundering)
+        if (Weather.Type == Globals.Weathers.Raining || Weather.Type == Globals.Weathers.Thundering)
         {
             if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status != SFML.Audio.SoundStatus.Playing)
                 Audio.Sound.Play(Audio.Sounds.Rain);

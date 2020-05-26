@@ -14,9 +14,9 @@ namespace Objects
         public string Name;
         public byte Width;
         public byte Height;
-        public byte Moral;
+        public Globals.Map_Morals Moral;
         public byte Panorama;
-        public byte Music;
+        public Audio.Musics Music;
         public Color Color;
         public Map_Weather Weather = new Map_Weather();
         public Map_Fog Fog = new Map_Fog();

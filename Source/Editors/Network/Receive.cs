@@ -70,7 +70,7 @@ partial class Receive
     private static void Classes(NetIncomingMessage Data)
     {
         // Classes a serem removidas
-        Dictionary<Guid, Lists.Structures.Class> ToRemove = new Dictionary<Guid, Lists.Structures.Class>(Lists.Class);
+        Dictionary<Guid, Objects.Class> ToRemove = new Dictionary<Guid, Objects.Class>(Lists.Class);
 
         // Quantidade de classes
         short Count = Data.ReadByte();
@@ -78,7 +78,7 @@ partial class Receive
         while (--Count >= 0)
         {
             Guid ID = new Guid(Data.ReadString());
-            Lists.Structures.Class Class;
+            Objects.Class Class;
 
             // Obtém o dado
             if (Lists.Class.ContainsKey(ID))
@@ -88,7 +88,7 @@ partial class Receive
             }
             else
             {
-                Class = new Lists.Structures.Class(ID);
+                Class = new Objects.Class(ID);
                 Lists.Class.Add(Class.ID, Class);
             }
 
@@ -101,14 +101,14 @@ partial class Receive
             Class.Description = Data.ReadString();
             for (byte t = 0, Size = Data.ReadByte(); t < Size; t++) Class.Tex_Male.Add(Data.ReadInt16());
             for (byte t = 0, Size = Data.ReadByte(); t < Size; t++) Class.Tex_Female.Add(Data.ReadInt16());
-            Class.Spawn_Map = (Lists.Structures.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
+            Class.Spawn_Map = (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
             Class.Spawn_Direction = Data.ReadByte();
             Class.Spawn_X = Data.ReadByte();
             Class.Spawn_Y = Data.ReadByte();
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Class.Vital[v] = Data.ReadInt16();
             for (byte a = 0; a < (byte)Globals.Attributes.Count; a++) Class.Attribute[a] = Data.ReadInt16();
             byte Num_Items = Data.ReadByte();
-            for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new Lists.Structures.Inventory((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16()));
+            for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new Lists.Structures.Inventory((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16()));
         }
 
         // Remove as classes que não tiveram os dados atualizados
@@ -118,13 +118,13 @@ partial class Receive
     private static void Map(NetIncomingMessage Data)
     {
         Guid ID = new Guid(Data.ReadString());
-        Lists.Structures.Map Map;
+        Objects.Map Map;
 
         // Obtém o dado
         if (Lists.Map.ContainsKey(ID)) Map = Lists.Map[ID];
         else
         {
-            Map = new Lists.Structures.Map(ID);
+            Map = new Objects.Map(ID);
             Lists.Map.Add(ID, Map);
         }
 
@@ -147,7 +147,7 @@ partial class Receive
 
         // Ligações
         for (short n = 0; n < (short)Globals.Directions.Count; n++)
-            Map.Link[n] = (Lists.Structures.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
+            Map.Link[n] = (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
 
         // Quantidade de camadas
         byte Num_Layers = Data.ReadByte();
@@ -156,18 +156,18 @@ partial class Receive
         for (byte n = 0; n < Num_Layers; n++)
         {
             // Dados básicos
-            Map.Layer.Add(new Lists.Structures.Map_Layer());
+            Map.Layer.Add(new Objects.Map_Layer());
             Map.Layer[n].Name = Data.ReadString();
             Map.Layer[n].Type = Data.ReadByte();
 
             // Redimensiona os azulejos
-            Map.Layer[n].Tile = new Lists.Structures.Map_Tile_Data[Map.Width, Map.Height];
+            Map.Layer[n].Tile = new Objects.Map_Tile_Data[Map.Width, Map.Height];
 
             // Azulejos
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
                 {
-                    Map.Layer[n].Tile[x, y] = new Lists.Structures.Map_Tile_Data();
+                    Map.Layer[n].Tile[x, y] = new Objects.Map_Tile_Data();
                     Map.Layer[n].Tile[x, y].X = Data.ReadByte();
                     Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
                     Map.Layer[n].Tile[x, y].Tile = Data.ReadByte();
@@ -176,11 +176,11 @@ partial class Receive
         }
 
         // Dados específicos dos azulejos
-        Map.Tile = new Lists.Structures.Map_Tile[Map.Width, Map.Height];
+        Map.Tile = new Objects.Map_Tile[Map.Width, Map.Height];
         for (byte x = 0; x < Map.Width; x++)
             for (byte y = 0; y < Map.Height; y++)
             {
-                Map.Tile[x, y] = new Lists.Structures.Map_Tile();
+                Map.Tile[x, y] = new Objects.Map_Tile();
                 Map.Tile[x, y].Attribute = Data.ReadByte();
                 Map.Tile[x, y].Data_1 = Data.ReadString();
                 Map.Tile[x, y].Data_2 = Data.ReadInt16();
@@ -194,18 +194,18 @@ partial class Receive
 
         // Luzes
         byte Num_Lights = Data.ReadByte();
-        Map.Light = new List<Lists.Structures.Map_Light>();
+        Map.Light = new List<Objects.Map_Light>();
         if (Num_Lights > 0)
             for (byte n = 0; n < Num_Lights; n++)
-                Map.Light.Add(new Lists.Structures.Map_Light(new Rectangle(Data.ReadByte(), Data.ReadByte(), Data.ReadByte(), Data.ReadByte())));
+                Map.Light.Add(new Objects.Map_Light(new Rectangle(Data.ReadByte(), Data.ReadByte(), Data.ReadByte(), Data.ReadByte())));
 
         // NPCs
         byte Num_NPCs = Data.ReadByte();
-        Lists.Structures.Map_NPC NPC = new Lists.Structures.Map_NPC();
+        Objects.Map_NPC NPC = new Objects.Map_NPC();
         if (Num_NPCs > 0)
             for (byte n = 0; n < Num_NPCs; n++)
             {
-                NPC.NPC = (Lists.Structures.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+                NPC.NPC = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
                 NPC.Zone = Data.ReadByte();
                 NPC.Spawn = Data.ReadBoolean();
                 NPC.X = Data.ReadByte();
@@ -217,7 +217,7 @@ partial class Receive
     private static void NPCs(NetIncomingMessage Data)
     {
         // NPCs a serem removidas
-        Dictionary<Guid, Lists.Structures.NPC> ToRemove = new Dictionary<Guid, Lists.Structures.NPC>(Lists.NPC);
+        Dictionary<Guid, Objects.NPC> ToRemove = new Dictionary<Guid, Objects.NPC>(Lists.NPC);
 
         // Quantidade de NPCs
         short Count = Data.ReadInt16();
@@ -225,7 +225,7 @@ partial class Receive
         while (--Count >= 0)
         {
             Guid ID = new Guid(Data.ReadString());
-            Lists.Structures.NPC NPC;
+            Objects.NPC NPC;
 
             // Obtém o dado
             if (Lists.NPC.ContainsKey(ID))
@@ -235,7 +235,7 @@ partial class Receive
             }
             else
             {
-                NPC = new Lists.Structures.NPC(ID);
+                NPC = new Objects.NPC(ID);
                 Lists.NPC.Add(NPC.ID, NPC);
             }
 
@@ -249,12 +249,12 @@ partial class Receive
             NPC.Sight = Data.ReadByte();
             NPC.Experience = Data.ReadInt32();
             for (byte n = 0; n < (byte)Globals.Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
-            for (byte n = 0, Size = Data.ReadByte(); n < Size; n++) NPC.Drop.Add(new Lists.Structures.NPC_Drop((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte()));
+            for (byte n = 0, Size = Data.ReadByte(); n < Size; n++) NPC.Drop.Add(new Objects.NPC_Drop((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte()));
             NPC.AttackNPC = Data.ReadBoolean();
-            for (byte n = 0, Size = Data.ReadByte(); n < Size; n++) NPC.Allie.Add((Lists.Structures.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString())));
+            for (byte n = 0, Size = Data.ReadByte(); n < Size; n++) NPC.Allie.Add((Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString())));
             NPC.Movement = (Globals.NPC_Movements)Data.ReadByte();
             NPC.Flee_Helth = Data.ReadByte();
-            NPC.Shop = (Lists.Structures.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+            NPC.Shop = (Objects.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
         }
 
         // Remove os NPCs que não tiveram os dados atualizados
@@ -264,7 +264,7 @@ partial class Receive
     private static void Items(NetIncomingMessage Data)
     {
         // Itens a serem removidas
-        Dictionary<Guid, Lists.Structures.Item> ToRemove = new Dictionary<Guid, Lists.Structures.Item>(Lists.Item);
+        Dictionary<Guid, Objects.Item> ToRemove = new Dictionary<Guid, Objects.Item>(Lists.Item);
 
         // Quantidade de itens
         short Count = Data.ReadInt16();
@@ -272,7 +272,7 @@ partial class Receive
         while (--Count >= 0)
         {
             Guid ID = new Guid(Data.ReadString());
-            Lists.Structures.Item Item;
+            Objects.Item Item;
 
             // Obtém o dado
             if (Lists.Item.ContainsKey(ID))
@@ -282,7 +282,7 @@ partial class Receive
             }
             else
             {
-                Item = new Lists.Structures.Item(ID);
+                Item = new Objects.Item(ID);
                 Lists.Item.Add(Item.ID, Item);
             }
 
@@ -295,7 +295,7 @@ partial class Receive
             Item.Bind = Data.ReadByte();
             Item.Rarity = Data.ReadByte();
             Item.Req_Level = Data.ReadInt16();
-            Item.Req_Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
+            Item.Req_Class = (Objects.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
             Item.Potion_Experience = Data.ReadInt32();
             for (byte v = 0; v < (byte)Globals.Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
             Item.Equip_Type = Data.ReadByte();
@@ -310,7 +310,7 @@ partial class Receive
     private static void Shops(NetIncomingMessage Data)
     {
         // Lojas a serem removidas
-        Dictionary<Guid, Lists.Structures.Shop> ToRemove = new Dictionary<Guid, Lists.Structures.Shop>(Lists.Shop);
+        Dictionary<Guid, Objects.Shop> ToRemove = new Dictionary<Guid, Objects.Shop>(Lists.Shop);
 
         // Quantidade de lojas
         short Count = Data.ReadInt16();
@@ -318,7 +318,7 @@ partial class Receive
         while (--Count >= 0)
         {
             Guid ID = new Guid(Data.ReadString());
-            Lists.Structures.Shop Shop;
+            Objects.Shop Shop;
 
             // Obtém o dado
             if (Lists.Shop.ContainsKey(ID))
@@ -328,7 +328,7 @@ partial class Receive
             }
             else
             {
-                Shop = new Lists.Structures.Shop(ID);
+                Shop = new Objects.Shop(ID);
                 Lists.Shop.Add(Shop.ID, Shop);
             }
 
@@ -338,9 +338,9 @@ partial class Receive
 
             // Lê os dados
             Shop.Name = Data.ReadString();
-            Shop.Currency = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
-            for (byte j = 0, Size = Data.ReadByte(); j < Size; j++) Shop.Sold.Add(new Lists.Structures.Shop_Item((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
-            for (byte j = 0, Size = Data.ReadByte(); j < Size; j++) Shop.Bought.Add(new Lists.Structures.Shop_Item((Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
+            Shop.Currency = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+            for (byte j = 0, Size = Data.ReadByte(); j < Size; j++) Shop.Sold.Add(new Objects.Shop_Item((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
+            for (byte j = 0, Size = Data.ReadByte(); j < Size; j++) Shop.Bought.Add(new Objects.Shop_Item((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
         }
 
         // Remove as lojas que não tiveram os dados atualizados

@@ -126,12 +126,7 @@ class Lists
         public class MapProp
         {
             // Dados gerais
-            public short Revision;
-            public Map_Tile[,] Tile;
-            public List<Map_Layer> Layer = new List<Map_Layer>();
-            public List<Map_Light> Light = new List<Map_Light>();
-            public BindingList<Map_NPC> NPC = new BindingList<Map_NPC>();
-            public Map_Weather Weather = new Map_Weather();
+            public Objects.Map Base;
 
             /*
                      // Limites
@@ -177,6 +172,7 @@ class Lists
                 get => Fog.Speed_Y;
                 set => Fog.Speed_Y = value;
             }
+            /*
 
             [Category("Weather"), DisplayName("Weather Intensity")]
             public byte Weather_SpeedY
@@ -195,6 +191,7 @@ class Lists
                     Globals.Weather_Update();
                 }
             }
+            */
             //Weather
             [Category("weather"), Description("weatherdesc"), DisplayName("weather"),
              DefaultValue("None"), TypeConverter(typeof(MapMusicProperty)), Browsable(true)]
@@ -205,13 +202,6 @@ class Lists
 
             public Map_Fog Fog = new Map_Fog();
             public Map[] Link = new Map[(byte)Globals.Directions.Count];
-
-            // Construtor
-      
-            public override string ToString() => Name;
-
-            // Verifica se as coordenas estão no limite do mapa
-            public bool OutLimit(short x, short y) => x >= Width || y >= Height || x < 0 || y < 0;
         }
 
         public struct Weather
@@ -223,9 +213,5 @@ class Lists
             public int Start;
             public bool Back;
         }
-
-
-
-
     }
 }
