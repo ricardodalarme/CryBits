@@ -117,7 +117,7 @@ partial class Editor_Maps : Form
         Selected = Lists.Map[(Guid)List.SelectedNode.Tag];
 
         // Conecta as listas com os componentes
-        prgProperties.SelectedObject = Selected;
+        prgProperties.SelectedObject = new Maper.Properties(Selected);
         lstNPC.DataSource = Selected.NPC;
 
         // Reseta o clima
