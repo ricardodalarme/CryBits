@@ -3,9 +3,6 @@ using System.Drawing;
 
 class Map
 {
-    // Limitações dos mapas
-    public const byte Min_Width = 25;
-    public const byte Min_Height = 19;
 
     // Fumaças
     public static int Fog_X;
@@ -75,7 +72,7 @@ class Map
             }
     }
 
-    private static void NextTile(Game.Directions Direction, ref short X, ref short Y)
+    private static void NextTile(Game.Directions Direction, ref byte X, ref byte Y)
     {
         // Próximo azulejo
         switch (Direction)
@@ -88,11 +85,11 @@ class Map
     }
 
     // Verifica se as coordenas estão no limite do mapa
-    public static bool OutOfLimit(short x, short y) => x > Lists.Map.Width || y > Lists.Map.Height || x < 0 || y < 0;
+    public static bool OutOfLimit(byte x, byte y) => x >= Game.Map_Width || y >= Game.Map_Height || x < 0 || y < 0;
 
     public static bool Tile_Blocked(short Map, byte X, byte Y, Game.Directions Direction)
     {
-        short Next_X = X, Next_Y = Y;
+        byte Next_X = X, Next_Y = Y;
 
         // Próximo azulejo
         NextTile(Direction, ref Next_X, ref Next_Y);
@@ -366,8 +363,8 @@ class Map
         public static void Update()
         {
             // Atualiza os azulejos necessários
-            for (byte x = 0; x <= Lists.Map.Width; x++)
-                for (byte y = 0; y <= Lists.Map.Height; y++)
+            for (byte x = 0; x < Game.Map_Width; x++)
+                for (byte y = 0; y < Game.Map_Height; y++)
                     for (byte c = 0; c < (byte)Layers.Amount; c++)
                         for (byte q = 0; q <= Lists.Map.Tile[x, y].Data.GetUpperBound(1); q++)
                             if (Lists.Map.Tile[x, y].Data[c, q].Automatic)
@@ -424,7 +421,7 @@ class Map
             Lists.Structures.Map_Tile_Data Data1, Data2;
 
             // Somente se necessário
-            if (X2 < 0 || X2 > Lists.Map.Width || Y2 < 0 || Y2 > Lists.Map.Height) return true;
+            if (X2 < 0 || X2 >= Game.Map_Width || Y2 < 0 || Y2 >= Game.Map_Height) return true;
 
             // Dados
             Data1 = Lists.Map.Tile[X1, Y1].Data[Layer_Type, Layer_Num];
@@ -575,8 +572,8 @@ partial class Graphics
         SFML.Graphics.Color Color = CColor(TempColor.R, TempColor.G, TempColor.B);
 
         // Desenha todas as camadas dos azulejos
-        for (short x = (short)Game.Sight.X; x <= Game.Sight.Width; x++)
-            for (short y = (short)Game.Sight.Y; y <= Game.Sight.Height; y++)
+        for (byte x = (byte)Game.Sight.X; x <= Game.Sight.Width; x++)
+            for (byte y = (byte)Game.Sight.Y; y <= Game.Sight.Height; y++)
                 if (!Map.OutOfLimit(x, y))
                     for (byte q = 0; q <= Lists.Map.Tile[x, y].Data.GetUpperBound(1); q++)
                         if (Lists.Map.Tile[x, y].Data[c, q].Tile > 0)
@@ -628,8 +625,8 @@ partial class Graphics
         if (Data.Texture <= 0) return;
 
         // Desenha a fumaça
-        for (int x = -1; x <= Lists.Map.Width * Game.Grid / Texture_Size.Width + 1; x++)
-            for (int y = -1; y <= Lists.Map.Height * Game.Grid / Texture_Size.Height + 1; y++)
+        for (int x = -1; x <= Game.Map_Width * Game.Grid / Texture_Size.Width; x++)
+            for (int y = -1; y <= Game.Map_Height * Game.Grid / Texture_Size.Height ; y++)
                 Render(Tex_Fog[Data.Texture], new Point(x * Texture_Size.Width + Map.Fog_X, y * Texture_Size.Height + Map.Fog_Y), new SFML.Graphics.Color(255, 255, 255, Data.Alpha));
     }
 

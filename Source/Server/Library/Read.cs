@@ -208,19 +208,9 @@ partial class Read
 
             // Dados do mapa
             Map.Name = "New map";
-            Map.Width = Game.Min_Map_Width;
-            Map.Height = Game.Min_Map_Height;
             Map.Layer = new Objects.Map_Layer[1];
-            Map.Layer[0] = new Objects.Map_Layer(Game.Min_Map_Width, Game.Min_Map_Height);
+            Map.Layer[0] = new Objects.Map_Layer();
             Map.Layer[0].Name = "Ground";
-            Map.Tile = new Objects.Map_Tile[Game.Min_Map_Width, Game.Min_Map_Height];
-            Map.Tile = new Objects.Map_Tile[Map.Width, Map.Height];
-            for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
-                {
-                    Map.Tile[x, y] = new Objects.Map_Tile();
-                    Map.Layer[0].Tile[x, y] = new Objects.Map_Tile_Data();
-                }
 
             // Escreve os dados
             Write.Map(Map);

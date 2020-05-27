@@ -194,7 +194,7 @@ class Loop
                 }
 
                 // Reseta a partícula
-                if (Lists.Weather[i].x > Editor_Maps.Form.Selected.Width * Globals.Grid || Lists.Weather[i].y > Editor_Maps.Form.Selected.Height * Globals.Grid)
+                if (Lists.Weather[i].x > Globals.Map_Width * Globals.Grid || Lists.Weather[i].y > Globals.Map_Height * Globals.Grid)
                     Lists.Weather[i] = new Lists.Structures.Weather();
             }
 
@@ -281,7 +281,7 @@ class Loop
 
         // Inicia a música
         if (Audio.Music.Device == null || Audio.Music.Current != Editor_Maps.Form.Selected.Music)
-            Audio.Music.Play((Audio.Musics)Editor_Maps.Form.Selected.Music);
+            Audio.Music.Play(Editor_Maps.Form.Selected.Music);
         return;
     stop:
         // Para a música

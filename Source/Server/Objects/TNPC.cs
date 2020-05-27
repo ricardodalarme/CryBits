@@ -138,10 +138,10 @@ namespace Objects
                 {
                     // Define o alvo a zona do NPC
                     if (Map.Data.NPC[Index].Zone > 0)
-                        if (Map.Data.Tile[X, Y].Zone != Map.Data.NPC[Index].Zone)
-                            for (byte x2 = 0; x2 <= Map.Data.Width; x2++)
-                                for (byte y2 = 0; y2 <= Map.Data.Height; y2++)
-                                    if (Map.Data.Tile[x2, y2].Zone == Map.Data.NPC[Index].Zone)
+                        if (Map.Data.Attribute[X, Y].Zone != Map.Data.NPC[Index].Zone)
+                            for (byte x2 = 0; x2 < Game.Map_Width; x2++)
+                                for (byte y2 = 0; y2 < Game.Map_Height; y2++)
+                                    if (Map.Data.Attribute[x2, y2].Zone == Map.Data.NPC[Index].Zone)
                                         if (!Map.Data.Tile_Blocked(x2, y2))
                                         {
                                             TargetX = x2;
@@ -230,12 +230,12 @@ namespace Objects
             // Faz com que ele apareça em um local aleatório
             for (byte i = 0; i < 50; i++) // tenta 50 vezes com que ele apareça em um local aleatório
             {
-                x = (byte)Game.Random.Next(0, Map.Data.Width);
-                y = (byte)Game.Random.Next(0, Map.Data.Height);
+                x = (byte)Game.Random.Next(0, Game.Map_Width - 1);
+                y = (byte)Game.Random.Next(0, Game.Map_Height - 1);
 
                 // Verifica se está dentro da zona
                 if (Map.Data.NPC[Index].Zone > 0)
-                    if (Map.Data.Tile[x, y].Zone != Map.Data.NPC[Index].Zone)
+                    if (Map.Data.Attribute[x, y].Zone != Map.Data.NPC[Index].Zone)
                         continue;
 
                 // Define os dados
@@ -247,13 +247,13 @@ namespace Objects
             }
 
             // Em último caso, tentar no primeiro lugar possível
-            for (byte x2 = 0; x2 <= Map.Data.Width; x2++)
-                for (byte y2 = 0; y2 <= Map.Data.Height; y2++)
+            for (byte x2 = 0; x2 < Game.Map_Width; x2++)
+                for (byte y2 = 0; y2 < Game.Map_Height; y2++)
                     if (!Map.Data.Tile_Blocked(x2, y2))
                     {
                         // Verifica se está dentro da zona
                         if (Map.Data.NPC[Index].Zone > 0)
-                            if (Map.Data.Tile[x2, y2].Zone != Map.Data.NPC[Index].Zone)
+                            if (Map.Data.Attribute[x2, y2].Zone != Map.Data.NPC[Index].Zone)
                                 continue;
 
                         // Define os dados
@@ -264,7 +264,7 @@ namespace Objects
 
         private bool Move(Game.Directions Direction, byte Movement = 1, bool CheckZone = false)
         {
-            short Next_X = X, Next_Y = Y;
+            byte Next_X = X, Next_Y = Y;
 
             // Define a direção do NPC
             this.Direction = Direction;
@@ -279,7 +279,7 @@ namespace Objects
 
             // Verifica se está dentro da zona
             if (CheckZone)
-                if (Map.Data.Tile[Next_X, Next_Y].Zone != Map.Data.NPC[Index].Zone)
+                if (Map.Data.Attribute[Next_X, Next_Y].Zone != Map.Data.NPC[Index].Zone)
                     return false;
 
             // Movimenta o NPC
@@ -291,7 +291,7 @@ namespace Objects
 
         private void Attack()
         {
-            short Next_X = X, Next_Y = Y;
+            byte Next_X = X, Next_Y = Y;
             Game.NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Apenas se necessário

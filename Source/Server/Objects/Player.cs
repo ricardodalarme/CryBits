@@ -150,8 +150,8 @@ namespace Objects
 
             // Evita que o jogador seja transportado para fora do limite
             if (To == null) return;
-            if (x > To.Data.Width) x = To.Data.Width;
-            if (y > To.Data.Height) y = To.Data.Height;
+            if (x >= Game.Map_Width) x = Game.Map_Width -1;
+            if (y >= Game.Map_Height) y = Game.Map_Height-1;
             if (x < 0) x = 0;
             if (y < 0) y = 0;
 
@@ -181,7 +181,7 @@ namespace Objects
 
         public void Move(byte Movement)
         {
-            short Next_X = X, Next_Y = Y;
+            byte Next_X = X, Next_Y = Y;
             byte Old_X = X, Old_Y = Y;
             TMap Link = (TMap)Lists.GetData(Lists.Temp_Map, Map.Data.Link[(byte)Direction].ID);
             bool SecondMovement = false;
@@ -203,10 +203,10 @@ namespace Objects
                 if (Link != null)
                     switch (Direction)
                     {
-                        case Game.Directions.Up: Warp(Link, Old_X, Link.Data.Height); return;
+                        case Game.Directions.Up: Warp(Link, Old_X, Game.Map_Height-1); return;
                         case Game.Directions.Down: Warp(Link, Old_X, 0); return;
                         case Game.Directions.Right: Warp(Link, 0, Old_Y); return;
-                        case Game.Directions.Left: Warp(Link, Link.Data.Width, Old_Y); return;
+                        case Game.Directions.Left: Warp(Link, Game.Map_Width -1, Old_Y); return;
                     }
                 else
                 {
@@ -222,9 +222,9 @@ namespace Objects
             }
 
             // Atributos
-            Map_Tile Tile = Map.Data.Tile[Next_X, Next_Y];
+            Map_Attribute Tile = Map.Data.Attribute[Next_X, Next_Y];
 
-            switch ((Game.Tile_Attributes)Tile.Attribute)
+            switch ((Game.Tile_Attributes)Tile.Type)
             {
                 // Teletransporte
                 case Game.Tile_Attributes.Warp:
@@ -258,7 +258,7 @@ namespace Objects
 
         public void Attack()
         {
-            short Next_X = X, Next_Y = Y;
+            byte Next_X = X, Next_Y = Y;
             object Victim;
 
             // Próximo azulejo

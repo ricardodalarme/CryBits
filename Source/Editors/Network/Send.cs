@@ -170,8 +170,6 @@ partial class Send
             Data.Write(Map.ID.ToString());
             Data.Write(++Map.Revision);
             Data.Write(Map.Name);
-            Data.Write(Map.Width);
-            Data.Write(Map.Height);
             Data.Write((byte)Map.Moral);
             Data.Write(Map.Panorama);
             Data.Write((byte)Map.Music);
@@ -196,8 +194,8 @@ partial class Send
                 Data.Write(Map.Layer[i].Type);
 
                 // Azulejos
-                for (byte x = 0; x < Map.Width; x++)
-                    for (byte y = 0; y < Map.Height; y++)
+                for (byte x = 0; x < Globals.Map_Width; x++)
+                    for (byte y = 0; y < Globals.Map_Height; y++)
                     {
                         Data.Write(Map.Layer[i].Tile[x, y].X);
                         Data.Write(Map.Layer[i].Tile[x, y].Y);
@@ -207,19 +205,19 @@ partial class Send
             }
 
             // Dados específicos dos azulejos
-            for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
+            for (byte x = 0; x < Globals.Map_Width; x++)
+                for (byte y = 0; y < Globals.Map_Height; y++)
                 {
-                    Data.Write(Map.Tile[x, y].Attribute);
-                    Data.Write(Map.Tile[x, y].Data_1);
-                    Data.Write(Map.Tile[x, y].Data_2);
-                    Data.Write(Map.Tile[x, y].Data_3);
-                    Data.Write(Map.Tile[x, y].Data_4);
-                    Data.Write(Map.Tile[x, y].Zone);
+                    Data.Write(Map.Attribute[x, y].Type);
+                    Data.Write(Map.Attribute[x, y].Data_1);
+                    Data.Write(Map.Attribute[x, y].Data_2);
+                    Data.Write(Map.Attribute[x, y].Data_3);
+                    Data.Write(Map.Attribute[x, y].Data_4);
+                    Data.Write(Map.Attribute[x, y].Zone);
 
                     // Bloqueio direcional
                     for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
-                        Data.Write(Map.Tile[x, y].Block[i]);
+                        Data.Write(Map.Attribute[x, y].Block[i]);
                 }
 
             // Luzes

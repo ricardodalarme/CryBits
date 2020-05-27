@@ -10,10 +10,8 @@ namespace Objects
         // Dados gerais
         public short Revision;
         public List<Map_Layer> Layer = new List<Map_Layer>();
-        public Map_Tile[,] Tile;
+        public Map_Attribute[,] Attribute = new Map_Attribute[Globals.Map_Width, Globals.Map_Height];
         public string Name;
-        public byte Width;
-        public byte Height;
         public Globals.Map_Morals Moral;
         public byte Panorama;
         public Audio.Musics Music;
@@ -26,16 +24,22 @@ namespace Objects
         public List<Map_NPC> NPC = new List<Map_NPC>();
 
         // Construtor
-        public Map(Guid ID) : base(ID) { }
+        public Map(Guid ID) : base(ID)
+        {
+            for (byte x = 0; x < Globals.Map_Width; x++)
+                for (byte y = 0; y < Globals.Map_Height; y++)
+                    Attribute[x, y] = new Map_Attribute();
+        }
+
         public override string ToString() => Name;
 
         // Verifica se as coordenas estão no limite do mapa
-        public bool OutLimit(short x, short y) => x > Width || y > Height || x < 0 || y < 0;
+        public bool OutLimit(short x, short y) => x >= Globals.Map_Width || y >= Globals.Map_Height || x < 0 || y < 0;
     }
 
-    class Map_Tile
+    class Map_Attribute
     {
-        public byte Attribute;
+        public byte Type;
         public string Data_1;
         public short Data_2;
         public short Data_3;
@@ -96,7 +100,14 @@ namespace Objects
     {
         public string Name;
         public byte Type;
-        public Map_Tile_Data[,] Tile;
+        public Map_Tile_Data[,] Tile = new Map_Tile_Data[Globals.Map_Width, Globals.Map_Height];
+
+        public Map_Layer()
+        {
+            for (byte x = 0; x < Globals.Map_Width; x++)
+                for (byte y = 0; y < Globals.Map_Height; y++)
+                    Tile[x, y] = new Map_Tile_Data();
+        }
     }
 
     class Map_NPC

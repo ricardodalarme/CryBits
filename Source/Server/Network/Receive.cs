@@ -664,8 +664,6 @@ class Receive
             // Dados gerais
             Map.Revision = Data.ReadInt16();
             Map.Name = Data.ReadString();
-            Map.Width = Data.ReadByte();
-            Map.Height = Data.ReadByte();
             Map.Moral = Data.ReadByte();
             Map.Panorama = Data.ReadByte();
             Map.Music = Data.ReadByte();
@@ -687,15 +685,14 @@ class Receive
             for (byte n = 0; n < Map.Layer.Length; n++)
             {
                 // Dados básicos
-                Map.Layer[n] = new Objects.Map_Layer(Game.Min_Map_Width, Game.Min_Map_Height);
+                Map.Layer[n] = new Objects.Map_Layer();
                 Map.Layer[n].Name = Data.ReadString();
                 Map.Layer[n].Type = Data.ReadByte();
 
                 // Azulejos
-                for (byte x = 0; x < Map.Width; x++)
-                    for (byte y = 0; y < Map.Height; y++)
+                for (byte x = 0; x < Game.Map_Width; x++)
+                    for (byte y = 0; y < Game.Map_Height; y++)
                     {
-                        Map.Layer[n].Tile[x, y] = new Objects.Map_Tile_Data();
                         Map.Layer[n].Tile[x, y].X = Data.ReadByte();
                         Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
                         Map.Layer[n].Tile[x, y].Tile = Data.ReadByte();
@@ -704,20 +701,19 @@ class Receive
             }
 
             // Dados específicos dos azulejos
-            Map.Tile = new Objects.Map_Tile[Map.Width, Map.Height];
-            for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
+            for (byte x = 0; x < Game.Map_Width; x++)
+                for (byte y = 0; y < Game.Map_Height; y++)
                 {
-                    Map.Tile[x, y] = new Objects.Map_Tile();
-                    Map.Tile[x, y].Attribute = Data.ReadByte();
-                    Map.Tile[x, y].Data_1 = Data.ReadString();
-                    Map.Tile[x, y].Data_2 = Data.ReadInt16();
-                    Map.Tile[x, y].Data_3 = Data.ReadInt16();
-                    Map.Tile[x, y].Data_4 = Data.ReadInt16();
-                    Map.Tile[x, y].Zone = Data.ReadByte();
+                    Map.Attribute[x, y] = new Objects.Map_Attribute();
+                    Map.Attribute[x, y].Type = Data.ReadByte();
+                    Map.Attribute[x, y].Data_1 = Data.ReadString();
+                    Map.Attribute[x, y].Data_2 = Data.ReadInt16();
+                    Map.Attribute[x, y].Data_3 = Data.ReadInt16();
+                    Map.Attribute[x, y].Data_4 = Data.ReadInt16();
+                    Map.Attribute[x, y].Zone = Data.ReadByte();
 
                     for (byte n = 0; n < (byte)Game.Directions.Count; n++)
-                        Map.Tile[x, y].Block[n] = Data.ReadBoolean();
+                        Map.Attribute[x, y].Block[n] = Data.ReadBoolean();
                 }
 
             // Luzes

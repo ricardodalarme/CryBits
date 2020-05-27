@@ -418,7 +418,7 @@ class Receive
         Send.RequestMap(Needed);
 
         // Reseta os sangues do mapa
-        Lists.Temp_Map.Blood = new System.Collections.Generic.List<Lists.Structures.Map_Blood>();
+        Lists.Temp_Map.Blood = new List<Lists.Structures.Map_Blood>();
     }
 
     private static void Map(NetIncomingMessage Data)
@@ -429,8 +429,6 @@ class Receive
         // Lê os dados
         Lists.Map.Revision = Data.ReadInt16();
         Lists.Map.Name = Data.ReadString();
-        Lists.Map.Width = Data.ReadByte();
-        Lists.Map.Height = Data.ReadByte();
         Lists.Map.Moral = Data.ReadByte();
         Lists.Map.Panorama = Data.ReadByte();
         Lists.Map.Music = Data.ReadByte();
@@ -453,9 +451,8 @@ class Receive
         byte Num_Layers = Data.ReadByte();
 
         // Redimensiona os dados
-        Lists.Map.Tile = new Lists.Structures.Map_Tile[Lists.Map.Width + 1, Lists.Map.Height + 1];
-        for (byte x = 0; x <= Lists.Map.Width; x++)
-            for (byte y = 0; y <= Lists.Map.Height; y++)
+        for (byte x = 0; x < Game.Map_Width; x++)
+            for (byte y = 0; y < Game.Map_Height; y++)
                 Lists.Map.Tile[x, y].Data = new Lists.Structures.Map_Tile_Data[(byte)global::Map.Layers.Amount, Num_Layers + 1];
 
         // Lê os azulejos
@@ -466,8 +463,8 @@ class Receive
             byte t = Data.ReadByte(); // Tipo
 
             // Azulejos
-            for (byte x = 0; x <= Lists.Map.Width; x++)
-                for (byte y = 0; y <= Lists.Map.Height; y++)
+            for (byte x = 0; x < Game.Map_Width; x++)
+                for (byte y = 0; y < Game.Map_Height; y++)
                 {
                     Lists.Map.Tile[x, y].Data[t, i].X = Data.ReadByte();
                     Lists.Map.Tile[x, y].Data[t, i].Y = Data.ReadByte();
@@ -478,8 +475,8 @@ class Receive
         }
 
         // Dados específicos dos azulejos
-        for (byte x = 0; x <= Lists.Map.Width; x++)
-            for (byte y = 0; y <= Lists.Map.Height; y++)
+        for (byte x = 0; x < Game.Map_Width; x++)
+            for (byte y = 0; y < Game.Map_Height; y++)
             {
                 Lists.Map.Tile[x, y].Attribute = Data.ReadByte();
                 Data.ReadInt16(); // Dado 1

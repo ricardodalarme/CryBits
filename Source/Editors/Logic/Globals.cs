@@ -11,9 +11,8 @@ class Globals
     public static short FPS;
 
     // Limitações dos mapas
-    public const byte Max_Map_Layers = 3;
-    public const byte Min_Map_Width = 25;
-    public const byte Min_Map_Height = 19;
+    public const byte Map_Width = 25;
+    public const byte Map_Height = 19;
     public const byte Num_Zones = 20;
 
     // Fumaças
@@ -186,89 +185,5 @@ class Globals
     // Tamanho da grade com o zoom
     public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Form.Zoom());
     public static Point Zoom(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
-
-    /*
-    
-    private void Map_Resize()
-    {
-        byte Width_New = (byte)numWidth.Value, Height_New = (byte)numHeight.Value;
-        int Width_Difference, Height_Difference;
-
-        // Somente se necessário
-        if (Selected.Width == Width_New && Selected.Height == Height_New) return;
-
-        // Redimensiona os azulejos
-        Lists.Structures.Map_Tile_Data[,] TempTile;
-        Lists.Structures.Map_Tile[,] TempTile2;
-
-        // Calcula a diferença
-        Width_Difference = Width_New - Selected.Width;
-        Height_Difference = Height_New - Selected.Height;
-
-        // Azulejo
-        for (byte c = 0; c < Selected.Layer.Count; c++)
-        {
-            TempTile = new Lists.Structures.Map_Tile_Data[Width_New + 1, Height_New + 1];
-
-            for (byte x = 0; x <= Width_New; x++)
-                for (byte y = 0; y <= Height_New; y++)
-                {
-                    // Redimensiona para frente
-                    if (!chkReverse.Checked)
-                        if (x <= Selected.Width && y <= Selected.Height)
-                            TempTile[x, y] = Selected.Layer[c].Tile[x, y];
-                        else
-                        {
-                            TempTile[x, y] = new Lists.Structures.Map_Tile_Data();
-                            TempTile[x, y].Mini = new Point[4];
-                        }
-                    // Redimensiona para trás
-                    else
-                    {
-                        if (x < Width_Difference || y < Height_Difference)
-                        {
-                            TempTile[x, y] = new Lists.Structures.Map_Tile_Data();
-                            TempTile[x, y].Mini = new Point[4];
-                        }
-                        else
-                            TempTile[x, y] = Selected.Layer[c].Tile[x - Width_Difference, y - Height_Difference];
-                    }
-                }
-
-            // Define os dados
-            Selected.Layer[c].Tile = TempTile;
-        }
-
-        // Dados do azulejo
-        TempTile2 = new Lists.Structures.Map_Tile[Width_New + 1, Height_New + 1];
-        for (byte x = 0; x <= Width_New; x++)
-            for (byte y = 0; y <= Height_New; y++)
-            {
-                // Redimensiona para frente
-                if (!chkReverse.Checked)
-                    if (x <= Selected.Width && y <= Selected.Height)
-                        TempTile2[x, y] = Selected.Tile[x, y];
-                    else
-                    {
-                        TempTile2[x, y] = new Lists.Structures.Map_Tile();
-                        TempTile2[x, y].Block = new bool[4];
-                    }
-                // Redimensiona para trás
-                else
-                {
-                    if (x < Width_Difference || y < Height_Difference)
-                    {
-                        TempTile2[x, y] = new Lists.Structures.Map_Tile();
-                        TempTile2[x, y].Block = new bool[4];
-                    }
-                    else
-                        TempTile2[x, y] = Selected.Tile[x - Width_Difference, y - Height_Difference];
-                }
-            }
-
-        // Define os dados
-        Selected.Tile = TempTile2;
-    }
-    */
 }
  

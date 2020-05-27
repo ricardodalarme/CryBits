@@ -36,12 +36,16 @@ class Game
     public const byte Max_DirBlock = 3;
 
     // Tamanho da tela
-    public const short Screen_Width = (Map.Min_Width + 1) * Grid;
-    public const short Screen_Height = (Map.Min_Height + 1) * Grid;
+    public const short Screen_Width = Map_Width * Grid;
+    public const short Screen_Height = Map_Height  * Grid;
 
     // Limites em geral
     public const byte Max_Inventory = 30;
     public const byte Max_Hotbar = 10;
+
+    // Limitações dos mapas
+    public const byte Map_Width = 25;
+    public const byte Map_Height = 19;
 
     public enum Attributes
     {
@@ -180,8 +184,8 @@ class Game
         Sight_Offset.Y = Player.Me.Y2 + Grid;
 
         // Início da tela
-        Sight.X = Player.Me.X - Map.Min_Width / 2 - 1;
-        Sight.Y = Player.Me.Y - Map.Min_Height / 2 - 1;
+        Sight.X = Player.Me.X - Map_Width / 2 ;
+        Sight.Y = Player.Me.Y - Map_Height / 2 ;
 
         // Reajusta a posição horizontal da tela
         if (Sight.X < 0)
@@ -200,25 +204,25 @@ class Game
         }
 
         // Final da tela
-        Sight.Width = Sight.X + Map.Min_Width + 1;
-        Sight.Height = Sight.Y + Map.Min_Height + 1;
+        Sight.Width = Sight.X + Map_Width;
+        Sight.Height = Sight.Y + Map_Height;
 
         // Reajusta a posição horizontal da tela
-        if (Sight.Width > Lists.Map.Width)
+        if (Sight.Width >= Map_Width)
         {
             Sight_Offset.X = Grid;
-            if (Sight.Width == Lists.Map.Width + 1 && Player.Me.X2 < 0) Sight_Offset.X = Player.Me.X2 + Grid;
-            Sight.Width = Lists.Map.Width;
-            Sight.X = Sight.Width - Map.Min_Width;
+            if (Sight.Width == Map_Width && Player.Me.X2 < 0) Sight_Offset.X = Player.Me.X2 + Grid;
+            Sight.Width = Map_Width -1;
+            Sight.X = Sight.Width - Map_Width -1;
         }
 
         // Reajusta a posição vertical da tela
-        if (Sight.Height > Lists.Map.Height)
+        if (Sight.Height >= Map_Height)
         {
             Sight_Offset.Y = Grid;
-            if (Sight.Height == Lists.Map.Height + 1 && Player.Me.Y2 < 0) Sight_Offset.Y = Player.Me.Y2 + Grid;
-            Sight.Height = Lists.Map.Height;
-            Sight.Y = Sight.Height - Map.Min_Height;
+            if (Sight.Height == Map_Height  && Player.Me.Y2 < 0) Sight_Offset.Y = Player.Me.Y2 + Grid;
+            Sight.Height = Map_Height -1;
+            Sight.Y = Sight.Height - Map_Height;
         }
     }
 }

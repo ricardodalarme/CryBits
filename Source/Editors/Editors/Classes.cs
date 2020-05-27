@@ -13,6 +13,10 @@ partial class Editor_Classes : Form
         // Inicializa os componentes 
         InitializeComponent();
 
+        // Define os limites
+        numSpawn_X.Maximum = Globals.Map_Width - 1;
+        numSpawn_Y.Maximum = Globals.Map_Height - 1;
+
         // Lista os dados
         foreach (var Item in Lists.Item.Values) cmbItems.Items.Add(Item);
         foreach (var Map in Lists.Map.Values) cmbSpawn_Map.Items.Add(Map);
@@ -209,8 +213,6 @@ partial class Editor_Classes : Form
     private void cmbSpawn_Map_SelectedIndexChanged(object sender, EventArgs e)
     {
         Selected.Spawn_Map = (Map)cmbSpawn_Map.SelectedItem;
-        numSpawn_X.Maximum = Selected.Spawn_Map.Width - 1;
-        numSpawn_Y.Maximum = Selected.Spawn_Map.Height - 1;
     }
 
     private void cmbSpawn_Direction_SelectedIndexChanged(object sender, EventArgs e)

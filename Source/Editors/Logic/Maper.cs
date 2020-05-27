@@ -31,23 +31,6 @@ class Maper
             set => Base.Moral = value;
         }
 
-        //////////
-        // Size //
-        //////////
-        [Category("Size"), DefaultValue(Globals.Min_Map_Width)]
-        public byte Width
-        {
-            get => Base.Width;
-            set => Base.Width = Math.Max(value, Globals.Min_Map_Width);
-        }
-
-        [Category("Size"), DefaultValue(Globals.Min_Map_Height)]
-        public byte Height
-        {
-            get => Base.Height;
-            set => Base.Height = Math.Max(value, Globals.Min_Map_Height);
-        }
-
         /////////
         // Fog //
         /////////
@@ -167,8 +150,8 @@ class Maper
         public static void Update(Objects.Map Map)
         {
             // Atualiza os azulejos necessários
-            for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
+            for (byte x = 0; x < Globals.Map_Width; x++)
+                for (byte y = 0; y < Globals.Map_Height; y++)
                     for (byte c = 0; c < Map.Layer.Count; c++)
                         if (Map.Layer[c].Tile[x, y].Auto)
                             // Faz os cálculos para a autocriação
@@ -180,7 +163,7 @@ class Maper
             // Atualiza os azulejos necessários
             for (int x2 = x - 2; x2 < x + 2; x2++)
                 for (int y2 = y - 2; y2 < y + 2; y2++)
-                    if (x2 >= 0 && x2 < Map.Width && y2 >= 0 && y2 < Map.Height)
+                    if (x2 >= 0 && x2 < Globals.Map_Width && y2 >= 0 && y2 < Globals.Map_Height)
                         // Faz os cálculos para a autocriação
                         Calculate(Map, (byte)x2, (byte)y2, Layer_Num);
         }
@@ -234,8 +217,8 @@ class Maper
             Objects.Map_Tile_Data Data1, Data2;
 
             // Somente se necessário
-            if (X1 < 0 || X1 >= Map.Width || Y1 < 0 || Y1 >= Map.Height) return true;
-            if (X2 < 0 || X2 >= Map.Width || Y2 < 0 || Y2 >= Map.Height) return true;
+            if (X1 < 0 || X1 >= Globals.Map_Width || Y1 < 0 || Y1 >= Globals.Map_Height) return true;
+            if (X2 < 0 || X2 >= Globals.Map_Width || Y2 < 0 || Y2 >= Globals.Map_Height) return true;
 
             // Dados
             Data1 = Map.Layer[Layer_Num].Tile[X1, Y1];

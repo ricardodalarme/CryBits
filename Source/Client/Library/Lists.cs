@@ -78,8 +78,6 @@ class Lists
         {
             public short Revision;
             public string Name;
-            public byte Width;
-            public byte Height;
             public byte Moral;
             public byte Panorama;
             public byte Music;

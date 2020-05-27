@@ -8,33 +8,36 @@ namespace Objects
     {
         // Dados
         public short Revision;
-        public Map_Layer[] Layer = Array.Empty<Map_Layer>();
-        public Map_Tile[,] Tile;
         public string Name = string.Empty;
-        public byte Width = Game.Min_Map_Width;
-        public byte Height = Game.Min_Map_Height;
         public byte Moral;
+        public Map_Layer[] Layer = Array.Empty<Map_Layer>();
+        public Map_Attribute[,] Attribute = new Map_Attribute[Game.Map_Width, Game.Map_Height];
         public byte Panorama;
         public byte Music;
         public int Color = -1;
         public Map_Weather Weather = new Map_Weather();
         public Map_Fog Fog = new Map_Fog();
-        public Map[] Link = new Map[(byte)Game.Directions.Count];
-        public byte Lighting = 100;
-        public Map_Light[] Light = Array.Empty<Map_Light>();
         public Map_NPC[] NPC = Array.Empty<Map_NPC>();
+        public Map_Light[] Light = Array.Empty<Map_Light>();
+        public byte Lighting = 100;
+        public Map[] Link = new Map[(byte)Game.Directions.Count];
 
         // Construtor
-        public Map(Guid ID) : base(ID) { }
+        public Map(Guid ID) : base(ID)
+        {
+            for (byte x = 0; x < Game.Map_Width; x++)
+                for (byte y = 0; y < Game.Map_Height; y++)
+                    Attribute[x, y] = new Map_Attribute();
+        }
 
         // Verifica se as coordenas estão no limite do mapa
-        public bool OutLimit(short X, short Y) => X >= Width || Y >= Height || X < 0 || Y < 0;
+        public bool OutLimit(byte X, byte Y) => X >= Game.Map_Width || Y >= Game.Map_Height || X < 0 || Y < 0;
 
-        public bool Tile_Blocked(short X, short Y)
+        public bool Tile_Blocked(byte X, byte Y)
         {
             // Verifica se o azulejo está bloqueado
             if (OutLimit(X, Y)) return true;
-            if (Tile[X, Y].Attribute == (byte)Game.Tile_Attributes.Block) return true;
+            if (Attribute[X, Y].Type == (byte)Game.Tile_Attributes.Block) return true;
             return false;
         }
 
@@ -58,9 +61,9 @@ namespace Objects
 
 
     [Serializable]
-    class Map_Tile
+    class Map_Attribute
     {
-        public byte Attribute;
+        public byte Type;
         public string Data_1;
         public short Data_2;
         public short Data_3;
@@ -74,11 +77,13 @@ namespace Objects
     {
         public string Name;
         public byte Type;
-        public Map_Tile_Data[,] Tile;
+        public Map_Tile_Data[,] Tile = new Map_Tile_Data[Game.Map_Width, Game.Map_Height];
 
-        public Map_Layer(byte Width, byte Height)
+        public Map_Layer()
         {
-            Tile = new Map_Tile_Data[Width, Height];
+            for (byte x = 0; x < Game.Map_Width; x++)
+                for (byte y = 0; y < Game.Map_Height; y++)
+                    Tile[x, y] = new Map_Tile_Data();
         }
     }
 

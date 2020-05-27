@@ -422,8 +422,8 @@ partial class Graphics
                 Color = CColor(Map.Color.R, Map.Color.G, Map.Color.B);
 
             // Continua
-            for (int x = Begin_X; x < Form.Selected.Width; x++)
-                for (int y = Begin_Y; y < Form.Selected.Height; y++)
+            for (int x = Begin_X; x < Globals.Map_Width; x++)
+                for (int y = Begin_Y; y < Globals.Map_Height; y++)
                     if (Map.Layer[c].Tile[x, y].Tile > 0)
                     {
                         // Dados
@@ -463,8 +463,8 @@ partial class Graphics
 
         // Desenha a fumaça
         Size Texture_Size = TSize(Tex_Fog[Map.Fog.Texture]);
-        for (int x = -1; x <= Editor_Maps.Form.Selected.Width * Globals.Grid / Texture_Size.Width; x++)
-            for (int y = -1; y <= Editor_Maps.Form.Selected.Height * Globals.Grid / Texture_Size.Height; y++)
+        for (int x = -1; x <= Globals.Map_Width * Globals.Grid / Texture_Size.Width; x++)
+            for (int y = -1; y <= Globals.Map_Height * Globals.Grid / Texture_Size.Height; y++)
             {
                 Point Position = new Point(x * Texture_Size.Width + Globals.Fog_X, y * Texture_Size.Height + Globals.Fog_Y);
                 Render(Win_Map, Tex_Fog[Map.Fog.Texture], Editor_Maps.Form.Zoom(new Rectangle(Position, Texture_Size)), CColor(255, 255, 255, Map.Fog.Alpha));
@@ -532,8 +532,8 @@ partial class Graphics
 
         // Desenha as grades
         if (Form.butGrid.Checked || !Form.butGrid.Enabled)
-            for (byte x = 0; x < Form.Selected.Width; x++)
-                for (byte y = 0; y < Form.Selected.Height; y++)
+            for (byte x = 0; x < Globals.Map_Width; x++)
+                for (byte y = 0; y < Globals.Map_Height; y++)
                 {
                     RenderRectangle(Win_Map, x * Globals.Grid_Zoom, y * Globals.Grid_Zoom, Globals.Grid_Zoom, Globals.Grid_Zoom, CColor(25, 25, 25, 70));
                     Editor_Maps_Map_Zones(Map, x, y);
@@ -559,7 +559,7 @@ partial class Graphics
     private static void Editor_Maps_Map_Zones(Objects.Map Map, byte x, byte y)
     {
         Point Position = new Point((x - Editor_Maps.Form.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Globals.Grid_Zoom);
-        byte Zone_Num = Map.Tile[x, y].Zone;
+        byte Zone_Num = Map.Attribute[x, y].Zone;
         SFML.Graphics.Color Color;
 
         // Apenas se necessário
@@ -580,7 +580,7 @@ partial class Graphics
     private static void Editor_Maps_Map_Attributes(Objects.Map Map, byte x, byte y)
     {
         Point Position = new Point((x - Editor_Maps.Form.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Globals.Grid_Zoom);
-        Globals.Tile_Attributes Attribute = (Globals.Tile_Attributes)Map.Tile[x, y].Attribute;
+        Globals.Tile_Attributes Attribute = (Globals.Tile_Attributes)Map.Attribute[x, y].Type;
         SFML.Graphics.Color Color;
         string Letter;
 
@@ -614,13 +614,13 @@ partial class Graphics
         if (!Editor_Maps.Form.optA_DirBlock.Checked) return;
 
         // Previne erros
-        if (Tile.X > Map.Tile.GetUpperBound(0)) return;
-        if (Tile.Y > Map.Tile.GetUpperBound(1)) return;
+        if (Tile.X > Map.Attribute.GetUpperBound(0)) return;
+        if (Tile.Y > Map.Attribute.GetUpperBound(1)) return;
 
         for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
         {
             // Estado do bloqueio
-            if (Map.Tile[Tile.X, Tile.Y].Block[i])
+            if (Map.Attribute[Tile.X, Tile.Y].Block[i])
                 Y = 8;
             else
                 Y = 0;

@@ -14,8 +14,8 @@ class Game
     // Limites em geral
     public const byte Max_Inventory = 30;
     public const byte Max_Hotbar = 10;
-    public const byte Min_Map_Width = 25;
-    public const byte Min_Map_Height = 19;
+    public const byte Map_Width = 25;
+    public const byte Map_Height = 19;
 
     public enum Directions
     {
@@ -148,7 +148,7 @@ class Game
         }
     }
 
-    public static void NextTile(Directions Direction, ref short X, ref short Y)
+    public static void NextTile(Directions Direction, ref byte X, ref byte Y)
     {
         // Próximo azulejo
         switch (Direction)

@@ -33,7 +33,7 @@ namespace Objects
             }
         }
 
-        public TNPC HasNPC(short X, short Y)
+        public TNPC HasNPC(byte X, byte Y)
         {
             // Verifica se há algum npc na cordenada
             for (byte i = 1; i < NPC.Length; i++)
@@ -44,7 +44,7 @@ namespace Objects
             return null;
         }
 
-        public Player HasPlayer(short X, short Y)
+        public Player HasPlayer(byte X, byte Y)
         {
             // Verifica se há algum Jogador na cordenada
             for (byte i = 0; i < Lists.Account.Count; i++)
@@ -81,30 +81,30 @@ namespace Objects
             TMap_Items Map_Item = new TMap_Items();
 
             // Verifica se tem algum atributo de item no mapa
-            for (byte x = 0; x < Data.Width; x++)
-                for (byte y = 0; y < Data.Height; y++)
-                    if (Data.Tile[x, y].Attribute == (byte)Game.Tile_Attributes.Item)
+            for (byte x = 0; x < Game.Map_Width; x++)
+                for (byte y = 0; y < Game.Map_Height; y++)
+                    if (Data.Attribute[x, y].Type == (byte)Game.Tile_Attributes.Item)
                     {
                         // Faz o item aparecer
-                        Map_Item.Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.Tile[x, y].Data_1));
-                        Map_Item.Amount = Data.Tile[x, y].Data_2;
+                        Map_Item.Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.Attribute[x, y].Data_1));
+                        Map_Item.Amount = Data.Attribute[x, y].Data_2;
                         Map_Item.X = x;
                         Map_Item.Y = y;
                         Item.Add(Map_Item);
                     }
         }
 
-        public bool Tile_Blocked(short X, short Y, Game.Directions Direction, bool CountEntities = true)
+        public bool Tile_Blocked(byte X, byte Y, Game.Directions Direction, bool CountEntities = true)
         {
-            short Next_X = X, Next_Y = Y;
+            byte Next_X = X, Next_Y = Y;
 
             // Próximo azulejo
             Game.NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Verifica se o azulejo está bloqueado
-            if (Data.Tile_Blocked((byte)Next_X, (byte)Next_Y)) return true;
-            if (Data.Tile[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
-            if (Data.Tile[X, Y].Block[(byte)Direction]) return true;
+            if (Data.Tile_Blocked(Next_X, Next_Y)) return true;
+            if (Data.Attribute[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
+            if (Data.Attribute[X, Y].Block[(byte)Direction]) return true;
             if (CountEntities && (HasPlayer(Next_X, Next_Y) != null || HasNPC(Next_X, Next_Y) != null)) return true;
             return false;
         }
