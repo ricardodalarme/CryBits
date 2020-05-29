@@ -8,12 +8,14 @@ using System.Windows.Forms;
 partial class Graphics
 {
     // Locais de renderização
-    public static RenderWindow Win_Preview;
     public static RenderWindow Win_Interface;
     public static RenderWindow Win_Tile;
     public static RenderWindow Win_Map;
     public static RenderWindow Win_Map_Tile;
     public static RenderTexture Win_Map_Lighting;
+    public static RenderWindow Win_Item;
+    public static RenderWindow Win_Class;
+    public static RenderWindow Win_NPC;
 
     // Fonte principal
     public static SFML.Graphics.Font Font_Default;
@@ -204,129 +206,22 @@ partial class Graphics
         // Desenha 
         Editor_Maps_Tile();
         Editor_Maps_Map();
-        Interface();
         Editor_Tile();
+        Editor_Class();
+        Editor_Item();
+        Editor_NPC();
+        Interface();
     }
 
     private static void Transparent(RenderWindow Window)
     {
-        Size Tamanho = TSize(Tex_Transparent);
+        Size Texture_Size = TSize(Tex_Transparent);
 
         // Desenha uma textura transparente na janela inteira
-        for (int x = 0; x <= Window.Size.X / Tamanho.Width; x++)
-            for (int y = 0; y <= Window.Size.Y / Tamanho.Height; y++)
-                Render(Window, Tex_Transparent, new Point(Tamanho.Width * x, Tamanho.Height * y));
+        for (int x = 0; x <= Window.Size.X / Texture_Size.Width; x++)
+            for (int y = 0; y <= Window.Size.Y / Texture_Size.Height; y++)
+                Render(Window, Tex_Transparent, new Point(Texture_Size.Width * x, Texture_Size.Height * y));
     }
-
-    #region Preview
-    public static void Preview_Image()
-    {
-        Preview Form = Preview.Objects;
-
-        // Apenas se necessário
-        if (Form == null) return;
-        if (Form.List.SelectedIndex < 0) return;
-
-        // Dados
-        Texture Texture = Preview.Texture[Form.List.SelectedIndex];
-
-        // Limpa a área
-        Win_Preview.Clear();
-
-        // Desenha a textura
-        if (Form.chkTransparent.Checked) Transparent(Win_Preview);
-        if (Form.List.SelectedIndex > 0) Render(Win_Preview, Texture, new Rectangle(new Point(Form.scrlImageX.Value, Form.scrlImageY.Value), TSize(Texture)), new Rectangle(new Point(0), TSize(Texture)));
-
-        // Exibe o que foi renderizado
-        Win_Preview.Display();
-    }
-    #endregion
-
-    #region Tile Editor
-    public static void Editor_Tile()
-    {
-        Editor_Tiles Form = Editor_Tiles.Form;
-
-        // Somente se necessário
-        if (Form == null ) return;
-
-        // Limpa a tela e desenha um fundo transparente
-        Win_Tile.Clear();
-        Transparent(Win_Tile);
-
-        // Desenha o azulejo e as grades
-        Texture Texture = Tex_Tile[Form.scrlTile.Value];
-        Point Position = new Point(Form.scrlTileX.Value * Globals.Grid, Form.scrlTileY.Value * Globals.Grid);
-        Render(Win_Tile, Texture, new Rectangle(Position, TSize(Texture)), new Rectangle(new Point(0), TSize(Texture)));
-
-        for (byte x = 0; x <= Form.picTile.Width / Globals.Grid; x++)
-            for (byte y = 0; y <= Form.picTile.Height / Globals.Grid; y++)
-            {
-                // Desenha os atributos
-                if (Form.optAttributes.Checked)
-                    Editor_Tile_Attributes(x, y);
-                // Bloqueios direcionais
-                else if (Form.optDirBlock.Checked)
-                    Editor_Tile_DirBlock(x, y);
-
-                // Grades
-                RenderRectangle(Win_Tile, x * Globals.Grid, y * Globals.Grid, Globals.Grid, Globals.Grid, CColor(25, 25, 25, 70));
-            }
-
-        // Exibe o que foi renderizado
-        Win_Tile.Display();
-    }
-
-    private static void Editor_Tile_Attributes(byte x, byte y)
-    {
-        Editor_Tiles Form = Editor_Tiles.Form;
-        Point Tile = new Point(Form.scrlTileX.Value + x, Form.scrlTileY.Value + y);
-        Point Point = new Point(x * Globals.Grid + Globals.Grid / 2 - 5, y * Globals.Grid + Globals.Grid / 2 - 6);
-
-        // Previne erros
-        if (Tile.X > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(0)) return;
-        if (Tile.Y > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(1)) return;
-
-        // Desenha uma letra e colore o azulejo referente ao atributo
-        switch ((Globals.Tile_Attributes)Lists.Tile[Form.scrlTile.Value].Data[Tile.X, Tile.Y].Attribute)
-        {
-            case Globals.Tile_Attributes.Block:
-                Render(Win_Tile, Tex_Blank, x * Globals.Grid, y * Globals.Grid, 0, 0, Globals.Grid, Globals.Grid, CColor(225, 0, 0, 75));
-                DrawText(Win_Tile, "B", Point.X, Point.Y, SFML.Graphics.Color.Red);
-                break;
-        }
-    }
-
-    private static void Editor_Tile_DirBlock(byte x, byte y)
-    {
-        Editor_Tiles Form = Editor_Tiles.Form;
-        Point Tile = new Point(Form.scrlTileX.Value + x, Form.scrlTileY.Value + y);
-        byte Y;
-
-        // Previne erros
-        if (Tile.X > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(0)) return;
-        if (Tile.Y > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(1)) return;
-
-        // Bloqueio total
-        if (Lists.Tile[Form.scrlTile.Value].Data[x, y].Attribute == (byte)Globals.Tile_Attributes.Block)
-        {
-            Editor_Tile_Attributes(x, y);
-            return;
-        }
-
-        for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
-        {
-            // Estado do bloqueio
-            if (Lists.Tile[Form.scrlTile.Value].Data[Tile.X, Tile.Y].Block[i])
-                Y = 8;
-            else
-                Y = 0;
-
-            // Renderiza
-            Render(Win_Tile, Tex_Directions, x * Globals.Grid + Globals.Block_Position(i).X, y * Globals.Grid + Globals.Block_Position(i).Y, i * 8, Y, 6, 6);
-        }
-    }
-    #endregion
 
     #region Map Editor
     private static void Editor_Maps_Tile()
@@ -642,6 +537,143 @@ partial class Graphics
                     Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Globals.Grid_Zoom, Globals.Grid_Zoom)), CColor(0, 220, 0, 150));
                     DrawText(Win_Map, (i + 1).ToString(), Position.X + 10, Position.Y + 10, SFML.Graphics.Color.White);
                 }
+    }
+    #endregion
+
+    #region Tile Editor
+    public static void Editor_Tile()
+    {
+        Editor_Tiles Form = Editor_Tiles.Form;
+
+        // Somente se necessário
+        if (Form == null) return;
+
+        // Limpa a tela e desenha um fundo transparente
+        Win_Tile.Clear();
+        Transparent(Win_Tile);
+
+        // Desenha o azulejo e as grades
+        Texture Texture = Tex_Tile[Form.scrlTile.Value];
+        Point Position = new Point(Form.scrlTileX.Value * Globals.Grid, Form.scrlTileY.Value * Globals.Grid);
+        Render(Win_Tile, Texture, new Rectangle(Position, TSize(Texture)), new Rectangle(new Point(0), TSize(Texture)));
+
+        for (byte x = 0; x <= Form.picTile.Width / Globals.Grid; x++)
+            for (byte y = 0; y <= Form.picTile.Height / Globals.Grid; y++)
+            {
+                // Desenha os atributos
+                if (Form.optAttributes.Checked)
+                    Editor_Tile_Attributes(x, y);
+                // Bloqueios direcionais
+                else if (Form.optDirBlock.Checked)
+                    Editor_Tile_DirBlock(x, y);
+
+                // Grades
+                RenderRectangle(Win_Tile, x * Globals.Grid, y * Globals.Grid, Globals.Grid, Globals.Grid, CColor(25, 25, 25, 70));
+            }
+
+        // Exibe o que foi renderizado
+        Win_Tile.Display();
+    }
+
+    private static void Editor_Tile_Attributes(byte x, byte y)
+    {
+        Editor_Tiles Form = Editor_Tiles.Form;
+        Point Tile = new Point(Form.scrlTileX.Value + x, Form.scrlTileY.Value + y);
+        Point Point = new Point(x * Globals.Grid + Globals.Grid / 2 - 5, y * Globals.Grid + Globals.Grid / 2 - 6);
+
+        // Previne erros
+        if (Tile.X > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(0)) return;
+        if (Tile.Y > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(1)) return;
+
+        // Desenha uma letra e colore o azulejo referente ao atributo
+        switch ((Globals.Tile_Attributes)Lists.Tile[Form.scrlTile.Value].Data[Tile.X, Tile.Y].Attribute)
+        {
+            case Globals.Tile_Attributes.Block:
+                Render(Win_Tile, Tex_Blank, x * Globals.Grid, y * Globals.Grid, 0, 0, Globals.Grid, Globals.Grid, CColor(225, 0, 0, 75));
+                DrawText(Win_Tile, "B", Point.X, Point.Y, SFML.Graphics.Color.Red);
+                break;
+        }
+    }
+
+    private static void Editor_Tile_DirBlock(byte x, byte y)
+    {
+        Editor_Tiles Form = Editor_Tiles.Form;
+        Point Tile = new Point(Form.scrlTileX.Value + x, Form.scrlTileY.Value + y);
+        byte Y;
+
+        // Previne erros
+        if (Tile.X > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(0)) return;
+        if (Tile.Y > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(1)) return;
+
+        // Bloqueio total
+        if (Lists.Tile[Form.scrlTile.Value].Data[x, y].Attribute == (byte)Globals.Tile_Attributes.Block)
+        {
+            Editor_Tile_Attributes(x, y);
+            return;
+        }
+
+        for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
+        {
+            // Estado do bloqueio
+            if (Lists.Tile[Form.scrlTile.Value].Data[Tile.X, Tile.Y].Block[i])
+                Y = 8;
+            else
+                Y = 0;
+
+            // Renderiza
+            Render(Win_Tile, Tex_Directions, x * Globals.Grid + Globals.Block_Position(i).X, y * Globals.Grid + Globals.Block_Position(i).Y, i * 8, Y, 6, 6);
+        }
+    }
+    #endregion
+
+    #region Item Editor
+    private static void Editor_Item()
+    {
+        // Somente se necessário
+        if (Editor_Items.Form == null ) return;
+
+        // Desenha o item
+        short Texture_Num = (short)Editor_Items.Form.numTexture.Value;
+        Win_Item.Clear();
+        Transparent(Win_Item);
+        if (Texture_Num > 0 && Texture_Num < Tex_Item.Length) Render(Win_Item, Tex_Item[Texture_Num], new Point(0));
+        Win_Item.Display();
+    }
+    #endregion
+
+    #region NPC Editor
+    private static void Editor_NPC()
+    {
+        // Somente se necessário
+        if (Editor_NPCs.Form == null ) return;
+
+        // Desenha o NPC
+        Character(Win_NPC, (short)Editor_NPCs.Form.numTexture.Value);
+    }
+    #endregion
+
+    #region Class Editor
+    private static void Editor_Class()
+    {
+        // Somente se necessário
+        if (Editor_Classes.Form == null ) return;
+
+        // Desenha o NPC
+        Character(Win_Class, (short) Editor_Classes.Form.numTexture.Value);
+    }
+    #endregion
+
+    #region Character
+    private static void Character(RenderWindow Window, short Texture_Num)
+    {
+        Texture Texture = Tex_Character[Texture_Num];
+        Size Size = new Size(TSize(Texture).Width / 4, TSize(Texture).Height / 4);
+
+        // Desenha o item
+        Window.Clear();
+        Transparent(Window);
+        if (Texture_Num > 0 && Texture_Num < Tex_Character.Length)  Render(Window, Texture, (int)(Window.Size.X - Size.Width) / 2, (int)(Window.Size.Y-Size.Height) / 2, 0, 0, Size.Width, Size.Height);
+        Window.Display();
     }
     #endregion
 

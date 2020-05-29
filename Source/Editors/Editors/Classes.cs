@@ -5,17 +5,22 @@ using Objects;
 
 partial class Editor_Classes : Form
 {
+    // Usado para acessar os dados da janela
+    public static Editor_Classes Form;
+
     // Classe selecionada
-    private Class Selected;
+    public Class Selected;
 
     public Editor_Classes()
     {
         // Inicializa os componentes 
         InitializeComponent();
+        Graphics.Win_Class = new SFML.Graphics.RenderWindow(picTexture.Handle);
 
         // Define os limites
         numSpawn_X.Maximum = Globals.Map_Width - 1;
         numSpawn_Y.Maximum = Globals.Map_Height - 1;
+        numTexture.Maximum =Graphics.Tex_Character.Length - 1;
 
         // Lista os dados
         foreach (var Item in Lists.Item.Values) cmbItems.Items.Add(Item);
@@ -182,18 +187,30 @@ partial class Editor_Classes : Form
         Selected.Attribute[(byte)Globals.Attributes.Vitality] = (short)numVitality.Value;
     }
 
-    private void butMTexture_Click(object sender, EventArgs e)
+    private void butTexture_Ok_Click(object sender, EventArgs e)
     {
         // Adiciona a textura
-        short Texture_Num = Preview.Select(Graphics.Tex_Character, 0);
-        if (Texture_Num != 0) Selected.Tex_Male.Add(Texture_Num);
+        if (grpTexture_Add.Tag == lstMale)
+            Selected.Tex_Male.Add((short)numTexture.Value);
+        else
+            Selected.Tex_Female.Add((short)numTexture.Value);
+        grpTexture_Add.Visible = false;
+    }
+
+    private void butMTexture_Click(object sender, EventArgs e)
+    {
+        // Abre a janela para adicionar a textura
+        numTexture.Value = 1;
+        grpTexture_Add.Tag = lstMale;
+        grpTexture_Add.Visible = true;
     }
 
     private void butFTexture_Click(object sender, EventArgs e)
     {
-        // Adiciona a textura
-        short Texture_Num = Preview.Select(Graphics.Tex_Character, 0);
-        if (Texture_Num != 0) Selected.Tex_Female.Add(Texture_Num);
+        // Abre a janela para adicionar a textura
+        numTexture.Value = 1;
+        grpTexture_Add.Tag = lstFemale;
+        grpTexture_Add.Visible = true;
     }
 
     private void butMDelete_Click(object sender, EventArgs e)
@@ -255,7 +272,7 @@ partial class Editor_Classes : Form
     private void butItem_Delete_Click(object sender, EventArgs e)
     {
         // Deleta a textura
-        if (lstItems.SelectedIndex != -1) 
+        if (lstItems.SelectedIndex != -1)
             Selected.Item.RemoveAt(lstItems.SelectedIndex);
     }
 }

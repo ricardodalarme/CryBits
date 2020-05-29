@@ -28,6 +28,7 @@
     {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Items));
             this.grpGeneral = new System.Windows.Forms.GroupBox();
+            this.picTexture = new System.Windows.Forms.PictureBox();
             this.cmbRarity = new System.Windows.Forms.ComboBox();
             this.cmbBind = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
@@ -39,7 +40,6 @@
             this.numTexture = new System.Windows.Forms.NumericUpDown();
             this.txtName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.butTexture = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.butSave = new System.Windows.Forms.Button();
@@ -59,24 +59,25 @@
             this.label14 = new System.Windows.Forms.Label();
             this.grpEquipment = new System.Windows.Forms.GroupBox();
             this.numWeapon_Damage = new System.Windows.Forms.NumericUpDown();
-            this.cmbEquipment_Type = new System.Windows.Forms.ComboBox();
             this.numEquip_Strength = new System.Windows.Forms.NumericUpDown();
+            this.numEquip_Vitality = new System.Windows.Forms.NumericUpDown();
+            this.numEquip_Resistance = new System.Windows.Forms.NumericUpDown();
+            this.numEquip_Intelligence = new System.Windows.Forms.NumericUpDown();
+            this.numEquip_Agility = new System.Windows.Forms.NumericUpDown();
+            this.cmbEquipment_Type = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.lblWeapon_Damage = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.numEquip_Vitality = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.numEquip_Resistance = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.numEquip_Intelligence = new System.Windows.Forms.NumericUpDown();
-            this.numEquip_Agility = new System.Windows.Forms.NumericUpDown();
             this.List = new System.Windows.Forms.TreeView();
             this.butRemove = new System.Windows.Forms.Button();
             this.butNew = new System.Windows.Forms.Button();
             this.txtFilter = new System.Windows.Forms.TextBox();
             this.grpGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picTexture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
             this.grpRequirements.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numReq_Level)).BeginInit();
@@ -95,6 +96,7 @@
             // 
             // grpGeneral
             // 
+            this.grpGeneral.Controls.Add(this.picTexture);
             this.grpGeneral.Controls.Add(this.cmbRarity);
             this.grpGeneral.Controls.Add(this.cmbBind);
             this.grpGeneral.Controls.Add(this.label20);
@@ -106,7 +108,6 @@
             this.grpGeneral.Controls.Add(this.numTexture);
             this.grpGeneral.Controls.Add(this.txtName);
             this.grpGeneral.Controls.Add(this.label2);
-            this.grpGeneral.Controls.Add(this.butTexture);
             this.grpGeneral.Controls.Add(this.label1);
             this.grpGeneral.Controls.Add(this.label3);
             this.grpGeneral.Location = new System.Drawing.Point(219, 7);
@@ -116,6 +117,14 @@
             this.grpGeneral.TabStop = false;
             this.grpGeneral.Text = "General";
             this.grpGeneral.Visible = false;
+            // 
+            // picTexture
+            // 
+            this.picTexture.Location = new System.Drawing.Point(263, 150);
+            this.picTexture.Name = "picTexture";
+            this.picTexture.Size = new System.Drawing.Size(32, 32);
+            this.picTexture.TabIndex = 30;
+            this.picTexture.TabStop = false;
             // 
             // cmbRarity
             // 
@@ -202,7 +211,7 @@
             // 
             this.numTexture.Location = new System.Drawing.Point(155, 162);
             this.numTexture.Name = "numTexture";
-            this.numTexture.Size = new System.Drawing.Size(82, 20);
+            this.numTexture.Size = new System.Drawing.Size(102, 20);
             this.numTexture.TabIndex = 12;
             this.numTexture.ValueChanged += new System.EventHandler(this.numTexture_ValueChanged);
             // 
@@ -222,16 +231,6 @@
             this.label2.Size = new System.Drawing.Size(34, 13);
             this.label2.TabIndex = 19;
             this.label2.Text = "Type:";
-            // 
-            // butTexture
-            // 
-            this.butTexture.Location = new System.Drawing.Point(243, 161);
-            this.butTexture.Name = "butTexture";
-            this.butTexture.Size = new System.Drawing.Size(52, 20);
-            this.butTexture.TabIndex = 17;
-            this.butTexture.Text = "Select";
-            this.butTexture.UseVisualStyleBackColor = true;
-            this.butTexture.Click += new System.EventHandler(this.butTexture_Click);
             // 
             // label1
             // 
@@ -450,6 +449,71 @@
             this.numWeapon_Damage.Size = new System.Drawing.Size(90, 20);
             this.numWeapon_Damage.TabIndex = 58;
             // 
+            // numEquip_Strength
+            // 
+            this.numEquip_Strength.Location = new System.Drawing.Point(12, 57);
+            this.numEquip_Strength.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numEquip_Strength.Name = "numEquip_Strength";
+            this.numEquip_Strength.Size = new System.Drawing.Size(90, 20);
+            this.numEquip_Strength.TabIndex = 43;
+            this.numEquip_Strength.ValueChanged += new System.EventHandler(this.numEquip_Strength_ValueChanged);
+            // 
+            // numEquip_Vitality
+            // 
+            this.numEquip_Vitality.Location = new System.Drawing.Point(109, 98);
+            this.numEquip_Vitality.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numEquip_Vitality.Name = "numEquip_Vitality";
+            this.numEquip_Vitality.Size = new System.Drawing.Size(90, 20);
+            this.numEquip_Vitality.TabIndex = 52;
+            this.numEquip_Vitality.ValueChanged += new System.EventHandler(this.numEquip_Vitality_ValueChanged);
+            // 
+            // numEquip_Resistance
+            // 
+            this.numEquip_Resistance.Location = new System.Drawing.Point(109, 57);
+            this.numEquip_Resistance.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numEquip_Resistance.Name = "numEquip_Resistance";
+            this.numEquip_Resistance.Size = new System.Drawing.Size(90, 20);
+            this.numEquip_Resistance.TabIndex = 44;
+            this.numEquip_Resistance.ValueChanged += new System.EventHandler(this.numEquip_Resistance_ValueChanged);
+            // 
+            // numEquip_Intelligence
+            // 
+            this.numEquip_Intelligence.Location = new System.Drawing.Point(207, 57);
+            this.numEquip_Intelligence.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numEquip_Intelligence.Name = "numEquip_Intelligence";
+            this.numEquip_Intelligence.Size = new System.Drawing.Size(90, 20);
+            this.numEquip_Intelligence.TabIndex = 46;
+            this.numEquip_Intelligence.ValueChanged += new System.EventHandler(this.numEquip_Intelligence_ValueChanged);
+            // 
+            // numEquip_Agility
+            // 
+            this.numEquip_Agility.Location = new System.Drawing.Point(12, 98);
+            this.numEquip_Agility.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numEquip_Agility.Name = "numEquip_Agility";
+            this.numEquip_Agility.Size = new System.Drawing.Size(90, 20);
+            this.numEquip_Agility.TabIndex = 48;
+            this.numEquip_Agility.ValueChanged += new System.EventHandler(this.numEquip_Agility_ValueChanged);
+            // 
             // cmbEquipment_Type
             // 
             this.cmbEquipment_Type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -465,19 +529,6 @@
             this.cmbEquipment_Type.Size = new System.Drawing.Size(285, 21);
             this.cmbEquipment_Type.TabIndex = 22;
             this.cmbEquipment_Type.SelectedIndexChanged += new System.EventHandler(this.cmbEquipment_Type_SelectedIndexChanged);
-            // 
-            // numEquip_Strength
-            // 
-            this.numEquip_Strength.Location = new System.Drawing.Point(12, 57);
-            this.numEquip_Strength.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numEquip_Strength.Name = "numEquip_Strength";
-            this.numEquip_Strength.Size = new System.Drawing.Size(90, 20);
-            this.numEquip_Strength.TabIndex = 43;
-            this.numEquip_Strength.ValueChanged += new System.EventHandler(this.numEquip_Strength_ValueChanged);
             // 
             // label10
             // 
@@ -506,19 +557,6 @@
             this.label8.TabIndex = 47;
             this.label8.Text = "Agility:";
             // 
-            // numEquip_Vitality
-            // 
-            this.numEquip_Vitality.Location = new System.Drawing.Point(109, 98);
-            this.numEquip_Vitality.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numEquip_Vitality.Name = "numEquip_Vitality";
-            this.numEquip_Vitality.Size = new System.Drawing.Size(90, 20);
-            this.numEquip_Vitality.TabIndex = 52;
-            this.numEquip_Vitality.ValueChanged += new System.EventHandler(this.numEquip_Vitality_ValueChanged);
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -536,19 +574,6 @@
             this.label6.Size = new System.Drawing.Size(63, 13);
             this.label6.TabIndex = 42;
             this.label6.Text = "Resistance:";
-            // 
-            // numEquip_Resistance
-            // 
-            this.numEquip_Resistance.Location = new System.Drawing.Point(109, 57);
-            this.numEquip_Resistance.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numEquip_Resistance.Name = "numEquip_Resistance";
-            this.numEquip_Resistance.Size = new System.Drawing.Size(90, 20);
-            this.numEquip_Resistance.TabIndex = 44;
-            this.numEquip_Resistance.ValueChanged += new System.EventHandler(this.numEquip_Resistance_ValueChanged);
             // 
             // label13
             // 
@@ -568,32 +593,6 @@
             this.label11.Size = new System.Drawing.Size(64, 13);
             this.label11.TabIndex = 45;
             this.label11.Text = "Intelligence:";
-            // 
-            // numEquip_Intelligence
-            // 
-            this.numEquip_Intelligence.Location = new System.Drawing.Point(207, 57);
-            this.numEquip_Intelligence.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numEquip_Intelligence.Name = "numEquip_Intelligence";
-            this.numEquip_Intelligence.Size = new System.Drawing.Size(90, 20);
-            this.numEquip_Intelligence.TabIndex = 46;
-            this.numEquip_Intelligence.ValueChanged += new System.EventHandler(this.numEquip_Intelligence_ValueChanged);
-            // 
-            // numEquip_Agility
-            // 
-            this.numEquip_Agility.Location = new System.Drawing.Point(12, 98);
-            this.numEquip_Agility.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numEquip_Agility.Name = "numEquip_Agility";
-            this.numEquip_Agility.Size = new System.Drawing.Size(90, 20);
-            this.numEquip_Agility.TabIndex = 48;
-            this.numEquip_Agility.ValueChanged += new System.EventHandler(this.numEquip_Agility_ValueChanged);
             // 
             // List
             // 
@@ -657,6 +656,7 @@
             this.Text = "Item Editor";
             this.grpGeneral.ResumeLayout(false);
             this.grpGeneral.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picTexture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).EndInit();
             this.grpRequirements.ResumeLayout(false);
             this.grpRequirements.PerformLayout();
@@ -685,8 +685,6 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Button butSave;
     private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Button butTexture;
-    private System.Windows.Forms.NumericUpDown numTexture;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.ComboBox cmbType;
@@ -729,4 +727,6 @@
     private System.Windows.Forms.Label label11;
     private System.Windows.Forms.NumericUpDown numEquip_Intelligence;
     private System.Windows.Forms.NumericUpDown numEquip_Agility;
+    public System.Windows.Forms.NumericUpDown numTexture;
+    private System.Windows.Forms.PictureBox picTexture;
 }

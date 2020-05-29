@@ -140,12 +140,6 @@
     <Compile Include="Editors\NPCs.Designer.cs">
       <DependentUpon>NPCs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Preview.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Editors\Preview.Designer.cs">
-      <DependentUpon>Preview.cs</DependentUpon>
-    </Compile>
     <Compile Include="Logic\Maper.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Media\Audio.cs" />
@@ -204,9 +198,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\NPCs.resx">
       <DependentUpon>NPCs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Preview.resx">
-      <DependentUpon>Preview.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

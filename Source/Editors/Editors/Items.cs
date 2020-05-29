@@ -4,13 +4,17 @@ using Objects;
 
 partial class Editor_Items : Form
 {
+    // Usado para acessar os dados da janela
+    public static Editor_Items Form;
+
     // Item selecionado
-    private Item Selected;
+    public Item Selected;
 
     public Editor_Items()
     {
         // Inicializa os componentes
         InitializeComponent();
+        Graphics.Win_Item = new SFML.Graphics.RenderWindow(picTexture.Handle);
 
         // Define os limites
         numTexture.Maximum = Graphics.Tex_Item.GetUpperBound(0);
@@ -136,13 +140,6 @@ partial class Editor_Items : Form
     private void numTexture_ValueChanged(object sender, EventArgs e)
     {
         Selected.Texture = (short)numTexture.Value;
-    }
-
-    private void butTexture_Click(object sender, EventArgs e)
-    {
-        // Abre a pré visualização
-        Selected.Texture = Preview.Select(Graphics.Tex_Item, Selected.Texture);
-        numTexture.Value = Selected.Texture;
     }
 
     private void cmbType_SelectedIndexChanged(object sender, EventArgs e)

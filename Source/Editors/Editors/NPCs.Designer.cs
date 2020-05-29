@@ -28,11 +28,11 @@
     {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_NPCs));
             this.grpGeneral = new System.Windows.Forms.GroupBox();
+            this.picTexture = new System.Windows.Forms.PictureBox();
             this.numTexture = new System.Windows.Forms.NumericUpDown();
             this.txtName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.lblTexture = new System.Windows.Forms.Label();
-            this.butTexture = new System.Windows.Forms.Button();
             this.txtSayMsg = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.numSpawn = new System.Windows.Forms.NumericUpDown();
@@ -72,15 +72,15 @@
             this.label16 = new System.Windows.Forms.Label();
             this.butItem_Ok = new System.Windows.Forms.Button();
             this.grpAllies = new System.Windows.Forms.GroupBox();
-            this.grpAllie_Add = new System.Windows.Forms.GroupBox();
-            this.cmbAllie_NPC = new System.Windows.Forms.ComboBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.butAllie_Ok = new System.Windows.Forms.Button();
             this.butAllie_Delete = new System.Windows.Forms.Button();
             this.butAllie_Add = new System.Windows.Forms.Button();
             this.lstAllies = new System.Windows.Forms.ListBox();
             this.label12 = new System.Windows.Forms.Label();
             this.chkAttackNPC = new System.Windows.Forms.CheckBox();
+            this.grpAllie_Add = new System.Windows.Forms.GroupBox();
+            this.cmbAllie_NPC = new System.Windows.Forms.ComboBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.butAllie_Ok = new System.Windows.Forms.Button();
             this.grpBehaviour = new System.Windows.Forms.GroupBox();
             this.cmbMovement = new System.Windows.Forms.ComboBox();
             this.cmbShop = new System.Windows.Forms.ComboBox();
@@ -93,6 +93,7 @@
             this.butNew = new System.Windows.Forms.Button();
             this.txtFilter = new System.Windows.Forms.TextBox();
             this.grpGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picTexture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numRange)).BeginInit();
@@ -117,11 +118,11 @@
             // 
             // grpGeneral
             // 
+            this.grpGeneral.Controls.Add(this.picTexture);
             this.grpGeneral.Controls.Add(this.numTexture);
             this.grpGeneral.Controls.Add(this.txtName);
             this.grpGeneral.Controls.Add(this.label3);
             this.grpGeneral.Controls.Add(this.lblTexture);
-            this.grpGeneral.Controls.Add(this.butTexture);
             this.grpGeneral.Location = new System.Drawing.Point(220, 7);
             this.grpGeneral.Name = "grpGeneral";
             this.grpGeneral.Size = new System.Drawing.Size(304, 103);
@@ -129,6 +130,14 @@
             this.grpGeneral.TabStop = false;
             this.grpGeneral.Text = "General";
             this.grpGeneral.Visible = false;
+            // 
+            // picTexture
+            // 
+            this.picTexture.Location = new System.Drawing.Point(227, 31);
+            this.picTexture.Name = "picTexture";
+            this.picTexture.Size = new System.Drawing.Size(64, 64);
+            this.picTexture.TabIndex = 37;
+            this.picTexture.TabStop = false;
             // 
             // numTexture
             // 
@@ -139,7 +148,7 @@
             0,
             0});
             this.numTexture.Name = "numTexture";
-            this.numTexture.Size = new System.Drawing.Size(187, 20);
+            this.numTexture.Size = new System.Drawing.Size(201, 20);
             this.numTexture.TabIndex = 36;
             this.numTexture.ValueChanged += new System.EventHandler(this.numTexture_ValueChanged);
             // 
@@ -147,7 +156,7 @@
             // 
             this.txtName.Location = new System.Drawing.Point(14, 36);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(279, 20);
+            this.txtName.Size = new System.Drawing.Size(201, 20);
             this.txtName.TabIndex = 10;
             this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
@@ -168,16 +177,6 @@
             this.lblTexture.Size = new System.Drawing.Size(46, 13);
             this.lblTexture.TabIndex = 29;
             this.lblTexture.Text = "Texture:";
-            // 
-            // butTexture
-            // 
-            this.butTexture.Location = new System.Drawing.Point(207, 75);
-            this.butTexture.Name = "butTexture";
-            this.butTexture.Size = new System.Drawing.Size(86, 19);
-            this.butTexture.TabIndex = 28;
-            this.butTexture.Text = "Select";
-            this.butTexture.UseVisualStyleBackColor = true;
-            this.butTexture.Click += new System.EventHandler(this.butTexture_Click);
             // 
             // txtSayMsg
             // 
@@ -596,47 +595,6 @@
             this.grpAllies.Text = "NPC vs NPC";
             this.grpAllies.Visible = false;
             // 
-            // grpAllie_Add
-            // 
-            this.grpAllie_Add.Controls.Add(this.cmbAllie_NPC);
-            this.grpAllie_Add.Controls.Add(this.label17);
-            this.grpAllie_Add.Controls.Add(this.butAllie_Ok);
-            this.grpAllie_Add.Location = new System.Drawing.Point(532, 7);
-            this.grpAllie_Add.Name = "grpAllie_Add";
-            this.grpAllie_Add.Size = new System.Drawing.Size(304, 253);
-            this.grpAllie_Add.TabIndex = 41;
-            this.grpAllie_Add.TabStop = false;
-            this.grpAllie_Add.Text = "Add Allie";
-            this.grpAllie_Add.Visible = false;
-            // 
-            // cmbAllie_NPC
-            // 
-            this.cmbAllie_NPC.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAllie_NPC.FormattingEnabled = true;
-            this.cmbAllie_NPC.Location = new System.Drawing.Point(26, 118);
-            this.cmbAllie_NPC.Name = "cmbAllie_NPC";
-            this.cmbAllie_NPC.Size = new System.Drawing.Size(251, 21);
-            this.cmbAllie_NPC.TabIndex = 38;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(23, 102);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(32, 13);
-            this.label17.TabIndex = 37;
-            this.label17.Text = "NPC:";
-            // 
-            // butAllie_Ok
-            // 
-            this.butAllie_Ok.Location = new System.Drawing.Point(26, 144);
-            this.butAllie_Ok.Name = "butAllie_Ok";
-            this.butAllie_Ok.Size = new System.Drawing.Size(251, 20);
-            this.butAllie_Ok.TabIndex = 36;
-            this.butAllie_Ok.Text = "Ok";
-            this.butAllie_Ok.UseVisualStyleBackColor = true;
-            this.butAllie_Ok.Click += new System.EventHandler(this.butAllie_Ok_Click);
-            // 
             // butAllie_Delete
             // 
             this.butAllie_Delete.Location = new System.Drawing.Point(155, 221);
@@ -685,6 +643,47 @@
             this.chkAttackNPC.Text = "Enabled?";
             this.chkAttackNPC.UseVisualStyleBackColor = true;
             this.chkAttackNPC.CheckedChanged += new System.EventHandler(this.chkAttackNPC_CheckedChanged);
+            // 
+            // grpAllie_Add
+            // 
+            this.grpAllie_Add.Controls.Add(this.cmbAllie_NPC);
+            this.grpAllie_Add.Controls.Add(this.label17);
+            this.grpAllie_Add.Controls.Add(this.butAllie_Ok);
+            this.grpAllie_Add.Location = new System.Drawing.Point(532, 7);
+            this.grpAllie_Add.Name = "grpAllie_Add";
+            this.grpAllie_Add.Size = new System.Drawing.Size(304, 253);
+            this.grpAllie_Add.TabIndex = 41;
+            this.grpAllie_Add.TabStop = false;
+            this.grpAllie_Add.Text = "Add Allie";
+            this.grpAllie_Add.Visible = false;
+            // 
+            // cmbAllie_NPC
+            // 
+            this.cmbAllie_NPC.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAllie_NPC.FormattingEnabled = true;
+            this.cmbAllie_NPC.Location = new System.Drawing.Point(26, 118);
+            this.cmbAllie_NPC.Name = "cmbAllie_NPC";
+            this.cmbAllie_NPC.Size = new System.Drawing.Size(251, 21);
+            this.cmbAllie_NPC.TabIndex = 38;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(23, 102);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(32, 13);
+            this.label17.TabIndex = 37;
+            this.label17.Text = "NPC:";
+            // 
+            // butAllie_Ok
+            // 
+            this.butAllie_Ok.Location = new System.Drawing.Point(26, 144);
+            this.butAllie_Ok.Name = "butAllie_Ok";
+            this.butAllie_Ok.Size = new System.Drawing.Size(251, 20);
+            this.butAllie_Ok.TabIndex = 36;
+            this.butAllie_Ok.Text = "Ok";
+            this.butAllie_Ok.UseVisualStyleBackColor = true;
+            this.butAllie_Ok.Click += new System.EventHandler(this.butAllie_Ok_Click);
             // 
             // grpBehaviour
             // 
@@ -833,6 +832,7 @@
             this.Text = "NPC Editor";
             this.grpGeneral.ResumeLayout(false);
             this.grpGeneral.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picTexture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpawn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numRange)).EndInit();
@@ -870,7 +870,6 @@
     private System.Windows.Forms.Button butSave;
     private System.Windows.Forms.Button butCancel;
     private System.Windows.Forms.Label lblTexture;
-    private System.Windows.Forms.Button butTexture;
     private System.Windows.Forms.NumericUpDown numRange;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.ComboBox cmbBehavior;
@@ -893,7 +892,6 @@
     private System.Windows.Forms.Label label9;
     private System.Windows.Forms.NumericUpDown numVitality;
     private System.Windows.Forms.Label label10;
-    private System.Windows.Forms.NumericUpDown numTexture;
     private System.Windows.Forms.NumericUpDown numDrop_Amount;
     private System.Windows.Forms.ComboBox cmbDrop_Item;
     private System.Windows.Forms.NumericUpDown numDrop_Chance;
@@ -929,4 +927,6 @@
     private System.Windows.Forms.Button butRemove;
     private System.Windows.Forms.Button butNew;
     public System.Windows.Forms.TextBox txtFilter;
+    private System.Windows.Forms.PictureBox picTexture;
+    public System.Windows.Forms.NumericUpDown numTexture;
 }

@@ -2,15 +2,19 @@
 using System.Windows.Forms;
 using Objects;
 
-public partial class Editor_NPCs : Form
+partial class Editor_NPCs : Form
 {
+    // Usado para acessar os dados da janela
+    public static Editor_NPCs Form;
+
     // NPC selecionado
-    private NPC Selected;
+    public NPC Selected;
 
     public Editor_NPCs()
     {
         // Inicializa os componentes
         InitializeComponent();
+        Graphics.Win_NPC = new SFML.Graphics.RenderWindow(picTexture.Handle);
 
         // Define os limites
         numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
@@ -144,13 +148,6 @@ public partial class Editor_NPCs : Form
     private void txtSayMsg_TextChanged(object sender, EventArgs e)
     {
         Selected.SayMsg = txtSayMsg.Text;
-    }
-
-    private void butTexture_Click(object sender, EventArgs e)
-    {
-        // Abre a pré visualização
-        Selected.Texture = Preview.Select(Graphics.Tex_Character, Selected.Texture);
-        numTexture.Value = Selected.Texture;
     }
 
     private void numTexture_ValueChanged(object sender, EventArgs e)

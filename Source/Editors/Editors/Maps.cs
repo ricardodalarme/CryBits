@@ -523,7 +523,7 @@ partial class Editor_Maps : Form
 
     private void butEditors_Classes_Click(object sender, EventArgs e)
     {
-        new Editor_Classes();
+        Editor_Classes.Form = new Editor_Classes();
     }
 
     private void butEditors_Data_Click(object sender, EventArgs e)
@@ -538,12 +538,12 @@ partial class Editor_Maps : Form
 
     private void butEditors_Items_Click(object sender, EventArgs e)
     {
-        new Editor_Items();
+        Editor_Items.Form = new Editor_Items();
     }
 
     private void butEditors_NPCs_Click(object sender, EventArgs e)
     {
-        new Editor_NPCs();
+        Editor_NPCs.Form = new Editor_NPCs();
     }
 
     private void butEditors_Shops_Click(object sender, EventArgs e)
@@ -986,9 +986,9 @@ partial class Editor_Maps : Form
 
         // Verifica se não passou do limite
         if (x < 0) x = 0;
-        if (x >= Globals.Map_Width) x = Globals.Map_Width -1;
+        if (x >= Globals.Map_Width) x = Globals.Map_Width - 1;
         if (y < 0) y = 0;
-        if (y >= Globals.Map_Height) y = Globals.Map_Height -1;
+        if (y >= Globals.Map_Height) y = Globals.Map_Height - 1;
 
         // Define o tamanho
         Def_Map_Selection.Width = x - Def_Map_Selection.X + 1;
