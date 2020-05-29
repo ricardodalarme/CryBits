@@ -1,5 +1,6 @@
 ﻿using SFML.Window;
 using System;
+using Objects;
 
 class Player
 {
@@ -10,7 +11,7 @@ class Player
     public static Me_Structure Me;
 
     // Dados gerais dos jogadores
-    public class Structure : Character
+    public class Structure : Objects.Character
     {
         // Geral
         public string Name = string.Empty;
@@ -18,7 +19,7 @@ class Player
         public short Level;
         public short[] Max_Vital = new short[(byte)Game.Vitals.Count];
         public short[] Attribute = new short[(byte)Game.Attributes.Count];
-        public Lists.Structures.Item[] Equipment = new Lists.Structures.Item[(byte)Game.Equipments.Count];
+        public Item[] Equipment = new Item[(byte)Game.Equipments.Count];
         public short Map_Num;
 
         public Structure(string Name)

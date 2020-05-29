@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using Objects;
 
 class Lists
 {
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
     public static List<Player.Structure> Player = new List<Player.Structure>();
-    public static Dictionary<Guid, Structures.Class> Class = new Dictionary<Guid, Structures.Class>();
+    public static Dictionary<Guid, Class> Class = new Dictionary<Guid, Class>();
     public static Structures.Character[] Characters;
     public static Structures.Map Map;
     public static Structures.Temp_Map Temp_Map = new Structures.Temp_Map();
     public static Structures.Weather[] Weather;
-    public static Dictionary<Guid, Structures.NPC> NPC = new Dictionary<Guid, Structures.NPC>();
-    public static Dictionary<Guid, Structures.Item> Item = new Dictionary<Guid, Structures.Item>();
-    public static Dictionary<Guid, Structures.Shop> Shop = new Dictionary<Guid, Structures.Shop>();
+    public static Dictionary<Guid, Objects.NPC> NPC = new Dictionary<Guid, Objects.NPC>();
+    public static Dictionary<Guid, Item> Item = new Dictionary<Guid, Item>();
+    public static Dictionary<Guid, Shop> Shop = new Dictionary<Guid, Shop>();
 
     public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
     {
@@ -61,16 +62,6 @@ class Lists
             public string Name;
             public short Level;
             public short Texture_Num;
-        }
-
-        public class Class : Data
-        {
-            public string Name;
-            public string Description;
-            public short[] Tex_Male;
-            public short[] Tex_Female;
-
-            public Class(Guid ID) : base(ID) { }
         }
 
         [Serializable]
@@ -150,45 +141,11 @@ class Lists
             public bool Back;
         }
 
-        public class NPC : Data
-        {
-            public string Name;
-            public string SayMsg;
-            public short Texture;
-            public byte Type;
-            public short[] Vital = new short[(byte)Game.Vitals.Count];
-
-            public NPC(Guid ID) : base(ID) { }
-        }
-
         public struct Map_Items
         {
             public Item Item;
             public byte X;
             public byte Y;
-        }
-
-        public class Item : Data
-        {
-            // Geral
-            public string Name = string.Empty;
-            public string Description = string.Empty;
-            public short Texture;
-            public byte Type;
-            public byte Rarity;
-            public Game.BindOn Bind;
-            // Requerimentos
-            public short Req_Level;
-            public Class Req_Class;
-            // Poção
-            public int Potion_Experience;
-            public short[] Potion_Vital = new short[(byte)Game.Vitals.Count];
-            // Equipamento
-            public byte Equip_Type;
-            public short[] Equip_Attribute = new short[(byte)Game.Equipments.Count];
-            public short Weapon_Damage;
-
-            public Item(Guid ID) : base(ID) { }
         }
 
         public struct Inventory
@@ -219,23 +176,6 @@ class Lists
                 this.Y = Y;
                 this.Opacity = Opacity;
             }
-        }
-
-        public class Shop : Data
-        {
-            public string Name;
-            public Item Currency;
-            public Shop_Item[] Sold;
-            public Shop_Item[] Bought;
-
-            public Shop(Guid ID) : base(ID) { }
-        }
-
-        public class Shop_Item
-        {
-            public Item Item;
-            public short Amount;
-            public short Price;
         }
     }
 }

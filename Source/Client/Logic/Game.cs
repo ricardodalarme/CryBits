@@ -168,7 +168,7 @@ class Game
         }
     }
 
-    public static short Find_Shop_Bought(Lists.Structures.Item Item)
+    public static short Find_Shop_Bought(Objects.Item Item)
     {
         for (byte i = 0; i < Utilities.Shop_Open.Bought.Length; i++)
             if (Utilities.Shop_Open.Bought[i].Item == Item)

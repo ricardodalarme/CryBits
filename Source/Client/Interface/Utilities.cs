@@ -13,7 +13,7 @@ class Utilities
     public static string Trade_Invitation;
     public static byte Trade_Slot = 0;
     public static byte Trade_Inventory_Slot = 0;
-    public static Lists.Structures.Shop Shop_Open;
+    public static Objects.Shop Shop_Open;
     public static byte Shop_Inventory_Slot = 0;
     public static byte Hotbar_Change;
     public static byte Inventory_Change;

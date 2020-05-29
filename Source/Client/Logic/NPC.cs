@@ -1,9 +1,9 @@
 ﻿using System;
 
-class NPC : Character
+class NPC : Objects.Character
 {
     // Indice
-    public Lists.Structures.NPC Data;
+    public Objects.NPC Data;
 
     public void Logic()
     {

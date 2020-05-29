@@ -71,7 +71,11 @@
     <Compile Include="Interface\Chat.cs" />
     <Compile Include="Interface\Utilities.cs" />
     <Compile Include="Interface\Window.cs" />
-    <Compile Include="Logic\Character.cs" />
+    <Compile Include="Objects\Character.cs" />
+    <Compile Include="Objects\Item.cs" />
+    <Compile Include="Objects\NPC.cs" />
+    <Compile Include="Objects\Class.cs" />
+    <Compile Include="Objects\Shop.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Interface\Buttons.cs" />
     <Compile Include="Interface\CheckBoxes.cs" />

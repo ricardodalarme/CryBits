@@ -111,7 +111,7 @@ class Receive
     {
         // Reseta os valores
         Utilities.SelectCharacter = 0;
-        Lists.Class = new Dictionary<Guid, Lists.Structures.Class>();
+        Lists.Class = new Dictionary<Guid, Objects.Class>();
 
         // Abre o painel de seleção de personagens
         Panels.Menu_Close();
@@ -125,9 +125,9 @@ class Receive
         Lists.Player.Add(Player.Me);
 
         // Reseta alguns valores
-        Lists.Class = new Dictionary<Guid, Lists.Structures.Class>();
-        Lists.Item = new Dictionary<Guid, Lists.Structures.Item>();
-        Lists.Shop = new Dictionary<Guid, Lists.Structures.Shop>();
+        Lists.Class = new Dictionary<Guid, Objects.Class>();
+        Lists.Item = new Dictionary<Guid, Objects.Item>();
+        Lists.Shop = new Dictionary<Guid, Objects.Shop>();
     }
 
     private static void CreateCharacter()
@@ -147,7 +147,7 @@ class Receive
     private static void Classes(NetIncomingMessage Data)
     {
         // Classes a serem removidas
-        Dictionary<Guid, Lists.Structures.Class> ToRemove = new Dictionary<Guid, Lists.Structures.Class>(Lists.Class);
+        Dictionary<Guid, Objects.Class> ToRemove = new Dictionary<Guid, Objects.Class>(Lists.Class);
 
         // Quantidade de classes
         short Count = Data.ReadByte();
@@ -155,7 +155,7 @@ class Receive
         while (--Count >= 0)
         {
             Guid ID = new Guid(Data.ReadString());
-            Lists.Structures.Class Class;
+            Objects.Class Class;
 
             // Obtém o dado
             if (Lists.Class.ContainsKey(ID))
@@ -165,7 +165,7 @@ class Receive
             }
             else
             {
-                Class = new Lists.Structures.Class(ID);
+                Class = new Objects.Class(ID);
                 Lists.Class.Add(Class.ID, Class);
             }
 
@@ -262,7 +262,7 @@ class Receive
             Player.Max_Vital[n] = Data.ReadInt16();
         }
         for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Player.Attribute[n] = Data.ReadInt16();
-        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Player.Equipment[n] = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Player.Equipment[n] = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
     }
 
     private static void Player_Position(NetIncomingMessage Data)
@@ -297,7 +297,7 @@ class Receive
         Player.Structure Player = global::Player.Get(Data.ReadString());
 
         // Altera os dados dos equipamentos do jogador
-        for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Player.Equipment[i] = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+        for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Player.Equipment[i] = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
     }
 
     private static void Player_Leave(NetIncomingMessage Data)
@@ -379,7 +379,7 @@ class Receive
         // Define os dados
         for (byte i = 1; i <= Game.Max_Inventory; i++)
         {
-            Player.Me.Inventory[i].Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+            Player.Me.Inventory[i].Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             Player.Me.Inventory[i].Amount = Data.ReadInt16();
         }
     }
@@ -547,7 +547,7 @@ class Receive
     private static void Items(NetIncomingMessage Data)
     {
         // Itens a serem removidas
-        Dictionary<Guid, Lists.Structures.Item> ToRemove = new Dictionary<Guid, Lists.Structures.Item>(Lists.Item);
+        Dictionary<Guid, Objects.Item> ToRemove = new Dictionary<Guid, Objects.Item>(Lists.Item);
 
         // Quantidade de lojas
         short Count = Data.ReadInt16();
@@ -555,7 +555,7 @@ class Receive
         while (--Count >= 0)
         {
             Guid ID = new Guid(Data.ReadString());
-            Lists.Structures.Item Item;
+            Objects.Item Item;
 
             // Obtém o dado
             if (Lists.Item.ContainsKey(ID))
@@ -565,7 +565,7 @@ class Receive
             }
             else
             {
-                Item = new Lists.Structures.Item(ID);
+                Item = new Objects.Item(ID);
                 Lists.Item.Add(Item.ID, Item);
             }
 
@@ -578,7 +578,7 @@ class Receive
             Item.Bind = (Game.BindOn)Data.ReadByte();
             Item.Rarity = Data.ReadByte();
             Item.Req_Level = Data.ReadInt16();
-            Item.Req_Class = (Lists.Structures.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
+            Item.Req_Class = (Objects.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
             Item.Potion_Experience = Data.ReadInt32();
             for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
             Item.Equip_Type = Data.ReadByte();
@@ -599,7 +599,7 @@ class Receive
         for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)
         {
             // Geral
-            Lists.Temp_Map.Item[i].Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+            Lists.Temp_Map.Item[i].Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             Lists.Temp_Map.Item[i].X = Data.ReadByte();
             Lists.Temp_Map.Item[i].Y = Data.ReadByte();
         }
@@ -690,13 +690,13 @@ class Receive
         if (Data.ReadBoolean())
             for (byte i = 1; i <= Game.Max_Inventory; i++)
             {
-                Player.Me.Trade_Offer[i].Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+                Player.Me.Trade_Offer[i].Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
                 Player.Me.Trade_Offer[i].Amount = Data.ReadInt16();
             }
         else
             for (byte i = 1; i <= Game.Max_Inventory; i++)
             {
-                Player.Me.Trade_Their_Offer[i].Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+                Player.Me.Trade_Their_Offer[i].Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
                 Player.Me.Trade_Their_Offer[i].Amount = Data.ReadInt16();
             }
     }
@@ -704,7 +704,7 @@ class Receive
     private static void Shops(NetIncomingMessage Data)
     {
         // Lojas a serem removidas
-        Dictionary<Guid, Lists.Structures.Shop> ToRemove = new Dictionary<Guid, Lists.Structures.Shop>(Lists.Shop);
+        Dictionary<Guid, Objects.Shop> ToRemove = new Dictionary<Guid, Objects.Shop>(Lists.Shop);
 
         // Quantidade de lojas
         short Count = Data.ReadInt16();
@@ -712,7 +712,7 @@ class Receive
         while (--Count >= 0)
         {
             Guid ID = new Guid(Data.ReadString());
-            Lists.Structures.Shop Shop;
+            Objects.Shop Shop;
 
             // Obtém o dado
             if (Lists.Shop.ContainsKey(ID))
@@ -722,28 +722,28 @@ class Receive
             }
             else
             {
-                Shop = new Lists.Structures.Shop(ID);
+                Shop = new Objects.Shop(ID);
                 Lists.Shop.Add(Shop.ID, Shop);
             }
 
             // Redimensiona os valores necessários 
-            Shop.Sold = new Lists.Structures.Shop_Item[Data.ReadByte()];
-            Shop.Bought = new Lists.Structures.Shop_Item[Data.ReadByte()];
+            Shop.Sold = new Objects.Shop_Item[Data.ReadByte()];
+            Shop.Bought = new Objects.Shop_Item[Data.ReadByte()];
 
             // Lê os dados
             Shop.Name = Data.ReadString();
-            Shop.Currency = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+            Shop.Currency = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             for (byte j = 0; j < Shop.Sold.Length; j++)
-                Shop.Sold[j] = new Lists.Structures.Shop_Item
+                Shop.Sold[j] = new Objects.Shop_Item
                 {
-                    Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
+                    Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
                     Amount = Data.ReadInt16(),
                     Price = Data.ReadInt16()
                 };
             for (byte j = 0; j < Shop.Bought.Length; j++)
-                Shop.Bought[j] = new Lists.Structures.Shop_Item
+                Shop.Bought[j] = new Objects.Shop_Item
                 {
-                    Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
+                    Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
                     Amount = Data.ReadInt16(),
                     Price = Data.ReadInt16()
                 };
@@ -756,14 +756,14 @@ class Receive
     private static void Shop_Open(NetIncomingMessage Data)
     {
         // Abre a loja
-        Utilities.Shop_Open = (Lists.Structures.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+        Utilities.Shop_Open = (Objects.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
         Panels.Get("Shop").Visible = Utilities.Shop_Open != null;
     }
 
     private static void NPCs(NetIncomingMessage Data)
     {
         // Lojas a serem removidas
-        Dictionary<Guid, Lists.Structures.NPC> ToRemove = new Dictionary<Guid, Lists.Structures.NPC>(Lists.NPC);
+        Dictionary<Guid, Objects.NPC> ToRemove = new Dictionary<Guid, Objects.NPC>(Lists.NPC);
 
         // Quantidade de lojas
         short Count = Data.ReadInt16();
@@ -771,7 +771,7 @@ class Receive
         while (--Count >= 0)
         {
             Guid ID = new Guid(Data.ReadString());
-            Lists.Structures.NPC NPC;
+            Objects.NPC NPC;
 
             // Obtém o dado
             if (Lists.NPC.ContainsKey(ID))
@@ -781,7 +781,7 @@ class Receive
             }
             else
             {
-                NPC = new Lists.Structures.NPC(ID);
+                NPC = new Objects.NPC(ID);
                 Lists.NPC.Add(NPC.ID, NPC);
             }
 
@@ -810,7 +810,7 @@ class Receive
             Lists.Temp_Map.NPC[i] = new NPC();
             Lists.Temp_Map.NPC[i].X2 = 0;
             Lists.Temp_Map.NPC[i].Y2 = 0;
-            Lists.Temp_Map.NPC[i].Data = (Lists.Structures.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+            Lists.Temp_Map.NPC[i].Data = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
             Lists.Temp_Map.NPC[i].X = Data.ReadByte();
             Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
             Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
@@ -827,7 +827,7 @@ class Receive
         byte i = Data.ReadByte();
         Lists.Temp_Map.NPC[i].X2 = 0;
         Lists.Temp_Map.NPC[i].Y2 = 0;
-        Lists.Temp_Map.NPC[i].Data = (Lists.Structures.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+        Lists.Temp_Map.NPC[i].Data = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
         Lists.Temp_Map.NPC[i].X = Data.ReadByte();
         Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
         Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();

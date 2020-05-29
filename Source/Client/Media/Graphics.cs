@@ -433,7 +433,7 @@ partial class Graphics
     private static void CreateCharacter_Class()
     {
         short Texture_Num = 0;
-        Lists.Structures.Class Class = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value;
+        Objects.Class Class = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value;
 
         // Textura do personagem
         if (CheckBoxes.Get("GenderMale").Checked && Class.Tex_Male.Length > 0)
@@ -496,7 +496,7 @@ partial class Graphics
 
     private static void Informations(Panels.Structure Tool)
     {
-        Lists.Structures.Item Item = (Lists.Structures.Item)Lists.GetData(Lists.Item, new Guid(Utilities.Infomation_ID));
+        Objects.Item Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Utilities.Infomation_ID));
         SFML.Graphics.Color Text_Color;
         List<string> Data = new List<string>();
 
@@ -665,7 +665,7 @@ partial class Graphics
             Item(Utilities.Shop_Open.Sold[i].Item, Utilities.Shop_Open.Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
     }
 
-    private static void Item(Lists.Structures.Item Item, short Amount, Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)
+    private static void Item(Objects.Item Item, short Amount, Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)
     {
         // Somente se necessário
         if (Item == null) return;
