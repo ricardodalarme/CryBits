@@ -35,7 +35,10 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.chkUsername = new System.Windows.Forms.CheckBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lblDirectory = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtUsername
@@ -111,12 +114,31 @@
             this.chkUsername.Text = "Save username";
             this.chkUsername.UseVisualStyleBackColor = true;
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblDirectory});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 277);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(487, 22);
+            this.statusStrip1.TabIndex = 8;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // lblDirectory
+            // 
+            this.lblDirectory.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDirectory.Name = "lblDirectory";
+            this.lblDirectory.Size = new System.Drawing.Size(51, 17);
+            this.lblDirectory.Text = "Directory";
+            this.lblDirectory.Click += new System.EventHandler(this.lblDirectory_Click);
+            // 
             // Login
             // 
             this.AcceptButton = this.butConnect;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(487, 282);
+            this.ClientSize = new System.Drawing.Size(487, 299);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.chkUsername);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.pictureBox1);
@@ -133,6 +155,8 @@
             this.Text = "Login";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Login_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,4 +171,6 @@
     private System.Windows.Forms.PictureBox pictureBox1;
     private System.Windows.Forms.Label label3;
     public System.Windows.Forms.CheckBox chkUsername;
+    private System.Windows.Forms.StatusStrip statusStrip1;
+    public System.Windows.Forms.ToolStripStatusLabel lblDirectory;
 }

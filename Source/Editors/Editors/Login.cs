@@ -39,4 +39,10 @@ public partial class Login : Form
         // Fecha a aplicação
         Program.Working = false;
     }
+
+    private void lblDirectory_Click(object sender, System.EventArgs e)
+    {
+        Directories.Select(false);
+        lblDirectory.Text = Lists.Options.Directory_Client;
+    }
 }

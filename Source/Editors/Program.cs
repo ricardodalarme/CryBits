@@ -19,6 +19,7 @@ class Program
         Socket.Init();
 
         // Inicia a aplicação
+        Login.Form.lblDirectory.Text = Lists.Options.Directory_Client;
         Login.Form.Visible = true;
         Application.EnableVisualStyles();
         Loop.Init();

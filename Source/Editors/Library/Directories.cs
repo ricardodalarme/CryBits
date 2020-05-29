@@ -32,7 +32,7 @@ class Directories
     public static FileInfo Tex_Transparent;
     public static FileInfo Tex_Lighting;
 
-    public static bool Select()
+    public static bool Select(bool ShowMessage = true)
     {
         // Cria uma instância de um navegador de pastas
         FolderBrowserDialog Browser = new FolderBrowserDialog
@@ -45,7 +45,7 @@ class Directories
         // Só permite continuar caso selecionar um diretório
         if (Browser.ShowDialog() != DialogResult.OK)
         {
-            MessageBox.Show("You need to select the client directory.", "Select the client directory", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+           if (ShowMessage) MessageBox.Show("You need to select the client directory.", "Select the client directory", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
             return false;
         }
 
