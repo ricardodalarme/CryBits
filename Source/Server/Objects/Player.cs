@@ -113,6 +113,7 @@ namespace Objects
 
             // Envia todos os dados necessários
             Send.Join(this);
+            Send.Map(Account, Map.Data);
             Send.Map_Players(this);
             Send.Player_Experience(this);
             Send.Player_Inventory(this);
@@ -183,7 +184,7 @@ namespace Objects
         {
             byte Next_X = X, Next_Y = Y;
             byte Old_X = X, Old_Y = Y;
-            TMap Link = (TMap)Lists.GetData(Lists.Temp_Map, Map.Data.Link[(byte)Direction].ID);
+            TMap Link = null;// (TMap)Lists.GetData(Lists.Temp_Map, Map.Data.Link[(byte)Direction].ID);
             bool SecondMovement = false;
 
             // Previne erros

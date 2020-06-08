@@ -26,11 +26,11 @@ class Panels
     }
 
     // Retorna em qual slot o mouse está sobrepondo
-    public static byte Inventory_Slot => Utilities.Slot(Get("Menu_Inventory"), 7, 29, 6, 5);
-    public static byte Hotbar_Slot => Utilities.Slot(Get("Hotbar"), 8, 6, 1, 10);
-    public static byte Trade_Slot => Utilities.Slot(Get("Trade"), 7, 50, 6, 5);
-    public static short Shop_Slot => (short)(Utilities.Slot(Get("Shop"), 7, 50, 4, 7) - 1);
-    public static short Equipment_Slot => (short)(Utilities.Slot(Get("Menu_Character"), 7, 248, 1, 5) - 1);
+    public static byte Inventory_Slot => Utils.Slot(Get("Menu_Inventory"), 7, 29, 6, 5);
+    public static byte Hotbar_Slot => Utils.Slot(Get("Hotbar"), 8, 6, 1, 10);
+    public static byte Trade_Slot => Utils.Slot(Get("Trade"), 7, 50, 6, 5);
+    public static short Shop_Slot => (short)(Utils.Slot(Get("Shop"), 7, 50, 4, 7) - 1);
+    public static short Equipment_Slot => (short)(Utils.Slot(Get("Menu_Character"), 7, 248, 1, 5) - 1);
 
     public static void Inventory_MouseDown(SFML.Window.MouseButtonEventArgs e)
     {
@@ -49,7 +49,7 @@ class Panels
                 {
                     if (Player.Me.Inventory[Slot].Amount != 1)
                     {
-                        Utilities.Shop_Inventory_Slot = Slot;
+                        Utils.Shop_Inventory_Slot = Slot;
                         TextBoxes.Get("Shop_Sell_Amount").Text = string.Empty;
                         Get("Shop_Sell").Visible = true;
                     }
@@ -59,14 +59,14 @@ class Panels
                 else if (!Get("Trade").Visible)
                     if (Player.Me.Inventory[Slot].Amount != 1)
                     {
-                        Utilities.Drop_Slot = Slot;
+                        Utils.Drop_Slot = Slot;
                         TextBoxes.Get("Drop_Amount").Text = string.Empty;
                         Get("Drop").Visible = true;
                     }
                     else Send.DropItem(Slot, 1);
         }
         // Seleciona o item
-        else if (e.Button == SFML.Window.Mouse.Button.Left) Utilities.Inventory_Change = Slot;
+        else if (e.Button == SFML.Window.Mouse.Button.Left) Utils.Inventory_Change = Slot;
     }
 
     public static void Equipment_MouseDown(SFML.Window.MouseButtonEventArgs e)
@@ -74,7 +74,7 @@ class Panels
         Point Panel_Position = Get("Menu_Character").Position;
 
         for (byte i = 0; i < (byte)Game.Equipments.Count; i++)
-            if (Utilities.IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
+            if (Utils.IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
                 // Remove o equipamento
                 if (e.Button == SFML.Window.Mouse.Button.Right)
                     if (Player.Me.Equipment[i].Bind != Game.BindOn.Equip)
@@ -101,7 +101,7 @@ class Panels
         // Seleciona o item
         if (e.Button == SFML.Window.Mouse.Button.Left)
         {
-            Utilities.Hotbar_Change = Slot;
+            Utils.Hotbar_Change = Slot;
             return;
         }
     }

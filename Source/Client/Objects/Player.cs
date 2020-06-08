@@ -20,7 +20,7 @@ class Player
         public short[] Max_Vital = new short[(byte)Game.Vitals.Count];
         public short[] Attribute = new short[(byte)Game.Attributes.Count];
         public Item[] Equipment = new Item[(byte)Game.Equipments.Count];
-        public short Map_Num;
+        public TMap Map;
 
         public Structure(string Name)
         {
@@ -86,7 +86,7 @@ class Player
             }
 
             // Verifica se o azulejo seguinte está livre
-            if (Map.Tile_Blocked(Map_Num, X, Y, Direction)) return;
+            if (Map.Tile_Blocked(X, Y, Direction)) return;
 
             // Define a velocidade que o jogador se move
             if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Graphics.RenderWindow.HasFocus())
@@ -135,8 +135,8 @@ class Player
             if (TextBoxes.Focused != null) return;
 
             // Verifica se tem algum item nas coordenadas 
-            for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)
-                if (Lists.Temp_Map.Item[i].X == X && Lists.Temp_Map.Item[i].Y == Y)
+            for (byte i = 0; i < Mapper.Current.Item.Length; i++)
+                if (Mapper.Current.Item[i].X == X && Mapper.Current.Item[i].Y == Y)
                     HasItem = true;
 
             // Verifica se tem algum espaço vazio no inventário

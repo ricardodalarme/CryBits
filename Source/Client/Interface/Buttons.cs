@@ -19,7 +19,7 @@ class Buttons
         public void MouseUp()
         {
             // Somente se necessário
-            if (!Utilities.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
+            if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
 
             // Altera o estado do botão
             Audio.Sound.Play(Audio.Sounds.Click);
@@ -33,7 +33,7 @@ class Buttons
         {
             // Somente se necessário
             if (e.Button == Mouse.Button.Right) return;
-            if (!Utilities.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
+            if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
 
             // Altera o estado do botão
             State = States.Click;
@@ -42,7 +42,7 @@ class Buttons
         public void MouseMove()
         {
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-            if (!Utilities.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num]))))
+            if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num]))))
             {
                 State = States.Normal;
                 return;
@@ -121,7 +121,7 @@ class Buttons
     public static bool Characters_Change_Buttons()
     {
         // Altera os botões visíveis
-        bool Visibility = Lists.Characters != null && Utilities.SelectCharacter < Lists.Characters.Length;
+        bool Visibility = Lists.Characters != null && Utils.SelectCharacter < Lists.Characters.Length;
         Get("Character_Create").Visible = !Visibility;
         Get("Character_Delete").Visible = Visibility;
         Get("Character_Use").Visible = Visibility;
@@ -204,19 +204,19 @@ class Buttons
     private static void CreateCharacter_ChangeRight()
     {
         // Altera a classe selecionada pelo jogador
-        if (Utilities.CreateCharacter_Class == Lists.Class.Count - 1)
-            Utilities.CreateCharacter_Class = 0;
+        if (Utils.CreateCharacter_Class == Lists.Class.Count - 1)
+            Utils.CreateCharacter_Class = 0;
         else
-            Utilities.CreateCharacter_Class += 1;
+            Utils.CreateCharacter_Class += 1;
     }
 
     private static void CreateCharacter_ChangeLeft()
     {
         // Altera a classe selecionada pelo jogador
-        if (Utilities.CreateCharacter_Class == 0)
-            Utilities.CreateCharacter_Class = (byte)Lists.Class.Count;
+        if (Utils.CreateCharacter_Class == 0)
+            Utils.CreateCharacter_Class = (byte)Lists.Class.Count;
         else
-            Utilities.CreateCharacter_Class -= 1;
+            Utils.CreateCharacter_Class -= 1;
     }
 
     private static void CreateCharacter_Texture_ChangeRight()
@@ -224,15 +224,15 @@ class Buttons
         // Lista de texturas
         short[] Tex_List;
         if (CheckBoxes.Get("GenderMale").Checked)
-            Tex_List = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value.Tex_Male;
+            Tex_List = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Male;
         else
-            Tex_List = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value.Tex_Female;
+            Tex_List = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Female;
 
         // Altera a classe selecionada pelo jogador
-        if (Utilities.CreateCharacter_Tex == Tex_List.Length - 1)
-            Utilities.CreateCharacter_Tex = 0;
+        if (Utils.CreateCharacter_Tex == Tex_List.Length - 1)
+            Utils.CreateCharacter_Tex = 0;
         else
-            Utilities.CreateCharacter_Tex += 1;
+            Utils.CreateCharacter_Tex += 1;
     }
 
     private static void CreateCharacter_Texture_ChangeLeft()
@@ -240,15 +240,15 @@ class Buttons
         // Lista de texturas
         short[] Tex_List;
         if (CheckBoxes.Get("GenderMale").Checked)
-            Tex_List = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value.Tex_Male;
+            Tex_List = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Male;
         else
-            Tex_List = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value.Tex_Female;
+            Tex_List = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Female;
 
         // Altera a classe selecionada pelo jogador
-        if (Utilities.CreateCharacter_Tex == 0)
-            Utilities.CreateCharacter_Tex = (byte)(Tex_List.Length - 1);
+        if (Utils.CreateCharacter_Tex == 0)
+            Utils.CreateCharacter_Tex = (byte)(Tex_List.Length - 1);
         else
-            Utilities.CreateCharacter_Tex -= 1;
+            Utils.CreateCharacter_Tex -= 1;
     }
 
     private static void CreateCharacter_Return()
@@ -279,19 +279,19 @@ class Buttons
     private static void Character_Change_Right()
     {
         // Altera o personagem selecionado pelo jogador
-        if (Utilities.SelectCharacter == Lists.Characters.Length)
-            Utilities.SelectCharacter = 0;
+        if (Utils.SelectCharacter == Lists.Characters.Length)
+            Utils.SelectCharacter = 0;
         else
-            Utilities.SelectCharacter += 1;
+            Utils.SelectCharacter += 1;
     }
 
     private static void Character_Change_Left()
     {
         // Altera o personagem selecionado pelo jogador
-        if (Utilities.SelectCharacter == 0)
-            Utilities.SelectCharacter = Lists.Characters.Length;
+        if (Utils.SelectCharacter == 0)
+            Utils.SelectCharacter = Lists.Characters.Length;
         else
-            Utilities.SelectCharacter -= 1;
+            Utils.SelectCharacter -= 1;
     }
 
     private static void Chat_Up()
@@ -370,7 +370,7 @@ class Buttons
         }
 
         // Solta o item
-        Send.DropItem(Utilities.Drop_Slot, Amount);
+        Send.DropItem(Utils.Drop_Slot, Amount);
         Panels.Get("Drop").Visible = false;
     }
 
@@ -458,7 +458,7 @@ class Buttons
         }
 
         // Solta o item
-        Send.Trade_Offer(Utilities.Trade_Slot, Utilities.Trade_Inventory_Slot, Amount);
+        Send.Trade_Offer(Utils.Trade_Slot, Utils.Trade_Inventory_Slot, Amount);
         Panels.Get("Trade_Amount").Visible = false;
     }
 
@@ -488,7 +488,7 @@ class Buttons
         }
 
         // Vende o item
-        Send.Shop_Sell(Utilities.Shop_Inventory_Slot, Amount);
+        Send.Shop_Sell(Utils.Shop_Inventory_Slot, Amount);
         Panels.Get("Shop_Sell").Visible = false;
     }
 

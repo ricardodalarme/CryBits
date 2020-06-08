@@ -29,15 +29,15 @@ class Game
     public const byte Movement_Right = 2;
 
     // Visão do jogador
-    private static Point Sight_Offset;
-    public static Rectangle Sight;
+    private static Rectangle Camera;
+    public static Rectangle Tile_Sight;
 
     // Bloqueio direcional
     public const byte Max_DirBlock = 3;
 
     // Tamanho da tela
     public const short Screen_Width = Map_Width * Grid;
-    public const short Screen_Height = Map_Height  * Grid;
+    public const short Screen_Height = Map_Height * Grid;
 
     // Limites em geral
     public const byte Max_Inventory = 30;
@@ -152,8 +152,8 @@ class Game
     }
 
     // Converte o valor em uma posição adequada à camera
-    public static int ConvertX(int x) => x - (Sight.X * Grid) - Sight_Offset.X;
-    public static int ConvertY(int y) => y - (Sight.Y * Grid) - Sight_Offset.Y;
+    public static int ConvertX(int x) => x - (Tile_Sight.X * Grid) - Camera.X;
+    public static int ConvertY(int y) => y - (Tile_Sight.Y * Grid) - Camera.Y;
 
     public static Directions ReverseDirection(Directions Direction)
     {
@@ -168,61 +168,66 @@ class Game
         }
     }
 
-    public static short Find_Shop_Bought(Objects.Item Item)
-    {
-        for (byte i = 0; i < Utilities.Shop_Open.Bought.Length; i++)
-            if (Utilities.Shop_Open.Bought[i].Item == Item)
-                return i;
-
-        return -1;
-    }
-
     public static void UpdateCamera()
     {
-        // Offset da tela
-        Sight_Offset.X = Player.Me.X2 + Grid;
-        Sight_Offset.Y = Player.Me.Y2 + Grid;
+        Point End = new Point(), Start = new Point(), Position = new Point();
+
+        // Centro da tela
+        Position.X = Player.Me.X2 + Grid;
+        Position.Y = Player.Me.Y2 + Grid;
 
         // Início da tela
-        Sight.X = Player.Me.X - Map_Width / 2 ;
-        Sight.Y = Player.Me.Y - Map_Height / 2 ;
+        Start.X = Player.Me.X - ((Map_Width + 1) / 2) - 1;
+        Start.Y = Player.Me.Y - ((Map_Height + 1) / 2) - 1;
 
         // Reajusta a posição horizontal da tela
-        if (Sight.X < 0)
+        if (Start.X < 0)
         {
-            Sight_Offset.X = 0;
-            if (Sight.X == -1 && Player.Me.X2 > 0) Sight_Offset.X = Player.Me.X2;
-            Sight.X = 0;
+            Position.X = 0;
+            if (Start.X == -1 && Player.Me.X2 > 0) Position.X = Player.Me.X2;
+            Start.X = 0;
         }
 
         // Reajusta a posição vertical da tela
-        if (Sight.Y < 0)
+        if (Start.Y < 0)
         {
-            Sight_Offset.Y = 0;
-            if (Sight.Y == -1 && Player.Me.Y2 > 0) Sight_Offset.Y = Player.Me.Y2;
-            Sight.Y = 0;
+            Position.Y = 0;
+            if (Start.Y == -1 && Player.Me.Y2 > 0) Position.Y = Player.Me.Y2;
+            Start.Y = 0;
         }
 
         // Final da tela
-        Sight.Width = Sight.X + Map_Width;
-        Sight.Height = Sight.Y + Map_Height;
+        End.X = Start.X + (Map_Width + 1) + 1;
+        End.Y = Start.Y + (Map_Height + 1) + 1;
 
         // Reajusta a posição horizontal da tela
-        if (Sight.Width >= Map_Width)
+        if (End.X > Map_Width)
         {
-            Sight_Offset.X = Grid;
-            if (Sight.Width == Map_Width && Player.Me.X2 < 0) Sight_Offset.X = Player.Me.X2 + Grid;
-            Sight.Width = Map_Width -1;
-            Sight.X = Sight.Width - Map_Width -1;
+            Position.X = Grid;
+            if (End.X == Map_Width + 1 && Player.Me.X2 < 0) Position.X = Player.Me.X2 + Grid;
+            End.X = Map_Width;
+            Start.X = End.X - Map_Width - 1;
         }
 
         // Reajusta a posição vertical da tela
-        if (Sight.Height >= Map_Height)
+        if (End.Y > Map_Height)
         {
-            Sight_Offset.Y = Grid;
-            if (Sight.Height == Map_Height  && Player.Me.Y2 < 0) Sight_Offset.Y = Player.Me.Y2 + Grid;
-            Sight.Height = Map_Height -1;
-            Sight.Y = Sight.Height - Map_Height;
+            Position.Y = Grid;
+            if (End.Y == Map_Height + 1 && Player.Me.Y2 < 0) Position.Y = Player.Me.Y2 + Grid;
+            End.Y = Map_Height;
+            Start.Y = End.Y - Map_Height - 1;
         }
+
+        // Define a dimensão dos azulejos vistos
+        Tile_Sight.Y = Start.Y;
+        Tile_Sight.Height = End.Y;
+        Tile_Sight.X = Start.X;
+        Tile_Sight.Width = End.X;
+
+        // Define a posição da câmera
+        Camera.Y = Position.Y;
+        Camera.Height = Camera.Y + Screen_Height;
+        Camera.X = Position.X;
+        Camera.Width = Camera.X + Screen_Width;
     }
 }

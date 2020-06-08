@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -122,17 +123,18 @@ class Read
         }
     }
 
-    public static void Map(int Index)
+    public static void Map(Guid ID)
     {
-        FileInfo File = new FileInfo(Directories.Maps_Data.FullName + Index + Directories.Format);
+        FileInfo File = new FileInfo(Directories.Maps_Data.FullName + ID.ToString() + Directories.Format);
 
         // Lê os dados
         FileStream Stream = File.OpenRead();
-        Lists.Map = (Lists.Structures.Map)new BinaryFormatter().Deserialize(Stream);
+        // Lists.Map.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
+        Lists.Temp_Map.Add(ID, new Objects.TMap(Lists.Map[ID]));
         Stream.Close();
 
         // Redimensiona as partículas do clima
-        global::Map.Weather_Update();
-        global::Map.Autotile.Update();
+        Mapper.Weather_Update();
+        Mapper.Autotile.Update();
     }
 }

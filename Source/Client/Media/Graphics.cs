@@ -178,8 +178,8 @@ partial class Graphics
         // Alinhamento do texto
         switch (Alignment)
         {
-            case Alignments.Center: X -= Utilities.MeasureString(Text) / 2; break;
-            case Alignments.Right: X -= Utilities.MeasureString(Text); break;
+            case Alignments.Center: X -= Utils.MeasureString(Text) / 2; break;
+            case Alignments.Right: X -= Utils.MeasureString(Text); break;
         }
 
         // Define os dados
@@ -196,7 +196,7 @@ partial class Graphics
     private static void DrawText(string Text, int X, int Y, SFML.Graphics.Color Color, int Max_Width, bool Cut = true)
     {
         string Temp_Text;
-        int Message_Width = Utilities.MeasureString(Text), Split = -1;
+        int Message_Width = Utils.MeasureString(Text), Split = -1;
 
         // Caso couber, adiciona a mensagem normalmente
         if (Message_Width < Max_Width)
@@ -214,7 +214,7 @@ partial class Graphics
 
                 // Desenha a parte do texto que cabe
                 Temp_Text = Text.Substring(0, i);
-                if (Utilities.MeasureString(Temp_Text) > Max_Width)
+                if (Utils.MeasureString(Temp_Text) > Max_Width)
                 {
                     // Divide o texto novamente caso tenha encontrado um ponto de divisão
                     if (Cut && Split != -1) Temp_Text = Text.Substring(0, Split + 1);
@@ -269,26 +269,26 @@ partial class Graphics
 
         // Desenhos abaixo do jogador
         Map_Panorama();
-        Map_Tiles((byte)Map.Layers.Ground);
+        Map_Tiles((byte)Mapper.Layers.Ground);
         Map_Blood();
         Map_Items();
 
         // Desenha os NPCs
-        for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
-            if (Lists.Temp_Map.NPC[i].Data != null)
-                NPC(Lists.Temp_Map.NPC[i]);
+        for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
+            if (Mapper.Current.NPC[i].Data != null)
+                NPC(Mapper.Current.NPC[i]);
 
         // Desenha os jogadores
         for (byte i = 0; i < Lists.Player.Count; i++)
             if (Lists.Player[i] != Player.Me)
-                if (Lists.Player[i].Map_Num == Player.Me.Map_Num)
+                if (Lists.Player[i].Map == Player.Me.Map)
                     Player_Character(Lists.Player[i]);
 
         // Desenha o próprio jogador
         Player_Character(Player.Me);
 
         // Desenhos acima do jogador
-        Map_Tiles((byte)Map.Layers.Fringe);
+        Map_Tiles((byte)Mapper.Layers.Fringe);
         Map_Weather();
         Map_Fog();
         Map_Name();
@@ -368,7 +368,7 @@ partial class Graphics
         if (Tool.Password && !string.IsNullOrEmpty(Text)) Text = new string('•', Text.Length);
 
         // Quebra o texto para que caiba no digitalizador, se for necessário
-        Text = Utilities.TextBreak(Text, Tool.Width - 10);
+        Text = Utils.TextBreak(Text, Tool.Width - 10);
 
         // Desenha o texto do digitalizador
         if (TextBoxes.Focused != null && (TextBoxes.Structure)TextBoxes.Focused.Data == Tool && TextBoxes.Signal) Text += "|";
@@ -401,7 +401,7 @@ partial class Graphics
     private static void SelectCharacter_Class()
     {
         Point Text_Position = new Point(399, 425);
-        string Text = "(" + (Utilities.SelectCharacter + 1) + ") None";
+        string Text = "(" + (Utils.SelectCharacter + 1) + ") None";
 
         // Somente se necessário
         if (!Buttons.Characters_Change_Buttons())
@@ -411,14 +411,14 @@ partial class Graphics
         }
 
         // Verifica se o personagem existe
-        if (Utilities.SelectCharacter >= Lists.Characters.Length)
+        if (Utils.SelectCharacter >= Lists.Characters.Length)
         {
             DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
             return;
         }
 
         // Desenha o personagem
-        short Texture_Num = Lists.Characters[Utilities.SelectCharacter].Texture_Num;
+        short Texture_Num = Lists.Characters[Utils.SelectCharacter].Texture_Num;
         if (Texture_Num > 0)
         {
             Render(Tex_Face[Texture_Num], new Point(353, 442));
@@ -426,20 +426,20 @@ partial class Graphics
         }
 
         // Desenha o nome da classe
-        Text = "(" + (Utilities.SelectCharacter + 1) + ") " + Lists.Characters[Utilities.SelectCharacter].Name;
+        Text = "(" + (Utils.SelectCharacter + 1) + ") " + Lists.Characters[Utils.SelectCharacter].Name;
         DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
     }
 
     private static void CreateCharacter_Class()
     {
         short Texture_Num = 0;
-        Objects.Class Class = Lists.Class.ElementAt(Utilities.CreateCharacter_Class).Value;
+        Objects.Class Class = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value;
 
         // Textura do personagem
         if (CheckBoxes.Get("GenderMale").Checked && Class.Tex_Male.Length > 0)
-            Texture_Num = Class.Tex_Male[Utilities.CreateCharacter_Tex];
+            Texture_Num = Class.Tex_Male[Utils.CreateCharacter_Tex];
         else if (Class.Tex_Female.Length > 0)
-            Texture_Num = Class.Tex_Female[Utilities.CreateCharacter_Tex];
+            Texture_Num = Class.Tex_Female[Utils.CreateCharacter_Tex];
 
         // Desenha o personagem
         if (Texture_Num > 0)
@@ -496,7 +496,7 @@ partial class Graphics
 
     private static void Informations(Panels.Structure Tool)
     {
-        Objects.Item Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Utilities.Infomation_ID));
+        Objects.Item Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Utils.Infomation_ID));
         SFML.Graphics.Color Text_Color;
         List<string> Data = new List<string>();
 
@@ -521,10 +521,10 @@ partial class Graphics
         // Informações da Loja
         if (Panels.Get("Shop").Visible)
             if (Panels.Shop_Slot >= 0)
-                Data.Add("Price: " + Utilities.Shop_Open.Sold[Panels.Shop_Slot].Price);
+                Data.Add("Price: " + Utils.Shop_Open.Sold[Panels.Shop_Slot].Price);
             else if (Panels.Inventory_Slot > 0)
-                if (Game.Find_Shop_Bought(Item) >= 0)
-                    Data.Add("Sale price: " + Utilities.Shop_Open.Bought[Game.Find_Shop_Bought(Item)].Price);
+                if (Utils.Shop_Open.FindBought(Item) != null)
+                    Data.Add("Sale price: " + Utils.Shop_Open.FindBought(Item).Price);
 
         // Informações específicas dos itens
         switch ((Game.Items)Item.Type)
@@ -576,9 +576,9 @@ partial class Graphics
         }
 
         // Movendo slot
-        if (Utilities.Hotbar_Change > 0)
-            if (Player.Me.Hotbar[Utilities.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
-                Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Utilities.Hotbar_Change].Slot].Item.Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
+        if (Utils.Hotbar_Change > 0)
+            if (Player.Me.Hotbar[Utils.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
+                Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Utils.Hotbar_Change].Slot].Item.Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
     }
 
     private static void Menu_Character(Panels.Structure Tool)
@@ -613,12 +613,12 @@ partial class Graphics
             Item(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount, Tool.Position + new Size(7, 30), i, NumColumns);
 
         // Movendo item
-        if (Utilities.Inventory_Change > 0) Render(Tex_Item[Player.Me.Inventory[Utilities.Inventory_Change].Item.Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
+        if (Utils.Inventory_Change > 0) Render(Tex_Item[Player.Me.Inventory[Utils.Inventory_Change].Item.Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
     }
 
     private static void Party_Invitation(Panels.Structure Tool)
     {
-        DrawText(Utilities.Party_Invitation + " has invite you to a party. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+        DrawText(Utils.Party_Invitation + " has invite you to a party. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
     }
 
     private static void Party()
@@ -640,7 +640,7 @@ partial class Graphics
 
     private static void Trade_Invitation(Panels.Structure Tool)
     {
-        DrawText(Utilities.Trade_Invitation + " has invite you to a trade. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+        DrawText(Utils.Trade_Invitation + " has invite you to a trade. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
     }
 
     private static void Trade(Panels.Structure Tool)
@@ -656,13 +656,13 @@ partial class Graphics
     private static void Shop(Panels.Structure Tool)
     {
         // Dados da loja
-        string Name = Utilities.Shop_Open.Name;
+        string Name = Utils.Shop_Open.Name;
         DrawText(Name, Tool.Position.X + 131, Tool.Position.Y + 28, SFML.Graphics.Color.White, Alignments.Center);
-        DrawText("Currency: " + Utilities.Shop_Open.Currency.Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
+        DrawText("Currency: " + Utils.Shop_Open.Currency.Name, Tool.Position.X + 10, Tool.Position.Y + 195, SFML.Graphics.Color.White);
 
         // Desenha os itens
-        for (byte i = 0; i < Utilities.Shop_Open.Sold.Length; i++)
-            Item(Utilities.Shop_Open.Sold[i].Item, Utilities.Shop_Open.Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
+        for (byte i = 0; i < Utils.Shop_Open.Sold.Length; i++)
+            Item(Utils.Shop_Open.Sold[i].Item, Utils.Shop_Open.Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
     }
 
     private static void Item(Objects.Item Item, short Amount, Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)
@@ -772,7 +772,7 @@ partial class Graphics
     private static void Player_Name(Player.Structure Player)
     {
         Texture Texture = Tex_Character[Player.Texture_Num];
-        int Name_Size = Utilities.MeasureString(Player.Name);
+        int Name_Size = Utils.MeasureString(Player.Name);
 
         // Posição do texto
         Point Position = new Point
@@ -792,7 +792,7 @@ partial class Graphics
         DrawText(Player.Name, Game.ConvertX(Position.X), Game.ConvertY(Position.Y), Color);
     }
 
-    private static void NPC(NPC NPC)
+    private static void NPC(Objects.TNPC NPC)
     {
         byte Column = 0;
         bool Hurt = false;
@@ -820,11 +820,11 @@ partial class Graphics
         NPC_Bars(NPC);
     }
 
-    private static void NPC_Name(NPC NPC)
+    private static void NPC_Name(Objects.TNPC NPC)
     {
         Point Position = new Point();
         SFML.Graphics.Color Color;
-        int Name_Size = Utilities.MeasureString(NPC.Data.Name);
+        int Name_Size = Utils.MeasureString(NPC.Data.Name);
         Texture Texture = Tex_Character[NPC.Data.Texture];
 
         // Posição do texto
@@ -844,7 +844,7 @@ partial class Graphics
         DrawText(NPC.Data.Name, Game.ConvertX(Position.X), Game.ConvertY(Position.Y), Color);
     }
 
-    private static void NPC_Bars(NPC NPC)
+    private static void NPC_Bars(Objects.TNPC NPC)
     {
         Texture Texture = Tex_Character[NPC.Data.Texture];
         short Value = NPC.Vital[(byte)Game.Vitals.HP];
@@ -860,5 +860,139 @@ partial class Graphics
         // Desenha a barra 
         Render(Tex_Bars, Position.X, Position.Y, 0, 4, FullWidth, 4);
         Render(Tex_Bars, Position.X, Position.Y, 0, 0, Width, 4);
+    }
+
+    private static void Map_Tiles(byte c)
+    {
+        // Previne erros
+        if (Mapper.Current.Data.Name == null) return;
+
+        // Dados
+        System.Drawing.Color TempColor = System.Drawing.Color.FromArgb(Mapper.Current.Data.Color);
+        SFML.Graphics.Color Color = CColor(TempColor.R, TempColor.G, TempColor.B);
+
+        // Desenha todas as camadas dos azulejos
+        for (var x = Game.Tile_Sight.X; x <= Game.Tile_Sight.Width; x++)
+            for (var y = Game.Tile_Sight.Y; y <= Game.Tile_Sight.Height; y++)
+                if (!Mapper.OutOfLimit(x, y))
+                    for (byte q = 0; q <= Mapper.Current.Data.Tile[x, y].Data.GetUpperBound(1); q++)
+                        if (Mapper.Current.Data.Tile[x, y].Data[c, q].Tile > 0)
+                        {
+                            int x2 = Mapper.Current.Data.Tile[x, y].Data[c, q].X * Game.Grid;
+                            int y2 = Mapper.Current.Data.Tile[x, y].Data[c, q].Y * Game.Grid;
+
+                            // Desenha o azulejo
+                            if (!Mapper.Current.Data.Tile[x, y].Data[c, q].Automatic)
+                                Render(Tex_Tile[Mapper.Current.Data.Tile[x, y].Data[c, q].Tile], Game.ConvertX(x * Game.Grid), Game.ConvertY(y * Game.Grid), x2, y2, Game.Grid, Game.Grid, Color);
+                            else
+                                Map_Autotile(new Point(Game.ConvertX(x * Game.Grid), Game.ConvertY(y * Game.Grid)), Mapper.Current.Data.Tile[x, y].Data[c, q], Color);
+                        }
+    }
+
+    private static void Map_Autotile(Point Position, Objects.Map_Tile_Data Data, SFML.Graphics.Color Cor)
+    {
+        // Desenha os 4 mini azulejos
+        for (byte i = 0; i < 4; i++)
+        {
+            Point Destiny = Position, Source = Data.Mini[i];
+
+            // Partes do azulejo
+            switch (i)
+            {
+                case 1: Destiny.X += 16; break;
+                case 2: Destiny.Y += 16; break;
+                case 3: Destiny.X += 16; Destiny.Y += 16; break;
+            }
+
+            // Renderiza o mini azulejo
+            Render(Tex_Tile[Data.Tile], new Rectangle(Source.X, Source.Y, 16, 16), new Rectangle(Destiny, new Size(16, 16)), Cor);
+        }
+    }
+
+    private static void Map_Panorama()
+    {
+        // Desenha o panorama
+        if (Mapper.Current.Data.Panorama > 0)
+            Render(Tex_Panorama[Mapper.Current.Data.Panorama], new Point(0));
+    }
+
+    private static void Map_Fog()
+    {
+        Objects.Map_Fog Data = Mapper.Current.Data.Fog;
+        Size Texture_Size = TSize(Tex_Fog[Data.Texture]);
+
+        // Previne erros
+        if (Data.Texture <= 0) return;
+
+        // Desenha a fumaça
+        for (int x = -1; x <= Game.Map_Width * Game.Grid / Texture_Size.Width; x++)
+            for (int y = -1; y <= Game.Map_Height * Game.Grid / Texture_Size.Height; y++)
+                Render(Tex_Fog[Data.Texture], new Point(x * Texture_Size.Width + Mapper.Fog_X, y * Texture_Size.Height + Mapper.Fog_Y), new SFML.Graphics.Color(255, 255, 255, Data.Alpha));
+    }
+
+    private static void Map_Weather()
+    {
+        byte x = 0;
+
+        // Somente se necessário
+        if (Mapper.Current.Data.Weather.Type == 0) return;
+
+        // Textura
+        switch ((Mapper.Weathers)Mapper.Current.Data.Weather.Type)
+        {
+            case Mapper.Weathers.Snowing: x = 32; break;
+        }
+
+        // Desenha as partículas
+        for (int i = 0; i < Lists.Weather.Length; i++)
+            if (Lists.Weather[i].Visible)
+                Render(Tex_Weather, new Rectangle(x, 0, 32, 32), new Rectangle(Lists.Weather[i].x, Lists.Weather[i].y, 32, 32), CColor(255, 255, 255, 150));
+
+        // Trovoadas
+        Render(Tex_Blanc, 0, 0, 0, 0, Game.Screen_Width, Game.Screen_Height, new SFML.Graphics.Color(255, 255, 255, Mapper.Lightning));
+    }
+
+    private static void Map_Name()
+    {
+        SFML.Graphics.Color Color;
+
+        // Somente se necessário
+        if (string.IsNullOrEmpty(Mapper.Current.Data.Name)) return;
+
+        // A cor do texto vária de acordo com a moral do mapa
+        switch (Mapper.Current.Data.Moral)
+        {
+            case (byte)Mapper.Morals.Danger: Color = SFML.Graphics.Color.Red; break;
+            default: Color = SFML.Graphics.Color.White; break;
+        }
+
+        // Desenha o nome do mapa
+        DrawText(Mapper.Current.Data.Name, 426, 48, Color);
+    }
+
+    private static void Map_Items()
+    {
+        // Desenha todos os itens que estão no chão
+        for (byte i = 0; i < Mapper.Current.Item.Length; i++)
+        {
+            Objects.TMap_Items Data = Mapper.Current.Item[i];
+
+            // Somente se necessário
+            if (Data.Item == null) continue;
+
+            // Desenha o item
+            Point Position = new Point(Game.ConvertX(Data.X * Game.Grid), Game.ConvertY(Data.Y * Game.Grid));
+            Render(Tex_Item[Data.Item.Texture], Position);
+        }
+    }
+
+    private static void Map_Blood()
+    {
+        // Desenha todos os sangues
+        for (byte i = 0; i < Mapper.Current.Blood.Count; i++)
+        {
+            Objects.TMap_Blood Data = Mapper.Current.Blood[i];
+            Render(Tex_Blood, Game.ConvertX(Data.X * Game.Grid), Game.ConvertY(Data.Y * Game.Grid), Data.Texture_Num * 32, 0, 32, 32, CColor(255, 255, 255, Data.Opacity));
+        }
     }
 }

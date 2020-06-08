@@ -21,10 +21,10 @@ class CheckBoxes
         {
             // Tamanho do marcador
             Size Texture_Size = Graphics.TSize(Graphics.Tex_CheckBox);
-            Size Box = new Size(Texture_Size.Width / 2 + Utilities.MeasureString(Text) + Margin, Texture_Size.Height);
+            Size Box = new Size(Texture_Size.Width / 2 + Utils.MeasureString(Text) + Margin, Texture_Size.Height);
 
             // Somente se estiver sobrepondo a ferramenta
-            if (!Utilities.IsAbove(new Rectangle(Position, Box))) return;
+            if (!Utils.IsAbove(new Rectangle(Position, Box))) return;
 
             // Altera o estado do marcador
             Checked = !Checked;
@@ -78,7 +78,7 @@ class CheckBoxes
         else if (Window.Current == Window.Types.Menu)
             Audio.Music.Play(Audio.Musics.Menu);
         else if (Window.Current == Window.Types.Game)
-            Audio.Music.Play((Audio.Musics)Lists.Map.Music);
+            Audio.Music.Play((Audio.Musics)Mapper.Current.Data.Music);
     }
 
     private static void SaveUsername()
@@ -92,14 +92,14 @@ class CheckBoxes
     {
         // Altera o estado do marcador de outro gênero
         Get("GenderFemale").Checked = !Get("GenderMale").Checked;
-        Utilities.CreateCharacter_Tex = 0;
+        Utils.CreateCharacter_Tex = 0;
     }
 
     private static void GenreFemale()
     {
         // Altera o estado do marcador de outro gênero
         Get("GenderMale").Checked = !Get("GenderFemale").Checked;
-        Utilities.CreateCharacter_Tex = 0;
+        Utils.CreateCharacter_Tex = 0;
     }
 
     private static void Chat()

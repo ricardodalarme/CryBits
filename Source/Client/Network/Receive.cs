@@ -110,7 +110,7 @@ class Receive
     private static void Connect()
     {
         // Reseta os valores
-        Utilities.SelectCharacter = 0;
+        Utils.SelectCharacter = 0;
         Lists.Class = new Dictionary<Guid, Objects.Class>();
 
         // Abre o painel de seleção de personagens
@@ -136,8 +136,8 @@ class Receive
         TextBoxes.Get("CreateCharacter_Name").Text = string.Empty;
         CheckBoxes.Get("GenderMale").Checked = true;
         CheckBoxes.Get("GenderFemale").Checked = false;
-        Utilities.CreateCharacter_Class = 0;
-        Utilities.CreateCharacter_Tex = 0;
+        Utils.CreateCharacter_Class = 0;
+        Utils.CreateCharacter_Tex = 0;
 
         // Abre o painel de criação de personagem
         Panels.Menu_Close();
@@ -202,7 +202,7 @@ class Receive
     private static void JoinGame()
     {
         // Reseta os valores
-        Chat.Order = new System.Collections.Generic.List<Chat.Structure>();
+        Chat.Order = new List<Chat.Structure>();
         Chat.Lines_First = 0;
         Loop.Chat_Timer = Environment.TickCount + Chat.Sleep_Timer;
         TextBoxes.Get("Chat").Text = string.Empty;
@@ -214,7 +214,7 @@ class Receive
         CheckBoxes.Get("Options_Trade").Checked = Lists.Options.Trade;
         CheckBoxes.Get("Options_Party").Checked = Lists.Options.Party;
         Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
-        Utilities.Infomation_ID = Guid.Empty.ToString();
+        Utils.Infomation_ID = Guid.Empty.ToString();
 
         // Reseta a interface
         Panels.Get("Menu_Character").Visible = false;
@@ -252,7 +252,7 @@ class Receive
         // Defini os dados do jogador
         Player.Texture_Num = Data.ReadInt16();
         Player.Level = Data.ReadInt16();
-        Player.Map_Num = Data.ReadInt16();
+        Player.Map = Lists.Temp_Map[new Guid(Data.ReadString())];
         Player.X = Data.ReadByte();
         Player.Y = Data.ReadByte();
         Player.Direction = (Game.Directions)Data.ReadByte();
@@ -263,6 +263,7 @@ class Receive
         }
         for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Player.Attribute[n] = Data.ReadInt16();
         for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Player.Equipment[n] = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+        Mapper.Current = Player.Map;
     }
 
     private static void Player_Position(NetIncomingMessage Data)
@@ -350,12 +351,12 @@ class Receive
             {
                 Player.Structure Victim_Data = global::Player.Get(Victim);
                 Victim_Data.Hurt = Environment.TickCount;
-                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
+                Mapper.Current.Blood.Add(new Objects.TMap_Blood((byte)Game.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
             }
             else if (Victim_Type == (byte)Game.Target.NPC)
             {
-                Lists.Temp_Map.NPC[byte.Parse(Victim)].Hurt = Environment.TickCount;
-                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Temp_Map.NPC[byte.Parse(Victim)].X, Lists.Temp_Map.NPC[byte.Parse(Victim)].Y, 255));
+                Mapper.Current.NPC[byte.Parse(Victim)].Hurt = Environment.TickCount;
+                Mapper.Current.Blood.Add(new Objects.TMap_Blood((byte)Game.Random.Next(0, 3), Mapper.Current.NPC[byte.Parse(Victim)].X, Mapper.Current.NPC[byte.Parse(Victim)].Y, 255));
             }
     }
 
@@ -397,66 +398,80 @@ class Receive
     private static void Map_Revision(NetIncomingMessage Data)
     {
         bool Needed = false;
-        short Map_Num = Data.ReadInt16();
+        Guid ID = new Guid(Data.ReadString());
 
         // Limpa todos os outros jogadores
         for (byte i = 0; i < Lists.Player.Count; i++)
             if (Lists.Player[i] != Player.Me)
                 Lists.Player.RemoveAt(i);
 
+        /*
         // Verifica se é necessário baixar os dados do mapa
-        if (System.IO.File.Exists(Directories.Maps_Data.FullName + Map_Num + Directories.Format))
+        if (System.IO.File.Exists(Directories.Maps_Data.FullName + ID + Directories.Format))
         {
-            Read.Map(Map_Num);
-            if (Lists.Map.Revision != Data.ReadInt16())
+            Needed = true;
+            break;
+            Read.Map(ID);
+            if (Lists.Map[ID].Revision != Data.ReadInt16())
                 Needed = true;
         }
         else
             Needed = true;
-
+        */
+        Needed = true;
         // Solicita os dados do mapa
         Send.RequestMap(Needed);
 
         // Reseta os sangues do mapa
-        Lists.Temp_Map.Blood = new List<Lists.Structures.Map_Blood>();
+        Mapper.Current.Blood = new List<Objects.TMap_Blood>();
     }
 
     private static void Map(NetIncomingMessage Data)
     {
-        // Define os dados
-        short Map_Num = Data.ReadInt16();
+        Guid ID = new Guid(Data.ReadString());
+        Objects.Map Map;
+
+        // Obtém o dado
+        if (Lists.Map.ContainsKey(ID)) Map = Lists.Map[ID];
+        else
+        {
+            Map = new Objects.Map(ID);
+            Lists.Map.Add(ID, Map);
+            Lists.Temp_Map.Add(ID, new Objects.TMap(Map));
+        }
+        Mapper.Current = Lists.Temp_Map[ID];
 
         // Lê os dados
-        Lists.Map.Revision = Data.ReadInt16();
-        Lists.Map.Name = Data.ReadString();
-        Lists.Map.Moral = Data.ReadByte();
-        Lists.Map.Panorama = Data.ReadByte();
-        Lists.Map.Music = Data.ReadByte();
-        Lists.Map.Color = Data.ReadInt32();
-        Lists.Map.Weather.Type = Data.ReadByte();
-        Lists.Map.Weather.Intensity = Data.ReadByte();
-        Lists.Map.Fog.Texture = Data.ReadByte();
-        Lists.Map.Fog.Speed_X = Data.ReadSByte();
-        Lists.Map.Fog.Speed_Y = Data.ReadSByte();
-        Lists.Map.Fog.Alpha = Data.ReadByte();
+        Map.Revision = Data.ReadInt16();
+        Map.Name = Data.ReadString();
+        Map.Moral = Data.ReadByte();
+        Map.Panorama = Data.ReadByte();
+        Map.Music = Data.ReadByte();
+        Map.Color = Data.ReadInt32();
+        Map.Weather.Type = Data.ReadByte();
+        Map.Weather.Intensity = Data.ReadByte();
+        Map.Fog.Texture = Data.ReadByte();
+        Map.Fog.Speed_X = Data.ReadSByte();
+        Map.Fog.Speed_Y = Data.ReadSByte();
+        Map.Fog.Alpha = Data.ReadByte();
         Data.ReadByte(); // Luz global
-        Data.ReadByte(); // Iluminação
 
         // Ligações
-        Lists.Map.Link = new short[(byte)Game.Directions.Count];
-        for (short i = 0; i < (short)Game.Directions.Count; i++)
-            Lists.Map.Link[i] = Data.ReadInt16();
+        Map.Link = new short[(byte)Game.Directions.Count];
+        for (byte i = 0; i < (byte)Game.Directions.Count; i++)
+            Data.ReadString();
 
         // Azulejos
         byte Num_Layers = Data.ReadByte();
 
         // Redimensiona os dados
+
         for (byte x = 0; x < Game.Map_Width; x++)
             for (byte y = 0; y < Game.Map_Height; y++)
-                Lists.Map.Tile[x, y].Data = new Lists.Structures.Map_Tile_Data[(byte)global::Map.Layers.Amount, Num_Layers + 1];
+                Map.Tile[x, y].Data = new Objects.Map_Tile_Data[(byte)global::Mapper.Layers.Count, Num_Layers ];
 
         // Lê os azulejos
-        for (byte i = 0; i <= Num_Layers; i++)
+        for (byte i = 0; i < Num_Layers; i++)
         {
             // Dados básicos
             Data.ReadString(); // Name
@@ -466,11 +481,11 @@ class Receive
             for (byte x = 0; x < Game.Map_Width; x++)
                 for (byte y = 0; y < Game.Map_Height; y++)
                 {
-                    Lists.Map.Tile[x, y].Data[t, i].X = Data.ReadByte();
-                    Lists.Map.Tile[x, y].Data[t, i].Y = Data.ReadByte();
-                    Lists.Map.Tile[x, y].Data[t, i].Tile = Data.ReadByte();
-                    Lists.Map.Tile[x, y].Data[t, i].Automatic = Data.ReadBoolean();
-                    Lists.Map.Tile[x, y].Data[t, i].Mini = new Point[4];
+                    Map.Tile[x, y].Data[t, i].X = Data.ReadByte();
+                    Map.Tile[x, y].Data[t, i].Y = Data.ReadByte();
+                    Map.Tile[x, y].Data[t, i].Tile = Data.ReadByte();
+                    Map.Tile[x, y].Data[t, i].Automatic = Data.ReadBoolean();
+                    Map.Tile[x, y].Data[t, i].Mini = new Point[4];
                 }
         }
 
@@ -478,35 +493,35 @@ class Receive
         for (byte x = 0; x < Game.Map_Width; x++)
             for (byte y = 0; y < Game.Map_Height; y++)
             {
-                Lists.Map.Tile[x, y].Attribute = Data.ReadByte();
-                Data.ReadInt16(); // Dado 1
+                Map.Tile[x, y].Attribute = Data.ReadByte();
+                Data.ReadString(); // Dado 1
                 Data.ReadInt16(); // Dado 2
                 Data.ReadInt16(); // Dado 3
                 Data.ReadInt16(); // Dado 4
                 Data.ReadByte(); // Zona
 
                 // Bloqueio direcional
-                Lists.Map.Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
+                Map.Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
                 for (byte i = 0; i < (byte)Game.Directions.Count; i++)
-                    Lists.Map.Tile[x, y].Block[i] = Data.ReadBoolean();
+                    Map.Tile[x, y].Block[i] = Data.ReadBoolean();
             }
 
         // Luzes
-        Lists.Map.Light = new Lists.Structures.Map_Light[Data.ReadByte()];
-        if (Lists.Map.Light.GetUpperBound(0) > 0)
-            for (byte i = 0; i < Lists.Map.Light.Length; i++)
+        Map.Light = new Objects.Map_Light[Data.ReadByte()];
+        if (Map.Light.GetUpperBound(0) > 0)
+            for (byte i = 0; i < Map.Light.Length; i++)
             {
-                Lists.Map.Light[i].X = Data.ReadByte();
-                Lists.Map.Light[i].Y = Data.ReadByte();
-                Lists.Map.Light[i].Width = Data.ReadByte();
-                Lists.Map.Light[i].Height = Data.ReadByte();
+                Map.Light[i].X = Data.ReadByte();
+                Map.Light[i].Y = Data.ReadByte();
+                Map.Light[i].Width = Data.ReadByte();
+                Map.Light[i].Height = Data.ReadByte();
             }
 
         // NPCs
-        Lists.Map.NPC = new short[Data.ReadByte() + 1];
-        for (byte i = 1; i < Lists.Map.NPC.Length; i++)
+        Map.NPC = new short[Data.ReadByte()];
+        for (byte i = 0; i < Map.NPC.Length; i++)
         {
-            Lists.Map.NPC[i] = Data.ReadInt16();
+            Map.NPC[i] = Data.ReadInt16();
             Data.ReadByte(); // Zone
             Data.ReadBoolean(); // Spawn
             Data.ReadByte(); // X
@@ -514,18 +529,18 @@ class Receive
         }
 
         // Salva o mapa
-        Write.Map(Map_Num);
+        Write.Map(Map);
 
         // Redimensiona as partículas do clima
-        global::Map.Weather_Update();
-        global::Map.Autotile.Update();
+        global::Mapper.Weather_Update();
+        global::Mapper.Autotile.Update();
     }
 
     private static void JoinMap()
     {
         // Se tiver, reproduz a música de fundo do mapa
-        if (Lists.Map.Music > 0)
-            Audio.Music.Play((Audio.Musics)Lists.Map.Music);
+        if (Mapper.Current.Data.Music > 0)
+            Audio.Music.Play((Audio.Musics)Mapper.Current.Data.Music);
         else
             Audio.Music.Stop();
     }
@@ -593,15 +608,15 @@ class Receive
     private static void Map_Items(NetIncomingMessage Data)
     {
         // Quantidade
-        Lists.Temp_Map.Item = new Lists.Structures.Map_Items[Data.ReadInt16() + 1];
+        Mapper.Current.Item = new Objects.TMap_Items[Data.ReadInt16() + 1];
 
         // Lê os dados de todos
-        for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)
+        for (byte i = 0; i < Mapper.Current.Item.Length; i++)
         {
             // Geral
-            Lists.Temp_Map.Item[i].Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
-            Lists.Temp_Map.Item[i].X = Data.ReadByte();
-            Lists.Temp_Map.Item[i].Y = Data.ReadByte();
+            Mapper.Current.Item[i].Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+            Mapper.Current.Item[i].X = Data.ReadByte();
+            Mapper.Current.Item[i].Y = Data.ReadByte();
         }
     }
 
@@ -622,7 +637,7 @@ class Receive
         }
 
         // Abre a janela de convite para o grupo
-        Utilities.Party_Invitation = Data.ReadString();
+        Utils.Party_Invitation = Data.ReadString();
         Panels.Get("Party_Invitation").Visible = true;
     }
 
@@ -662,7 +677,7 @@ class Receive
         }
 
         // Abre a janela de convite para o grupo
-        Utilities.Trade_Invitation = Data.ReadString();
+        Utils.Trade_Invitation = Data.ReadString();
         Panels.Get("Trade_Invitation").Visible = true;
     }
 
@@ -756,8 +771,8 @@ class Receive
     private static void Shop_Open(NetIncomingMessage Data)
     {
         // Abre a loja
-        Utilities.Shop_Open = (Objects.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
-        Panels.Get("Shop").Visible = Utilities.Shop_Open != null;
+        Utils.Shop_Open = (Objects.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+        Panels.Get("Shop").Visible = Utils.Shop_Open != null;
     }
 
     private static void NPCs(NetIncomingMessage Data)
@@ -804,20 +819,20 @@ class Receive
     private static void Map_NPCs(NetIncomingMessage Data)
     {
         // Lê os dados
-        Lists.Temp_Map.NPC = new NPC[Data.ReadInt16()];
-        for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
+        Mapper.Current.NPC = new Objects.TNPC[Data.ReadInt16()];
+        for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
         {
-            Lists.Temp_Map.NPC[i] = new NPC();
-            Lists.Temp_Map.NPC[i].X2 = 0;
-            Lists.Temp_Map.NPC[i].Y2 = 0;
-            Lists.Temp_Map.NPC[i].Data = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
-            Lists.Temp_Map.NPC[i].X = Data.ReadByte();
-            Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
-            Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+            Mapper.Current.NPC[i] = new Objects.TNPC();
+            Mapper.Current.NPC[i].X2 = 0;
+            Mapper.Current.NPC[i].Y2 = 0;
+            Mapper.Current.NPC[i].Data = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+            Mapper.Current.NPC[i].X = Data.ReadByte();
+            Mapper.Current.NPC[i].Y = Data.ReadByte();
+            Mapper.Current.NPC[i].Direction = (Game.Directions)Data.ReadByte();
 
             // Vitais
             for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
-                Lists.Temp_Map.NPC[i].Vital[n] = Data.ReadInt16();
+                Mapper.Current.NPC[i].Vital[n] = Data.ReadInt16();
         }
     }
 
@@ -825,36 +840,36 @@ class Receive
     {
         // Lê os dados
         byte i = Data.ReadByte();
-        Lists.Temp_Map.NPC[i].X2 = 0;
-        Lists.Temp_Map.NPC[i].Y2 = 0;
-        Lists.Temp_Map.NPC[i].Data = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
-        Lists.Temp_Map.NPC[i].X = Data.ReadByte();
-        Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
-        Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
-        Lists.Temp_Map.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
-        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Lists.Temp_Map.NPC[i].Vital[n] = Data.ReadInt16();
+        Mapper.Current.NPC[i].X2 = 0;
+        Mapper.Current.NPC[i].Y2 = 0;
+        Mapper.Current.NPC[i].Data = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+        Mapper.Current.NPC[i].X = Data.ReadByte();
+        Mapper.Current.NPC[i].Y = Data.ReadByte();
+        Mapper.Current.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+        Mapper.Current.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Mapper.Current.NPC[i].Vital[n] = Data.ReadInt16();
     }
 
     private static void Map_NPC_Movement(NetIncomingMessage Data)
     {
         // Lê os dados
         byte i = Data.ReadByte();
-        byte x = Lists.Temp_Map.NPC[i].X, y = Lists.Temp_Map.NPC[i].Y;
-        Lists.Temp_Map.NPC[i].X2 = 0;
-        Lists.Temp_Map.NPC[i].Y2 = 0;
-        Lists.Temp_Map.NPC[i].X = Data.ReadByte();
-        Lists.Temp_Map.NPC[i].Y = Data.ReadByte();
-        Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
-        Lists.Temp_Map.NPC[i].Movement = (Game.Movements)Data.ReadByte();
+        byte x = Mapper.Current.NPC[i].X, y = Mapper.Current.NPC[i].Y;
+        Mapper.Current.NPC[i].X2 = 0;
+        Mapper.Current.NPC[i].Y2 = 0;
+        Mapper.Current.NPC[i].X = Data.ReadByte();
+        Mapper.Current.NPC[i].Y = Data.ReadByte();
+        Mapper.Current.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+        Mapper.Current.NPC[i].Movement = (Game.Movements)Data.ReadByte();
 
         // Posição exata do jogador
-        if (x != Lists.Temp_Map.NPC[i].X || y != Lists.Temp_Map.NPC[i].Y)
-            switch (Lists.Temp_Map.NPC[i].Direction)
+        if (x != Mapper.Current.NPC[i].X || y != Mapper.Current.NPC[i].Y)
+            switch (Mapper.Current.NPC[i].Direction)
             {
-                case Game.Directions.Up: Lists.Temp_Map.NPC[i].Y2 = Game.Grid; break;
-                case Game.Directions.Down: Lists.Temp_Map.NPC[i].Y2 = Game.Grid * -1; break;
-                case Game.Directions.Right: Lists.Temp_Map.NPC[i].X2 = Game.Grid * -1; break;
-                case Game.Directions.Left: Lists.Temp_Map.NPC[i].X2 = Game.Grid; break;
+                case Game.Directions.Up: Mapper.Current.NPC[i].Y2 = Game.Grid; break;
+                case Game.Directions.Down: Mapper.Current.NPC[i].Y2 = Game.Grid * -1; break;
+                case Game.Directions.Right: Mapper.Current.NPC[i].X2 = Game.Grid * -1; break;
+                case Game.Directions.Left: Mapper.Current.NPC[i].X2 = Game.Grid; break;
             }
     }
 
@@ -865,8 +880,8 @@ class Receive
         byte Victim_Type = Data.ReadByte();
 
         // Inicia o ataque
-        Lists.Temp_Map.NPC[Index].Attacking = true;
-        Lists.Temp_Map.NPC[Index].Attack_Timer = Environment.TickCount;
+        Mapper.Current.NPC[Index].Attacking = true;
+        Mapper.Current.NPC[Index].Attack_Timer = Environment.TickCount;
 
         // Sofrendo dano
         if (Victim != string.Empty)
@@ -874,12 +889,12 @@ class Receive
             {
                 Player.Structure Victim_Data = Player.Get(Victim);
                 Victim_Data.Hurt = Environment.TickCount;
-                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
+                Mapper.Current.Blood.Add(new Objects.TMap_Blood((byte)Game.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
             }
             else if (Victim_Type == (byte)Game.Target.NPC)
             {
-                Lists.Temp_Map.NPC[byte.Parse(Victim)].Hurt = Environment.TickCount;
-                Lists.Temp_Map.Blood.Add(new Lists.Structures.Map_Blood((byte)Game.Random.Next(0, 3), Lists.Temp_Map.NPC[byte.Parse(Victim)].X, Lists.Temp_Map.NPC[byte.Parse(Victim)].Y, 255));
+                Mapper.Current.NPC[byte.Parse(Victim)].Hurt = Environment.TickCount;
+                Mapper.Current.Blood.Add(new Objects.TMap_Blood((byte)Game.Random.Next(0, 3), Mapper.Current.NPC[byte.Parse(Victim)].X, Mapper.Current.NPC[byte.Parse(Victim)].Y, 255));
             }
     }
 
@@ -887,9 +902,9 @@ class Receive
     {
         // Define a direção de determinado NPC
         byte i = Data.ReadByte();
-        Lists.Temp_Map.NPC[i].Direction = (Game.Directions)Data.ReadByte();
-        Lists.Temp_Map.NPC[i].X2 = 0;
-        Lists.Temp_Map.NPC[i].Y2 = 0;
+        Mapper.Current.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+        Mapper.Current.NPC[i].X2 = 0;
+        Mapper.Current.NPC[i].Y2 = 0;
     }
 
     private static void Map_NPC_Vitals(NetIncomingMessage Data)
@@ -898,7 +913,7 @@ class Receive
 
         // Define os vitais de determinado NPC
         for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
-            Lists.Temp_Map.NPC[Index].Vital[n] = Data.ReadInt16();
+            Mapper.Current.NPC[Index].Vital[n] = Data.ReadInt16();
     }
 
     private static void Map_NPC_Died(NetIncomingMessage Data)
@@ -906,11 +921,11 @@ class Receive
         byte i = Data.ReadByte();
 
         // Limpa os dados do NPC
-        Lists.Temp_Map.NPC[i].X2 = 0;
-        Lists.Temp_Map.NPC[i].Y2 = 0;
-        Lists.Temp_Map.NPC[i].Data = null;
-        Lists.Temp_Map.NPC[i].X = 0;
-        Lists.Temp_Map.NPC[i].Y = 0;
-        Lists.Temp_Map.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+        Mapper.Current.NPC[i].X2 = 0;
+        Mapper.Current.NPC[i].Y2 = 0;
+        Mapper.Current.NPC[i].Data = null;
+        Mapper.Current.NPC[i].X = 0;
+        Mapper.Current.NPC[i].Y = 0;
+        Mapper.Current.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
     }
 }

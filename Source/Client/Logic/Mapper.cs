@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
 
-class Map
+class Mapper
 {
+    // Mapa atual
+    public static Objects.TMap Current;
 
     // Fumaças
     public static int Fog_X;
@@ -29,7 +31,7 @@ class Map
     {
         Ground,
         Fringe,
-        Amount
+        Count
     }
 
     public enum Layer_Attributes
@@ -37,7 +39,7 @@ class Map
         None,
         Block,
         Warp,
-        Amount
+        Count
     }
 
     public enum Weathers
@@ -46,14 +48,14 @@ class Map
         Raining,
         Thundering,
         Snowing,
-        Amount
+        Count
     }
 
     public enum Morals
     {
         Pacific,
         Danger,
-        Amount
+        Count
     }
 
     public static void Logic()
@@ -64,15 +66,15 @@ class Map
 
         // Retira os sangues do chão depois de um determinado tempo
         if (Blood_Timer < Environment.TickCount)
-            for (short i = 0; i < Lists.Temp_Map.Blood.Count; i++)
+            for (byte i = 0; i < Current.Blood.Count; i++)
             {
-                Lists.Temp_Map.Blood[i].Opacity -= 1;
-                if (Lists.Temp_Map.Blood[i].Opacity == 0) Lists.Temp_Map.Blood.RemoveAt(i);
+                Current.Blood[i].Opacity -= 1;
+                if (Current.Blood[i].Opacity == 0) Current.Blood.RemoveAt(i);
                 Blood_Timer = Environment.TickCount + 100;
             }
     }
 
-    private static void NextTile(Game.Directions Direction, ref byte X, ref byte Y)
+    public static void NextTile(Game.Directions Direction, ref byte X, ref byte Y)
     {
         // Próximo azulejo
         switch (Direction)
@@ -85,46 +87,7 @@ class Map
     }
 
     // Verifica se as coordenas estão no limite do mapa
-    public static bool OutOfLimit(byte x, byte y) => x >= Game.Map_Width || y >= Game.Map_Height || x < 0 || y < 0;
-
-    public static bool Tile_Blocked(short Map, byte X, byte Y, Game.Directions Direction)
-    {
-        byte Next_X = X, Next_Y = Y;
-
-        // Próximo azulejo
-        NextTile(Direction, ref Next_X, ref Next_Y);
-
-        // Verifica se está indo para uma ligação
-        if (OutOfLimit(Next_X, Next_Y)) return Lists.Map.Link[(byte)Direction] == 0;
-
-        // Verifica se o azulejo está bloqueado
-        if (Lists.Map.Tile[Next_X, Next_Y].Attribute == (byte)Layer_Attributes.Block) return true;
-        if (Lists.Map.Tile[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
-        if (Lists.Map.Tile[X, Y].Block[(byte)Direction]) return true;
-        if (HasPlayer(Map, Next_X, Next_Y) != null || HasNPC(Next_X, Next_Y) > 0) return true;
-        return false;
-    }
-
-    private static byte HasNPC(short X, short Y)
-    {
-        // Verifica se há algum npc na cordenada
-        for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
-            if (Lists.Temp_Map.NPC[i].Data != null)
-                if (Lists.Temp_Map.NPC[i].X == X && Lists.Temp_Map.NPC[i].Y == Y)
-                    return i;
-
-        return 0;
-    }
-
-    private static Player.Structure HasPlayer(short Num, short X, short Y)
-    {
-        // Verifica se há algum Jogador na cordenada
-        for (byte i = 0; i < Lists.Player.Count; i++)
-            if (Lists.Player[i].X == X && Lists.Player[i].Y == Y && Lists.Player[i].Map_Num == Num)
-                return Lists.Player[i];
-
-        return null;
-    }
+    public static bool OutOfLimit(int x, int y) => x >= Game.Map_Width || y >= Game.Map_Height || x < 0 || y < 0;
 
     private static void Fog()
     {
@@ -135,8 +98,8 @@ class Map
 
     private static void Calculate_Fog_X()
     {
-        Size Size = Graphics.TSize(Graphics.Tex_Fog[Lists.Map.Fog.Texture]);
-        int Speed_X = Lists.Map.Fog.Speed_X;
+        Size Size = Graphics.TSize(Graphics.Tex_Fog[Current.Data.Fog.Texture]);
+        int Speed_X = Current.Data.Fog.Speed_X;
 
         // Apenas se necessário
         if (Fog_X_Timer >= Environment.TickCount) return;
@@ -162,8 +125,8 @@ class Map
 
     private static void Calculate_Fog_Y()
     {
-        Size Size = Graphics.TSize(Graphics.Tex_Fog[Lists.Map.Fog.Texture]);
-        int Speed_Y = Lists.Map.Fog.Speed_Y;
+        Size Size = Graphics.TSize(Graphics.Tex_Fog[Current.Data.Fog.Texture]);
+        int Speed_Y = Current.Data.Fog.Speed_Y;
 
         // Apenas se necessário
         if (Fog_Y_Timer >= Environment.TickCount) return;
@@ -194,7 +157,7 @@ class Map
         byte Thunder_Last = (byte)Audio.Sounds.Thunder_4;
 
         // Somente se necessário
-        if (Lists.Map.Weather.Type == 0) return;
+        if (Current.Data.Weather.Type == 0) return;
 
         // Contagem da neve
         if (Snow_Timer < Environment.TickCount)
@@ -217,7 +180,7 @@ class Map
         for (short i = 1; i < Lists.Weather.Length; i++)
             if (!Lists.Weather[i].Visible)
             {
-                if (Game.Random.Next(0, Max_Weather_Intensity - Lists.Map.Weather.Intensity) == 0)
+                if (Game.Random.Next(0, Max_Weather_Intensity - Current.Data.Weather.Intensity) == 0)
                 {
                     if (!Stop)
                     {
@@ -225,7 +188,7 @@ class Map
                         Lists.Weather[i].Visible = true;
 
                         // Cria a partícula de acordo com o seu tipo
-                        switch ((Weathers)Lists.Map.Weather.Type)
+                        switch ((Weathers)Current.Data.Weather.Type)
                         {
                             case Weathers.Thundering:
                             case Weathers.Raining: Weather_Rain_Create(i); break;
@@ -239,7 +202,7 @@ class Map
             else
             {
                 // Movimenta a partícula de acordo com o seu tipo
-                switch ((Weathers)Lists.Map.Weather.Type)
+                switch ((Weathers)Current.Data.Weather.Type)
                 {
                     case Weathers.Thundering:
                     case Weathers.Raining: Weather_Rain_Movement(i); break;
@@ -252,8 +215,8 @@ class Map
             }
 
         // Trovoadas
-        if (Lists.Map.Weather.Type == (byte)Weathers.Thundering)
-            if (Game.Random.Next(0, Max_Weather_Intensity * 10 - Lists.Map.Weather.Intensity * 2) == 0)
+        if (Current.Data.Weather.Type == (byte)Weathers.Thundering)
+            if (Game.Random.Next(0, Max_Weather_Intensity * 10 - Current.Data.Weather.Intensity * 2) == 0)
             {
                 // Som do trovão
                 int Thunder = Game.Random.Next(Thunder_First, Thunder_Last);
@@ -330,7 +293,7 @@ class Map
         Audio.Sound.Stop_All();
 
         // Redimensiona a lista
-        switch ((Weathers)Lists.Map.Weather.Type)
+        switch ((Weathers)Current.Data.Weather.Type)
         {
             case Weathers.Thundering:
             case Weathers.Raining:
@@ -365,9 +328,9 @@ class Map
             // Atualiza os azulejos necessários
             for (byte x = 0; x < Game.Map_Width; x++)
                 for (byte y = 0; y < Game.Map_Height; y++)
-                    for (byte c = 0; c < (byte)Layers.Amount; c++)
-                        for (byte q = 0; q <= Lists.Map.Tile[x, y].Data.GetUpperBound(1); q++)
-                            if (Lists.Map.Tile[x, y].Data[c, q].Automatic)
+                    for (byte c = 0; c < (byte)Layers.Count; c++)
+                        for (byte q = 0; q <= Current.Data.Tile[x, y].Data.GetUpperBound(1); q++)
+                            if (Current.Data.Tile[x, y].Data[c, q].Automatic)
                                 // Faz os cálculos para a autocriação
                                 Calculate(x, y, q, c);
         }
@@ -411,21 +374,21 @@ class Map
             }
 
             // Define a posição do mini azulejo
-            Lists.Structures.Map_Tile_Data Data = Lists.Map.Tile[x, y].Data[Layer_Type, Layer_Num];
-            Lists.Map.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].X = Data.X * Game.Grid + Position.X;
-            Lists.Map.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].Y = Data.Y * Game.Grid + Position.Y;
+            Objects.Map_Tile_Data Data = Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num];
+            Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].X = Data.X * Game.Grid + Position.X;
+            Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].Y = Data.Y * Game.Grid + Position.Y;
         }
 
         private static bool Check(int X1, int Y1, int X2, int Y2, byte Layer_Num, byte Layer_Type)
         {
-            Lists.Structures.Map_Tile_Data Data1, Data2;
+            Objects.Map_Tile_Data Data1, Data2;
 
             // Somente se necessário
             if (X2 < 0 || X2 >= Game.Map_Width || Y2 < 0 || Y2 >= Game.Map_Height) return true;
 
             // Dados
-            Data1 = Lists.Map.Tile[X1, Y1].Data[Layer_Type, Layer_Num];
-            Data2 = Lists.Map.Tile[X2, Y2].Data[Layer_Type, Layer_Num];
+            Data1 = Current.Data.Tile[X1, Y1].Data[Layer_Type, Layer_Num];
+            Data2 = Current.Data.Tile[X2, Y2].Data[Layer_Type, Layer_Num];
 
             // Verifica se são os mesmo azulejos
             if (!Data2.Automatic) return false;
@@ -556,143 +519,6 @@ class Map
                 case AddMode.Vertical: Set(x, y, Layer_Num, Layer_Type, 3, "l"); break;
                 case AddMode.Fill: Set(x, y, Layer_Num, Layer_Type, 3, "h"); break;
             }
-        }
-    }
-}
-
-partial class Graphics
-{
-    private static void Map_Tiles(byte c)
-    {
-        // Previne erros
-        if (Lists.Map.Name == null) return;
-
-        // Dados
-        System.Drawing.Color TempColor = System.Drawing.Color.FromArgb(Lists.Map.Color);
-        SFML.Graphics.Color Color = CColor(TempColor.R, TempColor.G, TempColor.B);
-
-        // Desenha todas as camadas dos azulejos
-        for (byte x = (byte)Game.Sight.X; x <= Game.Sight.Width; x++)
-            for (byte y = (byte)Game.Sight.Y; y <= Game.Sight.Height; y++)
-                if (!Map.OutOfLimit(x, y))
-                    for (byte q = 0; q <= Lists.Map.Tile[x, y].Data.GetUpperBound(1); q++)
-                        if (Lists.Map.Tile[x, y].Data[c, q].Tile > 0)
-                        {
-                            int x2 = Lists.Map.Tile[x, y].Data[c, q].X * Game.Grid;
-                            int y2 = Lists.Map.Tile[x, y].Data[c, q].Y * Game.Grid;
-
-                            // Desenha o azulejo
-                            if (!Lists.Map.Tile[x, y].Data[c, q].Automatic)
-                                Render(Tex_Tile[Lists.Map.Tile[x, y].Data[c, q].Tile], Game.ConvertX(x * Game.Grid), Game.ConvertY(y * Game.Grid), x2, y2, Game.Grid, Game.Grid, Color);
-                            else
-                                Map_Autotile(new Point(Game.ConvertX(x * Game.Grid), Game.ConvertY(y * Game.Grid)), Lists.Map.Tile[x, y].Data[c, q], Color);
-                        }
-    }
-
-    private static void Map_Autotile(Point Position, Lists.Structures.Map_Tile_Data Dados, SFML.Graphics.Color Cor)
-    {
-        // Desenha os 4 mini azulejos
-        for (byte i = 0; i <= 3; i++)
-        {
-            Point Destiny = Position, Source = Dados.Mini[i];
-
-            // Partes do azulejo
-            switch (i)
-            {
-                case 1: Destiny.X += 16; break;
-                case 2: Destiny.Y += 16; break;
-                case 3: Destiny.X += 16; Destiny.Y += 16; break;
-            }
-
-            // Renderiza o mini azulejo
-            Render(Tex_Tile[Dados.Tile], new Rectangle(Source.X, Source.Y, 16, 16), new Rectangle(Destiny, new Size(16, 16)), Cor);
-        }
-    }
-
-    private static void Map_Panorama()
-    {
-        // Desenha o panorama
-        if (Lists.Map.Panorama > 0)
-            Render(Tex_Panorama[Lists.Map.Panorama], new Point(0));
-    }
-
-    private static void Map_Fog()
-    {
-        Lists.Structures.Map_Fog Data = Lists.Map.Fog;
-        Size Texture_Size = TSize(Tex_Fog[Data.Texture]);
-
-        // Previne erros
-        if (Data.Texture <= 0) return;
-
-        // Desenha a fumaça
-        for (int x = -1; x <= Game.Map_Width * Game.Grid / Texture_Size.Width; x++)
-            for (int y = -1; y <= Game.Map_Height * Game.Grid / Texture_Size.Height ; y++)
-                Render(Tex_Fog[Data.Texture], new Point(x * Texture_Size.Width + Map.Fog_X, y * Texture_Size.Height + Map.Fog_Y), new SFML.Graphics.Color(255, 255, 255, Data.Alpha));
-    }
-
-    private static void Map_Weather()
-    {
-        byte x = 0;
-
-        // Somente se necessário
-        if (Lists.Map.Weather.Type == 0) return;
-
-        // Textura
-        switch ((Map.Weathers)Lists.Map.Weather.Type)
-        {
-            case Map.Weathers.Snowing: x = 32; break;
-        }
-
-        // Desenha as partículas
-        for (int i = 1; i < Lists.Weather.Length; i++)
-            if (Lists.Weather[i].Visible)
-                Render(Tex_Weather, new Rectangle(x, 0, 32, 32), new Rectangle(Lists.Weather[i].x, Lists.Weather[i].y, 32, 32), CColor(255, 255, 255, 150));
-
-        // Trovoadas
-        Render(Tex_Blanc, 0, 0, 0, 0, Game.Screen_Width, Game.Screen_Height, new SFML.Graphics.Color(255, 255, 255, Map.Lightning));
-    }
-
-    private static void Map_Name()
-    {
-        SFML.Graphics.Color Color;
-
-        // Somente se necessário
-        if (string.IsNullOrEmpty(Lists.Map.Name)) return;
-
-        // A cor do texto vária de acordo com a moral do mapa
-        switch (Lists.Map.Moral)
-        {
-            case (byte)Map.Morals.Danger: Color = SFML.Graphics.Color.Red; break;
-            default: Color = SFML.Graphics.Color.White; break;
-        }
-
-        // Desenha o nome do mapa
-        DrawText(Lists.Map.Name, 426, 48, Color);
-    }
-
-    private static void Map_Items()
-    {
-        // Desenha todos os itens que estão no chão
-        for (byte i = 1; i < Lists.Temp_Map.Item.Length; i++)
-        {
-            Lists.Structures.Map_Items Data = Lists.Temp_Map.Item[i];
-
-            // Somente se necessário
-            if (Data.Item == null) continue;
-
-            // Desenha o item
-            Point Position = new Point(Game.ConvertX(Data.X * Game.Grid), Game.ConvertY(Data.Y * Game.Grid));
-            Render(Tex_Item[Data.Item.Texture], Position);
-        }
-    }
-
-    private static void Map_Blood()
-    {
-        // Desenha todos os sangues
-        for (byte i = 0; i < Lists.Temp_Map.Blood.Count; i++)
-        {
-            Lists.Structures.Map_Blood Data = Lists.Temp_Map.Blood[i];
-            Render(Tex_Blood, Game.ConvertX(Data.X * Game.Grid), Game.ConvertY(Data.Y * Game.Grid), Data.Texture_Num * 32, 0, 32, 32, CColor(255, 255, 255, Data.Opacity));
         }
     }
 }

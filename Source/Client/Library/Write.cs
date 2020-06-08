@@ -11,11 +11,11 @@ class Write
         Stream.Close();
     }
 
-    public static void Map(short Index)
+    public static void Map(Objects.Map Map)
     {
         // Escreve os dados
-        FileStream Stream = new FileInfo(Directories.Maps_Data.FullName + Index + Directories.Format).OpenWrite();
-        new BinaryFormatter().Serialize(Stream, Lists.Map);
+        FileStream Stream = new FileInfo(Directories.Maps_Data.FullName + Map.ID.ToString() + Directories.Format).OpenWrite();
+        // new BinaryFormatter().Serialize(Stream, Map);
         Stream.Close();
     }
 }

@@ -32,7 +32,7 @@ class Loop
 
             if (Window.Current == Window.Types.Game)
             {
-                Map.Logic();
+                Mapper.Logic();
                 if (Timer_30 < Environment.TickCount)
                 {
                     // Lógica dos jogadores
@@ -40,16 +40,16 @@ class Loop
                         Lists.Player[i].Logic();
 
                     // Lógica dos NPCs
-                    for (byte i = 1; i < Lists.Temp_Map.NPC.Length; i++)
-                        if (Lists.Temp_Map.NPC[i].Data != null)
-                            Lists.Temp_Map.NPC[i].Logic();
+                    for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
+                        if (Mapper.Current.NPC[i].Data != null)
+                            Mapper.Current.NPC[i].Logic();
 
                     // Reinicia a contagem
                     Timer_30 = Environment.TickCount + 30;
                 }
 
                 // Verifica se é necessário mostrar o painel de informações
-                Utilities.CheckInformations();
+                Utils.CheckInformations();
             }
 
             // Faz com que a aplicação se mantenha estável

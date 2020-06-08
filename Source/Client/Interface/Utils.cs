@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-class Utilities
+class Utils
 {
     // Dados temporários
     public static byte CreateCharacter_Class = 0;
