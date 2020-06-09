@@ -1,22 +1,32 @@
 ﻿using System;
 
-class Game
+static class Utils
 {
     // Números aleatórios
-    public static Random Random = new Random();
+    public static Random MyRandom = new Random();
 
-    // CPS do servidor
-    public static int CPS;
+    // Configurações
+    public static string Game_Name = "CryBits";
+    public static string Welcome_Message = "Welcome to CryBits.";
+    public static short Port = 7001;
+    public static byte Max_Players = 15;
+    public static byte Max_Characters = 3;
+    public static byte Max_Party_Members = 3;
+    public static byte Max_Map_Items = 100;
+    public static byte Num_Points = 3;
+    public static byte Max_Name_Length = 12;
+    public static byte Min_Name_Length = 3;
+    public static byte Max_Password_Length = 12;
+    public static byte Min_Password_Length = 3;
 
-    // Bloqueio direcional
-    public const byte Max_DirBlock = 3;
-
-    // Limites em geral
+    // Limites fixos
     public const byte Max_Inventory = 30;
     public const byte Max_Hotbar = 10;
-    public const byte Map_Width = 25;
-    public const byte Map_Height = 19;
+    public const byte Max_DirBlock = 3;
 
+    ////////////////
+    // Numerações //
+    ////////////////
     public enum Directions
     {
         Up,
@@ -63,7 +73,6 @@ class Game
     {
         Pacific,
         Dangerous,
-        Amount
     }
 
     public enum NPC_Behaviour
@@ -87,10 +96,9 @@ class Game
         Block,
         Warp,
         Item,
-        Amount
     }
 
-    public enum Target
+    public enum Targets
     {
         Player = 1,
         NPC
@@ -113,7 +121,7 @@ class Game
         Count
     }
 
-    public enum Hotbar
+    public enum Hotbars
     {
         None,
         Item
@@ -123,8 +131,7 @@ class Game
     {
         None,
         Pickup,
-        Equip,
-        Count
+        Equip
     }
 
     public enum Trade_Status
@@ -158,16 +165,5 @@ class Game
             case Directions.Right: X += 1; break;
             case Directions.Left: X -= 1; break;
         }
-    }
-
-    public static Objects.Player FindPlayer(string Name)
-    {
-        // Encontra o usuário
-        for (byte i = 0; i < Lists.Account.Count; i++)
-            if (Lists.Account[i].IsPlaying)
-                if (Lists.Account[i].Character.Name.Equals(Name))
-                    return Lists.Account[i].Character;
-
-        return null;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Objects
 {
-   class Tool
+    class Tool
     {
         // Informações gerais de todas as ferramentas
         public string Name { get; set; }

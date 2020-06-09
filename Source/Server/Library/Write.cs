@@ -1,8 +1,32 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using static Utils;
 
-class Write
+static class Write
 {
+    public static void Settings()
+    {
+        // Cria um arquivo temporário
+        BinaryWriter Data = new BinaryWriter(Directories.Settings.OpenWrite());
+
+        // Escreve os dados
+        Data.Write(Game_Name);
+        Data.Write(Welcome_Message);
+        Data.Write(Port);
+        Data.Write(Max_Players);
+        Data.Write(Max_Characters);
+        Data.Write(Max_Party_Members);
+        Data.Write(Max_Map_Items);
+        Data.Write(Num_Points);
+        Data.Write(Max_Name_Length);
+        Data.Write(Min_Name_Length);
+        Data.Write(Max_Password_Length);
+        Data.Write(Min_Password_Length);
+
+        // Descarrega o arquivo
+        Data.Dispose();
+    }
+
     public static void Account(Objects.Account Account)
     {
         FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Data" + Directories.Format);
@@ -44,15 +68,15 @@ class Write
         Data.Write(Account.Character.X);
         Data.Write(Account.Character.Y);
         Data.Write((byte)Account.Character.Direction);
-        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Account.Character.Vital[n]);
-        for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Account.Character.Attribute[n]);
-        for (byte n = 1; n <= Game.Max_Inventory; n++)
+        for (byte n = 0; n < (byte)Vitals.Count; n++) Data.Write(Account.Character.Vital[n]);
+        for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(Account.Character.Attribute[n]);
+        for (byte n = 1; n <= Max_Inventory; n++)
         {
             Data.Write(Lists.GetID(Account.Character.Inventory[n].Item));
             Data.Write(Account.Character.Inventory[n].Amount);
         }
-        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Lists.GetID(Account.Character.Equipment[n]));
-        for (byte n = 1; n <= Game.Max_Hotbar; n++)
+        for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(Lists.GetID(Account.Character.Equipment[n]));
+        for (byte n = 1; n <= Max_Hotbar; n++)
         {
             Data.Write(Account.Character.Hotbar[n].Type);
             Data.Write(Account.Character.Hotbar[n].Slot);
@@ -84,14 +108,6 @@ class Write
 
         // Descarrega o arquivo
         Data.Dispose();
-    }
-
-    public static void Server_Data()
-    {
-        // Escreve os dados
-        FileStream Stream = Directories.Server_Data.OpenWrite();
-        new BinaryFormatter().Serialize(Stream, Lists.Server_Data);
-        Stream.Close();
     }
 
     public static void Class(Objects.Class Class)

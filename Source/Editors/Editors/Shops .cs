@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Objects;
+using System;
 using System.Linq;
 using System.Windows.Forms;
-using Objects;
 
 partial class Editor_Shops : Form
 {
@@ -162,7 +162,7 @@ partial class Editor_Shops : Form
     private void butBought_Remove_Click(object sender, EventArgs e)
     {
         // Remove o item
-        if (lstBought.SelectedIndex >= 0)  Selected.Bought.RemoveAt(lstSold.SelectedIndex);
+        if (lstBought.SelectedIndex >= 0) Selected.Bought.RemoveAt(lstSold.SelectedIndex);
     }
 
     private void butConfirm_Click(object sender, EventArgs e)

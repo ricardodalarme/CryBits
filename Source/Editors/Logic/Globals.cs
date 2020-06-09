@@ -161,7 +161,7 @@ class Globals
     {
         // Redimensiona a lista
         if (Editor_Maps.Form != null)
-            switch ((Weathers)Editor_Maps.Form.Selected.Weather.Type)
+            switch (Editor_Maps.Form.Selected.Weather.Type)
             {
                 case Weathers.Thundering:
                 case Weathers.Raining: Lists.Weather = new Lists.Structures.Weather[Max_Rain_Particles + 1]; break;
@@ -186,4 +186,3 @@ class Globals
     public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Form.Zoom());
     public static Point Zoom(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
 }
- 

@@ -79,14 +79,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Directories.cs" />
+    <Compile Include="Logic\Utils.cs" />
     <Compile Include="Objects\Account.cs" />
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\Class.cs" />
+    <Compile Include="Objects\Data.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Objects\Map.cs" />
     <Compile Include="Objects\NPC.cs" />
     <Compile Include="Objects\Player.cs" />
-    <Compile Include="Logic\Game.cs" />
     <Compile Include="Objects\Shop.cs" />
     <Compile Include="Objects\TMap.cs" />
     <Compile Include="Objects\TNPC.cs" />

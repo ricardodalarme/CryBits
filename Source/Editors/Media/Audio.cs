@@ -21,7 +21,7 @@ class Audio
     public enum Musics
     {
         None,
-        Menu 
+        Menu
     }
 
     public class Sound

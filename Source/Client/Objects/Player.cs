@@ -1,6 +1,6 @@
-﻿using SFML.Window;
+﻿using Objects;
+using SFML.Window;
 using System;
-using Objects;
 
 class Player
 {

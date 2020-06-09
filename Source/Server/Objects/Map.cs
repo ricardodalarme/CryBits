@@ -1,17 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
+using static Utils;
 
 namespace Objects
 {
     [Serializable]
-    class Map : Lists.Structures.Data
+    class Map : Data
     {
+        // Tamanho dos mapas
+        public const byte Width = 25;
+        public const byte Height = 19;
+
         // Dados
         public short Revision;
         public string Name = string.Empty;
         public byte Moral;
         public Map_Layer[] Layer = Array.Empty<Map_Layer>();
-        public Map_Attribute[,] Attribute = new Map_Attribute[Game.Map_Width, Game.Map_Height];
+        public Map_Attribute[,] Attribute = new Map_Attribute[Width, Height];
         public byte Panorama;
         public byte Music;
         public int Color = -1;
@@ -20,24 +24,24 @@ namespace Objects
         public Map_NPC[] NPC = Array.Empty<Map_NPC>();
         public Map_Light[] Light = Array.Empty<Map_Light>();
         public byte Lighting = 100;
-        public Map[] Link = new Map[(byte)Game.Directions.Count];
+        public Map[] Link = new Map[(byte)Directions.Count];
 
         // Construtor
         public Map(Guid ID) : base(ID)
         {
-            for (byte x = 0; x < Game.Map_Width; x++)
-                for (byte y = 0; y < Game.Map_Height; y++)
+            for (byte x = 0; x < Width; x++)
+                for (byte y = 0; y < Height; y++)
                     Attribute[x, y] = new Map_Attribute();
         }
 
         // Verifica se as coordenas estão no limite do mapa
-        public bool OutLimit(byte X, byte Y) => X >= Game.Map_Width || Y >= Game.Map_Height || X < 0 || Y < 0;
+        public bool OutLimit(byte X, byte Y) => X >= Width || Y >= Height || X < 0 || Y < 0;
 
         public bool Tile_Blocked(byte X, byte Y)
         {
             // Verifica se o azulejo está bloqueado
             if (OutLimit(X, Y)) return true;
-            if (Attribute[X, Y].Type == (byte)Game.Tile_Attributes.Block) return true;
+            if (Attribute[X, Y].Type == (byte)Tile_Attributes.Block) return true;
             return false;
         }
 
@@ -48,7 +52,7 @@ namespace Objects
 
             // NPCs do mapa
             Temp_Map.NPC = new TNPC[NPC.Length];
-            for (byte i = 1; i < Temp_Map.NPC.Length; i++)
+            for (byte i = 0; i < Temp_Map.NPC.Length; i++)
             {
                 Temp_Map.NPC[i] = new TNPC(i, Temp_Map, NPC[i].NPC);
                 Temp_Map.NPC[i].Spawn();
@@ -69,7 +73,7 @@ namespace Objects
         public short Data_3;
         public short Data_4;
         public byte Zone;
-        public bool[] Block = new bool[(byte)Game.Directions.Count];
+        public bool[] Block = new bool[(byte)Directions.Count];
     }
 
     [Serializable]
@@ -77,12 +81,12 @@ namespace Objects
     {
         public string Name;
         public byte Type;
-        public Map_Tile_Data[,] Tile = new Map_Tile_Data[Game.Map_Width, Game.Map_Height];
+        public Map_Tile_Data[,] Tile = new Map_Tile_Data[Map.Width, Map.Height];
 
         public Map_Layer()
         {
-            for (byte x = 0; x < Game.Map_Width; x++)
-                for (byte y = 0; y < Game.Map_Height; y++)
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                     Tile[x, y] = new Map_Tile_Data();
         }
     }

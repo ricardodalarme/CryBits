@@ -3,7 +3,7 @@
 namespace Objects
 {
     [Serializable]
-    class Item : Lists.Structures.Data
+    class Item : Data
     {
         // Geral
         public string Name = string.Empty;
@@ -23,10 +23,10 @@ namespace Objects
         }
         // Poção
         public int Potion_Experience;
-        public short[] Potion_Vital = new short[(byte)Game.Vitals.Count];
+        public short[] Potion_Vital = new short[(byte)Utils.Vitals.Count];
         // Equipamento
         public byte Equip_Type;
-        public short[] Equip_Attribute = new short[(byte)Game.Attributes.Count];
+        public short[] Equip_Attribute = new short[(byte)Utils.Attributes.Count];
         public short Weapon_Damage;
 
         // Construtor

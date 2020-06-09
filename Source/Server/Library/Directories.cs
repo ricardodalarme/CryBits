@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Windows.Forms;
 
-class Directories
+static class Directories
 {
     // Formato de todos os arquivos de dados
     public const string Format = ".dat";
 
     // Diretório dos arquivos
-    public static FileInfo Server_Data = new FileInfo(Application.StartupPath + @"\Data\General" + Format);
+    public static FileInfo Settings = new FileInfo(Application.StartupPath + @"\Data\Settings" + Format);
     public static DirectoryInfo Accounts = new DirectoryInfo(Application.StartupPath + @"\Data\Accounts\");
     public static FileInfo Characters = new FileInfo(Application.StartupPath + @"\Data\Characters" + Format);
     public static DirectoryInfo Classes = new DirectoryInfo(Application.StartupPath + @"\Data\Classes\");
@@ -19,7 +19,7 @@ class Directories
     public static void Create()
     {
         // Cria todos os diretórios do jogo
-        Server_Data.Directory.Create();
+        Settings.Directory.Create();
         Accounts.Create();
         Characters.Directory.Create();
         Classes.Create();

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Network;
+using static Utils;
 
 namespace Objects
 {
@@ -14,10 +16,10 @@ namespace Objects
         public short Level;
         public int Experience;
         public byte Points;
-        public short[] Attribute = new short[(byte)Game.Attributes.Count];
-        public Lists.Structures.Inventories[] Inventory = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
-        public Item[] Equipment = new Item[(byte)Game.Equipments.Count];
-        public Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
+        public short[] Attribute = new short[(byte)Attributes.Count];
+        public Inventory[] Inventory = new Inventory[Max_Inventory + 1];
+        public Item[] Equipment = new Item[(byte)Equipments.Count];
+        public Hotbar[] Hotbar = new Hotbar[Max_Hotbar + 1];
 
         // Dados temporários
         public bool GettingMap;
@@ -26,7 +28,7 @@ namespace Objects
         public string Party_Request;
         public Player Trade;
         public string Trade_Request;
-        public Lists.Structures.Trade_Slot[] Trade_Offer;
+        public Trade_Slot[] Trade_Offer;
         public Shop Shop;
         public Account Account;
 
@@ -41,24 +43,24 @@ namespace Objects
         {
             get
             {
-                short Value = Attribute[(byte)Game.Attributes.Strength];
-                if (Equipment[(byte)Game.Equipments.Weapon] != null) Value += Equipment[(byte)Game.Equipments.Weapon].Weapon_Damage;
+                short Value = Attribute[(byte)Attributes.Strength];
+                if (Equipment[(byte)Equipments.Weapon] != null) Value += Equipment[(byte)Equipments.Weapon].Weapon_Damage;
                 return Value;
             }
         }
 
         // Cálcula a defesa do jogador
-        public short Player_Defense => Attribute[(byte)Game.Attributes.Resistance];
+        public short Player_Defense => Attribute[(byte)Attributes.Resistance];
 
         public short MaxVital(byte Vital)
         {
             short[] Base = Class.Vital;
 
             // Cálcula o máximo de vital que um jogador possui
-            switch ((Game.Vitals)Vital)
+            switch ((Vitals)Vital)
             {
-                case Game.Vitals.HP: return (short)(Base[Vital] + (Attribute[(byte)Game.Attributes.Vitality] * 1.50 * (Level * 0.75)) + 1);
-                case Game.Vitals.MP: return (short)(Base[Vital] + (Attribute[(byte)Game.Attributes.Intelligence] * 1.25 * (Level * 0.5)) + 1);
+                case Vitals.HP: return (short)(Base[Vital] + (Attribute[(byte)Attributes.Vitality] * 1.50 * (Level * 0.75)) + 1);
+                case Vitals.MP: return (short)(Base[Vital] + (Attribute[(byte)Attributes.Intelligence] * 1.25 * (Level * 0.5)) + 1);
             }
 
             return 1;
@@ -67,13 +69,13 @@ namespace Objects
         public short Regeneration(byte Vital)
         {
             // Cálcula o máximo de vital que um jogador possui
-            switch ((Game.Vitals)Vital)
+            switch ((Vitals)Vital)
             {
-                case Game.Vitals.HP: return (short)(MaxVital(Vital) * 0.05 + Attribute[(byte)Game.Attributes.Vitality] * 0.3);
-                case Game.Vitals.MP: return (short)(MaxVital(Vital) * 0.05 + Attribute[(byte)Game.Attributes.Intelligence] * 0.1);
+                case Vitals.HP: return (short)(MaxVital(Vital) * 0.05 + Attribute[(byte)Attributes.Vitality] * 0.3);
+                case Vitals.MP: return (short)(MaxVital(Vital) * 0.05 + Attribute[(byte)Attributes.Intelligence] * 0.1);
             }
 
-            return 0;
+            return 1;
         }
 
         // Quantidade de experiência para passar para o próximo level
@@ -82,7 +84,7 @@ namespace Objects
             get
             {
                 short Total = 0;
-                for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Total += Attribute[i];
+                for (byte i = 0; i < (byte)Attributes.Count; i++) Total += Attribute[i];
                 return (int)((Level + 1) * 2.5 + (Total + Points) / 2);
             }
         }
@@ -93,8 +95,8 @@ namespace Objects
         public void Logic()
         {
             // Reneração 
-            if (Environment.TickCount > Loop.Timer_Player_Regen + 5000)
-                for (byte v = 0; v < (byte)Game.Vitals.Count; v++)
+            if (Environment.TickCount > Loop.Timer_Regen + 5000)
+                for (byte v = 0; v < (byte)Vitals.Count; v++)
                     if (Vital[v] < MaxVital(v))
                     {
                         // Renera a vida do jogador
@@ -127,7 +129,7 @@ namespace Objects
 
             // Entra no jogo
             Send.JoinGame(this);
-            Send.Message(this, Lists.Server_Data.Welcome, Color.Blue);
+            Send.Message(this, Welcome_Message, Color.Blue);
         }
 
         public void Leave()
@@ -151,8 +153,8 @@ namespace Objects
 
             // Evita que o jogador seja transportado para fora do limite
             if (To == null) return;
-            if (x >= Game.Map_Width) x = Game.Map_Width -1;
-            if (y >= Game.Map_Height) y = Game.Map_Height-1;
+            if (x >= Objects.Map.Width) x = Objects.Map.Width - 1;
+            if (y >= Objects.Map.Height) y = Objects.Map.Height - 1;
             if (x < 0) x = 0;
             if (y < 0) y = 0;
 
@@ -196,7 +198,7 @@ namespace Objects
             if (Shop != null) Shop_Leave();
 
             // Próximo azulejo
-            Game.NextTile(Direction, ref Next_X, ref Next_Y);
+            NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Ponto de ligação
             if (Map.Data.OutLimit(Next_X, Next_Y))
@@ -204,10 +206,10 @@ namespace Objects
                 if (Link != null)
                     switch (Direction)
                     {
-                        case Game.Directions.Up: Warp(Link, Old_X, Game.Map_Height-1); return;
-                        case Game.Directions.Down: Warp(Link, Old_X, 0); return;
-                        case Game.Directions.Right: Warp(Link, 0, Old_Y); return;
-                        case Game.Directions.Left: Warp(Link, Game.Map_Width -1, Old_Y); return;
+                        case Directions.Up: Warp(Link, Old_X, Objects.Map.Height - 1); return;
+                        case Directions.Down: Warp(Link, Old_X, 0); return;
+                        case Directions.Right: Warp(Link, 0, Old_Y); return;
+                        case Directions.Left: Warp(Link, Objects.Map.Width - 1, Old_Y); return;
                     }
                 else
                 {
@@ -218,18 +220,18 @@ namespace Objects
             // Bloqueio
             else if (!Map.Tile_Blocked(Old_X, Old_Y, Direction))
             {
-                X = (byte)Next_X;
-                Y = (byte)Next_Y;
+                X = Next_X;
+                Y = Next_Y;
             }
 
             // Atributos
             Map_Attribute Tile = Map.Data.Attribute[Next_X, Next_Y];
 
-            switch ((Game.Tile_Attributes)Tile.Type)
+            switch ((Tile_Attributes)Tile.Type)
             {
                 // Teletransporte
-                case Game.Tile_Attributes.Warp:
-                    if (Tile.Data_4 > 0) Direction = (Game.Directions)Tile.Data_4 - 1;
+                case Tile_Attributes.Warp:
+                    if (Tile.Data_4 > 0) Direction = (Directions)Tile.Data_4 - 1;
                     Warp((TMap)Lists.GetData(Lists.Temp_Map, new Guid(Tile.Data_1)), (byte)Tile.Data_2, (byte)Tile.Data_3);
                     SecondMovement = true;
                     break;
@@ -245,7 +247,7 @@ namespace Objects
         public void Died()
         {
             // Recupera os vitais
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Vital[n] = MaxVital(n);
+            for (byte n = 0; n < (byte)Vitals.Count; n++) Vital[n] = MaxVital(n);
             Send.Player_Vitals(this);
 
             // Perde 10% da experiência
@@ -253,7 +255,7 @@ namespace Objects
             Send.Player_Experience(this);
 
             // Retorna para o ínicio
-            Direction = (Game.Directions)Class.Spawn_Direction;
+            Direction = (Directions)Class.Spawn_Direction;
             Warp((TMap)Lists.GetData(Lists.Temp_Map, Class.Spawn_Map.ID), Class.Spawn_X, Class.Spawn_Y);
         }
 
@@ -263,7 +265,7 @@ namespace Objects
             object Victim;
 
             // Próximo azulejo
-            Game.NextTile(Direction, ref Next_X, ref Next_Y);
+            NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Apenas se necessário
             if (Trade != null) return;
@@ -297,7 +299,7 @@ namespace Objects
         {
             // Verifica se a vítima pode ser atacada
             if (Victim.GettingMap) return;
-            if (Map.Data.Moral == (byte)Game.Map_Morals.Pacific)
+            if (Map.Data.Moral == (byte)Map_Morals.Pacific)
             {
                 Send.Message(this, "This is a peaceful area.", Color.White);
                 return;
@@ -313,11 +315,11 @@ namespace Objects
             if (Attack_Damage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Player_Attack(this, Victim.Name, Game.Target.Player);
+                Send.Player_Attack(this, Victim.Name, Targets.Player);
 
-                if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
+                if (Attack_Damage < Victim.Vital[(byte)Vitals.HP])
                 {
-                    Victim.Vital[(byte)Game.Vitals.HP] -= Attack_Damage;
+                    Victim.Vital[(byte)Vitals.HP] -= Attack_Damage;
                     Send.Player_Vitals(Victim);
                 }
                 // FATALITY
@@ -341,10 +343,10 @@ namespace Objects
             if (Victim.Target != this && !string.IsNullOrEmpty(Victim.Data.SayMsg)) Send.Message(this, Victim.Data.Name + ": " + Victim.Data.SayMsg, Color.White);
 
             // Não executa o combate com um NPC amigavel
-            switch ((Game.NPC_Behaviour)Victim.Data.Behaviour)
+            switch ((NPC_Behaviour)Victim.Data.Behaviour)
             {
-                case Game.NPC_Behaviour.Friendly: return;
-                case Game.NPC_Behaviour.ShopKeeper: Shop_Open(Victim.Data.Shop); return;
+                case NPC_Behaviour.Friendly: return;
+                case NPC_Behaviour.ShopKeeper: Shop_Open(Victim.Data.Shop); return;
             }
 
             // Define o alvo do NPC
@@ -354,17 +356,17 @@ namespace Objects
             Attack_Timer = Environment.TickCount;
 
             // Cálculo de dano
-            short Attack_Damage = (short)(Damage - Victim.Data.Attribute[(byte)Game.Attributes.Resistance]);
+            short Attack_Damage = (short)(Damage - Victim.Data.Attribute[(byte)Attributes.Resistance]);
 
             // Dano não fatal
             if (Attack_Damage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Player_Attack(this, Victim.Index.ToString(), Game.Target.NPC);
+                Send.Player_Attack(this, Victim.Index.ToString(), Targets.NPC);
 
-                if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
+                if (Attack_Damage < Victim.Vital[(byte)Vitals.HP])
                 {
-                    Victim.Vital[(byte)Game.Vitals.HP] -= Attack_Damage;
+                    Victim.Vital[(byte)Vitals.HP] -= Attack_Damage;
                     Send.Map_NPC_Vitals(Victim);
                 }
                 // FATALITY
@@ -406,7 +408,7 @@ namespace Objects
 
                 // Define os dados
                 Level++;
-                Points += Lists.Server_Data.Num_Points;
+                Points += Num_Points;
                 Experience = ExpRest;
             }
 
@@ -444,18 +446,18 @@ namespace Objects
         {
             // Previne erros
             if (Slot <= 0) return;
-            if (Amount < 0) Amount = 1;
+            if (Amount <= 0) Amount = 1;
 
             // Tira o item do jogaor
             if (Amount == Inventory[Slot].Amount)
             {
-                Inventory[Slot] = new Lists.Structures.Inventories();
+                Inventory[Slot] = new Inventory();
 
                 // Retira o item da hotbar caso estier
-                byte HotbarSlot = FindHotbar((byte)Game.Hotbar.Item, Slot);
+                byte HotbarSlot = FindHotbar((byte)Hotbars.Item, Slot);
                 if (HotbarSlot > 0)
                 {
-                    Hotbar[HotbarSlot] = new Lists.Structures.Hotbar();
+                    Hotbar[HotbarSlot] = new Hotbar();
                     Send.Player_Hotbar(this);
                 }
             }
@@ -472,9 +474,9 @@ namespace Objects
             TMap_Items Map_Item = new TMap_Items();
 
             // Somente se necessário
-            if (Map.Item.Count == Lists.Server_Data.Max_Map_Items) return;
+            if (Map.Item.Count == Max_Map_Items) return;
             if (Inventory[Slot].Item == null) return;
-            if (Inventory[Slot].Item.Bind == (byte)Game.BindOn.Pickup) return;
+            if (Inventory[Slot].Item.Bind == (byte)BindOn.Pickup) return;
             if (Trade != null) return;
 
             // Verifica se não está dropando mais do que tem
@@ -513,7 +515,7 @@ namespace Objects
                     return;
                 }
 
-            if (Item.Type == (byte)Game.Items.Equipment)
+            if (Item.Type == (byte)Items.Equipment)
             {
                 // Retira o item do inventário
                 TakeItem(Slot, 1);
@@ -524,19 +526,19 @@ namespace Objects
 
                 // Equipa o item
                 Equipment[Item.Equip_Type] = Item;
-                for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Attribute[i] += Item.Equip_Attribute[i];
+                for (byte i = 0; i < (byte)Attributes.Count; i++) Attribute[i] += Item.Equip_Attribute[i];
 
                 // Envia os dados
                 Send.Player_Inventory(this);
                 Send.Player_Equipments(this);
                 Send.Player_Hotbar(this);
             }
-            else if (Item.Type == (byte)Game.Items.Potion)
+            else if (Item.Type == (byte)Items.Potion)
             {
                 // Efeitos
                 bool HadEffect = false;
                 GiveExperience(Item.Potion_Experience);
-                for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
+                for (byte i = 0; i < (byte)Vitals.Count; i++)
                 {
                     // Verifica se o item causou algum efeito 
                     if (Vital[i] < MaxVital(i) && Item.Potion_Vital[i] != 0) HadEffect = true;
@@ -550,7 +552,7 @@ namespace Objects
                 }
 
                 // Foi fatal
-                if (Vital[(byte)Game.Vitals.HP] == 0) Died();
+                if (Vital[(byte)Vitals.HP] == 0) Died();
 
                 // Remove o item caso tenha tido algum efeito
                 if (Item.Potion_Experience > 0 || HadEffect) TakeItem(Slot, 1);
@@ -560,7 +562,7 @@ namespace Objects
         public byte FindHotbar(byte Type, byte Slot)
         {
             // Encontra algo especifico na hotbar
-            for (byte i = 1; i <= Game.Max_Hotbar; i++)
+            for (byte i = 1; i <= Max_Hotbar; i++)
                 if (Hotbar[i].Type == Type && Hotbar[i].Slot == Slot)
                     return i;
 
@@ -570,7 +572,7 @@ namespace Objects
         public byte FindInventory(Item Item)
         {
             // Encontra algo especifico na hotbar
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            for (byte i = 1; i <= Max_Inventory; i++)
                 if (Inventory[i].Item == Item)
                     return i;
 
@@ -582,7 +584,7 @@ namespace Objects
             byte Total = 0;
 
             // Retorna a quantidade de itens oferecidos na troca
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            for (byte i = 1; i <= Max_Inventory; i++)
                 if (Inventory[i].Item == null)
                     Total++;
 
@@ -663,7 +665,7 @@ namespace Objects
             byte Total = 0;
 
             // Retorna a quantidade de itens oferecidos na troca
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            for (byte i = 1; i <= Max_Inventory; i++)
                 if (Trade_Offer[i].Slot_Num != 0)
                     Total++;
 
@@ -683,5 +685,37 @@ namespace Objects
             Shop = null;
             Send.Shop_Open(this, null);
         }
+
+        ///////////////////////
+        // Métodos Estáticos //
+        ///////////////////////
+        public static Player Find(string Name)
+        {
+            // Encontra o usuário
+            foreach (var Account in Lists.Account)
+                if (Account.IsPlaying)
+                    if (Account.Character.Name.Equals(Name))
+                        return Account.Character;
+
+            return null;
+        }
+    }
+
+    class Inventory
+    {
+        public Item Item;
+        public short Amount;
+    }
+
+    class Trade_Slot
+    {
+        public short Slot_Num;
+        public short Amount;
+    }
+
+    class Hotbar
+    {
+        public byte Type;
+        public byte Slot;
     }
 }

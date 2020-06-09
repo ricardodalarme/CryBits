@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using static Utils;
 
-partial class Read
+static class Read
 {
     public static void All()
     {
         // Carrega todos os dados
-        Console.WriteLine("Loading data.");
-        Server_Data();
+        Console.WriteLine("Loading settings.");
+        Settings();
         Console.WriteLine("Loading maps.");
         Maps();
         Console.WriteLine("Loading classes.");
@@ -23,19 +24,34 @@ partial class Read
         Shops();
     }
 
-    private static void Server_Data()
+    private static void Settings()
     {
         // Cria o arquivo caso ele não existir
-        if (!Directories.Server_Data.Exists)
+        if (!Directories.Settings.Exists)
         {
-            Write.Server_Data();
+            Write.Settings();
             return;
         }
 
-        // Lê os dados
-        FileStream Stream = Directories.Server_Data.OpenRead();
-        Lists.Server_Data = (Lists.Structures.Server_Data)new BinaryFormatter().Deserialize(Stream);
-        Stream.Close();
+        // Cria um arquivo temporário
+        BinaryReader Data = new BinaryReader(Directories.Settings.OpenRead());
+
+        // Carrega os dados
+        Game_Name = Data.ReadString();
+        Welcome_Message = Data.ReadString();
+        Port = Data.ReadInt16();
+        Max_Players = Data.ReadByte();
+        Max_Characters = Data.ReadByte();
+        Max_Party_Members = Data.ReadByte();
+        Max_Map_Items = Data.ReadByte();
+        Num_Points = Data.ReadByte();
+        Max_Name_Length = Data.ReadByte();
+        Min_Name_Length = Data.ReadByte();
+        Max_Password_Length = Data.ReadByte();
+        Min_Password_Length = Data.ReadByte();
+
+        // Descarrega o arquivo
+        Data.Dispose();
     }
 
     public static void Account(Objects.Account Account, string Name)
@@ -48,7 +64,7 @@ partial class Read
         // Carrega os dados e os adiciona ao cache
         Account.User = Data.ReadString();
         Account.Password = Data.ReadString();
-        Account.Acess = (Game.Accesses)Data.ReadByte();
+        Account.Acess = (Accesses)Data.ReadByte();
 
         // Descarrega o arquivo
         Data.Dispose();
@@ -63,14 +79,14 @@ partial class Read
 
         // Lê odos os personagens
         FileInfo[] File = Directory.GetFiles();
-        Account.Characters = new List<Lists.Structures.TempCharacter>();
+        Account.Characters = new List<Objects.Account.TempCharacter>();
         for (byte i = 0; i < File.Length; i++)
         {
             // Cria um arquivo temporário
             BinaryReader Data = new BinaryReader(File[i].OpenRead());
 
             // Carrega os dados e os adiciona ao cache
-            Lists.Structures.TempCharacter Temp = new Lists.Structures.TempCharacter
+            var Temp = new Objects.Account.TempCharacter
             {
                 Name = Data.ReadString(),
                 Texture_Num = Data.ReadInt16(),
@@ -105,16 +121,16 @@ partial class Read
         Account.Character.Map = (Objects.TMap)Lists.GetData(Lists.Temp_Map, new Guid(Data.ReadString()));
         Account.Character.X = Data.ReadByte();
         Account.Character.Y = Data.ReadByte();
-        Account.Character.Direction = (Game.Directions)Data.ReadByte();
-        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Account.Character.Vital[n] = Data.ReadInt16();
-        for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Account.Character.Attribute[n] = Data.ReadInt16();
-        for (byte n = 1; n <= Game.Max_Inventory; n++)
+        Account.Character.Direction = (Directions)Data.ReadByte();
+        for (byte n = 0; n < (byte)Vitals.Count; n++) Account.Character.Vital[n] = Data.ReadInt16();
+        for (byte n = 0; n < (byte)Attributes.Count; n++) Account.Character.Attribute[n] = Data.ReadInt16();
+        for (byte n = 1; n <= Max_Inventory; n++)
         {
             Account.Character.Inventory[n].Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             Account.Character.Inventory[n].Amount = Data.ReadInt16();
         }
-        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Account.Character.Equipment[n] = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
-        for (byte n = 1; n <= Game.Max_Hotbar; n++)
+        for (byte n = 0; n < (byte)Equipments.Count; n++) Account.Character.Equipment[n] = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+        for (byte n = 1; n <= Max_Hotbar; n++)
         {
             Account.Character.Hotbar[n].Type = Data.ReadByte();
             Account.Character.Hotbar[n].Slot = Data.ReadByte();

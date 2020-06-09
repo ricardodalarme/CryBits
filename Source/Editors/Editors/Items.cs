@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Objects;
+using System;
 using System.Windows.Forms;
-using Objects;
 
 partial class Editor_Items : Form
 {

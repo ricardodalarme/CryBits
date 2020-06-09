@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Objects;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Objects;
 
 partial class Editor_Maps : Form
 {

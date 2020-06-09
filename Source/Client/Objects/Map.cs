@@ -18,7 +18,7 @@ namespace Objects
         public Map_Light[] Light;
         public short[] NPC;
 
-        public Map(Guid ID) :base(ID){}
+        public Map(Guid ID) : base(ID) { }
     }
 
     [Serializable]

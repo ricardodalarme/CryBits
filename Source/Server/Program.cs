@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Network;
 
-class Program
+static class Program
 {
+    // Usado para manter a aplicação aberta
+    public static bool Working = true;
+
+    // CPS do servidor
+    public static int CPS;
+
     // Usado pra detectar quando o console é fechado
     [DllImport("Kernel32")]
     private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
@@ -43,7 +50,7 @@ class Program
         // Inicia os laços
         Thread Console_Loop = new Thread(Loop.Commands);
         Console_Loop.Start();
-        Loop.Init();
+        Loop.Main();
     }
 
     private static bool Exit()
@@ -88,7 +95,7 @@ class Program
      cps                        - shows the current server cps");
                 break;
             case "cps":
-                Console.WriteLine("CPS: " + Game.CPS);
+                Console.WriteLine("CPS: " + CPS);
                 break;
             case "defineaccess":
                 byte Access;
@@ -110,11 +117,11 @@ class Program
                 }
 
                 // Define o acesso do jogador
-                Account.Acess = (Game.Accesses)Access;
+                Account.Acess = (Utils.Accesses)Access;
 
                 // Salva os dados
                 Write.Account(Account);
-                Console.WriteLine((Game.Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
+                Console.WriteLine((Utils.Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
                 break;
             // Se o comando não existir mandar uma mensagem de ajuda
             default:

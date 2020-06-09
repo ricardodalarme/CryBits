@@ -3,7 +3,7 @@
 namespace Objects
 {
     [Serializable]
-    class NPC : Lists.Structures.Data
+    class NPC : Data
     {
         // Dados
         public string Name;
@@ -13,12 +13,12 @@ namespace Objects
         public byte SpawnTime;
         public byte Sight;
         public int Experience;
-        public short[] Vital = new short[(byte)Game.Vitals.Count];
-        public short[] Attribute = new short[(byte)Game.Attributes.Count];
+        public short[] Vital = new short[(byte)Utils.Vitals.Count];
+        public short[] Attribute = new short[(byte)Utils.Attributes.Count];
         public NPC_Drop[] Drop;
         public bool AttackNPC;
         public NPC[] Allie;
-        public Game.NPC_Movements Movement;
+        public Utils.NPC_Movements Movement;
         public byte Flee_Helth;
         private Guid shop;
 
