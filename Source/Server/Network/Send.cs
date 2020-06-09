@@ -618,7 +618,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Inventory);
-        for (byte i = 1; i <= Game.Max_Inventory; i++)
+        for (byte i = 1; i <= Max_Inventory; i++)
         {
             Data.Write(Lists.GetID(Player.Inventory[i].Item));
             Data.Write(Player.Inventory[i].Amount);
@@ -632,7 +632,7 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Hotbar);
-        for (byte i = 1; i <= Game.Max_Hotbar; i++)
+        for (byte i = 1; i <= Max_Hotbar; i++)
         {
             Data.Write(Player.Hotbar[i].Type);
             Data.Write(Player.Hotbar[i].Slot);
@@ -854,7 +854,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Trade_Offer);
         Data.Write(Own);
-        for (byte i = 1; i <= Game.Max_Inventory; i++)
+        for (byte i = 1; i <= Max_Inventory; i++)
         {
             Data.Write(Lists.GetID(To.Inventory[To.Trade_Offer[i].Slot_Num].Item));
             Data.Write(To.Trade_Offer[i].Amount);

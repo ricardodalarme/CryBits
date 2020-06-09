@@ -19,6 +19,11 @@ static class Utils
     public static byte Max_Password_Length = 12;
     public static byte Min_Password_Length = 3;
 
+    // Limites fixos
+    public const byte Max_Inventory = 30;
+    public const byte Max_Hotbar = 10;
+    public const byte Max_DirBlock = 3;
+
     public static Game.Directions ReverseDirection(Game.Directions Direction)
     {
         // Retorna a direção inversa

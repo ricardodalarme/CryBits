@@ -16,9 +16,9 @@ namespace Objects
         public int Experience;
         public byte Points;
         public short[] Attribute = new short[(byte)Game.Attributes.Count];
-        public Inventory[] Inventory = new Inventory[Game.Max_Inventory + 1];
+        public Inventory[] Inventory = new Inventory[Max_Inventory + 1];
         public Item[] Equipment = new Item[(byte)Game.Equipments.Count];
-        public Hotbar[] Hotbar = new Hotbar[Game.Max_Hotbar + 1];
+        public Hotbar[] Hotbar = new Hotbar[Max_Hotbar + 1];
 
         // Dados temporários
         public bool GettingMap;
@@ -561,7 +561,7 @@ namespace Objects
         public byte FindHotbar(byte Type, byte Slot)
         {
             // Encontra algo especifico na hotbar
-            for (byte i = 1; i <= Game.Max_Hotbar; i++)
+            for (byte i = 1; i <= Max_Hotbar; i++)
                 if (Hotbar[i].Type == Type && Hotbar[i].Slot == Slot)
                     return i;
 
@@ -571,7 +571,7 @@ namespace Objects
         public byte FindInventory(Item Item)
         {
             // Encontra algo especifico na hotbar
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            for (byte i = 1; i <= Max_Inventory; i++)
                 if (Inventory[i].Item == Item)
                     return i;
 
@@ -583,7 +583,7 @@ namespace Objects
             byte Total = 0;
 
             // Retorna a quantidade de itens oferecidos na troca
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            for (byte i = 1; i <= Max_Inventory; i++)
                 if (Inventory[i].Item == null)
                     Total++;
 
@@ -664,7 +664,7 @@ namespace Objects
             byte Total = 0;
 
             // Retorna a quantidade de itens oferecidos na troca
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            for (byte i = 1; i <= Max_Inventory; i++)
                 if (Trade_Offer[i].Slot_Num != 0)
                     Total++;
 

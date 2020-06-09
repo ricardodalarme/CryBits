@@ -124,13 +124,13 @@ class Read
         Account.Character.Direction = (Game.Directions)Data.ReadByte();
         for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Account.Character.Vital[n] = Data.ReadInt16();
         for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Account.Character.Attribute[n] = Data.ReadInt16();
-        for (byte n = 1; n <= Game.Max_Inventory; n++)
+        for (byte n = 1; n <= Max_Inventory; n++)
         {
             Account.Character.Inventory[n].Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             Account.Character.Inventory[n].Amount = Data.ReadInt16();
         }
         for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Account.Character.Equipment[n] = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
-        for (byte n = 1; n <= Game.Max_Hotbar; n++)
+        for (byte n = 1; n <= Max_Hotbar; n++)
         {
             Account.Character.Hotbar[n].Type = Data.ReadByte();
             Account.Character.Hotbar[n].Slot = Data.ReadByte();

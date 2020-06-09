@@ -1188,8 +1188,8 @@ class Receive
 
         // Limpa os dadoss
         Player.Trade_Request = string.Empty;
-        Player.Trade_Offer = new Objects.Trade_Slot[Game.Max_Inventory + 1];
-        Invited.Trade_Offer = new Objects.Trade_Slot[Game.Max_Inventory + 1];
+        Player.Trade_Offer = new Objects.Trade_Slot[Max_Inventory + 1];
+        Invited.Trade_Offer = new Objects.Trade_Slot[Max_Inventory + 1];
 
         // Envia os dados para o grupo
         Send.Trade(Player, true);
@@ -1219,7 +1219,7 @@ class Receive
         if (Inventory_Slot != 0)
         {
             // Evita itens repetidos
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            for (byte i = 1; i <= Max_Inventory; i++)
                 if (Player.Trade_Offer[i].Slot_Num == Inventory_Slot)
                     return;
 
@@ -1265,11 +1265,11 @@ class Receive
                 // Remove os itens do inventário dos jogadores
                 Objects.Player To = Player;
                 for (byte j = 0; j < 2; j++, To = To == Player ? Invited : Player)
-                    for (byte i = 1; i <= Game.Max_Inventory; i++)
+                    for (byte i = 1; i <= Max_Inventory; i++)
                         To.TakeItem((byte)To.Trade_Offer[i].Slot_Num, To.Trade_Offer[i].Amount);
 
                 // Dá os itens aos jogadores
-                for (byte i = 1; i <= Game.Max_Inventory; i++)
+                for (byte i = 1; i <= Max_Inventory; i++)
                 {
                     if (Player.Trade_Offer[i].Slot_Num > 0) Invited.GiveItem(Your_Inventory[Player.Trade_Offer[i].Slot_Num].Item, Player.Trade_Offer[i].Amount);
                     if (Invited.Trade_Offer[i].Slot_Num > 0) Player.GiveItem(Their_Inventory[Invited.Trade_Offer[i].Slot_Num].Item, Invited.Trade_Offer[i].Amount);
@@ -1280,8 +1280,8 @@ class Receive
                 Send.Player_Inventory(Invited);
 
                 // Limpa a troca
-                Player.Trade_Offer = new Objects.Trade_Slot[Game.Max_Inventory + 1];
-                Invited.Trade_Offer = new Objects.Trade_Slot[Game.Max_Inventory + 1];
+                Player.Trade_Offer = new Objects.Trade_Slot[Max_Inventory + 1];
+                Invited.Trade_Offer = new Objects.Trade_Slot[Max_Inventory + 1];
                 Send.Trade_Offer(Invited);
                 Send.Trade_Offer(Invited, false);
                 break;

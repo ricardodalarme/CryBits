@@ -4,6 +4,12 @@ using System.Threading;
 
 class Program
 {
+    // Usado para manter a aplicação aberta
+    public static bool Working = true;
+
+    // CPS do servidor
+    public static int CPS;
+
     // Usado pra detectar quando o console é fechado
     [DllImport("Kernel32")]
     private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
@@ -88,7 +94,7 @@ class Program
      cps                        - shows the current server cps");
                 break;
             case "cps":
-                Console.WriteLine("CPS: " + Game.CPS);
+                Console.WriteLine("CPS: " + CPS);
                 break;
             case "defineaccess":
                 byte Access;

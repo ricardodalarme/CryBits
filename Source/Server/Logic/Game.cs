@@ -1,15 +1,5 @@
 ﻿class Game
 {
-    // CPS do servidor
-    public static int CPS;
-
-    // Bloqueio direcional
-    public const byte Max_DirBlock = 3;
-
-    // Limites em geral
-    public const byte Max_Inventory = 30;
-    public const byte Max_Hotbar = 10;
-
     public enum Directions
     {
         Up,
