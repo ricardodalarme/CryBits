@@ -40,7 +40,7 @@ class Socket
 
                     // Nova conexão - Conecta o jogador ao jogo
                     if (Status == NetConnectionStatus.Connected)
-                        Connect(Data);
+                        Lists.Account.Add(new Objects.Account(Data.SenderConnection));
                     // Conexão perdida, disconecta o jogador do jogo
                     else if (Status == NetConnectionStatus.Disconnected)
                         Account.Leave();
@@ -54,12 +54,6 @@ class Socket
 
             Device.Recycle(Data);
         }
-    }
-
-    private static void Connect(NetIncomingMessage IncomingMsg)
-    {
-        // Define a conexão do jogador
-        Lists.Account.Add(new Objects.Account(IncomingMsg.SenderConnection));
     }
 
     private static Objects.Account FindConnection(NetConnection Data)

@@ -8,8 +8,7 @@ class Loop
 
     // Contagens
     public static int Timer_500 = 0, Timer_1000 = 0, Timer_5000 = 0;
-    public static int Timer_Player_Regen = 0;
-    public static int Timer_NPC_Regen = 0;
+    public static int Timer_Regen = 0;
     public static int Timer_Map_Items = 0;
 
     public static void Init()
@@ -21,7 +20,7 @@ class Loop
             // Manuseia os dados recebidos
             Socket.HandleData();
 
-            if (Timer_500 < Environment.TickCount)
+            if (Environment.TickCount > Timer_500 + 500)
             {
                 // Lógicas do mapa
                 foreach (Objects.TMap Temp_Map in Lists.Temp_Map.Values) Temp_Map.Logic();
@@ -32,12 +31,11 @@ class Loop
                         Lists.Account[i].Character.Logic();
 
                 // Reinicia a contagem dos 500
-                Timer_500 = Environment.TickCount + 500;
+                Timer_500 = Environment.TickCount;
             }
 
             // Reinicia algumas contagens
-            if (Environment.TickCount > Timer_Player_Regen + 5000) Timer_Player_Regen = Environment.TickCount;
-            if (Environment.TickCount > Timer_NPC_Regen + 5000) Timer_NPC_Regen = Environment.TickCount;
+            if (Environment.TickCount > Timer_Regen + 5000) Timer_Regen = Environment.TickCount;
             if (Environment.TickCount > Timer_Map_Items + 300000) Timer_Map_Items = Environment.TickCount;
 
             // Faz com que a aplicação se mantenha estável

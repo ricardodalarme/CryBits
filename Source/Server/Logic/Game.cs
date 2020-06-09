@@ -1,6 +1,4 @@
-﻿using System;
-
-class Game
+﻿class Game
 {
     // CPS do servidor
     public static int CPS;
@@ -58,7 +56,6 @@ class Game
     {
         Pacific,
         Dangerous,
-        Amount
     }
 
     public enum NPC_Behaviour
@@ -82,7 +79,6 @@ class Game
         Block,
         Warp,
         Item,
-        Amount
     }
 
     public enum Target
@@ -118,8 +114,7 @@ class Game
     {
         None,
         Pickup,
-        Equip,
-        Count
+        Equip
     }
 
     public enum Trade_Status

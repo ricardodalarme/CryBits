@@ -93,7 +93,7 @@ namespace Objects
         public void Logic()
         {
             // Reneração 
-            if (Environment.TickCount > Loop.Timer_Player_Regen + 5000)
+            if (Environment.TickCount > Loop.Timer_Regen + 5000)
                 for (byte v = 0; v < (byte)Game.Vitals.Count; v++)
                     if (Vital[v] < MaxVital(v))
                     {

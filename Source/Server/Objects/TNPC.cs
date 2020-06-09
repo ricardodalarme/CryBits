@@ -56,7 +56,7 @@ namespace Objects
                 /////////////////
                 // Regeneração //
                 /////////////////
-                if (Environment.TickCount > Loop.Timer_NPC_Regen + 5000)
+                if (Environment.TickCount > Loop.Timer_Regen + 5000)
                     for (byte v = 0; v < (byte)Game.Vitals.Count; v++)
                         if (Vital[v] < Data.Vital[v])
                         {
