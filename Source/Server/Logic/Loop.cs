@@ -23,7 +23,7 @@ static class Loop
                 foreach (var Temp_Map in Lists.Temp_Map.Values) Temp_Map.Logic();
 
                 // Lógica dos jogadores
-                foreach (var Account in  Lists.Account)
+                foreach (var Account in Lists.Account)
                     if (Account.IsPlaying)
                         Account.Character.Logic();
 

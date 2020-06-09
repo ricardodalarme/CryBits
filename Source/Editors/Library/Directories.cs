@@ -45,7 +45,7 @@ class Directories
         // Só permite continuar caso selecionar um diretório
         if (Browser.ShowDialog() != DialogResult.OK)
         {
-           if (ShowMessage) MessageBox.Show("You need to select the client directory.", "Select the client directory", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+            if (ShowMessage) MessageBox.Show("You need to select the client directory.", "Select the client directory", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
             return false;
         }
 

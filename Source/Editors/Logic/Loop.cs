@@ -172,7 +172,7 @@ class Loop
                         Lists.Weather[i].Visible = true;
 
                         // Cria a partícula de acordo com o seu tipo
-                        switch ((Globals.Weathers)Weather.Type)
+                        switch (Weather.Type)
                         {
                             case Globals.Weathers.Thundering:
                             case Globals.Weathers.Raining: Weather_Rain_Create(i); break;
@@ -186,7 +186,7 @@ class Loop
             else
             {
                 // Movimenta a partícula de acordo com o seu tipo
-                switch ((Globals.Weathers)Weather.Type)
+                switch (Weather.Type)
                 {
                     case Globals.Weathers.Thundering:
                     case Globals.Weathers.Raining: Weather_Rain_Movement(i); break;

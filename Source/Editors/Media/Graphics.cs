@@ -630,7 +630,7 @@ partial class Graphics
     private static void Editor_Item()
     {
         // Somente se necessário
-        if (Editor_Items.Form == null ) return;
+        if (Editor_Items.Form == null) return;
 
         // Desenha o item
         short Texture_Num = (short)Editor_Items.Form.numTexture.Value;
@@ -645,7 +645,7 @@ partial class Graphics
     private static void Editor_NPC()
     {
         // Somente se necessário
-        if (Editor_NPCs.Form == null ) return;
+        if (Editor_NPCs.Form == null) return;
 
         // Desenha o NPC
         Character(Win_NPC, (short)Editor_NPCs.Form.numTexture.Value);
@@ -656,10 +656,10 @@ partial class Graphics
     private static void Editor_Class()
     {
         // Somente se necessário
-        if (Editor_Classes.Form == null ) return;
+        if (Editor_Classes.Form == null) return;
 
         // Desenha o NPC
-        Character(Win_Class, (short) Editor_Classes.Form.numTexture.Value);
+        Character(Win_Class, (short)Editor_Classes.Form.numTexture.Value);
     }
     #endregion
 
@@ -672,7 +672,7 @@ partial class Graphics
         // Desenha o item
         Window.Clear();
         Transparent(Window);
-        if (Texture_Num > 0 && Texture_Num < Tex_Character.Length)  Render(Window, Texture, (int)(Window.Size.X - Size.Width) / 2, (int)(Window.Size.Y-Size.Height) / 2, 0, 0, Size.Width, Size.Height);
+        if (Texture_Num > 0 && Texture_Num < Tex_Character.Length) Render(Window, Texture, (int)(Window.Size.X - Size.Width) / 2, (int)(Window.Size.Y - Size.Height) / 2, 0, 0, Size.Width, Size.Height);
         Window.Display();
     }
     #endregion

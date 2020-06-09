@@ -24,7 +24,7 @@ namespace Objects
         public Map_NPC[] NPC = Array.Empty<Map_NPC>();
         public Map_Light[] Light = Array.Empty<Map_Light>();
         public byte Lighting = 100;
-        public Map[] Link = new Map[(byte) Directions.Count];
+        public Map[] Link = new Map[(byte)Directions.Count];
 
         // Construtor
         public Map(Guid ID) : base(ID)
@@ -41,7 +41,7 @@ namespace Objects
         {
             // Verifica se o azulejo está bloqueado
             if (OutLimit(X, Y)) return true;
-            if (Attribute[X, Y].Type == (byte) Tile_Attributes.Block) return true;
+            if (Attribute[X, Y].Type == (byte)Tile_Attributes.Block) return true;
             return false;
         }
 
@@ -73,7 +73,7 @@ namespace Objects
         public short Data_3;
         public short Data_4;
         public byte Zone;
-        public bool[] Block = new bool[(byte) Directions.Count];
+        public bool[] Block = new bool[(byte)Directions.Count];
     }
 
     [Serializable]

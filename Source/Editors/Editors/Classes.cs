@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Objects;
+using System;
 using System.Linq;
 using System.Windows.Forms;
-using Objects;
 
 partial class Editor_Classes : Form
 {
@@ -20,7 +20,7 @@ partial class Editor_Classes : Form
         // Define os limites
         numSpawn_X.Maximum = Globals.Map_Width - 1;
         numSpawn_Y.Maximum = Globals.Map_Height - 1;
-        numTexture.Maximum =Graphics.Tex_Character.Length - 1;
+        numTexture.Maximum = Graphics.Tex_Character.Length - 1;
 
         // Lista os dados
         foreach (var Item in Lists.Item.Values) cmbItems.Items.Add(Item);

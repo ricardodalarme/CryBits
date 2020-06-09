@@ -468,7 +468,7 @@ class Receive
 
         for (byte x = 0; x < Game.Map_Width; x++)
             for (byte y = 0; y < Game.Map_Height; y++)
-                Map.Tile[x, y].Data = new Objects.Map_Tile_Data[(byte)global::Mapper.Layers.Count, Num_Layers ];
+                Map.Tile[x, y].Data = new Objects.Map_Tile_Data[(byte)global::Mapper.Layers.Count, Num_Layers];
 
         // Lê os azulejos
         for (byte i = 0; i < Num_Layers; i++)

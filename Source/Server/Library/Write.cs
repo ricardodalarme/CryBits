@@ -45,14 +45,14 @@ static class Write
         Data.Write(Account.Character.X);
         Data.Write(Account.Character.Y);
         Data.Write((byte)Account.Character.Direction);
-        for (byte n = 0; n < (byte)Utils.Vitals.Count; n++) Data.Write(Account.Character.Vital[n]);
-        for (byte n = 0; n < (byte)Utils.Attributes.Count; n++) Data.Write(Account.Character.Attribute[n]);
+        for (byte n = 0; n < (byte)Vitals.Count; n++) Data.Write(Account.Character.Vital[n]);
+        for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(Account.Character.Attribute[n]);
         for (byte n = 1; n <= Max_Inventory; n++)
         {
             Data.Write(Lists.GetID(Account.Character.Inventory[n].Item));
             Data.Write(Account.Character.Inventory[n].Amount);
         }
-        for (byte n = 0; n < (byte)Utils.Equipments.Count; n++) Data.Write(Lists.GetID(Account.Character.Equipment[n]));
+        for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(Lists.GetID(Account.Character.Equipment[n]));
         for (byte n = 1; n <= Max_Hotbar; n++)
         {
             Data.Write(Account.Character.Hotbar[n].Type);

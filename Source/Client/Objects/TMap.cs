@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Objects
 {
@@ -36,7 +35,7 @@ namespace Objects
             return false;
         }
 
-        public bool Tile_Blocked( byte X, byte Y, Game.Directions Direction)
+        public bool Tile_Blocked(byte X, byte Y, Game.Directions Direction)
         {
             byte Next_X = X, Next_Y = Y;
 
@@ -50,7 +49,7 @@ namespace Objects
             if (Data.Tile[Next_X, Next_Y].Attribute == (byte)Mapper.Layer_Attributes.Block) return true;
             if (Data.Tile[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
             if (Data.Tile[X, Y].Block[(byte)Direction]) return true;
-            if (HasPlayer(Next_X, Next_Y)  || HasNPC(Next_X, Next_Y)) return true;
+            if (HasPlayer(Next_X, Next_Y) || HasNPC(Next_X, Next_Y)) return true;
             return false;
         }
     }
