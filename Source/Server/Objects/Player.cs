@@ -690,10 +690,10 @@ namespace Objects
         public static Player Find(string Name)
         {
             // Encontra o usuário
-            for (byte i = 0; i < Lists.Account.Count; i++)
-                if (Lists.Account[i].IsPlaying)
-                    if (Lists.Account[i].Character.Name.Equals(Name))
-                        return Lists.Account[i].Character;
+            foreach (var Account in Lists.Account)
+                if (Account.IsPlaying)
+                    if (Account.Character.Name.Equals(Name))
+                        return Account.Character;
 
             return null;
         }

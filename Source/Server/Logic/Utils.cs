@@ -1,6 +1,6 @@
 ﻿using System;
 
-class Utils
+static class Utils
 {
     // Números aleatórios
     public static Random Random = new Random();

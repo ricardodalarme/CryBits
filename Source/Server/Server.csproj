@@ -83,6 +83,7 @@
     <Compile Include="Objects\Account.cs" />
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\Class.cs" />
+    <Compile Include="Objects\Data.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Objects\Map.cs" />
     <Compile Include="Objects\NPC.cs" />

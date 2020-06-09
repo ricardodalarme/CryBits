@@ -78,20 +78,20 @@ namespace Objects
                 {
                     // Jogador
                     if (Target == null)
-                        for (byte Player_Index = 0; Player_Index < Lists.Account.Count; Player_Index++)
+                        foreach (var Player in Lists.Account)
                         {
                             // Verifica se o jogador está jogando e no mesmo mapa que o NPC
-                            if (!Lists.Account[Player_Index].IsPlaying) continue;
-                            if (Lists.Account[Player_Index].Character.Map != Map) continue;
+                            if (!Player.IsPlaying) continue;
+                            if (Player.Character.Map != Map) continue;
 
                             // Se o jogador estiver no alcance do NPC, ir atrás dele
-                            Distance = (short)Math.Sqrt(Math.Pow(X - Lists.Account[Player_Index].Character.X, 2) + Math.Pow(Y - Lists.Account[Player_Index].Character.Y, 2));
+                            Distance = (short)Math.Sqrt(Math.Pow(X - Player.Character.X, 2) + Math.Pow(Y - Player.Character.Y, 2));
                             if (Distance <= Data.Sight)
                             {
-                                Target = Lists.Account[Player_Index].Character;
+                                Target = Player.Character;
 
                                 // Mensagem
-                                if (!string.IsNullOrEmpty(Data.SayMsg)) Send.Message(Lists.Account[Player_Index].Character, Data.Name + ": " + Data.SayMsg, System.Drawing.Color.White);
+                                if (!string.IsNullOrEmpty(Data.SayMsg)) Send.Message(Player.Character, Data.Name + ": " + Data.SayMsg, System.Drawing.Color.White);
                                 break;
                             }
                         }

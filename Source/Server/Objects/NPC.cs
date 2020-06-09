@@ -3,7 +3,7 @@
 namespace Objects
 {
     [Serializable]
-    class NPC : Lists.Structures.Data
+    class NPC : Data
     {
         // Dados
         public string Name;

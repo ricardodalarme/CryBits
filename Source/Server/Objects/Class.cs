@@ -3,7 +3,7 @@
 namespace Objects
 {
     [Serializable]
-    class Class : Lists.Structures.Data
+    class Class : Data
     {
         // Dados
         public string Name;

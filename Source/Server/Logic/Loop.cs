@@ -23,12 +23,12 @@ class Loop
             if (Environment.TickCount > Timer_500 + 500)
             {
                 // Lógicas do mapa
-                foreach (Objects.TMap Temp_Map in Lists.Temp_Map.Values) Temp_Map.Logic();
+                foreach (var Temp_Map in Lists.Temp_Map.Values) Temp_Map.Logic();
 
                 // Lógica dos jogadores
-                for (byte i = 0; i < Lists.Account.Count; i++)
-                    if (Lists.Account[i].IsPlaying)
-                        Lists.Account[i].Character.Logic();
+                foreach (var Account in  Lists.Account)
+                    if (Account.IsPlaying)
+                        Account.Character.Logic();
 
                 // Reinicia a contagem dos 500
                 Timer_500 = Environment.TickCount;

@@ -12,7 +12,13 @@ namespace Objects
         public Game.Accesses Acess;
         public bool InEditor;
         public Player Character;
-        public List<Lists.Structures.TempCharacter> Characters = new List<Lists.Structures.TempCharacter>();
+        public List<TempCharacter> Characters = new List<TempCharacter>();
+        public struct TempCharacter
+        {
+            public string Name;
+            public short Texture_Num;
+            public short Level;
+        }
 
         // Construtor
         public Account(NetConnection Connection)

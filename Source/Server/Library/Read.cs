@@ -63,14 +63,14 @@ class Read
 
         // Lê odos os personagens
         FileInfo[] File = Directory.GetFiles();
-        Account.Characters = new List<Lists.Structures.TempCharacter>();
+        Account.Characters = new List<Objects.Account.TempCharacter>();
         for (byte i = 0; i < File.Length; i++)
         {
             // Cria um arquivo temporário
             BinaryReader Data = new BinaryReader(File[i].OpenRead());
 
             // Carrega os dados e os adiciona ao cache
-            Lists.Structures.TempCharacter Temp = new Lists.Structures.TempCharacter
+            var Temp = new Objects.Account.TempCharacter
             {
                 Name = Data.ReadString(),
                 Texture_Num = Data.ReadInt16(),

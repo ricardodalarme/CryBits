@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Objects
 {
-    class TMap : Lists.Structures.Data
+    class TMap : Data
     {
         // Dados
         public Map Data;
@@ -22,7 +22,7 @@ namespace Objects
             if (!HasPlayers()) return;
 
             // Lógica dos NPCs
-            for (byte j = 1; j < NPC.Length; j++) NPC[j].Logic();
+            for (byte j = 0; j < NPC.Length; j++) NPC[j].Logic();
 
             // Faz reaparecer todos os itens do mapa
             if (Environment.TickCount > Loop.Timer_Map_Items + 300000)
@@ -36,7 +36,7 @@ namespace Objects
         public TNPC HasNPC(byte X, byte Y)
         {
             // Verifica se há algum npc na cordenada
-            for (byte i = 1; i < NPC.Length; i++)
+            for (byte i = 0; i < NPC.Length; i++)
                 if (NPC[i].Alive)
                     if (NPC[i].X == X && NPC[i].Y == Y)
                         return NPC[i];
@@ -47,10 +47,10 @@ namespace Objects
         public Player HasPlayer(byte X, byte Y)
         {
             // Verifica se há algum Jogador na cordenada
-            for (byte i = 0; i < Lists.Account.Count; i++)
-                if (Lists.Account[i].IsPlaying)
-                    if (Lists.Account[i].Character.X == X && Lists.Account[i].Character.Y == Y && Lists.Account[i].Character.Map == this)
-                        return Lists.Account[i].Character;
+            foreach (var Account in Lists.Account)
+                if (Account.IsPlaying)
+                    if ((Account.Character.X, Account.Character.Y, Account.Character.Map) == (X, Y, this))
+                        return Account.Character;
 
             return null;
         }
@@ -58,22 +58,22 @@ namespace Objects
         public bool HasPlayers()
         {
             // Verifica se tem algum jogador no mapa
-            for (byte i = 0; i < Lists.Account.Count; i++)
-                if (Lists.Account[i].IsPlaying)
-                    if (Lists.Account[i].Character.Map == this)
+            foreach (var Account in Lists.Account)
+                if (Account.IsPlaying)
+                    if (Account.Character.Map == this)
                         return true;
 
             return false;
         }
 
-        public byte HasItem(byte X, byte Y)
+        public TMap_Items HasItem(byte X, byte Y)
         {
             // Verifica se tem algum item nas coordenadas 
-            for (byte i = (byte)(Item.Count - 1); i >= 1; i--)
+            for (byte i = (byte)(Item.Count - 1); i >= 0; i--)
                 if (Item[i].X == X && Item[i].Y == Y)
-                    return i;
+                    return Item[i];
 
-            return 0;
+            return null;
         }
 
         public void Spawn_Items()
@@ -81,8 +81,8 @@ namespace Objects
             TMap_Items Map_Item = new TMap_Items();
 
             // Verifica se tem algum atributo de item no mapa
-            for (byte x = 0; x < Objects.Map.Width; x++)
-                for (byte y = 0; y < Objects.Map.Height; y++)
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                     if (Data.Attribute[x, y].Type == (byte)Game.Tile_Attributes.Item)
                     {
                         // Faz o item aparecer

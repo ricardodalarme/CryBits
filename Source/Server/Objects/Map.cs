@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Objects
 {
     [Serializable]
-    class Map : Lists.Structures.Data
+    class Map : Data
     {
         // Tamanho dos mapas
         public const byte Width = 25;

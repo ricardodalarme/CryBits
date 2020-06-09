@@ -413,17 +413,16 @@ class Receive
 
     private static void CollectItem(Objects.Player Player)
     {
-        byte Map_Item = Player.Map.HasItem(Player.X, Player.Y);
-        Objects.Item Item = Player.Map.Item[Map_Item].Item;
+        Objects.TMap_Items Map_Item = Player.Map.HasItem(Player.X, Player.Y);
 
         // Somente se necessário
-        if (Map_Item == 0) return;
+        if (Map_Item == null) return;
 
         // Dá o item ao jogador
-        if (Player.GiveItem(Item, Player.Map.Item[Map_Item].Amount))
+        if (Player.GiveItem(Map_Item.Item, Map_Item.Amount))
         {
             // Retira o item do mapa
-            Player.Map.Item.RemoveAt(Map_Item);
+            Player.Map.Item.Remove(Map_Item);
             Send.Map_Items(Player.Map);
         }
     }
@@ -1213,7 +1212,7 @@ class Receive
     private static void Trade_Offer(Objects.Player Player, NetIncomingMessage Data)
     {
         byte Slot = Data.ReadByte(), Inventory_Slot = Data.ReadByte();
-        short Amount = System.Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
+        short Amount = Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
 
         // Adiciona o item à troca
         if (Inventory_Slot != 0)
