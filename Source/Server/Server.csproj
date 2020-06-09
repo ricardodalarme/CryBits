@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Directories.cs" />
+    <Compile Include="Logic\Utils.cs" />
     <Compile Include="Objects\Account.cs" />
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\Class.cs" />

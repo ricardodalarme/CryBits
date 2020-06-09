@@ -423,8 +423,8 @@ class Send
             Data.Write(Map.Layer[i].Type);
 
             // Azulejos
-            for (byte x = 0; x < Game.Map_Width; x++)
-                for (byte y = 0; y < Game.Map_Height; y++)
+            for (byte x = 0; x < Objects.Map.Width; x++)
+                for (byte y = 0; y < Objects.Map.Height; y++)
                 {
                     Data.Write(Map.Layer[i].Tile[x, y].X);
                     Data.Write(Map.Layer[i].Tile[x, y].Y);
@@ -434,8 +434,8 @@ class Send
         }
 
         // Dados específicos dos azulejos
-        for (byte x = 0; x < Game.Map_Width; x++)
-            for (byte y = 0; y < Game.Map_Height; y++)
+        for (byte x = 0; x < Objects.Map.Width; x++)
+            for (byte y = 0; y < Objects.Map.Height; y++)
             {
                 Data.Write(Map.Attribute[x, y].Type);
                 Data.Write(Map.Attribute[x, y].Data_1);
@@ -518,7 +518,7 @@ class Send
 
     public static void Message_Private(Objects.Player Player, string Addressee_Name, string Texto)
     {
-        Objects.Player Addressee = Game.FindPlayer(Addressee_Name);
+        Objects.Player Addressee = Objects.Player.Find(Addressee_Name);
 
         // Verifica se o jogador está conectado
         if (Addressee == null)

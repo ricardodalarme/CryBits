@@ -81,8 +81,8 @@ namespace Objects
             TMap_Items Map_Item = new TMap_Items();
 
             // Verifica se tem algum atributo de item no mapa
-            for (byte x = 0; x < Game.Map_Width; x++)
-                for (byte y = 0; y < Game.Map_Height; y++)
+            for (byte x = 0; x < Objects.Map.Width; x++)
+                for (byte y = 0; y < Objects.Map.Height; y++)
                     if (Data.Attribute[x, y].Type == (byte)Game.Tile_Attributes.Item)
                     {
                         // Faz o item aparecer
@@ -99,11 +99,11 @@ namespace Objects
             byte Next_X = X, Next_Y = Y;
 
             // Próximo azulejo
-            Game.NextTile(Direction, ref Next_X, ref Next_Y);
+            Utils.NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Verifica se o azulejo está bloqueado
             if (Data.Tile_Blocked(Next_X, Next_Y)) return true;
-            if (Data.Attribute[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
+            if (Data.Attribute[Next_X, Next_Y].Block[(byte)Utils.ReverseDirection(Direction)]) return true;
             if (Data.Attribute[X, Y].Block[(byte)Direction]) return true;
             if (CountEntities && (HasPlayer(Next_X, Next_Y) != null || HasNPC(Next_X, Next_Y) != null)) return true;
             return false;

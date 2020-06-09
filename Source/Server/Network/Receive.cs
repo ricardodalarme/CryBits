@@ -690,8 +690,8 @@ class Receive
                 Map.Layer[n].Type = Data.ReadByte();
 
                 // Azulejos
-                for (byte x = 0; x < Game.Map_Width; x++)
-                    for (byte y = 0; y < Game.Map_Height; y++)
+                for (byte x = 0; x < Objects.Map.Width; x++)
+                    for (byte y = 0; y < Objects.Map.Height; y++)
                     {
                         Map.Layer[n].Tile[x, y].X = Data.ReadByte();
                         Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
@@ -701,8 +701,8 @@ class Receive
             }
 
             // Dados específicos dos azulejos
-            for (byte x = 0; x < Game.Map_Width; x++)
-                for (byte y = 0; y < Game.Map_Height; y++)
+            for (byte x = 0; x < Objects.Map.Width; x++)
+                for (byte y = 0; y < Objects.Map.Height; y++)
                 {
                     Map.Attribute[x, y] = new Objects.Map_Attribute();
                     Map.Attribute[x, y].Type = Data.ReadByte();
@@ -1004,7 +1004,7 @@ class Receive
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        Objects.Player Invited = Game.FindPlayer(Name);
+        Objects.Player Invited = Objects.Player.Find(Name);
 
         // Verifica se o jogador está convectado
         if (Invited == null)
@@ -1044,7 +1044,7 @@ class Receive
 
     private static void Party_Accept(Objects.Player Player)
     {
-        Objects.Player Invitation = Game.FindPlayer(Player.Party_Request);
+        Objects.Player Invitation = Objects.Player.Find(Player.Party_Request);
 
         // Verifica se já tem um grupo
         if (Player.Party.Count != 0)
@@ -1084,7 +1084,7 @@ class Receive
 
     private static void Party_Decline(Objects.Player Player)
     {
-        Objects.Player Invitation = Game.FindPlayer(Player.Party_Request);
+        Objects.Player Invitation = Objects.Player.Find(Player.Party_Request);
 
         // Recusa o convite
         if (Invitation != null) Send.Message(Invitation, Player.Name + " decline the party.", System.Drawing.Color.White);
@@ -1102,7 +1102,7 @@ class Receive
         string Name = Data.ReadString();
 
         // Encontra o jogador
-        Objects.Player Invited = Game.FindPlayer(Name);
+        Objects.Player Invited = Objects.Player.Find(Name);
 
         // Verifica se o jogador está convectado
         if (Invited == null)
@@ -1153,7 +1153,7 @@ class Receive
 
     private static void Trade_Accept(Objects.Player Player)
     {
-        Objects.Player Invited = Game.FindPlayer(Player.Trade_Request);
+        Objects.Player Invited = Objects.Player.Find(Player.Trade_Request);
 
         // Verifica se já tem um grupo
         if (Player.Trade != null)
@@ -1198,7 +1198,7 @@ class Receive
 
     private static void Trade_Decline(Objects.Player Player)
     {
-        Objects.Player Invited = Game.FindPlayer(Player.Trade_Request);
+        Objects.Player Invited = Objects.Player.Find(Player.Trade_Request);
 
         // Recusa o convite
         if (Invited != null) Send.Message(Invited, Player.Name + " decline the trade.", System.Drawing.Color.White);
