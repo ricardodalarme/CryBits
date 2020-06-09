@@ -2,10 +2,10 @@
 using System.Drawing;
 using static Utils;
 
-class Send
+static class Send
 {
     // Pacotes do servidor para o cliente
-    public enum Client_Packets
+    private enum Client_Packets
     {
         Alert,
         Connect,

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using static Utils;
 
-class Receive
+static class Receive
 {
     // Pacotes do cliente
     private enum Client_Packets

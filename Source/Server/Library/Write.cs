@@ -4,6 +4,29 @@ using static Utils;
 
 static class Write
 {
+    public static void Settings()
+    {
+        // Cria um arquivo temporário
+        BinaryWriter Data = new BinaryWriter(Directories.Settings.OpenWrite());
+
+        // Escreve os dados
+        Data.Write(Game_Name);
+        Data.Write(Welcome_Message);
+        Data.Write(Port);
+        Data.Write(Max_Players);
+        Data.Write(Max_Characters);
+        Data.Write(Max_Party_Members);
+        Data.Write(Max_Map_Items);
+        Data.Write(Num_Points);
+        Data.Write(Max_Name_Length);
+        Data.Write(Min_Name_Length);
+        Data.Write(Max_Password_Length);
+        Data.Write(Min_Password_Length);
+
+        // Descarrega o arquivo
+        Data.Dispose();
+    }
+
     public static void Account(Objects.Account Account)
     {
         FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Data" + Directories.Format);
@@ -82,29 +105,6 @@ static class Write
 
         // Salva o nome do personagem no arquivo
         Data.Write(Characters_Name);
-
-        // Descarrega o arquivo
-        Data.Dispose();
-    }
-
-    public static void Settings()
-    {
-        // Cria um arquivo temporário
-        BinaryWriter Data = new BinaryWriter(Directories.Settings.OpenWrite());
-
-        // Escreve os dados
-        Data.Write(Game_Name);
-        Data.Write(Welcome_Message);
-        Data.Write(Port);
-        Data.Write(Max_Players);
-        Data.Write(Max_Characters);
-        Data.Write(Max_Party_Members);
-        Data.Write(Max_Map_Items);
-        Data.Write(Num_Points);
-        Data.Write(Max_Name_Length);
-        Data.Write(Min_Name_Length);
-        Data.Write(Max_Password_Length);
-        Data.Write(Min_Password_Length);
 
         // Descarrega o arquivo
         Data.Dispose();

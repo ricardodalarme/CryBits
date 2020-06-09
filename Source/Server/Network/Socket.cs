@@ -1,6 +1,6 @@
 ﻿using Lidgren.Network;
 
-class Socket
+static class Socket
 {
     // Protocolo do controle de transmissão
     public static NetServer Device;
