@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 
-class Program
+static class Program
 {
     // Usado para manter a aplicação aberta
     public static bool Working = true;
