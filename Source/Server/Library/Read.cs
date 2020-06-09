@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using static Utils;
 
-class Read
+static class Read
 {
     public static void All()
     {
@@ -64,7 +64,7 @@ class Read
         // Carrega os dados e os adiciona ao cache
         Account.User = Data.ReadString();
         Account.Password = Data.ReadString();
-        Account.Acess = (Game.Accesses)Data.ReadByte();
+        Account.Acess = (Utils.Accesses)Data.ReadByte();
 
         // Descarrega o arquivo
         Data.Dispose();
@@ -121,15 +121,15 @@ class Read
         Account.Character.Map = (Objects.TMap)Lists.GetData(Lists.Temp_Map, new Guid(Data.ReadString()));
         Account.Character.X = Data.ReadByte();
         Account.Character.Y = Data.ReadByte();
-        Account.Character.Direction = (Game.Directions)Data.ReadByte();
-        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Account.Character.Vital[n] = Data.ReadInt16();
-        for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Account.Character.Attribute[n] = Data.ReadInt16();
+        Account.Character.Direction = (Utils.Directions)Data.ReadByte();
+        for (byte n = 0; n < (byte)Utils.Vitals.Count; n++) Account.Character.Vital[n] = Data.ReadInt16();
+        for (byte n = 0; n < (byte)Utils.Attributes.Count; n++) Account.Character.Attribute[n] = Data.ReadInt16();
         for (byte n = 1; n <= Max_Inventory; n++)
         {
             Account.Character.Inventory[n].Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             Account.Character.Inventory[n].Amount = Data.ReadInt16();
         }
-        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Account.Character.Equipment[n] = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+        for (byte n = 0; n < (byte)Utils.Equipments.Count; n++) Account.Character.Equipment[n] = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
         for (byte n = 1; n <= Max_Hotbar; n++)
         {
             Account.Character.Hotbar[n].Type = Data.ReadByte();

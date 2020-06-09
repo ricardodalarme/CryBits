@@ -88,7 +88,6 @@
     <Compile Include="Objects\Map.cs" />
     <Compile Include="Objects\NPC.cs" />
     <Compile Include="Objects\Player.cs" />
-    <Compile Include="Logic\Game.cs" />
     <Compile Include="Objects\Shop.cs" />
     <Compile Include="Objects\TMap.cs" />
     <Compile Include="Objects\TNPC.cs" />

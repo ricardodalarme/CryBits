@@ -9,7 +9,7 @@ namespace Objects
         public NetConnection Connection;
         public string User = string.Empty;
         public string Password = string.Empty;
-        public Game.Accesses Acess;
+        public Utils.Accesses Acess;
         public bool InEditor;
         public Player Character;
         public List<TempCharacter> Characters = new List<TempCharacter>();

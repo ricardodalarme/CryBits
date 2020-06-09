@@ -201,8 +201,8 @@ class Send
                 Data.Write(Class.Spawn_Direction);
                 Data.Write(Class.Spawn_X);
                 Data.Write(Class.Spawn_Y);
-                for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Class.Vital[n]);
-                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Class.Attribute[n]);
+                for (byte n = 0; n < (byte) Vitals.Count; n++) Data.Write(Class.Vital[n]);
+                for (byte n = 0; n < (byte) Attributes.Count; n++) Data.Write(Class.Attribute[n]);
                 Data.Write((byte)Class.Item.Length);
                 for (byte n = 0; n < (byte)Class.Item.Length; n++)
                 {
@@ -238,13 +238,13 @@ class Send
         Data.Write(Player.X);
         Data.Write(Player.Y);
         Data.Write((byte)Player.Direction);
-        for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+        for (byte n = 0; n < (byte) Vitals.Count; n++)
         {
             Data.Write(Player.Vital[n]);
             Data.Write(Player.MaxVital(n));
         }
-        for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(Player.Attribute[n]);
-        for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Data.Write(Lists.GetID(Player.Equipment[n]));
+        for (byte n = 0; n < (byte) Attributes.Count; n++) Data.Write(Player.Attribute[n]);
+        for (byte n = 0; n < (byte) Equipments.Count; n++) Data.Write(Lists.GetID(Player.Equipment[n]));
 
         return Data;
     }
@@ -269,7 +269,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Vitals);
         Data.Write(Player.Name);
-        for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
+        for (byte i = 0; i < (byte) Vitals.Count; i++)
         {
             Data.Write(Player.Vital[i]);
             Data.Write(Player.MaxVital(i));
@@ -332,7 +332,7 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Player_Equipments);
         Data.Write(Player.Name);
-        for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Data.Write(Lists.GetID(Player.Equipment[i]));
+        for (byte i = 0; i < (byte) Equipments.Count; i++) Data.Write(Lists.GetID(Player.Equipment[i]));
         ToMap(Player.Map, Data);
     }
 
@@ -413,7 +413,7 @@ class Send
         Data.Write(Map.Lighting);
 
         // Ligações
-        for (short i = 0; i < (short)Game.Directions.Count; i++)
+        for (short i = 0; i < (short) Directions.Count; i++)
             Data.Write(Lists.GetID(Map.Link[i]));
 
         // Camadas
@@ -446,7 +446,7 @@ class Send
                 Data.Write(Map.Attribute[x, y].Zone);
 
                 // Bloqueio direcional
-                for (byte i = 0; i < (byte)Game.Directions.Count; i++)
+                for (byte i = 0; i < (byte) Directions.Count; i++)
                     Data.Write(Map.Attribute[x, y].Block[i]);
             }
 
@@ -533,7 +533,7 @@ class Send
         Message(Addressee, "[From] " + Player.Name + ": " + Texto, Color.Pink);
     }
 
-    public static void Player_Attack(Objects.Player Player, string Victim = "", Game.Target Victim_Type = 0)
+    public static void Player_Attack(Objects.Player Player, string Victim = "",  Targets Victim_Type = 0)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -566,9 +566,9 @@ class Send
             Data.Write(Item.Req_Level);
             Data.Write(Lists.GetID(Item.Req_Class));
             Data.Write(Item.Potion_Experience);
-            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Data.Write(Item.Potion_Vital[v]);
+            for (byte v = 0; v < (byte) Vitals.Count; v++) Data.Write(Item.Potion_Vital[v]);
             Data.Write(Item.Equip_Type);
-            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Data.Write(Item.Equip_Attribute[a]);
+            for (byte a = 0; a < (byte) Attributes.Count; a++) Data.Write(Item.Equip_Attribute[a]);
             Data.Write(Item.Weapon_Damage);
         }
 
@@ -656,7 +656,7 @@ class Send
             Data.Write(NPC.SayMsg);
             Data.Write(NPC.Texture);
             Data.Write(NPC.Behaviour);
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(NPC.Vital[n]);
+            for (byte n = 0; n < (byte) Vitals.Count; n++) Data.Write(NPC.Vital[n]);
 
             // Dados apenas do editor
             if (Account.InEditor)
@@ -664,7 +664,7 @@ class Send
                 Data.Write(NPC.SpawnTime);
                 Data.Write(NPC.Sight);
                 Data.Write(NPC.Experience);
-                for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Data.Write(NPC.Attribute[n]);
+                for (byte n = 0; n < (byte) Attributes.Count; n++) Data.Write(NPC.Attribute[n]);
                 Data.Write((byte)NPC.Drop.Length);
                 for (byte n = 0; n < NPC.Drop.Length; n++)
                 {
@@ -696,7 +696,7 @@ class Send
             Data.Write(Map.NPC[i].X);
             Data.Write(Map.NPC[i].Y);
             Data.Write((byte)Map.NPC[i].Direction);
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(Map.NPC[i].Vital[n]);
+            for (byte n = 0; n < (byte) Vitals.Count; n++) Data.Write(Map.NPC[i].Vital[n]);
         }
         ToPlayer(Player, Data);
     }
@@ -712,7 +712,7 @@ class Send
         Data.Write(NPC.X);
         Data.Write(NPC.Y);
         Data.Write((byte)NPC.Direction);
-        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(NPC.Vital[n]);
+        for (byte n = 0; n < (byte) Vitals.Count; n++) Data.Write(NPC.Vital[n]);
         ToMap(NPC.Map, Data);
     }
 
@@ -748,11 +748,11 @@ class Send
         // Envia os dados
         Data.Write((byte)Client_Packets.Map_NPC_Vitals);
         Data.Write(NPC.Index);
-        for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Data.Write(NPC.Vital[n]);
+        for (byte n = 0; n < (byte) Vitals.Count; n++) Data.Write(NPC.Vital[n]);
         ToMap(NPC.Map, Data);
     }
 
-    public static void Map_NPC_Attack(Objects.TNPC NPC, string Victim = "", Game.Target Victim_Type = 0)
+    public static void Map_NPC_Attack(Objects.TNPC NPC, string Victim = "",  Targets Victim_Type = 0)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -836,7 +836,7 @@ class Send
         ToPlayer(Player, Data);
     }
 
-    public static void Trade_State(Objects.Player Player, Game.Trade_Status State)
+    public static void Trade_State(Objects.Player Player,  Trade_Status State)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

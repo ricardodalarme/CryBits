@@ -84,7 +84,7 @@ namespace Objects
             // Verifica se tem algum atributo de item no mapa
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
-                    if (Data.Attribute[x, y].Type == (byte)Game.Tile_Attributes.Item)
+                    if (Data.Attribute[x, y].Type == (byte) Tile_Attributes.Item)
                     {
                         // Faz o item aparecer
                         Map_Item.Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.Attribute[x, y].Data_1));
@@ -95,7 +95,7 @@ namespace Objects
                     }
         }
 
-        public bool Tile_Blocked(byte X, byte Y, Game.Directions Direction, bool CountEntities = true)
+        public bool Tile_Blocked(byte X, byte Y,  Directions Direction, bool CountEntities = true)
         {
             byte Next_X = X, Next_Y = Y;
 

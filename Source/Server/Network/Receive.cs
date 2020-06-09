@@ -166,12 +166,12 @@ class Receive
             return;
         }
 
-        Account.Acess = Game.Accesses.Administrator;
+        Account.Acess = Accesses.Administrator;
 
         if (Editor)
         {
             // Verifica se o jogador tem permissão para fazer entrar no modo edição
-            if (Account.Acess < Game.Accesses.Editor)
+            if (Account.Acess < Accesses.Editor)
             {
                 Send.Alert(Account, "You're not allowed to do this.");
                 return;
@@ -215,14 +215,14 @@ class Receive
         string Password = Data.ReadString();
 
         // Verifica se está tudo certo
-        if (User.Length <  Min_Name_Length || User.Length >  Max_Name_Length)
+        if (User.Length < Min_Name_Length || User.Length > Max_Name_Length)
         {
-            Send.Alert(Account, "The username must contain between " +  Min_Name_Length + " and " +  Max_Name_Length + " characters.");
+            Send.Alert(Account, "The username must contain between " + Min_Name_Length + " and " + Max_Name_Length + " characters.");
             return;
         }
-        if (Password.Length <  Min_Name_Length || Password.Length >  Max_Name_Length)
+        if (Password.Length < Min_Name_Length || Password.Length > Max_Name_Length)
         {
-            Send.Alert(Account, "The password must contain between " +  Min_Name_Length + " and " +  Max_Name_Length + " characters.");
+            Send.Alert(Account, "The password must contain between " + Min_Name_Length + " and " + Max_Name_Length + " characters.");
             return;
         }
         if (File.Exists(Directories.Accounts.FullName + User + Directories.Format))
@@ -249,9 +249,9 @@ class Receive
         string Name = Data.ReadString().Trim();
 
         // Verifica se está tudo certo
-        if (Name.Length <  Min_Name_Length || Name.Length >  Max_Name_Length)
+        if (Name.Length < Min_Name_Length || Name.Length > Max_Name_Length)
         {
-            Send.Alert(Account, "The character name must contain between " +  Min_Name_Length + " and " +  Max_Name_Length + " characters.", false);
+            Send.Alert(Account, "The character name must contain between " + Min_Name_Length + " and " + Max_Name_Length + " characters.", false);
             return;
         }
         if (Name.Contains(";") || Name.Contains(":"))
@@ -276,12 +276,12 @@ class Receive
         else Account.Character.Texture_Num = Class.Tex_Female[Data.ReadByte()];
         Account.Character.Attribute = Class.Attribute;
         Account.Character.Map = (Objects.TMap)Lists.GetData(Lists.Temp_Map, Class.Spawn_Map.ID);
-        Account.Character.Direction = (Game.Directions)Class.Spawn_Direction;
+        Account.Character.Direction = (Directions)Class.Spawn_Direction;
         Account.Character.X = Class.Spawn_X;
         Account.Character.Y = Class.Spawn_Y;
-        for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Account.Character.Vital[i] = Account.Character.MaxVital(i);
+        for (byte i = 0; i < (byte)Vitals.Count; i++) Account.Character.Vital[i] = Account.Character.MaxVital(i);
         for (byte i = 0; i < (byte)Class.Item.Length; i++)
-            if (Class.Item[i].Item1.Type == (byte)Game.Items.Equipment && Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] == null)
+            if (Class.Item[i].Item1.Type == (byte)Items.Equipment && Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] == null)
                 Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] = Class.Item[i].Item1;
             else
                 Account.Character.GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
@@ -309,9 +309,9 @@ class Receive
     private static void Character_Create(Objects.Account Account)
     {
         // Verifica se o jogador já criou o máximo de personagens possíveis
-        if (Account.Characters.Count ==  Max_Characters)
+        if (Account.Characters.Count == Max_Characters)
         {
-            Send.Alert(Account, "You can only have " +  Max_Characters + " characters.", false);
+            Send.Alert(Account, "You can only have " + Max_Characters + " characters.", false);
             return;
         }
 
@@ -341,10 +341,10 @@ class Receive
 
     private static void Player_Direction(Objects.Player Player, NetIncomingMessage Data)
     {
-        Game.Directions Direction = (Game.Directions)Data.ReadByte();
+        Directions Direction = (Directions)Data.ReadByte();
 
         // Previne erros
-        if (Direction < Game.Directions.Up || Direction > Game.Directions.Right) return;
+        if (Direction < Directions.Up || Direction > Directions.Right) return;
         if (Player.GettingMap) return;
 
         // Defini a direção do jogador
@@ -384,11 +384,11 @@ class Receive
                 return;
 
         // Envia a mensagem para os outros jogadores
-        switch ((Game.Messages)Data.ReadByte())
+        switch ((Messages)Data.ReadByte())
         {
-            case Game.Messages.Map: Send.Message_Map(Player, Message); break;
-            case Game.Messages.Global: Send.Message_Global(Player, Message); break;
-            case Game.Messages.Private: Send.Message_Private(Player, Data.ReadString(), Message); break;
+            case Messages.Map: Send.Message_Map(Player, Message); break;
+            case Messages.Global: Send.Message_Global(Player, Message); break;
+            case Messages.Private: Send.Message_Private(Player, Data.ReadString(), Message); break;
         }
     }
 
@@ -436,7 +436,7 @@ class Receive
     private static void Inventory_Change(Objects.Player Player, NetIncomingMessage Data)
     {
         byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
-        byte Hotbar_Slot = Player.FindHotbar((byte)Game.Hotbar.Item, Slot_Old);
+        byte Hotbar_Slot = Player.FindHotbar((byte)Hotbars.Item, Slot_Old);
 
         // Somente se necessário
         if (Player.Inventory[Slot_Old].Item == null) return;
@@ -463,13 +463,13 @@ class Receive
 
         // Apenas se necessário
         if (Player.Equipment[Slot] == null) return;
-        if (Player.Equipment[Slot].Bind == (byte)Game.BindOn.Equip) return;
+        if (Player.Equipment[Slot].Bind == (byte)BindOn.Equip) return;
 
         // Adiciona o equipamento ao inventário
         if (!Player.GiveItem(Player.Equipment[Slot], 1))
         {
             // Somente se necessário
-            if (Player.Map.Item.Count ==  Max_Map_Items) return;
+            if (Player.Map.Item.Count == Max_Map_Items) return;
 
             // Solta o item no chão
             Map_Item.Item = Player.Equipment[Slot];
@@ -484,7 +484,7 @@ class Receive
         }
 
         // Remove o equipamento
-        for (byte i = 0; i < (byte)Game.Attributes.Count; i++) Player.Attribute[i] -= Player.Equipment[Slot].Equip_Attribute[i];
+        for (byte i = 0; i < (byte)Attributes.Count; i++) Player.Attribute[i] -= Player.Equipment[Slot].Equip_Attribute[i];
         Player.Equipment[Slot] = null;
 
         // Envia os dados
@@ -527,32 +527,32 @@ class Receive
         byte Hotbar_Slot = Data.ReadByte();
 
         // Usa o item
-        if (Player.Hotbar[Hotbar_Slot].Type == (byte)Game.Hotbar.Item)
+        if (Player.Hotbar[Hotbar_Slot].Type == (byte)Hotbars.Item)
             Player.UseItem(Player.Hotbar[Hotbar_Slot].Slot);
     }
 
     private static void Write_Settings(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Account.Acess < Game.Accesses.Editor)
+        if (Account.Acess < Accesses.Editor)
         {
             Send.Alert(Account, "You aren't allowed to do this.");
             return;
         }
 
         // Altera os dados
-         Game_Name = Data.ReadString();
-         Welcome_Message = Data.ReadString();
-         Port = Data.ReadInt16();
-         Max_Players = Data.ReadByte();
-         Max_Characters = Data.ReadByte();
-         Max_Party_Members = Data.ReadByte();
-         Max_Map_Items = Data.ReadByte();
-         Num_Points = Data.ReadByte();
-         Min_Name_Length = Data.ReadByte();
-         Max_Name_Length = Data.ReadByte();
-         Min_Password_Length = Data.ReadByte();
-         Max_Password_Length = Data.ReadByte();
+        Game_Name = Data.ReadString();
+        Welcome_Message = Data.ReadString();
+        Port = Data.ReadInt16();
+        Max_Players = Data.ReadByte();
+        Max_Characters = Data.ReadByte();
+        Max_Party_Members = Data.ReadByte();
+        Max_Map_Items = Data.ReadByte();
+        Num_Points = Data.ReadByte();
+        Min_Name_Length = Data.ReadByte();
+        Max_Name_Length = Data.ReadByte();
+        Min_Password_Length = Data.ReadByte();
+        Max_Password_Length = Data.ReadByte();
 
         // Salva os dados
         Write.Settings();
@@ -561,7 +561,7 @@ class Receive
     private static void Write_Classes(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Account.Acess < Game.Accesses.Editor)
+        if (Account.Acess < Accesses.Editor)
         {
             Send.Alert(Account, "You aren't allowed to do this.");
             return;
@@ -604,8 +604,8 @@ class Receive
             Class.Spawn_Direction = Data.ReadByte();
             Class.Spawn_X = Data.ReadByte();
             Class.Spawn_Y = Data.ReadByte();
-            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Class.Vital[v] = Data.ReadInt16();
-            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Class.Attribute[a] = Data.ReadInt16();
+            for (byte v = 0; v < (byte)Vitals.Count; v++) Class.Vital[v] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Attributes.Count; a++) Class.Attribute[a] = Data.ReadInt16();
             for (byte n = 0; n < (byte)Class.Item.Length; n++) Class.Item[n] = new Tuple<Objects.Item, short>((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16());
 
             // Salva os dados das classes
@@ -628,7 +628,7 @@ class Receive
     private static void Write_Maps(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Account.Acess < Game.Accesses.Editor)
+        if (Account.Acess < Accesses.Editor)
         {
             Send.Alert(Account, "You aren't allowed to do this.");
             return;
@@ -677,7 +677,7 @@ class Receive
             Map.Lighting = Data.ReadByte();
 
             // Ligações
-            for (short n = 0; n < (short)Game.Directions.Count; n++)
+            for (short n = 0; n < (short)Directions.Count; n++)
                 Map.Link[n] = (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
 
             // Camadas
@@ -712,7 +712,7 @@ class Receive
                     Map.Attribute[x, y].Data_4 = Data.ReadInt16();
                     Map.Attribute[x, y].Zone = Data.ReadByte();
 
-                    for (byte n = 0; n < (byte)Game.Directions.Count; n++)
+                    for (byte n = 0; n < (byte)Directions.Count; n++)
                         Map.Attribute[x, y].Block[n] = Data.ReadBoolean();
                 }
 
@@ -763,7 +763,7 @@ class Receive
     private static void Write_NPCs(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Account.Acess < Game.Accesses.Editor)
+        if (Account.Acess < Accesses.Editor)
         {
             Send.Alert(Account, "You aren't allowed to do this.");
             return;
@@ -800,14 +800,14 @@ class Receive
             NPC.SpawnTime = Data.ReadByte();
             NPC.Sight = Data.ReadByte();
             NPC.Experience = Data.ReadInt32();
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) NPC.Vital[n] = Data.ReadInt16();
-            for (byte n = 0; n < (byte)Game.Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Vitals.Count; n++) NPC.Vital[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
             NPC.Drop = new Objects.NPC_Drop[Data.ReadByte()];
             for (byte n = 0; n < NPC.Drop.Length; n++) NPC.Drop[n] = new Objects.NPC_Drop((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
             NPC.AttackNPC = Data.ReadBoolean();
             NPC.Allie = new Objects.NPC[Data.ReadByte()];
             for (byte n = 0; n < NPC.Allie.Length; n++) NPC.Allie[n] = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
-            NPC.Movement = (Game.NPC_Movements)Data.ReadByte();
+            NPC.Movement = (NPC_Movements)Data.ReadByte();
             NPC.Flee_Helth = Data.ReadByte();
             NPC.Shop = (Objects.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
 
@@ -831,7 +831,7 @@ class Receive
     private static void Write_Items(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Account.Acess < Game.Accesses.Editor)
+        if (Account.Acess < Accesses.Editor)
         {
             Send.Alert(Account, "You aren't allowed to do this.");
             return;
@@ -871,9 +871,9 @@ class Receive
             Item.Req_Level = Data.ReadInt16();
             Item.Req_Class = (Objects.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
             Item.Potion_Experience = Data.ReadInt32();
-            for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
+            for (byte v = 0; v < (byte)Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
             Item.Equip_Type = Data.ReadByte();
-            for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
+            for (byte a = 0; a < (byte)Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
             Item.Weapon_Damage = Data.ReadInt16();
 
             // Salva os dados do item
@@ -896,7 +896,7 @@ class Receive
     private static void Write_Shops(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Account.Acess < Game.Accesses.Editor)
+        if (Account.Acess < Accesses.Editor)
         {
             Send.Alert(Account, "You aren't allowed to do this.");
             return;
@@ -1031,7 +1031,7 @@ class Receive
             return;
         }
         // Verifica se o grupo está cheio
-        if (Player.Party.Count ==  Max_Party_Members - 1)
+        if (Player.Party.Count == Max_Party_Members - 1)
         {
             Send.Message(Player, "Your party is full.", System.Drawing.Color.White);
             return;
@@ -1060,7 +1060,7 @@ class Receive
             return;
         }
         // Verifica se o grupo está cheio
-        if (Invitation.Party.Count ==  Max_Party_Members - 1)
+        if (Invitation.Party.Count == Max_Party_Members - 1)
         {
             Send.Message(Player, "The party is full.", System.Drawing.Color.White);
             return;
@@ -1237,12 +1237,12 @@ class Receive
 
     private static void Trade_Offer_State(Objects.Player Player, NetIncomingMessage Data)
     {
-        Game.Trade_Status State = (Game.Trade_Status)Data.ReadByte();
+        Trade_Status State = (Trade_Status)Data.ReadByte();
         Objects.Player Invited = Player.Trade;
 
         switch (State)
         {
-            case Game.Trade_Status.Accepted:
+            case Trade_Status.Accepted:
                 // Verifica se os jogadores têm espaço disponivel para trocar os itens
                 if (Player.Total_Trade_Items() > Invited.Total_Inventory_Free())
                 {
@@ -1285,10 +1285,10 @@ class Receive
                 Send.Trade_Offer(Invited);
                 Send.Trade_Offer(Invited, false);
                 break;
-            case Game.Trade_Status.Declined:
+            case Trade_Status.Declined:
                 Send.Message(Invited, "The offer was declined.", System.Drawing.Color.Red);
                 break;
-            case Game.Trade_Status.Waiting:
+            case Trade_Status.Waiting:
                 Send.Message(Invited, Player.Name + " send you a offer.", System.Drawing.Color.White);
                 break;
         }
@@ -1354,7 +1354,7 @@ class Receive
     private static void Warp(Objects.Player Player, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
-        if (Player.Account.Acess < Game.Accesses.Editor)
+        if (Player.Account.Acess < Accesses.Editor)
         {
             Send.Alert(Player.Account, "You aren't allowed to do this.");
             return;

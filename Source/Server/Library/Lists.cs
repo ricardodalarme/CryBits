@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Objects;
 
-class Lists
+static class Lists
 {
     // As listas dos dados
     public static List<Account> Account = new List<Account>();

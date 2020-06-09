@@ -16,10 +16,10 @@ namespace Objects
         private short Regeneration(byte Vital)
         {
             // Cálcula o máximo de vital que o NPC possui
-            switch ((Game.Vitals)Vital)
+            switch (( Vitals)Vital)
             {
-                case Game.Vitals.HP: return (short)(Data.Vital[Vital] * 0.05 + Data.Attribute[(byte)Game.Attributes.Vitality] * 0.3);
-                case Game.Vitals.MP: return (short)(Data.Vital[Vital] * 0.05 + Data.Attribute[(byte)Game.Attributes.Intelligence] * 0.1);
+                case  Vitals.HP: return (short)(Data.Vital[Vital] * 0.05 + Data.Attribute[(byte) Attributes.Vitality] * 0.3);
+                case  Vitals.MP: return (short)(Data.Vital[Vital] * 0.05 + Data.Attribute[(byte) Attributes.Intelligence] * 0.1);
             }
 
             return 0;
@@ -49,7 +49,7 @@ namespace Objects
             else
             {
                 byte TargetX = 0, TargetY = 0;
-                bool[] CanMove = new bool[(byte)Game.Directions.Count];
+                bool[] CanMove = new bool[(byte) Directions.Count];
                 short Distance;
                 bool Moved = false;
                 bool Move = false;
@@ -58,7 +58,7 @@ namespace Objects
                 // Regeneração //
                 /////////////////
                 if (Environment.TickCount > Loop.Timer_Regen + 5000)
-                    for (byte v = 0; v < (byte)Game.Vitals.Count; v++)
+                    for (byte v = 0; v < (byte) Vitals.Count; v++)
                         if (Vital[v] < Data.Vital[v])
                         {
                             // Renera os vitais
@@ -75,7 +75,7 @@ namespace Objects
                 // Movimentação //
                 //////////////////
                 // Atacar ao ver
-                if (Data.Behaviour == (byte)Game.NPC_Behaviour.AttackOnSight)
+                if (Data.Behaviour == (byte) NPC_Behaviour.AttackOnSight)
                 {
                     // Jogador
                     if (Target == null)
@@ -156,44 +156,44 @@ namespace Objects
                 if (Move)
                 {
                     // Verifica como o NPC pode se mover
-                    if (Vital[(byte)Game.Vitals.HP] > Data.Vital[(byte)Game.Vitals.HP] * (Data.Flee_Helth / 100.0))
+                    if (Vital[(byte) Vitals.HP] > Data.Vital[(byte) Vitals.HP] * (Data.Flee_Helth / 100.0))
                     {
                         // Para perto do alvo
-                        CanMove[(byte)Game.Directions.Up] = Y > TargetY;
-                        CanMove[(byte)Game.Directions.Down] = Y < TargetY;
-                        CanMove[(byte)Game.Directions.Left] = X > TargetX;
-                        CanMove[(byte)Game.Directions.Right] = X < TargetX;
+                        CanMove[(byte) Directions.Up] = Y > TargetY;
+                        CanMove[(byte) Directions.Down] = Y < TargetY;
+                        CanMove[(byte) Directions.Left] = X > TargetX;
+                        CanMove[(byte) Directions.Right] = X < TargetX;
                     }
                     else
                     {
                         // Para longe do alvo
-                        CanMove[(byte)Game.Directions.Up] = Y < TargetY;
-                        CanMove[(byte)Game.Directions.Down] = Y > TargetY;
-                        CanMove[(byte)Game.Directions.Left] = X < TargetX;
-                        CanMove[(byte)Game.Directions.Right] = X > TargetX;
+                        CanMove[(byte) Directions.Up] = Y < TargetY;
+                        CanMove[(byte) Directions.Down] = Y > TargetY;
+                        CanMove[(byte) Directions.Left] = X < TargetX;
+                        CanMove[(byte) Directions.Right] = X > TargetX;
                     }
 
                     // Aleatoriza a forma que ele vai se movimentar até o alvo
                     if ( MyRandom.Next(0, 2) == 0)
                     {
-                        for (byte d = 0; d < (byte)Game.Directions.Count; d++)
-                            if (!Moved && CanMove[d] && this.Move((Game.Directions)d))
+                        for (byte d = 0; d < (byte) Directions.Count; d++)
+                            if (!Moved && CanMove[d] && this.Move(( Directions)d))
                                 Moved = true;
                     }
                     else
-                        for (short d = (byte)Game.Directions.Count - 1; d >= 0; d--)
-                            if (!Moved && CanMove[d] && this.Move((Game.Directions)d))
+                        for (short d = (byte) Directions.Count - 1; d >= 0; d--)
+                            if (!Moved && CanMove[d] && this.Move(( Directions)d))
                                 Moved = true;
                 }
 
                 // Move-se aleatoriamente
-                if (Data.Behaviour == (byte)Game.NPC_Behaviour.Friendly || Target == null)
+                if (Data.Behaviour == (byte) NPC_Behaviour.Friendly || Target == null)
                     if ( MyRandom.Next(0, 3) == 0 && !Moved)
-                        if (Data.Movement == Game.NPC_Movements.MoveRandomly)
-                            this.Move((Game.Directions) MyRandom.Next(0, 4), 1, true);
-                        else if (Data.Movement == Game.NPC_Movements.TurnRandomly)
+                        if (Data.Movement ==  NPC_Movements.MoveRandomly)
+                            this.Move(( Directions) MyRandom.Next(0, 4), 1, true);
+                        else if (Data.Movement ==  NPC_Movements.TurnRandomly)
                         {
-                            Direction = (Game.Directions) MyRandom.Next(0, 4);
+                            Direction = ( Directions) MyRandom.Next(0, 4);
                             Send.Map_NPC_Direction(this);
                         }
 
@@ -204,14 +204,14 @@ namespace Objects
             }
         }
 
-        private void Spawn(byte X, byte Y, Game.Directions Direction = 0)
+        private void Spawn(byte X, byte Y,  Directions Direction = 0)
         {
             // Faz o NPC surgir no mapa
             Alive = true;
             this.X = X;
             this.Y = Y;
             this.Direction = Direction;
-            for (byte i = 0; i < (byte)Game.Vitals.Count; i++) Vital[i] = Data.Vital[i];
+            for (byte i = 0; i < (byte) Vitals.Count; i++) Vital[i] = Data.Vital[i];
 
             // Envia os dados aos jogadores
             if (Socket.Device != null) Send.Map_NPC(Map.NPC[Index]);
@@ -263,7 +263,7 @@ namespace Objects
                     }
         }
 
-        private bool Move(Game.Directions Direction, byte Movement = 1, bool CheckZone = false)
+        private bool Move( Directions Direction, byte Movement = 1, bool CheckZone = false)
         {
             byte Next_X = X, Next_Y = Y;
 
@@ -318,17 +318,17 @@ namespace Objects
             Attack_Timer = Environment.TickCount;
 
             // Cálculo de dano
-            short Attack_Damage = (short)(Data.Attribute[(byte)Game.Attributes.Strength] - Victim.Player_Defense);
+            short Attack_Damage = (short)(Data.Attribute[(byte) Attributes.Strength] - Victim.Player_Defense);
 
             // Dano não fatal
             if (Attack_Damage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Map_NPC_Attack(this, Victim.Name, Game.Target.Player);
+                Send.Map_NPC_Attack(this, Victim.Name,  Targets.Player);
 
-                if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
+                if (Attack_Damage < Victim.Vital[(byte) Vitals.HP])
                 {
-                    Victim.Vital[(byte)Game.Vitals.HP] -= Attack_Damage;
+                    Victim.Vital[(byte) Vitals.HP] -= Attack_Damage;
                     Send.Player_Vitals(Victim);
                 }
                 // FATALITY
@@ -359,17 +359,17 @@ namespace Objects
             Victim.Target = this;
 
             // Cálculo de dano
-            short Attack_Damage = (short)(Data.Attribute[(byte)Game.Attributes.Strength] - Victim.Data.Attribute[(byte)Game.Attributes.Resistance]);
+            short Attack_Damage = (short)(Data.Attribute[(byte) Attributes.Strength] - Victim.Data.Attribute[(byte) Attributes.Resistance]);
 
             // Dano não fatal
             if (Attack_Damage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Map_NPC_Attack(this, Victim.Index.ToString(), Game.Target.NPC);
+                Send.Map_NPC_Attack(this, Victim.Index.ToString(),  Targets.NPC);
 
-                if (Attack_Damage < Victim.Vital[(byte)Game.Vitals.HP])
+                if (Attack_Damage < Victim.Vital[(byte) Vitals.HP])
                 {
-                    Victim.Vital[(byte)Game.Vitals.HP] -= Attack_Damage;
+                    Victim.Vital[(byte) Vitals.HP] -= Attack_Damage;
                     Send.Map_NPC_Vitals(Victim);
                 }
                 // FATALITY
