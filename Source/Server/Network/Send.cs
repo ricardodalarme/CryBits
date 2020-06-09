@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using System.Drawing;
+using static Utils;
 
 class Send
 {
@@ -779,18 +780,18 @@ class Send
 
         // Envia os dados
         Data.Write((byte)Editor_Packets.Server_Data);
-        Data.Write(Lists.Server_Data.Game_Name);
-        Data.Write(Lists.Server_Data.Welcome);
-        Data.Write(Lists.Server_Data.Port);
-        Data.Write(Lists.Server_Data.Max_Players);
-        Data.Write(Lists.Server_Data.Max_Characters);
-        Data.Write(Lists.Server_Data.Max_Party_Members);
-        Data.Write(Lists.Server_Data.Max_Map_Items);
-        Data.Write(Lists.Server_Data.Num_Points);
-        Data.Write(Lists.Server_Data.Min_Name_Length);
-        Data.Write(Lists.Server_Data.Max_Name_Length);
-        Data.Write(Lists.Server_Data.Min_Password_Length);
-        Data.Write(Lists.Server_Data.Max_Password_Length);
+        Data.Write( Game_Name);
+        Data.Write( Welcome_Message);
+        Data.Write( Port);
+        Data.Write( Max_Players);
+        Data.Write( Max_Characters);
+        Data.Write( Max_Party_Members);
+        Data.Write( Max_Map_Items);
+        Data.Write( Num_Points);
+        Data.Write( Min_Name_Length);
+        Data.Write( Max_Name_Length);
+        Data.Write( Min_Password_Length);
+        Data.Write( Max_Password_Length);
         ToPlayer(Account, Data);
     }
 

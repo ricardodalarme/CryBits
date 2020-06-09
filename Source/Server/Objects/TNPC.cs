@@ -1,4 +1,5 @@
 ﻿using System;
+using static Utils;
 
 namespace Objects
 {
@@ -173,7 +174,7 @@ namespace Objects
                     }
 
                     // Aleatoriza a forma que ele vai se movimentar até o alvo
-                    if (Utils.Random.Next(0, 2) == 0)
+                    if ( MyRandom.Next(0, 2) == 0)
                     {
                         for (byte d = 0; d < (byte)Game.Directions.Count; d++)
                             if (!Moved && CanMove[d] && this.Move((Game.Directions)d))
@@ -187,12 +188,12 @@ namespace Objects
 
                 // Move-se aleatoriamente
                 if (Data.Behaviour == (byte)Game.NPC_Behaviour.Friendly || Target == null)
-                    if (Utils.Random.Next(0, 3) == 0 && !Moved)
+                    if ( MyRandom.Next(0, 3) == 0 && !Moved)
                         if (Data.Movement == Game.NPC_Movements.MoveRandomly)
-                            this.Move((Game.Directions)Utils.Random.Next(0, 4), 1, true);
+                            this.Move((Game.Directions) MyRandom.Next(0, 4), 1, true);
                         else if (Data.Movement == Game.NPC_Movements.TurnRandomly)
                         {
-                            Direction = (Game.Directions)Utils.Random.Next(0, 4);
+                            Direction = (Game.Directions) MyRandom.Next(0, 4);
                             Send.Map_NPC_Direction(this);
                         }
 
@@ -230,8 +231,8 @@ namespace Objects
             // Faz com que ele apareça em um local aleatório
             for (byte i = 0; i < 50; i++) // tenta 50 vezes com que ele apareça em um local aleatório
             {
-                x = (byte)Utils.Random.Next(0, Objects.Map.Width - 1);
-                y = (byte)Utils.Random.Next(0, Objects.Map.Height - 1);
+                x = (byte) MyRandom.Next(0, Objects.Map.Width - 1);
+                y = (byte) MyRandom.Next(0, Objects.Map.Height - 1);
 
                 // Verifica se está dentro da zona
                 if (Map.Data.NPC[Index].Zone > 0)
@@ -271,7 +272,7 @@ namespace Objects
             Send.Map_NPC_Direction(this);
 
             // Próximo azulejo
-            Utils.NextTile(Direction, ref Next_X, ref Next_Y);
+             NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Próximo azulejo bloqueado ou fora do limite
             if (Map.Data.OutLimit(Next_X, Next_Y)) return false;
@@ -292,7 +293,7 @@ namespace Objects
         private void Attack()
         {
             byte Next_X = X, Next_Y = Y;
-            Utils.NextTile(Direction, ref Next_X, ref Next_Y);
+             NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Apenas se necessário
             if (!Alive) return;
@@ -391,7 +392,7 @@ namespace Objects
             // Solta os itens
             for (byte i = 0; i < Data.Drop.Length; i++)
                 if (Data.Drop[i].Item != null)
-                    if (Utils.Random.Next(1, 99) <= Data.Drop[i].Chance)
+                    if ( MyRandom.Next(1, 99) <= Data.Drop[i].Chance)
                     {
                         // Dados do item
                         TMap_Items Map_Item = new TMap_Items

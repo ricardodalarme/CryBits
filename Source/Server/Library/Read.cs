@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using static Utils;
 
 class Read
 {
     public static void All()
     {
         // Carrega todos os dados
-        Console.WriteLine("Loading data.");
-        Server_Data();
+        Console.WriteLine("Loading settings.");
+        Settings();
         Console.WriteLine("Loading maps.");
         Maps();
         Console.WriteLine("Loading classes.");
@@ -23,19 +24,34 @@ class Read
         Shops();
     }
 
-    private static void Server_Data()
+    private static void Settings()
     {
         // Cria o arquivo caso ele não existir
-        if (!Directories.Server_Data.Exists)
+        if (!Directories.Settings.Exists)
         {
-            Write.Server_Data();
+            Write.Settings();
             return;
         }
 
-        // Lê os dados
-        FileStream Stream = Directories.Server_Data.OpenRead();
-        Lists.Server_Data = (Lists.Structures.Server_Data)new BinaryFormatter().Deserialize(Stream);
-        Stream.Close();
+        // Cria um arquivo temporário
+        BinaryReader Data = new BinaryReader(Directories.Settings.OpenRead());
+
+        // Carrega os dados
+        Game_Name = Data.ReadString();
+        Welcome_Message = Data.ReadString();
+        Port = Data.ReadInt16();
+        Max_Players = Data.ReadByte();
+        Max_Characters = Data.ReadByte();
+        Max_Party_Members = Data.ReadByte();
+        Max_Map_Items = Data.ReadByte();
+        Num_Points = Data.ReadByte();
+        Max_Name_Length = Data.ReadByte();
+        Min_Name_Length = Data.ReadByte();
+        Max_Password_Length = Data.ReadByte();
+        Min_Password_Length = Data.ReadByte();
+
+        // Descarrega o arquivo
+        Data.Dispose();
     }
 
     public static void Account(Objects.Account Account, string Name)

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using static Utils;
 
 class Write
 {
@@ -86,12 +87,27 @@ class Write
         Data.Dispose();
     }
 
-    public static void Server_Data()
+    public static void Settings()
     {
+        // Cria um arquivo temporário
+        BinaryWriter Data = new BinaryWriter(Directories.Settings.OpenWrite());
+
         // Escreve os dados
-        FileStream Stream = Directories.Server_Data.OpenWrite();
-        new BinaryFormatter().Serialize(Stream, Lists.Server_Data);
-        Stream.Close();
+        Data.Write(Game_Name);
+        Data.Write(Welcome_Message);
+        Data.Write(Port);
+        Data.Write(Max_Players);
+        Data.Write(Max_Characters);
+        Data.Write(Max_Party_Members);
+        Data.Write(Max_Map_Items);
+        Data.Write(Num_Points);
+        Data.Write(Max_Name_Length);
+        Data.Write(Min_Name_Length);
+        Data.Write(Max_Password_Length);
+        Data.Write(Min_Password_Length);
+
+        // Descarrega o arquivo
+        Data.Dispose();
     }
 
     public static void Class(Objects.Class Class)

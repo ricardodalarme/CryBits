@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static Utils;
 
 namespace Objects
 {
@@ -99,11 +100,11 @@ namespace Objects
             byte Next_X = X, Next_Y = Y;
 
             // Próximo azulejo
-            Utils.NextTile(Direction, ref Next_X, ref Next_Y);
+             NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Verifica se o azulejo está bloqueado
             if (Data.Tile_Blocked(Next_X, Next_Y)) return true;
-            if (Data.Attribute[Next_X, Next_Y].Block[(byte)Utils.ReverseDirection(Direction)]) return true;
+            if (Data.Attribute[Next_X, Next_Y].Block[(byte) ReverseDirection(Direction)]) return true;
             if (Data.Attribute[X, Y].Block[(byte)Direction]) return true;
             if (CountEntities && (HasPlayer(Next_X, Next_Y) != null || HasNPC(Next_X, Next_Y) != null)) return true;
             return false;

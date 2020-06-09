@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using static Utils;
 
 class Receive
 {
@@ -49,13 +50,13 @@ class Receive
     private enum Editor_Packets
     {
         Connect,
-        Write_Server_Data,
+        Write_Settings,
         Write_Classes,
         Write_Maps,
         Write_NPCs,
         Write_Items,
         Write_Shops,
-        Request_Server_Data,
+        Request_Setting,
         Request_Classes,
         Request_Map,
         Request_Maps,
@@ -114,13 +115,13 @@ class Receive
             // Manuseia os dados recebidos do editor
             switch ((Editor_Packets)Packet_Num)
             {
-                case Editor_Packets.Write_Server_Data: Write_Server_Data(Account, Data); break;
+                case Editor_Packets.Write_Settings: Write_Settings(Account, Data); break;
                 case Editor_Packets.Write_Classes: Write_Classes(Account, Data); break;
                 case Editor_Packets.Write_Maps: Write_Maps(Account, Data); break;
                 case Editor_Packets.Write_NPCs: Write_NPCs(Account, Data); break;
                 case Editor_Packets.Write_Items: Write_Items(Account, Data); break;
                 case Editor_Packets.Write_Shops: Write_Shops(Account, Data); break;
-                case Editor_Packets.Request_Server_Data: Request_Server_Data(Account); break;
+                case Editor_Packets.Request_Setting: Request_Setting(Account); break;
                 case Editor_Packets.Request_Classes: Request_Classes(Account); break;
                 case Editor_Packets.Request_Map: Request_Map(Account, Data); break;
                 case Editor_Packets.Request_Maps: Request_Maps(Account, Data); break;
@@ -214,14 +215,14 @@ class Receive
         string Password = Data.ReadString();
 
         // Verifica se está tudo certo
-        if (User.Length < Lists.Server_Data.Min_Name_Length || User.Length > Lists.Server_Data.Max_Name_Length)
+        if (User.Length <  Min_Name_Length || User.Length >  Max_Name_Length)
         {
-            Send.Alert(Account, "The username must contain between " + Lists.Server_Data.Min_Name_Length + " and " + Lists.Server_Data.Max_Name_Length + " characters.");
+            Send.Alert(Account, "The username must contain between " +  Min_Name_Length + " and " +  Max_Name_Length + " characters.");
             return;
         }
-        if (Password.Length < Lists.Server_Data.Min_Name_Length || Password.Length > Lists.Server_Data.Max_Name_Length)
+        if (Password.Length <  Min_Name_Length || Password.Length >  Max_Name_Length)
         {
-            Send.Alert(Account, "The password must contain between " + Lists.Server_Data.Min_Name_Length + " and " + Lists.Server_Data.Max_Name_Length + " characters.");
+            Send.Alert(Account, "The password must contain between " +  Min_Name_Length + " and " +  Max_Name_Length + " characters.");
             return;
         }
         if (File.Exists(Directories.Accounts.FullName + User + Directories.Format))
@@ -248,9 +249,9 @@ class Receive
         string Name = Data.ReadString().Trim();
 
         // Verifica se está tudo certo
-        if (Name.Length < Lists.Server_Data.Min_Name_Length || Name.Length > Lists.Server_Data.Max_Name_Length)
+        if (Name.Length <  Min_Name_Length || Name.Length >  Max_Name_Length)
         {
-            Send.Alert(Account, "The character name must contain between " + Lists.Server_Data.Min_Name_Length + " and " + Lists.Server_Data.Max_Name_Length + " characters.", false);
+            Send.Alert(Account, "The character name must contain between " +  Min_Name_Length + " and " +  Max_Name_Length + " characters.", false);
             return;
         }
         if (Name.Contains(";") || Name.Contains(":"))
@@ -308,9 +309,9 @@ class Receive
     private static void Character_Create(Objects.Account Account)
     {
         // Verifica se o jogador já criou o máximo de personagens possíveis
-        if (Account.Characters.Count == Lists.Server_Data.Max_Characters)
+        if (Account.Characters.Count ==  Max_Characters)
         {
-            Send.Alert(Account, "You can only have " + Lists.Server_Data.Max_Characters + " characters.", false);
+            Send.Alert(Account, "You can only have " +  Max_Characters + " characters.", false);
             return;
         }
 
@@ -468,7 +469,7 @@ class Receive
         if (!Player.GiveItem(Player.Equipment[Slot], 1))
         {
             // Somente se necessário
-            if (Player.Map.Item.Count == Lists.Server_Data.Max_Map_Items) return;
+            if (Player.Map.Item.Count ==  Max_Map_Items) return;
 
             // Solta o item no chão
             Map_Item.Item = Player.Equipment[Slot];
@@ -530,7 +531,7 @@ class Receive
             Player.UseItem(Player.Hotbar[Hotbar_Slot].Slot);
     }
 
-    private static void Write_Server_Data(Objects.Account Account, NetIncomingMessage Data)
+    private static void Write_Settings(Objects.Account Account, NetIncomingMessage Data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (Account.Acess < Game.Accesses.Editor)
@@ -540,21 +541,21 @@ class Receive
         }
 
         // Altera os dados
-        Lists.Server_Data.Game_Name = Data.ReadString();
-        Lists.Server_Data.Welcome = Data.ReadString();
-        Lists.Server_Data.Port = Data.ReadInt16();
-        Lists.Server_Data.Max_Players = Data.ReadByte();
-        Lists.Server_Data.Max_Characters = Data.ReadByte();
-        Lists.Server_Data.Max_Party_Members = Data.ReadByte();
-        Lists.Server_Data.Max_Map_Items = Data.ReadByte();
-        Lists.Server_Data.Num_Points = Data.ReadByte();
-        Lists.Server_Data.Min_Name_Length = Data.ReadByte();
-        Lists.Server_Data.Max_Name_Length = Data.ReadByte();
-        Lists.Server_Data.Min_Password_Length = Data.ReadByte();
-        Lists.Server_Data.Max_Password_Length = Data.ReadByte();
+         Game_Name = Data.ReadString();
+         Welcome_Message = Data.ReadString();
+         Port = Data.ReadInt16();
+         Max_Players = Data.ReadByte();
+         Max_Characters = Data.ReadByte();
+         Max_Party_Members = Data.ReadByte();
+         Max_Map_Items = Data.ReadByte();
+         Num_Points = Data.ReadByte();
+         Min_Name_Length = Data.ReadByte();
+         Max_Name_Length = Data.ReadByte();
+         Min_Password_Length = Data.ReadByte();
+         Max_Password_Length = Data.ReadByte();
 
         // Salva os dados
-        Write.Server_Data();
+        Write.Settings();
     }
 
     private static void Write_Classes(Objects.Account Account, NetIncomingMessage Data)
@@ -963,7 +964,7 @@ class Receive
                 Send.Shops(Lists.Account[i]);
     }
 
-    private static void Request_Server_Data(Objects.Account Account)
+    private static void Request_Setting(Objects.Account Account)
     {
         Send.Server_Data(Account);
     }
@@ -1030,7 +1031,7 @@ class Receive
             return;
         }
         // Verifica se o grupo está cheio
-        if (Player.Party.Count == Lists.Server_Data.Max_Party_Members - 1)
+        if (Player.Party.Count ==  Max_Party_Members - 1)
         {
             Send.Message(Player, "Your party is full.", System.Drawing.Color.White);
             return;
@@ -1059,7 +1060,7 @@ class Receive
             return;
         }
         // Verifica se o grupo está cheio
-        if (Invitation.Party.Count == Lists.Server_Data.Max_Party_Members - 1)
+        if (Invitation.Party.Count ==  Max_Party_Members - 1)
         {
             Send.Message(Player, "The party is full.", System.Drawing.Color.White);
             return;
@@ -1187,8 +1188,8 @@ class Receive
 
         // Limpa os dadoss
         Player.Trade_Request = string.Empty;
-        Player.Trade_Offer = new Lists.Structures.Trade_Slot[Game.Max_Inventory + 1];
-        Invited.Trade_Offer = new Lists.Structures.Trade_Slot[Game.Max_Inventory + 1];
+        Player.Trade_Offer = new Objects.Trade_Slot[Game.Max_Inventory + 1];
+        Invited.Trade_Offer = new Objects.Trade_Slot[Game.Max_Inventory + 1];
 
         // Envia os dados para o grupo
         Send.Trade(Player, true);
@@ -1227,7 +1228,7 @@ class Receive
         }
         // Remove o item da troca
         else
-            Player.Trade_Offer[Slot] = new Lists.Structures.Trade_Slot();
+            Player.Trade_Offer[Slot] = new Objects.Trade_Slot();
 
         // Envia os dados ao outro jogador
         Send.Trade_Offer(Player);
@@ -1258,8 +1259,8 @@ class Receive
                 Send.Message(Invited, "The offer was accepted.", System.Drawing.Color.Green);
 
                 // Dados da oferta
-                Lists.Structures.Inventories[] Your_Inventory = (Lists.Structures.Inventories[])Player.Inventory.Clone(),
-                    Their_Inventory = (Lists.Structures.Inventories[])Invited.Inventory.Clone();
+                Objects.Inventory[] Your_Inventory = (Objects.Inventory[])Player.Inventory.Clone(),
+                    Their_Inventory = (Objects.Inventory[])Invited.Inventory.Clone();
 
                 // Remove os itens do inventário dos jogadores
                 Objects.Player To = Player;
@@ -1279,8 +1280,8 @@ class Receive
                 Send.Player_Inventory(Invited);
 
                 // Limpa a troca
-                Player.Trade_Offer = new Lists.Structures.Trade_Slot[Game.Max_Inventory + 1];
-                Invited.Trade_Offer = new Lists.Structures.Trade_Slot[Game.Max_Inventory + 1];
+                Player.Trade_Offer = new Objects.Trade_Slot[Game.Max_Inventory + 1];
+                Invited.Trade_Offer = new Objects.Trade_Slot[Game.Max_Inventory + 1];
                 Send.Trade_Offer(Invited);
                 Send.Trade_Offer(Invited, false);
                 break;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using static Utils;
 
 namespace Objects
 {
@@ -15,9 +16,9 @@ namespace Objects
         public int Experience;
         public byte Points;
         public short[] Attribute = new short[(byte)Game.Attributes.Count];
-        public Lists.Structures.Inventories[] Inventory = new Lists.Structures.Inventories[Game.Max_Inventory + 1];
+        public Inventory[] Inventory = new Inventory[Game.Max_Inventory + 1];
         public Item[] Equipment = new Item[(byte)Game.Equipments.Count];
-        public Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
+        public Hotbar[] Hotbar = new Hotbar[Game.Max_Hotbar + 1];
 
         // Dados temporários
         public bool GettingMap;
@@ -26,7 +27,7 @@ namespace Objects
         public string Party_Request;
         public Player Trade;
         public string Trade_Request;
-        public Lists.Structures.Trade_Slot[] Trade_Offer;
+        public Trade_Slot[] Trade_Offer;
         public Shop Shop;
         public Account Account;
 
@@ -127,7 +128,7 @@ namespace Objects
 
             // Entra no jogo
             Send.JoinGame(this);
-            Send.Message(this, Lists.Server_Data.Welcome, Color.Blue);
+            Send.Message(this,  Welcome_Message, Color.Blue);
         }
 
         public void Leave()
@@ -196,7 +197,7 @@ namespace Objects
             if (Shop != null) Shop_Leave();
 
             // Próximo azulejo
-            Utils.NextTile(Direction, ref Next_X, ref Next_Y);
+             NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Ponto de ligação
             if (Map.Data.OutLimit(Next_X, Next_Y))
@@ -263,7 +264,7 @@ namespace Objects
             object Victim;
 
             // Próximo azulejo
-            Utils.NextTile(Direction, ref Next_X, ref Next_Y);
+             NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Apenas se necessário
             if (Trade != null) return;
@@ -406,7 +407,7 @@ namespace Objects
 
                 // Define os dados
                 Level++;
-                Points += Lists.Server_Data.Num_Points;
+                Points +=  Num_Points;
                 Experience = ExpRest;
             }
 
@@ -444,18 +445,18 @@ namespace Objects
         {
             // Previne erros
             if (Slot <= 0) return;
-            if (Amount < 0) Amount = 1;
+            if (Amount <= 0) Amount = 1;
 
             // Tira o item do jogaor
             if (Amount == Inventory[Slot].Amount)
             {
-                Inventory[Slot] = new Lists.Structures.Inventories();
+                Inventory[Slot] = new Inventory();
 
                 // Retira o item da hotbar caso estier
                 byte HotbarSlot = FindHotbar((byte)Game.Hotbar.Item, Slot);
                 if (HotbarSlot > 0)
                 {
-                    Hotbar[HotbarSlot] = new Lists.Structures.Hotbar();
+                    Hotbar[HotbarSlot] = new Hotbar();
                     Send.Player_Hotbar(this);
                 }
             }
@@ -472,7 +473,7 @@ namespace Objects
             TMap_Items Map_Item = new TMap_Items();
 
             // Somente se necessário
-            if (Map.Item.Count == Lists.Server_Data.Max_Map_Items) return;
+            if (Map.Item.Count ==  Max_Map_Items) return;
             if (Inventory[Slot].Item == null) return;
             if (Inventory[Slot].Item.Bind == (byte)Game.BindOn.Pickup) return;
             if (Trade != null) return;
@@ -697,5 +698,23 @@ namespace Objects
 
             return null;
         }
+    }
+
+    class Inventory
+    {
+        public Item Item;
+        public short Amount;
+    }
+
+    class Trade_Slot
+    {
+        public short Slot_Num;
+        public short Amount;
+    }
+
+    class Hotbar
+    {
+        public byte Type;
+        public byte Slot;
     }
 }

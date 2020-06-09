@@ -12,9 +12,9 @@ class Socket
         // Define algumas configurações da rede
         Config = new NetPeerConfiguration("CryBits")
         {
-            Port = Lists.Server_Data.Port,
+            Port = Utils.Port,
             AcceptIncomingConnections = true,
-            MaximumConnections = Lists.Server_Data.Max_Players
+            MaximumConnections = Utils.Max_Players
         };
 
         // Cria o dispositivo com as devidas configurações
