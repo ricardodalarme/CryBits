@@ -5,7 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-partial class Graphics
+class Graphics
 {
     // Locais de renderização
     public static RenderWindow Win_Interface;

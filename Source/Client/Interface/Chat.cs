@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using System.Collections.Generic;
+using Network;
 
 class Chat
 {

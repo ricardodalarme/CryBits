@@ -2,7 +2,7 @@
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
-class Write
+static class Write
 {
     public static void Options()
     {

@@ -1,6 +1,7 @@
 ﻿using Objects;
 using SFML.Window;
 using System;
+using Network;
 
 class Player
 {
@@ -11,7 +12,7 @@ class Player
     public static Me_Structure Me;
 
     // Dados gerais dos jogadores
-    public class Structure : Objects.Character
+    public class Structure : Character
     {
         // Geral
         public string Name = string.Empty;

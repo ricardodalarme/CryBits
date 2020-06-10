@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Objects;
 using static Utils;
 
 namespace Network
@@ -67,10 +68,10 @@ namespace Network
             Request_Shops
         }
 
-        public static void Handle(Objects.Account Account, NetIncomingMessage Data)
+        public static void Handle( Account Account, NetIncomingMessage Data)
         {
             byte Packet_Num = Data.ReadByte();
-            Objects.Player Player = Account.Character;
+             Player Player = Account.Character;
 
             // Pacote principal de conexão
             if (Packet_Num == 0) Connect(Account, Data);
@@ -133,13 +134,13 @@ namespace Network
                 }
         }
 
-        private static void Latency(Objects.Account Account)
+        private static void Latency( Account Account)
         {
             // Envia o pacote para a contagem da latência
             Send.Latency(Account);
         }
 
-        private static void Connect(Objects.Account Account, NetIncomingMessage Data)
+        private static void Connect( Account Account, NetIncomingMessage Data)
         {
             // Lê os dados
             string User = Data.ReadString().Trim();
@@ -210,7 +211,7 @@ namespace Network
             }
         }
 
-        private static void Register(Objects.Account Account, NetIncomingMessage Data)
+        private static void Register( Account Account, NetIncomingMessage Data)
         {
             // Lê os dados
             string User = Data.ReadString().Trim();
@@ -245,7 +246,7 @@ namespace Network
             Send.CreateCharacter(Account);
         }
 
-        private static void CreateCharacter(Objects.Account Account, NetIncomingMessage Data)
+        private static void CreateCharacter( Account Account, NetIncomingMessage Data)
         {
             // Lê os dados
             string Name = Data.ReadString().Trim();
@@ -268,16 +269,16 @@ namespace Network
             }
 
             // Define os valores iniciais do personagem
-            Objects.Class Class;
-            Account.Character = new Objects.Player(Account);
+             Class Class;
+            Account.Character = new  Player(Account);
             Account.Character.Name = Name;
             Account.Character.Level = 1;
-            Account.Character.Class = Class = (Objects.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
+            Account.Character.Class = Class = ( Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
             Account.Character.Genre = Data.ReadBoolean();
             if (Account.Character.Genre) Account.Character.Texture_Num = Class.Tex_Male[Data.ReadByte()];
             else Account.Character.Texture_Num = Class.Tex_Female[Data.ReadByte()];
             Account.Character.Attribute = Class.Attribute;
-            Account.Character.Map = (Objects.TMap)Lists.GetData(Lists.Temp_Map, Class.Spawn_Map.ID);
+            Account.Character.Map = ( TMap)Lists.GetData(Lists.Temp_Map, Class.Spawn_Map.ID);
             Account.Character.Direction = (Directions)Class.Spawn_Direction;
             Account.Character.X = Class.Spawn_X;
             Account.Character.Y = Class.Spawn_Y;
@@ -296,7 +297,7 @@ namespace Network
             Account.Character.Join();
         }
 
-        private static void Character_Use(Objects.Account Account, NetIncomingMessage Data)
+        private static void Character_Use( Account Account, NetIncomingMessage Data)
         {
             byte Character = Data.ReadByte();
 
@@ -308,7 +309,7 @@ namespace Network
             Account.Character.Join();
         }
 
-        private static void Character_Create(Objects.Account Account)
+        private static void Character_Create( Account Account)
         {
             // Verifica se o jogador já criou o máximo de personagens possíveis
             if (Account.Characters.Count == Max_Characters)
@@ -322,7 +323,7 @@ namespace Network
             Send.CreateCharacter(Account);
         }
 
-        private static void Character_Delete(Objects.Account Account, NetIncomingMessage Data)
+        private static void Character_Delete( Account Account, NetIncomingMessage Data)
         {
             byte Character = Data.ReadByte();
 
@@ -341,7 +342,7 @@ namespace Network
             Write.Account(Account);
         }
 
-        private static void Player_Direction(Objects.Player Player, NetIncomingMessage Data)
+        private static void Player_Direction( Player Player, NetIncomingMessage Data)
         {
             Directions Direction = (Directions)Data.ReadByte();
 
@@ -354,7 +355,7 @@ namespace Network
             Send.Player_Direction(Player);
         }
 
-        private static void Player_Move(Objects.Player Player, NetIncomingMessage Data)
+        private static void Player_Move( Player Player, NetIncomingMessage Data)
         {
             // Move o jogador se necessário
             if (Player.X != Data.ReadByte() || Player.Y != Data.ReadByte())
@@ -363,7 +364,7 @@ namespace Network
                 Player.Move(Data.ReadByte());
         }
 
-        private static void RequestMap(Objects.Player Player, NetIncomingMessage Data)
+        private static void RequestMap( Player Player, NetIncomingMessage Data)
         {
             // Se necessário enviar as informações do mapa ao jogador
             if (Data.ReadBoolean()) Send.Map(Player.Account, Player.Map.Data);
@@ -376,7 +377,7 @@ namespace Network
             Send.JoinMap(Player);
         }
 
-        private static void Message(Objects.Player Player, NetIncomingMessage Data)
+        private static void Message( Player Player, NetIncomingMessage Data)
         {
             string Message = Data.ReadString();
 
@@ -394,13 +395,13 @@ namespace Network
             }
         }
 
-        private static void Player_Attack(Objects.Player Player)
+        private static void Player_Attack( Player Player)
         {
             // Ataca
             Player.Attack();
         }
 
-        private static void AddPoint(Objects.Player Player, NetIncomingMessage Data)
+        private static void AddPoint( Player Player, NetIncomingMessage Data)
         {
             byte Attribute_Num = Data.ReadByte();
 
@@ -414,9 +415,9 @@ namespace Network
             }
         }
 
-        private static void CollectItem(Objects.Player Player)
+        private static void CollectItem( Player Player)
         {
-            Objects.TMap_Items Map_Item = Player.Map.HasItem(Player.X, Player.Y);
+             TMap_Items Map_Item = Player.Map.HasItem(Player.X, Player.Y);
 
             // Somente se necessário
             if (Map_Item == null) return;
@@ -430,12 +431,12 @@ namespace Network
             }
         }
 
-        private static void DropItem(Objects.Player Player, NetIncomingMessage Data)
+        private static void DropItem( Player Player, NetIncomingMessage Data)
         {
             Player.DropItem(Data.ReadByte(), Data.ReadInt16());
         }
 
-        private static void Inventory_Change(Objects.Player Player, NetIncomingMessage Data)
+        private static void Inventory_Change( Player Player, NetIncomingMessage Data)
         {
             byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
 
@@ -449,7 +450,7 @@ namespace Network
             Send.Player_Inventory(Player);
 
             // Altera na hotbar
-            Objects.Hotbar Hotbar_Slot = Player.FindHotbar(Hotbars.Item, Slot_Old);
+             Hotbar Hotbar_Slot = Player.FindHotbar(Hotbars.Item, Slot_Old);
             if (Hotbar_Slot != null)
             {
                 Hotbar_Slot.Slot = Slot_New;
@@ -457,15 +458,15 @@ namespace Network
             }
         }
 
-        private static void Inventory_Use(Objects.Player Player, NetIncomingMessage Data)
+        private static void Inventory_Use( Player Player, NetIncomingMessage Data)
         {
             Player.UseItem(Data.ReadByte());
         }
 
-        private static void Equipment_Remove(Objects.Player Player, NetIncomingMessage Data)
+        private static void Equipment_Remove( Player Player, NetIncomingMessage Data)
         {
             byte Slot = Data.ReadByte();
-            Objects.TMap_Items Map_Item = new Objects.TMap_Items();
+             TMap_Items Map_Item = new  TMap_Items();
 
             // Apenas se necessário
             if (Player.Equipment[Slot] == null) return;
@@ -497,7 +498,7 @@ namespace Network
             Send.Player_Equipments(Player);
         }
 
-        private static void Hotbar_Add(Objects.Player Player, NetIncomingMessage Data)
+        private static void Hotbar_Add( Player Player, NetIncomingMessage Data)
         {
             short Hotbar_Slot = Data.ReadInt16();
             Hotbars Type = (Hotbars)Data.ReadByte();
@@ -514,7 +515,7 @@ namespace Network
             Send.Player_Hotbar(Player);
         }
 
-        private static void Hotbar_Change(Objects.Player Player, NetIncomingMessage Data)
+        private static void Hotbar_Change( Player Player, NetIncomingMessage Data)
         {
             short Slot_Old = Data.ReadInt16(), Slot_New = Data.ReadInt16();
 
@@ -528,7 +529,7 @@ namespace Network
             Send.Player_Hotbar(Player);
         }
 
-        private static void Hotbar_Use(Objects.Player Player, NetIncomingMessage Data)
+        private static void Hotbar_Use( Player Player, NetIncomingMessage Data)
         {
             byte Hotbar_Slot = Data.ReadByte();
 
@@ -539,7 +540,7 @@ namespace Network
             }
         }
 
-        private static void Write_Settings(Objects.Account Account, NetIncomingMessage Data)
+        private static void Write_Settings( Account Account, NetIncomingMessage Data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (Account.Acess < Accesses.Editor)
@@ -566,7 +567,7 @@ namespace Network
             Write.Settings();
         }
 
-        private static void Write_Classes(Objects.Account Account, NetIncomingMessage Data)
+        private static void Write_Classes( Account Account, NetIncomingMessage Data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (Account.Acess < Accesses.Editor)
@@ -576,7 +577,7 @@ namespace Network
             }
 
             // Classes a serem removidas
-            Dictionary<Guid, Objects.Class> ToRemove = new Dictionary<Guid, Objects.Class>(Lists.Class);
+            Dictionary<Guid,  Class> ToRemove = new Dictionary<Guid,  Class>(Lists.Class);
 
             // Quantidade de classes
             short Count = Data.ReadByte();
@@ -584,7 +585,7 @@ namespace Network
             while (--Count >= 0)
             {
                 Guid ID = new Guid(Data.ReadString());
-                Objects.Class Class;
+                 Class Class;
 
                 // Obtém o dado
                 if (Lists.Class.ContainsKey(ID))
@@ -594,27 +595,27 @@ namespace Network
                 }
                 else
                 {
-                    Class = new Objects.Class(ID);
+                    Class = new  Class(ID);
                     Lists.Class.Add(Class.ID, Class);
                 }
 
                 // Redimensiona os valores necessários 
                 Class.Tex_Male = new short[Data.ReadByte()];
                 Class.Tex_Female = new short[Data.ReadByte()];
-                Class.Item = new Tuple<Objects.Item, short>[Data.ReadByte()];
+                Class.Item = new Tuple< Item, short>[Data.ReadByte()];
 
                 // Lê os dados
                 Class.Name = Data.ReadString();
                 Class.Description = Data.ReadString();
                 for (byte t = 0; t < Class.Tex_Male.Length; t++) Class.Tex_Male[t] = Data.ReadInt16();
                 for (byte t = 0; t < Class.Tex_Female.Length; t++) Class.Tex_Female[t] = Data.ReadInt16();
-                Class.Spawn_Map = (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
+                Class.Spawn_Map = ( Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
                 Class.Spawn_Direction = Data.ReadByte();
                 Class.Spawn_X = Data.ReadByte();
                 Class.Spawn_Y = Data.ReadByte();
                 for (byte v = 0; v < (byte)Vitals.Count; v++) Class.Vital[v] = Data.ReadInt16();
                 for (byte a = 0; a < (byte)Attributes.Count; a++) Class.Attribute[a] = Data.ReadInt16();
-                for (byte n = 0; n < (byte)Class.Item.Length; n++) Class.Item[n] = new Tuple<Objects.Item, short>((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16());
+                for (byte n = 0; n < (byte)Class.Item.Length; n++) Class.Item[n] = new Tuple< Item, short>(( Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16());
 
                 // Salva os dados das classes
                 Write.Class(Class);
@@ -633,7 +634,7 @@ namespace Network
                     Send.Classes(Lists.Account[i]);
         }
 
-        private static void Write_Maps(Objects.Account Account, NetIncomingMessage Data)
+        private static void Write_Maps( Account Account, NetIncomingMessage Data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (Account.Acess < Accesses.Editor)
@@ -643,7 +644,7 @@ namespace Network
             }
 
             // Classes a serem removidas
-            Dictionary<Guid, Objects.Map> ToRemove = new Dictionary<Guid, Objects.Map>(Lists.Map);
+            Dictionary<Guid,  Map> ToRemove = new Dictionary<Guid,  Map>(Lists.Map);
 
             // Quantidade de classes
             short Count = Data.ReadByte();
@@ -651,7 +652,7 @@ namespace Network
             while (--Count >= 0)
             {
                 Guid ID = new Guid(Data.ReadString());
-                Objects.Map Map;
+                 Map Map;
 
                 // Obtém o dado
                 if (Lists.Map.ContainsKey(ID))
@@ -661,13 +662,13 @@ namespace Network
                 }
                 else
                 {
-                    Map = new Objects.Map(ID);
+                    Map = new  Map(ID);
                     Lists.Map.Add(Map.ID, Map);
                     Map.Create_Temporary();
                 }
 
                 // Mapa temporário
-                Objects.TMap Temp_Map = Lists.Temp_Map[ID];
+                 TMap Temp_Map = Lists.Temp_Map[ID];
 
                 // Dados gerais
                 Map.Revision = Data.ReadInt16();
@@ -686,20 +687,20 @@ namespace Network
 
                 // Ligações
                 for (short n = 0; n < (short)Directions.Count; n++)
-                    Map.Link[n] = (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
+                    Map.Link[n] = ( Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
 
                 // Camadas
-                Map.Layer = new Objects.Map_Layer[Data.ReadByte()];
+                Map.Layer = new  Map_Layer[Data.ReadByte()];
                 for (byte n = 0; n < Map.Layer.Length; n++)
                 {
                     // Dados básicos
-                    Map.Layer[n] = new Objects.Map_Layer();
+                    Map.Layer[n] = new  Map_Layer();
                     Map.Layer[n].Name = Data.ReadString();
                     Map.Layer[n].Type = Data.ReadByte();
 
                     // Azulejos
-                    for (byte x = 0; x < Objects.Map.Width; x++)
-                        for (byte y = 0; y < Objects.Map.Height; y++)
+                    for (byte x = 0; x <  Map.Width; x++)
+                        for (byte y = 0; y <  Map.Height; y++)
                         {
                             Map.Layer[n].Tile[x, y].X = Data.ReadByte();
                             Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
@@ -709,10 +710,10 @@ namespace Network
                 }
 
                 // Dados específicos dos azulejos
-                for (byte x = 0; x < Objects.Map.Width; x++)
-                    for (byte y = 0; y < Objects.Map.Height; y++)
+                for (byte x = 0; x <  Map.Width; x++)
+                    for (byte y = 0; y <  Map.Height; y++)
                     {
-                        Map.Attribute[x, y] = new Objects.Map_Attribute();
+                        Map.Attribute[x, y] = new  Map_Attribute();
                         Map.Attribute[x, y].Type = Data.ReadByte();
                         Map.Attribute[x, y].Data_1 = Data.ReadString();
                         Map.Attribute[x, y].Data_2 = Data.ReadInt16();
@@ -725,7 +726,7 @@ namespace Network
                     }
 
                 // Luzes
-                Map.Light = new Objects.Map_Light[Data.ReadByte()];
+                Map.Light = new  Map_Light[Data.ReadByte()];
                 for (byte n = 0; n < Map.Light.Length; n++)
                 {
                     Map.Light[n].X = Data.ReadByte();
@@ -735,11 +736,11 @@ namespace Network
                 }
 
                 // NPCs
-                Map.NPC = new Objects.Map_NPC[Data.ReadByte()];
-                Temp_Map.NPC = new Objects.TNPC[Map.NPC.Length];
+                Map.NPC = new  Map_NPC[Data.ReadByte()];
+                Temp_Map.NPC = new  TNPC[Map.NPC.Length];
                 for (byte n = 0; n < Map.NPC.Length; n++)
                 {
-                    Map.NPC[n].NPC = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+                    Map.NPC[n].NPC = ( NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
                     Map.NPC[n].Zone = Data.ReadByte();
                     Map.NPC[n].Spawn = Data.ReadBoolean();
                     Map.NPC[n].X = Data.ReadByte();
@@ -768,7 +769,7 @@ namespace Network
             }
         }
 
-        private static void Write_NPCs(Objects.Account Account, NetIncomingMessage Data)
+        private static void Write_NPCs( Account Account, NetIncomingMessage Data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (Account.Acess < Accesses.Editor)
@@ -778,7 +779,7 @@ namespace Network
             }
 
             // Lojas a serem removidas
-            Dictionary<Guid, Objects.NPC> ToRemove = new Dictionary<Guid, Objects.NPC>(Lists.NPC);
+            Dictionary<Guid,  NPC> ToRemove = new Dictionary<Guid,  NPC>(Lists.NPC);
 
             // Quantidade de lojas
             short Count = Data.ReadInt16();
@@ -786,7 +787,7 @@ namespace Network
             while (--Count >= 0)
             {
                 Guid ID = new Guid(Data.ReadString());
-                Objects.NPC NPC;
+                 NPC NPC;
 
                 // Obtém o dado
                 if (Lists.NPC.ContainsKey(ID))
@@ -796,7 +797,7 @@ namespace Network
                 }
                 else
                 {
-                    NPC = new Objects.NPC(ID);
+                    NPC = new  NPC(ID);
                     Lists.NPC.Add(NPC.ID, NPC);
                 }
 
@@ -810,14 +811,14 @@ namespace Network
                 NPC.Experience = Data.ReadInt32();
                 for (byte n = 0; n < (byte)Vitals.Count; n++) NPC.Vital[n] = Data.ReadInt16();
                 for (byte n = 0; n < (byte)Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
-                NPC.Drop = new Objects.NPC_Drop[Data.ReadByte()];
-                for (byte n = 0; n < NPC.Drop.Length; n++) NPC.Drop[n] = new Objects.NPC_Drop((Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
+                NPC.Drop = new  NPC_Drop[Data.ReadByte()];
+                for (byte n = 0; n < NPC.Drop.Length; n++) NPC.Drop[n] = new  NPC_Drop(( Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
                 NPC.AttackNPC = Data.ReadBoolean();
-                NPC.Allie = new Objects.NPC[Data.ReadByte()];
-                for (byte n = 0; n < NPC.Allie.Length; n++) NPC.Allie[n] = (Objects.NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+                NPC.Allie = new  NPC[Data.ReadByte()];
+                for (byte n = 0; n < NPC.Allie.Length; n++) NPC.Allie[n] = ( NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
                 NPC.Movement = (NPC_Movements)Data.ReadByte();
                 NPC.Flee_Helth = Data.ReadByte();
-                NPC.Shop = (Objects.Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+                NPC.Shop = ( Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
 
                 // Salva os dados do item
                 Write.NPC(NPC);
@@ -836,7 +837,7 @@ namespace Network
                     Send.NPCs(Lists.Account[i]);
         }
 
-        private static void Write_Items(Objects.Account Account, NetIncomingMessage Data)
+        private static void Write_Items( Account Account, NetIncomingMessage Data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (Account.Acess < Accesses.Editor)
@@ -846,7 +847,7 @@ namespace Network
             }
 
             // Lojas a serem removidas
-            Dictionary<Guid, Objects.Item> ToRemove = new Dictionary<Guid, Objects.Item>(Lists.Item);
+            Dictionary<Guid,  Item> ToRemove = new Dictionary<Guid,  Item>(Lists.Item);
 
             // Quantidade de lojas
             short Count = Data.ReadInt16();
@@ -854,7 +855,7 @@ namespace Network
             while (--Count >= 0)
             {
                 Guid ID = new Guid(Data.ReadString());
-                Objects.Item Item;
+                 Item Item;
 
                 // Obtém o dado
                 if (Lists.Item.ContainsKey(ID))
@@ -864,7 +865,7 @@ namespace Network
                 }
                 else
                 {
-                    Item = new Objects.Item(ID);
+                    Item = new  Item(ID);
                     Lists.Item.Add(Item.ID, Item);
                 }
 
@@ -877,7 +878,7 @@ namespace Network
                 Item.Bind = Data.ReadByte();
                 Item.Rarity = Data.ReadByte();
                 Item.Req_Level = Data.ReadInt16();
-                Item.Req_Class = (Objects.Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
+                Item.Req_Class = ( Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
                 Item.Potion_Experience = Data.ReadInt32();
                 for (byte v = 0; v < (byte)Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
                 Item.Equip_Type = Data.ReadByte();
@@ -901,7 +902,7 @@ namespace Network
                     Send.Items(Lists.Account[i]);
         }
 
-        private static void Write_Shops(Objects.Account Account, NetIncomingMessage Data)
+        private static void Write_Shops( Account Account, NetIncomingMessage Data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (Account.Acess < Accesses.Editor)
@@ -911,7 +912,7 @@ namespace Network
             }
 
             // Lojas a serem removidas
-            Dictionary<Guid, Objects.Shop> ToRemove = new Dictionary<Guid, Objects.Shop>(Lists.Shop);
+            Dictionary<Guid,  Shop> ToRemove = new Dictionary<Guid,  Shop>(Lists.Shop);
 
             // Quantidade de lojas
             short Count = Data.ReadInt16();
@@ -919,7 +920,7 @@ namespace Network
             while (--Count >= 0)
             {
                 Guid ID = new Guid(Data.ReadString());
-                Objects.Shop Shop;
+                 Shop Shop;
 
                 // Obtém o dado
                 if (Lists.Shop.ContainsKey(ID))
@@ -929,28 +930,28 @@ namespace Network
                 }
                 else
                 {
-                    Shop = new Objects.Shop(ID);
+                    Shop = new  Shop(ID);
                     Lists.Shop.Add(Shop.ID, Shop);
                 }
 
                 // Redimensiona os valores necessários 
-                Shop.Sold = new Objects.Shop_Item[Data.ReadByte()];
-                Shop.Bought = new Objects.Shop_Item[Data.ReadByte()];
+                Shop.Sold = new  Shop_Item[Data.ReadByte()];
+                Shop.Bought = new  Shop_Item[Data.ReadByte()];
 
                 // Lê os dados
                 Shop.Name = Data.ReadString();
-                Shop.Currency = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+                Shop.Currency = ( Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
                 for (byte j = 0; j < Shop.Sold.Length; j++)
-                    Shop.Sold[j] = new Objects.Shop_Item
+                    Shop.Sold[j] = new  Shop_Item
                     {
-                        Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
+                        Item = ( Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
                         Amount = Data.ReadInt16(),
                         Price = Data.ReadInt16()
                     };
                 for (byte j = 0; j < Shop.Bought.Length; j++)
-                    Shop.Bought[j] = new Objects.Shop_Item
+                    Shop.Bought[j] = new  Shop_Item
                     {
-                        Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
+                        Item = ( Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
                         Amount = Data.ReadInt16(),
                         Price = Data.ReadInt16()
                     };
@@ -972,47 +973,47 @@ namespace Network
                     Send.Shops(Lists.Account[i]);
         }
 
-        private static void Request_Setting(Objects.Account Account)
+        private static void Request_Setting( Account Account)
         {
             Send.Server_Data(Account);
         }
 
-        private static void Request_Classes(Objects.Account Account)
+        private static void Request_Classes( Account Account)
         {
             Send.Classes(Account);
         }
 
-        private static void Request_Map(Objects.Account Account, NetIncomingMessage Data)
+        private static void Request_Map( Account Account, NetIncomingMessage Data)
         {
-            Send.Map(Account, (Objects.Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString())));
+            Send.Map(Account, ( Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString())));
         }
 
-        private static void Request_Maps(Objects.Account Account, NetIncomingMessage Data)
+        private static void Request_Maps( Account Account, NetIncomingMessage Data)
         {
             Send.Maps(Account);
         }
 
-        private static void Request_NPCs(Objects.Account Account)
+        private static void Request_NPCs( Account Account)
         {
             Send.NPCs(Account);
         }
 
-        private static void Request_Items(Objects.Account Account)
+        private static void Request_Items( Account Account)
         {
             Send.Items(Account);
         }
 
-        private static void Request_Shops(Objects.Account Account)
+        private static void Request_Shops( Account Account)
         {
             Send.Shops(Account);
         }
 
-        private static void Party_Invite(Objects.Player Player, NetIncomingMessage Data)
+        private static void Party_Invite( Player Player, NetIncomingMessage Data)
         {
             string Name = Data.ReadString();
 
             // Encontra o jogador
-            Objects.Player Invited = Objects.Player.Find(Name);
+             Player Invited =  Player.Find(Name);
 
             // Verifica se o jogador está convectado
             if (Invited == null)
@@ -1050,9 +1051,9 @@ namespace Network
             Send.Party_Invitation(Invited, Player.Name);
         }
 
-        private static void Party_Accept(Objects.Player Player)
+        private static void Party_Accept( Player Player)
         {
-            Objects.Player Invitation = Objects.Player.Find(Player.Party_Request);
+             Player Invitation =  Player.Find(Player.Party_Request);
 
             // Verifica se já tem um grupo
             if (Player.Party.Count != 0)
@@ -1090,27 +1091,27 @@ namespace Network
             for (byte i = 0; i < Player.Party.Count; i++) Send.Party(Player.Party[i]);
         }
 
-        private static void Party_Decline(Objects.Player Player)
+        private static void Party_Decline( Player Player)
         {
-            Objects.Player Invitation = Objects.Player.Find(Player.Party_Request);
+             Player Invitation =  Player.Find(Player.Party_Request);
 
             // Recusa o convite
             if (Invitation != null) Send.Message(Invitation, Player.Name + " decline the party.", System.Drawing.Color.White);
             Player.Party_Request = string.Empty;
         }
 
-        private static void Party_Leave(Objects.Player Player)
+        private static void Party_Leave( Player Player)
         {
             // Sai do grupo
             Player.Party_Leave();
         }
 
-        private static void Trade_Invite(Objects.Player Player, NetIncomingMessage Data)
+        private static void Trade_Invite( Player Player, NetIncomingMessage Data)
         {
             string Name = Data.ReadString();
 
             // Encontra o jogador
-            Objects.Player Invited = Objects.Player.Find(Name);
+             Player Invited =  Player.Find(Name);
 
             // Verifica se o jogador está convectado
             if (Invited == null)
@@ -1159,9 +1160,9 @@ namespace Network
             Send.Trade_Invitation(Invited, Player.Name);
         }
 
-        private static void Trade_Accept(Objects.Player Player)
+        private static void Trade_Accept( Player Player)
         {
-            Objects.Player Invited = Objects.Player.Find(Player.Trade_Request);
+             Player Invited =  Player.Find(Player.Trade_Request);
 
             // Verifica se já tem um grupo
             if (Player.Trade != null)
@@ -1196,29 +1197,29 @@ namespace Network
 
             // Limpa os dadoss
             Player.Trade_Request = string.Empty;
-            Player.Trade_Offer = new Objects.Trade_Slot[Max_Inventory + 1];
-            Invited.Trade_Offer = new Objects.Trade_Slot[Max_Inventory + 1];
+            Player.Trade_Offer = new  Trade_Slot[Max_Inventory + 1];
+            Invited.Trade_Offer = new  Trade_Slot[Max_Inventory + 1];
 
             // Envia os dados para o grupo
             Send.Trade(Player, true);
             Send.Trade(Invited, true);
         }
 
-        private static void Trade_Decline(Objects.Player Player)
+        private static void Trade_Decline( Player Player)
         {
-            Objects.Player Invited = Objects.Player.Find(Player.Trade_Request);
+             Player Invited =  Player.Find(Player.Trade_Request);
 
             // Recusa o convite
             if (Invited != null) Send.Message(Invited, Player.Name + " decline the trade.", System.Drawing.Color.White);
             Player.Trade_Request = string.Empty;
         }
 
-        private static void Trade_Leave(Objects.Player Player)
+        private static void Trade_Leave( Player Player)
         {
             Player.Trade_Leave();
         }
 
-        private static void Trade_Offer(Objects.Player Player, NetIncomingMessage Data)
+        private static void Trade_Offer( Player Player, NetIncomingMessage Data)
         {
             byte Slot = Data.ReadByte(), Inventory_Slot = Data.ReadByte();
             short Amount = Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
@@ -1236,17 +1237,17 @@ namespace Network
             }
             // Remove o item da troca
             else
-                Player.Trade_Offer[Slot] = new Objects.Trade_Slot();
+                Player.Trade_Offer[Slot] = new  Trade_Slot();
 
             // Envia os dados ao outro jogador
             Send.Trade_Offer(Player);
             Send.Trade_Offer(Player.Trade, false);
         }
 
-        private static void Trade_Offer_State(Objects.Player Player, NetIncomingMessage Data)
+        private static void Trade_Offer_State( Player Player, NetIncomingMessage Data)
         {
             Trade_Status State = (Trade_Status)Data.ReadByte();
-            Objects.Player Invited = Player.Trade;
+             Player Invited = Player.Trade;
 
             switch (State)
             {
@@ -1267,11 +1268,11 @@ namespace Network
                     Send.Message(Invited, "The offer was accepted.", System.Drawing.Color.Green);
 
                     // Dados da oferta
-                    Objects.Inventory[] Your_Inventory = (Objects.Inventory[])Player.Inventory.Clone(),
-                        Their_Inventory = (Objects.Inventory[])Invited.Inventory.Clone();
+                     Inventory[] Your_Inventory = ( Inventory[])Player.Inventory.Clone(),
+                        Their_Inventory = ( Inventory[])Invited.Inventory.Clone();
 
                     // Remove os itens do inventário dos jogadores
-                    Objects.Player To = Player;
+                     Player To = Player;
                     for (byte j = 0; j < 2; j++, To = To == Player ? Invited : Player)
                         for (byte i = 1; i <= Max_Inventory; i++)
                             To.TakeItem((byte)To.Trade_Offer[i].Slot_Num, To.Trade_Offer[i].Amount);
@@ -1288,8 +1289,8 @@ namespace Network
                     Send.Player_Inventory(Invited);
 
                     // Limpa a troca
-                    Player.Trade_Offer = new Objects.Trade_Slot[Max_Inventory + 1];
-                    Invited.Trade_Offer = new Objects.Trade_Slot[Max_Inventory + 1];
+                    Player.Trade_Offer = new  Trade_Slot[Max_Inventory + 1];
+                    Invited.Trade_Offer = new  Trade_Slot[Max_Inventory + 1];
                     Send.Trade_Offer(Invited);
                     Send.Trade_Offer(Invited, false);
                     break;
@@ -1305,9 +1306,9 @@ namespace Network
             Send.Trade_State(Invited, State);
         }
 
-        private static void Shop_Buy(Objects.Player Player, NetIncomingMessage Data)
+        private static void Shop_Buy( Player Player, NetIncomingMessage Data)
         {
-            Objects.Shop_Item Shop_Sold = Player.Shop.Sold[Data.ReadByte()];
+             Shop_Item Shop_Sold = Player.Shop.Sold[Data.ReadByte()];
             byte Inventory_Slot = Player.FindInventory(Player.Shop.Currency);
 
             // Verifica se o jogador tem dinheiro
@@ -1329,11 +1330,11 @@ namespace Network
             Send.Message(Player, "You bought " + Shop_Sold.Price + "x " + Shop_Sold.Item.Name + ".", System.Drawing.Color.Green);
         }
 
-        private static void Shop_Sell(Objects.Player Player, NetIncomingMessage Data)
+        private static void Shop_Sell( Player Player, NetIncomingMessage Data)
         {
             byte Inventory_Slot = Data.ReadByte();
             short Amount = Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
-            Objects.Shop_Item Buy = Player.Shop.BoughtItem(Player.Inventory[Inventory_Slot].Item);
+             Shop_Item Buy = Player.Shop.BoughtItem(Player.Inventory[Inventory_Slot].Item);
 
             // Verifica se a loja vende o item
             if (Buy == null)
@@ -1354,12 +1355,12 @@ namespace Network
             Player.GiveItem(Player.Shop.Currency, (short)(Buy.Price * Amount));
         }
 
-        private static void Shop_Close(Objects.Player Player)
+        private static void Shop_Close( Player Player)
         {
             Player.Shop = null;
         }
 
-        private static void Warp(Objects.Player Player, NetIncomingMessage Data)
+        private static void Warp( Player Player, NetIncomingMessage Data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (Player.Account.Acess < Accesses.Editor)

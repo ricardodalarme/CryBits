@@ -19,7 +19,7 @@ class Loop
             Count = Environment.TickCount;
 
             // Manuseia os dados recebidos
-            Socket.HandleData();
+            Network.Socket.HandleData();
 
             // Apresenta os gráficos à tela
             Graphics.Present();
@@ -59,7 +59,7 @@ class Loop
             // Cálcula o FPS
             if (Timer_1000 < Environment.TickCount)
             {
-                Send.Latency();
+                Network.Send.Latency();
                 Game.FPS = FPS;
                 FPS = 0;
                 Timer_1000 = Environment.TickCount + 1000;

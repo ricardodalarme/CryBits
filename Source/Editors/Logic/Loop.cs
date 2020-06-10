@@ -21,7 +21,7 @@ class Loop
             Count = Environment.TickCount;
 
             // Manuseia os dados recebidos
-            Socket.HandleData();
+            Network.Socket.HandleData();
 
             // Eventos
             Editor_Maps_Fog();
@@ -120,8 +120,6 @@ class Loop
     private static void Editor_Maps_Weather()
     {
         bool Stop = false, Move;
-        byte First_Thunder = (byte)Audio.Sounds.Thunder_1;
-        byte Last_Thunder = (byte)Audio.Sounds.Thunder_4;
 
         // Somente se necessário
         if (Editor_Maps.Form == null || Editor_Maps.Form.Selected.Weather.Type == 0 || !Editor_Maps.Form.butVisualization.Checked)
@@ -203,7 +201,7 @@ class Loop
             if (Globals.GameRandom.Next(0, Globals.Max_Weather_Intensity * 10 - Weather.Intensity * 2) == 0)
             {
                 // Som do trovão
-                int Thunder = Globals.GameRandom.Next(First_Thunder, Last_Thunder);
+                int Thunder = Globals.GameRandom.Next((byte)Audio.Sounds.Thunder_1, (byte)Audio.Sounds.Thunder_4);
                 Audio.Sound.Play((Audio.Sounds)Thunder);
 
                 // Relâmpago
