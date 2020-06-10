@@ -1400,7 +1400,7 @@ partial class Editor_Maps : Form
             cmbA_Item.Items.Clear();
             foreach (var Item in Lists.Item.Values) cmbA_Item.Items.Add(Item);
             cmbA_Item.SelectedIndex = 0;
-            numA_Item_Amount.Value = 1;
+            numA_Item_Amount.Value = AData_2 = 1;
         }
         grpA_Item.Visible = optA_Item.Checked;
     }

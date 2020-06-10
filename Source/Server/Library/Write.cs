@@ -76,9 +76,9 @@ static class Write
             Data.Write(Account.Character.Inventory[n].Amount);
         }
         for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(Lists.GetID(Account.Character.Equipment[n]));
-        for (byte n = 1; n <= Max_Hotbar; n++)
+        for (byte n = 0; n < Max_Hotbar; n++)
         {
-            Data.Write(Account.Character.Hotbar[n].Type);
+            Data.Write((byte)Account.Character.Hotbar[n].Type);
             Data.Write(Account.Character.Hotbar[n].Slot);
         }
 

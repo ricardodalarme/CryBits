@@ -80,14 +80,13 @@ namespace Objects
 
         public void Spawn_Items()
         {
-            TMap_Items Map_Item = new TMap_Items();
-
             // Verifica se tem algum atributo de item no mapa
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
                     if (Data.Attribute[x, y].Type == (byte)Tile_Attributes.Item)
                     {
                         // Faz o item aparecer
+                        TMap_Items Map_Item = new TMap_Items();
                         Map_Item.Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.Attribute[x, y].Data_1));
                         Map_Item.Amount = Data.Attribute[x, y].Data_2;
                         Map_Item.X = x;

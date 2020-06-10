@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using Network;
 using static Utils;
 
@@ -19,7 +20,7 @@ namespace Objects
         public short[] Attribute = new short[(byte)Attributes.Count];
         public Inventory[] Inventory = new Inventory[Max_Inventory + 1];
         public Item[] Equipment = new Item[(byte)Equipments.Count];
-        public Hotbar[] Hotbar = new Hotbar[Max_Hotbar + 1];
+        public Hotbar[] Hotbar = new Hotbar[Max_Hotbar];
 
         // Dados temporários
         public bool GettingMap;
@@ -115,14 +116,14 @@ namespace Objects
 
             // Envia todos os dados necessários
             Send.Join(this);
+            Send.Items(Account);
+            Send.NPCs(Account);
+            Send.Shops(Account);
             Send.Map(Account, Map.Data);
             Send.Map_Players(this);
             Send.Player_Experience(this);
             Send.Player_Inventory(this);
             Send.Player_Hotbar(this);
-            Send.Items(Account);
-            Send.NPCs(Account);
-            Send.Shops(Account);
 
             // Transporta o jogador para a sua determinada Posição
             Warp(Map, X, Y, true);
@@ -454,10 +455,10 @@ namespace Objects
                 Inventory[Slot] = new Inventory();
 
                 // Retira o item da hotbar caso estier
-                byte HotbarSlot = FindHotbar((byte)Hotbars.Item, Slot);
-                if (HotbarSlot > 0)
+                var HotbarSlot = FindHotbar(Hotbars.Item, Slot);
+                if (HotbarSlot != null)
                 {
-                    Hotbar[HotbarSlot] = new Hotbar();
+                    HotbarSlot = new Hotbar(Hotbars.None, 0);
                     Send.Player_Hotbar(this);
                 }
             }
@@ -559,14 +560,14 @@ namespace Objects
             }
         }
 
-        public byte FindHotbar(byte Type, byte Slot)
+        public Hotbar FindHotbar(Hotbars Type, byte Slot)
         {
             // Encontra algo especifico na hotbar
-            for (byte i = 1; i <= Max_Hotbar; i++)
+            for (byte i = 0; i < Max_Hotbar; i++)
                 if (Hotbar[i].Type == Type && Hotbar[i].Slot == Slot)
-                    return i;
+                    return Hotbar[i];
 
-            return 0;
+            return null;
         }
 
         public byte FindInventory(Item Item)
@@ -701,7 +702,7 @@ namespace Objects
         }
     }
 
-    class Inventory
+    struct Inventory
     {
         public Item Item;
         public short Amount;
@@ -715,7 +716,13 @@ namespace Objects
 
     class Hotbar
     {
-        public byte Type;
+        public Hotbars Type;
         public byte Slot;
+
+        public Hotbar(Hotbars Type, byte Slot)
+        {
+            this.Type = Type;
+            this.Slot = Slot;
+        }
     }
 }

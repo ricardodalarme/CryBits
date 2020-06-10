@@ -216,7 +216,7 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Hotbar_Add(byte Hotbar_Slot, byte Type, byte Slot)
+    public static void Hotbar_Add(short Hotbar_Slot, byte Type, byte Slot)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -228,7 +228,7 @@ partial class Send
         Packet(Data);
     }
 
-    public static void Hotbar_Change(byte Old, byte New)
+    public static void Hotbar_Change(short Old, short New)
     {
         NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

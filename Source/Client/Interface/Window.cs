@@ -120,9 +120,9 @@ class Window
                 if (Utils.Inventory_Change > 0) Send.Inventory_Change(Utils.Inventory_Change, Panels.Inventory_Slot);
             }
             // Muda o slot da hotbar
-            else if (Panels.Hotbar_Slot > 0)
+            else if (Panels.Hotbar_Slot >= 0)
             {
-                if (Utils.Hotbar_Change > 0) Send.Hotbar_Change(Utils.Hotbar_Change, Panels.Hotbar_Slot);
+                if (Utils.Hotbar_Change >= 0) Send.Hotbar_Change(Utils.Hotbar_Change, Panels.Hotbar_Slot);
                 if (Utils.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Game.Hotbar.Item, Utils.Inventory_Change);
             }
             // Adiciona um item à troca
@@ -142,7 +142,7 @@ class Window
 
             // Reseta a movimentação
             Utils.Inventory_Change = 0;
-            Utils.Hotbar_Change = 0;
+            Utils.Hotbar_Change = -1;
         }
     }
 

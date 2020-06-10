@@ -130,11 +130,7 @@ static class Read
             Account.Character.Inventory[n].Amount = Data.ReadInt16();
         }
         for (byte n = 0; n < (byte)Equipments.Count; n++) Account.Character.Equipment[n] = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
-        for (byte n = 1; n <= Max_Hotbar; n++)
-        {
-            Account.Character.Hotbar[n].Type = Data.ReadByte();
-            Account.Character.Hotbar[n].Slot = Data.ReadByte();
-        }
+        for (byte n = 0; n < Max_Hotbar; n++) Account.Character.Hotbar[n] = new Objects.Hotbar((Hotbars)Data.ReadByte(), Data.ReadByte());
 
         // Descarrega o arquivo
         Data.Dispose();

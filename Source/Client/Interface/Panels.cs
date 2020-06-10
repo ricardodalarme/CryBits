@@ -27,7 +27,7 @@ class Panels
 
     // Retorna em qual slot o mouse está sobrepondo
     public static byte Inventory_Slot => Utils.Slot(Get("Menu_Inventory"), 7, 29, 6, 5);
-    public static byte Hotbar_Slot => Utils.Slot(Get("Hotbar"), 8, 6, 1, 10);
+    public static short Hotbar_Slot => (short)(Utils.Slot(Get("Hotbar"), 8, 6, 1, 10) -1);
     public static byte Trade_Slot => Utils.Slot(Get("Trade"), 7, 50, 6, 5);
     public static short Shop_Slot => (short)(Utils.Slot(Get("Shop"), 7, 50, 4, 7) - 1);
     public static short Equipment_Slot => (short)(Utils.Slot(Get("Menu_Character"), 7, 248, 1, 5) - 1);
@@ -86,10 +86,10 @@ class Panels
 
     public static void Hotbar_MouseDown(SFML.Window.MouseButtonEventArgs e)
     {
-        byte Slot = Hotbar_Slot;
+        short Slot = Hotbar_Slot;
 
         // Somente se necessário
-        if (Slot == 0) return;
+        if (Slot < 0) return;
         if (Player.Me.Hotbar[Slot].Slot == 0) return;
 
         // Solta item

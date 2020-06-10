@@ -1472,6 +1472,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1366, 687);
+            this.Controls.Add(this.grpAttributes);
             this.Controls.Add(this.prgProperties);
             this.Controls.Add(this.picBackground);
             this.Controls.Add(this.txtFilter);
@@ -1490,7 +1491,6 @@
             this.Controls.Add(this.grpLayers);
             this.Controls.Add(this.grpZones);
             this.Controls.Add(this.grpLayer_Add);
-            this.Controls.Add(this.grpAttributes);
             this.Controls.Add(this.picTile_Background);
             this.Controls.Add(this.grpLighting);
             this.Controls.Add(this.grpNPCs);
