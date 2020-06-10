@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace Objects
 {
-    class Shop : Lists.Structures.Data
+    class Shop : Data
     {
         public string Name = string.Empty;
         public Item Currency;

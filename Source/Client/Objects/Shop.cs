@@ -1,9 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Objects
 {
-    class Shop : Lists.Structures.Data
+    class Shop : Data
     {
+        // Lista de dados
+        public static Dictionary<Guid, Shop> List ;
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static Shop Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
+        // Dados gerais
         public string Name;
         public Item Currency;
         public Shop_Item[] Sold;

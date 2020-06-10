@@ -1,19 +1,24 @@
-﻿using System;
+﻿using Library;
+using Network;
+using System;
 using System.Windows.Forms;
 
-class Program
+static class Program
 {
     // Usado para manter a aplicação aberta
     public static bool Working = true;
+
+    // Medida de calculo do atraso do jogo
+    public static short FPS;
 
     [STAThread]
     static void Main()
     {
         // Abre a janela de seleção de diretório do cliente caso não houver um
-        if (!Directories.Options.Exists && !Directories.Select())
-            return;
-        else
-            Read.Options();
+        if (!Directories.Options.Exists && !Directories.Select()) return;
+
+        // Lê os dados
+        Read.Options();
 
         // Inicia o dispositivo de rede
         Socket.Init();

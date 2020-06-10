@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using Network;
+using SFML.Graphics;
 using System.Collections.Generic;
 
 class Chat

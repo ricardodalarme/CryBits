@@ -1,33 +1,14 @@
 ﻿using System;
 using System.Drawing;
 
-class Globals
+static class Utils
 {
     // Dimensão das grades 
     public const byte Grid = 32;
     public static Size Grid_Size = new Size(Grid, Grid);
 
-    // Medida de calculo do atraso do jogo
-    public static short FPS;
-
-    // Limitações dos mapas
-    public const byte Map_Width = 25;
-    public const byte Map_Height = 19;
-    public const byte Num_Zones = 20;
-
-    // Fumaças
-    public static int Fog_X;
-    public static int Fog_Y;
-
-    // Clima
-    public const byte Max_Rain_Particles = 100;
-    public const short Max_Snow_Particles = 635;
-    public const byte Max_Weather_Intensity = 10;
-    public const byte Snow_Movement = 10;
-    public static byte Lightning;
-
     // Números aleAmountatórios
-    public static Random GameRandom = new Random();
+    public static Random MyRandom = new Random();
 
     public enum Tools_Types
     {
@@ -94,13 +75,6 @@ class Globals
         Count
     }
 
-    public enum Tiles_Mode
-    {
-        Normal,
-        Automatic,
-        Automatic_Animated
-    }
-
     public enum Items
     {
         None,
@@ -155,18 +129,6 @@ class Globals
         MoveRandomly,
         TurnRandomly,
         StandStill
-    }
-
-    public static void Weather_Update()
-    {
-        // Redimensiona a lista
-        if (Editor_Maps.Form != null)
-            switch (Editor_Maps.Form.Selected.Weather.Type)
-            {
-                case Weathers.Thundering:
-                case Weathers.Raining: Lists.Weather = new Lists.Structures.Weather[Max_Rain_Particles + 1]; break;
-                case Weathers.Snowing: Lists.Weather = new Lists.Structures.Weather[Max_Snow_Particles + 1]; break;
-            }
     }
 
     public static Point Block_Position(byte Direction)

@@ -1,6 +1,8 @@
-﻿using Objects;
+﻿using Network;
+using Objects;
 using System;
 using System.Windows.Forms;
+using static Utils;
 
 partial class Editor_NPCs : Form
 {
@@ -73,13 +75,13 @@ partial class Editor_NPCs : Form
         numSpawn.Value = Selected.SpawnTime;
         numRange.Value = Selected.Sight;
         numExperience.Value = Selected.Experience;
-        numHP.Value = Selected.Vital[(byte)Globals.Vitals.HP];
-        numMP.Value = Selected.Vital[(byte)Globals.Vitals.MP];
-        numStrength.Value = Selected.Attribute[(byte)Globals.Attributes.Strength];
-        numResistance.Value = Selected.Attribute[(byte)Globals.Attributes.Resistance];
-        numIntelligence.Value = Selected.Attribute[(byte)Globals.Attributes.Intelligence];
-        numAgility.Value = Selected.Attribute[(byte)Globals.Attributes.Agility];
-        numVitality.Value = Selected.Attribute[(byte)Globals.Attributes.Vitality];
+        numHP.Value = Selected.Vital[(byte)Vitals.HP];
+        numMP.Value = Selected.Vital[(byte)Vitals.MP];
+        numStrength.Value = Selected.Attribute[(byte)Attributes.Strength];
+        numResistance.Value = Selected.Attribute[(byte)Attributes.Resistance];
+        numIntelligence.Value = Selected.Attribute[(byte)Attributes.Intelligence];
+        numAgility.Value = Selected.Attribute[(byte)Attributes.Agility];
+        numVitality.Value = Selected.Attribute[(byte)Attributes.Vitality];
         cmbMovement.SelectedIndex = (byte)Selected.Movement;
         numFlee_Health.Value = Selected.Flee_Helth;
         chkAttackNPC.Checked = Selected.AttackNPC;
@@ -165,7 +167,7 @@ partial class Editor_NPCs : Form
         // Evita erros
         cmbShop.Enabled = false;
         cmbShop.SelectedIndex = -1;
-        if (cmbBehavior.SelectedIndex == (byte)Globals.NPC_Behaviour.ShopKeeper)
+        if (cmbBehavior.SelectedIndex == (byte)NPC_Behaviour.ShopKeeper)
             if (Lists.Shop.Count == 0)
             {
                 cmbBehavior.SelectedIndex = Selected.Behaviour;
@@ -182,37 +184,37 @@ partial class Editor_NPCs : Form
 
     private void numHP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Vital[(byte)Globals.Vitals.HP] = (short)numHP.Value;
+        Selected.Vital[(byte)Vitals.HP] = (short)numHP.Value;
     }
 
     private void numMP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Vital[(byte)Globals.Vitals.MP] = (short)numMP.Value;
+        Selected.Vital[(byte)Vitals.MP] = (short)numMP.Value;
     }
 
     private void numStrength_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Attribute[(byte)Globals.Attributes.Strength] = (short)numStrength.Value;
+        Selected.Attribute[(byte)Attributes.Strength] = (short)numStrength.Value;
     }
 
     private void numResistance_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Attribute[(byte)Globals.Attributes.Resistance] = (short)numResistance.Value;
+        Selected.Attribute[(byte)Attributes.Resistance] = (short)numResistance.Value;
     }
 
     private void numIntelligence_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Attribute[(byte)Globals.Attributes.Intelligence] = (short)numIntelligence.Value;
+        Selected.Attribute[(byte)Attributes.Intelligence] = (short)numIntelligence.Value;
     }
 
     private void numAgility_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Attribute[(byte)Globals.Attributes.Agility] = (short)numAgility.Value;
+        Selected.Attribute[(byte)Attributes.Agility] = (short)numAgility.Value;
     }
 
     private void numVitality_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Attribute[(byte)Globals.Attributes.Vitality] = (short)numVitality.Value;
+        Selected.Attribute[(byte)Attributes.Vitality] = (short)numVitality.Value;
     }
 
     private void numSpawn_ValueChanged(object sender, EventArgs e)
@@ -292,7 +294,7 @@ partial class Editor_NPCs : Form
 
     private void cmbMovement_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected.Movement = (Globals.NPC_Movements)cmbMovement.SelectedIndex;
+        Selected.Movement = (NPC_Movements)cmbMovement.SelectedIndex;
     }
 
     private void numFlee_Health_ValueChanged(object sender, EventArgs e)

@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Objects
 {
-    class Item : Lists.Structures.Data
+    class Item : Data
     {
+        // Lista de dados
+        public static Dictionary<Guid, Item> List ;
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static Item Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
         // Geral
         public string Name = string.Empty;
         public string Description = string.Empty;

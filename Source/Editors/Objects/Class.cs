@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using static Utils;
 
 namespace Objects
 {
-    class Class : Lists.Structures.Data
+    class Class : Data
     {
         // Dados
         public string Name = string.Empty;
@@ -14,8 +15,8 @@ namespace Objects
         public byte Spawn_Direction;
         public byte Spawn_X;
         public byte Spawn_Y;
-        public short[] Vital = new short[(byte)Globals.Vitals.Count];
-        public short[] Attribute = new short[(byte)Globals.Attributes.Count];
+        public short[] Vital = new short[(byte)Vitals.Count];
+        public short[] Attribute = new short[(byte)Attributes.Count];
         public BindingList<Lists.Structures.Inventory> Item = new BindingList<Lists.Structures.Inventory>();
 
         // Construtor

@@ -6,42 +6,15 @@ class Lists
 {
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
-    public static List<Player.Structure> Player = new List<Player.Structure>();
-    public static Dictionary<Guid, Class> Class = new Dictionary<Guid, Class>();
-    public static Dictionary<Guid, Map> Map = new Dictionary<Guid, Map>();
-    public static Dictionary<Guid, TMap> Temp_Map = new Dictionary<Guid, TMap>();
-    public static Dictionary<Guid, NPC> NPC = new Dictionary<Guid, NPC>();
-    public static Dictionary<Guid, Item> Item = new Dictionary<Guid, Item>();
-    public static Dictionary<Guid, Shop> Shop = new Dictionary<Guid, Shop>();
     public static Structures.Character[] Characters;
     public static Structures.Weather[] Weather;
 
-    public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
-    {
-        if (Dictionary.ContainsKey(ID))
-            return Dictionary[ID];
-        else
-            return null;
-    }
-
-    public static string GetID(object Object)
-    {
-        return Object == null ? Guid.Empty.ToString() : ((Structures.Data)Object).ID.ToString();
-    }
+    // Obtém o ID de algum dado, caso ele não existir retorna um ID zerado
+    public static string GetID(Data Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
 
     // Estrutura dos itens em gerais
     public class Structures
     {
-        public class Data
-        {
-            public Guid ID;
-
-            public Data(Guid ID)
-            {
-                this.ID = ID;
-            }
-        }
-
         [Serializable]
         public struct Options
         {
@@ -64,7 +37,6 @@ class Lists
             public short Texture_Num;
         }
 
-
         public struct Weather
         {
             public bool Visible;
@@ -73,18 +45,6 @@ class Lists
             public int Speed;
             public int Start;
             public bool Back;
-        }
-
-        public struct Inventory
-        {
-            public Item Item;
-            public short Amount;
-        }
-
-        public struct Hotbar
-        {
-            public byte Type;
-            public byte Slot;
         }
     }
 }

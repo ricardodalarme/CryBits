@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using Objects;
 
 namespace Network
 {
@@ -14,9 +15,9 @@ namespace Network
             // Define algumas configurações da rede
             Config = new NetPeerConfiguration("CryBits")
             {
-                Port = Utils.Port,
+                Port = Logic.Utils.Port,
                 AcceptIncomingConnections = true,
-                MaximumConnections = Utils.Max_Players
+                MaximumConnections = Logic.Utils.Max_Players
             };
 
             // Cria o dispositivo com as devidas configurações
@@ -42,7 +43,7 @@ namespace Network
 
                         // Nova conexão - Conecta o jogador ao jogo
                         if (Status == NetConnectionStatus.Connected)
-                            Lists.Account.Add(new Objects.Account(Data.SenderConnection));
+                            Account.List.Add(new Account(Data.SenderConnection));
                         // Conexão perdida, disconecta o jogador do jogo
                         else if (Status == NetConnectionStatus.Disconnected)
                             Account.Leave();
@@ -58,12 +59,12 @@ namespace Network
             }
         }
 
-        private static Objects.Account FindConnection(NetConnection Data)
+        private static Account FindConnection(NetConnection Data)
         {
             // Encontra uma determinada conexão
-            for (byte i = 0; i < Lists.Account.Count; i++)
-                if (Lists.Account[i].Connection == Data)
-                    return Lists.Account[i];
+            for (byte i = 0; i < Account.List.Count; i++)
+                if (Account.List[i].Connection == Data)
+                    return Account.List[i];
 
             return null;
         }

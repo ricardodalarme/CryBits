@@ -143,7 +143,7 @@
     <Compile Include="Logic\Maper.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Media\Audio.cs" />
-    <Compile Include="Logic\Globals.cs" />
+    <Compile Include="Logic\Utils.cs" />
     <Compile Include="Editors\Classes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +160,7 @@
     <Compile Include="Network\Send.cs" />
     <Compile Include="Network\Socket.cs" />
     <Compile Include="Objects\Class.cs" />
+    <Compile Include="Objects\Data.cs" />
     <Compile Include="Objects\Interface.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Objects\Map.cs" />

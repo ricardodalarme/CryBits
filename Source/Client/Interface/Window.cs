@@ -1,7 +1,9 @@
-﻿using SFML.Window;
+﻿using Network;
+using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Objects;
 
 class Window
 {

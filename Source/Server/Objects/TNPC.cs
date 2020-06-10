@@ -1,6 +1,7 @@
-﻿using System;
-using Network;
-using static Utils;
+﻿using Network;
+using System;
+using Logic;
+using static Logic.Utils;
 
 namespace Objects
 {
@@ -80,7 +81,7 @@ namespace Objects
                 {
                     // Jogador
                     if (Target == null)
-                        foreach (var Player in Lists.Account)
+                        foreach (var Player in Account.List)
                         {
                             // Verifica se o jogador está jogando e no mesmo mapa que o NPC
                             if (!Player.IsPlaying) continue;

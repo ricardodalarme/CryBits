@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Library;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
+using static Utils;
 
-public partial class Editor_Tiles : Form
+partial class Editor_Tiles : Form
 {
     // Usado para acessar os dados da janela
     public static Editor_Tiles Form;
 
     // Atributo selecionado
-    private Globals.Tile_Attributes Attributes;
+    private Tile_Attributes Attributes;
 
     public Editor_Tiles()
     {
@@ -27,8 +29,8 @@ public partial class Editor_Tiles : Form
 
     private void Update_Bounds()
     {
-        int x = Graphics.TSize(Graphics.Tex_Tile[scrlTile.Value]).Width / Globals.Grid - picTile.Width / Globals.Grid;
-        int y = Graphics.TSize(Graphics.Tex_Tile[scrlTile.Value]).Height / Globals.Grid - picTile.Height / Globals.Grid;
+        int x = Graphics.TSize(Graphics.Tex_Tile[scrlTile.Value]).Width / Grid - picTile.Width / Grid;
+        int y = Graphics.TSize(Graphics.Tex_Tile[scrlTile.Value]).Height / Grid - picTile.Height / Grid;
 
         // Verifica se nada passou do limite minímo
         if (x < 0) x = 0;
@@ -71,8 +73,8 @@ public partial class Editor_Tiles : Form
 
     private void picTile_MouseDown(object sender, MouseEventArgs e)
     {
-        Point Position = new Point((e.X + scrlTileX.Value * Globals.Grid) / Globals.Grid, (e.Y + scrlTileY.Value * Globals.Grid) / Globals.Grid);
-        Point Tile_Dif = new Point(e.X - e.X / Globals.Grid * Globals.Grid, e.Y - e.Y / Globals.Grid * Globals.Grid);
+        Point Position = new Point((e.X + scrlTileX.Value * Grid) / Grid, (e.Y + scrlTileY.Value * Grid) / Grid);
+        Point Tile_Dif = new Point(e.X - e.X / Grid * Grid, e.Y - e.Y / Grid * Grid);
 
         // Previne erros
         if (Position.X > Lists.Tile[scrlTile.Value].Data.GetUpperBound(0)) return;
@@ -90,10 +92,10 @@ public partial class Editor_Tiles : Form
         }
         // Bloqueio direcional
         else if (optDirBlock.Checked)
-            for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
-                if (Tile_Dif.X >= Globals.Block_Position(i).X && Tile_Dif.X <= Globals.Block_Position(i).X + 8)
-                    if (Tile_Dif.Y >= Globals.Block_Position(i).Y && Tile_Dif.Y <= Globals.Block_Position(i).Y + 8)
-                        if (Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Attribute != (byte)Globals.Tile_Attributes.Block)
+            for (byte i = 0; i < (byte)Directions.Count; i++)
+                if (Tile_Dif.X >= Block_Position(i).X && Tile_Dif.X <= Block_Position(i).X + 8)
+                    if (Tile_Dif.Y >= Block_Position(i).Y && Tile_Dif.Y <= Block_Position(i).Y + 8)
+                        if (Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Attribute != (byte)Tile_Attributes.Block)
                             // Altera o valor de bloqueio
                             Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i] = !Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i];
     }
@@ -101,7 +103,7 @@ public partial class Editor_Tiles : Form
     private void optBlock_CheckedChanged(object sender, EventArgs e)
     {
         // Define o atributo
-        Attributes = Globals.Tile_Attributes.Block;
+        Attributes = Tile_Attributes.Block;
     }
 
     private void optAttributes_CheckedChanged(object sender, EventArgs e)

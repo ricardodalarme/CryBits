@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using Objects;
+using SFML.Graphics;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
@@ -279,10 +280,10 @@ partial class Graphics
                 NPC(Mapper.Current.NPC[i]);
 
         // Desenha os jogadores
-        for (byte i = 0; i < Lists.Player.Count; i++)
-            if (Lists.Player[i] != Player.Me)
-                if (Lists.Player[i].Map == Player.Me.Map)
-                    Player_Character(Lists.Player[i]);
+        for (byte i = 0; i < Player.List.Count; i++)
+            if (Player.List[i] != Player.Me)
+                if (Player.List[i].Map == Player.Me.Map)
+                    Player_Character(Player.List[i]);
 
         // Desenha o próprio jogador
         Player_Character(Player.Me);
@@ -298,7 +299,7 @@ partial class Graphics
 
         // Desenha os dados do jogo
         if (Lists.Options.FPS) DrawText("FPS: " + Game.FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
-        if (Lists.Options.Latency) DrawText("Latency: " + Socket.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
+        if (Lists.Options.Latency) DrawText("Latency: " + Network.Socket.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
     }
 
     #region Tools
@@ -433,7 +434,7 @@ partial class Graphics
     private static void CreateCharacter_Class()
     {
         short Texture_Num = 0;
-        Objects.Class Class = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value;
+        Class Class = Class.List.ElementAt(Utils.CreateCharacter_Class).Value;
 
         // Textura do personagem
         if (CheckBoxes.Get("GenderMale").Checked && Class.Tex_Male.Length > 0)
@@ -496,7 +497,7 @@ partial class Graphics
 
     private static void Informations(Panels.Structure Tool)
     {
-        Objects.Item Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Utils.Infomation_ID));
+        Item Item = Item.Get( new Guid(Utils.Infomation_ID));
         SFML.Graphics.Color Text_Color;
         List<string> Data = new List<string>();
 
@@ -566,13 +567,13 @@ partial class Graphics
                 switch ((Game.Hotbar)Player.Me.Hotbar[i].Type)
                 {
                     // Itens
-                    case Game.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), (byte)(i +1), 10); break;
+                    case Game.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
                 }
 
             // Desenha os números de cada slot
-            if (i < 10) Indicator = (i+1).ToString();
+            if (i < 10) Indicator = (i + 1).ToString();
             else if (i == 9) Indicator = "0";
-            DrawText(Indicator, Tool.Position.X + 16 + 36 * i , Tool.Position.Y + 22, SFML.Graphics.Color.White);
+            DrawText(Indicator, Tool.Position.X + 16 + 36 * i, Tool.Position.Y + 22, SFML.Graphics.Color.White);
         }
 
         // Movendo slot
@@ -665,7 +666,7 @@ partial class Graphics
             Item(Utils.Shop_Open.Sold[i].Item, Utils.Shop_Open.Sold[i].Amount, Tool.Position + new Size(7, 50), (byte)(i + 1), 7);
     }
 
-    private static void Item(Objects.Item Item, short Amount, Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)
+    private static void Item(Item Item, short Amount, Point Start, byte Slot, byte Columns, byte Grid = 32, byte Gap = 4)
     {
         // Somente se necessário
         if (Item == null) return;
@@ -711,7 +712,7 @@ partial class Graphics
         Render(Tex_Character[Texture_Num], Rec_Source, Rec_Destiny, Color);
     }
 
-    private static void Player_Character(Player.Structure Player)
+    private static void Player_Character(Player Player)
     {
         // Desenha o jogador
         Player_Texture(Player);
@@ -719,7 +720,7 @@ partial class Graphics
         Player_Bars(Player);
     }
 
-    private static void Player_Texture(Player.Structure Player)
+    private static void Player_Texture(Player Player)
     {
         byte Column = Game.Animation_Stopped;
         bool Hurt = false;
@@ -745,7 +746,7 @@ partial class Graphics
         Character(Player.Texture_Num, new Point(Game.ConvertX(Player.Pixel_X), Game.ConvertY(Player.Pixel_Y)), Player.Direction, Column, Hurt);
     }
 
-    private static void Player_Bars(Player.Structure Player)
+    private static void Player_Bars(Player Player)
     {
         short Value = Player.Vital[(byte)Game.Vitals.HP];
 
@@ -769,7 +770,7 @@ partial class Graphics
         Render(Tex_Bars, Position.X, Position.Y, 0, 0, Width, 4);
     }
 
-    private static void Player_Name(Player.Structure Player)
+    private static void Player_Name(Player Player)
     {
         Texture Texture = Tex_Character[Player.Texture_Num];
         int Name_Size = Utils.MeasureString(Player.Name);
@@ -783,7 +784,7 @@ partial class Graphics
 
         // Cor do texto
         SFML.Graphics.Color Color;
-        if (Player == global::Player.Me)
+        if (Player == Player.Me)
             Color = SFML.Graphics.Color.Yellow;
         else
             Color = SFML.Graphics.Color.White;
@@ -792,7 +793,7 @@ partial class Graphics
         DrawText(Player.Name, Game.ConvertX(Position.X), Game.ConvertY(Position.Y), Color);
     }
 
-    private static void NPC(Objects.TNPC NPC)
+    private static void NPC(TNPC NPC)
     {
         byte Column = 0;
         bool Hurt = false;
@@ -820,7 +821,7 @@ partial class Graphics
         NPC_Bars(NPC);
     }
 
-    private static void NPC_Name(Objects.TNPC NPC)
+    private static void NPC_Name(TNPC NPC)
     {
         Point Position = new Point();
         SFML.Graphics.Color Color;
@@ -844,7 +845,7 @@ partial class Graphics
         DrawText(NPC.Data.Name, Game.ConvertX(Position.X), Game.ConvertY(Position.Y), Color);
     }
 
-    private static void NPC_Bars(Objects.TNPC NPC)
+    private static void NPC_Bars(TNPC NPC)
     {
         Texture Texture = Tex_Character[NPC.Data.Texture];
         short Value = NPC.Vital[(byte)Game.Vitals.HP];
@@ -889,7 +890,7 @@ partial class Graphics
                         }
     }
 
-    private static void Map_Autotile(Point Position, Objects.Map_Tile_Data Data, SFML.Graphics.Color Cor)
+    private static void Map_Autotile(Point Position, Map_Tile_Data Data, SFML.Graphics.Color Cor)
     {
         // Desenha os 4 mini azulejos
         for (byte i = 0; i < 4; i++)
@@ -918,7 +919,7 @@ partial class Graphics
 
     private static void Map_Fog()
     {
-        Objects.Map_Fog Data = Mapper.Current.Data.Fog;
+        Map_Fog Data = Mapper.Current.Data.Fog;
         Size Texture_Size = TSize(Tex_Fog[Data.Texture]);
 
         // Previne erros
@@ -975,7 +976,7 @@ partial class Graphics
         // Desenha todos os itens que estão no chão
         for (byte i = 0; i < Mapper.Current.Item.Length; i++)
         {
-            Objects.TMap_Items Data = Mapper.Current.Item[i];
+            TMap_Items Data = Mapper.Current.Item[i];
 
             // Somente se necessário
             if (Data.Item == null) continue;
@@ -991,7 +992,7 @@ partial class Graphics
         // Desenha todos os sangues
         for (byte i = 0; i < Mapper.Current.Blood.Count; i++)
         {
-            Objects.TMap_Blood Data = Mapper.Current.Blood[i];
+            TMap_Blood Data = Mapper.Current.Blood[i];
             Render(Tex_Blood, Game.ConvertX(Data.X * Game.Grid), Game.ConvertY(Data.Y * Game.Grid), Data.Texture_Num * 32, 0, 32, 32, CColor(255, 255, 255, Data.Opacity));
         }
     }

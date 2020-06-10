@@ -1,11 +1,14 @@
-﻿using SFML.Graphics;
+﻿using Library;
+using Objects;
+using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using static Utils;
 
-partial class Graphics
+class Graphics
 {
     // Locais de renderização
     public static RenderWindow Win_Interface;
@@ -249,7 +252,7 @@ partial class Graphics
         Transparent(Win_Map_Tile);
         Render(Win_Map_Tile, Texture, new Rectangle(Position, TSize(Texture)), new Rectangle(new Point(0), TSize(Texture)));
         RenderRectangle(Win_Map_Tile, new Rectangle(new Point(Form.Tile_Source.X - Position.X, Form.Tile_Source.Y - Position.Y), Form.Tile_Source.Size), CColor(165, 42, 42, 250));
-        RenderRectangle(Win_Map_Tile, Form.Tile_Mouse.X, Form.Tile_Mouse.Y, Globals.Grid, Globals.Grid, CColor(65, 105, 225, 250));
+        RenderRectangle(Win_Map_Tile, Form.Tile_Mouse.X, Form.Tile_Mouse.Y, Grid, Grid, CColor(65, 105, 225, 250));
 
         // Exibe o que foi renderizado
         Win_Map_Tile.Display();
@@ -284,8 +287,8 @@ partial class Graphics
         {
             Rectangle Destiny = new Rectangle()
             {
-                X = Editor_Maps.Form.scrlMapX.Value * -Globals.Grid_Zoom,
-                Y = Editor_Maps.Form.scrlMapY.Value * -Globals.Grid_Zoom,
+                X = Editor_Maps.Form.scrlMapX.Value * -Grid_Zoom,
+                Y = Editor_Maps.Form.scrlMapY.Value * -Grid_Zoom,
                 Size = TSize(Tex_Panorama[Map.Panorama])
             };
             Render(Win_Map, Tex_Panorama[Map.Panorama], Editor_Maps.Form.Zoom(Destiny));
@@ -317,14 +320,14 @@ partial class Graphics
                 Color = CColor(Map.Color.R, Map.Color.G, Map.Color.B);
 
             // Continua
-            for (int x = Begin_X; x < Globals.Map_Width; x++)
-                for (int y = Begin_Y; y < Globals.Map_Height; y++)
+            for (int x = Begin_X; x < Map.Width; x++)
+                for (int y = Begin_Y; y < Map.Height; y++)
                     if (Map.Layer[c].Tile[x, y].Tile > 0)
                     {
                         // Dados
                         Data = Map.Layer[c].Tile[x, y];
-                        Rectangle Source = new Rectangle(new Point(Data.X * Globals.Grid, Data.Y * Globals.Grid), Globals.Grid_Size);
-                        Rectangle Destiny = new Rectangle(new Point((x - Begin_X) * Globals.Grid, (y - Begin_Y) * Globals.Grid), Globals.Grid_Size);
+                        Rectangle Source = new Rectangle(new Point(Data.X * Grid, Data.Y * Grid), Grid_Size);
+                        Rectangle Destiny = new Rectangle(new Point((x - Begin_X) * Grid, (y - Begin_Y) * Grid), Grid_Size);
 
                         // Desenha o azulejo
                         if (!Map.Layer[c].Tile[x, y].Auto)
@@ -358,10 +361,10 @@ partial class Graphics
 
         // Desenha a fumaça
         Size Texture_Size = TSize(Tex_Fog[Map.Fog.Texture]);
-        for (int x = -1; x <= Globals.Map_Width * Globals.Grid / Texture_Size.Width; x++)
-            for (int y = -1; y <= Globals.Map_Height * Globals.Grid / Texture_Size.Height; y++)
+        for (int x = -1; x <= Map.Width * Grid / Texture_Size.Width; x++)
+            for (int y = -1; y <= Map.Height * Grid / Texture_Size.Height; y++)
             {
-                Point Position = new Point(x * Texture_Size.Width + Globals.Fog_X, y * Texture_Size.Height + Globals.Fog_Y);
+                Point Position = new Point(x * Texture_Size.Width + Map.Fog_X, y * Texture_Size.Height + Map.Fog_Y);
                 Render(Win_Map, Tex_Fog[Map.Fog.Texture], Editor_Maps.Form.Zoom(new Rectangle(Position, Texture_Size)), CColor(255, 255, 255, Map.Fog.Alpha));
             }
     }
@@ -369,11 +372,11 @@ partial class Graphics
     private static void Editor_Maps_Map_Weather(Objects.Map Map)
     {
         // Somente se necessário
-        if (!Editor_Maps.Form.butVisualization.Checked || Map.Weather.Type == Globals.Weathers.Normal) return;
+        if (!Editor_Maps.Form.butVisualization.Checked || Map.Weather.Type == Weathers.Normal) return;
 
         // Dados
         byte x = 0;
-        if (Map.Weather.Type == Globals.Weathers.Snowing) x = 32;
+        if (Map.Weather.Type == Weathers.Snowing) x = 32;
 
         // Desenha as partículas
         for (int i = 0; i < Lists.Weather.Length; i++)
@@ -412,7 +415,7 @@ partial class Graphics
                     RenderRectangle(Win_Map, Form.Zoom_Grid(new Rectangle(Map.Light[i].Rec.X, Map.Light[i].Rec.Y, 1, 1)), CColor(175, 42, 42, 175));
 
         // Trovoadas
-        Render(Win_Map, Tex_Blank, 0, 0, 0, 0, Form.picMap.Width, Form.picMap.Height, CColor(255, 255, 255, Globals.Lightning));
+        Render(Win_Map, Tex_Blank, 0, 0, 0, 0, Form.picMap.Width, Form.picMap.Height, CColor(255, 255, 255, Map.Lightning));
     }
 
     private static void Editor_Maps_Map_Grids(Objects.Map Map)
@@ -422,15 +425,15 @@ partial class Graphics
         Point Begin = new Point(Form.Map_Selection.X - Form.scrlMapX.Value, Form.Map_Selection.Y - Form.scrlMapY.Value);
 
         // Dados
-        Destiny.Location = Globals.Zoom(Begin.X, Begin.Y);
+        Destiny.Location = Zoom(Begin.X, Begin.Y);
         Destiny.Size = new Size(Source.Width / Form.Zoom(), Source.Height / Form.Zoom());
 
         // Desenha as grades
         if (Form.butGrid.Checked || !Form.butGrid.Enabled)
-            for (byte x = 0; x < Globals.Map_Width; x++)
-                for (byte y = 0; y < Globals.Map_Height; y++)
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                 {
-                    RenderRectangle(Win_Map, x * Globals.Grid_Zoom, y * Globals.Grid_Zoom, Globals.Grid_Zoom, Globals.Grid_Zoom, CColor(25, 25, 25, 70));
+                    RenderRectangle(Win_Map, x * Grid_Zoom, y * Grid_Zoom, Grid_Zoom, Grid_Zoom, CColor(25, 25, 25, 70));
                     Editor_Maps_Map_Zones(Map, x, y);
                     Editor_Maps_Map_Attributes(Map, x, y);
                     Editor_Maps_Map_DirBlock(Map, x, y);
@@ -444,16 +447,16 @@ partial class Graphics
             else if (Form.butRectangle.Checked)
                 for (int x = Begin.X; x < Begin.X + Form.Map_Selection.Width; x++)
                     for (int y = Begin.Y; y < Begin.Y + Form.Map_Selection.Height; y++)
-                        Render(Win_Map, Tex_Tile[Form.cmbTiles.SelectedIndex + 1], Source, new Rectangle(Globals.Zoom(x, y), Destiny.Size));
+                        Render(Win_Map, Tex_Tile[Form.cmbTiles.SelectedIndex + 1], Source, new Rectangle(Zoom(x, y), Destiny.Size));
 
         // Desenha a grade
         if (!Form.butMAttributes.Checked || !Form.optA_DirBlock.Checked)
-            RenderRectangle(Win_Map, Destiny.X, Destiny.Y, Form.Map_Selection.Width * Globals.Grid_Zoom, Form.Map_Selection.Height * Globals.Grid_Zoom);
+            RenderRectangle(Win_Map, Destiny.X, Destiny.Y, Form.Map_Selection.Width * Grid_Zoom, Form.Map_Selection.Height * Grid_Zoom);
     }
 
     private static void Editor_Maps_Map_Zones(Objects.Map Map, byte x, byte y)
     {
-        Point Position = new Point((x - Editor_Maps.Form.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Globals.Grid_Zoom);
+        Point Position = new Point((x - Editor_Maps.Form.scrlMapX.Value) * Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Grid_Zoom);
         byte Zone_Num = Map.Attribute[x, y].Zone;
         SFML.Graphics.Color Color;
 
@@ -468,34 +471,34 @@ partial class Graphics
             Color = CColor((byte)(Zone_Num * 33), (byte)(Zone_Num * 22), (byte)(Zone_Num * 42), 150 ^ 3);
 
         // Desenha as zonas
-        Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Globals.Grid_Zoom, Globals.Grid_Zoom)), Color);
+        Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Grid_Zoom, Grid_Zoom)), Color);
         DrawText(Win_Map, Zone_Num.ToString(), Position.X, Position.Y, SFML.Graphics.Color.White);
     }
 
     private static void Editor_Maps_Map_Attributes(Objects.Map Map, byte x, byte y)
     {
-        Point Position = new Point((x - Editor_Maps.Form.scrlMapX.Value) * Globals.Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Globals.Grid_Zoom);
-        Globals.Tile_Attributes Attribute = (Globals.Tile_Attributes)Map.Attribute[x, y].Type;
+        Point Position = new Point((x - Editor_Maps.Form.scrlMapX.Value) * Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Grid_Zoom);
+        Tile_Attributes Attribute = (Tile_Attributes)Map.Attribute[x, y].Type;
         SFML.Graphics.Color Color;
         string Letter;
 
         // Apenas se necessário
         if (!Editor_Maps.Form.butMAttributes.Checked) return;
         if (Editor_Maps.Form.optA_DirBlock.Checked) return;
-        if (Attribute == Globals.Tile_Attributes.None) return;
+        if (Attribute == Tile_Attributes.None) return;
 
         // Define a cor e a letra
         switch (Attribute)
         {
-            case Globals.Tile_Attributes.Block: Letter = "B"; Color = SFML.Graphics.Color.Red; break;
-            case Globals.Tile_Attributes.Warp: Letter = "T"; Color = SFML.Graphics.Color.Blue; break;
-            case Globals.Tile_Attributes.Item: Letter = "I"; Color = SFML.Graphics.Color.Green; break;
+            case Tile_Attributes.Block: Letter = "B"; Color = SFML.Graphics.Color.Red; break;
+            case Tile_Attributes.Warp: Letter = "T"; Color = SFML.Graphics.Color.Blue; break;
+            case Tile_Attributes.Item: Letter = "I"; Color = SFML.Graphics.Color.Green; break;
             default: return;
         }
         Color = new SFML.Graphics.Color(Color.R, Color.G, Color.B, 100);
 
         // Desenha as Atributos
-        Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Globals.Grid_Zoom, Globals.Grid_Zoom)), Color);
+        Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Grid_Zoom, Grid_Zoom)), Color);
         DrawText(Win_Map, Letter, Position.X, Position.Y, SFML.Graphics.Color.White);
     }
 
@@ -512,7 +515,7 @@ partial class Graphics
         if (Tile.X > Map.Attribute.GetUpperBound(0)) return;
         if (Tile.Y > Map.Attribute.GetUpperBound(1)) return;
 
-        for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
+        for (byte i = 0; i < (byte)Directions.Count; i++)
         {
             // Estado do bloqueio
             if (Map.Attribute[Tile.X, Tile.Y].Block[i])
@@ -521,7 +524,7 @@ partial class Graphics
                 Y = 0;
 
             // Renderiza
-            Render(Win_Map, Tex_Directions, x * Globals.Grid + Globals.Block_Position(i).X, y * Globals.Grid + Globals.Block_Position(i).Y, i * 8, Y, 6, 6);
+            Render(Win_Map, Tex_Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, Y, 6, 6);
         }
     }
 
@@ -531,10 +534,10 @@ partial class Graphics
             for (byte i = 0; i < Map.NPC.Count; i++)
                 if (Map.NPC[i].Spawn)
                 {
-                    Point Position = new Point((Map.NPC[i].X - Editor_Maps.Form.scrlMapX.Value) * Globals.Grid_Zoom, (Map.NPC[i].Y - Editor_Maps.Form.scrlMapY.Value) * Globals.Grid_Zoom);
+                    Point Position = new Point((Map.NPC[i].X - Editor_Maps.Form.scrlMapX.Value) * Grid_Zoom, (Map.NPC[i].Y - Editor_Maps.Form.scrlMapY.Value) * Grid_Zoom);
 
                     // Desenha uma sinalização de onde os NPCs estão
-                    Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Globals.Grid_Zoom, Globals.Grid_Zoom)), CColor(0, 220, 0, 150));
+                    Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Grid_Zoom, Grid_Zoom)), CColor(0, 220, 0, 150));
                     DrawText(Win_Map, (i + 1).ToString(), Position.X + 10, Position.Y + 10, SFML.Graphics.Color.White);
                 }
     }
@@ -554,11 +557,11 @@ partial class Graphics
 
         // Desenha o azulejo e as grades
         Texture Texture = Tex_Tile[Form.scrlTile.Value];
-        Point Position = new Point(Form.scrlTileX.Value * Globals.Grid, Form.scrlTileY.Value * Globals.Grid);
+        Point Position = new Point(Form.scrlTileX.Value * Grid, Form.scrlTileY.Value * Grid);
         Render(Win_Tile, Texture, new Rectangle(Position, TSize(Texture)), new Rectangle(new Point(0), TSize(Texture)));
 
-        for (byte x = 0; x <= Form.picTile.Width / Globals.Grid; x++)
-            for (byte y = 0; y <= Form.picTile.Height / Globals.Grid; y++)
+        for (byte x = 0; x <= Form.picTile.Width / Grid; x++)
+            for (byte y = 0; y <= Form.picTile.Height / Grid; y++)
             {
                 // Desenha os atributos
                 if (Form.optAttributes.Checked)
@@ -568,7 +571,7 @@ partial class Graphics
                     Editor_Tile_DirBlock(x, y);
 
                 // Grades
-                RenderRectangle(Win_Tile, x * Globals.Grid, y * Globals.Grid, Globals.Grid, Globals.Grid, CColor(25, 25, 25, 70));
+                RenderRectangle(Win_Tile, x * Grid, y * Grid, Grid, Grid, CColor(25, 25, 25, 70));
             }
 
         // Exibe o que foi renderizado
@@ -579,17 +582,17 @@ partial class Graphics
     {
         Editor_Tiles Form = Editor_Tiles.Form;
         Point Tile = new Point(Form.scrlTileX.Value + x, Form.scrlTileY.Value + y);
-        Point Point = new Point(x * Globals.Grid + Globals.Grid / 2 - 5, y * Globals.Grid + Globals.Grid / 2 - 6);
+        Point Point = new Point(x * Grid + Grid / 2 - 5, y * Grid + Grid / 2 - 6);
 
         // Previne erros
         if (Tile.X > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(0)) return;
         if (Tile.Y > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(1)) return;
 
         // Desenha uma letra e colore o azulejo referente ao atributo
-        switch ((Globals.Tile_Attributes)Lists.Tile[Form.scrlTile.Value].Data[Tile.X, Tile.Y].Attribute)
+        switch ((Tile_Attributes)Lists.Tile[Form.scrlTile.Value].Data[Tile.X, Tile.Y].Attribute)
         {
-            case Globals.Tile_Attributes.Block:
-                Render(Win_Tile, Tex_Blank, x * Globals.Grid, y * Globals.Grid, 0, 0, Globals.Grid, Globals.Grid, CColor(225, 0, 0, 75));
+            case Tile_Attributes.Block:
+                Render(Win_Tile, Tex_Blank, x * Grid, y * Grid, 0, 0, Grid, Grid, CColor(225, 0, 0, 75));
                 DrawText(Win_Tile, "B", Point.X, Point.Y, SFML.Graphics.Color.Red);
                 break;
         }
@@ -606,13 +609,13 @@ partial class Graphics
         if (Tile.Y > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(1)) return;
 
         // Bloqueio total
-        if (Lists.Tile[Form.scrlTile.Value].Data[x, y].Attribute == (byte)Globals.Tile_Attributes.Block)
+        if (Lists.Tile[Form.scrlTile.Value].Data[x, y].Attribute == (byte)Tile_Attributes.Block)
         {
             Editor_Tile_Attributes(x, y);
             return;
         }
 
-        for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
+        for (byte i = 0; i < (byte)Directions.Count; i++)
         {
             // Estado do bloqueio
             if (Lists.Tile[Form.scrlTile.Value].Data[Tile.X, Tile.Y].Block[i])
@@ -621,7 +624,7 @@ partial class Graphics
                 Y = 0;
 
             // Renderiza
-            Render(Win_Tile, Tex_Directions, x * Globals.Grid + Globals.Block_Position(i).X, y * Globals.Grid + Globals.Block_Position(i).Y, i * 8, Y, 6, 6);
+            Render(Win_Tile, Tex_Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, Y, 6, 6);
         }
     }
     #endregion

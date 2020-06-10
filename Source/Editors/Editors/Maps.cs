@@ -1,8 +1,11 @@
-﻿using Objects;
+﻿using Library;
+using Network;
+using Objects;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using static Utils;
 
 partial class Editor_Maps : Form
 {
@@ -51,15 +54,15 @@ partial class Editor_Maps : Form
         Graphics.Win_Map_Lighting = new SFML.Graphics.RenderTexture((uint)Width, (uint)Height);
 
         // Lista os dados
-        for (byte i = 0; i < (byte)Globals.Layers.Count; i++) cmbLayers_Type.Items.Add(((Globals.Layers)i).ToString());
+        for (byte i = 0; i < (byte)Layers.Count; i++) cmbLayers_Type.Items.Add(((Layers)i).ToString());
         for (byte i = 1; i < Graphics.Tex_Tile.Length; i++) cmbTiles.Items.Add(i.ToString());
         Update_List();
 
         // Define os limites
-        scrlZone.Maximum = Globals.Num_Zones;
-        numNPC_Zone.Maximum = Globals.Num_Zones;
-        numA_Warp_X.Maximum = Globals.Map_Width - 1;
-        numA_Warp_Y.Maximum = Globals.Map_Height - 1;
+        scrlZone.Maximum = Map.Num_Zones;
+        numNPC_Zone.Maximum = Map.Num_Zones;
+        numA_Warp_X.Maximum = Map.Width - 1;
+        numA_Warp_Y.Maximum = Map.Height - 1;
 
         // Reseta os valores
         grpAttributes.BringToFront();
@@ -123,7 +126,7 @@ partial class Editor_Maps : Form
         lstNPC.DataSource = Selected.NPC;
 
         // Reseta o clima
-        Globals.Weather_Update();
+        Map.Weather_Update();
 
         // Faz os cálculos da autocriação
         Maper.Autotile.Update(Selected);
@@ -149,8 +152,8 @@ partial class Editor_Maps : Form
         New.Layer[0].Name = "Ground";
 
         // Azulejos
-        for (byte x = 0; x < Globals.Map_Width; x++)
-            for (byte y = 0; y < Globals.Map_Height; y++)
+        for (byte x = 0; x < Map.Width; x++)
+            for (byte y = 0; y < Map.Height; y++)
             {
                 New.Layer[0].Tile[x, y] = new Map_Tile_Data();
                 New.Attribute[x, y] = new Map_Attribute();
@@ -184,7 +187,7 @@ partial class Editor_Maps : Form
     private void Update_Strip()
     {
         // Atualiza as informações da barra
-        Strip.Items[0].Text = "FPS: " + Globals.FPS;
+        Strip.Items[0].Text = "FPS: " + Program.FPS;
         Strip.Items[2].Text = "Revision: " + Selected.Revision;
         Strip.Items[4].Text = "Position: {" + Map_Mouse.X + ";" + Map_Mouse.Y + "}"; ;
     }
@@ -220,8 +223,8 @@ partial class Editor_Maps : Form
             Tiles_Copy.Data[c].Name = Selected.Layer[c].Name;
 
             // Copia os dados dos azulejos
-            for (byte x = 0; x < Globals.Map_Width; x++)
-                for (byte y = 0; y < Globals.Map_Height; y++)
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                     Tiles_Copy.Data[c].Tile[x, y] = Selected.Layer[c].Tile[x, y];
         }
     }
@@ -261,8 +264,8 @@ partial class Editor_Maps : Form
 
                     // Previne erros
                     if (Layer < 0) continue;
-                    if (x2 >= Globals.Map_Width) continue;
-                    if (y2 >= Globals.Map_Height) continue;
+                    if (x2 >= Map.Width) continue;
+                    if (y2 >= Map.Height) continue;
 
                     // Cola
                     Selected.Layer[Layer].Tile[x2, y2] = Tiles_Copy.Data[c].Tile[x, y];
@@ -342,8 +345,8 @@ partial class Editor_Maps : Form
         if (lstLayers.SelectedItems.Count == 0) return;
 
         // Preenche todos os azulejos iguais ao selecionado com o mesmo azulejo
-        for (int x = 0; x < Globals.Map_Width; x++)
-            for (int y = 0; y < Globals.Map_Height; y++)
+        for (int x = 0; x < Map.Width; x++)
+            for (int y = 0; y < Map.Height; y++)
                 Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = Set_Tile();
 
         // Faz os cálculos da autocriação
@@ -356,8 +359,8 @@ partial class Editor_Maps : Form
         if (lstLayers.SelectedItems.Count == 0) return;
 
         // Reseta todos os azulejos
-        for (int x = 0; x < Globals.Map_Width; x++)
-            for (int y = 0; y < Globals.Map_Height; y++)
+        for (int x = 0; x < Map.Width; x++)
+            for (int y = 0; y < Map.Height; y++)
                 Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = new Map_Tile_Data();
     }
 
@@ -675,8 +678,8 @@ partial class Editor_Maps : Form
         // Verifica se nada passou do limite minímo
         if (Width < 0) Width = 0;
         if (Height < 0) Height = 0;
-        if (Width > 0) Width += Globals.Grid;
-        if (Height > 0) Height += Globals.Grid;
+        if (Width > 0) Width += Grid;
+        if (Height > 0) Height += Grid;
 
         // Define os limites
         scrlTileX.Maximum = Width;
@@ -694,16 +697,16 @@ partial class Editor_Maps : Form
 
         // Movimenta para baixo
         if (e.Delta > 0)
-            if (scrlTileY.Value - Globals.Grid > 0)
-                scrlTileY.Value -= Globals.Grid;
+            if (scrlTileY.Value - Grid > 0)
+                scrlTileY.Value -= Grid;
             else
                 scrlTileY.Value = 0;
         // Movimenta para cima
         else if (e.Delta < 0)
-            if (scrlTileY.Value < scrlTileY.Maximum - Globals.Grid)
-                scrlTileY.Value += Globals.Grid;
+            if (scrlTileY.Value < scrlTileY.Maximum - Grid)
+                scrlTileY.Value += Grid;
             else
-                scrlTileY.Value = scrlTileY.Maximum - Globals.Grid;
+                scrlTileY.Value = scrlTileY.Maximum - Grid;
     }
 
     private void picTile_MouseDown(object sender, MouseEventArgs e)
@@ -715,19 +718,19 @@ partial class Editor_Maps : Form
             if (e.Y + scrlTileY.Value > Graphics.TSize(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]).Height) return;
 
             // Seleciona o azulejo;
-            Def_Tiles_Selection.Location = new Point((e.X + scrlTileX.Value) / Globals.Grid, (e.Y + scrlTileY.Value) / Globals.Grid);
+            Def_Tiles_Selection.Location = new Point((e.X + scrlTileX.Value) / Grid, (e.Y + scrlTileY.Value) / Grid);
             Update_Tile_Selected();
         }
     }
 
     private void picTile_MouseMove(object sender, MouseEventArgs e)
     {
-        int x = (e.X + scrlTileX.Value) / Globals.Grid;
-        int y = (e.Y + scrlTileY.Value) / Globals.Grid;
+        int x = (e.X + scrlTileX.Value) / Grid;
+        int y = (e.Y + scrlTileY.Value) / Grid;
         Size Texture_Size = Graphics.TSize(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]);
 
         // Define os valores
-        Tile_Mouse = new Point(x * Globals.Grid - scrlTileX.Value, y * Globals.Grid - scrlTileY.Value);
+        Tile_Mouse = new Point(x * Grid - scrlTileX.Value, y * Grid - scrlTileY.Value);
 
         // Somente se necessário
         if (e.Button != MouseButtons.Left) return;
@@ -735,9 +738,9 @@ partial class Editor_Maps : Form
 
         // Verifica se não passou do limite
         if (x < 0) x = 0;
-        if (x > Texture_Size.Width / Globals.Grid - 1) x = Texture_Size.Width / Globals.Grid - 1;
+        if (x > Texture_Size.Width / Grid - 1) x = Texture_Size.Width / Grid - 1;
         if (y < 0) y = 0;
-        if (y > Texture_Size.Height / Globals.Grid - 1) y = Texture_Size.Height / Globals.Grid - 1;
+        if (y > Texture_Size.Height / Grid - 1) y = Texture_Size.Height / Grid - 1;
 
         // Tamanho da grade
         Def_Tiles_Selection.Width = x - Def_Tiles_Selection.X + 1;
@@ -781,14 +784,14 @@ partial class Editor_Maps : Form
     public void Update_Map_Bounds()
     {
         // Tamanho do scroll do mapa
-        scrlMapX.Maximum = Math.Max(0, (Globals.Map_Width / Zoom() * Globals.Grid - picBackground.Width) / Globals.Grid);
-        scrlMapY.Maximum = Math.Max(0, (Globals.Map_Height / Zoom() * Globals.Grid - picBackground.Height) / Globals.Grid);
+        scrlMapX.Maximum = Math.Max(0, (Map.Width / Zoom() * Grid - picBackground.Width) / Grid);
+        scrlMapY.Maximum = Math.Max(0, (Map.Height / Zoom() * Grid - picBackground.Height) / Grid);
         scrlMapX.Value = 0;
         scrlMapY.Value = 0;
 
         // Tamanho da tela do mapa
-        picMap.Width = Math.Min(Globals.Map_Width * Globals.Grid, Globals.Map_Width / Zoom() * Globals.Grid);
-        picMap.Height = Math.Min(Globals.Map_Height * Globals.Grid, Globals.Map_Height / Zoom() * Globals.Grid);
+        picMap.Width = Math.Min(Map.Width * Grid, Map.Width / Zoom() * Grid);
+        picMap.Height = Math.Min(Map.Height * Grid, Map.Height / Zoom() * Grid);
     }
 
     private void picMap_SizeChanged(object sender, EventArgs e)
@@ -818,10 +821,10 @@ partial class Editor_Maps : Form
 
     private void picMap_MouseDown(object sender, MouseEventArgs e)
     {
-        Point Tile_Dif = new Point(e.X - e.X / Globals.Grid * Globals.Grid, e.Y - e.Y / Globals.Grid * Globals.Grid);
+        Point Tile_Dif = new Point(e.X - e.X / Grid * Grid, e.Y - e.Y / Grid * Grid);
 
         // Previne erros
-        if (Map_Selection.X >= Globals.Map_Width || Map_Selection.Y >= Globals.Map_Height) return;
+        if (Map_Selection.X >= Map.Width || Map_Selection.Y >= Map.Height) return;
 
         // Executa um evento de acordo com a ferramenta selecionada
         if (butMNormal.Checked)
@@ -834,9 +837,9 @@ partial class Editor_Maps : Form
         else if (butMAttributes.Checked && optA_DirBlock.Checked)
         {
             // Define o bloqueio direcional
-            for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
-                if (Tile_Dif.X >= Globals.Block_Position(i).X && Tile_Dif.X <= Globals.Block_Position(i).X + 8)
-                    if (Tile_Dif.Y >= Globals.Block_Position(i).Y && Tile_Dif.Y <= Globals.Block_Position(i).Y + 8)
+            for (byte i = 0; i < (byte)Directions.Count; i++)
+                if (Tile_Dif.X >= Block_Position(i).X && Tile_Dif.X <= Block_Position(i).X + 8)
+                    if (Tile_Dif.Y >= Block_Position(i).Y && Tile_Dif.Y <= Block_Position(i).Y + 8)
                         // Altera o valor de bloqueio
                         Selected.Attribute[Map_Selection.X, Map_Selection.Y].Block[i] = !Selected.Attribute[Map_Selection.X, Map_Selection.Y].Block[i];
         }
@@ -879,7 +882,7 @@ partial class Editor_Maps : Form
         // Somente se necessário
         if (e.Button != MouseButtons.Left) return;
         if (lstLayers.SelectedIndices.Count == 0) return;
-        if (Map_Selection.X >= Globals.Map_Width || Map_Selection.Y >= Globals.Map_Height) return;
+        if (Map_Selection.X >= Map.Width || Map_Selection.Y >= Map.Height) return;
 
         // Camada selecionada
         byte Layer = (byte)Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
@@ -916,8 +919,8 @@ partial class Editor_Maps : Form
         // Impede que saia do limite da tela
         if (Map_Mouse.X < 0) Map_Mouse.X = 0;
         if (Map_Mouse.Y < 0) Map_Mouse.Y = 0;
-        if (Map_Mouse.X >= Globals.Map_Width) Map_Mouse.X = Globals.Map_Width - 1;
-        if (Map_Mouse.Y >= Globals.Map_Height) Map_Mouse.Y = Globals.Map_Height - 1;
+        if (Map_Mouse.X >= Map.Width) Map_Mouse.X = Map.Width - 1;
+        if (Map_Mouse.Y >= Map.Height) Map_Mouse.Y = Map.Height - 1;
 
         // Cria um retângulo
         if (Map_Rectangle(e)) return;
@@ -986,9 +989,9 @@ partial class Editor_Maps : Form
 
         // Verifica se não passou do limite
         if (x < 0) x = 0;
-        if (x >= Globals.Map_Width) x = Globals.Map_Width - 1;
+        if (x >= Map.Width) x = Map.Width - 1;
         if (y < 0) y = 0;
-        if (y >= Globals.Map_Height) y = Globals.Map_Height - 1;
+        if (y >= Map.Height) y = Map.Height - 1;
 
         // Define o tamanho
         Def_Map_Selection.Width = x - Def_Map_Selection.X + 1;
@@ -1099,7 +1102,7 @@ partial class Editor_Maps : Form
             lstLayers.Items[i].Checked = true;
             lstLayers.Items[i].SubItems.Add((i + 1).ToString());
             lstLayers.Items[i].SubItems.Add(Selected.Layer[i].Name);
-            lstLayers.Items[i].SubItems.Add(((Globals.Layers)Selected.Layer[i].Type).ToString());
+            lstLayers.Items[i].SubItems.Add(((Layers)Selected.Layer[i].Type).ToString());
         }
 
         // Seleciona o primeiro item
@@ -1121,8 +1124,8 @@ partial class Editor_Maps : Form
         // Define os dados
         Layer.Name = txtLayer_Name.Text;
         Layer.Type = (byte)cmbLayers_Type.SelectedIndex;
-        for (byte x = 0; x < Globals.Map_Width; x++)
-            for (byte y = 0; y < Globals.Map_Height; y++)
+        for (byte x = 0; x < Map.Width; x++)
+            for (byte y = 0; y < Map.Height; y++)
                 Layer.Tile[x, y] = new Map_Tile_Data();
 
         // Adiciona a camada
@@ -1159,7 +1162,7 @@ partial class Editor_Maps : Form
         List<Map_Layer> Temp = new List<Map_Layer>();
 
         // Reordena as camadas
-        for (byte n = 0; n < (byte)Globals.Layers.Count; n++)
+        for (byte n = 0; n < (byte)Layers.Count; n++)
             for (byte i = 0; i < Selected.Layer.Count; i++)
                 if (Selected.Layer[i].Type == n)
                     Temp.Add(Selected.Layer[i]);
@@ -1335,16 +1338,16 @@ partial class Editor_Maps : Form
     private void butAttributes_Clear_Click(object sender, EventArgs e)
     {
         // Reseta todas os atributos
-        for (byte x = 0; x < Globals.Map_Width; x++)
-            for (byte y = 0; y < Globals.Map_Height; y++)
+        for (byte x = 0; x < Map.Width; x++)
+            for (byte y = 0; y < Map.Height; y++)
                 Selected.Attribute[x, y] = new Map_Attribute();
     }
 
     private void butAttributes_Import_Click(object sender, EventArgs e)
     {
         // Importa os dados padrões dos azulejos
-        for (byte x = 0; x < Globals.Map_Width; x++)
-            for (byte y = 0; y < Globals.Map_Height; y++)
+        for (byte x = 0; x < Map.Width; x++)
+            for (byte y = 0; y < Map.Height; y++)
                 for (byte c = 0; c < Selected.Layer.Count; c++)
                 {
                     // Dados do azulejo
@@ -1357,20 +1360,20 @@ partial class Editor_Maps : Form
                             Selected.Attribute[x, y].Type = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute;
 
                         // Bloqueio direcional
-                        for (byte b = 0; b < (byte)Globals.Directions.Count; b++)
+                        for (byte b = 0; b < (byte)Directions.Count; b++)
                             if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b])
                                 Selected.Attribute[x, y].Block[b] = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b];
                     }
                 }
     }
 
-    private Globals.Tile_Attributes Attribute_Selected()
+    private Tile_Attributes Attribute_Selected()
     {
         // Retorna com o atributo selecionado
-        if (optA_Block.Checked) return Globals.Tile_Attributes.Block;
-        else if (optA_Warp.Checked) return Globals.Tile_Attributes.Warp;
-        else if (optA_Item.Checked) return Globals.Tile_Attributes.Item;
-        else return Globals.Tile_Attributes.None;
+        if (optA_Block.Checked) return Tile_Attributes.Block;
+        else if (optA_Warp.Checked) return Tile_Attributes.Warp;
+        else if (optA_Item.Checked) return Tile_Attributes.Item;
+        else return Tile_Attributes.None;
     }
 
     private void optA_Warp_CheckedChanged(object sender, EventArgs e)
@@ -1429,7 +1432,7 @@ partial class Editor_Maps : Form
 
     private void cmbA_Item_SelectedIndexChanged(object sender, EventArgs e)
     {
-        AData_1 = Lists.GetID(cmbA_Item.SelectedItem);
+        AData_1 = Lists.GetID((Item)cmbA_Item.SelectedItem);
     }
 
     private void numA_Item_Amount_ValueChanged(object sender, EventArgs e)
@@ -1442,8 +1445,8 @@ partial class Editor_Maps : Form
     private void scrlZone_Clear_Click(object sender, EventArgs e)
     {
         // Reseta todas as zonas
-        for (byte x = 0; x < Globals.Map_Width; x++)
-            for (byte y = 0; y < Globals.Map_Height; y++)
+        for (byte x = 0; x < Map.Width; x++)
+            for (byte y = 0; y < Map.Height; y++)
                 Selected.Attribute[x, y].Zone = 0;
     }
 
@@ -1501,7 +1504,7 @@ partial class Editor_Maps : Form
     }
 
     // Retorna com o retângulo do azulejo ajustado à grade
-    public Rectangle Tile_Source => new Rectangle(Tiles_Selection.X * Globals.Grid, Tiles_Selection.Y * Globals.Grid, Tiles_Selection.Width * Globals.Grid, Tiles_Selection.Height * Globals.Grid);
+    public Rectangle Tile_Source => new Rectangle(Tiles_Selection.X * Grid, Tiles_Selection.Y * Grid, Tiles_Selection.Width * Grid, Tiles_Selection.Height * Grid);
 
     // Retorna o valor com o zoom
     public byte Zoom()
@@ -1512,7 +1515,7 @@ partial class Editor_Maps : Form
         return 1;
     }
 
-    private byte Grid_Zoom => (byte)(Globals.Grid / Zoom());
+    private byte Grid_Zoom => (byte)(Grid / Zoom());
     public Rectangle Zoom(Rectangle Value) => new Rectangle(Value.X / Zoom(), Value.Y / Zoom(), Value.Width / Zoom(), Value.Height / Zoom());
     public Rectangle Zoom_Grid(Rectangle Rectangle) => new Rectangle(Rectangle.X * Grid_Zoom, Rectangle.Y * Grid_Zoom, Rectangle.Width * Grid_Zoom, Rectangle.Height * Grid_Zoom);
     public Point Zoom_Grid(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);

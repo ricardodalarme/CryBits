@@ -1,11 +1,19 @@
 ﻿using System;
-using static Utils;
+using System.Collections.Generic;
+using static Logic.Utils;
 
 namespace Objects
 {
     [Serializable]
     class Map : Data
     {
+        // Lista de dados
+        public static Dictionary<Guid, Map> List = new Dictionary<Guid, Map>();
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static Map Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
+
         // Tamanho dos mapas
         public const byte Width = 25;
         public const byte Height = 19;
@@ -48,7 +56,7 @@ namespace Objects
         public void Create_Temporary()
         {
             TMap Temp_Map = new TMap(ID, this);
-            Lists.Temp_Map.Add(ID, Temp_Map);
+            TMap.List.Add(ID, Temp_Map);
 
             // NPCs do mapa
             Temp_Map.NPC = new TNPC[NPC.Length];

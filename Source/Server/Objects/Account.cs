@@ -5,11 +5,14 @@ namespace Objects
 {
     class Account
     {
+        // Lista de dados
+        public static List<Account> List = new List<Account>();
+
         // Dados básicos
         public NetConnection Connection;
         public string User = string.Empty;
         public string Password = string.Empty;
-        public Utils.Accesses Acess;
+        public Logic.Utils.Accesses Acess;
         public bool InEditor;
         public Player Character;
         public List<TempCharacter> Characters = new List<TempCharacter>();
@@ -33,7 +36,7 @@ namespace Objects
         {
             // Limpa os dados do jogador
             if (Character != null) Character.Leave();
-            Lists.Account.Remove(this);
+            List.Remove(this);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Network;
+using System;
 using System.Windows.Forms;
 
 class Program

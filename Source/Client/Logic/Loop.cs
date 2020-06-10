@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Objects;
 
 class Loop
 {
@@ -19,7 +20,7 @@ class Loop
             Count = Environment.TickCount;
 
             // Manuseia os dados recebidos
-            Socket.HandleData();
+            Network.Socket.HandleData();
 
             // Apresenta os gráficos à tela
             Graphics.Present();
@@ -36,8 +37,8 @@ class Loop
                 if (Timer_30 < Environment.TickCount)
                 {
                     // Lógica dos jogadores
-                    for (byte i = 0; i < Lists.Player.Count; i++)
-                        Lists.Player[i].Logic();
+                    for (byte i = 0; i < Player.List.Count; i++)
+                        Player.List[i].Logic();
 
                     // Lógica dos NPCs
                     for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
@@ -59,7 +60,7 @@ class Loop
             // Cálcula o FPS
             if (Timer_1000 < Environment.TickCount)
             {
-                Send.Latency();
+                Network.Send.Latency();
                 Game.FPS = FPS;
                 FPS = 0;
                 Timer_1000 = Environment.TickCount + 1000;

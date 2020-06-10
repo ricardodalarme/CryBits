@@ -1,8 +1,9 @@
 ﻿using System;
+using static Utils;
 
 namespace Objects
 {
-    class Item : Lists.Structures.Data
+    class Item : Data
     {
         // Geral
         public string Name = string.Empty;
@@ -17,10 +18,10 @@ namespace Objects
         public Class Req_Class;
         // Poção
         public int Potion_Experience;
-        public short[] Potion_Vital = new short[(byte)Globals.Vitals.Count];
+        public short[] Potion_Vital = new short[(byte)Vitals.Count];
         // Equipamento
         public byte Equip_Type;
-        public short[] Equip_Attribute = new short[(byte)Globals.Attributes.Count];
+        public short[] Equip_Attribute = new short[(byte)Attributes.Count];
         public short Weapon_Damage;
 
         public Item(Guid ID) : base(ID) { }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Objects;
 
 class Utils
 {
@@ -13,7 +14,7 @@ class Utils
     public static string Trade_Invitation;
     public static byte Trade_Slot = 0;
     public static byte Trade_Inventory_Slot = 0;
-    public static Objects.Shop Shop_Open;
+    public static Shop Shop_Open;
     public static byte Shop_Inventory_Slot = 0;
     public static short Hotbar_Change;
     public static byte Inventory_Change;

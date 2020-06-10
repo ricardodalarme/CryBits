@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Program</StartupObject>
+    <StartupObject>Logic.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -91,8 +91,7 @@
     <Compile Include="Objects\Shop.cs" />
     <Compile Include="Objects\TMap.cs" />
     <Compile Include="Objects\TNPC.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Library\Lists.cs" />
+    <Compile Include="Logic\Program.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Network\Receive.cs" />

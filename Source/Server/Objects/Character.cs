@@ -1,4 +1,6 @@
-﻿namespace Objects
+﻿using static Logic.Utils;
+
+namespace Objects
 {
     class Character
     {
@@ -6,7 +8,7 @@
         public TMap Map;
         public byte X;
         public byte Y;
-        public Utils.Directions Direction;
-        public short[] Vital = new short[(byte)Utils.Vitals.Count];
+        public Directions Direction;
+        public short[] Vital = new short[(byte)Vitals.Count];
     }
 }
