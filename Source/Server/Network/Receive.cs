@@ -438,7 +438,6 @@ namespace Network
         private static void Inventory_Change(Objects.Player Player, NetIncomingMessage Data)
         {
             byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
-            byte Hotbar_Slot = Player.FindHotbar((byte)Hotbars.Item, Slot_Old);
 
             // Somente se necessário
             if (Player.Inventory[Slot_Old].Item == null) return;
@@ -446,11 +445,16 @@ namespace Network
             if (Player.Trade != null) return;
 
             // Muda o item de slot
-            (Player.Inventory[Slot_Old].Item, Player.Inventory[Slot_New].Item) = (Player.Inventory[Slot_New].Item, Player.Inventory[Slot_Old].Item);
-            (Player.Inventory[Slot_Old].Amount, Player.Inventory[Slot_New].Amount) = (Player.Inventory[Slot_New].Amount, Player.Inventory[Slot_Old].Amount);
-            Player.Hotbar[Hotbar_Slot].Slot = Slot_New;
+            Swap(ref Player.Inventory[Slot_Old], ref Player.Inventory[Slot_New]);
             Send.Player_Inventory(Player);
-            Send.Player_Hotbar(Player);
+
+            // Altera na hotbar
+            Objects.Hotbar Hotbar_Slot = Player.FindHotbar(Hotbars.Item, Slot_Old);
+            if (Hotbar_Slot != null)
+            {
+                Hotbar_Slot.Slot = Slot_New;
+                Send.Player_Hotbar(Player);
+            }
         }
 
         private static void Inventory_Use(Objects.Player Player, NetIncomingMessage Data)
@@ -495,12 +499,12 @@ namespace Network
 
         private static void Hotbar_Add(Objects.Player Player, NetIncomingMessage Data)
         {
-            byte Hotbar_Slot = Data.ReadByte();
-            byte Type = Data.ReadByte();
+            short Hotbar_Slot = Data.ReadInt16();
+            Hotbars Type = (Hotbars)Data.ReadByte();
             byte Slot = Data.ReadByte();
 
             // Somente se necessário
-            if (Slot != 0 && Player.FindHotbar(Type, Slot) > 0) return;
+            if (Slot != 0 && Player.FindHotbar(Type, Slot) != null) return;
 
             // Define os dados
             Player.Hotbar[Hotbar_Slot].Slot = Slot;
@@ -512,15 +516,15 @@ namespace Network
 
         private static void Hotbar_Change(Objects.Player Player, NetIncomingMessage Data)
         {
-            byte Slot_Old = Data.ReadByte(), Slot_New = Data.ReadByte();
+            short Slot_Old = Data.ReadInt16(), Slot_New = Data.ReadInt16();
 
             // Somente se necessário
-            if (Player.Hotbar[Slot_Old].Slot == 0) return;
+            if (Slot_Old < 0 || Slot_New < 0) return;
             if (Slot_Old == Slot_New) return;
+            if (Player.Hotbar[Slot_Old].Slot == 0) return;
 
             // Muda o item de slot
-            (Player.Hotbar[Slot_Old].Slot, Player.Hotbar[Slot_New].Slot) = (Player.Hotbar[Slot_New].Slot, Player.Hotbar[Slot_Old].Slot);
-            (Player.Hotbar[Slot_Old].Type, Player.Hotbar[Slot_New].Type) = (Player.Hotbar[Slot_New].Type, Player.Hotbar[Slot_Old].Type);
+            Swap(ref Player.Hotbar[Slot_Old], ref Player.Hotbar[Slot_New]);
             Send.Player_Hotbar(Player);
         }
 
@@ -529,8 +533,10 @@ namespace Network
             byte Hotbar_Slot = Data.ReadByte();
 
             // Usa o item
-            if (Player.Hotbar[Hotbar_Slot].Type == (byte)Hotbars.Item)
-                Player.UseItem(Player.Hotbar[Hotbar_Slot].Slot);
+            switch (Player.Hotbar[Hotbar_Slot].Type)
+            {
+                case Hotbars.Item: Player.UseItem(Player.Hotbar[Hotbar_Slot].Slot); break;
+            }
         }
 
         private static void Write_Settings(Objects.Account Account, NetIncomingMessage Data)

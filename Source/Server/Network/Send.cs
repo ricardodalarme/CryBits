@@ -584,7 +584,7 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Client_Packets.Map_Items);
-            Data.Write((short)(Map.Item.Count - 1));
+            Data.Write((byte)Map.Item.Count);
 
             for (byte i = 0; i < Map.Item.Count; i++)
             {
@@ -604,7 +604,7 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Client_Packets.Map_Items);
-            Data.Write((short)(Map.Item.Count - 1));
+            Data.Write((byte)Map.Item.Count);
             for (byte i = 0; i < Map.Item.Count; i++)
             {
                 Data.Write(Lists.GetID(Map.Item[i].Item));
@@ -634,9 +634,9 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Client_Packets.Player_Hotbar);
-            for (byte i = 1; i <= Max_Hotbar; i++)
+            for (byte i = 0; i < Max_Hotbar; i++)
             {
-                Data.Write(Player.Hotbar[i].Type);
+                Data.Write((byte)Player.Hotbar[i].Type);
                 Data.Write(Player.Hotbar[i].Slot);
             }
             ToPlayer(Player, Data);

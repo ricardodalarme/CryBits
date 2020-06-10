@@ -388,7 +388,7 @@ class Receive
     private static void Player_Hotbar(NetIncomingMessage Data)
     {
         // Define os dados
-        for (byte i = 1; i <= Game.Max_Hotbar; i++)
+        for (byte i = 0; i < Game.Max_Hotbar; i++)
         {
             Player.Me.Hotbar[i].Type = Data.ReadByte();
             Player.Me.Hotbar[i].Slot = Data.ReadByte();
@@ -608,12 +608,13 @@ class Receive
     private static void Map_Items(NetIncomingMessage Data)
     {
         // Quantidade
-        Mapper.Current.Item = new Objects.TMap_Items[Data.ReadInt16() + 1];
+        Mapper.Current.Item = new Objects.TMap_Items[Data.ReadByte()];
 
         // Lê os dados de todos
         for (byte i = 0; i < Mapper.Current.Item.Length; i++)
         {
             // Geral
+            Mapper.Current.Item[i] = new Objects.TMap_Items();
             Mapper.Current.Item[i].Item = (Objects.Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
             Mapper.Current.Item[i].X = Data.ReadByte();
             Mapper.Current.Item[i].Y = Data.ReadByte();

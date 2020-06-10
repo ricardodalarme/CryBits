@@ -15,7 +15,7 @@ class Utils
     public static byte Trade_Inventory_Slot = 0;
     public static Objects.Shop Shop_Open;
     public static byte Shop_Inventory_Slot = 0;
-    public static byte Hotbar_Change;
+    public static short Hotbar_Change;
     public static byte Inventory_Change;
 
     public static bool IsAbove(Rectangle Rectangle)
@@ -75,7 +75,7 @@ class Utils
         Point Position = new Point();
 
         // Define as informações do painel com base no que o Window.Mouse está sobrepondo
-        if (Panels.Hotbar_Slot > 0)
+        if (Panels.Hotbar_Slot >= 0)
         {
             Position = Panels.Get("Hotbar").Position + new Size(0, 42);
             Infomation_ID = Lists.GetID(Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Slot].Slot].Item);

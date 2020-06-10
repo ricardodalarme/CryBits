@@ -42,7 +42,7 @@ class Player
     {
         // Dados
         public Lists.Structures.Inventory[] Inventory = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
-        public Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar + 1];
+        public Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar];
         public Lists.Structures.Inventory[] Trade_Offer;
         public Lists.Structures.Inventory[] Trade_Their_Offer;
         public Structure[] Party = Array.Empty<Structure>();

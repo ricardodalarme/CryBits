@@ -559,24 +559,24 @@ partial class Graphics
         string Indicator = string.Empty;
 
         // Desenha os objetos da hotbar
-        for (byte i = 1; i <= Game.Max_Hotbar; i++)
+        for (byte i = 0; i < Game.Max_Hotbar; i++)
         {
             byte Slot = Player.Me.Hotbar[i].Slot;
             if (Slot > 0)
                 switch ((Game.Hotbar)Player.Me.Hotbar[i].Type)
                 {
                     // Itens
-                    case Game.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), i, 10); break;
+                    case Game.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), (byte)(i +1), 10); break;
                 }
 
             // Desenha os números de cada slot
-            if (i < 10) Indicator = i.ToString();
-            else if (i == 10) Indicator = "0";
-            DrawText(Indicator, Tool.Position.X + 16 + 36 * (i - 1), Tool.Position.Y + 22, SFML.Graphics.Color.White);
+            if (i < 10) Indicator = (i+1).ToString();
+            else if (i == 9) Indicator = "0";
+            DrawText(Indicator, Tool.Position.X + 16 + 36 * i , Tool.Position.Y + 22, SFML.Graphics.Color.White);
         }
 
         // Movendo slot
-        if (Utils.Hotbar_Change > 0)
+        if (Utils.Hotbar_Change >= 0)
             if (Player.Me.Hotbar[Utils.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
                 Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Utils.Hotbar_Change].Slot].Item.Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
     }

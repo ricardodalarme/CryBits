@@ -166,4 +166,12 @@ static class Utils
             case Directions.Left: X -= 1; break;
         }
     }
+
+    public static void Swap<T>(ref T Item1, ref T Item2)
+    {
+        // Troca dois elementos
+        T Temp = Item1;
+        Item1 = Item2;
+        Item2 = Temp;
+    }
 }
