@@ -52,7 +52,7 @@ namespace Objects
 
             // NPCs do mapa
             Temp_Map.NPC = new TNPC[NPC.Length];
-            for (byte i = 1; i < Temp_Map.NPC.Length; i++)
+            for (byte i = 0; i < Temp_Map.NPC.Length; i++)
             {
                 Temp_Map.NPC[i] = new TNPC(i, Temp_Map, NPC[i].NPC);
                 Temp_Map.NPC[i].Spawn();

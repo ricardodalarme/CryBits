@@ -1,4 +1,5 @@
 ﻿using System;
+using Network;
 using static Utils;
 
 namespace Objects
@@ -99,7 +100,7 @@ namespace Objects
 
                     // NPC
                     if (Data.AttackNPC && Target == null)
-                        for (byte NPC_Index = 1; NPC_Index < Map.NPC.Length; NPC_Index++)
+                        for (byte NPC_Index = 0; NPC_Index < Map.NPC.Length; NPC_Index++)
                         {
                             // Verifica se pode atacar
                             if (NPC_Index == Index) continue;

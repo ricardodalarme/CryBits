@@ -15,7 +15,7 @@ static class Loop
         while (Program.Working)
         {
             // Manuseia os dados recebidos
-            Socket.HandleData();
+            Network.Socket.HandleData();
 
             if (Environment.TickCount > Timer_500 + 500)
             {
