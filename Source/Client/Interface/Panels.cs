@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Network;
+using System.Collections.Generic;
 using System.Drawing;
-using Network;
 
 class Panels
 {
@@ -28,7 +28,7 @@ class Panels
 
     // Retorna em qual slot o mouse está sobrepondo
     public static byte Inventory_Slot => Utils.Slot(Get("Menu_Inventory"), 7, 29, 6, 5);
-    public static short Hotbar_Slot => (short)(Utils.Slot(Get("Hotbar"), 8, 6, 1, 10) -1);
+    public static short Hotbar_Slot => (short)(Utils.Slot(Get("Hotbar"), 8, 6, 1, 10) - 1);
     public static byte Trade_Slot => Utils.Slot(Get("Trade"), 7, 50, 6, 5);
     public static short Shop_Slot => (short)(Utils.Slot(Get("Shop"), 7, 50, 4, 7) - 1);
     public static short Equipment_Slot => (short)(Utils.Slot(Get("Menu_Character"), 7, 248, 1, 5) - 1);

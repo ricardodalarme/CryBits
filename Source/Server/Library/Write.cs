@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using Objects;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Objects;
 using static Utils;
 
 static class Write
@@ -28,7 +28,7 @@ static class Write
         Data.Dispose();
     }
 
-    public static void Account( Account Account)
+    public static void Account(Account Account)
     {
         FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Data" + Directories.Format);
 
@@ -47,7 +47,7 @@ static class Write
         Data.Dispose();
     }
 
-    public static void Character( Account Account)
+    public static void Character(Account Account)
     {
         FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Characters\\" + Account.Character.Name + Directories.Format);
 
@@ -111,7 +111,7 @@ static class Write
         Data.Dispose();
     }
 
-    public static void Class( Class Class)
+    public static void Class(Class Class)
     {
         // Escreve os dados
         FileStream Stream = new FileInfo(Directories.Classes.FullName + Class.ID + Directories.Format).OpenWrite();
@@ -119,7 +119,7 @@ static class Write
         Stream.Close();
     }
 
-    public static void NPC( NPC NPC)
+    public static void NPC(NPC NPC)
     {
         // Escreve os dados
         FileStream Stream = new FileInfo(Directories.NPCs.FullName + NPC.ID + Directories.Format).OpenWrite();
@@ -127,7 +127,7 @@ static class Write
         Stream.Close();
     }
 
-    public static void Item( Item Item)
+    public static void Item(Item Item)
     {
         // Escreve os dados
         FileStream Stream = new FileInfo(Directories.Items.FullName + Item.ID + Directories.Format).OpenWrite();
@@ -135,7 +135,7 @@ static class Write
         Stream.Close();
     }
 
-    public static void Map( Map Map)
+    public static void Map(Map Map)
     {
         // Escreve os dados
         FileStream Stream = new FileInfo(Directories.Maps.FullName + Map.ID + Directories.Format).OpenWrite();
@@ -143,7 +143,7 @@ static class Write
         Stream.Close();
     }
 
-    public static void Shop( Shop Shop)
+    public static void Shop(Shop Shop)
     {
         // Escreve os dados
         FileStream Stream = new FileInfo(Directories.Shops.FullName + Shop.ID + Directories.Format).OpenWrite();

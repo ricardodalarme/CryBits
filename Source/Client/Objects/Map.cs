@@ -3,7 +3,7 @@
 namespace Objects
 {
     [Serializable]
-    class Map : Lists.Structures.Data
+    class Map : Data
     {
         public short Revision;
         public string Name;

@@ -1,8 +1,9 @@
-﻿using Objects;
+﻿using Network;
+using Objects;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using Network;
+using static Utils;
 
 partial class Editor_Classes : Form
 {
@@ -19,8 +20,8 @@ partial class Editor_Classes : Form
         Graphics.Win_Class = new SFML.Graphics.RenderWindow(picTexture.Handle);
 
         // Define os limites
-        numSpawn_X.Maximum = Globals.Map_Width - 1;
-        numSpawn_Y.Maximum = Globals.Map_Height - 1;
+        numSpawn_X.Maximum = Map.Width - 1;
+        numSpawn_Y.Maximum = Map.Height - 1;
         numTexture.Maximum = Graphics.Tex_Character.Length - 1;
 
         // Lista os dados
@@ -69,13 +70,13 @@ partial class Editor_Classes : Form
         // Lista os dados
         txtName.Text = Selected.Name;
         txtDescription.Text = Selected.Description;
-        numHP.Value = Selected.Vital[(byte)Globals.Vitals.HP];
-        numMP.Value = Selected.Vital[(byte)Globals.Vitals.MP];
-        numStrength.Value = Selected.Attribute[(byte)Globals.Attributes.Strength];
-        numResistance.Value = Selected.Attribute[(byte)Globals.Attributes.Resistance];
-        numIntelligence.Value = Selected.Attribute[(byte)Globals.Attributes.Intelligence];
-        numAgility.Value = Selected.Attribute[(byte)Globals.Attributes.Agility];
-        numVitality.Value = Selected.Attribute[(byte)Globals.Attributes.Vitality];
+        numHP.Value = Selected.Vital[(byte)Vitals.HP];
+        numMP.Value = Selected.Vital[(byte)Vitals.MP];
+        numStrength.Value = Selected.Attribute[(byte)Attributes.Strength];
+        numResistance.Value = Selected.Attribute[(byte)Attributes.Resistance];
+        numIntelligence.Value = Selected.Attribute[(byte)Attributes.Intelligence];
+        numAgility.Value = Selected.Attribute[(byte)Attributes.Agility];
+        numVitality.Value = Selected.Attribute[(byte)Attributes.Vitality];
         cmbSpawn_Map.SelectedItem = Selected.Spawn_Map;
         cmbSpawn_Direction.SelectedIndex = Selected.Spawn_Direction;
         numSpawn_X.Value = Selected.Spawn_X;
@@ -155,37 +156,37 @@ partial class Editor_Classes : Form
 
     private void numHP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Vital[(byte)Globals.Vitals.HP] = (short)numHP.Value;
+        Selected.Vital[(byte)Vitals.HP] = (short)numHP.Value;
     }
 
     private void numMP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Vital[(byte)Globals.Vitals.MP] = (short)numMP.Value;
+        Selected.Vital[(byte)Vitals.MP] = (short)numMP.Value;
     }
 
     private void numStrength_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Attribute[(byte)Globals.Attributes.Strength] = (short)numStrength.Value;
+        Selected.Attribute[(byte)Attributes.Strength] = (short)numStrength.Value;
     }
 
     private void numResistance_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Attribute[(byte)Globals.Attributes.Resistance] = (short)numResistance.Value;
+        Selected.Attribute[(byte)Attributes.Resistance] = (short)numResistance.Value;
     }
 
     private void numIntelligence_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Attribute[(byte)Globals.Attributes.Intelligence] = (short)numIntelligence.Value;
+        Selected.Attribute[(byte)Attributes.Intelligence] = (short)numIntelligence.Value;
     }
 
     private void numAgility_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Attribute[(byte)Globals.Attributes.Agility] = (short)numAgility.Value;
+        Selected.Attribute[(byte)Attributes.Agility] = (short)numAgility.Value;
     }
 
     private void numVitality_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Attribute[(byte)Globals.Attributes.Vitality] = (short)numVitality.Value;
+        Selected.Attribute[(byte)Attributes.Vitality] = (short)numVitality.Value;
     }
 
     private void butTexture_Ok_Click(object sender, EventArgs e)

@@ -1,7 +1,8 @@
-﻿using System.Windows.Forms;
+﻿using Library;
 using Network;
+using System.Windows.Forms;
 
-public partial class Login : Form
+partial class Login : Form
 {
     // Usado para acessar os dados da janela
     public static Login Form = new Login();

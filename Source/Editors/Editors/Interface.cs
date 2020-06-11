@@ -1,6 +1,8 @@
-﻿using Objects;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Objects;
+using Library;
+using static Utils;
 
 partial class Editor_Interface : Form
 {
@@ -17,11 +19,11 @@ partial class Editor_Interface : Form
         Graphics.Win_Interface = new SFML.Graphics.RenderWindow(picWindow.Handle);
 
         // Adiciona as janelas à lista
-        cmbWindows.Items.AddRange(Enum.GetNames(typeof(Globals.Windows)));
+        cmbWindows.Items.AddRange(Enum.GetNames(typeof(Windows)));
         cmbWindows.SelectedIndex = 0;
 
         // Adiciona os tipos de ferramentas à lista
-        for (byte i = 0; i < (byte)Globals.Tools_Types.Count; i++) cmbType.Items.Add((Globals.Tools_Types)i);
+        for (byte i = 0; i < (byte)Tools_Types.Count; i++) cmbType.Items.Add((Tools_Types)i);
 
         // Abre a janela
         Editor_Maps.Form.Hide();
@@ -90,15 +92,15 @@ partial class Editor_Interface : Form
         // Adiciona uma nova ferramenta
         Tool New = new Tool();
         Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = New;
-        switch ((Globals.Tools_Types)cmbType.SelectedIndex)
+        switch ((Tools_Types)cmbType.SelectedIndex)
         {
-            case Globals.Tools_Types.Button: New = new Objects.Button(); break;
-            case Globals.Tools_Types.Panel: New = new Objects.Panel(); break;
-            case Globals.Tools_Types.CheckBox: New = new Objects.CheckBox(); break;
-            case Globals.Tools_Types.TextBox: New = new Objects.TextBox(); break;
+            case Tools_Types.Button: New = new Objects.Button(); break;
+            case Tools_Types.Panel: New = new Objects.Panel(); break;
+            case Tools_Types.CheckBox: New = new Objects.CheckBox(); break;
+            case Tools_Types.TextBox: New = new Objects.TextBox(); break;
         }
         Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(New.ToString());
-        New.Window = (Globals.Windows)cmbWindows.SelectedIndex;
+        New.Window = (Windows)cmbWindows.SelectedIndex;
         grpNew.Visible = false;
     }
 

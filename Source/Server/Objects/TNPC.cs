@@ -1,5 +1,5 @@
-﻿using System;
-using Network;
+﻿using Network;
+using System;
 using static Utils;
 
 namespace Objects

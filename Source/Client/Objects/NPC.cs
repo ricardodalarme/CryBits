@@ -2,7 +2,7 @@
 
 namespace Objects
 {
-    class NPC : Lists.Structures.Data
+    class NPC : Data
     {
         public string Name;
         public string SayMsg;

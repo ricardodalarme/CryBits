@@ -2,7 +2,7 @@
 
 namespace Objects
 {
-    class Shop : Lists.Structures.Data
+    class Shop : Data
     {
         public string Name;
         public Item Currency;

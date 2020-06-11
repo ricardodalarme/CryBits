@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Objects;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using Objects;
 using static Utils;
 
 static class Read

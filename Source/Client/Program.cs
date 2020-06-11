@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Network;
+using System;
 using System.Windows.Forms;
-using Network;
 
 class Program
 {

@@ -1,7 +1,7 @@
-﻿using System.Windows.Forms;
-using Network;
+﻿using Network;
+using System.Windows.Forms;
 
-public partial class Editor_Data : Form
+partial class Editor_Data : Form
 {
     public Editor_Data()
     {

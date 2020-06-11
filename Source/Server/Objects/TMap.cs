@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Network;
+using System;
 using System.Collections.Generic;
-using Network;
 using static Utils;
 
 namespace Objects

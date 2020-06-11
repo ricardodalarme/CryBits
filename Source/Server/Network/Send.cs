@@ -1,6 +1,6 @@
 ﻿using Lidgren.Network;
-using System.Drawing;
 using Objects;
+using System.Drawing;
 using static Utils;
 
 namespace Network
@@ -67,7 +67,7 @@ namespace Network
             Shops
         }
 
-        private static void ToPlayer( Account Account, NetOutgoingMessage Data)
+        private static void ToPlayer(Account Account, NetOutgoingMessage Data)
         {
             // Recria o pacote e o envia
             NetOutgoingMessage Data_Send = Socket.Device.CreateMessage(Data.LengthBytes);
@@ -75,7 +75,7 @@ namespace Network
             Socket.Device.SendMessage(Data_Send, Account.Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        private static void ToPlayer( Player Player, NetOutgoingMessage Data)
+        private static void ToPlayer(Player Player, NetOutgoingMessage Data)
         {
             ToPlayer(Player.Account, Data);
         }
@@ -88,7 +88,7 @@ namespace Network
                     ToPlayer(Lists.Account[i].Character, Data);
         }
 
-        private static void ToAllBut( Player Player, NetOutgoingMessage Data)
+        private static void ToAllBut(Player Player, NetOutgoingMessage Data)
         {
             // Envia os dados para todos conectados, com excessão do índice
             for (byte i = 0; i < Lists.Account.Count; i++)
@@ -97,7 +97,7 @@ namespace Network
                         ToPlayer(Lists.Account[i].Character, Data);
         }
 
-        private static void ToMap( TMap Map, NetOutgoingMessage Data)
+        private static void ToMap(TMap Map, NetOutgoingMessage Data)
         {
             // Envia os dados para todos conectados, com excessão do índice
             for (byte i = 0; i < Lists.Account.Count; i++)
@@ -106,7 +106,7 @@ namespace Network
                         ToPlayer(Lists.Account[i].Character, Data);
         }
 
-        private static void ToMapBut( TMap Map,  Player Player, NetOutgoingMessage Data)
+        private static void ToMapBut(TMap Map, Player Player, NetOutgoingMessage Data)
         {
             // Envia os dados para todos conectados, com excessão do índice
             for (byte i = 0; i < Lists.Account.Count; i++)
@@ -116,7 +116,7 @@ namespace Network
                             ToPlayer(Lists.Account[i].Character, Data);
         }
 
-        public static void Alert( Account Account, string Message, bool Disconnect = true)
+        public static void Alert(Account Account, string Message, bool Disconnect = true)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -130,7 +130,7 @@ namespace Network
             if (Disconnect) Account.Connection.Disconnect(string.Empty);
         }
 
-        public static void Connect( Account Account)
+        public static void Connect(Account Account)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -140,7 +140,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void CreateCharacter( Account Account)
+        public static void CreateCharacter(Account Account)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -149,7 +149,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Join( Player Player)
+        public static void Join(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -159,7 +159,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Characters( Account Account)
+        public static void Characters(Account Account)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -177,7 +177,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Classes( Account Account)
+        public static void Classes(Account Account)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -186,7 +186,7 @@ namespace Network
             else Data.Write((byte)Client_Packets.Classes);
             Data.Write((byte)Lists.Class.Count);
 
-            foreach ( Class Class in Lists.Class.Values)
+            foreach (Class Class in Lists.Class.Values)
             {
                 // Escreve os dados
                 Data.Write(Class.ID.ToString());
@@ -219,7 +219,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void JoinGame( Player Player)
+        public static void JoinGame(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -228,7 +228,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static NetOutgoingMessage Player_Data_Cache( Player Player)
+        public static NetOutgoingMessage Player_Data_Cache(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -252,7 +252,7 @@ namespace Network
             return Data;
         }
 
-        public static void Player_Position( Player Player)
+        public static void Player_Position(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -265,7 +265,7 @@ namespace Network
             ToMap(Player.Map, Data);
         }
 
-        public static void Player_Vitals( Player Player)
+        public static void Player_Vitals(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -281,7 +281,7 @@ namespace Network
             ToMap(Player.Map, Data);
         }
 
-        public static void Player_Leave( Player Player)
+        public static void Player_Leave(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -291,7 +291,7 @@ namespace Network
             ToAllBut(Player, Data);
         }
 
-        public static void Player_Move( Player Player, byte Movement)
+        public static void Player_Move(Player Player, byte Movement)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -305,7 +305,7 @@ namespace Network
             ToMapBut(Player.Map, Player, Data);
         }
 
-        public static void Player_Direction( Player Player)
+        public static void Player_Direction(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -316,7 +316,7 @@ namespace Network
             ToMapBut(Player.Map, Player, Data);
         }
 
-        public static void Player_Experience( Player Player)
+        public static void Player_Experience(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -328,7 +328,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Player_Equipments( Player Player)
+        public static void Player_Equipments(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -339,7 +339,7 @@ namespace Network
             ToMap(Player.Map, Data);
         }
 
-        public static void Map_Players( Player Player)
+        public static void Map_Players(Player Player)
         {
             // Envia os dados dos outros jogadores 
             for (byte i = 0; i < Lists.Account.Count; i++)
@@ -352,7 +352,7 @@ namespace Network
             ToMap(Player.Map, Player_Data_Cache(Player));
         }
 
-        public static void JoinMap( Player Player)
+        public static void JoinMap(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -361,7 +361,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Player_LeaveMap( Player Player,  TMap Map)
+        public static void Player_LeaveMap(Player Player, TMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -371,7 +371,7 @@ namespace Network
             ToMapBut(Map, Player, Data);
         }
 
-        public static void Map_Revision( Player Player,  Map Map)
+        public static void Map_Revision(Player Player, Map Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -382,7 +382,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Maps( Account Account)
+        public static void Maps(Account Account)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -390,10 +390,10 @@ namespace Network
             Data.Write((byte)Editor_Packets.Maps);
             Data.Write((short)Lists.Map.Count);
             ToPlayer(Account, Data);
-            foreach ( Map Map in Lists.Map.Values) Send.Map(Account, Map);
+            foreach (Map Map in Lists.Map.Values) Send.Map(Account, Map);
         }
 
-        public static void Map( Account Account,  Map Map)
+        public static void Map(Account Account, Map Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -427,8 +427,8 @@ namespace Network
                 Data.Write(Map.Layer[i].Type);
 
                 // Azulejos
-                for (byte x = 0; x <  Map.Width; x++)
-                    for (byte y = 0; y <  Map.Height; y++)
+                for (byte x = 0; x < Map.Width; x++)
+                    for (byte y = 0; y < Map.Height; y++)
                     {
                         Data.Write(Map.Layer[i].Tile[x, y].X);
                         Data.Write(Map.Layer[i].Tile[x, y].Y);
@@ -438,8 +438,8 @@ namespace Network
             }
 
             // Dados específicos dos azulejos
-            for (byte x = 0; x <  Map.Width; x++)
-                for (byte y = 0; y <  Map.Height; y++)
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                 {
                     Data.Write(Map.Attribute[x, y].Type);
                     Data.Write(Map.Attribute[x, y].Data_1);
@@ -476,7 +476,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Latency( Account Account)
+        public static void Latency(Account Account)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -485,7 +485,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Message( Player Player, string Text, Color Color)
+        public static void Message(Player Player, string Text, Color Color)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -496,7 +496,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Message_Map( Player Player, string Text)
+        public static void Message_Map(Player Player, string Text)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
             string Message = "[Map] " + Player.Name + ": " + Text;
@@ -508,7 +508,7 @@ namespace Network
             ToMap(Player.Map, Data);
         }
 
-        public static void Message_Global( Player Player, string Text)
+        public static void Message_Global(Player Player, string Text)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
             string Message = "[Global] " + Player.Name + ": " + Text;
@@ -520,9 +520,9 @@ namespace Network
             ToAll(Data);
         }
 
-        public static void Message_Private( Player Player, string Addressee_Name, string Texto)
+        public static void Message_Private(Player Player, string Addressee_Name, string Texto)
         {
-             Player Addressee =  Player.Find(Addressee_Name);
+            Player Addressee = Player.Find(Addressee_Name);
 
             // Verifica se o jogador está conectado
             if (Addressee == null)
@@ -536,7 +536,7 @@ namespace Network
             Message(Addressee, "[From] " + Player.Name + ": " + Texto, Color.Pink);
         }
 
-        public static void Player_Attack( Player Player, string Victim = "", Targets Victim_Type = 0)
+        public static void Player_Attack(Player Player, string Victim = "", Targets Victim_Type = 0)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -548,7 +548,7 @@ namespace Network
             ToMap(Player.Map, Data);
         }
 
-        public static void Items( Account Account)
+        public static void Items(Account Account)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -556,7 +556,7 @@ namespace Network
             if (Account.InEditor) Data.Write((byte)Editor_Packets.Items);
             else Data.Write((byte)Client_Packets.Items);
             Data.Write((short)Lists.Item.Count);
-            foreach ( Item Item in Lists.Item.Values)
+            foreach (Item Item in Lists.Item.Values)
             {
                 Data.Write(Item.ID.ToString());
                 Data.Write(Item.Name);
@@ -579,7 +579,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Map_Items( Player Player,  TMap Map)
+        public static void Map_Items(Player Player, TMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -599,7 +599,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Map_Items( TMap Map)
+        public static void Map_Items(TMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -615,7 +615,7 @@ namespace Network
             ToMap(Map, Data);
         }
 
-        public static void Player_Inventory( Player Player)
+        public static void Player_Inventory(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -629,7 +629,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Player_Hotbar( Player Player)
+        public static void Player_Hotbar(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -643,7 +643,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void NPCs( Account Account)
+        public static void NPCs(Account Account)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -651,7 +651,7 @@ namespace Network
             if (Account.InEditor) Data.Write((byte)Editor_Packets.NPCs);
             else Data.Write((byte)Client_Packets.NPCs);
             Data.Write((short)Lists.NPC.Count);
-            foreach ( NPC NPC in Lists.NPC.Values)
+            foreach (NPC NPC in Lists.NPC.Values)
             {
                 // Geral
                 Data.Write(NPC.ID.ToString());
@@ -686,7 +686,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Map_NPCs( Player Player,  TMap Map)
+        public static void Map_NPCs(Player Player, TMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -704,7 +704,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Map_NPC( TNPC NPC)
+        public static void Map_NPC(TNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -719,7 +719,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Movement( TNPC NPC, byte Movement)
+        public static void Map_NPC_Movement(TNPC NPC, byte Movement)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -733,7 +733,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Direction( TNPC NPC)
+        public static void Map_NPC_Direction(TNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -744,7 +744,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Vitals( TNPC NPC)
+        public static void Map_NPC_Vitals(TNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -755,7 +755,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Attack( TNPC NPC, string Victim = "", Targets Victim_Type = 0)
+        public static void Map_NPC_Attack(TNPC NPC, string Victim = "", Targets Victim_Type = 0)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -767,7 +767,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Died( TNPC NPC)
+        public static void Map_NPC_Died(TNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -777,7 +777,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Server_Data( Account Account)
+        public static void Server_Data(Account Account)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -798,7 +798,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Party( Player Player)
+        public static void Party(Player Player)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -809,7 +809,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Party_Invitation( Player Player, string Player_Invitation)
+        public static void Party_Invitation(Player Player, string Player_Invitation)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -819,7 +819,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Trade( Player Player, bool State)
+        public static void Trade(Player Player, bool State)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -829,7 +829,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Trade_Invitation( Player Player, string Player_Invitation)
+        public static void Trade_Invitation(Player Player, string Player_Invitation)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -839,7 +839,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Trade_State( Player Player, Trade_Status State)
+        public static void Trade_State(Player Player, Trade_Status State)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -849,10 +849,10 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Trade_Offer( Player Player, bool Own = true)
+        public static void Trade_Offer(Player Player, bool Own = true)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
-             Player To = Own ? Player : Player.Trade;
+            Player To = Own ? Player : Player.Trade;
 
             // Envia os dados
             Data.Write((byte)Client_Packets.Trade_Offer);
@@ -865,7 +865,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Shops( Account Account)
+        public static void Shops(Account Account)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -873,7 +873,7 @@ namespace Network
             if (Account.InEditor) Data.Write((byte)Editor_Packets.Shops);
             else Data.Write((byte)Client_Packets.Shops);
             Data.Write((short)Lists.Shop.Count);
-            foreach ( Shop Shop in Lists.Shop.Values)
+            foreach (Shop Shop in Lists.Shop.Values)
             {
                 // Geral
                 Data.Write(Shop.ID.ToString());
@@ -897,7 +897,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Shop_Open( Player Player,  Shop Shop)
+        public static void Shop_Open(Player Player, Shop Shop)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

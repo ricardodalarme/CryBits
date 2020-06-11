@@ -1,9 +1,9 @@
-﻿using SFML.Window;
+﻿using Network;
+using SFML.Window;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Network;
 
 class Buttons
 {

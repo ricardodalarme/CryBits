@@ -2,7 +2,7 @@
 
 namespace Objects
 {
-    class Class : Lists.Structures.Data
+    class Class : Data
     {
         public string Name;
         public string Description;

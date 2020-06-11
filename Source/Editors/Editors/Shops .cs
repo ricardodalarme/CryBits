@@ -1,8 +1,8 @@
-﻿using Objects;
+﻿using Network;
+using Objects;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using Network;
 
 partial class Editor_Shops : Form
 {

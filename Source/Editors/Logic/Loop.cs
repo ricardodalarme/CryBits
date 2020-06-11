@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Objects;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
+using static Utils;
 
 class Loop
 {
@@ -39,7 +41,7 @@ class Loop
             if (Timer_1000 < Environment.TickCount)
             {
                 // Cálcula o FPS
-                Globals.FPS = FPS;
+                Program.FPS = FPS;
                 FPS = 0;
 
                 // Reinicia a contagem
@@ -75,14 +77,14 @@ class Loop
         // Movimento para trás
         if (Speed < 0)
         {
-            Globals.Fog_X -= 1;
-            if (Globals.Fog_X < -Texture_Size.Width) Globals.Fog_X = 0;
+            Map.Fog_X -= 1;
+            if (Map.Fog_X < -Texture_Size.Width) Map.Fog_X = 0;
         }
         // Movimento para frente
         else
         {
-            Globals.Fog_X += 1;
-            if (Globals.Fog_X > Texture_Size.Width) Globals.Fog_X = 0;
+            Map.Fog_X += 1;
+            if (Map.Fog_X > Texture_Size.Width) Map.Fog_X = 0;
         }
 
         // Contagem
@@ -102,14 +104,14 @@ class Loop
         // Movimento para trás
         if (Speed < 0)
         {
-            Globals.Fog_Y -= 1;
-            if (Globals.Fog_Y < -Texture_Size.Height) Globals.Fog_Y = 0;
+            Map.Fog_Y -= 1;
+            if (Map.Fog_Y < -Texture_Size.Height) Map.Fog_Y = 0;
         }
         // Movimento para frente
         else
         {
-            Globals.Fog_Y += 1;
-            if (Globals.Fog_Y > Texture_Size.Height) Globals.Fog_Y = 0;
+            Map.Fog_Y += 1;
+            if (Map.Fog_Y > Texture_Size.Height) Map.Fog_Y = 0;
         }
 
         // Contagem
@@ -130,10 +132,10 @@ class Loop
         }
 
         // Clima do mapa
-        Objects.Map_Weather Weather = Editor_Maps.Form.Selected.Weather;
+        Map_Weather Weather = Editor_Maps.Form.Selected.Weather;
 
         // Reproduz o som chuva
-        if (Weather.Type == Globals.Weathers.Raining || Weather.Type == Globals.Weathers.Thundering)
+        if (Weather.Type == Weathers.Raining || Weather.Type == Weathers.Thundering)
         {
             if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status != SFML.Audio.SoundStatus.Playing)
                 Audio.Sound.Play(Audio.Sounds.Rain);
@@ -151,10 +153,10 @@ class Loop
             Move = false;
 
         // Contagem dos relâmpagos
-        if (Globals.Lightning > 0)
+        if (Map.Lightning > 0)
             if (Thundering_Timer < Environment.TickCount)
             {
-                Globals.Lightning -= 10;
+                Map.Lightning -= 10;
                 Thundering_Timer = Environment.TickCount + 25;
             }
 
@@ -162,7 +164,7 @@ class Loop
         for (int i = 1; i <= Lists.Weather.GetUpperBound(0); i++)
             if (!Lists.Weather[i].Visible)
             {
-                if (Globals.GameRandom.Next(0, Globals.Max_Weather_Intensity - Weather.Intensity) == 0)
+                if (MyRandom.Next(0, Map.Max_Weather_Intensity - Weather.Intensity) == 0)
                 {
                     if (!Stop)
                     {
@@ -172,9 +174,9 @@ class Loop
                         // Cria a partícula de acordo com o seu tipo
                         switch (Weather.Type)
                         {
-                            case Globals.Weathers.Thundering:
-                            case Globals.Weathers.Raining: Weather_Rain_Create(i); break;
-                            case Globals.Weathers.Snowing: Weather_Snow_Create(i); break;
+                            case Weathers.Thundering:
+                            case Weathers.Raining: Weather_Rain_Create(i); break;
+                            case Weathers.Snowing: Weather_Snow_Create(i); break;
                         }
                     }
                 }
@@ -186,42 +188,42 @@ class Loop
                 // Movimenta a partícula de acordo com o seu tipo
                 switch (Weather.Type)
                 {
-                    case Globals.Weathers.Thundering:
-                    case Globals.Weathers.Raining: Weather_Rain_Movement(i); break;
-                    case Globals.Weathers.Snowing: Weather_Snow_Movement(i, Move); break;
+                    case Weathers.Thundering:
+                    case Weathers.Raining: Weather_Rain_Movement(i); break;
+                    case Weathers.Snowing: Weather_Snow_Movement(i, Move); break;
                 }
 
                 // Reseta a partícula
-                if (Lists.Weather[i].x > Globals.Map_Width * Globals.Grid || Lists.Weather[i].y > Globals.Map_Height * Globals.Grid)
+                if (Lists.Weather[i].x > Map.Width * Grid || Lists.Weather[i].y > Map.Height * Grid)
                     Lists.Weather[i] = new Lists.Structures.Weather();
             }
 
         // Trovoadas
-        if (Weather.Type == Globals.Weathers.Thundering)
-            if (Globals.GameRandom.Next(0, Globals.Max_Weather_Intensity * 10 - Weather.Intensity * 2) == 0)
+        if (Weather.Type == Weathers.Thundering)
+            if (MyRandom.Next(0, Map.Max_Weather_Intensity * 10 - Weather.Intensity * 2) == 0)
             {
                 // Som do trovão
-                int Thunder = Globals.GameRandom.Next((byte)Audio.Sounds.Thunder_1, (byte)Audio.Sounds.Thunder_4);
+                int Thunder = MyRandom.Next((byte)Audio.Sounds.Thunder_1, (byte)Audio.Sounds.Thunder_4);
                 Audio.Sound.Play((Audio.Sounds)Thunder);
 
                 // Relâmpago
-                if (Thunder < 6) Globals.Lightning = 190;
+                if (Thunder < 6) Map.Lightning = 190;
             }
     }
 
     private static void Weather_Rain_Create(int i)
     {
         // Define a velocidade e a posição da partícula
-        Lists.Weather[i].Speed = Globals.GameRandom.Next(8, 13);
+        Lists.Weather[i].Speed = MyRandom.Next(8, 13);
 
-        if (Globals.GameRandom.Next(2) == 0)
+        if (MyRandom.Next(2) == 0)
         {
             Lists.Weather[i].x = -32;
-            Lists.Weather[i].y = Globals.GameRandom.Next(-32, Editor_Maps.Form.picMap.Height);
+            Lists.Weather[i].y = MyRandom.Next(-32, Editor_Maps.Form.picMap.Height);
         }
         else
         {
-            Lists.Weather[i].x = Globals.GameRandom.Next(-32, Editor_Maps.Form.picMap.Width);
+            Lists.Weather[i].x = MyRandom.Next(-32, Editor_Maps.Form.picMap.Width);
             Lists.Weather[i].y = -32;
         }
     }
@@ -236,12 +238,12 @@ class Loop
     private static void Weather_Snow_Create(int i)
     {
         // Define a velocidade e a posição da partícula
-        Lists.Weather[i].Speed = Globals.GameRandom.Next(1, 3);
+        Lists.Weather[i].Speed = MyRandom.Next(1, 3);
         Lists.Weather[i].y = -32;
-        Lists.Weather[i].x = Globals.GameRandom.Next(-32, Editor_Maps.Form.picMap.Width);
+        Lists.Weather[i].x = MyRandom.Next(-32, Editor_Maps.Form.picMap.Width);
         Lists.Weather[i].Start = Lists.Weather[i].x;
 
-        if (Globals.GameRandom.Next(2) == 0)
+        if (MyRandom.Next(2) == 0)
             Lists.Weather[i].Back = false;
         else
             Lists.Weather[i].Back = true;
@@ -249,9 +251,9 @@ class Loop
 
     private static void Weather_Snow_Movement(int i, bool Move = true)
     {
-        int Difference = Globals.GameRandom.Next(0, Globals.Snow_Movement / 3);
-        int x1 = Lists.Weather[i].Start + Globals.Snow_Movement + Difference;
-        int x2 = Lists.Weather[i].Start - Globals.Snow_Movement - Difference;
+        int Difference = MyRandom.Next(0, Map.Snow_Movement / 3);
+        int x1 = Lists.Weather[i].Start + Map.Snow_Movement + Difference;
+        int x2 = Lists.Weather[i].Start - Map.Snow_Movement - Difference;
 
         // Faz com que a partícula volte
         if (x1 <= Lists.Weather[i].x)

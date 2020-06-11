@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using Objects;
+using static Utils;
 
 namespace Network
 {
@@ -60,7 +61,7 @@ namespace Network
             Packet(Data);
         }
 
-        public static void Request_Map( Map Map)
+        public static void Request_Map(Map Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -134,7 +135,7 @@ namespace Network
             // Envia os dados
             Data.Write((byte)Packets.Write_Classes);
             Data.Write((byte)Lists.Class.Count);
-            foreach ( Class Class in Lists.Class.Values)
+            foreach (Class Class in Lists.Class.Values)
             {
                 // Escreve os dados
                 Data.Write(Class.ID.ToString());
@@ -149,8 +150,8 @@ namespace Network
                 Data.Write(Class.Spawn_Direction);
                 Data.Write(Class.Spawn_X);
                 Data.Write(Class.Spawn_Y);
-                for (byte i = 0; i < (byte)Globals.Vitals.Count; i++) Data.Write(Class.Vital[i]);
-                for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Class.Attribute[i]);
+                for (byte i = 0; i < (byte)Vitals.Count; i++) Data.Write(Class.Vital[i]);
+                for (byte i = 0; i < (byte)Attributes.Count; i++) Data.Write(Class.Attribute[i]);
                 for (byte i = 0; i < Class.Item.Count; i++)
                 {
                     Data.Write(Lists.GetID(Class.Item[i].Item));
@@ -167,7 +168,7 @@ namespace Network
             // Envia os dados
             Data.Write((byte)Packets.Write_Maps);
             Data.Write((byte)Lists.Map.Count);
-            foreach ( Map Map in Lists.Map.Values)
+            foreach (Map Map in Lists.Map.Values)
             {
                 // Escreve os dados
                 Data.Write(Map.ID.ToString());
@@ -186,7 +187,7 @@ namespace Network
                 Data.Write(Map.Lighting);
 
                 // Ligações
-                for (short i = 0; i < (short)Globals.Directions.Count; i++)
+                for (short i = 0; i < (short)Directions.Count; i++)
                     Data.Write(Lists.GetID(Map.Link[i]));
 
                 // Camadas
@@ -197,8 +198,8 @@ namespace Network
                     Data.Write(Map.Layer[i].Type);
 
                     // Azulejos
-                    for (byte x = 0; x < Globals.Map_Width; x++)
-                        for (byte y = 0; y < Globals.Map_Height; y++)
+                    for (byte x = 0; x < Map.Width; x++)
+                        for (byte y = 0; y < Map.Height; y++)
                         {
                             Data.Write(Map.Layer[i].Tile[x, y].X);
                             Data.Write(Map.Layer[i].Tile[x, y].Y);
@@ -208,8 +209,8 @@ namespace Network
                 }
 
                 // Dados específicos dos azulejos
-                for (byte x = 0; x < Globals.Map_Width; x++)
-                    for (byte y = 0; y < Globals.Map_Height; y++)
+                for (byte x = 0; x < Map.Width; x++)
+                    for (byte y = 0; y < Map.Height; y++)
                     {
                         Data.Write(Map.Attribute[x, y].Type);
                         Data.Write(Map.Attribute[x, y].Data_1);
@@ -219,7 +220,7 @@ namespace Network
                         Data.Write(Map.Attribute[x, y].Zone);
 
                         // Bloqueio direcional
-                        for (byte i = 0; i < (byte)Globals.Directions.Count; i++)
+                        for (byte i = 0; i < (byte)Directions.Count; i++)
                             Data.Write(Map.Attribute[x, y].Block[i]);
                     }
 
@@ -254,7 +255,7 @@ namespace Network
             // Envia os dados
             Data.Write((byte)Packets.Write_NPCs);
             Data.Write((short)Lists.NPC.Count);
-            foreach ( NPC NPC in Lists.NPC.Values)
+            foreach (NPC NPC in Lists.NPC.Values)
             {
                 // Geral
                 Data.Write(NPC.ID.ToString());
@@ -265,8 +266,8 @@ namespace Network
                 Data.Write(NPC.SpawnTime);
                 Data.Write(NPC.Sight);
                 Data.Write(NPC.Experience);
-                for (byte i = 0; i < (byte)Globals.Vitals.Count; i++) Data.Write(NPC.Vital[i]);
-                for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(NPC.Attribute[i]);
+                for (byte i = 0; i < (byte)Vitals.Count; i++) Data.Write(NPC.Vital[i]);
+                for (byte i = 0; i < (byte)Attributes.Count; i++) Data.Write(NPC.Attribute[i]);
                 Data.Write((byte)NPC.Drop.Count);
                 for (byte i = 0; i < NPC.Drop.Count; i++)
                 {
@@ -291,7 +292,7 @@ namespace Network
             // Envia os dados
             Data.Write((byte)Packets.Write_Items);
             Data.Write((short)Lists.Item.Count);
-            foreach ( Item Item in Lists.Item.Values)
+            foreach (Item Item in Lists.Item.Values)
             {
                 // Geral
                 Data.Write(Item.ID.ToString());
@@ -305,9 +306,9 @@ namespace Network
                 Data.Write(Item.Req_Level);
                 Data.Write(Lists.GetID(Item.Req_Class));
                 Data.Write(Item.Potion_Experience);
-                for (byte i = 0; i < (byte)Globals.Vitals.Count; i++) Data.Write(Item.Potion_Vital[i]);
+                for (byte i = 0; i < (byte)Vitals.Count; i++) Data.Write(Item.Potion_Vital[i]);
                 Data.Write(Item.Equip_Type);
-                for (byte i = 0; i < (byte)Globals.Attributes.Count; i++) Data.Write(Item.Equip_Attribute[i]);
+                for (byte i = 0; i < (byte)Attributes.Count; i++) Data.Write(Item.Equip_Attribute[i]);
                 Data.Write(Item.Weapon_Damage);
             }
             Packet(Data);
@@ -320,7 +321,7 @@ namespace Network
             // Envia os dados
             Data.Write((byte)Packets.Write_Shops);
             Data.Write((short)Lists.Shop.Count);
-            foreach ( Shop Shop in Lists.Shop.Values)
+            foreach (Shop Shop in Lists.Shop.Values)
             {
                 // Geral
                 Data.Write(Shop.ID.ToString());

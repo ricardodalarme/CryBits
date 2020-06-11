@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Objects;
+using System;
 using System.ComponentModel;
 using System.Drawing;
+using static Utils;
 
 class Maper
 {
     public class Properties
     {
-        public Properties(Objects.Map Map)
+        public Properties(Map Map)
         {
             Base = Map;
         }
@@ -25,7 +27,7 @@ class Maper
         }
 
         [Category("General"), DefaultValue(0)]
-        public Globals.Map_Morals Moral
+        public Map_Morals Moral
         {
             get => Base.Moral;
             set => Base.Moral = value;
@@ -70,17 +72,17 @@ class Maper
         public byte Weather_SpeedY
         {
             get => Base.Weather.Intensity;
-            set => Base.Weather.Intensity = Math.Max(value, Globals.Max_Weather_Intensity);
+            set => Base.Weather.Intensity = Math.Max(value, Map.Max_Weather_Intensity);
         }
 
         [Category("Weather"), DisplayName("Weather Type"), DefaultValue(0)]
-        public Globals.Weathers Weather_Type
+        public Weathers Weather_Type
         {
             get => Base.Weather.Type;
             set
             {
                 Base.Weather.Type = value;
-                Globals.Weather_Update();
+                Map.Weather_Update();
             }
         }
 
@@ -150,8 +152,8 @@ class Maper
         public static void Update(Objects.Map Map)
         {
             // Atualiza os azulejos necessários
-            for (byte x = 0; x < Globals.Map_Width; x++)
-                for (byte y = 0; y < Globals.Map_Height; y++)
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                     for (byte c = 0; c < Map.Layer.Count; c++)
                         if (Map.Layer[c].Tile[x, y].Auto)
                             // Faz os cálculos para a autocriação
@@ -163,7 +165,7 @@ class Maper
             // Atualiza os azulejos necessários
             for (int x2 = x - 2; x2 < x + 2; x2++)
                 for (int y2 = y - 2; y2 < y + 2; y2++)
-                    if (x2 >= 0 && x2 < Globals.Map_Width && y2 >= 0 && y2 < Globals.Map_Height)
+                    if (x2 >= 0 && x2 < Map.Width && y2 >= 0 && y2 < Map.Height)
                         // Faz os cálculos para a autocriação
                         Calculate(Map, (byte)x2, (byte)y2, Layer_Num);
         }
@@ -208,8 +210,8 @@ class Maper
 
             // Define a posição do mini azulejo
             Objects.Map_Tile_Data Data = Map.Layer[Layer_Num].Tile[x, y];
-            Map.Layer[Layer_Num].Tile[x, y].Mini[Part].X = Data.X * Globals.Grid + Position.X;
-            Map.Layer[Layer_Num].Tile[x, y].Mini[Part].Y = Data.Y * Globals.Grid + Position.Y;
+            Map.Layer[Layer_Num].Tile[x, y].Mini[Part].X = Data.X * Grid + Position.X;
+            Map.Layer[Layer_Num].Tile[x, y].Mini[Part].Y = Data.Y * Grid + Position.Y;
         }
 
         private static bool Check(Objects.Map Map, int X1, int Y1, int X2, int Y2, byte Layer_Num)
@@ -217,8 +219,8 @@ class Maper
             Objects.Map_Tile_Data Data1, Data2;
 
             // Somente se necessário
-            if (X1 < 0 || X1 >= Globals.Map_Width || Y1 < 0 || Y1 >= Globals.Map_Height) return true;
-            if (X2 < 0 || X2 >= Globals.Map_Width || Y2 < 0 || Y2 >= Globals.Map_Height) return true;
+            if (X1 < 0 || X1 >= Map.Width || Y1 < 0 || Y1 >= Map.Height) return true;
+            if (X2 < 0 || X2 >= Map.Width || Y2 < 0 || Y2 >= Map.Height) return true;
 
             // Dados
             Data1 = Map.Layer[Layer_Num].Tile[X1, Y1];

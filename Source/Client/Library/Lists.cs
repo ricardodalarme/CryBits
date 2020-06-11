@@ -18,30 +18,18 @@ class Lists
 
     public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
     {
-        if (Dictionary.ContainsKey(ID))
-            return Dictionary[ID];
-        else
-            return null;
+        if (Dictionary.ContainsKey(ID)) return Dictionary[ID];
+        return null;
     }
 
     public static string GetID(object Object)
     {
-        return Object == null ? Guid.Empty.ToString() : ((Structures.Data)Object).ID.ToString();
+        return Object == null ? Guid.Empty.ToString() : ((Data)Object).ID.ToString();
     }
 
     // Estrutura dos itens em gerais
     public class Structures
     {
-        public class Data
-        {
-            public Guid ID;
-
-            public Data(Guid ID)
-            {
-                this.ID = ID;
-            }
-        }
-
         [Serializable]
         public struct Options
         {
@@ -63,7 +51,6 @@ class Lists
             public short Level;
             public short Texture_Num;
         }
-
 
         public struct Weather
         {

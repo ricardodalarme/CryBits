@@ -1,7 +1,8 @@
-﻿using Objects;
+﻿using Network;
+using Objects;
 using System;
 using System.Windows.Forms;
-using Network;
+using static Utils;
 
 partial class Editor_Items : Form
 {
@@ -23,8 +24,8 @@ partial class Editor_Items : Form
         // Lista os dados
         cmbReq_Class.Items.Add("None");
         foreach (var Class in Lists.Class.Values) cmbReq_Class.Items.Add(Class);
-        for (byte i = 0; i < (byte)Globals.Rarity.Count; i++) cmbRarity.Items.Add((Globals.Rarity)i);
-        for (byte i = 0; i < (byte)Globals.BindOn.Count; i++) cmbBind.Items.Add((Globals.BindOn)i);
+        for (byte i = 0; i < (byte)Rarity.Count; i++) cmbRarity.Items.Add((Rarity)i);
+        for (byte i = 0; i < (byte)BindOn.Count; i++) cmbBind.Items.Add((BindOn)i);
         List_Update();
 
         // Abre a janela
@@ -72,14 +73,14 @@ partial class Editor_Items : Form
         if (Selected.Req_Class != null) cmbReq_Class.SelectedIndex = cmbReq_Class.Items.IndexOf(Selected.Req_Class);
         else cmbReq_Class.SelectedIndex = 0;
         numPotion_Experience.Value = Selected.Potion_Experience;
-        numPotion_HP.Value = Selected.Potion_Vital[(byte)Globals.Vitals.HP];
-        numPotion_MP.Value = Selected.Potion_Vital[(byte)Globals.Vitals.MP];
+        numPotion_HP.Value = Selected.Potion_Vital[(byte)Vitals.HP];
+        numPotion_MP.Value = Selected.Potion_Vital[(byte)Vitals.MP];
         cmbEquipment_Type.SelectedIndex = Selected.Equip_Type;
-        numEquip_Strength.Value = Selected.Equip_Attribute[(byte)Globals.Attributes.Strength];
-        numEquip_Resistance.Value = Selected.Equip_Attribute[(byte)Globals.Attributes.Resistance];
-        numEquip_Intelligence.Value = Selected.Equip_Attribute[(byte)Globals.Attributes.Intelligence];
-        numEquip_Agility.Value = Selected.Equip_Attribute[(byte)Globals.Attributes.Agility];
-        numEquip_Vitality.Value = Selected.Equip_Attribute[(byte)Globals.Attributes.Vitality];
+        numEquip_Strength.Value = Selected.Equip_Attribute[(byte)Attributes.Strength];
+        numEquip_Resistance.Value = Selected.Equip_Attribute[(byte)Attributes.Resistance];
+        numEquip_Intelligence.Value = Selected.Equip_Attribute[(byte)Attributes.Intelligence];
+        numEquip_Agility.Value = Selected.Equip_Attribute[(byte)Attributes.Agility];
+        numEquip_Vitality.Value = Selected.Equip_Attribute[(byte)Attributes.Vitality];
         numWeapon_Damage.Value = Selected.Weapon_Damage;
     }
 
@@ -148,9 +149,9 @@ partial class Editor_Items : Form
         Selected.Type = (byte)cmbType.SelectedIndex;
 
         // Visibilidade dos paineis
-        if (cmbType.SelectedIndex == (byte)Globals.Items.Equipment) grpEquipment.Visible = true;
+        if (cmbType.SelectedIndex == (byte)Items.Equipment) grpEquipment.Visible = true;
         else grpEquipment.Visible = false;
-        if (cmbType.SelectedIndex == (byte)Globals.Items.Potion) grpPotion.Visible = true;
+        if (cmbType.SelectedIndex == (byte)Items.Potion) grpPotion.Visible = true;
         else grpPotion.Visible = false;
     }
 
@@ -169,12 +170,12 @@ partial class Editor_Items : Form
 
     private void numEquip_Vida_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Potion_Vital[(byte)Globals.Vitals.HP] = (short)numPotion_HP.Value;
+        Selected.Potion_Vital[(byte)Vitals.HP] = (short)numPotion_HP.Value;
     }
 
     private void numEquip_Mana_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Potion_Vital[(byte)Globals.Vitals.MP] = (short)numPotion_MP.Value;
+        Selected.Potion_Vital[(byte)Vitals.MP] = (short)numPotion_MP.Value;
     }
 
     private void numEquip_Experience_ValueChanged(object sender, EventArgs e)
@@ -184,27 +185,27 @@ partial class Editor_Items : Form
 
     private void numEquip_Strength_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Equip_Attribute[(byte)Globals.Attributes.Strength] = (short)numEquip_Strength.Value;
+        Selected.Equip_Attribute[(byte)Attributes.Strength] = (short)numEquip_Strength.Value;
     }
 
     private void numEquip_Resistance_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Equip_Attribute[(byte)Globals.Attributes.Resistance] = (short)numEquip_Resistance.Value;
+        Selected.Equip_Attribute[(byte)Attributes.Resistance] = (short)numEquip_Resistance.Value;
     }
 
     private void numEquip_Intelligence_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Equip_Attribute[(byte)Globals.Attributes.Intelligence] = (short)numEquip_Intelligence.Value;
+        Selected.Equip_Attribute[(byte)Attributes.Intelligence] = (short)numEquip_Intelligence.Value;
     }
 
     private void numEquip_Agility_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Equip_Attribute[(byte)Globals.Attributes.Agility] = (short)numEquip_Agility.Value;
+        Selected.Equip_Attribute[(byte)Attributes.Agility] = (short)numEquip_Agility.Value;
     }
 
     private void numEquip_Vitality_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Equip_Attribute[(byte)Globals.Attributes.Vitality] = (short)numEquip_Vitality.Value;
+        Selected.Equip_Attribute[(byte)Attributes.Vitality] = (short)numEquip_Vitality.Value;
     }
 
     private void chkStackable_CheckedChanged(object sender, EventArgs e)
@@ -220,7 +221,7 @@ partial class Editor_Items : Form
     private void cmbEquipment_Type_SelectedIndexChanged(object sender, EventArgs e)
     {
         Selected.Equip_Type = (byte)cmbEquipment_Type.SelectedIndex;
-        numWeapon_Damage.Visible = lblWeapon_Damage.Visible = (cmbEquipment_Type.SelectedIndex == (byte)Globals.Equipments.Weapon);
+        numWeapon_Damage.Visible = lblWeapon_Damage.Visible = (cmbEquipment_Type.SelectedIndex == (byte)Equipments.Weapon);
     }
 
     private void txtDescription_TextChanged(object sender, EventArgs e)

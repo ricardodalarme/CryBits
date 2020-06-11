@@ -2,7 +2,7 @@
 
 namespace Objects
 {
-    class Item : Lists.Structures.Data
+    class Item : Data
     {
         // Geral
         public string Name = string.Empty;

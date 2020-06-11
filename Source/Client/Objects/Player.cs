@@ -1,7 +1,7 @@
-﻿using Objects;
+﻿using Network;
+using Objects;
 using SFML.Window;
 using System;
-using Network;
 
 class Player
 {

@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using static Utils;
 
 namespace Objects
 {
@@ -8,7 +9,7 @@ namespace Objects
         public string Name { get; set; }
         public Point Position { get; set; }
         public bool Visible { get; set; }
-        public Globals.Windows Window { get; set; }
+        public Windows Window { get; set; }
     }
 
     class Button : Tool
