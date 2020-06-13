@@ -2,6 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Library;
 
 static class Program
 {
@@ -10,7 +11,7 @@ static class Program
 
     // CPS do servidor
     public static int CPS;
-
+    
     // Usado pra detectar quando o console é fechado
     [DllImport("Kernel32")]
     private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
@@ -24,7 +25,7 @@ static class Program
         Console.Title = "Server";
         Logo();
         Console.WriteLine("[Starting]");
-
+        
         // Evento de saída do console
         Handler += new EventHandler(Exit);
         SetConsoleCtrlHandler(Handler, true);

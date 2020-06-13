@@ -1432,7 +1432,7 @@ partial class Editor_Maps : Form
 
     private void cmbA_Item_SelectedIndexChanged(object sender, EventArgs e)
     {
-        AData_1 = Lists.GetID(cmbA_Item.SelectedItem);
+        AData_1 = Lists.GetID((Item)cmbA_Item.SelectedItem);
     }
 
     private void numA_Item_Amount_ValueChanged(object sender, EventArgs e)

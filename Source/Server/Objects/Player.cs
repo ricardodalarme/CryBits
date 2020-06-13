@@ -135,7 +135,7 @@ namespace Objects
         public void Leave()
         {
             // Salva os dados do jogador e atualiza os demais jogadores da desconexão
-            Write.Character(Account);
+            Library.Write.Character(Account);
             Send.Player_Leave(this);
 
             // Sai dos grupos

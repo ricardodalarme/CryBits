@@ -52,7 +52,7 @@ namespace Network
                         if ((NetConnectionStatus)Data.ReadByte() == NetConnectionStatus.Disconnected)
                         {
                             // Apaga os dados e volta ao menu
-                            if (Player.Me != null) Player.Me.Leave();
+                            if (Objects.Player.Me != null) Objects.Player.Me.Leave();
                             Window.OpenMenu();
                         }
                         break;

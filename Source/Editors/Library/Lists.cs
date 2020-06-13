@@ -17,11 +17,13 @@ static class Lists
     public static Dictionary<Guid, Shop> Shop = new Dictionary<Guid, Shop>();
     public static TreeNode Tool;
 
-    public static string GetID(object Object) => Object == null ? Guid.Empty.ToString() : ((Data)Object).ID.ToString();
+    // Obtém o ID de algum dado, caso ele não existir retorna um ID zerado
+    public static string GetID(Data Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
 
+    // Obtém o dado, caso ele não existir retorna nulo
     public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
     {
-        if (Dictionary.ContainsKey(ID))  return Dictionary[ID];
+        if (Dictionary.ContainsKey(ID)) return Dictionary[ID];
         return null;
     }
 

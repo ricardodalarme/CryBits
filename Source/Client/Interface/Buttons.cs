@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Objects;
 
 class Buttons
 {
@@ -425,8 +426,8 @@ class Buttons
         Send.Trade_Offer_State(Game.Trade_Status.Accepted);
 
         // Limpa os dados da oferta
-        Player.Me.Trade_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
-        Player.Me.Trade_Their_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
+        Player.Me.Trade_Offer = new Inventory[Game.Max_Inventory + 1];
+        Player.Me.Trade_Their_Offer = new Inventory[Game.Max_Inventory + 1];
     }
 
     private static void Trade_Offer_Decline()

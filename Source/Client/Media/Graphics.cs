@@ -712,7 +712,7 @@ partial class Graphics
         Render(Tex_Character[Texture_Num], Rec_Source, Rec_Destiny, Color);
     }
 
-    private static void Player_Character(Player.Structure Player)
+    private static void Player_Character(Player Player)
     {
         // Desenha o jogador
         Player_Texture(Player);
@@ -720,7 +720,7 @@ partial class Graphics
         Player_Bars(Player);
     }
 
-    private static void Player_Texture(Player.Structure Player)
+    private static void Player_Texture(Player Player)
     {
         byte Column = Game.Animation_Stopped;
         bool Hurt = false;
@@ -746,7 +746,7 @@ partial class Graphics
         Character(Player.Texture_Num, new Point(Game.ConvertX(Player.Pixel_X), Game.ConvertY(Player.Pixel_Y)), Player.Direction, Column, Hurt);
     }
 
-    private static void Player_Bars(Player.Structure Player)
+    private static void Player_Bars(Player Player)
     {
         short Value = Player.Vital[(byte)Game.Vitals.HP];
 
@@ -770,7 +770,7 @@ partial class Graphics
         Render(Tex_Bars, Position.X, Position.Y, 0, 0, Width, 4);
     }
 
-    private static void Player_Name(Player.Structure Player)
+    private static void Player_Name(Player Player)
     {
         Texture Texture = Tex_Character[Player.Texture_Num];
         int Name_Size = Utils.MeasureString(Player.Name);
@@ -784,7 +784,7 @@ partial class Graphics
 
         // Cor do texto
         SFML.Graphics.Color Color;
-        if (Player == global::Player.Me)
+        if (Player == Player.Me)
             Color = SFML.Graphics.Color.Yellow;
         else
             Color = SFML.Graphics.Color.White;

@@ -1,20 +1,18 @@
 ﻿using Network;
-using Objects;
 using SFML.Window;
 using System;
 
-class Player
+namespace Objects
 {
-    // Obtém um jogador com determinado nome
-    public static Structure Get(string Name) => Lists.Player.Find(x => x.Name.Equals(Name));
-
-    // O próprio jogador
-    public static Me_Structure Me;
-
-    // Dados gerais dos jogadores
-    public class Structure : Character
+    class Player : Character
     {
-        // Geral
+        // Obtém um jogador com determinado nome
+        public static Player Get(string Name) => Lists.Player.Find(x => x.Name.Equals(Name));
+
+        // O próprio jogador
+        public static Me_Structure Me;
+
+        // Dados gerais dos jogadores
         public string Name = string.Empty;
         public short Texture_Num;
         public short Level;
@@ -23,7 +21,7 @@ class Player
         public Item[] Equipment = new Item[(byte)Game.Equipments.Count];
         public TMap Map;
 
-        public Structure(string Name)
+        public Player(string Name)
         {
             this.Name = Name;
         }
@@ -39,14 +37,14 @@ class Player
     }
 
     // Dados somente do próprio jogador
-    public class Me_Structure : Structure
+    class Me_Structure : Player
     {
         // Dados
-        public Lists.Structures.Inventory[] Inventory = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
-        public Lists.Structures.Hotbar[] Hotbar = new Lists.Structures.Hotbar[Game.Max_Hotbar];
-        public Lists.Structures.Inventory[] Trade_Offer;
-        public Lists.Structures.Inventory[] Trade_Their_Offer;
-        public Structure[] Party = Array.Empty<Structure>();
+        public Inventory[] Inventory = new Inventory[Game.Max_Inventory + 1];
+        public Hotbar[] Hotbar = new Hotbar[Game.Max_Hotbar];
+        public Inventory[] Trade_Offer;
+        public Inventory[] Trade_Their_Offer;
+        public Player[] Party = Array.Empty<Player>();
         public int Experience;
         public int ExpNeeded;
         public short Points;
@@ -161,5 +159,17 @@ class Player
             Lists.Player.Clear();
             Me = null;
         }
+    }
+
+    struct Inventory
+    {
+        public Item Item;
+        public short Amount;
+    }
+
+    public struct Hotbar
+    {
+        public byte Type;
+        public byte Slot;
     }
 }

@@ -124,7 +124,7 @@ namespace Network
         private static void Join(NetIncomingMessage Data)
         {
             // Definir os valores que são enviados do servidor
-            Player.Me = new Player.Me_Structure(Data.ReadString());
+            Player.Me = new Me_Structure(Data.ReadString());
             Lists.Player.Add(Player.Me);
 
             // Reseta alguns valores
@@ -241,16 +241,16 @@ namespace Network
         private static void Player_Data(NetIncomingMessage Data)
         {
             string Name = Data.ReadString();
-            Player.Structure Player;
+            Player Player;
 
             // Adiciona o jogador à lista
-            if (Name != global::Player.Me.Name)
+            if (Name != Player.Me.Name)
             {
-                Player = new Player.Structure(Name);
+                Player = new Player(Name);
                 Lists.Player.Add(Player);
             }
             else
-                Player = global::Player.Me;
+                Player = Player.Me;
 
             // Defini os dados do jogador
             Player.Texture_Num = Data.ReadInt16();
@@ -271,7 +271,7 @@ namespace Network
 
         private static void Player_Position(NetIncomingMessage Data)
         {
-            Player.Structure Player = global::Player.Get(Data.ReadString());
+            Player Player = Player.Get(Data.ReadString());
 
             // Defini os dados do jogador
             Player.X = Data.ReadByte();
@@ -286,7 +286,7 @@ namespace Network
 
         private static void Player_Vitals(NetIncomingMessage Data)
         {
-            Player.Structure Player = global::Player.Get(Data.ReadString());
+            Player Player = Player.Get(Data.ReadString());
 
             // Define os dados
             for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
@@ -298,7 +298,7 @@ namespace Network
 
         private static void Player_Equipments(NetIncomingMessage Data)
         {
-            Player.Structure Player = global::Player.Get(Data.ReadString());
+            Player Player = Player.Get(Data.ReadString());
 
             // Altera os dados dos equipamentos do jogador
             for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Player.Equipment[i] = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
@@ -312,7 +312,7 @@ namespace Network
 
         private static void Player_Move(NetIncomingMessage Data)
         {
-            Player.Structure Player = global::Player.Get(Data.ReadString());
+            Player Player = Player.Get(Data.ReadString());
 
             // Move o jogador
             Player.X = Data.ReadByte();
@@ -340,7 +340,7 @@ namespace Network
 
         private static void Player_Attack(NetIncomingMessage Data)
         {
-            Player.Structure Player = global::Player.Get(Data.ReadString());
+            Player Player = Player.Get(Data.ReadString());
             string Victim = Data.ReadString();
             byte Victim_Type = Data.ReadByte();
 
@@ -352,7 +352,7 @@ namespace Network
             if (Victim != string.Empty)
                 if (Victim_Type == (byte)Game.Target.Player)
                 {
-                    Player.Structure Victim_Data = global::Player.Get(Victim);
+                    Player Victim_Data = Player.Get(Victim);
                     Victim_Data.Hurt = Environment.TickCount;
                     Mapper.Current.Blood.Add(new TMap_Blood((byte)Game.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
                 }
@@ -627,7 +627,7 @@ namespace Network
         private static void Party(NetIncomingMessage Data)
         {
             // Lê os dados do grupo
-            Player.Me.Party = new Player.Structure[Data.ReadByte()];
+            Player.Me.Party = new Player[Data.ReadByte()];
             for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Player.Get(Data.ReadString());
         }
 
@@ -660,8 +660,8 @@ namespace Network
                 Panels.Get("Trade_Offer_Disable").Visible = false;
 
                 // Limpa os dados
-                Player.Me.Trade_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
-                Player.Me.Trade_Their_Offer = new Lists.Structures.Inventory[Game.Max_Inventory + 1];
+                Player.Me.Trade_Offer = new Inventory[Game.Max_Inventory + 1];
+                Player.Me.Trade_Their_Offer = new Inventory[Game.Max_Inventory + 1];
             }
             else
             {
@@ -891,7 +891,7 @@ namespace Network
             if (Victim != string.Empty)
                 if (Victim_Type == (byte)Game.Target.Player)
                 {
-                    Player.Structure Victim_Data = Player.Get(Victim);
+                    Player Victim_Data = Player.Get(Victim);
                     Victim_Data.Hurt = Environment.TickCount;
                     Mapper.Current.Blood.Add(new TMap_Blood((byte)Game.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
                 }

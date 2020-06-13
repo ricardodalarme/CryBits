@@ -1,6 +1,7 @@
 ﻿using Network;
 using System.Collections.Generic;
 using System.Drawing;
+using Objects;
 
 class Panels
 {
