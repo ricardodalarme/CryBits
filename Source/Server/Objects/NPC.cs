@@ -1,10 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using static Utils;
 
 namespace Objects
 {
     [Serializable]
     class NPC : Data
     {
+        // Lista de dados
+        public static Dictionary<Guid, NPC> List = new Dictionary<Guid, NPC>();
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static NPC Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
         // Dados
         public string Name;
         public string SayMsg;
@@ -13,19 +21,19 @@ namespace Objects
         public byte SpawnTime;
         public byte Sight;
         public int Experience;
-        public short[] Vital = new short[(byte)Utils.Vitals.Count];
-        public short[] Attribute = new short[(byte)Utils.Attributes.Count];
+        public short[] Vital = new short[(byte)Vitals.Count];
+        public short[] Attribute = new short[(byte)Attributes.Count];
         public NPC_Drop[] Drop;
         public bool AttackNPC;
         public NPC[] Allie;
-        public Utils.NPC_Movements Movement;
+        public NPC_Movements Movement;
         public byte Flee_Helth;
         private Guid shop;
 
         public Shop Shop
         {
-            get => (Shop)Lists.GetData(Lists.Shop, shop);
-            set => shop = new Guid(Lists.GetID(value));
+            get => Shop.Get( shop);
+            set => shop = new Guid(GetID(value));
         }
 
         // Construtor
@@ -49,8 +57,8 @@ namespace Objects
         private Guid item;
         public Item Item
         {
-            get => (Item)Lists.GetData(Lists.Item, item);
-            set => item = new Guid(Lists.GetID(value));
+            get => Item.Get( item);
+            set => item = new Guid(GetID(value));
         }
         public short Amount;
         public byte Chance;

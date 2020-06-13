@@ -80,7 +80,7 @@ namespace Objects
                 {
                     // Jogador
                     if (Target == null)
-                        foreach (var Player in Lists.Account)
+                        foreach (var Player in Account.List)
                         {
                             // Verifica se o jogador está jogando e no mesmo mapa que o NPC
                             if (!Player.IsPlaying) continue;

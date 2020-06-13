@@ -1,17 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using static Utils;
 
 namespace Objects
 {
     [Serializable]
     class Shop : Data
     {
+        // Lista de dados
+        public static Dictionary<Guid, Shop> List = new Dictionary<Guid, Shop>();
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static Shop Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
         // Dados
         public string Name;
         private Guid currency;
         public Item Currency
         {
-            get => (Item)Lists.GetData(Lists.Item, currency);
-            set => currency = new Guid(Lists.GetID(value));
+            get => Item.Get( currency);
+            set => currency = new Guid(GetID(value));
         }
         public Shop_Item[] Bought = Array.Empty<Shop_Item>();
         public Shop_Item[] Sold = Array.Empty<Shop_Item>();
@@ -36,8 +44,8 @@ namespace Objects
         private Guid item;
         public Item Item
         {
-            get => (Item)Lists.GetData(Lists.Item, item);
-            set => item = new Guid(Lists.GetID(value));
+            get => Item.Get( item);
+            set => item = new Guid(GetID(value));
         }
         public short Amount;
         public short Price;

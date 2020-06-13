@@ -92,7 +92,6 @@
     <Compile Include="Objects\TMap.cs" />
     <Compile Include="Objects\TNPC.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Network\Receive.cs" />

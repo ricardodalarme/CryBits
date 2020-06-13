@@ -7,6 +7,12 @@ namespace Objects
 {
     class TMap : Data
     {
+        // Lista de dados
+        public static Dictionary<Guid, TMap> List = new Dictionary<Guid, TMap>();
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static TMap Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
         // Dados
         public Map Data;
         public TNPC[] NPC = Array.Empty<TNPC>();
@@ -49,7 +55,7 @@ namespace Objects
         public Player HasPlayer(byte X, byte Y)
         {
             // Verifica se há algum Jogador na cordenada
-            foreach (var Account in Lists.Account)
+            foreach (var Account in Account.List)
                 if (Account.IsPlaying)
                     if ((Account.Character.X, Account.Character.Y, Account.Character.Map) == (X, Y, this))
                         return Account.Character;
@@ -60,7 +66,7 @@ namespace Objects
         public bool HasPlayers()
         {
             // Verifica se tem algum jogador no mapa
-            foreach (var Account in Lists.Account)
+            foreach (var Account in Account.List)
                 if (Account.IsPlaying)
                     if (Account.Character.Map == this)
                         return true;
@@ -87,7 +93,7 @@ namespace Objects
                     {
                         // Faz o item aparecer
                         TMap_Items Map_Item = new TMap_Items();
-                        Map_Item.Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.Attribute[x, y].Data_1));
+                        Map_Item.Item = Objects.Item.Get(new Guid(Data.Attribute[x, y].Data_1));
                         Map_Item.Amount = Data.Attribute[x, y].Data_2;
                         Map_Item.X = x;
                         Map_Item.Y = y;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Objects;
+using System;
 using System.Windows.Forms;
 
 static class Loop
@@ -20,10 +21,10 @@ static class Loop
             if (Environment.TickCount > Timer_500 + 500)
             {
                 // Lógicas do mapa
-                foreach (var Temp_Map in Lists.Temp_Map.Values) Temp_Map.Logic();
+                foreach (var Temp_Map in TMap.List.Values) Temp_Map.Logic();
 
                 // Lógica dos jogadores
-                foreach (var Account in Lists.Account)
+                foreach (var Account in Account.List)
                     if (Account.IsPlaying)
                         Account.Character.Logic();
 

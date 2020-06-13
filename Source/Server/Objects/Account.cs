@@ -5,6 +5,9 @@ namespace Objects
 {
     class Account
     {
+        // Lista de dados
+        public static List<Account> List = new List<Account>();
+
         // Dados básicos
         public NetConnection Connection;
         public string User = string.Empty;
@@ -33,7 +36,7 @@ namespace Objects
         {
             // Limpa os dados do jogador
             if (Character != null) Character.Leave();
-            Lists.Account.Remove(this);
+            List.Remove(this);
         }
     }
 }

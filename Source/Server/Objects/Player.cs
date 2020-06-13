@@ -186,7 +186,7 @@ namespace Objects
         {
             byte Next_X = X, Next_Y = Y;
             byte Old_X = X, Old_Y = Y;
-            TMap Link = null;// (TMap)Lists.GetData(Lists.Temp_Map, Map.Data.Link[(byte)Direction].ID);
+            TMap Link = null;// TMap.Get( Map.Data.Link[(byte)Direction].ID);
             bool SecondMovement = false;
 
             // Previne erros
@@ -232,7 +232,7 @@ namespace Objects
                 // Teletransporte
                 case Tile_Attributes.Warp:
                     if (Tile.Data_4 > 0) Direction = (Directions)Tile.Data_4 - 1;
-                    Warp((TMap)Lists.GetData(Lists.Temp_Map, new Guid(Tile.Data_1)), (byte)Tile.Data_2, (byte)Tile.Data_3);
+                    Warp(TMap.Get( new Guid(Tile.Data_1)), (byte)Tile.Data_2, (byte)Tile.Data_3);
                     SecondMovement = true;
                     break;
             }
@@ -256,7 +256,7 @@ namespace Objects
 
             // Retorna para o ínicio
             Direction = (Directions)Class.Spawn_Direction;
-            Warp((TMap)Lists.GetData(Lists.Temp_Map, Class.Spawn_Map.ID), Class.Spawn_X, Class.Spawn_Y);
+            Warp(TMap.Get( Class.Spawn_Map.ID), Class.Spawn_X, Class.Spawn_Y);
         }
 
         public void Attack()
@@ -692,7 +692,7 @@ namespace Objects
         public static Player Find(string Name)
         {
             // Encontra o usuário
-            foreach (var Account in Lists.Account)
+            foreach (var Account in Account.List)
                 if (Account.IsPlaying)
                     if (Account.Character.Name.Equals(Name))
                         return Account.Character;

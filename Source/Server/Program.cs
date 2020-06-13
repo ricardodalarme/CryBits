@@ -3,6 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Library;
+using Objects;
 
 static class Program
 {
@@ -39,7 +40,7 @@ static class Program
 
         // Cria os mapas temporários
         Console.WriteLine("Creating temporary maps.");
-        foreach (Objects.Map Map in Lists.Map.Values) Map.Create_Temporary();
+        foreach (Map Map in Map.List.Values) Map.Create_Temporary();
 
         // Cria os dispositivos da rede
         Socket.Init();
@@ -57,9 +58,9 @@ static class Program
     private static bool Exit()
     {
         // Salva os dados de todos os jogadores
-        for (byte i = 0; i < Lists.Account.Count; i++)
-            if (Lists.Account[i].IsPlaying)
-                Write.Character(Lists.Account[i]);
+        for (byte i = 0; i < Account.List.Count; i++)
+            if (Account.List[i].IsPlaying)
+                Write.Character(Account.List[i]);
 
         // Fecha o servidores
         Socket.Device.Shutdown("Server was shut down.");
@@ -109,7 +110,7 @@ static class Program
                 }
 
                 // Encontra o jogador
-                Objects.Account Account = Lists.Account.Find(x => x.User.Equals(Parts[1]));
+                Objects.Account Account = Account.List.Find(x => x.User.Equals(Parts[1]));
 
                 if (Account == null)
                 {
