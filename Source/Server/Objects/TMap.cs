@@ -1,7 +1,8 @@
 ﻿using Network;
 using System;
 using System.Collections.Generic;
-using static Utils;
+using Logic;
+using static Logic.Utils;
 
 namespace Objects
 {

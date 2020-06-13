@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using static Utils;
+using static Logic.Utils;
 
 namespace Objects
 {
@@ -21,6 +21,7 @@ namespace Objects
         public bool Stackable;
         public byte Bind;
         public byte Rarity;
+
         // Requerimentos
         public short Req_Level;
         private Guid req_Class;
@@ -29,12 +30,14 @@ namespace Objects
             get => Class.Get( req_Class);
             set => req_Class = new Guid(GetID(value));
         }
+
         // Poção
         public int Potion_Experience;
-        public short[] Potion_Vital = new short[(byte)Utils.Vitals.Count];
+        public short[] Potion_Vital = new short[(byte)Vitals.Count];
+
         // Equipamento
         public byte Equip_Type;
-        public short[] Equip_Attribute = new short[(byte)Utils.Attributes.Count];
+        public short[] Equip_Attribute = new short[(byte)Attributes.Count];
         public short Weapon_Damage;
 
         // Construtor

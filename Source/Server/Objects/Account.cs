@@ -12,7 +12,7 @@ namespace Objects
         public NetConnection Connection;
         public string User = string.Empty;
         public string Password = string.Empty;
-        public Utils.Accesses Acess;
+        public Logic.Utils.Accesses Acess;
         public bool InEditor;
         public Player Character;
         public List<TempCharacter> Characters = new List<TempCharacter>();

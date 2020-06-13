@@ -1,6 +1,7 @@
 ﻿using Network;
 using System;
-using static Utils;
+using Logic;
+using static Logic.Utils;
 
 namespace Objects
 {

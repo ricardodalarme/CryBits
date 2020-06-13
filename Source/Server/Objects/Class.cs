@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static Logic.Utils;
 
 namespace Objects
 {
@@ -21,8 +22,8 @@ namespace Objects
         public byte Spawn_Direction;
         public byte Spawn_X;
         public byte Spawn_Y;
-        public short[] Vital = new short[(byte)Utils.Vitals.Count];
-        public short[] Attribute = new short[(byte)Utils.Attributes.Count];
+        public short[] Vital = new short[(byte)Vitals.Count];
+        public short[] Attribute = new short[(byte)Attributes.Count];
         public Tuple<Item, short>[] Item = Array.Empty<Tuple<Item, short>>();
 
         // Construtor

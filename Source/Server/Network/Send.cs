@@ -1,7 +1,7 @@
 ﻿using Lidgren.Network;
 using Objects;
 using System.Drawing;
-using static Utils;
+using static Logic.Utils;
 
 namespace Network
 {

@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static Utils;
+using Logic;
+using static Logic.Utils;
 
 namespace Objects
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using static Utils;
+using static Logic.Utils;
 
 namespace Objects
 {

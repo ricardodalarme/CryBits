@@ -15,9 +15,9 @@ namespace Network
             // Define algumas configurações da rede
             Config = new NetPeerConfiguration("CryBits")
             {
-                Port = Utils.Port,
+                Port = Logic.Utils.Port,
                 AcceptIncomingConnections = true,
-                MaximumConnections = Utils.Max_Players
+                MaximumConnections = Logic.Utils.Max_Players
             };
 
             // Cria o dispositivo com as devidas configurações

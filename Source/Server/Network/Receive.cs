@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Library;
-using static Utils;
+using static Logic.Utils;
 
 namespace Network
 {
