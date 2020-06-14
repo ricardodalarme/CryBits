@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Objects;
+using Interface;
 
 class Loop
 {
@@ -31,7 +32,7 @@ class Loop
             // Eventos
             TextBox();
 
-            if (Window.Current == Window.Types.Game)
+            if (Windows.Current == Windows.Types.Game)
             {
                 Mapper.Logic();
                 if (Timer_30 < Environment.TickCount)

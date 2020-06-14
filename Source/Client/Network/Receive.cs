@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Interface;
 
 namespace Network
 {
@@ -235,7 +236,7 @@ namespace Network
 
             // Abre o jogo
             Audio.Music.Stop();
-            Window.Current = Window.Types.Game;
+            Windows.Current = Windows.Types.Game;
         }
 
         private static void Player_Data(NetIncomingMessage Data)

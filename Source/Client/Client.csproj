@@ -70,7 +70,7 @@
   <ItemGroup>
     <Compile Include="Interface\Chat.cs" />
     <Compile Include="Interface\Utils.cs" />
-    <Compile Include="Interface\Window.cs" />
+    <Compile Include="Interface\Windows.cs" />
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\Data.cs" />
     <Compile Include="Objects\Item.cs" />

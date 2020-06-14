@@ -53,7 +53,7 @@ namespace Network
                         {
                             // Apaga os dados e volta ao menu
                             if (Objects.Player.Me != null) Objects.Player.Me.Leave();
-                            Window.OpenMenu();
+                            Interface.Windows.OpenMenu();
                         }
                         break;
                 }

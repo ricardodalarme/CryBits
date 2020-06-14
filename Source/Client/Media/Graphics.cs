@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using Interface;
 
-partial class Graphics
+class Graphics
 {
     // Locais de renderização
     public static RenderWindow RenderWindow;
@@ -60,13 +61,13 @@ partial class Graphics
 
         // Inicia a janela
         RenderWindow = new RenderWindow(new VideoMode(800, 608), Game.Option.Game_Name, Styles.Close);
-        RenderWindow.Closed += new EventHandler(Window.OnClosed);
-        RenderWindow.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonPressed);
-        RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Window.OnMouseMoved);
-        RenderWindow.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonReleased);
-        RenderWindow.KeyPressed += new EventHandler<KeyEventArgs>(Window.OnKeyPressed);
-        RenderWindow.KeyReleased += new EventHandler<KeyEventArgs>(Window.OnKeyReleased);
-        RenderWindow.TextEntered += new EventHandler<TextEventArgs>(Window.OnTextEntered);
+        RenderWindow.Closed += new EventHandler(Windows.OnClosed);
+        RenderWindow.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(Windows.OnMouseButtonPressed);
+        RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Windows.OnMouseMoved);
+        RenderWindow.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(Windows.OnMouseButtonReleased);
+        RenderWindow.KeyPressed += new EventHandler<KeyEventArgs>(Windows.OnKeyPressed);
+        RenderWindow.KeyReleased += new EventHandler<KeyEventArgs>(Windows.OnKeyReleased);
+        RenderWindow.TextEntered += new EventHandler<TextEventArgs>(Windows.OnTextEntered);
     }
 
     private static void LoadTextures()
@@ -254,7 +255,7 @@ partial class Graphics
         Interface(Tools.Order);
 
         // Desenha o chat 
-        if (Window.Current == Window.Types.Game) Chat();
+        if (Windows.Current == Windows.Types.Game) Chat();
 
         // Exibe o que foi renderizado
         RenderWindow.Display();
@@ -263,7 +264,7 @@ partial class Graphics
     private static void InGame()
     {
         // Não desenhar se não estiver em jogo
-        if (Window.Current != Window.Types.Game) return;
+        if (Windows.Current != Windows.Types.Game) return;
 
         // Atualiza a câmera
         Game.UpdateCamera();
@@ -487,9 +488,9 @@ partial class Graphics
 
         // Renderiza as mensagens
         if (Tool.Visible || (Loop.Chat_Timer >= Environment.TickCount && Game.Option.Chat))
-            for (byte i = global::Chat.Lines_First; i <= global::Chat.Lines_Visible + global::Chat.Lines_First; i++)
-                if (global::Chat.Order.Count > i)
-                    DrawText(global::Chat.Order[i].Text, 16, 461 + 11 * (i - global::Chat.Lines_First), global::Chat.Order[i].Color);
+            for (byte i = global::Interface.Chat.Lines_First; i <= global::Interface.Chat.Lines_Visible + global::Interface.Chat.Lines_First; i++)
+                if (global::Interface.Chat.Order.Count > i)
+                    DrawText(global::Interface.Chat.Order[i].Text, 16, 461 + 11 * (i - global::Interface.Chat.Lines_First), global::Interface.Chat.Order[i].Color);
 
         // Dica de como abrir o chat
         if (!Tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.Get("Chat").Position.X + 5, TextBoxes.Get("Chat").Position.Y + 3, SFML.Graphics.Color.White);
@@ -579,7 +580,7 @@ partial class Graphics
         // Movendo slot
         if (Utils.Hotbar_Change >= 0)
             if (Player.Me.Hotbar[Utils.Hotbar_Change].Type == (byte)Game.Hotbar.Item)
-                Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Utils.Hotbar_Change].Slot].Item.Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
+                Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Utils.Hotbar_Change].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
     }
 
     private static void Menu_Character(Panels.Structure Tool)
@@ -614,7 +615,7 @@ partial class Graphics
             Item(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount, Tool.Position + new Size(7, 30), i, NumColumns);
 
         // Movendo item
-        if (Utils.Inventory_Change > 0) Render(Tex_Item[Player.Me.Inventory[Utils.Inventory_Change].Item.Texture], new Point(Window.Mouse.X + 6, Window.Mouse.Y + 6));
+        if (Utils.Inventory_Change > 0) Render(Tex_Item[Player.Me.Inventory[Utils.Inventory_Change].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
     }
 
     private static void Party_Invitation(Panels.Structure Tool)

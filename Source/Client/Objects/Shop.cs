@@ -22,7 +22,7 @@ namespace Objects
         public Shop_Item FindBought(Item Item)
         {
             // Encontra um item especifico na lista de itens vendidos
-            for (byte i = 0; i < Utils.Shop_Open.Bought.Length; i++)
+            for (byte i = 0; i < Bought.Length; i++)
                 if (Bought[i].Item.Equals(Item))
                     return Bought[i];
 

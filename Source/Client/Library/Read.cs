@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Objects;
+using Interface;
 
 static class Read
 {
@@ -37,7 +38,7 @@ static class Read
         Tool.Position.X = Data.ReadInt32();
         Tool.Position.Y = Data.ReadInt32();
         Tool.Visible = Data.ReadBoolean();
-        Tool.Window = (Window.Types)Data.ReadByte();
+        Tool.Window = (Windows.Types)Data.ReadByte();
         Tool.Texture_Num = Data.ReadByte();
         return Tool;
     }
@@ -50,7 +51,7 @@ static class Read
         Tool.Position.X = Data.ReadInt32();
         Tool.Position.Y = Data.ReadInt32();
         Tool.Visible = Data.ReadBoolean();
-        Tool.Window = (Window.Types)Data.ReadByte();
+        Tool.Window = (Windows.Types)Data.ReadByte();
         Tool.Lenght = Data.ReadInt16();
         Tool.Width = Data.ReadInt16();
         Tool.Password = Data.ReadBoolean();
@@ -65,7 +66,7 @@ static class Read
         Tool.Position.X = Data.ReadInt32();
         Tool.Position.Y = Data.ReadInt32();
         Tool.Visible = Data.ReadBoolean();
-        Tool.Window = (Window.Types)Data.ReadByte();
+        Tool.Window = (Windows.Types)Data.ReadByte();
         Tool.Texture_Num = Data.ReadByte();
         return Tool;
     }
@@ -78,7 +79,7 @@ static class Read
         Tool.Position.X = Data.ReadInt32();
         Tool.Position.Y = Data.ReadInt32();
         Tool.Visible = Data.ReadBoolean();
-        Tool.Window = (Window.Types)Data.ReadByte();
+        Tool.Window = (Windows.Types)Data.ReadByte();
         Tool.Text = Data.ReadString();
         Tool.Checked = Data.ReadBoolean();
         return Tool;
@@ -87,11 +88,11 @@ static class Read
     private static void Tools()
     {
         FileInfo File = new FileInfo(Directories.Tools_Data.FullName);
-        for (byte i = 0; i < (byte)global::Window.Types.Count; i++) global::Tools.All_Order[i] = new List<Tools.Order_Structure>();
+        for (byte i = 0; i < (byte)Windows.Types.Count; i++) Interface.Tools.All_Order[i] = new List<Tools.Order_Structure>();
 
         // Lê todas as ferramentas
         BinaryReader Data = new BinaryReader(File.OpenRead());
-        for (byte n = 0; n < global::Tools.All_Order.Length; n++) Tools(null, ref global::Tools.All_Order[n], Data);
+        for (byte n = 0; n < Interface.Tools.All_Order.Length; n++) Tools(null, ref Interface.Tools.All_Order[n], Data);
         Data.Dispose();
     }
 
@@ -106,10 +107,10 @@ static class Read
             Tools.Structure Temp_Tool = new Tools.Structure();
             switch ((Tools.Types)Data.ReadByte())
             {
-                case global::Tools.Types.Button: Temp_Tool = Button(Data); Buttons.List.Add((Buttons.Structure)Temp_Tool); break;
-                case global::Tools.Types.TextBox: Temp_Tool = TextBox(Data); TextBoxes.List.Add((TextBoxes.Structure)Temp_Tool); break;
-                case global::Tools.Types.Panel: Temp_Tool = Panel(Data); Panels.List.Add((Panels.Structure)Temp_Tool); break;
-                case global::Tools.Types.CheckBox: Temp_Tool = CheckBox(Data); CheckBoxes.List.Add((CheckBoxes.Structure)Temp_Tool); break;
+                case Interface.Tools.Types.Button: Temp_Tool = Button(Data); Buttons.List.Add((Buttons.Structure)Temp_Tool); break;
+                case Interface.Tools.Types.TextBox: Temp_Tool = TextBox(Data); TextBoxes.List.Add((TextBoxes.Structure)Temp_Tool); break;
+                case Interface.Tools.Types.Panel: Temp_Tool = Panel(Data); Panels.List.Add((Panels.Structure)Temp_Tool); break;
+                case Interface.Tools.Types.CheckBox: Temp_Tool = CheckBox(Data); CheckBoxes.List.Add((CheckBoxes.Structure)Temp_Tool); break;
             }
 
             // Adiciona à lista
