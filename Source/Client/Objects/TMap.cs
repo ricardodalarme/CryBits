@@ -7,6 +7,7 @@ namespace Objects
     {
         // Lista de dados
         public static Dictionary<Guid, TMap> List;
+        public static TMap_Weather[] Weather;
 
         // Dados gerais
         public Map Data;
@@ -82,5 +83,15 @@ namespace Objects
             this.Y = Y;
             this.Opacity = Opacity;
         }
+    }
+
+    class TMap_Weather
+    {
+        public bool Visible;
+        public int x;
+        public int y;
+        public int Speed;
+        public int Start;
+        public bool Back;
     }
 }

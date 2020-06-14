@@ -123,7 +123,7 @@ class Buttons
     public static bool Characters_Change_Buttons()
     {
         // Altera os botões visíveis
-        bool Visibility = Lists.Characters != null && Utils.SelectCharacter < Lists.Characters.Length;
+        bool Visibility = Utils.Characters != null && Utils.SelectCharacter < Utils.Characters.Length;
         Get("Character_Create").Visible = !Visibility;
         Get("Character_Delete").Visible = Visibility;
         Get("Character_Use").Visible = Visibility;
@@ -156,8 +156,8 @@ class Buttons
         Socket.Disconnect();
 
         // Define as marcações corretas
-        CheckBoxes.Get("Sounds").Checked = Lists.Options.Sounds;
-        CheckBoxes.Get("Musics").Checked = Lists.Options.Musics;
+        CheckBoxes.Get("Sounds").Checked = Game.Option.Sounds;
+        CheckBoxes.Get("Musics").Checked = Game.Option.Musics;
 
         // Abre o painel
         Panels.Menu_Close();
@@ -177,7 +177,7 @@ class Buttons
     private static void Connect_Ok()
     {
         // Salva o nome do usuário
-        Lists.Options.Username = TextBoxes.Get("Connect_Username").Text;
+        Game.Option.Username = TextBoxes.Get("Connect_Username").Text;
         Write.Options();
 
         // Conecta-se ao jogo
@@ -281,7 +281,7 @@ class Buttons
     private static void Character_Change_Right()
     {
         // Altera o personagem selecionado pelo jogador
-        if (Utils.SelectCharacter == Lists.Characters.Length)
+        if (Utils.SelectCharacter == Utils.Characters.Length)
             Utils.SelectCharacter = 0;
         else
             Utils.SelectCharacter += 1;
@@ -291,7 +291,7 @@ class Buttons
     {
         // Altera o personagem selecionado pelo jogador
         if (Utils.SelectCharacter == 0)
-            Utils.SelectCharacter = Lists.Characters.Length;
+            Utils.SelectCharacter = Utils.Characters.Length;
         else
             Utils.SelectCharacter -= 1;
     }

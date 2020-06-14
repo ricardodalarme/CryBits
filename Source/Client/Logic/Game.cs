@@ -48,6 +48,23 @@ class Game
     public const byte Map_Width = 25;
     public const byte Map_Height = 19;
 
+    // Opções
+    public static Options Option = new Options();
+    [Serializable]
+    public class Options
+    {
+        public string Game_Name = "CryBits";
+        public bool SaveUsername = true;
+        public bool Sounds = true;
+        public bool Musics = true;
+        public bool Chat = true;
+        public bool FPS;
+        public bool Latency;
+        public bool Party;
+        public bool Trade;
+        public string Username = string.Empty;
+    }
+
     public enum Attributes
     {
         Strength,

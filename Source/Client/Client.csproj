@@ -85,9 +85,7 @@
     <Compile Include="Interface\Panels.cs" />
     <Compile Include="Interface\TextBoxes.cs" />
     <Compile Include="Interface\Tools.cs" />
-    <Compile Include="Library\Clear.cs" />
     <Compile Include="Library\Directories.cs" />
-    <Compile Include="Library\Lists.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Library\Write.cs" />
     <Compile Include="Logic\Game.cs" />

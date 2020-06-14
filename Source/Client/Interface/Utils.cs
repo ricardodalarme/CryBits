@@ -8,7 +8,7 @@ class Utils
     public static byte CreateCharacter_Class = 0;
     public static byte CreateCharacter_Tex = 0;
     public static int SelectCharacter = 1;
-    public static string Infomation_ID;
+    public static Guid Infomation_ID;
     public static byte Drop_Slot = 0;
     public static string Party_Invitation;
     public static string Trade_Invitation;
@@ -18,6 +18,13 @@ class Utils
     public static byte Shop_Inventory_Slot = 0;
     public static short Hotbar_Change;
     public static byte Inventory_Change;
+    public static TempCharacter[] Characters;
+    public struct TempCharacter
+    {
+        public string Name;
+        public short Level;
+        public short Texture_Num;
+    }
 
     public static bool IsAbove(Rectangle Rectangle)
     {
@@ -79,27 +86,27 @@ class Utils
         if (Panels.Hotbar_Slot >= 0)
         {
             Position = Panels.Get("Hotbar").Position + new Size(0, 42);
-            Infomation_ID = Lists.GetID(Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Slot].Slot].Item);
+            Infomation_ID = Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Slot].Slot].Item.ID;
         }
         else if (Panels.Inventory_Slot > 0)
         {
             Position = Panels.Get("Menu_Inventory").Position + new Size(-186, 3);
-            Infomation_ID = Lists.GetID(Player.Me.Inventory[Panels.Inventory_Slot].Item);
+            Infomation_ID = Player.Me.Inventory[Panels.Inventory_Slot].Item.ID;
         }
         else if (Panels.Equipment_Slot >= 0)
         {
             Position = Panels.Get("Menu_Character").Position + new Size(-186, 5);
-            Infomation_ID = Lists.GetID(Player.Me.Equipment[Panels.Equipment_Slot]);
+            Infomation_ID = Player.Me.Equipment[Panels.Equipment_Slot].ID;
         }
         else if (Panels.Shop_Slot >= 0 && Panels.Shop_Slot < Shop_Open.Sold.Length)
         {
             Position = new Point(Panels.Get("Shop").Position.X - 186, Panels.Get("Shop").Position.Y + 5);
-            Infomation_ID = Lists.GetID(Shop_Open.Sold[Panels.Shop_Slot].Item);
+            Infomation_ID = Shop_Open.Sold[Panels.Shop_Slot].Item.ID;
         }
-        else Infomation_ID = Guid.Empty.ToString();
+        else Infomation_ID = Guid.Empty;
 
         // Define os dados do painel de informações
-        Panels.Get("Information").Visible = !Position.IsEmpty && Infomation_ID != Guid.Empty.ToString();
+        Panels.Get("Information").Visible = !Position.IsEmpty && Infomation_ID != Guid.Empty;
         Panels.Get("Information").Position = Position;
     }
 }

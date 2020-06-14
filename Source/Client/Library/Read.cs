@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Objects;
 
-class Read
+static class Read
 {
     public static void Data()
     {
@@ -18,14 +18,14 @@ class Read
         // Cria o arquivo se ele não existir
         if (!Directories.Options.Exists)
         {
-            Clear.Options();
+            Game.Option = new Game.Options();
             Write.Options();
             return;
         }
 
         // Lê os dados
         FileStream Stream = Directories.Options.OpenRead();
-        Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);
+        Game.Option = (Game.Options)new BinaryFormatter().Deserialize(Stream);
         Stream.Close();
     }
 

@@ -59,7 +59,7 @@ partial class Graphics
         LoadTextures();
 
         // Inicia a janela
-        RenderWindow = new RenderWindow(new VideoMode(800, 608), Lists.Options.Game_Name, Styles.Close);
+        RenderWindow = new RenderWindow(new VideoMode(800, 608), Game.Option.Game_Name, Styles.Close);
         RenderWindow.Closed += new EventHandler(Window.OnClosed);
         RenderWindow.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(Window.OnMouseButtonPressed);
         RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Window.OnMouseMoved);
@@ -298,8 +298,8 @@ partial class Graphics
         Party();
 
         // Desenha os dados do jogo
-        if (Lists.Options.FPS) DrawText("FPS: " + Game.FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
-        if (Lists.Options.Latency) DrawText("Latency: " + Network.Socket.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
+        if (Game.Option.FPS) DrawText("FPS: " + Game.FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
+        if (Game.Option.Latency) DrawText("Latency: " + Network.Socket.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
     }
 
     #region Tools
@@ -412,14 +412,14 @@ partial class Graphics
         }
 
         // Verifica se o personagem existe
-        if (Utils.SelectCharacter >= Lists.Characters.Length)
+        if (Utils.SelectCharacter >= Utils.Characters.Length)
         {
             DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
             return;
         }
 
         // Desenha o personagem
-        short Texture_Num = Lists.Characters[Utils.SelectCharacter].Texture_Num;
+        short Texture_Num = Utils.Characters[Utils.SelectCharacter].Texture_Num;
         if (Texture_Num > 0)
         {
             Render(Tex_Face[Texture_Num], new Point(353, 442));
@@ -427,7 +427,7 @@ partial class Graphics
         }
 
         // Desenha o nome da classe
-        Text = "(" + (Utils.SelectCharacter + 1) + ") " + Lists.Characters[Utils.SelectCharacter].Name;
+        Text = "(" + (Utils.SelectCharacter + 1) + ") " + Utils.Characters[Utils.SelectCharacter].Name;
         DrawText(Text, Text_Position.X, Text_Position.Y, SFML.Graphics.Color.White, Alignments.Center);
     }
 
@@ -486,7 +486,7 @@ partial class Graphics
         Tool.Visible = TextBoxes.Focused != null && ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
 
         // Renderiza as mensagens
-        if (Tool.Visible || (Loop.Chat_Timer >= Environment.TickCount && Lists.Options.Chat))
+        if (Tool.Visible || (Loop.Chat_Timer >= Environment.TickCount && Game.Option.Chat))
             for (byte i = global::Chat.Lines_First; i <= global::Chat.Lines_Visible + global::Chat.Lines_First; i++)
                 if (global::Chat.Order.Count > i)
                     DrawText(global::Chat.Order[i].Text, 16, 461 + 11 * (i - global::Chat.Lines_First), global::Chat.Order[i].Color);
@@ -497,7 +497,7 @@ partial class Graphics
 
     private static void Informations(Panels.Structure Tool)
     {
-        Item Item = Item.Get( new Guid(Utils.Infomation_ID));
+        Item Item = Item.Get( Utils.Infomation_ID);
         SFML.Graphics.Color Text_Color;
         List<string> Data = new List<string>();
 
@@ -945,9 +945,9 @@ partial class Graphics
         }
 
         // Desenha as partículas
-        for (int i = 0; i < Lists.Weather.Length; i++)
-            if (Lists.Weather[i].Visible)
-                Render(Tex_Weather, new Rectangle(x, 0, 32, 32), new Rectangle(Lists.Weather[i].x, Lists.Weather[i].y, 32, 32), CColor(255, 255, 255, 150));
+        for (int i = 0; i < TMap.Weather.Length; i++)
+            if (TMap.Weather[i].Visible)
+                Render(Tex_Weather, new Rectangle(x, 0, 32, 32), new Rectangle(TMap.Weather[i].x, TMap.Weather[i].y, 32, 32), CColor(255, 255, 255, 150));
 
         // Trovoadas
         Render(Tex_Blanc, 0, 0, 0, 0, Game.Screen_Width, Game.Screen_Height, new SFML.Graphics.Color(255, 255, 255, Mapper.Lightning));

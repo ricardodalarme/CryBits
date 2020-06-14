@@ -188,12 +188,12 @@ namespace Network
         private static void Characters(NetIncomingMessage Data)
         {
             // Redimensiona a lista
-            Lists.Characters = new Lists.Structures.Character[Data.ReadByte()];
+            Utils.Characters = new Utils.TempCharacter[Data.ReadByte()];
 
-            for (byte i = 0; i < Lists.Characters.Length; i++)
+            for (byte i = 0; i < Utils.Characters.Length; i++)
             {
                 // Recebe os dados do personagem
-                Lists.Characters[i] = new Lists.Structures.Character
+                Utils.Characters[i] = new Utils.TempCharacter
                 {
                     Name = Data.ReadString(),
                     Texture_Num = Data.ReadInt16(),
@@ -209,15 +209,15 @@ namespace Network
             Chat.Lines_First = 0;
             Loop.Chat_Timer = Environment.TickCount + Chat.Sleep_Timer;
             TextBoxes.Get("Chat").Text = string.Empty;
-            CheckBoxes.Get("Options_Sounds").Checked = Lists.Options.Sounds;
-            CheckBoxes.Get("Options_Musics").Checked = Lists.Options.Musics;
-            CheckBoxes.Get("Options_Chat").Checked = Lists.Options.Chat;
-            CheckBoxes.Get("Options_FPS").Checked = Lists.Options.FPS;
-            CheckBoxes.Get("Options_Latency").Checked = Lists.Options.Latency;
-            CheckBoxes.Get("Options_Trade").Checked = Lists.Options.Trade;
-            CheckBoxes.Get("Options_Party").Checked = Lists.Options.Party;
+            CheckBoxes.Get("Options_Sounds").Checked = Game.Option.Sounds;
+            CheckBoxes.Get("Options_Musics").Checked = Game.Option.Musics;
+            CheckBoxes.Get("Options_Chat").Checked = Game.Option.Chat;
+            CheckBoxes.Get("Options_FPS").Checked = Game.Option.FPS;
+            CheckBoxes.Get("Options_Latency").Checked = Game.Option.Latency;
+            CheckBoxes.Get("Options_Trade").Checked = Game.Option.Trade;
+            CheckBoxes.Get("Options_Party").Checked = Game.Option.Party;
             Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
-            Utils.Infomation_ID = Guid.Empty.ToString();
+            Utils.Infomation_ID = Guid.Empty;
 
             // Reseta a interface
             Panels.Get("Menu_Character").Visible = false;
@@ -634,7 +634,7 @@ namespace Network
         private static void Party_Invitation(NetIncomingMessage Data)
         {
             // Nega o pedido caso o jogador não quiser receber convites
-            if (!Lists.Options.Party)
+            if (!Game.Option.Party)
             {
                 Send.Party_Decline();
                 return;
@@ -674,7 +674,7 @@ namespace Network
         private static void Trade_Invitation(NetIncomingMessage Data)
         {
             // Nega o pedido caso o jogador não quiser receber convites
-            if (!Lists.Options.Trade)
+            if (!Game.Option.Trade)
             {
                 Send.Trade_Decline();
                 return;

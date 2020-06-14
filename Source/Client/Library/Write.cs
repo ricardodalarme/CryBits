@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-class Write
+static class Write
 {
     public static void Options()
     {
         // Escreve os dados
         FileStream Stream = new FileInfo(Directories.Options.FullName).OpenWrite();
-        new BinaryFormatter().Serialize(Stream, Lists.Options);
+        new BinaryFormatter().Serialize(Stream, Game.Option);
         Stream.Close();
     }
 

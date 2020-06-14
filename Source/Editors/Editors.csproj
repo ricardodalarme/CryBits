@@ -140,7 +140,8 @@
     <Compile Include="Editors\NPCs.Designer.cs">
       <DependentUpon>NPCs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Logic\Maper.cs" />
+    <Compile Include="Logic\MapAutoTile.cs" />
+    <Compile Include="Logic\MapProperties.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Media\Audio.cs" />
     <Compile Include="Logic\Utils.cs" />

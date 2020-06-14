@@ -61,19 +61,19 @@ class CheckBoxes
     private static void Sounds()
     {
         // Salva os dados
-        Lists.Options.Sounds = !Lists.Options.Sounds;
-        if (!Lists.Options.Sounds) Audio.Sound.Stop_All();
+        Game.Option.Sounds = !Game.Option.Sounds;
+        if (!Game.Option.Sounds) Audio.Sound.Stop_All();
         Write.Options();
     }
 
     private static void Musics()
     {
         // Salva os dados
-        Lists.Options.Musics = !Lists.Options.Musics;
+        Game.Option.Musics = !Game.Option.Musics;
         Write.Options();
 
         // Para ou reproduz a música dependendo do estado do marcador
-        if (!Lists.Options.Musics)
+        if (!Game.Option.Musics)
             Audio.Music.Stop();
         else if (Window.Current == Window.Types.Menu)
             Audio.Music.Play(Audio.Musics.Menu);
@@ -84,7 +84,7 @@ class CheckBoxes
     private static void SaveUsername()
     {
         // Salva os dados
-        Lists.Options.SaveUsername = Get("Connect_Save_Username").Checked;
+        Game.Option.SaveUsername = Get("Connect_Save_Username").Checked;
         Write.Options();
     }
 
@@ -105,36 +105,36 @@ class CheckBoxes
     private static void Chat()
     {
         // Salva os dado
-        Lists.Options.Chat = Get("Options_Chat").Checked;
+        Game.Option.Chat = Get("Options_Chat").Checked;
         Write.Options();
-        if (Lists.Options.Chat) Loop.Chat_Timer = System.Environment.TickCount + global::Chat.Sleep_Timer;
+        if (Game.Option.Chat) Loop.Chat_Timer = System.Environment.TickCount + global::Chat.Sleep_Timer;
     }
 
     private static void FPS()
     {
         // Salva os dado
-        Lists.Options.FPS = Get("Options_FPS").Checked;
+        Game.Option.FPS = Get("Options_FPS").Checked;
         Write.Options();
     }
 
     private static void Latency()
     {
         // Desabilita a prévia do chat
-        Lists.Options.Latency = Get("Options_Latency").Checked;
+        Game.Option.Latency = Get("Options_Latency").Checked;
         Write.Options();
     }
 
     private static void Party()
     {
         // Salva os dado
-        Lists.Options.Party = Get("Options_Party").Checked;
+        Game.Option.Party = Get("Options_Party").Checked;
         Write.Options();
     }
 
     private static void Trade()
     {
         // Salva os dado
-        Lists.Options.Trade = Get("Options_Trade").Checked;
+        Game.Option.Trade = Get("Options_Trade").Checked;
         Write.Options();
     }
 }

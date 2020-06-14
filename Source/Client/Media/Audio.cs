@@ -45,7 +45,7 @@ class Audio
         public static void Play(Sounds Index, bool Loop = false)
         {
             // Apenas se necessário
-            if (!Lists.Options.Sounds) return;
+            if (!Game.Option.Sounds) return;
 
             // Reproduz o áudio
             List[(byte)Index].Volume = 20;
@@ -81,7 +81,7 @@ class Audio
 
             // Apenas se necessário
             if (Device != null) return;
-            if (!Lists.Options.Musics) return;
+            if (!Game.Option.Musics) return;
             if (!File.Exists(Directory)) return;
 
             // Carrega o áudio
