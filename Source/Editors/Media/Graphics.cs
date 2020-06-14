@@ -267,7 +267,7 @@ class Graphics
         Win_Map.Clear(SFML.Graphics.Color.Black);
 
         // Desenha o mapa
-        Objects.Map Selected = Editor_Maps.Form.Selected;
+        Map Selected = Editor_Maps.Form.Selected;
         Editor_Maps_Map_Panorama(Selected);
         Editor_Maps_Map_Tiles(Selected);
         Editor_Maps_Map_Weather(Selected);
@@ -280,25 +280,27 @@ class Graphics
         Win_Map.Display();
     }
 
-    private static void Editor_Maps_Map_Panorama(Objects.Map Map)
+    private static void Editor_Maps_Map_Panorama(Map Map)
     {
+        Editor_Maps Form = Editor_Maps.Form;
+
         // Desenha o panorama
-        if (Editor_Maps.Form.butVisualization.Checked && Map.Panorama > 0)
+        if (Form.butVisualization.Checked && Map.Panorama > 0)
         {
             Rectangle Destiny = new Rectangle()
             {
-                X = Editor_Maps.Form.scrlMapX.Value * -Grid_Zoom,
-                Y = Editor_Maps.Form.scrlMapY.Value * -Grid_Zoom,
+                X = Form.scrlMapX.Value * -Form.Grid_Zoom,
+                Y = Form.scrlMapY.Value * -Form.Grid_Zoom,
                 Size = TSize(Tex_Panorama[Map.Panorama])
             };
             Render(Win_Map, Tex_Panorama[Map.Panorama], Editor_Maps.Form.Zoom(Destiny));
         }
     }
 
-    private static void Editor_Maps_Map_Tiles(Objects.Map Map)
+    private static void Editor_Maps_Map_Tiles(Map Map)
     {
         Editor_Maps Form = Editor_Maps.Form;
-        Objects.Map_Tile_Data Data;
+        Map_Tile_Data Data;
         int Begin_X = Form.scrlMapX.Value, Begin_Y = Form.scrlMapY.Value;
         SFML.Graphics.Color Color;
 
@@ -338,7 +340,7 @@ class Graphics
         }
     }
 
-    private static void Editor_Maps_AutoTile(Point Position, Objects.Map_Tile_Data Data, SFML.Graphics.Color Color)
+    private static void Editor_Maps_AutoTile(Point Position, Map_Tile_Data Data, SFML.Graphics.Color Color)
     {
         // Desenha todas as partes do azulejo
         for (byte i = 0; i < 4; i++)
@@ -353,7 +355,7 @@ class Graphics
         }
     }
 
-    private static void Editor_Maps_Map_Fog(Objects.Map Map)
+    private static void Editor_Maps_Map_Fog(Map Map)
     {
         // Somente se necessário
         if (Map.Fog.Texture <= 0) return;
@@ -369,7 +371,7 @@ class Graphics
             }
     }
 
-    private static void Editor_Maps_Map_Weather(Objects.Map Map)
+    private static void Editor_Maps_Map_Weather(Map Map)
     {
         // Somente se necessário
         if (!Editor_Maps.Form.butVisualization.Checked || Map.Weather.Type == Weathers.Normal) return;
@@ -384,13 +386,13 @@ class Graphics
                 Render(Win_Map, Tex_Weather, new Rectangle(x, 0, 32, 32), Editor_Maps.Form.Zoom(new Rectangle(Lists.Weather[i].x, Lists.Weather[i].y, 32, 32)), CColor(255, 255, 255, 150));
     }
 
-    private static void Editor_Maps_Map_Light(Objects.Map Map)
+    private static void Editor_Maps_Map_Light(Map Map)
     {
         Editor_Maps Form = Editor_Maps.Form;
         byte Light = (byte)((255 * ((decimal)Map.Lighting / 100) - 255) * -1);
 
         // Somente se necessário
-        if (!Editor_Maps.Form.butVisualization.Checked) return;
+        if (!Form.butVisualization.Checked) return;
 
         // Escuridão
         Win_Map_Lighting.Clear(CColor(0, 0, 0, Light));
@@ -398,10 +400,19 @@ class Graphics
         // Desenha o ponto iluminado
         if (Map.Light.Count > 0)
             for (byte i = 0; i < Map.Light.Count; i++)
-                Render(Win_Map_Lighting, Tex_Lighting, Form.Zoom_Grid(Map.Light[i].Rec), null, new RenderStates(BlendMode.Multiply));
+            {
+                var Destiny = new Rectangle
+                {
+                    X = Map.Light[i].Rec.X - Form.scrlMapX.Value,
+                    Y = Map.Light[i].Rec.Y - Form.scrlMapY.Value,
+                    Width = Map.Light[i].Width,
+                    Height = Map.Light[i].Height
+                };
+                Render(Win_Map_Lighting, Tex_Lighting, Form.Zoom_Grid(Destiny), null, new RenderStates(BlendMode.Multiply));
+            }
 
         // Pré visualização
-        if (Editor_Maps.Form.butMLighting.Checked)
+        if (Form.butMLighting.Checked)
             Render(Win_Map_Lighting, Tex_Lighting, Form.Zoom_Grid(Form.Map_Selection), null, new RenderStates(BlendMode.Multiply));
 
         // Apresenta o que foi renderizado
@@ -412,20 +423,20 @@ class Graphics
         if (Form.butMLighting.Checked)
             if (Map.Light.Count > 0)
                 for (byte i = 0; i < Map.Light.Count; i++)
-                    RenderRectangle(Win_Map, Form.Zoom_Grid(new Rectangle(Map.Light[i].Rec.X, Map.Light[i].Rec.Y, 1, 1)), CColor(175, 42, 42, 175));
+                    RenderRectangle(Win_Map, Form.Zoom_Grid(new Rectangle(Map.Light[i].Rec.X - Form.scrlMapX.Value, Map.Light[i].Rec.Y - Form.scrlMapY.Value, 1, 1)), CColor(175, 42, 42, 175));
 
         // Trovoadas
         Render(Win_Map, Tex_Blank, 0, 0, 0, 0, Form.picMap.Width, Form.picMap.Height, CColor(255, 255, 255, Map.Lightning));
     }
 
-    private static void Editor_Maps_Map_Grids(Objects.Map Map)
+    private static void Editor_Maps_Map_Grids(Map Map)
     {
         Editor_Maps Form = Editor_Maps.Form;
         Rectangle Source = Form.Tile_Source, Destiny = new Rectangle();
         Point Begin = new Point(Form.Map_Selection.X - Form.scrlMapX.Value, Form.Map_Selection.Y - Form.scrlMapY.Value);
 
         // Dados
-        Destiny.Location = Zoom(Begin.X, Begin.Y);
+        Destiny.Location = Form.Zoom_Grid(Begin.X, Begin.Y);
         Destiny.Size = new Size(Source.Width / Form.Zoom(), Source.Height / Form.Zoom());
 
         // Desenha as grades
@@ -433,7 +444,7 @@ class Graphics
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
                 {
-                    RenderRectangle(Win_Map, x * Grid_Zoom, y * Grid_Zoom, Grid_Zoom, Grid_Zoom, CColor(25, 25, 25, 70));
+                    RenderRectangle(Win_Map, x * Form.Grid_Zoom, y * Form.Grid_Zoom, Form.Grid_Zoom, Form.Grid_Zoom, CColor(25, 25, 25, 70));
                     Editor_Maps_Map_Zones(Map, x, y);
                     Editor_Maps_Map_Attributes(Map, x, y);
                     Editor_Maps_Map_DirBlock(Map, x, y);
@@ -447,16 +458,17 @@ class Graphics
             else if (Form.butRectangle.Checked)
                 for (int x = Begin.X; x < Begin.X + Form.Map_Selection.Width; x++)
                     for (int y = Begin.Y; y < Begin.Y + Form.Map_Selection.Height; y++)
-                        Render(Win_Map, Tex_Tile[Form.cmbTiles.SelectedIndex + 1], Source, new Rectangle(Zoom(x, y), Destiny.Size));
+                        Render(Win_Map, Tex_Tile[Form.cmbTiles.SelectedIndex + 1], Source, new Rectangle(Form.Zoom_Grid(x, y), Destiny.Size));
 
         // Desenha a grade
         if (!Form.butMAttributes.Checked || !Form.optA_DirBlock.Checked)
-            RenderRectangle(Win_Map, Destiny.X, Destiny.Y, Form.Map_Selection.Width * Grid_Zoom, Form.Map_Selection.Height * Grid_Zoom);
+            RenderRectangle(Win_Map, Destiny.X, Destiny.Y, Form.Map_Selection.Width * Form.Grid_Zoom, Form.Map_Selection.Height * Form.Grid_Zoom);
     }
 
-    private static void Editor_Maps_Map_Zones(Objects.Map Map, byte x, byte y)
+    private static void Editor_Maps_Map_Zones(Map Map, byte x, byte y)
     {
-        Point Position = new Point((x - Editor_Maps.Form.scrlMapX.Value) * Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Grid_Zoom);
+        Editor_Maps Form = Editor_Maps.Form;
+        Point Position = new Point((x - Form.scrlMapX.Value) * Form.Grid_Zoom, (y - Form.scrlMapY.Value) * Form.Grid_Zoom);
         byte Zone_Num = Map.Attribute[x, y].Zone;
         SFML.Graphics.Color Color;
 
@@ -471,13 +483,14 @@ class Graphics
             Color = CColor((byte)(Zone_Num * 33), (byte)(Zone_Num * 22), (byte)(Zone_Num * 42), 150 ^ 3);
 
         // Desenha as zonas
-        Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Grid_Zoom, Grid_Zoom)), Color);
+        Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Form.Grid_Zoom, Form.Grid_Zoom)), Color);
         DrawText(Win_Map, Zone_Num.ToString(), Position.X, Position.Y, SFML.Graphics.Color.White);
     }
 
-    private static void Editor_Maps_Map_Attributes(Objects.Map Map, byte x, byte y)
+    private static void Editor_Maps_Map_Attributes(Map Map, byte x, byte y)
     {
-        Point Position = new Point((x - Editor_Maps.Form.scrlMapX.Value) * Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Grid_Zoom);
+        Editor_Maps Form = Editor_Maps.Form;
+        Point Position = new Point((x - Form.scrlMapX.Value) * Form.Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Form.Grid_Zoom);
         Tile_Attributes Attribute = (Tile_Attributes)Map.Attribute[x, y].Type;
         SFML.Graphics.Color Color;
         string Letter;
@@ -498,11 +511,11 @@ class Graphics
         Color = new SFML.Graphics.Color(Color.R, Color.G, Color.B, 100);
 
         // Desenha as Atributos
-        Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Grid_Zoom, Grid_Zoom)), Color);
+        Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Form.Grid_Zoom, Form.Grid_Zoom)), Color);
         DrawText(Win_Map, Letter, Position.X, Position.Y, SFML.Graphics.Color.White);
     }
 
-    private static void Editor_Maps_Map_DirBlock(Objects.Map Map, byte x, byte y)
+    private static void Editor_Maps_Map_DirBlock(Map Map, byte x, byte y)
     {
         Point Tile = new Point(Editor_Maps.Form.scrlMapX.Value + x, Editor_Maps.Form.scrlMapY.Value + y);
         byte Y;
@@ -528,16 +541,18 @@ class Graphics
         }
     }
 
-    private static void Editor_Maps_Map_NPCs(Objects.Map Map)
+    private static void Editor_Maps_Map_NPCs(Map Map)
     {
+        Editor_Maps Form = Editor_Maps.Form;
+
         if (Editor_Maps.Form.butMNPCs.Checked)
             for (byte i = 0; i < Map.NPC.Count; i++)
                 if (Map.NPC[i].Spawn)
                 {
-                    Point Position = new Point((Map.NPC[i].X - Editor_Maps.Form.scrlMapX.Value) * Grid_Zoom, (Map.NPC[i].Y - Editor_Maps.Form.scrlMapY.Value) * Grid_Zoom);
+                    Point Position = new Point((Map.NPC[i].X - Form.scrlMapX.Value) * Form.Grid_Zoom, (Map.NPC[i].Y - Form.scrlMapY.Value) * Form.Grid_Zoom);
 
                     // Desenha uma sinalização de onde os NPCs estão
-                    Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Grid_Zoom, Grid_Zoom)), CColor(0, 220, 0, 150));
+                    Render(Win_Map, Tex_Blank, new Rectangle(Position, new Size(Form.Grid_Zoom, Form.Grid_Zoom)), CColor(0, 220, 0, 150));
                     DrawText(Win_Map, (i + 1).ToString(), Position.X + 10, Position.Y + 10, SFML.Graphics.Color.White);
                 }
     }
@@ -697,7 +712,7 @@ class Graphics
         for (byte i = 0; i < Node.Nodes.Count; i++)
         {
             // Desenha a ferramenta
-            Objects.Tool Tool = (Objects.Tool)Node.Nodes[i].Tag;
+            Tool Tool = (Tool)Node.Nodes[i].Tag;
             if (Tool.Visible)
             {
                 if (Tool is Objects.Panel) Panel((Objects.Panel)Tool);

@@ -145,12 +145,13 @@
             this.butNPC_Remove = new System.Windows.Forms.Button();
             this.butNPC_Clear = new System.Windows.Forms.Button();
             this.List = new System.Windows.Forms.TreeView();
-            this.butRemove = new System.Windows.Forms.Button();
-            this.butNew = new System.Windows.Forms.Button();
             this.txtFilter = new System.Windows.Forms.TextBox();
             this.picBackground = new System.Windows.Forms.Panel();
             this.picMap = new System.Windows.Forms.PictureBox();
             this.prgProperties = new System.Windows.Forms.PropertyGrid();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.butNew = new System.Windows.Forms.ToolStripButton();
+            this.butRemove = new System.Windows.Forms.ToolStripButton();
             this.tolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTile)).BeginInit();
             this.Strip.SuspendLayout();
@@ -173,6 +174,7 @@
             this.groupBox1.SuspendLayout();
             this.picBackground.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripSeparator5
@@ -1388,33 +1390,11 @@
             this.List.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.List.HideSelection = false;
-            this.List.Location = new System.Drawing.Point(1101, 51);
+            this.List.Location = new System.Drawing.Point(1101, 73);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(256, 266);
+            this.List.Size = new System.Drawing.Size(256, 271);
             this.List.TabIndex = 109;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
-            // 
-            // butRemove
-            // 
-            this.butRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.butRemove.Location = new System.Drawing.Point(1231, 323);
-            this.butRemove.Name = "butRemove";
-            this.butRemove.Size = new System.Drawing.Size(126, 25);
-            this.butRemove.TabIndex = 111;
-            this.butRemove.Text = "Remove";
-            this.butRemove.UseVisualStyleBackColor = true;
-            this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
-            // 
-            // butNew
-            // 
-            this.butNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.butNew.Location = new System.Drawing.Point(1101, 323);
-            this.butNew.Name = "butNew";
-            this.butNew.Size = new System.Drawing.Size(126, 25);
-            this.butNew.TabIndex = 110;
-            this.butNew.Text = "New";
-            this.butNew.UseVisualStyleBackColor = true;
-            this.butNew.Click += new System.EventHandler(this.butNew_Click);
             // 
             // txtFilter
             // 
@@ -1466,19 +1446,50 @@
             this.prgProperties.Size = new System.Drawing.Size(256, 303);
             this.prgProperties.TabIndex = 114;
             // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.butNew,
+            this.butRemove});
+            this.toolStrip1.Location = new System.Drawing.Point(1101, 48);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(89, 25);
+            this.toolStrip1.TabIndex = 115;
+            // 
+            // butNew
+            // 
+            this.butNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butNew.Image = ((System.Drawing.Image)(resources.GetObject("butNew.Image")));
+            this.butNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.butNew.Name = "butNew";
+            this.butNew.Size = new System.Drawing.Size(23, 22);
+            this.butNew.Text = "Add";
+            this.butNew.Click += new System.EventHandler(this.butNew_Click);
+            // 
+            // butRemove
+            // 
+            this.butRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butRemove.Image = ((System.Drawing.Image)(resources.GetObject("butRemove.Image")));
+            this.butRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.butRemove.Name = "butRemove";
+            this.butRemove.Size = new System.Drawing.Size(23, 22);
+            this.butRemove.Text = "Remove";
+            this.butRemove.ToolTipText = "Remover";
+            this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
+            // 
             // Editor_Maps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1366, 687);
+            this.Controls.Add(this.List);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.grpAttributes);
             this.Controls.Add(this.prgProperties);
             this.Controls.Add(this.picBackground);
             this.Controls.Add(this.txtFilter);
-            this.Controls.Add(this.butRemove);
-            this.Controls.Add(this.butNew);
-            this.Controls.Add(this.List);
             this.Controls.Add(this.picTile);
             this.Controls.Add(this.grpTile);
             this.Controls.Add(this.cmbTiles);
@@ -1533,6 +1544,8 @@
             this.groupBox1.ResumeLayout(false);
             this.picBackground.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1647,8 +1660,6 @@
     private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
     private System.Windows.Forms.ToolStripButton butLayers_Edit;
     public System.Windows.Forms.TreeView List;
-    private System.Windows.Forms.Button butRemove;
-    private System.Windows.Forms.Button butNew;
     private System.Windows.Forms.ToolStripDropDownButton butEditors;
     private System.Windows.Forms.ToolStripMenuItem butEditors_Classes;
     private System.Windows.Forms.ToolStripMenuItem butEditors_Data;
@@ -1662,4 +1673,7 @@
     private System.Windows.Forms.Panel picBackground;
     public System.Windows.Forms.PictureBox picMap;
     private System.Windows.Forms.PropertyGrid prgProperties;
+    private System.Windows.Forms.ToolStrip toolStrip1;
+    private System.Windows.Forms.ToolStripButton butNew;
+    private System.Windows.Forms.ToolStripButton butRemove;
 }

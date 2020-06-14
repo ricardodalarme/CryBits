@@ -143,8 +143,4 @@ static class Utils
             default: return new Point(0);
         }
     }
-
-    // Tamanho da grade com o zoom
-    public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Form.Zoom());
-    public static Point Zoom(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
 }
