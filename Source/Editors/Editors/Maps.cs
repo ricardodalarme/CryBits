@@ -1515,9 +1515,13 @@ partial class Editor_Maps : Form
         return 1;
     }
 
-    private byte Grid_Zoom => (byte)(Grid / Zoom());
+    public byte Grid_Zoom => (byte)(Grid / Zoom());
     public Rectangle Zoom(Rectangle Value) => new Rectangle(Value.X / Zoom(), Value.Y / Zoom(), Value.Width / Zoom(), Value.Height / Zoom());
     public Rectangle Zoom_Grid(Rectangle Rectangle) => new Rectangle(Rectangle.X * Grid_Zoom, Rectangle.Y * Grid_Zoom, Rectangle.Width * Grid_Zoom, Rectangle.Height * Grid_Zoom);
     public Point Zoom_Grid(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
+
+    // Tamanho da grade com o zoom
+   // public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Form.Zoom());
+    //public static Point Zoom(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
     #endregion
 }
