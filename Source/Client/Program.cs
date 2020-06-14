@@ -1,6 +1,7 @@
 ﻿using Network;
 using System;
 using System.Windows.Forms;
+using Library;
 
 class Program
 {
@@ -17,7 +18,7 @@ class Program
         Read.Data();
 
         // Abre a janela
-        Window.OpenMenu();
+        Interface.Windows.OpenMenu();
 
         // Inicializa todos os dispositivos
         Socket.Init();

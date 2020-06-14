@@ -122,14 +122,14 @@ partial class Editor_Maps : Form
         Selected = Lists.Map[(Guid)List.SelectedNode.Tag];
 
         // Conecta as listas com os componentes
-        prgProperties.SelectedObject = new Maper.Properties(Selected);
+        prgProperties.SelectedObject = new MapProperties(Selected);
         lstNPC.DataSource = Selected.NPC;
 
         // Reseta o clima
         Map.Weather_Update();
 
         // Faz os cálculos da autocriação
-        Maper.Autotile.Update(Selected);
+        MapAutotile.Update(Selected);
 
         // Atualiza os dados
         Update_Map_Bounds();
@@ -206,7 +206,7 @@ partial class Editor_Maps : Form
         // Recarrega o mapa
         Send.Request_Map(Selected);
         Update_List_Layers();
-        Maper.Autotile.Update(Selected);
+        MapAutotile.Update(Selected);
     }
 
     private void Copy()
@@ -247,7 +247,7 @@ partial class Editor_Maps : Form
                     Selected.Layer[c].Tile[x, y] = new Map_Tile_Data();
 
         // Atualiza os azulejos Autos 
-        Maper.Autotile.Update(Selected);
+        MapAutotile.Update(Selected);
     }
 
     private void butPaste_Click(object sender, EventArgs e)
@@ -272,7 +272,7 @@ partial class Editor_Maps : Form
                 }
 
         // Atualiza os azulejos Autos 
-        Maper.Autotile.Update(Selected);
+        MapAutotile.Update(Selected);
     }
 
     private void butPencil_Click(object sender, EventArgs e)
@@ -350,7 +350,7 @@ partial class Editor_Maps : Form
                 Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = Set_Tile();
 
         // Faz os cálculos da autocriação
-        Maper.Autotile.Update(Selected);
+        MapAutotile.Update(Selected);
     }
 
     private void butEraser_Click(object sender, EventArgs e)
@@ -896,7 +896,7 @@ partial class Editor_Maps : Form
                     for (int y = Map_Selection.Y; y < Map_Selection.Y + Map_Selection.Height; y++)
                     {
                         Selected.Layer[Layer].Tile[x, y] = Set_Tile();
-                        Maper.Autotile.Update(Selected, x, y, Layer);
+                        MapAutotile.Update(Selected, x, y, Layer);
                     }
         }
         // Iluminação
@@ -1047,7 +1047,7 @@ partial class Editor_Maps : Form
 
         // Defini um único azulejo
         Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = Set_Tile();
-        Maper.Autotile.Update(Selected, Map_Selection.X, Map_Selection.Y, Layer_Num);
+        MapAutotile.Update(Selected, Map_Selection.X, Map_Selection.Y, Layer_Num);
     }
 
     private void Tile_Set_Multiples(byte Layer_Num)
@@ -1067,7 +1067,7 @@ partial class Editor_Maps : Form
                 if (!Selected.OutLimit((short)x, (short)y))
                 {
                     Selected.Layer[Layer_Num].Tile[x, y] = Set_Tile((byte)(Tiles_Selection.X + x2), (byte)(Tiles_Selection.Y + y2));
-                    Maper.Autotile.Update(Selected, x, y, Layer_Num);
+                    MapAutotile.Update(Selected, x, y, Layer_Num);
                 }
                 y2++;
             }
@@ -1080,7 +1080,7 @@ partial class Editor_Maps : Form
         // Limpa a camada
         Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = new Map_Tile_Data();
         Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y].Mini = new Point[4];
-        Maper.Autotile.Update(Selected, Map_Selection.X, Map_Selection.Y, Layer_Num);
+        MapAutotile.Update(Selected, Map_Selection.X, Map_Selection.Y, Layer_Num);
     }
     #endregion
 

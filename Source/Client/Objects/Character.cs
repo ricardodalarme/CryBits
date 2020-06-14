@@ -3,11 +3,11 @@
     class Character
     {
         // Geral
-        public short[] Vital = new short[(byte)Game.Vitals.Count];
+        public short[] Vital = new short[(byte)Utils.Vitals.Count];
         public byte X;
         public byte Y;
-        public Game.Directions Direction;
-        public Game.Movements Movement;
+        public Utils.Directions Direction;
+        public Utils.Movements Movement;
         public short X2;
         public short Y2;
         public byte Animation;
@@ -16,8 +16,8 @@
         public int Attack_Timer;
 
         // Posição exata em que o personagem está
-        public int Pixel_X => X * Game.Grid + X2;
-        public int Pixel_Y => Y * Game.Grid + Y2;
+        public int Pixel_X => X * Utils.Grid + X2;
+        public int Pixel_Y => Y * Utils.Grid + Y2;
 
         public void ProcessMovement()
         {
@@ -25,14 +25,14 @@
             short x = X2, y = Y2;
 
             // Reseta a animação se necessário
-            if (Animation == Game.Animation_Stopped) Animation = Game.Animation_Right;
+            if (Animation == Utils.Animation_Stopped) Animation = Utils.Animation_Right;
 
             // Define a velocidade que o jogador se move
             switch (Movement)
             {
-                case Game.Movements.Walking: Speed = 2; break;
-                case Game.Movements.Moving: Speed = 3; break;
-                case Game.Movements.Stopped:
+                case Utils.Movements.Walking: Speed = 2; break;
+                case Utils.Movements.Moving: Speed = 3; break;
+                case Utils.Movements.Stopped:
                     // Reseta os dados
                     X2 = 0;
                     Y2 = 0;
@@ -42,10 +42,10 @@
             // Define a Posição exata do jogador
             switch (Direction)
             {
-                case Game.Directions.Up: Y2 -= Speed; break;
-                case Game.Directions.Down: Y2 += Speed; break;
-                case Game.Directions.Right: X2 += Speed; break;
-                case Game.Directions.Left: X2 -= Speed; break;
+                case Utils.Directions.Up: Y2 -= Speed; break;
+                case Utils.Directions.Down: Y2 += Speed; break;
+                case Utils.Directions.Right: X2 += Speed; break;
+                case Utils.Directions.Left: X2 -= Speed; break;
             }
 
             // Verifica se não passou do limite
@@ -55,7 +55,7 @@
             if (y < 0 && Y2 > 0) Y2 = 0;
 
             // Alterar as animações somente quando necessário
-            if (Direction == Game.Directions.Right || Direction == Game.Directions.Down)
+            if (Direction == Utils.Directions.Right || Direction == Utils.Directions.Down)
             {
                 if (X2 < 0 || Y2 < 0)
                     return;
@@ -64,11 +64,11 @@
                 return;
 
             // Define as animações
-            Movement = Game.Movements.Stopped;
-            if (Animation == Game.Animation_Left)
-                Animation = Game.Animation_Right;
+            Movement = Utils.Movements.Stopped;
+            if (Animation == Utils.Animation_Left)
+                Animation = Utils.Animation_Right;
             else
-                Animation = Game.Animation_Left;
+                Animation = Utils.Animation_Left;
         }
     }
 }

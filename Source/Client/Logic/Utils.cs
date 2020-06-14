@@ -1,8 +1,10 @@
 ﻿using System;
-using System.Drawing;
 using Objects;
+using Logic;
+using System.Drawing;
+using Interface;
 
-class Game
+static class Utils
 {
     // Números aleatórios
     public static Random Random = new Random();
@@ -29,10 +31,6 @@ class Game
     public const byte Movement_Left = 1;
     public const byte Movement_Right = 2;
 
-    // Visão do jogador
-    private static Rectangle Camera;
-    public static Rectangle Tile_Sight;
-
     // Bloqueio direcional
     public const byte Max_DirBlock = 3;
 
@@ -47,6 +45,23 @@ class Game
     // Limitações dos mapas
     public const byte Map_Width = 25;
     public const byte Map_Height = 19;
+
+    // Opções
+    public static Options Option = new Options();
+    [Serializable]
+    public class Options
+    {
+        public string Game_Name = "CryBits";
+        public bool SaveUsername = true;
+        public bool Sounds = true;
+        public bool Musics = true;
+        public bool Chat = true;
+        public bool FPS;
+        public bool Latency;
+        public bool Party;
+        public bool Trade;
+        public string Username = string.Empty;
+    }
 
     public enum Attributes
     {
@@ -153,8 +168,8 @@ class Game
     }
 
     // Converte o valor em uma posição adequada à camera
-    public static int ConvertX(int x) => x - (Tile_Sight.X * Grid) - Camera.X;
-    public static int ConvertY(int y) => y - (Tile_Sight.Y * Grid) - Camera.Y;
+    public static int ConvertX(int x) => x - (Camera.Tile_Sight.X * Grid) - Camera.Start_Sight.X;
+    public static int ConvertY(int y) => y - (Camera.Tile_Sight.Y * Grid) - Camera.Start_Sight.Y;
 
     public static Directions ReverseDirection(Directions Direction)
     {
@@ -169,66 +184,59 @@ class Game
         }
     }
 
-    public static void UpdateCamera()
+
+    // Obtém o ID de algum dado, caso ele não existir retorna um ID zerado
+    public static string GetID(Data Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
+
+    public static bool IsAbove(Rectangle Rectangle)
     {
-        Point End = new Point(), Start = new Point(), Position = new Point();
+        // Verficia se o Window.Mouse está sobre o objeto
+        if (Windows.Mouse.X >= Rectangle.X && Windows.Mouse.X <= Rectangle.X + Rectangle.Width)
+            if (Windows.Mouse.Y >= Rectangle.Y && Windows.Mouse.Y <= Rectangle.Y + Rectangle.Height)
+                return true;
 
-        // Centro da tela
-        Position.X = Player.Me.X2 + Grid;
-        Position.Y = Player.Me.Y2 + Grid;
+        // Se não, retornar um valor nulo
+        return false;
+    }
 
-        // Início da tela
-        Start.X = Player.Me.X - ((Map_Width + 1) / 2) - 1;
-        Start.Y = Player.Me.Y - ((Map_Height + 1) / 2) - 1;
+    public static short MeasureString(string Text)
+    {
+        // Dados do texto
+        SFML.Graphics.Text TempText = new SFML.Graphics.Text(Text, Graphics.Font_Default);
+        TempText.CharacterSize = 10;
+        return (short)TempText.GetLocalBounds().Width;
+    }
 
-        // Reajusta a posição horizontal da tela
-        if (Start.X < 0)
+    public static string TextBreak(string Text, int Width)
+    {
+        // Previne sobrecargas
+        if (string.IsNullOrEmpty(Text)) return Text;
+
+        // Usado para fazer alguns calculosk
+        int Text_Width = MeasureString(Text);
+
+        // Diminui o tamanho do texto até que ele caiba no digitalizador
+        while (Text_Width - Width >= 0)
         {
-            Position.X = 0;
-            if (Start.X == -1 && Player.Me.X2 > 0) Position.X = Player.Me.X2;
-            Start.X = 0;
+            Text = Text.Substring(1);
+            Text_Width = MeasureString(Text);
         }
 
-        // Reajusta a posição vertical da tela
-        if (Start.Y < 0)
-        {
-            Position.Y = 0;
-            if (Start.Y == -1 && Player.Me.Y2 > 0) Position.Y = Player.Me.Y2;
-            Start.Y = 0;
-        }
+        return Text;
+    }
 
-        // Final da tela
-        End.X = Start.X + (Map_Width + 1) + 1;
-        End.Y = Start.Y + (Map_Height + 1) + 1;
+    public static byte Slot(Panels.Structure Panel, byte OffX, byte OffY, byte Lines, byte Columns, byte Grid = 32, byte Gap = 4)
+    {
+        int Size = Grid + Gap;
+        Point Start = Panel.Position + new Size(OffX, OffY);
+        Point Slot = new Point((Windows.Mouse.X - Start.X) / Size, (Windows.Mouse.Y - Start.Y) / Size);
 
-        // Reajusta a posição horizontal da tela
-        if (End.X > Map_Width)
-        {
-            Position.X = Grid;
-            if (End.X == Map_Width + 1 && Player.Me.X2 < 0) Position.X = Player.Me.X2 + Grid;
-            End.X = Map_Width;
-            Start.X = End.X - Map_Width - 1;
-        }
+        // Verifica se o Window.Mouse está sobre o slot
+        if (Slot.Y < 0 || Slot.X < 0 || Slot.X >= Columns || Slot.Y >= Lines) return 0;
+        if (!IsAbove(new Rectangle(Start.X + Slot.X * Size, Start.Y + Slot.Y * Size, Grid, Grid))) return 0;
+        if (!Panel.Visible) return 0;
 
-        // Reajusta a posição vertical da tela
-        if (End.Y > Map_Height)
-        {
-            Position.Y = Grid;
-            if (End.Y == Map_Height + 1 && Player.Me.Y2 < 0) Position.Y = Player.Me.Y2 + Grid;
-            End.Y = Map_Height;
-            Start.Y = End.Y - Map_Height - 1;
-        }
-
-        // Define a dimensão dos azulejos vistos
-        Tile_Sight.Y = Start.Y;
-        Tile_Sight.Height = End.Y;
-        Tile_Sight.X = Start.X;
-        Tile_Sight.Width = End.X;
-
-        // Define a posição da câmera
-        Camera.Y = Position.Y;
-        Camera.Height = Camera.Y + Screen_Height;
-        Camera.X = Position.X;
-        Camera.Width = Camera.X + Screen_Width;
+        // Retorna o slot
+        return (byte)(Slot.Y * Columns + Slot.X + 1);
     }
 }

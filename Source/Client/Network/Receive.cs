@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Interface;
 
 namespace Network
 {
@@ -113,7 +114,7 @@ namespace Network
         private static void Connect()
         {
             // Reseta os valores
-            Utils.SelectCharacter = 0;
+            Panels.SelectCharacter = 0;
             Class.List = new Dictionary<Guid, Class>();
 
             // Abre o painel de seleção de personagens
@@ -123,14 +124,17 @@ namespace Network
 
         private static void Join(NetIncomingMessage Data)
         {
+            // Reseta alguns valores
+            Player.List = new List<Player>();
+            Item.List = new Dictionary<Guid, Item>();
+            Shop.List = new Dictionary<Guid, Shop>();
+            NPC.List = new Dictionary<Guid, NPC>();
+            Objects.Map.List = new Dictionary<Guid, Map>();
+            TMap.List = new Dictionary<Guid, TMap>();
+
             // Definir os valores que são enviados do servidor
             Player.Me = new Me_Structure(Data.ReadString());
             Player.List.Add(Player.Me);
-
-            // Reseta alguns valores
-            Class.List = new Dictionary<Guid, Class>();
-            Item.List = new Dictionary<Guid, Item>();
-            Shop.List = new Dictionary<Guid, Shop>();
         }
 
         private static void CreateCharacter()
@@ -139,8 +143,8 @@ namespace Network
             TextBoxes.Get("CreateCharacter_Name").Text = string.Empty;
             CheckBoxes.Get("GenderMale").Checked = true;
             CheckBoxes.Get("GenderFemale").Checked = false;
-            Utils.CreateCharacter_Class = 0;
-            Utils.CreateCharacter_Tex = 0;
+            Panels.CreateCharacter_Class = 0;
+            Panels.CreateCharacter_Tex = 0;
 
             // Abre o painel de criação de personagem
             Panels.Menu_Close();
@@ -188,12 +192,12 @@ namespace Network
         private static void Characters(NetIncomingMessage Data)
         {
             // Redimensiona a lista
-            Lists.Characters = new Lists.Structures.Character[Data.ReadByte()];
+            Panels.Characters = new Panels.TempCharacter[Data.ReadByte()];
 
-            for (byte i = 0; i < Lists.Characters.Length; i++)
+            for (byte i = 0; i < Panels.Characters.Length; i++)
             {
                 // Recebe os dados do personagem
-                Lists.Characters[i] = new Lists.Structures.Character
+                Panels.Characters[i] = new Panels.TempCharacter
                 {
                     Name = Data.ReadString(),
                     Texture_Num = Data.ReadInt16(),
@@ -209,15 +213,15 @@ namespace Network
             Chat.Lines_First = 0;
             Loop.Chat_Timer = Environment.TickCount + Chat.Sleep_Timer;
             TextBoxes.Get("Chat").Text = string.Empty;
-            CheckBoxes.Get("Options_Sounds").Checked = Lists.Options.Sounds;
-            CheckBoxes.Get("Options_Musics").Checked = Lists.Options.Musics;
-            CheckBoxes.Get("Options_Chat").Checked = Lists.Options.Chat;
-            CheckBoxes.Get("Options_FPS").Checked = Lists.Options.FPS;
-            CheckBoxes.Get("Options_Latency").Checked = Lists.Options.Latency;
-            CheckBoxes.Get("Options_Trade").Checked = Lists.Options.Trade;
-            CheckBoxes.Get("Options_Party").Checked = Lists.Options.Party;
+            CheckBoxes.Get("Options_Sounds").Checked = Utils.Option.Sounds;
+            CheckBoxes.Get("Options_Musics").Checked = Utils.Option.Musics;
+            CheckBoxes.Get("Options_Chat").Checked = Utils.Option.Chat;
+            CheckBoxes.Get("Options_FPS").Checked = Utils.Option.FPS;
+            CheckBoxes.Get("Options_Latency").Checked = Utils.Option.Latency;
+            CheckBoxes.Get("Options_Trade").Checked = Utils.Option.Trade;
+            CheckBoxes.Get("Options_Party").Checked = Utils.Option.Party;
             Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
-            Utils.Infomation_ID = Guid.Empty.ToString();
+            Panels.Infomation_ID = Guid.Empty;
 
             // Reseta a interface
             Panels.Get("Menu_Character").Visible = false;
@@ -235,7 +239,7 @@ namespace Network
 
             // Abre o jogo
             Audio.Music.Stop();
-            Window.Current = Window.Types.Game;
+            Windows.Current = Windows.Types.Game;
         }
 
         private static void Player_Data(NetIncomingMessage Data)
@@ -258,14 +262,14 @@ namespace Network
             Player.Map = TMap.List[new Guid(Data.ReadString())];
             Player.X = Data.ReadByte();
             Player.Y = Data.ReadByte();
-            Player.Direction = (Game.Directions)Data.ReadByte();
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+            Player.Direction = (Utils.Directions)Data.ReadByte();
+            for (byte n = 0; n < (byte)Utils.Vitals.Count; n++)
             {
                 Player.Vital[n] = Data.ReadInt16();
                 Player.Max_Vital[n] = Data.ReadInt16();
             }
-            for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Player.Attribute[n] = Data.ReadInt16();
-            for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Player.Equipment[n] = Item.Get( new Guid(Data.ReadString()));
+            for (byte n = 0; n < (byte)Utils.Attributes.Count; n++) Player.Attribute[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Utils.Equipments.Count; n++) Player.Equipment[n] = Item.Get( new Guid(Data.ReadString()));
             Mapper.Current = Player.Map;
         }
 
@@ -276,12 +280,12 @@ namespace Network
             // Defini os dados do jogador
             Player.X = Data.ReadByte();
             Player.Y = Data.ReadByte();
-            Player.Direction = (Game.Directions)Data.ReadByte();
+            Player.Direction = (Utils.Directions)Data.ReadByte();
 
             // Para a movimentação
             Player.X2 = 0;
             Player.Y2 = 0;
-            Player.Movement = Game.Movements.Stopped;
+            Player.Movement = Utils.Movements.Stopped;
         }
 
         private static void Player_Vitals(NetIncomingMessage Data)
@@ -289,7 +293,7 @@ namespace Network
             Player Player = Player.Get(Data.ReadString());
 
             // Define os dados
-            for (byte i = 0; i < (byte)Game.Vitals.Count; i++)
+            for (byte i = 0; i < (byte)Utils.Vitals.Count; i++)
             {
                 Player.Vital[i] = Data.ReadInt16();
                 Player.Max_Vital[i] = Data.ReadInt16();
@@ -301,7 +305,7 @@ namespace Network
             Player Player = Player.Get(Data.ReadString());
 
             // Altera os dados dos equipamentos do jogador
-            for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Player.Equipment[i] = Item.Get( new Guid(Data.ReadString()));
+            for (byte i = 0; i < (byte)Utils.Equipments.Count; i++) Player.Equipment[i] = Item.Get( new Guid(Data.ReadString()));
         }
 
         private static void Player_Leave(NetIncomingMessage Data)
@@ -317,25 +321,25 @@ namespace Network
             // Move o jogador
             Player.X = Data.ReadByte();
             Player.Y = Data.ReadByte();
-            Player.Direction = (Game.Directions)Data.ReadByte();
-            Player.Movement = (Game.Movements)Data.ReadByte();
+            Player.Direction = (Utils.Directions)Data.ReadByte();
+            Player.Movement = (Utils.Movements)Data.ReadByte();
             Player.X2 = 0;
             Player.Y2 = 0;
 
             // Posição exata do jogador
             switch (Player.Direction)
             {
-                case Game.Directions.Up: Player.Y2 = Game.Grid; break;
-                case Game.Directions.Down: Player.Y2 = Game.Grid * -1; break;
-                case Game.Directions.Right: Player.X2 = Game.Grid * -1; break;
-                case Game.Directions.Left: Player.X2 = Game.Grid; break;
+                case Utils.Directions.Up: Player.Y2 = Utils.Grid; break;
+                case Utils.Directions.Down: Player.Y2 = Utils.Grid * -1; break;
+                case Utils.Directions.Right: Player.X2 = Utils.Grid * -1; break;
+                case Utils.Directions.Left: Player.X2 = Utils.Grid; break;
             }
         }
 
         private static void Player_Direction(NetIncomingMessage Data)
         {
             // Altera a posição do jogador
-            Player.Get(Data.ReadString()).Direction = (Game.Directions)Data.ReadByte();
+            Player.Get(Data.ReadString()).Direction = (Utils.Directions)Data.ReadByte();
         }
 
         private static void Player_Attack(NetIncomingMessage Data)
@@ -350,16 +354,16 @@ namespace Network
 
             // Sofrendo dano
             if (Victim != string.Empty)
-                if (Victim_Type == (byte)Game.Target.Player)
+                if (Victim_Type == (byte)Utils.Target.Player)
                 {
                     Player Victim_Data = Player.Get(Victim);
                     Victim_Data.Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Game.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
+                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Utils.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
                 }
-                else if (Victim_Type == (byte)Game.Target.NPC)
+                else if (Victim_Type == (byte)Utils.Target.NPC)
                 {
                     Mapper.Current.NPC[byte.Parse(Victim)].Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Game.Random.Next(0, 3), Mapper.Current.NPC[byte.Parse(Victim)].X, Mapper.Current.NPC[byte.Parse(Victim)].Y, 255));
+                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Utils.Random.Next(0, 3), Mapper.Current.NPC[byte.Parse(Victim)].X, Mapper.Current.NPC[byte.Parse(Victim)].Y, 255));
                 }
         }
 
@@ -381,7 +385,7 @@ namespace Network
         private static void Player_Inventory(NetIncomingMessage Data)
         {
             // Define os dados
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            for (byte i = 1; i <= Utils.Max_Inventory; i++)
             {
                 Player.Me.Inventory[i].Item = Item.Get( new Guid(Data.ReadString()));
                 Player.Me.Inventory[i].Amount = Data.ReadInt16();
@@ -391,7 +395,7 @@ namespace Network
         private static void Player_Hotbar(NetIncomingMessage Data)
         {
             // Define os dados
-            for (byte i = 0; i < Game.Max_Hotbar; i++)
+            for (byte i = 0; i < Utils.Max_Hotbar; i++)
             {
                 Player.Me.Hotbar[i].Type = Data.ReadByte();
                 Player.Me.Hotbar[i].Slot = Data.ReadByte();
@@ -460,8 +464,8 @@ namespace Network
             Data.ReadByte(); // Luz global
 
             // Ligações
-            Map.Link = new short[(byte)Game.Directions.Count];
-            for (byte i = 0; i < (byte)Game.Directions.Count; i++)
+            Map.Link = new short[(byte)Utils.Directions.Count];
+            for (byte i = 0; i < (byte)Utils.Directions.Count; i++)
                 Data.ReadString();
 
             // Azulejos
@@ -469,8 +473,8 @@ namespace Network
 
             // Redimensiona os dados
 
-            for (byte x = 0; x < Game.Map_Width; x++)
-                for (byte y = 0; y < Game.Map_Height; y++)
+            for (byte x = 0; x < Utils.Map_Width; x++)
+                for (byte y = 0; y < Utils.Map_Height; y++)
                     Map.Tile[x, y].Data = new Map_Tile_Data[(byte)global::Mapper.Layers.Count, Num_Layers];
 
             // Lê os azulejos
@@ -481,8 +485,8 @@ namespace Network
                 byte t = Data.ReadByte(); // Tipo
 
                 // Azulejos
-                for (byte x = 0; x < Game.Map_Width; x++)
-                    for (byte y = 0; y < Game.Map_Height; y++)
+                for (byte x = 0; x < Utils.Map_Width; x++)
+                    for (byte y = 0; y < Utils.Map_Height; y++)
                     {
                         Map.Tile[x, y].Data[t, i].X = Data.ReadByte();
                         Map.Tile[x, y].Data[t, i].Y = Data.ReadByte();
@@ -493,8 +497,8 @@ namespace Network
             }
 
             // Dados específicos dos azulejos
-            for (byte x = 0; x < Game.Map_Width; x++)
-                for (byte y = 0; y < Game.Map_Height; y++)
+            for (byte x = 0; x < Utils.Map_Width; x++)
+                for (byte y = 0; y < Utils.Map_Height; y++)
                 {
                     Map.Tile[x, y].Attribute = Data.ReadByte();
                     Data.ReadString(); // Dado 1
@@ -504,8 +508,8 @@ namespace Network
                     Data.ReadByte(); // Zona
 
                     // Bloqueio direcional
-                    Map.Tile[x, y].Block = new bool[(byte)Game.Directions.Count];
-                    for (byte i = 0; i < (byte)Game.Directions.Count; i++)
+                    Map.Tile[x, y].Block = new bool[(byte)Utils.Directions.Count];
+                    for (byte i = 0; i < (byte)Utils.Directions.Count; i++)
                         Map.Tile[x, y].Block[i] = Data.ReadBoolean();
                 }
 
@@ -532,7 +536,7 @@ namespace Network
             }
 
             // Salva o mapa
-            Write.Map(Map);
+            Library.Write.Map(Map);
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();
@@ -593,14 +597,14 @@ namespace Network
                 Item.Texture = Data.ReadInt16();
                 Item.Type = Data.ReadByte();
                 Data.ReadBoolean(); // Stackable
-                Item.Bind = (Game.BindOn)Data.ReadByte();
+                Item.Bind = (Utils.BindOn)Data.ReadByte();
                 Item.Rarity = Data.ReadByte();
                 Item.Req_Level = Data.ReadInt16();
                 Item.Req_Class = Class.Get(new Guid(Data.ReadString()));
                 Item.Potion_Experience = Data.ReadInt32();
-                for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
+                for (byte v = 0; v < (byte)Utils.Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
                 Item.Equip_Type = Data.ReadByte();
-                for (byte a = 0; a < (byte)Game.Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
+                for (byte a = 0; a < (byte)Utils.Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
                 Item.Weapon_Damage = Data.ReadInt16();
             }
 
@@ -634,14 +638,14 @@ namespace Network
         private static void Party_Invitation(NetIncomingMessage Data)
         {
             // Nega o pedido caso o jogador não quiser receber convites
-            if (!Lists.Options.Party)
+            if (!Utils.Option.Party)
             {
                 Send.Party_Decline();
                 return;
             }
 
             // Abre a janela de convite para o grupo
-            Utils.Party_Invitation = Data.ReadString();
+            Panels.Party_Invitation = Data.ReadString();
             Panels.Get("Party_Invitation").Visible = true;
         }
 
@@ -660,8 +664,8 @@ namespace Network
                 Panels.Get("Trade_Offer_Disable").Visible = false;
 
                 // Limpa os dados
-                Player.Me.Trade_Offer = new Inventory[Game.Max_Inventory + 1];
-                Player.Me.Trade_Their_Offer = new Inventory[Game.Max_Inventory + 1];
+                Player.Me.Trade_Offer = new Inventory[Utils.Max_Inventory + 1];
+                Player.Me.Trade_Their_Offer = new Inventory[Utils.Max_Inventory + 1];
             }
             else
             {
@@ -674,28 +678,28 @@ namespace Network
         private static void Trade_Invitation(NetIncomingMessage Data)
         {
             // Nega o pedido caso o jogador não quiser receber convites
-            if (!Lists.Options.Trade)
+            if (!Utils.Option.Trade)
             {
                 Send.Trade_Decline();
                 return;
             }
 
             // Abre a janela de convite para o grupo
-            Utils.Trade_Invitation = Data.ReadString();
+            Panels.Trade_Invitation = Data.ReadString();
             Panels.Get("Trade_Invitation").Visible = true;
         }
 
         private static void Trade_State(NetIncomingMessage Data)
         {
-            switch ((Game.Trade_Status)Data.ReadByte())
+            switch ((Utils.Trade_Status)Data.ReadByte())
             {
-                case Game.Trade_Status.Accepted:
-                case Game.Trade_Status.Declined:
+                case Utils.Trade_Status.Accepted:
+                case Utils.Trade_Status.Declined:
                     Buttons.Get("Trade_Offer_Confirm").Visible = true;
                     Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
                     Panels.Get("Trade_Offer_Disable").Visible = false;
                     break;
-                case Game.Trade_Status.Confirmed:
+                case Utils.Trade_Status.Confirmed:
                     Buttons.Get("Trade_Offer_Confirm").Visible = false;
                     Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = true;
                     Panels.Get("Trade_Offer_Disable").Visible = false;
@@ -707,13 +711,13 @@ namespace Network
         {
             // Recebe os dados da oferta
             if (Data.ReadBoolean())
-                for (byte i = 1; i <= Game.Max_Inventory; i++)
+                for (byte i = 1; i <= Utils.Max_Inventory; i++)
                 {
                     Player.Me.Trade_Offer[i].Item = Item.Get( new Guid(Data.ReadString()));
                     Player.Me.Trade_Offer[i].Amount = Data.ReadInt16();
                 }
             else
-                for (byte i = 1; i <= Game.Max_Inventory; i++)
+                for (byte i = 1; i <= Utils.Max_Inventory; i++)
                 {
                     Player.Me.Trade_Their_Offer[i].Item = Item.Get( new Guid(Data.ReadString()));
                     Player.Me.Trade_Their_Offer[i].Amount = Data.ReadInt16();
@@ -775,8 +779,8 @@ namespace Network
         private static void Shop_Open(NetIncomingMessage Data)
         {
             // Abre a loja
-            Utils.Shop_Open = Shop.Get(new Guid(Data.ReadString()));
-            Panels.Get("Shop").Visible = Utils.Shop_Open != null;
+            Panels.Shop_Open = Shop.Get(new Guid(Data.ReadString()));
+            Panels.Get("Shop").Visible = Panels.Shop_Open != null;
         }
 
         private static void NPCs(NetIncomingMessage Data)
@@ -811,8 +815,8 @@ namespace Network
                 NPC.Type = Data.ReadByte();
 
                 // Vitais
-                NPC.Vital = new short[(byte)Game.Vitals.Count];
-                for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+                NPC.Vital = new short[(byte)Utils.Vitals.Count];
+                for (byte n = 0; n < (byte)Utils.Vitals.Count; n++)
                     NPC.Vital[n] = Data.ReadInt16();
             }
 
@@ -832,10 +836,10 @@ namespace Network
                 Mapper.Current.NPC[i].Data = NPC.Get(new Guid(Data.ReadString()));
                 Mapper.Current.NPC[i].X = Data.ReadByte();
                 Mapper.Current.NPC[i].Y = Data.ReadByte();
-                Mapper.Current.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+                Mapper.Current.NPC[i].Direction = (Utils.Directions)Data.ReadByte();
 
                 // Vitais
-                for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+                for (byte n = 0; n < (byte)Utils.Vitals.Count; n++)
                     Mapper.Current.NPC[i].Vital[n] = Data.ReadInt16();
             }
         }
@@ -849,9 +853,9 @@ namespace Network
             Mapper.Current.NPC[i].Data = NPC.Get( new Guid(Data.ReadString()));
             Mapper.Current.NPC[i].X = Data.ReadByte();
             Mapper.Current.NPC[i].Y = Data.ReadByte();
-            Mapper.Current.NPC[i].Direction = (Game.Directions)Data.ReadByte();
-            Mapper.Current.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++) Mapper.Current.NPC[i].Vital[n] = Data.ReadInt16();
+            Mapper.Current.NPC[i].Direction = (Utils.Directions)Data.ReadByte();
+            Mapper.Current.NPC[i].Vital = new short[(byte)Utils.Vitals.Count];
+            for (byte n = 0; n < (byte)Utils.Vitals.Count; n++) Mapper.Current.NPC[i].Vital[n] = Data.ReadInt16();
         }
 
         private static void Map_NPC_Movement(NetIncomingMessage Data)
@@ -863,17 +867,17 @@ namespace Network
             Mapper.Current.NPC[i].Y2 = 0;
             Mapper.Current.NPC[i].X = Data.ReadByte();
             Mapper.Current.NPC[i].Y = Data.ReadByte();
-            Mapper.Current.NPC[i].Direction = (Game.Directions)Data.ReadByte();
-            Mapper.Current.NPC[i].Movement = (Game.Movements)Data.ReadByte();
+            Mapper.Current.NPC[i].Direction = (Utils.Directions)Data.ReadByte();
+            Mapper.Current.NPC[i].Movement = (Utils.Movements)Data.ReadByte();
 
             // Posição exata do jogador
             if (x != Mapper.Current.NPC[i].X || y != Mapper.Current.NPC[i].Y)
                 switch (Mapper.Current.NPC[i].Direction)
                 {
-                    case Game.Directions.Up: Mapper.Current.NPC[i].Y2 = Game.Grid; break;
-                    case Game.Directions.Down: Mapper.Current.NPC[i].Y2 = Game.Grid * -1; break;
-                    case Game.Directions.Right: Mapper.Current.NPC[i].X2 = Game.Grid * -1; break;
-                    case Game.Directions.Left: Mapper.Current.NPC[i].X2 = Game.Grid; break;
+                    case Utils.Directions.Up: Mapper.Current.NPC[i].Y2 = Utils.Grid; break;
+                    case Utils.Directions.Down: Mapper.Current.NPC[i].Y2 = Utils.Grid * -1; break;
+                    case Utils.Directions.Right: Mapper.Current.NPC[i].X2 = Utils.Grid * -1; break;
+                    case Utils.Directions.Left: Mapper.Current.NPC[i].X2 = Utils.Grid; break;
                 }
         }
 
@@ -889,16 +893,16 @@ namespace Network
 
             // Sofrendo dano
             if (Victim != string.Empty)
-                if (Victim_Type == (byte)Game.Target.Player)
+                if (Victim_Type == (byte)Utils.Target.Player)
                 {
                     Player Victim_Data = Player.Get(Victim);
                     Victim_Data.Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Game.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
+                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Utils.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
                 }
-                else if (Victim_Type == (byte)Game.Target.NPC)
+                else if (Victim_Type == (byte)Utils.Target.NPC)
                 {
                     Mapper.Current.NPC[byte.Parse(Victim)].Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Game.Random.Next(0, 3), Mapper.Current.NPC[byte.Parse(Victim)].X, Mapper.Current.NPC[byte.Parse(Victim)].Y, 255));
+                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Utils.Random.Next(0, 3), Mapper.Current.NPC[byte.Parse(Victim)].X, Mapper.Current.NPC[byte.Parse(Victim)].Y, 255));
                 }
         }
 
@@ -906,7 +910,7 @@ namespace Network
         {
             // Define a direção de determinado NPC
             byte i = Data.ReadByte();
-            Mapper.Current.NPC[i].Direction = (Game.Directions)Data.ReadByte();
+            Mapper.Current.NPC[i].Direction = (Utils.Directions)Data.ReadByte();
             Mapper.Current.NPC[i].X2 = 0;
             Mapper.Current.NPC[i].Y2 = 0;
         }
@@ -916,7 +920,7 @@ namespace Network
             byte Index = Data.ReadByte();
 
             // Define os vitais de determinado NPC
-            for (byte n = 0; n < (byte)Game.Vitals.Count; n++)
+            for (byte n = 0; n < (byte)Utils.Vitals.Count; n++)
                 Mapper.Current.NPC[Index].Vital[n] = Data.ReadInt16();
         }
 
@@ -930,7 +934,7 @@ namespace Network
             Mapper.Current.NPC[i].Data = null;
             Mapper.Current.NPC[i].X = 0;
             Mapper.Current.NPC[i].Y = 0;
-            Mapper.Current.NPC[i].Vital = new short[(byte)Game.Vitals.Count];
+            Mapper.Current.NPC[i].Vital = new short[(byte)Utils.Vitals.Count];
         }
     }
 }

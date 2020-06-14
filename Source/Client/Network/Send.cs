@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using Objects;
+using Interface;
 
 namespace Network
 {
@@ -82,9 +83,9 @@ namespace Network
             // Envia os dados
             Data.Write((byte)Packets.CreateCharacter);
             Data.Write(TextBoxes.Get("CreateCharacter_Name").Text);
-            Data.Write(Class.List.ElementAt(Utils.CreateCharacter_Class).Value.ID.ToString());
+            Data.Write(Class.List.ElementAt(Panels.CreateCharacter_Class).Value.ID.ToString());
             Data.Write(CheckBoxes.Get("GenderMale").Checked);
-            Data.Write(Utils.CreateCharacter_Tex);
+            Data.Write(Panels.CreateCharacter_Tex);
             Packet(Data);
         }
 
@@ -94,7 +95,7 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Packets.Character_Use);
-            Data.Write(Utils.SelectCharacter);
+            Data.Write(Panels.SelectCharacter);
             Packet(Data);
         }
 
@@ -113,7 +114,7 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Packets.Character_Delete);
-            Data.Write(Utils.SelectCharacter);
+            Data.Write(Panels.SelectCharacter);
             Packet(Data);
         }
 
@@ -139,7 +140,7 @@ namespace Network
             Socket.Latency_Send = Environment.TickCount;
         }
 
-        public static void Message(string Message, Game.Messages Type, string Addressee = "")
+        public static void Message(string Message, Utils.Messages Type, string Addressee = "")
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -151,7 +152,7 @@ namespace Network
             Packet(Data);
         }
 
-        public static void AddPoint(Game.Attributes Attribute)
+        public static void AddPoint(Utils.Attributes Attribute)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -374,7 +375,7 @@ namespace Network
             Packet(Data);
         }
 
-        public static void Trade_Offer_State(Game.Trade_Status State)
+        public static void Trade_Offer_State(Utils.Trade_Status State)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

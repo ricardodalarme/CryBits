@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Objects;
+using Interface;
 
 class Loop
 {
@@ -31,7 +32,7 @@ class Loop
             // Eventos
             TextBox();
 
-            if (Window.Current == Window.Types.Game)
+            if (Windows.Current == Windows.Types.Game)
             {
                 Mapper.Logic();
                 if (Timer_30 < Environment.TickCount)
@@ -50,7 +51,7 @@ class Loop
                 }
 
                 // Verifica se é necessário mostrar o painel de informações
-                Utils.CheckInformations();
+                Panels.CheckInformations();
             }
 
             // Faz com que a aplicação se mantenha estável
@@ -61,7 +62,7 @@ class Loop
             if (Timer_1000 < Environment.TickCount)
             {
                 Network.Send.Latency();
-                Game.FPS = FPS;
+                Utils.FPS = FPS;
                 FPS = 0;
                 Timer_1000 = Environment.TickCount + 1000;
             }

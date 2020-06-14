@@ -2,6 +2,7 @@
 using SFML.Window;
 using System;
 using System.Collections.Generic;
+using Interface;
 
 namespace Objects
 {
@@ -20,9 +21,9 @@ namespace Objects
         public string Name = string.Empty;
         public short Texture_Num;
         public short Level;
-        public short[] Max_Vital = new short[(byte)Game.Vitals.Count];
-        public short[] Attribute = new short[(byte)Game.Attributes.Count];
-        public Item[] Equipment = new Item[(byte)Game.Equipments.Count];
+        public short[] Max_Vital = new short[(byte)Utils.Vitals.Count];
+        public short[] Attribute = new short[(byte)Utils.Attributes.Count];
+        public Item[] Equipment = new Item[(byte)Utils.Equipments.Count];
         public TMap Map;
 
         public Player(string Name)
@@ -44,8 +45,8 @@ namespace Objects
     class Me_Structure : Player
     {
         // Dados
-        public Inventory[] Inventory = new Inventory[Game.Max_Inventory + 1];
-        public Hotbar[] Hotbar = new Hotbar[Game.Max_Hotbar];
+        public Inventory[] Inventory = new Inventory[Utils.Max_Inventory + 1];
+        public Hotbar[] Hotbar = new Hotbar[Utils.Max_Hotbar];
         public Inventory[] Trade_Offer;
         public Inventory[] Trade_Their_Offer;
         public Player[] Party = Array.Empty<Player>();
@@ -70,16 +71,16 @@ namespace Objects
             if (Movement > 0 || !Graphics.RenderWindow.HasFocus()) return;
 
             // Move o personagem
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Game.Directions.Up);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Game.Directions.Down);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Game.Directions.Left);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Game.Directions.Right);
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Utils.Directions.Up);
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Utils.Directions.Down);
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Utils.Directions.Left);
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Utils.Directions.Right);
         }
 
-        public void Move(Game.Directions Direction)
+        public void Move(Utils.Directions Direction)
         {
             // Verifica se o jogador pode se mover
-            if (Movement != Game.Movements.Stopped) return;
+            if (Movement != Utils.Movements.Stopped) return;
 
             // Define a direção do jogador
             if (this.Direction != Direction)
@@ -93,9 +94,9 @@ namespace Objects
 
             // Define a velocidade que o jogador se move
             if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Graphics.RenderWindow.HasFocus())
-                Movement = Game.Movements.Moving;
+                Movement = Utils.Movements.Moving;
             else
-                Movement = Game.Movements.Walking;
+                Movement = Utils.Movements.Walking;
 
             // Movimento o jogador
             Send.Player_Move();
@@ -103,17 +104,17 @@ namespace Objects
             // Define a Posição exata do jogador
             switch (Direction)
             {
-                case Game.Directions.Up: Y2 = Game.Grid; Y -= 1; break;
-                case Game.Directions.Down: Y2 = Game.Grid * -1; Y += 1; break;
-                case Game.Directions.Right: X2 = Game.Grid * -1; X += 1; break;
-                case Game.Directions.Left: X2 = Game.Grid; X -= 1; break;
+                case Utils.Directions.Up: Y2 = Utils.Grid; Y -= 1; break;
+                case Utils.Directions.Down: Y2 = Utils.Grid * -1; Y += 1; break;
+                case Utils.Directions.Right: X2 = Utils.Grid * -1; X += 1; break;
+                case Utils.Directions.Left: X2 = Utils.Grid; X -= 1; break;
             }
         }
 
         public void CheckAttack()
         {
             // Reseta o ataque
-            if (Attack_Timer + Game.Attack_Speed < Environment.TickCount)
+            if (Attack_Timer + Utils.Attack_Speed < Environment.TickCount)
             {
                 Attack_Timer = 0;
                 Attacking = false;
@@ -143,7 +144,7 @@ namespace Objects
                     HasItem = true;
 
             // Verifica se tem algum espaço vazio no inventário
-            for (byte i = 1; i <= Game.Max_Inventory; i++)
+            for (byte i = 1; i <= Utils.Max_Inventory; i++)
                 if (Inventory[i].Item == null)
                     HasSlot = true;
 

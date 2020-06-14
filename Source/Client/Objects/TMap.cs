@@ -7,6 +7,7 @@ namespace Objects
     {
         // Lista de dados
         public static Dictionary<Guid, TMap> List;
+        public static TMap_Weather[] Weather;
 
         // Dados gerais
         public Map Data;
@@ -40,7 +41,7 @@ namespace Objects
             return false;
         }
 
-        public bool Tile_Blocked(byte X, byte Y, Game.Directions Direction)
+        public bool Tile_Blocked(byte X, byte Y, Utils.Directions Direction)
         {
             byte Next_X = X, Next_Y = Y;
 
@@ -52,7 +53,7 @@ namespace Objects
 
             // Verifica se o azulejo está bloqueado
             if (Data.Tile[Next_X, Next_Y].Attribute == (byte)Mapper.Layer_Attributes.Block) return true;
-            if (Data.Tile[Next_X, Next_Y].Block[(byte)Game.ReverseDirection(Direction)]) return true;
+            if (Data.Tile[Next_X, Next_Y].Block[(byte)Utils.ReverseDirection(Direction)]) return true;
             if (Data.Tile[X, Y].Block[(byte)Direction]) return true;
             if (HasPlayer(Next_X, Next_Y) || HasNPC(Next_X, Next_Y)) return true;
             return false;
@@ -82,5 +83,15 @@ namespace Objects
             this.Y = Y;
             this.Opacity = Opacity;
         }
+    }
+
+    class TMap_Weather
+    {
+        public bool Visible;
+        public int x;
+        public int y;
+        public int Speed;
+        public int Start;
+        public bool Back;
     }
 }
