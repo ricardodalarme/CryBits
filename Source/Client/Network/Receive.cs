@@ -114,7 +114,7 @@ namespace Network
         {
             // Reseta os valores
             Utils.SelectCharacter = 0;
-            Lists.Class = new Dictionary<Guid, Class>();
+            Class.List = new Dictionary<Guid, Class>();
 
             // Abre o painel de seleção de personagens
             Panels.Menu_Close();
@@ -125,12 +125,12 @@ namespace Network
         {
             // Definir os valores que são enviados do servidor
             Player.Me = new Me_Structure(Data.ReadString());
-            Lists.Player.Add(Player.Me);
+            Player.List.Add(Player.Me);
 
             // Reseta alguns valores
-            Lists.Class = new Dictionary<Guid, Class>();
-            Lists.Item = new Dictionary<Guid, Item>();
-            Lists.Shop = new Dictionary<Guid, Shop>();
+            Class.List = new Dictionary<Guid, Class>();
+            Item.List = new Dictionary<Guid, Item>();
+            Shop.List = new Dictionary<Guid, Shop>();
         }
 
         private static void CreateCharacter()
@@ -150,7 +150,7 @@ namespace Network
         private static void Classes(NetIncomingMessage Data)
         {
             // Classes a serem removidas
-            Dictionary<Guid, Class> ToRemove = new Dictionary<Guid, Class>(Lists.Class);
+            Dictionary<Guid, Class> ToRemove = new Dictionary<Guid, Class>(Class.List);
 
             // Quantidade de classes
             short Count = Data.ReadByte();
@@ -161,15 +161,15 @@ namespace Network
                 Class Class;
 
                 // Obtém o dado
-                if (Lists.Class.ContainsKey(ID))
+                if (Class.List.ContainsKey(ID))
                 {
-                    Class = Lists.Class[ID];
+                    Class = Class.List[ID];
                     ToRemove.Remove(ID);
                 }
                 else
                 {
                     Class = new Class(ID);
-                    Lists.Class.Add(Class.ID, Class);
+                    Class.List.Add(Class.ID, Class);
                 }
 
                 // Recebe os dados do personagem
@@ -182,7 +182,7 @@ namespace Network
             }
 
             // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys) Lists.Shop.Remove(Remove);
+            foreach (Guid Remove in ToRemove.Keys) Shop.List.Remove(Remove);
         }
 
         private static void Characters(NetIncomingMessage Data)
@@ -247,7 +247,7 @@ namespace Network
             if (Name != Player.Me.Name)
             {
                 Player = new Player(Name);
-                Lists.Player.Add(Player);
+                Player.List.Add(Player);
             }
             else
                 Player = Player.Me;
@@ -255,7 +255,7 @@ namespace Network
             // Defini os dados do jogador
             Player.Texture_Num = Data.ReadInt16();
             Player.Level = Data.ReadInt16();
-            Player.Map = Lists.Temp_Map[new Guid(Data.ReadString())];
+            Player.Map = TMap.List[new Guid(Data.ReadString())];
             Player.X = Data.ReadByte();
             Player.Y = Data.ReadByte();
             Player.Direction = (Game.Directions)Data.ReadByte();
@@ -265,7 +265,7 @@ namespace Network
                 Player.Max_Vital[n] = Data.ReadInt16();
             }
             for (byte n = 0; n < (byte)Game.Attributes.Count; n++) Player.Attribute[n] = Data.ReadInt16();
-            for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Player.Equipment[n] = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+            for (byte n = 0; n < (byte)Game.Equipments.Count; n++) Player.Equipment[n] = Item.Get( new Guid(Data.ReadString()));
             Mapper.Current = Player.Map;
         }
 
@@ -301,13 +301,13 @@ namespace Network
             Player Player = Player.Get(Data.ReadString());
 
             // Altera os dados dos equipamentos do jogador
-            for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Player.Equipment[i] = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+            for (byte i = 0; i < (byte)Game.Equipments.Count; i++) Player.Equipment[i] = Item.Get( new Guid(Data.ReadString()));
         }
 
         private static void Player_Leave(NetIncomingMessage Data)
         {
             // Limpa os dados do jogador
-            Lists.Player.Remove(Player.Get(Data.ReadString()));
+            Player.List.Remove(Player.Get(Data.ReadString()));
         }
 
         private static void Player_Move(NetIncomingMessage Data)
@@ -383,7 +383,7 @@ namespace Network
             // Define os dados
             for (byte i = 1; i <= Game.Max_Inventory; i++)
             {
-                Player.Me.Inventory[i].Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+                Player.Me.Inventory[i].Item = Item.Get( new Guid(Data.ReadString()));
                 Player.Me.Inventory[i].Amount = Data.ReadInt16();
             }
         }
@@ -404,9 +404,9 @@ namespace Network
             Guid ID = new Guid(Data.ReadString());
 
             // Limpa todos os outros jogadores
-            for (byte i = 0; i < Lists.Player.Count; i++)
-                if (Lists.Player[i] != Player.Me)
-                    Lists.Player.RemoveAt(i);
+            for (byte i = 0; i < Player.List.Count; i++)
+                if (Player.List[i] != Player.Me)
+                    Player.List.RemoveAt(i);
 
             /*
             // Verifica se é necessário baixar os dados do mapa
@@ -415,7 +415,7 @@ namespace Network
                 Needed = true;
                 break;
                 Read.Map(ID);
-                if (Lists.Map[ID].Revision != Data.ReadInt16())
+                if (Map.List[ID].Revision != Data.ReadInt16())
                     Needed = true;
             }
             else
@@ -435,14 +435,14 @@ namespace Network
             Map Map;
 
             // Obtém o dado
-            if (Lists.Map.ContainsKey(ID)) Map = Lists.Map[ID];
+            if (Map.List.ContainsKey(ID)) Map = Map.List[ID];
             else
             {
                 Map = new Map(ID);
-                Lists.Map.Add(ID, Map);
-                Lists.Temp_Map.Add(ID, new TMap(Map));
+                Map.List.Add(ID, Map);
+                TMap.List.Add(ID, new TMap(Map));
             }
-            Mapper.Current = Lists.Temp_Map[ID];
+            Mapper.Current = TMap.List[ID];
 
             // Lê os dados
             Map.Revision = Data.ReadInt16();
@@ -535,8 +535,8 @@ namespace Network
             Write.Map(Map);
 
             // Redimensiona as partículas do clima
-            global::Mapper.Weather_Update();
-            global::Mapper.Autotile.Update();
+            Mapper.Weather_Update();
+            Mapper.Autotile.Update();
         }
 
         private static void JoinMap()
@@ -565,7 +565,7 @@ namespace Network
         private static void Items(NetIncomingMessage Data)
         {
             // Itens a serem removidas
-            Dictionary<Guid, Item> ToRemove = new Dictionary<Guid, Item>(Lists.Item);
+            Dictionary<Guid, Item> ToRemove = new Dictionary<Guid, Item>(Item.List);
 
             // Quantidade de lojas
             short Count = Data.ReadInt16();
@@ -576,15 +576,15 @@ namespace Network
                 Item Item;
 
                 // Obtém o dado
-                if (Lists.Item.ContainsKey(ID))
+                if (Item.List.ContainsKey(ID))
                 {
-                    Item = Lists.Item[ID];
+                    Item = Item.List[ID];
                     ToRemove.Remove(ID);
                 }
                 else
                 {
                     Item = new Item(ID);
-                    Lists.Item.Add(Item.ID, Item);
+                    Item.List.Add(Item.ID, Item);
                 }
 
                 // Lê os dados
@@ -596,7 +596,7 @@ namespace Network
                 Item.Bind = (Game.BindOn)Data.ReadByte();
                 Item.Rarity = Data.ReadByte();
                 Item.Req_Level = Data.ReadInt16();
-                Item.Req_Class = (Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
+                Item.Req_Class = Class.Get(new Guid(Data.ReadString()));
                 Item.Potion_Experience = Data.ReadInt32();
                 for (byte v = 0; v < (byte)Game.Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
                 Item.Equip_Type = Data.ReadByte();
@@ -605,7 +605,7 @@ namespace Network
             }
 
             // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys) Lists.Item.Remove(Remove);
+            foreach (Guid Remove in ToRemove.Keys) Item.List.Remove(Remove);
         }
 
         private static void Map_Items(NetIncomingMessage Data)
@@ -618,7 +618,7 @@ namespace Network
             {
                 // Geral
                 Mapper.Current.Item[i] = new TMap_Items();
-                Mapper.Current.Item[i].Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+                Mapper.Current.Item[i].Item = Item.Get( new Guid(Data.ReadString()));
                 Mapper.Current.Item[i].X = Data.ReadByte();
                 Mapper.Current.Item[i].Y = Data.ReadByte();
             }
@@ -709,13 +709,13 @@ namespace Network
             if (Data.ReadBoolean())
                 for (byte i = 1; i <= Game.Max_Inventory; i++)
                 {
-                    Player.Me.Trade_Offer[i].Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+                    Player.Me.Trade_Offer[i].Item = Item.Get( new Guid(Data.ReadString()));
                     Player.Me.Trade_Offer[i].Amount = Data.ReadInt16();
                 }
             else
                 for (byte i = 1; i <= Game.Max_Inventory; i++)
                 {
-                    Player.Me.Trade_Their_Offer[i].Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+                    Player.Me.Trade_Their_Offer[i].Item = Item.Get( new Guid(Data.ReadString()));
                     Player.Me.Trade_Their_Offer[i].Amount = Data.ReadInt16();
                 }
         }
@@ -723,7 +723,7 @@ namespace Network
         private static void Shops(NetIncomingMessage Data)
         {
             // Lojas a serem removidas
-            Dictionary<Guid, Shop> ToRemove = new Dictionary<Guid, Shop>(Lists.Shop);
+            Dictionary<Guid, Shop> ToRemove = new Dictionary<Guid, Shop>(Shop.List);
 
             // Quantidade de lojas
             short Count = Data.ReadInt16();
@@ -734,15 +734,15 @@ namespace Network
                 Shop Shop;
 
                 // Obtém o dado
-                if (Lists.Shop.ContainsKey(ID))
+                if (Shop.List.ContainsKey(ID))
                 {
-                    Shop = Lists.Shop[ID];
+                    Shop = Shop.List[ID];
                     ToRemove.Remove(ID);
                 }
                 else
                 {
                     Shop = new Shop(ID);
-                    Lists.Shop.Add(Shop.ID, Shop);
+                    Shop.List.Add(Shop.ID, Shop);
                 }
 
                 // Redimensiona os valores necessários 
@@ -751,38 +751,38 @@ namespace Network
 
                 // Lê os dados
                 Shop.Name = Data.ReadString();
-                Shop.Currency = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
+                Shop.Currency = Item.Get( new Guid(Data.ReadString()));
                 for (byte j = 0; j < Shop.Sold.Length; j++)
                     Shop.Sold[j] = new Shop_Item
                     {
-                        Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
+                        Item = Item.Get( new Guid(Data.ReadString())),
                         Amount = Data.ReadInt16(),
                         Price = Data.ReadInt16()
                     };
                 for (byte j = 0; j < Shop.Bought.Length; j++)
                     Shop.Bought[j] = new Shop_Item
                     {
-                        Item = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())),
+                        Item = Item.Get( new Guid(Data.ReadString())),
                         Amount = Data.ReadInt16(),
                         Price = Data.ReadInt16()
                     };
             }
 
             // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys) Lists.Shop.Remove(Remove);
+            foreach (Guid Remove in ToRemove.Keys) Shop.List.Remove(Remove);
         }
 
         private static void Shop_Open(NetIncomingMessage Data)
         {
             // Abre a loja
-            Utils.Shop_Open = (Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+            Utils.Shop_Open = Shop.Get(new Guid(Data.ReadString()));
             Panels.Get("Shop").Visible = Utils.Shop_Open != null;
         }
 
         private static void NPCs(NetIncomingMessage Data)
         {
             // Lojas a serem removidas
-            Dictionary<Guid, NPC> ToRemove = new Dictionary<Guid, NPC>(Lists.NPC);
+            Dictionary<Guid, NPC> ToRemove = new Dictionary<Guid, NPC>(NPC.List);
 
             // Quantidade de lojas
             short Count = Data.ReadInt16();
@@ -793,15 +793,15 @@ namespace Network
                 NPC NPC;
 
                 // Obtém o dado
-                if (Lists.NPC.ContainsKey(ID))
+                if (NPC.List.ContainsKey(ID))
                 {
-                    NPC = Lists.NPC[ID];
+                    NPC = NPC.List[ID];
                     ToRemove.Remove(ID);
                 }
                 else
                 {
                     NPC = new NPC(ID);
-                    Lists.NPC.Add(NPC.ID, NPC);
+                    NPC.List.Add(NPC.ID, NPC);
                 }
 
                 // Geral
@@ -817,7 +817,7 @@ namespace Network
             }
 
             // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys) Lists.NPC.Remove(Remove);
+            foreach (Guid Remove in ToRemove.Keys) NPC.List.Remove(Remove);
         }
 
         private static void Map_NPCs(NetIncomingMessage Data)
@@ -829,7 +829,7 @@ namespace Network
                 Mapper.Current.NPC[i] = new TNPC();
                 Mapper.Current.NPC[i].X2 = 0;
                 Mapper.Current.NPC[i].Y2 = 0;
-                Mapper.Current.NPC[i].Data = (NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+                Mapper.Current.NPC[i].Data = NPC.Get(new Guid(Data.ReadString()));
                 Mapper.Current.NPC[i].X = Data.ReadByte();
                 Mapper.Current.NPC[i].Y = Data.ReadByte();
                 Mapper.Current.NPC[i].Direction = (Game.Directions)Data.ReadByte();
@@ -846,7 +846,7 @@ namespace Network
             byte i = Data.ReadByte();
             Mapper.Current.NPC[i].X2 = 0;
             Mapper.Current.NPC[i].Y2 = 0;
-            Mapper.Current.NPC[i].Data = (NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+            Mapper.Current.NPC[i].Data = NPC.Get( new Guid(Data.ReadString()));
             Mapper.Current.NPC[i].X = Data.ReadByte();
             Mapper.Current.NPC[i].Y = Data.ReadByte();
             Mapper.Current.NPC[i].Direction = (Game.Directions)Data.ReadByte();

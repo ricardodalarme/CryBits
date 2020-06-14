@@ -280,10 +280,10 @@ partial class Graphics
                 NPC(Mapper.Current.NPC[i]);
 
         // Desenha os jogadores
-        for (byte i = 0; i < Lists.Player.Count; i++)
-            if (Lists.Player[i] != Player.Me)
-                if (Lists.Player[i].Map == Player.Me.Map)
-                    Player_Character(Lists.Player[i]);
+        for (byte i = 0; i < Player.List.Count; i++)
+            if (Player.List[i] != Player.Me)
+                if (Player.List[i].Map == Player.Me.Map)
+                    Player_Character(Player.List[i]);
 
         // Desenha o próprio jogador
         Player_Character(Player.Me);
@@ -434,7 +434,7 @@ partial class Graphics
     private static void CreateCharacter_Class()
     {
         short Texture_Num = 0;
-        Class Class = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value;
+        Class Class = Class.List.ElementAt(Utils.CreateCharacter_Class).Value;
 
         // Textura do personagem
         if (CheckBoxes.Get("GenderMale").Checked && Class.Tex_Male.Length > 0)
@@ -497,7 +497,7 @@ partial class Graphics
 
     private static void Informations(Panels.Structure Tool)
     {
-        Item Item = (Item)Lists.GetData(Lists.Item, new Guid(Utils.Infomation_ID));
+        Item Item = Item.Get( new Guid(Utils.Infomation_ID));
         SFML.Graphics.Color Text_Color;
         List<string> Data = new List<string>();
 

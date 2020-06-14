@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Objects;
 
 class Read
 {
@@ -129,8 +130,8 @@ class Read
 
         // Lê os dados
         FileStream Stream = File.OpenRead();
-        // Lists.Map.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
-        Lists.Temp_Map.Add(ID, new Objects.TMap(Lists.Map[ID]));
+        // Map.List.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
+        TMap.List.Add(ID, new TMap(Objects.Map.List[ID]));
         Stream.Close();
 
         // Redimensiona as partículas do clima

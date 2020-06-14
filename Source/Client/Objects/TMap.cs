@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Objects
 {
     class TMap
     {
+        // Lista de dados
+        public static Dictionary<Guid, TMap> List;
+
+        // Dados gerais
         public Map Data;
         public TNPC[] NPC;
         public TMap_Items[] Item = new TMap_Items[0];
@@ -28,8 +33,8 @@ namespace Objects
         private bool HasPlayer(short X, short Y)
         {
             // Verifica se há algum Jogador na cordenada
-            for (byte i = 0; i < Lists.Player.Count; i++)
-                if ((Lists.Player[i].X, Lists.Player[i].Y) == (X, Y) && Lists.Player[i].Map == this)
+            for (byte i = 0; i < Player.List.Count; i++)
+                if ((Player.List[i].X, Player.List[i].Y, Player.List[i].Map) == (X, Y, this))
                     return true;
 
             return false;

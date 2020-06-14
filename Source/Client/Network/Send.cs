@@ -83,7 +83,7 @@ namespace Network
             // Envia os dados
             Data.Write((byte)Packets.CreateCharacter);
             Data.Write(TextBoxes.Get("CreateCharacter_Name").Text);
-            Data.Write(Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value.ID.ToString());
+            Data.Write(Class.List.ElementAt(Utils.CreateCharacter_Class).Value.ID.ToString());
             Data.Write(CheckBoxes.Get("GenderMale").Checked);
             Data.Write(Utils.CreateCharacter_Tex);
             Packet(Data);

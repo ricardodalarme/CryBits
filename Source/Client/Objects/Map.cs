@@ -1,10 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Objects
 {
     [Serializable]
     class Map : Data
     {
+        // Lista de dados
+        public static Dictionary<Guid, Map> List;
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static Map Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
+        // Dados gerais
         public short Revision;
         public string Name;
         public byte Moral;

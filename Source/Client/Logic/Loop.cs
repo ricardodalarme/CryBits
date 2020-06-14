@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Objects;
 
 class Loop
 {
@@ -36,8 +37,8 @@ class Loop
                 if (Timer_30 < Environment.TickCount)
                 {
                     // Lógica dos jogadores
-                    for (byte i = 0; i < Lists.Player.Count; i++)
-                        Lists.Player[i].Logic();
+                    for (byte i = 0; i < Player.List.Count; i++)
+                        Player.List[i].Logic();
 
                     // Lógica dos NPCs
                     for (byte i = 0; i < Mapper.Current.NPC.Length; i++)

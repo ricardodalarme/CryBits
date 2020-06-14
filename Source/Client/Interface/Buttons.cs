@@ -206,7 +206,7 @@ class Buttons
     private static void CreateCharacter_ChangeRight()
     {
         // Altera a classe selecionada pelo jogador
-        if (Utils.CreateCharacter_Class == Lists.Class.Count - 1)
+        if (Utils.CreateCharacter_Class == Class.List.Count - 1)
             Utils.CreateCharacter_Class = 0;
         else
             Utils.CreateCharacter_Class += 1;
@@ -216,7 +216,7 @@ class Buttons
     {
         // Altera a classe selecionada pelo jogador
         if (Utils.CreateCharacter_Class == 0)
-            Utils.CreateCharacter_Class = (byte)Lists.Class.Count;
+            Utils.CreateCharacter_Class = (byte)Class.List.Count;
         else
             Utils.CreateCharacter_Class -= 1;
     }
@@ -226,9 +226,9 @@ class Buttons
         // Lista de texturas
         short[] Tex_List;
         if (CheckBoxes.Get("GenderMale").Checked)
-            Tex_List = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Male;
+            Tex_List = Class.List.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Male;
         else
-            Tex_List = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Female;
+            Tex_List = Class.List.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Female;
 
         // Altera a classe selecionada pelo jogador
         if (Utils.CreateCharacter_Tex == Tex_List.Length - 1)
@@ -242,9 +242,9 @@ class Buttons
         // Lista de texturas
         short[] Tex_List;
         if (CheckBoxes.Get("GenderMale").Checked)
-            Tex_List = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Male;
+            Tex_List = Class.List.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Male;
         else
-            Tex_List = Lists.Class.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Female;
+            Tex_List = Class.List.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Female;
 
         // Altera a classe selecionada pelo jogador
         if (Utils.CreateCharacter_Tex == 0)

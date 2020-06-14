@@ -1,13 +1,17 @@
 ﻿using Network;
 using SFML.Window;
 using System;
+using System.Collections.Generic;
 
 namespace Objects
 {
     class Player : Character
     {
+        // Lista de dados
+        public static List<Player> List ;
+
         // Obtém um jogador com determinado nome
-        public static Player Get(string Name) => Lists.Player.Find(x => x.Name.Equals(Name));
+        public static Player Get(string Name) => List.Find(x => x.Name.Equals(Name));
 
         // O próprio jogador
         public static Me_Structure Me;
@@ -156,7 +160,7 @@ namespace Objects
         public void Leave()
         {
             // Reseta os dados
-            Lists.Player.Clear();
+            Player.List.Clear();
             Me = null;
         }
     }
