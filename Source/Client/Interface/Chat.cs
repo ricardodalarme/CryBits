@@ -111,17 +111,6 @@ class Chat
             case "/trade":
                 if (Parts.Length > 1) Send.Trade_Invite(Parts[1]);
                 break;
-            case "/warp":
-                short Map_Num = 0;
-                byte X = 0, Y = 0;
-                if (Parts.Length < 4 || !short.TryParse(Parts[1], out Map_Num) || !byte.TryParse(Parts[2], out X) || !byte.TryParse(Parts[3], out Y))
-                {
-                    AddText("Use: /warp 'Map_Num' 'X' 'Y'", Color.White);
-                    break;
-                }
-
-                Send.Warp(Map_Num, X, Y);
-                break;
             default:
                 // Mensagem lobal
                 if (Message.Substring(0, 1) == "'")

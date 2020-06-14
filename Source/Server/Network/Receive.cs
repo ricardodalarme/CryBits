@@ -46,8 +46,7 @@ namespace Network
             Trade_Offer_State,
             Shop_Buy,
             Shop_Sell,
-            Shop_Close,
-            Warp
+            Shop_Close
         }
 
         // Pacotes do editor
@@ -113,7 +112,6 @@ namespace Network
                     case Client_Packets.Shop_Buy: Shop_Buy(Player, Data); break;
                     case Client_Packets.Shop_Sell: Shop_Sell(Player, Data); break;
                     case Client_Packets.Shop_Close: Shop_Close(Player); break;
-                    case Client_Packets.Warp: Warp(Player, Data); break;
                 }
             else
                 // Manuseia os dados recebidos do editor
@@ -1359,19 +1357,6 @@ namespace Network
         private static void Shop_Close(Player Player)
         {
             Player.Shop = null;
-        }
-
-        private static void Warp(Player Player, NetIncomingMessage Data)
-        {
-            // Verifica se o jogador realmente tem permissão 
-            if (Player.Account.Acess < Accesses.Editor)
-            {
-                Send.Alert(Player.Account, "You aren't allowed to do this.");
-                return;
-            }
-
-            // Teletransporta o jogador para o mapa TODO
-            //   Player.Warp(Data.ReadInt16(), Data.ReadByte(), Data.ReadByte());
         }
     }
 }
