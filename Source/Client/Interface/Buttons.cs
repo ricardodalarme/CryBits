@@ -180,7 +180,7 @@ namespace Interface
         {
             // Salva o nome do usuário
             Game.Option.Username = TextBoxes.Get("Connect_Username").Text;
-            Write.Options();
+            Library.Write.Options();
 
             // Conecta-se ao jogo
             if (Socket.TryConnect()) Send.Connect();

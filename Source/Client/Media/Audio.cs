@@ -1,6 +1,7 @@
 ﻿using SFML.Audio;
 using System;
 using System.IO;
+using Library;
 
 class Audio
 {

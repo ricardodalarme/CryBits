@@ -533,7 +533,7 @@ namespace Network
             }
 
             // Salva o mapa
-            Write.Map(Map);
+            Library.Write.Map(Map);
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();
