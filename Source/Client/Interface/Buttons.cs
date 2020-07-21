@@ -125,7 +125,7 @@ namespace Interface
         public static bool Characters_Change_Buttons()
         {
             // Altera os botões visíveis
-            bool Visibility = Utils.Characters != null && Utils.SelectCharacter < Utils.Characters.Length;
+            bool Visibility = Panels.Characters != null && Panels.SelectCharacter < Panels.Characters.Length;
             Get("Character_Create").Visible = !Visibility;
             Get("Character_Delete").Visible = Visibility;
             Get("Character_Use").Visible = Visibility;
@@ -158,8 +158,8 @@ namespace Interface
             Socket.Disconnect();
 
             // Define as marcações corretas
-            CheckBoxes.Get("Sounds").Checked = Game.Option.Sounds;
-            CheckBoxes.Get("Musics").Checked = Game.Option.Musics;
+            CheckBoxes.Get("Sounds").Checked = Utils.Option.Sounds;
+            CheckBoxes.Get("Musics").Checked = Utils.Option.Musics;
 
             // Abre o painel
             Panels.Menu_Close();
@@ -179,7 +179,7 @@ namespace Interface
         private static void Connect_Ok()
         {
             // Salva o nome do usuário
-            Game.Option.Username = TextBoxes.Get("Connect_Username").Text;
+            Utils.Option.Username = TextBoxes.Get("Connect_Username").Text;
             Library.Write.Options();
 
             // Conecta-se ao jogo
@@ -208,19 +208,19 @@ namespace Interface
         private static void CreateCharacter_ChangeRight()
         {
             // Altera a classe selecionada pelo jogador
-            if (Utils.CreateCharacter_Class == Class.List.Count - 1)
-                Utils.CreateCharacter_Class = 0;
+            if (Panels.CreateCharacter_Class == Class.List.Count - 1)
+                Panels.CreateCharacter_Class = 0;
             else
-                Utils.CreateCharacter_Class += 1;
+                Panels.CreateCharacter_Class += 1;
         }
 
         private static void CreateCharacter_ChangeLeft()
         {
             // Altera a classe selecionada pelo jogador
-            if (Utils.CreateCharacter_Class == 0)
-                Utils.CreateCharacter_Class = (byte)Class.List.Count;
+            if (Panels.CreateCharacter_Class == 0)
+                Panels.CreateCharacter_Class = (byte)Class.List.Count;
             else
-                Utils.CreateCharacter_Class -= 1;
+                Panels.CreateCharacter_Class -= 1;
         }
 
         private static void CreateCharacter_Texture_ChangeRight()
@@ -228,15 +228,15 @@ namespace Interface
             // Lista de texturas
             short[] Tex_List;
             if (CheckBoxes.Get("GenderMale").Checked)
-                Tex_List = Class.List.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Male;
+                Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Male;
             else
-                Tex_List = Class.List.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Female;
+                Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Female;
 
             // Altera a classe selecionada pelo jogador
-            if (Utils.CreateCharacter_Tex == Tex_List.Length - 1)
-                Utils.CreateCharacter_Tex = 0;
+            if (Panels.CreateCharacter_Tex == Tex_List.Length - 1)
+                Panels.CreateCharacter_Tex = 0;
             else
-                Utils.CreateCharacter_Tex += 1;
+                Panels.CreateCharacter_Tex += 1;
         }
 
         private static void CreateCharacter_Texture_ChangeLeft()
@@ -244,15 +244,15 @@ namespace Interface
             // Lista de texturas
             short[] Tex_List;
             if (CheckBoxes.Get("GenderMale").Checked)
-                Tex_List = Class.List.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Male;
+                Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Male;
             else
-                Tex_List = Class.List.ElementAt(Utils.CreateCharacter_Class).Value.Tex_Female;
+                Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Female;
 
             // Altera a classe selecionada pelo jogador
-            if (Utils.CreateCharacter_Tex == 0)
-                Utils.CreateCharacter_Tex = (byte)(Tex_List.Length - 1);
+            if (Panels.CreateCharacter_Tex == 0)
+                Panels.CreateCharacter_Tex = (byte)(Tex_List.Length - 1);
             else
-                Utils.CreateCharacter_Tex -= 1;
+                Panels.CreateCharacter_Tex -= 1;
         }
 
         private static void CreateCharacter_Return()
@@ -283,19 +283,19 @@ namespace Interface
         private static void Character_Change_Right()
         {
             // Altera o personagem selecionado pelo jogador
-            if (Utils.SelectCharacter == Utils.Characters.Length)
-                Utils.SelectCharacter = 0;
+            if (Panels.SelectCharacter == Panels.Characters.Length)
+                Panels.SelectCharacter = 0;
             else
-                Utils.SelectCharacter += 1;
+                Panels.SelectCharacter += 1;
         }
 
         private static void Character_Change_Left()
         {
             // Altera o personagem selecionado pelo jogador
-            if (Utils.SelectCharacter == 0)
-                Utils.SelectCharacter = Utils.Characters.Length;
+            if (Panels.SelectCharacter == 0)
+                Panels.SelectCharacter = Panels.Characters.Length;
             else
-                Utils.SelectCharacter -= 1;
+                Panels.SelectCharacter -= 1;
         }
 
         private static void Chat_Up()
@@ -322,27 +322,27 @@ namespace Interface
 
         private static void Attribute_Strenght()
         {
-            Send.AddPoint(Game.Attributes.Strength);
+            Send.AddPoint(Utils.Attributes.Strength);
         }
 
         private static void Attribute_Resistance()
         {
-            Send.AddPoint(Game.Attributes.Resistance);
+            Send.AddPoint(Utils.Attributes.Resistance);
         }
 
         private static void Attribute_Intelligence()
         {
-            Send.AddPoint(Game.Attributes.Intelligence);
+            Send.AddPoint(Utils.Attributes.Intelligence);
         }
 
         private static void Attribute_Agility()
         {
-            Send.AddPoint(Game.Attributes.Agility);
+            Send.AddPoint(Utils.Attributes.Agility);
         }
 
         private static void Attribute_Vitality()
         {
-            Send.AddPoint(Game.Attributes.Vitality);
+            Send.AddPoint(Utils.Attributes.Vitality);
         }
 
         private static void Menu_Inventory()
@@ -374,7 +374,7 @@ namespace Interface
             }
 
             // Solta o item
-            Send.DropItem(Utils.Drop_Slot, Amount);
+            Send.DropItem(Panels.Drop_Slot, Amount);
             Panels.Get("Drop").Visible = false;
         }
 
@@ -425,11 +425,11 @@ namespace Interface
             Get("Trade_Offer_Confirm").Visible = true;
             Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
             Panels.Get("Trade_Offer_Disable").Visible = false;
-            Send.Trade_Offer_State(Game.Trade_Status.Accepted);
+            Send.Trade_Offer_State(Utils.Trade_Status.Accepted);
 
             // Limpa os dados da oferta
-            Player.Me.Trade_Offer = new Inventory[Game.Max_Inventory + 1];
-            Player.Me.Trade_Their_Offer = new Inventory[Game.Max_Inventory + 1];
+            Player.Me.Trade_Offer = new Inventory[Utils.Max_Inventory + 1];
+            Player.Me.Trade_Their_Offer = new Inventory[Utils.Max_Inventory + 1];
         }
 
         private static void Trade_Offer_Decline()
@@ -438,7 +438,7 @@ namespace Interface
             Get("Trade_Offer_Confirm").Visible = true;
             Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
             Panels.Get("Trade_Offer_Disable").Visible = false;
-            Send.Trade_Offer_State(Game.Trade_Status.Declined);
+            Send.Trade_Offer_State(Utils.Trade_Status.Declined);
         }
 
         public static void Trade_Offer_Confirm()
@@ -446,7 +446,7 @@ namespace Interface
             // Confirma a oferta
             Get("Trade_Offer_Confirm").Visible = Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
             Panels.Get("Trade_Offer_Disable").Visible = true;
-            Send.Trade_Offer_State(Game.Trade_Status.Confirmed);
+            Send.Trade_Offer_State(Utils.Trade_Status.Confirmed);
         }
 
         private static void Trade_Amount_Confirm()
@@ -462,7 +462,7 @@ namespace Interface
             }
 
             // Solta o item
-            Send.Trade_Offer(Utils.Trade_Slot, Utils.Trade_Inventory_Slot, Amount);
+            Send.Trade_Offer(Panels.Trade_Slot, Panels.Trade_Inventory_Slot, Amount);
             Panels.Get("Trade_Amount").Visible = false;
         }
 
@@ -492,7 +492,7 @@ namespace Interface
             }
 
             // Vende o item
-            Send.Shop_Sell(Utils.Shop_Inventory_Slot, Amount);
+            Send.Shop_Sell(Panels.Shop_Inventory_Slot, Amount);
             Panels.Get("Shop_Sell").Visible = false;
         }
 

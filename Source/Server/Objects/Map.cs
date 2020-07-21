@@ -13,7 +13,6 @@ namespace Objects
         // Obtém o dado, caso ele não existir retorna nulo
         public static Map Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
 
-
         // Tamanho dos mapas
         public const byte Width = 25;
         public const byte Height = 19;

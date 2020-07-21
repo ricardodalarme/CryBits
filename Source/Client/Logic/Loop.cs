@@ -51,7 +51,7 @@ class Loop
                 }
 
                 // Verifica se é necessário mostrar o painel de informações
-                Utils.CheckInformations();
+                Panels.CheckInformations();
             }
 
             // Faz com que a aplicação se mantenha estável
@@ -62,7 +62,7 @@ class Loop
             if (Timer_1000 < Environment.TickCount)
             {
                 Network.Send.Latency();
-                Game.FPS = FPS;
+                Utils.FPS = FPS;
                 FPS = 0;
                 Timer_1000 = Environment.TickCount + 1000;
             }

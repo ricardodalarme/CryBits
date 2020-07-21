@@ -75,20 +75,20 @@ class Mapper
             }
     }
 
-    public static void NextTile(Game.Directions Direction, ref byte X, ref byte Y)
+    public static void NextTile(Utils.Directions Direction, ref byte X, ref byte Y)
     {
         // Próximo azulejo
         switch (Direction)
         {
-            case Game.Directions.Up: Y -= 1; break;
-            case Game.Directions.Down: Y += 1; break;
-            case Game.Directions.Right: X += 1; break;
-            case Game.Directions.Left: X -= 1; break;
+            case Utils.Directions.Up: Y -= 1; break;
+            case Utils.Directions.Down: Y += 1; break;
+            case Utils.Directions.Right: X += 1; break;
+            case Utils.Directions.Left: X -= 1; break;
         }
     }
 
     // Verifica se as coordenas estão no limite do mapa
-    public static bool OutOfLimit(int x, int y) => x >= Game.Map_Width || y >= Game.Map_Height || x < 0 || y < 0;
+    public static bool OutOfLimit(int x, int y) => x >= Utils.Map_Width || y >= Utils.Map_Height || x < 0 || y < 0;
 
     private static void Fog()
     {
@@ -181,7 +181,7 @@ class Mapper
         for (short i = 1; i < TMap.Weather.Length; i++)
             if (!TMap.Weather[i].Visible)
             {
-                if (Game.Random.Next(0, Max_Weather_Intensity - Current.Data.Weather.Intensity) == 0)
+                if (Utils.Random.Next(0, Max_Weather_Intensity - Current.Data.Weather.Intensity) == 0)
                 {
                     if (!Stop)
                     {
@@ -211,16 +211,16 @@ class Mapper
                 }
 
                 // Reseta a partícula
-                if (TMap.Weather[i].x > Game.Screen_Width || TMap.Weather[i].y > Game.Screen_Height)
+                if (TMap.Weather[i].x > Utils.Screen_Width || TMap.Weather[i].y > Utils.Screen_Height)
                     TMap.Weather[i] = new TMap_Weather();
             }
 
         // Trovoadas
         if (Current.Data.Weather.Type == (byte)Weathers.Thundering)
-            if (Game.Random.Next(0, Max_Weather_Intensity * 10 - Current.Data.Weather.Intensity * 2) == 0)
+            if (Utils.Random.Next(0, Max_Weather_Intensity * 10 - Current.Data.Weather.Intensity * 2) == 0)
             {
                 // Som do trovão
-                int Thunder = Game.Random.Next(Thunder_First, Thunder_Last);
+                int Thunder = Utils.Random.Next(Thunder_First, Thunder_Last);
                 Audio.Sound.Play((Audio.Sounds)Thunder);
 
                 // Relâmpago
@@ -231,16 +231,16 @@ class Mapper
     private static void Weather_Rain_Create(int i)
     {
         // Define a velocidade e a posição da partícula
-        TMap.Weather[i].Speed = Game.Random.Next(8, 13);
+        TMap.Weather[i].Speed = Utils.Random.Next(8, 13);
 
-        if (Game.Random.Next(2) == 0)
+        if (Utils.Random.Next(2) == 0)
         {
             TMap.Weather[i].x = -32;
-            TMap.Weather[i].y = Game.Random.Next(-32, Game.Screen_Height);
+            TMap.Weather[i].y = Utils.Random.Next(-32, Utils.Screen_Height);
         }
         else
         {
-            TMap.Weather[i].x = Game.Random.Next(-32, Game.Screen_Width);
+            TMap.Weather[i].x = Utils.Random.Next(-32, Utils.Screen_Width);
             TMap.Weather[i].y = -32;
         }
     }
@@ -255,12 +255,12 @@ class Mapper
     private static void Weather_Snow_Create(int i)
     {
         // Define a velocidade e a posição da partícula
-        TMap.Weather[i].Speed = Game.Random.Next(1, 3);
+        TMap.Weather[i].Speed = Utils.Random.Next(1, 3);
         TMap.Weather[i].y = -32;
-        TMap.Weather[i].x = Game.Random.Next(-32, Game.Screen_Width);
+        TMap.Weather[i].x = Utils.Random.Next(-32, Utils.Screen_Width);
         TMap.Weather[i].Start = TMap.Weather[i].x;
 
-        if (Game.Random.Next(2) == 0)
+        if (Utils.Random.Next(2) == 0)
             TMap.Weather[i].Back = false;
         else
             TMap.Weather[i].Back = true;
@@ -268,7 +268,7 @@ class Mapper
 
     private static void Weather_Snow_Movement(int i, bool Movimentrar = true)
     {
-        int Diference = Game.Random.Next(0, Snow_Movement / 3);
+        int Diference = Utils.Random.Next(0, Snow_Movement / 3);
         int x1 = TMap.Weather[i].Start + Snow_Movement + Diference;
         int x2 = TMap.Weather[i].Start - Snow_Movement - Diference;
 
@@ -327,8 +327,8 @@ class Mapper
         public static void Update()
         {
             // Atualiza os azulejos necessários
-            for (byte x = 0; x < Game.Map_Width; x++)
-                for (byte y = 0; y < Game.Map_Height; y++)
+            for (byte x = 0; x < Utils.Map_Width; x++)
+                for (byte y = 0; y < Utils.Map_Height; y++)
                     for (byte c = 0; c < (byte)Layers.Count; c++)
                         for (byte q = 0; q <= Current.Data.Tile[x, y].Data.GetUpperBound(1); q++)
                             if (Current.Data.Tile[x, y].Data[c, q].Automatic)
@@ -376,8 +376,8 @@ class Mapper
 
             // Define a posição do mini azulejo
             Objects.Map_Tile_Data Data = Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num];
-            Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].X = Data.X * Game.Grid + Position.X;
-            Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].Y = Data.Y * Game.Grid + Position.Y;
+            Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].X = Data.X * Utils.Grid + Position.X;
+            Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].Y = Data.Y * Utils.Grid + Position.Y;
         }
 
         private static bool Check(int X1, int Y1, int X2, int Y2, byte Layer_Num, byte Layer_Type)
@@ -385,7 +385,7 @@ class Mapper
             Objects.Map_Tile_Data Data1, Data2;
 
             // Somente se necessário
-            if (X2 < 0 || X2 >= Game.Map_Width || Y2 < 0 || Y2 >= Game.Map_Height) return true;
+            if (X2 < 0 || X2 >= Utils.Map_Width || Y2 < 0 || Y2 >= Utils.Map_Height) return true;
 
             // Dados
             Data1 = Current.Data.Tile[X1, Y1].Data[Layer_Type, Layer_Num];

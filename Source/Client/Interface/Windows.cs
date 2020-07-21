@@ -58,7 +58,7 @@ namespace Interface
                     // Compra o item da loja
                     Slot = Panels.Shop_Slot;
                     if (Slot >= 0)
-                        if (Utils.Shop_Open != null)
+                        if (Panels.Shop_Open != null)
                             Send.Shop_Buy((byte)Slot);
                 }
             }
@@ -121,32 +121,32 @@ namespace Interface
                 // Muda o slot do item
                 if (Panels.Inventory_Slot > 0)
                 {
-                    if (Utils.Inventory_Change > 0) Send.Inventory_Change(Utils.Inventory_Change, Panels.Inventory_Slot);
+                    if (Panels.Inventory_Change > 0) Send.Inventory_Change(Panels.Inventory_Change, Panels.Inventory_Slot);
                 }
                 // Muda o slot da hotbar
                 else if (Panels.Hotbar_Slot >= 0)
                 {
-                    if (Utils.Hotbar_Change >= 0) Send.Hotbar_Change(Utils.Hotbar_Change, Panels.Hotbar_Slot);
-                    if (Utils.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Game.Hotbar.Item, Utils.Inventory_Change);
+                    if (Panels.Hotbar_Change >= 0) Send.Hotbar_Change(Panels.Hotbar_Change, Panels.Hotbar_Slot);
+                    if (Panels.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Utils.Hotbar.Item, Panels.Inventory_Change);
                 }
                 // Adiciona um item à troca
                 else if (Panels.Trade_Slot > 0)
                 {
-                    if (Utils.Inventory_Change > 0)
-                        if (Player.Me.Inventory[Utils.Inventory_Change].Amount == 1)
-                            Send.Trade_Offer(Panels.Trade_Slot, Utils.Inventory_Change);
+                    if (Panels.Inventory_Change > 0)
+                        if (Player.Me.Inventory[Panels.Inventory_Change].Amount == 1)
+                            Send.Trade_Offer(Panels.Trade_Slot, Panels.Inventory_Change);
                         else
                         {
-                            Utils.Trade_Slot = Panels.Trade_Slot;
-                            Utils.Trade_Inventory_Slot = Utils.Inventory_Change;
+                            Panels.Trade_Slot_Selected = Panels.Trade_Slot;
+                            Panels.Trade_Inventory_Slot = Panels.Inventory_Change;
                             TextBoxes.Get("Trade_Amount").Text = string.Empty;
                             Panels.Get("Trade_Amount").Visible = true;
                         }
                 }
 
                 // Reseta a movimentação
-                Utils.Inventory_Change = 0;
-                Utils.Hotbar_Change = -1;
+                Panels.Inventory_Change = 0;
+                Panels.Hotbar_Change = -1;
             }
         }
 
@@ -213,11 +213,11 @@ namespace Interface
         {
             // Reproduz a música de fundo
             Audio.Sound.Stop_All();
-            if (Game.Option.Musics) Audio.Music.Play(Audio.Musics.Menu);
+            if (Utils.Option.Musics) Audio.Music.Play(Audio.Musics.Menu);
 
             // Nome do usuário salvo
-            CheckBoxes.Get("Connect_Save_Username").Checked = Game.Option.SaveUsername;
-            if (Game.Option.SaveUsername) TextBoxes.Get("Connect_Username").Text = Game.Option.Username;
+            CheckBoxes.Get("Connect_Save_Username").Checked = Utils.Option.SaveUsername;
+            if (Utils.Option.SaveUsername) TextBoxes.Get("Connect_Username").Text = Utils.Option.Username;
 
             // Traz o jogador de volta ao menu
             Panels.Menu_Close();

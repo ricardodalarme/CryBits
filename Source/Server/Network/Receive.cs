@@ -287,6 +287,7 @@ namespace Network
                     Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] = Class.Item[i].Item1;
                 else
                     Account.Character.GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
+            for (byte i = 0; i < Max_Hotbar; i++) Account.Character.Hotbar[i] = new Hotbar(Hotbars.None, 0);
 
             // Salva a conta
             Write.Character_Name(Name);

@@ -116,7 +116,7 @@ namespace Interface
                 default:
                     // Mensagem lobal
                     if (Message.Substring(0, 1) == "'")
-                        Send.Message(Message.Substring(1), Game.Messages.Global);
+                        Send.Message(Message.Substring(1), Utils.Messages.Global);
                     // Mensagem particular
                     else if (Message.Substring(0, 1) == "!")
                     {
@@ -130,12 +130,12 @@ namespace Interface
                             Message = Message.Substring(Parts[0].Length + 1);
 
                             // Envia a mensagem
-                            Send.Message(Message, Game.Messages.Private, Destiny);
+                            Send.Message(Message, Utils.Messages.Private, Destiny);
                         }
                     }
                     // Mensagem mapa
                     else
-                        Send.Message(Message, Game.Messages.Map);
+                        Send.Message(Message, Utils.Messages.Map);
                     break;
             }
         }

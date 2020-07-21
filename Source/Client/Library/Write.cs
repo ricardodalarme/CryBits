@@ -9,7 +9,7 @@ namespace Library
         {
             // Escreve os dados
             FileStream Stream = new FileInfo(Directories.Options.FullName).OpenWrite();
-            new BinaryFormatter().Serialize(Stream, Game.Option);
+            new BinaryFormatter().Serialize(Stream, Utils.Option);
             Stream.Close();
         }
 

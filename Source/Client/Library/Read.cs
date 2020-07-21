@@ -21,14 +21,14 @@ namespace Library
             // Cria o arquivo se ele não existir
             if (!Directories.Options.Exists)
             {
-                Game.Option = new Game.Options();
+                Utils.Option = new Utils.Options();
                 Write.Options();
                 return;
             }
 
             // Lê os dados
             FileStream Stream = Directories.Options.OpenRead();
-            Game.Option = (Game.Options)new BinaryFormatter().Deserialize(Stream);
+            Utils.Option = (Utils.Options)new BinaryFormatter().Deserialize(Stream);
             Stream.Close();
         }
 

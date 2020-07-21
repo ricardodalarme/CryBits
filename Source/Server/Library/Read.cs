@@ -36,41 +36,35 @@ namespace Library
                 return;
             }
 
-            // Cria um arquivo temporário
-            BinaryReader Data = new BinaryReader(Directories.Settings.OpenRead());
-
-            // Carrega os dados
-            Game_Name = Data.ReadString();
-            Welcome_Message = Data.ReadString();
-            Port = Data.ReadInt16();
-            Max_Players = Data.ReadByte();
-            Max_Characters = Data.ReadByte();
-            Max_Party_Members = Data.ReadByte();
-            Max_Map_Items = Data.ReadByte();
-            Num_Points = Data.ReadByte();
-            Max_Name_Length = Data.ReadByte();
-            Min_Name_Length = Data.ReadByte();
-            Max_Password_Length = Data.ReadByte();
-            Min_Password_Length = Data.ReadByte();
-
-            // Descarrega o arquivo
-            Data.Dispose();
+            // Carrega as configurações
+            using (var Data = new BinaryReader(Directories.Settings.OpenRead()))
+            {
+                Game_Name = Data.ReadString();
+                Welcome_Message = Data.ReadString();
+                Port = Data.ReadInt16();
+                Max_Players = Data.ReadByte();
+                Max_Characters = Data.ReadByte();
+                Max_Party_Members = Data.ReadByte();
+                Max_Map_Items = Data.ReadByte();
+                Num_Points = Data.ReadByte();
+                Max_Name_Length = Data.ReadByte();
+                Min_Name_Length = Data.ReadByte();
+                Max_Password_Length = Data.ReadByte();
+                Min_Password_Length = Data.ReadByte();
+            }
         }
 
         public static void Account(Account Account, string Name)
         {
-            FileInfo File = new FileInfo(Directories.Accounts.FullName + Name + "\\Data" + Directories.Format);
+            var File = new FileInfo(Directories.Accounts.FullName + Name + "\\Data" + Directories.Format);
 
-            // Cria um arquivo temporário
-            BinaryReader Data = new BinaryReader(File.OpenRead());
-
-            // Carrega os dados e os adiciona ao cache
-            Account.User = Data.ReadString();
-            Account.Password = Data.ReadString();
-            Account.Acess = (Accesses)Data.ReadByte();
-
-            // Descarrega o arquivo
-            Data.Dispose();
+            // Carrega os dados da conta
+            using (var Data = new BinaryReader(File.OpenRead()))
+            {
+                Account.User = Data.ReadString();
+                Account.Password = Data.ReadString();
+                Account.Acess = (Accesses)Data.ReadByte();
+            }
         }
 
         public static void Characters(Account Account)
@@ -148,17 +142,9 @@ namespace Library
                 return string.Empty;
             }
 
-            // Cria um arquivo temporário
-            StreamReader Data = new StreamReader(Directories.Characters.FullName);
-
-            // Carrega todos os nomes dos personagens
-            string Characters = Data.ReadToEnd();
-
-            // Descarrega o arquivo
-            Data.Dispose();
-
-            // Retorna o valor de acordo com o que foi carregado
-            return Characters;
+            // Retorna o nome de todos os personagens registrados
+            using (var Data = new StreamReader(Directories.Characters.FullName))
+                return Data.ReadToEnd();
         }
 
         private static void Classes()

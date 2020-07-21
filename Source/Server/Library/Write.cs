@@ -9,25 +9,22 @@ namespace Library
     {
         public static void Settings()
         {
-            // Cria um arquivo temporário
-            BinaryWriter Data = new BinaryWriter(Directories.Settings.OpenWrite());
-
-            // Escreve os dados
-            Data.Write(Game_Name);
-            Data.Write(Welcome_Message);
-            Data.Write(Port);
-            Data.Write(Max_Players);
-            Data.Write(Max_Characters);
-            Data.Write(Max_Party_Members);
-            Data.Write(Max_Map_Items);
-            Data.Write(Num_Points);
-            Data.Write(Max_Name_Length);
-            Data.Write(Min_Name_Length);
-            Data.Write(Max_Password_Length);
-            Data.Write(Min_Password_Length);
-
-            // Descarrega o arquivo
-            Data.Dispose();
+            // Escreve as configurações
+            using (var Data = new BinaryWriter(Directories.Settings.OpenWrite()))
+            {
+                Data.Write(Game_Name);
+                Data.Write(Welcome_Message);
+                Data.Write(Port);
+                Data.Write(Max_Players);
+                Data.Write(Max_Characters);
+                Data.Write(Max_Party_Members);
+                Data.Write(Max_Map_Items);
+                Data.Write(Num_Points);
+                Data.Write(Max_Name_Length);
+                Data.Write(Min_Name_Length);
+                Data.Write(Max_Password_Length);
+                Data.Write(Min_Password_Length);
+            }
         }
 
         public static void Account(Account Account)
@@ -37,16 +34,13 @@ namespace Library
             // Evita erros
             if (!File.Directory.Exists) File.Directory.Create();
 
-            // Cria um arquivo temporário
-            BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
-            // Salva os dados no arquivo
-            Data.Write(Account.User);
-            Data.Write(Account.Password);
-            Data.Write((byte)Account.Acess);
-
-            // Descarrega o arquivo
-            Data.Dispose();
+            // Escreve os dados da conta no arquivo
+            using (var Data = new BinaryWriter(File.OpenWrite()))
+            {
+                Data.Write(Account.User);
+                Data.Write(Account.Password);
+                Data.Write((byte)Account.Acess);
+            }
         }
 
         public static void Character(Account Account)
@@ -56,61 +50,48 @@ namespace Library
             // Evita erros
             if (!File.Directory.Exists) File.Directory.Create();
 
-            // Cria um arquivo temporário
-            BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
-            // Salva os dados no arquivo
-            Data.Write(Account.Character.Name);
-            Data.Write(Account.Character.Texture_Num);
-            Data.Write(Account.Character.Level);
-            Data.Write(GetID(Account.Character.Class));
-            Data.Write(Account.Character.Genre);
-            Data.Write(Account.Character.Experience);
-            Data.Write(Account.Character.Points);
-            Data.Write(GetID(Account.Character.Map));
-            Data.Write(Account.Character.X);
-            Data.Write(Account.Character.Y);
-            Data.Write((byte)Account.Character.Direction);
-            for (byte n = 0; n < (byte)Vitals.Count; n++) Data.Write(Account.Character.Vital[n]);
-            for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(Account.Character.Attribute[n]);
-            for (byte n = 1; n <= Max_Inventory; n++)
+            // Salva os dados do personagem no arquivo
+            using (var Data = new BinaryWriter(File.OpenWrite()))
             {
-                Data.Write(GetID(Account.Character.Inventory[n].Item));
-                Data.Write(Account.Character.Inventory[n].Amount);
+                Data.Write(Account.Character.Name);
+                Data.Write(Account.Character.Texture_Num);
+                Data.Write(Account.Character.Level);
+                Data.Write(GetID(Account.Character.Class));
+                Data.Write(Account.Character.Genre);
+                Data.Write(Account.Character.Experience);
+                Data.Write(Account.Character.Points);
+                Data.Write(GetID(Account.Character.Map));
+                Data.Write(Account.Character.X);
+                Data.Write(Account.Character.Y);
+                Data.Write((byte)Account.Character.Direction);
+                for (byte n = 0; n < (byte)Vitals.Count; n++) Data.Write(Account.Character.Vital[n]);
+                for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(Account.Character.Attribute[n]);
+                for (byte n = 1; n <= Max_Inventory; n++)
+                {
+                    Data.Write(GetID(Account.Character.Inventory[n].Item));
+                    Data.Write(Account.Character.Inventory[n].Amount);
+                }
+                for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(GetID(Account.Character.Equipment[n]));
+                for (byte n = 0; n < Max_Hotbar; n++)
+                {
+                    Data.Write((byte)Account.Character.Hotbar[n].Type);
+                    Data.Write(Account.Character.Hotbar[n].Slot);
+                }
             }
-            for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(GetID(Account.Character.Equipment[n]));
-            for (byte n = 0; n < Max_Hotbar; n++)
-            {
-                Data.Write((byte)Account.Character.Hotbar[n].Type);
-                Data.Write(Account.Character.Hotbar[n].Slot);
-            }
-
-            // Descarrega o arquivo
-            Data.Dispose();
         }
 
         public static void Character_Name(string Name)
         {
-            // Cria um arquivo temporário
-            StreamWriter Data = new StreamWriter(Directories.Characters.FullName, true);
-
-            // Salva o nome do personagem no arquivo
-            Data.Write(";" + Name + ":");
-
-            // Descarrega o arquivo
-            Data.Dispose();
+            // Salva o nome de um personagem no arquivo
+            using (var Data = new StreamWriter(Directories.Characters.FullName, true))
+                Data.Write(";" + Name + ":");
         }
 
         public static void Characters_Name(string Characters_Name)
         {
-            // Cria um arquivo temporário
-            StreamWriter Data = new StreamWriter(Directories.Characters.FullName);
-
-            // Salva o nome do personagem no arquivo
-            Data.Write(Characters_Name);
-
-            // Descarrega o arquivo
-            Data.Dispose();
+            // Salva o nome de todos os personagens no arquivo
+            using (var Data = new StreamWriter(Directories.Characters.FullName))
+                Data.Write(Characters_Name);
         }
 
         public static void Class(Class Class)

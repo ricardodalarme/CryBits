@@ -22,7 +22,7 @@ namespace Objects
         public Map_Weather Weather;
         public Map_Fog Fog;
         public short[] Link;
-        public Map_Tile[,] Tile = new Map_Tile[Game.Map_Width, Game.Map_Height];
+        public Map_Tile[,] Tile = new Map_Tile[Utils.Map_Width, Utils.Map_Height];
         public Map_Light[] Light;
         public short[] NPC;
 

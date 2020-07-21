@@ -17,16 +17,16 @@ namespace Objects
         public short Texture;
         public byte Type;
         public byte Rarity;
-        public Game.BindOn Bind;
+        public Utils.BindOn Bind;
         // Requerimentos
         public short Req_Level;
         public Class Req_Class;
         // Poção
         public int Potion_Experience;
-        public short[] Potion_Vital = new short[(byte)Game.Vitals.Count];
+        public short[] Potion_Vital = new short[(byte)Utils.Vitals.Count];
         // Equipamento
         public byte Equip_Type;
-        public short[] Equip_Attribute = new short[(byte)Game.Equipments.Count];
+        public short[] Equip_Attribute = new short[(byte)Utils.Equipments.Count];
         public short Weapon_Damage;
 
         public Item(Guid ID) : base(ID) { }

@@ -6,7 +6,7 @@ namespace Objects
     class Class : Data
     {
         // Lista de dados
-        public static Dictionary<Guid, Class> List;
+        public static Dictionary<Guid, Class> List = new Dictionary<Guid, Class>();
 
         // Obtém o dado, caso ele não existir retorna nulo
         public static Class Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;

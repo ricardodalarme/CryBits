@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Objects;
+using System;
+using static Utils;
 
 namespace Interface
 {
@@ -19,6 +21,28 @@ namespace Interface
         // Retorna o painel procurado
         public static Structure Get(string Name) => List.Find(x => x.Name.Equals(Name));
 
+        // Dados temporários
+        public static byte CreateCharacter_Class = 0;
+        public static byte CreateCharacter_Tex = 0;
+        public static int SelectCharacter = 1;
+        public static Guid Infomation_ID;
+        public static byte Drop_Slot = 0;
+        public static string Party_Invitation;
+        public static string Trade_Invitation;
+        public static byte Trade_Slot_Selected = 0;
+        public static byte Trade_Inventory_Slot = 0;
+        public static Shop Shop_Open;
+        public static byte Shop_Inventory_Slot = 0;
+        public static short Hotbar_Change;
+        public static byte Inventory_Change;
+        public static TempCharacter[] Characters;
+        public struct TempCharacter
+        {
+            public string Name;
+            public short Level;
+            public short Texture_Num;
+        }
+
         public static void Menu_Close()
         {
             // Fecha todos os paineis abertos
@@ -30,11 +54,11 @@ namespace Interface
         }
 
         // Retorna em qual slot o mouse está sobrepondo
-        public static byte Inventory_Slot => Utils.Slot(Get("Menu_Inventory"), 7, 29, 6, 5);
-        public static short Hotbar_Slot => (short)(Utils.Slot(Get("Hotbar"), 8, 6, 1, 10) - 1);
-        public static byte Trade_Slot => Utils.Slot(Get("Trade"), 7, 50, 6, 5);
-        public static short Shop_Slot => (short)(Utils.Slot(Get("Shop"), 7, 50, 4, 7) - 1);
-        public static short Equipment_Slot => (short)(Utils.Slot(Get("Menu_Character"), 7, 248, 1, 5) - 1);
+        public static byte Inventory_Slot =>  Slot(Get("Menu_Inventory"), 7, 29, 6, 5);
+        public static short Hotbar_Slot => (short)( Slot(Get("Hotbar"), 8, 6, 1, 10) - 1);
+        public static byte Trade_Slot =>  Slot(Get("Trade"), 7, 50, 6, 5);
+        public static short Shop_Slot => (short)( Slot(Get("Shop"), 7, 50, 4, 7) - 1);
+        public static short Equipment_Slot => (short)( Slot(Get("Menu_Character"), 7, 248, 1, 5) - 1);
 
         public static void Inventory_MouseDown(SFML.Window.MouseButtonEventArgs e)
         {
@@ -47,13 +71,13 @@ namespace Interface
             // Solta item
             if (e.Button == SFML.Window.Mouse.Button.Right)
             {
-                if (Player.Me.Inventory[Slot].Item.Bind != Game.BindOn.Pickup)
+                if (Player.Me.Inventory[Slot].Item.Bind !=  BindOn.Pickup)
                     // Vende o item
                     if (Get("Shop").Visible)
                     {
                         if (Player.Me.Inventory[Slot].Amount != 1)
                         {
-                            Utils.Shop_Inventory_Slot = Slot;
+                            Shop_Inventory_Slot = Slot;
                             TextBoxes.Get("Shop_Sell_Amount").Text = string.Empty;
                             Get("Shop_Sell").Visible = true;
                         }
@@ -63,25 +87,25 @@ namespace Interface
                     else if (!Get("Trade").Visible)
                         if (Player.Me.Inventory[Slot].Amount != 1)
                         {
-                            Utils.Drop_Slot = Slot;
+                            Drop_Slot = Slot;
                             TextBoxes.Get("Drop_Amount").Text = string.Empty;
                             Get("Drop").Visible = true;
                         }
                         else Send.DropItem(Slot, 1);
             }
             // Seleciona o item
-            else if (e.Button == SFML.Window.Mouse.Button.Left) Utils.Inventory_Change = Slot;
+            else if (e.Button == SFML.Window.Mouse.Button.Left) Inventory_Change = Slot;
         }
 
         public static void Equipment_MouseDown(SFML.Window.MouseButtonEventArgs e)
         {
             Point Panel_Position = Get("Menu_Character").Position;
 
-            for (byte i = 0; i < (byte)Game.Equipments.Count; i++)
-                if (Utils.IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
+            for (byte i = 0; i < (byte) Equipments.Count; i++)
+                if ( IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
                     // Remove o equipamento
                     if (e.Button == SFML.Window.Mouse.Button.Right)
-                        if (Player.Me.Equipment[i].Bind != Game.BindOn.Equip)
+                        if (Player.Me.Equipment[i].Bind !=  BindOn.Equip)
                         {
                             Send.Equipment_Remove(i);
                             return;
@@ -105,7 +129,7 @@ namespace Interface
             // Seleciona o item
             if (e.Button == SFML.Window.Mouse.Button.Left)
             {
-                Utils.Hotbar_Change = Slot;
+                Panels.Hotbar_Change = Slot;
                 return;
             }
         }
@@ -121,6 +145,38 @@ namespace Interface
 
             // Solta item
             if (e.Button == SFML.Window.Mouse.Button.Right) Send.Trade_Offer(Slot, 0);
+        }
+
+        public static void CheckInformations()
+        {
+            Point Position = new Point();
+
+            // Define as informações do painel com base no que o Window.Mouse está sobrepondo
+            if ( Hotbar_Slot >= 0)
+            {
+                Position =  Get("Hotbar").Position + new Size(0, 42);
+                Infomation_ID = Player.Me.Inventory[Player.Me.Hotbar[ Hotbar_Slot].Slot].Item.ID;
+            }
+            else if ( Inventory_Slot > 0)
+            {
+                Position =  Get("Menu_Inventory").Position + new Size(-186, 3);
+                Infomation_ID = Player.Me.Inventory[ Inventory_Slot].Item.ID;
+            }
+            else if ( Equipment_Slot >= 0)
+            {
+                Position =  Get("Menu_Character").Position + new Size(-186, 5);
+                Infomation_ID = Player.Me.Equipment[ Equipment_Slot].ID;
+            }
+            else if ( Shop_Slot >= 0 &&  Shop_Slot < Shop_Open.Sold.Length)
+            {
+                Position = new Point( Get("Shop").Position.X - 186,  Get("Shop").Position.Y + 5);
+                Infomation_ID = Shop_Open.Sold[ Shop_Slot].Item.ID;
+            }
+            else Infomation_ID = Guid.Empty;
+
+            // Define os dados do painel de informações
+             Get("Information").Visible = !Position.IsEmpty && Infomation_ID != Guid.Empty;
+             Get("Information").Position = Position;
         }
     }
 }
