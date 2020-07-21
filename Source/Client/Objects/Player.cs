@@ -123,8 +123,8 @@ namespace Objects
             // Somente se estiver pressionando a tecla de ataque e não estiver atacando
             if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Graphics.RenderWindow.HasFocus()) return;
             if (Attack_Timer > 0) return;
-            if (Panels.Get("Trade").Visible) return;
-            if (Panels.Get("Shop").Visible) return;
+            if (Panels.List["Trade"].Visible) return;
+            if (Panels.List["Shop"].Visible) return;
 
             // Envia os dados para o servidor
             Attack_Timer = Environment.TickCount;

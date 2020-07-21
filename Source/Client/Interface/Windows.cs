@@ -76,7 +76,7 @@ namespace Interface
                         if (Top[i].Data.Visible)
                         {
                             // Executa o comando
-                            if (Top[i].Data is Buttons.Structure) ((Buttons.Structure)Top[i].Data).MouseDown(e);
+                            if (Top[i].Data is Buttons) ((Buttons)Top[i].Data).MouseDown(e);
                             Stack.Push(Top[i].Nodes);
                         }
                 }
@@ -108,9 +108,9 @@ namespace Interface
                     if (Top[i].Data.Visible)
                     {
                         // Executa o comando
-                        if (Top[i].Data is Buttons.Structure) ((Buttons.Structure)Top[i].Data).MouseUp();
-                        else if (Top[i].Data is CheckBoxes.Structure) ((CheckBoxes.Structure)Top[i].Data).MouseUp();
-                        else if (Top[i].Data is TextBoxes.Structure) ((TextBoxes.Structure)Top[i].Data).MouseUp(Top[i]);
+                        if (Top[i].Data is Buttons) ((Buttons)Top[i].Data).MouseUp();
+                        else if (Top[i].Data is CheckBoxes) ((CheckBoxes)Top[i].Data).MouseUp();
+                        else if (Top[i].Data is TextBoxes) ((TextBoxes)Top[i].Data).MouseUp(Top[i]);
                         Stack.Push(Top[i].Nodes);
                     }
             }
@@ -139,8 +139,8 @@ namespace Interface
                         {
                             Panels.Trade_Slot_Selected = Panels.Trade_Slot;
                             Panels.Trade_Inventory_Slot = Panels.Inventory_Change;
-                            TextBoxes.Get("Trade_Amount").Text = string.Empty;
-                            Panels.Get("Trade_Amount").Visible = true;
+                            TextBoxes.List["Trade_Amount"].Text = string.Empty;
+                            Panels.List["Trade_Amount"].Visible = true;
                         }
                 }
 
@@ -167,7 +167,7 @@ namespace Interface
                     if (Top[i].Data.Visible)
                     {
                         // Executa o comando
-                        if (Top[i].Data is Buttons.Structure) ((Buttons.Structure)Top[i].Data).MouseMove();
+                        if (Top[i].Data is Buttons) ((Buttons)Top[i].Data).MouseMove();
                         Stack.Push(Top[i].Nodes);
                     }
             }
@@ -206,7 +206,7 @@ namespace Interface
         public static void OnTextEntered(object sender, TextEventArgs e)
         {
             // Executa os eventos
-            if (TextBoxes.Focused != null) ((TextBoxes.Structure)TextBoxes.Focused.Data).TextEntered(e);
+            if (TextBoxes.Focused != null) ((TextBoxes)TextBoxes.Focused.Data).TextEntered(e);
         }
 
         public static void OpenMenu()
@@ -216,12 +216,12 @@ namespace Interface
             if (Utils.Option.Musics) Audio.Music.Play(Audio.Musics.Menu);
 
             // Nome do usuário salvo
-            CheckBoxes.Get("Connect_Save_Username").Checked = Utils.Option.SaveUsername;
-            if (Utils.Option.SaveUsername) TextBoxes.Get("Connect_Username").Text = Utils.Option.Username;
+            CheckBoxes.List["Connect_Save_Username"].Checked = Utils.Option.SaveUsername;
+            if (Utils.Option.SaveUsername) TextBoxes.List["Connect_Username"].Text = Utils.Option.Username;
 
             // Traz o jogador de volta ao menu
             Panels.Menu_Close();
-            Panels.Get("Connect").Visible = true;
+            Panels.List["Connect"].Visible = true;
             Current = Types.Menu;
         }
     }

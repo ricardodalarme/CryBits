@@ -225,7 +225,7 @@ static class Utils
         return Text;
     }
 
-    public static byte Slot(Panels.Structure Panel, byte OffX, byte OffY, byte Lines, byte Columns, byte Grid = 32, byte Gap = 4)
+    public static byte Slot(Panels Panel, byte OffX, byte OffY, byte Lines, byte Columns, byte Grid = 32, byte Gap = 4)
     {
         int Size = Grid + Gap;
         Point Start = Panel.Position + new Size(OffX, OffY);

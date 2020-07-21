@@ -8,58 +8,10 @@ using Objects;
 
 namespace Interface
 {
-    class Buttons
+    class Buttons : Tools.Structure
     {
         // Aramazenamento de dados da ferramenta
-        public static List<Structure> List = new List<Structure>();
-
-        // Estrutura das ferramentas
-        public class Structure : Tools.Structure
-        {
-            // Dados
-            public byte Texture_Num;
-            public States State;
-
-            public void MouseUp()
-            {
-                // Somente se necessário
-                if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
-
-                // Altera o estado do botão
-                Audio.Sound.Play(Audio.Sounds.Click);
-                State = States.Above;
-
-                // Executa o evento
-                Execute(Name);
-            }
-
-            public void MouseDown(MouseButtonEventArgs e)
-            {
-                // Somente se necessário
-                if (e.Button == Mouse.Button.Right) return;
-                if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
-
-                // Altera o estado do botão
-                State = States.Click;
-            }
-
-            public void MouseMove()
-            {
-                // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-                if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num]))))
-                {
-                    State = States.Normal;
-                    return;
-                }
-
-                // Se o botão já estiver no estado normal, isso não é necessário
-                if (State != States.Normal) return;
-
-                // Altera o estado do botão
-                State = States.Above;
-                Audio.Sound.Play(Audio.Sounds.Above);
-            }
-        }
+        public static Dictionary<string, Buttons> List = new Dictionary<string, Buttons>();
 
         // Estados dos botões
         public enum States
@@ -69,8 +21,49 @@ namespace Interface
             Above,
         }
 
-        // Retorna o botão procurado
-        public static Structure Get(string Name) => List.Find(x => x.Name.Equals(Name));
+        // Dados
+        public byte Texture_Num;
+        public States State;
+
+        public void MouseUp()
+        {
+            // Somente se necessário
+            if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
+
+            // Altera o estado do botão
+            Audio.Sound.Play(Audio.Sounds.Click);
+            State = States.Above;
+
+            // Executa o evento
+            Execute(Name);
+        }
+
+        public void MouseDown(MouseButtonEventArgs e)
+        {
+            // Somente se necessário
+            if (e.Button == Mouse.Button.Right) return;
+            if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
+
+            // Altera o estado do botão
+            State = States.Click;
+        }
+
+        public void MouseMove()
+        {
+            // Se o mouse não estiver sobre a ferramenta, então não executar o evento
+            if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num]))))
+            {
+                State = States.Normal;
+                return;
+            }
+
+            // Se o botão já estiver no estado normal, isso não é necessário
+            if (State != States.Normal) return;
+
+            // Altera o estado do botão
+            State = States.Above;
+            Audio.Sound.Play(Audio.Sounds.Above);
+        }
 
         private static void Execute(string Name)
         {
@@ -126,9 +119,9 @@ namespace Interface
         {
             // Altera os botões visíveis
             bool Visibility = Panels.Characters != null && Panels.SelectCharacter < Panels.Characters.Length;
-            Get("Character_Create").Visible = !Visibility;
-            Get("Character_Delete").Visible = Visibility;
-            Get("Character_Use").Visible = Visibility;
+            List["Character_Create"].Visible = !Visibility;
+            List["Character_Delete"].Visible = Visibility;
+            List["Character_Use"].Visible = Visibility;
             return Visibility;
         }
 
@@ -139,7 +132,7 @@ namespace Interface
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Get("Connect").Visible = true;
+            Panels.List["Connect"].Visible = true;
         }
 
         private static void Register()
@@ -149,7 +142,7 @@ namespace Interface
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Get("Register").Visible = true;
+            Panels.List["Register"].Visible = true;
         }
 
         private static void Options()
@@ -158,12 +151,12 @@ namespace Interface
             Socket.Disconnect();
 
             // Define as marcações corretas
-            CheckBoxes.Get("Sounds").Checked = Utils.Option.Sounds;
-            CheckBoxes.Get("Musics").Checked = Utils.Option.Musics;
+            CheckBoxes.List["Sounds"].Checked = Utils.Option.Sounds;
+            CheckBoxes.List["Musics"].Checked = Utils.Option.Musics;
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Get("Options").Visible = true;
+            Panels.List["Options"].Visible = true;
         }
 
         private static void Menu_Return()
@@ -173,13 +166,13 @@ namespace Interface
 
             // Abre o painel
             Panels.Menu_Close();
-            Panels.Get("Connect").Visible = true;
+            Panels.List["Connect"].Visible = true;
         }
 
         private static void Connect_Ok()
         {
             // Salva o nome do usuário
-            Utils.Option.Username = TextBoxes.Get("Connect_Username").Text;
+            Utils.Option.Username = TextBoxes.List["Connect_Username"].Text;
             Library.Write.Options();
 
             // Conecta-se ao jogo
@@ -189,7 +182,7 @@ namespace Interface
         private static void Register_Ok()
         {
             // Regras de segurança
-            if (TextBoxes.Get("Register_Password").Text != TextBoxes.Get("Register_Password2").Text)
+            if (TextBoxes.List["Register_Password"].Text != TextBoxes.List["Register_Password2"].Text)
             {
                 MessageBox.Show("The password don't match.");
                 return;
@@ -227,7 +220,7 @@ namespace Interface
         {
             // Lista de texturas
             short[] Tex_List;
-            if (CheckBoxes.Get("GenderMale").Checked)
+            if (CheckBoxes.List["GenderMale"].Checked)
                 Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Male;
             else
                 Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Female;
@@ -243,7 +236,7 @@ namespace Interface
         {
             // Lista de texturas
             short[] Tex_List;
-            if (CheckBoxes.Get("GenderMale").Checked)
+            if (CheckBoxes.List["GenderMale"].Checked)
                 Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Male;
             else
                 Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Female;
@@ -259,7 +252,7 @@ namespace Interface
         {
             // Abre o painel de personagens
             Panels.Menu_Close();
-            Panels.Get("SelectCharacter").Visible = true;
+            Panels.List["SelectCharacter"].Visible = true;
         }
 
         private static void Character_Use()
@@ -315,9 +308,9 @@ namespace Interface
         private static void Menu_Character()
         {
             // Altera a visibilidade do painel e fecha os outros
-            Panels.Get("Menu_Character").Visible = !Panels.Get("Menu_Character").Visible;
-            Panels.Get("Menu_Inventory").Visible = false;
-            Panels.Get("Menu_Options").Visible = false;
+            Panels.List["Menu_Character"].Visible = !Panels.List["Menu_Character"].Visible;
+            Panels.List["Menu_Inventory"].Visible = false;
+            Panels.List["Menu_Options"].Visible = false;
         }
 
         private static void Attribute_Strenght()
@@ -348,23 +341,23 @@ namespace Interface
         private static void Menu_Inventory()
         {
             // Altera a visibilidade do painel e fecha os outros
-            Panels.Get("Menu_Inventory").Visible = !Panels.Get("Menu_Inventory").Visible;
-            Panels.Get("Menu_Character").Visible = false;
-            Panels.Get("Menu_Options").Visible = false;
+            Panels.List["Menu_Inventory"].Visible = !Panels.List["Menu_Inventory"].Visible;
+            Panels.List["Menu_Character"].Visible = false;
+            Panels.List["Menu_Options"].Visible = false;
         }
 
         private static void Menu_Options()
         {
             // Altera a visibilidade do painel e fecha os outros
-            Panels.Get("Menu_Options").Visible = !Panels.Get("Menu_Options").Visible;
-            Panels.Get("Menu_Character").Visible = false;
-            Panels.Get("Menu_Inventory").Visible = false;
+            Panels.List["Menu_Options"].Visible = !Panels.List["Menu_Options"].Visible;
+            Panels.List["Menu_Character"].Visible = false;
+            Panels.List["Menu_Inventory"].Visible = false;
         }
 
         private static void Drop_Confirm()
         {
             // Quantidade
-            short.TryParse(TextBoxes.Get("Drop_Amount").Text, out short Amount);
+            short.TryParse(TextBoxes.List["Drop_Amount"].Text, out short Amount);
 
             // Verifica se o valor digitado é válidp
             if (Amount == 0)
@@ -375,56 +368,56 @@ namespace Interface
 
             // Solta o item
             Send.DropItem(Panels.Drop_Slot, Amount);
-            Panels.Get("Drop").Visible = false;
+            Panels.List["Drop"].Visible = false;
         }
 
         private static void Drop_Cancel()
         {
             // Fecha o painel
-            Panels.Get("Drop").Visible = false;
+            Panels.List["Drop"].Visible = false;
         }
 
         private static void Party_Yes()
         {
             // Aceita o grupo e fecha o painel
             Send.Party_Accept();
-            Panels.Get("Party_Invitation").Visible = false;
+            Panels.List["Party_Invitation"].Visible = false;
         }
 
         private static void Party_No()
         {
             // Fecha o painel
             Send.Party_Decline();
-            Panels.Get("Party_Invitation").Visible = false;
+            Panels.List["Party_Invitation"].Visible = false;
         }
 
         private static void Trade_Yes()
         {
             // Aceita o grupo e fecha o painel
             Send.Trade_Accept();
-            Panels.Get("Trade_Invitation").Visible = false;
+            Panels.List["Trade_Invitation"].Visible = false;
         }
 
         private static void Trade_No()
         {
             // Fecha o painel
             Send.Trade_Decline();
-            Panels.Get("Trade_Invitation").Visible = false;
+            Panels.List["Trade_Invitation"].Visible = false;
         }
 
         private static void Trade_Close()
         {
             // Fecha o painel
             Send.Trade_Leave();
-            Panels.Get("Trade").Visible = false;
+            Panels.List["Trade"].Visible = false;
         }
 
         private static void Trade_Offer_Accept()
         {
             // Aceita a oferta
-            Get("Trade_Offer_Confirm").Visible = true;
-            Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
-            Panels.Get("Trade_Offer_Disable").Visible = false;
+            List["Trade_Offer_Confirm"].Visible = true;
+            List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
+            Panels.List["Trade_Offer_Disable"].Visible = false;
             Send.Trade_Offer_State(Utils.Trade_Status.Accepted);
 
             // Limpa os dados da oferta
@@ -435,24 +428,24 @@ namespace Interface
         private static void Trade_Offer_Decline()
         {
             // Recusa a oferta
-            Get("Trade_Offer_Confirm").Visible = true;
-            Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
-            Panels.Get("Trade_Offer_Disable").Visible = false;
+            List["Trade_Offer_Confirm"].Visible = true;
+            List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
+            Panels.List["Trade_Offer_Disable"].Visible = false;
             Send.Trade_Offer_State(Utils.Trade_Status.Declined);
         }
 
         public static void Trade_Offer_Confirm()
         {
             // Confirma a oferta
-            Get("Trade_Offer_Confirm").Visible = Get("Trade_Offer_Accept").Visible = Get("Trade_Offer_Decline").Visible = false;
-            Panels.Get("Trade_Offer_Disable").Visible = true;
+            List["Trade_Offer_Confirm"].Visible = List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
+            Panels.List["Trade_Offer_Disable"].Visible = true;
             Send.Trade_Offer_State(Utils.Trade_Status.Confirmed);
         }
 
         private static void Trade_Amount_Confirm()
         {
             // Quantidade
-            short.TryParse(TextBoxes.Get("Trade_Amount").Text, out short Amount);
+            short.TryParse(TextBoxes.List["Trade_Amount"].Text, out short Amount);
 
             // Verifica se o valor digitado é válido
             if (Amount <= 0)
@@ -463,26 +456,26 @@ namespace Interface
 
             // Solta o item
             Send.Trade_Offer(Panels.Trade_Slot, Panels.Trade_Inventory_Slot, Amount);
-            Panels.Get("Trade_Amount").Visible = false;
+            Panels.List["Trade_Amount"].Visible = false;
         }
 
         private static void Trade_Amount_Cancel()
         {
             // Fecha o painel
-            Panels.Get("Trade_Amount").Visible = false;
+            Panels.List["Trade_Amount"].Visible = false;
         }
 
         private static void Shop_Close()
         {
             // Fecha o painel
-            Panels.Get("Shop").Visible = false;
+            Panels.List["Shop"].Visible = false;
             Send.Shop_Close();
         }
 
         private static void Shop_Sell_Confirm()
         {
             // Quantidade
-            short.TryParse(TextBoxes.Get("Shop_Sell_Amount").Text, out short Amount);
+            short.TryParse(TextBoxes.List["Shop_Sell_Amount"].Text, out short Amount);
 
             // Verifica se o valor digitado é válido
             if (Amount <= 0)
@@ -493,13 +486,13 @@ namespace Interface
 
             // Vende o item
             Send.Shop_Sell(Panels.Shop_Inventory_Slot, Amount);
-            Panels.Get("Shop_Sell").Visible = false;
+            Panels.List["Shop_Sell"].Visible = false;
         }
 
         private static void Shop_Sell_Cancel()
         {
             // Fecha o painel
-            Panels.Get("Shop_Sell").Visible = false;
+            Panels.List["Shop_Sell"].Visible = false;
         }
     }
 }

@@ -32,10 +32,10 @@ namespace Library
             Stream.Close();
         }
 
-        private static Buttons.Structure Button(BinaryReader Data)
+        private static Buttons Button(BinaryReader Data)
         {
             // Lê os dados
-            Buttons.Structure Tool = new Buttons.Structure();
+            var Tool = new Buttons();
             Tool.Name = Data.ReadString();
             Tool.Position.X = Data.ReadInt32();
             Tool.Position.Y = Data.ReadInt32();
@@ -45,10 +45,10 @@ namespace Library
             return Tool;
         }
 
-        private static TextBoxes.Structure TextBox(BinaryReader Data)
+        private static TextBoxes TextBox(BinaryReader Data)
         {
             // Lê os dados
-            TextBoxes.Structure Tool = new TextBoxes.Structure();
+            var Tool = new TextBoxes();
             Tool.Name = Data.ReadString();
             Tool.Position.X = Data.ReadInt32();
             Tool.Position.Y = Data.ReadInt32();
@@ -60,10 +60,10 @@ namespace Library
             return Tool;
         }
 
-        private static Panels.Structure Panel(BinaryReader Data)
+        private static Panels Panel(BinaryReader Data)
         {
             // Carrega os dados
-            Panels.Structure Tool = new Panels.Structure();
+            Panels Tool = new Panels();
             Tool.Name = Data.ReadString();
             Tool.Position.X = Data.ReadInt32();
             Tool.Position.Y = Data.ReadInt32();
@@ -73,10 +73,10 @@ namespace Library
             return Tool;
         }
 
-        private static CheckBoxes.Structure CheckBox(BinaryReader Data)
+        private static CheckBoxes CheckBox(BinaryReader Data)
         {
             // Carrega os dados
-            CheckBoxes.Structure Tool = new CheckBoxes.Structure();
+            var Tool = new CheckBoxes();
             Tool.Name = Data.ReadString();
             Tool.Position.X = Data.ReadInt32();
             Tool.Position.Y = Data.ReadInt32();
@@ -106,13 +106,13 @@ namespace Library
             for (byte i = 0; i < Size; i++)
             {
                 // Lê a ferramenta
-                Tools.Structure Temp_Tool = new Tools.Structure();
+                var Temp_Tool = new Tools.Structure();
                 switch ((Tools.Types)Data.ReadByte())
                 {
-                    case Interface.Tools.Types.Button: Temp_Tool = Button(Data); Buttons.List.Add((Buttons.Structure)Temp_Tool); break;
-                    case Interface.Tools.Types.TextBox: Temp_Tool = TextBox(Data); TextBoxes.List.Add((TextBoxes.Structure)Temp_Tool); break;
-                    case Interface.Tools.Types.Panel: Temp_Tool = Panel(Data); Panels.List.Add((Panels.Structure)Temp_Tool); break;
-                    case Interface.Tools.Types.CheckBox: Temp_Tool = CheckBox(Data); CheckBoxes.List.Add((CheckBoxes.Structure)Temp_Tool); break;
+                    case Interface.Tools.Types.Button: Temp_Tool = Button(Data); Buttons.List.Add(Temp_Tool.Name, (Buttons)Temp_Tool); break;
+                    case Interface.Tools.Types.TextBox: Temp_Tool = TextBox(Data); TextBoxes.List.Add(Temp_Tool.Name, (TextBoxes)Temp_Tool); break;
+                    case Interface.Tools.Types.Panel: Temp_Tool = Panel(Data); Panels.List.Add(Temp_Tool.Name, (Panels)Temp_Tool); break;
+                    case Interface.Tools.Types.CheckBox: Temp_Tool = CheckBox(Data); CheckBoxes.List.Add(Temp_Tool.Name, (CheckBoxes)Temp_Tool); break;
                 }
 
                 // Adiciona à lista
