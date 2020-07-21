@@ -42,7 +42,7 @@ namespace Interface
 
         public static void AddText(string Message, Color Color)
         {
-            int Message_Width, Box_Width = Graphics.TSize(Graphics.Tex_Panel[Panels.Get("Chat").Texture_Num]).Width - 16;
+            int Message_Width, Box_Width = Graphics.TSize(Graphics.Tex_Panel[Panels.List["Chat"].Texture_Num]).Width - 16;
             string Temp_Message;
 
             // Remove os espaços
@@ -69,8 +69,8 @@ namespace Interface
 
         public static void Type()
         {
-            TextBoxes.Structure Tool = TextBoxes.Get("Chat");
-            Panels.Structure Panel = Panels.Get("Chat");
+            var Tool = TextBoxes.List["Chat"];
+            var Panel = Panels.List["Chat"];
 
             // Altera a visiblidade da caixa
             Panel.Visible = !Panel.Visible;

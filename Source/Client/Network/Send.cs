@@ -59,8 +59,8 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Packets.Connect);
-            Data.Write(TextBoxes.Get("Connect_Username").Text);
-            Data.Write(TextBoxes.Get("Connect_Password").Text);
+            Data.Write(TextBoxes.List["Connect_Username"].Text);
+            Data.Write(TextBoxes.List["Connect_Password"].Text);
             Data.Write(false); // Acesso pelo cliente
             Packet(Data);
         }
@@ -71,8 +71,8 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Packets.Register);
-            Data.Write(TextBoxes.Get("Register_Username").Text);
-            Data.Write(TextBoxes.Get("Register_Password").Text);
+            Data.Write(TextBoxes.List["Register_Username"].Text);
+            Data.Write(TextBoxes.List["Register_Password"].Text);
             Packet(Data);
         }
 
@@ -82,9 +82,9 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Packets.CreateCharacter);
-            Data.Write(TextBoxes.Get("CreateCharacter_Name").Text);
+            Data.Write(TextBoxes.List["CreateCharacter_Name"].Text);
             Data.Write(Class.List.ElementAt(Panels.CreateCharacter_Class).Value.ID.ToString());
-            Data.Write(CheckBoxes.Get("GenderMale").Checked);
+            Data.Write(CheckBoxes.List["GenderMale"].Checked);
             Data.Write(Panels.CreateCharacter_Tex);
             Packet(Data);
         }
@@ -193,7 +193,7 @@ namespace Network
             Packet(Data);
 
             // Fecha o painel de soltar item
-            Panels.Get("Drop").Visible = false;
+            Panels.List["Drop"].Visible = false;
         }
 
         public static void Inventory_Use(byte Slot)
@@ -206,7 +206,7 @@ namespace Network
             Packet(Data);
 
             // Fecha o painel de soltar item
-            Panels.Get("Drop").Visible = false;
+            Panels.List["Drop"].Visible = false;
         }
 
         public static void Equipment_Remove(byte Slot)
@@ -254,7 +254,7 @@ namespace Network
                 Packet(Data);
 
                 // Fecha o painel de soltar item
-                Panels.Get("Drop").Visible = false;
+                Panels.List["Drop"].Visible = false;
             }
         }
 

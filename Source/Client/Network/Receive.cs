@@ -119,7 +119,7 @@ namespace Network
 
             // Abre o painel de seleção de personagens
             Panels.Menu_Close();
-            Panels.Get("SelectCharacter").Visible = true;
+            Panels.List["SelectCharacter"].Visible = true;
         }
 
         private static void Join(NetIncomingMessage Data)
@@ -140,15 +140,15 @@ namespace Network
         private static void CreateCharacter()
         {
             // Reseta os valores
-            TextBoxes.Get("CreateCharacter_Name").Text = string.Empty;
-            CheckBoxes.Get("GenderMale").Checked = true;
-            CheckBoxes.Get("GenderFemale").Checked = false;
+            TextBoxes.List["CreateCharacter_Name"].Text = string.Empty;
+            CheckBoxes.List["GenderMale"].Checked = true;
+            CheckBoxes.List["GenderFemale"].Checked = false;
             Panels.CreateCharacter_Class = 0;
             Panels.CreateCharacter_Tex = 0;
 
             // Abre o painel de criação de personagem
             Panels.Menu_Close();
-            Panels.Get("CreateCharacter").Visible = true;
+            Panels.List["CreateCharacter"].Visible = true;
         }
 
         private static void Classes(NetIncomingMessage Data)
@@ -212,30 +212,30 @@ namespace Network
             Chat.Order = new List<Chat.Structure>();
             Chat.Lines_First = 0;
             Loop.Chat_Timer = Environment.TickCount + Chat.Sleep_Timer;
-            TextBoxes.Get("Chat").Text = string.Empty;
-            CheckBoxes.Get("Options_Sounds").Checked = Utils.Option.Sounds;
-            CheckBoxes.Get("Options_Musics").Checked = Utils.Option.Musics;
-            CheckBoxes.Get("Options_Chat").Checked = Utils.Option.Chat;
-            CheckBoxes.Get("Options_FPS").Checked = Utils.Option.FPS;
-            CheckBoxes.Get("Options_Latency").Checked = Utils.Option.Latency;
-            CheckBoxes.Get("Options_Trade").Checked = Utils.Option.Trade;
-            CheckBoxes.Get("Options_Party").Checked = Utils.Option.Party;
+            TextBoxes.List["Chat"].Text = string.Empty;
+            CheckBoxes.List["Options_Sounds"].Checked = Utils.Option.Sounds;
+            CheckBoxes.List["Options_Musics"].Checked = Utils.Option.Musics;
+            CheckBoxes.List["Options_Chat"].Checked = Utils.Option.Chat;
+            CheckBoxes.List["Options_FPS"].Checked = Utils.Option.FPS;
+            CheckBoxes.List["Options_Latency"].Checked = Utils.Option.Latency;
+            CheckBoxes.List["Options_Trade"].Checked = Utils.Option.Trade;
+            CheckBoxes.List["Options_Party"].Checked = Utils.Option.Party;
             Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
             Panels.Infomation_ID = Guid.Empty;
 
             // Reseta a interface
-            Panels.Get("Menu_Character").Visible = false;
-            Panels.Get("Menu_Inventory").Visible = false;
-            Panels.Get("Menu_Options").Visible = false;
-            Panels.Get("Chat").Visible = false;
-            Panels.Get("Drop").Visible = false;
-            Panels.Get("Party_Invitation").Visible = false;
-            Panels.Get("Trade").Visible = false;
-            Buttons.Get("Trade_Offer_Confirm").Visible = true;
-            Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
-            Panels.Get("Trade_Offer_Disable").Visible = false;
-            Panels.Get("Shop").Visible = false;
-            Panels.Get("Shop_Sell").Visible = false;
+            Panels.List["Menu_Character"].Visible = false;
+            Panels.List["Menu_Inventory"].Visible = false;
+            Panels.List["Menu_Options"].Visible = false;
+            Panels.List["Chat"].Visible = false;
+            Panels.List["Drop"].Visible = false;
+            Panels.List["Party_Invitation"].Visible = false;
+            Panels.List["Trade"].Visible = false;
+            Buttons.List["Trade_Offer_Confirm"].Visible = true;
+            Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = false;
+            Panels.List["Trade_Offer_Disable"].Visible = false;
+            Panels.List["Shop"].Visible = false;
+            Panels.List["Shop_Sell"].Visible = false;
 
             // Abre o jogo
             Audio.Music.Stop();
@@ -375,11 +375,11 @@ namespace Network
             Player.Me.Points = Data.ReadByte();
 
             // Manipula a visibilidade dos botões
-            Buttons.Get("Attributes_Strength").Visible = Player.Me.Points > 0;
-            Buttons.Get("Attributes_Resistance").Visible = Player.Me.Points > 0;
-            Buttons.Get("Attributes_Intelligence").Visible = Player.Me.Points > 0;
-            Buttons.Get("Attributes_Agility").Visible = Player.Me.Points > 0;
-            Buttons.Get("Attributes_Vitality").Visible = Player.Me.Points > 0;
+            Buttons.List["Attributes_Strength"].Visible = Player.Me.Points > 0;
+            Buttons.List["Attributes_Resistance"].Visible = Player.Me.Points > 0;
+            Buttons.List["Attributes_Intelligence"].Visible = Player.Me.Points > 0;
+            Buttons.List["Attributes_Agility"].Visible = Player.Me.Points > 0;
+            Buttons.List["Attributes_Vitality"].Visible = Player.Me.Points > 0;
         }
 
         private static void Player_Inventory(NetIncomingMessage Data)
@@ -646,7 +646,7 @@ namespace Network
 
             // Abre a janela de convite para o grupo
             Panels.Party_Invitation = Data.ReadString();
-            Panels.Get("Party_Invitation").Visible = true;
+            Panels.List["Party_Invitation"].Visible = true;
         }
 
         private static void Trade(NetIncomingMessage Data)
@@ -654,14 +654,14 @@ namespace Network
             bool State = Data.ReadBoolean();
 
             // Visibilidade do painel
-            Panels.Get("Trade").Visible = Data.ReadBoolean();
+            Panels.List["Trade"].Visible = Data.ReadBoolean();
 
             if (State)
             {
                 // Reseta os botões
-                Buttons.Get("Trade_Offer_Confirm").Visible = true;
-                Panels.Get("Trade_Amount").Visible = Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
-                Panels.Get("Trade_Offer_Disable").Visible = false;
+                Buttons.List["Trade_Offer_Confirm"].Visible = true;
+                Panels.List["Trade_Amount"].Visible = Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = false;
+                Panels.List["Trade_Offer_Disable"].Visible = false;
 
                 // Limpa os dados
                 Player.Me.Trade_Offer = new Inventory[Utils.Max_Inventory + 1];
@@ -686,7 +686,7 @@ namespace Network
 
             // Abre a janela de convite para o grupo
             Panels.Trade_Invitation = Data.ReadString();
-            Panels.Get("Trade_Invitation").Visible = true;
+            Panels.List["Trade_Invitation"].Visible = true;
         }
 
         private static void Trade_State(NetIncomingMessage Data)
@@ -695,14 +695,14 @@ namespace Network
             {
                 case Utils.Trade_Status.Accepted:
                 case Utils.Trade_Status.Declined:
-                    Buttons.Get("Trade_Offer_Confirm").Visible = true;
-                    Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = false;
-                    Panels.Get("Trade_Offer_Disable").Visible = false;
+                    Buttons.List["Trade_Offer_Confirm"].Visible = true;
+                    Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = false;
+                    Panels.List["Trade_Offer_Disable"].Visible = false;
                     break;
                 case Utils.Trade_Status.Confirmed:
-                    Buttons.Get("Trade_Offer_Confirm").Visible = false;
-                    Buttons.Get("Trade_Offer_Accept").Visible = Buttons.Get("Trade_Offer_Decline").Visible = true;
-                    Panels.Get("Trade_Offer_Disable").Visible = false;
+                    Buttons.List["Trade_Offer_Confirm"].Visible = false;
+                    Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = true;
+                    Panels.List["Trade_Offer_Disable"].Visible = false;
                     break;
             }
         }
@@ -780,7 +780,7 @@ namespace Network
         {
             // Abre a loja
             Panels.Shop_Open = Shop.Get(new Guid(Data.ReadString()));
-            Panels.Get("Shop").Visible = Panels.Shop_Open != null;
+            Panels.List["Shop"].Visible = Panels.Shop_Open != null;
         }
 
         private static void NPCs(NetIncomingMessage Data)

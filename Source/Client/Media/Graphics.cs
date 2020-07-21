@@ -312,10 +312,10 @@ class Graphics
             if (Node[i].Data.Visible)
             {
                 // Desenha a ferramenta
-                if (Node[i].Data is Panels.Structure) Panel((Panels.Structure)Node[i].Data);
-                else if (Node[i].Data is TextBoxes.Structure) TextBox((TextBoxes.Structure)Node[i].Data);
-                else if (Node[i].Data is Buttons.Structure) Button((Buttons.Structure)Node[i].Data);
-                else if (Node[i].Data is CheckBoxes.Structure) CheckBox((CheckBoxes.Structure)Node[i].Data);
+                if (Node[i].Data is Panels) Panel((Panels)Node[i].Data);
+                else if (Node[i].Data is TextBoxes) TextBox((TextBoxes)Node[i].Data);
+                else if (Node[i].Data is Buttons) Button((Buttons)Node[i].Data);
+                else if (Node[i].Data is CheckBoxes) CheckBox((CheckBoxes)Node[i].Data);
 
                 // Desenha algumas coisas mais específicas da interface
                 Interface_Specific(Node[i].Data);
@@ -325,7 +325,7 @@ class Graphics
             }
     }
 
-    private static void Button(Buttons.Structure Tool)
+    private static void Button(Buttons Tool)
     {
         byte Alpha = 225;
 
@@ -340,13 +340,13 @@ class Graphics
         Render(Tex_Button[Tool.Texture_Num], Tool.Position, new SFML.Graphics.Color(255, 255, 225, Alpha));
     }
 
-    private static void Panel(Panels.Structure Tool)
+    private static void Panel(Panels Tool)
     {
         // Desenha o painel
         Render(Tex_Panel[Tool.Texture_Num], Tool.Position);
     }
 
-    private static void CheckBox(CheckBoxes.Structure Tool)
+    private static void CheckBox(CheckBoxes Tool)
     {
         // Define as propriedades dos retângulos
         Rectangle Rec_Source = new Rectangle(new Point(), new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height));
@@ -360,7 +360,7 @@ class Graphics
         DrawText(Tool.Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + CheckBoxes.Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
     }
 
-    private static void TextBox(TextBoxes.Structure Tool)
+    private static void TextBox(TextBoxes Tool)
     {
         Point Position = Tool.Position;
         string Text = Tool.Text;
@@ -375,7 +375,7 @@ class Graphics
         Text = Utils.TextBreak(Text, Tool.Width - 10);
 
         // Desenha o texto do digitalizador
-        if (TextBoxes.Focused != null && (TextBoxes.Structure)TextBoxes.Focused.Data == Tool && TextBoxes.Signal) Text += "|";
+        if (TextBoxes.Focused != null && (TextBoxes)TextBoxes.Focused.Data == Tool && TextBoxes.Signal) Text += "|";
         DrawText(Text, Position.X + 4, Position.Y + 2, SFML.Graphics.Color.White);
     }
 
@@ -383,20 +383,20 @@ class Graphics
     private static void Interface_Specific(Tools.Structure Tool)
     {
         // Interações especificas
-        if (!(Tool is Panels.Structure)) return;
+        if (!(Tool is Panels)) return;
         switch (Tool.Name)
         {
             case "SelectCharacter": SelectCharacter_Class(); break;
             case "CreateCharacter": CreateCharacter_Class(); break;
-            case "Hotbar": Hotbar((Panels.Structure)Tool); break;
-            case "Menu_Character": Menu_Character((Panels.Structure)Tool); break;
-            case "Menu_Inventory": Menu_Inventory((Panels.Structure)Tool); break;
-            case "Bars": Bars((Panels.Structure)Tool); break;
-            case "Information": Informations((Panels.Structure)Tool); break;
-            case "Party_Invitation": Party_Invitation((Panels.Structure)Tool); break;
-            case "Trade_Invitation": Trade_Invitation((Panels.Structure)Tool); break;
-            case "Trade": Trade((Panels.Structure)Tool); break;
-            case "Shop": Shop((Panels.Structure)Tool); break;
+            case "Hotbar": Hotbar((Panels)Tool); break;
+            case "Menu_Character": Menu_Character((Panels)Tool); break;
+            case "Menu_Inventory": Menu_Inventory((Panels)Tool); break;
+            case "Bars": Bars((Panels)Tool); break;
+            case "Information": Informations((Panels)Tool); break;
+            case "Party_Invitation": Party_Invitation((Panels)Tool); break;
+            case "Trade_Invitation": Trade_Invitation((Panels)Tool); break;
+            case "Trade": Trade((Panels)Tool); break;
+            case "Shop": Shop((Panels)Tool); break;
         }
     }
     #endregion
@@ -440,7 +440,7 @@ class Graphics
         Class Class = Objects.Class.List.ElementAt(Panels.CreateCharacter_Class).Value;
 
         // Textura do personagem
-        if (CheckBoxes.Get("GenderMale").Checked && Class.Tex_Male.Length > 0)
+        if (CheckBoxes.List["GenderMale"].Checked && Class.Tex_Male.Length > 0)
             Texture_Num = Class.Tex_Male[Panels.CreateCharacter_Tex];
         else if (Class.Tex_Female.Length > 0)
             Texture_Num = Class.Tex_Female[Panels.CreateCharacter_Tex];
@@ -461,7 +461,7 @@ class Graphics
     }
     #endregion
 
-    private static void Bars(Panels.Structure Tool)
+    private static void Bars(Panels Tool)
     {
         decimal HP_Percentage = Player.Me.Vital[(byte)Utils.Vitals.HP] / (decimal)Player.Me.Max_Vital[(byte)Utils.Vitals.HP];
         decimal MP_Percentage = Player.Me.Vital[(byte)Utils.Vitals.MP] / (decimal)Player.Me.Max_Vital[(byte)Utils.Vitals.MP];
@@ -485,8 +485,8 @@ class Graphics
 
     private static void Chat()
     {
-        Panels.Structure Tool = Panels.Get("Chat");
-        Tool.Visible = TextBoxes.Focused != null && ((TextBoxes.Structure)TextBoxes.Focused.Data).Name.Equals("Chat");
+        Panels Tool = Panels.List["Chat"];
+        Tool.Visible = TextBoxes.Focused != null && ((TextBoxes)TextBoxes.Focused.Data).Name.Equals("Chat");
 
         // Renderiza as mensagens
         if (Tool.Visible || (Loop.Chat_Timer >= Environment.TickCount && Utils.Option.Chat))
@@ -495,10 +495,10 @@ class Graphics
                     DrawText(global::Interface.Chat.Order[i].Text, 16, 461 + 11 * (i - global::Interface.Chat.Lines_First), global::Interface.Chat.Order[i].Color);
 
         // Dica de como abrir o chat
-        if (!Tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.Get("Chat").Position.X + 5, TextBoxes.Get("Chat").Position.Y + 3, SFML.Graphics.Color.White);
+        if (!Tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.List["Chat"].Position.X + 5, TextBoxes.List["Chat"].Position.Y + 3, SFML.Graphics.Color.White);
     }
 
-    private static void Informations(Panels.Structure Tool)
+    private static void Informations(Panels Tool)
     {
         Item Item = Item.Get( Panels.Infomation_ID);
         SFML.Graphics.Color Text_Color;
@@ -523,7 +523,7 @@ class Graphics
         Render(Tex_Item[Item.Texture], new Rectangle(Tool.Position.X + 9, Tool.Position.Y + 21, 64, 64));
 
         // Informações da Loja
-        if (Panels.Get("Shop").Visible)
+        if (Panels.List["Shop"].Visible)
             if (Panels.Shop_Slot >= 0)
                 Data.Add("Price: " + Panels.Shop_Open.Sold[Panels.Shop_Slot].Price);
             else if (Panels.Inventory_Slot > 0)
@@ -558,7 +558,7 @@ class Graphics
         for (byte i = 0; i < Data.Count; i++) DrawText(Data[i], Positions[i].X, Positions[i].Y, SFML.Graphics.Color.White);
     }
 
-    private static void Hotbar(Panels.Structure Tool)
+    private static void Hotbar(Panels Tool)
     {
         string Indicator = string.Empty;
 
@@ -585,7 +585,7 @@ class Graphics
                 Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Change].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
     }
 
-    private static void Menu_Character(Panels.Structure Tool)
+    private static void Menu_Character(Panels Tool)
     {
         // Dados básicos
         DrawText(Player.Me.Name, Tool.Position.X + 18, Tool.Position.Y + 52, SFML.Graphics.Color.White);
@@ -608,7 +608,7 @@ class Graphics
                 Render(Tex_Item[Player.Me.Equipment[i].Texture], Tool.Position.X + 8 + i * 35, Tool.Position.Y + 247, 0, 0, 34, 34);
     }
 
-    private static void Menu_Inventory(Panels.Structure Tool)
+    private static void Menu_Inventory(Panels Tool)
     {
         byte NumColumns = 5;
 
@@ -620,7 +620,7 @@ class Graphics
         if (Panels.Inventory_Change > 0) Render(Tex_Item[Player.Me.Inventory[Panels.Inventory_Change].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
     }
 
-    private static void Party_Invitation(Panels.Structure Tool)
+    private static void Party_Invitation(Panels Tool)
     {
         DrawText(Panels.Party_Invitation + " has invite you to a party. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
     }
@@ -642,12 +642,12 @@ class Graphics
         }
     }
 
-    private static void Trade_Invitation(Panels.Structure Tool)
+    private static void Trade_Invitation(Panels Tool)
     {
         DrawText(Panels.Trade_Invitation + " has invite you to a trade. Would you like to join?", Tool.Position.X + 14, Tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
     }
 
-    private static void Trade(Panels.Structure Tool)
+    private static void Trade(Panels Tool)
     {
         // Desenha os itens das ofertas
         for (byte i = 1; i <= Utils.Max_Inventory; i++)
@@ -657,7 +657,7 @@ class Graphics
         }
     }
 
-    private static void Shop(Panels.Structure Tool)
+    private static void Shop(Panels Tool)
     {
         // Dados da loja
         string Name = Panels.Shop_Open.Name;
