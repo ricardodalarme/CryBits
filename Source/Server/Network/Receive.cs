@@ -277,7 +277,7 @@ namespace Network
             if (Account.Character.Genre) Account.Character.Texture_Num = Class.Tex_Male[Data.ReadByte()];
             else Account.Character.Texture_Num = Class.Tex_Female[Data.ReadByte()];
             Account.Character.Attribute = Class.Attribute;
-            Account.Character.Map = TMap.Get( Class.Spawn_Map.ID);
+            Account.Character.Map = TempMap.Get( Class.Spawn_Map.ID);
             Account.Character.Direction = (Directions)Class.Spawn_Direction;
             Account.Character.X = Class.Spawn_X;
             Account.Character.Y = Class.Spawn_Y;
@@ -668,7 +668,7 @@ namespace Network
                 }
 
                 // Mapa temporário
-                TMap Temp_Map = TMap.List[ID];
+                TempMap Temp_Map = TempMap.List[ID];
 
                 // Dados gerais
                 Map.Revision = Data.ReadInt16();
@@ -737,7 +737,7 @@ namespace Network
 
                 // NPCs
                 Map.NPC = new Map_NPC[Data.ReadByte()];
-                Temp_Map.NPC = new TNPC[Map.NPC.Length];
+                Temp_Map.NPC = new TempNPC[Map.NPC.Length];
                 for (byte n = 0; n < Map.NPC.Length; n++)
                 {
                     Map.NPC[n].NPC = NPC.Get(new Guid(Data.ReadString()));

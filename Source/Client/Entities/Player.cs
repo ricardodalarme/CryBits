@@ -24,7 +24,7 @@ namespace Objects
         public short[] Max_Vital = new short[(byte)Utils.Vitals.Count];
         public short[] Attribute = new short[(byte)Utils.Attributes.Count];
         public Item[] Equipment = new Item[(byte)Utils.Equipments.Count];
-        public TMap Map;
+        public TempMap Map;
 
         public Player(string Name)
         {

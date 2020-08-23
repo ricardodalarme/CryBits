@@ -54,14 +54,14 @@ namespace Objects
 
         public void Create_Temporary()
         {
-            TMap Temp_Map = new TMap(ID, this);
-            TMap.List.Add(ID, Temp_Map);
+            TempMap Temp_Map = new TempMap(ID, this);
+            TempMap.List.Add(ID, Temp_Map);
 
             // NPCs do mapa
-            Temp_Map.NPC = new TNPC[NPC.Length];
+            Temp_Map.NPC = new TempNPC[NPC.Length];
             for (byte i = 0; i < Temp_Map.NPC.Length; i++)
             {
-                Temp_Map.NPC[i] = new TNPC(i, Temp_Map, NPC[i].NPC);
+                Temp_Map.NPC[i] = new TempNPC(i, Temp_Map, NPC[i].NPC);
                 Temp_Map.NPC[i].Spawn();
             }
 

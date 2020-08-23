@@ -2,7 +2,7 @@
 
 namespace Objects
 {
-    class TNPC : Character
+    class TempNPC : Character
     {
         // Indice
         public NPC Data;

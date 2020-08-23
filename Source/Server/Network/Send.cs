@@ -97,7 +97,7 @@ namespace Network
                         ToPlayer(Account.List[i].Character, Data);
         }
 
-        private static void ToMap(TMap Map, NetOutgoingMessage Data)
+        private static void ToMap(TempMap Map, NetOutgoingMessage Data)
         {
             // Envia os dados para todos conectados, com excessão do índice
             for (byte i = 0; i < Account.List.Count; i++)
@@ -106,7 +106,7 @@ namespace Network
                         ToPlayer(Account.List[i].Character, Data);
         }
 
-        private static void ToMapBut(TMap Map, Player Player, NetOutgoingMessage Data)
+        private static void ToMapBut(TempMap Map, Player Player, NetOutgoingMessage Data)
         {
             // Envia os dados para todos conectados, com excessão do índice
             for (byte i = 0; i < Account.List.Count; i++)
@@ -361,7 +361,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Player_LeaveMap(Player Player, TMap Map)
+        public static void Player_LeaveMap(Player Player, TempMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -579,7 +579,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Map_Items(Player Player, TMap Map)
+        public static void Map_Items(Player Player, TempMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -599,7 +599,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Map_Items(TMap Map)
+        public static void Map_Items(TempMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -686,7 +686,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Map_NPCs(Player Player, TMap Map)
+        public static void Map_NPCs(Player Player, TempMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -704,7 +704,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Map_NPC(TNPC NPC)
+        public static void Map_NPC(TempNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -719,7 +719,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Movement(TNPC NPC, byte Movement)
+        public static void Map_NPC_Movement(TempNPC NPC, byte Movement)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -733,7 +733,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Direction(TNPC NPC)
+        public static void Map_NPC_Direction(TempNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -744,7 +744,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Vitals(TNPC NPC)
+        public static void Map_NPC_Vitals(TempNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -755,7 +755,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Attack(TNPC NPC, string Victim = "", Targets Victim_Type = 0)
+        public static void Map_NPC_Attack(TempNPC NPC, string Victim = "", Targets Victim_Type = 0)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -767,7 +767,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Died(TNPC NPC)
+        public static void Map_NPC_Died(TempNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

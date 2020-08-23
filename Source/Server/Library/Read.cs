@@ -115,7 +115,7 @@ namespace Library
             Account.Character.Genre = Data.ReadBoolean();
             Account.Character.Experience = Data.ReadInt32();
             Account.Character.Points = Data.ReadByte();
-            Account.Character.Map = TMap.Get( new Guid(Data.ReadString()));
+            Account.Character.Map = TempMap.Get( new Guid(Data.ReadString()));
             Account.Character.X = Data.ReadByte();
             Account.Character.Y = Data.ReadByte();
             Account.Character.Direction = (Directions)Data.ReadByte();

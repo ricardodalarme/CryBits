@@ -130,7 +130,7 @@ namespace Network
             Shop.List = new Dictionary<Guid, Shop>();
             NPC.List = new Dictionary<Guid, NPC>();
             Objects.Map.List = new Dictionary<Guid, Map>();
-            TMap.List = new Dictionary<Guid, TMap>();
+            TempMap.List = new Dictionary<Guid, TempMap>();
 
             // Definir os valores que são enviados do servidor
             Player.Me = new Me_Structure(Data.ReadString());
@@ -259,7 +259,7 @@ namespace Network
             // Defini os dados do jogador
             Player.Texture_Num = Data.ReadInt16();
             Player.Level = Data.ReadInt16();
-            Player.Map = TMap.List[new Guid(Data.ReadString())];
+            Player.Map = TempMap.List[new Guid(Data.ReadString())];
             Player.X = Data.ReadByte();
             Player.Y = Data.ReadByte();
             Player.Direction = (Utils.Directions)Data.ReadByte();
@@ -444,9 +444,9 @@ namespace Network
             {
                 Map = new Map(ID);
                 Map.List.Add(ID, Map);
-                TMap.List.Add(ID, new TMap(Map));
+                TempMap.List.Add(ID, new TempMap(Map));
             }
-            Mapper.Current = TMap.List[ID];
+            Mapper.Current = TempMap.List[ID];
 
             // Lê os dados
             Map.Revision = Data.ReadInt16();
@@ -827,10 +827,10 @@ namespace Network
         private static void Map_NPCs(NetIncomingMessage Data)
         {
             // Lê os dados
-            Mapper.Current.NPC = new TNPC[Data.ReadInt16()];
+            Mapper.Current.NPC = new TempNPC[Data.ReadInt16()];
             for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
             {
-                Mapper.Current.NPC[i] = new TNPC();
+                Mapper.Current.NPC[i] = new TempNPC();
                 Mapper.Current.NPC[i].X2 = 0;
                 Mapper.Current.NPC[i].Y2 = 0;
                 Mapper.Current.NPC[i].Data = NPC.Get(new Guid(Data.ReadString()));

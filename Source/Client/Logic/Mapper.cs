@@ -5,7 +5,7 @@ using System.Drawing;
 class Mapper
 {
     // Mapa atual
-    public static Objects.TMap Current;
+    public static Objects.TempMap Current;
 
     // Fumaças
     public static int Fog_X;
@@ -178,15 +178,15 @@ class Mapper
             }
 
         // Adiciona uma nova partícula
-        for (short i = 1; i < TMap.Weather.Length; i++)
-            if (!TMap.Weather[i].Visible)
+        for (short i = 1; i < TempMap.Weather.Length; i++)
+            if (!TempMap.Weather[i].Visible)
             {
                 if (Utils.Random.Next(0, Max_Weather_Intensity - Current.Data.Weather.Intensity) == 0)
                 {
                     if (!Stop)
                     {
                         // Cria a partícula
-                        TMap.Weather[i].Visible = true;
+                        TempMap.Weather[i].Visible = true;
 
                         // Cria a partícula de acordo com o seu tipo
                         switch ((Weathers)Current.Data.Weather.Type)
@@ -211,8 +211,8 @@ class Mapper
                 }
 
                 // Reseta a partícula
-                if (TMap.Weather[i].x > Utils.Screen_Width || TMap.Weather[i].y > Utils.Screen_Height)
-                    TMap.Weather[i] = new TMap_Weather();
+                if (TempMap.Weather[i].x > Utils.Screen_Width || TempMap.Weather[i].y > Utils.Screen_Height)
+                    TempMap.Weather[i] = new TMap_Weather();
             }
 
         // Trovoadas
@@ -231,61 +231,61 @@ class Mapper
     private static void Weather_Rain_Create(int i)
     {
         // Define a velocidade e a posição da partícula
-        TMap.Weather[i].Speed = Utils.Random.Next(8, 13);
+        TempMap.Weather[i].Speed = Utils.Random.Next(8, 13);
 
         if (Utils.Random.Next(2) == 0)
         {
-            TMap.Weather[i].x = -32;
-            TMap.Weather[i].y = Utils.Random.Next(-32, Utils.Screen_Height);
+            TempMap.Weather[i].x = -32;
+            TempMap.Weather[i].y = Utils.Random.Next(-32, Utils.Screen_Height);
         }
         else
         {
-            TMap.Weather[i].x = Utils.Random.Next(-32, Utils.Screen_Width);
-            TMap.Weather[i].y = -32;
+            TempMap.Weather[i].x = Utils.Random.Next(-32, Utils.Screen_Width);
+            TempMap.Weather[i].y = -32;
         }
     }
 
     private static void Weather_Rain_Movement(int i)
     {
         // Movimenta a partícula
-        TMap.Weather[i].x += TMap.Weather[i].Speed;
-        TMap.Weather[i].y += TMap.Weather[i].Speed;
+        TempMap.Weather[i].x += TempMap.Weather[i].Speed;
+        TempMap.Weather[i].y += TempMap.Weather[i].Speed;
     }
 
     private static void Weather_Snow_Create(int i)
     {
         // Define a velocidade e a posição da partícula
-        TMap.Weather[i].Speed = Utils.Random.Next(1, 3);
-        TMap.Weather[i].y = -32;
-        TMap.Weather[i].x = Utils.Random.Next(-32, Utils.Screen_Width);
-        TMap.Weather[i].Start = TMap.Weather[i].x;
+        TempMap.Weather[i].Speed = Utils.Random.Next(1, 3);
+        TempMap.Weather[i].y = -32;
+        TempMap.Weather[i].x = Utils.Random.Next(-32, Utils.Screen_Width);
+        TempMap.Weather[i].Start = TempMap.Weather[i].x;
 
         if (Utils.Random.Next(2) == 0)
-            TMap.Weather[i].Back = false;
+            TempMap.Weather[i].Back = false;
         else
-            TMap.Weather[i].Back = true;
+            TempMap.Weather[i].Back = true;
     }
 
     private static void Weather_Snow_Movement(int i, bool Movimentrar = true)
     {
         int Diference = Utils.Random.Next(0, Snow_Movement / 3);
-        int x1 = TMap.Weather[i].Start + Snow_Movement + Diference;
-        int x2 = TMap.Weather[i].Start - Snow_Movement - Diference;
+        int x1 = TempMap.Weather[i].Start + Snow_Movement + Diference;
+        int x2 = TempMap.Weather[i].Start - Snow_Movement - Diference;
 
         // Faz com que a partícula volte
-        if (x1 <= TMap.Weather[i].x)
-            TMap.Weather[i].Back = true;
-        else if (x2 >= TMap.Weather[i].x)
-            TMap.Weather[i].Back = false;
+        if (x1 <= TempMap.Weather[i].x)
+            TempMap.Weather[i].Back = true;
+        else if (x2 >= TempMap.Weather[i].x)
+            TempMap.Weather[i].Back = false;
 
         // Movimenta a partícula
-        TMap.Weather[i].y += TMap.Weather[i].Speed;
+        TempMap.Weather[i].y += TempMap.Weather[i].Speed;
 
         if (Movimentrar)
-            if (TMap.Weather[i].Back)
-                TMap.Weather[i].x -= 1;
+            if (TempMap.Weather[i].Back)
+                TempMap.Weather[i].x -= 1;
             else
-                TMap.Weather[i].x += 1;
+                TempMap.Weather[i].x += 1;
     }
 
     public static void Weather_Update()
@@ -302,9 +302,9 @@ class Mapper
                 Audio.Sound.Play(Audio.Sounds.Rain, true);
 
                 // Redimensiona a estrutura
-                TMap.Weather = new TMap_Weather[Max_Rain + 1];
+                TempMap.Weather = new TMap_Weather[Max_Rain + 1];
                 break;
-            case Weathers.Snowing: TMap.Weather = new TMap_Weather[Max_Snow + 1]; break;
+            case Weathers.Snowing: TempMap.Weather = new TMap_Weather[Max_Snow + 1]; break;
         }
     }
 

@@ -796,7 +796,7 @@ class Graphics
         DrawText(Player.Name, Utils.ConvertX(Position.X), Utils.ConvertY(Position.Y), Color);
     }
 
-    private static void NPC(TNPC NPC)
+    private static void NPC(TempNPC NPC)
     {
         byte Column = 0;
         bool Hurt = false;
@@ -824,7 +824,7 @@ class Graphics
         NPC_Bars(NPC);
     }
 
-    private static void NPC_Name(TNPC NPC)
+    private static void NPC_Name(TempNPC NPC)
     {
         Point Position = new Point();
         SFML.Graphics.Color Color;
@@ -848,7 +848,7 @@ class Graphics
         DrawText(NPC.Data.Name, Utils.ConvertX(Position.X), Utils.ConvertY(Position.Y), Color);
     }
 
-    private static void NPC_Bars(TNPC NPC)
+    private static void NPC_Bars(TempNPC NPC)
     {
         Texture Texture = Tex_Character[NPC.Data.Texture];
         short Value = NPC.Vital[(byte)Utils.Vitals.HP];
@@ -948,9 +948,9 @@ class Graphics
         }
 
         // Desenha as partículas
-        for (int i = 0; i < TMap.Weather.Length; i++)
-            if (TMap.Weather[i].Visible)
-                Render(Tex_Weather, new Rectangle(x, 0, 32, 32), new Rectangle(TMap.Weather[i].x, TMap.Weather[i].y, 32, 32), CColor(255, 255, 255, 150));
+        for (int i = 0; i < TempMap.Weather.Length; i++)
+            if (TempMap.Weather[i].Visible)
+                Render(Tex_Weather, new Rectangle(x, 0, 32, 32), new Rectangle(TempMap.Weather[i].x, TempMap.Weather[i].y, 32, 32), CColor(255, 255, 255, 150));
 
         // Trovoadas
         Render(Tex_Blanc, 0, 0, 0, 0, Utils.Screen_Width, Utils.Screen_Height, new SFML.Graphics.Color(255, 255, 255, Mapper.Lightning));

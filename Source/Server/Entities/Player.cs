@@ -144,9 +144,9 @@ namespace Objects
             Trade_Leave();
         }
 
-        public void Warp(TMap To, byte x, byte y, bool NeedUpdate = false)
+        public void Warp(TempMap To, byte x, byte y, bool NeedUpdate = false)
         {
-            TMap Map_Old = Map;
+            TempMap Map_Old = Map;
 
             // Cancela a troca ou a loja
             if (Trade != null) Trade_Leave();
@@ -187,7 +187,7 @@ namespace Objects
         {
             byte Next_X = X, Next_Y = Y;
             byte Old_X = X, Old_Y = Y;
-            TMap Link = null;// TMap.Get( Map.Data.Link[(byte)Direction].ID);
+            TempMap Link = null;// TMap.Get( Map.Data.Link[(byte)Direction].ID);
             bool SecondMovement = false;
 
             // Previne erros
@@ -233,7 +233,7 @@ namespace Objects
                 // Teletransporte
                 case Tile_Attributes.Warp:
                     if (Tile.Data_4 > 0) Direction = (Directions)Tile.Data_4 - 1;
-                    Warp(TMap.Get( new Guid(Tile.Data_1)), (byte)Tile.Data_2, (byte)Tile.Data_3);
+                    Warp(TempMap.Get( new Guid(Tile.Data_1)), (byte)Tile.Data_2, (byte)Tile.Data_3);
                     SecondMovement = true;
                     break;
             }
@@ -257,7 +257,7 @@ namespace Objects
 
             // Retorna para o ínicio
             Direction = (Directions)Class.Spawn_Direction;
-            Warp(TMap.Get( Class.Spawn_Map.ID), Class.Spawn_X, Class.Spawn_Y);
+            Warp(TempMap.Get( Class.Spawn_Map.ID), Class.Spawn_X, Class.Spawn_Y);
         }
 
         public void Attack()
@@ -286,7 +286,7 @@ namespace Objects
             Victim = Map.HasNPC(Next_X, Next_Y);
             if (Victim != null)
             {
-                Attack_NPC((TNPC)Victim);
+                Attack_NPC((TempNPC)Victim);
                 return;
             }
 
@@ -338,7 +338,7 @@ namespace Objects
                 Send.Player_Attack(this);
         }
 
-        private void Attack_NPC(TNPC Victim)
+        private void Attack_NPC(TempNPC Victim)
         {
             // Mensagem
             if (Victim.Target != this && !string.IsNullOrEmpty(Victim.Data.SayMsg)) Send.Message(this, Victim.Data.Name + ": " + Victim.Data.SayMsg, Color.White);

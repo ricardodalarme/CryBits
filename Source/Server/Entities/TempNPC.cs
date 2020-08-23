@@ -5,15 +5,15 @@ using static Logic.Utils;
 
 namespace Objects
 {
-    class TNPC : Character
+    class TempNPC : Character
     {
         // Dados básicos
         public byte Index;
         public NPC Data;
         public bool Alive;
         public Character Target;
-        public int Spawn_Timer;
-        public int Attack_Timer;
+        public int SpawnTimer;
+        public int AttackTimer;
 
         private short Regeneration(byte Vital)
         {
@@ -28,7 +28,7 @@ namespace Objects
         }
 
         // Construtor
-        public TNPC(byte Index, TMap Map, NPC Data)
+        public TempNPC(byte Index, TempMap Map, NPC Data)
         {
             this.Index = Index;
             this.Map = Map;
@@ -45,7 +45,7 @@ namespace Objects
             ////////////////
             if (!Alive)
             {
-                if (Environment.TickCount > Spawn_Timer + (Data.SpawnTime * 1000)) Spawn();
+                if (Environment.TickCount > SpawnTimer + (Data.SpawnTime * 1000)) Spawn();
                 return;
             }
             else
@@ -122,7 +122,7 @@ namespace Objects
                 if (Target != null)
                     if (Target is Player && !((Player)Target).Account.IsPlaying || Target.Map != Map)
                         Target = null;
-                    else if (Target is TNPC && !((TNPC)Target).Alive)
+                    else if (Target is TempNPC && !((TempNPC)Target).Alive)
                         Target = null;
 
                 // Evita que ele se movimente sem sentido
@@ -299,14 +299,14 @@ namespace Objects
 
             // Apenas se necessário
             if (!Alive) return;
-            if (Environment.TickCount < Attack_Timer + 750) return;
+            if (Environment.TickCount < AttackTimer + 750) return;
             if (Map.Tile_Blocked(X, Y, Direction, false)) return;
 
             // Verifica se o jogador está na frente do NPC
             if (Target is Player)
                 Attack_Player(Map.HasPlayer(Next_X, Next_Y));
             // Verifica se o NPC alvo está na frente do NPC
-            else if (Target is TNPC)
+            else if (Target is TempNPC)
                 Attack_NPC(Map.HasNPC(Next_X, Next_Y));
         }
 
@@ -317,7 +317,7 @@ namespace Objects
             if (Victim.GettingMap) return;
 
             // Tempo de ataque 
-            Attack_Timer = Environment.TickCount;
+            AttackTimer = Environment.TickCount;
 
             // Cálculo de dano
             short Attack_Damage = (short)(Data.Attribute[(byte)Attributes.Strength] - Victim.Player_Defense);
@@ -348,14 +348,14 @@ namespace Objects
                 Send.Map_NPC_Attack(this);
         }
 
-        private void Attack_NPC(TNPC Victim)
+        private void Attack_NPC(TempNPC Victim)
         {
             // Verifica se a vítima pode ser atacada
             if (Victim == null) return;
             if (!Victim.Alive) return;
 
             // Tempo de ataque 
-            Attack_Timer = Environment.TickCount;
+            AttackTimer = Environment.TickCount;
 
             // Define o alvo do NPC
             Victim.Target = this;
@@ -413,7 +413,7 @@ namespace Objects
             Send.Map_Items(Map);
 
             // Reseta os dados do NPC 
-            Spawn_Timer = Environment.TickCount;
+            SpawnTimer = Environment.TickCount;
             Target = null;
             Alive = false;
             Send.Map_NPC_Died(this);

@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace Objects
 {
-    class TMap
+    class TempMap
     {
         // Lista de dados
-        public static Dictionary<Guid, TMap> List;
+        public static Dictionary<Guid, TempMap> List;
         public static TMap_Weather[] Weather;
 
         // Dados gerais
         public Map Data;
-        public TNPC[] NPC;
+        public TempNPC[] NPC;
         public TMap_Items[] Item = new TMap_Items[0];
         public List<TMap_Blood> Blood = new List<TMap_Blood>();
 
-        public TMap(Map Data)
+        public TempMap(Map Data)
         {
             this.Data = Data;
         }

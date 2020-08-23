@@ -6,21 +6,21 @@ using static Logic.Utils;
 
 namespace Objects
 {
-    class TMap : Data
+    class TempMap : Data
     {
         // Lista de dados
-        public static Dictionary<Guid, TMap> List = new Dictionary<Guid, TMap>();
+        public static Dictionary<Guid, TempMap> List = new Dictionary<Guid, TempMap>();
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static TMap Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+        public static TempMap Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
 
         // Dados
         public Map Data;
-        public TNPC[] NPC = Array.Empty<TNPC>();
+        public TempNPC[] NPC = Array.Empty<TempNPC>();
         public List<TMap_Items> Item = new List<TMap_Items>();
 
         // Construtor
-        public TMap(Guid ID, Map Map) : base(ID)
+        public TempMap(Guid ID, Map Map) : base(ID)
         {
             Data = Map;
         }
@@ -42,7 +42,7 @@ namespace Objects
             }
         }
 
-        public TNPC HasNPC(byte X, byte Y)
+        public TempNPC HasNPC(byte X, byte Y)
         {
             // Verifica se há algum npc na cordenada
             for (byte i = 0; i < NPC.Length; i++)

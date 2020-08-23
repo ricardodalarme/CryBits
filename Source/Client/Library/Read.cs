@@ -134,7 +134,7 @@ namespace Library
             // Lê os dados
             FileStream Stream = File.OpenRead();
             // Map.List.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
-            TMap.List.Add(ID, new TMap(Objects.Map.List[ID]));
+            TempMap.List.Add(ID, new TempMap(Objects.Map.List[ID]));
             Stream.Close();
 
             // Redimensiona as partículas do clima

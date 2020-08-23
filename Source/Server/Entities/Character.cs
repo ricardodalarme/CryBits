@@ -2,10 +2,10 @@
 
 namespace Objects
 {
-    class Character
+    abstract class Character
     {
         // Dados básicos de todos personagens
-        public TMap Map;
+        public TempMap Map;
         public byte X;
         public byte Y;
         public Directions Direction;
