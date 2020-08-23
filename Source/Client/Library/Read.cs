@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Entities;
+using Interface;
+using Logic;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Objects;
-using Interface;
 
 namespace Library
 {
@@ -21,70 +23,69 @@ namespace Library
             // Cria o arquivo se ele não existir
             if (!Directories.Options.Exists)
             {
-                Utils.Option = new Utils.Options();
+                Option = new Options();
                 Write.Options();
                 return;
             }
 
             // Lê os dados
-            FileStream Stream = Directories.Options.OpenRead();
-            Utils.Option = (Utils.Options)new BinaryFormatter().Deserialize(Stream);
-            Stream.Close();
+            using (var Stream = Directories.Options.OpenRead())
+                Option = (Options)new BinaryFormatter().Deserialize(Stream);
         }
 
         private static Buttons Button(BinaryReader Data)
         {
             // Lê os dados
-            var Tool = new Buttons();
-            Tool.Name = Data.ReadString();
-            Tool.Position.X = Data.ReadInt32();
-            Tool.Position.Y = Data.ReadInt32();
-            Tool.Visible = Data.ReadBoolean();
-            Tool.Window = (Windows.Types)Data.ReadByte();
-            Tool.Texture_Num = Data.ReadByte();
-            return Tool;
+            return new Buttons()
+            {
+                Name = Data.ReadString(),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
+                Visible = Data.ReadBoolean(),
+                Window = (Windows.Types)Data.ReadByte(),
+                Texture_Num = Data.ReadByte(),
+            };
         }
 
         private static TextBoxes TextBox(BinaryReader Data)
         {
             // Lê os dados
-            var Tool = new TextBoxes();
-            Tool.Name = Data.ReadString();
-            Tool.Position.X = Data.ReadInt32();
-            Tool.Position.Y = Data.ReadInt32();
-            Tool.Visible = Data.ReadBoolean();
-            Tool.Window = (Windows.Types)Data.ReadByte();
-            Tool.Lenght = Data.ReadInt16();
-            Tool.Width = Data.ReadInt16();
-            Tool.Password = Data.ReadBoolean();
-            return Tool;
+            return new TextBoxes
+            {
+                Name = Data.ReadString(),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
+                Visible = Data.ReadBoolean(),
+                Window = (Windows.Types)Data.ReadByte(),
+                Lenght = Data.ReadInt16(),
+                Width = Data.ReadInt16(),
+                Password = Data.ReadBoolean(),
+            };
         }
 
         private static Panels Panel(BinaryReader Data)
         {
-            // Carrega os dados
-            Panels Tool = new Panels();
-            Tool.Name = Data.ReadString();
-            Tool.Position.X = Data.ReadInt32();
-            Tool.Position.Y = Data.ReadInt32();
-            Tool.Visible = Data.ReadBoolean();
-            Tool.Window = (Windows.Types)Data.ReadByte();
-            Tool.Texture_Num = Data.ReadByte();
-            return Tool;
+            // Lê os dados
+            return new Panels
+            {
+                Name = Data.ReadString(),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
+                Visible = Data.ReadBoolean(),
+                Window = (Windows.Types)Data.ReadByte(),
+                Texture_Num = Data.ReadByte(),
+            };
         }
 
         private static CheckBoxes CheckBox(BinaryReader Data)
         {
-            // Carrega os dados
-            var Tool = new CheckBoxes();
-            Tool.Name = Data.ReadString();
-            Tool.Position.X = Data.ReadInt32();
-            Tool.Position.Y = Data.ReadInt32();
-            Tool.Visible = Data.ReadBoolean();
-            Tool.Window = (Windows.Types)Data.ReadByte();
-            Tool.Text = Data.ReadString();
-            Tool.Checked = Data.ReadBoolean();
-            return Tool;
+            // Lê os dados
+            return new CheckBoxes
+            {
+                Name = Data.ReadString(),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
+                Visible = Data.ReadBoolean(),
+                Window = (Windows.Types)Data.ReadByte(),
+                Text = Data.ReadString(),
+                Checked = Data.ReadBoolean(),
+            };
         }
 
         private static void Tools()
@@ -93,9 +94,9 @@ namespace Library
             for (byte i = 0; i < (byte)Windows.Types.Count; i++) Interface.Tools.All_Order[i] = new List<Tools.Order_Structure>();
 
             // Lê todas as ferramentas
-            BinaryReader Data = new BinaryReader(File.OpenRead());
-            for (byte n = 0; n < Interface.Tools.All_Order.Length; n++) Tools(null, ref Interface.Tools.All_Order[n], Data);
-            Data.Dispose();
+            using (var Data = new BinaryReader(File.OpenRead()))
+                for (byte n = 0; n < Interface.Tools.All_Order.Length; n++)
+                    Tools(null, ref Interface.Tools.All_Order[n], Data);
         }
 
         private static void Tools(Tools.Order_Structure Parent, ref List<Tools.Order_Structure> Node, BinaryReader Data)
@@ -132,14 +133,13 @@ namespace Library
             FileInfo File = new FileInfo(Directories.Maps_Data.FullName + ID.ToString() + Directories.Format);
 
             // Lê os dados
-            FileStream Stream = File.OpenRead();
-            // Map.List.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
-            TMap.List.Add(ID, new TMap(Objects.Map.List[ID]));
-            Stream.Close();
+            using (var Stream = File.OpenRead())
+                // Map.List.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
+                TempMap.List.Add(ID, new TempMap(Entities.Map.List[ID]));
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();
-            Mapper.Autotile.Update();
+            MapAutoTile.Update();
         }
     }
 }

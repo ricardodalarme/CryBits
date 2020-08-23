@@ -1,12 +1,14 @@
-﻿using Library;
-using Objects;
+﻿using Editors;
+using Entities;
+using Library;
+using Logic;
 using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using static Utils;
+using static Logic.Utils;
 
 class Graphics
 {
@@ -715,10 +717,10 @@ class Graphics
             Tool Tool = (Tool)Node.Nodes[i].Tag;
             if (Tool.Visible)
             {
-                if (Tool is Objects.Panel) Panel((Objects.Panel)Tool);
-                else if (Tool is Objects.TextBox) TextBox((Objects.TextBox)Tool);
-                else if (Tool is Objects.Button) Button((Objects.Button)Tool);
-                else if (Tool is Objects.CheckBox) CheckBox((Objects.CheckBox)Tool);
+                if (Tool is Entities.Panel) Panel((Entities.Panel)Tool);
+                else if (Tool is Entities.TextBox) TextBox((Entities.TextBox)Tool);
+                else if (Tool is Entities.Button) Button((Entities.Button)Tool);
+                else if (Tool is Entities.CheckBox) CheckBox((Entities.CheckBox)Tool);
 
                 // Pula pra próxima
                 Interface_Order(Node.Nodes[i]);
@@ -726,21 +728,21 @@ class Graphics
         }
     }
 
-    private static void Button(Objects.Button Tool)
+    private static void Button(Entities.Button Tool)
     {
         // Desenha o botão
         if (Tool.Texture_Num < Tex_Button.Length)
             Render(Win_Interface, Tex_Button[Tool.Texture_Num], Tool.Position, new SFML.Graphics.Color(255, 255, 225, 225));
     }
 
-    private static void Panel(Objects.Panel Tool)
+    private static void Panel(Entities.Panel Tool)
     {
         // Desenha o painel
         if (Tool.Texture_Num < Tex_Panel.Length)
             Render(Win_Interface, Tex_Panel[Tool.Texture_Num], Tool.Position);
     }
 
-    private static void CheckBox(Objects.CheckBox Tool)
+    private static void CheckBox(Entities.CheckBox Tool)
     {
         // Define as propriedades dos retângulos
         Rectangle Rec_Source = new Rectangle(new Point(), new Size(TSize(Tex_CheckBox).Width / 2, TSize(Tex_CheckBox).Height));
@@ -756,7 +758,7 @@ class Graphics
         DrawText(Win_Interface, Tool.Text, Rec_Destiny.Location.X + TSize(Tex_CheckBox).Width / 2 + Margin, Rec_Destiny.Location.Y + 1, SFML.Graphics.Color.White);
     }
 
-    private static void TextBox(Objects.TextBox Tool)
+    private static void TextBox(Entities.TextBox Tool)
     {
         // Desenha a ferramenta
         Render_Box(Win_Interface, Tex_TextBox, 3, Tool.Position, new Size(Tool.Width, TSize(Tex_TextBox).Height));

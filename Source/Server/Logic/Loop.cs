@@ -1,4 +1,4 @@
-﻿using Objects;
+﻿using Entities;
 using System;
 using System.Windows.Forms;
 
@@ -23,7 +23,7 @@ namespace Logic
                 if (Environment.TickCount > Timer_500 + 500)
                 {
                     // Lógicas do mapa
-                    foreach (var Temp_Map in TMap.List.Values) Temp_Map.Logic();
+                    foreach (var Temp_Map in TempMap.List.Values) Temp_Map.Logic();
 
                     // Lógica dos jogadores
                     foreach (var Account in Account.List)

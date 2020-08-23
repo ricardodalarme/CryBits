@@ -1,6 +1,5 @@
-﻿using Objects;
+﻿using Entities;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 static class Lists
@@ -8,24 +7,10 @@ static class Lists
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
-    public static Dictionary<Guid, Class> Class = new Dictionary<Guid, Class>();
-    public static Dictionary<Guid, Map> Map = new Dictionary<Guid, Map>();
-    public static Structures.Weather[] Weather;
+    public static Map_Weather_Particle[] Weather;
     public static Tile[] Tile;
-    public static Dictionary<Guid, NPC> NPC = new Dictionary<Guid, NPC>();
-    public static Dictionary<Guid, Item> Item = new Dictionary<Guid, Item>();
-    public static Dictionary<Guid, Shop> Shop = new Dictionary<Guid, Shop>();
     public static TreeNode Tool;
 
-    // Obtém o ID de algum dado, caso ele não existir retorna um ID zerado
-    public static string GetID(Data Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
-
-    // Obtém o dado, caso ele não existir retorna nulo
-    public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)
-    {
-        if (Dictionary.ContainsKey(ID)) return Dictionary[ID];
-        return null;
-    }
 
     // Estrutura dos itens em gerais
     public class Structures
@@ -69,14 +54,5 @@ static class Lists
             public override string ToString() => Item.Name + " - " + Amount + "x";
         }
 
-        public struct Weather
-        {
-            public bool Visible;
-            public int x;
-            public int y;
-            public int Speed;
-            public int Start;
-            public bool Back;
-        }
     }
 }

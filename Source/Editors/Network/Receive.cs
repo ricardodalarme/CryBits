@@ -1,10 +1,11 @@
-﻿using Lidgren.Network;
-using Objects;
+﻿using Editors;
+using Entities;
+using Lidgren.Network;
+using Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using static Utils;
 
 namespace Network
 {
@@ -73,7 +74,7 @@ namespace Network
         private static void Classes(NetIncomingMessage Data)
         {
             // Classes a serem removidas
-            Dictionary<Guid, Class> ToRemove = new Dictionary<Guid, Class>(Lists.Class);
+            Dictionary<Guid, Class> ToRemove = new Dictionary<Guid, Class>(Class.List);
 
             // Quantidade de classes
             short Count = Data.ReadByte();
@@ -84,15 +85,15 @@ namespace Network
                 Class Class;
 
                 // Obtém o dado
-                if (Lists.Class.ContainsKey(ID))
+                if (Class.List.ContainsKey(ID))
                 {
-                    Class = Lists.Class[ID];
+                    Class = Class.List[ID];
                     ToRemove.Remove(ID);
                 }
                 else
                 {
                     Class = new Class(ID);
-                    Lists.Class.Add(Class.ID, Class);
+                    Class.List.Add(Class.ID, Class);
                 }
 
                 // Reseta os valores necessários
@@ -104,18 +105,18 @@ namespace Network
                 Class.Description = Data.ReadString();
                 for (byte t = 0, Size = Data.ReadByte(); t < Size; t++) Class.Tex_Male.Add(Data.ReadInt16());
                 for (byte t = 0, Size = Data.ReadByte(); t < Size; t++) Class.Tex_Female.Add(Data.ReadInt16());
-                Class.Spawn_Map = (Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
+                Class.Spawn_Map = Entities.Map.Get(new Guid(Data.ReadString()));
                 Class.Spawn_Direction = Data.ReadByte();
                 Class.Spawn_X = Data.ReadByte();
                 Class.Spawn_Y = Data.ReadByte();
                 for (byte v = 0; v < (byte)Vitals.Count; v++) Class.Vital[v] = Data.ReadInt16();
                 for (byte a = 0; a < (byte)Attributes.Count; a++) Class.Attribute[a] = Data.ReadInt16();
                 byte Num_Items = Data.ReadByte();
-                for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new Lists.Structures.Inventory((Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16()));
+                for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new Lists.Structures.Inventory(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16()));
             }
 
             // Remove as classes que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys) Lists.Class.Remove(Remove);
+            foreach (Guid Remove in ToRemove.Keys) Class.List.Remove(Remove);
         }
 
         private static void Map(NetIncomingMessage Data)
@@ -124,11 +125,11 @@ namespace Network
             Map Map;
 
             // Obtém o dado
-            if (Lists.Map.ContainsKey(ID)) Map = Lists.Map[ID];
+            if (Map.List.ContainsKey(ID)) Map = Map.List[ID];
             else
             {
                 Map = new Map(ID);
-                Lists.Map.Add(ID, Map);
+                Map.List.Add(ID, Map);
             }
 
             // Dados básicos
@@ -148,7 +149,7 @@ namespace Network
 
             // Ligações
             for (short n = 0; n < (short)Directions.Count; n++)
-                Map.Link[n] = (Map)Lists.GetData(Lists.Map, new Guid(Data.ReadString()));
+                Map.Link[n] = Map.Get(new Guid(Data.ReadString()));
 
             // Quantidade de camadas
             byte Num_Layers = Data.ReadByte();
@@ -202,7 +203,7 @@ namespace Network
             if (Num_NPCs > 0)
                 for (byte n = 0; n < Num_NPCs; n++)
                 {
-                    NPC.NPC = (NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString()));
+                    NPC.NPC = Entities.NPC.Get(new Guid(Data.ReadString()));
                     NPC.Zone = Data.ReadByte();
                     NPC.Spawn = Data.ReadBoolean();
                     NPC.X = Data.ReadByte();
@@ -214,7 +215,7 @@ namespace Network
         private static void NPCs(NetIncomingMessage Data)
         {
             // NPCs a serem removidas
-            Dictionary<Guid, NPC> ToRemove = new Dictionary<Guid, NPC>(Lists.NPC);
+            Dictionary<Guid, NPC> ToRemove = new Dictionary<Guid, NPC>(NPC.List);
 
             // Quantidade de NPCs
             short Count = Data.ReadInt16();
@@ -225,15 +226,15 @@ namespace Network
                 NPC NPC;
 
                 // Obtém o dado
-                if (Lists.NPC.ContainsKey(ID))
+                if (NPC.List.ContainsKey(ID))
                 {
-                    NPC = Lists.NPC[ID];
+                    NPC = NPC.List[ID];
                     ToRemove.Remove(ID);
                 }
                 else
                 {
                     NPC = new NPC(ID);
-                    Lists.NPC.Add(NPC.ID, NPC);
+                    NPC.List.Add(NPC.ID, NPC);
                 }
 
                 // Lê os dados
@@ -246,22 +247,22 @@ namespace Network
                 NPC.Sight = Data.ReadByte();
                 NPC.Experience = Data.ReadInt32();
                 for (byte n = 0; n < (byte)Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
-                for (byte n = 0, Size = Data.ReadByte(); n < Size; n++) NPC.Drop.Add(new NPC_Drop((Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte()));
+                for (byte n = 0, Size = Data.ReadByte(); n < Size; n++) NPC.Drop.Add(new NPC_Drop(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte()));
                 NPC.AttackNPC = Data.ReadBoolean();
-                for (byte n = 0, Size = Data.ReadByte(); n < Size; n++) NPC.Allie.Add((NPC)Lists.GetData(Lists.NPC, new Guid(Data.ReadString())));
+                for (byte n = 0, Size = Data.ReadByte(); n < Size; n++) NPC.Allie.Add(NPC.Get(new Guid(Data.ReadString())));
                 NPC.Movement = (NPC_Movements)Data.ReadByte();
                 NPC.Flee_Helth = Data.ReadByte();
-                NPC.Shop = (Shop)Lists.GetData(Lists.Shop, new Guid(Data.ReadString()));
+                NPC.Shop = Shop.Get(new Guid(Data.ReadString()));
             }
 
             // Remove os NPCs que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys) Lists.NPC.Remove(Remove);
+            foreach (Guid Remove in ToRemove.Keys) NPC.List.Remove(Remove);
         }
 
         private static void Items(NetIncomingMessage Data)
         {
             // Itens a serem removidas
-            Dictionary<Guid, Item> ToRemove = new Dictionary<Guid, Item>(Lists.Item);
+            Dictionary<Guid, Item> ToRemove = new Dictionary<Guid, Item>(Item.List);
 
             // Quantidade de itens
             short Count = Data.ReadInt16();
@@ -272,15 +273,15 @@ namespace Network
                 Item Item;
 
                 // Obtém o dado
-                if (Lists.Item.ContainsKey(ID))
+                if (Item.List.ContainsKey(ID))
                 {
-                    Item = Lists.Item[ID];
+                    Item = Item.List[ID];
                     ToRemove.Remove(ID);
                 }
                 else
                 {
                     Item = new Item(ID);
-                    Lists.Item.Add(Item.ID, Item);
+                    Item.List.Add(Item.ID, Item);
                 }
 
                 // Lê os dados
@@ -292,7 +293,7 @@ namespace Network
                 Item.Bind = Data.ReadByte();
                 Item.Rarity = Data.ReadByte();
                 Item.Req_Level = Data.ReadInt16();
-                Item.Req_Class = (Class)Lists.GetData(Lists.Class, new Guid(Data.ReadString()));
+                Item.Req_Class = Class.Get(new Guid(Data.ReadString()));
                 Item.Potion_Experience = Data.ReadInt32();
                 for (byte v = 0; v < (byte)Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
                 Item.Equip_Type = Data.ReadByte();
@@ -301,13 +302,13 @@ namespace Network
             }
 
             // Remove os itens que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys) Lists.Item.Remove(Remove);
+            foreach (Guid Remove in ToRemove.Keys) Item.List.Remove(Remove);
         }
 
         private static void Shops(NetIncomingMessage Data)
         {
             // Lojas a serem removidas
-            Dictionary<Guid, Shop> ToRemove = new Dictionary<Guid, Shop>(Lists.Shop);
+            Dictionary<Guid, Shop> ToRemove = new Dictionary<Guid, Shop>(Shop.List);
 
             // Quantidade de lojas
             short Count = Data.ReadInt16();
@@ -318,15 +319,15 @@ namespace Network
                 Shop Shop;
 
                 // Obtém o dado
-                if (Lists.Shop.ContainsKey(ID))
+                if (Shop.List.ContainsKey(ID))
                 {
-                    Shop = Lists.Shop[ID];
+                    Shop = Shop.List[ID];
                     ToRemove.Remove(ID);
                 }
                 else
                 {
                     Shop = new Shop(ID);
-                    Lists.Shop.Add(Shop.ID, Shop);
+                    Shop.List.Add(Shop.ID, Shop);
                 }
 
                 // Reseta os valores necessários
@@ -335,13 +336,13 @@ namespace Network
 
                 // Lê os dados
                 Shop.Name = Data.ReadString();
-                Shop.Currency = (Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString()));
-                for (byte j = 0, Size = Data.ReadByte(); j < Size; j++) Shop.Sold.Add(new Shop_Item((Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
-                for (byte j = 0, Size = Data.ReadByte(); j < Size; j++) Shop.Bought.Add(new Shop_Item((Item)Lists.GetData(Lists.Item, new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
+                Shop.Currency = Item.Get(new Guid(Data.ReadString()));
+                for (byte j = 0, Size = Data.ReadByte(); j < Size; j++) Shop.Sold.Add(new Shop_Item(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
+                for (byte j = 0, Size = Data.ReadByte(); j < Size; j++) Shop.Bought.Add(new Shop_Item(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadInt16()));
             }
 
             // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys) Lists.Shop.Remove(Remove);
+            foreach (Guid Remove in ToRemove.Keys) Shop.List.Remove(Remove);
         }
     }
 }

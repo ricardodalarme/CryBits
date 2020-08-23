@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using Objects;
-using static Utils;
+﻿using Entities;
+using System.Drawing;
+using static Logic.Game;
 
 namespace Logic
 {
@@ -68,7 +68,6 @@ namespace Logic
 
             // Define a posição da câmera
             Start_Sight.Y = Position.Y;
-
             Start_Sight.X = Position.X;
         }
     }

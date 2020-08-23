@@ -1,9 +1,10 @@
-﻿using Objects;
+﻿using Editors;
+using Entities;
+using Logic;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using static Utils;
 
 namespace Library
 {
@@ -12,9 +13,8 @@ namespace Library
         public static void Options()
         {
             // Lê os dados
-            FileStream Stream = Directories.Options.OpenRead();
-            Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);
-            Stream.Close();
+            using (var Stream = Directories.Options.OpenRead())
+                Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);
 
             // Define os dados
             Directories.SetClient();
@@ -38,13 +38,10 @@ namespace Library
             }
 
             // Cria um sistema binário para a manipulação dos dados
-            BinaryReader Data = new BinaryReader(File.OpenRead());
-
-            // Lê todos os nós
-            for (byte n = 0; n < Lists.Tool.Nodes.Count; n++) Tools(Lists.Tool.Nodes[n], Data);
-
-            // Fecha o sistema
-            Data.Dispose();
+            using (var Data = new BinaryReader(File.OpenRead()))
+                // Lê todos os nós
+                for (byte n = 0; n < Lists.Tool.Nodes.Count; n++)
+                    Tools(Lists.Tool.Nodes[n], Data);
         }
 
         public static void Tools(TreeNode Node, BinaryReader Data)
@@ -53,7 +50,7 @@ namespace Library
             byte Size = Data.ReadByte();
             for (byte i = 0; i < Size; i++)
             {
-                Objects.Tool Temp = new Objects.Tool();
+                Entities.Tool Temp = new Entities.Tool();
                 Tools_Types Type = (Tools_Types)Data.ReadByte();
 
                 // Lê a ferramenta
@@ -71,10 +68,10 @@ namespace Library
             }
         }
 
-        private static Objects.Button Button(BinaryReader Data)
+        private static Entities.Button Button(BinaryReader Data)
         {
             // Lê os dados
-            Objects.Button Tool = new Objects.Button
+            Entities.Button Tool = new Entities.Button
             {
                 Name = Data.ReadString(),
                 Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
@@ -85,10 +82,10 @@ namespace Library
             return Tool;
         }
 
-        private static Objects.TextBox TextBox(BinaryReader Data)
+        private static Entities.TextBox TextBox(BinaryReader Data)
         {
             // Lê os dados
-            Objects.TextBox Tool = new Objects.TextBox
+            Entities.TextBox Tool = new Entities.TextBox
             {
                 Name = Data.ReadString(),
                 Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
@@ -101,10 +98,10 @@ namespace Library
             return Tool;
         }
 
-        private static Objects.Panel Panel(BinaryReader Data)
+        private static Entities.Panel Panel(BinaryReader Data)
         {
             // Carrega os dados
-            Objects.Panel Tool = new Objects.Panel
+            Entities.Panel Tool = new Entities.Panel
             {
                 Name = Data.ReadString(),
                 Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
@@ -115,10 +112,10 @@ namespace Library
             return Tool;
         }
 
-        private static Objects.CheckBox CheckBox(BinaryReader Data)
+        private static Entities.CheckBox CheckBox(BinaryReader Data)
         {
             // Carrega os dados
-            Objects.CheckBox Tool = new Objects.CheckBox
+            Entities.CheckBox Tool = new Entities.CheckBox
             {
                 Name = Data.ReadString(),
                 Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
@@ -144,15 +141,14 @@ namespace Library
             // Evita erros
             if (!File.Exists)
             {
-                Clear.Tile(Index);
+                Lists.Tile[Index] = new Tile(Index);
                 Write.Tile(Index);
                 return;
             }
 
             // Lê os dados
-            FileStream Stream = File.OpenRead();
-            Lists.Tile[Index] = (Tile)new BinaryFormatter().Deserialize(Stream);
-            Stream.Close();
+            // using (var Stream = File.OpenRead())
+            // Lists.Tile[Index] = (Tile)new BinaryFormatter().Deserialize(Stream);
         }
     }
 }

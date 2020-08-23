@@ -1,9 +1,11 @@
-﻿using Network;
+﻿using Interface;
+using Library;
+using Logic;
+using Network;
 using System;
 using System.Windows.Forms;
-using Library;
 
-class Program
+static class Program
 {
     // Usado para manter a aplicação aberta
     public static bool Working = true;
@@ -18,7 +20,7 @@ class Program
         Read.Data();
 
         // Abre a janela
-        Interface.Windows.OpenMenu();
+        Windows.OpenMenu();
 
         // Inicializa todos os dispositivos
         Socket.Init();

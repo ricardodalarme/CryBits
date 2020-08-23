@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Program</StartupObject>
+    <StartupObject>Logic.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -68,31 +68,35 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interface\Chat.cs" />
-    <Compile Include="Interface\Windows.cs" />
+    <Compile Include="Logic\Enums.cs" />
+    <Compile Include="Logic\Game.cs" />
+    <Compile Include="Logic\MapAutoTile.cs" />
+    <Compile Include="Logic\Options.cs" />
+    <Compile Include="UI\Chat.cs" />
+    <Compile Include="UI\Windows.cs" />
     <Compile Include="Logic\Camera.cs" />
-    <Compile Include="Objects\Character.cs" />
-    <Compile Include="Objects\Data.cs" />
-    <Compile Include="Objects\Item.cs" />
-    <Compile Include="Objects\Map.cs" />
-    <Compile Include="Objects\NPC.cs" />
-    <Compile Include="Objects\Class.cs" />
-    <Compile Include="Objects\Shop.cs" />
-    <Compile Include="Objects\TMap.cs" />
+    <Compile Include="Entities\Character.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Item.cs" />
+    <Compile Include="Entities\Map.cs" />
+    <Compile Include="Entities\NPC.cs" />
+    <Compile Include="Entities\Class.cs" />
+    <Compile Include="Entities\Shop.cs" />
+    <Compile Include="Entities\TempMap.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Interface\Buttons.cs" />
-    <Compile Include="Interface\CheckBoxes.cs" />
-    <Compile Include="Interface\Panels.cs" />
-    <Compile Include="Interface\TextBoxes.cs" />
-    <Compile Include="Interface\Tools.cs" />
+    <Compile Include="UI\Buttons.cs" />
+    <Compile Include="UI\CheckBoxes.cs" />
+    <Compile Include="UI\Panels.cs" />
+    <Compile Include="UI\TextBoxes.cs" />
+    <Compile Include="UI\Tools.cs" />
     <Compile Include="Library\Directories.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Library\Write.cs" />
     <Compile Include="Logic\Utils.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Logic\Mapper.cs" />
-    <Compile Include="Objects\TNPC.cs" />
-    <Compile Include="Objects\Player.cs" />
+    <Compile Include="Entities\TempNPC.cs" />
+    <Compile Include="Entities\Player.cs" />
     <Compile Include="Media\Audio.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Network\Receive.cs" />

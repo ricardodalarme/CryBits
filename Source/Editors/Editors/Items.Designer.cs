@@ -1,31 +1,33 @@
-﻿partial class Editor_Items
+﻿namespace Editors
 {
-    /// <summary>
-    /// Required designer variable.
-    /// </summary>
-    private System.ComponentModel.IContainer components = null;
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
+    partial class Editor_Items
     {
-        if (disposing && (components != null))
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
-            components.Dispose();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
-        base.Dispose(disposing);
-    }
 
-    #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Items));
             this.grpGeneral = new System.Windows.Forms.GroupBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
@@ -677,56 +679,57 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
-    }
+        }
 
-    #endregion
-    private System.Windows.Forms.GroupBox grpGeneral;
-    public System.Windows.Forms.TextBox txtName;
-    private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.Button butSave;
-    private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.ComboBox cmbType;
-    private System.Windows.Forms.GroupBox grpRequirements;
-    private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.ComboBox cmbReq_Class;
-    private System.Windows.Forms.NumericUpDown numReq_Level;
-    private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.Label label12;
-    private System.Windows.Forms.NumericUpDown numPotion_Experience;
-    private System.Windows.Forms.Label label9;
-    private System.Windows.Forms.NumericUpDown numPotion_MP;
-    private System.Windows.Forms.NumericUpDown numPotion_HP;
-    private System.Windows.Forms.Label lblMP;
-    private System.Windows.Forms.GroupBox grpPotion;
-    private System.Windows.Forms.Label label14;
-    public System.Windows.Forms.TextBox txtDescription;
-    private System.Windows.Forms.Label label15;
-    private System.Windows.Forms.CheckBox chkStackable;
-    private System.Windows.Forms.GroupBox grpEquipment;
-    private System.Windows.Forms.ComboBox cmbEquipment_Type;
-    private System.Windows.Forms.Label label20;
-    private System.Windows.Forms.Label label19;
-    private System.Windows.Forms.ComboBox cmbRarity;
-    private System.Windows.Forms.ComboBox cmbBind;
-    private System.Windows.Forms.TreeView List;
-    private System.Windows.Forms.Button butRemove;
-    private System.Windows.Forms.Button butNew;
-    public System.Windows.Forms.TextBox txtFilter;
-    private System.Windows.Forms.NumericUpDown numWeapon_Damage;
-    private System.Windows.Forms.NumericUpDown numEquip_Strength;
-    private System.Windows.Forms.Label label10;
-    public System.Windows.Forms.Label lblWeapon_Damage;
-    private System.Windows.Forms.Label label8;
-    private System.Windows.Forms.NumericUpDown numEquip_Vitality;
-    private System.Windows.Forms.Label label7;
-    private System.Windows.Forms.Label label6;
-    private System.Windows.Forms.NumericUpDown numEquip_Resistance;
-    private System.Windows.Forms.Label label13;
-    private System.Windows.Forms.Label label11;
-    private System.Windows.Forms.NumericUpDown numEquip_Intelligence;
-    private System.Windows.Forms.NumericUpDown numEquip_Agility;
-    public System.Windows.Forms.NumericUpDown numTexture;
-    private System.Windows.Forms.PictureBox picTexture;
+        #endregion
+        private System.Windows.Forms.GroupBox grpGeneral;
+        public System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button butSave;
+        private System.Windows.Forms.Button butCancel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox cmbType;
+        private System.Windows.Forms.GroupBox grpRequirements;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox cmbReq_Class;
+        private System.Windows.Forms.NumericUpDown numReq_Level;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown numPotion_Experience;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown numPotion_MP;
+        private System.Windows.Forms.NumericUpDown numPotion_HP;
+        private System.Windows.Forms.Label lblMP;
+        private System.Windows.Forms.GroupBox grpPotion;
+        private System.Windows.Forms.Label label14;
+        public System.Windows.Forms.TextBox txtDescription;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.CheckBox chkStackable;
+        private System.Windows.Forms.GroupBox grpEquipment;
+        private System.Windows.Forms.ComboBox cmbEquipment_Type;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.ComboBox cmbRarity;
+        private System.Windows.Forms.ComboBox cmbBind;
+        private System.Windows.Forms.TreeView List;
+        private System.Windows.Forms.Button butRemove;
+        private System.Windows.Forms.Button butNew;
+        public System.Windows.Forms.TextBox txtFilter;
+        private System.Windows.Forms.NumericUpDown numWeapon_Damage;
+        private System.Windows.Forms.NumericUpDown numEquip_Strength;
+        private System.Windows.Forms.Label label10;
+        public System.Windows.Forms.Label lblWeapon_Damage;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown numEquip_Vitality;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numEquip_Resistance;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown numEquip_Intelligence;
+        private System.Windows.Forms.NumericUpDown numEquip_Agility;
+        public System.Windows.Forms.NumericUpDown numTexture;
+        private System.Windows.Forms.PictureBox picTexture;
+    }
 }

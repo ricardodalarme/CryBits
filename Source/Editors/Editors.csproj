@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Program</StartupObject>
+    <StartupObject>Logic.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -115,7 +115,6 @@
     </Compile>
     <Compile Include="Library\Directories.cs" />
     <Compile Include="Library\Write.cs" />
-    <Compile Include="Library\Clear.cs" />
     <Compile Include="Editors\Items.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,6 +139,7 @@
     <Compile Include="Editors\NPCs.Designer.cs">
       <DependentUpon>NPCs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\MapAutoTile.cs" />
     <Compile Include="Logic\MapProperties.cs" />
     <Compile Include="Media\Graphics.cs" />
@@ -160,14 +160,14 @@
     <Compile Include="Network\Receive.cs" />
     <Compile Include="Network\Send.cs" />
     <Compile Include="Network\Socket.cs" />
-    <Compile Include="Objects\Class.cs" />
-    <Compile Include="Objects\Data.cs" />
-    <Compile Include="Objects\Interface.cs" />
-    <Compile Include="Objects\Item.cs" />
-    <Compile Include="Objects\Map.cs" />
-    <Compile Include="Objects\NPC.cs" />
-    <Compile Include="Objects\Shop.cs" />
-    <Compile Include="Objects\Tile.cs" />
+    <Compile Include="Entities\Class.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Interface.cs" />
+    <Compile Include="Entities\Item.cs" />
+    <Compile Include="Entities\Map.cs" />
+    <Compile Include="Entities\NPC.cs" />
+    <Compile Include="Entities\Shop.cs" />
+    <Compile Include="Entities\Tile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Library\Lists.cs" />

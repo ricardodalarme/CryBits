@@ -1,31 +1,33 @@
-﻿partial class Editor_Interface
+﻿namespace Editors
 {
-    /// <summary>
-    /// Required designer variable.
-    /// </summary>
-    private System.ComponentModel.IContainer components = null;
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
+    partial class Editor_Interface
     {
-        if (disposing && (components != null))
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
-            components.Dispose();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
-        base.Dispose(disposing);
-    }
 
-    #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Interface));
             this.picWindow = new System.Windows.Forms.PictureBox();
             this.butNew = new System.Windows.Forms.Button();
@@ -258,25 +260,26 @@
             this.grpNew.PerformLayout();
             this.ResumeLayout(false);
 
-    }
+        }
 
-    #endregion
-    private System.Windows.Forms.Button butNew;
-    private System.Windows.Forms.Button butRemove;
-    public System.Windows.Forms.ComboBox cmbWindows;
-    public System.Windows.Forms.PictureBox picWindow;
-    private System.Windows.Forms.GroupBox grpOrder;
-    private System.Windows.Forms.GroupBox grpProperties;
-    private System.Windows.Forms.PropertyGrid prgProperties;
-    public System.Windows.Forms.TreeView treOrder;
-    private System.Windows.Forms.Button butOrder_Down;
-    private System.Windows.Forms.Button butOrder_Up;
-    private System.Windows.Forms.Button butOrder_Unpin;
-    private System.Windows.Forms.Button butOrder_Pin;
-    private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Button butSaveAll;
-    private System.Windows.Forms.GroupBox grpNew;
-    private System.Windows.Forms.Button butConfirm;
-    public System.Windows.Forms.ComboBox cmbType;
-    private System.Windows.Forms.Label label1;
+        #endregion
+        private System.Windows.Forms.Button butNew;
+        private System.Windows.Forms.Button butRemove;
+        public System.Windows.Forms.ComboBox cmbWindows;
+        public System.Windows.Forms.PictureBox picWindow;
+        private System.Windows.Forms.GroupBox grpOrder;
+        private System.Windows.Forms.GroupBox grpProperties;
+        private System.Windows.Forms.PropertyGrid prgProperties;
+        public System.Windows.Forms.TreeView treOrder;
+        private System.Windows.Forms.Button butOrder_Down;
+        private System.Windows.Forms.Button butOrder_Up;
+        private System.Windows.Forms.Button butOrder_Unpin;
+        private System.Windows.Forms.Button butOrder_Pin;
+        private System.Windows.Forms.Button butCancel;
+        private System.Windows.Forms.Button butSaveAll;
+        private System.Windows.Forms.GroupBox grpNew;
+        private System.Windows.Forms.Button butConfirm;
+        public System.Windows.Forms.ComboBox cmbType;
+        private System.Windows.Forms.Label label1;
+    }
 }

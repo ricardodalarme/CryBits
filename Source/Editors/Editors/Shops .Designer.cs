@@ -1,31 +1,33 @@
-﻿partial class Editor_Shops
+﻿namespace Editors
 {
-    /// <summary>
-    /// Required designer variable.
-    /// </summary>
-    private System.ComponentModel.IContainer components = null;
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
+    partial class Editor_Shops
     {
-        if (disposing && (components != null))
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
-            components.Dispose();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
-        base.Dispose(disposing);
-    }
 
-    #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Shops));
             this.butSave = new System.Windows.Forms.Button();
             this.butCancel = new System.Windows.Forms.Button();
@@ -372,34 +374,35 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
-    }
+        }
 
-    #endregion
-    private System.Windows.Forms.Button butSave;
-    private System.Windows.Forms.Button butCancel;
-    public System.Windows.Forms.TextBox txtName;
-    private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.ListBox lstSold;
-    private System.Windows.Forms.GroupBox grpGeneral;
-    private System.Windows.Forms.GroupBox grpSold;
-    private System.Windows.Forms.GroupBox grpBought;
-    private System.Windows.Forms.ListBox lstBought;
-    private System.Windows.Forms.Button butSold_Remove;
-    private System.Windows.Forms.Button butSold_Add;
-    private System.Windows.Forms.Button butBought_Remove;
-    private System.Windows.Forms.Button butBought_Add;
-    private System.Windows.Forms.GroupBox grpAddItem;
-    private System.Windows.Forms.NumericUpDown numAmount;
-    private System.Windows.Forms.NumericUpDown numPrice;
-    private System.Windows.Forms.ComboBox cmbItems;
-    private System.Windows.Forms.Button butConfirm;
-    private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.ComboBox cmbCurrency;
-    private System.Windows.Forms.Button butNew;
-    private System.Windows.Forms.Button butRemove;
-    private System.Windows.Forms.TreeView List;
-    public System.Windows.Forms.TextBox txtFilter;
+        #endregion
+        private System.Windows.Forms.Button butSave;
+        private System.Windows.Forms.Button butCancel;
+        public System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListBox lstSold;
+        private System.Windows.Forms.GroupBox grpGeneral;
+        private System.Windows.Forms.GroupBox grpSold;
+        private System.Windows.Forms.GroupBox grpBought;
+        private System.Windows.Forms.ListBox lstBought;
+        private System.Windows.Forms.Button butSold_Remove;
+        private System.Windows.Forms.Button butSold_Add;
+        private System.Windows.Forms.Button butBought_Remove;
+        private System.Windows.Forms.Button butBought_Add;
+        private System.Windows.Forms.GroupBox grpAddItem;
+        private System.Windows.Forms.NumericUpDown numAmount;
+        private System.Windows.Forms.NumericUpDown numPrice;
+        private System.Windows.Forms.ComboBox cmbItems;
+        private System.Windows.Forms.Button butConfirm;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox cmbCurrency;
+        private System.Windows.Forms.Button butNew;
+        private System.Windows.Forms.Button butRemove;
+        private System.Windows.Forms.TreeView List;
+        public System.Windows.Forms.TextBox txtFilter;
+    }
 }

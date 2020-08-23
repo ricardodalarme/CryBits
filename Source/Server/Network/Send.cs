@@ -1,5 +1,6 @@
-﻿using Lidgren.Network;
-using Objects;
+﻿using Entities;
+using Lidgren.Network;
+using Logic;
 using System.Drawing;
 using static Logic.Utils;
 
@@ -97,7 +98,7 @@ namespace Network
                         ToPlayer(Account.List[i].Character, Data);
         }
 
-        private static void ToMap(TMap Map, NetOutgoingMessage Data)
+        private static void ToMap(TempMap Map, NetOutgoingMessage Data)
         {
             // Envia os dados para todos conectados, com excessão do índice
             for (byte i = 0; i < Account.List.Count; i++)
@@ -106,7 +107,7 @@ namespace Network
                         ToPlayer(Account.List[i].Character, Data);
         }
 
-        private static void ToMapBut(TMap Map, Player Player, NetOutgoingMessage Data)
+        private static void ToMapBut(TempMap Map, Player Player, NetOutgoingMessage Data)
         {
             // Envia os dados para todos conectados, com excessão do índice
             for (byte i = 0; i < Account.List.Count; i++)
@@ -200,7 +201,7 @@ namespace Network
                 // Apenas dados do editor
                 if (Account.InEditor)
                 {
-                    Data.Write(GetID(Class.Spawn_Map));
+                    Data.Write(Entity.GetID(Class.Spawn_Map));
                     Data.Write(Class.Spawn_Direction);
                     Data.Write(Class.Spawn_X);
                     Data.Write(Class.Spawn_Y);
@@ -209,7 +210,7 @@ namespace Network
                     Data.Write((byte)Class.Item.Length);
                     for (byte n = 0; n < (byte)Class.Item.Length; n++)
                     {
-                        Data.Write(GetID(Class.Item[n].Item1));
+                        Data.Write(Entity.GetID(Class.Item[n].Item1));
                         Data.Write(Class.Item[n].Item2);
                     }
                 }
@@ -237,7 +238,7 @@ namespace Network
             Data.Write(Player.Name);
             Data.Write(Player.Texture_Num);
             Data.Write(Player.Level);
-            Data.Write(GetID(Player.Map));
+            Data.Write(Entity.GetID(Player.Map));
             Data.Write(Player.X);
             Data.Write(Player.Y);
             Data.Write((byte)Player.Direction);
@@ -247,7 +248,7 @@ namespace Network
                 Data.Write(Player.MaxVital(n));
             }
             for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(Player.Attribute[n]);
-            for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(GetID(Player.Equipment[n]));
+            for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(Entity.GetID(Player.Equipment[n]));
 
             return Data;
         }
@@ -335,7 +336,7 @@ namespace Network
             // Envia os dados
             Data.Write((byte)Client_Packets.Player_Equipments);
             Data.Write(Player.Name);
-            for (byte i = 0; i < (byte)Equipments.Count; i++) Data.Write(GetID(Player.Equipment[i]));
+            for (byte i = 0; i < (byte)Equipments.Count; i++) Data.Write(Entity.GetID(Player.Equipment[i]));
             ToMap(Player.Map, Data);
         }
 
@@ -361,7 +362,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Player_LeaveMap(Player Player, TMap Map)
+        public static void Player_LeaveMap(Player Player, TempMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -377,7 +378,7 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Client_Packets.Map_Revision);
-            Data.Write(GetID(Map));
+            Data.Write(Entity.GetID(Map));
             Data.Write(Map.Revision);
             ToPlayer(Player, Data);
         }
@@ -388,9 +389,9 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Editor_Packets.Maps);
-            Data.Write((short)Objects.Map.List.Count);
+            Data.Write((short)Entities.Map.List.Count);
             ToPlayer(Account, Data);
-            foreach (Map Map in Objects.Map.List.Values) Send.Map(Account, Map);
+            foreach (Map Map in Entities.Map.List.Values) Send.Map(Account, Map);
         }
 
         public static void Map(Account Account, Map Map)
@@ -400,7 +401,7 @@ namespace Network
             // Envia os dados
             if (Account.InEditor) Data.Write((byte)Editor_Packets.Map);
             else Data.Write((byte)Client_Packets.Map);
-            Data.Write(GetID(Map));
+            Data.Write(Entity.GetID(Map));
             Data.Write(Map.Revision);
             Data.Write(Map.Name);
             Data.Write(Map.Moral);
@@ -417,7 +418,7 @@ namespace Network
 
             // Ligações
             for (short i = 0; i < (short)Directions.Count; i++)
-                Data.Write(GetID(Map.Link[i]));
+                Data.Write(Entity.GetID(Map.Link[i]));
 
             // Camadas
             Data.Write((byte)Map.Layer.Length);
@@ -467,7 +468,7 @@ namespace Network
             Data.Write((byte)Map.NPC.Length);
             for (byte i = 0; i < Map.NPC.Length; i++)
             {
-                Data.Write(GetID(Map.NPC[i].NPC));
+                Data.Write(Entity.GetID(Map.NPC[i].NPC));
                 Data.Write(Map.NPC[i].Zone);
                 Data.Write(Map.NPC[i].Spawn);
                 Data.Write(Map.NPC[i].X);
@@ -567,7 +568,7 @@ namespace Network
                 Data.Write(Item.Bind);
                 Data.Write(Item.Rarity);
                 Data.Write(Item.Req_Level);
-                Data.Write(GetID(Item.Req_Class));
+                Data.Write(Entity.GetID(Item.Req_Class));
                 Data.Write(Item.Potion_Experience);
                 for (byte v = 0; v < (byte)Vitals.Count; v++) Data.Write(Item.Potion_Vital[v]);
                 Data.Write(Item.Equip_Type);
@@ -579,7 +580,7 @@ namespace Network
             ToPlayer(Account, Data);
         }
 
-        public static void Map_Items(Player Player, TMap Map)
+        public static void Map_Items(Player Player, TempMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -590,7 +591,7 @@ namespace Network
             for (byte i = 0; i < Map.Item.Count; i++)
             {
                 // Geral
-                Data.Write(GetID(Map.Item[i].Item));
+                Data.Write(Entity.GetID(Map.Item[i].Item));
                 Data.Write(Map.Item[i].X);
                 Data.Write(Map.Item[i].Y);
             }
@@ -599,7 +600,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Map_Items(TMap Map)
+        public static void Map_Items(TempMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -608,7 +609,7 @@ namespace Network
             Data.Write((byte)Map.Item.Count);
             for (byte i = 0; i < Map.Item.Count; i++)
             {
-                Data.Write(GetID(Map.Item[i].Item));
+                Data.Write(Entity.GetID(Map.Item[i].Item));
                 Data.Write(Map.Item[i].X);
                 Data.Write(Map.Item[i].Y);
             }
@@ -623,7 +624,7 @@ namespace Network
             Data.Write((byte)Client_Packets.Player_Inventory);
             for (byte i = 1; i <= Max_Inventory; i++)
             {
-                Data.Write(GetID(Player.Inventory[i].Item));
+                Data.Write(Entity.GetID(Player.Inventory[i].Item));
                 Data.Write(Player.Inventory[i].Amount);
             }
             ToPlayer(Player, Data);
@@ -671,22 +672,22 @@ namespace Network
                     Data.Write((byte)NPC.Drop.Length);
                     for (byte n = 0; n < NPC.Drop.Length; n++)
                     {
-                        Data.Write(GetID(NPC.Drop[n].Item));
+                        Data.Write(Entity.GetID(NPC.Drop[n].Item));
                         Data.Write(NPC.Drop[n].Amount);
                         Data.Write(NPC.Drop[n].Chance);
                     }
                     Data.Write(NPC.AttackNPC);
                     Data.Write((byte)NPC.Allie.Length);
-                    for (byte n = 0; n < NPC.Allie.Length; n++) Data.Write(GetID(NPC.Allie[n]));
+                    for (byte n = 0; n < NPC.Allie.Length; n++) Data.Write(Entity.GetID(NPC.Allie[n]));
                     Data.Write((byte)NPC.Movement);
                     Data.Write(NPC.Flee_Helth);
-                    Data.Write(GetID(NPC.Shop));
+                    Data.Write(Entity.GetID(NPC.Shop));
                 }
             }
             ToPlayer(Account, Data);
         }
 
-        public static void Map_NPCs(Player Player, TMap Map)
+        public static void Map_NPCs(Player Player, TempMap Map)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -695,7 +696,7 @@ namespace Network
             Data.Write((short)Map.NPC.Length);
             for (byte i = 0; i < Map.NPC.Length; i++)
             {
-                Data.Write(GetID(Map.NPC[i].Data));
+                Data.Write(Entity.GetID(Map.NPC[i].Data));
                 Data.Write(Map.NPC[i].X);
                 Data.Write(Map.NPC[i].Y);
                 Data.Write((byte)Map.NPC[i].Direction);
@@ -704,14 +705,14 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Map_NPC(TNPC NPC)
+        public static void Map_NPC(TempNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
             // Envia os dados
             Data.Write((byte)Client_Packets.Map_NPC);
             Data.Write(NPC.Index);
-            Data.Write(GetID(NPC.Data));
+            Data.Write(Entity.GetID(NPC.Data));
             Data.Write(NPC.X);
             Data.Write(NPC.Y);
             Data.Write((byte)NPC.Direction);
@@ -719,7 +720,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Movement(TNPC NPC, byte Movement)
+        public static void Map_NPC_Movement(TempNPC NPC, byte Movement)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -733,7 +734,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Direction(TNPC NPC)
+        public static void Map_NPC_Direction(TempNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -744,7 +745,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Vitals(TNPC NPC)
+        public static void Map_NPC_Vitals(TempNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -755,7 +756,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Attack(TNPC NPC, string Victim = "", Targets Victim_Type = 0)
+        public static void Map_NPC_Attack(TempNPC NPC, string Victim = "", Targets Victim_Type = 0)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -767,7 +768,7 @@ namespace Network
             ToMap(NPC.Map, Data);
         }
 
-        public static void Map_NPC_Died(TNPC NPC)
+        public static void Map_NPC_Died(TempNPC NPC)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -839,7 +840,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Trade_State(Player Player, Trade_Status State)
+        public static void Trade_State(Player Player, TradeStatus State)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -859,7 +860,7 @@ namespace Network
             Data.Write(Own);
             for (byte i = 1; i <= Max_Inventory; i++)
             {
-                Data.Write(GetID(To.Inventory[To.Trade_Offer[i].Slot_Num].Item));
+                Data.Write(Entity.GetID(To.Inventory[To.Trade_Offer[i].Slot_Num].Item));
                 Data.Write(To.Trade_Offer[i].Amount);
             }
             ToPlayer(Player, Data);
@@ -878,18 +879,18 @@ namespace Network
                 // Geral
                 Data.Write(Shop.ID.ToString());
                 Data.Write(Shop.Name);
-                Data.Write(GetID(Shop.Currency));
+                Data.Write(Entity.GetID(Shop.Currency));
                 Data.Write((byte)Shop.Sold.Length);
                 for (byte j = 0; j < Shop.Sold.Length; j++)
                 {
-                    Data.Write(GetID(Shop.Sold[j].Item));
+                    Data.Write(Entity.GetID(Shop.Sold[j].Item));
                     Data.Write(Shop.Sold[j].Amount);
                     Data.Write(Shop.Sold[j].Price);
                 }
                 Data.Write((byte)Shop.Bought.Length);
                 for (byte j = 0; j < Shop.Bought.Length; j++)
                 {
-                    Data.Write(GetID(Shop.Bought[j].Item));
+                    Data.Write(Entity.GetID(Shop.Bought[j].Item));
                     Data.Write(Shop.Bought[j].Amount);
                     Data.Write(Shop.Bought[j].Price);
                 }
@@ -903,7 +904,7 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Client_Packets.Shop_Open);
-            Data.Write(GetID(Shop));
+            Data.Write(Entity.GetID(Shop));
             ToPlayer(Player, Data);
         }
     }

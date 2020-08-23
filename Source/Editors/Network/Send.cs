@@ -1,6 +1,7 @@
-﻿using Lidgren.Network;
-using Objects;
-using static Utils;
+﻿using Editors;
+using Entities;
+using Lidgren.Network;
+using Logic;
 
 namespace Network
 {
@@ -134,8 +135,8 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Packets.Write_Classes);
-            Data.Write((byte)Lists.Class.Count);
-            foreach (Class Class in Lists.Class.Values)
+            Data.Write((byte)Class.List.Count);
+            foreach (Class Class in Class.List.Values)
             {
                 // Escreve os dados
                 Data.Write(Class.ID.ToString());
@@ -146,7 +147,7 @@ namespace Network
                 Data.Write(Class.Description);
                 for (byte i = 0; i < Class.Tex_Male.Count; i++) Data.Write(Class.Tex_Male[i]);
                 for (byte i = 0; i < Class.Tex_Female.Count; i++) Data.Write(Class.Tex_Female[i]);
-                Data.Write(Lists.GetID(Class.Spawn_Map));
+                Data.Write(Entity.GetID(Class.Spawn_Map));
                 Data.Write(Class.Spawn_Direction);
                 Data.Write(Class.Spawn_X);
                 Data.Write(Class.Spawn_Y);
@@ -154,7 +155,7 @@ namespace Network
                 for (byte i = 0; i < (byte)Attributes.Count; i++) Data.Write(Class.Attribute[i]);
                 for (byte i = 0; i < Class.Item.Count; i++)
                 {
-                    Data.Write(Lists.GetID(Class.Item[i].Item));
+                    Data.Write(Entity.GetID(Class.Item[i].Item));
                     Data.Write(Class.Item[i].Amount);
                 }
             }
@@ -167,8 +168,8 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Packets.Write_Maps);
-            Data.Write((byte)Lists.Map.Count);
-            foreach (Map Map in Lists.Map.Values)
+            Data.Write((byte)Map.List.Count);
+            foreach (Map Map in Map.List.Values)
             {
                 // Escreve os dados
                 Data.Write(Map.ID.ToString());
@@ -188,7 +189,7 @@ namespace Network
 
                 // Ligações
                 for (short i = 0; i < (short)Directions.Count; i++)
-                    Data.Write(Lists.GetID(Map.Link[i]));
+                    Data.Write(Entity.GetID(Map.Link[i]));
 
                 // Camadas
                 Data.Write((byte)Map.Layer.Count);
@@ -238,7 +239,7 @@ namespace Network
                 Data.Write((byte)Map.NPC.Count);
                 for (byte i = 0; i < Map.NPC.Count; i++)
                 {
-                    Data.Write(Lists.GetID(Map.NPC[i].NPC));
+                    Data.Write(Entity.GetID(Map.NPC[i].NPC));
                     Data.Write(Map.NPC[i].Zone);
                     Data.Write(Map.NPC[i].Spawn);
                     Data.Write(Map.NPC[i].X);
@@ -254,8 +255,8 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Packets.Write_NPCs);
-            Data.Write((short)Lists.NPC.Count);
-            foreach (NPC NPC in Lists.NPC.Values)
+            Data.Write((short)NPC.List.Count);
+            foreach (NPC NPC in NPC.List.Values)
             {
                 // Geral
                 Data.Write(NPC.ID.ToString());
@@ -271,16 +272,16 @@ namespace Network
                 Data.Write((byte)NPC.Drop.Count);
                 for (byte i = 0; i < NPC.Drop.Count; i++)
                 {
-                    Data.Write(Lists.GetID(NPC.Drop[i].Item));
+                    Data.Write(Entity.GetID(NPC.Drop[i].Item));
                     Data.Write(NPC.Drop[i].Amount);
                     Data.Write(NPC.Drop[i].Chance);
                 }
                 Data.Write(NPC.AttackNPC);
                 Data.Write((byte)NPC.Allie.Count);
-                for (byte i = 0; i < NPC.Allie.Count; i++) Data.Write(Lists.GetID(NPC.Allie[i]));
+                for (byte i = 0; i < NPC.Allie.Count; i++) Data.Write(Entity.GetID(NPC.Allie[i]));
                 Data.Write((byte)NPC.Movement);
                 Data.Write(NPC.Flee_Helth);
-                Data.Write(Lists.GetID(NPC.Shop));
+                Data.Write(Entity.GetID(NPC.Shop));
             }
             Packet(Data);
         }
@@ -291,8 +292,8 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Packets.Write_Items);
-            Data.Write((short)Lists.Item.Count);
-            foreach (Item Item in Lists.Item.Values)
+            Data.Write((short)Item.List.Count);
+            foreach (Item Item in Item.List.Values)
             {
                 // Geral
                 Data.Write(Item.ID.ToString());
@@ -304,7 +305,7 @@ namespace Network
                 Data.Write(Item.Bind);
                 Data.Write(Item.Rarity);
                 Data.Write(Item.Req_Level);
-                Data.Write(Lists.GetID(Item.Req_Class));
+                Data.Write(Entity.GetID(Item.Req_Class));
                 Data.Write(Item.Potion_Experience);
                 for (byte i = 0; i < (byte)Vitals.Count; i++) Data.Write(Item.Potion_Vital[i]);
                 Data.Write(Item.Equip_Type);
@@ -320,24 +321,24 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Packets.Write_Shops);
-            Data.Write((short)Lists.Shop.Count);
-            foreach (Shop Shop in Lists.Shop.Values)
+            Data.Write((short)Shop.List.Count);
+            foreach (Shop Shop in Shop.List.Values)
             {
                 // Geral
                 Data.Write(Shop.ID.ToString());
                 Data.Write((byte)Shop.Sold.Count);
                 Data.Write((byte)Shop.Bought.Count);
                 Data.Write(Shop.Name);
-                Data.Write(Lists.GetID(Shop.Currency));
+                Data.Write(Entity.GetID(Shop.Currency));
                 for (byte j = 0; j < Shop.Sold.Count; j++)
                 {
-                    Data.Write(Lists.GetID(Shop.Sold[j].Item));
+                    Data.Write(Entity.GetID(Shop.Sold[j].Item));
                     Data.Write(Shop.Sold[j].Amount);
                     Data.Write(Shop.Sold[j].Price);
                 }
                 for (byte j = 0; j < Shop.Bought.Count; j++)
                 {
-                    Data.Write(Lists.GetID(Shop.Bought[j].Item));
+                    Data.Write(Entity.GetID(Shop.Bought[j].Item));
                     Data.Write(Shop.Bought[j].Amount);
                     Data.Write(Shop.Bought[j].Price);
                 }

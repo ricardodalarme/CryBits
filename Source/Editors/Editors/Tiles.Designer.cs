@@ -1,31 +1,33 @@
-﻿partial class Editor_Tiles
+﻿namespace Editors
 {
-    /// <summary>
-    /// Required designer variable.
-    /// </summary>
-    private System.ComponentModel.IContainer components = null;
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
+    partial class Editor_Tiles
     {
-        if (disposing && (components != null))
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
-            components.Dispose();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
-        base.Dispose(disposing);
-    }
 
-    #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Tiles));
             this.scrlTileX = new System.Windows.Forms.HScrollBar();
             this.scrlTileY = new System.Windows.Forms.VScrollBar();
@@ -211,21 +213,22 @@
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
+        }
+
+        #endregion
+
+        public System.Windows.Forms.HScrollBar scrlTileX;
+        public System.Windows.Forms.VScrollBar scrlTileY;
+        public System.Windows.Forms.PictureBox picTile;
+        private System.Windows.Forms.GroupBox grpAttributes;
+        private System.Windows.Forms.Button butClear;
+        private System.Windows.Forms.Button butCancel;
+        private System.Windows.Forms.Button butSave;
+        private System.Windows.Forms.RadioButton optBlock;
+        private System.Windows.Forms.GroupBox grpTile;
+        public System.Windows.Forms.HScrollBar scrlTile;
+        private System.Windows.Forms.GroupBox groupBox2;
+        public System.Windows.Forms.RadioButton optDirBlock;
+        public System.Windows.Forms.RadioButton optAttributes;
     }
-
-    #endregion
-
-    public System.Windows.Forms.HScrollBar scrlTileX;
-    public System.Windows.Forms.VScrollBar scrlTileY;
-    public System.Windows.Forms.PictureBox picTile;
-    private System.Windows.Forms.GroupBox grpAttributes;
-    private System.Windows.Forms.Button butClear;
-    private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Button butSave;
-    private System.Windows.Forms.RadioButton optBlock;
-    private System.Windows.Forms.GroupBox grpTile;
-    public System.Windows.Forms.HScrollBar scrlTile;
-    private System.Windows.Forms.GroupBox groupBox2;
-    public System.Windows.Forms.RadioButton optDirBlock;
-    public System.Windows.Forms.RadioButton optAttributes;
 }

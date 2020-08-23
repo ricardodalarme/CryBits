@@ -1,31 +1,33 @@
-﻿partial class Editor_Data
+﻿namespace Editors
 {
-    /// <summary>
-    /// Required designer variable.
-    /// </summary>
-    private System.ComponentModel.IContainer components = null;
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
+    partial class Editor_Data
     {
-        if (disposing && (components != null))
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
-            components.Dispose();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
-        base.Dispose(disposing);
-    }
 
-    #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Data));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -434,36 +436,37 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        #endregion
+
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button butCancel;
+        private System.Windows.Forms.Button butSalve;
+        public System.Windows.Forms.NumericUpDown numMax_Players;
+        public System.Windows.Forms.NumericUpDown numMax_Characters;
+        public System.Windows.Forms.TextBox txtGame_Name;
+        public System.Windows.Forms.NumericUpDown numPort;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        public System.Windows.Forms.TextBox txtWelcome;
+        public System.Windows.Forms.NumericUpDown numMax_Party_Members;
+        private System.Windows.Forms.Label label6;
+        public System.Windows.Forms.NumericUpDown numMax_Map_Items;
+        private System.Windows.Forms.Label label7;
+        public System.Windows.Forms.NumericUpDown numPoints;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        public System.Windows.Forms.NumericUpDown numMax_Name;
+        private System.Windows.Forms.Label label10;
+        public System.Windows.Forms.NumericUpDown numMin_Name;
+        private System.Windows.Forms.Label label11;
+        public System.Windows.Forms.NumericUpDown numMax_Password;
+        private System.Windows.Forms.Label label12;
+        public System.Windows.Forms.NumericUpDown numMin_Password;
+        private System.Windows.Forms.Label label13;
     }
-
-    #endregion
-
-    private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Button butSalve;
-    public System.Windows.Forms.NumericUpDown numMax_Players;
-    public System.Windows.Forms.NumericUpDown numMax_Characters;
-    public System.Windows.Forms.TextBox txtGame_Name;
-    public System.Windows.Forms.NumericUpDown numPort;
-    private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.Label label5;
-    public System.Windows.Forms.TextBox txtWelcome;
-    public System.Windows.Forms.NumericUpDown numMax_Party_Members;
-    private System.Windows.Forms.Label label6;
-    public System.Windows.Forms.NumericUpDown numMax_Map_Items;
-    private System.Windows.Forms.Label label7;
-    public System.Windows.Forms.NumericUpDown numPoints;
-    private System.Windows.Forms.Label label8;
-    private System.Windows.Forms.Label label9;
-    public System.Windows.Forms.NumericUpDown numMax_Name;
-    private System.Windows.Forms.Label label10;
-    public System.Windows.Forms.NumericUpDown numMin_Name;
-    private System.Windows.Forms.Label label11;
-    public System.Windows.Forms.NumericUpDown numMax_Password;
-    private System.Windows.Forms.Label label12;
-    public System.Windows.Forms.NumericUpDown numMin_Password;
-    private System.Windows.Forms.Label label13;
 }

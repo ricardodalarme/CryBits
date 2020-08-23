@@ -1,7 +1,7 @@
-﻿using SFML.Audio;
+﻿using Library;
+using SFML.Audio;
 using System;
 using System.IO;
-using Library;
 
 class Audio
 {
@@ -15,14 +15,14 @@ class Audio
         Thunder_2,
         Thunder_3,
         Thunder_4,
-        Amount
+        Count
     }
 
     // Listas das músicas
     public enum Musics
     {
         Menu = 1,
-        Amount
+        Count
     }
 
     public class Sound
@@ -36,7 +36,7 @@ class Audio
         public static void Load()
         {
             // Redimensiona a lista
-            Array.Resize(ref List, (byte)Sounds.Amount);
+            Array.Resize(ref List, (byte)Sounds.Count);
 
             // Carrega todos os arquivos e os adiciona a lista
             for (int i = 1; i < List.Length; i++)
@@ -46,7 +46,7 @@ class Audio
         public static void Play(Sounds Index, bool Loop = false)
         {
             // Apenas se necessário
-            if (!Utils.Option.Sounds) return;
+            if (!Option.Sounds) return;
 
             // Reproduz o áudio
             List[(byte)Index].Volume = 20;
@@ -60,7 +60,7 @@ class Audio
             if (List == null) return;
 
             // Para todos os sons
-            for (byte i = 1; i < (byte)Sounds.Amount; i++)
+            for (byte i = 1; i < (byte)Sounds.Count; i++)
                 List[i].Stop();
         }
     }
@@ -82,7 +82,7 @@ class Audio
 
             // Apenas se necessário
             if (Device != null) return;
-            if (!Utils.Option.Musics) return;
+            if (!Option.Musics) return;
             if (!File.Exists(Directory)) return;
 
             // Carrega o áudio
