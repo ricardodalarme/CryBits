@@ -1,5 +1,5 @@
-﻿using Network;
-using Entities;
+﻿using Entities;
+using Network;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -27,8 +27,8 @@ namespace Editors
             numTexture.Maximum = Graphics.Tex_Character.Length - 1;
 
             // Lista os dados
-            foreach (var Item in Lists.Item.Values) cmbItems.Items.Add(Item);
-            foreach (var Map in Lists.Map.Values) cmbSpawn_Map.Items.Add(Map);
+            foreach (var Item in Item.List.Values) cmbItems.Items.Add(Item);
+            foreach (var Map in Map.List.Values) cmbSpawn_Map.Items.Add(Map);
             List_Update();
 
             // Abre a janela
@@ -47,7 +47,7 @@ namespace Editors
         {
             // Lista as classes
             List.Nodes.Clear();
-            foreach (var Class in Lists.Class.Values)
+            foreach (var Class in Class.List.Values)
                 if (Class.Name.StartsWith(txtFilter.Text))
                 {
                     List.Nodes.Add(Class.Name);
@@ -62,7 +62,7 @@ namespace Editors
         private void List_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // Atualiza o valor da loja selecionada
-            Selected = Lists.Class[(Guid)List.SelectedNode.Tag];
+            Selected = Class.List[(Guid)List.SelectedNode.Tag];
 
             // Conecta as listas com os componentes
             lstMale.DataSource = Selected.Tex_Male;
@@ -100,9 +100,9 @@ namespace Editors
         {
             // Adiciona uma loja nova
             Class New = new Class(Guid.NewGuid());
-            Lists.Class.Add(New.ID, New);
+            Class.List.Add(New.ID, New);
             New.Name = "New class";
-            New.Spawn_Map = Lists.Map.ElementAt(0).Value;
+            New.Spawn_Map = Map.List.ElementAt(0).Value;
 
             // Adiciona na lista
             TreeNode Node = new TreeNode(New.Name);
@@ -116,14 +116,14 @@ namespace Editors
             if (List.SelectedNode != null)
             {
                 // Garante que sempre vai ter pelo menos uma classse
-                if (Lists.Class.Count == 1)
+                if (Class.List.Count == 1)
                 {
                     MessageBox.Show("It must have at least one class registered.");
                     return;
                 }
 
                 // Remove a classes selecionada
-                Lists.Class.Remove(Selected.ID);
+                Class.List.Remove(Selected.ID);
                 List.SelectedNode.Remove();
             }
         }
@@ -254,7 +254,7 @@ namespace Editors
         private void butItem_Add_Click(object sender, EventArgs e)
         {
             // Evita erros
-            if (Lists.Item.Count == 0)
+            if (Item.List.Count == 0)
             {
                 MessageBox.Show("It must have at least one item registered add inital items.");
                 return;

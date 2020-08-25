@@ -1,10 +1,11 @@
-﻿using Network;
+﻿using Entities;
+using Network;
 using SFML.Window;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Entities;
+using static Logic.Utils;
 
 namespace Interface
 {
@@ -28,7 +29,7 @@ namespace Interface
         public void MouseUp()
         {
             // Somente se necessário
-            if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
+            if (!IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
 
             // Altera o estado do botão
             Audio.Sound.Play(Audio.Sounds.Click);
@@ -42,7 +43,7 @@ namespace Interface
         {
             // Somente se necessário
             if (e.Button == Mouse.Button.Right) return;
-            if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
+            if (!IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
 
             // Altera o estado do botão
             State = States.Click;
@@ -51,7 +52,7 @@ namespace Interface
         public void MouseMove()
         {
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-            if (!Utils.IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num]))))
+            if (!IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num]))))
             {
                 State = States.Normal;
                 return;
@@ -151,8 +152,8 @@ namespace Interface
             Socket.Disconnect();
 
             // Define as marcações corretas
-            CheckBoxes.List["Sounds"].Checked = Utils.Option.Sounds;
-            CheckBoxes.List["Musics"].Checked = Utils.Option.Musics;
+            CheckBoxes.List["Sounds"].Checked = Option.Sounds;
+            CheckBoxes.List["Musics"].Checked = Option.Musics;
 
             // Abre o painel
             Panels.Menu_Close();
@@ -172,7 +173,7 @@ namespace Interface
         private static void Connect_Ok()
         {
             // Salva o nome do usuário
-            Utils.Option.Username = TextBoxes.List["Connect_Username"].Text;
+            Option.Username = TextBoxes.List["Connect_Username"].Text;
             Library.Write.Options();
 
             // Conecta-se ao jogo
@@ -315,27 +316,27 @@ namespace Interface
 
         private static void Attribute_Strenght()
         {
-            Send.AddPoint(Utils.Attributes.Strength);
+            Send.AddPoint(Attributes.Strength);
         }
 
         private static void Attribute_Resistance()
         {
-            Send.AddPoint(Utils.Attributes.Resistance);
+            Send.AddPoint(Attributes.Resistance);
         }
 
         private static void Attribute_Intelligence()
         {
-            Send.AddPoint(Utils.Attributes.Intelligence);
+            Send.AddPoint(Attributes.Intelligence);
         }
 
         private static void Attribute_Agility()
         {
-            Send.AddPoint(Utils.Attributes.Agility);
+            Send.AddPoint(Attributes.Agility);
         }
 
         private static void Attribute_Vitality()
         {
-            Send.AddPoint(Utils.Attributes.Vitality);
+            Send.AddPoint(Attributes.Vitality);
         }
 
         private static void Menu_Inventory()
@@ -418,11 +419,11 @@ namespace Interface
             List["Trade_Offer_Confirm"].Visible = true;
             List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
             Panels.List["Trade_Offer_Disable"].Visible = false;
-            Send.Trade_Offer_State(Utils.Trade_Status.Accepted);
+            Send.Trade_Offer_State(Trade_Status.Accepted);
 
             // Limpa os dados da oferta
-            Player.Me.Trade_Offer = new Inventory[Utils.Max_Inventory + 1];
-            Player.Me.Trade_Their_Offer = new Inventory[Utils.Max_Inventory + 1];
+            Player.Me.Trade_Offer = new Inventory[Max_Inventory + 1];
+            Player.Me.Trade_Their_Offer = new Inventory[Max_Inventory + 1];
         }
 
         private static void Trade_Offer_Decline()
@@ -431,7 +432,7 @@ namespace Interface
             List["Trade_Offer_Confirm"].Visible = true;
             List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
             Panels.List["Trade_Offer_Disable"].Visible = false;
-            Send.Trade_Offer_State(Utils.Trade_Status.Declined);
+            Send.Trade_Offer_State(Trade_Status.Declined);
         }
 
         public static void Trade_Offer_Confirm()
@@ -439,7 +440,7 @@ namespace Interface
             // Confirma a oferta
             List["Trade_Offer_Confirm"].Visible = List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
             Panels.List["Trade_Offer_Disable"].Visible = true;
-            Send.Trade_Offer_State(Utils.Trade_Status.Confirmed);
+            Send.Trade_Offer_State(Trade_Status.Confirmed);
         }
 
         private static void Trade_Amount_Confirm()

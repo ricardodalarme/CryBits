@@ -1,5 +1,5 @@
-﻿using Network;
-using Entities;
+﻿using Entities;
+using Network;
 using System;
 using System.Windows.Forms;
 using static Logic.Utils;
@@ -24,8 +24,8 @@ namespace Editors
             numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
 
             // Lista os dados
-            foreach (var Item in Lists.Item.Values) cmbDrop_Item.Items.Add(Item);
-            foreach (var Shop in Lists.Shop.Values) cmbShop.Items.Add(Shop);
+            foreach (var Item in Item.List.Values) cmbDrop_Item.Items.Add(Item);
+            foreach (var Shop in Shop.List.Values) cmbShop.Items.Add(Shop);
             List_Update();
 
             // Abre a janela
@@ -44,7 +44,7 @@ namespace Editors
         {
             // Lista os NPCs
             List.Nodes.Clear();
-            foreach (var NPC in Lists.NPC.Values)
+            foreach (var NPC in NPC.List.Values)
                 if (NPC.Name.StartsWith(txtFilter.Text))
                 {
                     List.Nodes.Add(NPC.Name);
@@ -59,7 +59,7 @@ namespace Editors
         private void List_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // Atualiza o valor da loja selecionada
-            Selected = Lists.NPC[(Guid)List.SelectedNode.Tag];
+            Selected = NPC.List[(Guid)List.SelectedNode.Tag];
 
             // Reseta os dados necessários
             grpDrop_Add.Visible = false;
@@ -104,7 +104,7 @@ namespace Editors
             // Adiciona uma loja nova
             NPC New = new NPC(Guid.NewGuid());
             New.Name = "New NPC";
-            Lists.NPC.Add(New.ID, New);
+            NPC.List.Add(New.ID, New);
 
             // Adiciona na lista
             TreeNode Node = new TreeNode(New.Name);
@@ -121,7 +121,7 @@ namespace Editors
             // Remove a loja selecionada
             if (List.SelectedNode != null)
             {
-                Lists.NPC.Remove(Selected.ID);
+                NPC.List.Remove(Selected.ID);
                 List.SelectedNode.Remove();
                 Groups_Visibility();
             }
@@ -170,7 +170,7 @@ namespace Editors
             cmbShop.Enabled = false;
             cmbShop.SelectedIndex = -1;
             if (cmbBehavior.SelectedIndex == (byte)NPC_Behaviour.ShopKeeper)
-                if (Lists.Shop.Count == 0)
+                if (Shop.List.Count == 0)
                 {
                     cmbBehavior.SelectedIndex = Selected.Behaviour;
                     return;
@@ -232,7 +232,7 @@ namespace Editors
         private void butDrop_Add_Click(object sender, EventArgs e)
         {
             // Evita erros
-            if (Lists.Item.Count == 0)
+            if (Item.List.Count == 0)
             {
                 MessageBox.Show("It must have at least one item registered add inital items.");
                 return;
@@ -272,7 +272,7 @@ namespace Editors
             {
                 // Adiciona os NPCs
                 cmbAllie_NPC.Items.Clear();
-                foreach (var NPC in Lists.NPC.Values) cmbAllie_NPC.Items.Add(NPC);
+                foreach (var NPC in NPC.List.Values) cmbAllie_NPC.Items.Add(NPC);
                 cmbAllie_NPC.SelectedIndex = 0;
 
                 // Abre a janela para adicionar o aliado

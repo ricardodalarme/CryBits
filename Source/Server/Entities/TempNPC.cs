@@ -1,6 +1,6 @@
-﻿using Network;
+﻿using Logic;
+using Network;
 using System;
-using Logic;
 using static Logic.Utils;
 
 namespace Entities

@@ -601,7 +601,7 @@
             // 
             // picTile
             // 
-            this.picTile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.picTile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.picTile.BackColor = System.Drawing.Color.Black;
             this.picTile.Location = new System.Drawing.Point(0, 48);
@@ -617,7 +617,7 @@
             // 
             // scrlTileY
             // 
-            this.scrlTileY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.scrlTileY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.scrlTileY.Cursor = System.Windows.Forms.Cursors.Default;
             this.scrlTileY.LargeChange = 32;
@@ -630,7 +630,7 @@
             // 
             // scrlMapX
             // 
-            this.scrlMapX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.scrlMapX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scrlMapX.LargeChange = 1;
             this.scrlMapX.Location = new System.Drawing.Point(279, 637);
@@ -640,7 +640,7 @@
             // 
             // scrlMapY
             // 
-            this.scrlMapY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.scrlMapY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scrlMapY.Cursor = System.Windows.Forms.Cursors.Default;
             this.scrlMapY.LargeChange = 1;
@@ -941,7 +941,7 @@
             // 
             // grpZones
             // 
-            this.grpZones.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.grpZones.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.grpZones.Controls.Add(this.scrlZone_Clear);
             this.grpZones.Controls.Add(this.scrlZone);
@@ -983,7 +983,7 @@
             // 
             // grpLighting
             // 
-            this.grpLighting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.grpLighting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.grpLighting.Controls.Add(this.butLight_Clear);
             this.grpLighting.Location = new System.Drawing.Point(0, 27);
@@ -1013,7 +1013,7 @@
             // 
             // grpAttributes
             // 
-            this.grpAttributes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.grpAttributes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.grpAttributes.Controls.Add(this.grpA_Item);
             this.grpAttributes.Controls.Add(this.optA_Item);
@@ -1255,7 +1255,7 @@
             // 
             // picTile_Background
             // 
-            this.picTile_Background.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.picTile_Background.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.picTile_Background.BackColor = System.Drawing.Color.Black;
             this.picTile_Background.Location = new System.Drawing.Point(0, 48);
@@ -1266,7 +1266,7 @@
             // 
             // grpNPCs
             // 
-            this.grpNPCs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.grpNPCs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.grpNPCs.Controls.Add(this.groupBox2);
             this.grpNPCs.Controls.Add(this.groupBox1);
@@ -1389,7 +1389,7 @@
             // 
             // List
             // 
-            this.List.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.List.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.List.HideSelection = false;
             this.List.Location = new System.Drawing.Point(1101, 73);
@@ -1400,7 +1400,7 @@
             // 
             // txtFilter
             // 
-            this.txtFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.txtFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFilter.Location = new System.Drawing.Point(1101, 26);
@@ -1411,8 +1411,8 @@
             // 
             // picBackground
             // 
-            this.picBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.picBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.picBackground.BackColor = System.Drawing.Color.Black;
             this.picBackground.Controls.Add(this.picMap);
@@ -1423,8 +1423,8 @@
             // 
             // picMap
             // 
-            this.picMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.picMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.picMap.BackColor = System.Drawing.Color.Black;
             this.picMap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -1456,7 +1456,7 @@
             this.butRemove});
             this.toolStrip1.Location = new System.Drawing.Point(1101, 48);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(89, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(58, 25);
             this.toolStrip1.TabIndex = 115;
             // 
             // butNew

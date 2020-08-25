@@ -1,9 +1,8 @@
-﻿using Network;
+﻿using Entities;
+using Network;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Entities;
-using System;
-using static Utils;
 
 namespace Interface
 {

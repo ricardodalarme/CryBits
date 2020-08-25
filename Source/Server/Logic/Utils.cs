@@ -176,8 +176,5 @@ namespace Logic
             Item1 = Item2;
             Item2 = Temp;
         }
-
-        // Obtém o ID de algum dado, caso ele não existir retorna um ID zerado
-        public static string GetID(Entities.Entity Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
     }
 }

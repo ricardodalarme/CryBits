@@ -6,7 +6,7 @@ namespace Entities
     class Item : Entity
     {
         // Lista de dados
-        public static Dictionary<Guid, Item> List ;
+        public static Dictionary<Guid, Item> List;
 
         // Obtém o dado, caso ele não existir retorna nulo
         public static Item Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
@@ -17,16 +17,16 @@ namespace Entities
         public short Texture;
         public byte Type;
         public byte Rarity;
-        public Utils.BindOn Bind;
+        public BindOn Bind;
         // Requerimentos
         public short Req_Level;
         public Class Req_Class;
         // Poção
         public int Potion_Experience;
-        public short[] Potion_Vital = new short[(byte)Utils.Vitals.Count];
+        public short[] Potion_Vital = new short[(byte)Vitals.Count];
         // Equipamento
         public byte Equip_Type;
-        public short[] Equip_Attribute = new short[(byte)Utils.Equipments.Count];
+        public short[] Equip_Attribute = new short[(byte)Equipments.Count];
         public short Weapon_Damage;
 
         public Item(Guid ID) : base(ID) { }

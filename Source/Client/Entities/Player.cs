@@ -1,15 +1,15 @@
-﻿using Network;
+﻿using Interface;
+using Network;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
-using Interface;
 
 namespace Entities
 {
     class Player : Character
     {
         // Lista de dados
-        public static List<Player> List ;
+        public static List<Player> List;
 
         // Obtém um jogador com determinado nome
         public static Player Get(string Name) => List.Find(x => x.Name.Equals(Name));
@@ -21,9 +21,9 @@ namespace Entities
         public string Name = string.Empty;
         public short Texture_Num;
         public short Level;
-        public short[] Max_Vital = new short[(byte)Utils.Vitals.Count];
-        public short[] Attribute = new short[(byte)Utils.Attributes.Count];
-        public Item[] Equipment = new Item[(byte)Utils.Equipments.Count];
+        public short[] Max_Vital = new short[(byte)Vitals.Count];
+        public short[] Attribute = new short[(byte)Attributes.Count];
+        public Item[] Equipment = new Item[(byte)Equipments.Count];
         public TempMap Map;
 
         public Player(string Name)
@@ -45,8 +45,8 @@ namespace Entities
     class Me_Structure : Player
     {
         // Dados
-        public Inventory[] Inventory = new Inventory[Utils.Max_Inventory + 1];
-        public Hotbar[] Hotbar = new Hotbar[Utils.Max_Hotbar];
+        public Inventory[] Inventory = new Inventory[Max_Inventory + 1];
+        public Hotbar[] Hotbar = new Hotbar[Max_Hotbar];
         public Inventory[] Trade_Offer;
         public Inventory[] Trade_Their_Offer;
         public Player[] Party = Array.Empty<Player>();
@@ -71,16 +71,16 @@ namespace Entities
             if (Movement > 0 || !Graphics.RenderWindow.HasFocus()) return;
 
             // Move o personagem
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Utils.Directions.Up);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Utils.Directions.Down);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Utils.Directions.Left);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Utils.Directions.Right);
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Directions.Up);
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Directions.Down);
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Directions.Left);
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Directions.Right);
         }
 
-        public void Move(Utils.Directions Direction)
+        public void Move(Directions Direction)
         {
             // Verifica se o jogador pode se mover
-            if (Movement != Utils.Movements.Stopped) return;
+            if (Movement != Movements.Stopped) return;
 
             // Define a direção do jogador
             if (this.Direction != Direction)
@@ -94,9 +94,9 @@ namespace Entities
 
             // Define a velocidade que o jogador se move
             if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Graphics.RenderWindow.HasFocus())
-                Movement = Utils.Movements.Moving;
+                Movement = Movements.Moving;
             else
-                Movement = Utils.Movements.Walking;
+                Movement = Movements.Walking;
 
             // Movimento o jogador
             Send.Player_Move();
@@ -104,17 +104,17 @@ namespace Entities
             // Define a Posição exata do jogador
             switch (Direction)
             {
-                case Utils.Directions.Up: Y2 = Utils.Grid; Y -= 1; break;
-                case Utils.Directions.Down: Y2 = Utils.Grid * -1; Y += 1; break;
-                case Utils.Directions.Right: X2 = Utils.Grid * -1; X += 1; break;
-                case Utils.Directions.Left: X2 = Utils.Grid; X -= 1; break;
+                case Directions.Up: Y2 = Grid; Y -= 1; break;
+                case Directions.Down: Y2 = Grid * -1; Y += 1; break;
+                case Directions.Right: X2 = Grid * -1; X += 1; break;
+                case Directions.Left: X2 = Grid; X -= 1; break;
             }
         }
 
         public void CheckAttack()
         {
             // Reseta o ataque
-            if (Attack_Timer + Utils.Attack_Speed < Environment.TickCount)
+            if (Attack_Timer + Attack_Speed < Environment.TickCount)
             {
                 Attack_Timer = 0;
                 Attacking = false;
@@ -144,7 +144,7 @@ namespace Entities
                     HasItem = true;
 
             // Verifica se tem algum espaço vazio no inventário
-            for (byte i = 1; i <= Utils.Max_Inventory; i++)
+            for (byte i = 1; i <= Max_Inventory; i++)
                 if (Inventory[i].Item == null)
                     HasSlot = true;
 

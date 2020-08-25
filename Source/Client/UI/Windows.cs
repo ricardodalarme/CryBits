@@ -1,9 +1,10 @@
-﻿using Network;
+﻿using Entities;
+using Network;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Entities;
+using static Logic.Utils;
 
 namespace Interface
 {
@@ -127,7 +128,7 @@ namespace Interface
                 else if (Panels.Hotbar_Slot >= 0)
                 {
                     if (Panels.Hotbar_Change >= 0) Send.Hotbar_Change(Panels.Hotbar_Change, Panels.Hotbar_Slot);
-                    if (Panels.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Utils.Hotbar.Item, Panels.Inventory_Change);
+                    if (Panels.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Logic.Utils.Hotbar.Item, Panels.Inventory_Change);
                 }
                 // Adiciona um item à troca
                 else if (Panels.Trade_Slot > 0)
@@ -213,11 +214,11 @@ namespace Interface
         {
             // Reproduz a música de fundo
             Audio.Sound.Stop_All();
-            if (Utils.Option.Musics) Audio.Music.Play(Audio.Musics.Menu);
+            if (Option.Musics) Audio.Music.Play(Audio.Musics.Menu);
 
             // Nome do usuário salvo
-            CheckBoxes.List["Connect_Save_Username"].Checked = Utils.Option.SaveUsername;
-            if (Utils.Option.SaveUsername) TextBoxes.List["Connect_Username"].Text = Utils.Option.Username;
+            CheckBoxes.List["Connect_Save_Username"].Checked = Option.SaveUsername;
+            if (Option.SaveUsername) TextBoxes.List["Connect_Username"].Text = Option.Username;
 
             // Traz o jogador de volta ao menu
             Panels.Menu_Close();

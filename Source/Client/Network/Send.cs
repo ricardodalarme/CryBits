@@ -1,8 +1,9 @@
-﻿using Lidgren.Network;
+﻿using Entities;
+using Interface;
+using Lidgren.Network;
 using System;
 using System.Linq;
-using Entities;
-using Interface;
+using static Logic.Utils;
 
 namespace Network
 {
@@ -140,7 +141,7 @@ namespace Network
             Socket.Latency_Send = Environment.TickCount;
         }
 
-        public static void Message(string Message, Utils.Messages Type, string Addressee = "")
+        public static void Message(string Message, Messages Type, string Addressee = "")
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -152,7 +153,7 @@ namespace Network
             Packet(Data);
         }
 
-        public static void AddPoint(Utils.Attributes Attribute)
+        public static void AddPoint(Attributes Attribute)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 
@@ -375,7 +376,7 @@ namespace Network
             Packet(Data);
         }
 
-        public static void Trade_Offer_State(Utils.Trade_Status State)
+        public static void Trade_Offer_State(Trade_Status State)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

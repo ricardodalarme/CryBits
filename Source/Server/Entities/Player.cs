@@ -1,8 +1,8 @@
-﻿using Network;
+﻿using Logic;
+using Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Logic;
 using static Logic.Utils;
 
 namespace Entities
@@ -233,7 +233,7 @@ namespace Entities
                 // Teletransporte
                 case Tile_Attributes.Warp:
                     if (Tile.Data_4 > 0) Direction = (Directions)Tile.Data_4 - 1;
-                    Warp(TempMap.Get( new Guid(Tile.Data_1)), (byte)Tile.Data_2, (byte)Tile.Data_3);
+                    Warp(TempMap.Get(new Guid(Tile.Data_1)), (byte)Tile.Data_2, (byte)Tile.Data_3);
                     SecondMovement = true;
                     break;
             }
@@ -257,7 +257,7 @@ namespace Entities
 
             // Retorna para o ínicio
             Direction = (Directions)Class.Spawn_Direction;
-            Warp(TempMap.Get( Class.Spawn_Map.ID), Class.Spawn_X, Class.Spawn_Y);
+            Warp(TempMap.Get(Class.Spawn_Map.ID), Class.Spawn_X, Class.Spawn_Y);
         }
 
         public void Attack()

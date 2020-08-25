@@ -1,9 +1,9 @@
-﻿using Lidgren.Network;
-using Entities;
+﻿using Entities;
+using Library;
+using Lidgren.Network;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Library;
 using static Logic.Utils;
 
 namespace Network
@@ -277,7 +277,7 @@ namespace Network
             if (Account.Character.Genre) Account.Character.Texture_Num = Class.Tex_Male[Data.ReadByte()];
             else Account.Character.Texture_Num = Class.Tex_Female[Data.ReadByte()];
             Account.Character.Attribute = Class.Attribute;
-            Account.Character.Map = TempMap.Get( Class.Spawn_Map.ID);
+            Account.Character.Map = TempMap.Get(Class.Spawn_Map.ID);
             Account.Character.Direction = (Directions)Class.Spawn_Direction;
             Account.Character.X = Class.Spawn_X;
             Account.Character.Y = Class.Spawn_Y;
@@ -609,13 +609,13 @@ namespace Network
                 Class.Description = Data.ReadString();
                 for (byte n = 0; n < Class.Tex_Male.Length; n++) Class.Tex_Male[n] = Data.ReadInt16();
                 for (byte n = 0; n < Class.Tex_Female.Length; n++) Class.Tex_Female[n] = Data.ReadInt16();
-                Class.Spawn_Map = Map.Get( new Guid(Data.ReadString()));
+                Class.Spawn_Map = Map.Get(new Guid(Data.ReadString()));
                 Class.Spawn_Direction = Data.ReadByte();
                 Class.Spawn_X = Data.ReadByte();
                 Class.Spawn_Y = Data.ReadByte();
                 for (byte n = 0; n < (byte)Vitals.Count; n++) Class.Vital[n] = Data.ReadInt16();
                 for (byte n = 0; n < (byte)Attributes.Count; n++) Class.Attribute[n] = Data.ReadInt16();
-                for (byte n = 0; n < (byte)Class.Item.Length; n++) Class.Item[n] = new Tuple<Item, short>(Item.Get( new Guid(Data.ReadString())), Data.ReadInt16());
+                for (byte n = 0; n < (byte)Class.Item.Length; n++) Class.Item[n] = new Tuple<Item, short>(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16());
 
                 // Salva os dados das classes
                 Write.Class(Class);
@@ -687,7 +687,7 @@ namespace Network
 
                 // Ligações
                 for (short n = 0; n < (short)Directions.Count; n++)
-                    Map.Link[n] = Map.Get( new Guid(Data.ReadString()));
+                    Map.Link[n] = Map.Get(new Guid(Data.ReadString()));
 
                 // Camadas
                 Map.Layer = new Map_Layer[Data.ReadByte()];
@@ -812,13 +812,13 @@ namespace Network
                 for (byte n = 0; n < (byte)Vitals.Count; n++) NPC.Vital[n] = Data.ReadInt16();
                 for (byte n = 0; n < (byte)Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
                 NPC.Drop = new NPC_Drop[Data.ReadByte()];
-                for (byte n = 0; n < NPC.Drop.Length; n++) NPC.Drop[n] = new NPC_Drop(Item.Get( new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
+                for (byte n = 0; n < NPC.Drop.Length; n++) NPC.Drop[n] = new NPC_Drop(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
                 NPC.AttackNPC = Data.ReadBoolean();
                 NPC.Allie = new NPC[Data.ReadByte()];
                 for (byte n = 0; n < NPC.Allie.Length; n++) NPC.Allie[n] = NPC.Get(new Guid(Data.ReadString()));
                 NPC.Movement = (NPC_Movements)Data.ReadByte();
                 NPC.Flee_Helth = Data.ReadByte();
-                NPC.Shop = Shop.Get( new Guid(Data.ReadString()));
+                NPC.Shop = Shop.Get(new Guid(Data.ReadString()));
 
                 // Salva os dados do item
                 Write.NPC(NPC);
@@ -878,7 +878,7 @@ namespace Network
                 Item.Bind = Data.ReadByte();
                 Item.Rarity = Data.ReadByte();
                 Item.Req_Level = Data.ReadInt16();
-                Item.Req_Class = Class.Get( new Guid(Data.ReadString()));
+                Item.Req_Class = Class.Get(new Guid(Data.ReadString()));
                 Item.Potion_Experience = Data.ReadInt32();
                 for (byte v = 0; v < (byte)Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
                 Item.Equip_Type = Data.ReadByte();
@@ -940,18 +940,18 @@ namespace Network
 
                 // Lê os dados
                 Shop.Name = Data.ReadString();
-                Shop.Currency = Item.Get( new Guid(Data.ReadString()));
+                Shop.Currency = Item.Get(new Guid(Data.ReadString()));
                 for (byte j = 0; j < Shop.Sold.Length; j++)
                     Shop.Sold[j] = new Shop_Item
                     {
-                        Item = Item.Get( new Guid(Data.ReadString())),
+                        Item = Item.Get(new Guid(Data.ReadString())),
                         Amount = Data.ReadInt16(),
                         Price = Data.ReadInt16()
                     };
                 for (byte j = 0; j < Shop.Bought.Length; j++)
                     Shop.Bought[j] = new Shop_Item
                     {
-                        Item = Item.Get( new Guid(Data.ReadString())),
+                        Item = Item.Get(new Guid(Data.ReadString())),
                         Amount = Data.ReadInt16(),
                         Price = Data.ReadInt16()
                     };
@@ -985,7 +985,7 @@ namespace Network
 
         private static void Request_Map(Account Account, NetIncomingMessage Data)
         {
-            Send.Map(Account, Map.Get( new Guid(Data.ReadString())));
+            Send.Map(Account, Map.Get(new Guid(Data.ReadString())));
         }
 
         private static void Request_Maps(Account Account, NetIncomingMessage Data)

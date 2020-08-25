@@ -1,9 +1,9 @@
-﻿using Network;
+﻿using Entities;
+using Library;
+using Network;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Library;
-using Entities;
 
 namespace Logic
 {

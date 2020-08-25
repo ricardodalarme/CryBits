@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using Entities;
+﻿using Entities;
 using Interface;
+using System;
+using System.Windows.Forms;
 
 namespace Logic
 {

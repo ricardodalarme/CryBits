@@ -1,9 +1,9 @@
-﻿using Entities;
+﻿using Editors;
+using Entities;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using Editors;
 using static Logic.Utils;
 
 namespace Library
@@ -40,7 +40,7 @@ namespace Library
             // Cria um sistema binário para a manipulação dos dados
             using (var Data = new BinaryReader(File.OpenRead()))
                 // Lê todos os nós
-                for (byte n = 0; n < Lists.Tool.Nodes.Count; n++) 
+                for (byte n = 0; n < Lists.Tool.Nodes.Count; n++)
                     Tools(Lists.Tool.Nodes[n], Data);
         }
 
@@ -147,8 +147,8 @@ namespace Library
             }
 
             // Lê os dados
-            using (var Stream = File.OpenRead())
-            Lists.Tile[Index] = (Tile)new BinaryFormatter().Deserialize(Stream);
+            // using (var Stream = File.OpenRead())
+            // Lists.Tile[Index] = (Tile)new BinaryFormatter().Deserialize(Stream);
         }
     }
 }

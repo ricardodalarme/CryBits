@@ -1,7 +1,8 @@
-﻿using Network;
+﻿using Logic;
+using Network;
 using SFML.Graphics;
 using System.Collections.Generic;
-using Logic;
+using static Logic.Utils;
 
 namespace Interface
 {
@@ -48,7 +49,7 @@ namespace Interface
 
             // Remove os espaços
             Message = Message.Trim();
-            Message_Width = Utils.MeasureString(Message);
+            Message_Width = MeasureString(Message);
 
             // Caso couber, adiciona a mensagem normalmente
             if (Message_Width < Box_Width)
@@ -59,7 +60,7 @@ namespace Interface
                     Temp_Message = Message.Substring(0, i);
 
                     // Adiciona o texto à caixa
-                    if (Utils.MeasureString(Temp_Message) > Box_Width)
+                    if (MeasureString(Temp_Message) > Box_Width)
                     {
                         AddLine(Temp_Message, Color);
                         AddText(Message.Substring(Temp_Message.Length), Color);
@@ -117,7 +118,7 @@ namespace Interface
                 default:
                     // Mensagem lobal
                     if (Message.Substring(0, 1) == "'")
-                        Send.Message(Message.Substring(1), Utils.Messages.Global);
+                        Send.Message(Message.Substring(1), Messages.Global);
                     // Mensagem particular
                     else if (Message.Substring(0, 1) == "!")
                     {
@@ -131,12 +132,12 @@ namespace Interface
                             Message = Message.Substring(Parts[0].Length + 1);
 
                             // Envia a mensagem
-                            Send.Message(Message, Utils.Messages.Private, Destiny);
+                            Send.Message(Message, Messages.Private, Destiny);
                         }
                     }
                     // Mensagem mapa
                     else
-                        Send.Message(Message, Utils.Messages.Map);
+                        Send.Message(Message, Messages.Map);
                     break;
             }
         }

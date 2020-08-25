@@ -1,8 +1,8 @@
-﻿using Entities;
+﻿using Editors;
+using Entities;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Editors;
 using static Logic.Utils;
 
 namespace Logic
@@ -61,7 +61,7 @@ namespace Logic
         private static void Editor_Maps_Fog()
         {
             // Faz a movimentação
-            if (Editor_Maps.Form != null)
+            if (Editor_Maps.Form != null && Editor_Maps.Form.Visible)
             {
                 Editor_Maps_Fog_X();
                 Editor_Maps_Fog_Y();
@@ -127,7 +127,7 @@ namespace Logic
             bool Stop = false, Move;
 
             // Somente se necessário
-            if (Editor_Maps.Form == null || Editor_Maps.Form.Selected.Weather.Type == 0 || !Editor_Maps.Form.butVisualization.Checked)
+            if (Editor_Maps.Form == null || !Editor_Maps.Form.Visible || Editor_Maps.Form.Selected.Weather.Type == 0 || !Editor_Maps.Form.butVisualization.Checked)
             {
                 if (Audio.Sound.List != null)
                     if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SFML.Audio.SoundStatus.Playing) Audio.Sound.Stop_All();
@@ -277,7 +277,7 @@ namespace Logic
         private static void Editor_Maps_Music()
         {
             // Apenas se necessário
-            if (Editor_Maps.Form == null) goto stop;
+            if (Editor_Maps.Form == null || !Editor_Maps.Form.Visible) goto stop;
             if (!Editor_Maps.Form.butAudio.Checked) goto stop;
             if (!Editor_Maps.Form.butVisualization.Checked) goto stop;
             if (Editor_Maps.Form.Selected.Music == 0) goto stop;

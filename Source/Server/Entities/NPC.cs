@@ -32,8 +32,8 @@ namespace Entities
 
         public Shop Shop
         {
-            get => Shop.Get( shop);
-            set => shop = new Guid(GetID(value));
+            get => Shop.Get(shop);
+            set => shop = new Guid(Entity.GetID(value));
         }
 
         // Construtor
@@ -57,8 +57,8 @@ namespace Entities
         private Guid item;
         public Item Item
         {
-            get => Item.Get( item);
-            set => item = new Guid(GetID(value));
+            get => Item.Get(item);
+            set => item = new Guid(Entity.GetID(value));
         }
         public short Amount;
         public byte Chance;

@@ -1,5 +1,5 @@
-﻿using Network;
-using Entities;
+﻿using Entities;
+using Network;
 using System;
 using System.Windows.Forms;
 using static Logic.Utils;
@@ -25,7 +25,7 @@ namespace Editors
 
             // Lista os dados
             cmbReq_Class.Items.Add("None");
-            foreach (var Class in Lists.Class.Values) cmbReq_Class.Items.Add(Class);
+            foreach (var Class in Class.List.Values) cmbReq_Class.Items.Add(Class);
             for (byte i = 0; i < (byte)Rarity.Count; i++) cmbRarity.Items.Add((Rarity)i);
             for (byte i = 0; i < (byte)BindOn.Count; i++) cmbBind.Items.Add((BindOn)i);
             List_Update();
@@ -46,7 +46,7 @@ namespace Editors
         {
             // Lista os itens
             List.Nodes.Clear();
-            foreach (var Item in Lists.Item.Values)
+            foreach (var Item in Item.List.Values)
                 if (Item.Name.StartsWith(txtFilter.Text))
                 {
                     List.Nodes.Add(Item.Name);
@@ -61,7 +61,7 @@ namespace Editors
         private void List_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // Atualiza o valor da loja selecionada
-            Selected = Lists.Item[(Guid)List.SelectedNode.Tag];
+            Selected = Item.List[(Guid)List.SelectedNode.Tag];
 
             // Lista os dados
             txtName.Text = Selected.Name;
@@ -96,7 +96,7 @@ namespace Editors
             // Adiciona uma loja nova
             Item New = new Item(Guid.NewGuid());
             New.Name = "New item";
-            Lists.Item.Add(New.ID, New);
+            Item.List.Add(New.ID, New);
 
             // Adiciona na lista
             TreeNode Node = new TreeNode(New.Name);
@@ -113,7 +113,7 @@ namespace Editors
             // Remove a loja selecionada
             if (List.SelectedNode != null)
             {
-                Lists.Item.Remove(Selected.ID);
+                Item.List.Remove(Selected.ID);
                 List.SelectedNode.Remove();
                 Groups_Visibility();
             }

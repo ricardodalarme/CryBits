@@ -1,7 +1,8 @@
-﻿using SFML.Audio;
+﻿using Library;
+using SFML.Audio;
 using System;
 using System.IO;
-using Library;
+using static Logic.Utils;
 
 class Audio
 {
@@ -46,7 +47,7 @@ class Audio
         public static void Play(Sounds Index, bool Loop = false)
         {
             // Apenas se necessário
-            if (!Utils.Option.Sounds) return;
+            if (!Option.Sounds) return;
 
             // Reproduz o áudio
             List[(byte)Index].Volume = 20;
@@ -82,7 +83,7 @@ class Audio
 
             // Apenas se necessário
             if (Device != null) return;
-            if (!Utils.Option.Musics) return;
+            if (!Option.Musics) return;
             if (!File.Exists(Directory)) return;
 
             // Carrega o áudio

@@ -1,8 +1,9 @@
-﻿using SFML.Window;
+﻿using Logic;
+using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Logic;
+using static Logic.Utils;
 
 namespace Interface
 {
@@ -25,7 +26,7 @@ namespace Interface
         public void MouseUp(Tools.Order_Structure Order)
         {
             // Somente se necessário
-            if (!Utils.IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
+            if (!IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
 
             // Define o foco no digitalizador
             Focused = Order;

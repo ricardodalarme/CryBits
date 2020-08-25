@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Editors;
+using System;
 using System.Collections.Generic;
-using Editors;
 using System.Drawing;
 using static Logic.Utils;
 
@@ -9,6 +9,12 @@ namespace Entities
     [Serializable]
     class Map : Entity
     {
+        // Lista de dados
+        public static Dictionary<Guid, Map> List = new Dictionary<Guid, Map>();
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static Map Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
         // Limitações dos mapas
         public const byte Width = 25;
         public const byte Height = 19;

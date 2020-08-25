@@ -6,7 +6,7 @@ namespace Entities
     class Shop : Entity
     {
         // Lista de dados
-        public static Dictionary<Guid, Shop> List ;
+        public static Dictionary<Guid, Shop> List;
 
         // Obtém o dado, caso ele não existir retorna nulo
         public static Shop Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;

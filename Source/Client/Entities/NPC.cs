@@ -16,7 +16,7 @@ namespace Entities
         public string SayMsg;
         public short Texture;
         public byte Type;
-        public short[] Vital = new short[(byte)Utils.Vitals.Count];
+        public short[] Vital = new short[(byte)Vitals.Count];
 
         public NPC(Guid ID) : base(ID) { }
     }

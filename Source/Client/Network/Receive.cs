@@ -1,11 +1,12 @@
-﻿using Lidgren.Network;
-using Entities;
+﻿using Entities;
+using Interface;
+using Lidgren.Network;
+using Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Interface;
-using Logic;
+using static Logic.Utils;
 
 namespace Network
 {
@@ -214,13 +215,13 @@ namespace Network
             Chat.Lines_First = 0;
             Loop.Chat_Timer = Environment.TickCount + Chat.Sleep_Timer;
             TextBoxes.List["Chat"].Text = string.Empty;
-            CheckBoxes.List["Options_Sounds"].Checked = Utils.Option.Sounds;
-            CheckBoxes.List["Options_Musics"].Checked = Utils.Option.Musics;
-            CheckBoxes.List["Options_Chat"].Checked = Utils.Option.Chat;
-            CheckBoxes.List["Options_FPS"].Checked = Utils.Option.FPS;
-            CheckBoxes.List["Options_Latency"].Checked = Utils.Option.Latency;
-            CheckBoxes.List["Options_Trade"].Checked = Utils.Option.Trade;
-            CheckBoxes.List["Options_Party"].Checked = Utils.Option.Party;
+            CheckBoxes.List["Options_Sounds"].Checked = Option.Sounds;
+            CheckBoxes.List["Options_Musics"].Checked = Option.Musics;
+            CheckBoxes.List["Options_Chat"].Checked = Option.Chat;
+            CheckBoxes.List["Options_FPS"].Checked = Option.FPS;
+            CheckBoxes.List["Options_Latency"].Checked = Option.Latency;
+            CheckBoxes.List["Options_Trade"].Checked = Option.Trade;
+            CheckBoxes.List["Options_Party"].Checked = Option.Party;
             Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
             Panels.Infomation_ID = Guid.Empty;
 
@@ -263,14 +264,14 @@ namespace Network
             Player.Map = TempMap.List[new Guid(Data.ReadString())];
             Player.X = Data.ReadByte();
             Player.Y = Data.ReadByte();
-            Player.Direction = (Utils.Directions)Data.ReadByte();
-            for (byte n = 0; n < (byte)Utils.Vitals.Count; n++)
+            Player.Direction = (Directions)Data.ReadByte();
+            for (byte n = 0; n < (byte)Vitals.Count; n++)
             {
                 Player.Vital[n] = Data.ReadInt16();
                 Player.Max_Vital[n] = Data.ReadInt16();
             }
-            for (byte n = 0; n < (byte)Utils.Attributes.Count; n++) Player.Attribute[n] = Data.ReadInt16();
-            for (byte n = 0; n < (byte)Utils.Equipments.Count; n++) Player.Equipment[n] = Item.Get( new Guid(Data.ReadString()));
+            for (byte n = 0; n < (byte)Attributes.Count; n++) Player.Attribute[n] = Data.ReadInt16();
+            for (byte n = 0; n < (byte)Equipments.Count; n++) Player.Equipment[n] = Item.Get(new Guid(Data.ReadString()));
             Mapper.Current = Player.Map;
         }
 
@@ -281,12 +282,12 @@ namespace Network
             // Defini os dados do jogador
             Player.X = Data.ReadByte();
             Player.Y = Data.ReadByte();
-            Player.Direction = (Utils.Directions)Data.ReadByte();
+            Player.Direction = (Directions)Data.ReadByte();
 
             // Para a movimentação
             Player.X2 = 0;
             Player.Y2 = 0;
-            Player.Movement = Utils.Movements.Stopped;
+            Player.Movement = Movements.Stopped;
         }
 
         private static void Player_Vitals(NetIncomingMessage Data)
@@ -294,7 +295,7 @@ namespace Network
             Player Player = Player.Get(Data.ReadString());
 
             // Define os dados
-            for (byte i = 0; i < (byte)Utils.Vitals.Count; i++)
+            for (byte i = 0; i < (byte)Vitals.Count; i++)
             {
                 Player.Vital[i] = Data.ReadInt16();
                 Player.Max_Vital[i] = Data.ReadInt16();
@@ -306,7 +307,7 @@ namespace Network
             Player Player = Player.Get(Data.ReadString());
 
             // Altera os dados dos equipamentos do jogador
-            for (byte i = 0; i < (byte)Utils.Equipments.Count; i++) Player.Equipment[i] = Item.Get( new Guid(Data.ReadString()));
+            for (byte i = 0; i < (byte)Equipments.Count; i++) Player.Equipment[i] = Item.Get(new Guid(Data.ReadString()));
         }
 
         private static void Player_Leave(NetIncomingMessage Data)
@@ -322,25 +323,25 @@ namespace Network
             // Move o jogador
             Player.X = Data.ReadByte();
             Player.Y = Data.ReadByte();
-            Player.Direction = (Utils.Directions)Data.ReadByte();
-            Player.Movement = (Utils.Movements)Data.ReadByte();
+            Player.Direction = (Directions)Data.ReadByte();
+            Player.Movement = (Movements)Data.ReadByte();
             Player.X2 = 0;
             Player.Y2 = 0;
 
             // Posição exata do jogador
             switch (Player.Direction)
             {
-                case Utils.Directions.Up: Player.Y2 = Utils.Grid; break;
-                case Utils.Directions.Down: Player.Y2 = Utils.Grid * -1; break;
-                case Utils.Directions.Right: Player.X2 = Utils.Grid * -1; break;
-                case Utils.Directions.Left: Player.X2 = Utils.Grid; break;
+                case Directions.Up: Player.Y2 = Grid; break;
+                case Directions.Down: Player.Y2 = Grid * -1; break;
+                case Directions.Right: Player.X2 = Grid * -1; break;
+                case Directions.Left: Player.X2 = Grid; break;
             }
         }
 
         private static void Player_Direction(NetIncomingMessage Data)
         {
             // Altera a posição do jogador
-            Player.Get(Data.ReadString()).Direction = (Utils.Directions)Data.ReadByte();
+            Player.Get(Data.ReadString()).Direction = (Directions)Data.ReadByte();
         }
 
         private static void Player_Attack(NetIncomingMessage Data)
@@ -355,16 +356,16 @@ namespace Network
 
             // Sofrendo dano
             if (Victim != string.Empty)
-                if (Victim_Type == (byte)Utils.Target.Player)
+                if (Victim_Type == (byte)Target.Player)
                 {
                     Player Victim_Data = Player.Get(Victim);
                     Victim_Data.Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Utils.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
+                    Mapper.Current.Blood.Add(new TMap_Blood((byte)MyRandom.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
                 }
-                else if (Victim_Type == (byte)Utils.Target.NPC)
+                else if (Victim_Type == (byte)Target.NPC)
                 {
                     Mapper.Current.NPC[byte.Parse(Victim)].Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Utils.Random.Next(0, 3), Mapper.Current.NPC[byte.Parse(Victim)].X, Mapper.Current.NPC[byte.Parse(Victim)].Y, 255));
+                    Mapper.Current.Blood.Add(new TMap_Blood((byte)MyRandom.Next(0, 3), Mapper.Current.NPC[byte.Parse(Victim)].X, Mapper.Current.NPC[byte.Parse(Victim)].Y, 255));
                 }
         }
 
@@ -386,9 +387,9 @@ namespace Network
         private static void Player_Inventory(NetIncomingMessage Data)
         {
             // Define os dados
-            for (byte i = 1; i <= Utils.Max_Inventory; i++)
+            for (byte i = 1; i <= Max_Inventory; i++)
             {
-                Player.Me.Inventory[i].Item = Item.Get( new Guid(Data.ReadString()));
+                Player.Me.Inventory[i].Item = Item.Get(new Guid(Data.ReadString()));
                 Player.Me.Inventory[i].Amount = Data.ReadInt16();
             }
         }
@@ -396,7 +397,7 @@ namespace Network
         private static void Player_Hotbar(NetIncomingMessage Data)
         {
             // Define os dados
-            for (byte i = 0; i < Utils.Max_Hotbar; i++)
+            for (byte i = 0; i < Max_Hotbar; i++)
             {
                 Player.Me.Hotbar[i].Type = Data.ReadByte();
                 Player.Me.Hotbar[i].Slot = Data.ReadByte();
@@ -465,8 +466,8 @@ namespace Network
             Data.ReadByte(); // Luz global
 
             // Ligações
-            Map.Link = new short[(byte)Utils.Directions.Count];
-            for (byte i = 0; i < (byte)Utils.Directions.Count; i++)
+            Map.Link = new short[(byte)Directions.Count];
+            for (byte i = 0; i < (byte)Directions.Count; i++)
                 Data.ReadString();
 
             // Azulejos
@@ -474,8 +475,8 @@ namespace Network
 
             // Redimensiona os dados
 
-            for (byte x = 0; x < Utils.Map_Width; x++)
-                for (byte y = 0; y < Utils.Map_Height; y++)
+            for (byte x = 0; x < Map_Width; x++)
+                for (byte y = 0; y < Map_Height; y++)
                     Map.Tile[x, y].Data = new Map_Tile_Data[(byte)global::Mapper.Layers.Count, Num_Layers];
 
             // Lê os azulejos
@@ -486,8 +487,8 @@ namespace Network
                 byte t = Data.ReadByte(); // Tipo
 
                 // Azulejos
-                for (byte x = 0; x < Utils.Map_Width; x++)
-                    for (byte y = 0; y < Utils.Map_Height; y++)
+                for (byte x = 0; x < Map_Width; x++)
+                    for (byte y = 0; y < Map_Height; y++)
                     {
                         Map.Tile[x, y].Data[t, i].X = Data.ReadByte();
                         Map.Tile[x, y].Data[t, i].Y = Data.ReadByte();
@@ -498,8 +499,8 @@ namespace Network
             }
 
             // Dados específicos dos azulejos
-            for (byte x = 0; x < Utils.Map_Width; x++)
-                for (byte y = 0; y < Utils.Map_Height; y++)
+            for (byte x = 0; x < Map_Width; x++)
+                for (byte y = 0; y < Map_Height; y++)
                 {
                     Map.Tile[x, y].Attribute = Data.ReadByte();
                     Data.ReadString(); // Dado 1
@@ -509,8 +510,8 @@ namespace Network
                     Data.ReadByte(); // Zona
 
                     // Bloqueio direcional
-                    Map.Tile[x, y].Block = new bool[(byte)Utils.Directions.Count];
-                    for (byte i = 0; i < (byte)Utils.Directions.Count; i++)
+                    Map.Tile[x, y].Block = new bool[(byte)Directions.Count];
+                    for (byte i = 0; i < (byte)Directions.Count; i++)
                         Map.Tile[x, y].Block[i] = Data.ReadBoolean();
                 }
 
@@ -598,14 +599,14 @@ namespace Network
                 Item.Texture = Data.ReadInt16();
                 Item.Type = Data.ReadByte();
                 Data.ReadBoolean(); // Stackable
-                Item.Bind = (Utils.BindOn)Data.ReadByte();
+                Item.Bind = (BindOn)Data.ReadByte();
                 Item.Rarity = Data.ReadByte();
                 Item.Req_Level = Data.ReadInt16();
                 Item.Req_Class = Class.Get(new Guid(Data.ReadString()));
                 Item.Potion_Experience = Data.ReadInt32();
-                for (byte v = 0; v < (byte)Utils.Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
+                for (byte v = 0; v < (byte)Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
                 Item.Equip_Type = Data.ReadByte();
-                for (byte a = 0; a < (byte)Utils.Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
+                for (byte a = 0; a < (byte)Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
                 Item.Weapon_Damage = Data.ReadInt16();
             }
 
@@ -623,7 +624,7 @@ namespace Network
             {
                 // Geral
                 Mapper.Current.Item[i] = new TMap_Items();
-                Mapper.Current.Item[i].Item = Item.Get( new Guid(Data.ReadString()));
+                Mapper.Current.Item[i].Item = Item.Get(new Guid(Data.ReadString()));
                 Mapper.Current.Item[i].X = Data.ReadByte();
                 Mapper.Current.Item[i].Y = Data.ReadByte();
             }
@@ -639,7 +640,7 @@ namespace Network
         private static void Party_Invitation(NetIncomingMessage Data)
         {
             // Nega o pedido caso o jogador não quiser receber convites
-            if (!Utils.Option.Party)
+            if (!Option.Party)
             {
                 Send.Party_Decline();
                 return;
@@ -665,8 +666,8 @@ namespace Network
                 Panels.List["Trade_Offer_Disable"].Visible = false;
 
                 // Limpa os dados
-                Player.Me.Trade_Offer = new Inventory[Utils.Max_Inventory + 1];
-                Player.Me.Trade_Their_Offer = new Inventory[Utils.Max_Inventory + 1];
+                Player.Me.Trade_Offer = new Inventory[Max_Inventory + 1];
+                Player.Me.Trade_Their_Offer = new Inventory[Max_Inventory + 1];
             }
             else
             {
@@ -679,7 +680,7 @@ namespace Network
         private static void Trade_Invitation(NetIncomingMessage Data)
         {
             // Nega o pedido caso o jogador não quiser receber convites
-            if (!Utils.Option.Trade)
+            if (!Option.Trade)
             {
                 Send.Trade_Decline();
                 return;
@@ -692,15 +693,15 @@ namespace Network
 
         private static void Trade_State(NetIncomingMessage Data)
         {
-            switch ((Utils.Trade_Status)Data.ReadByte())
+            switch ((Trade_Status)Data.ReadByte())
             {
-                case Utils.Trade_Status.Accepted:
-                case Utils.Trade_Status.Declined:
+                case Trade_Status.Accepted:
+                case Trade_Status.Declined:
                     Buttons.List["Trade_Offer_Confirm"].Visible = true;
                     Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = false;
                     Panels.List["Trade_Offer_Disable"].Visible = false;
                     break;
-                case Utils.Trade_Status.Confirmed:
+                case Trade_Status.Confirmed:
                     Buttons.List["Trade_Offer_Confirm"].Visible = false;
                     Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = true;
                     Panels.List["Trade_Offer_Disable"].Visible = false;
@@ -712,15 +713,15 @@ namespace Network
         {
             // Recebe os dados da oferta
             if (Data.ReadBoolean())
-                for (byte i = 1; i <= Utils.Max_Inventory; i++)
+                for (byte i = 1; i <= Max_Inventory; i++)
                 {
-                    Player.Me.Trade_Offer[i].Item = Item.Get( new Guid(Data.ReadString()));
+                    Player.Me.Trade_Offer[i].Item = Item.Get(new Guid(Data.ReadString()));
                     Player.Me.Trade_Offer[i].Amount = Data.ReadInt16();
                 }
             else
-                for (byte i = 1; i <= Utils.Max_Inventory; i++)
+                for (byte i = 1; i <= Max_Inventory; i++)
                 {
-                    Player.Me.Trade_Their_Offer[i].Item = Item.Get( new Guid(Data.ReadString()));
+                    Player.Me.Trade_Their_Offer[i].Item = Item.Get(new Guid(Data.ReadString()));
                     Player.Me.Trade_Their_Offer[i].Amount = Data.ReadInt16();
                 }
         }
@@ -756,18 +757,18 @@ namespace Network
 
                 // Lê os dados
                 Shop.Name = Data.ReadString();
-                Shop.Currency = Item.Get( new Guid(Data.ReadString()));
+                Shop.Currency = Item.Get(new Guid(Data.ReadString()));
                 for (byte j = 0; j < Shop.Sold.Length; j++)
                     Shop.Sold[j] = new Shop_Item
                     {
-                        Item = Item.Get( new Guid(Data.ReadString())),
+                        Item = Item.Get(new Guid(Data.ReadString())),
                         Amount = Data.ReadInt16(),
                         Price = Data.ReadInt16()
                     };
                 for (byte j = 0; j < Shop.Bought.Length; j++)
                     Shop.Bought[j] = new Shop_Item
                     {
-                        Item = Item.Get( new Guid(Data.ReadString())),
+                        Item = Item.Get(new Guid(Data.ReadString())),
                         Amount = Data.ReadInt16(),
                         Price = Data.ReadInt16()
                     };
@@ -816,8 +817,8 @@ namespace Network
                 NPC.Type = Data.ReadByte();
 
                 // Vitais
-                NPC.Vital = new short[(byte)Utils.Vitals.Count];
-                for (byte n = 0; n < (byte)Utils.Vitals.Count; n++)
+                NPC.Vital = new short[(byte)Vitals.Count];
+                for (byte n = 0; n < (byte)Vitals.Count; n++)
                     NPC.Vital[n] = Data.ReadInt16();
             }
 
@@ -837,10 +838,10 @@ namespace Network
                 Mapper.Current.NPC[i].Data = NPC.Get(new Guid(Data.ReadString()));
                 Mapper.Current.NPC[i].X = Data.ReadByte();
                 Mapper.Current.NPC[i].Y = Data.ReadByte();
-                Mapper.Current.NPC[i].Direction = (Utils.Directions)Data.ReadByte();
+                Mapper.Current.NPC[i].Direction = (Directions)Data.ReadByte();
 
                 // Vitais
-                for (byte n = 0; n < (byte)Utils.Vitals.Count; n++)
+                for (byte n = 0; n < (byte)Vitals.Count; n++)
                     Mapper.Current.NPC[i].Vital[n] = Data.ReadInt16();
             }
         }
@@ -851,12 +852,12 @@ namespace Network
             byte i = Data.ReadByte();
             Mapper.Current.NPC[i].X2 = 0;
             Mapper.Current.NPC[i].Y2 = 0;
-            Mapper.Current.NPC[i].Data = NPC.Get( new Guid(Data.ReadString()));
+            Mapper.Current.NPC[i].Data = NPC.Get(new Guid(Data.ReadString()));
             Mapper.Current.NPC[i].X = Data.ReadByte();
             Mapper.Current.NPC[i].Y = Data.ReadByte();
-            Mapper.Current.NPC[i].Direction = (Utils.Directions)Data.ReadByte();
-            Mapper.Current.NPC[i].Vital = new short[(byte)Utils.Vitals.Count];
-            for (byte n = 0; n < (byte)Utils.Vitals.Count; n++) Mapper.Current.NPC[i].Vital[n] = Data.ReadInt16();
+            Mapper.Current.NPC[i].Direction = (Directions)Data.ReadByte();
+            Mapper.Current.NPC[i].Vital = new short[(byte)Vitals.Count];
+            for (byte n = 0; n < (byte)Vitals.Count; n++) Mapper.Current.NPC[i].Vital[n] = Data.ReadInt16();
         }
 
         private static void Map_NPC_Movement(NetIncomingMessage Data)
@@ -868,17 +869,17 @@ namespace Network
             Mapper.Current.NPC[i].Y2 = 0;
             Mapper.Current.NPC[i].X = Data.ReadByte();
             Mapper.Current.NPC[i].Y = Data.ReadByte();
-            Mapper.Current.NPC[i].Direction = (Utils.Directions)Data.ReadByte();
-            Mapper.Current.NPC[i].Movement = (Utils.Movements)Data.ReadByte();
+            Mapper.Current.NPC[i].Direction = (Directions)Data.ReadByte();
+            Mapper.Current.NPC[i].Movement = (Movements)Data.ReadByte();
 
             // Posição exata do jogador
             if (x != Mapper.Current.NPC[i].X || y != Mapper.Current.NPC[i].Y)
                 switch (Mapper.Current.NPC[i].Direction)
                 {
-                    case Utils.Directions.Up: Mapper.Current.NPC[i].Y2 = Utils.Grid; break;
-                    case Utils.Directions.Down: Mapper.Current.NPC[i].Y2 = Utils.Grid * -1; break;
-                    case Utils.Directions.Right: Mapper.Current.NPC[i].X2 = Utils.Grid * -1; break;
-                    case Utils.Directions.Left: Mapper.Current.NPC[i].X2 = Utils.Grid; break;
+                    case Directions.Up: Mapper.Current.NPC[i].Y2 = Grid; break;
+                    case Directions.Down: Mapper.Current.NPC[i].Y2 = Grid * -1; break;
+                    case Directions.Right: Mapper.Current.NPC[i].X2 = Grid * -1; break;
+                    case Directions.Left: Mapper.Current.NPC[i].X2 = Grid; break;
                 }
         }
 
@@ -894,16 +895,16 @@ namespace Network
 
             // Sofrendo dano
             if (Victim != string.Empty)
-                if (Victim_Type == (byte)Utils.Target.Player)
+                if (Victim_Type == (byte)Target.Player)
                 {
                     Player Victim_Data = Player.Get(Victim);
                     Victim_Data.Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Utils.Random.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
+                    Mapper.Current.Blood.Add(new TMap_Blood((byte)MyRandom.Next(0, 3), Victim_Data.X, Victim_Data.Y, 255));
                 }
-                else if (Victim_Type == (byte)Utils.Target.NPC)
+                else if (Victim_Type == (byte)Target.NPC)
                 {
                     Mapper.Current.NPC[byte.Parse(Victim)].Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new TMap_Blood((byte)Utils.Random.Next(0, 3), Mapper.Current.NPC[byte.Parse(Victim)].X, Mapper.Current.NPC[byte.Parse(Victim)].Y, 255));
+                    Mapper.Current.Blood.Add(new TMap_Blood((byte)MyRandom.Next(0, 3), Mapper.Current.NPC[byte.Parse(Victim)].X, Mapper.Current.NPC[byte.Parse(Victim)].Y, 255));
                 }
         }
 
@@ -911,7 +912,7 @@ namespace Network
         {
             // Define a direção de determinado NPC
             byte i = Data.ReadByte();
-            Mapper.Current.NPC[i].Direction = (Utils.Directions)Data.ReadByte();
+            Mapper.Current.NPC[i].Direction = (Directions)Data.ReadByte();
             Mapper.Current.NPC[i].X2 = 0;
             Mapper.Current.NPC[i].Y2 = 0;
         }
@@ -921,7 +922,7 @@ namespace Network
             byte Index = Data.ReadByte();
 
             // Define os vitais de determinado NPC
-            for (byte n = 0; n < (byte)Utils.Vitals.Count; n++)
+            for (byte n = 0; n < (byte)Vitals.Count; n++)
                 Mapper.Current.NPC[Index].Vital[n] = Data.ReadInt16();
         }
 
@@ -935,7 +936,7 @@ namespace Network
             Mapper.Current.NPC[i].Data = null;
             Mapper.Current.NPC[i].X = 0;
             Mapper.Current.NPC[i].Y = 0;
-            Mapper.Current.NPC[i].Vital = new short[(byte)Utils.Vitals.Count];
+            Mapper.Current.NPC[i].Vital = new short[(byte)Vitals.Count];
         }
     }
 }

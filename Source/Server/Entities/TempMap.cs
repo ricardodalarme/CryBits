@@ -1,7 +1,7 @@
-﻿using Network;
+﻿using Logic;
+using Network;
 using System;
 using System.Collections.Generic;
-using Logic;
 using static Logic.Utils;
 
 namespace Entities

@@ -1,5 +1,5 @@
-﻿using Lidgren.Network;
-using Entities;
+﻿using Entities;
+using Lidgren.Network;
 using System.Drawing;
 using static Logic.Utils;
 
@@ -200,7 +200,7 @@ namespace Network
                 // Apenas dados do editor
                 if (Account.InEditor)
                 {
-                    Data.Write(GetID(Class.Spawn_Map));
+                    Data.Write(Entity.GetID(Class.Spawn_Map));
                     Data.Write(Class.Spawn_Direction);
                     Data.Write(Class.Spawn_X);
                     Data.Write(Class.Spawn_Y);
@@ -209,7 +209,7 @@ namespace Network
                     Data.Write((byte)Class.Item.Length);
                     for (byte n = 0; n < (byte)Class.Item.Length; n++)
                     {
-                        Data.Write(GetID(Class.Item[n].Item1));
+                        Data.Write(Entity.GetID(Class.Item[n].Item1));
                         Data.Write(Class.Item[n].Item2);
                     }
                 }
@@ -237,7 +237,7 @@ namespace Network
             Data.Write(Player.Name);
             Data.Write(Player.Texture_Num);
             Data.Write(Player.Level);
-            Data.Write(GetID(Player.Map));
+            Data.Write(Entity.GetID(Player.Map));
             Data.Write(Player.X);
             Data.Write(Player.Y);
             Data.Write((byte)Player.Direction);
@@ -247,7 +247,7 @@ namespace Network
                 Data.Write(Player.MaxVital(n));
             }
             for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(Player.Attribute[n]);
-            for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(GetID(Player.Equipment[n]));
+            for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(Entity.GetID(Player.Equipment[n]));
 
             return Data;
         }
@@ -335,7 +335,7 @@ namespace Network
             // Envia os dados
             Data.Write((byte)Client_Packets.Player_Equipments);
             Data.Write(Player.Name);
-            for (byte i = 0; i < (byte)Equipments.Count; i++) Data.Write(GetID(Player.Equipment[i]));
+            for (byte i = 0; i < (byte)Equipments.Count; i++) Data.Write(Entity.GetID(Player.Equipment[i]));
             ToMap(Player.Map, Data);
         }
 
@@ -377,7 +377,7 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Client_Packets.Map_Revision);
-            Data.Write(GetID(Map));
+            Data.Write(Entity.GetID(Map));
             Data.Write(Map.Revision);
             ToPlayer(Player, Data);
         }
@@ -400,7 +400,7 @@ namespace Network
             // Envia os dados
             if (Account.InEditor) Data.Write((byte)Editor_Packets.Map);
             else Data.Write((byte)Client_Packets.Map);
-            Data.Write(GetID(Map));
+            Data.Write(Entity.GetID(Map));
             Data.Write(Map.Revision);
             Data.Write(Map.Name);
             Data.Write(Map.Moral);
@@ -417,7 +417,7 @@ namespace Network
 
             // Ligações
             for (short i = 0; i < (short)Directions.Count; i++)
-                Data.Write(GetID(Map.Link[i]));
+                Data.Write(Entity.GetID(Map.Link[i]));
 
             // Camadas
             Data.Write((byte)Map.Layer.Length);
@@ -467,7 +467,7 @@ namespace Network
             Data.Write((byte)Map.NPC.Length);
             for (byte i = 0; i < Map.NPC.Length; i++)
             {
-                Data.Write(GetID(Map.NPC[i].NPC));
+                Data.Write(Entity.GetID(Map.NPC[i].NPC));
                 Data.Write(Map.NPC[i].Zone);
                 Data.Write(Map.NPC[i].Spawn);
                 Data.Write(Map.NPC[i].X);
@@ -567,7 +567,7 @@ namespace Network
                 Data.Write(Item.Bind);
                 Data.Write(Item.Rarity);
                 Data.Write(Item.Req_Level);
-                Data.Write(GetID(Item.Req_Class));
+                Data.Write(Entity.GetID(Item.Req_Class));
                 Data.Write(Item.Potion_Experience);
                 for (byte v = 0; v < (byte)Vitals.Count; v++) Data.Write(Item.Potion_Vital[v]);
                 Data.Write(Item.Equip_Type);
@@ -590,7 +590,7 @@ namespace Network
             for (byte i = 0; i < Map.Item.Count; i++)
             {
                 // Geral
-                Data.Write(GetID(Map.Item[i].Item));
+                Data.Write(Entity.GetID(Map.Item[i].Item));
                 Data.Write(Map.Item[i].X);
                 Data.Write(Map.Item[i].Y);
             }
@@ -608,7 +608,7 @@ namespace Network
             Data.Write((byte)Map.Item.Count);
             for (byte i = 0; i < Map.Item.Count; i++)
             {
-                Data.Write(GetID(Map.Item[i].Item));
+                Data.Write(Entity.GetID(Map.Item[i].Item));
                 Data.Write(Map.Item[i].X);
                 Data.Write(Map.Item[i].Y);
             }
@@ -623,7 +623,7 @@ namespace Network
             Data.Write((byte)Client_Packets.Player_Inventory);
             for (byte i = 1; i <= Max_Inventory; i++)
             {
-                Data.Write(GetID(Player.Inventory[i].Item));
+                Data.Write(Entity.GetID(Player.Inventory[i].Item));
                 Data.Write(Player.Inventory[i].Amount);
             }
             ToPlayer(Player, Data);
@@ -671,16 +671,16 @@ namespace Network
                     Data.Write((byte)NPC.Drop.Length);
                     for (byte n = 0; n < NPC.Drop.Length; n++)
                     {
-                        Data.Write(GetID(NPC.Drop[n].Item));
+                        Data.Write(Entity.GetID(NPC.Drop[n].Item));
                         Data.Write(NPC.Drop[n].Amount);
                         Data.Write(NPC.Drop[n].Chance);
                     }
                     Data.Write(NPC.AttackNPC);
                     Data.Write((byte)NPC.Allie.Length);
-                    for (byte n = 0; n < NPC.Allie.Length; n++) Data.Write(GetID(NPC.Allie[n]));
+                    for (byte n = 0; n < NPC.Allie.Length; n++) Data.Write(Entity.GetID(NPC.Allie[n]));
                     Data.Write((byte)NPC.Movement);
                     Data.Write(NPC.Flee_Helth);
-                    Data.Write(GetID(NPC.Shop));
+                    Data.Write(Entity.GetID(NPC.Shop));
                 }
             }
             ToPlayer(Account, Data);
@@ -695,7 +695,7 @@ namespace Network
             Data.Write((short)Map.NPC.Length);
             for (byte i = 0; i < Map.NPC.Length; i++)
             {
-                Data.Write(GetID(Map.NPC[i].Data));
+                Data.Write(Entity.GetID(Map.NPC[i].Data));
                 Data.Write(Map.NPC[i].X);
                 Data.Write(Map.NPC[i].Y);
                 Data.Write((byte)Map.NPC[i].Direction);
@@ -711,7 +711,7 @@ namespace Network
             // Envia os dados
             Data.Write((byte)Client_Packets.Map_NPC);
             Data.Write(NPC.Index);
-            Data.Write(GetID(NPC.Data));
+            Data.Write(Entity.GetID(NPC.Data));
             Data.Write(NPC.X);
             Data.Write(NPC.Y);
             Data.Write((byte)NPC.Direction);
@@ -859,7 +859,7 @@ namespace Network
             Data.Write(Own);
             for (byte i = 1; i <= Max_Inventory; i++)
             {
-                Data.Write(GetID(To.Inventory[To.Trade_Offer[i].Slot_Num].Item));
+                Data.Write(Entity.GetID(To.Inventory[To.Trade_Offer[i].Slot_Num].Item));
                 Data.Write(To.Trade_Offer[i].Amount);
             }
             ToPlayer(Player, Data);
@@ -878,18 +878,18 @@ namespace Network
                 // Geral
                 Data.Write(Shop.ID.ToString());
                 Data.Write(Shop.Name);
-                Data.Write(GetID(Shop.Currency));
+                Data.Write(Entity.GetID(Shop.Currency));
                 Data.Write((byte)Shop.Sold.Length);
                 for (byte j = 0; j < Shop.Sold.Length; j++)
                 {
-                    Data.Write(GetID(Shop.Sold[j].Item));
+                    Data.Write(Entity.GetID(Shop.Sold[j].Item));
                     Data.Write(Shop.Sold[j].Amount);
                     Data.Write(Shop.Sold[j].Price);
                 }
                 Data.Write((byte)Shop.Bought.Length);
                 for (byte j = 0; j < Shop.Bought.Length; j++)
                 {
-                    Data.Write(GetID(Shop.Bought[j].Item));
+                    Data.Write(Entity.GetID(Shop.Bought[j].Item));
                     Data.Write(Shop.Bought[j].Amount);
                     Data.Write(Shop.Bought[j].Price);
                 }
@@ -903,7 +903,7 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Client_Packets.Shop_Open);
-            Data.Write(GetID(Shop));
+            Data.Write(Entity.GetID(Shop));
             ToPlayer(Player, Data);
         }
     }

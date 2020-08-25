@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using static Logic.Utils;
 
 namespace Library
 {
@@ -9,7 +10,7 @@ namespace Library
         {
             // Escreve os dados
             using (var Stream = new FileInfo(Directories.Options.FullName).OpenWrite())
-                new BinaryFormatter().Serialize(Stream, Utils.Option);
+                new BinaryFormatter().Serialize(Stream, Option);
         }
 
         public static void Map(Entities.Map Map)

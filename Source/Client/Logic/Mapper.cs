@@ -1,6 +1,7 @@
 ﻿using Entities;
 using System;
 using System.Drawing;
+using static Logic.Utils;
 
 class Mapper
 {
@@ -76,7 +77,7 @@ class Mapper
     }
 
     // Verifica se as coordenas estão no limite do mapa
-    public static bool OutOfLimit(int x, int y) => x >= Utils.Map_Width || y >= Utils.Map_Height || x < 0 || y < 0;
+    public static bool OutOfLimit(int x, int y) => x >= Map_Width || y >= Map_Height || x < 0 || y < 0;
 
     private static void Fog()
     {
@@ -169,7 +170,7 @@ class Mapper
         for (short i = 1; i < TempMap.Weather.Length; i++)
             if (!TempMap.Weather[i].Visible)
             {
-                if (Utils.Random.Next(0, Max_Weather_Intensity - Current.Data.Weather.Intensity) == 0)
+                if (MyRandom.Next(0, Max_Weather_Intensity - Current.Data.Weather.Intensity) == 0)
                 {
                     if (!Stop)
                     {
@@ -199,16 +200,16 @@ class Mapper
                 }
 
                 // Reseta a partícula
-                if (TempMap.Weather[i].x > Utils.Screen_Width || TempMap.Weather[i].y > Utils.Screen_Height)
+                if (TempMap.Weather[i].x > Screen_Width || TempMap.Weather[i].y > Screen_Height)
                     TempMap.Weather[i] = new TMap_Weather();
             }
 
         // Trovoadas
         if (Current.Data.Weather.Type == (byte)Weathers.Thundering)
-            if (Utils.Random.Next(0, Max_Weather_Intensity * 10 - Current.Data.Weather.Intensity * 2) == 0)
+            if (MyRandom.Next(0, Max_Weather_Intensity * 10 - Current.Data.Weather.Intensity * 2) == 0)
             {
                 // Som do trovão
-                int Thunder = Utils.Random.Next(Thunder_First, Thunder_Last);
+                int Thunder = MyRandom.Next(Thunder_First, Thunder_Last);
                 Audio.Sound.Play((Audio.Sounds)Thunder);
 
                 // Relâmpago
@@ -219,16 +220,16 @@ class Mapper
     private static void Weather_Rain_Create(int i)
     {
         // Define a velocidade e a posição da partícula
-        TempMap.Weather[i].Speed = Utils.Random.Next(8, 13);
+        TempMap.Weather[i].Speed = MyRandom.Next(8, 13);
 
-        if (Utils.Random.Next(2) == 0)
+        if (MyRandom.Next(2) == 0)
         {
             TempMap.Weather[i].x = -32;
-            TempMap.Weather[i].y = Utils.Random.Next(-32, Utils.Screen_Height);
+            TempMap.Weather[i].y = MyRandom.Next(-32, Screen_Height);
         }
         else
         {
-            TempMap.Weather[i].x = Utils.Random.Next(-32, Utils.Screen_Width);
+            TempMap.Weather[i].x = MyRandom.Next(-32, Screen_Width);
             TempMap.Weather[i].y = -32;
         }
     }
@@ -243,12 +244,12 @@ class Mapper
     private static void Weather_Snow_Create(int i)
     {
         // Define a velocidade e a posição da partícula
-        TempMap.Weather[i].Speed = Utils.Random.Next(1, 3);
+        TempMap.Weather[i].Speed = MyRandom.Next(1, 3);
         TempMap.Weather[i].y = -32;
-        TempMap.Weather[i].x = Utils.Random.Next(-32, Utils.Screen_Width);
+        TempMap.Weather[i].x = MyRandom.Next(-32, Screen_Width);
         TempMap.Weather[i].Start = TempMap.Weather[i].x;
 
-        if (Utils.Random.Next(2) == 0)
+        if (MyRandom.Next(2) == 0)
             TempMap.Weather[i].Back = false;
         else
             TempMap.Weather[i].Back = true;
@@ -256,7 +257,7 @@ class Mapper
 
     private static void Weather_Snow_Movement(int i, bool Movimentrar = true)
     {
-        int Diference = Utils.Random.Next(0, Snow_Movement / 3);
+        int Diference = MyRandom.Next(0, Snow_Movement / 3);
         int x1 = TempMap.Weather[i].Start + Snow_Movement + Diference;
         int x2 = TempMap.Weather[i].Start - Snow_Movement - Diference;
 

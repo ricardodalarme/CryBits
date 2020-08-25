@@ -1,10 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using static Logic.Utils;
 
 namespace Entities
 {
     class Item : Entity
     {
+        // Lista de dados
+        public static Dictionary<Guid, Item> List = new Dictionary<Guid, Item>();
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static Item Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
         // Geral
         public string Name = string.Empty;
         public string Description = string.Empty;

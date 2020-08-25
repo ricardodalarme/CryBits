@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using static Logic.Utils;
 
@@ -6,6 +7,13 @@ namespace Entities
 {
     class NPC : Entity
     {
+        // Lista de dados
+        public static Dictionary<Guid, NPC> List = new Dictionary<Guid, NPC>();
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static NPC Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
+        // Dados
         public string Name = string.Empty;
         public string SayMsg = string.Empty;
         public short Texture;

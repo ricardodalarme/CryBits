@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using static Utils;
+using static Logic.Utils;
 
 namespace Logic
 {

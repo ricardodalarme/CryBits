@@ -1,7 +1,7 @@
-﻿using Network;
+﻿using Library;
+using Network;
 using System;
 using System.Windows.Forms;
-using Library;
 
 namespace Logic
 {

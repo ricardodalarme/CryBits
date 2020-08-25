@@ -6,25 +6,6 @@ namespace Library
 {
     static class Clear
     {
-        public static void Options()
-        {
-            // Defini os dados das opções
-            Lists.Options.Directory_Client = string.Empty;
-
-            // Salva o que foi modificado
-            Write.Options();
-        }
-
-        public static void Server_Data()
-        {
-            // Defini os dados das opções
-            Lists.Server_Data.Game_Name = "CryBits";
-            Lists.Server_Data.Welcome = "Welcome to CryBits.";
-            Lists.Server_Data.Port = 7001;
-            Lists.Server_Data.Max_Players = 15;
-            Lists.Server_Data.Max_Characters = 3;
-        }
-
         public static void Tile(byte Index)
         {
             Size Texture_Size = Graphics.TSize(Graphics.Tex_Tile[Index]);

@@ -1,11 +1,11 @@
-﻿using Library;
+﻿using Entities;
+using Library;
+using Logic;
 using Network;
-using Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Logic;
 using static Logic.Utils;
 
 namespace Editors
@@ -106,7 +106,7 @@ namespace Editors
             cmbA_Warp_Map.Items.Clear();
 
             // Adiciona os itens às listas
-            foreach (var Map in Lists.Map.Values)
+            foreach (var Map in Map.List.Values)
             {
                 if (Map.Name.StartsWith(txtFilter.Text))
                 {
@@ -122,7 +122,7 @@ namespace Editors
 
         private void List_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            Selected = Lists.Map[(Guid)List.SelectedNode.Tag];
+            Selected = Map.List[(Guid)List.SelectedNode.Tag];
 
             // Conecta as listas com os componentes
             prgProperties.SelectedObject = new MapProperties(Selected);
@@ -148,7 +148,7 @@ namespace Editors
         {
             // Adiciona uma loja nova
             Map New = new Map(Guid.NewGuid());
-            Lists.Map.Add(New.ID, New);
+            Map.List.Add(New.ID, New);
             cmbA_Warp_Map.Items.Add(New);
             New.Name = "New map";
             New.Layer.Add(new Map_Layer());
@@ -174,7 +174,7 @@ namespace Editors
             if (List.SelectedNode != null)
             {
                 // Garante que sempre vai ter pelo menos uma mapa
-                if (Lists.Map.Count == 1)
+                if (Map.List.Count == 1)
                 {
                     MessageBox.Show("It must have at least one map registered.");
                     return;
@@ -182,7 +182,7 @@ namespace Editors
 
                 // Remove o mapa selecionado
                 cmbA_Warp_Map.Items.Remove(Selected);
-                Lists.Map.Remove(Selected.ID);
+                Map.List.Remove(Selected.ID);
                 List.SelectedNode.Remove();
             }
         }
@@ -507,7 +507,7 @@ namespace Editors
             butMNPCs.Checked = true;
 
             // Adiciona os NPCs e reseta os valores
-            foreach (var NPC in Lists.NPC.Values) cmbNPC.Items.Add(NPC);
+            foreach (var NPC in NPC.List.Values) cmbNPC.Items.Add(NPC);
             cmbNPC.SelectedIndex = 0;
             numNPC_Zone.Value = 0;
         }
@@ -564,7 +564,7 @@ namespace Editors
 
         private void tmrUpdate_Tick(object sender, EventArgs e)
         {
-            if (Lists.NPC.Count == 0)
+            if (NPC.List.Count == 0)
             {
                 if (butMNPCs.Checked) butMNormal.Checked = true;
                 butMNPCs.Enabled = false;
@@ -1395,7 +1395,7 @@ namespace Editors
             // Verifica se é possível usar o atributo
             if (optA_Item.Checked)
             {
-                if (Lists.Item.Count == 0)
+                if (Item.List.Count == 0)
                 {
                     MessageBox.Show("It must have at least one item registered to use this attribute.");
                     optA_Block.Checked = true;
@@ -1404,7 +1404,7 @@ namespace Editors
 
                 // Adiciona os itens
                 cmbA_Item.Items.Clear();
-                foreach (var Item in Lists.Item.Values) cmbA_Item.Items.Add(Item);
+                foreach (var Item in Item.List.Values) cmbA_Item.Items.Add(Item);
                 cmbA_Item.SelectedIndex = 0;
                 numA_Item_Amount.Value = AData_2 = 1;
             }
@@ -1415,7 +1415,7 @@ namespace Editors
         {
             // Reseta os valores
             var Warp_Map = (Map)cmbA_Warp_Map.SelectedItem;
-            AData_1 = Lists.GetID(Warp_Map);
+            AData_1 = Entity.GetID(Warp_Map);
         }
 
         private void numA_Warp_X_ValueChanged(object sender, EventArgs e)
@@ -1435,7 +1435,7 @@ namespace Editors
 
         private void cmbA_Item_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AData_1 = Lists.GetID((Item)cmbA_Item.SelectedItem);
+            AData_1 = Entity.GetID((Item)cmbA_Item.SelectedItem);
         }
 
         private void numA_Item_Amount_ValueChanged(object sender, EventArgs e)

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Entities;
+using Interface;
+using Logic;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Entities;
-using Interface;
+using static Logic.Utils;
 
 namespace Library
 {
@@ -21,14 +23,14 @@ namespace Library
             // Cria o arquivo se ele não existir
             if (!Directories.Options.Exists)
             {
-                Utils.Option = new Utils.Options();
+                Option = new Options();
                 Write.Options();
                 return;
             }
 
             // Lê os dados
             using (var Stream = Directories.Options.OpenRead())
-                Utils.Option = (Utils.Options)new BinaryFormatter().Deserialize(Stream);
+                Option = (Options)new BinaryFormatter().Deserialize(Stream);
         }
 
         private static Buttons Button(BinaryReader Data)
@@ -93,7 +95,7 @@ namespace Library
 
             // Lê todas as ferramentas
             using (var Data = new BinaryReader(File.OpenRead()))
-                for (byte n = 0; n < Interface.Tools.All_Order.Length; n++) 
+                for (byte n = 0; n < Interface.Tools.All_Order.Length; n++)
                     Tools(null, ref Interface.Tools.All_Order[n], Data);
         }
 
@@ -137,7 +139,7 @@ namespace Library
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();
-            Mapper.Autotile.Update();
+            MapAutoTile.Update();
         }
     }
 }

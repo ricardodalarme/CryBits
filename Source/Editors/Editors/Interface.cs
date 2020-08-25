@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using Entities;
+﻿using Entities;
 using Library;
+using System;
+using System.Windows.Forms;
 using static Logic.Utils;
 
 namespace Editors

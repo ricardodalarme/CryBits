@@ -56,11 +56,11 @@ namespace Library
                 Data.Write(Account.Character.Name);
                 Data.Write(Account.Character.Texture_Num);
                 Data.Write(Account.Character.Level);
-                Data.Write(GetID(Account.Character.Class));
+                Data.Write(Entity.GetID(Account.Character.Class));
                 Data.Write(Account.Character.Genre);
                 Data.Write(Account.Character.Experience);
                 Data.Write(Account.Character.Points);
-                Data.Write(GetID(Account.Character.Map));
+                Data.Write(Entity.GetID(Account.Character.Map));
                 Data.Write(Account.Character.X);
                 Data.Write(Account.Character.Y);
                 Data.Write((byte)Account.Character.Direction);
@@ -68,10 +68,10 @@ namespace Library
                 for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(Account.Character.Attribute[n]);
                 for (byte n = 1; n <= Max_Inventory; n++)
                 {
-                    Data.Write(GetID(Account.Character.Inventory[n].Item));
+                    Data.Write(Entity.GetID(Account.Character.Inventory[n].Item));
                     Data.Write(Account.Character.Inventory[n].Amount);
                 }
-                for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(GetID(Account.Character.Equipment[n]));
+                for (byte n = 0; n < (byte)Equipments.Count; n++) Data.Write(Entity.GetID(Account.Character.Equipment[n]));
                 for (byte n = 0; n < Max_Hotbar; n++)
                 {
                     Data.Write((byte)Account.Character.Hotbar[n].Type);

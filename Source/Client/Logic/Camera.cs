@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using Entities;
-using static Utils;
+﻿using Entities;
+using System.Drawing;
+using static Logic.Utils;
 
 namespace Logic
 {

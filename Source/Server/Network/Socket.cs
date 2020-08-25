@@ -1,5 +1,5 @@
-﻿using Lidgren.Network;
-using Entities;
+﻿using Entities;
+using Lidgren.Network;
 
 namespace Network
 {

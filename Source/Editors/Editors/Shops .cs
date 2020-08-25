@@ -1,5 +1,5 @@
-﻿using Network;
-using Entities;
+﻿using Entities;
+using Network;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -14,7 +14,7 @@ namespace Editors
         public Editor_Shops()
         {
             // Verifica se é possível abrir
-            if (Lists.Item.Count == 0)
+            if (Item.List.Count == 0)
             {
                 MessageBox.Show("It must have at least one item registered to open the store editor.");
                 return;
@@ -24,7 +24,7 @@ namespace Editors
             InitializeComponent();
 
             // Lista os dados
-            foreach (var Item in Lists.Item.Values)
+            foreach (var Item in Item.List.Values)
             {
                 cmbItems.Items.Add(Item);
                 cmbCurrency.Items.Add(Item);
@@ -46,7 +46,7 @@ namespace Editors
         private void List_Update()
         {
             // Lista as lojas
-            foreach (var Shop in Lists.Shop.Values)
+            foreach (var Shop in Shop.List.Values)
                 if (Shop.Name.StartsWith(txtFilter.Text))
                 {
                     List.Nodes.Add(Shop.Name);
@@ -61,7 +61,7 @@ namespace Editors
         private void List_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // Atualiza o valor da loja selecionada
-            Selected = Lists.Shop[(Guid)List.SelectedNode.Tag];
+            Selected = Shop.List[(Guid)List.SelectedNode.Tag];
 
             // Conecta as listas com os componentes
             lstBought.DataSource = Selected.Bought;
@@ -83,8 +83,8 @@ namespace Editors
             // Adiciona uma loja nova
             Shop New = new Shop(Guid.NewGuid());
             New.Name = "New shop";
-            New.Currency = Lists.Item.ElementAt(0).Value;
-            Lists.Shop.Add(New.ID, New);
+            New.Currency = Item.List.ElementAt(0).Value;
+            Shop.List.Add(New.ID, New);
 
             // Adiciona na lista
             TreeNode Node = new TreeNode(New.Name);
@@ -101,7 +101,7 @@ namespace Editors
             // Remove a loja selecionada
             if (List.SelectedNode != null)
             {
-                Lists.Shop.Remove(Selected.ID);
+                Shop.List.Remove(Selected.ID);
                 List.SelectedNode.Remove();
                 Groups_Visibility();
             }

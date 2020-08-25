@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using static Logic.Utils;
 
@@ -6,6 +7,12 @@ namespace Entities
 {
     class Class : Entity
     {
+        // Lista de dados
+        public static Dictionary<Guid, Class> List = new Dictionary<Guid, Class>();
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static Class Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+
         // Dados
         public string Name = string.Empty;
         public string Description;

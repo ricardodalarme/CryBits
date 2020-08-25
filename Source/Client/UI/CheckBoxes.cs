@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using Library;
+﻿using Library;
 using Logic;
+using System.Collections.Generic;
+using System.Drawing;
+using static Logic.Utils;
 
 namespace Interface
 {
@@ -22,10 +23,10 @@ namespace Interface
         {
             // Tamanho do marcador
             Size Texture_Size = Graphics.TSize(Graphics.Tex_CheckBox);
-            Size Box = new Size(Texture_Size.Width / 2 + Utils.MeasureString(Text) + Margin, Texture_Size.Height);
+            Size Box = new Size(Texture_Size.Width / 2 + MeasureString(Text) + Margin, Texture_Size.Height);
 
             // Somente se estiver sobrepondo a ferramenta
-            if (!Utils.IsAbove(new Rectangle(Position, Box))) return;
+            if (!IsAbove(new Rectangle(Position, Box))) return;
 
             // Altera o estado do marcador
             Checked = !Checked;
@@ -58,19 +59,19 @@ namespace Interface
         private static void Sounds()
         {
             // Salva os dados
-            Utils.Option.Sounds = !Utils.Option.Sounds;
-            if (!Utils.Option.Sounds) Audio.Sound.Stop_All();
+            Option.Sounds = !Option.Sounds;
+            if (!Option.Sounds) Audio.Sound.Stop_All();
             Write.Options();
         }
 
         private static void Musics()
         {
             // Salva os dados
-            Utils.Option.Musics = !Utils.Option.Musics;
+            Option.Musics = !Option.Musics;
             Write.Options();
 
             // Para ou reproduz a música dependendo do estado do marcador
-            if (!Utils.Option.Musics)
+            if (!Option.Musics)
                 Audio.Music.Stop();
             else if (Windows.Current == Windows.Types.Menu)
                 Audio.Music.Play(Audio.Musics.Menu);
@@ -81,7 +82,7 @@ namespace Interface
         private static void SaveUsername()
         {
             // Salva os dados
-            Utils.Option.SaveUsername = List["Connect_Save_Username"].Checked;
+            Option.SaveUsername = List["Connect_Save_Username"].Checked;
             Write.Options();
         }
 
@@ -102,36 +103,36 @@ namespace Interface
         private static void Chat()
         {
             // Salva os dado
-            Utils.Option.Chat = List["Options_Chat"].Checked;
+            Option.Chat = List["Options_Chat"].Checked;
             Write.Options();
-            if (Utils.Option.Chat) Loop.Chat_Timer = System.Environment.TickCount + Interface.Chat.Sleep_Timer;
+            if (Option.Chat) Loop.Chat_Timer = System.Environment.TickCount + Interface.Chat.Sleep_Timer;
         }
 
         private static void FPS()
         {
             // Salva os dado
-            Utils.Option.FPS = List["Options_FPS"].Checked;
+            Option.FPS = List["Options_FPS"].Checked;
             Write.Options();
         }
 
         private static void Latency()
         {
             // Desabilita a prévia do chat
-            Utils.Option.Latency = List["Options_Latency"].Checked;
+            Option.Latency = List["Options_Latency"].Checked;
             Write.Options();
         }
 
         private static void Party()
         {
             // Salva os dado
-            Utils.Option.Party = List["Options_Party"].Checked;
+            Option.Party = List["Options_Party"].Checked;
             Write.Options();
         }
 
         private static void Trade()
         {
             // Salva os dado
-            Utils.Option.Trade = List["Options_Trade"].Checked;
+            Option.Trade = List["Options_Trade"].Checked;
             Write.Options();
         }
     }
