@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using static Utils;
 
-namespace Objects
+namespace Entities
 {
     class Tool
     {

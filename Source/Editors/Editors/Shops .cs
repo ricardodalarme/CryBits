@@ -1,5 +1,5 @@
 ﻿using Network;
-using Objects;
+using Entities;
 using System;
 using System.Linq;
 using System.Windows.Forms;

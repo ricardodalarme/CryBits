@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Objects;
+using Entities;
 using Interface;
 
 namespace Library
@@ -27,9 +27,8 @@ namespace Library
             }
 
             // Lê os dados
-            FileStream Stream = Directories.Options.OpenRead();
-            Utils.Option = (Utils.Options)new BinaryFormatter().Deserialize(Stream);
-            Stream.Close();
+            using (var Stream = Directories.Options.OpenRead())
+                Utils.Option = (Utils.Options)new BinaryFormatter().Deserialize(Stream);
         }
 
         private static Buttons Button(BinaryReader Data)
@@ -93,9 +92,9 @@ namespace Library
             for (byte i = 0; i < (byte)Windows.Types.Count; i++) Interface.Tools.All_Order[i] = new List<Tools.Order_Structure>();
 
             // Lê todas as ferramentas
-            BinaryReader Data = new BinaryReader(File.OpenRead());
-            for (byte n = 0; n < Interface.Tools.All_Order.Length; n++) Tools(null, ref Interface.Tools.All_Order[n], Data);
-            Data.Dispose();
+            using (var Data = new BinaryReader(File.OpenRead()))
+                for (byte n = 0; n < Interface.Tools.All_Order.Length; n++) 
+                    Tools(null, ref Interface.Tools.All_Order[n], Data);
         }
 
         private static void Tools(Tools.Order_Structure Parent, ref List<Tools.Order_Structure> Node, BinaryReader Data)
@@ -132,10 +131,9 @@ namespace Library
             FileInfo File = new FileInfo(Directories.Maps_Data.FullName + ID.ToString() + Directories.Format);
 
             // Lê os dados
-            FileStream Stream = File.OpenRead();
-            // Map.List.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
-            TempMap.List.Add(ID, new TempMap(Objects.Map.List[ID]));
-            Stream.Close();
+            using (var Stream = File.OpenRead())
+                // Map.List.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
+                TempMap.List.Add(ID, new TempMap(Entities.Map.List[ID]));
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();

@@ -72,7 +72,7 @@
     <Compile Include="UI\Windows.cs" />
     <Compile Include="Logic\Camera.cs" />
     <Compile Include="Entities\Character.cs" />
-    <Compile Include="Entities\Data.cs" />
+    <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Entities\NPC.cs" />

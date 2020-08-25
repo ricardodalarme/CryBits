@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Objects
+namespace Entities
 {
-    class Data
+    class Entity
     {
         public Guid ID;
 
-        public Data(Guid ID)
+        public Entity(Guid ID)
         {
             this.ID = ID;
         }

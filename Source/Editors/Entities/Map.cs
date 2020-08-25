@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using static Utils;
 
-namespace Objects
+namespace Entities
 {
     [Serializable]
-    class Map : Data
+    class Map : Entity
     {
         // Limitações dos mapas
         public const byte Width = 25;

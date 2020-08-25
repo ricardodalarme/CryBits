@@ -1,6 +1,6 @@
 ﻿using static Logic.Utils;
 
-namespace Objects
+namespace Entities
 {
     abstract class Character
     {

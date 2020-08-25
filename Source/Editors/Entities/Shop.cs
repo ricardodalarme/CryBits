@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Objects
+namespace Entities
 {
-    class Shop : Data
+    class Shop : Entity
     {
         public string Name = string.Empty;
         public Item Currency;

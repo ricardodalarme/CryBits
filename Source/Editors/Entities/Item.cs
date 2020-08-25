@@ -1,9 +1,9 @@
 ﻿using System;
 using static Utils;
 
-namespace Objects
+namespace Entities
 {
-    class Item : Data
+    class Item : Entity
     {
         // Geral
         public string Name = string.Empty;

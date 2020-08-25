@@ -1,5 +1,5 @@
 ﻿using Lidgren.Network;
-using Objects;
+using Entities;
 
 namespace Network
 {
@@ -28,13 +28,13 @@ namespace Network
         public static void HandleData()
         {
             NetIncomingMessage Data;
-            Objects.Account Account;
+            Account Account;
 
             // Lê e direciona todos os dados recebidos
             while ((Data = Device.ReadMessage()) != null)
             {
-                // Jogador que está a enviar os dados
-                Account = FindConnection(Data.SenderConnection);
+                // Jogador que está enviando os dados
+                Account = Account.List.Find(x => x.Connection == Data.SenderConnection);
 
                 switch (Data.MessageType)
                 {
@@ -57,16 +57,6 @@ namespace Network
 
                 Device.Recycle(Data);
             }
-        }
-
-        private static Account FindConnection(NetConnection Data)
-        {
-            // Encontra uma determinada conexão
-            for (byte i = 0; i < Account.List.Count; i++)
-                if (Account.List[i].Connection == Data)
-                    return Account.List[i];
-
-            return null;
         }
     }
 }

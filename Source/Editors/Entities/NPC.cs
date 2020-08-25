@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using static Utils;
 
-namespace Objects
+namespace Entities
 {
-    class NPC : Data
+    class NPC : Entity
     {
         public string Name = string.Empty;
         public string SayMsg = string.Empty;

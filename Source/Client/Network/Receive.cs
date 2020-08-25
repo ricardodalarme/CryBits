@@ -1,5 +1,5 @@
 ﻿using Lidgren.Network;
-using Objects;
+using Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -129,7 +129,7 @@ namespace Network
             Item.List = new Dictionary<Guid, Item>();
             Shop.List = new Dictionary<Guid, Shop>();
             NPC.List = new Dictionary<Guid, NPC>();
-            Objects.Map.List = new Dictionary<Guid, Map>();
+            Entities.Map.List = new Dictionary<Guid, Map>();
             TempMap.List = new Dictionary<Guid, TempMap>();
 
             // Definir os valores que são enviados do servidor

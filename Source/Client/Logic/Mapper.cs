@@ -1,11 +1,11 @@
-﻿using Objects;
+﻿using Entities;
 using System;
 using System.Drawing;
 
 class Mapper
 {
     // Mapa atual
-    public static Objects.TempMap Current;
+    public static Entities.TempMap Current;
 
     // Fumaças
     public static int Fog_X;
@@ -375,14 +375,14 @@ class Mapper
             }
 
             // Define a posição do mini azulejo
-            Objects.Map_Tile_Data Data = Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num];
+            Entities.Map_Tile_Data Data = Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num];
             Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].X = Data.X * Utils.Grid + Position.X;
             Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].Y = Data.Y * Utils.Grid + Position.Y;
         }
 
         private static bool Check(int X1, int Y1, int X2, int Y2, byte Layer_Num, byte Layer_Type)
         {
-            Objects.Map_Tile_Data Data1, Data2;
+            Entities.Map_Tile_Data Data1, Data2;
 
             // Somente se necessário
             if (X2 < 0 || X2 >= Utils.Map_Width || Y2 < 0 || Y2 >= Utils.Map_Height) return true;

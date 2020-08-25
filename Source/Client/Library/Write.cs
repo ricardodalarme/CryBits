@@ -8,17 +8,15 @@ namespace Library
         public static void Options()
         {
             // Escreve os dados
-            FileStream Stream = new FileInfo(Directories.Options.FullName).OpenWrite();
-            new BinaryFormatter().Serialize(Stream, Utils.Option);
-            Stream.Close();
+            using (var Stream = new FileInfo(Directories.Options.FullName).OpenWrite())
+                new BinaryFormatter().Serialize(Stream, Utils.Option);
         }
 
-        public static void Map(Objects.Map Map)
+        public static void Map(Entities.Map Map)
         {
             // Escreve os dados
-            FileStream Stream = new FileInfo(Directories.Maps_Data.FullName + Map.ID.ToString() + Directories.Format).OpenWrite();
-            // new BinaryFormatter().Serialize(Stream, Map);
-            Stream.Close();
+            using (var Stream = new FileInfo(Directories.Maps_Data.FullName + Map.ID.ToString() + Directories.Format).OpenWrite())
+                new BinaryFormatter().Serialize(Stream, Map);
         }
     }
 }

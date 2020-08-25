@@ -1,7 +1,7 @@
 ﻿using Network;
 using System.Collections.Generic;
 using System.Drawing;
-using Objects;
+using Entities;
 using System;
 using static Utils;
 

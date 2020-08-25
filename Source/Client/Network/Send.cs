@@ -1,7 +1,7 @@
 ﻿using Lidgren.Network;
 using System;
 using System.Linq;
-using Objects;
+using Entities;
 using Interface;
 
 namespace Network

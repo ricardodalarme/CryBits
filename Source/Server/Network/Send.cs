@@ -1,5 +1,5 @@
 ﻿using Lidgren.Network;
-using Objects;
+using Entities;
 using System.Drawing;
 using static Logic.Utils;
 
@@ -388,9 +388,9 @@ namespace Network
 
             // Envia os dados
             Data.Write((byte)Editor_Packets.Maps);
-            Data.Write((short)Objects.Map.List.Count);
+            Data.Write((short)Entities.Map.List.Count);
             ToPlayer(Account, Data);
-            foreach (Map Map in Objects.Map.List.Values) Send.Map(Account, Map);
+            foreach (Map Map in Entities.Map.List.Values) Send.Map(Account, Map);
         }
 
         public static void Map(Account Account, Map Map)

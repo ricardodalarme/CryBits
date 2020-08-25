@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Objects
+namespace Entities
 {
     class TempMap
     {

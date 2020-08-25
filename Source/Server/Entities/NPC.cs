@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using static Logic.Utils;
 
-namespace Objects
+namespace Entities
 {
     [Serializable]
-    class NPC : Data
+    class NPC : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, NPC> List = new Dictionary<Guid, NPC>();

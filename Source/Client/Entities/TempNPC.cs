@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Objects
+namespace Entities
 {
     class TempNPC : Character
     {

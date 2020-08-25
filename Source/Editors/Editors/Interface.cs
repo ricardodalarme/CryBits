@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using Objects;
+using Entities;
 using Library;
 using static Utils;
 
@@ -94,10 +94,10 @@ partial class Editor_Interface : Form
         Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = New;
         switch ((Tools_Types)cmbType.SelectedIndex)
         {
-            case Tools_Types.Button: New = new Objects.Button(); break;
-            case Tools_Types.Panel: New = new Objects.Panel(); break;
-            case Tools_Types.CheckBox: New = new Objects.CheckBox(); break;
-            case Tools_Types.TextBox: New = new Objects.TextBox(); break;
+            case Tools_Types.Button: New = new Entities.Button(); break;
+            case Tools_Types.Panel: New = new Entities.Panel(); break;
+            case Tools_Types.CheckBox: New = new Entities.CheckBox(); break;
+            case Tools_Types.TextBox: New = new Entities.TextBox(); break;
         }
         Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(New.ToString());
         New.Window = (Windows)cmbWindows.SelectedIndex;

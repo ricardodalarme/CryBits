@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Objects
+namespace Entities
 {
     [Serializable]
-    class Map : Data
+    class Map : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, Map> List;

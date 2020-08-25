@@ -1,18 +1,16 @@
 ﻿using System;
 
-namespace Objects
+namespace Entities
 {
     [Serializable]
-    public class Data
+    public class Entity
     {
         // Informações de todos os dados
         public Guid ID;
-        public readonly DateTime CreationTime;
 
-        public Data(Guid ID)
+        public Entity(Guid ID)
         {
             this.ID = ID;
-            CreationTime = DateTime.Now;
         }
     }
 }

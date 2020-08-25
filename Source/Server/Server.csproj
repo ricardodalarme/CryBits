@@ -83,7 +83,7 @@
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\Character.cs" />
     <Compile Include="Entities\Class.cs" />
-    <Compile Include="Entities\Data.cs" />
+    <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Entities\NPC.cs" />

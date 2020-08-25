@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Objects
+namespace Entities
 {
-    class Item : Data
+    class Item : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, Item> List ;

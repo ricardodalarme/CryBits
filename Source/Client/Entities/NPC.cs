@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Objects
+namespace Entities
 {
-    class NPC : Data
+    class NPC : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, NPC> List;

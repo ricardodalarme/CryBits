@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using Objects;
+using Entities;
 using Interface;
 
 class Loop

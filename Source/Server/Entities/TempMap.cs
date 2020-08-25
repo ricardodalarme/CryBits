@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using Logic;
 using static Logic.Utils;
 
-namespace Objects
+namespace Entities
 {
-    class TempMap : Data
+    class TempMap : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, TempMap> List = new Dictionary<Guid, TempMap>();
@@ -94,7 +94,7 @@ namespace Objects
                     {
                         // Faz o item aparecer
                         TMap_Items Map_Item = new TMap_Items();
-                        Map_Item.Item = Objects.Item.Get(new Guid(Data.Attribute[x, y].Data_1));
+                        Map_Item.Item = Entities.Item.Get(new Guid(Data.Attribute[x, y].Data_1));
                         Map_Item.Amount = Data.Attribute[x, y].Data_2;
                         Map_Item.X = x;
                         Map_Item.Y = y;

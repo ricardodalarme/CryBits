@@ -1,4 +1,4 @@
-﻿using Objects;
+﻿using Entities;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using static Logic.Utils;
@@ -97,41 +97,36 @@ namespace Library
         public static void Class(Class Class)
         {
             // Escreve os dados
-            FileStream Stream = new FileInfo(Directories.Classes.FullName + Class.ID + Directories.Format).OpenWrite();
-            new BinaryFormatter().Serialize(Stream, Class);
-            Stream.Close();
+            using (var Stream = new FileInfo(Directories.Classes.FullName + Class.ID + Directories.Format).OpenWrite())
+                new BinaryFormatter().Serialize(Stream, Class);
         }
 
         public static void NPC(NPC NPC)
         {
             // Escreve os dados
-            FileStream Stream = new FileInfo(Directories.NPCs.FullName + NPC.ID + Directories.Format).OpenWrite();
-            new BinaryFormatter().Serialize(Stream, NPC);
-            Stream.Close();
+            using (var Stream = new FileInfo(Directories.NPCs.FullName + NPC.ID + Directories.Format).OpenWrite())
+                new BinaryFormatter().Serialize(Stream, NPC);
         }
 
         public static void Item(Item Item)
         {
             // Escreve os dados
-            FileStream Stream = new FileInfo(Directories.Items.FullName + Item.ID + Directories.Format).OpenWrite();
-            new BinaryFormatter().Serialize(Stream, Item);
-            Stream.Close();
+            using (var Stream = new FileInfo(Directories.Items.FullName + Item.ID + Directories.Format).OpenWrite())
+                new BinaryFormatter().Serialize(Stream, Item);
         }
 
         public static void Map(Map Map)
         {
             // Escreve os dados
-            FileStream Stream = new FileInfo(Directories.Maps.FullName + Map.ID + Directories.Format).OpenWrite();
-            new BinaryFormatter().Serialize(Stream, Map);
-            Stream.Close();
+            using (var Stream = new FileInfo(Directories.Maps.FullName + Map.ID + Directories.Format).OpenWrite())
+                new BinaryFormatter().Serialize(Stream, Map);
         }
 
         public static void Shop(Shop Shop)
         {
             // Escreve os dados
-            FileStream Stream = new FileInfo(Directories.Shops.FullName + Shop.ID + Directories.Format).OpenWrite();
-            new BinaryFormatter().Serialize(Stream, Shop);
-            Stream.Close();
+            using (var Stream = new FileInfo(Directories.Shops.FullName + Shop.ID + Directories.Format).OpenWrite())
+                new BinaryFormatter().Serialize(Stream, Shop);
         }
     }
 }

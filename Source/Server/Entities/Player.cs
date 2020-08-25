@@ -5,7 +5,7 @@ using System.Drawing;
 using Logic;
 using static Logic.Utils;
 
-namespace Objects
+namespace Entities
 {
     class Player : Character
     {
@@ -154,8 +154,8 @@ namespace Objects
 
             // Evita que o jogador seja transportado para fora do limite
             if (To == null) return;
-            if (x >= Objects.Map.Width) x = Objects.Map.Width - 1;
-            if (y >= Objects.Map.Height) y = Objects.Map.Height - 1;
+            if (x >= Entities.Map.Width) x = Entities.Map.Width - 1;
+            if (y >= Entities.Map.Height) y = Entities.Map.Height - 1;
             if (x < 0) x = 0;
             if (y < 0) y = 0;
 
@@ -207,10 +207,10 @@ namespace Objects
                 if (Link != null)
                     switch (Direction)
                     {
-                        case Directions.Up: Warp(Link, Old_X, Objects.Map.Height - 1); return;
+                        case Directions.Up: Warp(Link, Old_X, Entities.Map.Height - 1); return;
                         case Directions.Down: Warp(Link, Old_X, 0); return;
                         case Directions.Right: Warp(Link, 0, Old_Y); return;
-                        case Directions.Left: Warp(Link, Objects.Map.Width - 1, Old_Y); return;
+                        case Directions.Left: Warp(Link, Entities.Map.Width - 1, Old_Y); return;
                     }
                 else
                 {

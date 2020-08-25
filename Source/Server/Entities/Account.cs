@@ -1,7 +1,7 @@
 ﻿using Lidgren.Network;
 using System.Collections.Generic;
 
-namespace Objects
+namespace Entities
 {
     class Account
     {

@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using static Utils;
 
-namespace Objects
+namespace Entities
 {
-    class Class : Data
+    class Class : Entity
     {
         // Dados
         public string Name = string.Empty;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Objects
+namespace Entities
 {
     [Serializable]
     public class Tile

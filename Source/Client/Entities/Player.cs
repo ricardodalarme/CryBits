@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Interface;
 
-namespace Objects
+namespace Entities
 {
     class Player : Character
     {

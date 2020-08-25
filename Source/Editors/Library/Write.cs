@@ -10,22 +10,18 @@ namespace Library
         public static void Options()
         {
             // Escreve os dados
-            FileStream Stream = new FileInfo(Directories.Options.FullName).OpenWrite();
-            new BinaryFormatter().Serialize(Stream, Lists.Options);
-            Stream.Close();
+            using (var Stream = new FileInfo(Directories.Options.FullName).OpenWrite())
+                new BinaryFormatter().Serialize(Stream, Lists.Options);
         }
 
         public static void Tools()
         {
             // Cria um sistema binário para a manipulação dos dados
             FileInfo File = new FileInfo(Directories.Tools.FullName);
-            BinaryWriter Data = new BinaryWriter(File.OpenWrite());
-
-            // Escreve os dados
-            for (short n = 0; n < Lists.Tool.Nodes.Count; n++) Tools(Lists.Tool.Nodes[n], Data);
-
-            // Fecha o sistema
-            Data.Dispose();
+            using (var Data = new BinaryWriter(File.OpenWrite()))
+                // Escreve os dados
+                for (short n = 0; n < Lists.Tool.Nodes.Count; n++) 
+                    Tools(Lists.Tool.Nodes[n], Data);
         }
 
         private static void Tools(TreeNode Node, BinaryWriter Data)
@@ -35,26 +31,26 @@ namespace Library
             for (byte i = 0; i < Node.Nodes.Count; i++)
             {
                 // Salva de acordo com a ferramenta
-                Objects.Tool Tool = (Objects.Tool)Node.Nodes[i].Tag;
-                if (Tool is Objects.Button)
+                Entities.Tool Tool = (Entities.Tool)Node.Nodes[i].Tag;
+                if (Tool is Entities.Button)
                 {
                     Data.Write((byte)Tools_Types.Button);
-                    Button(Data, (Objects.Button)Tool);
+                    Button(Data, (Entities.Button)Tool);
                 }
-                else if (Tool is Objects.TextBox)
+                else if (Tool is Entities.TextBox)
                 {
                     Data.Write((byte)Tools_Types.TextBox);
-                    TextBox(Data, (Objects.TextBox)Tool);
+                    TextBox(Data, (Entities.TextBox)Tool);
                 }
-                else if (Tool is Objects.CheckBox)
+                else if (Tool is Entities.CheckBox)
                 {
                     Data.Write((byte)Tools_Types.CheckBox);
-                    CheckBox(Data, (Objects.CheckBox)Tool);
+                    CheckBox(Data, (Entities.CheckBox)Tool);
                 }
-                else if (Tool is Objects.Panel)
+                else if (Tool is Entities.Panel)
                 {
                     Data.Write((byte)Tools_Types.Panel);
-                    Panel(Data, (Objects.Panel)Tool);
+                    Panel(Data, (Entities.Panel)Tool);
                 }
 
                 // Pula pra próxima ferramenta
@@ -62,7 +58,7 @@ namespace Library
             }
         }
 
-        private static void Button(BinaryWriter Data, Objects.Button Tool)
+        private static void Button(BinaryWriter Data, Entities.Button Tool)
         {
             // Escreve os dados
             Data.Write(Tool.Name);
@@ -73,7 +69,7 @@ namespace Library
             Data.Write(Tool.Texture_Num);
         }
 
-        private static void TextBox(BinaryWriter Data, Objects.TextBox Tool)
+        private static void TextBox(BinaryWriter Data, Entities.TextBox Tool)
         {
             // Escreve os dados
             Data.Write(Tool.Name);
@@ -86,7 +82,7 @@ namespace Library
             Data.Write(Tool.Password);
         }
 
-        private static void Panel(BinaryWriter Data, Objects.Panel Tool)
+        private static void Panel(BinaryWriter Data, Entities.Panel Tool)
         {
             // Escreve os dados
             Data.Write(Tool.Name);
@@ -97,7 +93,7 @@ namespace Library
             Data.Write(Tool.Texture_Num);
         }
 
-        private static void CheckBox(BinaryWriter Data, Objects.CheckBox Tool)
+        private static void CheckBox(BinaryWriter Data, Entities.CheckBox Tool)
         {
             // Escreve os dados
             Data.Write(Tool.Name);
@@ -118,9 +114,8 @@ namespace Library
         public static void Tile(byte Index)
         {
             // Escreve os dados
-            FileStream Stream = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format).OpenWrite();
-            new BinaryFormatter().Serialize(Stream, Lists.Tile[Index]);
-            Stream.Close();
+            using (var Stream = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format).OpenWrite())
+                new BinaryFormatter().Serialize(Stream, Lists.Tile[Index]);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Objects;
+﻿using Entities;
 using SFML.Graphics;
 using SFML.Window;
 using System;
@@ -437,7 +437,7 @@ class Graphics
     private static void CreateCharacter_Class()
     {
         short Texture_Num = 0;
-        Class Class = Objects.Class.List.ElementAt(Panels.CreateCharacter_Class).Value;
+        Class Class = Entities.Class.List.ElementAt(Panels.CreateCharacter_Class).Value;
 
         // Textura do personagem
         if (CheckBoxes.List["GenderMale"].Checked && Class.Tex_Male.Length > 0)

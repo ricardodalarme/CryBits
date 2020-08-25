@@ -3,7 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Library;
-using Objects;
+using Entities;
 
 namespace Logic
 {
@@ -112,7 +112,7 @@ namespace Logic
                     }
 
                     // Encontra o jogador
-                    Objects.Account Account = Account.List.Find(x => x.User.Equals(Parts[1]));
+                    Entities.Account Account = Account.List.Find(x => x.User.Equals(Parts[1]));
 
                     if (Account == null)
                     {

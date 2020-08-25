@@ -1,4 +1,4 @@
-﻿using Objects;
+﻿using Entities;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -18,7 +18,7 @@ static class Lists
     public static TreeNode Tool;
 
     // Obtém o ID de algum dado, caso ele não existir retorna um ID zerado
-    public static string GetID(Data Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
+    public static string GetID(Entity Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
 
     // Obtém o dado, caso ele não existir retorna nulo
     public static object GetData<T>(Dictionary<Guid, T> Dictionary, Guid ID)

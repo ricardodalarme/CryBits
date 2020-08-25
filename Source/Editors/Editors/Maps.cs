@@ -1,6 +1,6 @@
 ﻿using Library;
 using Network;
-using Objects;
+using Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

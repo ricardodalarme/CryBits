@@ -1,4 +1,4 @@
-﻿namespace Objects
+﻿namespace Entities
 {
     class Character
     {
