@@ -1,6 +1,7 @@
 ﻿using Network;
 using SFML.Graphics;
 using System.Collections.Generic;
+using Logic;
 
 namespace Interface
 {

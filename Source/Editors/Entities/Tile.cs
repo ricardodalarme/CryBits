@@ -14,6 +14,6 @@ namespace Entities
     public class Tile_Data
     {
         public byte Attribute;
-        public bool[] Block = new bool[(byte)Utils.Directions.Count];
+        public bool[] Block = new bool[(byte)Logic.Utils.Directions.Count];
     }
 }

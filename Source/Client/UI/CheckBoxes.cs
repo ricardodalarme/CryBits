@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using Library;
+using Logic;
 
 namespace Interface
 {

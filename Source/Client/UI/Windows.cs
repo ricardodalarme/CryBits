@@ -33,7 +33,7 @@ namespace Interface
             if (Current == Types.Game)
                 Socket.Disconnect();
             else
-                Program.Working = false;
+                Logic.Program.Working = false;
         }
 
         public static void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)

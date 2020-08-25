@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Program</StartupObject>
+    <StartupObject>Logic.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -68,6 +68,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logic\MapAutoTile.cs" />
     <Compile Include="UI\Chat.cs" />
     <Compile Include="UI\Windows.cs" />
     <Compile Include="Logic\Camera.cs" />
@@ -79,7 +80,7 @@
     <Compile Include="Entities\Class.cs" />
     <Compile Include="Entities\Shop.cs" />
     <Compile Include="Entities\TempMap.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Logic\Program.cs" />
     <Compile Include="UI\Buttons.cs" />
     <Compile Include="UI\CheckBoxes.cs" />
     <Compile Include="UI\Panels.cs" />

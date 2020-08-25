@@ -1,12 +1,10 @@
-﻿using Entities;
-using System.Drawing;
-using static Logic.Utils;
+﻿using System.Drawing;
+using static Utils;
 
 namespace Logic
 {
-    class MapAutotile
-    {
-        // Formas de adicionar o mini azulejo
+    class MapAutoTile
+    {   // Formas de adicionar o mini azulejo
         public enum AddMode
         {
             None,
@@ -17,28 +15,19 @@ namespace Logic
             Fill
         }
 
-        public static void Update(Map Map)
+        public static void Update()
         {
             // Atualiza os azulejos necessários
-            for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
-                    for (byte c = 0; c < Map.Layer.Count; c++)
-                        if (Map.Layer[c].Tile[x, y].Auto)
-                            // Faz os cálculos para a autocriação
-                            Calculate(Map, x, y, c);
+            for (byte x = 0; x < Map_Width; x++)
+                for (byte y = 0; y < Map_Height; y++)
+                    for (byte c = 0; c < (byte)Mapper.Layers.Count; c++)
+                        for (byte q = 0; q <= Mapper.Current.Data.Tile[x, y].Data.GetUpperBound(1); q++)
+                            if (Mapper.Current.Data.Tile[x, y].Data[c, q].Automatic)
+                                // Faz os cálculos para a autocriação
+                                Calculate(x, y, q, c);
         }
 
-        public static void Update(Map Map, int x, int y, byte Layer_Num)
-        {
-            // Atualiza os azulejos necessários
-            for (int x2 = x - 2; x2 < x + 2; x2++)
-                for (int y2 = y - 2; y2 < y + 2; y2++)
-                    if (x2 >= 0 && x2 < Map.Width && y2 >= 0 && y2 < Map.Height)
-                        // Faz os cálculos para a autocriação
-                        Calculate(Map, (byte)x2, (byte)y2, Layer_Num);
-        }
-
-        private static void Set(Map Map, byte x, byte y, byte Layer_Num, byte Part, string Index)
+        private static void Set(byte x, byte y, byte Layer_Num, byte Layer_Type, byte Part, string Index)
         {
             Point Position = new Point(0);
 
@@ -77,25 +66,24 @@ namespace Logic
             }
 
             // Define a posição do mini azulejo
-            Map_Tile_Data Data = Map.Layer[Layer_Num].Tile[x, y];
-            Map.Layer[Layer_Num].Tile[x, y].Mini[Part].X = Data.X * Grid + Position.X;
-            Map.Layer[Layer_Num].Tile[x, y].Mini[Part].Y = Data.Y * Grid + Position.Y;
+            Entities.Map_Tile_Data Data = Mapper.Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num];
+            Mapper.Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].X = Data.X * Grid + Position.X;
+            Mapper.Current.Data.Tile[x, y].Data[Layer_Type, Layer_Num].Mini[Part].Y = Data.Y * Grid + Position.Y;
         }
 
-        private static bool Check(Map Map, int X1, int Y1, int X2, int Y2, byte Layer_Num)
+        private static bool Check(int X1, int Y1, int X2, int Y2, byte Layer_Num, byte Layer_Type)
         {
-            Map_Tile_Data Data1, Data2;
+            Entities.Map_Tile_Data Data1, Data2;
 
             // Somente se necessário
-            if (X1 < 0 || X1 >= Map.Width || Y1 < 0 || Y1 >= Map.Height) return true;
-            if (X2 < 0 || X2 >= Map.Width || Y2 < 0 || Y2 >= Map.Height) return true;
+            if (X2 < 0 || X2 >= Map_Width || Y2 < 0 || Y2 >= Map_Height) return true;
 
             // Dados
-            Data1 = Map.Layer[Layer_Num].Tile[X1, Y1];
-            Data2 = Map.Layer[Layer_Num].Tile[X2, Y2];
+            Data1 = Mapper.Current.Data.Tile[X1, Y1].Data[Layer_Type, Layer_Num];
+            Data2 = Mapper.Current.Data.Tile[X2, Y2].Data[Layer_Type, Layer_Num];
 
             // Verifica se são os mesmo azulejos
-            if (!Data2.Auto) return false;
+            if (!Data2.Automatic) return false;
             if (Data1.Tile != Data2.Tile) return false;
             if (Data1.X != Data2.X) return false;
             if (Data1.Y != Data2.Y) return false;
@@ -104,24 +92,24 @@ namespace Logic
             return true;
         }
 
-        private static void Calculate(Map Map, byte x, byte y, byte Layer_Num)
+        private static void Calculate(byte x, byte y, byte Layer_Num, byte Layer_Type)
         {
             // Calcula as quatros partes do azulejo
-            Calculate_NW(Map, x, y, Layer_Num);
-            Calculate_NE(Map, x, y, Layer_Num);
-            Calculate_SW(Map, x, y, Layer_Num);
-            Calculate_SE(Map, x, y, Layer_Num);
+            Calculate_NW(x, y, Layer_Num, Layer_Type);
+            Calculate_NE(x, y, Layer_Num, Layer_Type);
+            Calculate_SW(x, y, Layer_Num, Layer_Type);
+            Calculate_SE(x, y, Layer_Num, Layer_Type);
         }
 
-        private static void Calculate_NW(Map Map, byte x, byte y, byte Layer_Num)
+        private static void Calculate_NW(byte x, byte y, byte Layer_Num, byte Layer_Type)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
 
             // Verifica se existe algo para modificar nos azulejos em volta (Norte, Oeste, Noroeste)
-            if (Check(Map, x, y, x - 1, y - 1, Layer_Num)) Tile[1] = true;
-            if (Check(Map, x, y, x, y - 1, Layer_Num)) Tile[2] = true;
-            if (Check(Map, x, y, x - 1, y, Layer_Num)) Tile[3] = true;
+            if (Check(x, y, x - 1, y - 1, Layer_Num, Layer_Type)) Tile[1] = true;
+            if (Check(x, y, x, y - 1, Layer_Num, Layer_Type)) Tile[2] = true;
+            if (Check(x, y, x - 1, y, Layer_Num, Layer_Type)) Tile[3] = true;
 
             // Forma que será adicionado o mini azulejo
             if (!Tile[2] && !Tile[3]) Mode = AddMode.Inside;
@@ -133,23 +121,23 @@ namespace Logic
             // Define o mini azulejo
             switch (Mode)
             {
-                case AddMode.Inside: Set(Map, x, y, Layer_Num, 0, "e"); break;
-                case AddMode.Exterior: Set(Map, x, y, Layer_Num, 0, "a"); break;
-                case AddMode.Horizontal: Set(Map, x, y, Layer_Num, 0, "i"); break;
-                case AddMode.Vertical: Set(Map, x, y, Layer_Num, 0, "m"); break;
-                case AddMode.Fill: Set(Map, x, y, Layer_Num, 0, "q"); break;
+                case AddMode.Inside: Set(x, y, Layer_Num, Layer_Type, 0, "e"); break;
+                case AddMode.Exterior: Set(x, y, Layer_Num, Layer_Type, 0, "a"); break;
+                case AddMode.Horizontal: Set(x, y, Layer_Num, Layer_Type, 0, "i"); break;
+                case AddMode.Vertical: Set(x, y, Layer_Num, Layer_Type, 0, "m"); break;
+                case AddMode.Fill: Set(x, y, Layer_Num, Layer_Type, 0, "q"); break;
             }
         }
 
-        private static void Calculate_NE(Map Map, byte x, byte y, byte Layer_Num)
+        private static void Calculate_NE(byte x, byte y, byte Layer_Num, byte Layer_Type)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
 
             // Verifica se existe algo para modificar nos azulejos em volta (Norte, Oeste, Noroeste)
-            if (Check(Map, x, y, x, y - 1, Layer_Num)) Tile[1] = true;
-            if (Check(Map, x, y, x + 1, y - 1, Layer_Num)) Tile[2] = true;
-            if (Check(Map, x, y, x + 1, y, Layer_Num)) Tile[3] = true;
+            if (Check(x, y, x, y - 1, Layer_Num, Layer_Type)) Tile[1] = true;
+            if (Check(x, y, x + 1, y - 1, Layer_Num, Layer_Type)) Tile[2] = true;
+            if (Check(x, y, x + 1, y, Layer_Num, Layer_Type)) Tile[3] = true;
 
             // Forma que será adicionado o mini azulejo
             if (!Tile[1] && !Tile[3]) Mode = AddMode.Inside;
@@ -161,23 +149,23 @@ namespace Logic
             // Define o mini azulejo
             switch (Mode)
             {
-                case AddMode.Inside: Set(Map, x, y, Layer_Num, 1, "j"); break;
-                case AddMode.Exterior: Set(Map, x, y, Layer_Num, 1, "b"); break;
-                case AddMode.Horizontal: Set(Map, x, y, Layer_Num, 1, "f"); break;
-                case AddMode.Vertical: Set(Map, x, y, Layer_Num, 1, "r"); break;
-                case AddMode.Fill: Set(Map, x, y, Layer_Num, 1, "n"); break;
+                case AddMode.Inside: Set(x, y, Layer_Num, Layer_Type, 1, "j"); break;
+                case AddMode.Exterior: Set(x, y, Layer_Num, Layer_Type, 1, "b"); break;
+                case AddMode.Horizontal: Set(x, y, Layer_Num, Layer_Type, 1, "f"); break;
+                case AddMode.Vertical: Set(x, y, Layer_Num, Layer_Type, 1, "r"); break;
+                case AddMode.Fill: Set(x, y, Layer_Num, Layer_Type, 1, "n"); break;
             }
         }
 
-        private static void Calculate_SW(Map Map, byte x, byte y, byte Layer_Num)
+        private static void Calculate_SW(byte x, byte y, byte Layer_Num, byte Layer_Type)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
 
             // Verifica se existe algo para modificar nos azulejos em volta (Sul, Oeste, Sudoeste)
-            if (Check(Map, x, y, x - 1, y, Layer_Num)) Tile[1] = true;
-            if (Check(Map, x, y, x - 1, y + 1, Layer_Num)) Tile[2] = true;
-            if (Check(Map, x, y, x, y + 1, Layer_Num)) Tile[3] = true;
+            if (Check(x, y, x - 1, y, Layer_Num, Layer_Type)) Tile[1] = true;
+            if (Check(x, y, x - 1, y + 1, Layer_Num, Layer_Type)) Tile[2] = true;
+            if (Check(x, y, x, y + 1, Layer_Num, Layer_Type)) Tile[3] = true;
 
             // Forma que será adicionado o mini azulejo
             if (!Tile[1] && !Tile[3]) Mode = AddMode.Inside;
@@ -189,23 +177,23 @@ namespace Logic
             // Define o mini azulejo
             switch (Mode)
             {
-                case AddMode.Inside: Set(Map, x, y, Layer_Num, 2, "o"); break;
-                case AddMode.Exterior: Set(Map, x, y, Layer_Num, 2, "c"); break;
-                case AddMode.Horizontal: Set(Map, x, y, Layer_Num, 2, "s"); break;
-                case AddMode.Vertical: Set(Map, x, y, Layer_Num, 2, "g"); break;
-                case AddMode.Fill: Set(Map, x, y, Layer_Num, 2, "k"); break;
+                case AddMode.Inside: Set(x, y, Layer_Num, Layer_Type, 2, "o"); break;
+                case AddMode.Exterior: Set(x, y, Layer_Num, Layer_Type, 2, "c"); break;
+                case AddMode.Horizontal: Set(x, y, Layer_Num, Layer_Type, 2, "s"); break;
+                case AddMode.Vertical: Set(x, y, Layer_Num, Layer_Type, 2, "g"); break;
+                case AddMode.Fill: Set(x, y, Layer_Num, Layer_Type, 2, "k"); break;
             }
         }
 
-        private static void Calculate_SE(Map Map, byte x, byte y, byte Layer_Num)
+        private static void Calculate_SE(byte x, byte y, byte Layer_Num, byte Layer_Type)
         {
             bool[] Tile = new bool[4];
             AddMode Mode = AddMode.None;
 
             // Verifica se existe algo para modificar nos azulejos em volta (Sul, Oeste, Sudeste)
-            if (Check(Map, x, y, x, y + 1, Layer_Num)) Tile[1] = true;
-            if (Check(Map, x, y, x + 1, y + 1, Layer_Num)) Tile[2] = true;
-            if (Check(Map, x, y, x + 1, y, Layer_Num)) Tile[3] = true;
+            if (Check(x, y, x, y + 1, Layer_Num, Layer_Type)) Tile[1] = true;
+            if (Check(x, y, x + 1, y + 1, Layer_Num, Layer_Type)) Tile[2] = true;
+            if (Check(x, y, x + 1, y, Layer_Num, Layer_Type)) Tile[3] = true;
 
             // Forma que será adicionado o mini azulejo
             if (!Tile[1] && !Tile[3]) Mode = AddMode.Inside;
@@ -217,11 +205,11 @@ namespace Logic
             // Define o mini azulejo
             switch (Mode)
             {
-                case AddMode.Inside: Set(Map, x, y, Layer_Num, 3, "t"); break;
-                case AddMode.Exterior: Set(Map, x, y, Layer_Num, 3, "d"); break;
-                case AddMode.Horizontal: Set(Map, x, y, Layer_Num, 3, "p"); break;
-                case AddMode.Vertical: Set(Map, x, y, Layer_Num, 3, "l"); break;
-                case AddMode.Fill: Set(Map, x, y, Layer_Num, 3, "h"); break;
+                case AddMode.Inside: Set(x, y, Layer_Num, Layer_Type, 3, "t"); break;
+                case AddMode.Exterior: Set(x, y, Layer_Num, Layer_Type, 3, "d"); break;
+                case AddMode.Horizontal: Set(x, y, Layer_Num, Layer_Type, 3, "p"); break;
+                case AddMode.Vertical: Set(x, y, Layer_Num, Layer_Type, 3, "l"); break;
+                case AddMode.Fill: Set(x, y, Layer_Num, Layer_Type, 3, "h"); break;
             }
         }
     }

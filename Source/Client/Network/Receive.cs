@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Interface;
+using Logic;
 
 namespace Network
 {
@@ -540,7 +541,7 @@ namespace Network
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();
-            Mapper.Autotile.Update();
+            MapAutoTile.Update();
         }
 
         private static void JoinMap()

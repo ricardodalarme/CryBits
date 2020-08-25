@@ -1,31 +1,33 @@
-﻿partial class Editor_NPCs
+﻿namespace Editors
 {
-    /// <summary>
-    /// Required designer variable.
-    /// </summary>
-    private System.ComponentModel.IContainer components = null;
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
+    partial class Editor_NPCs
     {
-        if (disposing && (components != null))
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
-            components.Dispose();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
-        base.Dispose(disposing);
-    }
 
-    #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_NPCs));
             this.grpGeneral = new System.Windows.Forms.GroupBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
@@ -861,72 +863,73 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
-    }
+        }
 
-    #endregion
-    private System.Windows.Forms.GroupBox grpGeneral;
-    public System.Windows.Forms.TextBox txtName;
-    private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.Button butSave;
-    private System.Windows.Forms.Button butCancel;
-    private System.Windows.Forms.Label lblTexture;
-    private System.Windows.Forms.NumericUpDown numRange;
-    private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.ComboBox cmbBehavior;
-    private System.Windows.Forms.GroupBox grpAttributes;
-    private System.Windows.Forms.NumericUpDown numAgility;
-    private System.Windows.Forms.Label label6;
-    private System.Windows.Forms.NumericUpDown numIntelligence;
-    private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.NumericUpDown numResistance;
-    private System.Windows.Forms.NumericUpDown numStrength;
-    private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.Label label7;
-    private System.Windows.Forms.NumericUpDown numMP;
-    private System.Windows.Forms.NumericUpDown numHP;
-    private System.Windows.Forms.Label lblMP;
-    private System.Windows.Forms.Label lblHP;
-    private System.Windows.Forms.NumericUpDown numSpawn;
-    private System.Windows.Forms.Label label8;
-    private System.Windows.Forms.NumericUpDown numExperience;
-    private System.Windows.Forms.Label label9;
-    private System.Windows.Forms.NumericUpDown numVitality;
-    private System.Windows.Forms.Label label10;
-    private System.Windows.Forms.NumericUpDown numDrop_Amount;
-    private System.Windows.Forms.ComboBox cmbDrop_Item;
-    private System.Windows.Forms.NumericUpDown numDrop_Chance;
-    private System.Windows.Forms.Label label11;
-    public System.Windows.Forms.TextBox txtSayMsg;
-    private System.Windows.Forms.Label label14;
-    private System.Windows.Forms.GroupBox grpDrop;
-    private System.Windows.Forms.GroupBox grpDrop_Add;
-    private System.Windows.Forms.Label label15;
-    private System.Windows.Forms.Label label16;
-    private System.Windows.Forms.Button butItem_Ok;
-    private System.Windows.Forms.Button butDrop_Delete;
-    public System.Windows.Forms.ListBox lstDrop;
-    private System.Windows.Forms.Button butDrop_Add;
-    private System.Windows.Forms.GroupBox grpAllies;
-    private System.Windows.Forms.ListBox lstAllies;
-    private System.Windows.Forms.Label label12;
-    private System.Windows.Forms.Button butAllie_Delete;
-    private System.Windows.Forms.Button butAllie_Add;
-    private System.Windows.Forms.GroupBox grpBehaviour;
-    private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.NumericUpDown numFlee_Health;
-    private System.Windows.Forms.ComboBox cmbMovement;
-    private System.Windows.Forms.Label label13;
-    private System.Windows.Forms.GroupBox grpAllie_Add;
-    private System.Windows.Forms.ComboBox cmbAllie_NPC;
-    private System.Windows.Forms.Label label17;
-    private System.Windows.Forms.Button butAllie_Ok;
-    private System.Windows.Forms.CheckBox chkAttackNPC;
-    private System.Windows.Forms.ComboBox cmbShop;
-    private System.Windows.Forms.Label label18;
-    private System.Windows.Forms.TreeView List;
-    private System.Windows.Forms.Button butRemove;
-    private System.Windows.Forms.Button butNew;
-    public System.Windows.Forms.TextBox txtFilter;
-    private System.Windows.Forms.PictureBox picTexture;
-    public System.Windows.Forms.NumericUpDown numTexture;
+        #endregion
+        private System.Windows.Forms.GroupBox grpGeneral;
+        public System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button butSave;
+        private System.Windows.Forms.Button butCancel;
+        private System.Windows.Forms.Label lblTexture;
+        private System.Windows.Forms.NumericUpDown numRange;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox cmbBehavior;
+        private System.Windows.Forms.GroupBox grpAttributes;
+        private System.Windows.Forms.NumericUpDown numAgility;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numIntelligence;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown numResistance;
+        private System.Windows.Forms.NumericUpDown numStrength;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown numMP;
+        private System.Windows.Forms.NumericUpDown numHP;
+        private System.Windows.Forms.Label lblMP;
+        private System.Windows.Forms.Label lblHP;
+        private System.Windows.Forms.NumericUpDown numSpawn;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown numExperience;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown numVitality;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown numDrop_Amount;
+        private System.Windows.Forms.ComboBox cmbDrop_Item;
+        private System.Windows.Forms.NumericUpDown numDrop_Chance;
+        private System.Windows.Forms.Label label11;
+        public System.Windows.Forms.TextBox txtSayMsg;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.GroupBox grpDrop;
+        private System.Windows.Forms.GroupBox grpDrop_Add;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Button butItem_Ok;
+        private System.Windows.Forms.Button butDrop_Delete;
+        public System.Windows.Forms.ListBox lstDrop;
+        private System.Windows.Forms.Button butDrop_Add;
+        private System.Windows.Forms.GroupBox grpAllies;
+        private System.Windows.Forms.ListBox lstAllies;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button butAllie_Delete;
+        private System.Windows.Forms.Button butAllie_Add;
+        private System.Windows.Forms.GroupBox grpBehaviour;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numFlee_Health;
+        private System.Windows.Forms.ComboBox cmbMovement;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.GroupBox grpAllie_Add;
+        private System.Windows.Forms.ComboBox cmbAllie_NPC;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button butAllie_Ok;
+        private System.Windows.Forms.CheckBox chkAttackNPC;
+        private System.Windows.Forms.ComboBox cmbShop;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TreeView List;
+        private System.Windows.Forms.Button butRemove;
+        private System.Windows.Forms.Button butNew;
+        public System.Windows.Forms.TextBox txtFilter;
+        private System.Windows.Forms.PictureBox picTexture;
+        public System.Windows.Forms.NumericUpDown numTexture;
+    }
 }

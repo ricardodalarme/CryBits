@@ -46,7 +46,7 @@ namespace Entities
             byte Next_X = X, Next_Y = Y;
 
             // Próximo azulejo
-            Mapper.NextTile(Direction, ref Next_X, ref Next_Y);
+            Utils.NextTile(Direction, ref Next_X, ref Next_Y);
 
             // Verifica se está indo para uma ligação
             if (Mapper.OutOfLimit(Next_X, Next_Y)) return Data.Link[(byte)Direction] == 0;

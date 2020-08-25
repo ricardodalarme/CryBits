@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using static Utils;
+using static Logic.Utils;
 
 namespace Library
 {

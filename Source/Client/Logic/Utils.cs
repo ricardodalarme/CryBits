@@ -184,6 +184,19 @@ static class Utils
         }
     }
 
+    public static void NextTile(Utils.Directions Direction, ref byte X, ref byte Y)
+    {
+        // Próximo azulejo
+        switch (Direction)
+        {
+            case Utils.Directions.Up: Y -= 1; break;
+            case Utils.Directions.Down: Y += 1; break;
+            case Utils.Directions.Right: X += 1; break;
+            case Utils.Directions.Left: X -= 1; break;
+        }
+    }
+
+
 
     // Obtém o ID de algum dado, caso ele não existir retorna um ID zerado
     public static string GetID(Entity Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();

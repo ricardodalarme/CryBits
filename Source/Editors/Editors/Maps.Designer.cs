@@ -1,31 +1,33 @@
-﻿partial class Editor_Maps
+﻿namespace Editors
 {
-    /// <summary>
-    /// Required designer variable.
-    /// </summary>
-    private System.ComponentModel.IContainer components = null;
-
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-    protected override void Dispose(bool disposing)
+    partial class Editor_Maps
     {
-        if (disposing && (components != null))
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
-            components.Dispose();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
-        base.Dispose(disposing);
-    }
 
-    #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Maps));
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
@@ -599,7 +601,7 @@
             // 
             // picTile
             // 
-            this.picTile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.picTile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.picTile.BackColor = System.Drawing.Color.Black;
             this.picTile.Location = new System.Drawing.Point(0, 48);
@@ -615,7 +617,7 @@
             // 
             // scrlTileY
             // 
-            this.scrlTileY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.scrlTileY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.scrlTileY.Cursor = System.Windows.Forms.Cursors.Default;
             this.scrlTileY.LargeChange = 32;
@@ -628,7 +630,7 @@
             // 
             // scrlMapX
             // 
-            this.scrlMapX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.scrlMapX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scrlMapX.LargeChange = 1;
             this.scrlMapX.Location = new System.Drawing.Point(279, 637);
@@ -638,7 +640,7 @@
             // 
             // scrlMapY
             // 
-            this.scrlMapY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.scrlMapY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scrlMapY.Cursor = System.Windows.Forms.Cursors.Default;
             this.scrlMapY.LargeChange = 1;
@@ -939,7 +941,7 @@
             // 
             // grpZones
             // 
-            this.grpZones.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.grpZones.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.grpZones.Controls.Add(this.scrlZone_Clear);
             this.grpZones.Controls.Add(this.scrlZone);
@@ -981,7 +983,7 @@
             // 
             // grpLighting
             // 
-            this.grpLighting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.grpLighting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.grpLighting.Controls.Add(this.butLight_Clear);
             this.grpLighting.Location = new System.Drawing.Point(0, 27);
@@ -1011,7 +1013,7 @@
             // 
             // grpAttributes
             // 
-            this.grpAttributes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.grpAttributes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.grpAttributes.Controls.Add(this.grpA_Item);
             this.grpAttributes.Controls.Add(this.optA_Item);
@@ -1253,7 +1255,7 @@
             // 
             // picTile_Background
             // 
-            this.picTile_Background.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.picTile_Background.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.picTile_Background.BackColor = System.Drawing.Color.Black;
             this.picTile_Background.Location = new System.Drawing.Point(0, 48);
@@ -1264,7 +1266,7 @@
             // 
             // grpNPCs
             // 
-            this.grpNPCs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.grpNPCs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.grpNPCs.Controls.Add(this.groupBox2);
             this.grpNPCs.Controls.Add(this.groupBox1);
@@ -1387,7 +1389,7 @@
             // 
             // List
             // 
-            this.List.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.List.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.List.HideSelection = false;
             this.List.Location = new System.Drawing.Point(1101, 73);
@@ -1398,7 +1400,7 @@
             // 
             // txtFilter
             // 
-            this.txtFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.txtFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFilter.Location = new System.Drawing.Point(1101, 26);
@@ -1409,8 +1411,8 @@
             // 
             // picBackground
             // 
-            this.picBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.picBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.picBackground.BackColor = System.Drawing.Color.Black;
             this.picBackground.Controls.Add(this.picMap);
@@ -1421,8 +1423,8 @@
             // 
             // picMap
             // 
-            this.picMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.picMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.picMap.BackColor = System.Drawing.Color.Black;
             this.picMap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -1549,131 +1551,132 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
-    }
+        }
 
-    #endregion
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-    private System.Windows.Forms.ToolStrip tolStrip;
-    private System.Windows.Forms.ToolStripButton butSaveAll;
-    private System.Windows.Forms.ToolStripButton butClearAll;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-    public System.Windows.Forms.ToolStripButton butPencil;
-    private System.Windows.Forms.ToolStripButton butFill;
-    public System.Windows.Forms.ToolStripButton butZoom_Normal;
-    public System.Windows.Forms.ToolStripButton butZoom_2x;
-    public System.Windows.Forms.ToolStripButton butZoom_4x;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
-    public System.Windows.Forms.ToolStripButton butVisualization;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-    public System.Windows.Forms.ToolStripButton butGrid;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-    public System.Windows.Forms.PictureBox picTile;
-    public System.Windows.Forms.VScrollBar scrlTileY;
-    public System.Windows.Forms.HScrollBar scrlMapX;
-    public System.Windows.Forms.VScrollBar scrlMapY;
-    public System.Windows.Forms.HScrollBar scrlTileX;
-    private System.Windows.Forms.StatusStrip Strip;
-    private System.Windows.Forms.ToolStripStatusLabel Revision;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-    private System.Windows.Forms.ToolStripStatusLabel Position;
-    public System.Windows.Forms.ToolStripButton butEdition;
-    private System.Windows.Forms.GroupBox grpLayers;
-    internal System.Windows.Forms.ColumnHeader colNúmero;
-    internal System.Windows.Forms.ColumnHeader colVisible;
-    internal System.Windows.Forms.ColumnHeader colName;
-    public System.Windows.Forms.CheckBox chkAuto;
-    private System.Windows.Forms.GroupBox grpLayer_Add;
-    private System.Windows.Forms.Button butLayer_Add;
-    private System.Windows.Forms.ColumnHeader colType;
-    private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.TextBox txtLayer_Name;
-    private System.Windows.Forms.ComboBox cmbLayers_Type;
-    private System.Windows.Forms.Button butLayer_Cancel;
-    private System.Windows.Forms.Button butLayer_Edit;
-    public System.Windows.Forms.ListView lstLayers;
-    public System.Windows.Forms.ToolStripButton butDiscover;
-    public System.Windows.Forms.ToolStripButton butRectangle;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-    private System.Windows.Forms.ToolStripButton butEraser;
-    private System.Windows.Forms.ToolStripButton butArea;
-    public System.Windows.Forms.ToolStripButton butMNormal;
-    public System.Windows.Forms.ToolStripButton butMZones;
-    private System.Windows.Forms.GroupBox grpZones;
-    private System.Windows.Forms.HScrollBar scrlZone;
-    private System.Windows.Forms.Button scrlZone_Clear;
-    public System.Windows.Forms.ToolStripButton butMLighting;
-    public System.Windows.Forms.ToolStripButton butCut;
-    public System.Windows.Forms.ToolStripButton butCopy;
-    private System.Windows.Forms.ToolStripButton butPaste;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
-    private System.Windows.Forms.Button butLight_Clear;
-    private System.Windows.Forms.GroupBox grpLighting;
-    public System.Windows.Forms.ComboBox cmbTiles;
-    private System.Windows.Forms.Timer tmrUpdate;
-    private System.Windows.Forms.GroupBox grpTile;
-    public System.Windows.Forms.ToolStripButton butAudio;
-    private System.Windows.Forms.ToolStripButton butReload;
-    public System.Windows.Forms.ToolStripButton butMAttributes;
-    private System.Windows.Forms.GroupBox grpAttributes;
-    private System.Windows.Forms.Button butAttributes_Clear;
-    private System.Windows.Forms.ToolStripStatusLabel FPS;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-    public System.Windows.Forms.PictureBox picTile_Background;
-    public System.Windows.Forms.ToolStripButton butMNPCs;
-    private System.Windows.Forms.GroupBox grpNPCs;
-    private System.Windows.Forms.Button butNPC_Add;
-    private System.Windows.Forms.Button butNPC_Remove;
-    private System.Windows.Forms.ComboBox cmbNPC;
-    private System.Windows.Forms.ListBox lstNPC;
-    private System.Windows.Forms.Button butNPC_Clear;
-    private System.Windows.Forms.RadioButton optA_Block;
-    private System.Windows.Forms.RadioButton optA_Warp;
-    private System.Windows.Forms.Button butAttributes_Import;
-    public System.Windows.Forms.RadioButton optA_DirBlock;
-    private System.Windows.Forms.NumericUpDown numA_Warp_Y;
-    private System.Windows.Forms.NumericUpDown numA_Warp_X;
-    private System.Windows.Forms.ComboBox cmbA_Warp_Map;
-    private System.Windows.Forms.Label label6;
-    private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.GroupBox grpA_Warp;
-    private System.Windows.Forms.ComboBox cmbA_Warp_Direction;
-    private System.Windows.Forms.Label label7;
-    private System.Windows.Forms.GroupBox groupBox2;
-    private System.Windows.Forms.Label label11;
-    private System.Windows.Forms.NumericUpDown numNPC_Zone;
-    private System.Windows.Forms.Label label9;
-    private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.Label label13;
-    private System.Windows.Forms.RadioButton optA_Item;
-    private System.Windows.Forms.GroupBox grpA_Item;
-    private System.Windows.Forms.NumericUpDown numA_Item_Amount;
-    private System.Windows.Forms.ComboBox cmbA_Item;
-    private System.Windows.Forms.Label label15;
-    private System.Windows.Forms.ToolStrip Trip_Layers;
-    private System.Windows.Forms.ToolStripButton butLayers_Add;
-    private System.Windows.Forms.ToolStripButton butLayers_Remove;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
-    private System.Windows.Forms.ToolStripButton butLayers_Up;
-    public System.Windows.Forms.ToolStripButton butLayers_Down;
-    private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
-    private System.Windows.Forms.ToolStripButton butLayers_Edit;
-    public System.Windows.Forms.TreeView List;
-    private System.Windows.Forms.ToolStripDropDownButton butEditors;
-    private System.Windows.Forms.ToolStripMenuItem butEditors_Classes;
-    private System.Windows.Forms.ToolStripMenuItem butEditors_Data;
-    private System.Windows.Forms.ToolStripMenuItem butEditors_Interface;
-    private System.Windows.Forms.ToolStripMenuItem butEditors_Items;
-    private System.Windows.Forms.ToolStripMenuItem butEditors_NPCs;
-    private System.Windows.Forms.ToolStripMenuItem butEditors_Shops;
-    private System.Windows.Forms.ToolStripMenuItem butEditors_Tiles;
-    public System.Windows.Forms.TextBox txtFilter;
-    private System.Windows.Forms.Label label16;
-    private System.Windows.Forms.Panel picBackground;
-    public System.Windows.Forms.PictureBox picMap;
-    private System.Windows.Forms.PropertyGrid prgProperties;
-    private System.Windows.Forms.ToolStrip toolStrip1;
-    private System.Windows.Forms.ToolStripButton butNew;
-    private System.Windows.Forms.ToolStripButton butRemove;
+        #endregion
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStrip tolStrip;
+        private System.Windows.Forms.ToolStripButton butSaveAll;
+        private System.Windows.Forms.ToolStripButton butClearAll;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        public System.Windows.Forms.ToolStripButton butPencil;
+        private System.Windows.Forms.ToolStripButton butFill;
+        public System.Windows.Forms.ToolStripButton butZoom_Normal;
+        public System.Windows.Forms.ToolStripButton butZoom_2x;
+        public System.Windows.Forms.ToolStripButton butZoom_4x;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
+        public System.Windows.Forms.ToolStripButton butVisualization;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        public System.Windows.Forms.ToolStripButton butGrid;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        public System.Windows.Forms.PictureBox picTile;
+        public System.Windows.Forms.VScrollBar scrlTileY;
+        public System.Windows.Forms.HScrollBar scrlMapX;
+        public System.Windows.Forms.VScrollBar scrlMapY;
+        public System.Windows.Forms.HScrollBar scrlTileX;
+        private System.Windows.Forms.StatusStrip Strip;
+        private System.Windows.Forms.ToolStripStatusLabel Revision;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripStatusLabel Position;
+        public System.Windows.Forms.ToolStripButton butEdition;
+        private System.Windows.Forms.GroupBox grpLayers;
+        internal System.Windows.Forms.ColumnHeader colNúmero;
+        internal System.Windows.Forms.ColumnHeader colVisible;
+        internal System.Windows.Forms.ColumnHeader colName;
+        public System.Windows.Forms.CheckBox chkAuto;
+        private System.Windows.Forms.GroupBox grpLayer_Add;
+        private System.Windows.Forms.Button butLayer_Add;
+        private System.Windows.Forms.ColumnHeader colType;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtLayer_Name;
+        private System.Windows.Forms.ComboBox cmbLayers_Type;
+        private System.Windows.Forms.Button butLayer_Cancel;
+        private System.Windows.Forms.Button butLayer_Edit;
+        public System.Windows.Forms.ListView lstLayers;
+        public System.Windows.Forms.ToolStripButton butDiscover;
+        public System.Windows.Forms.ToolStripButton butRectangle;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripButton butEraser;
+        private System.Windows.Forms.ToolStripButton butArea;
+        public System.Windows.Forms.ToolStripButton butMNormal;
+        public System.Windows.Forms.ToolStripButton butMZones;
+        private System.Windows.Forms.GroupBox grpZones;
+        private System.Windows.Forms.HScrollBar scrlZone;
+        private System.Windows.Forms.Button scrlZone_Clear;
+        public System.Windows.Forms.ToolStripButton butMLighting;
+        public System.Windows.Forms.ToolStripButton butCut;
+        public System.Windows.Forms.ToolStripButton butCopy;
+        private System.Windows.Forms.ToolStripButton butPaste;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+        private System.Windows.Forms.Button butLight_Clear;
+        private System.Windows.Forms.GroupBox grpLighting;
+        public System.Windows.Forms.ComboBox cmbTiles;
+        private System.Windows.Forms.Timer tmrUpdate;
+        private System.Windows.Forms.GroupBox grpTile;
+        public System.Windows.Forms.ToolStripButton butAudio;
+        private System.Windows.Forms.ToolStripButton butReload;
+        public System.Windows.Forms.ToolStripButton butMAttributes;
+        private System.Windows.Forms.GroupBox grpAttributes;
+        private System.Windows.Forms.Button butAttributes_Clear;
+        private System.Windows.Forms.ToolStripStatusLabel FPS;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        public System.Windows.Forms.PictureBox picTile_Background;
+        public System.Windows.Forms.ToolStripButton butMNPCs;
+        private System.Windows.Forms.GroupBox grpNPCs;
+        private System.Windows.Forms.Button butNPC_Add;
+        private System.Windows.Forms.Button butNPC_Remove;
+        private System.Windows.Forms.ComboBox cmbNPC;
+        private System.Windows.Forms.ListBox lstNPC;
+        private System.Windows.Forms.Button butNPC_Clear;
+        private System.Windows.Forms.RadioButton optA_Block;
+        private System.Windows.Forms.RadioButton optA_Warp;
+        private System.Windows.Forms.Button butAttributes_Import;
+        public System.Windows.Forms.RadioButton optA_DirBlock;
+        private System.Windows.Forms.NumericUpDown numA_Warp_Y;
+        private System.Windows.Forms.NumericUpDown numA_Warp_X;
+        private System.Windows.Forms.ComboBox cmbA_Warp_Map;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.GroupBox grpA_Warp;
+        private System.Windows.Forms.ComboBox cmbA_Warp_Direction;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown numNPC_Zone;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.RadioButton optA_Item;
+        private System.Windows.Forms.GroupBox grpA_Item;
+        private System.Windows.Forms.NumericUpDown numA_Item_Amount;
+        private System.Windows.Forms.ComboBox cmbA_Item;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.ToolStrip Trip_Layers;
+        private System.Windows.Forms.ToolStripButton butLayers_Add;
+        private System.Windows.Forms.ToolStripButton butLayers_Remove;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+        private System.Windows.Forms.ToolStripButton butLayers_Up;
+        public System.Windows.Forms.ToolStripButton butLayers_Down;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
+        private System.Windows.Forms.ToolStripButton butLayers_Edit;
+        public System.Windows.Forms.TreeView List;
+        private System.Windows.Forms.ToolStripDropDownButton butEditors;
+        private System.Windows.Forms.ToolStripMenuItem butEditors_Classes;
+        private System.Windows.Forms.ToolStripMenuItem butEditors_Data;
+        private System.Windows.Forms.ToolStripMenuItem butEditors_Interface;
+        private System.Windows.Forms.ToolStripMenuItem butEditors_Items;
+        private System.Windows.Forms.ToolStripMenuItem butEditors_NPCs;
+        private System.Windows.Forms.ToolStripMenuItem butEditors_Shops;
+        private System.Windows.Forms.ToolStripMenuItem butEditors_Tiles;
+        public System.Windows.Forms.TextBox txtFilter;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Panel picBackground;
+        public System.Windows.Forms.PictureBox picMap;
+        private System.Windows.Forms.PropertyGrid prgProperties;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton butNew;
+        private System.Windows.Forms.ToolStripButton butRemove;
+    }
 }

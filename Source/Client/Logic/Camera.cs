@@ -68,7 +68,6 @@ namespace Logic
 
             // Define a posição da câmera
             Start_Sight.Y = Position.Y;
-
             Start_Sight.X = Position.X;
         }
     }

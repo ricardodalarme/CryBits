@@ -6,7 +6,8 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using static Utils;
+using Editors;
+using static Logic.Utils;
 
 class Graphics
 {

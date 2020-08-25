@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using static Utils;
+using static Logic.Utils;
 
 namespace Entities
 {
