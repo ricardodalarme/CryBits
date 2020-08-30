@@ -115,7 +115,6 @@
     </Compile>
     <Compile Include="Library\Directories.cs" />
     <Compile Include="Library\Write.cs" />
-    <Compile Include="Library\Clear.cs" />
     <Compile Include="Editors\Items.cs">
       <SubType>Form</SubType>
     </Compile>

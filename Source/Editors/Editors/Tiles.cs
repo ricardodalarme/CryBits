@@ -54,7 +54,7 @@ namespace Editors
         private void butClear_Click(object sender, EventArgs e)
         {
             // Limpa os dados
-            Clear.Tile((byte)scrlTile.Value);
+            Lists.Tile[(byte)scrlTile.Value] =new Entities.Tile((byte)scrlTile.Value);
         }
 
         private void butCancel_Click(object sender, EventArgs e)

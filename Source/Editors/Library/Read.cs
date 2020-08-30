@@ -141,7 +141,7 @@ namespace Library
             // Evita erros
             if (!File.Exists)
             {
-                Clear.Tile(Index);
+                Lists.Tile[Index] = new Tile(Index);
                 Write.Tile(Index);
                 return;
             }

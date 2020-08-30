@@ -3,6 +3,7 @@ using Network;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
+using static Logic.Utils;
 
 namespace Entities
 {

@@ -198,7 +198,7 @@ namespace Logic
 
                     // Reseta a partícula
                     if (Lists.Weather[i].x > Map.Width * Grid || Lists.Weather[i].y > Map.Height * Grid)
-                        Lists.Weather[i] = new Lists.Structures.Weather();
+                        Lists.Weather[i] = new Map_Weather_Particle();
                 }
 
             // Trovoadas

@@ -70,8 +70,8 @@ namespace Entities
                 switch (Editor_Maps.Form.Selected.Weather.Type)
                 {
                     case Weathers.Thundering:
-                    case Weathers.Raining: Lists.Weather = new Lists.Structures.Weather[Max_Rain_Particles + 1]; break;
-                    case Weathers.Snowing: Lists.Weather = new Lists.Structures.Weather[Max_Snow_Particles + 1]; break;
+                    case Weathers.Raining: Lists.Weather = new Map_Weather_Particle[Max_Rain_Particles + 1]; break;
+                    case Weathers.Snowing: Lists.Weather = new Map_Weather_Particle[Max_Snow_Particles + 1]; break;
                 }
         }
     }
@@ -116,6 +116,16 @@ namespace Entities
     {
         public Weathers Type;
         public byte Intensity;
+    }
+
+    public struct Map_Weather_Particle
+    {
+        public bool Visible;
+        public int x;
+        public int y;
+        public int Speed;
+        public int Start;
+        public bool Back;
     }
 
     class Map_Fog

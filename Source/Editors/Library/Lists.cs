@@ -7,7 +7,7 @@ static class Lists
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
-    public static Structures.Weather[] Weather;
+    public static Map_Weather_Particle[] Weather;
     public static Tile[] Tile;
     public static TreeNode Tool;
 
@@ -54,14 +54,5 @@ static class Lists
             public override string ToString() => Item.Name + " - " + Amount + "x";
         }
 
-        public struct Weather
-        {
-            public bool Visible;
-            public int x;
-            public int y;
-            public int Speed;
-            public int Start;
-            public bool Back;
-        }
     }
 }
