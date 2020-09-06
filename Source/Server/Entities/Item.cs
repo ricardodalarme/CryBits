@@ -28,7 +28,7 @@ namespace Entities
         public Class Req_Class
         {
             get => Class.Get(req_Class);
-            set => req_Class = new Guid(Entity.GetID(value));
+            set => req_Class = new Guid(value.GetID());
         }
 
         // Poção

@@ -13,15 +13,12 @@ namespace Logic
 
         public static void Init()
         {
-            int Count;
             int Timer_1000 = 0;
             int Timer_30 = 0;
             short FPS = 0;
 
             while (Program.Working)
             {
-                Count = Environment.TickCount;
-
                 // Manuseia os dados recebidos
                 Network.Socket.HandleData();
 

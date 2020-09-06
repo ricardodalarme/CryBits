@@ -1415,7 +1415,7 @@ namespace Editors
         {
             // Reseta os valores
             var Warp_Map = (Map)cmbA_Warp_Map.SelectedItem;
-            AData_1 = Entity.GetID(Warp_Map);
+            AData_1 = Warp_Map.GetID();
         }
 
         private void numA_Warp_X_ValueChanged(object sender, EventArgs e)
@@ -1435,7 +1435,7 @@ namespace Editors
 
         private void cmbA_Item_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AData_1 = Entity.GetID((Item)cmbA_Item.SelectedItem);
+            AData_1 = ((Item)cmbA_Item.SelectedItem).GetID();
         }
 
         private void numA_Item_Amount_ValueChanged(object sender, EventArgs e)
