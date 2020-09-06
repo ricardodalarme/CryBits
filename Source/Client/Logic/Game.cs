@@ -1,7 +1,12 @@
-﻿namespace Logic
+﻿using System;
+
+namespace Logic
 {
     static class Game
     {
+        // Nome do jogo
+        public static string Game_Name = "CryBits";
+
         // Dimensão das grades 
         public const byte Grid = 32;
 
@@ -38,5 +43,22 @@
         // Limitações dos mapas
         public const byte Map_Width = 25;
         public const byte Map_Height = 19;
+
+        // Opções
+        public static Options Option = new Options();
+
+        [Serializable]
+        public class Options
+        {
+            public bool SaveUsername = true;
+            public string Username = string.Empty;
+            public bool Sounds = true;
+            public bool Musics = true;
+            public bool Chat = true;
+            public bool FPS = false;
+            public bool Latency = false;
+            public bool Party = true;
+            public bool Trade = true;
+        }
     }
 }

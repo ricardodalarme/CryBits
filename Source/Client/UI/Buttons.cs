@@ -154,8 +154,8 @@ namespace Interface
             Socket.Disconnect();
 
             // Define as marcações corretas
-            CheckBoxes.List["Sounds"].Checked = Game.Options.Sounds;
-            CheckBoxes.List["Musics"].Checked = Options.Musics;
+            CheckBoxes.List["Sounds"].Checked = Option.Sounds;
+            CheckBoxes.List["Musics"].Checked = Option.Musics;
 
             // Abre o painel
             Panels.Menu_Close();
@@ -175,7 +175,7 @@ namespace Interface
         private static void Connect_Ok()
         {
             // Salva o nome do usuário
-            Options.Username = TextBoxes.List["Connect_Username"].Text;
+            Option.Username = TextBoxes.List["Connect_Username"].Text;
             Library.Write.Options();
 
             // Conecta-se ao jogo

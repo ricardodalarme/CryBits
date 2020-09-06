@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Logic.Program</StartupObject>
+    <StartupObject>Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -67,7 +67,6 @@
     <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\Game.cs" />
     <Compile Include="Logic\MapAutoTile.cs" />
-    <Compile Include="Logic\Options.cs" />
     <Compile Include="UI\Chat.cs" />
     <Compile Include="UI\Windows.cs" />
     <Compile Include="Logic\Camera.cs" />

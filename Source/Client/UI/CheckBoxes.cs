@@ -3,6 +3,7 @@ using Logic;
 using System.Collections.Generic;
 using System.Drawing;
 using static Logic.Utils;
+using static Logic.Game;
 
 namespace Interface
 {
