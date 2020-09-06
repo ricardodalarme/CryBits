@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace Library
 {
@@ -71,60 +72,56 @@ namespace Library
         private static Entities.Button Button(BinaryReader Data)
         {
             // Lê os dados
-            Entities.Button Tool = new Entities.Button
+            return new Entities.Button
             {
                 Name = Data.ReadString(),
-                Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
+                Position = new  Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
                 Window = (Windows)Data.ReadByte(),
                 Texture_Num = Data.ReadByte()
             };
-            return Tool;
         }
 
         private static Entities.TextBox TextBox(BinaryReader Data)
         {
             // Lê os dados
-            Entities.TextBox Tool = new Entities.TextBox
+           return new Entities.TextBox
             {
                 Name = Data.ReadString(),
-                Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
                 Window = (Windows)Data.ReadByte(),
                 Max_Characters = Data.ReadInt16(),
                 Width = Data.ReadInt16(),
                 Password = Data.ReadBoolean()
             };
-            return Tool;
         }
 
         private static Entities.Panel Panel(BinaryReader Data)
         {
             // Carrega os dados
-            Entities.Panel Tool = new Entities.Panel
+            return  new Entities.Panel
             {
                 Name = Data.ReadString(),
-                Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
+                Position = new  Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
                 Window = (Windows)Data.ReadByte(),
                 Texture_Num = Data.ReadByte()
             };
-            return Tool;
         }
 
         private static Entities.CheckBox CheckBox(BinaryReader Data)
         {
             // Carrega os dados
-            Entities.CheckBox Tool = new Entities.CheckBox
+           return new Entities.CheckBox
             {
                 Name = Data.ReadString(),
-                Position = new System.Drawing.Point(Data.ReadInt32(), Data.ReadInt32()),
+                Position = new  Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
                 Window = (Windows)Data.ReadByte(),
                 Text = Data.ReadString(),
                 Checked = Data.ReadBoolean()
             };
-            return Tool;
         }
 
         public static void Tiles()
