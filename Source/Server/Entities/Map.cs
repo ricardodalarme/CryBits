@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Logic;
+using System;
 using System.Collections.Generic;
-using static Logic.Utils;
 
 namespace Entities
 {
@@ -48,7 +48,7 @@ namespace Entities
         {
             // Verifica se o azulejo está bloqueado
             if (OutLimit(X, Y)) return true;
-            if (Attribute[X, Y].Type == (byte)Tile_Attributes.Block) return true;
+            if (Attribute[X, Y].Type == (byte)TileAttributes.Block) return true;
             return false;
         }
 

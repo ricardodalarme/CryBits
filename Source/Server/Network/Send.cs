@@ -1,5 +1,6 @@
 ﻿using Entities;
 using Lidgren.Network;
+using Logic;
 using System.Drawing;
 using static Logic.Utils;
 
@@ -839,7 +840,7 @@ namespace Network
             ToPlayer(Player, Data);
         }
 
-        public static void Trade_State(Player Player, Trade_Status State)
+        public static void Trade_State(Player Player, TradeStatus State)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

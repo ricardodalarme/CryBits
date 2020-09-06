@@ -1,6 +1,7 @@
 ﻿using Entities;
 using Library;
 using Lidgren.Network;
+using Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -816,7 +817,7 @@ namespace Network
                 NPC.AttackNPC = Data.ReadBoolean();
                 NPC.Allie = new NPC[Data.ReadByte()];
                 for (byte n = 0; n < NPC.Allie.Length; n++) NPC.Allie[n] = NPC.Get(new Guid(Data.ReadString()));
-                NPC.Movement = (NPC_Movements)Data.ReadByte();
+                NPC.Movement = (NPCMovements)Data.ReadByte();
                 NPC.Flee_Helth = Data.ReadByte();
                 NPC.Shop = Shop.Get(new Guid(Data.ReadString()));
 
@@ -1246,12 +1247,12 @@ namespace Network
 
         private static void Trade_Offer_State(Player Player, NetIncomingMessage Data)
         {
-            Trade_Status State = (Trade_Status)Data.ReadByte();
+            TradeStatus State = (TradeStatus)Data.ReadByte();
             Player Invited = Player.Trade;
 
             switch (State)
             {
-                case Trade_Status.Accepted:
+                case TradeStatus.Accepted:
                     // Verifica se os jogadores têm espaço disponivel para trocar os itens
                     if (Player.Total_Trade_Items() > Invited.Total_Inventory_Free())
                     {
@@ -1294,10 +1295,10 @@ namespace Network
                     Send.Trade_Offer(Invited);
                     Send.Trade_Offer(Invited, false);
                     break;
-                case Trade_Status.Declined:
+                case TradeStatus.Declined:
                     Send.Message(Invited, "The offer was declined.", System.Drawing.Color.Red);
                     break;
-                case Trade_Status.Waiting:
+                case TradeStatus.Waiting:
                     Send.Message(Invited, Player.Name + " send you a offer.", System.Drawing.Color.White);
                     break;
             }

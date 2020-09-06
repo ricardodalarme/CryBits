@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using Logic;
 using System.Collections.Generic;
 
 namespace Entities
@@ -12,7 +13,7 @@ namespace Entities
         public NetConnection Connection;
         public string User = string.Empty;
         public string Password = string.Empty;
-        public Logic.Utils.Accesses Acess;
+        public Accesses Acess;
         public bool InEditor;
         public Player Character;
         public List<TempCharacter> Characters = new List<TempCharacter>();

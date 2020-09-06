@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logic;
+using System;
 using System.Collections.Generic;
 using static Logic.Utils;
 
@@ -53,7 +54,7 @@ namespace Entities
             if (Mapper.OutOfLimit(Next_X, Next_Y)) return Data.Link[(byte)Direction] == 0;
 
             // Verifica se o azulejo está bloqueado
-            if (Data.Tile[Next_X, Next_Y].Attribute == (byte)Mapper.Layer_Attributes.Block) return true;
+            if (Data.Tile[Next_X, Next_Y].Attribute == (byte)Layer_Attributes.Block) return true;
             if (Data.Tile[Next_X, Next_Y].Block[(byte)ReverseDirection(Direction)]) return true;
             if (Data.Tile[X, Y].Block[(byte)Direction]) return true;
             if (HasPlayer(Next_X, Next_Y) || HasNPC(Next_X, Next_Y)) return true;

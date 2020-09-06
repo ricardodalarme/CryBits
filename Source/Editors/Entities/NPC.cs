@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Logic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using static Logic.Utils;
 
 namespace Entities
 {

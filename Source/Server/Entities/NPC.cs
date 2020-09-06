@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Logic;
+using System;
 using System.Collections.Generic;
-using static Logic.Utils;
 
 namespace Entities
 {
@@ -26,7 +26,7 @@ namespace Entities
         public NPC_Drop[] Drop;
         public bool AttackNPC;
         public NPC[] Allie;
-        public NPC_Movements Movement;
+        public NPCMovements Movement;
         public byte Flee_Helth;
         private Guid shop;
 

@@ -3,9 +3,9 @@ using Interface;
 using Logic;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using static Logic.Utils;
 
 namespace Library
 {
@@ -36,56 +36,56 @@ namespace Library
         private static Buttons Button(BinaryReader Data)
         {
             // Lê os dados
-            var Tool = new Buttons();
-            Tool.Name = Data.ReadString();
-            Tool.Position.X = Data.ReadInt32();
-            Tool.Position.Y = Data.ReadInt32();
-            Tool.Visible = Data.ReadBoolean();
-            Tool.Window = (Windows.Types)Data.ReadByte();
-            Tool.Texture_Num = Data.ReadByte();
-            return Tool;
+            return new Buttons()
+            {
+                Name = Data.ReadString(),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
+                Visible = Data.ReadBoolean(),
+                Window = (Windows.Types)Data.ReadByte(),
+                Texture_Num = Data.ReadByte(),
+            };
         }
 
         private static TextBoxes TextBox(BinaryReader Data)
         {
             // Lê os dados
-            var Tool = new TextBoxes();
-            Tool.Name = Data.ReadString();
-            Tool.Position.X = Data.ReadInt32();
-            Tool.Position.Y = Data.ReadInt32();
-            Tool.Visible = Data.ReadBoolean();
-            Tool.Window = (Windows.Types)Data.ReadByte();
-            Tool.Lenght = Data.ReadInt16();
-            Tool.Width = Data.ReadInt16();
-            Tool.Password = Data.ReadBoolean();
-            return Tool;
+            return new TextBoxes
+            {
+                Name = Data.ReadString(),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
+                Visible = Data.ReadBoolean(),
+                Window = (Windows.Types)Data.ReadByte(),
+                Lenght = Data.ReadInt16(),
+                Width = Data.ReadInt16(),
+                Password = Data.ReadBoolean(),
+            };
         }
 
         private static Panels Panel(BinaryReader Data)
         {
-            // Carrega os dados
-            Panels Tool = new Panels();
-            Tool.Name = Data.ReadString();
-            Tool.Position.X = Data.ReadInt32();
-            Tool.Position.Y = Data.ReadInt32();
-            Tool.Visible = Data.ReadBoolean();
-            Tool.Window = (Windows.Types)Data.ReadByte();
-            Tool.Texture_Num = Data.ReadByte();
-            return Tool;
+            // Lê os dados
+            return new Panels
+            {
+                Name = Data.ReadString(),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
+                Visible = Data.ReadBoolean(),
+                Window = (Windows.Types)Data.ReadByte(),
+                Texture_Num = Data.ReadByte(),
+            };
         }
 
         private static CheckBoxes CheckBox(BinaryReader Data)
         {
-            // Carrega os dados
-            var Tool = new CheckBoxes();
-            Tool.Name = Data.ReadString();
-            Tool.Position.X = Data.ReadInt32();
-            Tool.Position.Y = Data.ReadInt32();
-            Tool.Visible = Data.ReadBoolean();
-            Tool.Window = (Windows.Types)Data.ReadByte();
-            Tool.Text = Data.ReadString();
-            Tool.Checked = Data.ReadBoolean();
-            return Tool;
+            // Lê os dados
+            return new CheckBoxes
+            {
+                Name = Data.ReadString(),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
+                Visible = Data.ReadBoolean(),
+                Window = (Windows.Types)Data.ReadByte(),
+                Text = Data.ReadString(),
+                Checked = Data.ReadBoolean(),
+            };
         }
 
         private static void Tools()

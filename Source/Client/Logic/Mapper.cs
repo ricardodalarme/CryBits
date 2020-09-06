@@ -1,6 +1,8 @@
 ﻿using Entities;
+using Logic;
 using System;
 using System.Drawing;
+using static Logic.Game;
 using static Logic.Utils;
 
 class Mapper
@@ -25,40 +27,6 @@ class Mapper
 
     // Sangue
     private static int Blood_Timer;
-
-    ////////////////
-    // Numerações //
-    ////////////////
-    public enum Layers
-    {
-        Ground,
-        Fringe,
-        Count
-    }
-
-    public enum Layer_Attributes
-    {
-        None,
-        Block,
-        Warp,
-        Count
-    }
-
-    public enum Weathers
-    {
-        Normal,
-        Raining,
-        Thundering,
-        Snowing,
-        Count
-    }
-
-    public enum Morals
-    {
-        Pacific,
-        Danger,
-        Count
-    }
 
     public static void Logic()
     {

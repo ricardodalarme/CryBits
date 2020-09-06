@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Logic;
+using System;
 using System.Collections.Generic;
-using static Logic.Utils;
 
 namespace Entities
 {

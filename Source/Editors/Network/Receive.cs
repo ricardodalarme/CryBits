@@ -1,11 +1,11 @@
 ﻿using Editors;
 using Entities;
 using Lidgren.Network;
+using Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using static Logic.Utils;
 
 namespace Network
 {

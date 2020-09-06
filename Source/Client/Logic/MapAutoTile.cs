@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using static Logic.Utils;
+using static Logic.Game;
 
 namespace Logic
 {
@@ -20,7 +20,7 @@ namespace Logic
             // Atualiza os azulejos necessários
             for (byte x = 0; x < Map_Width; x++)
                 for (byte y = 0; y < Map_Height; y++)
-                    for (byte c = 0; c < (byte)Mapper.Layers.Count; c++)
+                    for (byte c = 0; c < (byte)Layers.Count; c++)
                         for (byte q = 0; q <= Mapper.Current.Data.Tile[x, y].Data.GetUpperBound(1); q++)
                             if (Mapper.Current.Data.Tile[x, y].Data[c, q].Automatic)
                                 // Faz os cálculos para a autocriação

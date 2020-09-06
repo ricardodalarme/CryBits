@@ -139,6 +139,7 @@
     <Compile Include="Editors\NPCs.Designer.cs">
       <DependentUpon>NPCs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\MapAutoTile.cs" />
     <Compile Include="Logic\MapProperties.cs" />
     <Compile Include="Media\Graphics.cs" />
@@ -167,7 +168,7 @@
     <Compile Include="Entities\NPC.cs" />
     <Compile Include="Entities\Shop.cs" />
     <Compile Include="Entities\Tile.cs" />
-    <Compile Include="Logic\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />

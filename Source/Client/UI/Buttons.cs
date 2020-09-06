@@ -1,10 +1,12 @@
 ﻿using Entities;
+using Logic;
 using Network;
 using SFML.Window;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using static Logic.Game;
 using static Logic.Utils;
 
 namespace Interface
@@ -152,8 +154,8 @@ namespace Interface
             Socket.Disconnect();
 
             // Define as marcações corretas
-            CheckBoxes.List["Sounds"].Checked = Option.Sounds;
-            CheckBoxes.List["Musics"].Checked = Option.Musics;
+            CheckBoxes.List["Sounds"].Checked = Game.Options.Sounds;
+            CheckBoxes.List["Musics"].Checked = Options.Musics;
 
             // Abre o painel
             Panels.Menu_Close();
@@ -173,7 +175,7 @@ namespace Interface
         private static void Connect_Ok()
         {
             // Salva o nome do usuário
-            Option.Username = TextBoxes.List["Connect_Username"].Text;
+            Options.Username = TextBoxes.List["Connect_Username"].Text;
             Library.Write.Options();
 
             // Conecta-se ao jogo
@@ -419,7 +421,7 @@ namespace Interface
             List["Trade_Offer_Confirm"].Visible = true;
             List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
             Panels.List["Trade_Offer_Disable"].Visible = false;
-            Send.Trade_Offer_State(Trade_Status.Accepted);
+            Send.Trade_Offer_State(TradeStatus.Accepted);
 
             // Limpa os dados da oferta
             Player.Me.Trade_Offer = new Inventory[Max_Inventory + 1];
@@ -432,7 +434,7 @@ namespace Interface
             List["Trade_Offer_Confirm"].Visible = true;
             List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
             Panels.List["Trade_Offer_Disable"].Visible = false;
-            Send.Trade_Offer_State(Trade_Status.Declined);
+            Send.Trade_Offer_State(TradeStatus.Declined);
         }
 
         public static void Trade_Offer_Confirm()
@@ -440,7 +442,7 @@ namespace Interface
             // Confirma a oferta
             List["Trade_Offer_Confirm"].Visible = List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
             Panels.List["Trade_Offer_Disable"].Visible = true;
-            Send.Trade_Offer_State(Trade_Status.Confirmed);
+            Send.Trade_Offer_State(TradeStatus.Confirmed);
         }
 
         private static void Trade_Amount_Confirm()

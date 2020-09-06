@@ -1,4 +1,4 @@
-﻿using static Logic.Utils;
+﻿using Logic;
 
 namespace Entities
 {

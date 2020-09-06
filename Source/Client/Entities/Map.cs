@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using static Logic.Utils;
+using static Logic.Game;
 
 namespace Entities
 {

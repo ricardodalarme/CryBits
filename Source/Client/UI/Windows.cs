@@ -4,7 +4,6 @@ using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static Logic.Utils;
 
 namespace Interface
 {
@@ -34,7 +33,7 @@ namespace Interface
             if (Current == Types.Game)
                 Socket.Disconnect();
             else
-                Logic.Program.Working = false;
+                Program.Working = false;
         }
 
         public static void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
@@ -128,7 +127,7 @@ namespace Interface
                 else if (Panels.Hotbar_Slot >= 0)
                 {
                     if (Panels.Hotbar_Change >= 0) Send.Hotbar_Change(Panels.Hotbar_Change, Panels.Hotbar_Slot);
-                    if (Panels.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Logic.Utils.Hotbar.Item, Panels.Inventory_Change);
+                    if (Panels.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Logic.Hotbar.Item, Panels.Inventory_Change);
                 }
                 // Adiciona um item à troca
                 else if (Panels.Trade_Slot > 0)

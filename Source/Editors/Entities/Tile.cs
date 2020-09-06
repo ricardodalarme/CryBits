@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logic;
+using System;
 using System.Drawing;
 using static Logic.Utils;
 
@@ -29,7 +30,7 @@ namespace Entities
                 }
         }
     }
-    
+
     [Serializable]
     class Tile_Data
     {

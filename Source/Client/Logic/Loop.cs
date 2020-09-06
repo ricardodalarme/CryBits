@@ -64,7 +64,7 @@ namespace Logic
                 if (Timer_1000 < Environment.TickCount)
                 {
                     Network.Send.Latency();
-                    Utils.FPS = FPS;
+                    Game.FPS = FPS;
                     FPS = 0;
                     Timer_1000 = Environment.TickCount + 1000;
                 }

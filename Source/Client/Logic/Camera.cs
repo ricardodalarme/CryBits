@@ -1,6 +1,6 @@
 ﻿using Entities;
 using System.Drawing;
-using static Logic.Utils;
+using static Logic.Game;
 
 namespace Logic
 {

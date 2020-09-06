@@ -90,7 +90,7 @@ namespace Entities
             // Verifica se tem algum atributo de item no mapa
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
-                    if (Data.Attribute[x, y].Type == (byte)Tile_Attributes.Item)
+                    if (Data.Attribute[x, y].Type == (byte)TileAttributes.Item)
                     {
                         // Faz o item aparecer
                         TMap_Items Map_Item = new TMap_Items();

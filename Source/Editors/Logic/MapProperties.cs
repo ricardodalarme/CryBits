@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using static Logic.Utils;
 
 namespace Logic
 {

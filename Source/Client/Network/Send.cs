@@ -1,9 +1,9 @@
 ﻿using Entities;
 using Interface;
 using Lidgren.Network;
+using Logic;
 using System;
 using System.Linq;
-using static Logic.Utils;
 
 namespace Network
 {
@@ -376,7 +376,7 @@ namespace Network
             Packet(Data);
         }
 
-        public static void Trade_Offer_State(Trade_Status State)
+        public static void Trade_Offer_State(TradeStatus State)
         {
             NetOutgoingMessage Data = Socket.Device.CreateMessage();
 

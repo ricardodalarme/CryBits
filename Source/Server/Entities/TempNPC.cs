@@ -77,7 +77,7 @@ namespace Entities
                 // Movimentação //
                 //////////////////
                 // Atacar ao ver
-                if (Data.Behaviour == (byte)NPC_Behaviour.AttackOnSight)
+                if (Data.Behaviour == (byte)NPCBehaviour.AttackOnSight)
                 {
                     // Jogador
                     if (Target == null)
@@ -189,11 +189,11 @@ namespace Entities
                 }
 
                 // Move-se aleatoriamente
-                if (Data.Behaviour == (byte)NPC_Behaviour.Friendly || Target == null)
+                if (Data.Behaviour == (byte)NPCBehaviour.Friendly || Target == null)
                     if (MyRandom.Next(0, 3) == 0 && !Moved)
-                        if (Data.Movement == NPC_Movements.MoveRandomly)
+                        if (Data.Movement == NPCMovements.MoveRandomly)
                             this.Move((Directions)MyRandom.Next(0, 4), 1, true);
-                        else if (Data.Movement == NPC_Movements.TurnRandomly)
+                        else if (Data.Movement == NPCMovements.TurnRandomly)
                         {
                             Direction = (Directions)MyRandom.Next(0, 4);
                             Send.Map_NPC_Direction(this);

@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using static Logic.Utils;
+﻿using Logic;
+using System.Drawing;
 
 namespace Entities
 {

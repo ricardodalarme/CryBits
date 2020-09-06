@@ -1,9 +1,9 @@
 ﻿using Entities;
+using Logic;
 using Network;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using static Logic.Utils;
 
 namespace Editors
 {

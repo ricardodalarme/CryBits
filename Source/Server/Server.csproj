@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Logic.Program</StartupObject>
+    <StartupObject>Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Directories.cs" />
+    <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\Utils.cs" />
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\Character.cs" />
@@ -91,7 +92,7 @@
     <Compile Include="Entities\Shop.cs" />
     <Compile Include="Entities\TempMap.cs" />
     <Compile Include="Entities\TempNPC.cs" />
-    <Compile Include="Logic\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Network\Receive.cs" />

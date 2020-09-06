@@ -1,8 +1,8 @@
 ﻿using Editors;
+using Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static Logic.Utils;
 
 namespace Entities
 {

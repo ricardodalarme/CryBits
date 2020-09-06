@@ -1,7 +1,7 @@
 ﻿using Editors;
 using Entities;
 using Lidgren.Network;
-using static Logic.Utils;
+using Logic;
 
 namespace Network
 {

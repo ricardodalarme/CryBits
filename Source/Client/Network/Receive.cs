@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using static Logic.Game;
 using static Logic.Utils;
 
 namespace Network
@@ -477,7 +478,7 @@ namespace Network
 
             for (byte x = 0; x < Map_Width; x++)
                 for (byte y = 0; y < Map_Height; y++)
-                    Map.Tile[x, y].Data = new Map_Tile_Data[(byte)global::Mapper.Layers.Count, Num_Layers];
+                    Map.Tile[x, y].Data = new Map_Tile_Data[(byte)Layers.Count, Num_Layers];
 
             // Lê os azulejos
             for (byte i = 0; i < Num_Layers; i++)
@@ -693,15 +694,15 @@ namespace Network
 
         private static void Trade_State(NetIncomingMessage Data)
         {
-            switch ((Trade_Status)Data.ReadByte())
+            switch ((TradeStatus)Data.ReadByte())
             {
-                case Trade_Status.Accepted:
-                case Trade_Status.Declined:
+                case TradeStatus.Accepted:
+                case TradeStatus.Declined:
                     Buttons.List["Trade_Offer_Confirm"].Visible = true;
                     Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = false;
                     Panels.List["Trade_Offer_Disable"].Visible = false;
                     break;
-                case Trade_Status.Confirmed:
+                case TradeStatus.Confirmed:
                     Buttons.List["Trade_Offer_Confirm"].Visible = false;
                     Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = true;
                     Panels.List["Trade_Offer_Disable"].Visible = false;

@@ -228,10 +228,10 @@ namespace Entities
             // Atributos
             Map_Attribute Tile = Map.Data.Attribute[Next_X, Next_Y];
 
-            switch ((Tile_Attributes)Tile.Type)
+            switch ((TileAttributes)Tile.Type)
             {
                 // Teletransporte
-                case Tile_Attributes.Warp:
+                case TileAttributes.Warp:
                     if (Tile.Data_4 > 0) Direction = (Directions)Tile.Data_4 - 1;
                     Warp(TempMap.Get(new Guid(Tile.Data_1)), (byte)Tile.Data_2, (byte)Tile.Data_3);
                     SecondMovement = true;
@@ -300,7 +300,7 @@ namespace Entities
         {
             // Verifica se a vítima pode ser atacada
             if (Victim.GettingMap) return;
-            if (Map.Data.Moral == (byte)Map_Morals.Pacific)
+            if (Map.Data.Moral == (byte)MapMorals.Pacific)
             {
                 Send.Message(this, "This is a peaceful area.", Color.White);
                 return;
@@ -344,10 +344,10 @@ namespace Entities
             if (Victim.Target != this && !string.IsNullOrEmpty(Victim.Data.SayMsg)) Send.Message(this, Victim.Data.Name + ": " + Victim.Data.SayMsg, Color.White);
 
             // Não executa o combate com um NPC amigavel
-            switch ((NPC_Behaviour)Victim.Data.Behaviour)
+            switch ((NPCBehaviour)Victim.Data.Behaviour)
             {
-                case NPC_Behaviour.Friendly: return;
-                case NPC_Behaviour.ShopKeeper: Shop_Open(Victim.Data.Shop); return;
+                case NPCBehaviour.Friendly: return;
+                case NPCBehaviour.ShopKeeper: Shop_Open(Victim.Data.Shop); return;
             }
 
             // Define o alvo do NPC

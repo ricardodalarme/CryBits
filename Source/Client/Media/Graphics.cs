@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using static Logic.Game;
 using static Logic.Utils;
 
 class Graphics
@@ -274,7 +275,7 @@ class Graphics
 
         // Desenhos abaixo do jogador
         Map_Panorama();
-        Map_Tiles((byte)Mapper.Layers.Ground);
+        Map_Tiles((byte)Layers.Ground);
         Map_Blood();
         Map_Items();
 
@@ -293,7 +294,7 @@ class Graphics
         Player_Character(Player.Me);
 
         // Desenhos acima do jogador
-        Map_Tiles((byte)Mapper.Layers.Fringe);
+        Map_Tiles((byte)Layers.Fringe);
         Map_Weather();
         Map_Fog();
         Map_Name();
@@ -568,10 +569,10 @@ class Graphics
         {
             byte Slot = Player.Me.Hotbar[i].Slot;
             if (Slot > 0)
-                switch ((Utils.Hotbar)Player.Me.Hotbar[i].Type)
+                switch ((Logic.Hotbar)Player.Me.Hotbar[i].Type)
                 {
                     // Itens
-                    case Utils.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
+                    case Logic.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
                 }
 
             // Desenha os números de cada slot
@@ -582,7 +583,7 @@ class Graphics
 
         // Movendo slot
         if (Panels.Hotbar_Change >= 0)
-            if (Player.Me.Hotbar[Panels.Hotbar_Change].Type == (byte)Utils.Hotbar.Item)
+            if (Player.Me.Hotbar[Panels.Hotbar_Change].Type == (byte)Logic.Hotbar.Item)
                 Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Change].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
     }
 
@@ -943,9 +944,9 @@ class Graphics
         if (Mapper.Current.Data.Weather.Type == 0) return;
 
         // Textura
-        switch ((Mapper.Weathers)Mapper.Current.Data.Weather.Type)
+        switch ((Weathers)Mapper.Current.Data.Weather.Type)
         {
-            case Mapper.Weathers.Snowing: x = 32; break;
+            case Weathers.Snowing: x = 32; break;
         }
 
         // Desenha as partículas
@@ -967,7 +968,7 @@ class Graphics
         // A cor do texto vária de acordo com a moral do mapa
         switch (Mapper.Current.Data.Moral)
         {
-            case (byte)Mapper.Morals.Danger: Color = SFML.Graphics.Color.Red; break;
+            case (byte)Morals.Danger: Color = SFML.Graphics.Color.Red; break;
             default: Color = SFML.Graphics.Color.White; break;
         }
 

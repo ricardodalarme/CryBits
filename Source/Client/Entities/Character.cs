@@ -1,4 +1,5 @@
-﻿using static Logic.Utils;
+﻿using Logic;
+using static Logic.Game;
 
 namespace Entities
 {
