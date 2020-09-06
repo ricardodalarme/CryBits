@@ -4,6 +4,7 @@ using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using static Logic.Game;
 
 namespace Interface
 {

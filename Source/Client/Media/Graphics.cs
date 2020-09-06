@@ -64,7 +64,7 @@ class Graphics
         LoadTextures();
 
         // Inicia a janela
-        RenderWindow = new RenderWindow(new VideoMode(800, 608), Option.Game_Name, Styles.Close);
+        RenderWindow = new RenderWindow(new VideoMode(800, 608), Game_Name, Styles.Close);
         RenderWindow.Closed += new EventHandler(Windows.OnClosed);
         RenderWindow.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(Windows.OnMouseButtonPressed);
         RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Windows.OnMouseMoved);

@@ -2,6 +2,7 @@
 using SFML.Audio;
 using System;
 using System.IO;
+using static Logic.Game;
 
 class Audio
 {
