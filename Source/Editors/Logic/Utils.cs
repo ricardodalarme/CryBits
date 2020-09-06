@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities;
+using System;
 using System.Drawing;
 
 namespace Logic
@@ -24,5 +25,9 @@ namespace Logic
                 default: return new Point(0);
             }
         }
+
+
+        // Obtém o ID de alguma entidade, caso ela não existir retorna um ID zerado
+        public static string GetID(this Entity Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
     }
 }

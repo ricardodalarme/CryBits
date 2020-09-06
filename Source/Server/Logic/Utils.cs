@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities;
+using System;
 
 namespace Logic
 {
@@ -58,5 +59,8 @@ namespace Logic
             Item1 = Item2;
             Item2 = Temp;
         }
+
+        // Obtém o ID de alguma entidade, caso ela não existir retorna um ID zerado
+        public static string GetID(this Entity Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
     }
 }

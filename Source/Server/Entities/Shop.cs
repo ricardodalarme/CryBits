@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static Logic.Utils;
 
 namespace Entities
 {
@@ -18,7 +19,7 @@ namespace Entities
         public Item Currency
         {
             get => Item.Get(currency);
-            set => currency = new Guid(Entity.GetID(value));
+            set => currency = new Guid(value.GetID());
         }
         public Shop_Item[] Bought = Array.Empty<Shop_Item>();
         public Shop_Item[] Sold = Array.Empty<Shop_Item>();
@@ -44,7 +45,7 @@ namespace Entities
         public Item Item
         {
             get => Item.Get(item);
-            set => item = new Guid(Entity.GetID(value));
+            set => item = new Guid(value.GetID());
         }
         public short Amount;
         public short Price;
