@@ -1,4 +1,6 @@
-﻿namespace Editors
+﻿using DarkUI.Controls;
+
+namespace Editors
 {
     partial class Editor_Data
     {
@@ -29,34 +31,34 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Data));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numPoints = new System.Windows.Forms.NumericUpDown();
-            this.label8 = new System.Windows.Forms.Label();
-            this.numMax_Map_Items = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
-            this.numMax_Party_Members = new System.Windows.Forms.NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtWelcome = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.numPort = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtGame_Name = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.numMax_Characters = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
-            this.numMax_Players = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.butCancel = new System.Windows.Forms.Button();
-            this.butSalve = new System.Windows.Forms.Button();
-            this.numMax_Name = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
-            this.numMin_Name = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.numMax_Password = new System.Windows.Forms.NumericUpDown();
-            this.label12 = new System.Windows.Forms.Label();
-            this.numMin_Password = new System.Windows.Forms.NumericUpDown();
-            this.label13 = new System.Windows.Forms.Label();
+            this.groupBox1 = new DarkGroupBox();
+            this.label9 = new DarkLabel();
+            this.numPoints = new DarkNumericUpDown();
+            this.label8 = new DarkLabel();
+            this.numMax_Map_Items = new DarkNumericUpDown();
+            this.label7 = new DarkLabel();
+            this.numMax_Party_Members = new DarkNumericUpDown();
+            this.label6 = new DarkLabel();
+            this.txtWelcome = new DarkTextBox();
+            this.label5 = new DarkLabel();
+            this.numPort = new DarkNumericUpDown();
+            this.label4 = new DarkLabel();
+            this.txtGame_Name = new DarkTextBox();
+            this.label3 = new DarkLabel();
+            this.numMax_Characters = new DarkNumericUpDown();
+            this.label2 = new DarkLabel();
+            this.numMax_Players = new DarkNumericUpDown();
+            this.label1 = new DarkLabel();
+            this.butCancel = new DarkButton();
+            this.butSalve = new DarkButton();
+            this.numMax_Name = new DarkNumericUpDown();
+            this.label10 = new DarkLabel();
+            this.numMin_Name = new DarkNumericUpDown();
+            this.label11 = new DarkLabel();
+            this.numMax_Password = new DarkNumericUpDown();
+            this.label12 = new DarkLabel();
+            this.numMin_Password = new DarkNumericUpDown();
+            this.label13 = new DarkLabel();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPoints)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMax_Map_Items)).BeginInit();
@@ -285,7 +287,6 @@
             this.butCancel.Size = new System.Drawing.Size(141, 25);
             this.butCancel.TabIndex = 20;
             this.butCancel.Text = "Cancel";
-            this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
             // 
             // butSalve
@@ -295,7 +296,6 @@
             this.butSalve.Size = new System.Drawing.Size(141, 25);
             this.butSalve.TabIndex = 19;
             this.butSalve.Text = "Save";
-            this.butSalve.UseVisualStyleBackColor = true;
             this.butSalve.Click += new System.EventHandler(this.butSave_Click);
             // 
             // numMax_Name
@@ -440,33 +440,33 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button butCancel;
-        private System.Windows.Forms.Button butSalve;
-        public System.Windows.Forms.NumericUpDown numMax_Players;
-        public System.Windows.Forms.NumericUpDown numMax_Characters;
-        public System.Windows.Forms.TextBox txtGame_Name;
-        public System.Windows.Forms.NumericUpDown numPort;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        public System.Windows.Forms.TextBox txtWelcome;
-        public System.Windows.Forms.NumericUpDown numMax_Party_Members;
-        private System.Windows.Forms.Label label6;
-        public System.Windows.Forms.NumericUpDown numMax_Map_Items;
-        private System.Windows.Forms.Label label7;
-        public System.Windows.Forms.NumericUpDown numPoints;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        public System.Windows.Forms.NumericUpDown numMax_Name;
-        private System.Windows.Forms.Label label10;
-        public System.Windows.Forms.NumericUpDown numMin_Name;
-        private System.Windows.Forms.Label label11;
-        public System.Windows.Forms.NumericUpDown numMax_Password;
-        private System.Windows.Forms.Label label12;
-        public System.Windows.Forms.NumericUpDown numMin_Password;
-        private System.Windows.Forms.Label label13;
+        private DarkGroupBox groupBox1;
+        private DarkLabel label1;
+        private DarkLabel label2;
+        private DarkLabel label3;
+        private DarkButton butCancel;
+        private DarkButton butSalve;
+        public DarkNumericUpDown numMax_Players;
+        public DarkNumericUpDown numMax_Characters;
+        public DarkTextBox txtGame_Name;
+        public DarkNumericUpDown numPort;
+        private DarkLabel label4;
+        private DarkLabel label5;
+        public DarkTextBox txtWelcome;
+        public DarkNumericUpDown numMax_Party_Members;
+        private DarkLabel label6;
+        public DarkNumericUpDown numMax_Map_Items;
+        private DarkLabel label7;
+        public DarkNumericUpDown numPoints;
+        private DarkLabel label8;
+        private DarkLabel label9;
+        public DarkNumericUpDown numMax_Name;
+        private DarkLabel label10;
+        public DarkNumericUpDown numMin_Name;
+        private DarkLabel label11;
+        public DarkNumericUpDown numMax_Password;
+        private DarkLabel label12;
+        public DarkNumericUpDown numMin_Password;
+        private DarkLabel label13;
     }
 }

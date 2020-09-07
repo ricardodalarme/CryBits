@@ -1,4 +1,6 @@
-﻿namespace Editors
+﻿using DarkUI.Controls;
+
+namespace Editors
 {
     partial class Editor_Shops
     {
@@ -29,33 +31,33 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Shops));
-            this.butSave = new System.Windows.Forms.Button();
-            this.butCancel = new System.Windows.Forms.Button();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.butSave = new DarkButton();
+            this.butCancel = new DarkButton();
+            this.txtName = new DarkTextBox();
+            this.label3 = new DarkLabel();
             this.lstSold = new System.Windows.Forms.ListBox();
-            this.grpGeneral = new System.Windows.Forms.GroupBox();
-            this.cmbCurrency = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.grpSold = new System.Windows.Forms.GroupBox();
-            this.butSold_Remove = new System.Windows.Forms.Button();
-            this.butSold_Add = new System.Windows.Forms.Button();
-            this.grpBought = new System.Windows.Forms.GroupBox();
-            this.butBought_Remove = new System.Windows.Forms.Button();
-            this.butBought_Add = new System.Windows.Forms.Button();
+            this.grpGeneral = new DarkGroupBox();
+            this.cmbCurrency = new DarkComboBox();
+            this.label5 = new DarkLabel();
+            this.grpSold = new DarkGroupBox();
+            this.butSold_Remove = new DarkButton();
+            this.butSold_Add = new DarkButton();
+            this.grpBought = new DarkGroupBox();
+            this.butBought_Remove = new DarkButton();
+            this.butBought_Add = new DarkButton();
             this.lstBought = new System.Windows.Forms.ListBox();
-            this.grpAddItem = new System.Windows.Forms.GroupBox();
-            this.numAmount = new System.Windows.Forms.NumericUpDown();
-            this.numPrice = new System.Windows.Forms.NumericUpDown();
-            this.cmbItems = new System.Windows.Forms.ComboBox();
-            this.butConfirm = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.butNew = new System.Windows.Forms.Button();
-            this.butRemove = new System.Windows.Forms.Button();
+            this.grpAddItem = new DarkGroupBox();
+            this.numAmount = new DarkNumericUpDown();
+            this.numPrice = new DarkNumericUpDown();
+            this.cmbItems = new DarkComboBox();
+            this.butConfirm = new DarkButton();
+            this.label4 = new DarkLabel();
+            this.label2 = new DarkLabel();
+            this.label1 = new DarkLabel();
+            this.butNew = new DarkButton();
+            this.butRemove = new DarkButton();
             this.List = new System.Windows.Forms.TreeView();
-            this.txtFilter = new System.Windows.Forms.TextBox();
+            this.txtFilter = new DarkTextBox();
             this.grpGeneral.SuspendLayout();
             this.grpSold.SuspendLayout();
             this.grpBought.SuspendLayout();
@@ -71,7 +73,6 @@
             this.butSave.Size = new System.Drawing.Size(250, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
-            this.butSave.UseVisualStyleBackColor = true;
             this.butSave.Click += new System.EventHandler(this.butSave_Click);
             // 
             // butCancel
@@ -81,7 +82,6 @@
             this.butCancel.Size = new System.Drawing.Size(250, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
-            this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
             // 
             // txtName
@@ -108,6 +108,9 @@
             this.lstSold.Name = "lstSold";
             this.lstSold.Size = new System.Drawing.Size(238, 264);
             this.lstSold.TabIndex = 22;
+            this.lstSold.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.lstSold.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstSold.ForeColor = System.Drawing.Color.Gainsboro;
             // 
             // grpGeneral
             // 
@@ -162,7 +165,6 @@
             this.butSold_Remove.Size = new System.Drawing.Size(118, 23);
             this.butSold_Remove.TabIndex = 24;
             this.butSold_Remove.Text = "Remove";
-            this.butSold_Remove.UseVisualStyleBackColor = true;
             this.butSold_Remove.Click += new System.EventHandler(this.butSold_Remove_Click);
             // 
             // butSold_Add
@@ -172,7 +174,6 @@
             this.butSold_Add.Size = new System.Drawing.Size(118, 23);
             this.butSold_Add.TabIndex = 23;
             this.butSold_Add.Text = "Add";
-            this.butSold_Add.UseVisualStyleBackColor = true;
             this.butSold_Add.Click += new System.EventHandler(this.butSold_Add_Click);
             // 
             // grpBought
@@ -195,7 +196,6 @@
             this.butBought_Remove.Size = new System.Drawing.Size(118, 23);
             this.butBought_Remove.TabIndex = 26;
             this.butBought_Remove.Text = "Remove";
-            this.butBought_Remove.UseVisualStyleBackColor = true;
             this.butBought_Remove.Click += new System.EventHandler(this.butBought_Remove_Click);
             // 
             // butBought_Add
@@ -205,7 +205,6 @@
             this.butBought_Add.Size = new System.Drawing.Size(118, 23);
             this.butBought_Add.TabIndex = 25;
             this.butBought_Add.Text = "Add";
-            this.butBought_Add.UseVisualStyleBackColor = true;
             this.butBought_Add.Click += new System.EventHandler(this.butBought_Add_Click);
             // 
             // lstBought
@@ -215,6 +214,9 @@
             this.lstBought.Name = "lstBought";
             this.lstBought.Size = new System.Drawing.Size(238, 264);
             this.lstBought.TabIndex = 22;
+            this.lstBought.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.lstBought.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstBought.ForeColor = System.Drawing.Color.Gainsboro;
             // 
             // grpAddItem
             // 
@@ -273,7 +275,6 @@
             this.butConfirm.Size = new System.Drawing.Size(166, 20);
             this.butConfirm.TabIndex = 19;
             this.butConfirm.Text = "Confirm";
-            this.butConfirm.UseVisualStyleBackColor = true;
             this.butConfirm.Click += new System.EventHandler(this.butConfirm_Click);
             // 
             // label4
@@ -310,7 +311,6 @@
             this.butNew.Size = new System.Drawing.Size(98, 25);
             this.butNew.TabIndex = 27;
             this.butNew.Text = "New";
-            this.butNew.UseVisualStyleBackColor = true;
             this.butNew.Click += new System.EventHandler(this.butNew_Click);
             // 
             // butRemove
@@ -320,7 +320,6 @@
             this.butRemove.Size = new System.Drawing.Size(98, 25);
             this.butRemove.TabIndex = 28;
             this.butRemove.Text = "Remove";
-            this.butRemove.UseVisualStyleBackColor = true;
             this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
             // 
             // List
@@ -331,6 +330,10 @@
             this.List.Size = new System.Drawing.Size(201, 369);
             this.List.TabIndex = 23;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
+            this.List.BackColor = System.Drawing.Color.FromArgb(60, 63, 65);
+            this.List.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.List.ForeColor = System.Drawing.Color.Gainsboro;
+            this.List.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             // 
             // txtFilter
             // 
@@ -377,32 +380,32 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button butSave;
-        private System.Windows.Forms.Button butCancel;
-        public System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.Label label3;
+        private DarkButton butSave;
+        private DarkButton butCancel;
+        public DarkTextBox txtName;
+        private DarkLabel label3;
         private System.Windows.Forms.ListBox lstSold;
-        private System.Windows.Forms.GroupBox grpGeneral;
-        private System.Windows.Forms.GroupBox grpSold;
-        private System.Windows.Forms.GroupBox grpBought;
+        private DarkGroupBox grpGeneral;
+        private DarkGroupBox grpSold;
+        private DarkGroupBox grpBought;
         private System.Windows.Forms.ListBox lstBought;
-        private System.Windows.Forms.Button butSold_Remove;
-        private System.Windows.Forms.Button butSold_Add;
-        private System.Windows.Forms.Button butBought_Remove;
-        private System.Windows.Forms.Button butBought_Add;
-        private System.Windows.Forms.GroupBox grpAddItem;
-        private System.Windows.Forms.NumericUpDown numAmount;
-        private System.Windows.Forms.NumericUpDown numPrice;
-        private System.Windows.Forms.ComboBox cmbItems;
-        private System.Windows.Forms.Button butConfirm;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox cmbCurrency;
-        private System.Windows.Forms.Button butNew;
-        private System.Windows.Forms.Button butRemove;
+        private DarkButton butSold_Remove;
+        private DarkButton butSold_Add;
+        private DarkButton butBought_Remove;
+        private DarkButton butBought_Add;
+        private DarkGroupBox grpAddItem;
+        private DarkNumericUpDown numAmount;
+        private DarkNumericUpDown numPrice;
+        private DarkComboBox cmbItems;
+        private DarkButton butConfirm;
+        private DarkLabel label4;
+        private DarkLabel label2;
+        private DarkLabel label1;
+        private DarkLabel label5;
+        private DarkComboBox cmbCurrency;
+        private DarkButton butNew;
+        private DarkButton butRemove;
         private System.Windows.Forms.TreeView List;
-        public System.Windows.Forms.TextBox txtFilter;
+        public DarkTextBox txtFilter;
     }
 }

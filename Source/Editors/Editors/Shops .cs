@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using DarkUI.Forms;
+using Entities;
 using Network;
 using System;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Editors
 {
-    partial class Editor_Shops : Form
+    partial class Editor_Shops : DarkForm
     {
         // Loja selecionada
         private Shop Selected;
@@ -48,10 +49,10 @@ namespace Editors
             // Lista as lojas
             foreach (var Shop in Shop.List.Values)
                 if (Shop.Name.StartsWith(txtFilter.Text))
-                {
-                    List.Nodes.Add(Shop.Name);
-                    List.Nodes[List.Nodes.Count - 1].Tag = Shop.ID;
-                }
+                    List.Nodes.Add(new TreeNode(Shop.Name)
+                    {
+                        Tag = Shop.ID
+                    });
 
             // Seleciona o primeiro
             if (List.Nodes.Count > 0) List.SelectedNode = List.Nodes[0];

@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using DarkUI.Forms;
+using Entities;
 using Logic;
 using Network;
 using System;
@@ -6,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Editors
 {
-    partial class Editor_Items : Form
+    partial class Editor_Items : DarkForm
     {
         // Usado para acessar os dados da janela
         public static Editor_Items Form;
@@ -48,10 +49,10 @@ namespace Editors
             List.Nodes.Clear();
             foreach (var Item in Item.List.Values)
                 if (Item.Name.StartsWith(txtFilter.Text))
-                {
-                    List.Nodes.Add(Item.Name);
-                    List.Nodes[List.Nodes.Count - 1].Tag = Item.ID;
-                }
+                    List.Nodes.Add(new TreeNode(Item.Name)
+                    {
+                        Tag = Item.ID
+                    });
 
             // Seleciona o primeiro
             if (List.Nodes.Count > 0) List.SelectedNode = List.Nodes[0];

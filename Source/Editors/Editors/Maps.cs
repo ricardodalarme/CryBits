@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using DarkUI.Forms;
+using Entities;
 using Library;
 using Logic;
 using Network;
@@ -10,7 +11,7 @@ using static Logic.Utils;
 
 namespace Editors
 {
-    partial class Editor_Maps : Form
+    partial class Editor_Maps : DarkForm
     {
         #region Data
         // Usado para acessar os dados da janela
@@ -1102,6 +1103,8 @@ namespace Editors
             for (byte i = 0; i < Selected.Layer.Count; i++)
             {
                 lstLayers.Items.Add(string.Empty);
+                lstLayers.Items[i].BackColor = Color.FromArgb(60, 63, 65);
+                lstLayers.Items[i].ForeColor = Color.White;
                 lstLayers.Items[i].Checked = true;
                 lstLayers.Items[i].SubItems.Add((i + 1).ToString());
                 lstLayers.Items[i].SubItems.Add(Selected.Layer[i].Name);

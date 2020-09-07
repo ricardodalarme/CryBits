@@ -1,4 +1,6 @@
-﻿namespace Editors
+﻿using DarkUI.Controls;
+
+namespace Editors
 {
     partial class Editor_Tiles
     {
@@ -32,16 +34,16 @@
             this.scrlTileX = new System.Windows.Forms.HScrollBar();
             this.scrlTileY = new System.Windows.Forms.VScrollBar();
             this.picTile = new System.Windows.Forms.PictureBox();
-            this.grpAttributes = new System.Windows.Forms.GroupBox();
-            this.optBlock = new System.Windows.Forms.RadioButton();
-            this.butClear = new System.Windows.Forms.Button();
-            this.butCancel = new System.Windows.Forms.Button();
-            this.butSave = new System.Windows.Forms.Button();
-            this.grpTile = new System.Windows.Forms.GroupBox();
+            this.grpAttributes = new DarkGroupBox();
+            this.optBlock = new DarkRadioButton();
+            this.butClear = new DarkButton();
+            this.butCancel = new DarkButton();
+            this.butSave = new DarkButton();
+            this.grpTile = new DarkGroupBox();
             this.scrlTile = new System.Windows.Forms.HScrollBar();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.optAttributes = new System.Windows.Forms.RadioButton();
-            this.optDirBlock = new System.Windows.Forms.RadioButton();
+            this.groupBox2 = new DarkGroupBox();
+            this.optAttributes = new DarkRadioButton();
+            this.optDirBlock = new DarkRadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.picTile)).BeginInit();
             this.grpAttributes.SuspendLayout();
             this.grpTile.SuspendLayout();
@@ -96,7 +98,6 @@
             this.optBlock.TabIndex = 75;
             this.optBlock.TabStop = true;
             this.optBlock.Text = "Block";
-            this.optBlock.UseVisualStyleBackColor = true;
             this.optBlock.CheckedChanged += new System.EventHandler(this.optBlock_CheckedChanged);
             // 
             // butClear
@@ -106,7 +107,6 @@
             this.butClear.Size = new System.Drawing.Size(97, 21);
             this.butClear.TabIndex = 74;
             this.butClear.Text = "Clear";
-            this.butClear.UseVisualStyleBackColor = true;
             this.butClear.Click += new System.EventHandler(this.butClear_Click);
             // 
             // butCancel
@@ -116,7 +116,6 @@
             this.butCancel.Size = new System.Drawing.Size(97, 21);
             this.butCancel.TabIndex = 73;
             this.butCancel.Text = "Cancel";
-            this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
             // 
             // butSave
@@ -126,7 +125,6 @@
             this.butSave.Size = new System.Drawing.Size(97, 21);
             this.butSave.TabIndex = 72;
             this.butSave.Text = "Save";
-            this.butSave.UseVisualStyleBackColor = true;
             this.butSave.Click += new System.EventHandler(this.butSave_Click);
             // 
             // grpTile
@@ -171,7 +169,6 @@
             this.optAttributes.TabIndex = 75;
             this.optAttributes.TabStop = true;
             this.optAttributes.Text = "Attributes";
-            this.optAttributes.UseVisualStyleBackColor = true;
             this.optAttributes.CheckedChanged += new System.EventHandler(this.optAttributes_CheckedChanged);
             // 
             // optDirBlock
@@ -182,7 +179,6 @@
             this.optDirBlock.Size = new System.Drawing.Size(91, 17);
             this.optDirBlock.TabIndex = 76;
             this.optDirBlock.Text = "Dir. Block";
-            this.optDirBlock.UseVisualStyleBackColor = false;
             this.optDirBlock.CheckedChanged += new System.EventHandler(this.optDirBlock_CheckedChanged);
             // 
             // Editor_Tiles
@@ -220,15 +216,15 @@
         public System.Windows.Forms.HScrollBar scrlTileX;
         public System.Windows.Forms.VScrollBar scrlTileY;
         public System.Windows.Forms.PictureBox picTile;
-        private System.Windows.Forms.GroupBox grpAttributes;
-        private System.Windows.Forms.Button butClear;
-        private System.Windows.Forms.Button butCancel;
-        private System.Windows.Forms.Button butSave;
-        private System.Windows.Forms.RadioButton optBlock;
-        private System.Windows.Forms.GroupBox grpTile;
+        private DarkGroupBox grpAttributes;
+        private DarkButton butClear;
+        private DarkButton butCancel;
+        private DarkButton butSave;
+        private DarkRadioButton optBlock;
+        private DarkGroupBox grpTile;
         public System.Windows.Forms.HScrollBar scrlTile;
-        private System.Windows.Forms.GroupBox groupBox2;
-        public System.Windows.Forms.RadioButton optDirBlock;
-        public System.Windows.Forms.RadioButton optAttributes;
+        private DarkGroupBox groupBox2;
+        public DarkRadioButton optDirBlock;
+        public DarkRadioButton optAttributes;
     }
 }

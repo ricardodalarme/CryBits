@@ -19,8 +19,6 @@ namespace Library
 
             // Define os dados
             Directories.SetClient();
-            Login.Form.txtUsername.Text = Lists.Options.Username;
-            Login.Form.chkUsername.Checked = Lists.Options.Username != string.Empty;
         }
 
         public static void Tools()

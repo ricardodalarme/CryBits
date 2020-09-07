@@ -1,4 +1,6 @@
-﻿namespace Editors
+﻿using DarkUI.Controls;
+
+namespace Editors
 {
     partial class Editor_Items
     {
@@ -29,55 +31,55 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Items));
-            this.grpGeneral = new System.Windows.Forms.GroupBox();
+            this.grpGeneral = new DarkGroupBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
-            this.cmbRarity = new System.Windows.Forms.ComboBox();
-            this.cmbBind = new System.Windows.Forms.ComboBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.txtDescription = new System.Windows.Forms.TextBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.chkStackable = new System.Windows.Forms.CheckBox();
-            this.cmbType = new System.Windows.Forms.ComboBox();
-            this.numTexture = new System.Windows.Forms.NumericUpDown();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.butSave = new System.Windows.Forms.Button();
-            this.butCancel = new System.Windows.Forms.Button();
-            this.grpRequirements = new System.Windows.Forms.GroupBox();
-            this.cmbReq_Class = new System.Windows.Forms.ComboBox();
-            this.numReq_Level = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.numPotion_Experience = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numPotion_MP = new System.Windows.Forms.NumericUpDown();
-            this.numPotion_HP = new System.Windows.Forms.NumericUpDown();
-            this.lblMP = new System.Windows.Forms.Label();
-            this.grpPotion = new System.Windows.Forms.GroupBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.grpEquipment = new System.Windows.Forms.GroupBox();
-            this.numWeapon_Damage = new System.Windows.Forms.NumericUpDown();
-            this.numEquip_Strength = new System.Windows.Forms.NumericUpDown();
-            this.numEquip_Vitality = new System.Windows.Forms.NumericUpDown();
-            this.numEquip_Resistance = new System.Windows.Forms.NumericUpDown();
-            this.numEquip_Intelligence = new System.Windows.Forms.NumericUpDown();
-            this.numEquip_Agility = new System.Windows.Forms.NumericUpDown();
-            this.cmbEquipment_Type = new System.Windows.Forms.ComboBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.lblWeapon_Damage = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
+            this.cmbRarity = new DarkComboBox();
+            this.cmbBind = new DarkComboBox();
+            this.label20 = new DarkLabel();
+            this.label19 = new DarkLabel();
+            this.txtDescription = new DarkTextBox();
+            this.label15 = new DarkLabel();
+            this.chkStackable = new DarkCheckBox();
+            this.cmbType = new DarkComboBox();
+            this.numTexture = new DarkNumericUpDown();
+            this.txtName = new DarkTextBox();
+            this.label2 = new DarkLabel();
+            this.label1 = new DarkLabel();
+            this.label3 = new DarkLabel();
+            this.butSave = new DarkButton();
+            this.butCancel = new DarkButton();
+            this.grpRequirements = new DarkGroupBox();
+            this.cmbReq_Class = new DarkComboBox();
+            this.numReq_Level = new DarkNumericUpDown();
+            this.label5 = new DarkLabel();
+            this.label4 = new DarkLabel();
+            this.label12 = new DarkLabel();
+            this.numPotion_Experience = new DarkNumericUpDown();
+            this.label9 = new DarkLabel();
+            this.numPotion_MP = new DarkNumericUpDown();
+            this.numPotion_HP = new DarkNumericUpDown();
+            this.lblMP = new DarkLabel();
+            this.grpPotion = new DarkGroupBox();
+            this.label14 = new DarkLabel();
+            this.grpEquipment = new DarkGroupBox();
+            this.numWeapon_Damage = new DarkNumericUpDown();
+            this.numEquip_Strength = new DarkNumericUpDown();
+            this.numEquip_Vitality = new DarkNumericUpDown();
+            this.numEquip_Resistance = new DarkNumericUpDown();
+            this.numEquip_Intelligence = new DarkNumericUpDown();
+            this.numEquip_Agility = new DarkNumericUpDown();
+            this.cmbEquipment_Type = new DarkComboBox();
+            this.label10 = new DarkLabel();
+            this.lblWeapon_Damage = new DarkLabel();
+            this.label8 = new DarkLabel();
+            this.label7 = new DarkLabel();
+            this.label6 = new DarkLabel();
+            this.label13 = new DarkLabel();
+            this.label11 = new DarkLabel();
             this.List = new System.Windows.Forms.TreeView();
-            this.butRemove = new System.Windows.Forms.Button();
-            this.butNew = new System.Windows.Forms.Button();
-            this.txtFilter = new System.Windows.Forms.TextBox();
+            this.butRemove = new DarkButton();
+            this.butNew = new DarkButton();
+            this.txtFilter = new DarkTextBox();
             this.grpGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTexture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
@@ -192,7 +194,6 @@
             this.chkStackable.Size = new System.Drawing.Size(74, 17);
             this.chkStackable.TabIndex = 20;
             this.chkStackable.Text = "Stackable";
-            this.chkStackable.UseVisualStyleBackColor = true;
             this.chkStackable.CheckedChanged += new System.EventHandler(this.chkStackable_CheckedChanged);
             // 
             // cmbType
@@ -259,7 +260,6 @@
             this.butSave.Size = new System.Drawing.Size(151, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
-            this.butSave.UseVisualStyleBackColor = true;
             this.butSave.Click += new System.EventHandler(this.butSave_Click);
             // 
             // butCancel
@@ -269,7 +269,6 @@
             this.butCancel.Size = new System.Drawing.Size(151, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
-            this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
             // 
             // grpRequirements
@@ -604,6 +603,10 @@
             this.List.Size = new System.Drawing.Size(201, 435);
             this.List.TabIndex = 44;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
+            this.List.BackColor = System.Drawing.Color.FromArgb(60, 63, 65);
+            this.List.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.List.ForeColor = System.Drawing.Color.Gainsboro;
+            this.List.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             // 
             // butRemove
             // 
@@ -612,7 +615,6 @@
             this.butRemove.Size = new System.Drawing.Size(98, 25);
             this.butRemove.TabIndex = 43;
             this.butRemove.Text = "Remove";
-            this.butRemove.UseVisualStyleBackColor = true;
             this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
             // 
             // butNew
@@ -622,7 +624,6 @@
             this.butNew.Size = new System.Drawing.Size(98, 25);
             this.butNew.TabIndex = 42;
             this.butNew.Text = "New";
-            this.butNew.UseVisualStyleBackColor = true;
             this.butNew.Click += new System.EventHandler(this.butNew_Click);
             // 
             // txtFilter
@@ -682,54 +683,54 @@
         }
 
         #endregion
-        private System.Windows.Forms.GroupBox grpGeneral;
-        public System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button butSave;
-        private System.Windows.Forms.Button butCancel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox cmbType;
-        private System.Windows.Forms.GroupBox grpRequirements;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox cmbReq_Class;
-        private System.Windows.Forms.NumericUpDown numReq_Level;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.NumericUpDown numPotion_Experience;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.NumericUpDown numPotion_MP;
-        private System.Windows.Forms.NumericUpDown numPotion_HP;
-        private System.Windows.Forms.Label lblMP;
-        private System.Windows.Forms.GroupBox grpPotion;
-        private System.Windows.Forms.Label label14;
-        public System.Windows.Forms.TextBox txtDescription;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.CheckBox chkStackable;
-        private System.Windows.Forms.GroupBox grpEquipment;
-        private System.Windows.Forms.ComboBox cmbEquipment_Type;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.ComboBox cmbRarity;
-        private System.Windows.Forms.ComboBox cmbBind;
+        private DarkGroupBox grpGeneral;
+        public DarkTextBox txtName;
+        private DarkLabel label3;
+        private DarkButton butSave;
+        private DarkButton butCancel;
+        private DarkLabel label1;
+        private DarkLabel label2;
+        private DarkComboBox cmbType;
+        private DarkGroupBox grpRequirements;
+        private DarkLabel label5;
+        private DarkComboBox cmbReq_Class;
+        private DarkNumericUpDown numReq_Level;
+        private DarkLabel label4;
+        private DarkLabel label12;
+        private DarkNumericUpDown numPotion_Experience;
+        private DarkLabel label9;
+        private DarkNumericUpDown numPotion_MP;
+        private DarkNumericUpDown numPotion_HP;
+        private DarkLabel lblMP;
+        private DarkGroupBox grpPotion;
+        private DarkLabel label14;
+        public DarkTextBox txtDescription;
+        private DarkLabel label15;
+        private DarkCheckBox chkStackable;
+        private DarkGroupBox grpEquipment;
+        private DarkComboBox cmbEquipment_Type;
+        private DarkLabel label20;
+        private DarkLabel label19;
+        private DarkComboBox cmbRarity;
+        private DarkComboBox cmbBind;
         private System.Windows.Forms.TreeView List;
-        private System.Windows.Forms.Button butRemove;
-        private System.Windows.Forms.Button butNew;
-        public System.Windows.Forms.TextBox txtFilter;
-        private System.Windows.Forms.NumericUpDown numWeapon_Damage;
-        private System.Windows.Forms.NumericUpDown numEquip_Strength;
-        private System.Windows.Forms.Label label10;
-        public System.Windows.Forms.Label lblWeapon_Damage;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.NumericUpDown numEquip_Vitality;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown numEquip_Resistance;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.NumericUpDown numEquip_Intelligence;
-        private System.Windows.Forms.NumericUpDown numEquip_Agility;
-        public System.Windows.Forms.NumericUpDown numTexture;
+        private DarkButton butRemove;
+        private DarkButton butNew;
+        public DarkTextBox txtFilter;
+        private DarkNumericUpDown numWeapon_Damage;
+        private DarkNumericUpDown numEquip_Strength;
+        private DarkLabel label10;
+        public DarkLabel lblWeapon_Damage;
+        private DarkLabel label8;
+        private DarkNumericUpDown numEquip_Vitality;
+        private DarkLabel label7;
+        private DarkLabel label6;
+        private DarkNumericUpDown numEquip_Resistance;
+        private DarkLabel label13;
+        private DarkLabel label11;
+        private DarkNumericUpDown numEquip_Intelligence;
+        private DarkNumericUpDown numEquip_Agility;
+        public DarkNumericUpDown numTexture;
         private System.Windows.Forms.PictureBox picTexture;
     }
 }
