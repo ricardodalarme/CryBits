@@ -158,7 +158,7 @@ namespace Network
             for (byte n = 0; n < Num_Layers; n++)
             {
                 // Dados básicos
-                Map.Layer.Add(new Map_Layer());
+                Map.Layer.Add(new MapLayer());
                 Map.Layer[n].Name = Data.ReadString();
                 Map.Layer[n].Type = Data.ReadByte();
 
@@ -166,11 +166,11 @@ namespace Network
                 for (byte x = 0; x < Map.Width; x++)
                     for (byte y = 0; y < Map.Height; y++)
                     {
-                        Map.Layer[n].Tile[x, y] = new Map_Tile_Data();
+                        Map.Layer[n].Tile[x, y] = new MapTileData();
                         Map.Layer[n].Tile[x, y].X = Data.ReadByte();
                         Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
-                        Map.Layer[n].Tile[x, y].Tile = Data.ReadByte();
-                        Map.Layer[n].Tile[x, y].Auto = Data.ReadBoolean();
+                        Map.Layer[n].Tile[x, y].Texture = Data.ReadByte();
+                        Map.Layer[n].Tile[x, y].IsAutotile = Data.ReadBoolean();
                     }
             }
 

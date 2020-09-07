@@ -81,7 +81,7 @@ namespace Logic
             set
             {
                 Base.Weather.Type = value;
-                Map.Weather_Update();
+                Map.UpdateWeather();
             }
         }
 

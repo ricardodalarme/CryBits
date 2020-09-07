@@ -302,7 +302,7 @@ class Graphics
     private static void Editor_Maps_Map_Tiles(Map Map)
     {
         Editor_Maps Form = Editor_Maps.Form;
-        Map_Tile_Data Data;
+        MapTileData Data;
         int Begin_X = Form.scrlMapX.Value, Begin_Y = Form.scrlMapY.Value;
         SFML.Graphics.Color Color;
 
@@ -326,7 +326,7 @@ class Graphics
             // Continua
             for (int x = Begin_X; x < Map.Width; x++)
                 for (int y = Begin_Y; y < Map.Height; y++)
-                    if (Map.Layer[c].Tile[x, y].Tile > 0)
+                    if (Map.Layer[c].Tile[x, y].Texture > 0)
                     {
                         // Dados
                         Data = Map.Layer[c].Tile[x, y];
@@ -334,15 +334,15 @@ class Graphics
                         Rectangle Destiny = new Rectangle(new Point((x - Begin_X) * Grid, (y - Begin_Y) * Grid), Grid_Size);
 
                         // Desenha o azulejo
-                        if (!Map.Layer[c].Tile[x, y].Auto)
-                            Render(Win_Map, Tex_Tile[Data.Tile], Source, Form.Zoom(Destiny), Color);
+                        if (!Map.Layer[c].Tile[x, y].IsAutotile)
+                            Render(Win_Map, Tex_Tile[Data.Texture], Source, Form.Zoom(Destiny), Color);
                         else
                             Editor_Maps_AutoTile(Destiny.Location, Data, Color);
                     }
         }
     }
 
-    private static void Editor_Maps_AutoTile(Point Position, Map_Tile_Data Data, SFML.Graphics.Color Color)
+    private static void Editor_Maps_AutoTile(Point Position, MapTileData Data, SFML.Graphics.Color Color)
     {
         // Desenha todas as partes do azulejo
         for (byte i = 0; i < 4; i++)
@@ -353,7 +353,7 @@ class Graphics
                 case 2: Position.Y += 16; break;
                 case 3: Position.X += 16; Position.Y += 16; break;
             }
-            Render(Win_Map, Tex_Tile[Data.Tile], new Rectangle(Data.Mini[i].X, Data.Mini[i].Y, 16, 16), Editor_Maps.Form.Zoom(new Rectangle(Position, new Size(16, 16))), Color);
+            Render(Win_Map, Tex_Tile[Data.Texture], new Rectangle(Data.Mini[i].X, Data.Mini[i].Y, 16, 16), Editor_Maps.Form.Zoom(new Rectangle(Position, new Size(16, 16))), Color);
         }
     }
 

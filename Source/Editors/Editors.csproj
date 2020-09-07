@@ -112,6 +112,12 @@
     <Compile Include="Editors\Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Tools\TextBox.cs" />
+    <Compile Include="Entities\Tools\CheckBox.cs" />
+    <Compile Include="Entities\Tools\Panel.cs" />
+    <Compile Include="Entities\Tools\Button.cs" />
+    <Compile Include="Entities\Map\MapLayer.cs" />
+    <Compile Include="Entities\Map\MapTileData.cs" />
     <Compile Include="Library\Directories.cs" />
     <Compile Include="Library\Write.cs" />
     <Compile Include="Editors\Items.cs">
@@ -139,7 +145,6 @@
       <DependentUpon>NPCs.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\Enums.cs" />
-    <Compile Include="Logic\MapAutoTile.cs" />
     <Compile Include="Logic\MapProperties.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Media\Audio.cs" />
@@ -161,9 +166,9 @@
     <Compile Include="Network\Socket.cs" />
     <Compile Include="Entities\Class.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\Interface.cs" />
+    <Compile Include="Entities\Tools\Tool.cs" />
     <Compile Include="Entities\Item.cs" />
-    <Compile Include="Entities\Map.cs" />
+    <Compile Include="Entities\Map\Map.cs" />
     <Compile Include="Entities\NPC.cs" />
     <Compile Include="Entities\Shop.cs" />
     <Compile Include="Entities\Tile.cs" />

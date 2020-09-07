@@ -33,7 +33,7 @@ namespace Entities
 
         // Dados gerais
         public short Revision;
-        public List<Map_Layer> Layer = new List<Map_Layer>();
+        public List<MapLayer> Layer = new List<MapLayer>();
         public Map_Attribute[,] Attribute = new Map_Attribute[Width, Height];
         public string Name;
         public Map_Morals Moral;
@@ -60,10 +60,18 @@ namespace Entities
         // Verifica se as coordenas estão no limite do mapa
         public bool OutLimit(short x, short y) => x >= Width || y >= Height || x < 0 || y < 0;
 
-        ///////////////////////
-        // Funções Estáticas //
-        ///////////////////////
-        public static void Weather_Update()
+        public void Update()
+        {
+            // Atualiza os azulejos necessários
+            for (byte x = 0; x < Width; x++)
+                for (byte y = 0; y < Height; y++)
+                    for (byte c = 0; c < Layer.Count; c++)
+                        if (Layer[c].Tile[x, y].IsAutotile)
+                            // Faz os cálculos para a autocriação
+                            Layer[c].Calculate(x, y);
+        }
+
+        public static void UpdateWeather()
         {
             // Redimensiona a lista
             if (Editor_Maps.Form != null)
@@ -136,28 +144,6 @@ namespace Entities
         public byte Alpha;
     }
 
-    class Map_Tile_Data
-    {
-        public byte X;
-        public byte Y;
-        public byte Tile;
-        public bool Auto;
-        public Point[] Mini = new Point[4];
-    }
-
-    class Map_Layer
-    {
-        public string Name;
-        public byte Type;
-        public Map_Tile_Data[,] Tile = new Map_Tile_Data[Map.Width, Map.Height];
-
-        public Map_Layer()
-        {
-            for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
-                    Tile[x, y] = new Map_Tile_Data();
-        }
-    }
 
     class Map_NPC
     {

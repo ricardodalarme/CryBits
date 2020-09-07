@@ -205,8 +205,8 @@ namespace Network
                         {
                             Data.Write(Map.Layer[i].Tile[x, y].X);
                             Data.Write(Map.Layer[i].Tile[x, y].Y);
-                            Data.Write(Map.Layer[i].Tile[x, y].Tile);
-                            Data.Write(Map.Layer[i].Tile[x, y].Auto);
+                            Data.Write(Map.Layer[i].Tile[x, y].Texture);
+                            Data.Write(Map.Layer[i].Tile[x, y].IsAutotile);
                         }
                 }
 
