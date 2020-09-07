@@ -39,10 +39,7 @@ namespace Editors
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label3 = new DarkUI.Controls.DarkLabel();
             this.chkUsername = new DarkUI.Controls.DarkCheckBox();
-            this.statusStrip1 = new DarkUI.Controls.DarkStatusStrip();
-            this.lblDirectory = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtUsername
@@ -126,36 +123,12 @@ namespace Editors
             this.chkUsername.TabIndex = 7;
             this.chkUsername.Text = "Save username";
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.AutoSize = false;
-            this.statusStrip1.BackColor = System.Drawing.Color.FromArgb(60, 63, 65);
-            this.statusStrip1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblDirectory});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 279);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
-            this.statusStrip1.Size = new System.Drawing.Size(487, 31);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 8;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // lblDirectory
-            // 
-            this.lblDirectory.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDirectory.Name = "lblDirectory";
-            this.lblDirectory.Size = new System.Drawing.Size(51, 18);
-            this.lblDirectory.Text = "Directory";
-            this.lblDirectory.Click += new System.EventHandler(this.lblDirectory_Click);
-            // 
             // Login
             // 
             this.AcceptButton = this.butConnect;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(487, 310);
-            this.Controls.Add(this.statusStrip1);
+            this.ClientSize = new System.Drawing.Size(487, 282);
             this.Controls.Add(this.chkUsername);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.pictureBox1);
@@ -172,8 +145,6 @@ namespace Editors
             this.Text = "Login";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Login_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,7 +159,5 @@ namespace Editors
         private System.Windows.Forms.PictureBox pictureBox1;
         private DarkLabel label3;
         public DarkCheckBox chkUsername;
-        private DarkStatusStrip statusStrip1;
-        public System.Windows.Forms.ToolStripStatusLabel lblDirectory;
     }
 }

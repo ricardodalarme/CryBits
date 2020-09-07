@@ -186,7 +186,7 @@ class Graphics
         Tex_Character = AddTextures(Directories.Tex_Characters.FullName);
         Tex_Tile = AddTextures(Directories.Tex_Tiles.FullName);
         Tex_Face = AddTextures(Directories.Tex_Faces.FullName);
-        Tex_Panel = AddTextures(Directories.Tex_Painel.FullName);
+        Tex_Panel = AddTextures(Directories.Tex_Panels.FullName);
         Tex_Button = AddTextures(Directories.Tex_Buttons.FullName);
         Tex_Panorama = AddTextures(Directories.Tex_Panoramas.FullName);
         Tex_Fog = AddTextures(Directories.Tex_Fogs.FullName);
