@@ -132,7 +132,7 @@ namespace Editors
             Map.Weather_Update();
 
             // Faz os cálculos da autocriação
-            MapAutotile.Update(Selected);
+            Selected.Update();
 
             // Atualiza os dados
             Update_Map_Bounds();
@@ -209,7 +209,7 @@ namespace Editors
             // Recarrega o mapa
             Send.Request_Map(Selected);
             Update_List_Layers();
-            MapAutotile.Update(Selected);
+            Selected.Update();
         }
 
         private void Copy()
@@ -250,7 +250,7 @@ namespace Editors
                         Selected.Layer[c].Tile[x, y] = new Map_Tile_Data();
 
             // Atualiza os azulejos Autos 
-            MapAutotile.Update(Selected);
+            Selected.Update();
         }
 
         private void butPaste_Click(object sender, EventArgs e)
@@ -275,7 +275,7 @@ namespace Editors
                     }
 
             // Atualiza os azulejos Autos 
-            MapAutotile.Update(Selected);
+            Selected.Update();
         }
 
         private void butPencil_Click(object sender, EventArgs e)
@@ -353,7 +353,7 @@ namespace Editors
                     Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = Set_Tile();
 
             // Faz os cálculos da autocriação
-            MapAutotile.Update(Selected);
+            Selected.Update();
         }
 
         private void butEraser_Click(object sender, EventArgs e)
@@ -899,7 +899,7 @@ namespace Editors
                         for (int y = Map_Selection.Y; y < Map_Selection.Y + Map_Selection.Height; y++)
                         {
                             Selected.Layer[Layer].Tile[x, y] = Set_Tile();
-                            MapAutotile.Update(Selected, x, y, Layer);
+                            Selected.Layer[Layer].Update(x, y);
                         }
             }
             // Iluminação
@@ -1050,7 +1050,7 @@ namespace Editors
 
             // Defini um único azulejo
             Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = Set_Tile();
-            MapAutotile.Update(Selected, Map_Selection.X, Map_Selection.Y, Layer_Num);
+            Selected.Layer[Layer_Num].Update(Map_Selection.X, Map_Selection.Y);
         }
 
         private void Tile_Set_Multiples(byte Layer_Num)
@@ -1070,7 +1070,7 @@ namespace Editors
                     if (!Selected.OutLimit((short)x, (short)y))
                     {
                         Selected.Layer[Layer_Num].Tile[x, y] = Set_Tile((byte)(Tiles_Selection.X + x2), (byte)(Tiles_Selection.Y + y2));
-                        MapAutotile.Update(Selected, x, y, Layer_Num);
+                        Selected.Layer[Layer_Num].Update(x, y);
                     }
                     y2++;
                 }
@@ -1083,7 +1083,7 @@ namespace Editors
             // Limpa a camada
             Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = new Map_Tile_Data();
             Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y].Mini = new Point[4];
-            MapAutotile.Update(Selected, Map_Selection.X, Map_Selection.Y, Layer_Num);
+            Selected.Layer[Layer_Num].Update(Map_Selection.X, Map_Selection.Y);
         }
         #endregion
 

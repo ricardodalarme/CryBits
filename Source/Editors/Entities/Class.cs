@@ -26,8 +26,8 @@ namespace Entities
         public short[] Attribute = new short[(byte)Attributes.Count];
         public BindingList<Lists.Structures.Inventory> Item = new BindingList<Lists.Structures.Inventory>();
 
-        // Construtor
         public Class(Guid ID) : base(ID) { }
+
         public override string ToString() => Name;
     }
 }
