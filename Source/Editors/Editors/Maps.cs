@@ -42,7 +42,7 @@ namespace Editors
         public struct Copy_Struct
         {
             public Rectangle Area;
-            public Map_Layer[] Data;
+            public MapLayer[] Data;
 
         }
         #endregion
@@ -129,7 +129,7 @@ namespace Editors
             lstNPC.DataSource = Selected.NPC;
 
             // Reseta o clima
-            Map.Weather_Update();
+            Map.UpdateWeather();
 
             // Faz os cálculos da autocriação
             Selected.Update();
@@ -151,14 +151,14 @@ namespace Editors
             Map.List.Add(New.ID, New);
             cmbA_Warp_Map.Items.Add(New);
             New.Name = "New map";
-            New.Layer.Add(new Map_Layer());
+            New.Layer.Add(new MapLayer());
             New.Layer[0].Name = "Ground";
 
             // Azulejos
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
                 {
-                    New.Layer[0].Tile[x, y] = new Map_Tile_Data();
+                    New.Layer[0].Tile[x, y] = new MapTileData();
                     New.Attribute[x, y] = new Map_Attribute();
                 }
 
@@ -214,7 +214,7 @@ namespace Editors
 
         private void Copy()
         {
-            Tiles_Copy.Data = new Map_Layer[Selected.Layer.Count];
+            Tiles_Copy.Data = new MapLayer[Selected.Layer.Count];
 
             // Seleção
             Tiles_Copy.Area = Map_Selection;
@@ -222,7 +222,7 @@ namespace Editors
             // Copia os dados das camadas
             for (byte c = 0; c < Tiles_Copy.Data.Length; c++)
             {
-                Tiles_Copy.Data[c] = new Map_Layer();
+                Tiles_Copy.Data[c] = new MapLayer();
                 Tiles_Copy.Data[c].Name = Selected.Layer[c].Name;
 
                 // Copia os dados dos azulejos
@@ -247,7 +247,7 @@ namespace Editors
             for (int x = Map_Selection.X; x < Map_Selection.X + Map_Selection.Width; x++)
                 for (int y = Map_Selection.Y; y < Map_Selection.Y + Map_Selection.Height; y++)
                     for (byte c = 0; c < Selected.Layer.Count; c++)
-                        Selected.Layer[c].Tile[x, y] = new Map_Tile_Data();
+                        Selected.Layer[c].Tile[x, y] = new MapTileData();
 
             // Atualiza os azulejos Autos 
             Selected.Update();
@@ -364,7 +364,7 @@ namespace Editors
             // Reseta todos os azulejos
             for (int x = 0; x < Map.Width; x++)
                 for (int y = 0; y < Map.Height; y++)
-                    Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = new Map_Tile_Data();
+                    Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = new MapTileData();
         }
 
         private void butEdition_Click(object sender, EventArgs e)
@@ -1005,7 +1005,7 @@ namespace Editors
 
         private void Tile_Discover()
         {
-            Map_Tile_Data Data;
+            MapTileData Data;
 
             for (int c = Selected.Layer.Count - 1; c >= 0; c--)
             {
@@ -1013,19 +1013,19 @@ namespace Editors
 
                 // Somente se necessário
                 if (!lstLayers.Items[c].Checked) continue;
-                if (Data.Tile == 0) continue;
+                if (Data.Texture == 0) continue;
 
                 // Define o azulejo
-                cmbTiles.SelectedIndex = Data.Tile - 1;
-                chkAuto.Checked = Data.Auto;
+                cmbTiles.SelectedIndex = Data.Texture - 1;
+                chkAuto.Checked = Data.IsAutotile;
                 Def_Tiles_Selection = new Rectangle(Data.X, Data.Y, 1, 1);
                 return;
             }
         }
 
-        private Map_Tile_Data Set_Tile(byte x = 0, byte y = 0)
+        private MapTileData Set_Tile(byte x = 0, byte y = 0)
         {
-            Map_Tile_Data Temp_Tile = new Map_Tile_Data();
+            MapTileData Temp_Tile = new MapTileData();
 
             // Posição padrão
             if (x == 0) x = (byte)Tiles_Selection.X;
@@ -1035,8 +1035,8 @@ namespace Editors
             Temp_Tile.Mini = new Point[4];
             Temp_Tile.X = x;
             Temp_Tile.Y = y;
-            Temp_Tile.Tile = (byte)(cmbTiles.SelectedIndex + 1);
-            Temp_Tile.Auto = chkAuto.Checked;
+            Temp_Tile.Texture = (byte)(cmbTiles.SelectedIndex + 1);
+            Temp_Tile.IsAutotile = chkAuto.Checked;
 
             // Retorna o azulejo
             return Temp_Tile;
@@ -1081,7 +1081,7 @@ namespace Editors
         private void Tile_Clear(byte Layer_Num)
         {
             // Limpa a camada
-            Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = new Map_Tile_Data();
+            Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = new MapTileData();
             Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y].Mini = new Point[4];
             Selected.Layer[Layer_Num].Update(Map_Selection.X, Map_Selection.Y);
         }
@@ -1114,7 +1114,7 @@ namespace Editors
 
         private void butLayer_Add_Click(object sender, EventArgs e)
         {
-            Map_Layer Layer = new Map_Layer();
+            MapLayer Layer = new MapLayer();
 
             // Verifica se o nome é válido
             if (txtLayer_Name.Text.Length < 1 || txtLayer_Name.Text.Length > 12) return;
@@ -1129,7 +1129,7 @@ namespace Editors
             Layer.Type = (byte)cmbLayers_Type.SelectedIndex;
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
-                    Layer.Tile[x, y] = new Map_Tile_Data();
+                    Layer.Tile[x, y] = new MapTileData();
 
             // Adiciona a camada
             Selected.Layer.Add(Layer);
@@ -1162,7 +1162,7 @@ namespace Editors
 
         public void Update_Layers()
         {
-            List<Map_Layer> Temp = new List<Map_Layer>();
+            List<MapLayer> Temp = new List<MapLayer>();
 
             // Reordena as camadas
             for (byte n = 0; n < (byte)Layers.Count; n++)
@@ -1230,7 +1230,7 @@ namespace Editors
             if (lstLayers.SelectedItems[0].Index == 0) return;
 
             // Dados
-            List<Map_Layer> Temp = new List<Map_Layer>(Selected.Layer);
+            List<MapLayer> Temp = new List<MapLayer>(Selected.Layer);
             int Layer_Num = lstLayers.SelectedItems[0].Index;
 
             if (Temp[Layer_Num - 1].Type == Temp[Layer_Num].Type)
@@ -1253,7 +1253,7 @@ namespace Editors
             if (lstLayers.SelectedItems[0].Index == lstLayers.Items.Count - 1) return;
 
             // Dados
-            List<Map_Layer> Temp = new List<Map_Layer>(Selected.Layer);
+            List<MapLayer> Temp = new List<MapLayer>(Selected.Layer);
             int Layer_Num = lstLayers.SelectedItems[0].Index;
 
             if (Temp[Layer_Num + 1].Type == Temp[Layer_Num].Type)
@@ -1354,18 +1354,18 @@ namespace Editors
                     for (byte c = 0; c < Selected.Layer.Count; c++)
                     {
                         // Dados do azulejo
-                        Map_Tile_Data Data = Selected.Layer[c].Tile[x, y];
+                        MapTileData Data = Selected.Layer[c].Tile[x, y];
 
-                        if (Data.Tile > 0)
+                        if (Data.Texture > 0)
                         {
                             // Atributos
-                            if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute > 0)
-                                Selected.Attribute[x, y].Type = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Attribute;
+                            if (Lists.Tile[Data.Texture].Data[Data.X, Data.Y].Attribute > 0)
+                                Selected.Attribute[x, y].Type = Lists.Tile[Data.Texture].Data[Data.X, Data.Y].Attribute;
 
                             // Bloqueio direcional
                             for (byte b = 0; b < (byte)Directions.Count; b++)
-                                if (Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b])
-                                    Selected.Attribute[x, y].Block[b] = Lists.Tile[Data.Tile].Data[Data.X, Data.Y].Block[b];
+                                if (Lists.Tile[Data.Texture].Data[Data.X, Data.Y].Block[b])
+                                    Selected.Attribute[x, y].Block[b] = Lists.Tile[Data.Texture].Data[Data.X, Data.Y].Block[b];
                         }
                     }
         }
