@@ -17,14 +17,16 @@ namespace Logic
         [STAThread]
         static void Main()
         {
-            // Abre a janela de seleção de diretório do cliente caso não houver um
-            if (!Directories.Options.Exists && !Directories.Select()) return;
+            // Verifica se todos os diretórios existem, se não existirem então criá-os
+            Directories.Create();
 
-            // Lê os dados
+            // Carrega as preferências
             Read.Options();
 
-            // Inicia o dispositivo de rede
+            // Inicializa todos os dispositivos
             Socket.Init();
+            Audio.Sound.Load();
+            Graphics.Init();
 
             // Abre a janela
             Application.EnableVisualStyles();

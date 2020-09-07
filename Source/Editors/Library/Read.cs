@@ -16,9 +16,6 @@ namespace Library
             // Lê os dados
             using (var Stream = Directories.Options.OpenRead())
                 Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);
-
-            // Define os dados
-            Directories.SetClient();
         }
 
         public static void Tools()

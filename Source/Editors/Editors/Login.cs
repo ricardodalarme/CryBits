@@ -16,7 +16,6 @@ namespace Editors
             InitializeComponent();
             txtUsername.Text = Lists.Options.Username;
             chkUsername.Checked = Lists.Options.Username != string.Empty;
-            lblDirectory.Text = Lists.Options.Directory_Client;
         }
 
         private void butConnect_Click(object sender, System.EventArgs e)
@@ -46,12 +45,6 @@ namespace Editors
         {
             // Fecha a aplicação
             Program.Working = false;
-        }
-
-        private void lblDirectory_Click(object sender, System.EventArgs e)
-        {
-            Directories.Select(false);
-            lblDirectory.Text = Lists.Options.Directory_Client;
         }
     }
 }
