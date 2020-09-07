@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using DarkUI.Forms;
+using Entities;
 using Logic;
 using Network;
 using System;
@@ -6,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Editors
 {
-    partial class Editor_NPCs : Form
+    partial class Editor_NPCs : DarkForm
     {
         // Usado para acessar os dados da janela
         public static Editor_NPCs Form;
@@ -46,10 +47,10 @@ namespace Editors
             List.Nodes.Clear();
             foreach (var NPC in NPC.List.Values)
                 if (NPC.Name.StartsWith(txtFilter.Text))
-                {
-                    List.Nodes.Add(NPC.Name);
-                    List.Nodes[List.Nodes.Count - 1].Tag = NPC.ID;
-                }
+                    List.Nodes.Add(new TreeNode(NPC.Name)
+                    {
+                        Tag = NPC.ID
+                    });
 
             // Seleciona o primeiro
             if (List.Nodes.Count > 0) List.SelectedNode = List.Nodes[0];

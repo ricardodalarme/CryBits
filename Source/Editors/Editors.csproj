@@ -67,6 +67,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DarkUI, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DarkUI.2.0.2\lib\DarkUI.dll</HintPath>
+    </Reference>
     <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Lidgren.Network.1.0.2\lib\net451\Lidgren.Network.dll</HintPath>
     </Reference>

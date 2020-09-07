@@ -26,10 +26,13 @@ namespace Logic
             // Inicia o dispositivo de rede
             Socket.Init();
 
-            // Inicia a aplicação
-            Login.Form.lblDirectory.Text = Lists.Options.Directory_Client;
-            Login.Form.Visible = true;
+            // Abre a janela
             Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Login.Form = new Login();
+            Login.Form.Show();
+
+            // Inicia o laço
             Loop.Init();
         }
 

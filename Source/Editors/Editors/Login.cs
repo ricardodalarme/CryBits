@@ -1,18 +1,22 @@
-﻿using Library;
+﻿using DarkUI.Forms;
+using Library;
 using Logic;
 using Network;
 using System.Windows.Forms;
 
 namespace Editors
 {
-    partial class Login : Form
+    partial class Login : DarkForm
     {
         // Usado para acessar os dados da janela
-        public static Login Form = new Login();
+        public static Login Form;
 
         public Login()
         {
             InitializeComponent();
+            txtUsername.Text = Lists.Options.Username;
+            chkUsername.Checked = Lists.Options.Username != string.Empty;
+            lblDirectory.Text = Lists.Options.Directory_Client;
         }
 
         private void butConnect_Click(object sender, System.EventArgs e)

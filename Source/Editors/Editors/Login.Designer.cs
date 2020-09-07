@@ -1,4 +1,6 @@
-﻿namespace Editors
+﻿using DarkUI.Controls;
+
+namespace Editors
 {
     partial class Login
     {
@@ -29,15 +31,15 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
-            this.txtUsername = new System.Windows.Forms.TextBox();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.butConnect = new System.Windows.Forms.Button();
+            this.txtUsername = new DarkUI.Controls.DarkTextBox();
+            this.txtPassword = new DarkUI.Controls.DarkTextBox();
+            this.label1 = new DarkUI.Controls.DarkLabel();
+            this.label2 = new DarkUI.Controls.DarkLabel();
+            this.butConnect = new DarkUI.Controls.DarkButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.chkUsername = new System.Windows.Forms.CheckBox();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.label3 = new DarkUI.Controls.DarkLabel();
+            this.chkUsername = new DarkUI.Controls.DarkCheckBox();
+            this.statusStrip1 = new DarkUI.Controls.DarkStatusStrip();
             this.lblDirectory = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -45,6 +47,9 @@
             // 
             // txtUsername
             // 
+            this.txtUsername.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.txtUsername.Location = new System.Drawing.Point(300, 161);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(175, 20);
@@ -52,6 +57,9 @@
             // 
             // txtPassword
             // 
+            this.txtPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.txtPassword.Location = new System.Drawing.Point(300, 200);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
@@ -61,6 +69,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label1.Location = new System.Drawing.Point(297, 145);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
@@ -70,6 +79,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label2.Location = new System.Drawing.Point(297, 184);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 13);
@@ -80,10 +90,10 @@
             // 
             this.butConnect.Location = new System.Drawing.Point(300, 246);
             this.butConnect.Name = "butConnect";
+            this.butConnect.Padding = new System.Windows.Forms.Padding(5);
             this.butConnect.Size = new System.Drawing.Size(175, 24);
             this.butConnect.TabIndex = 4;
             this.butConnect.Text = "Connect";
-            this.butConnect.UseVisualStyleBackColor = true;
             this.butConnect.Click += new System.EventHandler(this.butConnect_Click);
             // 
             // pictureBox1
@@ -98,6 +108,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label3.Location = new System.Drawing.Point(12, 168);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(272, 52);
@@ -114,15 +125,19 @@
             this.chkUsername.Size = new System.Drawing.Size(100, 17);
             this.chkUsername.TabIndex = 7;
             this.chkUsername.Text = "Save username";
-            this.chkUsername.UseVisualStyleBackColor = true;
             // 
             // statusStrip1
             // 
+            this.statusStrip1.AutoSize = false;
+            this.statusStrip1.BackColor = System.Drawing.Color.FromArgb(60, 63, 65);
+            this.statusStrip1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblDirectory});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 277);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 279);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(487, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
+            this.statusStrip1.Size = new System.Drawing.Size(487, 31);
+            this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -130,7 +145,7 @@
             // 
             this.lblDirectory.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDirectory.Name = "lblDirectory";
-            this.lblDirectory.Size = new System.Drawing.Size(51, 17);
+            this.lblDirectory.Size = new System.Drawing.Size(51, 18);
             this.lblDirectory.Text = "Directory";
             this.lblDirectory.Click += new System.EventHandler(this.lblDirectory_Click);
             // 
@@ -139,7 +154,7 @@
             this.AcceptButton = this.butConnect;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(487, 299);
+            this.ClientSize = new System.Drawing.Size(487, 310);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.chkUsername);
             this.Controls.Add(this.label3);
@@ -165,15 +180,15 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button butConnect;
-        public System.Windows.Forms.TextBox txtUsername;
-        public System.Windows.Forms.TextBox txtPassword;
+        private DarkLabel label1;
+        private DarkLabel label2;
+        private DarkButton butConnect;
+        public DarkTextBox txtUsername;
+        public DarkTextBox txtPassword;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label3;
-        public System.Windows.Forms.CheckBox chkUsername;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private DarkLabel label3;
+        public DarkCheckBox chkUsername;
+        private DarkStatusStrip statusStrip1;
         public System.Windows.Forms.ToolStripStatusLabel lblDirectory;
     }
 }

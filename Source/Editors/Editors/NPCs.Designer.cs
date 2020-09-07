@@ -1,4 +1,6 @@
-﻿namespace Editors
+﻿using DarkUI.Controls;
+
+namespace Editors
 {
     partial class Editor_NPCs
     {
@@ -29,71 +31,71 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_NPCs));
-            this.grpGeneral = new System.Windows.Forms.GroupBox();
+            this.grpGeneral = new DarkGroupBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
-            this.numTexture = new System.Windows.Forms.NumericUpDown();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lblTexture = new System.Windows.Forms.Label();
-            this.txtSayMsg = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.numSpawn = new System.Windows.Forms.NumericUpDown();
-            this.label8 = new System.Windows.Forms.Label();
-            this.numRange = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cmbBehavior = new System.Windows.Forms.ComboBox();
-            this.butSave = new System.Windows.Forms.Button();
-            this.butCancel = new System.Windows.Forms.Button();
-            this.grpAttributes = new System.Windows.Forms.GroupBox();
-            this.numResistance = new System.Windows.Forms.NumericUpDown();
-            this.numExperience = new System.Windows.Forms.NumericUpDown();
-            this.numIntelligence = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numVitality = new System.Windows.Forms.NumericUpDown();
-            this.numMP = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
-            this.numHP = new System.Windows.Forms.NumericUpDown();
-            this.numStrength = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
-            this.lblMP = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lblHP = new System.Windows.Forms.Label();
-            this.numAgility = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.numDrop_Amount = new System.Windows.Forms.NumericUpDown();
-            this.cmbDrop_Item = new System.Windows.Forms.ComboBox();
-            this.numDrop_Chance = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.grpDrop = new System.Windows.Forms.GroupBox();
-            this.butDrop_Delete = new System.Windows.Forms.Button();
+            this.numTexture = new DarkNumericUpDown();
+            this.txtName = new DarkTextBox();
+            this.label3 = new DarkLabel();
+            this.lblTexture = new DarkLabel();
+            this.txtSayMsg = new DarkTextBox();
+            this.label14 = new DarkLabel();
+            this.numSpawn = new DarkNumericUpDown();
+            this.label8 = new DarkLabel();
+            this.numRange = new DarkNumericUpDown();
+            this.label2 = new DarkLabel();
+            this.cmbBehavior = new DarkComboBox();
+            this.butSave = new DarkButton();
+            this.butCancel = new DarkButton();
+            this.grpAttributes = new DarkGroupBox();
+            this.numResistance = new DarkNumericUpDown();
+            this.numExperience = new DarkNumericUpDown();
+            this.numIntelligence = new DarkNumericUpDown();
+            this.label9 = new DarkLabel();
+            this.numVitality = new DarkNumericUpDown();
+            this.numMP = new DarkNumericUpDown();
+            this.label10 = new DarkLabel();
+            this.numHP = new DarkNumericUpDown();
+            this.numStrength = new DarkNumericUpDown();
+            this.label7 = new DarkLabel();
+            this.lblMP = new DarkLabel();
+            this.label4 = new DarkLabel();
+            this.lblHP = new DarkLabel();
+            this.numAgility = new DarkNumericUpDown();
+            this.label5 = new DarkLabel();
+            this.label6 = new DarkLabel();
+            this.numDrop_Amount = new DarkNumericUpDown();
+            this.cmbDrop_Item = new DarkComboBox();
+            this.numDrop_Chance = new DarkNumericUpDown();
+            this.label11 = new DarkLabel();
+            this.grpDrop = new DarkGroupBox();
+            this.butDrop_Delete = new DarkButton();
             this.lstDrop = new System.Windows.Forms.ListBox();
-            this.butDrop_Add = new System.Windows.Forms.Button();
-            this.grpDrop_Add = new System.Windows.Forms.GroupBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.butItem_Ok = new System.Windows.Forms.Button();
-            this.grpAllies = new System.Windows.Forms.GroupBox();
-            this.butAllie_Delete = new System.Windows.Forms.Button();
-            this.butAllie_Add = new System.Windows.Forms.Button();
+            this.butDrop_Add = new DarkButton();
+            this.grpDrop_Add = new DarkGroupBox();
+            this.label15 = new DarkLabel();
+            this.label16 = new DarkLabel();
+            this.butItem_Ok = new DarkButton();
+            this.grpAllies = new DarkGroupBox();
+            this.butAllie_Delete = new DarkButton();
+            this.butAllie_Add = new DarkButton();
             this.lstAllies = new System.Windows.Forms.ListBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.chkAttackNPC = new System.Windows.Forms.CheckBox();
-            this.grpAllie_Add = new System.Windows.Forms.GroupBox();
-            this.cmbAllie_NPC = new System.Windows.Forms.ComboBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.butAllie_Ok = new System.Windows.Forms.Button();
-            this.grpBehaviour = new System.Windows.Forms.GroupBox();
-            this.cmbMovement = new System.Windows.Forms.ComboBox();
-            this.cmbShop = new System.Windows.Forms.ComboBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.numFlee_Health = new System.Windows.Forms.NumericUpDown();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label12 = new DarkLabel();
+            this.chkAttackNPC = new DarkCheckBox();
+            this.grpAllie_Add = new DarkGroupBox();
+            this.cmbAllie_NPC = new DarkComboBox();
+            this.label17 = new DarkLabel();
+            this.butAllie_Ok = new DarkButton();
+            this.grpBehaviour = new DarkGroupBox();
+            this.cmbMovement = new DarkComboBox();
+            this.cmbShop = new DarkComboBox();
+            this.label18 = new DarkLabel();
+            this.numFlee_Health = new DarkNumericUpDown();
+            this.label13 = new DarkLabel();
+            this.label1 = new DarkLabel();
             this.List = new System.Windows.Forms.TreeView();
-            this.butRemove = new System.Windows.Forms.Button();
-            this.butNew = new System.Windows.Forms.Button();
-            this.txtFilter = new System.Windows.Forms.TextBox();
+            this.butRemove = new DarkButton();
+            this.butNew = new DarkButton();
+            this.txtFilter = new DarkTextBox();
             this.grpGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTexture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
@@ -264,7 +266,6 @@
             this.butSave.Size = new System.Drawing.Size(304, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
-            this.butSave.UseVisualStyleBackColor = true;
             this.butSave.Click += new System.EventHandler(this.butSave_Click);
             // 
             // butCancel
@@ -274,7 +275,6 @@
             this.butCancel.Size = new System.Drawing.Size(304, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
-            this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
             // 
             // grpAttributes
@@ -516,7 +516,6 @@
             this.butDrop_Delete.Size = new System.Drawing.Size(139, 20);
             this.butDrop_Delete.TabIndex = 35;
             this.butDrop_Delete.Text = "Delete";
-            this.butDrop_Delete.UseVisualStyleBackColor = true;
             this.butDrop_Delete.Click += new System.EventHandler(this.butDrop_Delete_Click);
             // 
             // lstDrop
@@ -526,6 +525,9 @@
             this.lstDrop.Name = "lstDrop";
             this.lstDrop.Size = new System.Drawing.Size(284, 199);
             this.lstDrop.TabIndex = 34;
+            this.lstDrop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.lstDrop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstDrop.ForeColor = System.Drawing.Color.Gainsboro;
             // 
             // butDrop_Add
             // 
@@ -534,7 +536,6 @@
             this.butDrop_Add.Size = new System.Drawing.Size(138, 20);
             this.butDrop_Add.TabIndex = 33;
             this.butDrop_Add.Text = "Add";
-            this.butDrop_Add.UseVisualStyleBackColor = true;
             this.butDrop_Add.Click += new System.EventHandler(this.butDrop_Add_Click);
             // 
             // grpDrop_Add
@@ -579,7 +580,6 @@
             this.butItem_Ok.Size = new System.Drawing.Size(251, 20);
             this.butItem_Ok.TabIndex = 29;
             this.butItem_Ok.Text = "Ok";
-            this.butItem_Ok.UseVisualStyleBackColor = true;
             this.butItem_Ok.Click += new System.EventHandler(this.butItem_Ok_Click);
             // 
             // grpAllies
@@ -604,7 +604,6 @@
             this.butAllie_Delete.Size = new System.Drawing.Size(139, 20);
             this.butAllie_Delete.TabIndex = 36;
             this.butAllie_Delete.Text = "Delete";
-            this.butAllie_Delete.UseVisualStyleBackColor = true;
             this.butAllie_Delete.Click += new System.EventHandler(this.butAllie_Delete_Click);
             // 
             // butAllie_Add
@@ -614,7 +613,6 @@
             this.butAllie_Add.Size = new System.Drawing.Size(139, 20);
             this.butAllie_Add.TabIndex = 35;
             this.butAllie_Add.Text = "Add";
-            this.butAllie_Add.UseVisualStyleBackColor = true;
             this.butAllie_Add.Click += new System.EventHandler(this.butAllie_Add_Click);
             // 
             // lstAllies
@@ -625,6 +623,9 @@
             this.lstAllies.Name = "lstAllies";
             this.lstAllies.Size = new System.Drawing.Size(284, 160);
             this.lstAllies.TabIndex = 2;
+            this.lstAllies.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.lstAllies.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstAllies.ForeColor = System.Drawing.Color.Gainsboro;
             // 
             // label12
             // 
@@ -643,7 +644,6 @@
             this.chkAttackNPC.Size = new System.Drawing.Size(71, 17);
             this.chkAttackNPC.TabIndex = 0;
             this.chkAttackNPC.Text = "Enabled?";
-            this.chkAttackNPC.UseVisualStyleBackColor = true;
             this.chkAttackNPC.CheckedChanged += new System.EventHandler(this.chkAttackNPC_CheckedChanged);
             // 
             // grpAllie_Add
@@ -684,7 +684,6 @@
             this.butAllie_Ok.Size = new System.Drawing.Size(251, 20);
             this.butAllie_Ok.TabIndex = 36;
             this.butAllie_Ok.Text = "Ok";
-            this.butAllie_Ok.UseVisualStyleBackColor = true;
             this.butAllie_Ok.Click += new System.EventHandler(this.butAllie_Ok_Click);
             // 
             // grpBehaviour
@@ -777,6 +776,10 @@
             this.List.Size = new System.Drawing.Size(201, 474);
             this.List.TabIndex = 44;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
+            this.List.BackColor = System.Drawing.Color.FromArgb(60, 63, 65);
+            this.List.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.List.ForeColor = System.Drawing.Color.Gainsboro;
+            this.List.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             // 
             // butRemove
             // 
@@ -785,7 +788,6 @@
             this.butRemove.Size = new System.Drawing.Size(98, 25);
             this.butRemove.TabIndex = 43;
             this.butRemove.Text = "Remove";
-            this.butRemove.UseVisualStyleBackColor = true;
             this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
             // 
             // butNew
@@ -795,7 +797,6 @@
             this.butNew.Size = new System.Drawing.Size(98, 25);
             this.butNew.TabIndex = 42;
             this.butNew.Text = "New";
-            this.butNew.UseVisualStyleBackColor = true;
             this.butNew.Click += new System.EventHandler(this.butNew_Click);
             // 
             // txtFilter
@@ -866,70 +867,70 @@
         }
 
         #endregion
-        private System.Windows.Forms.GroupBox grpGeneral;
-        public System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button butSave;
-        private System.Windows.Forms.Button butCancel;
-        private System.Windows.Forms.Label lblTexture;
-        private System.Windows.Forms.NumericUpDown numRange;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox cmbBehavior;
-        private System.Windows.Forms.GroupBox grpAttributes;
-        private System.Windows.Forms.NumericUpDown numAgility;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown numIntelligence;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numResistance;
-        private System.Windows.Forms.NumericUpDown numStrength;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.NumericUpDown numMP;
-        private System.Windows.Forms.NumericUpDown numHP;
-        private System.Windows.Forms.Label lblMP;
-        private System.Windows.Forms.Label lblHP;
-        private System.Windows.Forms.NumericUpDown numSpawn;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.NumericUpDown numExperience;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.NumericUpDown numVitality;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.NumericUpDown numDrop_Amount;
-        private System.Windows.Forms.ComboBox cmbDrop_Item;
-        private System.Windows.Forms.NumericUpDown numDrop_Chance;
-        private System.Windows.Forms.Label label11;
-        public System.Windows.Forms.TextBox txtSayMsg;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.GroupBox grpDrop;
-        private System.Windows.Forms.GroupBox grpDrop_Add;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Button butItem_Ok;
-        private System.Windows.Forms.Button butDrop_Delete;
+        private DarkGroupBox grpGeneral;
+        public DarkTextBox txtName;
+        private DarkLabel label3;
+        private DarkButton butSave;
+        private DarkButton butCancel;
+        private DarkLabel lblTexture;
+        private DarkNumericUpDown numRange;
+        private DarkLabel label2;
+        private DarkComboBox cmbBehavior;
+        private DarkGroupBox grpAttributes;
+        private DarkNumericUpDown numAgility;
+        private DarkLabel label6;
+        private DarkNumericUpDown numIntelligence;
+        private DarkLabel label5;
+        private DarkNumericUpDown numResistance;
+        private DarkNumericUpDown numStrength;
+        private DarkLabel label4;
+        private DarkLabel label7;
+        private DarkNumericUpDown numMP;
+        private DarkNumericUpDown numHP;
+        private DarkLabel lblMP;
+        private DarkLabel lblHP;
+        private DarkNumericUpDown numSpawn;
+        private DarkLabel label8;
+        private DarkNumericUpDown numExperience;
+        private DarkLabel label9;
+        private DarkNumericUpDown numVitality;
+        private DarkLabel label10;
+        private DarkNumericUpDown numDrop_Amount;
+        private DarkComboBox cmbDrop_Item;
+        private DarkNumericUpDown numDrop_Chance;
+        private DarkLabel label11;
+        public DarkTextBox txtSayMsg;
+        private DarkLabel label14;
+        private DarkGroupBox grpDrop;
+        private DarkGroupBox grpDrop_Add;
+        private DarkLabel label15;
+        private DarkLabel label16;
+        private DarkButton butItem_Ok;
+        private DarkButton butDrop_Delete;
         public System.Windows.Forms.ListBox lstDrop;
-        private System.Windows.Forms.Button butDrop_Add;
-        private System.Windows.Forms.GroupBox grpAllies;
+        private DarkButton butDrop_Add;
+        private DarkGroupBox grpAllies;
         private System.Windows.Forms.ListBox lstAllies;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Button butAllie_Delete;
-        private System.Windows.Forms.Button butAllie_Add;
-        private System.Windows.Forms.GroupBox grpBehaviour;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.NumericUpDown numFlee_Health;
-        private System.Windows.Forms.ComboBox cmbMovement;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.GroupBox grpAllie_Add;
-        private System.Windows.Forms.ComboBox cmbAllie_NPC;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Button butAllie_Ok;
-        private System.Windows.Forms.CheckBox chkAttackNPC;
-        private System.Windows.Forms.ComboBox cmbShop;
-        private System.Windows.Forms.Label label18;
+        private DarkLabel label12;
+        private DarkButton butAllie_Delete;
+        private DarkButton butAllie_Add;
+        private DarkGroupBox grpBehaviour;
+        private DarkLabel label1;
+        private DarkNumericUpDown numFlee_Health;
+        private DarkComboBox cmbMovement;
+        private DarkLabel label13;
+        private DarkGroupBox grpAllie_Add;
+        private DarkComboBox cmbAllie_NPC;
+        private DarkLabel label17;
+        private DarkButton butAllie_Ok;
+        private DarkCheckBox chkAttackNPC;
+        private DarkComboBox cmbShop;
+        private DarkLabel label18;
         private System.Windows.Forms.TreeView List;
-        private System.Windows.Forms.Button butRemove;
-        private System.Windows.Forms.Button butNew;
-        public System.Windows.Forms.TextBox txtFilter;
+        private DarkButton butRemove;
+        private DarkButton butNew;
+        public DarkTextBox txtFilter;
         private System.Windows.Forms.PictureBox picTexture;
-        public System.Windows.Forms.NumericUpDown numTexture;
+        public DarkNumericUpDown numTexture;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using DarkUI.Forms;
+using Entities;
 using Library;
 using Logic;
 using System;
@@ -6,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Editors
 {
-    partial class Editor_Interface : Form
+    partial class Editor_Interface : DarkForm
     {
         // Usado para acessar os dados da janela
         public static Editor_Interface Form;

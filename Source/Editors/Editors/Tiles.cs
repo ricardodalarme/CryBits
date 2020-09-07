@@ -1,4 +1,5 @@
-﻿using Library;
+﻿using DarkUI.Forms;
+using Library;
 using Logic;
 using System;
 using System.Drawing;
@@ -7,7 +8,7 @@ using static Logic.Utils;
 
 namespace Editors
 {
-    partial class Editor_Tiles : Form
+    partial class Editor_Tiles : DarkForm
     {
         // Usado para acessar os dados da janela
         public static Editor_Tiles Form;

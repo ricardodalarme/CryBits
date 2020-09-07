@@ -1,4 +1,6 @@
-﻿namespace Editors
+﻿using DarkUI.Controls;
+
+namespace Editors
 {
     partial class Editor_Interface
     {
@@ -30,23 +32,23 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Interface));
             this.picWindow = new System.Windows.Forms.PictureBox();
-            this.butNew = new System.Windows.Forms.Button();
-            this.butRemove = new System.Windows.Forms.Button();
-            this.cmbWindows = new System.Windows.Forms.ComboBox();
-            this.grpOrder = new System.Windows.Forms.GroupBox();
-            this.butOrder_Down = new System.Windows.Forms.Button();
-            this.butOrder_Up = new System.Windows.Forms.Button();
-            this.butOrder_Unpin = new System.Windows.Forms.Button();
-            this.butOrder_Pin = new System.Windows.Forms.Button();
+            this.butNew = new DarkUI.Controls.DarkButton();
+            this.butRemove = new DarkUI.Controls.DarkButton();
+            this.cmbWindows = new DarkUI.Controls.DarkComboBox();
+            this.grpOrder = new DarkUI.Controls.DarkGroupBox();
+            this.butOrder_Down = new DarkUI.Controls.DarkButton();
+            this.butOrder_Up = new DarkUI.Controls.DarkButton();
+            this.butOrder_Unpin = new DarkUI.Controls.DarkButton();
+            this.butOrder_Pin = new DarkUI.Controls.DarkButton();
             this.treOrder = new System.Windows.Forms.TreeView();
-            this.grpProperties = new System.Windows.Forms.GroupBox();
+            this.grpProperties = new DarkUI.Controls.DarkGroupBox();
             this.prgProperties = new System.Windows.Forms.PropertyGrid();
-            this.butCancel = new System.Windows.Forms.Button();
-            this.butSaveAll = new System.Windows.Forms.Button();
-            this.grpNew = new System.Windows.Forms.GroupBox();
-            this.butConfirm = new System.Windows.Forms.Button();
-            this.cmbType = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.butCancel = new DarkUI.Controls.DarkButton();
+            this.butSaveAll = new DarkUI.Controls.DarkButton();
+            this.grpNew = new DarkUI.Controls.DarkGroupBox();
+            this.butConfirm = new DarkUI.Controls.DarkButton();
+            this.cmbType = new DarkUI.Controls.DarkComboBox();
+            this.label1 = new DarkUI.Controls.DarkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.picWindow)).BeginInit();
             this.grpOrder.SuspendLayout();
             this.grpProperties.SuspendLayout();
@@ -66,25 +68,25 @@
             // 
             this.butNew.Location = new System.Drawing.Point(11, 19);
             this.butNew.Name = "butNew";
+            this.butNew.Padding = new System.Windows.Forms.Padding(5);
             this.butNew.Size = new System.Drawing.Size(109, 25);
             this.butNew.TabIndex = 28;
             this.butNew.Text = "New";
-            this.butNew.UseVisualStyleBackColor = true;
             this.butNew.Click += new System.EventHandler(this.butNew_Click);
             // 
             // butRemove
             // 
             this.butRemove.Location = new System.Drawing.Point(124, 19);
             this.butRemove.Name = "butRemove";
+            this.butRemove.Padding = new System.Windows.Forms.Padding(5);
             this.butRemove.Size = new System.Drawing.Size(109, 25);
             this.butRemove.TabIndex = 29;
             this.butRemove.Text = "Remove";
-            this.butRemove.UseVisualStyleBackColor = true;
             this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
             // 
             // cmbWindows
             // 
-            this.cmbWindows.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbWindows.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbWindows.Location = new System.Drawing.Point(12, 12);
             this.cmbWindows.Name = "cmbWindows";
             this.cmbWindows.Size = new System.Drawing.Size(800, 21);
@@ -93,6 +95,7 @@
             // 
             // grpOrder
             // 
+            this.grpOrder.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpOrder.Controls.Add(this.butOrder_Down);
             this.grpOrder.Controls.Add(this.butOrder_Up);
             this.grpOrder.Controls.Add(this.butRemove);
@@ -111,44 +114,48 @@
             // 
             this.butOrder_Down.Location = new System.Drawing.Point(183, 350);
             this.butOrder_Down.Name = "butOrder_Down";
+            this.butOrder_Down.Padding = new System.Windows.Forms.Padding(5);
             this.butOrder_Down.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Down.TabIndex = 30;
             this.butOrder_Down.Text = "Down";
-            this.butOrder_Down.UseVisualStyleBackColor = true;
             this.butOrder_Down.Click += new System.EventHandler(this.butOrder_Down_Click);
             // 
             // butOrder_Up
             // 
             this.butOrder_Up.Location = new System.Drawing.Point(125, 350);
             this.butOrder_Up.Name = "butOrder_Up";
+            this.butOrder_Up.Padding = new System.Windows.Forms.Padding(5);
             this.butOrder_Up.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Up.TabIndex = 29;
             this.butOrder_Up.Text = "Up";
-            this.butOrder_Up.UseVisualStyleBackColor = true;
             this.butOrder_Up.Click += new System.EventHandler(this.butOrder_Up_Click);
             // 
             // butOrder_Unpin
             // 
             this.butOrder_Unpin.Location = new System.Drawing.Point(68, 350);
             this.butOrder_Unpin.Name = "butOrder_Unpin";
+            this.butOrder_Unpin.Padding = new System.Windows.Forms.Padding(5);
             this.butOrder_Unpin.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Unpin.TabIndex = 28;
             this.butOrder_Unpin.Text = "Unpin";
-            this.butOrder_Unpin.UseVisualStyleBackColor = true;
             this.butOrder_Unpin.Click += new System.EventHandler(this.butOrder_Unpin_Click);
             // 
             // butOrder_Pin
             // 
             this.butOrder_Pin.Location = new System.Drawing.Point(12, 350);
             this.butOrder_Pin.Name = "butOrder_Pin";
+            this.butOrder_Pin.Padding = new System.Windows.Forms.Padding(5);
             this.butOrder_Pin.Size = new System.Drawing.Size(50, 25);
             this.butOrder_Pin.TabIndex = 27;
             this.butOrder_Pin.Text = "Pin";
-            this.butOrder_Pin.UseVisualStyleBackColor = true;
             this.butOrder_Pin.Click += new System.EventHandler(this.butOrder_Pin_Click);
             // 
             // treOrder
             // 
+            this.treOrder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.treOrder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.treOrder.ForeColor = System.Drawing.Color.Gainsboro;
+            this.treOrder.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             this.treOrder.Location = new System.Drawing.Point(12, 50);
             this.treOrder.Name = "treOrder";
             this.treOrder.Size = new System.Drawing.Size(221, 294);
@@ -157,6 +164,8 @@
             // 
             // grpProperties
             // 
+            this.grpProperties.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.grpProperties.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpProperties.Controls.Add(this.prgProperties);
             this.grpProperties.Location = new System.Drawing.Point(823, 400);
             this.grpProperties.Name = "grpProperties";
@@ -167,35 +176,52 @@
             // 
             // prgProperties
             // 
+            this.prgProperties.CategoryForeColor = System.Drawing.Color.Gainsboro;
+            this.prgProperties.CategorySplitterColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.prgProperties.CommandsBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.prgProperties.CommandsForeColor = System.Drawing.Color.Gainsboro;
+            this.prgProperties.CommandsVisibleIfAvailable = false;
+            this.prgProperties.DisabledItemForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(133)))), ((int)(((byte)(133)))));
+            this.prgProperties.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.prgProperties.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.prgProperties.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.prgProperties.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.prgProperties.HelpForeColor = System.Drawing.Color.Gainsboro;
             this.prgProperties.HelpVisible = false;
-            this.prgProperties.Location = new System.Drawing.Point(11, 19);
+            this.prgProperties.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(51)))), ((int)(((byte)(53)))));
+            this.prgProperties.Location = new System.Drawing.Point(3, 16);
             this.prgProperties.Name = "prgProperties";
-            this.prgProperties.Size = new System.Drawing.Size(222, 182);
+            this.prgProperties.Size = new System.Drawing.Size(237, 196);
             this.prgProperties.TabIndex = 25;
+            this.prgProperties.ToolbarVisible = false;
+            this.prgProperties.ViewBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.prgProperties.ViewBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.prgProperties.ViewForeColor = System.Drawing.Color.Gainsboro;
             this.prgProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.prgProperties_PropertyValueChanged);
             // 
             // butCancel
             // 
             this.butCancel.Location = new System.Drawing.Point(948, 621);
             this.butCancel.Name = "butCancel";
+            this.butCancel.Padding = new System.Windows.Forms.Padding(5);
             this.butCancel.Size = new System.Drawing.Size(118, 25);
             this.butCancel.TabIndex = 39;
             this.butCancel.Text = "Cancel";
-            this.butCancel.UseVisualStyleBackColor = true;
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
             // 
             // butSaveAll
             // 
             this.butSaveAll.Location = new System.Drawing.Point(822, 621);
             this.butSaveAll.Name = "butSaveAll";
+            this.butSaveAll.Padding = new System.Windows.Forms.Padding(5);
             this.butSaveAll.Size = new System.Drawing.Size(118, 25);
             this.butSaveAll.TabIndex = 38;
             this.butSaveAll.Text = "Save All";
-            this.butSaveAll.UseVisualStyleBackColor = true;
             this.butSaveAll.Click += new System.EventHandler(this.butSaveAll_Click);
             // 
             // grpNew
             // 
+            this.grpNew.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpNew.Controls.Add(this.butConfirm);
             this.grpNew.Controls.Add(this.cmbType);
             this.grpNew.Controls.Add(this.label1);
@@ -211,15 +237,15 @@
             // 
             this.butConfirm.Location = new System.Drawing.Point(175, 296);
             this.butConfirm.Name = "butConfirm";
+            this.butConfirm.Padding = new System.Windows.Forms.Padding(5);
             this.butConfirm.Size = new System.Drawing.Size(59, 23);
             this.butConfirm.TabIndex = 32;
             this.butConfirm.Text = "Confirm";
-            this.butConfirm.UseVisualStyleBackColor = true;
             this.butConfirm.Click += new System.EventHandler(this.butConfirm_Click);
             // 
             // cmbType
             // 
-            this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbType.Location = new System.Drawing.Point(14, 298);
             this.cmbType.Name = "cmbType";
             this.cmbType.Size = new System.Drawing.Size(155, 21);
@@ -228,6 +254,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label1.Location = new System.Drawing.Point(11, 282);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(34, 13);
@@ -263,23 +290,23 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button butNew;
-        private System.Windows.Forms.Button butRemove;
-        public System.Windows.Forms.ComboBox cmbWindows;
+        private DarkButton butNew;
+        private DarkButton butRemove;
+        public DarkComboBox cmbWindows;
         public System.Windows.Forms.PictureBox picWindow;
-        private System.Windows.Forms.GroupBox grpOrder;
-        private System.Windows.Forms.GroupBox grpProperties;
+        private DarkGroupBox grpOrder;
+        private DarkGroupBox grpProperties;
         private System.Windows.Forms.PropertyGrid prgProperties;
         public System.Windows.Forms.TreeView treOrder;
-        private System.Windows.Forms.Button butOrder_Down;
-        private System.Windows.Forms.Button butOrder_Up;
-        private System.Windows.Forms.Button butOrder_Unpin;
-        private System.Windows.Forms.Button butOrder_Pin;
-        private System.Windows.Forms.Button butCancel;
-        private System.Windows.Forms.Button butSaveAll;
-        private System.Windows.Forms.GroupBox grpNew;
-        private System.Windows.Forms.Button butConfirm;
-        public System.Windows.Forms.ComboBox cmbType;
-        private System.Windows.Forms.Label label1;
+        private DarkButton butOrder_Down;
+        private DarkButton butOrder_Up;
+        private DarkButton butOrder_Unpin;
+        private DarkButton butOrder_Pin;
+        private DarkButton butCancel;
+        private DarkButton butSaveAll;
+        private DarkGroupBox grpNew;
+        private DarkButton butConfirm;
+        public DarkComboBox cmbType;
+        private DarkLabel label1;
     }
 }

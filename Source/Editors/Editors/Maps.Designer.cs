@@ -1,4 +1,7 @@
-﻿namespace Editors
+﻿using DarkUI.Controls;
+using System.Windows.Forms;
+
+namespace Editors
 {
     partial class Editor_Maps
     {
@@ -31,7 +34,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Maps));
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.tolStrip = new System.Windows.Forms.ToolStrip();
+            this.tolStrip = new DarkUI.Controls.DarkToolStrip();
             this.butSaveAll = new System.Windows.Forms.ToolStripButton();
             this.butReload = new System.Windows.Forms.ToolStripButton();
             this.butClearAll = new System.Windows.Forms.ToolStripButton();
@@ -75,16 +78,16 @@
             this.scrlMapX = new System.Windows.Forms.HScrollBar();
             this.scrlMapY = new System.Windows.Forms.VScrollBar();
             this.scrlTileX = new System.Windows.Forms.HScrollBar();
-            this.Strip = new System.Windows.Forms.StatusStrip();
+            this.Strip = new DarkUI.Controls.DarkStatusStrip();
             this.FPS = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.Revision = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.Position = new System.Windows.Forms.ToolStripStatusLabel();
-            this.chkAuto = new System.Windows.Forms.CheckBox();
-            this.cmbTiles = new System.Windows.Forms.ComboBox();
-            this.grpLayers = new System.Windows.Forms.GroupBox();
-            this.Trip_Layers = new System.Windows.Forms.ToolStrip();
+            this.chkAuto = new DarkUI.Controls.DarkCheckBox();
+            this.cmbTiles = new DarkUI.Controls.DarkComboBox();
+            this.grpLayers = new DarkUI.Controls.DarkGroupBox();
+            this.Trip_Layers = new DarkUI.Controls.DarkToolStrip();
             this.butLayers_Add = new System.Windows.Forms.ToolStripButton();
             this.butLayers_Remove = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -97,61 +100,61 @@
             this.colNúmero = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.grpLayer_Add = new System.Windows.Forms.GroupBox();
-            this.txtLayer_Name = new System.Windows.Forms.TextBox();
-            this.cmbLayers_Type = new System.Windows.Forms.ComboBox();
-            this.butLayer_Edit = new System.Windows.Forms.Button();
-            this.butLayer_Cancel = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.butLayer_Add = new System.Windows.Forms.Button();
-            this.grpZones = new System.Windows.Forms.GroupBox();
-            this.scrlZone_Clear = new System.Windows.Forms.Button();
+            this.grpLayer_Add = new DarkUI.Controls.DarkGroupBox();
+            this.txtLayer_Name = new DarkUI.Controls.DarkTextBox();
+            this.cmbLayers_Type = new DarkUI.Controls.DarkComboBox();
+            this.butLayer_Edit = new DarkUI.Controls.DarkButton();
+            this.butLayer_Cancel = new DarkUI.Controls.DarkButton();
+            this.label2 = new DarkUI.Controls.DarkLabel();
+            this.label1 = new DarkUI.Controls.DarkLabel();
+            this.butLayer_Add = new DarkUI.Controls.DarkButton();
+            this.grpZones = new DarkUI.Controls.DarkGroupBox();
+            this.scrlZone_Clear = new DarkUI.Controls.DarkButton();
             this.scrlZone = new System.Windows.Forms.HScrollBar();
-            this.butLight_Clear = new System.Windows.Forms.Button();
-            this.grpLighting = new System.Windows.Forms.GroupBox();
+            this.butLight_Clear = new DarkUI.Controls.DarkButton();
+            this.grpLighting = new DarkUI.Controls.DarkGroupBox();
             this.tmrUpdate = new System.Windows.Forms.Timer(this.components);
-            this.grpTile = new System.Windows.Forms.GroupBox();
-            this.grpAttributes = new System.Windows.Forms.GroupBox();
-            this.grpA_Item = new System.Windows.Forms.GroupBox();
-            this.numA_Item_Amount = new System.Windows.Forms.NumericUpDown();
-            this.cmbA_Item = new System.Windows.Forms.ComboBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.optA_Item = new System.Windows.Forms.RadioButton();
-            this.butAttributes_Import = new System.Windows.Forms.Button();
-            this.optA_Warp = new System.Windows.Forms.RadioButton();
-            this.optA_DirBlock = new System.Windows.Forms.RadioButton();
-            this.optA_Block = new System.Windows.Forms.RadioButton();
-            this.butAttributes_Clear = new System.Windows.Forms.Button();
-            this.grpA_Warp = new System.Windows.Forms.GroupBox();
-            this.cmbA_Warp_Direction = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.numA_Warp_Y = new System.Windows.Forms.NumericUpDown();
-            this.numA_Warp_X = new System.Windows.Forms.NumericUpDown();
-            this.cmbA_Warp_Map = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.grpTile = new DarkUI.Controls.DarkGroupBox();
+            this.grpAttributes = new DarkUI.Controls.DarkGroupBox();
+            this.grpA_Item = new DarkUI.Controls.DarkGroupBox();
+            this.numA_Item_Amount = new DarkUI.Controls.DarkNumericUpDown();
+            this.cmbA_Item = new DarkUI.Controls.DarkComboBox();
+            this.label15 = new DarkUI.Controls.DarkLabel();
+            this.label16 = new DarkUI.Controls.DarkLabel();
+            this.optA_Item = new DarkUI.Controls.DarkRadioButton();
+            this.butAttributes_Import = new DarkUI.Controls.DarkButton();
+            this.optA_Warp = new DarkUI.Controls.DarkRadioButton();
+            this.optA_DirBlock = new DarkUI.Controls.DarkRadioButton();
+            this.optA_Block = new DarkUI.Controls.DarkRadioButton();
+            this.butAttributes_Clear = new DarkUI.Controls.DarkButton();
+            this.grpA_Warp = new DarkUI.Controls.DarkGroupBox();
+            this.cmbA_Warp_Direction = new DarkUI.Controls.DarkComboBox();
+            this.label7 = new DarkUI.Controls.DarkLabel();
+            this.numA_Warp_Y = new DarkUI.Controls.DarkNumericUpDown();
+            this.numA_Warp_X = new DarkUI.Controls.DarkNumericUpDown();
+            this.cmbA_Warp_Map = new DarkUI.Controls.DarkComboBox();
+            this.label6 = new DarkUI.Controls.DarkLabel();
+            this.label5 = new DarkUI.Controls.DarkLabel();
+            this.label4 = new DarkUI.Controls.DarkLabel();
             this.picTile_Background = new System.Windows.Forms.PictureBox();
-            this.grpNPCs = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cmbNPC = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.numNPC_Zone = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
-            this.butNPC_Add = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grpNPCs = new DarkUI.Controls.DarkGroupBox();
+            this.groupBox2 = new DarkUI.Controls.DarkGroupBox();
+            this.cmbNPC = new DarkUI.Controls.DarkComboBox();
+            this.label13 = new DarkUI.Controls.DarkLabel();
+            this.label11 = new DarkUI.Controls.DarkLabel();
+            this.numNPC_Zone = new DarkUI.Controls.DarkNumericUpDown();
+            this.label9 = new DarkUI.Controls.DarkLabel();
+            this.butNPC_Add = new DarkUI.Controls.DarkButton();
+            this.groupBox1 = new DarkUI.Controls.DarkGroupBox();
             this.lstNPC = new System.Windows.Forms.ListBox();
-            this.butNPC_Remove = new System.Windows.Forms.Button();
-            this.butNPC_Clear = new System.Windows.Forms.Button();
+            this.butNPC_Remove = new DarkUI.Controls.DarkButton();
+            this.butNPC_Clear = new DarkUI.Controls.DarkButton();
             this.List = new System.Windows.Forms.TreeView();
-            this.txtFilter = new System.Windows.Forms.TextBox();
+            this.txtFilter = new DarkUI.Controls.DarkTextBox();
             this.picBackground = new System.Windows.Forms.Panel();
             this.picMap = new System.Windows.Forms.PictureBox();
             this.prgProperties = new System.Windows.Forms.PropertyGrid();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStrip1 = new DarkUI.Controls.DarkToolStrip();
             this.butNew = new System.Windows.Forms.ToolStripButton();
             this.butRemove = new System.Windows.Forms.ToolStripButton();
             this.tolStrip.SuspendLayout();
@@ -181,11 +184,17 @@
             // 
             // toolStripSeparator5
             // 
+            this.toolStripSeparator5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator5.Margin = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
             // tolStrip
             // 
+            this.tolStrip.AutoSize = false;
+            this.tolStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.tolStrip.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.tolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.butSaveAll,
             this.butReload,
@@ -221,13 +230,16 @@
             this.butEditors});
             this.tolStrip.Location = new System.Drawing.Point(0, 0);
             this.tolStrip.Name = "tolStrip";
+            this.tolStrip.Padding = new System.Windows.Forms.Padding(5, 0, 1, 0);
             this.tolStrip.Size = new System.Drawing.Size(1366, 25);
             this.tolStrip.TabIndex = 78;
             this.tolStrip.Text = "toolStrip2";
             // 
             // butSaveAll
             // 
+            this.butSaveAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butSaveAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butSaveAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butSaveAll.Image = ((System.Drawing.Image)(resources.GetObject("butSaveAll.Image")));
             this.butSaveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butSaveAll.Name = "butSaveAll";
@@ -237,7 +249,9 @@
             // 
             // butReload
             // 
+            this.butReload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butReload.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butReload.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butReload.Image = ((System.Drawing.Image)(resources.GetObject("butReload.Image")));
             this.butReload.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butReload.Name = "butReload";
@@ -247,7 +261,9 @@
             // 
             // butClearAll
             // 
+            this.butClearAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butClearAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butClearAll.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butClearAll.Image = ((System.Drawing.Image)(resources.GetObject("butClearAll.Image")));
             this.butClearAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butClearAll.Name = "butClearAll";
@@ -256,15 +272,20 @@
             // 
             // toolStripSeparator3
             // 
+            this.toolStripSeparator3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator3.Margin = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // butMNormal
             // 
+            this.butMNormal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butMNormal.Checked = true;
             this.butMNormal.CheckOnClick = true;
             this.butMNormal.CheckState = System.Windows.Forms.CheckState.Checked;
             this.butMNormal.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butMNormal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butMNormal.Image = ((System.Drawing.Image)(resources.GetObject("butMNormal.Image")));
             this.butMNormal.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butMNormal.Name = "butMNormal";
@@ -275,8 +296,10 @@
             // 
             // butMAttributes
             // 
+            this.butMAttributes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butMAttributes.CheckOnClick = true;
             this.butMAttributes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butMAttributes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butMAttributes.Image = ((System.Drawing.Image)(resources.GetObject("butMAttributes.Image")));
             this.butMAttributes.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butMAttributes.Name = "butMAttributes";
@@ -286,8 +309,10 @@
             // 
             // butMZones
             // 
+            this.butMZones.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butMZones.CheckOnClick = true;
             this.butMZones.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butMZones.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butMZones.Image = ((System.Drawing.Image)(resources.GetObject("butMZones.Image")));
             this.butMZones.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butMZones.Name = "butMZones";
@@ -298,8 +323,10 @@
             // 
             // butMLighting
             // 
+            this.butMLighting.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butMLighting.CheckOnClick = true;
             this.butMLighting.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butMLighting.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butMLighting.Image = ((System.Drawing.Image)(resources.GetObject("butMLighting.Image")));
             this.butMLighting.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butMLighting.Name = "butMLighting";
@@ -310,8 +337,10 @@
             // 
             // butMNPCs
             // 
+            this.butMNPCs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butMNPCs.CheckOnClick = true;
             this.butMNPCs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butMNPCs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butMNPCs.Image = ((System.Drawing.Image)(resources.GetObject("butMNPCs.Image")));
             this.butMNPCs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butMNPCs.Name = "butMNPCs";
@@ -321,14 +350,18 @@
             // 
             // toolStripSeparator2
             // 
+            this.toolStripSeparator2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator2.Margin = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // butCut
             // 
-            this.butCut.BackColor = System.Drawing.Color.Transparent;
+            this.butCut.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butCut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.butCut.Enabled = false;
+            this.butCut.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butCut.Image = ((System.Drawing.Image)(resources.GetObject("butCut.Image")));
             this.butCut.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butCut.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
@@ -339,8 +372,10 @@
             // 
             // butCopy
             // 
+            this.butCopy.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butCopy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.butCopy.Enabled = false;
+            this.butCopy.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butCopy.Image = ((System.Drawing.Image)(resources.GetObject("butCopy.Image")));
             this.butCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butCopy.Name = "butCopy";
@@ -350,8 +385,10 @@
             // 
             // butPaste
             // 
+            this.butPaste.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butPaste.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.butPaste.Enabled = false;
+            this.butPaste.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butPaste.Image = ((System.Drawing.Image)(resources.GetObject("butPaste.Image")));
             this.butPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butPaste.Name = "butPaste";
@@ -361,16 +398,20 @@
             // 
             // toolStripSeparator11
             // 
+            this.toolStripSeparator11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator11.Margin = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStripSeparator11.Name = "toolStripSeparator11";
             this.toolStripSeparator11.Size = new System.Drawing.Size(6, 25);
             // 
             // butPencil
             // 
-            this.butPencil.BackColor = System.Drawing.Color.Transparent;
+            this.butPencil.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butPencil.Checked = true;
             this.butPencil.CheckOnClick = true;
             this.butPencil.CheckState = System.Windows.Forms.CheckState.Checked;
             this.butPencil.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butPencil.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butPencil.Image = ((System.Drawing.Image)(resources.GetObject("butPencil.Image")));
             this.butPencil.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butPencil.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
@@ -381,8 +422,10 @@
             // 
             // butRectangle
             // 
+            this.butRectangle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butRectangle.CheckOnClick = true;
             this.butRectangle.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butRectangle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butRectangle.Image = ((System.Drawing.Image)(resources.GetObject("butRectangle.Image")));
             this.butRectangle.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butRectangle.Name = "butRectangle";
@@ -392,8 +435,10 @@
             // 
             // butArea
             // 
+            this.butArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butArea.CheckOnClick = true;
             this.butArea.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butArea.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butArea.Image = ((System.Drawing.Image)(resources.GetObject("butArea.Image")));
             this.butArea.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butArea.Name = "butArea";
@@ -403,8 +448,10 @@
             // 
             // butDiscover
             // 
+            this.butDiscover.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butDiscover.CheckOnClick = true;
             this.butDiscover.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butDiscover.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butDiscover.Image = ((System.Drawing.Image)(resources.GetObject("butDiscover.Image")));
             this.butDiscover.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butDiscover.Name = "butDiscover";
@@ -414,12 +461,17 @@
             // 
             // toolStripSeparator8
             // 
+            this.toolStripSeparator8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator8.Margin = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStripSeparator8.Name = "toolStripSeparator8";
             this.toolStripSeparator8.Size = new System.Drawing.Size(6, 25);
             // 
             // butFill
             // 
+            this.butFill.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butFill.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butFill.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butFill.Image = ((System.Drawing.Image)(resources.GetObject("butFill.Image")));
             this.butFill.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butFill.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
@@ -430,7 +482,9 @@
             // 
             // butEraser
             // 
+            this.butEraser.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butEraser.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butEraser.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butEraser.Image = ((System.Drawing.Image)(resources.GetObject("butEraser.Image")));
             this.butEraser.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butEraser.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
@@ -441,10 +495,12 @@
             // 
             // butZoom_Normal
             // 
+            this.butZoom_Normal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butZoom_Normal.Checked = true;
             this.butZoom_Normal.CheckOnClick = true;
             this.butZoom_Normal.CheckState = System.Windows.Forms.CheckState.Checked;
             this.butZoom_Normal.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butZoom_Normal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butZoom_Normal.Image = ((System.Drawing.Image)(resources.GetObject("butZoom_Normal.Image")));
             this.butZoom_Normal.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butZoom_Normal.Name = "butZoom_Normal";
@@ -454,8 +510,10 @@
             // 
             // butZoom_2x
             // 
+            this.butZoom_2x.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butZoom_2x.CheckOnClick = true;
             this.butZoom_2x.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butZoom_2x.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butZoom_2x.Image = ((System.Drawing.Image)(resources.GetObject("butZoom_2x.Image")));
             this.butZoom_2x.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butZoom_2x.Name = "butZoom_2x";
@@ -465,8 +523,10 @@
             // 
             // butZoom_4x
             // 
+            this.butZoom_4x.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butZoom_4x.CheckOnClick = true;
             this.butZoom_4x.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butZoom_4x.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butZoom_4x.Image = ((System.Drawing.Image)(resources.GetObject("butZoom_4x.Image")));
             this.butZoom_4x.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butZoom_4x.Name = "butZoom_4x";
@@ -476,15 +536,20 @@
             // 
             // toolStripSeparator19
             // 
+            this.toolStripSeparator19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator19.Margin = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStripSeparator19.Name = "toolStripSeparator19";
             this.toolStripSeparator19.Size = new System.Drawing.Size(6, 25);
             // 
             // butVisualization
             // 
+            this.butVisualization.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butVisualization.Checked = true;
             this.butVisualization.CheckOnClick = true;
             this.butVisualization.CheckState = System.Windows.Forms.CheckState.Checked;
             this.butVisualization.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butVisualization.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butVisualization.Image = ((System.Drawing.Image)(resources.GetObject("butVisualization.Image")));
             this.butVisualization.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butVisualization.Name = "butVisualization";
@@ -494,8 +559,10 @@
             // 
             // butEdition
             // 
+            this.butEdition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butEdition.CheckOnClick = true;
             this.butEdition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butEdition.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butEdition.Image = ((System.Drawing.Image)(resources.GetObject("butEdition.Image")));
             this.butEdition.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butEdition.Name = "butEdition";
@@ -505,13 +572,18 @@
             // 
             // toolStripSeparator1
             // 
+            this.toolStripSeparator1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator1.Margin = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // butGrid
             // 
+            this.butGrid.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butGrid.CheckOnClick = true;
             this.butGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butGrid.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butGrid.Image = ((System.Drawing.Image)(resources.GetObject("butGrid.Image")));
             this.butGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butGrid.Name = "butGrid";
@@ -521,10 +593,12 @@
             // 
             // butAudio
             // 
+            this.butAudio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butAudio.Checked = true;
             this.butAudio.CheckOnClick = true;
             this.butAudio.CheckState = System.Windows.Forms.CheckState.Checked;
             this.butAudio.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butAudio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butAudio.Image = ((System.Drawing.Image)(resources.GetObject("butAudio.Image")));
             this.butAudio.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butAudio.Name = "butAudio";
@@ -535,6 +609,7 @@
             // butEditors
             // 
             this.butEditors.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.butEditors.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butEditors.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.butEditors.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.butEditors_Classes,
@@ -544,6 +619,7 @@
             this.butEditors_NPCs,
             this.butEditors_Shops,
             this.butEditors_Tiles});
+            this.butEditors.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butEditors.Image = ((System.Drawing.Image)(resources.GetObject("butEditors.Image")));
             this.butEditors.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butEditors.Name = "butEditors";
@@ -662,6 +738,9 @@
             // 
             // Strip
             // 
+            this.Strip.AutoSize = false;
+            this.Strip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.Strip.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.Strip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FPS,
             this.toolStripSeparator6,
@@ -670,7 +749,9 @@
             this.Position});
             this.Strip.Location = new System.Drawing.Point(0, 664);
             this.Strip.Name = "Strip";
+            this.Strip.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
             this.Strip.Size = new System.Drawing.Size(1366, 23);
+            this.Strip.SizingGrip = false;
             this.Strip.TabIndex = 83;
             this.Strip.Text = "0";
             // 
@@ -678,29 +759,29 @@
             // 
             this.FPS.AutoSize = false;
             this.FPS.Name = "FPS";
-            this.FPS.Size = new System.Drawing.Size(50, 18);
+            this.FPS.Size = new System.Drawing.Size(50, 10);
             this.FPS.Text = "FPS: 64";
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 23);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 15);
             // 
             // Revision
             // 
             this.Revision.Name = "Revision";
-            this.Revision.Size = new System.Drawing.Size(51, 18);
+            this.Revision.Size = new System.Drawing.Size(51, 10);
             this.Revision.Text = "Revision";
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 23);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 15);
             // 
             // Position
             // 
             this.Position.Name = "Position";
-            this.Position.Size = new System.Drawing.Size(50, 18);
+            this.Position.Size = new System.Drawing.Size(50, 10);
             this.Position.Text = "Position";
             // 
             // chkAuto
@@ -711,12 +792,11 @@
             this.chkAuto.Size = new System.Drawing.Size(48, 17);
             this.chkAuto.TabIndex = 101;
             this.chkAuto.Text = "Auto";
-            this.chkAuto.UseVisualStyleBackColor = true;
             this.chkAuto.CheckedChanged += new System.EventHandler(this.chkAuto_CheckedChanged);
             // 
             // cmbTiles
             // 
-            this.cmbTiles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTiles.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbTiles.FormattingEnabled = true;
             this.cmbTiles.Location = new System.Drawing.Point(0, 27);
             this.cmbTiles.Name = "cmbTiles";
@@ -727,6 +807,7 @@
             // grpLayers
             // 
             this.grpLayers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.grpLayers.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpLayers.Controls.Add(this.Trip_Layers);
             this.grpLayers.Controls.Add(this.lstLayers);
             this.grpLayers.Location = new System.Drawing.Point(12, 491);
@@ -738,7 +819,10 @@
             // 
             // Trip_Layers
             // 
+            this.Trip_Layers.AutoSize = false;
+            this.Trip_Layers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.Trip_Layers.Dock = System.Windows.Forms.DockStyle.None;
+            this.Trip_Layers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.Trip_Layers.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.butLayers_Add,
             this.butLayers_Remove,
@@ -749,12 +833,15 @@
             this.butLayers_Edit});
             this.Trip_Layers.Location = new System.Drawing.Point(6, 135);
             this.Trip_Layers.Name = "Trip_Layers";
+            this.Trip_Layers.Padding = new System.Windows.Forms.Padding(5, 0, 1, 0);
             this.Trip_Layers.Size = new System.Drawing.Size(139, 25);
             this.Trip_Layers.TabIndex = 109;
             // 
             // butLayers_Add
             // 
+            this.butLayers_Add.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butLayers_Add.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Add.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butLayers_Add.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Add.Image")));
             this.butLayers_Add.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butLayers_Add.Name = "butLayers_Add";
@@ -764,7 +851,9 @@
             // 
             // butLayers_Remove
             // 
+            this.butLayers_Remove.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butLayers_Remove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Remove.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butLayers_Remove.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Remove.Image")));
             this.butLayers_Remove.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butLayers_Remove.Name = "butLayers_Remove";
@@ -775,12 +864,17 @@
             // 
             // toolStripSeparator12
             // 
+            this.toolStripSeparator12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator12.Margin = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStripSeparator12.Name = "toolStripSeparator12";
             this.toolStripSeparator12.Size = new System.Drawing.Size(6, 25);
             // 
             // butLayers_Up
             // 
+            this.butLayers_Up.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butLayers_Up.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Up.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butLayers_Up.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Up.Image")));
             this.butLayers_Up.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butLayers_Up.Name = "butLayers_Up";
@@ -791,8 +885,9 @@
             // 
             // butLayers_Down
             // 
-            this.butLayers_Down.BackColor = System.Drawing.Color.Transparent;
+            this.butLayers_Down.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butLayers_Down.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Down.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butLayers_Down.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Down.Image")));
             this.butLayers_Down.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butLayers_Down.MergeAction = System.Windows.Forms.MergeAction.MatchOnly;
@@ -804,30 +899,37 @@
             // 
             // toolStripSeparator13
             // 
+            this.toolStripSeparator13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator13.Margin = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStripSeparator13.Name = "toolStripSeparator13";
             this.toolStripSeparator13.Size = new System.Drawing.Size(6, 25);
             // 
             // butLayers_Edit
             // 
+            this.butLayers_Edit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butLayers_Edit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Edit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butLayers_Edit.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Edit.Image")));
             this.butLayers_Edit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butLayers_Edit.Name = "butLayers_Edit";
-            this.butLayers_Edit.Size = new System.Drawing.Size(23, 22);
+            this.butLayers_Edit.Size = new System.Drawing.Size(24, 24);
             this.butLayers_Edit.Text = "Edit";
             this.butLayers_Edit.ToolTipText = "Editar";
             this.butLayers_Edit.Click += new System.EventHandler(this.butLayers_Edit_Click);
             // 
             // lstLayers
             // 
+            this.lstLayers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.lstLayers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lstLayers.CheckBoxes = true;
             this.lstLayers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colVisible,
             this.colNúmero,
             this.colName,
             this.colType});
+            this.lstLayers.ForeColor = System.Drawing.Color.Gainsboro;
             this.lstLayers.FullRowSelect = true;
-            this.lstLayers.GridLines = true;
             this.lstLayers.HideSelection = false;
             this.lstLayers.Location = new System.Drawing.Point(6, 19);
             this.lstLayers.MultiSelect = false;
@@ -860,6 +962,7 @@
             // grpLayer_Add
             // 
             this.grpLayer_Add.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.grpLayer_Add.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpLayer_Add.Controls.Add(this.txtLayer_Name);
             this.grpLayer_Add.Controls.Add(this.cmbLayers_Type);
             this.grpLayer_Add.Controls.Add(this.butLayer_Edit);
@@ -877,6 +980,9 @@
             // 
             // txtLayer_Name
             // 
+            this.txtLayer_Name.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.txtLayer_Name.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtLayer_Name.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.txtLayer_Name.Location = new System.Drawing.Point(9, 33);
             this.txtLayer_Name.Name = "txtLayer_Name";
             this.txtLayer_Name.Size = new System.Drawing.Size(243, 20);
@@ -884,7 +990,7 @@
             // 
             // cmbLayers_Type
             // 
-            this.cmbLayers_Type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLayers_Type.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbLayers_Type.FormattingEnabled = true;
             this.cmbLayers_Type.Location = new System.Drawing.Point(10, 71);
             this.cmbLayers_Type.Name = "cmbLayers_Type";
@@ -895,25 +1001,26 @@
             // 
             this.butLayer_Edit.Location = new System.Drawing.Point(10, 136);
             this.butLayer_Edit.Name = "butLayer_Edit";
+            this.butLayer_Edit.Padding = new System.Windows.Forms.Padding(5);
             this.butLayer_Edit.Size = new System.Drawing.Size(171, 24);
             this.butLayer_Edit.TabIndex = 10;
             this.butLayer_Edit.Text = "Edit";
-            this.butLayer_Edit.UseVisualStyleBackColor = true;
             this.butLayer_Edit.Click += new System.EventHandler(this.butLayer_Edit_Click);
             // 
             // butLayer_Cancel
             // 
             this.butLayer_Cancel.Location = new System.Drawing.Point(186, 136);
             this.butLayer_Cancel.Name = "butLayer_Cancel";
+            this.butLayer_Cancel.Padding = new System.Windows.Forms.Padding(5);
             this.butLayer_Cancel.Size = new System.Drawing.Size(66, 24);
             this.butLayer_Cancel.TabIndex = 9;
             this.butLayer_Cancel.Text = "Cancel";
-            this.butLayer_Cancel.UseVisualStyleBackColor = true;
             this.butLayer_Cancel.Click += new System.EventHandler(this.butLayer_Cancel_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label2.Location = new System.Drawing.Point(6, 55);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(34, 13);
@@ -923,6 +1030,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label1.Location = new System.Drawing.Point(7, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(38, 13);
@@ -933,16 +1041,17 @@
             // 
             this.butLayer_Add.Location = new System.Drawing.Point(10, 136);
             this.butLayer_Add.Name = "butLayer_Add";
+            this.butLayer_Add.Padding = new System.Windows.Forms.Padding(5);
             this.butLayer_Add.Size = new System.Drawing.Size(171, 24);
             this.butLayer_Add.TabIndex = 3;
             this.butLayer_Add.Text = "Add";
-            this.butLayer_Add.UseVisualStyleBackColor = true;
             this.butLayer_Add.Click += new System.EventHandler(this.butLayer_Add_Click);
             // 
             // grpZones
             // 
             this.grpZones.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.grpZones.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpZones.Controls.Add(this.scrlZone_Clear);
             this.grpZones.Controls.Add(this.scrlZone);
             this.grpZones.Location = new System.Drawing.Point(0, 27);
@@ -957,10 +1066,10 @@
             // 
             this.scrlZone_Clear.Location = new System.Drawing.Point(8, 46);
             this.scrlZone_Clear.Name = "scrlZone_Clear";
+            this.scrlZone_Clear.Padding = new System.Windows.Forms.Padding(5);
             this.scrlZone_Clear.Size = new System.Drawing.Size(256, 24);
             this.scrlZone_Clear.TabIndex = 12;
             this.scrlZone_Clear.Text = "Clear";
-            this.scrlZone_Clear.UseVisualStyleBackColor = true;
             this.scrlZone_Clear.Click += new System.EventHandler(this.scrlZone_Clear_Click);
             // 
             // scrlZone
@@ -975,16 +1084,17 @@
             // 
             this.butLight_Clear.Location = new System.Drawing.Point(7, 23);
             this.butLight_Clear.Name = "butLight_Clear";
+            this.butLight_Clear.Padding = new System.Windows.Forms.Padding(5);
             this.butLight_Clear.Size = new System.Drawing.Size(262, 24);
             this.butLight_Clear.TabIndex = 12;
             this.butLight_Clear.Text = "Clear lights";
-            this.butLight_Clear.UseVisualStyleBackColor = true;
             this.butLight_Clear.Click += new System.EventHandler(this.butLight_Clear_Click);
             // 
             // grpLighting
             // 
             this.grpLighting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.grpLighting.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpLighting.Controls.Add(this.butLight_Clear);
             this.grpLighting.Location = new System.Drawing.Point(0, 27);
             this.grpLighting.Name = "grpLighting";
@@ -1003,6 +1113,7 @@
             // grpTile
             // 
             this.grpTile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.grpTile.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpTile.Controls.Add(this.chkAuto);
             this.grpTile.Location = new System.Drawing.Point(12, 435);
             this.grpTile.Name = "grpTile";
@@ -1015,6 +1126,7 @@
             // 
             this.grpAttributes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.grpAttributes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpAttributes.Controls.Add(this.grpA_Item);
             this.grpAttributes.Controls.Add(this.optA_Item);
             this.grpAttributes.Controls.Add(this.butAttributes_Import);
@@ -1033,6 +1145,7 @@
             // 
             // grpA_Item
             // 
+            this.grpA_Item.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpA_Item.Controls.Add(this.numA_Item_Amount);
             this.grpA_Item.Controls.Add(this.cmbA_Item);
             this.grpA_Item.Controls.Add(this.label15);
@@ -1065,7 +1178,7 @@
             // 
             // cmbA_Item
             // 
-            this.cmbA_Item.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbA_Item.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbA_Item.FormattingEnabled = true;
             this.cmbA_Item.Location = new System.Drawing.Point(14, 30);
             this.cmbA_Item.Name = "cmbA_Item";
@@ -1076,6 +1189,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label15.Location = new System.Drawing.Point(11, 55);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(46, 13);
@@ -1085,6 +1199,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
+            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label16.Location = new System.Drawing.Point(10, 14);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(30, 13);
@@ -1099,7 +1214,6 @@
             this.optA_Item.Size = new System.Drawing.Size(45, 17);
             this.optA_Item.TabIndex = 80;
             this.optA_Item.Text = "Item";
-            this.optA_Item.UseVisualStyleBackColor = true;
             this.optA_Item.CheckedChanged += new System.EventHandler(this.optA_Item_CheckedChanged);
             this.optA_Item.Click += new System.EventHandler(this.optA_Item_CheckedChanged);
             // 
@@ -1107,10 +1221,10 @@
             // 
             this.butAttributes_Import.Location = new System.Drawing.Point(138, 24);
             this.butAttributes_Import.Name = "butAttributes_Import";
+            this.butAttributes_Import.Padding = new System.Windows.Forms.Padding(5);
             this.butAttributes_Import.Size = new System.Drawing.Size(126, 24);
             this.butAttributes_Import.TabIndex = 79;
             this.butAttributes_Import.Text = "Import attributes";
-            this.butAttributes_Import.UseVisualStyleBackColor = true;
             this.butAttributes_Import.Click += new System.EventHandler(this.butAttributes_Import_Click);
             // 
             // optA_Warp
@@ -1121,7 +1235,6 @@
             this.optA_Warp.Size = new System.Drawing.Size(51, 17);
             this.optA_Warp.TabIndex = 78;
             this.optA_Warp.Text = "Warp";
-            this.optA_Warp.UseVisualStyleBackColor = true;
             this.optA_Warp.CheckedChanged += new System.EventHandler(this.optA_Warp_CheckedChanged);
             this.optA_Warp.Click += new System.EventHandler(this.optA_Warp_CheckedChanged);
             // 
@@ -1133,7 +1246,6 @@
             this.optA_DirBlock.Size = new System.Drawing.Size(70, 17);
             this.optA_DirBlock.TabIndex = 77;
             this.optA_DirBlock.Text = "Dir. block";
-            this.optA_DirBlock.UseVisualStyleBackColor = true;
             // 
             // optA_Block
             // 
@@ -1145,20 +1257,20 @@
             this.optA_Block.TabIndex = 76;
             this.optA_Block.TabStop = true;
             this.optA_Block.Text = "Block";
-            this.optA_Block.UseVisualStyleBackColor = true;
             // 
             // butAttributes_Clear
             // 
             this.butAttributes_Clear.Location = new System.Drawing.Point(9, 24);
             this.butAttributes_Clear.Name = "butAttributes_Clear";
+            this.butAttributes_Clear.Padding = new System.Windows.Forms.Padding(5);
             this.butAttributes_Clear.Size = new System.Drawing.Size(127, 24);
             this.butAttributes_Clear.TabIndex = 12;
             this.butAttributes_Clear.Text = "Clear";
-            this.butAttributes_Clear.UseVisualStyleBackColor = true;
             this.butAttributes_Clear.Click += new System.EventHandler(this.butAttributes_Clear_Click);
             // 
             // grpA_Warp
             // 
+            this.grpA_Warp.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpA_Warp.Controls.Add(this.cmbA_Warp_Direction);
             this.grpA_Warp.Controls.Add(this.label7);
             this.grpA_Warp.Controls.Add(this.numA_Warp_Y);
@@ -1177,7 +1289,7 @@
             // 
             // cmbA_Warp_Direction
             // 
-            this.cmbA_Warp_Direction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbA_Warp_Direction.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbA_Warp_Direction.FormattingEnabled = true;
             this.cmbA_Warp_Direction.Items.AddRange(new object[] {
             "Keep",
@@ -1194,6 +1306,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label7.Location = new System.Drawing.Point(10, 104);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(52, 13);
@@ -1218,7 +1331,7 @@
             // 
             // cmbA_Warp_Map
             // 
-            this.cmbA_Warp_Map.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbA_Warp_Map.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbA_Warp_Map.FormattingEnabled = true;
             this.cmbA_Warp_Map.Location = new System.Drawing.Point(14, 33);
             this.cmbA_Warp_Map.Name = "cmbA_Warp_Map";
@@ -1229,6 +1342,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label6.Location = new System.Drawing.Point(135, 61);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(17, 13);
@@ -1238,6 +1352,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label5.Location = new System.Drawing.Point(11, 58);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(17, 13);
@@ -1247,6 +1362,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label4.Location = new System.Drawing.Point(10, 17);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(31, 13);
@@ -1268,6 +1384,7 @@
             // 
             this.grpNPCs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.grpNPCs.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpNPCs.Controls.Add(this.groupBox2);
             this.grpNPCs.Controls.Add(this.groupBox1);
             this.grpNPCs.Location = new System.Drawing.Point(0, 26);
@@ -1280,6 +1397,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.groupBox2.Controls.Add(this.cmbNPC);
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.label11);
@@ -1295,7 +1413,7 @@
             // 
             // cmbNPC
             // 
-            this.cmbNPC.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbNPC.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbNPC.FormattingEnabled = true;
             this.cmbNPC.Location = new System.Drawing.Point(10, 36);
             this.cmbNPC.Name = "cmbNPC";
@@ -1306,6 +1424,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label13.Location = new System.Drawing.Point(41, 129);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(179, 12);
@@ -1315,6 +1434,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label11.Location = new System.Drawing.Point(7, 20);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(32, 13);
@@ -1331,6 +1451,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label9.Location = new System.Drawing.Point(8, 63);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(35, 13);
@@ -1341,14 +1462,15 @@
             // 
             this.butNPC_Add.Location = new System.Drawing.Point(10, 104);
             this.butNPC_Add.Name = "butNPC_Add";
+            this.butNPC_Add.Padding = new System.Windows.Forms.Padding(5);
             this.butNPC_Add.Size = new System.Drawing.Size(239, 22);
             this.butNPC_Add.TabIndex = 3;
             this.butNPC_Add.Text = "Add";
-            this.butNPC_Add.UseVisualStyleBackColor = true;
             this.butNPC_Add.Click += new System.EventHandler(this.butNPC_Add_Click);
             // 
             // groupBox1
             // 
+            this.groupBox1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.groupBox1.Controls.Add(this.lstNPC);
             this.groupBox1.Controls.Add(this.butNPC_Remove);
             this.groupBox1.Controls.Add(this.butNPC_Clear);
@@ -1361,37 +1483,44 @@
             // 
             // lstNPC
             // 
+            this.lstNPC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.lstNPC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstNPC.ForeColor = System.Drawing.Color.Gainsboro;
             this.lstNPC.FormattingEnabled = true;
             this.lstNPC.Location = new System.Drawing.Point(7, 19);
             this.lstNPC.Name = "lstNPC";
-            this.lstNPC.Size = new System.Drawing.Size(243, 173);
+            this.lstNPC.Size = new System.Drawing.Size(243, 171);
             this.lstNPC.TabIndex = 0;
             // 
             // butNPC_Remove
             // 
             this.butNPC_Remove.Location = new System.Drawing.Point(6, 198);
             this.butNPC_Remove.Name = "butNPC_Remove";
+            this.butNPC_Remove.Padding = new System.Windows.Forms.Padding(5);
             this.butNPC_Remove.Size = new System.Drawing.Size(121, 19);
             this.butNPC_Remove.TabIndex = 2;
             this.butNPC_Remove.Text = "Remove";
-            this.butNPC_Remove.UseVisualStyleBackColor = true;
             this.butNPC_Remove.Click += new System.EventHandler(this.butNPC_Remove_Click);
             // 
             // butNPC_Clear
             // 
             this.butNPC_Clear.Location = new System.Drawing.Point(129, 198);
             this.butNPC_Clear.Name = "butNPC_Clear";
+            this.butNPC_Clear.Padding = new System.Windows.Forms.Padding(5);
             this.butNPC_Clear.Size = new System.Drawing.Size(121, 19);
             this.butNPC_Clear.TabIndex = 4;
             this.butNPC_Clear.Text = "Clear";
-            this.butNPC_Clear.UseVisualStyleBackColor = true;
             this.butNPC_Clear.Click += new System.EventHandler(this.butNPC_Clear_Click);
             // 
             // List
             // 
             this.List.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.List.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.List.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.List.ForeColor = System.Drawing.Color.Gainsboro;
             this.List.HideSelection = false;
+            this.List.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             this.List.Location = new System.Drawing.Point(1101, 73);
             this.List.Name = "List";
             this.List.Size = new System.Drawing.Size(256, 271);
@@ -1402,7 +1531,10 @@
             // 
             this.txtFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.txtFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFilter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.txtFilter.Location = new System.Drawing.Point(1101, 26);
             this.txtFilter.Name = "txtFilter";
             this.txtFilter.Size = new System.Drawing.Size(256, 20);
@@ -1442,26 +1574,46 @@
             // prgProperties
             // 
             this.prgProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.prgProperties.CategoryForeColor = System.Drawing.Color.Gainsboro;
+            this.prgProperties.CategorySplitterColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.prgProperties.CommandsBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.prgProperties.CommandsForeColor = System.Drawing.Color.Gainsboro;
+            this.prgProperties.CommandsVisibleIfAvailable = false;
+            this.prgProperties.DisabledItemForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(133)))), ((int)(((byte)(133)))));
+            this.prgProperties.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.prgProperties.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.prgProperties.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.prgProperties.HelpForeColor = System.Drawing.Color.Gainsboro;
             this.prgProperties.HelpVisible = false;
+            this.prgProperties.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(51)))), ((int)(((byte)(53)))));
             this.prgProperties.Location = new System.Drawing.Point(1101, 354);
             this.prgProperties.Name = "prgProperties";
             this.prgProperties.Size = new System.Drawing.Size(256, 303);
             this.prgProperties.TabIndex = 114;
+            this.prgProperties.ToolbarVisible = false;
+            this.prgProperties.ViewBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.prgProperties.ViewBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.prgProperties.ViewForeColor = System.Drawing.Color.Gainsboro;
             // 
             // toolStrip1
             // 
+            this.toolStrip1.AutoSize = false;
+            this.toolStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.butNew,
             this.butRemove});
             this.toolStrip1.Location = new System.Drawing.Point(1101, 48);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(58, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(99, 25);
             this.toolStrip1.TabIndex = 115;
             // 
             // butNew
             // 
+            this.butNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butNew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butNew.Image = ((System.Drawing.Image)(resources.GetObject("butNew.Image")));
             this.butNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butNew.Name = "butNew";
@@ -1471,11 +1623,13 @@
             // 
             // butRemove
             // 
+            this.butRemove.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.butRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butRemove.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.butRemove.Image = ((System.Drawing.Image)(resources.GetObject("butRemove.Image")));
             this.butRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butRemove.Name = "butRemove";
-            this.butRemove.Size = new System.Drawing.Size(23, 22);
+            this.butRemove.Size = new System.Drawing.Size(24, 24);
             this.butRemove.Text = "Remove";
             this.butRemove.ToolTipText = "Remover";
             this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
@@ -1484,7 +1638,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.ClientSize = new System.Drawing.Size(1366, 687);
             this.Controls.Add(this.List);
             this.Controls.Add(this.toolStrip1);
@@ -1520,7 +1674,6 @@
             this.Strip.ResumeLayout(false);
             this.Strip.PerformLayout();
             this.grpLayers.ResumeLayout(false);
-            this.grpLayers.PerformLayout();
             this.Trip_Layers.ResumeLayout(false);
             this.Trip_Layers.PerformLayout();
             this.grpLayer_Add.ResumeLayout(false);
@@ -1555,7 +1708,7 @@
 
         #endregion
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStrip tolStrip;
+        private DarkToolStrip tolStrip;
         private System.Windows.Forms.ToolStripButton butSaveAll;
         private System.Windows.Forms.ToolStripButton butClearAll;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -1574,26 +1727,26 @@
         public System.Windows.Forms.HScrollBar scrlMapX;
         public System.Windows.Forms.VScrollBar scrlMapY;
         public System.Windows.Forms.HScrollBar scrlTileX;
-        private System.Windows.Forms.StatusStrip Strip;
+        private DarkStatusStrip Strip;
         private System.Windows.Forms.ToolStripStatusLabel Revision;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripStatusLabel Position;
         public System.Windows.Forms.ToolStripButton butEdition;
-        private System.Windows.Forms.GroupBox grpLayers;
+        private DarkGroupBox grpLayers;
         internal System.Windows.Forms.ColumnHeader colNúmero;
         internal System.Windows.Forms.ColumnHeader colVisible;
         internal System.Windows.Forms.ColumnHeader colName;
-        public System.Windows.Forms.CheckBox chkAuto;
-        private System.Windows.Forms.GroupBox grpLayer_Add;
-        private System.Windows.Forms.Button butLayer_Add;
+        public DarkCheckBox chkAuto;
+        private DarkGroupBox grpLayer_Add;
+        private DarkButton butLayer_Add;
         private System.Windows.Forms.ColumnHeader colType;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtLayer_Name;
-        private System.Windows.Forms.ComboBox cmbLayers_Type;
-        private System.Windows.Forms.Button butLayer_Cancel;
-        private System.Windows.Forms.Button butLayer_Edit;
-        public System.Windows.Forms.ListView lstLayers;
+        private DarkLabel label2;
+        private DarkLabel label1;
+        private DarkTextBox txtLayer_Name;
+        private DarkComboBox cmbLayers_Type;
+        private DarkButton butLayer_Cancel;
+        private DarkButton butLayer_Edit;
+        public ListView lstLayers;
         public System.Windows.Forms.ToolStripButton butDiscover;
         public System.Windows.Forms.ToolStripButton butRectangle;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
@@ -1601,59 +1754,59 @@
         private System.Windows.Forms.ToolStripButton butArea;
         public System.Windows.Forms.ToolStripButton butMNormal;
         public System.Windows.Forms.ToolStripButton butMZones;
-        private System.Windows.Forms.GroupBox grpZones;
+        private DarkGroupBox grpZones;
         private System.Windows.Forms.HScrollBar scrlZone;
-        private System.Windows.Forms.Button scrlZone_Clear;
+        private DarkButton scrlZone_Clear;
         public System.Windows.Forms.ToolStripButton butMLighting;
         public System.Windows.Forms.ToolStripButton butCut;
         public System.Windows.Forms.ToolStripButton butCopy;
         private System.Windows.Forms.ToolStripButton butPaste;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
-        private System.Windows.Forms.Button butLight_Clear;
-        private System.Windows.Forms.GroupBox grpLighting;
-        public System.Windows.Forms.ComboBox cmbTiles;
+        private DarkButton butLight_Clear;
+        private DarkGroupBox grpLighting;
+        public DarkComboBox cmbTiles;
         private System.Windows.Forms.Timer tmrUpdate;
-        private System.Windows.Forms.GroupBox grpTile;
+        private DarkGroupBox grpTile;
         public System.Windows.Forms.ToolStripButton butAudio;
         private System.Windows.Forms.ToolStripButton butReload;
         public System.Windows.Forms.ToolStripButton butMAttributes;
-        private System.Windows.Forms.GroupBox grpAttributes;
-        private System.Windows.Forms.Button butAttributes_Clear;
+        private DarkGroupBox grpAttributes;
+        private DarkButton butAttributes_Clear;
         private System.Windows.Forms.ToolStripStatusLabel FPS;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         public System.Windows.Forms.PictureBox picTile_Background;
         public System.Windows.Forms.ToolStripButton butMNPCs;
-        private System.Windows.Forms.GroupBox grpNPCs;
-        private System.Windows.Forms.Button butNPC_Add;
-        private System.Windows.Forms.Button butNPC_Remove;
-        private System.Windows.Forms.ComboBox cmbNPC;
+        private DarkGroupBox grpNPCs;
+        private DarkButton butNPC_Add;
+        private DarkButton butNPC_Remove;
+        private DarkComboBox cmbNPC;
         private System.Windows.Forms.ListBox lstNPC;
-        private System.Windows.Forms.Button butNPC_Clear;
-        private System.Windows.Forms.RadioButton optA_Block;
-        private System.Windows.Forms.RadioButton optA_Warp;
-        private System.Windows.Forms.Button butAttributes_Import;
-        public System.Windows.Forms.RadioButton optA_DirBlock;
-        private System.Windows.Forms.NumericUpDown numA_Warp_Y;
-        private System.Windows.Forms.NumericUpDown numA_Warp_X;
-        private System.Windows.Forms.ComboBox cmbA_Warp_Map;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.GroupBox grpA_Warp;
-        private System.Windows.Forms.ComboBox cmbA_Warp_Direction;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.NumericUpDown numNPC_Zone;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.RadioButton optA_Item;
-        private System.Windows.Forms.GroupBox grpA_Item;
-        private System.Windows.Forms.NumericUpDown numA_Item_Amount;
-        private System.Windows.Forms.ComboBox cmbA_Item;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.ToolStrip Trip_Layers;
+        private DarkButton butNPC_Clear;
+        private DarkRadioButton optA_Block;
+        private DarkRadioButton optA_Warp;
+        private DarkButton butAttributes_Import;
+        public DarkRadioButton optA_DirBlock;
+        private DarkNumericUpDown numA_Warp_Y;
+        private DarkNumericUpDown numA_Warp_X;
+        private DarkComboBox cmbA_Warp_Map;
+        private DarkLabel label6;
+        private DarkLabel label5;
+        private DarkLabel label4;
+        private DarkGroupBox grpA_Warp;
+        private DarkComboBox cmbA_Warp_Direction;
+        private DarkLabel label7;
+        private DarkGroupBox groupBox2;
+        private DarkLabel label11;
+        private DarkNumericUpDown numNPC_Zone;
+        private DarkLabel label9;
+        private DarkGroupBox groupBox1;
+        private DarkLabel label13;
+        private DarkRadioButton optA_Item;
+        private DarkGroupBox grpA_Item;
+        private DarkNumericUpDown numA_Item_Amount;
+        private DarkComboBox cmbA_Item;
+        private DarkLabel label15;
+        private DarkToolStrip Trip_Layers;
         private System.Windows.Forms.ToolStripButton butLayers_Add;
         private System.Windows.Forms.ToolStripButton butLayers_Remove;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
@@ -1670,12 +1823,12 @@
         private System.Windows.Forms.ToolStripMenuItem butEditors_NPCs;
         private System.Windows.Forms.ToolStripMenuItem butEditors_Shops;
         private System.Windows.Forms.ToolStripMenuItem butEditors_Tiles;
-        public System.Windows.Forms.TextBox txtFilter;
-        private System.Windows.Forms.Label label16;
+        public DarkTextBox txtFilter;
+        private DarkLabel label16;
         private System.Windows.Forms.Panel picBackground;
         public System.Windows.Forms.PictureBox picMap;
         private System.Windows.Forms.PropertyGrid prgProperties;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private DarkToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton butNew;
         private System.Windows.Forms.ToolStripButton butRemove;
     }

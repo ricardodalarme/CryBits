@@ -1,9 +1,10 @@
-﻿using Network;
+﻿using DarkUI.Forms;
+using Network;
 using System.Windows.Forms;
 
 namespace Editors
 {
-    partial class Editor_Data : Form
+    partial class Editor_Data : DarkForm
     {
         public Editor_Data()
         {

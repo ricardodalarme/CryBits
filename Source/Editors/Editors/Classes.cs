@@ -1,13 +1,15 @@
-﻿using Entities;
+﻿using DarkUI.Forms;
+using Entities;
 using Logic;
 using Network;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace Editors
 {
-    partial class Editor_Classes : Form
+    partial class Editor_Classes : DarkForm
     {
         // Usado para acessar os dados da janela
         public static Editor_Classes Form;
@@ -49,10 +51,10 @@ namespace Editors
             List.Nodes.Clear();
             foreach (var Class in Class.List.Values)
                 if (Class.Name.StartsWith(txtFilter.Text))
-                {
-                    List.Nodes.Add(Class.Name);
-                    List.Nodes[List.Nodes.Count - 1].Tag = Class.ID;
-                }
+                    List.Nodes.Add(new TreeNode(Class.Name)
+                    {
+                        Tag = Class.ID
+                    });
 
             // Seleciona o primeiro
             if (List.Nodes.Count > 0) List.SelectedNode = List.Nodes[0];
@@ -80,6 +82,7 @@ namespace Editors
             numAgility.Value = Selected.Attribute[(byte)Attributes.Agility];
             numVitality.Value = Selected.Attribute[(byte)Attributes.Vitality];
             cmbSpawn_Map.SelectedItem = Selected.Spawn_Map;
+            cmbSpawn_Map.Update();
             cmbSpawn_Direction.SelectedIndex = Selected.Spawn_Direction;
             numSpawn_X.Value = Selected.Spawn_X;
             numSpawn_Y.Value = Selected.Spawn_Y;
