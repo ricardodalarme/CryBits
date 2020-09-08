@@ -18,17 +18,24 @@ namespace Editors
 
         public Editor_Tiles()
         {
-            // Inicializa os componentes
             InitializeComponent();
+
+            // Abre janela
+            Editor_Maps.Form.Hide();
+            Show();
+
+            // Inicializa a janela de renderização
             Graphics.Win_Tile = new SFML.Graphics.RenderWindow(picTile.Handle);
 
             // Define os limites
             scrlTile.Maximum = Graphics.Tex_Tile.GetUpperBound(0);
             Update_Bounds();
+        }
 
-            // Abre a janela
-            Editor_Maps.Form.Hide();
-            Show();
+        private void Editor_Tiles_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Graphics.Win_Tile = null;
+            Editor_Maps.Form.Show();
         }
 
         private void Update_Bounds()
@@ -50,7 +57,6 @@ namespace Editors
             // Salva os dados e volta à janela principal
             Write.Tiles();
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void butClear_Click(object sender, EventArgs e)
@@ -63,7 +69,6 @@ namespace Editors
         {
             // Volta à janela principal
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void scrlTile_ValueChanged(object sender, EventArgs e)

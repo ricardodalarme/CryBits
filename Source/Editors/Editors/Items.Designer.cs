@@ -31,55 +31,55 @@ namespace Editors
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Items));
-            this.grpGeneral = new DarkGroupBox();
+            this.grpGeneral = new DarkUI.Controls.DarkGroupBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
-            this.cmbRarity = new DarkComboBox();
-            this.cmbBind = new DarkComboBox();
-            this.label20 = new DarkLabel();
-            this.label19 = new DarkLabel();
-            this.txtDescription = new DarkTextBox();
-            this.label15 = new DarkLabel();
-            this.chkStackable = new DarkCheckBox();
-            this.cmbType = new DarkComboBox();
-            this.numTexture = new DarkNumericUpDown();
-            this.txtName = new DarkTextBox();
-            this.label2 = new DarkLabel();
-            this.label1 = new DarkLabel();
-            this.label3 = new DarkLabel();
-            this.butSave = new DarkButton();
-            this.butCancel = new DarkButton();
-            this.grpRequirements = new DarkGroupBox();
-            this.cmbReq_Class = new DarkComboBox();
-            this.numReq_Level = new DarkNumericUpDown();
-            this.label5 = new DarkLabel();
-            this.label4 = new DarkLabel();
-            this.label12 = new DarkLabel();
-            this.numPotion_Experience = new DarkNumericUpDown();
-            this.label9 = new DarkLabel();
-            this.numPotion_MP = new DarkNumericUpDown();
-            this.numPotion_HP = new DarkNumericUpDown();
-            this.lblMP = new DarkLabel();
-            this.grpPotion = new DarkGroupBox();
-            this.label14 = new DarkLabel();
-            this.grpEquipment = new DarkGroupBox();
-            this.numWeapon_Damage = new DarkNumericUpDown();
-            this.numEquip_Strength = new DarkNumericUpDown();
-            this.numEquip_Vitality = new DarkNumericUpDown();
-            this.numEquip_Resistance = new DarkNumericUpDown();
-            this.numEquip_Intelligence = new DarkNumericUpDown();
-            this.numEquip_Agility = new DarkNumericUpDown();
-            this.cmbEquipment_Type = new DarkComboBox();
-            this.label10 = new DarkLabel();
-            this.lblWeapon_Damage = new DarkLabel();
-            this.label8 = new DarkLabel();
-            this.label7 = new DarkLabel();
-            this.label6 = new DarkLabel();
-            this.label13 = new DarkLabel();
-            this.label11 = new DarkLabel();
+            this.cmbRarity = new DarkUI.Controls.DarkComboBox();
+            this.cmbBind = new DarkUI.Controls.DarkComboBox();
+            this.label20 = new DarkUI.Controls.DarkLabel();
+            this.label19 = new DarkUI.Controls.DarkLabel();
+            this.txtDescription = new DarkUI.Controls.DarkTextBox();
+            this.label15 = new DarkUI.Controls.DarkLabel();
+            this.chkStackable = new DarkUI.Controls.DarkCheckBox();
+            this.cmbType = new DarkUI.Controls.DarkComboBox();
+            this.numTexture = new DarkUI.Controls.DarkNumericUpDown();
+            this.txtName = new DarkUI.Controls.DarkTextBox();
+            this.label2 = new DarkUI.Controls.DarkLabel();
+            this.label1 = new DarkUI.Controls.DarkLabel();
+            this.label3 = new DarkUI.Controls.DarkLabel();
+            this.butSave = new DarkUI.Controls.DarkButton();
+            this.butCancel = new DarkUI.Controls.DarkButton();
+            this.grpRequirements = new DarkUI.Controls.DarkGroupBox();
+            this.cmbReq_Class = new DarkUI.Controls.DarkComboBox();
+            this.numReq_Level = new DarkUI.Controls.DarkNumericUpDown();
+            this.label5 = new DarkUI.Controls.DarkLabel();
+            this.label4 = new DarkUI.Controls.DarkLabel();
+            this.label12 = new DarkUI.Controls.DarkLabel();
+            this.numPotion_Experience = new DarkUI.Controls.DarkNumericUpDown();
+            this.label9 = new DarkUI.Controls.DarkLabel();
+            this.numPotion_MP = new DarkUI.Controls.DarkNumericUpDown();
+            this.numPotion_HP = new DarkUI.Controls.DarkNumericUpDown();
+            this.lblMP = new DarkUI.Controls.DarkLabel();
+            this.grpPotion = new DarkUI.Controls.DarkGroupBox();
+            this.label14 = new DarkUI.Controls.DarkLabel();
+            this.grpEquipment = new DarkUI.Controls.DarkGroupBox();
+            this.numWeapon_Damage = new DarkUI.Controls.DarkNumericUpDown();
+            this.numEquip_Strength = new DarkUI.Controls.DarkNumericUpDown();
+            this.numEquip_Vitality = new DarkUI.Controls.DarkNumericUpDown();
+            this.numEquip_Resistance = new DarkUI.Controls.DarkNumericUpDown();
+            this.numEquip_Intelligence = new DarkUI.Controls.DarkNumericUpDown();
+            this.numEquip_Agility = new DarkUI.Controls.DarkNumericUpDown();
+            this.cmbEquipment_Type = new DarkUI.Controls.DarkComboBox();
+            this.label10 = new DarkUI.Controls.DarkLabel();
+            this.lblWeapon_Damage = new DarkUI.Controls.DarkLabel();
+            this.label8 = new DarkUI.Controls.DarkLabel();
+            this.label7 = new DarkUI.Controls.DarkLabel();
+            this.label6 = new DarkUI.Controls.DarkLabel();
+            this.label13 = new DarkUI.Controls.DarkLabel();
+            this.label11 = new DarkUI.Controls.DarkLabel();
             this.List = new System.Windows.Forms.TreeView();
-            this.butRemove = new DarkButton();
-            this.butNew = new DarkButton();
-            this.txtFilter = new DarkTextBox();
+            this.butRemove = new DarkUI.Controls.DarkButton();
+            this.butNew = new DarkUI.Controls.DarkButton();
+            this.txtFilter = new DarkUI.Controls.DarkTextBox();
             this.grpGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTexture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
@@ -100,6 +100,7 @@ namespace Editors
             // 
             // grpGeneral
             // 
+            this.grpGeneral.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpGeneral.Controls.Add(this.picTexture);
             this.grpGeneral.Controls.Add(this.cmbRarity);
             this.grpGeneral.Controls.Add(this.cmbBind);
@@ -120,7 +121,6 @@ namespace Editors
             this.grpGeneral.TabIndex = 14;
             this.grpGeneral.TabStop = false;
             this.grpGeneral.Text = "General";
-            this.grpGeneral.Visible = false;
             // 
             // picTexture
             // 
@@ -132,7 +132,7 @@ namespace Editors
             // 
             // cmbRarity
             // 
-            this.cmbRarity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRarity.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbRarity.FormattingEnabled = true;
             this.cmbRarity.Location = new System.Drawing.Point(10, 202);
             this.cmbRarity.Name = "cmbRarity";
@@ -142,7 +142,7 @@ namespace Editors
             // 
             // cmbBind
             // 
-            this.cmbBind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBind.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbBind.FormattingEnabled = true;
             this.cmbBind.Location = new System.Drawing.Point(156, 202);
             this.cmbBind.Name = "cmbBind";
@@ -153,6 +153,7 @@ namespace Editors
             // label20
             // 
             this.label20.AutoSize = true;
+            this.label20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label20.Location = new System.Drawing.Point(7, 186);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(37, 13);
@@ -162,6 +163,7 @@ namespace Editors
             // label19
             // 
             this.label19.AutoSize = true;
+            this.label19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label19.Location = new System.Drawing.Point(153, 187);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(31, 13);
@@ -170,6 +172,9 @@ namespace Editors
             // 
             // txtDescription
             // 
+            this.txtDescription.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.txtDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDescription.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.txtDescription.Location = new System.Drawing.Point(10, 72);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
@@ -180,6 +185,7 @@ namespace Editors
             // label15
             // 
             this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label15.Location = new System.Drawing.Point(7, 57);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(63, 13);
@@ -198,7 +204,7 @@ namespace Editors
             // 
             // cmbType
             // 
-            this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbType.FormattingEnabled = true;
             this.cmbType.Items.AddRange(new object[] {
             "None",
@@ -220,6 +226,9 @@ namespace Editors
             // 
             // txtName
             // 
+            this.txtName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.txtName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.txtName.Location = new System.Drawing.Point(10, 31);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(285, 20);
@@ -229,6 +238,7 @@ namespace Editors
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label2.Location = new System.Drawing.Point(7, 144);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(34, 13);
@@ -238,6 +248,7 @@ namespace Editors
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label1.Location = new System.Drawing.Point(152, 146);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 13);
@@ -247,6 +258,7 @@ namespace Editors
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label3.Location = new System.Drawing.Point(7, 13);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 13);
@@ -257,6 +269,7 @@ namespace Editors
             // 
             this.butSave.Location = new System.Drawing.Point(217, 479);
             this.butSave.Name = "butSave";
+            this.butSave.Padding = new System.Windows.Forms.Padding(5);
             this.butSave.Size = new System.Drawing.Size(151, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
@@ -266,6 +279,7 @@ namespace Editors
             // 
             this.butCancel.Location = new System.Drawing.Point(372, 479);
             this.butCancel.Name = "butCancel";
+            this.butCancel.Padding = new System.Windows.Forms.Padding(5);
             this.butCancel.Size = new System.Drawing.Size(151, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
@@ -273,6 +287,7 @@ namespace Editors
             // 
             // grpRequirements
             // 
+            this.grpRequirements.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpRequirements.Controls.Add(this.cmbReq_Class);
             this.grpRequirements.Controls.Add(this.numReq_Level);
             this.grpRequirements.Controls.Add(this.label5);
@@ -283,11 +298,10 @@ namespace Editors
             this.grpRequirements.TabIndex = 19;
             this.grpRequirements.TabStop = false;
             this.grpRequirements.Text = "Requirements";
-            this.grpRequirements.Visible = false;
             // 
             // cmbReq_Class
             // 
-            this.cmbReq_Class.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbReq_Class.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbReq_Class.FormattingEnabled = true;
             this.cmbReq_Class.Location = new System.Drawing.Point(157, 36);
             this.cmbReq_Class.Name = "cmbReq_Class";
@@ -306,6 +320,7 @@ namespace Editors
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label5.Location = new System.Drawing.Point(155, 21);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(35, 13);
@@ -315,6 +330,7 @@ namespace Editors
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label4.Location = new System.Drawing.Point(8, 20);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(36, 13);
@@ -324,6 +340,7 @@ namespace Editors
             // label12
             // 
             this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label12.Location = new System.Drawing.Point(10, 21);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(25, 13);
@@ -346,6 +363,7 @@ namespace Editors
             // label9
             // 
             this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label9.Location = new System.Drawing.Point(204, 21);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(63, 13);
@@ -381,6 +399,7 @@ namespace Editors
             // lblMP
             // 
             this.lblMP.AutoSize = true;
+            this.lblMP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.lblMP.Location = new System.Drawing.Point(106, 21);
             this.lblMP.Name = "lblMP";
             this.lblMP.Size = new System.Drawing.Size(26, 13);
@@ -389,6 +408,7 @@ namespace Editors
             // 
             // grpPotion
             // 
+            this.grpPotion.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpPotion.Controls.Add(this.numPotion_MP);
             this.grpPotion.Controls.Add(this.numPotion_Experience);
             this.grpPotion.Controls.Add(this.numPotion_HP);
@@ -402,11 +422,11 @@ namespace Editors
             this.grpPotion.TabIndex = 21;
             this.grpPotion.TabStop = false;
             this.grpPotion.Text = "Potion";
-            this.grpPotion.Visible = false;
             // 
             // label14
             // 
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label14.Location = new System.Drawing.Point(10, 60);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(287, 14);
@@ -416,6 +436,7 @@ namespace Editors
             // 
             // grpEquipment
             // 
+            this.grpEquipment.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpEquipment.Controls.Add(this.numWeapon_Damage);
             this.grpEquipment.Controls.Add(this.numEquip_Strength);
             this.grpEquipment.Controls.Add(this.numEquip_Vitality);
@@ -436,7 +457,6 @@ namespace Editors
             this.grpEquipment.TabIndex = 22;
             this.grpEquipment.TabStop = false;
             this.grpEquipment.Text = "Equipment";
-            this.grpEquipment.Visible = false;
             // 
             // numWeapon_Damage
             // 
@@ -517,7 +537,7 @@ namespace Editors
             // 
             // cmbEquipment_Type
             // 
-            this.cmbEquipment_Type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbEquipment_Type.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbEquipment_Type.FormattingEnabled = true;
             this.cmbEquipment_Type.Items.AddRange(new object[] {
             "Weapon",
@@ -534,6 +554,7 @@ namespace Editors
             // label10
             // 
             this.label10.AutoSize = true;
+            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label10.Location = new System.Drawing.Point(106, 82);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(40, 13);
@@ -543,6 +564,7 @@ namespace Editors
             // lblWeapon_Damage
             // 
             this.lblWeapon_Damage.AutoSize = true;
+            this.lblWeapon_Damage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.lblWeapon_Damage.Location = new System.Drawing.Point(204, 82);
             this.lblWeapon_Damage.Name = "lblWeapon_Damage";
             this.lblWeapon_Damage.Size = new System.Drawing.Size(75, 13);
@@ -552,6 +574,7 @@ namespace Editors
             // label8
             // 
             this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label8.Location = new System.Drawing.Point(9, 80);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(37, 13);
@@ -561,6 +584,7 @@ namespace Editors
             // label7
             // 
             this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label7.Location = new System.Drawing.Point(9, 41);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(50, 13);
@@ -570,6 +594,7 @@ namespace Editors
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label6.Location = new System.Drawing.Point(106, 41);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(63, 13);
@@ -579,6 +604,7 @@ namespace Editors
             // label13
             // 
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label13.Location = new System.Drawing.Point(10, 121);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(287, 16);
@@ -589,6 +615,7 @@ namespace Editors
             // label11
             // 
             this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label11.Location = new System.Drawing.Point(205, 41);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(64, 13);
@@ -597,21 +624,22 @@ namespace Editors
             // 
             // List
             // 
+            this.List.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.List.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.List.ForeColor = System.Drawing.Color.Gainsboro;
             this.List.HideSelection = false;
+            this.List.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             this.List.Location = new System.Drawing.Point(11, 38);
             this.List.Name = "List";
             this.List.Size = new System.Drawing.Size(201, 435);
             this.List.TabIndex = 44;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
-            this.List.BackColor = System.Drawing.Color.FromArgb(60, 63, 65);
-            this.List.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.List.ForeColor = System.Drawing.Color.Gainsboro;
-            this.List.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             // 
             // butRemove
             // 
             this.butRemove.Location = new System.Drawing.Point(114, 479);
             this.butRemove.Name = "butRemove";
+            this.butRemove.Padding = new System.Windows.Forms.Padding(5);
             this.butRemove.Size = new System.Drawing.Size(98, 25);
             this.butRemove.TabIndex = 43;
             this.butRemove.Text = "Remove";
@@ -621,6 +649,7 @@ namespace Editors
             // 
             this.butNew.Location = new System.Drawing.Point(10, 479);
             this.butNew.Name = "butNew";
+            this.butNew.Padding = new System.Windows.Forms.Padding(5);
             this.butNew.Size = new System.Drawing.Size(98, 25);
             this.butNew.TabIndex = 42;
             this.butNew.Text = "New";
@@ -628,7 +657,10 @@ namespace Editors
             // 
             // txtFilter
             // 
+            this.txtFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.txtFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFilter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.txtFilter.Location = new System.Drawing.Point(11, 12);
             this.txtFilter.Name = "txtFilter";
             this.txtFilter.Size = new System.Drawing.Size(201, 20);
@@ -657,6 +689,7 @@ namespace Editors
             this.Name = "Editor_Items";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Item Editor";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Items_FormClosed);
             this.grpGeneral.ResumeLayout(false);
             this.grpGeneral.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTexture)).EndInit();

@@ -31,71 +31,71 @@ namespace Editors
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_NPCs));
-            this.grpGeneral = new DarkGroupBox();
+            this.grpGeneral = new DarkUI.Controls.DarkGroupBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
-            this.numTexture = new DarkNumericUpDown();
-            this.txtName = new DarkTextBox();
-            this.label3 = new DarkLabel();
-            this.lblTexture = new DarkLabel();
-            this.txtSayMsg = new DarkTextBox();
-            this.label14 = new DarkLabel();
-            this.numSpawn = new DarkNumericUpDown();
-            this.label8 = new DarkLabel();
-            this.numRange = new DarkNumericUpDown();
-            this.label2 = new DarkLabel();
-            this.cmbBehavior = new DarkComboBox();
-            this.butSave = new DarkButton();
-            this.butCancel = new DarkButton();
-            this.grpAttributes = new DarkGroupBox();
-            this.numResistance = new DarkNumericUpDown();
-            this.numExperience = new DarkNumericUpDown();
-            this.numIntelligence = new DarkNumericUpDown();
-            this.label9 = new DarkLabel();
-            this.numVitality = new DarkNumericUpDown();
-            this.numMP = new DarkNumericUpDown();
-            this.label10 = new DarkLabel();
-            this.numHP = new DarkNumericUpDown();
-            this.numStrength = new DarkNumericUpDown();
-            this.label7 = new DarkLabel();
-            this.lblMP = new DarkLabel();
-            this.label4 = new DarkLabel();
-            this.lblHP = new DarkLabel();
-            this.numAgility = new DarkNumericUpDown();
-            this.label5 = new DarkLabel();
-            this.label6 = new DarkLabel();
-            this.numDrop_Amount = new DarkNumericUpDown();
-            this.cmbDrop_Item = new DarkComboBox();
-            this.numDrop_Chance = new DarkNumericUpDown();
-            this.label11 = new DarkLabel();
-            this.grpDrop = new DarkGroupBox();
-            this.butDrop_Delete = new DarkButton();
+            this.numTexture = new DarkUI.Controls.DarkNumericUpDown();
+            this.txtName = new DarkUI.Controls.DarkTextBox();
+            this.label3 = new DarkUI.Controls.DarkLabel();
+            this.lblTexture = new DarkUI.Controls.DarkLabel();
+            this.txtSayMsg = new DarkUI.Controls.DarkTextBox();
+            this.label14 = new DarkUI.Controls.DarkLabel();
+            this.numSpawn = new DarkUI.Controls.DarkNumericUpDown();
+            this.label8 = new DarkUI.Controls.DarkLabel();
+            this.numRange = new DarkUI.Controls.DarkNumericUpDown();
+            this.label2 = new DarkUI.Controls.DarkLabel();
+            this.cmbBehavior = new DarkUI.Controls.DarkComboBox();
+            this.butSave = new DarkUI.Controls.DarkButton();
+            this.butCancel = new DarkUI.Controls.DarkButton();
+            this.grpAttributes = new DarkUI.Controls.DarkGroupBox();
+            this.numResistance = new DarkUI.Controls.DarkNumericUpDown();
+            this.numExperience = new DarkUI.Controls.DarkNumericUpDown();
+            this.numIntelligence = new DarkUI.Controls.DarkNumericUpDown();
+            this.label9 = new DarkUI.Controls.DarkLabel();
+            this.numVitality = new DarkUI.Controls.DarkNumericUpDown();
+            this.numMP = new DarkUI.Controls.DarkNumericUpDown();
+            this.label10 = new DarkUI.Controls.DarkLabel();
+            this.numHP = new DarkUI.Controls.DarkNumericUpDown();
+            this.numStrength = new DarkUI.Controls.DarkNumericUpDown();
+            this.label7 = new DarkUI.Controls.DarkLabel();
+            this.lblMP = new DarkUI.Controls.DarkLabel();
+            this.label4 = new DarkUI.Controls.DarkLabel();
+            this.lblHP = new DarkUI.Controls.DarkLabel();
+            this.numAgility = new DarkUI.Controls.DarkNumericUpDown();
+            this.label5 = new DarkUI.Controls.DarkLabel();
+            this.label6 = new DarkUI.Controls.DarkLabel();
+            this.numDrop_Amount = new DarkUI.Controls.DarkNumericUpDown();
+            this.cmbDrop_Item = new DarkUI.Controls.DarkComboBox();
+            this.numDrop_Chance = new DarkUI.Controls.DarkNumericUpDown();
+            this.label11 = new DarkUI.Controls.DarkLabel();
+            this.grpDrop = new DarkUI.Controls.DarkGroupBox();
+            this.butDrop_Delete = new DarkUI.Controls.DarkButton();
             this.lstDrop = new System.Windows.Forms.ListBox();
-            this.butDrop_Add = new DarkButton();
-            this.grpDrop_Add = new DarkGroupBox();
-            this.label15 = new DarkLabel();
-            this.label16 = new DarkLabel();
-            this.butItem_Ok = new DarkButton();
-            this.grpAllies = new DarkGroupBox();
-            this.butAllie_Delete = new DarkButton();
-            this.butAllie_Add = new DarkButton();
+            this.butDrop_Add = new DarkUI.Controls.DarkButton();
+            this.grpDrop_Add = new DarkUI.Controls.DarkGroupBox();
+            this.label15 = new DarkUI.Controls.DarkLabel();
+            this.label16 = new DarkUI.Controls.DarkLabel();
+            this.butItem_Ok = new DarkUI.Controls.DarkButton();
+            this.grpAllies = new DarkUI.Controls.DarkGroupBox();
+            this.butAllie_Delete = new DarkUI.Controls.DarkButton();
+            this.butAllie_Add = new DarkUI.Controls.DarkButton();
             this.lstAllies = new System.Windows.Forms.ListBox();
-            this.label12 = new DarkLabel();
-            this.chkAttackNPC = new DarkCheckBox();
-            this.grpAllie_Add = new DarkGroupBox();
-            this.cmbAllie_NPC = new DarkComboBox();
-            this.label17 = new DarkLabel();
-            this.butAllie_Ok = new DarkButton();
-            this.grpBehaviour = new DarkGroupBox();
-            this.cmbMovement = new DarkComboBox();
-            this.cmbShop = new DarkComboBox();
-            this.label18 = new DarkLabel();
-            this.numFlee_Health = new DarkNumericUpDown();
-            this.label13 = new DarkLabel();
-            this.label1 = new DarkLabel();
+            this.label12 = new DarkUI.Controls.DarkLabel();
+            this.chkAttackNPC = new DarkUI.Controls.DarkCheckBox();
+            this.grpAllie_Add = new DarkUI.Controls.DarkGroupBox();
+            this.cmbAllie_NPC = new DarkUI.Controls.DarkComboBox();
+            this.label17 = new DarkUI.Controls.DarkLabel();
+            this.butAllie_Ok = new DarkUI.Controls.DarkButton();
+            this.grpBehaviour = new DarkUI.Controls.DarkGroupBox();
+            this.cmbMovement = new DarkUI.Controls.DarkComboBox();
+            this.cmbShop = new DarkUI.Controls.DarkComboBox();
+            this.label18 = new DarkUI.Controls.DarkLabel();
+            this.numFlee_Health = new DarkUI.Controls.DarkNumericUpDown();
+            this.label13 = new DarkUI.Controls.DarkLabel();
+            this.label1 = new DarkUI.Controls.DarkLabel();
             this.List = new System.Windows.Forms.TreeView();
-            this.butRemove = new DarkButton();
-            this.butNew = new DarkButton();
-            this.txtFilter = new DarkTextBox();
+            this.butRemove = new DarkUI.Controls.DarkButton();
+            this.butNew = new DarkUI.Controls.DarkButton();
+            this.txtFilter = new DarkUI.Controls.DarkTextBox();
             this.grpGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTexture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTexture)).BeginInit();
@@ -122,6 +122,7 @@ namespace Editors
             // 
             // grpGeneral
             // 
+            this.grpGeneral.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpGeneral.Controls.Add(this.picTexture);
             this.grpGeneral.Controls.Add(this.numTexture);
             this.grpGeneral.Controls.Add(this.txtName);
@@ -133,7 +134,6 @@ namespace Editors
             this.grpGeneral.TabIndex = 14;
             this.grpGeneral.TabStop = false;
             this.grpGeneral.Text = "General";
-            this.grpGeneral.Visible = false;
             // 
             // picTexture
             // 
@@ -158,6 +158,9 @@ namespace Editors
             // 
             // txtName
             // 
+            this.txtName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.txtName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.txtName.Location = new System.Drawing.Point(14, 36);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(201, 20);
@@ -167,6 +170,7 @@ namespace Editors
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label3.Location = new System.Drawing.Point(11, 18);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 13);
@@ -176,6 +180,7 @@ namespace Editors
             // lblTexture
             // 
             this.lblTexture.AutoSize = true;
+            this.lblTexture.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.lblTexture.Location = new System.Drawing.Point(11, 59);
             this.lblTexture.Name = "lblTexture";
             this.lblTexture.Size = new System.Drawing.Size(46, 13);
@@ -184,6 +189,9 @@ namespace Editors
             // 
             // txtSayMsg
             // 
+            this.txtSayMsg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.txtSayMsg.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtSayMsg.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.txtSayMsg.Location = new System.Drawing.Point(13, 108);
             this.txtSayMsg.Name = "txtSayMsg";
             this.txtSayMsg.Size = new System.Drawing.Size(279, 20);
@@ -193,6 +201,7 @@ namespace Editors
             // label14
             // 
             this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label14.Location = new System.Drawing.Point(10, 92);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(73, 13);
@@ -216,6 +225,7 @@ namespace Editors
             // 
             this.label8.AutoSize = true;
             this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label8.Location = new System.Drawing.Point(154, 131);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(90, 13);
@@ -238,6 +248,7 @@ namespace Editors
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label2.Location = new System.Drawing.Point(10, 131);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 13);
@@ -246,7 +257,7 @@ namespace Editors
             // 
             // cmbBehavior
             // 
-            this.cmbBehavior.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBehavior.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbBehavior.FormattingEnabled = true;
             this.cmbBehavior.Items.AddRange(new object[] {
             "Friendly",
@@ -263,6 +274,7 @@ namespace Editors
             // 
             this.butSave.Location = new System.Drawing.Point(220, 518);
             this.butSave.Name = "butSave";
+            this.butSave.Padding = new System.Windows.Forms.Padding(5);
             this.butSave.Size = new System.Drawing.Size(304, 25);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
@@ -272,6 +284,7 @@ namespace Editors
             // 
             this.butCancel.Location = new System.Drawing.Point(532, 518);
             this.butCancel.Name = "butCancel";
+            this.butCancel.Padding = new System.Windows.Forms.Padding(5);
             this.butCancel.Size = new System.Drawing.Size(304, 25);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
@@ -279,6 +292,7 @@ namespace Editors
             // 
             // grpAttributes
             // 
+            this.grpAttributes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpAttributes.Controls.Add(this.numResistance);
             this.grpAttributes.Controls.Add(this.numExperience);
             this.grpAttributes.Controls.Add(this.numIntelligence);
@@ -301,7 +315,6 @@ namespace Editors
             this.grpAttributes.TabIndex = 21;
             this.grpAttributes.TabStop = false;
             this.grpAttributes.Text = "Base Attributes";
-            this.grpAttributes.Visible = false;
             // 
             // numResistance
             // 
@@ -330,6 +343,7 @@ namespace Editors
             // label9
             // 
             this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label9.Location = new System.Drawing.Point(200, 16);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(63, 13);
@@ -355,6 +369,7 @@ namespace Editors
             // label10
             // 
             this.label10.AutoSize = true;
+            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label10.Location = new System.Drawing.Point(106, 94);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(40, 13);
@@ -380,6 +395,7 @@ namespace Editors
             // label7
             // 
             this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label7.Location = new System.Drawing.Point(10, 54);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(50, 13);
@@ -389,6 +405,7 @@ namespace Editors
             // lblMP
             // 
             this.lblMP.AutoSize = true;
+            this.lblMP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.lblMP.Location = new System.Drawing.Point(106, 18);
             this.lblMP.Name = "lblMP";
             this.lblMP.Size = new System.Drawing.Size(26, 13);
@@ -398,6 +415,7 @@ namespace Editors
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label4.Location = new System.Drawing.Point(106, 54);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(63, 13);
@@ -407,6 +425,7 @@ namespace Editors
             // lblHP
             // 
             this.lblHP.AutoSize = true;
+            this.lblHP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.lblHP.Location = new System.Drawing.Point(11, 16);
             this.lblHP.Name = "lblHP";
             this.lblHP.Size = new System.Drawing.Size(25, 13);
@@ -424,6 +443,7 @@ namespace Editors
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label5.Location = new System.Drawing.Point(201, 54);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(64, 13);
@@ -433,6 +453,7 @@ namespace Editors
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label6.Location = new System.Drawing.Point(10, 94);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(37, 13);
@@ -463,7 +484,7 @@ namespace Editors
             // 
             // cmbDrop_Item
             // 
-            this.cmbDrop_Item.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDrop_Item.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbDrop_Item.FormattingEnabled = true;
             this.cmbDrop_Item.Location = new System.Drawing.Point(28, 96);
             this.cmbDrop_Item.Name = "cmbDrop_Item";
@@ -490,6 +511,7 @@ namespace Editors
             // label11
             // 
             this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label11.Location = new System.Drawing.Point(154, 119);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(64, 13);
@@ -498,6 +520,7 @@ namespace Editors
             // 
             // grpDrop
             // 
+            this.grpDrop.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpDrop.Controls.Add(this.butDrop_Delete);
             this.grpDrop.Controls.Add(this.lstDrop);
             this.grpDrop.Controls.Add(this.butDrop_Add);
@@ -507,12 +530,12 @@ namespace Editors
             this.grpDrop.TabIndex = 37;
             this.grpDrop.TabStop = false;
             this.grpDrop.Text = "Drop items";
-            this.grpDrop.Visible = false;
             // 
             // butDrop_Delete
             // 
             this.butDrop_Delete.Location = new System.Drawing.Point(155, 219);
             this.butDrop_Delete.Name = "butDrop_Delete";
+            this.butDrop_Delete.Padding = new System.Windows.Forms.Padding(5);
             this.butDrop_Delete.Size = new System.Drawing.Size(139, 20);
             this.butDrop_Delete.TabIndex = 35;
             this.butDrop_Delete.Text = "Delete";
@@ -520,19 +543,20 @@ namespace Editors
             // 
             // lstDrop
             // 
-            this.lstDrop.FormattingEnabled = true;
-            this.lstDrop.Location = new System.Drawing.Point(10, 16);
-            this.lstDrop.Name = "lstDrop";
-            this.lstDrop.Size = new System.Drawing.Size(284, 199);
-            this.lstDrop.TabIndex = 34;
             this.lstDrop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.lstDrop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lstDrop.ForeColor = System.Drawing.Color.Gainsboro;
+            this.lstDrop.FormattingEnabled = true;
+            this.lstDrop.Location = new System.Drawing.Point(10, 16);
+            this.lstDrop.Name = "lstDrop";
+            this.lstDrop.Size = new System.Drawing.Size(284, 197);
+            this.lstDrop.TabIndex = 34;
             // 
             // butDrop_Add
             // 
             this.butDrop_Add.Location = new System.Drawing.Point(10, 219);
             this.butDrop_Add.Name = "butDrop_Add";
+            this.butDrop_Add.Padding = new System.Windows.Forms.Padding(5);
             this.butDrop_Add.Size = new System.Drawing.Size(138, 20);
             this.butDrop_Add.TabIndex = 33;
             this.butDrop_Add.Text = "Add";
@@ -540,6 +564,7 @@ namespace Editors
             // 
             // grpDrop_Add
             // 
+            this.grpDrop_Add.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpDrop_Add.Controls.Add(this.numDrop_Amount);
             this.grpDrop_Add.Controls.Add(this.label15);
             this.grpDrop_Add.Controls.Add(this.numDrop_Chance);
@@ -558,6 +583,7 @@ namespace Editors
             // label15
             // 
             this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label15.Location = new System.Drawing.Point(25, 119);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(46, 13);
@@ -567,6 +593,7 @@ namespace Editors
             // label16
             // 
             this.label16.AutoSize = true;
+            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label16.Location = new System.Drawing.Point(25, 80);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(30, 13);
@@ -577,6 +604,7 @@ namespace Editors
             // 
             this.butItem_Ok.Location = new System.Drawing.Point(28, 159);
             this.butItem_Ok.Name = "butItem_Ok";
+            this.butItem_Ok.Padding = new System.Windows.Forms.Padding(5);
             this.butItem_Ok.Size = new System.Drawing.Size(251, 20);
             this.butItem_Ok.TabIndex = 29;
             this.butItem_Ok.Text = "Ok";
@@ -584,6 +612,7 @@ namespace Editors
             // 
             // grpAllies
             // 
+            this.grpAllies.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpAllies.Controls.Add(this.butAllie_Delete);
             this.grpAllies.Controls.Add(this.butAllie_Add);
             this.grpAllies.Controls.Add(this.lstAllies);
@@ -595,12 +624,12 @@ namespace Editors
             this.grpAllies.TabIndex = 39;
             this.grpAllies.TabStop = false;
             this.grpAllies.Text = "NPC vs NPC";
-            this.grpAllies.Visible = false;
             // 
             // butAllie_Delete
             // 
             this.butAllie_Delete.Location = new System.Drawing.Point(155, 221);
             this.butAllie_Delete.Name = "butAllie_Delete";
+            this.butAllie_Delete.Padding = new System.Windows.Forms.Padding(5);
             this.butAllie_Delete.Size = new System.Drawing.Size(139, 20);
             this.butAllie_Delete.TabIndex = 36;
             this.butAllie_Delete.Text = "Delete";
@@ -610,6 +639,7 @@ namespace Editors
             // 
             this.butAllie_Add.Location = new System.Drawing.Point(10, 221);
             this.butAllie_Add.Name = "butAllie_Add";
+            this.butAllie_Add.Padding = new System.Windows.Forms.Padding(5);
             this.butAllie_Add.Size = new System.Drawing.Size(139, 20);
             this.butAllie_Add.TabIndex = 35;
             this.butAllie_Add.Text = "Add";
@@ -617,19 +647,20 @@ namespace Editors
             // 
             // lstAllies
             // 
+            this.lstAllies.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.lstAllies.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lstAllies.Enabled = false;
+            this.lstAllies.ForeColor = System.Drawing.Color.Gainsboro;
             this.lstAllies.FormattingEnabled = true;
             this.lstAllies.Location = new System.Drawing.Point(10, 55);
             this.lstAllies.Name = "lstAllies";
-            this.lstAllies.Size = new System.Drawing.Size(284, 160);
+            this.lstAllies.Size = new System.Drawing.Size(284, 158);
             this.lstAllies.TabIndex = 2;
-            this.lstAllies.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.lstAllies.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstAllies.ForeColor = System.Drawing.Color.Gainsboro;
             // 
             // label12
             // 
             this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label12.Location = new System.Drawing.Point(7, 39);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(34, 13);
@@ -648,6 +679,7 @@ namespace Editors
             // 
             // grpAllie_Add
             // 
+            this.grpAllie_Add.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpAllie_Add.Controls.Add(this.cmbAllie_NPC);
             this.grpAllie_Add.Controls.Add(this.label17);
             this.grpAllie_Add.Controls.Add(this.butAllie_Ok);
@@ -661,7 +693,7 @@ namespace Editors
             // 
             // cmbAllie_NPC
             // 
-            this.cmbAllie_NPC.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAllie_NPC.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbAllie_NPC.FormattingEnabled = true;
             this.cmbAllie_NPC.Location = new System.Drawing.Point(26, 118);
             this.cmbAllie_NPC.Name = "cmbAllie_NPC";
@@ -671,6 +703,7 @@ namespace Editors
             // label17
             // 
             this.label17.AutoSize = true;
+            this.label17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label17.Location = new System.Drawing.Point(23, 102);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(32, 13);
@@ -681,6 +714,7 @@ namespace Editors
             // 
             this.butAllie_Ok.Location = new System.Drawing.Point(26, 144);
             this.butAllie_Ok.Name = "butAllie_Ok";
+            this.butAllie_Ok.Padding = new System.Windows.Forms.Padding(5);
             this.butAllie_Ok.Size = new System.Drawing.Size(251, 20);
             this.butAllie_Ok.TabIndex = 36;
             this.butAllie_Ok.Text = "Ok";
@@ -688,6 +722,7 @@ namespace Editors
             // 
             // grpBehaviour
             // 
+            this.grpBehaviour.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpBehaviour.Controls.Add(this.cmbMovement);
             this.grpBehaviour.Controls.Add(this.cmbShop);
             this.grpBehaviour.Controls.Add(this.label18);
@@ -707,11 +742,10 @@ namespace Editors
             this.grpBehaviour.TabIndex = 40;
             this.grpBehaviour.TabStop = false;
             this.grpBehaviour.Text = "Behaviour";
-            this.grpBehaviour.Visible = false;
             // 
             // cmbMovement
             // 
-            this.cmbMovement.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbMovement.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbMovement.FormattingEnabled = true;
             this.cmbMovement.Items.AddRange(new object[] {
             "Move Randomly",
@@ -725,7 +759,7 @@ namespace Editors
             // 
             // cmbShop
             // 
-            this.cmbShop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbShop.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cmbShop.FormattingEnabled = true;
             this.cmbShop.Location = new System.Drawing.Point(13, 226);
             this.cmbShop.Name = "cmbShop";
@@ -736,6 +770,7 @@ namespace Editors
             // label18
             // 
             this.label18.AutoSize = true;
+            this.label18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label18.Location = new System.Drawing.Point(11, 210);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(35, 13);
@@ -753,6 +788,7 @@ namespace Editors
             // label13
             // 
             this.label13.AutoSize = true;
+            this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label13.Location = new System.Drawing.Point(10, 47);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(60, 13);
@@ -762,6 +798,7 @@ namespace Editors
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.label1.Location = new System.Drawing.Point(11, 171);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(79, 13);
@@ -770,21 +807,22 @@ namespace Editors
             // 
             // List
             // 
+            this.List.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.List.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.List.ForeColor = System.Drawing.Color.Gainsboro;
             this.List.HideSelection = false;
+            this.List.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             this.List.Location = new System.Drawing.Point(12, 38);
             this.List.Name = "List";
             this.List.Size = new System.Drawing.Size(201, 474);
             this.List.TabIndex = 44;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
-            this.List.BackColor = System.Drawing.Color.FromArgb(60, 63, 65);
-            this.List.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.List.ForeColor = System.Drawing.Color.Gainsboro;
-            this.List.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             // 
             // butRemove
             // 
             this.butRemove.Location = new System.Drawing.Point(115, 518);
             this.butRemove.Name = "butRemove";
+            this.butRemove.Padding = new System.Windows.Forms.Padding(5);
             this.butRemove.Size = new System.Drawing.Size(98, 25);
             this.butRemove.TabIndex = 43;
             this.butRemove.Text = "Remove";
@@ -794,6 +832,7 @@ namespace Editors
             // 
             this.butNew.Location = new System.Drawing.Point(11, 518);
             this.butNew.Name = "butNew";
+            this.butNew.Padding = new System.Windows.Forms.Padding(5);
             this.butNew.Size = new System.Drawing.Size(98, 25);
             this.butNew.TabIndex = 42;
             this.butNew.Text = "New";
@@ -801,7 +840,10 @@ namespace Editors
             // 
             // txtFilter
             // 
+            this.txtFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.txtFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFilter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.txtFilter.Location = new System.Drawing.Point(12, 12);
             this.txtFilter.Name = "txtFilter";
             this.txtFilter.Size = new System.Drawing.Size(201, 20);
@@ -833,6 +875,7 @@ namespace Editors
             this.Name = "Editor_NPCs";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NPC Editor";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_NPCs_FormClosed);
             this.grpGeneral.ResumeLayout(false);
             this.grpGeneral.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTexture)).EndInit();

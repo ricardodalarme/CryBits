@@ -24,6 +24,10 @@ namespace Editors
             // Inicializa os componentes
             InitializeComponent();
 
+            // Abre a janela
+            Editor_Maps.Form.Hide();
+            Show();
+
             // Lista os dados
             foreach (var Item in Item.List.Values)
             {
@@ -31,10 +35,11 @@ namespace Editors
                 cmbCurrency.Items.Add(Item);
             }
             List_Update();
+        }
 
-            // Abre a janela
-            Editor_Maps.Form.Hide();
-            Show();
+        private void Editor_Shops_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Editor_Maps.Form.Show();
         }
 
         private void Groups_Visibility()
@@ -113,14 +118,12 @@ namespace Editors
             // Salva os dados e volta à janela principal
             Send.Write_Shops();
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void butCancel_Click(object sender, EventArgs e)
         {
             // Volta à janela principal
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
@@ -138,11 +141,11 @@ namespace Editors
         private void butSold_Add_Click(object sender, EventArgs e)
         {
             // Abre o painel para adicionar o item
+            grpAddItem.Visible = true;
             cmbItems.SelectedIndex = 0;
             numAmount.Value = 1;
             numPrice.Value = 0;
             grpAddItem.Tag = lstSold;
-            grpAddItem.Visible = true;
             grpAddItem.BringToFront();
         }
 

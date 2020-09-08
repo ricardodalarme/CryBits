@@ -234,7 +234,7 @@ class Graphics
         Editor_Maps Form = Editor_Maps.Form;
 
         // Somente se necessário
-        if (Form == null || Form.IsDisposed || !Form.butMNormal.Checked) return;
+        if (Win_Map == null || !Form.butMNormal.Checked) return;
 
         // Reinicia o dispositivo caso haja alguma alteração no tamanho da tela
         if (new Size((int)Win_Map_Tile.Size.X, (int)Win_Map_Tile.Size.Y) != Form.picTile.Size)
@@ -566,7 +566,7 @@ class Graphics
         Editor_Tiles Form = Editor_Tiles.Form;
 
         // Somente se necessário
-        if (Form == null) return;
+        if (Win_Tile == null) return;
 
         // Limpa a tela e desenha um fundo transparente
         Win_Tile.Clear();
@@ -650,7 +650,7 @@ class Graphics
     private static void Editor_Item()
     {
         // Somente se necessário
-        if (Editor_Items.Form == null) return;
+        if (Win_Item == null) return;
 
         // Desenha o item
         short Texture_Num = (short)Editor_Items.Form.numTexture.Value;
@@ -665,18 +665,18 @@ class Graphics
     private static void Editor_NPC()
     {
         // Somente se necessário
-        if (Editor_NPCs.Form == null) return;
+        if (Win_NPC == null) return;
 
         // Desenha o NPC
         Character(Win_NPC, (short)Editor_NPCs.Form.numTexture.Value);
     }
     #endregion
 
-    #region Class Editor
+    #region Class Editors
     private static void Editor_Class()
     {
         // Somente se necessário
-        if (Editor_Classes.Form == null) return;
+        if (Win_Class == null ) return;
 
         // Desenha o NPC
         Character(Win_Class, (short)Editor_Classes.Form.numTexture.Value);
@@ -701,7 +701,7 @@ class Graphics
     public static void Interface()
     {
         // Apenas se necessário
-        if (Editor_Interface.Form == null) return;
+        if (Win_Interface == null) return;
 
         // Desenha as ferramentas
         Win_Interface.Clear();

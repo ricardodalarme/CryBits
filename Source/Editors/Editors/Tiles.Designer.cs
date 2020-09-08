@@ -34,16 +34,16 @@ namespace Editors
             this.scrlTileX = new System.Windows.Forms.HScrollBar();
             this.scrlTileY = new System.Windows.Forms.VScrollBar();
             this.picTile = new System.Windows.Forms.PictureBox();
-            this.grpAttributes = new DarkGroupBox();
-            this.optBlock = new DarkRadioButton();
-            this.butClear = new DarkButton();
-            this.butCancel = new DarkButton();
-            this.butSave = new DarkButton();
-            this.grpTile = new DarkGroupBox();
+            this.grpAttributes = new DarkUI.Controls.DarkGroupBox();
+            this.optBlock = new DarkUI.Controls.DarkRadioButton();
+            this.butClear = new DarkUI.Controls.DarkButton();
+            this.butCancel = new DarkUI.Controls.DarkButton();
+            this.butSave = new DarkUI.Controls.DarkButton();
+            this.grpTile = new DarkUI.Controls.DarkGroupBox();
             this.scrlTile = new System.Windows.Forms.HScrollBar();
-            this.groupBox2 = new DarkGroupBox();
-            this.optAttributes = new DarkRadioButton();
-            this.optDirBlock = new DarkRadioButton();
+            this.groupBox2 = new DarkUI.Controls.DarkGroupBox();
+            this.optAttributes = new DarkUI.Controls.DarkRadioButton();
+            this.optDirBlock = new DarkUI.Controls.DarkRadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.picTile)).BeginInit();
             this.grpAttributes.SuspendLayout();
             this.grpTile.SuspendLayout();
@@ -81,6 +81,7 @@ namespace Editors
             // 
             // grpAttributes
             // 
+            this.grpAttributes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpAttributes.Controls.Add(this.optBlock);
             this.grpAttributes.Location = new System.Drawing.Point(297, 141);
             this.grpAttributes.Name = "grpAttributes";
@@ -104,6 +105,7 @@ namespace Editors
             // 
             this.butClear.Location = new System.Drawing.Point(297, 431);
             this.butClear.Name = "butClear";
+            this.butClear.Padding = new System.Windows.Forms.Padding(5);
             this.butClear.Size = new System.Drawing.Size(97, 21);
             this.butClear.TabIndex = 74;
             this.butClear.Text = "Clear";
@@ -113,6 +115,7 @@ namespace Editors
             // 
             this.butCancel.Location = new System.Drawing.Point(297, 451);
             this.butCancel.Name = "butCancel";
+            this.butCancel.Padding = new System.Windows.Forms.Padding(5);
             this.butCancel.Size = new System.Drawing.Size(97, 21);
             this.butCancel.TabIndex = 73;
             this.butCancel.Text = "Cancel";
@@ -122,6 +125,7 @@ namespace Editors
             // 
             this.butSave.Location = new System.Drawing.Point(297, 411);
             this.butSave.Name = "butSave";
+            this.butSave.Padding = new System.Windows.Forms.Padding(5);
             this.butSave.Size = new System.Drawing.Size(97, 21);
             this.butSave.TabIndex = 72;
             this.butSave.Text = "Save";
@@ -129,6 +133,7 @@ namespace Editors
             // 
             // grpTile
             // 
+            this.grpTile.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpTile.Controls.Add(this.scrlTile);
             this.grpTile.Location = new System.Drawing.Point(12, 12);
             this.grpTile.Name = "grpTile";
@@ -150,6 +155,7 @@ namespace Editors
             // 
             // groupBox2
             // 
+            this.groupBox2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.groupBox2.Controls.Add(this.optAttributes);
             this.groupBox2.Controls.Add(this.optDirBlock);
             this.groupBox2.Location = new System.Drawing.Point(297, 69);
@@ -201,6 +207,7 @@ namespace Editors
             this.Name = "Editor_Tiles";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tile Editor";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Tiles_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.picTile)).EndInit();
             this.grpAttributes.ResumeLayout(false);
             this.grpAttributes.PerformLayout();

@@ -17,8 +17,13 @@ namespace Editors
 
         public Editor_NPCs()
         {
-            // Inicializa os componentes
             InitializeComponent();
+
+            // Abre janela
+            Editor_Maps.Form.Hide();
+            Show();
+
+            // Inicializa a janela de renderização
             Graphics.Win_NPC = new SFML.Graphics.RenderWindow(picTexture.Handle);
 
             // Define os limites
@@ -28,10 +33,12 @@ namespace Editors
             foreach (var Item in Item.List.Values) cmbDrop_Item.Items.Add(Item);
             foreach (var Shop in Shop.List.Values) cmbShop.Items.Add(Shop);
             List_Update();
+        }
 
-            // Abre a janela
-            Editor_Maps.Form.Hide();
-            Show();
+        private void Editor_NPCs_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Graphics.Win_NPC = null;
+            Editor_Maps.Form.Show();
         }
 
         private void Groups_Visibility()
@@ -133,14 +140,12 @@ namespace Editors
             // Salva os dados e volta à janela principal
             Send.Write_NPCs();
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void butCancel_Click(object sender, EventArgs e)
         {
             // Volta à janela principal
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
@@ -240,10 +245,10 @@ namespace Editors
             }
 
             // Reseta os valores e abre a janela para adicionar o item
+            grpDrop_Add.Visible = true;
             cmbDrop_Item.SelectedIndex = 0;
             numDrop_Amount.Value = 1;
             numDrop_Chance.Value = 100;
-            grpDrop_Add.Visible = true;
         }
 
         private void butDrop_Delete_Click(object sender, EventArgs e)
@@ -271,13 +276,13 @@ namespace Editors
         {
             if (chkAttackNPC.Checked)
             {
+                // Abre a janela para adicionar o aliado
+                grpAllie_Add.Visible = true;
+
                 // Adiciona os NPCs
                 cmbAllie_NPC.Items.Clear();
                 foreach (var NPC in NPC.List.Values) cmbAllie_NPC.Items.Add(NPC);
                 cmbAllie_NPC.SelectedIndex = 0;
-
-                // Abre a janela para adicionar o aliado
-                grpAllie_Add.Visible = true;
             }
         }
 

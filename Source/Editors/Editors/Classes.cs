@@ -19,8 +19,13 @@ namespace Editors
 
         public Editor_Classes()
         {
-            // Inicializa os componentes 
             InitializeComponent();
+
+            // Abre janela
+            Editor_Maps.Form.Hide();
+            Show();
+
+            // Inicializa a janela de renderização
             Graphics.Win_Class = new SFML.Graphics.RenderWindow(picTexture.Handle);
 
             // Define os limites
@@ -32,10 +37,12 @@ namespace Editors
             foreach (var Item in Item.List.Values) cmbItems.Items.Add(Item);
             foreach (var Map in Map.List.Values) cmbSpawn_Map.Items.Add(Map);
             List_Update();
+        }
 
-            // Abre a janela
-            Editor_Maps.Form.Hide();
-            Show();
+        private void Editor_Classes_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Graphics.Win_Class = null;
+            Editor_Maps.Form.Show();
         }
 
         private void Groups_Visibility()
@@ -82,7 +89,6 @@ namespace Editors
             numAgility.Value = Selected.Attribute[(byte)Attributes.Agility];
             numVitality.Value = Selected.Attribute[(byte)Attributes.Vitality];
             cmbSpawn_Map.SelectedItem = Selected.Spawn_Map;
-            cmbSpawn_Map.Update();
             cmbSpawn_Direction.SelectedIndex = Selected.Spawn_Direction;
             numSpawn_X.Value = Selected.Spawn_X;
             numSpawn_Y.Value = Selected.Spawn_Y;
@@ -136,7 +142,6 @@ namespace Editors
             // Salva os dados e volta à janela principal
             Send.Write_Classes();
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void butCancel_Click(object sender, EventArgs e)
@@ -144,7 +149,6 @@ namespace Editors
             // Volta à janela principal
             Send.Request_Classes();
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
@@ -264,9 +268,9 @@ namespace Editors
             }
 
             // Abre a janela para adicionar o item
+            grpItem_Add.Visible = true;
             cmbItems.SelectedIndex = 0;
             numItem_Amount.Value = 1;
-            grpItem_Add.Visible = true;
         }
 
         private void butItem_Ok_Click(object sender, EventArgs e)
