@@ -47,6 +47,7 @@ namespace Editors
         {
             // Atualiza a visiblidade dos paineis
             grpGeneral.Visible = grpRequirements.Visible = List.SelectedNode != null;
+            if (List.SelectedNode == null) grpEquipment.Visible = grpPotion.Visible = false;
         }
 
         private void List_Update()

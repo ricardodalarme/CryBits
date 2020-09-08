@@ -1523,7 +1523,7 @@ namespace Editors
             this.List.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             this.List.Location = new System.Drawing.Point(1101, 73);
             this.List.Name = "List";
-            this.List.Size = new System.Drawing.Size(256, 271);
+            this.List.Size = new System.Drawing.Size(256, 258);
             this.List.TabIndex = 109;
             this.List.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.List_AfterSelect);
             // 
@@ -1586,9 +1586,9 @@ namespace Editors
             this.prgProperties.HelpForeColor = System.Drawing.Color.Gainsboro;
             this.prgProperties.HelpVisible = false;
             this.prgProperties.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(51)))), ((int)(((byte)(53)))));
-            this.prgProperties.Location = new System.Drawing.Point(1101, 354);
+            this.prgProperties.Location = new System.Drawing.Point(1101, 337);
             this.prgProperties.Name = "prgProperties";
-            this.prgProperties.Size = new System.Drawing.Size(256, 303);
+            this.prgProperties.Size = new System.Drawing.Size(256, 320);
             this.prgProperties.TabIndex = 114;
             this.prgProperties.ToolbarVisible = false;
             this.prgProperties.ViewBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
