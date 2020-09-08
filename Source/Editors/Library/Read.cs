@@ -70,7 +70,7 @@ namespace Library
             return new Entities.Button
             {
                 Name = Data.ReadString(),
-                Position = new  Point(Data.ReadInt32(), Data.ReadInt32()),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
                 Window = (Windows)Data.ReadByte(),
                 Texture_Num = Data.ReadByte()
@@ -80,7 +80,7 @@ namespace Library
         private static Entities.TextBox TextBox(BinaryReader Data)
         {
             // Lê os dados
-           return new Entities.TextBox
+            return new Entities.TextBox
             {
                 Name = Data.ReadString(),
                 Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
@@ -95,10 +95,10 @@ namespace Library
         private static Entities.Panel Panel(BinaryReader Data)
         {
             // Carrega os dados
-            return  new Entities.Panel
+            return new Entities.Panel
             {
                 Name = Data.ReadString(),
-                Position = new  Point(Data.ReadInt32(), Data.ReadInt32()),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
                 Window = (Windows)Data.ReadByte(),
                 Texture_Num = Data.ReadByte()
@@ -108,10 +108,10 @@ namespace Library
         private static Entities.CheckBox CheckBox(BinaryReader Data)
         {
             // Carrega os dados
-           return new Entities.CheckBox
+            return new Entities.CheckBox
             {
                 Name = Data.ReadString(),
-                Position = new  Point(Data.ReadInt32(), Data.ReadInt32()),
+                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
                 Window = (Windows)Data.ReadByte(),
                 Text = Data.ReadString(),
@@ -139,8 +139,8 @@ namespace Library
             }
 
             // Lê os dados
-            // using (var Stream = File.OpenRead())
-            // Lists.Tile[Index] = (Tile)new BinaryFormatter().Deserialize(Stream);
+            using (var Stream = File.OpenRead())
+                Lists.Tile[Index] = (Tile)new BinaryFormatter().Deserialize(Stream);
         }
     }
 }

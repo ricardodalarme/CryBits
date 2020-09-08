@@ -53,26 +53,26 @@ namespace Editors
             // scrlTileX
             // 
             this.scrlTileX.LargeChange = 1;
-            this.scrlTileX.Location = new System.Drawing.Point(14, 453);
+            this.scrlTileX.Location = new System.Drawing.Point(12, 445);
             this.scrlTileX.Name = "scrlTileX";
-            this.scrlTileX.Size = new System.Drawing.Size(256, 19);
+            this.scrlTileX.Size = new System.Drawing.Size(256, 15);
             this.scrlTileX.TabIndex = 69;
             // 
             // scrlTileY
             // 
             this.scrlTileY.Cursor = System.Windows.Forms.Cursors.Default;
             this.scrlTileY.LargeChange = 1;
-            this.scrlTileY.Location = new System.Drawing.Point(270, 69);
+            this.scrlTileY.Location = new System.Drawing.Point(268, 61);
             this.scrlTileY.Maximum = 255;
             this.scrlTileY.Name = "scrlTileY";
-            this.scrlTileY.Size = new System.Drawing.Size(19, 384);
+            this.scrlTileY.Size = new System.Drawing.Size(15, 384);
             this.scrlTileY.TabIndex = 70;
             // 
             // picTile
             // 
             this.picTile.BackColor = System.Drawing.Color.Black;
             this.picTile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picTile.Location = new System.Drawing.Point(14, 69);
+            this.picTile.Location = new System.Drawing.Point(12, 61);
             this.picTile.Name = "picTile";
             this.picTile.Size = new System.Drawing.Size(256, 384);
             this.picTile.TabIndex = 68;
@@ -83,9 +83,9 @@ namespace Editors
             // 
             this.grpAttributes.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpAttributes.Controls.Add(this.optBlock);
-            this.grpAttributes.Location = new System.Drawing.Point(297, 141);
+            this.grpAttributes.Location = new System.Drawing.Point(295, 133);
             this.grpAttributes.Name = "grpAttributes";
-            this.grpAttributes.Size = new System.Drawing.Size(98, 264);
+            this.grpAttributes.Size = new System.Drawing.Size(98, 251);
             this.grpAttributes.TabIndex = 71;
             this.grpAttributes.TabStop = false;
             this.grpAttributes.Text = "Attributes";
@@ -103,7 +103,7 @@ namespace Editors
             // 
             // butClear
             // 
-            this.butClear.Location = new System.Drawing.Point(297, 431);
+            this.butClear.Location = new System.Drawing.Point(295, 420);
             this.butClear.Name = "butClear";
             this.butClear.Padding = new System.Windows.Forms.Padding(5);
             this.butClear.Size = new System.Drawing.Size(97, 21);
@@ -113,7 +113,7 @@ namespace Editors
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(297, 451);
+            this.butCancel.Location = new System.Drawing.Point(295, 440);
             this.butCancel.Name = "butCancel";
             this.butCancel.Padding = new System.Windows.Forms.Padding(5);
             this.butCancel.Size = new System.Drawing.Size(97, 21);
@@ -123,7 +123,7 @@ namespace Editors
             // 
             // butSave
             // 
-            this.butSave.Location = new System.Drawing.Point(297, 411);
+            this.butSave.Location = new System.Drawing.Point(295, 400);
             this.butSave.Name = "butSave";
             this.butSave.Padding = new System.Windows.Forms.Padding(5);
             this.butSave.Size = new System.Drawing.Size(97, 21);
@@ -137,7 +137,7 @@ namespace Editors
             this.grpTile.Controls.Add(this.scrlTile);
             this.grpTile.Location = new System.Drawing.Point(12, 12);
             this.grpTile.Name = "grpTile";
-            this.grpTile.Size = new System.Drawing.Size(382, 49);
+            this.grpTile.Size = new System.Drawing.Size(382, 43);
             this.grpTile.TabIndex = 75;
             this.grpTile.TabStop = false;
             this.grpTile.Text = "Tile: 1";
@@ -148,7 +148,7 @@ namespace Editors
             this.scrlTile.Location = new System.Drawing.Point(9, 18);
             this.scrlTile.Minimum = 1;
             this.scrlTile.Name = "scrlTile";
-            this.scrlTile.Size = new System.Drawing.Size(370, 19);
+            this.scrlTile.Size = new System.Drawing.Size(365, 15);
             this.scrlTile.TabIndex = 16;
             this.scrlTile.Value = 1;
             this.scrlTile.ValueChanged += new System.EventHandler(this.scrlTile_ValueChanged);
@@ -158,7 +158,7 @@ namespace Editors
             this.groupBox2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.groupBox2.Controls.Add(this.optAttributes);
             this.groupBox2.Controls.Add(this.optDirBlock);
-            this.groupBox2.Location = new System.Drawing.Point(297, 69);
+            this.groupBox2.Location = new System.Drawing.Point(295, 61);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(98, 66);
             this.groupBox2.TabIndex = 76;
@@ -191,7 +191,7 @@ namespace Editors
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(406, 487);
+            this.ClientSize = new System.Drawing.Size(406, 475);
             this.ControlBox = false;
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.butCancel);
