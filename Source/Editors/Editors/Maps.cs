@@ -53,6 +53,14 @@ namespace Editors
         {
             // Inicializa os componentes
             InitializeComponent();
+
+            // Abre a janela
+            Login.Form.Visible = false;
+            Show();
+        }
+
+        private void Editor_Maps_Load(object sender, EventArgs e)
+        {
             Graphics.Win_Map = new SFML.Graphics.RenderWindow(picMap.Handle);
             Graphics.Win_Map_Tile = new SFML.Graphics.RenderWindow(picTile.Handle);
             Graphics.Win_Map_Lighting = new SFML.Graphics.RenderTexture((uint)Width, (uint)Height);
@@ -83,9 +91,6 @@ namespace Editors
                 butEdition.Checked = true;
             }
 
-            // Abre a janela
-            Login.Form.Visible = false;
-            Show();
         }
 
         private void Editor_Maps_FormClosing(object sender, FormClosingEventArgs e)

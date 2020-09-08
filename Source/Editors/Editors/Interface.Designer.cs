@@ -280,6 +280,7 @@ namespace Editors
             this.Name = "Editor_Interface";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Interface Editor";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Interface_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.picWindow)).EndInit();
             this.grpOrder.ResumeLayout(false);
             this.grpProperties.ResumeLayout(false);

@@ -1,6 +1,6 @@
 ﻿using DarkUI.Forms;
 using Network;
-using System.Windows.Forms;
+using System;
 
 namespace Editors
 {
@@ -8,8 +8,11 @@ namespace Editors
     {
         public Editor_Data()
         {
-            // Inicializa os componentes
             InitializeComponent();
+
+            // Abre janela
+            Editor_Maps.Form.Hide();
+            Show();
 
             // Define os valores
             txtGame_Name.Text = Lists.Server_Data.Game_Name;
@@ -24,13 +27,14 @@ namespace Editors
             numMax_Name.Value = Lists.Server_Data.Max_Name_Length;
             numMin_Password.Value = Lists.Server_Data.Min_Password_Length;
             numMax_Password.Value = Lists.Server_Data.Max_Password_Length;
-
-            // Abre a janela
-            Editor_Maps.Form.Hide();
-            Show();
         }
 
-        private void butSave_Click(object sender, System.EventArgs e)
+        private void Editor_Data_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
+        {
+            Editor_Maps.Form.Show();
+        }
+
+        private void butSave_Click(object sender, EventArgs e)
         {
             // Salva os dados
             Lists.Server_Data.Game_Name = txtGame_Name.Text;
@@ -49,15 +53,13 @@ namespace Editors
 
             // Volta à janela principal
             Close();
-            Editor_Maps.Form.Show();
         }
 
-        private void butCancel_Click(object sender, System.EventArgs e)
+        private void butCancel_Click(object sender, EventArgs e)
         {
             // Volta à janela principal
             Send.Request_Server_Data();
             Close();
-            Editor_Maps.Form.Show();
         }
     }
 }

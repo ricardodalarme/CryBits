@@ -54,6 +54,7 @@ namespace Editors
             this.numHP = new DarkUI.Controls.DarkNumericUpDown();
             this.lblMP = new DarkUI.Controls.DarkLabel();
             this.lblHP = new DarkUI.Controls.DarkLabel();
+            this.cmbItems = new DarkUI.Controls.DarkComboBox();
             this.grpTexture = new DarkUI.Controls.DarkGroupBox();
             this.butFDelete = new DarkUI.Controls.DarkButton();
             this.butMDelete = new DarkUI.Controls.DarkButton();
@@ -80,7 +81,6 @@ namespace Editors
             this.grpItem_Add = new DarkUI.Controls.DarkGroupBox();
             this.numItem_Amount = new DarkUI.Controls.DarkNumericUpDown();
             this.label13 = new DarkUI.Controls.DarkLabel();
-            this.cmbItems = new DarkUI.Controls.DarkComboBox();
             this.label16 = new DarkUI.Controls.DarkLabel();
             this.butItem_Ok = new DarkUI.Controls.DarkButton();
             this.butRemove = new DarkUI.Controls.DarkButton();
@@ -340,6 +340,15 @@ namespace Editors
             this.lblHP.TabIndex = 1;
             this.lblHP.Text = "HP:";
             // 
+            // cmbItems
+            // 
+            this.cmbItems.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cmbItems.FormattingEnabled = true;
+            this.cmbItems.Location = new System.Drawing.Point(29, 79);
+            this.cmbItems.Name = "cmbItems";
+            this.cmbItems.Size = new System.Drawing.Size(251, 21);
+            this.cmbItems.TabIndex = 33;
+            // 
             // grpTexture
             // 
             this.grpTexture.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
@@ -597,9 +606,9 @@ namespace Editors
             // grpItem_Add
             // 
             this.grpItem_Add.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.grpItem_Add.Controls.Add(this.cmbItems);
             this.grpItem_Add.Controls.Add(this.numItem_Amount);
             this.grpItem_Add.Controls.Add(this.label13);
-            this.grpItem_Add.Controls.Add(this.cmbItems);
             this.grpItem_Add.Controls.Add(this.label16);
             this.grpItem_Add.Controls.Add(this.butItem_Ok);
             this.grpItem_Add.Location = new System.Drawing.Point(531, 219);
@@ -636,15 +645,6 @@ namespace Editors
             this.label13.Size = new System.Drawing.Size(46, 13);
             this.label13.TabIndex = 31;
             this.label13.Text = "Amount:";
-            // 
-            // cmbItems
-            // 
-            this.cmbItems.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cmbItems.FormattingEnabled = true;
-            this.cmbItems.Location = new System.Drawing.Point(29, 79);
-            this.cmbItems.Name = "cmbItems";
-            this.cmbItems.Size = new System.Drawing.Size(251, 21);
-            this.cmbItems.TabIndex = 0;
             // 
             // label16
             // 
@@ -775,7 +775,7 @@ namespace Editors
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(847, 475);
+            this.ClientSize = new System.Drawing.Size(845, 475);
             this.ControlBox = false;
             this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.List);
@@ -796,6 +796,7 @@ namespace Editors
             this.Name = "Editor_Classes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Class Editor";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Classes_FormClosed);
             this.grpGeneral.ResumeLayout(false);
             this.grpGeneral.PerformLayout();
             this.grpAttributes.ResumeLayout(false);
@@ -874,7 +875,6 @@ namespace Editors
         private DarkGroupBox grpItem_Add;
         private DarkLabel label16;
         private DarkButton butItem_Ok;
-        private DarkComboBox cmbItems;
         private DarkLabel label12;
         private DarkNumericUpDown numItem_Amount;
         private DarkLabel label13;
@@ -888,5 +888,6 @@ namespace Editors
         private DarkButton butTexture_Ok;
         private System.Windows.Forms.PictureBox picTexture;
         public DarkNumericUpDown numTexture;
+        private DarkComboBox cmbItems;
     }
 }

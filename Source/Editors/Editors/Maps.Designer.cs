@@ -747,10 +747,10 @@ namespace Editors
             this.Revision,
             this.toolStripSeparator9,
             this.Position});
-            this.Strip.Location = new System.Drawing.Point(0, 664);
+            this.Strip.Location = new System.Drawing.Point(0, 656);
             this.Strip.Name = "Strip";
             this.Strip.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
-            this.Strip.Size = new System.Drawing.Size(1366, 23);
+            this.Strip.Size = new System.Drawing.Size(1366, 31);
             this.Strip.SizingGrip = false;
             this.Strip.TabIndex = 83;
             this.Strip.Text = "0";
@@ -759,29 +759,29 @@ namespace Editors
             // 
             this.FPS.AutoSize = false;
             this.FPS.Name = "FPS";
-            this.FPS.Size = new System.Drawing.Size(50, 10);
+            this.FPS.Size = new System.Drawing.Size(50, 18);
             this.FPS.Text = "FPS: 64";
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 15);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 23);
             // 
             // Revision
             // 
             this.Revision.Name = "Revision";
-            this.Revision.Size = new System.Drawing.Size(51, 10);
+            this.Revision.Size = new System.Drawing.Size(51, 18);
             this.Revision.Text = "Revision";
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 15);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 23);
             // 
             // Position
             // 
             this.Position.Name = "Position";
-            this.Position.Size = new System.Drawing.Size(50, 10);
+            this.Position.Size = new System.Drawing.Size(50, 18);
             this.Position.Text = "Position";
             // 
             // chkAuto
@@ -1597,6 +1597,7 @@ namespace Editors
             // 
             // toolStrip1
             // 
+            this.toolStrip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.toolStrip1.AutoSize = false;
             this.toolStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
@@ -1606,6 +1607,7 @@ namespace Editors
             this.butRemove});
             this.toolStrip1.Location = new System.Drawing.Point(1101, 48);
             this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(5, 0, 1, 0);
             this.toolStrip1.Size = new System.Drawing.Size(99, 25);
             this.toolStrip1.TabIndex = 115;
             // 
@@ -1629,7 +1631,7 @@ namespace Editors
             this.butRemove.Image = ((System.Drawing.Image)(resources.GetObject("butRemove.Image")));
             this.butRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butRemove.Name = "butRemove";
-            this.butRemove.Size = new System.Drawing.Size(24, 24);
+            this.butRemove.Size = new System.Drawing.Size(23, 22);
             this.butRemove.Text = "Remove";
             this.butRemove.ToolTipText = "Remover";
             this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
@@ -1667,6 +1669,7 @@ namespace Editors
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CryBits Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Editor_Maps_FormClosing);
+            this.Load += new System.EventHandler(this.Editor_Maps_Load);
             this.SizeChanged += new System.EventHandler(this.Editor_Maps_SizeChanged);
             this.tolStrip.ResumeLayout(false);
             this.tolStrip.PerformLayout();

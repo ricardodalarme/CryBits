@@ -17,8 +17,13 @@ namespace Editors
 
         public Editor_Interface()
         {
-            // Inicializa os componentes
             InitializeComponent();
+
+            // Abre janela
+            Editor_Maps.Form.Hide();
+            Show();
+
+            // Inicializa a janela de renderização
             Graphics.Win_Interface = new SFML.Graphics.RenderWindow(picWindow.Handle);
 
             // Adiciona as janelas à lista
@@ -27,10 +32,12 @@ namespace Editors
 
             // Adiciona os tipos de ferramentas à lista
             for (byte i = 0; i < (byte)Tools_Types.Count; i++) cmbType.Items.Add((Tools_Types)i);
+        }
 
-            // Abre a janela
-            Editor_Maps.Form.Hide();
-            Show();
+        private void Editor_Interface_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Graphics.Win_Interface = null;
+            Editor_Maps.Form.Show();
         }
 
         private void cmbWindows_SelectedIndexChanged(object sender, EventArgs e)
@@ -72,14 +79,12 @@ namespace Editors
             // Salva os dados e volta à janela principal
             Write.Tools();
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void butCancel_Click(object sender, EventArgs e)
         {
             // Volta à janela principal
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void butNew_Click(object sender, EventArgs e)

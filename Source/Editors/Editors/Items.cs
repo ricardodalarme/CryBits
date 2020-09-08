@@ -17,8 +17,13 @@ namespace Editors
 
         public Editor_Items()
         {
-            // Inicializa os componentes
             InitializeComponent();
+
+            // Abre janela
+            Editor_Maps.Form.Hide();
+            Show();
+
+            // Inicializa a janela de renderização
             Graphics.Win_Item = new SFML.Graphics.RenderWindow(picTexture.Handle);
 
             // Define os limites
@@ -30,17 +35,18 @@ namespace Editors
             for (byte i = 0; i < (byte)Rarity.Count; i++) cmbRarity.Items.Add((Rarity)i);
             for (byte i = 0; i < (byte)BindOn.Count; i++) cmbBind.Items.Add((BindOn)i);
             List_Update();
+        }
 
-            // Abre a janela
-            Editor_Maps.Form.Hide();
-            Show();
+        private void Editor_Items_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Graphics.Win_Item = null;
+            Editor_Maps.Form.Show();
         }
 
         private void Groups_Visibility()
         {
             // Atualiza a visiblidade dos paineis
             grpGeneral.Visible = grpRequirements.Visible = List.SelectedNode != null;
-            grpEquipment.Visible = grpPotion.Visible = false;
         }
 
         private void List_Update()
@@ -125,14 +131,12 @@ namespace Editors
             // Salva os dados e volta à janela principal
             Send.Write_Items();
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void butCancel_Click(object sender, EventArgs e)
         {
             // Volta à janela principal
             Close();
-            Editor_Maps.Form.Show();
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
@@ -152,10 +156,8 @@ namespace Editors
             Selected.Type = (byte)cmbType.SelectedIndex;
 
             // Visibilidade dos paineis
-            if (cmbType.SelectedIndex == (byte)Items.Equipment) grpEquipment.Visible = true;
-            else grpEquipment.Visible = false;
-            if (cmbType.SelectedIndex == (byte)Items.Potion) grpPotion.Visible = true;
-            else grpPotion.Visible = false;
+            grpEquipment.Visible = cmbType.SelectedIndex == (byte)Items.Equipment;
+            grpPotion.Visible = cmbType.SelectedIndex == (byte)Items.Potion; 
         }
 
         private void numReq_Level_ValueChanged(object sender, EventArgs e)
