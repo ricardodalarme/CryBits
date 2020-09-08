@@ -90,7 +90,6 @@ namespace Editors
                 butVisualization.Checked = false;
                 butEdition.Checked = true;
             }
-
         }
 
         private void Editor_Maps_FormClosing(object sender, FormClosingEventArgs e)
