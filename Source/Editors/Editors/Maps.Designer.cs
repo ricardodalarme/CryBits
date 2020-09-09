@@ -90,10 +90,10 @@ namespace Editors
             this.Trip_Layers = new DarkUI.Controls.DarkToolStrip();
             this.butLayers_Add = new System.Windows.Forms.ToolStripButton();
             this.butLayers_Remove = new System.Windows.Forms.ToolStripButton();
-            this.butLayers_Edit = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.butLayers_Up = new System.Windows.Forms.ToolStripButton();
             this.butLayers_Down = new System.Windows.Forms.ToolStripButton();
+            this.butLayers_Edit = new System.Windows.Forms.ToolStripButton();
             this.lstLayers = new System.Windows.Forms.ListView();
             this.colVisible = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colNúmero = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -137,7 +137,7 @@ namespace Editors
             this.label4 = new DarkUI.Controls.DarkLabel();
             this.picTile_Background = new System.Windows.Forms.PictureBox();
             this.grpNPCs = new DarkUI.Controls.DarkGroupBox();
-            this.grpAddNPC = new DarkUI.Controls.DarkGroupBox();
+            this.groupBox2 = new DarkUI.Controls.DarkGroupBox();
             this.cmbNPC = new DarkUI.Controls.DarkComboBox();
             this.label13 = new DarkUI.Controls.DarkLabel();
             this.label11 = new DarkUI.Controls.DarkLabel();
@@ -173,7 +173,7 @@ namespace Editors
             ((System.ComponentModel.ISupportInitialize)(this.numA_Warp_X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTile_Background)).BeginInit();
             this.grpNPCs.SuspendLayout();
-            this.grpAddNPC.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numNPC_Zone)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.picBackground.SuspendLayout();
@@ -230,7 +230,7 @@ namespace Editors
             this.tolStrip.Location = new System.Drawing.Point(0, 0);
             this.tolStrip.Name = "tolStrip";
             this.tolStrip.Padding = new System.Windows.Forms.Padding(5, 0, 1, 0);
-            this.tolStrip.Size = new System.Drawing.Size(1356, 25);
+            this.tolStrip.Size = new System.Drawing.Size(1366, 25);
             this.tolStrip.TabIndex = 78;
             this.tolStrip.Text = "toolStrip2";
             // 
@@ -749,7 +749,7 @@ namespace Editors
             this.Strip.Location = new System.Drawing.Point(0, 656);
             this.Strip.Name = "Strip";
             this.Strip.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
-            this.Strip.Size = new System.Drawing.Size(1356, 31);
+            this.Strip.Size = new System.Drawing.Size(1366, 31);
             this.Strip.SizingGrip = false;
             this.Strip.TabIndex = 83;
             this.Strip.Text = "0";
@@ -860,19 +860,6 @@ namespace Editors
             this.butLayers_Remove.ToolTipText = "Remove";
             this.butLayers_Remove.Click += new System.EventHandler(this.butLayers_Remove_Click);
             // 
-            // butLayers_Edit
-            // 
-            this.butLayers_Edit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.butLayers_Edit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.butLayers_Edit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.butLayers_Edit.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Edit.Image")));
-            this.butLayers_Edit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.butLayers_Edit.Name = "butLayers_Edit";
-            this.butLayers_Edit.Size = new System.Drawing.Size(23, 22);
-            this.butLayers_Edit.Text = "Edit";
-            this.butLayers_Edit.ToolTipText = "Editar";
-            this.butLayers_Edit.Click += new System.EventHandler(this.butLayers_Edit_Click);
-            // 
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
@@ -907,6 +894,19 @@ namespace Editors
             this.butLayers_Down.Text = "Down";
             this.butLayers_Down.ToolTipText = "Abaixo";
             this.butLayers_Down.Click += new System.EventHandler(this.butLayers_Down_Click);
+            // 
+            // butLayers_Edit
+            // 
+            this.butLayers_Edit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.butLayers_Edit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Edit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.butLayers_Edit.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Edit.Image")));
+            this.butLayers_Edit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.butLayers_Edit.Name = "butLayers_Edit";
+            this.butLayers_Edit.Size = new System.Drawing.Size(24, 24);
+            this.butLayers_Edit.Text = "Edit";
+            this.butLayers_Edit.ToolTipText = "Editar";
+            this.butLayers_Edit.Click += new System.EventHandler(this.butLayers_Edit_Click);
             // 
             // lstLayers
             // 
@@ -1054,7 +1054,7 @@ namespace Editors
             // 
             // scrlZone_Clear
             // 
-            this.scrlZone_Clear.Location = new System.Drawing.Point(8, 44);
+            this.scrlZone_Clear.Location = new System.Drawing.Point(8, 46);
             this.scrlZone_Clear.Name = "scrlZone_Clear";
             this.scrlZone_Clear.Padding = new System.Windows.Forms.Padding(5);
             this.scrlZone_Clear.Size = new System.Drawing.Size(256, 24);
@@ -1066,7 +1066,7 @@ namespace Editors
             // 
             this.scrlZone.Location = new System.Drawing.Point(8, 24);
             this.scrlZone.Name = "scrlZone";
-            this.scrlZone.Size = new System.Drawing.Size(256, 15);
+            this.scrlZone.Size = new System.Drawing.Size(256, 19);
             this.scrlZone.TabIndex = 0;
             this.scrlZone.ValueChanged += new System.EventHandler(this.scrlZone_ValueChanged);
             // 
@@ -1375,7 +1375,7 @@ namespace Editors
             this.grpNPCs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.grpNPCs.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.grpNPCs.Controls.Add(this.grpAddNPC);
+            this.grpNPCs.Controls.Add(this.groupBox2);
             this.grpNPCs.Controls.Add(this.groupBox1);
             this.grpNPCs.Location = new System.Drawing.Point(0, 27);
             this.grpNPCs.Name = "grpNPCs";
@@ -1385,21 +1385,21 @@ namespace Editors
             this.grpNPCs.Text = "NPCs";
             this.grpNPCs.Visible = false;
             // 
-            // grpAddNPC
+            // groupBox2
             // 
-            this.grpAddNPC.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.grpAddNPC.Controls.Add(this.cmbNPC);
-            this.grpAddNPC.Controls.Add(this.label13);
-            this.grpAddNPC.Controls.Add(this.label11);
-            this.grpAddNPC.Controls.Add(this.numNPC_Zone);
-            this.grpAddNPC.Controls.Add(this.label9);
-            this.grpAddNPC.Controls.Add(this.butNPC_Add);
-            this.grpAddNPC.Location = new System.Drawing.Point(12, 265);
-            this.grpAddNPC.Name = "grpAddNPC";
-            this.grpAddNPC.Size = new System.Drawing.Size(252, 154);
-            this.grpAddNPC.TabIndex = 8;
-            this.grpAddNPC.TabStop = false;
-            this.grpAddNPC.Text = "Add";
+            this.groupBox2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.groupBox2.Controls.Add(this.cmbNPC);
+            this.groupBox2.Controls.Add(this.label13);
+            this.groupBox2.Controls.Add(this.label11);
+            this.groupBox2.Controls.Add(this.numNPC_Zone);
+            this.groupBox2.Controls.Add(this.label9);
+            this.groupBox2.Controls.Add(this.butNPC_Add);
+            this.groupBox2.Location = new System.Drawing.Point(12, 265);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(252, 154);
+            this.groupBox2.TabIndex = 8;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Add";
             // 
             // cmbNPC
             // 
@@ -1632,7 +1632,6 @@ namespace Editors
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.ClientSize = new System.Drawing.Size(1356, 687);
-            this.Controls.Add(this.grpNPCs);
             this.Controls.Add(this.List);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.prgProperties);
@@ -1653,6 +1652,7 @@ namespace Editors
             this.Controls.Add(this.grpAttributes);
             this.Controls.Add(this.grpZones);
             this.Controls.Add(this.grpLighting);
+            this.Controls.Add(this.grpNPCs);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "Editor_Maps";
@@ -1686,8 +1686,8 @@ namespace Editors
             ((System.ComponentModel.ISupportInitialize)(this.numA_Warp_X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTile_Background)).EndInit();
             this.grpNPCs.ResumeLayout(false);
-            this.grpAddNPC.ResumeLayout(false);
-            this.grpAddNPC.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numNPC_Zone)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.picBackground.ResumeLayout(false);
@@ -1788,7 +1788,7 @@ namespace Editors
         private DarkGroupBox grpA_Warp;
         private DarkComboBox cmbA_Warp_Direction;
         private DarkLabel label7;
-        private DarkGroupBox grpAddNPC;
+        private DarkGroupBox groupBox2;
         private DarkLabel label11;
         private DarkNumericUpDown numNPC_Zone;
         private DarkLabel label9;

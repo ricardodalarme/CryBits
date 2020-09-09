@@ -67,10 +67,6 @@
     <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\Game.cs" />
     <Compile Include="Logic\MapAutoTile.cs" />
-    <Compile Include="Media\Audio\Sound.cs" />
-    <Compile Include="Media\Audio\Music.cs" />
-    <Compile Include="Media\Graphics\Textures.cs" />
-    <Compile Include="Network\Packages.cs" />
     <Compile Include="UI\Chat.cs" />
     <Compile Include="UI\Windows.cs" />
     <Compile Include="Logic\Camera.cs" />
@@ -109,6 +105,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
