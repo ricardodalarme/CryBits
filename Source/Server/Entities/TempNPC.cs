@@ -395,20 +395,15 @@ namespace Entities
             for (byte i = 0; i < Data.Drop.Length; i++)
                 if (Data.Drop[i].Item != null)
                     if (MyRandom.Next(1, 99) <= Data.Drop[i].Chance)
-                    {
-                        // Dados do item
-                        TMap_Items Map_Item = new TMap_Items
+                        // Solta o item
+                        Map.Item.Add(new TMap_Items
                         {
                             Item = Data.Drop[i].Item,
                             Amount = Data.Drop[i].Amount,
                             X = X,
                             Y = Y
-                        };
-
-                        // Solta o item
-                        Map.Item.Add(Map_Item);
-                    }
-
+                        });
+                    
             // Envia os dados dos itens no chão para o mapa
             Send.Map_Items(Map);
 

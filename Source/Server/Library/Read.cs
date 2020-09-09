@@ -81,16 +81,13 @@ namespace Library
             for (byte i = 0; i < File.Length; i++)
                 // Cria um arquivo temporário
                 using (var Data = new BinaryReader(File[i].OpenRead()))
-                {
-                    // Carrega os dados e os adiciona ao cache
-                    var Temp = new Account.TempCharacter
+                    // Carrega os dados e os adiciona à lista
+                    Account.Characters.Add(new Account.TempCharacter
                     {
                         Name = Data.ReadString(),
                         Texture_Num = Data.ReadInt16(),
                         Level = Data.ReadInt16()
-                    };
-                    Account.Characters.Add(Temp);
-                }
+                    });
         }
 
         public static void Character(Account Account, string Name)
