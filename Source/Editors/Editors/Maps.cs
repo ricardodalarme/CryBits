@@ -512,8 +512,6 @@ namespace Editors
             butMNPCs.Checked = true;
 
             // Adiciona os NPCs e reseta os valores
-            cmbNPC.Visible = true;
-            cmbNPC.Items.Clear();
             foreach (var NPC in NPC.List.Values) cmbNPC.Items.Add(NPC);
             cmbNPC.SelectedIndex = 0;
             numNPC_Zone.Value = 0;
@@ -1298,15 +1296,18 @@ namespace Editors
         #region NPCs
         private void AddNPC(bool FixedSpawn = false, byte X = 0, byte Y = 0)
         {
-            // Adiciona o NPC
-            Selected.NPC.Add(new Map_NPC
+            // Define os dados
+            Map_NPC Data = new Map_NPC
             {
                 NPC = (NPC)cmbNPC.SelectedItem,
                 Zone = (byte)numNPC_Zone.Value,
                 Spawn = FixedSpawn,
                 X = X,
                 Y = Y
-            });
+            };
+
+            // Adiciona o NPC
+            Selected.NPC.Add(Data);
         }
         private void butNPC_Remove_Click(object sender, EventArgs e)
         {
@@ -1388,18 +1389,16 @@ namespace Editors
         private void optA_Warp_CheckedChanged(object sender, EventArgs e)
         {
             // Reseta os valores
-            grpA_Warp.Visible = optA_Warp.Checked;
             cmbA_Warp_Map.SelectedIndex = 0;
             cmbA_Warp_Direction.SelectedIndex = 0;
             numA_Warp_X.Value = 0;
             numA_Warp_Y.Value = 0;
             cmbA_Warp_Direction.SelectedIndex = 0;
+            grpA_Warp.Visible = optA_Warp.Checked;
         }
 
         private void optA_Item_CheckedChanged(object sender, EventArgs e)
         {
-            grpA_Item.Visible = optA_Item.Checked;
-
             // Verifica se é possível usar o atributo
             if (optA_Item.Checked)
             {
@@ -1416,6 +1415,7 @@ namespace Editors
                 cmbA_Item.SelectedIndex = 0;
                 numA_Item_Amount.Value = AData_2 = 1;
             }
+            grpA_Item.Visible = optA_Item.Checked;
         }
 
         private void cmbA_Warp_Map_SelectedIndexChanged(object sender, EventArgs e)
