@@ -472,8 +472,6 @@ namespace Entities
 
         public void DropItem(byte Slot, short Amount)
         {
-            TMap_Items Map_Item = new TMap_Items();
-
             // Somente se necessário
             if (Map.Item.Count == Max_Map_Items) return;
             if (Inventory[Slot].Item == null) return;
@@ -484,11 +482,13 @@ namespace Entities
             if (Amount > Inventory[Slot].Amount) Amount = Inventory[Slot].Amount;
 
             // Solta o item no chão
-            Map_Item.Item = Inventory[Slot].Item;
-            Map_Item.Amount = Amount;
-            Map_Item.X = X;
-            Map_Item.Y = Y;
-            Map.Item.Add(Map_Item);
+            Map.Item.Add(new TMap_Items
+            {
+                Item = Inventory[Slot].Item,
+                Amount = Amount,
+                X = X,
+                Y = Y
+            });
             Send.Map_Items(Map);
 
             // Retira o item do inventário do jogador 
