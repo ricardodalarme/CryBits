@@ -66,6 +66,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Core">
+      <HintPath>..\..\Build\Core\Core.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
       <Private>False</Private>
@@ -128,7 +131,6 @@
     <Compile Include="Editors\NPCs.Designer.cs">
       <DependentUpon>NPCs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\MapProperties.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Media\Audio.cs" />

@@ -1,7 +1,7 @@
 ﻿using CryBits.Client.Entities;
 using CryBits.Client.Interface;
-using Lidgren.Network;
 using CryBits.Client.Logic;
+using Lidgren.Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -242,7 +242,7 @@ namespace CryBits.Client.Network
 
             // Abre o jogo
             Audio.Music.Stop();
-            Windows.Current = Windows.Types.Game;
+            Windows.Current = WindowsTypes.Game;
         }
 
         private static void Player_Data(NetIncomingMessage Data)

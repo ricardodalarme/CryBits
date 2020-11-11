@@ -1,11 +1,11 @@
-﻿using DarkUI.Forms;
-using CryBits.Editors.Entities;
+﻿using CryBits.Editors.Entities;
 using CryBits.Editors.Network;
+using DarkUI.Forms;
 using System;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace CryBits.Editors.Editors
+namespace CryBits.Editors.Forms
 {
     partial class Editor_Shops : DarkForm
     {

@@ -11,7 +11,7 @@ namespace CryBits.Client.Interface
     class Windows
     {
         // Janela que está aberta
-        public static Types Current;
+        public static WindowsTypes Current;
 
         // Detecção de duplo clique
         private static int DoubleClick_Timer;
@@ -19,19 +19,10 @@ namespace CryBits.Client.Interface
         // Posição do ponteiro do mouse
         public static Point Mouse;
 
-        // Identificação das janelas do jogo
-        public enum Types
-        {
-            Menu,
-            Game,
-            Global,
-            Count
-        }
-
         public static void OnClosed(object sender, EventArgs e)
         {
             // Fecha o jogo
-            if (Current == Types.Game)
+            if (Current == WindowsTypes.Game)
                 Socket.Disconnect();
             else
                 Program.Working = false;
@@ -42,7 +33,7 @@ namespace CryBits.Client.Interface
             // Clique duplo
             if (Environment.TickCount < DoubleClick_Timer + 142)
             {
-                if (Current == Types.Game)
+                if (Current == WindowsTypes.Game)
                 {
                     // Usar item
                     short Slot = Panels.Inventory_Slot;
@@ -83,7 +74,7 @@ namespace CryBits.Client.Interface
                 }
 
                 // Eventos em jogo
-                if (Current == Types.Game)
+                if (Current == WindowsTypes.Game)
                 {
                     Panels.Inventory_MouseDown(e);
                     Panels.Equipment_MouseDown(e);
@@ -117,7 +108,7 @@ namespace CryBits.Client.Interface
             }
 
             // Eventos em jogo
-            if (Current == Types.Game)
+            if (Current == WindowsTypes.Game)
             {
                 // Muda o slot do item
                 if (Panels.Inventory_Slot > 0)
@@ -128,7 +119,7 @@ namespace CryBits.Client.Interface
                 else if (Panels.Hotbar_Slot >= 0)
                 {
                     if (Panels.Hotbar_Change >= 0) Send.Hotbar_Change(Panels.Hotbar_Change, Panels.Hotbar_Slot);
-                    if (Panels.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Logic.Hotbar.Item, Panels.Inventory_Change);
+                    if (Panels.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Hotbars.Item, Panels.Inventory_Change);
                 }
                 // Adiciona um item à troca
                 else if (Panels.Trade_Slot > 0)
@@ -186,7 +177,7 @@ namespace CryBits.Client.Interface
         public static void OnKeyReleased(object sender, KeyEventArgs e)
         {
             // Define se um botão está sendo pressionado
-            if (Current == Types.Game)
+            if (Current == WindowsTypes.Game)
                 switch (e.Code)
                 {
                     case Keyboard.Key.Enter: Chat.Type(); break;
@@ -223,7 +214,7 @@ namespace CryBits.Client.Interface
             // Traz o jogador de volta ao menu
             Panels.Menu_Close();
             Panels.List["Connect"].Visible = true;
-            Current = Types.Menu;
+            Current = WindowsTypes.Menu;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using CryBits.Editors.Logic;
+﻿using CryBits;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;

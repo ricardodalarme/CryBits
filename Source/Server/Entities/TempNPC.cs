@@ -403,7 +403,7 @@ namespace CryBits.Server.Entities
                             X = X,
                             Y = Y
                         });
-                    
+
             // Envia os dados dos itens no chão para o mapa
             Send.Map_Items(Map);
 

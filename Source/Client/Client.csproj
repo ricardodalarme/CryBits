@@ -44,12 +44,14 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Core">
+      <HintPath>..\..\Build\Core\Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\Game.cs" />
     <Compile Include="Logic\MapAutoTile.cs" />
     <Compile Include="UI\Chat.cs" />

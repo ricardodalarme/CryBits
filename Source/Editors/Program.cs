@@ -1,7 +1,7 @@
-﻿using CryBits.Editors.Editors;
+﻿using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
-using CryBits.Editors.Network;
 using CryBits.Editors.Logic;
+using CryBits.Editors.Network;
 using System;
 using System.Windows.Forms;
 

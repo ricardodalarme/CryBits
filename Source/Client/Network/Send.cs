@@ -1,7 +1,7 @@
 ﻿using CryBits.Client.Entities;
 using CryBits.Client.Interface;
+using CryBits;
 using Lidgren.Network;
-using CryBits.Client.Logic;
 using System;
 using System.Linq;
 

@@ -1,7 +1,7 @@
-﻿using CryBits.Editors.Editors;
+﻿using CryBits.Editors.Forms;
 using CryBits.Editors.Entities;
+using CryBits;
 using Lidgren.Network;
-using CryBits.Editors.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

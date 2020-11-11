@@ -1,4 +1,4 @@
-﻿using CryBits.Editors.Logic;
+﻿using CryBits;
 
 namespace CryBits.Editors.Entities
 {

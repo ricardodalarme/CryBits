@@ -68,6 +68,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Core">
+      <HintPath>..\..\Build\Core\Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Drawing" />
@@ -75,7 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Directories.cs" />
-    <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\Utils.cs" />
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\Character.cs" />

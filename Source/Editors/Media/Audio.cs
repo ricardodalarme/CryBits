@@ -1,4 +1,4 @@
-﻿using CryBits.Editors.Editors;
+﻿using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
 using SFML.Audio;
 using System;

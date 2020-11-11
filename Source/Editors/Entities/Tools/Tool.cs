@@ -1,4 +1,4 @@
-﻿using CryBits.Editors.Logic;
+﻿using CryBits;
 using System.Drawing;
 
 namespace CryBits.Editors.Entities
@@ -9,6 +9,6 @@ namespace CryBits.Editors.Entities
         public string Name { get; set; }
         public Point Position { get; set; }
         public bool Visible { get; set; }
-        public Windows Window { get; set; }
+        public WindowsTypes Window { get; set; }
     }
 }

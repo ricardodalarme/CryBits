@@ -1,8 +1,8 @@
-﻿using DarkUI.Forms;
-using CryBits.Editors.Network;
+﻿using CryBits.Editors.Network;
+using DarkUI.Forms;
 using System;
 
-namespace CryBits.Editors.Editors
+namespace CryBits.Editors.Forms
 {
     partial class Editor_Data : DarkForm
     {

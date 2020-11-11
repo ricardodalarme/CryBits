@@ -1,7 +1,7 @@
 ﻿using CryBits.Server.Entities;
 using CryBits.Server.Library;
+using CryBits;
 using Lidgren.Network;
-using CryBits.Server.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;

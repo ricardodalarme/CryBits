@@ -1,4 +1,4 @@
-﻿using CryBits.Client.Logic;
+﻿using CryBits;
 using System;
 using System.Collections.Generic;
 using static CryBits.Client.Logic.Utils;

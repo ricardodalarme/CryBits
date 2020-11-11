@@ -31,7 +31,7 @@ namespace CryBits.Client.Logic
                 // Eventos
                 TextBox();
 
-                if (Windows.Current == Windows.Types.Game)
+                if (Windows.Current == WindowsTypes.Game)
                 {
                     Mapper.Logic();
                     if (Timer_30 < Environment.TickCount)

@@ -2,6 +2,7 @@
 using CryBits.Client.Interface;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
+using CryBits;
 using SFML.Graphics;
 using SFML.Window;
 using System;
@@ -259,7 +260,7 @@ class Graphics
         Interface(Tools.Order);
 
         // Desenha o chat 
-        if (Windows.Current == Windows.Types.Game) Chat();
+        if (Windows.Current == WindowsTypes.Game) Chat();
 
         // Exibe o que foi renderizado
         RenderWindow.Display();
@@ -268,7 +269,7 @@ class Graphics
     private static void InGame()
     {
         // Não desenhar se não estiver em jogo
-        if (Windows.Current != Windows.Types.Game) return;
+        if (Windows.Current != WindowsTypes.Game) return;
 
         // Atualiza a câmera
         Camera.Update();
@@ -569,10 +570,10 @@ class Graphics
         {
             byte Slot = Player.Me.Hotbar[i].Slot;
             if (Slot > 0)
-                switch ((CryBits.Client.Logic.Hotbar)Player.Me.Hotbar[i].Type)
+                switch ((CryBits.Hotbars)Player.Me.Hotbar[i].Type)
                 {
                     // Itens
-                    case CryBits.Client.Logic.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
+                    case CryBits.Hotbars.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
                 }
 
             // Desenha os números de cada slot
@@ -583,7 +584,7 @@ class Graphics
 
         // Movendo slot
         if (Panels.Hotbar_Change >= 0)
-            if (Player.Me.Hotbar[Panels.Hotbar_Change].Type == (byte)CryBits.Client.Logic.Hotbar.Item)
+            if (Player.Me.Hotbar[Panels.Hotbar_Change].Type == (byte)CryBits.Hotbars.Item)
                 Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Change].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
     }
 
