@@ -1,4 +1,4 @@
-﻿using CryBits.Editors.Logic;
+﻿using CryBits;
 using System;
 using System.Drawing;
 using static CryBits.Editors.Logic.Utils;

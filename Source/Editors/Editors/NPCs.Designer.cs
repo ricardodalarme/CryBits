@@ -1,6 +1,6 @@
 ﻿using DarkUI.Controls;
 
-namespace CryBits.Editors.Editors
+namespace CryBits.Editors.Forms
 {
     partial class Editor_NPCs
     {

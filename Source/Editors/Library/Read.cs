@@ -1,11 +1,10 @@
-﻿using CryBits.Editors.Editors;
-using CryBits.Editors.Entities;
-using CryBits.Editors.Logic;
+﻿using CryBits.Editors.Entities;
+using CryBits;
 using System;
+using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using System.Drawing;
 
 namespace CryBits.Editors.Library
 {
@@ -24,7 +23,7 @@ namespace CryBits.Editors.Library
 
             // Limpa a árvore de ordem
             Lists.Tool = new TreeNode();
-            for (byte i = 0; i < Enum.GetValues(typeof(Windows)).Length; i++) Lists.Tool.Nodes.Add(((Windows)i).ToString());
+            for (byte i = 0; i < Enum.GetValues(typeof(WindowsTypes)).Length; i++) Lists.Tool.Nodes.Add(((WindowsTypes)i).ToString());
 
             // Cria o arquivo caso ele não existir
             if (!File.Exists)
@@ -72,7 +71,7 @@ namespace CryBits.Editors.Library
                 Name = Data.ReadString(),
                 Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
-                Window = (Windows)Data.ReadByte(),
+                Window = (WindowsTypes)Data.ReadByte(),
                 Texture_Num = Data.ReadByte()
             };
         }
@@ -85,7 +84,7 @@ namespace CryBits.Editors.Library
                 Name = Data.ReadString(),
                 Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
-                Window = (Windows)Data.ReadByte(),
+                Window = (WindowsTypes)Data.ReadByte(),
                 Max_Characters = Data.ReadInt16(),
                 Width = Data.ReadInt16(),
                 Password = Data.ReadBoolean()
@@ -100,7 +99,7 @@ namespace CryBits.Editors.Library
                 Name = Data.ReadString(),
                 Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
-                Window = (Windows)Data.ReadByte(),
+                Window = (WindowsTypes)Data.ReadByte(),
                 Texture_Num = Data.ReadByte()
             };
         }
@@ -113,7 +112,7 @@ namespace CryBits.Editors.Library
                 Name = Data.ReadString(),
                 Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
                 Visible = Data.ReadBoolean(),
-                Window = (Windows)Data.ReadByte(),
+                Window = (WindowsTypes)Data.ReadByte(),
                 Text = Data.ReadString(),
                 Checked = Data.ReadBoolean()
             };

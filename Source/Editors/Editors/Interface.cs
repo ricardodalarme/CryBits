@@ -1,11 +1,11 @@
-﻿using DarkUI.Forms;
-using CryBits.Editors.Entities;
+﻿using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
-using CryBits.Editors.Logic;
+using CryBits;
+using DarkUI.Forms;
 using System;
 using System.Windows.Forms;
 
-namespace CryBits.Editors.Editors
+namespace CryBits.Editors.Forms
 {
     partial class Editor_Interface : DarkForm
     {
@@ -27,7 +27,7 @@ namespace CryBits.Editors.Editors
             Graphics.Win_Interface = new SFML.Graphics.RenderWindow(picWindow.Handle);
 
             // Adiciona as janelas à lista
-            cmbWindows.Items.AddRange(Enum.GetNames(typeof(Windows)));
+            cmbWindows.Items.AddRange(Enum.GetNames(typeof(WindowsTypes)));
             cmbWindows.SelectedIndex = 0;
 
             // Adiciona os tipos de ferramentas à lista
@@ -108,7 +108,7 @@ namespace CryBits.Editors.Editors
                 case Tools_Types.TextBox: New = new Entities.TextBox(); break;
             }
             Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(New.ToString());
-            New.Window = (Windows)cmbWindows.SelectedIndex;
+            New.Window = (WindowsTypes)cmbWindows.SelectedIndex;
             grpNew.Visible = false;
         }
 

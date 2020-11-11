@@ -2,8 +2,8 @@
 using CryBits.Client.Logic;
 using System.Collections.Generic;
 using System.Drawing;
-using static CryBits.Client.Logic.Utils;
 using static CryBits.Client.Logic.Game;
+using static CryBits.Client.Logic.Utils;
 
 namespace CryBits.Client.Interface
 {
@@ -74,9 +74,9 @@ namespace CryBits.Client.Interface
             // Para ou reproduz a música dependendo do estado do marcador
             if (!Option.Musics)
                 Audio.Music.Stop();
-            else if (Windows.Current == Windows.Types.Menu)
+            else if (Windows.Current == WindowsTypes.Menu)
                 Audio.Music.Play(Audio.Musics.Menu);
-            else if (Windows.Current == Windows.Types.Game)
+            else if (Windows.Current == WindowsTypes.Game)
                 Audio.Music.Play((Audio.Musics)Mapper.Current.Data.Music);
         }
 

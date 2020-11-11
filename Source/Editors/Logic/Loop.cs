@@ -1,5 +1,6 @@
-﻿using CryBits.Editors.Editors;
+﻿using CryBits.Editors.Forms;
 using CryBits.Editors.Entities;
+using CryBits;
 using System;
 using System.Drawing;
 using System.Windows.Forms;

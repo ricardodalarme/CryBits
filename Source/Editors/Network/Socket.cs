@@ -1,4 +1,4 @@
-﻿using CryBits.Editors.Editors;
+﻿using CryBits.Editors.Forms;
 using Lidgren.Network;
 using System;
 using System.Windows.Forms;

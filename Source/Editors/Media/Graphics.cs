@@ -1,7 +1,7 @@
-﻿using CryBits.Editors.Editors;
+﻿using CryBits.Editors.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
-using CryBits.Editors.Logic;
+using CryBits;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -676,7 +676,7 @@ class Graphics
     private static void Editor_Class()
     {
         // Somente se necessário
-        if (Win_Class == null ) return;
+        if (Win_Class == null) return;
 
         // Desenha o NPC
         Character(Win_Class, (short)Editor_Classes.Form.numTexture.Value);

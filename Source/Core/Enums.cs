@@ -1,4 +1,4 @@
-﻿namespace CryBits.Editors.Logic
+﻿namespace CryBits
 {
     public enum Tools_Types
     {
@@ -82,10 +82,11 @@
         Count
     }
 
-    public enum Windows
+    public enum WindowsTypes
     {
         Menu,
-        Game
+        Game,
+        Count
     }
 
     public enum Rarity
@@ -130,5 +131,106 @@
         Horizontal,
         Vertical,
         Fill
+    }
+
+    public enum Accesses
+    {
+        None,
+        Moderator,
+        Editor,
+        Administrator
+    }
+
+    public enum Messages
+    {
+        Game,
+        Map,
+        Global,
+        Private
+    }
+
+    public enum MapMorals
+    {
+        Pacific,
+        Dangerous,
+    }
+
+    public enum NPCBehaviour
+    {
+        Friendly,
+        AttackOnSight,
+        AttackWhenAttacked,
+        ShopKeeper
+    }
+
+    public enum NPCMovements
+    {
+        MoveRandomly,
+        TurnRandomly,
+        StandStill
+    }
+
+    public enum TileAttributes
+    {
+        None,
+        Block,
+        Warp,
+        Item,
+    }
+
+    public enum Targets
+    {
+        Player = 1,
+        NPC
+    }
+
+    public enum Hotbars
+    {
+        None,
+        Item
+    }
+
+    public enum TradeStatus
+    {
+        Waiting,
+        Confirmed,
+        Accepted,
+        Declined
+    }
+
+    public enum Movements
+    {
+        Stopped,
+        Walking,
+        Moving
+    }
+
+    public enum NPCs
+    {
+        Friendly,
+        AttackOnSight,
+        AttackWhenAttacked,
+        ShopKeeper
+    }
+
+    public enum Target
+    {
+        Player = 1,
+        NPC
+    }
+
+    public enum Layer_Attributes
+    {
+        None,
+        Block,
+        Warp,
+        Count
+    }
+
+    public enum Morals
+    {
+        Pacific,
+        Danger,
+        Count
     }
 }

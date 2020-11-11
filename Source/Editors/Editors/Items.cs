@@ -1,11 +1,11 @@
-﻿using DarkUI.Forms;
-using CryBits.Editors.Entities;
-using CryBits.Editors.Logic;
+﻿using CryBits.Editors.Entities;
 using CryBits.Editors.Network;
+using CryBits;
+using DarkUI.Forms;
 using System;
 using System.Windows.Forms;
 
-namespace CryBits.Editors.Editors
+namespace CryBits.Editors.Forms
 {
     partial class Editor_Items : DarkForm
     {
@@ -158,7 +158,7 @@ namespace CryBits.Editors.Editors
 
             // Visibilidade dos paineis
             grpEquipment.Visible = cmbType.SelectedIndex == (byte)Items.Equipment;
-            grpPotion.Visible = cmbType.SelectedIndex == (byte)Items.Potion; 
+            grpPotion.Visible = cmbType.SelectedIndex == (byte)Items.Potion;
         }
 
         private void numReq_Level_ValueChanged(object sender, EventArgs e)

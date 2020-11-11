@@ -1,10 +1,9 @@
-﻿using DarkUI.Forms;
-using CryBits.Editors.Library;
-using CryBits.Editors.Logic;
+﻿using CryBits.Editors.Library;
 using CryBits.Editors.Network;
+using DarkUI.Forms;
 using System.Windows.Forms;
 
-namespace CryBits.Editors.Editors
+namespace CryBits.Editors.Forms
 {
     partial class Login : DarkForm
     {
