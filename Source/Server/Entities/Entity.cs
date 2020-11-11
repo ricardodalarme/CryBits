@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Entities
+namespace CryBits.Server.Entities
 {
     [Serializable]
     abstract class Entity

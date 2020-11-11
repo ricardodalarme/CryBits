@@ -1,6 +1,6 @@
-﻿using Logic;
+﻿using CryBits.Server.Logic;
 
-namespace Entities
+namespace CryBits.Server.Entities
 {
     abstract class Character
     {

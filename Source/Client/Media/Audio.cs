@@ -1,8 +1,8 @@
-﻿using Library;
+﻿using CryBits.Client.Library;
 using SFML.Audio;
 using System;
 using System.IO;
-using static Logic.Game;
+using static CryBits.Client.Logic.Game;
 
 class Audio
 {

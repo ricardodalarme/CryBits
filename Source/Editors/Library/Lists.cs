@@ -1,4 +1,4 @@
-﻿using Entities;
+﻿using CryBits.Editors.Entities;
 using System;
 using System.Windows.Forms;
 

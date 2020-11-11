@@ -1,8 +1,8 @@
-﻿using Entities;
+﻿using CryBits.Editors.Entities;
 using System;
 using System.Drawing;
 
-namespace Logic
+namespace CryBits.Editors.Logic
 {
     static class Utils
     {

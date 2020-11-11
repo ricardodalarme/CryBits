@@ -1,9 +1,9 @@
-﻿using Entities;
+﻿using CryBits.Editors.Entities;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace Logic
+namespace CryBits.Editors.Logic
 {
     class MapProperties
     {

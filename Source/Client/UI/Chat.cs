@@ -1,10 +1,10 @@
-﻿using Logic;
-using Network;
+﻿using CryBits.Client.Logic;
+using CryBits.Client.Network;
 using SFML.Graphics;
 using System.Collections.Generic;
-using static Logic.Utils;
+using static CryBits.Client.Logic.Utils;
 
-namespace Interface
+namespace CryBits.Client.Interface
 {
     class Chat
     {

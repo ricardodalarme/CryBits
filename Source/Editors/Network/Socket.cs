@@ -1,9 +1,9 @@
-﻿using Editors;
+﻿using CryBits.Editors.Editors;
 using Lidgren.Network;
 using System;
 using System.Windows.Forms;
 
-namespace Network
+namespace CryBits.Editors.Network
 {
     class Socket
     {

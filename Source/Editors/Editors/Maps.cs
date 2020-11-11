@@ -1,15 +1,15 @@
 ﻿using DarkUI.Forms;
-using Entities;
-using Library;
-using Logic;
-using Network;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Library;
+using CryBits.Editors.Logic;
+using CryBits.Editors.Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using static Logic.Utils;
+using static CryBits.Editors.Logic.Utils;
 
-namespace Editors
+namespace CryBits.Editors.Editors
 {
     partial class Editor_Maps : DarkForm
     {

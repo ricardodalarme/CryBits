@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
-using static Logic.Game;
+using static CryBits.Client.Logic.Game;
 
-namespace Logic
+namespace CryBits.Client.Logic
 {
     class MapAutoTile
     {   // Formas de adicionar o mini azulejo

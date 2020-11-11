@@ -1,15 +1,15 @@
-﻿using Entities;
-using Logic;
-using Network;
+﻿using CryBits.Client.Entities;
+using CryBits.Client.Logic;
+using CryBits.Client.Network;
 using SFML.Window;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static Logic.Game;
-using static Logic.Utils;
+using static CryBits.Client.Logic.Game;
+using static CryBits.Client.Logic.Utils;
 
-namespace Interface
+namespace CryBits.Client.Interface
 {
     class Buttons : Tools.Structure
     {

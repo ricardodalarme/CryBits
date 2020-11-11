@@ -1,7 +1,7 @@
 ﻿using DarkUI.Controls;
 using System.Windows.Forms;
 
-namespace Editors
+namespace CryBits.Editors.Editors
 {
     partial class Editor_Classes
     {

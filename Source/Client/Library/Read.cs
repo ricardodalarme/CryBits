@@ -1,14 +1,14 @@
-﻿using Entities;
-using Interface;
-using Logic;
+﻿using CryBits.Client.Entities;
+using CryBits.Client.Interface;
+using CryBits.Client.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using static Logic.Game;
+using static CryBits.Client.Logic.Game;
 
-namespace Library
+namespace CryBits.Client.Library
 {
     static class Read
     {

@@ -1,7 +1,7 @@
-﻿using Entities;
+﻿using CryBits.Server.Entities;
 using Lidgren.Network;
 
-namespace Network
+namespace CryBits.Server.Network
 {
     static class Socket
     {

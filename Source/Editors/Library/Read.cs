@@ -1,13 +1,13 @@
-﻿using Editors;
-using Entities;
-using Logic;
+﻿using CryBits.Editors.Editors;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Logic;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace Library
+namespace CryBits.Editors.Library
 {
     static class Read
     {

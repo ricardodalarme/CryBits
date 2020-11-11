@@ -1,11 +1,11 @@
 ﻿using DarkUI.Forms;
-using Entities;
-using Library;
-using Logic;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Library;
+using CryBits.Editors.Logic;
 using System;
 using System.Windows.Forms;
 
-namespace Editors
+namespace CryBits.Editors.Editors
 {
     partial class Editor_Interface : DarkForm
     {

@@ -1,10 +1,10 @@
-﻿using Entities;
-using Logic;
+﻿using CryBits.Server.Entities;
+using CryBits.Server.Logic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using static Logic.Utils;
+using static CryBits.Server.Logic.Utils;
 
-namespace Library
+namespace CryBits.Server.Library
 {
     static class Write
     {

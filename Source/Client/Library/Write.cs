@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using static Logic.Game;
+using static CryBits.Client.Logic.Game;
 
-namespace Library
+namespace CryBits.Client.Library
 {
     static class Write
     {

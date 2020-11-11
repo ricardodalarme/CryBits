@@ -1,4 +1,4 @@
-﻿namespace Logic
+﻿namespace CryBits.Editors.Logic
 {
     public enum Tools_Types
     {

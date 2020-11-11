@@ -1,11 +1,11 @@
-﻿using Logic;
-using Network;
+﻿using CryBits.Server.Logic;
+using CryBits.Server.Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static Logic.Utils;
+using static CryBits.Server.Logic.Utils;
 
-namespace Entities
+namespace CryBits.Server.Entities
 {
     class Player : Character
     {

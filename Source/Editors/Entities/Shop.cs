@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Entities
+namespace CryBits.Editors.Entities
 {
     class Shop : Entity
     {

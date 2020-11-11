@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Windows.Forms;
 
-namespace Library
+namespace CryBits.Server.Library
 {
     static class Directories
     {

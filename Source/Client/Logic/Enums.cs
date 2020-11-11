@@ -1,4 +1,4 @@
-﻿namespace Logic
+﻿namespace CryBits.Client.Logic
 {
     public enum Attributes
     {

@@ -1,7 +1,7 @@
-﻿using Logic;
+﻿using CryBits.Editors.Logic;
 using System.Drawing;
 
-namespace Entities
+namespace CryBits.Editors.Entities
 {
     class Tool
     {

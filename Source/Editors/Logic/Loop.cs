@@ -1,11 +1,11 @@
-﻿using Editors;
-using Entities;
+﻿using CryBits.Editors.Editors;
+using CryBits.Editors.Entities;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using static Logic.Utils;
+using static CryBits.Editors.Logic.Utils;
 
-namespace Logic
+namespace CryBits.Editors.Logic
 {
     class Loop
     {

@@ -1,8 +1,8 @@
-﻿using Logic;
+﻿using CryBits.Client.Logic;
 using System;
 using System.Collections.Generic;
 
-namespace Entities
+namespace CryBits.Client.Entities
 {
     class Item : Entity
     {

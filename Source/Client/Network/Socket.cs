@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace Network
+namespace CryBits.Client.Network
 {
     static class Socket
     {

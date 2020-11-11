@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using static Logic.Utils;
+using static CryBits.Server.Logic.Utils;
 
-namespace Entities
+namespace CryBits.Server.Entities
 {
     [Serializable]
     class Shop : Entity

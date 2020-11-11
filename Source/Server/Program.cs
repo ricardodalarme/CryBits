@@ -1,7 +1,7 @@
-﻿using Entities;
-using Library;
-using Logic;
-using Network;
+﻿using CryBits.Server.Entities;
+using CryBits.Server.Library;
+using CryBits.Server.Logic;
+using CryBits.Server.Network;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -111,7 +111,7 @@ static class Program
                 }
 
                 // Encontra o jogador
-                Entities.Account Account = Account.List.Find(x => x.User.Equals(Parts[1]));
+                Account Account = Account.List.Find(x => x.User.Equals(Parts[1]));
 
                 if (Account == null)
                 {

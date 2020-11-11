@@ -1,12 +1,12 @@
-﻿using Entities;
-using Logic;
-using Network;
+﻿using CryBits.Client.Entities;
+using CryBits.Client.Logic;
+using CryBits.Client.Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static Logic.Utils;
+using static CryBits.Client.Logic.Utils;
 
-namespace Interface
+namespace CryBits.Client.Interface
 {
     class Panels : Tools.Structure
     {

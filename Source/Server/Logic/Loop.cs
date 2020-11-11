@@ -1,8 +1,8 @@
-﻿using Entities;
+﻿using CryBits.Server.Entities;
 using System;
 using System.Windows.Forms;
 
-namespace Logic
+namespace CryBits.Server.Logic
 {
     static class Loop
     {
