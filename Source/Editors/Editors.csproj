@@ -81,22 +81,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Editors\Shops .cs">
+    <Compile Include="Forms\Shops .cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Shops .Designer.cs">
+    <Compile Include="Forms\Shops .Designer.cs">
       <DependentUpon>Shops .cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Interface.cs">
+    <Compile Include="Forms\Interface.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Interface.Designer.cs">
+    <Compile Include="Forms\Interface.Designer.cs">
       <DependentUpon>Interface.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Login.cs">
+    <Compile Include="Forms\Login.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Login.Designer.cs">
+    <Compile Include="Forms\Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\Tools\TextBox.cs" />
@@ -107,44 +107,44 @@
     <Compile Include="Entities\Map\MapTileData.cs" />
     <Compile Include="Library\Directories.cs" />
     <Compile Include="Library\Write.cs" />
-    <Compile Include="Editors\Items.cs">
+    <Compile Include="Forms\Items.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Items.Designer.cs">
+    <Compile Include="Forms\Items.Designer.cs">
       <DependentUpon>Items.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Data.cs">
+    <Compile Include="Forms\Data.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Data.Designer.cs">
+    <Compile Include="Forms\Data.Designer.cs">
       <DependentUpon>Data.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Tiles.cs">
+    <Compile Include="Forms\Tiles.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Tiles.Designer.cs">
+    <Compile Include="Forms\Tiles.Designer.cs">
       <DependentUpon>Tiles.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\NPCs.cs">
+    <Compile Include="Forms\NPCs.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\NPCs.Designer.cs">
+    <Compile Include="Forms\NPCs.Designer.cs">
       <DependentUpon>NPCs.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\MapProperties.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Media\Audio.cs" />
     <Compile Include="Logic\Utils.cs" />
-    <Compile Include="Editors\Classes.cs">
+    <Compile Include="Forms\Classes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Classes.Designer.cs">
+    <Compile Include="Forms\Classes.Designer.cs">
       <DependentUpon>Classes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Maps.cs">
+    <Compile Include="Forms\Maps.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Maps.Designer.cs">
+    <Compile Include="Forms\Maps.Designer.cs">
       <DependentUpon>Maps.cs</DependentUpon>
     </Compile>
     <Compile Include="Network\Receive.cs" />
@@ -163,32 +163,32 @@
     <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Editors\Shops .resx">
+    <EmbeddedResource Include="Forms\Shops .resx">
       <DependentUpon>Shops .cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Interface.resx">
+    <EmbeddedResource Include="Forms\Interface.resx">
       <DependentUpon>Interface.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Login.resx">
+    <EmbeddedResource Include="Forms\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Tiles.resx">
+    <EmbeddedResource Include="Forms\Tiles.resx">
       <DependentUpon>Tiles.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Items.resx">
+    <EmbeddedResource Include="Forms\Items.resx">
       <DependentUpon>Items.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Classes.resx">
+    <EmbeddedResource Include="Forms\Classes.resx">
       <DependentUpon>Classes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Data.resx">
+    <EmbeddedResource Include="Forms\Data.resx">
       <DependentUpon>Data.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Maps.resx">
+    <EmbeddedResource Include="Forms\Maps.resx">
       <DependentUpon>Maps.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\NPCs.resx">
+    <EmbeddedResource Include="Forms\NPCs.resx">
       <DependentUpon>NPCs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
