@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using CryBits.Entities;
 
 namespace CryBits.Editors.Entities
 {
@@ -13,13 +14,11 @@ namespace CryBits.Editors.Entities
         public static Shop Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
 
         // Dados
-        public string Name = string.Empty;
         public Item Currency;
         public BindingList<Shop_Item> Sold = new BindingList<Shop_Item>();
         public BindingList<Shop_Item> Bought = new BindingList<Shop_Item>();
 
         public Shop(Guid ID) : base(ID) { }
-        public override string ToString() => Name;
     }
 
     class Shop_Item : Lists.Structures.Inventory

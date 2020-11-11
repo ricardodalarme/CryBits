@@ -2,7 +2,6 @@
 using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
-using CryBits;
 using DarkUI.Forms;
 using System;
 using System.Collections.Generic;

@@ -44,7 +44,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Core">
+    <Reference Include="Core, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Build\Core\Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -58,7 +59,6 @@
     <Compile Include="UI\Windows.cs" />
     <Compile Include="Logic\Camera.cs" />
     <Compile Include="Entities\Character.cs" />
-    <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Entities\NPC.cs" />

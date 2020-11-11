@@ -1,4 +1,4 @@
-﻿using CryBits;
+﻿using CryBits.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +14,6 @@ namespace CryBits.Editors.Entities
         public static Class Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
 
         // Dados
-        public string Name = string.Empty;
         public string Description;
         public BindingList<short> Tex_Male = new BindingList<short>();
         public BindingList<short> Tex_Female = new BindingList<short>();

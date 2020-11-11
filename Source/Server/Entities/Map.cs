@@ -1,4 +1,4 @@
-﻿using CryBits;
+﻿using CryBits.Entities;
 using System;
 using System.Collections.Generic;
 
@@ -19,7 +19,6 @@ namespace CryBits.Server.Entities
 
         // Dados
         public short Revision;
-        public string Name = string.Empty;
         public byte Moral;
         public Map_Layer[] Layer = Array.Empty<Map_Layer>();
         public Map_Attribute[,] Attribute = new Map_Attribute[Width, Height];

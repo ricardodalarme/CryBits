@@ -1,4 +1,4 @@
-﻿using CryBits.Server.Entities;
+﻿using CryBits.Entities;
 using System;
 
 namespace CryBits.Server.Logic

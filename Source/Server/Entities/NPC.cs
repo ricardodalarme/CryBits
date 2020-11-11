@@ -1,4 +1,5 @@
-﻿using CryBits.Server.Logic;
+﻿using CryBits.Entities;
+using CryBits.Server.Logic;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +15,6 @@ namespace CryBits.Server.Entities
         public static NPC Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
 
         // Dados
-        public string Name;
         public string SayMsg;
         public short Texture;
         public byte Behaviour;

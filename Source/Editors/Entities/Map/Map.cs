@@ -1,5 +1,5 @@
 ﻿using CryBits.Editors.Forms;
-using CryBits;
+using CryBits.Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -35,7 +35,6 @@ namespace CryBits.Editors.Entities
         public short Revision;
         public List<MapLayer> Layer = new List<MapLayer>();
         public Map_Attribute[,] Attribute = new Map_Attribute[Width, Height];
-        public string Name;
         public Map_Morals Moral;
         public byte Panorama;
         public Audio.Musics Music;
@@ -54,8 +53,6 @@ namespace CryBits.Editors.Entities
                 for (byte y = 0; y < Height; y++)
                     Attribute[x, y] = new Map_Attribute();
         }
-
-        public override string ToString() => Name;
 
         // Verifica se as coordenas estão no limite do mapa
         public bool OutLimit(short x, short y) => x >= Width || y >= Height || x < 0 || y < 0;

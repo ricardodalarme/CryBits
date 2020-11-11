@@ -1,5 +1,4 @@
-﻿using CryBits.Editors.Entities;
-using CryBits;
+﻿using CryBits.Entities;
 using System;
 using System.Drawing;
 

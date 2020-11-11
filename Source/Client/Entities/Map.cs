@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CryBits.Entities;
 using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Entities
@@ -15,7 +16,6 @@ namespace CryBits.Client.Entities
 
         // Dados gerais
         public short Revision;
-        public string Name;
         public byte Moral;
         public byte Panorama;
         public byte Music;
