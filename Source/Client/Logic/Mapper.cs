@@ -1,9 +1,9 @@
-﻿using Entities;
-using Logic;
+﻿using CryBits.Client.Entities;
+using CryBits.Client.Logic;
 using System;
 using System.Drawing;
-using static Logic.Game;
-using static Logic.Utils;
+using static CryBits.Client.Logic.Game;
+using static CryBits.Client.Logic.Utils;
 
 class Mapper
 {

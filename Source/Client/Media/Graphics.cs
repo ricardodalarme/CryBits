@@ -1,7 +1,7 @@
-﻿using Entities;
-using Interface;
-using Library;
-using Logic;
+﻿using CryBits.Client.Entities;
+using CryBits.Client.Interface;
+using CryBits.Client.Library;
+using CryBits.Client.Logic;
 using SFML.Graphics;
 using SFML.Window;
 using System;
@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using static Logic.Game;
-using static Logic.Utils;
+using static CryBits.Client.Logic.Game;
+using static CryBits.Client.Logic.Utils;
 
 class Graphics
 {
@@ -304,7 +304,7 @@ class Graphics
 
         // Desenha os dados do jogo
         if (Option.FPS) DrawText("FPS: " + FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
-        if (Option.Latency) DrawText("Latency: " + Network.Socket.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
+        if (Option.Latency) DrawText("Latency: " + CryBits.Client.Network.Socket.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
     }
 
     #region Tools
@@ -439,7 +439,7 @@ class Graphics
     private static void CreateCharacter_Class()
     {
         short Texture_Num = 0;
-        Class Class = Entities.Class.List.ElementAt(Panels.CreateCharacter_Class).Value;
+        Class Class = CryBits.Client.Entities.Class.List.ElementAt(Panels.CreateCharacter_Class).Value;
 
         // Textura do personagem
         if (CheckBoxes.List["GenderMale"].Checked && Class.Tex_Male.Length > 0)
@@ -492,9 +492,9 @@ class Graphics
 
         // Renderiza as mensagens
         if (Tool.Visible || (Loop.Chat_Timer >= Environment.TickCount && Option.Chat))
-            for (byte i = global::Interface.Chat.Lines_First; i <= global::Interface.Chat.Lines_Visible + global::Interface.Chat.Lines_First; i++)
-                if (global::Interface.Chat.Order.Count > i)
-                    DrawText(global::Interface.Chat.Order[i].Text, 16, 461 + 11 * (i - global::Interface.Chat.Lines_First), global::Interface.Chat.Order[i].Color);
+            for (byte i = CryBits.Client.Interface.Chat.Lines_First; i <= global::CryBits.Client.Interface.Chat.Lines_Visible + global::CryBits.Client.Interface.Chat.Lines_First; i++)
+                if (global::CryBits.Client.Interface.Chat.Order.Count > i)
+                    DrawText(global::CryBits.Client.Interface.Chat.Order[i].Text, 16, 461 + 11 * (i - global::CryBits.Client.Interface.Chat.Lines_First), global::CryBits.Client.Interface.Chat.Order[i].Color);
 
         // Dica de como abrir o chat
         if (!Tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.List["Chat"].Position.X + 5, TextBoxes.List["Chat"].Position.Y + 3, SFML.Graphics.Color.White);
@@ -569,10 +569,10 @@ class Graphics
         {
             byte Slot = Player.Me.Hotbar[i].Slot;
             if (Slot > 0)
-                switch ((Logic.Hotbar)Player.Me.Hotbar[i].Type)
+                switch ((CryBits.Client.Logic.Hotbar)Player.Me.Hotbar[i].Type)
                 {
                     // Itens
-                    case Logic.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
+                    case CryBits.Client.Logic.Hotbar.Item: Item(Player.Me.Inventory[Slot].Item, 1, Tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
                 }
 
             // Desenha os números de cada slot
@@ -583,7 +583,7 @@ class Graphics
 
         // Movendo slot
         if (Panels.Hotbar_Change >= 0)
-            if (Player.Me.Hotbar[Panels.Hotbar_Change].Type == (byte)Logic.Hotbar.Item)
+            if (Player.Me.Hotbar[Panels.Hotbar_Change].Type == (byte)CryBits.Client.Logic.Hotbar.Item)
                 Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Change].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
     }
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace Interface
+namespace CryBits.Client.Interface
 {
     class Tools
     {

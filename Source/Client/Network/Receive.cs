@@ -1,15 +1,15 @@
-﻿using Entities;
-using Interface;
+﻿using CryBits.Client.Entities;
+using CryBits.Client.Interface;
 using Lidgren.Network;
-using Logic;
+using CryBits.Client.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using static Logic.Game;
-using static Logic.Utils;
+using static CryBits.Client.Logic.Game;
+using static CryBits.Client.Logic.Utils;
 
-namespace Network
+namespace CryBits.Client.Network
 {
     class Receive
     {

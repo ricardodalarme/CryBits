@@ -1,13 +1,13 @@
-﻿using Editors;
-using Entities;
+﻿using CryBits.Editors.Editors;
+using CryBits.Editors.Entities;
 using Lidgren.Network;
-using Logic;
+using CryBits.Editors.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Network
+namespace CryBits.Editors.Network
 {
     class Receive
     {

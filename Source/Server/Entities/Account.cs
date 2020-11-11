@@ -1,8 +1,8 @@
 ﻿using Lidgren.Network;
-using Logic;
+using CryBits.Server.Logic;
 using System.Collections.Generic;
 
-namespace Entities
+namespace CryBits.Server.Entities
 {
     class Account
     {

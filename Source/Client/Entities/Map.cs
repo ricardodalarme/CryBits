@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using static Logic.Game;
+using static CryBits.Client.Logic.Game;
 
-namespace Entities
+namespace CryBits.Client.Entities
 {
     [Serializable]
     class Map : Entity

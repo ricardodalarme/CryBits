@@ -1,9 +1,9 @@
-﻿using Logic;
+﻿using CryBits.Editors.Logic;
 using System;
 using System.Drawing;
-using static Logic.Utils;
+using static CryBits.Editors.Logic.Utils;
 
-namespace Entities
+namespace CryBits.Editors.Entities
 {
     [Serializable]
     class Tile

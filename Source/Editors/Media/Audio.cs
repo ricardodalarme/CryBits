@@ -1,5 +1,5 @@
-﻿using Editors;
-using Library;
+﻿using CryBits.Editors.Editors;
+using CryBits.Editors.Library;
 using SFML.Audio;
 using System;
 

@@ -1,56 +1,54 @@
-﻿using Editors;
-using Library;
-using Network;
+﻿using CryBits.Editors.Editors;
+using CryBits.Editors.Library;
+using CryBits.Editors.Network;
+using CryBits.Editors.Logic;
 using System;
 using System.Windows.Forms;
 
-namespace Logic
+static class Program
 {
-    static class Program
+    // Usado para manter a aplicação aberta
+    public static bool Working = true;
+
+    // Medida de calculo do atraso do jogo
+    public static short FPS;
+
+    [STAThread]
+    static void Main()
     {
-        // Usado para manter a aplicação aberta
-        public static bool Working = true;
+        // Verifica se todos os diretórios existem, se não existirem então criá-os
+        Directories.Create();
 
-        // Medida de calculo do atraso do jogo
-        public static short FPS;
+        // Carrega as preferências
+        Read.Options();
 
-        [STAThread]
-        static void Main()
-        {
-            // Verifica se todos os diretórios existem, se não existirem então criá-os
-            Directories.Create();
+        // Inicializa todos os dispositivos
+        Socket.Init();
+        Audio.Sound.Load();
+        Graphics.Init();
 
-            // Carrega as preferências
-            Read.Options();
+        // Abre a janela
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        Login.Form = new Login();
+        Login.Form.Show();
 
-            // Inicializa todos os dispositivos
-            Socket.Init();
-            Audio.Sound.Load();
-            Graphics.Init();
+        // Inicia o laço
+        Loop.Init();
+    }
 
-            // Abre a janela
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Login.Form = new Login();
-            Login.Form.Show();
+    public static void Close()
+    {
+        int Wait_Timer = Environment.TickCount;
 
-            // Inicia o laço
-            Loop.Init();
-        }
+        // Desconecta da rede
+        Socket.Disconnect();
 
-        public static void Close()
-        {
-            int Wait_Timer = Environment.TickCount;
+        // Espera até que o jogador seja desconectado
+        while (Socket.IsConnected() && Environment.TickCount <= Wait_Timer + 1000)
+            Application.DoEvents();
 
-            // Desconecta da rede
-            Socket.Disconnect();
-
-            // Espera até que o jogador seja desconectado
-            while (Socket.IsConnected() && Environment.TickCount <= Wait_Timer + 1000)
-                Application.DoEvents();
-
-            // Fecha a aplicação
-            Application.Exit();
-        }
+        // Fecha a aplicação
+        Application.Exit();
     }
 }

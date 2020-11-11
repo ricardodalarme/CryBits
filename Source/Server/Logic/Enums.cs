@@ -1,4 +1,4 @@
-﻿namespace Logic
+﻿namespace CryBits.Server.Logic
 {
     public enum Directions
     {

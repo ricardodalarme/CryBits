@@ -1,7 +1,7 @@
-﻿using Interface;
-using Library;
-using Logic;
-using Network;
+﻿using CryBits.Client.Interface;
+using CryBits.Client.Library;
+using CryBits.Client.Logic;
+using CryBits.Client.Network;
 using System;
 using System.Windows.Forms;
 

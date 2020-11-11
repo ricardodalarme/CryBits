@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Logic
+namespace CryBits.Client.Logic
 {
     static class Game
     {

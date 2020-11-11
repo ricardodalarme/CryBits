@@ -1,10 +1,10 @@
-﻿using Editors;
-using Entities;
+﻿using CryBits.Editors.Editors;
+using CryBits.Editors.Entities;
 using Lidgren.Network;
-using Logic;
-using static Logic.Utils;
+using CryBits.Editors.Logic;
+using static CryBits.Editors.Logic.Utils;
 
-namespace Network
+namespace CryBits.Editors.Network
 {
     class Send
     {

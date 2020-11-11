@@ -1,11 +1,11 @@
-﻿using Library;
-using Logic;
+﻿using CryBits.Client.Library;
+using CryBits.Client.Logic;
 using System.Collections.Generic;
 using System.Drawing;
-using static Logic.Utils;
-using static Logic.Game;
+using static CryBits.Client.Logic.Utils;
+using static CryBits.Client.Logic.Game;
 
-namespace Interface
+namespace CryBits.Client.Interface
 {
     class CheckBoxes : Tools.Structure
     {

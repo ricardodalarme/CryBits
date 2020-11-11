@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Entities
+namespace CryBits.Editors.Entities
 {
     class Entity
     {

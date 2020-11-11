@@ -1,13 +1,13 @@
-﻿using Entities;
-using Library;
+﻿using CryBits.Server.Entities;
+using CryBits.Server.Library;
 using Lidgren.Network;
-using Logic;
+using CryBits.Server.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using static Logic.Utils;
+using static CryBits.Server.Logic.Utils;
 
-namespace Network
+namespace CryBits.Server.Network
 {
     static class Receive
     {

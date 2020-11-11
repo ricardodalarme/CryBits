@@ -1,6 +1,6 @@
-﻿using Logic;
+﻿using CryBits.Editors.Logic;
 
-namespace Entities
+namespace CryBits.Editors.Entities
 {
     class MapLayer
     {

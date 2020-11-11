@@ -1,12 +1,12 @@
-﻿using Interface;
-using Logic;
-using Network;
+﻿using CryBits.Client.Interface;
+using CryBits.Client.Logic;
+using CryBits.Client.Network;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
-using static Logic.Game;
+using static CryBits.Client.Logic.Game;
 
-namespace Entities
+namespace CryBits.Client.Entities
 {
     class Player : Character
     {

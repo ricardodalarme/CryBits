@@ -1,7 +1,7 @@
-﻿using Entities;
+﻿using CryBits.Server.Entities;
 using System;
 
-namespace Logic
+namespace CryBits.Server.Logic
 {
     static class Utils
     {

@@ -1,9 +1,9 @@
-﻿using Interface;
+﻿using CryBits.Client.Interface;
 using System;
 using System.Drawing;
-using static Logic.Game;
+using static CryBits.Client.Logic.Game;
 
-namespace Logic
+namespace CryBits.Client.Logic
 {
     static class Utils
     {

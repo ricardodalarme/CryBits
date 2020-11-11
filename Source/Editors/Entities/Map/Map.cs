@@ -1,10 +1,10 @@
-﻿using Editors;
-using Logic;
+﻿using CryBits.Editors.Editors;
+using CryBits.Editors.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Entities
+namespace CryBits.Editors.Entities
 {
     [Serializable]
     class Map : Entity

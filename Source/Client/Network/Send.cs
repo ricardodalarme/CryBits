@@ -1,11 +1,11 @@
-﻿using Entities;
-using Interface;
+﻿using CryBits.Client.Entities;
+using CryBits.Client.Interface;
 using Lidgren.Network;
-using Logic;
+using CryBits.Client.Logic;
 using System;
 using System.Linq;
 
-namespace Network
+namespace CryBits.Client.Network
 {
     class Send
     {

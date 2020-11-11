@@ -1,4 +1,4 @@
-﻿namespace Entities
+﻿namespace CryBits.Editors.Entities
 {
     class Button : Tool
     {

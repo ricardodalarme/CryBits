@@ -1,9 +1,9 @@
-﻿using Logic;
+﻿using CryBits.Client.Logic;
 using System;
 using System.Collections.Generic;
-using static Logic.Utils;
+using static CryBits.Client.Logic.Utils;
 
-namespace Entities
+namespace CryBits.Client.Entities
 {
     class TempMap
     {

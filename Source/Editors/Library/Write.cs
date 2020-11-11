@@ -1,9 +1,9 @@
-﻿using Logic;
+﻿using CryBits.Editors.Logic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
-namespace Library
+namespace CryBits.Editors.Library
 {
     static class Write
     {

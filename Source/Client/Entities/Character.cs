@@ -1,7 +1,7 @@
-﻿using Logic;
-using static Logic.Game;
+﻿using CryBits.Client.Logic;
+using static CryBits.Client.Logic.Game;
 
-namespace Entities
+namespace CryBits.Client.Entities
 {
     class Character
     {

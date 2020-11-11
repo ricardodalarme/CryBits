@@ -1,10 +1,10 @@
-﻿using Entities;
+﻿using CryBits.Server.Entities;
 using Lidgren.Network;
-using Logic;
+using CryBits.Server.Logic;
 using System.Drawing;
-using static Logic.Utils;
+using static CryBits.Server.Logic.Utils;
 
-namespace Network
+namespace CryBits.Server.Network
 {
     static class Send
     {

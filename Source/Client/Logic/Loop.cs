@@ -1,9 +1,9 @@
-﻿using Entities;
-using Interface;
+﻿using CryBits.Client.Entities;
+using CryBits.Client.Interface;
 using System;
 using System.Windows.Forms;
 
-namespace Logic
+namespace CryBits.Client.Logic
 {
     class Loop
     {
