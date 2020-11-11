@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CryBits.Entities;
 
 namespace CryBits.Client.Entities
 {
@@ -12,7 +13,6 @@ namespace CryBits.Client.Entities
         public static Class Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
 
         // Dados gerais
-        public string Name;
         public string Description;
         public short[] Tex_Male;
         public short[] Tex_Female;

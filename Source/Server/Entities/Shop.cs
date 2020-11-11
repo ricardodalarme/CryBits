@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryBits.Entities;
+using System;
 using System.Collections.Generic;
 using static CryBits.Server.Logic.Utils;
 
@@ -14,7 +15,6 @@ namespace CryBits.Server.Entities
         public static Shop Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
 
         // Dados
-        public string Name;
         private Guid currency;
         public Item Currency
         {

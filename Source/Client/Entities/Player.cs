@@ -1,5 +1,5 @@
 ﻿using CryBits.Client.Interface;
-using CryBits;
+using CryBits.Entities;
 using CryBits.Client.Network;
 using SFML.Window;
 using System;

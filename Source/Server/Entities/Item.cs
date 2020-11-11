@@ -1,6 +1,8 @@
 ﻿using CryBits.Server.Logic;
+using CryBits.Entities;
 using System;
 using System.Collections.Generic;
+using static CryBits.Server.Logic.Utils;
 
 namespace CryBits.Server.Entities
 {
@@ -14,7 +16,6 @@ namespace CryBits.Server.Entities
         public static Item Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
 
         // Geral
-        public string Name = string.Empty;
         public string Description = string.Empty;
         public short Texture;
         public byte Type;
