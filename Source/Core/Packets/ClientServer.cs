@@ -1,0 +1,41 @@
+﻿namespace CryBits.Packets
+{
+    // Pacotes do cliente para o servidor
+    public enum ClientServer
+    {
+        Connect,
+        Latency,
+        Register,
+        CreateCharacter,
+        Character_Use,
+        Character_Create,
+        Character_Delete,
+        Player_Direction,
+        Player_Move,
+        Player_Attack,
+        RequestMap,
+        Message,
+        AddPoint,
+        CollectItem,
+        DropItem,
+        Inventory_Change,
+        Inventory_Use,
+        Equipment_Remove,
+        Hotbar_Add,
+        Hotbar_Change,
+        Hotbar_Use,
+        Party_Invite,
+        Party_Accept,
+        Party_Decline,
+        Party_Leave,
+        Trade_Invite,
+        Trade_Accept,
+        Trade_Decline,
+        Trade_Leave,
+        Trade_Offer,
+        Trade_Offer_State,
+        Shop_Buy,
+        Shop_Sell,
+        Shop_Close
+    }
+}

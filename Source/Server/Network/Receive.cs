@@ -1,6 +1,7 @@
 ﻿using CryBits.Server.Entities;
 using CryBits.Server.Library;
 using CryBits.Entities;
+using CryBits.Packets;
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
@@ -12,64 +13,6 @@ namespace CryBits.Server.Network
 {
     static class Receive
     {
-        // Pacotes do cliente
-        private enum Client_Packets
-        {
-            Connect,
-            Latency,
-            Register,
-            CreateCharacter,
-            Character_Use,
-            Character_Create,
-            Character_Delete,
-            Player_Direction,
-            Player_Move,
-            Player_Attack,
-            RequestMap,
-            Message,
-            AddPoint,
-            CollectItem,
-            DropItem,
-            Inventory_Change,
-            Inventory_Use,
-            Equipment_Remove,
-            Hotbar_Add,
-            Hotbar_Change,
-            Hotbar_Use,
-            Party_Invite,
-            Party_Accept,
-            Party_Decline,
-            Party_Leave,
-            Trade_Invite,
-            Trade_Accept,
-            Trade_Decline,
-            Trade_Leave,
-            Trade_Offer,
-            Trade_Offer_State,
-            Shop_Buy,
-            Shop_Sell,
-            Shop_Close
-        }
-
-        // Pacotes do editor
-        private enum Editor_Packets
-        {
-            Connect,
-            Write_Settings,
-            Write_Classes,
-            Write_Maps,
-            Write_NPCs,
-            Write_Items,
-            Write_Shops,
-            Request_Setting,
-            Request_Classes,
-            Request_Map,
-            Request_Maps,
-            Request_NPCs,
-            Request_Items,
-            Request_Shops
-        }
-
         public static void Handle(Account Account, NetIncomingMessage Data)
         {
             byte Packet_Num = Data.ReadByte();
@@ -79,59 +22,59 @@ namespace CryBits.Server.Network
             if (Packet_Num == 0) Connect(Account, Data);
             else if (!Account.InEditor)
                 // Manuseia os dados recebidos do cliente
-                switch ((Client_Packets)Packet_Num)
+                switch ((ClientServer)Packet_Num)
                 {
-                    case Client_Packets.Latency: Latency(Account); break;
-                    case Client_Packets.Register: Register(Account, Data); break;
-                    case Client_Packets.CreateCharacter: CreateCharacter(Account, Data); break;
-                    case Client_Packets.Character_Use: Character_Use(Account, Data); break;
-                    case Client_Packets.Character_Create: Character_Create(Account); break;
-                    case Client_Packets.Character_Delete: Character_Delete(Account, Data); break;
-                    case Client_Packets.Player_Direction: Player_Direction(Player, Data); break;
-                    case Client_Packets.Player_Move: Player_Move(Player, Data); break;
-                    case Client_Packets.Player_Attack: Player_Attack(Player); break;
-                    case Client_Packets.RequestMap: RequestMap(Player, Data); break;
-                    case Client_Packets.Message: Message(Player, Data); break;
-                    case Client_Packets.AddPoint: AddPoint(Player, Data); break;
-                    case Client_Packets.CollectItem: CollectItem(Player); break;
-                    case Client_Packets.DropItem: DropItem(Player, Data); break;
-                    case Client_Packets.Inventory_Change: Inventory_Change(Player, Data); break;
-                    case Client_Packets.Inventory_Use: Inventory_Use(Player, Data); break;
-                    case Client_Packets.Equipment_Remove: Equipment_Remove(Player, Data); break;
-                    case Client_Packets.Hotbar_Add: Hotbar_Add(Player, Data); break;
-                    case Client_Packets.Hotbar_Change: Hotbar_Change(Player, Data); break;
-                    case Client_Packets.Hotbar_Use: Hotbar_Use(Player, Data); break;
-                    case Client_Packets.Party_Invite: Party_Invite(Player, Data); break;
-                    case Client_Packets.Party_Accept: Party_Accept(Player); break;
-                    case Client_Packets.Party_Decline: Party_Decline(Player); break;
-                    case Client_Packets.Party_Leave: Party_Leave(Player); break;
-                    case Client_Packets.Trade_Invite: Trade_Invite(Player, Data); break;
-                    case Client_Packets.Trade_Accept: Trade_Accept(Player); break;
-                    case Client_Packets.Trade_Decline: Trade_Decline(Player); break;
-                    case Client_Packets.Trade_Leave: Trade_Leave(Player); break;
-                    case Client_Packets.Trade_Offer: Trade_Offer(Player, Data); break;
-                    case Client_Packets.Trade_Offer_State: Trade_Offer_State(Player, Data); break;
-                    case Client_Packets.Shop_Buy: Shop_Buy(Player, Data); break;
-                    case Client_Packets.Shop_Sell: Shop_Sell(Player, Data); break;
-                    case Client_Packets.Shop_Close: Shop_Close(Player); break;
+                    case ClientServer.Latency: Latency(Account); break;
+                    case ClientServer.Register: Register(Account, Data); break;
+                    case ClientServer.CreateCharacter: CreateCharacter(Account, Data); break;
+                    case ClientServer.Character_Use: Character_Use(Account, Data); break;
+                    case ClientServer.Character_Create: Character_Create(Account); break;
+                    case ClientServer.Character_Delete: Character_Delete(Account, Data); break;
+                    case ClientServer.Player_Direction: Player_Direction(Player, Data); break;
+                    case ClientServer.Player_Move: Player_Move(Player, Data); break;
+                    case ClientServer.Player_Attack: Player_Attack(Player); break;
+                    case ClientServer.RequestMap: RequestMap(Player, Data); break;
+                    case ClientServer.Message: Message(Player, Data); break;
+                    case ClientServer.AddPoint: AddPoint(Player, Data); break;
+                    case ClientServer.CollectItem: CollectItem(Player); break;
+                    case ClientServer.DropItem: DropItem(Player, Data); break;
+                    case ClientServer.Inventory_Change: Inventory_Change(Player, Data); break;
+                    case ClientServer.Inventory_Use: Inventory_Use(Player, Data); break;
+                    case ClientServer.Equipment_Remove: Equipment_Remove(Player, Data); break;
+                    case ClientServer.Hotbar_Add: Hotbar_Add(Player, Data); break;
+                    case ClientServer.Hotbar_Change: Hotbar_Change(Player, Data); break;
+                    case ClientServer.Hotbar_Use: Hotbar_Use(Player, Data); break;
+                    case ClientServer.Party_Invite: Party_Invite(Player, Data); break;
+                    case ClientServer.Party_Accept: Party_Accept(Player); break;
+                    case ClientServer.Party_Decline: Party_Decline(Player); break;
+                    case ClientServer.Party_Leave: Party_Leave(Player); break;
+                    case ClientServer.Trade_Invite: Trade_Invite(Player, Data); break;
+                    case ClientServer.Trade_Accept: Trade_Accept(Player); break;
+                    case ClientServer.Trade_Decline: Trade_Decline(Player); break;
+                    case ClientServer.Trade_Leave: Trade_Leave(Player); break;
+                    case ClientServer.Trade_Offer: Trade_Offer(Player, Data); break;
+                    case ClientServer.Trade_Offer_State: Trade_Offer_State(Player, Data); break;
+                    case ClientServer.Shop_Buy: Shop_Buy(Player, Data); break;
+                    case ClientServer.Shop_Sell: Shop_Sell(Player, Data); break;
+                    case ClientServer.Shop_Close: Shop_Close(Player); break;
                 }
             else
                 // Manuseia os dados recebidos do editor
-                switch ((Editor_Packets)Packet_Num)
+                switch ((EditorServer)Packet_Num)
                 {
-                    case Editor_Packets.Write_Settings: Write_Settings(Account, Data); break;
-                    case Editor_Packets.Write_Classes: Write_Classes(Account, Data); break;
-                    case Editor_Packets.Write_Maps: Write_Maps(Account, Data); break;
-                    case Editor_Packets.Write_NPCs: Write_NPCs(Account, Data); break;
-                    case Editor_Packets.Write_Items: Write_Items(Account, Data); break;
-                    case Editor_Packets.Write_Shops: Write_Shops(Account, Data); break;
-                    case Editor_Packets.Request_Setting: Request_Setting(Account); break;
-                    case Editor_Packets.Request_Classes: Request_Classes(Account); break;
-                    case Editor_Packets.Request_Map: Request_Map(Account, Data); break;
-                    case Editor_Packets.Request_Maps: Request_Maps(Account, Data); break;
-                    case Editor_Packets.Request_NPCs: Request_NPCs(Account); break;
-                    case Editor_Packets.Request_Items: Request_Items(Account); break;
-                    case Editor_Packets.Request_Shops: Request_Shops(Account); break;
+                    case EditorServer.Write_Settings: Write_Settings(Account, Data); break;
+                    case EditorServer.Write_Classes: Write_Classes(Account, Data); break;
+                    case EditorServer.Write_Maps: Write_Maps(Account, Data); break;
+                    case EditorServer.Write_NPCs: Write_NPCs(Account, Data); break;
+                    case EditorServer.Write_Items: Write_Items(Account, Data); break;
+                    case EditorServer.Write_Shops: Write_Shops(Account, Data); break;
+                    case EditorServer.Request_Setting: Request_Setting(Account); break;
+                    case EditorServer.Request_Classes: Request_Classes(Account); break;
+                    case EditorServer.Request_Map: Request_Map(Account, Data); break;
+                    case EditorServer.Request_Maps: Request_Maps(Account, Data); break;
+                    case EditorServer.Request_NPCs: Request_NPCs(Account); break;
+                    case EditorServer.Request_Items: Request_Items(Account); break;
+                    case EditorServer.Request_Shops: Request_Shops(Account); break;
                 }
         }
 
