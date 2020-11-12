@@ -20,7 +20,7 @@ static class Program
     [DllImport("Kernel32")]
     private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
     private delegate bool EventHandler();
-    static EventHandler Handler;
+    static EventHandler _handler;
 
     [STAThread]
     private static void Main()
@@ -31,8 +31,8 @@ static class Program
         Console.WriteLine("[Starting]");
 
         // Evento de saída do console
-        Handler += new EventHandler(Exit);
-        SetConsoleCtrlHandler(Handler, true);
+        _handler += new EventHandler(Exit);
+        SetConsoleCtrlHandler(_handler, true);
 
         // Verifica se todos os diretórios existem, se não existirem então criá-los
         Directories.Create();
@@ -43,7 +43,7 @@ static class Program
 
         // Cria os mapas temporários
         Console.WriteLine("Creating temporary maps.");
-        foreach (Map Map in Map.List.Values) TempMap.Create_Temporary(Map);
+        foreach (Map map in Map.List.Values) TempMap.Create_Temporary(map);
 
         // Cria os dispositivos da rede
         Socket.Init();
@@ -53,8 +53,8 @@ static class Program
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
 
         // Inicia os laços
-        Thread Console_Loop = new Thread(Loop.Commands);
-        Console_Loop.Start();
+        Thread consoleLoop = new Thread(Loop.Commands);
+        consoleLoop.Start();
         Loop.Main();
     }
 
@@ -82,17 +82,17 @@ static class Program
                           2D orpg engine" + "\r\n");
     }
 
-    public static void ExecuteCommand(string Command)
+    public static void ExecuteCommand(string command)
     {
         // Previne sobrecargas
-        if (string.IsNullOrEmpty(Command))
+        if (string.IsNullOrEmpty(command))
             return;
 
         // Separa os comandos em partes
-        string[] Parts = Command.Split(' ');
+        string[] parts = command.Split(' ');
 
         // Executa o determinado comando
-        switch (Parts[0].ToLower())
+        switch (parts[0].ToLower())
         {
             case "help":
                 Console.WriteLine(@"     List of available commands:
@@ -103,30 +103,30 @@ static class Program
                 Console.WriteLine("CPS: " + CPS);
                 break;
             case "defineaccess":
-                byte Access;
+                byte access;
 
                 // Verifica se o que está digitado corretamente
-                if (Parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(Parts[1]) || !byte.TryParse(Parts[2], out Access))
+                if (parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(parts[1]) || !byte.TryParse(parts[2], out access))
                 {
                     Console.WriteLine("Use: defineaccess 'Player Name' 'Access' ");
                     return;
                 }
 
                 // Encontra o jogador
-                Account Account = Account.List.Find(x => x.User.Equals(Parts[1]));
+                Account account = Account.List.Find(x => x.User.Equals(parts[1]));
 
-                if (Account == null)
+                if (account == null)
                 {
                     Console.WriteLine("This player is either offline or doesn't exist.");
                     return;
                 }
 
                 // Define o acesso do jogador
-                Account.Acess = (Accesses)Access;
+                account.Acess = (Accesses)access;
 
                 // Salva os dados
-                Write.Account(Account);
-                Console.WriteLine((Accesses)Convert.ToByte(Parts[2]) + " access granted to " + Parts[1] + ".");
+                Write.Account(account);
+                Console.WriteLine((Accesses)Convert.ToByte(parts[2]) + " access granted to " + parts[1] + ".");
                 break;
             // Se o comando não existir mandar uma mensagem de ajuda
             default:

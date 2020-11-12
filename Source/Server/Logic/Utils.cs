@@ -17,8 +17,8 @@
         public static byte Min_Password_Length = 3;
 
         // Limites fixos
-        public const byte Max_Inventory = 30;
-        public const byte Max_Hotbar = 10;
-        public const byte Max_DirBlock = 3;
+        public const byte MaxInventory = 30;
+        public const byte MaxHotbar = 10;
+        public const byte MaxDirBlock = 3;
     }
 }

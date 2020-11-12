@@ -13,17 +13,17 @@ namespace CryBits.Server.Entities
         public static Dictionary<Guid, TempMap> List = new Dictionary<Guid, TempMap>();
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static TempMap Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+        public static TempMap Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
 
         // Dados
         public Map Data;
         public TempNPC[] NPC = Array.Empty<TempNPC>();
-        public List<TMap_Items> Item = new List<TMap_Items>();
+        public List<MapItems> Item = new List<MapItems>();
 
         // Construtor
-        public TempMap(Guid ID, Map Map) : base(ID)
+        public TempMap(Guid id, Map map) : base(id)
         {
-            Data = Map;
+            Data = map;
         }
 
         public void Logic()
@@ -37,30 +37,30 @@ namespace CryBits.Server.Entities
             // Faz reaparecer todos os itens do mapa
             if (Environment.TickCount > Loop.Timer_Map_Items + 300000)
             {
-                Item = new List<TMap_Items>();
+                Item = new List<MapItems>();
                 Spawn_Items();
                 Send.Map_Items(this);
             }
         }
 
-        public TempNPC HasNPC(byte X, byte Y)
+        public TempNPC HasNPC(byte x, byte y)
         {
             // Verifica se há algum npc na cordenada
             for (byte i = 0; i < NPC.Length; i++)
                 if (NPC[i].Alive)
-                    if (NPC[i].X == X && NPC[i].Y == Y)
+                    if (NPC[i].X == x && NPC[i].Y == y)
                         return NPC[i];
 
             return null;
         }
 
-        public Player HasPlayer(byte X, byte Y)
+        public Player HasPlayer(byte x, byte y)
         {
             // Verifica se há algum Jogador na cordenada
-            foreach (var Account in Account.List)
-                if (Account.IsPlaying)
-                    if ((Account.Character.X, Account.Character.Y, Account.Character.Map) == (X, Y, this))
-                        return Account.Character;
+            foreach (var account in Account.List)
+                if (account.IsPlaying)
+                    if ((account.Character.X, account.Character.Y, account.Character.Map) == (x, y, this))
+                        return account.Character;
 
             return null;
         }
@@ -68,19 +68,19 @@ namespace CryBits.Server.Entities
         public bool HasPlayers()
         {
             // Verifica se tem algum jogador no mapa
-            foreach (var Account in Account.List)
-                if (Account.IsPlaying)
-                    if (Account.Character.Map == this)
+            foreach (var account in Account.List)
+                if (account.IsPlaying)
+                    if (account.Character.Map == this)
                         return true;
 
             return false;
         }
 
-        public TMap_Items HasItem(byte X, byte Y)
+        public MapItems HasItem(byte x, byte y)
         {
             // Verifica se tem algum item nas coordenadas 
             for (byte i = (byte)(Item.Count - 1); i >= 0; i--)
-                if (Item[i].X == X && Item[i].Y == Y)
+                if (Item[i].X == x && Item[i].Y == y)
                     return Item[i];
 
             return null;
@@ -93,7 +93,7 @@ namespace CryBits.Server.Entities
                 for (byte y = 0; y < Map.Height; y++)
                     if (Data.Attribute[x, y].Type == (byte)TileAttributes.Item)
                         // Adiciona o item
-                        Item.Add(new TMap_Items
+                        Item.Add(new MapItems
                         {
                             Item = CryBits.Entities.Item.Get(new Guid(Data.Attribute[x, y].Data_1)),
                             Amount = Data.Attribute[x, y].Data_2,
@@ -102,40 +102,40 @@ namespace CryBits.Server.Entities
                         });
         }
 
-        public bool Tile_Blocked(byte X, byte Y, Directions Direction, bool CountEntities = true)
+        public bool Tile_Blocked(byte x, byte y, Directions direction, bool countEntities = true)
         {
-            byte Next_X = X, Next_Y = Y;
+            byte nextX = x, nextY = y;
 
             // Próximo azulejo
-            NextTile(Direction, ref Next_X, ref Next_Y);
+            NextTile(direction, ref nextX, ref nextY);
 
             // Verifica se o azulejo está bloqueado
-            if (Data.Tile_Blocked(Next_X, Next_Y)) return true;
-            if (Data.Attribute[Next_X, Next_Y].Block[(byte)ReverseDirection(Direction)]) return true;
-            if (Data.Attribute[X, Y].Block[(byte)Direction]) return true;
-            if (CountEntities && (HasPlayer(Next_X, Next_Y) != null || HasNPC(Next_X, Next_Y) != null)) return true;
+            if (Data.Tile_Blocked(nextX, nextY)) return true;
+            if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
+            if (Data.Attribute[x, y].Block[(byte)direction]) return true;
+            if (countEntities && (HasPlayer(nextX, nextY) != null || HasNPC(nextX, nextY) != null)) return true;
             return false;
         }
 
         public static void Create_Temporary(Map map)
         {
-            TempMap Temp_Map = new TempMap(map.ID, map);
-            List.Add(map.ID, Temp_Map);
+            TempMap tempMap = new TempMap(map.ID, map);
+            List.Add(map.ID, tempMap);
 
             // NPCs do mapa
-            Temp_Map.NPC = new TempNPC[map.NPC.Count];
-            for (byte i = 0; i < Temp_Map.NPC.Length; i++)
+            tempMap.NPC = new TempNPC[map.NPC.Count];
+            for (byte i = 0; i < tempMap.NPC.Length; i++)
             {
-                Temp_Map.NPC[i] = new TempNPC(i, Temp_Map, map.NPC[i].NPC);
-                Temp_Map.NPC[i].Spawn();
+                tempMap.NPC[i] = new TempNPC(i, tempMap, map.NPC[i].NPC);
+                tempMap.NPC[i].Spawn();
             }
 
             // Itens do mapa
-            Temp_Map.Spawn_Items();
+            tempMap.Spawn_Items();
         }
     }
 
-    class TMap_Items
+    class MapItems
     {
         public Item Item;
         public byte X;
