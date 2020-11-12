@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using static CryBits.Client.Logic.Game;
+using CryBits.Entities;
 
 namespace CryBits.Client.Library
 {
@@ -13,7 +14,7 @@ namespace CryBits.Client.Library
                 new BinaryFormatter().Serialize(stream, Option);
         }
 
-        public static void Map(Entities.Map map)
+        public static void Map(Map map)
         {
             // Escreve os dados
             using (var stream = new FileInfo(Directories.Maps_Data.FullName + map.ID + Directories.Format).OpenWrite())

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using CryBits.Entities;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
@@ -11,6 +12,7 @@ using SFML.Graphics;
 using SFML.Window;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
+using static CryBits.Utils;
 
 namespace CryBits.Client.Media
 {
@@ -281,7 +283,7 @@ namespace CryBits.Client.Media
             Map_Blood();
             Map_Items();
 
-            // Desenha os NPCs
+            // Desenha os NPCBehaviour
             for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
                 if (Mapper.Current.NPC[i].Data != null)
                     NPC(Mapper.Current.NPC[i]);
@@ -444,9 +446,9 @@ namespace CryBits.Client.Media
             Class @class = Class.List.ElementAt(Panels.CreateCharacter_Class).Value;
 
             // Textura do personagem
-            if (CheckBoxes.List["GenderMale"].Checked && @class.Tex_Male.Length > 0)
+            if (CheckBoxes.List["GenderMale"].Checked && @class.Tex_Male.Count > 0)
                 textureNum = @class.Tex_Male[Panels.CreateCharacter_Tex];
-            else if (@class.Tex_Female.Length > 0)
+            else if (@class.Tex_Female.Count > 0)
                 textureNum = @class.Tex_Female[Panels.CreateCharacter_Tex];
 
             // Desenha o personagem
@@ -504,7 +506,7 @@ namespace CryBits.Client.Media
 
         private static void Informations(Panels tool)
         {
-            Item item = Entities.Item.Get(Panels.Infomation_ID);
+            Item item = CryBits.Entities.Item.Get(Panels.Infomation_ID);
             SFML.Graphics.Color textColor;
             List<string> data = new List<string>();
 
@@ -669,7 +671,7 @@ namespace CryBits.Client.Media
             DrawText("Currency: " + Panels.Shop_Open.Currency.Name, tool.Position.X + 10, tool.Position.Y + 195, SFML.Graphics.Color.White);
 
             // Desenha os itens
-            for (byte i = 0; i < Panels.Shop_Open.Sold.Length; i++)
+            for (byte i = 0; i < Panels.Shop_Open.Sold.Count; i++)
                 Item(Panels.Shop_Open.Sold[i].Item, Panels.Shop_Open.Sold[i].Amount, tool.Position + new Size(7, 50), (byte)(i + 1), 7);
         }
 
@@ -840,11 +842,11 @@ namespace CryBits.Client.Media
             position.Y = npc.Pixel_Y - Size(texture).Height / AnimationAmount / 2;
 
             // Cor do texto
-            switch ((NPCs)npc.Data.Type)
+            switch (npc.Data.Behaviour)
             {
-                case NPCs.Friendly: color = SFML.Graphics.Color.White; break;
-                case NPCs.AttackOnSight: color = SFML.Graphics.Color.Red; break;
-                case NPCs.AttackWhenAttacked: color = new SFML.Graphics.Color(228, 120, 51); break;
+                case NPCBehaviour.Friendly: color = SFML.Graphics.Color.White; break;
+                case NPCBehaviour.AttackOnSight: color = SFML.Graphics.Color.Red; break;
+                case NPCBehaviour.AttackWhenAttacked: color = new SFML.Graphics.Color(228, 120, 51); break;
                 default: color = SFML.Graphics.Color.White; break;
             }
 
@@ -870,31 +872,36 @@ namespace CryBits.Client.Media
             Render(Tex_Bars, position.X, position.Y, 0, 0, width, 4);
         }
 
-        private static void Map_Tiles(byte c)
+        private static void Map_Tiles(byte layerType)
         {
             // Previne erros
             if (Mapper.Current.Data.Name == null) return;
 
             // Dados
-            System.Drawing.Color tempColor = System.Drawing.Color.FromArgb(Mapper.Current.Data.Color);
+            System.Drawing.Color tempColor = Mapper.Current.Data.Color;
             SFML.Graphics.Color color = CColor(tempColor.R, tempColor.G, tempColor.B);
+            Map map = Mapper.Current.Data;
 
             // Desenha todas as camadas dos azulejos
-            for (var x = Camera.Tile_Sight.X; x <= Camera.Tile_Sight.Width; x++)
-            for (var y = Camera.Tile_Sight.Y; y <= Camera.Tile_Sight.Height; y++)
-                if (!Mapper.OutOfLimit(x, y))
-                    for (byte q = 0; q <= Mapper.Current.Data.Tile[x, y].Data.GetUpperBound(1); q++)
-                        if (Mapper.Current.Data.Tile[x, y].Data[c, q].Tile > 0)
-                        {
-                            int x2 = Mapper.Current.Data.Tile[x, y].Data[c, q].X * Grid;
-                            int y2 = Mapper.Current.Data.Tile[x, y].Data[c, q].Y * Grid;
+            for (byte c = 0; c < map.Layer.Count; c++)
+                if (c == layerType)
+                    for (int x = Camera.Tile_Sight.X; x <= Camera.Tile_Sight.Width; x++)
+                        for (int y = Camera.Tile_Sight.Y; y <= Camera.Tile_Sight.Height; y++)
+                            if (!Mapper.OutOfLimit(x, y))
+                            {
+                                MapTileData data = map.Layer[c].Tile[x, y];
+                                if (data.Texture > 0)
+                                {
+                                    int x2 = data.X * Grid;
+                                    int y2 = data.Y * Grid;
 
-                            // Desenha o azulejo
-                            if (!Mapper.Current.Data.Tile[x, y].Data[c, q].Automatic)
-                                Render(Tex_Tile[Mapper.Current.Data.Tile[x, y].Data[c, q].Tile], ConvertX(x * Grid), ConvertY(y * Grid), x2, y2, Grid, Grid, color);
-                            else
-                                Map_Autotile(new Point(ConvertX(x * Grid), ConvertY(y * Grid)), Mapper.Current.Data.Tile[x, y].Data[c, q], color);
-                        }
+                                    // Desenha o azulejo
+                                    if (!map.Layer[c].Tile[x, y].IsAutotile)
+                                        Render(Tex_Tile[data.Texture], ConvertX(x * Grid), ConvertY(y * Grid), x2, y2, Grid, Grid, color);
+                                    else
+                                        Map_Autotile(new Point(ConvertX(x * Grid), ConvertY(y * Grid)), data, color);
+                                }
+                            }
         }
 
         private static void Map_Autotile(Point position, MapTileData data, SFML.Graphics.Color cor)
@@ -913,7 +920,7 @@ namespace CryBits.Client.Media
                 }
 
                 // Renderiza o mini azulejo
-                Render(Tex_Tile[data.Tile], new Rectangle(source.X, source.Y, 16, 16), new Rectangle(destiny, new Size(16, 16)), cor);
+                Render(Tex_Tile[data.Texture], new Rectangle(source.X, source.Y, 16, 16), new Rectangle(destiny, new Size(16, 16)), cor);
             }
         }
 
@@ -934,8 +941,8 @@ namespace CryBits.Client.Media
 
             // Desenha a fumaça
             for (int x = -1; x <= MapWidth * Grid / textureSize.Width; x++)
-            for (int y = -1; y <= MapHeight * Grid / textureSize.Height; y++)
-                Render(Tex_Fog[data.Texture], new Point(x * textureSize.Width + Mapper.Fog_X, y * textureSize.Height + Mapper.Fog_Y), new SFML.Graphics.Color(255, 255, 255, data.Alpha));
+                for (int y = -1; y <= MapHeight * Grid / textureSize.Height; y++)
+                    Render(Tex_Fog[data.Texture], new Point(x * textureSize.Width + Mapper.Fog_X, y * textureSize.Height + Mapper.Fog_Y), new SFML.Graphics.Color(255, 255, 255, data.Alpha));
         }
 
         private static void Map_Weather()
@@ -970,7 +977,7 @@ namespace CryBits.Client.Media
             // A cor do texto vária de acordo com a moral do mapa
             switch (Mapper.Current.Data.Moral)
             {
-                case (byte)Morals.Danger: color = SFML.Graphics.Color.Red; break;
+                case Morals.Dangerous: color = SFML.Graphics.Color.Red; break;
                 default: color = SFML.Graphics.Color.White; break;
             }
 

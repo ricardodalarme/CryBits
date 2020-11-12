@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using CryBits.Client.UI;
-using static CryBits.Client.Logic.Game;
 using Graphics = CryBits.Client.Media.Graphics;
+using static CryBits.Utils;
 
 namespace CryBits.Client.Logic
 {
     static class Utils
     {
-        // Números aleatórios
-        public static Random MyRandom = new Random();
-
         // Converte o valor em uma posição adequada à camera
         public static int ConvertX(int x) => x - (Camera.Tile_Sight.X * Grid) - Camera.Start_Sight.X;
         public static int ConvertY(int y) => y - (Camera.Tile_Sight.Y * Grid) - Camera.Start_Sight.Y;

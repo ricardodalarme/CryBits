@@ -29,7 +29,7 @@ namespace CryBits.Editors.Logic
         }
 
         [Category("General"), DefaultValue(0)]
-        public MapMorals Moral
+        public Morals Moral
         {
             get => Base.Moral;
             set => Base.Moral = value;

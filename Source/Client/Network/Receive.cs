@@ -9,103 +9,60 @@ using CryBits.Client.Media;
 using CryBits.Client.UI;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
+using static CryBits.Utils;
+using CryBits.Entities;
+using CryBits.Packets;
 
 namespace CryBits.Client.Network
 {
     class Receive
     {
-        // Pacotes do servidor
-        private enum Packets
-        {
-            Alert,
-            Connect,
-            CreateCharacter,
-            Join,
-            Classes,
-            Characters,
-            JoinGame,
-            Player_Data,
-            Player_Position,
-            Player_Vitals,
-            Player_Leave,
-            Player_Attack,
-            Player_Move,
-            Player_Direction,
-            Player_Experience,
-            Player_Inventory,
-            Player_Equipments,
-            Player_Hotbar,
-            JoinMap,
-            Map_Revision,
-            Map,
-            Latency,
-            Message,
-            NPCs,
-            Map_NPCs,
-            Map_NPC,
-            Map_NPC_Movement,
-            Map_NPC_Direction,
-            Map_NPC_Vitals,
-            Map_NPC_Attack,
-            Map_NPC_Died,
-            Items,
-            Map_Items,
-            Party,
-            Party_Invitation,
-            Trade,
-            Trade_Invitation,
-            Trade_State,
-            Trade_Offer,
-            Shops,
-            Shop_Open
-        }
-
         public static void Handle(NetIncomingMessage data)
         {
             // Manuseia os dados recebidos
-            switch ((Packets)data.ReadByte())
+            switch ((ServerClient)data.ReadByte())
             {
-                case Packets.Alert: Alert(data); break;
-                case Packets.Connect: Connect(); break;
-                case Packets.Join: Join(data); break;
-                case Packets.CreateCharacter: CreateCharacter(); break;
-                case Packets.JoinGame: JoinGame(); break;
-                case Packets.Classes: Classes(data); break;
-                case Packets.Characters: Characters(data); break;
-                case Packets.Player_Data: Player_Data(data); break;
-                case Packets.Player_Position: Player_Position(data); break;
-                case Packets.Player_Vitals: Player_Vitals(data); break;
-                case Packets.Player_Move: Player_Move(data); break;
-                case Packets.Player_Leave: Player_Leave(data); break;
-                case Packets.Player_Direction: Player_Direction(data); break;
-                case Packets.Player_Attack: Player_Attack(data); break;
-                case Packets.Player_Experience: Player_Experience(data); break;
-                case Packets.Player_Inventory: Player_Inventory(data); break;
-                case Packets.Player_Equipments: Player_Equipments(data); break;
-                case Packets.Player_Hotbar: Player_Hotbar(data); break;
-                case Packets.Map_Revision: Map_Revision(data); break;
-                case Packets.Map: Map(data); break;
-                case Packets.JoinMap: JoinMap(); break;
-                case Packets.Latency: Latency(); break;
-                case Packets.Message: Message(data); break;
-                case Packets.NPCs: NPCs(data); break;
-                case Packets.Map_NPCs: Map_NPCs(data); break;
-                case Packets.Map_NPC: Map_NPC(data); break;
-                case Packets.Map_NPC_Movement: Map_NPC_Movement(data); break;
-                case Packets.Map_NPC_Direction: Map_NPC_Direction(data); break;
-                case Packets.Map_NPC_Vitals: Map_NPC_Vitals(data); break;
-                case Packets.Map_NPC_Attack: Map_NPC_Attack(data); break;
-                case Packets.Map_NPC_Died: Map_NPC_Died(data); break;
-                case Packets.Items: Items(data); break;
-                case Packets.Map_Items: Map_Items(data); break;
-                case Packets.Party: Party(data); break;
-                case Packets.Party_Invitation: Party_Invitation(data); break;
-                case Packets.Trade: Trade(data); break;
-                case Packets.Trade_Invitation: Trade_Invitation(data); break;
-                case Packets.Trade_State: Trade_State(data); break;
-                case Packets.Trade_Offer: Trade_Offer(data); break;
-                case Packets.Shops: Shops(data); break;
-                case Packets.Shop_Open: Shop_Open(data); break;
+                case ServerClient.Alert: Alert(data); break;
+                case ServerClient.Connect: Connect(); break;
+                case ServerClient.Join: Join(data); break;
+                case ServerClient.CreateCharacter: CreateCharacter(); break;
+                case ServerClient.JoinGame: JoinGame(); break;
+                case ServerClient.Classes: Classes(data); break;
+                case ServerClient.Characters: Characters(data); break;
+                case ServerClient.Player_Data: Player_Data(data); break;
+                case ServerClient.Player_Position: Player_Position(data); break;
+                case ServerClient.Player_Vitals: Player_Vitals(data); break;
+                case ServerClient.Player_Move: Player_Move(data); break;
+                case ServerClient.Player_Leave: Player_Leave(data); break;
+                case ServerClient.Player_Direction: Player_Direction(data); break;
+                case ServerClient.Player_Attack: Player_Attack(data); break;
+                case ServerClient.Player_Experience: Player_Experience(data); break;
+                case ServerClient.Player_Inventory: Player_Inventory(data); break;
+                case ServerClient.Player_Equipments: Player_Equipments(data); break;
+                case ServerClient.Player_Hotbar: Player_Hotbar(data); break;
+                case ServerClient.Map_Revision: Map_Revision(data); break;
+                case ServerClient.Map: Map(data); break;
+                case ServerClient.JoinMap: JoinMap(); break;
+                case ServerClient.Latency: Latency(); break;
+                case ServerClient.Message: Message(data); break;
+                case ServerClient.NPCs: NPCs(data); break;
+                case ServerClient.Map_NPCs: Map_NPCs(data); break;
+                case ServerClient.Map_NPC: Map_NPC(data); break;
+                case ServerClient.Map_NPC_Movement: Map_NPC_Movement(data); break;
+                case ServerClient.Map_NPC_Direction: Map_NPC_Direction(data); break;
+                case ServerClient.Map_NPC_Vitals: Map_NPC_Vitals(data); break;
+                case ServerClient.Map_NPC_Attack: Map_NPC_Attack(data); break;
+                case ServerClient.Map_NPC_Died: Map_NPC_Died(data); break;
+                case ServerClient.Items: Items(data); break;
+                case ServerClient.Map_Items: Map_Items(data); break;
+                case ServerClient.Party: Party(data); break;
+                case ServerClient.Party_Invitation: Party_Invitation(data); break;
+                case ServerClient.Trade: Trade(data); break;
+                case ServerClient.Trade_Invitation: Trade_Invitation(data); break;
+                case ServerClient.Trade_State: Trade_State(data); break;
+                case ServerClient.Trade_Offer: Trade_Offer(data); break;
+                case ServerClient.Shops: Shops(data); break;
+                case ServerClient.Shop_Open: Shop_Open(data); break;
             }
         }
 
@@ -133,7 +90,7 @@ namespace CryBits.Client.Network
             Item.List = new Dictionary<Guid, Item>();
             Shop.List = new Dictionary<Guid, Shop>();
             NPC.List = new Dictionary<Guid, NPC>();
-            Entities.Map.List = new Dictionary<Guid, Map>();
+            CryBits.Entities.Map.List = new Dictionary<Guid, Map>();
             TempMap.List = new Dictionary<Guid, TempMap>();
 
             // Definir os valores que são enviados do servidor
@@ -157,40 +114,8 @@ namespace CryBits.Client.Network
 
         private static void Classes(NetIncomingMessage data)
         {
-            // Classes a serem removidas
-            Dictionary<Guid, Class> toRemove = new Dictionary<Guid, Class>(Class.List);
-
-            // Quantidade de classes
-            short count = data.ReadByte();
-
-            while (--count >= 0)
-            {
-                Guid id = new Guid(data.ReadString());
-                Class @class;
-
-                // Obtém o dado
-                if (Class.List.ContainsKey(id))
-                {
-                    @class = Class.List[id];
-                    toRemove.Remove(id);
-                }
-                else
-                {
-                    @class = new Class(id);
-                    Class.List.Add(@class.ID, @class);
-                }
-
-                // Recebe os dados do personagem
-                @class.Name = data.ReadString();
-                @class.Description = data.ReadString();
-                @class.Tex_Male = new short[data.ReadByte()];
-                for (byte n = 0; n < @class.Tex_Male.Length; n++) @class.Tex_Male[n] = data.ReadInt16();
-                @class.Tex_Female = new short[data.ReadByte()];
-                for (byte n = 0; n < @class.Tex_Female.Length; n++) @class.Tex_Female[n] = data.ReadInt16();
-            }
-
-            // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid remove in toRemove.Keys) Shop.List.Remove(remove);
+            // Recebe os dados
+            Class.List = (Dictionary<Guid, Class>)ByteArrayToObject(data);
         }
 
         private static void Characters(NetIncomingMessage data)
@@ -439,112 +364,25 @@ namespace CryBits.Client.Network
 
         private static void Map(NetIncomingMessage data)
         {
-            Guid id = new Guid(data.ReadString());
-            Map map;
+            Map map = (Map)ByteArrayToObject(data);
+            Guid id = map.ID;
 
             // Obtém o dado
-            if (Entities.Map.List.ContainsKey(id)) map = Entities.Map.List[id];
+            if (CryBits.Entities.Map.List.ContainsKey(id)) CryBits.Entities.Map.List[id] = map;
             else
             {
-                map = new Map(id);
-                Entities.Map.List.Add(id, map);
+                CryBits.Entities.Map.List.Add(id, map);
                 TempMap.List.Add(id, new TempMap(map));
             }
+
             Mapper.Current = TempMap.List[id];
-
-            // Lê os dados
-            map.Revision = data.ReadInt16();
-            map.Name = data.ReadString();
-            map.Moral = data.ReadByte();
-            map.Panorama = data.ReadByte();
-            map.Music = data.ReadByte();
-            map.Color = data.ReadInt32();
-            map.Weather.Type = data.ReadByte();
-            map.Weather.Intensity = data.ReadByte();
-            map.Fog.Texture = data.ReadByte();
-            map.Fog.Speed_X = data.ReadSByte();
-            map.Fog.Speed_Y = data.ReadSByte();
-            map.Fog.Alpha = data.ReadByte();
-            data.ReadByte(); // Luz global
-
-            // Ligações
-            map.Link = new short[(byte)Directions.Count];
-            for (byte i = 0; i < (byte)Directions.Count; i++)
-                data.ReadString();
-
-            // Azulejos
-            byte numLayers = data.ReadByte();
-
-            // Redimensiona os dados
-
-            for (byte x = 0; x < MapWidth; x++)
-                for (byte y = 0; y < MapHeight; y++)
-                    map.Tile[x, y].Data = new MapTileData[(byte)Layers.Count, numLayers];
-
-            // Lê os azulejos
-            for (byte i = 0; i < numLayers; i++)
-            {
-                // Dados básicos
-                data.ReadString(); // Name
-                byte t = data.ReadByte(); // Tipo
-
-                // Azulejos
-                for (byte x = 0; x < MapWidth; x++)
-                    for (byte y = 0; y < MapHeight; y++)
-                    {
-                        map.Tile[x, y].Data[t, i].X = data.ReadByte();
-                        map.Tile[x, y].Data[t, i].Y = data.ReadByte();
-                        map.Tile[x, y].Data[t, i].Tile = data.ReadByte();
-                        map.Tile[x, y].Data[t, i].Automatic = data.ReadBoolean();
-                        map.Tile[x, y].Data[t, i].Mini = new Point[4];
-                    }
-            }
-
-            // Dados específicos dos azulejos
-            for (byte x = 0; x < MapWidth; x++)
-                for (byte y = 0; y < MapHeight; y++)
-                {
-                    map.Tile[x, y].Attribute = data.ReadByte();
-                    data.ReadString(); // Dado 1
-                    data.ReadInt16(); // Dado 2
-                    data.ReadInt16(); // Dado 3
-                    data.ReadInt16(); // Dado 4
-                    data.ReadByte(); // Zona
-
-                    // Bloqueio direcional
-                    map.Tile[x, y].Block = new bool[(byte)Directions.Count];
-                    for (byte i = 0; i < (byte)Directions.Count; i++)
-                        map.Tile[x, y].Block[i] = data.ReadBoolean();
-                }
-
-            // Luzes
-            map.Light = new MapLight[data.ReadByte()];
-            if (map.Light.GetUpperBound(0) > 0)
-                for (byte i = 0; i < map.Light.Length; i++)
-                {
-                    map.Light[i].X = data.ReadByte();
-                    map.Light[i].Y = data.ReadByte();
-                    map.Light[i].Width = data.ReadByte();
-                    map.Light[i].Height = data.ReadByte();
-                }
-
-            // NPCs
-            map.NPC = new short[data.ReadByte()];
-            for (byte i = 0; i < map.NPC.Length; i++)
-            {
-                map.NPC[i] = data.ReadInt16();
-                data.ReadByte(); // Zone
-                data.ReadBoolean(); // Spawn
-                data.ReadByte(); // X
-                data.ReadByte(); // Y
-            }
 
             // Salva o mapa
             Library.Write.Map(map);
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();
-            MapAutoTile.Update();
+            Mapper.Current.Data.Update();
         }
 
         private static void JoinMap()
@@ -572,48 +410,8 @@ namespace CryBits.Client.Network
 
         private static void Items(NetIncomingMessage data)
         {
-            // Itens a serem removidas
-            Dictionary<Guid, Item> toRemove = new Dictionary<Guid, Item>(Item.List);
-
-            // Quantidade de lojas
-            short count = data.ReadInt16();
-
-            while (--count >= 0)
-            {
-                Guid id = new Guid(data.ReadString());
-                Item item;
-
-                // Obtém o dado
-                if (Item.List.ContainsKey(id))
-                {
-                    item = Item.List[id];
-                    toRemove.Remove(id);
-                }
-                else
-                {
-                    item = new Item(id);
-                    Item.List.Add(item.ID, item);
-                }
-
-                // Lê os dados
-                item.Name = data.ReadString();
-                item.Description = data.ReadString();
-                item.Texture = data.ReadInt16();
-                item.Type = data.ReadByte();
-                data.ReadBoolean(); // Stackable
-                item.Bind = (BindOn)data.ReadByte();
-                item.Rarity = data.ReadByte();
-                item.Req_Level = data.ReadInt16();
-                item.Req_Class = Class.Get(new Guid(data.ReadString()));
-                item.Potion_Experience = data.ReadInt32();
-                for (byte v = 0; v < (byte)Vitals.Count; v++) item.Potion_Vital[v] = data.ReadInt16();
-                item.Equip_Type = data.ReadByte();
-                for (byte a = 0; a < (byte)Attributes.Count; a++) item.Equip_Attribute[a] = data.ReadInt16();
-                item.Weapon_Damage = data.ReadInt16();
-            }
-
-            // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid remove in toRemove.Keys) Item.List.Remove(remove);
+            // Recebe os dados
+            Item.List = (Dictionary<Guid, Item>)ByteArrayToObject(data);
         }
 
         private static void Map_Items(NetIncomingMessage data)
@@ -730,54 +528,8 @@ namespace CryBits.Client.Network
 
         private static void Shops(NetIncomingMessage data)
         {
-            // Lojas a serem removidas
-            Dictionary<Guid, Shop> toRemove = new Dictionary<Guid, Shop>(Shop.List);
-
-            // Quantidade de lojas
-            short count = data.ReadInt16();
-
-            while (--count >= 0)
-            {
-                Guid id = new Guid(data.ReadString());
-                Shop shop;
-
-                // Obtém o dado
-                if (Shop.List.ContainsKey(id))
-                {
-                    shop = Shop.List[id];
-                    toRemove.Remove(id);
-                }
-                else
-                {
-                    shop = new Shop(id);
-                    Shop.List.Add(shop.ID, shop);
-                }
-
-                // Redimensiona os valores necessários 
-                shop.Sold = new ShopItem[data.ReadByte()];
-                shop.Bought = new ShopItem[data.ReadByte()];
-
-                // Lê os dados
-                shop.Name = data.ReadString();
-                shop.Currency = Item.Get(new Guid(data.ReadString()));
-                for (byte j = 0; j < shop.Sold.Length; j++)
-                    shop.Sold[j] = new ShopItem
-                    {
-                        Item = Item.Get(new Guid(data.ReadString())),
-                        Amount = data.ReadInt16(),
-                        Price = data.ReadInt16()
-                    };
-                for (byte j = 0; j < shop.Bought.Length; j++)
-                    shop.Bought[j] = new ShopItem
-                    {
-                        Item = Item.Get(new Guid(data.ReadString())),
-                        Amount = data.ReadInt16(),
-                        Price = data.ReadInt16()
-                    };
-            }
-
-            // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid remove in toRemove.Keys) Shop.List.Remove(remove);
+            // Recebe os dados
+            Shop.List = (Dictionary<Guid, Shop>)ByteArrayToObject(data);
         }
 
         private static void Shop_Open(NetIncomingMessage data)
@@ -789,43 +541,8 @@ namespace CryBits.Client.Network
 
         private static void NPCs(NetIncomingMessage data)
         {
-            // Lojas a serem removidas
-            Dictionary<Guid, NPC> toRemove = new Dictionary<Guid, NPC>(NPC.List);
-
-            // Quantidade de lojas
-            short count = data.ReadInt16();
-
-            while (--count >= 0)
-            {
-                Guid id = new Guid(data.ReadString());
-                NPC npc;
-
-                // Obtém o dado
-                if (NPC.List.ContainsKey(id))
-                {
-                    npc = NPC.List[id];
-                    toRemove.Remove(id);
-                }
-                else
-                {
-                    npc = new NPC(id);
-                    NPC.List.Add(npc.ID, npc);
-                }
-
-                // Geral
-                npc.Name = data.ReadString();
-                npc.SayMsg = data.ReadString();
-                npc.Texture = data.ReadInt16();
-                npc.Type = data.ReadByte();
-
-                // Vitais
-                npc.Vital = new short[(byte)Vitals.Count];
-                for (byte n = 0; n < (byte)Vitals.Count; n++)
-                    npc.Vital[n] = data.ReadInt16();
-            }
-
-            // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid remove in toRemove.Keys) NPC.List.Remove(remove);
+            // Recebe os dados
+            NPC.List = (Dictionary<Guid, NPC>)ByteArrayToObject(data);
         }
 
         private static void Map_NPCs(NetIncomingMessage data)

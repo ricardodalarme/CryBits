@@ -3,25 +3,13 @@ using CryBits.Packets;
 using CryBits.Server.Entities;
 using Lidgren.Network;
 using System.Drawing;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using static CryBits.Server.Logic.Utils;
+using static CryBits.Utils;
 
 namespace CryBits.Server.Network
 {
     internal static class Send
     {
-        public static void ObjectToByteArray(NetOutgoingMessage data, object obj)
-        {
-            var bf = new BinaryFormatter();
-            using (var stream = new MemoryStream())
-            {
-                bf.Serialize(stream, obj);
-                data.Write(stream.ToArray().Length);
-                data.Write(stream.ToArray());
-            }
-        }
-
         private static void ToPlayer(Account account, NetOutgoingMessage data)
         {
             // Recria o pacote e o envia

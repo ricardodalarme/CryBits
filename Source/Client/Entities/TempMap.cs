@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CryBits.Client.Logic;
 using static CryBits.Client.Logic.Utils;
+using  CryBits.Entities;
 
 namespace CryBits.Client.Entities
 {
@@ -51,12 +52,12 @@ namespace CryBits.Client.Entities
             NextTile(direction, ref nextX, ref nextY);
 
             // Verifica se está indo para uma ligação
-            if (Mapper.OutOfLimit(nextX, nextY)) return Data.Link[(byte)direction] == 0;
+            if (Mapper.OutOfLimit(nextX, nextY)) return Data.Link[(byte) direction] == null;
 
             // Verifica se o azulejo está bloqueado
-            if (Data.Tile[nextX, nextY].Attribute == (byte)LayerAttributes.Block) return true;
-            if (Data.Tile[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
-            if (Data.Tile[x, y].Block[(byte)direction]) return true;
+            if (Data.Attribute[nextX, nextY].Type == (byte)LayerAttributes.Block) return true;
+            if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
+            if (Data.Attribute[x, y].Block[(byte)direction]) return true;
             if (HasPlayer(nextX, nextY) || HasNPC(nextX, nextY)) return true;
             return false;
         }
