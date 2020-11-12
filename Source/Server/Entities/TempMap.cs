@@ -7,7 +7,7 @@ using static CryBits.Utils;
 
 namespace CryBits.Server.Entities
 {
-    class TempMap : Entity
+    internal class TempMap : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, TempMap> List = new Dictionary<Guid, TempMap>();
@@ -135,7 +135,7 @@ namespace CryBits.Server.Entities
         }
     }
 
-    class MapItems
+    internal class MapItems
     {
         public Item Item;
         public byte X;

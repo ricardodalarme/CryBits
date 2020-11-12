@@ -4,7 +4,7 @@ using CryBits.Server.Entities;
 
 namespace CryBits.Server.Logic
 {
-    static class Loop
+    internal static class Loop
     {
         // Contagens
         public static int Timer_500, Timer_1000;

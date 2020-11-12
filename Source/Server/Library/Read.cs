@@ -9,7 +9,7 @@ using static CryBits.Server.Logic.Utils;
 
 namespace CryBits.Server.Library
 {
-    static class Read
+    internal static class Read
     {
         public static void All()
         {

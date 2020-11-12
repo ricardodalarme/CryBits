@@ -6,7 +6,7 @@ using static CryBits.Server.Logic.Utils;
 
 namespace CryBits.Server.Library
 {
-    static class Write
+    internal static class Write
     {
         public static void Settings()
         {

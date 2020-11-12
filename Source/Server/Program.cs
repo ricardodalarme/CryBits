@@ -21,7 +21,8 @@ namespace CryBits.Server
         [DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
         private delegate bool EventHandler();
-        static EventHandler _handler;
+
+        private static EventHandler _handler;
 
         [STAThread]
         private static void Main()

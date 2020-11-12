@@ -11,7 +11,7 @@ using static CryBits.Utils;
 
 namespace CryBits.Server.Network
 {
-    static class Receive
+    internal static class Receive
     {
         public static void Handle(Account account, NetIncomingMessage data)
         {

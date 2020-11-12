@@ -9,7 +9,7 @@ using static CryBits.Utils;
 
 namespace CryBits.Server.Entities
 {
-    class Player : Character
+    internal class Player : Character
     {
         // Dados permantes
         public string Name = string.Empty;
@@ -704,19 +704,19 @@ namespace CryBits.Server.Entities
         }
     }
 
-    struct Inventory
+    internal struct Inventory
     {
         public Item Item;
         public short Amount;
     }
 
-    class TradeSlot
+    internal class TradeSlot
     {
         public short Slot_Num;
         public short Amount;
     }
 
-    class Hotbar
+    internal class Hotbar
     {
         public Hotbars Type;
         public byte Slot;

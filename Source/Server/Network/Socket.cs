@@ -3,7 +3,7 @@ using Lidgren.Network;
 
 namespace CryBits.Server.Network
 {
-    static class Socket
+    internal static class Socket
     {
         // Protocolo do controle de transmissão
         public static NetServer Device;

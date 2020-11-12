@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace CryBits.Server.Library
 {
-    static class Directories
+    internal static class Directories
     {
         // Formato de todos os arquivos de dados
         public const string Format = ".dat";

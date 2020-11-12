@@ -6,7 +6,7 @@ using static CryBits.Utils;
 
 namespace CryBits.Server.Entities
 {
-    class TempNPC : Character
+    internal class TempNPC : Character
     {
         // Dados básicos
         public byte Index;
