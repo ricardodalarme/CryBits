@@ -1,6 +1,7 @@
 ﻿using CryBits.Server.Entities;
 using CryBits.Server.Library;
 using CryBits.Server.Logic;
+using CryBits.Entities;
 using CryBits;
 using CryBits.Server.Network;
 using System;
@@ -42,7 +43,7 @@ static class Program
 
         // Cria os mapas temporários
         Console.WriteLine("Creating temporary maps.");
-        foreach (Map Map in Map.List.Values) Map.Create_Temporary();
+        foreach (Map Map in Map.List.Values) Mapp.Create_Temporary(Map);
 
         // Cria os dispositivos da rede
         Socket.Init();

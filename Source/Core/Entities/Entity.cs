@@ -2,6 +2,7 @@
 
 namespace CryBits.Entities
 {
+    [Serializable]
     public class Entity
     {
         public Guid ID;

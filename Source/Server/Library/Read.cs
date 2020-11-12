@@ -1,5 +1,5 @@
 ﻿using CryBits.Server.Entities;
-using CryBits;
+using CryBits.Entities;
 using System;
 using System.Collections.Generic;
 using System.IO;

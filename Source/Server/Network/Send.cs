@@ -1,5 +1,6 @@
 ﻿using CryBits.Server.Entities;
 using CryBits;
+using CryBits.Entities;
 using Lidgren.Network;
 using System.Drawing;
 using static CryBits.Server.Logic.Utils;
@@ -389,9 +390,9 @@ namespace CryBits.Server.Network
 
             // Envia os dados
             Data.Write((byte)Editor_Packets.Maps);
-            Data.Write((short)Entities.Map.List.Count);
+            Data.Write((short)CryBits.Entities.Map.List.Count);
             ToPlayer(Account, Data);
-            foreach (Map Map in Entities.Map.List.Values) Send.Map(Account, Map);
+            foreach (Map Map in CryBits.Entities.Map.List.Values) Send.Map(Account, Map);
         }
 
         public static void Map(Account Account, Map Map)

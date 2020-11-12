@@ -95,7 +95,7 @@ namespace CryBits.Server.Entities
                         // Adiciona o item
                         Item.Add(new TMap_Items
                         {
-                            Item = Entities.Item.Get(new Guid(Data.Attribute[x, y].Data_1)),
+                            Item = CryBits.Entities.Item.Get(new Guid(Data.Attribute[x, y].Data_1)),
                             Amount = Data.Attribute[x, y].Data_2,
                             X = x,
                             Y = y

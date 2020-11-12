@@ -1,5 +1,6 @@
 ﻿using CryBits.Server.Logic;
 using CryBits.Server.Network;
+using CryBits.Entities;
 using System;
 using static CryBits.Server.Logic.Utils;
 
@@ -142,8 +143,8 @@ namespace CryBits.Server.Entities
                     // Define o alvo a zona do NPC
                     if (Map.Data.NPC[Index].Zone > 0)
                         if (Map.Data.Attribute[X, Y].Zone != Map.Data.NPC[Index].Zone)
-                            for (byte x2 = 0; x2 < Entities.Map.Width; x2++)
-                                for (byte y2 = 0; y2 < Entities.Map.Height; y2++)
+                            for (byte x2 = 0; x2 < CryBits.Entities.Map.Width; x2++)
+                                for (byte y2 = 0; y2 < CryBits.Entities.Map.Height; y2++)
                                     if (Map.Data.Attribute[x2, y2].Zone == Map.Data.NPC[Index].Zone)
                                         if (!Map.Data.Tile_Blocked(x2, y2))
                                         {
@@ -233,8 +234,8 @@ namespace CryBits.Server.Entities
             // Faz com que ele apareça em um local aleatório
             for (byte i = 0; i < 50; i++) // tenta 50 vezes com que ele apareça em um local aleatório
             {
-                x = (byte)MyRandom.Next(0, Entities.Map.Width - 1);
-                y = (byte)MyRandom.Next(0, Entities.Map.Height - 1);
+                x = (byte)MyRandom.Next(0, CryBits.Entities.Map.Width - 1);
+                y = (byte)MyRandom.Next(0, CryBits.Entities.Map.Height - 1);
 
                 // Verifica se está dentro da zona
                 if (Map.Data.NPC[Index].Zone > 0)
@@ -250,8 +251,8 @@ namespace CryBits.Server.Entities
             }
 
             // Em último caso, tentar no primeiro lugar possível
-            for (byte x2 = 0; x2 < Entities.Map.Width; x2++)
-                for (byte y2 = 0; y2 < Entities.Map.Height; y2++)
+            for (byte x2 = 0; x2 < CryBits.Entities.Map.Width; x2++)
+                for (byte y2 = 0; y2 < CryBits.Entities.Map.Height; y2++)
                     if (!Map.Data.Tile_Blocked(x2, y2))
                     {
                         // Verifica se está dentro da zona

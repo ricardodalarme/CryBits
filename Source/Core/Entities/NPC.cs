@@ -1,12 +1,10 @@
-﻿using CryBits.Entities;
-using CryBits.Server.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace CryBits.Server.Entities
+namespace CryBits.Entities
 {
     [Serializable]
-    class NPC : Entity
+   public class NPC : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, NPC> List = new Dictionary<Guid, NPC>();
@@ -15,19 +13,19 @@ namespace CryBits.Server.Entities
         public static NPC Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
 
         // Dados
-        public string SayMsg;
-        public short Texture;
-        public byte Behaviour;
-        public byte SpawnTime;
-        public byte Sight;
-        public int Experience;
-        public short[] Vital = new short[(byte)Vitals.Count];
-        public short[] Attribute = new short[(byte)Attributes.Count];
-        public NPC_Drop[] Drop;
-        public bool AttackNPC;
-        public NPC[] Allie;
-        public NPCMovements Movement;
-        public byte Flee_Helth;
+        public string SayMsg { get; set; }
+        public short Texture { get; set; }
+        public byte Behaviour { get; set; }
+        public byte SpawnTime { get; set; }
+        public byte Sight { get; set; }
+        public int Experience { get; set; }
+        public short[] Vital { get; set; } = new short[(byte)Vitals.Count];
+        public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
+        public NPC_Drop[] Drop { get; set; }
+        public bool AttackNPC { get; set; }
+        public NPC[] Allie { get; set; }
+        public NPCMovements Movement { get; set; }
+        public byte Flee_Helth { get; set; }
         private Guid shop;
 
         public Shop Shop
@@ -51,7 +49,7 @@ namespace CryBits.Server.Entities
     }
 
     [Serializable]
-    class NPC_Drop
+    public class NPC_Drop
     {
         // Dados
         private Guid item;

@@ -3,6 +3,7 @@ using CryBits.Server.Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CryBits.Entities;
 using static CryBits.Server.Logic.Utils;
 
 namespace CryBits.Server.Entities
@@ -154,8 +155,8 @@ namespace CryBits.Server.Entities
 
             // Evita que o jogador seja transportado para fora do limite
             if (To == null) return;
-            if (x >= Entities.Map.Width) x = Entities.Map.Width - 1;
-            if (y >= Entities.Map.Height) y = Entities.Map.Height - 1;
+            if (x >= CryBits.Entities.Map.Width) x = CryBits.Entities.Map.Width - 1;
+            if (y >= CryBits.Entities.Map.Height) y = CryBits.Entities.Map.Height - 1;
             if (x < 0) x = 0;
             if (y < 0) y = 0;
 
@@ -207,10 +208,10 @@ namespace CryBits.Server.Entities
                 if (Link != null)
                     switch (Direction)
                     {
-                        case Directions.Up: Warp(Link, Old_X, Entities.Map.Height - 1); return;
+                        case Directions.Up: Warp(Link, Old_X, CryBits.Entities.Map.Height - 1); return;
                         case Directions.Down: Warp(Link, Old_X, 0); return;
                         case Directions.Right: Warp(Link, 0, Old_Y); return;
-                        case Directions.Left: Warp(Link, Entities.Map.Width - 1, Old_Y); return;
+                        case Directions.Left: Warp(Link, CryBits.Entities.Map.Width - 1, Old_Y); return;
                     }
                 else
                 {
