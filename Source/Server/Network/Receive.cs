@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using static CryBits.Server.Logic.Utils;
 using static CryBits.Utils;
 
@@ -14,6 +15,15 @@ namespace CryBits.Server.Network
 {
     static class Receive
     {
+        public static object ByteArrayToObject(NetIncomingMessage data)
+        {
+            int size = data.ReadInt32();
+            byte[] array = data.ReadBytes(size);
+
+            using (var stream = new MemoryStream(array))
+                return new BinaryFormatter().Deserialize(stream);
+        }
+
         public static void Handle(Account Account, NetIncomingMessage Data)
         {
             byte Packet_Num = Data.ReadByte();
@@ -522,59 +532,11 @@ namespace CryBits.Server.Network
                 return;
             }
 
-            // Classes a serem removidas
-            Dictionary<Guid, Class> ToRemove = new Dictionary<Guid, Class>(Class.List);
+            // Recebe e salva os novos dados
+            Class.List = (Dictionary<Guid, Class>)ByteArrayToObject(Data);
+            Write.Classes();
 
-            // Quantidade de classes
-            short Count = Data.ReadByte();
-
-            while (--Count >= 0)
-            {
-                Guid ID = new Guid(Data.ReadString());
-                Class Class;
-
-                // Obtém o dado
-                if (Class.List.ContainsKey(ID))
-                {
-                    Class = Class.List[ID];
-                    ToRemove.Remove(ID);
-                }
-                else
-                {
-                    Class = new Class(ID);
-                    Class.List.Add(Class.ID, Class);
-                }
-
-                // Redimensiona os valores necessários 
-                Class.Tex_Male = new short[Data.ReadByte()];
-                Class.Tex_Female = new short[Data.ReadByte()];
-                Class.Item = new ItemSlot[Data.ReadByte()];
-
-                // Lê os dados
-                Class.Name = Data.ReadString();
-                Class.Description = Data.ReadString();
-                for (byte n = 0; n < Class.Tex_Male.Count; n++) Class.Tex_Male[n] = Data.ReadInt16();
-                for (byte n = 0; n < Class.Tex_Female.Count; n++) Class.Tex_Female[n] = Data.ReadInt16();
-                Class.Spawn_Map = Map.Get(new Guid(Data.ReadString()));
-                Class.Spawn_Direction = Data.ReadByte();
-                Class.Spawn_X = Data.ReadByte();
-                Class.Spawn_Y = Data.ReadByte();
-                for (byte n = 0; n < (byte)Vitals.Count; n++) Class.Vital[n] = Data.ReadInt16();
-                for (byte n = 0; n < (byte)Attributes.Count; n++) Class.Attribute[n] = Data.ReadInt16();
-                for (byte n = 0; n < (byte)Class.Item.Count; n++) Class.Item[n] = new ItemSlot(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16());
-
-                // Salva os dados das classes
-                Write.Class(Class);
-            }
-
-            // Remove as classes que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys)
-            {
-                Class.List.Remove(Remove);
-                File.Delete(Directories.Classes.FullName + Remove.ToString() + Directories.Format);
-            }
-
-            // Salva os dados e envia pra todos jogadores conectados
+            // Envia os novos dados para todos jogadores conectados
             for (byte i = 0; i < Account.List.Count; i++)
                 if (Account.List[i] != Account)
                     Send.Classes(Account.List[i]);
@@ -589,111 +551,13 @@ namespace CryBits.Server.Network
                 return;
             }
 
-            // Classes a serem removidas
-            Dictionary<Guid, Map> ToRemove = new Dictionary<Guid, Map>(Map.List);
+            // Recebe e salva os novos dados
+            Map.List = (Dictionary<Guid, Map>)ByteArrayToObject(Data);
+            Write.Maps();
 
-            // Quantidade de classes
-            short Count = Data.ReadByte();
-
-            while (--Count >= 0)
+            // Envia os novos dados para todos jogadores 
+            foreach (var Temp_Map in TempMap.List.Values)
             {
-                Guid ID = new Guid(Data.ReadString());
-                Map Map;
-
-                // Obtém o dado
-                if (Map.List.ContainsKey(ID))
-                {
-                    Map = Map.List[ID];
-                    ToRemove.Remove(ID);
-                }
-                else
-                {
-                    Map = new Map(ID);
-                    Map.List.Add(Map.ID, Map);
-                    TempMap.Create_Temporary(Map);
-                }
-
-                // Mapa temporário
-                TempMap Temp_Map = TempMap.List[ID];
-
-                // Dados gerais
-                Map.Revision = Data.ReadInt16();
-                Map.Name = Data.ReadString();
-                Map.Moral = (Map_Morals)Data.ReadByte();
-                Map.Panorama = Data.ReadByte();
-                Map.Music = Data.ReadByte();
-                Map.Color = Color.FromArgb(Data.ReadInt32());
-                Map.Weather.Type = (Weathers)Data.ReadByte();
-                Map.Weather.Intensity = Data.ReadByte();
-                Map.Fog.Texture = Data.ReadByte();
-                Map.Fog.Speed_X = Data.ReadSByte();
-                Map.Fog.Speed_Y = Data.ReadSByte();
-                Map.Fog.Alpha = Data.ReadByte();
-                Map.Lighting = Data.ReadByte();
-
-                // Ligações
-                for (short n = 0; n < (short)Directions.Count; n++)
-                    Map.Link[n] = Map.Get(new Guid(Data.ReadString()));
-
-                // Camadas
-                Map.Layer = new MapLayer[Data.ReadByte()];
-                for (byte n = 0; n < Map.Layer.Count; n++)
-                {
-                    // Dados básicos
-                    Map.Layer[n] = new MapLayer();
-                    Map.Layer[n].Name = Data.ReadString();
-                    Map.Layer[n].Type = Data.ReadByte();
-
-                    // Azulejos
-                    for (byte x = 0; x < Map.Width; x++)
-                        for (byte y = 0; y < Map.Height; y++)
-                        {
-                            Map.Layer[n].Tile[x, y].X = Data.ReadByte();
-                            Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
-                            Map.Layer[n].Tile[x, y].Texture = Data.ReadByte();
-                            Map.Layer[n].Tile[x, y].IsAutotile = Data.ReadBoolean();
-                        }
-                }
-
-                // Dados específicos dos azulejos
-                for (byte x = 0; x < Map.Width; x++)
-                    for (byte y = 0; y < Map.Height; y++)
-                    {
-                        Map.Attribute[x, y] = new MapAttribute();
-                        Map.Attribute[x, y].Type = Data.ReadByte();
-                        Map.Attribute[x, y].Data_1 = Data.ReadString();
-                        Map.Attribute[x, y].Data_2 = Data.ReadInt16();
-                        Map.Attribute[x, y].Data_3 = Data.ReadInt16();
-                        Map.Attribute[x, y].Data_4 = Data.ReadInt16();
-                        Map.Attribute[x, y].Zone = Data.ReadByte();
-
-                        for (byte n = 0; n < (byte)Directions.Count; n++)
-                            Map.Attribute[x, y].Block[n] = Data.ReadBoolean();
-                    }
-
-                // Luzes
-                Map.Light = new MapLight[Data.ReadByte()];
-                for (byte n = 0; n < Map.Light.Count; n++)
-                {
-                    Map.Light[n].X = Data.ReadByte();
-                    Map.Light[n].Y = Data.ReadByte();
-                    Map.Light[n].Width = Data.ReadByte();
-                    Map.Light[n].Height = Data.ReadByte();
-                }
-
-                // NPCs
-                Map.NPC = new MapNPC[Data.ReadByte()];
-                Temp_Map.NPC = new TempNPC[Map.NPC.Count];
-                for (byte n = 0; n < Map.NPC.Count; n++)
-                {
-                    Map.NPC[n].NPC = NPC.Get(new Guid(Data.ReadString()));
-                    Map.NPC[n].Zone = Data.ReadByte();
-                    Map.NPC[n].Spawn = Data.ReadBoolean();
-                    Map.NPC[n].X = Data.ReadByte();
-                    Map.NPC[n].Y = Data.ReadByte();
-                    Temp_Map.NPC[n].Spawn();
-                }
-
                 // Itens do mapa
                 Temp_Map.Spawn_Items();
 
@@ -702,16 +566,6 @@ namespace CryBits.Server.Network
                     if (Account.List[n] != Account)
                         if (Account.List[n].Character.Map == Temp_Map || Account.List[n].InEditor)
                             Send.Map(Account.List[n], Temp_Map.Data);
-
-                // Salva os dados das classes
-                Write.Map(Map);
-            }
-
-            // Remove os mapas que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys)
-            {
-                Map.List.Remove(Remove);
-                File.Delete(Directories.Maps.FullName + Remove.ToString() + Directories.Format);
             }
         }
 
@@ -724,60 +578,11 @@ namespace CryBits.Server.Network
                 return;
             }
 
-            // Lojas a serem removidas
-            Dictionary<Guid, NPC> ToRemove = new Dictionary<Guid, NPC>(NPC.List);
+            // Recebe e salva os novos dados
+            NPC.List = (Dictionary<Guid, NPC>)ByteArrayToObject(Data);
+            Write.NPCs();
 
-            // Quantidade de lojas
-            short Count = Data.ReadInt16();
-
-            while (--Count >= 0)
-            {
-                Guid ID = new Guid(Data.ReadString());
-                NPC NPC;
-
-                // Obtém o dado
-                if (NPC.List.ContainsKey(ID))
-                {
-                    NPC = NPC.List[ID];
-                    ToRemove.Remove(ID);
-                }
-                else
-                {
-                    NPC = new NPC(ID);
-                    NPC.List.Add(NPC.ID, NPC);
-                }
-
-                // Lê os dados
-                NPC.Name = Data.ReadString();
-                NPC.SayMsg = Data.ReadString();
-                NPC.Texture = Data.ReadInt16();
-                NPC.Behaviour = (NPCBehaviour)Data.ReadByte();
-                NPC.SpawnTime = Data.ReadByte();
-                NPC.Sight = Data.ReadByte();
-                NPC.Experience = Data.ReadInt32();
-                for (byte n = 0; n < (byte)Vitals.Count; n++) NPC.Vital[n] = Data.ReadInt16();
-                for (byte n = 0; n < (byte)Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
-                NPC.Drop = new NPC_Drop[Data.ReadByte()];
-                for (byte n = 0; n < NPC.Drop.Count; n++) NPC.Drop[n] = new NPC_Drop(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
-                NPC.AttackNPC = Data.ReadBoolean();
-                NPC.Allie = new NPC[Data.ReadByte()];
-                for (byte n = 0; n < NPC.Allie.Count; n++) NPC.Allie[n] = NPC.Get(new Guid(Data.ReadString()));
-                NPC.Movement = (NPCMovements)Data.ReadByte();
-                NPC.Flee_Helth = Data.ReadByte();
-                NPC.Shop = Shop.Get(new Guid(Data.ReadString()));
-
-                // Salva os dados do item
-                Write.NPC(NPC);
-            }
-
-            // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys)
-            {
-                NPC.List.Remove(Remove);
-                File.Delete(Directories.NPCs.FullName + Remove.ToString() + Directories.Format);
-            }
-
-            // Salva os dados e envia pra todos jogadores conectados
+            // Envia os novos dados para todos jogadores conectados
             for (byte i = 0; i < Account.List.Count; i++)
                 if (Account.List[i] != Account)
                     Send.NPCs(Account.List[i]);
@@ -792,57 +597,11 @@ namespace CryBits.Server.Network
                 return;
             }
 
-            // Lojas a serem removidas
-            Dictionary<Guid, Item> ToRemove = new Dictionary<Guid, Item>(Item.List);
+            // Recebe e salva os novos dados
+            Item.List = (Dictionary<Guid, Item>)ByteArrayToObject(Data);
+            Write.Items();
 
-            // Quantidade de lojas
-            short Count = Data.ReadInt16();
-
-            while (--Count >= 0)
-            {
-                Guid ID = new Guid(Data.ReadString());
-                Item Item;
-
-                // Obtém o dado
-                if (Item.List.ContainsKey(ID))
-                {
-                    Item = Item.List[ID];
-                    ToRemove.Remove(ID);
-                }
-                else
-                {
-                    Item = new Item(ID);
-                    Item.List.Add(Item.ID, Item);
-                }
-
-                // Lê os dados
-                Item.Name = Data.ReadString();
-                Item.Description = Data.ReadString();
-                Item.Texture = Data.ReadInt16();
-                Item.Type = (Items)Data.ReadByte();
-                Item.Stackable = Data.ReadBoolean();
-                Item.Bind = (BindOn)Data.ReadByte();
-                Item.Rarity = (Rarity)Data.ReadByte();
-                Item.Req_Level = Data.ReadInt16();
-                Item.Req_Class = Class.Get(new Guid(Data.ReadString()));
-                Item.Potion_Experience = Data.ReadInt32();
-                for (byte v = 0; v < (byte)Vitals.Count; v++) Item.Potion_Vital[v] = Data.ReadInt16();
-                Item.Equip_Type = Data.ReadByte();
-                for (byte a = 0; a < (byte)Attributes.Count; a++) Item.Equip_Attribute[a] = Data.ReadInt16();
-                Item.Weapon_Damage = Data.ReadInt16();
-
-                // Salva os dados do item
-                Write.Item(Item);
-            }
-
-            // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys)
-            {
-                Item.List.Remove(Remove);
-                File.Delete(Directories.Items.FullName + Remove.ToString() + Directories.Format);
-            }
-
-            // Salva os dados e envia pra todos jogadores conectados
+            // Envia os novos dados para todos jogadores conectados
             for (byte i = 0; i < Account.List.Count; i++)
                 if (Account.List[i] != Account)
                     Send.Items(Account.List[i]);
@@ -857,63 +616,11 @@ namespace CryBits.Server.Network
                 return;
             }
 
-            // Lojas a serem removidas
-            Dictionary<Guid, Shop> ToRemove = new Dictionary<Guid, Shop>(Shop.List);
+            // Recebe e salva os novos dados
+            Shop.List = (Dictionary<Guid, Shop>)ByteArrayToObject(Data);
+            Write.Shops();
 
-            // Quantidade de lojas
-            short Count = Data.ReadInt16();
-
-            while (--Count >= 0)
-            {
-                Guid ID = new Guid(Data.ReadString());
-                Shop Shop;
-
-                // Obtém o dado
-                if (Shop.List.ContainsKey(ID))
-                {
-                    Shop = Shop.List[ID];
-                    ToRemove.Remove(ID);
-                }
-                else
-                {
-                    Shop = new Shop(ID);
-                    Shop.List.Add(Shop.ID, Shop);
-                }
-
-                // Redimensiona os valores necessários 
-                Shop.Sold = new Shop_Item[Data.ReadByte()];
-                Shop.Bought = new Shop_Item[Data.ReadByte()];
-                Shop.Bought = new Shop_Item[Data.ReadByte()];
-
-                // Lê os dados
-                Shop.Name = Data.ReadString();
-                Shop.Currency = Item.Get(new Guid(Data.ReadString()));
-                for (byte j = 0; j < Shop.Sold.Count; j++)
-                    Shop.Sold[j] = new Shop_Item(
-                         Item.Get(new Guid(Data.ReadString())),
-                         Data.ReadInt16(),
-                         Data.ReadInt16()
-                    );
-                for (byte j = 0; j < Shop.Bought.Count; j++)
-                    Shop.Bought[j] = new Shop_Item(
-
-                       Item.Get(new Guid(Data.ReadString())),
-                         Data.ReadInt16(),
-                      Data.ReadInt16()
-                    );
-
-                // Salva os dados da loja
-                Write.Shop(Shop);
-            }
-
-            // Remove as lojas que não tiveram os dados atualizados
-            foreach (Guid Remove in ToRemove.Keys)
-            {
-                Shop.List.Remove(Remove);
-                File.Delete(Directories.Shops.FullName + Remove.ToString() + Directories.Format);
-            }
-
-            // Salva os dados e envia pra todos jogadores conectados
+            // Envia os novos dados para todos jogadores conectados
             for (byte i = 0; i < Account.List.Count; i++)
                 if (Account.List[i] != Account)
                     Send.Shops(Account.List[i]);

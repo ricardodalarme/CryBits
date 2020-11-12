@@ -3,12 +3,25 @@ using CryBits.Packets;
 using CryBits.Server.Entities;
 using Lidgren.Network;
 using System.Drawing;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using static CryBits.Server.Logic.Utils;
 
 namespace CryBits.Server.Network
 {
     static class Send
     {
+        public static void ObjectToByteArray(NetOutgoingMessage Data, object obj)
+        {
+            var bf = new BinaryFormatter();
+            using (var stream = new MemoryStream())
+            {
+                bf.Serialize(stream, obj);
+                Data.Write(stream.ToArray().Length);
+                Data.Write(stream.ToArray());
+            }
+        }
+
         private static void ToPlayer(Account Account, NetOutgoingMessage Data)
         {
             // Recria o pacote e o envia
@@ -126,38 +139,7 @@ namespace CryBits.Server.Network
             // Envia os dados
             if (Account.InEditor) Data.Write((byte)ServerEditor.Classes);
             else Data.Write((byte)ServerClient.Classes);
-            Data.Write((byte)Class.List.Count);
-
-            foreach (Class Class in Class.List.Values)
-            {
-                // Escreve os dados
-                Data.Write(Class.ID.ToString());
-                Data.Write(Class.Name);
-                Data.Write(Class.Description);
-                Data.Write((byte)Class.Tex_Male.Count);
-                for (byte t = 0; t < Class.Tex_Male.Count; t++) Data.Write(Class.Tex_Male[t]);
-                Data.Write((byte)Class.Tex_Female.Count);
-                for (byte t = 0; t < Class.Tex_Female.Count; t++) Data.Write(Class.Tex_Female[t]);
-
-                // Apenas dados do editor
-                if (Account.InEditor)
-                {
-                    Data.Write(Class.Spawn_Map.GetID());
-                    Data.Write(Class.Spawn_Direction);
-                    Data.Write(Class.Spawn_X);
-                    Data.Write(Class.Spawn_Y);
-                    for (byte n = 0; n < (byte)Vitals.Count; n++) Data.Write(Class.Vital[n]);
-                    for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(Class.Attribute[n]);
-                    Data.Write((byte)Class.Item.Count);
-                    for (byte n = 0; n < (byte)Class.Item.Count; n++)
-                    {
-                        Data.Write(Class.Item[n].Item.GetID());
-                        Data.Write(Class.Item[n].Amount);
-                    }
-                }
-            }
-
-            // Envia os dados
+            ObjectToByteArray(Data, Class.List);
             ToPlayer(Account, Data);
         }
 
@@ -342,79 +324,7 @@ namespace CryBits.Server.Network
             // Envia os dados
             if (Account.InEditor) Data.Write((byte)ServerEditor.Map);
             else Data.Write((byte)ServerClient.Map);
-            Data.Write(Map.GetID());
-            Data.Write(Map.Revision);
-            Data.Write(Map.Name);
-            Data.Write((byte)Map.Moral);
-            Data.Write(Map.Panorama);
-            Data.Write(Map.Music);
-            Data.Write(Map.Color.ToArgb());
-            Data.Write((byte)Map.Weather.Type);
-            Data.Write(Map.Weather.Intensity);
-            Data.Write(Map.Fog.Texture);
-            Data.Write(Map.Fog.Speed_X);
-            Data.Write(Map.Fog.Speed_Y);
-            Data.Write(Map.Fog.Alpha);
-            Data.Write(Map.Lighting);
-
-            // Ligações
-            for (short i = 0; i < (short)Directions.Count; i++)
-                Data.Write(Map.Link[i].GetID());
-
-            // Camadas
-            Data.Write((byte)Map.Layer.Count);
-            for (byte i = 0; i < Map.Layer.Count; i++)
-            {
-                Data.Write(Map.Layer[i].Name);
-                Data.Write(Map.Layer[i].Type);
-
-                // Azulejos
-                for (byte x = 0; x < Map.Width; x++)
-                    for (byte y = 0; y < Map.Height; y++)
-                    {
-                        Data.Write(Map.Layer[i].Tile[x, y].X);
-                        Data.Write(Map.Layer[i].Tile[x, y].Y);
-                        Data.Write(Map.Layer[i].Tile[x, y].Texture);
-                        Data.Write(Map.Layer[i].Tile[x, y].IsAutotile);
-                    }
-            }
-
-            // Dados específicos dos azulejos
-            for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
-                {
-                    Data.Write(Map.Attribute[x, y].Type);
-                    Data.Write(Map.Attribute[x, y].Data_1);
-                    Data.Write(Map.Attribute[x, y].Data_2);
-                    Data.Write(Map.Attribute[x, y].Data_3);
-                    Data.Write(Map.Attribute[x, y].Data_4);
-                    Data.Write(Map.Attribute[x, y].Zone);
-
-                    // Bloqueio direcional
-                    for (byte i = 0; i < (byte)Directions.Count; i++)
-                        Data.Write(Map.Attribute[x, y].Block[i]);
-                }
-
-            // Luzes
-            Data.Write((byte)Map.Light.Count);
-            for (byte i = 0; i < Map.Light.Count; i++)
-            {
-                Data.Write(Map.Light[i].X);
-                Data.Write(Map.Light[i].Y);
-                Data.Write(Map.Light[i].Width);
-                Data.Write(Map.Light[i].Height);
-            }
-
-            // NPCs
-            Data.Write((byte)Map.NPC.Count);
-            for (byte i = 0; i < Map.NPC.Count; i++)
-            {
-                Data.Write(Map.NPC[i].NPC.GetID());
-                Data.Write(Map.NPC[i].Zone);
-                Data.Write(Map.NPC[i].Spawn);
-                Data.Write(Map.NPC[i].X);
-                Data.Write(Map.NPC[i].Y);
-            }
+            ObjectToByteArray(Data, Map);
             ToPlayer(Account, Data);
         }
 
@@ -497,27 +407,7 @@ namespace CryBits.Server.Network
             // Envia os dados
             if (Account.InEditor) Data.Write((byte)ServerEditor.Items);
             else Data.Write((byte)ServerClient.Items);
-            Data.Write((short)Item.List.Count);
-            foreach (Item Item in Item.List.Values)
-            {
-                Data.Write(Item.ID.ToString());
-                Data.Write(Item.Name);
-                Data.Write(Item.Description);
-                Data.Write(Item.Texture);
-                Data.Write((byte)Item.Type);
-                Data.Write(Item.Stackable);
-                Data.Write((byte)Item.Bind);
-                Data.Write((byte)Item.Rarity);
-                Data.Write(Item.Req_Level);
-                Data.Write(Item.Req_Class.GetID());
-                Data.Write(Item.Potion_Experience);
-                for (byte v = 0; v < (byte)Vitals.Count; v++) Data.Write(Item.Potion_Vital[v]);
-                Data.Write(Item.Equip_Type);
-                for (byte a = 0; a < (byte)Attributes.Count; a++) Data.Write(Item.Equip_Attribute[a]);
-                Data.Write(Item.Weapon_Damage);
-            }
-
-            // Envia os dados
+            ObjectToByteArray(Data, Item.List);
             ToPlayer(Account, Data);
         }
 
@@ -592,39 +482,7 @@ namespace CryBits.Server.Network
             // Envia os dados
             if (Account.InEditor) Data.Write((byte)ServerEditor.NPCs);
             else Data.Write((byte)ServerClient.NPCs);
-            Data.Write((short)NPC.List.Count);
-            foreach (NPC NPC in NPC.List.Values)
-            {
-                // Geral
-                Data.Write(NPC.ID.ToString());
-                Data.Write(NPC.Name);
-                Data.Write(NPC.SayMsg);
-                Data.Write(NPC.Texture);
-                Data.Write((byte)NPC.Behaviour);
-                for (byte n = 0; n < (byte)Vitals.Count; n++) Data.Write(NPC.Vital[n]);
-
-                // Dados apenas do editor
-                if (Account.InEditor)
-                {
-                    Data.Write(NPC.SpawnTime);
-                    Data.Write(NPC.Sight);
-                    Data.Write(NPC.Experience);
-                    for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(NPC.Attribute[n]);
-                    Data.Write((byte)NPC.Drop.Count);
-                    for (byte n = 0; n < NPC.Drop.Count; n++)
-                    {
-                        Data.Write(NPC.Drop[n].Item.GetID());
-                        Data.Write(NPC.Drop[n].Amount);
-                        Data.Write(NPC.Drop[n].Chance);
-                    }
-                    Data.Write(NPC.AttackNPC);
-                    Data.Write((byte)NPC.Allie.Count);
-                    for (byte n = 0; n < NPC.Allie.Count; n++) Data.Write(NPC.Allie[n].GetID());
-                    Data.Write((byte)NPC.Movement);
-                    Data.Write(NPC.Flee_Helth);
-                    Data.Write(NPC.Shop.GetID());
-                }
-            }
+            ObjectToByteArray(Data, NPC.List);
             ToPlayer(Account, Data);
         }
 
@@ -814,28 +672,7 @@ namespace CryBits.Server.Network
             // Envia os dados
             if (Account.InEditor) Data.Write((byte)ServerEditor.Shops);
             else Data.Write((byte)ServerClient.Shops);
-            Data.Write((short)Shop.List.Count);
-            foreach (Shop Shop in Shop.List.Values)
-            {
-                // Geral
-                Data.Write(Shop.ID.ToString());
-                Data.Write(Shop.Name);
-                Data.Write(Shop.Currency.GetID());
-                Data.Write((byte)Shop.Sold.Count);
-                for (byte j = 0; j < Shop.Sold.Count; j++)
-                {
-                    Data.Write(Shop.Sold[j].Item.GetID());
-                    Data.Write(Shop.Sold[j].Amount);
-                    Data.Write(Shop.Sold[j].Price);
-                }
-                Data.Write((byte)Shop.Bought.Count);
-                for (byte j = 0; j < Shop.Bought.Count; j++)
-                {
-                    Data.Write(Shop.Bought[j].Item.GetID());
-                    Data.Write(Shop.Bought[j].Amount);
-                    Data.Write(Shop.Bought[j].Price);
-                }
-            }
+            ObjectToByteArray(Data, Shop.List);
             ToPlayer(Account, Data);
         }
 

@@ -95,6 +95,13 @@ namespace CryBits.Server.Library
                 Data.Write(Characters_Name);
         }
 
+        public static void Classes()
+        {
+            // Escreve os dados
+            foreach (var classe in CryBits.Entities.Class.List.Values)
+                Class(classe);
+        }
+
         public static void Class(Class Class)
         {
             // Escreve os dados
@@ -102,18 +109,26 @@ namespace CryBits.Server.Library
                 new BinaryFormatter().Serialize(Stream, Class);
         }
 
-        public static void NPC(NPC NPC)
+        public static void NPCs()
         {
             // Escreve os dados
-            using (var Stream = new FileInfo(Directories.NPCs.FullName + NPC.ID + Directories.Format).OpenWrite())
-                new BinaryFormatter().Serialize(Stream, NPC);
+            foreach (var NPC in NPC.List.Values)
+                using (var Stream = new FileInfo(Directories.NPCs.FullName + NPC.ID + Directories.Format).OpenWrite())
+                    new BinaryFormatter().Serialize(Stream, NPC);
         }
 
-        public static void Item(Item Item)
+        public static void Items()
         {
             // Escreve os dados
-            using (var Stream = new FileInfo(Directories.Items.FullName + Item.ID + Directories.Format).OpenWrite())
-                new BinaryFormatter().Serialize(Stream, Item);
+            foreach (var Item in Item.List.Values)
+                using (var Stream = new FileInfo(Directories.Items.FullName + Item.ID + Directories.Format).OpenWrite())
+                    new BinaryFormatter().Serialize(Stream, Item);
+        }
+        public static void Maps()
+        {
+            // Escreve os dados
+            foreach (var map in CryBits.Entities.Map.List.Values)
+                Map(map);
         }
 
         public static void Map(Map Map)
@@ -123,11 +138,12 @@ namespace CryBits.Server.Library
                 new BinaryFormatter().Serialize(Stream, Map);
         }
 
-        public static void Shop(Shop Shop)
+        public static void Shops()
         {
             // Escreve os dados
-            using (var Stream = new FileInfo(Directories.Shops.FullName + Shop.ID + Directories.Format).OpenWrite())
-                new BinaryFormatter().Serialize(Stream, Shop);
+            foreach (var Shop in Shop.List.Values)
+                using (var Stream = new FileInfo(Directories.Shops.FullName + Shop.ID + Directories.Format).OpenWrite())
+                    new BinaryFormatter().Serialize(Stream, Shop);
         }
     }
 }

@@ -206,6 +206,8 @@ namespace CryBits.Editors.Forms
         private void butSaveAll_Click(object sender, EventArgs e)
         {
             // Salva todos os dados
+            foreach (Map Map in Map.List.Values)
+                ++Map.Revision;
             Send.Write_Maps();
             MessageBox.Show("All maps has been saved");
         }
@@ -1117,7 +1119,7 @@ namespace CryBits.Editors.Forms
             }
 
             // Seleciona o primeiro item
-            lstLayers.Items[0].Selected = true;
+            if (Selected.Layer.Count> 0)lstLayers.Items[0].Selected = true;
         }
 
         private void butLayer_Add_Click(object sender, EventArgs e)

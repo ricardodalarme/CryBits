@@ -48,5 +48,6 @@ namespace CryBits
 
         // Obtém o dado, caso ele não existir retorna nulo
         public static TV Get<Guid, TV>(this Dictionary<Guid, TV> dict, Guid key) => dict.ContainsKey(key) ? dict[key] : default;
+
     }
 }
