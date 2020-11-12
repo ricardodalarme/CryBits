@@ -71,7 +71,7 @@ namespace CryBits.Editors.Media
         public class Music
         {
             // Formato em o dispositivo irá ler as músicas
-            public const string Format = ".ogg";
+            private const string Format = ".ogg";
 
             // Lista das músicas
             public static SFML.Audio.Music Device;
@@ -102,12 +102,10 @@ namespace CryBits.Editors.Media
             public static void Stop()
             {
                 // Para a música que está tocando
-                if (Device != null && Current != 0)
-                {
-                    Device.Stop();
-                    Device.Dispose();
-                    Device = null;
-                }
+                if (Device == null || Current == 0) return;
+                Device.Stop();
+                Device.Dispose();
+                Device = null;
             }
         }
     }

@@ -10,7 +10,7 @@ using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Library
 {
-    static class Read
+    internal static class Read
     {
         public static void Data()
         {
@@ -118,11 +118,12 @@ namespace CryBits.Client.Library
                 }
 
                 // Adiciona à lista
-                Tools.OrderStructure tempOrder = new Tools.OrderStructure();
-                tempOrder.Nodes = new List<Tools.OrderStructure>();
-                tempOrder.Parent = parent;
-                tempOrder.Data = tempTool;
-                node.Add(tempOrder);
+                node.Add(new Tools.OrderStructure
+                {
+                    Nodes = new List<Tools.OrderStructure>(),
+                    Parent = parent,
+                    Data = tempTool
+                });
 
                 // Pula pro próximo
                 Tools(node[i], ref node[i].Nodes, data);
@@ -131,7 +132,7 @@ namespace CryBits.Client.Library
 
         public static void Map(Guid id)
         {
-            FileInfo file = new FileInfo(Directories.Maps_Data.FullName + id.ToString() + Directories.Format);
+            FileInfo file = new FileInfo(Directories.Maps_Data.FullName + id + Directories.Format);
 
             // Lê os dados
             using (var stream = file.OpenRead())

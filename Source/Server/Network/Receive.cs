@@ -81,7 +81,7 @@ namespace CryBits.Server.Network
                     case EditorServer.Request_Setting: Request_Setting(account); break;
                     case EditorServer.Request_Classes: Request_Classes(account); break;
                     case EditorServer.Request_Map: Request_Map(account, data); break;
-                    case EditorServer.Request_Maps: Request_Maps(account, data); break;
+                    case EditorServer.Request_Maps: Request_Maps(account); break;
                     case EditorServer.Request_NPCs: Request_NPCs(account); break;
                     case EditorServer.Request_Items: Request_Items(account); break;
                     case EditorServer.Request_Shops: Request_Shops(account); break;
@@ -640,7 +640,7 @@ namespace CryBits.Server.Network
             Send.Map(account, Map.Get(new Guid(data.ReadString())));
         }
 
-        private static void Request_Maps(Account account, NetIncomingMessage data)
+        private static void Request_Maps(Account account)
         {
             Send.Maps(account);
         }
@@ -801,7 +801,7 @@ namespace CryBits.Server.Network
                 return;
             }
             // Verifica se os jogadores estão pertods um do outro
-            if (System.Math.Abs(player.X - invited.X) + System.Math.Abs(player.Y - invited.Y) != 1)
+            if (Math.Abs(player.X - invited.X) + Math.Abs(player.Y - invited.Y) != 1)
             {
                 Send.Message(player, "You need to be close to the player to start trade.", System.Drawing.Color.White);
                 return;
@@ -829,7 +829,7 @@ namespace CryBits.Server.Network
                 return;
             }
             // Verifica se os jogadores estão pertods um do outro
-            if (System.Math.Abs(player.X - invited.X) + System.Math.Abs(player.Y - invited.Y) != 1)
+            if (Math.Abs(player.X - invited.X) + Math.Abs(player.Y - invited.Y) != 1)
             {
                 Send.Message(player, "You need to be close to the player to accept the trade.", System.Drawing.Color.White);
                 return;

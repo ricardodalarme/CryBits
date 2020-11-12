@@ -160,8 +160,8 @@ namespace CryBits.Editors.Media
 
         private static void Render_Box(RenderWindow window, Texture texture, byte margin, Point position, Size size)
         {
-            int textureWidth = Graphics.Size(texture).Width;
-            int textureHeight = Graphics.Size(texture).Height;
+            int textureWidth = Size(texture).Width;
+            int textureHeight = Size(texture).Height;
 
             // Borda esquerda
             Render(window, texture, new Rectangle(new Point(0), new Size(margin, textureWidth)), new Rectangle(position, new Size(margin, textureHeight)));
@@ -694,7 +694,7 @@ namespace CryBits.Editors.Media
         private static void Character(RenderWindow window, short textureNum)
         {
             Texture texture = Tex_Character[textureNum];
-            Size size = new Size(Graphics.Size(texture).Width / 4, Graphics.Size(texture).Height / 4);
+            Size size = new Size(Size(texture).Width / 4, Size(texture).Height / 4);
 
             // Desenha o item
             window.Clear();

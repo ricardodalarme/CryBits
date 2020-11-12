@@ -237,8 +237,8 @@ namespace CryBits.Client.Media
 
         private static void Render_Box(Texture texture, byte margin, Point position, Size size)
         {
-            int textureWidth = Graphics.Size(texture).Width;
-            int textureHeight = Graphics.Size(texture).Height;
+            int textureWidth = Size(texture).Width;
+            int textureHeight = Size(texture).Height;
 
             // Borda esquerda
             Render(texture, new Rectangle(new Point(0), new Size(margin, textureWidth)), new Rectangle(position, new Size(margin, textureHeight)));
@@ -305,8 +305,8 @@ namespace CryBits.Client.Media
             Party();
 
             // Desenha os dados do jogo
-            if (Option.FPS) DrawText("FPS: " + FPS.ToString(), 176, 7, SFML.Graphics.Color.White);
-            if (Option.Latency) DrawText("Latency: " + CryBits.Client.Network.Socket.Latency.ToString(), 176, 19, SFML.Graphics.Color.White);
+            if (Option.FPS) DrawText("FPS: " + FPS, 176, 7, SFML.Graphics.Color.White);
+            if (Option.Latency) DrawText("Latency: " + Network.Socket.Latency, 176, 19, SFML.Graphics.Color.White);
         }
 
         #region Tools
@@ -441,7 +441,7 @@ namespace CryBits.Client.Media
         private static void CreateCharacter_Class()
         {
             short textureNum = 0;
-            Class @class = CryBits.Client.Entities.Class.List.ElementAt(Panels.CreateCharacter_Class).Value;
+            Class @class = Class.List.ElementAt(Panels.CreateCharacter_Class).Value;
 
             // Textura do personagem
             if (CheckBoxes.List["GenderMale"].Checked && @class.Tex_Male.Length > 0)
@@ -494,9 +494,9 @@ namespace CryBits.Client.Media
 
             // Renderiza as mensagens
             if (tool.Visible || (Loop.Chat_Timer >= Environment.TickCount && Option.Chat))
-                for (byte i = UI.Chat.Lines_First; i <= global::CryBits.Client.UI.Chat.LinesVisible + global::CryBits.Client.UI.Chat.Lines_First; i++)
-                    if (global::CryBits.Client.UI.Chat.Order.Count > i)
-                        DrawText(global::CryBits.Client.UI.Chat.Order[i].Text, 16, 461 + 11 * (i - global::CryBits.Client.UI.Chat.Lines_First), global::CryBits.Client.UI.Chat.Order[i].Color);
+                for (byte i = UI.Chat.Lines_First; i <= UI.Chat.LinesVisible + UI.Chat.Lines_First; i++)
+                    if (UI.Chat.Order.Count > i)
+                        DrawText(UI.Chat.Order[i].Text, 16, 461 + 11 * (i - UI.Chat.Lines_First), UI.Chat.Order[i].Color);
 
             // Dica de como abrir o chat
             if (!tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.List["Chat"].Position.X + 5, TextBoxes.List["Chat"].Position.Y + 3, SFML.Graphics.Color.White);
@@ -504,7 +504,7 @@ namespace CryBits.Client.Media
 
         private static void Informations(Panels tool)
         {
-            Item item = CryBits.Client.Entities.Item.Get(Panels.Infomation_ID);
+            Item item = Entities.Item.Get(Panels.Infomation_ID);
             SFML.Graphics.Color textColor;
             List<string> data = new List<string>();
 
@@ -541,7 +541,7 @@ namespace CryBits.Client.Media
                 case Items.Potion:
                     for (byte n = 0; n < (byte)Vitals.Count; n++)
                         if (item.Potion_Vital[n] != 0)
-                            data.Add(((Vitals)n).ToString() + ": " + item.Potion_Vital[n]);
+                            data.Add(((Vitals)n) + ": " + item.Potion_Vital[n]);
 
                     if (item.Potion_Experience != 0) data.Add("Experience: " + item.Potion_Experience);
                     break;
@@ -553,7 +553,7 @@ namespace CryBits.Client.Media
 
                     for (byte n = 0; n < (byte)Attributes.Count; n++)
                         if (item.Equip_Attribute[n] != 0)
-                            data.Add(((Attributes)n).ToString() + ": " + item.Equip_Attribute[n]);
+                            data.Add(((Attributes)n) + ": " + item.Equip_Attribute[n]);
                     break;
             }
 
@@ -574,7 +574,7 @@ namespace CryBits.Client.Media
                     switch ((CryBits.Hotbars)Player.Me.Hotbar[i].Type)
                     {
                         // Itens
-                        case CryBits.Hotbars.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
+                        case Hotbars.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
                     }
 
                 // Desenha os números de cada slot
@@ -585,7 +585,7 @@ namespace CryBits.Client.Media
 
             // Movendo slot
             if (Panels.Hotbar_Change >= 0)
-                if (Player.Me.Hotbar[Panels.Hotbar_Change].Type == (byte)CryBits.Hotbars.Item)
+                if (Player.Me.Hotbar[Panels.Hotbar_Change].Type == (byte)Hotbars.Item)
                     Render(Tex_Item[Player.Me.Inventory[Player.Me.Hotbar[Panels.Hotbar_Change].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
         }
 
@@ -691,7 +691,7 @@ namespace CryBits.Client.Media
         private static void Character(short textureNum, Point position, Directions direction, byte column, bool hurt = false)
         {
             Rectangle recSource = new Rectangle(), recDestiny;
-            Size size = Graphics.Size(Tex_Character[textureNum]);
+            Size size = Size(Tex_Character[textureNum]);
             SFML.Graphics.Color color = new SFML.Graphics.Color(255, 255, 255);
             byte line = 0;
 
@@ -715,7 +715,7 @@ namespace CryBits.Client.Media
             if (hurt) color = new SFML.Graphics.Color(205, 125, 125);
 
             // Desenha o personagem e sua sombra
-            Render(Tex_Shadow, recDestiny.Location.X, recDestiny.Location.Y + size.Height / AnimationAmount - Graphics.Size(Tex_Shadow).Height + 5, 0, 0, size.Width / AnimationAmount, Graphics.Size(Tex_Shadow).Height);
+            Render(Tex_Shadow, recDestiny.Location.X, recDestiny.Location.Y + size.Height / AnimationAmount - Size(Tex_Shadow).Height + 5, 0, 0, size.Width / AnimationAmount, Size(Tex_Shadow).Height);
             Render(Tex_Character[textureNum], recSource, recDestiny, color);
         }
 

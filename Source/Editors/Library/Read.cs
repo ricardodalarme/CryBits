@@ -68,7 +68,7 @@ namespace CryBits.Editors.Library
                 else if (type == ToolsTypes.TextBox) temp = TextBox(data);
 
                 // Adiciona o nó
-                node.Nodes.Add("[" + type.ToString() + "] " + temp.Name);
+                node.Nodes.Add("[" + type + "] " + temp.Name);
                 node.LastNode.Tag = temp;
 
                 // Pula pro próximo

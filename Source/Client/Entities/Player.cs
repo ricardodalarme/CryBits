@@ -164,7 +164,7 @@ namespace CryBits.Client.Entities
         public void Leave()
         {
             // Reseta os dados
-            Player.List.Clear();
+            List.Clear();
             Me = null;
         }
     }

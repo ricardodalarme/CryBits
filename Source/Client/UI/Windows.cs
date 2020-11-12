@@ -146,8 +146,8 @@ namespace CryBits.Client.UI
         public static void OnMouseMoved(object sender, MouseMoveEventArgs e)
         {
             // Define a posição do mouse à váriavel
-            Windows.Mouse.X = e.X;
-            Windows.Mouse.Y = e.Y;
+            Mouse.X = e.X;
+            Mouse.Y = e.Y;
 
             // Percorre toda a árvore de ordem para executar o comando
             Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();

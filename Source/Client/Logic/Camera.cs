@@ -4,7 +4,7 @@ using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Logic
 {
-    static class Camera
+    internal static class Camera
     {
         // Visão do jogador
         public static Point Start_Sight;

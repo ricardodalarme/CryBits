@@ -346,7 +346,7 @@ namespace CryBits.Server.Entities
             if (victim.Target != this && !string.IsNullOrEmpty(victim.Data.SayMsg)) Send.Message(this, victim.Data.Name + ": " + victim.Data.SayMsg, Color.White);
 
             // Não executa o combate com um NPC amigavel
-            switch ((NPCBehaviour)victim.Data.Behaviour)
+            switch (victim.Data.Behaviour)
             {
                 case NPCBehaviour.Friendly: return;
                 case NPCBehaviour.ShopKeeper: Shop_Open(victim.Data.Shop); return;

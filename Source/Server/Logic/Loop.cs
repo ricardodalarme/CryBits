@@ -7,7 +7,7 @@ namespace CryBits.Server.Logic
     static class Loop
     {
         // Contagens
-        public static int Timer_500 = 0, Timer_1000 = 0, Timer_5000 = 0;
+        public static int Timer_500 = 0, Timer_1000 = 0;
         public static int Timer_Regen = 0;
         public static int Timer_Map_Items = 0;
 

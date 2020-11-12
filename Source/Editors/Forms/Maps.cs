@@ -39,9 +39,9 @@ namespace CryBits.Editors.Forms
         private short _aData2;
         private short _aData3;
         private short _aData4;
-
+        
         // Azulejos copiados
-        private CopyStruct _tilesCopy = new CopyStruct();
+        private CopyStruct _tilesCopy;
 
         public struct CopyStruct
         {

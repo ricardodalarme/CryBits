@@ -14,7 +14,7 @@ namespace CryBits.Editors.Network
         private static NetIncomingMessage _data;
 
         // Dados para a conexão com o servidor
-        public const string Ip = "localhost";
+        public const string IP = "localhost";
         public const short Port = 7001;
 
         public static void Init()
@@ -66,7 +66,7 @@ namespace CryBits.Editors.Network
             if (IsConnected()) return true;
 
             // Tenta se conectar
-            Device.Connect(Ip, Port);
+            Device.Connect(IP, Port);
 
             // Espere até que o jogador se conecte
             while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)

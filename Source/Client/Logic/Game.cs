@@ -2,7 +2,7 @@
 
 namespace CryBits.Client.Logic
 {
-    static class Game
+    internal static class Game
     {
         // Nome do jogo
         public static string Game_Name = "CryBits";

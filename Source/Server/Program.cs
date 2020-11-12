@@ -9,7 +9,7 @@ using CryBits.Server.Network;
 
 namespace CryBits.Server
 {
-    static class Program
+    internal static class Program
     {
         // Usado para manter a aplicação aberta
         public static bool Working = true;

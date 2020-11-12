@@ -70,7 +70,7 @@ namespace CryBits.Server.Library
 
         public static void Characters(Account account)
         {
-            DirectoryInfo directory = new DirectoryInfo(Directories.Accounts.FullName + account.User.ToString() + "\\Characters");
+            DirectoryInfo directory = new DirectoryInfo(Directories.Accounts.FullName + account.User + "\\Characters");
 
             // Previne erros
             if (!directory.Exists) directory.Create();
