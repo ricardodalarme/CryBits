@@ -151,8 +151,8 @@ namespace CryBits.Server.Network
                     Data.Write((byte)Class.Item.Count);
                     for (byte n = 0; n < (byte)Class.Item.Count; n++)
                     {
-                        Data.Write(Class.Item[n].Item1.GetID());
-                        Data.Write(Class.Item[n].Item2);
+                        Data.Write(Class.Item[n].Item.GetID());
+                        Data.Write(Class.Item[n].Amount);
                     }
                 }
             }

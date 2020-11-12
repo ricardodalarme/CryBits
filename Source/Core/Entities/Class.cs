@@ -22,7 +22,7 @@ namespace CryBits.Entities
         public byte Spawn_Y { get; set; }
         public short[] Vital { get; set; } = new short[(byte)Vitals.Count];
         public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
-        public IList<Tuple<Item, short>> Item { get; set; } = Array.Empty<Tuple<Item, short>>();
+        public IList<ItemSlot> Item { get; set; } = Array.Empty<ItemSlot>();
 
         // Construtor
         public Class(Guid ID) : base(ID) { }
