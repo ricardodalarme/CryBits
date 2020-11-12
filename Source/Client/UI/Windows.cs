@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Media;
+using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
 using SFML.Window;
 using static CryBits.Client.Logic.Game;
@@ -205,8 +206,8 @@ namespace CryBits.Client.UI
         public static void OpenMenu()
         {
             // Reproduz a música de fundo
-            Audio.Sound.Stop_All();
-            if (Option.Musics) Audio.Music.Play(Audio.Musics.Menu);
+            Sound.Stop_All();
+            if (Option.Musics) Music.Play(Musics.Menu);
 
             // Nome do usuário salvo
             CheckBoxes.List["Connect_Save_Username"].Checked = Option.SaveUsername;

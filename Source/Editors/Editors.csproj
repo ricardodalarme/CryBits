@@ -128,8 +128,9 @@
       <DependentUpon>NPCs.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\MapProperties.cs" />
+    <Compile Include="Media\Audio\Sound.cs" />
     <Compile Include="Media\Graphics.cs" />
-    <Compile Include="Media\Audio.cs" />
+    <Compile Include="Media\Audio\Music.cs" />
     <Compile Include="Logic\Utils.cs" />
     <Compile Include="Forms\Classes.cs">
       <SubType>Form</SubType>
@@ -220,6 +221,7 @@
       <Version>2.5.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

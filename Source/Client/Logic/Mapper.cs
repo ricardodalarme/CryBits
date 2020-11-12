@@ -2,6 +2,7 @@
 using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Media;
+using CryBits.Client.Media.Audio;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
@@ -114,8 +115,8 @@ namespace CryBits.Client.Logic
         private static void Weather()
         {
             bool stop = false, move;
-            byte thunderFirst = (byte)Audio.Sounds.Thunder_1;
-            byte thunderLast = (byte)Audio.Sounds.Thunder_4;
+            byte thunderFirst = (byte)Sounds.Thunder_1;
+            byte thunderLast = (byte)Sounds.Thunder_4;
 
             // Somente se necessário
             if (Current.Data.Weather.Type == 0) return;
@@ -181,7 +182,7 @@ namespace CryBits.Client.Logic
                 {
                     // Som do trovão
                     int thunder = MyRandom.Next(thunderFirst, thunderLast);
-                    Audio.Sound.Play((Audio.Sounds)thunder);
+                    Sound.Play((Sounds)thunder);
 
                     // Relâmpago
                     if (thunder < 6) Lightning = 190;
@@ -251,7 +252,7 @@ namespace CryBits.Client.Logic
         public static void Weather_Update()
         {
             // Para todos os sons
-            Audio.Sound.Stop_All();
+            Sound.Stop_All();
             if (Current == null) return;
             // Redimensiona a lista
             switch (Current.Data.Weather.Type)
@@ -259,7 +260,7 @@ namespace CryBits.Client.Logic
                 case Weathers.Thundering:
                 case Weathers.Raining:
                     // Reproduz o som chuva
-                    Audio.Sound.Play(Audio.Sounds.Rain, true);
+                    Sound.Play(Sounds.Rain, true);
 
                     // Redimensiona a estrutura
                     TempMap.Weather = new MapWeatherParticle[MaxRain + 1];

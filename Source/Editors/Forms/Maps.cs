@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
-using CryBits.Editors.Media;
+using CryBits.Editors.Media.Audio;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using DarkUI.Forms;
@@ -421,8 +421,8 @@ namespace CryBits.Editors.Forms
             // Desativa os áudios
             if (!butAudio.Checked)
             {
-                Audio.Music.Stop();
-                Audio.Sound.Stop_All();
+                Music.Stop();
+                Sound.Stop_All();
             }
         }
 

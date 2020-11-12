@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Windows.Forms;
 using CryBits.Editors.Media;
+using CryBits.Editors.Media.Audio;
 
 namespace CryBits.Editors.Library
 {
@@ -62,7 +63,7 @@ namespace CryBits.Editors.Library
 
             // Lê os dados do lado do cliente
             Graphics.Init();
-            Audio.Sound.Load();
+            Sound.Load();
             Read.Tiles();
             Read.Tools();
         }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
-using CryBits.Client.Media;
+using CryBits;
+using CryBits.Client.Media.Audio;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
@@ -37,7 +38,7 @@ namespace CryBits.Client.UI
 
             // Executa o evento
             Execute(Name);
-            Audio.Sound.Play(Audio.Sounds.Click);
+            Sound.Play(CryBits.Sounds.Click);
         }
 
         private static void Execute(string name)
@@ -64,7 +65,7 @@ namespace CryBits.Client.UI
         {
             // Salva os dados
             Option.Sounds = !Option.Sounds;
-            if (!Option.Sounds) Audio.Sound.Stop_All();
+            if (!Option.Sounds) Sound.Stop_All();
             Write.Options();
         }
 
@@ -76,11 +77,11 @@ namespace CryBits.Client.UI
 
             // Para ou reproduz a música dependendo do estado do marcador
             if (!Option.Musics)
-                Audio.Music.Stop();
+                Music.Stop();
             else if (Windows.Current == WindowsTypes.Menu)
-                Audio.Music.Play(Audio.Musics.Menu);
+                Music.Play(CryBits.Musics.Menu);
             else if (Windows.Current == WindowsTypes.Game)
-                Audio.Music.Play((Audio.Musics)Mapper.Current.Data.Music);
+                Music.Play((Musics)Mapper.Current.Data.Music);
         }
 
         private static void SaveUsername()
