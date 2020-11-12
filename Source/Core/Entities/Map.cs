@@ -1,11 +1,10 @@
-﻿using CryBits.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace CryBits.Server.Entities
+namespace CryBits.Entities
 {
     [Serializable]
-    class Map : Entity
+    public class Map : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, Map> List = new Dictionary<Guid, Map>();
@@ -50,28 +49,10 @@ namespace CryBits.Server.Entities
             if (Attribute[X, Y].Type == (byte)TileAttributes.Block) return true;
             return false;
         }
-
-        public void Create_Temporary()
-        {
-            TempMap Temp_Map = new TempMap(ID, this);
-            TempMap.List.Add(ID, Temp_Map);
-
-            // NPCs do mapa
-            Temp_Map.NPC = new TempNPC[NPC.Length];
-            for (byte i = 0; i < Temp_Map.NPC.Length; i++)
-            {
-                Temp_Map.NPC[i] = new TempNPC(i, Temp_Map, NPC[i].NPC);
-                Temp_Map.NPC[i].Spawn();
-            }
-
-            // Itens do mapa
-            Temp_Map.Spawn_Items();
-        }
     }
 
-
     [Serializable]
-    class Map_Attribute
+    public class Map_Attribute
     {
         public byte Type;
         public string Data_1;
@@ -83,7 +64,7 @@ namespace CryBits.Server.Entities
     }
 
     [Serializable]
-    class Map_Layer
+    public class Map_Layer
     {
         public string Name;
         public byte Type;
@@ -98,7 +79,7 @@ namespace CryBits.Server.Entities
     }
 
     [Serializable]
-    class Map_NPC
+    public class Map_NPC
     {
         public NPC NPC;
         public byte Zone;
@@ -108,7 +89,7 @@ namespace CryBits.Server.Entities
     }
 
     [Serializable]
-    class Map_Tile_Data
+    public class Map_Tile_Data
     {
         public byte X;
         public byte Y;
@@ -117,7 +98,7 @@ namespace CryBits.Server.Entities
     }
 
     [Serializable]
-    class Map_Light
+    public class Map_Light
     {
         public byte X;
         public byte Y;
@@ -126,14 +107,14 @@ namespace CryBits.Server.Entities
     }
 
     [Serializable]
-    class Map_Weather
+    public class Map_Weather
     {
         public byte Type;
         public byte Intensity;
     }
 
     [Serializable]
-    class Map_Fog
+    public class Map_Fog
     {
         public byte Texture;
         public sbyte Speed_X;

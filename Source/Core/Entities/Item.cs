@@ -1,13 +1,10 @@
-﻿using CryBits.Server.Logic;
-using CryBits.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using static CryBits.Server.Logic.Utils;
 
-namespace CryBits.Server.Entities
+namespace CryBits.Entities
 {
     [Serializable]
-    class Item : Entity
+    public class Item : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, Item> List = new Dictionary<Guid, Item>();
@@ -16,12 +13,12 @@ namespace CryBits.Server.Entities
         public static Item Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
 
         // Geral
-        public string Description = string.Empty;
-        public short Texture;
-        public byte Type;
-        public bool Stackable;
-        public byte Bind;
-        public byte Rarity;
+        public string Description { get; set; } = string.Empty;
+        public short Texture { get; set; }
+        public byte Type { get; set; }
+        public bool Stackable { get; set; }
+        public byte Bind { get; set; }
+        public byte Rarity { get; set; }
 
         // Requerimentos
         public short Req_Level;
@@ -33,13 +30,13 @@ namespace CryBits.Server.Entities
         }
 
         // Poção
-        public int Potion_Experience;
-        public short[] Potion_Vital = new short[(byte)Vitals.Count];
+        public int Potion_Experience { get; set; }
+        public short[] Potion_Vital { get; set; } = new short[(byte)Vitals.Count];
 
         // Equipamento
-        public byte Equip_Type;
-        public short[] Equip_Attribute = new short[(byte)Attributes.Count];
-        public short Weapon_Damage;
+        public byte Equip_Type { get; set; }
+        public short[] Equip_Attribute { get; set; } = new short[(byte)Attributes.Count];
+        public short Weapon_Damage { get; set; }
 
         // Construtor
         public Item(Guid ID) : base(ID) { }

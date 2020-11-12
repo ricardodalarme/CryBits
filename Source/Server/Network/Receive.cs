@@ -1,6 +1,6 @@
 ﻿using CryBits.Server.Entities;
 using CryBits.Server.Library;
-using CryBits;
+using CryBits.Entities;
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
@@ -665,7 +665,7 @@ namespace CryBits.Server.Network
                 {
                     Map = new Map(ID);
                     Map.List.Add(Map.ID, Map);
-                    Map.Create_Temporary();
+                    Mapp.Create_Temporary(Map);
                 }
 
                 // Mapa temporário

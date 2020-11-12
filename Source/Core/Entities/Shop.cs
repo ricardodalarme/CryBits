@@ -1,12 +1,10 @@
-﻿using CryBits.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using static CryBits.Server.Logic.Utils;
 
-namespace CryBits.Server.Entities
+namespace CryBits.Entities
 {
     [Serializable]
-    class Shop : Entity
+    public class Shop : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, Shop> List = new Dictionary<Guid, Shop>();
@@ -21,8 +19,8 @@ namespace CryBits.Server.Entities
             get => Item.Get(currency);
             set => currency = new Guid(value.GetID());
         }
-        public Shop_Item[] Bought = Array.Empty<Shop_Item>();
-        public Shop_Item[] Sold = Array.Empty<Shop_Item>();
+        public Shop_Item[] Bought { get; set; } = Array.Empty<Shop_Item>();
+        public Shop_Item[] Sold { get; set; } = Array.Empty<Shop_Item>();
 
         // Construtor
         public Shop(Guid ID) : base(ID) { }
@@ -39,7 +37,7 @@ namespace CryBits.Server.Entities
     }
 
     [Serializable]
-    class Shop_Item
+    public class Shop_Item
     {
         private Guid item;
         public Item Item
