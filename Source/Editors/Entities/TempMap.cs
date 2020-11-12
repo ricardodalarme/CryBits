@@ -1,8 +1,8 @@
-﻿using CryBits;
-using CryBits.Editors.Forms;
+﻿using CryBits.Editors.Forms;
+using CryBits.Editors.Library;
 using CryBits.Entities;
 
-namespace Editors.Entities
+namespace CryBits.Editors.Entities
 {
     class TempMap
     {

@@ -1,11 +1,12 @@
 ﻿using CryBits.Client.Entities;
-using CryBits.Client.Interface;
 using CryBits.Client.Logic;
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using CryBits.Client.Media;
+using CryBits.Client.UI;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
 

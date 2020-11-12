@@ -1,8 +1,8 @@
 ﻿using CryBits.Client.Entities;
-using CryBits.Client.Interface;
 using Lidgren.Network;
 using System;
 using System.Linq;
+using CryBits.Client.UI;
 
 namespace CryBits.Client.Network
 {

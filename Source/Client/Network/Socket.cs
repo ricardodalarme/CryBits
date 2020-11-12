@@ -1,6 +1,7 @@
 ﻿using Lidgren.Network;
 using System;
 using System.Windows.Forms;
+using CryBits.Client.UI;
 
 namespace CryBits.Client.Network
 {
@@ -53,7 +54,7 @@ namespace CryBits.Client.Network
                         {
                             // Apaga os dados e volta ao menu
                             if (Entities.Player.Me != null) Entities.Player.Me.Leave();
-                            Interface.Windows.OpenMenu();
+                            Windows.OpenMenu();
                         }
                         break;
                 }

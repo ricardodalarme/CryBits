@@ -1,8 +1,10 @@
-﻿using CryBits.Client.Interface;
-using CryBits.Client.Network;
+﻿using CryBits.Client.Network;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
+using CryBits.Client.Logic;
+using CryBits.Client.Media;
+using CryBits.Client.UI;
 using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Entities

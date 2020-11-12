@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Windows.Forms;
+using CryBits.Editors.Media;
 
 namespace CryBits.Editors.Library
 {

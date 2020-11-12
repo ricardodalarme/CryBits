@@ -1,7 +1,8 @@
 ﻿using CryBits.Client.Entities;
-using CryBits.Client.Interface;
 using System;
 using System.Windows.Forms;
+using CryBits.Client.Media;
+using CryBits.Client.UI;
 
 namespace CryBits.Client.Logic
 {

@@ -4,6 +4,7 @@ using CryBits.Packets;
 using Lidgren.Network;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using CryBits.Editors.Library;
 
 namespace CryBits.Editors.Network
 {

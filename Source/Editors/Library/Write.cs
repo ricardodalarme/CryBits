@@ -1,6 +1,11 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using CryBits.Editors.Entities.Tools;
+using Button = CryBits.Editors.Entities.Tools.Button;
+using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
+using Panel = CryBits.Editors.Entities.Tools.Panel;
+using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
 namespace CryBits.Editors.Library
 {
@@ -30,26 +35,26 @@ namespace CryBits.Editors.Library
             for (byte i = 0; i < node.Nodes.Count; i++)
             {
                 // Salva de acordo com a ferramenta
-                Entities.Tool tool = (Entities.Tool)node.Nodes[i].Tag;
-                if (tool is Entities.Button)
+                Tool tool = (Tool)node.Nodes[i].Tag;
+                if (tool is Button)
                 {
                     data.Write((byte)ToolsTypes.Button);
-                    Button(data, (Entities.Button)tool);
+                    Button(data, (Button)tool);
                 }
-                else if (tool is Entities.TextBox)
+                else if (tool is TextBox)
                 {
                     data.Write((byte)ToolsTypes.TextBox);
-                    TextBox(data, (Entities.TextBox)tool);
+                    TextBox(data, (TextBox)tool);
                 }
-                else if (tool is Entities.CheckBox)
+                else if (tool is CheckBox)
                 {
                     data.Write((byte)ToolsTypes.CheckBox);
-                    CheckBox(data, (Entities.CheckBox)tool);
+                    CheckBox(data, (CheckBox)tool);
                 }
-                else if (tool is Entities.Panel)
+                else if (tool is Panel)
                 {
                     data.Write((byte)ToolsTypes.Panel);
-                    Panel(data, (Entities.Panel)tool);
+                    Panel(data, (Panel)tool);
                 }
 
                 // Pula pra próxima ferramenta
@@ -57,7 +62,7 @@ namespace CryBits.Editors.Library
             }
         }
 
-        private static void Button(BinaryWriter data, Entities.Button tool)
+        private static void Button(BinaryWriter data, Button tool)
         {
             // Escreve os dados
             data.Write(tool.Name);
@@ -68,7 +73,7 @@ namespace CryBits.Editors.Library
             data.Write(tool.Texture_Num);
         }
 
-        private static void TextBox(BinaryWriter data, Entities.TextBox tool)
+        private static void TextBox(BinaryWriter data, TextBox tool)
         {
             // Escreve os dados
             data.Write(tool.Name);
@@ -81,7 +86,7 @@ namespace CryBits.Editors.Library
             data.Write(tool.Password);
         }
 
-        private static void Panel(BinaryWriter data, Entities.Panel tool)
+        private static void Panel(BinaryWriter data, Panel tool)
         {
             // Escreve os dados
             data.Write(tool.Name);
@@ -92,7 +97,7 @@ namespace CryBits.Editors.Library
             data.Write(tool.Texture_Num);
         }
 
-        private static void CheckBox(BinaryWriter data, Entities.CheckBox tool)
+        private static void CheckBox(BinaryWriter data, CheckBox tool)
         {
             // Escreve os dados
             data.Write(tool.Name);

@@ -4,6 +4,12 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using CryBits.Editors.Entities.Tools;
+using Button = CryBits.Editors.Entities.Tools.Button;
+using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
+using Graphics = CryBits.Editors.Media.Graphics;
+using Panel = CryBits.Editors.Entities.Tools.Panel;
+using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
 namespace CryBits.Editors.Library
 {
@@ -52,7 +58,7 @@ namespace CryBits.Editors.Library
             byte size = data.ReadByte();
             for (byte i = 0; i < size; i++)
             {
-                Entities.Tool temp = new Entities.Tool();
+                Tool temp = new Tool();
                 ToolsTypes type = (ToolsTypes)data.ReadByte();
 
                 // Lê a ferramenta
@@ -70,10 +76,10 @@ namespace CryBits.Editors.Library
             }
         }
 
-        private static Entities.Button Button(BinaryReader data)
+        private static Button Button(BinaryReader data)
         {
             // Lê os dados
-            return new Entities.Button
+            return new Button
             {
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
@@ -83,10 +89,10 @@ namespace CryBits.Editors.Library
             };
         }
 
-        private static Entities.TextBox TextBox(BinaryReader data)
+        private static TextBox TextBox(BinaryReader data)
         {
             // Lê os dados
-            return new Entities.TextBox
+            return new TextBox
             {
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
@@ -98,10 +104,10 @@ namespace CryBits.Editors.Library
             };
         }
 
-        private static Entities.Panel Panel(BinaryReader data)
+        private static Panel Panel(BinaryReader data)
         {
             // Carrega os dados
-            return new Entities.Panel
+            return new Panel
             {
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
@@ -111,10 +117,10 @@ namespace CryBits.Editors.Library
             };
         }
 
-        private static Entities.CheckBox CheckBox(BinaryReader data)
+        private static CheckBox CheckBox(BinaryReader data)
         {
             // Carrega os dados
-            return new Entities.CheckBox
+            return new CheckBox
             {
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),

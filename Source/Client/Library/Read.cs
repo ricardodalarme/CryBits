@@ -1,11 +1,11 @@
 ﻿using CryBits.Client.Entities;
-using CryBits.Client.Interface;
 using CryBits.Client.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using CryBits.Client.UI;
 using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Library
@@ -92,12 +92,12 @@ namespace CryBits.Client.Library
         private static void Tools()
         {
             FileInfo file = new FileInfo(Directories.Tools_Data.FullName);
-            for (byte i = 0; i < (byte)WindowsTypes.Count; i++) Interface.Tools.All_Order[i] = new List<Tools.OrderStructure>();
+            for (byte i = 0; i < (byte)WindowsTypes.Count; i++) UI.Tools.All_Order[i] = new List<Tools.OrderStructure>();
 
             // Lê todas as ferramentas
             using (var data = new BinaryReader(file.OpenRead()))
-                for (byte n = 0; n < Interface.Tools.All_Order.Length; n++)
-                    Tools(null, ref Interface.Tools.All_Order[n], data);
+                for (byte n = 0; n < UI.Tools.All_Order.Length; n++)
+                    Tools(null, ref UI.Tools.All_Order[n], data);
         }
 
         private static void Tools(Tools.OrderStructure parent, ref List<Tools.OrderStructure> node, BinaryReader data)
@@ -111,10 +111,10 @@ namespace CryBits.Client.Library
                 var tempTool = new Tools.Structure();
                 switch ((Tools.Types)data.ReadByte())
                 {
-                    case Interface.Tools.Types.Button: tempTool = Button(data); Buttons.List.Add(tempTool.Name, (Buttons)tempTool); break;
-                    case Interface.Tools.Types.TextBox: tempTool = TextBox(data); TextBoxes.List.Add(tempTool.Name, (TextBoxes)tempTool); break;
-                    case Interface.Tools.Types.Panel: tempTool = Panel(data); Panels.List.Add(tempTool.Name, (Panels)tempTool); break;
-                    case Interface.Tools.Types.CheckBox: tempTool = CheckBox(data); CheckBoxes.List.Add(tempTool.Name, (CheckBoxes)tempTool); break;
+                    case UI.Tools.Types.Button: tempTool = Button(data); Buttons.List.Add(tempTool.Name, (Buttons)tempTool); break;
+                    case UI.Tools.Types.TextBox: tempTool = TextBox(data); TextBoxes.List.Add(tempTool.Name, (TextBoxes)tempTool); break;
+                    case UI.Tools.Types.Panel: tempTool = Panel(data); Panels.List.Add(tempTool.Name, (Panels)tempTool); break;
+                    case UI.Tools.Types.CheckBox: tempTool = CheckBox(data); CheckBoxes.List.Add(tempTool.Name, (CheckBoxes)tempTool); break;
                 }
 
                 // Adiciona à lista
