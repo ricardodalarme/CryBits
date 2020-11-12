@@ -190,9 +190,10 @@ namespace CryBits.Server.Library
 
                 // Dados do mapa
                 Map.Name = "New map";
-                Map.Layer = new MapLayer[1];
-                Map.Layer[0] = new MapLayer();
-                Map.Layer[0].Name = "Ground";
+                Map.Layer.Add(new MapLayer
+                {
+                    Name = "Ground"
+                });
 
                 // Escreve os dados
                 Write.Map(Map);
