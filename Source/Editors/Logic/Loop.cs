@@ -1,6 +1,6 @@
 ﻿using CryBits.Editors.Forms;
-using CryBits.Editors.Entities;
-using CryBits;
+using CryBits.Entities;
+using Editors.Entities;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -81,14 +81,14 @@ namespace CryBits.Editors.Logic
             // Movimento para trás
             if (Speed < 0)
             {
-                Map.Fog_X -= 1;
-                if (Map.Fog_X < -Texture_Size.Width) Map.Fog_X = 0;
+                TempMap.Fog_X -= 1;
+                if (TempMap.Fog_X < -Texture_Size.Width) TempMap.Fog_X = 0;
             }
             // Movimento para frente
             else
             {
-                Map.Fog_X += 1;
-                if (Map.Fog_X > Texture_Size.Width) Map.Fog_X = 0;
+                TempMap.Fog_X += 1;
+                if (TempMap.Fog_X > Texture_Size.Width) TempMap.Fog_X = 0;
             }
 
             // Contagem
@@ -108,14 +108,14 @@ namespace CryBits.Editors.Logic
             // Movimento para trás
             if (Speed < 0)
             {
-                Map.Fog_Y -= 1;
-                if (Map.Fog_Y < -Texture_Size.Height) Map.Fog_Y = 0;
+                TempMap.Fog_Y -= 1;
+                if (TempMap.Fog_Y < -Texture_Size.Height) TempMap.Fog_Y = 0;
             }
             // Movimento para frente
             else
             {
-                Map.Fog_Y += 1;
-                if (Map.Fog_Y > Texture_Size.Height) Map.Fog_Y = 0;
+                TempMap.Fog_Y += 1;
+                if (TempMap.Fog_Y > Texture_Size.Height) TempMap.Fog_Y = 0;
             }
 
             // Contagem
@@ -136,7 +136,7 @@ namespace CryBits.Editors.Logic
             }
 
             // Clima do mapa
-            Map_Weather Weather = Editor_Maps.Form.Selected.Weather;
+            MapWeather Weather = Editor_Maps.Form.Selected.Weather;
 
             // Reproduz o som chuva
             if (Weather.Type == Weathers.Raining || Weather.Type == Weathers.Thundering)
@@ -157,10 +157,10 @@ namespace CryBits.Editors.Logic
                 Move = false;
 
             // Contagem dos relâmpagos
-            if (Map.Lightning > 0)
+            if (TempMap.Lightning > 0)
                 if (Thundering_Timer < Environment.TickCount)
                 {
-                    Map.Lightning -= 10;
+                    TempMap.Lightning -= 10;
                     Thundering_Timer = Environment.TickCount + 25;
                 }
 
@@ -199,7 +199,7 @@ namespace CryBits.Editors.Logic
 
                     // Reseta a partícula
                     if (Lists.Weather[i].x > Map.Width * Grid || Lists.Weather[i].y > Map.Height * Grid)
-                        Lists.Weather[i] = new Map_Weather_Particle();
+                        Lists.Weather[i] = new MapWeatherParticle();
                 }
 
             // Trovoadas
@@ -211,7 +211,7 @@ namespace CryBits.Editors.Logic
                     Audio.Sound.Play((Audio.Sounds)Thunder);
 
                     // Relâmpago
-                    if (Thunder < 6) Map.Lightning = 190;
+                    if (Thunder < 6) TempMap.Lightning = 190;
                 }
         }
 
@@ -284,8 +284,8 @@ namespace CryBits.Editors.Logic
             if (Editor_Maps.Form.Selected.Music == 0) goto stop;
 
             // Inicia a música
-            if (Audio.Music.Device == null || Audio.Music.Current != Editor_Maps.Form.Selected.Music)
-                Audio.Music.Play(Editor_Maps.Form.Selected.Music);
+            if (Audio.Music.Device == null || Audio.Music.Current != (Audio.Musics)Editor_Maps.Form.Selected.Music)
+                Audio.Music.Play((Audio.Musics)Editor_Maps.Form.Selected.Music);
             return;
         stop:
             // Para a música

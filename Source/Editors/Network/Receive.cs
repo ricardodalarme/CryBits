@@ -1,5 +1,5 @@
 ﻿using CryBits.Editors.Forms;
-using CryBits.Editors.Entities;
+using CryBits.Entities;
 using CryBits.Packets;
 using Lidgren.Network;
 using System;
@@ -91,14 +91,14 @@ namespace CryBits.Editors.Network
                 Class.Description = Data.ReadString();
                 for (byte t = 0, Size = Data.ReadByte(); t < Size; t++) Class.Tex_Male.Add(Data.ReadInt16());
                 for (byte t = 0, Size = Data.ReadByte(); t < Size; t++) Class.Tex_Female.Add(Data.ReadInt16());
-                Class.Spawn_Map = Entities.Map.Get(new Guid(Data.ReadString()));
+                Class.Spawn_Map = CryBits.Entities.Map.Get(new Guid(Data.ReadString()));
                 Class.Spawn_Direction = Data.ReadByte();
                 Class.Spawn_X = Data.ReadByte();
                 Class.Spawn_Y = Data.ReadByte();
                 for (byte v = 0; v < (byte)Vitals.Count; v++) Class.Vital[v] = Data.ReadInt16();
                 for (byte a = 0; a < (byte)Attributes.Count; a++) Class.Attribute[a] = Data.ReadInt16();
                 byte Num_Items = Data.ReadByte();
-                for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new Lists.Structures.Inventory(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16()));
+                for (byte a = 0; a < Num_Items; a++) Class.Item.Add(new ItemSlot(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16()));
             }
 
             // Remove as classes que não tiveram os dados atualizados
@@ -123,7 +123,7 @@ namespace CryBits.Editors.Network
             Map.Name = Data.ReadString();
             Map.Moral = (Map_Morals)Data.ReadByte();
             Map.Panorama = Data.ReadByte();
-            Map.Music = (Audio.Musics)Data.ReadByte();
+            Map.Music = Data.ReadByte();
             Map.Color = Color.FromArgb(Data.ReadInt32());
             Map.Weather.Type = (Weathers)Data.ReadByte();
             Map.Weather.Intensity = Data.ReadByte();
@@ -164,7 +164,7 @@ namespace CryBits.Editors.Network
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
                 {
-                    Map.Attribute[x, y] = new Map_Attribute();
+                    Map.Attribute[x, y] = new MapAttribute();
                     Map.Attribute[x, y].Type = Data.ReadByte();
                     Map.Attribute[x, y].Data_1 = Data.ReadString();
                     Map.Attribute[x, y].Data_2 = Data.ReadInt16();
@@ -178,18 +178,18 @@ namespace CryBits.Editors.Network
 
             // Luzes
             byte Num_Lights = Data.ReadByte();
-            Map.Light = new List<Map_Light>();
+            Map.Light = new List<MapLight>();
             if (Num_Lights > 0)
                 for (byte n = 0; n < Num_Lights; n++)
-                    Map.Light.Add(new Map_Light(new Rectangle(Data.ReadByte(), Data.ReadByte(), Data.ReadByte(), Data.ReadByte())));
+                    Map.Light.Add(new MapLight(new Rectangle(Data.ReadByte(), Data.ReadByte(), Data.ReadByte(), Data.ReadByte())));
 
             // NPCs
             byte Num_NPCs = Data.ReadByte();
-            Map_NPC NPC = new Map_NPC();
+            MapNPC NPC = new MapNPC();
             if (Num_NPCs > 0)
                 for (byte n = 0; n < Num_NPCs; n++)
                 {
-                    NPC.NPC = Entities.NPC.Get(new Guid(Data.ReadString()));
+                    NPC.NPC = CryBits.Entities.NPC.Get(new Guid(Data.ReadString()));
                     NPC.Zone = Data.ReadByte();
                     NPC.Spawn = Data.ReadBoolean();
                     NPC.X = Data.ReadByte();
@@ -227,7 +227,7 @@ namespace CryBits.Editors.Network
                 NPC.Name = Data.ReadString();
                 NPC.SayMsg = Data.ReadString();
                 NPC.Texture = Data.ReadInt16();
-                NPC.Behaviour = Data.ReadByte();
+                NPC.Behaviour = (NPCBehaviour)Data.ReadByte();
                 for (byte n = 0; n < (byte)Vitals.Count; n++) NPC.Vital[n] = Data.ReadInt16();
                 NPC.SpawnTime = Data.ReadByte();
                 NPC.Sight = Data.ReadByte();
@@ -236,7 +236,7 @@ namespace CryBits.Editors.Network
                 for (byte n = 0, Size = Data.ReadByte(); n < Size; n++) NPC.Drop.Add(new NPC_Drop(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte()));
                 NPC.AttackNPC = Data.ReadBoolean();
                 for (byte n = 0, Size = Data.ReadByte(); n < Size; n++) NPC.Allie.Add(NPC.Get(new Guid(Data.ReadString())));
-                NPC.Movement = (NPC_Movements)Data.ReadByte();
+                NPC.Movement = (NPCMovements)Data.ReadByte();
                 NPC.Flee_Helth = Data.ReadByte();
                 NPC.Shop = Shop.Get(new Guid(Data.ReadString()));
             }
@@ -274,10 +274,10 @@ namespace CryBits.Editors.Network
                 Item.Name = Data.ReadString();
                 Item.Description = Data.ReadString();
                 Item.Texture = Data.ReadInt16();
-                Item.Type = Data.ReadByte();
+                Item.Type = (Items)Data.ReadByte();
                 Item.Stackable = Data.ReadBoolean();
-                Item.Bind = Data.ReadByte();
-                Item.Rarity = Data.ReadByte();
+                Item.Bind = (BindOn)Data.ReadByte();
+                Item.Rarity = (Rarity)Data.ReadByte();
                 Item.Req_Level = Data.ReadInt16();
                 Item.Req_Class = Class.Get(new Guid(Data.ReadString()));
                 Item.Potion_Experience = Data.ReadInt32();

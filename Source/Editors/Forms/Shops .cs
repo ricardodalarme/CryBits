@@ -1,5 +1,5 @@
-﻿using CryBits.Editors.Entities;
-using CryBits.Editors.Network;
+﻿using CryBits.Editors.Network;
+using CryBits.Entities;
 using DarkUI.Forms;
 using System;
 using System.Linq;

@@ -1,6 +1,5 @@
-﻿using CryBits.Editors.Entities;
-using CryBits.Editors.Network;
-using CryBits;
+﻿using CryBits.Editors.Network;
+using CryBits.Entities;
 using DarkUI.Forms;
 using System;
 using System.Windows.Forms;
@@ -75,10 +74,10 @@ namespace CryBits.Editors.Forms
             txtName.Text = Selected.Name;
             txtDescription.Text = Selected.Description;
             numTexture.Value = Selected.Texture;
-            cmbType.SelectedIndex = Selected.Type;
+            cmbType.SelectedIndex = (byte)Selected.Type;
             chkStackable.Checked = Selected.Stackable;
-            cmbBind.SelectedIndex = Selected.Bind;
-            cmbRarity.SelectedIndex = Selected.Rarity;
+            cmbBind.SelectedIndex = (byte)Selected.Bind;
+            cmbRarity.SelectedIndex = (byte)Selected.Rarity;
             numReq_Level.Value = Selected.Req_Level;
             if (Selected.Req_Class != null) cmbReq_Class.SelectedIndex = cmbReq_Class.Items.IndexOf(Selected.Req_Class);
             else cmbReq_Class.SelectedIndex = 0;
@@ -154,7 +153,7 @@ namespace CryBits.Editors.Forms
 
         private void cmbType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Selected.Type = (byte)cmbType.SelectedIndex;
+            Selected.Type = (Items)cmbType.SelectedIndex;
 
             // Visibilidade dos paineis
             grpEquipment.Visible = cmbType.SelectedIndex == (byte)Items.Equipment;
@@ -237,12 +236,12 @@ namespace CryBits.Editors.Forms
 
         private void cmbRarity_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Selected.Rarity = (byte)cmbRarity.SelectedIndex;
+            Selected.Rarity = (Rarity)cmbRarity.SelectedIndex;
         }
 
         private void cmbBind_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Selected.Bind = (byte)cmbBind.SelectedIndex;
+            Selected.Bind = (BindOn)cmbBind.SelectedIndex;
         }
     }
 }

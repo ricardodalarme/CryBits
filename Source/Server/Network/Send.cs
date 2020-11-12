@@ -348,7 +348,7 @@ namespace CryBits.Server.Network
             Data.Write((byte)Map.Moral);
             Data.Write(Map.Panorama);
             Data.Write(Map.Music);
-            Data.Write(Map.Color);
+            Data.Write(Map.Color.ToArgb());
             Data.Write((byte)Map.Weather.Type);
             Data.Write(Map.Weather.Intensity);
             Data.Write(Map.Fog.Texture);

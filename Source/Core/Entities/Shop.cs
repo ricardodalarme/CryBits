@@ -19,8 +19,8 @@ namespace CryBits.Entities
             get => Item.Get(currency);
             set => currency = new Guid(value.GetID());
         }
-        public IList<Shop_Item> Bought { get; set; } = Array.Empty<Shop_Item>();
-        public IList<Shop_Item> Sold { get; set; } = Array.Empty<Shop_Item>();
+        public IList<Shop_Item> Bought { get; set; } = new List<Shop_Item>();
+        public IList<Shop_Item> Sold { get; set; } = new List<Shop_Item>();
 
         // Construtor
         public Shop(Guid ID) : base(ID) { }

@@ -5,6 +5,7 @@ using CryBits.Server.Library;
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using static CryBits.Server.Logic.Utils;
 using static CryBits.Utils;
@@ -621,7 +622,7 @@ namespace CryBits.Server.Network
                 Map.Moral = (Map_Morals)Data.ReadByte();
                 Map.Panorama = Data.ReadByte();
                 Map.Music = Data.ReadByte();
-                Map.Color = Data.ReadInt32();
+                Map.Color = Color.FromArgb(Data.ReadInt32());
                 Map.Weather.Type = (Weathers)Data.ReadByte();
                 Map.Weather.Intensity = Data.ReadByte();
                 Map.Fog.Texture = Data.ReadByte();

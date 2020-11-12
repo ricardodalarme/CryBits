@@ -1,7 +1,8 @@
 ﻿using CryBits.Editors.Forms;
-using CryBits.Editors.Entities;
+using CryBits.Entities;
 using CryBits.Packets;
 using Lidgren.Network;
+using System.Drawing;
 
 namespace CryBits.Editors.Network
 {
@@ -244,7 +245,7 @@ namespace CryBits.Editors.Network
                 Data.Write(NPC.Name);
                 Data.Write(NPC.SayMsg);
                 Data.Write(NPC.Texture);
-                Data.Write(NPC.Behaviour);
+                Data.Write((byte)NPC.Behaviour);
                 Data.Write(NPC.SpawnTime);
                 Data.Write(NPC.Sight);
                 Data.Write(NPC.Experience);
@@ -281,10 +282,10 @@ namespace CryBits.Editors.Network
                 Data.Write(Item.Name);
                 Data.Write(Item.Description);
                 Data.Write(Item.Texture);
-                Data.Write(Item.Type);
+                Data.Write((byte)Item.Type);
                 Data.Write(Item.Stackable);
-                Data.Write(Item.Bind);
-                Data.Write(Item.Rarity);
+                Data.Write((byte)Item.Bind);
+                Data.Write((byte)Item.Rarity);
                 Data.Write(Item.Req_Level);
                 Data.Write(Item.Req_Class.GetID());
                 Data.Write(Item.Potion_Experience);

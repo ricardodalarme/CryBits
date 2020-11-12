@@ -66,8 +66,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Core">
-      <HintPath>..\..\Build\Core\Core.dll</HintPath>
+    <Reference Include="CryBits.Core">
+      <HintPath>..\..\Build\Core\CryBits.Core.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\TempMap.cs" />
     <Compile Include="Forms\Shops .cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,8 +104,6 @@
     <Compile Include="Entities\Tools\CheckBox.cs" />
     <Compile Include="Entities\Tools\Panel.cs" />
     <Compile Include="Entities\Tools\Button.cs" />
-    <Compile Include="Entities\Map\MapLayer.cs" />
-    <Compile Include="Entities\Map\MapTileData.cs" />
     <Compile Include="Library\Directories.cs" />
     <Compile Include="Library\Write.cs" />
     <Compile Include="Forms\Items.cs">
@@ -150,12 +149,7 @@
     <Compile Include="Network\Receive.cs" />
     <Compile Include="Network\Send.cs" />
     <Compile Include="Network\Socket.cs" />
-    <Compile Include="Entities\Class.cs" />
     <Compile Include="Entities\Tools\Tool.cs" />
-    <Compile Include="Entities\Item.cs" />
-    <Compile Include="Entities\Map\Map.cs" />
-    <Compile Include="Entities\NPC.cs" />
-    <Compile Include="Entities\Shop.cs" />
     <Compile Include="Entities\Tile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Library\Read.cs" />

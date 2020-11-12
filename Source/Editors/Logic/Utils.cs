@@ -6,6 +6,12 @@ namespace CryBits.Editors.Logic
 {
     static class Utils
     {
+        // Limites
+        public const byte Max_Rain_Particles = 100;
+        public const short Max_Snow_Particles = 635;
+        public const byte Max_Weather_Intensity = 10;
+        public const byte Snow_Movement = 10;
+
         // Dimensão das grades 
         public const byte Grid = 32;
         public static Size Grid_Size = new Size(Grid, Grid);
