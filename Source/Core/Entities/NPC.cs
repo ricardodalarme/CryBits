@@ -55,7 +55,7 @@ namespace CryBits.Entities
 
         public NPCDrop(Item item, short amount, byte chance) : base(item, amount)
         {
-            this.Chance = chance;
+            Chance = chance;
         }
     }
 }

@@ -123,12 +123,12 @@ namespace CryBits.Server.Network
                 return;
             }
 
-            account.Acess = Accesses.Administrator;
+            account.Access = Accesses.Administrator;
 
             if (editor)
             {
                 // Verifica se o jogador tem permissão para fazer entrar no modo edição
-                if (account.Acess < Accesses.Editor)
+                if (account.Access < Accesses.Editor)
                 {
                     Send.Alert(account, "You're not allowed to do this.");
                     return;
@@ -498,7 +498,7 @@ namespace CryBits.Server.Network
         private static void Write_Settings(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Acess < Accesses.Editor)
+            if (account.Access < Accesses.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;
@@ -525,7 +525,7 @@ namespace CryBits.Server.Network
         private static void Write_Classes(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Acess < Accesses.Editor)
+            if (account.Access < Accesses.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;
@@ -544,7 +544,7 @@ namespace CryBits.Server.Network
         private static void Write_Maps(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Acess < Accesses.Editor)
+            if (account.Access < Accesses.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;
@@ -571,7 +571,7 @@ namespace CryBits.Server.Network
         private static void Write_NPCs(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Acess < Accesses.Editor)
+            if (account.Access < Accesses.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;
@@ -590,7 +590,7 @@ namespace CryBits.Server.Network
         private static void Write_Items(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Acess < Accesses.Editor)
+            if (account.Access < Accesses.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;
@@ -609,7 +609,7 @@ namespace CryBits.Server.Network
         private static void Write_Shops(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Acess < Accesses.Editor)
+            if (account.Access < Accesses.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;

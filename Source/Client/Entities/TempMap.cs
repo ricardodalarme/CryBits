@@ -19,7 +19,7 @@ namespace CryBits.Client.Entities
 
         public TempMap(Map data)
         {
-            this.Data = data;
+            Data = data;
         }
 
         private bool HasNPC(byte x, byte y)
@@ -80,10 +80,10 @@ namespace CryBits.Client.Entities
         // Construtor
         public MapBlood(byte textureNum, short x, short y, byte opacity)
         {
-            this.Texture_Num = textureNum;
-            this.X = x;
-            this.Y = y;
-            this.Opacity = opacity;
+            Texture_Num = textureNum;
+            X = x;
+            Y = y;
+            Opacity = opacity;
         }
     }
 

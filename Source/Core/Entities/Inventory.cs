@@ -15,8 +15,8 @@ namespace CryBits.Entities
 
         public ItemSlot(Item item, short amount)
         {
-            this.Item = item;
-            this.Amount = amount;
+            Item = item;
+            Amount = amount;
         }
 
         public override string ToString() => Item.Name + " - " + Amount + "x";

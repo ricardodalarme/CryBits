@@ -38,7 +38,7 @@ namespace CryBits.Server.Entities
         // Constutor
         public Player(Account account)
         {
-            this.Account = account;
+            Account = account;
         }
 
         // Cálcula o dano do jogador
@@ -678,7 +678,7 @@ namespace CryBits.Server.Entities
         public void Shop_Open(Shop shop)
         {
             // Abre a loja
-            this.Shop = shop;
+            Shop = shop;
             Send.Shop_Open(this, shop);
         }
 
@@ -723,8 +723,8 @@ namespace CryBits.Server.Entities
 
         public Hotbar(Hotbars type, byte slot)
         {
-            this.Type = type;
-            this.Slot = slot;
+            Type = type;
+            Slot = slot;
         }
     }
 }

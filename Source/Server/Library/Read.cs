@@ -64,7 +64,7 @@ namespace CryBits.Server.Library
             {
                 account.User = data.ReadString();
                 account.Password = data.ReadString();
-                account.Acess = (Accesses)data.ReadByte();
+                account.Access = (Accesses)data.ReadByte();
             }
         }
 

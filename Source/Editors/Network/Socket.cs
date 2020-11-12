@@ -29,8 +29,7 @@ namespace CryBits.Editors.Network
         public static void Disconnect()
         {
             // Acaba com a conexão
-            if (Device != null)
-                Device.Disconnect(string.Empty);
+            Device?.Disconnect(string.Empty);
         }
 
         public static void HandleData()

@@ -12,7 +12,7 @@ namespace CryBits.Server.Entities
         public NetConnection Connection;
         public string User = string.Empty;
         public string Password = string.Empty;
-        public Accesses Acess;
+        public Accesses Access;
         public bool InEditor;
         public Player Character;
         public List<TempCharacter> Characters = new List<TempCharacter>();
@@ -26,7 +26,7 @@ namespace CryBits.Server.Entities
         // Construtor
         public Account(NetConnection connection)
         {
-            this.Connection = connection;
+            Connection = connection;
         }
 
         // Verifica se o jogador está dentro do jogo
@@ -35,7 +35,7 @@ namespace CryBits.Server.Entities
         public void Leave()
         {
             // Limpa os dados do jogador
-            if (Character != null) Character.Leave();
+            Character?.Leave();
             List.Remove(this);
         }
     }

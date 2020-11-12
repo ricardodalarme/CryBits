@@ -31,9 +31,9 @@ namespace CryBits.Server.Entities
         // Construtor
         public TempNPC(byte index, TempMap map, NPC data)
         {
-            this.Index = index;
-            this.Map = map;
-            this.Data = data;
+            Index = index;
+            Map = map;
+            Data = data;
         }
 
         /////////////
@@ -180,12 +180,12 @@ namespace CryBits.Server.Entities
                     if (MyRandom.Next(0, 2) == 0)
                     {
                         for (byte d = 0; d < (byte)Directions.Count; d++)
-                            if (!moved && canMove[d] && this.Move((Directions)d))
+                            if (!moved && canMove[d] && Move((Directions)d))
                                 moved = true;
                     }
                     else
                         for (short d = (byte)Directions.Count - 1; d >= 0; d--)
-                            if (!moved && canMove[d] && this.Move((Directions)d))
+                            if (!moved && canMove[d] && Move((Directions)d))
                                 moved = true;
                 }
 
@@ -193,7 +193,7 @@ namespace CryBits.Server.Entities
                 if (Data.Behaviour == (byte)NPCBehaviour.Friendly || Target == null)
                     if (MyRandom.Next(0, 3) == 0 && !moved)
                         if (Data.Movement == NPCMovements.MoveRandomly)
-                            this.Move((Directions)MyRandom.Next(0, 4), 1, true);
+                            Move((Directions)MyRandom.Next(0, 4), 1, true);
                         else if (Data.Movement == NPCMovements.TurnRandomly)
                         {
                             Direction = (Directions)MyRandom.Next(0, 4);
@@ -211,9 +211,9 @@ namespace CryBits.Server.Entities
         {
             // Faz o NPC surgir no mapa
             Alive = true;
-            this.X = x;
-            this.Y = y;
-            this.Direction = direction;
+            X = x;
+            Y = y;
+            Direction = direction;
             for (byte i = 0; i < (byte)Vitals.Count; i++) Vital[i] = Data.Vital[i];
 
             // Envia os dados aos jogadores
@@ -271,7 +271,7 @@ namespace CryBits.Server.Entities
             byte nextX = X, nextY = Y;
 
             // Define a direção do NPC
-            this.Direction = direction;
+            Direction = direction;
             Send.Map_NPC_Direction(this);
 
             // Próximo azulejo

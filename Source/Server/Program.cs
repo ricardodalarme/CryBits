@@ -123,7 +123,7 @@ namespace CryBits.Server
                     }
 
                     // Define o acesso do jogador
-                    account.Acess = (Accesses)access;
+                    account.Access = (Accesses)access;
 
                     // Salva os dados
                     Write.Account(account);

@@ -10,7 +10,7 @@ namespace CryBits.Entities
 
         public Entity(Guid id)
         {
-            this.ID = id;
+            ID = id;
         }
 
         public override string ToString() => Name;

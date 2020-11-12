@@ -31,7 +31,7 @@ namespace CryBits.Client.Entities
 
         public Player(string name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         public virtual void Logic()
@@ -86,9 +86,9 @@ namespace CryBits.Client.Entities
             if (Movement != Movements.Stopped) return;
 
             // Define a direção do jogador
-            if (this.Direction != direction)
+            if (Direction != direction)
             {
-                this.Direction = direction;
+                Direction = direction;
                 Send.Player_Direction();
             }
 
