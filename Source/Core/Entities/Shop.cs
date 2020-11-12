@@ -22,9 +22,6 @@ namespace CryBits.Entities
         public IList<ShopItem> Bought { get; set; } = new List<ShopItem>();
         public IList<ShopItem> Sold { get; set; } = new List<ShopItem>();
 
-        // Construtor
-        public Shop(Guid id) : base(id) { }
-
         public ShopItem FindBought(Item item)
         {
             // Verifica se a loja vende determinado item

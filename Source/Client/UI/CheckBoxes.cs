@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
-using CryBits;
 using CryBits.Client.Media.Audio;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
@@ -27,7 +26,7 @@ namespace CryBits.Client.UI
         public void MouseUp()
         {
             // Tamanho do marcador
-            Size textureSize = Graphics.Size(Graphics.Tex_CheckBox);
+            Size textureSize = Graphics.Size(Graphics.TexCheckBox);
             Size box = new Size(textureSize.Width / 2 + MeasureString(Text) + Margin, textureSize.Height);
 
             // Somente se estiver sobrepondo a ferramenta
@@ -95,14 +94,14 @@ namespace CryBits.Client.UI
         {
             // Altera o estado do marcador de outro gênero
             List["GenderFemale"].Checked = !List["GenderMale"].Checked;
-            Panels.CreateCharacter_Tex = 0;
+            Panels.CreateCharacterTex = 0;
         }
 
         private static void GenreFemale()
         {
             // Altera o estado do marcador de outro gênero
             List["GenderMale"].Checked = !List["GenderFemale"].Checked;
-            Panels.CreateCharacter_Tex = 0;
+            Panels.CreateCharacterTex = 0;
         }
 
         private static void Chat()
@@ -110,7 +109,7 @@ namespace CryBits.Client.UI
             // Salva os dado
             Option.Chat = List["Options_Chat"].Checked;
             Write.Options();
-            if (Option.Chat) Loop.Chat_Timer = Environment.TickCount + UI.Chat.SleepTimer;
+            if (Option.Chat) Loop.ChatTimer = Environment.TickCount + UI.Chat.SleepTimer;
         }
 
         private static void FPS()

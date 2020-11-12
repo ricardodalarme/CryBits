@@ -87,7 +87,7 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            Shop @new = new Shop(Guid.NewGuid());
+            Shop @new = new Shop();
             @new.Name = "New shop";
             @new.Currency = Item.List.ElementAt(0).Value;
             Shop.List.Add(@new.ID, @new);

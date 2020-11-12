@@ -3,18 +3,18 @@
     internal static class Utils
     {
         // Configurações
-        public static string Game_Name = "CryBits";
-        public static string Welcome_Message = "Welcome to CryBits.";
+        public static string GameName = "CryBits";
+        public static string WelcomeMessage = "Welcome to CryBits.";
         public static short Port = 7001;
-        public static byte Max_Players = 15;
-        public static byte Max_Characters = 3;
-        public static byte Max_Party_Members = 3;
-        public static byte Max_Map_Items = 100;
-        public static byte Num_Points = 3;
-        public static byte Max_Name_Length = 12;
-        public static byte Min_Name_Length = 3;
-        public static byte Max_Password_Length = 12;
-        public static byte Min_Password_Length = 3;
+        public static byte MaxPlayers = 15;
+        public static byte MaxCharacters = 3;
+        public static byte MaxPartyMembers = 3;
+        public static byte MaxMapItems = 100;
+        public static byte NumPoints = 3;
+        public static byte MaxNameLength = 12;
+        public static byte MinNameLength = 3;
+        public static byte MaxPasswordLength = 12;
+        public static byte MinPasswordLength = 3;
 
         // Limites fixos
         public const byte MaxInventory = 30;

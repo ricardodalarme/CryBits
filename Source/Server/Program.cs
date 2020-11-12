@@ -105,10 +105,8 @@ namespace CryBits.Server
                     Console.WriteLine("CPS: " + CPS);
                     break;
                 case "defineaccess":
-                    byte access;
-
                     // Verifica se o que está digitado corretamente
-                    if (parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(parts[1]) || !byte.TryParse(parts[2], out access))
+                    if (parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(parts[1]) || !byte.TryParse(parts[2], out byte access))
                     {
                         Console.WriteLine("Use: defineaccess 'Player Name' 'Access' ");
                         return;

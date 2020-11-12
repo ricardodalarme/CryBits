@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
-using CryBits.Client.Media;
 using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
 using CryBits.Entities;
@@ -29,13 +28,13 @@ namespace CryBits.Client.UI
         }
 
         // Dados
-        public byte Texture_Num;
+        public byte TextureNum;
         public States State;
 
         public void MouseUp()
         {
             // Somente se necessário
-            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.Tex_Button[Texture_Num])))) return;
+            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum])))) return;
 
             // Altera o estado do botão
              Sound.Play( Sounds.Click);
@@ -49,7 +48,7 @@ namespace CryBits.Client.UI
         {
             // Somente se necessário
             if (e.Button == Mouse.Button.Right) return;
-            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.Tex_Button[Texture_Num])))) return;
+            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum])))) return;
 
             // Altera o estado do botão
             State = States.Click;
@@ -58,7 +57,7 @@ namespace CryBits.Client.UI
         public void MouseMove()
         {
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.Tex_Button[Texture_Num]))))
+            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum]))))
             {
                 State = States.Normal;
                 return;
@@ -97,7 +96,7 @@ namespace CryBits.Client.UI
                 case "Chat_Up": Chat_Up(); break;
                 case "Chat_Down": Chat_Down(); break;
                 case "Menu_Character": Menu_Character(); break;
-                case "Attributes_Strength": Attribute_Strenght(); break;
+                case "Attributes_Strength": Attribute_Strength(); break;
                 case "Attributes_Resistance": Attribute_Resistance(); break;
                 case "Attributes_Intelligence": Attribute_Intelligence(); break;
                 case "Attributes_Agility": Attribute_Agility(); break;
@@ -208,19 +207,19 @@ namespace CryBits.Client.UI
         private static void CreateCharacter_ChangeRight()
         {
             // Altera a classe selecionada pelo jogador
-            if (Panels.CreateCharacter_Class == Class.List.Count - 1)
-                Panels.CreateCharacter_Class = 0;
+            if (Panels.CreateCharacterClass == Class.List.Count - 1)
+                Panels.CreateCharacterClass = 0;
             else
-                Panels.CreateCharacter_Class += 1;
+                Panels.CreateCharacterClass += 1;
         }
 
         private static void CreateCharacter_ChangeLeft()
         {
             // Altera a classe selecionada pelo jogador
-            if (Panels.CreateCharacter_Class == 0)
-                Panels.CreateCharacter_Class = (byte)Class.List.Count;
+            if (Panels.CreateCharacterClass == 0)
+                Panels.CreateCharacterClass = (byte)Class.List.Count;
             else
-                Panels.CreateCharacter_Class -= 1;
+                Panels.CreateCharacterClass -= 1;
         }
 
         private static void CreateCharacter_Texture_ChangeRight()
@@ -228,15 +227,15 @@ namespace CryBits.Client.UI
             // Lista de texturas
             IList<short>texList;
             if (CheckBoxes.List["GenderMale"].Checked)
-                texList = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Male;
+                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexMale;
             else
-                texList = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Female;
+                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexFemale;
 
             // Altera a classe selecionada pelo jogador
-            if (Panels.CreateCharacter_Tex == texList.Count - 1)
-                Panels.CreateCharacter_Tex = 0;
+            if (Panels.CreateCharacterTex == texList.Count - 1)
+                Panels.CreateCharacterTex = 0;
             else
-                Panels.CreateCharacter_Tex += 1;
+                Panels.CreateCharacterTex += 1;
         }
 
         private static void CreateCharacter_Texture_ChangeLeft()
@@ -244,15 +243,15 @@ namespace CryBits.Client.UI
             // Lista de texturas
             IList<short> texList;
             if (CheckBoxes.List["GenderMale"].Checked)
-                texList = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Male;
+                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexMale;
             else
-                texList = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Female;
+                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexFemale;
 
             // Altera a classe selecionada pelo jogador
-            if (Panels.CreateCharacter_Tex == 0)
-                Panels.CreateCharacter_Tex = (byte)(texList.Count - 1);
+            if (Panels.CreateCharacterTex == 0)
+                Panels.CreateCharacterTex = (byte)(texList.Count - 1);
             else
-                Panels.CreateCharacter_Tex -= 1;
+                Panels.CreateCharacterTex -= 1;
         }
 
         private static void CreateCharacter_Return()
@@ -301,15 +300,15 @@ namespace CryBits.Client.UI
         private static void Chat_Up()
         {
             // Sobe as linhas do chat
-            if (Chat.Lines_First > 0)
-                Chat.Lines_First -= 1;
+            if (Chat.LinesFirst > 0)
+                Chat.LinesFirst -= 1;
         }
 
         private static void Chat_Down()
         {
             // Sobe as linhas do chat
-            if (Chat.Order.Count - 1 - Chat.Lines_First - Chat.LinesVisible > 0)
-                Chat.Lines_First += 1;
+            if (Chat.Order.Count - 1 - Chat.LinesFirst - Chat.LinesVisible > 0)
+                Chat.LinesFirst += 1;
         }
 
         private static void Menu_Character()
@@ -320,7 +319,7 @@ namespace CryBits.Client.UI
             Panels.List["Menu_Options"].Visible = false;
         }
 
-        private static void Attribute_Strenght()
+        private static void Attribute_Strength()
         {
             Send.AddPoint(Attributes.Strength);
         }
@@ -374,7 +373,7 @@ namespace CryBits.Client.UI
             }
 
             // Solta o item
-            Send.DropItem(Panels.Drop_Slot, amount);
+            Send.DropItem(Panels.DropSlot, amount);
             Panels.List["Drop"].Visible = false;
         }
 
@@ -428,8 +427,8 @@ namespace CryBits.Client.UI
             Send.Trade_Offer_State(TradeStatus.Accepted);
 
             // Limpa os dados da oferta
-            Player.Me.Trade_Offer = new Inventory[MaxInventory + 1];
-            Player.Me.Trade_Their_Offer = new Inventory[MaxInventory + 1];
+            Player.Me.TradeOffer = new Inventory[MaxInventory + 1];
+            Player.Me.TradeTheirOffer = new Inventory[MaxInventory + 1];
         }
 
         private static void Trade_Offer_Decline()
@@ -462,7 +461,7 @@ namespace CryBits.Client.UI
             }
 
             // Solta o item
-            Send.Trade_Offer(Panels.Trade_Slot, Panels.Trade_Inventory_Slot, amount);
+            Send.Trade_Offer(Panels.TradeSlot, Panels.TradeInventorySlot, amount);
             Panels.List["Trade_Amount"].Visible = false;
         }
 
@@ -492,7 +491,7 @@ namespace CryBits.Client.UI
             }
 
             // Vende o item
-            Send.Shop_Sell(Panels.Shop_Inventory_Slot, amount);
+            Send.Shop_Sell(Panels.ShopInventorySlot, amount);
             Panels.List["Shop_Sell"].Visible = false;
         }
 

@@ -21,24 +21,21 @@ namespace CryBits.Entities
         public Rarity Rarity { get; set; }
 
         // Requerimentos
-        public short Req_Level;
+        public short ReqLevel;
         private Guid _reqClass;
-        public Class Req_Class
+        public Class ReqClass
         {
             get => Class.Get(_reqClass);
             set => _reqClass = new Guid(value.GetID());
         }
 
         // Poção
-        public int Potion_Experience { get; set; }
-        public short[] Potion_Vital { get; set; } = new short[(byte)Vitals.Count];
+        public int PotionExperience { get; set; }
+        public short[] PotionVital { get; set; } = new short[(byte)Vitals.Count];
 
         // Equipamento
-        public byte Equip_Type { get; set; }
-        public short[] Equip_Attribute { get; set; } = new short[(byte)Attributes.Count];
-        public short Weapon_Damage { get; set; }
-
-        // Construtor
-        public Item(Guid id) : base(id) { }
+        public byte EquipType { get; set; }
+        public short[] EquipAttribute { get; set; } = new short[(byte)Attributes.Count];
+        public short WeaponDamage { get; set; }
     }
 }

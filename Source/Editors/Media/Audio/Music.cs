@@ -4,7 +4,7 @@ using CryBits.Editors.Library;
 
 namespace CryBits.Editors.Media.Audio
 {
-    public class Music
+    public static class Music
     {
         // Formato em o dispositivo irá ler as músicas
         private const string Format = ".ogg";
@@ -25,10 +25,11 @@ namespace CryBits.Editors.Media.Audio
             if (!file.Exists) return;
 
             // Carrega o áudio
-            Device = new SFML.Audio.Music(Directories.Musics.FullName + (byte)index + Format);
-            Device.Loop = true;
-            Device.Volume = 20;
-            Device.Loop = loop;
+            Device = new SFML.Audio.Music(Directories.Musics.FullName + (byte)index + Format)
+            {
+                Loop = loop,
+                Volume = 20
+            };
 
             // Reproduz
             Device.Play();
@@ -37,8 +38,9 @@ namespace CryBits.Editors.Media.Audio
 
         public static void Stop()
         {
-            // Para a música que está tocando
             if (Device == null || Current == 0) return;
+
+            // Para a música que está tocando
             Device.Stop();
             Device.Dispose();
             Device = null;

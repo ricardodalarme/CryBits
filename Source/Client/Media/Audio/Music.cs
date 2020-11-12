@@ -7,7 +7,7 @@ namespace CryBits.Client.Media.Audio
     public class Music
     {
         // Formato em o dispositivo irá ler as músicas
-        public const string Format = ".ogg";
+        private const string Format = ".ogg";
 
         // Lista das músicas
         private static SFML.Audio.Music _device;
@@ -25,10 +25,11 @@ namespace CryBits.Client.Media.Audio
             if (!File.Exists(directory)) return;
 
             // Carrega o áudio
-            _device = new SFML.Audio.Music(directory);
-            _device.Loop = true;
-            _device.Volume = 20;
-            _device.Loop = loop;
+            _device = new SFML.Audio.Music(directory)
+            {
+                Volume = 20,
+                Loop = loop
+            };
 
             // Reproduz
             _device.Play();
@@ -37,13 +38,12 @@ namespace CryBits.Client.Media.Audio
 
         public static void Stop()
         {
+            if (_device == null || _current == 0) return;
+
             // Para a música que está tocando
-            if (_device != null && _current != 0)
-            {
-                _device.Stop();
-                _device.Dispose();
-                _device = null;
-            }
+            _device.Stop();
+            _device.Dispose();
+            _device = null;
         }
     }
 }

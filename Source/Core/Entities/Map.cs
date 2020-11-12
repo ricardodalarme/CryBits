@@ -43,7 +43,7 @@ namespace CryBits.Entities
         public Map[] Link = new Map[(byte)Directions.Count];
 
         // Construtor
-        public Map(Guid id) : base(id)
+        public Map() 
         {
             for (byte x = 0; x < Width; x++)
                 for (byte y = 0; y < Height; y++)
@@ -67,7 +67,7 @@ namespace CryBits.Entities
             for (byte x = 0; x < Width; x++)
                 for (byte y = 0; y < Height; y++)
                     for (byte c = 0; c < Layer.Count; c++)
-                        if (Layer[c].Tile[x, y].IsAutotile)
+                        if (Layer[c].Tile[x, y].IsAutoTile)
                             // Faz os cálculos para a autocriação
                             Layer[c].Calculate(x, y);
         }
@@ -77,10 +77,10 @@ namespace CryBits.Entities
     public class MapAttribute
     {
         public byte Type;
-        public string Data_1;
-        public short Data_2;
-        public short Data_3;
-        public short Data_4;
+        public string Data1;
+        public short Data2;
+        public short Data3;
+        public short Data4;
         public byte Zone;
         public bool[] Block = new bool[(byte)Directions.Count];
     }
@@ -111,18 +111,16 @@ namespace CryBits.Entities
 
         private bool Check(int x1, int y1, int x2, int y2)
         {
-            MapTileData data1, data2;
-
             // Somente se necessário
             if (x1 < 0 || x1 >= Map.Width || y1 < 0 || y1 >= Map.Height) return true;
             if (x2 < 0 || x2 >= Map.Width || y2 < 0 || y2 >= Map.Height) return true;
 
             // Dados
-            data1 = Tile[x1, y1];
-            data2 = Tile[x2, y2];
+            MapTileData data1 = Tile[x1, y1];
+            MapTileData data2 = Tile[x2, y2];
 
             // Verifica se são os mesmo azulejos
-            if (!data2.IsAutotile) return false;
+            if (!data2.IsAutoTile) return false;
             if (data1.Texture != data2.Texture) return false;
             if (data1.X != data2.X) return false;
             if (data1.Y != data2.Y) return false;
@@ -142,20 +140,20 @@ namespace CryBits.Entities
 
         private void CalculateNw(byte x, byte y)
         {
-            bool[] avaliable = new bool[3];
+            bool[] available = new bool[3];
             AddMode mode = AddMode.None;
 
             // Verifica se existe algo para modificar nos azulejos em volta (Norte, Oeste, Noroeste)
-            if (Check(x, y, x - 1, y - 1)) avaliable[0] = true;
-            if (Check(x, y, x, y - 1)) avaliable[1] = true;
-            if (Check(x, y, x - 1, y)) avaliable[2] = true;
+            if (Check(x, y, x - 1, y - 1)) available[0] = true;
+            if (Check(x, y, x, y - 1)) available[1] = true;
+            if (Check(x, y, x - 1, y)) available[2] = true;
 
             // Forma que será adicionado o mini azulejo
-            if (!avaliable[1] && !avaliable[2]) mode = AddMode.Inside;
-            if (!avaliable[1] && avaliable[2]) mode = AddMode.Horizontal;
-            if (avaliable[1] && !avaliable[2]) mode = AddMode.Vertical;
-            if (!avaliable[0] && avaliable[1] && avaliable[2]) mode = AddMode.Exterior;
-            if (avaliable[0] && avaliable[1] && avaliable[2]) mode = AddMode.Fill;
+            if (!available[1] && !available[2]) mode = AddMode.Inside;
+            if (!available[1] && available[2]) mode = AddMode.Horizontal;
+            if (available[1] && !available[2]) mode = AddMode.Vertical;
+            if (!available[0] && available[1] && available[2]) mode = AddMode.Exterior;
+            if (available[0] && available[1] && available[2]) mode = AddMode.Fill;
 
             // Define o mini azulejo
             switch (mode)
@@ -170,20 +168,20 @@ namespace CryBits.Entities
 
         private void CalculateNe(byte x, byte y)
         {
-            bool[] avaliable = new bool[3];
+            bool[] available = new bool[3];
             AddMode mode = AddMode.None;
 
             // Verifica se existe algo para modificar nos azulejos em volta (Norte, Oeste, Noroeste)
-            if (Check(x, y, x, y - 1)) avaliable[0] = true;
-            if (Check(x, y, x + 1, y - 1)) avaliable[1] = true;
-            if (Check(x, y, x + 1, y)) avaliable[2] = true;
+            if (Check(x, y, x, y - 1)) available[0] = true;
+            if (Check(x, y, x + 1, y - 1)) available[1] = true;
+            if (Check(x, y, x + 1, y)) available[2] = true;
 
             // Forma que será adicionado o mini azulejo
-            if (!avaliable[0] && !avaliable[2]) mode = AddMode.Inside;
-            if (!avaliable[0] && avaliable[2]) mode = AddMode.Horizontal;
-            if (avaliable[0] && !avaliable[2]) mode = AddMode.Vertical;
-            if (avaliable[0] && !avaliable[1] && avaliable[2]) mode = AddMode.Exterior;
-            if (avaliable[0] && avaliable[1] && avaliable[2]) mode = AddMode.Fill;
+            if (!available[0] && !available[2]) mode = AddMode.Inside;
+            if (!available[0] && available[2]) mode = AddMode.Horizontal;
+            if (available[0] && !available[2]) mode = AddMode.Vertical;
+            if (available[0] && !available[1] && available[2]) mode = AddMode.Exterior;
+            if (available[0] && available[1] && available[2]) mode = AddMode.Fill;
 
             // Define o mini azulejo
             switch (mode)
@@ -198,20 +196,20 @@ namespace CryBits.Entities
 
         private void CalculateSw(byte x, byte y)
         {
-            bool[] avaliable = new bool[3];
+            bool[] available = new bool[3];
             AddMode mode = AddMode.None;
 
             // Verifica se existe algo para modificar nos azulejos em volta (Sul, Oeste, Sudoeste)
-            if (Check(x, y, x - 1, y)) avaliable[0] = true;
-            if (Check(x, y, x - 1, y + 1)) avaliable[1] = true;
-            if (Check(x, y, x, y + 1)) avaliable[2] = true;
+            if (Check(x, y, x - 1, y)) available[0] = true;
+            if (Check(x, y, x - 1, y + 1)) available[1] = true;
+            if (Check(x, y, x, y + 1)) available[2] = true;
 
             // Forma que será adicionado o mini azulejo
-            if (!avaliable[0] && !avaliable[2]) mode = AddMode.Inside;
-            if (avaliable[0] && !avaliable[2]) mode = AddMode.Horizontal;
-            if (!avaliable[0] && avaliable[2]) mode = AddMode.Vertical;
-            if (avaliable[0] && !avaliable[1] && avaliable[2]) mode = AddMode.Exterior;
-            if (avaliable[0] && avaliable[1] && avaliable[2]) mode = AddMode.Fill;
+            if (!available[0] && !available[2]) mode = AddMode.Inside;
+            if (available[0] && !available[2]) mode = AddMode.Horizontal;
+            if (!available[0] && available[2]) mode = AddMode.Vertical;
+            if (available[0] && !available[1] && available[2]) mode = AddMode.Exterior;
+            if (available[0] && available[1] && available[2]) mode = AddMode.Fill;
 
             // Define o mini azulejo
             switch (mode)
@@ -226,20 +224,20 @@ namespace CryBits.Entities
 
         private void CalculateSe(byte x, byte y)
         {
-            bool[] avaliable = new bool[3];
+            bool[] available = new bool[3];
             AddMode mode = AddMode.None;
 
             // Verifica se existe algo para modificar nos azulejos em volta (Sul, Oeste, Sudeste)
-            if (Check(x, y, x, y + 1)) avaliable[0] = true;
-            if (Check(x, y, x + 1, y + 1)) avaliable[1] = true;
-            if (Check(x, y, x + 1, y)) avaliable[2] = true;
+            if (Check(x, y, x, y + 1)) available[0] = true;
+            if (Check(x, y, x + 1, y + 1)) available[1] = true;
+            if (Check(x, y, x + 1, y)) available[2] = true;
 
             // Forma que será adicionado o mini azulejo
-            if (!avaliable[0] && !avaliable[2]) mode = AddMode.Inside;
-            if (!avaliable[0] && avaliable[2]) mode = AddMode.Horizontal;
-            if (avaliable[0] && !avaliable[2]) mode = AddMode.Vertical;
-            if (avaliable[0] && !avaliable[1] && avaliable[2]) mode = AddMode.Exterior;
-            if (avaliable[0] && avaliable[1] && avaliable[2]) mode = AddMode.Fill;
+            if (!available[0] && !available[2]) mode = AddMode.Inside;
+            if (!available[0] && available[2]) mode = AddMode.Horizontal;
+            if (available[0] && !available[2]) mode = AddMode.Vertical;
+            if (available[0] && !available[1] && available[2]) mode = AddMode.Exterior;
+            if (available[0] && available[1] && available[2]) mode = AddMode.Fill;
 
             // Define o mini azulejo
             switch (mode)
@@ -269,7 +267,7 @@ namespace CryBits.Entities
         public byte X;
         public byte Y;
         public byte Texture;
-        public bool IsAutotile;
+        public bool IsAutoTile;
         public Point[] Mini = new Point[4];
 
         public void SetMini(byte index, string mode)
@@ -335,13 +333,7 @@ namespace CryBits.Entities
             Height = (byte)rec.Height;
         }
 
-        public Rectangle Rec
-        {
-            get
-            {
-                return new Rectangle(X, Y, Width, Height);
-            }
-        }
+        public Rectangle Rec => new Rectangle(X, Y, Width, Height);
     }
 
     [Serializable]
@@ -355,8 +347,8 @@ namespace CryBits.Entities
     public class MapFog
     {
         public byte Texture;
-        public sbyte Speed_X;
-        public sbyte Speed_Y;
+        public sbyte SpeedX;
+        public sbyte SpeedY;
         public byte Alpha = 255;
     }
 

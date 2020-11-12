@@ -5,7 +5,7 @@
     {
         Alert,
         Connect,
-        Server_Data,
+        ServerData,
         Classes,
         Maps,
         Map,

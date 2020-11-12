@@ -25,10 +25,10 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.Win_NPC = new RenderWindow(picTexture.Handle);
+            Graphics.WinNPC = new RenderWindow(picTexture.Handle);
 
             // Define os limites
-            numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
+            numTexture.Maximum = Graphics.TexCharacter.GetUpperBound(0);
 
             // Lista os dados
             foreach (var item in Item.List.Values) cmbDrop_Item.Items.Add(item);
@@ -38,7 +38,7 @@ namespace CryBits.Editors.Forms
 
         private void Editor_NPCs_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphics.Win_NPC = null;
+            Graphics.WinNPC = null;
             EditorMaps.Form.Show();
         }
 
@@ -94,7 +94,7 @@ namespace CryBits.Editors.Forms
             numAgility.Value = Selected.Attribute[(byte)Attributes.Agility];
             numVitality.Value = Selected.Attribute[(byte)Attributes.Vitality];
             cmbMovement.SelectedIndex = (byte)Selected.Movement;
-            numFlee_Health.Value = Selected.Flee_Helth;
+            numFlee_Health.Value = Selected.FleeHealth;
             chkAttackNPC.Checked = Selected.AttackNPC;
             if (Selected.Shop != null) cmbShop.SelectedItem = Selected.Shop;
             else cmbShop.SelectedIndex = -1;
@@ -111,7 +111,7 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            NPC @new = new NPC(Guid.NewGuid());
+            NPC @new = new NPC();
             @new.Name = "New NPC";
             NPC.List.Add(@new.ID, @new);
 
@@ -241,7 +241,7 @@ namespace CryBits.Editors.Forms
             // Evita erros
             if (Item.List.Count == 0)
             {
-                MessageBox.Show("It must have at least one item registered add inital items.");
+                MessageBox.Show("It must have at least one item registered add initial items.");
                 return;
             }
 
@@ -308,7 +308,7 @@ namespace CryBits.Editors.Forms
 
         private void numFlee_Health_ValueChanged(object sender, EventArgs e)
         {
-            Selected.Flee_Helth = (byte)numFlee_Health.Value;
+            Selected.FleeHealth = (byte)numFlee_Health.Value;
         }
 
         private void cmbShop_SelectedIndexChanged(object sender, EventArgs e)

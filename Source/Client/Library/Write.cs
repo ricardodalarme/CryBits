@@ -17,7 +17,7 @@ namespace CryBits.Client.Library
         public static void Map(Map map)
         {
             // Escreve os dados
-            using (var stream = new FileInfo(Directories.Maps_Data.FullName + map.ID + Directories.Format).OpenWrite())
+            using (var stream = new FileInfo(Directories.MapsData.FullName + map.ID + Directories.Format).OpenWrite())
                 new BinaryFormatter().Serialize(stream, map);
         }
     }

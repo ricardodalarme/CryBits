@@ -19,7 +19,7 @@ namespace CryBits.Client.UI
 
         // Dados
         public string Text;
-        public short Lenght;
+        public short Length;
         public short Width;
         public bool Password;
 
@@ -27,7 +27,7 @@ namespace CryBits.Client.UI
         public void MouseUp(Tools.OrderStructure order)
         {
             // Somente se necessário
-            if (!IsAbove(new Rectangle(Position, new Size(Width, Graphics.Size(Graphics.Tex_TextBox).Height)))) return;
+            if (!IsAbove(new Rectangle(Position, new Size(Width, Graphics.Size(Graphics.TexTextBox).Height)))) return;
 
             // Define o foco no digitalizador
             Focused = order;
@@ -35,7 +35,7 @@ namespace CryBits.Client.UI
             // Altera o foco do digitalizador
             if (((TextBoxes)order.Data).Name.Equals("Chat"))
             {
-                Loop.Chat_Timer = Environment.TickCount + Chat.SleepTimer;
+                Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
                 Panels.List["Chat"].Visible = true;
             }
         }
@@ -54,8 +54,8 @@ namespace CryBits.Client.UI
                     }
 
                     // Não adicionar se já estiver no máximo de caracteres
-                    if (Lenght > 0)
-                        if (Text.Length >= Lenght)
+                    if (Length > 0)
+                        if (Text.Length >= Length)
                             return;
                 }
 

@@ -38,22 +38,22 @@ namespace CryBits.Editors.Library
                 Tool tool = (Tool)node.Nodes[i].Tag;
                 if (tool is Button)
                 {
-                    data.Write((byte)ToolsTypes.Button);
+                    data.Write((byte)ToolType.Button);
                     Button(data, (Button)tool);
                 }
                 else if (tool is TextBox)
                 {
-                    data.Write((byte)ToolsTypes.TextBox);
+                    data.Write((byte)ToolType.TextBox);
                     TextBox(data, (TextBox)tool);
                 }
                 else if (tool is CheckBox)
                 {
-                    data.Write((byte)ToolsTypes.CheckBox);
+                    data.Write((byte)ToolType.CheckBox);
                     CheckBox(data, (CheckBox)tool);
                 }
                 else if (tool is Panel)
                 {
-                    data.Write((byte)ToolsTypes.Panel);
+                    data.Write((byte)ToolType.Panel);
                     Panel(data, (Panel)tool);
                 }
 
@@ -70,7 +70,7 @@ namespace CryBits.Editors.Library
             data.Write(tool.Position.Y);
             data.Write(tool.Visible);
             data.Write((byte)tool.Window);
-            data.Write(tool.Texture_Num);
+            data.Write(tool.TextureNum);
         }
 
         private static void TextBox(BinaryWriter data, TextBox tool)
@@ -81,7 +81,7 @@ namespace CryBits.Editors.Library
             data.Write(tool.Position.Y);
             data.Write(tool.Visible);
             data.Write((byte)tool.Window);
-            data.Write(tool.Max_Characters);
+            data.Write(tool.MaxCharacters);
             data.Write(tool.Width);
             data.Write(tool.Password);
         }
@@ -94,7 +94,7 @@ namespace CryBits.Editors.Library
             data.Write(tool.Position.Y);
             data.Write(tool.Visible);
             data.Write((byte)tool.Window);
-            data.Write(tool.Texture_Num);
+            data.Write(tool.TextureNum);
         }
 
         private static void CheckBox(BinaryWriter data, CheckBox tool)

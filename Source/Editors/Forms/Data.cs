@@ -17,18 +17,18 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Define os valores
-            txtGame_Name.Text = Lists.Server_Data.Game_Name;
-            txtWelcome.Text = Lists.Server_Data.Welcome;
-            numPort.Value = Lists.Server_Data.Port;
-            numMax_Players.Value = Lists.Server_Data.Max_Players;
-            numMax_Characters.Value = Lists.Server_Data.Max_Characters;
-            numMax_Party_Members.Value = Lists.Server_Data.Max_Party_Members;
-            numMax_Map_Items.Value = Lists.Server_Data.Max_Map_Items;
-            numPoints.Value = Lists.Server_Data.Num_Points;
-            numMin_Name.Value = Lists.Server_Data.Min_Name_Length;
-            numMax_Name.Value = Lists.Server_Data.Max_Name_Length;
-            numMin_Password.Value = Lists.Server_Data.Min_Password_Length;
-            numMax_Password.Value = Lists.Server_Data.Max_Password_Length;
+            txtGame_Name.Text = Lists.ServerData.GameName;
+            txtWelcome.Text = Lists.ServerData.Welcome;
+            numPort.Value = Lists.ServerData.Port;
+            numMax_Players.Value = Lists.ServerData.MaxPlayers;
+            numMax_Characters.Value = Lists.ServerData.MaxCharacters;
+            numMax_Party_Members.Value = Lists.ServerData.MaxPartyMembers;
+            numMax_Map_Items.Value = Lists.ServerData.MaxMapItems;
+            numPoints.Value = Lists.ServerData.NumPoints;
+            numMin_Name.Value = Lists.ServerData.MinNameLength;
+            numMax_Name.Value = Lists.ServerData.MaxNameLength;
+            numMin_Password.Value = Lists.ServerData.MinPasswordLength;
+            numMax_Password.Value = Lists.ServerData.MaxPasswordLength;
         }
 
         private void Editor_Data_FormClosed(object sender, FormClosedEventArgs e)
@@ -39,18 +39,18 @@ namespace CryBits.Editors.Forms
         private void butSave_Click(object sender, EventArgs e)
         {
             // Salva os dados
-            Lists.Server_Data.Game_Name = txtGame_Name.Text;
-            Lists.Server_Data.Welcome = txtWelcome.Text;
-            Lists.Server_Data.Port = (short)numPort.Value;
-            Lists.Server_Data.Max_Players = (byte)numMax_Players.Value;
-            Lists.Server_Data.Max_Characters = (byte)numMax_Characters.Value;
-            Lists.Server_Data.Max_Party_Members = (byte)numMax_Party_Members.Value;
-            Lists.Server_Data.Max_Map_Items = (byte)numMax_Map_Items.Value;
-            Lists.Server_Data.Num_Points = (byte)numPoints.Value;
-            Lists.Server_Data.Min_Name_Length = (byte)numMin_Name.Value;
-            Lists.Server_Data.Max_Name_Length = (byte)numMax_Name.Value;
-            Lists.Server_Data.Min_Password_Length = (byte)numMin_Password.Value;
-            Lists.Server_Data.Max_Password_Length = (byte)numMax_Password.Value;
+            Lists.ServerData.GameName = txtGame_Name.Text;
+            Lists.ServerData.Welcome = txtWelcome.Text;
+            Lists.ServerData.Port = (short)numPort.Value;
+            Lists.ServerData.MaxPlayers = (byte)numMax_Players.Value;
+            Lists.ServerData.MaxCharacters = (byte)numMax_Characters.Value;
+            Lists.ServerData.MaxPartyMembers = (byte)numMax_Party_Members.Value;
+            Lists.ServerData.MaxMapItems = (byte)numMax_Map_Items.Value;
+            Lists.ServerData.NumPoints = (byte)numPoints.Value;
+            Lists.ServerData.MinNameLength = (byte)numMin_Name.Value;
+            Lists.ServerData.MaxNameLength = (byte)numMax_Name.Value;
+            Lists.ServerData.MinPasswordLength = (byte)numMin_Password.Value;
+            Lists.ServerData.MaxPasswordLength = (byte)numMax_Password.Value;
             Send.Write_Server_Data();
 
             // Volta à janela principal

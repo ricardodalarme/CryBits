@@ -14,7 +14,7 @@ namespace CryBits.Editors.Entities
 
         public Tile(byte index)
         {
-            Size textureSize = Graphics.Size(Graphics.Tex_Tile[index]);
+            Size textureSize = Graphics.Size(Graphics.TexTile[index]);
             Size size = new Size(textureSize.Width / Grid - 1, textureSize.Height / Grid - 1);
 
             // Redimensiona os valores

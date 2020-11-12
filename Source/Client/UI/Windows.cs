@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Entities;
-using CryBits.Client.Media;
 using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
 using SFML.Window;
@@ -10,7 +9,7 @@ using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.UI
 {
-    internal class Windows
+    internal static class Windows
     {
         // Janela que está aberta
         public static WindowsTypes Current;
@@ -38,21 +37,21 @@ namespace CryBits.Client.UI
                 if (Current == WindowsTypes.Game)
                 {
                     // Usar item
-                    short slot = Panels.Inventory_Slot;
+                    short slot = Panels.InventorySlot;
                     if (slot > 0)
                         if (Player.Me.Inventory[slot].Item != null)
                             Send.Inventory_Use((byte)slot);
 
                     // Usar o que estiver na hotbar
-                    slot = Panels.Hotbar_Slot;
+                    slot = Panels.HotbarSlot;
                     if (slot > 0)
                         if (Player.Me.Hotbar[slot].Slot > 0)
                             Send.Hotbar_Use((byte)slot);
 
                     // Compra o item da loja
-                    slot = Panels.Shop_Slot;
+                    slot = Panels.ShopSlot;
                     if (slot >= 0)
-                        if (Panels.Shop_Open != null)
+                        if (Panels.ShopOpen != null)
                             Send.Shop_Buy((byte)slot);
                 }
             }
@@ -113,34 +112,33 @@ namespace CryBits.Client.UI
             if (Current == WindowsTypes.Game)
             {
                 // Muda o slot do item
-                if (Panels.Inventory_Slot > 0)
+                if (Panels.InventorySlot > 0)
                 {
-                    if (Panels.Inventory_Change > 0) Send.Inventory_Change(Panels.Inventory_Change, Panels.Inventory_Slot);
+                    if (Panels.InventoryChange > 0) Send.Inventory_Change(Panels.InventoryChange, Panels.InventorySlot);
                 }
                 // Muda o slot da hotbar
-                else if (Panels.Hotbar_Slot >= 0)
+                else if (Panels.HotbarSlot >= 0)
                 {
-                    if (Panels.Hotbar_Change >= 0) Send.Hotbar_Change(Panels.Hotbar_Change, Panels.Hotbar_Slot);
-                    if (Panels.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Hotbars.Item, Panels.Inventory_Change);
+                    if (Panels.HotbarChange >= 0) Send.Hotbar_Change(Panels.HotbarChange, Panels.HotbarSlot);
+                    if (Panels.InventoryChange > 0) Send.Hotbar_Add(Panels.HotbarSlot, (byte)Hotbars.Item, Panels.InventoryChange);
                 }
                 // Adiciona um item à troca
-                else if (Panels.Trade_Slot > 0)
+                else if (Panels.TradeSlot > 0)
                 {
-                    if (Panels.Inventory_Change > 0)
-                        if (Player.Me.Inventory[Panels.Inventory_Change].Amount == 1)
-                            Send.Trade_Offer(Panels.Trade_Slot, Panels.Inventory_Change);
+                    if (Panels.InventoryChange > 0)
+                        if (Player.Me.Inventory[Panels.InventoryChange].Amount == 1)
+                            Send.Trade_Offer(Panels.TradeSlot, Panels.InventoryChange);
                         else
                         {
-                            Panels.Trade_Slot_Selected = Panels.Trade_Slot;
-                            Panels.Trade_Inventory_Slot = Panels.Inventory_Change;
+                            Panels.TradeInventorySlot = Panels.InventoryChange;
                             TextBoxes.List["Trade_Amount"].Text = string.Empty;
                             Panels.List["Trade_Amount"].Visible = true;
                         }
                 }
 
                 // Reseta a movimentação
-                Panels.Inventory_Change = 0;
-                Panels.Hotbar_Change = -1;
+                Panels.InventoryChange = 0;
+                Panels.HotbarChange = -1;
             }
         }
 

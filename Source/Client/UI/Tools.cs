@@ -3,11 +3,11 @@ using System.Drawing;
 
 namespace CryBits.Client.UI
 {
-    internal class Tools
+    internal static class Tools
     {
         // Ordem da renderização das ferramentas
-        public static List<OrderStructure>[] All_Order = new List<OrderStructure>[(byte)WindowsTypes.Count];
-        public static List<OrderStructure> Order => All_Order[(byte)Windows.Current];
+        public static List<OrderStructure>[] AllOrder = new List<OrderStructure>[(byte)WindowsTypes.Count];
+        public static List<OrderStructure> Order => AllOrder[(byte)Windows.Current];
 
         public class OrderStructure
         {
@@ -47,7 +47,7 @@ namespace CryBits.Client.UI
         {
             // Percorre toda a árvore de ordem para encontrar a ferramenta
             Stack<List<OrderStructure>> stack = new Stack<List<OrderStructure>>();
-            for (byte i = 0; i < All_Order.Length; i++) stack.Push(All_Order[i]);
+            for (byte i = 0; i < AllOrder.Length; i++) stack.Push(AllOrder[i]);
             while (stack.Count != 0)
             {
                 List<OrderStructure> top = stack.Pop();

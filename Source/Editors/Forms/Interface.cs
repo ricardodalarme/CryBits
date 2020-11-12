@@ -29,19 +29,19 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.Win_Interface = new RenderWindow(picWindow.Handle);
+            Graphics.WinInterface = new RenderWindow(picWindow.Handle);
 
             // Adiciona as janelas à lista
             cmbWindows.Items.AddRange(Enum.GetNames(typeof(WindowsTypes)));
             cmbWindows.SelectedIndex = 0;
 
             // Adiciona os tipos de ferramentas à lista
-            for (byte i = 0; i < (byte)ToolsTypes.Count; i++) cmbType.Items.Add((ToolsTypes)i);
+            for (byte i = 0; i < (byte)ToolType.Count; i++) cmbType.Items.Add((ToolType)i);
         }
 
         private void Editor_Interface_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphics.Win_Interface = null;
+            Graphics.WinInterface = null;
             EditorMaps.Form.Show();
         }
 
@@ -105,12 +105,12 @@ namespace CryBits.Editors.Forms
             // Adiciona uma nova ferramenta
             Tool @new = new Tool();
             Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
-            switch ((ToolsTypes)cmbType.SelectedIndex)
+            switch ((ToolType)cmbType.SelectedIndex)
             {
-                case ToolsTypes.Button: @new = new Button(); break;
-                case ToolsTypes.Panel: @new = new Panel(); break;
-                case ToolsTypes.CheckBox: @new = new CheckBox(); break;
-                case ToolsTypes.TextBox: @new = new TextBox(); break;
+                case ToolType.Button: @new = new Button(); break;
+                case ToolType.Panel: @new = new Panel(); break;
+                case ToolType.CheckBox: @new = new CheckBox(); break;
+                case ToolType.TextBox: @new = new TextBox(); break;
             }
             Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
             @new.Window = (WindowsTypes)cmbWindows.SelectedIndex;
@@ -120,7 +120,7 @@ namespace CryBits.Editors.Forms
         private void butRemove_Click(object sender, EventArgs e)
         {
             // Remove a ferramenta
-            if (treOrder.SelectedNode != null && treOrder.SelectedNode.Parent != null)
+            if (treOrder.SelectedNode?.Parent != null)
                 treOrder.SelectedNode.Remove();
         }
 
@@ -149,7 +149,7 @@ namespace CryBits.Editors.Forms
             // Dados
             TreeNode selected = treOrder.SelectedNode;
             TreeNode parent = selected.Parent;
-            if (parent != null && parent.Parent != null)
+            if (parent?.Parent != null)
             {
                 // Desfixa o nó
                 parent.Parent.Nodes.Insert(parent.Index + 1, (TreeNode)selected.Clone());

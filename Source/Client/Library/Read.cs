@@ -43,7 +43,7 @@ namespace CryBits.Client.Library
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
                 Window = (WindowsTypes)data.ReadByte(),
-                Texture_Num = data.ReadByte(),
+                TextureNum = data.ReadByte(),
             };
         }
 
@@ -56,7 +56,7 @@ namespace CryBits.Client.Library
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
                 Window = (WindowsTypes)data.ReadByte(),
-                Lenght = data.ReadInt16(),
+                Length = data.ReadInt16(),
                 Width = data.ReadInt16(),
                 Password = data.ReadBoolean(),
             };
@@ -71,7 +71,7 @@ namespace CryBits.Client.Library
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
                 Window = (WindowsTypes)data.ReadByte(),
-                Texture_Num = data.ReadByte(),
+                TextureNum = data.ReadByte(),
             };
         }
 
@@ -91,13 +91,13 @@ namespace CryBits.Client.Library
 
         private static void Tools()
         {
-            FileInfo file = new FileInfo(Directories.Tools_Data.FullName);
-            for (byte i = 0; i < (byte)WindowsTypes.Count; i++) UI.Tools.All_Order[i] = new List<Tools.OrderStructure>();
+            FileInfo file = new FileInfo(Directories.ToolsData.FullName);
+            for (byte i = 0; i < (byte)WindowsTypes.Count; i++) UI.Tools.AllOrder[i] = new List<Tools.OrderStructure>();
 
             // Lê todas as ferramentas
             using (var data = new BinaryReader(file.OpenRead()))
-                for (byte n = 0; n < UI.Tools.All_Order.Length; n++)
-                    Tools(null, ref UI.Tools.All_Order[n], data);
+                for (byte n = 0; n < UI.Tools.AllOrder.Length; n++)
+                    Tools(null, ref UI.Tools.AllOrder[n], data);
         }
 
         private static void Tools(Tools.OrderStructure parent, ref List<Tools.OrderStructure> node, BinaryReader data)
@@ -132,7 +132,7 @@ namespace CryBits.Client.Library
 
         public static void Map(Guid id)
         {
-            FileInfo file = new FileInfo(Directories.Maps_Data.FullName + id + Directories.Format);
+            FileInfo file = new FileInfo(Directories.MapsData.FullName + id + Directories.Format);
 
             // Lê os dados
             using (var stream = file.OpenRead())

@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
-using CryBits.Client.Media;
 using CryBits.Client.Media.Audio;
 using CryBits.Client.UI;
 using CryBits.Entities;
@@ -16,7 +15,7 @@ using static CryBits.Utils;
 
 namespace CryBits.Client.Network
 {
-    internal class Receive
+    internal static class Receive
     {
         public static void Handle(NetIncomingMessage data)
         {
@@ -30,40 +29,40 @@ namespace CryBits.Client.Network
                 case ServerClient.JoinGame: JoinGame(); break;
                 case ServerClient.Classes: Classes(data); break;
                 case ServerClient.Characters: Characters(data); break;
-                case ServerClient.Player_Data: Player_Data(data); break;
-                case ServerClient.Player_Position: Player_Position(data); break;
-                case ServerClient.Player_Vitals: Player_Vitals(data); break;
-                case ServerClient.Player_Move: Player_Move(data); break;
-                case ServerClient.Player_Leave: Player_Leave(data); break;
-                case ServerClient.Player_Direction: Player_Direction(data); break;
-                case ServerClient.Player_Attack: Player_Attack(data); break;
-                case ServerClient.Player_Experience: Player_Experience(data); break;
-                case ServerClient.Player_Inventory: Player_Inventory(data); break;
-                case ServerClient.Player_Equipments: Player_Equipments(data); break;
-                case ServerClient.Player_Hotbar: Player_Hotbar(data); break;
-                case ServerClient.Map_Revision: Map_Revision(data); break;
+                case ServerClient.PlayerData: Player_Data(data); break;
+                case ServerClient.PlayerPosition: Player_Position(data); break;
+                case ServerClient.PlayerVitals: Player_Vitals(data); break;
+                case ServerClient.PlayerMove: Player_Move(data); break;
+                case ServerClient.PlayerLeave: Player_Leave(data); break;
+                case ServerClient.PlayerDirection: Player_Direction(data); break;
+                case ServerClient.PlayerAttack: Player_Attack(data); break;
+                case ServerClient.PlayerExperience: Player_Experience(data); break;
+                case ServerClient.PlayerInventory: Player_Inventory(data); break;
+                case ServerClient.PlayerEquipments: Player_Equipments(data); break;
+                case ServerClient.PlayerHotbar: Player_Hotbar(data); break;
+                case ServerClient.MapRevision: Map_Revision(data); break;
                 case ServerClient.Map: Map(data); break;
                 case ServerClient.JoinMap: JoinMap(); break;
                 case ServerClient.Latency: Latency(); break;
                 case ServerClient.Message: Message(data); break;
                 case ServerClient.NPCs: NPCs(data); break;
-                case ServerClient.Map_NPCs: Map_NPCs(data); break;
-                case ServerClient.Map_NPC: Map_NPC(data); break;
-                case ServerClient.Map_NPC_Movement: Map_NPC_Movement(data); break;
-                case ServerClient.Map_NPC_Direction: Map_NPC_Direction(data); break;
-                case ServerClient.Map_NPC_Vitals: Map_NPC_Vitals(data); break;
-                case ServerClient.Map_NPC_Attack: Map_NPC_Attack(data); break;
-                case ServerClient.Map_NPC_Died: Map_NPC_Died(data); break;
+                case ServerClient.MapNPCs: Map_NPCs(data); break;
+                case ServerClient.MapNPC: Map_NPC(data); break;
+                case ServerClient.MapNPCMovement: Map_NPC_Movement(data); break;
+                case ServerClient.MapNPCDirection: Map_NPC_Direction(data); break;
+                case ServerClient.MapNPCVitals: Map_NPC_Vitals(data); break;
+                case ServerClient.MapNPCAttack: Map_NPC_Attack(data); break;
+                case ServerClient.MapNPCDied: Map_NPC_Died(data); break;
                 case ServerClient.Items: Items(data); break;
-                case ServerClient.Map_Items: Map_Items(data); break;
+                case ServerClient.MapItems: Map_Items(data); break;
                 case ServerClient.Party: Party(data); break;
-                case ServerClient.Party_Invitation: Party_Invitation(data); break;
+                case ServerClient.PartyInvitation: Party_Invitation(data); break;
                 case ServerClient.Trade: Trade(data); break;
-                case ServerClient.Trade_Invitation: Trade_Invitation(data); break;
-                case ServerClient.Trade_State: Trade_State(data); break;
-                case ServerClient.Trade_Offer: Trade_Offer(data); break;
+                case ServerClient.TradeInvitation: Trade_Invitation(data); break;
+                case ServerClient.TradeState: Trade_State(data); break;
+                case ServerClient.TradeOffer: Trade_Offer(data); break;
                 case ServerClient.Shops: Shops(data); break;
-                case ServerClient.Shop_Open: Shop_Open(data); break;
+                case ServerClient.ShopOpen: Shop_Open(data); break;
             }
         }
 
@@ -105,8 +104,8 @@ namespace CryBits.Client.Network
             TextBoxes.List["CreateCharacter_Name"].Text = string.Empty;
             CheckBoxes.List["GenderMale"].Checked = true;
             CheckBoxes.List["GenderFemale"].Checked = false;
-            Panels.CreateCharacter_Class = 0;
-            Panels.CreateCharacter_Tex = 0;
+            Panels.CreateCharacterClass = 0;
+            Panels.CreateCharacterTex = 0;
 
             // Abre o painel de criação de personagem
             Panels.Menu_Close();
@@ -130,8 +129,7 @@ namespace CryBits.Client.Network
                 Panels.Characters[i] = new Panels.TempCharacter
                 {
                     Name = data.ReadString(),
-                    Texture_Num = data.ReadInt16(),
-                    Level = data.ReadInt16()
+                    TextureNum = data.ReadInt16(),
                 };
             }
         }
@@ -140,8 +138,8 @@ namespace CryBits.Client.Network
         {
             // Reseta os valores
             Chat.Order = new List<Chat.Structure>();
-            Chat.Lines_First = 0;
-            Loop.Chat_Timer = Environment.TickCount + Chat.SleepTimer;
+            Chat.LinesFirst = 0;
+            Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
             TextBoxes.List["Chat"].Text = string.Empty;
             CheckBoxes.List["Options_Sounds"].Checked = Option.Sounds;
             CheckBoxes.List["Options_Musics"].Checked = Option.Musics;
@@ -150,8 +148,8 @@ namespace CryBits.Client.Network
             CheckBoxes.List["Options_Latency"].Checked = Option.Latency;
             CheckBoxes.List["Options_Trade"].Checked = Option.Trade;
             CheckBoxes.List["Options_Party"].Checked = Option.Party;
-            Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
-            Panels.Infomation_ID = Guid.Empty;
+            Loop.ChatTimer = Loop.ChatTimer = Environment.TickCount + 10000;
+            Panels.InformationID = Guid.Empty;
 
             // Reseta a interface
             Panels.List["Menu_Character"].Visible = false;
@@ -187,7 +185,7 @@ namespace CryBits.Client.Network
                 player = Player.Me;
 
             // Defini os dados do jogador
-            player.Texture_Num = data.ReadInt16();
+            player.TextureNum = data.ReadInt16();
             player.Level = data.ReadInt16();
             player.Map = TempMap.List[new Guid(data.ReadString())];
             player.X = data.ReadByte();
@@ -196,7 +194,7 @@ namespace CryBits.Client.Network
             for (byte n = 0; n < (byte)Vitals.Count; n++)
             {
                 player.Vital[n] = data.ReadInt16();
-                player.Max_Vital[n] = data.ReadInt16();
+                player.MaxVital[n] = data.ReadInt16();
             }
             for (byte n = 0; n < (byte)Attributes.Count; n++) player.Attribute[n] = data.ReadInt16();
             for (byte n = 0; n < (byte)Equipments.Count; n++) player.Equipment[n] = Item.Get(new Guid(data.ReadString()));
@@ -226,7 +224,7 @@ namespace CryBits.Client.Network
             for (byte i = 0; i < (byte)Vitals.Count; i++)
             {
                 player.Vital[i] = data.ReadInt16();
-                player.Max_Vital[i] = data.ReadInt16();
+                player.MaxVital[i] = data.ReadInt16();
             }
         }
 
@@ -280,7 +278,7 @@ namespace CryBits.Client.Network
 
             // Inicia o ataque
             player.Attacking = true;
-            player.Attack_Timer = Environment.TickCount;
+            player.AttackTimer = Environment.TickCount;
 
             // Sofrendo dano
             if (victim != string.Empty)
@@ -398,7 +396,7 @@ namespace CryBits.Client.Network
         private static void Latency()
         {
             // Define a latência
-            Socket.Latency = Environment.TickCount - Socket.Latency_Send;
+            Socket.Latency = Environment.TickCount - Socket.LatencySend;
         }
 
         private static void Message(NetIncomingMessage data)
@@ -448,7 +446,7 @@ namespace CryBits.Client.Network
             }
 
             // Abre a janela de convite para o grupo
-            Panels.Party_Invitation = data.ReadString();
+            Panels.PartyInvitation = data.ReadString();
             Panels.List["Party_Invitation"].Visible = true;
         }
 
@@ -467,14 +465,14 @@ namespace CryBits.Client.Network
                 Panels.List["Trade_Offer_Disable"].Visible = false;
 
                 // Limpa os dados
-                Player.Me.Trade_Offer = new Inventory[MaxInventory + 1];
-                Player.Me.Trade_Their_Offer = new Inventory[MaxInventory + 1];
+                Player.Me.TradeOffer = new Inventory[MaxInventory + 1];
+                Player.Me.TradeTheirOffer = new Inventory[MaxInventory + 1];
             }
             else
             {
                 // Limpa os dados
-                Player.Me.Trade_Offer = null;
-                Player.Me.Trade_Their_Offer = null;
+                Player.Me.TradeOffer = null;
+                Player.Me.TradeTheirOffer = null;
             }
         }
 
@@ -488,7 +486,7 @@ namespace CryBits.Client.Network
             }
 
             // Abre a janela de convite para o grupo
-            Panels.Trade_Invitation = data.ReadString();
+            Panels.TradeInvitation = data.ReadString();
             Panels.List["Trade_Invitation"].Visible = true;
         }
 
@@ -516,14 +514,14 @@ namespace CryBits.Client.Network
             if (data.ReadBoolean())
                 for (byte i = 1; i <= MaxInventory; i++)
                 {
-                    Player.Me.Trade_Offer[i].Item = Item.Get(new Guid(data.ReadString()));
-                    Player.Me.Trade_Offer[i].Amount = data.ReadInt16();
+                    Player.Me.TradeOffer[i].Item = Item.Get(new Guid(data.ReadString()));
+                    Player.Me.TradeOffer[i].Amount = data.ReadInt16();
                 }
             else
                 for (byte i = 1; i <= MaxInventory; i++)
                 {
-                    Player.Me.Trade_Their_Offer[i].Item = Item.Get(new Guid(data.ReadString()));
-                    Player.Me.Trade_Their_Offer[i].Amount = data.ReadInt16();
+                    Player.Me.TradeTheirOffer[i].Item = Item.Get(new Guid(data.ReadString()));
+                    Player.Me.TradeTheirOffer[i].Amount = data.ReadInt16();
                 }
         }
 
@@ -536,8 +534,8 @@ namespace CryBits.Client.Network
         private static void Shop_Open(NetIncomingMessage data)
         {
             // Abre a loja
-            Panels.Shop_Open = Shop.Get(new Guid(data.ReadString()));
-            Panels.List["Shop"].Visible = Panels.Shop_Open != null;
+            Panels.ShopOpen = Shop.Get(new Guid(data.ReadString()));
+            Panels.List["Shop"].Visible = Panels.ShopOpen != null;
         }
 
         private static void NPCs(NetIncomingMessage data)
@@ -611,7 +609,7 @@ namespace CryBits.Client.Network
 
             // Inicia o ataque
             Mapper.Current.NPC[index].Attacking = true;
-            Mapper.Current.NPC[index].Attack_Timer = Environment.TickCount;
+            Mapper.Current.NPC[index].AttackTimer = Environment.TickCount;
 
             // Sofrendo dano
             if (victim != string.Empty)

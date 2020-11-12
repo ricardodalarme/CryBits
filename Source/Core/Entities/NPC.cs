@@ -25,7 +25,7 @@ namespace CryBits.Entities
         public bool AttackNPC { get; set; }
         public IList<NPC> Allie { get; set; } = new List<NPC>();
         public NPCMovements Movement { get; set; }
-        public byte Flee_Helth { get; set; }
+        public byte FleeHealth { get; set; }
         private Guid _shop;
 
         public Shop Shop
@@ -34,10 +34,7 @@ namespace CryBits.Entities
             set => _shop = new Guid(value.GetID());
         }
 
-        // Construtor
-        public NPC(Guid id) : base(id) { }
-
-        public bool IsAlied(NPC npc)
+        public bool IsAllied(NPC npc)
         {
             // Verifica se o NPC é aliado do outro
             for (byte i = 0; i < Allie.Count; i++)

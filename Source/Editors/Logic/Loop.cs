@@ -5,11 +5,9 @@ using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
-using CryBits.Editors.Media.Audio;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using SFML.Audio;
-using CryBits;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 using Music = CryBits.Editors.Media.Audio.Music;
@@ -17,7 +15,7 @@ using Sound = CryBits.Editors.Media.Audio.Sound;
 
 namespace CryBits.Editors.Logic
 {
-    internal class Loop
+    internal static class Loop
     {
         // Contadores
         private static int _fogXTimer;
@@ -80,8 +78,8 @@ namespace CryBits.Editors.Logic
 
         private static void Editor_Maps_Fog_X()
         {
-            Size textureSize = Graphics.Size(Graphics.Tex_Fog[EditorMaps.Form.Selected.Fog.Texture]);
-            int speed = EditorMaps.Form.Selected.Fog.Speed_X;
+            Size textureSize = Graphics.Size(Graphics.TexFog[EditorMaps.Form.Selected.Fog.Texture]);
+            int speed = EditorMaps.Form.Selected.Fog.SpeedX;
 
             // Apenas se necessário
             if (_fogXTimer >= Environment.TickCount) return;
@@ -90,14 +88,14 @@ namespace CryBits.Editors.Logic
             // Movimento para trás
             if (speed < 0)
             {
-                TempMap.Fog_X -= 1;
-                if (TempMap.Fog_X < -textureSize.Width) TempMap.Fog_X = 0;
+                TempMap.FogX -= 1;
+                if (TempMap.FogX < -textureSize.Width) TempMap.FogX = 0;
             }
             // Movimento para frente
             else
             {
-                TempMap.Fog_X += 1;
-                if (TempMap.Fog_X > textureSize.Width) TempMap.Fog_X = 0;
+                TempMap.FogX += 1;
+                if (TempMap.FogX > textureSize.Width) TempMap.FogX = 0;
             }
 
             // Contagem
@@ -107,8 +105,8 @@ namespace CryBits.Editors.Logic
 
         private static void Editor_Maps_Fog_Y()
         {
-            Size textureSize = Graphics.Size(Graphics.Tex_Fog[EditorMaps.Form.Selected.Fog.Texture]);
-            int speed = EditorMaps.Form.Selected.Fog.Speed_Y;
+            Size textureSize = Graphics.Size(Graphics.TexFog[EditorMaps.Form.Selected.Fog.Texture]);
+            int speed = EditorMaps.Form.Selected.Fog.SpeedY;
 
             // Apenas se necessário
             if (_fogYTimer >= Environment.TickCount) return;
@@ -117,14 +115,14 @@ namespace CryBits.Editors.Logic
             // Movimento para trás
             if (speed < 0)
             {
-                TempMap.Fog_Y -= 1;
-                if (TempMap.Fog_Y < -textureSize.Height) TempMap.Fog_Y = 0;
+                TempMap.FogY -= 1;
+                if (TempMap.FogY < -textureSize.Height) TempMap.FogY = 0;
             }
             // Movimento para frente
             else
             {
-                TempMap.Fog_Y += 1;
-                if (TempMap.Fog_Y > textureSize.Height) TempMap.Fog_Y = 0;
+                TempMap.FogY += 1;
+                if (TempMap.FogY > textureSize.Height) TempMap.FogY = 0;
             }
 
             // Contagem
@@ -216,7 +214,7 @@ namespace CryBits.Editors.Logic
                 if (MyRandom.Next(0, Map.MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
                 {
                     // Som do trovão
-                    int thunder = MyRandom.Next((byte)Sounds.Thunder_1, (byte)Sounds.Thunder_4);
+                    int thunder = MyRandom.Next((byte)Sounds.Thunder1, (byte)Sounds.Thunder4);
                     Sound.Play((Sounds)thunder);
 
                     // Relâmpago
@@ -255,11 +253,7 @@ namespace CryBits.Editors.Logic
             Lists.Weather[i].Y = -32;
             Lists.Weather[i].X = MyRandom.Next(-32, EditorMaps.Form.picMap.Width);
             Lists.Weather[i].Start = Lists.Weather[i].X;
-
-            if (MyRandom.Next(2) == 0)
-                Lists.Weather[i].Back = false;
-            else
-                Lists.Weather[i].Back = true;
+            Lists.Weather[i].Back = MyRandom.Next(2) != 0;
         }
 
         private static void Weather_Snow_Movement(int i, bool move = true)
