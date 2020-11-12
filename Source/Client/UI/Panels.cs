@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Network;
-using static CryBits.Client.Logic.Utils;
 using CryBits.Entities;
+using static CryBits.Client.Logic.Utils;
 
 namespace CryBits.Client.UI
 {
@@ -21,13 +21,13 @@ namespace CryBits.Client.UI
         public static byte CreateCharacter_Tex = 0;
         public static int SelectCharacter = 1;
         public static Guid Infomation_ID;
-        public static byte Drop_Slot = 0;
+        public static byte Drop_Slot;
         public static string Party_Invitation;
         public static string Trade_Invitation;
         public static byte Trade_Slot_Selected = 0;
         public static byte Trade_Inventory_Slot = 0;
         public static Shop Shop_Open;
-        public static byte Shop_Inventory_Slot = 0;
+        public static byte Shop_Inventory_Slot;
         public static short Hotbar_Change;
         public static byte Inventory_Change;
         public static TempCharacter[] Characters;
@@ -125,7 +125,6 @@ namespace CryBits.Client.UI
             if (e.Button == SFML.Window.Mouse.Button.Left)
             {
                 Hotbar_Change = slot;
-                return;
             }
         }
 

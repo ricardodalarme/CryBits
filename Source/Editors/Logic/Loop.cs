@@ -1,11 +1,11 @@
-﻿using CryBits.Editors.Forms;
-using CryBits.Entities;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
+using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
 using CryBits.Editors.Media;
+using CryBits.Entities;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 
@@ -14,10 +14,10 @@ namespace CryBits.Editors.Logic
     class Loop
     {
         // Contadores
-        private static int _fogXTimer = 0;
-        private static int _fogYTimer = 0;
-        private static int _snowTimer = 0;
-        private static int _thunderingTimer = 0;
+        private static int _fogXTimer;
+        private static int _fogYTimer;
+        private static int _snowTimer;
+        private static int _thunderingTimer;
 
         public static void Init()
         {

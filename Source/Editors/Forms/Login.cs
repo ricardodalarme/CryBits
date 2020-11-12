@@ -1,7 +1,7 @@
-﻿using CryBits.Editors.Library;
+﻿using System.Windows.Forms;
+using CryBits.Editors.Library;
 using CryBits.Editors.Network;
 using DarkUI.Forms;
-using System.Windows.Forms;
 
 namespace CryBits.Editors.Forms
 {

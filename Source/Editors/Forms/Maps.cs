@@ -1,14 +1,14 @@
-﻿using CryBits.Editors.Library;
-using CryBits.Editors.Logic;
-using CryBits.Editors.Network;
-using CryBits.Entities;
-using DarkUI.Forms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
+using CryBits.Editors.Library;
+using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
+using CryBits.Editors.Network;
+using CryBits.Entities;
+using DarkUI.Forms;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 
@@ -1386,9 +1386,9 @@ namespace CryBits.Editors.Forms
         {
             // Retorna com o atributo selecionado
             if (optA_Block.Checked) return TileAttributes.Block;
-            else if (optA_Warp.Checked) return TileAttributes.Warp;
-            else if (optA_Item.Checked) return TileAttributes.Item;
-            else return TileAttributes.None;
+            if (optA_Warp.Checked) return TileAttributes.Warp;
+            if (optA_Item.Checked) return TileAttributes.Item;
+            return TileAttributes.None;
         }
 
         private void optA_Warp_CheckedChanged(object sender, EventArgs e)

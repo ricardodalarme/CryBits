@@ -1,8 +1,8 @@
 ﻿using CryBits.Editors.Forms;
+using CryBits.Editors.Library;
 using CryBits.Entities;
 using CryBits.Packets;
 using Lidgren.Network;
-using CryBits.Editors.Library;
 using static CryBits.Utils;
 
 namespace CryBits.Editors.Network

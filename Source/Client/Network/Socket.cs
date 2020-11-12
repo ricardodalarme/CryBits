@@ -1,7 +1,7 @@
-﻿using Lidgren.Network;
-using System;
+﻿using System;
 using System.Windows.Forms;
 using CryBits.Client.UI;
+using Lidgren.Network;
 
 namespace CryBits.Client.Network
 {

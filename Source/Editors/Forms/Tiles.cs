@@ -1,8 +1,8 @@
-﻿using CryBits.Editors.Library;
-using DarkUI.Forms;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using CryBits.Editors.Library;
+using DarkUI.Forms;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 

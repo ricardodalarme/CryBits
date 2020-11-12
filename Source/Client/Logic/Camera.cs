@@ -1,5 +1,5 @@
-﻿using CryBits.Client.Entities;
-using System.Drawing;
+﻿using System.Drawing;
+using CryBits.Client.Entities;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Utils;
 

@@ -76,8 +76,7 @@ namespace CryBits.Editors.Media
             // Retorna com o tamanho da textura
             if (texture != null)
                 return new Size((int)texture.Size.X, (int)texture.Size.Y);
-            else
-                return new Size(0, 0);
+            return new Size(0, 0);
         }
 
         // Retorna a cor
@@ -296,7 +295,7 @@ namespace CryBits.Editors.Media
             // Desenha o panorama
             if (form.butVisualization.Checked && map.Panorama > 0)
             {
-                Rectangle destiny = new Rectangle()
+                Rectangle destiny = new Rectangle
                 {
                     X = form.scrlMapX.Value * -form.Grid_Zoom,
                     Y = form.scrlMapY.Value * -form.Grid_Zoom,
@@ -320,7 +319,7 @@ namespace CryBits.Editors.Media
                 if (!form.lstLayers.Items[c].Checked) continue;
 
                 // Transparência da camada
-                color = CColor(255, 255, 255);
+                color = CColor();
                 if (form.butEdition.Checked && form.butMNormal.Checked)
                 {
                     if (EditorMaps.Form.lstLayers.SelectedIndices.Count > 0)

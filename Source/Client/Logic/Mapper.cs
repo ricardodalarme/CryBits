@@ -16,8 +16,8 @@ namespace CryBits.Client.Logic
         // Fumaças
         public static int Fog_X;
         public static int Fog_Y;
-        private static int _fogXTimer = 0;
-        private static int _fogYTimer = 0;
+        private static int _fogXTimer;
+        private static int _fogYTimer;
 
         // Clima
         public const byte MaxRain = 100;
@@ -25,8 +25,8 @@ namespace CryBits.Client.Logic
         public const byte MaxWeatherIntensity = 10;
         public const byte SnowMovement = 10;
         public static byte Lightning;
-        private static int _snowTimer = 0;
-        private static int _lightningTimer = 0;
+        private static int _snowTimer;
+        private static int _lightningTimer;
 
         // Sangue
         private static int _bloodTimer;
@@ -149,7 +149,7 @@ namespace CryBits.Client.Logic
                             TempMap.Weather[i].Visible = true;
 
                             // Cria a partícula de acordo com o seu tipo
-                            switch ((Weathers)Current.Data.Weather.Type)
+                            switch (Current.Data.Weather.Type)
                             {
                                 case Weathers.Thundering:
                                 case Weathers.Raining: Weather_Rain_Create(i); break;
@@ -163,7 +163,7 @@ namespace CryBits.Client.Logic
                 else
                 {
                     // Movimenta a partícula de acordo com o seu tipo
-                    switch ((Weathers)Current.Data.Weather.Type)
+                    switch (Current.Data.Weather.Type)
                     {
                         case Weathers.Thundering:
                         case Weathers.Raining: Weather_Rain_Movement(i); break;
@@ -254,7 +254,7 @@ namespace CryBits.Client.Logic
             Audio.Sound.Stop_All();
             if (Current == null) return;
             // Redimensiona a lista
-            switch ((Weathers)Current.Data.Weather.Type)
+            switch (Current.Data.Weather.Type)
             {
                 case Weathers.Thundering:
                 case Weathers.Raining:

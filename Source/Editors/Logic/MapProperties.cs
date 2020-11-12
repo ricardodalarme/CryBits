@@ -1,9 +1,9 @@
-﻿using CryBits.Entities;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Media;
+using CryBits.Entities;
 using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Logic

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using CryBits.Client.Logic;
+using CryBits.Entities;
 using static CryBits.Client.Logic.Utils;
-using  CryBits.Entities;
 
 namespace CryBits.Client.Entities
 {

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using static CryBits.Client.Logic.Game;
 using CryBits.Entities;
+using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Library
 {

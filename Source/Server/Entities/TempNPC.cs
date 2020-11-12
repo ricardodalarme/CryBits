@@ -1,7 +1,7 @@
-﻿using CryBits.Entities;
+﻿using System;
+using CryBits.Entities;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
-using System;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Entities

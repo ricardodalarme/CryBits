@@ -1,6 +1,6 @@
-﻿using CryBits.Client.Entities;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using CryBits.Client.Entities;
 using CryBits.Client.Media;
 using CryBits.Client.UI;
 
@@ -9,7 +9,7 @@ namespace CryBits.Client.Logic
     class Loop
     {
         // Contagens
-        public static int TextBox_Timer = 0;
+        public static int TextBox_Timer;
         public static int Chat_Timer = 0;
 
         public static void Init()

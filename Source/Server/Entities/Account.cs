@@ -1,5 +1,5 @@
-﻿using Lidgren.Network;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Lidgren.Network;
 
 namespace CryBits.Server.Entities
 {

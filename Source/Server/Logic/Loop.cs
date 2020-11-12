@@ -1,15 +1,15 @@
-﻿using CryBits.Server.Entities;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using CryBits.Server.Entities;
 
 namespace CryBits.Server.Logic
 {
     static class Loop
     {
         // Contagens
-        public static int Timer_500 = 0, Timer_1000 = 0;
-        public static int Timer_Regen = 0;
-        public static int Timer_Map_Items = 0;
+        public static int Timer_500, Timer_1000;
+        public static int Timer_Regen;
+        public static int Timer_Map_Items;
 
         public static void Main()
         {

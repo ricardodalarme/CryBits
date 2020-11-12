@@ -1,10 +1,9 @@
-﻿using CryBits.Editors.Entities;
-using CryBits.Editors.Library;
-using DarkUI.Forms;
-using System;
+﻿using System;
 using System.Windows.Forms;
 using CryBits.Editors.Entities.Tools;
+using CryBits.Editors.Library;
 using CryBits.Editors.Media;
+using DarkUI.Forms;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
 using Panel = CryBits.Editors.Entities.Tools.Panel;

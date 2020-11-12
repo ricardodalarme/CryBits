@@ -1,6 +1,6 @@
-﻿using CryBits.Entities;
-using System;
+﻿using System;
 using System.Drawing;
+using CryBits.Entities;
 
 namespace CryBits.Editors.Logic
 {

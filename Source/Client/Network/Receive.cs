@@ -1,17 +1,16 @@
-﻿using CryBits.Client.Entities;
-using CryBits.Client.Logic;
-using Lidgren.Network;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using CryBits.Client.Entities;
+using CryBits.Client.Logic;
 using CryBits.Client.Media;
 using CryBits.Client.UI;
-using static CryBits.Client.Logic.Game;
-using static CryBits.Client.Logic.Utils;
-using static CryBits.Utils;
 using CryBits.Entities;
 using CryBits.Packets;
+using Lidgren.Network;
+using static CryBits.Client.Logic.Game;
+using static CryBits.Utils;
 
 namespace CryBits.Client.Network
 {

@@ -85,8 +85,8 @@ namespace CryBits.Client.UI
                 TextBoxes.Focused = Tools.Get(tool);
                 return;
             }
-            else
-                TextBoxes.Focused = null;
+
+            TextBoxes.Focused = null;
 
             // Dados
             string message = tool.Text;

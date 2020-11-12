@@ -1,10 +1,10 @@
-﻿using CryBits.Client.Entities;
-using Lidgren.Network;
-using System;
+﻿using System;
 using System.Linq;
+using CryBits.Client.Entities;
 using CryBits.Client.UI;
 using CryBits.Entities;
 using CryBits.Packets;
+using Lidgren.Network;
 
 namespace CryBits.Client.Network
 {

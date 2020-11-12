@@ -32,7 +32,7 @@ namespace CryBits.Server
             Console.WriteLine("[Starting]");
 
             // Evento de saída do console
-            _handler += new EventHandler(Exit);
+            _handler += Exit;
             SetConsoleCtrlHandler(_handler, true);
 
             // Verifica se todos os diretórios existem, se não existirem então criá-los

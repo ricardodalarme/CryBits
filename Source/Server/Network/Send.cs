@@ -1,8 +1,8 @@
-﻿using CryBits.Entities;
+﻿using System.Drawing;
+using CryBits.Entities;
 using CryBits.Packets;
 using CryBits.Server.Entities;
 using Lidgren.Network;
-using System.Drawing;
 using static CryBits.Server.Logic.Utils;
 using static CryBits.Utils;
 

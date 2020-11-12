@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using CryBits.Entities;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.UI;
+using CryBits.Entities;
 using SFML.Graphics;
 using SFML.Window;
 using static CryBits.Client.Logic.Game;
@@ -69,13 +69,13 @@ namespace CryBits.Client.Media
 
             // Inicia a janela
             RenderWindow = new RenderWindow(new VideoMode(800, 608), Game_Name, Styles.Close);
-            RenderWindow.Closed += new EventHandler(Windows.OnClosed);
-            RenderWindow.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(Windows.OnMouseButtonPressed);
-            RenderWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(Windows.OnMouseMoved);
-            RenderWindow.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(Windows.OnMouseButtonReleased);
-            RenderWindow.KeyPressed += new EventHandler<KeyEventArgs>(Windows.OnKeyPressed);
-            RenderWindow.KeyReleased += new EventHandler<KeyEventArgs>(Windows.OnKeyReleased);
-            RenderWindow.TextEntered += new EventHandler<TextEventArgs>(Windows.OnTextEntered);
+            RenderWindow.Closed += Windows.OnClosed;
+            RenderWindow.MouseButtonPressed += Windows.OnMouseButtonPressed;
+            RenderWindow.MouseMoved += Windows.OnMouseMoved;
+            RenderWindow.MouseButtonReleased += Windows.OnMouseButtonReleased;
+            RenderWindow.KeyPressed += Windows.OnKeyPressed;
+            RenderWindow.KeyReleased += Windows.OnKeyReleased;
+            RenderWindow.TextEntered += Windows.OnTextEntered;
         }
 
         private static void LoadTextures()
@@ -130,8 +130,7 @@ namespace CryBits.Client.Media
             // Retorna com o tamanho da textura
             if (texture != null)
                 return new Size((int)texture.Size.X, (int)texture.Size.Y);
-            else
-                return new Size(0, 0);
+            return new Size(0, 0);
         }
 
         private static SFML.Graphics.Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new SFML.Graphics.Color(r, g, b, a);
@@ -514,13 +513,13 @@ namespace CryBits.Client.Media
             if (item == null) return;
 
             // Define a cor de acordo com a raridade
-            switch ((Rarity)item.Rarity)
+            switch (item.Rarity)
             {
                 case Rarity.Uncommon: textColor = CColor(204, 255, 153); break; // Verde
-                case Rarity.Rare: textColor = CColor(102, 153, 255); break; // Azul
+                case Rarity.Rare: textColor = CColor(102, 153); break; // Azul
                 case Rarity.Epic: textColor = CColor(153, 0, 204); break; // Roxo
                 case Rarity.Legendary: textColor = CColor(255, 255, 77); break; // Amarelo
-                default: textColor = CColor(255, 255, 255); break; // Branco
+                default: textColor = CColor(); break; // Branco
             }
 
             // Nome, descrição e icone do item
@@ -537,7 +536,7 @@ namespace CryBits.Client.Media
                         data.Add("Sale price: " + Panels.Shop_Open.FindBought(item).Price);
 
             // Informações específicas dos itens
-            switch ((Items)item.Type)
+            switch (item.Type)
             {
                 // Poção
                 case Items.Potion:
@@ -573,7 +572,7 @@ namespace CryBits.Client.Media
             {
                 byte slot = Player.Me.Hotbar[i].Slot;
                 if (slot > 0)
-                    switch ((CryBits.Hotbars)Player.Me.Hotbar[i].Type)
+                    switch ((Hotbars)Player.Me.Hotbar[i].Type)
                     {
                         // Itens
                         case Hotbars.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
@@ -953,7 +952,7 @@ namespace CryBits.Client.Media
             if (Mapper.Current.Data.Weather.Type == 0) return;
 
             // Textura
-            switch ((Weathers)Mapper.Current.Data.Weather.Type)
+            switch (Mapper.Current.Data.Weather.Type)
             {
                 case Weathers.Snowing: x = 32; break;
             }
