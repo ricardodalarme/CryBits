@@ -1,9 +1,10 @@
 ﻿using CryBits.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace CryBits
 {
-    static class Utils
+    public static class Utils
     {
         // Números aleatórios
         public static Random MyRandom = new Random();
@@ -43,5 +44,8 @@ namespace CryBits
 
         // Obtém o ID de alguma entidade, caso ela não existir retorna um ID zerado
         public static string GetID(this Entity Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
+
+        // Obtém o dado, caso ele não existir retorna nulo
+        public static TV Get<Guid, TV>(this Dictionary<Guid, TV> dict, Guid key) => dict.ContainsKey(key) ? dict[key] : default;
     }
 }
