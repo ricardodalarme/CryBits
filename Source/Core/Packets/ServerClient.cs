@@ -1,0 +1,48 @@
+﻿namespace CryBits.Packets
+{
+    // Pacotes do servidor para o cliente
+    public enum ServerClient
+    {
+        Alert,
+        Connect,
+        CreateCharacter,
+        Join,
+        Classes,
+        Characters,
+        JoinGame,
+        Player_Data,
+        Player_Position,
+        Player_Vitals,
+        Player_Leave,
+        Player_Attack,
+        Player_Move,
+        Player_Direction,
+        Player_Experience,
+        Player_Inventory,
+        Player_Equipments,
+        Player_Hotbar,
+        JoinMap,
+        Map_Revision,
+        Map,
+        Latency,
+        Message,
+        NPCs,
+        Map_NPCs,
+        Map_NPC,
+        Map_NPC_Movement,
+        Map_NPC_Direction,
+        Map_NPC_Vitals,
+        Map_NPC_Attack,
+        Map_NPC_Died,
+        Items,
+        Map_Items,
+        Party,
+        Party_Invitation,
+        Trade,
+        Trade_Invitation,
+        Trade_State,
+        Trade_Offer,
+        Shops,
+        Shop_Open
+    }
+}

@@ -1,6 +1,6 @@
 ﻿using CryBits.Editors.Forms;
 using CryBits.Editors.Entities;
-using CryBits;
+using CryBits.Packets;
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
@@ -11,33 +11,19 @@ namespace CryBits.Editors.Network
 {
     class Receive
     {
-        // Pacotes do servidor
-        private enum Packets
-        {
-            Alert,
-            Connect,
-            Server_Data,
-            Classes,
-            Maps,
-            Map,
-            NPCs,
-            Items,
-            Shops
-        }
-
         public static void Handle(NetIncomingMessage Data)
         {
             // Manuseia os dados recebidos
-            switch ((Packets)Data.ReadByte())
+            switch ((ServerEditor)Data.ReadByte())
             {
-                case Packets.Alert: Alert(Data); break;
-                case Packets.Connect: Connect(); break;
-                case Packets.Server_Data: Server_Data(Data); break;
-                case Packets.Classes: Classes(Data); break;
-                case Packets.Map: Map(Data); break;
-                case Packets.NPCs: NPCs(Data); break;
-                case Packets.Items: Items(Data); break;
-                case Packets.Shops: Shops(Data); break;
+                case ServerEditor.Alert: Alert(Data); break;
+                case ServerEditor.Connect: Connect(); break;
+                case ServerEditor.Server_Data: Server_Data(Data); break;
+                case ServerEditor.Classes: Classes(Data); break;
+                case ServerEditor.Map: Map(Data); break;
+                case ServerEditor.NPCs: NPCs(Data); break;
+                case ServerEditor.Items: Items(Data); break;
+                case ServerEditor.Shops: Shops(Data); break;
             }
         }
 
