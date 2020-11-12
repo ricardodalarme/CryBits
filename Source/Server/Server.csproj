@@ -72,7 +72,6 @@
       <HintPath>..\..\Build\Core\CryBits.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>

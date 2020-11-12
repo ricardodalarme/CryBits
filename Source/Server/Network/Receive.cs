@@ -244,7 +244,7 @@ namespace CryBits.Server.Network
 
         private static void Character_Use(Account account, NetIncomingMessage data)
         {
-            byte character = data.ReadByte();
+            int character = data.ReadInt32();
 
             // Verifica se o personagem existe
             if (character < 0 || character >= account.Characters.Count) return;
@@ -270,7 +270,7 @@ namespace CryBits.Server.Network
 
         private static void Character_Delete(Account account, NetIncomingMessage data)
         {
-            byte character = data.ReadByte();
+            int character = data.ReadInt32();
 
             // Verifica se o personagem existe
             if (character < 0 || character >= account.Characters.Count) return;
