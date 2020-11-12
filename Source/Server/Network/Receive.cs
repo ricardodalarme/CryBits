@@ -228,10 +228,10 @@ namespace CryBits.Server.Network
             Account.Character.Y = Class.Spawn_Y;
             for (byte i = 0; i < (byte)Vitals.Count; i++) Account.Character.Vital[i] = Account.Character.MaxVital(i);
             for (byte i = 0; i < (byte)Class.Item.Count; i++)
-                if (Class.Item[i].Item1.Type == Items.Equipment && Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] == null)
-                    Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] = Class.Item[i].Item1;
+                if (Class.Item[i].Item.Type == Items.Equipment && Account.Character.Equipment[Class.Item[i].Item.Equip_Type] == null)
+                    Account.Character.Equipment[Class.Item[i].Item.Equip_Type] = Class.Item[i].Item;
                 else
-                    Account.Character.GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
+                    Account.Character.GiveItem(Class.Item[i].Item, Class.Item[i].Amount);
             for (byte i = 0; i < Max_Hotbar; i++) Account.Character.Hotbar[i] = new Hotbar(Hotbars.None, 0);
 
             // Salva a conta
@@ -547,7 +547,7 @@ namespace CryBits.Server.Network
                 // Redimensiona os valores necessários 
                 Class.Tex_Male = new short[Data.ReadByte()];
                 Class.Tex_Female = new short[Data.ReadByte()];
-                Class.Item = new Tuple<Item, short>[Data.ReadByte()];
+                Class.Item = new ItemSlot[Data.ReadByte()];
 
                 // Lê os dados
                 Class.Name = Data.ReadString();
@@ -560,7 +560,7 @@ namespace CryBits.Server.Network
                 Class.Spawn_Y = Data.ReadByte();
                 for (byte n = 0; n < (byte)Vitals.Count; n++) Class.Vital[n] = Data.ReadInt16();
                 for (byte n = 0; n < (byte)Attributes.Count; n++) Class.Attribute[n] = Data.ReadInt16();
-                for (byte n = 0; n < (byte)Class.Item.Count; n++) Class.Item[n] = new Tuple<Item, short>(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16());
+                for (byte n = 0; n < (byte)Class.Item.Count; n++) Class.Item[n] = new ItemSlot(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16());
 
                 // Salva os dados das classes
                 Write.Class(Class);
