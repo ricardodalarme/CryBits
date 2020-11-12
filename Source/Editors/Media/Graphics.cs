@@ -12,12 +12,14 @@ using SFML.System;
 using static CryBits.Editors.Logic.Utils;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
+using Color = SFML.Graphics.Color;
+using Font = SFML.Graphics.Font;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
 using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
 namespace CryBits.Editors.Media
 {
-    class Graphics
+    internal class Graphics
     {
         // Locais de renderização
         public static RenderWindow Win_Interface;
@@ -30,7 +32,7 @@ namespace CryBits.Editors.Media
         public static RenderWindow Win_NPC;
 
         // Fonte principal
-        public static SFML.Graphics.Font Font_Default;
+        public static Font Font_Default;
 
         // Texturas
         public static Texture[] Tex_Character;
@@ -76,12 +78,11 @@ namespace CryBits.Editors.Media
             // Retorna com o tamanho da textura
             if (texture != null)
                 return new Size((int)texture.Size.X, (int)texture.Size.Y);
-            else
-                return new Size(0, 0);
+            return new Size(0, 0);
         }
 
         // Retorna a cor
-        private static SFML.Graphics.Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new SFML.Graphics.Color(r, g, b, a);
+        private static Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new Color(r, g, b, a);
 
         private static void Render(RenderWindow window, Texture texture, Rectangle source, Rectangle destiny, object color = null, object mode = null)
         {
@@ -92,7 +93,7 @@ namespace CryBits.Editors.Media
                 Position = new Vector2f(destiny.X, destiny.Y),
                 Scale = new Vector2f(destiny.Width / (float)source.Width, destiny.Height / (float)source.Height)
             };
-            if (color != null) tmpImage.Color = (SFML.Graphics.Color)color;
+            if (color != null) tmpImage.Color = (Color)color;
 
             // Renderiza a textura em forma de retângulo
             if (mode == null) mode = RenderStates.Default;
@@ -107,7 +108,7 @@ namespace CryBits.Editors.Media
                 Position = new Vector2f(destiny.X, destiny.Y),
                 Scale = new Vector2f(destiny.Width / (float)Size(texture).Width, destiny.Height / (float)Size(texture).Height)
             };
-            if (color != null) tmpImage.Color = (SFML.Graphics.Color)color;
+            if (color != null) tmpImage.Color = (Color)color;
 
             // Renderiza a textura em forma de retângulo
             if (mode == null) mode = RenderStates.Default;
@@ -171,7 +172,7 @@ namespace CryBits.Editors.Media
             Render(window, texture, new Rectangle(new Point(margin, 0), new Size(margin, textureHeight)), new Rectangle(new Point(position.X + margin, position.Y), new Size(size.Width - margin * 2, textureHeight)));
         }
 
-        private static void DrawText(RenderWindow window, string text, int x, int y, SFML.Graphics.Color color)
+        private static void DrawText(RenderWindow window, string text, int x, int y, Color color)
         {
             Text tempText = new Text(text, Font_Default);
 
@@ -179,7 +180,7 @@ namespace CryBits.Editors.Media
             tempText.CharacterSize = 10;
             tempText.FillColor = color;
             tempText.Position = new Vector2f(x, y);
-            tempText.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 70);
+            tempText.OutlineColor = new Color(0, 0, 0, 70);
             tempText.OutlineThickness = 1;
 
             // Desenha
@@ -210,7 +211,7 @@ namespace CryBits.Editors.Media
             Tex_Lighting = new Texture(Directories.Tex_Lighting.FullName + Format);
 
             // Fontes
-            Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
+            Font_Default = new Font(Directories.Fonts.FullName + "Georgia.ttf");
         }
 
         public static void Present()
@@ -251,7 +252,7 @@ namespace CryBits.Editors.Media
             }
 
             // Limpa a área com um fundo preto
-            Win_Map_Tile.Clear(SFML.Graphics.Color.Black);
+            Win_Map_Tile.Clear(Color.Black);
 
             // Dados
             Texture texture = Tex_Tile[form.cmbTiles.SelectedIndex + 1];
@@ -273,7 +274,7 @@ namespace CryBits.Editors.Media
             if (EditorMaps.Form == null || EditorMaps.Form.IsDisposed || EditorMaps.Form.Selected == null) return;
 
             // Limpa a área com um fundo preto
-            Win_Map.Clear(SFML.Graphics.Color.Black);
+            Win_Map.Clear(Color.Black);
 
             // Desenha o mapa
             Map selected = EditorMaps.Form.Selected;
@@ -296,7 +297,7 @@ namespace CryBits.Editors.Media
             // Desenha o panorama
             if (form.butVisualization.Checked && map.Panorama > 0)
             {
-                Rectangle destiny = new Rectangle()
+                Rectangle destiny = new Rectangle
                 {
                     X = form.scrlMapX.Value * -form.Grid_Zoom,
                     Y = form.scrlMapY.Value * -form.Grid_Zoom,
@@ -311,7 +312,7 @@ namespace CryBits.Editors.Media
             EditorMaps form = EditorMaps.Form;
             MapTileData data;
             int beginX = form.scrlMapX.Value, beginY = form.scrlMapY.Value;
-            SFML.Graphics.Color color;
+            Color color;
 
             // Desenha todos os azulejos
             for (byte c = 0; c < map.Layer.Count; c++)
@@ -320,7 +321,7 @@ namespace CryBits.Editors.Media
                 if (!form.lstLayers.Items[c].Checked) continue;
 
                 // Transparência da camada
-                color = CColor(255, 255, 255);
+                color = CColor();
                 if (form.butEdition.Checked && form.butMNormal.Checked)
                 {
                     if (EditorMaps.Form.lstLayers.SelectedIndices.Count > 0)
@@ -349,7 +350,7 @@ namespace CryBits.Editors.Media
             }
         }
 
-        private static void Editor_Maps_AutoTile(Point position, MapTileData data, SFML.Graphics.Color color)
+        private static void Editor_Maps_AutoTile(Point position, MapTileData data, Color color)
         {
             // Desenha todas as partes do azulejo
             for (byte i = 0; i < 4; i++)
@@ -479,7 +480,7 @@ namespace CryBits.Editors.Media
             EditorMaps form = EditorMaps.Form;
             Point position = new Point((x - form.scrlMapX.Value) * form.Grid_Zoom, (y - form.scrlMapY.Value) * form.Grid_Zoom);
             byte zoneNum = map.Attribute[x, y].Zone;
-            SFML.Graphics.Color color;
+            Color color;
 
             // Apenas se necessário
             if (!EditorMaps.Form.butMZones.Checked) return;
@@ -493,7 +494,7 @@ namespace CryBits.Editors.Media
 
             // Desenha as zonas
             Render(Win_Map, Tex_Blank, new Rectangle(position, new Size(form.Grid_Zoom, form.Grid_Zoom)), color);
-            DrawText(Win_Map, zoneNum.ToString(), position.X, position.Y, SFML.Graphics.Color.White);
+            DrawText(Win_Map, zoneNum.ToString(), position.X, position.Y, Color.White);
         }
 
         private static void Editor_Maps_Map_Attributes(Map map, byte x, byte y)
@@ -501,7 +502,7 @@ namespace CryBits.Editors.Media
             EditorMaps form = EditorMaps.Form;
             Point position = new Point((x - form.scrlMapX.Value) * form.Grid_Zoom, (y - EditorMaps.Form.scrlMapY.Value) * form.Grid_Zoom);
             TileAttributes attribute = (TileAttributes)map.Attribute[x, y].Type;
-            SFML.Graphics.Color color;
+            Color color;
             string letter;
 
             // Apenas se necessário
@@ -512,16 +513,16 @@ namespace CryBits.Editors.Media
             // Define a cor e a letra
             switch (attribute)
             {
-                case TileAttributes.Block: letter = "B"; color = SFML.Graphics.Color.Red; break;
-                case TileAttributes.Warp: letter = "T"; color = SFML.Graphics.Color.Blue; break;
-                case TileAttributes.Item: letter = "I"; color = SFML.Graphics.Color.Green; break;
+                case TileAttributes.Block: letter = "B"; color = Color.Red; break;
+                case TileAttributes.Warp: letter = "T"; color = Color.Blue; break;
+                case TileAttributes.Item: letter = "I"; color = Color.Green; break;
                 default: return;
             }
-            color = new SFML.Graphics.Color(color.R, color.G, color.B, 100);
+            color = new Color(color.R, color.G, color.B, 100);
 
             // Desenha as Atributos
             Render(Win_Map, Tex_Blank, new Rectangle(position, new Size(form.Grid_Zoom, form.Grid_Zoom)), color);
-            DrawText(Win_Map, letter, position.X, position.Y, SFML.Graphics.Color.White);
+            DrawText(Win_Map, letter, position.X, position.Y, Color.White);
         }
 
         private static void Editor_Maps_Map_DirBlock(Map map, byte x, byte y)
@@ -562,7 +563,7 @@ namespace CryBits.Editors.Media
 
                         // Desenha uma sinalização de onde os NPCBehaviour estão
                         Render(Win_Map, Tex_Blank, new Rectangle(position, new Size(form.Grid_Zoom, form.Grid_Zoom)), CColor(0, 220, 0, 150));
-                        DrawText(Win_Map, (i + 1).ToString(), position.X + 10, position.Y + 10, SFML.Graphics.Color.White);
+                        DrawText(Win_Map, (i + 1).ToString(), position.X + 10, position.Y + 10, Color.White);
                     }
         }
         #endregion
@@ -617,7 +618,7 @@ namespace CryBits.Editors.Media
             {
                 case TileAttributes.Block:
                     Render(Win_Tile, Tex_Blank, x * Grid, y * Grid, 0, 0, Grid, Grid, CColor(225, 0, 0, 75));
-                    DrawText(Win_Tile, "B", point.X, point.Y, SFML.Graphics.Color.Red);
+                    DrawText(Win_Tile, "B", point.X, point.Y, Color.Red);
                     break;
             }
         }
@@ -739,7 +740,7 @@ namespace CryBits.Editors.Media
         {
             // Desenha o botão
             if (tool.Texture_Num < Tex_Button.Length)
-                Render(Win_Interface, Tex_Button[tool.Texture_Num], tool.Position, new SFML.Graphics.Color(255, 255, 225, 225));
+                Render(Win_Interface, Tex_Button[tool.Texture_Num], tool.Position, new Color(255, 255, 225, 225));
         }
 
         private static void Panel(Panel tool)
@@ -762,7 +763,7 @@ namespace CryBits.Editors.Media
             // Desenha o marcador 
             byte margin = 4;
             Render(Win_Interface, Tex_CheckBox, recSource, recDestiny);
-            DrawText(Win_Interface, tool.Text, recDestiny.Location.X + Size(Tex_CheckBox).Width / 2 + margin, recDestiny.Location.Y + 1, SFML.Graphics.Color.White);
+            DrawText(Win_Interface, tool.Text, recDestiny.Location.X + Size(Tex_CheckBox).Width / 2 + margin, recDestiny.Location.Y + 1, Color.White);
         }
 
         private static void TextBox(TextBox tool)

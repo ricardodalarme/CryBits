@@ -1,12 +1,12 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using CryBits.Client.UI;
-using Graphics = CryBits.Client.Media.Graphics;
+using SFML.Graphics;
 using static CryBits.Utils;
+using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.Logic
 {
-    static class Utils
+    internal static class Utils
     {
         // Converte o valor em uma posição adequada à camera
         public static int ConvertX(int x) => x - (Camera.Tile_Sight.X * Grid) - Camera.Start_Sight.X;
@@ -51,7 +51,7 @@ namespace CryBits.Client.Logic
         public static short MeasureString(string text)
         {
             // Dados do texto
-            SFML.Graphics.Text tempText = new SFML.Graphics.Text(text, Graphics.Font_Default);
+            Text tempText = new Text(text, Graphics.Font_Default);
             tempText.CharacterSize = 10;
             return (short)tempText.GetLocalBounds().Width;
         }

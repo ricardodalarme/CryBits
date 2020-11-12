@@ -1,11 +1,12 @@
-﻿using CryBits.Editors.Network;
-using DarkUI.Forms;
-using System;
+﻿using System;
+using System.Windows.Forms;
 using CryBits.Editors.Library;
+using CryBits.Editors.Network;
+using DarkUI.Forms;
 
 namespace CryBits.Editors.Forms
 {
-    partial class EditorData : DarkForm
+    internal partial class EditorData : DarkForm
     {
         public EditorData()
         {
@@ -30,7 +31,7 @@ namespace CryBits.Editors.Forms
             numMax_Password.Value = Lists.Server_Data.Max_Password_Length;
         }
 
-        private void Editor_Data_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
+        private void Editor_Data_FormClosed(object sender, FormClosedEventArgs e)
         {
             EditorMaps.Form.Show();
         }

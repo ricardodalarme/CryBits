@@ -9,7 +9,7 @@ using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
 namespace CryBits.Editors.Library
 {
-    static class Write
+    internal static class Write
     {
         public static void Options()
         {

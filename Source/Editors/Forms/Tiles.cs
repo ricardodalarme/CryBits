@@ -1,14 +1,16 @@
-﻿using CryBits.Editors.Library;
-using DarkUI.Forms;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Library;
+using DarkUI.Forms;
+using SFML.Graphics;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Forms
 {
-    partial class EditorTiles : DarkForm
+    internal partial class EditorTiles : DarkForm
     {
         // Usado para acessar os dados da janela
         public static EditorTiles Form;
@@ -25,7 +27,7 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.Win_Tile = new SFML.Graphics.RenderWindow(picTile.Handle);
+            Graphics.Win_Tile = new RenderWindow(picTile.Handle);
 
             // Define os limites
             scrlTile.Maximum = Graphics.Tex_Tile.GetUpperBound(0);
@@ -62,7 +64,7 @@ namespace CryBits.Editors.Forms
         private void butClear_Click(object sender, EventArgs e)
         {
             // Limpa os dados
-            Lists.Tile[(byte)scrlTile.Value] = new Entities.Tile((byte)scrlTile.Value);
+            Lists.Tile[(byte)scrlTile.Value] = new Tile((byte)scrlTile.Value);
         }
 
         private void butCancel_Click(object sender, EventArgs e)

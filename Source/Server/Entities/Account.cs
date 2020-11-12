@@ -1,9 +1,9 @@
-﻿using Lidgren.Network;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Lidgren.Network;
 
 namespace CryBits.Server.Entities
 {
-    class Account
+    internal class Account
     {
         // Lista de dados
         public static List<Account> List = new List<Account>();

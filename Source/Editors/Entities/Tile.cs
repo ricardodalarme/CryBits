@@ -6,7 +6,7 @@ using Graphics = CryBits.Editors.Media.Graphics;
 namespace CryBits.Editors.Entities
 {
     [Serializable]
-    class Tile
+    internal class Tile
     {
         public byte Width;
         public byte Height;
@@ -32,7 +32,7 @@ namespace CryBits.Editors.Entities
     }
 
     [Serializable]
-    class TileData
+    internal class TileData
     {
         public byte Attribute;
         public bool[] Block = new bool[(byte)Directions.Count];

@@ -21,7 +21,8 @@ namespace CryBits.Server
         [DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
         private delegate bool EventHandler();
-        static EventHandler _handler;
+
+        private static EventHandler _handler;
 
         [STAThread]
         private static void Main()
@@ -32,7 +33,7 @@ namespace CryBits.Server
             Console.WriteLine("[Starting]");
 
             // Evento de saída do console
-            _handler += new EventHandler(Exit);
+            _handler += Exit;
             SetConsoleCtrlHandler(_handler, true);
 
             // Verifica se todos os diretórios existem, se não existirem então criá-los

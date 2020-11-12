@@ -3,7 +3,7 @@ using static CryBits.Utils;
 
 namespace CryBits.Client.Entities
 {
-    class Character
+    internal class Character
     {
         // Geral
         public short[] Vital = new short[(byte)Vitals.Count];

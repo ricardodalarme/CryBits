@@ -1,17 +1,18 @@
-﻿using CryBits.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using CryBits.Entities;
 using CryBits.Packets;
 using CryBits.Server.Entities;
 using CryBits.Server.Library;
 using Lidgren.Network;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using static CryBits.Server.Logic.Utils;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Network
 {
-    static class Receive
+    internal static class Receive
     {
         public static void Handle(Account account, NetIncomingMessage data)
         {
@@ -244,7 +245,7 @@ namespace CryBits.Server.Network
 
         private static void Character_Use(Account account, NetIncomingMessage data)
         {
-            byte character = data.ReadByte();
+            int character = data.ReadInt32();
 
             // Verifica se o personagem existe
             if (character < 0 || character >= account.Characters.Count) return;
@@ -270,7 +271,7 @@ namespace CryBits.Server.Network
 
         private static void Character_Delete(Account account, NetIncomingMessage data)
         {
-            byte character = data.ReadByte();
+            int character = data.ReadInt32();
 
             // Verifica se o personagem existe
             if (character < 0 || character >= account.Characters.Count) return;
@@ -660,31 +661,31 @@ namespace CryBits.Server.Network
             // Verifica se o jogador está convectado
             if (invited == null)
             {
-                Send.Message(player, "The player ins't connected.", System.Drawing.Color.White);
+                Send.Message(player, "The player ins't connected.", Color.White);
                 return;
             }
             // Verifica se não está tentando se convidar
             if (invited == player)
             {
-                Send.Message(player, "You can't be invited.", System.Drawing.Color.White);
+                Send.Message(player, "You can't be invited.", Color.White);
                 return;
             }
             // Verifica se já tem um grupo
             if (invited.Party.Count != 0)
             {
-                Send.Message(player, "The player is already part of a party.", System.Drawing.Color.White);
+                Send.Message(player, "The player is already part of a party.", Color.White);
                 return;
             }
             // Verifica se o jogador já está analisando um convite para algum grupo
             if (!string.IsNullOrEmpty(invited.Party_Request))
             {
-                Send.Message(player, "The player is analyzing an invitation to another party.", System.Drawing.Color.White);
+                Send.Message(player, "The player is analyzing an invitation to another party.", Color.White);
                 return;
             }
             // Verifica se o grupo está cheio
             if (player.Party.Count == Max_Party_Members - 1)
             {
-                Send.Message(player, "Your party is full.", System.Drawing.Color.White);
+                Send.Message(player, "Your party is full.", Color.White);
                 return;
             }
 
@@ -700,20 +701,20 @@ namespace CryBits.Server.Network
             // Verifica se já tem um grupo
             if (player.Party.Count != 0)
             {
-                Send.Message(player, "You are already part of a party.", System.Drawing.Color.White);
+                Send.Message(player, "You are already part of a party.", Color.White);
                 return;
             }
 
             // Verifica se quem chamou ainda está disponível
             if (invitation == null)
             {
-                Send.Message(player, "Who invited you is no longer avaliable.", System.Drawing.Color.White);
+                Send.Message(player, "Who invited you is no longer avaliable.", Color.White);
                 return;
             }
             // Verifica se o grupo está cheio
             if (invitation.Party.Count == Max_Party_Members - 1)
             {
-                Send.Message(player, "The party is full.", System.Drawing.Color.White);
+                Send.Message(player, "The party is full.", Color.White);
                 return;
             }
 
@@ -726,7 +727,7 @@ namespace CryBits.Server.Network
             player.Party.Insert(0, invitation);
             invitation.Party.Add(player);
             player.Party_Request = string.Empty;
-            Send.Message(invitation, player.Name + " joined the party.", System.Drawing.Color.White);
+            Send.Message(invitation, player.Name + " joined the party.", Color.White);
 
             // Envia os dados para o grupo
             Send.Party(player);
@@ -738,7 +739,7 @@ namespace CryBits.Server.Network
             Player invitation = Player.Find(player.Party_Request);
 
             // Recusa o convite
-            if (invitation != null) Send.Message(invitation, player.Name + " decline the party.", System.Drawing.Color.White);
+            if (invitation != null) Send.Message(invitation, player.Name + " decline the party.", Color.White);
             player.Party_Request = string.Empty;
         }
 
@@ -758,42 +759,42 @@ namespace CryBits.Server.Network
             // Verifica se o jogador está convectado
             if (invited == null)
             {
-                Send.Message(player, "The player ins't connected.", System.Drawing.Color.White);
+                Send.Message(player, "The player ins't connected.", Color.White);
                 return;
             }
             // Verifica se não está tentando se convidar
             if (invited == player)
             {
-                Send.Message(player, "You can't be invited.", System.Drawing.Color.White);
+                Send.Message(player, "You can't be invited.", Color.White);
                 return;
             }
             // Verifica se já tem um grupo
             if (invited.Trade != null)
             {
-                Send.Message(player, "The player is already part of a trade.", System.Drawing.Color.White);
+                Send.Message(player, "The player is already part of a trade.", Color.White);
                 return;
             }
             // Verifica se o jogador já está analisando um convite para algum grupo
             if (!string.IsNullOrEmpty(invited.Trade_Request))
             {
-                Send.Message(player, "The player is analyzing an invitation of another trade.", System.Drawing.Color.White);
+                Send.Message(player, "The player is analyzing an invitation of another trade.", Color.White);
                 return;
             }
             // Verifica se os jogadores não estão em com a loja aberta
             if (player.Shop != null)
             {
-                Send.Message(player, "You can't start a trade while in the shop.", System.Drawing.Color.White);
+                Send.Message(player, "You can't start a trade while in the shop.", Color.White);
                 return;
             }
             if (invited.Shop != null)
             {
-                Send.Message(player, "The player is in the shop.", System.Drawing.Color.White);
+                Send.Message(player, "The player is in the shop.", Color.White);
                 return;
             }
             // Verifica se os jogadores estão pertods um do outro
             if (Math.Abs(player.X - invited.X) + Math.Abs(player.Y - invited.Y) != 1)
             {
-                Send.Message(player, "You need to be close to the player to start trade.", System.Drawing.Color.White);
+                Send.Message(player, "You need to be close to the player to start trade.", Color.White);
                 return;
             }
 
@@ -809,33 +810,33 @@ namespace CryBits.Server.Network
             // Verifica se já tem um grupo
             if (player.Trade != null)
             {
-                Send.Message(player, "You are already part of a trade.", System.Drawing.Color.White);
+                Send.Message(player, "You are already part of a trade.", Color.White);
                 return;
             }
             // Verifica se quem chamou ainda está disponível
             if (invited == null)
             {
-                Send.Message(player, "Who invited you is no longer avaliable.", System.Drawing.Color.White);
+                Send.Message(player, "Who invited you is no longer avaliable.", Color.White);
                 return;
             }
             // Verifica se os jogadores estão pertods um do outro
             if (Math.Abs(player.X - invited.X) + Math.Abs(player.Y - invited.Y) != 1)
             {
-                Send.Message(player, "You need to be close to the player to accept the trade.", System.Drawing.Color.White);
+                Send.Message(player, "You need to be close to the player to accept the trade.", Color.White);
                 return;
             }
             // Verifica se  os jogadores não estão em com a loja aberta
             if (invited.Shop != null)
             {
-                Send.Message(player, "Who invited you is in the shop.", System.Drawing.Color.White);
+                Send.Message(player, "Who invited you is in the shop.", Color.White);
                 return;
             }
 
             // Entra na troca
             player.Trade = invited;
             invited.Trade = player;
-            Send.Message(player, "You have accepted " + invited.Name + "'s trade request.", System.Drawing.Color.White);
-            Send.Message(invited, player.Name + " has accepted your trade request.", System.Drawing.Color.White);
+            Send.Message(player, "You have accepted " + invited.Name + "'s trade request.", Color.White);
+            Send.Message(invited, player.Name + " has accepted your trade request.", Color.White);
 
             // Limpa os dadoss
             player.Trade_Request = string.Empty;
@@ -852,7 +853,7 @@ namespace CryBits.Server.Network
             Player invited = Player.Find(player.Trade_Request);
 
             // Recusa o convite
-            if (invited != null) Send.Message(invited, player.Name + " decline the trade.", System.Drawing.Color.White);
+            if (invited != null) Send.Message(invited, player.Name + " decline the trade.", Color.White);
             player.Trade_Request = string.Empty;
         }
 
@@ -897,17 +898,17 @@ namespace CryBits.Server.Network
                     // Verifica se os jogadores têm espaço disponivel para trocar os itens
                     if (player.Total_Trade_Items() > invited.Total_Inventory_Free())
                     {
-                        Send.Message(invited, invited.Name + " don't have enought space in their inventory to do this trade.", System.Drawing.Color.Red);
+                        Send.Message(invited, invited.Name + " don't have enought space in their inventory to do this trade.", Color.Red);
                         break;
                     }
                     if (invited.Total_Trade_Items() > player.Total_Inventory_Free())
                     {
-                        Send.Message(invited, "You don't have enought space in your inventory to do this trade.", System.Drawing.Color.Red);
+                        Send.Message(invited, "You don't have enought space in your inventory to do this trade.", Color.Red);
                         break;
                     }
 
                     // Mensagem de confirmação
-                    Send.Message(invited, "The offer was accepted.", System.Drawing.Color.Green);
+                    Send.Message(invited, "The offer was accepted.", Color.Green);
 
                     // Dados da oferta
                     Inventory[] yourInventory = (Inventory[])player.Inventory.Clone(),
@@ -937,10 +938,10 @@ namespace CryBits.Server.Network
                     Send.Trade_Offer(invited, false);
                     break;
                 case TradeStatus.Declined:
-                    Send.Message(invited, "The offer was declined.", System.Drawing.Color.Red);
+                    Send.Message(invited, "The offer was declined.", Color.Red);
                     break;
                 case TradeStatus.Waiting:
-                    Send.Message(invited, player.Name + " send you a offer.", System.Drawing.Color.White);
+                    Send.Message(invited, player.Name + " send you a offer.", Color.White);
                     break;
             }
 
@@ -956,20 +957,20 @@ namespace CryBits.Server.Network
             // Verifica se o jogador tem dinheiro
             if (inventorySlot == 0 || player.Inventory[inventorySlot].Amount < shopSold.Price)
             {
-                Send.Message(player, "You don't have enough money to buy the item.", System.Drawing.Color.Red);
+                Send.Message(player, "You don't have enough money to buy the item.", Color.Red);
                 return;
             }
             // Verifica se há espaço no inventário
             if (player.Total_Inventory_Free() == 0 && player.Inventory[inventorySlot].Amount > shopSold.Price)
             {
-                Send.Message(player, "You  don't have space in your bag.", System.Drawing.Color.Red);
+                Send.Message(player, "You  don't have space in your bag.", Color.Red);
                 return;
             }
 
             // Realiza a compra do item
             player.TakeItem(inventorySlot, shopSold.Price);
             player.GiveItem(shopSold.Item, shopSold.Amount);
-            Send.Message(player, "You bought " + shopSold.Price + "x " + shopSold.Item.Name + ".", System.Drawing.Color.Green);
+            Send.Message(player, "You bought " + shopSold.Price + "x " + shopSold.Item.Name + ".", Color.Green);
         }
 
         private static void Shop_Sell(Player player, NetIncomingMessage data)
@@ -981,18 +982,18 @@ namespace CryBits.Server.Network
             // Verifica se a loja vende o item
             if (buy == null)
             {
-                Send.Message(player, "The store doesn't sell this item", System.Drawing.Color.Red);
+                Send.Message(player, "The store doesn't sell this item", Color.Red);
                 return;
             }
             // Verifica se há espaço no inventário
             if (player.Total_Inventory_Free() == 0 && player.Inventory[inventorySlot].Amount > amount)
             {
-                Send.Message(player, "You don't have space in your bag.", System.Drawing.Color.Red);
+                Send.Message(player, "You don't have space in your bag.", Color.Red);
                 return;
             }
 
             // Realiza a venda do item
-            Send.Message(player, "You sold " + player.Inventory[inventorySlot].Item.Name + "x " + amount + "for .", System.Drawing.Color.Green);
+            Send.Message(player, "You sold " + player.Inventory[inventorySlot].Item.Name + "x " + amount + "for .", Color.Green);
             player.TakeItem(inventorySlot, amount);
             player.GiveItem(player.Shop.Currency, (short)(buy.Price * amount));
         }

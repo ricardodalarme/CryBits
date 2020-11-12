@@ -1,11 +1,12 @@
-﻿using Lidgren.Network;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using CryBits.Client.Entities;
 using CryBits.Client.UI;
+using Lidgren.Network;
 
 namespace CryBits.Client.Network
 {
-    static class Socket
+    internal static class Socket
     {
         // Protocolo do controle de transmissão
         public static NetClient Device;
@@ -52,7 +53,7 @@ namespace CryBits.Client.Network
                         if ((NetConnectionStatus)_data.ReadByte() == NetConnectionStatus.Disconnected)
                         {
                             // Apaga os dados e volta ao menu
-                            if (Entities.Player.Me != null) Entities.Player.Me.Leave();
+                            if (Player.Me != null) Player.Me.Leave();
                             Windows.OpenMenu();
                         }
                         break;

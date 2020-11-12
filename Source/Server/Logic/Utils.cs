@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Server.Logic
 {
-    static class Utils
+    internal static class Utils
     {
         // Configurações
         public static string Game_Name = "CryBits";

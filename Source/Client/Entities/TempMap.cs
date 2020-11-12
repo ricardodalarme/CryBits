@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using CryBits.Client.Logic;
+using CryBits.Entities;
 using static CryBits.Client.Logic.Utils;
-using  CryBits.Entities;
 
 namespace CryBits.Client.Entities
 {
-    class TempMap
+    internal class TempMap
     {
         // Lista de dados
         public static Dictionary<Guid, TempMap> List;
@@ -63,14 +63,14 @@ namespace CryBits.Client.Entities
         }
     }
 
-    class MapItems
+    internal class MapItems
     {
         public Item Item;
         public byte X;
         public byte Y;
     }
 
-    class MapBlood
+    internal class MapBlood
     {
         // Dados
         public byte Texture_Num;
@@ -88,7 +88,7 @@ namespace CryBits.Client.Entities
         }
     }
 
-    class MapWeatherParticle
+    internal class MapWeatherParticle
     {
         public bool Visible;
         public int X;

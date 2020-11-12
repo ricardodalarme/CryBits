@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CryBits.Client.Logic;
 using CryBits.Client.Media;
 using CryBits.Client.Network;
@@ -7,7 +8,7 @@ using static CryBits.Client.Logic.Utils;
 
 namespace CryBits.Client.UI
 {
-    class Chat
+    internal class Chat
     {
         // Ordem de renderização
         public static List<Structure> Order = new List<Structure>();
@@ -40,7 +41,7 @@ namespace CryBits.Client.UI
                 Lines_First = (byte)(i - LinesVisible);
 
             // Torna as linhas visíveis
-            Loop.Chat_Timer = System.Environment.TickCount + 10000; ;
+            Loop.Chat_Timer = Environment.TickCount + 10000; ;
         }
 
         public static void AddText(string message, Color color)
@@ -81,12 +82,12 @@ namespace CryBits.Client.UI
             // Altera o foco do digitalizador
             if (panel.Visible)
             {
-                Loop.Chat_Timer = System.Environment.TickCount + SleepTimer;
+                Loop.Chat_Timer = Environment.TickCount + SleepTimer;
                 TextBoxes.Focused = Tools.Get(tool);
                 return;
             }
-            else
-                TextBoxes.Focused = null;
+
+            TextBoxes.Focused = null;
 
             // Dados
             string message = tool.Text;

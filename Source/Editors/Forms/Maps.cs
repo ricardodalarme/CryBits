@@ -1,20 +1,22 @@
-﻿using CryBits.Editors.Library;
-using CryBits.Editors.Logic;
-using CryBits.Editors.Network;
-using CryBits.Entities;
-using DarkUI.Forms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
+using CryBits.Editors.Library;
+using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
+using CryBits.Editors.Network;
+using CryBits.Entities;
+using DarkUI.Forms;
+using SFML.Graphics;
 using static CryBits.Editors.Logic.Utils;
+using Color = System.Drawing.Color;
 using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Forms
 {
-    partial class EditorMaps : DarkForm
+    internal partial class EditorMaps : DarkForm
     {
         #region Data
         // Usado para acessar os dados da janela
@@ -64,9 +66,9 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Maps_Load(object sender, EventArgs e)
         {
-            Graphics.Win_Map = new SFML.Graphics.RenderWindow(picMap.Handle);
-            Graphics.Win_Map_Tile = new SFML.Graphics.RenderWindow(picTile.Handle);
-            Graphics.Win_Map_Lighting = new SFML.Graphics.RenderTexture((uint)Width, (uint)Height);
+            Graphics.Win_Map = new RenderWindow(picMap.Handle);
+            Graphics.Win_Map_Tile = new RenderWindow(picTile.Handle);
+            Graphics.Win_Map_Lighting = new RenderTexture((uint)Width, (uint)Height);
 
             // Lista os dados
             for (byte i = 0; i < (byte)Layers.Count; i++) cmbLayers_Type.Items.Add(((Layers)i).ToString());
@@ -811,9 +813,9 @@ namespace CryBits.Editors.Forms
         {
             // Recria as janelas de acordo com o novo tamanho
             Graphics.Win_Map.Dispose();
-            Graphics.Win_Map = new SFML.Graphics.RenderWindow(picMap.Handle);
+            Graphics.Win_Map = new RenderWindow(picMap.Handle);
             Graphics.Win_Map_Lighting.Dispose();
-            Graphics.Win_Map_Lighting = new SFML.Graphics.RenderTexture((uint)picMap.Width, (uint)picMap.Height);
+            Graphics.Win_Map_Lighting = new RenderTexture((uint)picMap.Width, (uint)picMap.Height);
         }
 
         private void picMap_MouseWheel(object sender, MouseEventArgs e)
@@ -1386,9 +1388,9 @@ namespace CryBits.Editors.Forms
         {
             // Retorna com o atributo selecionado
             if (optA_Block.Checked) return TileAttributes.Block;
-            else if (optA_Warp.Checked) return TileAttributes.Warp;
-            else if (optA_Item.Checked) return TileAttributes.Item;
-            else return TileAttributes.None;
+            if (optA_Warp.Checked) return TileAttributes.Warp;
+            if (optA_Item.Checked) return TileAttributes.Item;
+            return TileAttributes.None;
         }
 
         private void optA_Warp_CheckedChanged(object sender, EventArgs e)

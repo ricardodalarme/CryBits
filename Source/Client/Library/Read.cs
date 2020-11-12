@@ -1,10 +1,10 @@
-﻿using CryBits.Client.Entities;
-using CryBits.Client.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using CryBits.Client.Entities;
+using CryBits.Client.Logic;
 using CryBits.Client.UI;
 using static CryBits.Client.Logic.Game;
 
@@ -37,7 +37,7 @@ namespace CryBits.Client.Library
         private static Buttons Button(BinaryReader data)
         {
             // Lê os dados
-            return new Buttons()
+            return new Buttons
             {
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),

@@ -1,14 +1,14 @@
-﻿using CryBits.Entities;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Media;
+using CryBits.Entities;
 using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Logic
 {
-    class MapProperties
+    internal class MapProperties
     {
         public MapProperties(Map map)
         {
@@ -28,7 +28,7 @@ namespace CryBits.Editors.Logic
             set => Base.Name = value;
         }
 
-        [Category("General"), DefaultValue(0)]
+        [Category("General")][DefaultValue(0)]
         public Morals Moral
         {
             get => Base.Moral;
@@ -38,28 +38,28 @@ namespace CryBits.Editors.Logic
         /////////
         // Fog //
         /////////
-        [Category("Fog"), DisplayName("Fog Texture"), DefaultValue(0)]
+        [Category("Fog")][DisplayName("Fog Texture")][DefaultValue(0)]
         public byte Fog_Texture
         {
             get => Base.Fog.Texture;
             set => Base.Fog.Texture = Math.Min(value, (byte)(Graphics.Tex_Fog.Length - 1));
         }
 
-        [Category("Fog"), DisplayName("Fog Alpha"), DefaultValue(255)]
+        [Category("Fog")][DisplayName("Fog Alpha")][DefaultValue(255)]
         public byte Fog_Alpha
         {
             get => Base.Fog.Alpha;
             set => Base.Fog.Alpha = value;
         }
 
-        [Category("Fog"), DisplayName("Fog X Speed"), DefaultValue(0)]
+        [Category("Fog")][DisplayName("Fog X Speed")][DefaultValue(0)]
         public sbyte Fog_SpeedX
         {
             get => Base.Fog.Speed_X;
             set => Base.Fog.Speed_X = value;
         }
 
-        [Category("Fog"), DisplayName("Fog Y Speed"), DefaultValue(0)]
+        [Category("Fog")][DisplayName("Fog Y Speed")][DefaultValue(0)]
         public sbyte Fog_SpeedY
         {
             get => Base.Fog.Speed_Y;
@@ -70,14 +70,14 @@ namespace CryBits.Editors.Logic
         // Weather //
         /////////////
 
-        [Category("Weather"), DisplayName("Weather Intensity"), DefaultValue(0)]
+        [Category("Weather")][DisplayName("Weather Intensity")][DefaultValue(0)]
         public byte Weather_SpeedY
         {
             get => Base.Weather.Intensity;
             set => Base.Weather.Intensity = Math.Max(value, Map.MaxWeatherIntensity);
         }
 
-        [Category("Weather"), DisplayName("Weather Type"), DefaultValue(0)]
+        [Category("Weather")][DisplayName("Weather Type")][DefaultValue(0)]
         public Weathers Weather_Type
         {
             get => Base.Weather.Type;
@@ -92,21 +92,21 @@ namespace CryBits.Editors.Logic
         // Hue //
         /////////
 
-        [Category("Hue Overlay"), DisplayName("Red Hue"), DefaultValue(255)]
+        [Category("Hue Overlay")][DisplayName("Red Hue")][DefaultValue(255)]
         public byte Hue_Red
         {
             get => Base.Color.R;
             set => Base.Color = Color.FromArgb(Base.Color.A, value, Base.Color.G, Base.Color.B);
         }
 
-        [Category("Hue Overlay"), DisplayName("Green Hue"), DefaultValue(255)]
+        [Category("Hue Overlay")][DisplayName("Green Hue")][DefaultValue(255)]
         public byte Hue_Green
         {
             get => Base.Color.G;
             set => Base.Color = Color.FromArgb(Base.Color.A, Base.Color.R, value, Base.Color.B);
         }
 
-        [Category("Hue Overlay"), DisplayName("Blue Hue"), DefaultValue(255)]
+        [Category("Hue Overlay")][DisplayName("Blue Hue")][DefaultValue(255)]
         public byte Hue_Blue
         {
             get => Base.Color.B;
@@ -116,21 +116,21 @@ namespace CryBits.Editors.Logic
         //////////
         // Misc //
         //////////
-        [Category("Misc"), DefaultValue(100)]
+        [Category("Misc")][DefaultValue(100)]
         public byte Lighting
         {
             get => Base.Lighting;
             set => Base.Lighting = value;
         }
 
-        [Category("Misc"), DefaultValue(0)]
+        [Category("Misc")][DefaultValue(0)]
         public Audio.Musics Music
         {
             get => (Audio.Musics)Base.Music;
             set => Base.Music = (byte)value;
         }
 
-        [Category("Misc"), DefaultValue(0)]
+        [Category("Misc")][DefaultValue(0)]
         public byte Panorama
         {
             get => Base.Panorama;

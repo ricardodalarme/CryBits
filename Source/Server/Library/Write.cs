@@ -1,12 +1,12 @@
-﻿using CryBits.Entities;
-using CryBits.Server.Entities;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using CryBits.Entities;
+using CryBits.Server.Entities;
 using static CryBits.Server.Logic.Utils;
 
 namespace CryBits.Server.Library
 {
-    static class Write
+    internal static class Write
     {
         public static void Settings()
         {

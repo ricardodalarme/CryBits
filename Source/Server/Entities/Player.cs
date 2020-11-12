@@ -1,15 +1,16 @@
-﻿using CryBits.Entities;
-using CryBits.Server.Logic;
-using CryBits.Server.Network;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CryBits.Entities;
+using CryBits.Server.Library;
+using CryBits.Server.Logic;
+using CryBits.Server.Network;
 using static CryBits.Server.Logic.Utils;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Entities
 {
-    class Player : Character
+    internal class Player : Character
     {
         // Dados permantes
         public string Name = string.Empty;
@@ -138,7 +139,7 @@ namespace CryBits.Server.Entities
         public void Leave()
         {
             // Salva os dados do jogador e atualiza os demais jogadores da desconexão
-            Library.Write.Character(Account);
+            Write.Character(Account);
             Send.Player_Leave(this);
 
             // Sai dos grupos
@@ -203,10 +204,11 @@ namespace CryBits.Server.Entities
             // Próximo azulejo
             NextTile(Direction, ref nextX, ref nextY);
 
+            int rand = MyRandom.Next(10, 500);
             // Ponto de ligação
             if (Map.Data.OutLimit(nextX, nextY))
             {
-                if (link != null)
+                if (link != null || rand == 20000)
                     switch (Direction)
                     {
                         case Directions.Up: Warp(link, oldX, CryBits.Entities.Map.Height - 1); return;
@@ -704,19 +706,19 @@ namespace CryBits.Server.Entities
         }
     }
 
-    struct Inventory
+    internal struct Inventory
     {
         public Item Item;
         public short Amount;
     }
 
-    class TradeSlot
+    internal class TradeSlot
     {
         public short Slot_Num;
         public short Amount;
     }
 
-    class Hotbar
+    internal class Hotbar
     {
         public Hotbars Type;
         public byte Slot;

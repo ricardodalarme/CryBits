@@ -1,12 +1,13 @@
-﻿using CryBits.Entities;
+﻿using System;
+using System.Drawing;
+using CryBits.Entities;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
-using System;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Entities
 {
-    class TempNPC : Character
+    internal class TempNPC : Character
     {
         // Dados básicos
         public byte Index;
@@ -97,7 +98,7 @@ namespace CryBits.Server.Entities
                             // Mensagem
                             if (!string.IsNullOrEmpty(Data.SayMsg))
                                 Send.Message(player.Character, Data.Name + ": " + Data.SayMsg,
-                                    System.Drawing.Color.White);
+                                    Color.White);
                             break;
                         }
                     }

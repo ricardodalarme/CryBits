@@ -9,7 +9,7 @@ using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.UI
 {
-    class Windows
+    internal class Windows
     {
         // Janela que está aberta
         public static WindowsTypes Current;

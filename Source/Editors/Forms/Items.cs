@@ -1,13 +1,14 @@
-﻿using CryBits.Editors.Network;
-using CryBits.Entities;
-using DarkUI.Forms;
-using System;
+﻿using System;
 using System.Windows.Forms;
 using CryBits.Editors.Media;
+using CryBits.Editors.Network;
+using CryBits.Entities;
+using DarkUI.Forms;
+using SFML.Graphics;
 
 namespace CryBits.Editors.Forms
 {
-    partial class EditorItems : DarkForm
+    internal partial class EditorItems : DarkForm
     {
         // Usado para acessar os dados da janela
         public static EditorItems Form;
@@ -24,7 +25,7 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.Win_Item = new SFML.Graphics.RenderWindow(picTexture.Handle);
+            Graphics.Win_Item = new RenderWindow(picTexture.Handle);
 
             // Define os limites
             numTexture.Maximum = Graphics.Tex_Item.GetUpperBound(0);

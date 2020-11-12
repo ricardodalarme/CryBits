@@ -1,17 +1,17 @@
-﻿using CryBits.Client.Network;
-using SFML.Window;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CryBits.Client.Logic;
 using CryBits.Client.Media;
+using CryBits.Client.Network;
 using CryBits.Client.UI;
 using CryBits.Entities;
+using SFML.Window;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Utils;
 
 namespace CryBits.Client.Entities
 {
-    class Player : Character
+    internal class Player : Character
     {
         // Lista de dados
         public static List<Player> List;
@@ -47,7 +47,7 @@ namespace CryBits.Client.Entities
     }
 
     // Dados somente do próprio jogador
-    class MeStructure : Player
+    internal class MeStructure : Player
     {
         // Dados
         public Inventory[] Inventory = new Inventory[MaxInventory + 1];
@@ -171,7 +171,7 @@ namespace CryBits.Client.Entities
         }
     }
 
-    struct Inventory
+    internal struct Inventory
     {
         public Item Item;
         public short Amount;

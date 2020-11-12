@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using CryBits.Entities;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
+using CryBits.Client.Library;
 using CryBits.Client.Media;
 using CryBits.Client.Network;
+using CryBits.Entities;
 using SFML.Window;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
@@ -13,7 +14,7 @@ using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.UI
 {
-    class Buttons : Tools.Structure
+    internal class Buttons : Tools.Structure
     {
         // Aramazenamento de dados da ferramenta
         public static Dictionary<string, Buttons> List = new Dictionary<string, Buttons>();
@@ -178,7 +179,7 @@ namespace CryBits.Client.UI
         {
             // Salva o nome do usuário
             Option.Username = TextBoxes.List["Connect_Username"].Text;
-            Library.Write.Options();
+            Write.Options();
 
             // Conecta-se ao jogo
             if (Socket.TryConnect()) Send.Connect();

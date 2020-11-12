@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
@@ -9,7 +10,7 @@ using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.UI
 {
-    class CheckBoxes : Tools.Structure
+    internal class CheckBoxes : Tools.Structure
     {
         // Armazenamento dos dados da ferramenta
         public static Dictionary<string, CheckBoxes> List = new Dictionary<string, CheckBoxes>();
@@ -108,7 +109,7 @@ namespace CryBits.Client.UI
             // Salva os dado
             Option.Chat = List["Options_Chat"].Checked;
             Write.Options();
-            if (Option.Chat) Loop.Chat_Timer = System.Environment.TickCount + UI.Chat.SleepTimer;
+            if (Option.Chat) Loop.Chat_Timer = Environment.TickCount + UI.Chat.SleepTimer;
         }
 
         private static void FPS()

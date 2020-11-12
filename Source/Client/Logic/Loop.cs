@@ -1,15 +1,17 @@
-﻿using CryBits.Client.Entities;
-using System;
+﻿using System;
+using System.Threading;
 using System.Windows.Forms;
+using CryBits.Client.Entities;
 using CryBits.Client.Media;
+using CryBits.Client.Network;
 using CryBits.Client.UI;
 
 namespace CryBits.Client.Logic
 {
-    class Loop
+    internal class Loop
     {
         // Contagens
-        public static int TextBox_Timer = 0;
+        public static int TextBox_Timer;
         public static int Chat_Timer = 0;
 
         public static void Init()
@@ -21,7 +23,7 @@ namespace CryBits.Client.Logic
             while (Program.Working)
             {
                 // Manuseia os dados recebidos
-                Network.Socket.HandleData();
+                Socket.HandleData();
 
                 // Apresenta os gráficos à tela
                 Graphics.Present();
@@ -56,12 +58,12 @@ namespace CryBits.Client.Logic
 
                 // Faz com que a aplicação se mantenha estável
                 Application.DoEvents();
-                System.Threading.Thread.Sleep(1);
+                Thread.Sleep(1);
 
                 // Cálcula o FPS
                 if (timer1000 < Environment.TickCount)
                 {
-                    Network.Send.Latency();
+                    Send.Latency();
                     Game.FPS = fps;
                     fps = 0;
                     timer1000 = Environment.TickCount + 1000;

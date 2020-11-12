@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Editors.Entities.Tools
 {
-    class Button : Tool
+    internal class Button : Tool
     {
         public byte Texture_Num { get; set; }
 

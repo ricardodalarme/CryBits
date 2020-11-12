@@ -1,14 +1,15 @@
-﻿using CryBits.Editors.Network;
-using CryBits.Entities;
-using DarkUI.Forms;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Forms;
 using CryBits.Editors.Media;
+using CryBits.Editors.Network;
+using CryBits.Entities;
+using DarkUI.Forms;
+using SFML.Graphics;
 
 namespace CryBits.Editors.Forms
 {
-    partial class EditorClasses : DarkForm
+    internal partial class EditorClasses : DarkForm
     {
         // Usado para acessar os dados da janela
         public static EditorClasses Form;
@@ -25,7 +26,7 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.Win_Class = new SFML.Graphics.RenderWindow(picTexture.Handle);
+            Graphics.Win_Class = new RenderWindow(picTexture.Handle);
 
             // Define os limites
             numSpawn_X.Maximum = Map.Width - 1;
