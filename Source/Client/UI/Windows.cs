@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Entities;
-using CryBits.Client.Media;
 using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
 using SFML.Window;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
-using CryBits;
 using CryBits.Client.Media.Audio;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;

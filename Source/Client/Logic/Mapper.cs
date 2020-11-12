@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using CryBits.Client.Entities;
-using CryBits.Client.Media;
 using CryBits.Client.Media.Audio;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Utils;

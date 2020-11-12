@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
-using CryBits.Client.Media;
 using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
 using CryBits.Entities;
