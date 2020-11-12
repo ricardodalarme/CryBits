@@ -477,7 +477,7 @@ namespace CryBits.Server.Entities
             // Somente se necessário
             if (Map.Item.Count == Max_Map_Items) return;
             if (Inventory[Slot].Item == null) return;
-            if (Inventory[Slot].Item.Bind == (byte)BindOn.Pickup) return;
+            if (Inventory[Slot].Item.Bind == BindOn.Pickup) return;
             if (Trade != null) return;
 
             // Verifica se não está dropando mais do que tem
@@ -518,7 +518,7 @@ namespace CryBits.Server.Entities
                     return;
                 }
 
-            if (Item.Type == (byte)Items.Equipment)
+            if (Item.Type == Items.Equipment)
             {
                 // Retira o item do inventário
                 TakeItem(Slot, 1);
@@ -536,7 +536,7 @@ namespace CryBits.Server.Entities
                 Send.Player_Equipments(this);
                 Send.Player_Hotbar(this);
             }
-            else if (Item.Type == (byte)Items.Potion)
+            else if (Item.Type == Items.Potion)
             {
                 // Efeitos
                 bool HadEffect = false;

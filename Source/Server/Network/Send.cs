@@ -504,10 +504,10 @@ namespace CryBits.Server.Network
                 Data.Write(Item.Name);
                 Data.Write(Item.Description);
                 Data.Write(Item.Texture);
-                Data.Write(Item.Type);
+                Data.Write((byte)Item.Type);
                 Data.Write(Item.Stackable);
-                Data.Write(Item.Bind);
-                Data.Write(Item.Rarity);
+                Data.Write((byte)Item.Bind);
+                Data.Write((byte)Item.Rarity);
                 Data.Write(Item.Req_Level);
                 Data.Write(Item.Req_Class.GetID());
                 Data.Write(Item.Potion_Experience);
@@ -600,7 +600,7 @@ namespace CryBits.Server.Network
                 Data.Write(NPC.Name);
                 Data.Write(NPC.SayMsg);
                 Data.Write(NPC.Texture);
-                Data.Write(NPC.Behaviour);
+                Data.Write((byte)NPC.Behaviour);
                 for (byte n = 0; n < (byte)Vitals.Count; n++) Data.Write(NPC.Vital[n]);
 
                 // Dados apenas do editor

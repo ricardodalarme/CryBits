@@ -43,7 +43,7 @@ static class Program
 
         // Cria os mapas temporários
         Console.WriteLine("Creating temporary maps.");
-        foreach (Map Map in Map.List.Values) Mapp.Create_Temporary(Map);
+        foreach (Map Map in Map.List.Values) TempMap.Create_Temporary(Map);
 
         // Cria os dispositivos da rede
         Socket.Init();
