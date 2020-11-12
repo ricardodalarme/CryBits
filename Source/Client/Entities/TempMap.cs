@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CryBits.Client.Logic;
 using static CryBits.Client.Logic.Utils;
 
 namespace CryBits.Client.Entities

@@ -4,6 +4,7 @@ using DarkUI.Forms;
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using CryBits.Editors.Media;
 
 namespace CryBits.Editors.Forms
 {

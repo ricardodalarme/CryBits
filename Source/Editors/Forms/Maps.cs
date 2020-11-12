@@ -3,12 +3,14 @@ using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using DarkUI.Forms;
-using Editors.Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Media;
 using static CryBits.Editors.Logic.Utils;
+using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Forms
 {

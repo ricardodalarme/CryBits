@@ -1,10 +1,13 @@
 ﻿using CryBits.Editors.Forms;
 using CryBits.Entities;
-using Editors.Entities;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Library;
+using CryBits.Editors.Media;
 using static CryBits.Editors.Logic.Utils;
+using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Logic
 {

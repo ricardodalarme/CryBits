@@ -3,6 +3,12 @@ using CryBits.Editors.Library;
 using DarkUI.Forms;
 using System;
 using System.Windows.Forms;
+using CryBits.Editors.Entities.Tools;
+using CryBits.Editors.Media;
+using Button = CryBits.Editors.Entities.Tools.Button;
+using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
+using Panel = CryBits.Editors.Entities.Tools.Panel;
+using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
 namespace CryBits.Editors.Forms
 {
@@ -101,10 +107,10 @@ namespace CryBits.Editors.Forms
             Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
             switch ((ToolsTypes)cmbType.SelectedIndex)
             {
-                case ToolsTypes.Button: @new = new Entities.Button(); break;
-                case ToolsTypes.Panel: @new = new Entities.Panel(); break;
-                case ToolsTypes.CheckBox: @new = new Entities.CheckBox(); break;
-                case ToolsTypes.TextBox: @new = new Entities.TextBox(); break;
+                case ToolsTypes.Button: @new = new Button(); break;
+                case ToolsTypes.Panel: @new = new Panel(); break;
+                case ToolsTypes.CheckBox: @new = new CheckBox(); break;
+                case ToolsTypes.TextBox: @new = new TextBox(); break;
             }
             Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
             @new.Window = (WindowsTypes)cmbWindows.SelectedIndex;

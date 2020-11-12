@@ -1,48 +1,52 @@
-﻿using CryBits.Client.Interface;
+﻿using System;
+using System.Windows.Forms;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
+using CryBits.Client.Media;
 using CryBits.Client.Network;
-using System;
-using System.Windows.Forms;
+using CryBits.Client.UI;
 
-static class Program
+namespace CryBits.Client
 {
-    // Usado para manter a aplicação aberta
-    public static bool Working = true;
-
-    [STAThread]
-    static void Main()
+    static class Program
     {
-        // Verifica se todos os diretórios existem, se não existirem então criá-los
-        Directories.Create();
+        // Usado para manter a aplicação aberta
+        public static bool Working = true;
 
-        // Carrega todos os dados
-        Read.Data();
+        [STAThread]
+        static void Main()
+        {
+            // Verifica se todos os diretórios existem, se não existirem então criá-los
+            Directories.Create();
 
-        // Abre a janela
-        Windows.OpenMenu();
+            // Carrega todos os dados
+            Read.Data();
 
-        // Inicializa todos os dispositivos
-        Socket.Init();
-        Audio.Sound.Load();
-        Graphics.Init();
+            // Abre a janela
+            Windows.OpenMenu();
 
-        // Inicia a aplicação
-        Loop.Init();
-    }
+            // Inicializa todos os dispositivos
+            Socket.Init();
+            Audio.Sound.Load();
+            Graphics.Init();
 
-    public static void Close()
-    {
-        int waitTimer = Environment.TickCount;
+            // Inicia a aplicação
+            Loop.Init();
+        }
 
-        // Desconecta da rede
-        Socket.Disconnect();
+        public static void Close()
+        {
+            int waitTimer = Environment.TickCount;
+ 
+            // Desconecta da rede
+            Socket.Disconnect();
 
-        // Espera até que o jogador seja desconectado
-        while (Socket.IsConnected() && Environment.TickCount <= waitTimer + 1000)
-            Application.DoEvents();
+            // Espera até que o jogador seja desconectado
+            while (Socket.IsConnected() && Environment.TickCount <= waitTimer + 1000)
+                Application.DoEvents();
 
-        // Fecha a aplicação
-        Application.Exit();
+            // Fecha a aplicação
+            Application.Exit();
+        }
     }
 }

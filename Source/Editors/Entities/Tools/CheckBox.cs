@@ -1,4 +1,4 @@
-﻿namespace CryBits.Editors.Entities
+﻿namespace CryBits.Editors.Entities.Tools
 {
     class CheckBox : Tool
     {

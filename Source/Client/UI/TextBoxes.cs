@@ -1,11 +1,12 @@
-﻿using CryBits.Client.Logic;
-using SFML.Window;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CryBits.Client.Logic;
+using SFML.Window;
 using static CryBits.Client.Logic.Utils;
+using Graphics = CryBits.Client.Media.Graphics;
 
-namespace CryBits.Client.Interface
+namespace CryBits.Client.UI
 {
     class TextBoxes : Tools.Structure
     {

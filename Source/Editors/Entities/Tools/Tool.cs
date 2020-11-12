@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace CryBits.Editors.Entities
+namespace CryBits.Editors.Entities.Tools
 {
     class Tool
     {
