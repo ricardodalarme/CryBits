@@ -9,15 +9,15 @@ namespace CryBits.Client.Library
         public static void Options()
         {
             // Escreve os dados
-            using (var Stream = new FileInfo(Directories.Options.FullName).OpenWrite())
-                new BinaryFormatter().Serialize(Stream, Option);
+            using (var stream = new FileInfo(Directories.Options.FullName).OpenWrite())
+                new BinaryFormatter().Serialize(stream, Option);
         }
 
-        public static void Map(Entities.Map Map)
+        public static void Map(Entities.Map map)
         {
             // Escreve os dados
-            using (var Stream = new FileInfo(Directories.Maps_Data.FullName + Map.ID.ToString() + Directories.Format).OpenWrite())
-                new BinaryFormatter().Serialize(Stream, Map);
+            using (var stream = new FileInfo(Directories.Maps_Data.FullName + map.ID.ToString() + Directories.Format).OpenWrite())
+                new BinaryFormatter().Serialize(stream, map);
         }
     }
 }

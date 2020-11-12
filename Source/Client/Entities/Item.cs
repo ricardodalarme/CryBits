@@ -10,7 +10,7 @@ namespace CryBits.Client.Entities
         public static Dictionary<Guid, Item> List;
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static Item Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+        public static Item Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
 
         // Geral
         public string Description = string.Empty;
@@ -29,6 +29,6 @@ namespace CryBits.Client.Entities
         public short[] Equip_Attribute = new short[(byte)Equipments.Count];
         public short Weapon_Damage;
 
-        public Item(Guid ID) : base(ID) { }
+        public Item(Guid id) : base(id) { }
     }
 }

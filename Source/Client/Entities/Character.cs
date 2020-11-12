@@ -23,17 +23,17 @@ namespace CryBits.Client.Entities
 
         public void ProcessMovement()
         {
-            byte Speed = 0;
+            byte speed = 0;
             short x = X2, y = Y2;
 
             // Reseta a animação se necessário
-            if (Animation == Animation_Stopped) Animation = Animation_Right;
+            if (Animation == AnimationStopped) Animation = AnimationRight;
 
             // Define a velocidade que o jogador se move
             switch (Movement)
             {
-                case Movements.Walking: Speed = 2; break;
-                case Movements.Moving: Speed = 3; break;
+                case Movements.Walking: speed = 2; break;
+                case Movements.Moving: speed = 3; break;
                 case Movements.Stopped:
                     // Reseta os dados
                     X2 = 0;
@@ -44,10 +44,10 @@ namespace CryBits.Client.Entities
             // Define a Posição exata do jogador
             switch (Direction)
             {
-                case Directions.Up: Y2 -= Speed; break;
-                case Directions.Down: Y2 += Speed; break;
-                case Directions.Right: X2 += Speed; break;
-                case Directions.Left: X2 -= Speed; break;
+                case Directions.Up: Y2 -= speed; break;
+                case Directions.Down: Y2 += speed; break;
+                case Directions.Right: X2 += speed; break;
+                case Directions.Left: X2 -= speed; break;
             }
 
             // Verifica se não passou do limite
@@ -67,10 +67,10 @@ namespace CryBits.Client.Entities
 
             // Define as animações
             Movement = Movements.Stopped;
-            if (Animation == Animation_Left)
-                Animation = Animation_Right;
+            if (Animation == AnimationLeft)
+                Animation = AnimationRight;
             else
-                Animation = Animation_Left;
+                Animation = AnimationLeft;
         }
     }
 }

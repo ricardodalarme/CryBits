@@ -13,62 +13,62 @@ namespace CryBits.Client.Entities
         // Dados gerais
         public Map Data;
         public TempNPC[] NPC;
-        public TMap_Items[] Item = new TMap_Items[0];
-        public List<TMap_Blood> Blood = new List<TMap_Blood>();
+        public MapItems[] Item = new MapItems[0];
+        public List<MapBlood> Blood = new List<MapBlood>();
 
-        public TempMap(Map Data)
+        public TempMap(Map data)
         {
-            this.Data = Data;
+            this.Data = data;
         }
 
-        private bool HasNPC(byte X, byte Y)
+        private bool HasNPC(byte x, byte y)
         {
             // Verifica se há algum npc na cordenada
             for (byte i = 0; i < NPC.Length; i++)
                 if (NPC[i].Data != null)
-                    if ((NPC[i].X, NPC[i].Y) == (X, Y))
+                    if ((NPC[i].X, NPC[i].Y) == (x, y))
                         return true;
 
             return false;
         }
 
-        private bool HasPlayer(short X, short Y)
+        private bool HasPlayer(short x, short y)
         {
             // Verifica se há algum Jogador na cordenada
             for (byte i = 0; i < Player.List.Count; i++)
-                if ((Player.List[i].X, Player.List[i].Y, Player.List[i].Map) == (X, Y, this))
+                if ((Player.List[i].X, Player.List[i].Y, Player.List[i].Map) == (x, y, this))
                     return true;
 
             return false;
         }
 
-        public bool Tile_Blocked(byte X, byte Y, Directions Direction)
+        public bool Tile_Blocked(byte x, byte y, Directions direction)
         {
-            byte Next_X = X, Next_Y = Y;
+            byte nextX = x, nextY = y;
 
             // Próximo azulejo
-            NextTile(Direction, ref Next_X, ref Next_Y);
+            NextTile(direction, ref nextX, ref nextY);
 
             // Verifica se está indo para uma ligação
-            if (Mapper.OutOfLimit(Next_X, Next_Y)) return Data.Link[(byte)Direction] == 0;
+            if (Mapper.OutOfLimit(nextX, nextY)) return Data.Link[(byte)direction] == 0;
 
             // Verifica se o azulejo está bloqueado
-            if (Data.Tile[Next_X, Next_Y].Attribute == (byte)LayerAttributes.Block) return true;
-            if (Data.Tile[Next_X, Next_Y].Block[(byte)ReverseDirection(Direction)]) return true;
-            if (Data.Tile[X, Y].Block[(byte)Direction]) return true;
-            if (HasPlayer(Next_X, Next_Y) || HasNPC(Next_X, Next_Y)) return true;
+            if (Data.Tile[nextX, nextY].Attribute == (byte)LayerAttributes.Block) return true;
+            if (Data.Tile[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
+            if (Data.Tile[x, y].Block[(byte)direction]) return true;
+            if (HasPlayer(nextX, nextY) || HasNPC(nextX, nextY)) return true;
             return false;
         }
     }
 
-    class TMap_Items
+    class MapItems
     {
         public Item Item;
         public byte X;
         public byte Y;
     }
 
-    class TMap_Blood
+    class MapBlood
     {
         // Dados
         public byte Texture_Num;
@@ -77,20 +77,20 @@ namespace CryBits.Client.Entities
         public byte Opacity;
 
         // Construtor
-        public TMap_Blood(byte Texture_Num, short X, short Y, byte Opacity)
+        public MapBlood(byte textureNum, short x, short y, byte opacity)
         {
-            this.Texture_Num = Texture_Num;
-            this.X = X;
-            this.Y = Y;
-            this.Opacity = Opacity;
+            this.Texture_Num = textureNum;
+            this.X = x;
+            this.Y = y;
+            this.Opacity = opacity;
         }
     }
 
     class MapWeatherParticle
     {
         public bool Visible;
-        public int x;
-        public int y;
+        public int X;
+        public int Y;
         public int Speed;
         public int Start;
         public bool Back;

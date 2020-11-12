@@ -14,7 +14,7 @@ namespace CryBits.Client.Interface
         public static WindowsTypes Current;
 
         // Detecção de duplo clique
-        private static int DoubleClick_Timer;
+        private static int _doubleClickTimer;
 
         // Posição do ponteiro do mouse
         public static Point Mouse;
@@ -31,45 +31,45 @@ namespace CryBits.Client.Interface
         public static void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
         {
             // Clique duplo
-            if (Environment.TickCount < DoubleClick_Timer + 142)
+            if (Environment.TickCount < _doubleClickTimer + 142)
             {
                 if (Current == WindowsTypes.Game)
                 {
                     // Usar item
-                    short Slot = Panels.Inventory_Slot;
-                    if (Slot > 0)
-                        if (Player.Me.Inventory[Slot].Item != null)
-                            Send.Inventory_Use((byte)Slot);
+                    short slot = Panels.Inventory_Slot;
+                    if (slot > 0)
+                        if (Player.Me.Inventory[slot].Item != null)
+                            Send.Inventory_Use((byte)slot);
 
                     // Usar o que estiver na hotbar
-                    Slot = Panels.Hotbar_Slot;
-                    if (Slot > 0)
-                        if (Player.Me.Hotbar[Slot].Slot > 0)
-                            Send.Hotbar_Use((byte)Slot);
+                    slot = Panels.Hotbar_Slot;
+                    if (slot > 0)
+                        if (Player.Me.Hotbar[slot].Slot > 0)
+                            Send.Hotbar_Use((byte)slot);
 
                     // Compra o item da loja
-                    Slot = Panels.Shop_Slot;
-                    if (Slot >= 0)
+                    slot = Panels.Shop_Slot;
+                    if (slot >= 0)
                         if (Panels.Shop_Open != null)
-                            Send.Shop_Buy((byte)Slot);
+                            Send.Shop_Buy((byte)slot);
                 }
             }
             // Clique único
             else
             {
                 // Percorre toda a árvore de ordem para executar o comando
-                Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
-                Stack.Push(Tools.Order);
-                while (Stack.Count != 0)
+                Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+                stack.Push(Tools.Order);
+                while (stack.Count != 0)
                 {
-                    List<Tools.Order_Structure> Top = Stack.Pop();
+                    List<Tools.OrderStructure> top = stack.Pop();
 
-                    for (byte i = 0; i < Top.Count; i++)
-                        if (Top[i].Data.Visible)
+                    for (byte i = 0; i < top.Count; i++)
+                        if (top[i].Data.Visible)
                         {
                             // Executa o comando
-                            if (Top[i].Data is Buttons) ((Buttons)Top[i].Data).MouseDown(e);
-                            Stack.Push(Top[i].Nodes);
+                            if (top[i].Data is Buttons) ((Buttons)top[i].Data).MouseDown(e);
+                            stack.Push(top[i].Nodes);
                         }
                 }
 
@@ -87,23 +87,23 @@ namespace CryBits.Client.Interface
         public static void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
         {
             // Contagem do clique duplo
-            DoubleClick_Timer = Environment.TickCount;
+            _doubleClickTimer = Environment.TickCount;
 
             // Percorre toda a árvore de ordem para executar o comando
-            Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
-            Stack.Push(Tools.Order);
-            while (Stack.Count != 0)
+            Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+            stack.Push(Tools.Order);
+            while (stack.Count != 0)
             {
-                List<Tools.Order_Structure> Top = Stack.Pop();
+                List<Tools.OrderStructure> top = stack.Pop();
 
-                for (byte i = 0; i < Top.Count; i++)
-                    if (Top[i].Data.Visible)
+                for (byte i = 0; i < top.Count; i++)
+                    if (top[i].Data.Visible)
                     {
                         // Executa o comando
-                        if (Top[i].Data is Buttons) ((Buttons)Top[i].Data).MouseUp();
-                        else if (Top[i].Data is CheckBoxes) ((CheckBoxes)Top[i].Data).MouseUp();
-                        else if (Top[i].Data is TextBoxes) ((TextBoxes)Top[i].Data).MouseUp(Top[i]);
-                        Stack.Push(Top[i].Nodes);
+                        if (top[i].Data is Buttons) ((Buttons)top[i].Data).MouseUp();
+                        else if (top[i].Data is CheckBoxes) ((CheckBoxes)top[i].Data).MouseUp();
+                        else if (top[i].Data is TextBoxes) ((TextBoxes)top[i].Data).MouseUp(top[i]);
+                        stack.Push(top[i].Nodes);
                     }
             }
 
@@ -149,18 +149,18 @@ namespace CryBits.Client.Interface
             Windows.Mouse.Y = e.Y;
 
             // Percorre toda a árvore de ordem para executar o comando
-            Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
-            Stack.Push(Tools.Order);
-            while (Stack.Count != 0)
+            Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+            stack.Push(Tools.Order);
+            while (stack.Count != 0)
             {
-                List<Tools.Order_Structure> Top = Stack.Pop();
+                List<Tools.OrderStructure> top = stack.Pop();
 
-                for (byte i = 0; i < Top.Count; i++)
-                    if (Top[i].Data.Visible)
+                for (byte i = 0; i < top.Count; i++)
+                    if (top[i].Data.Visible)
                     {
                         // Executa o comando
-                        if (Top[i].Data is Buttons) ((Buttons)Top[i].Data).MouseMove();
-                        Stack.Push(Top[i].Nodes);
+                        if (top[i].Data is Buttons) ((Buttons)top[i].Data).MouseMove();
+                        stack.Push(top[i].Nodes);
                     }
             }
         }
