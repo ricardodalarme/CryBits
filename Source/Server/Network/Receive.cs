@@ -1,13 +1,13 @@
-﻿using CryBits.Server.Entities;
-using CryBits.Server.Library;
-using CryBits.Entities;
+﻿using CryBits.Entities;
 using CryBits.Packets;
+using CryBits.Server.Entities;
+using CryBits.Server.Library;
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using static CryBits.Utils;
 using static CryBits.Server.Logic.Utils;
+using static CryBits.Utils;
 
 namespace CryBits.Server.Network
 {
@@ -227,7 +227,7 @@ namespace CryBits.Server.Network
             Account.Character.X = Class.Spawn_X;
             Account.Character.Y = Class.Spawn_Y;
             for (byte i = 0; i < (byte)Vitals.Count; i++) Account.Character.Vital[i] = Account.Character.MaxVital(i);
-            for (byte i = 0; i < (byte)Class.Item.Length; i++)
+            for (byte i = 0; i < (byte)Class.Item.Count; i++)
                 if (Class.Item[i].Item1.Type == Items.Equipment && Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] == null)
                     Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] = Class.Item[i].Item1;
                 else
@@ -552,15 +552,15 @@ namespace CryBits.Server.Network
                 // Lê os dados
                 Class.Name = Data.ReadString();
                 Class.Description = Data.ReadString();
-                for (byte n = 0; n < Class.Tex_Male.Length; n++) Class.Tex_Male[n] = Data.ReadInt16();
-                for (byte n = 0; n < Class.Tex_Female.Length; n++) Class.Tex_Female[n] = Data.ReadInt16();
+                for (byte n = 0; n < Class.Tex_Male.Count; n++) Class.Tex_Male[n] = Data.ReadInt16();
+                for (byte n = 0; n < Class.Tex_Female.Count; n++) Class.Tex_Female[n] = Data.ReadInt16();
                 Class.Spawn_Map = Map.Get(new Guid(Data.ReadString()));
                 Class.Spawn_Direction = Data.ReadByte();
                 Class.Spawn_X = Data.ReadByte();
                 Class.Spawn_Y = Data.ReadByte();
                 for (byte n = 0; n < (byte)Vitals.Count; n++) Class.Vital[n] = Data.ReadInt16();
                 for (byte n = 0; n < (byte)Attributes.Count; n++) Class.Attribute[n] = Data.ReadInt16();
-                for (byte n = 0; n < (byte)Class.Item.Length; n++) Class.Item[n] = new Tuple<Item, short>(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16());
+                for (byte n = 0; n < (byte)Class.Item.Count; n++) Class.Item[n] = new Tuple<Item, short>(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16());
 
                 // Salva os dados das classes
                 Write.Class(Class);
@@ -618,11 +618,11 @@ namespace CryBits.Server.Network
                 // Dados gerais
                 Map.Revision = Data.ReadInt16();
                 Map.Name = Data.ReadString();
-                Map.Moral = Data.ReadByte();
+                Map.Moral = (Map_Morals)Data.ReadByte();
                 Map.Panorama = Data.ReadByte();
                 Map.Music = Data.ReadByte();
                 Map.Color = Data.ReadInt32();
-                Map.Weather.Type = Data.ReadByte();
+                Map.Weather.Type = (Weathers)Data.ReadByte();
                 Map.Weather.Intensity = Data.ReadByte();
                 Map.Fog.Texture = Data.ReadByte();
                 Map.Fog.Speed_X = Data.ReadSByte();
@@ -635,11 +635,11 @@ namespace CryBits.Server.Network
                     Map.Link[n] = Map.Get(new Guid(Data.ReadString()));
 
                 // Camadas
-                Map.Layer = new Map_Layer[Data.ReadByte()];
-                for (byte n = 0; n < Map.Layer.Length; n++)
+                Map.Layer = new MapLayer[Data.ReadByte()];
+                for (byte n = 0; n < Map.Layer.Count; n++)
                 {
                     // Dados básicos
-                    Map.Layer[n] = new Map_Layer();
+                    Map.Layer[n] = new MapLayer();
                     Map.Layer[n].Name = Data.ReadString();
                     Map.Layer[n].Type = Data.ReadByte();
 
@@ -649,8 +649,8 @@ namespace CryBits.Server.Network
                         {
                             Map.Layer[n].Tile[x, y].X = Data.ReadByte();
                             Map.Layer[n].Tile[x, y].Y = Data.ReadByte();
-                            Map.Layer[n].Tile[x, y].Tile = Data.ReadByte();
-                            Map.Layer[n].Tile[x, y].Auto = Data.ReadBoolean();
+                            Map.Layer[n].Tile[x, y].Texture = Data.ReadByte();
+                            Map.Layer[n].Tile[x, y].IsAutotile = Data.ReadBoolean();
                         }
                 }
 
@@ -658,7 +658,7 @@ namespace CryBits.Server.Network
                 for (byte x = 0; x < Map.Width; x++)
                     for (byte y = 0; y < Map.Height; y++)
                     {
-                        Map.Attribute[x, y] = new Map_Attribute();
+                        Map.Attribute[x, y] = new MapAttribute();
                         Map.Attribute[x, y].Type = Data.ReadByte();
                         Map.Attribute[x, y].Data_1 = Data.ReadString();
                         Map.Attribute[x, y].Data_2 = Data.ReadInt16();
@@ -671,8 +671,8 @@ namespace CryBits.Server.Network
                     }
 
                 // Luzes
-                Map.Light = new Map_Light[Data.ReadByte()];
-                for (byte n = 0; n < Map.Light.Length; n++)
+                Map.Light = new MapLight[Data.ReadByte()];
+                for (byte n = 0; n < Map.Light.Count; n++)
                 {
                     Map.Light[n].X = Data.ReadByte();
                     Map.Light[n].Y = Data.ReadByte();
@@ -681,9 +681,9 @@ namespace CryBits.Server.Network
                 }
 
                 // NPCs
-                Map.NPC = new Map_NPC[Data.ReadByte()];
-                Temp_Map.NPC = new TempNPC[Map.NPC.Length];
-                for (byte n = 0; n < Map.NPC.Length; n++)
+                Map.NPC = new MapNPC[Data.ReadByte()];
+                Temp_Map.NPC = new TempNPC[Map.NPC.Count];
+                for (byte n = 0; n < Map.NPC.Count; n++)
                 {
                     Map.NPC[n].NPC = NPC.Get(new Guid(Data.ReadString()));
                     Map.NPC[n].Zone = Data.ReadByte();
@@ -757,10 +757,10 @@ namespace CryBits.Server.Network
                 for (byte n = 0; n < (byte)Vitals.Count; n++) NPC.Vital[n] = Data.ReadInt16();
                 for (byte n = 0; n < (byte)Attributes.Count; n++) NPC.Attribute[n] = Data.ReadInt16();
                 NPC.Drop = new NPC_Drop[Data.ReadByte()];
-                for (byte n = 0; n < NPC.Drop.Length; n++) NPC.Drop[n] = new NPC_Drop(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
+                for (byte n = 0; n < NPC.Drop.Count; n++) NPC.Drop[n] = new NPC_Drop(Item.Get(new Guid(Data.ReadString())), Data.ReadInt16(), Data.ReadByte());
                 NPC.AttackNPC = Data.ReadBoolean();
                 NPC.Allie = new NPC[Data.ReadByte()];
-                for (byte n = 0; n < NPC.Allie.Length; n++) NPC.Allie[n] = NPC.Get(new Guid(Data.ReadString()));
+                for (byte n = 0; n < NPC.Allie.Count; n++) NPC.Allie[n] = NPC.Get(new Guid(Data.ReadString()));
                 NPC.Movement = (NPCMovements)Data.ReadByte();
                 NPC.Flee_Helth = Data.ReadByte();
                 NPC.Shop = Shop.Get(new Guid(Data.ReadString()));
@@ -882,24 +882,24 @@ namespace CryBits.Server.Network
                 // Redimensiona os valores necessários 
                 Shop.Sold = new Shop_Item[Data.ReadByte()];
                 Shop.Bought = new Shop_Item[Data.ReadByte()];
+                Shop.Bought = new Shop_Item[Data.ReadByte()];
 
                 // Lê os dados
                 Shop.Name = Data.ReadString();
                 Shop.Currency = Item.Get(new Guid(Data.ReadString()));
-                for (byte j = 0; j < Shop.Sold.Length; j++)
-                    Shop.Sold[j] = new Shop_Item
-                    {
-                        Item = Item.Get(new Guid(Data.ReadString())),
-                        Amount = Data.ReadInt16(),
-                        Price = Data.ReadInt16()
-                    };
-                for (byte j = 0; j < Shop.Bought.Length; j++)
-                    Shop.Bought[j] = new Shop_Item
-                    {
-                        Item = Item.Get(new Guid(Data.ReadString())),
-                        Amount = Data.ReadInt16(),
-                        Price = Data.ReadInt16()
-                    };
+                for (byte j = 0; j < Shop.Sold.Count; j++)
+                    Shop.Sold[j] = new Shop_Item(
+                         Item.Get(new Guid(Data.ReadString())),
+                         Data.ReadInt16(),
+                         Data.ReadInt16()
+                    );
+                for (byte j = 0; j < Shop.Bought.Count; j++)
+                    Shop.Bought[j] = new Shop_Item(
+
+                       Item.Get(new Guid(Data.ReadString())),
+                         Data.ReadInt16(),
+                      Data.ReadInt16()
+                    );
 
                 // Salva os dados da loja
                 Write.Shop(Shop);

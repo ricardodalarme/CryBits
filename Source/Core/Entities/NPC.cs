@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CryBits.Entities
 {
     [Serializable]
-   public class NPC : Entity
+    public class NPC : Entity
     {
         // Lista de dados
         public static Dictionary<Guid, NPC> List = new Dictionary<Guid, NPC>();
@@ -21,9 +21,9 @@ namespace CryBits.Entities
         public int Experience { get; set; }
         public short[] Vital { get; set; } = new short[(byte)Vitals.Count];
         public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
-        public NPC_Drop[] Drop { get; set; }
+        public IList<NPC_Drop> Drop { get; set; }
         public bool AttackNPC { get; set; }
-        public NPC[] Allie { get; set; }
+        public IList<NPC> Allie { get; set; }
         public NPCMovements Movement { get; set; }
         public byte Flee_Helth { get; set; }
         private Guid shop;
@@ -40,7 +40,7 @@ namespace CryBits.Entities
         public bool IsAlied(NPC NPC)
         {
             // Verifica se o NPC é aliado do outro
-            for (byte i = 0; i < Allie.Length; i++)
+            for (byte i = 0; i < Allie.Count; i++)
                 if (Allie[i] == NPC)
                     return true;
 
@@ -49,23 +49,12 @@ namespace CryBits.Entities
     }
 
     [Serializable]
-    public class NPC_Drop
+    public class NPC_Drop : ItemSlot
     {
-        // Dados
-        private Guid item;
-        public Item Item
-        {
-            get => Item.Get(item);
-            set => item = new Guid(value.GetID());
-        }
-        public short Amount;
         public byte Chance;
 
-        // Construtor    
-        public NPC_Drop(Item Item, short Amount, byte Chance)
+        public NPC_Drop(Item Item, short Amount, byte Chance) : base(Item, Amount)
         {
-            this.Item = Item;
-            this.Amount = Amount;
             this.Chance = Chance;
         }
     }

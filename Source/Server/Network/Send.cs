@@ -1,6 +1,6 @@
-﻿using CryBits.Server.Entities;
+﻿using CryBits.Entities;
 using CryBits.Packets;
-using CryBits.Entities;
+using CryBits.Server.Entities;
 using Lidgren.Network;
 using System.Drawing;
 using static CryBits.Server.Logic.Utils;
@@ -134,10 +134,10 @@ namespace CryBits.Server.Network
                 Data.Write(Class.ID.ToString());
                 Data.Write(Class.Name);
                 Data.Write(Class.Description);
-                Data.Write((byte)Class.Tex_Male.Length);
-                for (byte t = 0; t < Class.Tex_Male.Length; t++) Data.Write(Class.Tex_Male[t]);
-                Data.Write((byte)Class.Tex_Female.Length);
-                for (byte t = 0; t < Class.Tex_Female.Length; t++) Data.Write(Class.Tex_Female[t]);
+                Data.Write((byte)Class.Tex_Male.Count);
+                for (byte t = 0; t < Class.Tex_Male.Count; t++) Data.Write(Class.Tex_Male[t]);
+                Data.Write((byte)Class.Tex_Female.Count);
+                for (byte t = 0; t < Class.Tex_Female.Count; t++) Data.Write(Class.Tex_Female[t]);
 
                 // Apenas dados do editor
                 if (Account.InEditor)
@@ -148,8 +148,8 @@ namespace CryBits.Server.Network
                     Data.Write(Class.Spawn_Y);
                     for (byte n = 0; n < (byte)Vitals.Count; n++) Data.Write(Class.Vital[n]);
                     for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(Class.Attribute[n]);
-                    Data.Write((byte)Class.Item.Length);
-                    for (byte n = 0; n < (byte)Class.Item.Length; n++)
+                    Data.Write((byte)Class.Item.Count);
+                    for (byte n = 0; n < (byte)Class.Item.Count; n++)
                     {
                         Data.Write(Class.Item[n].Item1.GetID());
                         Data.Write(Class.Item[n].Item2);
@@ -345,11 +345,11 @@ namespace CryBits.Server.Network
             Data.Write(Map.GetID());
             Data.Write(Map.Revision);
             Data.Write(Map.Name);
-            Data.Write(Map.Moral);
+            Data.Write((byte)Map.Moral);
             Data.Write(Map.Panorama);
             Data.Write(Map.Music);
             Data.Write(Map.Color);
-            Data.Write(Map.Weather.Type);
+            Data.Write((byte)Map.Weather.Type);
             Data.Write(Map.Weather.Intensity);
             Data.Write(Map.Fog.Texture);
             Data.Write(Map.Fog.Speed_X);
@@ -362,8 +362,8 @@ namespace CryBits.Server.Network
                 Data.Write(Map.Link[i].GetID());
 
             // Camadas
-            Data.Write((byte)Map.Layer.Length);
-            for (byte i = 0; i < Map.Layer.Length; i++)
+            Data.Write((byte)Map.Layer.Count);
+            for (byte i = 0; i < Map.Layer.Count; i++)
             {
                 Data.Write(Map.Layer[i].Name);
                 Data.Write(Map.Layer[i].Type);
@@ -374,8 +374,8 @@ namespace CryBits.Server.Network
                     {
                         Data.Write(Map.Layer[i].Tile[x, y].X);
                         Data.Write(Map.Layer[i].Tile[x, y].Y);
-                        Data.Write(Map.Layer[i].Tile[x, y].Tile);
-                        Data.Write(Map.Layer[i].Tile[x, y].Auto);
+                        Data.Write(Map.Layer[i].Tile[x, y].Texture);
+                        Data.Write(Map.Layer[i].Tile[x, y].IsAutotile);
                     }
             }
 
@@ -396,8 +396,8 @@ namespace CryBits.Server.Network
                 }
 
             // Luzes
-            Data.Write((byte)Map.Light.Length);
-            for (byte i = 0; i < Map.Light.Length; i++)
+            Data.Write((byte)Map.Light.Count);
+            for (byte i = 0; i < Map.Light.Count; i++)
             {
                 Data.Write(Map.Light[i].X);
                 Data.Write(Map.Light[i].Y);
@@ -406,8 +406,8 @@ namespace CryBits.Server.Network
             }
 
             // NPCs
-            Data.Write((byte)Map.NPC.Length);
-            for (byte i = 0; i < Map.NPC.Length; i++)
+            Data.Write((byte)Map.NPC.Count);
+            for (byte i = 0; i < Map.NPC.Count; i++)
             {
                 Data.Write(Map.NPC[i].NPC.GetID());
                 Data.Write(Map.NPC[i].Zone);
@@ -610,16 +610,16 @@ namespace CryBits.Server.Network
                     Data.Write(NPC.Sight);
                     Data.Write(NPC.Experience);
                     for (byte n = 0; n < (byte)Attributes.Count; n++) Data.Write(NPC.Attribute[n]);
-                    Data.Write((byte)NPC.Drop.Length);
-                    for (byte n = 0; n < NPC.Drop.Length; n++)
+                    Data.Write((byte)NPC.Drop.Count);
+                    for (byte n = 0; n < NPC.Drop.Count; n++)
                     {
                         Data.Write(NPC.Drop[n].Item.GetID());
                         Data.Write(NPC.Drop[n].Amount);
                         Data.Write(NPC.Drop[n].Chance);
                     }
                     Data.Write(NPC.AttackNPC);
-                    Data.Write((byte)NPC.Allie.Length);
-                    for (byte n = 0; n < NPC.Allie.Length; n++) Data.Write(NPC.Allie[n].GetID());
+                    Data.Write((byte)NPC.Allie.Count);
+                    for (byte n = 0; n < NPC.Allie.Count; n++) Data.Write(NPC.Allie[n].GetID());
                     Data.Write((byte)NPC.Movement);
                     Data.Write(NPC.Flee_Helth);
                     Data.Write(NPC.Shop.GetID());
@@ -821,15 +821,15 @@ namespace CryBits.Server.Network
                 Data.Write(Shop.ID.ToString());
                 Data.Write(Shop.Name);
                 Data.Write(Shop.Currency.GetID());
-                Data.Write((byte)Shop.Sold.Length);
-                for (byte j = 0; j < Shop.Sold.Length; j++)
+                Data.Write((byte)Shop.Sold.Count);
+                for (byte j = 0; j < Shop.Sold.Count; j++)
                 {
                     Data.Write(Shop.Sold[j].Item.GetID());
                     Data.Write(Shop.Sold[j].Amount);
                     Data.Write(Shop.Sold[j].Price);
                 }
-                Data.Write((byte)Shop.Bought.Length);
-                for (byte j = 0; j < Shop.Bought.Length; j++)
+                Data.Write((byte)Shop.Bought.Count);
+                for (byte j = 0; j < Shop.Bought.Count; j++)
                 {
                     Data.Write(Shop.Bought[j].Item.GetID());
                     Data.Write(Shop.Bought[j].Amount);

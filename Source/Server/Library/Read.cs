@@ -1,5 +1,5 @@
-﻿using CryBits.Server.Entities;
-using CryBits.Entities;
+﻿using CryBits.Entities;
+using CryBits.Server.Entities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -190,8 +190,8 @@ namespace CryBits.Server.Library
 
                 // Dados do mapa
                 Map.Name = "New map";
-                Map.Layer = new Map_Layer[1];
-                Map.Layer[0] = new Map_Layer();
+                Map.Layer = new MapLayer[1];
+                Map.Layer[0] = new MapLayer();
                 Map.Layer[0].Name = "Ground";
 
                 // Escreve os dados
