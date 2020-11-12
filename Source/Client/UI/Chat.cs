@@ -12,10 +12,10 @@ namespace CryBits.Client.Interface
         public static List<Structure> Order = new List<Structure>();
 
         // Chat
-        public const byte Lines_Visible = 9;
+        public const byte LinesVisible = 9;
         public static byte Lines_First;
-        private const byte Max_Lines = 50;
-        public const short Sleep_Timer = 10000;
+        private const byte MaxLines = 50;
+        public const short SleepTimer = 10000;
 
         // Estrutura do chat
         public class Structure
@@ -24,46 +24,46 @@ namespace CryBits.Client.Interface
             public Color Color;
         }
 
-        private static void AddLine(string Text, Color Color)
+        private static void AddLine(string text, Color color)
         {
             Order.Add(new Structure());
             int i = Order.Count - 1;
 
             // Adiciona a mensagem em uma linha vazia
-            Order[i].Text = Text;
-            Order[i].Color = Color;
+            Order[i].Text = text;
+            Order[i].Color = color;
 
             // Remove uma linha se necessário
-            if (Order.Count > Max_Lines) Order.Remove(Order[0]);
-            if (i + Lines_First > Lines_Visible + Lines_First)
-                Lines_First = (byte)(i - Lines_Visible);
+            if (Order.Count > MaxLines) Order.Remove(Order[0]);
+            if (i + Lines_First > LinesVisible + Lines_First)
+                Lines_First = (byte)(i - LinesVisible);
 
             // Torna as linhas visíveis
             Loop.Chat_Timer = System.Environment.TickCount + 10000; ;
         }
 
-        public static void AddText(string Message, Color Color)
+        public static void AddText(string message, Color color)
         {
-            int Message_Width, Box_Width = Graphics.TSize(Graphics.Tex_Panel[Panels.List["Chat"].Texture_Num]).Width - 16;
-            string Temp_Message;
+            int messageWidth, boxWidth = Graphics.Size(Graphics.Tex_Panel[Panels.List["Chat"].Texture_Num]).Width - 16;
+            string tempMessage;
 
             // Remove os espaços
-            Message = Message.Trim();
-            Message_Width = MeasureString(Message);
+            message = message.Trim();
+            messageWidth = MeasureString(message);
 
             // Caso couber, adiciona a mensagem normalmente
-            if (Message_Width < Box_Width)
-                AddLine(Message, Color);
+            if (messageWidth < boxWidth)
+                AddLine(message, color);
             else
-                for (int i = 0; i <= Message.Length; i++)
+                for (int i = 0; i <= message.Length; i++)
                 {
-                    Temp_Message = Message.Substring(0, i);
+                    tempMessage = message.Substring(0, i);
 
                     // Adiciona o texto à caixa
-                    if (MeasureString(Temp_Message) > Box_Width)
+                    if (MeasureString(tempMessage) > boxWidth)
                     {
-                        AddLine(Temp_Message, Color);
-                        AddText(Message.Substring(Temp_Message.Length), Color);
+                        AddLine(tempMessage, color);
+                        AddText(message.Substring(tempMessage.Length), color);
                         return;
                     }
                 }
@@ -71,73 +71,73 @@ namespace CryBits.Client.Interface
 
         public static void Type()
         {
-            var Tool = TextBoxes.List["Chat"];
-            var Panel = Panels.List["Chat"];
+            var tool = TextBoxes.List["Chat"];
+            var panel = Panels.List["Chat"];
 
             // Altera a visiblidade da caixa
-            Panel.Visible = !Panel.Visible;
+            panel.Visible = !panel.Visible;
 
             // Altera o foco do digitalizador
-            if (Panel.Visible)
+            if (panel.Visible)
             {
-                Loop.Chat_Timer = System.Environment.TickCount + Sleep_Timer;
-                TextBoxes.Focused = Tools.Get(Tool);
+                Loop.Chat_Timer = System.Environment.TickCount + SleepTimer;
+                TextBoxes.Focused = Tools.Get(tool);
                 return;
             }
             else
                 TextBoxes.Focused = null;
 
             // Dados
-            string Message = Tool.Text;
+            string message = tool.Text;
 
             // Somente se necessário
-            if (Message.Length < 3)
+            if (message.Length < 3)
             {
-                Tool.Text = string.Empty;
+                tool.Text = string.Empty;
                 return;
             }
 
             // Limpa a caixa de texto
-            Tool.Text = string.Empty;
+            tool.Text = string.Empty;
 
             // Separa as mensagens em partes
-            string[] Parts = Message.Split(' ');
+            string[] parts = message.Split(' ');
 
             // Comandos
-            switch (Parts[0].ToLower())
+            switch (parts[0].ToLower())
             {
                 case "/party":
-                    if (Parts.Length > 1) Send.Party_Invite(Parts[1]);
+                    if (parts.Length > 1) Send.Party_Invite(parts[1]);
                     break;
                 case "/partyleave":
                     Send.Party_Leave();
                     break;
                 case "/trade":
-                    if (Parts.Length > 1) Send.Trade_Invite(Parts[1]);
+                    if (parts.Length > 1) Send.Trade_Invite(parts[1]);
                     break;
                 default:
                     // Mensagem lobal
-                    if (Message.Substring(0, 1) == "'")
-                        Send.Message(Message.Substring(1), Messages.Global);
+                    if (message.Substring(0, 1) == "'")
+                        Send.Message(message.Substring(1), Messages.Global);
                     // Mensagem particular
-                    else if (Message.Substring(0, 1) == "!")
+                    else if (message.Substring(0, 1) == "!")
                     {
                         // Previne erros 
-                        if (Parts.GetUpperBound(0) < 1)
+                        if (parts.GetUpperBound(0) < 1)
                             AddText("Use: '!' + Addressee + 'Message'", Color.White);
                         else
                         {
                             // Dados
-                            string Destiny = Message.Substring(1, Parts[0].Length - 1);
-                            Message = Message.Substring(Parts[0].Length + 1);
+                            string destiny = message.Substring(1, parts[0].Length - 1);
+                            message = message.Substring(parts[0].Length + 1);
 
                             // Envia a mensagem
-                            Send.Message(Message, Messages.Private, Destiny);
+                            Send.Message(message, Messages.Private, destiny);
                         }
                     }
                     // Mensagem mapa
                     else
-                        Send.Message(Message, Messages.Map);
+                        Send.Message(message, Messages.Map);
                     break;
             }
         }

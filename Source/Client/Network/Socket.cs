@@ -10,10 +10,10 @@ namespace CryBits.Client.Network
         public static NetClient Device;
 
         // Manuseamento dos dados
-        private static NetIncomingMessage Data;
+        private static NetIncomingMessage _data;
 
         // Dados para a conexão com o servidor
-        public const string IP = "localhost";
+        public const string Ip = "localhost";
         public const short Port = 7001;
 
         // Latência
@@ -22,10 +22,10 @@ namespace CryBits.Client.Network
 
         public static void Init()
         {
-            NetPeerConfiguration Config = new NetPeerConfiguration("CryBits");
+            NetPeerConfiguration config = new NetPeerConfiguration("CryBits");
 
             // Cria o dispositivo com as devidas configurações
-            Device = new NetClient(Config);
+            Device = new NetClient(config);
             Device.Start();
         }
 
@@ -39,17 +39,17 @@ namespace CryBits.Client.Network
         public static void HandleData()
         {
             // Lê e direciona todos os dados recebidos
-            while ((Data = Device.ReadMessage()) != null)
+            while ((_data = Device.ReadMessage()) != null)
             {
-                switch (Data.MessageType)
+                switch (_data.MessageType)
                 {
                     // Recebe e manuseia os dados
                     case NetIncomingMessageType.Data:
-                        Receive.Handle(Data);
+                        Receive.Handle(_data);
                         break;
                     // Desconectar o jogador caso o servidor seja desligado
                     case NetIncomingMessageType.StatusChanged:
-                        if ((NetConnectionStatus)Data.ReadByte() == NetConnectionStatus.Disconnected)
+                        if ((NetConnectionStatus)_data.ReadByte() == NetConnectionStatus.Disconnected)
                         {
                             // Apaga os dados e volta ao menu
                             if (Entities.Player.Me != null) Entities.Player.Me.Leave();
@@ -58,7 +58,7 @@ namespace CryBits.Client.Network
                         break;
                 }
 
-                Device.Recycle(Data);
+                Device.Recycle(_data);
             }
         }
 
@@ -71,11 +71,11 @@ namespace CryBits.Client.Network
             if (IsConnected()) return true;
 
             // Tenta se conectar
-            Device.Connect(IP, Port);
+            Device.Connect(Ip, Port);
 
             // Espere até que o jogador se conecte
-            int Wait_Timer = Environment.TickCount;
-            while (!IsConnected() && Environment.TickCount <= Wait_Timer + 1000)
+            int waitTimer = Environment.TickCount;
+            while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)
                 HandleData();
 
             // Retorna uma mensagem caso não conseguir se conectar

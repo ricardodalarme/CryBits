@@ -33,13 +33,13 @@ static class Program
 
     public static void Close()
     {
-        int Wait_Timer = Environment.TickCount;
+        int waitTimer = Environment.TickCount;
 
         // Desconecta da rede
         Socket.Disconnect();
 
         // Espera até que o jogador seja desconectado
-        while (Socket.IsConnected() && Environment.TickCount <= Wait_Timer + 1000)
+        while (Socket.IsConnected() && Environment.TickCount <= waitTimer + 1000)
             Application.DoEvents();
 
         // Fecha a aplicação

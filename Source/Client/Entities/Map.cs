@@ -12,7 +12,7 @@ namespace CryBits.Client.Entities
         public static Dictionary<Guid, Map> List;
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static Map Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+        public static Map Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
 
         // Dados gerais
         public short Revision;
@@ -20,25 +20,25 @@ namespace CryBits.Client.Entities
         public byte Panorama;
         public byte Music;
         public int Color;
-        public Map_Weather Weather;
-        public Map_Fog Fog;
+        public MapWeather Weather;
+        public MapFog Fog;
         public short[] Link;
-        public Map_Tile[,] Tile = new Map_Tile[Map_Width, Map_Height];
-        public Map_Light[] Light;
+        public MapTile[,] Tile = new MapTile[MapWidth, MapHeight];
+        public MapLight[] Light;
         public short[] NPC;
 
-        public Map(Guid ID) : base(ID) { }
+        public Map(Guid id) : base(id) { }
     }
 
     [Serializable]
-    public struct Map_Weather
+    public struct MapWeather
     {
         public byte Type;
         public byte Intensity;
     }
 
     [Serializable]
-    public struct Map_Fog
+    public struct MapFog
     {
         public byte Texture;
         public sbyte Speed_X;
@@ -47,15 +47,15 @@ namespace CryBits.Client.Entities
     }
 
     [Serializable]
-    public struct Map_Tile
+    public struct MapTile
     {
         public byte Attribute;
         public bool[] Block;
-        public Map_Tile_Data[,] Data;
+        public MapTileData[,] Data;
     }
 
     [Serializable]
-    public struct Map_Tile_Data
+    public struct MapTileData
     {
         public byte X;
         public byte Y;
@@ -65,7 +65,7 @@ namespace CryBits.Client.Entities
     }
 
     [Serializable]
-    public struct Map_Light
+    public struct MapLight
     {
         public byte X;
         public byte Y;

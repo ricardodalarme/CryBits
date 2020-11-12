@@ -13,10 +13,10 @@ namespace CryBits.Client.Entities
         public static List<Player> List;
 
         // Obtém um jogador com determinado nome
-        public static Player Get(string Name) => List.Find(x => x.Name.Equals(Name));
+        public static Player Get(string name) => List.Find(x => x.Name.Equals(name));
 
         // O próprio jogador
-        public static Me_Structure Me;
+        public static MeStructure Me;
 
         // Dados gerais dos jogadores
         public string Name = string.Empty;
@@ -27,9 +27,9 @@ namespace CryBits.Client.Entities
         public Item[] Equipment = new Item[(byte)Equipments.Count];
         public TempMap Map;
 
-        public Player(string Name)
+        public Player(string name)
         {
-            this.Name = Name;
+            this.Name = name;
         }
 
         public virtual void Logic()
@@ -43,11 +43,11 @@ namespace CryBits.Client.Entities
     }
 
     // Dados somente do próprio jogador
-    class Me_Structure : Player
+    class MeStructure : Player
     {
         // Dados
-        public Inventory[] Inventory = new Inventory[Max_Inventory + 1];
-        public Hotbar[] Hotbar = new Hotbar[Max_Hotbar];
+        public Inventory[] Inventory = new Inventory[MaxInventory + 1];
+        public Hotbar[] Hotbar = new Hotbar[MaxHotbar];
         public Inventory[] Trade_Offer;
         public Inventory[] Trade_Their_Offer;
         public Player[] Party = Array.Empty<Player>();
@@ -57,7 +57,7 @@ namespace CryBits.Client.Entities
         public int Collect_Timer;
 
         // Construtor
-        public Me_Structure(string Name) : base(Name) { }
+        public MeStructure(string name) : base(name) { }
 
         public override void Logic()
         {
@@ -78,20 +78,20 @@ namespace CryBits.Client.Entities
             else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Directions.Right);
         }
 
-        public void Move(Directions Direction)
+        public void Move(Directions direction)
         {
             // Verifica se o jogador pode se mover
             if (Movement != Movements.Stopped) return;
 
             // Define a direção do jogador
-            if (this.Direction != Direction)
+            if (this.Direction != direction)
             {
-                this.Direction = Direction;
+                this.Direction = direction;
                 Send.Player_Direction();
             }
 
             // Verifica se o azulejo seguinte está livre
-            if (Map.Tile_Blocked(X, Y, Direction)) return;
+            if (Map.Tile_Blocked(X, Y, direction)) return;
 
             // Define a velocidade que o jogador se move
             if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Graphics.RenderWindow.HasFocus())
@@ -103,7 +103,7 @@ namespace CryBits.Client.Entities
             Send.Player_Move();
 
             // Define a Posição exata do jogador
-            switch (Direction)
+            switch (direction)
             {
                 case Directions.Up: Y2 = Grid; Y -= 1; break;
                 case Directions.Down: Y2 = Grid * -1; Y += 1; break;
@@ -115,7 +115,7 @@ namespace CryBits.Client.Entities
         public void CheckAttack()
         {
             // Reseta o ataque
-            if (Attack_Timer + Attack_Speed < Environment.TickCount)
+            if (Attack_Timer + AttackSpeed < Environment.TickCount)
             {
                 Attack_Timer = 0;
                 Attacking = false;
@@ -134,7 +134,7 @@ namespace CryBits.Client.Entities
 
         public void CollectItem()
         {
-            bool HasItem = false, HasSlot = false;
+            bool hasItem = false, hasSlot = false;
 
             // Previne erros
             if (TextBoxes.Focused != null) return;
@@ -142,16 +142,16 @@ namespace CryBits.Client.Entities
             // Verifica se tem algum item nas coordenadas 
             for (byte i = 0; i < Mapper.Current.Item.Length; i++)
                 if (Mapper.Current.Item[i].X == X && Mapper.Current.Item[i].Y == Y)
-                    HasItem = true;
+                    hasItem = true;
 
             // Verifica se tem algum espaço vazio no inventário
-            for (byte i = 1; i <= Max_Inventory; i++)
+            for (byte i = 1; i <= MaxInventory; i++)
                 if (Inventory[i].Item == null)
-                    HasSlot = true;
+                    hasSlot = true;
 
             // Somente se necessário
-            if (!HasItem) return;
-            if (!HasSlot) return;
+            if (!hasItem) return;
+            if (!hasSlot) return;
             if (Environment.TickCount <= Collect_Timer + 250) return;
 
             // Coleta o item

@@ -56,47 +56,47 @@ namespace CryBits.Client.Interface
 
         public static void Inventory_MouseDown(SFML.Window.MouseButtonEventArgs e)
         {
-            byte Slot = Inventory_Slot;
+            byte slot = Inventory_Slot;
 
             // Somente se necessário
-            if (Slot == 0) return;
-            if (Player.Me.Inventory[Slot].Item == null) return;
+            if (slot == 0) return;
+            if (Player.Me.Inventory[slot].Item == null) return;
 
             // Solta item
             if (e.Button == SFML.Window.Mouse.Button.Right)
             {
-                if (Player.Me.Inventory[Slot].Item.Bind != BindOn.Pickup)
+                if (Player.Me.Inventory[slot].Item.Bind != BindOn.Pickup)
                     // Vende o item
                     if (List["Shop"].Visible)
                     {
-                        if (Player.Me.Inventory[Slot].Amount != 1)
+                        if (Player.Me.Inventory[slot].Amount != 1)
                         {
-                            Shop_Inventory_Slot = Slot;
+                            Shop_Inventory_Slot = slot;
                             TextBoxes.List["Shop_Sell_Amount"].Text = string.Empty;
                             List["Shop_Sell"].Visible = true;
                         }
-                        else Send.Shop_Sell(Slot, 1);
+                        else Send.Shop_Sell(slot, 1);
                     }
                     // Solta o item
                     else if (!List["Trade"].Visible)
-                        if (Player.Me.Inventory[Slot].Amount != 1)
+                        if (Player.Me.Inventory[slot].Amount != 1)
                         {
-                            Drop_Slot = Slot;
+                            Drop_Slot = slot;
                             TextBoxes.List["Drop_Amount"].Text = string.Empty;
                             List["Drop"].Visible = true;
                         }
-                        else Send.DropItem(Slot, 1);
+                        else Send.DropItem(slot, 1);
             }
             // Seleciona o item
-            else if (e.Button == SFML.Window.Mouse.Button.Left) Inventory_Change = Slot;
+            else if (e.Button == SFML.Window.Mouse.Button.Left) Inventory_Change = slot;
         }
 
         public static void Equipment_MouseDown(SFML.Window.MouseButtonEventArgs e)
         {
-            Point Panel_Position = List["Menu_Character"].Position;
+            Point panelPosition = List["Menu_Character"].Position;
 
             for (byte i = 0; i < (byte)Equipments.Count; i++)
-                if (IsAbove(new Rectangle(Panel_Position.X + 7 + i * 36, Panel_Position.Y + 247, 32, 32)))
+                if (IsAbove(new Rectangle(panelPosition.X + 7 + i * 36, panelPosition.Y + 247, 32, 32)))
                     // Remove o equipamento
                     if (e.Button == SFML.Window.Mouse.Button.Right)
                         if (Player.Me.Equipment[i].Bind != BindOn.Equip)
@@ -108,69 +108,69 @@ namespace CryBits.Client.Interface
 
         public static void Hotbar_MouseDown(SFML.Window.MouseButtonEventArgs e)
         {
-            short Slot = Hotbar_Slot;
+            short slot = Hotbar_Slot;
 
             // Somente se necessário
-            if (Slot < 0) return;
-            if (Player.Me.Hotbar[Slot].Slot == 0) return;
+            if (slot < 0) return;
+            if (Player.Me.Hotbar[slot].Slot == 0) return;
 
             // Solta item
             if (e.Button == SFML.Window.Mouse.Button.Right)
             {
-                Send.Hotbar_Add(Slot, 0, 0);
+                Send.Hotbar_Add(slot, 0, 0);
                 return;
             }
             // Seleciona o item
             if (e.Button == SFML.Window.Mouse.Button.Left)
             {
-                Panels.Hotbar_Change = Slot;
+                Panels.Hotbar_Change = slot;
                 return;
             }
         }
 
         public static void Trade_MouseDown(SFML.Window.MouseButtonEventArgs e)
         {
-            byte Slot = Trade_Slot;
+            byte slot = Trade_Slot;
 
             // Somente se necessário
             if (!List["Trade"].Visible) return;
-            if (Slot == 0) return;
-            if (Player.Me.Trade_Offer[Slot].Item == null) return;
+            if (slot == 0) return;
+            if (Player.Me.Trade_Offer[slot].Item == null) return;
 
             // Solta item
-            if (e.Button == SFML.Window.Mouse.Button.Right) Send.Trade_Offer(Slot, 0);
+            if (e.Button == SFML.Window.Mouse.Button.Right) Send.Trade_Offer(slot, 0);
         }
 
         public static void CheckInformations()
         {
-            Point Position = new Point();
+            Point position = new Point();
 
             // Define as informações do painel com base no que o Window.Mouse está sobrepondo
             if (Hotbar_Slot >= 0)
             {
-                Position = List["Hotbar"].Position + new Size(0, 42);
+                position = List["Hotbar"].Position + new Size(0, 42);
                 Infomation_ID = Player.Me.Inventory[Player.Me.Hotbar[Hotbar_Slot].Slot].Item.ID;
             }
             else if (Inventory_Slot > 0)
             {
-                Position = List["Menu_Inventory"].Position + new Size(-186, 3);
+                position = List["Menu_Inventory"].Position + new Size(-186, 3);
                 Infomation_ID = Player.Me.Inventory[Inventory_Slot].Item.ID;
             }
             else if (Equipment_Slot >= 0)
             {
-                Position = List["Menu_Character"].Position + new Size(-186, 5);
+                position = List["Menu_Character"].Position + new Size(-186, 5);
                 Infomation_ID = Player.Me.Equipment[Equipment_Slot].ID;
             }
             else if (Shop_Slot >= 0 && Shop_Slot < Shop_Open.Sold.Length)
             {
-                Position = new Point(List["Shop"].Position.X - 186, List["Shop"].Position.Y + 5);
+                position = new Point(List["Shop"].Position.X - 186, List["Shop"].Position.Y + 5);
                 Infomation_ID = Shop_Open.Sold[Shop_Slot].Item.ID;
             }
             else Infomation_ID = Guid.Empty;
 
             // Define os dados do painel de informações
-            List["Information"].Visible = !Position.IsEmpty && Infomation_ID != Guid.Empty;
-            List["Information"].Position = Position;
+            List["Information"].Visible = !position.IsEmpty && Infomation_ID != Guid.Empty;
+            List["Information"].Position = position;
         }
     }
 }

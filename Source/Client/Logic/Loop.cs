@@ -13,9 +13,9 @@ namespace CryBits.Client.Logic
 
         public static void Init()
         {
-            int Timer_1000 = 0;
-            int Timer_30 = 0;
-            short FPS = 0;
+            int timer1000 = 0;
+            int timer30 = 0;
+            short fps = 0;
 
             while (Program.Working)
             {
@@ -34,7 +34,7 @@ namespace CryBits.Client.Logic
                 if (Windows.Current == WindowsTypes.Game)
                 {
                     Mapper.Logic();
-                    if (Timer_30 < Environment.TickCount)
+                    if (timer30 < Environment.TickCount)
                     {
                         // Lógica dos jogadores
                         for (byte i = 0; i < Player.List.Count; i++)
@@ -46,7 +46,7 @@ namespace CryBits.Client.Logic
                                 Mapper.Current.NPC[i].Logic();
 
                         // Reinicia a contagem
-                        Timer_30 = Environment.TickCount + 30;
+                        timer30 = Environment.TickCount + 30;
                     }
 
                     // Verifica se é necessário mostrar o painel de informações
@@ -58,15 +58,15 @@ namespace CryBits.Client.Logic
                 System.Threading.Thread.Sleep(1);
 
                 // Cálcula o FPS
-                if (Timer_1000 < Environment.TickCount)
+                if (timer1000 < Environment.TickCount)
                 {
                     Network.Send.Latency();
-                    Game.FPS = FPS;
-                    FPS = 0;
-                    Timer_1000 = Environment.TickCount + 1000;
+                    Game.FPS = fps;
+                    fps = 0;
+                    timer1000 = Environment.TickCount + 1000;
                 }
                 else
-                    FPS += 1;
+                    fps += 1;
             }
 
             // Fecha o jogo

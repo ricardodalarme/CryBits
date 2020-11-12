@@ -10,27 +10,27 @@ namespace CryBits.Client.Entities
         public static Dictionary<Guid, Shop> List;
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static Shop Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+        public static Shop Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
 
         // Dados gerais
         public Item Currency;
-        public Shop_Item[] Sold;
-        public Shop_Item[] Bought;
+        public ShopItem[] Sold;
+        public ShopItem[] Bought;
 
-        public Shop(Guid ID) : base(ID) { }
+        public Shop(Guid id) : base(id) { }
 
-        public Shop_Item FindBought(Item Item)
+        public ShopItem FindBought(Item item)
         {
             // Encontra um item especifico na lista de itens vendidos
             for (byte i = 0; i < Bought.Length; i++)
-                if (Bought[i].Item.Equals(Item))
+                if (Bought[i].Item.Equals(item))
                     return Bought[i];
 
             return null;
         }
     }
 
-    class Shop_Item
+    class ShopItem
     {
         public Item Item;
         public short Amount;

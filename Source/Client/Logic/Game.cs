@@ -14,35 +14,35 @@ namespace CryBits.Client.Logic
         public static short FPS;
 
         // Ataque
-        public const short Attack_Speed = 750;
+        public const short AttackSpeed = 750;
 
         // Animação
-        public const byte Animation_Amount = 4;
-        public const byte Animation_Stopped = 1;
-        public const byte Animation_Right = 0;
-        public const byte Animation_Left = 2;
-        public const byte Animation_Attack = 2;
+        public const byte AnimationAmount = 4;
+        public const byte AnimationStopped = 1;
+        public const byte AnimationRight = 0;
+        public const byte AnimationLeft = 2;
+        public const byte AnimationAttack = 2;
 
         // Movimentação
-        public const byte Movement_Up = 3;
-        public const byte Movement_Down = 0;
-        public const byte Movement_Left = 1;
-        public const byte Movement_Right = 2;
+        public const byte MovementUp = 3;
+        public const byte MovementDown = 0;
+        public const byte MovementLeft = 1;
+        public const byte MovementRight = 2;
 
         // Bloqueio direcional
-        public const byte Max_DirBlock = 3;
+        public const byte MaxDirBlock = 3;
 
         // Tamanho da tela
-        public const short Screen_Width = Map_Width * Grid;
-        public const short Screen_Height = Map_Height * Grid;
+        public const short ScreenWidth = MapWidth * Grid;
+        public const short ScreenHeight = MapHeight * Grid;
 
         // Limites em geral
-        public const byte Max_Inventory = 30;
-        public const byte Max_Hotbar = 10;
+        public const byte MaxInventory = 30;
+        public const byte MaxHotbar = 10;
 
         // Limitações dos mapas
-        public const byte Map_Width = 25;
-        public const byte Map_Height = 19;
+        public const byte MapWidth = 25;
+        public const byte MapHeight = 19;
 
         // Opções
         public static Options Option = new Options();

@@ -14,10 +14,10 @@ namespace CryBits.Client.Logic
         public static int ConvertX(int x) => x - (Camera.Tile_Sight.X * Grid) - Camera.Start_Sight.X;
         public static int ConvertY(int y) => y - (Camera.Tile_Sight.Y * Grid) - Camera.Start_Sight.Y;
 
-        public static Directions ReverseDirection(Directions Direction)
+        public static Directions ReverseDirection(Directions direction)
         {
             // Retorna a direção inversa
-            switch (Direction)
+            switch (direction)
             {
                 case Directions.Up: return Directions.Down;
                 case Directions.Down: return Directions.Up;
@@ -27,68 +27,68 @@ namespace CryBits.Client.Logic
             }
         }
 
-        public static void NextTile(Directions Direction, ref byte X, ref byte Y)
+        public static void NextTile(Directions direction, ref byte x, ref byte y)
         {
             // Próximo azulejo
-            switch (Direction)
+            switch (direction)
             {
-                case Directions.Up: Y -= 1; break;
-                case Directions.Down: Y += 1; break;
-                case Directions.Right: X += 1; break;
-                case Directions.Left: X -= 1; break;
+                case Directions.Up: y -= 1; break;
+                case Directions.Down: y += 1; break;
+                case Directions.Right: x += 1; break;
+                case Directions.Left: x -= 1; break;
             }
         }
 
-        public static bool IsAbove(Rectangle Rectangle)
+        public static bool IsAbove(Rectangle rectangle)
         {
             // Verficia se o Window.Mouse está sobre o objeto
-            if (Windows.Mouse.X >= Rectangle.X && Windows.Mouse.X <= Rectangle.X + Rectangle.Width)
-                if (Windows.Mouse.Y >= Rectangle.Y && Windows.Mouse.Y <= Rectangle.Y + Rectangle.Height)
+            if (Windows.Mouse.X >= rectangle.X && Windows.Mouse.X <= rectangle.X + rectangle.Width)
+                if (Windows.Mouse.Y >= rectangle.Y && Windows.Mouse.Y <= rectangle.Y + rectangle.Height)
                     return true;
 
             // Se não, retornar um valor nulo
             return false;
         }
 
-        public static short MeasureString(string Text)
+        public static short MeasureString(string text)
         {
             // Dados do texto
-            SFML.Graphics.Text TempText = new SFML.Graphics.Text(Text, Graphics.Font_Default);
-            TempText.CharacterSize = 10;
-            return (short)TempText.GetLocalBounds().Width;
+            SFML.Graphics.Text tempText = new SFML.Graphics.Text(text, Graphics.Font_Default);
+            tempText.CharacterSize = 10;
+            return (short)tempText.GetLocalBounds().Width;
         }
 
-        public static string TextBreak(string Text, int Width)
+        public static string TextBreak(string text, int width)
         {
             // Previne sobrecargas
-            if (string.IsNullOrEmpty(Text)) return Text;
+            if (string.IsNullOrEmpty(text)) return text;
 
             // Usado para fazer alguns calculosk
-            int Text_Width = MeasureString(Text);
+            int textWidth = MeasureString(text);
 
             // Diminui o tamanho do texto até que ele caiba no digitalizador
-            while (Text_Width - Width >= 0)
+            while (textWidth - width >= 0)
             {
-                Text = Text.Substring(1);
-                Text_Width = MeasureString(Text);
+                text = text.Substring(1);
+                textWidth = MeasureString(text);
             }
 
-            return Text;
+            return text;
         }
 
-        public static byte Slot(Panels Panel, byte OffX, byte OffY, byte Lines, byte Columns, byte Grid = 32, byte Gap = 4)
+        public static byte Slot(Panels panel, byte offX, byte offY, byte lines, byte columns, byte grid = 32, byte gap = 4)
         {
-            int Size = Grid + Gap;
-            Point Start = Panel.Position + new Size(OffX, OffY);
-            Point Slot = new Point((Windows.Mouse.X - Start.X) / Size, (Windows.Mouse.Y - Start.Y) / Size);
+            int size = grid + gap;
+            Point start = panel.Position + new Size(offX, offY);
+            Point slot = new Point((Windows.Mouse.X - start.X) / size, (Windows.Mouse.Y - start.Y) / size);
 
             // Verifica se o Window.Mouse está sobre o slot
-            if (Slot.Y < 0 || Slot.X < 0 || Slot.X >= Columns || Slot.Y >= Lines) return 0;
-            if (!IsAbove(new Rectangle(Start.X + Slot.X * Size, Start.Y + Slot.Y * Size, Grid, Grid))) return 0;
-            if (!Panel.Visible) return 0;
+            if (slot.Y < 0 || slot.X < 0 || slot.X >= columns || slot.Y >= lines) return 0;
+            if (!IsAbove(new Rectangle(start.X + slot.X * size, start.Y + slot.Y * size, grid, grid))) return 0;
+            if (!panel.Visible) return 0;
 
             // Retorna o slot
-            return (byte)(Slot.Y * Columns + Slot.X + 1);
+            return (byte)(slot.Y * columns + slot.X + 1);
         }
     }
 }

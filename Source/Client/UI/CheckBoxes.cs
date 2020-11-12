@@ -23,11 +23,11 @@ namespace CryBits.Client.Interface
         public void MouseUp()
         {
             // Tamanho do marcador
-            Size Texture_Size = Graphics.TSize(Graphics.Tex_CheckBox);
-            Size Box = new Size(Texture_Size.Width / 2 + MeasureString(Text) + Margin, Texture_Size.Height);
+            Size textureSize = Graphics.Size(Graphics.Tex_CheckBox);
+            Size box = new Size(textureSize.Width / 2 + MeasureString(Text) + Margin, textureSize.Height);
 
             // Somente se estiver sobrepondo a ferramenta
-            if (!IsAbove(new Rectangle(Position, Box))) return;
+            if (!IsAbove(new Rectangle(Position, box))) return;
 
             // Altera o estado do marcador
             Checked = !Checked;
@@ -37,10 +37,10 @@ namespace CryBits.Client.Interface
             Audio.Sound.Play(Audio.Sounds.Click);
         }
 
-        private static void Execute(string Name)
+        private static void Execute(string name)
         {
             // Executa o evento do marcador
-            switch (Name)
+            switch (name)
             {
                 case "Sounds": Sounds(); break;
                 case "Musics": Musics(); break;
@@ -106,7 +106,7 @@ namespace CryBits.Client.Interface
             // Salva os dado
             Option.Chat = List["Options_Chat"].Checked;
             Write.Options();
-            if (Option.Chat) Loop.Chat_Timer = System.Environment.TickCount + Interface.Chat.Sleep_Timer;
+            if (Option.Chat) Loop.Chat_Timer = System.Environment.TickCount + Interface.Chat.SleepTimer;
         }
 
         private static void FPS()

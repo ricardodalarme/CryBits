@@ -10,7 +10,7 @@ namespace CryBits.Client.Entities
         public static Dictionary<Guid, NPC> List;
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static NPC Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+        public static NPC Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
 
         // Dados gerais
         public string SayMsg;
@@ -18,6 +18,6 @@ namespace CryBits.Client.Entities
         public byte Type;
         public short[] Vital = new short[(byte)Vitals.Count];
 
-        public NPC(Guid ID) : base(ID) { }
+        public NPC(Guid id) : base(id) { }
     }
 }

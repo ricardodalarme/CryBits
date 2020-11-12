@@ -30,113 +30,113 @@ namespace CryBits.Client.Library
             }
 
             // Lê os dados
-            using (var Stream = Directories.Options.OpenRead())
-                Option = (Options)new BinaryFormatter().Deserialize(Stream);
+            using (var stream = Directories.Options.OpenRead())
+                Option = (Options)new BinaryFormatter().Deserialize(stream);
         }
 
-        private static Buttons Button(BinaryReader Data)
+        private static Buttons Button(BinaryReader data)
         {
             // Lê os dados
             return new Buttons()
             {
-                Name = Data.ReadString(),
-                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
-                Visible = Data.ReadBoolean(),
-                Window = (WindowsTypes)Data.ReadByte(),
-                Texture_Num = Data.ReadByte(),
+                Name = data.ReadString(),
+                Position = new Point(data.ReadInt32(), data.ReadInt32()),
+                Visible = data.ReadBoolean(),
+                Window = (WindowsTypes)data.ReadByte(),
+                Texture_Num = data.ReadByte(),
             };
         }
 
-        private static TextBoxes TextBox(BinaryReader Data)
+        private static TextBoxes TextBox(BinaryReader data)
         {
             // Lê os dados
             return new TextBoxes
             {
-                Name = Data.ReadString(),
-                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
-                Visible = Data.ReadBoolean(),
-                Window = (WindowsTypes)Data.ReadByte(),
-                Lenght = Data.ReadInt16(),
-                Width = Data.ReadInt16(),
-                Password = Data.ReadBoolean(),
+                Name = data.ReadString(),
+                Position = new Point(data.ReadInt32(), data.ReadInt32()),
+                Visible = data.ReadBoolean(),
+                Window = (WindowsTypes)data.ReadByte(),
+                Lenght = data.ReadInt16(),
+                Width = data.ReadInt16(),
+                Password = data.ReadBoolean(),
             };
         }
 
-        private static Panels Panel(BinaryReader Data)
+        private static Panels Panel(BinaryReader data)
         {
             // Lê os dados
             return new Panels
             {
-                Name = Data.ReadString(),
-                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
-                Visible = Data.ReadBoolean(),
-                Window = (WindowsTypes)Data.ReadByte(),
-                Texture_Num = Data.ReadByte(),
+                Name = data.ReadString(),
+                Position = new Point(data.ReadInt32(), data.ReadInt32()),
+                Visible = data.ReadBoolean(),
+                Window = (WindowsTypes)data.ReadByte(),
+                Texture_Num = data.ReadByte(),
             };
         }
 
-        private static CheckBoxes CheckBox(BinaryReader Data)
+        private static CheckBoxes CheckBox(BinaryReader data)
         {
             // Lê os dados
             return new CheckBoxes
             {
-                Name = Data.ReadString(),
-                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
-                Visible = Data.ReadBoolean(),
-                Window = (WindowsTypes)Data.ReadByte(),
-                Text = Data.ReadString(),
-                Checked = Data.ReadBoolean(),
+                Name = data.ReadString(),
+                Position = new Point(data.ReadInt32(), data.ReadInt32()),
+                Visible = data.ReadBoolean(),
+                Window = (WindowsTypes)data.ReadByte(),
+                Text = data.ReadString(),
+                Checked = data.ReadBoolean(),
             };
         }
 
         private static void Tools()
         {
-            FileInfo File = new FileInfo(Directories.Tools_Data.FullName);
-            for (byte i = 0; i < (byte)WindowsTypes.Count; i++) Interface.Tools.All_Order[i] = new List<Tools.Order_Structure>();
+            FileInfo file = new FileInfo(Directories.Tools_Data.FullName);
+            for (byte i = 0; i < (byte)WindowsTypes.Count; i++) Interface.Tools.All_Order[i] = new List<Tools.OrderStructure>();
 
             // Lê todas as ferramentas
-            using (var Data = new BinaryReader(File.OpenRead()))
+            using (var data = new BinaryReader(file.OpenRead()))
                 for (byte n = 0; n < Interface.Tools.All_Order.Length; n++)
-                    Tools(null, ref Interface.Tools.All_Order[n], Data);
+                    Tools(null, ref Interface.Tools.All_Order[n], data);
         }
 
-        private static void Tools(Tools.Order_Structure Parent, ref List<Tools.Order_Structure> Node, BinaryReader Data)
+        private static void Tools(Tools.OrderStructure parent, ref List<Tools.OrderStructure> node, BinaryReader data)
         {
             // Lê todos os filhos
-            byte Size = Data.ReadByte();
+            byte size = data.ReadByte();
 
-            for (byte i = 0; i < Size; i++)
+            for (byte i = 0; i < size; i++)
             {
                 // Lê a ferramenta
-                var Temp_Tool = new Tools.Structure();
-                switch ((Tools.Types)Data.ReadByte())
+                var tempTool = new Tools.Structure();
+                switch ((Tools.Types)data.ReadByte())
                 {
-                    case Interface.Tools.Types.Button: Temp_Tool = Button(Data); Buttons.List.Add(Temp_Tool.Name, (Buttons)Temp_Tool); break;
-                    case Interface.Tools.Types.TextBox: Temp_Tool = TextBox(Data); TextBoxes.List.Add(Temp_Tool.Name, (TextBoxes)Temp_Tool); break;
-                    case Interface.Tools.Types.Panel: Temp_Tool = Panel(Data); Panels.List.Add(Temp_Tool.Name, (Panels)Temp_Tool); break;
-                    case Interface.Tools.Types.CheckBox: Temp_Tool = CheckBox(Data); CheckBoxes.List.Add(Temp_Tool.Name, (CheckBoxes)Temp_Tool); break;
+                    case Interface.Tools.Types.Button: tempTool = Button(data); Buttons.List.Add(tempTool.Name, (Buttons)tempTool); break;
+                    case Interface.Tools.Types.TextBox: tempTool = TextBox(data); TextBoxes.List.Add(tempTool.Name, (TextBoxes)tempTool); break;
+                    case Interface.Tools.Types.Panel: tempTool = Panel(data); Panels.List.Add(tempTool.Name, (Panels)tempTool); break;
+                    case Interface.Tools.Types.CheckBox: tempTool = CheckBox(data); CheckBoxes.List.Add(tempTool.Name, (CheckBoxes)tempTool); break;
                 }
 
                 // Adiciona à lista
-                Tools.Order_Structure Temp_Order = new Tools.Order_Structure();
-                Temp_Order.Nodes = new List<Tools.Order_Structure>();
-                Temp_Order.Parent = Parent;
-                Temp_Order.Data = Temp_Tool;
-                Node.Add(Temp_Order);
+                Tools.OrderStructure tempOrder = new Tools.OrderStructure();
+                tempOrder.Nodes = new List<Tools.OrderStructure>();
+                tempOrder.Parent = parent;
+                tempOrder.Data = tempTool;
+                node.Add(tempOrder);
 
                 // Pula pro próximo
-                Tools(Node[i], ref Node[i].Nodes, Data);
+                Tools(node[i], ref node[i].Nodes, data);
             }
         }
 
-        public static void Map(Guid ID)
+        public static void Map(Guid id)
         {
-            FileInfo File = new FileInfo(Directories.Maps_Data.FullName + ID.ToString() + Directories.Format);
+            FileInfo file = new FileInfo(Directories.Maps_Data.FullName + id.ToString() + Directories.Format);
 
             // Lê os dados
-            using (var Stream = File.OpenRead())
+            using (var stream = file.OpenRead())
                 // Map.List.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
-                TempMap.List.Add(ID, new TempMap(Entities.Map.List[ID]));
+                TempMap.List.Add(id, new TempMap(Entities.Map.List[id]));
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();

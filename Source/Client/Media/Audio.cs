@@ -32,37 +32,37 @@ class Audio
         public const string Format = ".wav";
 
         // Dispositivo sonoro
-        private static SFML.Audio.Sound[] List;
+        private static SFML.Audio.Sound[] _list;
 
         public static void Load()
         {
             // Redimensiona a lista
-            Array.Resize(ref List, (byte)Sounds.Count);
+            Array.Resize(ref _list, (byte)Sounds.Count);
 
             // Carrega todos os arquivos e os adiciona a lista
-            for (int i = 1; i < List.Length; i++)
-                List[i] = new SFML.Audio.Sound(new SoundBuffer(Directories.Sounds.FullName + i + Format));
+            for (int i = 1; i < _list.Length; i++)
+                _list[i] = new SFML.Audio.Sound(new SoundBuffer(Directories.Sounds.FullName + i + Format));
         }
 
-        public static void Play(Sounds Index, bool Loop = false)
+        public static void Play(Sounds index, bool loop = false)
         {
             // Apenas se necessário
             if (!Option.Sounds) return;
 
             // Reproduz o áudio
-            List[(byte)Index].Volume = 20;
-            List[(byte)Index].Loop = Loop;
-            List[(byte)Index].Play();
+            _list[(byte)index].Volume = 20;
+            _list[(byte)index].Loop = loop;
+            _list[(byte)index].Play();
         }
 
         public static void Stop_All()
         {
             // Apenas se necessário
-            if (List == null) return;
+            if (_list == null) return;
 
             // Para todos os sons
             for (byte i = 1; i < (byte)Sounds.Count; i++)
-                List[i].Stop();
+                _list[i].Stop();
         }
     }
 
@@ -72,39 +72,39 @@ class Audio
         public const string Format = ".ogg";
 
         // Lista das músicas
-        private static SFML.Audio.Music Device;
+        private static SFML.Audio.Music _device;
 
         // Index da música reproduzida atualmente
-        private static byte Current;
+        private static byte _current;
 
-        public static void Play(Musics Index, bool Loop = false)
+        public static void Play(Musics index, bool loop = false)
         {
-            string Directory = Directories.Musics.FullName + (byte)Index + Format;
+            string directory = Directories.Musics.FullName + (byte)index + Format;
 
             // Apenas se necessário
-            if (Device != null) return;
+            if (_device != null) return;
             if (!Option.Musics) return;
-            if (!File.Exists(Directory)) return;
+            if (!File.Exists(directory)) return;
 
             // Carrega o áudio
-            Device = new SFML.Audio.Music(Directory);
-            Device.Loop = true;
-            Device.Volume = 20;
-            Device.Loop = Loop;
+            _device = new SFML.Audio.Music(directory);
+            _device.Loop = true;
+            _device.Volume = 20;
+            _device.Loop = loop;
 
             // Reproduz
-            Device.Play();
-            Current = (byte)Index;
+            _device.Play();
+            _current = (byte)index;
         }
 
         public static void Stop()
         {
             // Para a música que está tocando
-            if (Device != null && Current != 0)
+            if (_device != null && _current != 0)
             {
-                Device.Stop();
-                Device.Dispose();
-                Device = null;
+                _device.Stop();
+                _device.Dispose();
+                _device = null;
             }
         }
     }
