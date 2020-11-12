@@ -2,7 +2,7 @@
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Interface
+    partial class EditorInterface
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Interface));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorInterface));
             this.picWindow = new System.Windows.Forms.PictureBox();
             this.butNew = new DarkUI.Controls.DarkButton();
             this.butRemove = new DarkUI.Controls.DarkButton();
@@ -277,7 +277,7 @@ namespace CryBits.Editors.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimizeBox = false;
-            this.Name = "Editor_Interface";
+            this.Name = "EditorInterface";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Interface Editor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Interface_FormClosed);

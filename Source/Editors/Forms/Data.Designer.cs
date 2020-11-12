@@ -2,7 +2,7 @@
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Data
+    partial class EditorData
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Data));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorData));
             this.groupBox1 = new DarkUI.Controls.DarkGroupBox();
             this.numMax_Map_Items = new DarkUI.Controls.DarkNumericUpDown();
             this.numMax_Name = new DarkUI.Controls.DarkNumericUpDown();
@@ -440,7 +440,7 @@ namespace CryBits.Editors.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Editor_Data";
+            this.Name = "EditorData";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Data Editor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Data_FormClosed);

@@ -16,8 +16,8 @@ namespace Editors.Entities
         public static void UpdateWeather()
         {
             // Redimensiona a lista
-            if (Editor_Maps.Form != null)
-                switch (Editor_Maps.Form.Selected.Weather.Type)
+            if (EditorMaps.Form != null)
+                switch (EditorMaps.Form.Selected.Weather.Type)
                 {
                     case Weathers.Thundering:
                     case Weathers.Raining: Lists.Weather = new MapWeatherParticle[Map.MaxRainParticles + 1]; break;

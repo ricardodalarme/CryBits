@@ -7,12 +7,12 @@ using System.Windows.Forms;
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Shops : DarkForm
+    partial class EditorShops : DarkForm
     {
         // Loja selecionada
-        private Shop Selected;
+        private Shop _selected;
 
-        public Editor_Shops()
+        public EditorShops()
         {
             // Verifica se é possível abrir
             if (Item.List.Count == 0)
@@ -25,21 +25,21 @@ namespace CryBits.Editors.Forms
             InitializeComponent();
 
             // Abre a janela
-            Editor_Maps.Form.Hide();
+            EditorMaps.Form.Hide();
             Show();
 
             // Lista os dados
-            foreach (var Item in Item.List.Values)
+            foreach (var item in Item.List.Values)
             {
-                cmbItems.Items.Add(Item);
-                cmbCurrency.Items.Add(Item);
+                cmbItems.Items.Add(item);
+                cmbCurrency.Items.Add(item);
             }
             List_Update();
         }
 
         private void Editor_Shops_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Editor_Maps.Form.Show();
+            EditorMaps.Form.Show();
         }
 
         private void Groups_Visibility()
@@ -52,11 +52,11 @@ namespace CryBits.Editors.Forms
         private void List_Update()
         {
             // Lista as lojas
-            foreach (var Shop in Shop.List.Values)
-                if (Shop.Name.StartsWith(txtFilter.Text))
-                    List.Nodes.Add(new TreeNode(Shop.Name)
+            foreach (var shop in Shop.List.Values)
+                if (shop.Name.StartsWith(txtFilter.Text))
+                    List.Nodes.Add(new TreeNode(shop.Name)
                     {
-                        Tag = Shop.ID
+                        Tag = shop.ID
                     });
 
             // Seleciona o primeiro
@@ -67,15 +67,15 @@ namespace CryBits.Editors.Forms
         private void List_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // Atualiza o valor da loja selecionada
-            Selected = Shop.List[(Guid)List.SelectedNode.Tag];
+            _selected = Shop.List[(Guid)List.SelectedNode.Tag];
 
             // Conecta as listas com os componentes
-            lstBought.DataSource = Selected.Bought;
-            lstSold.DataSource = Selected.Sold;
+            lstBought.DataSource = _selected.Bought;
+            lstSold.DataSource = _selected.Sold;
 
             // Lista os dados
-            txtName.Text = Selected.Name;
-            cmbCurrency.SelectedItem = Selected.Currency;
+            txtName.Text = _selected.Name;
+            cmbCurrency.SelectedItem = _selected.Currency;
             grpAddItem.Visible = false;
         }
 
@@ -87,16 +87,16 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            Shop New = new Shop(Guid.NewGuid());
-            New.Name = "New shop";
-            New.Currency = Item.List.ElementAt(0).Value;
-            Shop.List.Add(New.ID, New);
+            Shop @new = new Shop(Guid.NewGuid());
+            @new.Name = "New shop";
+            @new.Currency = Item.List.ElementAt(0).Value;
+            Shop.List.Add(@new.ID, @new);
 
             // Adiciona na lista
-            TreeNode Node = new TreeNode(New.Name);
-            Node.Tag = New.ID;
-            List.Nodes.Add(Node);
-            List.SelectedNode = Node;
+            TreeNode node = new TreeNode(@new.Name);
+            node.Tag = @new.ID;
+            List.Nodes.Add(node);
+            List.SelectedNode = node;
 
             // Altera a visiblidade dos grupos caso necessários
             Groups_Visibility();
@@ -107,7 +107,7 @@ namespace CryBits.Editors.Forms
             // Remove a loja selecionada
             if (List.SelectedNode != null)
             {
-                Shop.List.Remove(Selected.ID);
+                Shop.List.Remove(_selected.ID);
                 List.SelectedNode.Remove();
                 Groups_Visibility();
             }
@@ -129,13 +129,13 @@ namespace CryBits.Editors.Forms
         private void txtName_TextChanged(object sender, EventArgs e)
         {
             // Atualiza a lista
-            Selected.Name = txtName.Text;
+            _selected.Name = txtName.Text;
             List.SelectedNode.Text = txtName.Text;
         }
 
         private void cmbCurrency_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Selected.Currency = (Item)cmbCurrency.SelectedItem;
+            _selected.Currency = (Item)cmbCurrency.SelectedItem;
         }
 
         private void butSold_Add_Click(object sender, EventArgs e)
@@ -152,7 +152,7 @@ namespace CryBits.Editors.Forms
         private void butSold_Remove_Click(object sender, EventArgs e)
         {
             // Remove o item
-            if (lstSold.SelectedIndex >= 0) Selected.Sold.RemoveAt(lstSold.SelectedIndex);
+            if (lstSold.SelectedIndex >= 0) _selected.Sold.RemoveAt(lstSold.SelectedIndex);
         }
 
         private void butBought_Add_Click(object sender, EventArgs e)
@@ -169,15 +169,15 @@ namespace CryBits.Editors.Forms
         private void butBought_Remove_Click(object sender, EventArgs e)
         {
             // Remove o item
-            if (lstBought.SelectedIndex >= 0) Selected.Bought.RemoveAt(lstSold.SelectedIndex);
+            if (lstBought.SelectedIndex >= 0) _selected.Bought.RemoveAt(lstSold.SelectedIndex);
         }
 
         private void butConfirm_Click(object sender, EventArgs e)
         {
             // Adiciona o item
-            ShopItem Data = new ShopItem((Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
-            if (grpAddItem.Tag == lstSold) Selected.Sold.Add(Data);
-            else Selected.Bought.Add(Data);
+            ShopItem data = new ShopItem((Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
+            if (grpAddItem.Tag == lstSold) _selected.Sold.Add(data);
+            else _selected.Bought.Add(data);
 
             // Fecha o painel
             grpAddItem.Visible = false;

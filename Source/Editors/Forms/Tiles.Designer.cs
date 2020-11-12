@@ -2,7 +2,7 @@
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Tiles
+    partial class EditorTiles
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Tiles));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorTiles));
             this.scrlTileX = new System.Windows.Forms.HScrollBar();
             this.scrlTileY = new System.Windows.Forms.VScrollBar();
             this.picTile = new System.Windows.Forms.PictureBox();
@@ -204,7 +204,7 @@ namespace CryBits.Editors.Forms
             this.Controls.Add(this.picTile);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Editor_Tiles";
+            this.Name = "EditorTiles";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tile Editor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Tiles_FormClosed);

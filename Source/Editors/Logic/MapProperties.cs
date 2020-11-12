@@ -8,9 +8,9 @@ namespace CryBits.Editors.Logic
 {
     class MapProperties
     {
-        public MapProperties(Map Map)
+        public MapProperties(Map map)
         {
-            Base = Map;
+            Base = map;
         }
 
         // Dados do NPC

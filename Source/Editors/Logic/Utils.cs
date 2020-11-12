@@ -7,10 +7,10 @@ namespace CryBits.Editors.Logic
     static class Utils
     {
         // Limites
-        public const byte Max_Rain_Particles = 100;
-        public const short Max_Snow_Particles = 635;
-        public const byte Max_Weather_Intensity = 10;
-        public const byte Snow_Movement = 10;
+        public const byte MaxRainParticles = 100;
+        public const short MaxSnowParticles = 635;
+        public const byte MaxWeatherIntensity = 10;
+        public const byte SnowMovement = 10;
 
         // Dimensão das grades 
         public const byte Grid = 32;
@@ -19,10 +19,10 @@ namespace CryBits.Editors.Logic
         // Números aleAmountatórios
         public static Random MyRandom = new Random();
 
-        public static Point Block_Position(byte Direction)
+        public static Point Block_Position(byte direction)
         {
             // Retorna a posição de cada seta do bloqueio direcional
-            switch ((Directions)Direction)
+            switch ((Directions)direction)
             {
                 case Directions.Up: return new Point(Grid / 2 - 4, 0);
                 case Directions.Down: return new Point(Grid / 2 - 4, Grid - 9);
@@ -34,6 +34,6 @@ namespace CryBits.Editors.Logic
 
 
         // Obtém o ID de alguma entidade, caso ela não existir retorna um ID zerado
-        public static string GetID(this Entity Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
+        public static string GetID(this Entity @object) => @object == null ? Guid.Empty.ToString() : @object.ID.ToString();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Shops
+    partial class EditorShops
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Shops));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorShops));
             this.butSave = new DarkUI.Controls.DarkButton();
             this.butCancel = new DarkUI.Controls.DarkButton();
             this.txtName = new DarkUI.Controls.DarkTextBox();
@@ -384,7 +384,7 @@ namespace CryBits.Editors.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Editor_Shops";
+            this.Name = "EditorShops";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Shop Editor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Shops_FormClosed);

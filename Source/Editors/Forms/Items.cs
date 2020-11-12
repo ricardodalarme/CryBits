@@ -6,20 +6,20 @@ using System.Windows.Forms;
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Items : DarkForm
+    partial class EditorItems : DarkForm
     {
         // Usado para acessar os dados da janela
-        public static Editor_Items Form;
+        public static EditorItems Form;
 
         // Item selecionado
         public Item Selected;
 
-        public Editor_Items()
+        public EditorItems()
         {
             InitializeComponent();
 
             // Abre janela
-            Editor_Maps.Form.Hide();
+            EditorMaps.Form.Hide();
             Show();
 
             // Inicializa a janela de renderização
@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
 
             // Lista os dados
             cmbReq_Class.Items.Add("None");
-            foreach (var Class in Class.List.Values) cmbReq_Class.Items.Add(Class);
+            foreach (var @class in Class.List.Values) cmbReq_Class.Items.Add(@class);
             for (byte i = 0; i < (byte)Rarity.Count; i++) cmbRarity.Items.Add((Rarity)i);
             for (byte i = 0; i < (byte)BindOn.Count; i++) cmbBind.Items.Add((BindOn)i);
             List_Update();
@@ -39,7 +39,7 @@ namespace CryBits.Editors.Forms
         private void Editor_Items_FormClosed(object sender, FormClosedEventArgs e)
         {
             Graphics.Win_Item = null;
-            Editor_Maps.Form.Show();
+            EditorMaps.Form.Show();
         }
 
         private void Groups_Visibility()
@@ -53,11 +53,11 @@ namespace CryBits.Editors.Forms
         {
             // Lista os itens
             List.Nodes.Clear();
-            foreach (var Item in Item.List.Values)
-                if (Item.Name.StartsWith(txtFilter.Text))
-                    List.Nodes.Add(new TreeNode(Item.Name)
+            foreach (var item in Item.List.Values)
+                if (item.Name.StartsWith(txtFilter.Text))
+                    List.Nodes.Add(new TreeNode(item.Name)
                     {
-                        Tag = Item.ID
+                        Tag = item.ID
                     });
 
             // Seleciona o primeiro
@@ -101,15 +101,15 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            Item New = new Item(Guid.NewGuid());
-            New.Name = "New item";
-            Item.List.Add(New.ID, New);
+            Item @new = new Item(Guid.NewGuid());
+            @new.Name = "New item";
+            Item.List.Add(@new.ID, @new);
 
             // Adiciona na lista
-            TreeNode Node = new TreeNode(New.Name);
-            Node.Tag = New.ID;
-            List.Nodes.Add(Node);
-            List.SelectedNode = Node;
+            TreeNode node = new TreeNode(@new.Name);
+            node.Tag = @new.ID;
+            List.Nodes.Add(node);
+            List.SelectedNode = node;
 
             // Altera a visiblidade dos grupos caso necessários
             Groups_Visibility();

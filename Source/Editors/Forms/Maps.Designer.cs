@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Maps
+    partial class EditorMaps
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@ namespace CryBits.Editors.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Maps));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorMaps));
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.tolStrip = new DarkUI.Controls.DarkToolStrip();
             this.butSaveAll = new System.Windows.Forms.ToolStripButton();
@@ -1655,7 +1655,7 @@ namespace CryBits.Editors.Forms
             this.Controls.Add(this.grpNPCs);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(800, 600);
-            this.Name = "Editor_Maps";
+            this.Name = "EditorMaps";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CryBits Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Editor_Maps_FormClosing);

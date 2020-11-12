@@ -2,7 +2,7 @@
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Items
+    partial class EditorItems
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Items));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorItems));
             this.grpGeneral = new DarkUI.Controls.DarkGroupBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
             this.cmbRarity = new DarkUI.Controls.DarkComboBox();
@@ -686,7 +686,7 @@ namespace CryBits.Editors.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Editor_Items";
+            this.Name = "EditorItems";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Item Editor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Items_FormClosed);

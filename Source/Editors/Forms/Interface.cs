@@ -6,20 +6,20 @@ using System.Windows.Forms;
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Interface : DarkForm
+    partial class EditorInterface : DarkForm
     {
         // Usado para acessar os dados da janela
-        public static Editor_Interface Form;
+        public static EditorInterface Form;
 
         // Ferramenta selecionada
-        private Tool Selected;
+        private Tool _selected;
 
-        public Editor_Interface()
+        public EditorInterface()
         {
             InitializeComponent();
 
             // Abre janela
-            Editor_Maps.Form.Hide();
+            EditorMaps.Form.Hide();
             Show();
 
             // Inicializa a janela de renderização
@@ -36,7 +36,7 @@ namespace CryBits.Editors.Forms
         private void Editor_Interface_FormClosed(object sender, FormClosedEventArgs e)
         {
             Graphics.Win_Interface = null;
-            Editor_Maps.Form.Show();
+            EditorMaps.Form.Show();
         }
 
         private void cmbWindows_SelectedIndexChanged(object sender, EventArgs e)
@@ -50,23 +50,23 @@ namespace CryBits.Editors.Forms
         private void treOrder_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // Atualiza as informações
-            Selected = (Tool)treOrder.SelectedNode.Tag;
-            prgProperties.SelectedObject = Selected;
+            _selected = (Tool)treOrder.SelectedNode.Tag;
+            prgProperties.SelectedObject = _selected;
         }
 
         private void prgProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             if (treOrder.SelectedNode != null)
             {
-                byte Window = (byte)((Tool)treOrder.SelectedNode.Tag).Window;
+                byte window = (byte)((Tool)treOrder.SelectedNode.Tag).Window;
 
                 // Troca a ferramenta de janela
                 if (e.ChangedItem.Label == "Window")
                 {
-                    Lists.Tool.Nodes[Window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
+                    Lists.Tool.Nodes[window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
                     treOrder.SelectedNode.Remove();
-                    cmbWindows.SelectedIndex = Window;
-                    treOrder.SelectedNode = Lists.Tool.Nodes[Window].LastNode;
+                    cmbWindows.SelectedIndex = window;
+                    treOrder.SelectedNode = Lists.Tool.Nodes[window].LastNode;
                 }
                 // Troca o nome da ferramenta
                 else if (e.ChangedItem.Label == "Name") treOrder.SelectedNode.Text = treOrder.SelectedNode.Tag.ToString();
@@ -97,17 +97,17 @@ namespace CryBits.Editors.Forms
         private void butConfirm_Click(object sender, EventArgs e)
         {
             // Adiciona uma nova ferramenta
-            Tool New = new Tool();
-            Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = New;
+            Tool @new = new Tool();
+            Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
             switch ((ToolsTypes)cmbType.SelectedIndex)
             {
-                case ToolsTypes.Button: New = new Entities.Button(); break;
-                case ToolsTypes.Panel: New = new Entities.Panel(); break;
-                case ToolsTypes.CheckBox: New = new Entities.CheckBox(); break;
-                case ToolsTypes.TextBox: New = new Entities.TextBox(); break;
+                case ToolsTypes.Button: @new = new Entities.Button(); break;
+                case ToolsTypes.Panel: @new = new Entities.Panel(); break;
+                case ToolsTypes.CheckBox: @new = new Entities.CheckBox(); break;
+                case ToolsTypes.TextBox: @new = new Entities.TextBox(); break;
             }
-            Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(New.ToString());
-            New.Window = (WindowsTypes)cmbWindows.SelectedIndex;
+            Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
+            @new.Window = (WindowsTypes)cmbWindows.SelectedIndex;
             grpNew.Visible = false;
         }
 
@@ -121,14 +121,14 @@ namespace CryBits.Editors.Forms
         private void butOrder_Pin_Click(object sender, EventArgs e)
         {
             // Dados
-            TreeNode Selected_Node = treOrder.SelectedNode;
+            TreeNode selectedNode = treOrder.SelectedNode;
             if (treOrder.SelectedNode != null)
-                if (Selected_Node.PrevNode != null)
+                if (selectedNode.PrevNode != null)
                 {
                     // Fixa o nó
-                    Selected_Node.PrevNode.Nodes.Add((TreeNode)Selected_Node.Clone());
-                    treOrder.SelectedNode = Selected_Node.PrevNode.LastNode;
-                    Selected_Node.Remove();
+                    selectedNode.PrevNode.Nodes.Add((TreeNode)selectedNode.Clone());
+                    treOrder.SelectedNode = selectedNode.PrevNode.LastNode;
+                    selectedNode.Remove();
                 }
 
             // Foca o componente
@@ -141,14 +141,14 @@ namespace CryBits.Editors.Forms
             if (treOrder.SelectedNode == null) return;
 
             // Dados
-            TreeNode Selected = treOrder.SelectedNode;
-            TreeNode Parent = Selected.Parent;
-            if (Parent != null && Parent.Parent != null)
+            TreeNode selected = treOrder.SelectedNode;
+            TreeNode parent = selected.Parent;
+            if (parent != null && parent.Parent != null)
             {
                 // Desfixa o nó
-                Parent.Parent.Nodes.Insert(Parent.Index + 1, (TreeNode)Selected.Clone());
-                treOrder.SelectedNode = Selected.Parent.NextNode;
-                Selected.Remove();
+                parent.Parent.Nodes.Insert(parent.Index + 1, (TreeNode)selected.Clone());
+                treOrder.SelectedNode = selected.Parent.NextNode;
+                selected.Remove();
             }
 
             // Foca o componente
@@ -161,14 +161,14 @@ namespace CryBits.Editors.Forms
             if (treOrder.SelectedNode == null) return;
 
             // Dados
-            TreeNode Parent = treOrder.SelectedNode.Parent;
-            TreeNode Selected = treOrder.SelectedNode;
-            if (Parent != null && Selected != Parent.FirstNode && Parent.Nodes.Count > 1)
+            TreeNode parent = treOrder.SelectedNode.Parent;
+            TreeNode selected = treOrder.SelectedNode;
+            if (parent != null && selected != parent.FirstNode && parent.Nodes.Count > 1)
             {
                 // Altera a posição dos nós
-                Parent.Nodes.Insert(Selected.Index - 1, (TreeNode)Selected.Clone());
-                Selected.Remove();
-                treOrder.SelectedNode = Parent.Nodes[Selected.Index - 2];
+                parent.Nodes.Insert(selected.Index - 1, (TreeNode)selected.Clone());
+                selected.Remove();
+                treOrder.SelectedNode = parent.Nodes[selected.Index - 2];
             }
 
             // Foca o componente
@@ -181,14 +181,14 @@ namespace CryBits.Editors.Forms
             if (treOrder.SelectedNode == null) return;
 
             // Dados
-            TreeNode Parent = treOrder.SelectedNode.Parent;
-            TreeNode Selected = treOrder.SelectedNode;
-            if (Parent != null && Selected != Parent.LastNode && Parent.Nodes.Count > 1)
+            TreeNode parent = treOrder.SelectedNode.Parent;
+            TreeNode selected = treOrder.SelectedNode;
+            if (parent != null && selected != parent.LastNode && parent.Nodes.Count > 1)
             {
                 // Altera a posição dos nós
-                Parent.Nodes.Insert(Selected.Index + 2, (TreeNode)Selected.Clone());
-                Selected.Remove();
-                treOrder.SelectedNode = Parent.Nodes[Selected.Index + 1];
+                parent.Nodes.Insert(selected.Index + 2, (TreeNode)selected.Clone());
+                selected.Remove();
+                treOrder.SelectedNode = parent.Nodes[selected.Index + 1];
             }
 
             // Foca o componente
