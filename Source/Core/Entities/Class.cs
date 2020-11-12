@@ -10,7 +10,7 @@ namespace CryBits.Entities
         public static Dictionary<Guid, Class> List = new Dictionary<Guid, Class>();
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static Class Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+        public static Class Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
 
         // Dados
         public string Description { get; set; }
@@ -25,6 +25,6 @@ namespace CryBits.Entities
         public IList<ItemSlot> Item { get; set; } = new List<ItemSlot>();
 
         // Construtor
-        public Class(Guid ID) : base(ID) { }
+        public Class(Guid id) : base(id) { }
     }
 }

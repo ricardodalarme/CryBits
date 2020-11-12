@@ -33,22 +33,22 @@ namespace CryBits.Editors.Library
                 Entities.Tool Tool = (Entities.Tool)Node.Nodes[i].Tag;
                 if (Tool is Entities.Button)
                 {
-                    Data.Write((byte)Tools_Types.Button);
+                    Data.Write((byte)ToolsTypes.Button);
                     Button(Data, (Entities.Button)Tool);
                 }
                 else if (Tool is Entities.TextBox)
                 {
-                    Data.Write((byte)Tools_Types.TextBox);
+                    Data.Write((byte)ToolsTypes.TextBox);
                     TextBox(Data, (Entities.TextBox)Tool);
                 }
                 else if (Tool is Entities.CheckBox)
                 {
-                    Data.Write((byte)Tools_Types.CheckBox);
+                    Data.Write((byte)ToolsTypes.CheckBox);
                     CheckBox(Data, (Entities.CheckBox)Tool);
                 }
                 else if (Tool is Entities.Panel)
                 {
-                    Data.Write((byte)Tools_Types.Panel);
+                    Data.Write((byte)ToolsTypes.Panel);
                     Panel(Data, (Entities.Panel)Tool);
                 }
 

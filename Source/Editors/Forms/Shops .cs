@@ -175,7 +175,7 @@ namespace CryBits.Editors.Forms
         private void butConfirm_Click(object sender, EventArgs e)
         {
             // Adiciona o item
-            Shop_Item Data = new Shop_Item((Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
+            ShopItem Data = new ShopItem((Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
             if (grpAddItem.Tag == lstSold) Selected.Sold.Add(Data);
             else Selected.Bought.Add(Data);
 

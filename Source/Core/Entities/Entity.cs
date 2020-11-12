@@ -8,9 +8,9 @@ namespace CryBits.Entities
         public Guid ID;
         public string Name { get; set; } = string.Empty;
 
-        public Entity(Guid ID)
+        public Entity(Guid id)
         {
-            this.ID = ID;
+            this.ID = id;
         }
 
         public override string ToString() => Name;

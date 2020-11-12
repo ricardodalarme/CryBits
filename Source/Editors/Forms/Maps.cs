@@ -72,8 +72,8 @@ namespace CryBits.Editors.Forms
             Update_List();
 
             // Define os limites
-            scrlZone.Maximum = Map.Num_Zones;
-            numNPC_Zone.Maximum = Map.Num_Zones;
+            scrlZone.Maximum = Map.NumZones;
+            numNPC_Zone.Maximum = Map.NumZones;
             numA_Warp_X.Maximum = Map.Width - 1;
             numA_Warp_Y.Maximum = Map.Height - 1;
 
@@ -1380,13 +1380,13 @@ namespace CryBits.Editors.Forms
                     }
         }
 
-        private Tile_Attributes Attribute_Selected()
+        private TileAttributes Attribute_Selected()
         {
             // Retorna com o atributo selecionado
-            if (optA_Block.Checked) return Tile_Attributes.Block;
-            else if (optA_Warp.Checked) return Tile_Attributes.Warp;
-            else if (optA_Item.Checked) return Tile_Attributes.Item;
-            else return Tile_Attributes.None;
+            if (optA_Block.Checked) return TileAttributes.Block;
+            else if (optA_Warp.Checked) return TileAttributes.Warp;
+            else if (optA_Item.Checked) return TileAttributes.Item;
+            else return TileAttributes.None;
         }
 
         private void optA_Warp_CheckedChanged(object sender, EventArgs e)

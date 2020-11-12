@@ -261,7 +261,7 @@ namespace CryBits.Editors.Forms
         private void butItem_Ok_Click(object sender, EventArgs e)
         {
             // Adiciona o item
-            Selected.Drop.Add(new NPC_Drop((Item)cmbDrop_Item.SelectedItem, (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value));
+            Selected.Drop.Add(new NPCDrop((Item)cmbDrop_Item.SelectedItem, (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value));
             grpDrop_Add.Visible = false;
         }
 

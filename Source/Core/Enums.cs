@@ -1,20 +1,11 @@
 ﻿namespace CryBits
 {
-    public enum Tools_Types
+    public enum ToolsTypes
     {
         Button,
         Panel,
         CheckBox,
         TextBox,
-        Count
-    }
-
-    public enum Tile_Attributes
-    {
-        None,
-        Block,
-        Warp,
-        Item,
         Count
     }
 
@@ -40,12 +31,6 @@
         Agility,
         Vitality,
         Count
-    }
-
-    public enum Map_Morals
-    {
-        Pacific,
-        Dangerous
     }
 
     public enum Weathers
@@ -107,13 +92,6 @@
         Count
     }
 
-    public enum NPC_Movements
-    {
-        MoveRandomly,
-        TurnRandomly,
-        StandStill
-    }
-
     // Formas de adicionar o mini azulejo
     public enum AddMode
     {
@@ -168,6 +146,7 @@
         Block,
         Warp,
         Item,
+        Count
     }
 
     public enum Targets
@@ -211,7 +190,7 @@
         NPC
     }
 
-    public enum Layer_Attributes
+    public enum LayerAttributes
     {
         None,
         Block,
