@@ -169,7 +169,7 @@ class Mapper
 
                 // Reseta a partícula
                 if (TempMap.Weather[i].x > Screen_Width || TempMap.Weather[i].y > Screen_Height)
-                    TempMap.Weather[i] = new TMap_Weather();
+                    TempMap.Weather[i] = new MapWeatherParticle();
             }
 
         // Trovoadas
@@ -259,9 +259,9 @@ class Mapper
                 Audio.Sound.Play(Audio.Sounds.Rain, true);
 
                 // Redimensiona a estrutura
-                TempMap.Weather = new TMap_Weather[Max_Rain + 1];
+                TempMap.Weather = new MapWeatherParticle[Max_Rain + 1];
                 break;
-            case Weathers.Snowing: TempMap.Weather = new TMap_Weather[Max_Snow + 1]; break;
+            case Weathers.Snowing: TempMap.Weather = new MapWeatherParticle[Max_Snow + 1]; break;
         }
     }
 }

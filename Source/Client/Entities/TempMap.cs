@@ -8,7 +8,7 @@ namespace CryBits.Client.Entities
     {
         // Lista de dados
         public static Dictionary<Guid, TempMap> List;
-        public static TMap_Weather[] Weather;
+        public static MapWeatherParticle[] Weather;
 
         // Dados gerais
         public Map Data;
@@ -86,7 +86,7 @@ namespace CryBits.Client.Entities
         }
     }
 
-    class TMap_Weather
+    class MapWeatherParticle
     {
         public bool Visible;
         public int x;
