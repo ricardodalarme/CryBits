@@ -5,7 +5,6 @@ using CryBits.Server.Library;
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using static CryBits.Server.Logic.Utils;

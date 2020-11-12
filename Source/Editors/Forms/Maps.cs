@@ -1119,7 +1119,7 @@ namespace CryBits.Editors.Forms
             }
 
             // Seleciona o primeiro item
-            if (Selected.Layer.Count> 0)lstLayers.Items[0].Selected = true;
+            if (Selected.Layer.Count > 0) lstLayers.Items[0].Selected = true;
         }
 
         private void butLayer_Add_Click(object sender, EventArgs e)
