@@ -82,7 +82,6 @@
     <Compile Include="Logic\Utils.cs" />
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\Character.cs" />
-    <Compile Include="Entities\Mapp.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Entities\TempMap.cs" />
     <Compile Include="Entities\TempNPC.cs" />

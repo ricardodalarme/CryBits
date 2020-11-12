@@ -78,7 +78,7 @@ namespace CryBits.Server.Entities
                 // Movimentação //
                 //////////////////
                 // Atacar ao ver
-                if (Data.Behaviour == (byte)NPCBehaviour.AttackOnSight)
+                if (Data.Behaviour == NPCBehaviour.AttackOnSight)
                 {
                     // Jogador
                     if (Target == null)

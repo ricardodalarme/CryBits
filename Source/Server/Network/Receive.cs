@@ -228,7 +228,7 @@ namespace CryBits.Server.Network
             Account.Character.Y = Class.Spawn_Y;
             for (byte i = 0; i < (byte)Vitals.Count; i++) Account.Character.Vital[i] = Account.Character.MaxVital(i);
             for (byte i = 0; i < (byte)Class.Item.Length; i++)
-                if (Class.Item[i].Item1.Type == (byte)Items.Equipment && Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] == null)
+                if (Class.Item[i].Item1.Type == Items.Equipment && Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] == null)
                     Account.Character.Equipment[Class.Item[i].Item1.Equip_Type] = Class.Item[i].Item1;
                 else
                     Account.Character.GiveItem(Class.Item[i].Item1, Class.Item[i].Item2);
@@ -415,7 +415,7 @@ namespace CryBits.Server.Network
 
             // Apenas se necessário
             if (Player.Equipment[Slot] == null) return;
-            if (Player.Equipment[Slot].Bind == (byte)BindOn.Equip) return;
+            if (Player.Equipment[Slot].Bind == BindOn.Equip) return;
 
             // Adiciona o equipamento ao inventário
             if (!Player.GiveItem(Player.Equipment[Slot], 1))
@@ -609,7 +609,7 @@ namespace CryBits.Server.Network
                 {
                     Map = new Map(ID);
                     Map.List.Add(Map.ID, Map);
-                    Mapp.Create_Temporary(Map);
+                    TempMap.Create_Temporary(Map);
                 }
 
                 // Mapa temporário
@@ -750,7 +750,7 @@ namespace CryBits.Server.Network
                 NPC.Name = Data.ReadString();
                 NPC.SayMsg = Data.ReadString();
                 NPC.Texture = Data.ReadInt16();
-                NPC.Behaviour = Data.ReadByte();
+                NPC.Behaviour = (NPCBehaviour)Data.ReadByte();
                 NPC.SpawnTime = Data.ReadByte();
                 NPC.Sight = Data.ReadByte();
                 NPC.Experience = Data.ReadInt32();
@@ -818,10 +818,10 @@ namespace CryBits.Server.Network
                 Item.Name = Data.ReadString();
                 Item.Description = Data.ReadString();
                 Item.Texture = Data.ReadInt16();
-                Item.Type = Data.ReadByte();
+                Item.Type = (Items)Data.ReadByte();
                 Item.Stackable = Data.ReadBoolean();
-                Item.Bind = Data.ReadByte();
-                Item.Rarity = Data.ReadByte();
+                Item.Bind = (BindOn)Data.ReadByte();
+                Item.Rarity = (Rarity)Data.ReadByte();
                 Item.Req_Level = Data.ReadInt16();
                 Item.Req_Class = Class.Get(new Guid(Data.ReadString()));
                 Item.Potion_Experience = Data.ReadInt32();
@@ -1279,7 +1279,7 @@ namespace CryBits.Server.Network
         {
             byte Inventory_Slot = Data.ReadByte();
             short Amount = Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
-            Shop_Item Buy = Player.Shop.BoughtItem(Player.Inventory[Inventory_Slot].Item);
+            Shop_Item Buy = Player.Shop.FindBought(Player.Inventory[Inventory_Slot].Item);
 
             // Verifica se a loja vende o item
             if (Buy == null)

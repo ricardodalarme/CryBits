@@ -15,10 +15,10 @@ namespace CryBits.Entities
         // Geral
         public string Description { get; set; } = string.Empty;
         public short Texture { get; set; }
-        public byte Type { get; set; }
+        public Items Type { get; set; }
         public bool Stackable { get; set; }
-        public byte Bind { get; set; }
-        public byte Rarity { get; set; }
+        public BindOn Bind { get; set; }
+        public Rarity Rarity { get; set; }
 
         // Requerimentos
         public short Req_Level;

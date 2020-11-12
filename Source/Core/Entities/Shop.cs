@@ -25,7 +25,7 @@ namespace CryBits.Entities
         // Construtor
         public Shop(Guid ID) : base(ID) { }
 
-        public Shop_Item BoughtItem(Item Item)
+        public Shop_Item FindBought(Item Item)
         {
             // Verifica se a loja vende determinado item
             for (byte i = 0; i < Bought.Length; i++)
