@@ -1,5 +1,5 @@
-﻿using CryBits.Editors.Entities;
-using CryBits;
+﻿using CryBits.Entities;
+using Editors.Entities;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -82,7 +82,7 @@ namespace CryBits.Editors.Logic
             set
             {
                 Base.Weather.Type = value;
-                Map.UpdateWeather();
+                TempMap.UpdateWeather();
             }
         }
 
@@ -124,8 +124,8 @@ namespace CryBits.Editors.Logic
         [Category("Misc"), DefaultValue(0)]
         public Audio.Musics Music
         {
-            get => Base.Music;
-            set => Base.Music = value;
+            get => (Audio.Musics)Base.Music;
+            set => Base.Music = (byte)value;
         }
 
         [Category("Misc"), DefaultValue(0)]

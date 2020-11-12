@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CryBits.Entities;
+using System;
 using System.Collections.Generic;
-using CryBits.Entities;
 using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Entities

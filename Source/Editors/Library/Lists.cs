@@ -1,4 +1,5 @@
 ﻿using CryBits.Editors.Entities;
+using CryBits.Entities;
 using System;
 using System.Windows.Forms;
 
@@ -7,7 +8,7 @@ static class Lists
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
     public static Structures.Server_Data Server_Data = new Structures.Server_Data();
-    public static Map_Weather_Particle[] Weather;
+    public static MapWeatherParticle[] Weather;
     public static Tile[] Tile;
     public static TreeNode Tool;
 
@@ -39,19 +40,5 @@ static class Lists
             public byte Max_Password_Length;
             public byte Min_Password_Length;
         }
-
-        public class Inventory
-        {
-            public Item Item;
-            public short Amount;
-
-            public Inventory(Item Item, short Amount)
-            {
-                this.Item = Item;
-                this.Amount = Amount;
-            }
-            public override string ToString() => Item.Name + " - " + Amount + "x";
-        }
-
     }
 }

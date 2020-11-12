@@ -14,15 +14,15 @@ namespace CryBits.Entities
 
         // Dados
         public string Description { get; set; }
-        public IList<short> Tex_Male { get; set; } = Array.Empty<short>();
-        public IList<short> Tex_Female { get; set; } = Array.Empty<short>();
+        public IList<short> Tex_Male { get; set; } = new List<short>();
+        public IList<short> Tex_Female { get; set; } = new List<short>();
         public Map Spawn_Map { get; set; }
         public byte Spawn_Direction { get; set; }
         public byte Spawn_X { get; set; }
         public byte Spawn_Y { get; set; }
         public short[] Vital { get; set; } = new short[(byte)Vitals.Count];
         public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
-        public IList<ItemSlot> Item { get; set; } = Array.Empty<ItemSlot>();
+        public IList<ItemSlot> Item { get; set; } = new List<ItemSlot>();
 
         // Construtor
         public Class(Guid ID) : base(ID) { }

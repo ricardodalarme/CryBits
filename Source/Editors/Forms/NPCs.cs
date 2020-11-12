@@ -1,6 +1,5 @@
-﻿using CryBits.Editors.Entities;
-using CryBits.Editors.Network;
-using CryBits;
+﻿using CryBits.Editors.Network;
+using CryBits.Entities;
 using DarkUI.Forms;
 using System;
 using System.Windows.Forms;
@@ -81,7 +80,7 @@ namespace CryBits.Editors.Forms
             txtName.Text = Selected.Name;
             txtSayMsg.Text = Selected.SayMsg;
             numTexture.Value = Selected.Texture;
-            cmbBehavior.SelectedIndex = Selected.Behaviour;
+            cmbBehavior.SelectedIndex = (byte)Selected.Behaviour;
             numSpawn.Value = Selected.SpawnTime;
             numRange.Value = Selected.Sight;
             numExperience.Value = Selected.Experience;
@@ -175,10 +174,10 @@ namespace CryBits.Editors.Forms
             // Evita erros
             cmbShop.Enabled = false;
             cmbShop.SelectedIndex = -1;
-            if (cmbBehavior.SelectedIndex == (byte)NPC_Behaviour.ShopKeeper)
+            if (cmbBehavior.SelectedIndex == (byte)NPCBehaviour.ShopKeeper)
                 if (Shop.List.Count == 0)
                 {
-                    cmbBehavior.SelectedIndex = Selected.Behaviour;
+                    cmbBehavior.SelectedIndex = (byte)Selected.Behaviour;
                     return;
                 }
                 else
@@ -187,7 +186,7 @@ namespace CryBits.Editors.Forms
                     if (Selected.Shop == null) cmbShop.SelectedIndex = 0;
                 }
 
-            Selected.Behaviour = (byte)cmbBehavior.SelectedIndex;
+            Selected.Behaviour = (NPCBehaviour)cmbBehavior.SelectedIndex;
         }
 
         private void numHP_ValueChanged(object sender, EventArgs e)
@@ -302,7 +301,7 @@ namespace CryBits.Editors.Forms
 
         private void cmbMovement_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Selected.Movement = (NPC_Movements)cmbMovement.SelectedIndex;
+            Selected.Movement = (NPCMovements)cmbMovement.SelectedIndex;
         }
 
         private void numFlee_Health_ValueChanged(object sender, EventArgs e)

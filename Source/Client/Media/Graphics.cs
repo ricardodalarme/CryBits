@@ -1,8 +1,8 @@
-﻿using CryBits.Client.Entities;
+﻿using CryBits;
+using CryBits.Client.Entities;
 using CryBits.Client.Interface;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
-using CryBits;
 using SFML.Graphics;
 using SFML.Window;
 using System;

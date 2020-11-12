@@ -1,8 +1,9 @@
-﻿using CryBits.Editors.Entities;
-using CryBits.Editors.Library;
+﻿using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
+using CryBits.Entities;
 using DarkUI.Forms;
+using Editors.Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -134,7 +135,7 @@ namespace CryBits.Editors.Forms
             lstNPC.DataSource = Selected.NPC;
 
             // Reseta o clima
-            Map.UpdateWeather();
+            TempMap.UpdateWeather();
 
             // Faz os cálculos da autocriação
             Selected.Update();
@@ -164,7 +165,7 @@ namespace CryBits.Editors.Forms
                 for (byte y = 0; y < Map.Height; y++)
                 {
                     New.Layer[0].Tile[x, y] = new MapTileData();
-                    New.Attribute[x, y] = new Map_Attribute();
+                    New.Attribute[x, y] = new MapAttribute();
                 }
 
             // Adiciona na lista
@@ -909,7 +910,7 @@ namespace CryBits.Editors.Forms
             }
             // Iluminação
             else if (butMLighting.Checked)
-                Selected.Light.Add(new Map_Light(Map_Selection));
+                Selected.Light.Add(new MapLight(Map_Selection));
             // Nenhum
             else
                 return;
@@ -1297,7 +1298,7 @@ namespace CryBits.Editors.Forms
         private void AddNPC(bool FixedSpawn = false, byte X = 0, byte Y = 0)
         {
             // Define os dados
-            Map_NPC Data = new Map_NPC
+            MapNPC Data = new MapNPC
             {
                 NPC = (NPC)cmbNPC.SelectedItem,
                 Zone = (byte)numNPC_Zone.Value,
@@ -1342,7 +1343,7 @@ namespace CryBits.Editors.Forms
             }
             // Limpa os dados
             else if (e.Button == MouseButtons.Right)
-                Selected.Attribute[Map_Selection.X, Map_Selection.Y] = new Map_Attribute();
+                Selected.Attribute[Map_Selection.X, Map_Selection.Y] = new MapAttribute();
         }
 
         private void butAttributes_Clear_Click(object sender, EventArgs e)
@@ -1350,7 +1351,7 @@ namespace CryBits.Editors.Forms
             // Reseta todas os atributos
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
-                    Selected.Attribute[x, y] = new Map_Attribute();
+                    Selected.Attribute[x, y] = new MapAttribute();
         }
 
         private void butAttributes_Import_Click(object sender, EventArgs e)
@@ -1474,7 +1475,7 @@ namespace CryBits.Editors.Forms
         private void butLight_Clear_Click(object sender, EventArgs e)
         {
             // Reseta todas as zonas
-            Selected.Light = new List<Map_Light>();
+            Selected.Light = new List<MapLight>();
         }
         #endregion
 

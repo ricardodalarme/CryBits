@@ -1,10 +1,13 @@
-﻿namespace CryBits.Entities
+﻿using System;
+
+namespace CryBits.Entities
 {
     public interface ISlot
     {
         public short Amount { get; set; }
     }
 
+    [Serializable]
     public class ItemSlot : ISlot
     {
         public Item Item { get; set; }

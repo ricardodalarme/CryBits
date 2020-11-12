@@ -1,5 +1,4 @@
 ﻿using CryBits.Editors.Entities;
-using CryBits;
 using System;
 using System.Drawing;
 using System.IO;
@@ -12,6 +11,14 @@ namespace CryBits.Editors.Library
     {
         public static void Options()
         {
+            // Cria o arquivo se ele não existir
+            if (!Directories.Options.Exists)
+            {
+                Lists.Options = new Lists.Structures.Options();
+                Write.Options();
+                return;
+            }
+
             // Lê os dados
             using (var Stream = Directories.Options.OpenRead())
                 Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);

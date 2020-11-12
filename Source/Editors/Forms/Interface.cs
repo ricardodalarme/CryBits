@@ -1,6 +1,5 @@
 ﻿using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
-using CryBits;
 using DarkUI.Forms;
 using System;
 using System.Windows.Forms;

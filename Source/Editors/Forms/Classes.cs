@@ -1,6 +1,5 @@
-﻿using CryBits.Editors.Entities;
-using CryBits.Editors.Network;
-using CryBits;
+﻿using CryBits.Editors.Network;
+using CryBits.Entities;
 using DarkUI.Forms;
 using System;
 using System.Linq;
@@ -275,7 +274,7 @@ namespace CryBits.Editors.Forms
         private void butItem_Ok_Click(object sender, EventArgs e)
         {
             // Adiciona o item
-            Selected.Item.Add(new Lists.Structures.Inventory((Item)cmbItems.SelectedItem, (short)numItem_Amount.Value));
+            Selected.Item.Add(new ItemSlot((Item)cmbItems.SelectedItem, (short)numItem_Amount.Value));
             grpItem_Add.Visible = false;
         }
 

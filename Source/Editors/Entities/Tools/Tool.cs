@@ -1,5 +1,4 @@
-﻿using CryBits;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace CryBits.Editors.Entities
 {

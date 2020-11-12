@@ -1,7 +1,9 @@
-﻿using CryBits.Editors.Forms;
+﻿using CryBits;
 using CryBits.Editors.Entities;
+using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
-using CryBits;
+using CryBits.Entities;
+using Editors.Entities;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -368,7 +370,7 @@ class Graphics
         for (int x = -1; x <= Map.Width * Grid / Texture_Size.Width; x++)
             for (int y = -1; y <= Map.Height * Grid / Texture_Size.Height; y++)
             {
-                Point Position = new Point(x * Texture_Size.Width + Map.Fog_X, y * Texture_Size.Height + Map.Fog_Y);
+                Point Position = new Point(x * Texture_Size.Width + TempMap.Fog_X, y * Texture_Size.Height + TempMap.Fog_Y);
                 Render(Win_Map, Tex_Fog[Map.Fog.Texture], Editor_Maps.Form.Zoom(new Rectangle(Position, Texture_Size)), CColor(255, 255, 255, Map.Fog.Alpha));
             }
     }
@@ -428,7 +430,7 @@ class Graphics
                     RenderRectangle(Win_Map, Form.Zoom_Grid(new Rectangle(Map.Light[i].Rec.X - Form.scrlMapX.Value, Map.Light[i].Rec.Y - Form.scrlMapY.Value, 1, 1)), CColor(175, 42, 42, 175));
 
         // Trovoadas
-        Render(Win_Map, Tex_Blank, 0, 0, 0, 0, Form.picMap.Width, Form.picMap.Height, CColor(255, 255, 255, Map.Lightning));
+        Render(Win_Map, Tex_Blank, 0, 0, 0, 0, Form.picMap.Width, Form.picMap.Height, CColor(255, 255, 255, TempMap.Lightning));
     }
 
     private static void Editor_Maps_Map_Grids(Map Map)

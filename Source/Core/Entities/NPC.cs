@@ -21,9 +21,9 @@ namespace CryBits.Entities
         public int Experience { get; set; }
         public short[] Vital { get; set; } = new short[(byte)Vitals.Count];
         public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
-        public IList<NPC_Drop> Drop { get; set; }
+        public IList<NPC_Drop> Drop { get; set; } = new List<NPC_Drop>();
         public bool AttackNPC { get; set; }
-        public IList<NPC> Allie { get; set; }
+        public IList<NPC> Allie { get; set; } = new List<NPC>();
         public NPCMovements Movement { get; set; }
         public byte Flee_Helth { get; set; }
         private Guid shop;
