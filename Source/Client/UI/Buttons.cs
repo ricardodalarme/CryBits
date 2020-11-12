@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using CryBits.Entities;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.Media;
@@ -223,14 +224,14 @@ namespace CryBits.Client.UI
         private static void CreateCharacter_Texture_ChangeRight()
         {
             // Lista de texturas
-            short[] texList;
+            IList<short>texList;
             if (CheckBoxes.List["GenderMale"].Checked)
                 texList = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Male;
             else
                 texList = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Female;
 
             // Altera a classe selecionada pelo jogador
-            if (Panels.CreateCharacter_Tex == texList.Length - 1)
+            if (Panels.CreateCharacter_Tex == texList.Count - 1)
                 Panels.CreateCharacter_Tex = 0;
             else
                 Panels.CreateCharacter_Tex += 1;
@@ -239,7 +240,7 @@ namespace CryBits.Client.UI
         private static void CreateCharacter_Texture_ChangeLeft()
         {
             // Lista de texturas
-            short[] texList;
+            IList<short> texList;
             if (CheckBoxes.List["GenderMale"].Checked)
                 texList = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Male;
             else
@@ -247,7 +248,7 @@ namespace CryBits.Client.UI
 
             // Altera a classe selecionada pelo jogador
             if (Panels.CreateCharacter_Tex == 0)
-                Panels.CreateCharacter_Tex = (byte)(texList.Length - 1);
+                Panels.CreateCharacter_Tex = (byte)(texList.Count - 1);
             else
                 Panels.CreateCharacter_Tex -= 1;
         }

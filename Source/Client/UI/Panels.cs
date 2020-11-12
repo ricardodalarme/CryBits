@@ -4,6 +4,7 @@ using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Network;
 using static CryBits.Client.Logic.Utils;
+using CryBits.Entities;
 
 namespace CryBits.Client.UI
 {
@@ -161,7 +162,7 @@ namespace CryBits.Client.UI
                 position = List["Menu_Character"].Position + new Size(-186, 5);
                 Infomation_ID = Player.Me.Equipment[Equipment_Slot].ID;
             }
-            else if (Shop_Slot >= 0 && Shop_Slot < Shop_Open.Sold.Length)
+            else if (Shop_Slot >= 0 && Shop_Slot < Shop_Open.Sold.Count)
             {
                 position = new Point(List["Shop"].Position.X - 186, List["Shop"].Position.Y + 5);
                 Infomation_ID = Shop_Open.Sold[Shop_Slot].Item.ID;

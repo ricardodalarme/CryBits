@@ -119,12 +119,6 @@
         Private
     }
 
-    public enum MapMorals
-    {
-        Pacific,
-        Dangerous,
-    }
-
     public enum NPCBehaviour
     {
         Friendly,
@@ -176,14 +170,6 @@
         Moving
     }
 
-    public enum NPCs
-    {
-        Friendly,
-        AttackOnSight,
-        AttackWhenAttacked,
-        ShopKeeper
-    }
-
     public enum Target
     {
         Player = 1,
@@ -201,7 +187,7 @@
     public enum Morals
     {
         Pacific,
-        Danger,
+        Dangerous,
         Count
     }
 }

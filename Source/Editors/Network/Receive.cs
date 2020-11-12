@@ -4,24 +4,14 @@ using CryBits.Packets;
 using Lidgren.Network;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using CryBits.Editors.Library;
+using static CryBits.Utils;
 
 namespace CryBits.Editors.Network
 {
     class Receive
     {
-        public static object ByteArrayToObject(NetIncomingMessage data)
-        {
-            int size = data.ReadInt32();
-            byte[] array = data.ReadBytes(size);
-
-            using (var stream = new MemoryStream(array))
-                return new BinaryFormatter().Deserialize(stream);
-        }
-
         public static void Handle(NetIncomingMessage data)
         {
             // Manuseia os dados recebidos

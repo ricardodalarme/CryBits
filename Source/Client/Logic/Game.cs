@@ -1,4 +1,5 @@
 ﻿using System;
+using static CryBits.Utils;
 
 namespace CryBits.Client.Logic
 {
@@ -6,9 +7,6 @@ namespace CryBits.Client.Logic
     {
         // Nome do jogo
         public static string Game_Name = "CryBits";
-
-        // Dimensão das grades 
-        public const byte Grid = 32;
 
         // Medida de calculo do atraso do jogo
         public static short FPS;
@@ -28,9 +26,6 @@ namespace CryBits.Client.Logic
         public const byte MovementDown = 0;
         public const byte MovementLeft = 1;
         public const byte MovementRight = 2;
-
-        // Bloqueio direcional
-        public const byte MaxDirBlock = 3;
 
         // Tamanho da tela
         public const short ScreenWidth = MapWidth * Grid;

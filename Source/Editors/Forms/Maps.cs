@@ -516,7 +516,7 @@ namespace CryBits.Editors.Forms
             Modes_Visibiliy();
             butMNPCs.Checked = true;
 
-            // Adiciona os NPCs e reseta os valores
+            // Adiciona os NPCBehaviour e reseta os valores
             foreach (var npc in NPC.List.Values) cmbNPC.Items.Add(npc);
             cmbNPC.SelectedIndex = 0;
             numNPC_Zone.Value = 0;
@@ -651,7 +651,7 @@ namespace CryBits.Editors.Forms
                 grpLighting.Visible = false;
                 grpNPCs.Visible = false;
             }
-            // NPCs
+            // NPCBehaviour
             if (butMNPCs.Checked)
             {
                 grpNPCs.Visible = true;
@@ -1298,7 +1298,7 @@ namespace CryBits.Editors.Forms
         }
         #endregion
 
-        #region NPCs
+        #region NPCBehaviour
         private void AddNPC(bool fixedSpawn = false, byte x = 0, byte y = 0)
         {
             // Define os dados
@@ -1322,7 +1322,7 @@ namespace CryBits.Editors.Forms
 
         private void butNPC_Clear_Click(object sender, EventArgs e)
         {
-            // Limpa todos os NPCs do mapa
+            // Limpa todos os NPCBehaviour do mapa
             Selected.NPC.Clear();
         }
 

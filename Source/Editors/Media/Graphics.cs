@@ -231,8 +231,8 @@ namespace CryBits.Editors.Media
 
             // Desenha uma textura transparente na janela inteira
             for (int x = 0; x <= window.Size.X / textureSize.Width; x++)
-            for (int y = 0; y <= window.Size.Y / textureSize.Height; y++)
-                Render(window, Tex_Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
+                for (int y = 0; y <= window.Size.Y / textureSize.Height; y++)
+                    Render(window, Tex_Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
         }
 
         #region Map Editor
@@ -332,20 +332,20 @@ namespace CryBits.Editors.Media
 
                 // Continua
                 for (int x = beginX; x < Map.Width; x++)
-                for (int y = beginY; y < Map.Height; y++)
-                    if (map.Layer[c].Tile[x, y].Texture > 0)
-                    {
-                        // Dados
-                        data = map.Layer[c].Tile[x, y];
-                        Rectangle source = new Rectangle(new Point(data.X * Grid, data.Y * Grid), Grid_Size);
-                        Rectangle destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), Grid_Size);
+                    for (int y = beginY; y < Map.Height; y++)
+                        if (map.Layer[c].Tile[x, y].Texture > 0)
+                        {
+                            // Dados
+                            data = map.Layer[c].Tile[x, y];
+                            Rectangle source = new Rectangle(new Point(data.X * Grid, data.Y * Grid), Grid_Size);
+                            Rectangle destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), Grid_Size);
 
-                        // Desenha o azulejo
-                        if (!map.Layer[c].Tile[x, y].IsAutotile)
-                            Render(Win_Map, Tex_Tile[data.Texture], source, form.Zoom(destiny), color);
-                        else
-                            Editor_Maps_AutoTile(destiny.Location, data, color);
-                    }
+                            // Desenha o azulejo
+                            if (!data.IsAutotile)
+                                Render(Win_Map, Tex_Tile[data.Texture], source, form.Zoom(destiny), color);
+                            else
+                                Editor_Maps_AutoTile(destiny.Location, data, color);
+                        }
             }
         }
 
@@ -373,11 +373,11 @@ namespace CryBits.Editors.Media
             // Desenha a fumaça
             Size textureSize = Size(Tex_Fog[map.Fog.Texture]);
             for (int x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
-            for (int y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
-            {
-                Point position = new Point(x * textureSize.Width + TempMap.Fog_X, y * textureSize.Height + TempMap.Fog_Y);
-                Render(Win_Map, Tex_Fog[map.Fog.Texture], EditorMaps.Form.Zoom(new Rectangle(position, textureSize)), CColor(255, 255, 255, map.Fog.Alpha));
-            }
+                for (int y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
+                {
+                    Point position = new Point(x * textureSize.Width + TempMap.Fog_X, y * textureSize.Height + TempMap.Fog_Y);
+                    Render(Win_Map, Tex_Fog[map.Fog.Texture], EditorMaps.Form.Zoom(new Rectangle(position, textureSize)), CColor(255, 255, 255, map.Fog.Alpha));
+                }
         }
 
         private static void Editor_Maps_Map_Weather(Map map)
@@ -451,13 +451,13 @@ namespace CryBits.Editors.Media
             // Desenha as grades
             if (form.butGrid.Checked || !form.butGrid.Enabled)
                 for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
-                {
-                    RenderRectangle(Win_Map, x * form.Grid_Zoom, y * form.Grid_Zoom, form.Grid_Zoom, form.Grid_Zoom, CColor(25, 25, 25, 70));
-                    Editor_Maps_Map_Zones(map, x, y);
-                    Editor_Maps_Map_Attributes(map, x, y);
-                    Editor_Maps_Map_DirBlock(map, x, y);
-                }
+                    for (byte y = 0; y < Map.Height; y++)
+                    {
+                        RenderRectangle(Win_Map, x * form.Grid_Zoom, y * form.Grid_Zoom, form.Grid_Zoom, form.Grid_Zoom, CColor(25, 25, 25, 70));
+                        Editor_Maps_Map_Zones(map, x, y);
+                        Editor_Maps_Map_Attributes(map, x, y);
+                        Editor_Maps_Map_DirBlock(map, x, y);
+                    }
 
             if (!form.chkAuto.Checked && form.butMNormal.Checked)
                 // Normal
@@ -466,8 +466,8 @@ namespace CryBits.Editors.Media
                 // Retângulo
                 else if (form.butRectangle.Checked)
                     for (int x = begin.X; x < begin.X + form.Map_Selection.Width; x++)
-                    for (int y = begin.Y; y < begin.Y + form.Map_Selection.Height; y++)
-                        Render(Win_Map, Tex_Tile[form.cmbTiles.SelectedIndex + 1], source, new Rectangle(form.Zoom_Grid(x, y), destiny.Size));
+                        for (int y = begin.Y; y < begin.Y + form.Map_Selection.Height; y++)
+                            Render(Win_Map, Tex_Tile[form.cmbTiles.SelectedIndex + 1], source, new Rectangle(form.Zoom_Grid(x, y), destiny.Size));
 
             // Desenha a grade
             if (!form.butMAttributes.Checked || !form.optA_DirBlock.Checked)
@@ -560,7 +560,7 @@ namespace CryBits.Editors.Media
                     {
                         Point position = new Point((map.NPC[i].X - form.scrlMapX.Value) * form.Grid_Zoom, (map.NPC[i].Y - form.scrlMapY.Value) * form.Grid_Zoom);
 
-                        // Desenha uma sinalização de onde os NPCs estão
+                        // Desenha uma sinalização de onde os NPCBehaviour estão
                         Render(Win_Map, Tex_Blank, new Rectangle(position, new Size(form.Grid_Zoom, form.Grid_Zoom)), CColor(0, 220, 0, 150));
                         DrawText(Win_Map, (i + 1).ToString(), position.X + 10, position.Y + 10, SFML.Graphics.Color.White);
                     }
@@ -585,18 +585,18 @@ namespace CryBits.Editors.Media
             Render(Win_Tile, texture, new Rectangle(position, Size(texture)), new Rectangle(new Point(0), Size(texture)));
 
             for (byte x = 0; x <= form.picTile.Width / Grid; x++)
-            for (byte y = 0; y <= form.picTile.Height / Grid; y++)
-            {
-                // Desenha os atributos
-                if (form.optAttributes.Checked)
-                    Editor_TileAttributes(x, y);
-                // Bloqueios direcionais
-                else if (form.optDirBlock.Checked)
-                    Editor_Tile_DirBlock(x, y);
+                for (byte y = 0; y <= form.picTile.Height / Grid; y++)
+                {
+                    // Desenha os atributos
+                    if (form.optAttributes.Checked)
+                        Editor_TileAttributes(x, y);
+                    // Bloqueios direcionais
+                    else if (form.optDirBlock.Checked)
+                        Editor_Tile_DirBlock(x, y);
 
-                // Grades
-                RenderRectangle(Win_Tile, x * Grid, y * Grid, Grid, Grid, CColor(25, 25, 25, 70));
-            }
+                    // Grades
+                    RenderRectangle(Win_Tile, x * Grid, y * Grid, Grid, Grid, CColor(25, 25, 25, 70));
+                }
 
             // Exibe o que foi renderizado
             Win_Tile.Display();

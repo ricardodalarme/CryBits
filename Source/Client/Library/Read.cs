@@ -137,11 +137,11 @@ namespace CryBits.Client.Library
             // Lê os dados
             using (var stream = file.OpenRead())
                 // Map.List.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
-                TempMap.List.Add(id, new TempMap(Entities.Map.List[id]));
+                TempMap.List.Add(id, new TempMap(CryBits.Entities.Map.List[id]));
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();
-            MapAutoTile.Update();
+            Mapper.Current.Data.Update();
         }
     }
 }

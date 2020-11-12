@@ -1,6 +1,9 @@
 ﻿using CryBits.Entities;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using Lidgren.Network;
 
 namespace CryBits
 {
@@ -48,5 +51,25 @@ namespace CryBits
 
         // Obtém o dado, caso ele não existir retorna nulo
         public static TV Get<TGuid, TV>(this Dictionary<TGuid, TV> dict, TGuid key) => dict.ContainsKey(key) ? dict[key] : default;
+
+        public static void ObjectToByteArray(NetOutgoingMessage data, object obj)
+        {
+            var bf = new BinaryFormatter();
+            using (var stream = new MemoryStream())
+            {
+                bf.Serialize(stream, obj);
+                data.Write(stream.ToArray().Length);
+                data.Write(stream.ToArray());
+            }
+        }
+
+        public static object ByteArrayToObject(NetIncomingMessage data)
+        {
+            int size = data.ReadInt32();
+            byte[] array = data.ReadBytes(size);
+
+            using (var stream = new MemoryStream(array))
+                return new BinaryFormatter().Deserialize(stream);
+        }
     }
 }

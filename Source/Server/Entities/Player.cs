@@ -302,7 +302,7 @@ namespace CryBits.Server.Entities
         {
             // Verifica se a vítima pode ser atacada
             if (victim.GettingMap) return;
-            if (Map.Data.Moral == (byte)MapMorals.Pacific)
+            if (Map.Data.Moral == (byte)Morals.Pacific)
             {
                 Send.Message(this, "This is a peaceful area.", Color.White);
                 return;

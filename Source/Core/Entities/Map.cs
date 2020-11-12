@@ -29,7 +29,7 @@ namespace CryBits.Entities
 
         // Dados
         public short Revision { get; set; }
-        public MapMorals Moral { get; set; }
+        public Morals Moral { get; set; }
         public IList<MapLayer> Layer { get; set; } = new List<MapLayer>();
         public MapAttribute[,] Attribute = new MapAttribute[Width, Height];
         public byte Panorama { get; set; }

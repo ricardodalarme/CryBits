@@ -2,25 +2,13 @@
 using CryBits.Entities;
 using CryBits.Packets;
 using Lidgren.Network;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Editors.Library;
+using static CryBits.Utils;
 
 namespace CryBits.Editors.Network
 {
     class Send
     {
-        public static void ObjectToByteArray(NetOutgoingMessage data, object obj)
-        {
-            var bf = new BinaryFormatter();
-            using (var stream = new MemoryStream())
-            {
-                bf.Serialize(stream, obj);
-                data.Write(stream.ToArray().Length);
-                data.Write(stream.ToArray());
-            }
-        }
-
         private static void Packet(NetOutgoingMessage data)
         {
             // Envia os dados ao servidor
@@ -140,7 +128,6 @@ namespace CryBits.Editors.Network
 
             // Envia os dados
             data.Write((byte)EditorServer.Write_Maps);
-            data.Write((byte)Map.List.Count);
             ObjectToByteArray(data, Map.List);
             Packet(data);
         }

@@ -53,16 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logic\Game.cs" />
-    <Compile Include="Logic\MapAutoTile.cs" />
     <Compile Include="UI\Chat.cs" />
     <Compile Include="UI\Windows.cs" />
     <Compile Include="Logic\Camera.cs" />
     <Compile Include="Entities\Character.cs" />
-    <Compile Include="Entities\Item.cs" />
-    <Compile Include="Entities\Map.cs" />
-    <Compile Include="Entities\NPC.cs" />
-    <Compile Include="Entities\Class.cs" />
-    <Compile Include="Entities\Shop.cs" />
     <Compile Include="Entities\TempMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="UI\Buttons.cs" />

@@ -6,7 +6,6 @@ using Lidgren.Network;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using static CryBits.Server.Logic.Utils;
 using static CryBits.Utils;
 
@@ -14,15 +13,6 @@ namespace CryBits.Server.Network
 {
     static class Receive
     {
-        public static object ByteArrayToObject(NetIncomingMessage data)
-        {
-            int size = data.ReadInt32();
-            byte[] array = data.ReadBytes(size);
-
-            using (var stream = new MemoryStream(array))
-                return new BinaryFormatter().Deserialize(stream);
-        }
-
         public static void Handle(Account account, NetIncomingMessage data)
         {
             byte packetNum = data.ReadByte();

@@ -3,7 +3,7 @@ using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Media;
 using static CryBits.Client.Logic.Game;
-using static CryBits.Client.Logic.Utils;
+using static CryBits.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.Logic
@@ -176,7 +176,7 @@ namespace CryBits.Client.Logic
                 }
 
             // Trovoadas
-            if (Current.Data.Weather.Type == (byte)Weathers.Thundering)
+            if (Current.Data.Weather.Type == Weathers.Thundering)
                 if (MyRandom.Next(0, MaxWeatherIntensity * 10 - Current.Data.Weather.Intensity * 2) == 0)
                 {
                     // Som do trovão
@@ -252,7 +252,7 @@ namespace CryBits.Client.Logic
         {
             // Para todos os sons
             Audio.Sound.Stop_All();
-
+            if (Current == null) return;
             // Redimensiona a lista
             switch ((Weathers)Current.Data.Weather.Type)
             {
