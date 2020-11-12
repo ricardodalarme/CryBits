@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using CryBits.Entities;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
@@ -97,7 +98,7 @@ namespace CryBits.Server.Entities
                             // Mensagem
                             if (!string.IsNullOrEmpty(Data.SayMsg))
                                 Send.Message(player.Character, Data.Name + ": " + Data.SayMsg,
-                                    System.Drawing.Color.White);
+                                    Color.White);
                             break;
                         }
                     }

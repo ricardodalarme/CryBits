@@ -4,7 +4,7 @@ using CryBits.Entities;
 
 namespace CryBits.Editors.Logic
 {
-    static class Utils
+    internal static class Utils
     {
         // Dimensão das grades 
         public const byte Grid = 32;

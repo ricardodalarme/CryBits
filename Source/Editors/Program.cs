@@ -8,7 +8,7 @@ using CryBits.Editors.Network;
 
 namespace CryBits.Editors
 {
-    static class Program
+    internal static class Program
     {
         // Usado para manter a aplicação aberta
         public static bool Working = true;
@@ -17,7 +17,7 @@ namespace CryBits.Editors
         public static short FPS;
 
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             // Verifica se todos os diretórios existem, se não existirem então criá-os
             Directories.Create();

@@ -1,11 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using CryBits.Editors.Library;
 using CryBits.Editors.Network;
 using DarkUI.Forms;
 
 namespace CryBits.Editors.Forms
 {
-    partial class Login : DarkForm
+    internal partial class Login : DarkForm
     {
         // Usado para acessar os dados da janela
         public static Login Form;
@@ -17,7 +18,7 @@ namespace CryBits.Editors.Forms
             chkUsername.Checked = Lists.Options.Username != string.Empty;
         }
 
-        private void butConnect_Click(object sender, System.EventArgs e)
+        private void butConnect_Click(object sender, EventArgs e)
         {
             // Verifica se é possível se conectar ao servidor
             if (!Socket.TryConnect())

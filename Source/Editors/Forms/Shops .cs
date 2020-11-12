@@ -7,7 +7,7 @@ using DarkUI.Forms;
 
 namespace CryBits.Editors.Forms
 {
-    partial class EditorShops : DarkForm
+    internal partial class EditorShops : DarkForm
     {
         // Loja selecionada
         private Shop _selected;

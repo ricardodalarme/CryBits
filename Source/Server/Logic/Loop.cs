@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using CryBits.Server.Entities;
+using CryBits.Server.Network;
 
 namespace CryBits.Server.Logic
 {
@@ -18,7 +19,7 @@ namespace CryBits.Server.Logic
             while (Program.Working)
             {
                 // Manuseia os dados recebidos
-                Network.Socket.HandleData();
+                Socket.HandleData();
 
                 if (Environment.TickCount > Timer_500 + 500)
                 {

@@ -4,7 +4,7 @@ using CryBits.Editors.Media;
 
 namespace CryBits.Editors.Library
 {
-    static class Directories
+    internal static class Directories
     {
         // Formato de todos os arquivos de dados
         public const string Format = ".dat";

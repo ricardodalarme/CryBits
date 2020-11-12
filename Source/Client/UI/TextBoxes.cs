@@ -8,7 +8,7 @@ using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.UI
 {
-    class TextBoxes : Tools.Structure
+    internal class TextBoxes : Tools.Structure
     {
         // Armazenamento de dados da ferramenta
         public static Dictionary<string, TextBoxes> List = new Dictionary<string, TextBoxes>();

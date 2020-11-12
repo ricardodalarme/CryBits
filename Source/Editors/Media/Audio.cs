@@ -1,11 +1,12 @@
 ﻿using System;
+using System.IO;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
 using SFML.Audio;
 
 namespace CryBits.Editors.Media
 {
-    class Audio
+    internal class Audio
     {
         // Lista dos sons
         public enum Sounds
@@ -81,7 +82,7 @@ namespace CryBits.Editors.Media
 
             public static void Play(Musics index, bool loop = false)
             {
-                System.IO.FileInfo file = new System.IO.FileInfo(Directories.Musics.FullName + (byte)index + Format);
+                FileInfo file = new FileInfo(Directories.Musics.FullName + (byte)index + Format);
 
                 // Apenas se necessário
                 if (Device != null) return;

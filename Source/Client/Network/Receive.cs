@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
+using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.Media;
 using CryBits.Client.UI;
@@ -14,7 +15,7 @@ using static CryBits.Utils;
 
 namespace CryBits.Client.Network
 {
-    class Receive
+    internal class Receive
     {
         public static void Handle(NetIncomingMessage data)
         {
@@ -377,7 +378,7 @@ namespace CryBits.Client.Network
             Mapper.Current = TempMap.List[id];
 
             // Salva o mapa
-            Library.Write.Map(map);
+            Write.Map(map);
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();

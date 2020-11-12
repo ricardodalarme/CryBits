@@ -8,7 +8,7 @@ using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.Logic
 {
-    class Mapper
+    internal class Mapper
     {
         // Mapa atual
         public static TempMap Current;

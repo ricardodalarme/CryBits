@@ -4,7 +4,7 @@ using CryBits.Entities;
 
 namespace CryBits.Editors.Entities
 {
-    class TempMap
+    internal class TempMap
     {
         // Fumaças
         public static int Fog_X;

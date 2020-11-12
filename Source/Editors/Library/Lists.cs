@@ -5,7 +5,7 @@ using CryBits.Entities;
 
 namespace CryBits.Editors.Library
 {
-    static class Lists
+    internal static class Lists
     {
         // Armazenamento de dados
         public static Structures.Options Options = new Structures.Options();

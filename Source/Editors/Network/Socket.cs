@@ -5,7 +5,7 @@ using Lidgren.Network;
 
 namespace CryBits.Editors.Network
 {
-    class Socket
+    internal class Socket
     {
         // Protocolo do controle de transmissão
         public static NetClient Device;

@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Editors.Entities.Tools
 {
-    class TextBox : Tool
+    internal class TextBox : Tool
     {
         public short Max_Characters { get; set; }
         public short Width { get; set; }

@@ -6,7 +6,7 @@ using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Media
 {
-    class Audio
+    internal class Audio
     {
         // Lista dos sons
         public enum Sounds

@@ -4,11 +4,12 @@ using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Network;
 using CryBits.Entities;
+using SFML.Window;
 using static CryBits.Client.Logic.Utils;
 
 namespace CryBits.Client.UI
 {
-    class Panels : Tools.Structure
+    internal class Panels : Tools.Structure
     {
         // Armazenamento dos dados da ferramenta
         public static Dictionary<string, Panels> List = new Dictionary<string, Panels>();
@@ -55,7 +56,7 @@ namespace CryBits.Client.UI
         public static short Shop_Slot => (short)(Slot(List["Shop"], 7, 50, 4, 7) - 1);
         public static short Equipment_Slot => (short)(Slot(List["Menu_Character"], 7, 248, 1, 5) - 1);
 
-        public static void Inventory_MouseDown(SFML.Window.MouseButtonEventArgs e)
+        public static void Inventory_MouseDown(MouseButtonEventArgs e)
         {
             byte slot = Inventory_Slot;
 
@@ -64,7 +65,7 @@ namespace CryBits.Client.UI
             if (Player.Me.Inventory[slot].Item == null) return;
 
             // Solta item
-            if (e.Button == SFML.Window.Mouse.Button.Right)
+            if (e.Button == Mouse.Button.Right)
             {
                 if (Player.Me.Inventory[slot].Item.Bind != BindOn.Pickup)
                     // Vende o item
@@ -89,17 +90,17 @@ namespace CryBits.Client.UI
                         else Send.DropItem(slot, 1);
             }
             // Seleciona o item
-            else if (e.Button == SFML.Window.Mouse.Button.Left) Inventory_Change = slot;
+            else if (e.Button == Mouse.Button.Left) Inventory_Change = slot;
         }
 
-        public static void Equipment_MouseDown(SFML.Window.MouseButtonEventArgs e)
+        public static void Equipment_MouseDown(MouseButtonEventArgs e)
         {
             Point panelPosition = List["Menu_Character"].Position;
 
             for (byte i = 0; i < (byte)Equipments.Count; i++)
                 if (IsAbove(new Rectangle(panelPosition.X + 7 + i * 36, panelPosition.Y + 247, 32, 32)))
                     // Remove o equipamento
-                    if (e.Button == SFML.Window.Mouse.Button.Right)
+                    if (e.Button == Mouse.Button.Right)
                         if (Player.Me.Equipment[i].Bind != BindOn.Equip)
                         {
                             Send.Equipment_Remove(i);
@@ -107,7 +108,7 @@ namespace CryBits.Client.UI
                         }
         }
 
-        public static void Hotbar_MouseDown(SFML.Window.MouseButtonEventArgs e)
+        public static void Hotbar_MouseDown(MouseButtonEventArgs e)
         {
             short slot = Hotbar_Slot;
 
@@ -116,19 +117,19 @@ namespace CryBits.Client.UI
             if (Player.Me.Hotbar[slot].Slot == 0) return;
 
             // Solta item
-            if (e.Button == SFML.Window.Mouse.Button.Right)
+            if (e.Button == Mouse.Button.Right)
             {
                 Send.Hotbar_Add(slot, 0, 0);
                 return;
             }
             // Seleciona o item
-            if (e.Button == SFML.Window.Mouse.Button.Left)
+            if (e.Button == Mouse.Button.Left)
             {
                 Hotbar_Change = slot;
             }
         }
 
-        public static void Trade_MouseDown(SFML.Window.MouseButtonEventArgs e)
+        public static void Trade_MouseDown(MouseButtonEventArgs e)
         {
             byte slot = Trade_Slot;
 
@@ -138,7 +139,7 @@ namespace CryBits.Client.UI
             if (Player.Me.Trade_Offer[slot].Item == null) return;
 
             // Solta item
-            if (e.Button == SFML.Window.Mouse.Button.Right) Send.Trade_Offer(slot, 0);
+            if (e.Button == Mouse.Button.Right) Send.Trade_Offer(slot, 0);
         }
 
         public static void CheckInformations()

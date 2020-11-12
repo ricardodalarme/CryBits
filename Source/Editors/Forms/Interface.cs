@@ -4,6 +4,7 @@ using CryBits.Editors.Entities.Tools;
 using CryBits.Editors.Library;
 using CryBits.Editors.Media;
 using DarkUI.Forms;
+using SFML.Graphics;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
@@ -11,7 +12,7 @@ using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
 namespace CryBits.Editors.Forms
 {
-    partial class EditorInterface : DarkForm
+    internal partial class EditorInterface : DarkForm
     {
         // Usado para acessar os dados da janela
         public static EditorInterface Form;
@@ -28,7 +29,7 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.Win_Interface = new SFML.Graphics.RenderWindow(picWindow.Handle);
+            Graphics.Win_Interface = new RenderWindow(picWindow.Handle);
 
             // Adiciona as janelas à lista
             cmbWindows.Items.AddRange(Enum.GetNames(typeof(WindowsTypes)));

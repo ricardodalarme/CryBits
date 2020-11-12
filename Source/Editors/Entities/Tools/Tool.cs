@@ -2,7 +2,7 @@
 
 namespace CryBits.Editors.Entities.Tools
 {
-    class Tool
+    internal class Tool
     {
         // Informações gerais de todas as ferramentas
         public string Name { get; set; }

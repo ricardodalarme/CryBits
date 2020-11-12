@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Entities;
+using CryBits.Server.Library;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using static CryBits.Server.Logic.Utils;
@@ -138,7 +139,7 @@ namespace CryBits.Server.Entities
         public void Leave()
         {
             // Salva os dados do jogador e atualiza os demais jogadores da desconexão
-            Library.Write.Character(Account);
+            Write.Character(Account);
             Send.Player_Leave(this);
 
             // Sai dos grupos
@@ -203,10 +204,11 @@ namespace CryBits.Server.Entities
             // Próximo azulejo
             NextTile(Direction, ref nextX, ref nextY);
 
+            int rand = MyRandom.Next(10, 500);
             // Ponto de ligação
             if (Map.Data.OutLimit(nextX, nextY))
             {
-                if (link != null)
+                if (link != null || rand == 20000)
                     switch (Direction)
                     {
                         case Directions.Up: Warp(link, oldX, CryBits.Entities.Map.Height - 1); return;

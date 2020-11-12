@@ -6,23 +6,27 @@ using System.Linq;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
+using CryBits.Client.Network;
 using CryBits.Client.UI;
 using CryBits.Entities;
 using SFML.Graphics;
+using SFML.System;
 using SFML.Window;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
 using static CryBits.Utils;
+using Color = SFML.Graphics.Color;
+using Font = SFML.Graphics.Font;
 
 namespace CryBits.Client.Media
 {
-    class Graphics
+    internal class Graphics
     {
         // Locais de renderização
         public static RenderWindow RenderWindow;
 
         // Fonte principal
-        public static SFML.Graphics.Font Font_Default;
+        public static Font Font_Default;
 
         // Texturas
         public static Texture[] Tex_Character;
@@ -62,7 +66,7 @@ namespace CryBits.Client.Media
         public static void Init()
         {
             // Carrega a fonte
-            Font_Default = new SFML.Graphics.Font(Directories.Fonts.FullName + "Georgia.ttf");
+            Font_Default = new Font(Directories.Fonts.FullName + "Georgia.ttf");
 
             // Carrega as texturas
             LoadTextures();
@@ -133,7 +137,7 @@ namespace CryBits.Client.Media
             return new Size(0, 0);
         }
 
-        private static SFML.Graphics.Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new SFML.Graphics.Color(r, g, b, a);
+        private static Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new Color(r, g, b, a);
 
         private static void Render(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null, object mode = null)
         {
@@ -141,10 +145,10 @@ namespace CryBits.Client.Media
 
             // Define os dados
             tmpImage.TextureRect = new IntRect(recSource.X, recSource.Y, recSource.Width, recSource.Height);
-            tmpImage.Position = new SFML.System.Vector2f(recDestiny.X, recDestiny.Y);
-            tmpImage.Scale = new SFML.System.Vector2f(recDestiny.Width / (float)recSource.Width, recDestiny.Height / (float)recSource.Height);
+            tmpImage.Position = new Vector2f(recDestiny.X, recDestiny.Y);
+            tmpImage.Scale = new Vector2f(recDestiny.Width / (float)recSource.Width, recDestiny.Height / (float)recSource.Height);
             if (color != null)
-                tmpImage.Color = (SFML.Graphics.Color)color;
+                tmpImage.Color = (Color)color;
 
             // Renderiza a textura em forma de retângulo
             if (mode == null) mode = RenderStates.Default;
@@ -180,7 +184,7 @@ namespace CryBits.Client.Media
             Render(texture, source, destiny, color);
         }
 
-        private static void DrawText(string text, int x, int y, SFML.Graphics.Color color, Alignments alignment = Alignments.Left)
+        private static void DrawText(string text, int x, int y, Color color, Alignments alignment = Alignments.Left)
         {
             Text tempText = new Text(text, Font_Default);
 
@@ -194,15 +198,15 @@ namespace CryBits.Client.Media
             // Define os dados
             tempText.CharacterSize = 10;
             tempText.FillColor = color;
-            tempText.Position = new SFML.System.Vector2f(x, y);
-            tempText.OutlineColor = new SFML.Graphics.Color(0, 0, 0, 70);
+            tempText.Position = new Vector2f(x, y);
+            tempText.OutlineColor = new Color(0, 0, 0, 70);
             tempText.OutlineThickness = 1;
 
             // Desenha
             RenderWindow.Draw(tempText);
         }
 
-        private static void DrawText(string text, int x, int y, SFML.Graphics.Color color, int maxWidth, bool cut = true)
+        private static void DrawText(string text, int x, int y, Color color, int maxWidth, bool cut = true)
         {
             string tempText;
             int messageWidth = MeasureString(text), split = -1;
@@ -253,7 +257,7 @@ namespace CryBits.Client.Media
         public static void Present()
         {
             // Limpa a área com um fundo preto
-            RenderWindow.Clear(SFML.Graphics.Color.Black);
+            RenderWindow.Clear(Color.Black);
 
             // Desenha as coisas em jogo
             InGame();
@@ -306,8 +310,8 @@ namespace CryBits.Client.Media
             Party();
 
             // Desenha os dados do jogo
-            if (Option.FPS) DrawText("FPS: " + FPS, 176, 7, SFML.Graphics.Color.White);
-            if (Option.Latency) DrawText("Latency: " + Network.Socket.Latency, 176, 19, SFML.Graphics.Color.White);
+            if (Option.FPS) DrawText("FPS: " + FPS, 176, 7, Color.White);
+            if (Option.Latency) DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
         }
 
         #region Tools
@@ -342,7 +346,7 @@ namespace CryBits.Client.Media
             }
 
             // Desenha o botão
-            Render(Tex_Button[tool.Texture_Num], tool.Position, new SFML.Graphics.Color(255, 255, 225, alpha));
+            Render(Tex_Button[tool.Texture_Num], tool.Position, new Color(255, 255, 225, alpha));
         }
 
         private static void Panel(Panels tool)
@@ -362,7 +366,7 @@ namespace CryBits.Client.Media
 
             // Desenha o marcador 
             Render(Tex_CheckBox, recSource, recDestiny);
-            DrawText(tool.Text, recDestiny.Location.X + Size(Tex_CheckBox).Width / 2 + CheckBoxes.Margin, recDestiny.Location.Y + 1, SFML.Graphics.Color.White);
+            DrawText(tool.Text, recDestiny.Location.X + Size(Tex_CheckBox).Width / 2 + CheckBoxes.Margin, recDestiny.Location.Y + 1, Color.White);
         }
 
         private static void TextBox(TextBoxes tool)
@@ -381,7 +385,7 @@ namespace CryBits.Client.Media
 
             // Desenha o texto do digitalizador
             if (TextBoxes.Focused != null && (TextBoxes)TextBoxes.Focused.Data == tool && TextBoxes.Signal) text += "|";
-            DrawText(text, position.X + 4, position.Y + 2, SFML.Graphics.Color.White);
+            DrawText(text, position.X + 4, position.Y + 2, Color.White);
         }
 
 
@@ -415,14 +419,14 @@ namespace CryBits.Client.Media
             // Somente se necessário
             if (!Buttons.Characters_Change_Buttons())
             {
-                DrawText(text, textPosition.X, textPosition.Y, SFML.Graphics.Color.White, Alignments.Center);
+                DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignments.Center);
                 return;
             }
 
             // Verifica se o personagem existe
             if (Panels.SelectCharacter >= Panels.Characters.Length)
             {
-                DrawText(text, textPosition.X, textPosition.Y, SFML.Graphics.Color.White, Alignments.Center);
+                DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignments.Center);
                 return;
             }
 
@@ -436,7 +440,7 @@ namespace CryBits.Client.Media
 
             // Desenha o nome da classe
             text = "(" + (Panels.SelectCharacter + 1) + ") " + Panels.Characters[Panels.SelectCharacter].Name;
-            DrawText(text, textPosition.X, textPosition.Y, SFML.Graphics.Color.White, Alignments.Center);
+            DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignments.Center);
         }
 
         private static void CreateCharacter_Class()
@@ -459,10 +463,10 @@ namespace CryBits.Client.Media
 
             // Desenha o nome da classe
             string text = @class.Name;
-            DrawText(text, 347, 509, SFML.Graphics.Color.White, Alignments.Center);
+            DrawText(text, 347, 509, Color.White, Alignments.Center);
 
             // Descrição
-            DrawText(@class.Description, 282, 526, SFML.Graphics.Color.White, 123);
+            DrawText(@class.Description, 282, 526, Color.White, 123);
         }
         #endregion
 
@@ -478,14 +482,14 @@ namespace CryBits.Client.Media
             Render(Tex_Bars_Panel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36, (int)(Tex_Bars_Panel.Size.X * expPercentage), 17);
 
             // Textos 
-            DrawText("HP", tool.Position.X + 10, tool.Position.Y + 3, SFML.Graphics.Color.White);
-            DrawText("MP", tool.Position.X + 10, tool.Position.Y + 21, SFML.Graphics.Color.White);
-            DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, SFML.Graphics.Color.White);
+            DrawText("HP", tool.Position.X + 10, tool.Position.Y + 3, Color.White);
+            DrawText("MP", tool.Position.X + 10, tool.Position.Y + 21, Color.White);
+            DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, Color.White);
 
             // Indicadores
-            DrawText(Player.Me.Vital[(byte)Vitals.HP] + "/" + Player.Me.Max_Vital[(byte)Vitals.HP], tool.Position.X + 76, tool.Position.Y + 7, SFML.Graphics.Color.White, Alignments.Center);
-            DrawText(Player.Me.Vital[(byte)Vitals.MP] + "/" + Player.Me.Max_Vital[(byte)Vitals.MP], tool.Position.X + 76, tool.Position.Y + 25, SFML.Graphics.Color.White, Alignments.Center);
-            DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76, tool.Position.Y + 43, SFML.Graphics.Color.White, Alignments.Center);
+            DrawText(Player.Me.Vital[(byte)Vitals.HP] + "/" + Player.Me.Max_Vital[(byte)Vitals.HP], tool.Position.X + 76, tool.Position.Y + 7, Color.White, Alignments.Center);
+            DrawText(Player.Me.Vital[(byte)Vitals.MP] + "/" + Player.Me.Max_Vital[(byte)Vitals.MP], tool.Position.X + 76, tool.Position.Y + 25, Color.White, Alignments.Center);
+            DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76, tool.Position.Y + 43, Color.White, Alignments.Center);
         }
 
         private static void Chat()
@@ -500,13 +504,13 @@ namespace CryBits.Client.Media
                         DrawText(UI.Chat.Order[i].Text, 16, 461 + 11 * (i - UI.Chat.Lines_First), UI.Chat.Order[i].Color);
 
             // Dica de como abrir o chat
-            if (!tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.List["Chat"].Position.X + 5, TextBoxes.List["Chat"].Position.Y + 3, SFML.Graphics.Color.White);
+            if (!tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.List["Chat"].Position.X + 5, TextBoxes.List["Chat"].Position.Y + 3, Color.White);
         }
 
         private static void Informations(Panels tool)
         {
             Item item = CryBits.Entities.Item.Get(Panels.Infomation_ID);
-            SFML.Graphics.Color textColor;
+            Color textColor;
             List<string> data = new List<string>();
 
             // Apenas se necessário
@@ -524,7 +528,7 @@ namespace CryBits.Client.Media
 
             // Nome, descrição e icone do item
             DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, Alignments.Center);
-            DrawText(item.Description, tool.Position.X + 82, tool.Position.Y + 20, SFML.Graphics.Color.White, 86);
+            DrawText(item.Description, tool.Position.X + 82, tool.Position.Y + 20, Color.White, 86);
             Render(Tex_Item[item.Texture], new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
 
             // Informações da Loja
@@ -560,7 +564,7 @@ namespace CryBits.Client.Media
 
             // Desenha todos os dados necessários
             Point[] positions = { new Point(tool.Position.X + 10, tool.Position.Y + 90), new Point(tool.Position.X + 10, tool.Position.Y + 102), new Point(tool.Position.X + 10, tool.Position.Y + 114), new Point(tool.Position.X + 96, tool.Position.Y + 90), new Point(tool.Position.X + 96, tool.Position.Y + 102), new Point(tool.Position.X + 96, tool.Position.Y + 114), new Point(tool.Position.X + 96, tool.Position.Y + 126) };
-            for (byte i = 0; i < data.Count; i++) DrawText(data[i], positions[i].X, positions[i].Y, SFML.Graphics.Color.White);
+            for (byte i = 0; i < data.Count; i++) DrawText(data[i], positions[i].X, positions[i].Y, Color.White);
         }
 
         private static void Hotbar(Panels tool)
@@ -581,7 +585,7 @@ namespace CryBits.Client.Media
                 // Desenha os números de cada slot
                 if (i < 10) indicator = (i + 1).ToString();
                 else if (i == 9) indicator = "0";
-                DrawText(indicator, tool.Position.X + 16 + 36 * i, tool.Position.Y + 22, SFML.Graphics.Color.White);
+                DrawText(indicator, tool.Position.X + 16 + 36 * i, tool.Position.Y + 22, Color.White);
             }
 
             // Movendo slot
@@ -593,17 +597,17 @@ namespace CryBits.Client.Media
         private static void Menu_Character(Panels tool)
         {
             // Dados básicos
-            DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, SFML.Graphics.Color.White);
-            DrawText(Player.Me.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, SFML.Graphics.Color.White);
+            DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
+            DrawText(Player.Me.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, Color.White);
             Render(Tex_Face[Player.Me.Texture_Num], new Point(tool.Position.X + 82, tool.Position.Y + 37));
 
             // Atributos
-            DrawText("Strength: " + Player.Me.Attribute[(byte)Attributes.Strength], tool.Position.X + 32, tool.Position.Y + 146, SFML.Graphics.Color.White);
-            DrawText("Resistance: " + Player.Me.Attribute[(byte)Attributes.Resistance], tool.Position.X + 32, tool.Position.Y + 162, SFML.Graphics.Color.White);
-            DrawText("Intelligence: " + Player.Me.Attribute[(byte)Attributes.Intelligence], tool.Position.X + 32, tool.Position.Y + 178, SFML.Graphics.Color.White);
-            DrawText("Agility: " + Player.Me.Attribute[(byte)Attributes.Agility], tool.Position.X + 32, tool.Position.Y + 194, SFML.Graphics.Color.White);
-            DrawText("Vitality: " + Player.Me.Attribute[(byte)Attributes.Vitality], tool.Position.X + 32, tool.Position.Y + 210, SFML.Graphics.Color.White);
-            DrawText("Points: " + Player.Me.Points, tool.Position.X + 14, tool.Position.Y + 228, SFML.Graphics.Color.White);
+            DrawText("Strength: " + Player.Me.Attribute[(byte)Attributes.Strength], tool.Position.X + 32, tool.Position.Y + 146, Color.White);
+            DrawText("Resistance: " + Player.Me.Attribute[(byte)Attributes.Resistance], tool.Position.X + 32, tool.Position.Y + 162, Color.White);
+            DrawText("Intelligence: " + Player.Me.Attribute[(byte)Attributes.Intelligence], tool.Position.X + 32, tool.Position.Y + 178, Color.White);
+            DrawText("Agility: " + Player.Me.Attribute[(byte)Attributes.Agility], tool.Position.X + 32, tool.Position.Y + 194, Color.White);
+            DrawText("Vitality: " + Player.Me.Attribute[(byte)Attributes.Vitality], tool.Position.X + 32, tool.Position.Y + 210, Color.White);
+            DrawText("Points: " + Player.Me.Points, tool.Position.X + 14, tool.Position.Y + 228, Color.White);
 
             // Equipamentos 
             for (byte i = 0; i < (byte)Equipments.Count; i++)
@@ -627,7 +631,7 @@ namespace CryBits.Client.Media
 
         private static void Party_Invitation(Panels tool)
         {
-            DrawText(Panels.Party_Invitation + " has invite you to a party. Would you like to join?", tool.Position.X + 14, tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+            DrawText(Panels.Party_Invitation + " has invite you to a party. Would you like to join?", tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
         }
 
         private static void Party()
@@ -643,13 +647,13 @@ namespace CryBits.Client.Media
                     Render(Tex_Party_Bars, 10, 99 + (27 * i), 0, 16, (Player.Me.Party[i].Vital[(byte)Vitals.MP] * 82) / Player.Me.Party[i].Max_Vital[(byte)Vitals.MP], 8); // MP 
 
                 // Nome do membro
-                DrawText(Player.Me.Party[i].Name, 10, 79 + (27 * i), SFML.Graphics.Color.White);
+                DrawText(Player.Me.Party[i].Name, 10, 79 + (27 * i), Color.White);
             }
         }
 
         private static void Trade_Invitation(Panels tool)
         {
-            DrawText(Panels.Trade_Invitation + " has invite you to a trade. Would you like to join?", tool.Position.X + 14, tool.Position.Y + 33, SFML.Graphics.Color.White, 160);
+            DrawText(Panels.Trade_Invitation + " has invite you to a trade. Would you like to join?", tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
         }
 
         private static void Trade(Panels tool)
@@ -666,8 +670,8 @@ namespace CryBits.Client.Media
         {
             // Dados da loja
             string name = Panels.Shop_Open.Name;
-            DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, SFML.Graphics.Color.White, Alignments.Center);
-            DrawText("Currency: " + Panels.Shop_Open.Currency.Name, tool.Position.X + 10, tool.Position.Y + 195, SFML.Graphics.Color.White);
+            DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, Alignments.Center);
+            DrawText("Currency: " + Panels.Shop_Open.Currency.Name, tool.Position.X + 10, tool.Position.Y + 195, Color.White);
 
             // Desenha os itens
             for (byte i = 0; i < Panels.Shop_Open.Sold.Count; i++)
@@ -686,14 +690,14 @@ namespace CryBits.Client.Media
 
             // Desenha o item e sua quantidade
             Render(Tex_Item[item.Texture], position);
-            if (amount > 1) DrawText(amount.ToString(), position.X + 2, position.Y + 17, SFML.Graphics.Color.White);
+            if (amount > 1) DrawText(amount.ToString(), position.X + 2, position.Y + 17, Color.White);
         }
 
         private static void Character(short textureNum, Point position, Directions direction, byte column, bool hurt = false)
         {
             Rectangle recSource = new Rectangle(), recDestiny;
             Size size = Size(Tex_Character[textureNum]);
-            SFML.Graphics.Color color = new SFML.Graphics.Color(255, 255, 255);
+            Color color = new Color(255, 255, 255);
             byte line = 0;
 
             // Direção
@@ -713,7 +717,7 @@ namespace CryBits.Client.Media
             recDestiny = new Rectangle(position, recSource.Size);
 
             // Demonstra que o personagem está sofrendo dano
-            if (hurt) color = new SFML.Graphics.Color(205, 125, 125);
+            if (hurt) color = new Color(205, 125, 125);
 
             // Desenha o personagem e sua sombra
             Render(Tex_Shadow, recDestiny.Location.X, recDestiny.Location.Y + size.Height / AnimationAmount - Size(Tex_Shadow).Height + 5, 0, 0, size.Width / AnimationAmount, Size(Tex_Shadow).Height);
@@ -791,11 +795,11 @@ namespace CryBits.Client.Media
             };
 
             // Cor do texto
-            SFML.Graphics.Color color;
+            Color color;
             if (player == Player.Me)
-                color = SFML.Graphics.Color.Yellow;
+                color = Color.Yellow;
             else
-                color = SFML.Graphics.Color.White;
+                color = Color.White;
 
             // Desenha o texto
             DrawText(player.Name, ConvertX(position.X), ConvertY(position.Y), color);
@@ -832,7 +836,7 @@ namespace CryBits.Client.Media
         private static void NPC_Name(TempNPC npc)
         {
             Point position = new Point();
-            SFML.Graphics.Color color;
+            Color color;
             int nameSize = MeasureString(npc.Data.Name);
             Texture texture = Tex_Character[npc.Data.Texture];
 
@@ -843,10 +847,10 @@ namespace CryBits.Client.Media
             // Cor do texto
             switch (npc.Data.Behaviour)
             {
-                case NPCBehaviour.Friendly: color = SFML.Graphics.Color.White; break;
-                case NPCBehaviour.AttackOnSight: color = SFML.Graphics.Color.Red; break;
-                case NPCBehaviour.AttackWhenAttacked: color = new SFML.Graphics.Color(228, 120, 51); break;
-                default: color = SFML.Graphics.Color.White; break;
+                case NPCBehaviour.Friendly: color = Color.White; break;
+                case NPCBehaviour.AttackOnSight: color = Color.Red; break;
+                case NPCBehaviour.AttackWhenAttacked: color = new Color(228, 120, 51); break;
+                default: color = Color.White; break;
             }
 
             // Desenha o texto
@@ -878,7 +882,7 @@ namespace CryBits.Client.Media
 
             // Dados
             System.Drawing.Color tempColor = Mapper.Current.Data.Color;
-            SFML.Graphics.Color color = CColor(tempColor.R, tempColor.G, tempColor.B);
+            Color color = CColor(tempColor.R, tempColor.G, tempColor.B);
             Map map = Mapper.Current.Data;
 
             // Desenha todas as camadas dos azulejos
@@ -903,7 +907,7 @@ namespace CryBits.Client.Media
                             }
         }
 
-        private static void Map_Autotile(Point position, MapTileData data, SFML.Graphics.Color cor)
+        private static void Map_Autotile(Point position, MapTileData data, Color cor)
         {
             // Desenha os 4 mini azulejos
             for (byte i = 0; i < 4; i++)
@@ -941,7 +945,7 @@ namespace CryBits.Client.Media
             // Desenha a fumaça
             for (int x = -1; x <= MapWidth * Grid / textureSize.Width; x++)
                 for (int y = -1; y <= MapHeight * Grid / textureSize.Height; y++)
-                    Render(Tex_Fog[data.Texture], new Point(x * textureSize.Width + Mapper.Fog_X, y * textureSize.Height + Mapper.Fog_Y), new SFML.Graphics.Color(255, 255, 255, data.Alpha));
+                    Render(Tex_Fog[data.Texture], new Point(x * textureSize.Width + Mapper.Fog_X, y * textureSize.Height + Mapper.Fog_Y), new Color(255, 255, 255, data.Alpha));
         }
 
         private static void Map_Weather()
@@ -963,12 +967,12 @@ namespace CryBits.Client.Media
                     Render(Tex_Weather, new Rectangle(x, 0, 32, 32), new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32), CColor(255, 255, 255, 150));
 
             // Trovoadas
-            Render(Tex_Blanc, 0, 0, 0, 0, ScreenWidth, ScreenHeight, new SFML.Graphics.Color(255, 255, 255, Mapper.Lightning));
+            Render(Tex_Blanc, 0, 0, 0, 0, ScreenWidth, ScreenHeight, new Color(255, 255, 255, Mapper.Lightning));
         }
 
         private static void Map_Name()
         {
-            SFML.Graphics.Color color;
+            Color color;
 
             // Somente se necessário
             if (string.IsNullOrEmpty(Mapper.Current.Data.Name)) return;
@@ -976,8 +980,8 @@ namespace CryBits.Client.Media
             // A cor do texto vária de acordo com a moral do mapa
             switch (Mapper.Current.Data.Moral)
             {
-                case Morals.Dangerous: color = SFML.Graphics.Color.Red; break;
-                default: color = SFML.Graphics.Color.White; break;
+                case Morals.Dangerous: color = Color.Red; break;
+                default: color = Color.White; break;
             }
 
             // Desenha o nome do mapa

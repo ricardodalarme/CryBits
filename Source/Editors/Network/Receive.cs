@@ -10,7 +10,7 @@ using static CryBits.Utils;
 
 namespace CryBits.Editors.Network
 {
-    class Receive
+    internal class Receive
     {
         public static void Handle(NetIncomingMessage data)
         {

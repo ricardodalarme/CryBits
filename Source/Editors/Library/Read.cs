@@ -13,7 +13,7 @@ using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
 namespace CryBits.Editors.Library
 {
-    static class Read
+    internal static class Read
     {
         public static void Options()
         {

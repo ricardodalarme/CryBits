@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
 using CryBits.Editors.Media;
+using CryBits.Editors.Network;
 using CryBits.Entities;
+using SFML.Audio;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Logic
 {
-    class Loop
+    internal class Loop
     {
         // Contadores
         private static int _fogXTimer;
@@ -30,7 +33,7 @@ namespace CryBits.Editors.Logic
                 count = Environment.TickCount;
 
                 // Manuseia os dados recebidos
-                Network.Socket.HandleData();
+                Socket.HandleData();
 
                 // Eventos
                 Editor_Maps_Fog();
@@ -42,7 +45,7 @@ namespace CryBits.Editors.Logic
 
                 // Faz com que a aplicação se mantenha estável
                 Application.DoEvents();
-                while (Environment.TickCount < count + 10) System.Threading.Thread.Sleep(1);
+                while (Environment.TickCount < count + 10) Thread.Sleep(1);
 
                 // FPS
                 if (timer1000 < Environment.TickCount)
@@ -134,7 +137,7 @@ namespace CryBits.Editors.Logic
             if (EditorMaps.Form == null || !EditorMaps.Form.Visible || EditorMaps.Form.Selected.Weather.Type == 0 || !EditorMaps.Form.butVisualization.Checked)
             {
                 if (Audio.Sound.List != null)
-                    if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SFML.Audio.SoundStatus.Playing) Audio.Sound.Stop_All();
+                    if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SoundStatus.Playing) Audio.Sound.Stop_All();
                 return;
             }
 
@@ -144,11 +147,11 @@ namespace CryBits.Editors.Logic
             // Reproduz o som chuva
             if (weather.Type == Weathers.Raining || weather.Type == Weathers.Thundering)
             {
-                if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status != SFML.Audio.SoundStatus.Playing)
+                if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status != SoundStatus.Playing)
                     Audio.Sound.Play(Audio.Sounds.Rain);
             }
             else
-              if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SFML.Audio.SoundStatus.Playing) Audio.Sound.Stop_All();
+              if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SoundStatus.Playing) Audio.Sound.Stop_All();
 
             // Contagem da neve
             if (_snowTimer < Environment.TickCount)

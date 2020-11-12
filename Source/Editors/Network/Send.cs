@@ -7,7 +7,7 @@ using static CryBits.Utils;
 
 namespace CryBits.Editors.Network
 {
-    class Send
+    internal class Send
     {
         private static void Packet(NetOutgoingMessage data)
         {
