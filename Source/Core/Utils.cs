@@ -10,10 +10,10 @@ namespace CryBits
         public static Random MyRandom = new Random();
         public const byte Grid = 32;
 
-        public static Directions ReverseDirection(Directions Direction)
+        public static Directions ReverseDirection(Directions direction)
         {
             // Retorna a direção inversa
-            switch (Direction)
+            switch (direction)
             {
                 case Directions.Up: return Directions.Down;
                 case Directions.Down: return Directions.Up;
@@ -23,31 +23,31 @@ namespace CryBits
             }
         }
 
-        public static void NextTile(Directions Direction, ref byte X, ref byte Y)
+        public static void NextTile(Directions direction, ref byte x, ref byte y)
         {
             // Próximo azulejo
-            switch (Direction)
+            switch (direction)
             {
-                case Directions.Up: Y -= 1; break;
-                case Directions.Down: Y += 1; break;
-                case Directions.Right: X += 1; break;
-                case Directions.Left: X -= 1; break;
+                case Directions.Up: y -= 1; break;
+                case Directions.Down: y += 1; break;
+                case Directions.Right: x += 1; break;
+                case Directions.Left: x -= 1; break;
             }
         }
 
-        public static void Swap<T>(ref T Item1, ref T Item2)
+        public static void Swap<T>(ref T item1, ref T item2)
         {
             // Troca dois elementos
-            T Temp = Item1;
-            Item1 = Item2;
-            Item2 = Temp;
+            T temp = item1;
+            item1 = item2;
+            item2 = temp;
         }
 
         // Obtém o ID de alguma entidade, caso ela não existir retorna um ID zerado
-        public static string GetID(this Entity Object) => Object == null ? Guid.Empty.ToString() : Object.ID.ToString();
+        public static string GetID(this Entity @object) => @object == null ? Guid.Empty.ToString() : @object.ID.ToString();
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static TV Get<Guid, TV>(this Dictionary<Guid, TV> dict, Guid key) => dict.ContainsKey(key) ? dict[key] : default;
+        public static TV Get<TGuid, TV>(this Dictionary<TGuid, TV> dict, TGuid key) => dict.ContainsKey(key) ? dict[key] : default;
 
     }
 }

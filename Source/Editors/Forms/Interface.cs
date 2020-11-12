@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
             cmbWindows.SelectedIndex = 0;
 
             // Adiciona os tipos de ferramentas à lista
-            for (byte i = 0; i < (byte)Tools_Types.Count; i++) cmbType.Items.Add((Tools_Types)i);
+            for (byte i = 0; i < (byte)ToolsTypes.Count; i++) cmbType.Items.Add((ToolsTypes)i);
         }
 
         private void Editor_Interface_FormClosed(object sender, FormClosedEventArgs e)
@@ -99,12 +99,12 @@ namespace CryBits.Editors.Forms
             // Adiciona uma nova ferramenta
             Tool New = new Tool();
             Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = New;
-            switch ((Tools_Types)cmbType.SelectedIndex)
+            switch ((ToolsTypes)cmbType.SelectedIndex)
             {
-                case Tools_Types.Button: New = new Entities.Button(); break;
-                case Tools_Types.Panel: New = new Entities.Panel(); break;
-                case Tools_Types.CheckBox: New = new Entities.CheckBox(); break;
-                case Tools_Types.TextBox: New = new Entities.TextBox(); break;
+                case ToolsTypes.Button: New = new Entities.Button(); break;
+                case ToolsTypes.Panel: New = new Entities.Panel(); break;
+                case ToolsTypes.CheckBox: New = new Entities.CheckBox(); break;
+                case ToolsTypes.TextBox: New = new Entities.TextBox(); break;
             }
             Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(New.ToString());
             New.Window = (WindowsTypes)cmbWindows.SelectedIndex;

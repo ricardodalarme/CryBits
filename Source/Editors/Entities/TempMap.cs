@@ -20,8 +20,8 @@ namespace Editors.Entities
                 switch (Editor_Maps.Form.Selected.Weather.Type)
                 {
                     case Weathers.Thundering:
-                    case Weathers.Raining: Lists.Weather = new MapWeatherParticle[Map.Max_Rain_Particles + 1]; break;
-                    case Weathers.Snowing: Lists.Weather = new MapWeatherParticle[Map.Max_Snow_Particles + 1]; break;
+                    case Weathers.Raining: Lists.Weather = new MapWeatherParticle[Map.MaxRainParticles + 1]; break;
+                    case Weathers.Snowing: Lists.Weather = new MapWeatherParticle[Map.MaxSnowParticles + 1]; break;
                 }
         }
     }

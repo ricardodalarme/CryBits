@@ -27,7 +27,7 @@ namespace CryBits.Editors.Logic
         }
 
         [Category("General"), DefaultValue(0)]
-        public Map_Morals Moral
+        public MapMorals Moral
         {
             get => Base.Moral;
             set => Base.Moral = value;
@@ -72,7 +72,7 @@ namespace CryBits.Editors.Logic
         public byte Weather_SpeedY
         {
             get => Base.Weather.Intensity;
-            set => Base.Weather.Intensity = Math.Max(value, Map.Max_Weather_Intensity);
+            set => Base.Weather.Intensity = Math.Max(value, Map.MaxWeatherIntensity);
         }
 
         [Category("Weather"), DisplayName("Weather Type"), DefaultValue(0)]

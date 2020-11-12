@@ -10,26 +10,26 @@ namespace CryBits.Entities
         public static Dictionary<Guid, Shop> List = new Dictionary<Guid, Shop>();
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static Shop Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+        public static Shop Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
 
         // Dados
-        private Guid currency;
+        private Guid _currency;
         public Item Currency
         {
-            get => Item.Get(currency);
-            set => currency = new Guid(value.GetID());
+            get => Item.Get(_currency);
+            set => _currency = new Guid(value.GetID());
         }
-        public IList<Shop_Item> Bought { get; set; } = new List<Shop_Item>();
-        public IList<Shop_Item> Sold { get; set; } = new List<Shop_Item>();
+        public IList<ShopItem> Bought { get; set; } = new List<ShopItem>();
+        public IList<ShopItem> Sold { get; set; } = new List<ShopItem>();
 
         // Construtor
-        public Shop(Guid ID) : base(ID) { }
+        public Shop(Guid id) : base(id) { }
 
-        public Shop_Item FindBought(Item Item)
+        public ShopItem FindBought(Item item)
         {
             // Verifica se a loja vende determinado item
             for (byte i = 0; i < Bought.Count; i++)
-                if (Bought[i].Item == Item)
+                if (Bought[i].Item == item)
                     return Bought[i];
 
             return null;
@@ -37,13 +37,13 @@ namespace CryBits.Entities
     }
 
     [Serializable]
-    public class Shop_Item : ItemSlot
+    public class ShopItem : ItemSlot
     {
         public short Price { get; set; }
 
-        public Shop_Item(Item Item, short Amount, short Price) : base(Item, Amount)
+        public ShopItem(Item item, short amount, short price) : base(item, amount)
         {
-            this.Price = Price;
+            this.Price = price;
         }
 
         public override string ToString() => Item.Name + " - " + Amount + "x [$" + Price + "]";

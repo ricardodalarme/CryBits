@@ -10,7 +10,7 @@ namespace CryBits.Entities
         public static Dictionary<Guid, Item> List = new Dictionary<Guid, Item>();
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static Item Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+        public static Item Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
 
         // Geral
         public string Description { get; set; } = string.Empty;
@@ -22,11 +22,11 @@ namespace CryBits.Entities
 
         // Requerimentos
         public short Req_Level;
-        private Guid req_Class;
+        private Guid _reqClass;
         public Class Req_Class
         {
-            get => Class.Get(req_Class);
-            set => req_Class = new Guid(value.GetID());
+            get => Class.Get(_reqClass);
+            set => _reqClass = new Guid(value.GetID());
         }
 
         // Poção
@@ -39,6 +39,6 @@ namespace CryBits.Entities
         public short Weapon_Damage { get; set; }
 
         // Construtor
-        public Item(Guid ID) : base(ID) { }
+        public Item(Guid id) : base(id) { }
     }
 }

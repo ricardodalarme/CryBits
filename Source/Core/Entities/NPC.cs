@@ -10,7 +10,7 @@ namespace CryBits.Entities
         public static Dictionary<Guid, NPC> List = new Dictionary<Guid, NPC>();
 
         // Obtém o dado, caso ele não existir retorna nulo
-        public static NPC Get(Guid ID) => List.ContainsKey(ID) ? List[ID] : null;
+        public static NPC Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
 
         // Dados
         public string SayMsg { get; set; }
@@ -21,27 +21,27 @@ namespace CryBits.Entities
         public int Experience { get; set; }
         public short[] Vital { get; set; } = new short[(byte)Vitals.Count];
         public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
-        public IList<NPC_Drop> Drop { get; set; } = new List<NPC_Drop>();
+        public IList<NPCDrop> Drop { get; set; } = new List<NPCDrop>();
         public bool AttackNPC { get; set; }
         public IList<NPC> Allie { get; set; } = new List<NPC>();
         public NPCMovements Movement { get; set; }
         public byte Flee_Helth { get; set; }
-        private Guid shop;
+        private Guid _shop;
 
         public Shop Shop
         {
-            get => Shop.Get(shop);
-            set => shop = new Guid(value.GetID());
+            get => Shop.Get(_shop);
+            set => _shop = new Guid(value.GetID());
         }
 
         // Construtor
-        public NPC(Guid ID) : base(ID) { }
+        public NPC(Guid id) : base(id) { }
 
-        public bool IsAlied(NPC NPC)
+        public bool IsAlied(NPC npc)
         {
             // Verifica se o NPC é aliado do outro
             for (byte i = 0; i < Allie.Count; i++)
-                if (Allie[i] == NPC)
+                if (Allie[i] == npc)
                     return true;
 
             return false;
@@ -49,13 +49,13 @@ namespace CryBits.Entities
     }
 
     [Serializable]
-    public class NPC_Drop : ItemSlot
+    public class NPCDrop : ItemSlot
     {
         public byte Chance;
 
-        public NPC_Drop(Item Item, short Amount, byte Chance) : base(Item, Amount)
+        public NPCDrop(Item item, short amount, byte chance) : base(item, amount)
         {
-            this.Chance = Chance;
+            this.Chance = chance;
         }
     }
 }

@@ -387,7 +387,7 @@ class Graphics
         // Desenha as partículas
         for (int i = 0; i < Lists.Weather.Length; i++)
             if (Lists.Weather[i].Visible)
-                Render(Win_Map, Tex_Weather, new Rectangle(x, 0, 32, 32), Editor_Maps.Form.Zoom(new Rectangle(Lists.Weather[i].x, Lists.Weather[i].y, 32, 32)), CColor(255, 255, 255, 150));
+                Render(Win_Map, Tex_Weather, new Rectangle(x, 0, 32, 32), Editor_Maps.Form.Zoom(new Rectangle(Lists.Weather[i].X, Lists.Weather[i].Y, 32, 32)), CColor(255, 255, 255, 150));
     }
 
     private static void Editor_Maps_Map_Light(Map Map)
@@ -495,21 +495,21 @@ class Graphics
     {
         Editor_Maps Form = Editor_Maps.Form;
         Point Position = new Point((x - Form.scrlMapX.Value) * Form.Grid_Zoom, (y - Editor_Maps.Form.scrlMapY.Value) * Form.Grid_Zoom);
-        Tile_Attributes Attribute = (Tile_Attributes)Map.Attribute[x, y].Type;
+        TileAttributes Attribute = (TileAttributes)Map.Attribute[x, y].Type;
         SFML.Graphics.Color Color;
         string Letter;
 
         // Apenas se necessário
         if (!Editor_Maps.Form.butMAttributes.Checked) return;
         if (Editor_Maps.Form.optA_DirBlock.Checked) return;
-        if (Attribute == Tile_Attributes.None) return;
+        if (Attribute == TileAttributes.None) return;
 
         // Define a cor e a letra
         switch (Attribute)
         {
-            case Tile_Attributes.Block: Letter = "B"; Color = SFML.Graphics.Color.Red; break;
-            case Tile_Attributes.Warp: Letter = "T"; Color = SFML.Graphics.Color.Blue; break;
-            case Tile_Attributes.Item: Letter = "I"; Color = SFML.Graphics.Color.Green; break;
+            case TileAttributes.Block: Letter = "B"; Color = SFML.Graphics.Color.Red; break;
+            case TileAttributes.Warp: Letter = "T"; Color = SFML.Graphics.Color.Blue; break;
+            case TileAttributes.Item: Letter = "I"; Color = SFML.Graphics.Color.Green; break;
             default: return;
         }
         Color = new SFML.Graphics.Color(Color.R, Color.G, Color.B, 100);
@@ -584,7 +584,7 @@ class Graphics
             {
                 // Desenha os atributos
                 if (Form.optAttributes.Checked)
-                    Editor_Tile_Attributes(x, y);
+                    Editor_TileAttributes(x, y);
                 // Bloqueios direcionais
                 else if (Form.optDirBlock.Checked)
                     Editor_Tile_DirBlock(x, y);
@@ -597,7 +597,7 @@ class Graphics
         Win_Tile.Display();
     }
 
-    private static void Editor_Tile_Attributes(byte x, byte y)
+    private static void Editor_TileAttributes(byte x, byte y)
     {
         Editor_Tiles Form = Editor_Tiles.Form;
         Point Tile = new Point(Form.scrlTileX.Value + x, Form.scrlTileY.Value + y);
@@ -608,9 +608,9 @@ class Graphics
         if (Tile.Y > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(1)) return;
 
         // Desenha uma letra e colore o azulejo referente ao atributo
-        switch ((Tile_Attributes)Lists.Tile[Form.scrlTile.Value].Data[Tile.X, Tile.Y].Attribute)
+        switch ((TileAttributes)Lists.Tile[Form.scrlTile.Value].Data[Tile.X, Tile.Y].Attribute)
         {
-            case Tile_Attributes.Block:
+            case TileAttributes.Block:
                 Render(Win_Tile, Tex_Blank, x * Grid, y * Grid, 0, 0, Grid, Grid, CColor(225, 0, 0, 75));
                 DrawText(Win_Tile, "B", Point.X, Point.Y, SFML.Graphics.Color.Red);
                 break;
@@ -628,9 +628,9 @@ class Graphics
         if (Tile.Y > Lists.Tile[Form.scrlTile.Value].Data.GetUpperBound(1)) return;
 
         // Bloqueio total
-        if (Lists.Tile[Form.scrlTile.Value].Data[x, y].Attribute == (byte)Tile_Attributes.Block)
+        if (Lists.Tile[Form.scrlTile.Value].Data[x, y].Attribute == (byte)TileAttributes.Block)
         {
-            Editor_Tile_Attributes(x, y);
+            Editor_TileAttributes(x, y);
             return;
         }
 

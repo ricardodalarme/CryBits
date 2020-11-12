@@ -960,7 +960,7 @@ namespace CryBits.Server.Network
 
         private static void Shop_Buy(Player Player, NetIncomingMessage Data)
         {
-            Shop_Item Shop_Sold = Player.Shop.Sold[Data.ReadByte()];
+            ShopItem Shop_Sold = Player.Shop.Sold[Data.ReadByte()];
             byte Inventory_Slot = Player.FindInventory(Player.Shop.Currency);
 
             // Verifica se o jogador tem dinheiro
@@ -986,7 +986,7 @@ namespace CryBits.Server.Network
         {
             byte Inventory_Slot = Data.ReadByte();
             short Amount = Math.Min(Data.ReadInt16(), Player.Inventory[Inventory_Slot].Amount);
-            Shop_Item Buy = Player.Shop.FindBought(Player.Inventory[Inventory_Slot].Item);
+            ShopItem Buy = Player.Shop.FindBought(Player.Inventory[Inventory_Slot].Item);
 
             // Verifica se a loja vende o item
             if (Buy == null)

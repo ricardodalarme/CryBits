@@ -13,7 +13,7 @@ namespace CryBits.Editors.Forms
         public static Editor_Tiles Form;
 
         // Atributo selecionado
-        private Tile_Attributes Attributes;
+        private TileAttributes Attributes;
 
         public Editor_Tiles()
         {
@@ -103,7 +103,7 @@ namespace CryBits.Editors.Forms
                 for (byte i = 0; i < (byte)Directions.Count; i++)
                     if (Tile_Dif.X >= Block_Position(i).X && Tile_Dif.X <= Block_Position(i).X + 8)
                         if (Tile_Dif.Y >= Block_Position(i).Y && Tile_Dif.Y <= Block_Position(i).Y + 8)
-                            if (Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Attribute != (byte)Tile_Attributes.Block)
+                            if (Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Attribute != (byte)TileAttributes.Block)
                                 // Altera o valor de bloqueio
                                 Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i] = !Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i];
         }
@@ -111,7 +111,7 @@ namespace CryBits.Editors.Forms
         private void optBlock_CheckedChanged(object sender, EventArgs e)
         {
             // Define o atributo
-            Attributes = Tile_Attributes.Block;
+            Attributes = TileAttributes.Block;
         }
 
         private void optAttributes_CheckedChanged(object sender, EventArgs e)
