@@ -9,7 +9,7 @@ using CryBits.Server.Network;
 
 namespace CryBits.Server
 {
-    static class Program
+    internal static class Program
     {
         // Usado para manter a aplicação aberta
         public static bool Working = true;
@@ -123,7 +123,7 @@ namespace CryBits.Server
                     }
 
                     // Define o acesso do jogador
-                    account.Acess = (Accesses)access;
+                    account.Access = (Accesses)access;
 
                     // Salva os dados
                     Write.Account(account);

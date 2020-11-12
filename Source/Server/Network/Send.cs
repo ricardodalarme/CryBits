@@ -9,7 +9,7 @@ using static CryBits.Server.Logic.Utils;
 
 namespace CryBits.Server.Network
 {
-    static class Send
+    internal static class Send
     {
         public static void ObjectToByteArray(NetOutgoingMessage data, object obj)
         {
@@ -314,7 +314,7 @@ namespace CryBits.Server.Network
             data.Write((byte)ServerEditor.Maps);
             data.Write((short)CryBits.Entities.Map.List.Count);
             ToPlayer(account, data);
-            foreach (Map map in CryBits.Entities.Map.List.Values) Send.Map(account, map);
+            foreach (Map map in CryBits.Entities.Map.List.Values) Map(account, map);
         }
 
         public static void Map(Account account, Map map)

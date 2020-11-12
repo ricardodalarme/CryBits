@@ -80,8 +80,7 @@ namespace CryBits.Editors.Forms
             cmbBind.SelectedIndex = (byte)Selected.Bind;
             cmbRarity.SelectedIndex = (byte)Selected.Rarity;
             numReq_Level.Value = Selected.Req_Level;
-            if (Selected.Req_Class != null) cmbReq_Class.SelectedIndex = cmbReq_Class.Items.IndexOf(Selected.Req_Class);
-            else cmbReq_Class.SelectedIndex = 0;
+            cmbReq_Class.SelectedIndex = Selected.Req_Class != null ? cmbReq_Class.Items.IndexOf(Selected.Req_Class) : 0;
             numPotion_Experience.Value = Selected.Potion_Experience;
             numPotion_HP.Value = Selected.Potion_Vital[(byte)Vitals.HP];
             numPotion_MP.Value = Selected.Potion_Vital[(byte)Vitals.MP];

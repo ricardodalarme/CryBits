@@ -64,13 +64,13 @@ namespace CryBits.Server.Library
             {
                 account.User = data.ReadString();
                 account.Password = data.ReadString();
-                account.Acess = (Accesses)data.ReadByte();
+                account.Access = (Accesses)data.ReadByte();
             }
         }
 
         public static void Characters(Account account)
         {
-            DirectoryInfo directory = new DirectoryInfo(Directories.Accounts.FullName + account.User.ToString() + "\\Characters");
+            DirectoryInfo directory = new DirectoryInfo(Directories.Accounts.FullName + account.User + "\\Characters");
 
             // Previne erros
             if (!directory.Exists) directory.Create();

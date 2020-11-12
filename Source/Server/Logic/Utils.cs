@@ -19,6 +19,5 @@
         // Limites fixos
         public const byte MaxInventory = 30;
         public const byte MaxHotbar = 10;
-        public const byte MaxDirBlock = 3;
     }
 }

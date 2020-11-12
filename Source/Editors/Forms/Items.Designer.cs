@@ -469,6 +469,7 @@ namespace CryBits.Editors.Forms
             this.numWeapon_Damage.Name = "numWeapon_Damage";
             this.numWeapon_Damage.Size = new System.Drawing.Size(90, 20);
             this.numWeapon_Damage.TabIndex = 58;
+            this.numWeapon_Damage.ValueChanged += new System.EventHandler(this.numWeapon_Damage_ValueChanged);
             // 
             // numEquip_Strength
             // 
@@ -667,7 +668,7 @@ namespace CryBits.Editors.Forms
             this.txtFilter.TabIndex = 45;
             this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
-            // Editor_Items
+            // EditorItems
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

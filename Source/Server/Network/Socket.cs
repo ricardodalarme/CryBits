@@ -10,10 +10,8 @@ namespace CryBits.Server.Network
 
         public static void Init()
         {
-            NetPeerConfiguration config;
-
             // Define algumas configurações da rede
-            config = new NetPeerConfiguration("CryBits")
+            NetPeerConfiguration config = new NetPeerConfiguration("CryBits")
             {
                 Port = Logic.Utils.Port,
                 AcceptIncomingConnections = true,
@@ -28,13 +26,12 @@ namespace CryBits.Server.Network
         public static void HandleData()
         {
             NetIncomingMessage data;
-            Account account;
 
             // Lê e direciona todos os dados recebidos
             while ((data = Device.ReadMessage()) != null)
             {
                 // Jogador que está enviando os dados
-                account = Account.List.Find(x => x.Connection == data.SenderConnection);
+                Account account = Account.List.Find(x => x.Connection == data.SenderConnection);
 
                 switch (data.MessageType)
                 {

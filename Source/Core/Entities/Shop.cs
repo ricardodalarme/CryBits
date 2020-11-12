@@ -43,7 +43,7 @@ namespace CryBits.Entities
 
         public ShopItem(Item item, short amount, short price) : base(item, amount)
         {
-            this.Price = price;
+            Price = price;
         }
 
         public override string ToString() => Item.Name + " - " + Amount + "x [$" + Price + "]";

@@ -123,7 +123,7 @@ namespace CryBits.Client.UI
             // Seleciona o item
             if (e.Button == SFML.Window.Mouse.Button.Left)
             {
-                Panels.Hotbar_Change = slot;
+                Hotbar_Change = slot;
                 return;
             }
         }

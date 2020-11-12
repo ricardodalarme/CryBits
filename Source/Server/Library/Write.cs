@@ -40,7 +40,7 @@ namespace CryBits.Server.Library
             {
                 data.Write(account.User);
                 data.Write(account.Password);
-                data.Write((byte)account.Acess);
+                data.Write((byte)account.Access);
             }
         }
 

@@ -4,7 +4,7 @@ using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Library
 {
-    static class Write
+    internal static class Write
     {
         public static void Options()
         {
@@ -16,7 +16,7 @@ namespace CryBits.Client.Library
         public static void Map(Entities.Map map)
         {
             // Escreve os dados
-            using (var stream = new FileInfo(Directories.Maps_Data.FullName + map.ID.ToString() + Directories.Format).OpenWrite())
+            using (var stream = new FileInfo(Directories.Maps_Data.FullName + map.ID + Directories.Format).OpenWrite())
                 new BinaryFormatter().Serialize(stream, map);
         }
     }

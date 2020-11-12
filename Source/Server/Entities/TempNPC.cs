@@ -31,9 +31,9 @@ namespace CryBits.Server.Entities
         // Construtor
         public TempNPC(byte index, TempMap map, NPC data)
         {
-            this.Index = index;
-            this.Map = map;
-            this.Data = data;
+            Index = index;
+            Map = map;
+            Data = data;
         }
 
         /////////////
@@ -49,171 +49,173 @@ namespace CryBits.Server.Entities
                 if (Environment.TickCount > SpawnTimer + (Data.SpawnTime * 1000)) Spawn();
                 return;
             }
+
+            byte targetX = 0, targetY = 0;
+            bool[] canMove = new bool[(byte) Directions.Count];
+            short distance;
+            bool moved = false;
+            bool move = false;
+
+            /////////////////
+            // Regeneração //
+            /////////////////
+            if (Environment.TickCount > Loop.Timer_Regen + 5000)
+                for (byte v = 0; v < (byte) Vitals.Count; v++)
+                    if (Vital[v] < Data.Vital[v])
+                    {
+                        // Renera os vitais
+                        Vital[v] += Regeneration(v);
+
+                        // Impede que o valor passe do limite
+                        if (Vital[v] > Data.Vital[v]) Vital[v] = Data.Vital[v];
+
+                        // Envia os dados aos jogadores do mapa
+                        Send.Map_NPC_Vitals(this);
+                    }
+
+            //////////////////
+            // Movimentação //
+            //////////////////
+            // Atacar ao ver
+            if (Data.Behaviour == NPCBehaviour.AttackOnSight)
+            {
+                // Jogador
+                if (Target == null)
+                    foreach (var player in Account.List)
+                    {
+                        // Verifica se o jogador está jogando e no mesmo mapa que o NPC
+                        if (!player.IsPlaying) continue;
+                        if (player.Character.Map != Map) continue;
+
+                        // Se o jogador estiver no alcance do NPC, ir atrás dele
+                        distance = (short) Math.Sqrt(Math.Pow(X - player.Character.X, 2) +
+                                                     Math.Pow(Y - player.Character.Y, 2));
+                        if (distance <= Data.Sight)
+                        {
+                            Target = player.Character;
+
+                            // Mensagem
+                            if (!string.IsNullOrEmpty(Data.SayMsg))
+                                Send.Message(player.Character, Data.Name + ": " + Data.SayMsg,
+                                    System.Drawing.Color.White);
+                            break;
+                        }
+                    }
+
+                // NPC
+                if (Data.AttackNPC && Target == null)
+                    for (byte npcIndex = 0; npcIndex < Map.NPC.Length; npcIndex++)
+                    {
+                        // Verifica se pode atacar
+                        if (npcIndex == Index) continue;
+                        if (!Map.NPC[npcIndex].Alive) continue;
+                        if (Data.IsAlied(Map.NPC[npcIndex].Data)) continue;
+
+                        // Se o NPC estiver no alcance do NPC, ir atrás dele
+                        distance = (short) Math.Sqrt(Math.Pow(X - Map.NPC[npcIndex].X, 2) +
+                                                     Math.Pow(Y - Map.NPC[npcIndex].Y, 2));
+                        if (distance <= Data.Sight)
+                        {
+                            Target = Map.NPC[npcIndex];
+                            break;
+                        }
+                    }
+            }
+
+            // Verifica se o alvo ainda está disponível
+            if (Target != null)
+                if (Target is Player && !((Player) Target).Account.IsPlaying || Target.Map != Map)
+                    Target = null;
+                else if (Target is TempNPC && !((TempNPC) Target).Alive)
+                    Target = null;
+
+            // Evita que ele se movimente sem sentido
+            if (Target != null)
+            {
+                targetX = Target.X;
+                targetY = Target.Y;
+
+                // Verifica se o alvo saiu do alcance do NPC
+                if (Data.Sight < Math.Sqrt(Math.Pow(X - targetX, 2) + Math.Pow(Y - targetY, 2)))
+                    Target = null;
+                else
+                    move = true;
+            }
             else
             {
-                byte targetX = 0, targetY = 0;
-                bool[] canMove = new bool[(byte)Directions.Count];
-                short distance;
-                bool moved = false;
-                bool move = false;
+                // Define o alvo a zona do NPC
+                if (Map.Data.NPC[Index].Zone > 0)
+                    if (Map.Data.Attribute[X, Y].Zone != Map.Data.NPC[Index].Zone)
+                        for (byte x2 = 0; x2 < CryBits.Entities.Map.Width; x2++)
+                        for (byte y2 = 0; y2 < CryBits.Entities.Map.Height; y2++)
+                            if (Map.Data.Attribute[x2, y2].Zone == Map.Data.NPC[Index].Zone)
+                                if (!Map.Data.Tile_Blocked(x2, y2))
+                                {
+                                    targetX = x2;
+                                    targetY = y2;
+                                    move = true;
+                                    break;
+                                }
+            }
 
-                /////////////////
-                // Regeneração //
-                /////////////////
-                if (Environment.TickCount > Loop.Timer_Regen + 5000)
-                    for (byte v = 0; v < (byte)Vitals.Count; v++)
-                        if (Vital[v] < Data.Vital[v])
-                        {
-                            // Renera os vitais
-                            Vital[v] += Regeneration(v);
-
-                            // Impede que o valor passe do limite
-                            if (Vital[v] > Data.Vital[v]) Vital[v] = Data.Vital[v];
-
-                            // Envia os dados aos jogadores do mapa
-                            Send.Map_NPC_Vitals(this);
-                        }
-
-                //////////////////
-                // Movimentação //
-                //////////////////
-                // Atacar ao ver
-                if (Data.Behaviour == NPCBehaviour.AttackOnSight)
+            // Movimenta o NPC
+            if (move)
+            {
+                // Verifica como o NPC pode se mover
+                if (Vital[(byte) Vitals.HP] > Data.Vital[(byte) Vitals.HP] * (Data.Flee_Helth / 100.0))
                 {
-                    // Jogador
-                    if (Target == null)
-                        foreach (var player in Account.List)
-                        {
-                            // Verifica se o jogador está jogando e no mesmo mapa que o NPC
-                            if (!player.IsPlaying) continue;
-                            if (player.Character.Map != Map) continue;
-
-                            // Se o jogador estiver no alcance do NPC, ir atrás dele
-                            distance = (short)Math.Sqrt(Math.Pow(X - player.Character.X, 2) + Math.Pow(Y - player.Character.Y, 2));
-                            if (distance <= Data.Sight)
-                            {
-                                Target = player.Character;
-
-                                // Mensagem
-                                if (!string.IsNullOrEmpty(Data.SayMsg)) Send.Message(player.Character, Data.Name + ": " + Data.SayMsg, System.Drawing.Color.White);
-                                break;
-                            }
-                        }
-
-                    // NPC
-                    if (Data.AttackNPC && Target == null)
-                        for (byte npcIndex = 0; npcIndex < Map.NPC.Length; npcIndex++)
-                        {
-                            // Verifica se pode atacar
-                            if (npcIndex == Index) continue;
-                            if (!Map.NPC[npcIndex].Alive) continue;
-                            if (Data.IsAlied(Map.NPC[npcIndex].Data)) continue;
-
-                            // Se o NPC estiver no alcance do NPC, ir atrás dele
-                            distance = (short)Math.Sqrt(Math.Pow(X - Map.NPC[npcIndex].X, 2) + Math.Pow(Y - Map.NPC[npcIndex].Y, 2));
-                            if (distance <= Data.Sight)
-                            {
-                                Target = Map.NPC[npcIndex];
-                                break;
-                            }
-                        }
-                }
-
-                // Verifica se o alvo ainda está disponível
-                if (Target != null)
-                    if (Target is Player && !((Player)Target).Account.IsPlaying || Target.Map != Map)
-                        Target = null;
-                    else if (Target is TempNPC && !((TempNPC)Target).Alive)
-                        Target = null;
-
-                // Evita que ele se movimente sem sentido
-                if (Target != null)
-                {
-                    targetX = Target.X;
-                    targetY = Target.Y;
-
-                    // Verifica se o alvo saiu do alcance do NPC
-                    if (Data.Sight < Math.Sqrt(Math.Pow(X - targetX, 2) + Math.Pow(Y - targetY, 2)))
-                        Target = null;
-                    else
-                        move = true;
+                    // Para perto do alvo
+                    canMove[(byte) Directions.Up] = Y > targetY;
+                    canMove[(byte) Directions.Down] = Y < targetY;
+                    canMove[(byte) Directions.Left] = X > targetX;
+                    canMove[(byte) Directions.Right] = X < targetX;
                 }
                 else
                 {
-                    // Define o alvo a zona do NPC
-                    if (Map.Data.NPC[Index].Zone > 0)
-                        if (Map.Data.Attribute[X, Y].Zone != Map.Data.NPC[Index].Zone)
-                            for (byte x2 = 0; x2 < CryBits.Entities.Map.Width; x2++)
-                                for (byte y2 = 0; y2 < CryBits.Entities.Map.Height; y2++)
-                                    if (Map.Data.Attribute[x2, y2].Zone == Map.Data.NPC[Index].Zone)
-                                        if (!Map.Data.Tile_Blocked(x2, y2))
-                                        {
-                                            targetX = x2;
-                                            targetY = y2;
-                                            move = true;
-                                            break;
-                                        }
+                    // Para longe do alvo
+                    canMove[(byte) Directions.Up] = Y < targetY;
+                    canMove[(byte) Directions.Down] = Y > targetY;
+                    canMove[(byte) Directions.Left] = X < targetX;
+                    canMove[(byte) Directions.Right] = X > targetX;
                 }
 
-                // Movimenta o NPC
-                if (move)
+                // Aleatoriza a forma que ele vai se movimentar até o alvo
+                if (MyRandom.Next(0, 2) == 0)
                 {
-                    // Verifica como o NPC pode se mover
-                    if (Vital[(byte)Vitals.HP] > Data.Vital[(byte)Vitals.HP] * (Data.Flee_Helth / 100.0))
-                    {
-                        // Para perto do alvo
-                        canMove[(byte)Directions.Up] = Y > targetY;
-                        canMove[(byte)Directions.Down] = Y < targetY;
-                        canMove[(byte)Directions.Left] = X > targetX;
-                        canMove[(byte)Directions.Right] = X < targetX;
-                    }
-                    else
-                    {
-                        // Para longe do alvo
-                        canMove[(byte)Directions.Up] = Y < targetY;
-                        canMove[(byte)Directions.Down] = Y > targetY;
-                        canMove[(byte)Directions.Left] = X < targetX;
-                        canMove[(byte)Directions.Right] = X > targetX;
-                    }
-
-                    // Aleatoriza a forma que ele vai se movimentar até o alvo
-                    if (MyRandom.Next(0, 2) == 0)
-                    {
-                        for (byte d = 0; d < (byte)Directions.Count; d++)
-                            if (!moved && canMove[d] && this.Move((Directions)d))
-                                moved = true;
-                    }
-                    else
-                        for (short d = (byte)Directions.Count - 1; d >= 0; d--)
-                            if (!moved && canMove[d] && this.Move((Directions)d))
-                                moved = true;
+                    for (byte d = 0; d < (byte) Directions.Count; d++)
+                        if (!moved && canMove[d] && Move((Directions) d))
+                            moved = true;
                 }
-
-                // Move-se aleatoriamente
-                if (Data.Behaviour == (byte)NPCBehaviour.Friendly || Target == null)
-                    if (MyRandom.Next(0, 3) == 0 && !moved)
-                        if (Data.Movement == NPCMovements.MoveRandomly)
-                            this.Move((Directions)MyRandom.Next(0, 4), 1, true);
-                        else if (Data.Movement == NPCMovements.TurnRandomly)
-                        {
-                            Direction = (Directions)MyRandom.Next(0, 4);
-                            Send.Map_NPC_Direction(this);
-                        }
-
-                ////////////
-                // Ataque //
-                ////////////
-                Attack();
+                else
+                    for (short d = (byte) Directions.Count - 1; d >= 0; d--)
+                        if (!moved && canMove[d] && Move((Directions) d))
+                            moved = true;
             }
+
+            // Move-se aleatoriamente
+            if (Data.Behaviour == (byte) NPCBehaviour.Friendly || Target == null)
+                if (MyRandom.Next(0, 3) == 0 && !moved)
+                    if (Data.Movement == NPCMovements.MoveRandomly)
+                        Move((Directions) MyRandom.Next(0, 4), 1, true);
+                    else if (Data.Movement == NPCMovements.TurnRandomly)
+                    {
+                        Direction = (Directions) MyRandom.Next(0, 4);
+                        Send.Map_NPC_Direction(this);
+                    }
+
+            ////////////
+            // Ataque //
+            ////////////
+            Attack();
         }
 
         private void Spawn(byte x, byte y, Directions direction = 0)
         {
             // Faz o NPC surgir no mapa
             Alive = true;
-            this.X = x;
-            this.Y = y;
-            this.Direction = direction;
+            X = x;
+            Y = y;
+            Direction = direction;
             for (byte i = 0; i < (byte)Vitals.Count; i++) Vital[i] = Data.Vital[i];
 
             // Envia os dados aos jogadores
@@ -271,7 +273,7 @@ namespace CryBits.Server.Entities
             byte nextX = X, nextY = Y;
 
             // Define a direção do NPC
-            this.Direction = direction;
+            Direction = direction;
             Send.Map_NPC_Direction(this);
 
             // Próximo azulejo

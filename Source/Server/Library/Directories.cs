@@ -9,14 +9,14 @@ namespace CryBits.Server.Library
         public const string Format = ".dat";
 
         // Diretório dos arquivos
-        public static FileInfo Settings = new FileInfo(Application.StartupPath + @"\Data\Settings" + Format);
-        public static DirectoryInfo Accounts = new DirectoryInfo(Application.StartupPath + @"\Data\Accounts\");
-        public static FileInfo Characters = new FileInfo(Application.StartupPath + @"\Data\Characters" + Format);
-        public static DirectoryInfo Classes = new DirectoryInfo(Application.StartupPath + @"\Data\Classes\");
-        public static DirectoryInfo Maps = new DirectoryInfo(Application.StartupPath + @"\Data\Maps\");
-        public static DirectoryInfo NPCs = new DirectoryInfo(Application.StartupPath + @"\Data\NPCs\");
-        public static DirectoryInfo Items = new DirectoryInfo(Application.StartupPath + @"\Data\Items\");
-        public static DirectoryInfo Shops = new DirectoryInfo(Application.StartupPath + @"\Data\Shops\");
+        public static readonly FileInfo Settings = new FileInfo(Application.StartupPath + @"\Data\Settings" + Format);
+        public static readonly DirectoryInfo Accounts = new DirectoryInfo(Application.StartupPath + @"\Data\Accounts\");
+        public static readonly FileInfo Characters = new FileInfo(Application.StartupPath + @"\Data\Characters" + Format);
+        public static readonly DirectoryInfo Classes = new DirectoryInfo(Application.StartupPath + @"\Data\Classes\");
+        public static readonly DirectoryInfo Maps = new DirectoryInfo(Application.StartupPath + @"\Data\Maps\");
+        public static readonly DirectoryInfo NPCs = new DirectoryInfo(Application.StartupPath + @"\Data\NPCs\");
+        public static readonly DirectoryInfo Items = new DirectoryInfo(Application.StartupPath + @"\Data\Items\");
+        public static readonly DirectoryInfo Shops = new DirectoryInfo(Application.StartupPath + @"\Data\Shops\");
 
         public static void Create()
         {

@@ -79,7 +79,7 @@ namespace CryBits.Server.Entities
         public MapItems HasItem(byte x, byte y)
         {
             // Verifica se tem algum item nas coordenadas 
-            for (byte i = (byte)(Item.Count - 1); i >= 0; i--)
+            for (int i = Item.Count - 1; i >= 0; i--)
                 if (Item[i].X == x && Item[i].Y == y)
                     return Item[i];
 
