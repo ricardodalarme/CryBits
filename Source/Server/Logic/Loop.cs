@@ -13,7 +13,7 @@ namespace CryBits.Server.Logic
 
         public static void Main()
         {
-            int CPS = 0;
+            int cps = 0;
 
             while (Program.Working)
             {
@@ -23,12 +23,12 @@ namespace CryBits.Server.Logic
                 if (Environment.TickCount > Timer_500 + 500)
                 {
                     // Lógicas do mapa
-                    foreach (var Temp_Map in TempMap.List.Values) Temp_Map.Logic();
+                    foreach (var tempMap in TempMap.List.Values) tempMap.Logic();
 
                     // Lógica dos jogadores
-                    foreach (var Account in Account.List)
-                        if (Account.IsPlaying)
-                            Account.Character.Logic();
+                    foreach (var account in Account.List)
+                        if (account.IsPlaying)
+                            account.Character.Logic();
 
                     // Reinicia a contagem dos 500
                     Timer_500 = Environment.TickCount;
@@ -44,12 +44,12 @@ namespace CryBits.Server.Logic
                 // Calcula o CPS
                 if (Timer_1000 < Environment.TickCount)
                 {
-                    Program.CPS = CPS;
-                    CPS = 0;
+                    Program.CPS = cps;
+                    cps = 0;
                     Timer_1000 = Environment.TickCount + 1000;
                 }
                 else
-                    CPS += 1;
+                    cps += 1;
             }
         }
 

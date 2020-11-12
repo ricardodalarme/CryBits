@@ -24,9 +24,9 @@ namespace CryBits.Server.Entities
         }
 
         // Construtor
-        public Account(NetConnection Connection)
+        public Account(NetConnection connection)
         {
-            this.Connection = Connection;
+            this.Connection = connection;
         }
 
         // Verifica se o jogador está dentro do jogo
