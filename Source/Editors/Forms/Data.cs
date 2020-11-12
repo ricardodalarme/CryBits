@@ -4,14 +4,14 @@ using System;
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Data : DarkForm
+    partial class EditorData : DarkForm
     {
-        public Editor_Data()
+        public EditorData()
         {
             InitializeComponent();
 
             // Abre janela
-            Editor_Maps.Form.Hide();
+            EditorMaps.Form.Hide();
             Show();
 
             // Define os valores
@@ -31,7 +31,7 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Data_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
-            Editor_Maps.Form.Show();
+            EditorMaps.Form.Show();
         }
 
         private void butSave_Click(object sender, EventArgs e)

@@ -6,20 +6,20 @@ using System.Windows.Forms;
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_NPCs : DarkForm
+    partial class EditorNPCs : DarkForm
     {
         // Usado para acessar os dados da janela
-        public static Editor_NPCs Form;
+        public static EditorNPCs Form;
 
         // NPC selecionado
         public NPC Selected;
 
-        public Editor_NPCs()
+        public EditorNPCs()
         {
             InitializeComponent();
 
             // Abre janela
-            Editor_Maps.Form.Hide();
+            EditorMaps.Form.Hide();
             Show();
 
             // Inicializa a janela de renderização
@@ -29,15 +29,15 @@ namespace CryBits.Editors.Forms
             numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
 
             // Lista os dados
-            foreach (var Item in Item.List.Values) cmbDrop_Item.Items.Add(Item);
-            foreach (var Shop in Shop.List.Values) cmbShop.Items.Add(Shop);
+            foreach (var item in Item.List.Values) cmbDrop_Item.Items.Add(item);
+            foreach (var shop in Shop.List.Values) cmbShop.Items.Add(shop);
             List_Update();
         }
 
         private void Editor_NPCs_FormClosed(object sender, FormClosedEventArgs e)
         {
             Graphics.Win_NPC = null;
-            Editor_Maps.Form.Show();
+            EditorMaps.Form.Show();
         }
 
         private void Groups_Visibility()
@@ -51,11 +51,11 @@ namespace CryBits.Editors.Forms
         {
             // Lista os NPCs
             List.Nodes.Clear();
-            foreach (var NPC in NPC.List.Values)
-                if (NPC.Name.StartsWith(txtFilter.Text))
-                    List.Nodes.Add(new TreeNode(NPC.Name)
+            foreach (var npc in NPC.List.Values)
+                if (npc.Name.StartsWith(txtFilter.Text))
+                    List.Nodes.Add(new TreeNode(npc.Name)
                     {
-                        Tag = NPC.ID
+                        Tag = npc.ID
                     });
 
             // Seleciona o primeiro
@@ -109,15 +109,15 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            NPC New = new NPC(Guid.NewGuid());
-            New.Name = "New NPC";
-            NPC.List.Add(New.ID, New);
+            NPC @new = new NPC(Guid.NewGuid());
+            @new.Name = "New NPC";
+            NPC.List.Add(@new.ID, @new);
 
             // Adiciona na lista
-            TreeNode Node = new TreeNode(New.Name);
-            Node.Tag = New.ID;
-            List.Nodes.Add(Node);
-            List.SelectedNode = Node;
+            TreeNode node = new TreeNode(@new.Name);
+            node.Tag = @new.ID;
+            List.Nodes.Add(node);
+            List.SelectedNode = node;
 
             // Altera a visiblidade dos grupos caso necessários
             Groups_Visibility();
@@ -253,9 +253,9 @@ namespace CryBits.Editors.Forms
         private void butDrop_Delete_Click(object sender, EventArgs e)
         {
             // Deleta a item
-            short Selected_Item = (short)lstDrop.SelectedIndex;
-            if (Selected_Item != -1)
-                Selected.Drop.RemoveAt(Selected_Item);
+            short selectedItem = (short)lstDrop.SelectedIndex;
+            if (selectedItem != -1)
+                Selected.Drop.RemoveAt(selectedItem);
         }
 
         private void butItem_Ok_Click(object sender, EventArgs e)
@@ -280,7 +280,7 @@ namespace CryBits.Editors.Forms
 
                 // Adiciona os NPCs
                 cmbAllie_NPC.Items.Clear();
-                foreach (var NPC in NPC.List.Values) cmbAllie_NPC.Items.Add(NPC);
+                foreach (var npc in NPC.List.Values) cmbAllie_NPC.Items.Add(npc);
                 cmbAllie_NPC.SelectedIndex = 0;
             }
         }
@@ -294,8 +294,8 @@ namespace CryBits.Editors.Forms
         private void butAllie_Ok_Click(object sender, EventArgs e)
         {
             // Adiciona o aliado
-            var Allie = (NPC)cmbAllie_NPC.SelectedItem;
-            if (!Selected.Allie.Contains(Allie)) Selected.Allie.Add(Allie);
+            var allie = (NPC)cmbAllie_NPC.SelectedItem;
+            if (!Selected.Allie.Contains(allie)) Selected.Allie.Add(allie);
             grpAllie_Add.Visible = false;
         }
 

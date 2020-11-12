@@ -9,99 +9,99 @@ namespace CryBits.Editors.Library
         public static void Options()
         {
             // Escreve os dados
-            using (var Stream = new FileInfo(Directories.Options.FullName).OpenWrite())
-                new BinaryFormatter().Serialize(Stream, Lists.Options);
+            using (var stream = new FileInfo(Directories.Options.FullName).OpenWrite())
+                new BinaryFormatter().Serialize(stream, Lists.Options);
         }
 
         public static void Tools()
         {
             // Cria um sistema binário para a manipulação dos dados
-            FileInfo File = new FileInfo(Directories.Tools.FullName);
-            using (var Data = new BinaryWriter(File.OpenWrite()))
+            FileInfo file = new FileInfo(Directories.Tools.FullName);
+            using (var data = new BinaryWriter(file.OpenWrite()))
                 // Escreve os dados
                 for (short n = 0; n < Lists.Tool.Nodes.Count; n++)
-                    Tools(Lists.Tool.Nodes[n], Data);
+                    Tools(Lists.Tool.Nodes[n], data);
         }
 
-        private static void Tools(TreeNode Node, BinaryWriter Data)
+        private static void Tools(TreeNode node, BinaryWriter data)
         {
             // Escreve a ferramenta
-            Data.Write((byte)Node.Nodes.Count);
-            for (byte i = 0; i < Node.Nodes.Count; i++)
+            data.Write((byte)node.Nodes.Count);
+            for (byte i = 0; i < node.Nodes.Count; i++)
             {
                 // Salva de acordo com a ferramenta
-                Entities.Tool Tool = (Entities.Tool)Node.Nodes[i].Tag;
-                if (Tool is Entities.Button)
+                Entities.Tool tool = (Entities.Tool)node.Nodes[i].Tag;
+                if (tool is Entities.Button)
                 {
-                    Data.Write((byte)ToolsTypes.Button);
-                    Button(Data, (Entities.Button)Tool);
+                    data.Write((byte)ToolsTypes.Button);
+                    Button(data, (Entities.Button)tool);
                 }
-                else if (Tool is Entities.TextBox)
+                else if (tool is Entities.TextBox)
                 {
-                    Data.Write((byte)ToolsTypes.TextBox);
-                    TextBox(Data, (Entities.TextBox)Tool);
+                    data.Write((byte)ToolsTypes.TextBox);
+                    TextBox(data, (Entities.TextBox)tool);
                 }
-                else if (Tool is Entities.CheckBox)
+                else if (tool is Entities.CheckBox)
                 {
-                    Data.Write((byte)ToolsTypes.CheckBox);
-                    CheckBox(Data, (Entities.CheckBox)Tool);
+                    data.Write((byte)ToolsTypes.CheckBox);
+                    CheckBox(data, (Entities.CheckBox)tool);
                 }
-                else if (Tool is Entities.Panel)
+                else if (tool is Entities.Panel)
                 {
-                    Data.Write((byte)ToolsTypes.Panel);
-                    Panel(Data, (Entities.Panel)Tool);
+                    data.Write((byte)ToolsTypes.Panel);
+                    Panel(data, (Entities.Panel)tool);
                 }
 
                 // Pula pra próxima ferramenta
-                Tools(Node.Nodes[i], Data);
+                Tools(node.Nodes[i], data);
             }
         }
 
-        private static void Button(BinaryWriter Data, Entities.Button Tool)
+        private static void Button(BinaryWriter data, Entities.Button tool)
         {
             // Escreve os dados
-            Data.Write(Tool.Name);
-            Data.Write(Tool.Position.X);
-            Data.Write(Tool.Position.Y);
-            Data.Write(Tool.Visible);
-            Data.Write((byte)Tool.Window);
-            Data.Write(Tool.Texture_Num);
+            data.Write(tool.Name);
+            data.Write(tool.Position.X);
+            data.Write(tool.Position.Y);
+            data.Write(tool.Visible);
+            data.Write((byte)tool.Window);
+            data.Write(tool.Texture_Num);
         }
 
-        private static void TextBox(BinaryWriter Data, Entities.TextBox Tool)
+        private static void TextBox(BinaryWriter data, Entities.TextBox tool)
         {
             // Escreve os dados
-            Data.Write(Tool.Name);
-            Data.Write(Tool.Position.X);
-            Data.Write(Tool.Position.Y);
-            Data.Write(Tool.Visible);
-            Data.Write((byte)Tool.Window);
-            Data.Write(Tool.Max_Characters);
-            Data.Write(Tool.Width);
-            Data.Write(Tool.Password);
+            data.Write(tool.Name);
+            data.Write(tool.Position.X);
+            data.Write(tool.Position.Y);
+            data.Write(tool.Visible);
+            data.Write((byte)tool.Window);
+            data.Write(tool.Max_Characters);
+            data.Write(tool.Width);
+            data.Write(tool.Password);
         }
 
-        private static void Panel(BinaryWriter Data, Entities.Panel Tool)
+        private static void Panel(BinaryWriter data, Entities.Panel tool)
         {
             // Escreve os dados
-            Data.Write(Tool.Name);
-            Data.Write(Tool.Position.X);
-            Data.Write(Tool.Position.Y);
-            Data.Write(Tool.Visible);
-            Data.Write((byte)Tool.Window);
-            Data.Write(Tool.Texture_Num);
+            data.Write(tool.Name);
+            data.Write(tool.Position.X);
+            data.Write(tool.Position.Y);
+            data.Write(tool.Visible);
+            data.Write((byte)tool.Window);
+            data.Write(tool.Texture_Num);
         }
 
-        private static void CheckBox(BinaryWriter Data, Entities.CheckBox Tool)
+        private static void CheckBox(BinaryWriter data, Entities.CheckBox tool)
         {
             // Escreve os dados
-            Data.Write(Tool.Name);
-            Data.Write(Tool.Position.X);
-            Data.Write(Tool.Position.Y);
-            Data.Write(Tool.Visible);
-            Data.Write((byte)Tool.Window);
-            Data.Write(Tool.Text);
-            Data.Write(Tool.Checked);
+            data.Write(tool.Name);
+            data.Write(tool.Position.X);
+            data.Write(tool.Position.Y);
+            data.Write(tool.Visible);
+            data.Write((byte)tool.Window);
+            data.Write(tool.Text);
+            data.Write(tool.Checked);
         }
 
         public static void Tiles()
@@ -110,11 +110,11 @@ namespace CryBits.Editors.Library
             for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
         }
 
-        public static void Tile(byte Index)
+        public static void Tile(byte index)
         {
             // Escreve os dados
-            using (var Stream = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format).OpenWrite())
-                new BinaryFormatter().Serialize(Stream, Lists.Tile[Index]);
+            using (var stream = new FileInfo(Directories.Tiles.FullName + index + Directories.Format).OpenWrite())
+                new BinaryFormatter().Serialize(stream, Lists.Tile[index]);
         }
     }
 }

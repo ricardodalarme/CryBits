@@ -21,85 +21,85 @@ namespace CryBits.Editors.Network
                 return new BinaryFormatter().Deserialize(stream);
         }
 
-        public static void Handle(NetIncomingMessage Data)
+        public static void Handle(NetIncomingMessage data)
         {
             // Manuseia os dados recebidos
-            switch ((ServerEditor)Data.ReadByte())
+            switch ((ServerEditor)data.ReadByte())
             {
-                case ServerEditor.Alert: Alert(Data); break;
+                case ServerEditor.Alert: Alert(data); break;
                 case ServerEditor.Connect: Connect(); break;
-                case ServerEditor.Server_Data: Server_Data(Data); break;
-                case ServerEditor.Classes: Classes(Data); break;
-                case ServerEditor.Map: Map(Data); break;
-                case ServerEditor.NPCs: NPCs(Data); break;
-                case ServerEditor.Items: Items(Data); break;
-                case ServerEditor.Shops: Shops(Data); break;
+                case ServerEditor.Server_Data: Server_Data(data); break;
+                case ServerEditor.Classes: Classes(data); break;
+                case ServerEditor.Map: Map(data); break;
+                case ServerEditor.NPCs: NPCs(data); break;
+                case ServerEditor.Items: Items(data); break;
+                case ServerEditor.Shops: Shops(data); break;
             }
         }
 
-        private static void Alert(NetIncomingMessage Data)
+        private static void Alert(NetIncomingMessage data)
         {
             // Mostra a mensagem
-            MessageBox.Show(Data.ReadString());
+            MessageBox.Show(data.ReadString());
         }
 
         private static void Connect()
         {
             // Abre a janela principal
             Login.Form.Visible = false;
-            Editor_Maps.Form = new Editor_Maps();
+            EditorMaps.Form = new EditorMaps();
         }
 
-        private static void Server_Data(NetIncomingMessage Data)
+        private static void Server_Data(NetIncomingMessage data)
         {
             // Lê os dados
-            Lists.Server_Data.Game_Name = Data.ReadString();
-            Lists.Server_Data.Welcome = Data.ReadString();
-            Lists.Server_Data.Port = Data.ReadInt16();
-            Lists.Server_Data.Max_Players = Data.ReadByte();
-            Lists.Server_Data.Max_Characters = Data.ReadByte();
-            Lists.Server_Data.Max_Party_Members = Data.ReadByte();
-            Lists.Server_Data.Max_Map_Items = Data.ReadByte();
-            Lists.Server_Data.Num_Points = Data.ReadByte();
-            Lists.Server_Data.Min_Name_Length = Data.ReadByte();
-            Lists.Server_Data.Max_Name_Length = Data.ReadByte();
-            Lists.Server_Data.Min_Password_Length = Data.ReadByte();
-            Lists.Server_Data.Max_Password_Length = Data.ReadByte();
+            Lists.Server_Data.Game_Name = data.ReadString();
+            Lists.Server_Data.Welcome = data.ReadString();
+            Lists.Server_Data.Port = data.ReadInt16();
+            Lists.Server_Data.Max_Players = data.ReadByte();
+            Lists.Server_Data.Max_Characters = data.ReadByte();
+            Lists.Server_Data.Max_Party_Members = data.ReadByte();
+            Lists.Server_Data.Max_Map_Items = data.ReadByte();
+            Lists.Server_Data.Num_Points = data.ReadByte();
+            Lists.Server_Data.Min_Name_Length = data.ReadByte();
+            Lists.Server_Data.Max_Name_Length = data.ReadByte();
+            Lists.Server_Data.Min_Password_Length = data.ReadByte();
+            Lists.Server_Data.Max_Password_Length = data.ReadByte();
         }
 
-        private static void Classes(NetIncomingMessage Data)
+        private static void Classes(NetIncomingMessage data)
         {
             // Recebe os dados
-            Class.List = (Dictionary<Guid, Class>)ByteArrayToObject(Data);
+            Class.List = (Dictionary<Guid, Class>)ByteArrayToObject(data);
         }
 
-        private static void Map(NetIncomingMessage Data)
+        private static void Map(NetIncomingMessage data)
         {
-            Map Map = (Map)ByteArrayToObject(Data);
-            Guid ID = Map.ID;
+            Map map = (Map)ByteArrayToObject(data);
+            Guid id = map.ID;
 
             // Obtém o dado
-            if (Map.List.ContainsKey(ID)) Map.List[ID] = Map;
+            if (CryBits.Entities.Map.List.ContainsKey(id)) CryBits.Entities.Map.List[id] = map;
             else
-                Map.List.Add(ID, Map);
+                CryBits.Entities.Map.List.Add(id, map);
         }
 
-        private static void NPCs(NetIncomingMessage Data)
+        private static void NPCs(NetIncomingMessage data)
         {
             // Recebe os dados
-            NPC.List = (Dictionary<Guid, NPC>)ByteArrayToObject(Data);
+            NPC.List = (Dictionary<Guid, NPC>)ByteArrayToObject(data);
         }
 
-        private static void Items(NetIncomingMessage Data)
+        private static void Items(NetIncomingMessage data)
         {
             // Recebe os dados
-            Item.List = (Dictionary<Guid, Item>)ByteArrayToObject(Data);
+            Item.List = (Dictionary<Guid, Item>)ByteArrayToObject(data);
         }
 
-        private static void Shops(NetIncomingMessage Data)
+        private static void Shops(NetIncomingMessage data)
         {
             // Recebe os dados
-            Shop.List = (Dictionary<Guid, Shop>)ByteArrayToObject(Data);
+            Shop.List = (Dictionary<Guid, Shop>)ByteArrayToObject(data);
         }
     }
 }

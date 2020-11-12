@@ -7,20 +7,20 @@ using static CryBits.Editors.Logic.Utils;
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Tiles : DarkForm
+    partial class EditorTiles : DarkForm
     {
         // Usado para acessar os dados da janela
-        public static Editor_Tiles Form;
+        public static EditorTiles Form;
 
         // Atributo selecionado
-        private TileAttributes Attributes;
+        private TileAttributes _attributes;
 
-        public Editor_Tiles()
+        public EditorTiles()
         {
             InitializeComponent();
 
             // Abre janela
-            Editor_Maps.Form.Hide();
+            EditorMaps.Form.Hide();
             Show();
 
             // Inicializa a janela de renderização
@@ -34,13 +34,13 @@ namespace CryBits.Editors.Forms
         private void Editor_Tiles_FormClosed(object sender, FormClosedEventArgs e)
         {
             Graphics.Win_Tile = null;
-            Editor_Maps.Form.Show();
+            EditorMaps.Form.Show();
         }
 
         private void Update_Bounds()
         {
-            int x = Graphics.TSize(Graphics.Tex_Tile[scrlTile.Value]).Width / Grid - picTile.Width / Grid;
-            int y = Graphics.TSize(Graphics.Tex_Tile[scrlTile.Value]).Height / Grid - picTile.Height / Grid;
+            int x = Graphics.Size(Graphics.Tex_Tile[scrlTile.Value]).Width / Grid - picTile.Width / Grid;
+            int y = Graphics.Size(Graphics.Tex_Tile[scrlTile.Value]).Height / Grid - picTile.Height / Grid;
 
             // Verifica se nada passou do limite minímo
             if (x < 0) x = 0;
@@ -81,37 +81,37 @@ namespace CryBits.Editors.Forms
 
         private void picTile_MouseDown(object sender, MouseEventArgs e)
         {
-            Point Position = new Point((e.X + scrlTileX.Value * Grid) / Grid, (e.Y + scrlTileY.Value * Grid) / Grid);
-            Point Tile_Dif = new Point(e.X - e.X / Grid * Grid, e.Y - e.Y / Grid * Grid);
+            Point position = new Point((e.X + scrlTileX.Value * Grid) / Grid, (e.Y + scrlTileY.Value * Grid) / Grid);
+            Point tileDif = new Point(e.X - e.X / Grid * Grid, e.Y - e.Y / Grid * Grid);
 
             // Previne erros
-            if (Position.X > Lists.Tile[scrlTile.Value].Data.GetUpperBound(0)) return;
-            if (Position.Y > Lists.Tile[scrlTile.Value].Data.GetUpperBound(1)) return;
+            if (position.X > Lists.Tile[scrlTile.Value].Data.GetUpperBound(0)) return;
+            if (position.Y > Lists.Tile[scrlTile.Value].Data.GetUpperBound(1)) return;
 
             // Atributos
             if (optAttributes.Checked)
             {
                 // Define
                 if (e.Button == MouseButtons.Left)
-                    Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Attribute = (byte)Attributes;
+                    Lists.Tile[scrlTile.Value].Data[position.X, position.Y].Attribute = (byte)_attributes;
                 // Remove
                 else if (e.Button == MouseButtons.Right)
-                    Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Attribute = 0;
+                    Lists.Tile[scrlTile.Value].Data[position.X, position.Y].Attribute = 0;
             }
             // Bloqueio direcional
             else if (optDirBlock.Checked)
                 for (byte i = 0; i < (byte)Directions.Count; i++)
-                    if (Tile_Dif.X >= Block_Position(i).X && Tile_Dif.X <= Block_Position(i).X + 8)
-                        if (Tile_Dif.Y >= Block_Position(i).Y && Tile_Dif.Y <= Block_Position(i).Y + 8)
-                            if (Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Attribute != (byte)TileAttributes.Block)
+                    if (tileDif.X >= Block_Position(i).X && tileDif.X <= Block_Position(i).X + 8)
+                        if (tileDif.Y >= Block_Position(i).Y && tileDif.Y <= Block_Position(i).Y + 8)
+                            if (Lists.Tile[scrlTile.Value].Data[position.X, position.Y].Attribute != (byte)TileAttributes.Block)
                                 // Altera o valor de bloqueio
-                                Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i] = !Lists.Tile[scrlTile.Value].Data[Position.X, Position.Y].Block[i];
+                                Lists.Tile[scrlTile.Value].Data[position.X, position.Y].Block[i] = !Lists.Tile[scrlTile.Value].Data[position.X, position.Y].Block[i];
         }
 
         private void optBlock_CheckedChanged(object sender, EventArgs e)
         {
             // Define o atributo
-            Attributes = TileAttributes.Block;
+            _attributes = TileAttributes.Block;
         }
 
         private void optAttributes_CheckedChanged(object sender, EventArgs e)

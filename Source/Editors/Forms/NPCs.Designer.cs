@@ -2,7 +2,7 @@
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_NPCs
+    partial class EditorNPCs
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_NPCs));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorNPCs));
             this.grpGeneral = new DarkUI.Controls.DarkGroupBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
             this.numTexture = new DarkUI.Controls.DarkNumericUpDown();
@@ -872,7 +872,7 @@ namespace CryBits.Editors.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Editor_NPCs";
+            this.Name = "EditorNPCs";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NPC Editor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_NPCs_FormClosed);

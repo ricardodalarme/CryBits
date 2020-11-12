@@ -12,36 +12,36 @@ using static CryBits.Editors.Logic.Utils;
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Maps : DarkForm
+    partial class EditorMaps : DarkForm
     {
         #region Data
         // Usado para acessar os dados da janela
-        public static Editor_Maps Form;
+        public static EditorMaps Form;
 
         // Mapa selecionado
         public Map Selected;
 
         // Dados temporários
-        private bool Map_Pressed;
+        private bool _mapPressed;
 
         // Posição do mouse
         public Point Tile_Mouse { get; set; }
-        private Point Map_Mouse;
+        private Point _mapMouse;
 
         // Seleção retângular
-        private Rectangle Def_Tiles_Selection = new Rectangle(0, 0, 1, 1);
-        private Rectangle Def_Map_Selection = new Rectangle(0, 0, 1, 1);
+        private Rectangle _defTilesSelection = new Rectangle(0, 0, 1, 1);
+        private Rectangle _defMapSelection = new Rectangle(0, 0, 1, 1);
 
         // Dados dos atributos
-        private string AData_1;
-        private short AData_2;
-        private short AData_3;
-        private short AData_4;
+        private string _aData1;
+        private short _aData2;
+        private short _aData3;
+        private short _aData4;
 
         // Azulejos copiados
-        private Copy_Struct Tiles_Copy = new Copy_Struct();
+        private CopyStruct _tilesCopy = new CopyStruct();
 
-        public struct Copy_Struct
+        public struct CopyStruct
         {
             public Rectangle Area;
             public MapLayer[] Data;
@@ -50,7 +50,7 @@ namespace CryBits.Editors.Forms
         #endregion
 
         #region Base
-        public Editor_Maps()
+        public EditorMaps()
         {
             // Inicializa os componentes
             InitializeComponent();
@@ -112,14 +112,14 @@ namespace CryBits.Editors.Forms
             cmbA_Warp_Map.Items.Clear();
 
             // Adiciona os itens às listas
-            foreach (var Map in Map.List.Values)
+            foreach (var map in Map.List.Values)
             {
-                if (Map.Name.StartsWith(txtFilter.Text))
+                if (map.Name.StartsWith(txtFilter.Text))
                 {
-                    List.Nodes.Add(Map.Name);
-                    List.Nodes[List.Nodes.Count - 1].Tag = Map.ID;
+                    List.Nodes.Add(map.Name);
+                    List.Nodes[List.Nodes.Count - 1].Tag = map.ID;
                 }
-                cmbA_Warp_Map.Items.Add(Map);
+                cmbA_Warp_Map.Items.Add(map);
             }
 
             // Seleciona o primeiro item
@@ -153,26 +153,26 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            Map New = new Map(Guid.NewGuid());
-            Map.List.Add(New.ID, New);
-            cmbA_Warp_Map.Items.Add(New);
-            New.Name = "New map";
-            New.Layer.Add(new MapLayer());
-            New.Layer[0].Name = "Ground";
+            Map @new = new Map(Guid.NewGuid());
+            Map.List.Add(@new.ID, @new);
+            cmbA_Warp_Map.Items.Add(@new);
+            @new.Name = "New map";
+            @new.Layer.Add(new MapLayer());
+            @new.Layer[0].Name = "Ground";
 
             // Azulejos
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
                 {
-                    New.Layer[0].Tile[x, y] = new MapTileData();
-                    New.Attribute[x, y] = new MapAttribute();
+                    @new.Layer[0].Tile[x, y] = new MapTileData();
+                    @new.Attribute[x, y] = new MapAttribute();
                 }
 
             // Adiciona na lista
-            TreeNode Node = new TreeNode(New.Name);
-            Node.Tag = New.ID;
-            List.Nodes.Add(Node);
-            List.SelectedNode = Node;
+            TreeNode node = new TreeNode(@new.Name);
+            node.Tag = @new.ID;
+            List.Nodes.Add(node);
+            List.SelectedNode = node;
         }
 
         private void butRemove_Click(object sender, EventArgs e)
@@ -198,7 +198,7 @@ namespace CryBits.Editors.Forms
             // Atualiza as informações da barra
             Strip.Items[0].Text = "FPS: " + Program.FPS;
             Strip.Items[2].Text = "Revision: " + Selected.Revision;
-            Strip.Items[4].Text = "Position: {" + Map_Mouse.X + ";" + Map_Mouse.Y + "}"; ;
+            Strip.Items[4].Text = "Position: {" + _mapMouse.X + ";" + _mapMouse.Y + "}"; ;
         }
         #endregion
 
@@ -206,8 +206,8 @@ namespace CryBits.Editors.Forms
         private void butSaveAll_Click(object sender, EventArgs e)
         {
             // Salva todos os dados
-            foreach (Map Map in Map.List.Values)
-                ++Map.Revision;
+            foreach (Map map in Map.List.Values)
+                ++map.Revision;
             Send.Write_Maps();
             MessageBox.Show("All maps has been saved");
         }
@@ -222,21 +222,21 @@ namespace CryBits.Editors.Forms
 
         private void Copy()
         {
-            Tiles_Copy.Data = new MapLayer[Selected.Layer.Count];
+            _tilesCopy.Data = new MapLayer[Selected.Layer.Count];
 
             // Seleção
-            Tiles_Copy.Area = Map_Selection;
+            _tilesCopy.Area = Map_Selection;
 
             // Copia os dados das camadas
-            for (byte c = 0; c < Tiles_Copy.Data.Length; c++)
+            for (byte c = 0; c < _tilesCopy.Data.Length; c++)
             {
-                Tiles_Copy.Data[c] = new MapLayer();
-                Tiles_Copy.Data[c].Name = Selected.Layer[c].Name;
+                _tilesCopy.Data[c] = new MapLayer();
+                _tilesCopy.Data[c].Name = Selected.Layer[c].Name;
 
                 // Copia os dados dos azulejos
                 for (byte x = 0; x < Map.Width; x++)
                     for (byte y = 0; y < Map.Height; y++)
-                        Tiles_Copy.Data[c].Tile[x, y] = Selected.Layer[c].Tile[x, y];
+                        _tilesCopy.Data[c].Tile[x, y] = Selected.Layer[c].Tile[x, y];
             }
         }
 
@@ -264,22 +264,22 @@ namespace CryBits.Editors.Forms
         private void butPaste_Click(object sender, EventArgs e)
         {
             // Cola os azulejos
-            for (int x = Tiles_Copy.Area.X; x < Tiles_Copy.Area.X + Tiles_Copy.Area.Width; x++)
-                for (int y = Tiles_Copy.Area.Y; y < Tiles_Copy.Area.Y + Tiles_Copy.Area.Height; y++)
-                    for (byte c = 0; c < Tiles_Copy.Data.Length; c++)
+            for (int x = _tilesCopy.Area.X; x < _tilesCopy.Area.X + _tilesCopy.Area.Width; x++)
+                for (int y = _tilesCopy.Area.Y; y < _tilesCopy.Area.Y + _tilesCopy.Area.Height; y++)
+                    for (byte c = 0; c < _tilesCopy.Data.Length; c++)
                     {
                         // Dados
-                        int Layer = Find_Layer(Tiles_Copy.Data[c].Name);
-                        int x2 = Map_Selection.X + x - Tiles_Copy.Area.X;
-                        int y2 = y + Map_Selection.Y - Tiles_Copy.Area.Y;
+                        int layer = Find_Layer(_tilesCopy.Data[c].Name);
+                        int x2 = Map_Selection.X + x - _tilesCopy.Area.X;
+                        int y2 = y + Map_Selection.Y - _tilesCopy.Area.Y;
 
                         // Previne erros
-                        if (Layer < 0) continue;
+                        if (layer < 0) continue;
                         if (x2 >= Map.Width) continue;
                         if (y2 >= Map.Height) continue;
 
                         // Cola
-                        Selected.Layer[Layer].Tile[x2, y2] = Tiles_Copy.Data[c].Tile[x, y];
+                        Selected.Layer[layer].Tile[x2, y2] = _tilesCopy.Data[c].Tile[x, y];
                     }
 
             // Atualiza os azulejos Autos 
@@ -299,7 +299,7 @@ namespace CryBits.Editors.Forms
                 butPencil.Checked = true;
 
             // Reseta o tamanho da seleção
-            Def_Map_Selection.Size = new Size(1, 1);
+            _defMapSelection.Size = new Size(1, 1);
         }
 
         private void butRectangle_Click(object sender, EventArgs e)
@@ -315,7 +315,7 @@ namespace CryBits.Editors.Forms
                 butRectangle.Checked = true;
 
             // Reseta o tamanho da seleção
-            Def_Map_Selection.Size = new Size(1, 1);
+            _defMapSelection.Size = new Size(1, 1);
         }
 
         private void butArea_Click(object sender, EventArgs e)
@@ -331,7 +331,7 @@ namespace CryBits.Editors.Forms
                 butArea.Checked = true;
 
             // Reseta o tamanho da seleção
-            Def_Map_Selection.Size = new Size(1, 1);
+            _defMapSelection.Size = new Size(1, 1);
         }
 
         private void butDiscover_Click(object sender, EventArgs e)
@@ -347,7 +347,7 @@ namespace CryBits.Editors.Forms
                 butDiscover.Checked = true;
 
             // Reseta o tamanho da seleção
-            Def_Map_Selection.Size = new Size(1, 1);
+            _defMapSelection.Size = new Size(1, 1);
         }
 
         private void butFill_Click(object sender, EventArgs e)
@@ -515,59 +515,59 @@ namespace CryBits.Editors.Forms
             butMNPCs.Checked = true;
 
             // Adiciona os NPCs e reseta os valores
-            foreach (var NPC in NPC.List.Values) cmbNPC.Items.Add(NPC);
+            foreach (var npc in NPC.List.Values) cmbNPC.Items.Add(npc);
             cmbNPC.SelectedIndex = 0;
             numNPC_Zone.Value = 0;
         }
 
         private void butMNormal_CheckedChanged(object sender, EventArgs e)
         {
-            Def_Map_Selection.Size = new Size(1, 1);
+            _defMapSelection.Size = new Size(1, 1);
         }
 
         private void butMLighting_CheckedChanged(object sender, EventArgs e)
         {
-            Def_Map_Selection.Size = new Size(1, 1);
+            _defMapSelection.Size = new Size(1, 1);
         }
 
         private void butMZones_CheckedChanged(object sender, EventArgs e)
         {
-            Def_Map_Selection.Size = new Size(1, 1);
+            _defMapSelection.Size = new Size(1, 1);
         }
 
         private void butEditors_Classes_Click(object sender, EventArgs e)
         {
-            Editor_Classes.Form = new Editor_Classes();
+            EditorClasses.Form = new EditorClasses();
         }
 
         private void butEditors_Data_Click(object sender, EventArgs e)
         {
-            new Editor_Data();
+            new EditorData();
         }
 
         private void butEditors_Interface_Click(object sender, EventArgs e)
         {
-            Editor_Interface.Form = new Editor_Interface();
+            EditorInterface.Form = new EditorInterface();
         }
 
         private void butEditors_Items_Click(object sender, EventArgs e)
         {
-            Editor_Items.Form = new Editor_Items();
+            EditorItems.Form = new EditorItems();
         }
 
         private void butEditors_NPCs_Click(object sender, EventArgs e)
         {
-            Editor_NPCs.Form = new Editor_NPCs();
+            EditorNPCs.Form = new EditorNPCs();
         }
 
         private void butEditors_Shops_Click(object sender, EventArgs e)
         {
-            new Editor_Shops();
+            new EditorShops();
         }
 
         private void butEditors_Tiles_Click(object sender, EventArgs e)
         {
-            Editor_Tiles.Form = new Editor_Tiles();
+            EditorTiles.Form = new EditorTiles();
         }
 
         private void tmrUpdate_Tick(object sender, EventArgs e)
@@ -672,7 +672,7 @@ namespace CryBits.Editors.Forms
                 butCut.Enabled = true;
             }
             // Sem cópias
-            if (Tiles_Copy.Data == null) butPaste.Enabled = false;
+            if (_tilesCopy.Data == null) butPaste.Enabled = false;
 
             // Atualiza os dados da faixa
             Update_Strip();
@@ -682,23 +682,23 @@ namespace CryBits.Editors.Forms
         #region Tile
         private void Update_Tile_Bounds()
         {
-            Size Tile_Size = Graphics.TSize(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]);
-            int Width = Tile_Size.Width - picTile.Width;
-            int Height = Tile_Size.Height - picTile.Height;
+            Size tileSize = Graphics.Size(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]);
+            int width = tileSize.Width - picTile.Width;
+            int height = tileSize.Height - picTile.Height;
 
             // Verifica se nada passou do limite minímo
-            if (Width < 0) Width = 0;
-            if (Height < 0) Height = 0;
-            if (Width > 0) Width += Grid;
-            if (Height > 0) Height += Grid;
+            if (width < 0) width = 0;
+            if (height < 0) height = 0;
+            if (width > 0) width += Grid;
+            if (height > 0) height += Grid;
 
             // Define os limites
-            scrlTileX.Maximum = Width;
-            scrlTileY.Maximum = Height;
+            scrlTileX.Maximum = width;
+            scrlTileY.Maximum = height;
         }
 
         // Altera o tamanho do azulejo selecionado
-        private void Update_Tile_Selected() => Def_Tiles_Selection.Size = chkAuto.Checked ? new Size(2, 3) : new Size(1, 1);
+        private void Update_Tile_Selected() => _defTilesSelection.Size = chkAuto.Checked ? new Size(2, 3) : new Size(1, 1);
 
         private void picTile_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -725,11 +725,11 @@ namespace CryBits.Editors.Forms
             if (e.Button == MouseButtons.Left)
             {
                 // Previne erros
-                if (e.X + scrlTileX.Value > Graphics.TSize(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]).Width) return;
-                if (e.Y + scrlTileY.Value > Graphics.TSize(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]).Height) return;
+                if (e.X + scrlTileX.Value > Graphics.Size(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]).Width) return;
+                if (e.Y + scrlTileY.Value > Graphics.Size(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]).Height) return;
 
                 // Seleciona o azulejo;
-                Def_Tiles_Selection.Location = new Point((e.X + scrlTileX.Value) / Grid, (e.Y + scrlTileY.Value) / Grid);
+                _defTilesSelection.Location = new Point((e.X + scrlTileX.Value) / Grid, (e.Y + scrlTileY.Value) / Grid);
                 Update_Tile_Selected();
             }
         }
@@ -738,7 +738,7 @@ namespace CryBits.Editors.Forms
         {
             int x = (e.X + scrlTileX.Value) / Grid;
             int y = (e.Y + scrlTileY.Value) / Grid;
-            Size Texture_Size = Graphics.TSize(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]);
+            Size textureSize = Graphics.Size(Graphics.Tex_Tile[cmbTiles.SelectedIndex + 1]);
 
             // Define os valores
             Tile_Mouse = new Point(x * Grid - scrlTileX.Value, y * Grid - scrlTileY.Value);
@@ -749,17 +749,17 @@ namespace CryBits.Editors.Forms
 
             // Verifica se não passou do limite
             if (x < 0) x = 0;
-            if (x > Texture_Size.Width / Grid - 1) x = Texture_Size.Width / Grid - 1;
+            if (x > textureSize.Width / Grid - 1) x = textureSize.Width / Grid - 1;
             if (y < 0) y = 0;
-            if (y > Texture_Size.Height / Grid - 1) y = Texture_Size.Height / Grid - 1;
+            if (y > textureSize.Height / Grid - 1) y = textureSize.Height / Grid - 1;
 
             // Tamanho da grade
-            Def_Tiles_Selection.Width = x - Def_Tiles_Selection.X + 1;
-            Def_Tiles_Selection.Height = y - Def_Tiles_Selection.Y + 1;
+            _defTilesSelection.Width = x - _defTilesSelection.X + 1;
+            _defTilesSelection.Height = y - _defTilesSelection.Y + 1;
 
             // Altera o tamanho da tela de azulejos
-            if (picTile.Width < Texture_Size.Width - scrlTileX.Value) picTile.Width = Texture_Size.Width - scrlTileX.Value;
-            if (picTile.Height < Texture_Size.Height - scrlTileY.Value) picTile.Height = Texture_Size.Height - scrlTileY.Value;
+            if (picTile.Width < textureSize.Width - scrlTileX.Value) picTile.Width = textureSize.Width - scrlTileX.Value;
+            if (picTile.Height < textureSize.Height - scrlTileY.Value) picTile.Height = textureSize.Height - scrlTileY.Value;
         }
 
         private void picTile_MouseLeave(object sender, EventArgs e)
@@ -786,8 +786,8 @@ namespace CryBits.Editors.Forms
 
             // Verifica se a seleção de azulejos passou do limite
             Tile_Mouse = new Point(0);
-            Def_Tiles_Selection = new Rectangle(0, 0, 1, 1);
-            Def_Map_Selection.Size = new Size(1, 1);
+            _defTilesSelection = new Rectangle(0, 0, 1, 1);
+            _defMapSelection.Size = new Size(1, 1);
         }
         #endregion
 
@@ -832,7 +832,7 @@ namespace CryBits.Editors.Forms
 
         private void picMap_MouseDown(object sender, MouseEventArgs e)
         {
-            Point Tile_Dif = new Point(e.X - e.X / Grid * Grid, e.Y - e.Y / Grid * Grid);
+            Point tileDif = new Point(e.X - e.X / Grid * Grid, e.Y - e.Y / Grid * Grid);
 
             // Previne erros
             if (Map_Selection.X >= Map.Width || Map_Selection.Y >= Map.Height) return;
@@ -843,14 +843,14 @@ namespace CryBits.Editors.Forms
                 Tile_Events(e.Button);
 
                 // Ferramentas
-                if (butArea.Checked) Def_Map_Selection = new Rectangle(Map_Mouse, new Size(1, 1));
+                if (butArea.Checked) _defMapSelection = new Rectangle(_mapMouse, new Size(1, 1));
             }
             else if (butMAttributes.Checked && optA_DirBlock.Checked)
             {
                 // Define o bloqueio direcional
                 for (byte i = 0; i < (byte)Directions.Count; i++)
-                    if (Tile_Dif.X >= Block_Position(i).X && Tile_Dif.X <= Block_Position(i).X + 8)
-                        if (Tile_Dif.Y >= Block_Position(i).Y && Tile_Dif.Y <= Block_Position(i).Y + 8)
+                    if (tileDif.X >= Block_Position(i).X && tileDif.X <= Block_Position(i).X + 8)
+                        if (tileDif.Y >= Block_Position(i).Y && tileDif.Y <= Block_Position(i).Y + 8)
                             // Altera o valor de bloqueio
                             Selected.Attribute[Map_Selection.X, Map_Selection.Y].Block[i] = !Selected.Attribute[Map_Selection.X, Map_Selection.Y].Block[i];
             }
@@ -888,7 +888,7 @@ namespace CryBits.Editors.Forms
 
         private void picMap_MouseUp(object sender, MouseEventArgs e)
         {
-            Map_Pressed = false;
+            _mapPressed = false;
 
             // Somente se necessário
             if (e.Button != MouseButtons.Left) return;
@@ -896,7 +896,7 @@ namespace CryBits.Editors.Forms
             if (Map_Selection.X >= Map.Width || Map_Selection.Y >= Map.Height) return;
 
             // Camada selecionada
-            byte Layer = (byte)Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
+            byte layer = (byte)Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
 
             // Retângulo
             if (butRectangle.Checked)
@@ -906,8 +906,8 @@ namespace CryBits.Editors.Forms
                     for (int x = Map_Selection.X; x < Map_Selection.X + Map_Selection.Width; x++)
                         for (int y = Map_Selection.Y; y < Map_Selection.Y + Map_Selection.Height; y++)
                         {
-                            Selected.Layer[Layer].Tile[x, y] = Set_Tile();
-                            Selected.Layer[Layer].Update(x, y);
+                            Selected.Layer[layer].Tile[x, y] = Set_Tile();
+                            Selected.Layer[layer].Update(x, y);
                         }
             }
             // Iluminação
@@ -918,20 +918,20 @@ namespace CryBits.Editors.Forms
                 return;
 
             // Reseta o tamanho da seleção
-            Def_Map_Selection.Size = new Size(1, 1);
+            _defMapSelection.Size = new Size(1, 1);
         }
 
         private void picMap_MouseMove(object sender, MouseEventArgs e)
         {
             // Mouse
-            Map_Mouse.X = e.X / Grid_Zoom + scrlMapX.Value;
-            Map_Mouse.Y = e.Y / Grid_Zoom + scrlMapY.Value;
+            _mapMouse.X = e.X / Grid_Zoom + scrlMapX.Value;
+            _mapMouse.Y = e.Y / Grid_Zoom + scrlMapY.Value;
 
             // Impede que saia do limite da tela
-            if (Map_Mouse.X < 0) Map_Mouse.X = 0;
-            if (Map_Mouse.Y < 0) Map_Mouse.Y = 0;
-            if (Map_Mouse.X >= Map.Width) Map_Mouse.X = Map.Width - 1;
-            if (Map_Mouse.Y >= Map.Height) Map_Mouse.Y = Map.Height - 1;
+            if (_mapMouse.X < 0) _mapMouse.X = 0;
+            if (_mapMouse.Y < 0) _mapMouse.Y = 0;
+            if (_mapMouse.X >= Map.Width) _mapMouse.X = Map.Width - 1;
+            if (_mapMouse.Y >= Map.Height) _mapMouse.Y = Map.Height - 1;
 
             // Cria um retângulo
             if (Map_Rectangle(e)) return;
@@ -940,7 +940,7 @@ namespace CryBits.Editors.Forms
             if (butArea.Checked && butArea.Enabled) return;
 
             // Define a posição da seleção
-            Def_Map_Selection.Location = Map_Mouse;
+            _defMapSelection.Location = _mapMouse;
 
             // Executa um evento de acordo com a ferramenta selecionada
             if (butMNormal.Checked)
@@ -949,7 +949,7 @@ namespace CryBits.Editors.Forms
             {
                 // Define as zonas
                 if (e.Button == MouseButtons.Left)
-                    Selected.Attribute[Map_Mouse.X, Map_Mouse.Y].Zone = (byte)scrlZone.Value;
+                    Selected.Attribute[_mapMouse.X, _mapMouse.Y].Zone = (byte)scrlZone.Value;
                 else if (e.Button == MouseButtons.Right)
                     Selected.Attribute[Map_Selection.X, Map_Selection.Y].Zone = 0;
             }
@@ -957,7 +957,7 @@ namespace CryBits.Editors.Forms
             {
                 // Define as zonas
                 if (e.Button == MouseButtons.Left)
-                    Selected.Attribute[Map_Mouse.X, Map_Mouse.Y].Type = (byte)Attribute_Selected();
+                    Selected.Attribute[_mapMouse.X, _mapMouse.Y].Type = (byte)Attribute_Selected();
                 else if (e.Button == MouseButtons.Right)
                     Selected.Attribute[Map_Selection.X, Map_Selection.Y].Type = 0;
             }
@@ -969,17 +969,17 @@ namespace CryBits.Editors.Forms
             if (lstLayers.SelectedIndices.Count == 0) return;
 
             // Camada selecionada
-            byte Layer = (byte)Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
+            byte layer = (byte)Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
 
             // Executa um evento de acordo com a ferramenta selecionada
             if (e == MouseButtons.Left)
             {
-                if (butPencil.Checked) Tile_Set(Layer);
+                if (butPencil.Checked) Tile_Set(layer);
                 if (butDiscover.Checked) Tile_Discover();
             }
             else if (e == MouseButtons.Right)
             {
-                if (butPencil.Checked) Tile_Clear(Layer);
+                if (butPencil.Checked) Tile_Clear(layer);
             }
         }
 
@@ -996,7 +996,7 @@ namespace CryBits.Editors.Forms
         Continuation:
 
             // Cria um retângulo
-            if (!Map_Pressed) Def_Map_Selection.Size = new Size(1, 1);
+            if (!_mapPressed) _defMapSelection.Size = new Size(1, 1);
 
             // Verifica se não passou do limite
             if (x < 0) x = 0;
@@ -1005,63 +1005,63 @@ namespace CryBits.Editors.Forms
             if (y >= Map.Height) y = Map.Height - 1;
 
             // Define o tamanho
-            Def_Map_Selection.Width = x - Def_Map_Selection.X + 1;
-            Def_Map_Selection.Height = y - Def_Map_Selection.Y + 1;
-            Map_Pressed = true;
+            _defMapSelection.Width = x - _defMapSelection.X + 1;
+            _defMapSelection.Height = y - _defMapSelection.Y + 1;
+            _mapPressed = true;
             return true;
         }
 
         private void Tile_Discover()
         {
-            MapTileData Data;
+            MapTileData data;
 
             for (int c = Selected.Layer.Count - 1; c >= 0; c--)
             {
-                Data = Selected.Layer[c].Tile[Map_Selection.X, Map_Selection.Y];
+                data = Selected.Layer[c].Tile[Map_Selection.X, Map_Selection.Y];
 
                 // Somente se necessário
                 if (!lstLayers.Items[c].Checked) continue;
-                if (Data.Texture == 0) continue;
+                if (data.Texture == 0) continue;
 
                 // Define o azulejo
-                cmbTiles.SelectedIndex = Data.Texture - 1;
-                chkAuto.Checked = Data.IsAutotile;
-                Def_Tiles_Selection = new Rectangle(Data.X, Data.Y, 1, 1);
+                cmbTiles.SelectedIndex = data.Texture - 1;
+                chkAuto.Checked = data.IsAutotile;
+                _defTilesSelection = new Rectangle(data.X, data.Y, 1, 1);
                 return;
             }
         }
 
         private MapTileData Set_Tile(byte x = 0, byte y = 0)
         {
-            MapTileData Temp_Tile = new MapTileData();
+            MapTileData tempTile = new MapTileData();
 
             // Posição padrão
             if (x == 0) x = (byte)Tiles_Selection.X;
             if (y == 0) y = (byte)Tiles_Selection.Y;
 
             // Define os valores da camada
-            Temp_Tile.Mini = new Point[4];
-            Temp_Tile.X = x;
-            Temp_Tile.Y = y;
-            Temp_Tile.Texture = (byte)(cmbTiles.SelectedIndex + 1);
-            Temp_Tile.IsAutotile = chkAuto.Checked;
+            tempTile.Mini = new Point[4];
+            tempTile.X = x;
+            tempTile.Y = y;
+            tempTile.Texture = (byte)(cmbTiles.SelectedIndex + 1);
+            tempTile.IsAutotile = chkAuto.Checked;
 
             // Retorna o azulejo
-            return Temp_Tile;
+            return tempTile;
         }
 
-        private void Tile_Set(byte Layer_Num)
+        private void Tile_Set(byte layerNum)
         {
             // Define múltiplos azulejos
             if (Tiles_Selection.Width > 1 || Tiles_Selection.Height > 1)
-                Tile_Set_Multiples(Layer_Num);
+                Tile_Set_Multiples(layerNum);
 
             // Defini um único azulejo
-            Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = Set_Tile();
-            Selected.Layer[Layer_Num].Update(Map_Selection.X, Map_Selection.Y);
+            Selected.Layer[layerNum].Tile[Map_Selection.X, Map_Selection.Y] = Set_Tile();
+            Selected.Layer[layerNum].Update(Map_Selection.X, Map_Selection.Y);
         }
 
-        private void Tile_Set_Multiples(byte Layer_Num)
+        private void Tile_Set_Multiples(byte layerNum)
         {
             byte x2 = 0, y2;
 
@@ -1077,8 +1077,8 @@ namespace CryBits.Editors.Forms
                     // Define os azulejos
                     if (!Selected.OutLimit((short)x, (short)y))
                     {
-                        Selected.Layer[Layer_Num].Tile[x, y] = Set_Tile((byte)(Tiles_Selection.X + x2), (byte)(Tiles_Selection.Y + y2));
-                        Selected.Layer[Layer_Num].Update(x, y);
+                        Selected.Layer[layerNum].Tile[x, y] = Set_Tile((byte)(Tiles_Selection.X + x2), (byte)(Tiles_Selection.Y + y2));
+                        Selected.Layer[layerNum].Update(x, y);
                     }
                     y2++;
                 }
@@ -1086,12 +1086,12 @@ namespace CryBits.Editors.Forms
             }
         }
 
-        private void Tile_Clear(byte Layer_Num)
+        private void Tile_Clear(byte layerNum)
         {
             // Limpa a camada
-            Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y] = new MapTileData();
-            Selected.Layer[Layer_Num].Tile[Map_Selection.X, Map_Selection.Y].Mini = new Point[4];
-            Selected.Layer[Layer_Num].Update(Map_Selection.X, Map_Selection.Y);
+            Selected.Layer[layerNum].Tile[Map_Selection.X, Map_Selection.Y] = new MapTileData();
+            Selected.Layer[layerNum].Tile[Map_Selection.X, Map_Selection.Y].Mini = new Point[4];
+            Selected.Layer[layerNum].Update(Map_Selection.X, Map_Selection.Y);
         }
         #endregion
 
@@ -1124,7 +1124,7 @@ namespace CryBits.Editors.Forms
 
         private void butLayer_Add_Click(object sender, EventArgs e)
         {
-            MapLayer Layer = new MapLayer();
+            MapLayer layer = new MapLayer();
 
             // Verifica se o nome é válido
             if (txtLayer_Name.Text.Length < 1 || txtLayer_Name.Text.Length > 12) return;
@@ -1135,14 +1135,14 @@ namespace CryBits.Editors.Forms
             }
 
             // Define os dados
-            Layer.Name = txtLayer_Name.Text;
-            Layer.Type = (byte)cmbLayers_Type.SelectedIndex;
+            layer.Name = txtLayer_Name.Text;
+            layer.Type = (byte)cmbLayers_Type.SelectedIndex;
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
-                    Layer.Tile[x, y] = new MapTileData();
+                    layer.Tile[x, y] = new MapTileData();
 
             // Adiciona a camada
-            Selected.Layer.Add(Layer);
+            Selected.Layer.Add(layer);
 
             // Atualiza a lista
             Update_Layers();
@@ -1172,16 +1172,16 @@ namespace CryBits.Editors.Forms
 
         public void Update_Layers()
         {
-            List<MapLayer> Temp = new List<MapLayer>();
+            List<MapLayer> temp = new List<MapLayer>();
 
             // Reordena as camadas
             for (byte n = 0; n < (byte)Layers.Count; n++)
                 for (byte i = 0; i < Selected.Layer.Count; i++)
                     if (Selected.Layer[i].Type == n)
-                        Temp.Add(Selected.Layer[i]);
+                        temp.Add(Selected.Layer[i]);
 
             // Atualiza os valores
-            Selected.Layer = Temp;
+            Selected.Layer = temp;
             Update_List_Layers();
         }
 
@@ -1206,21 +1206,21 @@ namespace CryBits.Editors.Forms
             if (lstLayers.SelectedItems.Count == 0) return;
 
             // Index
-            int Index = Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
+            int index = Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
 
             // Remove a camada
-            if (Index >= 0)
+            if (index >= 0)
             {
-                Selected.Layer.RemoveAt(Index);
+                Selected.Layer.RemoveAt(index);
                 Update_List_Layers();
             }
         }
 
-        private int Find_Layer(string Nome)
+        private int Find_Layer(string nome)
         {
             // Encontra a camada
             for (byte i = 0; i < Selected.Layer.Count; i++)
-                if (Selected.Layer[i].Name == Nome)
+                if (Selected.Layer[i].Name == nome)
                     return i;
 
             return -1;
@@ -1240,15 +1240,15 @@ namespace CryBits.Editors.Forms
             if (lstLayers.SelectedItems[0].Index == 0) return;
 
             // Dados
-            List<MapLayer> Temp = new List<MapLayer>(Selected.Layer);
-            int Layer_Num = lstLayers.SelectedItems[0].Index;
+            List<MapLayer> temp = new List<MapLayer>(Selected.Layer);
+            int layerNum = lstLayers.SelectedItems[0].Index;
 
-            if (Temp[Layer_Num - 1].Type == Temp[Layer_Num].Type)
+            if (temp[layerNum - 1].Type == temp[layerNum].Type)
             {
                 // Altera as posições
-                Temp[Layer_Num - 1] = Selected.Layer[Layer_Num];
-                Temp[Layer_Num] = Selected.Layer[Layer_Num - 1];
-                Selected.Layer = Temp;
+                temp[layerNum - 1] = Selected.Layer[layerNum];
+                temp[layerNum] = Selected.Layer[layerNum - 1];
+                Selected.Layer = temp;
 
                 // Atualiza a lista
                 Update_List_Layers();
@@ -1263,15 +1263,15 @@ namespace CryBits.Editors.Forms
             if (lstLayers.SelectedItems[0].Index == lstLayers.Items.Count - 1) return;
 
             // Dados
-            List<MapLayer> Temp = new List<MapLayer>(Selected.Layer);
-            int Layer_Num = lstLayers.SelectedItems[0].Index;
+            List<MapLayer> temp = new List<MapLayer>(Selected.Layer);
+            int layerNum = lstLayers.SelectedItems[0].Index;
 
-            if (Temp[Layer_Num + 1].Type == Temp[Layer_Num].Type)
+            if (temp[layerNum + 1].Type == temp[layerNum].Type)
             {
                 // Altera as posições
-                Temp[Layer_Num + 1] = Selected.Layer[Layer_Num];
-                Temp[Layer_Num] = Selected.Layer[Layer_Num + 1];
-                Selected.Layer = Temp;
+                temp[layerNum + 1] = Selected.Layer[layerNum];
+                temp[layerNum] = Selected.Layer[layerNum + 1];
+                Selected.Layer = temp;
 
                 // Atualiza a lista
                 Update_List_Layers();
@@ -1297,20 +1297,20 @@ namespace CryBits.Editors.Forms
         #endregion
 
         #region NPCs
-        private void AddNPC(bool FixedSpawn = false, byte X = 0, byte Y = 0)
+        private void AddNPC(bool fixedSpawn = false, byte x = 0, byte y = 0)
         {
             // Define os dados
-            MapNPC Data = new MapNPC
+            MapNPC data = new MapNPC
             {
                 NPC = (NPC)cmbNPC.SelectedItem,
                 Zone = (byte)numNPC_Zone.Value,
-                Spawn = FixedSpawn,
-                X = X,
-                Y = Y
+                Spawn = fixedSpawn,
+                X = x,
+                Y = y
             };
 
             // Adiciona o NPC
-            Selected.NPC.Add(Data);
+            Selected.NPC.Add(data);
         }
         private void butNPC_Remove_Click(object sender, EventArgs e)
         {
@@ -1337,10 +1337,10 @@ namespace CryBits.Editors.Forms
             // Define os Atributos
             if (e.Button == MouseButtons.Left)
             {
-                Selected.Attribute[Map_Selection.X, Map_Selection.Y].Data_1 = AData_1;
-                Selected.Attribute[Map_Selection.X, Map_Selection.Y].Data_2 = AData_2;
-                Selected.Attribute[Map_Selection.X, Map_Selection.Y].Data_3 = AData_3;
-                Selected.Attribute[Map_Selection.X, Map_Selection.Y].Data_4 = AData_4;
+                Selected.Attribute[Map_Selection.X, Map_Selection.Y].Data_1 = _aData1;
+                Selected.Attribute[Map_Selection.X, Map_Selection.Y].Data_2 = _aData2;
+                Selected.Attribute[Map_Selection.X, Map_Selection.Y].Data_3 = _aData3;
+                Selected.Attribute[Map_Selection.X, Map_Selection.Y].Data_4 = _aData4;
                 Selected.Attribute[Map_Selection.X, Map_Selection.Y].Type = (byte)Attribute_Selected();
             }
             // Limpa os dados
@@ -1364,18 +1364,18 @@ namespace CryBits.Editors.Forms
                     for (byte c = 0; c < Selected.Layer.Count; c++)
                     {
                         // Dados do azulejo
-                        MapTileData Data = Selected.Layer[c].Tile[x, y];
+                        MapTileData data = Selected.Layer[c].Tile[x, y];
 
-                        if (Data.Texture > 0)
+                        if (data.Texture > 0)
                         {
                             // Atributos
-                            if (Lists.Tile[Data.Texture].Data[Data.X, Data.Y].Attribute > 0)
-                                Selected.Attribute[x, y].Type = Lists.Tile[Data.Texture].Data[Data.X, Data.Y].Attribute;
+                            if (Lists.Tile[data.Texture].Data[data.X, data.Y].Attribute > 0)
+                                Selected.Attribute[x, y].Type = Lists.Tile[data.Texture].Data[data.X, data.Y].Attribute;
 
                             // Bloqueio direcional
                             for (byte b = 0; b < (byte)Directions.Count; b++)
-                                if (Lists.Tile[Data.Texture].Data[Data.X, Data.Y].Block[b])
-                                    Selected.Attribute[x, y].Block[b] = Lists.Tile[Data.Texture].Data[Data.X, Data.Y].Block[b];
+                                if (Lists.Tile[data.Texture].Data[data.X, data.Y].Block[b])
+                                    Selected.Attribute[x, y].Block[b] = Lists.Tile[data.Texture].Data[data.X, data.Y].Block[b];
                         }
                     }
         }
@@ -1414,9 +1414,9 @@ namespace CryBits.Editors.Forms
 
                 // Adiciona os itens
                 cmbA_Item.Items.Clear();
-                foreach (var Item in Item.List.Values) cmbA_Item.Items.Add(Item);
+                foreach (var item in Item.List.Values) cmbA_Item.Items.Add(item);
                 cmbA_Item.SelectedIndex = 0;
-                numA_Item_Amount.Value = AData_2 = 1;
+                numA_Item_Amount.Value = _aData2 = 1;
             }
             grpA_Item.Visible = optA_Item.Checked;
         }
@@ -1424,33 +1424,33 @@ namespace CryBits.Editors.Forms
         private void cmbA_Warp_Map_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Reseta os valores
-            var Warp_Map = (Map)cmbA_Warp_Map.SelectedItem;
-            AData_1 = Warp_Map.GetID();
+            var warpMap = (Map)cmbA_Warp_Map.SelectedItem;
+            _aData1 = warpMap.GetID();
         }
 
         private void numA_Warp_X_ValueChanged(object sender, EventArgs e)
         {
-            AData_2 = (short)numA_Warp_X.Value;
+            _aData2 = (short)numA_Warp_X.Value;
         }
 
         private void numA_Warp_Y_ValueChanged(object sender, EventArgs e)
         {
-            AData_3 = (short)numA_Warp_Y.Value;
+            _aData3 = (short)numA_Warp_Y.Value;
         }
 
         private void cmbA_Warp_Direction_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AData_4 = (short)cmbA_Warp_Direction.SelectedIndex;
+            _aData4 = (short)cmbA_Warp_Direction.SelectedIndex;
         }
 
         private void cmbA_Item_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AData_1 = ((Item)cmbA_Item.SelectedItem).GetID();
+            _aData1 = ((Item)cmbA_Item.SelectedItem).GetID();
         }
 
         private void numA_Item_Amount_ValueChanged(object sender, EventArgs e)
         {
-            AData_2 = (short)numA_Item_Amount.Value;
+            _aData2 = (short)numA_Item_Amount.Value;
         }
         #endregion
 
@@ -1483,36 +1483,36 @@ namespace CryBits.Editors.Forms
 
         #region Utils
         // Usado pra movimentar as seleções
-        private Rectangle Selection_Rec(Rectangle Temp)
+        private Rectangle Selection_Rec(Rectangle temp)
         {
             // Largura
-            if (Temp.Width <= 0)
+            if (temp.Width <= 0)
             {
-                Temp.X += Temp.Width - 1;
-                Temp.Width = (Temp.Width - 2) * -1;
+                temp.X += temp.Width - 1;
+                temp.Width = (temp.Width - 2) * -1;
             }
             // Altura
-            if (Temp.Height <= 0)
+            if (temp.Height <= 0)
             {
-                Temp.Y += Temp.Height - 1;
-                Temp.Height = (Temp.Height - 2) * -1;
+                temp.Y += temp.Height - 1;
+                temp.Height = (temp.Height - 2) * -1;
             }
 
             // Retorna o valor do retângulo
-            return Temp;
+            return temp;
         }
 
         // Retângulo da seleção de azulejos
-        private Rectangle Tiles_Selection => Selection_Rec(Def_Tiles_Selection);
+        private Rectangle Tiles_Selection => Selection_Rec(_defTilesSelection);
 
         // Retângulo do mapa
         public Rectangle Map_Selection
         {
             get
             {
-                if (chkAuto.Checked) return new Rectangle(Map_Mouse, new Size(1, 1));
-                if (butMNormal.Checked && butPencil.Checked) return new Rectangle(Map_Mouse, Tiles_Selection.Size);
-                return Selection_Rec(Def_Map_Selection);
+                if (chkAuto.Checked) return new Rectangle(_mapMouse, new Size(1, 1));
+                if (butMNormal.Checked && butPencil.Checked) return new Rectangle(_mapMouse, Tiles_Selection.Size);
+                return Selection_Rec(_defMapSelection);
             }
         }
 
@@ -1529,9 +1529,9 @@ namespace CryBits.Editors.Forms
         }
 
         public byte Grid_Zoom => (byte)(Grid / Zoom());
-        public Rectangle Zoom(Rectangle Value) => new Rectangle(Value.X / Zoom(), Value.Y / Zoom(), Value.Width / Zoom(), Value.Height / Zoom());
-        public Rectangle Zoom_Grid(Rectangle Rectangle) => new Rectangle(Rectangle.X * Grid_Zoom, Rectangle.Y * Grid_Zoom, Rectangle.Width * Grid_Zoom, Rectangle.Height * Grid_Zoom);
-        public Point Zoom_Grid(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
+        public Rectangle Zoom(Rectangle value) => new Rectangle(value.X / Zoom(), value.Y / Zoom(), value.Width / Zoom(), value.Height / Zoom());
+        public Rectangle Zoom_Grid(Rectangle rectangle) => new Rectangle(rectangle.X * Grid_Zoom, rectangle.Y * Grid_Zoom, rectangle.Width * Grid_Zoom, rectangle.Height * Grid_Zoom);
+        public Point Zoom_Grid(int x, int y) => new Point(x * Grid_Zoom, y * Grid_Zoom);
 
         // Tamanho da grade com o zoom
         // public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Form.Zoom());

@@ -44,15 +44,15 @@ class Audio
                 List[i] = new SFML.Audio.Sound(new SoundBuffer(Directories.Sounds.FullName + i + Format));
         }
 
-        public static void Play(Sounds Index, bool Loop = false)
+        public static void Play(Sounds index, bool loop = false)
         {
             // Somente se necessário
-            if (Editor_Maps.Form.Visible && !Editor_Maps.Form.butAudio.Checked) return;
+            if (EditorMaps.Form.Visible && !EditorMaps.Form.butAudio.Checked) return;
 
             // Reproduz o áudio
-            List[(byte)Index].Volume = 20;
-            List[(byte)Index].Loop = Loop;
-            List[(byte)Index].Play();
+            List[(byte)index].Volume = 20;
+            List[(byte)index].Loop = loop;
+            List[(byte)index].Play();
         }
 
         public static void Stop_All()
@@ -77,24 +77,24 @@ class Audio
         // Index da música reproduzida atualmente
         public static Musics Current;
 
-        public static void Play(Musics Index, bool Loop = false)
+        public static void Play(Musics index, bool loop = false)
         {
-            System.IO.FileInfo File = new System.IO.FileInfo(Directories.Musics.FullName + (byte)Index + Format);
+            System.IO.FileInfo file = new System.IO.FileInfo(Directories.Musics.FullName + (byte)index + Format);
 
             // Apenas se necessário
             if (Device != null) return;
-            if (Editor_Maps.Form.Visible && !Editor_Maps.Form.butAudio.Checked) return;
-            if (!File.Exists) return;
+            if (EditorMaps.Form.Visible && !EditorMaps.Form.butAudio.Checked) return;
+            if (!file.Exists) return;
 
             // Carrega o áudio
-            Device = new SFML.Audio.Music(Directories.Musics.FullName + (byte)Index + Format);
+            Device = new SFML.Audio.Music(Directories.Musics.FullName + (byte)index + Format);
             Device.Loop = true;
             Device.Volume = 20;
-            Device.Loop = Loop;
+            Device.Loop = loop;
 
             // Reproduz
             Device.Play();
-            Current = Index;
+            Current = index;
         }
 
         public static void Stop()

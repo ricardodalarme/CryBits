@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace CryBits.Editors.Forms
 {
-    partial class Editor_Classes
+    partial class EditorClasses
     {
         /// <summary>
         /// Required designer variable.
@@ -31,7 +31,7 @@ namespace CryBits.Editors.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor_Classes));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorClasses));
             this.grpGeneral = new DarkUI.Controls.DarkGroupBox();
             this.txtDescription = new DarkUI.Controls.DarkTextBox();
             this.label11 = new DarkUI.Controls.DarkLabel();
@@ -793,7 +793,7 @@ namespace CryBits.Editors.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Editor_Classes";
+            this.Name = "EditorClasses";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Class Editor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Classes_FormClosed);

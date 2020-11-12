@@ -7,7 +7,7 @@ static class Lists
 {
     // Armazenamento de dados
     public static Structures.Options Options = new Structures.Options();
-    public static Structures.Server_Data Server_Data = new Structures.Server_Data();
+    public static Structures.ServerData Server_Data = new Structures.ServerData();
     public static MapWeatherParticle[] Weather;
     public static Tile[] Tile;
     public static TreeNode Tool;
@@ -25,7 +25,7 @@ static class Lists
             public string Username;
         }
 
-        public struct Server_Data
+        public struct ServerData
         {
             public string Game_Name;
             public string Welcome;
