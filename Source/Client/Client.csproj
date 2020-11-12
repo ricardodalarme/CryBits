@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logic\Game.cs" />
+    <Compile Include="Media\Audio\Sound.cs" />
     <Compile Include="UI\Chat.cs" />
     <Compile Include="UI\Windows.cs" />
     <Compile Include="Logic\Camera.cs" />
@@ -72,7 +73,7 @@
     <Compile Include="Logic\Mapper.cs" />
     <Compile Include="Entities\TempNPC.cs" />
     <Compile Include="Entities\Player.cs" />
-    <Compile Include="Media\Audio.cs" />
+    <Compile Include="Media\Audio\Music.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Network\Receive.cs" />
     <Compile Include="Network\Send.cs" />
@@ -102,5 +103,6 @@
       <Version>2.5.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

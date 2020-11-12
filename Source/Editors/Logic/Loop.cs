@@ -5,12 +5,15 @@ using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
-using CryBits.Editors.Media;
+using CryBits.Editors.Media.Audio;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using SFML.Audio;
+using CryBits;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
+using Music = CryBits.Editors.Media.Audio.Music;
+using Sound = CryBits.Editors.Media.Audio.Sound;
 
 namespace CryBits.Editors.Logic
 {
@@ -136,8 +139,8 @@ namespace CryBits.Editors.Logic
             // Somente se necessário
             if (EditorMaps.Form == null || !EditorMaps.Form.Visible || EditorMaps.Form.Selected.Weather.Type == 0 || !EditorMaps.Form.butVisualization.Checked)
             {
-                if (Audio.Sound.List != null)
-                    if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SoundStatus.Playing) Audio.Sound.Stop_All();
+                if (Sound.List != null)
+                    if (Sound.List[(byte)Sounds.Rain].Status == SoundStatus.Playing) Sound.Stop_All();
                 return;
             }
 
@@ -147,11 +150,11 @@ namespace CryBits.Editors.Logic
             // Reproduz o som chuva
             if (weather.Type == Weathers.Raining || weather.Type == Weathers.Thundering)
             {
-                if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status != SoundStatus.Playing)
-                    Audio.Sound.Play(Audio.Sounds.Rain);
+                if (Sound.List[(byte)Sounds.Rain].Status != SoundStatus.Playing)
+                    Sound.Play(Sounds.Rain);
             }
             else
-              if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SoundStatus.Playing) Audio.Sound.Stop_All();
+              if (Sound.List[(byte)Sounds.Rain].Status == SoundStatus.Playing) Sound.Stop_All();
 
             // Contagem da neve
             if (_snowTimer < Environment.TickCount)
@@ -213,8 +216,8 @@ namespace CryBits.Editors.Logic
                 if (MyRandom.Next(0, Map.MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
                 {
                     // Som do trovão
-                    int thunder = MyRandom.Next((byte)Audio.Sounds.Thunder_1, (byte)Audio.Sounds.Thunder_4);
-                    Audio.Sound.Play((Audio.Sounds)thunder);
+                    int thunder = MyRandom.Next((byte)Sounds.Thunder_1, (byte)Sounds.Thunder_4);
+                    Sound.Play((Sounds)thunder);
 
                     // Relâmpago
                     if (thunder < 6) TempMap.Lightning = 190;
@@ -290,12 +293,12 @@ namespace CryBits.Editors.Logic
             if (EditorMaps.Form.Selected.Music == 0) goto stop;
 
             // Inicia a música
-            if (Audio.Music.Device == null || Audio.Music.Current != (Audio.Musics)EditorMaps.Form.Selected.Music)
-                Audio.Music.Play((Audio.Musics)EditorMaps.Form.Selected.Music);
+            if (Music.Device == null || Music.Current != (Musics)EditorMaps.Form.Selected.Music)
+                Music.Play((Musics)EditorMaps.Form.Selected.Music);
             return;
         stop:
             // Para a música
-            if (Audio.Music.Device != null) Audio.Music.Stop();
+            if (Music.Device != null) Music.Stop();
         }
     }
 }

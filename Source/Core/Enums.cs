@@ -190,4 +190,25 @@
         Dangerous,
         Count
     }
+
+    // Lista dos sons
+    public enum Sounds
+    {
+        Click = 1,
+        Above,
+        Rain,
+        Thunder_1,
+        Thunder_2,
+        Thunder_3,
+        Thunder_4,
+        Count
+    }
+
+
+    // Listas das músicas
+    public enum Musics
+    {
+        None,
+        Menu
+    }
 }

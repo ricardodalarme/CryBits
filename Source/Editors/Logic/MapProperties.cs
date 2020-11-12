@@ -124,9 +124,9 @@ namespace CryBits.Editors.Logic
         }
 
         [Category("Misc")][DefaultValue(0)]
-        public Audio.Musics Music
+        public Musics Music
         {
-            get => (Audio.Musics)Base.Music;
+            get => (Musics)Base.Music;
             set => Base.Music = (byte)value;
         }
 

@@ -6,6 +6,7 @@ using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.Media;
+using CryBits.Client.Media.Audio;
 using CryBits.Client.UI;
 using CryBits.Entities;
 using CryBits.Packets;
@@ -167,7 +168,7 @@ namespace CryBits.Client.Network
             Panels.List["Shop_Sell"].Visible = false;
 
             // Abre o jogo
-            Audio.Music.Stop();
+             Music.Stop();
             Windows.Current = WindowsTypes.Game;
         }
 
@@ -389,9 +390,9 @@ namespace CryBits.Client.Network
         {
             // Se tiver, reproduz a música de fundo do mapa
             if (Mapper.Current.Data.Music > 0)
-                Audio.Music.Play((Audio.Musics)Mapper.Current.Data.Music);
+                 Music.Play(( Musics)Mapper.Current.Data.Music);
             else
-                Audio.Music.Stop();
+                 Music.Stop();
         }
 
         private static void Latency()

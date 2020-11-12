@@ -4,6 +4,7 @@ using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
+using CryBits.Editors.Media.Audio;
 using CryBits.Editors.Network;
 
 namespace CryBits.Editors
@@ -27,7 +28,7 @@ namespace CryBits.Editors
 
             // Inicializa todos os dispositivos
             Socket.Init();
-            Audio.Sound.Load();
+            Sound.Load();
             Graphics.Init();
 
             // Abre a janela
