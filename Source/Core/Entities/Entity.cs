@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 
 namespace CryBits.Entities
 {
@@ -16,15 +15,8 @@ namespace CryBits.Entities
 
         public override string ToString() => Name;
 
-        public override int GetHashCode()
-        {
-            return ID.GetHashCode();
-        }
+        public override int GetHashCode() => ID.GetHashCode();
 
-        bool IEquatable<Entity>.Equals(Entity other)
-        {
-            if (other == null) return false;
-            return (other).ID == ID;
-        }
+        bool IEquatable<Entity>.Equals(Entity other) => other == null && (other).ID == ID;
     }
 }
