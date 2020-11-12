@@ -1,9 +1,9 @@
-﻿using CryBits.Server.Logic;
+﻿using CryBits.Entities;
+using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using CryBits.Entities;
 using static CryBits.Server.Logic.Utils;
 using static CryBits.Utils;
 
@@ -228,7 +228,7 @@ namespace CryBits.Server.Entities
             }
 
             // Atributos
-            Map_Attribute Tile = Map.Data.Attribute[Next_X, Next_Y];
+            MapAttribute Tile = Map.Data.Attribute[Next_X, Next_Y];
 
             switch ((TileAttributes)Tile.Type)
             {

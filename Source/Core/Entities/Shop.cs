@@ -19,8 +19,8 @@ namespace CryBits.Entities
             get => Item.Get(currency);
             set => currency = new Guid(value.GetID());
         }
-        public Shop_Item[] Bought { get; set; } = Array.Empty<Shop_Item>();
-        public Shop_Item[] Sold { get; set; } = Array.Empty<Shop_Item>();
+        public IList<Shop_Item> Bought { get; set; } = Array.Empty<Shop_Item>();
+        public IList<Shop_Item> Sold { get; set; } = Array.Empty<Shop_Item>();
 
         // Construtor
         public Shop(Guid ID) : base(ID) { }
@@ -28,7 +28,7 @@ namespace CryBits.Entities
         public Shop_Item FindBought(Item Item)
         {
             // Verifica se a loja vende determinado item
-            for (byte i = 0; i < Bought.Length; i++)
+            for (byte i = 0; i < Bought.Count; i++)
                 if (Bought[i].Item == Item)
                     return Bought[i];
 
@@ -37,15 +37,15 @@ namespace CryBits.Entities
     }
 
     [Serializable]
-    public class Shop_Item
+    public class Shop_Item : ItemSlot
     {
-        private Guid item;
-        public Item Item
+        public short Price { get; set; }
+
+        public Shop_Item(Item Item, short Amount, short Price) : base(Item, Amount)
         {
-            get => Item.Get(item);
-            set => item = new Guid(value.GetID());
+            this.Price = Price;
         }
-        public short Amount;
-        public short Price;
+
+        public override string ToString() => Item.Name + " - " + Amount + "x [$" + Price + "]";
     }
 }

@@ -1,6 +1,6 @@
-﻿using CryBits.Server.Logic;
+﻿using CryBits.Entities;
+using CryBits.Server.Logic;
 using CryBits.Server.Network;
-using CryBits.Entities;
 using System;
 using static CryBits.Utils;
 
@@ -393,7 +393,7 @@ namespace CryBits.Server.Entities
         public void Died()
         {
             // Solta os itens
-            for (byte i = 0; i < Data.Drop.Length; i++)
+            for (byte i = 0; i < Data.Drop.Count; i++)
                 if (Data.Drop[i].Item != null)
                     if (MyRandom.Next(1, 99) <= Data.Drop[i].Chance)
                         // Solta o item

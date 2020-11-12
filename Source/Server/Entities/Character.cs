@@ -1,6 +1,4 @@
-﻿using CryBits;
-
-namespace CryBits.Server.Entities
+﻿namespace CryBits.Server.Entities
 {
     abstract class Character
     {

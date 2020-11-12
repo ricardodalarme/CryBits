@@ -8,10 +8,11 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CryBits</RootNamespace>
-    <AssemblyName>Core</AssemblyName>
+    <AssemblyName>CryBits.Core</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Entities\Class.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Inventory.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Entities\NPC.cs" />

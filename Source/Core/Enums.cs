@@ -107,14 +107,6 @@
         Count
     }
 
-    public enum NPC_Behaviour
-    {
-        Friendly,
-        AttackOnSight,
-        AttackWhenAttacked,
-        ShopKeeper
-    }
-
     public enum NPC_Movements
     {
         MoveRandomly,

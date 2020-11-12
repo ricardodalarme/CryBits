@@ -1,9 +1,9 @@
-﻿using CryBits.Server.Logic;
+﻿using CryBits.Entities;
+using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using System;
 using System.Collections.Generic;
 using static CryBits.Utils;
-using CryBits.Entities;
 
 namespace CryBits.Server.Entities
 {
@@ -123,7 +123,7 @@ namespace CryBits.Server.Entities
             List.Add(map.ID, Temp_Map);
 
             // NPCs do mapa
-            Temp_Map.NPC = new TempNPC[map.NPC.Length];
+            Temp_Map.NPC = new TempNPC[map.NPC.Count];
             for (byte i = 0; i < Temp_Map.NPC.Length; i++)
             {
                 Temp_Map.NPC[i] = new TempNPC(i, Temp_Map, map.NPC[i].NPC);
