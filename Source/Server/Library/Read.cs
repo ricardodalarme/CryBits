@@ -86,7 +86,6 @@ namespace CryBits.Server.Library
                     {
                         Name = data.ReadString(),
                         TextureNum = data.ReadInt16(),
-                        Level = data.ReadInt16()
                     });
         }
 

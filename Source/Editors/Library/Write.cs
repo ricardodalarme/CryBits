@@ -38,22 +38,22 @@ namespace CryBits.Editors.Library
                 Tool tool = (Tool)node.Nodes[i].Tag;
                 if (tool is Button)
                 {
-                    data.Write((byte)ToolsTypes.Button);
+                    data.Write((byte)ToolType.Button);
                     Button(data, (Button)tool);
                 }
                 else if (tool is TextBox)
                 {
-                    data.Write((byte)ToolsTypes.TextBox);
+                    data.Write((byte)ToolType.TextBox);
                     TextBox(data, (TextBox)tool);
                 }
                 else if (tool is CheckBox)
                 {
-                    data.Write((byte)ToolsTypes.CheckBox);
+                    data.Write((byte)ToolType.CheckBox);
                     CheckBox(data, (CheckBox)tool);
                 }
                 else if (tool is Panel)
                 {
-                    data.Write((byte)ToolsTypes.Panel);
+                    data.Write((byte)ToolType.Panel);
                     Panel(data, (Panel)tool);
                 }
 

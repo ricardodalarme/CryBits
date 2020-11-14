@@ -21,7 +21,6 @@ namespace CryBits.Server.Entities
         {
             public string Name;
             public short TextureNum;
-            public short Level;
         }
 
         // Construtor

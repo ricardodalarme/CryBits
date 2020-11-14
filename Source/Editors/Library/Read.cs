@@ -59,13 +59,13 @@ namespace CryBits.Editors.Library
             for (byte i = 0; i < size; i++)
             {
                 Tool temp = new Tool();
-                ToolsTypes type = (ToolsTypes)data.ReadByte();
+                ToolType type = (ToolType)data.ReadByte();
 
                 // Lê a ferramenta
-                if (type == ToolsTypes.Button) temp = Button(data);
-                else if (type == ToolsTypes.CheckBox) temp = CheckBox(data);
-                else if (type == ToolsTypes.Panel) temp = Panel(data);
-                else if (type == ToolsTypes.TextBox) temp = TextBox(data);
+                if (type == ToolType.Button) temp = Button(data);
+                else if (type == ToolType.CheckBox) temp = CheckBox(data);
+                else if (type == ToolType.Panel) temp = Panel(data);
+                else if (type == ToolType.TextBox) temp = TextBox(data);
 
                 // Adiciona o nó
                 node.Nodes.Add("[" + type + "] " + temp.Name);
