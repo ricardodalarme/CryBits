@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using CryBits.Client.Entities;
 using CryBits.Client.Logic;
 using CryBits.Client.UI;
 using static CryBits.Client.Logic.Game;
@@ -136,8 +135,7 @@ namespace CryBits.Client.Library
 
             // Lê os dados
             using (var stream = file.OpenRead())
-                // Map.List.Add(ID,(Objects.Map)new BinaryFormatter().Deserialize(Stream));
-                TempMap.List.Add(id, new TempMap(CryBits.Entities.Map.List[id]));
+                CryBits.Entities.Map.List.Add(id, (CryBits.Entities.Map)new BinaryFormatter().Deserialize(stream));
 
             // Redimensiona as partículas do clima
             Mapper.Weather_Update();
