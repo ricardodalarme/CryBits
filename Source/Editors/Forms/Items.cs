@@ -228,7 +228,7 @@ namespace CryBits.Editors.Forms
         private void cmbEquipment_Type_SelectedIndexChanged(object sender, EventArgs e)
         {
             Selected.EquipType = (byte)cmbEquipment_Type.SelectedIndex;
-            numWeapon_Damage.Visible = lblWeapon_Damage.Visible = (cmbEquipment_Type.SelectedIndex == (byte)Equipments.Weapon);
+            numWeapon_Damage.Visible = lblWeapon_Damage.Visible = cmbEquipment_Type.SelectedIndex == (byte)Equipments.Weapon;
         }
 
         private void txtDescription_TextChanged(object sender, EventArgs e)

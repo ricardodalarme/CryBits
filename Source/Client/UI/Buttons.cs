@@ -24,7 +24,7 @@ namespace CryBits.Client.UI
         {
             Normal,
             Click,
-            Above,
+            Above
         }
 
         // Dados

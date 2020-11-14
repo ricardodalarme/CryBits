@@ -43,7 +43,7 @@ namespace CryBits.Client.Library
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
                 Window = (WindowsTypes)data.ReadByte(),
-                TextureNum = data.ReadByte(),
+                TextureNum = data.ReadByte()
             };
         }
 
@@ -58,7 +58,7 @@ namespace CryBits.Client.Library
                 Window = (WindowsTypes)data.ReadByte(),
                 Length = data.ReadInt16(),
                 Width = data.ReadInt16(),
-                Password = data.ReadBoolean(),
+                Password = data.ReadBoolean()
             };
         }
 
@@ -71,7 +71,7 @@ namespace CryBits.Client.Library
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
                 Window = (WindowsTypes)data.ReadByte(),
-                TextureNum = data.ReadByte(),
+                TextureNum = data.ReadByte()
             };
         }
 
@@ -85,7 +85,7 @@ namespace CryBits.Client.Library
                 Visible = data.ReadBoolean(),
                 Window = (WindowsTypes)data.ReadByte(),
                 Text = data.ReadString(),
-                Checked = data.ReadBoolean(),
+                Checked = data.ReadBoolean()
             };
         }
 

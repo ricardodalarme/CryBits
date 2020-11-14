@@ -9,8 +9,8 @@ namespace CryBits.Client.Logic
     internal static class Utils
     {
         // Converte o valor em uma posição adequada à camera
-        public static int ConvertX(int x) => x - (Camera.TileSight.X * Grid) - Camera.StartSight.X;
-        public static int ConvertY(int y) => y - (Camera.TileSight.Y * Grid) - Camera.StartSight.Y;
+        public static int ConvertX(int x) => x - Camera.TileSight.X * Grid - Camera.StartSight.X;
+        public static int ConvertY(int y) => y - Camera.TileSight.Y * Grid - Camera.StartSight.Y;
 
         public static Directions ReverseDirection(Directions direction)
         {

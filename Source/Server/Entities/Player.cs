@@ -65,8 +65,8 @@ namespace CryBits.Server.Entities
             // Cálcula o máximo de vital que um jogador possui
             switch ((Vitals)vital)
             {
-                case Vitals.HP: return (short)(@base[vital] + (Attribute[(byte)Attributes.Vitality] * 1.50 * (Level * 0.75)) + 1);
-                case Vitals.MP: return (short)(@base[vital] + (Attribute[(byte)Attributes.Intelligence] * 1.25 * (Level * 0.5)) + 1);
+                case Vitals.HP: return (short)(@base[vital] + Attribute[(byte)Attributes.Vitality] * 1.50 * (Level * 0.75) + 1);
+                case Vitals.MP: return (short)(@base[vital] + Attribute[(byte)Attributes.Intelligence] * 1.25 * (Level * 0.5) + 1);
             }
 
             return 1;
@@ -664,7 +664,7 @@ namespace CryBits.Server.Entities
                 if (diffSum > 1) diff[i] *= 1 / diffSum;
 
                 // Divide a experiência
-                givenExperience = (int)((value / 2) * diff[i]);
+                givenExperience = (int)(value / 2 * diff[i]);
                 experienceSum += givenExperience;
                 Party[i].GiveExperience(givenExperience);
                 Send.Player_Experience(Party[i]);

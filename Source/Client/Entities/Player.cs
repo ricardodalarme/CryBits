@@ -1,13 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using CryBits.Client.Logic;
-using CryBits.Client.Media;
-using CryBits.Client.Network;
-using CryBits.Client.UI;
 using CryBits.Entities;
-using SFML.Window;
-using static CryBits.Client.Logic.Game;
-using static CryBits.Utils;
 
 namespace CryBits.Client.Entities
 {
