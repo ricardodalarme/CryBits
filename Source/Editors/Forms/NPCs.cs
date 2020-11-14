@@ -25,10 +25,10 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.Win_NPC = new RenderWindow(picTexture.Handle);
+            Graphics.WinNPC = new RenderWindow(picTexture.Handle);
 
             // Define os limites
-            numTexture.Maximum = Graphics.Tex_Character.GetUpperBound(0);
+            numTexture.Maximum = Graphics.TexCharacter.GetUpperBound(0);
 
             // Lista os dados
             foreach (var item in Item.List.Values) cmbDrop_Item.Items.Add(item);
@@ -38,7 +38,7 @@ namespace CryBits.Editors.Forms
 
         private void Editor_NPCs_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphics.Win_NPC = null;
+            Graphics.WinNPC = null;
             EditorMaps.Form.Show();
         }
 

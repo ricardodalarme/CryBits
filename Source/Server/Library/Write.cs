@@ -13,18 +13,18 @@ namespace CryBits.Server.Library
             // Escreve as configurações
             using (var data = new BinaryWriter(Directories.Settings.OpenWrite()))
             {
-                data.Write(Game_Name);
-                data.Write(Welcome_Message);
+                data.Write(GameName);
+                data.Write(WelcomeMessage);
                 data.Write(Port);
-                data.Write(Max_Players);
-                data.Write(Max_Characters);
-                data.Write(Max_Party_Members);
-                data.Write(Max_Map_Items);
-                data.Write(Num_Points);
-                data.Write(Max_Name_Length);
-                data.Write(Min_Name_Length);
-                data.Write(Max_Password_Length);
-                data.Write(Min_Password_Length);
+                data.Write(MaxPlayers);
+                data.Write(MaxCharacters);
+                data.Write(MaxPartyMembers);
+                data.Write(MaxMapItems);
+                data.Write(NumPoints);
+                data.Write(MaxNameLength);
+                data.Write(MinNameLength);
+                data.Write(MaxPasswordLength);
+                data.Write(MinPasswordLength);
             }
         }
 
@@ -55,7 +55,7 @@ namespace CryBits.Server.Library
             using (var data = new BinaryWriter(file.OpenWrite()))
             {
                 data.Write(account.Character.Name);
-                data.Write(account.Character.Texture_Num);
+                data.Write(account.Character.TextureNum);
                 data.Write(account.Character.Level);
                 data.Write(account.Character.Class.GetID());
                 data.Write(account.Character.Genre);

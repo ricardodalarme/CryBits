@@ -14,8 +14,8 @@ namespace CryBits.Client.Logic
         public static TempMap Current;
 
         // Fumaças
-        public static int Fog_X;
-        public static int Fog_Y;
+        public static int FogX;
+        public static int FogY;
         private static int _fogXTimer;
         private static int _fogYTimer;
 
@@ -59,8 +59,8 @@ namespace CryBits.Client.Logic
 
         private static void Calculate_Fog_X()
         {
-            Size size = Graphics.Size(Graphics.Tex_Fog[Current.Data.Fog.Texture]);
-            int speedX = Current.Data.Fog.Speed_X;
+            Size size = Graphics.Size(Graphics.TexFog[Current.Data.Fog.Texture]);
+            int speedX = Current.Data.Fog.SpeedX;
 
             // Apenas se necessário
             if (_fogXTimer >= Environment.TickCount) return;
@@ -69,14 +69,14 @@ namespace CryBits.Client.Logic
             // Movimento para trás
             if (speedX < 0)
             {
-                Fog_X -= 1;
-                if (Fog_X < -size.Width) Fog_X = 0;
+                FogX -= 1;
+                if (FogX < -size.Width) FogX = 0;
             }
             // Movimento para frente
             else
             {
-                Fog_X += 1;
-                if (Fog_X > size.Width) Fog_X = 0;
+                FogX += 1;
+                if (FogX > size.Width) FogX = 0;
             }
 
             // Contagem
@@ -86,8 +86,8 @@ namespace CryBits.Client.Logic
 
         private static void Calculate_Fog_Y()
         {
-            Size size = Graphics.Size(Graphics.Tex_Fog[Current.Data.Fog.Texture]);
-            int speedY = Current.Data.Fog.Speed_Y;
+            Size size = Graphics.Size(Graphics.TexFog[Current.Data.Fog.Texture]);
+            int speedY = Current.Data.Fog.SpeedY;
 
             // Apenas se necessário
             if (_fogYTimer >= Environment.TickCount) return;
@@ -96,14 +96,14 @@ namespace CryBits.Client.Logic
             // Movimento para trás
             if (speedY < 0)
             {
-                Fog_Y -= 1;
-                if (Fog_Y < -size.Height) Fog_Y = 0;
+                FogY -= 1;
+                if (FogY < -size.Height) FogY = 0;
             }
             // Movimento para frente
             else
             {
-                Fog_Y += 1;
-                if (Fog_Y > size.Height) Fog_Y = 0;
+                FogY += 1;
+                if (FogY > size.Height) FogY = 0;
             }
 
             // Contagem
@@ -114,8 +114,8 @@ namespace CryBits.Client.Logic
         private static void Weather()
         {
             bool stop = false, move;
-            byte thunderFirst = (byte)Sounds.Thunder_1;
-            byte thunderLast = (byte)Sounds.Thunder_4;
+            byte thunderFirst = (byte)Sounds.Thunder1;
+            byte thunderLast = (byte)Sounds.Thunder4;
 
             // Somente se necessário
             if (Current.Data.Weather.Type == 0) return;

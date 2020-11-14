@@ -20,7 +20,7 @@ namespace CryBits.Client.Network
 
         // Latência
         public static int Latency;
-        public static int Latency_Send;
+        public static int LatencySend;
 
         public static void Init()
         {

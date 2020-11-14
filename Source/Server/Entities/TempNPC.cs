@@ -60,7 +60,7 @@ namespace CryBits.Server.Entities
             /////////////////
             // Regeneração //
             /////////////////
-            if (Environment.TickCount > Loop.Timer_Regen + 5000)
+            if (Environment.TickCount > Loop.TimerRegen + 5000)
                 for (byte v = 0; v < (byte)Vitals.Count; v++)
                     if (Vital[v] < Data.Vital[v])
                     {
@@ -322,7 +322,7 @@ namespace CryBits.Server.Entities
             _attackTimer = Environment.TickCount;
 
             // Cálculo de dano
-            short attackDamage = (short)(Data.Attribute[(byte)Attributes.Strength] - victim.Player_Defense);
+            short attackDamage = (short)(Data.Attribute[(byte)Attributes.Strength] - victim.PlayerDefense);
 
             // Dano não fatal
             if (attackDamage > 0)

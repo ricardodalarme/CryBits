@@ -6,7 +6,7 @@ namespace CryBits.Client.Logic
     internal static class Game
     {
         // Nome do jogo
-        public static string Game_Name = "CryBits";
+        public static string GameName = "CryBits";
 
         // Medida de calculo do atraso do jogo
         public static short FPS;

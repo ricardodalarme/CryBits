@@ -19,7 +19,7 @@ namespace CryBits.Editors.Network
             {
                 case ServerEditor.Alert: Alert(data); break;
                 case ServerEditor.Connect: Connect(); break;
-                case ServerEditor.Server_Data: Server_Data(data); break;
+                case ServerEditor.ServerData: Server_Data(data); break;
                 case ServerEditor.Classes: Classes(data); break;
                 case ServerEditor.Map: Map(data); break;
                 case ServerEditor.NPCs: NPCs(data); break;
@@ -44,18 +44,18 @@ namespace CryBits.Editors.Network
         private static void Server_Data(NetIncomingMessage data)
         {
             // Lê os dados
-            Lists.Server_Data.Game_Name = data.ReadString();
-            Lists.Server_Data.Welcome = data.ReadString();
-            Lists.Server_Data.Port = data.ReadInt16();
-            Lists.Server_Data.Max_Players = data.ReadByte();
-            Lists.Server_Data.Max_Characters = data.ReadByte();
-            Lists.Server_Data.Max_Party_Members = data.ReadByte();
-            Lists.Server_Data.Max_Map_Items = data.ReadByte();
-            Lists.Server_Data.Num_Points = data.ReadByte();
-            Lists.Server_Data.Min_Name_Length = data.ReadByte();
-            Lists.Server_Data.Max_Name_Length = data.ReadByte();
-            Lists.Server_Data.Min_Password_Length = data.ReadByte();
-            Lists.Server_Data.Max_Password_Length = data.ReadByte();
+            Lists.ServerData.GameName = data.ReadString();
+            Lists.ServerData.Welcome = data.ReadString();
+            Lists.ServerData.Port = data.ReadInt16();
+            Lists.ServerData.MaxPlayers = data.ReadByte();
+            Lists.ServerData.MaxCharacters = data.ReadByte();
+            Lists.ServerData.MaxPartyMembers = data.ReadByte();
+            Lists.ServerData.MaxMapItems = data.ReadByte();
+            Lists.ServerData.NumPoints = data.ReadByte();
+            Lists.ServerData.MinNameLength = data.ReadByte();
+            Lists.ServerData.MaxNameLength = data.ReadByte();
+            Lists.ServerData.MinPasswordLength = data.ReadByte();
+            Lists.ServerData.MaxPasswordLength = data.ReadByte();
         }
 
         private static void Classes(NetIncomingMessage data)

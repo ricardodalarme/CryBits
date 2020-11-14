@@ -16,11 +16,11 @@ namespace CryBits.Client.Entities
         public byte Animation;
         public bool Attacking;
         public int Hurt;
-        public int Attack_Timer;
+        public int AttackTimer;
 
         // Posição exata em que o personagem está
-        public int Pixel_X => X * Grid + X2;
-        public int Pixel_Y => Y * Grid + Y2;
+        public int PixelX => X * Grid + X2;
+        public int PixelY => Y * Grid + Y2;
 
         public void ProcessMovement()
         {

@@ -27,23 +27,23 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.Win_Tile = new RenderWindow(picTile.Handle);
+            Graphics.WinTile = new RenderWindow(picTile.Handle);
 
             // Define os limites
-            scrlTile.Maximum = Graphics.Tex_Tile.GetUpperBound(0);
+            scrlTile.Maximum = Graphics.TexTile.GetUpperBound(0);
             Update_Bounds();
         }
 
         private void Editor_Tiles_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphics.Win_Tile = null;
+            Graphics.WinTile = null;
             EditorMaps.Form.Show();
         }
 
         private void Update_Bounds()
         {
-            int x = Graphics.Size(Graphics.Tex_Tile[scrlTile.Value]).Width / Grid - picTile.Width / Grid;
-            int y = Graphics.Size(Graphics.Tex_Tile[scrlTile.Value]).Height / Grid - picTile.Height / Grid;
+            int x = Graphics.Size(Graphics.TexTile[scrlTile.Value]).Width / Grid - picTile.Width / Grid;
+            int y = Graphics.Size(Graphics.TexTile[scrlTile.Value]).Height / Grid - picTile.Height / Grid;
 
             // Verifica se nada passou do limite minímo
             if (x < 0) x = 0;

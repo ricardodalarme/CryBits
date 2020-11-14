@@ -35,7 +35,7 @@ namespace CryBits.Server.Entities
             for (byte j = 0; j < NPC.Length; j++) NPC[j].Logic();
 
             // Faz reaparecer todos os itens do mapa
-            if (Environment.TickCount > Loop.Timer_Map_Items + 300000)
+            if (Environment.TickCount > Loop.TimerMapItems + 300000)
             {
                 Item = new List<MapItems>();
                 Spawn_Items();
@@ -95,8 +95,8 @@ namespace CryBits.Server.Entities
                         // Adiciona o item
                         Item.Add(new MapItems
                         {
-                            Item = CryBits.Entities.Item.Get(new Guid(Data.Attribute[x, y].Data_1)),
-                            Amount = Data.Attribute[x, y].Data_2,
+                            Item = CryBits.Entities.Item.Get(new Guid(Data.Attribute[x, y].Data1)),
+                            Amount = Data.Attribute[x, y].Data2,
                             X = x,
                             Y = y
                         });

@@ -70,7 +70,7 @@ namespace CryBits.Editors.Library
             data.Write(tool.Position.Y);
             data.Write(tool.Visible);
             data.Write((byte)tool.Window);
-            data.Write(tool.Texture_Num);
+            data.Write(tool.TextureNum);
         }
 
         private static void TextBox(BinaryWriter data, TextBox tool)
@@ -81,7 +81,7 @@ namespace CryBits.Editors.Library
             data.Write(tool.Position.Y);
             data.Write(tool.Visible);
             data.Write((byte)tool.Window);
-            data.Write(tool.Max_Characters);
+            data.Write(tool.MaxCharacters);
             data.Write(tool.Width);
             data.Write(tool.Password);
         }
@@ -94,7 +94,7 @@ namespace CryBits.Editors.Library
             data.Write(tool.Position.Y);
             data.Write(tool.Visible);
             data.Write((byte)tool.Window);
-            data.Write(tool.Texture_Num);
+            data.Write(tool.TextureNum);
         }
 
         private static void CheckBox(BinaryWriter data, CheckBox tool)

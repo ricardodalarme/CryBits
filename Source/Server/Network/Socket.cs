@@ -15,7 +15,7 @@ namespace CryBits.Server.Network
             {
                 Port = Logic.Utils.Port,
                 AcceptIncomingConnections = true,
-                MaximumConnections = Logic.Utils.Max_Players
+                MaximumConnections = Logic.Utils.MaxPlayers
             };
 
             // Cria o dispositivo com as devidas configurações

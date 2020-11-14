@@ -8,7 +8,7 @@ namespace CryBits.Editors.Logic
     {
         // Dimensão das grades 
         public const byte Grid = 32;
-        public static Size Grid_Size = new Size(Grid, Grid);
+        public static Size GridSize = new Size(Grid, Grid);
 
         // Números aleAmountatórios
         public static readonly Random MyRandom = new Random();

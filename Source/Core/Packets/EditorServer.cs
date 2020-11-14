@@ -4,18 +4,18 @@
     public enum EditorServer
     {
         Connect,
-        Write_Settings,
-        Write_Classes,
-        Write_Maps,
-        Write_NPCs,
-        Write_Items,
-        Write_Shops,
-        Request_Setting,
-        Request_Classes,
-        Request_Map,
-        Request_Maps,
-        Request_NPCs,
-        Request_Items,
-        Request_Shops
+        WriteSettings,
+        WriteClasses,
+        WriteMaps,
+        WriteNPCs,
+        WriteItems,
+        WriteShops,
+        RequestSetting,
+        RequestClasses,
+        RequestMap,
+        RequestMaps,
+        RequestNPCs,
+        RequestItems,
+        RequestShops
     }
 }

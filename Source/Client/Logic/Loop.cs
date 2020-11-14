@@ -11,8 +11,8 @@ namespace CryBits.Client.Logic
     internal static class Loop
     {
         // Contagens
-        public static int TextBox_Timer;
-        public static int Chat_Timer = 0;
+        public static int TextBoxTimer;
+        public static int ChatTimer = 0;
 
         public static void Init()
         {
@@ -79,9 +79,9 @@ namespace CryBits.Client.Logic
         private static void TextBox()
         {
             // Contagem para a renderização da referência do último texto
-            if (TextBox_Timer < Environment.TickCount)
+            if (TextBoxTimer < Environment.TickCount)
             {
-                TextBox_Timer = Environment.TickCount + 500;
+                TextBoxTimer = Environment.TickCount + 500;
                 TextBoxes.Signal = !TextBoxes.Signal;
 
                 // Se necessário foca o digitalizador de novo

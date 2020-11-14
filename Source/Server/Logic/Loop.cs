@@ -8,9 +8,9 @@ namespace CryBits.Server.Logic
     internal static class Loop
     {
         // Contagens
-        private static int Timer_500, Timer_1000;
-        public static int Timer_Regen;
-        public static int Timer_Map_Items;
+        private static int _timer500, _timer1000;
+        public static int TimerRegen;
+        public static int TimerMapItems;
 
         public static void Main()
         {
@@ -21,7 +21,7 @@ namespace CryBits.Server.Logic
                 // Manuseia os dados recebidos
                 Socket.HandleData();
 
-                if (Environment.TickCount > Timer_500 + 500)
+                if (Environment.TickCount > _timer500 + 500)
                 {
                     // Lógicas do mapa
                     foreach (var tempMap in TempMap.List.Values) tempMap.Logic();
@@ -32,22 +32,22 @@ namespace CryBits.Server.Logic
                             account.Character.Logic();
 
                     // Reinicia a contagem dos 500
-                    Timer_500 = Environment.TickCount;
+                    _timer500 = Environment.TickCount;
                 }
 
                 // Reinicia algumas contagens
-                if (Environment.TickCount > Timer_Regen + 5000) Timer_Regen = Environment.TickCount;
-                if (Environment.TickCount > Timer_Map_Items + 300000) Timer_Map_Items = Environment.TickCount;
+                if (Environment.TickCount > TimerRegen + 5000) TimerRegen = Environment.TickCount;
+                if (Environment.TickCount > TimerMapItems + 300000) TimerMapItems = Environment.TickCount;
 
                 // Faz com que a aplicação se mantenha estável
                 Application.DoEvents();
 
                 // Calcula o CPS
-                if (Timer_1000 < Environment.TickCount)
+                if (_timer1000 < Environment.TickCount)
                 {
                     Program.CPS = cps;
                     cps = 0;
-                    Timer_1000 = Environment.TickCount + 1000;
+                    _timer1000 = Environment.TickCount + 1000;
                 }
                 else
                     cps += 1;

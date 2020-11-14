@@ -24,9 +24,9 @@ namespace CryBits.Client.Entities
 
         // Dados gerais dos jogadores
         public string Name = string.Empty;
-        public short Texture_Num;
+        public short TextureNum;
         public short Level;
-        public short[] Max_Vital = new short[(byte)Vitals.Count];
+        public short[] MaxVital = new short[(byte)Vitals.Count];
         public short[] Attribute = new short[(byte)Attributes.Count];
         public Item[] Equipment = new Item[(byte)Equipments.Count];
         public TempMap Map;
@@ -52,13 +52,13 @@ namespace CryBits.Client.Entities
         // Dados
         public Inventory[] Inventory = new Inventory[MaxInventory + 1];
         public Hotbar[] Hotbar = new Hotbar[MaxHotbar];
-        public Inventory[] Trade_Offer;
-        public Inventory[] Trade_Their_Offer;
+        public Inventory[] TradeOffer;
+        public Inventory[] TradeTheirOffer;
         public Player[] Party = Array.Empty<Player>();
         public int Experience;
         public int ExpNeeded;
         public short Points;
-        public int Collect_Timer;
+        public int CollectTimer;
 
         // Construtor
         public MeStructure(string name) : base(name) { }
@@ -119,20 +119,20 @@ namespace CryBits.Client.Entities
         public void CheckAttack()
         {
             // Reseta o ataque
-            if (Attack_Timer + AttackSpeed < Environment.TickCount)
+            if (AttackTimer + AttackSpeed < Environment.TickCount)
             {
-                Attack_Timer = 0;
+                AttackTimer = 0;
                 Attacking = false;
             }
 
             // Somente se estiver pressionando a tecla de ataque e não estiver atacando
             if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Graphics.RenderWindow.HasFocus()) return;
-            if (Attack_Timer > 0) return;
+            if (AttackTimer > 0) return;
             if (Panels.List["Trade"].Visible) return;
             if (Panels.List["Shop"].Visible) return;
 
             // Envia os dados para o servidor
-            Attack_Timer = Environment.TickCount;
+            AttackTimer = Environment.TickCount;
             Send.Player_Attack();
         }
 
@@ -156,11 +156,11 @@ namespace CryBits.Client.Entities
             // Somente se necessário
             if (!hasItem) return;
             if (!hasSlot) return;
-            if (Environment.TickCount <= Collect_Timer + 250) return;
+            if (Environment.TickCount <= CollectTimer + 250) return;
 
             // Coleta o item
             Send.CollectItem();
-            Collect_Timer = Environment.TickCount;
+            CollectTimer = Environment.TickCount;
         }
 
         public void Leave()

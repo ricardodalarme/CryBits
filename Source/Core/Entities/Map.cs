@@ -77,10 +77,10 @@ namespace CryBits.Entities
     public class MapAttribute
     {
         public byte Type;
-        public string Data_1;
-        public short Data_2;
-        public short Data_3;
-        public short Data_4;
+        public string Data1;
+        public short Data2;
+        public short Data3;
+        public short Data4;
         public byte Zone;
         public bool[] Block = new bool[(byte)Directions.Count];
     }
@@ -347,8 +347,8 @@ namespace CryBits.Entities
     public class MapFog
     {
         public byte Texture;
-        public sbyte Speed_X;
-        public sbyte Speed_Y;
+        public sbyte SpeedX;
+        public sbyte SpeedY;
         public byte Alpha = 255;
     }
 

@@ -27,7 +27,7 @@ namespace CryBits.Client.UI
         public void MouseUp(Tools.OrderStructure order)
         {
             // Somente se necessário
-            if (!IsAbove(new Rectangle(Position, new Size(Width, Graphics.Size(Graphics.Tex_TextBox).Height)))) return;
+            if (!IsAbove(new Rectangle(Position, new Size(Width, Graphics.Size(Graphics.TexTextBox).Height)))) return;
 
             // Define o foco no digitalizador
             Focused = order;
@@ -35,7 +35,7 @@ namespace CryBits.Client.UI
             // Altera o foco do digitalizador
             if (((TextBoxes)order.Data).Name.Equals("Chat"))
             {
-                Loop.Chat_Timer = Environment.TickCount + Chat.SleepTimer;
+                Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
                 Panels.List["Chat"].Visible = true;
             }
         }

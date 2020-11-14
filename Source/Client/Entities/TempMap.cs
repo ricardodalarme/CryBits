@@ -73,7 +73,7 @@ namespace CryBits.Client.Entities
     internal class MapBlood
     {
         // Dados
-        public byte Texture_Num;
+        public byte TextureNum;
         public short X;
         public short Y;
         public byte Opacity;
@@ -81,7 +81,7 @@ namespace CryBits.Client.Entities
         // Construtor
         public MapBlood(byte textureNum, short x, short y, byte opacity)
         {
-            Texture_Num = textureNum;
+            TextureNum = textureNum;
             X = x;
             Y = y;
             Opacity = opacity;

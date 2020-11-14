@@ -40,18 +40,18 @@ namespace CryBits.Server.Library
             // Carrega as configurações
             using (var data = new BinaryReader(Directories.Settings.OpenRead()))
             {
-                Game_Name = data.ReadString();
-                Welcome_Message = data.ReadString();
+                GameName = data.ReadString();
+                WelcomeMessage = data.ReadString();
                 Port = data.ReadInt16();
-                Max_Players = data.ReadByte();
-                Max_Characters = data.ReadByte();
-                Max_Party_Members = data.ReadByte();
-                Max_Map_Items = data.ReadByte();
-                Num_Points = data.ReadByte();
-                Max_Name_Length = data.ReadByte();
-                Min_Name_Length = data.ReadByte();
-                Max_Password_Length = data.ReadByte();
-                Min_Password_Length = data.ReadByte();
+                MaxPlayers = data.ReadByte();
+                MaxCharacters = data.ReadByte();
+                MaxPartyMembers = data.ReadByte();
+                MaxMapItems = data.ReadByte();
+                NumPoints = data.ReadByte();
+                MaxNameLength = data.ReadByte();
+                MinNameLength = data.ReadByte();
+                MaxPasswordLength = data.ReadByte();
+                MinPasswordLength = data.ReadByte();
             }
         }
 
@@ -85,7 +85,7 @@ namespace CryBits.Server.Library
                     account.Characters.Add(new Account.TempCharacter
                     {
                         Name = data.ReadString(),
-                        Texture_Num = data.ReadInt16(),
+                        TextureNum = data.ReadInt16(),
                         Level = data.ReadInt16()
                     });
         }
@@ -103,7 +103,7 @@ namespace CryBits.Server.Library
                 // Carrega os dados e os adiciona ao cache
                 account.Character = new Player(account);
                 account.Character.Name = data.ReadString();
-                account.Character.Texture_Num = data.ReadInt16();
+                account.Character.TextureNum = data.ReadInt16();
                 account.Character.Level = data.ReadInt16();
                 account.Character.Class = Class.Get(new Guid(data.ReadString()));
                 account.Character.Genre = data.ReadBoolean();
@@ -154,7 +154,7 @@ namespace CryBits.Server.Library
             {
                 Class @class = new Class();
                 @class.Name = "New class";
-                @class.Spawn_Map = Map.List.ElementAt(0).Value;
+                @class.SpawnMap = Map.List.ElementAt(0).Value;
                 Class.List.Add(@class.ID, @class);
                 Write.Class(@class);
             }

@@ -15,7 +15,7 @@ namespace CryBits.Client.UI
 
         // Chat
         public const byte LinesVisible = 9;
-        public static byte Lines_First;
+        public static byte LinesFirst;
         private const byte MaxLines = 50;
         public const short SleepTimer = 10000;
 
@@ -37,16 +37,16 @@ namespace CryBits.Client.UI
 
             // Remove uma linha se necessário
             if (Order.Count > MaxLines) Order.Remove(Order[0]);
-            if (i + Lines_First > LinesVisible + Lines_First)
-                Lines_First = (byte)(i - LinesVisible);
+            if (i + LinesFirst > LinesVisible + LinesFirst)
+                LinesFirst = (byte)(i - LinesVisible);
 
             // Torna as linhas visíveis
-            Loop.Chat_Timer = Environment.TickCount + 10000; ;
+            Loop.ChatTimer = Environment.TickCount + 10000; ;
         }
 
         public static void AddText(string message, Color color)
         {
-            int messageWidth, boxWidth = Graphics.Size(Graphics.Tex_Panel[Panels.List["Chat"].Texture_Num]).Width - 16;
+            int messageWidth, boxWidth = Graphics.Size(Graphics.TexPanel[Panels.List["Chat"].TextureNum]).Width - 16;
             string tempMessage;
 
             // Remove os espaços
@@ -82,7 +82,7 @@ namespace CryBits.Client.UI
             // Altera o foco do digitalizador
             if (panel.Visible)
             {
-                Loop.Chat_Timer = Environment.TickCount + SleepTimer;
+                Loop.ChatTimer = Environment.TickCount + SleepTimer;
                 TextBoxes.Focused = Tools.Get(tool);
                 return;
             }

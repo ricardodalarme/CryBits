@@ -9,7 +9,7 @@ namespace CryBits.Editors.Library
     {
         // Armazenamento de dados
         public static Structures.Options Options = new Structures.Options();
-        public static Structures.ServerData Server_Data = new Structures.ServerData();
+        public static Structures.ServerData ServerData = new Structures.ServerData();
         public static MapWeatherParticle[] Weather;
         public static Tile[] Tile;
         public static TreeNode Tool;
@@ -21,26 +21,26 @@ namespace CryBits.Editors.Library
             [Serializable]
             public struct Options
             {
-                public bool Pre_Map_Grid;
-                public bool Pre_Map_View;
-                public bool Pre_Map_Audio;
+                public bool PreMapGrid;
+                public bool PreMapView;
+                public bool PreMapAudio;
                 public string Username;
             }
 
             public struct ServerData
             {
-                public string Game_Name;
+                public string GameName;
                 public string Welcome;
                 public short Port;
-                public byte Max_Players;
-                public byte Max_Characters;
-                public byte Max_Party_Members;
-                public byte Max_Map_Items;
-                public byte Num_Points;
-                public byte Max_Name_Length;
-                public byte Min_Name_Length;
-                public byte Max_Password_Length;
-                public byte Min_Password_Length;
+                public byte MaxPlayers;
+                public byte MaxCharacters;
+                public byte MaxPartyMembers;
+                public byte MaxMapItems;
+                public byte NumPoints;
+                public byte MaxNameLength;
+                public byte MinNameLength;
+                public byte MaxPasswordLength;
+                public byte MinPasswordLength;
             }
         }
     }

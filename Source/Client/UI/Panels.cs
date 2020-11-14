@@ -15,26 +15,26 @@ namespace CryBits.Client.UI
         public static Dictionary<string, Panels> List = new Dictionary<string, Panels>();
 
         // Dados
-        public byte Texture_Num;
+        public byte TextureNum;
 
         // Dados temporários
-        public static byte CreateCharacter_Class = 0;
-        public static byte CreateCharacter_Tex = 0;
+        public static byte CreateCharacterClass = 0;
+        public static byte CreateCharacterTex = 0;
         public static int SelectCharacter = 1;
-        public static Guid Information_ID;
-        public static byte Drop_Slot;
-        public static string Party_Invitation;
-        public static string Trade_Invitation;
-        public static byte Trade_Inventory_Slot = 0;
-        public static Shop Shop_Open;
-        public static byte Shop_Inventory_Slot;
-        public static short Hotbar_Change;
-        public static byte Inventory_Change;
+        public static Guid InformationID;
+        public static byte DropSlot;
+        public static string PartyInvitation;
+        public static string TradeInvitation;
+        public static byte TradeInventorySlot = 0;
+        public static Shop ShopOpen;
+        public static byte ShopInventorySlot;
+        public static short HotbarChange;
+        public static byte InventoryChange;
         public static TempCharacter[] Characters;
         public struct TempCharacter
         {
             public string Name;
-            public short Texture_Num;
+            public short TextureNum;
         }
 
         public static void Menu_Close()
@@ -48,15 +48,15 @@ namespace CryBits.Client.UI
         }
 
         // Retorna em qual slot o mouse está sobrepondo
-        public static byte Inventory_Slot => Slot(List["Menu_Inventory"], 7, 29, 6, 5);
-        public static short Hotbar_Slot => (short)(Slot(List["Hotbar"], 8, 6, 1, 10) - 1);
-        public static byte Trade_Slot => Slot(List["Trade"], 7, 50, 6, 5);
-        public static short Shop_Slot => (short)(Slot(List["Shop"], 7, 50, 4, 7) - 1);
-        public static short Equipment_Slot => (short)(Slot(List["Menu_Character"], 7, 248, 1, 5) - 1);
+        public static byte InventorySlot => Slot(List["Menu_Inventory"], 7, 29, 6, 5);
+        public static short HotbarSlot => (short)(Slot(List["Hotbar"], 8, 6, 1, 10) - 1);
+        public static byte TradeSlot => Slot(List["Trade"], 7, 50, 6, 5);
+        public static short ShopSlot => (short)(Slot(List["Shop"], 7, 50, 4, 7) - 1);
+        public static short EquipmentSlot => (short)(Slot(List["Menu_Character"], 7, 248, 1, 5) - 1);
 
         public static void Inventory_MouseDown(MouseButtonEventArgs e)
         {
-            byte slot = Inventory_Slot;
+            byte slot = InventorySlot;
 
             // Somente se necessário
             if (slot == 0) return;
@@ -71,7 +71,7 @@ namespace CryBits.Client.UI
                     {
                         if (Player.Me.Inventory[slot].Amount != 1)
                         {
-                            Shop_Inventory_Slot = slot;
+                            ShopInventorySlot = slot;
                             TextBoxes.List["Shop_Sell_Amount"].Text = string.Empty;
                             List["Shop_Sell"].Visible = true;
                         }
@@ -81,14 +81,14 @@ namespace CryBits.Client.UI
                     else if (!List["Trade"].Visible)
                         if (Player.Me.Inventory[slot].Amount != 1)
                         {
-                            Drop_Slot = slot;
+                            DropSlot = slot;
                             TextBoxes.List["Drop_Amount"].Text = string.Empty;
                             List["Drop"].Visible = true;
                         }
                         else Send.DropItem(slot, 1);
             }
             // Seleciona o item
-            else if (e.Button == Mouse.Button.Left) Inventory_Change = slot;
+            else if (e.Button == Mouse.Button.Left) InventoryChange = slot;
         }
 
         public static void Equipment_MouseDown(MouseButtonEventArgs e)
@@ -108,7 +108,7 @@ namespace CryBits.Client.UI
 
         public static void Hotbar_MouseDown(MouseButtonEventArgs e)
         {
-            short slot = Hotbar_Slot;
+            short slot = HotbarSlot;
 
             // Somente se necessário
             if (slot < 0) return;
@@ -123,18 +123,18 @@ namespace CryBits.Client.UI
             // Seleciona o item
             if (e.Button == Mouse.Button.Left)
             {
-                Hotbar_Change = slot;
+                HotbarChange = slot;
             }
         }
 
         public static void Trade_MouseDown(MouseButtonEventArgs e)
         {
-            byte slot = Trade_Slot;
+            byte slot = TradeSlot;
 
             // Somente se necessário
             if (!List["Trade"].Visible) return;
             if (slot == 0) return;
-            if (Player.Me.Trade_Offer[slot].Item == null) return;
+            if (Player.Me.TradeOffer[slot].Item == null) return;
 
             // Solta item
             if (e.Button == Mouse.Button.Right) Send.Trade_Offer(slot, 0);
@@ -145,30 +145,30 @@ namespace CryBits.Client.UI
             Point position = new Point();
 
             // Define as informações do painel com base no que o Window.Mouse está sobrepondo
-            if (Hotbar_Slot >= 0)
+            if (HotbarSlot >= 0)
             {
                 position = List["Hotbar"].Position + new Size(0, 42);
-                Information_ID = Player.Me.Inventory[Player.Me.Hotbar[Hotbar_Slot].Slot].Item.ID;
+                InformationID = Player.Me.Inventory[Player.Me.Hotbar[HotbarSlot].Slot].Item.ID;
             }
-            else if (Inventory_Slot > 0)
+            else if (InventorySlot > 0)
             {
                 position = List["Menu_Inventory"].Position + new Size(-186, 3);
-                Information_ID = Player.Me.Inventory[Inventory_Slot].Item.ID;
+                InformationID = Player.Me.Inventory[InventorySlot].Item.ID;
             }
-            else if (Equipment_Slot >= 0)
+            else if (EquipmentSlot >= 0)
             {
                 position = List["Menu_Character"].Position + new Size(-186, 5);
-                Information_ID = Player.Me.Equipment[Equipment_Slot].ID;
+                InformationID = Player.Me.Equipment[EquipmentSlot].ID;
             }
-            else if (Shop_Slot >= 0 && Shop_Slot < Shop_Open.Sold.Count)
+            else if (ShopSlot >= 0 && ShopSlot < ShopOpen.Sold.Count)
             {
                 position = new Point(List["Shop"].Position.X - 186, List["Shop"].Position.Y + 5);
-                Information_ID = Shop_Open.Sold[Shop_Slot].Item.ID;
+                InformationID = ShopOpen.Sold[ShopSlot].Item.ID;
             }
-            else Information_ID = Guid.Empty;
+            else InformationID = Guid.Empty;
 
             // Define os dados do painel de informações
-            List["Information"].Visible = !position.IsEmpty && Information_ID != Guid.Empty;
+            List["Information"].Visible = !position.IsEmpty && InformationID != Guid.Empty;
             List["Information"].Position = position;
         }
     }

@@ -85,7 +85,7 @@ namespace CryBits.Editors.Library
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
                 Window = (WindowsTypes)data.ReadByte(),
-                Texture_Num = data.ReadByte()
+                TextureNum = data.ReadByte()
             };
         }
 
@@ -98,7 +98,7 @@ namespace CryBits.Editors.Library
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
                 Window = (WindowsTypes)data.ReadByte(),
-                Max_Characters = data.ReadInt16(),
+                MaxCharacters = data.ReadInt16(),
                 Width = data.ReadInt16(),
                 Password = data.ReadBoolean()
             };
@@ -113,7 +113,7 @@ namespace CryBits.Editors.Library
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
                 Window = (WindowsTypes)data.ReadByte(),
-                Texture_Num = data.ReadByte()
+                TextureNum = data.ReadByte()
             };
         }
 
@@ -134,7 +134,7 @@ namespace CryBits.Editors.Library
         public static void Tiles()
         {
             // Lê os dados
-            Lists.Tile = new Tile[Graphics.Tex_Tile.Length];
+            Lists.Tile = new Tile[Graphics.TexTile.Length];
             for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
         }
 

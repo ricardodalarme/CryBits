@@ -8,8 +8,8 @@ namespace CryBits.Client.Logic
     internal static class Camera
     {
         // Visão do jogador
-        public static Point Start_Sight;
-        public static Rectangle Tile_Sight;
+        public static Point StartSight;
+        public static Rectangle TileSight;
 
         public static void Update()
         {
@@ -62,14 +62,14 @@ namespace CryBits.Client.Logic
             }
 
             // Define a dimensão dos azulejos vistos
-            Tile_Sight.Y = start.Y;
-            Tile_Sight.Height = end.Y;
-            Tile_Sight.X = start.X;
-            Tile_Sight.Width = end.X;
+            TileSight.Y = start.Y;
+            TileSight.Height = end.Y;
+            TileSight.X = start.X;
+            TileSight.Width = end.X;
 
             // Define a posição da câmera
-            Start_Sight.Y = position.Y;
-            Start_Sight.X = position.X;
+            StartSight.Y = position.Y;
+            StartSight.X = position.X;
         }
     }
 }

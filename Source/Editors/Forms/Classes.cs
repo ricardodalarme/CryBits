@@ -26,12 +26,12 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.Win_Class = new RenderWindow(picTexture.Handle);
+            Graphics.WinClass = new RenderWindow(picTexture.Handle);
 
             // Define os limites
             numSpawn_X.Maximum = Map.Width - 1;
             numSpawn_Y.Maximum = Map.Height - 1;
-            numTexture.Maximum = Graphics.Tex_Character.Length - 1;
+            numTexture.Maximum = Graphics.TexCharacter.Length - 1;
 
             // Lista os dados
             foreach (var item in Item.List.Values) cmbItems.Items.Add(item);
@@ -41,7 +41,7 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Classes_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphics.Win_Class = null;
+            Graphics.WinClass = null;
             EditorMaps.Form.Show();
         }
 
@@ -74,8 +74,8 @@ namespace CryBits.Editors.Forms
             Selected = Class.List[(Guid)List.SelectedNode.Tag];
 
             // Conecta as listas com os componentes
-            lstMale.DataSource = Selected.Tex_Male;
-            lstFemale.DataSource = Selected.Tex_Female;
+            lstMale.DataSource = Selected.TexMale;
+            lstFemale.DataSource = Selected.TexFemale;
             lstItems.DataSource = Selected.Item;
 
             // Lista os dados
@@ -88,10 +88,10 @@ namespace CryBits.Editors.Forms
             numIntelligence.Value = Selected.Attribute[(byte)Attributes.Intelligence];
             numAgility.Value = Selected.Attribute[(byte)Attributes.Agility];
             numVitality.Value = Selected.Attribute[(byte)Attributes.Vitality];
-            cmbSpawn_Map.SelectedItem = Selected.Spawn_Map;
-            cmbSpawn_Direction.SelectedIndex = Selected.Spawn_Direction;
-            numSpawn_X.Value = Selected.Spawn_X;
-            numSpawn_Y.Value = Selected.Spawn_Y;
+            cmbSpawn_Map.SelectedItem = Selected.SpawnMap;
+            cmbSpawn_Direction.SelectedIndex = Selected.SpawnDirection;
+            numSpawn_X.Value = Selected.SpawnX;
+            numSpawn_Y.Value = Selected.SpawnY;
             grpItem_Add.Visible = false;
 
             // Seleciona os primeiros itens
@@ -111,7 +111,7 @@ namespace CryBits.Editors.Forms
             Class @new = new Class();
             Class.List.Add(@new.ID, @new);
             @new.Name = "New class";
-            @new.Spawn_Map = Map.List.ElementAt(0).Value;
+            @new.SpawnMap = Map.List.ElementAt(0).Value;
 
             // Adiciona na lista
             TreeNode node = new TreeNode(@new.Name);
@@ -202,9 +202,9 @@ namespace CryBits.Editors.Forms
         {
             // Adiciona a textura
             if (grpTexture_Add.Tag == lstMale)
-                Selected.Tex_Male.Add((short)numTexture.Value);
+                Selected.TexMale.Add((short)numTexture.Value);
             else
-                Selected.Tex_Female.Add((short)numTexture.Value);
+                Selected.TexFemale.Add((short)numTexture.Value);
             grpTexture_Add.Visible = false;
         }
 
@@ -228,34 +228,34 @@ namespace CryBits.Editors.Forms
         {
             // Deleta a textura
             if (lstMale.SelectedIndex != -1)
-                Selected.Tex_Male.RemoveAt(lstMale.SelectedIndex);
+                Selected.TexMale.RemoveAt(lstMale.SelectedIndex);
         }
 
         private void butFDelete_Click(object sender, EventArgs e)
         {
             // Deleta a textura
             if (lstFemale.SelectedIndex != -1)
-                Selected.Tex_Female.RemoveAt(lstFemale.SelectedIndex);
+                Selected.TexFemale.RemoveAt(lstFemale.SelectedIndex);
         }
 
         private void cmbSpawn_Map_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Selected.Spawn_Map = (Map)cmbSpawn_Map.SelectedItem;
+            Selected.SpawnMap = (Map)cmbSpawn_Map.SelectedItem;
         }
 
         private void cmbSpawn_Direction_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Selected.Spawn_Direction = (byte)cmbSpawn_Direction.SelectedIndex;
+            Selected.SpawnDirection = (byte)cmbSpawn_Direction.SelectedIndex;
         }
 
         private void numSpawn_X_ValueChanged(object sender, EventArgs e)
         {
-            Selected.Spawn_X = (byte)numSpawn_X.Value;
+            Selected.SpawnX = (byte)numSpawn_X.Value;
         }
 
         private void numSpawn_Y_ValueChanged(object sender, EventArgs e)
         {
-            Selected.Spawn_Y = (byte)numSpawn_Y.Value;
+            Selected.SpawnY = (byte)numSpawn_Y.Value;
         }
 
         private void butItem_Add_Click(object sender, EventArgs e)

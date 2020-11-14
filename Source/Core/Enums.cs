@@ -197,10 +197,10 @@
         Click = 1,
         Above,
         Rain,
-        Thunder_1,
-        Thunder_2,
-        Thunder_3,
-        Thunder_4,
+        Thunder1,
+        Thunder2,
+        Thunder3,
+        Thunder4,
         Count
     }
 

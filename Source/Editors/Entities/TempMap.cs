@@ -7,8 +7,8 @@ namespace CryBits.Editors.Entities
     internal static class TempMap
     {
         // Fumaças
-        public static int Fog_X;
-        public static int Fog_Y;
+        public static int FogX;
+        public static int FogY;
 
         // Clima
         public static byte Lightning;

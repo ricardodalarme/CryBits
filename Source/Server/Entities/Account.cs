@@ -20,7 +20,7 @@ namespace CryBits.Server.Entities
         public struct TempCharacter
         {
             public string Name;
-            public short Texture_Num;
+            public short TextureNum;
             public short Level;
         }
 
