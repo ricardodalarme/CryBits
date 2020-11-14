@@ -47,7 +47,7 @@ namespace CryBits.Server.Entities
             ////////////////
             if (!Alive)
             {
-                if (Environment.TickCount > _spawnTimer + (Data.SpawnTime * 1000)) Spawn();
+                if (Environment.TickCount > _spawnTimer + Data.SpawnTime * 1000) Spawn();
                 return;
             }
 

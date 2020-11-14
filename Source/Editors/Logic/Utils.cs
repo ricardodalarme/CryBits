@@ -1,17 +1,12 @@
-﻿using System;
-using System.Drawing;
-using CryBits.Entities;
+﻿using System.Drawing;
+using static CryBits.Utils;
 
 namespace CryBits.Editors.Logic
 {
     internal static class Utils
     {
         // Dimensão das grades 
-        public const byte Grid = 32;
         public static Size GridSize = new Size(Grid, Grid);
-
-        // Números aleAmountatórios
-        public static readonly Random MyRandom = new Random();
 
         public static Point Block_Position(byte direction)
         {

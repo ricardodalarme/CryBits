@@ -491,7 +491,7 @@ namespace CryBits.Client.Media
             tool.Visible = TextBoxes.Focused != null && ((TextBoxes)TextBoxes.Focused.Data).Name.Equals("Chat");
 
             // Renderiza as mensagens
-            if (tool.Visible || (Loop.ChatTimer >= Environment.TickCount && Option.Chat))
+            if (tool.Visible || Loop.ChatTimer >= Environment.TickCount && Option.Chat)
                 for (byte i = UI.Chat.LinesFirst; i <= UI.Chat.LinesVisible + UI.Chat.LinesFirst; i++)
                     if (UI.Chat.Order.Count > i)
                         DrawText(UI.Chat.Order[i].Text, 16, 461 + 11 * (i - UI.Chat.LinesFirst), UI.Chat.Order[i].Color);
@@ -539,7 +539,7 @@ namespace CryBits.Client.Media
                 case Items.Potion:
                     for (byte n = 0; n < (byte)Vitals.Count; n++)
                         if (item.PotionVital[n] != 0)
-                            data.Add(((Vitals)n) + ": " + item.PotionVital[n]);
+                            data.Add((Vitals)n + ": " + item.PotionVital[n]);
 
                     if (item.PotionExperience != 0) data.Add("Experience: " + item.PotionExperience);
                     break;
@@ -551,7 +551,7 @@ namespace CryBits.Client.Media
 
                     for (byte n = 0; n < (byte)Attributes.Count; n++)
                         if (item.EquipAttribute[n] != 0)
-                            data.Add(((Attributes)n) + ": " + item.EquipAttribute[n]);
+                            data.Add((Attributes)n + ": " + item.EquipAttribute[n]);
                     break;
             }
 
@@ -632,15 +632,15 @@ namespace CryBits.Client.Media
             for (byte i = 0; i < Player.Me.Party.Length; i++)
             {
                 // Barras do membro
-                Render(TexPartyBars, 10, 92 + (27 * i), 0, 0, 82, 8); // HP Cinza
-                Render(TexPartyBars, 10, 99 + (27 * i), 0, 0, 82, 8); // MP Cinza
+                Render(TexPartyBars, 10, 92 + 27 * i, 0, 0, 82, 8); // HP Cinza
+                Render(TexPartyBars, 10, 99 + 27 * i, 0, 0, 82, 8); // MP Cinza
                 if (Player.Me.Party[i].Vital[(byte)Vitals.HP] > 0)
-                    Render(TexPartyBars, 10, 92 + (27 * i), 0, 8, (Player.Me.Party[i].Vital[(byte)Vitals.HP] * 82) / Player.Me.Party[i].MaxVital[(byte)Vitals.HP], 8); // HP 
+                    Render(TexPartyBars, 10, 92 + 27 * i, 0, 8, Player.Me.Party[i].Vital[(byte)Vitals.HP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vitals.HP], 8); // HP 
                 if (Player.Me.Party[i].Vital[(byte)Vitals.MP] > 0)
-                    Render(TexPartyBars, 10, 99 + (27 * i), 0, 16, (Player.Me.Party[i].Vital[(byte)Vitals.MP] * 82) / Player.Me.Party[i].MaxVital[(byte)Vitals.MP], 8); // MP 
+                    Render(TexPartyBars, 10, 99 + 27 * i, 0, 16, Player.Me.Party[i].Vital[(byte)Vitals.MP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vitals.MP], 8); // MP 
 
                 // Nome do membro
-                DrawText(Player.Me.Party[i].Name, 10, 79 + (27 * i), Color.White);
+                DrawText(Player.Me.Party[i].Name, 10, 79 + 27 * i, Color.White);
             }
         }
 
@@ -678,7 +678,7 @@ namespace CryBits.Client.Media
 
             // Posição do item baseado no slot
             int line = (slot - 1) / columns;
-            int column = slot - (line * 5) - 1;
+            int column = slot - line * 5 - 1;
             Point position = start + new Size(column * (grid + gap), line * (grid + gap));
 
             // Desenha o item e sua quantidade
@@ -761,7 +761,7 @@ namespace CryBits.Client.Media
             // Cálcula a largura da barra
             Size characterSize = Size(TexCharacter[player.TextureNum]);
             int fullWidth = characterSize.Width / AnimationAmount;
-            int width = (value * fullWidth) / player.MaxVital[(byte)Vitals.HP];
+            int width = value * fullWidth / player.MaxVital[(byte)Vitals.HP];
 
             // Posição das barras
             Point position = new Point
@@ -857,7 +857,7 @@ namespace CryBits.Client.Media
             // Posição
             Point position = new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY) + Size(texture).Height / AnimationAmount + 4);
             int fullWidth = Size(texture).Width / AnimationAmount;
-            int width = (value * fullWidth) / npc.Data.Vital[(byte)Vitals.HP];
+            int width = value * fullWidth / npc.Data.Vital[(byte)Vitals.HP];
 
             // Desenha a barra 
             Render(TexBars, position.X, position.Y, 0, 4, fullWidth, 4);

@@ -20,8 +20,8 @@ namespace CryBits.Client.Logic
             position.Y = Player.Me.Y2 + Grid;
 
             // Início da tela
-            start.X = Player.Me.X - ((MapWidth + 1) / 2) - 1;
-            start.Y = Player.Me.Y - ((MapHeight + 1) / 2) - 1;
+            start.X = Player.Me.X - (MapWidth + 1) / 2 - 1;
+            start.Y = Player.Me.Y - (MapHeight + 1) / 2 - 1;
 
             // Reajusta a posição horizontal da tela
             if (start.X < 0)
@@ -40,8 +40,8 @@ namespace CryBits.Client.Logic
             }
 
             // Final da tela
-            end.X = start.X + (MapWidth + 1) + 1;
-            end.Y = start.Y + (MapHeight + 1) + 1;
+            end.X = start.X + MapWidth + 1 + 1;
+            end.Y = start.Y + MapHeight + 1 + 1;
 
             // Reajusta a posição horizontal da tela
             if (end.X > MapWidth)

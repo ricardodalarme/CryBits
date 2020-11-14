@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
@@ -129,7 +130,7 @@ namespace CryBits.Client.Network
                 Panels.Characters[i] = new Panels.TempCharacter
                 {
                     Name = data.ReadString(),
-                    TextureNum = data.ReadInt16(),
+                    TextureNum = data.ReadInt16()
                 };
             }
         }
@@ -342,7 +343,7 @@ namespace CryBits.Client.Network
                     Player.List.RemoveAt(i);
 
             // Verifica se é necessário baixar os dados do mapa
-            if (System.IO.File.Exists(Directories.MapsData.FullName + id + Directories.Format) || CryBits.Entities.Map.List.ContainsKey(id))
+            if (File.Exists(Directories.MapsData.FullName + id + Directories.Format) || CryBits.Entities.Map.List.ContainsKey(id))
             {
                 if (!CryBits.Entities.Map.List.ContainsKey(id)) Read.Map(id);
 

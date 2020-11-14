@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using static CryBits.Editors.Logic.Utils;
+using static CryBits.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Entities
