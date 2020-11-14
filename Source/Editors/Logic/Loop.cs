@@ -15,7 +15,7 @@ using Sound = CryBits.Editors.Media.Audio.Sound;
 
 namespace CryBits.Editors.Logic
 {
-    internal class Loop
+    internal static class Loop
     {
         // Contadores
         private static int _fogXTimer;
@@ -253,11 +253,7 @@ namespace CryBits.Editors.Logic
             Lists.Weather[i].Y = -32;
             Lists.Weather[i].X = MyRandom.Next(-32, EditorMaps.Form.picMap.Width);
             Lists.Weather[i].Start = Lists.Weather[i].X;
-
-            if (MyRandom.Next(2) == 0)
-                Lists.Weather[i].Back = false;
-            else
-                Lists.Weather[i].Back = true;
+            Lists.Weather[i].Back = MyRandom.Next(2) != 0;
         }
 
         private static void Weather_Snow_Movement(int i, bool move = true)

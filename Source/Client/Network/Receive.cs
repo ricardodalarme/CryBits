@@ -15,7 +15,7 @@ using static CryBits.Utils;
 
 namespace CryBits.Client.Network
 {
-    internal class Receive
+    internal static class Receive
     {
         public static void Handle(NetIncomingMessage data)
         {
@@ -130,7 +130,6 @@ namespace CryBits.Client.Network
                 {
                     Name = data.ReadString(),
                     Texture_Num = data.ReadInt16(),
-                    Level = data.ReadInt16()
                 };
             }
         }
@@ -150,7 +149,7 @@ namespace CryBits.Client.Network
             CheckBoxes.List["Options_Trade"].Checked = Option.Trade;
             CheckBoxes.List["Options_Party"].Checked = Option.Party;
             Loop.Chat_Timer = Loop.Chat_Timer = Environment.TickCount + 10000;
-            Panels.Infomation_ID = Guid.Empty;
+            Panels.Information_ID = Guid.Empty;
 
             // Reseta a interface
             Panels.List["Menu_Character"].Visible = false;

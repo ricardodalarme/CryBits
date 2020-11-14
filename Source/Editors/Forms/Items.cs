@@ -102,7 +102,7 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            Item @new = new Item(Guid.NewGuid());
+            Item @new = new Item();
             @new.Name = "New item";
             Item.List.Add(@new.ID, @new);
 
@@ -174,12 +174,12 @@ namespace CryBits.Editors.Forms
                 Selected.Req_Class = (Class)cmbReq_Class.SelectedItem;
         }
 
-        private void numEquip_Vida_ValueChanged(object sender, EventArgs e)
+        private void numEquip_HP_ValueChanged(object sender, EventArgs e)
         {
             Selected.Potion_Vital[(byte)Vitals.HP] = (short)numPotion_HP.Value;
         }
 
-        private void numEquip_Mana_ValueChanged(object sender, EventArgs e)
+        private void numEquip_MP_ValueChanged(object sender, EventArgs e)
         {
             Selected.Potion_Vital[(byte)Vitals.MP] = (short)numPotion_MP.Value;
         }

@@ -7,7 +7,7 @@ namespace CryBits.Client.Media.Audio
     public class Music
     {
         // Formato em o dispositivo irá ler as músicas
-        public const string Format = ".ogg";
+        private const string Format = ".ogg";
 
         // Lista das músicas
         private static SFML.Audio.Music _device;

@@ -23,8 +23,5 @@ namespace CryBits.Entities
         public short[] Vital { get; set; } = new short[(byte)Vitals.Count];
         public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
         public IList<ItemSlot> Item { get; set; } = new List<ItemSlot>();
-
-        // Construtor
-        public Class(Guid id) : base(id) { }
     }
 }

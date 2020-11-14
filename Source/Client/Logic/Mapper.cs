@@ -8,7 +8,7 @@ using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.Logic
 {
-    internal class Mapper
+    internal static class Mapper
     {
         // Mapa atual
         public static TempMap Current;
@@ -219,18 +219,14 @@ namespace CryBits.Client.Logic
             TempMap.Weather[i].Y = -32;
             TempMap.Weather[i].X = MyRandom.Next(-32, ScreenWidth);
             TempMap.Weather[i].Start = TempMap.Weather[i].X;
-
-            if (MyRandom.Next(2) == 0)
-                TempMap.Weather[i].Back = false;
-            else
-                TempMap.Weather[i].Back = true;
+            TempMap.Weather[i].Back = MyRandom.Next(2) != 0;
         }
 
-        private static void Weather_Snow_Movement(int i, bool movimentrar = true)
+        private static void Weather_Snow_Movement(int i, bool move = true)
         {
-            int diference = MyRandom.Next(0, SnowMovement / 3);
-            int x1 = TempMap.Weather[i].Start + SnowMovement + diference;
-            int x2 = TempMap.Weather[i].Start - SnowMovement - diference;
+            int difference = MyRandom.Next(0, SnowMovement / 3);
+            int x1 = TempMap.Weather[i].Start + SnowMovement + difference;
+            int x2 = TempMap.Weather[i].Start - SnowMovement - difference;
 
             // Faz com que a partícula volte
             if (x1 <= TempMap.Weather[i].X)
@@ -241,7 +237,7 @@ namespace CryBits.Client.Logic
             // Movimenta a partícula
             TempMap.Weather[i].Y += TempMap.Weather[i].Speed;
 
-            if (movimentrar)
+            if (move)
                 if (TempMap.Weather[i].Back)
                     TempMap.Weather[i].X -= 1;
                 else

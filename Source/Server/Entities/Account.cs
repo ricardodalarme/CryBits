@@ -10,9 +10,10 @@ namespace CryBits.Server.Entities
 
         // Dados básicos
         public NetConnection Connection;
-        public string User = string.Empty;
-        public string Password = string.Empty;
-        public Accesses Access;
+        public string User { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+
+        public Accesses Access { get; set; }
         public bool InEditor;
         public Player Character;
         public List<TempCharacter> Characters = new List<TempCharacter>();

@@ -8,7 +8,7 @@ using static CryBits.Client.Logic.Utils;
 
 namespace CryBits.Client.UI
 {
-    internal class Chat
+    internal static class Chat
     {
         // Ordem de renderização
         public static List<Structure> Order = new List<Structure>();

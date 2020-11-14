@@ -10,7 +10,7 @@ namespace CryBits
     public static class Utils
     {
         // Números aleatórios
-        public static Random MyRandom = new Random();
+        public static readonly Random MyRandom = new Random();
         public const byte Grid = 32;
 
         public static Directions ReverseDirection(Directions direction)

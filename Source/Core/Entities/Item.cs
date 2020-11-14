@@ -37,8 +37,5 @@ namespace CryBits.Entities
         public byte Equip_Type { get; set; }
         public short[] Equip_Attribute { get; set; } = new short[(byte)Attributes.Count];
         public short Weapon_Damage { get; set; }
-
-        // Construtor
-        public Item(Guid id) : base(id) { }
     }
 }

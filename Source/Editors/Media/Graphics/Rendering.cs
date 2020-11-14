@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Entities.Tools;
 using CryBits.Editors.Forms;
@@ -12,14 +9,12 @@ using SFML.System;
 using static CryBits.Editors.Logic.Utils;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
-using Color = SFML.Graphics.Color;
-using Font = SFML.Graphics.Font;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
 using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
 namespace CryBits.Editors.Media
 {
-    internal static class Graphics
+    internal partial class Graphics
     {
         // Locais de renderização
         public static RenderWindow Win_Interface;
@@ -31,187 +26,14 @@ namespace CryBits.Editors.Media
         public static RenderWindow Win_Class;
         public static RenderWindow Win_NPC;
 
-        // Fonte principal
-        public static Font Font_Default;
-
-        // Texturas
-        public static Texture[] Tex_Character;
-        public static Texture[] Tex_Tile;
-        public static Texture[] Tex_Face;
-        public static Texture[] Tex_Panel;
-        public static Texture[] Tex_Button;
-        public static Texture[] Tex_Panorama;
-        public static Texture[] Tex_Fog;
-        public static Texture[] Tex_Item;
-        public static Texture Tex_CheckBox;
-        public static Texture Tex_TextBox;
-        public static Texture Tex_Grid;
-        public static Texture Tex_Weather;
-        public static Texture Tex_Blank;
-        public static Texture Tex_Directions;
-        public static Texture Tex_Transparent;
-        public static Texture Tex_Lighting;
-
-        // Formato das texturas
-        public const string Format = ".png";
-
-        #region Engine
-        private static Texture[] AddTextures(string directory)
+        private static void Transparent(RenderWindow window)
         {
-            short i = 1;
-            Texture[] tempTex = Array.Empty<Texture>();
+            Vector2u textureSize = Tex_Transparent.Size;
 
-            while (File.Exists(directory + i + Format))
-            {
-                // Carrega todas do diretório e as adiciona a lista
-                Array.Resize(ref tempTex, i + 1);
-                tempTex[i] = new Texture(directory + i + Format);
-                i += 1;
-            }
-
-            // Retorna o cache da textura
-            return tempTex;
-        }
-
-        public static Size Size(Texture texture)
-        {
-            // Retorna com o tamanho da textura
-            if (texture != null)
-                return new Size((int)texture.Size.X, (int)texture.Size.Y);
-            return new Size(0, 0);
-        }
-
-        // Retorna a cor
-        private static Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new Color(r, g, b, a);
-
-        private static void Render(RenderWindow window, Texture texture, Rectangle source, Rectangle destiny, object color = null, object mode = null)
-        {
-            // Define os dados
-            Sprite tmpImage = new Sprite(texture)
-            {
-                TextureRect = new IntRect(source.X, source.Y, source.Width, source.Height),
-                Position = new Vector2f(destiny.X, destiny.Y),
-                Scale = new Vector2f(destiny.Width / (float)source.Width, destiny.Height / (float)source.Height)
-            };
-            if (color != null) tmpImage.Color = (Color)color;
-
-            // Renderiza a textura em forma de retângulo
-            if (mode == null) mode = RenderStates.Default;
-            window.Draw(tmpImage, (RenderStates)mode);
-        }
-
-        private static void Render(RenderTexture window, Texture texture, Rectangle destiny, object color = null, object mode = null)
-        {
-            // Define os dados
-            Sprite tmpImage = new Sprite(texture)
-            {
-                Position = new Vector2f(destiny.X, destiny.Y),
-                Scale = new Vector2f(destiny.Width / (float)Size(texture).Width, destiny.Height / (float)Size(texture).Height)
-            };
-            if (color != null) tmpImage.Color = (Color)color;
-
-            // Renderiza a textura em forma de retângulo
-            if (mode == null) mode = RenderStates.Default;
-            window.Draw(tmpImage, (RenderStates)mode);
-        }
-
-        private static void Render(RenderWindow window, Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight, object color = null, object mode = null)
-        {
-            // Define as propriedades dos retângulos
-            Rectangle source = new Rectangle(new Point(sourceX, sourceY), new Size(sourceWidth, sourceHeight));
-            Rectangle destiny = new Rectangle(new Point(x, y), new Size(sourceWidth, sourceHeight));
-
-            // Desenha a textura
-            Render(window, texture, source, destiny, color, mode);
-        }
-
-        private static void Render(RenderWindow window, Texture texture, Rectangle destiny, object color = null, object mode = null)
-        {
-            // Define as propriedades dos retângulos
-            Rectangle source = new Rectangle(new Point(0), Size(texture));
-
-            // Desenha a textura
-            Render(window, texture, source, destiny, color, mode);
-        }
-
-        private static void Render(RenderWindow window, Texture texture, Point point, object color = null, object mode = null)
-        {
-            // Define as propriedades dos retângulos
-            Rectangle source = new Rectangle(new Point(0), Size(texture));
-            Rectangle destiny = new Rectangle(point, Size(texture));
-
-            // Desenha a textura
-            Render(window, texture, source, destiny, color, mode);
-        }
-
-        private static void RenderRectangle(RenderWindow window, Rectangle rectangle, object color = null)
-        {
-            // Desenha a caixa
-            Render(window, Tex_Grid, rectangle.X, rectangle.Y, 0, 0, rectangle.Width, 1, color);
-            Render(window, Tex_Grid, rectangle.X, rectangle.Y, 0, 0, 1, rectangle.Height, color);
-            Render(window, Tex_Grid, rectangle.X, rectangle.Y + rectangle.Height - 1, 0, 0, rectangle.Width, 1, color);
-            Render(window, Tex_Grid, rectangle.X + rectangle.Width - 1, rectangle.Y, 0, 0, 1, rectangle.Height, color);
-        }
-
-        private static void RenderRectangle(RenderWindow window, int x, int y, int width, int height, object color = null)
-        {
-            // Desenha a caixa
-            RenderRectangle(window, new Rectangle(x, y, width, height), color);
-        }
-
-        private static void Render_Box(RenderWindow window, Texture texture, byte margin, Point position, Size size)
-        {
-            int textureWidth = Size(texture).Width;
-            int textureHeight = Size(texture).Height;
-
-            // Borda esquerda
-            Render(window, texture, new Rectangle(new Point(0), new Size(margin, textureWidth)), new Rectangle(position, new Size(margin, textureHeight)));
-            // Borda direita
-            Render(window, texture, new Rectangle(new Point(textureWidth - margin, 0), new Size(margin, textureHeight)), new Rectangle(new Point(position.X + size.Width - margin, position.Y), new Size(margin, textureHeight)));
-            // Centro
-            Render(window, texture, new Rectangle(new Point(margin, 0), new Size(margin, textureHeight)), new Rectangle(new Point(position.X + margin, position.Y), new Size(size.Width - margin * 2, textureHeight)));
-        }
-
-        private static void DrawText(RenderWindow window, string text, int x, int y, Color color)
-        {
-            Text tempText = new Text(text, Font_Default);
-
-            // Define os dados
-            tempText.CharacterSize = 10;
-            tempText.FillColor = color;
-            tempText.Position = new Vector2f(x, y);
-            tempText.OutlineColor = new Color(0, 0, 0, 70);
-            tempText.OutlineThickness = 1;
-
-            // Desenha
-            window.Draw(tempText);
-        }
-        #endregion
-
-        public static void Init()
-        {
-            // Conjuntos
-            Tex_Character = AddTextures(Directories.TexCharacters.FullName);
-            Tex_Tile = AddTextures(Directories.TexTiles.FullName);
-            Tex_Face = AddTextures(Directories.TexFaces.FullName);
-            Tex_Panel = AddTextures(Directories.TexPanels.FullName);
-            Tex_Button = AddTextures(Directories.TexButtons.FullName);
-            Tex_Panorama = AddTextures(Directories.TexPanoramas.FullName);
-            Tex_Fog = AddTextures(Directories.TexFogs.FullName);
-            Tex_Item = AddTextures(Directories.TexItems.FullName);
-
-            // Únicas
-            Tex_Weather = new Texture(Directories.TexWeather.FullName + Format);
-            Tex_Blank = new Texture(Directories.TexBlanc.FullName + Format);
-            Tex_Directions = new Texture(Directories.TexDirections.FullName + Format);
-            Tex_Transparent = new Texture(Directories.TexTransparent.FullName + Format);
-            Tex_Grid = new Texture(Directories.TexGrid.FullName + Format);
-            Tex_CheckBox = new Texture(Directories.TexCheckBox.FullName + Format);
-            Tex_TextBox = new Texture(Directories.TexTextBox.FullName + Format);
-            Tex_Lighting = new Texture(Directories.TexLighting.FullName + Format);
-
-            // Fontes
-            Font_Default = new Font(Directories.Fonts.FullName + "Georgia.ttf");
+            // Desenha uma textura transparente na janela inteira
+            for (uint x = 0; x <= window.Size.X / textureSize.X; x++)
+                for (uint y = 0; y <= window.Size.Y / textureSize.Y; y++)
+                    Render(window, Tex_Transparent, new Vector2u(textureSize.X * x, textureSize.Y * y));
         }
 
         public static void Present()
@@ -224,16 +46,6 @@ namespace CryBits.Editors.Media
             Editor_Item();
             Editor_NPC();
             Interface();
-        }
-
-        private static void Transparent(RenderWindow window)
-        {
-            Size textureSize = Size(Tex_Transparent);
-
-            // Desenha uma textura transparente na janela inteira
-            for (int x = 0; x <= window.Size.X / textureSize.Width; x++)
-                for (int y = 0; y <= window.Size.Y / textureSize.Height; y++)
-                    Render(window, Tex_Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
         }
 
         #region Map Editor
@@ -342,7 +154,7 @@ namespace CryBits.Editors.Media
                             Rectangle destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), Grid_Size);
 
                             // Desenha o azulejo
-                            if (!data.IsAutoTile)
+                            if (!data.IsAutotile)
                                 Render(Win_Map, Tex_Tile[data.Texture], source, form.Zoom(destiny), color);
                             else
                                 Editor_Maps_AutoTile(destiny.Location, data, color);
@@ -541,7 +353,10 @@ namespace CryBits.Editors.Media
             for (byte i = 0; i < (byte)Directions.Count; i++)
             {
                 // Estado do bloqueio
-                sourceY = map.Attribute[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
+                if (map.Attribute[tile.X, tile.Y].Block[i])
+                    sourceY = 8;
+                else
+                    sourceY = 0;
 
                 // Renderiza
                 Render(Win_Map, Tex_Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
@@ -640,7 +455,10 @@ namespace CryBits.Editors.Media
             for (byte i = 0; i < (byte)Directions.Count; i++)
             {
                 // Estado do bloqueio
-                sourceY = Lists.Tile[form.scrlTile.Value].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
+                if (Lists.Tile[form.scrlTile.Value].Data[tile.X, tile.Y].Block[i])
+                    sourceY = 8;
+                else
+                    sourceY = 0;
 
                 // Renderiza
                 Render(Win_Tile, Tex_Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
@@ -747,7 +565,7 @@ namespace CryBits.Editors.Media
         private static void CheckBox(CheckBox tool)
         {
             // Define as propriedades dos retângulos
-            Rectangle recSource = new Rectangle(new Point(), new Size(Size(Tex_CheckBox).Width / 2, Size(Tex_CheckBox).Height));
+            Rectangle recSource = new Rectangle(new Point(), new Size(Tex_CheckBox.Size.X / 2, Size(Tex_CheckBox).Height));
             Rectangle recDestiny = new Rectangle(tool.Position, recSource.Size);
 
             // Desenha a textura do marcador pelo seu estado 

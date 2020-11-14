@@ -9,7 +9,7 @@ using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.UI
 {
-    internal class Windows
+    internal static class Windows
     {
         // Janela que está aberta
         public static WindowsTypes Current;
@@ -130,7 +130,6 @@ namespace CryBits.Client.UI
                             Send.Trade_Offer(Panels.Trade_Slot, Panels.Inventory_Change);
                         else
                         {
-                            Panels.Trade_Slot_Selected = Panels.Trade_Slot;
                             Panels.Trade_Inventory_Slot = Panels.Inventory_Change;
                             TextBoxes.List["Trade_Amount"].Text = string.Empty;
                             Panels.List["Trade_Amount"].Visible = true;

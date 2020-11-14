@@ -108,7 +108,7 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            Class @new = new Class(Guid.NewGuid());
+            Class @new = new Class();
             Class.List.Add(@new.ID, @new);
             @new.Name = "New class";
             @new.Spawn_Map = Map.List.ElementAt(0).Value;
@@ -263,7 +263,7 @@ namespace CryBits.Editors.Forms
             // Evita erros
             if (Item.List.Count == 0)
             {
-                MessageBox.Show("It must have at least one item registered add inital items.");
+                MessageBox.Show("It must have at least one item registered add initial items.");
                 return;
             }
 

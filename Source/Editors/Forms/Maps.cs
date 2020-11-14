@@ -157,7 +157,7 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            Map @new = new Map(Guid.NewGuid());
+            Map @new = new Map();
             Map.List.Add(@new.ID, @new);
             cmbA_Warp_Map.Items.Add(@new);
             @new.Name = "New map";
@@ -202,7 +202,7 @@ namespace CryBits.Editors.Forms
             // Atualiza as informações da barra
             Strip.Items[0].Text = "FPS: " + Program.FPS;
             Strip.Items[2].Text = "Revision: " + Selected.Revision;
-            Strip.Items[4].Text = "Position: {" + _mapMouse.X + ";" + _mapMouse.Y + "}"; ;
+            Strip.Items[4].Text = "Position: {" + _mapMouse.X + ";" + _mapMouse.Y + "}"; 
         }
         #endregion
 
@@ -474,7 +474,7 @@ namespace CryBits.Editors.Forms
             Update_Map_Bounds();
         }
 
-        private void Modes_Visibiliy()
+        private void Modes_Visibility()
         {
             // Desmarca todos os botões
             butMNormal.Checked = false;
@@ -487,35 +487,35 @@ namespace CryBits.Editors.Forms
         private void butMNormal_Click(object sender, EventArgs e)
         {
             // Marca o botão
-            Modes_Visibiliy();
+            Modes_Visibility();
             butMNormal.Checked = true;
         }
 
         private void butMAttributes_Click(object sender, EventArgs e)
         {
             // Marca o botão
-            Modes_Visibiliy();
+            Modes_Visibility();
             butMAttributes.Checked = true;
         }
 
         private void butMZones_Click(object sender, EventArgs e)
         {
             // Marca o botão
-            Modes_Visibiliy();
+            Modes_Visibility();
             butMZones.Checked = true;
         }
 
         private void butMLighting_Click(object sender, EventArgs e)
         {
             // Marca o botão
-            Modes_Visibiliy();
+            Modes_Visibility();
             butMLighting.Checked = true;
         }
 
         private void butMNPCs_Click(object sender, EventArgs e)
         {
             // Marca o botão
-            Modes_Visibiliy();
+            Modes_Visibility();
             butMNPCs.Checked = true;
 
             // Adiciona os NPCBehaviour e reseta os valores
@@ -1029,7 +1029,7 @@ namespace CryBits.Editors.Forms
 
                 // Define o azulejo
                 cmbTiles.SelectedIndex = data.Texture - 1;
-                chkAuto.Checked = data.IsAutotile;
+                chkAuto.Checked = data.IsAutoTile;
                 _defTilesSelection = new Rectangle(data.X, data.Y, 1, 1);
                 return;
             }
@@ -1048,7 +1048,7 @@ namespace CryBits.Editors.Forms
             tempTile.X = x;
             tempTile.Y = y;
             tempTile.Texture = (byte)(cmbTiles.SelectedIndex + 1);
-            tempTile.IsAutotile = chkAuto.Checked;
+            tempTile.IsAutoTile = chkAuto.Checked;
 
             // Retorna o azulejo
             return tempTile;

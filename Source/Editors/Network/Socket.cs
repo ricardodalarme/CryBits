@@ -5,7 +5,7 @@ using Lidgren.Network;
 
 namespace CryBits.Editors.Network
 {
-    internal class Socket
+    internal static class Socket
     {
         // Protocolo do controle de transmissão
         public static NetClient Device;
@@ -14,8 +14,8 @@ namespace CryBits.Editors.Network
         private static NetIncomingMessage _data;
 
         // Dados para a conexão com o servidor
-        public const string IP = "localhost";
-        public const short Port = 7001;
+        private const string IP = "localhost";
+        private const short Port = 7001;
 
         public static void Init()
         {

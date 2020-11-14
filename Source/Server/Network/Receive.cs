@@ -661,7 +661,7 @@ namespace CryBits.Server.Network
             // Verifica se o jogador está convectado
             if (invited == null)
             {
-                Send.Message(player, "The player ins't connected.", Color.White);
+                Send.Message(player, "The player isn't connected.", Color.White);
                 return;
             }
             // Verifica se não está tentando se convidar
@@ -708,7 +708,7 @@ namespace CryBits.Server.Network
             // Verifica se quem chamou ainda está disponível
             if (invitation == null)
             {
-                Send.Message(player, "Who invited you is no longer avaliable.", Color.White);
+                Send.Message(player, "Who invited you is no longer available.", Color.White);
                 return;
             }
             // Verifica se o grupo está cheio
@@ -759,7 +759,7 @@ namespace CryBits.Server.Network
             // Verifica se o jogador está convectado
             if (invited == null)
             {
-                Send.Message(player, "The player ins't connected.", Color.White);
+                Send.Message(player, "The player isn't connected.", Color.White);
                 return;
             }
             // Verifica se não está tentando se convidar
@@ -816,7 +816,7 @@ namespace CryBits.Server.Network
             // Verifica se quem chamou ainda está disponível
             if (invited == null)
             {
-                Send.Message(player, "Who invited you is no longer avaliable.", Color.White);
+                Send.Message(player, "Who invited you is no longer available.", Color.White);
                 return;
             }
             // Verifica se os jogadores estão pertods um do outro
@@ -898,12 +898,12 @@ namespace CryBits.Server.Network
                     // Verifica se os jogadores têm espaço disponivel para trocar os itens
                     if (player.Total_Trade_Items() > invited.Total_Inventory_Free())
                     {
-                        Send.Message(invited, invited.Name + " don't have enought space in their inventory to do this trade.", Color.Red);
+                        Send.Message(invited, invited.Name + " don't have enough space in their inventory to do this trade.", Color.Red);
                         break;
                     }
                     if (invited.Total_Trade_Items() > player.Total_Inventory_Free())
                     {
-                        Send.Message(invited, "You don't have enought space in your inventory to do this trade.", Color.Red);
+                        Send.Message(invited, "You don't have enough space in your inventory to do this trade.", Color.Red);
                         break;
                     }
 
@@ -911,8 +911,8 @@ namespace CryBits.Server.Network
                     Send.Message(invited, "The offer was accepted.", Color.Green);
 
                     // Dados da oferta
-                    Inventory[] yourInventory = (Inventory[])player.Inventory.Clone(),
-                       theirInventory = (Inventory[])invited.Inventory.Clone();
+                    ItemSlot[] yourInventory = (ItemSlot[])player.Inventory.Clone(),
+                       theirInventory = (ItemSlot[])invited.Inventory.Clone();
 
                     // Remove os itens do inventário dos jogadores
                     Player to = player;

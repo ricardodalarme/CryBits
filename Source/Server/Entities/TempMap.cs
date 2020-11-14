@@ -16,12 +16,12 @@ namespace CryBits.Server.Entities
         public static TempMap Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
 
         // Dados
-        public Map Data;
+        public readonly Map Data;
         public TempNPC[] NPC = Array.Empty<TempNPC>();
         public List<MapItems> Item = new List<MapItems>();
 
         // Construtor
-        public TempMap(Guid id, Map map) : base(id)
+        public TempMap( Map map) 
         {
             Data = map;
         }
@@ -119,8 +119,8 @@ namespace CryBits.Server.Entities
 
         public static void Create_Temporary(Map map)
         {
-            TempMap tempMap = new TempMap(map.ID, map);
-            List.Add(map.ID, tempMap);
+            TempMap tempMap = new TempMap( map);
+            List.Add(tempMap.ID, tempMap);
 
             // NPCBehaviour do mapa
             tempMap.NPC = new TempNPC[map.NPC.Count];

@@ -25,9 +25,5 @@ namespace CryBits.Editors.Logic
                 default: return new Point(0);
             }
         }
-
-
-        // Obtém o ID de alguma entidade, caso ela não existir retorna um ID zerado
-        public static string GetID(this Entity @object) => @object == null ? Guid.Empty.ToString() : @object.ID.ToString();
     }
 }

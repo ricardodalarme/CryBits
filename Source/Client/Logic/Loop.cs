@@ -8,7 +8,7 @@ using CryBits.Client.UI;
 
 namespace CryBits.Client.Logic
 {
-    internal class Loop
+    internal static class Loop
     {
         // Contagens
         public static int TextBox_Timer;
@@ -53,7 +53,7 @@ namespace CryBits.Client.Logic
                     }
 
                     // Verifica se é necessário mostrar o painel de informações
-                    Panels.CheckInformations();
+                    Panels.CheckInformation();
                 }
 
                 // Faz com que a aplicação se mantenha estável

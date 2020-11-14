@@ -114,7 +114,6 @@ namespace CryBits.Server.Network
             {
                 data.Write(account.Characters[i].Name);
                 data.Write(account.Characters[i].Texture_Num);
-                data.Write(account.Characters[i].Level);
             }
 
             ToPlayer(account, data);
@@ -140,7 +139,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static NetOutgoingMessage Player_Data_Cache(Player player)
+        private static NetOutgoingMessage Player_Data_Cache(Player player)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -360,7 +359,7 @@ namespace CryBits.Server.Network
             ToAll(data);
         }
 
-        public static void Message_Private(Player player, string addresseeName, string texto)
+        public static void Message_Private(Player player, string addresseeName, string text)
         {
             Player addressee = Player.Find(addresseeName);
 
@@ -372,8 +371,8 @@ namespace CryBits.Server.Network
             }
 
             // Envia as mensagens
-            Message(player, "[To] " + addresseeName + ": " + texto, Color.Pink);
-            Message(addressee, "[From] " + player.Name + ": " + texto, Color.Pink);
+            Message(player, "[To] " + addresseeName + ": " + text, Color.Pink);
+            Message(addressee, "[From] " + player.Name + ": " + text, Color.Pink);
         }
 
         public static void Player_Attack(Player player, string victim = "", Targets victimType = 0)

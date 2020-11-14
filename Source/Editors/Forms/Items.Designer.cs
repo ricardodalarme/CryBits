@@ -381,7 +381,7 @@ namespace CryBits.Editors.Forms
             this.numPotion_MP.Name = "numPotion_MP";
             this.numPotion_MP.Size = new System.Drawing.Size(90, 20);
             this.numPotion_MP.TabIndex = 40;
-            this.numPotion_MP.ValueChanged += new System.EventHandler(this.numEquip_Mana_ValueChanged);
+            this.numPotion_MP.ValueChanged += new System.EventHandler(this.numEquip_MP_ValueChanged);
             // 
             // numPotion_HP
             // 
@@ -394,7 +394,7 @@ namespace CryBits.Editors.Forms
             this.numPotion_HP.Name = "numPotion_HP";
             this.numPotion_HP.Size = new System.Drawing.Size(90, 20);
             this.numPotion_HP.TabIndex = 39;
-            this.numPotion_HP.ValueChanged += new System.EventHandler(this.numEquip_Vida_ValueChanged);
+            this.numPotion_HP.ValueChanged += new System.EventHandler(this.numEquip_HP_ValueChanged);
             // 
             // lblMP
             // 

@@ -21,13 +21,12 @@ namespace CryBits.Server.Entities
         public int Experience;
         public byte Points;
         public short[] Attribute = new short[(byte)Attributes.Count];
-        public Inventory[] Inventory = new Inventory[MaxInventory + 1];
+        public ItemSlot[] Inventory = new ItemSlot[MaxInventory + 1];
         public Item[] Equipment = new Item[(byte)Equipments.Count];
         public Hotbar[] Hotbar = new Hotbar[MaxHotbar];
 
         // Dados temporários
         public bool GettingMap;
-        public int Attack_Timer;
         public List<Player> Party = new List<Player>();
         public string Party_Request;
         public Player Trade;
@@ -35,6 +34,7 @@ namespace CryBits.Server.Entities
         public TradeSlot[] Trade_Offer;
         public Shop Shop;
         public Account Account;
+        private int _attackTimer;
 
         // Constutor
         public Player(Account account)
@@ -267,7 +267,7 @@ namespace CryBits.Server.Entities
         public void Attack()
         {
             byte nextX = X, nextY = Y;
-            object victim;
+            Character victim;
 
             // Próximo azulejo
             NextTile(Direction, ref nextX, ref nextY);
@@ -275,7 +275,7 @@ namespace CryBits.Server.Entities
             // Apenas se necessário
             if (Trade != null) return;
             if (Shop != null) return;
-            if (Environment.TickCount < Attack_Timer + 750) return;
+            if (Environment.TickCount < _attackTimer + 750) return;
             if (Map.Tile_Blocked(X, Y, Direction, false)) goto @continue;
 
             // Ataca um jogador
@@ -297,7 +297,7 @@ namespace CryBits.Server.Entities
         @continue:
             // Demonstra que aos outros jogadores o ataque
             Send.Player_Attack(this, null);
-            Attack_Timer = Environment.TickCount;
+            _attackTimer = Environment.TickCount;
         }
 
         private void Attack_Player(Player victim)
@@ -311,7 +311,7 @@ namespace CryBits.Server.Entities
             }
 
             // Tempo de ataque 
-            Attack_Timer = Environment.TickCount;
+            _attackTimer = Environment.TickCount;
 
             // Cálculo de dano
             short attackDamage = (short)(Damage - victim.Player_Defense);
@@ -358,7 +358,7 @@ namespace CryBits.Server.Entities
             victim.Target = this;
 
             // Tempo de ataque 
-            Attack_Timer = Environment.TickCount;
+            _attackTimer = Environment.TickCount;
 
             // Cálculo de dano
             short attackDamage = (short)(Damage - victim.Data.Attribute[(byte)Attributes.Resistance]);
@@ -456,13 +456,15 @@ namespace CryBits.Server.Entities
             // Tira o item do jogaor
             if (amount == Inventory[slot].Amount)
             {
-                Inventory[slot] = new Inventory();
+                Inventory[slot].Item = null;
+                Inventory[slot].Amount = 0;
 
                 // Retira o item da hotbar caso estier
                 var hotbarSlot = FindHotbar(Hotbars.Item, slot);
                 if (hotbarSlot != null)
                 {
-                    hotbarSlot = new Hotbar(Hotbars.None, 0);
+                    hotbarSlot.Type = Hotbars.None;
+                    hotbarSlot.Slot=0;
                     Send.Player_Hotbar(this);
                 }
             }
@@ -704,12 +706,6 @@ namespace CryBits.Server.Entities
 
             return null;
         }
-    }
-
-    internal struct Inventory
-    {
-        public Item Item;
-        public short Amount;
     }
 
     internal class TradeSlot

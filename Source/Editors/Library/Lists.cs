@@ -16,7 +16,7 @@ namespace CryBits.Editors.Library
 
 
         // Estrutura dos itens em gerais
-        public class Structures
+        public static class Structures
         {
             [Serializable]
             public struct Options

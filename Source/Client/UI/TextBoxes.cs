@@ -19,7 +19,7 @@ namespace CryBits.Client.UI
 
         // Dados
         public string Text;
-        public short Lenght;
+        public short Length;
         public short Width;
         public bool Password;
 
@@ -54,8 +54,8 @@ namespace CryBits.Client.UI
                     }
 
                     // Não adicionar se já estiver no máximo de caracteres
-                    if (Lenght > 0)
-                        if (Text.Length >= Lenght)
+                    if (Length > 0)
+                        if (Text.Length >= Length)
                             return;
                 }
 

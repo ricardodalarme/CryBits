@@ -120,7 +120,7 @@ namespace CryBits.Editors.Forms
         private void butRemove_Click(object sender, EventArgs e)
         {
             // Remove a ferramenta
-            if (treOrder.SelectedNode != null && treOrder.SelectedNode.Parent != null)
+            if (treOrder.SelectedNode?.Parent != null)
                 treOrder.SelectedNode.Remove();
         }
 
@@ -149,7 +149,7 @@ namespace CryBits.Editors.Forms
             // Dados
             TreeNode selected = treOrder.SelectedNode;
             TreeNode parent = selected.Parent;
-            if (parent != null && parent.Parent != null)
+            if (parent?.Parent != null)
             {
                 // Desfixa o nó
                 parent.Parent.Nodes.Insert(parent.Index + 1, (TreeNode)selected.Clone());

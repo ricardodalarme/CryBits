@@ -98,8 +98,8 @@ namespace CryBits.Server.Library
         public static void Classes()
         {
             // Escreve os dados
-            foreach (var classe in CryBits.Entities.Class.List.Values)
-                Class(classe);
+            foreach (var @class in CryBits.Entities.Class.List.Values)
+                Class(@class);
         }
 
         public static void Class(Class @class)

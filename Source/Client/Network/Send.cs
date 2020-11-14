@@ -8,7 +8,7 @@ using Lidgren.Network;
 
 namespace CryBits.Client.Network
 {
-    internal class Send
+    internal static class Send
     {
         private static void Packet(NetOutgoingMessage data)
         {

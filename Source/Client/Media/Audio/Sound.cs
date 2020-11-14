@@ -5,7 +5,7 @@ using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Media.Audio
 {
-    public class Sound
+    public static class Sound
     {
         // Formato em o dispositivo irá ler os sons
         public const string Format = ".wav";

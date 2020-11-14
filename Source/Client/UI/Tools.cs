@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace CryBits.Client.UI
 {
-    internal class Tools
+    internal static class Tools
     {
         // Ordem da renderização das ferramentas
         public static List<OrderStructure>[] All_Order = new List<OrderStructure>[(byte)WindowsTypes.Count];

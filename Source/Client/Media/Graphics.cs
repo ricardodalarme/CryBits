@@ -20,7 +20,7 @@ using Font = SFML.Graphics.Font;
 
 namespace CryBits.Client.Media
 {
-    internal class Graphics
+    internal static class Graphics
     {
         // Locais de renderização
         public static RenderWindow RenderWindow;
@@ -42,15 +42,12 @@ namespace CryBits.Client.Media
         public static Texture Tex_TextBox;
         public static Texture Tex_Weather;
         public static Texture Tex_Blanc;
-        public static Texture Tex_Directions;
         public static Texture Tex_Shadow;
         public static Texture Tex_Bars;
         public static Texture Tex_Bars_Panel;
-        public static Texture Tex_Grid;
         public static Texture Tex_Equipments;
         public static Texture Tex_Blood;
         public static Texture Tex_Party_Bars;
-        public static Texture Tex_Intro;
 
         // Formato das texturas
         public const string Format = ".png";
@@ -85,31 +82,27 @@ namespace CryBits.Client.Media
         private static void LoadTextures()
         {
             // Conjuntos
-            Tex_Character = LoadTextures(Directories.Tex_Characters.FullName);
-            Tex_Tile = LoadTextures(Directories.Tex_Tiles.FullName);
-            Tex_Face = LoadTextures(Directories.Tex_Faces.FullName);
-            Tex_Panel = LoadTextures(Directories.Tex_Panels.FullName);
-            Tex_Button = LoadTextures(Directories.Tex_Buttons.FullName);
-            Tex_Panorama = LoadTextures(Directories.Tex_Panoramas.FullName);
-            Tex_Fog = LoadTextures(Directories.Tex_Fogs.FullName);
-            Tex_Light = LoadTextures(Directories.Tex_Lights.FullName);
-            Tex_Item = LoadTextures(Directories.Tex_Items.FullName);
+            Tex_Character = LoadTextures(Directories.TexCharacters.FullName);
+            Tex_Tile = LoadTextures(Directories.TexTiles.FullName);
+            Tex_Face = LoadTextures(Directories.TexFaces.FullName);
+            Tex_Panel = LoadTextures(Directories.TexPanels.FullName);
+            Tex_Button = LoadTextures(Directories.TexButtons.FullName);
+            Tex_Panorama = LoadTextures(Directories.TexPanoramas.FullName);
+            Tex_Fog = LoadTextures(Directories.TexFogs.FullName);
+            Tex_Light = LoadTextures(Directories.TexLights.FullName);
+            Tex_Item = LoadTextures(Directories.TexItems.FullName);
 
             // Únicas
-            Tex_Weather = new Texture(Directories.Tex_Weather.FullName + Format);
-            Tex_Blanc = new Texture(Directories.Tex_Blank.FullName + Format);
-            Tex_Directions = new Texture(Directories.Tex_Directions.FullName + Format);
-            Tex_CheckBox = new Texture(Directories.Tex_CheckBox.FullName + Format);
-            Tex_TextBox = new Texture(Directories.Tex_TextBox.FullName + Format);
-            Tex_Directions = new Texture(Directories.Tex_Directions.FullName + Format);
-            Tex_Shadow = new Texture(Directories.Tex_Shadow.FullName + Format);
-            Tex_Bars = new Texture(Directories.Tex_Bars.FullName + Format);
-            Tex_Bars_Panel = new Texture(Directories.Tex_Bars_Panel.FullName + Format);
-            Tex_Grid = new Texture(Directories.Tex_Grid.FullName + Format);
-            Tex_Equipments = new Texture(Directories.Tex_Equipments.FullName + Format);
-            Tex_Blood = new Texture(Directories.Tex_Blood.FullName + Format);
-            Tex_Party_Bars = new Texture(Directories.Tex_Party_Bars.FullName + Format);
-            Tex_Intro = new Texture(Directories.Tex_Intro.FullName + Format);
+            Tex_Weather = new Texture(Directories.TexWeather.FullName + Format);
+            Tex_Blanc = new Texture(Directories.TexBlank.FullName + Format);
+            Tex_CheckBox = new Texture(Directories.TexCheckBox.FullName + Format);
+            Tex_TextBox = new Texture(Directories.TexTextBox.FullName + Format);
+            Tex_Shadow = new Texture(Directories.TexShadow.FullName + Format);
+            Tex_Bars = new Texture(Directories.TexBars.FullName + Format);
+            Tex_Bars_Panel = new Texture(Directories.TexBarsPanel.FullName + Format);
+            Tex_Equipments = new Texture(Directories.TexEquipments.FullName + Format);
+            Tex_Blood = new Texture(Directories.TexBlood.FullName + Format);
+            Tex_Party_Bars = new Texture(Directories.TexPartyBars.FullName + Format);
         }
 
         private static Texture[] LoadTextures(string directory)
@@ -401,7 +394,7 @@ namespace CryBits.Client.Media
                 case "Menu_Character": Menu_Character((Panels)tool); break;
                 case "Menu_Inventory": Menu_Inventory((Panels)tool); break;
                 case "Bars": Bars((Panels)tool); break;
-                case "Information": Informations((Panels)tool); break;
+                case "Information": Information((Panels)tool); break;
                 case "Party_Invitation": Party_Invitation((Panels)tool); break;
                 case "Trade_Invitation": Trade_Invitation((Panels)tool); break;
                 case "Trade": Trade((Panels)tool); break;
@@ -507,9 +500,9 @@ namespace CryBits.Client.Media
             if (!tool.Visible) DrawText("Press [Enter] to open chat.", TextBoxes.List["Chat"].Position.X + 5, TextBoxes.List["Chat"].Position.Y + 3, Color.White);
         }
 
-        private static void Informations(Panels tool)
+        private static void Information(Panels tool)
         {
-            Item item = CryBits.Entities.Item.Get(Panels.Infomation_ID);
+            Item item = CryBits.Entities.Item.Get(Panels.Information_ID);
             Color textColor;
             List<string> data = new List<string>();
 
@@ -766,15 +759,15 @@ namespace CryBits.Client.Media
             if (value <= 0 || value >= player.Max_Vital[(byte)Vitals.HP]) return;
 
             // Cálcula a largura da barra
-            Size chracaterSize = Size(Tex_Character[player.Texture_Num]);
-            int fullWidth = chracaterSize.Width / AnimationAmount;
+            Size characterSize = Size(Tex_Character[player.Texture_Num]);
+            int fullWidth = characterSize.Width / AnimationAmount;
             int width = (value * fullWidth) / player.Max_Vital[(byte)Vitals.HP];
 
             // Posição das barras
             Point position = new Point
             {
                 X = ConvertX(player.Pixel_X),
-                Y = ConvertY(player.Pixel_Y) + chracaterSize.Height / AnimationAmount + 4
+                Y = ConvertY(player.Pixel_Y) + characterSize.Height / AnimationAmount + 4
             };
 
             // Desenha as barras 
@@ -795,11 +788,7 @@ namespace CryBits.Client.Media
             };
 
             // Cor do texto
-            Color color;
-            if (player == Player.Me)
-                color = Color.Yellow;
-            else
-                color = Color.White;
+            Color color = player == Player.Me ? Color.Yellow : Color.White;
 
             // Desenha o texto
             DrawText(player.Name, ConvertX(position.X), ConvertY(position.Y), color);
@@ -899,15 +888,15 @@ namespace CryBits.Client.Media
                                     int y2 = data.Y * Grid;
 
                                     // Desenha o azulejo
-                                    if (!map.Layer[c].Tile[x, y].IsAutotile)
+                                    if (!map.Layer[c].Tile[x, y].IsAutoTile)
                                         Render(Tex_Tile[data.Texture], ConvertX(x * Grid), ConvertY(y * Grid), x2, y2, Grid, Grid, color);
                                     else
-                                        Map_Autotile(new Point(ConvertX(x * Grid), ConvertY(y * Grid)), data, color);
+                                        Map_AutoTile(new Point(ConvertX(x * Grid), ConvertY(y * Grid)), data, color);
                                 }
                             }
         }
 
-        private static void Map_Autotile(Point position, MapTileData data, Color cor)
+        private static void Map_AutoTile(Point position, MapTileData data, Color cor)
         {
             // Desenha os 4 mini azulejos
             for (byte i = 0; i < 4; i++)
@@ -962,9 +951,9 @@ namespace CryBits.Client.Media
             }
 
             // Desenha as partículas
-            for (int i = 0; i < TempMap.Weather.Length; i++)
-                if (TempMap.Weather[i].Visible)
-                    Render(Tex_Weather, new Rectangle(x, 0, 32, 32), new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32), CColor(255, 255, 255, 150));
+            foreach (var weather in TempMap.Weather)
+                if (weather.Visible)
+                    Render(Tex_Weather, new Rectangle(x, 0, 32, 32), new Rectangle(weather.X, weather.Y, 32, 32), CColor(255, 255, 255, 150));
 
             // Trovoadas
             Render(Tex_Blanc, 0, 0, 0, 0, ScreenWidth, ScreenHeight, new Color(255, 255, 255, Mapper.Lightning));

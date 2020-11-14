@@ -96,7 +96,7 @@ namespace CryBits.Client.UI
                 case "Chat_Up": Chat_Up(); break;
                 case "Chat_Down": Chat_Down(); break;
                 case "Menu_Character": Menu_Character(); break;
-                case "Attributes_Strength": Attribute_Strenght(); break;
+                case "Attributes_Strength": Attribute_Strength(); break;
                 case "Attributes_Resistance": Attribute_Resistance(); break;
                 case "Attributes_Intelligence": Attribute_Intelligence(); break;
                 case "Attributes_Agility": Attribute_Agility(); break;
@@ -319,7 +319,7 @@ namespace CryBits.Client.UI
             Panels.List["Menu_Options"].Visible = false;
         }
 
-        private static void Attribute_Strenght()
+        private static void Attribute_Strength()
         {
             Send.AddPoint(Attributes.Strength);
         }

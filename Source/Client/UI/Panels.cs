@@ -21,11 +21,10 @@ namespace CryBits.Client.UI
         public static byte CreateCharacter_Class = 0;
         public static byte CreateCharacter_Tex = 0;
         public static int SelectCharacter = 1;
-        public static Guid Infomation_ID;
+        public static Guid Information_ID;
         public static byte Drop_Slot;
         public static string Party_Invitation;
         public static string Trade_Invitation;
-        public static byte Trade_Slot_Selected = 0;
         public static byte Trade_Inventory_Slot = 0;
         public static Shop Shop_Open;
         public static byte Shop_Inventory_Slot;
@@ -35,7 +34,6 @@ namespace CryBits.Client.UI
         public struct TempCharacter
         {
             public string Name;
-            public short Level;
             public short Texture_Num;
         }
 
@@ -142,7 +140,7 @@ namespace CryBits.Client.UI
             if (e.Button == Mouse.Button.Right) Send.Trade_Offer(slot, 0);
         }
 
-        public static void CheckInformations()
+        public static void CheckInformation()
         {
             Point position = new Point();
 
@@ -150,27 +148,27 @@ namespace CryBits.Client.UI
             if (Hotbar_Slot >= 0)
             {
                 position = List["Hotbar"].Position + new Size(0, 42);
-                Infomation_ID = Player.Me.Inventory[Player.Me.Hotbar[Hotbar_Slot].Slot].Item.ID;
+                Information_ID = Player.Me.Inventory[Player.Me.Hotbar[Hotbar_Slot].Slot].Item.ID;
             }
             else if (Inventory_Slot > 0)
             {
                 position = List["Menu_Inventory"].Position + new Size(-186, 3);
-                Infomation_ID = Player.Me.Inventory[Inventory_Slot].Item.ID;
+                Information_ID = Player.Me.Inventory[Inventory_Slot].Item.ID;
             }
             else if (Equipment_Slot >= 0)
             {
                 position = List["Menu_Character"].Position + new Size(-186, 5);
-                Infomation_ID = Player.Me.Equipment[Equipment_Slot].ID;
+                Information_ID = Player.Me.Equipment[Equipment_Slot].ID;
             }
             else if (Shop_Slot >= 0 && Shop_Slot < Shop_Open.Sold.Count)
             {
                 position = new Point(List["Shop"].Position.X - 186, List["Shop"].Position.Y + 5);
-                Infomation_ID = Shop_Open.Sold[Shop_Slot].Item.ID;
+                Information_ID = Shop_Open.Sold[Shop_Slot].Item.ID;
             }
-            else Infomation_ID = Guid.Empty;
+            else Information_ID = Guid.Empty;
 
             // Define os dados do painel de informações
-            List["Information"].Visible = !position.IsEmpty && Infomation_ID != Guid.Empty;
+            List["Information"].Visible = !position.IsEmpty && Information_ID != Guid.Empty;
             List["Information"].Position = position;
         }
     }
