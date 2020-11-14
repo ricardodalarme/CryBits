@@ -836,9 +836,9 @@ namespace CryBits.Client.Media
             // Cor do texto
             switch (npc.Data.Behaviour)
             {
-                case NPCBehaviour.Friendly: color = Color.White; break;
-                case NPCBehaviour.AttackOnSight: color = Color.Red; break;
-                case NPCBehaviour.AttackWhenAttacked: color = new Color(228, 120, 51); break;
+                case NPCs.Friendly: color = Color.White; break;
+                case NPCs.AttackOnSight: color = Color.Red; break;
+                case NPCs.AttackWhenAttacked: color = new Color(228, 120, 51); break;
                 default: color = Color.White; break;
             }
 

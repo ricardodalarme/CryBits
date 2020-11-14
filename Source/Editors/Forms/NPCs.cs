@@ -177,7 +177,7 @@ namespace CryBits.Editors.Forms
             // Evita erros
             cmbShop.Enabled = false;
             cmbShop.SelectedIndex = -1;
-            if (cmbBehavior.SelectedIndex == (byte)NPCBehaviour.ShopKeeper)
+            if (cmbBehavior.SelectedIndex == (byte)NPCs.ShopKeeper)
                 if (Shop.List.Count == 0)
                 {
                     cmbBehavior.SelectedIndex = (byte)Selected.Behaviour;
@@ -189,7 +189,7 @@ namespace CryBits.Editors.Forms
                     if (Selected.Shop == null) cmbShop.SelectedIndex = 0;
                 }
 
-            Selected.Behaviour = (NPCBehaviour)cmbBehavior.SelectedIndex;
+            Selected.Behaviour = (NPCs)cmbBehavior.SelectedIndex;
         }
 
         private void numHP_ValueChanged(object sender, EventArgs e)

@@ -21,7 +21,7 @@ namespace CryBits.Server.Entities
         public int Experience;
         public byte Points;
         public short[] Attribute = new short[(byte)Attributes.Count];
-        public ItemSlot[] Inventory = new ItemSlot[MaxInventory + 1];
+        public ItemSlot[] Inventory { get; set; } = new ItemSlot[MaxInventory + 1];
         public Item[] Equipment = new Item[(byte)Equipments.Count];
         public Hotbar[] Hotbar = new Hotbar[MaxHotbar];
 
@@ -40,6 +40,8 @@ namespace CryBits.Server.Entities
         public Player(Account account)
         {
             Account = account;
+            for (byte i = 0;i < Inventory.Length;i++)
+                Inventory[i] =new ItemSlot(null, 0);
         }
 
         // Cálcula o dano do jogador
@@ -350,8 +352,8 @@ namespace CryBits.Server.Entities
             // Não executa o combate com um NPC amigavel
             switch (victim.Data.Behaviour)
             {
-                case NPCBehaviour.Friendly: return;
-                case NPCBehaviour.ShopKeeper: Shop_Open(victim.Data.Shop); return;
+                case NPCs.Friendly: return;
+                case NPCs.ShopKeeper: Shop_Open(victim.Data.Shop); return;
             }
 
             // Define o alvo do NPC

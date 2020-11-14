@@ -1,4 +1,7 @@
-﻿namespace CryBits.Server.Logic
+﻿using System;
+using CryBits.Entities;
+
+namespace CryBits.Server.Logic
 {
     internal static class Utils
     {
@@ -19,5 +22,10 @@
         // Limites fixos
         public const byte MaxInventory = 30;
         public const byte MaxHotbar = 10;
+
+        public static string GetIDs(this Entity @object)
+        {
+            return @object == null ? Guid.Empty.ToString() : @object.ID.ToString();
+        }
     }
 }

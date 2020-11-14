@@ -166,7 +166,7 @@ namespace CryBits.Client.Network
             Panels.List["Shop_Sell"].Visible = false;
 
             // Abre o jogo
-             Music.Stop();
+            Music.Stop();
             Windows.Current = WindowsTypes.Game;
         }
 
@@ -334,6 +334,7 @@ namespace CryBits.Client.Network
         {
             bool needed = false;
             Guid id = new Guid(data.ReadString());
+            short currentRevision = data.ReadInt16();
 
             // Limpa todos os outros jogadores
             for (byte i = 0; i < Player.List.Count; i++)
@@ -341,11 +342,12 @@ namespace CryBits.Client.Network
                     Player.List.RemoveAt(i);
 
             // Verifica se é necessário baixar os dados do mapa
-            if (System.IO.File.Exists(Directories.MapsData.FullName + id + Directories.Format))
+            if (System.IO.File.Exists(Directories.MapsData.FullName + id + Directories.Format) || CryBits.Entities.Map.List.ContainsKey(id))
             {
-                Read.Map(id);
-                if (CryBits.Entities.Map.List[id].Revision != data.ReadInt16())
-                    needed = true;
+                if (!CryBits.Entities.Map.List.ContainsKey(id)) Read.Map(id);
+
+                if (CryBits.Entities.Map.List[id].Revision != currentRevision)
+                        needed = true;
             }
             else
                 needed = true;
@@ -384,9 +386,9 @@ namespace CryBits.Client.Network
         {
             // Se tiver, reproduz a música de fundo do mapa
             if (Mapper.Current.Data.Music > 0)
-                 Music.Play(( Musics)Mapper.Current.Data.Music);
+                Music.Play((Musics)Mapper.Current.Data.Music);
             else
-                 Music.Stop();
+                Music.Stop();
         }
 
         private static void Latency()

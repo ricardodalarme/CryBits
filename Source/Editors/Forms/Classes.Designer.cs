@@ -771,7 +771,7 @@ namespace CryBits.Editors.Forms
             this.butTexture_Ok.Text = "Ok";
             this.butTexture_Ok.Click += new System.EventHandler(this.butTexture_Ok_Click);
             // 
-            // Editor_Classes
+            // EditorClasses
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
