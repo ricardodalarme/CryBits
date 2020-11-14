@@ -427,8 +427,8 @@ namespace CryBits.Client.UI
             Send.Trade_Offer_State(TradeStatus.Accepted);
 
             // Limpa os dados da oferta
-            Player.Me.TradeOffer = new Inventory[MaxInventory];
-            Player.Me.TradeTheirOffer = new Inventory[MaxInventory ];
+            Player.Me.TradeOffer = new ItemSlot[MaxInventory];
+            Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory ];
         }
 
         private static void Trade_Offer_Decline()

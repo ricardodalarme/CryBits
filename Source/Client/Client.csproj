@@ -52,6 +52,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Me.cs" />
     <Compile Include="Logic\Game.cs" />
     <Compile Include="Media\Audio\Sound.cs" />
     <Compile Include="UI\Chat.cs" />

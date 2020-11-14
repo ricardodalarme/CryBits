@@ -22,7 +22,7 @@ namespace CryBits.Client.Entities
         public int PixelX => X * Grid + X2;
         public int PixelY => Y * Grid + Y2;
 
-        public void ProcessMovement()
+        protected void ProcessMovement()
         {
             byte speed = 0;
             short x = X2, y = Y2;

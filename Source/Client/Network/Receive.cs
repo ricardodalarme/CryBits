@@ -94,7 +94,7 @@ namespace CryBits.Client.Network
             TempMap.List = new Dictionary<Guid, TempMap>();
 
             // Definir os valores que são enviados do servidor
-            Player.Me = new MeStructure(data.ReadString());
+            Player.Me = new Me(data.ReadString());
             Player.List.Add(Player.Me);
         }
 
@@ -463,8 +463,8 @@ namespace CryBits.Client.Network
                 Panels.List["Trade_Offer_Disable"].Visible = false;
 
                 // Limpa os dados
-                Player.Me.TradeOffer = new Inventory[MaxInventory ];
-                Player.Me.TradeTheirOffer = new Inventory[MaxInventory];
+                Player.Me.TradeOffer = new ItemSlot[MaxInventory ];
+                Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory];
             }
             else
             {

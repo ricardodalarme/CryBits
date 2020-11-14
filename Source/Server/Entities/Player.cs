@@ -5,7 +5,7 @@ using CryBits.Entities;
 using CryBits.Server.Library;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
-using static CryBits.Server.Logic.Utils;
+using static CryBits.Server.Logic.Defaults;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Entities
@@ -13,17 +13,17 @@ namespace CryBits.Server.Entities
     internal class Player : Character
     {
         // Dados permantes
-        public string Name = string.Empty;
-        public Class Class;
-        public short TextureNum;
-        public bool Genre;
-        public short Level;
-        public int Experience;
-        public byte Points;
-        public short[] Attribute = new short[(byte)Attributes.Count];
+        public string Name { get; set; } = string.Empty;
+        public Class Class { get; set; }
+        public short TextureNum { get; set; }
+        public bool Genre { get; set; }
+        public short Level { get; set; }
+        public int Experience { get; set; }
+        public byte Points { get; set; }
+        public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
         public ItemSlot[] Inventory { get; set; } = new ItemSlot[MaxInventory];
-        public Item[] Equipment = new Item[(byte)Equipments.Count];
-        public Hotbar[] Hotbar = new Hotbar[MaxHotbar];
+        public Item[] Equipment { get; set; } = new Item[(byte)Equipments.Count];
+        public Hotbar[] Hotbar { get; set; } = new Hotbar[MaxHotbar];
 
         // Dados temporários
         public bool GettingMap;
@@ -192,7 +192,7 @@ namespace CryBits.Server.Entities
         {
             byte nextX = X, nextY = Y;
             byte oldX = X, oldY = Y;
-            TempMap link = null;// TMap.Get( Map.Data.Link[(byte)Direction].ID);
+            TempMap link = TempMap.Get(new Guid(Map.Data.Link[(byte)Direction].GetID()));
             bool secondMovement = false;
 
             // Previne erros
@@ -206,11 +206,10 @@ namespace CryBits.Server.Entities
             // Próximo azulejo
             NextTile(Direction, ref nextX, ref nextY);
 
-            int rand = MyRandom.Next(10, 500);
             // Ponto de ligação
             if (Map.Data.OutLimit(nextX, nextY))
             {
-                if (link != null || rand == 20000)
+                if (link != null)
                     switch (Direction)
                     {
                         case Directions.Up: Warp(link, oldX, CryBits.Entities.Map.Height - 1); return;
