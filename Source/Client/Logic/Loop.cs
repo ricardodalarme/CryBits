@@ -43,7 +43,7 @@ namespace CryBits.Client.Logic
                         for (byte i = 0; i < Player.List.Count; i++)
                             Player.List[i].Logic();
 
-                        // Lógica dos NPCBehaviour
+                        // Lógica dos NPCs
                         for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
                             if (Mapper.Current.NPC[i].Data != null)
                                 Mapper.Current.NPC[i].Logic();

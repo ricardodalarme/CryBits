@@ -123,6 +123,7 @@ namespace CryBits.Editors.Forms
         private void butCancel_Click(object sender, EventArgs e)
         {
             // Volta à janela principal
+            Send.Request_Shops();
             Close();
         }
 

@@ -20,7 +20,7 @@ namespace CryBits.Server.Library
             Maps();
             Console.WriteLine("Loading classes.");
             Classes();
-            Console.WriteLine("Loading NPCBehaviour.");
+            Console.WriteLine("Loading NPCs.");
             NPCs();
             Console.WriteLine("Loading items.");
             Items();

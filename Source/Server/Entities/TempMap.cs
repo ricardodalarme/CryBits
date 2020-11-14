@@ -31,7 +31,7 @@ namespace CryBits.Server.Entities
             // Não é necessário fazer todos os cálculos se não houver nenhum jogador no mapa
             if (!HasPlayers()) return;
 
-            // Lógica dos NPCBehaviour
+            // Lógica dos NPCs
             for (byte j = 0; j < NPC.Length; j++) NPC[j].Logic();
 
             // Faz reaparecer todos os itens do mapa
@@ -122,7 +122,7 @@ namespace CryBits.Server.Entities
             TempMap tempMap = new TempMap( map);
             List.Add(tempMap.ID, tempMap);
 
-            // NPCBehaviour do mapa
+            // NPCs do mapa
             tempMap.NPC = new TempNPC[map.NPC.Count];
             for (byte i = 0; i < tempMap.NPC.Length; i++)
             {

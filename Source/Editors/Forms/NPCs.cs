@@ -51,7 +51,7 @@ namespace CryBits.Editors.Forms
 
         private void List_Update()
         {
-            // Lista os NPCBehaviour
+            // Lista os NPCs
             List.Nodes.Clear();
             foreach (var npc in NPC.List.Values)
                 if (npc.Name.StartsWith(txtFilter.Text))
@@ -146,6 +146,7 @@ namespace CryBits.Editors.Forms
         private void butCancel_Click(object sender, EventArgs e)
         {
             // Volta à janela principal
+            Send.Request_NPCs();
             Close();
         }
 
@@ -280,7 +281,7 @@ namespace CryBits.Editors.Forms
                 // Abre a janela para adicionar o aliado
                 grpAllie_Add.Visible = true;
 
-                // Adiciona os NPCBehaviour
+                // Adiciona os NPCs
                 cmbAllie_NPC.Items.Clear();
                 foreach (var npc in NPC.List.Values) cmbAllie_NPC.Items.Add(npc);
                 cmbAllie_NPC.SelectedIndex = 0;

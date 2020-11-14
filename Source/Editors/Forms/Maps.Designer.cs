@@ -344,7 +344,7 @@ namespace CryBits.Editors.Forms
             this.butMNPCs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.butMNPCs.Name = "butMNPCs";
             this.butMNPCs.Size = new System.Drawing.Size(23, 22);
-            this.butMNPCs.Text = "NPCBehaviour";
+            this.butMNPCs.Text = "NPCs";
             this.butMNPCs.Click += new System.EventHandler(this.butMNPCs_Click);
             // 
             // toolStripSeparator2
@@ -657,7 +657,7 @@ namespace CryBits.Editors.Forms
             // 
             this.butEditors_NPCs.Name = "butEditors_NPCs";
             this.butEditors_NPCs.Size = new System.Drawing.Size(120, 22);
-            this.butEditors_NPCs.Text = "NPCBehaviour";
+            this.butEditors_NPCs.Text = "NPCs";
             this.butEditors_NPCs.Click += new System.EventHandler(this.butEditors_NPCs_Click);
             // 
             // butEditors_Shops
@@ -1382,7 +1382,7 @@ namespace CryBits.Editors.Forms
             this.grpNPCs.Size = new System.Drawing.Size(271, 623);
             this.grpNPCs.TabIndex = 104;
             this.grpNPCs.TabStop = false;
-            this.grpNPCs.Text = "NPCBehaviour";
+            this.grpNPCs.Text = "NPCs";
             this.grpNPCs.Visible = false;
             // 
             // groupBox2
