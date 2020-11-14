@@ -340,20 +340,16 @@ namespace CryBits.Client.Network
                 if (Player.List[i] != Player.Me)
                     Player.List.RemoveAt(i);
 
-            /*
             // Verifica se é necessário baixar os dados do mapa
-            if (System.IO.File.Exists(Directories.Maps_Data.FullName + ID + Directories.Format))
+            if (System.IO.File.Exists(Directories.MapsData.FullName + id + Directories.Format))
             {
-                Needed = true;
-                break;
-                Read.Map(ID);
-                if (Map.List[ID].Revision != Data.ReadInt16())
-                    Needed = true;
+                Read.Map(id);
+                if (CryBits.Entities.Map.List[id].Revision != data.ReadInt16())
+                    needed = true;
             }
             else
-                Needed = true;
-            */
-            needed = true;
+                needed = true;
+
             // Solicita os dados do mapa
             Send.RequestMap(needed);
 
