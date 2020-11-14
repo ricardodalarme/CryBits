@@ -615,7 +615,7 @@ namespace CryBits.Client.Media
             byte numColumns = 5;
 
             // Desenha todos os itens do inventário
-            for (byte i = 1; i <= MaxInventory; i++)
+            for (byte i = 0; i < MaxInventory; i++)
                 Item(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount, tool.Position + new Size(7, 30), i, numColumns);
 
             // Movendo item
@@ -652,7 +652,7 @@ namespace CryBits.Client.Media
         private static void Trade(Panels tool)
         {
             // Desenha os itens das ofertas
-            for (byte i = 1; i <= MaxInventory; i++)
+            for (byte i = 0; i < MaxInventory; i++)
             {
                 Item(Player.Me.TradeOffer[i].Item, Player.Me.TradeOffer[i].Amount, tool.Position + new Size(7, 50), i, 5);
                 Item(Player.Me.TradeTheirOffer[i].Item, Player.Me.TradeTheirOffer[i].Amount, tool.Position + new Size(192, 50), i, 5);

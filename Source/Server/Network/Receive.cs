@@ -396,7 +396,7 @@ namespace CryBits.Server.Network
             Send.Player_Inventory(player);
 
             // Altera na hotbar
-            Hotbar hotbarSlot = player.FindHotbar(Hotbars.Item, slotOld);
+            Hotbar hotbarSlot = player.FindHotbar(Hotbars.Item, player.Inventory[slotOld]);
             if (hotbarSlot != null)
             {
                 hotbarSlot.Slot = slotNew;
@@ -406,7 +406,7 @@ namespace CryBits.Server.Network
 
         private static void Inventory_Use(Player player, NetIncomingMessage data)
         {
-            player.UseItem(data.ReadByte());
+            player.UseItem(player.Inventory[data.ReadByte()]);
         }
 
         private static void Equipment_Remove(Player player, NetIncomingMessage data)
@@ -840,8 +840,8 @@ namespace CryBits.Server.Network
 
             // Limpa os dadoss
             player.TradeRequest = string.Empty;
-            player.TradeOffer = new TradeSlot[MaxInventory + 1];
-            invited.TradeOffer = new TradeSlot[MaxInventory + 1];
+            player.TradeOffer = new TradeSlot[MaxInventory];
+            invited.TradeOffer = new TradeSlot[MaxInventory];
 
             // Envia os dados para o grupo
             Send.Trade(player, true);
@@ -871,7 +871,7 @@ namespace CryBits.Server.Network
             if (inventorySlot != 0)
             {
                 // Evita itens repetidos
-                for (byte i = 1; i <= MaxInventory; i++)
+                for (byte i = 0; i < MaxInventory; i++)
                     if (player.TradeOffer[i].SlotNum == inventorySlot)
                         return;
 
@@ -917,11 +917,11 @@ namespace CryBits.Server.Network
                     // Remove os itens do inventário dos jogadores
                     Player to = player;
                     for (byte j = 0; j < 2; j++, to = to == player ? invited : player)
-                        for (byte i = 1; i <= MaxInventory; i++)
-                            to.TakeItem((byte)to.TradeOffer[i].SlotNum, to.TradeOffer[i].Amount);
+                        for (byte i = 0; i < MaxInventory; i++)
+                            to.TakeItem(to.Inventory[to.TradeOffer[i].SlotNum], to.TradeOffer[i].Amount);
 
                     // Dá os itens aos jogadores
-                    for (byte i = 1; i <= MaxInventory; i++)
+                    for (byte i = 0; i < MaxInventory; i++)
                     {
                         if (player.TradeOffer[i].SlotNum > 0) invited.GiveItem(yourInventory[player.TradeOffer[i].SlotNum].Item, player.TradeOffer[i].Amount);
                         if (invited.TradeOffer[i].SlotNum > 0) player.GiveItem(theirInventory[invited.TradeOffer[i].SlotNum].Item, invited.TradeOffer[i].Amount);
@@ -932,8 +932,8 @@ namespace CryBits.Server.Network
                     Send.Player_Inventory(invited);
 
                     // Limpa a troca
-                    player.TradeOffer = new TradeSlot[MaxInventory + 1];
-                    invited.TradeOffer = new TradeSlot[MaxInventory + 1];
+                    player.TradeOffer = new TradeSlot[MaxInventory];
+                    invited.TradeOffer = new TradeSlot[MaxInventory];
                     Send.Trade_Offer(invited);
                     Send.Trade_Offer(invited, false);
                     break;
@@ -952,16 +952,16 @@ namespace CryBits.Server.Network
         private static void Shop_Buy(Player player, NetIncomingMessage data)
         {
             ShopItem shopSold = player.Shop.Sold[data.ReadByte()];
-            byte inventorySlot = player.FindInventory(player.Shop.Currency);
+            ItemSlot inventorySlot = player.FindInventory(player.Shop.Currency);
 
             // Verifica se o jogador tem dinheiro
-            if (inventorySlot == 0 || player.Inventory[inventorySlot].Amount < shopSold.Price)
+            if (inventorySlot == null || inventorySlot.Amount < shopSold.Price)
             {
                 Send.Message(player, "You don't have enough money to buy the item.", Color.Red);
                 return;
             }
             // Verifica se há espaço no inventário
-            if (player.Total_Inventory_Free() == 0 && player.Inventory[inventorySlot].Amount > shopSold.Price)
+            if (player.Total_Inventory_Free() == 0 && inventorySlot.Amount > shopSold.Price)
             {
                 Send.Message(player, "You  don't have space in your bag.", Color.Red);
                 return;
@@ -994,7 +994,7 @@ namespace CryBits.Server.Network
 
             // Realiza a venda do item
             Send.Message(player, "You sold " + player.Inventory[inventorySlot].Item.Name + "x " + amount + "for .", Color.Green);
-            player.TakeItem(inventorySlot, amount);
+            player.TakeItem(player.Inventory[inventorySlot], amount);
             player.GiveItem(player.Shop.Currency, (short)(buy.Price * amount));
         }
 

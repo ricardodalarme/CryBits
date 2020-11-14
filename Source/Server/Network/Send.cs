@@ -440,7 +440,7 @@ namespace CryBits.Server.Network
 
             // Envia os dados
             data.Write((byte)ServerClient.PlayerInventory);
-            for (byte i = 1; i <= MaxInventory; i++)
+            for (byte i = 0; i < MaxInventory; i++)
             {
                 data.Write(player.Inventory[i].Item.GetID());
                 data.Write(player.Inventory[i].Amount);
@@ -644,7 +644,7 @@ namespace CryBits.Server.Network
             // Envia os dados
             data.Write((byte)ServerClient.TradeOffer);
             data.Write(own);
-            for (byte i = 1; i <= MaxInventory; i++)
+            for (byte i = 0; i < MaxInventory; i++)
             {
                 data.Write(to.Inventory[to.TradeOffer[i].SlotNum].Item.GetID());
                 data.Write(to.TradeOffer[i].Amount);

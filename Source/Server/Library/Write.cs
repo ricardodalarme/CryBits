@@ -67,7 +67,7 @@ namespace CryBits.Server.Library
                 data.Write((byte)account.Character.Direction);
                 for (byte n = 0; n < (byte)Vitals.Count; n++) data.Write(account.Character.Vital[n]);
                 for (byte n = 0; n < (byte)Attributes.Count; n++) data.Write(account.Character.Attribute[n]);
-                for (byte n = 1; n <= MaxInventory; n++)
+                for (byte n = 0; n < MaxInventory; n++)
                 {
                     data.Write(account.Character.Inventory[n].Item.GetID());
                     data.Write(account.Character.Inventory[n].Amount);
