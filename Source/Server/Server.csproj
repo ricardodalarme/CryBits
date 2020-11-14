@@ -77,7 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Directories.cs" />
-    <Compile Include="Logic\Utils.cs" />
+    <Compile Include="Logic\Defaults.cs" />
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\Character.cs" />
     <Compile Include="Entities\Player.cs" />

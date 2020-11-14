@@ -1,9 +1,6 @@
-﻿using System;
-using CryBits.Entities;
-
-namespace CryBits.Server.Logic
+﻿namespace CryBits.Server.Logic
 {
-    internal static class Utils
+    internal static class Defaults
     {
         // Configurações
         public static string GameName = "CryBits";
@@ -22,10 +19,5 @@ namespace CryBits.Server.Logic
         // Limites fixos
         public const byte MaxInventory = 30;
         public const byte MaxHotbar = 10;
-
-        public static string GetIDs(this Entity @object)
-        {
-            return @object == null ? Guid.Empty.ToString() : @object.ID.ToString();
-        }
     }
 }

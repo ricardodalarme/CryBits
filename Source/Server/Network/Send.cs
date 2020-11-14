@@ -3,7 +3,7 @@ using CryBits.Entities;
 using CryBits.Packets;
 using CryBits.Server.Entities;
 using Lidgren.Network;
-using static CryBits.Server.Logic.Utils;
+using static CryBits.Server.Logic.Defaults;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Network

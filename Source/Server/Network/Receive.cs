@@ -7,7 +7,7 @@ using CryBits.Packets;
 using CryBits.Server.Entities;
 using CryBits.Server.Library;
 using Lidgren.Network;
-using static CryBits.Server.Logic.Utils;
+using static CryBits.Server.Logic.Defaults;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Network
