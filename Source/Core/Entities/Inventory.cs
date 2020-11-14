@@ -10,7 +10,12 @@ namespace CryBits.Entities
     [Serializable]
     public class ItemSlot : ISlot
     {
-        public Item Item { get; set; }
+        private Guid _item;
+        public Item Item
+        {
+            get => Item.Get(_item);
+            set => _item = new Guid(value.GetID());
+        }
         public short Amount { get; set; }
 
         public ItemSlot(Item item, short amount)

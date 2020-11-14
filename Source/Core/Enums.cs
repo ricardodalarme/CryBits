@@ -119,7 +119,7 @@
         Private
     }
 
-    public enum NPCBehaviour
+    public enum NPCs
     {
         Friendly,
         AttackOnSight,

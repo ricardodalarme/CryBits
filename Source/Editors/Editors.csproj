@@ -153,6 +153,9 @@
     <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\Classes.resx">
+      <DependentUpon>Classes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Shops .resx">
       <DependentUpon>Shops .cs</DependentUpon>
     </EmbeddedResource>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CryBits.Entities;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
@@ -21,7 +22,7 @@ namespace CryBits.Server.Entities
         public List<MapItems> Item = new List<MapItems>();
 
         // Construtor
-        public TempMap( Map map) 
+        public TempMap(Guid id, Map map):base(id)
         {
             Data = map;
         }
@@ -117,12 +118,13 @@ namespace CryBits.Server.Entities
             return false;
         }
 
-        public static void Create_Temporary(Map map)
+        public static void Create_Temporary(Map map, bool isOriginal)
         {
-            TempMap tempMap = new TempMap( map);
-            List.Add(tempMap.ID, tempMap);
+            Guid id = isOriginal ? map.ID : Guid.NewGuid();
+            TempMap tempMap = new TempMap(id, map);
+            List.Add(id, tempMap);
 
-            // NPCs do mapa
+            // NPCBehaviour do mapa
             tempMap.NPC = new TempNPC[map.NPC.Count];
             for (byte i = 0; i < tempMap.NPC.Length; i++)
             {

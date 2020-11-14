@@ -15,7 +15,7 @@ namespace CryBits.Entities
         // Dados
         public string SayMsg { get; set; }
         public short Texture { get; set; }
-        public NPCBehaviour Behaviour { get; set; }
+        public NPCs Behaviour { get; set; }
         public byte SpawnTime { get; set; }
         public byte Sight { get; set; }
         public int Experience { get; set; }

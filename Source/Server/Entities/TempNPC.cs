@@ -78,7 +78,7 @@ namespace CryBits.Server.Entities
             // Movimentação //
             //////////////////
             // Atacar ao ver
-            if (Data.Behaviour == NPCBehaviour.AttackOnSight)
+            if (Data.Behaviour == NPCs.AttackOnSight)
             {
                 // Jogador
                 if (Target == null)
@@ -194,7 +194,7 @@ namespace CryBits.Server.Entities
             }
 
             // Move-se aleatoriamente
-            if (Data.Behaviour == (byte)NPCBehaviour.Friendly || Target == null)
+            if (Data.Behaviour == (byte)NPCs.Friendly || Target == null)
                 if (MyRandom.Next(0, 3) == 0 && !moved)
                     if (Data.Movement == NPCMovements.MoveRandomly)
                         Move((Directions)MyRandom.Next(0, 4), 1, true);

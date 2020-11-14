@@ -85,7 +85,7 @@ namespace CryBits.Server.Library
                     account.Characters.Add(new Account.TempCharacter
                     {
                         Name = data.ReadString(),
-                        TextureNum = data.ReadInt16(),
+                        TextureNum = data.ReadInt16()
                     });
         }
 
