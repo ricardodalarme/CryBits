@@ -279,7 +279,7 @@ namespace CryBits.Client.Media
             Map_Blood();
             Map_Items();
 
-            // Desenha os NPCBehaviour
+            // Desenha os NPCs
             for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
                 if (Mapper.Current.NPC[i].Data != null)
                     NPC(Mapper.Current.NPC[i]);

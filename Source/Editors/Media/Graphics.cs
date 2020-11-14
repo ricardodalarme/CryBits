@@ -558,7 +558,7 @@ namespace CryBits.Editors.Media
                     {
                         Point position = new Point((map.NPC[i].X - form.scrlMapX.Value) * form.GridZoom, (map.NPC[i].Y - form.scrlMapY.Value) * form.GridZoom);
 
-                        // Desenha uma sinalização de onde os NPCBehaviour estão
+                        // Desenha uma sinalização de onde os NPCs estão
                         Render(WinMap, TexBlank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), CColor(0, 220, 0, 150));
                         DrawText(WinMap, (i + 1).ToString(), position.X + 10, position.Y + 10, Color.White);
                     }
