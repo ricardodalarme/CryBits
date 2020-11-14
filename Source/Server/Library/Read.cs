@@ -114,7 +114,7 @@ namespace CryBits.Server.Library
                 account.Character.Direction = (Directions)data.ReadByte();
                 for (byte n = 0; n < (byte)Vitals.Count; n++) account.Character.Vital[n] = data.ReadInt16();
                 for (byte n = 0; n < (byte)Attributes.Count; n++) account.Character.Attribute[n] = data.ReadInt16();
-                for (byte n = 1; n <= MaxInventory; n++)
+                for (byte n = 0; n < MaxInventory; n++)
                 {
                     account.Character.Inventory[n].Item = Item.Get(new Guid(data.ReadString()));
                     account.Character.Inventory[n].Amount = data.ReadInt16();

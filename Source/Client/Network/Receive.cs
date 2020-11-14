@@ -313,7 +313,7 @@ namespace CryBits.Client.Network
         private static void Player_Inventory(NetIncomingMessage data)
         {
             // Define os dados
-            for (byte i = 1; i <= MaxInventory; i++)
+            for (byte i = 0; i < MaxInventory; i++)
             {
                 Player.Me.Inventory[i].Item = Item.Get(new Guid(data.ReadString()));
                 Player.Me.Inventory[i].Amount = data.ReadInt16();
@@ -463,8 +463,8 @@ namespace CryBits.Client.Network
                 Panels.List["Trade_Offer_Disable"].Visible = false;
 
                 // Limpa os dados
-                Player.Me.TradeOffer = new Inventory[MaxInventory + 1];
-                Player.Me.TradeTheirOffer = new Inventory[MaxInventory + 1];
+                Player.Me.TradeOffer = new Inventory[MaxInventory ];
+                Player.Me.TradeTheirOffer = new Inventory[MaxInventory];
             }
             else
             {
@@ -510,13 +510,13 @@ namespace CryBits.Client.Network
         {
             // Recebe os dados da oferta
             if (data.ReadBoolean())
-                for (byte i = 1; i <= MaxInventory; i++)
+                for (byte i = 0; i < MaxInventory; i++)
                 {
                     Player.Me.TradeOffer[i].Item = Item.Get(new Guid(data.ReadString()));
                     Player.Me.TradeOffer[i].Amount = data.ReadInt16();
                 }
             else
-                for (byte i = 1; i <= MaxInventory; i++)
+                for (byte i = 0; i < MaxInventory; i++)
                 {
                     Player.Me.TradeTheirOffer[i].Item = Item.Get(new Guid(data.ReadString()));
                     Player.Me.TradeTheirOffer[i].Amount = data.ReadInt16();

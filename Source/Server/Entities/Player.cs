@@ -21,7 +21,7 @@ namespace CryBits.Server.Entities
         public int Experience;
         public byte Points;
         public short[] Attribute = new short[(byte)Attributes.Count];
-        public ItemSlot[] Inventory { get; set; } = new ItemSlot[MaxInventory + 1];
+        public ItemSlot[] Inventory { get; set; } = new ItemSlot[MaxInventory];
         public Item[] Equipment = new Item[(byte)Equipments.Count];
         public Hotbar[] Hotbar = new Hotbar[MaxHotbar];
 
@@ -40,8 +40,8 @@ namespace CryBits.Server.Entities
         public Player(Account account)
         {
             Account = account;
-            for (byte i = 0;i < Inventory.Length;i++)
-                Inventory[i] =new ItemSlot(null, 0);
+            for (byte i = 0; i < Inventory.Length; i++)
+                Inventory[i] = new ItemSlot(null, 0);
         }
 
         // Cálcula o dano do jogador
@@ -426,22 +426,22 @@ namespace CryBits.Server.Entities
 
         public bool GiveItem(Item item, short amount)
         {
-            byte slotItem = FindInventory(item);
-            byte slotEmpty = FindInventory(null);
+            ItemSlot slotItem = FindInventory(item);
+            ItemSlot slotEmpty = FindInventory(null);
 
             // Somente se necessário
             if (item == null) return false;
-            if (slotEmpty == 0) return false;
+            if (slotEmpty == null) return false;
             if (amount == 0) amount = 1;
 
             // Empilhável
-            if (slotItem > 0 && item.Stackable)
-                Inventory[slotItem].Amount += amount;
+            if (slotItem != null && item.Stackable)
+                slotItem.Amount += amount;
             // Não empilhável
             else
             {
-                Inventory[slotEmpty].Item = item;
-                Inventory[slotEmpty].Amount = item.Stackable ? amount : (byte)1;
+                slotEmpty.Item = item;
+                slotEmpty.Amount = item.Stackable ? amount : (byte)1;
             }
 
             // Envia os dados ao jogador
@@ -449,30 +449,30 @@ namespace CryBits.Server.Entities
             return true;
         }
 
-        public void TakeItem(byte slot, short amount)
+        public void TakeItem(ItemSlot slot, short amount)
         {
             // Previne erros
-            if (slot <= 0) return;
+            if (slot == null) return;
             if (amount <= 0) amount = 1;
 
             // Tira o item do jogaor
-            if (amount == Inventory[slot].Amount)
+            if (amount == slot.Amount)
             {
-                Inventory[slot].Item = null;
-                Inventory[slot].Amount = 0;
+                slot.Item = null;
+                slot.Amount = 0;
 
                 // Retira o item da hotbar caso estier
                 var hotbarSlot = FindHotbar(Hotbars.Item, slot);
                 if (hotbarSlot != null)
                 {
                     hotbarSlot.Type = Hotbars.None;
-                    hotbarSlot.Slot=0;
+                    hotbarSlot.Slot = 0;
                     Send.Player_Hotbar(this);
                 }
             }
             // Apenas desconta a quantidade
             else
-                Inventory[slot].Amount -= amount;
+                slot.Amount -= amount;
 
             // Atualiza o inventário
             Send.Player_Inventory(this);
@@ -480,19 +480,24 @@ namespace CryBits.Server.Entities
 
         public void DropItem(byte slot, short amount)
         {
+            DropItem(Inventory[slot], amount);
+        }
+
+        public void DropItem(ItemSlot slot, short amount)
+        {
             // Somente se necessário
             if (Map.Item.Count == MaxMapItems) return;
-            if (Inventory[slot].Item == null) return;
-            if (Inventory[slot].Item.Bind == BindOn.Pickup) return;
+            if (slot.Item == null) return;
+            if (slot.Item.Bind == BindOn.Pickup) return;
             if (Trade != null) return;
 
             // Verifica se não está dropando mais do que tem
-            if (amount > Inventory[slot].Amount) amount = Inventory[slot].Amount;
+            if (amount > slot.Amount) amount = slot.Amount;
 
             // Solta o item no chão
             Map.Item.Add(new MapItems
             {
-                Item = Inventory[slot].Item,
+                Item = slot.Item,
                 Amount = amount,
                 X = X,
                 Y = Y
@@ -505,7 +510,12 @@ namespace CryBits.Server.Entities
 
         public void UseItem(byte slot)
         {
-            Item item = Inventory[slot].Item;
+            UseItem(Inventory[slot]);
+        }
+
+        public void UseItem(ItemSlot slot)
+        {
+            Item item = slot.Item;
 
             // Somente se necessário
             if (item == null) return;
@@ -578,14 +588,24 @@ namespace CryBits.Server.Entities
             return null;
         }
 
-        public byte FindInventory(Item item)
+        public Hotbar FindHotbar(Hotbars type, ItemSlot slot)
         {
             // Encontra algo especifico na hotbar
-            for (byte i = 1; i <= MaxInventory; i++)
-                if (Inventory[i].Item == item)
-                    return i;
+            for (byte i = 0; i < MaxHotbar; i++)
+                if (Hotbar[i].Type == type && Inventory[Hotbar[i].Slot] == slot)
+                    return Hotbar[i];
 
-            return 0;
+            return null;
+        }
+
+        public ItemSlot FindInventory(Item item)
+        {
+            // Encontra algo especifico na hotbar
+            for (byte i = 0; i < MaxInventory; i++)
+                if (Inventory[i].Item == item)
+                    return Inventory[i];
+
+            return null;
         }
 
         public byte Total_Inventory_Free()
@@ -593,7 +613,7 @@ namespace CryBits.Server.Entities
             byte total = 0;
 
             // Retorna a quantidade de itens oferecidos na troca
-            for (byte i = 1; i <= MaxInventory; i++)
+            for (byte i = 0; i < MaxInventory; i++)
                 if (Inventory[i].Item == null)
                     total++;
 
@@ -674,7 +694,7 @@ namespace CryBits.Server.Entities
             byte total = 0;
 
             // Retorna a quantidade de itens oferecidos na troca
-            for (byte i = 1; i <= MaxInventory; i++)
+            for (byte i = 0; i < MaxInventory; i++)
                 if (TradeOffer[i].SlotNum != 0)
                     total++;
 

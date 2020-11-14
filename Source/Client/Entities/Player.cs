@@ -50,7 +50,7 @@ namespace CryBits.Client.Entities
     internal class MeStructure : Player
     {
         // Dados
-        public Inventory[] Inventory = new Inventory[MaxInventory + 1];
+        public Inventory[] Inventory = new Inventory[MaxInventory];
         public Hotbar[] Hotbar = new Hotbar[MaxHotbar];
         public Inventory[] TradeOffer;
         public Inventory[] TradeTheirOffer;
@@ -149,7 +149,7 @@ namespace CryBits.Client.Entities
                     hasItem = true;
 
             // Verifica se tem algum espaço vazio no inventário
-            for (byte i = 1; i <= MaxInventory; i++)
+            for (byte i = 0; i < MaxInventory; i++)
                 if (Inventory[i].Item == null)
                     hasSlot = true;
 
