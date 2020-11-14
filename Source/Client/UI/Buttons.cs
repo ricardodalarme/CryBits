@@ -1,17 +1,20 @@
-﻿using Entities;
-using Logic;
-using Network;
-using SFML.Window;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static Logic.Game;
-using static Logic.Utils;
+using CryBits.Client.Entities;
+using CryBits.Client.Library;
+using CryBits.Client.Media.Audio;
+using CryBits.Client.Network;
+using CryBits.Entities;
+using SFML.Window;
+using static CryBits.Client.Logic.Game;
+using static CryBits.Client.Logic.Utils;
+using Graphics = CryBits.Client.Media.Graphics;
 
-namespace Interface
+namespace CryBits.Client.UI
 {
-    class Buttons : Tools.Structure
+    internal class Buttons : Tools.Structure
     {
         // Aramazenamento de dados da ferramenta
         public static Dictionary<string, Buttons> List = new Dictionary<string, Buttons>();
@@ -25,16 +28,16 @@ namespace Interface
         }
 
         // Dados
-        public byte Texture_Num;
+        public byte TextureNum;
         public States State;
 
         public void MouseUp()
         {
             // Somente se necessário
-            if (!IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
+            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum])))) return;
 
             // Altera o estado do botão
-            Audio.Sound.Play(Audio.Sounds.Click);
+             Sound.Play( Sounds.Click);
             State = States.Above;
 
             // Executa o evento
@@ -45,7 +48,7 @@ namespace Interface
         {
             // Somente se necessário
             if (e.Button == Mouse.Button.Right) return;
-            if (!IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num])))) return;
+            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum])))) return;
 
             // Altera o estado do botão
             State = States.Click;
@@ -54,7 +57,7 @@ namespace Interface
         public void MouseMove()
         {
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-            if (!IsAbove(new Rectangle(Position, Graphics.TSize(Graphics.Tex_Button[Texture_Num]))))
+            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum]))))
             {
                 State = States.Normal;
                 return;
@@ -65,13 +68,13 @@ namespace Interface
 
             // Altera o estado do botão
             State = States.Above;
-            Audio.Sound.Play(Audio.Sounds.Above);
+             Sound.Play( Sounds.Above);
         }
 
-        private static void Execute(string Name)
+        private static void Execute(string name)
         {
             // Executa o evento do botão
-            switch (Name)
+            switch (name)
             {
                 case "Connect": Connect(); break;
                 case "Register": Register(); break;
@@ -93,7 +96,7 @@ namespace Interface
                 case "Chat_Up": Chat_Up(); break;
                 case "Chat_Down": Chat_Down(); break;
                 case "Menu_Character": Menu_Character(); break;
-                case "Attributes_Strength": Attribute_Strenght(); break;
+                case "Attributes_Strength": Attribute_Strength(); break;
                 case "Attributes_Resistance": Attribute_Resistance(); break;
                 case "Attributes_Intelligence": Attribute_Intelligence(); break;
                 case "Attributes_Agility": Attribute_Agility(); break;
@@ -121,11 +124,11 @@ namespace Interface
         public static bool Characters_Change_Buttons()
         {
             // Altera os botões visíveis
-            bool Visibility = Panels.Characters != null && Panels.SelectCharacter < Panels.Characters.Length;
-            List["Character_Create"].Visible = !Visibility;
-            List["Character_Delete"].Visible = Visibility;
-            List["Character_Use"].Visible = Visibility;
-            return Visibility;
+            bool visibility = Panels.Characters != null && Panels.SelectCharacter < Panels.Characters.Length;
+            List["Character_Create"].Visible = !visibility;
+            List["Character_Delete"].Visible = visibility;
+            List["Character_Use"].Visible = visibility;
+            return visibility;
         }
 
         private static void Connect()
@@ -176,7 +179,7 @@ namespace Interface
         {
             // Salva o nome do usuário
             Option.Username = TextBoxes.List["Connect_Username"].Text;
-            Library.Write.Options();
+            Write.Options();
 
             // Conecta-se ao jogo
             if (Socket.TryConnect()) Send.Connect();
@@ -204,51 +207,51 @@ namespace Interface
         private static void CreateCharacter_ChangeRight()
         {
             // Altera a classe selecionada pelo jogador
-            if (Panels.CreateCharacter_Class == Class.List.Count - 1)
-                Panels.CreateCharacter_Class = 0;
+            if (Panels.CreateCharacterClass == Class.List.Count - 1)
+                Panels.CreateCharacterClass = 0;
             else
-                Panels.CreateCharacter_Class += 1;
+                Panels.CreateCharacterClass += 1;
         }
 
         private static void CreateCharacter_ChangeLeft()
         {
             // Altera a classe selecionada pelo jogador
-            if (Panels.CreateCharacter_Class == 0)
-                Panels.CreateCharacter_Class = (byte)Class.List.Count;
+            if (Panels.CreateCharacterClass == 0)
+                Panels.CreateCharacterClass = (byte)Class.List.Count;
             else
-                Panels.CreateCharacter_Class -= 1;
+                Panels.CreateCharacterClass -= 1;
         }
 
         private static void CreateCharacter_Texture_ChangeRight()
         {
             // Lista de texturas
-            short[] Tex_List;
+            IList<short>texList;
             if (CheckBoxes.List["GenderMale"].Checked)
-                Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Male;
+                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexMale;
             else
-                Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Female;
+                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexFemale;
 
             // Altera a classe selecionada pelo jogador
-            if (Panels.CreateCharacter_Tex == Tex_List.Length - 1)
-                Panels.CreateCharacter_Tex = 0;
+            if (Panels.CreateCharacterTex == texList.Count - 1)
+                Panels.CreateCharacterTex = 0;
             else
-                Panels.CreateCharacter_Tex += 1;
+                Panels.CreateCharacterTex += 1;
         }
 
         private static void CreateCharacter_Texture_ChangeLeft()
         {
             // Lista de texturas
-            short[] Tex_List;
+            IList<short> texList;
             if (CheckBoxes.List["GenderMale"].Checked)
-                Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Male;
+                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexMale;
             else
-                Tex_List = Class.List.ElementAt(Panels.CreateCharacter_Class).Value.Tex_Female;
+                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexFemale;
 
             // Altera a classe selecionada pelo jogador
-            if (Panels.CreateCharacter_Tex == 0)
-                Panels.CreateCharacter_Tex = (byte)(Tex_List.Length - 1);
+            if (Panels.CreateCharacterTex == 0)
+                Panels.CreateCharacterTex = (byte)(texList.Count - 1);
             else
-                Panels.CreateCharacter_Tex -= 1;
+                Panels.CreateCharacterTex -= 1;
         }
 
         private static void CreateCharacter_Return()
@@ -297,15 +300,15 @@ namespace Interface
         private static void Chat_Up()
         {
             // Sobe as linhas do chat
-            if (Chat.Lines_First > 0)
-                Chat.Lines_First -= 1;
+            if (Chat.LinesFirst > 0)
+                Chat.LinesFirst -= 1;
         }
 
         private static void Chat_Down()
         {
             // Sobe as linhas do chat
-            if (Chat.Order.Count - 1 - Chat.Lines_First - Chat.Lines_Visible > 0)
-                Chat.Lines_First += 1;
+            if (Chat.Order.Count - 1 - Chat.LinesFirst - Chat.LinesVisible > 0)
+                Chat.LinesFirst += 1;
         }
 
         private static void Menu_Character()
@@ -316,7 +319,7 @@ namespace Interface
             Panels.List["Menu_Options"].Visible = false;
         }
 
-        private static void Attribute_Strenght()
+        private static void Attribute_Strength()
         {
             Send.AddPoint(Attributes.Strength);
         }
@@ -360,17 +363,17 @@ namespace Interface
         private static void Drop_Confirm()
         {
             // Quantidade
-            short.TryParse(TextBoxes.List["Drop_Amount"].Text, out short Amount);
+            short.TryParse(TextBoxes.List["Drop_Amount"].Text, out short amount);
 
             // Verifica se o valor digitado é válidp
-            if (Amount == 0)
+            if (amount == 0)
             {
                 MessageBox.Show("Enter a valid value!");
                 return;
             }
 
             // Solta o item
-            Send.DropItem(Panels.Drop_Slot, Amount);
+            Send.DropItem(Panels.DropSlot, amount);
             Panels.List["Drop"].Visible = false;
         }
 
@@ -424,8 +427,8 @@ namespace Interface
             Send.Trade_Offer_State(TradeStatus.Accepted);
 
             // Limpa os dados da oferta
-            Player.Me.Trade_Offer = new Inventory[Max_Inventory + 1];
-            Player.Me.Trade_Their_Offer = new Inventory[Max_Inventory + 1];
+            Player.Me.TradeOffer = new Inventory[MaxInventory + 1];
+            Player.Me.TradeTheirOffer = new Inventory[MaxInventory + 1];
         }
 
         private static void Trade_Offer_Decline()
@@ -448,17 +451,17 @@ namespace Interface
         private static void Trade_Amount_Confirm()
         {
             // Quantidade
-            short.TryParse(TextBoxes.List["Trade_Amount"].Text, out short Amount);
+            short.TryParse(TextBoxes.List["Trade_Amount"].Text, out short amount);
 
             // Verifica se o valor digitado é válido
-            if (Amount <= 0)
+            if (amount <= 0)
             {
                 MessageBox.Show("Enter a valid value!");
                 return;
             }
 
             // Solta o item
-            Send.Trade_Offer(Panels.Trade_Slot, Panels.Trade_Inventory_Slot, Amount);
+            Send.Trade_Offer(Panels.TradeSlot, Panels.TradeInventorySlot, amount);
             Panels.List["Trade_Amount"].Visible = false;
         }
 
@@ -478,17 +481,17 @@ namespace Interface
         private static void Shop_Sell_Confirm()
         {
             // Quantidade
-            short.TryParse(TextBoxes.List["Shop_Sell_Amount"].Text, out short Amount);
+            short.TryParse(TextBoxes.List["Shop_Sell_Amount"].Text, out short amount);
 
             // Verifica se o valor digitado é válido
-            if (Amount <= 0)
+            if (amount <= 0)
             {
                 MessageBox.Show("Enter a valid value!");
                 return;
             }
 
             // Vende o item
-            Send.Shop_Sell(Panels.Shop_Inventory_Slot, Amount);
+            Send.Shop_Sell(Panels.ShopInventorySlot, amount);
             Panels.List["Shop_Sell"].Visible = false;
         }
 

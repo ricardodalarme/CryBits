@@ -1,74 +1,75 @@
-﻿using Entities;
-using System.Drawing;
-using static Logic.Game;
+﻿using System.Drawing;
+using CryBits.Client.Entities;
+using static CryBits.Client.Logic.Game;
+using static CryBits.Utils;
 
-namespace Logic
+namespace CryBits.Client.Logic
 {
-    static class Camera
+    internal static class Camera
     {
         // Visão do jogador
-        public static Point Start_Sight;
-        public static Rectangle Tile_Sight;
+        public static Point StartSight;
+        public static Rectangle TileSight;
 
         public static void Update()
         {
-            Point End = new Point(), Start = new Point(), Position = new Point();
+            Point end = new Point(), start = new Point(), position = new Point();
 
             // Centro da tela
-            Position.X = Player.Me.X2 + Grid;
-            Position.Y = Player.Me.Y2 + Grid;
+            position.X = Player.Me.X2 + Grid;
+            position.Y = Player.Me.Y2 + Grid;
 
             // Início da tela
-            Start.X = Player.Me.X - ((Map_Width + 1) / 2) - 1;
-            Start.Y = Player.Me.Y - ((Map_Height + 1) / 2) - 1;
+            start.X = Player.Me.X - ((MapWidth + 1) / 2) - 1;
+            start.Y = Player.Me.Y - ((MapHeight + 1) / 2) - 1;
 
             // Reajusta a posição horizontal da tela
-            if (Start.X < 0)
+            if (start.X < 0)
             {
-                Position.X = 0;
-                if (Start.X == -1 && Player.Me.X2 > 0) Position.X = Player.Me.X2;
-                Start.X = 0;
+                position.X = 0;
+                if (start.X == -1 && Player.Me.X2 > 0) position.X = Player.Me.X2;
+                start.X = 0;
             }
 
             // Reajusta a posição vertical da tela
-            if (Start.Y < 0)
+            if (start.Y < 0)
             {
-                Position.Y = 0;
-                if (Start.Y == -1 && Player.Me.Y2 > 0) Position.Y = Player.Me.Y2;
-                Start.Y = 0;
+                position.Y = 0;
+                if (start.Y == -1 && Player.Me.Y2 > 0) position.Y = Player.Me.Y2;
+                start.Y = 0;
             }
 
             // Final da tela
-            End.X = Start.X + (Map_Width + 1) + 1;
-            End.Y = Start.Y + (Map_Height + 1) + 1;
+            end.X = start.X + (MapWidth + 1) + 1;
+            end.Y = start.Y + (MapHeight + 1) + 1;
 
             // Reajusta a posição horizontal da tela
-            if (End.X > Map_Width)
+            if (end.X > MapWidth)
             {
-                Position.X = Grid;
-                if (End.X == Map_Width + 1 && Player.Me.X2 < 0) Position.X = Player.Me.X2 + Grid;
-                End.X = Map_Width;
-                Start.X = End.X - Map_Width - 1;
+                position.X = Grid;
+                if (end.X == MapWidth + 1 && Player.Me.X2 < 0) position.X = Player.Me.X2 + Grid;
+                end.X = MapWidth;
+                start.X = end.X - MapWidth - 1;
             }
 
             // Reajusta a posição vertical da tela
-            if (End.Y > Map_Height)
+            if (end.Y > MapHeight)
             {
-                Position.Y = Grid;
-                if (End.Y == Map_Height + 1 && Player.Me.Y2 < 0) Position.Y = Player.Me.Y2 + Grid;
-                End.Y = Map_Height;
-                Start.Y = End.Y - Map_Height - 1;
+                position.Y = Grid;
+                if (end.Y == MapHeight + 1 && Player.Me.Y2 < 0) position.Y = Player.Me.Y2 + Grid;
+                end.Y = MapHeight;
+                start.Y = end.Y - MapHeight - 1;
             }
 
             // Define a dimensão dos azulejos vistos
-            Tile_Sight.Y = Start.Y;
-            Tile_Sight.Height = End.Y;
-            Tile_Sight.X = Start.X;
-            Tile_Sight.Width = End.X;
+            TileSight.Y = start.Y;
+            TileSight.Height = end.Y;
+            TileSight.X = start.X;
+            TileSight.Width = end.X;
 
             // Define a posição da câmera
-            Start_Sight.Y = Position.Y;
-            Start_Sight.X = Position.X;
+            StartSight.Y = position.Y;
+            StartSight.X = position.X;
         }
     }
 }

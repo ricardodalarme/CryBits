@@ -1,419 +1,381 @@
-﻿using Entities;
-using Interface;
-using Lidgren.Network;
-using Logic;
-using System;
+﻿using System;
 using System.Linq;
+using CryBits.Client.Entities;
+using CryBits.Client.UI;
+using CryBits.Entities;
+using CryBits.Packets;
+using Lidgren.Network;
 
-namespace Network
+namespace CryBits.Client.Network
 {
-    class Send
+    internal static class Send
     {
-        // Pacotes do cliente
-        public enum Packets
-        {
-            Connect,
-            Latency,
-            Register,
-            CreateCharacter,
-            Character_Use,
-            Character_Create,
-            Character_Delete,
-            Player_Direction,
-            Player_Move,
-            Player_Attack,
-            RequestMap,
-            Message,
-            AddPoint,
-            CollectItem,
-            DropItem,
-            Inventory_Change,
-            Inventory_Use,
-            Equipment_Remove,
-            Hotbar_Add,
-            Hotbar_Change,
-            Hotbar_Use,
-            Party_Invite,
-            Party_Accept,
-            Party_Decline,
-            Party_Leave,
-            Trade_Invite,
-            Trade_Accept,
-            Trade_Decline,
-            Trade_Leave,
-            Trade_Offer,
-            Trade_Offer_State,
-            Shop_Buy,
-            Shop_Sell,
-            Shop_Close
-        }
-
-        private static void Packet(NetOutgoingMessage Data)
+        private static void Packet(NetOutgoingMessage data)
         {
             // Envia os dados ao servidor
-            Socket.Device.SendMessage(Data, NetDeliveryMethod.ReliableOrdered);
+            Socket.Device.SendMessage(data, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void Connect()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Connect);
-            Data.Write(TextBoxes.List["Connect_Username"].Text);
-            Data.Write(TextBoxes.List["Connect_Password"].Text);
-            Data.Write(false); // Acesso pelo cliente
-            Packet(Data);
+            data.Write((byte)ClientServer.Connect);
+            data.Write(TextBoxes.List["Connect_Username"].Text);
+            data.Write(TextBoxes.List["Connect_Password"].Text);
+            data.Write(false); // Acesso pelo cliente
+            Packet(data);
         }
 
         public static void Register()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Register);
-            Data.Write(TextBoxes.List["Register_Username"].Text);
-            Data.Write(TextBoxes.List["Register_Password"].Text);
-            Packet(Data);
+            data.Write((byte)ClientServer.Register);
+            data.Write(TextBoxes.List["Register_Username"].Text);
+            data.Write(TextBoxes.List["Register_Password"].Text);
+            Packet(data);
         }
 
         public static void CreateCharacter()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.CreateCharacter);
-            Data.Write(TextBoxes.List["CreateCharacter_Name"].Text);
-            Data.Write(Class.List.ElementAt(Panels.CreateCharacter_Class).Value.ID.ToString());
-            Data.Write(CheckBoxes.List["GenderMale"].Checked);
-            Data.Write(Panels.CreateCharacter_Tex);
-            Packet(Data);
+            data.Write((byte)ClientServer.CreateCharacter);
+            data.Write(TextBoxes.List["CreateCharacter_Name"].Text);
+            data.Write(Class.List.ElementAt(Panels.CreateCharacterClass).Value.ID.ToString());
+            data.Write(CheckBoxes.List["GenderMale"].Checked);
+            data.Write(Panels.CreateCharacterTex);
+            Packet(data);
         }
 
         public static void Character_Use()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Character_Use);
-            Data.Write(Panels.SelectCharacter);
-            Packet(Data);
+            data.Write((byte)ClientServer.CharacterUse);
+            data.Write(Panels.SelectCharacter);
+            Packet(data);
         }
 
         public static void Character_Create()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Character_Create);
-            Packet(Data);
+            data.Write((byte)ClientServer.CharacterCreate);
+            Packet(data);
         }
 
         public static void Character_Delete()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Character_Delete);
-            Data.Write(Panels.SelectCharacter);
-            Packet(Data);
+            data.Write((byte)ClientServer.CharacterDelete);
+            data.Write(Panels.SelectCharacter);
+            Packet(data);
         }
 
-        public static void RequestMap(bool Order)
+        public static void RequestMap(bool order)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.RequestMap);
-            Data.Write(Order);
-            Packet(Data);
+            data.Write((byte)ClientServer.RequestMap);
+            data.Write(order);
+            Packet(data);
         }
 
         public static void Latency()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Latency);
-            Packet(Data);
+            data.Write((byte)ClientServer.Latency);
+            Packet(data);
 
             // Define a contaem na hora do envio
-            Socket.Latency_Send = Environment.TickCount;
+            Socket.LatencySend = Environment.TickCount;
         }
 
-        public static void Message(string Message, Messages Type, string Addressee = "")
+        public static void Message(string message, Messages type, string addressee = "")
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Message);
-            Data.Write(Message);
-            Data.Write((byte)Type);
-            Data.Write(Addressee);
-            Packet(Data);
+            data.Write((byte)ClientServer.Message);
+            data.Write(message);
+            data.Write((byte)type);
+            data.Write(addressee);
+            Packet(data);
         }
 
-        public static void AddPoint(Attributes Attribute)
+        public static void AddPoint(Attributes attribute)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.AddPoint);
-            Data.Write((byte)Attribute);
-            Packet(Data);
+            data.Write((byte)ClientServer.AddPoint);
+            data.Write((byte)attribute);
+            Packet(data);
         }
 
         public static void CollectItem()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.CollectItem);
-            Packet(Data);
+            data.Write((byte)ClientServer.CollectItem);
+            Packet(data);
         }
 
-        public static void DropItem(byte Slot, short Amount)
+        public static void DropItem(byte slot, short amount)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.DropItem);
-            Data.Write(Slot);
-            Data.Write(Amount);
-            Packet(Data);
+            data.Write((byte)ClientServer.DropItem);
+            data.Write(slot);
+            data.Write(amount);
+            Packet(data);
         }
 
-        public static void Inventory_Change(byte Old, byte New)
+        public static void Inventory_Change(byte old, byte @new)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Inventory_Change);
-            Data.Write(Old);
-            Data.Write(New);
-            Packet(Data);
+            data.Write((byte)ClientServer.InventoryChange);
+            data.Write(old);
+            data.Write(@new);
+            Packet(data);
 
             // Fecha o painel de soltar item
             Panels.List["Drop"].Visible = false;
         }
 
-        public static void Inventory_Use(byte Slot)
+        public static void Inventory_Use(byte slot)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Inventory_Use);
-            Data.Write(Slot);
-            Packet(Data);
+            data.Write((byte)ClientServer.InventoryUse);
+            data.Write(slot);
+            Packet(data);
 
             // Fecha o painel de soltar item
             Panels.List["Drop"].Visible = false;
         }
 
-        public static void Equipment_Remove(byte Slot)
+        public static void Equipment_Remove(byte slot)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Equipment_Remove);
-            Data.Write(Slot);
-            Packet(Data);
+            data.Write((byte)ClientServer.EquipmentRemove);
+            data.Write(slot);
+            Packet(data);
         }
 
-        public static void Hotbar_Add(short Hotbar_Slot, byte Type, byte Slot)
+        public static void Hotbar_Add(short hotbarSlot, byte type, byte slot)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Hotbar_Add);
-            Data.Write(Hotbar_Slot);
-            Data.Write(Type);
-            Data.Write(Slot);
-            Packet(Data);
+            data.Write((byte)ClientServer.HotbarAdd);
+            data.Write(hotbarSlot);
+            data.Write(type);
+            data.Write(slot);
+            Packet(data);
         }
 
-        public static void Hotbar_Change(short Old, short New)
+        public static void Hotbar_Change(short old, short @new)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Hotbar_Change);
-            Data.Write(Old);
-            Data.Write(New);
-            Packet(Data);
+            data.Write((byte)ClientServer.HotbarChange);
+            data.Write(old);
+            data.Write(@new);
+            Packet(data);
         }
 
-        public static void Hotbar_Use(byte Slot)
+        public static void Hotbar_Use(byte slot)
         {
             if (TextBoxes.Focused == null)
             {
-                NetOutgoingMessage Data = Socket.Device.CreateMessage();
+                NetOutgoingMessage data = Socket.Device.CreateMessage();
 
                 // Envia os dados
-                Data.Write((byte)Packets.Hotbar_Use);
-                Data.Write(Slot);
-                Packet(Data);
+                data.Write((byte)ClientServer.HotbarUse);
+                data.Write(slot);
+                Packet(data);
 
                 // Fecha o painel de soltar item
                 Panels.List["Drop"].Visible = false;
             }
         }
 
-        public static void Party_Invite(string Player_Name)
+        public static void Party_Invite(string playerName)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Party_Invite);
-            Data.Write(Player_Name);
-            Packet(Data);
+            data.Write((byte)ClientServer.PartyInvite);
+            data.Write(playerName);
+            Packet(data);
         }
 
         public static void Party_Accept()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Party_Accept);
-            Packet(Data);
+            data.Write((byte)ClientServer.PartyAccept);
+            Packet(data);
         }
 
         public static void Party_Decline()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Party_Decline);
-            Packet(Data);
+            data.Write((byte)ClientServer.PartyDecline);
+            Packet(data);
         }
 
         public static void Party_Leave()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Party_Leave);
-            Packet(Data);
+            data.Write((byte)ClientServer.PartyLeave);
+            Packet(data);
         }
 
         public static void Player_Direction()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Player_Direction);
-            Data.Write((byte)Player.Me.Direction);
-            Packet(Data);
+            data.Write((byte)ClientServer.PlayerDirection);
+            data.Write((byte)Player.Me.Direction);
+            Packet(data);
         }
 
         public static void Player_Move()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Player_Move);
-            Data.Write(Player.Me.X);
-            Data.Write(Player.Me.Y);
-            Data.Write((byte)Player.Me.Movement);
-            Packet(Data);
+            data.Write((byte)ClientServer.PlayerMove);
+            data.Write(Player.Me.X);
+            data.Write(Player.Me.Y);
+            data.Write((byte)Player.Me.Movement);
+            Packet(data);
         }
 
         public static void Player_Attack()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Player_Attack);
-            Packet(Data);
+            data.Write((byte)ClientServer.PlayerAttack);
+            Packet(data);
         }
 
-        public static void Trade_Invite(string Player_Name)
+        public static void Trade_Invite(string playerName)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Trade_Invite);
-            Data.Write(Player_Name);
-            Packet(Data);
+            data.Write((byte)ClientServer.TradeInvite);
+            data.Write(playerName);
+            Packet(data);
         }
 
         public static void Trade_Accept()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Trade_Accept);
-            Packet(Data);
+            data.Write((byte)ClientServer.TradeAccept);
+            Packet(data);
         }
 
         public static void Trade_Decline()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Trade_Decline);
-            Packet(Data);
+            data.Write((byte)ClientServer.TradeDecline);
+            Packet(data);
         }
 
         public static void Trade_Leave()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Trade_Leave);
-            Packet(Data);
+            data.Write((byte)ClientServer.TradeLeave);
+            Packet(data);
         }
 
-        public static void Trade_Offer(byte Slot, byte Inventory_Slot, short Amount = 1)
+        public static void Trade_Offer(byte slot, byte inventorySlot, short amount = 1)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Trade_Offer);
-            Data.Write(Slot);
-            Data.Write(Inventory_Slot);
-            Data.Write(Amount);
-            Packet(Data);
+            data.Write((byte)ClientServer.TradeOffer);
+            data.Write(slot);
+            data.Write(inventorySlot);
+            data.Write(amount);
+            Packet(data);
         }
 
-        public static void Trade_Offer_State(TradeStatus State)
+        public static void Trade_Offer_State(TradeStatus state)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Trade_Offer_State);
-            Data.Write((byte)State);
-            Packet(Data);
+            data.Write((byte)ClientServer.TradeOfferState);
+            data.Write((byte)state);
+            Packet(data);
         }
 
-        public static void Shop_Buy(byte Slot)
+        public static void Shop_Buy(byte slot)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Shop_Buy);
-            Data.Write(Slot);
-            Packet(Data);
+            data.Write((byte)ClientServer.ShopBuy);
+            data.Write(slot);
+            Packet(data);
         }
 
-        public static void Shop_Sell(byte Slot, short Amount)
+        public static void Shop_Sell(byte slot, short amount)
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Shop_Sell);
-            Data.Write(Slot);
-            Data.Write(Amount);
-            Packet(Data);
+            data.Write((byte)ClientServer.ShopSell);
+            data.Write(slot);
+            data.Write(amount);
+            Packet(data);
         }
 
         public static void Shop_Close()
         {
-            NetOutgoingMessage Data = Socket.Device.CreateMessage();
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            Data.Write((byte)Packets.Shop_Close);
-            Packet(Data);
+            data.Write((byte)ClientServer.ShopClose);
+            Packet(data);
         }
     }
 }

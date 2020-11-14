@@ -1,37 +1,29 @@
-﻿using Entities;
-using Network;
-using SFML.Window;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static Logic.Game;
+using CryBits.Client.Entities;
+using CryBits.Client.Media.Audio;
+using CryBits.Client.Network;
+using SFML.Window;
+using static CryBits.Client.Logic.Game;
 
-namespace Interface
+namespace CryBits.Client.UI
 {
-    class Windows
+    internal static class Windows
     {
         // Janela que está aberta
-        public static Types Current;
+        public static WindowsTypes Current;
 
         // Detecção de duplo clique
-        private static int DoubleClick_Timer;
+        private static int _doubleClickTimer;
 
         // Posição do ponteiro do mouse
         public static Point Mouse;
 
-        // Identificação das janelas do jogo
-        public enum Types
-        {
-            Menu,
-            Game,
-            Global,
-            Count
-        }
-
         public static void OnClosed(object sender, EventArgs e)
         {
             // Fecha o jogo
-            if (Current == Types.Game)
+            if (Current == WindowsTypes.Game)
                 Socket.Disconnect();
             else
                 Program.Working = false;
@@ -40,50 +32,50 @@ namespace Interface
         public static void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
         {
             // Clique duplo
-            if (Environment.TickCount < DoubleClick_Timer + 142)
+            if (Environment.TickCount < _doubleClickTimer + 142)
             {
-                if (Current == Types.Game)
+                if (Current == WindowsTypes.Game)
                 {
                     // Usar item
-                    short Slot = Panels.Inventory_Slot;
-                    if (Slot > 0)
-                        if (Player.Me.Inventory[Slot].Item != null)
-                            Send.Inventory_Use((byte)Slot);
+                    short slot = Panels.InventorySlot;
+                    if (slot > 0)
+                        if (Player.Me.Inventory[slot].Item != null)
+                            Send.Inventory_Use((byte)slot);
 
                     // Usar o que estiver na hotbar
-                    Slot = Panels.Hotbar_Slot;
-                    if (Slot > 0)
-                        if (Player.Me.Hotbar[Slot].Slot > 0)
-                            Send.Hotbar_Use((byte)Slot);
+                    slot = Panels.HotbarSlot;
+                    if (slot > 0)
+                        if (Player.Me.Hotbar[slot].Slot > 0)
+                            Send.Hotbar_Use((byte)slot);
 
                     // Compra o item da loja
-                    Slot = Panels.Shop_Slot;
-                    if (Slot >= 0)
-                        if (Panels.Shop_Open != null)
-                            Send.Shop_Buy((byte)Slot);
+                    slot = Panels.ShopSlot;
+                    if (slot >= 0)
+                        if (Panels.ShopOpen != null)
+                            Send.Shop_Buy((byte)slot);
                 }
             }
             // Clique único
             else
             {
                 // Percorre toda a árvore de ordem para executar o comando
-                Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
-                Stack.Push(Tools.Order);
-                while (Stack.Count != 0)
+                Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+                stack.Push(Tools.Order);
+                while (stack.Count != 0)
                 {
-                    List<Tools.Order_Structure> Top = Stack.Pop();
+                    List<Tools.OrderStructure> top = stack.Pop();
 
-                    for (byte i = 0; i < Top.Count; i++)
-                        if (Top[i].Data.Visible)
+                    for (byte i = 0; i < top.Count; i++)
+                        if (top[i].Data.Visible)
                         {
                             // Executa o comando
-                            if (Top[i].Data is Buttons) ((Buttons)Top[i].Data).MouseDown(e);
-                            Stack.Push(Top[i].Nodes);
+                            if (top[i].Data is Buttons) ((Buttons)top[i].Data).MouseDown(e);
+                            stack.Push(top[i].Nodes);
                         }
                 }
 
                 // Eventos em jogo
-                if (Current == Types.Game)
+                if (Current == WindowsTypes.Game)
                 {
                     Panels.Inventory_MouseDown(e);
                     Panels.Equipment_MouseDown(e);
@@ -96,80 +88,79 @@ namespace Interface
         public static void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
         {
             // Contagem do clique duplo
-            DoubleClick_Timer = Environment.TickCount;
+            _doubleClickTimer = Environment.TickCount;
 
             // Percorre toda a árvore de ordem para executar o comando
-            Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
-            Stack.Push(Tools.Order);
-            while (Stack.Count != 0)
+            Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+            stack.Push(Tools.Order);
+            while (stack.Count != 0)
             {
-                List<Tools.Order_Structure> Top = Stack.Pop();
+                List<Tools.OrderStructure> top = stack.Pop();
 
-                for (byte i = 0; i < Top.Count; i++)
-                    if (Top[i].Data.Visible)
+                for (byte i = 0; i < top.Count; i++)
+                    if (top[i].Data.Visible)
                     {
                         // Executa o comando
-                        if (Top[i].Data is Buttons) ((Buttons)Top[i].Data).MouseUp();
-                        else if (Top[i].Data is CheckBoxes) ((CheckBoxes)Top[i].Data).MouseUp();
-                        else if (Top[i].Data is TextBoxes) ((TextBoxes)Top[i].Data).MouseUp(Top[i]);
-                        Stack.Push(Top[i].Nodes);
+                        if (top[i].Data is Buttons) ((Buttons)top[i].Data).MouseUp();
+                        else if (top[i].Data is CheckBoxes) ((CheckBoxes)top[i].Data).MouseUp();
+                        else if (top[i].Data is TextBoxes) ((TextBoxes)top[i].Data).MouseUp(top[i]);
+                        stack.Push(top[i].Nodes);
                     }
             }
 
             // Eventos em jogo
-            if (Current == Types.Game)
+            if (Current == WindowsTypes.Game)
             {
                 // Muda o slot do item
-                if (Panels.Inventory_Slot > 0)
+                if (Panels.InventorySlot > 0)
                 {
-                    if (Panels.Inventory_Change > 0) Send.Inventory_Change(Panels.Inventory_Change, Panels.Inventory_Slot);
+                    if (Panels.InventoryChange > 0) Send.Inventory_Change(Panels.InventoryChange, Panels.InventorySlot);
                 }
                 // Muda o slot da hotbar
-                else if (Panels.Hotbar_Slot >= 0)
+                else if (Panels.HotbarSlot >= 0)
                 {
-                    if (Panels.Hotbar_Change >= 0) Send.Hotbar_Change(Panels.Hotbar_Change, Panels.Hotbar_Slot);
-                    if (Panels.Inventory_Change > 0) Send.Hotbar_Add(Panels.Hotbar_Slot, (byte)Logic.Hotbar.Item, Panels.Inventory_Change);
+                    if (Panels.HotbarChange >= 0) Send.Hotbar_Change(Panels.HotbarChange, Panels.HotbarSlot);
+                    if (Panels.InventoryChange > 0) Send.Hotbar_Add(Panels.HotbarSlot, (byte)Hotbars.Item, Panels.InventoryChange);
                 }
                 // Adiciona um item à troca
-                else if (Panels.Trade_Slot > 0)
+                else if (Panels.TradeSlot > 0)
                 {
-                    if (Panels.Inventory_Change > 0)
-                        if (Player.Me.Inventory[Panels.Inventory_Change].Amount == 1)
-                            Send.Trade_Offer(Panels.Trade_Slot, Panels.Inventory_Change);
+                    if (Panels.InventoryChange > 0)
+                        if (Player.Me.Inventory[Panels.InventoryChange].Amount == 1)
+                            Send.Trade_Offer(Panels.TradeSlot, Panels.InventoryChange);
                         else
                         {
-                            Panels.Trade_Slot_Selected = Panels.Trade_Slot;
-                            Panels.Trade_Inventory_Slot = Panels.Inventory_Change;
+                            Panels.TradeInventorySlot = Panels.InventoryChange;
                             TextBoxes.List["Trade_Amount"].Text = string.Empty;
                             Panels.List["Trade_Amount"].Visible = true;
                         }
                 }
 
                 // Reseta a movimentação
-                Panels.Inventory_Change = 0;
-                Panels.Hotbar_Change = -1;
+                Panels.InventoryChange = 0;
+                Panels.HotbarChange = -1;
             }
         }
 
         public static void OnMouseMoved(object sender, MouseMoveEventArgs e)
         {
             // Define a posição do mouse à váriavel
-            Windows.Mouse.X = e.X;
-            Windows.Mouse.Y = e.Y;
+            Mouse.X = e.X;
+            Mouse.Y = e.Y;
 
             // Percorre toda a árvore de ordem para executar o comando
-            Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
-            Stack.Push(Tools.Order);
-            while (Stack.Count != 0)
+            Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+            stack.Push(Tools.Order);
+            while (stack.Count != 0)
             {
-                List<Tools.Order_Structure> Top = Stack.Pop();
+                List<Tools.OrderStructure> top = stack.Pop();
 
-                for (byte i = 0; i < Top.Count; i++)
-                    if (Top[i].Data.Visible)
+                for (byte i = 0; i < top.Count; i++)
+                    if (top[i].Data.Visible)
                     {
                         // Executa o comando
-                        if (Top[i].Data is Buttons) ((Buttons)Top[i].Data).MouseMove();
-                        Stack.Push(Top[i].Nodes);
+                        if (top[i].Data is Buttons) ((Buttons)top[i].Data).MouseMove();
+                        stack.Push(top[i].Nodes);
                     }
             }
         }
@@ -186,7 +177,7 @@ namespace Interface
         public static void OnKeyReleased(object sender, KeyEventArgs e)
         {
             // Define se um botão está sendo pressionado
-            if (Current == Types.Game)
+            if (Current == WindowsTypes.Game)
                 switch (e.Code)
                 {
                     case Keyboard.Key.Enter: Chat.Type(); break;
@@ -213,8 +204,8 @@ namespace Interface
         public static void OpenMenu()
         {
             // Reproduz a música de fundo
-            Audio.Sound.Stop_All();
-            if (Option.Musics) Audio.Music.Play(Audio.Musics.Menu);
+            Sound.Stop_All();
+            if (Option.Musics) Music.Play(Musics.Menu);
 
             // Nome do usuário salvo
             CheckBoxes.List["Connect_Save_Username"].Checked = Option.SaveUsername;
@@ -223,7 +214,7 @@ namespace Interface
             // Traz o jogador de volta ao menu
             Panels.Menu_Close();
             Panels.List["Connect"].Visible = true;
-            Current = Types.Menu;
+            Current = WindowsTypes.Menu;
         }
     }
 }

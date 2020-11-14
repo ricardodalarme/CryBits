@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace Interface
+namespace CryBits.Client.UI
 {
-    class Tools
+    internal static class Tools
     {
         // Ordem da renderização das ferramentas
-        public static List<Order_Structure>[] All_Order = new List<Order_Structure>[(byte)Windows.Types.Count];
-        public static List<Order_Structure> Order => All_Order[(byte)Windows.Current];
+        public static List<OrderStructure>[] AllOrder = new List<OrderStructure>[(byte)WindowsTypes.Count];
+        public static List<OrderStructure> Order => AllOrder[(byte)Windows.Current];
 
-        public class Order_Structure
+        public class OrderStructure
         {
             public Structure Data;
-            public Order_Structure Parent;
-            public List<Order_Structure> Nodes;
+            public OrderStructure Parent;
+            public List<OrderStructure> Nodes;
             public bool Viewable => Viewable(this);
         }
 
@@ -22,7 +22,7 @@ namespace Interface
             public string Name;
             public bool Visible;
             public Point Position;
-            public Windows.Types Window;
+            public WindowsTypes Window;
         }
 
         // Tipos de ferramentas
@@ -34,28 +34,28 @@ namespace Interface
             TextBox
         }
 
-        public static bool Viewable(Order_Structure Order)
+        public static bool Viewable(OrderStructure order)
         {
             // Verifica se a ferramenta está visível
-            if (Order == null) return true;
-            if (Order.Data.Window != Windows.Current) return false;
-            if (!Order.Data.Visible) return false;
-            return Viewable(Order.Parent);
+            if (order == null) return true;
+            if (order.Data.Window != Windows.Current) return false;
+            if (!order.Data.Visible) return false;
+            return Viewable(order.Parent);
         }
 
-        public static Order_Structure Get(Structure Tool)
+        public static OrderStructure Get(Structure tool)
         {
             // Percorre toda a árvore de ordem para encontrar a ferramenta
-            Stack<List<Order_Structure>> Stack = new Stack<List<Order_Structure>>();
-            for (byte i = 0; i < All_Order.Length; i++) Stack.Push(All_Order[i]);
-            while (Stack.Count != 0)
+            Stack<List<OrderStructure>> stack = new Stack<List<OrderStructure>>();
+            for (byte i = 0; i < AllOrder.Length; i++) stack.Push(AllOrder[i]);
+            while (stack.Count != 0)
             {
-                List<Order_Structure> Top = Stack.Pop();
+                List<OrderStructure> top = stack.Pop();
 
-                for (byte i = 0; i < Top.Count; i++)
+                for (byte i = 0; i < top.Count; i++)
                 {
-                    if (Top[i].Data == Tool) return Top[i];
-                    Stack.Push(Top[i].Nodes);
+                    if (top[i].Data == tool) return top[i];
+                    stack.Push(top[i].Nodes);
                 }
             }
             return null;

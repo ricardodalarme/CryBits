@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{AB392C7C-BCB0-4924-BBE4-FA7D2280BE11}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Server</RootNamespace>
+    <RootNamespace>CryBits.Server</RootNamespace>
     <AssemblyName>Server</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Program</StartupObject>
+    <StartupObject>CryBits.Server.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -68,24 +68,19 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CryBits.Core">
+      <HintPath>..\..\Build\Core\CryBits.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library\Directories.cs" />
-    <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\Utils.cs" />
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\Character.cs" />
-    <Compile Include="Entities\Class.cs" />
-    <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\Item.cs" />
-    <Compile Include="Entities\Map.cs" />
-    <Compile Include="Entities\NPC.cs" />
     <Compile Include="Entities\Player.cs" />
-    <Compile Include="Entities\Shop.cs" />
     <Compile Include="Entities\TempMap.cs" />
     <Compile Include="Entities\TempNPC.cs" />
     <Compile Include="Program.cs" />

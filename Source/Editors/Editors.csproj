@@ -7,7 +7,7 @@
     <ProjectGuid>{8C3BB955-4C28-44D7-9255-17248A425087}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Editors</RootNamespace>
+    <RootNamespace>CryBits.Editors</RootNamespace>
     <AssemblyName>Editors</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -34,8 +34,7 @@
     <DebugType>embedded</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Build\Client and Editors\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>CryBits.Editors</DefineConstants>
     <ErrorReport>none</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
@@ -51,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Logic.Program</StartupObject>
+    <StartupObject>CryBits.Editors.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -67,127 +66,116 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CryBits.Core">
+      <HintPath>..\..\Build\Core\CryBits.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Editors\Shops .cs">
+    <Compile Include="Entities\TempMap.cs" />
+    <Compile Include="Forms\Shops .cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Shops .Designer.cs">
+    <Compile Include="Forms\Shops .Designer.cs">
       <DependentUpon>Shops .cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Interface.cs">
+    <Compile Include="Forms\Interface.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Interface.Designer.cs">
+    <Compile Include="Forms\Interface.Designer.cs">
       <DependentUpon>Interface.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Login.cs">
+    <Compile Include="Forms\Login.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Login.Designer.cs">
+    <Compile Include="Forms\Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
     <Compile Include="Entities\Tools\TextBox.cs" />
     <Compile Include="Entities\Tools\CheckBox.cs" />
     <Compile Include="Entities\Tools\Panel.cs" />
     <Compile Include="Entities\Tools\Button.cs" />
-    <Compile Include="Entities\Map\MapLayer.cs" />
-    <Compile Include="Entities\Map\MapTileData.cs" />
     <Compile Include="Library\Directories.cs" />
     <Compile Include="Library\Write.cs" />
-    <Compile Include="Editors\Items.cs">
+    <Compile Include="Forms\Items.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Items.Designer.cs">
+    <Compile Include="Forms\Items.Designer.cs">
       <DependentUpon>Items.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Data.cs">
+    <Compile Include="Forms\Data.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Data.Designer.cs">
+    <Compile Include="Forms\Data.Designer.cs">
       <DependentUpon>Data.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Tiles.cs">
+    <Compile Include="Forms\Tiles.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Tiles.Designer.cs">
+    <Compile Include="Forms\Tiles.Designer.cs">
       <DependentUpon>Tiles.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\NPCs.cs">
+    <Compile Include="Forms\NPCs.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\NPCs.Designer.cs">
+    <Compile Include="Forms\NPCs.Designer.cs">
       <DependentUpon>NPCs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\MapProperties.cs" />
+    <Compile Include="Media\Audio\Sound.cs" />
     <Compile Include="Media\Graphics.cs" />
-    <Compile Include="Media\Audio.cs" />
+    <Compile Include="Media\Audio\Music.cs" />
     <Compile Include="Logic\Utils.cs" />
-    <Compile Include="Editors\Classes.cs">
+    <Compile Include="Forms\Classes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Classes.Designer.cs">
+    <Compile Include="Forms\Classes.Designer.cs">
       <DependentUpon>Classes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Maps.cs">
+    <Compile Include="Forms\Maps.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editors\Maps.Designer.cs">
+    <Compile Include="Forms\Maps.Designer.cs">
       <DependentUpon>Maps.cs</DependentUpon>
     </Compile>
     <Compile Include="Network\Receive.cs" />
     <Compile Include="Network\Send.cs" />
     <Compile Include="Network\Socket.cs" />
-    <Compile Include="Entities\Class.cs" />
-    <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Tools\Tool.cs" />
-    <Compile Include="Entities\Item.cs" />
-    <Compile Include="Entities\Map\Map.cs" />
-    <Compile Include="Entities\NPC.cs" />
-    <Compile Include="Entities\Shop.cs" />
     <Compile Include="Entities\Tile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Library\Read.cs" />
     <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Editors\Shops .resx">
+    <EmbeddedResource Include="Forms\Shops .resx">
       <DependentUpon>Shops .cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Interface.resx">
+    <EmbeddedResource Include="Forms\Interface.resx">
       <DependentUpon>Interface.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Login.resx">
+    <EmbeddedResource Include="Forms\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Tiles.resx">
+    <EmbeddedResource Include="Forms\Tiles.resx">
       <DependentUpon>Tiles.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Items.resx">
+    <EmbeddedResource Include="Forms\Items.resx">
       <DependentUpon>Items.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Classes.resx">
-      <DependentUpon>Classes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Data.resx">
+    <EmbeddedResource Include="Forms\Data.resx">
       <DependentUpon>Data.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\Maps.resx">
+    <EmbeddedResource Include="Forms\Maps.resx">
       <DependentUpon>Maps.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\NPCs.resx">
+    <EmbeddedResource Include="Forms\NPCs.resx">
       <DependentUpon>NPCs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
@@ -229,6 +217,7 @@
       <Version>2.5.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

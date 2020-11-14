@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F0180377-345C-415C-8846-637E6D7D2CBE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Client</RootNamespace>
+    <RootNamespace>CryBits.Client</RootNamespace>
     <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Program</StartupObject>
+    <StartupObject>CryBits.Client.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -44,24 +44,20 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CryBits.Core">
+      <HintPath>..\..\Build\Core\CryBits.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\Game.cs" />
-    <Compile Include="Logic\MapAutoTile.cs" />
+    <Compile Include="Media\Audio\Sound.cs" />
     <Compile Include="UI\Chat.cs" />
     <Compile Include="UI\Windows.cs" />
     <Compile Include="Logic\Camera.cs" />
     <Compile Include="Entities\Character.cs" />
-    <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\Item.cs" />
-    <Compile Include="Entities\Map.cs" />
-    <Compile Include="Entities\NPC.cs" />
-    <Compile Include="Entities\Class.cs" />
-    <Compile Include="Entities\Shop.cs" />
     <Compile Include="Entities\TempMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="UI\Buttons.cs" />
@@ -77,7 +73,7 @@
     <Compile Include="Logic\Mapper.cs" />
     <Compile Include="Entities\TempNPC.cs" />
     <Compile Include="Entities\Player.cs" />
-    <Compile Include="Media\Audio.cs" />
+    <Compile Include="Media\Audio\Music.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Network\Receive.cs" />
     <Compile Include="Network\Send.cs" />
@@ -107,5 +103,6 @@
       <Version>2.5.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

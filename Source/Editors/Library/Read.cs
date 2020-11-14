@@ -1,146 +1,158 @@
-﻿using Editors;
-using Entities;
-using Logic;
-using System;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using System.Drawing;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Entities.Tools;
+using Button = CryBits.Editors.Entities.Tools.Button;
+using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
+using Graphics = CryBits.Editors.Media.Graphics;
+using Panel = CryBits.Editors.Entities.Tools.Panel;
+using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
-namespace Library
+namespace CryBits.Editors.Library
 {
-    static class Read
+    internal static class Read
     {
         public static void Options()
         {
+            // Cria o arquivo se ele não existir
+            if (!Directories.Options.Exists)
+            {
+                Lists.Options = new Lists.Structures.Options();
+                Write.Options();
+                return;
+            }
+
             // Lê os dados
-            using (var Stream = Directories.Options.OpenRead())
-                Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(Stream);
+            using (var stream = Directories.Options.OpenRead())
+                Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(stream);
         }
 
         public static void Tools()
         {
-            FileInfo File = new FileInfo(Directories.Tools.FullName);
+            FileInfo file = new FileInfo(Directories.Tools.FullName);
 
             // Limpa a árvore de ordem
             Lists.Tool = new TreeNode();
-            for (byte i = 0; i < Enum.GetValues(typeof(Windows)).Length; i++) Lists.Tool.Nodes.Add(((Windows)i).ToString());
+            for (byte i = 0; i < Enum.GetValues(typeof(WindowsTypes)).Length; i++) Lists.Tool.Nodes.Add(((WindowsTypes)i).ToString());
 
             // Cria o arquivo caso ele não existir
-            if (!File.Exists)
+            if (!file.Exists)
             {
                 Write.Tools();
                 return;
             }
 
             // Cria um sistema binário para a manipulação dos dados
-            using (var Data = new BinaryReader(File.OpenRead()))
+            using (var data = new BinaryReader(file.OpenRead()))
                 // Lê todos os nós
                 for (byte n = 0; n < Lists.Tool.Nodes.Count; n++)
-                    Tools(Lists.Tool.Nodes[n], Data);
+                    Tools(Lists.Tool.Nodes[n], data);
         }
 
-        public static void Tools(TreeNode Node, BinaryReader Data)
+        public static void Tools(TreeNode node, BinaryReader data)
         {
             // Lê todos os filhos
-            byte Size = Data.ReadByte();
-            for (byte i = 0; i < Size; i++)
+            byte size = data.ReadByte();
+            for (byte i = 0; i < size; i++)
             {
-                Entities.Tool Temp = new Entities.Tool();
-                Tools_Types Type = (Tools_Types)Data.ReadByte();
+                Tool temp = new Tool();
+                ToolType type = (ToolType)data.ReadByte();
 
                 // Lê a ferramenta
-                if (Type == Tools_Types.Button) Temp = Button(Data);
-                else if (Type == Tools_Types.CheckBox) Temp = CheckBox(Data);
-                else if (Type == Tools_Types.Panel) Temp = Panel(Data);
-                else if (Type == Tools_Types.TextBox) Temp = TextBox(Data);
+                if (type == ToolType.Button) temp = Button(data);
+                else if (type == ToolType.CheckBox) temp = CheckBox(data);
+                else if (type == ToolType.Panel) temp = Panel(data);
+                else if (type == ToolType.TextBox) temp = TextBox(data);
 
                 // Adiciona o nó
-                Node.Nodes.Add("[" + Type.ToString() + "] " + Temp.Name);
-                Node.LastNode.Tag = Temp;
+                node.Nodes.Add("[" + type + "] " + temp.Name);
+                node.LastNode.Tag = temp;
 
                 // Pula pro próximo
-                Tools(Node.Nodes[i], Data);
+                Tools(node.Nodes[i], data);
             }
         }
 
-        private static Entities.Button Button(BinaryReader Data)
+        private static Button Button(BinaryReader data)
         {
             // Lê os dados
-            return new Entities.Button
+            return new Button
             {
-                Name = Data.ReadString(),
-                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
-                Visible = Data.ReadBoolean(),
-                Window = (Windows)Data.ReadByte(),
-                Texture_Num = Data.ReadByte()
+                Name = data.ReadString(),
+                Position = new Point(data.ReadInt32(), data.ReadInt32()),
+                Visible = data.ReadBoolean(),
+                Window = (WindowsTypes)data.ReadByte(),
+                TextureNum = data.ReadByte()
             };
         }
 
-        private static Entities.TextBox TextBox(BinaryReader Data)
+        private static TextBox TextBox(BinaryReader data)
         {
             // Lê os dados
-            return new Entities.TextBox
+            return new TextBox
             {
-                Name = Data.ReadString(),
-                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
-                Visible = Data.ReadBoolean(),
-                Window = (Windows)Data.ReadByte(),
-                Max_Characters = Data.ReadInt16(),
-                Width = Data.ReadInt16(),
-                Password = Data.ReadBoolean()
+                Name = data.ReadString(),
+                Position = new Point(data.ReadInt32(), data.ReadInt32()),
+                Visible = data.ReadBoolean(),
+                Window = (WindowsTypes)data.ReadByte(),
+                MaxCharacters = data.ReadInt16(),
+                Width = data.ReadInt16(),
+                Password = data.ReadBoolean()
             };
         }
 
-        private static Entities.Panel Panel(BinaryReader Data)
+        private static Panel Panel(BinaryReader data)
         {
             // Carrega os dados
-            return new Entities.Panel
+            return new Panel
             {
-                Name = Data.ReadString(),
-                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
-                Visible = Data.ReadBoolean(),
-                Window = (Windows)Data.ReadByte(),
-                Texture_Num = Data.ReadByte()
+                Name = data.ReadString(),
+                Position = new Point(data.ReadInt32(), data.ReadInt32()),
+                Visible = data.ReadBoolean(),
+                Window = (WindowsTypes)data.ReadByte(),
+                TextureNum = data.ReadByte()
             };
         }
 
-        private static Entities.CheckBox CheckBox(BinaryReader Data)
+        private static CheckBox CheckBox(BinaryReader data)
         {
             // Carrega os dados
-            return new Entities.CheckBox
+            return new CheckBox
             {
-                Name = Data.ReadString(),
-                Position = new Point(Data.ReadInt32(), Data.ReadInt32()),
-                Visible = Data.ReadBoolean(),
-                Window = (Windows)Data.ReadByte(),
-                Text = Data.ReadString(),
-                Checked = Data.ReadBoolean()
+                Name = data.ReadString(),
+                Position = new Point(data.ReadInt32(), data.ReadInt32()),
+                Visible = data.ReadBoolean(),
+                Window = (WindowsTypes)data.ReadByte(),
+                Text = data.ReadString(),
+                Checked = data.ReadBoolean()
             };
         }
 
         public static void Tiles()
         {
             // Lê os dados
-            Lists.Tile = new Tile[Graphics.Tex_Tile.Length];
+            Lists.Tile = new Tile[Graphics.TexTile.Length];
             for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
         }
 
-        public static void Tile(byte Index)
+        public static void Tile(byte index)
         {
-            FileInfo File = new FileInfo(Directories.Tiles.FullName + Index + Directories.Format);
+            FileInfo file = new FileInfo(Directories.Tiles.FullName + index + Directories.Format);
 
             // Evita erros
-            if (!File.Exists)
+            if (!file.Exists)
             {
-                Lists.Tile[Index] = new Tile(Index);
-                Write.Tile(Index);
+                Lists.Tile[index] = new Tile(index);
+                Write.Tile(index);
                 return;
             }
 
             // Lê os dados
-            using (var Stream = File.OpenRead())
-                Lists.Tile[Index] = (Tile)new BinaryFormatter().Deserialize(Stream);
+            using (var stream = file.OpenRead())
+                Lists.Tile[index] = (Tile)new BinaryFormatter().Deserialize(stream);
         }
     }
 }

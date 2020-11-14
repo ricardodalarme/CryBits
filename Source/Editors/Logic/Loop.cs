@@ -1,32 +1,40 @@
-﻿using Editors;
-using Entities;
-using System;
+﻿using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
-using static Logic.Utils;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Forms;
+using CryBits.Editors.Library;
+using CryBits.Editors.Network;
+using CryBits.Entities;
+using SFML.Audio;
+using static CryBits.Editors.Logic.Utils;
+using Graphics = CryBits.Editors.Media.Graphics;
+using Music = CryBits.Editors.Media.Audio.Music;
+using Sound = CryBits.Editors.Media.Audio.Sound;
 
-namespace Logic
+namespace CryBits.Editors.Logic
 {
-    class Loop
+    internal static class Loop
     {
         // Contadores
-        private static int FogX_Timer = 0;
-        private static int FogY_Timer = 0;
-        private static int Snow_Timer = 0;
-        private static int Thundering_Timer = 0;
+        private static int _fogXTimer;
+        private static int _fogYTimer;
+        private static int _snowTimer;
+        private static int _thunderingTimer;
 
         public static void Init()
         {
-            int Count;
-            int Timer_1000 = 0;
-            short FPS = 0;
+            int count;
+            int timer1000 = 0;
+            short fps = 0;
 
             while (Program.Working)
             {
-                Count = Environment.TickCount;
+                count = Environment.TickCount;
 
                 // Manuseia os dados recebidos
-                Network.Socket.HandleData();
+                Socket.HandleData();
 
                 // Eventos
                 Editor_Maps_Fog();
@@ -38,20 +46,20 @@ namespace Logic
 
                 // Faz com que a aplicação se mantenha estável
                 Application.DoEvents();
-                while (Environment.TickCount < Count + 10) System.Threading.Thread.Sleep(1);
+                while (Environment.TickCount < count + 10) Thread.Sleep(1);
 
                 // FPS
-                if (Timer_1000 < Environment.TickCount)
+                if (timer1000 < Environment.TickCount)
                 {
                     // Cálcula o FPS
-                    Program.FPS = FPS;
-                    FPS = 0;
+                    Program.FPS = fps;
+                    fps = 0;
 
                     // Reinicia a contagem
-                    Timer_1000 = Environment.TickCount + 1000;
+                    timer1000 = Environment.TickCount + 1000;
                 }
                 else
-                    FPS += 1;
+                    fps += 1;
             }
 
             // Fecha a aplicação
@@ -61,7 +69,7 @@ namespace Logic
         private static void Editor_Maps_Fog()
         {
             // Faz a movimentação
-            if (Editor_Maps.Form != null && Editor_Maps.Form.Visible)
+            if (EditorMaps.Form != null && EditorMaps.Form.Visible)
             {
                 Editor_Maps_Fog_X();
                 Editor_Maps_Fog_Y();
@@ -70,112 +78,112 @@ namespace Logic
 
         private static void Editor_Maps_Fog_X()
         {
-            Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Editor_Maps.Form.Selected.Fog.Texture]);
-            int Speed = Editor_Maps.Form.Selected.Fog.Speed_X;
+            Size textureSize = Graphics.Size(Graphics.TexFog[EditorMaps.Form.Selected.Fog.Texture]);
+            int speed = EditorMaps.Form.Selected.Fog.SpeedX;
 
             // Apenas se necessário
-            if (FogX_Timer >= Environment.TickCount) return;
-            if (Speed == 0) return;
+            if (_fogXTimer >= Environment.TickCount) return;
+            if (speed == 0) return;
 
             // Movimento para trás
-            if (Speed < 0)
+            if (speed < 0)
             {
-                Map.Fog_X -= 1;
-                if (Map.Fog_X < -Texture_Size.Width) Map.Fog_X = 0;
+                TempMap.FogX -= 1;
+                if (TempMap.FogX < -textureSize.Width) TempMap.FogX = 0;
             }
             // Movimento para frente
             else
             {
-                Map.Fog_X += 1;
-                if (Map.Fog_X > Texture_Size.Width) Map.Fog_X = 0;
+                TempMap.FogX += 1;
+                if (TempMap.FogX > textureSize.Width) TempMap.FogX = 0;
             }
 
             // Contagem
-            if (Speed < 0) Speed *= -1;
-            FogX_Timer = Environment.TickCount + 50 - Speed;
+            if (speed < 0) speed *= -1;
+            _fogXTimer = Environment.TickCount + 50 - speed;
         }
 
         private static void Editor_Maps_Fog_Y()
         {
-            Size Texture_Size = Graphics.TSize(Graphics.Tex_Fog[Editor_Maps.Form.Selected.Fog.Texture]);
-            int Speed = Editor_Maps.Form.Selected.Fog.Speed_Y;
+            Size textureSize = Graphics.Size(Graphics.TexFog[EditorMaps.Form.Selected.Fog.Texture]);
+            int speed = EditorMaps.Form.Selected.Fog.SpeedY;
 
             // Apenas se necessário
-            if (FogY_Timer >= Environment.TickCount) return;
-            if (Speed == 0) return;
+            if (_fogYTimer >= Environment.TickCount) return;
+            if (speed == 0) return;
 
             // Movimento para trás
-            if (Speed < 0)
+            if (speed < 0)
             {
-                Map.Fog_Y -= 1;
-                if (Map.Fog_Y < -Texture_Size.Height) Map.Fog_Y = 0;
+                TempMap.FogY -= 1;
+                if (TempMap.FogY < -textureSize.Height) TempMap.FogY = 0;
             }
             // Movimento para frente
             else
             {
-                Map.Fog_Y += 1;
-                if (Map.Fog_Y > Texture_Size.Height) Map.Fog_Y = 0;
+                TempMap.FogY += 1;
+                if (TempMap.FogY > textureSize.Height) TempMap.FogY = 0;
             }
 
             // Contagem
-            if (Speed < 0) Speed *= -1;
-            FogY_Timer = Environment.TickCount + 50 - Speed;
+            if (speed < 0) speed *= -1;
+            _fogYTimer = Environment.TickCount + 50 - speed;
         }
 
         private static void Editor_Maps_Weather()
         {
-            bool Stop = false, Move;
+            bool stop = false, move;
 
             // Somente se necessário
-            if (Editor_Maps.Form == null || !Editor_Maps.Form.Visible || Editor_Maps.Form.Selected.Weather.Type == 0 || !Editor_Maps.Form.butVisualization.Checked)
+            if (EditorMaps.Form == null || !EditorMaps.Form.Visible || EditorMaps.Form.Selected.Weather.Type == 0 || !EditorMaps.Form.butVisualization.Checked)
             {
-                if (Audio.Sound.List != null)
-                    if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SFML.Audio.SoundStatus.Playing) Audio.Sound.Stop_All();
+                if (Sound.List != null)
+                    if (Sound.List[(byte)Sounds.Rain].Status == SoundStatus.Playing) Sound.Stop_All();
                 return;
             }
 
             // Clima do mapa
-            Map_Weather Weather = Editor_Maps.Form.Selected.Weather;
+            MapWeather weather = EditorMaps.Form.Selected.Weather;
 
             // Reproduz o som chuva
-            if (Weather.Type == Weathers.Raining || Weather.Type == Weathers.Thundering)
+            if (weather.Type == Weathers.Raining || weather.Type == Weathers.Thundering)
             {
-                if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status != SFML.Audio.SoundStatus.Playing)
-                    Audio.Sound.Play(Audio.Sounds.Rain);
+                if (Sound.List[(byte)Sounds.Rain].Status != SoundStatus.Playing)
+                    Sound.Play(Sounds.Rain);
             }
             else
-              if (Audio.Sound.List[(byte)Audio.Sounds.Rain].Status == SFML.Audio.SoundStatus.Playing) Audio.Sound.Stop_All();
+              if (Sound.List[(byte)Sounds.Rain].Status == SoundStatus.Playing) Sound.Stop_All();
 
             // Contagem da neve
-            if (Snow_Timer < Environment.TickCount)
+            if (_snowTimer < Environment.TickCount)
             {
-                Move = true;
-                Snow_Timer = Environment.TickCount + 35;
+                move = true;
+                _snowTimer = Environment.TickCount + 35;
             }
             else
-                Move = false;
+                move = false;
 
             // Contagem dos relâmpagos
-            if (Map.Lightning > 0)
-                if (Thundering_Timer < Environment.TickCount)
+            if (TempMap.Lightning > 0)
+                if (_thunderingTimer < Environment.TickCount)
                 {
-                    Map.Lightning -= 10;
-                    Thundering_Timer = Environment.TickCount + 25;
+                    TempMap.Lightning -= 10;
+                    _thunderingTimer = Environment.TickCount + 25;
                 }
 
             // Adiciona uma nova partícula
             for (int i = 1; i <= Lists.Weather.GetUpperBound(0); i++)
                 if (!Lists.Weather[i].Visible)
                 {
-                    if (MyRandom.Next(0, Map.Max_Weather_Intensity - Weather.Intensity) == 0)
+                    if (MyRandom.Next(0, Map.MaxWeatherIntensity - weather.Intensity) == 0)
                     {
-                        if (!Stop)
+                        if (!stop)
                         {
                             // Cria a partícula
                             Lists.Weather[i].Visible = true;
 
                             // Cria a partícula de acordo com o seu tipo
-                            switch (Weather.Type)
+                            switch (weather.Type)
                             {
                                 case Weathers.Thundering:
                                 case Weathers.Raining: Weather_Rain_Create(i); break;
@@ -184,33 +192,33 @@ namespace Logic
                         }
                     }
 
-                    Stop = true;
+                    stop = true;
                 }
                 else
                 {
                     // Movimenta a partícula de acordo com o seu tipo
-                    switch (Weather.Type)
+                    switch (weather.Type)
                     {
                         case Weathers.Thundering:
                         case Weathers.Raining: Weather_Rain_Movement(i); break;
-                        case Weathers.Snowing: Weather_Snow_Movement(i, Move); break;
+                        case Weathers.Snowing: Weather_Snow_Movement(i, move); break;
                     }
 
                     // Reseta a partícula
-                    if (Lists.Weather[i].x > Map.Width * Grid || Lists.Weather[i].y > Map.Height * Grid)
-                        Lists.Weather[i] = new Map_Weather_Particle();
+                    if (Lists.Weather[i].X > Map.Width * Grid || Lists.Weather[i].Y > Map.Height * Grid)
+                        Lists.Weather[i] = new MapWeatherParticle();
                 }
 
             // Trovoadas
-            if (Weather.Type == Weathers.Thundering)
-                if (MyRandom.Next(0, Map.Max_Weather_Intensity * 10 - Weather.Intensity * 2) == 0)
+            if (weather.Type == Weathers.Thundering)
+                if (MyRandom.Next(0, Map.MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
                 {
                     // Som do trovão
-                    int Thunder = MyRandom.Next((byte)Audio.Sounds.Thunder_1, (byte)Audio.Sounds.Thunder_4);
-                    Audio.Sound.Play((Audio.Sounds)Thunder);
+                    int thunder = MyRandom.Next((byte)Sounds.Thunder1, (byte)Sounds.Thunder4);
+                    Sound.Play((Sounds)thunder);
 
                     // Relâmpago
-                    if (Thunder < 6) Map.Lightning = 190;
+                    if (thunder < 6) TempMap.Lightning = 190;
                 }
         }
 
@@ -221,74 +229,70 @@ namespace Logic
 
             if (MyRandom.Next(2) == 0)
             {
-                Lists.Weather[i].x = -32;
-                Lists.Weather[i].y = MyRandom.Next(-32, Editor_Maps.Form.picMap.Height);
+                Lists.Weather[i].X = -32;
+                Lists.Weather[i].Y = MyRandom.Next(-32, EditorMaps.Form.picMap.Height);
             }
             else
             {
-                Lists.Weather[i].x = MyRandom.Next(-32, Editor_Maps.Form.picMap.Width);
-                Lists.Weather[i].y = -32;
+                Lists.Weather[i].X = MyRandom.Next(-32, EditorMaps.Form.picMap.Width);
+                Lists.Weather[i].Y = -32;
             }
         }
 
         private static void Weather_Rain_Movement(int i)
         {
             // Movimenta a partícula
-            Lists.Weather[i].x += Lists.Weather[i].Speed;
-            Lists.Weather[i].y += Lists.Weather[i].Speed;
+            Lists.Weather[i].X += Lists.Weather[i].Speed;
+            Lists.Weather[i].Y += Lists.Weather[i].Speed;
         }
 
         private static void Weather_Snow_Create(int i)
         {
             // Define a velocidade e a posição da partícula
             Lists.Weather[i].Speed = MyRandom.Next(1, 3);
-            Lists.Weather[i].y = -32;
-            Lists.Weather[i].x = MyRandom.Next(-32, Editor_Maps.Form.picMap.Width);
-            Lists.Weather[i].Start = Lists.Weather[i].x;
-
-            if (MyRandom.Next(2) == 0)
-                Lists.Weather[i].Back = false;
-            else
-                Lists.Weather[i].Back = true;
+            Lists.Weather[i].Y = -32;
+            Lists.Weather[i].X = MyRandom.Next(-32, EditorMaps.Form.picMap.Width);
+            Lists.Weather[i].Start = Lists.Weather[i].X;
+            Lists.Weather[i].Back = MyRandom.Next(2) != 0;
         }
 
-        private static void Weather_Snow_Movement(int i, bool Move = true)
+        private static void Weather_Snow_Movement(int i, bool move = true)
         {
-            int Difference = MyRandom.Next(0, Map.Snow_Movement / 3);
-            int x1 = Lists.Weather[i].Start + Map.Snow_Movement + Difference;
-            int x2 = Lists.Weather[i].Start - Map.Snow_Movement - Difference;
+            int difference = MyRandom.Next(0, Map.SnowMovement / 3);
+            int x1 = Lists.Weather[i].Start + Map.SnowMovement + difference;
+            int x2 = Lists.Weather[i].Start - Map.SnowMovement - difference;
 
             // Faz com que a partícula volte
-            if (x1 <= Lists.Weather[i].x)
+            if (x1 <= Lists.Weather[i].X)
                 Lists.Weather[i].Back = true;
-            else if (x2 >= Lists.Weather[i].x)
+            else if (x2 >= Lists.Weather[i].X)
                 Lists.Weather[i].Back = false;
 
             // Movimenta a partícula
-            Lists.Weather[i].y += Lists.Weather[i].Speed;
+            Lists.Weather[i].Y += Lists.Weather[i].Speed;
 
-            if (Move)
+            if (move)
                 if (Lists.Weather[i].Back)
-                    Lists.Weather[i].x -= 1;
+                    Lists.Weather[i].X -= 1;
                 else
-                    Lists.Weather[i].x += 1;
+                    Lists.Weather[i].X += 1;
         }
 
         private static void Editor_Maps_Music()
         {
             // Apenas se necessário
-            if (Editor_Maps.Form == null || !Editor_Maps.Form.Visible) goto stop;
-            if (!Editor_Maps.Form.butAudio.Checked) goto stop;
-            if (!Editor_Maps.Form.butVisualization.Checked) goto stop;
-            if (Editor_Maps.Form.Selected.Music == 0) goto stop;
+            if (EditorMaps.Form == null || !EditorMaps.Form.Visible) goto stop;
+            if (!EditorMaps.Form.butAudio.Checked) goto stop;
+            if (!EditorMaps.Form.butVisualization.Checked) goto stop;
+            if (EditorMaps.Form.Selected.Music == 0) goto stop;
 
             // Inicia a música
-            if (Audio.Music.Device == null || Audio.Music.Current != Editor_Maps.Form.Selected.Music)
-                Audio.Music.Play(Editor_Maps.Form.Selected.Music);
+            if (Music.Device == null || Music.Current != (Musics)EditorMaps.Form.Selected.Music)
+                Music.Play((Musics)EditorMaps.Form.Selected.Music);
             return;
         stop:
             // Para a música
-            if (Audio.Music.Device != null) Audio.Music.Stop();
+            if (Music.Device != null) Music.Stop();
         }
     }
 }

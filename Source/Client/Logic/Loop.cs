@@ -1,26 +1,29 @@
-﻿using Entities;
-using Interface;
-using System;
+﻿using System;
+using System.Threading;
 using System.Windows.Forms;
+using CryBits.Client.Entities;
+using CryBits.Client.Media;
+using CryBits.Client.Network;
+using CryBits.Client.UI;
 
-namespace Logic
+namespace CryBits.Client.Logic
 {
-    class Loop
+    internal static class Loop
     {
         // Contagens
-        public static int TextBox_Timer = 0;
-        public static int Chat_Timer = 0;
+        public static int TextBoxTimer;
+        public static int ChatTimer = 0;
 
         public static void Init()
         {
-            int Timer_1000 = 0;
-            int Timer_30 = 0;
-            short FPS = 0;
+            int timer1000 = 0;
+            int timer30 = 0;
+            short fps = 0;
 
             while (Program.Working)
             {
                 // Manuseia os dados recebidos
-                Network.Socket.HandleData();
+                Socket.HandleData();
 
                 // Apresenta os gráficos à tela
                 Graphics.Present();
@@ -31,42 +34,42 @@ namespace Logic
                 // Eventos
                 TextBox();
 
-                if (Windows.Current == Windows.Types.Game)
+                if (Windows.Current == WindowsTypes.Game)
                 {
                     Mapper.Logic();
-                    if (Timer_30 < Environment.TickCount)
+                    if (timer30 < Environment.TickCount)
                     {
                         // Lógica dos jogadores
                         for (byte i = 0; i < Player.List.Count; i++)
                             Player.List[i].Logic();
 
-                        // Lógica dos NPCs
+                        // Lógica dos NPCBehaviour
                         for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
                             if (Mapper.Current.NPC[i].Data != null)
                                 Mapper.Current.NPC[i].Logic();
 
                         // Reinicia a contagem
-                        Timer_30 = Environment.TickCount + 30;
+                        timer30 = Environment.TickCount + 30;
                     }
 
                     // Verifica se é necessário mostrar o painel de informações
-                    Panels.CheckInformations();
+                    Panels.CheckInformation();
                 }
 
                 // Faz com que a aplicação se mantenha estável
                 Application.DoEvents();
-                System.Threading.Thread.Sleep(1);
+                Thread.Sleep(1);
 
                 // Cálcula o FPS
-                if (Timer_1000 < Environment.TickCount)
+                if (timer1000 < Environment.TickCount)
                 {
-                    Network.Send.Latency();
-                    Game.FPS = FPS;
-                    FPS = 0;
-                    Timer_1000 = Environment.TickCount + 1000;
+                    Send.Latency();
+                    Game.FPS = fps;
+                    fps = 0;
+                    timer1000 = Environment.TickCount + 1000;
                 }
                 else
-                    FPS += 1;
+                    fps += 1;
             }
 
             // Fecha o jogo
@@ -76,9 +79,9 @@ namespace Logic
         private static void TextBox()
         {
             // Contagem para a renderização da referência do último texto
-            if (TextBox_Timer < Environment.TickCount)
+            if (TextBoxTimer < Environment.TickCount)
             {
-                TextBox_Timer = Environment.TickCount + 500;
+                TextBoxTimer = Environment.TickCount + 500;
                 TextBoxes.Signal = !TextBoxes.Signal;
 
                 // Se necessário foca o digitalizador de novo

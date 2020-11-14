@@ -1,8 +1,6 @@
-﻿using Logic;
-
-namespace Entities
+﻿namespace CryBits.Server.Entities
 {
-    abstract class Character
+    internal abstract class Character
     {
         // Dados básicos de todos personagens
         public TempMap Map;

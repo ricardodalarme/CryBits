@@ -1,57 +1,47 @@
-﻿using Entities;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using CryBits.Editors.Entities;
+using CryBits.Entities;
 
-static class Lists
+namespace CryBits.Editors.Library
 {
-    // Armazenamento de dados
-    public static Structures.Options Options = new Structures.Options();
-    public static Structures.Server_Data Server_Data = new Structures.Server_Data();
-    public static Map_Weather_Particle[] Weather;
-    public static Tile[] Tile;
-    public static TreeNode Tool;
-
-
-    // Estrutura dos itens em gerais
-    public class Structures
+    internal static class Lists
     {
-        [Serializable]
-        public struct Options
-        {
-            public bool Pre_Map_Grid;
-            public bool Pre_Map_View;
-            public bool Pre_Map_Audio;
-            public string Username;
-        }
+        // Armazenamento de dados
+        public static Structures.Options Options = new Structures.Options();
+        public static Structures.ServerData ServerData = new Structures.ServerData();
+        public static MapWeatherParticle[] Weather;
+        public static Tile[] Tile;
+        public static TreeNode Tool;
 
-        public struct Server_Data
-        {
-            public string Game_Name;
-            public string Welcome;
-            public short Port;
-            public byte Max_Players;
-            public byte Max_Characters;
-            public byte Max_Party_Members;
-            public byte Max_Map_Items;
-            public byte Num_Points;
-            public byte Max_Name_Length;
-            public byte Min_Name_Length;
-            public byte Max_Password_Length;
-            public byte Min_Password_Length;
-        }
 
-        public class Inventory
+        // Estrutura dos itens em gerais
+        public static class Structures
         {
-            public Item Item;
-            public short Amount;
-
-            public Inventory(Item Item, short Amount)
+            [Serializable]
+            public struct Options
             {
-                this.Item = Item;
-                this.Amount = Amount;
+                public bool PreMapGrid;
+                public bool PreMapView;
+                public bool PreMapAudio;
+                public string Username;
             }
-            public override string ToString() => Item.Name + " - " + Amount + "x";
-        }
 
+            public struct ServerData
+            {
+                public string GameName;
+                public string Welcome;
+                public short Port;
+                public byte MaxPlayers;
+                public byte MaxCharacters;
+                public byte MaxPartyMembers;
+                public byte MaxMapItems;
+                public byte NumPoints;
+                public byte MaxNameLength;
+                public byte MinNameLength;
+                public byte MaxPasswordLength;
+                public byte MinPasswordLength;
+            }
+        }
     }
 }

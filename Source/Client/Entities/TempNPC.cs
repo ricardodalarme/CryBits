@@ -1,8 +1,9 @@
 ﻿using System;
+using CryBits.Entities;
 
-namespace Entities
+namespace CryBits.Client.Entities
 {
-    class TempNPC : Character
+    internal class TempNPC : Character
     {
         // Indice
         public NPC Data;

@@ -1,61 +1,58 @@
-﻿using Entities;
+﻿using CryBits.Server.Entities;
 using Lidgren.Network;
 
-namespace Network
+namespace CryBits.Server.Network
 {
-    static class Socket
+    internal static class Socket
     {
         // Protocolo do controle de transmissão
         public static NetServer Device;
 
         public static void Init()
         {
-            NetPeerConfiguration Config;
-
             // Define algumas configurações da rede
-            Config = new NetPeerConfiguration("CryBits")
+            NetPeerConfiguration config = new NetPeerConfiguration("CryBits")
             {
                 Port = Logic.Utils.Port,
                 AcceptIncomingConnections = true,
-                MaximumConnections = Logic.Utils.Max_Players
+                MaximumConnections = Logic.Utils.MaxPlayers
             };
 
             // Cria o dispositivo com as devidas configurações
-            Device = new NetServer(Config);
+            Device = new NetServer(config);
             Device.Start();
         }
 
         public static void HandleData()
         {
-            NetIncomingMessage Data;
-            Account Account;
+            NetIncomingMessage data;
 
             // Lê e direciona todos os dados recebidos
-            while ((Data = Device.ReadMessage()) != null)
+            while ((data = Device.ReadMessage()) != null)
             {
                 // Jogador que está enviando os dados
-                Account = Account.List.Find(x => x.Connection == Data.SenderConnection);
+                Account account = Account.List.Find(x => x.Connection == data.SenderConnection);
 
-                switch (Data.MessageType)
+                switch (data.MessageType)
                 {
                     case NetIncomingMessageType.StatusChanged:
-                        NetConnectionStatus Status = (NetConnectionStatus)Data.ReadByte();
+                        NetConnectionStatus status = (NetConnectionStatus)data.ReadByte();
 
                         // Nova conexão - Conecta o jogador ao jogo
-                        if (Status == NetConnectionStatus.Connected)
-                            Account.List.Add(new Account(Data.SenderConnection));
+                        if (status == NetConnectionStatus.Connected)
+                            Account.List.Add(new Account(data.SenderConnection));
                         // Conexão perdida, disconecta o jogador do jogo
-                        else if (Status == NetConnectionStatus.Disconnected)
-                            Account.Leave();
+                        else if (status == NetConnectionStatus.Disconnected)
+                            account.Leave();
 
                         break;
                     // Recebe e manuseia os dados recebidos
                     case NetIncomingMessageType.Data:
-                        Receive.Handle(Account, Data);
+                        Receive.Handle(account, data);
                         break;
                 }
 
-                Device.Recycle(Data);
+                Device.Recycle(data);
             }
         }
     }

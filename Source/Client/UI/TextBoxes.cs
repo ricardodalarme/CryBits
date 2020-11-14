@@ -1,40 +1,41 @@
-﻿using Logic;
-using SFML.Window;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static Logic.Utils;
+using CryBits.Client.Logic;
+using SFML.Window;
+using static CryBits.Client.Logic.Utils;
+using Graphics = CryBits.Client.Media.Graphics;
 
-namespace Interface
+namespace CryBits.Client.UI
 {
-    class TextBoxes : Tools.Structure
+    internal class TextBoxes : Tools.Structure
     {
         // Armazenamento de dados da ferramenta
         public static Dictionary<string, TextBoxes> List = new Dictionary<string, TextBoxes>();
 
         // Digitalizador focado
-        public static Tools.Order_Structure Focused;
+        public static Tools.OrderStructure Focused;
         public static bool Signal;
 
         // Dados
         public string Text;
-        public short Lenght;
+        public short Length;
         public short Width;
         public bool Password;
 
         // Eventos
-        public void MouseUp(Tools.Order_Structure Order)
+        public void MouseUp(Tools.OrderStructure order)
         {
             // Somente se necessário
-            if (!IsAbove(new Rectangle(Position, new Size(Width, Graphics.TSize(Graphics.Tex_TextBox).Height)))) return;
+            if (!IsAbove(new Rectangle(Position, new Size(Width, Graphics.Size(Graphics.TexTextBox).Height)))) return;
 
             // Define o foco no digitalizador
-            Focused = Order;
+            Focused = order;
 
             // Altera o foco do digitalizador
-            if (((TextBoxes)Order.Data).Name.Equals("Chat"))
+            if (((TextBoxes)order.Data).Name.Equals("Chat"))
             {
-                Loop.Chat_Timer = Environment.TickCount + Chat.Sleep_Timer;
+                Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
                 Panels.List["Chat"].Visible = true;
             }
         }
@@ -53,14 +54,14 @@ namespace Interface
                     }
 
                     // Não adicionar se já estiver no máximo de caracteres
-                    if (Lenght > 0)
-                        if (Text.Length >= Lenght)
+                    if (Length > 0)
+                        if (Text.Length >= Length)
                             return;
                 }
 
                 // Adiciona o caracter à caixa de texto
-                char Char = Convert.ToChar(e.Unicode);
-                if (Char > 31 && Char < 128) Text += e.Unicode;
+                char @char = Convert.ToChar(e.Unicode);
+                if (@char > 31 && @char < 128) Text += e.Unicode;
             }
         }
 
@@ -70,22 +71,22 @@ namespace Interface
             if (Focused != null && Focused.Viewable) return;
 
             // Percorre toda a árvore de ordem para executar o comando
-            Stack<List<Tools.Order_Structure>> Stack = new Stack<List<Tools.Order_Structure>>();
-            Stack.Push(Tools.Order);
-            while (Stack.Count != 0)
+            Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+            stack.Push(Tools.Order);
+            while (stack.Count != 0)
             {
-                List<Tools.Order_Structure> Top = Stack.Pop();
+                List<Tools.OrderStructure> top = stack.Pop();
 
-                for (byte i = 0; i < Top.Count; i++)
-                    if (Top[i].Data.Visible)
+                for (byte i = 0; i < top.Count; i++)
+                    if (top[i].Data.Visible)
                     {
                         // Altera o digitalizador focado para o primeiro visível
-                        if (Top[i].Data is TextBoxes && !Tools.Order[i].Data.Name.Equals("Chat"))
+                        if (top[i].Data is TextBoxes && !Tools.Order[i].Data.Name.Equals("Chat"))
                         {
-                            Focused = Top[i];
+                            Focused = top[i];
                             return;
                         }
-                        Stack.Push(Top[i].Nodes);
+                        stack.Push(top[i].Nodes);
                     }
             }
             Focused = null;
@@ -93,21 +94,21 @@ namespace Interface
 
         public static void ChangeFocus()
         {
-            List<Tools.Order_Structure> Parent;
-            if (Focused.Parent != null) Parent = Focused.Parent.Nodes;
-            else Parent = Tools.Order;
-            int Index = Parent.IndexOf(Focused), Temp = Index + 1;
+            List<Tools.OrderStructure> parent;
+            if (Focused.Parent != null) parent = Focused.Parent.Nodes;
+            else parent = Tools.Order;
+            int index = parent.IndexOf(Focused), temp = index + 1;
 
             // Altera o digitalizador focado para o próximo
-            while (Temp != Index)
+            while (temp != index)
             {
-                if (Temp == Parent.Count) Temp = 0;
-                if (Parent[Temp].Viewable && Parent[Temp].Data is TextBoxes)
+                if (temp == parent.Count) temp = 0;
+                if (parent[temp].Viewable && parent[temp].Data is TextBoxes)
                 {
-                    Focused = Parent[Temp];
+                    Focused = parent[temp];
                     return;
                 }
-                Temp++;
+                temp++;
             }
         }
     }

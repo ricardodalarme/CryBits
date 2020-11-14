@@ -1,13 +1,16 @@
-﻿using Library;
-using Logic;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static Logic.Utils;
-using static Logic.Game;
+using CryBits.Client.Library;
+using CryBits.Client.Logic;
+using CryBits.Client.Media.Audio;
+using static CryBits.Client.Logic.Game;
+using static CryBits.Client.Logic.Utils;
+using Graphics = CryBits.Client.Media.Graphics;
 
-namespace Interface
+namespace CryBits.Client.UI
 {
-    class CheckBoxes : Tools.Structure
+    internal class CheckBoxes : Tools.Structure
     {
         // Armazenamento dos dados da ferramenta
         public static Dictionary<string, CheckBoxes> List = new Dictionary<string, CheckBoxes>();
@@ -23,24 +26,24 @@ namespace Interface
         public void MouseUp()
         {
             // Tamanho do marcador
-            Size Texture_Size = Graphics.TSize(Graphics.Tex_CheckBox);
-            Size Box = new Size(Texture_Size.Width / 2 + MeasureString(Text) + Margin, Texture_Size.Height);
+            Size textureSize = Graphics.Size(Graphics.TexCheckBox);
+            Size box = new Size(textureSize.Width / 2 + MeasureString(Text) + Margin, textureSize.Height);
 
             // Somente se estiver sobrepondo a ferramenta
-            if (!IsAbove(new Rectangle(Position, Box))) return;
+            if (!IsAbove(new Rectangle(Position, box))) return;
 
             // Altera o estado do marcador
             Checked = !Checked;
 
             // Executa o evento
             Execute(Name);
-            Audio.Sound.Play(Audio.Sounds.Click);
+            Sound.Play(CryBits.Sounds.Click);
         }
 
-        private static void Execute(string Name)
+        private static void Execute(string name)
         {
             // Executa o evento do marcador
-            switch (Name)
+            switch (name)
             {
                 case "Sounds": Sounds(); break;
                 case "Musics": Musics(); break;
@@ -61,7 +64,7 @@ namespace Interface
         {
             // Salva os dados
             Option.Sounds = !Option.Sounds;
-            if (!Option.Sounds) Audio.Sound.Stop_All();
+            if (!Option.Sounds) Sound.Stop_All();
             Write.Options();
         }
 
@@ -73,11 +76,11 @@ namespace Interface
 
             // Para ou reproduz a música dependendo do estado do marcador
             if (!Option.Musics)
-                Audio.Music.Stop();
-            else if (Windows.Current == Windows.Types.Menu)
-                Audio.Music.Play(Audio.Musics.Menu);
-            else if (Windows.Current == Windows.Types.Game)
-                Audio.Music.Play((Audio.Musics)Mapper.Current.Data.Music);
+                Music.Stop();
+            else if (Windows.Current == WindowsTypes.Menu)
+                Music.Play(CryBits.Musics.Menu);
+            else if (Windows.Current == WindowsTypes.Game)
+                Music.Play((Musics)Mapper.Current.Data.Music);
         }
 
         private static void SaveUsername()
@@ -91,14 +94,14 @@ namespace Interface
         {
             // Altera o estado do marcador de outro gênero
             List["GenderFemale"].Checked = !List["GenderMale"].Checked;
-            Panels.CreateCharacter_Tex = 0;
+            Panels.CreateCharacterTex = 0;
         }
 
         private static void GenreFemale()
         {
             // Altera o estado do marcador de outro gênero
             List["GenderMale"].Checked = !List["GenderFemale"].Checked;
-            Panels.CreateCharacter_Tex = 0;
+            Panels.CreateCharacterTex = 0;
         }
 
         private static void Chat()
@@ -106,7 +109,7 @@ namespace Interface
             // Salva os dado
             Option.Chat = List["Options_Chat"].Checked;
             Write.Options();
-            if (Option.Chat) Loop.Chat_Timer = System.Environment.TickCount + Interface.Chat.Sleep_Timer;
+            if (Option.Chat) Loop.ChatTimer = Environment.TickCount + UI.Chat.SleepTimer;
         }
 
         private static void FPS()

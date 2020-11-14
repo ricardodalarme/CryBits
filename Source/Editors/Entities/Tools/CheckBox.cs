@@ -1,6 +1,6 @@
-﻿namespace Entities
+﻿namespace CryBits.Editors.Entities.Tools
 {
-    class CheckBox : Tool
+    internal class CheckBox : Tool
     {
         public string Text { get; set; }
         public bool Checked { get; set; }

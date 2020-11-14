@@ -1,8 +1,8 @@
-﻿namespace Entities
+﻿namespace CryBits.Editors.Entities.Tools
 {
-    class Button : Tool
+    internal class Button : Tool
     {
-        public byte Texture_Num { get; set; }
+        public byte TextureNum { get; set; }
 
         public override string ToString() => "[Button] " + Name;
     }

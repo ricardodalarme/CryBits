@@ -1,64 +1,65 @@
-﻿using Lidgren.Network;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using CryBits.Client.Entities;
+using CryBits.Client.UI;
+using Lidgren.Network;
 
-namespace Network
+namespace CryBits.Client.Network
 {
-    static class Socket
+    internal static class Socket
     {
         // Protocolo do controle de transmissão
         public static NetClient Device;
 
         // Manuseamento dos dados
-        private static NetIncomingMessage Data;
+        private static NetIncomingMessage _data;
 
         // Dados para a conexão com o servidor
-        public const string IP = "localhost";
+        public const string Ip = "localhost";
         public const short Port = 7001;
 
         // Latência
         public static int Latency;
-        public static int Latency_Send;
+        public static int LatencySend;
 
         public static void Init()
         {
-            NetPeerConfiguration Config = new NetPeerConfiguration("CryBits");
+            NetPeerConfiguration config = new NetPeerConfiguration("CryBits");
 
             // Cria o dispositivo com as devidas configurações
-            Device = new NetClient(Config);
+            Device = new NetClient(config);
             Device.Start();
         }
 
         public static void Disconnect()
         {
             // Acaba com a conexão
-            if (Device != null)
-                Device.Disconnect(string.Empty);
+            Device?.Disconnect(string.Empty);
         }
 
         public static void HandleData()
         {
             // Lê e direciona todos os dados recebidos
-            while ((Data = Device.ReadMessage()) != null)
+            while ((_data = Device.ReadMessage()) != null)
             {
-                switch (Data.MessageType)
+                switch (_data.MessageType)
                 {
                     // Recebe e manuseia os dados
                     case NetIncomingMessageType.Data:
-                        Receive.Handle(Data);
+                        Receive.Handle(_data);
                         break;
                     // Desconectar o jogador caso o servidor seja desligado
                     case NetIncomingMessageType.StatusChanged:
-                        if ((NetConnectionStatus)Data.ReadByte() == NetConnectionStatus.Disconnected)
+                        if ((NetConnectionStatus)_data.ReadByte() == NetConnectionStatus.Disconnected)
                         {
                             // Apaga os dados e volta ao menu
-                            if (Entities.Player.Me != null) Entities.Player.Me.Leave();
-                            Interface.Windows.OpenMenu();
+                            if (Player.Me != null) Player.Me.Leave();
+                            Windows.OpenMenu();
                         }
                         break;
                 }
 
-                Device.Recycle(Data);
+                Device.Recycle(_data);
             }
         }
 
@@ -71,11 +72,11 @@ namespace Network
             if (IsConnected()) return true;
 
             // Tenta se conectar
-            Device.Connect(IP, Port);
+            Device.Connect(Ip, Port);
 
             // Espere até que o jogador se conecte
-            int Wait_Timer = Environment.TickCount;
-            while (!IsConnected() && Environment.TickCount <= Wait_Timer + 1000)
+            int waitTimer = Environment.TickCount;
+            while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)
                 HandleData();
 
             // Retorna uma mensagem caso não conseguir se conectar

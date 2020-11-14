@@ -1,12 +1,15 @@
-﻿using Editors;
-using Library;
-using Network;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using CryBits.Editors.Forms;
+using CryBits.Editors.Library;
+using CryBits.Editors.Logic;
+using CryBits.Editors.Media;
+using CryBits.Editors.Media.Audio;
+using CryBits.Editors.Network;
 
-namespace Logic
+namespace CryBits.Editors
 {
-    static class Program
+    internal static class Program
     {
         // Usado para manter a aplicação aberta
         public static bool Working = true;
@@ -15,7 +18,7 @@ namespace Logic
         public static short FPS;
 
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             // Verifica se todos os diretórios existem, se não existirem então criá-os
             Directories.Create();
@@ -25,7 +28,7 @@ namespace Logic
 
             // Inicializa todos os dispositivos
             Socket.Init();
-            Audio.Sound.Load();
+            Sound.Load();
             Graphics.Init();
 
             // Abre a janela
@@ -40,13 +43,13 @@ namespace Logic
 
         public static void Close()
         {
-            int Wait_Timer = Environment.TickCount;
+            int waitTimer = Environment.TickCount;
 
             // Desconecta da rede
             Socket.Disconnect();
 
             // Espera até que o jogador seja desconectado
-            while (Socket.IsConnected() && Environment.TickCount <= Wait_Timer + 1000)
+            while (Socket.IsConnected() && Environment.TickCount <= waitTimer + 1000)
                 Application.DoEvents();
 
             // Fecha a aplicação

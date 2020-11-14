@@ -1,15 +1,15 @@
-﻿using Entities;
-using Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using static Logic.Utils;
+using CryBits.Entities;
+using CryBits.Server.Entities;
+using static CryBits.Server.Logic.Utils;
 
-namespace Library
+namespace CryBits.Server.Library
 {
-    static class Read
+    internal static class Read
     {
         public static void All()
         {
@@ -20,7 +20,7 @@ namespace Library
             Maps();
             Console.WriteLine("Loading classes.");
             Classes();
-            Console.WriteLine("Loading NPCs.");
+            Console.WriteLine("Loading NPCBehaviour.");
             NPCs();
             Console.WriteLine("Loading items.");
             Items();
@@ -38,90 +38,89 @@ namespace Library
             }
 
             // Carrega as configurações
-            using (var Data = new BinaryReader(Directories.Settings.OpenRead()))
+            using (var data = new BinaryReader(Directories.Settings.OpenRead()))
             {
-                Game_Name = Data.ReadString();
-                Welcome_Message = Data.ReadString();
-                Port = Data.ReadInt16();
-                Max_Players = Data.ReadByte();
-                Max_Characters = Data.ReadByte();
-                Max_Party_Members = Data.ReadByte();
-                Max_Map_Items = Data.ReadByte();
-                Num_Points = Data.ReadByte();
-                Max_Name_Length = Data.ReadByte();
-                Min_Name_Length = Data.ReadByte();
-                Max_Password_Length = Data.ReadByte();
-                Min_Password_Length = Data.ReadByte();
+                GameName = data.ReadString();
+                WelcomeMessage = data.ReadString();
+                Port = data.ReadInt16();
+                MaxPlayers = data.ReadByte();
+                MaxCharacters = data.ReadByte();
+                MaxPartyMembers = data.ReadByte();
+                MaxMapItems = data.ReadByte();
+                NumPoints = data.ReadByte();
+                MaxNameLength = data.ReadByte();
+                MinNameLength = data.ReadByte();
+                MaxPasswordLength = data.ReadByte();
+                MinPasswordLength = data.ReadByte();
             }
         }
 
-        public static void Account(Account Account, string Name)
+        public static void Account(Account account, string name)
         {
-            var File = new FileInfo(Directories.Accounts.FullName + Name + "\\Data" + Directories.Format);
+            var file = new FileInfo(Directories.Accounts.FullName + name + "\\Data" + Directories.Format);
 
             // Carrega os dados da conta
-            using (var Data = new BinaryReader(File.OpenRead()))
+            using (var data = new BinaryReader(file.OpenRead()))
             {
-                Account.User = Data.ReadString();
-                Account.Password = Data.ReadString();
-                Account.Acess = (Accesses)Data.ReadByte();
+                account.User = data.ReadString();
+                account.Password = data.ReadString();
+                account.Access = (Accesses)data.ReadByte();
             }
         }
 
-        public static void Characters(Account Account)
+        public static void Characters(Account account)
         {
-            DirectoryInfo Directory = new DirectoryInfo(Directories.Accounts.FullName + Account.User.ToString() + "\\Characters");
+            DirectoryInfo directory = new DirectoryInfo(Directories.Accounts.FullName + account.User + "\\Characters");
 
             // Previne erros
-            if (!Directory.Exists) Directory.Create();
+            if (!directory.Exists) directory.Create();
 
             // Lê todos os personagens
-            FileInfo[] File = Directory.GetFiles();
-            Account.Characters = new List<Account.TempCharacter>();
-            for (byte i = 0; i < File.Length; i++)
+            FileInfo[] file = directory.GetFiles();
+            account.Characters = new List<Account.TempCharacter>();
+            for (byte i = 0; i < file.Length; i++)
                 // Cria um arquivo temporário
-                using (var Data = new BinaryReader(File[i].OpenRead()))
+                using (var data = new BinaryReader(file[i].OpenRead()))
                     // Carrega os dados e os adiciona à lista
-                    Account.Characters.Add(new Account.TempCharacter
+                    account.Characters.Add(new Account.TempCharacter
                     {
-                        Name = Data.ReadString(),
-                        Texture_Num = Data.ReadInt16(),
-                        Level = Data.ReadInt16()
+                        Name = data.ReadString(),
+                        TextureNum = data.ReadInt16(),
                     });
         }
 
-        public static void Character(Account Account, string Name)
+        public static void Character(Account account, string name)
         {
-            FileInfo File = new FileInfo(Directories.Accounts.FullName + Account.User + "\\Characters\\" + Name + Directories.Format);
+            FileInfo file = new FileInfo(Directories.Accounts.FullName + account.User + "\\Characters\\" + name + Directories.Format);
 
             // Verifica se o diretório existe
-            if (!File.Directory.Exists) return;
+            if (!file.Directory.Exists) return;
 
             // Cria um arquivo temporário
-            using (var Data = new BinaryReader(File.OpenRead()))
+            using (var data = new BinaryReader(file.OpenRead()))
             {
                 // Carrega os dados e os adiciona ao cache
-                Account.Character = new Player(Account);
-                Account.Character.Name = Data.ReadString();
-                Account.Character.Texture_Num = Data.ReadInt16();
-                Account.Character.Level = Data.ReadInt16();
-                Account.Character.Class = Class.Get(new Guid(Data.ReadString()));
-                Account.Character.Genre = Data.ReadBoolean();
-                Account.Character.Experience = Data.ReadInt32();
-                Account.Character.Points = Data.ReadByte();
-                Account.Character.Map = TempMap.Get(new Guid(Data.ReadString()));
-                Account.Character.X = Data.ReadByte();
-                Account.Character.Y = Data.ReadByte();
-                Account.Character.Direction = (Directions)Data.ReadByte();
-                for (byte n = 0; n < (byte)Vitals.Count; n++) Account.Character.Vital[n] = Data.ReadInt16();
-                for (byte n = 0; n < (byte)Attributes.Count; n++) Account.Character.Attribute[n] = Data.ReadInt16();
-                for (byte n = 1; n <= Max_Inventory; n++)
+                account.Character = new Player(account);
+                account.Character.Name = data.ReadString();
+                account.Character.TextureNum = data.ReadInt16();
+                account.Character.Level = data.ReadInt16();
+                account.Character.Class = Class.Get(new Guid(data.ReadString()));
+                account.Character.Genre = data.ReadBoolean();
+                account.Character.Experience = data.ReadInt32();
+                account.Character.Points = data.ReadByte();
+                account.Character.Map = TempMap.Get(new Guid(data.ReadString()));
+                account.Character.X = data.ReadByte();
+                account.Character.Y = data.ReadByte();
+                account.Character.Direction = (Directions)data.ReadByte();
+                for (byte n = 0; n < (byte)Vitals.Count; n++) account.Character.Vital[n] = data.ReadInt16();
+                for (byte n = 0; n < (byte)Attributes.Count; n++) account.Character.Attribute[n] = data.ReadInt16();
+                for (byte n = 1; n <= MaxInventory; n++)
                 {
-                    Account.Character.Inventory[n].Item = Item.Get(new Guid(Data.ReadString()));
-                    Account.Character.Inventory[n].Amount = Data.ReadInt16();
+                    account.Character.Inventory[n].Item = Item.Get(new Guid(data.ReadString()));
+                    account.Character.Inventory[n].Amount = data.ReadInt16();
                 }
-                for (byte n = 0; n < (byte)Equipments.Count; n++) Account.Character.Equipment[n] = Item.Get(new Guid(Data.ReadString()));
-                for (byte n = 0; n < Max_Hotbar; n++) Account.Character.Hotbar[n] = new Hotbar((Hotbars)Data.ReadByte(), Data.ReadByte());
+                for (byte n = 0; n < (byte)Equipments.Count; n++) account.Character.Equipment[n] = Item.Get(new Guid(data.ReadString()));
+                for (byte n = 0; n < MaxHotbar; n++) account.Character.Hotbar[n] = new Hotbar((Hotbars)data.ReadByte(), data.ReadByte());
             }
         }
 
@@ -135,28 +134,28 @@ namespace Library
             }
 
             // Retorna o nome de todos os personagens registrados
-            using (var Data = new StreamReader(Directories.Characters.FullName))
-                return Data.ReadToEnd();
+            using (var data = new StreamReader(Directories.Characters.FullName))
+                return data.ReadToEnd();
         }
 
         private static void Classes()
         {
             Class.List = new Dictionary<Guid, Class>();
-            FileInfo[] File = Directories.Classes.GetFiles();
+            FileInfo[] file = Directories.Classes.GetFiles();
 
             // Lê os dados
-            if (File.Length > 0)
-                for (byte i = 0; i < File.Length; i++)
-                    using (var Stream = File[i].OpenRead())
-                        Class.List.Add(new Guid(File[i].Name.Remove(36)), (Class)new BinaryFormatter().Deserialize(Stream));
+            if (file.Length > 0)
+                for (byte i = 0; i < file.Length; i++)
+                    using (var stream = file[i].OpenRead())
+                        Class.List.Add(new Guid(file[i].Name.Remove(36)), (Class)new BinaryFormatter().Deserialize(stream));
             // Cria uma classe caso não houver nenhuma
             else
             {
-                Class Class = new Class(Guid.NewGuid());
-                Class.Name = "New class";
-                Class.Spawn_Map = Map.List.ElementAt(0).Value;
-                Class.List.Add(Class.ID, Class);
-                Write.Class(Class);
+                Class @class = new Class();
+                @class.Name = "New class";
+                @class.SpawnMap = Map.List.ElementAt(0).Value;
+                Class.List.Add(@class.ID, @class);
+                Write.Class(@class);
             }
         }
 
@@ -164,38 +163,39 @@ namespace Library
         {
             // Lê os dados
             Item.List = new Dictionary<Guid, Item>();
-            FileInfo[] File = Directories.Items.GetFiles();
-            for (byte i = 0; i < File.Length; i++)
-                using (var Stream = File[i].OpenRead())
-                    Item.List.Add(new Guid(File[i].Name.Remove(36)), (Item)new BinaryFormatter().Deserialize(Stream));
+            FileInfo[] file = Directories.Items.GetFiles();
+            for (byte i = 0; i < file.Length; i++)
+                using (var stream = file[i].OpenRead())
+                    Item.List.Add(new Guid(file[i].Name.Remove(36)), (Item)new BinaryFormatter().Deserialize(stream));
         }
 
         private static void Maps()
         {
             // Lê os dados
             Map.List = new Dictionary<Guid, Map>();
-            FileInfo[] File = Directories.Maps.GetFiles();
+            FileInfo[] file = Directories.Maps.GetFiles();
 
             // Lê os dados
-            if (File.Length > 0)
-                for (byte i = 0; i < File.Length; i++)
-                    using (var Stream = File[i].OpenRead())
-                        Map.List.Add(new Guid(File[i].Name.Remove(36)), (Map)new BinaryFormatter().Deserialize(Stream));
+            if (file.Length > 0)
+                for (byte i = 0; i < file.Length; i++)
+                    using (var stream = file[i].OpenRead())
+                        Map.List.Add(new Guid(file[i].Name.Remove(36)), (Map)new BinaryFormatter().Deserialize(stream));
             // Cria um mapa novo caso não houver nenhuma
             else
             {
                 // Cria um mapa novo
-                Map Map = new Map(Guid.NewGuid());
-                Map.List.Add(Map.ID, Map);
+                Map map = new Map();
+                Map.List.Add(map.ID, map);
 
                 // Dados do mapa
-                Map.Name = "New map";
-                Map.Layer = new Map_Layer[1];
-                Map.Layer[0] = new Map_Layer();
-                Map.Layer[0].Name = "Ground";
+                map.Name = "New map";
+                map.Layer.Add(new MapLayer
+                {
+                    Name = "Ground"
+                });
 
                 // Escreve os dados
-                Write.Map(Map);
+                Write.Map(map);
             }
         }
 
@@ -203,20 +203,20 @@ namespace Library
         {
             // Lê os dados
             NPC.List = new Dictionary<Guid, NPC>();
-            FileInfo[] File = Directories.NPCs.GetFiles();
-            for (byte i = 0; i < File.Length; i++)
-                using (var Stream = File[i].OpenRead())
-                    NPC.List.Add(new Guid(File[i].Name.Remove(36)), (NPC)new BinaryFormatter().Deserialize(Stream));
+            FileInfo[] file = Directories.NPCs.GetFiles();
+            for (byte i = 0; i < file.Length; i++)
+                using (var stream = file[i].OpenRead())
+                    NPC.List.Add(new Guid(file[i].Name.Remove(36)), (NPC)new BinaryFormatter().Deserialize(stream));
         }
 
         private static void Shops()
         {
             // Lê os dados
             Shop.List = new Dictionary<Guid, Shop>();
-            FileInfo[] File = Directories.Shops.GetFiles();
-            for (byte i = 0; i < File.Length; i++)
-                using (var Stream = File[i].OpenRead())
-                    Shop.List.Add(new Guid(File[i].Name.Remove(36)), (Shop)new BinaryFormatter().Deserialize(Stream));
+            FileInfo[] file = Directories.Shops.GetFiles();
+            for (byte i = 0; i < file.Length; i++)
+                using (var stream = file[i].OpenRead())
+                    Shop.List.Add(new Guid(file[i].Name.Remove(36)), (Shop)new BinaryFormatter().Deserialize(stream));
         }
     }
 }

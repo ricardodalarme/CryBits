@@ -1,23 +1,24 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using static Logic.Game;
+using CryBits.Entities;
+using static CryBits.Client.Logic.Game;
 
-namespace Library
+namespace CryBits.Client.Library
 {
-    static class Write
+    internal static class Write
     {
         public static void Options()
         {
             // Escreve os dados
-            using (var Stream = new FileInfo(Directories.Options.FullName).OpenWrite())
-                new BinaryFormatter().Serialize(Stream, Option);
+            using (var stream = new FileInfo(Directories.Options.FullName).OpenWrite())
+                new BinaryFormatter().Serialize(stream, Option);
         }
 
-        public static void Map(Entities.Map Map)
+        public static void Map(Map map)
         {
             // Escreve os dados
-            using (var Stream = new FileInfo(Directories.Maps_Data.FullName + Map.ID.ToString() + Directories.Format).OpenWrite())
-                new BinaryFormatter().Serialize(Stream, Map);
+            using (var stream = new FileInfo(Directories.MapsData.FullName + map.ID + Directories.Format).OpenWrite())
+                new BinaryFormatter().Serialize(stream, map);
         }
     }
 }

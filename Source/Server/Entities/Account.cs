@@ -1,33 +1,32 @@
-﻿using Lidgren.Network;
-using Logic;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Lidgren.Network;
 
-namespace Entities
+namespace CryBits.Server.Entities
 {
-    class Account
+    internal class Account
     {
         // Lista de dados
         public static List<Account> List = new List<Account>();
 
         // Dados básicos
         public NetConnection Connection;
-        public string User = string.Empty;
-        public string Password = string.Empty;
-        public Accesses Acess;
+        public string User { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+
+        public Accesses Access { get; set; }
         public bool InEditor;
         public Player Character;
         public List<TempCharacter> Characters = new List<TempCharacter>();
         public struct TempCharacter
         {
             public string Name;
-            public short Texture_Num;
-            public short Level;
+            public short TextureNum;
         }
 
         // Construtor
-        public Account(NetConnection Connection)
+        public Account(NetConnection connection)
         {
-            this.Connection = Connection;
+            Connection = connection;
         }
 
         // Verifica se o jogador está dentro do jogo
@@ -36,7 +35,7 @@ namespace Entities
         public void Leave()
         {
             // Limpa os dados do jogador
-            if (Character != null) Character.Leave();
+            Character?.Leave();
             List.Remove(this);
         }
     }
