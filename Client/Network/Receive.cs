@@ -199,7 +199,7 @@ namespace CryBits.Client.Network
             }
             for (byte n = 0; n < (byte)Attributes.Count; n++) player.Attribute[n] = data.ReadInt16();
             for (byte n = 0; n < (byte)Equipments.Count; n++) player.Equipment[n] = Item.Get(new Guid(data.ReadString()));
-            Mapper.Current = player.Map;
+            TempMap.Current = player.Map;
         }
 
         private static void Player_Position(NetIncomingMessage data)
@@ -287,12 +287,12 @@ namespace CryBits.Client.Network
                 {
                     Player victimData = Player.Get(victim);
                     victimData.Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
+                    TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
                 }
                 else if (victimType == (byte)Target.NPC)
                 {
-                    Mapper.Current.NPC[byte.Parse(victim)].Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), Mapper.Current.NPC[byte.Parse(victim)].X, Mapper.Current.NPC[byte.Parse(victim)].Y, 255));
+                    TempMap.Current.NPC[byte.Parse(victim)].Hurt = Environment.TickCount;
+                    TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), TempMap.Current.NPC[byte.Parse(victim)].X, TempMap.Current.NPC[byte.Parse(victim)].Y, 255));
                 }
         }
 
@@ -357,7 +357,7 @@ namespace CryBits.Client.Network
             Send.RequestMap(needed);
 
             // Reseta os sangues do mapa
-            Mapper.Current.Blood = new List<MapBlood>();
+            TempMap.Current.Blood = new List<MapBlood>();
         }
 
         private static void Map(NetIncomingMessage data)
@@ -373,21 +373,21 @@ namespace CryBits.Client.Network
                 TempMap.List.Add(id, new TempMap(map));
             }
 
-            Mapper.Current = TempMap.List[id];
+            TempMap.Current = TempMap.List[id];
 
             // Salva o mapa
             Write.Map(map);
 
             // Redimensiona as partículas do clima
-            Mapper.Weather_Update();
-            Mapper.Current.Data.Update();
+            TempMap.Current.UpdateWeatherType();
+            TempMap.Current.Data.Update();
         }
 
         private static void JoinMap()
         {
             // Se tiver, reproduz a música de fundo do mapa
-            if (Mapper.Current.Data.Music > 0)
-                Music.Play((Musics)Mapper.Current.Data.Music);
+            if (TempMap.Current.Data.Music > 0)
+                Music.Play((Musics)TempMap.Current.Data.Music);
             else
                 Music.Stop();
         }
@@ -415,16 +415,16 @@ namespace CryBits.Client.Network
         private static void Map_Items(NetIncomingMessage data)
         {
             // Quantidade
-            Mapper.Current.Item = new MapItems[data.ReadByte()];
+            TempMap.Current.Item = new MapItems[data.ReadByte()];
 
             // Lê os dados de todos
-            for (byte i = 0; i < Mapper.Current.Item.Length; i++)
+            for (byte i = 0; i < TempMap.Current.Item.Length; i++)
             {
                 // Geral
-                Mapper.Current.Item[i] = new MapItems();
-                Mapper.Current.Item[i].Item = Item.Get(new Guid(data.ReadString()));
-                Mapper.Current.Item[i].X = data.ReadByte();
-                Mapper.Current.Item[i].Y = data.ReadByte();
+                TempMap.Current.Item[i] = new MapItems();
+                TempMap.Current.Item[i].Item = Item.Get(new Guid(data.ReadString()));
+                TempMap.Current.Item[i].X = data.ReadByte();
+                TempMap.Current.Item[i].Y = data.ReadByte();
             }
         }
 
@@ -546,20 +546,20 @@ namespace CryBits.Client.Network
         private static void Map_NPCs(NetIncomingMessage data)
         {
             // Lê os dados
-            Mapper.Current.NPC = new TempNPC[data.ReadInt16()];
-            for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
+            TempMap.Current.NPC = new TempNPC[data.ReadInt16()];
+            for (byte i = 0; i < TempMap.Current.NPC.Length; i++)
             {
-                Mapper.Current.NPC[i] = new TempNPC();
-                Mapper.Current.NPC[i].X2 = 0;
-                Mapper.Current.NPC[i].Y2 = 0;
-                Mapper.Current.NPC[i].Data = NPC.Get(new Guid(data.ReadString()));
-                Mapper.Current.NPC[i].X = data.ReadByte();
-                Mapper.Current.NPC[i].Y = data.ReadByte();
-                Mapper.Current.NPC[i].Direction = (Directions)data.ReadByte();
+                TempMap.Current.NPC[i] = new TempNPC();
+                TempMap.Current.NPC[i].X2 = 0;
+                TempMap.Current.NPC[i].Y2 = 0;
+                TempMap.Current.NPC[i].Data = NPC.Get(new Guid(data.ReadString()));
+                TempMap.Current.NPC[i].X = data.ReadByte();
+                TempMap.Current.NPC[i].Y = data.ReadByte();
+                TempMap.Current.NPC[i].Direction = (Directions)data.ReadByte();
 
                 // Vitais
                 for (byte n = 0; n < (byte)Vitals.Count; n++)
-                    Mapper.Current.NPC[i].Vital[n] = data.ReadInt16();
+                    TempMap.Current.NPC[i].Vital[n] = data.ReadInt16();
             }
         }
 
@@ -567,36 +567,36 @@ namespace CryBits.Client.Network
         {
             // Lê os dados
             byte i = data.ReadByte();
-            Mapper.Current.NPC[i].X2 = 0;
-            Mapper.Current.NPC[i].Y2 = 0;
-            Mapper.Current.NPC[i].Data = NPC.Get(new Guid(data.ReadString()));
-            Mapper.Current.NPC[i].X = data.ReadByte();
-            Mapper.Current.NPC[i].Y = data.ReadByte();
-            Mapper.Current.NPC[i].Direction = (Directions)data.ReadByte();
-            Mapper.Current.NPC[i].Vital = new short[(byte)Vitals.Count];
-            for (byte n = 0; n < (byte)Vitals.Count; n++) Mapper.Current.NPC[i].Vital[n] = data.ReadInt16();
+            TempMap.Current.NPC[i].X2 = 0;
+            TempMap.Current.NPC[i].Y2 = 0;
+            TempMap.Current.NPC[i].Data = NPC.Get(new Guid(data.ReadString()));
+            TempMap.Current.NPC[i].X = data.ReadByte();
+            TempMap.Current.NPC[i].Y = data.ReadByte();
+            TempMap.Current.NPC[i].Direction = (Directions)data.ReadByte();
+            TempMap.Current.NPC[i].Vital = new short[(byte)Vitals.Count];
+            for (byte n = 0; n < (byte)Vitals.Count; n++) TempMap.Current.NPC[i].Vital[n] = data.ReadInt16();
         }
 
         private static void Map_NPC_Movement(NetIncomingMessage data)
         {
             // Lê os dados
             byte i = data.ReadByte();
-            byte x = Mapper.Current.NPC[i].X, y = Mapper.Current.NPC[i].Y;
-            Mapper.Current.NPC[i].X2 = 0;
-            Mapper.Current.NPC[i].Y2 = 0;
-            Mapper.Current.NPC[i].X = data.ReadByte();
-            Mapper.Current.NPC[i].Y = data.ReadByte();
-            Mapper.Current.NPC[i].Direction = (Directions)data.ReadByte();
-            Mapper.Current.NPC[i].Movement = (Movements)data.ReadByte();
+            byte x = TempMap.Current.NPC[i].X, y = TempMap.Current.NPC[i].Y;
+            TempMap.Current.NPC[i].X2 = 0;
+            TempMap.Current.NPC[i].Y2 = 0;
+            TempMap.Current.NPC[i].X = data.ReadByte();
+            TempMap.Current.NPC[i].Y = data.ReadByte();
+            TempMap.Current.NPC[i].Direction = (Directions)data.ReadByte();
+            TempMap.Current.NPC[i].Movement = (Movements)data.ReadByte();
 
             // Posição exata do jogador
-            if (x != Mapper.Current.NPC[i].X || y != Mapper.Current.NPC[i].Y)
-                switch (Mapper.Current.NPC[i].Direction)
+            if (x != TempMap.Current.NPC[i].X || y != TempMap.Current.NPC[i].Y)
+                switch (TempMap.Current.NPC[i].Direction)
                 {
-                    case Directions.Up: Mapper.Current.NPC[i].Y2 = Grid; break;
-                    case Directions.Down: Mapper.Current.NPC[i].Y2 = Grid * -1; break;
-                    case Directions.Right: Mapper.Current.NPC[i].X2 = Grid * -1; break;
-                    case Directions.Left: Mapper.Current.NPC[i].X2 = Grid; break;
+                    case Directions.Up: TempMap.Current.NPC[i].Y2 = Grid; break;
+                    case Directions.Down: TempMap.Current.NPC[i].Y2 = Grid * -1; break;
+                    case Directions.Right: TempMap.Current.NPC[i].X2 = Grid * -1; break;
+                    case Directions.Left: TempMap.Current.NPC[i].X2 = Grid; break;
                 }
         }
 
@@ -607,8 +607,8 @@ namespace CryBits.Client.Network
             byte victimType = data.ReadByte();
 
             // Inicia o ataque
-            Mapper.Current.NPC[index].Attacking = true;
-            Mapper.Current.NPC[index].AttackTimer = Environment.TickCount;
+            TempMap.Current.NPC[index].Attacking = true;
+            TempMap.Current.NPC[index].AttackTimer = Environment.TickCount;
 
             // Sofrendo dano
             if (victim != string.Empty)
@@ -616,12 +616,12 @@ namespace CryBits.Client.Network
                 {
                     Player victimData = Player.Get(victim);
                     victimData.Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
+                    TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
                 }
                 else if (victimType == (byte)Target.NPC)
                 {
-                    Mapper.Current.NPC[byte.Parse(victim)].Hurt = Environment.TickCount;
-                    Mapper.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), Mapper.Current.NPC[byte.Parse(victim)].X, Mapper.Current.NPC[byte.Parse(victim)].Y, 255));
+                    TempMap.Current.NPC[byte.Parse(victim)].Hurt = Environment.TickCount;
+                    TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), TempMap.Current.NPC[byte.Parse(victim)].X, TempMap.Current.NPC[byte.Parse(victim)].Y, 255));
                 }
         }
 
@@ -629,9 +629,9 @@ namespace CryBits.Client.Network
         {
             // Define a direção de determinado NPC
             byte i = data.ReadByte();
-            Mapper.Current.NPC[i].Direction = (Directions)data.ReadByte();
-            Mapper.Current.NPC[i].X2 = 0;
-            Mapper.Current.NPC[i].Y2 = 0;
+            TempMap.Current.NPC[i].Direction = (Directions)data.ReadByte();
+            TempMap.Current.NPC[i].X2 = 0;
+            TempMap.Current.NPC[i].Y2 = 0;
         }
 
         private static void Map_NPC_Vitals(NetIncomingMessage data)
@@ -640,7 +640,7 @@ namespace CryBits.Client.Network
 
             // Define os vitais de determinado NPC
             for (byte n = 0; n < (byte)Vitals.Count; n++)
-                Mapper.Current.NPC[index].Vital[n] = data.ReadInt16();
+                TempMap.Current.NPC[index].Vital[n] = data.ReadInt16();
         }
 
         private static void Map_NPC_Died(NetIncomingMessage data)
@@ -648,12 +648,12 @@ namespace CryBits.Client.Network
             byte i = data.ReadByte();
 
             // Limpa os dados do NPC
-            Mapper.Current.NPC[i].X2 = 0;
-            Mapper.Current.NPC[i].Y2 = 0;
-            Mapper.Current.NPC[i].Data = null;
-            Mapper.Current.NPC[i].X = 0;
-            Mapper.Current.NPC[i].Y = 0;
-            Mapper.Current.NPC[i].Vital = new short[(byte)Vitals.Count];
+            TempMap.Current.NPC[i].X2 = 0;
+            TempMap.Current.NPC[i].Y2 = 0;
+            TempMap.Current.NPC[i].Data = null;
+            TempMap.Current.NPC[i].X = 0;
+            TempMap.Current.NPC[i].Y = 0;
+            TempMap.Current.NPC[i].Vital = new short[(byte)Vitals.Count];
         }
     }
 }

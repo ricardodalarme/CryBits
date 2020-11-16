@@ -207,7 +207,7 @@ namespace CryBits.Server.Entities
             NextTile(Direction, ref nextX, ref nextY);
 
             // Ponto de ligação
-            if (Map.Data.OutLimit(nextX, nextY))
+            if (CryBits.Entities.Map.OutLimit(nextX, nextY))
             {
                 if (link != null)
                     switch (Direction)

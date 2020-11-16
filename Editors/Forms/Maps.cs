@@ -1081,7 +1081,7 @@ namespace CryBits.Editors.Forms
                 for (int y = MapSelection.Y; y < MapSelection.Y + TilesSelection.Height; y++)
                 {
                     // Define os azulejos
-                    if (!Selected.OutLimit((short)x, (short)y))
+                    if (!Map.OutLimit((short)x, (short)y))
                     {
                         Selected.Layer[layerNum].Tile[x, y] = Set_Tile((byte)(TilesSelection.X + x2), (byte)(TilesSelection.Y + y2));
                         Selected.Layer[layerNum].Update(x, y);

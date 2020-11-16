@@ -12,19 +12,6 @@ namespace CryBits.Client.Logic
         public static int ConvertX(int x) => x - Camera.TileSight.X * Grid - Camera.StartSight.X;
         public static int ConvertY(int y) => y - Camera.TileSight.Y * Grid - Camera.StartSight.Y;
 
-        public static Directions ReverseDirection(Directions direction)
-        {
-            // Retorna a direção inversa
-            switch (direction)
-            {
-                case Directions.Up: return Directions.Down;
-                case Directions.Down: return Directions.Up;
-                case Directions.Left: return Directions.Right;
-                case Directions.Right: return Directions.Left;
-                default: return Directions.Count;
-            }
-        }
-
         public static bool IsAbove(Rectangle rectangle)
         {
             // Verficia se o Window.Mouse está sobre o objeto

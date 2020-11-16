@@ -279,7 +279,7 @@ namespace CryBits.Server.Entities
             NextTile(direction, ref nextX, ref nextY);
 
             // Próximo azulejo bloqueado ou fora do limite
-            if (Map.Data.OutLimit(nextX, nextY)) return false;
+            if (CryBits.Entities.Map.OutLimit(nextX, nextY)) return false;
             if (Map.Tile_Blocked(X, Y, direction)) return false;
 
             // Verifica se está dentro da zona

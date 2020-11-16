@@ -51,7 +51,7 @@ namespace CryBits.Entities
         }
 
         // Verifica se as coordenas estão no limite do mapa
-        public bool OutLimit(short x, short y) => x >= Width || y >= Height || x < 0 || y < 0;
+        public static bool OutLimit(short x, short y) => x >= Width || y >= Height || x < 0 || y < 0;
 
         public bool Tile_Blocked(short x, short y)
         {

@@ -107,8 +107,8 @@ namespace CryBits.Client.Entities
             if (TextBoxes.Focused != null) return;
 
             // Verifica se tem algum item nas coordenadas 
-            for (byte i = 0; i < Mapper.Current.Item.Length; i++)
-                if (Mapper.Current.Item[i].X == X && Mapper.Current.Item[i].Y == Y)
+            for (byte i = 0; i < TempMap.Current.Item.Length; i++)
+                if (TempMap.Current.Item[i].X == X && TempMap.Current.Item[i].Y == Y)
                     hasItem = true;
 
             // Verifica se tem algum espaço vazio no inventário

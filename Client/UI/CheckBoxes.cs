@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.Media.Audio;
@@ -79,7 +80,7 @@ namespace CryBits.Client.UI
             else if (Windows.Current == WindowsTypes.Menu)
                 Music.Play(CryBits.Musics.Menu);
             else if (Windows.Current == WindowsTypes.Game)
-                Music.Play((Musics)Mapper.Current.Data.Music);
+                Music.Play((Musics)TempMap.Current.Data.Music);
         }
 
         private static void SaveUsername()

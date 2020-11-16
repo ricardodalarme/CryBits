@@ -39,7 +39,7 @@ namespace CryBits.Client.Logic
 
                 if (Windows.Current == WindowsTypes.Game)
                 {
-                    Mapper.Logic();
+                    TempMap.Current.Logic();
                     if (timer30 < Environment.TickCount)
                     {
                         // Lógica dos jogadores
@@ -47,9 +47,9 @@ namespace CryBits.Client.Logic
                             Player.List[i].Logic();
 
                         // Lógica dos NPCs
-                        for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
-                            if (Mapper.Current.NPC[i].Data != null)
-                                Mapper.Current.NPC[i].Logic();
+                        for (byte i = 0; i < TempMap.Current.NPC.Length; i++)
+                            if (TempMap.Current.NPC[i].Data != null)
+                                TempMap.Current.NPC[i].Logic();
 
                         // Reinicia a contagem
                         timer30 = Environment.TickCount + 30;
