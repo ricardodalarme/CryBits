@@ -83,7 +83,7 @@ namespace CryBits.Editors.Logic
             set
             {
                 Base.Weather.Type = value;
-                TempMap.UpdateWeather();
+                TempMap.UpdateWeatherType();
             }
         }
 

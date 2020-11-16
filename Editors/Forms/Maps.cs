@@ -141,7 +141,7 @@ namespace CryBits.Editors.Forms
             lstNPC.DataSource = Selected.NPC;
 
             // Reseta o clima
-            TempMap.UpdateWeather();
+            TempMap.UpdateWeatherType();
 
             // Faz os cálculos da autocriação
             Selected.Update();
