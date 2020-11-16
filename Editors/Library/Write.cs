@@ -2,6 +2,7 @@
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using CryBits.Editors.Entities.Tools;
+using static CryBits.Editors.Logic.Options;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
@@ -13,9 +14,14 @@ namespace CryBits.Editors.Library
     {
         public static void Options()
         {
-            // Escreve os dados
-            using (var stream = new FileInfo(Directories.Options.FullName).OpenWrite())
-                new BinaryFormatter().Serialize(stream, Lists.Options);
+            // Escreve as configurações
+            using (var data = new BinaryWriter(Directories.Options.OpenWrite()))
+            {
+                data.Write(PreMapGrid);
+                data.Write(PreMapView);
+                data.Write(PreMapAudio);
+                data.Write(Username);
+            }
         }
 
         public static void Tools()
@@ -24,8 +30,8 @@ namespace CryBits.Editors.Library
             FileInfo file = new FileInfo(Directories.Tools.FullName);
             using (var data = new BinaryWriter(file.OpenWrite()))
                 // Escreve os dados
-                for (short n = 0; n < Lists.Tool.Nodes.Count; n++)
-                    Tools(Lists.Tool.Nodes[n], data);
+                for (short n = 0; n < Tool.Tree.Nodes.Count; n++)
+                    Tools(Tool.Tree.Nodes[n], data);
         }
 
         private static void Tools(TreeNode node, BinaryWriter data)
@@ -112,14 +118,14 @@ namespace CryBits.Editors.Library
         public static void Tiles()
         {
             // Escreve os dados
-            for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
+            for (byte i = 1; i < Entities.Tile.List.Length; i++) Tile(i);
         }
 
         public static void Tile(byte index)
         {
             // Escreve os dados
             using (var stream = new FileInfo(Directories.Tiles.FullName + index + Directories.Format).OpenWrite())
-                new BinaryFormatter().Serialize(stream, Lists.Tile[index]);
+                new BinaryFormatter().Serialize(stream, Entities.Tile.List[index]);
         }
     }
 }

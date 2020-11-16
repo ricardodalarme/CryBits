@@ -10,7 +10,8 @@ using CryBits.Editors.Network;
 using CryBits.Entities;
 using DarkUI.Forms;
 using SFML.Graphics;
-using static CryBits.Utils;
+using static CryBits.Defaults;
+using static CryBits.Editors.Logic.Options;
 using static CryBits.Editors.Logic.Utils;
 using Color = System.Drawing.Color;
 using Graphics = CryBits.Editors.Media.Graphics;
@@ -89,9 +90,9 @@ namespace CryBits.Editors.Forms
             grpLighting.BringToFront();
             cmbTiles.SelectedIndex = 0;
             cmbLayers_Type.SelectedIndex = 0;
-            butGrid.Checked = Lists.Options.PreMapGrid;
-            butAudio.Checked = Lists.Options.PreMapAudio;
-            if (!Lists.Options.PreMapView)
+            butGrid.Checked = PreMapGrid;
+            butAudio.Checked = PreMapAudio;
+            if (!PreMapView)
             {
                 butVisualization.Checked = false;
                 butEdition.Checked = true;
@@ -140,7 +141,7 @@ namespace CryBits.Editors.Forms
             lstNPC.DataSource = Selected.NPC;
 
             // Reseta o clima
-            TempMap.UpdateWeather();
+            TempMap.UpdateWeatherType();
 
             // Faz os cálculos da autocriação
             Selected.Update();
@@ -389,7 +390,7 @@ namespace CryBits.Editors.Forms
                 butEdition.Checked = true;
 
             // Salva a preferência
-            Lists.Options.PreMapView = butVisualization.Checked;
+            PreMapView = butVisualization.Checked;
             Write.Options();
         }
 
@@ -402,21 +403,21 @@ namespace CryBits.Editors.Forms
                 butVisualization.Checked = true;
 
             // Salva a preferência
-            Lists.Options.PreMapView = butVisualization.Checked;
+            PreMapView = butVisualization.Checked;
             Write.Options();
         }
 
         private void butGrids_Click(object sender, EventArgs e)
         {
             // Salva a preferência
-            Lists.Options.PreMapGrid = butGrid.Checked;
+            PreMapGrid = butGrid.Checked;
             Write.Options();
         }
 
         private void butAudio_Click(object sender, EventArgs e)
         {
             // Salva a preferência
-            Lists.Options.PreMapAudio = butAudio.Checked;
+            PreMapAudio = butAudio.Checked;
             Write.Options();
 
             // Desativa os áudios
@@ -1080,7 +1081,7 @@ namespace CryBits.Editors.Forms
                 for (int y = MapSelection.Y; y < MapSelection.Y + TilesSelection.Height; y++)
                 {
                     // Define os azulejos
-                    if (!Selected.OutLimit((short)x, (short)y))
+                    if (!Map.OutLimit((short)x, (short)y))
                     {
                         Selected.Layer[layerNum].Tile[x, y] = Set_Tile((byte)(TilesSelection.X + x2), (byte)(TilesSelection.Y + y2));
                         Selected.Layer[layerNum].Update(x, y);
@@ -1374,13 +1375,13 @@ namespace CryBits.Editors.Forms
                         if (data.Texture > 0)
                         {
                             // Atributos
-                            if (Lists.Tile[data.Texture].Data[data.X, data.Y].Attribute > 0)
-                                Selected.Attribute[x, y].Type = Lists.Tile[data.Texture].Data[data.X, data.Y].Attribute;
+                            if (Tile.List[data.Texture].Data[data.X, data.Y].Attribute > 0)
+                                Selected.Attribute[x, y].Type = Tile.List[data.Texture].Data[data.X, data.Y].Attribute;
 
                             // Bloqueio direcional
                             for (byte b = 0; b < (byte)Directions.Count; b++)
-                                if (Lists.Tile[data.Texture].Data[data.X, data.Y].Block[b])
-                                    Selected.Attribute[x, y].Block[b] = Lists.Tile[data.Texture].Data[data.X, data.Y].Block[b];
+                                if (Tile.List[data.Texture].Data[data.X, data.Y].Block[b])
+                                    Selected.Attribute[x, y].Block[b] = Tile.List[data.Texture].Data[data.X, data.Y].Block[b];
                         }
                     }
         }

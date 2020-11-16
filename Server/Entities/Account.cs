@@ -9,14 +9,13 @@ namespace CryBits.Server.Entities
         public static List<Account> List = new List<Account>();
 
         // Dados básicos
-        public NetConnection Connection;
+        public NetConnection Connection { get; }
         public string User { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-
         public Accesses Access { get; set; }
-        public bool InEditor;
-        public Player Character;
-        public List<TempCharacter> Characters = new List<TempCharacter>();
+        public bool InEditor { get; set; }
+        public Player Character { get; set; }
+        public List<TempCharacter> Characters { get; set; } = new List<TempCharacter>();
         public struct TempCharacter
         {
             public string Name;

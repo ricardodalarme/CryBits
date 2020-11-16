@@ -1,5 +1,4 @@
-﻿using static CryBits.Client.Logic.Game;
-using static CryBits.Utils;
+﻿using static CryBits.Defaults;
 
 namespace CryBits.Client.Entities
 {

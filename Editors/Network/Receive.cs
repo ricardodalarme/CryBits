@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CryBits.Editors.Forms;
-using CryBits.Editors.Library;
 using CryBits.Entities;
 using CryBits.Packets;
 using Lidgren.Network;
+using static CryBits.Defaults;
 using static CryBits.Utils;
 
 namespace CryBits.Editors.Network
@@ -44,18 +44,18 @@ namespace CryBits.Editors.Network
         private static void Server_Data(NetIncomingMessage data)
         {
             // Lê os dados
-            Lists.ServerData.GameName = data.ReadString();
-            Lists.ServerData.Welcome = data.ReadString();
-            Lists.ServerData.Port = data.ReadInt16();
-            Lists.ServerData.MaxPlayers = data.ReadByte();
-            Lists.ServerData.MaxCharacters = data.ReadByte();
-            Lists.ServerData.MaxPartyMembers = data.ReadByte();
-            Lists.ServerData.MaxMapItems = data.ReadByte();
-            Lists.ServerData.NumPoints = data.ReadByte();
-            Lists.ServerData.MinNameLength = data.ReadByte();
-            Lists.ServerData.MaxNameLength = data.ReadByte();
-            Lists.ServerData.MinPasswordLength = data.ReadByte();
-            Lists.ServerData.MaxPasswordLength = data.ReadByte();
+            GameName = data.ReadString();
+            WelcomeMessage = data.ReadString();
+            Port = data.ReadInt16();
+            MaxPlayers = data.ReadByte();
+            MaxCharacters = data.ReadByte();
+            MaxPartyMembers = data.ReadByte();
+            MaxMapItems = data.ReadByte();
+            NumPoints = data.ReadByte();
+            MinNameLength = data.ReadByte();
+            MaxNameLength = data.ReadByte();
+            MinPasswordLength = data.ReadByte();
+            MaxPasswordLength = data.ReadByte();
         }
 
         private static void Classes(NetIncomingMessage data)

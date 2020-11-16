@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Entities;
+using CryBits.Client.Logic;
 using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
 using SFML.Window;
-using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.UI
 {
@@ -205,11 +205,11 @@ namespace CryBits.Client.UI
         {
             // Reproduz a música de fundo
             Sound.Stop_All();
-            if (Option.Musics) Music.Play(Musics.Menu);
+            if (Options.Musics) Music.Play(Musics.Menu);
 
             // Nome do usuário salvo
-            CheckBoxes.List["Connect_Save_Username"].Checked = Option.SaveUsername;
-            if (Option.SaveUsername) TextBoxes.List["Connect_Username"].Text = Option.Username;
+            CheckBoxes.List["Connect_Save_Username"].Checked = Options.SaveUsername;
+            if (Options.SaveUsername) TextBoxes.List["Connect_Username"].Text = Options.Username;
 
             // Traz o jogador de volta ao menu
             Panels.Menu_Close();

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using CryBits.Client.UI;
 using SFML.Graphics;
-using static CryBits.Utils;
+using static CryBits.Defaults;
 using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.Logic
@@ -11,31 +11,6 @@ namespace CryBits.Client.Logic
         // Converte o valor em uma posição adequada à camera
         public static int ConvertX(int x) => x - Camera.TileSight.X * Grid - Camera.StartSight.X;
         public static int ConvertY(int y) => y - Camera.TileSight.Y * Grid - Camera.StartSight.Y;
-
-        public static Directions ReverseDirection(Directions direction)
-        {
-            // Retorna a direção inversa
-            switch (direction)
-            {
-                case Directions.Up: return Directions.Down;
-                case Directions.Down: return Directions.Up;
-                case Directions.Left: return Directions.Right;
-                case Directions.Right: return Directions.Left;
-                default: return Directions.Count;
-            }
-        }
-
-        public static void NextTile(Directions direction, ref byte x, ref byte y)
-        {
-            // Próximo azulejo
-            switch (direction)
-            {
-                case Directions.Up: y -= 1; break;
-                case Directions.Down: y += 1; break;
-                case Directions.Right: x += 1; break;
-                case Directions.Left: x -= 1; break;
-            }
-        }
 
         public static bool IsAbove(Rectangle rectangle)
         {

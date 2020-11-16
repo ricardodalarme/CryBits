@@ -10,6 +10,9 @@ namespace CryBits.Client.Logic
 {
     internal static class Loop
     {
+        // Medida de quantos frames são renderizados por segundo 
+        public static short FPS;
+
         // Contagens
         public static int TextBoxTimer;
         public static int ChatTimer = 0;
@@ -36,7 +39,7 @@ namespace CryBits.Client.Logic
 
                 if (Windows.Current == WindowsTypes.Game)
                 {
-                    Mapper.Logic();
+                    TempMap.Current.Logic();
                     if (timer30 < Environment.TickCount)
                     {
                         // Lógica dos jogadores
@@ -44,9 +47,9 @@ namespace CryBits.Client.Logic
                             Player.List[i].Logic();
 
                         // Lógica dos NPCs
-                        for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
-                            if (Mapper.Current.NPC[i].Data != null)
-                                Mapper.Current.NPC[i].Logic();
+                        for (byte i = 0; i < TempMap.Current.NPC.Length; i++)
+                            if (TempMap.Current.NPC[i].Data != null)
+                                TempMap.Current.NPC[i].Logic();
 
                         // Reinicia a contagem
                         timer30 = Environment.TickCount + 30;
@@ -64,7 +67,7 @@ namespace CryBits.Client.Logic
                 if (timer1000 < Environment.TickCount)
                 {
                     Send.Latency();
-                    Game.FPS = fps;
+                    FPS = fps;
                     fps = 0;
                     timer1000 = Environment.TickCount + 1000;
                 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using CryBits.Client.Library;
+using CryBits.Client.Logic;
 using SFML.Audio;
-using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Media.Audio
 {
@@ -25,7 +25,7 @@ namespace CryBits.Client.Media.Audio
         public static void Play(Sounds index, bool loop = false)
         {
             // Apenas se necessário
-            if (!Option.Sounds) return;
+            if (!Options.Sounds) return;
 
             // Reproduz o áudio
             _list[(byte)index].Volume = 20;

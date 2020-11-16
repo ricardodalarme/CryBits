@@ -1,12 +1,10 @@
 ﻿using System;
-using CryBits.Client.Logic;
 using CryBits.Client.Media;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
 using CryBits.Entities;
 using SFML.Window;
-using static CryBits.Client.Logic.Game;
-using static CryBits.Utils;
+using static CryBits.Defaults;
 
 namespace CryBits.Client.Entities
 {
@@ -108,8 +106,8 @@ namespace CryBits.Client.Entities
             if (TextBoxes.Focused != null) return;
 
             // Verifica se tem algum item nas coordenadas 
-            for (byte i = 0; i < Mapper.Current.Item.Length; i++)
-                if (Mapper.Current.Item[i].X == X && Mapper.Current.Item[i].Y == Y)
+            for (byte i = 0; i < TempMap.Current.Item.Length; i++)
+                if (TempMap.Current.Item[i].X == X && TempMap.Current.Item[i].Y == Y)
                     hasItem = true;
 
             // Verifica se tem algum espaço vazio no inventário

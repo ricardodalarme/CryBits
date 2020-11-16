@@ -279,7 +279,7 @@ namespace CryBits.Server.Entities
             NextTile(direction, ref nextX, ref nextY);
 
             // Próximo azulejo bloqueado ou fora do limite
-            if (Map.Data.OutLimit(nextX, nextY)) return false;
+            if (CryBits.Entities.Map.OutLimit(nextX, nextY)) return false;
             if (Map.Tile_Blocked(X, Y, direction)) return false;
 
             // Verifica se está dentro da zona
@@ -398,13 +398,7 @@ namespace CryBits.Server.Entities
                 if (Data.Drop[i].Item != null)
                     if (MyRandom.Next(1, 99) <= Data.Drop[i].Chance)
                         // Solta o item
-                        Map.Item.Add(new MapItems
-                        {
-                            Item = Data.Drop[i].Item,
-                            Amount = Data.Drop[i].Amount,
-                            X = X,
-                            Y = Y
-                        });
+                        Map.Item.Add(new MapItems(Data.Drop[i].Item, Data.Drop[i].Amount, X, Y));
 
             // Envia os dados dos itens no chão para o mapa
             Send.Map_Items(Map);

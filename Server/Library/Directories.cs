@@ -9,7 +9,7 @@ namespace CryBits.Server.Library
         public const string Format = ".dat";
 
         // Diretório dos arquivos
-        public static readonly FileInfo Settings = new FileInfo(Application.StartupPath + @"\Data\Settings" + Format);
+        public static readonly FileInfo Defaults = new FileInfo(Application.StartupPath + @"\Data\Defaults" + Format);
         public static readonly DirectoryInfo Accounts = new DirectoryInfo(Application.StartupPath + @"\Data\Accounts\");
         public static readonly FileInfo Characters = new FileInfo(Application.StartupPath + @"\Data\Characters" + Format);
         public static readonly DirectoryInfo Classes = new DirectoryInfo(Application.StartupPath + @"\Data\Classes\");
@@ -21,7 +21,7 @@ namespace CryBits.Server.Library
         public static void Create()
         {
             // Cria todos os diretórios do jogo
-            Settings.Directory.Create();
+            Defaults.Directory.Create();
             Accounts.Create();
             Characters.Directory.Create();
             Classes.Create();

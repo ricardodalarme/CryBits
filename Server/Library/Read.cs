@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
 using CryBits.Server.Entities;
-using static CryBits.Server.Logic.Defaults;
+using static CryBits.Defaults;
 
 namespace CryBits.Server.Library
 {
@@ -15,7 +15,7 @@ namespace CryBits.Server.Library
         {
             // Carrega todos os dados
             Console.WriteLine("Loading settings.");
-            Settings();
+            Defaults();
             Console.WriteLine("Loading maps.");
             Maps();
             Console.WriteLine("Loading classes.");
@@ -28,17 +28,17 @@ namespace CryBits.Server.Library
             Shops();
         }
 
-        private static void Settings()
+        private static void Defaults()
         {
             // Cria o arquivo caso ele não existir
-            if (!Directories.Settings.Exists)
+            if (!Directories.Defaults.Exists)
             {
-                Write.Settings();
+                Write.Defaults();
                 return;
             }
 
             // Carrega as configurações
-            using (var data = new BinaryReader(Directories.Settings.OpenRead()))
+            using (var data = new BinaryReader(Directories.Defaults.OpenRead()))
             {
                 GameName = data.ReadString();
                 WelcomeMessage = data.ReadString();
@@ -151,9 +151,11 @@ namespace CryBits.Server.Library
             // Cria uma classe caso não houver nenhuma
             else
             {
-                Class @class = new Class();
-                @class.Name = "New class";
-                @class.SpawnMap = Map.List.ElementAt(0).Value;
+                Class @class = new Class
+                {
+                    Name = "New class",
+                    SpawnMap = Map.List.ElementAt(0).Value
+                };
                 Class.List.Add(@class.ID, @class);
                 Write.Class(@class);
             }

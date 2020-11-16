@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.Media.Audio;
-using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
 
@@ -63,30 +63,30 @@ namespace CryBits.Client.UI
         private static void Sounds()
         {
             // Salva os dados
-            Option.Sounds = !Option.Sounds;
-            if (!Option.Sounds) Sound.Stop_All();
+            Options.Sounds = !Options.Sounds;
+            if (!Options.Sounds) Sound.Stop_All();
             Write.Options();
         }
 
         private static void Musics()
         {
             // Salva os dados
-            Option.Musics = !Option.Musics;
+            Options.Musics = !Options.Musics;
             Write.Options();
 
             // Para ou reproduz a música dependendo do estado do marcador
-            if (!Option.Musics)
+            if (!Options.Musics)
                 Music.Stop();
             else if (Windows.Current == WindowsTypes.Menu)
                 Music.Play(CryBits.Musics.Menu);
             else if (Windows.Current == WindowsTypes.Game)
-                Music.Play((Musics)Mapper.Current.Data.Music);
+                Music.Play((Musics)TempMap.Current.Data.Music);
         }
 
         private static void SaveUsername()
         {
             // Salva os dados
-            Option.SaveUsername = List["Connect_Save_Username"].Checked;
+            Options.SaveUsername = List["Connect_Save_Username"].Checked;
             Write.Options();
         }
 
@@ -107,36 +107,36 @@ namespace CryBits.Client.UI
         private static void Chat()
         {
             // Salva os dado
-            Option.Chat = List["Options_Chat"].Checked;
+            Options.Chat = List["Options_Chat"].Checked;
             Write.Options();
-            if (Option.Chat) Loop.ChatTimer = Environment.TickCount + UI.Chat.SleepTimer;
+            if (Options.Chat) Loop.ChatTimer = Environment.TickCount + UI.Chat.SleepTimer;
         }
 
         private static void FPS()
         {
             // Salva os dado
-            Option.FPS = List["Options_FPS"].Checked;
+            Options.FPS = List["Options_FPS"].Checked;
             Write.Options();
         }
 
         private static void Latency()
         {
             // Desabilita a prévia do chat
-            Option.Latency = List["Options_Latency"].Checked;
+            Options.Latency = List["Options_Latency"].Checked;
             Write.Options();
         }
 
         private static void Party()
         {
             // Salva os dado
-            Option.Party = List["Options_Party"].Checked;
+            Options.Party = List["Options_Party"].Checked;
             Write.Options();
         }
 
         private static void Trade()
         {
             // Salva os dado
-            Option.Trade = List["Options_Trade"].Checked;
+            Options.Trade = List["Options_Trade"].Checked;
             Write.Options();
         }
     }

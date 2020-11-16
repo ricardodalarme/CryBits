@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Me.cs" />
-    <Compile Include="Logic\Game.cs" />
+    <Compile Include="Logic\Options.cs" />
     <Compile Include="Media\Audio\Sound.cs" />
     <Compile Include="UI\Chat.cs" />
     <Compile Include="UI\Windows.cs" />
@@ -71,7 +71,6 @@
     <Compile Include="Library\Write.cs" />
     <Compile Include="Logic\Utils.cs" />
     <Compile Include="Logic\Loop.cs" />
-    <Compile Include="Logic\Mapper.cs" />
     <Compile Include="Entities\TempNPC.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Media\Audio\Music.cs" />

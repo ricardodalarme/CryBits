@@ -11,7 +11,6 @@ namespace CryBits
     {
         // Números aleatórios
         public static readonly Random MyRandom = new Random();
-        public const byte Grid = 32;
 
         public static Directions ReverseDirection(Directions direction)
         {

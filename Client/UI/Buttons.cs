@@ -8,7 +8,7 @@ using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
 using CryBits.Entities;
 using SFML.Window;
-using static CryBits.Client.Logic.Game;
+using static CryBits.Defaults;
 using static CryBits.Client.Logic.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
 
@@ -37,7 +37,7 @@ namespace CryBits.Client.UI
             if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum])))) return;
 
             // Altera o estado do botão
-             Sound.Play( Sounds.Click);
+            Sound.Play(Sounds.Click);
             State = States.Above;
 
             // Executa o evento
@@ -68,7 +68,7 @@ namespace CryBits.Client.UI
 
             // Altera o estado do botão
             State = States.Above;
-             Sound.Play( Sounds.Above);
+            Sound.Play(Sounds.Above);
         }
 
         private static void Execute(string name)
@@ -157,8 +157,8 @@ namespace CryBits.Client.UI
             Socket.Disconnect();
 
             // Define as marcações corretas
-            CheckBoxes.List["Sounds"].Checked = Option.Sounds;
-            CheckBoxes.List["Musics"].Checked = Option.Musics;
+            CheckBoxes.List["Sounds"].Checked = Logic.Options.Sounds;
+            CheckBoxes.List["Musics"].Checked = Logic.Options.Musics;
 
             // Abre o painel
             Panels.Menu_Close();
@@ -178,7 +178,7 @@ namespace CryBits.Client.UI
         private static void Connect_Ok()
         {
             // Salva o nome do usuário
-            Option.Username = TextBoxes.List["Connect_Username"].Text;
+            Logic.Options.Username = TextBoxes.List["Connect_Username"].Text;
             Write.Options();
 
             // Conecta-se ao jogo
@@ -225,7 +225,7 @@ namespace CryBits.Client.UI
         private static void CreateCharacter_Texture_ChangeRight()
         {
             // Lista de texturas
-            IList<short>texList;
+            IList<short> texList;
             if (CheckBoxes.List["GenderMale"].Checked)
                 texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexMale;
             else
@@ -428,7 +428,7 @@ namespace CryBits.Client.UI
 
             // Limpa os dados da oferta
             Player.Me.TradeOffer = new ItemSlot[MaxInventory];
-            Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory ];
+            Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory];
         }
 
         private static void Trade_Offer_Decline()

@@ -9,7 +9,7 @@ using CryBits.Editors.Library;
 using CryBits.Entities;
 using SFML.Graphics;
 using SFML.System;
-using static CryBits.Utils;
+using static CryBits.Defaults;
 using static CryBits.Editors.Logic.Utils;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
@@ -392,9 +392,9 @@ namespace CryBits.Editors.Media
             if (map.Weather.Type == Weathers.Snowing) x = 32;
 
             // Desenha as partículas
-            for (int i = 0; i < Lists.Weather.Length; i++)
-                if (Lists.Weather[i].Visible)
-                    Render(WinMap, TexWeather, new Rectangle(x, 0, 32, 32), EditorMaps.Form.Zoom(new Rectangle(Lists.Weather[i].X, Lists.Weather[i].Y, 32, 32)), CColor(255, 255, 255, 150));
+            for (int i = 0; i < TempMap.Weather.Length; i++)
+                if (TempMap.Weather[i].Visible)
+                    Render(WinMap, TexWeather, new Rectangle(x, 0, 32, 32), EditorMaps.Form.Zoom(new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32)), CColor(255, 255, 255, 150));
         }
 
         private static void Editor_Maps_Map_Light(Map map)
@@ -608,11 +608,11 @@ namespace CryBits.Editors.Media
             Point point = new Point(x * Grid + Grid / 2 - 5, y * Grid + Grid / 2 - 6);
 
             // Previne erros
-            if (tile.X > Lists.Tile[form.scrlTile.Value].Data.GetUpperBound(0)) return;
-            if (tile.Y > Lists.Tile[form.scrlTile.Value].Data.GetUpperBound(1)) return;
+            if (tile.X > Tile.List[form.scrlTile.Value].Data.GetUpperBound(0)) return;
+            if (tile.Y > Tile.List[form.scrlTile.Value].Data.GetUpperBound(1)) return;
 
             // Desenha uma letra e colore o azulejo referente ao atributo
-            switch ((TileAttributes)Lists.Tile[form.scrlTile.Value].Data[tile.X, tile.Y].Attribute)
+            switch ((TileAttributes)Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Attribute)
             {
                 case TileAttributes.Block:
                     Render(WinTile, TexBlank, x * Grid, y * Grid, 0, 0, Grid, Grid, CColor(225, 0, 0, 75));
@@ -628,11 +628,11 @@ namespace CryBits.Editors.Media
             byte sourceY;
 
             // Previne erros
-            if (tile.X > Lists.Tile[form.scrlTile.Value].Data.GetUpperBound(0)) return;
-            if (tile.Y > Lists.Tile[form.scrlTile.Value].Data.GetUpperBound(1)) return;
+            if (tile.X > Tile.List[form.scrlTile.Value].Data.GetUpperBound(0)) return;
+            if (tile.Y > Tile.List[form.scrlTile.Value].Data.GetUpperBound(1)) return;
 
             // Bloqueio total
-            if (Lists.Tile[form.scrlTile.Value].Data[x, y].Attribute == (byte)TileAttributes.Block)
+            if (Tile.List[form.scrlTile.Value].Data[x, y].Attribute == (byte)TileAttributes.Block)
             {
                 Editor_TileAttributes(x, y);
                 return;
@@ -641,7 +641,7 @@ namespace CryBits.Editors.Media
             for (byte i = 0; i < (byte)Directions.Count; i++)
             {
                 // Estado do bloqueio
-                sourceY = Lists.Tile[form.scrlTile.Value].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
+                sourceY = Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
 
                 // Renderiza
                 Render(WinTile, TexDirections, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
@@ -708,7 +708,7 @@ namespace CryBits.Editors.Media
 
             // Desenha as ferramentas
             WinInterface.Clear();
-            Interface_Order(Lists.Tool.Nodes[(byte)EditorInterface.Form.cmbWindows.SelectedIndex]);
+            Interface_Order(Tool.Tree.Nodes[(byte)EditorInterface.Form.cmbWindows.SelectedIndex]);
             WinInterface.Display();
         }
 

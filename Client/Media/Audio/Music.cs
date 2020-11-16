@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using CryBits.Client.Library;
-using static CryBits.Client.Logic.Game;
+using CryBits.Client.Logic;
 
 namespace CryBits.Client.Media.Audio
 {
@@ -21,7 +21,7 @@ namespace CryBits.Client.Media.Audio
 
             // Apenas se necessário
             if (_device != null) return;
-            if (!Option.Musics) return;
+            if (!Options.Musics) return;
             if (!File.Exists(directory)) return;
 
             // Carrega o áudio

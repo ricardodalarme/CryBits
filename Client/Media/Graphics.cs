@@ -12,9 +12,8 @@ using CryBits.Entities;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
-using static CryBits.Utils;
+using static CryBits.Defaults;
 using Color = SFML.Graphics.Color;
 using Font = SFML.Graphics.Font;
 
@@ -280,9 +279,9 @@ namespace CryBits.Client.Media
             Map_Items();
 
             // Desenha os NPCs
-            for (byte i = 0; i < Mapper.Current.NPC.Length; i++)
-                if (Mapper.Current.NPC[i].Data != null)
-                    NPC(Mapper.Current.NPC[i]);
+            for (byte i = 0; i < TempMap.Current.NPC.Length; i++)
+                if (TempMap.Current.NPC[i].Data != null)
+                    NPC(TempMap.Current.NPC[i]);
 
             // Desenha os jogadores
             for (byte i = 0; i < Player.List.Count; i++)
@@ -303,8 +302,8 @@ namespace CryBits.Client.Media
             Party();
 
             // Desenha os dados do jogo
-            if (Option.FPS) DrawText("FPS: " + FPS, 176, 7, Color.White);
-            if (Option.Latency) DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
+            if (Options.FPS) DrawText("FPS: " + Loop.FPS, 176, 7, Color.White);
+            if (Options.Latency) DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
         }
 
         #region Tools
@@ -491,7 +490,7 @@ namespace CryBits.Client.Media
             tool.Visible = TextBoxes.Focused != null && ((TextBoxes)TextBoxes.Focused.Data).Name.Equals("Chat");
 
             // Renderiza as mensagens
-            if (tool.Visible || Loop.ChatTimer >= Environment.TickCount && Option.Chat)
+            if (tool.Visible || Loop.ChatTimer >= Environment.TickCount && Options.Chat)
                 for (byte i = UI.Chat.LinesFirst; i <= UI.Chat.LinesVisible + UI.Chat.LinesFirst; i++)
                     if (UI.Chat.Order.Count > i)
                         DrawText(UI.Chat.Order[i].Text, 16, 461 + 11 * (i - UI.Chat.LinesFirst), UI.Chat.Order[i].Color);
@@ -867,19 +866,19 @@ namespace CryBits.Client.Media
         private static void Map_Tiles(byte layerType)
         {
             // Previne erros
-            if (Mapper.Current.Data.Name == null) return;
+            if (TempMap.Current.Data.Name == null) return;
 
             // Dados
-            System.Drawing.Color tempColor = Mapper.Current.Data.Color;
+            System.Drawing.Color tempColor = TempMap.Current.Data.Color;
             Color color = CColor(tempColor.R, tempColor.G, tempColor.B);
-            Map map = Mapper.Current.Data;
+            Map map = TempMap.Current.Data;
 
             // Desenha todas as camadas dos azulejos
             for (byte c = 0; c < map.Layer.Count; c++)
                 if (c == layerType)
                     for (int x = Camera.TileSight.X; x <= Camera.TileSight.Width; x++)
                         for (int y = Camera.TileSight.Y; y <= Camera.TileSight.Height; y++)
-                            if (!Mapper.OutOfLimit(x, y))
+                            if (!Map.OutLimit((short)x, (short)y))
                             {
                                 MapTileData data = map.Layer[c].Tile[x, y];
                                 if (data.Texture > 0)
@@ -919,22 +918,22 @@ namespace CryBits.Client.Media
         private static void Map_Panorama()
         {
             // Desenha o panorama
-            if (Mapper.Current.Data.Panorama > 0)
-                Render(TexPanorama[Mapper.Current.Data.Panorama], new Point(0));
+            if (TempMap.Current.Data.Panorama > 0)
+                Render(TexPanorama[TempMap.Current.Data.Panorama], new Point(0));
         }
 
         private static void Map_Fog()
         {
-            MapFog data = Mapper.Current.Data.Fog;
+            MapFog data = TempMap.Current.Data.Fog;
             Size textureSize = Size(TexFog[data.Texture]);
 
             // Previne erros
             if (data.Texture <= 0) return;
 
             // Desenha a fumaça
-            for (int x = -1; x <= MapWidth * Grid / textureSize.Width; x++)
-                for (int y = -1; y <= MapHeight * Grid / textureSize.Height; y++)
-                    Render(TexFog[data.Texture], new Point(x * textureSize.Width + Mapper.FogX, y * textureSize.Height + Mapper.FogY), new Color(255, 255, 255, data.Alpha));
+            for (int x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
+                for (int y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
+                    Render(TexFog[data.Texture], new Point(x * textureSize.Width + TempMap.Current.FogX, y * textureSize.Height + TempMap.Current.FogY), new Color(255, 255, 255, data.Alpha));
         }
 
         private static void Map_Weather()
@@ -942,21 +941,21 @@ namespace CryBits.Client.Media
             byte x = 0;
 
             // Somente se necessário
-            if (Mapper.Current.Data.Weather.Type == 0) return;
+            if (TempMap.Current.Data.Weather.Type == 0) return;
 
             // Textura
-            switch (Mapper.Current.Data.Weather.Type)
+            switch (TempMap.Current.Data.Weather.Type)
             {
                 case Weathers.Snowing: x = 32; break;
             }
 
             // Desenha as partículas
-            foreach (var weather in TempMap.Weather)
+            foreach (var weather in TempMap.Current.Weather)
                 if (weather.Visible)
                     Render(TexWeather, new Rectangle(x, 0, 32, 32), new Rectangle(weather.X, weather.Y, 32, 32), CColor(255, 255, 255, 150));
 
             // Trovoadas
-            Render(TexBlanc, 0, 0, 0, 0, ScreenWidth, ScreenHeight, new Color(255, 255, 255, Mapper.Lightning));
+            Render(TexBlanc, 0, 0, 0, 0, ScreenWidth, ScreenHeight, new Color(255, 255, 255, TempMap.Current.Lightning));
         }
 
         private static void Map_Name()
@@ -964,25 +963,25 @@ namespace CryBits.Client.Media
             Color color;
 
             // Somente se necessário
-            if (string.IsNullOrEmpty(Mapper.Current.Data.Name)) return;
+            if (string.IsNullOrEmpty(TempMap.Current.Data.Name)) return;
 
             // A cor do texto vária de acordo com a moral do mapa
-            switch (Mapper.Current.Data.Moral)
+            switch (TempMap.Current.Data.Moral)
             {
                 case Morals.Dangerous: color = Color.Red; break;
                 default: color = Color.White; break;
             }
 
             // Desenha o nome do mapa
-            DrawText(Mapper.Current.Data.Name, 426, 48, color);
+            DrawText(TempMap.Current.Data.Name, 426, 48, color);
         }
 
         private static void Map_Items()
         {
             // Desenha todos os itens que estão no chão
-            for (byte i = 0; i < Mapper.Current.Item.Length; i++)
+            for (byte i = 0; i < TempMap.Current.Item.Length; i++)
             {
-                MapItems data = Mapper.Current.Item[i];
+                MapItems data = TempMap.Current.Item[i];
 
                 // Somente se necessário
                 if (data.Item == null) continue;
@@ -996,9 +995,9 @@ namespace CryBits.Client.Media
         private static void Map_Blood()
         {
             // Desenha todos os sangues
-            for (byte i = 0; i < Mapper.Current.Blood.Count; i++)
+            for (byte i = 0; i < TempMap.Current.Blood.Count; i++)
             {
-                MapBlood data = Mapper.Current.Blood[i];
+                MapBlood data = TempMap.Current.Blood[i];
                 Render(TexBlood, ConvertX(data.X * Grid), ConvertY(data.Y * Grid), data.TextureNum * 32, 0, 32, 32, CColor(255, 255, 255, data.Opacity));
             }
         }

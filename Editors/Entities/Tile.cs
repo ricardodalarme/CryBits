@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using static CryBits.Utils;
+using static CryBits.Defaults;
 using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Entities
@@ -8,6 +8,10 @@ namespace CryBits.Editors.Entities
     [Serializable]
     internal class Tile
     {
+        // Lista de dados
+        public static Tile[] List;
+
+        // Dados
         public byte Width;
         public byte Height;
         public TileData[,] Data;

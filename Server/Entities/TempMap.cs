@@ -21,7 +21,7 @@ namespace CryBits.Server.Entities
         public List<MapItems> Item = new List<MapItems>();
 
         // Construtor
-        public TempMap(Guid id, Map map):base(id)
+        public TempMap(Guid id, Map map) : base(id)
         {
             Data = map;
         }
@@ -93,13 +93,7 @@ namespace CryBits.Server.Entities
                 for (byte y = 0; y < Map.Height; y++)
                     if (Data.Attribute[x, y].Type == (byte)TileAttributes.Item)
                         // Adiciona o item
-                        Item.Add(new MapItems
-                        {
-                            Item = CryBits.Entities.Item.Get(new Guid(Data.Attribute[x, y].Data1)),
-                            Amount = Data.Attribute[x, y].Data2,
-                            X = x,
-                            Y = y
-                        });
+                        Item.Add(new MapItems(CryBits.Entities.Item.Get(new Guid(Data.Attribute[x, y].Data1)), Data.Attribute[x, y].Data2, x, y));
         }
 
         public bool Tile_Blocked(byte x, byte y, Directions direction, bool countEntities = true)
@@ -136,11 +130,15 @@ namespace CryBits.Server.Entities
         }
     }
 
-    internal class MapItems
+    internal class MapItems : ItemSlot
     {
-        public Item Item;
         public byte X;
         public byte Y;
-        public short Amount;
+
+        public MapItems(Item item, short amount, byte x, byte y) : base(item, amount)
+        {
+            X = x;
+            Y = y;
+        }
     }
 }
