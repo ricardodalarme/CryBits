@@ -64,7 +64,7 @@ namespace CryBits.Client.Entities
             return false;
         }
 
-        public bool Tile_Blocked(byte x, byte y, Directions direction)
+        public bool TileBlocked(byte x, byte y, Directions direction)
         {
             byte nextX = x, nextY = y;
 
@@ -72,7 +72,7 @@ namespace CryBits.Client.Entities
             NextTile(direction, ref nextX, ref nextY);
 
             // Verifica se está indo para uma ligação
-            if (OutOfLimit(nextX, nextY)) return Data.Link[(byte)direction] == null;
+            if (Map.OutLimit(nextX, nextY)) return Data.Link[(byte)direction] == null;
 
             // Verifica se o azulejo está bloqueado
             if (Data.Attribute[nextX, nextY].Type == (byte)LayerAttributes.Block) return true;
@@ -81,9 +81,6 @@ namespace CryBits.Client.Entities
             if (HasPlayer(nextX, nextY) || HasNPC(nextX, nextY)) return true;
             return false;
         }
-
-        // Verifica se as coordenas estão no limite do mapa
-        public bool OutOfLimit(int x, int y) => x >= Map.Width || y >= Map.Height || x < 0 || y < 0;
 
         public void Logic()
         {
@@ -249,7 +246,7 @@ namespace CryBits.Client.Entities
         public void UpdateWeatherType()
         {
             // Para todos os sons
-            Sound.Stop_All();
+            Sound.StopAll();
 
             // Redimensiona a lista
             switch (Data.Weather.Type)

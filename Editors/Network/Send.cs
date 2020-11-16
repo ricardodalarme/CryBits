@@ -27,7 +27,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Request_Server_Data()
+        public static void RequestServerData()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -36,7 +36,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Request_Classes()
+        public static void RequestClasses()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -45,7 +45,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Request_Map(Map map)
+        public static void RequestMap(Map map)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -55,7 +55,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Request_Maps()
+        public static void RequestMaps()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -64,7 +64,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Request_NPCs()
+        public static void RequestNPCs()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -73,7 +73,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Request_Items()
+        public static void RequestItems()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -82,7 +82,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Request_Shops()
+        public static void RequestShops()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -91,7 +91,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Write_Server_Data()
+        public static void WriteServerData()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -112,7 +112,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Write_Classes()
+        public static void WriteClasses()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -122,7 +122,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Write_Maps()
+        public static void WriteMaps()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -132,7 +132,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Write_NPCs()
+        public static void WriteNPCs()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -142,7 +142,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Write_Items()
+        public static void WriteItems()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -152,7 +152,7 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void Write_Shops()
+        public static void WriteShops()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 

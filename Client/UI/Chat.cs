@@ -41,7 +41,7 @@ namespace CryBits.Client.UI
                 LinesFirst = (byte)(i - LinesVisible);
 
             // Torna as linhas visíveis
-            Loop.ChatTimer = Environment.TickCount + 10000; ;
+            Loop.ChatTimer = Environment.TickCount + 10000;
         }
 
         public static void AddText(string message, Color color)
@@ -109,13 +109,13 @@ namespace CryBits.Client.UI
             switch (parts[0].ToLower())
             {
                 case "/party":
-                    if (parts.Length > 1) Send.Party_Invite(parts[1]);
+                    if (parts.Length > 1) Send.PartyInvite(parts[1]);
                     break;
                 case "/partyleave":
-                    Send.Party_Leave();
+                    Send.PartyLeave();
                     break;
                 case "/trade":
-                    if (parts.Length > 1) Send.Trade_Invite(parts[1]);
+                    if (parts.Length > 1) Send.TradeInvite(parts[1]);
                     break;
                 default:
                     // Mensagem lobal

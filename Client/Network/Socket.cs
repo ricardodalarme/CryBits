@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.UI;
 using Lidgren.Network;
+using static CryBits.Defaults;
 
 namespace CryBits.Client.Network
 {
@@ -15,8 +16,7 @@ namespace CryBits.Client.Network
         private static NetIncomingMessage _data;
 
         // Dados para a conexão com o servidor
-        public const string Ip = "localhost";
-        public const short Port = 7001;
+        public const string IP = "localhost";
 
         // Latência
         public static int Latency;
@@ -24,7 +24,7 @@ namespace CryBits.Client.Network
 
         public static void Init()
         {
-            NetPeerConfiguration config = new NetPeerConfiguration("CryBits");
+            NetPeerConfiguration config = new NetPeerConfiguration(GameName);
 
             // Cria o dispositivo com as devidas configurações
             Device = new NetClient(config);
@@ -72,7 +72,7 @@ namespace CryBits.Client.Network
             if (IsConnected()) return true;
 
             // Tenta se conectar
-            Device.Connect(Ip, Port);
+            Device.Connect(IP, Port);
 
             // Espere até que o jogador se conecte
             int waitTimer = Environment.TickCount;

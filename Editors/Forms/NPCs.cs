@@ -139,14 +139,14 @@ namespace CryBits.Editors.Forms
         private void butSave_Click(object sender, EventArgs e)
         {
             // Salva os dados e volta à janela principal
-            Send.Write_NPCs();
+            Send.WriteNPCs();
             Close();
         }
 
         private void butCancel_Click(object sender, EventArgs e)
         {
             // Volta à janela principal
-            Send.Request_NPCs();
+            Send.RequestNPCs();
             Close();
         }
 

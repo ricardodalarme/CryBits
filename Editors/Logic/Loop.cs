@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Network;
-using CryBits.Entities;
-using SFML.Audio;
-using static CryBits.Defaults;
-using static CryBits.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 using Music = CryBits.Editors.Media.Audio.Music;
-using Sound = CryBits.Editors.Media.Audio.Sound;
 
 namespace CryBits.Editors.Logic
 {
@@ -33,7 +27,7 @@ namespace CryBits.Editors.Logic
                 // Eventos
                 TempMap.UpdateFog();
                 TempMap.UpdateWeather();
-                Editor_Maps_Music();
+                MapsMusic();
 
                 // Desenha os gráficos
                 Graphics.Present();
@@ -61,7 +55,7 @@ namespace CryBits.Editors.Logic
         }
 
 
-        private static void Editor_Maps_Music()
+        private static void MapsMusic()
         {
             // Apenas se necessário
             if (EditorMaps.Form == null || !EditorMaps.Form.Visible) goto stop;

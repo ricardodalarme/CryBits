@@ -64,7 +64,7 @@ namespace CryBits.Client.UI
         {
             // Salva os dados
             Options.Sounds = !Options.Sounds;
-            if (!Options.Sounds) Sound.Stop_All();
+            if (!Options.Sounds) Sound.StopAll();
             Write.Options();
         }
 

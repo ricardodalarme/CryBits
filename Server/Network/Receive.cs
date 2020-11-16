@@ -28,54 +28,54 @@ namespace CryBits.Server.Network
                     case ClientServer.Latency: Latency(account); break;
                     case ClientServer.Register: Register(account, data); break;
                     case ClientServer.CreateCharacter: CreateCharacter(account, data); break;
-                    case ClientServer.CharacterUse: Character_Use(account, data); break;
-                    case ClientServer.CharacterCreate: Character_Create(account); break;
-                    case ClientServer.CharacterDelete: Character_Delete(account, data); break;
-                    case ClientServer.PlayerDirection: Player_Direction(player, data); break;
-                    case ClientServer.PlayerMove: Player_Move(player, data); break;
-                    case ClientServer.PlayerAttack: Player_Attack(player); break;
+                    case ClientServer.CharacterUse: CharacterUse(account, data); break;
+                    case ClientServer.CharacterCreate: CharacterCreate(account); break;
+                    case ClientServer.CharacterDelete: CharacterDelete(account, data); break;
+                    case ClientServer.PlayerDirection: PlayerDirection(player, data); break;
+                    case ClientServer.PlayerMove: PlayerMove(player, data); break;
+                    case ClientServer.PlayerAttack: PlayerAttack(player); break;
                     case ClientServer.RequestMap: RequestMap(player, data); break;
                     case ClientServer.Message: Message(player, data); break;
                     case ClientServer.AddPoint: AddPoint(player, data); break;
                     case ClientServer.CollectItem: CollectItem(player); break;
                     case ClientServer.DropItem: DropItem(player, data); break;
-                    case ClientServer.InventoryChange: Inventory_Change(player, data); break;
-                    case ClientServer.InventoryUse: Inventory_Use(player, data); break;
-                    case ClientServer.EquipmentRemove: Equipment_Remove(player, data); break;
-                    case ClientServer.HotbarAdd: Hotbar_Add(player, data); break;
-                    case ClientServer.HotbarChange: Hotbar_Change(player, data); break;
-                    case ClientServer.HotbarUse: Hotbar_Use(player, data); break;
-                    case ClientServer.PartyInvite: Party_Invite(player, data); break;
-                    case ClientServer.PartyAccept: Party_Accept(player); break;
-                    case ClientServer.PartyDecline: Party_Decline(player); break;
-                    case ClientServer.PartyLeave: Party_Leave(player); break;
-                    case ClientServer.TradeInvite: Trade_Invite(player, data); break;
-                    case ClientServer.TradeAccept: Trade_Accept(player); break;
-                    case ClientServer.TradeDecline: Trade_Decline(player); break;
-                    case ClientServer.TradeLeave: Trade_Leave(player); break;
-                    case ClientServer.TradeOffer: Trade_Offer(player, data); break;
-                    case ClientServer.TradeOfferState: Trade_Offer_State(player, data); break;
-                    case ClientServer.ShopBuy: Shop_Buy(player, data); break;
-                    case ClientServer.ShopSell: Shop_Sell(player, data); break;
-                    case ClientServer.ShopClose: Shop_Close(player); break;
+                    case ClientServer.InventoryChange: InventoryChange(player, data); break;
+                    case ClientServer.InventoryUse: InventoryUse(player, data); break;
+                    case ClientServer.EquipmentRemove: EquipmentRemove(player, data); break;
+                    case ClientServer.HotbarAdd: HotbarAdd(player, data); break;
+                    case ClientServer.HotbarChange: HotbarChange(player, data); break;
+                    case ClientServer.HotbarUse: HotbarUse(player, data); break;
+                    case ClientServer.PartyInvite: PartyInvite(player, data); break;
+                    case ClientServer.PartyAccept: PartyAccept(player); break;
+                    case ClientServer.PartyDecline: PartyDecline(player); break;
+                    case ClientServer.PartyLeave: PartyLeave(player); break;
+                    case ClientServer.TradeInvite: TradeInvite(player, data); break;
+                    case ClientServer.TradeAccept: TradeAccept(player); break;
+                    case ClientServer.TradeDecline: TradeDecline(player); break;
+                    case ClientServer.TradeLeave: TradeLeave(player); break;
+                    case ClientServer.TradeOffer: TradeOffer(player, data); break;
+                    case ClientServer.TradeOfferState: TradeOfferState(player, data); break;
+                    case ClientServer.ShopBuy: ShopBuy(player, data); break;
+                    case ClientServer.ShopSell: ShopSell(player, data); break;
+                    case ClientServer.ShopClose: ShopClose(player); break;
                 }
             else
                 // Manuseia os dados recebidos do editor
                 switch ((EditorServer)packetNum)
                 {
-                    case EditorServer.WriteSettings: Write_Settings(account, data); break;
-                    case EditorServer.WriteClasses: Write_Classes(account, data); break;
-                    case EditorServer.WriteMaps: Write_Maps(account, data); break;
-                    case EditorServer.WriteNPCs: Write_NPCs(account, data); break;
-                    case EditorServer.WriteItems: Write_Items(account, data); break;
-                    case EditorServer.WriteShops: Write_Shops(account, data); break;
-                    case EditorServer.RequestSetting: Request_Setting(account); break;
-                    case EditorServer.RequestClasses: Request_Classes(account); break;
-                    case EditorServer.RequestMap: Request_Map(account, data); break;
-                    case EditorServer.RequestMaps: Request_Maps(account); break;
-                    case EditorServer.RequestNPCs: Request_NPCs(account); break;
-                    case EditorServer.RequestItems: Request_Items(account); break;
-                    case EditorServer.RequestShops: Request_Shops(account); break;
+                    case EditorServer.WriteSettings: WriteSettings(account, data); break;
+                    case EditorServer.WriteClasses: WriteClasses(account, data); break;
+                    case EditorServer.WriteMaps: WriteMaps(account, data); break;
+                    case EditorServer.WriteNPCs: WriteNPCs(account, data); break;
+                    case EditorServer.WriteItems: WriteItems(account, data); break;
+                    case EditorServer.WriteShops: WriteShops(account, data); break;
+                    case EditorServer.RequestSetting: RequestSetting(account); break;
+                    case EditorServer.RequestClasses: RequestClasses(account); break;
+                    case EditorServer.RequestMap: RequestMap(account, data); break;
+                    case EditorServer.RequestMaps: RequestMaps(account); break;
+                    case EditorServer.RequestNPCs: RequestNPCs(account); break;
+                    case EditorServer.RequestItems: RequestItems(account); break;
+                    case EditorServer.RequestShops: RequestShops(account); break;
                 }
         }
 
@@ -127,7 +127,7 @@ namespace CryBits.Server.Network
 
                 // Envia todos os dados
                 account.InEditor = true;
-                Send.Server_Data(account);
+                Send.ServerData(account);
                 Send.Maps(account);
                 Send.Items(account);
                 Send.Shops(account);
@@ -207,7 +207,7 @@ namespace CryBits.Server.Network
                 Send.Alert(account, "Can't contain ';' and ':' in the character name.", false);
                 return;
             }
-            if (Read.Characters_Name().Contains(";" + name + ":"))
+            if (Read.CharactersName().Contains(";" + name + ":"))
             {
                 Send.Alert(account, "A character with this name already exists", false);
                 return;
@@ -235,14 +235,14 @@ namespace CryBits.Server.Network
             for (byte i = 0; i < MaxHotbar; i++) account.Character.Hotbar[i] = new Hotbar(Hotbars.None, 0);
 
             // Salva a conta
-            Write.Character_Name(name);
+            Write.CharacterName(name);
             Write.Character(account);
 
             // Entra no jogo
             account.Character.Join();
         }
 
-        private static void Character_Use(Account account, NetIncomingMessage data)
+        private static void CharacterUse(Account account, NetIncomingMessage data)
         {
             int character = data.ReadInt32();
 
@@ -254,7 +254,7 @@ namespace CryBits.Server.Network
             account.Character.Join();
         }
 
-        private static void Character_Create(Account account)
+        private static void CharacterCreate(Account account)
         {
             // Verifica se o jogador já criou o máximo de personagens possíveis
             if (account.Characters.Count == MaxCharacters)
@@ -268,7 +268,7 @@ namespace CryBits.Server.Network
             Send.CreateCharacter(account);
         }
 
-        private static void Character_Delete(Account account, NetIncomingMessage data)
+        private static void CharacterDelete(Account account, NetIncomingMessage data)
         {
             int character = data.ReadInt32();
 
@@ -278,7 +278,7 @@ namespace CryBits.Server.Network
             // Deleta o personagem
             string name = account.Characters[character].Name;
             Send.Alert(account, "The character '" + name + "' has been deleted.", false);
-            Write.Characters_Name(Read.Characters_Name().Replace(":;" + name + ":", ":"));
+            Write.CharactersName(Read.CharactersName().Replace(":;" + name + ":", ":"));
             account.Characters.RemoveAt(character);
             File.Delete(Directories.Accounts.FullName + account.User + "\\Characters\\" + name + Directories.Format);
 
@@ -287,7 +287,7 @@ namespace CryBits.Server.Network
             Write.Account(account);
         }
 
-        private static void Player_Direction(Player player, NetIncomingMessage data)
+        private static void PlayerDirection(Player player, NetIncomingMessage data)
         {
             Directions direction = (Directions)data.ReadByte();
 
@@ -297,14 +297,14 @@ namespace CryBits.Server.Network
 
             // Defini a direção do jogador
             player.Direction = direction;
-            Send.Player_Direction(player);
+            Send.PlayerDirection(player);
         }
 
-        private static void Player_Move(Player player, NetIncomingMessage data)
+        private static void PlayerMove(Player player, NetIncomingMessage data)
         {
             // Move o jogador se necessário
             if (player.X != data.ReadByte() || player.Y != data.ReadByte())
-                Send.Player_Position(player);
+                Send.PlayerPosition(player);
             else
                 player.Move(data.ReadByte());
         }
@@ -315,7 +315,7 @@ namespace CryBits.Server.Network
             if (data.ReadBoolean()) Send.Map(player.Account, player.Map.Data);
 
             // Envia a informação aos outros jogadores
-            Send.Map_Players(player);
+            Send.MapPlayers(player);
 
             // Entra no mapa
             player.GettingMap = false;
@@ -334,13 +334,13 @@ namespace CryBits.Server.Network
             // Envia a mensagem para os outros jogadores
             switch ((Messages)data.ReadByte())
             {
-                case Messages.Map: Send.Message_Map(player, message); break;
-                case Messages.Global: Send.Message_Global(player, message); break;
-                case Messages.Private: Send.Message_Private(player, data.ReadString(), message); break;
+                case Messages.Map: Send.MessageMap(player, message); break;
+                case Messages.Global: Send.MessageGlobal(player, message); break;
+                case Messages.Private: Send.MessagePrivate(player, data.ReadString(), message); break;
             }
         }
 
-        private static void Player_Attack(Player player)
+        private static void PlayerAttack(Player player)
         {
             // Ataca
             player.Attack();
@@ -355,8 +355,8 @@ namespace CryBits.Server.Network
             {
                 player.Attribute[attributeNum] += 1;
                 player.Points -= 1;
-                Send.Player_Experience(player);
-                Send.Map_Players(player);
+                Send.PlayerExperience(player);
+                Send.MapPlayers(player);
             }
         }
 
@@ -372,7 +372,7 @@ namespace CryBits.Server.Network
             {
                 // Retira o item do mapa
                 player.Map.Item.Remove(mapItem);
-                Send.Map_Items(player.Map);
+                Send.MapItems(player.Map);
             }
         }
 
@@ -381,7 +381,7 @@ namespace CryBits.Server.Network
             player.DropItem(data.ReadByte(), data.ReadInt16());
         }
 
-        private static void Inventory_Change(Player player, NetIncomingMessage data)
+        private static void InventoryChange(Player player, NetIncomingMessage data)
         {
             byte slotOld = data.ReadByte(), slotNew = data.ReadByte();
 
@@ -392,23 +392,23 @@ namespace CryBits.Server.Network
 
             // Muda o item de slot
             Swap(ref player.Inventory[slotOld], ref player.Inventory[slotNew]);
-            Send.Player_Inventory(player);
+            Send.PlayerInventory(player);
 
             // Altera na hotbar
             Hotbar hotbarSlot = player.FindHotbar(Hotbars.Item, player.Inventory[slotOld]);
             if (hotbarSlot != null)
             {
                 hotbarSlot.Slot = slotNew;
-                Send.Player_Hotbar(player);
+                Send.PlayerHotbar(player);
             }
         }
 
-        private static void Inventory_Use(Player player, NetIncomingMessage data)
+        private static void InventoryUse(Player player, NetIncomingMessage data)
         {
             player.UseItem(player.Inventory[data.ReadByte()]);
         }
 
-        private static void Equipment_Remove(Player player, NetIncomingMessage data)
+        private static void EquipmentRemove(Player player, NetIncomingMessage data)
         {
             byte slot = data.ReadByte();
 
@@ -426,8 +426,8 @@ namespace CryBits.Server.Network
                 player.Map.Item.Add(new MapItems(player.Equipment[slot], 1, player.X, player.Y));
 
                 // Envia os dados
-                Send.Map_Items(player.Map);
-                Send.Player_Inventory(player);
+                Send.MapItems(player.Map);
+                Send.PlayerInventory(player);
             }
 
             // Remove o equipamento
@@ -435,10 +435,10 @@ namespace CryBits.Server.Network
             player.Equipment[slot] = null;
 
             // Envia os dados
-            Send.Player_Equipments(player);
+            Send.PlayerEquipments(player);
         }
 
-        private static void Hotbar_Add(Player player, NetIncomingMessage data)
+        private static void HotbarAdd(Player player, NetIncomingMessage data)
         {
             short hotbarSlot = data.ReadInt16();
             Hotbars type = (Hotbars)data.ReadByte();
@@ -452,10 +452,10 @@ namespace CryBits.Server.Network
             player.Hotbar[hotbarSlot].Type = type;
 
             // Envia os dados
-            Send.Player_Hotbar(player);
+            Send.PlayerHotbar(player);
         }
 
-        private static void Hotbar_Change(Player player, NetIncomingMessage data)
+        private static void HotbarChange(Player player, NetIncomingMessage data)
         {
             short slotOld = data.ReadInt16(), slotNew = data.ReadInt16();
 
@@ -466,10 +466,10 @@ namespace CryBits.Server.Network
 
             // Muda o item de slot
             Swap(ref player.Hotbar[slotOld], ref player.Hotbar[slotNew]);
-            Send.Player_Hotbar(player);
+            Send.PlayerHotbar(player);
         }
 
-        private static void Hotbar_Use(Player player, NetIncomingMessage data)
+        private static void HotbarUse(Player player, NetIncomingMessage data)
         {
             byte hotbarSlot = data.ReadByte();
 
@@ -480,7 +480,7 @@ namespace CryBits.Server.Network
             }
         }
 
-        private static void Write_Settings(Account account, NetIncomingMessage data)
+        private static void WriteSettings(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (account.Access < Accesses.Editor)
@@ -507,7 +507,7 @@ namespace CryBits.Server.Network
             Write.Defaults();
         }
 
-        private static void Write_Classes(Account account, NetIncomingMessage data)
+        private static void WriteClasses(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (account.Access < Accesses.Editor)
@@ -526,7 +526,7 @@ namespace CryBits.Server.Network
                     Send.Classes(Account.List[i]);
         }
 
-        private static void Write_Maps(Account account, NetIncomingMessage data)
+        private static void WriteMaps(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (account.Access < Accesses.Editor)
@@ -543,7 +543,7 @@ namespace CryBits.Server.Network
             foreach (var tempMap in TempMap.List.Values)
             {
                 // Itens do mapa
-                tempMap.Spawn_Items();
+                tempMap.SpawnItems();
 
                 // Envia o mapa para todos os jogadores que estão nele
                 for (byte n = 0; n < Account.List.Count; n++)
@@ -553,7 +553,7 @@ namespace CryBits.Server.Network
             }
         }
 
-        private static void Write_NPCs(Account account, NetIncomingMessage data)
+        private static void WriteNPCs(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (account.Access < Accesses.Editor)
@@ -572,7 +572,7 @@ namespace CryBits.Server.Network
                     Send.NPCs(Account.List[i]);
         }
 
-        private static void Write_Items(Account account, NetIncomingMessage data)
+        private static void WriteItems(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (account.Access < Accesses.Editor)
@@ -591,7 +591,7 @@ namespace CryBits.Server.Network
                     Send.Items(Account.List[i]);
         }
 
-        private static void Write_Shops(Account account, NetIncomingMessage data)
+        private static void WriteShops(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (account.Access < Accesses.Editor)
@@ -610,42 +610,42 @@ namespace CryBits.Server.Network
                     Send.Shops(Account.List[i]);
         }
 
-        private static void Request_Setting(Account account)
+        private static void RequestSetting(Account account)
         {
-            Send.Server_Data(account);
+            Send.ServerData(account);
         }
 
-        private static void Request_Classes(Account account)
+        private static void RequestClasses(Account account)
         {
             Send.Classes(account);
         }
 
-        private static void Request_Map(Account account, NetIncomingMessage data)
+        private static void RequestMap(Account account, NetIncomingMessage data)
         {
             Send.Map(account, Map.Get(new Guid(data.ReadString())));
         }
 
-        private static void Request_Maps(Account account)
+        private static void RequestMaps(Account account)
         {
             Send.Maps(account);
         }
 
-        private static void Request_NPCs(Account account)
+        private static void RequestNPCs(Account account)
         {
             Send.NPCs(account);
         }
 
-        private static void Request_Items(Account account)
+        private static void RequestItems(Account account)
         {
             Send.Items(account);
         }
 
-        private static void Request_Shops(Account account)
+        private static void RequestShops(Account account)
         {
             Send.Shops(account);
         }
 
-        private static void Party_Invite(Player player, NetIncomingMessage data)
+        private static void PartyInvite(Player player, NetIncomingMessage data)
         {
             string name = data.ReadString();
 
@@ -685,10 +685,10 @@ namespace CryBits.Server.Network
 
             // Convida o jogador
             invited.PartyRequest = player.Name;
-            Send.Party_Invitation(invited, player.Name);
+            Send.PartyInvitation(invited, player.Name);
         }
 
-        private static void Party_Accept(Player player)
+        private static void PartyAccept(Player player)
         {
             Player invitation = Player.Find(player.PartyRequest);
 
@@ -728,7 +728,7 @@ namespace CryBits.Server.Network
             for (byte i = 0; i < player.Party.Count; i++) Send.Party(player.Party[i]);
         }
 
-        private static void Party_Decline(Player player)
+        private static void PartyDecline(Player player)
         {
             Player invitation = Player.Find(player.PartyRequest);
 
@@ -737,13 +737,13 @@ namespace CryBits.Server.Network
             player.PartyRequest = string.Empty;
         }
 
-        private static void Party_Leave(Player player)
+        private static void PartyLeave(Player player)
         {
             // Sai do grupo
-            player.Party_Leave();
+            player.PartyLeave();
         }
 
-        private static void Trade_Invite(Player player, NetIncomingMessage data)
+        private static void TradeInvite(Player player, NetIncomingMessage data)
         {
             string name = data.ReadString();
 
@@ -794,10 +794,10 @@ namespace CryBits.Server.Network
 
             // Convida o jogador
             invited.TradeRequest = player.Name;
-            Send.Trade_Invitation(invited, player.Name);
+            Send.TradeInvitation(invited, player.Name);
         }
 
-        private static void Trade_Accept(Player player)
+        private static void TradeAccept(Player player)
         {
             Player invited = Player.Find(player.TradeRequest);
 
@@ -842,7 +842,7 @@ namespace CryBits.Server.Network
             Send.Trade(invited, true);
         }
 
-        private static void Trade_Decline(Player player)
+        private static void TradeDecline(Player player)
         {
             Player invited = Player.Find(player.TradeRequest);
 
@@ -851,12 +851,12 @@ namespace CryBits.Server.Network
             player.TradeRequest = string.Empty;
         }
 
-        private static void Trade_Leave(Player player)
+        private static void TradeLeave(Player player)
         {
-            player.Trade_Leave();
+            player.TradeLeave();
         }
 
-        private static void Trade_Offer(Player player, NetIncomingMessage data)
+        private static void TradeOffer(Player player, NetIncomingMessage data)
         {
             byte slot = data.ReadByte(), inventorySlot = data.ReadByte();
             short amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
@@ -877,11 +877,11 @@ namespace CryBits.Server.Network
                 player.TradeOffer[slot] = new TradeSlot();
 
             // Envia os dados ao outro jogador
-            Send.Trade_Offer(player);
-            Send.Trade_Offer(player.Trade, false);
+            Send.TradeOffer(player);
+            Send.TradeOffer(player.Trade, false);
         }
 
-        private static void Trade_Offer_State(Player player, NetIncomingMessage data)
+        private static void TradeOfferState(Player player, NetIncomingMessage data)
         {
             TradeStatus state = (TradeStatus)data.ReadByte();
             Player invited = player.Trade;
@@ -890,12 +890,12 @@ namespace CryBits.Server.Network
             {
                 case TradeStatus.Accepted:
                     // Verifica se os jogadores têm espaço disponivel para trocar os itens
-                    if (player.Total_Trade_Items() > invited.Total_Inventory_Free())
+                    if (player.TotalTradeItems() > invited.TotalInventoryFree())
                     {
                         Send.Message(invited, invited.Name + " don't have enough space in their inventory to do this trade.", Color.Red);
                         break;
                     }
-                    if (invited.Total_Trade_Items() > player.Total_Inventory_Free())
+                    if (invited.TotalTradeItems() > player.TotalInventoryFree())
                     {
                         Send.Message(invited, "You don't have enough space in your inventory to do this trade.", Color.Red);
                         break;
@@ -922,14 +922,14 @@ namespace CryBits.Server.Network
                     }
 
                     // Envia os dados do inventário aos jogadores
-                    Send.Player_Inventory(player);
-                    Send.Player_Inventory(invited);
+                    Send.PlayerInventory(player);
+                    Send.PlayerInventory(invited);
 
                     // Limpa a troca
                     player.TradeOffer = new TradeSlot[MaxInventory];
                     invited.TradeOffer = new TradeSlot[MaxInventory];
-                    Send.Trade_Offer(invited);
-                    Send.Trade_Offer(invited, false);
+                    Send.TradeOffer(invited);
+                    Send.TradeOffer(invited, false);
                     break;
                 case TradeStatus.Declined:
                     Send.Message(invited, "The offer was declined.", Color.Red);
@@ -940,10 +940,10 @@ namespace CryBits.Server.Network
             }
 
             // Envia os dados
-            Send.Trade_State(invited, state);
+            Send.TradeState(invited, state);
         }
 
-        private static void Shop_Buy(Player player, NetIncomingMessage data)
+        private static void ShopBuy(Player player, NetIncomingMessage data)
         {
             ShopItem shopSold = player.Shop.Sold[data.ReadByte()];
             ItemSlot inventorySlot = player.FindInventory(player.Shop.Currency);
@@ -955,7 +955,7 @@ namespace CryBits.Server.Network
                 return;
             }
             // Verifica se há espaço no inventário
-            if (player.Total_Inventory_Free() == 0 && inventorySlot.Amount > shopSold.Price)
+            if (player.TotalInventoryFree() == 0 && inventorySlot.Amount > shopSold.Price)
             {
                 Send.Message(player, "You  don't have space in your bag.", Color.Red);
                 return;
@@ -967,7 +967,7 @@ namespace CryBits.Server.Network
             Send.Message(player, "You bought " + shopSold.Price + "x " + shopSold.Item.Name + ".", Color.Green);
         }
 
-        private static void Shop_Sell(Player player, NetIncomingMessage data)
+        private static void ShopSell(Player player, NetIncomingMessage data)
         {
             byte inventorySlot = data.ReadByte();
             short amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
@@ -980,7 +980,7 @@ namespace CryBits.Server.Network
                 return;
             }
             // Verifica se há espaço no inventário
-            if (player.Total_Inventory_Free() == 0 && player.Inventory[inventorySlot].Amount > amount)
+            if (player.TotalInventoryFree() == 0 && player.Inventory[inventorySlot].Amount > amount)
             {
                 Send.Message(player, "You don't have space in your bag.", Color.Red);
                 return;
@@ -992,7 +992,7 @@ namespace CryBits.Server.Network
             player.GiveItem(player.Shop.Currency, (short)(buy.Price * amount));
         }
 
-        private static void Shop_Close(Player player)
+        private static void ShopClose(Player player)
         {
             player.Shop = null;
         }

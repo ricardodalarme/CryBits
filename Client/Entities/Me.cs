@@ -20,7 +20,7 @@ namespace CryBits.Client.Entities
         public int Experience;
         public int ExpNeeded;
         public short Points;
-        public int CollectTimer;
+        private int _collectTimer;
 
         // Construtor
         public Me(string name) : base(name) { }
@@ -53,11 +53,11 @@ namespace CryBits.Client.Entities
             if (Direction != direction)
             {
                 Direction = direction;
-                Send.Player_Direction();
+                Send.PlayerDirection();
             }
 
             // Verifica se o azulejo seguinte está livre
-            if (Map.Tile_Blocked(X, Y, direction)) return;
+            if (Map.TileBlocked(X, Y, direction)) return;
 
             // Define a velocidade que o jogador se move
             if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Graphics.RenderWindow.HasFocus())
@@ -66,7 +66,7 @@ namespace CryBits.Client.Entities
                 Movement = Movements.Walking;
 
             // Movimento o jogador
-            Send.Player_Move();
+            Send.PlayerMove();
 
             // Define a Posição exata do jogador
             switch (direction)
@@ -95,7 +95,7 @@ namespace CryBits.Client.Entities
 
             // Envia os dados para o servidor
             AttackTimer = Environment.TickCount;
-            Send.Player_Attack();
+            Send.PlayerAttack();
         }
 
         public void CollectItem()
@@ -118,11 +118,11 @@ namespace CryBits.Client.Entities
             // Somente se necessário
             if (!hasItem) return;
             if (!hasSlot) return;
-            if (Environment.TickCount <= CollectTimer + 250) return;
+            if (Environment.TickCount <= _collectTimer + 250) return;
 
             // Coleta o item
             Send.CollectItem();
-            CollectTimer = Environment.TickCount;
+            _collectTimer = Environment.TickCount;
         }
 
         public void Leave()
