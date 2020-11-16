@@ -15,6 +15,7 @@ CryBits is a project developed with the aim of helping indie developers to creat
 
 | Name  | Status |
 |:---|--------|
+| Master (Stable) | [![Build Status](https://github.com/ricardodalarme/CryBits/workflows/Master/badge.svg)](https://github.com/ricardodalarme/CryBits/actions) |
 | Development (Nightly) | [![Build Status](https://github.com/ricardodalarme/CryBits/workflows/Development/badge.svg)](https://github.com/ricardodalarme/CryBits/actions) |
 
 ## Contributing
