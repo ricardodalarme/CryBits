@@ -14,8 +14,8 @@ namespace CryBits.Server.Entities
         public string Password { get; set; } = string.Empty;
         public Accesses Access { get; set; }
         public bool InEditor { get; set; }
-        public Player Character{ get; set; }
-        public List<TempCharacter> Characters = new List<TempCharacter>();
+        public Player Character { get; set; }
+        public List<TempCharacter> Characters { get; set; } = new List<TempCharacter>();
         public struct TempCharacter
         {
             public string Name;

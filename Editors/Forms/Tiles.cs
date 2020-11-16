@@ -65,7 +65,7 @@ namespace CryBits.Editors.Forms
         private void butClear_Click(object sender, EventArgs e)
         {
             // Limpa os dados
-            Lists.Tile[(byte)scrlTile.Value] = new Tile((byte)scrlTile.Value);
+            Tile.List[(byte)scrlTile.Value] = new Tile((byte)scrlTile.Value);
         }
 
         private void butCancel_Click(object sender, EventArgs e)
@@ -89,27 +89,27 @@ namespace CryBits.Editors.Forms
             Point tileDif = new Point(e.X - e.X / Grid * Grid, e.Y - e.Y / Grid * Grid);
 
             // Previne erros
-            if (position.X > Lists.Tile[scrlTile.Value].Data.GetUpperBound(0)) return;
-            if (position.Y > Lists.Tile[scrlTile.Value].Data.GetUpperBound(1)) return;
+            if (position.X > Tile.List[scrlTile.Value].Data.GetUpperBound(0)) return;
+            if (position.Y > Tile.List[scrlTile.Value].Data.GetUpperBound(1)) return;
 
             // Atributos
             if (optAttributes.Checked)
             {
                 // Define
                 if (e.Button == MouseButtons.Left)
-                    Lists.Tile[scrlTile.Value].Data[position.X, position.Y].Attribute = (byte)_attributes;
+                    Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute = (byte)_attributes;
                 // Remove
                 else if (e.Button == MouseButtons.Right)
-                    Lists.Tile[scrlTile.Value].Data[position.X, position.Y].Attribute = 0;
+                    Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute = 0;
             }
             // Bloqueio direcional
             else if (optDirBlock.Checked)
                 for (byte i = 0; i < (byte)Directions.Count; i++)
                     if (tileDif.X >= Block_Position(i).X && tileDif.X <= Block_Position(i).X + 8)
                         if (tileDif.Y >= Block_Position(i).Y && tileDif.Y <= Block_Position(i).Y + 8)
-                            if (Lists.Tile[scrlTile.Value].Data[position.X, position.Y].Attribute != (byte)TileAttributes.Block)
+                            if (Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute != (byte)TileAttributes.Block)
                                 // Altera o valor de bloqueio
-                                Lists.Tile[scrlTile.Value].Data[position.X, position.Y].Block[i] = !Lists.Tile[scrlTile.Value].Data[position.X, position.Y].Block[i];
+                                Tile.List[scrlTile.Value].Data[position.X, position.Y].Block[i] = !Tile.List[scrlTile.Value].Data[position.X, position.Y].Block[i];
         }
 
         private void optBlock_CheckedChanged(object sender, EventArgs e)

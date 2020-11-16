@@ -173,15 +173,15 @@ namespace CryBits.Editors.Logic
                 }
 
             // Adiciona uma nova partícula
-            for (int i = 1; i <= Lists.Weather.GetUpperBound(0); i++)
-                if (!Lists.Weather[i].Visible)
+            for (int i = 1; i <= TempMap.Weather.GetUpperBound(0); i++)
+                if (!TempMap.Weather[i].Visible)
                 {
                     if (MyRandom.Next(0, Map.MaxWeatherIntensity - weather.Intensity) == 0)
                     {
                         if (!stop)
                         {
                             // Cria a partícula
-                            Lists.Weather[i].Visible = true;
+                            TempMap.Weather[i].Visible = true;
 
                             // Cria a partícula de acordo com o seu tipo
                             switch (weather.Type)
@@ -206,8 +206,8 @@ namespace CryBits.Editors.Logic
                     }
 
                     // Reseta a partícula
-                    if (Lists.Weather[i].X > Map.Width * Grid || Lists.Weather[i].Y > Map.Height * Grid)
-                        Lists.Weather[i] = new MapWeatherParticle();
+                    if (TempMap.Weather[i].X > Map.Width * Grid || TempMap.Weather[i].Y > Map.Height * Grid)
+                        TempMap.Weather[i] = new MapWeatherParticle();
                 }
 
             // Trovoadas
@@ -226,57 +226,57 @@ namespace CryBits.Editors.Logic
         private static void Weather_Rain_Create(int i)
         {
             // Define a velocidade e a posição da partícula
-            Lists.Weather[i].Speed = MyRandom.Next(8, 13);
+            TempMap.Weather[i].Speed = MyRandom.Next(8, 13);
 
             if (MyRandom.Next(2) == 0)
             {
-                Lists.Weather[i].X = -32;
-                Lists.Weather[i].Y = MyRandom.Next(-32, EditorMaps.Form.picMap.Height);
+                TempMap.Weather[i].X = -32;
+                TempMap.Weather[i].Y = MyRandom.Next(-32, EditorMaps.Form.picMap.Height);
             }
             else
             {
-                Lists.Weather[i].X = MyRandom.Next(-32, EditorMaps.Form.picMap.Width);
-                Lists.Weather[i].Y = -32;
+                TempMap.Weather[i].X = MyRandom.Next(-32, EditorMaps.Form.picMap.Width);
+                TempMap.Weather[i].Y = -32;
             }
         }
 
         private static void Weather_Rain_Movement(int i)
         {
             // Movimenta a partícula
-            Lists.Weather[i].X += Lists.Weather[i].Speed;
-            Lists.Weather[i].Y += Lists.Weather[i].Speed;
+            TempMap.Weather[i].X += TempMap.Weather[i].Speed;
+            TempMap.Weather[i].Y += TempMap.Weather[i].Speed;
         }
 
         private static void Weather_Snow_Create(int i)
         {
             // Define a velocidade e a posição da partícula
-            Lists.Weather[i].Speed = MyRandom.Next(1, 3);
-            Lists.Weather[i].Y = -32;
-            Lists.Weather[i].X = MyRandom.Next(-32, EditorMaps.Form.picMap.Width);
-            Lists.Weather[i].Start = Lists.Weather[i].X;
-            Lists.Weather[i].Back = MyRandom.Next(2) != 0;
+            TempMap.Weather[i].Speed = MyRandom.Next(1, 3);
+            TempMap.Weather[i].Y = -32;
+            TempMap.Weather[i].X = MyRandom.Next(-32, EditorMaps.Form.picMap.Width);
+            TempMap.Weather[i].Start = TempMap.Weather[i].X;
+            TempMap.Weather[i].Back = MyRandom.Next(2) != 0;
         }
 
         private static void Weather_Snow_Movement(int i, bool move = true)
         {
             int difference = MyRandom.Next(0, Map.SnowMovement / 3);
-            int x1 = Lists.Weather[i].Start + Map.SnowMovement + difference;
-            int x2 = Lists.Weather[i].Start - Map.SnowMovement - difference;
+            int x1 = TempMap.Weather[i].Start + Map.SnowMovement + difference;
+            int x2 = TempMap.Weather[i].Start - Map.SnowMovement - difference;
 
             // Faz com que a partícula volte
-            if (x1 <= Lists.Weather[i].X)
-                Lists.Weather[i].Back = true;
-            else if (x2 >= Lists.Weather[i].X)
-                Lists.Weather[i].Back = false;
+            if (x1 <= TempMap.Weather[i].X)
+                TempMap.Weather[i].Back = true;
+            else if (x2 >= TempMap.Weather[i].X)
+                TempMap.Weather[i].Back = false;
 
             // Movimenta a partícula
-            Lists.Weather[i].Y += Lists.Weather[i].Speed;
+            TempMap.Weather[i].Y += TempMap.Weather[i].Speed;
 
             if (move)
-                if (Lists.Weather[i].Back)
-                    Lists.Weather[i].X -= 1;
+                if (TempMap.Weather[i].Back)
+                    TempMap.Weather[i].X -= 1;
                 else
-                    Lists.Weather[i].X += 1;
+                    TempMap.Weather[i].X += 1;
         }
 
         private static void Editor_Maps_Music()

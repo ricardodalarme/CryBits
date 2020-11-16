@@ -504,7 +504,7 @@ namespace CryBits.Server.Network
             MaxPasswordLength = data.ReadByte();
 
             // Salva os dados
-            Write.Settings();
+            Write.Defaults();
         }
 
         private static void Write_Classes(Account account, NetIncomingMessage data)

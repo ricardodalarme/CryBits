@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Entities.Tools;
+using static CryBits.Editors.Logic.Options;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
 using Graphics = CryBits.Editors.Media.Graphics;
@@ -20,14 +21,18 @@ namespace CryBits.Editors.Library
             // Cria o arquivo se ele não existir
             if (!Directories.Options.Exists)
             {
-                Lists.Options = new Lists.Structures.Options();
                 Write.Options();
                 return;
             }
 
-            // Lê os dados
-            using (var stream = Directories.Options.OpenRead())
-                Lists.Options = (Lists.Structures.Options)new BinaryFormatter().Deserialize(stream);
+            // Carrega as configurações
+            using (var data = new BinaryReader(Directories.Options.OpenRead()))
+            {
+                PreMapGrid = data.ReadBoolean();
+                PreMapView = data.ReadBoolean();
+                PreMapAudio = data.ReadBoolean();
+                Username = data.ReadString();
+            }
         }
 
         public static void Tools()
@@ -35,8 +40,8 @@ namespace CryBits.Editors.Library
             FileInfo file = new FileInfo(Directories.Tools.FullName);
 
             // Limpa a árvore de ordem
-            Lists.Tool = new TreeNode();
-            for (byte i = 0; i < Enum.GetValues(typeof(WindowsTypes)).Length; i++) Lists.Tool.Nodes.Add(((WindowsTypes)i).ToString());
+            Tool.Tree = new TreeNode();
+            for (byte i = 0; i < Enum.GetValues(typeof(WindowsTypes)).Length; i++) Tool.Tree.Nodes.Add(((WindowsTypes)i).ToString());
 
             // Cria o arquivo caso ele não existir
             if (!file.Exists)
@@ -48,8 +53,8 @@ namespace CryBits.Editors.Library
             // Cria um sistema binário para a manipulação dos dados
             using (var data = new BinaryReader(file.OpenRead()))
                 // Lê todos os nós
-                for (byte n = 0; n < Lists.Tool.Nodes.Count; n++)
-                    Tools(Lists.Tool.Nodes[n], data);
+                for (byte n = 0; n < Tool.Tree.Nodes.Count; n++)
+                    Tools(Tool.Tree.Nodes[n], data);
         }
 
         public static void Tools(TreeNode node, BinaryReader data)
@@ -134,8 +139,8 @@ namespace CryBits.Editors.Library
         public static void Tiles()
         {
             // Lê os dados
-            Lists.Tile = new Tile[Graphics.TexTile.Length];
-            for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
+            Entities.Tile.List = new Tile[Graphics.TexTile.Length];
+            for (byte i = 1; i < Entities.Tile.List.Length; i++) Tile(i);
         }
 
         private static void Tile(byte index)
@@ -145,14 +150,14 @@ namespace CryBits.Editors.Library
             // Evita erros
             if (!file.Exists)
             {
-                Lists.Tile[index] = new Tile(index);
+                Entities.Tile.List[index] = new Tile(index);
                 Write.Tile(index);
                 return;
             }
 
             // Lê os dados
             using (var stream = file.OpenRead())
-                Lists.Tile[index] = (Tile)new BinaryFormatter().Deserialize(stream);
+                Entities.Tile.List[index] = (Tile)new BinaryFormatter().Deserialize(stream);
         }
     }
 }

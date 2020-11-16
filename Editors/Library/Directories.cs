@@ -11,7 +11,7 @@ namespace CryBits.Editors.Library
         public const string Format = ".dat";
 
         // Editor
-        public static readonly FileInfo Options = new FileInfo(Application.StartupPath + @"\Options" + Format);
+        public static readonly FileInfo Options = new FileInfo(Application.StartupPath + @"\Data\Editors Options" + Format);
 
         // Cliente
         public static readonly DirectoryInfo Fonts = new DirectoryInfo(Application.StartupPath + @"\Graphics\Fonts\");

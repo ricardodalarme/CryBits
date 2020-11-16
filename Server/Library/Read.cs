@@ -15,7 +15,7 @@ namespace CryBits.Server.Library
         {
             // Carrega todos os dados
             Console.WriteLine("Loading settings.");
-            Settings();
+            Defaults();
             Console.WriteLine("Loading maps.");
             Maps();
             Console.WriteLine("Loading classes.");
@@ -28,17 +28,17 @@ namespace CryBits.Server.Library
             Shops();
         }
 
-        private static void Settings()
+        private static void Defaults()
         {
             // Cria o arquivo caso ele não existir
-            if (!Directories.Settings.Exists)
+            if (!Directories.Defaults.Exists)
             {
-                Write.Settings();
+                Write.Defaults();
                 return;
             }
 
             // Carrega as configurações
-            using (var data = new BinaryReader(Directories.Settings.OpenRead()))
+            using (var data = new BinaryReader(Directories.Defaults.OpenRead()))
             {
                 GameName = data.ReadString();
                 WelcomeMessage = data.ReadString();

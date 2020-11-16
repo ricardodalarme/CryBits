@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using CryBits.Editors.Library;
 using CryBits.Editors.Network;
 using DarkUI.Forms;
+using static CryBits.Editors.Logic.Options;
 
 namespace CryBits.Editors.Forms
 {
@@ -14,8 +15,8 @@ namespace CryBits.Editors.Forms
         public Login()
         {
             InitializeComponent();
-            txtUsername.Text = Lists.Options.Username;
-            chkUsername.Checked = Lists.Options.Username != string.Empty;
+            txtUsername.Text =  Username;
+            chkUsername.Checked =  Username != string.Empty;
         }
 
         private void butConnect_Click(object sender, EventArgs e)
@@ -36,8 +37,7 @@ namespace CryBits.Editors.Forms
             Send.Connect();
 
             // Salva o nome do usuário
-            if (chkUsername.Checked) Lists.Options.Username = txtUsername.Text;
-            else Lists.Options.Username = string.Empty;
+            Username = chkUsername.Checked ? txtUsername.Text : string.Empty;
             Write.Options();
         }
 

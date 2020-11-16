@@ -8,6 +8,10 @@ namespace CryBits.Editors.Entities
     [Serializable]
     internal class Tile
     {
+        // Lista de dados
+        public static Tile[] List;
+
+        // Dados
         public byte Width;
         public byte Height;
         public TileData[,] Data;

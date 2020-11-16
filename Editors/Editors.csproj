@@ -127,6 +127,7 @@
       <DependentUpon>NPCs.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\MapProperties.cs" />
+    <Compile Include="Logic\Options.cs" />
     <Compile Include="Media\Audio\Sound.cs" />
     <Compile Include="Media\Graphics.cs" />
     <Compile Include="Media\Audio\Music.cs" />
@@ -150,7 +151,6 @@
     <Compile Include="Entities\Tile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Library\Read.cs" />
-    <Compile Include="Library\Lists.cs" />
     <Compile Include="Logic\Loop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\Classes.resx">

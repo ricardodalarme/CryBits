@@ -49,7 +49,7 @@ namespace CryBits.Editors.Forms
         {
             // Atualiza a lista de ordem
             treOrder.Nodes.Clear();
-            treOrder.Nodes.Add(Lists.Tool.Nodes[cmbWindows.SelectedIndex]);
+            treOrder.Nodes.Add(Tool.Tree.Nodes[cmbWindows.SelectedIndex]);
             treOrder.ExpandAll();
         }
 
@@ -69,10 +69,10 @@ namespace CryBits.Editors.Forms
                 // Troca a ferramenta de janela
                 if (e.ChangedItem.Label == "Window")
                 {
-                    Lists.Tool.Nodes[window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
+                    Tool.Tree.Nodes[window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
                     treOrder.SelectedNode.Remove();
                     cmbWindows.SelectedIndex = window;
-                    treOrder.SelectedNode = Lists.Tool.Nodes[window].LastNode;
+                    treOrder.SelectedNode = Tool.Tree.Nodes[window].LastNode;
                 }
                 // Troca o nome da ferramenta
                 else if (e.ChangedItem.Label == "Name") treOrder.SelectedNode.Text = treOrder.SelectedNode.Tag.ToString();
@@ -104,7 +104,7 @@ namespace CryBits.Editors.Forms
         {
             // Adiciona uma nova ferramenta
             Tool @new = new Tool();
-            Lists.Tool.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
+            Tool.Tree.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
             switch ((ToolType)cmbType.SelectedIndex)
             {
                 case ToolType.Button: @new = new Button(); break;
@@ -112,7 +112,7 @@ namespace CryBits.Editors.Forms
                 case ToolType.CheckBox: @new = new CheckBox(); break;
                 case ToolType.TextBox: @new = new TextBox(); break;
             }
-            Lists.Tool.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
+            Tool.Tree.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
             @new.Window = (WindowsTypes)cmbWindows.SelectedIndex;
             grpNew.Visible = false;
         }

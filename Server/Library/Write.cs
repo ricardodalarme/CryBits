@@ -8,10 +8,10 @@ namespace CryBits.Server.Library
 {
     internal static class Write
     {
-        public static void Settings()
+        public static void Defaults()
         {
             // Escreve as configurações
-            using (var data = new BinaryWriter(Directories.Settings.OpenWrite()))
+            using (var data = new BinaryWriter(Directories.Defaults.OpenWrite()))
             {
                 data.Write(GameName);
                 data.Write(WelcomeMessage);
