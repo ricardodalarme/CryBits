@@ -7,7 +7,7 @@
     <ProjectGuid>{AB392C7C-BCB0-4924-BBE4-FA7D2280BE11}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>CryBits.Server</RootNamespace>
-    <AssemblyName>CryBits Server</AssemblyName>
+    <AssemblyName>Server</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
