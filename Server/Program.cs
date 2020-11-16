@@ -14,9 +14,6 @@ namespace CryBits.Server
         // Usado para manter a aplicação aberta
         public static bool Working = true;
 
-        // CPS do servidor
-        public static int CPS;
-
         // Usado pra detectar quando o console é fechado
         [DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
@@ -101,7 +98,7 @@ namespace CryBits.Server
      cps                        - shows the current server cps");
                     break;
                 case "cps":
-                    Console.WriteLine("CPS: " + CPS);
+                    Console.WriteLine("CPS: " + Loop.CPS);
                     break;
                 case "defineaccess":
                     // Verifica se o que está digitado corretamente

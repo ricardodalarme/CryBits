@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
-using static CryBits.Client.Logic.Game;
+using static CryBits.Client.Logic.Options;
 
 namespace CryBits.Client.Library
 {
@@ -9,9 +9,19 @@ namespace CryBits.Client.Library
     {
         public static void Options()
         {
-            // Escreve os dados
-            using (var stream = new FileInfo(Directories.Options.FullName).OpenWrite())
-                new BinaryFormatter().Serialize(stream, Option);
+            // Escreve as configurações
+            using (var data = new BinaryWriter(Directories.Options.OpenWrite()))
+            {
+                data.Write(SaveUsername);
+                data.Write(Username);
+                data.Write(Logic.Options.Sounds);
+                data.Write(Logic.Options.Musics);
+                data.Write(Chat);
+                data.Write(FPS);
+                data.Write(Latency);
+                data.Write(Party);
+                data.Write(Trade);
+            }
         }
 
         public static void Map(Map map)

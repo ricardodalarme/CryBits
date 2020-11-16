@@ -25,18 +25,6 @@ namespace CryBits.Client.Logic
             }
         }
 
-        public static void NextTile(Directions direction, ref byte x, ref byte y)
-        {
-            // Próximo azulejo
-            switch (direction)
-            {
-                case Directions.Up: y -= 1; break;
-                case Directions.Down: y += 1; break;
-                case Directions.Right: x += 1; break;
-                case Directions.Left: x -= 1; break;
-            }
-        }
-
         public static bool IsAbove(Rectangle rectangle)
         {
             // Verficia se o Window.Mouse está sobre o objeto

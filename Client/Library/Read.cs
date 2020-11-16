@@ -6,7 +6,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Client.Logic;
 using CryBits.Client.UI;
 using CryBits.Entities;
-using static CryBits.Client.Logic.Game;
 
 namespace CryBits.Client.Library
 {
@@ -24,14 +23,23 @@ namespace CryBits.Client.Library
             // Cria o arquivo se ele não existir
             if (!Directories.Options.Exists)
             {
-                Option = new Options();
                 Write.Options();
                 return;
             }
 
-            // Lê os dados
-            using (var stream = Directories.Options.OpenRead())
-                Option = (Options)new BinaryFormatter().Deserialize(stream);
+            // Carrega as configurações
+            using (var data = new BinaryReader(Directories.Options.OpenRead()))
+            {
+                Logic.Options.SaveUsername = data.ReadBoolean();
+                Logic.Options.Username = data.ReadString();
+                Logic.Options.Sounds = data.ReadBoolean();
+                Logic.Options.Musics = data.ReadBoolean();
+                Logic.Options.Chat = data.ReadBoolean();
+                Logic.Options.FPS = data.ReadBoolean();
+                Logic.Options.Latency = data.ReadBoolean();
+                Logic.Options.Party = data.ReadBoolean();
+                Logic.Options.Trade = data.ReadBoolean();
+            }
         }
 
         private static Buttons Button(BinaryReader data)

@@ -9,7 +9,6 @@ using CryBits.Client.Network;
 using CryBits.Entities;
 using SFML.Window;
 using static CryBits.Defaults;
-using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
 
@@ -158,8 +157,8 @@ namespace CryBits.Client.UI
             Socket.Disconnect();
 
             // Define as marcações corretas
-            CheckBoxes.List["Sounds"].Checked = Option.Sounds;
-            CheckBoxes.List["Musics"].Checked = Option.Musics;
+            CheckBoxes.List["Sounds"].Checked = Logic.Options.Sounds;
+            CheckBoxes.List["Musics"].Checked = Logic.Options.Musics;
 
             // Abre o painel
             Panels.Menu_Close();
@@ -179,7 +178,7 @@ namespace CryBits.Client.UI
         private static void Connect_Ok()
         {
             // Salva o nome do usuário
-            Option.Username = TextBoxes.List["Connect_Username"].Text;
+            Logic.Options.Username = TextBoxes.List["Connect_Username"].Text;
             Write.Options();
 
             // Conecta-se ao jogo

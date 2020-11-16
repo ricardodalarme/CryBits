@@ -8,11 +8,11 @@ using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
+using CryBits.Client.Logic;
 using CryBits.Entities;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
 using static CryBits.Defaults;
 using Color = SFML.Graphics.Color;
@@ -303,8 +303,8 @@ namespace CryBits.Client.Media
             Party();
 
             // Desenha os dados do jogo
-            if (Option.FPS) DrawText("FPS: " + FPS, 176, 7, Color.White);
-            if (Option.Latency) DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
+            if (Options.FPS) DrawText("FPS: " + Loop.FPS, 176, 7, Color.White);
+            if (Options.Latency) DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
         }
 
         #region Tools
@@ -491,7 +491,7 @@ namespace CryBits.Client.Media
             tool.Visible = TextBoxes.Focused != null && ((TextBoxes)TextBoxes.Focused.Data).Name.Equals("Chat");
 
             // Renderiza as mensagens
-            if (tool.Visible || Loop.ChatTimer >= Environment.TickCount && Option.Chat)
+            if (tool.Visible || Loop.ChatTimer >= Environment.TickCount && Options.Chat)
                 for (byte i = UI.Chat.LinesFirst; i <= UI.Chat.LinesVisible + UI.Chat.LinesFirst; i++)
                     if (UI.Chat.Order.Count > i)
                         DrawText(UI.Chat.Order[i].Text, 16, 461 + 11 * (i - UI.Chat.LinesFirst), UI.Chat.Order[i].Color);

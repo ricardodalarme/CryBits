@@ -11,7 +11,6 @@ using CryBits.Client.UI;
 using CryBits.Entities;
 using CryBits.Packets;
 using Lidgren.Network;
-using static CryBits.Client.Logic.Game;
 using static CryBits.Defaults;
 using static CryBits.Utils;
 
@@ -143,13 +142,13 @@ namespace CryBits.Client.Network
             Chat.LinesFirst = 0;
             Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
             TextBoxes.List["Chat"].Text = string.Empty;
-            CheckBoxes.List["Options_Sounds"].Checked = Option.Sounds;
-            CheckBoxes.List["Options_Musics"].Checked = Option.Musics;
-            CheckBoxes.List["Options_Chat"].Checked = Option.Chat;
-            CheckBoxes.List["Options_FPS"].Checked = Option.FPS;
-            CheckBoxes.List["Options_Latency"].Checked = Option.Latency;
-            CheckBoxes.List["Options_Trade"].Checked = Option.Trade;
-            CheckBoxes.List["Options_Party"].Checked = Option.Party;
+            CheckBoxes.List["Options_Sounds"].Checked = Options.Sounds;
+            CheckBoxes.List["Options_Musics"].Checked = Options.Musics;
+            CheckBoxes.List["Options_Chat"].Checked = Options.Chat;
+            CheckBoxes.List["Options_FPS"].Checked = Options.FPS;
+            CheckBoxes.List["Options_Latency"].Checked = Options.Latency;
+            CheckBoxes.List["Options_Trade"].Checked = Options.Trade;
+            CheckBoxes.List["Options_Party"].Checked = Options.Party;
             Loop.ChatTimer = Loop.ChatTimer = Environment.TickCount + 10000;
             Panels.InformationID = Guid.Empty;
 
@@ -439,7 +438,7 @@ namespace CryBits.Client.Network
         private static void Party_Invitation(NetIncomingMessage data)
         {
             // Nega o pedido caso o jogador não quiser receber convites
-            if (!Option.Party)
+            if (!Options.Party)
             {
                 Send.Party_Decline();
                 return;
@@ -479,7 +478,7 @@ namespace CryBits.Client.Network
         private static void Trade_Invitation(NetIncomingMessage data)
         {
             // Nega o pedido caso o jogador não quiser receber convites
-            if (!Option.Trade)
+            if (!Options.Trade)
             {
                 Send.Trade_Decline();
                 return;

@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Me.cs" />
-    <Compile Include="Logic\Game.cs" />
+    <Compile Include="Logic\Options.cs" />
     <Compile Include="Media\Audio\Sound.cs" />
     <Compile Include="UI\Chat.cs" />
     <Compile Include="UI\Windows.cs" />
