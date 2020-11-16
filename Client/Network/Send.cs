@@ -52,7 +52,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Character_Use()
+        public static void CharacterUse()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -62,7 +62,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Character_Create()
+        public static void CharacterCreate()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -71,7 +71,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Character_Delete()
+        public static void CharacterDelete()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -145,7 +145,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Inventory_Change(byte old, byte @new)
+        public static void InventoryChange(byte old, byte @new)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -159,7 +159,7 @@ namespace CryBits.Client.Network
             Panels.List["Drop"].Visible = false;
         }
 
-        public static void Inventory_Use(byte slot)
+        public static void InventoryUse(byte slot)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -172,7 +172,7 @@ namespace CryBits.Client.Network
             Panels.List["Drop"].Visible = false;
         }
 
-        public static void Equipment_Remove(byte slot)
+        public static void EquipmentRemove(byte slot)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -182,7 +182,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Hotbar_Add(short hotbarSlot, byte type, byte slot)
+        public static void HotbarAdd(short hotbarSlot, byte type, byte slot)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -194,7 +194,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Hotbar_Change(short old, short @new)
+        public static void HotbarChange(short old, short @new)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -205,7 +205,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Hotbar_Use(byte slot)
+        public static void HotbarUse(byte slot)
         {
             if (TextBoxes.Focused == null)
             {
@@ -221,7 +221,7 @@ namespace CryBits.Client.Network
             }
         }
 
-        public static void Party_Invite(string playerName)
+        public static void PartyInvite(string playerName)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -231,7 +231,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Party_Accept()
+        public static void PartyAccept()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -240,7 +240,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Party_Decline()
+        public static void PartyDecline()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -249,7 +249,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Party_Leave()
+        public static void PartyLeave()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -258,7 +258,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Player_Direction()
+        public static void PlayerDirection()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -268,7 +268,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Player_Move()
+        public static void PlayerMove()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -280,7 +280,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Player_Attack()
+        public static void PlayerAttack()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -289,7 +289,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Trade_Invite(string playerName)
+        public static void TradeInvite(string playerName)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -299,7 +299,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Trade_Accept()
+        public static void TradeAccept()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -308,7 +308,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Trade_Decline()
+        public static void TradeDecline()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -317,7 +317,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Trade_Leave()
+        public static void TradeLeave()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -326,7 +326,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Trade_Offer(byte slot, byte inventorySlot, short amount = 1)
+        public static void TradeOffer(byte slot, byte inventorySlot, short amount = 1)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -338,7 +338,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Trade_Offer_State(TradeStatus state)
+        public static void TradeOfferState(TradeStatus state)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -348,7 +348,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Shop_Buy(byte slot)
+        public static void ShopBuy(byte slot)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -358,7 +358,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Shop_Sell(byte slot, short amount)
+        public static void ShopSell(byte slot, short amount)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -369,7 +369,7 @@ namespace CryBits.Client.Network
             Packet(data);
         }
 
-        public static void Shop_Close()
+        public static void ShopClose()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 

@@ -110,7 +110,7 @@ namespace CryBits.Server.Entities
                         if (Vital[v] > MaxVital(v)) Vital[v] = MaxVital(v);
 
                         // Env ia os dados aos jogadores
-                        Send.Player_Vitals(this);
+                        Send.PlayerVitals(this);
                     }
         }
 
@@ -125,10 +125,10 @@ namespace CryBits.Server.Entities
             Send.NPCs(Account);
             Send.Shops(Account);
             Send.Map(Account, Map.Data);
-            Send.Map_Players(this);
-            Send.Player_Experience(this);
-            Send.Player_Inventory(this);
-            Send.Player_Hotbar(this);
+            Send.MapPlayers(this);
+            Send.PlayerExperience(this);
+            Send.PlayerInventory(this);
+            Send.PlayerHotbar(this);
 
             // Transporta o jogador para a sua determinada Posição
             Warp(Map, X, Y, true);
@@ -142,11 +142,11 @@ namespace CryBits.Server.Entities
         {
             // Salva os dados do jogador e atualiza os demais jogadores da desconexão
             Write.Character(Account);
-            Send.Player_Leave(this);
+            Send.PlayerLeave(this);
 
             // Sai dos grupos
-            Party_Leave();
-            Trade_Leave();
+            PartyLeave();
+            TradeLeave();
         }
 
         public void Warp(TempMap to, byte x, byte y, bool needUpdate = false)
@@ -154,8 +154,8 @@ namespace CryBits.Server.Entities
             TempMap mapOld = Map;
 
             // Cancela a troca ou a loja
-            if (Trade != null) Trade_Leave();
-            if (Shop != null) Shop_Leave();
+            if (Trade != null) TradeLeave();
+            if (Shop != null) ShopLeave();
 
             // Evita que o jogador seja transportado para fora do limite
             if (to == null) return;
@@ -173,19 +173,19 @@ namespace CryBits.Server.Entities
             if (mapOld != to || needUpdate)
             {
                 // Sai do mapa antigo
-                Send.Player_LeaveMap(this, mapOld);
+                Send.PlayerLeaveMap(this, mapOld);
 
                 // Inviabiliza o jogador de algumas ações até que ele receba os dados necessários
                 GettingMap = true;
 
                 // Envia dados necessários do mapa
-                Send.Map_Revision(this, to.Data);
-                Send.Map_Items(this, to);
-                Send.Map_NPCs(this, to);
+                Send.MapRevision(this, to.Data);
+                Send.MapItems(this, to);
+                Send.MapNPCs(this, to);
             }
             // Apenas atualiza a posição do jogador
             else
-                Send.Player_Position(this);
+                Send.PlayerPosition(this);
         }
 
         public void Move(byte movement)
@@ -200,8 +200,8 @@ namespace CryBits.Server.Entities
             if (GettingMap) return;
 
             // Cancela a troca ou a loja
-            if (Trade != null) Trade_Leave();
-            if (Shop != null) Shop_Leave();
+            if (Trade != null) TradeLeave();
+            if (Shop != null) ShopLeave();
 
             // Próximo azulejo
             NextTile(Direction, ref nextX, ref nextY);
@@ -219,12 +219,12 @@ namespace CryBits.Server.Entities
                     }
                 else
                 {
-                    Send.Player_Position(this);
+                    Send.PlayerPosition(this);
                     return;
                 }
             }
             // Bloqueio
-            else if (!Map.Tile_Blocked(oldX, oldY, Direction))
+            else if (!Map.TileBlocked(oldX, oldY, Direction))
             {
                 X = nextX;
                 Y = nextY;
@@ -245,20 +245,20 @@ namespace CryBits.Server.Entities
 
             // Envia os dados
             if (!secondMovement && (oldX != X || oldY != Y))
-                Send.Player_Move(this, movement);
+                Send.PlayerMove(this, movement);
             else
-                Send.Player_Position(this);
+                Send.PlayerPosition(this);
         }
 
         public void Died()
         {
             // Recupera os vitais
             for (byte n = 0; n < (byte)Vitals.Count; n++) Vital[n] = MaxVital(n);
-            Send.Player_Vitals(this);
+            Send.PlayerVitals(this);
 
             // Perde 10% da experiência
             Experience /= 10;
-            Send.Player_Experience(this);
+            Send.PlayerExperience(this);
 
             // Retorna para o ínicio
             Direction = (Directions)Class.SpawnDirection;
@@ -276,14 +276,14 @@ namespace CryBits.Server.Entities
             // Apenas se necessário
             if (Trade != null) return;
             if (Shop != null) return;
-            if (Environment.TickCount < _attackTimer + 750) return;
-            if (Map.Tile_Blocked(X, Y, Direction, false)) goto @continue;
+            if (Environment.TickCount < _attackTimer + AttackSpeed) return;
+            if (Map.TileBlocked(X, Y, Direction, false)) goto @continue;
 
             // Ataca um jogador
             victim = Map.HasPlayer(nextX, nextY);
             if (victim != null)
             {
-                Attack_Player((Player)victim);
+                AttackPlayer((Player)victim);
                 return;
             }
 
@@ -291,17 +291,17 @@ namespace CryBits.Server.Entities
             victim = Map.HasNPC(nextX, nextY);
             if (victim != null)
             {
-                Attack_NPC((TempNPC)victim);
+                AttackNPC((TempNPC)victim);
                 return;
             }
 
         @continue:
             // Demonstra que aos outros jogadores o ataque
-            Send.Player_Attack(this, null);
+            Send.PlayerAttack(this, null);
             _attackTimer = Environment.TickCount;
         }
 
-        private void Attack_Player(Player victim)
+        private void AttackPlayer(Player victim)
         {
             // Verifica se a vítima pode ser atacada
             if (victim.GettingMap) return;
@@ -321,12 +321,12 @@ namespace CryBits.Server.Entities
             if (attackDamage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Player_Attack(this, victim.Name, Targets.Player);
+                Send.PlayerAttack(this, victim.Name, Targets.Player);
 
                 if (attackDamage < victim.Vital[(byte)Vitals.HP])
                 {
                     victim.Vital[(byte)Vitals.HP] -= attackDamage;
-                    Send.Player_Vitals(victim);
+                    Send.PlayerVitals(victim);
                 }
                 // FATALITY
                 else
@@ -340,10 +340,10 @@ namespace CryBits.Server.Entities
             }
             else
                 // Demonstra o ataque aos outros jogadores
-                Send.Player_Attack(this);
+                Send.PlayerAttack(this);
         }
 
-        private void Attack_NPC(TempNPC victim)
+        private void AttackNPC(TempNPC victim)
         {
             // Mensagem
             if (victim.Target != this && !string.IsNullOrEmpty(victim.Data.SayMsg)) Send.Message(this, victim.Data.Name + ": " + victim.Data.SayMsg, Color.White);
@@ -352,7 +352,7 @@ namespace CryBits.Server.Entities
             switch (victim.Data.Behaviour)
             {
                 case NPCs.Friendly: return;
-                case NPCs.ShopKeeper: Shop_Open(victim.Data.Shop); return;
+                case NPCs.ShopKeeper: ShopOpen(victim.Data.Shop); return;
             }
 
             // Define o alvo do NPC
@@ -368,12 +368,12 @@ namespace CryBits.Server.Entities
             if (attackDamage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.Player_Attack(this, victim.Index.ToString(), Targets.NPC);
+                Send.PlayerAttack(this, victim.Index.ToString(), Targets.NPC);
 
                 if (attackDamage < victim.Vital[(byte)Vitals.HP])
                 {
                     victim.Vital[(byte)Vitals.HP] -= attackDamage;
-                    Send.Map_NPC_Vitals(victim);
+                    Send.MapNPCVitals(victim);
                 }
                 // FATALITY
                 else
@@ -387,13 +387,13 @@ namespace CryBits.Server.Entities
             }
             else
                 // Demonstra o ataque aos outros jogadores
-                Send.Player_Attack(this);
+                Send.PlayerAttack(this);
         }
 
         public void GiveExperience(int value)
         {
             // Dá a experiência ao jogador, caso ele estiver em um grupo divide a experiência entre os membros
-            if (Party.Count > 0 && value > 0) Party_SplitXP(value);
+            if (Party.Count > 0 && value > 0) PartySplitXP(value);
             else Experience += value;
 
             // Verifica se a experiência não ficou negtiva
@@ -419,8 +419,8 @@ namespace CryBits.Server.Entities
             }
 
             // Envia os dados
-            Send.Player_Experience(this);
-            if (numLevel > 0) Send.Map_Players(this);
+            Send.PlayerExperience(this);
+            if (numLevel > 0) Send.MapPlayers(this);
         }
 
         public bool GiveItem(Item item, short amount)
@@ -444,7 +444,7 @@ namespace CryBits.Server.Entities
             }
 
             // Envia os dados ao jogador
-            Send.Player_Inventory(this);
+            Send.PlayerInventory(this);
             return true;
         }
 
@@ -466,7 +466,7 @@ namespace CryBits.Server.Entities
                 {
                     hotbarSlot.Type = Hotbars.None;
                     hotbarSlot.Slot = 0;
-                    Send.Player_Hotbar(this);
+                    Send.PlayerHotbar(this);
                 }
             }
             // Apenas desconta a quantidade
@@ -474,7 +474,7 @@ namespace CryBits.Server.Entities
                 slot.Amount -= amount;
 
             // Atualiza o inventário
-            Send.Player_Inventory(this);
+            Send.PlayerInventory(this);
         }
 
         public void DropItem(byte slot, short amount)
@@ -495,7 +495,7 @@ namespace CryBits.Server.Entities
 
             // Solta o item no chão
             Map.Item.Add(new MapItems(slot.Item, amount, X, Y));
-            Send.Map_Items(Map);
+            Send.MapItems(Map);
 
             // Retira o item do inventário do jogador 
             TakeItem(slot, amount);
@@ -541,9 +541,9 @@ namespace CryBits.Server.Entities
                 for (byte i = 0; i < (byte)Attributes.Count; i++) Attribute[i] += item.EquipAttribute[i];
 
                 // Envia os dados
-                Send.Player_Inventory(this);
-                Send.Player_Equipments(this);
-                Send.Player_Hotbar(this);
+                Send.PlayerInventory(this);
+                Send.PlayerEquipments(this);
+                Send.PlayerHotbar(this);
             }
             else if (item.Type == Items.Potion)
             {
@@ -601,7 +601,7 @@ namespace CryBits.Server.Entities
             return null;
         }
 
-        public byte Total_Inventory_Free()
+        public byte TotalInventoryFree()
         {
             byte total = 0;
 
@@ -613,7 +613,7 @@ namespace CryBits.Server.Entities
             return total;
         }
 
-        public void Party_Leave()
+        public void PartyLeave()
         {
             if (Party.Count > 0)
             {
@@ -628,7 +628,7 @@ namespace CryBits.Server.Entities
             }
         }
 
-        private void Party_SplitXP(int value)
+        private void PartySplitXP(int value)
         {
             // Somatório do level de todos os jogadores do grupo
             int givenExperience, experienceSum = 0, difference;
@@ -661,16 +661,16 @@ namespace CryBits.Server.Entities
                 givenExperience = (int)(value / 2 * diff[i]);
                 experienceSum += givenExperience;
                 Party[i].GiveExperience(givenExperience);
-                Send.Player_Experience(Party[i]);
+                Send.PlayerExperience(Party[i]);
             }
 
             // Dá ao jogador principal o restante da experiência
             Experience += value - experienceSum;
             CheckLevelUp();
-            Send.Player_Experience(this);
+            Send.PlayerExperience(this);
         }
 
-        public void Trade_Leave()
+        public void TradeLeave()
         {
             // Cancela a troca
             if (Trade != null)
@@ -682,7 +682,7 @@ namespace CryBits.Server.Entities
             }
         }
 
-        public byte Total_Trade_Items()
+        public byte TotalTradeItems()
         {
             byte total = 0;
 
@@ -694,18 +694,18 @@ namespace CryBits.Server.Entities
             return total;
         }
 
-        public void Shop_Open(Shop shop)
+        public void ShopOpen(Shop shop)
         {
             // Abre a loja
             Shop = shop;
-            Send.Shop_Open(this, shop);
+            Send.ShopOpen(this, shop);
         }
 
-        public void Shop_Leave()
+        public void ShopLeave()
         {
             // Fecha a loja
             Shop = null;
-            Send.Shop_Open(this, null);
+            Send.ShopOpen(this, null);
         }
 
         ///////////////////////

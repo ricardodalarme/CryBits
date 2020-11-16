@@ -124,12 +124,12 @@ namespace CryBits.Server.Library
             }
         }
 
-        public static string Characters_Name()
+        public static string CharactersName()
         {
             // Cria o arquivo caso ele não existir
             if (!Directories.Characters.Exists)
             {
-                Write.Characters_Name(string.Empty);
+                Write.CharactersName(string.Empty);
                 return string.Empty;
             }
 

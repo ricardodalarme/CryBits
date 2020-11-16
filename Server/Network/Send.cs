@@ -139,7 +139,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        private static NetOutgoingMessage Player_Data_Cache(Player player)
+        private static NetOutgoingMessage PlayerDataCache(Player player)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -163,7 +163,7 @@ namespace CryBits.Server.Network
             return data;
         }
 
-        public static void Player_Position(Player player)
+        public static void PlayerPosition(Player player)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -176,7 +176,7 @@ namespace CryBits.Server.Network
             ToMap(player.Map, data);
         }
 
-        public static void Player_Vitals(Player player)
+        public static void PlayerVitals(Player player)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -192,7 +192,7 @@ namespace CryBits.Server.Network
             ToMap(player.Map, data);
         }
 
-        public static void Player_Leave(Player player)
+        public static void PlayerLeave(Player player)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -202,7 +202,7 @@ namespace CryBits.Server.Network
             ToAllBut(player, data);
         }
 
-        public static void Player_Move(Player player, byte movement)
+        public static void PlayerMove(Player player, byte movement)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -216,7 +216,7 @@ namespace CryBits.Server.Network
             ToMapBut(player.Map, player, data);
         }
 
-        public static void Player_Direction(Player player)
+        public static void PlayerDirection(Player player)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -227,7 +227,7 @@ namespace CryBits.Server.Network
             ToMapBut(player.Map, player, data);
         }
 
-        public static void Player_Experience(Player player)
+        public static void PlayerExperience(Player player)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -239,7 +239,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void Player_Equipments(Player player)
+        public static void PlayerEquipments(Player player)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -250,17 +250,17 @@ namespace CryBits.Server.Network
             ToMap(player.Map, data);
         }
 
-        public static void Map_Players(Player player)
+        public static void MapPlayers(Player player)
         {
             // Envia os dados dos outros jogadores 
             for (byte i = 0; i < Account.List.Count; i++)
                 if (Account.List[i].IsPlaying)
                     if (player != Account.List[i].Character)
                         if (Account.List[i].Character.Map == player.Map)
-                            ToPlayer(player, Player_Data_Cache(Account.List[i].Character));
+                            ToPlayer(player, PlayerDataCache(Account.List[i].Character));
 
             // Envia os dados do jogador
-            ToMap(player.Map, Player_Data_Cache(player));
+            ToMap(player.Map, PlayerDataCache(player));
         }
 
         public static void JoinMap(Player player)
@@ -272,7 +272,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void Player_LeaveMap(Player player, TempMap map)
+        public static void PlayerLeaveMap(Player player, TempMap map)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -282,7 +282,7 @@ namespace CryBits.Server.Network
             ToMapBut(map, player, data);
         }
 
-        public static void Map_Revision(Player player, Map map)
+        public static void MapRevision(Player player, Map map)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -335,7 +335,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void Message_Map(Player player, string text)
+        public static void MessageMap(Player player, string text)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
             string message = "[Map] " + player.Name + ": " + text;
@@ -347,7 +347,7 @@ namespace CryBits.Server.Network
             ToMap(player.Map, data);
         }
 
-        public static void Message_Global(Player player, string text)
+        public static void MessageGlobal(Player player, string text)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
             string message = "[Global] " + player.Name + ": " + text;
@@ -359,7 +359,7 @@ namespace CryBits.Server.Network
             ToAll(data);
         }
 
-        public static void Message_Private(Player player, string addresseeName, string text)
+        public static void MessagePrivate(Player player, string addresseeName, string text)
         {
             Player addressee = Player.Find(addresseeName);
 
@@ -375,7 +375,7 @@ namespace CryBits.Server.Network
             Message(addressee, "[From] " + player.Name + ": " + text, Color.Pink);
         }
 
-        public static void Player_Attack(Player player, string victim = "", Targets victimType = 0)
+        public static void PlayerAttack(Player player, string victim = "", Targets victimType = 0)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -398,7 +398,7 @@ namespace CryBits.Server.Network
             ToPlayer(account, data);
         }
 
-        public static void Map_Items(Player player, TempMap map)
+        public static void MapItems(Player player, TempMap map)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -418,7 +418,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void Map_Items(TempMap map)
+        public static void MapItems(TempMap map)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -434,7 +434,7 @@ namespace CryBits.Server.Network
             ToMap(map, data);
         }
 
-        public static void Player_Inventory(Player player)
+        public static void PlayerInventory(Player player)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -448,7 +448,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void Player_Hotbar(Player player)
+        public static void PlayerHotbar(Player player)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -473,7 +473,7 @@ namespace CryBits.Server.Network
             ToPlayer(account, data);
         }
 
-        public static void Map_NPCs(Player player, TempMap map)
+        public static void MapNPCs(Player player, TempMap map)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -491,7 +491,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void Map_NPC(TempNPC npc)
+        public static void MapNPC(TempNPC npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -506,7 +506,7 @@ namespace CryBits.Server.Network
             ToMap(npc.Map, data);
         }
 
-        public static void Map_NPC_Movement(TempNPC npc, byte movement)
+        public static void MapNPCMovement(TempNPC npc, byte movement)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -520,7 +520,7 @@ namespace CryBits.Server.Network
             ToMap(npc.Map, data);
         }
 
-        public static void Map_NPC_Direction(TempNPC npc)
+        public static void MapNPCDirection(TempNPC npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -531,7 +531,7 @@ namespace CryBits.Server.Network
             ToMap(npc.Map, data);
         }
 
-        public static void Map_NPC_Vitals(TempNPC npc)
+        public static void MapNPCVitals(TempNPC npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -542,7 +542,7 @@ namespace CryBits.Server.Network
             ToMap(npc.Map, data);
         }
 
-        public static void Map_NPC_Attack(TempNPC npc, string victim = "", Targets victimType = 0)
+        public static void MapNPCAttack(TempNPC npc, string victim = "", Targets victimType = 0)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -554,7 +554,7 @@ namespace CryBits.Server.Network
             ToMap(npc.Map, data);
         }
 
-        public static void Map_NPC_Died(TempNPC npc)
+        public static void MapNPCDied(TempNPC npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -564,7 +564,7 @@ namespace CryBits.Server.Network
             ToMap(npc.Map, data);
         }
 
-        public static void Server_Data(Account account)
+        public static void ServerData(Account account)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -596,7 +596,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void Party_Invitation(Player player, string playerInvitation)
+        public static void PartyInvitation(Player player, string playerInvitation)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -616,7 +616,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void Trade_Invitation(Player player, string playerInvitation)
+        public static void TradeInvitation(Player player, string playerInvitation)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -626,7 +626,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void Trade_State(Player player, TradeStatus state)
+        public static void TradeState(Player player, TradeStatus state)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
@@ -636,7 +636,7 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void Trade_Offer(Player player, bool own = true)
+        public static void TradeOffer(Player player, bool own = true)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
             Player to = own ? player : player.Trade;
@@ -663,7 +663,7 @@ namespace CryBits.Server.Network
             ToPlayer(account, data);
         }
 
-        public static void Shop_Open(Player player, Shop shop)
+        public static void ShopOpen(Player player, Shop shop)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 

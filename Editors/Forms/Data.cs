@@ -51,7 +51,7 @@ namespace CryBits.Editors.Forms
             MaxNameLength = (byte)numMax_Name.Value;
             MinPasswordLength = (byte)numMin_Password.Value;
             MaxPasswordLength = (byte)numMax_Password.Value;
-            Send.Write_Server_Data();
+            Send.WriteServerData();
 
             // Volta à janela principal
             Close();
@@ -60,7 +60,7 @@ namespace CryBits.Editors.Forms
         private void butCancel_Click(object sender, EventArgs e)
         {
             // Volta à janela principal
-            Send.Request_Server_Data();
+            Send.RequestServerData();
             Close();
         }
     }

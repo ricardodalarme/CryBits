@@ -214,14 +214,14 @@ namespace CryBits.Editors.Forms
             // Salva todos os dados
             foreach (Map map in Map.List.Values)
                 ++map.Revision;
-            Send.Write_Maps();
+            Send.WriteMaps();
             MessageBox.Show("All maps has been saved");
         }
 
         private void butReload_Click(object sender, EventArgs e)
         {
             // Recarrega o mapa
-            Send.Request_Map(Selected);
+            Send.RequestMap(Selected);
             Update_List_Layers();
             Selected.Update();
         }
@@ -424,7 +424,7 @@ namespace CryBits.Editors.Forms
             if (!butAudio.Checked)
             {
                 Music.Stop();
-                Sound.Stop_All();
+                Sound.StopAll();
             }
         }
 

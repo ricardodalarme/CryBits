@@ -81,14 +81,14 @@ namespace CryBits.Server.Library
             }
         }
 
-        public static void Character_Name(string name)
+        public static void CharacterName(string name)
         {
             // Salva o nome de um personagem no arquivo
             using (var data = new StreamWriter(Directories.Characters.FullName, true))
                 data.Write(";" + name + ":");
         }
 
-        public static void Characters_Name(string charactersName)
+        public static void CharactersName(string charactersName)
         {
             // Salva o nome de todos os personagens no arquivo
             using (var data = new StreamWriter(Directories.Characters.FullName))

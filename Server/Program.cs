@@ -41,7 +41,7 @@ namespace CryBits.Server
 
             // Cria os mapas temporários
             Console.WriteLine("Creating temporary maps.");
-            foreach (Map map in Map.List.Values) TempMap.Create_Temporary(map,true);
+            foreach (Map map in Map.List.Values) TempMap.CreateTemporary(map,true);
 
             // Cria os dispositivos da rede
             Socket.Init();

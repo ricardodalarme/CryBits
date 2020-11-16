@@ -49,14 +49,7 @@ namespace CryBits.Client.Media
         public static Texture TexPartyBars;
 
         // Formato das texturas
-        public const string Format = ".png";
-
-        public enum Alignments
-        {
-            Left,
-            Center,
-            Right
-        }
+        private const string Format = ".png";
 
         #region Engine
         public static void Init()
@@ -273,10 +266,10 @@ namespace CryBits.Client.Media
             Camera.Update();
 
             // Desenhos abaixo do jogador
-            Map_Panorama();
-            Map_Tiles((byte)Layers.Ground);
-            Map_Blood();
-            Map_Items();
+            MapPanorama();
+            MapTiles((byte)Layers.Ground);
+            MapBlood();
+            MapItems();
 
             // Desenha os NPCs
             for (byte i = 0; i < TempMap.Current.NPC.Length; i++)
@@ -287,16 +280,16 @@ namespace CryBits.Client.Media
             for (byte i = 0; i < Player.List.Count; i++)
                 if (Player.List[i] != Player.Me)
                     if (Player.List[i].Map == Player.Me.Map)
-                        Player_Character(Player.List[i]);
+                        PlayerCharacter(Player.List[i]);
 
             // Desenha o próprio jogador
-            Player_Character(Player.Me);
+            PlayerCharacter(Player.Me);
 
             // Desenhos acima do jogador
-            Map_Tiles((byte)Layers.Fringe);
-            Map_Weather();
-            Map_Fog();
-            Map_Name();
+            MapTiles((byte)Layers.Fringe);
+            MapWeather();
+            MapFog();
+            MapName();
 
             // Desenha os membros da party
             Party();
@@ -319,7 +312,7 @@ namespace CryBits.Client.Media
                     else if (node[i].Data is CheckBoxes) CheckBox((CheckBoxes)node[i].Data);
 
                     // Desenha algumas coisas mais específicas da interface
-                    Interface_Specific(node[i].Data);
+                    InterfaceSpecific(node[i].Data);
 
                     // Pula pra próxima
                     Interface(node[i].Nodes);
@@ -381,20 +374,20 @@ namespace CryBits.Client.Media
         }
 
 
-        private static void Interface_Specific(Tools.Structure tool)
+        private static void InterfaceSpecific(Tools.Structure tool)
         {
             // Interações especificas
             if (!(tool is Panels)) return;
             switch (tool.Name)
             {
-                case "SelectCharacter": SelectCharacter_Class(); break;
-                case "CreateCharacter": CreateCharacter_Class(); break;
+                case "SelectCharacter": SelectCharacterClass(); break;
+                case "CreateCharacter": CreateCharacterClass(); break;
                 case "Hotbar": Hotbar((Panels)tool); break;
-                case "Menu_Character": Menu_Character((Panels)tool); break;
-                case "Menu_Inventory": Menu_Inventory((Panels)tool); break;
+                case "Menu_Character": MenuCharacter((Panels)tool); break;
+                case "Menu_Inventory": MenuInventory((Panels)tool); break;
                 case "Bars": Bars((Panels)tool); break;
                 case "Information": Information((Panels)tool); break;
-                case "Party_Invitation": Party_Invitation((Panels)tool); break;
+                case "Party_Invitation": PartyInvitation((Panels)tool); break;
                 case "Trade_Invitation": Trade_Invitation((Panels)tool); break;
                 case "Trade": Trade((Panels)tool); break;
                 case "Shop": Shop((Panels)tool); break;
@@ -403,7 +396,7 @@ namespace CryBits.Client.Media
         #endregion
 
         #region Menu
-        private static void SelectCharacter_Class()
+        private static void SelectCharacterClass()
         {
             Point textPosition = new Point(399, 425);
             string text = "(" + (Panels.SelectCharacter + 1) + ") None";
@@ -435,7 +428,7 @@ namespace CryBits.Client.Media
             DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignments.Center);
         }
 
-        private static void CreateCharacter_Class()
+        private static void CreateCharacterClass()
         {
             short textureNum = 0;
             Class @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
@@ -586,7 +579,7 @@ namespace CryBits.Client.Media
                     Render(TexItem[Player.Me.Inventory[Player.Me.Hotbar[Panels.HotbarChange].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
         }
 
-        private static void Menu_Character(Panels tool)
+        private static void MenuCharacter(Panels tool)
         {
             // Dados básicos
             DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
@@ -609,7 +602,7 @@ namespace CryBits.Client.Media
                     Render(TexItem[Player.Me.Equipment[i].Texture], tool.Position.X + 8 + i * 35, tool.Position.Y + 247, 0, 0, 34, 34);
         }
 
-        private static void Menu_Inventory(Panels tool)
+        private static void MenuInventory(Panels tool)
         {
             byte numColumns = 5;
 
@@ -621,7 +614,7 @@ namespace CryBits.Client.Media
             if (Panels.InventoryChange > 0) Render(TexItem[Player.Me.Inventory[Panels.InventoryChange].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
         }
 
-        private static void Party_Invitation(Panels tool)
+        private static void PartyInvitation(Panels tool)
         {
             DrawText(Panels.PartyInvitation + " has invite you to a party. Would you like to join?", tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
         }
@@ -716,15 +709,15 @@ namespace CryBits.Client.Media
             Render(TexCharacter[textureNum], recSource, recDestiny, color);
         }
 
-        private static void Player_Character(Player player)
+        private static void PlayerCharacter(Player player)
         {
             // Desenha o jogador
-            Player_Texture(player);
-            Player_Name(player);
-            Player_Bars(player);
+            PlayerTexture(player);
+            PlayerName(player);
+            PlayerBars(player);
         }
 
-        private static void Player_Texture(Player player)
+        private static void PlayerTexture(Player player)
         {
             byte column = AnimationStopped;
             bool hurt = false;
@@ -750,7 +743,7 @@ namespace CryBits.Client.Media
             Character(player.TextureNum, new Point(ConvertX(player.PixelX), ConvertY(player.PixelY)), player.Direction, column, hurt);
         }
 
-        private static void Player_Bars(Player player)
+        private static void PlayerBars(Player player)
         {
             short value = player.Vital[(byte)Vitals.HP];
 
@@ -774,7 +767,7 @@ namespace CryBits.Client.Media
             Render(TexBars, position.X, position.Y, 0, 0, width, 4);
         }
 
-        private static void Player_Name(Player player)
+        private static void PlayerName(Player player)
         {
             Texture texture = TexCharacter[player.TextureNum];
             int nameSize = MeasureString(player.Name);
@@ -817,11 +810,11 @@ namespace CryBits.Client.Media
 
             // Desenha o jogador
             Character(npc.Data.Texture, new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY)), npc.Direction, column, hurt);
-            NPC_Name(npc);
-            NPC_Bars(npc);
+            NPCName(npc);
+            NPCBars(npc);
         }
 
-        private static void NPC_Name(TempNPC npc)
+        private static void NPCName(TempNPC npc)
         {
             Point position = new Point();
             Color color;
@@ -845,7 +838,7 @@ namespace CryBits.Client.Media
             DrawText(npc.Data.Name, ConvertX(position.X), ConvertY(position.Y), color);
         }
 
-        private static void NPC_Bars(TempNPC npc)
+        private static void NPCBars(TempNPC npc)
         {
             Texture texture = TexCharacter[npc.Data.Texture];
             short value = npc.Vital[(byte)Vitals.HP];
@@ -863,7 +856,7 @@ namespace CryBits.Client.Media
             Render(TexBars, position.X, position.Y, 0, 0, width, 4);
         }
 
-        private static void Map_Tiles(byte layerType)
+        private static void MapTiles(byte layerType)
         {
             // Previne erros
             if (TempMap.Current.Data.Name == null) return;
@@ -890,12 +883,12 @@ namespace CryBits.Client.Media
                                     if (!map.Layer[c].Tile[x, y].IsAutoTile)
                                         Render(TexTile[data.Texture], ConvertX(x * Grid), ConvertY(y * Grid), x2, y2, Grid, Grid, color);
                                     else
-                                        Map_AutoTile(new Point(ConvertX(x * Grid), ConvertY(y * Grid)), data, color);
+                                        MapAutoTile(new Point(ConvertX(x * Grid), ConvertY(y * Grid)), data, color);
                                 }
                             }
         }
 
-        private static void Map_AutoTile(Point position, MapTileData data, Color cor)
+        private static void MapAutoTile(Point position, MapTileData data, Color cor)
         {
             // Desenha os 4 mini azulejos
             for (byte i = 0; i < 4; i++)
@@ -915,14 +908,14 @@ namespace CryBits.Client.Media
             }
         }
 
-        private static void Map_Panorama()
+        private static void MapPanorama()
         {
             // Desenha o panorama
             if (TempMap.Current.Data.Panorama > 0)
                 Render(TexPanorama[TempMap.Current.Data.Panorama], new Point(0));
         }
 
-        private static void Map_Fog()
+        private static void MapFog()
         {
             MapFog data = TempMap.Current.Data.Fog;
             Size textureSize = Size(TexFog[data.Texture]);
@@ -936,7 +929,7 @@ namespace CryBits.Client.Media
                     Render(TexFog[data.Texture], new Point(x * textureSize.Width + TempMap.Current.FogX, y * textureSize.Height + TempMap.Current.FogY), new Color(255, 255, 255, data.Alpha));
         }
 
-        private static void Map_Weather()
+        private static void MapWeather()
         {
             byte x = 0;
 
@@ -958,7 +951,7 @@ namespace CryBits.Client.Media
             Render(TexBlanc, 0, 0, 0, 0, ScreenWidth, ScreenHeight, new Color(255, 255, 255, TempMap.Current.Lightning));
         }
 
-        private static void Map_Name()
+        private static void MapName()
         {
             Color color;
 
@@ -976,7 +969,7 @@ namespace CryBits.Client.Media
             DrawText(TempMap.Current.Data.Name, 426, 48, color);
         }
 
-        private static void Map_Items()
+        private static void MapItems()
         {
             // Desenha todos os itens que estão no chão
             for (byte i = 0; i < TempMap.Current.Item.Length; i++)
@@ -992,7 +985,7 @@ namespace CryBits.Client.Media
             }
         }
 
-        private static void Map_Blood()
+        private static void MapBlood()
         {
             // Desenha todos os sangues
             for (byte i = 0; i < TempMap.Current.Blood.Count; i++)

@@ -111,7 +111,7 @@ namespace CryBits.Editors.Entities
             if (EditorMaps.Form == null || !EditorMaps.Form.Visible || EditorMaps.Form.Selected.Weather.Type == 0 || !EditorMaps.Form.butVisualization.Checked)
             {
                 if (Sound.List != null)
-                    if (Sound.List[(byte)Sounds.Rain].Status == SoundStatus.Playing) Sound.Stop_All();
+                    if (Sound.List[(byte)Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
                 return;
             }
 
@@ -125,7 +125,7 @@ namespace CryBits.Editors.Entities
                     Sound.Play(Sounds.Rain);
             }
             else
-              if (Sound.List[(byte)Sounds.Rain].Status == SoundStatus.Playing) Sound.Stop_All();
+              if (Sound.List[(byte)Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
 
             // Contagem da neve
             if (_snowTimer < Environment.TickCount)

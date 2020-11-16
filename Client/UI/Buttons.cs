@@ -79,45 +79,45 @@ namespace CryBits.Client.UI
                 case "Connect": Connect(); break;
                 case "Register": Register(); break;
                 case "Options": Options(); break;
-                case "Options_Back": Menu_Return(); break;
-                case "Connect_Confirm": Connect_Ok(); break;
-                case "Register_Confirm": Register_Ok(); break;
+                case "Options_Back": MenuReturn(); break;
+                case "Connect_Confirm": ConnectOk(); break;
+                case "Register_Confirm": RegisterOk(); break;
                 case "CreateCharacter": CreateCharacter(); break;
-                case "CreateCharacter_ChangeRight": CreateCharacter_ChangeRight(); break;
-                case "CreateCharacter_ChangeLeft": CreateCharacter_ChangeLeft(); break;
-                case "CreateCharacter_Texture_ChangeLeft": CreateCharacter_Texture_ChangeLeft(); break;
-                case "CreateCharacter_Texture_ChangeRight": CreateCharacter_Texture_ChangeRight(); break;
+                case "CreateCharacter_ChangeRight": CreateCharacterChangeRight(); break;
+                case "CreateCharacter_ChangeLeft": CreateCharacterChangeLeft(); break;
+                case "CreateCharacter_Texture_ChangeLeft": CreateCharacterTextureChangeLeft(); break;
+                case "CreateCharacter_Texture_ChangeRight": CreateCharacterTextureChangeRight(); break;
                 case "CreateCharacter_Back": CreateCharacter_Return(); break;
-                case "Character_Use": Character_Use(); break;
-                case "Character_Create": Character_Create(); break;
-                case "Character_Delete": Character_Delete(); break;
-                case "Character_ChangeRight": Character_Change_Right(); break;
-                case "Character_ChangeLeft": Character_Change_Left(); break;
-                case "Chat_Up": Chat_Up(); break;
-                case "Chat_Down": Chat_Down(); break;
-                case "Menu_Character": Menu_Character(); break;
-                case "Attributes_Strength": Attribute_Strength(); break;
-                case "Attributes_Resistance": Attribute_Resistance(); break;
-                case "Attributes_Intelligence": Attribute_Intelligence(); break;
-                case "Attributes_Agility": Attribute_Agility(); break;
-                case "Attributes_Vitality": Attribute_Vitality(); break;
-                case "Menu_Inventory": Menu_Inventory(); break;
-                case "Menu_Options": Menu_Options(); break;
-                case "Drop_Confirm": Drop_Confirm(); break;
-                case "Drop_Cancel": Drop_Cancel(); break;
-                case "Party_Yes": Party_Yes(); break;
-                case "Party_No": Party_No(); break;
-                case "Trade_Yes": Trade_Yes(); break;
-                case "Trade_No": Trade_No(); break;
-                case "Trade_Close": Trade_Close(); break;
-                case "Trade_Offer_Accept": Trade_Offer_Accept(); break;
-                case "Trade_Offer_Decline": Trade_Offer_Decline(); break;
-                case "Trade_Offer_Confirm": Trade_Offer_Confirm(); break;
-                case "Trade_Amount_Confirm": Trade_Amount_Confirm(); break;
-                case "Trade_Amount_Cancel": Trade_Amount_Cancel(); break;
-                case "Shop_Close": Shop_Close(); break;
-                case "Shop_Sell_Confirm": Shop_Sell_Confirm(); break;
-                case "Shop_Sell_Cancel": Shop_Sell_Cancel(); break;
+                case "Character_Use": CharacterUse(); break;
+                case "Character_Create": CharacterCreate(); break;
+                case "Character_Delete": CharacterDelete(); break;
+                case "Character_ChangeRight": CharacterChangeRight(); break;
+                case "Character_ChangeLeft": CharacterChangeLeft(); break;
+                case "Chat_Up": ChatUp(); break;
+                case "Chat_Down": ChatDown(); break;
+                case "Menu_Character": MenuCharacter(); break;
+                case "Attributes_Strength": AttributeStrength(); break;
+                case "Attributes_Resistance": AttributeResistance(); break;
+                case "Attributes_Intelligence": AttributeIntelligence(); break;
+                case "Attributes_Agility": AttributeAgility(); break;
+                case "Attributes_Vitality": AttributeVitality(); break;
+                case "Menu_Inventory": MenuInventory(); break;
+                case "Menu_Options": MenuOptions(); break;
+                case "Drop_Confirm": DropConfirm(); break;
+                case "Drop_Cancel": DropCancel(); break;
+                case "Party_Yes": PartyYes(); break;
+                case "Party_No": PartyNo(); break;
+                case "Trade_Yes": TradeYes(); break;
+                case "Trade_No": TradeNo(); break;
+                case "Trade_Close": TradeClose(); break;
+                case "Trade_Offer_Accept": TradeOfferAccept(); break;
+                case "Trade_Offer_Decline": TradeOfferDecline(); break;
+                case "Trade_Offer_Confirm": TradeOfferConfirm(); break;
+                case "Trade_Amount_Confirm": TradeAmountConfirm(); break;
+                case "Trade_Amount_Cancel": TradeAmountCancel(); break;
+                case "Shop_Close": ShopClose(); break;
+                case "Shop_Sell_Confirm": ShopSellConfirm(); break;
+                case "Shop_Sell_Cancel": ShopSellCancel(); break;
             }
         }
 
@@ -137,7 +137,7 @@ namespace CryBits.Client.UI
             Socket.Disconnect();
 
             // Abre o painel
-            Panels.Menu_Close();
+            Panels.MenuClose();
             Panels.List["Connect"].Visible = true;
         }
 
@@ -147,7 +147,7 @@ namespace CryBits.Client.UI
             Socket.Disconnect();
 
             // Abre o painel
-            Panels.Menu_Close();
+            Panels.MenuClose();
             Panels.List["Register"].Visible = true;
         }
 
@@ -161,21 +161,21 @@ namespace CryBits.Client.UI
             CheckBoxes.List["Musics"].Checked = Logic.Options.Musics;
 
             // Abre o painel
-            Panels.Menu_Close();
+            Panels.MenuClose();
             Panels.List["Options"].Visible = true;
         }
 
-        private static void Menu_Return()
+        private static void MenuReturn()
         {
             // Termina a conexão
             Socket.Disconnect();
 
             // Abre o painel
-            Panels.Menu_Close();
+            Panels.MenuClose();
             Panels.List["Connect"].Visible = true;
         }
 
-        private static void Connect_Ok()
+        private static void ConnectOk()
         {
             // Salva o nome do usuário
             Logic.Options.Username = TextBoxes.List["Connect_Username"].Text;
@@ -185,7 +185,7 @@ namespace CryBits.Client.UI
             if (Socket.TryConnect()) Send.Connect();
         }
 
-        private static void Register_Ok()
+        private static void RegisterOk()
         {
             // Regras de segurança
             if (TextBoxes.List["Register_Password"].Text != TextBoxes.List["Register_Password2"].Text)
@@ -204,7 +204,7 @@ namespace CryBits.Client.UI
             if (Socket.TryConnect()) Send.CreateCharacter();
         }
 
-        private static void CreateCharacter_ChangeRight()
+        private static void CreateCharacterChangeRight()
         {
             // Altera a classe selecionada pelo jogador
             if (Panels.CreateCharacterClass == Class.List.Count - 1)
@@ -213,7 +213,7 @@ namespace CryBits.Client.UI
                 Panels.CreateCharacterClass += 1;
         }
 
-        private static void CreateCharacter_ChangeLeft()
+        private static void CreateCharacterChangeLeft()
         {
             // Altera a classe selecionada pelo jogador
             if (Panels.CreateCharacterClass == 0)
@@ -222,7 +222,7 @@ namespace CryBits.Client.UI
                 Panels.CreateCharacterClass -= 1;
         }
 
-        private static void CreateCharacter_Texture_ChangeRight()
+        private static void CreateCharacterTextureChangeRight()
         {
             // Lista de texturas
             IList<short> texList;
@@ -238,7 +238,7 @@ namespace CryBits.Client.UI
                 Panels.CreateCharacterTex += 1;
         }
 
-        private static void CreateCharacter_Texture_ChangeLeft()
+        private static void CreateCharacterTextureChangeLeft()
         {
             // Lista de texturas
             IList<short> texList;
@@ -257,29 +257,29 @@ namespace CryBits.Client.UI
         private static void CreateCharacter_Return()
         {
             // Abre o painel de personagens
-            Panels.Menu_Close();
+            Panels.MenuClose();
             Panels.List["SelectCharacter"].Visible = true;
         }
 
-        private static void Character_Use()
+        private static void CharacterUse()
         {
             // Usa o personagem selecionado
-            Send.Character_Use();
+            Send.CharacterUse();
         }
 
-        private static void Character_Delete()
+        private static void CharacterDelete()
         {
             // Deleta o personagem selecionado
-            Send.Character_Delete();
+            Send.CharacterDelete();
         }
 
-        private static void Character_Create()
+        private static void CharacterCreate()
         {
             // Abre a criação de personagem
-            Send.Character_Create();
+            Send.CharacterCreate();
         }
 
-        private static void Character_Change_Right()
+        private static void CharacterChangeRight()
         {
             // Altera o personagem selecionado pelo jogador
             if (Panels.SelectCharacter == Panels.Characters.Length)
@@ -288,7 +288,7 @@ namespace CryBits.Client.UI
                 Panels.SelectCharacter += 1;
         }
 
-        private static void Character_Change_Left()
+        private static void CharacterChangeLeft()
         {
             // Altera o personagem selecionado pelo jogador
             if (Panels.SelectCharacter == 0)
@@ -297,21 +297,21 @@ namespace CryBits.Client.UI
                 Panels.SelectCharacter -= 1;
         }
 
-        private static void Chat_Up()
+        private static void ChatUp()
         {
             // Sobe as linhas do chat
             if (Chat.LinesFirst > 0)
                 Chat.LinesFirst -= 1;
         }
 
-        private static void Chat_Down()
+        private static void ChatDown()
         {
             // Sobe as linhas do chat
             if (Chat.Order.Count - 1 - Chat.LinesFirst - Chat.LinesVisible > 0)
                 Chat.LinesFirst += 1;
         }
 
-        private static void Menu_Character()
+        private static void MenuCharacter()
         {
             // Altera a visibilidade do painel e fecha os outros
             Panels.List["Menu_Character"].Visible = !Panels.List["Menu_Character"].Visible;
@@ -319,32 +319,32 @@ namespace CryBits.Client.UI
             Panels.List["Menu_Options"].Visible = false;
         }
 
-        private static void Attribute_Strength()
+        private static void AttributeStrength()
         {
             Send.AddPoint(Attributes.Strength);
         }
 
-        private static void Attribute_Resistance()
+        private static void AttributeResistance()
         {
             Send.AddPoint(Attributes.Resistance);
         }
 
-        private static void Attribute_Intelligence()
+        private static void AttributeIntelligence()
         {
             Send.AddPoint(Attributes.Intelligence);
         }
 
-        private static void Attribute_Agility()
+        private static void AttributeAgility()
         {
             Send.AddPoint(Attributes.Agility);
         }
 
-        private static void Attribute_Vitality()
+        private static void AttributeVitality()
         {
             Send.AddPoint(Attributes.Vitality);
         }
 
-        private static void Menu_Inventory()
+        private static void MenuInventory()
         {
             // Altera a visibilidade do painel e fecha os outros
             Panels.List["Menu_Inventory"].Visible = !Panels.List["Menu_Inventory"].Visible;
@@ -352,7 +352,7 @@ namespace CryBits.Client.UI
             Panels.List["Menu_Options"].Visible = false;
         }
 
-        private static void Menu_Options()
+        private static void MenuOptions()
         {
             // Altera a visibilidade do painel e fecha os outros
             Panels.List["Menu_Options"].Visible = !Panels.List["Menu_Options"].Visible;
@@ -360,7 +360,7 @@ namespace CryBits.Client.UI
             Panels.List["Menu_Inventory"].Visible = false;
         }
 
-        private static void Drop_Confirm()
+        private static void DropConfirm()
         {
             // Quantidade
             short.TryParse(TextBoxes.List["Drop_Amount"].Text, out short amount);
@@ -377,78 +377,78 @@ namespace CryBits.Client.UI
             Panels.List["Drop"].Visible = false;
         }
 
-        private static void Drop_Cancel()
+        private static void DropCancel()
         {
             // Fecha o painel
             Panels.List["Drop"].Visible = false;
         }
 
-        private static void Party_Yes()
+        private static void PartyYes()
         {
             // Aceita o grupo e fecha o painel
-            Send.Party_Accept();
+            Send.PartyAccept();
             Panels.List["Party_Invitation"].Visible = false;
         }
 
-        private static void Party_No()
+        private static void PartyNo()
         {
             // Fecha o painel
-            Send.Party_Decline();
+            Send.PartyDecline();
             Panels.List["Party_Invitation"].Visible = false;
         }
 
-        private static void Trade_Yes()
+        private static void TradeYes()
         {
             // Aceita o grupo e fecha o painel
-            Send.Trade_Accept();
+            Send.TradeAccept();
             Panels.List["Trade_Invitation"].Visible = false;
         }
 
-        private static void Trade_No()
+        private static void TradeNo()
         {
             // Fecha o painel
-            Send.Trade_Decline();
+            Send.TradeDecline();
             Panels.List["Trade_Invitation"].Visible = false;
         }
 
-        private static void Trade_Close()
+        private static void TradeClose()
         {
             // Fecha o painel
-            Send.Trade_Leave();
+            Send.TradeLeave();
             Panels.List["Trade"].Visible = false;
         }
 
-        private static void Trade_Offer_Accept()
+        private static void TradeOfferAccept()
         {
             // Aceita a oferta
             List["Trade_Offer_Confirm"].Visible = true;
             List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
             Panels.List["Trade_Offer_Disable"].Visible = false;
-            Send.Trade_Offer_State(TradeStatus.Accepted);
+            Send.TradeOfferState(TradeStatus.Accepted);
 
             // Limpa os dados da oferta
             Player.Me.TradeOffer = new ItemSlot[MaxInventory];
             Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory];
         }
 
-        private static void Trade_Offer_Decline()
+        private static void TradeOfferDecline()
         {
             // Recusa a oferta
             List["Trade_Offer_Confirm"].Visible = true;
             List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
             Panels.List["Trade_Offer_Disable"].Visible = false;
-            Send.Trade_Offer_State(TradeStatus.Declined);
+            Send.TradeOfferState(TradeStatus.Declined);
         }
 
-        public static void Trade_Offer_Confirm()
+        public static void TradeOfferConfirm()
         {
             // Confirma a oferta
             List["Trade_Offer_Confirm"].Visible = List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;
             Panels.List["Trade_Offer_Disable"].Visible = true;
-            Send.Trade_Offer_State(TradeStatus.Confirmed);
+            Send.TradeOfferState(TradeStatus.Confirmed);
         }
 
-        private static void Trade_Amount_Confirm()
+        private static void TradeAmountConfirm()
         {
             // Quantidade
             short.TryParse(TextBoxes.List["Trade_Amount"].Text, out short amount);
@@ -461,24 +461,24 @@ namespace CryBits.Client.UI
             }
 
             // Solta o item
-            Send.Trade_Offer(Panels.TradeSlot, Panels.TradeInventorySlot, amount);
+            Send.TradeOffer(Panels.TradeSlot, Panels.TradeInventorySlot, amount);
             Panels.List["Trade_Amount"].Visible = false;
         }
 
-        private static void Trade_Amount_Cancel()
+        private static void TradeAmountCancel()
         {
             // Fecha o painel
             Panels.List["Trade_Amount"].Visible = false;
         }
 
-        private static void Shop_Close()
+        private static void ShopClose()
         {
             // Fecha o painel
             Panels.List["Shop"].Visible = false;
-            Send.Shop_Close();
+            Send.ShopClose();
         }
 
-        private static void Shop_Sell_Confirm()
+        private static void ShopSellConfirm()
         {
             // Quantidade
             short.TryParse(TextBoxes.List["Shop_Sell_Amount"].Text, out short amount);
@@ -491,11 +491,11 @@ namespace CryBits.Client.UI
             }
 
             // Vende o item
-            Send.Shop_Sell(Panels.ShopInventorySlot, amount);
+            Send.ShopSell(Panels.ShopInventorySlot, amount);
             Panels.List["Shop_Sell"].Visible = false;
         }
 
-        private static void Shop_Sell_Cancel()
+        private static void ShopSellCancel()
         {
             // Fecha o painel
             Panels.List["Shop_Sell"].Visible = false;

@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using CryBits.Editors.Forms;
 using Lidgren.Network;
+using static CryBits.Defaults;
 
 namespace CryBits.Editors.Network
 {
@@ -15,11 +16,10 @@ namespace CryBits.Editors.Network
 
         // Dados para a conexão com o servidor
         private const string IP = "localhost";
-        private const short Port = 7001;
 
         public static void Init()
         {
-            NetPeerConfiguration config = new NetPeerConfiguration("CryBits");
+            NetPeerConfiguration config = new NetPeerConfiguration(GameName);
 
             // Cria o dispositivo com as devidas configurações
             Device = new NetClient(config);

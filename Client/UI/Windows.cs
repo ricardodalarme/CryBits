@@ -40,19 +40,19 @@ namespace CryBits.Client.UI
                     short slot = Panels.InventorySlot;
                     if (slot > 0)
                         if (Player.Me.Inventory[slot].Item != null)
-                            Send.Inventory_Use((byte)slot);
+                            Send.InventoryUse((byte)slot);
 
                     // Usar o que estiver na hotbar
                     slot = Panels.HotbarSlot;
                     if (slot > 0)
                         if (Player.Me.Hotbar[slot].Slot > 0)
-                            Send.Hotbar_Use((byte)slot);
+                            Send.HotbarUse((byte)slot);
 
                     // Compra o item da loja
                     slot = Panels.ShopSlot;
                     if (slot >= 0)
                         if (Panels.ShopOpen != null)
-                            Send.Shop_Buy((byte)slot);
+                            Send.ShopBuy((byte)slot);
                 }
             }
             // Clique único
@@ -114,20 +114,20 @@ namespace CryBits.Client.UI
                 // Muda o slot do item
                 if (Panels.InventorySlot > 0)
                 {
-                    if (Panels.InventoryChange > 0) Send.Inventory_Change(Panels.InventoryChange, Panels.InventorySlot);
+                    if (Panels.InventoryChange > 0) Send.InventoryChange(Panels.InventoryChange, Panels.InventorySlot);
                 }
                 // Muda o slot da hotbar
                 else if (Panels.HotbarSlot >= 0)
                 {
-                    if (Panels.HotbarChange >= 0) Send.Hotbar_Change(Panels.HotbarChange, Panels.HotbarSlot);
-                    if (Panels.InventoryChange > 0) Send.Hotbar_Add(Panels.HotbarSlot, (byte)Hotbars.Item, Panels.InventoryChange);
+                    if (Panels.HotbarChange >= 0) Send.HotbarChange(Panels.HotbarChange, Panels.HotbarSlot);
+                    if (Panels.InventoryChange > 0) Send.HotbarAdd(Panels.HotbarSlot, (byte)Hotbars.Item, Panels.InventoryChange);
                 }
                 // Adiciona um item à troca
                 else if (Panels.TradeSlot > 0)
                 {
                     if (Panels.InventoryChange > 0)
                         if (Player.Me.Inventory[Panels.InventoryChange].Amount == 1)
-                            Send.Trade_Offer(Panels.TradeSlot, Panels.InventoryChange);
+                            Send.TradeOffer(Panels.TradeSlot, Panels.InventoryChange);
                         else
                         {
                             Panels.TradeInventorySlot = Panels.InventoryChange;
@@ -182,16 +182,16 @@ namespace CryBits.Client.UI
                 {
                     case Keyboard.Key.Enter: Chat.Type(); break;
                     case Keyboard.Key.Space: Player.Me.CollectItem(); break;
-                    case Keyboard.Key.Num1: Send.Hotbar_Use(1); break;
-                    case Keyboard.Key.Num2: Send.Hotbar_Use(2); break;
-                    case Keyboard.Key.Num3: Send.Hotbar_Use(3); break;
-                    case Keyboard.Key.Num4: Send.Hotbar_Use(4); break;
-                    case Keyboard.Key.Num5: Send.Hotbar_Use(5); break;
-                    case Keyboard.Key.Num6: Send.Hotbar_Use(6); break;
-                    case Keyboard.Key.Num7: Send.Hotbar_Use(7); break;
-                    case Keyboard.Key.Num8: Send.Hotbar_Use(8); break;
-                    case Keyboard.Key.Num9: Send.Hotbar_Use(9); break;
-                    case Keyboard.Key.Num0: Send.Hotbar_Use(0); break;
+                    case Keyboard.Key.Num1: Send.HotbarUse(1); break;
+                    case Keyboard.Key.Num2: Send.HotbarUse(2); break;
+                    case Keyboard.Key.Num3: Send.HotbarUse(3); break;
+                    case Keyboard.Key.Num4: Send.HotbarUse(4); break;
+                    case Keyboard.Key.Num5: Send.HotbarUse(5); break;
+                    case Keyboard.Key.Num6: Send.HotbarUse(6); break;
+                    case Keyboard.Key.Num7: Send.HotbarUse(7); break;
+                    case Keyboard.Key.Num8: Send.HotbarUse(8); break;
+                    case Keyboard.Key.Num9: Send.HotbarUse(9); break;
+                    case Keyboard.Key.Num0: Send.HotbarUse(0); break;
                 }
         }
 
@@ -204,7 +204,7 @@ namespace CryBits.Client.UI
         public static void OpenMenu()
         {
             // Reproduz a música de fundo
-            Sound.Stop_All();
+            Sound.StopAll();
             if (Options.Musics) Music.Play(Musics.Menu);
 
             // Nome do usuário salvo
@@ -212,7 +212,7 @@ namespace CryBits.Client.UI
             if (Options.SaveUsername) TextBoxes.List["Connect_Username"].Text = Options.Username;
 
             // Traz o jogador de volta ao menu
-            Panels.Menu_Close();
+            Panels.MenuClose();
             Panels.List["Connect"].Visible = true;
             Current = WindowsTypes.Menu;
         }

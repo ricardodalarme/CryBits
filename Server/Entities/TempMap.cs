@@ -38,8 +38,8 @@ namespace CryBits.Server.Entities
             if (Environment.TickCount > Loop.TimerMapItems + 300000)
             {
                 Item = new List<MapItems>();
-                Spawn_Items();
-                Send.Map_Items(this);
+                SpawnItems();
+                Send.MapItems(this);
             }
         }
 
@@ -86,7 +86,7 @@ namespace CryBits.Server.Entities
             return null;
         }
 
-        public void Spawn_Items()
+        public void SpawnItems()
         {
             // Verifica se tem algum atributo de item no mapa
             for (byte x = 0; x < Map.Width; x++)
@@ -96,7 +96,7 @@ namespace CryBits.Server.Entities
                         Item.Add(new MapItems(CryBits.Entities.Item.Get(new Guid(Data.Attribute[x, y].Data1)), Data.Attribute[x, y].Data2, x, y));
         }
 
-        public bool Tile_Blocked(byte x, byte y, Directions direction, bool countEntities = true)
+        public bool TileBlocked(byte x, byte y, Directions direction, bool countEntities = true)
         {
             byte nextX = x, nextY = y;
 
@@ -104,14 +104,14 @@ namespace CryBits.Server.Entities
             NextTile(direction, ref nextX, ref nextY);
 
             // Verifica se o azulejo está bloqueado
-            if (Data.Tile_Blocked(nextX, nextY)) return true;
+            if (Data.TileBlocked(nextX, nextY)) return true;
             if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
             if (Data.Attribute[x, y].Block[(byte)direction]) return true;
             if (countEntities && (HasPlayer(nextX, nextY) != null || HasNPC(nextX, nextY) != null)) return true;
             return false;
         }
 
-        public static void Create_Temporary(Map map, bool isOriginal)
+        public static void CreateTemporary(Map map, bool isOriginal)
         {
             Guid id = isOriginal ? map.ID : Guid.NewGuid();
             TempMap tempMap = new TempMap(id, map);
@@ -126,7 +126,7 @@ namespace CryBits.Server.Entities
             }
 
             // Itens do mapa
-            tempMap.Spawn_Items();
+            tempMap.SpawnItems();
         }
     }
 

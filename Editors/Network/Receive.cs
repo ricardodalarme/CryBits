@@ -19,7 +19,7 @@ namespace CryBits.Editors.Network
             {
                 case ServerEditor.Alert: Alert(data); break;
                 case ServerEditor.Connect: Connect(); break;
-                case ServerEditor.ServerData: Server_Data(data); break;
+                case ServerEditor.ServerData: ServerData(data); break;
                 case ServerEditor.Classes: Classes(data); break;
                 case ServerEditor.Map: Map(data); break;
                 case ServerEditor.NPCs: NPCs(data); break;
@@ -41,7 +41,7 @@ namespace CryBits.Editors.Network
             EditorMaps.Form = new EditorMaps();
         }
 
-        private static void Server_Data(NetIncomingMessage data)
+        private static void ServerData(NetIncomingMessage data)
         {
             // Lê os dados
             GameName = data.ReadString();

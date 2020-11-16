@@ -54,7 +54,7 @@ namespace CryBits.Editors.Media
         public static Texture TexLighting;
 
         // Formato das texturas
-        public const string Format = ".png";
+        private const string Format = ".png";
 
         #region Engine
         private static Texture[] AddTextures(string directory)
@@ -218,12 +218,12 @@ namespace CryBits.Editors.Media
         public static void Present()
         {
             // Desenha 
-            Editor_Maps_Tile();
-            Editor_Maps_Map();
-            Editor_Tile();
-            Editor_Class();
-            Editor_Item();
-            Editor_NPC();
+            EditorMapsTile();
+            EditorMapsMap();
+            EditorTile();
+            EditorClass();
+            EditorItem();
+            EditorNPC();
             Interface();
         }
 
@@ -238,7 +238,7 @@ namespace CryBits.Editors.Media
         }
 
         #region Map Editor
-        private static void Editor_Maps_Tile()
+        private static void EditorMapsTile()
         {
             EditorMaps form = EditorMaps.Form;
 
@@ -269,7 +269,7 @@ namespace CryBits.Editors.Media
             WinMapTile.Display();
         }
 
-        private static void Editor_Maps_Map()
+        private static void EditorMapsMap()
         {
             // Previne erros
             if (EditorMaps.Form == null || EditorMaps.Form.IsDisposed || EditorMaps.Form.Selected == null) return;
@@ -279,19 +279,19 @@ namespace CryBits.Editors.Media
 
             // Desenha o mapa
             Map selected = EditorMaps.Form.Selected;
-            Editor_Maps_Map_Panorama(selected);
-            Editor_Maps_Map_Tiles(selected);
-            Editor_Maps_Map_Weather(selected);
-            Editor_Maps_Map_Light(selected);
-            Editor_Maps_Map_Fog(selected);
-            Editor_Maps_Map_Grids(selected);
-            Editor_Maps_Map_NPCs(selected);
+            EditorMapsMapPanorama(selected);
+            EditorMapsMapTiles(selected);
+            EditorMapsMapWeather(selected);
+            EditorMapsMapLight(selected);
+            EditorMapsMapFog(selected);
+            EditorMapsMapGrids(selected);
+            EditorMapsMapNPCs(selected);
 
             // Exibe o que foi renderizado
             WinMap.Display();
         }
 
-        private static void Editor_Maps_Map_Panorama(Map map)
+        private static void EditorMapsMapPanorama(Map map)
         {
             EditorMaps form = EditorMaps.Form;
 
@@ -308,7 +308,7 @@ namespace CryBits.Editors.Media
             }
         }
 
-        private static void Editor_Maps_Map_Tiles(Map map)
+        private static void EditorMapsMapTiles(Map map)
         {
             EditorMaps form = EditorMaps.Form;
             MapTileData data;
@@ -346,12 +346,12 @@ namespace CryBits.Editors.Media
                             if (!data.IsAutoTile)
                                 Render(WinMap, TexTile[data.Texture], source, form.Zoom(destiny), color);
                             else
-                                Editor_Maps_AutoTile(destiny.Location, data, color);
+                                EditorMapsAutoTile(destiny.Location, data, color);
                         }
             }
         }
 
-        private static void Editor_Maps_AutoTile(Point position, MapTileData data, Color color)
+        private static void EditorMapsAutoTile(Point position, MapTileData data, Color color)
         {
             // Desenha todas as partes do azulejo
             for (byte i = 0; i < 4; i++)
@@ -366,7 +366,7 @@ namespace CryBits.Editors.Media
             }
         }
 
-        private static void Editor_Maps_Map_Fog(Map map)
+        private static void EditorMapsMapFog(Map map)
         {
             // Somente se necessário
             if (map.Fog.Texture <= 0) return;
@@ -382,7 +382,7 @@ namespace CryBits.Editors.Media
                 }
         }
 
-        private static void Editor_Maps_Map_Weather(Map map)
+        private static void EditorMapsMapWeather(Map map)
         {
             // Somente se necessário
             if (!EditorMaps.Form.butVisualization.Checked || map.Weather.Type == Weathers.Normal) return;
@@ -397,7 +397,7 @@ namespace CryBits.Editors.Media
                     Render(WinMap, TexWeather, new Rectangle(x, 0, 32, 32), EditorMaps.Form.Zoom(new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32)), CColor(255, 255, 255, 150));
         }
 
-        private static void Editor_Maps_Map_Light(Map map)
+        private static void EditorMapsMapLight(Map map)
         {
             EditorMaps form = EditorMaps.Form;
             byte light = (byte)((255 * ((decimal)map.Lighting / 100) - 255) * -1);
@@ -440,7 +440,7 @@ namespace CryBits.Editors.Media
             Render(WinMap, TexBlank, 0, 0, 0, 0, form.picMap.Width, form.picMap.Height, CColor(255, 255, 255, TempMap.Lightning));
         }
 
-        private static void Editor_Maps_Map_Grids(Map map)
+        private static void EditorMapsMapGrids(Map map)
         {
             EditorMaps form = EditorMaps.Form;
             Rectangle source = form.TileSource, destiny = new Rectangle();
@@ -456,9 +456,9 @@ namespace CryBits.Editors.Media
                     for (byte y = 0; y < Map.Height; y++)
                     {
                         RenderRectangle(WinMap, x * form.GridZoom, y * form.GridZoom, form.GridZoom, form.GridZoom, CColor(25, 25, 25, 70));
-                        Editor_Maps_Map_Zones(map, x, y);
-                        Editor_Maps_Map_Attributes(map, x, y);
-                        Editor_Maps_Map_DirBlock(map, x, y);
+                        EditorMapsMapZones(map, x, y);
+                        EditorMapsMapAttributes(map, x, y);
+                        EditorMapsMapDirBlock(map, x, y);
                     }
 
             if (!form.chkAuto.Checked && form.butMNormal.Checked)
@@ -476,7 +476,7 @@ namespace CryBits.Editors.Media
                 RenderRectangle(WinMap, destiny.X, destiny.Y, form.MapSelection.Width * form.GridZoom, form.MapSelection.Height * form.GridZoom);
         }
 
-        private static void Editor_Maps_Map_Zones(Map map, byte x, byte y)
+        private static void EditorMapsMapZones(Map map, byte x, byte y)
         {
             EditorMaps form = EditorMaps.Form;
             Point position = new Point((x - form.scrlMapX.Value) * form.GridZoom, (y - form.scrlMapY.Value) * form.GridZoom);
@@ -498,7 +498,7 @@ namespace CryBits.Editors.Media
             DrawText(WinMap, zoneNum.ToString(), position.X, position.Y, Color.White);
         }
 
-        private static void Editor_Maps_Map_Attributes(Map map, byte x, byte y)
+        private static void EditorMapsMapAttributes(Map map, byte x, byte y)
         {
             EditorMaps form = EditorMaps.Form;
             Point position = new Point((x - form.scrlMapX.Value) * form.GridZoom, (y - EditorMaps.Form.scrlMapY.Value) * form.GridZoom);
@@ -526,7 +526,7 @@ namespace CryBits.Editors.Media
             DrawText(WinMap, letter, position.X, position.Y, Color.White);
         }
 
-        private static void Editor_Maps_Map_DirBlock(Map map, byte x, byte y)
+        private static void EditorMapsMapDirBlock(Map map, byte x, byte y)
         {
             Point tile = new Point(EditorMaps.Form.scrlMapX.Value + x, EditorMaps.Form.scrlMapY.Value + y);
             byte sourceY;
@@ -549,7 +549,7 @@ namespace CryBits.Editors.Media
             }
         }
 
-        private static void Editor_Maps_Map_NPCs(Map map)
+        private static void EditorMapsMapNPCs(Map map)
         {
             EditorMaps form = EditorMaps.Form;
 
@@ -567,7 +567,7 @@ namespace CryBits.Editors.Media
         #endregion
 
         #region Tile Editor
-        public static void Editor_Tile()
+        public static void EditorTile()
         {
             EditorTiles form = EditorTiles.Form;
 
@@ -588,10 +588,10 @@ namespace CryBits.Editors.Media
                 {
                     // Desenha os atributos
                     if (form.optAttributes.Checked)
-                        Editor_TileAttributes(x, y);
+                        EditorTileAttributes(x, y);
                     // Bloqueios direcionais
                     else if (form.optDirBlock.Checked)
-                        Editor_Tile_DirBlock(x, y);
+                        EditorTileDirBlock(x, y);
 
                     // Grades
                     RenderRectangle(WinTile, x * Grid, y * Grid, Grid, Grid, CColor(25, 25, 25, 70));
@@ -601,7 +601,7 @@ namespace CryBits.Editors.Media
             WinTile.Display();
         }
 
-        private static void Editor_TileAttributes(byte x, byte y)
+        private static void EditorTileAttributes(byte x, byte y)
         {
             EditorTiles form = EditorTiles.Form;
             Point tile = new Point(form.scrlTileX.Value + x, form.scrlTileY.Value + y);
@@ -621,7 +621,7 @@ namespace CryBits.Editors.Media
             }
         }
 
-        private static void Editor_Tile_DirBlock(byte x, byte y)
+        private static void EditorTileDirBlock(byte x, byte y)
         {
             EditorTiles form = EditorTiles.Form;
             Point tile = new Point(form.scrlTileX.Value + x, form.scrlTileY.Value + y);
@@ -634,7 +634,7 @@ namespace CryBits.Editors.Media
             // Bloqueio total
             if (Tile.List[form.scrlTile.Value].Data[x, y].Attribute == (byte)TileAttributes.Block)
             {
-                Editor_TileAttributes(x, y);
+                EditorTileAttributes(x, y);
                 return;
             }
 
@@ -650,7 +650,7 @@ namespace CryBits.Editors.Media
         #endregion
 
         #region Item Editor
-        private static void Editor_Item()
+        private static void EditorItem()
         {
             // Somente se necessário
             if (WinItem == null) return;
@@ -665,7 +665,7 @@ namespace CryBits.Editors.Media
         #endregion
 
         #region NPC Editor
-        private static void Editor_NPC()
+        private static void EditorNPC()
         {
             // Somente se necessário
             if (WinNPC == null) return;
@@ -676,7 +676,7 @@ namespace CryBits.Editors.Media
         #endregion
 
         #region Class Editors
-        private static void Editor_Class()
+        private static void EditorClass()
         {
             // Somente se necessário
             if (WinClass == null) return;
@@ -708,11 +708,11 @@ namespace CryBits.Editors.Media
 
             // Desenha as ferramentas
             WinInterface.Clear();
-            Interface_Order(Tool.Tree.Nodes[(byte)EditorInterface.Form.cmbWindows.SelectedIndex]);
+            InterfaceOrder(Tool.Tree.Nodes[(byte)EditorInterface.Form.cmbWindows.SelectedIndex]);
             WinInterface.Display();
         }
 
-        private static void Interface_Order(TreeNode node)
+        private static void InterfaceOrder(TreeNode node)
         {
             for (byte i = 0; i < node.Nodes.Count; i++)
             {
@@ -726,7 +726,7 @@ namespace CryBits.Editors.Media
                     else if (tool is CheckBox) CheckBox((CheckBox)tool);
 
                     // Pula pra próxima
-                    Interface_Order(node.Nodes[i]);
+                    InterfaceOrder(node.Nodes[i]);
                 }
             }
         }

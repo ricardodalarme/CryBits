@@ -211,4 +211,11 @@
         None,
         Menu
     }
+
+    public enum Alignments
+    {
+        Left,
+        Center,
+        Right
+    }
 }

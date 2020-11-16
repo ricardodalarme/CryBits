@@ -33,7 +33,7 @@ namespace CryBits.Client.Media.Audio
             _list[(byte)index].Play();
         }
 
-        public static void Stop_All()
+        public static void StopAll()
         {
             // Apenas se necessário
             if (_list == null) return;

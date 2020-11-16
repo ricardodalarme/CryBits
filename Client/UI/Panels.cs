@@ -37,7 +37,7 @@ namespace CryBits.Client.UI
             public short TextureNum;
         }
 
-        public static void Menu_Close()
+        public static void MenuClose()
         {
             // Fecha todos os paineis abertos
             List["Connect"].Visible = false;
@@ -75,7 +75,7 @@ namespace CryBits.Client.UI
                             TextBoxes.List["Shop_Sell_Amount"].Text = string.Empty;
                             List["Shop_Sell"].Visible = true;
                         }
-                        else Send.Shop_Sell(slot, 1);
+                        else Send.ShopSell(slot, 1);
                     }
                     // Solta o item
                     else if (!List["Trade"].Visible)
@@ -101,7 +101,7 @@ namespace CryBits.Client.UI
                     if (e.Button == Mouse.Button.Right)
                         if (Player.Me.Equipment[i].Bind != BindOn.Equip)
                         {
-                            Send.Equipment_Remove(i);
+                            Send.EquipmentRemove(i);
                             return;
                         }
         }
@@ -117,7 +117,7 @@ namespace CryBits.Client.UI
             // Solta item
             if (e.Button == Mouse.Button.Right)
             {
-                Send.Hotbar_Add(slot, 0, 0);
+                Send.HotbarAdd(slot, 0, 0);
                 return;
             }
             // Seleciona o item
@@ -137,7 +137,7 @@ namespace CryBits.Client.UI
             if (Player.Me.TradeOffer[slot].Item == null) return;
 
             // Solta item
-            if (e.Button == Mouse.Button.Right) Send.Trade_Offer(slot, 0);
+            if (e.Button == Mouse.Button.Right) Send.TradeOffer(slot, 0);
         }
 
         public static void CheckInformation()

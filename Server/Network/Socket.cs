@@ -1,5 +1,6 @@
 ﻿using CryBits.Server.Entities;
 using Lidgren.Network;
+using static CryBits.Defaults;
 
 namespace CryBits.Server.Network
 {
@@ -11,11 +12,11 @@ namespace CryBits.Server.Network
         public static void Init()
         {
             // Define algumas configurações da rede
-            NetPeerConfiguration config = new NetPeerConfiguration("CryBits")
+            NetPeerConfiguration config = new NetPeerConfiguration(GameName)
             {
-                Port = Defaults.Port,
+                Port = Port,
                 AcceptIncomingConnections = true,
-                MaximumConnections = Defaults.MaxPlayers
+                MaximumConnections = MaxPlayers
             };
 
             // Cria o dispositivo com as devidas configurações

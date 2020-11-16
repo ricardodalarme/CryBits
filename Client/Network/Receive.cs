@@ -30,40 +30,40 @@ namespace CryBits.Client.Network
                 case ServerClient.JoinGame: JoinGame(); break;
                 case ServerClient.Classes: Classes(data); break;
                 case ServerClient.Characters: Characters(data); break;
-                case ServerClient.PlayerData: Player_Data(data); break;
-                case ServerClient.PlayerPosition: Player_Position(data); break;
-                case ServerClient.PlayerVitals: Player_Vitals(data); break;
-                case ServerClient.PlayerMove: Player_Move(data); break;
-                case ServerClient.PlayerLeave: Player_Leave(data); break;
-                case ServerClient.PlayerDirection: Player_Direction(data); break;
-                case ServerClient.PlayerAttack: Player_Attack(data); break;
-                case ServerClient.PlayerExperience: Player_Experience(data); break;
-                case ServerClient.PlayerInventory: Player_Inventory(data); break;
-                case ServerClient.PlayerEquipments: Player_Equipments(data); break;
-                case ServerClient.PlayerHotbar: Player_Hotbar(data); break;
-                case ServerClient.MapRevision: Map_Revision(data); break;
+                case ServerClient.PlayerData: PlayerData(data); break;
+                case ServerClient.PlayerPosition: PlayerPosition(data); break;
+                case ServerClient.PlayerVitals: PlayerVitals(data); break;
+                case ServerClient.PlayerMove: PlayerMove(data); break;
+                case ServerClient.PlayerLeave: PlayerLeave(data); break;
+                case ServerClient.PlayerDirection: PlayerDirection(data); break;
+                case ServerClient.PlayerAttack: PlayerAttack(data); break;
+                case ServerClient.PlayerExperience: PlayerExperience(data); break;
+                case ServerClient.PlayerInventory: PlayerInventory(data); break;
+                case ServerClient.PlayerEquipments: PlayerEquipments(data); break;
+                case ServerClient.PlayerHotbar: PlayerHotbar(data); break;
+                case ServerClient.MapRevision: MapRevision(data); break;
                 case ServerClient.Map: Map(data); break;
                 case ServerClient.JoinMap: JoinMap(); break;
                 case ServerClient.Latency: Latency(); break;
                 case ServerClient.Message: Message(data); break;
                 case ServerClient.NPCs: NPCs(data); break;
-                case ServerClient.MapNPCs: Map_NPCs(data); break;
-                case ServerClient.MapNPC: Map_NPC(data); break;
-                case ServerClient.MapNPCMovement: Map_NPC_Movement(data); break;
-                case ServerClient.MapNPCDirection: Map_NPC_Direction(data); break;
-                case ServerClient.MapNPCVitals: Map_NPC_Vitals(data); break;
-                case ServerClient.MapNPCAttack: Map_NPC_Attack(data); break;
-                case ServerClient.MapNPCDied: Map_NPC_Died(data); break;
+                case ServerClient.MapNPCs: MapNPCs(data); break;
+                case ServerClient.MapNPC: MapNPC(data); break;
+                case ServerClient.MapNPCMovement: MapNPCMovement(data); break;
+                case ServerClient.MapNPCDirection: MapNPCDirection(data); break;
+                case ServerClient.MapNPCVitals: MapNPCVitals(data); break;
+                case ServerClient.MapNPCAttack: MapNPCAttack(data); break;
+                case ServerClient.MapNPCDied: MapNPCDied(data); break;
                 case ServerClient.Items: Items(data); break;
-                case ServerClient.MapItems: Map_Items(data); break;
+                case ServerClient.MapItems: MapItems(data); break;
                 case ServerClient.Party: Party(data); break;
-                case ServerClient.PartyInvitation: Party_Invitation(data); break;
+                case ServerClient.PartyInvitation: PartyInvitation(data); break;
                 case ServerClient.Trade: Trade(data); break;
-                case ServerClient.TradeInvitation: Trade_Invitation(data); break;
-                case ServerClient.TradeState: Trade_State(data); break;
-                case ServerClient.TradeOffer: Trade_Offer(data); break;
+                case ServerClient.TradeInvitation: TradeInvitation(data); break;
+                case ServerClient.TradeState: TradeState(data); break;
+                case ServerClient.TradeOffer: TradeOffer(data); break;
                 case ServerClient.Shops: Shops(data); break;
-                case ServerClient.ShopOpen: Shop_Open(data); break;
+                case ServerClient.ShopOpen: ShopOpen(data); break;
             }
         }
 
@@ -80,7 +80,7 @@ namespace CryBits.Client.Network
             Class.List = new Dictionary<Guid, Class>();
 
             // Abre o painel de seleção de personagens
-            Panels.Menu_Close();
+            Panels.MenuClose();
             Panels.List["SelectCharacter"].Visible = true;
         }
 
@@ -109,7 +109,7 @@ namespace CryBits.Client.Network
             Panels.CreateCharacterTex = 0;
 
             // Abre o painel de criação de personagem
-            Panels.Menu_Close();
+            Panels.MenuClose();
             Panels.List["CreateCharacter"].Visible = true;
         }
 
@@ -171,7 +171,7 @@ namespace CryBits.Client.Network
             Windows.Current = WindowsTypes.Game;
         }
 
-        private static void Player_Data(NetIncomingMessage data)
+        private static void PlayerData(NetIncomingMessage data)
         {
             string name = data.ReadString();
             Player player;
@@ -202,7 +202,7 @@ namespace CryBits.Client.Network
             TempMap.Current = player.Map;
         }
 
-        private static void Player_Position(NetIncomingMessage data)
+        private static void PlayerPosition(NetIncomingMessage data)
         {
             Player player = Player.Get(data.ReadString());
 
@@ -217,7 +217,7 @@ namespace CryBits.Client.Network
             player.Movement = Movements.Stopped;
         }
 
-        private static void Player_Vitals(NetIncomingMessage data)
+        private static void PlayerVitals(NetIncomingMessage data)
         {
             Player player = Player.Get(data.ReadString());
 
@@ -229,7 +229,7 @@ namespace CryBits.Client.Network
             }
         }
 
-        private static void Player_Equipments(NetIncomingMessage data)
+        private static void PlayerEquipments(NetIncomingMessage data)
         {
             Player player = Player.Get(data.ReadString());
 
@@ -237,13 +237,13 @@ namespace CryBits.Client.Network
             for (byte i = 0; i < (byte)Equipments.Count; i++) player.Equipment[i] = Item.Get(new Guid(data.ReadString()));
         }
 
-        private static void Player_Leave(NetIncomingMessage data)
+        private static void PlayerLeave(NetIncomingMessage data)
         {
             // Limpa os dados do jogador
             Player.List.Remove(Player.Get(data.ReadString()));
         }
 
-        private static void Player_Move(NetIncomingMessage data)
+        private static void PlayerMove(NetIncomingMessage data)
         {
             Player player = Player.Get(data.ReadString());
 
@@ -265,13 +265,13 @@ namespace CryBits.Client.Network
             }
         }
 
-        private static void Player_Direction(NetIncomingMessage data)
+        private static void PlayerDirection(NetIncomingMessage data)
         {
             // Altera a posição do jogador
             Player.Get(data.ReadString()).Direction = (Directions)data.ReadByte();
         }
 
-        private static void Player_Attack(NetIncomingMessage data)
+        private static void PlayerAttack(NetIncomingMessage data)
         {
             Player player = Player.Get(data.ReadString());
             string victim = data.ReadString();
@@ -296,7 +296,7 @@ namespace CryBits.Client.Network
                 }
         }
 
-        private static void Player_Experience(NetIncomingMessage data)
+        private static void PlayerExperience(NetIncomingMessage data)
         {
             // Define os dados
             Player.Me.Experience = data.ReadInt32();
@@ -311,7 +311,7 @@ namespace CryBits.Client.Network
             Buttons.List["Attributes_Vitality"].Visible = Player.Me.Points > 0;
         }
 
-        private static void Player_Inventory(NetIncomingMessage data)
+        private static void PlayerInventory(NetIncomingMessage data)
         {
             // Define os dados
             for (byte i = 0; i < MaxInventory; i++)
@@ -321,7 +321,7 @@ namespace CryBits.Client.Network
             }
         }
 
-        private static void Player_Hotbar(NetIncomingMessage data)
+        private static void PlayerHotbar(NetIncomingMessage data)
         {
             // Define os dados
             for (byte i = 0; i < MaxHotbar; i++)
@@ -331,7 +331,7 @@ namespace CryBits.Client.Network
             }
         }
 
-        private static void Map_Revision(NetIncomingMessage data)
+        private static void MapRevision(NetIncomingMessage data)
         {
             bool needed = false;
             Guid id = new Guid(data.ReadString());
@@ -412,7 +412,7 @@ namespace CryBits.Client.Network
             Item.List = (Dictionary<Guid, Item>)ByteArrayToObject(data);
         }
 
-        private static void Map_Items(NetIncomingMessage data)
+        private static void MapItems(NetIncomingMessage data)
         {
             // Quantidade
             TempMap.Current.Item = new MapItems[data.ReadByte()];
@@ -435,12 +435,12 @@ namespace CryBits.Client.Network
             for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Player.Get(data.ReadString());
         }
 
-        private static void Party_Invitation(NetIncomingMessage data)
+        private static void PartyInvitation(NetIncomingMessage data)
         {
             // Nega o pedido caso o jogador não quiser receber convites
             if (!Options.Party)
             {
-                Send.Party_Decline();
+                Send.PartyDecline();
                 return;
             }
 
@@ -475,12 +475,12 @@ namespace CryBits.Client.Network
             }
         }
 
-        private static void Trade_Invitation(NetIncomingMessage data)
+        private static void TradeInvitation(NetIncomingMessage data)
         {
             // Nega o pedido caso o jogador não quiser receber convites
             if (!Options.Trade)
             {
-                Send.Trade_Decline();
+                Send.TradeDecline();
                 return;
             }
 
@@ -489,7 +489,7 @@ namespace CryBits.Client.Network
             Panels.List["Trade_Invitation"].Visible = true;
         }
 
-        private static void Trade_State(NetIncomingMessage data)
+        private static void TradeState(NetIncomingMessage data)
         {
             switch ((TradeStatus)data.ReadByte())
             {
@@ -507,7 +507,7 @@ namespace CryBits.Client.Network
             }
         }
 
-        private static void Trade_Offer(NetIncomingMessage data)
+        private static void TradeOffer(NetIncomingMessage data)
         {
             // Recebe os dados da oferta
             if (data.ReadBoolean())
@@ -530,7 +530,7 @@ namespace CryBits.Client.Network
             Shop.List = (Dictionary<Guid, Shop>)ByteArrayToObject(data);
         }
 
-        private static void Shop_Open(NetIncomingMessage data)
+        private static void ShopOpen(NetIncomingMessage data)
         {
             // Abre a loja
             Panels.ShopOpen = Shop.Get(new Guid(data.ReadString()));
@@ -543,7 +543,7 @@ namespace CryBits.Client.Network
             NPC.List = (Dictionary<Guid, NPC>)ByteArrayToObject(data);
         }
 
-        private static void Map_NPCs(NetIncomingMessage data)
+        private static void MapNPCs(NetIncomingMessage data)
         {
             // Lê os dados
             TempMap.Current.NPC = new TempNPC[data.ReadInt16()];
@@ -563,7 +563,7 @@ namespace CryBits.Client.Network
             }
         }
 
-        private static void Map_NPC(NetIncomingMessage data)
+        private static void MapNPC(NetIncomingMessage data)
         {
             // Lê os dados
             byte i = data.ReadByte();
@@ -577,7 +577,7 @@ namespace CryBits.Client.Network
             for (byte n = 0; n < (byte)Vitals.Count; n++) TempMap.Current.NPC[i].Vital[n] = data.ReadInt16();
         }
 
-        private static void Map_NPC_Movement(NetIncomingMessage data)
+        private static void MapNPCMovement(NetIncomingMessage data)
         {
             // Lê os dados
             byte i = data.ReadByte();
@@ -600,7 +600,7 @@ namespace CryBits.Client.Network
                 }
         }
 
-        private static void Map_NPC_Attack(NetIncomingMessage data)
+        private static void MapNPCAttack(NetIncomingMessage data)
         {
             byte index = data.ReadByte();
             string victim = data.ReadString();
@@ -625,7 +625,7 @@ namespace CryBits.Client.Network
                 }
         }
 
-        private static void Map_NPC_Direction(NetIncomingMessage data)
+        private static void MapNPCDirection(NetIncomingMessage data)
         {
             // Define a direção de determinado NPC
             byte i = data.ReadByte();
@@ -634,7 +634,7 @@ namespace CryBits.Client.Network
             TempMap.Current.NPC[i].Y2 = 0;
         }
 
-        private static void Map_NPC_Vitals(NetIncomingMessage data)
+        private static void MapNPCVitals(NetIncomingMessage data)
         {
             byte index = data.ReadByte();
 
@@ -643,7 +643,7 @@ namespace CryBits.Client.Network
                 TempMap.Current.NPC[index].Vital[n] = data.ReadInt16();
         }
 
-        private static void Map_NPC_Died(NetIncomingMessage data)
+        private static void MapNPCDied(NetIncomingMessage data)
         {
             byte i = data.ReadByte();
 
