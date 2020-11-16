@@ -33,7 +33,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Build\Client and Editors\</OutputPath>
+    <OutputPath>..\Build\Client and Editors\</OutputPath>
     <DefineConstants>CryBits.Editors</DefineConstants>
     <ErrorReport>none</ErrorReport>
     <WarningLevel>4</WarningLevel>
