@@ -1,5 +1,4 @@
 ﻿using System;
-using CryBits.Client.Logic;
 using CryBits.Client.Media;
 using CryBits.Client.Network;
 using CryBits.Client.UI;

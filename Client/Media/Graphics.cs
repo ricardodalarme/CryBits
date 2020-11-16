@@ -8,7 +8,6 @@ using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
-using CryBits.Client.Logic;
 using CryBits.Entities;
 using SFML.Graphics;
 using SFML.System;

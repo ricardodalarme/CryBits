@@ -5,7 +5,6 @@ using CryBits.Client.Media.Audio;
 using CryBits.Entities;
 using static CryBits.Utils;
 using static CryBits.Defaults;
-using static CryBits.Client.Logic.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.Entities

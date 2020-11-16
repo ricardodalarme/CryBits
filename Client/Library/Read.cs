@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Client.Entities;
-using CryBits.Client.Logic;
 using CryBits.Client.UI;
 using CryBits.Entities;
 
