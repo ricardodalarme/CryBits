@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using CryBits.Client.Entities;
-using static CryBits.Client.Logic.Game;
-using static CryBits.Utils;
+using CryBits.Entities;
+using static CryBits.Defaults;
 
 namespace CryBits.Client.Logic
 {
@@ -20,8 +20,8 @@ namespace CryBits.Client.Logic
             position.Y = Player.Me.Y2 + Grid;
 
             // Início da tela
-            start.X = Player.Me.X - (MapWidth + 1) / 2 - 1;
-            start.Y = Player.Me.Y - (MapHeight + 1) / 2 - 1;
+            start.X = Player.Me.X - (Map.Width + 1) / 2 - 1;
+            start.Y = Player.Me.Y - (Map.Height + 1) / 2 - 1;
 
             // Reajusta a posição horizontal da tela
             if (start.X < 0)
@@ -40,25 +40,25 @@ namespace CryBits.Client.Logic
             }
 
             // Final da tela
-            end.X = start.X + MapWidth + 1 + 1;
-            end.Y = start.Y + MapHeight + 1 + 1;
+            end.X = start.X + Map.Width + 1 + 1;
+            end.Y = start.Y + Map.Height + 1 + 1;
 
             // Reajusta a posição horizontal da tela
-            if (end.X > MapWidth)
+            if (end.X > Map.Width)
             {
                 position.X = Grid;
-                if (end.X == MapWidth + 1 && Player.Me.X2 < 0) position.X = Player.Me.X2 + Grid;
-                end.X = MapWidth;
-                start.X = end.X - MapWidth - 1;
+                if (end.X == Map.Width + 1 && Player.Me.X2 < 0) position.X = Player.Me.X2 + Grid;
+                end.X = Map.Width;
+                start.X = end.X - Map.Width - 1;
             }
 
             // Reajusta a posição vertical da tela
-            if (end.Y > MapHeight)
+            if (end.Y > Map.Height)
             {
                 position.Y = Grid;
-                if (end.Y == MapHeight + 1 && Player.Me.Y2 < 0) position.Y = Player.Me.Y2 + Grid;
-                end.Y = MapHeight;
-                start.Y = end.Y - MapHeight - 1;
+                if (end.Y == Map.Height + 1 && Player.Me.Y2 < 0) position.Y = Player.Me.Y2 + Grid;
+                end.Y = Map.Height;
+                start.Y = end.Y - Map.Height - 1;
             }
 
             // Define a dimensão dos azulejos vistos

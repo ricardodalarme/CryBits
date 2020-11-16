@@ -5,7 +5,7 @@ using CryBits.Entities;
 using CryBits.Server.Library;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
-using static CryBits.Server.Logic.Defaults;
+using static CryBits.Defaults;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Entities
@@ -21,9 +21,9 @@ namespace CryBits.Server.Entities
         public int Experience { get; set; }
         public byte Points { get; set; }
         public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
-        public ItemSlot[] Inventory { get; set; } = new ItemSlot[MaxInventory];
-        public Item[] Equipment { get; set; } = new Item[(byte)Equipments.Count];
-        public Hotbar[] Hotbar { get; set; } = new Hotbar[MaxHotbar];
+        public ItemSlot[] Inventory { get; } = new ItemSlot[MaxInventory];
+        public Item[] Equipment { get; } = new Item[(byte)Equipments.Count];
+        public Hotbar[] Hotbar { get; } = new Hotbar[MaxHotbar];
 
         // Dados temporários
         public bool GettingMap;
@@ -494,13 +494,7 @@ namespace CryBits.Server.Entities
             if (amount > slot.Amount) amount = slot.Amount;
 
             // Solta o item no chão
-            Map.Item.Add(new MapItems
-            {
-                Item = slot.Item,
-                Amount = amount,
-                X = X,
-                Y = Y
-            });
+            Map.Item.Add(new MapItems(slot.Item, amount, X, Y));
             Send.Map_Items(Map);
 
             // Retira o item do inventário do jogador 

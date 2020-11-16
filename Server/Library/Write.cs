@@ -2,7 +2,7 @@
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
 using CryBits.Server.Entities;
-using static CryBits.Server.Logic.Defaults;
+using static CryBits.Defaults;
 
 namespace CryBits.Server.Library
 {

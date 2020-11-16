@@ -6,6 +6,7 @@ using CryBits.Client.UI;
 using CryBits.Entities;
 using SFML.Window;
 using static CryBits.Client.Logic.Game;
+using static CryBits.Defaults;
 using static CryBits.Utils;
 
 namespace CryBits.Client.Entities

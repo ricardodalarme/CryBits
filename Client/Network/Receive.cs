@@ -12,6 +12,7 @@ using CryBits.Entities;
 using CryBits.Packets;
 using Lidgren.Network;
 using static CryBits.Client.Logic.Game;
+using static CryBits.Defaults;
 using static CryBits.Utils;
 
 namespace CryBits.Client.Network

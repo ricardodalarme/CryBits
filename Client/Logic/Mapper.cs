@@ -2,9 +2,11 @@
 using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Media.Audio;
-using static CryBits.Client.Logic.Game;
+using CryBits.Entities;
+using static CryBits.Defaults;
 using static CryBits.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
+using MapWeatherParticle = CryBits.Client.Entities.MapWeatherParticle;
 
 namespace CryBits.Client.Logic
 {
@@ -48,7 +50,7 @@ namespace CryBits.Client.Logic
         }
 
         // Verifica se as coordenas estão no limite do mapa
-        public static bool OutOfLimit(int x, int y) => x >= MapWidth || y >= MapHeight || x < 0 || y < 0;
+        public static bool OutOfLimit(int x, int y) => x >= Map.Width || y >= Map.Height || x < 0 || y < 0;
 
         private static void Fog()
         {

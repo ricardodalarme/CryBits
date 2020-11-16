@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using static CryBits.Utils;
+using static CryBits.Defaults;
 
 namespace CryBits.Editors.Logic
 {

@@ -38,6 +38,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Defaults.cs" />
     <Compile Include="Entities\Class.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Inventory.cs" />

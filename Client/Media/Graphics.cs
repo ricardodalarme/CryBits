@@ -14,6 +14,7 @@ using SFML.System;
 using SFML.Window;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
+using static CryBits.Defaults;
 using static CryBits.Utils;
 using Color = SFML.Graphics.Color;
 using Font = SFML.Graphics.Font;
@@ -932,8 +933,8 @@ namespace CryBits.Client.Media
             if (data.Texture <= 0) return;
 
             // Desenha a fumaça
-            for (int x = -1; x <= MapWidth * Grid / textureSize.Width; x++)
-                for (int y = -1; y <= MapHeight * Grid / textureSize.Height; y++)
+            for (int x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
+                for (int y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
                     Render(TexFog[data.Texture], new Point(x * textureSize.Width + Mapper.FogX, y * textureSize.Height + Mapper.FogY), new Color(255, 255, 255, data.Alpha));
         }
 

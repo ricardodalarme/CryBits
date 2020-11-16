@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
 using CryBits.Server.Entities;
-using static CryBits.Server.Logic.Defaults;
+using static CryBits.Defaults;
 
 namespace CryBits.Server.Library
 {
@@ -151,9 +151,11 @@ namespace CryBits.Server.Library
             // Cria uma classe caso não houver nenhuma
             else
             {
-                Class @class = new Class();
-                @class.Name = "New class";
-                @class.SpawnMap = Map.List.ElementAt(0).Value;
+                Class @class = new Class
+                {
+                    Name = "New class",
+                    SpawnMap = Map.List.ElementAt(0).Value
+                };
                 Class.List.Add(@class.ID, @class);
                 Write.Class(@class);
             }

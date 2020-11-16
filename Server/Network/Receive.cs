@@ -7,7 +7,7 @@ using CryBits.Packets;
 using CryBits.Server.Entities;
 using CryBits.Server.Library;
 using Lidgren.Network;
-using static CryBits.Server.Logic.Defaults;
+using static CryBits.Defaults;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Network
@@ -220,8 +220,7 @@ namespace CryBits.Server.Network
             account.Character.Level = 1;
             account.Character.Class = @class = Class.Get(new Guid(data.ReadString()));
             account.Character.Genre = data.ReadBoolean();
-            if (account.Character.Genre) account.Character.TextureNum = @class.TexMale[data.ReadByte()];
-            else account.Character.TextureNum = @class.TexFemale[data.ReadByte()];
+            account.Character.TextureNum = account.Character.Genre ? @class.TexMale[data.ReadByte()] : @class.TexFemale[data.ReadByte()];
             account.Character.Attribute = @class.Attribute;
             account.Character.Map = TempMap.Get(@class.SpawnMap.ID);
             account.Character.Direction = (Directions)@class.SpawnDirection;
@@ -412,7 +411,6 @@ namespace CryBits.Server.Network
         private static void Equipment_Remove(Player player, NetIncomingMessage data)
         {
             byte slot = data.ReadByte();
-            MapItems mapItem = new MapItems();
 
             // Apenas se necessário
             if (player.Equipment[slot] == null) return;
@@ -425,11 +423,7 @@ namespace CryBits.Server.Network
                 if (player.Map.Item.Count == MaxMapItems) return;
 
                 // Solta o item no chão
-                mapItem.Item = player.Equipment[slot];
-                mapItem.Amount = 1;
-                mapItem.X = player.X;
-                mapItem.Y = player.Y;
-                player.Map.Item.Add(mapItem);
+                player.Map.Item.Add(new MapItems(player.Equipment[slot], 1, player.X, player.Y));
 
                 // Envia os dados
                 Send.Map_Items(player.Map);

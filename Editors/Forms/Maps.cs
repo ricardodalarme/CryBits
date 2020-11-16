@@ -10,7 +10,7 @@ using CryBits.Editors.Network;
 using CryBits.Entities;
 using DarkUI.Forms;
 using SFML.Graphics;
-using static CryBits.Utils;
+using static CryBits.Defaults;
 using static CryBits.Editors.Logic.Utils;
 using Color = System.Drawing.Color;
 using Graphics = CryBits.Editors.Media.Graphics;

@@ -5,7 +5,7 @@ using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
 using DarkUI.Forms;
 using SFML.Graphics;
-using static CryBits.Utils;
+using static CryBits.Defaults;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 

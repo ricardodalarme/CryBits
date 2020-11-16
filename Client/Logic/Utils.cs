@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using CryBits.Client.UI;
 using SFML.Graphics;
-using static CryBits.Utils;
+using static CryBits.Defaults;
 using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.Logic

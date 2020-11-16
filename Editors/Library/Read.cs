@@ -138,7 +138,7 @@ namespace CryBits.Editors.Library
             for (byte i = 1; i < Lists.Tile.Length; i++) Tile(i);
         }
 
-        public static void Tile(byte index)
+        private static void Tile(byte index)
         {
             FileInfo file = new FileInfo(Directories.Tiles.FullName + index + Directories.Format);
 

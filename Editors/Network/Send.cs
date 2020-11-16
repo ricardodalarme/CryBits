@@ -1,8 +1,8 @@
 ﻿using CryBits.Editors.Forms;
-using CryBits.Editors.Library;
 using CryBits.Entities;
 using CryBits.Packets;
 using Lidgren.Network;
+using static CryBits.Defaults;
 using static CryBits.Utils;
 
 namespace CryBits.Editors.Network
@@ -97,18 +97,18 @@ namespace CryBits.Editors.Network
 
             // Envia os dados
             data.Write((byte)EditorServer.WriteSettings);
-            data.Write(Lists.ServerData.GameName);
-            data.Write(Lists.ServerData.Welcome);
-            data.Write(Lists.ServerData.Port);
-            data.Write(Lists.ServerData.MaxPlayers);
-            data.Write(Lists.ServerData.MaxCharacters);
-            data.Write(Lists.ServerData.MaxPartyMembers);
-            data.Write(Lists.ServerData.MaxMapItems);
-            data.Write(Lists.ServerData.NumPoints);
-            data.Write(Lists.ServerData.MinNameLength);
-            data.Write(Lists.ServerData.MaxNameLength);
-            data.Write(Lists.ServerData.MinPasswordLength);
-            data.Write(Lists.ServerData.MaxPasswordLength);
+            data.Write(GameName);
+            data.Write(WelcomeMessage);
+            data.Write(Port);
+            data.Write(MaxPlayers);
+            data.Write(MaxCharacters);
+            data.Write(MaxPartyMembers);
+            data.Write(MaxMapItems);
+            data.Write(NumPoints);
+            data.Write(MinNameLength);
+            data.Write(MaxNameLength);
+            data.Write(MinPasswordLength);
+            data.Write(MaxPasswordLength);
             Packet(data);
         }
 
