@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CryBits.Editors.Forms;
-using CryBits.Editors.Library;
 using CryBits.Entities;
 using CryBits.Packets;
 using Lidgren.Network;

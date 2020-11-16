@@ -4,7 +4,6 @@ using System.Threading;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
-using CryBits.Editors.Library;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using SFML.Audio;

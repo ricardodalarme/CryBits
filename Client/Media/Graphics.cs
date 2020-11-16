@@ -15,7 +15,6 @@ using SFML.Window;
 using static CryBits.Client.Logic.Game;
 using static CryBits.Client.Logic.Utils;
 using static CryBits.Defaults;
-using static CryBits.Utils;
 using Color = SFML.Graphics.Color;
 using Font = SFML.Graphics.Font;
 

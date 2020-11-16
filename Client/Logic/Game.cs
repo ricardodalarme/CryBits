@@ -1,6 +1,4 @@
 ﻿using System;
-using CryBits.Entities;
-using static CryBits.Utils;
 
 namespace CryBits.Client.Logic
 {
