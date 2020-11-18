@@ -51,7 +51,6 @@ namespace CryBits.Editors.Forms
         {
             public Rectangle Area;
             public MapLayer[] Data;
-
         }
         #endregion
 
