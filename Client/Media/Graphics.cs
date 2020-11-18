@@ -373,7 +373,6 @@ namespace CryBits.Client.Media
             DrawText(text, position.X + 4, position.Y + 2, Color.White);
         }
 
-
         private static void InterfaceSpecific(Tools.Structure tool)
         {
             // Interações especificas

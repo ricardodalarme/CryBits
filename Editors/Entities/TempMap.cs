@@ -1,7 +1,7 @@
-﻿using CryBits.Editors.Forms;
-using CryBits.Entities;
-using System;
+﻿using System;
 using System.Drawing;
+using CryBits.Editors.Forms;
+using CryBits.Entities;
 using SFML.Audio;
 using static CryBits.Defaults;
 using static CryBits.Utils;
@@ -37,7 +37,6 @@ namespace CryBits.Editors.Entities
                     case Weathers.Snowing: Weather = new MapWeatherParticle[Map.MaxSnowParticles + 1]; break;
                 }
         }
-
 
         public static void UpdateFog()
         {
