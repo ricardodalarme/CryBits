@@ -1,13 +1,19 @@
 ﻿namespace CryBits.Packets
 {
     // Pacotes do servidor para o cliente
-    public enum ServerClient
+    public enum ServerPackets
     {
         Alert,
         Connect,
+        ServerData,
+        Classes,
+        Maps,
+        Map,
+        NPCs,
+        Items,
+        Shops,
         CreateCharacter,
         Join,
-        Classes,
         Characters,
         JoinGame,
         PlayerData,
@@ -23,10 +29,8 @@
         PlayerHotbar,
         JoinMap,
         MapRevision,
-        Map,
         Latency,
         Message,
-        NPCs,
         MapNPCs,
         MapNPC,
         MapNPCMovement,
@@ -34,7 +38,6 @@
         MapNPCVitals,
         MapNPCAttack,
         MapNPCDied,
-        Items,
         MapItems,
         Party,
         PartyInvitation,
@@ -42,7 +45,6 @@
         TradeInvitation,
         TradeState,
         TradeOffer,
-        Shops,
         ShopOpen
     }
 }

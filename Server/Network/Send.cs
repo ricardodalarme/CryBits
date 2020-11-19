@@ -64,8 +64,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            if (account.InEditor) data.Write((byte)ServerEditor.Alert);
-            else data.Write((byte)ServerClient.Alert);
+            data.Write((byte)ServerPackets.Alert);
             data.Write(message);
             ToPlayer(account, data);
 
@@ -78,8 +77,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            if (account.InEditor) data.Write((byte)ServerEditor.Connect);
-            else data.Write((byte)ServerClient.Connect);
+            data.Write((byte)ServerPackets.Connect);
             ToPlayer(account, data);
         }
 
@@ -88,7 +86,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.CreateCharacter);
+            data.Write((byte)ServerPackets.CreateCharacter);
             ToPlayer(account, data);
         }
 
@@ -97,7 +95,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.Join);
+            data.Write((byte)ServerPackets.Join);
             data.Write(player.Name);
             ToPlayer(player, data);
         }
@@ -107,7 +105,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.Characters);
+            data.Write((byte)ServerPackets.Characters);
             data.Write((byte)account.Characters.Count);
 
             for (byte i = 0; i < account.Characters.Count; i++)
@@ -124,8 +122,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            if (account.InEditor) data.Write((byte)ServerEditor.Classes);
-            else data.Write((byte)ServerClient.Classes);
+             data.Write((byte)ServerPackets.Classes);
             ObjectToByteArray(data, Class.List);
             ToPlayer(account, data);
         }
@@ -135,7 +132,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.JoinGame);
+            data.Write((byte)ServerPackets.JoinGame);
             ToPlayer(player, data);
         }
 
@@ -144,7 +141,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Escreve os dados
-            data.Write((byte)ServerClient.PlayerData);
+            data.Write((byte)ServerPackets.PlayerData);
             data.Write(player.Name);
             data.Write(player.TextureNum);
             data.Write(player.Level);
@@ -168,7 +165,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerPosition);
+            data.Write((byte)ServerPackets.PlayerPosition);
             data.Write(player.Name);
             data.Write(player.X);
             data.Write(player.Y);
@@ -181,7 +178,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerVitals);
+            data.Write((byte)ServerPackets.PlayerVitals);
             data.Write(player.Name);
             for (byte i = 0; i < (byte)Vitals.Count; i++)
             {
@@ -197,7 +194,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerLeave);
+            data.Write((byte)ServerPackets.PlayerLeave);
             data.Write(player.Name);
             ToAllBut(player, data);
         }
@@ -207,7 +204,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerMove);
+            data.Write((byte)ServerPackets.PlayerMove);
             data.Write(player.Name);
             data.Write(player.X);
             data.Write(player.Y);
@@ -221,7 +218,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerDirection);
+            data.Write((byte)ServerPackets.PlayerDirection);
             data.Write(player.Name);
             data.Write((byte)player.Direction);
             ToMapBut(player.Map, player, data);
@@ -232,7 +229,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerExperience);
+            data.Write((byte)ServerPackets.PlayerExperience);
             data.Write(player.Experience);
             data.Write(player.ExpNeeded);
             data.Write(player.Points);
@@ -244,7 +241,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerEquipments);
+            data.Write((byte)ServerPackets.PlayerEquipments);
             data.Write(player.Name);
             for (byte i = 0; i < (byte)Equipments.Count; i++) data.Write(player.Equipment[i].GetID());
             ToMap(player.Map, data);
@@ -268,7 +265,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.JoinMap);
+            data.Write((byte)ServerPackets.JoinMap);
             ToPlayer(player, data);
         }
 
@@ -277,7 +274,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerLeave);
+            data.Write((byte)ServerPackets.PlayerLeave);
             data.Write(player.Name);
             ToMapBut(map, player, data);
         }
@@ -287,7 +284,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.MapRevision);
+            data.Write((byte)ServerPackets.MapRevision);
             data.Write(map.GetID());
             data.Write(map.Revision);
             ToPlayer(player, data);
@@ -298,7 +295,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerEditor.Maps);
+            data.Write((byte)ServerPackets.Maps);
             data.Write((short)CryBits.Entities.Map.List.Count);
             ToPlayer(account, data);
             foreach (Map map in CryBits.Entities.Map.List.Values) Map(account, map);
@@ -309,8 +306,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            if (account.InEditor) data.Write((byte)ServerEditor.Map);
-            else data.Write((byte)ServerClient.Map);
+            data.Write((byte)ServerPackets.Map);
             ObjectToByteArray(data, map);
             ToPlayer(account, data);
         }
@@ -320,7 +316,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.Latency);
+            data.Write((byte)ServerPackets.Latency);
             ToPlayer(account, data);
         }
 
@@ -329,7 +325,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.Message);
+            data.Write((byte)ServerPackets.Message);
             data.Write(text);
             data.Write(color.ToArgb());
             ToPlayer(player, data);
@@ -341,7 +337,7 @@ namespace CryBits.Server.Network
             string message = "[Map] " + player.Name + ": " + text;
 
             // Envia os dados
-            data.Write((byte)ServerClient.Message);
+            data.Write((byte)ServerPackets.Message);
             data.Write(message);
             data.Write(Color.White.ToArgb());
             ToMap(player.Map, data);
@@ -353,7 +349,7 @@ namespace CryBits.Server.Network
             string message = "[Global] " + player.Name + ": " + text;
 
             // Envia os dados
-            data.Write((byte)ServerClient.Message);
+            data.Write((byte)ServerPackets.Message);
             data.Write(message);
             data.Write(Color.Yellow.ToArgb());
             ToAll(data);
@@ -380,7 +376,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerAttack);
+            data.Write((byte)ServerPackets.PlayerAttack);
             data.Write(player.Name);
             data.Write(victim);
             data.Write((byte)victimType);
@@ -392,8 +388,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            if (account.InEditor) data.Write((byte)ServerEditor.Items);
-            else data.Write((byte)ServerClient.Items);
+            data.Write((byte)ServerPackets.Items);
             ObjectToByteArray(data, Item.List);
             ToPlayer(account, data);
         }
@@ -403,7 +398,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.MapItems);
+            data.Write((byte)ServerPackets.MapItems);
             data.Write((byte)map.Item.Count);
 
             for (byte i = 0; i < map.Item.Count; i++)
@@ -423,7 +418,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.MapItems);
+            data.Write((byte)ServerPackets.MapItems);
             data.Write((byte)map.Item.Count);
             for (byte i = 0; i < map.Item.Count; i++)
             {
@@ -439,7 +434,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerInventory);
+            data.Write((byte)ServerPackets.PlayerInventory);
             for (byte i = 0; i < MaxInventory; i++)
             {
                 data.Write(player.Inventory[i].Item.GetID());
@@ -453,7 +448,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PlayerHotbar);
+            data.Write((byte)ServerPackets.PlayerHotbar);
             for (byte i = 0; i < MaxHotbar; i++)
             {
                 data.Write((byte)player.Hotbar[i].Type);
@@ -467,8 +462,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            if (account.InEditor) data.Write((byte)ServerEditor.NPCs);
-            else data.Write((byte)ServerClient.NPCs);
+            data.Write((byte)ServerPackets.NPCs);
             ObjectToByteArray(data, NPC.List);
             ToPlayer(account, data);
         }
@@ -478,7 +472,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.MapNPCs);
+            data.Write((byte)ServerPackets.MapNPCs);
             data.Write((short)map.NPC.Length);
             for (byte i = 0; i < map.NPC.Length; i++)
             {
@@ -496,7 +490,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.MapNPC);
+            data.Write((byte)ServerPackets.MapNPC);
             data.Write(npc.Index);
             data.Write(npc.Data.GetID());
             data.Write(npc.X);
@@ -511,7 +505,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.MapNPCMovement);
+            data.Write((byte)ServerPackets.MapNPCMovement);
             data.Write(npc.Index);
             data.Write(npc.X);
             data.Write(npc.Y);
@@ -525,7 +519,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.MapNPCDirection);
+            data.Write((byte)ServerPackets.MapNPCDirection);
             data.Write(npc.Index);
             data.Write((byte)npc.Direction);
             ToMap(npc.Map, data);
@@ -536,7 +530,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.MapNPCVitals);
+            data.Write((byte)ServerPackets.MapNPCVitals);
             data.Write(npc.Index);
             for (byte n = 0; n < (byte)Vitals.Count; n++) data.Write(npc.Vital[n]);
             ToMap(npc.Map, data);
@@ -547,7 +541,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.MapNPCAttack);
+            data.Write((byte)ServerPackets.MapNPCAttack);
             data.Write(npc.Index);
             data.Write(victim);
             data.Write((byte)victimType);
@@ -559,7 +553,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.MapNPCDied);
+            data.Write((byte)ServerPackets.MapNPCDied);
             data.Write(npc.Index);
             ToMap(npc.Map, data);
         }
@@ -569,7 +563,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerEditor.ServerData);
+            data.Write((byte)ServerPackets.ServerData);
             data.Write(GameName);
             data.Write(WelcomeMessage);
             data.Write(Port);
@@ -590,7 +584,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.Party);
+            data.Write((byte)ServerPackets.Party);
             data.Write((byte)player.Party.Count);
             for (byte i = 0; i < player.Party.Count; i++) data.Write(player.Party[i].Name);
             ToPlayer(player, data);
@@ -601,7 +595,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.PartyInvitation);
+            data.Write((byte)ServerPackets.PartyInvitation);
             data.Write(playerInvitation);
             ToPlayer(player, data);
         }
@@ -611,7 +605,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.Trade);
+            data.Write((byte)ServerPackets.Trade);
             data.Write(state);
             ToPlayer(player, data);
         }
@@ -621,7 +615,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.TradeInvitation);
+            data.Write((byte)ServerPackets.TradeInvitation);
             data.Write(playerInvitation);
             ToPlayer(player, data);
         }
@@ -631,7 +625,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.TradeState);
+            data.Write((byte)ServerPackets.TradeState);
             data.Write((byte)state);
             ToPlayer(player, data);
         }
@@ -642,7 +636,7 @@ namespace CryBits.Server.Network
             Player to = own ? player : player.Trade;
 
             // Envia os dados
-            data.Write((byte)ServerClient.TradeOffer);
+            data.Write((byte)ServerPackets.TradeOffer);
             data.Write(own);
             for (byte i = 0; i < MaxInventory; i++)
             {
@@ -657,8 +651,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            if (account.InEditor) data.Write((byte)ServerEditor.Shops);
-            else data.Write((byte)ServerClient.Shops);
+            data.Write((byte)ServerPackets.Shops);
             ObjectToByteArray(data, Shop.List);
             ToPlayer(account, data);
         }
@@ -668,7 +661,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerClient.ShopOpen);
+            data.Write((byte)ServerPackets.ShopOpen);
             data.Write(shop.GetID());
             ToPlayer(player, data);
         }

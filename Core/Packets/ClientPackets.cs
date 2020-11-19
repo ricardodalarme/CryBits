@@ -1,9 +1,22 @@
 ﻿namespace CryBits.Packets
 {
     // Pacotes do cliente para o servidor
-    public enum ClientServer
+    public enum ClientPackets
     {
         Connect,
+        WriteSettings,
+        WriteClasses,
+        WriteMaps,
+        WriteNPCs,
+        WriteItems,
+        WriteShops,
+        RequestSetting,
+        RequestClasses,
+        RequestMap,
+        RequestMaps,
+        RequestNPCs,
+        RequestItems,
+        RequestShops,
         Latency,
         Register,
         CreateCharacter,
@@ -13,7 +26,6 @@
         PlayerDirection,
         PlayerMove,
         PlayerAttack,
-        RequestMap,
         Message,
         AddPoint,
         CollectItem,
