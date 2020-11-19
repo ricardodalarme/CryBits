@@ -12,6 +12,7 @@ namespace CryBits.Entities
         {
             ID = Guid.NewGuid();
         }
+
         public Entity(Guid id)
         {
             ID = id;
