@@ -90,10 +90,10 @@ namespace CryBits.Editors.Forms
             this.Trip_Layers = new DarkUI.Controls.DarkToolStrip();
             this.butLayers_Add = new System.Windows.Forms.ToolStripButton();
             this.butLayers_Remove = new System.Windows.Forms.ToolStripButton();
+            this.butLayers_Edit = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.butLayers_Up = new System.Windows.Forms.ToolStripButton();
             this.butLayers_Down = new System.Windows.Forms.ToolStripButton();
-            this.butLayers_Edit = new System.Windows.Forms.ToolStripButton();
             this.lstLayers = new System.Windows.Forms.ListView();
             this.colVisible = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colNúmero = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -230,7 +230,7 @@ namespace CryBits.Editors.Forms
             this.tolStrip.Location = new System.Drawing.Point(0, 0);
             this.tolStrip.Name = "tolStrip";
             this.tolStrip.Padding = new System.Windows.Forms.Padding(5, 0, 1, 0);
-            this.tolStrip.Size = new System.Drawing.Size(1366, 25);
+            this.tolStrip.Size = new System.Drawing.Size(1356, 25);
             this.tolStrip.TabIndex = 78;
             this.tolStrip.Text = "toolStrip2";
             // 
@@ -749,7 +749,7 @@ namespace CryBits.Editors.Forms
             this.Strip.Location = new System.Drawing.Point(0, 656);
             this.Strip.Name = "Strip";
             this.Strip.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
-            this.Strip.Size = new System.Drawing.Size(1366, 31);
+            this.Strip.Size = new System.Drawing.Size(1356, 31);
             this.Strip.SizingGrip = false;
             this.Strip.TabIndex = 83;
             this.Strip.Text = "0";
@@ -860,6 +860,19 @@ namespace CryBits.Editors.Forms
             this.butLayers_Remove.ToolTipText = "Remove";
             this.butLayers_Remove.Click += new System.EventHandler(this.butLayers_Remove_Click);
             // 
+            // butLayers_Edit
+            // 
+            this.butLayers_Edit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.butLayers_Edit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butLayers_Edit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.butLayers_Edit.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Edit.Image")));
+            this.butLayers_Edit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.butLayers_Edit.Name = "butLayers_Edit";
+            this.butLayers_Edit.Size = new System.Drawing.Size(23, 22);
+            this.butLayers_Edit.Text = "Edit";
+            this.butLayers_Edit.ToolTipText = "Editar";
+            this.butLayers_Edit.Click += new System.EventHandler(this.butLayers_Edit_Click);
+            // 
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
@@ -894,19 +907,6 @@ namespace CryBits.Editors.Forms
             this.butLayers_Down.Text = "Down";
             this.butLayers_Down.ToolTipText = "Abaixo";
             this.butLayers_Down.Click += new System.EventHandler(this.butLayers_Down_Click);
-            // 
-            // butLayers_Edit
-            // 
-            this.butLayers_Edit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.butLayers_Edit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.butLayers_Edit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.butLayers_Edit.Image = ((System.Drawing.Image)(resources.GetObject("butLayers_Edit.Image")));
-            this.butLayers_Edit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.butLayers_Edit.Name = "butLayers_Edit";
-            this.butLayers_Edit.Size = new System.Drawing.Size(24, 24);
-            this.butLayers_Edit.Text = "Edit";
-            this.butLayers_Edit.ToolTipText = "Editar";
-            this.butLayers_Edit.Click += new System.EventHandler(this.butLayers_Edit_Click);
             // 
             // lstLayers
             // 
@@ -1626,7 +1626,7 @@ namespace CryBits.Editors.Forms
             this.butRemove.ToolTipText = "Remover";
             this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
             // 
-            // Editor_Maps
+            // EditorMaps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
