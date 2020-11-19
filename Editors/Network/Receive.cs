@@ -15,16 +15,16 @@ namespace CryBits.Editors.Network
         public static void Handle(NetIncomingMessage data)
         {
             // Manuseia os dados recebidos
-            switch ((ServerEditor)data.ReadByte())
+            switch ((ServerPackets)data.ReadByte())
             {
-                case ServerEditor.Alert: Alert(data); break;
-                case ServerEditor.Connect: Connect(); break;
-                case ServerEditor.ServerData: ServerData(data); break;
-                case ServerEditor.Classes: Classes(data); break;
-                case ServerEditor.Map: Map(data); break;
-                case ServerEditor.NPCs: NPCs(data); break;
-                case ServerEditor.Items: Items(data); break;
-                case ServerEditor.Shops: Shops(data); break;
+                case ServerPackets.Alert: Alert(data); break;
+                case ServerPackets.Connect: Connect(); break;
+                case ServerPackets.ServerData: ServerData(data); break;
+                case ServerPackets.Classes: Classes(data); break;
+                case ServerPackets.Map: Map(data); break;
+                case ServerPackets.NPCs: NPCs(data); break;
+                case ServerPackets.Items: Items(data); break;
+                case ServerPackets.Shops: Shops(data); break;
             }
         }
 

@@ -16,67 +16,58 @@ namespace CryBits.Server.Network
     {
         public static void Handle(Account account, NetIncomingMessage data)
         {
-            byte packetNum = data.ReadByte();
             Player player = account.Character;
 
-            // Pacote principal de conexão
-            if (packetNum == 0) Connect(account, data);
-            else if (!account.InEditor)
-                // Manuseia os dados recebidos do cliente
-                switch ((ClientServer)packetNum)
-                {
-                    case ClientServer.Latency: Latency(account); break;
-                    case ClientServer.Register: Register(account, data); break;
-                    case ClientServer.CreateCharacter: CreateCharacter(account, data); break;
-                    case ClientServer.CharacterUse: CharacterUse(account, data); break;
-                    case ClientServer.CharacterCreate: CharacterCreate(account); break;
-                    case ClientServer.CharacterDelete: CharacterDelete(account, data); break;
-                    case ClientServer.PlayerDirection: PlayerDirection(player, data); break;
-                    case ClientServer.PlayerMove: PlayerMove(player, data); break;
-                    case ClientServer.PlayerAttack: PlayerAttack(player); break;
-                    case ClientServer.RequestMap: RequestMap(player, data); break;
-                    case ClientServer.Message: Message(player, data); break;
-                    case ClientServer.AddPoint: AddPoint(player, data); break;
-                    case ClientServer.CollectItem: CollectItem(player); break;
-                    case ClientServer.DropItem: DropItem(player, data); break;
-                    case ClientServer.InventoryChange: InventoryChange(player, data); break;
-                    case ClientServer.InventoryUse: InventoryUse(player, data); break;
-                    case ClientServer.EquipmentRemove: EquipmentRemove(player, data); break;
-                    case ClientServer.HotbarAdd: HotbarAdd(player, data); break;
-                    case ClientServer.HotbarChange: HotbarChange(player, data); break;
-                    case ClientServer.HotbarUse: HotbarUse(player, data); break;
-                    case ClientServer.PartyInvite: PartyInvite(player, data); break;
-                    case ClientServer.PartyAccept: PartyAccept(player); break;
-                    case ClientServer.PartyDecline: PartyDecline(player); break;
-                    case ClientServer.PartyLeave: PartyLeave(player); break;
-                    case ClientServer.TradeInvite: TradeInvite(player, data); break;
-                    case ClientServer.TradeAccept: TradeAccept(player); break;
-                    case ClientServer.TradeDecline: TradeDecline(player); break;
-                    case ClientServer.TradeLeave: TradeLeave(player); break;
-                    case ClientServer.TradeOffer: TradeOffer(player, data); break;
-                    case ClientServer.TradeOfferState: TradeOfferState(player, data); break;
-                    case ClientServer.ShopBuy: ShopBuy(player, data); break;
-                    case ClientServer.ShopSell: ShopSell(player, data); break;
-                    case ClientServer.ShopClose: ShopClose(player); break;
-                }
-            else
-                // Manuseia os dados recebidos do editor
-                switch ((EditorServer)packetNum)
-                {
-                    case EditorServer.WriteSettings: WriteSettings(account, data); break;
-                    case EditorServer.WriteClasses: WriteClasses(account, data); break;
-                    case EditorServer.WriteMaps: WriteMaps(account, data); break;
-                    case EditorServer.WriteNPCs: WriteNPCs(account, data); break;
-                    case EditorServer.WriteItems: WriteItems(account, data); break;
-                    case EditorServer.WriteShops: WriteShops(account, data); break;
-                    case EditorServer.RequestSetting: RequestSetting(account); break;
-                    case EditorServer.RequestClasses: RequestClasses(account); break;
-                    case EditorServer.RequestMap: RequestMap(account, data); break;
-                    case EditorServer.RequestMaps: RequestMaps(account); break;
-                    case EditorServer.RequestNPCs: RequestNPCs(account); break;
-                    case EditorServer.RequestItems: RequestItems(account); break;
-                    case EditorServer.RequestShops: RequestShops(account); break;
-                }
+            // Manuseia os dados recebidos 
+            switch ((ClientPackets)data.ReadByte())
+            {
+                case ClientPackets.Connect: Connect(account,data); break;
+                case ClientPackets.Latency: Latency(account); break;
+                case ClientPackets.Register: Register(account, data); break;
+                case ClientPackets.CreateCharacter: CreateCharacter(account, data); break;
+                case ClientPackets.CharacterUse: CharacterUse(account, data); break;
+                case ClientPackets.CharacterCreate: CharacterCreate(account); break;
+                case ClientPackets.CharacterDelete: CharacterDelete(account, data); break;
+                case ClientPackets.PlayerDirection: PlayerDirection(player, data); break;
+                case ClientPackets.PlayerMove: PlayerMove(player, data); break;
+                case ClientPackets.PlayerAttack: PlayerAttack(player); break;
+                case ClientPackets.Message: Message(player, data); break;
+                case ClientPackets.AddPoint: AddPoint(player, data); break;
+                case ClientPackets.CollectItem: CollectItem(player); break;
+                case ClientPackets.DropItem: DropItem(player, data); break;
+                case ClientPackets.InventoryChange: InventoryChange(player, data); break;
+                case ClientPackets.InventoryUse: InventoryUse(player, data); break;
+                case ClientPackets.EquipmentRemove: EquipmentRemove(player, data); break;
+                case ClientPackets.HotbarAdd: HotbarAdd(player, data); break;
+                case ClientPackets.HotbarChange: HotbarChange(player, data); break;
+                case ClientPackets.HotbarUse: HotbarUse(player, data); break;
+                case ClientPackets.PartyInvite: PartyInvite(player, data); break;
+                case ClientPackets.PartyAccept: PartyAccept(player); break;
+                case ClientPackets.PartyDecline: PartyDecline(player); break;
+                case ClientPackets.PartyLeave: PartyLeave(player); break;
+                case ClientPackets.TradeInvite: TradeInvite(player, data); break;
+                case ClientPackets.TradeAccept: TradeAccept(player); break;
+                case ClientPackets.TradeDecline: TradeDecline(player); break;
+                case ClientPackets.TradeLeave: TradeLeave(player); break;
+                case ClientPackets.TradeOffer: TradeOffer(player, data); break;
+                case ClientPackets.TradeOfferState: TradeOfferState(player, data); break;
+                case ClientPackets.ShopBuy: ShopBuy(player, data); break;
+                case ClientPackets.ShopSell: ShopSell(player, data); break;
+                case ClientPackets.ShopClose: ShopClose(player); break;
+                case ClientPackets.WriteSettings: WriteSettings(account, data); break;
+                case ClientPackets.WriteClasses: WriteClasses(account, data); break;
+                case ClientPackets.WriteMaps: WriteMaps(account, data); break;
+                case ClientPackets.WriteNPCs: WriteNPCs(account, data); break;
+                case ClientPackets.WriteItems: WriteItems(account, data); break;
+                case ClientPackets.WriteShops: WriteShops(account, data); break;
+                case ClientPackets.RequestSetting: RequestSetting(account); break;
+                case ClientPackets.RequestClasses: RequestClasses(account); break;
+                case ClientPackets.RequestMap: RequestMap(account, data); break;
+                case ClientPackets.RequestMaps: RequestMaps(account); break;
+                case ClientPackets.RequestNPCs: RequestNPCs(account); break;
+                case ClientPackets.RequestItems: RequestItems(account); break;
+                case ClientPackets.RequestShops: RequestShops(account); break;
+            }
         }
 
         private static void Latency(Account account)
