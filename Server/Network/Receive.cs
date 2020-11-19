@@ -21,7 +21,7 @@ namespace CryBits.Server.Network
             // Manuseia os dados recebidos 
             switch ((ClientPackets)data.ReadByte())
             {
-                case ClientPackets.Connect: Connect(account,data); break;
+                case ClientPackets.Connect: Connect(account, data); break;
                 case ClientPackets.Latency: Latency(account); break;
                 case ClientPackets.Register: Register(account, data); break;
                 case ClientPackets.CreateCharacter: CreateCharacter(account, data); break;
@@ -298,19 +298,6 @@ namespace CryBits.Server.Network
                 Send.PlayerPosition(player);
             else
                 player.Move(data.ReadByte());
-        }
-
-        private static void RequestMap(Player player, NetIncomingMessage data)
-        {
-            // Se necessário enviar as informações do mapa ao jogador
-            if (data.ReadBoolean()) Send.Map(player.Account, player.Map.Data);
-
-            // Envia a informação aos outros jogadores
-            Send.MapPlayers(player);
-
-            // Entra no mapa
-            player.GettingMap = false;
-            Send.JoinMap(player);
         }
 
         private static void Message(Player player, NetIncomingMessage data)
@@ -613,7 +600,22 @@ namespace CryBits.Server.Network
 
         private static void RequestMap(Account account, NetIncomingMessage data)
         {
-            Send.Map(account, Map.Get(new Guid(data.ReadString())));
+            if (account.InEditor)
+                Send.Map(account, Map.Get(new Guid(data.ReadString())));
+            else
+            {
+                var player = account.Character;
+
+                // Se necessário enviar as informações do mapa ao jogador
+                if (data.ReadBoolean()) Send.Map(player.Account, player.Map.Data);
+
+                // Envia a informação aos outros jogadores
+                Send.MapPlayers(player);
+
+                // Entra no mapa
+                player.GettingMap = false;
+                Send.JoinMap(player);
+            }
         }
 
         private static void RequestMaps(Account account)
