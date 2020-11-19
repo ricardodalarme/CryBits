@@ -315,10 +315,7 @@ namespace CryBits.Client.Network
         {
             // Define os dados
             for (byte i = 0; i < MaxInventory; i++)
-            {
-                Player.Me.Inventory[i].Item = Item.Get(new Guid(data.ReadString()));
-                Player.Me.Inventory[i].Amount = data.ReadInt16();
-            }
+                Player.Me.Inventory[i] = new ItemSlot(Item.Get(new Guid(data.ReadString())), data.ReadInt16());
         }
 
         private static void PlayerHotbar(NetIncomingMessage data)
@@ -348,7 +345,7 @@ namespace CryBits.Client.Network
                 if (!CryBits.Entities.Map.List.ContainsKey(id)) Read.Map(id);
 
                 if (CryBits.Entities.Map.List[id].Revision != currentRevision)
-                        needed = true;
+                    needed = true;
             }
             else
                 needed = true;
@@ -464,7 +461,7 @@ namespace CryBits.Client.Network
                 Panels.List["Trade_Offer_Disable"].Visible = false;
 
                 // Limpa os dados
-                Player.Me.TradeOffer = new ItemSlot[MaxInventory ];
+                Player.Me.TradeOffer = new ItemSlot[MaxInventory];
                 Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory];
             }
             else

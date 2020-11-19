@@ -49,19 +49,19 @@ namespace CryBits.Client.Logic
             return text;
         }
 
-        public static byte Slot(Panels panel, byte offX, byte offY, byte lines, byte columns, byte grid = 32, byte gap = 4)
+        public static short Slot(Panels panel, byte offX, byte offY, byte lines, byte columns, byte grid = 32, byte gap = 4)
         {
             int size = grid + gap;
             Point start = panel.Position + new Size(offX, offY);
             Point slot = new Point((Windows.Mouse.X - start.X) / size, (Windows.Mouse.Y - start.Y) / size);
 
             // Verifica se o Window.Mouse está sobre o slot
-            if (slot.Y < 0 || slot.X < 0 || slot.X >= columns || slot.Y >= lines) return 0;
-            if (!IsAbove(new Rectangle(start.X + slot.X * size, start.Y + slot.Y * size, grid, grid))) return 0;
-            if (!panel.Visible) return 0;
+            if (slot.Y < 0 || slot.X < 0 || slot.X >= columns || slot.Y >= lines) return -1;
+            if (!IsAbove(new Rectangle(start.X + slot.X * size, start.Y + slot.Y * size, grid, grid))) return -1;
+            if (!panel.Visible) return -1;
 
             // Retorna o slot
-            return (byte)(slot.Y * columns + slot.X + 1);
+            return (short)(slot.Y * columns + slot.X);
         }
     }
 }

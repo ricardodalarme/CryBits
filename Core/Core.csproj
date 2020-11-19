@@ -41,7 +41,7 @@
     <Compile Include="Defaults.cs" />
     <Compile Include="Entities\Class.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\Inventory.cs" />
+    <Compile Include="Entities\Slots.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Entities\NPC.cs" />

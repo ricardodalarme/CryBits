@@ -26,4 +26,10 @@ namespace CryBits.Entities
 
         public override string ToString() => Item.Name + " - " + Amount + "x";
     }
+
+    public class TradeSlot : ISlot
+    {
+        public short SlotNum { get; set; }
+        public short Amount { get; set; }
+    }
 }

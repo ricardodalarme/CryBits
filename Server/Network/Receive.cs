@@ -378,12 +378,12 @@ namespace CryBits.Server.Network
 
         private static void DropItem(Player player, NetIncomingMessage data)
         {
-            player.DropItem(data.ReadByte(), data.ReadInt16());
+            player.DropItem(data.ReadInt16(), data.ReadInt16());
         }
 
         private static void InventoryChange(Player player, NetIncomingMessage data)
         {
-            byte slotOld = data.ReadByte(), slotNew = data.ReadByte();
+            short slotOld = data.ReadInt16(), slotNew = data.ReadInt16();
 
             // Somente se necessário
             if (player.Inventory[slotOld].Item == null) return;
@@ -442,7 +442,7 @@ namespace CryBits.Server.Network
         {
             short hotbarSlot = data.ReadInt16();
             Hotbars type = (Hotbars)data.ReadByte();
-            byte slot = data.ReadByte();
+            short slot = data.ReadInt16();
 
             // Somente se necessário
             if (slot != 0 && player.FindHotbar(type, slot) != null) return;
@@ -471,7 +471,7 @@ namespace CryBits.Server.Network
 
         private static void HotbarUse(Player player, NetIncomingMessage data)
         {
-            byte hotbarSlot = data.ReadByte();
+            short hotbarSlot = data.ReadInt16();
 
             // Usa o item
             switch (player.Hotbar[hotbarSlot].Type)
@@ -858,7 +858,7 @@ namespace CryBits.Server.Network
 
         private static void TradeOffer(Player player, NetIncomingMessage data)
         {
-            byte slot = data.ReadByte(), inventorySlot = data.ReadByte();
+            short slot = data.ReadInt16(), inventorySlot = data.ReadInt16();
             short amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
 
             // Adiciona o item à troca
@@ -945,7 +945,7 @@ namespace CryBits.Server.Network
 
         private static void ShopBuy(Player player, NetIncomingMessage data)
         {
-            ShopItem shopSold = player.Shop.Sold[data.ReadByte()];
+            ShopItem shopSold = player.Shop.Sold[data.ReadInt16()];
             ItemSlot inventorySlot = player.FindInventory(player.Shop.Currency);
 
             // Verifica se o jogador tem dinheiro

@@ -477,9 +477,10 @@ namespace CryBits.Server.Entities
             Send.PlayerInventory(this);
         }
 
-        public void DropItem(byte slot, short amount)
+        public void DropItem(short slot, short amount)
         {
-            DropItem(Inventory[slot], amount);
+            if (slot != -1)
+                DropItem(Inventory[slot], amount);
         }
 
         public void DropItem(ItemSlot slot, short amount)
@@ -501,9 +502,10 @@ namespace CryBits.Server.Entities
             TakeItem(slot, amount);
         }
 
-        public void UseItem(byte slot)
+        public void UseItem(short slot)
         {
-            UseItem(Inventory[slot]);
+            if (slot != -1)
+                UseItem(Inventory[slot]);
         }
 
         public void UseItem(ItemSlot slot)
@@ -571,7 +573,7 @@ namespace CryBits.Server.Entities
             }
         }
 
-        public Hotbar FindHotbar(Hotbars type, byte slot)
+        public Hotbar FindHotbar(Hotbars type, short slot)
         {
             // Encontra algo especifico na hotbar
             for (byte i = 0; i < MaxHotbar; i++)
@@ -723,18 +725,12 @@ namespace CryBits.Server.Entities
         }
     }
 
-    internal class TradeSlot
-    {
-        public short SlotNum;
-        public short Amount;
-    }
-
     internal class Hotbar
     {
         public Hotbars Type;
-        public byte Slot;
+        public short Slot;
 
-        public Hotbar(Hotbars type, byte slot)
+        public Hotbar(Hotbars type, short slot)
         {
             Type = type;
             Slot = slot;
