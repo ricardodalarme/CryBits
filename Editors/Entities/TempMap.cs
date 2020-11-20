@@ -23,7 +23,7 @@ namespace CryBits.Editors.Entities
         public static int FogY;
 
         // Clima
-        public static MapWeatherParticle[] Weather;
+        public static MapWeatherParticle[] Weather = Array.Empty<MapWeatherParticle>();
         public static byte Lightning;
 
         public static void UpdateWeatherType()

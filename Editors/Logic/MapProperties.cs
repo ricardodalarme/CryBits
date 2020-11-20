@@ -73,7 +73,7 @@ namespace CryBits.Editors.Logic
         public byte WeatherSpeedY
         {
             get => Base.Weather.Intensity;
-            set => Base.Weather.Intensity = Math.Max(value, Map.MaxWeatherIntensity);
+            set => Base.Weather.Intensity = Math.Min(value, Map.MaxWeatherIntensity);
         }
 
         [Category("Weather")][DisplayName("Weather Type")][DefaultValue(0)]
