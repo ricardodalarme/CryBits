@@ -33,8 +33,8 @@ namespace CryBits.Editors.Entities
                 switch (EditorMaps.Form.Selected.Weather.Type)
                 {
                     case Weathers.Thundering:
-                    case Weathers.Raining: Weather = new MapWeatherParticle[Map.MaxRainParticles + 1]; break;
-                    case Weathers.Snowing: Weather = new MapWeatherParticle[Map.MaxSnowParticles + 1]; break;
+                    case Weathers.Raining: Weather = new MapWeatherParticle[MaxRainParticles + 1]; break;
+                    case Weathers.Snowing: Weather = new MapWeatherParticle[MaxSnowParticles + 1]; break;
                 }
         }
 
@@ -147,7 +147,7 @@ namespace CryBits.Editors.Entities
             for (int i = 1; i <= Weather.GetUpperBound(0); i++)
                 if (!Weather[i].Visible)
                 {
-                    if (MyRandom.Next(0, Map.MaxWeatherIntensity - weather.Intensity) == 0)
+                    if (MyRandom.Next(0, MaxWeatherIntensity - weather.Intensity) == 0)
                     {
                         if (!stop)
                         {
@@ -183,7 +183,7 @@ namespace CryBits.Editors.Entities
 
             // Trovoadas
             if (weather.Type == Weathers.Thundering)
-                if (MyRandom.Next(0, Map.MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
+                if (MyRandom.Next(0, MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
                 {
                     // Som do trovão
                     int thunder = MyRandom.Next((byte)Sounds.Thunder1, (byte)Sounds.Thunder4);
@@ -230,9 +230,9 @@ namespace CryBits.Editors.Entities
 
         private static void SnowMove(int i, bool move = true)
         {
-            int difference = MyRandom.Next(0, Map.SnowMovement / 3);
-            int x1 = Weather[i].Start + Map.SnowMovement + difference;
-            int x2 = Weather[i].Start - Map.SnowMovement - difference;
+            int difference = MyRandom.Next(0, SnowMovement / 3);
+            int x1 = Weather[i].Start + SnowMovement + difference;
+            int x2 = Weather[i].Start - SnowMovement - difference;
 
             // Faz com que a partícula volte
             if (x1 <= Weather[i].X)

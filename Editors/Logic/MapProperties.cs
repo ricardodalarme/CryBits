@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using CryBits.Editors.Entities;
 using CryBits.Entities;
+using static CryBits.Defaults;
 using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Logic
@@ -73,7 +74,7 @@ namespace CryBits.Editors.Logic
         public byte WeatherSpeedY
         {
             get => Base.Weather.Intensity;
-            set => Base.Weather.Intensity = Math.Min(value, Map.MaxWeatherIntensity);
+            set => Base.Weather.Intensity = Math.Min(value, MaxWeatherIntensity);
         }
 
         [Category("Weather")][DisplayName("Weather Type")][DefaultValue(0)]

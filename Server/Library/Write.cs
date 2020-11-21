@@ -3,6 +3,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
 using CryBits.Server.Entities;
 using static CryBits.Defaults;
+using static CryBits.Utils;
 
 namespace CryBits.Server.Library
 {

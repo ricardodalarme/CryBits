@@ -77,8 +77,8 @@ namespace CryBits.Editors.Forms
             Update_List();
 
             // Define os limites
-            scrlZone.Maximum = Map.NumZones;
-            numNPC_Zone.Maximum = Map.NumZones;
+            scrlZone.Maximum = MaxZones;
+            numNPC_Zone.Maximum = MaxZones;
             numA_Warp_X.Maximum = Map.Width - 1;
             numA_Warp_Y.Maximum = Map.Height - 1;
 
@@ -1430,7 +1430,7 @@ namespace CryBits.Editors.Forms
         {
             // Reseta os valores
             var warpMap = (Map)cmbA_Warp_Map.SelectedItem;
-            _aData1 = warpMap.GetID();
+            _aData1 = warpMap.GetID().ToString();
         }
 
         private void numA_Warp_X_ValueChanged(object sender, EventArgs e)
@@ -1450,7 +1450,7 @@ namespace CryBits.Editors.Forms
 
         private void cmbA_Item_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _aData1 = ((Item)cmbA_Item.SelectedItem).GetID();
+            _aData1 = ((Item)cmbA_Item.SelectedItem).GetID().ToString();
         }
 
         private void numA_Item_Amount_ValueChanged(object sender, EventArgs e)

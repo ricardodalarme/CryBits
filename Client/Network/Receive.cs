@@ -198,7 +198,7 @@ namespace CryBits.Client.Network
                 player.MaxVital[n] = data.ReadInt16();
             }
             for (byte n = 0; n < (byte)Attributes.Count; n++) player.Attribute[n] = data.ReadInt16();
-            for (byte n = 0; n < (byte)Equipments.Count; n++) player.Equipment[n] = Item.Get(new Guid(data.ReadString()));
+            for (byte n = 0; n < (byte)Equipments.Count; n++) player.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
             TempMap.Current = player.Map;
         }
 
@@ -234,7 +234,7 @@ namespace CryBits.Client.Network
             Player player = Player.Get(data.ReadString());
 
             // Altera os dados dos equipamentos do jogador
-            for (byte i = 0; i < (byte)Equipments.Count; i++) player.Equipment[i] = Item.Get(new Guid(data.ReadString()));
+            for (byte i = 0; i < (byte)Equipments.Count; i++) player.Equipment[i] = Item.List.Get(new Guid(data.ReadString()));
         }
 
         private static void PlayerLeave(NetIncomingMessage data)
@@ -315,7 +315,7 @@ namespace CryBits.Client.Network
         {
             // Define os dados
             for (byte i = 0; i < MaxInventory; i++)
-                Player.Me.Inventory[i] = new ItemSlot(Item.Get(new Guid(data.ReadString())), data.ReadInt16());
+                Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(new Guid(data.ReadString())), data.ReadInt16());
         }
 
         private static void PlayerHotbar(NetIncomingMessage data)
@@ -419,7 +419,7 @@ namespace CryBits.Client.Network
             {
                 // Geral
                 TempMap.Current.Item[i] = new MapItems();
-                TempMap.Current.Item[i].Item = Item.Get(new Guid(data.ReadString()));
+                TempMap.Current.Item[i].Item = Item.List.Get(new Guid(data.ReadString()));
                 TempMap.Current.Item[i].X = data.ReadByte();
                 TempMap.Current.Item[i].Y = data.ReadByte();
             }
@@ -510,13 +510,13 @@ namespace CryBits.Client.Network
             if (data.ReadBoolean())
                 for (byte i = 0; i < MaxInventory; i++)
                 {
-                    Player.Me.TradeOffer[i].Item = Item.Get(new Guid(data.ReadString()));
+                    Player.Me.TradeOffer[i].Item = Item.List.Get(new Guid(data.ReadString()));
                     Player.Me.TradeOffer[i].Amount = data.ReadInt16();
                 }
             else
                 for (byte i = 0; i < MaxInventory; i++)
                 {
-                    Player.Me.TradeTheirOffer[i].Item = Item.Get(new Guid(data.ReadString()));
+                    Player.Me.TradeTheirOffer[i].Item = Item.List.Get(new Guid(data.ReadString()));
                     Player.Me.TradeTheirOffer[i].Amount = data.ReadInt16();
                 }
         }
@@ -530,7 +530,7 @@ namespace CryBits.Client.Network
         private static void ShopOpen(NetIncomingMessage data)
         {
             // Abre a loja
-            Panels.ShopOpen = Shop.Get(new Guid(data.ReadString()));
+            Panels.ShopOpen = Shop.List.Get(new Guid(data.ReadString()));
             Panels.List["Shop"].Visible = Panels.ShopOpen != null;
         }
 
@@ -549,7 +549,7 @@ namespace CryBits.Client.Network
                 TempMap.Current.NPC[i] = new TempNPC();
                 TempMap.Current.NPC[i].X2 = 0;
                 TempMap.Current.NPC[i].Y2 = 0;
-                TempMap.Current.NPC[i].Data = NPC.Get(new Guid(data.ReadString()));
+                TempMap.Current.NPC[i].Data = NPC.List.Get(new Guid(data.ReadString()));
                 TempMap.Current.NPC[i].X = data.ReadByte();
                 TempMap.Current.NPC[i].Y = data.ReadByte();
                 TempMap.Current.NPC[i].Direction = (Directions)data.ReadByte();
@@ -566,7 +566,7 @@ namespace CryBits.Client.Network
             byte i = data.ReadByte();
             TempMap.Current.NPC[i].X2 = 0;
             TempMap.Current.NPC[i].Y2 = 0;
-            TempMap.Current.NPC[i].Data = NPC.Get(new Guid(data.ReadString()));
+            TempMap.Current.NPC[i].Data = NPC.List.Get(new Guid(data.ReadString()));
             TempMap.Current.NPC[i].X = data.ReadByte();
             TempMap.Current.NPC[i].Y = data.ReadByte();
             TempMap.Current.NPC[i].Direction = (Directions)data.ReadByte();

@@ -9,15 +9,12 @@ namespace CryBits.Entities
         // Lista de dados
         public static Dictionary<Guid, Shop> List = new Dictionary<Guid, Shop>();
 
-        // Obtém o dado, caso ele não existir retorna nulo
-        public static Shop Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
-
         // Dados
         private Guid _currency;
         public Item Currency
         {
-            get => Item.Get(_currency);
-            set => _currency = new Guid(value.GetID());
+            get => Item.List.Get(_currency);
+            set => _currency = value.GetID();
         }
         public IList<ShopItem> Bought { get; set; } = new List<ShopItem>();
         public IList<ShopItem> Sold { get; set; } = new List<ShopItem>();

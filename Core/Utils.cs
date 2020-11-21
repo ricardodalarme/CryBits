@@ -46,10 +46,13 @@ namespace CryBits
         }
 
         // Obtém o ID de alguma entidade, caso ela não existir retorna um ID zerado
-        public static string GetID(this Entity @object) => @object == null ? Guid.Empty.ToString() : @object.ID.ToString();
+        public static Guid GetID(this Entity @object) => @object?.ID ?? Guid.Empty;
 
         // Obtém o dado, caso ele não existir retorna nulo
         public static TV Get<TGuid, TV>(this Dictionary<TGuid, TV> dict, TGuid key) => dict.ContainsKey(key) ? dict[key] : default;
+
+        public static void Write(this NetBuffer buffer, Guid id) => buffer.Write(id.ToString());
+        public static void Write(this BinaryWriter buffer, Guid id) => buffer.Write(id.ToString());
 
         public static void ObjectToByteArray(NetOutgoingMessage data, object obj)
         {

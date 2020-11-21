@@ -209,11 +209,11 @@ namespace CryBits.Server.Network
             account.Character = new Player(account);
             account.Character.Name = name;
             account.Character.Level = 1;
-            account.Character.Class = @class = Class.Get(new Guid(data.ReadString()));
+            account.Character.Class = @class = Class.List.Get(new Guid(data.ReadString()));
             account.Character.Genre = data.ReadBoolean();
             account.Character.TextureNum = account.Character.Genre ? @class.TexMale[data.ReadByte()] : @class.TexFemale[data.ReadByte()];
             account.Character.Attribute = @class.Attribute;
-            account.Character.Map = TempMap.Get(@class.SpawnMap.ID);
+            account.Character.Map = TempMap.List.Get(@class.SpawnMap.ID);
             account.Character.Direction = (Directions)@class.SpawnDirection;
             account.Character.X = @class.SpawnX;
             account.Character.Y = @class.SpawnY;
@@ -601,7 +601,7 @@ namespace CryBits.Server.Network
         private static void RequestMap(Account account, NetIncomingMessage data)
         {
             if (account.InEditor)
-                Send.Map(account, Map.Get(new Guid(data.ReadString())));
+                Send.Map(account, Map.List.Get(new Guid(data.ReadString())));
             else
             {
                 var player = account.Character;
