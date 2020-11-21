@@ -5,10 +5,10 @@ using SFML.Audio;
 
 namespace CryBits.Client.Media.Audio
 {
-    public static class Sound
+    internal static class Sound
     {
         // Formato em o dispositivo irá ler os sons
-        public const string Format = ".wav";
+        private const string Format = ".wav";
 
         // Dispositivo sonoro
         private static SFML.Audio.Sound[] _list;

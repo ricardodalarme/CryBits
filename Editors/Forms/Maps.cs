@@ -43,7 +43,7 @@ namespace CryBits.Editors.Forms
         private short _aData2;
         private short _aData3;
         private short _aData4;
-        
+
         // Azulejos copiados
         private CopyStruct _tilesCopy;
 
@@ -137,7 +137,10 @@ namespace CryBits.Editors.Forms
 
             // Conecta as listas com os componentes
             prgProperties.SelectedObject = new MapProperties(Selected);
-            lstNPC.DataSource = Selected.NPC;
+            lstNPC.Tag = Selected.NPC;
+
+            // Atualiza as listas
+            lstNPC.UpdateData();
 
             // Reseta o clima
             TempMap.UpdateWeatherType();
@@ -203,7 +206,7 @@ namespace CryBits.Editors.Forms
             // Atualiza as informações da barra
             Strip.Items[0].Text = "FPS: " + Program.FPS;
             Strip.Items[2].Text = "Revision: " + Selected.Revision;
-            Strip.Items[4].Text = "Position: {" + _mapMouse.X + ";" + _mapMouse.Y + "}"; 
+            Strip.Items[4].Text = "Position: {" + _mapMouse.X + ";" + _mapMouse.Y + "}";
         }
         #endregion
 
@@ -1316,11 +1319,17 @@ namespace CryBits.Editors.Forms
 
             // Adiciona o NPC
             Selected.NPC.Add(data);
+            lstNPC.UpdateData();
         }
+
         private void butNPC_Remove_Click(object sender, EventArgs e)
         {
             // Remove o NPC
-            if (lstNPC.SelectedIndex >= 0) Selected.NPC.RemoveAt(lstNPC.SelectedIndex);
+            if (lstNPC.SelectedIndex >= 0)
+            {
+                Selected.NPC.RemoveAt(lstNPC.SelectedIndex);
+                lstNPC.UpdateData();
+            }
         }
 
         private void butNPC_Clear_Click(object sender, EventArgs e)
