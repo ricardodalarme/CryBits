@@ -161,8 +161,6 @@ namespace CryBits.Server.Entities
             if (to == null) return;
             if (x >= CryBits.Entities.Map.Width) x = CryBits.Entities.Map.Width - 1;
             if (y >= CryBits.Entities.Map.Height) y = CryBits.Entities.Map.Height - 1;
-            if (x < 0) x = 0;
-            if (y < 0) y = 0;
 
             // Define a Posição do jogador
             Map = to;
@@ -192,7 +190,7 @@ namespace CryBits.Server.Entities
         {
             byte nextX = X, nextY = Y;
             byte oldX = X, oldY = Y;
-            TempMap link = TempMap.Get(new Guid(Map.Data.Link[(byte)Direction].GetID()));
+            TempMap link = TempMap.List.Get(Map.Data.Link[(byte)Direction].GetID());
             bool secondMovement = false;
 
             // Previne erros
@@ -238,7 +236,7 @@ namespace CryBits.Server.Entities
                 // Teletransporte
                 case TileAttributes.Warp:
                     if (tile.Data4 > 0) Direction = (Directions)tile.Data4 - 1;
-                    Warp(TempMap.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
+                    Warp(TempMap.List.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
                     secondMovement = true;
                     break;
             }
@@ -262,7 +260,7 @@ namespace CryBits.Server.Entities
 
             // Retorna para o ínicio
             Direction = (Directions)Class.SpawnDirection;
-            Warp(TempMap.Get(Class.SpawnMap.ID), Class.SpawnX, Class.SpawnY);
+            Warp(TempMap.List.Get(Class.SpawnMap.ID), Class.SpawnX, Class.SpawnY);
         }
 
         public void Attack()

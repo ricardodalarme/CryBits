@@ -148,22 +148,22 @@ namespace CryBits.Client.UI
             if (HotbarSlot >= 0)
             {
                 position = List["Hotbar"].Position + new Size(0, 42);
-                InformationID = new Guid(Player.Me.Inventory[Player.Me.Hotbar[HotbarSlot].Slot].Item.GetID());
+                InformationID = Player.Me.Inventory[Player.Me.Hotbar[HotbarSlot].Slot].Item.GetID();
             }
             else if (InventorySlot > 0)
             {
                 position = List["Menu_Inventory"].Position + new Size(-186, 3);
-                InformationID = new Guid(Player.Me.Inventory[InventorySlot].Item.GetID());
+                InformationID = Player.Me.Inventory[InventorySlot].Item.GetID();
             }
             else if (EquipmentSlot >= 0)
             {
                 position = List["Menu_Character"].Position + new Size(-186, 5);
-                InformationID = new Guid(Player.Me.Equipment[EquipmentSlot].GetID());
+                InformationID = Player.Me.Equipment[EquipmentSlot].GetID();
             }
             else if (ShopSlot >= 0 && ShopSlot < ShopOpen.Sold.Count)
             {
                 position = new Point(List["Shop"].Position.X - 186, List["Shop"].Position.Y + 5);
-                InformationID = new Guid(ShopOpen.Sold[ShopSlot].Item.GetID());
+                InformationID = ShopOpen.Sold[ShopSlot].Item.GetID();
             }
             else InformationID = Guid.Empty;
 

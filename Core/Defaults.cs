@@ -46,9 +46,12 @@ namespace CryBits
         public const short ScreenHeight = Map.Height * Grid;
 
         // Clima
-        public const byte MaxRain = 100;
-        public const short MaxSnow = 635;
+        public const byte MaxRainParticles = 100;
+        public const short MaxSnowParticles = 635;
         public const byte MaxWeatherIntensity = 10;
         public const byte SnowMovement = 10;
+
+        // Quantidade de zonas
+        public const byte MaxZones = 20;
     }
 }

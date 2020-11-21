@@ -9,9 +9,6 @@ namespace CryBits.Entities
         // Lista de dados
         public static Dictionary<Guid, NPC> List = new Dictionary<Guid, NPC>();
 
-        // Obtém o dado, caso ele não existir retorna nulo
-        public static NPC Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
-
         // Dados
         public string SayMsg { get; set; }
         public short Texture { get; set; }
@@ -30,8 +27,8 @@ namespace CryBits.Entities
 
         public Shop Shop
         {
-            get => Shop.Get(_shop);
-            set => _shop = new Guid(value.GetID());
+            get => Shop.List.Get(_shop);
+            set => _shop = value.GetID();
         }
 
         public bool IsAllied(NPC npc)

@@ -12,9 +12,6 @@ namespace CryBits.Server.Entities
         // Lista de dados
         public static Dictionary<Guid, TempMap> List = new Dictionary<Guid, TempMap>();
 
-        // Obtém o dado, caso ele não existir retorna nulo
-        public static TempMap Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
-
         // Dados
         public readonly Map Data;
         public TempNPC[] NPC = Array.Empty<TempNPC>();
@@ -93,7 +90,7 @@ namespace CryBits.Server.Entities
                 for (byte y = 0; y < Map.Height; y++)
                     if (Data.Attribute[x, y].Type == (byte)TileAttributes.Item)
                         // Adiciona o item
-                        Item.Add(new MapItems(CryBits.Entities.Item.Get(new Guid(Data.Attribute[x, y].Data1)), Data.Attribute[x, y].Data2, x, y));
+                        Item.Add(new MapItems(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)), Data.Attribute[x, y].Data2, x, y));
         }
 
         public bool TileBlocked(byte x, byte y, Directions direction, bool countEntities = true)

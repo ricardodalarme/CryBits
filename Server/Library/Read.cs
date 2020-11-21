@@ -104,11 +104,11 @@ namespace CryBits.Server.Library
                 account.Character.Name = data.ReadString();
                 account.Character.TextureNum = data.ReadInt16();
                 account.Character.Level = data.ReadInt16();
-                account.Character.Class = Class.Get(new Guid(data.ReadString()));
+                account.Character.Class = Class.List.Get(new Guid(data.ReadString()));
                 account.Character.Genre = data.ReadBoolean();
                 account.Character.Experience = data.ReadInt32();
                 account.Character.Points = data.ReadByte();
-                account.Character.Map = TempMap.Get(new Guid(data.ReadString()));
+                account.Character.Map = TempMap.List.Get(new Guid(data.ReadString()));
                 account.Character.X = data.ReadByte();
                 account.Character.Y = data.ReadByte();
                 account.Character.Direction = (Directions)data.ReadByte();
@@ -116,10 +116,10 @@ namespace CryBits.Server.Library
                 for (byte n = 0; n < (byte)Attributes.Count; n++) account.Character.Attribute[n] = data.ReadInt16();
                 for (byte n = 0; n < MaxInventory; n++)
                 {
-                    account.Character.Inventory[n].Item = Item.Get(new Guid(data.ReadString()));
+                    account.Character.Inventory[n].Item = Item.List.Get(new Guid(data.ReadString()));
                     account.Character.Inventory[n].Amount = data.ReadInt16();
                 }
-                for (byte n = 0; n < (byte)Equipments.Count; n++) account.Character.Equipment[n] = Item.Get(new Guid(data.ReadString()));
+                for (byte n = 0; n < (byte)Equipments.Count; n++) account.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
                 for (byte n = 0; n < MaxHotbar; n++) account.Character.Hotbar[n] = new Hotbar((Hotbars)data.ReadByte(), data.ReadByte());
             }
         }

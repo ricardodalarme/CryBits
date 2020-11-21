@@ -9,9 +9,6 @@ namespace CryBits.Entities
         // Lista de dados
         public static Dictionary<Guid, Class> List = new Dictionary<Guid, Class>();
 
-        // Obtém o dado, caso ele não existir retorna nulo
-        public static Class Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
-
         // Dados
         public string Description { get; set; }
         public IList<short> TexMale { get; set; } = new List<short>();

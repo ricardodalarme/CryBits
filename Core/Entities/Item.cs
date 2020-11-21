@@ -9,9 +9,6 @@ namespace CryBits.Entities
         // Lista de dados
         public static Dictionary<Guid, Item> List = new Dictionary<Guid, Item>();
 
-        // Obtém o dado, caso ele não existir retorna nulo
-        public static Item Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
-
         // Geral
         public string Description { get; set; } = string.Empty;
         public short Texture { get; set; }
@@ -21,12 +18,12 @@ namespace CryBits.Entities
         public Rarity Rarity { get; set; }
 
         // Requerimentos
-        public short ReqLevel;
+        public short ReqLevel { get; set; }
         private Guid _reqClass;
         public Class ReqClass
         {
-            get => Class.Get(_reqClass);
-            set => _reqClass = new Guid(value.GetID());
+            get => Class.List.Get(_reqClass);
+            set => _reqClass = value.GetID();
         }
 
         // Poção

@@ -493,7 +493,7 @@ namespace CryBits.Client.Media
 
         private static void Information(Panels tool)
         {
-            Item item = CryBits.Entities.Item.Get(Panels.InformationID);
+            Item item = CryBits.Entities.Item.List.Get(Panels.InformationID);
             Color textColor;
             List<string> data = new List<string>();
 

@@ -257,10 +257,10 @@ namespace CryBits.Client.Entities
                     Sound.Play(Sounds.Rain, true);
 
                     // Redimensiona a estrutura
-                    Weather = new MapWeatherParticle[MaxRain + 1];
+                    Weather = new MapWeatherParticle[MaxRainParticles + 1];
                     break;
                 case Weathers.Snowing:
-                    Weather = new MapWeatherParticle[MaxSnow + 1];
+                    Weather = new MapWeatherParticle[MaxSnowParticles + 1];
                     break;
             }
         }

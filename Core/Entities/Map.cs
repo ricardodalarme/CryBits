@@ -11,21 +11,9 @@ namespace CryBits.Entities
         // Lista de dados
         public static Dictionary<Guid, Map> List = new Dictionary<Guid, Map>();
 
-        // Obtém o dado, caso ele não existir retorna nulo
-        public static Map Get(Guid id) => List.ContainsKey(id) ? List[id] : null;
-
         // Tamanho dos mapas
         public const byte Width = 25;
         public const byte Height = 19;
-
-        // Quantidade de zonas
-        public const byte NumZones = 20;
-
-        // Clima
-        public const byte MaxRainParticles = 100;
-        public const short MaxSnowParticles = 635;
-        public const byte MaxWeatherIntensity = 10;
-        public const byte SnowMovement = 10;
 
         // Dados
         public short Revision { get; set; }

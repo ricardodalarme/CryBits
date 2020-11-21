@@ -38,7 +38,6 @@ namespace CryBits.Client.Library
         public static readonly FileInfo TexGrid = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Grid");
         public static readonly FileInfo TexBlood = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Blood");
         public static readonly FileInfo TexPartyBars = new FileInfo(Application.StartupPath + @"\Graphics\Misc\Party_Bars");
-        public static readonly FileInfo TexIntro = new FileInfo(Application.StartupPath + @"\Graphics\Interface\Intro");
 
         public static void Create()
         {
