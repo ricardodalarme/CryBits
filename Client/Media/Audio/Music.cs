@@ -4,7 +4,7 @@ using CryBits.Client.Logic;
 
 namespace CryBits.Client.Media.Audio
 {
-    public class Music
+    internal static class Music
     {
         // Formato em o dispositivo irá ler as músicas
         private const string Format = ".ogg";

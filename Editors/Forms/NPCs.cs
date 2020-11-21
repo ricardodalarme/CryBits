@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
 using CryBits.Editors.Network;
 using CryBits.Entities;
@@ -74,10 +75,6 @@ namespace CryBits.Editors.Forms
             grpDrop_Add.Visible = false;
             grpAllie_Add.Visible = false;
 
-            // Conecta as listas com os componentes
-            lstDrop.DataSource = Selected.Drop;
-            lstAllies.DataSource = Selected.Allie;
-
             // Lista os dados
             txtName.Text = Selected.Name;
             txtSayMsg.Text = Selected.SayMsg;
@@ -99,8 +96,13 @@ namespace CryBits.Editors.Forms
             if (Selected.Shop != null) cmbShop.SelectedItem = Selected.Shop;
             else cmbShop.SelectedIndex = -1;
 
-            // Seleciona os primeiros itens
-            if (lstDrop.Items.Count > 0) lstDrop.SelectedIndex = 0;
+            // Conecta as listas com os componentes
+            lstDrop.Tag = Selected.Drop;
+            lstAllies.Tag = Selected.Allie;
+
+            // Atualiza as listas
+            lstDrop.UpdateData();
+            lstAllies.UpdateData();
         }
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
@@ -258,13 +260,17 @@ namespace CryBits.Editors.Forms
             // Deleta a item
             short selectedItem = (short)lstDrop.SelectedIndex;
             if (selectedItem != -1)
+            {
                 Selected.Drop.RemoveAt(selectedItem);
+                lstDrop.UpdateData();
+            }
         }
 
         private void butItem_Ok_Click(object sender, EventArgs e)
         {
             // Adiciona o item
             Selected.Drop.Add(new NPCDrop((Item)cmbDrop_Item.SelectedItem, (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value));
+            lstDrop.UpdateData();
             grpDrop_Add.Visible = false;
         }
 
@@ -291,7 +297,11 @@ namespace CryBits.Editors.Forms
         private void butAllie_Delete_Click(object sender, EventArgs e)
         {
             // Deleta a aliado
-            if (lstAllies.SelectedItem != null) Selected.Allie.Remove((NPC)lstAllies.SelectedItem);
+            if (lstAllies.SelectedItem != null)
+            {
+                Selected.Allie.Remove((NPC)lstAllies.SelectedItem);
+                lstAllies.UpdateData();
+            }
         }
 
         private void butAllie_Ok_Click(object sender, EventArgs e)
@@ -299,6 +309,7 @@ namespace CryBits.Editors.Forms
             // Adiciona o aliado
             var allie = (NPC)cmbAllie_NPC.SelectedItem;
             if (!Selected.Allie.Contains(allie)) Selected.Allie.Add(allie);
+            lstAllies.UpdateData();
             grpAllie_Add.Visible = false;
         }
 

@@ -850,7 +850,7 @@ namespace CryBits.Editors.Forms
             this.txtFilter.TabIndex = 45;
             this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
-            // Editor_NPCs
+            // EditorNPCs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

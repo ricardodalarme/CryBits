@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
 using CryBits.Editors.Network;
 using CryBits.Entities;
@@ -73,11 +74,6 @@ namespace CryBits.Editors.Forms
             // Atualiza o valor da loja selecionada
             Selected = Class.List[(Guid)List.SelectedNode.Tag];
 
-            // Conecta as listas com os componentes
-            lstMale.DataSource = Selected.TexMale;
-            lstFemale.DataSource = Selected.TexFemale;
-            lstItems.DataSource = Selected.Item;
-
             // Lista os dados
             txtName.Text = Selected.Name;
             txtDescription.Text = Selected.Description;
@@ -94,10 +90,15 @@ namespace CryBits.Editors.Forms
             numSpawn_Y.Value = Selected.SpawnY;
             grpItem_Add.Visible = false;
 
-            // Seleciona os primeiros itens
-            if (lstMale.Items.Count > 0) lstMale.SelectedIndex = 0;
-            if (lstFemale.Items.Count > 0) lstFemale.SelectedIndex = 0;
-            if (lstItems.Items.Count > 0) lstItems.SelectedIndex = 0;
+            // Conecta as listas com os componentes
+            lstMale.Tag = Selected.TexMale;
+            lstFemale.Tag = Selected.TexFemale;
+            lstItems.Tag = Selected.Item;
+
+            // Atualiza as listas
+            lstMale.UpdateData();
+            lstFemale.UpdateData();
+            lstItems.UpdateData();
         }
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
@@ -205,6 +206,7 @@ namespace CryBits.Editors.Forms
                 Selected.TexMale.Add((short)numTexture.Value);
             else
                 Selected.TexFemale.Add((short)numTexture.Value);
+            ((ListBox)grpTexture_Add.Tag).UpdateData();
             grpTexture_Add.Visible = false;
         }
 
@@ -228,14 +230,20 @@ namespace CryBits.Editors.Forms
         {
             // Deleta a textura
             if (lstMale.SelectedIndex != -1)
+            {
                 Selected.TexMale.RemoveAt(lstMale.SelectedIndex);
+                lstMale.UpdateData();
+            }
         }
 
         private void butFDelete_Click(object sender, EventArgs e)
         {
             // Deleta a textura
             if (lstFemale.SelectedIndex != -1)
+            {
                 Selected.TexFemale.RemoveAt(lstFemale.SelectedIndex);
+                lstFemale.UpdateData();
+            }
         }
 
         private void cmbSpawn_Map_SelectedIndexChanged(object sender, EventArgs e)
@@ -277,6 +285,7 @@ namespace CryBits.Editors.Forms
         {
             // Adiciona o item
             Selected.Item.Add(new ItemSlot((Item)cmbItems.SelectedItem, (short)numItem_Amount.Value));
+            lstItems.UpdateData();
             grpItem_Add.Visible = false;
         }
 
@@ -284,7 +293,10 @@ namespace CryBits.Editors.Forms
         {
             // Deleta a textura
             if (lstItems.SelectedIndex != -1)
+            {
                 Selected.Item.RemoveAt(lstItems.SelectedIndex);
+                lstItems.UpdateData();
+            }
         }
     }
 }

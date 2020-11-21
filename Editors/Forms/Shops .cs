@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using DarkUI.Forms;
@@ -69,14 +70,18 @@ namespace CryBits.Editors.Forms
             // Atualiza o valor da loja selecionada
             _selected = Shop.List[(Guid)List.SelectedNode.Tag];
 
-            // Conecta as listas com os componentes
-            lstBought.DataSource = _selected.Bought;
-            lstSold.DataSource = _selected.Sold;
-
             // Lista os dados
             txtName.Text = _selected.Name;
             cmbCurrency.SelectedItem = _selected.Currency;
             grpAddItem.Visible = false;
+
+            // Conecta as listas com os componentes
+            lstBought.Tag = _selected.Bought;
+            lstSold.Tag = _selected.Sold;
+
+            // Atualiza as listas
+            lstBought.UpdateData();
+            lstSold.UpdateData();
         }
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
@@ -154,6 +159,7 @@ namespace CryBits.Editors.Forms
         {
             // Remove o item
             if (lstSold.SelectedIndex >= 0) _selected.Sold.RemoveAt(lstSold.SelectedIndex);
+            lstSold.UpdateData();
         }
 
         private void butBought_Add_Click(object sender, EventArgs e)
@@ -170,7 +176,11 @@ namespace CryBits.Editors.Forms
         private void butBought_Remove_Click(object sender, EventArgs e)
         {
             // Remove o item
-            if (lstBought.SelectedIndex >= 0) _selected.Bought.RemoveAt(lstSold.SelectedIndex);
+            if (lstBought.SelectedIndex >= 0)
+            {
+                _selected.Bought.RemoveAt(lstSold.SelectedIndex);
+                lstBought.UpdateData();
+            }
         }
 
         private void butConfirm_Click(object sender, EventArgs e)
@@ -179,6 +189,7 @@ namespace CryBits.Editors.Forms
             ShopItem data = new ShopItem((Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
             if (grpAddItem.Tag == lstSold) _selected.Sold.Add(data);
             else _selected.Bought.Add(data);
+            ((ListBox)grpAddItem.Tag).UpdateData();
 
             // Fecha o painel
             grpAddItem.Visible = false;
