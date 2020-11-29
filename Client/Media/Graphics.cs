@@ -867,7 +867,7 @@ namespace CryBits.Client.Media
 
             // Desenha todas as camadas dos azulejos
             for (byte c = 0; c < map.Layer.Count; c++)
-                if (c == layerType)
+                if (map.Layer[c].Type == layerType)
                     for (int x = Camera.TileSight.X; x <= Camera.TileSight.Width; x++)
                         for (int y = Camera.TileSight.Y; y <= Camera.TileSight.Height; y++)
                             if (!Map.OutLimit((short)x, (short)y))

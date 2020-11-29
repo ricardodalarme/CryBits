@@ -416,13 +416,12 @@ namespace CryBits.Client.Network
 
             // Lê os dados de todos
             for (byte i = 0; i < TempMap.Current.Item.Length; i++)
-            {
-                // Geral
-                TempMap.Current.Item[i] = new MapItems();
-                TempMap.Current.Item[i].Item = Item.List.Get(new Guid(data.ReadString()));
-                TempMap.Current.Item[i].X = data.ReadByte();
-                TempMap.Current.Item[i].Y = data.ReadByte();
-            }
+                TempMap.Current.Item[i] = new MapItems
+                {
+                    Item = Item.List.Get(new Guid(data.ReadString())),
+                    X = data.ReadByte(),
+                    Y = data.ReadByte()
+                };
         }
 
         private static void Party(NetIncomingMessage data)
