@@ -32,7 +32,8 @@ namespace CryBits.Editors.Forms
             Graphics.WinInterface = new RenderWindow(picWindow.Handle);
 
             // Adiciona as janelas à lista
-            cmbWindows.Items.AddRange(Enum.GetNames(typeof(WindowsTypes)));
+            for (byte i = 0; i < (byte)WindowsTypes.Count; i++)
+                cmbWindows.Items.Add((WindowsTypes)i);
             cmbWindows.SelectedIndex = 0;
 
             // Adiciona os tipos de ferramentas à lista
@@ -49,7 +50,7 @@ namespace CryBits.Editors.Forms
         {
             // Atualiza a lista de ordem
             treOrder.Nodes.Clear();
-            treOrder.Nodes.Add(Tool.Tree.Nodes[cmbWindows.SelectedIndex]);
+            treOrder.Nodes.Add((TreeNode)Tool.Tree.Nodes[cmbWindows.SelectedIndex].Clone());
             treOrder.ExpandAll();
         }
 

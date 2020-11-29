@@ -41,7 +41,7 @@ namespace CryBits.Editors.Library
 
             // Limpa a árvore de ordem
             Tool.Tree = new TreeNode();
-            for (byte i = 0; i < Enum.GetValues(typeof(WindowsTypes)).Length; i++) Tool.Tree.Nodes.Add(((WindowsTypes)i).ToString());
+            for (byte i = 0; i < (byte)WindowsTypes.Count; i++) Tool.Tree.Nodes.Add(((WindowsTypes)i).ToString());
 
             // Cria o arquivo caso ele não existir
             if (!file.Exists)
