@@ -291,7 +291,7 @@ namespace CryBits.Client.Entities
         }
     }
 
-    internal class MapWeatherParticle
+    internal struct MapWeatherParticle
     {
         public bool Visible;
         public int X;
