@@ -1,9 +1,8 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Items
+    public enum Hotbar
     {
         None,
-        Equipment,
-        Potion
+        Item
     }
 }

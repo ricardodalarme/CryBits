@@ -7,6 +7,7 @@ using CryBits.Editors.Media;
 using CryBits.Editors.Media.Audio;
 using CryBits.Editors.Network;
 using CryBits.Enums;
+using Music = CryBits.Enums.Music;
 
 namespace CryBits.Editors.Logic
 {
@@ -64,12 +65,12 @@ namespace CryBits.Editors.Logic
             if (EditorMaps.Form.Selected.Music == 0) goto stop;
 
             // Inicia a música
-            if (Music.Device == null || Music.Current != (Musics)EditorMaps.Form.Selected.Music)
-                Music.Play((Musics)EditorMaps.Form.Selected.Music);
+            if (Media.Audio.Music.Device == null || Media.Audio.Music.Current != (Music)EditorMaps.Form.Selected.Music)
+                Media.Audio.Music.Play((Music)EditorMaps.Form.Selected.Music);
             return;
         stop:
             // Para a música
-            if (Music.Device != null) Music.Stop();
+            if (Media.Audio.Music.Device != null) Media.Audio.Music.Stop();
         }
     }
 }

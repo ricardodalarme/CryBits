@@ -13,6 +13,9 @@ using CryBits.Enums;
 using Lidgren.Network;
 using static CryBits.Defaults;
 using static CryBits.Utils;
+using Attribute = CryBits.Enums.Attribute;
+using Item = CryBits.Entities.Item;
+using Music = CryBits.Enums.Music;
 
 namespace CryBits.Client.Network
 {
@@ -21,49 +24,49 @@ namespace CryBits.Client.Network
         public static void Handle(NetIncomingMessage data)
         {
             // Manuseia os dados recebidos
-            switch ((ServerPackets)data.ReadByte())
+            switch ((ServerPacket)data.ReadByte())
             {
-                case ServerPackets.Alert: Alert(data); break;
-                case ServerPackets.Connect: Connect(); break;
-                case ServerPackets.Join: Join(data); break;
-                case ServerPackets.CreateCharacter: CreateCharacter(); break;
-                case ServerPackets.JoinGame: JoinGame(); break;
-                case ServerPackets.Classes: Classes(data); break;
-                case ServerPackets.Characters: Characters(data); break;
-                case ServerPackets.PlayerData: PlayerData(data); break;
-                case ServerPackets.PlayerPosition: PlayerPosition(data); break;
-                case ServerPackets.PlayerVitals: PlayerVitals(data); break;
-                case ServerPackets.PlayerMove: PlayerMove(data); break;
-                case ServerPackets.PlayerLeave: PlayerLeave(data); break;
-                case ServerPackets.PlayerDirection: PlayerDirection(data); break;
-                case ServerPackets.PlayerAttack: PlayerAttack(data); break;
-                case ServerPackets.PlayerExperience: PlayerExperience(data); break;
-                case ServerPackets.PlayerInventory: PlayerInventory(data); break;
-                case ServerPackets.PlayerEquipments: PlayerEquipments(data); break;
-                case ServerPackets.PlayerHotbar: PlayerHotbar(data); break;
-                case ServerPackets.MapRevision: MapRevision(data); break;
-                case ServerPackets.Map: Map(data); break;
-                case ServerPackets.JoinMap: JoinMap(); break;
-                case ServerPackets.Latency: Latency(); break;
-                case ServerPackets.Message: Message(data); break;
-                case ServerPackets.Npcs: Npcs(data); break;
-                case ServerPackets.MapNpcs: MapNpcs(data); break;
-                case ServerPackets.MapNpc: MapNpc(data); break;
-                case ServerPackets.MapNpcMovement: MapNpcMovement(data); break;
-                case ServerPackets.MapNpcDirection: MapNpcDirection(data); break;
-                case ServerPackets.MapNpcVitals: MapNpcVitals(data); break;
-                case ServerPackets.MapNpcAttack: MapNpcAttack(data); break;
-                case ServerPackets.MapNpcDied: MapNpcDied(data); break;
-                case ServerPackets.Items: Items(data); break;
-                case ServerPackets.MapItems: MapItems(data); break;
-                case ServerPackets.Party: Party(data); break;
-                case ServerPackets.PartyInvitation: PartyInvitation(data); break;
-                case ServerPackets.Trade: Trade(data); break;
-                case ServerPackets.TradeInvitation: TradeInvitation(data); break;
-                case ServerPackets.TradeState: TradeState(data); break;
-                case ServerPackets.TradeOffer: TradeOffer(data); break;
-                case ServerPackets.Shops: Shops(data); break;
-                case ServerPackets.ShopOpen: ShopOpen(data); break;
+                case ServerPacket.Alert: Alert(data); break;
+                case ServerPacket.Connect: Connect(); break;
+                case ServerPacket.Join: Join(data); break;
+                case ServerPacket.CreateCharacter: CreateCharacter(); break;
+                case ServerPacket.JoinGame: JoinGame(); break;
+                case ServerPacket.Classes: Classes(data); break;
+                case ServerPacket.Characters: Characters(data); break;
+                case ServerPacket.PlayerData: PlayerData(data); break;
+                case ServerPacket.PlayerPosition: PlayerPosition(data); break;
+                case ServerPacket.PlayerVitals: PlayerVitals(data); break;
+                case ServerPacket.PlayerMove: PlayerMove(data); break;
+                case ServerPacket.PlayerLeave: PlayerLeave(data); break;
+                case ServerPacket.PlayerDirection: PlayerDirection(data); break;
+                case ServerPacket.PlayerAttack: PlayerAttack(data); break;
+                case ServerPacket.PlayerExperience: PlayerExperience(data); break;
+                case ServerPacket.PlayerInventory: PlayerInventory(data); break;
+                case ServerPacket.PlayerEquipments: PlayerEquipments(data); break;
+                case ServerPacket.PlayerHotbar: PlayerHotbar(data); break;
+                case ServerPacket.MapRevision: MapRevision(data); break;
+                case ServerPacket.Map: Map(data); break;
+                case ServerPacket.JoinMap: JoinMap(); break;
+                case ServerPacket.Latency: Latency(); break;
+                case ServerPacket.Message: Message(data); break;
+                case ServerPacket.Npcs: Npcs(data); break;
+                case ServerPacket.MapNpcs: MapNpcs(data); break;
+                case ServerPacket.MapNpc: MapNpc(data); break;
+                case ServerPacket.MapNpcMovement: MapNpcMovement(data); break;
+                case ServerPacket.MapNpcDirection: MapNpcDirection(data); break;
+                case ServerPacket.MapNpcVitals: MapNpcVitals(data); break;
+                case ServerPacket.MapNpcAttack: MapNpcAttack(data); break;
+                case ServerPacket.MapNpcDied: MapNpcDied(data); break;
+                case ServerPacket.Items: Items(data); break;
+                case ServerPacket.MapItems: MapItems(data); break;
+                case ServerPacket.Party: Party(data); break;
+                case ServerPacket.PartyInvitation: PartyInvitation(data); break;
+                case ServerPacket.Trade: Trade(data); break;
+                case ServerPacket.TradeInvitation: TradeInvitation(data); break;
+                case ServerPacket.TradeState: TradeState(data); break;
+                case ServerPacket.TradeOffer: TradeOffer(data); break;
+                case ServerPacket.Shops: Shops(data); break;
+                case ServerPacket.ShopOpen: ShopOpen(data); break;
             }
         }
 
@@ -167,8 +170,8 @@ namespace CryBits.Client.Network
             Panels.List["Shop_Sell"].Visible = false;
 
             // Abre o jogo
-            Music.Stop();
-            Windows.Current = WindowsTypes.Game;
+            Media.Audio.Music.Stop();
+            Windows.Current = Window.Game;
         }
 
         private static void PlayerData(NetIncomingMessage data)
@@ -191,14 +194,14 @@ namespace CryBits.Client.Network
             player.Map = TempMap.List[new Guid(data.ReadString())];
             player.X = data.ReadByte();
             player.Y = data.ReadByte();
-            player.Direction = (Directions)data.ReadByte();
-            for (byte n = 0; n < (byte)Vitals.Count; n++)
+            player.Direction = (Direction)data.ReadByte();
+            for (byte n = 0; n < (byte)Vital.Count; n++)
             {
                 player.Vital[n] = data.ReadInt16();
                 player.MaxVital[n] = data.ReadInt16();
             }
-            for (byte n = 0; n < (byte)Attributes.Count; n++) player.Attribute[n] = data.ReadInt16();
-            for (byte n = 0; n < (byte)Equipments.Count; n++) player.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
+            for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = data.ReadInt16();
+            for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
             TempMap.Current = player.Map;
         }
 
@@ -209,12 +212,12 @@ namespace CryBits.Client.Network
             // Defini os dados do jogador
             player.X = data.ReadByte();
             player.Y = data.ReadByte();
-            player.Direction = (Directions)data.ReadByte();
+            player.Direction = (Direction)data.ReadByte();
 
             // Para a movimentação
             player.X2 = 0;
             player.Y2 = 0;
-            player.Movement = Movements.Stopped;
+            player.Movement = Movement.Stopped;
         }
 
         private static void PlayerVitals(NetIncomingMessage data)
@@ -222,7 +225,7 @@ namespace CryBits.Client.Network
             Player player = Player.Get(data.ReadString());
 
             // Define os dados
-            for (byte i = 0; i < (byte)Vitals.Count; i++)
+            for (byte i = 0; i < (byte)Vital.Count; i++)
             {
                 player.Vital[i] = data.ReadInt16();
                 player.MaxVital[i] = data.ReadInt16();
@@ -234,7 +237,7 @@ namespace CryBits.Client.Network
             Player player = Player.Get(data.ReadString());
 
             // Altera os dados dos equipamentos do jogador
-            for (byte i = 0; i < (byte)Equipments.Count; i++) player.Equipment[i] = Item.List.Get(new Guid(data.ReadString()));
+            for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(new Guid(data.ReadString()));
         }
 
         private static void PlayerLeave(NetIncomingMessage data)
@@ -250,25 +253,25 @@ namespace CryBits.Client.Network
             // Move o jogador
             player.X = data.ReadByte();
             player.Y = data.ReadByte();
-            player.Direction = (Directions)data.ReadByte();
-            player.Movement = (Movements)data.ReadByte();
+            player.Direction = (Direction)data.ReadByte();
+            player.Movement = (Movement)data.ReadByte();
             player.X2 = 0;
             player.Y2 = 0;
 
             // Posição exata do jogador
             switch (player.Direction)
             {
-                case Directions.Up: player.Y2 = Grid; break;
-                case Directions.Down: player.Y2 = Grid * -1; break;
-                case Directions.Right: player.X2 = Grid * -1; break;
-                case Directions.Left: player.X2 = Grid; break;
+                case Direction.Up: player.Y2 = Grid; break;
+                case Direction.Down: player.Y2 = Grid * -1; break;
+                case Direction.Right: player.X2 = Grid * -1; break;
+                case Direction.Left: player.X2 = Grid; break;
             }
         }
 
         private static void PlayerDirection(NetIncomingMessage data)
         {
             // Altera a posição do jogador
-            Player.Get(data.ReadString()).Direction = (Directions)data.ReadByte();
+            Player.Get(data.ReadString()).Direction = (Direction)data.ReadByte();
         }
 
         private static void PlayerAttack(NetIncomingMessage data)
@@ -283,13 +286,13 @@ namespace CryBits.Client.Network
 
             // Sofrendo dano
             if (victim != string.Empty)
-                if (victimType == (byte)Targets.Player)
+                if (victimType == (byte)Target.Player)
                 {
                     Player victimData = Player.Get(victim);
                     victimData.Hurt = Environment.TickCount;
                     TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
                 }
-                else if (victimType == (byte)Targets.Npc)
+                else if (victimType == (byte)Target.Npc)
                 {
                     TempMap.Current.Npc[byte.Parse(victim)].Hurt = Environment.TickCount;
                     TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), TempMap.Current.Npc[byte.Parse(victim)].X, TempMap.Current.Npc[byte.Parse(victim)].Y, 255));
@@ -384,9 +387,9 @@ namespace CryBits.Client.Network
         {
             // Se tiver, reproduz a música de fundo do mapa
             if (TempMap.Current.Data.Music > 0)
-                Music.Play((Musics)TempMap.Current.Data.Music);
+                Media.Audio.Music.Play((Music)TempMap.Current.Data.Music);
             else
-                Music.Stop();
+                Media.Audio.Music.Stop();
         }
 
         private static void Latency()
@@ -551,10 +554,10 @@ namespace CryBits.Client.Network
                 TempMap.Current.Npc[i].Data = Npc.List.Get(new Guid(data.ReadString()));
                 TempMap.Current.Npc[i].X = data.ReadByte();
                 TempMap.Current.Npc[i].Y = data.ReadByte();
-                TempMap.Current.Npc[i].Direction = (Directions)data.ReadByte();
+                TempMap.Current.Npc[i].Direction = (Direction)data.ReadByte();
 
                 // Vitais
-                for (byte n = 0; n < (byte)Vitals.Count; n++)
+                for (byte n = 0; n < (byte)Vital.Count; n++)
                     TempMap.Current.Npc[i].Vital[n] = data.ReadInt16();
             }
         }
@@ -568,9 +571,9 @@ namespace CryBits.Client.Network
             TempMap.Current.Npc[i].Data = Npc.List.Get(new Guid(data.ReadString()));
             TempMap.Current.Npc[i].X = data.ReadByte();
             TempMap.Current.Npc[i].Y = data.ReadByte();
-            TempMap.Current.Npc[i].Direction = (Directions)data.ReadByte();
-            TempMap.Current.Npc[i].Vital = new short[(byte)Vitals.Count];
-            for (byte n = 0; n < (byte)Vitals.Count; n++) TempMap.Current.Npc[i].Vital[n] = data.ReadInt16();
+            TempMap.Current.Npc[i].Direction = (Direction)data.ReadByte();
+            TempMap.Current.Npc[i].Vital = new short[(byte)Vital.Count];
+            for (byte n = 0; n < (byte)Vital.Count; n++) TempMap.Current.Npc[i].Vital[n] = data.ReadInt16();
         }
 
         private static void MapNpcMovement(NetIncomingMessage data)
@@ -582,17 +585,17 @@ namespace CryBits.Client.Network
             TempMap.Current.Npc[i].Y2 = 0;
             TempMap.Current.Npc[i].X = data.ReadByte();
             TempMap.Current.Npc[i].Y = data.ReadByte();
-            TempMap.Current.Npc[i].Direction = (Directions)data.ReadByte();
-            TempMap.Current.Npc[i].Movement = (Movements)data.ReadByte();
+            TempMap.Current.Npc[i].Direction = (Direction)data.ReadByte();
+            TempMap.Current.Npc[i].Movement = (Movement)data.ReadByte();
 
             // Posição exata do jogador
             if (x != TempMap.Current.Npc[i].X || y != TempMap.Current.Npc[i].Y)
                 switch (TempMap.Current.Npc[i].Direction)
                 {
-                    case Directions.Up: TempMap.Current.Npc[i].Y2 = Grid; break;
-                    case Directions.Down: TempMap.Current.Npc[i].Y2 = Grid * -1; break;
-                    case Directions.Right: TempMap.Current.Npc[i].X2 = Grid * -1; break;
-                    case Directions.Left: TempMap.Current.Npc[i].X2 = Grid; break;
+                    case Direction.Up: TempMap.Current.Npc[i].Y2 = Grid; break;
+                    case Direction.Down: TempMap.Current.Npc[i].Y2 = Grid * -1; break;
+                    case Direction.Right: TempMap.Current.Npc[i].X2 = Grid * -1; break;
+                    case Direction.Left: TempMap.Current.Npc[i].X2 = Grid; break;
                 }
         }
 
@@ -608,13 +611,13 @@ namespace CryBits.Client.Network
 
             // Sofrendo dano
             if (victim != string.Empty)
-                if (victimType == (byte)Targets.Player)
+                if (victimType == (byte)Target.Player)
                 {
                     Player victimData = Player.Get(victim);
                     victimData.Hurt = Environment.TickCount;
                     TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
                 }
-                else if (victimType == (byte)Targets.Npc)
+                else if (victimType == (byte)Target.Npc)
                 {
                     TempMap.Current.Npc[byte.Parse(victim)].Hurt = Environment.TickCount;
                     TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), TempMap.Current.Npc[byte.Parse(victim)].X, TempMap.Current.Npc[byte.Parse(victim)].Y, 255));
@@ -625,7 +628,7 @@ namespace CryBits.Client.Network
         {
             // Define a direção de determinado Npc
             byte i = data.ReadByte();
-            TempMap.Current.Npc[i].Direction = (Directions)data.ReadByte();
+            TempMap.Current.Npc[i].Direction = (Direction)data.ReadByte();
             TempMap.Current.Npc[i].X2 = 0;
             TempMap.Current.Npc[i].Y2 = 0;
         }
@@ -635,7 +638,7 @@ namespace CryBits.Client.Network
             byte index = data.ReadByte();
 
             // Define os vitais de determinado Npc
-            for (byte n = 0; n < (byte)Vitals.Count; n++)
+            for (byte n = 0; n < (byte)Vital.Count; n++)
                 TempMap.Current.Npc[index].Vital[n] = data.ReadInt16();
         }
 
@@ -649,7 +652,7 @@ namespace CryBits.Client.Network
             TempMap.Current.Npc[i].Data = null;
             TempMap.Current.Npc[i].X = 0;
             TempMap.Current.Npc[i].Y = 0;
-            TempMap.Current.Npc[i].Vital = new short[(byte)Vitals.Count];
+            TempMap.Current.Npc[i].Vital = new short[(byte)Vital.Count];
         }
     }
 }

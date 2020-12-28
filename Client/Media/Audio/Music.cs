@@ -16,7 +16,7 @@ namespace CryBits.Client.Media.Audio
         // Index da música reproduzida atualmente
         private static byte _current;
 
-        public static void Play(Musics index, bool loop = false)
+        public static void Play(Enums.Music index, bool loop = false)
         {
             string directory = Directories.Musics.FullName + (byte)index + Format;
 

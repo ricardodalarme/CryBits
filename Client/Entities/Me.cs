@@ -39,16 +39,16 @@ namespace CryBits.Client.Entities
             if (Movement > 0 || !Graphics.RenderWindow.HasFocus()) return;
 
             // Move o personagem
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Directions.Up);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Directions.Down);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Directions.Left);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Directions.Right);
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Direction.Up);
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Direction.Down);
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Direction.Left);
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Direction.Right);
         }
 
-        public void Move(Directions direction)
+        public void Move(Direction direction)
         {
             // Verifica se o jogador pode se mover
-            if (Movement != Movements.Stopped) return;
+            if (Movement != Movement.Stopped) return;
 
             // Define a direção do jogador
             if (Direction != direction)
@@ -62,9 +62,9 @@ namespace CryBits.Client.Entities
 
             // Define a velocidade que o jogador se move
             if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Graphics.RenderWindow.HasFocus())
-                Movement = Movements.Moving;
+                Movement = Movement.Moving;
             else
-                Movement = Movements.Walking;
+                Movement = Movement.Walking;
 
             // Movimento o jogador
             Send.PlayerMove();
@@ -72,10 +72,10 @@ namespace CryBits.Client.Entities
             // Define a Posição exata do jogador
             switch (direction)
             {
-                case Directions.Up: Y2 = Grid; Y -= 1; break;
-                case Directions.Down: Y2 = Grid * -1; Y += 1; break;
-                case Directions.Right: X2 = Grid * -1; X += 1; break;
-                case Directions.Left: X2 = Grid; X -= 1; break;
+                case Direction.Up: Y2 = Grid; Y -= 1; break;
+                case Direction.Down: Y2 = Grid * -1; Y += 1; break;
+                case Direction.Right: X2 = Grid * -1; X += 1; break;
+                case Direction.Left: X2 = Grid; X -= 1; break;
             }
         }
 

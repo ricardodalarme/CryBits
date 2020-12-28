@@ -1,9 +1,8 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Accesses
+    public enum Access
     {
         None,
-        Moderator,
         Editor,
         Administrator
     }

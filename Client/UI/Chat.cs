@@ -121,7 +121,7 @@ namespace CryBits.Client.UI
                 default:
                     // Mensagem lobal
                     if (message.Substring(0, 1) == "'")
-                        Send.Message(message.Substring(1), Messages.Global);
+                        Send.Message(message.Substring(1), Message.Global);
                     // Mensagem particular
                     else if (message.Substring(0, 1) == "!")
                     {
@@ -135,12 +135,12 @@ namespace CryBits.Client.UI
                             message = message.Substring(parts[0].Length + 1);
 
                             // Envia a mensagem
-                            Send.Message(message, Messages.Private, destiny);
+                            Send.Message(message, Message.Private, destiny);
                         }
                     }
                     // Mensagem mapa
                     else
-                        Send.Message(message, Messages.Map);
+                        Send.Message(message, Message.Map);
                     break;
             }
         }

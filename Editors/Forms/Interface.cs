@@ -10,6 +10,7 @@ using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
 using TextBox = CryBits.Editors.Entities.Tools.TextBox;
+using Tool = CryBits.Enums.Tool;
 
 namespace CryBits.Editors.Forms
 {
@@ -19,7 +20,7 @@ namespace CryBits.Editors.Forms
         public static EditorInterface Form;
 
         // Ferramenta selecionada
-        private Tool _selected;
+        private Entities.Tools.Tool _selected;
 
         public EditorInterface()
         {
@@ -33,12 +34,12 @@ namespace CryBits.Editors.Forms
             Graphics.WinInterface = new RenderWindow(picWindow.Handle);
 
             // Adiciona as janelas à lista
-            for (byte i = 0; i < (byte)WindowsTypes.Count; i++)
-                cmbWindows.Items.Add((WindowsTypes)i);
+            for (byte i = 0; i < (byte)Window.Count; i++)
+                cmbWindows.Items.Add((Window)i);
             cmbWindows.SelectedIndex = 0;
 
             // Adiciona os tipos de ferramentas à lista
-            for (byte i = 0; i < (byte)ToolType.Count; i++) cmbType.Items.Add((ToolType)i);
+            for (byte i = 0; i < (byte)Tool.Count; i++) cmbType.Items.Add((Tool)i);
         }
 
         private void Editor_Interface_FormClosed(object sender, FormClosedEventArgs e)
@@ -51,14 +52,14 @@ namespace CryBits.Editors.Forms
         {
             // Atualiza a lista de ordem
             treOrder.Nodes.Clear();
-            treOrder.Nodes.Add((TreeNode)Tool.Tree.Nodes[cmbWindows.SelectedIndex].Clone());
+            treOrder.Nodes.Add((TreeNode)Entities.Tools.Tool.Tree.Nodes[cmbWindows.SelectedIndex].Clone());
             treOrder.ExpandAll();
         }
 
         private void treOrder_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // Atualiza as informações
-            _selected = (Tool)treOrder.SelectedNode.Tag;
+            _selected = (Entities.Tools.Tool)treOrder.SelectedNode.Tag;
             prgProperties.SelectedObject = _selected;
         }
 
@@ -66,15 +67,15 @@ namespace CryBits.Editors.Forms
         {
             if (treOrder.SelectedNode != null)
             {
-                byte window = (byte)((Tool)treOrder.SelectedNode.Tag).Window;
+                byte window = (byte)((Entities.Tools.Tool)treOrder.SelectedNode.Tag).Window;
 
                 // Troca a ferramenta de janela
                 if (e.ChangedItem.Label == "Window")
                 {
-                    Tool.Tree.Nodes[window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
+                    Entities.Tools.Tool.Tree.Nodes[window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
                     treOrder.SelectedNode.Remove();
                     cmbWindows.SelectedIndex = window;
-                    treOrder.SelectedNode = Tool.Tree.Nodes[window].LastNode;
+                    treOrder.SelectedNode = Entities.Tools.Tool.Tree.Nodes[window].LastNode;
                 }
                 // Troca o nome da ferramenta
                 else if (e.ChangedItem.Label == "Name") treOrder.SelectedNode.Text = treOrder.SelectedNode.Tag.ToString();
@@ -105,17 +106,17 @@ namespace CryBits.Editors.Forms
         private void butConfirm_Click(object sender, EventArgs e)
         {
             // Adiciona uma nova ferramenta
-            Tool @new = new Tool();
-            Tool.Tree.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
-            switch ((ToolType)cmbType.SelectedIndex)
+            Entities.Tools.Tool @new = new Entities.Tools.Tool();
+            Entities.Tools.Tool.Tree.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
+            switch ((Tool)cmbType.SelectedIndex)
             {
-                case ToolType.Button: @new = new Button(); break;
-                case ToolType.Panel: @new = new Panel(); break;
-                case ToolType.CheckBox: @new = new CheckBox(); break;
-                case ToolType.TextBox: @new = new TextBox(); break;
+                case Tool.Button: @new = new Button(); break;
+                case Tool.Panel: @new = new Panel(); break;
+                case Tool.CheckBox: @new = new CheckBox(); break;
+                case Tool.TextBox: @new = new TextBox(); break;
             }
-            Tool.Tree.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
-            @new.Window = (WindowsTypes)cmbWindows.SelectedIndex;
+            Entities.Tools.Tool.Tree.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
+            @new.Window = (Window)cmbWindows.SelectedIndex;
             grpNew.Visible = false;
         }
 

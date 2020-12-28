@@ -7,6 +7,9 @@ using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Server.Entities;
 using static CryBits.Defaults;
+using Attribute = CryBits.Enums.Attribute;
+using Hotbar = CryBits.Enums.Hotbar;
+using Item = CryBits.Entities.Item;
 
 namespace CryBits.Server.Library
 {
@@ -65,7 +68,7 @@ namespace CryBits.Server.Library
             {
                 account.User = data.ReadString();
                 account.Password = data.ReadString();
-                account.Access = (Accesses)data.ReadByte();
+                account.Access = (Access)data.ReadByte();
             }
         }
 
@@ -112,16 +115,16 @@ namespace CryBits.Server.Library
                 account.Character.Map = TempMap.List.Get(new Guid(data.ReadString()));
                 account.Character.X = data.ReadByte();
                 account.Character.Y = data.ReadByte();
-                account.Character.Direction = (Directions)data.ReadByte();
-                for (byte n = 0; n < (byte)Vitals.Count; n++) account.Character.Vital[n] = data.ReadInt16();
-                for (byte n = 0; n < (byte)Attributes.Count; n++) account.Character.Attribute[n] = data.ReadInt16();
+                account.Character.Direction = (Direction)data.ReadByte();
+                for (byte n = 0; n < (byte)Vital.Count; n++) account.Character.Vital[n] = data.ReadInt16();
+                for (byte n = 0; n < (byte)Attribute.Count; n++) account.Character.Attribute[n] = data.ReadInt16();
                 for (byte n = 0; n < MaxInventory; n++)
                 {
                     account.Character.Inventory[n].Item = Item.List.Get(new Guid(data.ReadString()));
                     account.Character.Inventory[n].Amount = data.ReadInt16();
                 }
-                for (byte n = 0; n < (byte)Equipments.Count; n++) account.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
-                for (byte n = 0; n < MaxHotbar; n++) account.Character.Hotbar[n] = new Hotbar((Hotbars)data.ReadByte(), data.ReadByte());
+                for (byte n = 0; n < (byte)Equipment.Count; n++) account.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
+                for (byte n = 0; n < MaxHotbar; n++) account.Character.Hotbar[n] = new Entities.Hotbar((Hotbar)data.ReadByte(), data.ReadByte());
             }
         }
 

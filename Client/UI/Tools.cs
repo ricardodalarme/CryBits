@@ -7,7 +7,7 @@ namespace CryBits.Client.UI
     internal static class Tools
     {
         // Ordem da renderização das ferramentas
-        public static List<OrderStructure>[] AllOrder = new List<OrderStructure>[(byte)WindowsTypes.Count];
+        public static List<OrderStructure>[] AllOrder = new List<OrderStructure>[(byte)Window.Count];
         public static List<OrderStructure> Order => AllOrder[(byte)Windows.Current];
 
         public class OrderStructure
@@ -23,7 +23,7 @@ namespace CryBits.Client.UI
             public string Name;
             public bool Visible;
             public Point Position;
-            public WindowsTypes Window;
+            public Window Window;
         }
 
         // Tipos de ferramentas

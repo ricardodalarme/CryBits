@@ -15,8 +15,12 @@ using SFML.System;
 using SFML.Window;
 using static CryBits.Client.Logic.Utils;
 using static CryBits.Defaults;
+using Attribute = CryBits.Enums.Attribute;
 using Color = SFML.Graphics.Color;
 using Font = SFML.Graphics.Font;
+using Hotbar = CryBits.Enums.Hotbar;
+using Item = CryBits.Entities.Item;
+using Window = CryBits.Enums.Window;
 
 namespace CryBits.Client.Media
 {
@@ -167,15 +171,15 @@ namespace CryBits.Client.Media
             Render(texture, source, destiny, color);
         }
 
-        private static void DrawText(string text, int x, int y, Color color, Alignments alignment = Alignments.Left)
+        private static void DrawText(string text, int x, int y, Color color, Alignment alignment = Alignment.Left)
         {
             Text tempText = new Text(text, FontDefault);
 
             // Alinhamento do texto
             switch (alignment)
             {
-                case Alignments.Center: x -= MeasureString(text) / 2; break;
-                case Alignments.Right: x -= MeasureString(text); break;
+                case Alignment.Center: x -= MeasureString(text) / 2; break;
+                case Alignment.Right: x -= MeasureString(text); break;
             }
 
             // Define os dados
@@ -249,7 +253,7 @@ namespace CryBits.Client.Media
             Interface(Tools.Order);
 
             // Desenha o chat 
-            if (Windows.Current == WindowsTypes.Game) Chat();
+            if (Windows.Current == Window.Game) Chat();
 
             // Exibe o que foi renderizado
             RenderWindow.Display();
@@ -258,14 +262,14 @@ namespace CryBits.Client.Media
         private static void InGame()
         {
             // Não desenhar se não estiver em jogo
-            if (Windows.Current != WindowsTypes.Game) return;
+            if (Windows.Current != Window.Game) return;
 
             // Atualiza a câmera
             Camera.Update();
 
             // Desenhos abaixo do jogador
             MapPanorama();
-            MapTiles((byte)Layers.Ground);
+            MapTiles((byte)Layer.Ground);
             MapBlood();
             MapItems();
 
@@ -284,7 +288,7 @@ namespace CryBits.Client.Media
             PlayerCharacter(Player.Me);
 
             // Desenhos acima do jogador
-            MapTiles((byte)Layers.Fringe);
+            MapTiles((byte)Layer.Fringe);
             MapWeather();
             MapFog();
             MapName();
@@ -401,14 +405,14 @@ namespace CryBits.Client.Media
             // Somente se necessário
             if (!Buttons.Characters_Change_Buttons())
             {
-                DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignments.Center);
+                DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignment.Center);
                 return;
             }
 
             // Verifica se o personagem existe
             if (Panels.SelectCharacter >= Panels.Characters.Length)
             {
-                DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignments.Center);
+                DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignment.Center);
                 return;
             }
 
@@ -417,12 +421,12 @@ namespace CryBits.Client.Media
             if (textureNum > 0)
             {
                 Render(TexFace[textureNum], new Point(353, 442));
-                Character(textureNum, new Point(356, 534 - Size(TexCharacter[textureNum]).Height / 4), Directions.Down, AnimationStopped);
+                Character(textureNum, new Point(356, 534 - Size(TexCharacter[textureNum]).Height / 4), Direction.Down, AnimationStopped);
             }
 
             // Desenha o nome da classe
             text = "(" + (Panels.SelectCharacter + 1) + ") " + Panels.Characters[Panels.SelectCharacter].Name;
-            DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignments.Center);
+            DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignment.Center);
         }
 
         private static void CreateCharacterClass()
@@ -440,12 +444,12 @@ namespace CryBits.Client.Media
             if (textureNum > 0)
             {
                 Render(TexFace[textureNum], new Point(425, 440));
-                Character(textureNum, new Point(433, 501), Directions.Down, AnimationStopped);
+                Character(textureNum, new Point(433, 501), Direction.Down, AnimationStopped);
             }
 
             // Desenha o nome da classe
             string text = @class.Name;
-            DrawText(text, 347, 509, Color.White, Alignments.Center);
+            DrawText(text, 347, 509, Color.White, Alignment.Center);
 
             // Descrição
             DrawText(@class.Description, 282, 526, Color.White, 123);
@@ -454,8 +458,8 @@ namespace CryBits.Client.Media
 
         private static void Bars(Panels tool)
         {
-            decimal hpPercentage = Player.Me.Vital[(byte)Vitals.HP] / (decimal)Player.Me.MaxVital[(byte)Vitals.HP];
-            decimal mpPercentage = Player.Me.Vital[(byte)Vitals.MP] / (decimal)Player.Me.MaxVital[(byte)Vitals.MP];
+            decimal hpPercentage = Player.Me.Vital[(byte)Vital.HP] / (decimal)Player.Me.MaxVital[(byte)Vital.HP];
+            decimal mpPercentage = Player.Me.Vital[(byte)Vital.MP] / (decimal)Player.Me.MaxVital[(byte)Vital.MP];
             decimal expPercentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
 
             // Barras
@@ -469,9 +473,9 @@ namespace CryBits.Client.Media
             DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, Color.White);
 
             // Indicadores
-            DrawText(Player.Me.Vital[(byte)Vitals.HP] + "/" + Player.Me.MaxVital[(byte)Vitals.HP], tool.Position.X + 76, tool.Position.Y + 7, Color.White, Alignments.Center);
-            DrawText(Player.Me.Vital[(byte)Vitals.MP] + "/" + Player.Me.MaxVital[(byte)Vitals.MP], tool.Position.X + 76, tool.Position.Y + 25, Color.White, Alignments.Center);
-            DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76, tool.Position.Y + 43, Color.White, Alignments.Center);
+            DrawText(Player.Me.Vital[(byte)Vital.HP] + "/" + Player.Me.MaxVital[(byte)Vital.HP], tool.Position.X + 76, tool.Position.Y + 7, Color.White, Alignment.Center);
+            DrawText(Player.Me.Vital[(byte)Vital.MP] + "/" + Player.Me.MaxVital[(byte)Vital.MP], tool.Position.X + 76, tool.Position.Y + 25, Color.White, Alignment.Center);
+            DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76, tool.Position.Y + 43, Color.White, Alignment.Center);
         }
 
         private static void Chat()
@@ -509,7 +513,7 @@ namespace CryBits.Client.Media
             }
 
             // Nome, descrição e icone do item
-            DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, Alignments.Center);
+            DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, Alignment.Center);
             DrawText(item.Description, tool.Position.X + 82, tool.Position.Y + 20, Color.White, 86);
             Render(TexItem[item.Texture], new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
 
@@ -525,22 +529,22 @@ namespace CryBits.Client.Media
             switch (item.Type)
             {
                 // Poção
-                case Items.Potion:
-                    for (byte n = 0; n < (byte)Vitals.Count; n++)
+                case Enums.Item.Potion:
+                    for (byte n = 0; n < (byte)Vital.Count; n++)
                         if (item.PotionVital[n] != 0)
-                            data.Add((Vitals)n + ": " + item.PotionVital[n]);
+                            data.Add((Vital)n + ": " + item.PotionVital[n]);
 
                     if (item.PotionExperience != 0) data.Add("Experience: " + item.PotionExperience);
                     break;
                 // Equipamentos
-                case Items.Equipment:
-                    if (item.EquipType == (byte)Equipments.Weapon)
+                case Enums.Item.Equipment:
+                    if (item.EquipType == (byte)Equipment.Weapon)
                         if (item.WeaponDamage != 0)
                             data.Add("Damage: " + item.WeaponDamage);
 
-                    for (byte n = 0; n < (byte)Attributes.Count; n++)
+                    for (byte n = 0; n < (byte)Attribute.Count; n++)
                         if (item.EquipAttribute[n] != 0)
-                            data.Add((Attributes)n + ": " + item.EquipAttribute[n]);
+                            data.Add((Attribute)n + ": " + item.EquipAttribute[n]);
                     break;
             }
 
@@ -558,10 +562,10 @@ namespace CryBits.Client.Media
             {
                 byte slot = Player.Me.Hotbar[i].Slot;
                 if (slot > 0)
-                    switch ((Hotbars)Player.Me.Hotbar[i].Type)
+                    switch ((Hotbar)Player.Me.Hotbar[i].Type)
                     {
                         // Itens
-                        case Hotbars.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
+                        case Enums.Hotbar.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
                     }
 
                 // Desenha os números de cada slot
@@ -572,7 +576,7 @@ namespace CryBits.Client.Media
 
             // Movendo slot
             if (Panels.HotbarChange >= 0)
-                if (Player.Me.Hotbar[Panels.HotbarChange].Type == (byte)Hotbars.Item)
+                if (Player.Me.Hotbar[Panels.HotbarChange].Type == (byte)Enums.Hotbar.Item)
                     Render(TexItem[Player.Me.Inventory[Player.Me.Hotbar[Panels.HotbarChange].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
         }
 
@@ -584,15 +588,15 @@ namespace CryBits.Client.Media
             Render(TexFace[Player.Me.TextureNum], new Point(tool.Position.X + 82, tool.Position.Y + 37));
 
             // Atributos
-            DrawText("Strength: " + Player.Me.Attribute[(byte)Attributes.Strength], tool.Position.X + 32, tool.Position.Y + 146, Color.White);
-            DrawText("Resistance: " + Player.Me.Attribute[(byte)Attributes.Resistance], tool.Position.X + 32, tool.Position.Y + 162, Color.White);
-            DrawText("Intelligence: " + Player.Me.Attribute[(byte)Attributes.Intelligence], tool.Position.X + 32, tool.Position.Y + 178, Color.White);
-            DrawText("Agility: " + Player.Me.Attribute[(byte)Attributes.Agility], tool.Position.X + 32, tool.Position.Y + 194, Color.White);
-            DrawText("Vitality: " + Player.Me.Attribute[(byte)Attributes.Vitality], tool.Position.X + 32, tool.Position.Y + 210, Color.White);
+            DrawText("Strength: " + Player.Me.Attribute[(byte)Attribute.Strength], tool.Position.X + 32, tool.Position.Y + 146, Color.White);
+            DrawText("Resistance: " + Player.Me.Attribute[(byte)Attribute.Resistance], tool.Position.X + 32, tool.Position.Y + 162, Color.White);
+            DrawText("Intelligence: " + Player.Me.Attribute[(byte)Attribute.Intelligence], tool.Position.X + 32, tool.Position.Y + 178, Color.White);
+            DrawText("Agility: " + Player.Me.Attribute[(byte)Attribute.Agility], tool.Position.X + 32, tool.Position.Y + 194, Color.White);
+            DrawText("Vitality: " + Player.Me.Attribute[(byte)Attribute.Vitality], tool.Position.X + 32, tool.Position.Y + 210, Color.White);
             DrawText("Points: " + Player.Me.Points, tool.Position.X + 14, tool.Position.Y + 228, Color.White);
 
             // Equipamentos 
-            for (byte i = 0; i < (byte)Equipments.Count; i++)
+            for (byte i = 0; i < (byte)Equipment.Count; i++)
                 if (Player.Me.Equipment[i] == null)
                     Render(TexEquipments, tool.Position.X + 7 + i * 34, tool.Position.Y + 247, i * 34, 0, 32, 32);
                 else
@@ -623,10 +627,10 @@ namespace CryBits.Client.Media
                 // Barras do membro
                 Render(TexPartyBars, 10, 92 + 27 * i, 0, 0, 82, 8); // HP Cinza
                 Render(TexPartyBars, 10, 99 + 27 * i, 0, 0, 82, 8); // MP Cinza
-                if (Player.Me.Party[i].Vital[(byte)Vitals.HP] > 0)
-                    Render(TexPartyBars, 10, 92 + 27 * i, 0, 8, Player.Me.Party[i].Vital[(byte)Vitals.HP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vitals.HP], 8); // HP 
-                if (Player.Me.Party[i].Vital[(byte)Vitals.MP] > 0)
-                    Render(TexPartyBars, 10, 99 + 27 * i, 0, 16, Player.Me.Party[i].Vital[(byte)Vitals.MP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vitals.MP], 8); // MP 
+                if (Player.Me.Party[i].Vital[(byte)Vital.HP] > 0)
+                    Render(TexPartyBars, 10, 92 + 27 * i, 0, 8, Player.Me.Party[i].Vital[(byte)Vital.HP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.HP], 8); // HP 
+                if (Player.Me.Party[i].Vital[(byte)Vital.MP] > 0)
+                    Render(TexPartyBars, 10, 99 + 27 * i, 0, 16, Player.Me.Party[i].Vital[(byte)Vital.MP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.MP], 8); // MP 
 
                 // Nome do membro
                 DrawText(Player.Me.Party[i].Name, 10, 79 + 27 * i, Color.White);
@@ -652,7 +656,7 @@ namespace CryBits.Client.Media
         {
             // Dados da loja
             string name = Panels.ShopOpen.Name;
-            DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, Alignments.Center);
+            DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, Alignment.Center);
             DrawText("Currency: " + Panels.ShopOpen.Currency.Name, tool.Position.X + 10, tool.Position.Y + 195, Color.White);
 
             // Desenha os itens
@@ -675,7 +679,7 @@ namespace CryBits.Client.Media
             if (amount > 1) DrawText(amount.ToString(), position.X + 2, position.Y + 17, Color.White);
         }
 
-        private static void Character(short textureNum, Point position, Directions direction, byte column, bool hurt = false)
+        private static void Character(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
         {
             Rectangle recSource = new Rectangle(), recDestiny;
             Size size = Size(TexCharacter[textureNum]);
@@ -685,10 +689,10 @@ namespace CryBits.Client.Media
             // Direção
             switch (direction)
             {
-                case Directions.Up: line = MovementUp; break;
-                case Directions.Down: line = MovementDown; break;
-                case Directions.Left: line = MovementLeft; break;
-                case Directions.Right: line = MovementRight; break;
+                case Direction.Up: line = MovementUp; break;
+                case Direction.Down: line = MovementDown; break;
+                case Direction.Left: line = MovementLeft; break;
+                case Direction.Right: line = MovementRight; break;
             }
 
             // Define as propriedades dos retângulos
@@ -742,15 +746,15 @@ namespace CryBits.Client.Media
 
         private static void PlayerBars(Player player)
         {
-            short value = player.Vital[(byte)Vitals.HP];
+            short value = player.Vital[(byte)Vital.HP];
 
             // Apenas se necessário
-            if (value <= 0 || value >= player.MaxVital[(byte)Vitals.HP]) return;
+            if (value <= 0 || value >= player.MaxVital[(byte)Vital.HP]) return;
 
             // Cálcula a largura da barra
             Size characterSize = Size(TexCharacter[player.TextureNum]);
             int fullWidth = characterSize.Width / AnimationAmount;
-            int width = value * fullWidth / player.MaxVital[(byte)Vitals.HP];
+            int width = value * fullWidth / player.MaxVital[(byte)Vital.HP];
 
             // Posição das barras
             Point position = new Point
@@ -825,9 +829,9 @@ namespace CryBits.Client.Media
             // Cor do texto
             switch (Npc.Data.Behaviour)
             {
-                case Npcs.Friendly: color = Color.White; break;
-                case Npcs.AttackOnSight: color = Color.Red; break;
-                case Npcs.AttackWhenAttacked: color = new Color(228, 120, 51); break;
+                case Behaviour.Friendly: color = Color.White; break;
+                case Behaviour.AttackOnSight: color = Color.Red; break;
+                case Behaviour.AttackWhenAttacked: color = new Color(228, 120, 51); break;
                 default: color = Color.White; break;
             }
 
@@ -838,15 +842,15 @@ namespace CryBits.Client.Media
         private static void NpcBars(TempNpc Npc)
         {
             Texture texture = TexCharacter[Npc.Data.Texture];
-            short value = Npc.Vital[(byte)Vitals.HP];
+            short value = Npc.Vital[(byte)Vital.HP];
 
             // Apenas se necessário
-            if (value <= 0 || value >= Npc.Data.Vital[(byte)Vitals.HP]) return;
+            if (value <= 0 || value >= Npc.Data.Vital[(byte)Vital.HP]) return;
 
             // Posição
             Point position = new Point(ConvertX(Npc.PixelX), ConvertY(Npc.PixelY) + Size(texture).Height / AnimationAmount + 4);
             int fullWidth = Size(texture).Width / AnimationAmount;
-            int width = value * fullWidth / Npc.Data.Vital[(byte)Vitals.HP];
+            int width = value * fullWidth / Npc.Data.Vital[(byte)Vital.HP];
 
             // Desenha a barra 
             Render(TexBars, position.X, position.Y, 0, 4, fullWidth, 4);
@@ -936,7 +940,7 @@ namespace CryBits.Client.Media
             // Textura
             switch (TempMap.Current.Data.Weather.Type)
             {
-                case Weathers.Snowing: x = 32; break;
+                case Weather.Snowing: x = 32; break;
             }
 
             // Desenha as partículas
@@ -958,7 +962,7 @@ namespace CryBits.Client.Media
             // A cor do texto vária de acordo com a moral do mapa
             switch (TempMap.Current.Data.Moral)
             {
-                case Morals.Dangerous: color = Color.Red; break;
+                case Moral.Dangerous: color = Color.Red; break;
                 default: color = Color.White; break;
             }
 

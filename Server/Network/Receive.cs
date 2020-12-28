@@ -9,6 +9,9 @@ using CryBits.Server.Library;
 using Lidgren.Network;
 using static CryBits.Defaults;
 using static CryBits.Utils;
+using Attribute = CryBits.Enums.Attribute;
+using Hotbar = CryBits.Enums.Hotbar;
+using Item = CryBits.Entities.Item;
 
 namespace CryBits.Server.Network
 {
@@ -19,54 +22,54 @@ namespace CryBits.Server.Network
             Player player = account.Character;
 
             // Manuseia os dados recebidos 
-            switch ((ClientPackets)data.ReadByte())
+            switch ((ClientPacket)data.ReadByte())
             {
-                case ClientPackets.Connect: Connect(account, data); break;
-                case ClientPackets.Latency: Latency(account); break;
-                case ClientPackets.Register: Register(account, data); break;
-                case ClientPackets.CreateCharacter: CreateCharacter(account, data); break;
-                case ClientPackets.CharacterUse: CharacterUse(account, data); break;
-                case ClientPackets.CharacterCreate: CharacterCreate(account); break;
-                case ClientPackets.CharacterDelete: CharacterDelete(account, data); break;
-                case ClientPackets.PlayerDirection: PlayerDirection(player, data); break;
-                case ClientPackets.PlayerMove: PlayerMove(player, data); break;
-                case ClientPackets.PlayerAttack: PlayerAttack(player); break;
-                case ClientPackets.Message: Message(player, data); break;
-                case ClientPackets.AddPoint: AddPoint(player, data); break;
-                case ClientPackets.CollectItem: CollectItem(player); break;
-                case ClientPackets.DropItem: DropItem(player, data); break;
-                case ClientPackets.InventoryChange: InventoryChange(player, data); break;
-                case ClientPackets.InventoryUse: InventoryUse(player, data); break;
-                case ClientPackets.EquipmentRemove: EquipmentRemove(player, data); break;
-                case ClientPackets.HotbarAdd: HotbarAdd(player, data); break;
-                case ClientPackets.HotbarChange: HotbarChange(player, data); break;
-                case ClientPackets.HotbarUse: HotbarUse(player, data); break;
-                case ClientPackets.PartyInvite: PartyInvite(player, data); break;
-                case ClientPackets.PartyAccept: PartyAccept(player); break;
-                case ClientPackets.PartyDecline: PartyDecline(player); break;
-                case ClientPackets.PartyLeave: PartyLeave(player); break;
-                case ClientPackets.TradeInvite: TradeInvite(player, data); break;
-                case ClientPackets.TradeAccept: TradeAccept(player); break;
-                case ClientPackets.TradeDecline: TradeDecline(player); break;
-                case ClientPackets.TradeLeave: TradeLeave(player); break;
-                case ClientPackets.TradeOffer: TradeOffer(player, data); break;
-                case ClientPackets.TradeOfferState: TradeOfferState(player, data); break;
-                case ClientPackets.ShopBuy: ShopBuy(player, data); break;
-                case ClientPackets.ShopSell: ShopSell(player, data); break;
-                case ClientPackets.ShopClose: ShopClose(player); break;
-                case ClientPackets.WriteSettings: WriteSettings(account, data); break;
-                case ClientPackets.WriteClasses: WriteClasses(account, data); break;
-                case ClientPackets.WriteMaps: WriteMaps(account, data); break;
-                case ClientPackets.WriteNpcs: WriteNpcs(account, data); break;
-                case ClientPackets.WriteItems: WriteItems(account, data); break;
-                case ClientPackets.WriteShops: WriteShops(account, data); break;
-                case ClientPackets.RequestSetting: RequestSetting(account); break;
-                case ClientPackets.RequestClasses: RequestClasses(account); break;
-                case ClientPackets.RequestMap: RequestMap(account, data); break;
-                case ClientPackets.RequestMaps: RequestMaps(account); break;
-                case ClientPackets.RequestNpcs: RequestNpcs(account); break;
-                case ClientPackets.RequestItems: RequestItems(account); break;
-                case ClientPackets.RequestShops: RequestShops(account); break;
+                case ClientPacket.Connect: Connect(account, data); break;
+                case ClientPacket.Latency: Latency(account); break;
+                case ClientPacket.Register: Register(account, data); break;
+                case ClientPacket.CreateCharacter: CreateCharacter(account, data); break;
+                case ClientPacket.CharacterUse: CharacterUse(account, data); break;
+                case ClientPacket.CharacterCreate: CharacterCreate(account); break;
+                case ClientPacket.CharacterDelete: CharacterDelete(account, data); break;
+                case ClientPacket.PlayerDirection: PlayerDirection(player, data); break;
+                case ClientPacket.PlayerMove: PlayerMove(player, data); break;
+                case ClientPacket.PlayerAttack: PlayerAttack(player); break;
+                case ClientPacket.Message: Message(player, data); break;
+                case ClientPacket.AddPoint: AddPoint(player, data); break;
+                case ClientPacket.CollectItem: CollectItem(player); break;
+                case ClientPacket.DropItem: DropItem(player, data); break;
+                case ClientPacket.InventoryChange: InventoryChange(player, data); break;
+                case ClientPacket.InventoryUse: InventoryUse(player, data); break;
+                case ClientPacket.EquipmentRemove: EquipmentRemove(player, data); break;
+                case ClientPacket.HotbarAdd: HotbarAdd(player, data); break;
+                case ClientPacket.HotbarChange: HotbarChange(player, data); break;
+                case ClientPacket.HotbarUse: HotbarUse(player, data); break;
+                case ClientPacket.PartyInvite: PartyInvite(player, data); break;
+                case ClientPacket.PartyAccept: PartyAccept(player); break;
+                case ClientPacket.PartyDecline: PartyDecline(player); break;
+                case ClientPacket.PartyLeave: PartyLeave(player); break;
+                case ClientPacket.TradeInvite: TradeInvite(player, data); break;
+                case ClientPacket.TradeAccept: TradeAccept(player); break;
+                case ClientPacket.TradeDecline: TradeDecline(player); break;
+                case ClientPacket.TradeLeave: TradeLeave(player); break;
+                case ClientPacket.TradeOffer: TradeOffer(player, data); break;
+                case ClientPacket.TradeOfferState: TradeOfferState(player, data); break;
+                case ClientPacket.ShopBuy: ShopBuy(player, data); break;
+                case ClientPacket.ShopSell: ShopSell(player, data); break;
+                case ClientPacket.ShopClose: ShopClose(player); break;
+                case ClientPacket.WriteSettings: WriteSettings(account, data); break;
+                case ClientPacket.WriteClasses: WriteClasses(account, data); break;
+                case ClientPacket.WriteMaps: WriteMaps(account, data); break;
+                case ClientPacket.WriteNpcs: WriteNpcs(account, data); break;
+                case ClientPacket.WriteItems: WriteItems(account, data); break;
+                case ClientPacket.WriteShops: WriteShops(account, data); break;
+                case ClientPacket.RequestSetting: RequestSetting(account); break;
+                case ClientPacket.RequestClasses: RequestClasses(account); break;
+                case ClientPacket.RequestMap: RequestMap(account, data); break;
+                case ClientPacket.RequestMaps: RequestMaps(account); break;
+                case ClientPacket.RequestNpcs: RequestNpcs(account); break;
+                case ClientPacket.RequestItems: RequestItems(account); break;
+                case ClientPacket.RequestShops: RequestShops(account); break;
             }
         }
 
@@ -105,12 +108,12 @@ namespace CryBits.Server.Network
                 return;
             }
 
-            account.Access = Accesses.Administrator;
+            account.Access = Access.Administrator;
 
             if (editor)
             {
                 // Verifica se o jogador tem permissão para fazer entrar no modo edição
-                if (account.Access < Accesses.Editor)
+                if (account.Access < Access.Editor)
                 {
                     Send.Alert(account, "You're not allowed to do this.");
                     return;
@@ -214,16 +217,16 @@ namespace CryBits.Server.Network
             account.Character.TextureNum = account.Character.Genre ? @class.TexMale[data.ReadByte()] : @class.TexFemale[data.ReadByte()];
             account.Character.Attribute = @class.Attribute;
             account.Character.Map = TempMap.List.Get(@class.SpawnMap.ID);
-            account.Character.Direction = (Directions)@class.SpawnDirection;
+            account.Character.Direction = (Direction)@class.SpawnDirection;
             account.Character.X = @class.SpawnX;
             account.Character.Y = @class.SpawnY;
-            for (byte i = 0; i < (byte)Vitals.Count; i++) account.Character.Vital[i] = account.Character.MaxVital(i);
+            for (byte i = 0; i < (byte)Vital.Count; i++) account.Character.Vital[i] = account.Character.MaxVital(i);
             for (byte i = 0; i < (byte)@class.Item.Count; i++)
-                if (@class.Item[i].Item.Type == Items.Equipment && account.Character.Equipment[@class.Item[i].Item.EquipType] == null)
+                if (@class.Item[i].Item.Type == Enums.Item.Equipment && account.Character.Equipment[@class.Item[i].Item.EquipType] == null)
                     account.Character.Equipment[@class.Item[i].Item.EquipType] = @class.Item[i].Item;
                 else
                     account.Character.GiveItem(@class.Item[i].Item, @class.Item[i].Amount);
-            for (byte i = 0; i < MaxHotbar; i++) account.Character.Hotbar[i] = new Hotbar(Hotbars.None, 0);
+            for (byte i = 0; i < MaxHotbar; i++) account.Character.Hotbar[i] = new Entities.Hotbar(Hotbar.None, 0);
 
             // Salva a conta
             Write.CharacterName(name);
@@ -280,10 +283,10 @@ namespace CryBits.Server.Network
 
         private static void PlayerDirection(Player player, NetIncomingMessage data)
         {
-            Directions direction = (Directions)data.ReadByte();
+            Direction direction = (Direction)data.ReadByte();
 
             // Previne erros
-            if (direction < Directions.Up || direction > Directions.Right) return;
+            if (direction < Direction.Up || direction > Direction.Right) return;
             if (player.GettingMap) return;
 
             // Defini a direção do jogador
@@ -310,11 +313,11 @@ namespace CryBits.Server.Network
                     return;
 
             // Envia a mensagem para os outros jogadores
-            switch ((Messages)data.ReadByte())
+            switch ((Message)data.ReadByte())
             {
-                case Messages.Map: Send.MessageMap(player, message); break;
-                case Messages.Global: Send.MessageGlobal(player, message); break;
-                case Messages.Private: Send.MessagePrivate(player, data.ReadString(), message); break;
+                case Enums.Message.Map: Send.MessageMap(player, message); break;
+                case Enums.Message.Global: Send.MessageGlobal(player, message); break;
+                case Enums.Message.Private: Send.MessagePrivate(player, data.ReadString(), message); break;
             }
         }
 
@@ -373,7 +376,7 @@ namespace CryBits.Server.Network
             Send.PlayerInventory(player);
 
             // Altera na hotbar
-            Hotbar hotbarSlot = player.FindHotbar(Hotbars.Item, player.Inventory[slotOld]);
+            Entities.Hotbar hotbarSlot = player.FindHotbar(Hotbar.Item, player.Inventory[slotOld]);
             if (hotbarSlot != null)
             {
                 hotbarSlot.Slot = slotNew;
@@ -409,7 +412,7 @@ namespace CryBits.Server.Network
             }
 
             // Remove o equipamento
-            for (byte i = 0; i < (byte)Attributes.Count; i++) player.Attribute[i] -= player.Equipment[slot].EquipAttribute[i];
+            for (byte i = 0; i < (byte)Attribute.Count; i++) player.Attribute[i] -= player.Equipment[slot].EquipAttribute[i];
             player.Equipment[slot] = null;
 
             // Envia os dados
@@ -419,7 +422,7 @@ namespace CryBits.Server.Network
         private static void HotbarAdd(Player player, NetIncomingMessage data)
         {
             short hotbarSlot = data.ReadInt16();
-            Hotbars type = (Hotbars)data.ReadByte();
+            Hotbar type = (Hotbar)data.ReadByte();
             short slot = data.ReadInt16();
 
             // Somente se necessário
@@ -454,14 +457,14 @@ namespace CryBits.Server.Network
             // Usa o item
             switch (player.Hotbar[hotbarSlot].Type)
             {
-                case Hotbars.Item: player.UseItem(player.Hotbar[hotbarSlot].Slot); break;
+                case Hotbar.Item: player.UseItem(player.Hotbar[hotbarSlot].Slot); break;
             }
         }
 
         private static void WriteSettings(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Access < Accesses.Editor)
+            if (account.Access < Access.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;
@@ -488,7 +491,7 @@ namespace CryBits.Server.Network
         private static void WriteClasses(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Access < Accesses.Editor)
+            if (account.Access < Access.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;
@@ -507,7 +510,7 @@ namespace CryBits.Server.Network
         private static void WriteMaps(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Access < Accesses.Editor)
+            if (account.Access < Access.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;
@@ -534,7 +537,7 @@ namespace CryBits.Server.Network
         private static void WriteNpcs(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Access < Accesses.Editor)
+            if (account.Access < Access.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;
@@ -553,7 +556,7 @@ namespace CryBits.Server.Network
         private static void WriteItems(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Access < Accesses.Editor)
+            if (account.Access < Access.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;
@@ -572,7 +575,7 @@ namespace CryBits.Server.Network
         private static void WriteShops(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
-            if (account.Access < Accesses.Editor)
+            if (account.Access < Access.Editor)
             {
                 Send.Alert(account, "You aren't allowed to do this.");
                 return;

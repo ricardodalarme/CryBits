@@ -7,6 +7,8 @@ using CryBits.Enums;
 using static CryBits.Utils;
 using static CryBits.Defaults;
 using Graphics = CryBits.Client.Media.Graphics;
+using Item = CryBits.Entities.Item;
+using Sound = CryBits.Enums.Sound;
 
 namespace CryBits.Client.Entities
 {
@@ -65,7 +67,7 @@ namespace CryBits.Client.Entities
             return false;
         }
 
-        public bool TileBlocked(byte x, byte y, Directions direction)
+        public bool TileBlocked(byte x, byte y, Direction direction)
         {
             byte nextX = x, nextY = y;
 
@@ -76,7 +78,7 @@ namespace CryBits.Client.Entities
             if (Map.OutLimit(nextX, nextY)) return Data.Link[(byte)direction] == null;
 
             // Verifica se o azulejo está bloqueado
-            if (Data.Attribute[nextX, nextY].Type == (byte)LayerAttributes.Block) return true;
+            if (Data.Attribute[nextX, nextY].Type == (byte)TileAttribute.Block) return true;
             if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
             if (Data.Attribute[x, y].Block[(byte)direction]) return true;
             if (HasPlayer(nextX, nextY) || HasNpc(nextX, nextY)) return true;
@@ -163,8 +165,8 @@ namespace CryBits.Client.Entities
         private void UpdateWeather()
         {
             bool stop = false, move;
-            byte thunderFirst = (byte)Sounds.Thunder1;
-            byte thunderLast = (byte)Sounds.Thunder4;
+            byte thunderFirst = (byte)Sound.Thunder1;
+            byte thunderLast = (byte)Sound.Thunder4;
 
             // Somente se necessário
             if (Data.Weather.Type == 0) return;
@@ -200,11 +202,11 @@ namespace CryBits.Client.Entities
                             // Cria a partícula de acordo com o seu tipo
                             switch (Data.Weather.Type)
                             {
-                                case Weathers.Thundering:
-                                case Weathers.Raining:
+                                case Enums.Weather.Thundering:
+                                case Enums.Weather.Raining:
                                     Weather[i].SetRain();
                                     break;
-                                case Weathers.Snowing:
+                                case Enums.Weather.Snowing:
                                     Weather[i].SetSnow();
                                     break;
                             }
@@ -218,11 +220,11 @@ namespace CryBits.Client.Entities
                     // Movimenta a partícula de acordo com o seu tipo
                     switch (Data.Weather.Type)
                     {
-                        case Weathers.Thundering:
-                        case Weathers.Raining:
+                        case Enums.Weather.Thundering:
+                        case Enums.Weather.Raining:
                             Weather[i].MoveRain();
                             break;
-                        case Weathers.Snowing:
+                        case Enums.Weather.Snowing:
                             Weather[i].MoveSnow(move);
                             break;
                     }
@@ -232,12 +234,12 @@ namespace CryBits.Client.Entities
                 }
 
             // Trovoadas
-            if (Data.Weather.Type == Weathers.Thundering)
+            if (Data.Weather.Type == Enums.Weather.Thundering)
                 if (MyRandom.Next(0, MaxWeatherIntensity * 10 - Data.Weather.Intensity * 2) == 0)
                 {
                     // Som do trovão
                     int thunder = MyRandom.Next(thunderFirst, thunderLast);
-                    Sound.Play((Sounds)thunder);
+                    Media.Audio.Sound.Play((Sound)thunder);
 
                     // Relâmpago
                     if (thunder < 6) Lightning = 190;
@@ -247,20 +249,20 @@ namespace CryBits.Client.Entities
         public void UpdateWeatherType()
         {
             // Para todos os sons
-            Sound.StopAll();
+            Media.Audio.Sound.StopAll();
 
             // Redimensiona a lista
             switch (Data.Weather.Type)
             {
-                case Weathers.Thundering:
-                case Weathers.Raining:
+                case Enums.Weather.Thundering:
+                case Enums.Weather.Raining:
                     // Reproduz o som chuva
-                    Sound.Play(Sounds.Rain, true);
+                    Media.Audio.Sound.Play(Sound.Rain, true);
 
                     // Redimensiona a estrutura
                     Weather = new MapWeatherParticle[MaxRainParticles + 1];
                     break;
-                case Weathers.Snowing:
+                case Enums.Weather.Snowing:
                     Weather = new MapWeatherParticle[MaxSnowParticles + 1];
                     break;
             }

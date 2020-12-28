@@ -51,7 +51,7 @@ namespace CryBits.Client.Library
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
-                Window = (WindowsTypes)data.ReadByte(),
+                Window = (Window)data.ReadByte(),
                 TextureNum = data.ReadByte()
             };
         }
@@ -64,7 +64,7 @@ namespace CryBits.Client.Library
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
-                Window = (WindowsTypes)data.ReadByte(),
+                Window = (Window)data.ReadByte(),
                 Length = data.ReadInt16(),
                 Width = data.ReadInt16(),
                 Password = data.ReadBoolean()
@@ -79,7 +79,7 @@ namespace CryBits.Client.Library
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
-                Window = (WindowsTypes)data.ReadByte(),
+                Window = (Window)data.ReadByte(),
                 TextureNum = data.ReadByte()
             };
         }
@@ -92,7 +92,7 @@ namespace CryBits.Client.Library
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
-                Window = (WindowsTypes)data.ReadByte(),
+                Window = (Window)data.ReadByte(),
                 Text = data.ReadString(),
                 Checked = data.ReadBoolean()
             };
@@ -101,7 +101,7 @@ namespace CryBits.Client.Library
         private static void Tools()
         {
             FileInfo file = new FileInfo(Directories.ToolsData.FullName);
-            for (byte i = 0; i < (byte)WindowsTypes.Count; i++) UI.Tools.AllOrder[i] = new List<Tools.OrderStructure>();
+            for (byte i = 0; i < (byte)Window.Count; i++) UI.Tools.AllOrder[i] = new List<Tools.OrderStructure>();
 
             // Lê todas as ferramentas
             using (var data = new BinaryReader(file.OpenRead()))

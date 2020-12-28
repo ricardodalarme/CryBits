@@ -18,6 +18,7 @@ using Color = SFML.Graphics.Color;
 using Font = SFML.Graphics.Font;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
 using TextBox = CryBits.Editors.Entities.Tools.TextBox;
+using Tool = CryBits.Editors.Entities.Tools.Tool;
 
 namespace CryBits.Editors.Media
 {
@@ -383,11 +384,11 @@ namespace CryBits.Editors.Media
         private static void EditorMapsMapWeather(Map map)
         {
             // Somente se necessário
-            if (!EditorMaps.Form.butVisualization.Checked || map.Weather.Type == Weathers.Normal) return;
+            if (!EditorMaps.Form.butVisualization.Checked || map.Weather.Type == Weather.Normal) return;
 
             // Dados
             byte x = 0;
-            if (map.Weather.Type == Weathers.Snowing) x = 32;
+            if (map.Weather.Type == Weather.Snowing) x = 32;
 
             // Desenha as partículas
             for (int i = 0; i < TempMap.Weather.Length; i++)
@@ -500,21 +501,21 @@ namespace CryBits.Editors.Media
         {
             EditorMaps form = EditorMaps.Form;
             Point position = new Point((x - form.scrlMapX.Value) * form.GridZoom, (y - EditorMaps.Form.scrlMapY.Value) * form.GridZoom);
-            TileAttributes attribute = (TileAttributes)map.Attribute[x, y].Type;
+            TileAttribute attribute = (TileAttribute)map.Attribute[x, y].Type;
             Color color;
             string letter;
 
             // Apenas se necessário
             if (!EditorMaps.Form.butMAttributes.Checked) return;
             if (EditorMaps.Form.optA_DirBlock.Checked) return;
-            if (attribute == TileAttributes.None) return;
+            if (attribute == TileAttribute.None) return;
 
             // Define a cor e a letra
             switch (attribute)
             {
-                case TileAttributes.Block: letter = "B"; color = Color.Red; break;
-                case TileAttributes.Warp: letter = "T"; color = Color.Blue; break;
-                case TileAttributes.Item: letter = "I"; color = Color.Green; break;
+                case TileAttribute.Block: letter = "B"; color = Color.Red; break;
+                case TileAttribute.Warp: letter = "T"; color = Color.Blue; break;
+                case TileAttribute.Item: letter = "I"; color = Color.Green; break;
                 default: return;
             }
             color = new Color(color.R, color.G, color.B, 100);
@@ -537,7 +538,7 @@ namespace CryBits.Editors.Media
             if (tile.X > map.Attribute.GetUpperBound(0)) return;
             if (tile.Y > map.Attribute.GetUpperBound(1)) return;
 
-            for (byte i = 0; i < (byte)Directions.Count; i++)
+            for (byte i = 0; i < (byte)Direction.Count; i++)
             {
                 // Estado do bloqueio
                 sourceY = map.Attribute[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
@@ -610,9 +611,9 @@ namespace CryBits.Editors.Media
             if (tile.Y > Tile.List[form.scrlTile.Value].Data.GetUpperBound(1)) return;
 
             // Desenha uma letra e colore o azulejo referente ao atributo
-            switch ((TileAttributes)Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Attribute)
+            switch ((TileAttribute)Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Attribute)
             {
-                case TileAttributes.Block:
+                case TileAttribute.Block:
                     Render(WinTile, TexBlank, x * Grid, y * Grid, 0, 0, Grid, Grid, CColor(225, 0, 0, 75));
                     DrawText(WinTile, "B", point.X, point.Y, Color.Red);
                     break;
@@ -630,13 +631,13 @@ namespace CryBits.Editors.Media
             if (tile.Y > Tile.List[form.scrlTile.Value].Data.GetUpperBound(1)) return;
 
             // Bloqueio total
-            if (Tile.List[form.scrlTile.Value].Data[x, y].Attribute == (byte)TileAttributes.Block)
+            if (Tile.List[form.scrlTile.Value].Data[x, y].Attribute == (byte)TileAttribute.Block)
             {
                 EditorTileAttributes(x, y);
                 return;
             }
 
-            for (byte i = 0; i < (byte)Directions.Count; i++)
+            for (byte i = 0; i < (byte)Direction.Count; i++)
             {
                 // Estado do bloqueio
                 sourceY = Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;

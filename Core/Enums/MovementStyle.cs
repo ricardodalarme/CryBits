@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum NpcMovements
+    public enum MovementStyle
     {
         MoveRandomly,
         TurnRandomly,

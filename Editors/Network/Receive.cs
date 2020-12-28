@@ -7,6 +7,7 @@ using CryBits.Enums;
 using Lidgren.Network;
 using static CryBits.Defaults;
 using static CryBits.Utils;
+using Item = CryBits.Entities.Item;
 
 namespace CryBits.Editors.Network
 {
@@ -15,16 +16,16 @@ namespace CryBits.Editors.Network
         public static void Handle(NetIncomingMessage data)
         {
             // Manuseia os dados recebidos
-            switch ((ServerPackets)data.ReadByte())
+            switch ((ServerPacket)data.ReadByte())
             {
-                case ServerPackets.Alert: Alert(data); break;
-                case ServerPackets.Connect: Connect(); break;
-                case ServerPackets.ServerData: ServerData(data); break;
-                case ServerPackets.Classes: Classes(data); break;
-                case ServerPackets.Map: Map(data); break;
-                case ServerPackets.Npcs: Npcs(data); break;
-                case ServerPackets.Items: Items(data); break;
-                case ServerPackets.Shops: Shops(data); break;
+                case ServerPacket.Alert: Alert(data); break;
+                case ServerPacket.Connect: Connect(); break;
+                case ServerPacket.ServerData: ServerData(data); break;
+                case ServerPacket.Classes: Classes(data); break;
+                case ServerPacket.Map: Map(data); break;
+                case ServerPacket.Npcs: Npcs(data); break;
+                case ServerPacket.Items: Items(data); break;
+                case ServerPacket.Shops: Shops(data); break;
             }
         }
 

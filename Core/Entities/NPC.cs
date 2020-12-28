@@ -8,21 +8,21 @@ namespace CryBits.Entities
     public class Npc : Entity
     {
         // Lista de dados
-        public static readonly Dictionary<Guid, Npc> List = new Dictionary<Guid, Npc>();
+        public static Dictionary<Guid, Npc> List = new Dictionary<Guid, Npc>();
 
         // Dados
         public string SayMsg { get; set; }
         public short Texture { get; set; }
-        public Npcs Behaviour { get; set; }
+        public Behaviour Behaviour { get; set; }
         public byte SpawnTime { get; set; }
         public byte Sight { get; set; }
         public int Experience { get; set; }
-        public short[] Vital { get; set; } = new short[(byte)Vitals.Count];
-        public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
+        public short[] Vital { get; set; } = new short[(byte)Enums.Vital.Count];
+        public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
         public IList<NpcDrop> Drop { get; set; } = new List<NpcDrop>();
         public bool AttackNpc { get; set; }
         public IList<Npc> Allie { get; set; } = new List<Npc>();
-        public NpcMovements Movement { get; set; }
+        public MovementStyle Movement { get; set; }
         public byte FleeHealth { get; set; }
         private Guid _shop;
 

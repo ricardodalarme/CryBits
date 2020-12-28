@@ -7,6 +7,8 @@ using CryBits.Entities;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
+using Attribute = CryBits.Enums.Attribute;
+using Item = CryBits.Entities.Item;
 
 namespace CryBits.Editors.Forms
 {
@@ -84,13 +86,13 @@ namespace CryBits.Editors.Forms
             numSpawn.Value = Selected.SpawnTime;
             numRange.Value = Selected.Sight;
             numExperience.Value = Selected.Experience;
-            numHP.Value = Selected.Vital[(byte)Vitals.HP];
-            numMP.Value = Selected.Vital[(byte)Vitals.MP];
-            numStrength.Value = Selected.Attribute[(byte)Attributes.Strength];
-            numResistance.Value = Selected.Attribute[(byte)Attributes.Resistance];
-            numIntelligence.Value = Selected.Attribute[(byte)Attributes.Intelligence];
-            numAgility.Value = Selected.Attribute[(byte)Attributes.Agility];
-            numVitality.Value = Selected.Attribute[(byte)Attributes.Vitality];
+            numHP.Value = Selected.Vital[(byte)Vital.HP];
+            numMP.Value = Selected.Vital[(byte)Vital.MP];
+            numStrength.Value = Selected.Attribute[(byte)Attribute.Strength];
+            numResistance.Value = Selected.Attribute[(byte)Attribute.Resistance];
+            numIntelligence.Value = Selected.Attribute[(byte)Attribute.Intelligence];
+            numAgility.Value = Selected.Attribute[(byte)Attribute.Agility];
+            numVitality.Value = Selected.Attribute[(byte)Attribute.Vitality];
             cmbMovement.SelectedIndex = (byte)Selected.Movement;
             numFlee_Health.Value = Selected.FleeHealth;
             chkAttackNpc.Checked = Selected.AttackNpc;
@@ -180,7 +182,7 @@ namespace CryBits.Editors.Forms
             // Evita erros
             cmbShop.Enabled = false;
             cmbShop.SelectedIndex = -1;
-            if (cmbBehavior.SelectedIndex == (byte)Npcs.ShopKeeper)
+            if (cmbBehavior.SelectedIndex == (byte)Behaviour.ShopKeeper)
                 if (Shop.List.Count == 0)
                 {
                     cmbBehavior.SelectedIndex = (byte)Selected.Behaviour;
@@ -192,42 +194,42 @@ namespace CryBits.Editors.Forms
                     if (Selected.Shop == null) cmbShop.SelectedIndex = 0;
                 }
 
-            Selected.Behaviour = (Npcs)cmbBehavior.SelectedIndex;
+            Selected.Behaviour = (Behaviour)cmbBehavior.SelectedIndex;
         }
 
         private void numHP_ValueChanged(object sender, EventArgs e)
         {
-            Selected.Vital[(byte)Vitals.HP] = (short)numHP.Value;
+            Selected.Vital[(byte)Vital.HP] = (short)numHP.Value;
         }
 
         private void numMP_ValueChanged(object sender, EventArgs e)
         {
-            Selected.Vital[(byte)Vitals.MP] = (short)numMP.Value;
+            Selected.Vital[(byte)Vital.MP] = (short)numMP.Value;
         }
 
         private void numStrength_ValueChanged(object sender, EventArgs e)
         {
-            Selected.Attribute[(byte)Attributes.Strength] = (short)numStrength.Value;
+            Selected.Attribute[(byte)Attribute.Strength] = (short)numStrength.Value;
         }
 
         private void numResistance_ValueChanged(object sender, EventArgs e)
         {
-            Selected.Attribute[(byte)Attributes.Resistance] = (short)numResistance.Value;
+            Selected.Attribute[(byte)Attribute.Resistance] = (short)numResistance.Value;
         }
 
         private void numIntelligence_ValueChanged(object sender, EventArgs e)
         {
-            Selected.Attribute[(byte)Attributes.Intelligence] = (short)numIntelligence.Value;
+            Selected.Attribute[(byte)Attribute.Intelligence] = (short)numIntelligence.Value;
         }
 
         private void numAgility_ValueChanged(object sender, EventArgs e)
         {
-            Selected.Attribute[(byte)Attributes.Agility] = (short)numAgility.Value;
+            Selected.Attribute[(byte)Attribute.Agility] = (short)numAgility.Value;
         }
 
         private void numVitality_ValueChanged(object sender, EventArgs e)
         {
-            Selected.Attribute[(byte)Attributes.Vitality] = (short)numVitality.Value;
+            Selected.Attribute[(byte)Attribute.Vitality] = (short)numVitality.Value;
         }
 
         private void numSpawn_ValueChanged(object sender, EventArgs e)
@@ -316,7 +318,7 @@ namespace CryBits.Editors.Forms
 
         private void cmbMovement_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Selected.Movement = (NpcMovements)cmbMovement.SelectedIndex;
+            Selected.Movement = (MovementStyle)cmbMovement.SelectedIndex;
         }
 
         private void numFlee_Health_ValueChanged(object sender, EventArgs e)

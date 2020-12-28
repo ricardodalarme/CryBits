@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Weathers
+    public enum Weather
     {
         Normal,
         Raining,

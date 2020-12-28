@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Layers
+    public enum Layer
     {
         Ground,
         Fringe,

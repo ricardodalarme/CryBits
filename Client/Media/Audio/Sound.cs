@@ -17,13 +17,13 @@ namespace CryBits.Client.Media.Audio
         public static void Load()
         {
             // Redimensiona a lista
-            Array.Resize(ref _list, (byte)Sounds.Count);
+            Array.Resize(ref _list, (byte)Enums.Sound.Count);
 
             // Carrega todos os arquivos e os adiciona a lista
             for (int i = 1; i < _list.Length; i++) _list[i] = new SFML.Audio.Sound(new SoundBuffer(Directories.Sounds.FullName + i + Format));
         }
 
-        public static void Play(Sounds index, bool loop = false)
+        public static void Play(Enums.Sound index, bool loop = false)
         {
             // Apenas se necessário
             if (!Options.Sounds) return;
@@ -40,7 +40,7 @@ namespace CryBits.Client.Media.Audio
             if (_list == null) return;
 
             // Para todos os sons
-            for (byte i = 1; i < (byte)Sounds.Count; i++) _list[i].Stop();
+            for (byte i = 1; i < (byte)Enums.Sound.Count; i++) _list[i].Stop();
         }
     }
 }

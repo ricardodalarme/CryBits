@@ -4,6 +4,7 @@ using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Server.Entities;
 using static CryBits.Defaults;
+using Item = CryBits.Entities.Item;
 
 namespace CryBits.Server.Library
 {
@@ -66,14 +67,14 @@ namespace CryBits.Server.Library
                 data.Write(account.Character.X);
                 data.Write(account.Character.Y);
                 data.Write((byte)account.Character.Direction);
-                for (byte n = 0; n < (byte)Vitals.Count; n++) data.Write(account.Character.Vital[n]);
-                for (byte n = 0; n < (byte)Attributes.Count; n++) data.Write(account.Character.Attribute[n]);
+                for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(account.Character.Vital[n]);
+                for (byte n = 0; n < (byte)Attribute.Count; n++) data.Write(account.Character.Attribute[n]);
                 for (byte n = 0; n < MaxInventory; n++)
                 {
                     data.Write(account.Character.Inventory[n].Item.GetID());
                     data.Write(account.Character.Inventory[n].Amount);
                 }
-                for (byte n = 0; n < (byte)Equipments.Count; n++) data.Write(account.Character.Equipment[n].GetID());
+                for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(account.Character.Equipment[n].GetID());
                 for (byte n = 0; n < MaxHotbar; n++)
                 {
                     data.Write((byte)account.Character.Hotbar[n].Type);

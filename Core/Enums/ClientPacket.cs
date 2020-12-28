@@ -1,7 +1,7 @@
 ﻿namespace CryBits.Enums
 {
     // Pacotes do cliente para o servidor
-    public enum ClientPackets
+    public enum ClientPacket
     {
         Connect,
         WriteSettings,

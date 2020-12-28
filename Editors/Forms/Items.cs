@@ -6,6 +6,8 @@ using CryBits.Entities;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
+using Attribute = CryBits.Enums.Attribute;
+using Item = CryBits.Entities.Item;
 
 namespace CryBits.Editors.Forms
 {
@@ -84,14 +86,14 @@ namespace CryBits.Editors.Forms
             numReq_Level.Value = Selected.ReqLevel;
             cmbReq_Class.SelectedIndex = Selected.ReqClass != null ? cmbReq_Class.Items.IndexOf(Selected.ReqClass) : 0;
             numPotion_Experience.Value = Selected.PotionExperience;
-            numPotion_HP.Value = Selected.PotionVital[(byte)Vitals.HP];
-            numPotion_MP.Value = Selected.PotionVital[(byte)Vitals.MP];
+            numPotion_HP.Value = Selected.PotionVital[(byte)Vital.HP];
+            numPotion_MP.Value = Selected.PotionVital[(byte)Vital.MP];
             cmbEquipment_Type.SelectedIndex = Selected.EquipType;
-            numEquip_Strength.Value = Selected.EquipAttribute[(byte)Attributes.Strength];
-            numEquip_Resistance.Value = Selected.EquipAttribute[(byte)Attributes.Resistance];
-            numEquip_Intelligence.Value = Selected.EquipAttribute[(byte)Attributes.Intelligence];
-            numEquip_Agility.Value = Selected.EquipAttribute[(byte)Attributes.Agility];
-            numEquip_Vitality.Value = Selected.EquipAttribute[(byte)Attributes.Vitality];
+            numEquip_Strength.Value = Selected.EquipAttribute[(byte)Attribute.Strength];
+            numEquip_Resistance.Value = Selected.EquipAttribute[(byte)Attribute.Resistance];
+            numEquip_Intelligence.Value = Selected.EquipAttribute[(byte)Attribute.Intelligence];
+            numEquip_Agility.Value = Selected.EquipAttribute[(byte)Attribute.Agility];
+            numEquip_Vitality.Value = Selected.EquipAttribute[(byte)Attribute.Vitality];
             numWeapon_Damage.Value = Selected.WeaponDamage;
         }
 
@@ -156,11 +158,11 @@ namespace CryBits.Editors.Forms
 
         private void cmbType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Selected.Type = (Items)cmbType.SelectedIndex;
+            Selected.Type = (ItemType)cmbType.SelectedIndex;
 
             // Visibilidade dos paineis
-            grpEquipment.Visible = cmbType.SelectedIndex == (byte)Items.Equipment;
-            grpPotion.Visible = cmbType.SelectedIndex == (byte)Items.Potion;
+            grpEquipment.Visible = cmbType.SelectedIndex == (byte)ItemType.Equipment;
+            grpPotion.Visible = cmbType.SelectedIndex == (byte)ItemType.Potion;
         }
 
         private void numReq_Level_ValueChanged(object sender, EventArgs e)
@@ -178,12 +180,12 @@ namespace CryBits.Editors.Forms
 
         private void numEquip_HP_ValueChanged(object sender, EventArgs e)
         {
-            Selected.PotionVital[(byte)Vitals.HP] = (short)numPotion_HP.Value;
+            Selected.PotionVital[(byte)Vital.HP] = (short)numPotion_HP.Value;
         }
 
         private void numEquip_MP_ValueChanged(object sender, EventArgs e)
         {
-            Selected.PotionVital[(byte)Vitals.MP] = (short)numPotion_MP.Value;
+            Selected.PotionVital[(byte)Vital.MP] = (short)numPotion_MP.Value;
         }
 
         private void numEquip_Experience_ValueChanged(object sender, EventArgs e)
@@ -193,27 +195,27 @@ namespace CryBits.Editors.Forms
 
         private void numEquip_Strength_ValueChanged(object sender, EventArgs e)
         {
-            Selected.EquipAttribute[(byte)Attributes.Strength] = (short)numEquip_Strength.Value;
+            Selected.EquipAttribute[(byte)Attribute.Strength] = (short)numEquip_Strength.Value;
         }
 
         private void numEquip_Resistance_ValueChanged(object sender, EventArgs e)
         {
-            Selected.EquipAttribute[(byte)Attributes.Resistance] = (short)numEquip_Resistance.Value;
+            Selected.EquipAttribute[(byte)Attribute.Resistance] = (short)numEquip_Resistance.Value;
         }
 
         private void numEquip_Intelligence_ValueChanged(object sender, EventArgs e)
         {
-            Selected.EquipAttribute[(byte)Attributes.Intelligence] = (short)numEquip_Intelligence.Value;
+            Selected.EquipAttribute[(byte)Attribute.Intelligence] = (short)numEquip_Intelligence.Value;
         }
 
         private void numEquip_Agility_ValueChanged(object sender, EventArgs e)
         {
-            Selected.EquipAttribute[(byte)Attributes.Agility] = (short)numEquip_Agility.Value;
+            Selected.EquipAttribute[(byte)Attribute.Agility] = (short)numEquip_Agility.Value;
         }
 
         private void numEquip_Vitality_ValueChanged(object sender, EventArgs e)
         {
-            Selected.EquipAttribute[(byte)Attributes.Vitality] = (short)numEquip_Vitality.Value;
+            Selected.EquipAttribute[(byte)Attribute.Vitality] = (short)numEquip_Vitality.Value;
         }
 
         private void chkStackable_CheckedChanged(object sender, EventArgs e)
@@ -229,7 +231,7 @@ namespace CryBits.Editors.Forms
         private void cmbEquipment_Type_SelectedIndexChanged(object sender, EventArgs e)
         {
             Selected.EquipType = (byte)cmbEquipment_Type.SelectedIndex;
-            numWeapon_Damage.Visible = lblWeapon_Damage.Visible = cmbEquipment_Type.SelectedIndex == (byte)Equipments.Weapon;
+            numWeapon_Damage.Visible = lblWeapon_Damage.Visible = cmbEquipment_Type.SelectedIndex == (byte)Equipment.Weapon;
         }
 
         private void txtDescription_TextChanged(object sender, EventArgs e)
