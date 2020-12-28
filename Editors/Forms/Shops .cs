@@ -1,10 +1,10 @@
-﻿using CryBits.Editors.Logic;
+﻿using System;
+using System.Linq;
+using System.Windows.Forms;
+using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using DarkUI.Forms;
-using System;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace CryBits.Editors.Forms
 {

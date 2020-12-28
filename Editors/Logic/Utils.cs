@@ -1,8 +1,8 @@
-﻿using CryBits.Enums;
-using System;
+﻿using System;
 using System.Collections;
 using System.Drawing;
 using System.Windows.Forms;
+using CryBits.Enums;
 using static CryBits.Defaults;
 
 namespace CryBits.Editors.Logic
@@ -42,7 +42,7 @@ namespace CryBits.Editors.Logic
                 if (lastSelected != null)
                     if (list.Items.Contains(lastSelected))
                         list.SelectedItem = lastSelected;
-                    else if (lastSelectedIndex <= list.Items.Count)
+                    else if (lastSelectedIndex <= list.Items.Count) 
                         list.SelectedIndex = Math.Max(0, lastSelectedIndex - 1);
             }
         }

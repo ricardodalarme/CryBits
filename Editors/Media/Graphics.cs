@@ -1,14 +1,15 @@
-﻿using CryBits.Editors.Entities;
+﻿using System;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Entities.Tools;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
 using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
 using static CryBits.Defaults;
 using static CryBits.Editors.Logic.Utils;
 using Button = CryBits.Editors.Entities.Tools.Button;
@@ -17,7 +18,6 @@ using Color = SFML.Graphics.Color;
 using Font = SFML.Graphics.Font;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
 using TextBox = CryBits.Editors.Entities.Tools.TextBox;
-using Tool = CryBits.Editors.Entities.Tools.Tool;
 
 namespace CryBits.Editors.Media
 {
@@ -37,14 +37,14 @@ namespace CryBits.Editors.Media
         public static Font FontDefault;
 
         // Texturas
-        public static List<Texture> TexCharacter;
-        public static List<Texture> TexTile;
-        public static List<Texture> TexFace;
-        public static List<Texture> TexPanel;
-        public static List<Texture> TexButton;
-        public static List<Texture> TexPanorama;
-        public static List<Texture> TexFog;
-        public static List<Texture> TexItem;
+        public static Texture[] TexCharacter;
+        public static Texture[] TexTile;
+        public static Texture[] TexFace;
+        public static Texture[] TexPanel;
+        public static Texture[] TexButton;
+        public static Texture[] TexPanorama;
+        public static Texture[] TexFog;
+        public static Texture[] TexItem;
         public static Texture TexCheckBox;
         public static Texture TexTextBox;
         public static Texture TexGrid;
@@ -58,15 +58,18 @@ namespace CryBits.Editors.Media
         private const string Format = ".png";
 
         #region Engine
-        private static List<Texture> LoadTextures(string directory)
+        private static Texture[] AddTextures(string directory)
         {
             short i = 1;
-            List<Texture> tempTex = new List<Texture>();
-            tempTex.Add(null);
+            Texture[] tempTex = Array.Empty<Texture>();
 
-            // Carrega todas do diretório e as adiciona a lista
             while (File.Exists(directory + i + Format))
-                tempTex.Add(new Texture(directory + i++ + Format));
+            {
+                // Carrega todas do diretório e as adiciona a lista
+                Array.Resize(ref tempTex, i + 1);
+                tempTex[i] = new Texture(directory + i + Format);
+                i += 1;
+            }
 
             // Retorna o cache da textura
             return tempTex;
@@ -190,14 +193,14 @@ namespace CryBits.Editors.Media
         public static void Init()
         {
             // Conjuntos
-            TexCharacter = LoadTextures(Directories.TexCharacters.FullName);
-            TexTile = LoadTextures(Directories.TexTiles.FullName);
-            TexFace = LoadTextures(Directories.TexFaces.FullName);
-            TexPanel = LoadTextures(Directories.TexPanels.FullName);
-            TexButton = LoadTextures(Directories.TexButtons.FullName);
-            TexPanorama = LoadTextures(Directories.TexPanoramas.FullName);
-            TexFog = LoadTextures(Directories.TexFogs.FullName);
-            TexItem = LoadTextures(Directories.TexItems.FullName);
+            TexCharacter = AddTextures(Directories.TexCharacters.FullName);
+            TexTile = AddTextures(Directories.TexTiles.FullName);
+            TexFace = AddTextures(Directories.TexFaces.FullName);
+            TexPanel = AddTextures(Directories.TexPanels.FullName);
+            TexButton = AddTextures(Directories.TexButtons.FullName);
+            TexPanorama = AddTextures(Directories.TexPanoramas.FullName);
+            TexFog = AddTextures(Directories.TexFogs.FullName);
+            TexItem = AddTextures(Directories.TexItems.FullName);
 
             // Únicas
             TexWeather = new Texture(Directories.TexWeather.FullName + Format);
@@ -221,7 +224,7 @@ namespace CryBits.Editors.Media
             EditorTile();
             EditorClass();
             EditorItem();
-            EditorNpc();
+            EditorNPC();
             Interface();
         }
 
@@ -551,13 +554,13 @@ namespace CryBits.Editors.Media
         {
             EditorMaps form = EditorMaps.Form;
 
-            if (EditorMaps.Form.butMNpcs.Checked)
+            if (EditorMaps.Form.butMNPCs.Checked)
                 for (byte i = 0; i < map.Npc.Count; i++)
                     if (map.Npc[i].Spawn)
                     {
                         Point position = new Point((map.Npc[i].X - form.scrlMapX.Value) * form.GridZoom, (map.Npc[i].Y - form.scrlMapY.Value) * form.GridZoom);
 
-                        // Desenha uma sinalização de onde os Npcs estão
+                        // Desenha uma sinalização de onde os NPCs estão
                         Render(WinMap, TexBlank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), CColor(0, 220, 0, 150));
                         DrawText(WinMap, (i + 1).ToString(), position.X + 10, position.Y + 10, Color.White);
                     }
@@ -657,18 +660,18 @@ namespace CryBits.Editors.Media
             short textureNum = (short)EditorItems.Form.numTexture.Value;
             WinItem.Clear();
             Transparent(WinItem);
-            if (textureNum > 0 && textureNum < TexItem.Count) Render(WinItem, TexItem[textureNum], new Point(0));
+            if (textureNum > 0 && textureNum < TexItem.Length) Render(WinItem, TexItem[textureNum], new Point(0));
             WinItem.Display();
         }
         #endregion
 
-        #region Npc Editor
-        private static void EditorNpc()
+        #region NPC Editor
+        private static void EditorNPC()
         {
             // Somente se necessário
             if (WinNpc == null) return;
 
-            // Desenha o Npc
+            // Desenha o NPC
             Character(WinNpc, (short)EditorNpcs.Form.numTexture.Value);
         }
         #endregion
@@ -679,7 +682,7 @@ namespace CryBits.Editors.Media
             // Somente se necessário
             if (WinClass == null) return;
 
-            // Desenha o Npc
+            // Desenha o NPC
             Character(WinClass, (short)EditorClasses.Form.numTexture.Value);
         }
         #endregion
@@ -693,7 +696,7 @@ namespace CryBits.Editors.Media
             // Desenha o item
             window.Clear();
             Transparent(window);
-            if (textureNum > 0 && textureNum < TexCharacter.Count) Render(window, texture, (int)(window.Size.X - size.Width) / 2, (int)(window.Size.Y - size.Height) / 2, 0, 0, size.Width, size.Height);
+            if (textureNum > 0 && textureNum < TexCharacter.Length) Render(window, texture, (int)(window.Size.X - size.Width) / 2, (int)(window.Size.Y - size.Height) / 2, 0, 0, size.Width, size.Height);
             window.Display();
         }
         #endregion
@@ -732,14 +735,14 @@ namespace CryBits.Editors.Media
         private static void Button(Button tool)
         {
             // Desenha o botão
-            if (tool.TextureNum < TexButton.Count)
+            if (tool.TextureNum < TexButton.Length)
                 Render(WinInterface, TexButton[tool.TextureNum], tool.Position, new Color(255, 255, 225, 225));
         }
 
         private static void Panel(Panel tool)
         {
             // Desenha o painel
-            if (tool.TextureNum < TexPanel.Count)
+            if (tool.TextureNum < TexPanel.Length)
                 Render(WinInterface, TexPanel[tool.TextureNum], tool.Position);
         }
 

@@ -1,10 +1,10 @@
-﻿using CryBits.Editors.Entities;
-using CryBits.Editors.Entities.Tools;
-using CryBits.Enums;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using CryBits.Editors.Entities;
+using CryBits.Editors.Entities.Tools;
+using CryBits.Enums;
 using static CryBits.Editors.Logic.Options;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
@@ -139,7 +139,7 @@ namespace CryBits.Editors.Library
         public static void Tiles()
         {
             // Lê os dados
-            Entities.Tile.List = new Tile[Graphics.TexTile.Count];
+            Entities.Tile.List = new Tile[Graphics.TexTile.Length];
             for (byte i = 1; i < Entities.Tile.List.Length; i++) Tile(i);
         }
 

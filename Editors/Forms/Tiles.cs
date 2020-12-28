@@ -1,11 +1,11 @@
-﻿using CryBits.Editors.Entities;
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 using static CryBits.Defaults;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
@@ -18,7 +18,7 @@ namespace CryBits.Editors.Forms
         public static EditorTiles Form;
 
         // Atributo selecionado
-        private TileAttribute _attribute;
+        private TileAttribute _attributes;
 
         public EditorTiles()
         {
@@ -32,7 +32,7 @@ namespace CryBits.Editors.Forms
             Graphics.WinTile = new RenderWindow(picTile.Handle);
 
             // Define os limites
-            scrlTile.Maximum = Graphics.TexTile.Count - 1;
+            scrlTile.Maximum = Graphics.TexTile.GetUpperBound(0);
             Update_Bounds();
         }
 
@@ -98,7 +98,7 @@ namespace CryBits.Editors.Forms
             {
                 // Define
                 if (e.Button == MouseButtons.Left)
-                    Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute = (byte)_attribute;
+                    Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute = (byte)_attributes;
                 // Remove
                 else if (e.Button == MouseButtons.Right)
                     Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute = 0;
@@ -116,7 +116,7 @@ namespace CryBits.Editors.Forms
         private void optBlock_CheckedChanged(object sender, EventArgs e)
         {
             // Define o atributo
-            _attribute = TileAttribute.Block;
+            _attributes = TileAttribute.Block;
         }
 
         private void optAttributes_CheckedChanged(object sender, EventArgs e)

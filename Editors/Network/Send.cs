@@ -4,7 +4,6 @@ using CryBits.Enums;
 using Lidgren.Network;
 using static CryBits.Defaults;
 using static CryBits.Utils;
-using Item = CryBits.Entities.Item;
 
 namespace CryBits.Editors.Network
 {
@@ -53,6 +52,15 @@ namespace CryBits.Editors.Network
             // Envia os dados
             data.Write((byte)ClientPacket.RequestMap);
             data.Write(map.ID.ToString());
+            Packet(data);
+        }
+
+        public static void RequestMaps()
+        {
+            NetOutgoingMessage data = Socket.Device.CreateMessage();
+
+            // Envia os dados
+            data.Write((byte)ClientPacket.RequestMaps);
             Packet(data);
         }
 

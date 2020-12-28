@@ -1,16 +1,15 @@
-﻿using CryBits.Editors.Entities.Tools;
+﻿using System;
+using System.Windows.Forms;
+using CryBits.Editors.Entities.Tools;
 using CryBits.Editors.Library;
 using CryBits.Editors.Media;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
-using System;
-using System.Windows.Forms;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
 using TextBox = CryBits.Editors.Entities.Tools.TextBox;
-using ToolType = CryBits.Enums.ToolType;
 
 namespace CryBits.Editors.Forms
 {

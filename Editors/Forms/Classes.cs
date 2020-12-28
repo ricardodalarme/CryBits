@@ -1,15 +1,14 @@
-﻿using CryBits.Editors.Logic;
+﻿using System;
+using System.Linq;
+using System.Windows.Forms;
+using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
-using System;
-using System.Linq;
-using System.Windows.Forms;
 using Attribute = CryBits.Enums.Attribute;
-using Item = CryBits.Entities.Item;
 
 namespace CryBits.Editors.Forms
 {
@@ -35,7 +34,7 @@ namespace CryBits.Editors.Forms
             // Define os limites
             numSpawn_X.Maximum = Map.Width - 1;
             numSpawn_Y.Maximum = Map.Height - 1;
-            numTexture.Maximum = Graphics.TexCharacter.Count - 1;
+            numTexture.Maximum = Graphics.TexCharacter.Length - 1;
 
             // Lista os dados
             foreach (var item in Item.List.Values) cmbItems.Items.Add(item);

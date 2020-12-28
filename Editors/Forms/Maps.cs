@@ -1,4 +1,8 @@
-﻿using CryBits.Editors.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
@@ -6,16 +10,11 @@ using CryBits.Entities;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 using static CryBits.Defaults;
 using static CryBits.Editors.Logic.Options;
 using static CryBits.Editors.Logic.Utils;
 using Color = System.Drawing.Color;
 using Graphics = CryBits.Editors.Media.Graphics;
-using Item = CryBits.Entities.Item;
 using Music = CryBits.Editors.Media.Audio.Music;
 using Sound = CryBits.Editors.Media.Audio.Sound;
 
@@ -76,19 +75,19 @@ namespace CryBits.Editors.Forms
 
             // Lista os dados
             for (byte i = 0; i < (byte)Layer.Count; i++) cmbLayers_Type.Items.Add(((Layer)i).ToString());
-            for (byte i = 1; i < Graphics.TexTile.Count; i++) cmbTiles.Items.Add(i.ToString());
+            for (byte i = 1; i < Graphics.TexTile.Length; i++) cmbTiles.Items.Add(i.ToString());
             Update_List();
 
             // Define os limites
             scrlZone.Maximum = MaxZones;
-            numNpc_Zone.Maximum = MaxZones;
+            numNPC_Zone.Maximum = MaxZones;
             numA_Warp_X.Maximum = Map.Width - 1;
             numA_Warp_Y.Maximum = Map.Height - 1;
 
             // Reseta os valores
             grpAttributes.BringToFront();
             grpZones.BringToFront();
-            grpNpcs.BringToFront();
+            grpNPCs.BringToFront();
             grpLighting.BringToFront();
             cmbTiles.SelectedIndex = 0;
             cmbLayers_Type.SelectedIndex = 0;
@@ -140,10 +139,10 @@ namespace CryBits.Editors.Forms
 
             // Conecta as listas com os componentes
             prgProperties.SelectedObject = new MapProperties(Selected);
-            lstNpc.Tag = Selected.Npc;
+            lstNPC.Tag = Selected.Npc;
 
             // Atualiza as listas
-            lstNpc.UpdateData();
+            lstNPC.UpdateData();
 
             // Reseta o clima
             TempMap.UpdateWeatherType();
@@ -488,7 +487,7 @@ namespace CryBits.Editors.Forms
             butMZones.Checked = false;
             butMLighting.Checked = false;
             butMAttributes.Checked = false;
-            butMNpcs.Checked = false;
+            butMNPCs.Checked = false;
         }
 
         private void butMNormal_Click(object sender, EventArgs e)
@@ -519,16 +518,16 @@ namespace CryBits.Editors.Forms
             butMLighting.Checked = true;
         }
 
-        private void butMNpcs_Click(object sender, EventArgs e)
+        private void butMNPCs_Click(object sender, EventArgs e)
         {
             // Marca o botão
             Modes_Visibility();
-            butMNpcs.Checked = true;
+            butMNPCs.Checked = true;
 
-            // Adiciona os Npcs e reseta os valores
-            foreach (var npc in Npc.List.Values) cmbNpc.Items.Add(npc);
-            cmbNpc.SelectedIndex = 0;
-            numNpc_Zone.Value = 0;
+            // Adiciona os NPCs e reseta os valores
+            foreach (var npc in Npc.List.Values) cmbNPC.Items.Add(npc);
+            cmbNPC.SelectedIndex = 0;
+            numNPC_Zone.Value = 0;
         }
 
         private void butMNormal_CheckedChanged(object sender, EventArgs e)
@@ -566,7 +565,7 @@ namespace CryBits.Editors.Forms
             EditorItems.Form = new EditorItems();
         }
 
-        private void butEditors_Npcs_Click(object sender, EventArgs e)
+        private void butEditors_NPCs_Click(object sender, EventArgs e)
         {
             EditorNpcs.Form = new EditorNpcs();
         }
@@ -585,10 +584,10 @@ namespace CryBits.Editors.Forms
         {
             if (Npc.List.Count == 0)
             {
-                if (butMNpcs.Checked) butMNormal.Checked = true;
-                butMNpcs.Enabled = false;
+                if (butMNPCs.Checked) butMNormal.Checked = true;
+                butMNPCs.Enabled = false;
             }
-            else butMNpcs.Enabled = true;
+            else butMNPCs.Enabled = true;
 
             // Ferramentas em geral
             if (butMNormal.Checked)
@@ -596,7 +595,7 @@ namespace CryBits.Editors.Forms
                 grpZones.Visible = false;
                 grpLighting.Visible = false;
                 grpAttributes.Visible = false;
-                grpNpcs.Visible = false;
+                grpNPCs.Visible = false;
                 butPencil.Enabled = true;
                 butRectangle.Enabled = true;
                 butArea.Enabled = true;
@@ -642,7 +641,7 @@ namespace CryBits.Editors.Forms
                 grpLighting.Visible = true;
                 grpZones.Visible = false;
                 grpAttributes.Visible = false;
-                grpNpcs.Visible = false;
+                grpNPCs.Visible = false;
             }
             // Zonas
             if (butMZones.Checked)
@@ -650,7 +649,7 @@ namespace CryBits.Editors.Forms
                 grpZones.Visible = true;
                 grpLighting.Visible = false;
                 grpAttributes.Visible = false;
-                grpNpcs.Visible = false;
+                grpNPCs.Visible = false;
             }
             // Atributos
             if (butMAttributes.Checked)
@@ -658,12 +657,12 @@ namespace CryBits.Editors.Forms
                 grpAttributes.Visible = true;
                 grpZones.Visible = false;
                 grpLighting.Visible = false;
-                grpNpcs.Visible = false;
+                grpNPCs.Visible = false;
             }
-            // Npcs
-            if (butMNpcs.Checked)
+            // NPCs
+            if (butMNPCs.Checked)
             {
-                grpNpcs.Visible = true;
+                grpNPCs.Visible = true;
                 grpZones.Visible = false;
                 grpAttributes.Visible = false;
                 grpLighting.Visible = false;
@@ -881,10 +880,10 @@ namespace CryBits.Editors.Forms
                 if (e.Button == MouseButtons.Right)
                     Lighting_Remove();
             }
-            else if (butMNpcs.Checked)
-                // Adiciona o Npc
+            else if (butMNPCs.Checked)
+                // Adiciona o NPC
                 if (e.Button == MouseButtons.Left)
-                    AddNpc(true, (byte)MapSelection.X, (byte)MapSelection.Y);
+                    AddNPC(true, (byte)MapSelection.X, (byte)MapSelection.Y);
         }
 
         private void Lighting_Remove()
@@ -1307,44 +1306,44 @@ namespace CryBits.Editors.Forms
         }
         #endregion
 
-        #region Npcs
-        private void AddNpc(bool fixedSpawn = false, byte x = 0, byte y = 0)
+        #region NPCs
+        private void AddNPC(bool fixedSpawn = false, byte x = 0, byte y = 0)
         {
             // Define os dados
             MapNpc data = new MapNpc
             {
-                Npc = (Npc)cmbNpc.SelectedItem,
-                Zone = (byte)numNpc_Zone.Value,
+                Npc = (Npc)cmbNPC.SelectedItem,
+                Zone = (byte)numNPC_Zone.Value,
                 Spawn = fixedSpawn,
                 X = x,
                 Y = y
             };
 
-            // Adiciona o Npc
+            // Adiciona o NPC
             Selected.Npc.Add(data);
-            lstNpc.UpdateData();
+            lstNPC.UpdateData();
         }
 
-        private void butNpc_Remove_Click(object sender, EventArgs e)
+        private void butNPC_Remove_Click(object sender, EventArgs e)
         {
-            // Remove o Npc
-            if (lstNpc.SelectedIndex >= 0)
+            // Remove o NPC
+            if (lstNPC.SelectedIndex >= 0)
             {
-                Selected.Npc.RemoveAt(lstNpc.SelectedIndex);
-                lstNpc.UpdateData();
+                Selected.Npc.RemoveAt(lstNPC.SelectedIndex);
+                lstNPC.UpdateData();
             }
         }
 
-        private void butNpc_Clear_Click(object sender, EventArgs e)
+        private void butNPC_Clear_Click(object sender, EventArgs e)
         {
-            // Limpa todos os Npcs do mapa
+            // Limpa todos os NPCs do mapa
             Selected.Npc.Clear();
         }
 
-        private void butNpc_Add_Click(object sender, EventArgs e)
+        private void butNPC_Add_Click(object sender, EventArgs e)
         {
-            // Adiciona o Npc
-            AddNpc();
+            // Adiciona o NPC
+            AddNPC();
         }
         #endregion
 
