@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using CryBits.Entities;
+using CryBits.Enums;
 using CryBits.Server.Entities;
 using CryBits.Server.Library;
 using CryBits.Server.Logic;

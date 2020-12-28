@@ -1,4 +1,4 @@
-﻿namespace CryBits.Packets
+﻿namespace CryBits.Enums
 {
     // Pacotes do cliente para o servidor
     public enum ClientPackets
@@ -7,14 +7,14 @@
         WriteSettings,
         WriteClasses,
         WriteMaps,
-        WriteNPCs,
+        WriteNpcs,
         WriteItems,
         WriteShops,
         RequestSetting,
         RequestClasses,
         RequestMap,
         RequestMaps,
-        RequestNPCs,
+        RequestNpcs,
         RequestItems,
         RequestShops,
         Latency,

@@ -3,10 +3,10 @@ using CryBits.Entities;
 
 namespace CryBits.Client.Entities
 {
-    internal class TempNPC : Character
+    internal class TempNpc : Character
     {
         // Indice
-        public NPC Data;
+        public Npc Data;
 
         public void Logic()
         {

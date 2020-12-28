@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using CryBits.Editors.Forms;
 using CryBits.Entities;
-using CryBits.Packets;
+using CryBits.Enums;
 using Lidgren.Network;
 using static CryBits.Defaults;
 using static CryBits.Utils;
@@ -22,7 +22,7 @@ namespace CryBits.Editors.Network
                 case ServerPackets.ServerData: ServerData(data); break;
                 case ServerPackets.Classes: Classes(data); break;
                 case ServerPackets.Map: Map(data); break;
-                case ServerPackets.NPCs: NPCs(data); break;
+                case ServerPackets.Npcs: Npcs(data); break;
                 case ServerPackets.Items: Items(data); break;
                 case ServerPackets.Shops: Shops(data); break;
             }
@@ -75,10 +75,10 @@ namespace CryBits.Editors.Network
                 CryBits.Entities.Map.List.Add(id, map);
         }
 
-        private static void NPCs(NetIncomingMessage data)
+        private static void Npcs(NetIncomingMessage data)
         {
             // Recebe os dados
-            NPC.List = (Dictionary<Guid, NPC>)ByteArrayToObject(data);
+            Npc.List = (Dictionary<Guid, Npc>)ByteArrayToObject(data);
         }
 
         private static void Items(NetIncomingMessage data)

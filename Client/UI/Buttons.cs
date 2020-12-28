@@ -7,6 +7,7 @@ using CryBits.Client.Library;
 using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
 using CryBits.Entities;
+using CryBits.Enums;
 using SFML.Window;
 using static CryBits.Defaults;
 using static CryBits.Client.Logic.Utils;

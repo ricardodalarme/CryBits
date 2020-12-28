@@ -1,4 +1,4 @@
-﻿namespace CryBits.Packets
+﻿namespace CryBits.Enums
 {
     // Pacotes do servidor para o cliente
     public enum ServerPackets
@@ -9,7 +9,7 @@
         Classes,
         Maps,
         Map,
-        NPCs,
+        Npcs,
         Items,
         Shops,
         CreateCharacter,
@@ -31,13 +31,13 @@
         MapRevision,
         Latency,
         Message,
-        MapNPCs,
-        MapNPC,
-        MapNPCMovement,
-        MapNPCDirection,
-        MapNPCVitals,
-        MapNPCAttack,
-        MapNPCDied,
+        MapNpcs,
+        MapNpc,
+        MapNpcMovement,
+        MapNpcDirection,
+        MapNpcVitals,
+        MapNpcAttack,
+        MapNpcDied,
         MapItems,
         Party,
         PartyInvitation,

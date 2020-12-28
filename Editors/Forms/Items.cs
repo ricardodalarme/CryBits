@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using CryBits.Editors.Media;
 using CryBits.Editors.Network;
 using CryBits.Entities;
+using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
 
@@ -28,7 +29,7 @@ namespace CryBits.Editors.Forms
             Graphics.WinItem = new RenderWindow(picTexture.Handle);
 
             // Define os limites
-            numTexture.Maximum = Graphics.TexItem.GetUpperBound(0);
+            numTexture.Maximum = Graphics.TexItem.Count-1;
 
             // Lista os dados
             cmbReq_Class.Items.Add("None");

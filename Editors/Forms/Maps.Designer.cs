@@ -43,7 +43,7 @@ namespace CryBits.Editors.Forms
             this.butMAttributes = new System.Windows.Forms.ToolStripButton();
             this.butMZones = new System.Windows.Forms.ToolStripButton();
             this.butMLighting = new System.Windows.Forms.ToolStripButton();
-            this.butMNPCs = new System.Windows.Forms.ToolStripButton();
+            this.butMNpcs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.butCut = new System.Windows.Forms.ToolStripButton();
             this.butCopy = new System.Windows.Forms.ToolStripButton();
@@ -70,7 +70,7 @@ namespace CryBits.Editors.Forms
             this.butEditors_Data = new System.Windows.Forms.ToolStripMenuItem();
             this.butEditors_Interface = new System.Windows.Forms.ToolStripMenuItem();
             this.butEditors_Items = new System.Windows.Forms.ToolStripMenuItem();
-            this.butEditors_NPCs = new System.Windows.Forms.ToolStripMenuItem();
+            this.butEditors_Npcs = new System.Windows.Forms.ToolStripMenuItem();
             this.butEditors_Shops = new System.Windows.Forms.ToolStripMenuItem();
             this.butEditors_Tiles = new System.Windows.Forms.ToolStripMenuItem();
             this.picTile = new System.Windows.Forms.PictureBox();
@@ -136,18 +136,18 @@ namespace CryBits.Editors.Forms
             this.label5 = new DarkUI.Controls.DarkLabel();
             this.label4 = new DarkUI.Controls.DarkLabel();
             this.picTile_Background = new System.Windows.Forms.PictureBox();
-            this.grpNPCs = new DarkUI.Controls.DarkGroupBox();
+            this.grpNpcs = new DarkUI.Controls.DarkGroupBox();
             this.groupBox2 = new DarkUI.Controls.DarkGroupBox();
-            this.cmbNPC = new DarkUI.Controls.DarkComboBox();
+            this.cmbNpc = new DarkUI.Controls.DarkComboBox();
             this.label13 = new DarkUI.Controls.DarkLabel();
             this.label11 = new DarkUI.Controls.DarkLabel();
-            this.numNPC_Zone = new DarkUI.Controls.DarkNumericUpDown();
+            this.numNpc_Zone = new DarkUI.Controls.DarkNumericUpDown();
             this.label9 = new DarkUI.Controls.DarkLabel();
-            this.butNPC_Add = new DarkUI.Controls.DarkButton();
+            this.butNpc_Add = new DarkUI.Controls.DarkButton();
             this.groupBox1 = new DarkUI.Controls.DarkGroupBox();
-            this.lstNPC = new System.Windows.Forms.ListBox();
-            this.butNPC_Remove = new DarkUI.Controls.DarkButton();
-            this.butNPC_Clear = new DarkUI.Controls.DarkButton();
+            this.lstNpc = new System.Windows.Forms.ListBox();
+            this.butNpc_Remove = new DarkUI.Controls.DarkButton();
+            this.butNpc_Clear = new DarkUI.Controls.DarkButton();
             this.List = new System.Windows.Forms.TreeView();
             this.txtFilter = new DarkUI.Controls.DarkTextBox();
             this.picBackground = new System.Windows.Forms.Panel();
@@ -172,9 +172,9 @@ namespace CryBits.Editors.Forms
             ((System.ComponentModel.ISupportInitialize)(this.numA_Warp_Y)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numA_Warp_X)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTile_Background)).BeginInit();
-            this.grpNPCs.SuspendLayout();
+            this.grpNpcs.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numNPC_Zone)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numNpc_Zone)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.picBackground.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
@@ -203,7 +203,7 @@ namespace CryBits.Editors.Forms
             this.butMAttributes,
             this.butMZones,
             this.butMLighting,
-            this.butMNPCs,
+            this.butMNpcs,
             this.toolStripSeparator2,
             this.butCut,
             this.butCopy,
@@ -334,18 +334,18 @@ namespace CryBits.Editors.Forms
             this.butMLighting.CheckedChanged += new System.EventHandler(this.butMLighting_CheckedChanged);
             this.butMLighting.Click += new System.EventHandler(this.butMLighting_Click);
             // 
-            // butMNPCs
+            // butMNpcs
             // 
-            this.butMNPCs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.butMNPCs.CheckOnClick = true;
-            this.butMNPCs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.butMNPCs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.butMNPCs.Image = ((System.Drawing.Image)(resources.GetObject("butMNPCs.Image")));
-            this.butMNPCs.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.butMNPCs.Name = "butMNPCs";
-            this.butMNPCs.Size = new System.Drawing.Size(23, 22);
-            this.butMNPCs.Text = "NPCs";
-            this.butMNPCs.Click += new System.EventHandler(this.butMNPCs_Click);
+            this.butMNpcs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.butMNpcs.CheckOnClick = true;
+            this.butMNpcs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.butMNpcs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.butMNpcs.Image = ((System.Drawing.Image)(resources.GetObject("butMNpcs.Image")));
+            this.butMNpcs.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.butMNpcs.Name = "butMNpcs";
+            this.butMNpcs.Size = new System.Drawing.Size(23, 22);
+            this.butMNpcs.Text = "Npcs";
+            this.butMNpcs.Click += new System.EventHandler(this.butMNpcs_Click);
             // 
             // toolStripSeparator2
             // 
@@ -615,7 +615,7 @@ namespace CryBits.Editors.Forms
             this.butEditors_Data,
             this.butEditors_Interface,
             this.butEditors_Items,
-            this.butEditors_NPCs,
+            this.butEditors_Npcs,
             this.butEditors_Shops,
             this.butEditors_Tiles});
             this.butEditors.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
@@ -653,12 +653,12 @@ namespace CryBits.Editors.Forms
             this.butEditors_Items.Text = "Items";
             this.butEditors_Items.Click += new System.EventHandler(this.butEditors_Items_Click);
             // 
-            // butEditors_NPCs
+            // butEditors_Npcs
             // 
-            this.butEditors_NPCs.Name = "butEditors_NPCs";
-            this.butEditors_NPCs.Size = new System.Drawing.Size(120, 22);
-            this.butEditors_NPCs.Text = "NPCs";
-            this.butEditors_NPCs.Click += new System.EventHandler(this.butEditors_NPCs_Click);
+            this.butEditors_Npcs.Name = "butEditors_Npcs";
+            this.butEditors_Npcs.Size = new System.Drawing.Size(120, 22);
+            this.butEditors_Npcs.Text = "Npcs";
+            this.butEditors_Npcs.Click += new System.EventHandler(this.butEditors_Npcs_Click);
             // 
             // butEditors_Shops
             // 
@@ -1370,30 +1370,30 @@ namespace CryBits.Editors.Forms
             this.picTile_Background.TabIndex = 107;
             this.picTile_Background.TabStop = false;
             // 
-            // grpNPCs
+            // grpNpcs
             // 
-            this.grpNPCs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.grpNpcs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.grpNPCs.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.grpNPCs.Controls.Add(this.groupBox2);
-            this.grpNPCs.Controls.Add(this.groupBox1);
-            this.grpNPCs.Location = new System.Drawing.Point(0, 27);
-            this.grpNPCs.Name = "grpNPCs";
-            this.grpNPCs.Size = new System.Drawing.Size(271, 623);
-            this.grpNPCs.TabIndex = 104;
-            this.grpNPCs.TabStop = false;
-            this.grpNPCs.Text = "NPCs";
-            this.grpNPCs.Visible = false;
+            this.grpNpcs.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.grpNpcs.Controls.Add(this.groupBox2);
+            this.grpNpcs.Controls.Add(this.groupBox1);
+            this.grpNpcs.Location = new System.Drawing.Point(0, 27);
+            this.grpNpcs.Name = "grpNpcs";
+            this.grpNpcs.Size = new System.Drawing.Size(271, 623);
+            this.grpNpcs.TabIndex = 104;
+            this.grpNpcs.TabStop = false;
+            this.grpNpcs.Text = "Npcs";
+            this.grpNpcs.Visible = false;
             // 
             // groupBox2
             // 
             this.groupBox2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.groupBox2.Controls.Add(this.cmbNPC);
+            this.groupBox2.Controls.Add(this.cmbNpc);
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.label11);
-            this.groupBox2.Controls.Add(this.numNPC_Zone);
+            this.groupBox2.Controls.Add(this.numNpc_Zone);
             this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.butNPC_Add);
+            this.groupBox2.Controls.Add(this.butNpc_Add);
             this.groupBox2.Location = new System.Drawing.Point(12, 265);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(252, 154);
@@ -1401,14 +1401,14 @@ namespace CryBits.Editors.Forms
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Add";
             // 
-            // cmbNPC
+            // cmbNpc
             // 
-            this.cmbNPC.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cmbNPC.FormattingEnabled = true;
-            this.cmbNPC.Location = new System.Drawing.Point(10, 36);
-            this.cmbNPC.Name = "cmbNPC";
-            this.cmbNPC.Size = new System.Drawing.Size(234, 21);
-            this.cmbNPC.TabIndex = 1;
+            this.cmbNpc.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cmbNpc.FormattingEnabled = true;
+            this.cmbNpc.Location = new System.Drawing.Point(10, 36);
+            this.cmbNpc.Name = "cmbNpc";
+            this.cmbNpc.Size = new System.Drawing.Size(234, 21);
+            this.cmbNpc.TabIndex = 1;
             // 
             // label13
             // 
@@ -1429,14 +1429,14 @@ namespace CryBits.Editors.Forms
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(32, 13);
             this.label11.TabIndex = 7;
-            this.label11.Text = "NPC:";
+            this.label11.Text = "Npc:";
             // 
-            // numNPC_Zone
+            // numNpc_Zone
             // 
-            this.numNPC_Zone.Location = new System.Drawing.Point(10, 78);
-            this.numNPC_Zone.Name = "numNPC_Zone";
-            this.numNPC_Zone.Size = new System.Drawing.Size(234, 20);
-            this.numNPC_Zone.TabIndex = 5;
+            this.numNpc_Zone.Location = new System.Drawing.Point(10, 78);
+            this.numNpc_Zone.Name = "numNpc_Zone";
+            this.numNpc_Zone.Size = new System.Drawing.Size(234, 20);
+            this.numNpc_Zone.TabIndex = 5;
             // 
             // label9
             // 
@@ -1448,22 +1448,22 @@ namespace CryBits.Editors.Forms
             this.label9.TabIndex = 6;
             this.label9.Text = "Zone:";
             // 
-            // butNPC_Add
+            // butNpc_Add
             // 
-            this.butNPC_Add.Location = new System.Drawing.Point(10, 104);
-            this.butNPC_Add.Name = "butNPC_Add";
-            this.butNPC_Add.Padding = new System.Windows.Forms.Padding(5);
-            this.butNPC_Add.Size = new System.Drawing.Size(234, 22);
-            this.butNPC_Add.TabIndex = 3;
-            this.butNPC_Add.Text = "Add";
-            this.butNPC_Add.Click += new System.EventHandler(this.butNPC_Add_Click);
+            this.butNpc_Add.Location = new System.Drawing.Point(10, 104);
+            this.butNpc_Add.Name = "butNpc_Add";
+            this.butNpc_Add.Padding = new System.Windows.Forms.Padding(5);
+            this.butNpc_Add.Size = new System.Drawing.Size(234, 22);
+            this.butNpc_Add.TabIndex = 3;
+            this.butNpc_Add.Text = "Add";
+            this.butNpc_Add.Click += new System.EventHandler(this.butNpc_Add_Click);
             // 
             // groupBox1
             // 
             this.groupBox1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.groupBox1.Controls.Add(this.lstNPC);
-            this.groupBox1.Controls.Add(this.butNPC_Remove);
-            this.groupBox1.Controls.Add(this.butNPC_Clear);
+            this.groupBox1.Controls.Add(this.lstNpc);
+            this.groupBox1.Controls.Add(this.butNpc_Remove);
+            this.groupBox1.Controls.Add(this.butNpc_Clear);
             this.groupBox1.Location = new System.Drawing.Point(11, 24);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(253, 231);
@@ -1471,36 +1471,36 @@ namespace CryBits.Editors.Forms
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "List";
             // 
-            // lstNPC
+            // lstNpc
             // 
-            this.lstNPC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.lstNPC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstNPC.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lstNPC.FormattingEnabled = true;
-            this.lstNPC.Location = new System.Drawing.Point(7, 19);
-            this.lstNPC.Name = "lstNPC";
-            this.lstNPC.Size = new System.Drawing.Size(238, 171);
-            this.lstNPC.TabIndex = 0;
+            this.lstNpc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.lstNpc.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstNpc.ForeColor = System.Drawing.Color.Gainsboro;
+            this.lstNpc.FormattingEnabled = true;
+            this.lstNpc.Location = new System.Drawing.Point(7, 19);
+            this.lstNpc.Name = "lstNpc";
+            this.lstNpc.Size = new System.Drawing.Size(238, 171);
+            this.lstNpc.TabIndex = 0;
             // 
-            // butNPC_Remove
+            // butNpc_Remove
             // 
-            this.butNPC_Remove.Location = new System.Drawing.Point(7, 198);
-            this.butNPC_Remove.Name = "butNPC_Remove";
-            this.butNPC_Remove.Padding = new System.Windows.Forms.Padding(5);
-            this.butNPC_Remove.Size = new System.Drawing.Size(118, 19);
-            this.butNPC_Remove.TabIndex = 2;
-            this.butNPC_Remove.Text = "Remove";
-            this.butNPC_Remove.Click += new System.EventHandler(this.butNPC_Remove_Click);
+            this.butNpc_Remove.Location = new System.Drawing.Point(7, 198);
+            this.butNpc_Remove.Name = "butNpc_Remove";
+            this.butNpc_Remove.Padding = new System.Windows.Forms.Padding(5);
+            this.butNpc_Remove.Size = new System.Drawing.Size(118, 19);
+            this.butNpc_Remove.TabIndex = 2;
+            this.butNpc_Remove.Text = "Remove";
+            this.butNpc_Remove.Click += new System.EventHandler(this.butNpc_Remove_Click);
             // 
-            // butNPC_Clear
+            // butNpc_Clear
             // 
-            this.butNPC_Clear.Location = new System.Drawing.Point(127, 198);
-            this.butNPC_Clear.Name = "butNPC_Clear";
-            this.butNPC_Clear.Padding = new System.Windows.Forms.Padding(5);
-            this.butNPC_Clear.Size = new System.Drawing.Size(118, 19);
-            this.butNPC_Clear.TabIndex = 4;
-            this.butNPC_Clear.Text = "Clear";
-            this.butNPC_Clear.Click += new System.EventHandler(this.butNPC_Clear_Click);
+            this.butNpc_Clear.Location = new System.Drawing.Point(127, 198);
+            this.butNpc_Clear.Name = "butNpc_Clear";
+            this.butNpc_Clear.Padding = new System.Windows.Forms.Padding(5);
+            this.butNpc_Clear.Size = new System.Drawing.Size(118, 19);
+            this.butNpc_Clear.TabIndex = 4;
+            this.butNpc_Clear.Text = "Clear";
+            this.butNpc_Clear.Click += new System.EventHandler(this.butNpc_Clear_Click);
             // 
             // List
             // 
@@ -1652,7 +1652,7 @@ namespace CryBits.Editors.Forms
             this.Controls.Add(this.grpAttributes);
             this.Controls.Add(this.grpZones);
             this.Controls.Add(this.grpLighting);
-            this.Controls.Add(this.grpNPCs);
+            this.Controls.Add(this.grpNpcs);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "EditorMaps";
@@ -1685,10 +1685,10 @@ namespace CryBits.Editors.Forms
             ((System.ComponentModel.ISupportInitialize)(this.numA_Warp_Y)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numA_Warp_X)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTile_Background)).EndInit();
-            this.grpNPCs.ResumeLayout(false);
+            this.grpNpcs.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numNPC_Zone)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numNpc_Zone)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.picBackground.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
@@ -1768,13 +1768,13 @@ namespace CryBits.Editors.Forms
         private System.Windows.Forms.ToolStripStatusLabel FPS;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         public System.Windows.Forms.PictureBox picTile_Background;
-        public System.Windows.Forms.ToolStripButton butMNPCs;
-        private DarkGroupBox grpNPCs;
-        private DarkButton butNPC_Add;
-        private DarkButton butNPC_Remove;
-        private DarkComboBox cmbNPC;
-        private System.Windows.Forms.ListBox lstNPC;
-        private DarkButton butNPC_Clear;
+        public System.Windows.Forms.ToolStripButton butMNpcs;
+        private DarkGroupBox grpNpcs;
+        private DarkButton butNpc_Add;
+        private DarkButton butNpc_Remove;
+        private DarkComboBox cmbNpc;
+        private System.Windows.Forms.ListBox lstNpc;
+        private DarkButton butNpc_Clear;
         private DarkRadioButton optA_Block;
         private DarkRadioButton optA_Warp;
         private DarkButton butAttributes_Import;
@@ -1790,7 +1790,7 @@ namespace CryBits.Editors.Forms
         private DarkLabel label7;
         private DarkGroupBox groupBox2;
         private DarkLabel label11;
-        private DarkNumericUpDown numNPC_Zone;
+        private DarkNumericUpDown numNpc_Zone;
         private DarkLabel label9;
         private DarkGroupBox groupBox1;
         private DarkLabel label13;
@@ -1812,7 +1812,7 @@ namespace CryBits.Editors.Forms
         private System.Windows.Forms.ToolStripMenuItem butEditors_Data;
         private System.Windows.Forms.ToolStripMenuItem butEditors_Interface;
         private System.Windows.Forms.ToolStripMenuItem butEditors_Items;
-        private System.Windows.Forms.ToolStripMenuItem butEditors_NPCs;
+        private System.Windows.Forms.ToolStripMenuItem butEditors_Npcs;
         private System.Windows.Forms.ToolStripMenuItem butEditors_Shops;
         private System.Windows.Forms.ToolStripMenuItem butEditors_Tiles;
         public DarkTextBox txtFilter;

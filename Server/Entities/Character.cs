@@ -1,4 +1,6 @@
-﻿namespace CryBits.Server.Entities
+﻿using CryBits.Enums;
+
+namespace CryBits.Server.Entities
 {
     internal abstract class Character
     {

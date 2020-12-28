@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Entities;
+using CryBits.Enums;
 using CryBits.Server.Library;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
@@ -122,7 +123,7 @@ namespace CryBits.Server.Entities
             // Envia todos os dados necessários
             Send.Join(this);
             Send.Items(Account);
-            Send.NPCs(Account);
+            Send.Npcs(Account);
             Send.Shops(Account);
             Send.Map(Account, Map.Data);
             Send.MapPlayers(this);
@@ -179,7 +180,7 @@ namespace CryBits.Server.Entities
                 // Envia dados necessários do mapa
                 Send.MapRevision(this, to.Data);
                 Send.MapItems(this, to);
-                Send.MapNPCs(this, to);
+                Send.MapNpcs(this, to);
             }
             // Apenas atualiza a posição do jogador
             else
@@ -285,11 +286,11 @@ namespace CryBits.Server.Entities
                 return;
             }
 
-            // Ataca um NPC
-            victim = Map.HasNPC(nextX, nextY);
+            // Ataca um Npc
+            victim = Map.HasNpc(nextX, nextY);
             if (victim != null)
             {
-                AttackNPC((TempNPC)victim);
+                AttackNpc((TempNpc)victim);
                 return;
             }
 
@@ -341,19 +342,19 @@ namespace CryBits.Server.Entities
                 Send.PlayerAttack(this);
         }
 
-        private void AttackNPC(TempNPC victim)
+        private void AttackNpc(TempNpc victim)
         {
             // Mensagem
             if (victim.Target != this && !string.IsNullOrEmpty(victim.Data.SayMsg)) Send.Message(this, victim.Data.Name + ": " + victim.Data.SayMsg, Color.White);
 
-            // Não executa o combate com um NPC amigavel
+            // Não executa o combate com um Npc amigavel
             switch (victim.Data.Behaviour)
             {
-                case NPCs.Friendly: return;
-                case NPCs.ShopKeeper: ShopOpen(victim.Data.Shop); return;
+                case Npcs.Friendly: return;
+                case Npcs.ShopKeeper: ShopOpen(victim.Data.Shop); return;
             }
 
-            // Define o alvo do NPC
+            // Define o alvo do Npc
             victim.Target = this;
 
             // Tempo de ataque 
@@ -366,12 +367,12 @@ namespace CryBits.Server.Entities
             if (attackDamage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.PlayerAttack(this, victim.Index.ToString(), Targets.NPC);
+                Send.PlayerAttack(this, victim.Index.ToString(), Targets.Npc);
 
                 if (attackDamage < victim.Vital[(byte)Vitals.HP])
                 {
                     victim.Vital[(byte)Vitals.HP] -= attackDamage;
-                    Send.MapNPCVitals(victim);
+                    Send.MapNpcVitals(victim);
                 }
                 // FATALITY
                 else
@@ -379,7 +380,7 @@ namespace CryBits.Server.Entities
                     // Experiência ganhada
                     GiveExperience(victim.Data.Experience);
 
-                    // Reseta os dados do NPC 
+                    // Reseta os dados do Npc 
                     victim.Died();
                 }
             }

@@ -2,6 +2,7 @@
 using System.Drawing;
 using CryBits.Editors.Forms;
 using CryBits.Entities;
+using CryBits.Enums;
 using SFML.Audio;
 using static CryBits.Defaults;
 using static CryBits.Utils;

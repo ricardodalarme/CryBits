@@ -14,7 +14,7 @@ namespace CryBits.Server.Library
         public static readonly FileInfo Characters = new FileInfo(Application.StartupPath + @"\Data\Characters" + Format);
         public static readonly DirectoryInfo Classes = new DirectoryInfo(Application.StartupPath + @"\Data\Classes\");
         public static readonly DirectoryInfo Maps = new DirectoryInfo(Application.StartupPath + @"\Data\Maps\");
-        public static readonly DirectoryInfo NPCs = new DirectoryInfo(Application.StartupPath + @"\Data\NPCs\");
+        public static readonly DirectoryInfo Npcs = new DirectoryInfo(Application.StartupPath + @"\Data\Npcs\");
         public static readonly DirectoryInfo Items = new DirectoryInfo(Application.StartupPath + @"\Data\Items\");
         public static readonly DirectoryInfo Shops = new DirectoryInfo(Application.StartupPath + @"\Data\Shops\");
 
@@ -26,7 +26,7 @@ namespace CryBits.Server.Library
             Characters.Directory.Create();
             Classes.Create();
             Maps.Create();
-            NPCs.Create();
+            Npcs.Create();
             Items.Create();
             Shops.Create();
         }

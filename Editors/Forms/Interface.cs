@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using CryBits.Editors.Entities.Tools;
 using CryBits.Editors.Library;
 using CryBits.Editors.Media;
+using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
 using Button = CryBits.Editors.Entities.Tools.Button;

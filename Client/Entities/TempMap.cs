@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Media.Audio;
 using CryBits.Entities;
+using CryBits.Enums;
 using static CryBits.Utils;
 using static CryBits.Defaults;
 using Graphics = CryBits.Client.Media.Graphics;
@@ -20,7 +21,7 @@ namespace CryBits.Client.Entities
 
         // Dados gerais
         public readonly Map Data;
-        public TempNPC[] NPC;
+        public TempNpc[] Npc;
         public MapItems[] Item = new MapItems[0];
         public List<MapBlood> Blood = new List<MapBlood>();
 
@@ -43,12 +44,12 @@ namespace CryBits.Client.Entities
             Data = data;
         }
 
-        private bool HasNPC(byte x, byte y)
+        private bool HasNpc(byte x, byte y)
         {
-            // Verifica se há algum npc na cordenada
-            for (byte i = 0; i < NPC.Length; i++)
-                if (NPC[i].Data != null)
-                    if ((NPC[i].X, NPC[i].Y) == (x, y))
+            // Verifica se há algum Npc na cordenada
+            for (byte i = 0; i < Npc.Length; i++)
+                if (Npc[i].Data != null)
+                    if ((Npc[i].X, Npc[i].Y) == (x, y))
                         return true;
 
             return false;
@@ -78,7 +79,7 @@ namespace CryBits.Client.Entities
             if (Data.Attribute[nextX, nextY].Type == (byte)LayerAttributes.Block) return true;
             if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
             if (Data.Attribute[x, y].Block[(byte)direction]) return true;
-            if (HasPlayer(nextX, nextY) || HasNPC(nextX, nextY)) return true;
+            if (HasPlayer(nextX, nextY) || HasNpc(nextX, nextY)) return true;
             return false;
         }
 

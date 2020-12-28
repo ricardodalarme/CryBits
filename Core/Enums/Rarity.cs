@@ -1,0 +1,12 @@
+﻿namespace CryBits.Enums
+{
+    public enum Rarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary,
+        Count
+    }
+}
