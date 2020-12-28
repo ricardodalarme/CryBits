@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Item
+    public enum ItemType
     {
         None,
         Equipment,

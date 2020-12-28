@@ -529,7 +529,7 @@ namespace CryBits.Client.Media
             switch (item.Type)
             {
                 // Poção
-                case Enums.Item.Potion:
+                case Enums.ItemType.Potion:
                     for (byte n = 0; n < (byte)Vital.Count; n++)
                         if (item.PotionVital[n] != 0)
                             data.Add((Vital)n + ": " + item.PotionVital[n]);
@@ -537,7 +537,7 @@ namespace CryBits.Client.Media
                     if (item.PotionExperience != 0) data.Add("Experience: " + item.PotionExperience);
                     break;
                 // Equipamentos
-                case Enums.Item.Equipment:
+                case Enums.ItemType.Equipment:
                     if (item.EquipType == (byte)Equipment.Weapon)
                         if (item.WeaponDamage != 0)
                             data.Add("Damage: " + item.WeaponDamage);

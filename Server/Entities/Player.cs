@@ -8,7 +8,7 @@ using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using static CryBits.Defaults;
 using static CryBits.Utils;
-using Item = CryBits.Enums.Item;
+using ItemType = CryBits.Enums.ItemType;
 
 namespace CryBits.Server.Entities
 {
@@ -529,7 +529,7 @@ namespace CryBits.Server.Entities
                     return;
                 }
 
-            if (item.Type == Item.Equipment)
+            if (item.Type == ItemType.Equipment)
             {
                 // Retira o item do inventário
                 TakeItem(slot, 1);
@@ -547,7 +547,7 @@ namespace CryBits.Server.Entities
                 Send.PlayerEquipments(this);
                 Send.PlayerHotbar(this);
             }
-            else if (item.Type == Item.Potion)
+            else if (item.Type == ItemType.Potion)
             {
                 // Efeitos
                 bool hadEffect = false;

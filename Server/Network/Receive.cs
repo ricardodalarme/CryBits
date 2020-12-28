@@ -222,7 +222,7 @@ namespace CryBits.Server.Network
             account.Character.Y = @class.SpawnY;
             for (byte i = 0; i < (byte)Vital.Count; i++) account.Character.Vital[i] = account.Character.MaxVital(i);
             for (byte i = 0; i < (byte)@class.Item.Count; i++)
-                if (@class.Item[i].Item.Type == Enums.Item.Equipment && account.Character.Equipment[@class.Item[i].Item.EquipType] == null)
+                if (@class.Item[i].Item.Type == Enums.ItemType.Equipment && account.Character.Equipment[@class.Item[i].Item.EquipType] == null)
                     account.Character.Equipment[@class.Item[i].Item.EquipType] = @class.Item[i].Item;
                 else
                     account.Character.GiveItem(@class.Item[i].Item, @class.Item[i].Amount);
