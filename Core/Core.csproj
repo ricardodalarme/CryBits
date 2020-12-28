@@ -64,7 +64,7 @@
     <Compile Include="Enums\Behaviour.cs" />
     <Compile Include="Enums\MovementStyle.cs" />
     <Compile Include="Enums\Window.cs" />
-    <Compile Include="Enums\Item.cs" />
+    <Compile Include="Enums\ItemType.cs" />
     <Compile Include="Enums\Direction.cs" />
     <Compile Include="Enums\Weather.cs" />
     <Compile Include="Enums\Attribute.cs" />
