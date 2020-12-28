@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using CryBits.Editors.Entities;
 using CryBits.Entities;
+using CryBits.Enums;
 using static CryBits.Defaults;
 using Graphics = CryBits.Editors.Media.Graphics;
 
@@ -29,7 +30,7 @@ namespace CryBits.Editors.Logic
         }
 
         [Category("General")][DefaultValue(0)]
-        public Morals Moral
+        public Moral Moral
         {
             get => Base.Moral;
             set => Base.Moral = value;
@@ -42,7 +43,7 @@ namespace CryBits.Editors.Logic
         public byte FogTexture
         {
             get => Base.Fog.Texture;
-            set => Base.Fog.Texture = Math.Min(value, (byte)(Graphics.TexFog.Length - 1));
+            set => Base.Fog.Texture = Math.Min(value, (byte)(Graphics.TexFog.Count - 1));
         }
 
         [Category("Fog")][DisplayName("Fog Alpha")][DefaultValue(255)]
@@ -78,7 +79,7 @@ namespace CryBits.Editors.Logic
         }
 
         [Category("Weather")][DisplayName("Weather Type")][DefaultValue(0)]
-        public Weathers WeatherType
+        public Weather WeatherType
         {
             get => Base.Weather.Type;
             set
@@ -124,9 +125,9 @@ namespace CryBits.Editors.Logic
         }
 
         [Category("Misc")][DefaultValue(0)]
-        public Musics Music
+        public Music Music
         {
-            get => (Musics)Base.Music;
+            get => (Music)Base.Music;
             set => Base.Music = (byte)value;
         }
 
@@ -134,7 +135,7 @@ namespace CryBits.Editors.Logic
         public byte Panorama
         {
             get => Base.Panorama;
-            set => Base.Panorama = Math.Min(value, (byte)(Graphics.TexPanorama.Length - 1));
+            set => Base.Panorama = Math.Min(value, (byte)(Graphics.TexPanorama.Count - 1));
         }
     }
 }

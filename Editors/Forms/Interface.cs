@@ -10,7 +10,7 @@ using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
 using TextBox = CryBits.Editors.Entities.Tools.TextBox;
-using Tool = CryBits.Enums.Tool;
+using ToolType = CryBits.Enums.ToolType;
 
 namespace CryBits.Editors.Forms
 {
@@ -39,7 +39,7 @@ namespace CryBits.Editors.Forms
             cmbWindows.SelectedIndex = 0;
 
             // Adiciona os tipos de ferramentas à lista
-            for (byte i = 0; i < (byte)Tool.Count; i++) cmbType.Items.Add((Tool)i);
+            for (byte i = 0; i < (byte)ToolType.Count; i++) cmbType.Items.Add((ToolType)i);
         }
 
         private void Editor_Interface_FormClosed(object sender, FormClosedEventArgs e)
@@ -108,12 +108,12 @@ namespace CryBits.Editors.Forms
             // Adiciona uma nova ferramenta
             Entities.Tools.Tool @new = new Entities.Tools.Tool();
             Entities.Tools.Tool.Tree.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
-            switch ((Tool)cmbType.SelectedIndex)
+            switch ((ToolType)cmbType.SelectedIndex)
             {
-                case Tool.Button: @new = new Button(); break;
-                case Tool.Panel: @new = new Panel(); break;
-                case Tool.CheckBox: @new = new CheckBox(); break;
-                case Tool.TextBox: @new = new TextBox(); break;
+                case ToolType.Button: @new = new Button(); break;
+                case ToolType.Panel: @new = new Panel(); break;
+                case ToolType.CheckBox: @new = new CheckBox(); break;
+                case ToolType.TextBox: @new = new TextBox(); break;
             }
             Entities.Tools.Tool.Tree.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
             @new.Window = (Window)cmbWindows.SelectedIndex;

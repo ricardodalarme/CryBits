@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Entities.Tools;
+using CryBits.Enums;
 using static CryBits.Editors.Logic.Options;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
@@ -41,7 +42,7 @@ namespace CryBits.Editors.Library
 
             // Limpa a árvore de ordem
             Tool.Tree = new TreeNode();
-            for (byte i = 0; i < (byte)WindowsTypes.Count; i++) Tool.Tree.Nodes.Add(((WindowsTypes)i).ToString());
+            for (byte i = 0; i < (byte)Window.Count; i++) Tool.Tree.Nodes.Add(((Window)i).ToString());
 
             // Cria o arquivo caso ele não existir
             if (!file.Exists)
@@ -89,7 +90,7 @@ namespace CryBits.Editors.Library
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
-                Window = (WindowsTypes)data.ReadByte(),
+                Window = (Window)data.ReadByte(),
                 TextureNum = data.ReadByte()
             };
         }
@@ -102,7 +103,7 @@ namespace CryBits.Editors.Library
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
-                Window = (WindowsTypes)data.ReadByte(),
+                Window = (Window)data.ReadByte(),
                 MaxCharacters = data.ReadInt16(),
                 Width = data.ReadInt16(),
                 Password = data.ReadBoolean()
@@ -117,7 +118,7 @@ namespace CryBits.Editors.Library
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
-                Window = (WindowsTypes)data.ReadByte(),
+                Window = (Window)data.ReadByte(),
                 TextureNum = data.ReadByte()
             };
         }
@@ -130,7 +131,7 @@ namespace CryBits.Editors.Library
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
                 Visible = data.ReadBoolean(),
-                Window = (WindowsTypes)data.ReadByte(),
+                Window = (Window)data.ReadByte(),
                 Text = data.ReadString(),
                 Checked = data.ReadBoolean()
             };
@@ -139,7 +140,7 @@ namespace CryBits.Editors.Library
         public static void Tiles()
         {
             // Lê os dados
-            Entities.Tile.List = new Tile[Graphics.TexTile.Length];
+            Entities.Tile.List = new Tile[Graphics.TexTile.Count];
             for (byte i = 1; i < Entities.Tile.List.Length; i++) Tile(i);
         }
 
