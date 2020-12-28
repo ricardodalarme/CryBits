@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using CryBits.Entities;
+using CryBits.Enums;
 using static CryBits.Defaults;
 
 namespace CryBits.Editors.Logic

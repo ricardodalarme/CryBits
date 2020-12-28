@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Client.Entities;
 using CryBits.Client.UI;
 using CryBits.Entities;
+using CryBits.Enums;
 
 namespace CryBits.Client.Library
 {

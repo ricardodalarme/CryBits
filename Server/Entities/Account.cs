@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CryBits.Enums;
 using Lidgren.Network;
 
 namespace CryBits.Server.Entities
@@ -6,7 +7,7 @@ namespace CryBits.Server.Entities
     internal class Account
     {
         // Lista de dados
-        public static List<Account> List = new List<Account>();
+        public static readonly List<Account> List = new List<Account>();
 
         // Dados básicos
         public NetConnection Connection { get; }

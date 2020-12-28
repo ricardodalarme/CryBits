@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CryBits.Enums;
 
 namespace CryBits.Entities
 {
@@ -7,7 +8,7 @@ namespace CryBits.Entities
     public class Class : Entity
     {
         // Lista de dados
-        public static Dictionary<Guid, Class> List = new Dictionary<Guid, Class>();
+        public static readonly Dictionary<Guid, Class> List = new Dictionary<Guid, Class>();
 
         // Dados
         public string Description { get; set; }

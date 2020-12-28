@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using CryBits.Enums;
 
 namespace CryBits.Entities
 {
     [Serializable]
-    public class NPC : Entity
+    public class Npc : Entity
     {
         // Lista de dados
-        public static Dictionary<Guid, NPC> List = new Dictionary<Guid, NPC>();
+        public static readonly Dictionary<Guid, Npc> List = new Dictionary<Guid, Npc>();
 
         // Dados
         public string SayMsg { get; set; }
         public short Texture { get; set; }
-        public NPCs Behaviour { get; set; }
+        public Npcs Behaviour { get; set; }
         public byte SpawnTime { get; set; }
         public byte Sight { get; set; }
         public int Experience { get; set; }
         public short[] Vital { get; set; } = new short[(byte)Vitals.Count];
         public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
-        public IList<NPCDrop> Drop { get; set; } = new List<NPCDrop>();
-        public bool AttackNPC { get; set; }
-        public IList<NPC> Allie { get; set; } = new List<NPC>();
-        public NPCMovements Movement { get; set; }
+        public IList<NpcDrop> Drop { get; set; } = new List<NpcDrop>();
+        public bool AttackNpc { get; set; }
+        public IList<Npc> Allie { get; set; } = new List<Npc>();
+        public NpcMovements Movement { get; set; }
         public byte FleeHealth { get; set; }
         private Guid _shop;
 
@@ -31,11 +32,11 @@ namespace CryBits.Entities
             set => _shop = value.GetID();
         }
 
-        public bool IsAllied(NPC npc)
+        public bool IsAllied(Npc Npc)
         {
-            // Verifica se o NPC é aliado do outro
+            // Verifica se o Npc é aliado do outro
             for (byte i = 0; i < Allie.Count; i++)
-                if (Allie[i] == npc)
+                if (Allie[i] == Npc)
                     return true;
 
             return false;
@@ -43,11 +44,11 @@ namespace CryBits.Entities
     }
 
     [Serializable]
-    public class NPCDrop : ItemSlot
+    public class NpcDrop : ItemSlot
     {
         public byte Chance;
 
-        public NPCDrop(Item item, short amount, byte chance) : base(item, amount)
+        public NpcDrop(Item item, short amount, byte chance) : base(item, amount)
         {
             Chance = chance;
         }

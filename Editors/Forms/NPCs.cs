@@ -4,20 +4,21 @@ using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
 using CryBits.Editors.Network;
 using CryBits.Entities;
+using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
 
 namespace CryBits.Editors.Forms
 {
-    internal partial class EditorNPCs : DarkForm
+    internal partial class EditorNpcs : DarkForm
     {
         // Usado para acessar os dados da janela
-        public static EditorNPCs Form;
+        public static EditorNpcs Form;
 
-        // NPC selecionado
-        public NPC Selected;
+        // Npc selecionado
+        public Npc Selected;
 
-        public EditorNPCs()
+        public EditorNpcs()
         {
             InitializeComponent();
 
@@ -26,10 +27,10 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.WinNPC = new RenderWindow(picTexture.Handle);
+            Graphics.WinNpc = new RenderWindow(picTexture.Handle);
 
             // Define os limites
-            numTexture.Maximum = Graphics.TexCharacter.GetUpperBound(0);
+            numTexture.Maximum = Graphics.TexCharacter.Count -1;
 
             // Lista os dados
             foreach (var item in Item.List.Values) cmbDrop_Item.Items.Add(item);
@@ -37,9 +38,9 @@ namespace CryBits.Editors.Forms
             List_Update();
         }
 
-        private void Editor_NPCs_FormClosed(object sender, FormClosedEventArgs e)
+        private void Editor_Npcs_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphics.WinNPC = null;
+            Graphics.WinNpc = null;
             EditorMaps.Form.Show();
         }
 
@@ -52,13 +53,13 @@ namespace CryBits.Editors.Forms
 
         private void List_Update()
         {
-            // Lista os NPCs
+            // Lista os Npcs
             List.Nodes.Clear();
-            foreach (var npc in NPC.List.Values)
-                if (npc.Name.StartsWith(txtFilter.Text))
-                    List.Nodes.Add(new TreeNode(npc.Name)
+            foreach (var Npc in Npc.List.Values)
+                if (Npc.Name.StartsWith(txtFilter.Text))
+                    List.Nodes.Add(new TreeNode(Npc.Name)
                     {
-                        Tag = npc.ID
+                        Tag = Npc.ID
                     });
 
             // Seleciona o primeiro
@@ -69,7 +70,7 @@ namespace CryBits.Editors.Forms
         private void List_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // Atualiza o valor da loja selecionada
-            Selected = NPC.List[(Guid)List.SelectedNode.Tag];
+            Selected = Npc.List[(Guid)List.SelectedNode.Tag];
 
             // Reseta os dados necessários
             grpDrop_Add.Visible = false;
@@ -92,7 +93,7 @@ namespace CryBits.Editors.Forms
             numVitality.Value = Selected.Attribute[(byte)Attributes.Vitality];
             cmbMovement.SelectedIndex = (byte)Selected.Movement;
             numFlee_Health.Value = Selected.FleeHealth;
-            chkAttackNPC.Checked = Selected.AttackNPC;
+            chkAttackNpc.Checked = Selected.AttackNpc;
             if (Selected.Shop != null) cmbShop.SelectedItem = Selected.Shop;
             else cmbShop.SelectedIndex = -1;
 
@@ -113,9 +114,9 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            NPC @new = new NPC();
-            @new.Name = "New NPC";
-            NPC.List.Add(@new.ID, @new);
+            Npc @new = new Npc();
+            @new.Name = "New Npc";
+            Npc.List.Add(@new.ID, @new);
 
             // Adiciona na lista
             TreeNode node = new TreeNode(@new.Name);
@@ -132,7 +133,7 @@ namespace CryBits.Editors.Forms
             // Remove a loja selecionada
             if (List.SelectedNode != null)
             {
-                NPC.List.Remove(Selected.ID);
+                Npc.List.Remove(Selected.ID);
                 List.SelectedNode.Remove();
                 Groups_Visibility();
             }
@@ -141,14 +142,14 @@ namespace CryBits.Editors.Forms
         private void butSave_Click(object sender, EventArgs e)
         {
             // Salva os dados e volta à janela principal
-            Send.WriteNPCs();
+            Send.WriteNpcs();
             Close();
         }
 
         private void butCancel_Click(object sender, EventArgs e)
         {
             // Volta à janela principal
-            Send.RequestNPCs();
+            Send.RequestNpcs();
             Close();
         }
 
@@ -179,7 +180,7 @@ namespace CryBits.Editors.Forms
             // Evita erros
             cmbShop.Enabled = false;
             cmbShop.SelectedIndex = -1;
-            if (cmbBehavior.SelectedIndex == (byte)NPCs.ShopKeeper)
+            if (cmbBehavior.SelectedIndex == (byte)Npcs.ShopKeeper)
                 if (Shop.List.Count == 0)
                 {
                     cmbBehavior.SelectedIndex = (byte)Selected.Behaviour;
@@ -191,7 +192,7 @@ namespace CryBits.Editors.Forms
                     if (Selected.Shop == null) cmbShop.SelectedIndex = 0;
                 }
 
-            Selected.Behaviour = (NPCs)cmbBehavior.SelectedIndex;
+            Selected.Behaviour = (Npcs)cmbBehavior.SelectedIndex;
         }
 
         private void numHP_ValueChanged(object sender, EventArgs e)
@@ -269,28 +270,28 @@ namespace CryBits.Editors.Forms
         private void butItem_Ok_Click(object sender, EventArgs e)
         {
             // Adiciona o item
-            Selected.Drop.Add(new NPCDrop((Item)cmbDrop_Item.SelectedItem, (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value));
+            Selected.Drop.Add(new NpcDrop((Item)cmbDrop_Item.SelectedItem, (short)numDrop_Amount.Value, (byte)numDrop_Chance.Value));
             lstDrop.UpdateData();
             grpDrop_Add.Visible = false;
         }
 
-        private void chkAttackNPC_CheckedChanged(object sender, EventArgs e)
+        private void chkAttackNpc_CheckedChanged(object sender, EventArgs e)
         {
-            Selected.AttackNPC = lstAllies.Enabled = chkAttackNPC.Checked;
-            if (!Selected.AttackNPC) Selected.Allie.Clear();
+            Selected.AttackNpc = lstAllies.Enabled = chkAttackNpc.Checked;
+            if (!Selected.AttackNpc) Selected.Allie.Clear();
         }
 
         private void butAllie_Add_Click(object sender, EventArgs e)
         {
-            if (chkAttackNPC.Checked)
+            if (chkAttackNpc.Checked)
             {
                 // Abre a janela para adicionar o aliado
                 grpAllie_Add.Visible = true;
 
-                // Adiciona os NPCs
-                cmbAllie_NPC.Items.Clear();
-                foreach (var npc in NPC.List.Values) cmbAllie_NPC.Items.Add(npc);
-                cmbAllie_NPC.SelectedIndex = 0;
+                // Adiciona os Npcs
+                cmbAllie_Npc.Items.Clear();
+                foreach (var Npc in Npc.List.Values) cmbAllie_Npc.Items.Add(Npc);
+                cmbAllie_Npc.SelectedIndex = 0;
             }
         }
 
@@ -299,7 +300,7 @@ namespace CryBits.Editors.Forms
             // Deleta a aliado
             if (lstAllies.SelectedItem != null)
             {
-                Selected.Allie.Remove((NPC)lstAllies.SelectedItem);
+                Selected.Allie.Remove((Npc)lstAllies.SelectedItem);
                 lstAllies.UpdateData();
             }
         }
@@ -307,7 +308,7 @@ namespace CryBits.Editors.Forms
         private void butAllie_Ok_Click(object sender, EventArgs e)
         {
             // Adiciona o aliado
-            var allie = (NPC)cmbAllie_NPC.SelectedItem;
+            var allie = (Npc)cmbAllie_Npc.SelectedItem;
             if (!Selected.Allie.Contains(allie)) Selected.Allie.Add(allie);
             lstAllies.UpdateData();
             grpAllie_Add.Visible = false;
@@ -315,7 +316,7 @@ namespace CryBits.Editors.Forms
 
         private void cmbMovement_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Selected.Movement = (NPCMovements)cmbMovement.SelectedIndex;
+            Selected.Movement = (NpcMovements)cmbMovement.SelectedIndex;
         }
 
         private void numFlee_Health_ValueChanged(object sender, EventArgs e)

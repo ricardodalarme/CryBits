@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using CryBits.Entities;
-using CryBits.Packets;
+using CryBits.Enums;
 using CryBits.Server.Entities;
 using Lidgren.Network;
 using static CryBits.Defaults;
@@ -457,105 +457,105 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void NPCs(Account account)
+        public static void Npcs(Account account)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerPackets.NPCs);
-            ObjectToByteArray(data, NPC.List);
+            data.Write((byte)ServerPackets.Npcs);
+            ObjectToByteArray(data, Npc.List);
             ToPlayer(account, data);
         }
 
-        public static void MapNPCs(Player player, TempMap map)
+        public static void MapNpcs(Player player, TempMap map)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerPackets.MapNPCs);
-            data.Write((short)map.NPC.Length);
-            for (byte i = 0; i < map.NPC.Length; i++)
+            data.Write((byte)ServerPackets.MapNpcs);
+            data.Write((short)map.Npc.Length);
+            for (byte i = 0; i < map.Npc.Length; i++)
             {
-                data.Write(map.NPC[i].Data.GetID());
-                data.Write(map.NPC[i].X);
-                data.Write(map.NPC[i].Y);
-                data.Write((byte)map.NPC[i].Direction);
-                for (byte n = 0; n < (byte)Vitals.Count; n++) data.Write(map.NPC[i].Vital[n]);
+                data.Write(map.Npc[i].Data.GetID());
+                data.Write(map.Npc[i].X);
+                data.Write(map.Npc[i].Y);
+                data.Write((byte)map.Npc[i].Direction);
+                for (byte n = 0; n < (byte)Vitals.Count; n++) data.Write(map.Npc[i].Vital[n]);
             }
             ToPlayer(player, data);
         }
 
-        public static void MapNPC(TempNPC npc)
+        public static void MapNpc(TempNpc Npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerPackets.MapNPC);
-            data.Write(npc.Index);
-            data.Write(npc.Data.GetID());
-            data.Write(npc.X);
-            data.Write(npc.Y);
-            data.Write((byte)npc.Direction);
-            for (byte n = 0; n < (byte)Vitals.Count; n++) data.Write(npc.Vital[n]);
-            ToMap(npc.Map, data);
+            data.Write((byte)ServerPackets.MapNpc);
+            data.Write(Npc.Index);
+            data.Write(Npc.Data.GetID());
+            data.Write(Npc.X);
+            data.Write(Npc.Y);
+            data.Write((byte)Npc.Direction);
+            for (byte n = 0; n < (byte)Vitals.Count; n++) data.Write(Npc.Vital[n]);
+            ToMap(Npc.Map, data);
         }
 
-        public static void MapNPCMovement(TempNPC npc, byte movement)
+        public static void MapNpcMovement(TempNpc Npc, byte movement)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerPackets.MapNPCMovement);
-            data.Write(npc.Index);
-            data.Write(npc.X);
-            data.Write(npc.Y);
-            data.Write((byte)npc.Direction);
+            data.Write((byte)ServerPackets.MapNpcMovement);
+            data.Write(Npc.Index);
+            data.Write(Npc.X);
+            data.Write(Npc.Y);
+            data.Write((byte)Npc.Direction);
             data.Write(movement);
-            ToMap(npc.Map, data);
+            ToMap(Npc.Map, data);
         }
 
-        public static void MapNPCDirection(TempNPC npc)
+        public static void MapNpcDirection(TempNpc Npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerPackets.MapNPCDirection);
-            data.Write(npc.Index);
-            data.Write((byte)npc.Direction);
-            ToMap(npc.Map, data);
+            data.Write((byte)ServerPackets.MapNpcDirection);
+            data.Write(Npc.Index);
+            data.Write((byte)Npc.Direction);
+            ToMap(Npc.Map, data);
         }
 
-        public static void MapNPCVitals(TempNPC npc)
+        public static void MapNpcVitals(TempNpc Npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerPackets.MapNPCVitals);
-            data.Write(npc.Index);
-            for (byte n = 0; n < (byte)Vitals.Count; n++) data.Write(npc.Vital[n]);
-            ToMap(npc.Map, data);
+            data.Write((byte)ServerPackets.MapNpcVitals);
+            data.Write(Npc.Index);
+            for (byte n = 0; n < (byte)Vitals.Count; n++) data.Write(Npc.Vital[n]);
+            ToMap(Npc.Map, data);
         }
 
-        public static void MapNPCAttack(TempNPC npc, string victim = "", Targets victimType = 0)
+        public static void MapNpcAttack(TempNpc Npc, string victim = "", Targets victimType = 0)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerPackets.MapNPCAttack);
-            data.Write(npc.Index);
+            data.Write((byte)ServerPackets.MapNpcAttack);
+            data.Write(Npc.Index);
             data.Write(victim);
             data.Write((byte)victimType);
-            ToMap(npc.Map, data);
+            ToMap(Npc.Map, data);
         }
 
-        public static void MapNPCDied(TempNPC npc)
+        public static void MapNpcDied(TempNpc Npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ServerPackets.MapNPCDied);
-            data.Write(npc.Index);
-            ToMap(npc.Map, data);
+            data.Write((byte)ServerPackets.MapNpcDied);
+            data.Write(Npc.Index);
+            ToMap(Npc.Map, data);
         }
 
         public static void ServerData(Account account)

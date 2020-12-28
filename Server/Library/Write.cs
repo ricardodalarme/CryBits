@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
+using CryBits.Enums;
 using CryBits.Server.Entities;
 using static CryBits.Defaults;
-using static CryBits.Utils;
 
 namespace CryBits.Server.Library
 {
@@ -110,12 +110,12 @@ namespace CryBits.Server.Library
                 new BinaryFormatter().Serialize(stream, @class);
         }
 
-        public static void NPCs()
+        public static void Npcs()
         {
             // Escreve os dados
-            foreach (var npc in NPC.List.Values)
-                using (var stream = new FileInfo(Directories.NPCs.FullName + npc.ID + Directories.Format).OpenWrite())
-                    new BinaryFormatter().Serialize(stream, npc);
+            foreach (var Npc in Npc.List.Values)
+                using (var stream = new FileInfo(Directories.Npcs.FullName + Npc.ID + Directories.Format).OpenWrite())
+                    new BinaryFormatter().Serialize(stream, Npc);
         }
 
         public static void Items()

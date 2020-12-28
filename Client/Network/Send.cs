@@ -3,7 +3,7 @@ using System.Linq;
 using CryBits.Client.Entities;
 using CryBits.Client.UI;
 using CryBits.Entities;
-using CryBits.Packets;
+using CryBits.Enums;
 using Lidgren.Network;
 
 namespace CryBits.Client.Network

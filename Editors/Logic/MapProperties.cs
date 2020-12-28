@@ -15,7 +15,7 @@ namespace CryBits.Editors.Logic
             Base = map;
         }
 
-        // Dados do NPC
+        // Dados do Npc
         public readonly Map Base;
 
         /////////////

@@ -5,6 +5,7 @@ using CryBits.Client.Entities;
 using CryBits.Client.Media;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
+using CryBits.Enums;
 
 namespace CryBits.Client.Logic
 {
@@ -46,10 +47,10 @@ namespace CryBits.Client.Logic
                         for (byte i = 0; i < Player.List.Count; i++)
                             Player.List[i].Logic();
 
-                        // Lógica dos NPCs
-                        for (byte i = 0; i < TempMap.Current.NPC.Length; i++)
-                            if (TempMap.Current.NPC[i].Data != null)
-                                TempMap.Current.NPC[i].Logic();
+                        // Lógica dos Npcs
+                        for (byte i = 0; i < TempMap.Current.Npc.Length; i++)
+                            if (TempMap.Current.Npc[i].Data != null)
+                                TempMap.Current.Npc[i].Logic();
 
                         // Reinicia a contagem
                         timer30 = Environment.TickCount + 30;

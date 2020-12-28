@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CryBits.Enums;
 using static CryBits.Defaults;
 
 namespace CryBits.Entities
@@ -9,7 +10,7 @@ namespace CryBits.Entities
     public class Map : Entity
     {
         // Lista de dados
-        public static Dictionary<Guid, Map> List = new Dictionary<Guid, Map>();
+        public static readonly Dictionary<Guid, Map> List = new Dictionary<Guid, Map>();
 
         // Tamanho dos mapas
         public const byte Width = 25;
@@ -25,7 +26,7 @@ namespace CryBits.Entities
         public Color Color { get; set; } = Color.FromArgb(-1);
         public MapWeather Weather = new MapWeather();
         public MapFog Fog = new MapFog();
-        public IList<MapNPC> NPC { get; set; } = new List<MapNPC>();
+        public IList<MapNpc> Npc { get; set; } = new List<MapNpc>();
         public IList<MapLight> Light { get; set; } = new List<MapLight>();
         public byte Lighting = 100;
         public Map[] Link = new Map[(byte)Directions.Count];
@@ -240,9 +241,9 @@ namespace CryBits.Entities
     }
 
     [Serializable]
-    public class MapNPC
+    public class MapNpc
     {
-        public NPC NPC;
+        public Npc Npc;
         public byte Zone;
         public bool Spawn;
         public byte X;

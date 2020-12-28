@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using CryBits.Entities;
-using CryBits.Packets;
+using CryBits.Enums;
 using CryBits.Server.Entities;
 using CryBits.Server.Library;
 using Lidgren.Network;
@@ -57,14 +57,14 @@ namespace CryBits.Server.Network
                 case ClientPackets.WriteSettings: WriteSettings(account, data); break;
                 case ClientPackets.WriteClasses: WriteClasses(account, data); break;
                 case ClientPackets.WriteMaps: WriteMaps(account, data); break;
-                case ClientPackets.WriteNPCs: WriteNPCs(account, data); break;
+                case ClientPackets.WriteNpcs: WriteNpcs(account, data); break;
                 case ClientPackets.WriteItems: WriteItems(account, data); break;
                 case ClientPackets.WriteShops: WriteShops(account, data); break;
                 case ClientPackets.RequestSetting: RequestSetting(account); break;
                 case ClientPackets.RequestClasses: RequestClasses(account); break;
                 case ClientPackets.RequestMap: RequestMap(account, data); break;
                 case ClientPackets.RequestMaps: RequestMaps(account); break;
-                case ClientPackets.RequestNPCs: RequestNPCs(account); break;
+                case ClientPackets.RequestNpcs: RequestNpcs(account); break;
                 case ClientPackets.RequestItems: RequestItems(account); break;
                 case ClientPackets.RequestShops: RequestShops(account); break;
             }
@@ -123,7 +123,7 @@ namespace CryBits.Server.Network
                 Send.Items(account);
                 Send.Shops(account);
                 Send.Classes(account);
-                Send.NPCs(account);
+                Send.Npcs(account);
                 Send.Connect(account);
             }
             else
@@ -531,7 +531,7 @@ namespace CryBits.Server.Network
             }
         }
 
-        private static void WriteNPCs(Account account, NetIncomingMessage data)
+        private static void WriteNpcs(Account account, NetIncomingMessage data)
         {
             // Verifica se o jogador realmente tem permissão 
             if (account.Access < Accesses.Editor)
@@ -541,13 +541,13 @@ namespace CryBits.Server.Network
             }
 
             // Recebe e salva os novos dados
-            NPC.List = (Dictionary<Guid, NPC>)ByteArrayToObject(data);
-            Write.NPCs();
+            Npc.List = (Dictionary<Guid, Npc>)ByteArrayToObject(data);
+            Write.Npcs();
 
             // Envia os novos dados para todos jogadores conectados
             for (byte i = 0; i < Account.List.Count; i++)
                 if (Account.List[i] != account)
-                    Send.NPCs(Account.List[i]);
+                    Send.Npcs(Account.List[i]);
         }
 
         private static void WriteItems(Account account, NetIncomingMessage data)
@@ -623,9 +623,9 @@ namespace CryBits.Server.Network
             Send.Maps(account);
         }
 
-        private static void RequestNPCs(Account account)
+        private static void RequestNpcs(Account account)
         {
-            Send.NPCs(account);
+            Send.Npcs(account);
         }
 
         private static void RequestItems(Account account)

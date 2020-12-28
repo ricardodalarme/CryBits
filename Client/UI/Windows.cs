@@ -5,6 +5,7 @@ using CryBits.Client.Entities;
 using CryBits.Client.Logic;
 using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
+using CryBits.Enums;
 using SFML.Window;
 
 namespace CryBits.Client.UI

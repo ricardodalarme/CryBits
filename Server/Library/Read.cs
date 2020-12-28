@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
+using CryBits.Enums;
 using CryBits.Server.Entities;
 using static CryBits.Defaults;
 
@@ -20,8 +21,8 @@ namespace CryBits.Server.Library
             Maps();
             Console.WriteLine("Loading classes.");
             Classes();
-            Console.WriteLine("Loading NPCs.");
-            NPCs();
+            Console.WriteLine("Loading npcs.");
+            Npcs();
             Console.WriteLine("Loading items.");
             Items();
             Console.WriteLine("Loading shops.");
@@ -201,14 +202,14 @@ namespace CryBits.Server.Library
             }
         }
 
-        private static void NPCs()
+        private static void Npcs()
         {
             // Lê os dados
-            NPC.List = new Dictionary<Guid, NPC>();
-            FileInfo[] file = Directories.NPCs.GetFiles();
+            Npc.List = new Dictionary<Guid, Npc>();
+            FileInfo[] file = Directories.Npcs.GetFiles();
             for (byte i = 0; i < file.Length; i++)
                 using (var stream = file[i].OpenRead())
-                    NPC.List.Add(new Guid(file[i].Name.Remove(36)), (NPC)new BinaryFormatter().Deserialize(stream));
+                    Npc.List.Add(new Guid(file[i].Name.Remove(36)), (Npc)new BinaryFormatter().Deserialize(stream));
         }
 
         private static void Shops()

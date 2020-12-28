@@ -1,6 +1,7 @@
 ﻿using System;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
+using CryBits.Enums;
 using SFML.Audio;
 
 namespace CryBits.Client.Media.Audio

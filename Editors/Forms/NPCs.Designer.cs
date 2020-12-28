@@ -2,7 +2,7 @@
 
 namespace CryBits.Editors.Forms
 {
-    partial class EditorNPCs
+    partial class EditorNpcs
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorNPCs));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorNpcs));
             this.grpGeneral = new DarkUI.Controls.DarkGroupBox();
             this.picTexture = new System.Windows.Forms.PictureBox();
             this.numTexture = new DarkUI.Controls.DarkNumericUpDown();
@@ -80,9 +80,9 @@ namespace CryBits.Editors.Forms
             this.butAllie_Add = new DarkUI.Controls.DarkButton();
             this.lstAllies = new System.Windows.Forms.ListBox();
             this.label12 = new DarkUI.Controls.DarkLabel();
-            this.chkAttackNPC = new DarkUI.Controls.DarkCheckBox();
+            this.chkAttackNpc = new DarkUI.Controls.DarkCheckBox();
             this.grpAllie_Add = new DarkUI.Controls.DarkGroupBox();
-            this.cmbAllie_NPC = new DarkUI.Controls.DarkComboBox();
+            this.cmbAllie_Npc = new DarkUI.Controls.DarkComboBox();
             this.label17 = new DarkUI.Controls.DarkLabel();
             this.butAllie_Ok = new DarkUI.Controls.DarkButton();
             this.grpBehaviour = new DarkUI.Controls.DarkGroupBox();
@@ -617,13 +617,13 @@ namespace CryBits.Editors.Forms
             this.grpAllies.Controls.Add(this.butAllie_Add);
             this.grpAllies.Controls.Add(this.lstAllies);
             this.grpAllies.Controls.Add(this.label12);
-            this.grpAllies.Controls.Add(this.chkAttackNPC);
+            this.grpAllies.Controls.Add(this.chkAttackNpc);
             this.grpAllies.Location = new System.Drawing.Point(532, 7);
             this.grpAllies.Name = "grpAllies";
             this.grpAllies.Size = new System.Drawing.Size(304, 253);
             this.grpAllies.TabIndex = 39;
             this.grpAllies.TabStop = false;
-            this.grpAllies.Text = "NPC vs NPC";
+            this.grpAllies.Text = "Npc vs Npc";
             // 
             // butAllie_Delete
             // 
@@ -667,20 +667,20 @@ namespace CryBits.Editors.Forms
             this.label12.TabIndex = 1;
             this.label12.Text = "Allies:";
             // 
-            // chkAttackNPC
+            // chkAttackNpc
             // 
-            this.chkAttackNPC.AutoSize = true;
-            this.chkAttackNPC.Location = new System.Drawing.Point(10, 19);
-            this.chkAttackNPC.Name = "chkAttackNPC";
-            this.chkAttackNPC.Size = new System.Drawing.Size(71, 17);
-            this.chkAttackNPC.TabIndex = 0;
-            this.chkAttackNPC.Text = "Enabled?";
-            this.chkAttackNPC.CheckedChanged += new System.EventHandler(this.chkAttackNPC_CheckedChanged);
+            this.chkAttackNpc.AutoSize = true;
+            this.chkAttackNpc.Location = new System.Drawing.Point(10, 19);
+            this.chkAttackNpc.Name = "chkAttackNpc";
+            this.chkAttackNpc.Size = new System.Drawing.Size(71, 17);
+            this.chkAttackNpc.TabIndex = 0;
+            this.chkAttackNpc.Text = "Enabled?";
+            this.chkAttackNpc.CheckedChanged += new System.EventHandler(this.chkAttackNpc_CheckedChanged);
             // 
             // grpAllie_Add
             // 
             this.grpAllie_Add.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.grpAllie_Add.Controls.Add(this.cmbAllie_NPC);
+            this.grpAllie_Add.Controls.Add(this.cmbAllie_Npc);
             this.grpAllie_Add.Controls.Add(this.label17);
             this.grpAllie_Add.Controls.Add(this.butAllie_Ok);
             this.grpAllie_Add.Location = new System.Drawing.Point(532, 7);
@@ -691,14 +691,14 @@ namespace CryBits.Editors.Forms
             this.grpAllie_Add.Text = "Add Allie";
             this.grpAllie_Add.Visible = false;
             // 
-            // cmbAllie_NPC
+            // cmbAllie_Npc
             // 
-            this.cmbAllie_NPC.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cmbAllie_NPC.FormattingEnabled = true;
-            this.cmbAllie_NPC.Location = new System.Drawing.Point(26, 118);
-            this.cmbAllie_NPC.Name = "cmbAllie_NPC";
-            this.cmbAllie_NPC.Size = new System.Drawing.Size(251, 21);
-            this.cmbAllie_NPC.TabIndex = 38;
+            this.cmbAllie_Npc.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cmbAllie_Npc.FormattingEnabled = true;
+            this.cmbAllie_Npc.Location = new System.Drawing.Point(26, 118);
+            this.cmbAllie_Npc.Name = "cmbAllie_Npc";
+            this.cmbAllie_Npc.Size = new System.Drawing.Size(251, 21);
+            this.cmbAllie_Npc.TabIndex = 38;
             // 
             // label17
             // 
@@ -708,7 +708,7 @@ namespace CryBits.Editors.Forms
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(32, 13);
             this.label17.TabIndex = 37;
-            this.label17.Text = "NPC:";
+            this.label17.Text = "Npc:";
             // 
             // butAllie_Ok
             // 
@@ -850,7 +850,7 @@ namespace CryBits.Editors.Forms
             this.txtFilter.TabIndex = 45;
             this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
-            // EditorNPCs
+            // EditorNpcs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -872,10 +872,10 @@ namespace CryBits.Editors.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "EditorNPCs";
+            this.Name = "EditorNpcs";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "NPC Editor";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_NPCs_FormClosed);
+            this.Text = "Npc Editor";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Editor_Npcs_FormClosed);
             this.grpGeneral.ResumeLayout(false);
             this.grpGeneral.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTexture)).EndInit();
@@ -963,10 +963,10 @@ namespace CryBits.Editors.Forms
         private DarkComboBox cmbMovement;
         private DarkLabel label13;
         private DarkGroupBox grpAllie_Add;
-        private DarkComboBox cmbAllie_NPC;
+        private DarkComboBox cmbAllie_Npc;
         private DarkLabel label17;
         private DarkButton butAllie_Ok;
-        private DarkCheckBox chkAttackNPC;
+        private DarkCheckBox chkAttackNpc;
         private DarkComboBox cmbShop;
         private DarkLabel label18;
         private System.Windows.Forms.TreeView List;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CryBits.Entities;
+using CryBits.Enums;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using static CryBits.Utils;
@@ -10,11 +11,11 @@ namespace CryBits.Server.Entities
     internal class TempMap : Entity
     {
         // Lista de dados
-        public static Dictionary<Guid, TempMap> List = new Dictionary<Guid, TempMap>();
+        public static readonly Dictionary<Guid, TempMap> List = new Dictionary<Guid, TempMap>();
 
         // Dados
         public readonly Map Data;
-        public TempNPC[] NPC = Array.Empty<TempNPC>();
+        public TempNpc[] Npc = Array.Empty<TempNpc>();
         public List<MapItems> Item = new List<MapItems>();
 
         // Construtor
@@ -28,8 +29,8 @@ namespace CryBits.Server.Entities
             // Não é necessário fazer todos os cálculos se não houver nenhum jogador no mapa
             if (!HasPlayers()) return;
 
-            // Lógica dos NPCs
-            for (byte j = 0; j < NPC.Length; j++) NPC[j].Logic();
+            // Lógica dos Npcs
+            for (byte j = 0; j < Npc.Length; j++) Npc[j].Logic();
 
             // Faz reaparecer todos os itens do mapa
             if (Environment.TickCount > Loop.TimerMapItems + 300000)
@@ -40,13 +41,13 @@ namespace CryBits.Server.Entities
             }
         }
 
-        public TempNPC HasNPC(byte x, byte y)
+        public TempNpc HasNpc(byte x, byte y)
         {
-            // Verifica se há algum npc na cordenada
-            for (byte i = 0; i < NPC.Length; i++)
-                if (NPC[i].Alive)
-                    if (NPC[i].X == x && NPC[i].Y == y)
-                        return NPC[i];
+            // Verifica se há algum Npc na cordenada
+            for (byte i = 0; i < Npc.Length; i++)
+                if (Npc[i].Alive)
+                    if (Npc[i].X == x && Npc[i].Y == y)
+                        return Npc[i];
 
             return null;
         }
@@ -104,7 +105,7 @@ namespace CryBits.Server.Entities
             if (Data.TileBlocked(nextX, nextY)) return true;
             if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
             if (Data.Attribute[x, y].Block[(byte)direction]) return true;
-            if (countEntities && (HasPlayer(nextX, nextY) != null || HasNPC(nextX, nextY) != null)) return true;
+            if (countEntities && (HasPlayer(nextX, nextY) != null || HasNpc(nextX, nextY) != null)) return true;
             return false;
         }
 
@@ -114,12 +115,12 @@ namespace CryBits.Server.Entities
             TempMap tempMap = new TempMap(id, map);
             List.Add(id, tempMap);
 
-            // NPCBehaviour do mapa
-            tempMap.NPC = new TempNPC[map.NPC.Count];
-            for (byte i = 0; i < tempMap.NPC.Length; i++)
+            // NpcBehaviour do mapa
+            tempMap.Npc = new TempNpc[map.Npc.Count];
+            for (byte i = 0; i < tempMap.Npc.Length; i++)
             {
-                tempMap.NPC[i] = new TempNPC(i, tempMap, map.NPC[i].NPC);
-                tempMap.NPC[i].Spawn();
+                tempMap.Npc[i] = new TempNpc(i, tempMap, map.Npc[i].Npc);
+                tempMap.Npc[i].Spawn();
             }
 
             // Itens do mapa

@@ -5,6 +5,7 @@ using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.Media.Audio;
+using CryBits.Enums;
 using static CryBits.Client.Logic.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
 
@@ -37,7 +38,7 @@ namespace CryBits.Client.UI
 
             // Executa o evento
             Execute(Name);
-            Sound.Play(CryBits.Sounds.Click);
+            Sound.Play(Enums.Sounds.Click);
         }
 
         private static void Execute(string name)
@@ -78,7 +79,7 @@ namespace CryBits.Client.UI
             if (!Options.Musics)
                 Music.Stop();
             else if (Windows.Current == WindowsTypes.Menu)
-                Music.Play(CryBits.Musics.Menu);
+                Music.Play(Enums.Musics.Menu);
             else if (Windows.Current == WindowsTypes.Game)
                 Music.Play((Musics)TempMap.Current.Data.Music);
         }

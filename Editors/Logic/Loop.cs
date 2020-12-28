@@ -6,6 +6,7 @@ using CryBits.Editors.Forms;
 using CryBits.Editors.Media;
 using CryBits.Editors.Media.Audio;
 using CryBits.Editors.Network;
+using CryBits.Enums;
 
 namespace CryBits.Editors.Logic
 {

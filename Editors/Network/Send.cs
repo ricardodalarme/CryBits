@@ -1,6 +1,6 @@
 ﻿using CryBits.Editors.Forms;
 using CryBits.Entities;
-using CryBits.Packets;
+using CryBits.Enums;
 using Lidgren.Network;
 using static CryBits.Defaults;
 using static CryBits.Utils;
@@ -64,12 +64,12 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void RequestNPCs()
+        public static void RequestNpcs()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ClientPackets.RequestNPCs);
+            data.Write((byte)ClientPackets.RequestNpcs);
             Packet(data);
         }
 
@@ -132,13 +132,13 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void WriteNPCs()
+        public static void WriteNpcs()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-            data.Write((byte)ClientPackets.WriteNPCs);
-            ObjectToByteArray(data, NPC.List);
+            data.Write((byte)ClientPackets.WriteNpcs);
+            ObjectToByteArray(data, Npc.List);
             Packet(data);
         }
 

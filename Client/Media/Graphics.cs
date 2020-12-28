@@ -9,6 +9,7 @@ using CryBits.Client.Logic;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
 using CryBits.Entities;
+using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -28,15 +29,15 @@ namespace CryBits.Client.Media
         public static Font FontDefault;
 
         // Texturas
-        public static Texture[] TexCharacter;
-        public static Texture[] TexTile;
-        public static Texture[] TexFace;
-        public static Texture[] TexPanel;
-        public static Texture[] TexButton;
-        public static Texture[] TexPanorama;
-        public static Texture[] TexFog;
-        public static Texture[] TexLight;
-        public static Texture[] TexItem;
+        public static List<Texture> TexCharacter;
+        public static List<Texture> TexTile;
+        public static List<Texture> TexFace;
+        public static List<Texture> TexPanel;
+        public static List<Texture> TexButton;
+        public static List<Texture> TexPanorama;
+        public static List<Texture> TexFog;
+        public static List<Texture> TexLight;
+        public static List<Texture> TexItem;
         public static Texture TexCheckBox;
         public static Texture TexTextBox;
         public static Texture TexWeather;
@@ -97,18 +98,15 @@ namespace CryBits.Client.Media
             TexPartyBars = new Texture(Directories.TexPartyBars.FullName + Format);
         }
 
-        private static Texture[] LoadTextures(string directory)
+        private static List<Texture> LoadTextures(string directory)
         {
             short i = 1;
-            Texture[] tempTex = Array.Empty<Texture>();
+            List<Texture> tempTex = new List<Texture>();
+            tempTex.Add(null);
 
+            // Carrega todas do diretório e as adiciona a lista
             while (File.Exists(directory + i + Format))
-            {
-                // Carrega todas do diretório e as adiciona a lista
-                Array.Resize(ref tempTex, i + 1);
-                tempTex[i] = new Texture(directory + i + Format);
-                i += 1;
-            }
+                tempTex.Add(new Texture(directory + i++ + Format));
 
             // Retorna o cache da textura
             return tempTex;
@@ -271,10 +269,10 @@ namespace CryBits.Client.Media
             MapBlood();
             MapItems();
 
-            // Desenha os NPCs
-            for (byte i = 0; i < TempMap.Current.NPC.Length; i++)
-                if (TempMap.Current.NPC[i].Data != null)
-                    NPC(TempMap.Current.NPC[i]);
+            // Desenha os Npcs
+            for (byte i = 0; i < TempMap.Current.Npc.Length; i++)
+                if (TempMap.Current.Npc[i].Data != null)
+                    Npc(TempMap.Current.Npc[i]);
 
             // Desenha os jogadores
             for (byte i = 0; i < Player.List.Count; i++)
@@ -722,7 +720,7 @@ namespace CryBits.Client.Media
             bool hurt = false;
 
             // Previne sobrecargas
-            if (player.TextureNum <= 0 || player.TextureNum > TexCharacter.GetUpperBound(0)) return;
+            if (player.TextureNum <= 0 || player.TextureNum > TexCharacter.Count) return;
 
             // Define a animação
             if (player.Attacking && player.AttackTimer + AttackSpeed / 2 > Environment.TickCount)
@@ -785,70 +783,70 @@ namespace CryBits.Client.Media
             DrawText(player.Name, ConvertX(position.X), ConvertY(position.Y), color);
         }
 
-        private static void NPC(TempNPC npc)
+        private static void Npc(TempNpc Npc)
         {
             byte column = 0;
             bool hurt = false;
 
             // Previne sobrecargas
-            if (npc.Data.Texture <= 0 || npc.Data.Texture > TexCharacter.GetUpperBound(0)) return;
+            if (Npc.Data.Texture <= 0 || Npc.Data.Texture > TexCharacter.Count) return;
 
             // Define a animação
-            if (npc.Attacking && npc.AttackTimer + AttackSpeed / 2 > Environment.TickCount)
+            if (Npc.Attacking && Npc.AttackTimer + AttackSpeed / 2 > Environment.TickCount)
                 column = AnimationAttack;
             else
             {
-                if (npc.X2 > 8 && npc.X2 < Grid) column = npc.Animation;
-                else if (npc.X2 < -8 && npc.X2 > Grid * -1) column = npc.Animation;
-                else if (npc.Y2 > 8 && npc.Y2 < Grid) column = npc.Animation;
-                else if (npc.Y2 < -8 && npc.Y2 > Grid * -1) column = npc.Animation;
+                if (Npc.X2 > 8 && Npc.X2 < Grid) column = Npc.Animation;
+                else if (Npc.X2 < -8 && Npc.X2 > Grid * -1) column = Npc.Animation;
+                else if (Npc.Y2 > 8 && Npc.Y2 < Grid) column = Npc.Animation;
+                else if (Npc.Y2 < -8 && Npc.Y2 > Grid * -1) column = Npc.Animation;
             }
 
             // Demonstra que o personagem está sofrendo dano
-            if (npc.Hurt > 0) hurt = true;
+            if (Npc.Hurt > 0) hurt = true;
 
             // Desenha o jogador
-            Character(npc.Data.Texture, new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY)), npc.Direction, column, hurt);
-            NPCName(npc);
-            NPCBars(npc);
+            Character(Npc.Data.Texture, new Point(ConvertX(Npc.PixelX), ConvertY(Npc.PixelY)), Npc.Direction, column, hurt);
+            NpcName(Npc);
+            NpcBars(Npc);
         }
 
-        private static void NPCName(TempNPC npc)
+        private static void NpcName(TempNpc Npc)
         {
             Point position = new Point();
             Color color;
-            int nameSize = MeasureString(npc.Data.Name);
-            Texture texture = TexCharacter[npc.Data.Texture];
+            int nameSize = MeasureString(Npc.Data.Name);
+            Texture texture = TexCharacter[Npc.Data.Texture];
 
             // Posição do texto
-            position.X = npc.PixelX + Size(texture).Width / AnimationAmount / 2 - nameSize / 2;
-            position.Y = npc.PixelY - Size(texture).Height / AnimationAmount / 2;
+            position.X = Npc.PixelX + Size(texture).Width / AnimationAmount / 2 - nameSize / 2;
+            position.Y = Npc.PixelY - Size(texture).Height / AnimationAmount / 2;
 
             // Cor do texto
-            switch (npc.Data.Behaviour)
+            switch (Npc.Data.Behaviour)
             {
-                case NPCs.Friendly: color = Color.White; break;
-                case NPCs.AttackOnSight: color = Color.Red; break;
-                case NPCs.AttackWhenAttacked: color = new Color(228, 120, 51); break;
+                case Npcs.Friendly: color = Color.White; break;
+                case Npcs.AttackOnSight: color = Color.Red; break;
+                case Npcs.AttackWhenAttacked: color = new Color(228, 120, 51); break;
                 default: color = Color.White; break;
             }
 
             // Desenha o texto
-            DrawText(npc.Data.Name, ConvertX(position.X), ConvertY(position.Y), color);
+            DrawText(Npc.Data.Name, ConvertX(position.X), ConvertY(position.Y), color);
         }
 
-        private static void NPCBars(TempNPC npc)
+        private static void NpcBars(TempNpc Npc)
         {
-            Texture texture = TexCharacter[npc.Data.Texture];
-            short value = npc.Vital[(byte)Vitals.HP];
+            Texture texture = TexCharacter[Npc.Data.Texture];
+            short value = Npc.Vital[(byte)Vitals.HP];
 
             // Apenas se necessário
-            if (value <= 0 || value >= npc.Data.Vital[(byte)Vitals.HP]) return;
+            if (value <= 0 || value >= Npc.Data.Vital[(byte)Vitals.HP]) return;
 
             // Posição
-            Point position = new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY) + Size(texture).Height / AnimationAmount + 4);
+            Point position = new Point(ConvertX(Npc.PixelX), ConvertY(Npc.PixelY) + Size(texture).Height / AnimationAmount + 4);
             int fullWidth = Size(texture).Width / AnimationAmount;
-            int width = value * fullWidth / npc.Data.Vital[(byte)Vitals.HP];
+            int width = value * fullWidth / Npc.Data.Vital[(byte)Vitals.HP];
 
             // Desenha a barra 
             Render(TexBars, position.X, position.Y, 0, 4, fullWidth, 4);
