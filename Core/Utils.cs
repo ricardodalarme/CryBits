@@ -13,28 +13,28 @@ namespace CryBits
         // Números aleatórios
         public static readonly Random MyRandom = new Random();
 
-        public static Directions ReverseDirection(Directions direction)
+        public static Direction ReverseDirection(Direction direction)
         {
             // Retorna a direção inversa
             switch (direction)
             {
-                case Directions.Up: return Directions.Down;
-                case Directions.Down: return Directions.Up;
-                case Directions.Left: return Directions.Right;
-                case Directions.Right: return Directions.Left;
-                default: return Directions.Count;
+                case Direction.Up: return Direction.Down;
+                case Direction.Down: return Direction.Up;
+                case Direction.Left: return Direction.Right;
+                case Direction.Right: return Direction.Left;
+                default: return Direction.Count;
             }
         }
 
-        public static void NextTile(Directions direction, ref byte x, ref byte y)
+        public static void NextTile(Direction direction, ref byte x, ref byte y)
         {
             // Próximo azulejo
             switch (direction)
             {
-                case Directions.Up: y -= 1; break;
-                case Directions.Down: y += 1; break;
-                case Directions.Right: x += 1; break;
-                case Directions.Left: x -= 1; break;
+                case Direction.Up: y -= 1; break;
+                case Direction.Down: y += 1; break;
+                case Direction.Right: x += 1; break;
+                case Direction.Left: x -= 1; break;
             }
         }
 

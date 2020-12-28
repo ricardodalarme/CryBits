@@ -5,6 +5,7 @@ using CryBits.Enums;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using static CryBits.Utils;
+using Item = CryBits.Entities.Item;
 
 namespace CryBits.Server.Entities
 {
@@ -89,12 +90,12 @@ namespace CryBits.Server.Entities
             // Verifica se tem algum atributo de item no mapa
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
-                    if (Data.Attribute[x, y].Type == (byte)TileAttributes.Item)
+                    if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
                         // Adiciona o item
                         Item.Add(new MapItems(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)), Data.Attribute[x, y].Data2, x, y));
         }
 
-        public bool TileBlocked(byte x, byte y, Directions direction, bool countEntities = true)
+        public bool TileBlocked(byte x, byte y, Direction direction, bool countEntities = true)
         {
             byte nextX = x, nextY = y;
 

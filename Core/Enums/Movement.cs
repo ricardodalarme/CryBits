@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Movements
+    public enum Movement
     {
         Stopped,
         Walking,

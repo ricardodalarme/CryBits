@@ -1,9 +1,9 @@
 ﻿namespace CryBits.Enums
 {
-    public enum WindowsTypes
+    public enum Vital
     {
-        Menu,
-        Game,
+        HP,
+        MP,
         Count
     }
 }

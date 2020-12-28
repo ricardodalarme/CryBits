@@ -6,11 +6,11 @@ namespace CryBits.Client.Entities
     internal class Character
     {
         // Geral
-        public short[] Vital = new short[(byte)Vitals.Count];
+        public short[] Vital = new short[(byte)Enums.Vital.Count];
         public byte X;
         public byte Y;
-        public Directions Direction;
-        public Movements Movement;
+        public Direction Direction;
+        public Movement Movement;
         public short X2;
         public short Y2;
         public byte Animation;
@@ -33,9 +33,9 @@ namespace CryBits.Client.Entities
             // Define a velocidade que o jogador se move
             switch (Movement)
             {
-                case Movements.Walking: speed = 2; break;
-                case Movements.Moving: speed = 3; break;
-                case Movements.Stopped:
+                case Movement.Walking: speed = 2; break;
+                case Movement.Moving: speed = 3; break;
+                case Movement.Stopped:
                     // Reseta os dados
                     X2 = 0;
                     Y2 = 0;
@@ -45,10 +45,10 @@ namespace CryBits.Client.Entities
             // Define a Posição exata do jogador
             switch (Direction)
             {
-                case Directions.Up: Y2 -= speed; break;
-                case Directions.Down: Y2 += speed; break;
-                case Directions.Right: X2 += speed; break;
-                case Directions.Left: X2 -= speed; break;
+                case Direction.Up: Y2 -= speed; break;
+                case Direction.Down: Y2 += speed; break;
+                case Direction.Right: X2 += speed; break;
+                case Direction.Left: X2 -= speed; break;
             }
 
             // Verifica se não passou do limite
@@ -58,7 +58,7 @@ namespace CryBits.Client.Entities
             if (y < 0 && Y2 > 0) Y2 = 0;
 
             // Alterar as animações somente quando necessário
-            if (Direction == Directions.Right || Direction == Directions.Down)
+            if (Direction == Direction.Right || Direction == Direction.Down)
             {
                 if (X2 < 0 || Y2 < 0)
                     return;
@@ -67,7 +67,7 @@ namespace CryBits.Client.Entities
                 return;
 
             // Define as animações
-            Movement = Movements.Stopped;
+            Movement = Movement.Stopped;
             if (Animation == AnimationLeft)
                 Animation = AnimationRight;
             else

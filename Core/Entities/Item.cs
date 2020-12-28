@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CryBits.Enums;
+using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Entities
 {
@@ -8,12 +9,12 @@ namespace CryBits.Entities
     public class Item : Entity
     {
         // Lista de dados
-        public static readonly Dictionary<Guid, Item> List = new Dictionary<Guid, Item>();
+        public static Dictionary<Guid, Item> List = new Dictionary<Guid, Item>();
 
         // Geral
         public string Description { get; set; } = string.Empty;
         public short Texture { get; set; }
-        public Items Type { get; set; }
+        public Enums.Item Type { get; set; }
         public bool Stackable { get; set; }
         public BindOn Bind { get; set; }
         public Rarity Rarity { get; set; }
@@ -29,11 +30,11 @@ namespace CryBits.Entities
 
         // Poção
         public int PotionExperience { get; set; }
-        public short[] PotionVital { get; set; } = new short[(byte)Vitals.Count];
+        public short[] PotionVital { get; set; } = new short[(byte)Vital.Count];
 
         // Equipamento
         public byte EquipType { get; set; }
-        public short[] EquipAttribute { get; set; } = new short[(byte)Attributes.Count];
+        public short[] EquipAttribute { get; set; } = new short[(byte)Attribute.Count];
         public short WeaponDamage { get; set; }
     }
 }

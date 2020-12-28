@@ -12,6 +12,7 @@ using SFML.Window;
 using static CryBits.Defaults;
 using static CryBits.Client.Logic.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
+using Sound = CryBits.Enums.Sound;
 
 namespace CryBits.Client.UI
 {
@@ -38,7 +39,7 @@ namespace CryBits.Client.UI
             if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum])))) return;
 
             // Altera o estado do botão
-            Sound.Play(Sounds.Click);
+            Media.Audio.Sound.Play(Sound.Click);
             State = States.Above;
 
             // Executa o evento
@@ -69,7 +70,7 @@ namespace CryBits.Client.UI
 
             // Altera o estado do botão
             State = States.Above;
-            Sound.Play(Sounds.Above);
+            Media.Audio.Sound.Play(Sound.Above);
         }
 
         private static void Execute(string name)
@@ -322,27 +323,27 @@ namespace CryBits.Client.UI
 
         private static void AttributeStrength()
         {
-            Send.AddPoint(Attributes.Strength);
+            Send.AddPoint(Attribute.Strength);
         }
 
         private static void AttributeResistance()
         {
-            Send.AddPoint(Attributes.Resistance);
+            Send.AddPoint(Attribute.Resistance);
         }
 
         private static void AttributeIntelligence()
         {
-            Send.AddPoint(Attributes.Intelligence);
+            Send.AddPoint(Attribute.Intelligence);
         }
 
         private static void AttributeAgility()
         {
-            Send.AddPoint(Attributes.Agility);
+            Send.AddPoint(Attribute.Agility);
         }
 
         private static void AttributeVitality()
         {
-            Send.AddPoint(Attributes.Vitality);
+            Send.AddPoint(Attribute.Vitality);
         }
 
         private static void MenuInventory()

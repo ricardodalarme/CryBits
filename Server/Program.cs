@@ -119,11 +119,11 @@ namespace CryBits.Server
                     }
 
                     // Define o acesso do jogador
-                    account.Access = (Accesses)access;
+                    account.Access = (Access)access;
 
                     // Salva os dados
                     Write.Account(account);
-                    Console.WriteLine((Accesses)Convert.ToByte(parts[2]) + " access granted to " + parts[1] + ".");
+                    Console.WriteLine((Access)Convert.ToByte(parts[2]) + " access granted to " + parts[1] + ".");
                     break;
                 // Se o comando não existir mandar uma mensagem de ajuda
                 default:

@@ -1,7 +1,7 @@
 ﻿namespace CryBits.Enums
 {
     // Lista dos sons
-    public enum Sounds
+    public enum Sound
     {
         Click = 1,
         Above,

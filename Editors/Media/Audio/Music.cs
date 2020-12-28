@@ -14,9 +14,9 @@ namespace CryBits.Editors.Media.Audio
         public static SFML.Audio.Music Device;
 
         // Index da música reproduzida atualmente
-        public static Musics Current;
+        public static Enums.Music Current;
 
-        public static void Play(Musics index, bool loop = false)
+        public static void Play(Enums.Music index, bool loop = false)
         {
             FileInfo file = new FileInfo(Directories.Musics.FullName + (byte)index + Format);
 

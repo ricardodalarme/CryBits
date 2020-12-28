@@ -13,6 +13,6 @@ namespace CryBits.Editors.Entities.Tools
         public string Name { get; set; }
         public Point Position { get; set; }
         public bool Visible { get; set; }
-        public WindowsTypes Window { get; set; }
+        public Window Window { get; set; }
     }
 }

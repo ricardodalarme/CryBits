@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Npcs
+    public enum Behaviour
     {
         Friendly,
         AttackOnSight,

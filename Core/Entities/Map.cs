@@ -10,7 +10,7 @@ namespace CryBits.Entities
     public class Map : Entity
     {
         // Lista de dados
-        public static readonly Dictionary<Guid, Map> List = new Dictionary<Guid, Map>();
+        public static Dictionary<Guid, Map> List = new Dictionary<Guid, Map>();
 
         // Tamanho dos mapas
         public const byte Width = 25;
@@ -18,7 +18,7 @@ namespace CryBits.Entities
 
         // Dados
         public short Revision { get; set; }
-        public Morals Moral { get; set; }
+        public Moral Moral { get; set; }
         public IList<MapLayer> Layer { get; set; } = new List<MapLayer>();
         public MapAttribute[,] Attribute = new MapAttribute[Width, Height];
         public byte Panorama { get; set; }
@@ -29,7 +29,7 @@ namespace CryBits.Entities
         public IList<MapNpc> Npc { get; set; } = new List<MapNpc>();
         public IList<MapLight> Light { get; set; } = new List<MapLight>();
         public byte Lighting = 100;
-        public Map[] Link = new Map[(byte)Directions.Count];
+        public Map[] Link = new Map[(byte)Direction.Count];
 
         // Construtor
         public Map() 
@@ -46,7 +46,7 @@ namespace CryBits.Entities
         {
             // Verifica se o azulejo está bloqueado
             if (OutLimit(x, y)) return true;
-            if (Attribute[x, y].Type == (byte)TileAttributes.Block) return true;
+            if (Attribute[x, y].Type == (byte)TileAttribute.Block) return true;
             return false;
         }
 
@@ -71,7 +71,7 @@ namespace CryBits.Entities
         public short Data3;
         public short Data4;
         public byte Zone;
-        public bool[] Block = new bool[(byte)Directions.Count];
+        public bool[] Block = new bool[(byte)Direction.Count];
     }
 
     [Serializable]
@@ -328,7 +328,7 @@ namespace CryBits.Entities
     [Serializable]
     public class MapWeather
     {
-        public Weathers Type;
+        public Weather Type;
         public byte Intensity;
     }
 

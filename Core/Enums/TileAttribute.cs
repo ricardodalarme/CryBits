@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum TileAttributes
+    public enum TileAttribute
     {
         None,
         Block,

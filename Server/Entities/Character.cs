@@ -8,7 +8,7 @@ namespace CryBits.Server.Entities
         public TempMap Map { get; set; }
         public byte X { get; set; }
         public byte Y { get; set; }
-        public Directions Direction { get; set; }
-        public short[] Vital { get;  } = new short[(byte)Vitals.Count];
+        public Direction Direction { get; set; }
+        public short[] Vital { get;  } = new short[(byte)Enums.Vital.Count];
     }
 }

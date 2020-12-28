@@ -1,8 +1,8 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Messages
+    public enum Message
     {
-        Game,
+        Local,
         Map,
         Global,
         Private

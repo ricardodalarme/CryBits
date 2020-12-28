@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CryBits.Entities;
 using CryBits.Enums;
+using Item = CryBits.Entities.Item;
 
 namespace CryBits.Client.Entities
 {
@@ -20,9 +21,9 @@ namespace CryBits.Client.Entities
         public string Name { get; set; } = string.Empty;
         public short TextureNum { get; set; }
         public short Level { get; set; }
-        public short[] MaxVital { get; set; } = new short[(byte)Vitals.Count];
-        public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
-        public Item[] Equipment { get; set; } = new Item[(byte)Equipments.Count];
+        public short[] MaxVital { get; set; } = new short[(byte)Enums.Vital.Count];
+        public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
+        public Item[] Equipment { get; set; } = new Item[(byte)Enums.Equipment.Count];
         public TempMap Map;
 
         public Player(string name)

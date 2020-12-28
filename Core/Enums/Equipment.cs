@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Equipments
+    public enum Equipment
     {
         Weapon,
         Armor,

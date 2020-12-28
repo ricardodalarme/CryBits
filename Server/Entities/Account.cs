@@ -13,7 +13,7 @@ namespace CryBits.Server.Entities
         public NetConnection Connection { get; }
         public string User { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public Accesses Access { get; set; }
+        public Access Access { get; set; }
         public bool InEditor { get; set; }
         public Player Character { get; set; }
         public List<TempCharacter> Characters { get; set; } = new List<TempCharacter>();

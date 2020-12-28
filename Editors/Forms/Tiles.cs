@@ -18,7 +18,7 @@ namespace CryBits.Editors.Forms
         public static EditorTiles Form;
 
         // Atributo selecionado
-        private TileAttributes _attributes;
+        private TileAttribute _attribute;
 
         public EditorTiles()
         {
@@ -98,17 +98,17 @@ namespace CryBits.Editors.Forms
             {
                 // Define
                 if (e.Button == MouseButtons.Left)
-                    Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute = (byte)_attributes;
+                    Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute = (byte)_attribute;
                 // Remove
                 else if (e.Button == MouseButtons.Right)
                     Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute = 0;
             }
             // Bloqueio direcional
             else if (optDirBlock.Checked)
-                for (byte i = 0; i < (byte)Directions.Count; i++)
+                for (byte i = 0; i < (byte)Direction.Count; i++)
                     if (tileDif.X >= Block_Position(i).X && tileDif.X <= Block_Position(i).X + 8)
                         if (tileDif.Y >= Block_Position(i).Y && tileDif.Y <= Block_Position(i).Y + 8)
-                            if (Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute != (byte)TileAttributes.Block)
+                            if (Tile.List[scrlTile.Value].Data[position.X, position.Y].Attribute != (byte)TileAttribute.Block)
                                 // Altera o valor de bloqueio
                                 Tile.List[scrlTile.Value].Data[position.X, position.Y].Block[i] = !Tile.List[scrlTile.Value].Data[position.X, position.Y].Block[i];
         }
@@ -116,7 +116,7 @@ namespace CryBits.Editors.Forms
         private void optBlock_CheckedChanged(object sender, EventArgs e)
         {
             // Define o atributo
-            _attributes = TileAttributes.Block;
+            _attribute = TileAttribute.Block;
         }
 
         private void optAttributes_CheckedChanged(object sender, EventArgs e)

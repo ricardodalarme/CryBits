@@ -16,6 +16,9 @@ using static CryBits.Editors.Logic.Options;
 using static CryBits.Editors.Logic.Utils;
 using Color = System.Drawing.Color;
 using Graphics = CryBits.Editors.Media.Graphics;
+using Item = CryBits.Entities.Item;
+using Music = CryBits.Editors.Media.Audio.Music;
+using Sound = CryBits.Editors.Media.Audio.Sound;
 
 namespace CryBits.Editors.Forms
 {
@@ -73,7 +76,7 @@ namespace CryBits.Editors.Forms
             Graphics.WinMapLighting = new RenderTexture((uint)Width, (uint)Height);
 
             // Lista os dados
-            for (byte i = 0; i < (byte)Layers.Count; i++) cmbLayers_Type.Items.Add(((Layers)i).ToString());
+            for (byte i = 0; i < (byte)Layer.Count; i++) cmbLayers_Type.Items.Add(((Layer)i).ToString());
             for (byte i = 1; i < Graphics.TexTile.Count; i++) cmbTiles.Items.Add(i.ToString());
             Update_List();
 
@@ -857,7 +860,7 @@ namespace CryBits.Editors.Forms
             else if (butMAttributes.Checked && optA_DirBlock.Checked)
             {
                 // Define o bloqueio direcional
-                for (byte i = 0; i < (byte)Directions.Count; i++)
+                for (byte i = 0; i < (byte)Direction.Count; i++)
                     if (tileDif.X >= Block_Position(i).X && tileDif.X <= Block_Position(i).X + 8)
                         if (tileDif.Y >= Block_Position(i).Y && tileDif.Y <= Block_Position(i).Y + 8)
                             // Altera o valor de bloqueio
@@ -1124,7 +1127,7 @@ namespace CryBits.Editors.Forms
                 lstLayers.Items[i].Checked = true;
                 lstLayers.Items[i].SubItems.Add((i + 1).ToString());
                 lstLayers.Items[i].SubItems.Add(Selected.Layer[i].Name);
-                lstLayers.Items[i].SubItems.Add(((Layers)Selected.Layer[i].Type).ToString());
+                lstLayers.Items[i].SubItems.Add(((Layer)Selected.Layer[i].Type).ToString());
             }
 
             // Seleciona o primeiro item
@@ -1184,7 +1187,7 @@ namespace CryBits.Editors.Forms
             List<MapLayer> temp = new List<MapLayer>();
 
             // Reordena as camadas
-            for (byte n = 0; n < (byte)Layers.Count; n++)
+            for (byte n = 0; n < (byte)Layer.Count; n++)
                 for (byte i = 0; i < Selected.Layer.Count; i++)
                     if (Selected.Layer[i].Type == n)
                         temp.Add(Selected.Layer[i]);
@@ -1388,20 +1391,20 @@ namespace CryBits.Editors.Forms
                                 Selected.Attribute[x, y].Type = Tile.List[data.Texture].Data[data.X, data.Y].Attribute;
 
                             // Bloqueio direcional
-                            for (byte b = 0; b < (byte)Directions.Count; b++)
+                            for (byte b = 0; b < (byte)Direction.Count; b++)
                                 if (Tile.List[data.Texture].Data[data.X, data.Y].Block[b])
                                     Selected.Attribute[x, y].Block[b] = Tile.List[data.Texture].Data[data.X, data.Y].Block[b];
                         }
                     }
         }
 
-        private TileAttributes Attribute_Selected()
+        private TileAttribute Attribute_Selected()
         {
             // Retorna com o atributo selecionado
-            if (optA_Block.Checked) return TileAttributes.Block;
-            if (optA_Warp.Checked) return TileAttributes.Warp;
-            if (optA_Item.Checked) return TileAttributes.Item;
-            return TileAttributes.None;
+            if (optA_Block.Checked) return TileAttribute.Block;
+            if (optA_Warp.Checked) return TileAttribute.Warp;
+            if (optA_Item.Checked) return TileAttribute.Item;
+            return TileAttribute.None;
         }
 
         private void optA_Warp_CheckedChanged(object sender, EventArgs e)

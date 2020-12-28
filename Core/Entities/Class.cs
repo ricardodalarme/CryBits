@@ -8,7 +8,7 @@ namespace CryBits.Entities
     public class Class : Entity
     {
         // Lista de dados
-        public static readonly Dictionary<Guid, Class> List = new Dictionary<Guid, Class>();
+        public static Dictionary<Guid, Class> List = new Dictionary<Guid, Class>();
 
         // Dados
         public string Description { get; set; }
@@ -18,8 +18,8 @@ namespace CryBits.Entities
         public byte SpawnDirection { get; set; }
         public byte SpawnX { get; set; }
         public byte SpawnY { get; set; }
-        public short[] Vital { get; set; } = new short[(byte)Vitals.Count];
-        public short[] Attribute { get; set; } = new short[(byte)Attributes.Count];
+        public short[] Vital { get; set; } = new short[(byte)Enums.Vital.Count];
+        public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
         public IList<ItemSlot> Item { get; set; } = new List<ItemSlot>();
     }
 }

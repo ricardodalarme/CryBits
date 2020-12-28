@@ -33,9 +33,9 @@ namespace CryBits.Editors.Entities
             if (EditorMaps.Form != null)
                 switch (EditorMaps.Form.Selected.Weather.Type)
                 {
-                    case Weathers.Thundering:
-                    case Weathers.Raining: Weather = new MapWeatherParticle[MaxRainParticles + 1]; break;
-                    case Weathers.Snowing: Weather = new MapWeatherParticle[MaxSnowParticles + 1]; break;
+                    case Enums.Weather.Thundering:
+                    case Enums.Weather.Raining: Weather = new MapWeatherParticle[MaxRainParticles + 1]; break;
+                    case Enums.Weather.Snowing: Weather = new MapWeatherParticle[MaxSnowParticles + 1]; break;
                 }
         }
 
@@ -111,7 +111,7 @@ namespace CryBits.Editors.Entities
             if (EditorMaps.Form == null || !EditorMaps.Form.Visible || EditorMaps.Form.Selected.Weather.Type == 0 || !EditorMaps.Form.butVisualization.Checked)
             {
                 if (Sound.List != null)
-                    if (Sound.List[(byte)Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
+                    if (Sound.List[(byte)Enums.Sound.Rain].Status == SoundStatus.Playing) Sound.StopAll();
                 return;
             }
 
@@ -119,13 +119,13 @@ namespace CryBits.Editors.Entities
             MapWeather weather = EditorMaps.Form.Selected.Weather;
 
             // Reproduz o som chuva
-            if (weather.Type == Weathers.Raining || weather.Type == Weathers.Thundering)
+            if (weather.Type == Enums.Weather.Raining || weather.Type == Enums.Weather.Thundering)
             {
-                if (Sound.List[(byte)Sounds.Rain].Status != SoundStatus.Playing)
-                    Sound.Play(Sounds.Rain);
+                if (Sound.List[(byte)Enums.Sound.Rain].Status != SoundStatus.Playing)
+                    Sound.Play(Enums.Sound.Rain);
             }
             else
-              if (Sound.List[(byte)Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
+              if (Sound.List[(byte)Enums.Sound.Rain].Status == SoundStatus.Playing) Sound.StopAll();
 
             // Contagem da neve
             if (_snowTimer < Environment.TickCount)
@@ -158,9 +158,9 @@ namespace CryBits.Editors.Entities
                             // Cria a partícula de acordo com o seu tipo
                             switch (weather.Type)
                             {
-                                case Weathers.Thundering:
-                                case Weathers.Raining: SetRain(i); break;
-                                case Weathers.Snowing: SetSnow(i); break;
+                                case Enums.Weather.Thundering:
+                                case Enums.Weather.Raining: SetRain(i); break;
+                                case Enums.Weather.Snowing: SetSnow(i); break;
                             }
                         }
                     }
@@ -172,9 +172,9 @@ namespace CryBits.Editors.Entities
                     // Movimenta a partícula de acordo com o seu tipo
                     switch (weather.Type)
                     {
-                        case Weathers.Thundering:
-                        case Weathers.Raining: MoveRain(i); break;
-                        case Weathers.Snowing: SnowMove(i, move); break;
+                        case Enums.Weather.Thundering:
+                        case Enums.Weather.Raining: MoveRain(i); break;
+                        case Enums.Weather.Snowing: SnowMove(i, move); break;
                     }
 
                     // Reseta a partícula
@@ -183,12 +183,12 @@ namespace CryBits.Editors.Entities
                 }
 
             // Trovoadas
-            if (weather.Type == Weathers.Thundering)
+            if (weather.Type == Enums.Weather.Thundering)
                 if (MyRandom.Next(0, MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
                 {
                     // Som do trovão
-                    int thunder = MyRandom.Next((byte)Sounds.Thunder1, (byte)Sounds.Thunder4);
-                    Sound.Play((Sounds)thunder);
+                    int thunder = MyRandom.Next((byte)Enums.Sound.Thunder1, (byte)Enums.Sound.Thunder4);
+                    Sound.Play((Enums.Sound)thunder);
 
                     // Relâmpago
                     if (thunder < 6) Lightning = 190;

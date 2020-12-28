@@ -31,7 +31,7 @@ namespace CryBits.Editors.Entities
                 for (byte y = 0; y <= size.Height; y++)
                 {
                     Data[x, y] = new TileData();
-                    Data[x, y].Block = new bool[(byte)Directions.Count];
+                    Data[x, y].Block = new bool[(byte)Direction.Count];
                 }
         }
     }
@@ -40,6 +40,6 @@ namespace CryBits.Editors.Entities
     internal class TileData
     {
         public byte Attribute;
-        public bool[] Block = new bool[(byte)Directions.Count];
+        public bool[] Block = new bool[(byte)Direction.Count];
     }
 }

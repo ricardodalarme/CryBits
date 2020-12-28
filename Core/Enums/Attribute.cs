@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Attributes
+    public enum Attribute
     {
         Strength,
         Resistance,

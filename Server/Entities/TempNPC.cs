@@ -6,6 +6,7 @@ using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using static CryBits.Defaults;
 using static CryBits.Utils;
+using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Server.Entities
 {
@@ -22,10 +23,10 @@ namespace CryBits.Server.Entities
         private short Regeneration(byte vital)
         {
             // Cálcula o máximo de vital que o Npc possui
-            switch ((Vitals)vital)
+            switch ((Vital)vital)
             {
-                case Vitals.HP: return (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attributes.Vitality] * 0.3);
-                case Vitals.MP: return (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attributes.Intelligence] * 0.1);
+                case Enums.Vital.HP: return (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Vitality] * 0.3);
+                case Enums.Vital.MP: return (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Intelligence] * 0.1);
             }
 
             return 0;
@@ -54,7 +55,7 @@ namespace CryBits.Server.Entities
             }
 
             byte targetX = 0, targetY = 0;
-            bool[] canMove = new bool[(byte)Directions.Count];
+            bool[] canMove = new bool[(byte)Enums.Direction.Count];
             short distance;
             bool moved = false;
             bool move = false;
@@ -63,7 +64,7 @@ namespace CryBits.Server.Entities
             // Regeneração //
             /////////////////
             if (Environment.TickCount > Loop.TimerRegen + 5000)
-                for (byte v = 0; v < (byte)Vitals.Count; v++)
+                for (byte v = 0; v < (byte)Enums.Vital.Count; v++)
                     if (Vital[v] < Data.Vital[v])
                     {
                         // Renera os vitais
@@ -80,7 +81,7 @@ namespace CryBits.Server.Entities
             // Movimentação //
             //////////////////
             // Atacar ao ver
-            if (Data.Behaviour == Npcs.AttackOnSight)
+            if (Data.Behaviour == Behaviour.AttackOnSight)
             {
                 // Jogador
                 if (Target == null)
@@ -165,44 +166,44 @@ namespace CryBits.Server.Entities
             if (move)
             {
                 // Verifica como o Npc pode se mover
-                if (Vital[(byte)Vitals.HP] > Data.Vital[(byte)Vitals.HP] * (Data.FleeHealth / 100.0))
+                if (Vital[(byte)Enums.Vital.HP] > Data.Vital[(byte)Enums.Vital.HP] * (Data.FleeHealth / 100.0))
                 {
                     // Para perto do alvo
-                    canMove[(byte)Directions.Up] = Y > targetY;
-                    canMove[(byte)Directions.Down] = Y < targetY;
-                    canMove[(byte)Directions.Left] = X > targetX;
-                    canMove[(byte)Directions.Right] = X < targetX;
+                    canMove[(byte)Enums.Direction.Up] = Y > targetY;
+                    canMove[(byte)Enums.Direction.Down] = Y < targetY;
+                    canMove[(byte)Enums.Direction.Left] = X > targetX;
+                    canMove[(byte)Enums.Direction.Right] = X < targetX;
                 }
                 else
                 {
                     // Para longe do alvo
-                    canMove[(byte)Directions.Up] = Y < targetY;
-                    canMove[(byte)Directions.Down] = Y > targetY;
-                    canMove[(byte)Directions.Left] = X < targetX;
-                    canMove[(byte)Directions.Right] = X > targetX;
+                    canMove[(byte)Enums.Direction.Up] = Y < targetY;
+                    canMove[(byte)Enums.Direction.Down] = Y > targetY;
+                    canMove[(byte)Enums.Direction.Left] = X < targetX;
+                    canMove[(byte)Enums.Direction.Right] = X > targetX;
                 }
 
                 // Aleatoriza a forma que ele vai se movimentar até o alvo
                 if (MyRandom.Next(0, 2) == 0)
                 {
-                    for (byte d = 0; d < (byte)Directions.Count; d++)
-                        if (!moved && canMove[d] && Move((Directions)d))
+                    for (byte d = 0; d < (byte)Enums.Direction.Count; d++)
+                        if (!moved && canMove[d] && Move((Direction)d))
                             moved = true;
                 }
                 else
-                    for (short d = (byte)Directions.Count - 1; d >= 0; d--)
-                        if (!moved && canMove[d] && Move((Directions)d))
+                    for (short d = (byte)Enums.Direction.Count - 1; d >= 0; d--)
+                        if (!moved && canMove[d] && Move((Direction)d))
                             moved = true;
             }
 
             // Move-se aleatoriamente
-            if (Data.Behaviour == (byte)Npcs.Friendly || Target == null)
+            if (Data.Behaviour == (byte)Behaviour.Friendly || Target == null)
                 if (MyRandom.Next(0, 3) == 0 && !moved)
-                    if (Data.Movement == NpcMovements.MoveRandomly)
-                        Move((Directions)MyRandom.Next(0, 4), 1, true);
-                    else if (Data.Movement == NpcMovements.TurnRandomly)
+                    if (Data.Movement == MovementStyle.MoveRandomly)
+                        Move((Direction)MyRandom.Next(0, 4), 1, true);
+                    else if (Data.Movement == MovementStyle.TurnRandomly)
                     {
-                        Direction = (Directions)MyRandom.Next(0, 4);
+                        Direction = (Direction)MyRandom.Next(0, 4);
                         Send.MapNpcDirection(this);
                     }
 
@@ -212,14 +213,14 @@ namespace CryBits.Server.Entities
             Attack();
         }
 
-        private void Spawn(byte x, byte y, Directions direction = 0)
+        private void Spawn(byte x, byte y, Direction direction = 0)
         {
             // Faz o Npc surgir no mapa
             Alive = true;
             X = x;
             Y = y;
             Direction = direction;
-            for (byte i = 0; i < (byte)Vitals.Count; i++) Vital[i] = Data.Vital[i];
+            for (byte i = 0; i < (byte)Enums.Vital.Count; i++) Vital[i] = Data.Vital[i];
 
             // Envia os dados aos jogadores
             if (Socket.Device != null) Send.MapNpc(Map.Npc[Index]);
@@ -269,7 +270,7 @@ namespace CryBits.Server.Entities
                     }
         }
 
-        private bool Move(Directions direction, byte movement = 1, bool checkZone = false)
+        private bool Move(Direction direction, byte movement = 1, bool checkZone = false)
         {
             byte nextX = X, nextY = Y;
 
@@ -324,17 +325,17 @@ namespace CryBits.Server.Entities
             _attackTimer = Environment.TickCount;
 
             // Cálculo de dano
-            short attackDamage = (short)(Data.Attribute[(byte)Attributes.Strength] - victim.PlayerDefense);
+            short attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] - victim.PlayerDefense);
 
             // Dano não fatal
             if (attackDamage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.MapNpcAttack(this, victim.Name, Targets.Player);
+                Send.MapNpcAttack(this, victim.Name, Enums.Target.Player);
 
-                if (attackDamage < victim.Vital[(byte)Vitals.HP])
+                if (attackDamage < victim.Vital[(byte)Enums.Vital.HP])
                 {
-                    victim.Vital[(byte)Vitals.HP] -= attackDamage;
+                    victim.Vital[(byte)Enums.Vital.HP] -= attackDamage;
                     Send.PlayerVitals(victim);
                 }
                 // FATALITY
@@ -365,17 +366,17 @@ namespace CryBits.Server.Entities
             victim.Target = this;
 
             // Cálculo de dano
-            short attackDamage = (short)(Data.Attribute[(byte)Attributes.Strength] - victim.Data.Attribute[(byte)Attributes.Resistance]);
+            short attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] - victim.Data.Attribute[(byte)Attribute.Resistance]);
 
             // Dano não fatal
             if (attackDamage > 0)
             {
                 // Demonstra o ataque aos outros jogadores
-                Send.MapNpcAttack(this, victim.Index.ToString(), Targets.Npc);
+                Send.MapNpcAttack(this, victim.Index.ToString(), Enums.Target.Npc);
 
-                if (attackDamage < victim.Vital[(byte)Vitals.HP])
+                if (attackDamage < victim.Vital[(byte)Enums.Vital.HP])
                 {
-                    victim.Vital[(byte)Vitals.HP] -= attackDamage;
+                    victim.Vital[(byte)Enums.Vital.HP] -= attackDamage;
                     Send.MapNpcVitals(victim);
                 }
                 // FATALITY
