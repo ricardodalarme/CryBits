@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using CryBits.Client.Entities;
+﻿using CryBits.Client.Entities;
 using CryBits.Client.Library;
-using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
 using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Window;
-using static CryBits.Defaults;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 using static CryBits.Client.Logic.Utils;
+using static CryBits.Defaults;
 using Graphics = CryBits.Client.Media.Graphics;
 using Sound = CryBits.Enums.Sound;
 

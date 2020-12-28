@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
-using CryBits.Editors.Entities.Tools;
+﻿using CryBits.Editors.Entities.Tools;
 using CryBits.Editors.Library;
 using CryBits.Editors.Media;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
+using System;
+using System.Windows.Forms;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
@@ -20,7 +20,7 @@ namespace CryBits.Editors.Forms
         public static EditorInterface Form;
 
         // Ferramenta selecionada
-        private Entities.Tools.Tool _selected;
+        private Tool _selected;
 
         public EditorInterface()
         {
@@ -52,14 +52,14 @@ namespace CryBits.Editors.Forms
         {
             // Atualiza a lista de ordem
             treOrder.Nodes.Clear();
-            treOrder.Nodes.Add((TreeNode)Entities.Tools.Tool.Tree.Nodes[cmbWindows.SelectedIndex].Clone());
+            treOrder.Nodes.Add((TreeNode)Tool.Tree.Nodes[cmbWindows.SelectedIndex].Clone());
             treOrder.ExpandAll();
         }
 
         private void treOrder_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // Atualiza as informações
-            _selected = (Entities.Tools.Tool)treOrder.SelectedNode.Tag;
+            _selected = (Tool)treOrder.SelectedNode.Tag;
             prgProperties.SelectedObject = _selected;
         }
 
@@ -67,15 +67,15 @@ namespace CryBits.Editors.Forms
         {
             if (treOrder.SelectedNode != null)
             {
-                byte window = (byte)((Entities.Tools.Tool)treOrder.SelectedNode.Tag).Window;
+                byte window = (byte)((Tool)treOrder.SelectedNode.Tag).Window;
 
                 // Troca a ferramenta de janela
                 if (e.ChangedItem.Label == "Window")
                 {
-                    Entities.Tools.Tool.Tree.Nodes[window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
+                    Tool.Tree.Nodes[window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
                     treOrder.SelectedNode.Remove();
                     cmbWindows.SelectedIndex = window;
-                    treOrder.SelectedNode = Entities.Tools.Tool.Tree.Nodes[window].LastNode;
+                    treOrder.SelectedNode = Tool.Tree.Nodes[window].LastNode;
                 }
                 // Troca o nome da ferramenta
                 else if (e.ChangedItem.Label == "Name") treOrder.SelectedNode.Text = treOrder.SelectedNode.Tag.ToString();
@@ -106,8 +106,8 @@ namespace CryBits.Editors.Forms
         private void butConfirm_Click(object sender, EventArgs e)
         {
             // Adiciona uma nova ferramenta
-            Entities.Tools.Tool @new = new Entities.Tools.Tool();
-            Entities.Tools.Tool.Tree.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
+            Tool @new = new Tool();
+            Tool.Tree.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
             switch ((ToolType)cmbType.SelectedIndex)
             {
                 case ToolType.Button: @new = new Button(); break;
@@ -115,7 +115,7 @@ namespace CryBits.Editors.Forms
                 case ToolType.CheckBox: @new = new CheckBox(); break;
                 case ToolType.TextBox: @new = new TextBox(); break;
             }
-            Entities.Tools.Tool.Tree.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
+            Tool.Tree.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
             @new.Window = (Window)cmbWindows.SelectedIndex;
             grpNew.Visible = false;
         }

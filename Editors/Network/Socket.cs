@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using CryBits.Editors.Forms;
+﻿using CryBits.Editors.Forms;
 using Lidgren.Network;
+using System;
+using System.Windows.Forms;
 using static CryBits.Defaults;
 
 namespace CryBits.Editors.Network

@@ -1,8 +1,7 @@
-﻿using System;
-using CryBits.Editors.Forms;
+﻿using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
-using CryBits.Enums;
 using SFML.Audio;
+using System;
 
 namespace CryBits.Editors.Media.Audio
 {

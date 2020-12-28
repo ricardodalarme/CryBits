@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading;
-using System.Windows.Forms;
-using CryBits.Editors.Entities;
+﻿using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Media;
-using CryBits.Editors.Media.Audio;
 using CryBits.Editors.Network;
-using CryBits.Enums;
+using System;
+using System.Threading;
+using System.Windows.Forms;
 using Music = CryBits.Enums.Music;
 
 namespace CryBits.Editors.Logic

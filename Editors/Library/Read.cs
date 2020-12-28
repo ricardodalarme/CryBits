@@ -1,11 +1,10 @@
-﻿using System;
+﻿using CryBits.Editors.Entities;
+using CryBits.Editors.Entities.Tools;
+using CryBits.Enums;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using CryBits.Editors.Entities;
-using CryBits.Editors.Entities.Tools;
-using CryBits.Enums;
 using static CryBits.Editors.Logic.Options;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;

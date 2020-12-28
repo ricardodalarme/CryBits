@@ -1,8 +1,8 @@
-﻿using System.Drawing;
-using CryBits.Entities;
+﻿using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Server.Entities;
 using Lidgren.Network;
+using System.Drawing;
 using static CryBits.Defaults;
 using static CryBits.Utils;
 using Item = CryBits.Entities.Item;
@@ -123,7 +123,7 @@ namespace CryBits.Server.Network
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
-             data.Write((byte)ServerPacket.Classes);
+            data.Write((byte)ServerPacket.Classes);
             ObjectToByteArray(data, Class.List);
             ToPlayer(account, data);
         }

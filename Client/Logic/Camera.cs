@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using CryBits.Client.Entities;
+﻿using CryBits.Client.Entities;
 using CryBits.Entities;
+using System.Drawing;
 using static CryBits.Defaults;
 
 namespace CryBits.Client.Logic

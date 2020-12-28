@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using CryBits.Editors.Network;
+﻿using CryBits.Editors.Network;
 using DarkUI.Forms;
+using System;
+using System.Windows.Forms;
 using static CryBits.Defaults;
 
 namespace CryBits.Editors.Forms

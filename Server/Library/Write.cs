@@ -1,8 +1,8 @@
-﻿using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using CryBits.Entities;
+﻿using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Server.Entities;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using static CryBits.Defaults;
 using Item = CryBits.Entities.Item;
 

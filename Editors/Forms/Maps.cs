@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using CryBits.Editors.Entities;
+﻿using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
-using CryBits.Editors.Media.Audio;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 using static CryBits.Defaults;
 using static CryBits.Editors.Logic.Options;
 using static CryBits.Editors.Logic.Utils;
@@ -527,7 +526,7 @@ namespace CryBits.Editors.Forms
             butMNpcs.Checked = true;
 
             // Adiciona os Npcs e reseta os valores
-            foreach (var Npc in Npc.List.Values) cmbNpc.Items.Add(Npc);
+            foreach (var npc in Npc.List.Values) cmbNpc.Items.Add(npc);
             cmbNpc.SelectedIndex = 0;
             numNpc_Zone.Value = 0;
         }

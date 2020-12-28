@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using CryBits.Client.Entities;
+﻿using CryBits.Client.Entities;
 using CryBits.Client.Network;
 using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Window;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using static CryBits.Client.Logic.Utils;
 
 namespace CryBits.Client.UI
@@ -50,10 +50,10 @@ namespace CryBits.Client.UI
 
         // Retorna em qual slot o mouse está sobrepondo
         public static short InventorySlot => Slot(List["Menu_Inventory"], 7, 29, 6, 5);
-        public static short HotbarSlot => Slot(List["Hotbar"], 8, 6, 1, 10) ;
+        public static short HotbarSlot => Slot(List["Hotbar"], 8, 6, 1, 10);
         public static short TradeSlot => Slot(List["Trade"], 7, 50, 6, 5);
-        public static short ShopSlot => Slot(List["Shop"], 7, 50, 4, 7) ;
-        public static short EquipmentSlot => Slot(List["Menu_Character"], 7, 248, 1, 5) ;
+        public static short ShopSlot => Slot(List["Shop"], 7, 50, 4, 7);
+        public static short EquipmentSlot => Slot(List["Menu_Character"], 7, 248, 1, 5);
 
         public static void Inventory_MouseDown(MouseButtonEventArgs e)
         {

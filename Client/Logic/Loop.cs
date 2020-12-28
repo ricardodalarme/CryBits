@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading;
-using System.Windows.Forms;
-using CryBits.Client.Entities;
+﻿using CryBits.Client.Entities;
 using CryBits.Client.Media;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
 using CryBits.Enums;
+using System;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace CryBits.Client.Logic
 {

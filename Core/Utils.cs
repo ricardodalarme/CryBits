@@ -1,10 +1,10 @@
-﻿using System;
+﻿using CryBits.Entities;
+using CryBits.Enums;
+using Lidgren.Network;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using CryBits.Entities;
-using CryBits.Enums;
-using Lidgren.Network;
 
 namespace CryBits
 {

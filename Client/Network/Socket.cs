@@ -1,8 +1,8 @@
-﻿using System;
-using System.Windows.Forms;
-using CryBits.Client.Entities;
+﻿using CryBits.Client.Entities;
 using CryBits.Client.UI;
 using Lidgren.Network;
+using System;
+using System.Windows.Forms;
 using static CryBits.Defaults;
 
 namespace CryBits.Client.Network

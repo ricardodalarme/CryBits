@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CryBits.Enums;
+using System;
 using System.Drawing;
-using CryBits.Enums;
 using static CryBits.Defaults;
 using Graphics = CryBits.Editors.Media.Graphics;
 

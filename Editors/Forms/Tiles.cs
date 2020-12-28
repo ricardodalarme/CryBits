@@ -1,11 +1,11 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using CryBits.Editors.Entities;
+﻿using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 using static CryBits.Defaults;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
@@ -32,7 +32,7 @@ namespace CryBits.Editors.Forms
             Graphics.WinTile = new RenderWindow(picTile.Handle);
 
             // Define os limites
-            scrlTile.Maximum = Graphics.TexTile.Count -1;
+            scrlTile.Maximum = Graphics.TexTile.Count - 1;
             Update_Bounds();
         }
 

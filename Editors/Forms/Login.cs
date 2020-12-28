@@ -1,8 +1,8 @@
-﻿using System;
-using System.Windows.Forms;
-using CryBits.Editors.Library;
+﻿using CryBits.Editors.Library;
 using CryBits.Editors.Network;
 using DarkUI.Forms;
+using System;
+using System.Windows.Forms;
 using static CryBits.Editors.Logic.Options;
 
 namespace CryBits.Editors.Forms
@@ -15,8 +15,8 @@ namespace CryBits.Editors.Forms
         public Login()
         {
             InitializeComponent();
-            txtUsername.Text =  Username;
-            chkUsername.Checked =  Username != string.Empty;
+            txtUsername.Text = Username;
+            chkUsername.Checked = Username != string.Empty;
         }
 
         private void butConnect_Click(object sender, EventArgs e)

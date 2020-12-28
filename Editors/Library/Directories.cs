@@ -1,7 +1,7 @@
-﻿using System.IO;
-using System.Windows.Forms;
-using CryBits.Editors.Media;
+﻿using CryBits.Editors.Media;
 using CryBits.Editors.Media.Audio;
+using System.IO;
+using System.Windows.Forms;
 
 namespace CryBits.Editors.Library
 {

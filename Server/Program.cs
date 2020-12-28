@@ -1,12 +1,12 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Threading;
-using CryBits.Entities;
+﻿using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Server.Entities;
 using CryBits.Server.Library;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
+using System;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace CryBits.Server
 {
@@ -42,7 +42,7 @@ namespace CryBits.Server
 
             // Cria os mapas temporários
             Console.WriteLine("Creating temporary maps.");
-            foreach (Map map in Map.List.Values) TempMap.CreateTemporary(map,true);
+            foreach (Map map in Map.List.Values) TempMap.CreateTemporary(map, true);
 
             // Cria os dispositivos da rede
             Socket.Init();

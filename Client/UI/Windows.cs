@@ -1,12 +1,10 @@
-﻿using System;
+﻿using CryBits.Client.Entities;
+using CryBits.Client.Logic;
+using CryBits.Client.Network;
+using SFML.Window;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using CryBits.Client.Entities;
-using CryBits.Client.Logic;
-using CryBits.Client.Media.Audio;
-using CryBits.Client.Network;
-using CryBits.Enums;
-using SFML.Window;
 using Hotbar = CryBits.Enums.Hotbar;
 using Music = CryBits.Enums.Music;
 using Sound = CryBits.Client.Media.Audio.Sound;

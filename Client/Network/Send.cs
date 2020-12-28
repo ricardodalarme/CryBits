@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using CryBits.Client.Entities;
+﻿using CryBits.Client.Entities;
 using CryBits.Client.UI;
 using CryBits.Entities;
 using CryBits.Enums;
 using Lidgren.Network;
+using System;
+using System.Linq;
 using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Client.Network

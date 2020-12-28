@@ -1,7 +1,7 @@
-﻿using System;
+﻿using CryBits.Enums;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using CryBits.Enums;
 using static CryBits.Defaults;
 
 namespace CryBits.Entities
@@ -32,7 +32,7 @@ namespace CryBits.Entities
         public Map[] Link = new Map[(byte)Direction.Count];
 
         // Construtor
-        public Map() 
+        public Map()
         {
             for (byte x = 0; x < Width; x++)
                 for (byte y = 0; y < Height; y++)
