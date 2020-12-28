@@ -1,11 +1,11 @@
-﻿using CryBits.Editors.Forms;
+﻿using System;
+using System.Windows.Forms;
+using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
 using CryBits.Editors.Media.Audio;
 using CryBits.Editors.Network;
-using System;
-using System.Windows.Forms;
 
 namespace CryBits.Editors
 {

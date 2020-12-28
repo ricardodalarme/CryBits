@@ -1,8 +1,8 @@
-﻿using CryBits.Editors.Forms;
+﻿using System;
+using System.Drawing;
+using CryBits.Editors.Forms;
 using CryBits.Entities;
 using SFML.Audio;
-using System;
-using System.Drawing;
 using static CryBits.Defaults;
 using static CryBits.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
@@ -11,7 +11,7 @@ using Sound = CryBits.Editors.Media.Audio.Sound;
 namespace CryBits.Editors.Entities
 {
     internal static class TempMap
-    {
+    {        
         // Contadores
         private static int _fogXTimer;
         private static int _fogYTimer;

@@ -1,9 +1,9 @@
-﻿using CryBits.Editors.Entities;
-using CryBits.Entities;
-using CryBits.Enums;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using CryBits.Editors.Entities;
+using CryBits.Entities;
+using CryBits.Enums;
 using static CryBits.Defaults;
 using Graphics = CryBits.Editors.Media.Graphics;
 
@@ -16,7 +16,7 @@ namespace CryBits.Editors.Logic
             Base = map;
         }
 
-        // Dados do Npc
+        // Dados do NPC
         public readonly Map Base;
 
         /////////////
@@ -29,8 +29,7 @@ namespace CryBits.Editors.Logic
             set => Base.Name = value;
         }
 
-        [Category("General")]
-        [DefaultValue(0)]
+        [Category("General")][DefaultValue(0)]
         public Moral Moral
         {
             get => Base.Moral;
@@ -40,36 +39,28 @@ namespace CryBits.Editors.Logic
         /////////
         // Fog //
         /////////
-        [Category("Fog")]
-        [DisplayName("Fog Texture")]
-        [DefaultValue(0)]
+        [Category("Fog")][DisplayName("Fog Texture")][DefaultValue(0)]
         public byte FogTexture
         {
             get => Base.Fog.Texture;
-            set => Base.Fog.Texture = Math.Min(value, (byte)(Graphics.TexFog.Count - 1));
+            set => Base.Fog.Texture = Math.Min(value, (byte)(Graphics.TexFog.Length - 1));
         }
 
-        [Category("Fog")]
-        [DisplayName("Fog Alpha")]
-        [DefaultValue(255)]
+        [Category("Fog")][DisplayName("Fog Alpha")][DefaultValue(255)]
         public byte FogAlpha
         {
             get => Base.Fog.Alpha;
             set => Base.Fog.Alpha = value;
         }
 
-        [Category("Fog")]
-        [DisplayName("Fog X Speed")]
-        [DefaultValue(0)]
+        [Category("Fog")][DisplayName("Fog X Speed")][DefaultValue(0)]
         public sbyte FogSpeedX
         {
             get => Base.Fog.SpeedX;
             set => Base.Fog.SpeedX = value;
         }
 
-        [Category("Fog")]
-        [DisplayName("Fog Y Speed")]
-        [DefaultValue(0)]
+        [Category("Fog")][DisplayName("Fog Y Speed")][DefaultValue(0)]
         public sbyte FogSpeedY
         {
             get => Base.Fog.SpeedY;
@@ -80,18 +71,14 @@ namespace CryBits.Editors.Logic
         // Weather //
         /////////////
 
-        [Category("Weather")]
-        [DisplayName("Weather Intensity")]
-        [DefaultValue(0)]
+        [Category("Weather")][DisplayName("Weather Intensity")][DefaultValue(0)]
         public byte WeatherSpeedY
         {
             get => Base.Weather.Intensity;
             set => Base.Weather.Intensity = Math.Min(value, MaxWeatherIntensity);
         }
 
-        [Category("Weather")]
-        [DisplayName("Weather Type")]
-        [DefaultValue(0)]
+        [Category("Weather")][DisplayName("Weather Type")][DefaultValue(0)]
         public Weather WeatherType
         {
             get => Base.Weather.Type;
@@ -106,27 +93,21 @@ namespace CryBits.Editors.Logic
         // Hue //
         /////////
 
-        [Category("Hue Overlay")]
-        [DisplayName("Red Hue")]
-        [DefaultValue(255)]
+        [Category("Hue Overlay")][DisplayName("Red Hue")][DefaultValue(255)]
         public byte HueRed
         {
             get => Base.Color.R;
             set => Base.Color = Color.FromArgb(Base.Color.A, value, Base.Color.G, Base.Color.B);
         }
 
-        [Category("Hue Overlay")]
-        [DisplayName("Green Hue")]
-        [DefaultValue(255)]
+        [Category("Hue Overlay")][DisplayName("Green Hue")][DefaultValue(255)]
         public byte HueGreen
         {
             get => Base.Color.G;
             set => Base.Color = Color.FromArgb(Base.Color.A, Base.Color.R, value, Base.Color.B);
         }
 
-        [Category("Hue Overlay")]
-        [DisplayName("Blue Hue")]
-        [DefaultValue(255)]
+        [Category("Hue Overlay")][DisplayName("Blue Hue")][DefaultValue(255)]
         public byte HueBlue
         {
             get => Base.Color.B;
@@ -136,28 +117,25 @@ namespace CryBits.Editors.Logic
         //////////
         // Misc //
         //////////
-        [Category("Misc")]
-        [DefaultValue(100)]
+        [Category("Misc")][DefaultValue(100)]
         public byte Lighting
         {
             get => Base.Lighting;
             set => Base.Lighting = value;
         }
 
-        [Category("Misc")]
-        [DefaultValue(0)]
+        [Category("Misc")][DefaultValue(0)]
         public Music Music
         {
             get => (Music)Base.Music;
             set => Base.Music = (byte)value;
         }
 
-        [Category("Misc")]
-        [DefaultValue(0)]
+        [Category("Misc")][DefaultValue(0)]
         public byte Panorama
         {
             get => Base.Panorama;
-            set => Base.Panorama = Math.Min(value, (byte)(Graphics.TexPanorama.Count - 1));
+            set => Base.Panorama = Math.Min(value, (byte)(Graphics.TexPanorama.Length - 1));
         }
     }
 }

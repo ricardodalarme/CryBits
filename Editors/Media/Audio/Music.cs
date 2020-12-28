@@ -1,6 +1,6 @@
-﻿using CryBits.Editors.Forms;
+﻿using System.IO;
+using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
-using System.IO;
 
 namespace CryBits.Editors.Media.Audio
 {

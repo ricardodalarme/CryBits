@@ -1,14 +1,13 @@
-﻿using CryBits.Editors.Logic;
+﻿using System;
+using System.Windows.Forms;
+using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
-using System;
-using System.Windows.Forms;
 using Attribute = CryBits.Enums.Attribute;
-using Item = CryBits.Entities.Item;
 
 namespace CryBits.Editors.Forms
 {
@@ -32,7 +31,7 @@ namespace CryBits.Editors.Forms
             Graphics.WinNpc = new RenderWindow(picTexture.Handle);
 
             // Define os limites
-            numTexture.Maximum = Graphics.TexCharacter.Count - 1;
+            numTexture.Maximum = Graphics.TexCharacter.GetUpperBound(0);
 
             // Lista os dados
             foreach (var item in Item.List.Values) cmbDrop_Item.Items.Add(item);
