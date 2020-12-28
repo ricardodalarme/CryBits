@@ -70,7 +70,7 @@
     <Compile Include="Enums\Attribute.cs" />
     <Compile Include="Enums\Vital.cs" />
     <Compile Include="Enums\Layer.cs" />
-    <Compile Include="Enums\Tool.cs" />
+    <Compile Include="Enums\ToolType.cs" />
     <Compile Include="Enums\Rarity.cs" />
     <Compile Include="Enums\ServerPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

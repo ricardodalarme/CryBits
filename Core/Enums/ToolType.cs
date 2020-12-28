@@ -1,7 +1,7 @@
 ﻿
 namespace CryBits.Enums
 {
-    public enum Tool
+    public enum ToolType
     {
         Button,
         Panel,
