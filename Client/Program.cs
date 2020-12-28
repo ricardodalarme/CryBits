@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
-using CryBits.Client.Library;
+﻿using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.Media;
 using CryBits.Client.Media.Audio;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
+using System;
+using System.Windows.Forms;
 
 namespace CryBits.Client
 {
@@ -28,7 +28,7 @@ namespace CryBits.Client
 
             // Inicializa todos os dispositivos
             Socket.Init();
-             Sound.Load();
+            Sound.Load();
             Graphics.Init();
 
             // Inicia a aplicação
@@ -38,7 +38,7 @@ namespace CryBits.Client
         public static void Close()
         {
             int waitTimer = Environment.TickCount;
- 
+
             // Desconecta da rede
             Socket.Disconnect();
 

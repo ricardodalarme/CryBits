@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using CryBits.Editors.Forms;
+﻿using CryBits.Editors.Forms;
 using CryBits.Entities;
 using CryBits.Enums;
 using Lidgren.Network;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using static CryBits.Defaults;
 using static CryBits.Utils;
 using Item = CryBits.Entities.Item;

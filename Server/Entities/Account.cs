@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using CryBits.Enums;
+﻿using CryBits.Enums;
 using Lidgren.Network;
+using System.Collections.Generic;
 
 namespace CryBits.Server.Entities
 {

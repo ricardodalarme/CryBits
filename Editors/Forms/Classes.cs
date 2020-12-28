@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using CryBits.Editors.Logic;
+﻿using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
+using System;
+using System.Linq;
+using System.Windows.Forms;
 using Attribute = CryBits.Enums.Attribute;
 using Item = CryBits.Entities.Item;
 

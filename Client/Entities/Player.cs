@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using CryBits.Entities;
-using CryBits.Enums;
 using Item = CryBits.Entities.Item;
 
 namespace CryBits.Client.Entities

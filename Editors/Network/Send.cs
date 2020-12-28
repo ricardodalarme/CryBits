@@ -56,15 +56,6 @@ namespace CryBits.Editors.Network
             Packet(data);
         }
 
-        public static void RequestMaps()
-        {
-            NetOutgoingMessage data = Socket.Device.CreateMessage();
-
-            // Envia os dados
-            data.Write((byte)ClientPacket.RequestMaps);
-            Packet(data);
-        }
-
         public static void RequestNpcs()
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();

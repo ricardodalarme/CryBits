@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using CryBits.Client.UI;
+﻿using CryBits.Client.UI;
 using SFML.Graphics;
+using System.Drawing;
 using static CryBits.Defaults;
 using Graphics = CryBits.Client.Media.Graphics;
 

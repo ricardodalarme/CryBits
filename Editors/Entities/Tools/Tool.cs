@@ -1,6 +1,6 @@
-﻿using System.Drawing;
+﻿using CryBits.Enums;
+using System.Drawing;
 using System.Windows.Forms;
-using CryBits.Enums;
 
 namespace CryBits.Editors.Entities.Tools
 {

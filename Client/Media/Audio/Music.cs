@@ -1,7 +1,6 @@
-﻿using System.IO;
-using CryBits.Client.Library;
+﻿using CryBits.Client.Library;
 using CryBits.Client.Logic;
-using CryBits.Enums;
+using System.IO;
 
 namespace CryBits.Client.Media.Audio
 {

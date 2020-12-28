@@ -1,11 +1,10 @@
-﻿using System;
+﻿using CryBits.Entities;
+using CryBits.Enums;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using CryBits.Client.Media.Audio;
-using CryBits.Entities;
-using CryBits.Enums;
-using static CryBits.Utils;
 using static CryBits.Defaults;
+using static CryBits.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
 using Item = CryBits.Entities.Item;
 using Sound = CryBits.Enums.Sound;
@@ -337,7 +336,7 @@ namespace CryBits.Client.Entities
             Back = MyRandom.Next(2) != 0;
         }
 
-        public  void MoveSnow( bool xAxis = true)
+        public void MoveSnow(bool xAxis = true)
         {
             int difference = MyRandom.Next(0, SnowMovement / 3);
             int x1 = Start + SnowMovement + difference;

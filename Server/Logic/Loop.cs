@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using CryBits.Server.Entities;
+﻿using CryBits.Server.Entities;
 using CryBits.Server.Network;
+using System;
+using System.Windows.Forms;
 
 namespace CryBits.Server.Logic
 {

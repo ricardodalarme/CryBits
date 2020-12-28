@@ -1,12 +1,12 @@
-﻿using System;
-using System.Windows.Forms;
-using CryBits.Editors.Logic;
+﻿using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
+using System;
+using System.Windows.Forms;
 using Attribute = CryBits.Enums.Attribute;
 using Item = CryBits.Entities.Item;
 
@@ -32,7 +32,7 @@ namespace CryBits.Editors.Forms
             Graphics.WinNpc = new RenderWindow(picTexture.Handle);
 
             // Define os limites
-            numTexture.Maximum = Graphics.TexCharacter.Count -1;
+            numTexture.Maximum = Graphics.TexCharacter.Count - 1;
 
             // Lista os dados
             foreach (var item in Item.List.Values) cmbDrop_Item.Items.Add(item);
@@ -57,11 +57,11 @@ namespace CryBits.Editors.Forms
         {
             // Lista os Npcs
             List.Nodes.Clear();
-            foreach (var Npc in Npc.List.Values)
-                if (Npc.Name.StartsWith(txtFilter.Text))
-                    List.Nodes.Add(new TreeNode(Npc.Name)
+            foreach (var npc in Npc.List.Values)
+                if (npc.Name.StartsWith(txtFilter.Text))
+                    List.Nodes.Add(new TreeNode(npc.Name)
                     {
-                        Tag = Npc.ID
+                        Tag = npc.ID
                     });
 
             // Seleciona o primeiro
@@ -292,7 +292,7 @@ namespace CryBits.Editors.Forms
 
                 // Adiciona os Npcs
                 cmbAllie_Npc.Items.Clear();
-                foreach (var Npc in Npc.List.Values) cmbAllie_Npc.Items.Add(Npc);
+                foreach (var npc in Npc.List.Values) cmbAllie_Npc.Items.Add(npc);
                 cmbAllie_Npc.SelectedIndex = 0;
             }
         }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CryBits.Enums;
+using System;
 using System.Collections.Generic;
-using CryBits.Enums;
 
 namespace CryBits.Entities
 {
