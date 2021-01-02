@@ -87,7 +87,7 @@ namespace CryBits.Server.Entities
 
         public void SpawnItems()
         {
-            // Verifica se tem algum atributo de item no mapa
+            // Verifica se tem algum atributo de item no mapas
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
                     if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)

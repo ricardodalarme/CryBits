@@ -295,7 +295,7 @@ namespace CryBits.Server.Entities
                 return;
             }
 
-        @continue:
+            @continue:
             // Demonstra que aos outros jogadores o ataque
             Send.PlayerAttack(this, null);
             _attackTimer = Environment.TickCount;

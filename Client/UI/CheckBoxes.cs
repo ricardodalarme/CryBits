@@ -79,7 +79,7 @@ namespace CryBits.Client.UI
             if (!Options.Musics)
                 Media.Audio.Music.Stop();
             else if (Windows.Current == Enums.Window.Menu)
-                Media.Audio.Music.Play(Enums.Music.Menu);
+                Media.Audio.Music.Play(Music.Menu);
             else if (Windows.Current == Enums.Window.Game)
                 Media.Audio.Music.Play((Music)TempMap.Current.Data.Music);
         }

@@ -1,7 +1,7 @@
 ﻿using CryBits.Server.Entities;
 using CryBits.Server.Network;
 using System;
-using System.Windows.Forms;
+using System.Threading;
 
 namespace CryBits.Server.Logic
 {
@@ -43,7 +43,7 @@ namespace CryBits.Server.Logic
                 if (Environment.TickCount > TimerMapItems + 300000) TimerMapItems = Environment.TickCount;
 
                 // Faz com que a aplicação se mantenha estável
-                Application.DoEvents();
+                Thread.Sleep(0); 
 
                 // Calcula o CPS
                 if (_timer1000 < Environment.TickCount)
