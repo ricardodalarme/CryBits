@@ -14,8 +14,8 @@ namespace CryBits.Client.Library
             {
                 data.Write(SaveUsername);
                 data.Write(Username);
-                data.Write(Logic.Options.Sounds);
-                data.Write(Logic.Options.Musics);
+                data.Write(Sounds);
+                data.Write(Musics);
                 data.Write(Chat);
                 data.Write(FPS);
                 data.Write(Latency);

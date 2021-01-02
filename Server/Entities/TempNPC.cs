@@ -55,7 +55,7 @@ namespace CryBits.Server.Entities
             }
 
             byte targetX = 0, targetY = 0;
-            bool[] canMove = new bool[(byte)Enums.Direction.Count];
+            bool[] canMove = new bool[(byte)Direction.Count];
             short distance;
             bool moved = false;
             bool move = false;
@@ -169,29 +169,29 @@ namespace CryBits.Server.Entities
                 if (Vital[(byte)Enums.Vital.HP] > Data.Vital[(byte)Enums.Vital.HP] * (Data.FleeHealth / 100.0))
                 {
                     // Para perto do alvo
-                    canMove[(byte)Enums.Direction.Up] = Y > targetY;
-                    canMove[(byte)Enums.Direction.Down] = Y < targetY;
-                    canMove[(byte)Enums.Direction.Left] = X > targetX;
-                    canMove[(byte)Enums.Direction.Right] = X < targetX;
+                    canMove[(byte)Direction.Up] = Y > targetY;
+                    canMove[(byte)Direction.Down] = Y < targetY;
+                    canMove[(byte)Direction.Left] = X > targetX;
+                    canMove[(byte)Direction.Right] = X < targetX;
                 }
                 else
                 {
                     // Para longe do alvo
-                    canMove[(byte)Enums.Direction.Up] = Y < targetY;
-                    canMove[(byte)Enums.Direction.Down] = Y > targetY;
-                    canMove[(byte)Enums.Direction.Left] = X < targetX;
-                    canMove[(byte)Enums.Direction.Right] = X > targetX;
+                    canMove[(byte)Direction.Up] = Y < targetY;
+                    canMove[(byte)Direction.Down] = Y > targetY;
+                    canMove[(byte)Direction.Left] = X < targetX;
+                    canMove[(byte)Direction.Right] = X > targetX;
                 }
 
                 // Aleatoriza a forma que ele vai se movimentar até o alvo
                 if (MyRandom.Next(0, 2) == 0)
                 {
-                    for (byte d = 0; d < (byte)Enums.Direction.Count; d++)
+                    for (byte d = 0; d < (byte)Direction.Count; d++)
                         if (!moved && canMove[d] && Move((Direction)d))
                             moved = true;
                 }
                 else
-                    for (short d = (byte)Enums.Direction.Count - 1; d >= 0; d--)
+                    for (short d = (byte)Direction.Count - 1; d >= 0; d--)
                         if (!moved && canMove[d] && Move((Direction)d))
                             moved = true;
             }

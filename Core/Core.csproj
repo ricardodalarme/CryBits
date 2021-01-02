@@ -1,20 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+ <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9763AE05-345F-4F7D-82A9-787F30F2D9EA}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CryBits</RootNamespace>
     <AssemblyName>CryBits.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+
+ <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <Optimize>false</Optimize>
@@ -24,62 +25,8 @@
     <ErrorReport>none</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Defaults.cs" />
-    <Compile Include="Entities\Class.cs" />
-    <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\Slots.cs" />
-    <Compile Include="Entities\Item.cs" />
-    <Compile Include="Entities\Map.cs" />
-    <Compile Include="Entities\Npc.cs" />
-    <Compile Include="Entities\Shop.cs" />
-    <Compile Include="Enums\Music.cs" />
-    <Compile Include="Enums\Sound.cs" />
-    <Compile Include="Enums\TradeStatus.cs" />
-    <Compile Include="Enums\Movement.cs" />
-    <Compile Include="Enums\Hotbar.cs" />
-    <Compile Include="Enums\Target.cs" />
-    <Compile Include="Enums\TileAttribute.cs" />
-    <Compile Include="Enums\Moral.cs" />
-    <Compile Include="Enums\Alignment.cs" />
-    <Compile Include="Enums\ClientPacket.cs" />
-    <Compile Include="Enums\Equipment.cs" />
-    <Compile Include="Enums\BindOn.cs" />
-    <Compile Include="Enums\AddMode.cs" />
-    <Compile Include="Enums\Access.cs" />
-    <Compile Include="Enums\Message.cs" />
-    <Compile Include="Enums\Behaviour.cs" />
-    <Compile Include="Enums\MovementStyle.cs" />
-    <Compile Include="Enums\Window.cs" />
-    <Compile Include="Enums\ItemType.cs" />
-    <Compile Include="Enums\Direction.cs" />
-    <Compile Include="Enums\Weather.cs" />
-    <Compile Include="Enums\Attribute.cs" />
-    <Compile Include="Enums\Vital.cs" />
-    <Compile Include="Enums\Layer.cs" />
-    <Compile Include="Enums\ToolType.cs" />
-    <Compile Include="Enums\Rarity.cs" />
-    <Compile Include="Enums\ServerPacket.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Lidgren.Network">
-      <Version>1.0.2</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+ <ItemGroup>
+   <PackageReference Include="Lidgren.Network.Core2" Version="1.0.0" />
+ </ItemGroup>
 </Project>
