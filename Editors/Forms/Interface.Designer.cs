@@ -58,28 +58,31 @@ namespace CryBits.Editors.Forms
             // picWindow
             // 
             this.picWindow.BackColor = System.Drawing.Color.Black;
-            this.picWindow.Location = new System.Drawing.Point(12, 40);
+            this.picWindow.Location = new System.Drawing.Point(14, 46);
+            this.picWindow.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.picWindow.Name = "picWindow";
-            this.picWindow.Size = new System.Drawing.Size(800, 608);
+            this.picWindow.Size = new System.Drawing.Size(933, 702);
             this.picWindow.TabIndex = 1;
             this.picWindow.TabStop = false;
             // 
             // butNew
             // 
-            this.butNew.Location = new System.Drawing.Point(11, 19);
+            this.butNew.Location = new System.Drawing.Point(13, 22);
+            this.butNew.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butNew.Name = "butNew";
-            this.butNew.Padding = new System.Windows.Forms.Padding(5);
-            this.butNew.Size = new System.Drawing.Size(109, 25);
+            this.butNew.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butNew.Size = new System.Drawing.Size(127, 29);
             this.butNew.TabIndex = 28;
             this.butNew.Text = "New";
             this.butNew.Click += new System.EventHandler(this.butNew_Click);
             // 
             // butRemove
             // 
-            this.butRemove.Location = new System.Drawing.Point(124, 19);
+            this.butRemove.Location = new System.Drawing.Point(145, 22);
+            this.butRemove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butRemove.Name = "butRemove";
-            this.butRemove.Padding = new System.Windows.Forms.Padding(5);
-            this.butRemove.Size = new System.Drawing.Size(109, 25);
+            this.butRemove.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butRemove.Size = new System.Drawing.Size(127, 29);
             this.butRemove.TabIndex = 29;
             this.butRemove.Text = "Remove";
             this.butRemove.Click += new System.EventHandler(this.butRemove_Click);
@@ -87,9 +90,10 @@ namespace CryBits.Editors.Forms
             // cmbWindows
             // 
             this.cmbWindows.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cmbWindows.Location = new System.Drawing.Point(12, 12);
+            this.cmbWindows.Location = new System.Drawing.Point(14, 14);
+            this.cmbWindows.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbWindows.Name = "cmbWindows";
-            this.cmbWindows.Size = new System.Drawing.Size(800, 21);
+            this.cmbWindows.Size = new System.Drawing.Size(933, 24);
             this.cmbWindows.TabIndex = 30;
             this.cmbWindows.SelectedIndexChanged += new System.EventHandler(this.cmbWindows_SelectedIndexChanged);
             // 
@@ -103,49 +107,55 @@ namespace CryBits.Editors.Forms
             this.grpOrder.Controls.Add(this.butNew);
             this.grpOrder.Controls.Add(this.butOrder_Pin);
             this.grpOrder.Controls.Add(this.treOrder);
-            this.grpOrder.Location = new System.Drawing.Point(823, 12);
+            this.grpOrder.Location = new System.Drawing.Point(960, 14);
+            this.grpOrder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grpOrder.Name = "grpOrder";
-            this.grpOrder.Size = new System.Drawing.Size(243, 382);
+            this.grpOrder.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.grpOrder.Size = new System.Drawing.Size(284, 441);
             this.grpOrder.TabIndex = 33;
             this.grpOrder.TabStop = false;
             this.grpOrder.Text = "Order";
             // 
             // butOrder_Down
             // 
-            this.butOrder_Down.Location = new System.Drawing.Point(183, 350);
+            this.butOrder_Down.Location = new System.Drawing.Point(214, 404);
+            this.butOrder_Down.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butOrder_Down.Name = "butOrder_Down";
-            this.butOrder_Down.Padding = new System.Windows.Forms.Padding(5);
-            this.butOrder_Down.Size = new System.Drawing.Size(50, 25);
+            this.butOrder_Down.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butOrder_Down.Size = new System.Drawing.Size(58, 29);
             this.butOrder_Down.TabIndex = 30;
             this.butOrder_Down.Text = "Down";
             this.butOrder_Down.Click += new System.EventHandler(this.butOrder_Down_Click);
             // 
             // butOrder_Up
             // 
-            this.butOrder_Up.Location = new System.Drawing.Point(125, 350);
+            this.butOrder_Up.Location = new System.Drawing.Point(146, 404);
+            this.butOrder_Up.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butOrder_Up.Name = "butOrder_Up";
-            this.butOrder_Up.Padding = new System.Windows.Forms.Padding(5);
-            this.butOrder_Up.Size = new System.Drawing.Size(50, 25);
+            this.butOrder_Up.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butOrder_Up.Size = new System.Drawing.Size(58, 29);
             this.butOrder_Up.TabIndex = 29;
             this.butOrder_Up.Text = "Up";
             this.butOrder_Up.Click += new System.EventHandler(this.butOrder_Up_Click);
             // 
             // butOrder_Unpin
             // 
-            this.butOrder_Unpin.Location = new System.Drawing.Point(68, 350);
+            this.butOrder_Unpin.Location = new System.Drawing.Point(79, 404);
+            this.butOrder_Unpin.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butOrder_Unpin.Name = "butOrder_Unpin";
-            this.butOrder_Unpin.Padding = new System.Windows.Forms.Padding(5);
-            this.butOrder_Unpin.Size = new System.Drawing.Size(50, 25);
+            this.butOrder_Unpin.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butOrder_Unpin.Size = new System.Drawing.Size(58, 29);
             this.butOrder_Unpin.TabIndex = 28;
             this.butOrder_Unpin.Text = "Unpin";
             this.butOrder_Unpin.Click += new System.EventHandler(this.butOrder_Unpin_Click);
             // 
             // butOrder_Pin
             // 
-            this.butOrder_Pin.Location = new System.Drawing.Point(12, 350);
+            this.butOrder_Pin.Location = new System.Drawing.Point(14, 404);
+            this.butOrder_Pin.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butOrder_Pin.Name = "butOrder_Pin";
-            this.butOrder_Pin.Padding = new System.Windows.Forms.Padding(5);
-            this.butOrder_Pin.Size = new System.Drawing.Size(50, 25);
+            this.butOrder_Pin.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butOrder_Pin.Size = new System.Drawing.Size(58, 29);
             this.butOrder_Pin.TabIndex = 27;
             this.butOrder_Pin.Text = "Pin";
             this.butOrder_Pin.Click += new System.EventHandler(this.butOrder_Pin_Click);
@@ -156,9 +166,10 @@ namespace CryBits.Editors.Forms
             this.treOrder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.treOrder.ForeColor = System.Drawing.Color.Gainsboro;
             this.treOrder.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
-            this.treOrder.Location = new System.Drawing.Point(12, 50);
+            this.treOrder.Location = new System.Drawing.Point(14, 58);
+            this.treOrder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.treOrder.Name = "treOrder";
-            this.treOrder.Size = new System.Drawing.Size(221, 294);
+            this.treOrder.Size = new System.Drawing.Size(257, 339);
             this.treOrder.TabIndex = 0;
             this.treOrder.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treOrder_AfterSelect);
             // 
@@ -167,9 +178,11 @@ namespace CryBits.Editors.Forms
             this.grpProperties.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.grpProperties.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.grpProperties.Controls.Add(this.prgProperties);
-            this.grpProperties.Location = new System.Drawing.Point(823, 400);
+            this.grpProperties.Location = new System.Drawing.Point(960, 462);
+            this.grpProperties.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grpProperties.Name = "grpProperties";
-            this.grpProperties.Size = new System.Drawing.Size(243, 215);
+            this.grpProperties.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.grpProperties.Size = new System.Drawing.Size(284, 248);
             this.grpProperties.TabIndex = 34;
             this.grpProperties.TabStop = false;
             this.grpProperties.Text = "Properties";
@@ -183,15 +196,16 @@ namespace CryBits.Editors.Forms
             this.prgProperties.CommandsVisibleIfAvailable = false;
             this.prgProperties.DisabledItemForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(133)))), ((int)(((byte)(133)))));
             this.prgProperties.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.prgProperties.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.prgProperties.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.prgProperties.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.prgProperties.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.prgProperties.HelpForeColor = System.Drawing.Color.Gainsboro;
             this.prgProperties.HelpVisible = false;
             this.prgProperties.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(51)))), ((int)(((byte)(53)))));
-            this.prgProperties.Location = new System.Drawing.Point(3, 16);
+            this.prgProperties.Location = new System.Drawing.Point(4, 19);
+            this.prgProperties.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.prgProperties.Name = "prgProperties";
-            this.prgProperties.Size = new System.Drawing.Size(237, 196);
+            this.prgProperties.Size = new System.Drawing.Size(276, 226);
             this.prgProperties.TabIndex = 25;
             this.prgProperties.ToolbarVisible = false;
             this.prgProperties.ViewBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
@@ -201,20 +215,22 @@ namespace CryBits.Editors.Forms
             // 
             // butCancel
             // 
-            this.butCancel.Location = new System.Drawing.Point(948, 621);
+            this.butCancel.Location = new System.Drawing.Point(1106, 717);
+            this.butCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butCancel.Name = "butCancel";
-            this.butCancel.Padding = new System.Windows.Forms.Padding(5);
-            this.butCancel.Size = new System.Drawing.Size(118, 25);
+            this.butCancel.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butCancel.Size = new System.Drawing.Size(138, 29);
             this.butCancel.TabIndex = 39;
             this.butCancel.Text = "Cancel";
             this.butCancel.Click += new System.EventHandler(this.butCancel_Click);
             // 
             // butSaveAll
             // 
-            this.butSaveAll.Location = new System.Drawing.Point(822, 621);
+            this.butSaveAll.Location = new System.Drawing.Point(959, 717);
+            this.butSaveAll.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butSaveAll.Name = "butSaveAll";
-            this.butSaveAll.Padding = new System.Windows.Forms.Padding(5);
-            this.butSaveAll.Size = new System.Drawing.Size(118, 25);
+            this.butSaveAll.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butSaveAll.Size = new System.Drawing.Size(138, 29);
             this.butSaveAll.TabIndex = 38;
             this.butSaveAll.Text = "Save All";
             this.butSaveAll.Click += new System.EventHandler(this.butSaveAll_Click);
@@ -225,9 +241,11 @@ namespace CryBits.Editors.Forms
             this.grpNew.Controls.Add(this.butConfirm);
             this.grpNew.Controls.Add(this.cmbType);
             this.grpNew.Controls.Add(this.label1);
-            this.grpNew.Location = new System.Drawing.Point(822, 12);
+            this.grpNew.Location = new System.Drawing.Point(959, 14);
+            this.grpNew.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.grpNew.Name = "grpNew";
-            this.grpNew.Size = new System.Drawing.Size(244, 603);
+            this.grpNew.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.grpNew.Size = new System.Drawing.Size(285, 696);
             this.grpNew.TabIndex = 31;
             this.grpNew.TabStop = false;
             this.grpNew.Text = "New";
@@ -235,10 +253,11 @@ namespace CryBits.Editors.Forms
             // 
             // butConfirm
             // 
-            this.butConfirm.Location = new System.Drawing.Point(175, 296);
+            this.butConfirm.Location = new System.Drawing.Point(204, 342);
+            this.butConfirm.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butConfirm.Name = "butConfirm";
-            this.butConfirm.Padding = new System.Windows.Forms.Padding(5);
-            this.butConfirm.Size = new System.Drawing.Size(59, 23);
+            this.butConfirm.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butConfirm.Size = new System.Drawing.Size(69, 27);
             this.butConfirm.TabIndex = 32;
             this.butConfirm.Text = "Confirm";
             this.butConfirm.Click += new System.EventHandler(this.butConfirm_Click);
@@ -246,26 +265,28 @@ namespace CryBits.Editors.Forms
             // cmbType
             // 
             this.cmbType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cmbType.Location = new System.Drawing.Point(14, 298);
+            this.cmbType.Location = new System.Drawing.Point(16, 344);
+            this.cmbType.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbType.Name = "cmbType";
-            this.cmbType.Size = new System.Drawing.Size(155, 21);
+            this.cmbType.Size = new System.Drawing.Size(180, 24);
             this.cmbType.TabIndex = 31;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.label1.Location = new System.Drawing.Point(11, 282);
+            this.label1.Location = new System.Drawing.Point(13, 325);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(34, 13);
+            this.label1.Size = new System.Drawing.Size(34, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Type:";
             // 
-            // Editor_Interface
+            // EditorInterface
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1075, 661);
+            this.ClientSize = new System.Drawing.Size(1256, 760);
             this.ControlBox = false;
             this.Controls.Add(this.grpOrder);
             this.Controls.Add(this.grpProperties);
@@ -276,6 +297,7 @@ namespace CryBits.Editors.Forms
             this.Controls.Add(this.grpNew);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MinimizeBox = false;
             this.Name = "EditorInterface";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

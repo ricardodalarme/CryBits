@@ -47,9 +47,10 @@ namespace CryBits.Editors.Forms
             this.txtUsername.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
             this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.txtUsername.Location = new System.Drawing.Point(300, 161);
+            this.txtUsername.Location = new System.Drawing.Point(350, 186);
+            this.txtUsername.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(175, 20);
+            this.txtUsername.Size = new System.Drawing.Size(204, 23);
             this.txtUsername.TabIndex = 0;
             // 
             // txtPassword
@@ -57,19 +58,21 @@ namespace CryBits.Editors.Forms
             this.txtPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
             this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.txtPassword.Location = new System.Drawing.Point(300, 200);
+            this.txtPassword.Location = new System.Drawing.Point(350, 231);
+            this.txtPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(175, 20);
+            this.txtPassword.Size = new System.Drawing.Size(204, 23);
             this.txtPassword.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.label1.Location = new System.Drawing.Point(297, 145);
+            this.label1.Location = new System.Drawing.Point(346, 167);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 13);
+            this.label1.Size = new System.Drawing.Size(63, 15);
             this.label1.TabIndex = 2;
             this.label1.Text = "Username:";
             // 
@@ -77,18 +80,20 @@ namespace CryBits.Editors.Forms
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.label2.Location = new System.Drawing.Point(297, 184);
+            this.label2.Location = new System.Drawing.Point(346, 212);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.Size = new System.Drawing.Size(60, 15);
             this.label2.TabIndex = 3;
             this.label2.Text = "Password:";
             // 
             // butConnect
             // 
-            this.butConnect.Location = new System.Drawing.Point(300, 246);
+            this.butConnect.Location = new System.Drawing.Point(350, 284);
+            this.butConnect.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butConnect.Name = "butConnect";
-            this.butConnect.Padding = new System.Windows.Forms.Padding(5);
-            this.butConnect.Size = new System.Drawing.Size(175, 24);
+            this.butConnect.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butConnect.Size = new System.Drawing.Size(204, 28);
             this.butConnect.TabIndex = 4;
             this.butConnect.Text = "Connect";
             this.butConnect.Click += new System.EventHandler(this.butConnect_Click);
@@ -96,9 +101,10 @@ namespace CryBits.Editors.Forms
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(26, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(30, 14);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(464, 122);
+            this.pictureBox1.Size = new System.Drawing.Size(541, 141);
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
             // 
@@ -106,9 +112,10 @@ namespace CryBits.Editors.Forms
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.label3.Location = new System.Drawing.Point(12, 168);
+            this.label3.Location = new System.Drawing.Point(14, 194);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(272, 52);
+            this.label3.Size = new System.Drawing.Size(303, 60);
             this.label3.TabIndex = 6;
             this.label3.Text = "Getting started?\r\n       1. Start the CryBits Server\r\n       2. Open the CryBits " +
     "Client and create an account\r\n       3. Login to that account to start creating " +
@@ -117,18 +124,19 @@ namespace CryBits.Editors.Forms
             // chkUsername
             // 
             this.chkUsername.AutoSize = true;
-            this.chkUsername.Location = new System.Drawing.Point(300, 226);
+            this.chkUsername.Location = new System.Drawing.Point(350, 261);
+            this.chkUsername.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.chkUsername.Name = "chkUsername";
-            this.chkUsername.Size = new System.Drawing.Size(100, 17);
+            this.chkUsername.Size = new System.Drawing.Size(105, 19);
             this.chkUsername.TabIndex = 7;
             this.chkUsername.Text = "Save username";
             // 
             // Login
             // 
             this.AcceptButton = this.butConnect;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(487, 282);
+            this.ClientSize = new System.Drawing.Size(567, 326);
             this.Controls.Add(this.chkUsername);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.pictureBox1);
@@ -139,6 +147,7 @@ namespace CryBits.Editors.Forms
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
