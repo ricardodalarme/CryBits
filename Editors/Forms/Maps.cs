@@ -818,9 +818,9 @@ namespace CryBits.Editors.Forms
         private void picMap_SizeChanged(object sender, EventArgs e)
         {
             // Recria as janelas de acordo com o novo tamanho
-            Graphics.WinMap?.Dispose();
+            Graphics.WinMap.Dispose();
             Graphics.WinMap = new RenderWindow(picMap.Handle);
-            Graphics.WinMapLighting?.Dispose();
+            Graphics.WinMapLighting.Dispose();
             Graphics.WinMapLighting = new RenderTexture((uint)picMap.Width, (uint)picMap.Height);
         }
 
