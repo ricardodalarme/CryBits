@@ -171,15 +171,15 @@ namespace CryBits.Client.Media
             Render(texture, source, destiny, color);
         }
 
-        private static void DrawText(string text, int x, int y, Color color, TextAlign alignment = TextAlign.Left)
+        private static void DrawText(string text, int x, int y, Color color, Alignment alignment = Alignment.Left)
         {
             Text tempText = new Text(text, FontDefault);
 
             // Alinhamento do texto
             switch (alignment)
             {
-                case TextAlign.Center: x -= MeasureString(text) / 2; break;
-                case TextAlign.Right: x -= MeasureString(text); break;
+                case Alignment.Center: x -= MeasureString(text) / 2; break;
+                case Alignment.Right: x -= MeasureString(text); break;
             }
 
             // Define os dados
@@ -405,14 +405,14 @@ namespace CryBits.Client.Media
             // Somente se necessário
             if (!Buttons.Characters_Change_Buttons())
             {
-                DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
+                DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignment.Center);
                 return;
             }
 
             // Verifica se o personagem existe
             if (Panels.SelectCharacter >= Panels.Characters.Length)
             {
-                DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
+                DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignment.Center);
                 return;
             }
 
@@ -426,7 +426,7 @@ namespace CryBits.Client.Media
 
             // Desenha o nome da classe
             text = "(" + (Panels.SelectCharacter + 1) + ") " + Panels.Characters[Panels.SelectCharacter].Name;
-            DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
+            DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignment.Center);
         }
 
         private static void CreateCharacterClass()
@@ -473,9 +473,9 @@ namespace CryBits.Client.Media
             DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, Color.White);
 
             // Indicadores
-            DrawText(Player.Me.Vital[(byte)Vital.HP] + "/" + Player.Me.MaxVital[(byte)Vital.HP], tool.Position.X + 76, tool.Position.Y + 7, Color.White, TextAlign.Center);
-            DrawText(Player.Me.Vital[(byte)Vital.MP] + "/" + Player.Me.MaxVital[(byte)Vital.MP], tool.Position.X + 76, tool.Position.Y + 25, Color.White, TextAlign.Center);
-            DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76, tool.Position.Y + 43, Color.White, TextAlign.Center);
+            DrawText(Player.Me.Vital[(byte)Vital.HP] + "/" + Player.Me.MaxVital[(byte)Vital.HP], tool.Position.X + 76, tool.Position.Y + 7, Color.White, Alignment.Center);
+            DrawText(Player.Me.Vital[(byte)Vital.MP] + "/" + Player.Me.MaxVital[(byte)Vital.MP], tool.Position.X + 76, tool.Position.Y + 25, Color.White, Alignment.Center);
+            DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76, tool.Position.Y + 43, Color.White, Alignment.Center);
         }
 
         private static void Chat()
@@ -495,7 +495,7 @@ namespace CryBits.Client.Media
 
         private static void Information(Panels tool)
         {
-            Item item = Item.List.Get(Panels.InformationID);
+            Item item = CryBits.Entities.Item.List.Get(Panels.InformationID);
             Color textColor;
             List<string> data = new List<string>();
 
@@ -565,7 +565,7 @@ namespace CryBits.Client.Media
                     switch ((Hotbar)Player.Me.Hotbar[i].Type)
                     {
                         // Itens
-                        case Hotbar.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
+                        case Enums.Hotbar.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
                     }
 
                 // Desenha os números de cada slot
@@ -576,7 +576,7 @@ namespace CryBits.Client.Media
 
             // Movendo slot
             if (Panels.HotbarChange >= 0)
-                if (Player.Me.Hotbar[Panels.HotbarChange].Type == (byte)Hotbar.Item)
+                if (Player.Me.Hotbar[Panels.HotbarChange].Type == (byte)Enums.Hotbar.Item)
                     Render(TexItem[Player.Me.Inventory[Player.Me.Hotbar[Panels.HotbarChange].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
         }
 
