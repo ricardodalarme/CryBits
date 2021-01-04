@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
+using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
 using CryBits.Entities;
@@ -22,37 +22,13 @@ using Window = CryBits.Enums.Window;
 
 namespace CryBits.Client.Media
 {
-    internal static class Graphics
+    internal static class Graphicss
     {
         // Locais de renderização
         public static RenderWindow RenderWindow;
 
         // Fonte principal
         public static Font FontDefault;
-
-        // Texturas
-        public static List<Texture> TexCharacter;
-        public static List<Texture> TexTile;
-        public static List<Texture> TexFace;
-        public static List<Texture> TexPanel;
-        public static List<Texture> TexButton;
-        public static List<Texture> TexPanorama;
-        public static List<Texture> TexFog;
-        public static List<Texture> TexLight;
-        public static List<Texture> TexItem;
-        public static Texture TexCheckBox;
-        public static Texture TexTextBox;
-        public static Texture TexWeather;
-        public static Texture TexBlanc;
-        public static Texture TexShadow;
-        public static Texture TexBars;
-        public static Texture TexBarsPanel;
-        public static Texture TexEquipments;
-        public static Texture TexBlood;
-        public static Texture TexPartyBars;
-
-        // Formato das texturas
-        private const string Format = ".png";
 
         #region Engine
         public static void Init()
@@ -61,7 +37,7 @@ namespace CryBits.Client.Media
             FontDefault = new Font(Directories.Fonts.FullName + "Georgia.ttf");
 
             // Carrega as texturas
-            LoadTextures();
+            Textures.LoadAll();
 
             // Inicia a janela
             RenderWindow = new RenderWindow(new VideoMode(800, 608), GameName, Styles.Close);
@@ -73,47 +49,7 @@ namespace CryBits.Client.Media
             RenderWindow.KeyReleased += Windows.OnKeyReleased;
             RenderWindow.TextEntered += Windows.OnTextEntered;
         }
-
-        private static void LoadTextures()
-        {
-            // Conjuntos
-            TexCharacter = LoadTextures(Directories.TexCharacters.FullName);
-            TexTile = LoadTextures(Directories.TexTiles.FullName);
-            TexFace = LoadTextures(Directories.TexFaces.FullName);
-            TexPanel = LoadTextures(Directories.TexPanels.FullName);
-            TexButton = LoadTextures(Directories.TexButtons.FullName);
-            TexPanorama = LoadTextures(Directories.TexPanoramas.FullName);
-            TexFog = LoadTextures(Directories.TexFogs.FullName);
-            TexLight = LoadTextures(Directories.TexLights.FullName);
-            TexItem = LoadTextures(Directories.TexItems.FullName);
-
-            // Únicas
-            TexWeather = new Texture(Directories.TexWeather.FullName + Format);
-            TexBlanc = new Texture(Directories.TexBlank.FullName + Format);
-            TexCheckBox = new Texture(Directories.TexCheckBox.FullName + Format);
-            TexTextBox = new Texture(Directories.TexTextBox.FullName + Format);
-            TexShadow = new Texture(Directories.TexShadow.FullName + Format);
-            TexBars = new Texture(Directories.TexBars.FullName + Format);
-            TexBarsPanel = new Texture(Directories.TexBarsPanel.FullName + Format);
-            TexEquipments = new Texture(Directories.TexEquipments.FullName + Format);
-            TexBlood = new Texture(Directories.TexBlood.FullName + Format);
-            TexPartyBars = new Texture(Directories.TexPartyBars.FullName + Format);
-        }
-
-        private static List<Texture> LoadTextures(string directory)
-        {
-            short i = 1;
-            List<Texture> tempTex = new List<Texture>();
-            tempTex.Add(null);
-
-            // Carrega todas do diretório e as adiciona a lista
-            while (File.Exists(directory + i + Format))
-                tempTex.Add(new Texture(directory + i++ + Format));
-
-            // Retorna o cache da textura
-            return tempTex;
-        }
-
+        
         public static Size Size(Texture texture)
         {
             // Retorna com o tamanho da textura
@@ -121,8 +57,6 @@ namespace CryBits.Client.Media
                 return new Size((int)texture.Size.X, (int)texture.Size.Y);
             return new Size(0, 0);
         }
-
-        private static Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new(r, g, b, a);
 
         private static void Render(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null, object mode = null)
         {
@@ -331,27 +265,27 @@ namespace CryBits.Client.Media
             }
 
             // Desenha o botão
-            Render(TexButton[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
+            Render(Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
         }
 
         private static void Panel(Panels tool)
         {
             // Desenha o painel
-            Render(TexPanel[tool.TextureNum], tool.Position);
+            Render(Textures.Panels[tool.TextureNum], tool.Position);
         }
 
         private static void CheckBox(CheckBoxes tool)
         {
             // Define as propriedades dos retângulos
-            Rectangle recSource = new Rectangle(new Point(), new Size(Size(TexCheckBox).Width / 2, Size(TexCheckBox).Height));
+            Rectangle recSource = new Rectangle(new Point(), new Size(Size(Textures.CheckBox).Width / 2, Size(Textures.CheckBox).Height));
             Rectangle recDestiny = new Rectangle(tool.Position, recSource.Size);
 
             // Desenha a textura do marcador pelo seu estado 
-            if (tool.Checked) recSource.Location = new Point(Size(TexCheckBox).Width / 2, 0);
+            if (tool.Checked) recSource.Location = new Point(Size(Textures.CheckBox).Width / 2, 0);
 
             // Desenha o marcador 
-            Render(TexCheckBox, recSource, recDestiny);
-            DrawText(tool.Text, recDestiny.Location.X + Size(TexCheckBox).Width / 2 + CheckBoxes.Margin, recDestiny.Location.Y + 1, Color.White);
+            Render(Textures.CheckBox, recSource, recDestiny);
+            DrawText(tool.Text, recDestiny.Location.X + Size(Textures.CheckBox).Width / 2 + CheckBoxes.Margin, recDestiny.Location.Y + 1, Color.White);
         }
 
         private static void TextBox(TextBoxes tool)
@@ -360,7 +294,7 @@ namespace CryBits.Client.Media
             string text = tool.Text;
 
             // Desenha a ferramenta
-            Render_Box(TexTextBox, 3, tool.Position, new Size(tool.Width, Size(TexTextBox).Height));
+            Render_Box(Textures.TextBox, 3, tool.Position, new Size(tool.Width, Size(Textures.TextBox).Height));
 
             // Altera todos os caracteres do texto para um em especifico, se for necessário
             if (tool.Password && !string.IsNullOrEmpty(text)) text = new string('•', text.Length);
@@ -418,8 +352,8 @@ namespace CryBits.Client.Media
             short textureNum = Panels.Characters[Panels.SelectCharacter].TextureNum;
             if (textureNum > 0)
             {
-                Render(TexFace[textureNum], new Point(353, 442));
-                Character(textureNum, new Point(356, 534 - Size(TexCharacter[textureNum]).Height / 4), Direction.Down, AnimationStopped);
+                Render(Textures.Faces[textureNum], new Point(353, 442));
+                Character(textureNum, new Point(356, 534 - Size(Textures.Characters[textureNum]).Height / 4), Direction.Down, AnimationStopped);
             }
 
             // Desenha o nome da classe
@@ -441,7 +375,7 @@ namespace CryBits.Client.Media
             // Desenha o personagem
             if (textureNum > 0)
             {
-                Render(TexFace[textureNum], new Point(425, 440));
+                Render(Textures.Faces[textureNum], new Point(425, 440));
                 Character(textureNum, new Point(433, 501), Direction.Down, AnimationStopped);
             }
 
@@ -461,9 +395,9 @@ namespace CryBits.Client.Media
             decimal expPercentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
 
             // Barras
-            Render(TexBarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0, (int)(TexBarsPanel.Size.X * hpPercentage), 17);
-            Render(TexBarsPanel, tool.Position.X + 6, tool.Position.Y + 24, 0, 18, (int)(TexBarsPanel.Size.X * mpPercentage), 17);
-            Render(TexBarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36, (int)(TexBarsPanel.Size.X * expPercentage), 17);
+            Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0, (int)(Textures.BarsPanel.Size.X * hpPercentage), 17);
+            Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 24, 0, 18, (int)(Textures.BarsPanel.Size.X * mpPercentage), 17);
+            Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36, (int)(Textures.BarsPanel.Size.X * expPercentage), 17);
 
             // Textos 
             DrawText("HP", tool.Position.X + 10, tool.Position.Y + 3, Color.White);
@@ -513,7 +447,7 @@ namespace CryBits.Client.Media
             // Nome, descrição e icone do item
             DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, TextAlign.Center);
             DrawText(item.Description, tool.Position.X + 82, tool.Position.Y + 20, Color.White, 86);
-            Render(TexItem[item.Texture], new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
+            Render(Textures.Items[item.Texture], new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
 
             // Informações da Loja
             if (Panels.List["Shop"].Visible)
@@ -575,7 +509,7 @@ namespace CryBits.Client.Media
             // Movendo slot
             if (Panels.HotbarChange >= 0)
                 if (Player.Me.Hotbar[Panels.HotbarChange].Type == SlotType.Item)
-                    Render(TexItem[Player.Me.Inventory[Player.Me.Hotbar[Panels.HotbarChange].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
+                    Render(Textures.Items[Player.Me.Inventory[Player.Me.Hotbar[Panels.HotbarChange].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
         }
 
         private static void MenuCharacter(Panels tool)
@@ -583,7 +517,7 @@ namespace CryBits.Client.Media
             // Dados básicos
             DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
             DrawText(Player.Me.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, Color.White);
-            Render(TexFace[Player.Me.TextureNum], new Point(tool.Position.X + 82, tool.Position.Y + 37));
+            Render(Textures.Faces[Player.Me.TextureNum], new Point(tool.Position.X + 82, tool.Position.Y + 37));
 
             // Atributos
             DrawText("Strength: " + Player.Me.Attribute[(byte)Attribute.Strength], tool.Position.X + 32, tool.Position.Y + 146, Color.White);
@@ -596,9 +530,9 @@ namespace CryBits.Client.Media
             // Equipamentos 
             for (byte i = 0; i < (byte)Equipment.Count; i++)
                 if (Player.Me.Equipment[i] == null)
-                    Render(TexEquipments, tool.Position.X + 7 + i * 34, tool.Position.Y + 247, i * 34, 0, 32, 32);
+                    Render(Textures.Equipments, tool.Position.X + 7 + i * 34, tool.Position.Y + 247, i * 34, 0, 32, 32);
                 else
-                    Render(TexItem[Player.Me.Equipment[i].Texture], tool.Position.X + 8 + i * 35, tool.Position.Y + 247, 0, 0, 34, 34);
+                    Render(Textures.Items[Player.Me.Equipment[i].Texture], tool.Position.X + 8 + i * 35, tool.Position.Y + 247, 0, 0, 34, 34);
         }
 
         private static void MenuInventory(Panels tool)
@@ -610,7 +544,7 @@ namespace CryBits.Client.Media
                 Item(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount, tool.Position + new Size(7, 30), i, numColumns);
 
             // Movendo item
-            if (Panels.InventoryChange > 0) Render(TexItem[Player.Me.Inventory[Panels.InventoryChange].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
+            if (Panels.InventoryChange > 0) Render(Textures.Items[Player.Me.Inventory[Panels.InventoryChange].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
         }
 
         private static void PartyInvitation(Panels tool)
@@ -623,12 +557,12 @@ namespace CryBits.Client.Media
             for (byte i = 0; i < Player.Me.Party.Length; i++)
             {
                 // Barras do membro
-                Render(TexPartyBars, 10, 92 + 27 * i, 0, 0, 82, 8); // HP Cinza
-                Render(TexPartyBars, 10, 99 + 27 * i, 0, 0, 82, 8); // MP Cinza
+                Render(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8); // HP Cinza
+                Render(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8); // MP Cinza
                 if (Player.Me.Party[i].Vital[(byte)Vital.HP] > 0)
-                    Render(TexPartyBars, 10, 92 + 27 * i, 0, 8, Player.Me.Party[i].Vital[(byte)Vital.HP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.HP], 8); // HP 
+                    Render(Textures.PartyBars, 10, 92 + 27 * i, 0, 8, Player.Me.Party[i].Vital[(byte)Vital.HP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.HP], 8); // HP 
                 if (Player.Me.Party[i].Vital[(byte)Vital.MP] > 0)
-                    Render(TexPartyBars, 10, 99 + 27 * i, 0, 16, Player.Me.Party[i].Vital[(byte)Vital.MP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.MP], 8); // MP 
+                    Render(Textures.PartyBars, 10, 99 + 27 * i, 0, 16, Player.Me.Party[i].Vital[(byte)Vital.MP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.MP], 8); // MP 
 
                 // Nome do membro
                 DrawText(Player.Me.Party[i].Name, 10, 79 + 27 * i, Color.White);
@@ -673,14 +607,14 @@ namespace CryBits.Client.Media
             Point position = start + new Size(column * (grid + gap), line * (grid + gap));
 
             // Desenha o item e sua quantidade
-            Render(TexItem[item.Texture], position);
+            Render(Textures.Items[item.Texture], position);
             if (amount > 1) DrawText(amount.ToString(), position.X + 2, position.Y + 17, Color.White);
         }
 
         private static void Character(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
         {
             Rectangle recSource = new(), recDestiny;
-            Size size = Size(TexCharacter[textureNum]);
+            Size size = Size(Textures.Characters[textureNum]);
             Color color = new Color(255, 255, 255);
             byte line = 0;
 
@@ -704,8 +638,8 @@ namespace CryBits.Client.Media
             if (hurt) color = new Color(205, 125, 125);
 
             // Desenha o personagem e sua sombra
-            Render(TexShadow, recDestiny.Location.X, recDestiny.Location.Y + size.Height / AnimationAmount - Size(TexShadow).Height + 5, 0, 0, size.Width / AnimationAmount, Size(TexShadow).Height);
-            Render(TexCharacter[textureNum], recSource, recDestiny, color);
+            Render(Textures.Shadow, recDestiny.Location.X, recDestiny.Location.Y + size.Height / AnimationAmount - Size(Textures.Shadow).Height + 5, 0, 0, size.Width / AnimationAmount, Size(Textures.Shadow).Height);
+            Render(Textures.Characters[textureNum], recSource, recDestiny, color);
         }
 
         private static void PlayerCharacter(Player player)
@@ -722,7 +656,7 @@ namespace CryBits.Client.Media
             bool hurt = false;
 
             // Previne sobrecargas
-            if (player.TextureNum <= 0 || player.TextureNum > TexCharacter.Count) return;
+            if (player.TextureNum <= 0 || player.TextureNum > Textures.Characters.Count) return;
 
             // Define a animação
             if (player.Attacking && player.AttackTimer + AttackSpeed / 2 > Environment.TickCount)
@@ -750,7 +684,7 @@ namespace CryBits.Client.Media
             if (value <= 0 || value >= player.MaxVital[(byte)Vital.HP]) return;
 
             // Cálcula a largura da barra
-            Size characterSize = Size(TexCharacter[player.TextureNum]);
+            Size characterSize = Size(Textures.Characters[player.TextureNum]);
             int fullWidth = characterSize.Width / AnimationAmount;
             int width = value * fullWidth / player.MaxVital[(byte)Vital.HP];
 
@@ -762,13 +696,13 @@ namespace CryBits.Client.Media
             };
 
             // Desenha as barras 
-            Render(TexBars, position.X, position.Y, 0, 4, fullWidth, 4);
-            Render(TexBars, position.X, position.Y, 0, 0, width, 4);
+            Render(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
+            Render(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
         }
 
         private static void PlayerName(Player player)
         {
-            Texture texture = TexCharacter[player.TextureNum];
+            Texture texture = Textures.Characters[player.TextureNum];
             int nameSize = MeasureString(player.Name);
 
             // Posição do texto
@@ -791,7 +725,7 @@ namespace CryBits.Client.Media
             bool hurt = false;
 
             // Previne sobrecargas
-            if (npc.Data.Texture <= 0 || npc.Data.Texture > TexCharacter.Count) return;
+            if (npc.Data.Texture <= 0 || npc.Data.Texture > Textures.Characters.Count) return;
 
             // Define a animação
             if (npc.Attacking && npc.AttackTimer + AttackSpeed / 2 > Environment.TickCount)
@@ -818,7 +752,7 @@ namespace CryBits.Client.Media
             Point position = new Point();
             Color color;
             int nameSize = MeasureString(npc.Data.Name);
-            Texture texture = TexCharacter[npc.Data.Texture];
+            Texture texture = Textures.Characters[npc.Data.Texture];
 
             // Posição do texto
             position.X = npc.PixelX + Size(texture).Width / AnimationAmount / 2 - nameSize / 2;
@@ -839,7 +773,7 @@ namespace CryBits.Client.Media
 
         private static void NpcBars(TempNpc npc)
         {
-            Texture texture = TexCharacter[npc.Data.Texture];
+            Texture texture = Textures.Characters[npc.Data.Texture];
             short value = npc.Vital[(byte)Vital.HP];
 
             // Apenas se necessário
@@ -851,8 +785,8 @@ namespace CryBits.Client.Media
             int width = value * fullWidth / npc.Data.Vital[(byte)Vital.HP];
 
             // Desenha a barra 
-            Render(TexBars, position.X, position.Y, 0, 4, fullWidth, 4);
-            Render(TexBars, position.X, position.Y, 0, 0, width, 4);
+            Render(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
+            Render(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
         }
 
         private static void MapTiles(byte layerType)
@@ -880,7 +814,7 @@ namespace CryBits.Client.Media
 
                                     // Desenha o azulejo
                                     if (!map.Layer[c].Tile[x, y].IsAutoTile)
-                                        Render(TexTile[data.Texture], ConvertX(x * Grid), ConvertY(y * Grid), x2, y2, Grid, Grid, color);
+                                        Render(Textures.Tiles[data.Texture], ConvertX(x * Grid), ConvertY(y * Grid), x2, y2, Grid, Grid, color);
                                     else
                                         MapAutoTile(new Point(ConvertX(x * Grid), ConvertY(y * Grid)), data, color);
                                 }
@@ -903,7 +837,7 @@ namespace CryBits.Client.Media
                 }
 
                 // Renderiza o mini azulejo
-                Render(TexTile[data.Texture], new Rectangle(source.X, source.Y, 16, 16), new Rectangle(destiny, new Size(16, 16)), cor);
+                Render(Textures.Tiles[data.Texture], new Rectangle(source.X, source.Y, 16, 16), new Rectangle(destiny, new Size(16, 16)), cor);
             }
         }
 
@@ -911,13 +845,13 @@ namespace CryBits.Client.Media
         {
             // Desenha o panorama
             if (TempMap.Current.Data.Panorama > 0)
-                Render(TexPanorama[TempMap.Current.Data.Panorama], new Point(0));
+                Render(Textures.Panoramas[TempMap.Current.Data.Panorama], new Point(0));
         }
 
         private static void MapFog()
         {
             MapFog data = TempMap.Current.Data.Fog;
-            Size textureSize = Size(TexFog[data.Texture]);
+            Size textureSize = Size(Textures.Fogs[data.Texture]);
 
             // Previne erros
             if (data.Texture <= 0) return;
@@ -925,7 +859,7 @@ namespace CryBits.Client.Media
             // Desenha a fumaça
             for (int x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
                 for (int y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
-                    Render(TexFog[data.Texture], new Point(x * textureSize.Width + TempMap.Current.FogX, y * textureSize.Height + TempMap.Current.FogY), new Color(255, 255, 255, data.Alpha));
+                    Render(Textures.Fogs[data.Texture], new Point(x * textureSize.Width + TempMap.Current.FogX, y * textureSize.Height + TempMap.Current.FogY), new Color(255, 255, 255, data.Alpha));
         }
 
         private static void MapWeather()
@@ -944,10 +878,10 @@ namespace CryBits.Client.Media
             // Desenha as partículas
             foreach (var weather in TempMap.Current.Weather)
                 if (weather.Visible)
-                    Render(TexWeather, new Rectangle(x, 0, 32, 32), new Rectangle(weather.X, weather.Y, 32, 32), CColor(255, 255, 255, 150));
+                    Render(Textures.Weather, new Rectangle(x, 0, 32, 32), new Rectangle(weather.X, weather.Y, 32, 32), CColor(255, 255, 255, 150));
 
             // Trovoadas
-            Render(TexBlanc, 0, 0, 0, 0, ScreenWidth, ScreenHeight, new Color(255, 255, 255, TempMap.Current.Lightning));
+            Render(Textures.Blank, 0, 0, 0, 0, ScreenWidth, ScreenHeight, new Color(255, 255, 255, TempMap.Current.Lightning));
         }
 
         private static void MapName()
@@ -980,7 +914,7 @@ namespace CryBits.Client.Media
 
                 // Desenha o item
                 Point position = new Point(ConvertX(data.X * Grid), ConvertY(data.Y * Grid));
-                Render(TexItem[data.Item.Texture], position);
+                Render(Textures.Items[data.Item.Texture], position);
             }
         }
 
@@ -990,7 +924,7 @@ namespace CryBits.Client.Media
             for (byte i = 0; i < TempMap.Current.Blood.Count; i++)
             {
                 MapBlood data = TempMap.Current.Blood[i];
-                Render(TexBlood, ConvertX(data.X * Grid), ConvertY(data.Y * Grid), data.TextureNum * 32, 0, 32, 32, CColor(255, 255, 255, data.Opacity));
+                Render(Textures.Blood, ConvertX(data.X * Grid), ConvertY(data.Y * Grid), data.TextureNum * 32, 0, 32, 32, CColor(255, 255, 255, data.Opacity));
             }
         }
     }

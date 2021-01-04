@@ -29,7 +29,7 @@ namespace CryBits.Client
             // Inicializa todos os dispositivos
             Socket.Init();
             Sound.Load();
-            Graphics.Init();
+            Graphicss.Init();
 
             // Inicia a aplicação
             Loop.Init();

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Entities.Tools;
 using CryBits.Editors.Media;
+using CryBits.Editors.Media.Graphics;
 using CryBits.Enums;
 using static CryBits.Editors.Logic.Options;
 using Button = CryBits.Editors.Entities.Tools.Button;
@@ -139,7 +140,7 @@ namespace CryBits.Editors.Library
         public static void Tiles()
         {
             // Lê os dados
-            Entities.Tile.List = new Tile[Graphicss.TexTile.Length];
+            Entities.Tile.List = new Tile[Textures.Tiles.Count];
             for (byte i = 1; i < Entities.Tile.List.Length; i++) Tile(i);
         }
 

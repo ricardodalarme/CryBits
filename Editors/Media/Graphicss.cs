@@ -6,6 +6,7 @@ using CryBits.Editors.Entities;
 using CryBits.Editors.Entities.Tools;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
+using CryBits.Editors.Media.Graphics;
 using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Graphics;
@@ -36,44 +37,7 @@ namespace CryBits.Editors.Media
         // Fonte principal
         public static Font FontDefault;
 
-        // Texturas
-        public static Texture[] TexCharacter;
-        public static Texture[] TexTile;
-        public static Texture[] TexFace;
-        public static Texture[] TexPanel;
-        public static Texture[] TexButton;
-        public static Texture[] TexPanorama;
-        public static Texture[] TexFog;
-        public static Texture[] TexItem;
-        public static Texture TexCheckBox;
-        public static Texture TexTextBox;
-        public static Texture TexGrid;
-        public static Texture TexWeather;
-        public static Texture TexBlank;
-        public static Texture TexDirections;
-        public static Texture TexTransparent;
-        public static Texture TexLighting;
-
-        // Formato das texturas
-        private const string Format = ".png";
-
         #region Engine
-        private static Texture[] AddTextures(string directory)
-        {
-            short i = 1;
-            Texture[] tempTex = Array.Empty<Texture>();
-
-            while (File.Exists(directory + i + Format))
-            {
-                // Carrega todas do diretório e as adiciona a lista
-                Array.Resize(ref tempTex, i + 1);
-                tempTex[i] = new Texture(directory + i + Format);
-                i += 1;
-            }
-
-            // Retorna o cache da textura
-            return tempTex;
-        }
 
         public static Size Size(Texture texture)
         {
@@ -82,9 +46,6 @@ namespace CryBits.Editors.Media
                 return new Size((int)texture.Size.X, (int)texture.Size.Y);
             return new Size(0, 0);
         }
-
-        // Retorna a cor
-        private static Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new(r, g, b, a);
 
         private static void Render(RenderWindow window, Texture texture, Rectangle source, Rectangle destiny, object color = null, object mode = null)
         {
@@ -149,10 +110,10 @@ namespace CryBits.Editors.Media
         private static void RenderRectangle(RenderWindow window, Rectangle rectangle, object color = null)
         {
             // Desenha a caixa
-            Render(window, TexGrid, rectangle.X, rectangle.Y, 0, 0, rectangle.Width, 1, color);
-            Render(window, TexGrid, rectangle.X, rectangle.Y, 0, 0, 1, rectangle.Height, color);
-            Render(window, TexGrid, rectangle.X, rectangle.Y + rectangle.Height - 1, 0, 0, rectangle.Width, 1, color);
-            Render(window, TexGrid, rectangle.X + rectangle.Width - 1, rectangle.Y, 0, 0, 1, rectangle.Height, color);
+            Render(window, Textures.Grid, rectangle.X, rectangle.Y, 0, 0, rectangle.Width, 1, color);
+            Render(window, Textures.Grid, rectangle.X, rectangle.Y, 0, 0, 1, rectangle.Height, color);
+            Render(window, Textures.Grid, rectangle.X, rectangle.Y + rectangle.Height - 1, 0, 0, rectangle.Width, 1, color);
+            Render(window, Textures.Grid, rectangle.X + rectangle.Width - 1, rectangle.Y, 0, 0, 1, rectangle.Height, color);
         }
 
         private static void RenderRectangle(RenderWindow window, int x, int y, int width, int height, object color = null)
@@ -192,26 +153,6 @@ namespace CryBits.Editors.Media
 
         public static void Init()
         {
-            // Conjuntos
-            TexCharacter = AddTextures(Directories.TexCharacters.FullName);
-            TexTile = AddTextures(Directories.TexTiles.FullName);
-            TexFace = AddTextures(Directories.TexFaces.FullName);
-            TexPanel = AddTextures(Directories.TexPanels.FullName);
-            TexButton = AddTextures(Directories.TexButtons.FullName);
-            TexPanorama = AddTextures(Directories.TexPanoramas.FullName);
-            TexFog = AddTextures(Directories.TexFogs.FullName);
-            TexItem = AddTextures(Directories.TexItems.FullName);
-
-            // Únicas
-            TexWeather = new Texture(Directories.TexWeather.FullName + Format);
-            TexBlank = new Texture(Directories.TexBlanc.FullName + Format);
-            TexDirections = new Texture(Directories.TexDirections.FullName + Format);
-            TexTransparent = new Texture(Directories.TexTransparent.FullName + Format);
-            TexGrid = new Texture(Directories.TexGrid.FullName + Format);
-            TexCheckBox = new Texture(Directories.TexCheckBox.FullName + Format);
-            TexTextBox = new Texture(Directories.TexTextBox.FullName + Format);
-            TexLighting = new Texture(Directories.TexLighting.FullName + Format);
-
             // Fontes
             FontDefault = new Font(Directories.Fonts.FullName + "Georgia.ttf");
         }
@@ -230,12 +171,12 @@ namespace CryBits.Editors.Media
 
         private static void Transparent(RenderWindow window)
         {
-            Size textureSize = Size(TexTransparent);
+            Size textureSize = Size(Textures.Transparent);
 
             // Desenha uma textura transparente na janela inteira
             for (int x = 0; x <= window.Size.X / textureSize.Width; x++)
                 for (int y = 0; y <= window.Size.Y / textureSize.Height; y++)
-                    Render(window, TexTransparent, new Point(textureSize.Width * x, textureSize.Height * y));
+                    Render(window, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
         }
 
         #region Map Editor
@@ -257,7 +198,7 @@ namespace CryBits.Editors.Media
             WinMapTile.Clear(Color.Black);
 
             // Dados
-            Texture texture = TexTile[form.cmbTiles.SelectedIndex + 1];
+            Texture texture = Textures.Tiles[form.cmbTiles.SelectedIndex + 1];
             Point position = new Point(form.scrlTileX.Value, form.scrlTileY.Value);
 
             // Desenha o azulejo e as grades
@@ -303,9 +244,9 @@ namespace CryBits.Editors.Media
                 {
                     X = form.scrlMapX.Value * -form.GridZoom,
                     Y = form.scrlMapY.Value * -form.GridZoom,
-                    Size = Size(TexPanorama[map.Panorama])
+                    Size = Size(Textures.Panoramas[map.Panorama])
                 };
-                Render(WinMap, TexPanorama[map.Panorama], EditorMaps.Form.Zoom(destiny));
+                Render(WinMap, Textures.Panoramas[map.Panorama], EditorMaps.Form.Zoom(destiny));
             }
         }
 
@@ -345,7 +286,7 @@ namespace CryBits.Editors.Media
 
                             // Desenha o azulejo
                             if (!data.IsAutoTile)
-                                Render(WinMap, TexTile[data.Texture], source, form.Zoom(destiny), color);
+                                Render(WinMap, Textures.Tiles[data.Texture], source, form.Zoom(destiny), color);
                             else
                                 EditorMapsAutoTile(destiny.Location, data, color);
                         }
@@ -363,7 +304,7 @@ namespace CryBits.Editors.Media
                     case 2: position.Y += 16; break;
                     case 3: position.X += 16; position.Y += 16; break;
                 }
-                Render(WinMap, TexTile[data.Texture], new Rectangle(data.Mini[i].X, data.Mini[i].Y, 16, 16), EditorMaps.Form.Zoom(new Rectangle(position, new Size(16, 16))), color);
+                Render(WinMap, Textures.Tiles[data.Texture], new Rectangle(data.Mini[i].X, data.Mini[i].Y, 16, 16), EditorMaps.Form.Zoom(new Rectangle(position, new Size(16, 16))), color);
             }
         }
 
@@ -374,12 +315,12 @@ namespace CryBits.Editors.Media
             if (!EditorMaps.Form.butVisualization.Checked) return;
 
             // Desenha a fumaça
-            Size textureSize = Size(TexFog[map.Fog.Texture]);
+            Size textureSize = Size(Textures.Fogs[map.Fog.Texture]);
             for (int x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
                 for (int y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
                 {
                     Point position = new Point(x * textureSize.Width + TempMap.FogX, y * textureSize.Height + TempMap.FogY);
-                    Render(WinMap, TexFog[map.Fog.Texture], EditorMaps.Form.Zoom(new Rectangle(position, textureSize)), CColor(255, 255, 255, map.Fog.Alpha));
+                    Render(WinMap, Textures.Fogs[map.Fog.Texture], EditorMaps.Form.Zoom(new Rectangle(position, textureSize)), CColor(255, 255, 255, map.Fog.Alpha));
                 }
         }
 
@@ -395,7 +336,7 @@ namespace CryBits.Editors.Media
             // Desenha as partículas
             for (int i = 0; i < TempMap.Weather.Length; i++)
                 if (TempMap.Weather[i].Visible)
-                    Render(WinMap, TexWeather, new Rectangle(x, 0, 32, 32), EditorMaps.Form.Zoom(new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32)), CColor(255, 255, 255, 150));
+                    Render(WinMap, Textures.Weather, new Rectangle(x, 0, 32, 32), EditorMaps.Form.Zoom(new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32)), CColor(255, 255, 255, 150));
         }
 
         private static void EditorMapsMapLight(Map map)
@@ -420,12 +361,12 @@ namespace CryBits.Editors.Media
                         Width = map.Light[i].Width,
                         Height = map.Light[i].Height
                     };
-                    Render(WinMapLighting, TexLighting, form.Zoom_Grid(destiny), null, new RenderStates(BlendMode.Multiply));
+                    Render(WinMapLighting, Textures.Lighting, form.Zoom_Grid(destiny), null, new RenderStates(BlendMode.Multiply));
                 }
 
             // Pré visualização
             if (form.butMLighting.Checked)
-                Render(WinMapLighting, TexLighting, form.Zoom_Grid(form.MapSelection), null, new RenderStates(BlendMode.Multiply));
+                Render(WinMapLighting, Textures.Lighting, form.Zoom_Grid(form.MapSelection), null, new RenderStates(BlendMode.Multiply));
 
             // Apresenta o que foi renderizado
             WinMapLighting.Display();
@@ -438,7 +379,7 @@ namespace CryBits.Editors.Media
                         RenderRectangle(WinMap, form.Zoom_Grid(new Rectangle(map.Light[i].Rec.X - form.scrlMapX.Value, map.Light[i].Rec.Y - form.scrlMapY.Value, 1, 1)), CColor(175, 42, 42, 175));
 
             // Trovoadas
-            Render(WinMap, TexBlank, 0, 0, 0, 0, form.picMap.Width, form.picMap.Height, CColor(255, 255, 255, TempMap.Lightning));
+            Render(WinMap, Textures.Blank, 0, 0, 0, 0, form.picMap.Width, form.picMap.Height, CColor(255, 255, 255, TempMap.Lightning));
         }
 
         private static void EditorMapsMapGrids(Map map)
@@ -465,12 +406,12 @@ namespace CryBits.Editors.Media
             if (!form.chkAuto.Checked && form.butMNormal.Checked)
                 // Normal
                 if (form.butPencil.Checked)
-                    Render(WinMap, TexTile[form.cmbTiles.SelectedIndex + 1], source, destiny);
+                    Render(WinMap, Textures.Tiles[form.cmbTiles.SelectedIndex + 1], source, destiny);
                 // Retângulo
                 else if (form.butRectangle.Checked)
                     for (int x = begin.X; x < begin.X + form.MapSelection.Width; x++)
                         for (int y = begin.Y; y < begin.Y + form.MapSelection.Height; y++)
-                            Render(WinMap, TexTile[form.cmbTiles.SelectedIndex + 1], source, new Rectangle(form.Zoom_Grid(x, y), destiny.Size));
+                            Render(WinMap, Textures.Tiles[form.cmbTiles.SelectedIndex + 1], source, new Rectangle(form.Zoom_Grid(x, y), destiny.Size));
 
             // Desenha a grade
             if (!form.butMAttributes.Checked || !form.optA_DirBlock.Checked)
@@ -495,7 +436,7 @@ namespace CryBits.Editors.Media
                 color = CColor((byte)(zoneNum * 33), (byte)(zoneNum * 22), (byte)(zoneNum * 42), 150 ^ 3);
 
             // Desenha as zonas
-            Render(WinMap, TexBlank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), color);
+            Render(WinMap, Textures.Blank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), color);
             DrawText(WinMap, zoneNum.ToString(), position.X, position.Y, Color.White);
         }
 
@@ -523,7 +464,7 @@ namespace CryBits.Editors.Media
             color = new Color(color.R, color.G, color.B, 100);
 
             // Desenha as Atributos
-            Render(WinMap, TexBlank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), color);
+            Render(WinMap, Textures.Blank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), color);
             DrawText(WinMap, letter, position.X, position.Y, Color.White);
         }
 
@@ -546,7 +487,7 @@ namespace CryBits.Editors.Media
                 sourceY = map.Attribute[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
 
                 // Renderiza
-                Render(WinMap, TexDirections, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
+                Render(WinMap, Textures.Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
             }
         }
 
@@ -561,7 +502,7 @@ namespace CryBits.Editors.Media
                         Point position = new Point((map.Npc[i].X - form.scrlMapX.Value) * form.GridZoom, (map.Npc[i].Y - form.scrlMapY.Value) * form.GridZoom);
 
                         // Desenha uma sinalização de onde os NPCs estão
-                        Render(WinMap, TexBlank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), CColor(0, 220, 0, 150));
+                        Render(WinMap, Textures.Blank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), CColor(0, 220, 0, 150));
                         DrawText(WinMap, (i + 1).ToString(), position.X + 10, position.Y + 10, Color.White);
                     }
         }
@@ -580,7 +521,7 @@ namespace CryBits.Editors.Media
             Transparent(WinTile);
 
             // Desenha o azulejo e as grades
-            Texture texture = TexTile[form.scrlTile.Value];
+            Texture texture = Textures.Tiles[form.scrlTile.Value];
             Point position = new Point(form.scrlTileX.Value * Grid, form.scrlTileY.Value * Grid);
             Render(WinTile, texture, new Rectangle(position, Size(texture)), new Rectangle(new Point(0), Size(texture)));
 
@@ -616,7 +557,7 @@ namespace CryBits.Editors.Media
             switch ((TileAttribute)Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Attribute)
             {
                 case TileAttribute.Block:
-                    Render(WinTile, TexBlank, x * Grid, y * Grid, 0, 0, Grid, Grid, CColor(225, 0, 0, 75));
+                    Render(WinTile, Textures.Blank, x * Grid, y * Grid, 0, 0, Grid, Grid, CColor(225, 0, 0, 75));
                     DrawText(WinTile, "B", point.X, point.Y, Color.Red);
                     break;
             }
@@ -645,7 +586,7 @@ namespace CryBits.Editors.Media
                 sourceY = Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
 
                 // Renderiza
-                Render(WinTile, TexDirections, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
+                Render(WinTile, Textures.Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
             }
         }
         #endregion
@@ -660,7 +601,7 @@ namespace CryBits.Editors.Media
             short textureNum = (short)EditorItems.Form.numTexture.Value;
             WinItem.Clear();
             Transparent(WinItem);
-            if (textureNum > 0 && textureNum < TexItem.Length) Render(WinItem, TexItem[textureNum], new Point(0));
+            if (textureNum > 0 && textureNum < Textures.Items.Count) Render(WinItem, Textures.Items[textureNum], new Point(0));
             WinItem.Display();
         }
         #endregion
@@ -690,13 +631,13 @@ namespace CryBits.Editors.Media
         #region Character
         private static void Character(RenderWindow window, short textureNum)
         {
-            Texture texture = TexCharacter[textureNum];
+            Texture texture = Textures.Characters[textureNum];
             Size size = new Size(Size(texture).Width / 4, Size(texture).Height / 4);
 
             // Desenha o item
             window.Clear();
             Transparent(window);
-            if (textureNum > 0 && textureNum < TexCharacter.Length) Render(window, texture, (int)(window.Size.X - size.Width) / 2, (int)(window.Size.Y - size.Height) / 2, 0, 0, size.Width, size.Height);
+            if (textureNum > 0 && textureNum < Textures.Characters.Count) Render(window, texture, (int)(window.Size.X - size.Width) / 2, (int)(window.Size.Y - size.Height) / 2, 0, 0, size.Width, size.Height);
             window.Display();
         }
         #endregion
@@ -735,37 +676,37 @@ namespace CryBits.Editors.Media
         private static void Button(Button tool)
         {
             // Desenha o botão
-            if (tool.TextureNum < TexButton.Length)
-                Render(WinInterface, TexButton[tool.TextureNum], tool.Position, new Color(255, 255, 225, 225));
+            if (tool.TextureNum < Textures.Buttons.Count)
+                Render(WinInterface, Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, 225));
         }
 
         private static void Panel(Panel tool)
         {
             // Desenha o painel
-            if (tool.TextureNum < TexPanel.Length)
-                Render(WinInterface, TexPanel[tool.TextureNum], tool.Position);
+            if (tool.TextureNum < Textures.Panels.Count)
+                Render(WinInterface, Textures.Panels[tool.TextureNum], tool.Position);
         }
 
         private static void CheckBox(CheckBox tool)
         {
             // Define as propriedades dos retângulos
-            Rectangle recSource = new Rectangle(new Point(), new Size(Size(TexCheckBox).Width / 2, Size(TexCheckBox).Height));
+            Rectangle recSource = new Rectangle(new Point(), new Size(Size(Textures.CheckBox).Width / 2, Size(Textures.CheckBox).Height));
             Rectangle recDestiny = new Rectangle(tool.Position, recSource.Size);
 
             // Desenha a textura do marcador pelo seu estado 
             if (tool.Checked)
-                recSource.Location = new Point(Size(TexCheckBox).Width / 2, 0);
+                recSource.Location = new Point(Size(Textures.CheckBox).Width / 2, 0);
 
             // Desenha o marcador 
             byte margin = 4;
-            Render(WinInterface, TexCheckBox, recSource, recDestiny);
-            DrawText(WinInterface, tool.Text, recDestiny.Location.X + Size(TexCheckBox).Width / 2 + margin, recDestiny.Location.Y + 1, Color.White);
+            Render(WinInterface, Textures.CheckBox, recSource, recDestiny);
+            DrawText(WinInterface, tool.Text, recDestiny.Location.X + Size(Textures.CheckBox).Width / 2 + margin, recDestiny.Location.Y + 1, Color.White);
         }
 
         private static void TextBox(TextBox tool)
         {
             // Desenha a ferramenta
-            Render_Box(WinInterface, TexTextBox, 3, tool.Position, new Size(tool.Width, Size(TexTextBox).Height));
+            Render_Box(WinInterface, Textures.TextBox, 3, tool.Position, new Size(tool.Width, Size(Textures.TextBox).Height));
         }
         #endregion
     }

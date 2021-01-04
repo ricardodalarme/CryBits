@@ -30,10 +30,10 @@ namespace CryBits.Client.Logic
                 Socket.HandleData();
 
                 // Apresenta os gráficos à tela
-                Graphics.Present();
+                Graphicss.Present();
 
                 // Processa os eventos da janela
-                Graphics.RenderWindow.DispatchEvents();
+                Graphicss.RenderWindow.DispatchEvents();
 
                 // Eventos
                 TextBox();

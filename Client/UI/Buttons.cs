@@ -4,13 +4,14 @@ using System.Linq;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
+using CryBits.Client.Media;
+using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Window;
 using static CryBits.Client.Logic.Utils;
 using static CryBits.Globals;
-using Graphics = CryBits.Client.Media.Graphics;
 using Sound = CryBits.Client.Media.Audio.Sound;
 
 namespace CryBits.Client.UI
@@ -35,7 +36,7 @@ namespace CryBits.Client.UI
         public void MouseUp()
         {
             // Somente se necessário
-            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum])))) return;
+            if (!IsAbove(new Rectangle(Position, Graphicss.Size(Textures.Buttons[TextureNum])))) return;
 
             // Altera o estado do botão
             Sound.Play(Enums.Sound.Click);
@@ -49,7 +50,7 @@ namespace CryBits.Client.UI
         {
             // Somente se necessário
             if (e.Button == Mouse.Button.Right) return;
-            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum])))) return;
+            if (!IsAbove(new Rectangle(Position, Graphicss.Size(Textures.Buttons[TextureNum])))) return;
 
             // Altera o estado do botão
             State = States.Click;
@@ -58,7 +59,7 @@ namespace CryBits.Client.UI
         public void MouseMove()
         {
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-            if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum]))))
+            if (!IsAbove(new Rectangle(Position, Graphicss.Size(Textures.Buttons[TextureNum]))))
             {
                 State = States.Normal;
                 return;
