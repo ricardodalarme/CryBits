@@ -6,7 +6,7 @@ using CryBits.Editors.Library;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using static CryBits.Editors.Logic.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 

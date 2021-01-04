@@ -5,7 +5,7 @@ using CryBits.Editors.Forms;
 using CryBits.Entities;
 using CryBits.Enums;
 using Lidgren.Network;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using static CryBits.Utils;
 
 namespace CryBits.Editors.Network

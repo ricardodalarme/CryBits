@@ -1,5 +1,5 @@
 ﻿using CryBits.Enums;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 
 namespace CryBits.Client.Entities
 {

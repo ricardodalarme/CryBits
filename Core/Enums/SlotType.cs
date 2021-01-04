@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Hotbar
+    public enum SlotType
     {
         None,
         Item

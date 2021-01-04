@@ -3,7 +3,7 @@ using System.Drawing;
 using CryBits.Editors.Forms;
 using CryBits.Entities;
 using SFML.Audio;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using static CryBits.Utils;
 using Graphics = CryBits.Editors.Media.Graphics;
 using Sound = CryBits.Editors.Media.Audio.Sound;

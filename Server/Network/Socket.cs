@@ -1,6 +1,6 @@
 ﻿using CryBits.Server.Entities;
 using Lidgren.Network;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 
 namespace CryBits.Server.Network
 {

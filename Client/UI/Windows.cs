@@ -5,7 +5,7 @@ using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Hotbar = CryBits.Enums.Hotbar;
+using SlotType = CryBits.Enums.SlotType;
 using Music = CryBits.Enums.Music;
 using Sound = CryBits.Client.Media.Audio.Sound;
 using Window = CryBits.Enums.Window;
@@ -123,7 +123,7 @@ namespace CryBits.Client.UI
                 else if (Panels.HotbarSlot >= 0)
                 {
                     if (Panels.HotbarChange >= 0) Send.HotbarChange(Panels.HotbarChange, Panels.HotbarSlot);
-                    if (Panels.InventoryChange > 0) Send.HotbarAdd(Panels.HotbarSlot, (byte)Hotbar.Item, Panels.InventoryChange);
+                    if (Panels.InventoryChange > 0) Send.HotbarAdd(Panels.HotbarSlot, (byte)SlotType.Item, Panels.InventoryChange);
                 }
                 // Adiciona um item à troca
                 else if (Panels.TradeSlot > 0)

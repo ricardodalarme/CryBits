@@ -2,7 +2,7 @@
 
 namespace CryBits
 {
-    public static class Defaults
+    public static class Globals
     {
         // Configurações
         public static string GameName = "CryBits";

@@ -6,7 +6,7 @@ using CryBits.Server.Network;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using static CryBits.Utils;
 using ItemType = CryBits.Enums.ItemType;
 
@@ -24,8 +24,8 @@ namespace CryBits.Server.Entities
         public byte Points { get; set; }
         public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
         public ItemSlot[] Inventory { get; } = new ItemSlot[MaxInventory];
-        public CryBits.Entities.Item[] Equipment { get; } = new CryBits.Entities.Item[(byte)Enums.Equipment.Count];
-        public Hotbar[] Hotbar { get; } = new Hotbar[MaxHotbar];
+        public Item[] Equipment { get; } = new Item[(byte)Enums.Equipment.Count];
+        public HotbarSlot[] Hotbar { get; } = new HotbarSlot[MaxHotbar];
 
         // Dados temporários
         public bool GettingMap;
@@ -423,7 +423,7 @@ namespace CryBits.Server.Entities
             if (numLevel > 0) Send.MapPlayers(this);
         }
 
-        public bool GiveItem(CryBits.Entities.Item item, short amount)
+        public bool GiveItem(Item item, short amount)
         {
             ItemSlot slotItem = FindInventory(item);
             ItemSlot slotEmpty = FindInventory(null);
@@ -461,10 +461,10 @@ namespace CryBits.Server.Entities
                 slot.Amount = 0;
 
                 // Retira o item da hotbar caso estier
-                var hotbarSlot = FindHotbar(Enums.Hotbar.Item, slot);
+                var hotbarSlot = FindHotbar(Enums.SlotType.Item, slot);
                 if (hotbarSlot != null)
                 {
-                    hotbarSlot.Type = Enums.Hotbar.None;
+                    hotbarSlot.Type = Enums.SlotType.None;
                     hotbarSlot.Slot = 0;
                     Send.PlayerHotbar(this);
                 }
@@ -510,7 +510,7 @@ namespace CryBits.Server.Entities
 
         public void UseItem(ItemSlot slot)
         {
-            CryBits.Entities.Item item = slot.Item;
+            Item item = slot.Item;
 
             // Somente se necessário
             if (item == null) return;
@@ -535,7 +535,7 @@ namespace CryBits.Server.Entities
                 TakeItem(slot, 1);
 
                 // Caso já estiver com algum equipamento, desequipa ele
-                CryBits.Entities.Item currentEquip = Equipment[item.EquipType];
+                Item currentEquip = Equipment[item.EquipType];
                 if (currentEquip != null) GiveItem(currentEquip, 1);
 
                 // Equipa o item
@@ -573,7 +573,7 @@ namespace CryBits.Server.Entities
             }
         }
 
-        public Hotbar FindHotbar(Enums.Hotbar type, short slot)
+        public HotbarSlot FindHotbar(SlotType type, short slot)
         {
             // Encontra algo especifico na hotbar
             for (byte i = 0; i < MaxHotbar; i++)
@@ -583,7 +583,7 @@ namespace CryBits.Server.Entities
             return null;
         }
 
-        public Hotbar FindHotbar(Enums.Hotbar type, ItemSlot slot)
+        public HotbarSlot FindHotbar(SlotType type, ItemSlot slot)
         {
             // Encontra algo especifico na hotbar
             for (byte i = 0; i < MaxHotbar; i++)
@@ -593,7 +593,7 @@ namespace CryBits.Server.Entities
             return null;
         }
 
-        public ItemSlot FindInventory(CryBits.Entities.Item item)
+        public ItemSlot FindInventory(Item item)
         {
             // Encontra algo especifico na hotbar
             for (byte i = 0; i < MaxInventory; i++)
@@ -722,18 +722,6 @@ namespace CryBits.Server.Entities
                         return account.Character;
 
             return null;
-        }
-    }
-
-    internal class Hotbar
-    {
-        public Enums.Hotbar Type;
-        public short Slot;
-
-        public Hotbar(Enums.Hotbar type, short slot)
-        {
-            Type = type;
-            Slot = slot;
         }
     }
 }

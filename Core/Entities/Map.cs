@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 
 namespace CryBits.Entities
 {

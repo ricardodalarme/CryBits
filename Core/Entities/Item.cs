@@ -14,7 +14,7 @@ namespace CryBits.Entities
         // Geral
         public string Description { get; set; } = string.Empty;
         public short Texture { get; set; }
-        public Enums.ItemType Type { get; set; }
+        public ItemType Type { get; set; }
         public bool Stackable { get; set; }
         public BindOn Bind { get; set; }
         public Rarity Rarity { get; set; }

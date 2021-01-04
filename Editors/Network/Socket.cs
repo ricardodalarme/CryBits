@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using CryBits.Editors.Forms;
 using Lidgren.Network;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 
 namespace CryBits.Editors.Network
 {
