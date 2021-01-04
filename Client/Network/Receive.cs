@@ -1,20 +1,19 @@
-﻿using CryBits.Client.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.UI;
 using CryBits.Entities;
 using CryBits.Enums;
 using Lidgren.Network;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
 using static CryBits.Globals;
 using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
-using Item = CryBits.Entities.Item;
-using Music = CryBits.Enums.Music;
+using Music = CryBits.Client.Media.Audio.Music;
 
 namespace CryBits.Client.Network
 {
@@ -169,7 +168,7 @@ namespace CryBits.Client.Network
             Panels.List["Shop_Sell"].Visible = false;
 
             // Abre o jogo
-            Media.Audio.Music.Stop();
+            Music.Stop();
             Windows.Current = Window.Game;
         }
 
@@ -386,9 +385,9 @@ namespace CryBits.Client.Network
         {
             // Se tiver, reproduz a música de fundo do mapa
             if (TempMap.Current.Data.Music > 0)
-                Media.Audio.Music.Play((Music)TempMap.Current.Data.Music);
+                Music.Play((Enums.Music)TempMap.Current.Data.Music);
             else
-                Media.Audio.Music.Stop();
+                Music.Stop();
         }
 
         private static void Latency()

@@ -1,11 +1,10 @@
-﻿using CryBits.Entities;
+﻿using System.Drawing;
+using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Server.Entities;
 using Lidgren.Network;
-using System.Drawing;
 using static CryBits.Globals;
 using static CryBits.Utils;
-using Item = CryBits.Entities.Item;
 
 namespace CryBits.Server.Network
 {

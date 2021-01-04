@@ -1,4 +1,9 @@
-﻿using CryBits.Client.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.Network;
@@ -8,18 +13,11 @@ using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using static CryBits.Client.Logic.Utils;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
 using Color = SFML.Graphics.Color;
 using Font = SFML.Graphics.Font;
-using SlotType = CryBits.Enums.SlotType;
-using Item = CryBits.Entities.Item;
 using Window = CryBits.Enums.Window;
 
 namespace CryBits.Client.Media
@@ -562,10 +560,10 @@ namespace CryBits.Client.Media
             {
                 short slot = Player.Me.Hotbar[i].Slot;
                 if (slot > 0)
-                    switch ((SlotType)Player.Me.Hotbar[i].Type)
+                    switch (Player.Me.Hotbar[i].Type)
                     {
                         // Itens
-                        case Enums.SlotType.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
+                        case SlotType.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
                     }
 
                 // Desenha os números de cada slot

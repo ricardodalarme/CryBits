@@ -1,7 +1,7 @@
-﻿using CryBits.Server.Entities;
-using CryBits.Server.Network;
-using System;
+﻿using System;
 using System.Threading;
+using CryBits.Server.Entities;
+using CryBits.Server.Network;
 
 namespace CryBits.Server.Logic
 {

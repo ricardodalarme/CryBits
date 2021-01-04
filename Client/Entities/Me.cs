@@ -1,10 +1,10 @@
-﻿using CryBits.Client.Media;
+﻿using System;
+using CryBits.Client.Media;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
 using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Window;
-using System;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Entities

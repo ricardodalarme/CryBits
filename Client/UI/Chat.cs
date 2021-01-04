@@ -1,10 +1,10 @@
-﻿using CryBits.Client.Logic;
+﻿using System;
+using System.Collections.Generic;
+using CryBits.Client.Logic;
 using CryBits.Client.Media;
 using CryBits.Client.Network;
 using CryBits.Enums;
 using SFML.Graphics;
-using System;
-using System.Collections.Generic;
 using static CryBits.Client.Logic.Utils;
 
 namespace CryBits.Client.UI

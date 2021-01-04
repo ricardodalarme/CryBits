@@ -1,5 +1,5 @@
-﻿using CryBits.Entities;
-using System;
+﻿using System;
+using CryBits.Entities;
 
 namespace CryBits.Client.Entities
 {

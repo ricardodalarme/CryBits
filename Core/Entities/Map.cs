@@ -1,7 +1,7 @@
-﻿using CryBits.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CryBits.Enums;
 using static CryBits.Globals;
 
 namespace CryBits.Entities

@@ -1,14 +1,13 @@
-﻿using CryBits.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Server.Library;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using static CryBits.Globals;
 using static CryBits.Utils;
-using ItemType = CryBits.Enums.ItemType;
 
 namespace CryBits.Server.Entities
 {
@@ -461,10 +460,10 @@ namespace CryBits.Server.Entities
                 slot.Amount = 0;
 
                 // Retira o item da hotbar caso estier
-                var hotbarSlot = FindHotbar(Enums.SlotType.Item, slot);
+                var hotbarSlot = FindHotbar(SlotType.Item, slot);
                 if (hotbarSlot != null)
                 {
-                    hotbarSlot.Type = Enums.SlotType.None;
+                    hotbarSlot.Type = SlotType.None;
                     hotbarSlot.Slot = 0;
                     Send.PlayerHotbar(this);
                 }

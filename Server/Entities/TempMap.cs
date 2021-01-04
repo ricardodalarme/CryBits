@@ -1,11 +1,10 @@
-﻿using CryBits.Entities;
+﻿using System;
+using System.Collections.Generic;
+using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
-using System;
-using System.Collections.Generic;
 using static CryBits.Utils;
-using Item = CryBits.Entities.Item;
 
 namespace CryBits.Server.Entities
 {
