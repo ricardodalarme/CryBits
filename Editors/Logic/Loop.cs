@@ -30,7 +30,7 @@ namespace CryBits.Editors.Logic
                 MapsMusic();
 
                 // Desenha os gráficos
-                Graphics.Present();
+                Graphicss.Present();
 
                 // Faz com que a aplicação se mantenha estável
                 Application.DoEvents();

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
+using CryBits.Editors.Media;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;
@@ -14,7 +15,6 @@ using static CryBits.Globals;
 using static CryBits.Editors.Logic.Options;
 using static CryBits.Editors.Logic.Utils;
 using Color = System.Drawing.Color;
-using Graphics = CryBits.Editors.Media.Graphics;
 using Music = CryBits.Editors.Media.Audio.Music;
 using Sound = CryBits.Editors.Media.Audio.Sound;
 
@@ -69,13 +69,13 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Maps_Load(object sender, EventArgs e)
         {
-            Graphics.WinMap = new RenderWindow(picMap.Handle);
-            Graphics.WinMapTile = new RenderWindow(picTile.Handle);
-            Graphics.WinMapLighting = new RenderTexture((uint)Width, (uint)Height);
+            Graphicss.WinMap = new RenderWindow(picMap.Handle);
+            Graphicss.WinMapTile = new RenderWindow(picTile.Handle);
+            Graphicss.WinMapLighting = new RenderTexture((uint)Width, (uint)Height);
 
             // Lista os dados
             for (byte i = 0; i < (byte)Layer.Count; i++) cmbLayers_Type.Items.Add(((Layer)i).ToString());
-            for (byte i = 1; i < Graphics.TexTile.Length; i++) cmbTiles.Items.Add(i.ToString());
+            for (byte i = 1; i < Graphicss.TexTile.Length; i++) cmbTiles.Items.Add(i.ToString());
             Update_List();
 
             // Define os limites
@@ -692,7 +692,7 @@ namespace CryBits.Editors.Forms
         #region Tile
         private void Update_Tile_Bounds()
         {
-            Size tileSize = Graphics.Size(Graphics.TexTile[cmbTiles.SelectedIndex + 1]);
+            Size tileSize = Graphicss.Size(Graphicss.TexTile[cmbTiles.SelectedIndex + 1]);
             int width = tileSize.Width - picTile.Width;
             int height = tileSize.Height - picTile.Height;
 
@@ -735,8 +735,8 @@ namespace CryBits.Editors.Forms
             if (e.Button == MouseButtons.Left)
             {
                 // Previne erros
-                if (e.X + scrlTileX.Value > Graphics.Size(Graphics.TexTile[cmbTiles.SelectedIndex + 1]).Width) return;
-                if (e.Y + scrlTileY.Value > Graphics.Size(Graphics.TexTile[cmbTiles.SelectedIndex + 1]).Height) return;
+                if (e.X + scrlTileX.Value > Graphicss.Size(Graphicss.TexTile[cmbTiles.SelectedIndex + 1]).Width) return;
+                if (e.Y + scrlTileY.Value > Graphicss.Size(Graphicss.TexTile[cmbTiles.SelectedIndex + 1]).Height) return;
 
                 // Seleciona o azulejo;
                 _defTilesSelection.Location = new Point((e.X + scrlTileX.Value) / Grid, (e.Y + scrlTileY.Value) / Grid);
@@ -748,7 +748,7 @@ namespace CryBits.Editors.Forms
         {
             int x = (e.X + scrlTileX.Value) / Grid;
             int y = (e.Y + scrlTileY.Value) / Grid;
-            Size textureSize = Graphics.Size(Graphics.TexTile[cmbTiles.SelectedIndex + 1]);
+            Size textureSize = Graphicss.Size(Graphicss.TexTile[cmbTiles.SelectedIndex + 1]);
 
             // Define os valores
             TileMouse = new Point(x * Grid - scrlTileX.Value, y * Grid - scrlTileY.Value);
@@ -818,11 +818,11 @@ namespace CryBits.Editors.Forms
         private void picMap_SizeChanged(object sender, EventArgs e)
         {
             // Recria as janelas de acordo com o novo tamanho
-            if (Graphics.WinMap == null) return;
-            Graphics.WinMap.Dispose();
-            Graphics.WinMap = new RenderWindow(picMap.Handle);
-            Graphics.WinMapLighting.Dispose();
-            Graphics.WinMapLighting = new RenderTexture((uint)picMap.Width, (uint)picMap.Height);
+            if (Graphicss.WinMap == null) return;
+            Graphicss.WinMap.Dispose();
+            Graphicss.WinMap = new RenderWindow(picMap.Handle);
+            Graphicss.WinMapLighting.Dispose();
+            Graphicss.WinMapLighting = new RenderTexture((uint)picMap.Width, (uint)picMap.Height);
         }
 
         private void picMap_MouseWheel(object sender, MouseEventArgs e)

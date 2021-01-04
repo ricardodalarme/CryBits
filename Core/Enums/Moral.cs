@@ -4,6 +4,5 @@
     {
         Pacific,
         Dangerous,
-        Count
     }
 }

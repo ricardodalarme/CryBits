@@ -29,7 +29,7 @@ namespace CryBits.Editors
             // Inicializa todos os dispositivos
             Socket.Init();
             Sound.Load();
-            Graphics.Init();
+            Graphicss.Init();
 
             // Abre a janela
             Application.EnableVisualStyles();

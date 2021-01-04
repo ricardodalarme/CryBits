@@ -29,12 +29,12 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.WinClass = new RenderWindow(picTexture.Handle);
+            Graphicss.WinClass = new RenderWindow(picTexture.Handle);
 
             // Define os limites
             numSpawn_X.Maximum = Map.Width - 1;
             numSpawn_Y.Maximum = Map.Height - 1;
-            numTexture.Maximum = Graphics.TexCharacter.Length - 1;
+            numTexture.Maximum = Graphicss.TexCharacter.Length - 1;
 
             // Lista os dados
             foreach (var item in Item.List.Values) cmbItems.Items.Add(item);
@@ -44,7 +44,7 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Classes_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphics.WinClass = null;
+            Graphicss.WinClass = null;
             EditorMaps.Form.Show();
         }
 

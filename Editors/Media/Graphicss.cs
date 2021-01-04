@@ -21,7 +21,7 @@ using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
 namespace CryBits.Editors.Media
 {
-    internal static class Graphics
+    internal static class Graphicss
     {
         // Locais de renderização
         public static RenderWindow WinInterface;

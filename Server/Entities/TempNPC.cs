@@ -108,19 +108,19 @@ namespace CryBits.Server.Entities
 
                 // Npc
                 if (Data.AttackNpc && Target == null)
-                    for (byte NpcIndex = 0; NpcIndex < Map.Npc.Length; NpcIndex++)
+                    for (byte npcIndex = 0; npcIndex < Map.Npc.Length; npcIndex++)
                     {
                         // Verifica se pode atacar
-                        if (NpcIndex == Index) continue;
-                        if (!Map.Npc[NpcIndex].Alive) continue;
-                        if (Data.IsAllied(Map.Npc[NpcIndex].Data)) continue;
+                        if (npcIndex == Index) continue;
+                        if (!Map.Npc[npcIndex].Alive) continue;
+                        if (Data.IsAllied(Map.Npc[npcIndex].Data)) continue;
 
                         // Se o Npc estiver no alcance do Npc, ir atrás dele
-                        distance = (short)Math.Sqrt(Math.Pow(X - Map.Npc[NpcIndex].X, 2) +
-                                                     Math.Pow(Y - Map.Npc[NpcIndex].Y, 2));
+                        distance = (short)Math.Sqrt(Math.Pow(X - Map.Npc[npcIndex].X, 2) +
+                                                     Math.Pow(Y - Map.Npc[npcIndex].Y, 2));
                         if (distance <= Data.Sight)
                         {
-                            Target = Map.Npc[NpcIndex];
+                            Target = Map.Npc[npcIndex];
                             break;
                         }
                     }

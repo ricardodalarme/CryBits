@@ -785,47 +785,47 @@ namespace CryBits.Client.Media
             DrawText(player.Name, ConvertX(position.X), ConvertY(position.Y), color);
         }
 
-        private static void Npc(TempNpc Npc)
+        private static void Npc(TempNpc npc)
         {
             byte column = 0;
             bool hurt = false;
 
             // Previne sobrecargas
-            if (Npc.Data.Texture <= 0 || Npc.Data.Texture > TexCharacter.Count) return;
+            if (npc.Data.Texture <= 0 || npc.Data.Texture > TexCharacter.Count) return;
 
             // Define a animação
-            if (Npc.Attacking && Npc.AttackTimer + AttackSpeed / 2 > Environment.TickCount)
+            if (npc.Attacking && npc.AttackTimer + AttackSpeed / 2 > Environment.TickCount)
                 column = AnimationAttack;
             else
             {
-                if (Npc.X2 > 8 && Npc.X2 < Grid) column = Npc.Animation;
-                else if (Npc.X2 < -8 && Npc.X2 > Grid * -1) column = Npc.Animation;
-                else if (Npc.Y2 > 8 && Npc.Y2 < Grid) column = Npc.Animation;
-                else if (Npc.Y2 < -8 && Npc.Y2 > Grid * -1) column = Npc.Animation;
+                if (npc.X2 > 8 && npc.X2 < Grid) column = npc.Animation;
+                else if (npc.X2 < -8 && npc.X2 > Grid * -1) column = npc.Animation;
+                else if (npc.Y2 > 8 && npc.Y2 < Grid) column = npc.Animation;
+                else if (npc.Y2 < -8 && npc.Y2 > Grid * -1) column = npc.Animation;
             }
 
             // Demonstra que o personagem está sofrendo dano
-            if (Npc.Hurt > 0) hurt = true;
+            if (npc.Hurt > 0) hurt = true;
 
             // Desenha o jogador
-            Character(Npc.Data.Texture, new Point(ConvertX(Npc.PixelX), ConvertY(Npc.PixelY)), Npc.Direction, column, hurt);
-            NpcName(Npc);
-            NpcBars(Npc);
+            Character(npc.Data.Texture, new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY)), npc.Direction, column, hurt);
+            NpcName(npc);
+            NpcBars(npc);
         }
 
-        private static void NpcName(TempNpc Npc)
+        private static void NpcName(TempNpc npc)
         {
             Point position = new Point();
             Color color;
-            int nameSize = MeasureString(Npc.Data.Name);
-            Texture texture = TexCharacter[Npc.Data.Texture];
+            int nameSize = MeasureString(npc.Data.Name);
+            Texture texture = TexCharacter[npc.Data.Texture];
 
             // Posição do texto
-            position.X = Npc.PixelX + Size(texture).Width / AnimationAmount / 2 - nameSize / 2;
-            position.Y = Npc.PixelY - Size(texture).Height / AnimationAmount / 2;
+            position.X = npc.PixelX + Size(texture).Width / AnimationAmount / 2 - nameSize / 2;
+            position.Y = npc.PixelY - Size(texture).Height / AnimationAmount / 2;
 
             // Cor do texto
-            switch (Npc.Data.Behaviour)
+            switch (npc.Data.Behaviour)
             {
                 case Behaviour.Friendly: color = Color.White; break;
                 case Behaviour.AttackOnSight: color = Color.Red; break;
@@ -834,21 +834,21 @@ namespace CryBits.Client.Media
             }
 
             // Desenha o texto
-            DrawText(Npc.Data.Name, ConvertX(position.X), ConvertY(position.Y), color);
+            DrawText(npc.Data.Name, ConvertX(position.X), ConvertY(position.Y), color);
         }
 
-        private static void NpcBars(TempNpc Npc)
+        private static void NpcBars(TempNpc npc)
         {
-            Texture texture = TexCharacter[Npc.Data.Texture];
-            short value = Npc.Vital[(byte)Vital.HP];
+            Texture texture = TexCharacter[npc.Data.Texture];
+            short value = npc.Vital[(byte)Vital.HP];
 
             // Apenas se necessário
-            if (value <= 0 || value >= Npc.Data.Vital[(byte)Vital.HP]) return;
+            if (value <= 0 || value >= npc.Data.Vital[(byte)Vital.HP]) return;
 
             // Posição
-            Point position = new Point(ConvertX(Npc.PixelX), ConvertY(Npc.PixelY) + Size(texture).Height / AnimationAmount + 4);
+            Point position = new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY) + Size(texture).Height / AnimationAmount + 4);
             int fullWidth = Size(texture).Width / AnimationAmount;
-            int width = value * fullWidth / Npc.Data.Vital[(byte)Vital.HP];
+            int width = value * fullWidth / npc.Data.Vital[(byte)Vital.HP];
 
             // Desenha a barra 
             Render(TexBars, position.X, position.Y, 0, 4, fullWidth, 4);

@@ -113,9 +113,9 @@ namespace CryBits.Server.Library
         public static void Npcs()
         {
             // Escreve os dados
-            foreach (var Npc in Npc.List.Values)
-                using (var stream = new FileInfo(Directories.Npcs.FullName + Npc.ID + Directories.Format).OpenWrite())
-                    new BinaryFormatter().Serialize(stream, Npc);
+            foreach (var npc in Npc.List.Values)
+                using (var stream = new FileInfo(Directories.Npcs.FullName + npc.ID + Directories.Format).OpenWrite())
+                    new BinaryFormatter().Serialize(stream, npc);
         }
 
         public static void Items()

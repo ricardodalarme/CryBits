@@ -485,77 +485,77 @@ namespace CryBits.Server.Network
             ToPlayer(player, data);
         }
 
-        public static void MapNpc(TempNpc Npc)
+        public static void MapNpc(TempNpc npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
             data.Write((byte)ServerPacket.MapNpc);
-            data.Write(Npc.Index);
-            data.Write(Npc.Data.GetID());
-            data.Write(Npc.X);
-            data.Write(Npc.Y);
-            data.Write((byte)Npc.Direction);
-            for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(Npc.Vital[n]);
-            ToMap(Npc.Map, data);
+            data.Write(npc.Index);
+            data.Write(npc.Data.GetID());
+            data.Write(npc.X);
+            data.Write(npc.Y);
+            data.Write((byte)npc.Direction);
+            for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(npc.Vital[n]);
+            ToMap(npc.Map, data);
         }
 
-        public static void MapNpcMovement(TempNpc Npc, byte movement)
+        public static void MapNpcMovement(TempNpc npc, byte movement)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
             data.Write((byte)ServerPacket.MapNpcMovement);
-            data.Write(Npc.Index);
-            data.Write(Npc.X);
-            data.Write(Npc.Y);
-            data.Write((byte)Npc.Direction);
+            data.Write(npc.Index);
+            data.Write(npc.X);
+            data.Write(npc.Y);
+            data.Write((byte)npc.Direction);
             data.Write(movement);
-            ToMap(Npc.Map, data);
+            ToMap(npc.Map, data);
         }
 
-        public static void MapNpcDirection(TempNpc Npc)
+        public static void MapNpcDirection(TempNpc npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
             data.Write((byte)ServerPacket.MapNpcDirection);
-            data.Write(Npc.Index);
-            data.Write((byte)Npc.Direction);
-            ToMap(Npc.Map, data);
+            data.Write(npc.Index);
+            data.Write((byte)npc.Direction);
+            ToMap(npc.Map, data);
         }
 
-        public static void MapNpcVitals(TempNpc Npc)
+        public static void MapNpcVitals(TempNpc npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
             data.Write((byte)ServerPacket.MapNpcVitals);
-            data.Write(Npc.Index);
-            for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(Npc.Vital[n]);
-            ToMap(Npc.Map, data);
+            data.Write(npc.Index);
+            for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(npc.Vital[n]);
+            ToMap(npc.Map, data);
         }
 
-        public static void MapNpcAttack(TempNpc Npc, string victim = "", Target victimType = 0)
+        public static void MapNpcAttack(TempNpc npc, string victim = "", Target victimType = 0)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
             data.Write((byte)ServerPacket.MapNpcAttack);
-            data.Write(Npc.Index);
+            data.Write(npc.Index);
             data.Write(victim);
             data.Write((byte)victimType);
-            ToMap(Npc.Map, data);
+            ToMap(npc.Map, data);
         }
 
-        public static void MapNpcDied(TempNpc Npc)
+        public static void MapNpcDied(TempNpc npc)
         {
             NetOutgoingMessage data = Socket.Device.CreateMessage();
 
             // Envia os dados
             data.Write((byte)ServerPacket.MapNpcDied);
-            data.Write(Npc.Index);
-            ToMap(Npc.Map, data);
+            data.Write(npc.Index);
+            ToMap(npc.Map, data);
         }
 
         public static void ServerData(Account account)

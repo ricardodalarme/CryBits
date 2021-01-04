@@ -39,4 +39,8 @@
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Media\NewFolder\" />
+  </ItemGroup>
+
 </Project>
