@@ -26,8 +26,7 @@ namespace CryBits.Client.Logic
         public static short MeasureString(string text)
         {
             // Dados do texto
-            Text tempText = new Text(text, Graphics.FontDefault);
-            tempText.CharacterSize = 10;
+            Text tempText = new Text(text, Graphics.FontDefault) { CharacterSize = 10 };
             return (short)tempText.GetLocalBounds().Width;
         }
 

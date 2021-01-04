@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Drawing;
 using CryBits.Editors.Entities;
+using CryBits.Editors.Media;
 using CryBits.Entities;
 using CryBits.Enums;
 using static CryBits.Globals;
-using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Logic
 {
@@ -43,7 +43,7 @@ namespace CryBits.Editors.Logic
         public byte FogTexture
         {
             get => Base.Fog.Texture;
-            set => Base.Fog.Texture = Math.Min(value, (byte)(Graphics.TexFog.Length - 1));
+            set => Base.Fog.Texture = Math.Min(value, (byte)(Graphicss.TexFog.Length - 1));
         }
 
         [Category("Fog")][DisplayName("Fog Alpha")][DefaultValue(255)]
@@ -135,7 +135,7 @@ namespace CryBits.Editors.Logic
         public byte Panorama
         {
             get => Base.Panorama;
-            set => Base.Panorama = Math.Min(value, (byte)(Graphics.TexPanorama.Length - 1));
+            set => Base.Panorama = Math.Min(value, (byte)(Graphicss.TexPanorama.Length - 1));
         }
     }
 }

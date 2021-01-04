@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using CryBits.Editors.Forms;
+using CryBits.Editors.Media;
 using CryBits.Entities;
 using SFML.Audio;
 using static CryBits.Globals;
 using static CryBits.Utils;
-using Graphics = CryBits.Editors.Media.Graphics;
 using Sound = CryBits.Editors.Media.Audio.Sound;
 
 namespace CryBits.Editors.Entities
@@ -50,7 +50,7 @@ namespace CryBits.Editors.Entities
 
         private static void UpdateFogX()
         {
-            Size textureSize = Graphics.Size(Graphics.TexFog[EditorMaps.Form.Selected.Fog.Texture]);
+            Size textureSize = Graphicss.Size(Graphicss.TexFog[EditorMaps.Form.Selected.Fog.Texture]);
             int speed = EditorMaps.Form.Selected.Fog.SpeedX;
 
             // Apenas se necessário
@@ -77,7 +77,7 @@ namespace CryBits.Editors.Entities
 
         private static void UpdateFogY()
         {
-            Size textureSize = Graphics.Size(Graphics.TexFog[EditorMaps.Form.Selected.Fog.Texture]);
+            Size textureSize = Graphicss.Size(Graphicss.TexFog[EditorMaps.Form.Selected.Fog.Texture]);
             int speed = EditorMaps.Form.Selected.Fog.SpeedY;
 
             // Apenas se necessário

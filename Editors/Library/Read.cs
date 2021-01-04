@@ -4,11 +4,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Entities.Tools;
+using CryBits.Editors.Media;
 using CryBits.Enums;
 using static CryBits.Editors.Logic.Options;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
-using Graphics = CryBits.Editors.Media.Graphics;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
 using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
@@ -139,7 +139,7 @@ namespace CryBits.Editors.Library
         public static void Tiles()
         {
             // Lê os dados
-            Entities.Tile.List = new Tile[Graphics.TexTile.Length];
+            Entities.Tile.List = new Tile[Graphicss.TexTile.Length];
             for (byte i = 1; i < Entities.Tile.List.Length; i++) Tile(i);
         }
 

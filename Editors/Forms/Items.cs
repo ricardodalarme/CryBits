@@ -27,10 +27,10 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphics.WinItem = new RenderWindow(picTexture.Handle);
+            Graphicss.WinItem = new RenderWindow(picTexture.Handle);
 
             // Define os limites
-            numTexture.Maximum = Graphics.TexItem.GetUpperBound(0);
+            numTexture.Maximum = Graphicss.TexItem.GetUpperBound(0);
 
             // Lista os dados
             cmbReq_Class.Items.Add("None");
@@ -42,7 +42,7 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Items_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphics.WinItem = null;
+            Graphicss.WinItem = null;
             EditorMaps.Form.Show();
         }
 

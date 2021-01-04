@@ -62,7 +62,7 @@ namespace CryBits.Editors.Library
             TexItems.Create();
 
             // Lê os dados do lado do cliente
-            Graphics.Init();
+            Graphicss.Init();
             Sound.Load();
             Read.Tiles();
             Read.Tools();
