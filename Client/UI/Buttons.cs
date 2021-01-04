@@ -18,7 +18,7 @@ namespace CryBits.Client.UI
     internal class Buttons : Tools.Structure
     {
         // Aramazenamento de dados da ferramenta
-        public static Dictionary<string, Buttons> List = new Dictionary<string, Buttons>();
+        public static Dictionary<string, Buttons> List = new();
 
         // Estados dos botões
         public enum States

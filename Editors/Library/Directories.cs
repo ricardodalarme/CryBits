@@ -11,30 +11,30 @@ namespace CryBits.Editors.Library
         public const string Format = ".dat";
 
         // Editor
-        public static readonly FileInfo Options = new FileInfo(Environment.CurrentDirectory + @"\Data\Editors Options" + Format);
+        public static readonly FileInfo Options = new(Environment.CurrentDirectory + @"\Data\Editors Options" + Format);
 
         // Cliente
-        public static readonly DirectoryInfo Fonts = new DirectoryInfo(Environment.CurrentDirectory + @"\Graphics\Fonts\");
-        public static readonly DirectoryInfo Sounds = new DirectoryInfo(Environment.CurrentDirectory + @"\Audio\Sounds\");
-        public static readonly DirectoryInfo Musics = new DirectoryInfo(Environment.CurrentDirectory + @"\Audio\Musics\");
-        public static readonly DirectoryInfo Tiles = new DirectoryInfo(Environment.CurrentDirectory + @"\Data\Tiles\");
-        public static readonly FileInfo Tools = new FileInfo(Environment.CurrentDirectory + @"\Data\Tools" + Format);
-        public static readonly DirectoryInfo TexPanels = new DirectoryInfo(Environment.CurrentDirectory + @"\Graphics\Interface\Panels\");
-        public static readonly FileInfo TexCheckBox = new FileInfo(Environment.CurrentDirectory + @"\Graphics\Interface\CheckBox");
-        public static readonly FileInfo TexTextBox = new FileInfo(Environment.CurrentDirectory + @"\Graphics\Interface\TextBox");
-        public static readonly DirectoryInfo TexButtons = new DirectoryInfo(Environment.CurrentDirectory + @"\Graphics\Interface\Buttons\");
-        public static readonly DirectoryInfo TexCharacters = new DirectoryInfo(Environment.CurrentDirectory + @"\Graphics\Characters\");
-        public static readonly DirectoryInfo TexFaces = new DirectoryInfo(Environment.CurrentDirectory + @"\Graphics\Faces\");
-        public static readonly DirectoryInfo TexPanoramas = new DirectoryInfo(Environment.CurrentDirectory + @"\Graphics\Panoramas\");
-        public static readonly DirectoryInfo TexFogs = new DirectoryInfo(Environment.CurrentDirectory + @"\Graphics\Fogs\");
-        public static readonly DirectoryInfo TexTiles = new DirectoryInfo(Environment.CurrentDirectory + @"\Graphics\Tiles\");
-        public static readonly DirectoryInfo TexItems = new DirectoryInfo(Environment.CurrentDirectory + @"\Graphics\Items\");
-        public static readonly FileInfo TexGrid = new FileInfo(Environment.CurrentDirectory + @"\Graphics\Misc\Grid");
-        public static readonly FileInfo TexWeather = new FileInfo(Environment.CurrentDirectory + @"\Graphics\Misc\Weather");
-        public static readonly FileInfo TexBlanc = new FileInfo(Environment.CurrentDirectory + @"\Graphics\Misc\Blank");
-        public static readonly FileInfo TexDirections = new FileInfo(Environment.CurrentDirectory + @"\Graphics\Misc\Directions");
-        public static readonly FileInfo TexTransparent = new FileInfo(Environment.CurrentDirectory + @"\Graphics\Misc\Transparent");
-        public static readonly FileInfo TexLighting = new FileInfo(Environment.CurrentDirectory + @"\Graphics\Misc\Lighting");
+        public static readonly DirectoryInfo Fonts = new(Environment.CurrentDirectory + @"\Graphics\Fonts\");
+        public static readonly DirectoryInfo Sounds = new(Environment.CurrentDirectory + @"\Audio\Sounds\");
+        public static readonly DirectoryInfo Musics = new(Environment.CurrentDirectory + @"\Audio\Musics\");
+        public static readonly DirectoryInfo Tiles = new(Environment.CurrentDirectory + @"\Data\Tiles\");
+        public static readonly FileInfo Tools = new(Environment.CurrentDirectory + @"\Data\Tools" + Format);
+        public static readonly DirectoryInfo TexPanels = new(Environment.CurrentDirectory + @"\Graphics\Interface\Panels\");
+        public static readonly FileInfo TexCheckBox = new(Environment.CurrentDirectory + @"\Graphics\Interface\CheckBox");
+        public static readonly FileInfo TexTextBox = new(Environment.CurrentDirectory + @"\Graphics\Interface\TextBox");
+        public static readonly DirectoryInfo TexButtons = new(Environment.CurrentDirectory + @"\Graphics\Interface\Buttons\");
+        public static readonly DirectoryInfo TexCharacters = new(Environment.CurrentDirectory + @"\Graphics\Characters\");
+        public static readonly DirectoryInfo TexFaces = new(Environment.CurrentDirectory + @"\Graphics\Faces\");
+        public static readonly DirectoryInfo TexPanoramas = new(Environment.CurrentDirectory + @"\Graphics\Panoramas\");
+        public static readonly DirectoryInfo TexFogs = new(Environment.CurrentDirectory + @"\Graphics\Fogs\");
+        public static readonly DirectoryInfo TexTiles = new(Environment.CurrentDirectory + @"\Graphics\Tiles\");
+        public static readonly DirectoryInfo TexItems = new(Environment.CurrentDirectory + @"\Graphics\Items\");
+        public static readonly FileInfo TexGrid = new(Environment.CurrentDirectory + @"\Graphics\Misc\Grid");
+        public static readonly FileInfo TexWeather = new(Environment.CurrentDirectory + @"\Graphics\Misc\Weather");
+        public static readonly FileInfo TexBlanc = new(Environment.CurrentDirectory + @"\Graphics\Misc\Blank");
+        public static readonly FileInfo TexDirections = new(Environment.CurrentDirectory + @"\Graphics\Misc\Directions");
+        public static readonly FileInfo TexTransparent = new(Environment.CurrentDirectory + @"\Graphics\Misc\Transparent");
+        public static readonly FileInfo TexLighting = new(Environment.CurrentDirectory + @"\Graphics\Misc\Lighting");
 
         public static void Create()
         {

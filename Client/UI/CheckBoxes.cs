@@ -14,7 +14,7 @@ namespace CryBits.Client.UI
     internal class CheckBoxes : Tools.Structure
     {
         // Armazenamento dos dados da ferramenta
-        public static Dictionary<string, CheckBoxes> List = new Dictionary<string, CheckBoxes>();
+        public static Dictionary<string, CheckBoxes> List = new();
 
         // Margem da textura até o texto
         public const byte Margin = 4;

@@ -7,7 +7,7 @@ namespace CryBits.Server.Entities
     internal class Account
     {
         // Lista de dados
-        public static readonly List<Account> List = new List<Account>();
+        public static readonly List<Account> List = new();
 
         // Dados básicos
         public NetConnection Connection { get; }
@@ -16,7 +16,7 @@ namespace CryBits.Server.Entities
         public Access Access { get; set; }
         public bool InEditor { get; set; }
         public Player Character { get; set; }
-        public List<TempCharacter> Characters { get; set; } = new List<TempCharacter>();
+        public List<TempCharacter> Characters { get; set; } = new();
         public struct TempCharacter
         {
             public string Name;

@@ -23,8 +23,8 @@ namespace CryBits.Client.Entities
         // Dados gerais
         public readonly Map Data;
         public TempNpc[] Npc;
-        public MapItems[] Item = new MapItems[0];
-        public List<MapBlood> Blood = new List<MapBlood>();
+        public MapItems[] Item = Array.Empty<MapItems>();
+        public List<MapBlood> Blood = new();
 
         // Fumaças
         public int FogX;

@@ -37,8 +37,8 @@ namespace CryBits.Editors.Forms
         private Point _mapMouse;
 
         // Seleção retângular
-        private Rectangle _defTilesSelection = new Rectangle(0, 0, 1, 1);
-        private Rectangle _defMapSelection = new Rectangle(0, 0, 1, 1);
+        private Rectangle _defTilesSelection = new(0, 0, 1, 1);
+        private Rectangle _defMapSelection = new(0, 0, 1, 1);
 
         // Dados dos atributos
         private string _aData1;
@@ -1534,7 +1534,7 @@ namespace CryBits.Editors.Forms
         }
 
         // Retorna com o retângulo do azulejo ajustado à grade
-        public Rectangle TileSource => new Rectangle(TilesSelection.X * Grid, TilesSelection.Y * Grid, TilesSelection.Width * Grid, TilesSelection.Height * Grid);
+        public Rectangle TileSource => new(TilesSelection.X * Grid, TilesSelection.Y * Grid, TilesSelection.Width * Grid, TilesSelection.Height * Grid);
 
         // Retorna o valor com o zoom
         public byte Zoom()
@@ -1546,9 +1546,9 @@ namespace CryBits.Editors.Forms
         }
 
         public byte GridZoom => (byte)(Grid / Zoom());
-        public Rectangle Zoom(Rectangle value) => new Rectangle(value.X / Zoom(), value.Y / Zoom(), value.Width / Zoom(), value.Height / Zoom());
-        public Rectangle Zoom_Grid(Rectangle rectangle) => new Rectangle(rectangle.X * GridZoom, rectangle.Y * GridZoom, rectangle.Width * GridZoom, rectangle.Height * GridZoom);
-        public Point Zoom_Grid(int x, int y) => new Point(x * GridZoom, y * GridZoom);
+        public Rectangle Zoom(Rectangle value) => new(value.X / Zoom(), value.Y / Zoom(), value.Width / Zoom(), value.Height / Zoom());
+        public Rectangle Zoom_Grid(Rectangle rectangle) => new(rectangle.X * GridZoom, rectangle.Y * GridZoom, rectangle.Width * GridZoom, rectangle.Height * GridZoom);
+        public Point Zoom_Grid(int x, int y) => new(x * GridZoom, y * GridZoom);
 
         // Tamanho da grade com o zoom
         // public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Form.Zoom());

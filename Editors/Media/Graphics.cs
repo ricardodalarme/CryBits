@@ -84,7 +84,7 @@ namespace CryBits.Editors.Media
         }
 
         // Retorna a cor
-        private static Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new Color(r, g, b, a);
+        private static Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new(r, g, b, a);
 
         private static void Render(RenderWindow window, Texture texture, Rectangle source, Rectangle destiny, object color = null, object mode = null)
         {
@@ -444,7 +444,7 @@ namespace CryBits.Editors.Media
         private static void EditorMapsMapGrids(Map map)
         {
             EditorMaps form = EditorMaps.Form;
-            Rectangle source = form.TileSource, destiny = new Rectangle();
+            Rectangle source = form.TileSource, destiny = new();
             Point begin = new Point(form.MapSelection.X - form.scrlMapX.Value, form.MapSelection.Y - form.scrlMapY.Value);
 
             // Dados

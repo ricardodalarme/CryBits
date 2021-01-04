@@ -9,14 +9,14 @@ namespace CryBits.Server.Library
         public const string Format = ".dat";
 
         // Diretório dos arquivos
-        public static readonly FileInfo Defaults = new FileInfo(Environment.CurrentDirectory + @"\Data\Defaults" + Format);
-        public static readonly DirectoryInfo Accounts = new DirectoryInfo(Environment.CurrentDirectory + @"\Data\Accounts\");
-        public static readonly FileInfo Characters = new FileInfo(Environment.CurrentDirectory + @"\Data\Characters" + Format);
-        public static readonly DirectoryInfo Classes = new DirectoryInfo(Environment.CurrentDirectory + @"\Data\Classes\");
-        public static readonly DirectoryInfo Maps = new DirectoryInfo(Environment.CurrentDirectory + @"\Data\Maps\");
-        public static readonly DirectoryInfo Npcs = new DirectoryInfo(Environment.CurrentDirectory + @"\Data\Npcs\");
-        public static readonly DirectoryInfo Items = new DirectoryInfo(Environment.CurrentDirectory + @"\Data\Items\");
-        public static readonly DirectoryInfo Shops = new DirectoryInfo(Environment.CurrentDirectory + @"\Data\Shops\");
+        public static readonly FileInfo Defaults = new(Environment.CurrentDirectory + @"\Data\Defaults" + Format);
+        public static readonly DirectoryInfo Accounts = new(Environment.CurrentDirectory + @"\Data\Accounts\");
+        public static readonly FileInfo Characters = new(Environment.CurrentDirectory + @"\Data\Characters" + Format);
+        public static readonly DirectoryInfo Classes = new(Environment.CurrentDirectory + @"\Data\Classes\");
+        public static readonly DirectoryInfo Maps = new(Environment.CurrentDirectory + @"\Data\Maps\");
+        public static readonly DirectoryInfo Npcs = new(Environment.CurrentDirectory + @"\Data\Npcs\");
+        public static readonly DirectoryInfo Items = new(Environment.CurrentDirectory + @"\Data\Items\");
+        public static readonly DirectoryInfo Shops = new(Environment.CurrentDirectory + @"\Data\Shops\");
 
         public static void Create()
         {

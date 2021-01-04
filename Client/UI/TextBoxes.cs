@@ -11,7 +11,7 @@ namespace CryBits.Client.UI
     internal class TextBoxes : Tools.Structure
     {
         // Armazenamento de dados da ferramenta
-        public static Dictionary<string, TextBoxes> List = new Dictionary<string, TextBoxes>();
+        public static Dictionary<string, TextBoxes> List = new();
 
         // Digitalizador focado
         public static Tools.OrderStructure Focused;

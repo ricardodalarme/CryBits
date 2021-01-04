@@ -84,7 +84,7 @@ namespace CryBits.Editors.Library
         private static Button Button(BinaryReader data)
         {
             // Lê os dados
-            return new Button
+            return new()
             {
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
@@ -97,7 +97,7 @@ namespace CryBits.Editors.Library
         private static TextBox TextBox(BinaryReader data)
         {
             // Lê os dados
-            return new TextBox
+            return new()
             {
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
@@ -112,7 +112,7 @@ namespace CryBits.Editors.Library
         private static Panel Panel(BinaryReader data)
         {
             // Carrega os dados
-            return new Panel
+            return new()
             {
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
@@ -125,7 +125,7 @@ namespace CryBits.Editors.Library
         private static CheckBox CheckBox(BinaryReader data)
         {
             // Carrega os dados
-            return new CheckBox
+            return new()
             {
                 Name = data.ReadString(),
                 Position = new Point(data.ReadInt32(), data.ReadInt32()),
