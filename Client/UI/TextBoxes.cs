@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Logic;
+using CryBits.Client.Media;
+using CryBits.Client.Media.Graphics;
 using SFML.Window;
 using static CryBits.Client.Logic.Utils;
-using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.UI
 {
@@ -27,7 +28,7 @@ namespace CryBits.Client.UI
         public void MouseUp(Tools.OrderStructure order)
         {
             // Somente se necessário
-            if (!IsAbove(new Rectangle(Position, new Size(Width, Graphics.Size(Graphics.TexTextBox).Height)))) return;
+            if (!IsAbove(new Rectangle(Position, new Size(Width, Graphicss.Size(Textures.TextBox).Height)))) return;
 
             // Define o foco no digitalizador
             Focused = order;

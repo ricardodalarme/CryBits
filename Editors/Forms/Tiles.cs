@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
 using CryBits.Editors.Media;
+using CryBits.Editors.Media.Graphics;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
@@ -32,7 +33,7 @@ namespace CryBits.Editors.Forms
             Graphicss.WinTile = new RenderWindow(picTile.Handle);
 
             // Define os limites
-            scrlTile.Maximum = Graphicss.TexTile.GetUpperBound(0);
+            scrlTile.Maximum = Textures.Tiles.Count-1;
             Update_Bounds();
         }
 
@@ -44,8 +45,8 @@ namespace CryBits.Editors.Forms
 
         private void Update_Bounds()
         {
-            int x = Graphicss.Size(Graphicss.TexTile[scrlTile.Value]).Width / Grid - picTile.Width / Grid;
-            int y = Graphicss.Size(Graphicss.TexTile[scrlTile.Value]).Height / Grid - picTile.Height / Grid;
+            int x = Graphicss.Size(Textures.Tiles[scrlTile.Value]).Width / Grid - picTile.Width / Grid;
+            int y = Graphicss.Size(Textures.Tiles[scrlTile.Value]).Height / Grid - picTile.Height / Grid;
 
             // Verifica se nada passou do limite minímo
             if (x < 0) x = 0;

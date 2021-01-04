@@ -6,6 +6,7 @@ using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
+using CryBits.Editors.Media.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;
@@ -75,7 +76,7 @@ namespace CryBits.Editors.Forms
 
             // Lista os dados
             for (byte i = 0; i < (byte)Layer.Count; i++) cmbLayers_Type.Items.Add(((Layer)i).ToString());
-            for (byte i = 1; i < Graphicss.TexTile.Length; i++) cmbTiles.Items.Add(i.ToString());
+            for (byte i = 1; i < Textures.Tiles.Count; i++) cmbTiles.Items.Add(i.ToString());
             Update_List();
 
             // Define os limites
@@ -692,7 +693,7 @@ namespace CryBits.Editors.Forms
         #region Tile
         private void Update_Tile_Bounds()
         {
-            Size tileSize = Graphicss.Size(Graphicss.TexTile[cmbTiles.SelectedIndex + 1]);
+            Size tileSize = Graphicss.Size(Textures.Tiles[cmbTiles.SelectedIndex + 1]);
             int width = tileSize.Width - picTile.Width;
             int height = tileSize.Height - picTile.Height;
 
@@ -735,8 +736,8 @@ namespace CryBits.Editors.Forms
             if (e.Button == MouseButtons.Left)
             {
                 // Previne erros
-                if (e.X + scrlTileX.Value > Graphicss.Size(Graphicss.TexTile[cmbTiles.SelectedIndex + 1]).Width) return;
-                if (e.Y + scrlTileY.Value > Graphicss.Size(Graphicss.TexTile[cmbTiles.SelectedIndex + 1]).Height) return;
+                if (e.X + scrlTileX.Value > Graphicss.Size(Textures.Tiles[cmbTiles.SelectedIndex + 1]).Width) return;
+                if (e.Y + scrlTileY.Value > Graphicss.Size(Textures.Tiles[cmbTiles.SelectedIndex + 1]).Height) return;
 
                 // Seleciona o azulejo;
                 _defTilesSelection.Location = new Point((e.X + scrlTileX.Value) / Grid, (e.Y + scrlTileY.Value) / Grid);
@@ -748,7 +749,7 @@ namespace CryBits.Editors.Forms
         {
             int x = (e.X + scrlTileX.Value) / Grid;
             int y = (e.Y + scrlTileY.Value) / Grid;
-            Size textureSize = Graphicss.Size(Graphicss.TexTile[cmbTiles.SelectedIndex + 1]);
+            Size textureSize = Graphicss.Size(Textures.Tiles[cmbTiles.SelectedIndex + 1]);
 
             // Define os valores
             TileMouse = new Point(x * Grid - scrlTileX.Value, y * Grid - scrlTileY.Value);

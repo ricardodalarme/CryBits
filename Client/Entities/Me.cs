@@ -36,7 +36,7 @@ namespace CryBits.Client.Entities
 
         public void CheckMovement()
         {
-            if (Movement > 0 || !Graphics.RenderWindow.HasFocus()) return;
+            if (Movement > 0 || !Graphicss.RenderWindow.HasFocus()) return;
 
             // Move o personagem
             if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Direction.Up);
@@ -61,7 +61,7 @@ namespace CryBits.Client.Entities
             if (Map.TileBlocked(X, Y, direction)) return;
 
             // Define a velocidade que o jogador se move
-            if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Graphics.RenderWindow.HasFocus())
+            if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Graphicss.RenderWindow.HasFocus())
                 Movement = Movement.Moving;
             else
                 Movement = Movement.Walking;
@@ -89,7 +89,7 @@ namespace CryBits.Client.Entities
             }
 
             // Somente se estiver pressionando a tecla de ataque e não estiver atacando
-            if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Graphics.RenderWindow.HasFocus()) return;
+            if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Graphicss.RenderWindow.HasFocus()) return;
             if (AttackTimer > 0) return;
             if (Panels.List["Trade"].Visible) return;
             if (Panels.List["Shop"].Visible) return;

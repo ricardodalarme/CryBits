@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CryBits.Client.Media;
+using CryBits.Client.Media.Graphics;
 using CryBits.Entities;
 using CryBits.Enums;
 using static CryBits.Globals;
 using static CryBits.Utils;
-using Graphics = CryBits.Client.Media.Graphics;
 
 namespace CryBits.Client.Entities
 {
@@ -107,7 +108,7 @@ namespace CryBits.Client.Entities
 
         private void UpdateFogX()
         {
-            Size size = Graphics.Size(Graphics.TexFog[Data.Fog.Texture]);
+            Size size = Graphicss.Size(Textures.Fogs[Data.Fog.Texture]);
             int speedX = Data.Fog.SpeedX;
 
             // Apenas se necessário
@@ -134,7 +135,7 @@ namespace CryBits.Client.Entities
 
         private void UpdateFogY()
         {
-            Size size = Graphics.Size(Graphics.TexFog[Data.Fog.Texture]);
+            Size size = Graphicss.Size(Textures.Fogs[Data.Fog.Texture]);
             int speedY = Data.Fog.SpeedY;
 
             // Apenas se necessário

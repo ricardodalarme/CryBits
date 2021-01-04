@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CryBits.Client.Logic;
 using CryBits.Client.Media;
+using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Enums;
 using SFML.Graphics;
@@ -47,7 +48,7 @@ namespace CryBits.Client.UI
 
         public static void AddText(string message, Color color)
         {
-            int messageWidth, boxWidth = Graphics.Size(Graphics.TexPanel[Panels.List["Chat"].TextureNum]).Width - 16;
+            int messageWidth, boxWidth = Graphicss.Size(Textures.Panels[Panels.List["Chat"].TextureNum]).Width - 16;
             string tempMessage;
 
             // Remove os espaços
