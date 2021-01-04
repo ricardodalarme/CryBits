@@ -13,7 +13,7 @@ namespace CryBits.Client.UI
     internal class Panels : Tools.Structure
     {
         // Armazenamento dos dados da ferramenta
-        public static Dictionary<string, Panels> List = new Dictionary<string, Panels>();
+        public static Dictionary<string, Panels> List = new();
 
         // Dados
         public byte TextureNum;

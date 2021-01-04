@@ -8,7 +8,7 @@ namespace CryBits.Entities
     public class Npc : Entity
     {
         // Lista de dados
-        public static Dictionary<Guid, Npc> List = new Dictionary<Guid, Npc>();
+        public static Dictionary<Guid, Npc> List = new();
 
         // Dados
         public string SayMsg { get; set; }

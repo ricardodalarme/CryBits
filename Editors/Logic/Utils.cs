@@ -10,7 +10,7 @@ namespace CryBits.Editors.Logic
     internal static class Utils
     {
         // Dimensão das grades 
-        public static Size GridSize = new Size(Grid, Grid);
+        public static Size GridSize = new(Grid, Grid);
 
         public static Point Block_Position(byte direction)
         {

@@ -12,7 +12,7 @@ namespace CryBits.Client.UI
     internal static class Chat
     {
         // Ordem de renderização
-        public static List<Structure> Order = new List<Structure>();
+        public static List<Structure> Order = new();
 
         // Chat
         public const byte LinesVisible = 9;

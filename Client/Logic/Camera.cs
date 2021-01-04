@@ -13,7 +13,7 @@ namespace CryBits.Client.Logic
 
         public static void Update()
         {
-            Point end = new Point(), start = new Point(), position = new Point();
+            Point end = new(), start = new(), position = new();
 
             // Centro da tela
             position.X = Player.Me.X2 + Grid;

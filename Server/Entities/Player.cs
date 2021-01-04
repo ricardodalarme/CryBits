@@ -29,7 +29,7 @@ namespace CryBits.Server.Entities
 
         // Dados temporários
         public bool GettingMap;
-        public List<Player> Party = new List<Player>();
+        public List<Player> Party = new();
         public string PartyRequest;
         public Player Trade;
         public string TradeRequest;

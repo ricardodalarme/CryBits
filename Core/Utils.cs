@@ -11,7 +11,7 @@ namespace CryBits
     public static class Utils
     {
         // Números aleatórios
-        public static readonly Random MyRandom = new Random();
+        public static readonly Random MyRandom = new();
 
         public static Direction ReverseDirection(Direction direction)
         {

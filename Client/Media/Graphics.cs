@@ -124,7 +124,7 @@ namespace CryBits.Client.Media
             return new Size(0, 0);
         }
 
-        private static Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new Color(r, g, b, a);
+        private static Color CColor(byte r = 255, byte g = 255, byte b = 255, byte a = 255) => new(r, g, b, a);
 
         private static void Render(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null, object mode = null)
         {
@@ -549,7 +549,7 @@ namespace CryBits.Client.Media
             }
 
             // Desenha todos os dados necessários
-            Point[] positions = { new Point(tool.Position.X + 10, tool.Position.Y + 90), new Point(tool.Position.X + 10, tool.Position.Y + 102), new Point(tool.Position.X + 10, tool.Position.Y + 114), new Point(tool.Position.X + 96, tool.Position.Y + 90), new Point(tool.Position.X + 96, tool.Position.Y + 102), new Point(tool.Position.X + 96, tool.Position.Y + 114), new Point(tool.Position.X + 96, tool.Position.Y + 126) };
+            Point[] positions = { new(tool.Position.X + 10, tool.Position.Y + 90), new(tool.Position.X + 10, tool.Position.Y + 102), new(tool.Position.X + 10, tool.Position.Y + 114), new(tool.Position.X + 96, tool.Position.Y + 90), new(tool.Position.X + 96, tool.Position.Y + 102), new(tool.Position.X + 96, tool.Position.Y + 114), new(tool.Position.X + 96, tool.Position.Y + 126) };
             for (byte i = 0; i < data.Count; i++) DrawText(data[i], positions[i].X, positions[i].Y, Color.White);
         }
 
@@ -681,7 +681,7 @@ namespace CryBits.Client.Media
 
         private static void Character(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
         {
-            Rectangle recSource = new Rectangle(), recDestiny;
+            Rectangle recSource = new(), recDestiny;
             Size size = Size(TexCharacter[textureNum]);
             Color color = new Color(255, 255, 255);
             byte line = 0;

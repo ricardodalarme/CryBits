@@ -7,7 +7,7 @@ namespace CryBits.Entities
     public class Class : Entity
     {
         // Lista de dados
-        public static Dictionary<Guid, Class> List = new Dictionary<Guid, Class>();
+        public static Dictionary<Guid, Class> List = new();
 
         // Dados
         public string Description { get; set; }

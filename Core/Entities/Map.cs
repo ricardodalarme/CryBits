@@ -10,7 +10,7 @@ namespace CryBits.Entities
     public class Map : Entity
     {
         // Lista de dados
-        public static Dictionary<Guid, Map> List = new Dictionary<Guid, Map>();
+        public static Dictionary<Guid, Map> List = new();
 
         // Tamanho dos mapas
         public const byte Width = 25;
@@ -24,8 +24,8 @@ namespace CryBits.Entities
         public byte Panorama { get; set; }
         public byte Music { get; set; }
         public Color Color { get; set; } = Color.FromArgb(-1);
-        public MapWeather Weather = new MapWeather();
-        public MapFog Fog = new MapFog();
+        public MapWeather Weather = new();
+        public MapFog Fog = new();
         public IList<MapNpc> Npc { get; set; } = new List<MapNpc>();
         public IList<MapLight> Light { get; set; } = new List<MapLight>();
         public byte Lighting = 100;
@@ -322,7 +322,7 @@ namespace CryBits.Entities
             Height = (byte)rec.Height;
         }
 
-        public Rectangle Rec => new Rectangle(X, Y, Width, Height);
+        public Rectangle Rec => new(X, Y, Width, Height);
     }
 
     [Serializable]
