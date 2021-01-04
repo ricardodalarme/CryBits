@@ -4,7 +4,7 @@ using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using System;
 using System.Drawing;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
 

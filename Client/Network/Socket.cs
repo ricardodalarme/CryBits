@@ -3,7 +3,7 @@ using CryBits.Client.UI;
 using Lidgren.Network;
 using System;
 using System.Windows.Forms;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 
 namespace CryBits.Client.Network
 {

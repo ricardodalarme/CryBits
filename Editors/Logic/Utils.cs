@@ -3,7 +3,7 @@ using System.Collections;
 using System.Drawing;
 using System.Windows.Forms;
 using CryBits.Enums;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 
 namespace CryBits.Editors.Logic
 {

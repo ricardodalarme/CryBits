@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums
 {
-    public enum Alignment
+    public enum TextAlign
     {
         Left,
         Center,

@@ -1,7 +1,7 @@
 ﻿using CryBits.Client.Entities;
 using CryBits.Entities;
 using System.Drawing;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 
 namespace CryBits.Client.Logic
 {

@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
-using Hotbar = CryBits.Enums.Hotbar;
 using Item = CryBits.Entities.Item;
 
 namespace CryBits.Server.Library
@@ -124,7 +123,7 @@ namespace CryBits.Server.Library
                     account.Character.Inventory[n].Amount = data.ReadInt16();
                 }
                 for (byte n = 0; n < (byte)Equipment.Count; n++) account.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
-                for (byte n = 0; n < MaxHotbar; n++) account.Character.Hotbar[n] = new Entities.Hotbar((Hotbar)data.ReadByte(), data.ReadByte());
+                for (byte n = 0; n < MaxHotbar; n++) account.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
             }
         }
 

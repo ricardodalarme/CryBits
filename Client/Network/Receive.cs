@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
 using Item = CryBits.Entities.Item;
@@ -325,7 +325,7 @@ namespace CryBits.Client.Network
             // Define os dados
             for (byte i = 0; i < MaxHotbar; i++)
             {
-                Player.Me.Hotbar[i].Type = data.ReadByte();
+                Player.Me.Hotbar[i].Type = (SlotType)data.ReadByte();
                 Player.Me.Hotbar[i].Slot = data.ReadByte();
             }
         }

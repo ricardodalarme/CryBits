@@ -3,7 +3,7 @@ using CryBits.Enums;
 using CryBits.Server.Entities;
 using Lidgren.Network;
 using System.Drawing;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using static CryBits.Utils;
 using Item = CryBits.Entities.Item;
 

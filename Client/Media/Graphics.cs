@@ -14,11 +14,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using static CryBits.Client.Logic.Utils;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
 using Color = SFML.Graphics.Color;
 using Font = SFML.Graphics.Font;
-using Hotbar = CryBits.Enums.Hotbar;
+using SlotType = CryBits.Enums.SlotType;
 using Item = CryBits.Entities.Item;
 using Window = CryBits.Enums.Window;
 
@@ -171,15 +171,15 @@ namespace CryBits.Client.Media
             Render(texture, source, destiny, color);
         }
 
-        private static void DrawText(string text, int x, int y, Color color, Alignment alignment = Alignment.Left)
+        private static void DrawText(string text, int x, int y, Color color, TextAlign alignment = TextAlign.Left)
         {
             Text tempText = new Text(text, FontDefault);
 
             // Alinhamento do texto
             switch (alignment)
             {
-                case Alignment.Center: x -= MeasureString(text) / 2; break;
-                case Alignment.Right: x -= MeasureString(text); break;
+                case TextAlign.Center: x -= MeasureString(text) / 2; break;
+                case TextAlign.Right: x -= MeasureString(text); break;
             }
 
             // Define os dados
@@ -405,14 +405,14 @@ namespace CryBits.Client.Media
             // Somente se necessário
             if (!Buttons.Characters_Change_Buttons())
             {
-                DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignment.Center);
+                DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
                 return;
             }
 
             // Verifica se o personagem existe
             if (Panels.SelectCharacter >= Panels.Characters.Length)
             {
-                DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignment.Center);
+                DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
                 return;
             }
 
@@ -426,7 +426,7 @@ namespace CryBits.Client.Media
 
             // Desenha o nome da classe
             text = "(" + (Panels.SelectCharacter + 1) + ") " + Panels.Characters[Panels.SelectCharacter].Name;
-            DrawText(text, textPosition.X, textPosition.Y, Color.White, Alignment.Center);
+            DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
         }
 
         private static void CreateCharacterClass()
@@ -449,7 +449,7 @@ namespace CryBits.Client.Media
 
             // Desenha o nome da classe
             string text = @class.Name;
-            DrawText(text, 347, 509, Color.White, Alignment.Center);
+            DrawText(text, 347, 509, Color.White, TextAlign.Center);
 
             // Descrição
             DrawText(@class.Description, 282, 526, Color.White, 123);
@@ -473,9 +473,9 @@ namespace CryBits.Client.Media
             DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, Color.White);
 
             // Indicadores
-            DrawText(Player.Me.Vital[(byte)Vital.HP] + "/" + Player.Me.MaxVital[(byte)Vital.HP], tool.Position.X + 76, tool.Position.Y + 7, Color.White, Alignment.Center);
-            DrawText(Player.Me.Vital[(byte)Vital.MP] + "/" + Player.Me.MaxVital[(byte)Vital.MP], tool.Position.X + 76, tool.Position.Y + 25, Color.White, Alignment.Center);
-            DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76, tool.Position.Y + 43, Color.White, Alignment.Center);
+            DrawText(Player.Me.Vital[(byte)Vital.HP] + "/" + Player.Me.MaxVital[(byte)Vital.HP], tool.Position.X + 76, tool.Position.Y + 7, Color.White, TextAlign.Center);
+            DrawText(Player.Me.Vital[(byte)Vital.MP] + "/" + Player.Me.MaxVital[(byte)Vital.MP], tool.Position.X + 76, tool.Position.Y + 25, Color.White, TextAlign.Center);
+            DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76, tool.Position.Y + 43, Color.White, TextAlign.Center);
         }
 
         private static void Chat()
@@ -513,7 +513,7 @@ namespace CryBits.Client.Media
             }
 
             // Nome, descrição e icone do item
-            DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, Alignment.Center);
+            DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, TextAlign.Center);
             DrawText(item.Description, tool.Position.X + 82, tool.Position.Y + 20, Color.White, 86);
             Render(TexItem[item.Texture], new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
 
@@ -560,12 +560,12 @@ namespace CryBits.Client.Media
             // Desenha os objetos da hotbar
             for (byte i = 0; i < MaxHotbar; i++)
             {
-                byte slot = Player.Me.Hotbar[i].Slot;
+                short slot = Player.Me.Hotbar[i].Slot;
                 if (slot > 0)
-                    switch ((Hotbar)Player.Me.Hotbar[i].Type)
+                    switch ((SlotType)Player.Me.Hotbar[i].Type)
                     {
                         // Itens
-                        case Enums.Hotbar.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
+                        case Enums.SlotType.Item: Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10); break;
                     }
 
                 // Desenha os números de cada slot
@@ -576,7 +576,7 @@ namespace CryBits.Client.Media
 
             // Movendo slot
             if (Panels.HotbarChange >= 0)
-                if (Player.Me.Hotbar[Panels.HotbarChange].Type == (byte)Enums.Hotbar.Item)
+                if (Player.Me.Hotbar[Panels.HotbarChange].Type == SlotType.Item)
                     Render(TexItem[Player.Me.Inventory[Player.Me.Hotbar[Panels.HotbarChange].Slot].Item.Texture], new Point(Windows.Mouse.X + 6, Windows.Mouse.Y + 6));
         }
 
@@ -656,7 +656,7 @@ namespace CryBits.Client.Media
         {
             // Dados da loja
             string name = Panels.ShopOpen.Name;
-            DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, Alignment.Center);
+            DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, TextAlign.Center);
             DrawText("Currency: " + Panels.ShopOpen.Currency.Name, tool.Position.X + 10, tool.Position.Y + 195, Color.White);
 
             // Desenha os itens

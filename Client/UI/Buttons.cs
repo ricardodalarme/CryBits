@@ -9,7 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using static CryBits.Client.Logic.Utils;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using Graphics = CryBits.Client.Media.Graphics;
 using Sound = CryBits.Enums.Sound;
 

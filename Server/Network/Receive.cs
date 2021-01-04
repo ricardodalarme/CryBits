@@ -7,10 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
-using Hotbar = CryBits.Enums.Hotbar;
 using Item = CryBits.Entities.Item;
 
 namespace CryBits.Server.Network
@@ -226,7 +225,7 @@ namespace CryBits.Server.Network
                     account.Character.Equipment[@class.Item[i].Item.EquipType] = @class.Item[i].Item;
                 else
                     account.Character.GiveItem(@class.Item[i].Item, @class.Item[i].Amount);
-            for (byte i = 0; i < MaxHotbar; i++) account.Character.Hotbar[i] = new Entities.Hotbar(Hotbar.None, 0);
+            for (byte i = 0; i < MaxHotbar; i++) account.Character.Hotbar[i] = new HotbarSlot(SlotType.None, 0);
 
             // Salva a conta
             Write.CharacterName(name);
@@ -376,7 +375,7 @@ namespace CryBits.Server.Network
             Send.PlayerInventory(player);
 
             // Altera na hotbar
-            Entities.Hotbar hotbarSlot = player.FindHotbar(Hotbar.Item, player.Inventory[slotOld]);
+            HotbarSlot hotbarSlot = player.FindHotbar(SlotType.Item, player.Inventory[slotOld]);
             if (hotbarSlot != null)
             {
                 hotbarSlot.Slot = slotNew;
@@ -422,7 +421,7 @@ namespace CryBits.Server.Network
         private static void HotbarAdd(Player player, NetIncomingMessage data)
         {
             short hotbarSlot = data.ReadInt16();
-            Hotbar type = (Hotbar)data.ReadByte();
+            SlotType type = (SlotType)data.ReadByte();
             short slot = data.ReadInt16();
 
             // Somente se necessário
@@ -457,7 +456,7 @@ namespace CryBits.Server.Network
             // Usa o item
             switch (player.Hotbar[hotbarSlot].Type)
             {
-                case Hotbar.Item: player.UseItem(player.Hotbar[hotbarSlot].Slot); break;
+                case SlotType.Item: player.UseItem(player.Hotbar[hotbarSlot].Slot); break;
             }
         }
 

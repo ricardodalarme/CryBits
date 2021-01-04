@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using CryBits.Editors.Network;
 using DarkUI.Forms;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 
 namespace CryBits.Editors.Forms
 {

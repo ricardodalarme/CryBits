@@ -1,4 +1,5 @@
 ﻿using System;
+using CryBits.Enums;
 
 namespace CryBits.Entities
 {
@@ -31,5 +32,17 @@ namespace CryBits.Entities
     {
         public short SlotNum { get; set; }
         public short Amount { get; set; }
+    }
+
+    public class HotbarSlot
+    {
+        public SlotType Type;
+        public short Slot;
+
+        public HotbarSlot(SlotType type, short slot)
+        {
+            Type = type;
+            Slot = slot;
+        }
     }
 }

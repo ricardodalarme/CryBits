@@ -3,7 +3,7 @@ using CryBits.Enums;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using static CryBits.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
 using Item = CryBits.Entities.Item;

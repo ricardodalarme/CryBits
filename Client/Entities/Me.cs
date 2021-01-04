@@ -5,7 +5,7 @@ using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Window;
 using System;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 
 namespace CryBits.Client.Entities
 {
@@ -14,7 +14,7 @@ namespace CryBits.Client.Entities
     {
         // Dados
         public ItemSlot[] Inventory = new ItemSlot[MaxInventory];
-        public Hotbar[] Hotbar = new Hotbar[MaxHotbar];
+        public HotbarSlot[] Hotbar = new HotbarSlot[MaxHotbar];
         public ItemSlot[] TradeOffer;
         public ItemSlot[] TradeTheirOffer;
         public Player[] Party = Array.Empty<Player>();
@@ -132,11 +132,5 @@ namespace CryBits.Client.Entities
             List.Clear();
             Me = null;
         }
-    }
-
-    public struct Hotbar
-    {
-        public byte Type;
-        public byte Slot;
     }
 }

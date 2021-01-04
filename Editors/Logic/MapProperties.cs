@@ -4,7 +4,7 @@ using System.Drawing;
 using CryBits.Editors.Entities;
 using CryBits.Entities;
 using CryBits.Enums;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using Graphics = CryBits.Editors.Media.Graphics;
 
 namespace CryBits.Editors.Logic

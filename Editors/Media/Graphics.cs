@@ -10,7 +10,7 @@ using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
-using static CryBits.Defaults;
+using static CryBits.Globals;
 using static CryBits.Editors.Logic.Utils;
 using Button = CryBits.Editors.Entities.Tools.Button;
 using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
