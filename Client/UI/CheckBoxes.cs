@@ -1,12 +1,13 @@
-﻿using CryBits.Client.Entities;
-using CryBits.Client.Library;
-using CryBits.Client.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using CryBits.Client.Entities;
+using CryBits.Client.Library;
+using CryBits.Client.Logic;
+using CryBits.Enums;
 using static CryBits.Client.Logic.Utils;
 using Graphics = CryBits.Client.Media.Graphics;
-using Music = CryBits.Enums.Music;
+using Music = CryBits.Client.Media.Audio.Music;
 using Sound = CryBits.Client.Media.Audio.Sound;
 
 namespace CryBits.Client.UI
@@ -77,11 +78,11 @@ namespace CryBits.Client.UI
 
             // Para ou reproduz a música dependendo do estado do marcador
             if (!Options.Musics)
-                Media.Audio.Music.Stop();
-            else if (Windows.Current == Enums.Window.Menu)
-                Media.Audio.Music.Play(Music.Menu);
-            else if (Windows.Current == Enums.Window.Game)
-                Media.Audio.Music.Play((Music)TempMap.Current.Data.Music);
+                Music.Stop();
+            else if (Windows.Current == Window.Menu)
+                Music.Play(Enums.Music.Menu);
+            else if (Windows.Current == Window.Game)
+                Music.Play((Enums.Music)TempMap.Current.Data.Music);
         }
 
         private static void SaveUsername()

@@ -1,12 +1,12 @@
-﻿using CryBits.Client.Entities;
-using CryBits.Client.UI;
-using CryBits.Entities;
-using CryBits.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using CryBits.Client.Entities;
+using CryBits.Client.UI;
+using CryBits.Entities;
+using CryBits.Enums;
 
 namespace CryBits.Client.Library
 {

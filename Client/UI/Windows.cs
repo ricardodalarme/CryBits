@@ -1,12 +1,12 @@
-﻿using CryBits.Client.Entities;
-using CryBits.Client.Logic;
-using CryBits.Client.Network;
-using SFML.Window;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using SlotType = CryBits.Enums.SlotType;
-using Music = CryBits.Enums.Music;
+using CryBits.Client.Entities;
+using CryBits.Client.Logic;
+using CryBits.Client.Network;
+using CryBits.Enums;
+using SFML.Window;
+using Music = CryBits.Client.Media.Audio.Music;
 using Sound = CryBits.Client.Media.Audio.Sound;
 using Window = CryBits.Enums.Window;
 
@@ -208,7 +208,7 @@ namespace CryBits.Client.UI
         {
             // Reproduz a música de fundo
             Sound.StopAll();
-            if (Options.Musics) Media.Audio.Music.Play(Music.Menu);
+            if (Options.Musics) Music.Play(Enums.Music.Menu);
 
             // Nome do usuário salvo
             CheckBoxes.List["Connect_Save_Username"].Checked = Options.SaveUsername;

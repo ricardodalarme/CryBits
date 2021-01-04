@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Item = CryBits.Entities.Item;
+using CryBits.Entities;
 
 namespace CryBits.Client.Entities
 {

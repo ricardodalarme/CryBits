@@ -1,6 +1,6 @@
-﻿using CryBits.Entities;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using CryBits.Entities;
 using static CryBits.Client.Logic.Options;
 
 namespace CryBits.Client.Library

@@ -1,6 +1,6 @@
-﻿using CryBits.Enums;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
+using CryBits.Enums;
 
 namespace CryBits.Client.UI
 {

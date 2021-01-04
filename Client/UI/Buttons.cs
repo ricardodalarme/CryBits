@@ -1,17 +1,17 @@
-﻿using CryBits.Client.Entities;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Network;
 using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Window;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using static CryBits.Client.Logic.Utils;
 using static CryBits.Globals;
 using Graphics = CryBits.Client.Media.Graphics;
-using Sound = CryBits.Enums.Sound;
+using Sound = CryBits.Client.Media.Audio.Sound;
 
 namespace CryBits.Client.UI
 {
@@ -38,7 +38,7 @@ namespace CryBits.Client.UI
             if (!IsAbove(new Rectangle(Position, Graphics.Size(Graphics.TexButton[TextureNum])))) return;
 
             // Altera o estado do botão
-            Media.Audio.Sound.Play(Sound.Click);
+            Sound.Play(Enums.Sound.Click);
             State = States.Above;
 
             // Executa o evento
@@ -69,7 +69,7 @@ namespace CryBits.Client.UI
 
             // Altera o estado do botão
             State = States.Above;
-            Media.Audio.Sound.Play(Sound.Above);
+            Sound.Play(Enums.Sound.Above);
         }
 
         private static void Execute(string name)
