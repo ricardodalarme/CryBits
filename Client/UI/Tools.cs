@@ -26,15 +26,6 @@ namespace CryBits.Client.UI
             public Window Window;
         }
 
-        // Tipos de ferramentas
-        public enum Types
-        {
-            Button,
-            Panel,
-            CheckBox,
-            TextBox
-        }
-
         public static bool Viewable(OrderStructure order)
         {
             // Verifica se a ferramenta está visível
