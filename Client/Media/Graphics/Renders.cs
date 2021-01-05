@@ -42,7 +42,6 @@ namespace CryBits.Client.Media.Graphics
             RenderWindow.TextEntered += Windows.OnTextEntered;
         }
         
-
         private static void Render(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null, object mode = null)
         {
             Sprite tmpImage = new Sprite(texture);
