@@ -97,7 +97,7 @@ namespace CryBits.Client.UI
             Point panelPosition = List["Menu_Character"].Position;
 
             for (byte i = 0; i < (byte)Equipment.Count; i++)
-                if (IsAbove(new Rectangle(panelPosition.X + 7 + i * 36, panelPosition.Y + 247, 32, 32)))
+                if (IsAbove(new Rectangle(panelPosition.X + 7 + (i * 36), panelPosition.Y + 247, 32, 32)))
                     // Remove o equipamento
                     if (e.Button == Mouse.Button.Right)
                         if (Player.Me.Equipment[i]?.Bind != BindOn.Equip)
