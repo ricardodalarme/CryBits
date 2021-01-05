@@ -25,8 +25,8 @@ namespace CryBits.Server.Entities
             // Cálcula o máximo de vital que o Npc possui
             switch ((Vital)vital)
             {
-                case Enums.Vital.HP: return (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Vitality] * 0.3);
-                case Enums.Vital.MP: return (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Intelligence] * 0.1);
+                case Enums.Vital.HP: return (short)((Data.Vital[vital] * 0.05) + (Data.Attribute[(byte)Attribute.Vitality] * 0.3));
+                case Enums.Vital.MP: return (short)((Data.Vital[vital] * 0.05) + (Data.Attribute[(byte)Attribute.Intelligence] * 0.1));
             }
 
             return 0;
@@ -50,7 +50,7 @@ namespace CryBits.Server.Entities
             ////////////////
             if (!Alive)
             {
-                if (Environment.TickCount > _spawnTimer + Data.SpawnTime * 1000) Spawn();
+                if (Environment.TickCount > _spawnTimer + (Data.SpawnTime * 1000)) Spawn();
                 return;
             }
 
@@ -128,9 +128,9 @@ namespace CryBits.Server.Entities
 
             // Verifica se o alvo ainda está disponível
             if (Target != null)
-                if (Target is Player && !((Player)Target).Account.IsPlaying || Target.Map != Map)
+                if ((Target is Player player && !player.Account.IsPlaying) || Target.Map != Map)
                     Target = null;
-                else if (Target is TempNpc && !((TempNpc)Target).Alive)
+                else if (Target is TempNpc {Alive: false})
                     Target = null;
 
             // Evita que ele se movimente sem sentido

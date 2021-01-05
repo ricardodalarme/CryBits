@@ -58,7 +58,7 @@ namespace CryBits.Editors.Logic
         private static void MapsMusic()
         {
             // Apenas se necessário
-            if (EditorMaps.Form == null || !EditorMaps.Form.Visible) goto stop;
+            if (EditorMaps.Form?.Visible != true) goto stop;
             if (!EditorMaps.Form.butAudio.Checked) goto stop;
             if (!EditorMaps.Form.butVisualization.Checked) goto stop;
             if (EditorMaps.Form.Selected.Music == 0) goto stop;

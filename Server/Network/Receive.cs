@@ -332,8 +332,8 @@ namespace CryBits.Server.Network
             // Adiciona um ponto a determinado atributo
             if (player.Points > 0)
             {
-                player.Attribute[attributeNum] += 1;
-                player.Points -= 1;
+                player.Attribute[attributeNum]++;
+                player.Points--;
                 Send.PlayerExperience(player);
                 Send.MapPlayers(player);
             }
