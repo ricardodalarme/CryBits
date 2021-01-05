@@ -27,7 +27,6 @@ namespace CryBits.Entities
         public MapWeather Weather = new();
         public MapFog Fog = new();
         public IList<MapNpc> Npc { get; set; } = new List<MapNpc>();
-        public IList<MapLight> Light { get; set; } = new List<MapLight>();
         public byte Lighting = 100;
         public Map[] Link = new Map[(byte)Direction.Count];
 
@@ -302,29 +301,7 @@ namespace CryBits.Entities
             Mini[index].Y = Y * Grid + position.Y;
         }
     }
-
-    [Serializable]
-    public class MapLight
-    {
-        public byte X;
-        public byte Y;
-        public byte Width;
-        public byte Height;
-
-        public MapLight() { }
-
-        public MapLight(Rectangle rec)
-        {
-            // Define os dados da estrutura
-            X = (byte)rec.X;
-            Y = (byte)rec.Y;
-            Width = (byte)rec.Width;
-            Height = (byte)rec.Height;
-        }
-
-        public Rectangle Rec => new(X, Y, Width, Height);
-    }
-
+    
     [Serializable]
     public class MapWeather
     {

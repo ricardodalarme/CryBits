@@ -42,7 +42,6 @@ namespace CryBits.Editors.Forms
             this.butMNormal = new System.Windows.Forms.ToolStripButton();
             this.butMAttributes = new System.Windows.Forms.ToolStripButton();
             this.butMZones = new System.Windows.Forms.ToolStripButton();
-            this.butMLighting = new System.Windows.Forms.ToolStripButton();
             this.butMNPCs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.butCut = new System.Windows.Forms.ToolStripButton();
@@ -110,8 +109,6 @@ namespace CryBits.Editors.Forms
             this.grpZones = new DarkUI.Controls.DarkGroupBox();
             this.scrlZone_Clear = new DarkUI.Controls.DarkButton();
             this.scrlZone = new System.Windows.Forms.HScrollBar();
-            this.butLight_Clear = new DarkUI.Controls.DarkButton();
-            this.grpLighting = new DarkUI.Controls.DarkGroupBox();
             this.tmrUpdate = new System.Windows.Forms.Timer(this.components);
             this.grpTile = new DarkUI.Controls.DarkGroupBox();
             this.grpAttributes = new DarkUI.Controls.DarkGroupBox();
@@ -163,7 +160,6 @@ namespace CryBits.Editors.Forms
             this.Trip_Layers.SuspendLayout();
             this.grpLayer_Add.SuspendLayout();
             this.grpZones.SuspendLayout();
-            this.grpLighting.SuspendLayout();
             this.grpTile.SuspendLayout();
             this.grpAttributes.SuspendLayout();
             this.grpA_Item.SuspendLayout();
@@ -202,7 +198,6 @@ namespace CryBits.Editors.Forms
             this.butMNormal,
             this.butMAttributes,
             this.butMZones,
-            this.butMLighting,
             this.butMNPCs,
             this.toolStripSeparator2,
             this.butCut,
@@ -319,20 +314,6 @@ namespace CryBits.Editors.Forms
             this.butMZones.Text = "Zones";
             this.butMZones.CheckedChanged += new System.EventHandler(this.butMZones_CheckedChanged);
             this.butMZones.Click += new System.EventHandler(this.butMZones_Click);
-            // 
-            // butMLighting
-            // 
-            this.butMLighting.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.butMLighting.CheckOnClick = true;
-            this.butMLighting.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.butMLighting.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.butMLighting.Image = ((System.Drawing.Image)(resources.GetObject("butMLighting.Image")));
-            this.butMLighting.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.butMLighting.Name = "butMLighting";
-            this.butMLighting.Size = new System.Drawing.Size(24, 24);
-            this.butMLighting.Text = "Lighting";
-            this.butMLighting.CheckedChanged += new System.EventHandler(this.butMLighting_CheckedChanged);
-            this.butMLighting.Click += new System.EventHandler(this.butMLighting_Click);
             // 
             // butMNPCs
             // 
@@ -1006,7 +987,7 @@ namespace CryBits.Editors.Forms
             this.butLayer_Edit.Location = new System.Drawing.Point(12, 151);
             this.butLayer_Edit.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butLayer_Edit.Name = "butLayer_Edit";
-            this.butLayer_Edit.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butLayer_Edit.Padding = new System.Windows.Forms.Padding(6);
             this.butLayer_Edit.Size = new System.Drawing.Size(200, 28);
             this.butLayer_Edit.TabIndex = 10;
             this.butLayer_Edit.Text = "Edit";
@@ -1017,7 +998,7 @@ namespace CryBits.Editors.Forms
             this.butLayer_Cancel.Location = new System.Drawing.Point(217, 151);
             this.butLayer_Cancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butLayer_Cancel.Name = "butLayer_Cancel";
-            this.butLayer_Cancel.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butLayer_Cancel.Padding = new System.Windows.Forms.Padding(6);
             this.butLayer_Cancel.Size = new System.Drawing.Size(77, 28);
             this.butLayer_Cancel.TabIndex = 9;
             this.butLayer_Cancel.Text = "Cancel";
@@ -1050,7 +1031,7 @@ namespace CryBits.Editors.Forms
             this.butLayer_Add.Location = new System.Drawing.Point(12, 151);
             this.butLayer_Add.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butLayer_Add.Name = "butLayer_Add";
-            this.butLayer_Add.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butLayer_Add.Padding = new System.Windows.Forms.Padding(6);
             this.butLayer_Add.Size = new System.Drawing.Size(200, 28);
             this.butLayer_Add.TabIndex = 3;
             this.butLayer_Add.Text = "Add";
@@ -1078,7 +1059,7 @@ namespace CryBits.Editors.Forms
             this.scrlZone_Clear.Location = new System.Drawing.Point(9, 53);
             this.scrlZone_Clear.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.scrlZone_Clear.Name = "scrlZone_Clear";
-            this.scrlZone_Clear.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.scrlZone_Clear.Padding = new System.Windows.Forms.Padding(6);
             this.scrlZone_Clear.Size = new System.Drawing.Size(299, 28);
             this.scrlZone_Clear.TabIndex = 12;
             this.scrlZone_Clear.Text = "Clear";
@@ -1091,33 +1072,6 @@ namespace CryBits.Editors.Forms
             this.scrlZone.Size = new System.Drawing.Size(299, 19);
             this.scrlZone.TabIndex = 0;
             this.scrlZone.ValueChanged += new System.EventHandler(this.scrlZone_ValueChanged);
-            // 
-            // butLight_Clear
-            // 
-            this.butLight_Clear.Location = new System.Drawing.Point(8, 27);
-            this.butLight_Clear.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.butLight_Clear.Name = "butLight_Clear";
-            this.butLight_Clear.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.butLight_Clear.Size = new System.Drawing.Size(301, 28);
-            this.butLight_Clear.TabIndex = 12;
-            this.butLight_Clear.Text = "Clear lights";
-            this.butLight_Clear.Click += new System.EventHandler(this.butLight_Clear_Click);
-            // 
-            // grpLighting
-            // 
-            this.grpLighting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.grpLighting.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.grpLighting.Controls.Add(this.butLight_Clear);
-            this.grpLighting.Location = new System.Drawing.Point(0, 31);
-            this.grpLighting.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.grpLighting.Name = "grpLighting";
-            this.grpLighting.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.grpLighting.Size = new System.Drawing.Size(316, 625);
-            this.grpLighting.TabIndex = 104;
-            this.grpLighting.TabStop = false;
-            this.grpLighting.Text = "Lighting";
-            this.grpLighting.Visible = false;
             // 
             // tmrUpdate
             // 
@@ -1248,7 +1202,7 @@ namespace CryBits.Editors.Forms
             this.butAttributes_Import.Location = new System.Drawing.Point(161, 28);
             this.butAttributes_Import.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butAttributes_Import.Name = "butAttributes_Import";
-            this.butAttributes_Import.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butAttributes_Import.Padding = new System.Windows.Forms.Padding(6);
             this.butAttributes_Import.Size = new System.Drawing.Size(147, 28);
             this.butAttributes_Import.TabIndex = 79;
             this.butAttributes_Import.Text = "Import attributes";
@@ -1293,7 +1247,7 @@ namespace CryBits.Editors.Forms
             this.butAttributes_Clear.Location = new System.Drawing.Point(10, 28);
             this.butAttributes_Clear.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butAttributes_Clear.Name = "butAttributes_Clear";
-            this.butAttributes_Clear.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butAttributes_Clear.Padding = new System.Windows.Forms.Padding(6);
             this.butAttributes_Clear.Size = new System.Drawing.Size(148, 28);
             this.butAttributes_Clear.TabIndex = 12;
             this.butAttributes_Clear.Text = "Clear";
@@ -1514,7 +1468,7 @@ namespace CryBits.Editors.Forms
             this.butNPC_Add.Location = new System.Drawing.Point(12, 120);
             this.butNPC_Add.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butNPC_Add.Name = "butNPC_Add";
-            this.butNPC_Add.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butNPC_Add.Padding = new System.Windows.Forms.Padding(6);
             this.butNPC_Add.Size = new System.Drawing.Size(273, 25);
             this.butNPC_Add.TabIndex = 3;
             this.butNPC_Add.Text = "Add";
@@ -1553,7 +1507,7 @@ namespace CryBits.Editors.Forms
             this.butNPC_Remove.Location = new System.Drawing.Point(8, 228);
             this.butNPC_Remove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butNPC_Remove.Name = "butNPC_Remove";
-            this.butNPC_Remove.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butNPC_Remove.Padding = new System.Windows.Forms.Padding(6);
             this.butNPC_Remove.Size = new System.Drawing.Size(138, 22);
             this.butNPC_Remove.TabIndex = 2;
             this.butNPC_Remove.Text = "Remove";
@@ -1564,7 +1518,7 @@ namespace CryBits.Editors.Forms
             this.butNPC_Clear.Location = new System.Drawing.Point(148, 228);
             this.butNPC_Clear.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butNPC_Clear.Name = "butNPC_Clear";
-            this.butNPC_Clear.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butNPC_Clear.Padding = new System.Windows.Forms.Padding(6);
             this.butNPC_Clear.Size = new System.Drawing.Size(138, 22);
             this.butNPC_Clear.TabIndex = 4;
             this.butNPC_Clear.Text = "Clear";
@@ -1724,7 +1678,6 @@ namespace CryBits.Editors.Forms
             this.Controls.Add(this.grpLayer_Add);
             this.Controls.Add(this.grpAttributes);
             this.Controls.Add(this.grpZones);
-            this.Controls.Add(this.grpLighting);
             this.Controls.Add(this.grpNPCs);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -1746,7 +1699,6 @@ namespace CryBits.Editors.Forms
             this.grpLayer_Add.ResumeLayout(false);
             this.grpLayer_Add.PerformLayout();
             this.grpZones.ResumeLayout(false);
-            this.grpLighting.ResumeLayout(false);
             this.grpTile.ResumeLayout(false);
             this.grpTile.PerformLayout();
             this.grpAttributes.ResumeLayout(false);
@@ -1824,13 +1776,10 @@ namespace CryBits.Editors.Forms
         private DarkGroupBox grpZones;
         private System.Windows.Forms.HScrollBar scrlZone;
         private DarkButton scrlZone_Clear;
-        public System.Windows.Forms.ToolStripButton butMLighting;
         public System.Windows.Forms.ToolStripButton butCut;
         public System.Windows.Forms.ToolStripButton butCopy;
         private System.Windows.Forms.ToolStripButton butPaste;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
-        private DarkButton butLight_Clear;
-        private DarkGroupBox grpLighting;
         public DarkComboBox cmbTiles;
         private System.Windows.Forms.Timer tmrUpdate;
         private DarkGroupBox grpTile;

@@ -72,7 +72,6 @@ namespace CryBits.Editors.Forms
         {
             Renders.WinMap = new RenderWindow(picMap.Handle);
             Renders.WinMapTile = new RenderWindow(picTile.Handle);
-            Renders.WinMapLighting = new RenderTexture((uint)Width, (uint)Height);
 
             // Lista os dados
             for (byte i = 0; i < (byte)Layer.Count; i++) cmbLayers_Type.Items.Add(((Layer)i).ToString());
@@ -89,7 +88,6 @@ namespace CryBits.Editors.Forms
             grpAttributes.BringToFront();
             grpZones.BringToFront();
             grpNPCs.BringToFront();
-            grpLighting.BringToFront();
             cmbTiles.SelectedIndex = 0;
             cmbLayers_Type.SelectedIndex = 0;
             butGrid.Checked = PreMapGrid;
@@ -486,7 +484,6 @@ namespace CryBits.Editors.Forms
             // Desmarca todos os botões
             butMNormal.Checked = false;
             butMZones.Checked = false;
-            butMLighting.Checked = false;
             butMAttributes.Checked = false;
             butMNPCs.Checked = false;
         }
@@ -512,13 +509,6 @@ namespace CryBits.Editors.Forms
             butMZones.Checked = true;
         }
 
-        private void butMLighting_Click(object sender, EventArgs e)
-        {
-            // Marca o botão
-            Modes_Visibility();
-            butMLighting.Checked = true;
-        }
-
         private void butMNPCs_Click(object sender, EventArgs e)
         {
             // Marca o botão
@@ -535,12 +525,7 @@ namespace CryBits.Editors.Forms
         {
             _defMapSelection.Size = new Size(1, 1);
         }
-
-        private void butMLighting_CheckedChanged(object sender, EventArgs e)
-        {
-            _defMapSelection.Size = new Size(1, 1);
-        }
-
+        
         private void butMZones_CheckedChanged(object sender, EventArgs e)
         {
             _defMapSelection.Size = new Size(1, 1);
@@ -594,7 +579,6 @@ namespace CryBits.Editors.Forms
             if (butMNormal.Checked)
             {
                 grpZones.Visible = false;
-                grpLighting.Visible = false;
                 grpAttributes.Visible = false;
                 grpNPCs.Visible = false;
                 butPencil.Enabled = true;
@@ -606,19 +590,6 @@ namespace CryBits.Editors.Forms
                 butGrid.Enabled = true;
                 butEdition.Enabled = true;
                 butVisualization.Enabled = true;
-            }
-            else if (butMLighting.Checked)
-            {
-                butPencil.Enabled = false;
-                butRectangle.Enabled = false;
-                butArea.Enabled = false;
-                butDiscover.Enabled = false;
-                butEraser.Enabled = false;
-                butFill.Enabled = false;
-                butVisualization.Enabled = false;
-                butVisualization.Checked = true;
-                butEdition.Enabled = false;
-                butEdition.Checked = false;
             }
             else
             {
@@ -636,19 +607,10 @@ namespace CryBits.Editors.Forms
             }
 
             // Grupos
-            // Iluminação
-            if (butMLighting.Checked)
-            {
-                grpLighting.Visible = true;
-                grpZones.Visible = false;
-                grpAttributes.Visible = false;
-                grpNPCs.Visible = false;
-            }
             // Zonas
             if (butMZones.Checked)
             {
                 grpZones.Visible = true;
-                grpLighting.Visible = false;
                 grpAttributes.Visible = false;
                 grpNPCs.Visible = false;
             }
@@ -657,7 +619,6 @@ namespace CryBits.Editors.Forms
             {
                 grpAttributes.Visible = true;
                 grpZones.Visible = false;
-                grpLighting.Visible = false;
                 grpNPCs.Visible = false;
             }
             // NPCs
@@ -666,7 +627,6 @@ namespace CryBits.Editors.Forms
                 grpNPCs.Visible = true;
                 grpZones.Visible = false;
                 grpAttributes.Visible = false;
-                grpLighting.Visible = false;
             }
 
             // Ferramentas de recorte e colagem
@@ -822,8 +782,6 @@ namespace CryBits.Editors.Forms
             if (Renders.WinMap == null) return;
             Renders.WinMap.Dispose();
             Renders.WinMap = new RenderWindow(picMap.Handle);
-            Renders.WinMapLighting.Dispose();
-            Renders.WinMapLighting = new RenderTexture((uint)picMap.Width, (uint)picMap.Height);
         }
 
         private void picMap_MouseWheel(object sender, MouseEventArgs e)
@@ -876,26 +834,10 @@ namespace CryBits.Editors.Forms
                 else if (e.Button == MouseButtons.Right)
                     Selected.Attribute[MapSelection.X, MapSelection.Y].Zone = 0;
             }
-            else if (butMLighting.Checked)
-            {
-                // Remove as luzes
-                if (e.Button == MouseButtons.Right)
-                    Lighting_Remove();
-            }
             else if (butMNPCs.Checked)
                 // Adiciona o NPC
                 if (e.Button == MouseButtons.Left)
                     AddNPC(true, (byte)MapSelection.X, (byte)MapSelection.Y);
-        }
-
-        private void Lighting_Remove()
-        {
-            // Encontra a luz que está nessa camada
-            if (Selected.Light.Count > 0)
-                for (byte i = 0; i < Selected.Light.Count; i++)
-                    if (Selected.Light[i].X == MapSelection.X)
-                        if (Selected.Light[i].Y == MapSelection.Y)
-                            Selected.Light.RemoveAt(i);
         }
 
         private void picMap_MouseUp(object sender, MouseEventArgs e)
@@ -922,9 +864,6 @@ namespace CryBits.Editors.Forms
                             Selected.Layer[layer].Update(x, y);
                         }
             }
-            // Iluminação
-            else if (butMLighting.Checked)
-                Selected.Light.Add(new MapLight(MapSelection));
             // Nenhum
             else
                 return;
@@ -1001,7 +940,6 @@ namespace CryBits.Editors.Forms
 
             // Somente se necessário
             if (e.Button != MouseButtons.Left) return false;
-            if (butMLighting.Checked) goto Continuation;
             if (butRectangle.Checked && butRectangle.Enabled) goto Continuation;
             if (butArea.Checked && butArea.Enabled) goto Continuation;
             return false;
@@ -1488,14 +1426,6 @@ namespace CryBits.Editors.Forms
                 grpZones.Text = "Zone: None";
             else
                 grpZones.Text = "Zone: " + scrlZone.Value;
-        }
-        #endregion
-
-        #region Lighting
-        private void butLight_Clear_Click(object sender, EventArgs e)
-        {
-            // Reseta todas as zonas
-            Selected.Light = new List<MapLight>();
         }
         #endregion
 
