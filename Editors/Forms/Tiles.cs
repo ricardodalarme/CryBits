@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphicss.WinTile = new RenderWindow(picTile.Handle);
+            Renders.WinTile = new RenderWindow(picTile.Handle);
 
             // Define os limites
             scrlTile.Maximum = Textures.Tiles.Count-1;
@@ -39,14 +39,14 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Tiles_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphicss.WinTile = null;
+            Renders.WinTile = null;
             EditorMaps.Form.Show();
         }
 
         private void Update_Bounds()
         {
-            int x = Graphicss.Size(Textures.Tiles[scrlTile.Value]).Width / Grid - picTile.Width / Grid;
-            int y = Graphicss.Size(Textures.Tiles[scrlTile.Value]).Height / Grid - picTile.Height / Grid;
+            int x = Textures.Tiles[scrlTile.Value].ToSize().Width / Grid - picTile.Width / Grid;
+            int y = Textures.Tiles[scrlTile.Value].ToSize().Height / Grid - picTile.Height / Grid;
 
             // Verifica se nada passou do limite minímo
             if (x < 0) x = 0;

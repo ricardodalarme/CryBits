@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
-using CryBits.Client.Media;
 using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Entities;
@@ -36,7 +35,7 @@ namespace CryBits.Client.UI
         public void MouseUp()
         {
             // Somente se necessário
-            if (!IsAbove(new Rectangle(Position, Graphicss.Size(Textures.Buttons[TextureNum])))) return;
+            if (!IsAbove(new Rectangle(Position, Textures.Buttons[TextureNum].ToSize()))) return;
 
             // Altera o estado do botão
             Sound.Play(Enums.Sound.Click);
@@ -50,7 +49,7 @@ namespace CryBits.Client.UI
         {
             // Somente se necessário
             if (e.Button == Mouse.Button.Right) return;
-            if (!IsAbove(new Rectangle(Position, Graphicss.Size(Textures.Buttons[TextureNum])))) return;
+            if (!IsAbove(new Rectangle(Position, Textures.Buttons[TextureNum].ToSize()))) return;
 
             // Altera o estado do botão
             State = States.Click;
@@ -59,7 +58,7 @@ namespace CryBits.Client.UI
         public void MouseMove()
         {
             // Se o mouse não estiver sobre a ferramenta, então não executar o evento
-            if (!IsAbove(new Rectangle(Position, Graphicss.Size(Textures.Buttons[TextureNum]))))
+            if (!IsAbove(new Rectangle(Position, Textures.Buttons[TextureNum].ToSize())))
             {
                 State = States.Normal;
                 return;
@@ -212,7 +211,7 @@ namespace CryBits.Client.UI
             if (Panels.CreateCharacterClass == Class.List.Count - 1)
                 Panels.CreateCharacterClass = 0;
             else
-                Panels.CreateCharacterClass += 1;
+                Panels.CreateCharacterClass++;
         }
 
         private static void CreateCharacterChangeLeft()
@@ -221,7 +220,7 @@ namespace CryBits.Client.UI
             if (Panels.CreateCharacterClass == 0)
                 Panels.CreateCharacterClass = (byte)Class.List.Count;
             else
-                Panels.CreateCharacterClass -= 1;
+                Panels.CreateCharacterClass--;
         }
 
         private static void CreateCharacterTextureChangeRight()
@@ -237,7 +236,7 @@ namespace CryBits.Client.UI
             if (Panels.CreateCharacterTex == texList.Count - 1)
                 Panels.CreateCharacterTex = 0;
             else
-                Panels.CreateCharacterTex += 1;
+                Panels.CreateCharacterTex++;
         }
 
         private static void CreateCharacterTextureChangeLeft()
@@ -253,7 +252,7 @@ namespace CryBits.Client.UI
             if (Panels.CreateCharacterTex == 0)
                 Panels.CreateCharacterTex = (byte)(texList.Count - 1);
             else
-                Panels.CreateCharacterTex -= 1;
+                Panels.CreateCharacterTex--;
         }
 
         private static void CreateCharacter_Return()
@@ -287,7 +286,7 @@ namespace CryBits.Client.UI
             if (Panels.SelectCharacter == Panels.Characters.Length)
                 Panels.SelectCharacter = 0;
             else
-                Panels.SelectCharacter += 1;
+                Panels.SelectCharacter++;
         }
 
         private static void CharacterChangeLeft()
@@ -296,21 +295,21 @@ namespace CryBits.Client.UI
             if (Panels.SelectCharacter == 0)
                 Panels.SelectCharacter = Panels.Characters.Length;
             else
-                Panels.SelectCharacter -= 1;
+                Panels.SelectCharacter--;
         }
 
         private static void ChatUp()
         {
             // Sobe as linhas do chat
             if (Chat.LinesFirst > 0)
-                Chat.LinesFirst -= 1;
+                Chat.LinesFirst--;
         }
 
         private static void ChatDown()
         {
             // Sobe as linhas do chat
             if (Chat.Order.Count - 1 - Chat.LinesFirst - Chat.LinesVisible > 0)
-                Chat.LinesFirst += 1;
+                Chat.LinesFirst++;
         }
 
         private static void MenuCharacter()

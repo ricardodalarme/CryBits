@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using CryBits.Editors.Media;
 using CryBits.Editors.Media.Graphics;
 using CryBits.Enums;
 using static CryBits.Globals;
@@ -20,7 +19,7 @@ namespace CryBits.Editors.Entities
 
         public Tile(byte index)
         {
-            Size textureSize = Graphicss.Size(Textures.Tiles[index]);
+            Size textureSize = Textures.Tiles[index].ToSize();
             Size size = new Size(textureSize.Width / Grid - 1, textureSize.Height / Grid - 1);
 
             // Redimensiona os valores

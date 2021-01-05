@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
+using CryBits.Editors.Media.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;
@@ -29,12 +30,12 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphicss.WinClass = new RenderWindow(picTexture.Handle);
+            Renders.WinClass = new RenderWindow(picTexture.Handle);
 
             // Define os limites
             numSpawn_X.Maximum = Map.Width - 1;
             numSpawn_Y.Maximum = Map.Height - 1;
-            numTexture.Maximum = Graphicss.TexCharacter.Length - 1;
+            numTexture.Maximum = Textures.Characters.Count - 1;
 
             // Lista os dados
             foreach (var item in Item.List.Values) cmbItems.Items.Add(item);
@@ -44,7 +45,7 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Classes_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphicss.WinClass = null;
+            Renders.WinClass = null;
             EditorMaps.Form.Show();
         }
 

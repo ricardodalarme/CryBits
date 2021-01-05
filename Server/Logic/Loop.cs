@@ -53,7 +53,7 @@ namespace CryBits.Server.Logic
                     _timer1000 = Environment.TickCount + 1000;
                 }
                 else
-                    cps += 1;
+                    cps++;
             }
         }
 

@@ -7,7 +7,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
- <PropertyGroup>
+  <PropertyGroup>
     <ProjectGuid>{F0180377-345C-415C-8846-637E6D7D2CBE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>CryBits.Client</RootNamespace>

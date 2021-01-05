@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Server.Library;
@@ -150,37 +151,37 @@ namespace CryBits.Server.Entities
             TradeLeave();
         }
 
-        public void Warp(TempMap to, byte x, byte y, bool needUpdate = false)
+        public void Warp(TempMap map, byte x, byte y, bool needUpdate = false)
         {
-            TempMap mapOld = Map;
+            TempMap oldMap = Map;
 
             // Cancela a troca ou a loja
             if (Trade != null) TradeLeave();
             if (Shop != null) ShopLeave();
 
             // Evita que o jogador seja transportado para fora do limite
-            if (to == null) return;
+            if (map == null) return;
             if (x >= CryBits.Entities.Map.Width) x = CryBits.Entities.Map.Width - 1;
             if (y >= CryBits.Entities.Map.Height) y = CryBits.Entities.Map.Height - 1;
 
             // Define a Posição do jogador
-            Map = to;
+            Map = map;
             X = x;
             Y = y;
 
             // Altera o mapa
-            if (mapOld != to || needUpdate)
+            if (oldMap != map || needUpdate)
             {
                 // Sai do mapa antigo
-                Send.PlayerLeaveMap(this, mapOld);
+                Send.PlayerLeaveMap(this, oldMap);
 
                 // Inviabiliza o jogador de algumas ações até que ele receba os dados necessários
                 GettingMap = true;
 
                 // Envia dados necessários do mapa
-                Send.MapRevision(this, to.Data);
-                Send.MapItems(this, to);
-                Send.MapNpcs(this, to);
+                Send.MapRevision(this, map.Data);
+                Send.MapItems(this, map);
+                Send.MapNpcs(this, map);
             }
             // Apenas atualiza a posição do jogador
             else
@@ -294,7 +295,7 @@ namespace CryBits.Server.Entities
                 return;
             }
 
-            @continue:
+        @continue:
             // Demonstra que aos outros jogadores o ataque
             Send.PlayerAttack(this, null);
             _attackTimer = Environment.TickCount;
@@ -572,47 +573,13 @@ namespace CryBits.Server.Entities
             }
         }
 
-        public HotbarSlot FindHotbar(SlotType type, short slot)
-        {
-            // Encontra algo especifico na hotbar
-            for (byte i = 0; i < MaxHotbar; i++)
-                if (Hotbar[i].Type == type && Hotbar[i].Slot == slot)
-                    return Hotbar[i];
+        public HotbarSlot FindHotbar(SlotType type, short slot) => Hotbar.First(x => x.Type == type && x.Slot == slot);
 
-            return null;
-        }
+        public HotbarSlot FindHotbar(SlotType type, ItemSlot slot) => Hotbar.First(x => x.Type == type && Inventory[x.Slot] == slot);
 
-        public HotbarSlot FindHotbar(SlotType type, ItemSlot slot)
-        {
-            // Encontra algo especifico na hotbar
-            for (byte i = 0; i < MaxHotbar; i++)
-                if (Hotbar[i].Type == type && Inventory[Hotbar[i].Slot] == slot)
-                    return Hotbar[i];
+        public ItemSlot FindInventory(Item item) => Inventory.First(x => x.Item == item);
 
-            return null;
-        }
-
-        public ItemSlot FindInventory(Item item)
-        {
-            // Encontra algo especifico na hotbar
-            for (byte i = 0; i < MaxInventory; i++)
-                if (Inventory[i].Item == item)
-                    return Inventory[i];
-
-            return null;
-        }
-
-        public byte TotalInventoryFree()
-        {
-            byte total = 0;
-
-            // Retorna a quantidade de itens oferecidos na troca
-            for (byte i = 0; i < MaxInventory; i++)
-                if (Inventory[i].Item == null)
-                    total++;
-
-            return total;
-        }
+        public byte TotalInventoryFree => (byte)Inventory.Count(x => x.Item != null);
 
         public void PartyLeave()
         {
@@ -683,17 +650,7 @@ namespace CryBits.Server.Entities
             }
         }
 
-        public byte TotalTradeItems()
-        {
-            byte total = 0;
-
-            // Retorna a quantidade de itens oferecidos na troca
-            for (byte i = 0; i < MaxInventory; i++)
-                if (TradeOffer[i].SlotNum != 0)
-                    total++;
-
-            return total;
-        }
+        public byte TotalTradeItems => (byte)TradeOffer.Count(x => x.SlotNum != 0);
 
         public void ShopOpen(Shop shop)
         {
@@ -709,18 +666,6 @@ namespace CryBits.Server.Entities
             Send.ShopOpen(this, null);
         }
 
-        ///////////////////////
-        // Métodos Estáticos //
-        ///////////////////////
-        public static Player Find(string name)
-        {
-            // Encontra o usuário
-            foreach (var account in Account.List)
-                if (account.IsPlaying)
-                    if (account.Character.Name.Equals(name))
-                        return account.Character;
-
-            return null;
-        }
+        public static Player Find(string name) => Account.List.Find(x => x.IsPlaying && x.Character.Name.Equals(name))?.Character;
     }
 }

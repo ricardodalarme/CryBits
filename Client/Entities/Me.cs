@@ -1,5 +1,5 @@
 ﻿using System;
-using CryBits.Client.Media;
+using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
 using CryBits.Entities;
@@ -36,7 +36,7 @@ namespace CryBits.Client.Entities
 
         public void CheckMovement()
         {
-            if (Movement > 0 || !Graphicss.RenderWindow.HasFocus()) return;
+            if (Movement > 0 || !Renders.RenderWindow.HasFocus()) return;
 
             // Move o personagem
             if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Direction.Up);
@@ -61,7 +61,7 @@ namespace CryBits.Client.Entities
             if (Map.TileBlocked(X, Y, direction)) return;
 
             // Define a velocidade que o jogador se move
-            if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Graphicss.RenderWindow.HasFocus())
+            if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Renders.RenderWindow.HasFocus())
                 Movement = Movement.Moving;
             else
                 Movement = Movement.Walking;
@@ -72,10 +72,10 @@ namespace CryBits.Client.Entities
             // Define a Posição exata do jogador
             switch (direction)
             {
-                case Direction.Up: Y2 = Grid; Y -= 1; break;
-                case Direction.Down: Y2 = Grid * -1; Y += 1; break;
-                case Direction.Right: X2 = Grid * -1; X += 1; break;
-                case Direction.Left: X2 = Grid; X -= 1; break;
+                case Direction.Up: Y2 = Grid; Y--; break;
+                case Direction.Down: Y2 = Grid * -1; Y++; break;
+                case Direction.Right: X2 = Grid * -1; X++; break;
+                case Direction.Left: X2 = Grid; X--; break;
             }
         }
 
@@ -89,7 +89,7 @@ namespace CryBits.Client.Entities
             }
 
             // Somente se estiver pressionando a tecla de ataque e não estiver atacando
-            if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Graphicss.RenderWindow.HasFocus()) return;
+            if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Renders.RenderWindow.HasFocus()) return;
             if (AttackTimer > 0) return;
             if (Panels.List["Trade"].Visible) return;
             if (Panels.List["Shop"].Visible) return;

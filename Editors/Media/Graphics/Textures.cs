@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using CryBits.Editors.Library;
 using SFML.Graphics;
@@ -60,6 +61,12 @@ namespace CryBits.Editors.Media.Graphics
             CheckBox = new Texture(Directories.TexCheckBox.FullName + Format);
             TextBox = new Texture(Directories.TexTextBox.FullName + Format);
             Lighting = new Texture(Directories.TexLighting.FullName + Format);
+        }
+
+        public static Size ToSize(this Texture texture)
+        {
+            // Retorna com o tamanho da textura
+            return texture != null ? new Size((int)texture.Size.X, (int)texture.Size.Y) : new Size(0, 0);
         }
     }
 }

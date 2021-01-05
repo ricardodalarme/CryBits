@@ -3,6 +3,6 @@
     public enum Moral
     {
         Pacific,
-        Dangerous,
+        Dangerous
     }
 }

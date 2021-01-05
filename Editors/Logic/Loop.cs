@@ -30,7 +30,7 @@ namespace CryBits.Editors.Logic
                 MapsMusic();
 
                 // Desenha os gráficos
-                Graphicss.Present();
+                Renders.Present();
 
                 // Faz com que a aplicação se mantenha estável
                 Application.DoEvents();
@@ -47,7 +47,7 @@ namespace CryBits.Editors.Logic
                     timer1000 = Environment.TickCount + 1000;
                 }
                 else
-                    fps += 1;
+                    fps++;
             }
 
             // Fecha a aplicação

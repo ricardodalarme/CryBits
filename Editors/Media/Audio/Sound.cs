@@ -13,7 +13,7 @@ namespace CryBits.Editors.Media.Audio
         // Dispositivo sonoro
         public static SFML.Audio.Sound[] List;
 
-        public static void Load()
+        public static void LoadAll()
         {
             // Redimensiona a lista
             Array.Resize(ref List, (byte)Enums.Sound.Count);

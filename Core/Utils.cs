@@ -31,10 +31,10 @@ namespace CryBits
             // Próximo azulejo
             switch (direction)
             {
-                case Direction.Up: y -= 1; break;
-                case Direction.Down: y += 1; break;
-                case Direction.Right: x += 1; break;
-                case Direction.Left: x -= 1; break;
+                case Direction.Up: y--; break;
+                case Direction.Down: y++; break;
+                case Direction.Right: x++; break;
+                case Direction.Left: x--; break;
             }
         }
 

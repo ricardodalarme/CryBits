@@ -21,9 +21,9 @@ namespace CryBits.Server.Library
         public static void Create()
         {
             // Cria todos os diretórios do jogo
-            Defaults.Directory.Create();
+            Defaults.Directory?.Create();
             Accounts.Create();
-            Characters.Directory.Create();
+            Characters.Directory?.Create();
             Classes.Create();
             Maps.Create();
             Npcs.Create();

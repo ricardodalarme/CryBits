@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using CryBits.Client.Media;
+using CryBits.Client.Media.Graphics;
 using CryBits.Client.UI;
 using SFML.Graphics;
 using static CryBits.Globals;
@@ -26,7 +26,7 @@ namespace CryBits.Client.Logic
         public static short MeasureString(string text)
         {
             // Dados do texto
-            Text tempText = new Text(text, Graphicss.FontDefault) { CharacterSize = 10 };
+            Text tempText = new Text(text, Fonts.Default) { CharacterSize = 10 };
             return (short)tempText.GetLocalBounds().Width;
         }
 

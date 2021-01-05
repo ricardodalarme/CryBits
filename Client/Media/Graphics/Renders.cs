@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using CryBits.Client.Entities;
-using CryBits.Client.Library;
 using CryBits.Client.Logic;
-using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
 using CryBits.Entities;
@@ -17,25 +15,19 @@ using static CryBits.Client.Logic.Utils;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
 using Color = SFML.Graphics.Color;
-using Font = SFML.Graphics.Font;
 using Window = CryBits.Enums.Window;
 
-namespace CryBits.Client.Media
+namespace CryBits.Client.Media.Graphics
 {
-    internal static class Graphicss
+    internal static class Renders
     {
         // Locais de renderização
         public static RenderWindow RenderWindow;
 
-        // Fonte principal
-        public static Font FontDefault;
-
         #region Engine
         public static void Init()
         {
-            // Carrega a fonte
-            FontDefault = new Font(Directories.Fonts.FullName + "Georgia.ttf");
-
+            Fonts.LoadAll();
             // Carrega as texturas
             Textures.LoadAll();
 
@@ -50,13 +42,6 @@ namespace CryBits.Client.Media
             RenderWindow.TextEntered += Windows.OnTextEntered;
         }
         
-        public static Size Size(Texture texture)
-        {
-            // Retorna com o tamanho da textura
-            if (texture != null)
-                return new Size((int)texture.Size.X, (int)texture.Size.Y);
-            return new Size(0, 0);
-        }
 
         private static void Render(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null, object mode = null)
         {
@@ -87,7 +72,7 @@ namespace CryBits.Client.Media
         private static void Render(Texture texture, Rectangle destiny, object color = null)
         {
             // Define as propriedades dos retângulos
-            Rectangle source = new Rectangle(new Point(0), Size(texture));
+            Rectangle source = new Rectangle(new Point(0), texture.ToSize());
 
             // Desenha a textura
             Render(texture, source, destiny, color);
@@ -96,8 +81,8 @@ namespace CryBits.Client.Media
         private static void Render(Texture texture, Point position, object color = null)
         {
             // Define as propriedades dos retângulos
-            Rectangle source = new Rectangle(new Point(0), Size(texture));
-            Rectangle destiny = new Rectangle(position, Size(texture));
+            Rectangle source = new Rectangle(new Point(0), texture.ToSize());
+            Rectangle destiny = new Rectangle(position, texture.ToSize());
 
             // Desenha a textura
             Render(texture, source, destiny, color);
@@ -105,7 +90,7 @@ namespace CryBits.Client.Media
 
         private static void DrawText(string text, int x, int y, Color color, TextAlign alignment = TextAlign.Left)
         {
-            Text tempText = new Text(text, FontDefault);
+            Text tempText = new Text(text, Fonts.Default);
 
             // Alinhamento do texto
             switch (alignment)
@@ -161,8 +146,8 @@ namespace CryBits.Client.Media
 
         private static void Render_Box(Texture texture, byte margin, Point position, Size size)
         {
-            int textureWidth = Size(texture).Width;
-            int textureHeight = Size(texture).Height;
+            int textureWidth = texture.ToSize().Width;
+            int textureHeight = texture.ToSize().Height;
 
             // Borda esquerda
             Render(texture, new Rectangle(new Point(0), new Size(margin, textureWidth)), new Rectangle(position, new Size(margin, textureHeight)));
@@ -277,15 +262,15 @@ namespace CryBits.Client.Media
         private static void CheckBox(CheckBoxes tool)
         {
             // Define as propriedades dos retângulos
-            Rectangle recSource = new Rectangle(new Point(), new Size(Size(Textures.CheckBox).Width / 2, Size(Textures.CheckBox).Height));
+            Rectangle recSource = new Rectangle(new Point(), new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
             Rectangle recDestiny = new Rectangle(tool.Position, recSource.Size);
 
             // Desenha a textura do marcador pelo seu estado 
-            if (tool.Checked) recSource.Location = new Point(Size(Textures.CheckBox).Width / 2, 0);
+            if (tool.Checked) recSource.Location = new Point(Textures.CheckBox.ToSize().Width / 2, 0);
 
             // Desenha o marcador 
             Render(Textures.CheckBox, recSource, recDestiny);
-            DrawText(tool.Text, recDestiny.Location.X + Size(Textures.CheckBox).Width / 2 + CheckBoxes.Margin, recDestiny.Location.Y + 1, Color.White);
+            DrawText(tool.Text, recDestiny.Location.X + Textures.CheckBox.ToSize().Width / 2 + CheckBoxes.Margin, recDestiny.Location.Y + 1, Color.White);
         }
 
         private static void TextBox(TextBoxes tool)
@@ -294,7 +279,7 @@ namespace CryBits.Client.Media
             string text = tool.Text;
 
             // Desenha a ferramenta
-            Render_Box(Textures.TextBox, 3, tool.Position, new Size(tool.Width, Size(Textures.TextBox).Height));
+            Render_Box(Textures.TextBox, 3, tool.Position, new Size(tool.Width, Textures.TextBox.ToSize().Height));
 
             // Altera todos os caracteres do texto para um em especifico, se for necessário
             if (tool.Password && !string.IsNullOrEmpty(text)) text = new string('•', text.Length);
@@ -353,7 +338,7 @@ namespace CryBits.Client.Media
             if (textureNum > 0)
             {
                 Render(Textures.Faces[textureNum], new Point(353, 442));
-                Character(textureNum, new Point(356, 534 - Size(Textures.Characters[textureNum]).Height / 4), Direction.Down, AnimationStopped);
+                Character(textureNum, new Point(356, 534 - Textures.Characters[textureNum].ToSize().Height / 4), Direction.Down, AnimationStopped);
             }
 
             // Desenha o nome da classe
@@ -437,11 +422,11 @@ namespace CryBits.Client.Media
             // Define a cor de acordo com a raridade
             switch (item.Rarity)
             {
-                case Rarity.Uncommon: textColor = CColor(204, 255, 153); break; // Verde
-                case Rarity.Rare: textColor = CColor(102, 153); break; // Azul
-                case Rarity.Epic: textColor = CColor(153, 0, 204); break; // Roxo
-                case Rarity.Legendary: textColor = CColor(255, 255, 77); break; // Amarelo
-                default: textColor = CColor(); break; // Branco
+                case Rarity.Uncommon: textColor = new Color(204, 255, 153); break; // Verde
+                case Rarity.Rare: textColor = new Color(102, 153, 255); break; // Azul
+                case Rarity.Epic: textColor = new Color(153, 0, 204); break; // Roxo
+                case Rarity.Legendary: textColor = new Color(255, 255, 77); break; // Amarelo
+                default: textColor = new Color(); break; // Branco
             }
 
             // Nome, descrição e icone do item
@@ -614,7 +599,7 @@ namespace CryBits.Client.Media
         private static void Character(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
         {
             Rectangle recSource = new(), recDestiny;
-            Size size = Size(Textures.Characters[textureNum]);
+            Size size = Textures.Characters[textureNum].ToSize();
             Color color = new Color(255, 255, 255);
             byte line = 0;
 
@@ -638,7 +623,7 @@ namespace CryBits.Client.Media
             if (hurt) color = new Color(205, 125, 125);
 
             // Desenha o personagem e sua sombra
-            Render(Textures.Shadow, recDestiny.Location.X, recDestiny.Location.Y + size.Height / AnimationAmount - Size(Textures.Shadow).Height + 5, 0, 0, size.Width / AnimationAmount, Size(Textures.Shadow).Height);
+            Render(Textures.Shadow, recDestiny.Location.X, recDestiny.Location.Y + size.Height / AnimationAmount - Textures.Shadow.ToSize().Height + 5, 0, 0, size.Width / AnimationAmount, Textures.Shadow.ToSize().Height);
             Render(Textures.Characters[textureNum], recSource, recDestiny, color);
         }
 
@@ -684,7 +669,7 @@ namespace CryBits.Client.Media
             if (value <= 0 || value >= player.MaxVital[(byte)Vital.HP]) return;
 
             // Cálcula a largura da barra
-            Size characterSize = Size(Textures.Characters[player.TextureNum]);
+            Size characterSize = Textures.Characters[player.TextureNum].ToSize();
             int fullWidth = characterSize.Width / AnimationAmount;
             int width = value * fullWidth / player.MaxVital[(byte)Vital.HP];
 
@@ -708,8 +693,8 @@ namespace CryBits.Client.Media
             // Posição do texto
             Point position = new Point
             {
-                X = player.PixelX + Size(texture).Width / AnimationAmount / 2 - nameSize / 2,
-                Y = player.PixelY - Size(texture).Height / AnimationAmount / 2
+                X = player.PixelX + texture.ToSize().Width / AnimationAmount / 2 - nameSize / 2,
+                Y = player.PixelY - texture.ToSize().Height / AnimationAmount / 2
             };
 
             // Cor do texto
@@ -755,8 +740,8 @@ namespace CryBits.Client.Media
             Texture texture = Textures.Characters[npc.Data.Texture];
 
             // Posição do texto
-            position.X = npc.PixelX + Size(texture).Width / AnimationAmount / 2 - nameSize / 2;
-            position.Y = npc.PixelY - Size(texture).Height / AnimationAmount / 2;
+            position.X = npc.PixelX + texture.ToSize().Width / AnimationAmount / 2 - nameSize / 2;
+            position.Y = npc.PixelY - texture.ToSize().Height / AnimationAmount / 2;
 
             // Cor do texto
             switch (npc.Data.Behaviour)
@@ -780,8 +765,8 @@ namespace CryBits.Client.Media
             if (value <= 0 || value >= npc.Data.Vital[(byte)Vital.HP]) return;
 
             // Posição
-            Point position = new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY) + Size(texture).Height / AnimationAmount + 4);
-            int fullWidth = Size(texture).Width / AnimationAmount;
+            Point position = new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY) + texture.ToSize().Height / AnimationAmount + 4);
+            int fullWidth = texture.ToSize().Width / AnimationAmount;
             int width = value * fullWidth / npc.Data.Vital[(byte)Vital.HP];
 
             // Desenha a barra 
@@ -796,7 +781,7 @@ namespace CryBits.Client.Media
 
             // Dados
             System.Drawing.Color tempColor = TempMap.Current.Data.Color;
-            Color color = CColor(tempColor.R, tempColor.G, tempColor.B);
+            Color color = new Color(tempColor.R, tempColor.G, tempColor.B);
             Map map = TempMap.Current.Data;
 
             // Desenha todas as camadas dos azulejos
@@ -851,7 +836,7 @@ namespace CryBits.Client.Media
         private static void MapFog()
         {
             MapFog data = TempMap.Current.Data.Fog;
-            Size textureSize = Size(Textures.Fogs[data.Texture]);
+            Size textureSize = Textures.Fogs[data.Texture].ToSize();
 
             // Previne erros
             if (data.Texture <= 0) return;
@@ -878,7 +863,7 @@ namespace CryBits.Client.Media
             // Desenha as partículas
             foreach (var weather in TempMap.Current.Weather)
                 if (weather.Visible)
-                    Render(Textures.Weather, new Rectangle(x, 0, 32, 32), new Rectangle(weather.X, weather.Y, 32, 32), CColor(255, 255, 255, 150));
+                    Render(Textures.Weather, new Rectangle(x, 0, 32, 32), new Rectangle(weather.X, weather.Y, 32, 32), new Color(255, 255, 255, 150));
 
             // Trovoadas
             Render(Textures.Blank, 0, 0, 0, 0, ScreenWidth, ScreenHeight, new Color(255, 255, 255, TempMap.Current.Lightning));
@@ -924,7 +909,7 @@ namespace CryBits.Client.Media
             for (byte i = 0; i < TempMap.Current.Blood.Count; i++)
             {
                 MapBlood data = TempMap.Current.Blood[i];
-                Render(Textures.Blood, ConvertX(data.X * Grid), ConvertY(data.Y * Grid), data.TextureNum * 32, 0, 32, 32, CColor(255, 255, 255, data.Opacity));
+                Render(Textures.Blood, ConvertX(data.X * Grid), ConvertY(data.Y * Grid), data.TextureNum * 32, 0, 32, 32, new Color(255, 255, 255, data.Opacity));
             }
         }
     }

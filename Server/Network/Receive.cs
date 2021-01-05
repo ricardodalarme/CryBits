@@ -884,12 +884,12 @@ namespace CryBits.Server.Network
             {
                 case TradeStatus.Accepted:
                     // Verifica se os jogadores têm espaço disponivel para trocar os itens
-                    if (player.TotalTradeItems() > invited.TotalInventoryFree())
+                    if (player.TotalTradeItems > invited.TotalInventoryFree)
                     {
                         Send.Message(invited, invited.Name + " don't have enough space in their inventory to do this trade.", Color.Red);
                         break;
                     }
-                    if (invited.TotalTradeItems() > player.TotalInventoryFree())
+                    if (invited.TotalTradeItems > player.TotalInventoryFree)
                     {
                         Send.Message(invited, "You don't have enough space in your inventory to do this trade.", Color.Red);
                         break;
@@ -949,7 +949,7 @@ namespace CryBits.Server.Network
                 return;
             }
             // Verifica se há espaço no inventário
-            if (player.TotalInventoryFree() == 0 && inventorySlot.Amount > shopSold.Price)
+            if (player.TotalInventoryFree == 0 && inventorySlot.Amount > shopSold.Price)
             {
                 Send.Message(player, "You  don't have space in your bag.", Color.Red);
                 return;
@@ -974,7 +974,7 @@ namespace CryBits.Server.Network
                 return;
             }
             // Verifica se há espaço no inventário
-            if (player.TotalInventoryFree() == 0 && player.Inventory[inventorySlot].Amount > amount)
+            if (player.TotalInventoryFree == 0 && player.Inventory[inventorySlot].Amount > amount)
             {
                 Send.Message(player, "You don't have space in your bag.", Color.Red);
                 return;

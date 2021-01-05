@@ -30,7 +30,7 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphicss.WinInterface = new RenderWindow(picWindow.Handle);
+            Renders.WinInterface = new RenderWindow(picWindow.Handle);
 
             // Adiciona as janelas à lista
             for (byte i = 0; i < (byte)Window.Count; i++)
@@ -43,7 +43,7 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Interface_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphicss.WinInterface = null;
+            Renders.WinInterface = null;
             EditorMaps.Form.Show();
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using CryBits.Client.Media;
 using CryBits.Client.Media.Graphics;
 using CryBits.Entities;
 using CryBits.Enums;
@@ -93,7 +92,7 @@ namespace CryBits.Client.Entities
             if (_bloodTimer < Environment.TickCount)
                 for (byte i = 0; i < Blood.Count; i++)
                 {
-                    Blood[i].Opacity -= 1;
+                    Blood[i].Opacity--;
                     if (Blood[i].Opacity == 0) Blood.RemoveAt(i);
                     _bloodTimer = Environment.TickCount + 100;
                 }
@@ -108,7 +107,7 @@ namespace CryBits.Client.Entities
 
         private void UpdateFogX()
         {
-            Size size = Graphicss.Size(Textures.Fogs[Data.Fog.Texture]);
+            Size size = Textures.Fogs[Data.Fog.Texture].ToSize();
             int speedX = Data.Fog.SpeedX;
 
             // Apenas se necessário
@@ -118,13 +117,13 @@ namespace CryBits.Client.Entities
             // Movimento para trás
             if (speedX < 0)
             {
-                FogX -= 1;
+                FogX--;
                 if (FogX < -size.Width) FogX = 0;
             }
             // Movimento para frente
             else
             {
-                FogX += 1;
+                FogX++;
                 if (FogX > size.Width) FogX = 0;
             }
 
@@ -135,7 +134,7 @@ namespace CryBits.Client.Entities
 
         private void UpdateFogY()
         {
-            Size size = Graphicss.Size(Textures.Fogs[Data.Fog.Texture]);
+            Size size = Textures.Fogs[Data.Fog.Texture].ToSize();
             int speedY = Data.Fog.SpeedY;
 
             // Apenas se necessário
@@ -145,13 +144,13 @@ namespace CryBits.Client.Entities
             // Movimento para trás
             if (speedY < 0)
             {
-                FogY -= 1;
+                FogY--;
                 if (FogY < -size.Height) FogY = 0;
             }
             // Movimento para frente
             else
             {
-                FogY += 1;
+                FogY++;
                 if (FogY > size.Height) FogY = 0;
             }
 
@@ -352,9 +351,9 @@ namespace CryBits.Client.Entities
 
             if (xAxis)
                 if (Back)
-                    X -= 1;
+                    X--;
                 else
-                    X += 1;
+                    X++;
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Drawing;
 using CryBits.Editors.Entities;
-using CryBits.Editors.Media;
 using CryBits.Editors.Media.Graphics;
 using CryBits.Entities;
 using CryBits.Enums;
