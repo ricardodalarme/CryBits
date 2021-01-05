@@ -23,7 +23,6 @@ namespace CryBits.Editors.Media.Graphics
         public static Texture Blank;
         public static Texture Directions;
         public static Texture Transparent;
-        public static Texture Lighting;
 
         // Formato das texturas
         private const string Format = ".png";
@@ -60,7 +59,6 @@ namespace CryBits.Editors.Media.Graphics
             Grid = new Texture(Directories.TexGrid.FullName + Format);
             CheckBox = new Texture(Directories.TexCheckBox.FullName + Format);
             TextBox = new Texture(Directories.TexTextBox.FullName + Format);
-            Lighting = new Texture(Directories.TexLighting.FullName + Format);
         }
 
         public static Size ToSize(this Texture texture)

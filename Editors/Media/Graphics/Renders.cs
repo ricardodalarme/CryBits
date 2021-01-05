@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Entities.Tools;
 using CryBits.Editors.Forms;
-using CryBits.Editors.Media.Graphics;
 using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Graphics;
@@ -16,7 +15,7 @@ using Color = SFML.Graphics.Color;
 using Panel = CryBits.Editors.Entities.Tools.Panel;
 using TextBox = CryBits.Editors.Entities.Tools.TextBox;
 
-namespace CryBits.Editors.Media
+namespace CryBits.Editors.Media.Graphics
 {
     internal static class Renders
     {
@@ -25,7 +24,6 @@ namespace CryBits.Editors.Media
         public static RenderWindow WinTile;
         public static RenderWindow WinMap;
         public static RenderWindow WinMapTile;
-        public static RenderTexture WinMapLighting;
         public static RenderWindow WinItem;
         public static RenderWindow WinClass;
         public static RenderWindow WinNpc;
@@ -203,7 +201,6 @@ namespace CryBits.Editors.Media
             EditorMapsMapPanorama(selected);
             EditorMapsMapTiles(selected);
             EditorMapsMapWeather(selected);
-            EditorMapsMapLight(selected);
             EditorMapsMapFog(selected);
             EditorMapsMapGrids(selected);
             EditorMapsMapNpcs(selected);
@@ -317,50 +314,7 @@ namespace CryBits.Editors.Media
                 if (TempMap.Weather[i].Visible)
                     Render(WinMap, Textures.Weather, new Rectangle(x, 0, 32, 32), EditorMaps.Form.Zoom(new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32)), new Color(255, 255, 255, 150));
         }
-
-        private static void EditorMapsMapLight(Map map)
-        {
-            EditorMaps form = EditorMaps.Form;
-            byte light = (byte)((255 * ((decimal)map.Lighting / 100) - 255) * -1);
-
-            // Somente se necessário
-            if (!form.butVisualization.Checked) return;
-
-            // Escuridão
-            WinMapLighting.Clear(new Color(0, 0, 0, light));
-
-            // Desenha o ponto iluminado
-            if (map.Light.Count > 0)
-                for (byte i = 0; i < map.Light.Count; i++)
-                {
-                    var destiny = new Rectangle
-                    {
-                        X = map.Light[i].Rec.X - form.scrlMapX.Value,
-                        Y = map.Light[i].Rec.Y - form.scrlMapY.Value,
-                        Width = map.Light[i].Width,
-                        Height = map.Light[i].Height
-                    };
-                    Render(WinMapLighting, Textures.Lighting, form.Zoom_Grid(destiny), null, new RenderStates(BlendMode.Multiply));
-                }
-
-            // Pré visualização
-            if (form.butMLighting.Checked)
-                Render(WinMapLighting, Textures.Lighting, form.Zoom_Grid(form.MapSelection), null, new RenderStates(BlendMode.Multiply));
-
-            // Apresenta o que foi renderizado
-            WinMapLighting.Display();
-            WinMap.Draw(new Sprite(WinMapLighting.Texture));
-
-            // Ponto de remoção da luz
-            if (form.butMLighting.Checked)
-                if (map.Light.Count > 0)
-                    for (byte i = 0; i < map.Light.Count; i++)
-                        RenderRectangle(WinMap, form.Zoom_Grid(new Rectangle(map.Light[i].Rec.X - form.scrlMapX.Value, map.Light[i].Rec.Y - form.scrlMapY.Value, 1, 1)), new Color(175, 42, 42, 175));
-
-            // Trovoadas
-            Render(WinMap, Textures.Blank, 0, 0, 0, 0, form.picMap.Width, form.picMap.Height, new Color(255, 255, 255, TempMap.Lightning));
-        }
-
+        
         private static void EditorMapsMapGrids(Map map)
         {
             EditorMaps form = EditorMaps.Form;
