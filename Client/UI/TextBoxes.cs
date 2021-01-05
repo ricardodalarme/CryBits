@@ -68,7 +68,7 @@ namespace CryBits.Client.UI
         public static void Focus()
         {
             // Se o digitalizador não estiver habilitado então isso não é necessário 
-            if (Focused != null && Focused.Viewable) return;
+            if (Focused?.Viewable == true) return;
 
             // Percorre toda a árvore de ordem para executar o comando
             Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();

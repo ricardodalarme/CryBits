@@ -27,7 +27,7 @@ namespace CryBits.Client.Media.Graphics
         public static Texture Equipments;
         public static Texture Blood;
         public static Texture PartyBars;
-        
+
         // Formato das texturas
         private const string Format = ".png";
 

@@ -11,7 +11,7 @@ using Sound = CryBits.Editors.Media.Audio.Sound;
 namespace CryBits.Editors.Entities
 {
     internal static class TempMap
-    {        
+    {
         // Contadores
         private static int _fogXTimer;
         private static int _fogYTimer;
@@ -41,7 +41,7 @@ namespace CryBits.Editors.Entities
         public static void UpdateFog()
         {
             // Faz a movimentação
-            if (EditorMaps.Form != null && EditorMaps.Form.Visible)
+            if (EditorMaps.Form?.Visible == true)
             {
                 UpdateFogX();
                 UpdateFogY();
@@ -60,13 +60,13 @@ namespace CryBits.Editors.Entities
             // Movimento para trás
             if (speed < 0)
             {
-                FogX -= 1;
+                FogX--;
                 if (FogX < -textureSize.Width) FogX = 0;
             }
             // Movimento para frente
             else
             {
-                FogX += 1;
+                FogX++;
                 if (FogX > textureSize.Width) FogX = 0;
             }
 
@@ -87,13 +87,13 @@ namespace CryBits.Editors.Entities
             // Movimento para trás
             if (speed < 0)
             {
-                FogY -= 1;
+                FogY--;
                 if (FogY < -textureSize.Height) FogY = 0;
             }
             // Movimento para frente
             else
             {
-                FogY += 1;
+                FogY++;
                 if (FogY > textureSize.Height) FogY = 0;
             }
 
@@ -107,7 +107,7 @@ namespace CryBits.Editors.Entities
             bool stop = false, move;
 
             // Somente se necessário
-            if (EditorMaps.Form == null || !EditorMaps.Form.Visible || EditorMaps.Form.Selected.Weather.Type == 0 || !EditorMaps.Form.butVisualization.Checked)
+            if (EditorMaps.Form?.Visible != true || EditorMaps.Form.Selected.Weather.Type == 0 || !EditorMaps.Form.butVisualization.Checked)
             {
                 if (Sound.List != null)
                     if (Sound.List[(byte)Enums.Sound.Rain].Status == SoundStatus.Playing) Sound.StopAll();
@@ -183,7 +183,7 @@ namespace CryBits.Editors.Entities
 
             // Trovoadas
             if (weather.Type == Enums.Weather.Thundering)
-                if (MyRandom.Next(0, MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
+                if (MyRandom.Next(0, (MaxWeatherIntensity * 10) - (weather.Intensity * 2)) == 0)
                 {
                     // Som do trovão
                     int thunder = MyRandom.Next((byte)Enums.Sound.Thunder1, (byte)Enums.Sound.Thunder4);
@@ -245,9 +245,9 @@ namespace CryBits.Editors.Entities
 
             if (move)
                 if (Weather[i].Back)
-                    Weather[i].X -= 1;
+                    Weather[i].X--;
                 else
-                    Weather[i].X += 1;
+                    Weather[i].X++;
         }
     }
 }

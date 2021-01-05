@@ -232,7 +232,7 @@ namespace CryBits.Client.Entities
 
             // Trovoadas
             if (Data.Weather.Type == Enums.Weather.Thundering)
-                if (MyRandom.Next(0, MaxWeatherIntensity * 10 - Data.Weather.Intensity * 2) == 0)
+                if (MyRandom.Next(0, (MaxWeatherIntensity * 10) - (Data.Weather.Intensity * 2)) == 0)
                 {
                     // Som do trovão
                     int thunder = MyRandom.Next(thunderFirst, thunderLast);

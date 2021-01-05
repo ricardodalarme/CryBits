@@ -43,7 +43,7 @@ namespace CryBits.Server.Logic
                 if (Environment.TickCount > TimerMapItems + 300000) TimerMapItems = Environment.TickCount;
 
                 // Faz com que a aplicação se mantenha estável
-                Thread.Sleep(0); 
+                Thread.Sleep(0);
 
                 // Calcula o CPS
                 if (_timer1000 < Environment.TickCount)

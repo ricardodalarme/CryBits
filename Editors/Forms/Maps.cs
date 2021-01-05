@@ -525,7 +525,7 @@ namespace CryBits.Editors.Forms
         {
             _defMapSelection.Size = new Size(1, 1);
         }
-        
+
         private void butMZones_CheckedChanged(object sender, EventArgs e)
         {
             _defMapSelection.Size = new Size(1, 1);
@@ -712,7 +712,7 @@ namespace CryBits.Editors.Forms
             Size textureSize = Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize();
 
             // Define os valores
-            TileMouse = new Point(x * Grid - scrlTileX.Value, y * Grid - scrlTileY.Value);
+            TileMouse = new Point((x * Grid) - scrlTileX.Value, (y * Grid) - scrlTileY.Value);
 
             // Somente se necessário
             if (e.Button != MouseButtons.Left) return;
@@ -720,9 +720,9 @@ namespace CryBits.Editors.Forms
 
             // Verifica se não passou do limite
             if (x < 0) x = 0;
-            if (x > textureSize.Width / Grid - 1) x = textureSize.Width / Grid - 1;
+            if (x > (textureSize.Width / Grid) - 1) x = (textureSize.Width / Grid) - 1;
             if (y < 0) y = 0;
-            if (y > textureSize.Height / Grid - 1) y = textureSize.Height / Grid - 1;
+            if (y > (textureSize.Height / Grid) - 1) y = (textureSize.Height / Grid) - 1;
 
             // Tamanho da grade
             _defTilesSelection.Width = x - _defTilesSelection.X + 1;
@@ -766,8 +766,8 @@ namespace CryBits.Editors.Forms
         public void Update_Map_Bounds()
         {
             // Tamanho do scroll do mapa
-            scrlMapX.Maximum = Math.Max(0, (Map.Width / Zoom() * Grid - picBackground.Width) / Grid);
-            scrlMapY.Maximum = Math.Max(0, (Map.Height / Zoom() * Grid - picBackground.Height) / Grid);
+            scrlMapX.Maximum = Math.Max(0, ((Map.Width / Zoom() * Grid) - picBackground.Width) / Grid);
+            scrlMapY.Maximum = Math.Max(0, ((Map.Height / Zoom() * Grid) - picBackground.Height) / Grid);
             scrlMapX.Value = 0;
             scrlMapY.Value = 0;
 
@@ -789,20 +789,20 @@ namespace CryBits.Editors.Forms
             // Movimenta para baixo
             if (e.Delta > 0)
                 if (scrlMapY.Value - 1 > 0)
-                    scrlMapY.Value -= 1;
+                    scrlMapY.Value--;
                 else
                     scrlMapY.Value = 0;
             // Movimenta para cima
             else if (e.Delta < 0)
                 if (scrlMapY.Value + 1 < scrlMapY.Maximum)
-                    scrlMapY.Value += 1;
+                    scrlMapY.Value++;
                 else
                     scrlMapY.Value = scrlMapY.Maximum;
         }
 
         private void picMap_MouseDown(object sender, MouseEventArgs e)
         {
-            Point tileDif = new Point(e.X - e.X / Grid * Grid, e.Y - e.Y / Grid * Grid);
+            Point tileDif = new Point(e.X - (e.X / Grid * Grid), e.Y - (e.Y / Grid * Grid));
 
             // Previne erros
             if (MapSelection.X >= Map.Width || MapSelection.Y >= Map.Height) return;
@@ -875,8 +875,8 @@ namespace CryBits.Editors.Forms
         private void picMap_MouseMove(object sender, MouseEventArgs e)
         {
             // Mouse
-            _mapMouse.X = e.X / GridZoom + scrlMapX.Value;
-            _mapMouse.Y = e.Y / GridZoom + scrlMapY.Value;
+            _mapMouse.X = (e.X / GridZoom) + scrlMapX.Value;
+            _mapMouse.Y = (e.Y / GridZoom) + scrlMapY.Value;
 
             // Impede que saia do limite da tela
             if (_mapMouse.X < 0) _mapMouse.X = 0;
@@ -936,7 +936,7 @@ namespace CryBits.Editors.Forms
 
         private bool Map_Rectangle(MouseEventArgs e)
         {
-            int x = e.X / GridZoom + scrlMapX.Value, y = e.Y / GridZoom + scrlMapY.Value;
+            int x = (e.X / GridZoom) + scrlMapX.Value, y = (e.Y / GridZoom) + scrlMapY.Value;
 
             // Somente se necessário
             if (e.Button != MouseButtons.Left) return false;
@@ -1478,12 +1478,7 @@ namespace CryBits.Editors.Forms
 
         public byte GridZoom => (byte)(Grid / Zoom());
         public Rectangle Zoom(Rectangle value) => new(value.X / Zoom(), value.Y / Zoom(), value.Width / Zoom(), value.Height / Zoom());
-        public Rectangle Zoom_Grid(Rectangle rectangle) => new(rectangle.X * GridZoom, rectangle.Y * GridZoom, rectangle.Width * GridZoom, rectangle.Height * GridZoom);
         public Point Zoom_Grid(int x, int y) => new(x * GridZoom, y * GridZoom);
-
-        // Tamanho da grade com o zoom
-        // public static byte Grid_Zoom => (byte)(Grid / Editor_Maps.Form.Zoom());
-        //public static Point Zoom(int X, int Y) => new Point(X * Grid_Zoom, Y * Grid_Zoom);
         #endregion
     }
 }

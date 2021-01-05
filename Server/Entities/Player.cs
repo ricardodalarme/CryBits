@@ -67,8 +67,8 @@ namespace CryBits.Server.Entities
             // Cálcula o máximo de vital que um jogador possui
             switch ((Vital)vital)
             {
-                case Enums.Vital.HP: return (short)(@base[vital] + Attribute[(byte)Enums.Attribute.Vitality] * 1.50 * (Level * 0.75) + 1);
-                case Enums.Vital.MP: return (short)(@base[vital] + Attribute[(byte)Enums.Attribute.Intelligence] * 1.25 * (Level * 0.5) + 1);
+                case Enums.Vital.HP: return (short)(@base[vital] + (Attribute[(byte)Enums.Attribute.Vitality] * 1.50 * (Level * 0.75)) + 1);
+                case Enums.Vital.MP: return (short)(@base[vital] + (Attribute[(byte)Enums.Attribute.Intelligence] * 1.25 * (Level * 0.5)) + 1);
             }
 
             return 1;
@@ -79,8 +79,8 @@ namespace CryBits.Server.Entities
             // Cálcula o máximo de vital que um jogador possui
             switch ((Vital)vital)
             {
-                case Enums.Vital.HP: return (short)(MaxVital(vital) * 0.05 + Attribute[(byte)Enums.Attribute.Vitality] * 0.3);
-                case Enums.Vital.MP: return (short)(MaxVital(vital) * 0.05 + Attribute[(byte)Enums.Attribute.Intelligence] * 0.1);
+                case Enums.Vital.HP: return (short)((MaxVital(vital) * 0.05) + (Attribute[(byte)Enums.Attribute.Vitality] * 0.3));
+                case Enums.Vital.MP: return (short)((MaxVital(vital) * 0.05) + (Attribute[(byte)Enums.Attribute.Intelligence] * 0.1));
             }
 
             return 1;
@@ -93,7 +93,7 @@ namespace CryBits.Server.Entities
             {
                 short total = 0;
                 for (byte i = 0; i < (byte)Enums.Attribute.Count; i++) total += Attribute[i];
-                return (int)((Level + 1) * 2.5 + (total + Points) / 2);
+                return (int)(((Level + 1) * 2.5) + ((total + Points) / 2));
             }
         }
 

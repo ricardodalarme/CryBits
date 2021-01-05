@@ -297,11 +297,11 @@ namespace CryBits.Entities
             }
 
             // Define a posição do mini azulejo
-            Mini[index].X = X * Grid + position.X;
-            Mini[index].Y = Y * Grid + position.Y;
+            Mini[index].X = (X * Grid) + position.X;
+            Mini[index].Y = (Y * Grid) + position.Y;
         }
     }
-    
+
     [Serializable]
     public class MapWeather
     {

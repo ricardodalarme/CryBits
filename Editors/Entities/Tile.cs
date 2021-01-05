@@ -20,7 +20,7 @@ namespace CryBits.Editors.Entities
         public Tile(byte index)
         {
             Size textureSize = Textures.Tiles[index].ToSize();
-            Size size = new Size(textureSize.Width / Grid - 1, textureSize.Height / Grid - 1);
+            Size size = new Size((textureSize.Width / Grid) - 1, (textureSize.Height / Grid) - 1);
 
             // Redimensiona os valores
             Width = (byte)size.Width;
@@ -29,10 +29,10 @@ namespace CryBits.Editors.Entities
 
             for (byte x = 0; x <= size.Width; x++)
                 for (byte y = 0; y <= size.Height; y++)
-                {
-                    Data[x, y] = new TileData();
-                    Data[x, y].Block = new bool[(byte)Direction.Count];
-                }
+                    Data[x, y] = new TileData
+                    {
+                        Block = new bool[(byte)Direction.Count]
+                    };
         }
     }
 
