@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CryBits.Entities
 {
@@ -20,5 +21,13 @@ namespace CryBits.Entities
         public short[] Vital { get; set; } = new short[(byte)Enums.Vital.Count];
         public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
         public IList<ItemSlot> Item { get; set; } = new List<ItemSlot>();
+
+        public Class()
+        {
+            Name = "New class";
+            SpawnMap = Map.List.ElementAt(0).Value;
+            TexMale.Add(1);
+            TexFemale.Add(1);
+        }
     }
 }

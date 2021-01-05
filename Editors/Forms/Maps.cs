@@ -162,24 +162,13 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            Map @new = new Map();
-            Map.List.Add(@new.ID, @new);
-            cmbA_Warp_Map.Items.Add(@new);
-            @new.Name = "New map";
-            @new.Layer.Add(new MapLayer());
-            @new.Layer[0].Name = "Ground";
-
-            // Azulejos
-            for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
-                {
-                    @new.Layer[0].Tile[x, y] = new MapTileData();
-                    @new.Attribute[x, y] = new MapAttribute();
-                }
+            Map map = new Map();
+            Map.List.Add(map.ID, map);
+            cmbA_Warp_Map.Items.Add(map);
 
             // Adiciona na lista
-            TreeNode node = new TreeNode(@new.Name);
-            node.Tag = @new.ID;
+            TreeNode node = new TreeNode(map.Name);
+            node.Tag = map.ID;
             List.Nodes.Add(node);
             List.SelectedNode = node;
         }

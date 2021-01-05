@@ -32,6 +32,11 @@ namespace CryBits.Entities
             set => _shop = value.GetID();
         }
 
+        public Npc()
+        {
+            Name = "New Npc";
+        }
+
         public bool IsAllied(Npc npc)
         {
             // Verifica se o Npc é aliado do outro

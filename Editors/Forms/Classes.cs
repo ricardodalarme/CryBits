@@ -114,8 +114,6 @@ namespace CryBits.Editors.Forms
             // Adiciona uma loja nova
             Class @new = new Class();
             Class.List.Add(@new.ID, @new);
-            @new.Name = "New class";
-            @new.SpawnMap = Map.List.ElementAt(0).Value;
 
             // Adiciona na lista
             TreeNode node = new TreeNode(@new.Name);

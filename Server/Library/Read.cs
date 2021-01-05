@@ -153,11 +153,7 @@ namespace CryBits.Server.Library
             // Cria uma classe caso não houver nenhuma
             else
             {
-                Class @class = new Class
-                {
-                    Name = "New class",
-                    SpawnMap = Map.List.ElementAt(0).Value
-                };
+                Class @class = new Class();
                 Class.List.Add(@class.ID, @class);
                 Write.Class(@class);
             }
@@ -190,13 +186,6 @@ namespace CryBits.Server.Library
                 // Cria um mapa novo
                 Map map = new Map();
                 Map.List.Add(map.ID, map);
-
-                // Dados do mapa
-                map.Name = "New map";
-                map.Layer.Add(new MapLayer
-                {
-                    Name = "Ground"
-                });
 
                 // Escreve os dados
                 Write.Map(map);

@@ -36,5 +36,10 @@ namespace CryBits.Entities
         public byte EquipType { get; set; }
         public short[] EquipAttribute { get; set; } = new short[(byte)Attribute.Count];
         public short WeaponDamage { get; set; }
+
+        public Item()
+        {
+            Name = "New item";
+        }
     }
 }

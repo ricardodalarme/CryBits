@@ -116,13 +116,12 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            Npc @new = new Npc();
-            @new.Name = "New Npc";
-            Npc.List.Add(@new.ID, @new);
+            Npc npc = new Npc();
+            Npc.List.Add(npc.ID, npc);
 
             // Adiciona na lista
-            TreeNode node = new TreeNode(@new.Name);
-            node.Tag = @new.ID;
+            TreeNode node = new TreeNode(npc.Name);
+            node.Tag = npc.ID;
             List.Nodes.Add(node);
             List.SelectedNode = node;
 
