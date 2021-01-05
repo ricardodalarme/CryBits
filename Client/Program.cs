@@ -2,8 +2,8 @@
 using System.Windows.Forms;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
-using CryBits.Client.Media;
 using CryBits.Client.Media.Audio;
+using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
 
@@ -29,7 +29,7 @@ namespace CryBits.Client
             // Inicializa todos os dispositivos
             Socket.Init();
             Sound.Load();
-            Graphicss.Init();
+            Renders.Init();
 
             // Inicia a aplicação
             Loop.Init();

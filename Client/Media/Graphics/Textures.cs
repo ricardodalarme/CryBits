@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using CryBits.Client.Library;
 using SFML.Graphics;
@@ -66,6 +67,12 @@ namespace CryBits.Client.Media.Graphics
             Equipments = new Texture(Directories.TexEquipments.FullName + Format);
             Blood = new Texture(Directories.TexBlood.FullName + Format);
             PartyBars = new Texture(Directories.TexPartyBars.FullName + Format);
+        }
+
+        public static Size ToSize(this Texture texture)
+        {
+            // Retorna com o tamanho da textura
+            return texture != null ? new Size((int)texture.Size.X, (int)texture.Size.Y) : new Size(0, 0);
         }
     }
 }

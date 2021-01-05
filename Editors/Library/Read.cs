@@ -4,7 +4,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Entities.Tools;
-using CryBits.Editors.Media;
 using CryBits.Editors.Media.Graphics;
 using CryBits.Enums;
 using static CryBits.Editors.Logic.Options;

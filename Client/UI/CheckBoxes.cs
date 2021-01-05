@@ -4,7 +4,6 @@ using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
-using CryBits.Client.Media;
 using CryBits.Client.Media.Graphics;
 using CryBits.Enums;
 using static CryBits.Client.Logic.Utils;
@@ -29,7 +28,7 @@ namespace CryBits.Client.UI
         public void MouseUp()
         {
             // Tamanho do marcador
-            Size textureSize = Graphicss.Size(Textures.CheckBox);
+            Size textureSize = Textures.CheckBox.ToSize();
             Size box = new Size(textureSize.Width / 2 + MeasureString(Text) + Margin, textureSize.Height);
 
             // Somente se estiver sobrepondo a ferramenta

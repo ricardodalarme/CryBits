@@ -3,8 +3,8 @@ using System.Windows.Forms;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
-using CryBits.Editors.Media;
 using CryBits.Editors.Media.Audio;
+using CryBits.Editors.Media.Graphics;
 using CryBits.Editors.Network;
 
 namespace CryBits.Editors
@@ -28,8 +28,9 @@ namespace CryBits.Editors
 
             // Inicializa todos os dispositivos
             Socket.Init();
-            Sound.Load();
-            Graphicss.Init();
+            Sound.LoadAll();
+            Textures.LoadAll();
+            Fonts.LoadAll();
 
             // Abre a janela
             Application.EnableVisualStyles();

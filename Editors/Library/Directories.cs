@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using CryBits.Editors.Media;
-using CryBits.Editors.Media.Audio;
 
 namespace CryBits.Editors.Library
 {
@@ -43,29 +41,23 @@ namespace CryBits.Editors.Library
             Sounds.Create();
             Musics.Create();
             Tiles.Create();
-            Tools.Directory.Create();
+            Tools.Directory?.Create();
             TexPanoramas.Create();
             TexFogs.Create();
             TexCharacters.Create();
             TexFaces.Create();
             TexPanels.Create();
             TexButtons.Create();
-            TexCheckBox.Directory.Create();
-            TexTextBox.Directory.Create();
+            TexCheckBox.Directory?.Create();
+            TexTextBox.Directory?.Create();
             TexTiles.Create();
-            TexGrid.Directory.Create();
-            TexWeather.Directory.Create();
-            TexBlanc.Directory.Create();
-            TexDirections.Directory.Create();
-            TexTransparent.Directory.Create();
-            TexLighting.Directory.Create();
+            TexGrid.Directory?.Create();
+            TexWeather.Directory?.Create();
+            TexBlanc.Directory?.Create();
+            TexDirections.Directory?.Create();
+            TexTransparent.Directory?.Create();
+            TexLighting.Directory?.Create();
             TexItems.Create();
-
-            // Lê os dados do lado do cliente
-            Graphicss.Init();
-            Sound.Load();
-            Read.Tiles();
-            Read.Tools();
         }
     }
 }

@@ -5,6 +5,6 @@
         None,
         Block,
         Warp,
-        Item,
+        Item
     }
 }

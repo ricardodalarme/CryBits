@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Media;
+using CryBits.Editors.Media.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;
@@ -28,10 +29,10 @@ namespace CryBits.Editors.Forms
             Show();
 
             // Inicializa a janela de renderização
-            Graphicss.WinNpc = new RenderWindow(picTexture.Handle);
+            Renders.WinNpc = new RenderWindow(picTexture.Handle);
 
             // Define os limites
-            numTexture.Maximum = Graphicss.TexCharacter.GetUpperBound(0);
+            numTexture.Maximum =Textures.Characters.Count-1;
 
             // Lista os dados
             foreach (var item in Item.List.Values) cmbDrop_Item.Items.Add(item);
@@ -41,7 +42,7 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Npcs_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Graphicss.WinNpc = null;
+            Renders.WinNpc = null;
             EditorMaps.Form.Show();
         }
 

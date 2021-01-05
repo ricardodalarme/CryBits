@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
-using CryBits.Client.Media;
+using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
 using CryBits.Enums;
@@ -30,10 +30,10 @@ namespace CryBits.Client.Logic
                 Socket.HandleData();
 
                 // Apresenta os gráficos à tela
-                Graphicss.Present();
+                Renders.Present();
 
                 // Processa os eventos da janela
-                Graphicss.RenderWindow.DispatchEvents();
+                Renders.RenderWindow.DispatchEvents();
 
                 // Eventos
                 TextBox();
@@ -73,7 +73,7 @@ namespace CryBits.Client.Logic
                     timer1000 = Environment.TickCount + 1000;
                 }
                 else
-                    fps += 1;
+                    fps++;
             }
 
             // Fecha o jogo

@@ -70,9 +70,9 @@ namespace CryBits.Editors.Forms
 
         private void Editor_Maps_Load(object sender, EventArgs e)
         {
-            Graphicss.WinMap = new RenderWindow(picMap.Handle);
-            Graphicss.WinMapTile = new RenderWindow(picTile.Handle);
-            Graphicss.WinMapLighting = new RenderTexture((uint)Width, (uint)Height);
+            Renders.WinMap = new RenderWindow(picMap.Handle);
+            Renders.WinMapTile = new RenderWindow(picTile.Handle);
+            Renders.WinMapLighting = new RenderTexture((uint)Width, (uint)Height);
 
             // Lista os dados
             for (byte i = 0; i < (byte)Layer.Count; i++) cmbLayers_Type.Items.Add(((Layer)i).ToString());
@@ -693,7 +693,7 @@ namespace CryBits.Editors.Forms
         #region Tile
         private void Update_Tile_Bounds()
         {
-            Size tileSize = Graphicss.Size(Textures.Tiles[cmbTiles.SelectedIndex + 1]);
+            Size tileSize = Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize();
             int width = tileSize.Width - picTile.Width;
             int height = tileSize.Height - picTile.Height;
 
@@ -736,8 +736,8 @@ namespace CryBits.Editors.Forms
             if (e.Button == MouseButtons.Left)
             {
                 // Previne erros
-                if (e.X + scrlTileX.Value > Graphicss.Size(Textures.Tiles[cmbTiles.SelectedIndex + 1]).Width) return;
-                if (e.Y + scrlTileY.Value > Graphicss.Size(Textures.Tiles[cmbTiles.SelectedIndex + 1]).Height) return;
+                if (e.X + scrlTileX.Value > Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize().Width) return;
+                if (e.Y + scrlTileY.Value > Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize().Height) return;
 
                 // Seleciona o azulejo;
                 _defTilesSelection.Location = new Point((e.X + scrlTileX.Value) / Grid, (e.Y + scrlTileY.Value) / Grid);
@@ -749,7 +749,7 @@ namespace CryBits.Editors.Forms
         {
             int x = (e.X + scrlTileX.Value) / Grid;
             int y = (e.Y + scrlTileY.Value) / Grid;
-            Size textureSize = Graphicss.Size(Textures.Tiles[cmbTiles.SelectedIndex + 1]);
+            Size textureSize = Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize();
 
             // Define os valores
             TileMouse = new Point(x * Grid - scrlTileX.Value, y * Grid - scrlTileY.Value);
@@ -819,11 +819,11 @@ namespace CryBits.Editors.Forms
         private void picMap_SizeChanged(object sender, EventArgs e)
         {
             // Recria as janelas de acordo com o novo tamanho
-            if (Graphicss.WinMap == null) return;
-            Graphicss.WinMap.Dispose();
-            Graphicss.WinMap = new RenderWindow(picMap.Handle);
-            Graphicss.WinMapLighting.Dispose();
-            Graphicss.WinMapLighting = new RenderTexture((uint)picMap.Width, (uint)picMap.Height);
+            if (Renders.WinMap == null) return;
+            Renders.WinMap.Dispose();
+            Renders.WinMap = new RenderWindow(picMap.Handle);
+            Renders.WinMapLighting.Dispose();
+            Renders.WinMapLighting = new RenderTexture((uint)picMap.Width, (uint)picMap.Height);
         }
 
         private void picMap_MouseWheel(object sender, MouseEventArgs e)
