@@ -92,14 +92,12 @@ namespace CryBits.Editors.Forms
         private void butNew_Click(object sender, EventArgs e)
         {
             // Adiciona uma loja nova
-            Shop @new = new Shop();
-            @new.Name = "New shop";
-            @new.Currency = Item.List.ElementAt(0).Value;
-            Shop.List.Add(@new.ID, @new);
+            Shop shop = new Shop();
+            Shop.List.Add(shop.ID, shop);
 
             // Adiciona na lista
-            TreeNode node = new TreeNode(@new.Name);
-            node.Tag = @new.ID;
+            TreeNode node = new TreeNode(shop.Name);
+            node.Tag = shop.ID;
             List.Nodes.Add(node);
             List.SelectedNode = node;
 

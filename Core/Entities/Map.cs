@@ -33,9 +33,15 @@ namespace CryBits.Entities
         // Construtor
         public Map()
         {
+            Name = "New map";
+            Layer.Add(new MapLayer { Name = "Ground" });
+
             for (byte x = 0; x < Width; x++)
-                for (byte y = 0; y < Height; y++)
-                    Attribute[x, y] = new MapAttribute();
+            for (byte y = 0; y < Height; y++)
+            {
+                Attribute[x, y] = new MapAttribute();
+                Layer[0].Tile[x, y] = new MapTileData();
+            }
         }
 
         // Verifica se as coordenas estão no limite do mapa
