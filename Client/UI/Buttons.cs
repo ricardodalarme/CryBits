@@ -191,7 +191,7 @@ namespace CryBits.Client.UI
             // Regras de segurança
             if (TextBoxes.List["Register_Password"].Text != TextBoxes.List["Register_Password2"].Text)
             {
-                MessageBox.Show("The password don't match.");
+                MessageBox.Show(@"The password don't match.");
                 return;
             }
 
@@ -363,7 +363,7 @@ namespace CryBits.Client.UI
             // Verifica se o valor digitado é válidp
             if (amount == 0)
             {
-                MessageBox.Show("Enter a valid value!");
+                MessageBox.Show(@"Enter a valid value!");
                 return;
             }
 
@@ -451,7 +451,7 @@ namespace CryBits.Client.UI
             // Verifica se o valor digitado é válido
             if (amount <= 0)
             {
-                MessageBox.Show("Enter a valid value!");
+                MessageBox.Show(@"Enter a valid value!");
                 return;
             }
 
@@ -481,7 +481,7 @@ namespace CryBits.Client.UI
             // Verifica se o valor digitado é válido
             if (amount <= 0)
             {
-                MessageBox.Show("Enter a valid value!");
+                MessageBox.Show(@"Enter a valid value!");
                 return;
             }
 

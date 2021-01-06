@@ -17,7 +17,7 @@ namespace CryBits.Editors.Forms
             // Verifica se é possível abrir
             if (Item.List.Count == 0)
             {
-                MessageBox.Show("It must have at least one item registered to open the store editor.");
+                MessageBox.Show(@"It must have at least one item registered to open the store editor.");
                 return;
             }
 

@@ -127,7 +127,7 @@ namespace CryBits.Editors.Forms
                 // Garante que sempre vai ter pelo menos uma classse
                 if (Class.List.Count == 1)
                 {
-                    MessageBox.Show("It must have at least one class registered.");
+                    MessageBox.Show(@"It must have at least one class registered.");
                     return;
                 }
 
@@ -270,7 +270,7 @@ namespace CryBits.Editors.Forms
             // Evita erros
             if (Item.List.Count == 0)
             {
-                MessageBox.Show("It must have at least one item registered add initial items.");
+                MessageBox.Show(@"It must have at least one item registered add initial items.");
                 return;
             }
 
