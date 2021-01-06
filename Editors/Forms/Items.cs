@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using CryBits.Editors.Media;
 using CryBits.Editors.Media.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
@@ -109,8 +108,7 @@ namespace CryBits.Editors.Forms
             Item.List.Add(item.ID, item);
 
             // Adiciona na lista
-            TreeNode node = new TreeNode(item.Name);
-            node.Tag = item.ID;
+            TreeNode node = new TreeNode(item.Name) {Tag = item.ID};
             List.Nodes.Add(node);
             List.SelectedNode = node;
 

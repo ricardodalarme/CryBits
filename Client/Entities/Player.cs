@@ -16,7 +16,7 @@ namespace CryBits.Client.Entities
         public static Me Me;
 
         // Dados gerais dos jogadores
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
         public short TextureNum { get; set; }
         public short Level { get; set; }
         public short[] MaxVital { get; set; } = new short[(byte)Enums.Vital.Count];

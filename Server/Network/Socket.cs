@@ -44,7 +44,7 @@ namespace CryBits.Server.Network
                             Account.List.Add(new Account(data.SenderConnection));
                         // Conexão perdida, disconecta o jogador do jogo
                         else if (status == NetConnectionStatus.Disconnected)
-                            account.Leave();
+                            account?.Leave();
 
                         break;
                     // Recebe e manuseia os dados recebidos

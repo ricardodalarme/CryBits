@@ -12,7 +12,7 @@ namespace CryBits.Server.Logic
 
         // Contagens
         private static int _timer500, _timer1000;
-        public static int TimerRegen;
+        public static int TimerRegeneration;
         public static int TimerMapItems;
 
         public static void Main()
@@ -39,7 +39,7 @@ namespace CryBits.Server.Logic
                 }
 
                 // Reinicia algumas contagens
-                if (Environment.TickCount > TimerRegen + 5000) TimerRegen = Environment.TickCount;
+                if (Environment.TickCount > TimerRegeneration + 5000) TimerRegeneration = Environment.TickCount;
                 if (Environment.TickCount > TimerMapItems + 300000) TimerMapItems = Environment.TickCount;
 
                 // Faz com que a aplicação se mantenha estável

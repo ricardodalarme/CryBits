@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
-using CryBits.Editors.Media;
 using CryBits.Editors.Media.Graphics;
 using CryBits.Enums;
 using DarkUI.Forms;

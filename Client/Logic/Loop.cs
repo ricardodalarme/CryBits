@@ -16,7 +16,7 @@ namespace CryBits.Client.Logic
 
         // Contagens
         public static int TextBoxTimer;
-        public static int ChatTimer = 0;
+        public static int ChatTimer;
 
         public static void Init()
         {
