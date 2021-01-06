@@ -22,17 +22,15 @@ namespace CryBits.Editors.Library
         public static readonly FileInfo TexTextBox = new(Environment.CurrentDirectory + @"\Graphics\Interface\TextBox");
         public static readonly DirectoryInfo TexButtons = new(Environment.CurrentDirectory + @"\Graphics\Interface\Buttons\");
         public static readonly DirectoryInfo TexCharacters = new(Environment.CurrentDirectory + @"\Graphics\Characters\");
-        public static readonly DirectoryInfo TexFaces = new(Environment.CurrentDirectory + @"\Graphics\Faces\");
         public static readonly DirectoryInfo TexPanoramas = new(Environment.CurrentDirectory + @"\Graphics\Panoramas\");
         public static readonly DirectoryInfo TexFogs = new(Environment.CurrentDirectory + @"\Graphics\Fogs\");
         public static readonly DirectoryInfo TexTiles = new(Environment.CurrentDirectory + @"\Graphics\Tiles\");
         public static readonly DirectoryInfo TexItems = new(Environment.CurrentDirectory + @"\Graphics\Items\");
         public static readonly FileInfo TexGrid = new(Environment.CurrentDirectory + @"\Graphics\Misc\Grid");
         public static readonly FileInfo TexWeather = new(Environment.CurrentDirectory + @"\Graphics\Misc\Weather");
-        public static readonly FileInfo TexBlanc = new(Environment.CurrentDirectory + @"\Graphics\Misc\Blank");
+        public static readonly FileInfo TexBlank = new(Environment.CurrentDirectory + @"\Graphics\Misc\Blank");
         public static readonly FileInfo TexDirections = new(Environment.CurrentDirectory + @"\Graphics\Misc\Directions");
         public static readonly FileInfo TexTransparent = new(Environment.CurrentDirectory + @"\Graphics\Misc\Transparent");
-        public static readonly FileInfo TexLighting = new(Environment.CurrentDirectory + @"\Graphics\Misc\Lighting");
 
         public static void Create()
         {
@@ -45,7 +43,6 @@ namespace CryBits.Editors.Library
             TexPanoramas.Create();
             TexFogs.Create();
             TexCharacters.Create();
-            TexFaces.Create();
             TexPanels.Create();
             TexButtons.Create();
             TexCheckBox.Directory?.Create();
@@ -53,10 +50,9 @@ namespace CryBits.Editors.Library
             TexTiles.Create();
             TexGrid.Directory?.Create();
             TexWeather.Directory?.Create();
-            TexBlanc.Directory?.Create();
+            TexBlank.Directory?.Create();
             TexDirections.Directory?.Create();
             TexTransparent.Directory?.Create();
-            TexLighting.Directory?.Create();
             TexItems.Create();
         }
     }

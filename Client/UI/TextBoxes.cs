@@ -94,9 +94,7 @@ namespace CryBits.Client.UI
 
         public static void ChangeFocus()
         {
-            List<Tools.OrderStructure> parent;
-            if (Focused.Parent != null) parent = Focused.Parent.Nodes;
-            else parent = Tools.Order;
+            List<Tools.OrderStructure>  parent = Focused.Parent != null ? Focused.Parent.Nodes : Tools.Order;
             int index = parent.IndexOf(Focused), temp = index + 1;
 
             // Altera o digitalizador focado para o próximo

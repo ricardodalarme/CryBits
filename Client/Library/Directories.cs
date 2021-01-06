@@ -46,30 +46,30 @@ namespace CryBits.Client.Library
             Sounds.Create();
             Musics.Create();
             MapsData.Create();
-            ToolsData.Directory.Create();
+            ToolsData.Directory?.Create();
             TexPanoramas.Create();
             TexFogs.Create();
             TexCharacters.Create();
             TexFaces.Create();
             TexPanels.Create();
             TexButtons.Create();
-            TexCheckBox.Directory.Create();
-            TexTextBox.Directory.Create();
-            TexChat.Directory.Create();
-            TexBackground.Directory.Create();
+            TexCheckBox.Directory?.Create();
+            TexTextBox.Directory?.Create();
+            TexChat.Directory?.Create();
+            TexBackground.Directory?.Create();
             TexTiles.Create();
             TexLights.Create();
-            TexWeather.Directory.Create();
-            TexBlank.Directory.Create();
-            TexDirections.Directory.Create();
-            TexShadow.Directory.Create();
-            TexBars.Directory.Create();
-            TexBarsPanel.Directory.Create();
+            TexWeather.Directory?.Create();
+            TexBlank.Directory?.Create();
+            TexDirections.Directory?.Create();
+            TexShadow.Directory?.Create();
+            TexBars.Directory?.Create();
+            TexBarsPanel.Directory?.Create();
             TexItems.Create();
-            TexGrid.Directory.Create();
-            TexEquipments.Directory.Create();
-            TexBlood.Directory.Create();
-            TexPartyBars.Directory.Create();
+            TexGrid.Directory?.Create();
+            TexEquipments.Directory?.Create();
+            TexBlood.Directory?.Create();
+            TexPartyBars.Directory?.Create();
         }
     }
 }

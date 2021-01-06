@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
-using CryBits.Editors.Media;
 using CryBits.Editors.Media.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;

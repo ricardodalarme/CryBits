@@ -226,11 +226,8 @@ namespace CryBits.Client.UI
         private static void CreateCharacterTextureChangeRight()
         {
             // Lista de texturas
-            IList<short> texList;
-            if (CheckBoxes.List["GenderMale"].Checked)
-                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexMale;
-            else
-                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexFemale;
+            Class @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
+            IList<short> texList = CheckBoxes.List["GenderMale"].Checked ? @class.TexMale : @class.TexFemale;
 
             // Altera a classe selecionada pelo jogador
             if (Panels.CreateCharacterTex == texList.Count - 1)
@@ -242,11 +239,8 @@ namespace CryBits.Client.UI
         private static void CreateCharacterTextureChangeLeft()
         {
             // Lista de texturas
-            IList<short> texList;
-            if (CheckBoxes.List["GenderMale"].Checked)
-                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexMale;
-            else
-                texList = Class.List.ElementAt(Panels.CreateCharacterClass).Value.TexFemale;
+            Class @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
+            IList<short> texList = CheckBoxes.List["GenderMale"].Checked ? @class.TexMale : @class.TexFemale;
 
             // Altera a classe selecionada pelo jogador
             if (Panels.CreateCharacterTex == 0)
@@ -441,7 +435,7 @@ namespace CryBits.Client.UI
             Send.TradeOfferState(TradeStatus.Declined);
         }
 
-        public static void TradeOfferConfirm()
+        private static void TradeOfferConfirm()
         {
             // Confirma a oferta
             List["Trade_Offer_Confirm"].Visible = List["Trade_Offer_Accept"].Visible = List["Trade_Offer_Decline"].Visible = false;

@@ -53,7 +53,7 @@ namespace CryBits.Editors.Media.Graphics
 
             // Únicas
             Weather = new Texture(Directories.TexWeather.FullName + Format);
-            Blank = new Texture(Directories.TexBlanc.FullName + Format);
+            Blank = new Texture(Directories.TexBlank.FullName + Format);
             Directions = new Texture(Directories.TexDirections.FullName + Format);
             Transparent = new Texture(Directories.TexTransparent.FullName + Format);
             Grid = new Texture(Directories.TexGrid.FullName + Format);

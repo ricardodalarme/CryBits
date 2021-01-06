@@ -63,7 +63,7 @@ namespace CryBits.Server.Entities
             /////////////////
             // Regeneração //
             /////////////////
-            if (Environment.TickCount > Loop.TimerRegen + 5000)
+            if (Environment.TickCount > Loop.TimerRegeneration + 5000)
                 for (byte v = 0; v < (byte)Enums.Vital.Count; v++)
                     if (Vital[v] < Data.Vital[v])
                     {

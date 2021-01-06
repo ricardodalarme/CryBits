@@ -16,7 +16,7 @@ namespace CryBits.Client.Network
         private static NetIncomingMessage _data;
 
         // Dados para a conexão com o servidor
-        public const string IP = "localhost";
+        private const string IP = "localhost";
 
         // Latência
         public static int Latency;
