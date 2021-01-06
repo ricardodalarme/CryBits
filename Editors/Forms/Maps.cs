@@ -179,7 +179,7 @@ namespace CryBits.Editors.Forms
                 // Garante que sempre vai ter pelo menos uma mapa
                 if (Map.List.Count == 1)
                 {
-                    MessageBox.Show("It must have at least one map registered.");
+                    MessageBox.Show(@"It must have at least one map registered.");
                     return;
                 }
 
@@ -206,7 +206,7 @@ namespace CryBits.Editors.Forms
             foreach (Map map in Map.List.Values)
                 ++map.Revision;
             Send.WriteMaps();
-            MessageBox.Show("All maps has been saved");
+            MessageBox.Show(@"All maps has been saved");
         }
 
         private void butReload_Click(object sender, EventArgs e)
@@ -1068,7 +1068,7 @@ namespace CryBits.Editors.Forms
             if (txtLayer_Name.Text.Length < 1 || txtLayer_Name.Text.Length > 12) return;
             if (Find_Layer(txtLayer_Name.Text) >= 0)
             {
-                MessageBox.Show("There is already a layer with that name.");
+                MessageBox.Show(@"There is already a layer with that name.");
                 return;
             }
 
@@ -1095,7 +1095,7 @@ namespace CryBits.Editors.Forms
             if (lstLayers.SelectedItems[0].SubItems[2].Text != txtLayer_Name.Text)
                 if (Find_Layer(txtLayer_Name.Text) >= 0)
                 {
-                    MessageBox.Show("There is already a layer with this name.");
+                    MessageBox.Show(@"There is already a layer with this name.");
                     return;
                 }
 
@@ -1351,7 +1351,7 @@ namespace CryBits.Editors.Forms
             {
                 if (Item.List.Count == 0)
                 {
-                    MessageBox.Show("It must have at least one item registered to use this attribute.");
+                    MessageBox.Show(@"It must have at least one item registered to use this attribute.");
                     optA_Block.Checked = true;
                     return;
                 }

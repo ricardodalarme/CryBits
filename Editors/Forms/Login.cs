@@ -24,12 +24,12 @@ namespace CryBits.Editors.Forms
             // Verifica se é possível se conectar ao servidor
             if (!Socket.TryConnect())
             {
-                MessageBox.Show("The server is currently unavailable.");
+                MessageBox.Show(@"The server is currently unavailable.");
                 return;
             }
             if (string.IsNullOrEmpty(txtUsername.Text) || string.IsNullOrEmpty(txtPassword.Text))
             {
-                MessageBox.Show("Some field is empty.");
+                MessageBox.Show(@"Some field is empty.");
                 return;
             }
 

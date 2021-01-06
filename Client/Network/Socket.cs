@@ -82,7 +82,7 @@ namespace CryBits.Client.Network
             // Retorna uma mensagem caso não conseguir se conectar
             if (!IsConnected())
             {
-                MessageBox.Show("The server is currently unavailable.");
+                MessageBox.Show(@"The server is currently unavailable.");
                 return false;
             }
 
