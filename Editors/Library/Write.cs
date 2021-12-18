@@ -16,23 +16,20 @@ internal static class Write
     public static void Options()
     {
         // Escreve as configurações
-        using (var data = new BinaryWriter(Directories.Options.OpenWrite()))
-        {
-            data.Write(PreMapGrid);
-            data.Write(PreMapView);
-            data.Write(PreMapAudio);
-            data.Write(Username);
-        }
+        using var data = new BinaryWriter(Directories.Options.OpenWrite());
+        data.Write(PreMapGrid);
+        data.Write(PreMapView);
+        data.Write(PreMapAudio);
+        data.Write(Username);
     }
 
     public static void Tools()
     {
         // Cria um sistema binário para a manipulação dos dados
         FileInfo file = new FileInfo(Directories.Tools.FullName);
-        using (var data = new BinaryWriter(file.OpenWrite()))
-            // Escreve os dados
-            for (short n = 0; n < Tool.Tree.Nodes.Count; n++)
-                Tools(Tool.Tree.Nodes[n], data);
+        using var data = new BinaryWriter(file.OpenWrite());
+        for (short n = 0; n < Tool.Tree.Nodes.Count; n++)
+            Tools(Tool.Tree.Nodes[n], data);
     }
 
     private static void Tools(TreeNode node, BinaryWriter data)
@@ -125,7 +122,7 @@ internal static class Write
     public static void Tile(byte index)
     {
         // Escreve os dados
-        using (var stream = new FileInfo(Directories.Tiles.FullName + index + Directories.Format).OpenWrite())
-            new BinaryFormatter().Serialize(stream, Entities.Tile.List[index]);
+        using var stream = new FileInfo(Directories.Tiles.FullName + index + Directories.Format).OpenWrite();
+        new BinaryFormatter().Serialize(stream, Entities.Tile.List[index]);
     }
 }

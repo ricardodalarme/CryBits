@@ -39,21 +39,19 @@ internal static class Read
         }
 
         // Carrega as configurações
-        using (var data = new BinaryReader(Directories.Defaults.OpenRead()))
-        {
-            GameName = data.ReadString();
-            WelcomeMessage = data.ReadString();
-            Port = data.ReadInt16();
-            MaxPlayers = data.ReadByte();
-            MaxCharacters = data.ReadByte();
-            MaxPartyMembers = data.ReadByte();
-            MaxMapItems = data.ReadByte();
-            NumPoints = data.ReadByte();
-            MaxNameLength = data.ReadByte();
-            MinNameLength = data.ReadByte();
-            MaxPasswordLength = data.ReadByte();
-            MinPasswordLength = data.ReadByte();
-        }
+        using var data = new BinaryReader(Directories.Defaults.OpenRead());
+        GameName = data.ReadString();
+        WelcomeMessage = data.ReadString();
+        Port = data.ReadInt16();
+        MaxPlayers = data.ReadByte();
+        MaxCharacters = data.ReadByte();
+        MaxPartyMembers = data.ReadByte();
+        MaxMapItems = data.ReadByte();
+        NumPoints = data.ReadByte();
+        MaxNameLength = data.ReadByte();
+        MinNameLength = data.ReadByte();
+        MaxPasswordLength = data.ReadByte();
+        MinPasswordLength = data.ReadByte();
     }
 
     public static void Account(Account account, string name)
@@ -61,12 +59,10 @@ internal static class Read
         var file = new FileInfo(Directories.Accounts.FullName + name + "\\Data" + Directories.Format);
 
         // Carrega os dados da conta
-        using (var data = new BinaryReader(file.OpenRead()))
-        {
-            account.User = data.ReadString();
-            account.Password = data.ReadString();
-            account.Access = (Access)data.ReadByte();
-        }
+        using var data = new BinaryReader(file.OpenRead());
+        account.User = data.ReadString();
+        account.Password = data.ReadString();
+        account.Access = (Access)data.ReadByte();
     }
 
     public static void Characters(Account account)
@@ -98,31 +94,29 @@ internal static class Read
         if (!file.Directory.Exists) return;
 
         // Cria um arquivo temporário
-        using (var data = new BinaryReader(file.OpenRead()))
+        using var data = new BinaryReader(file.OpenRead());
+        // Carrega os dados e os adiciona ao cache
+        account.Character = new Player(account);
+        account.Character.Name = data.ReadString();
+        account.Character.TextureNum = data.ReadInt16();
+        account.Character.Level = data.ReadInt16();
+        account.Character.Class = Class.List.Get(new Guid(data.ReadString()));
+        account.Character.Genre = data.ReadBoolean();
+        account.Character.Experience = data.ReadInt32();
+        account.Character.Points = data.ReadByte();
+        account.Character.Map = TempMap.List.Get(new Guid(data.ReadString()));
+        account.Character.X = data.ReadByte();
+        account.Character.Y = data.ReadByte();
+        account.Character.Direction = (Direction)data.ReadByte();
+        for (byte n = 0; n < (byte)Vital.Count; n++) account.Character.Vital[n] = data.ReadInt16();
+        for (byte n = 0; n < (byte)Attribute.Count; n++) account.Character.Attribute[n] = data.ReadInt16();
+        for (byte n = 0; n < MaxInventory; n++)
         {
-            // Carrega os dados e os adiciona ao cache
-            account.Character = new Player(account);
-            account.Character.Name = data.ReadString();
-            account.Character.TextureNum = data.ReadInt16();
-            account.Character.Level = data.ReadInt16();
-            account.Character.Class = Class.List.Get(new Guid(data.ReadString()));
-            account.Character.Genre = data.ReadBoolean();
-            account.Character.Experience = data.ReadInt32();
-            account.Character.Points = data.ReadByte();
-            account.Character.Map = TempMap.List.Get(new Guid(data.ReadString()));
-            account.Character.X = data.ReadByte();
-            account.Character.Y = data.ReadByte();
-            account.Character.Direction = (Direction)data.ReadByte();
-            for (byte n = 0; n < (byte)Vital.Count; n++) account.Character.Vital[n] = data.ReadInt16();
-            for (byte n = 0; n < (byte)Attribute.Count; n++) account.Character.Attribute[n] = data.ReadInt16();
-            for (byte n = 0; n < MaxInventory; n++)
-            {
-                account.Character.Inventory[n].Item = Item.List.Get(new Guid(data.ReadString()));
-                account.Character.Inventory[n].Amount = data.ReadInt16();
-            }
-            for (byte n = 0; n < (byte)Equipment.Count; n++) account.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
-            for (byte n = 0; n < MaxHotbar; n++) account.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
+            account.Character.Inventory[n].Item = Item.List.Get(new Guid(data.ReadString()));
+            account.Character.Inventory[n].Amount = data.ReadInt16();
         }
+        for (byte n = 0; n < (byte)Equipment.Count; n++) account.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
+        for (byte n = 0; n < MaxHotbar; n++) account.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
     }
 
     public static string CharactersName()
@@ -135,8 +129,8 @@ internal static class Read
         }
 
         // Retorna o nome de todos os personagens registrados
-        using (var data = new StreamReader(Directories.Characters.FullName))
-            return data.ReadToEnd();
+        using var data = new StreamReader(Directories.Characters.FullName);
+        return data.ReadToEnd();
     }
 
     private static void Classes()
