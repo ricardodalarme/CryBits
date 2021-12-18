@@ -19,7 +19,7 @@ public static class Sound
         Array.Resize(ref List, (byte)Enums.Sound.Count);
 
         // Carrega todos os arquivos e os adiciona a lista
-        for (int i = 1; i < List.Length; i++) List[i] = new SFML.Audio.Sound(new SoundBuffer(Directories.Sounds.FullName + i + Format));
+        for (var i = 1; i < List.Length; i++) List[i] = new SFML.Audio.Sound(new SoundBuffer(Directories.Sounds.FullName + i + Format));
     }
 
     public static void Play(Enums.Sound index, bool loop = false)

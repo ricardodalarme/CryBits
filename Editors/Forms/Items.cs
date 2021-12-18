@@ -104,11 +104,11 @@ internal partial class EditorItems : DarkForm
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
-        Item item = new Item();
+        var item = new Item();
         Item.List.Add(item.ID, item);
 
         // Adiciona na lista
-        TreeNode node = new TreeNode(item.Name) {Tag = item.ID};
+        var node = new TreeNode(item.Name) {Tag = item.ID};
         List.Nodes.Add(node);
         List.SelectedNode = node;
 

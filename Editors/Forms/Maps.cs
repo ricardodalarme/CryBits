@@ -161,12 +161,12 @@ internal partial class EditorMaps : DarkForm
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
-        Map map = new Map();
+        var map = new Map();
         Map.List.Add(map.ID, map);
         cmbA_Warp_Map.Items.Add(map);
 
         // Adiciona na lista
-        TreeNode node = new TreeNode(map.Name);
+        var node = new TreeNode(map.Name);
         node.Tag = map.ID;
         List.Nodes.Add(node);
         List.SelectedNode = node;
@@ -203,7 +203,7 @@ internal partial class EditorMaps : DarkForm
     private void butSaveAll_Click(object sender, EventArgs e)
     {
         // Salva todos os dados
-        foreach (Map map in Map.List.Values)
+        foreach (var map in Map.List.Values)
             ++map.Revision;
         Send.WriteMaps();
         MessageBox.Show(@"All maps has been saved");
@@ -249,8 +249,8 @@ internal partial class EditorMaps : DarkForm
         Copy();
 
         // Remove os azulejos copiados
-        for (int x = MapSelection.X; x < MapSelection.X + MapSelection.Width; x++)
-        for (int y = MapSelection.Y; y < MapSelection.Y + MapSelection.Height; y++)
+        for (var x = MapSelection.X; x < MapSelection.X + MapSelection.Width; x++)
+        for (var y = MapSelection.Y; y < MapSelection.Y + MapSelection.Height; y++)
         for (byte c = 0; c < Selected.Layer.Count; c++)
             Selected.Layer[c].Tile[x, y] = new MapTileData();
 
@@ -261,14 +261,14 @@ internal partial class EditorMaps : DarkForm
     private void butPaste_Click(object sender, EventArgs e)
     {
         // Cola os azulejos
-        for (int x = _tilesCopy.Area.X; x < _tilesCopy.Area.X + _tilesCopy.Area.Width; x++)
-        for (int y = _tilesCopy.Area.Y; y < _tilesCopy.Area.Y + _tilesCopy.Area.Height; y++)
+        for (var x = _tilesCopy.Area.X; x < _tilesCopy.Area.X + _tilesCopy.Area.Width; x++)
+        for (var y = _tilesCopy.Area.Y; y < _tilesCopy.Area.Y + _tilesCopy.Area.Height; y++)
         for (byte c = 0; c < _tilesCopy.Data.Length; c++)
         {
             // Dados
-            int layer = Find_Layer(_tilesCopy.Data[c].Name);
-            int x2 = MapSelection.X + x - _tilesCopy.Area.X;
-            int y2 = y + MapSelection.Y - _tilesCopy.Area.Y;
+            var layer = Find_Layer(_tilesCopy.Data[c].Name);
+            var x2 = MapSelection.X + x - _tilesCopy.Area.X;
+            var y2 = y + MapSelection.Y - _tilesCopy.Area.Y;
 
             // Previne erros
             if (layer < 0) continue;
@@ -353,8 +353,8 @@ internal partial class EditorMaps : DarkForm
         if (lstLayers.SelectedItems.Count == 0) return;
 
         // Preenche todos os azulejos iguais ao selecionado com o mesmo azulejo
-        for (int x = 0; x < Map.Width; x++)
-        for (int y = 0; y < Map.Height; y++)
+        for (var x = 0; x < Map.Width; x++)
+        for (var y = 0; y < Map.Height; y++)
             Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = Set_Tile();
 
         // Faz os cálculos da autocriação
@@ -367,8 +367,8 @@ internal partial class EditorMaps : DarkForm
         if (lstLayers.SelectedItems.Count == 0) return;
 
         // Reseta todos os azulejos
-        for (int x = 0; x < Map.Width; x++)
-        for (int y = 0; y < Map.Height; y++)
+        for (var x = 0; x < Map.Width; x++)
+        for (var y = 0; y < Map.Height; y++)
             Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = new MapTileData();
     }
 
@@ -641,9 +641,9 @@ internal partial class EditorMaps : DarkForm
     #region Tile
     private void Update_Tile_Bounds()
     {
-        Size tileSize = Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize();
-        int width = tileSize.Width - picTile.Width;
-        int height = tileSize.Height - picTile.Height;
+        var tileSize = Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize();
+        var width = tileSize.Width - picTile.Width;
+        var height = tileSize.Height - picTile.Height;
 
         // Verifica se nada passou do limite minímo
         if (width < 0) width = 0;
@@ -695,9 +695,9 @@ internal partial class EditorMaps : DarkForm
 
     private void picTile_MouseMove(object sender, MouseEventArgs e)
     {
-        int x = (e.X + scrlTileX.Value) / Grid;
-        int y = (e.Y + scrlTileY.Value) / Grid;
-        Size textureSize = Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize();
+        var x = (e.X + scrlTileX.Value) / Grid;
+        var y = (e.Y + scrlTileY.Value) / Grid;
+        var textureSize = Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize();
 
         // Define os valores
         TileMouse = new Point((x * Grid) - scrlTileX.Value, (y * Grid) - scrlTileY.Value);
@@ -790,7 +790,7 @@ internal partial class EditorMaps : DarkForm
 
     private void picMap_MouseDown(object sender, MouseEventArgs e)
     {
-        Point tileDif = new Point(e.X - (e.X / Grid * Grid), e.Y - (e.Y / Grid * Grid));
+        var tileDif = new Point(e.X - (e.X / Grid * Grid), e.Y - (e.Y / Grid * Grid));
 
         // Previne erros
         if (MapSelection.X >= Map.Width || MapSelection.Y >= Map.Height) return;
@@ -838,15 +838,15 @@ internal partial class EditorMaps : DarkForm
         if (MapSelection.X >= Map.Width || MapSelection.Y >= Map.Height) return;
 
         // Camada selecionada
-        byte layer = (byte)Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
+        var layer = (byte)Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
 
         // Retângulo
         if (butRectangle.Checked)
         {
             if (MapSelection.Width > 1 || MapSelection.Height > 1)
                 // Define os azulejos
-                for (int x = MapSelection.X; x < MapSelection.X + MapSelection.Width; x++)
-                for (int y = MapSelection.Y; y < MapSelection.Y + MapSelection.Height; y++)
+                for (var x = MapSelection.X; x < MapSelection.X + MapSelection.Width; x++)
+                for (var y = MapSelection.Y; y < MapSelection.Y + MapSelection.Height; y++)
                 {
                     Selected.Layer[layer].Tile[x, y] = Set_Tile();
                     Selected.Layer[layer].Update(x, y);
@@ -908,7 +908,7 @@ internal partial class EditorMaps : DarkForm
         if (lstLayers.SelectedIndices.Count == 0) return;
 
         // Camada selecionada
-        byte layer = (byte)Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
+        var layer = (byte)Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
 
         // Executa um evento de acordo com a ferramenta selecionada
         if (e == MouseButtons.Left)
@@ -953,7 +953,7 @@ internal partial class EditorMaps : DarkForm
     {
         MapTileData data;
 
-        for (int c = Selected.Layer.Count - 1; c >= 0; c--)
+        for (var c = Selected.Layer.Count - 1; c >= 0; c--)
         {
             data = Selected.Layer[c].Tile[MapSelection.X, MapSelection.Y];
 
@@ -971,7 +971,7 @@ internal partial class EditorMaps : DarkForm
 
     private MapTileData Set_Tile(byte x = 0, byte y = 0)
     {
-        MapTileData tempTile = new MapTileData();
+        var tempTile = new MapTileData();
 
         // Posição padrão
         if (x == 0) x = (byte)TilesSelection.X;
@@ -1007,10 +1007,10 @@ internal partial class EditorMaps : DarkForm
         if (chkAuto.Checked) return;
 
         // Define todos os azulejos selecionados
-        for (int x = MapSelection.X; x < MapSelection.X + TilesSelection.Width; x++)
+        for (var x = MapSelection.X; x < MapSelection.X + TilesSelection.Width; x++)
         {
             y2 = 0;
-            for (int y = MapSelection.Y; y < MapSelection.Y + TilesSelection.Height; y++)
+            for (var y = MapSelection.Y; y < MapSelection.Y + TilesSelection.Height; y++)
             {
                 // Define os azulejos
                 if (!Map.OutLimit((short)x, (short)y))
@@ -1062,7 +1062,7 @@ internal partial class EditorMaps : DarkForm
 
     private void butLayer_Add_Click(object sender, EventArgs e)
     {
-        MapLayer layer = new MapLayer();
+        var layer = new MapLayer();
 
         // Verifica se o nome é válido
         if (txtLayer_Name.Text.Length < 1 || txtLayer_Name.Text.Length > 12) return;
@@ -1110,7 +1110,7 @@ internal partial class EditorMaps : DarkForm
 
     public void Update_Layers()
     {
-        List<MapLayer> temp = new List<MapLayer>();
+        var temp = new List<MapLayer>();
 
         // Reordena as camadas
         for (byte n = 0; n < (byte)Layer.Count; n++)
@@ -1144,7 +1144,7 @@ internal partial class EditorMaps : DarkForm
         if (lstLayers.SelectedItems.Count == 0) return;
 
         // Index
-        int index = Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
+        var index = Find_Layer(lstLayers.SelectedItems[0].SubItems[2].Text);
 
         // Remove a camada
         if (index >= 0)
@@ -1178,8 +1178,8 @@ internal partial class EditorMaps : DarkForm
         if (lstLayers.SelectedItems[0].Index == 0) return;
 
         // Dados
-        List<MapLayer> temp = new List<MapLayer>(Selected.Layer);
-        int layerNum = lstLayers.SelectedItems[0].Index;
+        var temp = new List<MapLayer>(Selected.Layer);
+        var layerNum = lstLayers.SelectedItems[0].Index;
 
         if (temp[layerNum - 1].Type == temp[layerNum].Type)
         {
@@ -1201,8 +1201,8 @@ internal partial class EditorMaps : DarkForm
         if (lstLayers.SelectedItems[0].Index == lstLayers.Items.Count - 1) return;
 
         // Dados
-        List<MapLayer> temp = new List<MapLayer>(Selected.Layer);
-        int layerNum = lstLayers.SelectedItems[0].Index;
+        var temp = new List<MapLayer>(Selected.Layer);
+        var layerNum = lstLayers.SelectedItems[0].Index;
 
         if (temp[layerNum + 1].Type == temp[layerNum].Type)
         {
@@ -1238,7 +1238,7 @@ internal partial class EditorMaps : DarkForm
     private void AddNPC(bool fixedSpawn = false, byte x = 0, byte y = 0)
     {
         // Define os dados
-        MapNpc data = new MapNpc
+        var data = new MapNpc
         {
             Npc = (Npc)cmbNPC.SelectedItem,
             Zone = (byte)numNPC_Zone.Value,
@@ -1308,7 +1308,7 @@ internal partial class EditorMaps : DarkForm
         for (byte c = 0; c < Selected.Layer.Count; c++)
         {
             // Dados do azulejo
-            MapTileData data = Selected.Layer[c].Tile[x, y];
+            var data = Selected.Layer[c].Tile[x, y];
 
             if (data.Texture > 0)
             {

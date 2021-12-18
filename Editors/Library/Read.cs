@@ -35,7 +35,7 @@ internal static class Read
 
     public static void Tools()
     {
-        FileInfo file = new FileInfo(Directories.Tools.FullName);
+        var file = new FileInfo(Directories.Tools.FullName);
 
         // Limpa a árvore de ordem
         Tool.Tree = new TreeNode();
@@ -57,11 +57,11 @@ internal static class Read
     public static void Tools(TreeNode node, BinaryReader data)
     {
         // Lê todos os filhos
-        byte size = data.ReadByte();
+        var size = data.ReadByte();
         for (byte i = 0; i < size; i++)
         {
-            Tool temp = new Tool();
-            ToolType type = (ToolType)data.ReadByte();
+            var temp = new Tool();
+            var type = (ToolType)data.ReadByte();
 
             // Lê a ferramenta
             if (type == ToolType.Button) temp = Button(data);
@@ -142,7 +142,7 @@ internal static class Read
 
     private static void Tile(byte index)
     {
-        FileInfo file = new FileInfo(Directories.Tiles.FullName + index + Directories.Format);
+        var file = new FileInfo(Directories.Tiles.FullName + index + Directories.Format);
 
         // Evita erros
         if (!file.Exists)

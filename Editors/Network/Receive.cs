@@ -66,8 +66,8 @@ internal static class Receive
 
     private static void Map(NetIncomingMessage data)
     {
-        Map map = (Map)ByteArrayToObject(data);
-        Guid id = map.ID;
+        var map = (Map)ByteArrayToObject(data);
+        var id = map.ID;
 
         // Obtém o dado
         if (CryBits.Entities.Map.List.ContainsKey(id)) CryBits.Entities.Map.List[id] = map;

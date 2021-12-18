@@ -19,8 +19,8 @@ internal class Tile
 
     public Tile(byte index)
     {
-        Size textureSize = Textures.Tiles[index].ToSize();
-        Size size = new Size((textureSize.Width / Grid) - 1, (textureSize.Height / Grid) - 1);
+        var textureSize = Textures.Tiles[index].ToSize();
+        var size = new Size((textureSize.Width / Grid) - 1, (textureSize.Height / Grid) - 1);
 
         // Redimensiona os valores
         Width = (byte)size.Width;

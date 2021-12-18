@@ -174,7 +174,7 @@ internal static class Receive
 
     private static void PlayerData(NetIncomingMessage data)
     {
-        string name = data.ReadString();
+        var name = data.ReadString();
         Player player;
 
         // Adiciona o jogador à lista
@@ -205,7 +205,7 @@ internal static class Receive
 
     private static void PlayerPosition(NetIncomingMessage data)
     {
-        Player player = Player.Get(data.ReadString());
+        var player = Player.Get(data.ReadString());
 
         // Defini os dados do jogador
         player.X = data.ReadByte();
@@ -220,7 +220,7 @@ internal static class Receive
 
     private static void PlayerVitals(NetIncomingMessage data)
     {
-        Player player = Player.Get(data.ReadString());
+        var player = Player.Get(data.ReadString());
 
         // Define os dados
         for (byte i = 0; i < (byte)Vital.Count; i++)
@@ -232,7 +232,7 @@ internal static class Receive
 
     private static void PlayerEquipments(NetIncomingMessage data)
     {
-        Player player = Player.Get(data.ReadString());
+        var player = Player.Get(data.ReadString());
 
         // Altera os dados dos equipamentos do jogador
         for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(new Guid(data.ReadString()));
@@ -246,7 +246,7 @@ internal static class Receive
 
     private static void PlayerMove(NetIncomingMessage data)
     {
-        Player player = Player.Get(data.ReadString());
+        var player = Player.Get(data.ReadString());
 
         // Move o jogador
         player.X = data.ReadByte();
@@ -274,9 +274,9 @@ internal static class Receive
 
     private static void PlayerAttack(NetIncomingMessage data)
     {
-        Player player = Player.Get(data.ReadString());
-        string victim = data.ReadString();
-        byte victimType = data.ReadByte();
+        var player = Player.Get(data.ReadString());
+        var victim = data.ReadString();
+        var victimType = data.ReadByte();
 
         // Inicia o ataque
         player.Attacking = true;
@@ -286,7 +286,7 @@ internal static class Receive
         if (victim != string.Empty)
             if (victimType == (byte)Target.Player)
             {
-                Player victimData = Player.Get(victim);
+                var victimData = Player.Get(victim);
                 victimData.Hurt = Environment.TickCount;
                 TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
             }
@@ -331,9 +331,9 @@ internal static class Receive
 
     private static void MapRevision(NetIncomingMessage data)
     {
-        bool needed = false;
-        Guid id = new Guid(data.ReadString());
-        short currentRevision = data.ReadInt16();
+        var needed = false;
+        var id = new Guid(data.ReadString());
+        var currentRevision = data.ReadInt16();
 
         // Limpa todos os outros jogadores
         for (byte i = 0; i < Player.List.Count; i++)
@@ -360,8 +360,8 @@ internal static class Receive
 
     private static void Map(NetIncomingMessage data)
     {
-        Map map = (Map)ByteArrayToObject(data);
-        Guid id = map.ID;
+        var map = (Map)ByteArrayToObject(data);
+        var id = map.ID;
 
         // Obtém o dado
         if (CryBits.Entities.Map.List.ContainsKey(id)) CryBits.Entities.Map.List[id] = map;
@@ -399,8 +399,8 @@ internal static class Receive
     private static void Message(NetIncomingMessage data)
     {
         // Adiciona a mensagem
-        string text = data.ReadString();
-        Color color = Color.FromArgb(data.ReadInt32());
+        var text = data.ReadString();
+        var color = Color.FromArgb(data.ReadInt32());
         Chat.AddText(text, new SFML.Graphics.Color(color.R, color.G, color.B));
     }
 
@@ -448,7 +448,7 @@ internal static class Receive
 
     private static void Trade(NetIncomingMessage data)
     {
-        bool state = data.ReadBoolean();
+        var state = data.ReadBoolean();
 
         // Visibilidade do painel
         Panels.List["Trade"].Visible = data.ReadBoolean();
@@ -563,7 +563,7 @@ internal static class Receive
     private static void MapNpc(NetIncomingMessage data)
     {
         // Lê os dados
-        byte i = data.ReadByte();
+        var i = data.ReadByte();
         TempMap.Current.Npc[i].X2 = 0;
         TempMap.Current.Npc[i].Y2 = 0;
         TempMap.Current.Npc[i].Data = Npc.List.Get(new Guid(data.ReadString()));
@@ -577,7 +577,7 @@ internal static class Receive
     private static void MapNpcMovement(NetIncomingMessage data)
     {
         // Lê os dados
-        byte i = data.ReadByte();
+        var i = data.ReadByte();
         byte x = TempMap.Current.Npc[i].X, y = TempMap.Current.Npc[i].Y;
         TempMap.Current.Npc[i].X2 = 0;
         TempMap.Current.Npc[i].Y2 = 0;
@@ -599,9 +599,9 @@ internal static class Receive
 
     private static void MapNpcAttack(NetIncomingMessage data)
     {
-        byte index = data.ReadByte();
-        string victim = data.ReadString();
-        byte victimType = data.ReadByte();
+        var index = data.ReadByte();
+        var victim = data.ReadString();
+        var victimType = data.ReadByte();
 
         // Inicia o ataque
         TempMap.Current.Npc[index].Attacking = true;
@@ -611,7 +611,7 @@ internal static class Receive
         if (victim != string.Empty)
             if (victimType == (byte)Target.Player)
             {
-                Player victimData = Player.Get(victim);
+                var victimData = Player.Get(victim);
                 victimData.Hurt = Environment.TickCount;
                 TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
             }
@@ -625,7 +625,7 @@ internal static class Receive
     private static void MapNpcDirection(NetIncomingMessage data)
     {
         // Define a direção de determinado Npc
-        byte i = data.ReadByte();
+        var i = data.ReadByte();
         TempMap.Current.Npc[i].Direction = (Direction)data.ReadByte();
         TempMap.Current.Npc[i].X2 = 0;
         TempMap.Current.Npc[i].Y2 = 0;
@@ -633,7 +633,7 @@ internal static class Receive
 
     private static void MapNpcVitals(NetIncomingMessage data)
     {
-        byte index = data.ReadByte();
+        var index = data.ReadByte();
 
         // Define os vitais de determinado Npc
         for (byte n = 0; n < (byte)Vital.Count; n++)
@@ -642,7 +642,7 @@ internal static class Receive
 
     private static void MapNpcDied(NetIncomingMessage data)
     {
-        byte i = data.ReadByte();
+        var i = data.ReadByte();
 
         // Limpa os dados do Npc
         TempMap.Current.Npc[i].X2 = 0;

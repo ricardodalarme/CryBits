@@ -66,7 +66,7 @@ internal partial class EditorInterface : DarkForm
     {
         if (treOrder.SelectedNode != null)
         {
-            byte window = (byte)((Tool)treOrder.SelectedNode.Tag).Window;
+            var window = (byte)((Tool)treOrder.SelectedNode.Tag).Window;
 
             // Troca a ferramenta de janela
             if (e.ChangedItem.Label == "Window")
@@ -105,7 +105,7 @@ internal partial class EditorInterface : DarkForm
     private void butConfirm_Click(object sender, EventArgs e)
     {
         // Adiciona uma nova ferramenta
-        Tool @new = new Tool();
+        var @new = new Tool();
         Tool.Tree.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
         switch ((ToolType)cmbType.SelectedIndex)
         {
@@ -129,7 +129,7 @@ internal partial class EditorInterface : DarkForm
     private void butOrder_Pin_Click(object sender, EventArgs e)
     {
         // Dados
-        TreeNode selectedNode = treOrder.SelectedNode;
+        var selectedNode = treOrder.SelectedNode;
         if (treOrder.SelectedNode != null)
             if (selectedNode.PrevNode != null)
             {
@@ -149,8 +149,8 @@ internal partial class EditorInterface : DarkForm
         if (treOrder.SelectedNode == null) return;
 
         // Dados
-        TreeNode selected = treOrder.SelectedNode;
-        TreeNode parent = selected.Parent;
+        var selected = treOrder.SelectedNode;
+        var parent = selected.Parent;
         if (parent?.Parent != null)
         {
             // Desfixa o nó
@@ -169,8 +169,8 @@ internal partial class EditorInterface : DarkForm
         if (treOrder.SelectedNode == null) return;
 
         // Dados
-        TreeNode parent = treOrder.SelectedNode.Parent;
-        TreeNode selected = treOrder.SelectedNode;
+        var parent = treOrder.SelectedNode.Parent;
+        var selected = treOrder.SelectedNode;
         if (parent != null && selected != parent.FirstNode && parent.Nodes.Count > 1)
         {
             // Altera a posição dos nós
@@ -189,8 +189,8 @@ internal partial class EditorInterface : DarkForm
         if (treOrder.SelectedNode == null) return;
 
         // Dados
-        TreeNode parent = treOrder.SelectedNode.Parent;
-        TreeNode selected = treOrder.SelectedNode;
+        var parent = treOrder.SelectedNode.Parent;
+        var selected = treOrder.SelectedNode;
         if (parent != null && selected != parent.LastNode && parent.Nodes.Count > 1)
         {
             // Altera a posição dos nós

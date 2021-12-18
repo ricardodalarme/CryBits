@@ -26,7 +26,7 @@ internal static class Write
     public static void Tools()
     {
         // Cria um sistema binário para a manipulação dos dados
-        FileInfo file = new FileInfo(Directories.Tools.FullName);
+        var file = new FileInfo(Directories.Tools.FullName);
         using var data = new BinaryWriter(file.OpenWrite());
         for (short n = 0; n < Tool.Tree.Nodes.Count; n++)
             Tools(Tool.Tree.Nodes[n], data);
@@ -39,7 +39,7 @@ internal static class Write
         for (byte i = 0; i < node.Nodes.Count; i++)
         {
             // Salva de acordo com a ferramenta
-            Tool tool = (Tool)node.Nodes[i].Tag;
+            var tool = (Tool)node.Nodes[i].Tag;
             if (tool is Button)
             {
                 data.Write((byte)ToolType.Button);

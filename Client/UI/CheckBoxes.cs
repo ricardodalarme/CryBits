@@ -28,8 +28,8 @@ internal class CheckBoxes : Tools.Structure
     public void MouseUp()
     {
         // Tamanho do marcador
-        Size textureSize = Textures.CheckBox.ToSize();
-        Size box = new Size((textureSize.Width / 2) + MeasureString(Text) + Margin, textureSize.Height);
+        var textureSize = Textures.CheckBox.ToSize();
+        var box = new Size((textureSize.Width / 2) + MeasureString(Text) + Margin, textureSize.Height);
 
         // Somente se estiver sobrepondo a ferramenta
         if (!IsAbove(new Rectangle(Position, box))) return;

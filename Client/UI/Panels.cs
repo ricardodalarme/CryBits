@@ -57,7 +57,7 @@ internal class Panels : Tools.Structure
 
     public static void Inventory_MouseDown(MouseButtonEventArgs e)
     {
-        short slot = InventorySlot;
+        var slot = InventorySlot;
 
         // Somente se necessário
         if (slot == -1) return;
@@ -94,7 +94,7 @@ internal class Panels : Tools.Structure
 
     public static void Equipment_MouseDown(MouseButtonEventArgs e)
     {
-        Point panelPosition = List["Menu_Character"].Position;
+        var panelPosition = List["Menu_Character"].Position;
 
         for (byte i = 0; i < (byte)Equipment.Count; i++)
             if (IsAbove(new Rectangle(panelPosition.X + 7 + (i * 36), panelPosition.Y + 247, 32, 32)))
@@ -109,7 +109,7 @@ internal class Panels : Tools.Structure
 
     public static void Hotbar_MouseDown(MouseButtonEventArgs e)
     {
-        short slot = HotbarSlot;
+        var slot = HotbarSlot;
 
         // Somente se necessário
         if (slot < 0) return;
@@ -130,7 +130,7 @@ internal class Panels : Tools.Structure
 
     public static void Trade_MouseDown(MouseButtonEventArgs e)
     {
-        short slot = TradeSlot;
+        var slot = TradeSlot;
 
         // Somente se necessário
         if (!List["Trade"].Visible) return;
@@ -143,7 +143,7 @@ internal class Panels : Tools.Structure
 
     public static void CheckInformation()
     {
-        Point position = new Point();
+        var position = new Point();
 
         // Define as informações do painel com base no que o Window.Mouse está sobrepondo
         if (HotbarSlot >= 0)

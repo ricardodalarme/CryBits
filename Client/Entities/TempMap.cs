@@ -107,7 +107,7 @@ internal class TempMap
 
     private void UpdateFogX()
     {
-        Size size = Textures.Fogs[Data.Fog.Texture].ToSize();
+        var size = Textures.Fogs[Data.Fog.Texture].ToSize();
         int speedX = Data.Fog.SpeedX;
 
         // Apenas se necessário
@@ -134,7 +134,7 @@ internal class TempMap
 
     private void UpdateFogY()
     {
-        Size size = Textures.Fogs[Data.Fog.Texture].ToSize();
+        var size = Textures.Fogs[Data.Fog.Texture].ToSize();
         int speedY = Data.Fog.SpeedY;
 
         // Apenas se necessário
@@ -162,8 +162,8 @@ internal class TempMap
     private void UpdateWeather()
     {
         bool stop = false, move;
-        byte thunderFirst = (byte)Sound.Thunder1;
-        byte thunderLast = (byte)Sound.Thunder4;
+        var thunderFirst = (byte)Sound.Thunder1;
+        var thunderLast = (byte)Sound.Thunder4;
 
         // Somente se necessário
         if (Data.Weather.Type == 0) return;
@@ -235,7 +235,7 @@ internal class TempMap
             if (MyRandom.Next(0, (MaxWeatherIntensity * 10) - (Data.Weather.Intensity * 2)) == 0)
             {
                 // Som do trovão
-                int thunder = MyRandom.Next(thunderFirst, thunderLast);
+                var thunder = MyRandom.Next(thunderFirst, thunderLast);
                 Media.Audio.Sound.Play((Sound)thunder);
 
                 // Relâmpago
@@ -336,9 +336,9 @@ internal struct MapWeatherParticle
 
     public void MoveSnow(bool xAxis = true)
     {
-        int difference = MyRandom.Next(0, SnowMovement / 3);
-        int x1 = Start + SnowMovement + difference;
-        int x2 = Start - SnowMovement - difference;
+        var difference = MyRandom.Next(0, SnowMovement / 3);
+        var x1 = Start + SnowMovement + difference;
+        var x2 = Start - SnowMovement - difference;
 
         // Faz com que a partícula volte
         if (x1 <= X)

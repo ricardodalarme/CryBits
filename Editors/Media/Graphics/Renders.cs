@@ -33,7 +33,7 @@ internal static class Renders
     private static void Render(RenderWindow window, Texture texture, Rectangle source, Rectangle destiny, object color = null, object mode = null)
     {
         // Define os dados
-        Sprite tmpImage = new Sprite(texture)
+        var tmpImage = new Sprite(texture)
         {
             TextureRect = new IntRect(source.X, source.Y, source.Width, source.Height),
             Position = new Vector2f(destiny.X, destiny.Y),
@@ -49,8 +49,8 @@ internal static class Renders
     private static void Render(RenderWindow window, Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight, object color = null, object mode = null)
     {
         // Define as propriedades dos retângulos
-        Rectangle source = new Rectangle(new Point(sourceX, sourceY), new Size(sourceWidth, sourceHeight));
-        Rectangle destiny = new Rectangle(new Point(x, y), new Size(sourceWidth, sourceHeight));
+        var source = new Rectangle(new Point(sourceX, sourceY), new Size(sourceWidth, sourceHeight));
+        var destiny = new Rectangle(new Point(x, y), new Size(sourceWidth, sourceHeight));
 
         // Desenha a textura
         Render(window, texture, source, destiny, color, mode);
@@ -59,7 +59,7 @@ internal static class Renders
     private static void Render(RenderWindow window, Texture texture, Rectangle destiny, object color = null, object mode = null)
     {
         // Define as propriedades dos retângulos
-        Rectangle source = new Rectangle(new Point(0), texture.ToSize());
+        var source = new Rectangle(new Point(0), texture.ToSize());
 
         // Desenha a textura
         Render(window, texture, source, destiny, color, mode);
@@ -68,8 +68,8 @@ internal static class Renders
     private static void Render(RenderWindow window, Texture texture, Point point, object color = null, object mode = null)
     {
         // Define as propriedades dos retângulos
-        Rectangle source = new Rectangle(new Point(0), texture.ToSize());
-        Rectangle destiny = new Rectangle(point, texture.ToSize());
+        var source = new Rectangle(new Point(0), texture.ToSize());
+        var destiny = new Rectangle(point, texture.ToSize());
 
         // Desenha a textura
         Render(window, texture, source, destiny, color, mode);
@@ -92,8 +92,8 @@ internal static class Renders
 
     private static void Render_Box(RenderWindow window, Texture texture, byte margin, Point position, Size size)
     {
-        int textureWidth = texture.ToSize().Width;
-        int textureHeight = texture.ToSize().Height;
+        var textureWidth = texture.ToSize().Width;
+        var textureHeight = texture.ToSize().Height;
 
         // Borda esquerda
         Render(window, texture, new Rectangle(new Point(0), new Size(margin, textureWidth)), new Rectangle(position, new Size(margin, textureHeight)));
@@ -105,7 +105,7 @@ internal static class Renders
 
     private static void DrawText(RenderWindow window, string text, int x, int y, Color color)
     {
-        Text tempText = new Text(text, Fonts.Default);
+        var tempText = new Text(text, Fonts.Default);
 
         // Define os dados
         tempText.CharacterSize = 10;
@@ -133,18 +133,18 @@ internal static class Renders
 
     private static void Transparent(RenderWindow window)
     {
-        Size textureSize = Textures.Transparent.ToSize();
+        var textureSize = Textures.Transparent.ToSize();
 
         // Desenha uma textura transparente na janela inteira
-        for (int x = 0; x <= window.Size.X / textureSize.Width; x++)
-        for (int y = 0; y <= window.Size.Y / textureSize.Height; y++)
+        for (var x = 0; x <= window.Size.X / textureSize.Width; x++)
+        for (var y = 0; y <= window.Size.Y / textureSize.Height; y++)
             Render(window, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
     }
 
     #region Map Editor
     private static void EditorMapsTile()
     {
-        EditorMaps form = EditorMaps.Form;
+        var form = EditorMaps.Form;
 
         // Somente se necessário
         if (WinMap == null || !form.butMNormal.Checked) return;
@@ -160,8 +160,8 @@ internal static class Renders
         WinMapTile.Clear(Color.Black);
 
         // Dados
-        Texture texture = Textures.Tiles[form.cmbTiles.SelectedIndex + 1];
-        Point position = new Point(form.scrlTileX.Value, form.scrlTileY.Value);
+        var texture = Textures.Tiles[form.cmbTiles.SelectedIndex + 1];
+        var position = new Point(form.scrlTileX.Value, form.scrlTileY.Value);
 
         // Desenha o azulejo e as grades
         Transparent(WinMapTile);
@@ -182,7 +182,7 @@ internal static class Renders
         WinMap.Clear(Color.Black);
 
         // Desenha o mapa
-        Map selected = EditorMaps.Form.Selected;
+        var selected = EditorMaps.Form.Selected;
         EditorMapsMapPanorama(selected);
         EditorMapsMapTiles(selected);
         EditorMapsMapWeather(selected);
@@ -196,12 +196,12 @@ internal static class Renders
 
     private static void EditorMapsMapPanorama(Map map)
     {
-        EditorMaps form = EditorMaps.Form;
+        var form = EditorMaps.Form;
 
         // Desenha o panorama
         if (form.butVisualization.Checked && map.Panorama > 0)
         {
-            Rectangle destiny = new Rectangle
+            var destiny = new Rectangle
             {
                 X = form.scrlMapX.Value * -form.GridZoom,
                 Y = form.scrlMapY.Value * -form.GridZoom,
@@ -213,7 +213,7 @@ internal static class Renders
 
     private static void EditorMapsMapTiles(Map map)
     {
-        EditorMaps form = EditorMaps.Form;
+        var form = EditorMaps.Form;
         MapTileData data;
         int beginX = form.scrlMapX.Value, beginY = form.scrlMapY.Value;
         Color color;
@@ -236,14 +236,14 @@ internal static class Renders
                 color = new Color(map.Color.R, map.Color.G, map.Color.B);
 
             // Continua
-            for (int x = beginX; x < Map.Width; x++)
-            for (int y = beginY; y < Map.Height; y++)
+            for (var x = beginX; x < Map.Width; x++)
+            for (var y = beginY; y < Map.Height; y++)
                 if (map.Layer[c].Tile[x, y].Texture > 0)
                 {
                     // Dados
                     data = map.Layer[c].Tile[x, y];
-                    Rectangle source = new Rectangle(new Point(data.X * Grid, data.Y * Grid), GridSize);
-                    Rectangle destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), GridSize);
+                    var source = new Rectangle(new Point(data.X * Grid, data.Y * Grid), GridSize);
+                    var destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), GridSize);
 
                     // Desenha o azulejo
                     if (!data.IsAutoTile)
@@ -276,11 +276,11 @@ internal static class Renders
         if (!EditorMaps.Form.butVisualization.Checked) return;
 
         // Desenha a fumaça
-        Size textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
-        for (int x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
-        for (int y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
+        var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
+        for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
+        for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
         {
-            Point position = new Point((x * textureSize.Width) + TempMap.FogX, (y * textureSize.Height) + TempMap.FogY);
+            var position = new Point((x * textureSize.Width) + TempMap.FogX, (y * textureSize.Height) + TempMap.FogY);
             Render(WinMap, Textures.Fogs[map.Fog.Texture], EditorMaps.Form.Zoom(new Rectangle(position, textureSize)), new Color(255, 255, 255, map.Fog.Alpha));
         }
     }
@@ -295,16 +295,16 @@ internal static class Renders
         if (map.Weather.Type == Weather.Snowing) x = 32;
 
         // Desenha as partículas
-        for (int i = 0; i < TempMap.Weather.Length; i++)
+        for (var i = 0; i < TempMap.Weather.Length; i++)
             if (TempMap.Weather[i].Visible)
                 Render(WinMap, Textures.Weather, new Rectangle(x, 0, 32, 32), EditorMaps.Form.Zoom(new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32)), new Color(255, 255, 255, 150));
     }
 
     private static void EditorMapsMapGrids(Map map)
     {
-        EditorMaps form = EditorMaps.Form;
+        var form = EditorMaps.Form;
         Rectangle source = form.TileSource, destiny = new();
-        Point begin = new Point(form.MapSelection.X - form.scrlMapX.Value, form.MapSelection.Y - form.scrlMapY.Value);
+        var begin = new Point(form.MapSelection.X - form.scrlMapX.Value, form.MapSelection.Y - form.scrlMapY.Value);
 
         // Dados
         destiny.Location = form.Zoom_Grid(begin.X, begin.Y);
@@ -327,8 +327,8 @@ internal static class Renders
                 Render(WinMap, Textures.Tiles[form.cmbTiles.SelectedIndex + 1], source, destiny);
             // Retângulo
             else if (form.butRectangle.Checked)
-                for (int x = begin.X; x < begin.X + form.MapSelection.Width; x++)
-                for (int y = begin.Y; y < begin.Y + form.MapSelection.Height; y++)
+                for (var x = begin.X; x < begin.X + form.MapSelection.Width; x++)
+                for (var y = begin.Y; y < begin.Y + form.MapSelection.Height; y++)
                     Render(WinMap, Textures.Tiles[form.cmbTiles.SelectedIndex + 1], source, new Rectangle(form.Zoom_Grid(x, y), destiny.Size));
 
         // Desenha a grade
@@ -338,9 +338,9 @@ internal static class Renders
 
     private static void EditorMapsMapZones(Map map, byte x, byte y)
     {
-        EditorMaps form = EditorMaps.Form;
-        Point position = new Point((x - form.scrlMapX.Value) * form.GridZoom, (y - form.scrlMapY.Value) * form.GridZoom);
-        byte zoneNum = map.Attribute[x, y].Zone;
+        var form = EditorMaps.Form;
+        var position = new Point((x - form.scrlMapX.Value) * form.GridZoom, (y - form.scrlMapY.Value) * form.GridZoom);
+        var zoneNum = map.Attribute[x, y].Zone;
         Color color;
 
         // Apenas se necessário
@@ -360,9 +360,9 @@ internal static class Renders
 
     private static void EditorMapsMapAttributes(Map map, byte x, byte y)
     {
-        EditorMaps form = EditorMaps.Form;
-        Point position = new Point((x - form.scrlMapX.Value) * form.GridZoom, (y - EditorMaps.Form.scrlMapY.Value) * form.GridZoom);
-        TileAttribute attribute = (TileAttribute)map.Attribute[x, y].Type;
+        var form = EditorMaps.Form;
+        var position = new Point((x - form.scrlMapX.Value) * form.GridZoom, (y - EditorMaps.Form.scrlMapY.Value) * form.GridZoom);
+        var attribute = (TileAttribute)map.Attribute[x, y].Type;
         Color color;
         string letter;
 
@@ -388,7 +388,7 @@ internal static class Renders
 
     private static void EditorMapsMapDirBlock(Map map, byte x, byte y)
     {
-        Point tile = new Point(EditorMaps.Form.scrlMapX.Value + x, EditorMaps.Form.scrlMapY.Value + y);
+        var tile = new Point(EditorMaps.Form.scrlMapX.Value + x, EditorMaps.Form.scrlMapY.Value + y);
         byte sourceY;
 
         // Apenas se necessário
@@ -411,13 +411,13 @@ internal static class Renders
 
     private static void EditorMapsMapNpcs(Map map)
     {
-        EditorMaps form = EditorMaps.Form;
+        var form = EditorMaps.Form;
 
         if (EditorMaps.Form.butMNPCs.Checked)
             for (byte i = 0; i < map.Npc.Count; i++)
                 if (map.Npc[i].Spawn)
                 {
-                    Point position = new Point((map.Npc[i].X - form.scrlMapX.Value) * form.GridZoom, (map.Npc[i].Y - form.scrlMapY.Value) * form.GridZoom);
+                    var position = new Point((map.Npc[i].X - form.scrlMapX.Value) * form.GridZoom, (map.Npc[i].Y - form.scrlMapY.Value) * form.GridZoom);
 
                     // Desenha uma sinalização de onde os NPCs estão
                     Render(WinMap, Textures.Blank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), new Color(0, 220, 0, 150));
@@ -429,7 +429,7 @@ internal static class Renders
     #region Tile Editor
     public static void EditorTile()
     {
-        EditorTiles form = EditorTiles.Form;
+        var form = EditorTiles.Form;
 
         // Somente se necessário
         if (WinTile == null) return;
@@ -439,8 +439,8 @@ internal static class Renders
         Transparent(WinTile);
 
         // Desenha o azulejo e as grades
-        Texture texture = Textures.Tiles[form.scrlTile.Value];
-        Point position = new Point(form.scrlTileX.Value * Grid, form.scrlTileY.Value * Grid);
+        var texture = Textures.Tiles[form.scrlTile.Value];
+        var position = new Point(form.scrlTileX.Value * Grid, form.scrlTileY.Value * Grid);
         Render(WinTile, texture, new Rectangle(position, texture.ToSize()), new Rectangle(new Point(0), texture.ToSize()));
 
         for (byte x = 0; x <= form.picTile.Width / Grid; x++)
@@ -463,9 +463,9 @@ internal static class Renders
 
     private static void EditorTileAttributes(byte x, byte y)
     {
-        EditorTiles form = EditorTiles.Form;
-        Point tile = new Point(form.scrlTileX.Value + x, form.scrlTileY.Value + y);
-        Point point = new Point((x * Grid) + (Grid / 2) - 5, (y * Grid) + (Grid / 2) - 6);
+        var form = EditorTiles.Form;
+        var tile = new Point(form.scrlTileX.Value + x, form.scrlTileY.Value + y);
+        var point = new Point((x * Grid) + (Grid / 2) - 5, (y * Grid) + (Grid / 2) - 6);
 
         // Previne erros
         if (tile.X > Tile.List[form.scrlTile.Value].Data.GetUpperBound(0)) return;
@@ -483,8 +483,8 @@ internal static class Renders
 
     private static void EditorTileDirBlock(byte x, byte y)
     {
-        EditorTiles form = EditorTiles.Form;
-        Point tile = new Point(form.scrlTileX.Value + x, form.scrlTileY.Value + y);
+        var form = EditorTiles.Form;
+        var tile = new Point(form.scrlTileX.Value + x, form.scrlTileY.Value + y);
         byte sourceY;
 
         // Previne erros
@@ -516,7 +516,7 @@ internal static class Renders
         if (WinItem == null) return;
 
         // Desenha o item
-        short textureNum = (short)EditorItems.Form.numTexture.Value;
+        var textureNum = (short)EditorItems.Form.numTexture.Value;
         WinItem.Clear();
         Transparent(WinItem);
         if (textureNum > 0 && textureNum < Textures.Items.Count) Render(WinItem, Textures.Items[textureNum], new Point(0));
@@ -549,8 +549,8 @@ internal static class Renders
     #region Character
     private static void Character(RenderWindow window, short textureNum)
     {
-        Texture texture = Textures.Characters[textureNum];
-        Size size = new Size(texture.ToSize().Width / 4, texture.ToSize().Height / 4);
+        var texture = Textures.Characters[textureNum];
+        var size = new Size(texture.ToSize().Width / 4, texture.ToSize().Height / 4);
 
         // Desenha o item
         window.Clear();
@@ -577,7 +577,7 @@ internal static class Renders
         for (byte i = 0; i < node.Nodes.Count; i++)
         {
             // Desenha a ferramenta
-            Tool tool = (Tool)node.Nodes[i].Tag;
+            var tool = (Tool)node.Nodes[i].Tag;
             if (tool.Visible)
             {
                 if (tool is Panel panel) Panel(panel);
@@ -608,8 +608,8 @@ internal static class Renders
     private static void CheckBox(CheckBox tool)
     {
         // Define as propriedades dos retângulos
-        Rectangle recSource = new Rectangle(new Point(), new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
-        Rectangle recDestiny = new Rectangle(tool.Position, recSource.Size);
+        var recSource = new Rectangle(new Point(), new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
+        var recDestiny = new Rectangle(tool.Position, recSource.Size);
 
         // Desenha a textura do marcador pelo seu estado 
         if (tool.Checked)

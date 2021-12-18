@@ -44,7 +44,7 @@ internal static class Program
 
     public static void Close()
     {
-        int waitTimer = Environment.TickCount;
+        var waitTimer = Environment.TickCount;
 
         // Desconecta da rede
         Socket.Disconnect();

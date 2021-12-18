@@ -17,7 +17,7 @@ internal static class Send
 
     public static void Connect()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.Connect);
@@ -29,7 +29,7 @@ internal static class Send
 
     public static void RequestServerData()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.WriteSettings);
@@ -38,7 +38,7 @@ internal static class Send
 
     public static void RequestClasses()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.RequestClasses);
@@ -47,7 +47,7 @@ internal static class Send
 
     public static void RequestMap(Map map)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.RequestMap);
@@ -57,7 +57,7 @@ internal static class Send
 
     public static void RequestNpcs()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.RequestNpcs);
@@ -66,7 +66,7 @@ internal static class Send
 
     public static void RequestItems()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.RequestItems);
@@ -75,7 +75,7 @@ internal static class Send
 
     public static void RequestShops()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.RequestShops);
@@ -84,7 +84,7 @@ internal static class Send
 
     public static void WriteServerData()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.WriteSettings);
@@ -105,7 +105,7 @@ internal static class Send
 
     public static void WriteClasses()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.WriteClasses);
@@ -115,7 +115,7 @@ internal static class Send
 
     public static void WriteMaps()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.WriteMaps);
@@ -125,7 +125,7 @@ internal static class Send
 
     public static void WriteNpcs()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.WriteNpcs);
@@ -135,7 +135,7 @@ internal static class Send
 
     public static void WriteItems()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.WriteItems);
@@ -145,7 +145,7 @@ internal static class Send
 
     public static void WriteShops()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.WriteShops);

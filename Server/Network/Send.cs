@@ -13,7 +13,7 @@ internal static class Send
     private static void ToPlayer(Account account, NetOutgoingMessage data)
     {
         // Recria o pacote e o envia
-        NetOutgoingMessage dataSend = Socket.Device.CreateMessage(data.LengthBytes);
+        var dataSend = Socket.Device.CreateMessage(data.LengthBytes);
         dataSend.Write(data);
         Socket.Device.SendMessage(dataSend, account.Connection, NetDeliveryMethod.ReliableOrdered);
     }
@@ -61,7 +61,7 @@ internal static class Send
 
     public static void Alert(Account account, string message, bool disconnect = true)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Alert);
@@ -74,7 +74,7 @@ internal static class Send
 
     public static void Connect(Account account)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Connect);
@@ -83,7 +83,7 @@ internal static class Send
 
     public static void CreateCharacter(Account account)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.CreateCharacter);
@@ -92,7 +92,7 @@ internal static class Send
 
     public static void Join(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Join);
@@ -102,7 +102,7 @@ internal static class Send
 
     public static void Characters(Account account)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Characters);
@@ -119,7 +119,7 @@ internal static class Send
 
     public static void Classes(Account account)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Classes);
@@ -129,7 +129,7 @@ internal static class Send
 
     public static void JoinGame(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.JoinGame);
@@ -138,7 +138,7 @@ internal static class Send
 
     private static NetOutgoingMessage PlayerDataCache(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Escreve os dados
         data.Write((byte)ServerPacket.PlayerData);
@@ -162,7 +162,7 @@ internal static class Send
 
     public static void PlayerPosition(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerPosition);
@@ -175,7 +175,7 @@ internal static class Send
 
     public static void PlayerVitals(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerVitals);
@@ -191,7 +191,7 @@ internal static class Send
 
     public static void PlayerLeave(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerLeave);
@@ -201,7 +201,7 @@ internal static class Send
 
     public static void PlayerMove(Player player, byte movement)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerMove);
@@ -215,7 +215,7 @@ internal static class Send
 
     public static void PlayerDirection(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerDirection);
@@ -226,7 +226,7 @@ internal static class Send
 
     public static void PlayerExperience(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerExperience);
@@ -238,7 +238,7 @@ internal static class Send
 
     public static void PlayerEquipments(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerEquipments);
@@ -262,7 +262,7 @@ internal static class Send
 
     public static void JoinMap(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.JoinMap);
@@ -271,7 +271,7 @@ internal static class Send
 
     public static void PlayerLeaveMap(Player player, TempMap map)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerLeave);
@@ -281,7 +281,7 @@ internal static class Send
 
     public static void MapRevision(Player player, Map map)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapRevision);
@@ -292,18 +292,18 @@ internal static class Send
 
     public static void Maps(Account account)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Maps);
         data.Write((short)CryBits.Entities.Map.List.Count);
         ToPlayer(account, data);
-        foreach (Map map in CryBits.Entities.Map.List.Values) Map(account, map);
+        foreach (var map in CryBits.Entities.Map.List.Values) Map(account, map);
     }
 
     public static void Map(Account account, Map map)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Map);
@@ -313,7 +313,7 @@ internal static class Send
 
     public static void Latency(Account account)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Latency);
@@ -322,7 +322,7 @@ internal static class Send
 
     public static void Message(Player player, string text, Color color)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Message);
@@ -333,8 +333,8 @@ internal static class Send
 
     public static void MessageMap(Player player, string text)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
-        string message = "[Map] " + player.Name + ": " + text;
+        var data = Socket.Device.CreateMessage();
+        var message = "[Map] " + player.Name + ": " + text;
 
         // Envia os dados
         data.Write((byte)ServerPacket.Message);
@@ -345,8 +345,8 @@ internal static class Send
 
     public static void MessageGlobal(Player player, string text)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
-        string message = "[Global] " + player.Name + ": " + text;
+        var data = Socket.Device.CreateMessage();
+        var message = "[Global] " + player.Name + ": " + text;
 
         // Envia os dados
         data.Write((byte)ServerPacket.Message);
@@ -357,7 +357,7 @@ internal static class Send
 
     public static void MessagePrivate(Player player, string addresseeName, string text)
     {
-        Player addressee = Player.Find(addresseeName);
+        var addressee = Player.Find(addresseeName);
 
         // Verifica se o jogador está conectado
         if (addressee == null)
@@ -373,7 +373,7 @@ internal static class Send
 
     public static void PlayerAttack(Player player, string victim = "", Target victimType = 0)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerAttack);
@@ -385,7 +385,7 @@ internal static class Send
 
     public static void Items(Account account)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Items);
@@ -395,7 +395,7 @@ internal static class Send
 
     public static void MapItems(Player player, TempMap map)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapItems);
@@ -415,7 +415,7 @@ internal static class Send
 
     public static void MapItems(TempMap map)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapItems);
@@ -431,7 +431,7 @@ internal static class Send
 
     public static void PlayerInventory(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerInventory);
@@ -445,7 +445,7 @@ internal static class Send
 
     public static void PlayerHotbar(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerHotbar);
@@ -459,7 +459,7 @@ internal static class Send
 
     public static void Npcs(Account account)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Npcs);
@@ -469,7 +469,7 @@ internal static class Send
 
     public static void MapNpcs(Player player, TempMap map)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapNpcs);
@@ -487,7 +487,7 @@ internal static class Send
 
     public static void MapNpc(TempNpc npc)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapNpc);
@@ -502,7 +502,7 @@ internal static class Send
 
     public static void MapNpcMovement(TempNpc npc, byte movement)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapNpcMovement);
@@ -516,7 +516,7 @@ internal static class Send
 
     public static void MapNpcDirection(TempNpc npc)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapNpcDirection);
@@ -527,7 +527,7 @@ internal static class Send
 
     public static void MapNpcVitals(TempNpc npc)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapNpcVitals);
@@ -538,7 +538,7 @@ internal static class Send
 
     public static void MapNpcAttack(TempNpc npc, string victim = "", Target victimType = 0)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapNpcAttack);
@@ -550,7 +550,7 @@ internal static class Send
 
     public static void MapNpcDied(TempNpc npc)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapNpcDied);
@@ -560,7 +560,7 @@ internal static class Send
 
     public static void ServerData(Account account)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.ServerData);
@@ -581,7 +581,7 @@ internal static class Send
 
     public static void Party(Player player)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Party);
@@ -592,7 +592,7 @@ internal static class Send
 
     public static void PartyInvitation(Player player, string playerInvitation)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.PartyInvitation);
@@ -602,7 +602,7 @@ internal static class Send
 
     public static void Trade(Player player, bool state)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Trade);
@@ -612,7 +612,7 @@ internal static class Send
 
     public static void TradeInvitation(Player player, string playerInvitation)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.TradeInvitation);
@@ -622,7 +622,7 @@ internal static class Send
 
     public static void TradeState(Player player, TradeStatus state)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.TradeState);
@@ -632,8 +632,8 @@ internal static class Send
 
     public static void TradeOffer(Player player, bool own = true)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
-        Player to = own ? player : player.Trade;
+        var data = Socket.Device.CreateMessage();
+        var to = own ? player : player.Trade;
 
         // Envia os dados
         data.Write((byte)ServerPacket.TradeOffer);
@@ -648,7 +648,7 @@ internal static class Send
 
     public static void Shops(Account account)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.Shops);
@@ -658,7 +658,7 @@ internal static class Send
 
     public static void ShopOpen(Player player, Shop shop)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ServerPacket.ShopOpen);

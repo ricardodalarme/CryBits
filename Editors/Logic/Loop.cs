@@ -14,7 +14,7 @@ internal static class Loop
     public static void Init()
     {
         int count;
-        int timer1000 = 0;
+        var timer1000 = 0;
         short fps = 0;
 
         while (Program.Working)

@@ -26,7 +26,7 @@ internal static class Utils
     public static short MeasureString(string text)
     {
         // Dados do texto
-        Text tempText = new Text(text, Fonts.Default) { CharacterSize = 10 };
+        var tempText = new Text(text, Fonts.Default) { CharacterSize = 10 };
         return (short)tempText.GetLocalBounds().Width;
     }
 
@@ -50,9 +50,9 @@ internal static class Utils
 
     public static short Slot(Panels panel, byte offX, byte offY, byte lines, byte columns, byte grid = 32, byte gap = 4)
     {
-        int size = grid + gap;
-        Point start = panel.Position + new Size(offX, offY);
-        Point slot = new Point((Windows.Mouse.X - start.X) / size, (Windows.Mouse.Y - start.Y) / size);
+        var size = grid + gap;
+        var start = panel.Position + new Size(offX, offY);
+        var slot = new Point((Windows.Mouse.X - start.X) / size, (Windows.Mouse.Y - start.Y) / size);
 
         // Verifica se o Window.Mouse está sobre o slot
         if (slot.Y < 0 || slot.X < 0 || slot.X >= columns || slot.Y >= lines) return -1;

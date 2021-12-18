@@ -40,7 +40,7 @@ internal static class Windows
             if (Current == Window.Game)
             {
                 // Usar item
-                short slot = Panels.InventorySlot;
+                var slot = Panels.InventorySlot;
                 if (slot > 0)
                     if (Player.Me.Inventory[slot].Item != null)
                         Send.InventoryUse((byte)slot);
@@ -62,11 +62,11 @@ internal static class Windows
         else
         {
             // Percorre toda a árvore de ordem para executar o comando
-            Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+            var stack = new Stack<List<Tools.OrderStructure>>();
             stack.Push(Tools.Order);
             while (stack.Count != 0)
             {
-                List<Tools.OrderStructure> top = stack.Pop();
+                var top = stack.Pop();
 
                 for (byte i = 0; i < top.Count; i++)
                     if (top[i].Data.Visible)
@@ -94,11 +94,11 @@ internal static class Windows
         _doubleClickTimer = Environment.TickCount;
 
         // Percorre toda a árvore de ordem para executar o comando
-        Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+        var stack = new Stack<List<Tools.OrderStructure>>();
         stack.Push(Tools.Order);
         while (stack.Count != 0)
         {
-            List<Tools.OrderStructure> top = stack.Pop();
+            var top = stack.Pop();
 
             for (byte i = 0; i < top.Count; i++)
                 if (top[i].Data.Visible)
@@ -152,11 +152,11 @@ internal static class Windows
         Mouse.Y = e.Y;
 
         // Percorre toda a árvore de ordem para executar o comando
-        Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+        var stack = new Stack<List<Tools.OrderStructure>>();
         stack.Push(Tools.Order);
         while (stack.Count != 0)
         {
-            List<Tools.OrderStructure> top = stack.Pop();
+            var top = stack.Pop();
 
             for (byte i = 0; i < top.Count; i++)
                 if (top[i].Data.Visible)

@@ -17,7 +17,7 @@ internal static class Music
 
     public static void Play(Enums.Music index, bool loop = false)
     {
-        string directory = Directories.Musics.FullName + (byte)index + Format;
+        var directory = Directories.Musics.FullName + (byte)index + Format;
 
         // Apenas se necessário
         if (_device != null) return;

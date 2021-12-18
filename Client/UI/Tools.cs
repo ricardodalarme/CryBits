@@ -38,11 +38,11 @@ internal static class Tools
     public static OrderStructure Get(Structure tool)
     {
         // Percorre toda a árvore de ordem para encontrar a ferramenta
-        Stack<List<OrderStructure>> stack = new Stack<List<OrderStructure>>();
+        var stack = new Stack<List<OrderStructure>>();
         for (byte i = 0; i < AllOrder.Length; i++) stack.Push(AllOrder[i]);
         while (stack.Count != 0)
         {
-            List<OrderStructure> top = stack.Pop();
+            var top = stack.Pop();
 
             for (byte i = 0; i < top.Count; i++)
             {

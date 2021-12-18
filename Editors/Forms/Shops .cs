@@ -91,11 +91,11 @@ internal partial class EditorShops : DarkForm
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
-        Shop shop = new Shop();
+        var shop = new Shop();
         Shop.List.Add(shop.ID, shop);
 
         // Adiciona na lista
-        TreeNode node = new TreeNode(shop.Name);
+        var node = new TreeNode(shop.Name);
         node.Tag = shop.ID;
         List.Nodes.Add(node);
         List.SelectedNode = node;
@@ -183,7 +183,7 @@ internal partial class EditorShops : DarkForm
     private void butConfirm_Click(object sender, EventArgs e)
     {
         // Adiciona o item
-        ShopItem data = new ShopItem((Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
+        var data = new ShopItem((Item)cmbItems.SelectedItem, (short)numAmount.Value, (short)numPrice.Value);
         if (grpAddItem.Tag == lstSold) _selected.Sold.Add(data);
         else _selected.Bought.Add(data);
         ((ListBox)grpAddItem.Tag).UpdateData();

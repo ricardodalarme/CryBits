@@ -77,7 +77,7 @@ internal class TempMap : Entity
     public MapItems HasItem(byte x, byte y)
     {
         // Verifica se tem algum item nas coordenadas 
-        for (int i = Item.Count - 1; i >= 0; i--)
+        for (var i = Item.Count - 1; i >= 0; i--)
             if (Item[i].X == x && Item[i].Y == y)
                 return Item[i];
 
@@ -111,8 +111,8 @@ internal class TempMap : Entity
 
     public static void CreateTemporary(Map map, bool isOriginal)
     {
-        Guid id = isOriginal ? map.ID : Guid.NewGuid();
-        TempMap tempMap = new TempMap(id, map);
+        var id = isOriginal ? map.ID : Guid.NewGuid();
+        var tempMap = new TempMap(id, map);
         List.Add(id, tempMap);
 
         // NpcBehaviour do mapa

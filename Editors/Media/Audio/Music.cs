@@ -17,7 +17,7 @@ public static class Music
 
     public static void Play(Enums.Music index, bool loop = false)
     {
-        FileInfo file = new FileInfo(Directories.Musics.FullName + (byte)index + Format);
+        var file = new FileInfo(Directories.Musics.FullName + (byte)index + Format);
 
         // Apenas se necessário
         if (Device != null) return;

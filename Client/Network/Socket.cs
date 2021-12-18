@@ -24,7 +24,7 @@ internal static class Socket
 
     public static void Init()
     {
-        NetPeerConfiguration config = new NetPeerConfiguration(GameName);
+        var config = new NetPeerConfiguration(GameName);
 
         // Cria o dispositivo com as devidas configurações
         Device = new NetClient(config);
@@ -75,7 +75,7 @@ internal static class Socket
         Device.Connect(IP, Port);
 
         // Espere até que o jogador se conecte
-        int waitTimer = Environment.TickCount;
+        var waitTimer = Environment.TickCount;
         while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)
             HandleData();
 
