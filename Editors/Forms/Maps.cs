@@ -951,11 +951,9 @@ internal partial class EditorMaps : DarkForm
 
     private void Tile_Discover()
     {
-        MapTileData data;
-
         for (var c = Selected.Layer.Count - 1; c >= 0; c--)
         {
-            data = Selected.Layer[c].Tile[MapSelection.X, MapSelection.Y];
+            var data = Selected.Layer[c].Tile[MapSelection.X, MapSelection.Y];
 
             // Somente se necessário
             if (!lstLayers.Items[c].Checked) continue;
@@ -1001,7 +999,7 @@ internal partial class EditorMaps : DarkForm
 
     private void Tile_Set_Multiples(byte layerNum)
     {
-        byte x2 = 0, y2;
+        byte x2 = 0;
 
         // Apenas se necessário
         if (chkAuto.Checked) return;
@@ -1009,7 +1007,7 @@ internal partial class EditorMaps : DarkForm
         // Define todos os azulejos selecionados
         for (var x = MapSelection.X; x < MapSelection.X + TilesSelection.Width; x++)
         {
-            y2 = 0;
+            byte y2 = 0;
             for (var y = MapSelection.Y; y < MapSelection.Y + TilesSelection.Height; y++)
             {
                 // Define os azulejos

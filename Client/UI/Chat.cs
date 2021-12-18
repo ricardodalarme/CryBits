@@ -47,12 +47,11 @@ internal static class Chat
 
     public static void AddText(string message, Color color)
     {
-        int messageWidth, boxWidth = Textures.Panels[Panels.List["Chat"].TextureNum].ToSize().Width - 16;
-        string tempMessage;
+        int boxWidth = Textures.Panels[Panels.List["Chat"].TextureNum].ToSize().Width - 16;
 
         // Remove os espaços
         message = message.Trim();
-        messageWidth = MeasureString(message);
+        int messageWidth = MeasureString(message);
 
         // Caso couber, adiciona a mensagem normalmente
         if (messageWidth < boxWidth)
@@ -60,7 +59,7 @@ internal static class Chat
         else
             for (var i = 0; i <= message.Length; i++)
             {
-                tempMessage = message.Substring(0, i);
+                var tempMessage = message.Substring(0, i);
 
                 // Adiciona o texto à caixa
                 if (MeasureString(tempMessage) > boxWidth)

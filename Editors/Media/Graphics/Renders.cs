@@ -214,9 +214,7 @@ internal static class Renders
     private static void EditorMapsMapTiles(Map map)
     {
         var form = EditorMaps.Form;
-        MapTileData data;
         int beginX = form.scrlMapX.Value, beginY = form.scrlMapY.Value;
-        Color color;
 
         // Desenha todos os azulejos
         for (byte c = 0; c < map.Layer.Count; c++)
@@ -225,7 +223,7 @@ internal static class Renders
             if (!form.lstLayers.Items[c].Checked) continue;
 
             // Transparência da camada
-            color = new Color();
+            var color = new Color();
             if (form.butEdition.Checked && form.butMNormal.Checked)
             {
                 if (EditorMaps.Form.lstLayers.SelectedIndices.Count > 0)
@@ -241,7 +239,7 @@ internal static class Renders
                 if (map.Layer[c].Tile[x, y].Texture > 0)
                 {
                     // Dados
-                    data = map.Layer[c].Tile[x, y];
+                    var data = map.Layer[c].Tile[x, y];
                     var source = new Rectangle(new Point(data.X * Grid, data.Y * Grid), GridSize);
                     var destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), GridSize);
 
@@ -389,7 +387,6 @@ internal static class Renders
     private static void EditorMapsMapDirBlock(Map map, byte x, byte y)
     {
         var tile = new Point(EditorMaps.Form.scrlMapX.Value + x, EditorMaps.Form.scrlMapY.Value + y);
-        byte sourceY;
 
         // Apenas se necessário
         if (!EditorMaps.Form.butMAttributes.Checked) return;
@@ -402,7 +399,7 @@ internal static class Renders
         for (byte i = 0; i < (byte)Direction.Count; i++)
         {
             // Estado do bloqueio
-            sourceY = map.Attribute[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
+            var sourceY = map.Attribute[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
 
             // Renderiza
             Render(WinMap, Textures.Directions, (x * Grid) + Block_Position(i).X, (y * Grid) + Block_Position(i).Y, i * 8, sourceY, 6, 6);
@@ -485,7 +482,6 @@ internal static class Renders
     {
         var form = EditorTiles.Form;
         var tile = new Point(form.scrlTileX.Value + x, form.scrlTileY.Value + y);
-        byte sourceY;
 
         // Previne erros
         if (tile.X > Tile.List[form.scrlTile.Value].Data.GetUpperBound(0)) return;
@@ -501,7 +497,7 @@ internal static class Renders
         for (byte i = 0; i < (byte)Direction.Count; i++)
         {
             // Estado do bloqueio
-            sourceY = Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
+            var sourceY = Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
 
             // Renderiza
             Render(WinTile, Textures.Directions, (x * Grid) + Block_Position(i).X, (y * Grid) + Block_Position(i).Y, i * 8, sourceY, 6, 6);
