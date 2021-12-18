@@ -1,11 +1,10 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Direction
 {
-    public enum Direction
-    {
-        Up,
-        Down,
-        Left,
-        Right,
-        Count
-    }
+    Up,
+    Down,
+    Left,
+    Right,
+    Count
 }

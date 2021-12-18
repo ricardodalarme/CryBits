@@ -1,9 +1,8 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Access
 {
-    public enum Access
-    {
-        None,
-        Editor,
-        Administrator
-    }
+    None,
+    Editor,
+    Administrator
 }

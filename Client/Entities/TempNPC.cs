@@ -1,20 +1,19 @@
 ﻿using System;
 using CryBits.Entities;
 
-namespace CryBits.Client.Entities
+namespace CryBits.Client.Entities;
+
+internal class TempNpc : Character
 {
-    internal class TempNpc : Character
+    // Indice
+    public Npc Data;
+
+    public void Logic()
     {
-        // Indice
-        public Npc Data;
+        // Dano
+        if (Hurt + 325 < Environment.TickCount) Hurt = 0;
 
-        public void Logic()
-        {
-            // Dano
-            if (Hurt + 325 < Environment.TickCount) Hurt = 0;
-
-            // Movimento
-            ProcessMovement();
-        }
+        // Movimento
+        ProcessMovement();
     }
 }

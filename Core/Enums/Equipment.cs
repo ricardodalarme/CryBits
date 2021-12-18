@@ -1,12 +1,11 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Equipment
 {
-    public enum Equipment
-    {
-        Weapon,
-        Armor,
-        Helmet,
-        Shield,
-        Amulet,
-        Count
-    }
+    Weapon,
+    Armor,
+    Helmet,
+    Shield,
+    Amulet,
+    Count
 }

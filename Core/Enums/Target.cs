@@ -1,8 +1,7 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Target
 {
-    public enum Target
-    {
-        Player = 1,
-        Npc
-    }
+    Player = 1,
+    Npc
 }

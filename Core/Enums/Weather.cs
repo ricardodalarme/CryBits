@@ -1,10 +1,9 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Weather
 {
-    public enum Weather
-    {
-        Normal,
-        Raining,
-        Thundering,
-        Snowing
-    }
+    Normal,
+    Raining,
+    Thundering,
+    Snowing
 }

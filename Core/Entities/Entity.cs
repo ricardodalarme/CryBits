@@ -1,27 +1,26 @@
 ﻿using System;
 
-namespace CryBits.Entities
+namespace CryBits.Entities;
+
+[Serializable]
+public class Entity : IEquatable<Entity>
 {
-    [Serializable]
-    public class Entity : IEquatable<Entity>
+    public Guid ID { get; set; }
+    public string Name { get; set; } = string.Empty;
+
+    public Entity()
     {
-        public Guid ID { get; set; }
-        public string Name { get; set; } = string.Empty;
-
-        public Entity()
-        {
-            ID = Guid.NewGuid();
-        }
-
-        public Entity(Guid id)
-        {
-            ID = id;
-        }
-
-        public override string ToString() => Name;
-
-        public override int GetHashCode() => ID.GetHashCode();
-
-        bool IEquatable<Entity>.Equals(Entity other) => other != null && other.ID.Equals(ID);
+        ID = Guid.NewGuid();
     }
+
+    public Entity(Guid id)
+    {
+        ID = id;
+    }
+
+    public override string ToString() => Name;
+
+    public override int GetHashCode() => ID.GetHashCode();
+
+    bool IEquatable<Entity>.Equals(Entity other) => other != null && other.ID.Equals(ID);
 }

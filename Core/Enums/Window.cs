@@ -1,9 +1,8 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Window
 {
-    public enum Window
-    {
-        Menu,
-        Game,
-        Count
-    }
+    Menu,
+    Game,
+    Count
 }

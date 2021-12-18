@@ -1,12 +1,11 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Attribute
 {
-    public enum Attribute
-    {
-        Strength,
-        Resistance,
-        Intelligence,
-        Agility,
-        Vitality,
-        Count
-    }
+    Strength,
+    Resistance,
+    Intelligence,
+    Agility,
+    Vitality,
+    Count
 }
