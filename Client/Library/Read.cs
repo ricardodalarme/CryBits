@@ -29,18 +29,16 @@ internal static class Read
         }
 
         // Carrega as configurações
-        using (var data = new BinaryReader(Directories.Options.OpenRead()))
-        {
-            Logic.Options.SaveUsername = data.ReadBoolean();
-            Logic.Options.Username = data.ReadString();
-            Logic.Options.Sounds = data.ReadBoolean();
-            Logic.Options.Musics = data.ReadBoolean();
-            Logic.Options.Chat = data.ReadBoolean();
-            Logic.Options.FPS = data.ReadBoolean();
-            Logic.Options.Latency = data.ReadBoolean();
-            Logic.Options.Party = data.ReadBoolean();
-            Logic.Options.Trade = data.ReadBoolean();
-        }
+        using var data = new BinaryReader(Directories.Options.OpenRead());
+        Logic.Options.SaveUsername = data.ReadBoolean();
+        Logic.Options.Username = data.ReadString();
+        Logic.Options.Sounds = data.ReadBoolean();
+        Logic.Options.Musics = data.ReadBoolean();
+        Logic.Options.Chat = data.ReadBoolean();
+        Logic.Options.FPS = data.ReadBoolean();
+        Logic.Options.Latency = data.ReadBoolean();
+        Logic.Options.Party = data.ReadBoolean();
+        Logic.Options.Trade = data.ReadBoolean();
     }
 
     private static Buttons Button(BinaryReader data)
@@ -104,9 +102,9 @@ internal static class Read
         for (byte i = 0; i < (byte)Window.Count; i++) UI.Tools.AllOrder[i] = new List<Tools.OrderStructure>();
 
         // Lê todas as ferramentas
-        using (var data = new BinaryReader(file.OpenRead()))
-            for (byte n = 0; n < UI.Tools.AllOrder.Length; n++)
-                Tools(null, ref UI.Tools.AllOrder[n], data);
+        using var data = new BinaryReader(file.OpenRead());
+        for (byte n = 0; n < UI.Tools.AllOrder.Length; n++)
+            Tools(null, ref UI.Tools.AllOrder[n], data);
     }
 
     private static void Tools(Tools.OrderStructure parent, ref List<Tools.OrderStructure> node, BinaryReader data)

@@ -58,12 +58,10 @@ public static class Utils
     public static void ObjectToByteArray(NetOutgoingMessage data, object obj)
     {
         var bf = new BinaryFormatter();
-        using (var stream = new MemoryStream())
-        {
-            bf.Serialize(stream, obj);
-            data.Write(stream.ToArray().Length);
-            data.Write(stream.ToArray());
-        }
+        using var stream = new MemoryStream();
+        bf.Serialize(stream, obj);
+        data.Write(stream.ToArray().Length);
+        data.Write(stream.ToArray());
     }
 
     public static object ByteArrayToObject(NetIncomingMessage data)
@@ -71,7 +69,7 @@ public static class Utils
         int size = data.ReadInt32();
         byte[] array = data.ReadBytes(size);
 
-        using (var stream = new MemoryStream(array))
-            return new BinaryFormatter().Deserialize(stream);
+        using var stream = new MemoryStream(array);
+        return new BinaryFormatter().Deserialize(stream);
     }
 }

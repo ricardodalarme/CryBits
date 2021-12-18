@@ -26,13 +26,11 @@ internal static class Read
         }
 
         // Carrega as configurações
-        using (var data = new BinaryReader(Directories.Options.OpenRead()))
-        {
-            PreMapGrid = data.ReadBoolean();
-            PreMapView = data.ReadBoolean();
-            PreMapAudio = data.ReadBoolean();
-            Username = data.ReadString();
-        }
+        using var data = new BinaryReader(Directories.Options.OpenRead());
+        PreMapGrid = data.ReadBoolean();
+        PreMapView = data.ReadBoolean();
+        PreMapAudio = data.ReadBoolean();
+        Username = data.ReadString();
     }
 
     public static void Tools()
@@ -51,10 +49,9 @@ internal static class Read
         }
 
         // Cria um sistema binário para a manipulação dos dados
-        using (var data = new BinaryReader(file.OpenRead()))
-            // Lê todos os nós
-            for (byte n = 0; n < Tool.Tree.Nodes.Count; n++)
-                Tools(Tool.Tree.Nodes[n], data);
+        using var data = new BinaryReader(file.OpenRead());
+        for (byte n = 0; n < Tool.Tree.Nodes.Count; n++)
+            Tools(Tool.Tree.Nodes[n], data);
     }
 
     public static void Tools(TreeNode node, BinaryReader data)
@@ -156,7 +153,7 @@ internal static class Read
         }
 
         // Lê os dados
-        using (var stream = file.OpenRead())
-            Entities.Tile.List[index] = (Tile)new BinaryFormatter().Deserialize(stream);
+        using var stream = file.OpenRead();
+        Entities.Tile.List[index] = (Tile)new BinaryFormatter().Deserialize(stream);
     }
 }
