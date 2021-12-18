@@ -50,7 +50,7 @@ internal static class TempMap
 
     private static void UpdateFogX()
     {
-        Size textureSize = Textures.Fogs[EditorMaps.Form.Selected.Fog.Texture].ToSize();
+        var textureSize = Textures.Fogs[EditorMaps.Form.Selected.Fog.Texture].ToSize();
         int speed = EditorMaps.Form.Selected.Fog.SpeedX;
 
         // Apenas se necessário
@@ -77,7 +77,7 @@ internal static class TempMap
 
     private static void UpdateFogY()
     {
-        Size textureSize = Textures.Fogs[EditorMaps.Form.Selected.Fog.Texture].ToSize();
+        var textureSize = Textures.Fogs[EditorMaps.Form.Selected.Fog.Texture].ToSize();
         int speed = EditorMaps.Form.Selected.Fog.SpeedY;
 
         // Apenas se necessário
@@ -115,7 +115,7 @@ internal static class TempMap
         }
 
         // Clima do mapa
-        MapWeather weather = EditorMaps.Form.Selected.Weather;
+        var weather = EditorMaps.Form.Selected.Weather;
 
         // Reproduz o som chuva
         if (weather.Type == Enums.Weather.Raining || weather.Type == Enums.Weather.Thundering)
@@ -144,7 +144,7 @@ internal static class TempMap
             }
 
         // Adiciona uma nova partícula
-        for (int i = 1; i <= Weather.GetUpperBound(0); i++)
+        for (var i = 1; i <= Weather.GetUpperBound(0); i++)
             if (!Weather[i].Visible)
             {
                 if (MyRandom.Next(0, MaxWeatherIntensity - weather.Intensity) == 0)
@@ -186,7 +186,7 @@ internal static class TempMap
             if (MyRandom.Next(0, (MaxWeatherIntensity * 10) - (weather.Intensity * 2)) == 0)
             {
                 // Som do trovão
-                int thunder = MyRandom.Next((byte)Enums.Sound.Thunder1, (byte)Enums.Sound.Thunder4);
+                var thunder = MyRandom.Next((byte)Enums.Sound.Thunder1, (byte)Enums.Sound.Thunder4);
                 Sound.Play((Enums.Sound)thunder);
 
                 // Relâmpago
@@ -230,9 +230,9 @@ internal static class TempMap
 
     private static void SnowMove(int i, bool move = true)
     {
-        int difference = MyRandom.Next(0, SnowMovement / 3);
-        int x1 = Weather[i].Start + SnowMovement + difference;
-        int x2 = Weather[i].Start - SnowMovement - difference;
+        var difference = MyRandom.Next(0, SnowMovement / 3);
+        var x1 = Weather[i].Start + SnowMovement + difference;
+        var x2 = Weather[i].Start - SnowMovement - difference;
 
         // Faz com que a partícula volte
         if (x1 <= Weather[i].X)

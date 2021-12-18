@@ -41,7 +41,7 @@ public static class Utils
     public static void Swap<T>(ref T item1, ref T item2)
     {
         // Troca dois elementos
-        T temp = item1;
+        var temp = item1;
         item1 = item2;
         item2 = temp;
     }
@@ -66,8 +66,8 @@ public static class Utils
 
     public static object ByteArrayToObject(NetIncomingMessage data)
     {
-        int size = data.ReadInt32();
-        byte[] array = data.ReadBytes(size);
+        var size = data.ReadInt32();
+        var array = data.ReadBytes(size);
 
         using var stream = new MemoryStream(array);
         return new BinaryFormatter().Deserialize(stream);

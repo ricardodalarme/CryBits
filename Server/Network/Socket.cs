@@ -12,7 +12,7 @@ internal static class Socket
     public static void Init()
     {
         // Define algumas configurações da rede
-        NetPeerConfiguration config = new NetPeerConfiguration(GameName)
+        var config = new NetPeerConfiguration(GameName)
         {
             Port = Port,
             AcceptIncomingConnections = true,
@@ -32,12 +32,12 @@ internal static class Socket
         while ((data = Device.ReadMessage()) != null)
         {
             // Jogador que está enviando os dados
-            Account account = Account.List.Find(x => x.Connection == data.SenderConnection);
+            var account = Account.List.Find(x => x.Connection == data.SenderConnection);
 
             switch (data.MessageType)
             {
                 case NetIncomingMessageType.StatusChanged:
-                    NetConnectionStatus status = (NetConnectionStatus)data.ReadByte();
+                    var status = (NetConnectionStatus)data.ReadByte();
 
                     // Nova conexão - Conecta o jogador ao jogo
                     if (status == NetConnectionStatus.Connected)

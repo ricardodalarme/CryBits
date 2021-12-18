@@ -115,11 +115,11 @@ internal partial class EditorNpcs : DarkForm
     private void butNew_Click(object sender, EventArgs e)
     {
         // Adiciona uma loja nova
-        Npc npc = new Npc();
+        var npc = new Npc();
         Npc.List.Add(npc.ID, npc);
 
         // Adiciona na lista
-        TreeNode node = new TreeNode(npc.Name);
+        var node = new TreeNode(npc.Name);
         node.Tag = npc.ID;
         List.Nodes.Add(node);
         List.SelectedNode = node;
@@ -259,7 +259,7 @@ internal partial class EditorNpcs : DarkForm
     private void butDrop_Delete_Click(object sender, EventArgs e)
     {
         // Deleta a item
-        short selectedItem = (short)lstDrop.SelectedIndex;
+        var selectedItem = (short)lstDrop.SelectedIndex;
         if (selectedItem != -1)
         {
             Selected.Drop.RemoveAt(selectedItem);

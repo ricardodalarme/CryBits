@@ -44,7 +44,7 @@ internal static class Renders
 
     private static void Render(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null, object mode = null)
     {
-        Sprite tmpImage = new Sprite(texture);
+        var tmpImage = new Sprite(texture);
 
         // Define os dados
         tmpImage.TextureRect = new IntRect(recSource.X, recSource.Y, recSource.Width, recSource.Height);
@@ -61,8 +61,8 @@ internal static class Renders
     private static void Render(Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight, object color = null)
     {
         // Define as propriedades dos retângulos
-        Rectangle source = new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
-        Rectangle destiny = new Rectangle(x, y, sourceWidth, sourceHeight);
+        var source = new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
+        var destiny = new Rectangle(x, y, sourceWidth, sourceHeight);
 
         // Desenha a textura
         Render(texture, source, destiny, color);
@@ -71,7 +71,7 @@ internal static class Renders
     private static void Render(Texture texture, Rectangle destiny, object color = null)
     {
         // Define as propriedades dos retângulos
-        Rectangle source = new Rectangle(new Point(0), texture.ToSize());
+        var source = new Rectangle(new Point(0), texture.ToSize());
 
         // Desenha a textura
         Render(texture, source, destiny, color);
@@ -80,8 +80,8 @@ internal static class Renders
     private static void Render(Texture texture, Point position, object color = null)
     {
         // Define as propriedades dos retângulos
-        Rectangle source = new Rectangle(new Point(0), texture.ToSize());
-        Rectangle destiny = new Rectangle(position, texture.ToSize());
+        var source = new Rectangle(new Point(0), texture.ToSize());
+        var destiny = new Rectangle(position, texture.ToSize());
 
         // Desenha a textura
         Render(texture, source, destiny, color);
@@ -89,7 +89,7 @@ internal static class Renders
 
     private static void DrawText(string text, int x, int y, Color color, TextAlign alignment = TextAlign.Left)
     {
-        Text tempText = new Text(text, Fonts.Default);
+        var tempText = new Text(text, Fonts.Default);
 
         // Alinhamento do texto
         switch (alignment)
@@ -118,7 +118,7 @@ internal static class Renders
         if (messageWidth < maxWidth)
             DrawText(text, x, y, color);
         else
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 // Verifica se o caráctere é um separável 
                 switch (text[i])
@@ -145,8 +145,8 @@ internal static class Renders
 
     private static void Render_Box(Texture texture, byte margin, Point position, Size size)
     {
-        int textureWidth = texture.ToSize().Width;
-        int textureHeight = texture.ToSize().Height;
+        var textureWidth = texture.ToSize().Width;
+        var textureHeight = texture.ToSize().Height;
 
         // Borda esquerda
         Render(texture, new Rectangle(new Point(0), new Size(margin, textureWidth)), new Rectangle(position, new Size(margin, textureHeight)));
@@ -261,8 +261,8 @@ internal static class Renders
     private static void CheckBox(CheckBoxes tool)
     {
         // Define as propriedades dos retângulos
-        Rectangle recSource = new Rectangle(new Point(), new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
-        Rectangle recDestiny = new Rectangle(tool.Position, recSource.Size);
+        var recSource = new Rectangle(new Point(), new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
+        var recDestiny = new Rectangle(tool.Position, recSource.Size);
 
         // Desenha a textura do marcador pelo seu estado 
         if (tool.Checked) recSource.Location = new Point(Textures.CheckBox.ToSize().Width / 2, 0);
@@ -274,8 +274,8 @@ internal static class Renders
 
     private static void TextBox(TextBoxes tool)
     {
-        Point position = tool.Position;
-        string text = tool.Text;
+        var position = tool.Position;
+        var text = tool.Text;
 
         // Desenha a ferramenta
         Render_Box(Textures.TextBox, 3, tool.Position, new Size(tool.Width, Textures.TextBox.ToSize().Height));
@@ -315,8 +315,8 @@ internal static class Renders
     #region Menu
     private static void SelectCharacterClass()
     {
-        Point textPosition = new Point(399, 425);
-        string text = "(" + (Panels.SelectCharacter + 1) + ") None";
+        var textPosition = new Point(399, 425);
+        var text = "(" + (Panels.SelectCharacter + 1) + ") None";
 
         // Somente se necessário
         if (!Buttons.Characters_Change_Buttons())
@@ -333,7 +333,7 @@ internal static class Renders
         }
 
         // Desenha o personagem
-        short textureNum = Panels.Characters[Panels.SelectCharacter].TextureNum;
+        var textureNum = Panels.Characters[Panels.SelectCharacter].TextureNum;
         if (textureNum > 0)
         {
             Render(Textures.Faces[textureNum], new Point(353, 442));
@@ -348,7 +348,7 @@ internal static class Renders
     private static void CreateCharacterClass()
     {
         short textureNum = 0;
-        Class @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
+        var @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
 
         // Textura do personagem
         if (CheckBoxes.List["GenderMale"].Checked && @class.TexMale.Count > 0)
@@ -364,7 +364,7 @@ internal static class Renders
         }
 
         // Desenha o nome da classe
-        string text = @class.Name;
+        var text = @class.Name;
         DrawText(text, 347, 509, Color.White, TextAlign.Center);
 
         // Descrição
@@ -374,9 +374,9 @@ internal static class Renders
 
     private static void Bars(Panels tool)
     {
-        decimal hpPercentage = Player.Me.Vital[(byte)Vital.HP] / (decimal)Player.Me.MaxVital[(byte)Vital.HP];
-        decimal mpPercentage = Player.Me.Vital[(byte)Vital.MP] / (decimal)Player.Me.MaxVital[(byte)Vital.MP];
-        decimal expPercentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
+        var hpPercentage = Player.Me.Vital[(byte)Vital.HP] / (decimal)Player.Me.MaxVital[(byte)Vital.HP];
+        var mpPercentage = Player.Me.Vital[(byte)Vital.MP] / (decimal)Player.Me.MaxVital[(byte)Vital.MP];
+        var expPercentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
 
         // Barras
         Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0, (int)(Textures.BarsPanel.Size.X * hpPercentage), 17);
@@ -396,12 +396,12 @@ internal static class Renders
 
     private static void Chat()
     {
-        Panels tool = Panels.List["Chat"];
+        var tool = Panels.List["Chat"];
         tool.Visible = TextBoxes.Focused != null && ((TextBoxes)TextBoxes.Focused.Data).Name.Equals("Chat");
 
         // Renderiza as mensagens
         if (tool.Visible || (Loop.ChatTimer >= Environment.TickCount && Options.Chat))
-            for (byte i = UI.Chat.LinesFirst; i <= UI.Chat.LinesVisible + UI.Chat.LinesFirst; i++)
+            for (var i = UI.Chat.LinesFirst; i <= UI.Chat.LinesVisible + UI.Chat.LinesFirst; i++)
                 if (UI.Chat.Order.Count > i)
                     DrawText(UI.Chat.Order[i].Text, 16, 461 + (11 * (i - UI.Chat.LinesFirst)), UI.Chat.Order[i].Color);
 
@@ -411,9 +411,9 @@ internal static class Renders
 
     private static void Information(Panels tool)
     {
-        Item item = CryBits.Entities.Item.List.Get(Panels.InformationID);
+        var item = CryBits.Entities.Item.List.Get(Panels.InformationID);
         Color textColor;
-        List<string> data = new List<string>();
+        var data = new List<string>();
 
         // Apenas se necessário
         if (item == null) return;
@@ -471,12 +471,12 @@ internal static class Renders
 
     private static void Hotbar(Panels tool)
     {
-        string indicator = string.Empty;
+        var indicator = string.Empty;
 
         // Desenha os objetos da hotbar
         for (byte i = 0; i < MaxHotbar; i++)
         {
-            short slot = Player.Me.Hotbar[i].Slot;
+            var slot = Player.Me.Hotbar[i].Slot;
             if (slot > 0)
                 switch (Player.Me.Hotbar[i].Type)
                 {
@@ -571,7 +571,7 @@ internal static class Renders
     private static void Shop(Panels tool)
     {
         // Dados da loja
-        string name = Panels.ShopOpen.Name;
+        var name = Panels.ShopOpen.Name;
         DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, TextAlign.Center);
         DrawText("Currency: " + Panels.ShopOpen.Currency.Name, tool.Position.X + 10, tool.Position.Y + 195, Color.White);
 
@@ -586,9 +586,9 @@ internal static class Renders
         if (item == null) return;
 
         // Posição do item baseado no slot
-        int line = (slot - 1) / columns;
-        int column = slot - (line * 5) - 1;
-        Point position = start + new Size(column * (grid + gap), line * (grid + gap));
+        var line = (slot - 1) / columns;
+        var column = slot - (line * 5) - 1;
+        var position = start + new Size(column * (grid + gap), line * (grid + gap));
 
         // Desenha o item e sua quantidade
         Render(Textures.Items[item.Texture], position);
@@ -598,8 +598,8 @@ internal static class Renders
     private static void Character(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
     {
         Rectangle recSource = new(), recDestiny;
-        Size size = Textures.Characters[textureNum].ToSize();
-        Color color = new Color(255, 255, 255);
+        var size = Textures.Characters[textureNum].ToSize();
+        var color = new Color(255, 255, 255);
         byte line = 0;
 
         // Direção
@@ -636,8 +636,8 @@ internal static class Renders
 
     private static void PlayerTexture(Player player)
     {
-        byte column = AnimationStopped;
-        bool hurt = false;
+        var column = AnimationStopped;
+        var hurt = false;
 
         // Previne sobrecargas
         if (player.TextureNum <= 0 || player.TextureNum > Textures.Characters.Count) return;
@@ -662,18 +662,18 @@ internal static class Renders
 
     private static void PlayerBars(Player player)
     {
-        short value = player.Vital[(byte)Vital.HP];
+        var value = player.Vital[(byte)Vital.HP];
 
         // Apenas se necessário
         if (value <= 0 || value >= player.MaxVital[(byte)Vital.HP]) return;
 
         // Cálcula a largura da barra
-        Size characterSize = Textures.Characters[player.TextureNum].ToSize();
-        int fullWidth = characterSize.Width / AnimationAmount;
-        int width = value * fullWidth / player.MaxVital[(byte)Vital.HP];
+        var characterSize = Textures.Characters[player.TextureNum].ToSize();
+        var fullWidth = characterSize.Width / AnimationAmount;
+        var width = value * fullWidth / player.MaxVital[(byte)Vital.HP];
 
         // Posição das barras
-        Point position = new Point
+        var position = new Point
         {
             X = ConvertX(player.PixelX),
             Y = ConvertY(player.PixelY) + (characterSize.Height / AnimationAmount) + 4
@@ -686,18 +686,18 @@ internal static class Renders
 
     private static void PlayerName(Player player)
     {
-        Texture texture = Textures.Characters[player.TextureNum];
+        var texture = Textures.Characters[player.TextureNum];
         int nameSize = MeasureString(player.Name);
 
         // Posição do texto
-        Point position = new Point
+        var position = new Point
         {
             X = player.PixelX + (texture.ToSize().Width / AnimationAmount / 2) - (nameSize / 2),
             Y = player.PixelY - (texture.ToSize().Height / AnimationAmount / 2)
         };
 
         // Cor do texto
-        Color color = player == Player.Me ? Color.Yellow : Color.White;
+        var color = player == Player.Me ? Color.Yellow : Color.White;
 
         // Desenha o texto
         DrawText(player.Name, ConvertX(position.X), ConvertY(position.Y), color);
@@ -706,7 +706,7 @@ internal static class Renders
     private static void Npc(TempNpc npc)
     {
         byte column = 0;
-        bool hurt = false;
+        var hurt = false;
 
         // Previne sobrecargas
         if (npc.Data.Texture <= 0 || npc.Data.Texture > Textures.Characters.Count) return;
@@ -733,10 +733,10 @@ internal static class Renders
 
     private static void NpcName(TempNpc npc)
     {
-        Point position = new Point();
+        var position = new Point();
         Color color;
         int nameSize = MeasureString(npc.Data.Name);
-        Texture texture = Textures.Characters[npc.Data.Texture];
+        var texture = Textures.Characters[npc.Data.Texture];
 
         // Posição do texto
         position.X = npc.PixelX + (texture.ToSize().Width / AnimationAmount / 2) - (nameSize / 2);
@@ -757,16 +757,16 @@ internal static class Renders
 
     private static void NpcBars(TempNpc npc)
     {
-        Texture texture = Textures.Characters[npc.Data.Texture];
-        short value = npc.Vital[(byte)Vital.HP];
+        var texture = Textures.Characters[npc.Data.Texture];
+        var value = npc.Vital[(byte)Vital.HP];
 
         // Apenas se necessário
         if (value <= 0 || value >= npc.Data.Vital[(byte)Vital.HP]) return;
 
         // Posição
-        Point position = new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY) + (texture.ToSize().Height / AnimationAmount) + 4);
-        int fullWidth = texture.ToSize().Width / AnimationAmount;
-        int width = value * fullWidth / npc.Data.Vital[(byte)Vital.HP];
+        var position = new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY) + (texture.ToSize().Height / AnimationAmount) + 4);
+        var fullWidth = texture.ToSize().Width / AnimationAmount;
+        var width = value * fullWidth / npc.Data.Vital[(byte)Vital.HP];
 
         // Desenha a barra 
         Render(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
@@ -779,22 +779,22 @@ internal static class Renders
         if (TempMap.Current.Data.Name == null) return;
 
         // Dados
-        System.Drawing.Color tempColor = TempMap.Current.Data.Color;
-        Color color = new Color(tempColor.R, tempColor.G, tempColor.B);
-        Map map = TempMap.Current.Data;
+        var tempColor = TempMap.Current.Data.Color;
+        var color = new Color(tempColor.R, tempColor.G, tempColor.B);
+        var map = TempMap.Current.Data;
 
         // Desenha todas as camadas dos azulejos
         for (byte c = 0; c < map.Layer.Count; c++)
             if (map.Layer[c].Type == layerType)
-                for (int x = Camera.TileSight.X; x <= Camera.TileSight.Width; x++)
-                for (int y = Camera.TileSight.Y; y <= Camera.TileSight.Height; y++)
+                for (var x = Camera.TileSight.X; x <= Camera.TileSight.Width; x++)
+                for (var y = Camera.TileSight.Y; y <= Camera.TileSight.Height; y++)
                     if (!Map.OutLimit((short)x, (short)y))
                     {
-                        MapTileData data = map.Layer[c].Tile[x, y];
+                        var data = map.Layer[c].Tile[x, y];
                         if (data.Texture > 0)
                         {
-                            int x2 = data.X * Grid;
-                            int y2 = data.Y * Grid;
+                            var x2 = data.X * Grid;
+                            var y2 = data.Y * Grid;
 
                             // Desenha o azulejo
                             if (!map.Layer[c].Tile[x, y].IsAutoTile)
@@ -834,15 +834,15 @@ internal static class Renders
 
     private static void MapFog()
     {
-        MapFog data = TempMap.Current.Data.Fog;
-        Size textureSize = Textures.Fogs[data.Texture].ToSize();
+        var data = TempMap.Current.Data.Fog;
+        var textureSize = Textures.Fogs[data.Texture].ToSize();
 
         // Previne erros
         if (data.Texture <= 0) return;
 
         // Desenha a fumaça
-        for (int x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
-        for (int y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
+        for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
+        for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
             Render(Textures.Fogs[data.Texture], new Point((x * textureSize.Width) + TempMap.Current.FogX, (y * textureSize.Height) + TempMap.Current.FogY), new Color(255, 255, 255, data.Alpha));
     }
 
@@ -891,13 +891,13 @@ internal static class Renders
         // Desenha todos os itens que estão no chão
         for (byte i = 0; i < TempMap.Current.Item.Length; i++)
         {
-            MapItems data = TempMap.Current.Item[i];
+            var data = TempMap.Current.Item[i];
 
             // Somente se necessário
             if (data.Item == null) continue;
 
             // Desenha o item
-            Point position = new Point(ConvertX(data.X * Grid), ConvertY(data.Y * Grid));
+            var position = new Point(ConvertX(data.X * Grid), ConvertY(data.Y * Grid));
             Render(Textures.Items[data.Item.Texture], position);
         }
     }
@@ -907,7 +907,7 @@ internal static class Renders
         // Desenha todos os sangues
         for (byte i = 0; i < TempMap.Current.Blood.Count; i++)
         {
-            MapBlood data = TempMap.Current.Blood[i];
+            var data = TempMap.Current.Blood[i];
             Render(Textures.Blood, ConvertX(data.X * Grid), ConvertY(data.Y * Grid), data.TextureNum * 32, 0, 32, 32, new Color(255, 255, 255, data.Opacity));
         }
     }

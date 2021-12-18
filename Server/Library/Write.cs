@@ -29,7 +29,7 @@ internal static class Write
 
     public static void Account(Account account)
     {
-        FileInfo file = new FileInfo(Directories.Accounts.FullName + account.User + "\\Data" + Directories.Format);
+        var file = new FileInfo(Directories.Accounts.FullName + account.User + "\\Data" + Directories.Format);
 
         // Evita erros
         if (!file.Directory.Exists) file.Directory.Create();
@@ -43,7 +43,7 @@ internal static class Write
 
     public static void Character(Account account)
     {
-        FileInfo file = new FileInfo(Directories.Accounts.FullName + account.User + "\\Characters\\" + account.Character.Name + Directories.Format);
+        var file = new FileInfo(Directories.Accounts.FullName + account.User + "\\Characters\\" + account.Character.Name + Directories.Format);
 
         // Evita erros
         if (!file.Directory.Exists) file.Directory.Create();

@@ -42,7 +42,7 @@ internal static class Program
 
         // Cria os mapas temporários
         Console.WriteLine("Creating temporary maps.");
-        foreach (Map map in Map.List.Values) TempMap.CreateTemporary(map, true);
+        foreach (var map in Map.List.Values) TempMap.CreateTemporary(map, true);
 
         // Cria os dispositivos da rede
         Socket.Init();
@@ -52,7 +52,7 @@ internal static class Program
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
 
         // Inicia os laços
-        Thread consoleLoop = new Thread(Loop.Commands);
+        var consoleLoop = new Thread(Loop.Commands);
         consoleLoop.Start();
         Loop.Main();
     }
@@ -88,7 +88,7 @@ internal static class Program
             return;
 
         // Separa os comandos em partes
-        string[] parts = command.Split(' ');
+        var parts = command.Split(' ');
 
         // Executa o determinado comando
         switch (parts[0].ToLower())
@@ -103,14 +103,14 @@ internal static class Program
                 break;
             case "defineaccess":
                 // Verifica se o que está digitado corretamente
-                if (parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(parts[1]) || !byte.TryParse(parts[2], out byte access))
+                if (parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(parts[1]) || !byte.TryParse(parts[2], out var access))
                 {
                     Console.WriteLine("Use: defineaccess 'Player Name' 'Access' ");
                     return;
                 }
 
                 // Encontra o jogador
-                Account account = Account.List.Find(x => x.User.Equals(parts[1]));
+                var account = Account.List.Find(x => x.User.Equals(parts[1]));
 
                 if (account == null)
                 {

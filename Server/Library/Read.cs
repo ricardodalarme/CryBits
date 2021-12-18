@@ -67,13 +67,13 @@ internal static class Read
 
     public static void Characters(Account account)
     {
-        DirectoryInfo directory = new DirectoryInfo(Directories.Accounts.FullName + account.User + "\\Characters");
+        var directory = new DirectoryInfo(Directories.Accounts.FullName + account.User + "\\Characters");
 
         // Previne erros
         if (!directory.Exists) directory.Create();
 
         // Lê todos os personagens
-        FileInfo[] file = directory.GetFiles();
+        var file = directory.GetFiles();
         account.Characters = new List<Account.TempCharacter>();
         for (byte i = 0; i < file.Length; i++)
             // Cria um arquivo temporário
@@ -88,7 +88,7 @@ internal static class Read
 
     public static void Character(Account account, string name)
     {
-        FileInfo file = new FileInfo(Directories.Accounts.FullName + account.User + "\\Characters\\" + name + Directories.Format);
+        var file = new FileInfo(Directories.Accounts.FullName + account.User + "\\Characters\\" + name + Directories.Format);
 
         // Verifica se o diretório existe
         if (!file.Directory.Exists) return;
@@ -136,7 +136,7 @@ internal static class Read
     private static void Classes()
     {
         Class.List = new Dictionary<Guid, Class>();
-        FileInfo[] file = Directories.Classes.GetFiles();
+        var file = Directories.Classes.GetFiles();
 
         // Lê os dados
         if (file.Length > 0)
@@ -146,7 +146,7 @@ internal static class Read
         // Cria uma classe caso não houver nenhuma
         else
         {
-            Class @class = new Class();
+            var @class = new Class();
             Class.List.Add(@class.ID, @class);
             Write.Class(@class);
         }
@@ -156,7 +156,7 @@ internal static class Read
     {
         // Lê os dados
         Item.List = new Dictionary<Guid, Item>();
-        FileInfo[] file = Directories.Items.GetFiles();
+        var file = Directories.Items.GetFiles();
         for (byte i = 0; i < file.Length; i++)
             using (var stream = file[i].OpenRead())
                 Item.List.Add(new Guid(file[i].Name.Remove(36)), (Item)new BinaryFormatter().Deserialize(stream));
@@ -166,7 +166,7 @@ internal static class Read
     {
         // Lê os dados
         Map.List = new Dictionary<Guid, Map>();
-        FileInfo[] file = Directories.Maps.GetFiles();
+        var file = Directories.Maps.GetFiles();
 
         // Lê os dados
         if (file.Length > 0)
@@ -177,7 +177,7 @@ internal static class Read
         else
         {
             // Cria um mapa novo
-            Map map = new Map();
+            var map = new Map();
             Map.List.Add(map.ID, map);
 
             // Escreve os dados
@@ -189,7 +189,7 @@ internal static class Read
     {
         // Lê os dados
         Npc.List = new Dictionary<Guid, Npc>();
-        FileInfo[] file = Directories.Npcs.GetFiles();
+        var file = Directories.Npcs.GetFiles();
         for (byte i = 0; i < file.Length; i++)
             using (var stream = file[i].OpenRead())
                 Npc.List.Add(new Guid(file[i].Name.Remove(36)), (Npc)new BinaryFormatter().Deserialize(stream));
@@ -199,7 +199,7 @@ internal static class Read
     {
         // Lê os dados
         Shop.List = new Dictionary<Guid, Shop>();
-        FileInfo[] file = Directories.Shops.GetFiles();
+        var file = Directories.Shops.GetFiles();
         for (byte i = 0; i < file.Length; i++)
             using (var stream = file[i].OpenRead())
                 Shop.List.Add(new Guid(file[i].Name.Remove(36)), (Shop)new BinaryFormatter().Deserialize(stream));

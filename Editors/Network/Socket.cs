@@ -19,7 +19,7 @@ internal static class Socket
 
     public static void Init()
     {
-        NetPeerConfiguration config = new NetPeerConfiguration(GameName);
+        var config = new NetPeerConfiguration(GameName);
 
         // Cria o dispositivo com as devidas configurações
         Device = new NetClient(config);
@@ -60,7 +60,7 @@ internal static class Socket
 
     public static bool TryConnect()
     {
-        int waitTimer = Environment.TickCount;
+        var waitTimer = Environment.TickCount;
 
         // Se o jogador já estiver conectado, então isso não é mais necessário
         if (IsConnected()) return true;
@@ -78,7 +78,7 @@ internal static class Socket
     private static void Leave()
     {
         // Fecha todas as janelas abertar e abre o menu de login
-        for (int i = 0; i < Application.OpenForms.Count; i++)
+        for (var i = 0; i < Application.OpenForms.Count; i++)
             if (Application.OpenForms[i] != Login.Form)
                 Application.OpenForms[i].Close();
         Login.Form.Visible = true;

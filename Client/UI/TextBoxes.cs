@@ -60,7 +60,7 @@ internal class TextBoxes : Tools.Structure
             }
 
             // Adiciona o caracter à caixa de texto
-            char @char = Convert.ToChar(e.Unicode);
+            var @char = Convert.ToChar(e.Unicode);
             if (@char > 31 && @char < 128) Text += e.Unicode;
         }
     }
@@ -71,11 +71,11 @@ internal class TextBoxes : Tools.Structure
         if (Focused?.Viewable == true) return;
 
         // Percorre toda a árvore de ordem para executar o comando
-        Stack<List<Tools.OrderStructure>> stack = new Stack<List<Tools.OrderStructure>>();
+        var stack = new Stack<List<Tools.OrderStructure>>();
         stack.Push(Tools.Order);
         while (stack.Count != 0)
         {
-            List<Tools.OrderStructure> top = stack.Pop();
+            var top = stack.Pop();
 
             for (byte i = 0; i < top.Count; i++)
                 if (top[i].Data.Visible)
@@ -94,7 +94,7 @@ internal class TextBoxes : Tools.Structure
 
     public static void ChangeFocus()
     {
-        List<Tools.OrderStructure>  parent = Focused.Parent != null ? Focused.Parent.Nodes : Tools.Order;
+        var  parent = Focused.Parent != null ? Focused.Parent.Nodes : Tools.Order;
         int index = parent.IndexOf(Focused), temp = index + 1;
 
         // Altera o digitalizador focado para o próximo

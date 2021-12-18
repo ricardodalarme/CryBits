@@ -17,7 +17,7 @@ internal static class Receive
 {
     public static void Handle(Account account, NetIncomingMessage data)
     {
-        Player player = account.Character;
+        var player = account.Character;
 
         // Manuseia os dados recebidos 
         switch ((ClientPacket)data.ReadByte())
@@ -80,9 +80,9 @@ internal static class Receive
     private static void Connect(Account account, NetIncomingMessage data)
     {
         // Lê os dados
-        string user = data.ReadString().Trim();
-        string password = data.ReadString();
-        bool editor = data.ReadBoolean();
+        var user = data.ReadString().Trim();
+        var password = data.ReadString();
+        var editor = data.ReadBoolean();
 
         // Verifica se está tudo certo
         if (!Directory.Exists(Directories.Accounts.FullName + user))
@@ -151,8 +151,8 @@ internal static class Receive
     private static void Register(Account account, NetIncomingMessage data)
     {
         // Lê os dados
-        string user = data.ReadString().Trim();
-        string password = data.ReadString();
+        var user = data.ReadString().Trim();
+        var password = data.ReadString();
 
         // Verifica se está tudo certo
         if (user.Length < MinNameLength || user.Length > MaxNameLength)
@@ -186,7 +186,7 @@ internal static class Receive
     private static void CreateCharacter(Account account, NetIncomingMessage data)
     {
         // Lê os dados
-        string name = data.ReadString().Trim();
+        var name = data.ReadString().Trim();
 
         // Verifica se está tudo certo
         if (name.Length < MinNameLength || name.Length > MaxNameLength)
@@ -236,7 +236,7 @@ internal static class Receive
 
     private static void CharacterUse(Account account, NetIncomingMessage data)
     {
-        int character = data.ReadInt32();
+        var character = data.ReadInt32();
 
         // Verifica se o personagem existe
         if (character < 0 || character >= account.Characters.Count) return;
@@ -262,13 +262,13 @@ internal static class Receive
 
     private static void CharacterDelete(Account account, NetIncomingMessage data)
     {
-        int character = data.ReadInt32();
+        var character = data.ReadInt32();
 
         // Verifica se o personagem existe
         if (character < 0 || character >= account.Characters.Count) return;
 
         // Deleta o personagem
-        string name = account.Characters[character].Name;
+        var name = account.Characters[character].Name;
         Send.Alert(account, "The character '" + name + "' has been deleted.", false);
         Write.CharactersName(Read.CharactersName().Replace(":;" + name + ":", ":"));
         account.Characters.RemoveAt(character);
@@ -281,7 +281,7 @@ internal static class Receive
 
     private static void PlayerDirection(Player player, NetIncomingMessage data)
     {
-        Direction direction = (Direction)data.ReadByte();
+        var direction = (Direction)data.ReadByte();
 
         // Previne erros
         if (direction < Direction.Up || direction > Direction.Right) return;
@@ -303,7 +303,7 @@ internal static class Receive
 
     private static void Message(Player player, NetIncomingMessage data)
     {
-        string message = data.ReadString();
+        var message = data.ReadString();
 
         // Evita caracteres inválidos
         for (byte i = 0; i >= message.Length; i++)
@@ -327,7 +327,7 @@ internal static class Receive
 
     private static void AddPoint(Player player, NetIncomingMessage data)
     {
-        byte attributeNum = data.ReadByte();
+        var attributeNum = data.ReadByte();
 
         // Adiciona um ponto a determinado atributo
         if (player.Points > 0)
@@ -341,7 +341,7 @@ internal static class Receive
 
     private static void CollectItem(Player player)
     {
-        MapItems mapItem = player.Map.HasItem(player.X, player.Y);
+        var mapItem = player.Map.HasItem(player.X, player.Y);
 
         // Somente se necessário
         if (mapItem == null) return;
@@ -374,7 +374,7 @@ internal static class Receive
         Send.PlayerInventory(player);
 
         // Altera na hotbar
-        HotbarSlot hotbarSlot = player.FindHotbar(SlotType.Item, player.Inventory[slotOld]);
+        var hotbarSlot = player.FindHotbar(SlotType.Item, player.Inventory[slotOld]);
         if (hotbarSlot != null)
         {
             hotbarSlot.Slot = slotNew;
@@ -389,7 +389,7 @@ internal static class Receive
 
     private static void EquipmentRemove(Player player, NetIncomingMessage data)
     {
-        byte slot = data.ReadByte();
+        var slot = data.ReadByte();
 
         // Apenas se necessário
         if (player.Equipment[slot] == null) return;
@@ -419,9 +419,9 @@ internal static class Receive
 
     private static void HotbarAdd(Player player, NetIncomingMessage data)
     {
-        short hotbarSlot = data.ReadInt16();
-        SlotType type = (SlotType)data.ReadByte();
-        short slot = data.ReadInt16();
+        var hotbarSlot = data.ReadInt16();
+        var type = (SlotType)data.ReadByte();
+        var slot = data.ReadInt16();
 
         // Somente se necessário
         if (slot != 0 && player.FindHotbar(type, slot) != null) return;
@@ -450,7 +450,7 @@ internal static class Receive
 
     private static void HotbarUse(Player player, NetIncomingMessage data)
     {
-        short hotbarSlot = data.ReadInt16();
+        var hotbarSlot = data.ReadInt16();
 
         // Usa o item
         switch (player.Hotbar[hotbarSlot].Type)
@@ -641,10 +641,10 @@ internal static class Receive
 
     private static void PartyInvite(Player player, NetIncomingMessage data)
     {
-        string name = data.ReadString();
+        var name = data.ReadString();
 
         // Encontra o jogador
-        Player invited = Player.Find(name);
+        var invited = Player.Find(name);
 
         // Verifica se o jogador está convectado
         if (invited == null)
@@ -684,7 +684,7 @@ internal static class Receive
 
     private static void PartyAccept(Player player)
     {
-        Player invitation = Player.Find(player.PartyRequest);
+        var invitation = Player.Find(player.PartyRequest);
 
         // Verifica se já tem um grupo
         if (player.Party.Count != 0)
@@ -724,7 +724,7 @@ internal static class Receive
 
     private static void PartyDecline(Player player)
     {
-        Player invitation = Player.Find(player.PartyRequest);
+        var invitation = Player.Find(player.PartyRequest);
 
         // Recusa o convite
         if (invitation != null) Send.Message(invitation, player.Name + " decline the party.", Color.White);
@@ -739,10 +739,10 @@ internal static class Receive
 
     private static void TradeInvite(Player player, NetIncomingMessage data)
     {
-        string name = data.ReadString();
+        var name = data.ReadString();
 
         // Encontra o jogador
-        Player invited = Player.Find(name);
+        var invited = Player.Find(name);
 
         // Verifica se o jogador está convectado
         if (invited == null)
@@ -793,7 +793,7 @@ internal static class Receive
 
     private static void TradeAccept(Player player)
     {
-        Player invited = Player.Find(player.TradeRequest);
+        var invited = Player.Find(player.TradeRequest);
 
         // Verifica se já tem um grupo
         if (player.Trade != null)
@@ -838,7 +838,7 @@ internal static class Receive
 
     private static void TradeDecline(Player player)
     {
-        Player invited = Player.Find(player.TradeRequest);
+        var invited = Player.Find(player.TradeRequest);
 
         // Recusa o convite
         if (invited != null) Send.Message(invited, player.Name + " decline the trade.", Color.White);
@@ -853,7 +853,7 @@ internal static class Receive
     private static void TradeOffer(Player player, NetIncomingMessage data)
     {
         short slot = data.ReadInt16(), inventorySlot = data.ReadInt16();
-        short amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
+        var amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
 
         // Adiciona o item à troca
         if (inventorySlot != 0)
@@ -877,8 +877,8 @@ internal static class Receive
 
     private static void TradeOfferState(Player player, NetIncomingMessage data)
     {
-        TradeStatus state = (TradeStatus)data.ReadByte();
-        Player invited = player.Trade;
+        var state = (TradeStatus)data.ReadByte();
+        var invited = player.Trade;
 
         switch (state)
         {
@@ -903,7 +903,7 @@ internal static class Receive
                     theirInventory = (ItemSlot[])invited.Inventory.Clone();
 
                 // Remove os itens do inventário dos jogadores
-                Player to = player;
+                var to = player;
                 for (byte j = 0; j < 2; j++, to = to == player ? invited : player)
                 for (byte i = 0; i < MaxInventory; i++)
                     to.TakeItem(to.Inventory[to.TradeOffer[i].SlotNum], to.TradeOffer[i].Amount);
@@ -939,8 +939,8 @@ internal static class Receive
 
     private static void ShopBuy(Player player, NetIncomingMessage data)
     {
-        ShopItem shopSold = player.Shop.Sold[data.ReadInt16()];
-        ItemSlot inventorySlot = player.FindInventory(player.Shop.Currency);
+        var shopSold = player.Shop.Sold[data.ReadInt16()];
+        var inventorySlot = player.FindInventory(player.Shop.Currency);
 
         // Verifica se o jogador tem dinheiro
         if (inventorySlot == null || inventorySlot.Amount < shopSold.Price)
@@ -963,9 +963,9 @@ internal static class Receive
 
     private static void ShopSell(Player player, NetIncomingMessage data)
     {
-        byte inventorySlot = data.ReadByte();
-        short amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
-        ShopItem buy = player.Shop.FindBought(player.Inventory[inventorySlot].Item);
+        var inventorySlot = data.ReadByte();
+        var amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
+        var buy = player.Shop.FindBought(player.Inventory[inventorySlot].Item);
 
         // Verifica se a loja vende o item
         if (buy == null)

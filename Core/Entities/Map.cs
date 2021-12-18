@@ -96,8 +96,8 @@ public class MapLayer
     public void Update(int x, int y)
     {
         // Atualiza os azulejos necessários
-        for (int x2 = x - 2; x2 < x + 2; x2++)
-        for (int y2 = y - 2; y2 < y + 2; y2++)
+        for (var x2 = x - 2; x2 < x + 2; x2++)
+        for (var y2 = y - 2; y2 < y + 2; y2++)
             if (x2 >= 0 && x2 < Map.Width && y2 >= 0 && y2 < Map.Height)
                 // Faz os cálculos para a autocriação
                 Calculate((byte)x2, (byte)y2);
@@ -110,8 +110,8 @@ public class MapLayer
         if (x2 < 0 || x2 >= Map.Width || y2 < 0 || y2 >= Map.Height) return true;
 
         // Dados
-        MapTileData data1 = Tile[x1, y1];
-        MapTileData data2 = Tile[x2, y2];
+        var data1 = Tile[x1, y1];
+        var data2 = Tile[x2, y2];
 
         // Verifica se são os mesmo azulejos
         if (!data2.IsAutoTile) return false;
@@ -134,8 +134,8 @@ public class MapLayer
 
     private void CalculateNw(byte x, byte y)
     {
-        bool[] available = new bool[3];
-        AddMode mode = AddMode.None;
+        var available = new bool[3];
+        var mode = AddMode.None;
 
         // Verifica se existe algo para modificar nos azulejos em volta (Norte, Oeste, Noroeste)
         if (Check(x, y, x - 1, y - 1)) available[0] = true;
@@ -162,8 +162,8 @@ public class MapLayer
 
     private void CalculateNe(byte x, byte y)
     {
-        bool[] available = new bool[3];
-        AddMode mode = AddMode.None;
+        var available = new bool[3];
+        var mode = AddMode.None;
 
         // Verifica se existe algo para modificar nos azulejos em volta (Norte, Oeste, Noroeste)
         if (Check(x, y, x, y - 1)) available[0] = true;
@@ -190,8 +190,8 @@ public class MapLayer
 
     private void CalculateSw(byte x, byte y)
     {
-        bool[] available = new bool[3];
-        AddMode mode = AddMode.None;
+        var available = new bool[3];
+        var mode = AddMode.None;
 
         // Verifica se existe algo para modificar nos azulejos em volta (Sul, Oeste, Sudoeste)
         if (Check(x, y, x - 1, y)) available[0] = true;
@@ -218,8 +218,8 @@ public class MapLayer
 
     private void CalculateSe(byte x, byte y)
     {
-        bool[] available = new bool[3];
-        AddMode mode = AddMode.None;
+        var available = new bool[3];
+        var mode = AddMode.None;
 
         // Verifica se existe algo para modificar nos azulejos em volta (Sul, Oeste, Sudeste)
         if (Check(x, y, x, y + 1)) available[0] = true;
@@ -266,7 +266,7 @@ public class MapTileData
 
     public void SetMini(byte index, string mode)
     {
-        Point position = new Point(0);
+        var position = new Point(0);
 
         // Posições exatas dos mini azulejos (16x16)
         switch (mode)

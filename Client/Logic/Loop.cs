@@ -20,8 +20,8 @@ internal static class Loop
 
     public static void Init()
     {
-        int timer1000 = 0;
-        int timer30 = 0;
+        var timer1000 = 0;
+        var timer30 = 0;
         short fps = 0;
 
         while (Program.Working)

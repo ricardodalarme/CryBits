@@ -55,10 +55,10 @@ internal class TempNpc : Character
         }
 
         byte targetX = 0, targetY = 0;
-        bool[] canMove = new bool[(byte)Direction.Count];
+        var canMove = new bool[(byte)Direction.Count];
         short distance;
-        bool moved = false;
-        bool move = false;
+        var moved = false;
+        var move = false;
 
         /////////////////
         // Regeneração //
@@ -238,8 +238,8 @@ internal class TempNpc : Character
         // Faz com que ele apareça em um local aleatório
         for (byte i = 0; i < 50; i++) // tenta 50 vezes com que ele apareça em um local aleatório
         {
-            byte x = (byte)MyRandom.Next(0, CryBits.Entities.Map.Width - 1);
-            byte y = (byte)MyRandom.Next(0, CryBits.Entities.Map.Height - 1);
+            var x = (byte)MyRandom.Next(0, CryBits.Entities.Map.Width - 1);
+            var y = (byte)MyRandom.Next(0, CryBits.Entities.Map.Height - 1);
 
             // Verifica se está dentro da zona
             if (Map.Data.Npc[Index].Zone > 0)
@@ -325,7 +325,7 @@ internal class TempNpc : Character
         _attackTimer = Environment.TickCount;
 
         // Cálculo de dano
-        short attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] - victim.PlayerDefense);
+        var attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] - victim.PlayerDefense);
 
         // Dano não fatal
         if (attackDamage > 0)
@@ -366,7 +366,7 @@ internal class TempNpc : Character
         victim.Target = this;
 
         // Cálculo de dano
-        short attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] - victim.Data.Attribute[(byte)Attribute.Resistance]);
+        var attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] - victim.Data.Attribute[(byte)Attribute.Resistance]);
 
         // Dano não fatal
         if (attackDamage > 0)

@@ -30,7 +30,7 @@ internal static class Chat
     private static void AddLine(string text, Color color)
     {
         Order.Add(new Structure());
-        int i = Order.Count - 1;
+        var i = Order.Count - 1;
 
         // Adiciona a mensagem em uma linha vazia
         Order[i].Text = text;
@@ -58,7 +58,7 @@ internal static class Chat
         if (messageWidth < boxWidth)
             AddLine(message, color);
         else
-            for (int i = 0; i <= message.Length; i++)
+            for (var i = 0; i <= message.Length; i++)
             {
                 tempMessage = message.Substring(0, i);
 
@@ -91,7 +91,7 @@ internal static class Chat
         TextBoxes.Focused = null;
 
         // Dados
-        string message = tool.Text;
+        var message = tool.Text;
 
         // Somente se necessário
         if (message.Length < 3)
@@ -104,7 +104,7 @@ internal static class Chat
         tool.Text = string.Empty;
 
         // Separa as mensagens em partes
-        string[] parts = message.Split(' ');
+        var parts = message.Split(' ');
 
         // Comandos
         switch (parts[0].ToLower())
@@ -131,7 +131,7 @@ internal static class Chat
                     else
                     {
                         // Dados
-                        string destiny = message.Substring(1, parts[0].Length - 1);
+                        var destiny = message.Substring(1, parts[0].Length - 1);
                         message = message.Substring(parts[0].Length + 1);
 
                         // Envia a mensagem

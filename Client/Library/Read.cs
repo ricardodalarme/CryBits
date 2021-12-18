@@ -98,7 +98,7 @@ internal static class Read
 
     private static void Tools()
     {
-        FileInfo file = new FileInfo(Directories.ToolsData.FullName);
+        var file = new FileInfo(Directories.ToolsData.FullName);
         for (byte i = 0; i < (byte)Window.Count; i++) UI.Tools.AllOrder[i] = new List<Tools.OrderStructure>();
 
         // Lê todas as ferramentas
@@ -110,7 +110,7 @@ internal static class Read
     private static void Tools(Tools.OrderStructure parent, ref List<Tools.OrderStructure> node, BinaryReader data)
     {
         // Lê todos os filhos
-        byte size = data.ReadByte();
+        var size = data.ReadByte();
 
         for (byte i = 0; i < size; i++)
         {
@@ -139,7 +139,7 @@ internal static class Read
 
     public static void Map(Guid id)
     {
-        FileInfo file = new FileInfo(Directories.MapsData.FullName + id + Directories.Format);
+        var file = new FileInfo(Directories.MapsData.FullName + id + Directories.Format);
 
         // Lê os dados
         using (var stream = file.OpenRead())

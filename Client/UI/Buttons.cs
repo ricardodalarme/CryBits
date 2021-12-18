@@ -125,7 +125,7 @@ internal class Buttons : Tools.Structure
     public static bool Characters_Change_Buttons()
     {
         // Altera os botões visíveis
-        bool visibility = Panels.Characters != null && Panels.SelectCharacter < Panels.Characters.Length;
+        var visibility = Panels.Characters != null && Panels.SelectCharacter < Panels.Characters.Length;
         List["Character_Create"].Visible = !visibility;
         List["Character_Delete"].Visible = visibility;
         List["Character_Use"].Visible = visibility;
@@ -226,8 +226,8 @@ internal class Buttons : Tools.Structure
     private static void CreateCharacterTextureChangeRight()
     {
         // Lista de texturas
-        Class @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
-        IList<short> texList = CheckBoxes.List["GenderMale"].Checked ? @class.TexMale : @class.TexFemale;
+        var @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
+        var texList = CheckBoxes.List["GenderMale"].Checked ? @class.TexMale : @class.TexFemale;
 
         // Altera a classe selecionada pelo jogador
         if (Panels.CreateCharacterTex == texList.Count - 1)
@@ -239,8 +239,8 @@ internal class Buttons : Tools.Structure
     private static void CreateCharacterTextureChangeLeft()
     {
         // Lista de texturas
-        Class @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
-        IList<short> texList = CheckBoxes.List["GenderMale"].Checked ? @class.TexMale : @class.TexFemale;
+        var @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
+        var texList = CheckBoxes.List["GenderMale"].Checked ? @class.TexMale : @class.TexFemale;
 
         // Altera a classe selecionada pelo jogador
         if (Panels.CreateCharacterTex == 0)
@@ -358,7 +358,7 @@ internal class Buttons : Tools.Structure
     private static void DropConfirm()
     {
         // Quantidade
-        short.TryParse(TextBoxes.List["Drop_Amount"].Text, out short amount);
+        short.TryParse(TextBoxes.List["Drop_Amount"].Text, out var amount);
 
         // Verifica se o valor digitado é válidp
         if (amount == 0)
@@ -446,7 +446,7 @@ internal class Buttons : Tools.Structure
     private static void TradeAmountConfirm()
     {
         // Quantidade
-        short.TryParse(TextBoxes.List["Trade_Amount"].Text, out short amount);
+        short.TryParse(TextBoxes.List["Trade_Amount"].Text, out var amount);
 
         // Verifica se o valor digitado é válido
         if (amount <= 0)
@@ -476,7 +476,7 @@ internal class Buttons : Tools.Structure
     private static void ShopSellConfirm()
     {
         // Quantidade
-        short.TryParse(TextBoxes.List["Shop_Sell_Amount"].Text, out short amount);
+        short.TryParse(TextBoxes.List["Shop_Sell_Amount"].Text, out var amount);
 
         // Verifica se o valor digitado é válido
         if (amount <= 0)

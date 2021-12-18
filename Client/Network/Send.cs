@@ -19,7 +19,7 @@ internal static class Send
 
     public static void Connect()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.Connect);
@@ -31,7 +31,7 @@ internal static class Send
 
     public static void Register()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.Register);
@@ -42,7 +42,7 @@ internal static class Send
 
     public static void CreateCharacter()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.CreateCharacter);
@@ -55,7 +55,7 @@ internal static class Send
 
     public static void CharacterUse()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.CharacterUse);
@@ -65,7 +65,7 @@ internal static class Send
 
     public static void CharacterCreate()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.CharacterCreate);
@@ -74,7 +74,7 @@ internal static class Send
 
     public static void CharacterDelete()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.CharacterDelete);
@@ -84,7 +84,7 @@ internal static class Send
 
     public static void RequestMap(bool order)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.RequestMap);
@@ -94,7 +94,7 @@ internal static class Send
 
     public static void Latency()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.Latency);
@@ -106,7 +106,7 @@ internal static class Send
 
     public static void Message(string message, Message type, string addressee = "")
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.Message);
@@ -118,7 +118,7 @@ internal static class Send
 
     public static void AddPoint(Attribute attribute)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.AddPoint);
@@ -128,7 +128,7 @@ internal static class Send
 
     public static void CollectItem()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.CollectItem);
@@ -137,7 +137,7 @@ internal static class Send
 
     public static void DropItem(short slot, short amount)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.DropItem);
@@ -148,7 +148,7 @@ internal static class Send
 
     public static void InventoryChange(short old, short @new)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.InventoryChange);
@@ -162,7 +162,7 @@ internal static class Send
 
     public static void InventoryUse(byte slot)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.InventoryUse);
@@ -175,7 +175,7 @@ internal static class Send
 
     public static void EquipmentRemove(byte slot)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.EquipmentRemove);
@@ -185,7 +185,7 @@ internal static class Send
 
     public static void HotbarAdd(short hotbarSlot, byte type, short slot)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.HotbarAdd);
@@ -197,7 +197,7 @@ internal static class Send
 
     public static void HotbarChange(short old, short @new)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.HotbarChange);
@@ -210,7 +210,7 @@ internal static class Send
     {
         if (TextBoxes.Focused == null)
         {
-            NetOutgoingMessage data = Socket.Device.CreateMessage();
+            var data = Socket.Device.CreateMessage();
 
             // Envia os dados
             data.Write((byte)ClientPacket.HotbarUse);
@@ -224,7 +224,7 @@ internal static class Send
 
     public static void PartyInvite(string playerName)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.PartyInvite);
@@ -234,7 +234,7 @@ internal static class Send
 
     public static void PartyAccept()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.PartyAccept);
@@ -243,7 +243,7 @@ internal static class Send
 
     public static void PartyDecline()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.PartyDecline);
@@ -252,7 +252,7 @@ internal static class Send
 
     public static void PartyLeave()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.PartyLeave);
@@ -261,7 +261,7 @@ internal static class Send
 
     public static void PlayerDirection()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.PlayerDirection);
@@ -271,7 +271,7 @@ internal static class Send
 
     public static void PlayerMove()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.PlayerMove);
@@ -283,7 +283,7 @@ internal static class Send
 
     public static void PlayerAttack()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.PlayerAttack);
@@ -292,7 +292,7 @@ internal static class Send
 
     public static void TradeInvite(string playerName)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.TradeInvite);
@@ -302,7 +302,7 @@ internal static class Send
 
     public static void TradeAccept()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.TradeAccept);
@@ -311,7 +311,7 @@ internal static class Send
 
     public static void TradeDecline()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.TradeDecline);
@@ -320,7 +320,7 @@ internal static class Send
 
     public static void TradeLeave()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.TradeLeave);
@@ -329,7 +329,7 @@ internal static class Send
 
     public static void TradeOffer(short slot, short inventorySlot, short amount = 1)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.TradeOffer);
@@ -341,7 +341,7 @@ internal static class Send
 
     public static void TradeOfferState(TradeStatus state)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.TradeOfferState);
@@ -351,7 +351,7 @@ internal static class Send
 
     public static void ShopBuy(short slot)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.ShopBuy);
@@ -361,7 +361,7 @@ internal static class Send
 
     public static void ShopSell(short slot, short amount)
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.ShopSell);
@@ -372,7 +372,7 @@ internal static class Send
 
     public static void ShopClose()
     {
-        NetOutgoingMessage data = Socket.Device.CreateMessage();
+        var data = Socket.Device.CreateMessage();
 
         // Envia os dados
         data.Write((byte)ClientPacket.ShopClose);

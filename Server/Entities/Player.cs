@@ -51,7 +51,7 @@ internal class Player : Character
     {
         get
         {
-            short value = Attribute[(byte)Enums.Attribute.Strength];
+            var value = Attribute[(byte)Enums.Attribute.Strength];
             if (Equipment[(byte)Enums.Equipment.Weapon] != null) value += Equipment[(byte)Enums.Equipment.Weapon].WeaponDamage;
             return value;
         }
@@ -62,7 +62,7 @@ internal class Player : Character
 
     public short MaxVital(byte vital)
     {
-        short[] @base = Class.Vital;
+        var @base = Class.Vital;
 
         // Cálcula o máximo de vital que um jogador possui
         switch ((Vital)vital)
@@ -153,7 +153,7 @@ internal class Player : Character
 
     public void Warp(TempMap map, byte x, byte y, bool needUpdate = false)
     {
-        TempMap oldMap = Map;
+        var oldMap = Map;
 
         // Cancela a troca ou a loja
         if (Trade != null) TradeLeave();
@@ -192,8 +192,8 @@ internal class Player : Character
     {
         byte nextX = X, nextY = Y;
         byte oldX = X, oldY = Y;
-        TempMap link = TempMap.List.Get(Map.Data.Link[(byte)Direction].GetID());
-        bool secondMovement = false;
+        var link = TempMap.List.Get(Map.Data.Link[(byte)Direction].GetID());
+        var secondMovement = false;
 
         // Previne erros
         if (movement < 1 || movement > 2) return;
@@ -231,7 +231,7 @@ internal class Player : Character
         }
 
         // Atributos
-        MapAttribute tile = Map.Data.Attribute[nextX, nextY];
+        var tile = Map.Data.Attribute[nextX, nextY];
 
         switch ((TileAttribute)tile.Type)
         {
@@ -315,7 +315,7 @@ internal class Player : Character
         _attackTimer = Environment.TickCount;
 
         // Cálculo de dano
-        short attackDamage = (short)(Damage - victim.PlayerDefense);
+        var attackDamage = (short)(Damage - victim.PlayerDefense);
 
         // Dano não fatal
         if (attackDamage > 0)
@@ -362,7 +362,7 @@ internal class Player : Character
         _attackTimer = Environment.TickCount;
 
         // Cálculo de dano
-        short attackDamage = (short)(Damage - victim.Data.Attribute[(byte)Enums.Attribute.Resistance]);
+        var attackDamage = (short)(Damage - victim.Data.Attribute[(byte)Enums.Attribute.Resistance]);
 
         // Dano não fatal
         if (attackDamage > 0)
@@ -425,8 +425,8 @@ internal class Player : Character
 
     public bool GiveItem(Item item, short amount)
     {
-        ItemSlot slotItem = FindInventory(item);
-        ItemSlot slotEmpty = FindInventory(null);
+        var slotItem = FindInventory(item);
+        var slotEmpty = FindInventory(null);
 
         // Somente se necessário
         if (item == null) return false;
@@ -510,7 +510,7 @@ internal class Player : Character
 
     public void UseItem(ItemSlot slot)
     {
-        Item item = slot.Item;
+        var item = slot.Item;
 
         // Somente se necessário
         if (item == null) return;
@@ -535,7 +535,7 @@ internal class Player : Character
             TakeItem(slot, 1);
 
             // Caso já estiver com algum equipamento, desequipa ele
-            Item currentEquip = Equipment[item.EquipType];
+            var currentEquip = Equipment[item.EquipType];
             if (currentEquip != null) GiveItem(currentEquip, 1);
 
             // Equipa o item
@@ -550,7 +550,7 @@ internal class Player : Character
         else if (item.Type == ItemType.Potion)
         {
             // Efeitos
-            bool hadEffect = false;
+            var hadEffect = false;
             GiveExperience(item.PotionExperience);
             for (byte i = 0; i < (byte)Enums.Vital.Count; i++)
             {
@@ -600,7 +600,7 @@ internal class Player : Character
     {
         // Somatório do level de todos os jogadores do grupo
         int givenExperience, experienceSum = 0, difference;
-        double[] diff = new double[Party.Count];
+        var diff = new double[Party.Count];
         double diffSum = 0, k;
 
         // Cálcula a diferença dos leveis entre os jogadores

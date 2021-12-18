@@ -30,7 +30,7 @@ internal static class Textures
     private static List<Texture> LoadTextures(string directory)
     {
         short i = 1;
-        List<Texture> tempTex = new List<Texture> { null };
+        var tempTex = new List<Texture> { null };
 
         // Carrega todas do diretório e as adiciona a lista
         while (File.Exists(directory + i + Format))

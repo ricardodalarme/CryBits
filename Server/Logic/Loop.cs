@@ -17,7 +17,7 @@ internal static class Loop
 
     public static void Main()
     {
-        int cps = 0;
+        var cps = 0;
 
         while (Program.Working)
         {
