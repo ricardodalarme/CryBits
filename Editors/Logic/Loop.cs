@@ -13,13 +13,12 @@ internal static class Loop
 {
     public static void Init()
     {
-        int count;
         var timer1000 = 0;
         short fps = 0;
 
         while (Program.Working)
         {
-            count = Environment.TickCount;
+            var count = Environment.TickCount;
 
             // Manuseia os dados recebidos
             Socket.HandleData();

@@ -56,7 +56,6 @@ internal class TempNpc : Character
 
         byte targetX = 0, targetY = 0;
         var canMove = new bool[(byte)Direction.Count];
-        short distance;
         var moved = false;
         var move = false;
 
@@ -84,6 +83,7 @@ internal class TempNpc : Character
         if (Data.Behaviour == Behaviour.AttackOnSight)
         {
             // Jogador
+            short distance;
             if (Target == null)
                 foreach (var player in Account.List)
                 {

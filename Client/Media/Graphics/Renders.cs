@@ -111,7 +111,6 @@ internal static class Renders
 
     private static void DrawText(string text, int x, int y, Color color, int maxWidth, bool cut = true)
     {
-        string tempText;
         int messageWidth = MeasureString(text), split = -1;
 
         // Caso couber, adiciona a mensagem normalmente
@@ -129,7 +128,7 @@ internal static class Renders
                 }
 
                 // Desenha a parte do texto que cabe
-                tempText = text.Substring(0, i);
+                var tempText = text.Substring(0, i);
                 if (MeasureString(tempText) > maxWidth)
                 {
                     // Divide o texto novamente caso tenha encontrado um ponto de divisão
@@ -597,7 +596,7 @@ internal static class Renders
 
     private static void Character(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
     {
-        Rectangle recSource = new(), recDestiny;
+        Rectangle recSource = new();
         var size = Textures.Characters[textureNum].ToSize();
         var color = new Color(255, 255, 255);
         byte line = 0;
@@ -616,7 +615,7 @@ internal static class Renders
         recSource.Y = line * size.Height / AnimationAmount;
         recSource.Width = size.Width / AnimationAmount;
         recSource.Height = size.Height / AnimationAmount;
-        recDestiny = new Rectangle(position, recSource.Size);
+        var recDestiny = new Rectangle(position, recSource.Size);
 
         // Demonstra que o personagem está sofrendo dano
         if (hurt) color = new Color(205, 125, 125);

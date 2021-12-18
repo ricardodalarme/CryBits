@@ -268,7 +268,6 @@ internal class Player : Character
     public void Attack()
     {
         byte nextX = X, nextY = Y;
-        Character victim;
 
         // Próximo azulejo
         NextTile(Direction, ref nextX, ref nextY);
@@ -280,7 +279,7 @@ internal class Player : Character
         if (Map.TileBlocked(X, Y, Direction, false)) goto @continue;
 
         // Ataca um jogador
-        victim = Map.HasPlayer(nextX, nextY);
+        Character victim = Map.HasPlayer(nextX, nextY);
         if (victim != null)
         {
             AttackPlayer((Player)victim);
@@ -405,12 +404,12 @@ internal class Player : Character
 
     private void CheckLevelUp()
     {
-        byte numLevel = 0; int expRest;
+        byte numLevel = 0;
 
         while (Experience >= ExpNeeded)
         {
             numLevel++;
-            expRest = Experience - ExpNeeded;
+            var expRest = Experience - ExpNeeded;
 
             // Define os dados
             Level++;
@@ -599,16 +598,17 @@ internal class Player : Character
     private void PartySplitXP(int value)
     {
         // Somatório do level de todos os jogadores do grupo
-        int givenExperience, experienceSum = 0, difference;
+        int experienceSum = 0;
         var diff = new double[Party.Count];
-        double diffSum = 0, k;
+        double diffSum = 0;
 
         // Cálcula a diferença dos leveis entre os jogadores
         for (byte i = 0; i < Party.Count; i++)
         {
-            difference = Math.Abs(Level - Party[i].Level);
+            var difference = Math.Abs(Level - Party[i].Level);
 
             // Constante para a diminuir potêncialmente a experiência que diferenças altas ganhariam
+            double k;
             if (difference < 3) k = 1.15;
             else if (difference < 6) k = 1.55;
             else if (difference < 10) k = 1.85;
@@ -626,7 +626,7 @@ internal class Player : Character
             if (diffSum > 1) diff[i] *= 1 / diffSum;
 
             // Divide a experiência
-            givenExperience = (int)(value / 2 * diff[i]);
+            var givenExperience = (int)(value / 2 * diff[i]);
             experienceSum += givenExperience;
             Party[i].GiveExperience(givenExperience);
             Send.PlayerExperience(Party[i]);
