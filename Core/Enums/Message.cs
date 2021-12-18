@@ -1,10 +1,9 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Message
 {
-    public enum Message
-    {
-        Local,
-        Map,
-        Global,
-        Private
-    }
+    Local,
+    Map,
+    Global,
+    Private
 }

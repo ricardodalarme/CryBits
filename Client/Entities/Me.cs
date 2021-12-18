@@ -7,130 +7,129 @@ using CryBits.Enums;
 using SFML.Window;
 using static CryBits.Globals;
 
-namespace CryBits.Client.Entities
+namespace CryBits.Client.Entities;
+
+// Dados somente do próprio jogador
+internal class Me : Player
 {
-    // Dados somente do próprio jogador
-    internal class Me : Player
+    // Dados
+    public ItemSlot[] Inventory = new ItemSlot[MaxInventory];
+    public HotbarSlot[] Hotbar = new HotbarSlot[MaxHotbar];
+    public ItemSlot[] TradeOffer;
+    public ItemSlot[] TradeTheirOffer;
+    public Player[] Party = Array.Empty<Player>();
+    public int Experience;
+    public int ExpNeeded;
+    public short Points;
+    private int _collectTimer;
+
+    // Construtor
+    public Me(string name) : base(name) { }
+
+    public override void Logic()
     {
-        // Dados
-        public ItemSlot[] Inventory = new ItemSlot[MaxInventory];
-        public HotbarSlot[] Hotbar = new HotbarSlot[MaxHotbar];
-        public ItemSlot[] TradeOffer;
-        public ItemSlot[] TradeTheirOffer;
-        public Player[] Party = Array.Empty<Player>();
-        public int Experience;
-        public int ExpNeeded;
-        public short Points;
-        private int _collectTimer;
+        // Verificações
+        Me.CheckMovement();
+        Me.CheckAttack();
+        base.Logic();
+    }
 
-        // Construtor
-        public Me(string name) : base(name) { }
+    public void CheckMovement()
+    {
+        if (Movement > 0 || !Renders.RenderWindow.HasFocus()) return;
 
-        public override void Logic()
+        // Move o personagem
+        if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Direction.Up);
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Direction.Down);
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Direction.Left);
+        else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Direction.Right);
+    }
+
+    public void Move(Direction direction)
+    {
+        // Verifica se o jogador pode se mover
+        if (Movement != Movement.Stopped) return;
+
+        // Define a direção do jogador
+        if (Direction != direction)
         {
-            // Verificações
-            Me.CheckMovement();
-            Me.CheckAttack();
-            base.Logic();
+            Direction = direction;
+            Send.PlayerDirection();
         }
 
-        public void CheckMovement()
-        {
-            if (Movement > 0 || !Renders.RenderWindow.HasFocus()) return;
+        // Verifica se o azulejo seguinte está livre
+        if (Map.TileBlocked(X, Y, direction)) return;
 
-            // Move o personagem
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Direction.Up);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Direction.Down);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Direction.Left);
-            else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Direction.Right);
+        // Define a velocidade que o jogador se move
+        if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Renders.RenderWindow.HasFocus())
+            Movement = Movement.Moving;
+        else
+            Movement = Movement.Walking;
+
+        // Movimento o jogador
+        Send.PlayerMove();
+
+        // Define a Posição exata do jogador
+        switch (direction)
+        {
+            case Direction.Up: Y2 = Grid; Y--; break;
+            case Direction.Down: Y2 = Grid * -1; Y++; break;
+            case Direction.Right: X2 = Grid * -1; X++; break;
+            case Direction.Left: X2 = Grid; X--; break;
+        }
+    }
+
+    public void CheckAttack()
+    {
+        // Reseta o ataque
+        if (AttackTimer + AttackSpeed < Environment.TickCount)
+        {
+            AttackTimer = 0;
+            Attacking = false;
         }
 
-        public void Move(Direction direction)
-        {
-            // Verifica se o jogador pode se mover
-            if (Movement != Movement.Stopped) return;
+        // Somente se estiver pressionando a tecla de ataque e não estiver atacando
+        if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Renders.RenderWindow.HasFocus()) return;
+        if (AttackTimer > 0) return;
+        if (Panels.List["Trade"].Visible) return;
+        if (Panels.List["Shop"].Visible) return;
 
-            // Define a direção do jogador
-            if (Direction != direction)
-            {
-                Direction = direction;
-                Send.PlayerDirection();
-            }
+        // Envia os dados para o servidor
+        AttackTimer = Environment.TickCount;
+        Send.PlayerAttack();
+    }
 
-            // Verifica se o azulejo seguinte está livre
-            if (Map.TileBlocked(X, Y, direction)) return;
+    public void CollectItem()
+    {
+        bool hasItem = false, hasSlot = false;
 
-            // Define a velocidade que o jogador se move
-            if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Renders.RenderWindow.HasFocus())
-                Movement = Movement.Moving;
-            else
-                Movement = Movement.Walking;
+        // Previne erros
+        if (TextBoxes.Focused != null) return;
 
-            // Movimento o jogador
-            Send.PlayerMove();
+        // Verifica se tem algum item nas coordenadas 
+        for (byte i = 0; i < TempMap.Current.Item.Length; i++)
+            if (TempMap.Current.Item[i].X == X && TempMap.Current.Item[i].Y == Y)
+                hasItem = true;
 
-            // Define a Posição exata do jogador
-            switch (direction)
-            {
-                case Direction.Up: Y2 = Grid; Y--; break;
-                case Direction.Down: Y2 = Grid * -1; Y++; break;
-                case Direction.Right: X2 = Grid * -1; X++; break;
-                case Direction.Left: X2 = Grid; X--; break;
-            }
-        }
+        // Verifica se tem algum espaço vazio no inventário
+        for (byte i = 0; i < MaxInventory; i++)
+            if (Inventory[i].Item == null)
+                hasSlot = true;
 
-        public void CheckAttack()
-        {
-            // Reseta o ataque
-            if (AttackTimer + AttackSpeed < Environment.TickCount)
-            {
-                AttackTimer = 0;
-                Attacking = false;
-            }
+        // Somente se necessário
+        if (!hasItem) return;
+        if (!hasSlot) return;
+        if (Environment.TickCount <= _collectTimer + 250) return;
 
-            // Somente se estiver pressionando a tecla de ataque e não estiver atacando
-            if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Renders.RenderWindow.HasFocus()) return;
-            if (AttackTimer > 0) return;
-            if (Panels.List["Trade"].Visible) return;
-            if (Panels.List["Shop"].Visible) return;
+        // Coleta o item
+        Send.CollectItem();
+        _collectTimer = Environment.TickCount;
+    }
 
-            // Envia os dados para o servidor
-            AttackTimer = Environment.TickCount;
-            Send.PlayerAttack();
-        }
-
-        public void CollectItem()
-        {
-            bool hasItem = false, hasSlot = false;
-
-            // Previne erros
-            if (TextBoxes.Focused != null) return;
-
-            // Verifica se tem algum item nas coordenadas 
-            for (byte i = 0; i < TempMap.Current.Item.Length; i++)
-                if (TempMap.Current.Item[i].X == X && TempMap.Current.Item[i].Y == Y)
-                    hasItem = true;
-
-            // Verifica se tem algum espaço vazio no inventário
-            for (byte i = 0; i < MaxInventory; i++)
-                if (Inventory[i].Item == null)
-                    hasSlot = true;
-
-            // Somente se necessário
-            if (!hasItem) return;
-            if (!hasSlot) return;
-            if (Environment.TickCount <= _collectTimer + 250) return;
-
-            // Coleta o item
-            Send.CollectItem();
-            _collectTimer = Environment.TickCount;
-        }
-
-        public void Leave()
-        {
-            // Reseta os dados
-            List.Clear();
-            Me = null;
-        }
+    public void Leave()
+    {
+        // Reseta os dados
+        List.Clear();
+        Me = null;
     }
 }

@@ -1,9 +1,8 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Movement
 {
-    public enum Movement
-    {
-        Stopped,
-        Walking,
-        Moving
-    }
+    Stopped,
+    Walking,
+    Moving
 }

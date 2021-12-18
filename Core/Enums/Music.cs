@@ -1,9 +1,8 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+// Listas das músicas
+public enum Music
 {
-    // Listas das músicas
-    public enum Music
-    {
-        None,
-        Menu
-    }
+    None,
+    Menu
 }

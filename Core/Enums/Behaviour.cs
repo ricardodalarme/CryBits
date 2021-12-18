@@ -1,10 +1,9 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Behaviour
 {
-    public enum Behaviour
-    {
-        Friendly,
-        AttackOnSight,
-        AttackWhenAttacked,
-        ShopKeeper
-    }
+    Friendly,
+    AttackOnSight,
+    AttackWhenAttacked,
+    ShopKeeper
 }

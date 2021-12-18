@@ -2,55 +2,54 @@
 using System.Drawing;
 using CryBits.Enums;
 
-namespace CryBits.Client.UI
+namespace CryBits.Client.UI;
+
+internal static class Tools
 {
-    internal static class Tools
+    // Ordem da renderização das ferramentas
+    public static List<OrderStructure>[] AllOrder = new List<OrderStructure>[(byte)Window.Count];
+    public static List<OrderStructure> Order => AllOrder[(byte)Windows.Current];
+
+    public class OrderStructure
     {
-        // Ordem da renderização das ferramentas
-        public static List<OrderStructure>[] AllOrder = new List<OrderStructure>[(byte)Window.Count];
-        public static List<OrderStructure> Order => AllOrder[(byte)Windows.Current];
+        public Structure Data;
+        public OrderStructure Parent;
+        public List<OrderStructure> Nodes;
+        public bool Viewable => Viewable(this);
+    }
 
-        public class OrderStructure
-        {
-            public Structure Data;
-            public OrderStructure Parent;
-            public List<OrderStructure> Nodes;
-            public bool Viewable => Viewable(this);
-        }
+    public class Structure
+    {
+        public string Name;
+        public bool Visible;
+        public Point Position;
+        public Window Window;
+    }
 
-        public class Structure
-        {
-            public string Name;
-            public bool Visible;
-            public Point Position;
-            public Window Window;
-        }
+    public static bool Viewable(OrderStructure order)
+    {
+        // Verifica se a ferramenta está visível
+        if (order == null) return true;
+        if (order.Data.Window != Windows.Current) return false;
+        if (!order.Data.Visible) return false;
+        return Viewable(order.Parent);
+    }
 
-        public static bool Viewable(OrderStructure order)
+    public static OrderStructure Get(Structure tool)
+    {
+        // Percorre toda a árvore de ordem para encontrar a ferramenta
+        Stack<List<OrderStructure>> stack = new Stack<List<OrderStructure>>();
+        for (byte i = 0; i < AllOrder.Length; i++) stack.Push(AllOrder[i]);
+        while (stack.Count != 0)
         {
-            // Verifica se a ferramenta está visível
-            if (order == null) return true;
-            if (order.Data.Window != Windows.Current) return false;
-            if (!order.Data.Visible) return false;
-            return Viewable(order.Parent);
-        }
+            List<OrderStructure> top = stack.Pop();
 
-        public static OrderStructure Get(Structure tool)
-        {
-            // Percorre toda a árvore de ordem para encontrar a ferramenta
-            Stack<List<OrderStructure>> stack = new Stack<List<OrderStructure>>();
-            for (byte i = 0; i < AllOrder.Length; i++) stack.Push(AllOrder[i]);
-            while (stack.Count != 0)
+            for (byte i = 0; i < top.Count; i++)
             {
-                List<OrderStructure> top = stack.Pop();
-
-                for (byte i = 0; i < top.Count; i++)
-                {
-                    if (top[i].Data == tool) return top[i];
-                    stack.Push(top[i].Nodes);
-                }
+                if (top[i].Data == tool) return top[i];
+                stack.Push(top[i].Nodes);
             }
-            return null;
         }
+        return null;
     }
 }

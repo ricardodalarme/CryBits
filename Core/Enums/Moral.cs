@@ -1,8 +1,7 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Moral
 {
-    public enum Moral
-    {
-        Pacific,
-        Dangerous
-    }
+    Pacific,
+    Dangerous
 }

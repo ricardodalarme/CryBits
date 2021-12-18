@@ -1,10 +1,9 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum TradeStatus
 {
-    public enum TradeStatus
-    {
-        Waiting,
-        Confirmed,
-        Accepted,
-        Declined
-    }
+    Waiting,
+    Confirmed,
+    Accepted,
+    Declined
 }

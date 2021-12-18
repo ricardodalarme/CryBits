@@ -1,8 +1,7 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum SlotType
 {
-    public enum SlotType
-    {
-        None,
-        Item
-    }
+    None,
+    Item
 }

@@ -1,9 +1,8 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum MovementStyle
 {
-    public enum MovementStyle
-    {
-        MoveRandomly,
-        TurnRandomly,
-        StandStill
-    }
+    MoveRandomly,
+    TurnRandomly,
+    StandStill
 }

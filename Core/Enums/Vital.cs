@@ -1,9 +1,8 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum Vital
 {
-    public enum Vital
-    {
-        HP,
-        MP,
-        Count
-    }
+    HP,
+    MP,
+    Count
 }

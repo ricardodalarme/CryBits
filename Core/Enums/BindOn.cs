@@ -1,10 +1,9 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum BindOn
 {
-    public enum BindOn
-    {
-        None,
-        Pickup,
-        Equip,
-        Count
-    }
+    None,
+    Pickup,
+    Equip,
+    Count
 }

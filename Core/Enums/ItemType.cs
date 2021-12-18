@@ -1,9 +1,8 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum ItemType
 {
-    public enum ItemType
-    {
-        None,
-        Equipment,
-        Potion
-    }
+    None,
+    Equipment,
+    Potion
 }

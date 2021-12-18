@@ -1,11 +1,10 @@
-﻿namespace CryBits.Enums
+﻿namespace CryBits.Enums;
+
+public enum ToolType
 {
-    public enum ToolType
-    {
-        Button,
-        Panel,
-        CheckBox,
-        TextBox,
-        Count
-    }
+    Button,
+    Panel,
+    CheckBox,
+    TextBox,
+    Count
 }

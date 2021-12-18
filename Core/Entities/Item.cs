@@ -3,43 +3,42 @@ using System.Collections.Generic;
 using CryBits.Enums;
 using Attribute = CryBits.Enums.Attribute;
 
-namespace CryBits.Entities
+namespace CryBits.Entities;
+
+[Serializable]
+public class Item : Entity
 {
-    [Serializable]
-    public class Item : Entity
+    // Lista de dados
+    public static Dictionary<Guid, Item> List = new();
+
+    // Geral
+    public string Description { get; set; } = string.Empty;
+    public short Texture { get; set; }
+    public ItemType Type { get; set; }
+    public bool Stackable { get; set; }
+    public BindOn Bind { get; set; }
+    public Rarity Rarity { get; set; }
+
+    // Requerimentos
+    public short ReqLevel { get; set; }
+    private Guid _reqClass;
+    public Class ReqClass
     {
-        // Lista de dados
-        public static Dictionary<Guid, Item> List = new();
+        get => Class.List.Get(_reqClass);
+        set => _reqClass = value.GetID();
+    }
 
-        // Geral
-        public string Description { get; set; } = string.Empty;
-        public short Texture { get; set; }
-        public ItemType Type { get; set; }
-        public bool Stackable { get; set; }
-        public BindOn Bind { get; set; }
-        public Rarity Rarity { get; set; }
+    // Poção
+    public int PotionExperience { get; set; }
+    public short[] PotionVital { get; set; } = new short[(byte)Vital.Count];
 
-        // Requerimentos
-        public short ReqLevel { get; set; }
-        private Guid _reqClass;
-        public Class ReqClass
-        {
-            get => Class.List.Get(_reqClass);
-            set => _reqClass = value.GetID();
-        }
+    // Equipamento
+    public byte EquipType { get; set; }
+    public short[] EquipAttribute { get; set; } = new short[(byte)Attribute.Count];
+    public short WeaponDamage { get; set; }
 
-        // Poção
-        public int PotionExperience { get; set; }
-        public short[] PotionVital { get; set; } = new short[(byte)Vital.Count];
-
-        // Equipamento
-        public byte EquipType { get; set; }
-        public short[] EquipAttribute { get; set; } = new short[(byte)Attribute.Count];
-        public short WeaponDamage { get; set; }
-
-        public Item()
-        {
-            Name = "New item";
-        }
+    public Item()
+    {
+        Name = "New item";
     }
 }
