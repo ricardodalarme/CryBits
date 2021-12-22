@@ -370,7 +370,7 @@ internal static class Receive
         if (player.Trade != null) return;
 
         // Muda o item de slot
-        Swap(ref player.Inventory[slotOld], ref player.Inventory[slotNew]);
+        (player.Inventory[slotOld], player.Inventory[slotNew]) = (player.Inventory[slotNew], player.Inventory[slotOld]);
         Send.PlayerInventory(player);
 
         // Altera na hotbar
@@ -444,7 +444,7 @@ internal static class Receive
         if (player.Hotbar[slotOld].Slot == 0) return;
 
         // Muda o item de slot
-        Swap(ref player.Hotbar[slotOld], ref player.Hotbar[slotNew]);
+        (player.Hotbar[slotOld], player.Hotbar[slotNew]) = (player.Hotbar[slotNew], player.Hotbar[slotOld]);
         Send.PlayerHotbar(player);
     }
 
