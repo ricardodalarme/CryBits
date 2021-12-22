@@ -38,14 +38,6 @@ public static class Utils
         }
     }
 
-    public static void Swap<T>(ref T item1, ref T item2)
-    {
-        // Troca dois elementos
-        var temp = item1;
-        item1 = item2;
-        item2 = temp;
-    }
-
     // Obtém o ID de alguma entidade, caso ela não existir retorna um ID zerado
     public static Guid GetID(this Entity @object) => @object?.ID ?? Guid.Empty;
 
