@@ -212,7 +212,7 @@ internal static class Renders
         Party();
 
         // Desenha os dados do jogo
-        if (Options.FPS) DrawText("FPS: " + Loop.FPS, 176, 7, Color.White);
+        if (Options.Fps) DrawText("FPS: " + Loop.Fps, 176, 7, Color.White);
         if (Options.Latency) DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
     }
 
@@ -350,10 +350,10 @@ internal static class Renders
         var @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
 
         // Textura do personagem
-        if (CheckBoxes.List["GenderMale"].Checked && @class.TexMale.Count > 0)
-            textureNum = @class.TexMale[Panels.CreateCharacterTex];
-        else if (@class.TexFemale.Count > 0)
-            textureNum = @class.TexFemale[Panels.CreateCharacterTex];
+        if (CheckBoxes.List["GenderMale"].Checked && @class.TextureMale.Count > 0)
+            textureNum = @class.TextureMale[Panels.CreateCharacterTex];
+        else if (@class.TextureFemale.Count > 0)
+            textureNum = @class.TextureFemale[Panels.CreateCharacterTex];
 
         // Desenha o personagem
         if (textureNum > 0)
@@ -373,8 +373,8 @@ internal static class Renders
 
     private static void Bars(Panels tool)
     {
-        var hpPercentage = Player.Me.Vital[(byte)Vital.HP] / (decimal)Player.Me.MaxVital[(byte)Vital.HP];
-        var mpPercentage = Player.Me.Vital[(byte)Vital.MP] / (decimal)Player.Me.MaxVital[(byte)Vital.MP];
+        var hpPercentage = Player.Me.Vital[(byte)Vital.Hp] / (decimal)Player.Me.MaxVital[(byte)Vital.Hp];
+        var mpPercentage = Player.Me.Vital[(byte)Vital.Mp] / (decimal)Player.Me.MaxVital[(byte)Vital.Mp];
         var expPercentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
 
         // Barras
@@ -388,8 +388,8 @@ internal static class Renders
         DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, Color.White);
 
         // Indicadores
-        DrawText(Player.Me.Vital[(byte)Vital.HP] + "/" + Player.Me.MaxVital[(byte)Vital.HP], tool.Position.X + 76, tool.Position.Y + 7, Color.White, TextAlign.Center);
-        DrawText(Player.Me.Vital[(byte)Vital.MP] + "/" + Player.Me.MaxVital[(byte)Vital.MP], tool.Position.X + 76, tool.Position.Y + 25, Color.White, TextAlign.Center);
+        DrawText(Player.Me.Vital[(byte)Vital.Hp] + "/" + Player.Me.MaxVital[(byte)Vital.Hp], tool.Position.X + 76, tool.Position.Y + 7, Color.White, TextAlign.Center);
+        DrawText(Player.Me.Vital[(byte)Vital.Mp] + "/" + Player.Me.MaxVital[(byte)Vital.Mp], tool.Position.X + 76, tool.Position.Y + 25, Color.White, TextAlign.Center);
         DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76, tool.Position.Y + 43, Color.White, TextAlign.Center);
     }
 
@@ -410,7 +410,7 @@ internal static class Renders
 
     private static void Information(Panels tool)
     {
-        var item = CryBits.Entities.Item.List.Get(Panels.InformationID);
+        var item = CryBits.Entities.Item.List.Get(Panels.InformationId);
         Color textColor;
         var data = new List<string>();
 
@@ -542,10 +542,10 @@ internal static class Renders
             // Barras do membro
             Render(Textures.PartyBars, 10, 92 + (27 * i), 0, 0, 82, 8); // HP Cinza
             Render(Textures.PartyBars, 10, 99 + (27 * i), 0, 0, 82, 8); // MP Cinza
-            if (Player.Me.Party[i].Vital[(byte)Vital.HP] > 0)
-                Render(Textures.PartyBars, 10, 92 + (27 * i), 0, 8, Player.Me.Party[i].Vital[(byte)Vital.HP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.HP], 8); // HP 
-            if (Player.Me.Party[i].Vital[(byte)Vital.MP] > 0)
-                Render(Textures.PartyBars, 10, 99 + (27 * i), 0, 16, Player.Me.Party[i].Vital[(byte)Vital.MP] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.MP], 8); // MP 
+            if (Player.Me.Party[i].Vital[(byte)Vital.Hp] > 0)
+                Render(Textures.PartyBars, 10, 92 + (27 * i), 0, 8, Player.Me.Party[i].Vital[(byte)Vital.Hp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Hp], 8); // HP 
+            if (Player.Me.Party[i].Vital[(byte)Vital.Mp] > 0)
+                Render(Textures.PartyBars, 10, 99 + (27 * i), 0, 16, Player.Me.Party[i].Vital[(byte)Vital.Mp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Mp], 8); // MP 
 
             // Nome do membro
             DrawText(Player.Me.Party[i].Name, 10, 79 + (27 * i), Color.White);
@@ -661,15 +661,15 @@ internal static class Renders
 
     private static void PlayerBars(Player player)
     {
-        var value = player.Vital[(byte)Vital.HP];
+        var value = player.Vital[(byte)Vital.Hp];
 
         // Apenas se necessário
-        if (value <= 0 || value >= player.MaxVital[(byte)Vital.HP]) return;
+        if (value <= 0 || value >= player.MaxVital[(byte)Vital.Hp]) return;
 
         // Cálcula a largura da barra
         var characterSize = Textures.Characters[player.TextureNum].ToSize();
         var fullWidth = characterSize.Width / AnimationAmount;
-        var width = value * fullWidth / player.MaxVital[(byte)Vital.HP];
+        var width = value * fullWidth / player.MaxVital[(byte)Vital.Hp];
 
         // Posição das barras
         var position = new Point
@@ -757,15 +757,15 @@ internal static class Renders
     private static void NpcBars(TempNpc npc)
     {
         var texture = Textures.Characters[npc.Data.Texture];
-        var value = npc.Vital[(byte)Vital.HP];
+        var value = npc.Vital[(byte)Vital.Hp];
 
         // Apenas se necessário
-        if (value <= 0 || value >= npc.Data.Vital[(byte)Vital.HP]) return;
+        if (value <= 0 || value >= npc.Data.Vital[(byte)Vital.Hp]) return;
 
         // Posição
         var position = new Point(ConvertX(npc.PixelX), ConvertY(npc.PixelY) + (texture.ToSize().Height / AnimationAmount) + 4);
         var fullWidth = texture.ToSize().Width / AnimationAmount;
-        var width = value * fullWidth / npc.Data.Vital[(byte)Vital.HP];
+        var width = value * fullWidth / npc.Data.Vital[(byte)Vital.Hp];
 
         // Desenha a barra 
         Render(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);

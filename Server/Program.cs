@@ -99,7 +99,7 @@ internal static class Program
      cps                        - shows the current server cps");
                 break;
             case "cps":
-                Console.WriteLine("CPS: " + Loop.CPS);
+                Console.WriteLine("CPS: " + Loop.Cps);
                 break;
             case "defineaccess":
                 // Verifica se o que está digitado corretamente

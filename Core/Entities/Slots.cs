@@ -15,7 +15,7 @@ public class ItemSlot : ISlot
     public Item Item
     {
         get => Item.List.Get(_item);
-        set => _item = value.GetID();
+        set => _item = value.GetId();
     }
     public short Amount { get; set; }
 

@@ -5,22 +5,22 @@ namespace CryBits.Entities;
 [Serializable]
 public class Entity : IEquatable<Entity>
 {
-    public Guid ID { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
 
     public Entity()
     {
-        ID = Guid.NewGuid();
+        Id = Guid.NewGuid();
     }
 
     public Entity(Guid id)
     {
-        ID = id;
+        Id = id;
     }
 
     public override string ToString() => Name;
 
-    public override int GetHashCode() => ID.GetHashCode();
+    public override int GetHashCode() => Id.GetHashCode();
 
-    bool IEquatable<Entity>.Equals(Entity other) => other != null && other.ID.Equals(ID);
+    bool IEquatable<Entity>.Equals(Entity other) => other != null && other.Id.Equals(Id);
 }

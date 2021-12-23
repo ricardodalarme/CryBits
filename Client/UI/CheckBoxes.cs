@@ -55,7 +55,7 @@ internal class CheckBoxes : Tools.Structure
             case "Options_Sounds": Sounds(); break;
             case "Options_Musics": Musics(); break;
             case "Options_Chat": Chat(); break;
-            case "Options_FPS": FPS(); break;
+            case "Options_FPS": Fps(); break;
             case "Options_Latency": Latency(); break;
             case "Options_Party": Party(); break;
             case "Options_Trade": Trade(); break;
@@ -114,10 +114,10 @@ internal class CheckBoxes : Tools.Structure
         if (Options.Chat) Loop.ChatTimer = Environment.TickCount + UI.Chat.SleepTimer;
     }
 
-    private static void FPS()
+    private static void Fps()
     {
         // Salva os dado
-        Options.FPS = List["Options_FPS"].Checked;
+        Options.Fps = List["Options_FPS"].Checked;
         Write.Options();
     }
 

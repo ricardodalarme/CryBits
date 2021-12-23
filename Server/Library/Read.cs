@@ -147,7 +147,7 @@ internal static class Read
         else
         {
             var @class = new Class();
-            Class.List.Add(@class.ID, @class);
+            Class.List.Add(@class.Id, @class);
             Write.Class(@class);
         }
     }
@@ -178,7 +178,7 @@ internal static class Read
         {
             // Cria um mapa novo
             var map = new Map();
-            Map.List.Add(map.ID, map);
+            Map.List.Add(map.Id, map);
 
             // Escreve os dados
             Write.Map(map);

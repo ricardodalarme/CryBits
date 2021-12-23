@@ -12,7 +12,7 @@ namespace CryBits.Client.Logic;
 internal static class Loop
 {
     // Medida de quantos frames são renderizados por segundo 
-    public static short FPS;
+    public static short Fps;
 
     // Contagens
     public static int TextBoxTimer;
@@ -68,7 +68,7 @@ internal static class Loop
             if (timer1000 < Environment.TickCount)
             {
                 Send.Latency();
-                FPS = fps;
+                Fps = fps;
                 fps = 0;
                 timer1000 = Environment.TickCount + 1000;
             }

@@ -25,8 +25,8 @@ internal class TempNpc : Character
         // Cálcula o máximo de vital que o Npc possui
         switch ((Vital)vital)
         {
-            case Enums.Vital.HP: return (short)((Data.Vital[vital] * 0.05) + (Data.Attribute[(byte)Attribute.Vitality] * 0.3));
-            case Enums.Vital.MP: return (short)((Data.Vital[vital] * 0.05) + (Data.Attribute[(byte)Attribute.Intelligence] * 0.1));
+            case Enums.Vital.Hp: return (short)((Data.Vital[vital] * 0.05) + (Data.Attribute[(byte)Attribute.Vitality] * 0.3));
+            case Enums.Vital.Mp: return (short)((Data.Vital[vital] * 0.05) + (Data.Attribute[(byte)Attribute.Intelligence] * 0.1));
         }
 
         return 0;
@@ -166,7 +166,7 @@ internal class TempNpc : Character
         if (move)
         {
             // Verifica como o Npc pode se mover
-            if (Vital[(byte)Enums.Vital.HP] > Data.Vital[(byte)Enums.Vital.HP] * (Data.FleeHealth / 100.0))
+            if (Vital[(byte)Enums.Vital.Hp] > Data.Vital[(byte)Enums.Vital.Hp] * (Data.FleeHealth / 100.0))
             {
                 // Para perto do alvo
                 canMove[(byte)Direction.Up] = Y > targetY;
@@ -333,9 +333,9 @@ internal class TempNpc : Character
             // Demonstra o ataque aos outros jogadores
             Send.MapNpcAttack(this, victim.Name, Enums.Target.Player);
 
-            if (attackDamage < victim.Vital[(byte)Enums.Vital.HP])
+            if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
             {
-                victim.Vital[(byte)Enums.Vital.HP] -= attackDamage;
+                victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
                 Send.PlayerVitals(victim);
             }
             // FATALITY
@@ -374,9 +374,9 @@ internal class TempNpc : Character
             // Demonstra o ataque aos outros jogadores
             Send.MapNpcAttack(this, victim.Index.ToString(), Enums.Target.Npc);
 
-            if (attackDamage < victim.Vital[(byte)Enums.Vital.HP])
+            if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
             {
-                victim.Vital[(byte)Enums.Vital.HP] -= attackDamage;
+                victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
                 Send.MapNpcVitals(victim);
             }
             // FATALITY

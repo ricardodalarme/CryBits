@@ -53,11 +53,11 @@ internal static class Write
         data.Write(account.Character.Name);
         data.Write(account.Character.TextureNum);
         data.Write(account.Character.Level);
-        data.Write(account.Character.Class.GetID());
+        data.Write(account.Character.Class.GetId());
         data.Write(account.Character.Genre);
         data.Write(account.Character.Experience);
         data.Write(account.Character.Points);
-        data.Write(account.Character.Map.GetID());
+        data.Write(account.Character.Map.GetId());
         data.Write(account.Character.X);
         data.Write(account.Character.Y);
         data.Write((byte)account.Character.Direction);
@@ -65,10 +65,10 @@ internal static class Write
         for (byte n = 0; n < (byte)Attribute.Count; n++) data.Write(account.Character.Attribute[n]);
         for (byte n = 0; n < MaxInventory; n++)
         {
-            data.Write(account.Character.Inventory[n].Item.GetID());
+            data.Write(account.Character.Inventory[n].Item.GetId());
             data.Write(account.Character.Inventory[n].Amount);
         }
-        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(account.Character.Equipment[n].GetID());
+        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(account.Character.Equipment[n].GetId());
         for (byte n = 0; n < MaxHotbar; n++)
         {
             data.Write((byte)account.Character.Hotbar[n].Type);
@@ -100,7 +100,7 @@ internal static class Write
     public static void Class(Class @class)
     {
         // Escreve os dados
-        using var stream = new FileInfo(Directories.Classes.FullName + @class.ID + Directories.Format).OpenWrite();
+        using var stream = new FileInfo(Directories.Classes.FullName + @class.Id + Directories.Format).OpenWrite();
         new BinaryFormatter().Serialize(stream, @class);
     }
 
@@ -108,7 +108,7 @@ internal static class Write
     {
         // Escreve os dados
         foreach (var npc in Npc.List.Values)
-            using (var stream = new FileInfo(Directories.Npcs.FullName + npc.ID + Directories.Format).OpenWrite())
+            using (var stream = new FileInfo(Directories.Npcs.FullName + npc.Id + Directories.Format).OpenWrite())
                 new BinaryFormatter().Serialize(stream, npc);
     }
 
@@ -116,7 +116,7 @@ internal static class Write
     {
         // Escreve os dados
         foreach (var item in Item.List.Values)
-            using (var stream = new FileInfo(Directories.Items.FullName + item.ID + Directories.Format).OpenWrite())
+            using (var stream = new FileInfo(Directories.Items.FullName + item.Id + Directories.Format).OpenWrite())
                 new BinaryFormatter().Serialize(stream, item);
     }
     public static void Maps()
@@ -129,7 +129,7 @@ internal static class Write
     public static void Map(Map map)
     {
         // Escreve os dados
-        using var stream = new FileInfo(Directories.Maps.FullName + map.ID + Directories.Format).OpenWrite();
+        using var stream = new FileInfo(Directories.Maps.FullName + map.Id + Directories.Format).OpenWrite();
         new BinaryFormatter().Serialize(stream, map);
     }
 
@@ -137,7 +137,7 @@ internal static class Write
     {
         // Escreve os dados
         foreach (var shop in Shop.List.Values)
-            using (var stream = new FileInfo(Directories.Shops.FullName + shop.ID + Directories.Format).OpenWrite())
+            using (var stream = new FileInfo(Directories.Shops.FullName + shop.Id + Directories.Format).OpenWrite())
                 new BinaryFormatter().Serialize(stream, shop);
     }
 }

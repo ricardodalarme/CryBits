@@ -22,7 +22,7 @@ internal class Panels : Tools.Structure
     public static byte CreateCharacterClass = 0;
     public static byte CreateCharacterTex = 0;
     public static int SelectCharacter = 1;
-    public static Guid InformationID;
+    public static Guid InformationId;
     public static short DropSlot;
     public static string PartyInvitation;
     public static string TradeInvitation;
@@ -149,27 +149,27 @@ internal class Panels : Tools.Structure
         if (HotbarSlot >= 0)
         {
             position = List["Hotbar"].Position + new Size(0, 42);
-            InformationID = Player.Me.Inventory[Player.Me.Hotbar[HotbarSlot].Slot].Item.GetID();
+            InformationId = Player.Me.Inventory[Player.Me.Hotbar[HotbarSlot].Slot].Item.GetId();
         }
         else if (InventorySlot > 0)
         {
             position = List["Menu_Inventory"].Position + new Size(-186, 3);
-            InformationID = Player.Me.Inventory[InventorySlot].Item.GetID();
+            InformationId = Player.Me.Inventory[InventorySlot].Item.GetId();
         }
         else if (EquipmentSlot >= 0)
         {
             position = List["Menu_Character"].Position + new Size(-186, 5);
-            InformationID = Player.Me.Equipment[EquipmentSlot].GetID();
+            InformationId = Player.Me.Equipment[EquipmentSlot].GetId();
         }
         else if (ShopSlot >= 0 && ShopSlot < ShopOpen.Sold.Count)
         {
             position = new Point(List["Shop"].Position.X - 186, List["Shop"].Position.Y + 5);
-            InformationID = ShopOpen.Sold[ShopSlot].Item.GetID();
+            InformationId = ShopOpen.Sold[ShopSlot].Item.GetId();
         }
-        else InformationID = Guid.Empty;
+        else InformationId = Guid.Empty;
 
         // Define os dados do painel de informações
-        List["Information"].Visible = !position.IsEmpty && InformationID != Guid.Empty;
+        List["Information"].Visible = !position.IsEmpty && InformationId != Guid.Empty;
         List["Information"].Position = position;
     }
 }

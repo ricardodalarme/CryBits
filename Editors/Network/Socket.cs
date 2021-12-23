@@ -15,7 +15,7 @@ internal static class Socket
     private static NetIncomingMessage _data;
 
     // Dados para a conexão com o servidor
-    private const string IP = "localhost";
+    private const string Ip = "localhost";
 
     public static void Init()
     {
@@ -66,7 +66,7 @@ internal static class Socket
         if (IsConnected()) return true;
 
         // Tenta se conectar
-        Device.Connect(IP, Port);
+        Device.Connect(Ip, Port);
 
         // Espere até que o jogador se conecte
         while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)

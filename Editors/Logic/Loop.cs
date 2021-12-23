@@ -39,7 +39,7 @@ internal static class Loop
             if (timer1000 < Environment.TickCount)
             {
                 // Cálcula o FPS
-                Program.FPS = fps;
+                Program.Fps = fps;
                 fps = 0;
 
                 // Reinicia a contagem
