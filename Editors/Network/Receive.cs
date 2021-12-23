@@ -28,7 +28,7 @@ internal static class Receive
         }
     }
 
-    private static void Alert(NetIncomingMessage data)
+    private static void Alert(NetBuffer data)
     {
         // Mostra a mensagem
         MessageBox.Show(data.ReadString());
@@ -41,7 +41,7 @@ internal static class Receive
         EditorMaps.Form = new EditorMaps();
     }
 
-    private static void ServerData(NetIncomingMessage data)
+    private static void ServerData(NetBuffer data)
     {
         // Lê os dados
         GameName = data.ReadString();
@@ -58,13 +58,13 @@ internal static class Receive
         MaxPasswordLength = data.ReadByte();
     }
 
-    private static void Classes(NetIncomingMessage data)
+    private static void Classes(NetBuffer data)
     {
         // Recebe os dados
         Class.List = (Dictionary<Guid, Class>)ByteArrayToObject(data);
     }
 
-    private static void Map(NetIncomingMessage data)
+    private static void Map(NetBuffer data)
     {
         var map = (Map)ByteArrayToObject(data);
         var id = map.ID;
@@ -75,19 +75,19 @@ internal static class Receive
             CryBits.Entities.Map.List.Add(id, map);
     }
 
-    private static void Npcs(NetIncomingMessage data)
+    private static void Npcs(NetBuffer data)
     {
         // Recebe os dados
         Npc.List = (Dictionary<Guid, Npc>)ByteArrayToObject(data);
     }
 
-    private static void Items(NetIncomingMessage data)
+    private static void Items(NetBuffer data)
     {
         // Recebe os dados
         Item.List = (Dictionary<Guid, Item>)ByteArrayToObject(data);
     }
 
-    private static void Shops(NetIncomingMessage data)
+    private static void Shops(NetBuffer data)
     {
         // Recebe os dados
         Shop.List = (Dictionary<Guid, Shop>)ByteArrayToObject(data);

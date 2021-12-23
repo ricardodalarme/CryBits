@@ -77,7 +77,7 @@ internal static class Receive
         Send.Latency(account);
     }
 
-    private static void Connect(Account account, NetIncomingMessage data)
+    private static void Connect(Account account, NetBuffer data)
     {
         // Lê os dados
         var user = data.ReadString().Trim();
@@ -148,7 +148,7 @@ internal static class Receive
         }
     }
 
-    private static void Register(Account account, NetIncomingMessage data)
+    private static void Register(Account account, NetBuffer data)
     {
         // Lê os dados
         var user = data.ReadString().Trim();
@@ -183,7 +183,7 @@ internal static class Receive
         Send.CreateCharacter(account);
     }
 
-    private static void CreateCharacter(Account account, NetIncomingMessage data)
+    private static void CreateCharacter(Account account, NetBuffer data)
     {
         // Lê os dados
         var name = data.ReadString().Trim();
@@ -234,7 +234,7 @@ internal static class Receive
         account.Character.Join();
     }
 
-    private static void CharacterUse(Account account, NetIncomingMessage data)
+    private static void CharacterUse(Account account, NetBuffer data)
     {
         var character = data.ReadInt32();
 
@@ -260,7 +260,7 @@ internal static class Receive
         Send.CreateCharacter(account);
     }
 
-    private static void CharacterDelete(Account account, NetIncomingMessage data)
+    private static void CharacterDelete(Account account, NetBuffer data)
     {
         var character = data.ReadInt32();
 
@@ -279,7 +279,7 @@ internal static class Receive
         Write.Account(account);
     }
 
-    private static void PlayerDirection(Player player, NetIncomingMessage data)
+    private static void PlayerDirection(Player player, NetBuffer data)
     {
         var direction = (Direction)data.ReadByte();
 
@@ -292,7 +292,7 @@ internal static class Receive
         Send.PlayerDirection(player);
     }
 
-    private static void PlayerMove(Player player, NetIncomingMessage data)
+    private static void PlayerMove(Player player, NetBuffer data)
     {
         // Move o jogador se necessário
         if (player.X != data.ReadByte() || player.Y != data.ReadByte())
@@ -301,7 +301,7 @@ internal static class Receive
             player.Move(data.ReadByte());
     }
 
-    private static void Message(Player player, NetIncomingMessage data)
+    private static void Message(Player player, NetBuffer data)
     {
         var message = data.ReadString();
 
@@ -325,7 +325,7 @@ internal static class Receive
         player.Attack();
     }
 
-    private static void AddPoint(Player player, NetIncomingMessage data)
+    private static void AddPoint(Player player, NetBuffer data)
     {
         var attributeNum = data.ReadByte();
 
@@ -355,12 +355,12 @@ internal static class Receive
         }
     }
 
-    private static void DropItem(Player player, NetIncomingMessage data)
+    private static void DropItem(Player player, NetBuffer data)
     {
         player.DropItem(data.ReadInt16(), data.ReadInt16());
     }
 
-    private static void InventoryChange(Player player, NetIncomingMessage data)
+    private static void InventoryChange(Player player, NetBuffer data)
     {
         short slotOld = data.ReadInt16(), slotNew = data.ReadInt16();
 
@@ -382,12 +382,12 @@ internal static class Receive
         }
     }
 
-    private static void InventoryUse(Player player, NetIncomingMessage data)
+    private static void InventoryUse(Player player, NetBuffer data)
     {
         player.UseItem(player.Inventory[data.ReadByte()]);
     }
 
-    private static void EquipmentRemove(Player player, NetIncomingMessage data)
+    private static void EquipmentRemove(Player player, NetBuffer data)
     {
         var slot = data.ReadByte();
 
@@ -417,7 +417,7 @@ internal static class Receive
         Send.PlayerEquipments(player);
     }
 
-    private static void HotbarAdd(Player player, NetIncomingMessage data)
+    private static void HotbarAdd(Player player, NetBuffer data)
     {
         var hotbarSlot = data.ReadInt16();
         var type = (SlotType)data.ReadByte();
@@ -434,7 +434,7 @@ internal static class Receive
         Send.PlayerHotbar(player);
     }
 
-    private static void HotbarChange(Player player, NetIncomingMessage data)
+    private static void HotbarChange(Player player, NetBuffer data)
     {
         short slotOld = data.ReadInt16(), slotNew = data.ReadInt16();
 
@@ -448,7 +448,7 @@ internal static class Receive
         Send.PlayerHotbar(player);
     }
 
-    private static void HotbarUse(Player player, NetIncomingMessage data)
+    private static void HotbarUse(Player player, NetBuffer data)
     {
         var hotbarSlot = data.ReadInt16();
 
@@ -459,7 +459,7 @@ internal static class Receive
         }
     }
 
-    private static void WriteSettings(Account account, NetIncomingMessage data)
+    private static void WriteSettings(Account account, NetBuffer data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -486,7 +486,7 @@ internal static class Receive
         Write.Defaults();
     }
 
-    private static void WriteClasses(Account account, NetIncomingMessage data)
+    private static void WriteClasses(Account account, NetBuffer data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -505,7 +505,7 @@ internal static class Receive
                 Send.Classes(Account.List[i]);
     }
 
-    private static void WriteMaps(Account account, NetIncomingMessage data)
+    private static void WriteMaps(Account account, NetBuffer data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -532,7 +532,7 @@ internal static class Receive
         }
     }
 
-    private static void WriteNpcs(Account account, NetIncomingMessage data)
+    private static void WriteNpcs(Account account, NetBuffer data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -551,7 +551,7 @@ internal static class Receive
                 Send.Npcs(Account.List[i]);
     }
 
-    private static void WriteItems(Account account, NetIncomingMessage data)
+    private static void WriteItems(Account account, NetBuffer data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -570,7 +570,7 @@ internal static class Receive
                 Send.Items(Account.List[i]);
     }
 
-    private static void WriteShops(Account account, NetIncomingMessage data)
+    private static void WriteShops(Account account, NetBuffer data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -599,7 +599,7 @@ internal static class Receive
         Send.Classes(account);
     }
 
-    private static void RequestMap(Account account, NetIncomingMessage data)
+    private static void RequestMap(Account account, NetBuffer data)
     {
         if (account.InEditor)
             Send.Map(account, Map.List.Get(new Guid(data.ReadString())));
@@ -639,7 +639,7 @@ internal static class Receive
         Send.Shops(account);
     }
 
-    private static void PartyInvite(Player player, NetIncomingMessage data)
+    private static void PartyInvite(Player player, NetBuffer data)
     {
         var name = data.ReadString();
 
@@ -737,7 +737,7 @@ internal static class Receive
         player.PartyLeave();
     }
 
-    private static void TradeInvite(Player player, NetIncomingMessage data)
+    private static void TradeInvite(Player player, NetBuffer data)
     {
         var name = data.ReadString();
 
@@ -850,7 +850,7 @@ internal static class Receive
         player.TradeLeave();
     }
 
-    private static void TradeOffer(Player player, NetIncomingMessage data)
+    private static void TradeOffer(Player player, NetBuffer data)
     {
         short slot = data.ReadInt16(), inventorySlot = data.ReadInt16();
         var amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
@@ -875,7 +875,7 @@ internal static class Receive
         Send.TradeOffer(player.Trade, false);
     }
 
-    private static void TradeOfferState(Player player, NetIncomingMessage data)
+    private static void TradeOfferState(Player player, NetBuffer data)
     {
         var state = (TradeStatus)data.ReadByte();
         var invited = player.Trade;
@@ -937,7 +937,7 @@ internal static class Receive
         Send.TradeState(invited, state);
     }
 
-    private static void ShopBuy(Player player, NetIncomingMessage data)
+    private static void ShopBuy(Player player, NetBuffer data)
     {
         var shopSold = player.Shop.Sold[data.ReadInt16()];
         var inventorySlot = player.FindInventory(player.Shop.Currency);
@@ -961,7 +961,7 @@ internal static class Receive
         Send.Message(player, "You bought " + shopSold.Price + "x " + shopSold.Item.Name + ".", Color.Green);
     }
 
-    private static void ShopSell(Player player, NetIncomingMessage data)
+    private static void ShopSell(Player player, NetBuffer data)
     {
         var inventorySlot = data.ReadByte();
         var amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
