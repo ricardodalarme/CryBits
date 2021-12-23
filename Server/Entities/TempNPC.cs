@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using CryBits.Entities;
+using CryBits.Entities.Npc;
 using CryBits.Enums;
+using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using static CryBits.Globals;
@@ -33,7 +34,7 @@ internal class TempNpc : Character
     }
 
     // Construtor
-    public TempNpc(byte index, TempMap map, Npc data)
+    public TempNpc(byte index, TempMap.TempMap map, Npc data)
     {
         Index = index;
         Map = map;
@@ -150,8 +151,8 @@ internal class TempNpc : Character
             // Define o alvo a zona do Npc
             if (Map.Data.Npc[Index].Zone > 0)
                 if (Map.Data.Attribute[X, Y].Zone != Map.Data.Npc[Index].Zone)
-                    for (byte x2 = 0; x2 < CryBits.Entities.Map.Width; x2++)
-                    for (byte y2 = 0; y2 < CryBits.Entities.Map.Height; y2++)
+                    for (byte x2 = 0; x2 < CryBits.Entities.Map.Map.Width; x2++)
+                    for (byte y2 = 0; y2 < CryBits.Entities.Map.Map.Height; y2++)
                         if (Map.Data.Attribute[x2, y2].Zone == Map.Data.Npc[Index].Zone)
                             if (!Map.Data.TileBlocked(x2, y2))
                             {
@@ -238,8 +239,8 @@ internal class TempNpc : Character
         // Faz com que ele apareça em um local aleatório
         for (byte i = 0; i < 50; i++) // tenta 50 vezes com que ele apareça em um local aleatório
         {
-            var x = (byte)MyRandom.Next(0, CryBits.Entities.Map.Width - 1);
-            var y = (byte)MyRandom.Next(0, CryBits.Entities.Map.Height - 1);
+            var x = (byte)MyRandom.Next(0, CryBits.Entities.Map.Map.Width - 1);
+            var y = (byte)MyRandom.Next(0, CryBits.Entities.Map.Map.Height - 1);
 
             // Verifica se está dentro da zona
             if (Map.Data.Npc[Index].Zone > 0)
@@ -255,8 +256,8 @@ internal class TempNpc : Character
         }
 
         // Em último caso, tentar no primeiro lugar possível
-        for (byte x2 = 0; x2 < CryBits.Entities.Map.Width; x2++)
-        for (byte y2 = 0; y2 < CryBits.Entities.Map.Height; y2++)
+        for (byte x2 = 0; x2 < CryBits.Entities.Map.Map.Width; x2++)
+        for (byte y2 = 0; y2 < CryBits.Entities.Map.Map.Height; y2++)
             if (!Map.Data.TileBlocked(x2, y2))
             {
                 // Verifica se está dentro da zona
@@ -282,7 +283,7 @@ internal class TempNpc : Character
         NextTile(direction, ref nextX, ref nextY);
 
         // Próximo azulejo bloqueado ou fora do limite
-        if (CryBits.Entities.Map.OutLimit(nextX, nextY)) return false;
+        if (CryBits.Entities.Map.Map.OutLimit(nextX, nextY)) return false;
         if (Map.TileBlocked(X, Y, direction)) return false;
 
         // Verifica se está dentro da zona
@@ -401,7 +402,7 @@ internal class TempNpc : Character
             if (Data.Drop[i].Item != null)
                 if (MyRandom.Next(1, 99) <= Data.Drop[i].Chance)
                     // Solta o item
-                    Map.Item.Add(new MapItems(Data.Drop[i].Item, Data.Drop[i].Amount, X, Y));
+                    Map.Item.Add(new TempMapItems(Data.Drop[i].Item, Data.Drop[i].Amount, X, Y));
 
         // Envia os dados dos itens no chão para o mapa
         Send.MapItems(Map);

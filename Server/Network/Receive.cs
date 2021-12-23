@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using CryBits.Entities;
+using CryBits.Entities.Map;
+using CryBits.Entities.Npc;
+using CryBits.Entities.Shop;
+using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Server.Entities;
+using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
 using Lidgren.Network;
 using static CryBits.Globals;
@@ -402,7 +407,7 @@ internal static class Receive
             if (player.Map.Item.Count == MaxMapItems) return;
 
             // Solta o item no chão
-            player.Map.Item.Add(new MapItems(player.Equipment[slot], 1, player.X, player.Y));
+            player.Map.Item.Add(new TempMapItems(player.Equipment[slot], 1, player.X, player.Y));
 
             // Envia os dados
             Send.MapItems(player.Map);

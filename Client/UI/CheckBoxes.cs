@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Entities;
+using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.Media.Graphics;

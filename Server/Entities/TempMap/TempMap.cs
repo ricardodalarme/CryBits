@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using CryBits.Entities;
+using CryBits.Entities.Map;
 using CryBits.Enums;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using static CryBits.Utils;
 
-namespace CryBits.Server.Entities;
+namespace CryBits.Server.Entities.TempMap;
 
 internal class TempMap : Entity
 {
@@ -16,7 +17,7 @@ internal class TempMap : Entity
     // Dados
     public readonly Map Data;
     public TempNpc[] Npc = Array.Empty<TempNpc>();
-    public List<MapItems> Item = new();
+    public List<TempMapItems> Item = new();
 
     // Construtor
     public TempMap(Guid id, Map map) : base(id)
@@ -35,7 +36,7 @@ internal class TempMap : Entity
         // Faz reaparecer todos os itens do mapa
         if (Environment.TickCount > Loop.TimerMapItems + 300000)
         {
-            Item = new List<MapItems>();
+            Item = new List<TempMapItems>();
             SpawnItems();
             Send.MapItems(this);
         }
@@ -74,7 +75,7 @@ internal class TempMap : Entity
         return false;
     }
 
-    public MapItems HasItem(byte x, byte y)
+    public TempMapItems HasItem(byte x, byte y)
     {
         // Verifica se tem algum item nas coordenadas 
         for (var i = Item.Count - 1; i >= 0; i--)
@@ -91,7 +92,7 @@ internal class TempMap : Entity
         for (byte y = 0; y < Map.Height; y++)
             if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
                 // Adiciona o item
-                Item.Add(new MapItems(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)), Data.Attribute[x, y].Data2, x, y));
+                Item.Add(new TempMapItems(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)), Data.Attribute[x, y].Data2, x, y));
     }
 
     public bool TileBlocked(byte x, byte y, Direction direction, bool countEntities = true)
@@ -125,17 +126,5 @@ internal class TempMap : Entity
 
         // Itens do mapa
         tempMap.SpawnItems();
-    }
-}
-
-internal class MapItems : ItemSlot
-{
-    public byte X;
-    public byte Y;
-
-    public MapItems(Item item, short amount, byte x, byte y) : base(item, amount)
-    {
-        X = x;
-        Y = y;
     }
 }

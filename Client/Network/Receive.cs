@@ -4,10 +4,15 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
+using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.UI;
 using CryBits.Entities;
+using CryBits.Entities.Map;
+using CryBits.Entities.Npc;
+using CryBits.Entities.Shop;
+using CryBits.Entities.Slots;
 using CryBits.Enums;
 using Lidgren.Network;
 using static CryBits.Globals;
@@ -92,7 +97,7 @@ internal static class Receive
         Item.List = new Dictionary<Guid, Item>();
         Shop.List = new Dictionary<Guid, Shop>();
         Npc.List = new Dictionary<Guid, Npc>();
-        CryBits.Entities.Map.List = new Dictionary<Guid, Map>();
+        CryBits.Entities.Map.Map.List = new Dictionary<Guid, Map>();
         TempMap.List = new Dictionary<Guid, TempMap>();
 
         // Definir os valores que são enviados do servidor
@@ -288,12 +293,12 @@ internal static class Receive
             {
                 var victimData = Player.Get(victim);
                 victimData.Hurt = Environment.TickCount;
-                TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
+                TempMap.Current.Blood.Add(new TempMapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
             }
             else if (victimType == (byte)Target.Npc)
             {
                 TempMap.Current.Npc[byte.Parse(victim)].Hurt = Environment.TickCount;
-                TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), TempMap.Current.Npc[byte.Parse(victim)].X, TempMap.Current.Npc[byte.Parse(victim)].Y, 255));
+                TempMap.Current.Blood.Add(new TempMapBlood((byte)MyRandom.Next(0, 3), TempMap.Current.Npc[byte.Parse(victim)].X, TempMap.Current.Npc[byte.Parse(victim)].Y, 255));
             }
     }
 
@@ -341,11 +346,11 @@ internal static class Receive
                 Player.List.RemoveAt(i);
 
         // Verifica se é necessário baixar os dados do mapa
-        if (File.Exists(Directories.MapsData.FullName + id + Directories.Format) || CryBits.Entities.Map.List.ContainsKey(id))
+        if (File.Exists(Directories.MapsData.FullName + id + Directories.Format) || CryBits.Entities.Map.Map.List.ContainsKey(id))
         {
-            if (!CryBits.Entities.Map.List.ContainsKey(id)) Read.Map(id);
+            if (!CryBits.Entities.Map.Map.List.ContainsKey(id)) Read.Map(id);
 
-            if (CryBits.Entities.Map.List[id].Revision != currentRevision)
+            if (CryBits.Entities.Map.Map.List[id].Revision != currentRevision)
                 needed = true;
         }
         else
@@ -355,7 +360,7 @@ internal static class Receive
         Send.RequestMap(needed);
 
         // Reseta os sangues do mapa
-        TempMap.Current.Blood = new List<MapBlood>();
+        TempMap.Current.Blood = new List<TempMapBlood>();
     }
 
     private static void Map(NetBuffer data)
@@ -364,10 +369,10 @@ internal static class Receive
         var id = map.Id;
 
         // Obtém o dado
-        if (CryBits.Entities.Map.List.ContainsKey(id)) CryBits.Entities.Map.List[id] = map;
+        if (CryBits.Entities.Map.Map.List.ContainsKey(id)) CryBits.Entities.Map.Map.List[id] = map;
         else
         {
-            CryBits.Entities.Map.List.Add(id, map);
+            CryBits.Entities.Map.Map.List.Add(id, map);
             TempMap.List.Add(id, new TempMap(map));
         }
 
@@ -413,11 +418,11 @@ internal static class Receive
     private static void MapItems(NetBuffer data)
     {
         // Quantidade
-        TempMap.Current.Item = new MapItems[data.ReadByte()];
+        TempMap.Current.Item = new TempMapItems[data.ReadByte()];
 
         // Lê os dados de todos
         for (byte i = 0; i < TempMap.Current.Item.Length; i++)
-            TempMap.Current.Item[i] = new MapItems
+            TempMap.Current.Item[i] = new TempMapItems
             {
                 Item = Item.List.Get(new Guid(data.ReadString())),
                 X = data.ReadByte(),
@@ -613,12 +618,12 @@ internal static class Receive
             {
                 var victimData = Player.Get(victim);
                 victimData.Hurt = Environment.TickCount;
-                TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
+                TempMap.Current.Blood.Add(new TempMapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
             }
             else if (victimType == (byte)Target.Npc)
             {
                 TempMap.Current.Npc[byte.Parse(victim)].Hurt = Environment.TickCount;
-                TempMap.Current.Blood.Add(new MapBlood((byte)MyRandom.Next(0, 3), TempMap.Current.Npc[byte.Parse(victim)].X, TempMap.Current.Npc[byte.Parse(victim)].Y, 255));
+                TempMap.Current.Blood.Add(new TempMapBlood((byte)MyRandom.Next(0, 3), TempMap.Current.Npc[byte.Parse(victim)].X, TempMap.Current.Npc[byte.Parse(victim)].Y, 255));
             }
     }
 

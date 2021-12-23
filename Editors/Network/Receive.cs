@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using CryBits.Editors.Forms;
 using CryBits.Entities;
+using CryBits.Entities.Map;
+using CryBits.Entities.Npc;
+using CryBits.Entities.Shop;
 using CryBits.Enums;
 using Lidgren.Network;
 using static CryBits.Globals;
@@ -70,9 +73,9 @@ internal static class Receive
         var id = map.Id;
 
         // Obtém o dado
-        if (CryBits.Entities.Map.List.ContainsKey(id)) CryBits.Entities.Map.List[id] = map;
+        if (CryBits.Entities.Map.Map.List.ContainsKey(id)) CryBits.Entities.Map.Map.List[id] = map;
         else
-            CryBits.Entities.Map.List.Add(id, map);
+            CryBits.Entities.Map.Map.List.Add(id, map);
     }
 
     private static void Npcs(NetBuffer data)

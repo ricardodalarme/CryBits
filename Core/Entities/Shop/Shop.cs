@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CryBits.Entities;
+namespace CryBits.Entities.Shop;
 
 [Serializable]
 public class Shop : Entity
@@ -25,27 +25,6 @@ public class Shop : Entity
         Name = "New shop";
         Currency = Item.List.ElementAt(0).Value;
     }
-        
-    public ShopItem FindBought(Item item)
-    {
-        // Verifica se a loja vende determinado item
-        for (byte i = 0; i < Bought.Count; i++)
-            if (Bought[i].Item == item)
-                return Bought[i];
 
-        return null;
-    }
-}
-
-[Serializable]
-public class ShopItem : ItemSlot
-{
-    public short Price { get; set; }
-
-    public ShopItem(Item item, short amount, short price) : base(item, amount)
-    {
-        Price = price;
-    }
-
-    public override string ToString() => Item.Name + " - " + Amount + "x [$" + Price + "]";
+    public ShopItem FindBought(Item item) => Bought.First(x => x.Item == item);
 }

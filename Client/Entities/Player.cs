@@ -22,7 +22,7 @@ internal class Player : Character
     public short[] MaxVital { get; set; } = new short[(byte)Enums.Vital.Count];
     public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
     public Item[] Equipment { get; set; } = new Item[(byte)Enums.Equipment.Count];
-    public TempMap Map;
+    public TempMap.TempMap Map;
 
     public Player(string name)
     {

@@ -116,13 +116,13 @@ internal static class Write
     public static void Tiles()
     {
         // Escreve os dados
-        for (byte i = 1; i < Entities.Tile.List.Length; i++) Tile(i);
+        for (byte i = 1; i < CryBits.Entities.Tile.Tile.List.Length; i++) Tile(i);
     }
 
     public static void Tile(byte index)
     {
         // Escreve os dados
         using var stream = new FileInfo(Directories.Tiles.FullName + index + Directories.Format).OpenWrite();
-        new BinaryFormatter().Serialize(stream, Entities.Tile.List[index]);
+        new BinaryFormatter().Serialize(stream, CryBits.Entities.Tile.Tile.List[index]);
     }
 }

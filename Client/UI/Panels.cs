@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Network;
-using CryBits.Entities;
+using CryBits.Entities.Shop;
 using CryBits.Enums;
 using SFML.Window;
 using static CryBits.Client.Logic.Utils;

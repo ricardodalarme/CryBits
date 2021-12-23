@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
 using CryBits.Entities;
+using CryBits.Entities.Shop;
 using DarkUI.Forms;
 
 namespace CryBits.Editors.Forms;

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using CryBits.Client.Media.Graphics;
-using CryBits.Entities;
+using CryBits.Entities.Map;
 using CryBits.Enums;
 using static CryBits.Globals;
 using static CryBits.Utils;
 
-namespace CryBits.Client.Entities;
+namespace CryBits.Client.Entities.TempMap;
 
 internal class TempMap
 {
@@ -16,13 +15,13 @@ internal class TempMap
 
     // Lista de dados
     public static Dictionary<Guid, TempMap> List;
-    public MapWeatherParticle[] Weather;
+    public TempMapWeatherParticle[] Weather;
 
     // Dados gerais
     public readonly Map Data;
     public TempNpc[] Npc;
-    public MapItems[] Item = Array.Empty<MapItems>();
-    public List<MapBlood> Blood = new();
+    public TempMapItems[] Item = Array.Empty<TempMapItems>();
+    public List<TempMapBlood> Blood = new();
 
     // Fumaças
     public int FogX;
@@ -227,7 +226,7 @@ internal class TempMap
                 }
 
                 // Reseta a partícula
-                if (Weather[i].X > ScreenWidth || Weather[i].Y > ScreenHeight) Weather[i] = new MapWeatherParticle();
+                if (Weather[i].X > ScreenWidth || Weather[i].Y > ScreenHeight) Weather[i] = new TempMapWeatherParticle();
             }
 
         // Trovoadas
@@ -257,102 +256,11 @@ internal class TempMap
                 Media.Audio.Sound.Play(Sound.Rain, true);
 
                 // Redimensiona a estrutura
-                Weather = new MapWeatherParticle[MaxRainParticles + 1];
+                Weather = new TempMapWeatherParticle[MaxRainParticles + 1];
                 break;
             case Enums.Weather.Snowing:
-                Weather = new MapWeatherParticle[MaxSnowParticles + 1];
+                Weather = new TempMapWeatherParticle[MaxSnowParticles + 1];
                 break;
         }
-    }
-}
-
-internal class MapItems
-{
-    public Item Item;
-    public byte X;
-    public byte Y;
-}
-
-internal class MapBlood
-{
-    // Dados
-    public byte TextureNum;
-    public short X;
-    public short Y;
-    public byte Opacity;
-
-    // Construtor
-    public MapBlood(byte textureNum, short x, short y, byte opacity)
-    {
-        TextureNum = textureNum;
-        X = x;
-        Y = y;
-        Opacity = opacity;
-    }
-}
-
-internal struct MapWeatherParticle
-{
-    public bool Visible;
-    public int X;
-    public int Y;
-    public int Speed;
-    public int Start;
-    public bool Back;
-
-    public void MoveRain()
-    {
-        // Movimenta a partícula
-        X += Speed;
-        Y += Speed;
-    }
-
-    public void SetRain()
-    {
-        // Define a velocidade e a posição da partícula
-        Speed = MyRandom.Next(8, 13);
-
-        if (MyRandom.Next(2) == 0)
-        {
-            X = -32;
-            Y = MyRandom.Next(-32, ScreenHeight);
-        }
-        else
-        {
-            X = MyRandom.Next(-32, ScreenWidth);
-            Y = -32;
-        }
-    }
-
-    public void SetSnow()
-    {
-        // Define a velocidade e a posição da partícula
-        Speed = MyRandom.Next(1, 3);
-        Y = -32;
-        X = MyRandom.Next(-32, ScreenWidth);
-        Start = X;
-        Back = MyRandom.Next(2) != 0;
-    }
-
-    public void MoveSnow(bool xAxis = true)
-    {
-        var difference = MyRandom.Next(0, SnowMovement / 3);
-        var x1 = Start + SnowMovement + difference;
-        var x2 = Start - SnowMovement - difference;
-
-        // Faz com que a partícula volte
-        if (x1 <= X)
-            Back = true;
-        else if (x2 >= X)
-            Back = false;
-
-        // Movimenta a partícula
-        Y += Speed;
-
-        if (xAxis)
-            if (Back)
-                X--;
-            else
-                X++;
     }
 }

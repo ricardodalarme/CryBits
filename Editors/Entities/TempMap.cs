@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Media.Graphics;
-using CryBits.Entities;
+using CryBits.Entities.Map;
 using SFML.Audio;
 using static CryBits.Globals;
 using static CryBits.Utils;

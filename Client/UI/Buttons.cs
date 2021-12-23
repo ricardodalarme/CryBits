@@ -7,6 +7,7 @@ using CryBits.Client.Library;
 using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Entities;
+using CryBits.Entities.Slots;
 using CryBits.Enums;
 using SFML.Window;
 using static CryBits.Client.Logic.Utils;

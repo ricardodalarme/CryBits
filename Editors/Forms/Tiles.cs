@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using CryBits.Editors.Entities;
+using CryBits.Entities.Tile;
 using CryBits.Editors.Library;
 using CryBits.Editors.Media.Graphics;
 using CryBits.Enums;
@@ -66,7 +67,8 @@ internal partial class EditorTiles : DarkForm
     private void butClear_Click(object sender, EventArgs e)
     {
         // Limpa os dados
-        Tile.List[(byte)scrlTile.Value] = new Tile((byte)scrlTile.Value);
+        var tileSize = Textures.Tiles[scrlTile.Value].ToSize();
+        Tile.List[(byte)scrlTile.Value] = new Tile(tileSize);
     }
 
     private void butCancel_Click(object sender, EventArgs e)

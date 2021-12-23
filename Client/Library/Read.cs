@@ -4,8 +4,9 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Client.Entities;
+using CryBits.Client.Entities.TempMap;
 using CryBits.Client.UI;
-using CryBits.Entities;
+using CryBits.Entities.Map;
 using CryBits.Enums;
 
 namespace CryBits.Client.Library;
@@ -143,7 +144,7 @@ internal static class Read
 
         // Lê os dados
         using (var stream = file.OpenRead())
-            CryBits.Entities.Map.List.Add(id, (Map)new BinaryFormatter().Deserialize(stream));
+            CryBits.Entities.Map.Map.List.Add(id, (Map)new BinaryFormatter().Deserialize(stream));
 
         // Redimensiona as partículas do clima
         TempMap.Current.UpdateWeatherType();

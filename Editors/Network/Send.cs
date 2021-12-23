@@ -1,5 +1,8 @@
 ﻿using CryBits.Editors.Forms;
 using CryBits.Entities;
+using CryBits.Entities.Map;
+using CryBits.Entities.Npc;
+using CryBits.Entities.Shop;
 using CryBits.Enums;
 using Lidgren.Network;
 using static CryBits.Globals;

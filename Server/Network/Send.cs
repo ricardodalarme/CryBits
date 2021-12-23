@@ -1,7 +1,11 @@
 ﻿using System.Drawing;
 using CryBits.Entities;
+using CryBits.Entities.Map;
+using CryBits.Entities.Npc;
+using CryBits.Entities.Shop;
 using CryBits.Enums;
 using CryBits.Server.Entities;
+using CryBits.Server.Entities.TempMap;
 using Lidgren.Network;
 using static CryBits.Globals;
 using static CryBits.Utils;
@@ -296,9 +300,9 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ServerPacket.Maps);
-        data.Write((short)CryBits.Entities.Map.List.Count);
+        data.Write((short)CryBits.Entities.Map.Map.List.Count);
         ToPlayer(account, data);
-        foreach (var map in CryBits.Entities.Map.List.Values) Map(account, map);
+        foreach (var map in CryBits.Entities.Map.Map.List.Values) Map(account, map);
     }
 
     public static void Map(Account account, Map map)

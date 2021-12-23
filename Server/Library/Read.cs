@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
+using CryBits.Entities.Map;
+using CryBits.Entities.Npc;
+using CryBits.Entities.Shop;
+using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Server.Entities;
+using CryBits.Server.Entities.TempMap;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
 

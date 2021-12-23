@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CryBits.Enums;
 
-namespace CryBits.Entities;
+namespace CryBits.Entities.Npc;
 
 [Serializable]
 public class Npc : Entity
@@ -26,9 +26,9 @@ public class Npc : Entity
     public byte FleeHealth { get; set; }
     private Guid _shop;
 
-    public Shop Shop
+    public Shop.Shop Shop
     {
-        get => Shop.List.Get(_shop);
+        get => Entities.Shop.Shop.List.Get(_shop);
         set => _shop = value.GetId();
     }
 
@@ -37,24 +37,5 @@ public class Npc : Entity
         Name = "New Npc";
     }
 
-    public bool IsAllied(Npc npc)
-    {
-        // Verifica se o Npc é aliado do outro
-        for (byte i = 0; i < Allie.Count; i++)
-            if (Allie[i] == npc)
-                return true;
-
-        return false;
-    }
-}
-
-[Serializable]
-public class NpcDrop : ItemSlot
-{
-    public byte Chance;
-
-    public NpcDrop(Item item, short amount, byte chance) : base(item, amount)
-    {
-        Chance = chance;
-    }
+    public bool IsAllied(Npc npc) => Allie.Contains(npc);
 }

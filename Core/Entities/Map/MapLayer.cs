@@ -1,90 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using CryBits.Enums;
-using static CryBits.Globals;
 
-namespace CryBits.Entities;
-
-[Serializable]
-public class Map : Entity
-{
-    // Lista de dados
-    public static Dictionary<Guid, Map> List = new();
-
-    // Tamanho dos mapas
-    public const byte Width = 25;
-    public const byte Height = 19;
-
-    // Dados
-    public short Revision { get; set; }
-    public Moral Moral { get; set; }
-    public IList<MapLayer> Layer { get; set; } = new List<MapLayer>();
-    public MapAttribute[,] Attribute = new MapAttribute[Width, Height];
-    public byte Panorama { get; set; }
-    public byte Music { get; set; }
-    public Color Color { get; set; } = Color.FromArgb(-1);
-    public MapWeather Weather = new();
-    public MapFog Fog = new();
-    public IList<MapNpc> Npc { get; set; } = new List<MapNpc>();
-    public byte Lighting = 100;
-    public Map[] Link = new Map[(byte)Direction.Count];
-
-    // Construtor
-    public Map()
-    {
-        Name = "New map";
-        Layer.Add(new MapLayer { Name = "Ground" });
-
-        for (byte x = 0; x < Width; x++)
-        for (byte y = 0; y < Height; y++)
-        {
-            Attribute[x, y] = new MapAttribute();
-            Layer[0].Tile[x, y] = new MapTileData();
-        }
-    }
-
-    // Verifica se as coordenas estão no limite do mapa
-    public static bool OutLimit(short x, short y) => x >= Width || y >= Height || x < 0 || y < 0;
-
-    public bool TileBlocked(short x, short y)
-    {
-        // Verifica se o azulejo está bloqueado
-        if (OutLimit(x, y)) return true;
-        if (Attribute[x, y].Type == (byte)TileAttribute.Block) return true;
-        return false;
-    }
-
-    public void Update()
-    {
-        // Atualiza os azulejos necessários
-        for (byte x = 0; x < Width; x++)
-        for (byte y = 0; y < Height; y++)
-        for (byte c = 0; c < Layer.Count; c++)
-            if (Layer[c].Tile[x, y].IsAutoTile)
-                // Faz os cálculos para a autocriação
-                Layer[c].Calculate(x, y);
-    }
-}
-
-[Serializable]
-public class MapAttribute
-{
-    public byte Type;
-    public string Data1;
-    public short Data2;
-    public short Data3;
-    public short Data4;
-    public byte Zone;
-    public bool[] Block = new bool[(byte)Direction.Count];
-}
+namespace CryBits.Entities.Map;
 
 [Serializable]
 public class MapLayer
 {
-    public string Name;
-    public byte Type;
-    public MapTileData[,] Tile = new MapTileData[Map.Width, Map.Height];
+    public string Name { get; set; }
+    public byte Type { get; set; }
+    public MapTileData[,] Tile { get; set; } = new MapTileData[Map.Width, Map.Height];
 
     public MapLayer()
     {
@@ -243,93 +167,4 @@ public class MapLayer
             case AddMode.Fill: Tile[x, y].SetMini(3, "h"); break;
         }
     }
-}
-
-[Serializable]
-public class MapNpc
-{
-    public Npc Npc;
-    public byte Zone;
-    public bool Spawn;
-    public byte X;
-    public byte Y;
-}
-
-[Serializable]
-public class MapTileData
-{
-    public byte X;
-    public byte Y;
-    public byte Texture;
-    public bool IsAutoTile;
-    public Point[] Mini = new Point[4];
-
-    public void SetMini(byte index, string mode)
-    {
-        var position = new Point(0);
-
-        // Posições exatas dos mini azulejos (16x16)
-        switch (mode)
-        {
-            // Quinas
-            case "a": position = new Point(32, 0); break;
-            case "b": position = new Point(48, 0); break;
-            case "c": position = new Point(32, 16); break;
-            case "d": position = new Point(48, 16); break;
-
-            // Noroeste
-            case "e": position = new Point(0, 32); break;
-            case "f": position = new Point(16, 32); break;
-            case "g": position = new Point(0, 48); break;
-            case "h": position = new Point(16, 48); break;
-
-            // Nordeste
-            case "i": position = new Point(32, 32); break;
-            case "j": position = new Point(48, 32); break;
-            case "k": position = new Point(32, 48); break;
-            case "l": position = new Point(48, 48); break;
-
-            // Sudoeste
-            case "m": position = new Point(0, 64); break;
-            case "n": position = new Point(16, 64); break;
-            case "o": position = new Point(0, 80); break;
-            case "p": position = new Point(16, 80); break;
-
-            // Sudeste
-            case "q": position = new Point(32, 64); break;
-            case "r": position = new Point(48, 64); break;
-            case "s": position = new Point(32, 80); break;
-            case "t": position = new Point(48, 80); break;
-        }
-
-        // Define a posição do mini azulejo
-        Mini[index].X = (X * Grid) + position.X;
-        Mini[index].Y = (Y * Grid) + position.Y;
-    }
-}
-
-[Serializable]
-public class MapWeather
-{
-    public Weather Type;
-    public byte Intensity;
-}
-
-[Serializable]
-public class MapFog
-{
-    public byte Texture;
-    public sbyte SpeedX;
-    public sbyte SpeedY;
-    public byte Alpha = 255;
-}
-
-public struct MapWeatherParticle
-{
-    public bool Visible;
-    public int X;
-    public int Y;
-    public int Speed;
-    public int Start;
-    public bool Back;
 }

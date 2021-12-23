@@ -4,6 +4,8 @@ using CryBits.Editors.Logic;
 using CryBits.Editors.Media.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
+using CryBits.Entities.Map;
+using CryBits.Entities.Slots;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;

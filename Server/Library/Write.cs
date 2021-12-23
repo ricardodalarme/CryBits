@@ -1,6 +1,9 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
+using CryBits.Entities.Map;
+using CryBits.Entities.Npc;
+using CryBits.Entities.Shop;
 using CryBits.Enums;
 using CryBits.Server.Entities;
 using static CryBits.Globals;
@@ -122,7 +125,7 @@ internal static class Write
     public static void Maps()
     {
         // Escreve os dados
-        foreach (var map in CryBits.Entities.Map.List.Values)
+        foreach (var map in CryBits.Entities.Map.Map.List.Values)
             Map(map);
     }
 

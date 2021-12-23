@@ -1,12 +1,7 @@
 ﻿using System;
-using CryBits.Enums;
+using CryBits.Interfaces;
 
-namespace CryBits.Entities;
-
-public interface ISlot
-{
-    public short Amount { get; set; }
-}
+namespace CryBits.Entities.Slots;
 
 [Serializable]
 public class ItemSlot : ISlot
@@ -26,22 +21,4 @@ public class ItemSlot : ISlot
     }
 
     public override string ToString() => Item.Name + " - " + Amount + "x";
-}
-
-public class TradeSlot : ISlot
-{
-    public short SlotNum { get; set; }
-    public short Amount { get; set; }
-}
-
-public class HotbarSlot
-{
-    public SlotType Type;
-    public short Slot;
-
-    public HotbarSlot(SlotType type, short slot)
-    {
-        Type = type;
-        Slot = slot;
-    }
 }

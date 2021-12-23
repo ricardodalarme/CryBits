@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using CryBits.Entities;
+using CryBits.Entities.Shop;
+using CryBits.Entities.Slots;
 using CryBits.Enums;
+using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
@@ -151,7 +154,7 @@ internal class Player : Character
         TradeLeave();
     }
 
-    public void Warp(TempMap map, byte x, byte y, bool needUpdate = false)
+    public void Warp(TempMap.TempMap map, byte x, byte y, bool needUpdate = false)
     {
         var oldMap = Map;
 
@@ -161,8 +164,8 @@ internal class Player : Character
 
         // Evita que o jogador seja transportado para fora do limite
         if (map == null) return;
-        if (x >= CryBits.Entities.Map.Width) x = CryBits.Entities.Map.Width - 1;
-        if (y >= CryBits.Entities.Map.Height) y = CryBits.Entities.Map.Height - 1;
+        if (x >= CryBits.Entities.Map.Map.Width) x = CryBits.Entities.Map.Map.Width - 1;
+        if (y >= CryBits.Entities.Map.Map.Height) y = CryBits.Entities.Map.Map.Height - 1;
 
         // Define a Posição do jogador
         Map = map;
@@ -192,7 +195,7 @@ internal class Player : Character
     {
         byte nextX = X, nextY = Y;
         byte oldX = X, oldY = Y;
-        var link = TempMap.List.Get(Map.Data.Link[(byte)Direction].GetId());
+        var link = TempMap.TempMap.List.Get(Map.Data.Link[(byte)Direction].GetId());
         var secondMovement = false;
 
         // Previne erros
@@ -207,15 +210,15 @@ internal class Player : Character
         NextTile(Direction, ref nextX, ref nextY);
 
         // Ponto de ligação
-        if (CryBits.Entities.Map.OutLimit(nextX, nextY))
+        if (CryBits.Entities.Map.Map.OutLimit(nextX, nextY))
         {
             if (link != null)
                 switch (Direction)
                 {
-                    case Direction.Up: Warp(link, oldX, CryBits.Entities.Map.Height - 1); return;
+                    case Direction.Up: Warp(link, oldX, CryBits.Entities.Map.Map.Height - 1); return;
                     case Direction.Down: Warp(link, oldX, 0); return;
                     case Direction.Right: Warp(link, 0, oldY); return;
-                    case Direction.Left: Warp(link, CryBits.Entities.Map.Width - 1, oldY); return;
+                    case Direction.Left: Warp(link, CryBits.Entities.Map.Map.Width - 1, oldY); return;
                 }
             else
             {
@@ -238,7 +241,7 @@ internal class Player : Character
             // Teletransporte
             case TileAttribute.Warp:
                 if (tile.Data4 > 0) Direction = (Direction)tile.Data4 - 1;
-                Warp(TempMap.List.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
+                Warp(TempMap.TempMap.List.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
                 secondMovement = true;
                 break;
         }
@@ -262,7 +265,7 @@ internal class Player : Character
 
         // Retorna para o ínicio
         Direction = (Direction)Class.SpawnDirection;
-        Warp(TempMap.List.Get(Class.SpawnMap.Id), Class.SpawnX, Class.SpawnY);
+        Warp(TempMap.TempMap.List.Get(Class.SpawnMap.Id), Class.SpawnX, Class.SpawnY);
     }
 
     public void Attack()
@@ -494,7 +497,7 @@ internal class Player : Character
         if (amount > slot.Amount) amount = slot.Amount;
 
         // Solta o item no chão
-        Map.Item.Add(new MapItems(slot.Item, amount, X, Y));
+        Map.Item.Add(new TempMapItems(slot.Item, amount, X, Y));
         Send.MapItems(Map);
 
         // Retira o item do inventário do jogador 

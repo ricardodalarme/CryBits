@@ -2,7 +2,7 @@
 using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
-using CryBits.Entities;
+using CryBits.Entities.Slots;
 using CryBits.Enums;
 using SFML.Window;
 using static CryBits.Globals;
@@ -107,8 +107,8 @@ internal class Me : Player
         if (TextBoxes.Focused != null) return;
 
         // Verifica se tem algum item nas coordenadas 
-        for (byte i = 0; i < TempMap.Current.Item.Length; i++)
-            if (TempMap.Current.Item[i].X == X && TempMap.Current.Item[i].Y == Y)
+        for (byte i = 0; i < TempMap.TempMap.Current.Item.Length; i++)
+            if (TempMap.TempMap.Current.Item[i].X == X && TempMap.TempMap.Current.Item[i].Y == Y)
                 hasItem = true;
 
         // Verifica se tem algum espaço vazio no inventário

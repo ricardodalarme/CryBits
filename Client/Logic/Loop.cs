@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
+using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.UI;

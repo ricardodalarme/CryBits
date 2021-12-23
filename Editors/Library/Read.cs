@@ -2,9 +2,9 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using CryBits.Editors.Entities;
 using CryBits.Editors.Entities.Tools;
 using CryBits.Editors.Media.Graphics;
+using CryBits.Entities.Tile;
 using CryBits.Enums;
 using static CryBits.Editors.Logic.Options;
 using Button = CryBits.Editors.Entities.Tools.Button;
@@ -136,8 +136,8 @@ internal static class Read
     public static void Tiles()
     {
         // Lê os dados
-        Entities.Tile.List = new Tile[Textures.Tiles.Count];
-        for (byte i = 1; i < Entities.Tile.List.Length; i++) Tile(i);
+        CryBits.Entities.Tile.Tile.List = new Tile[Textures.Tiles.Count];
+        for (byte i = 1; i < CryBits.Entities.Tile.Tile.List.Length; i++) Tile(i);
     }
 
     private static void Tile(byte index)
@@ -147,13 +147,14 @@ internal static class Read
         // Evita erros
         if (!file.Exists)
         {
-            Entities.Tile.List[index] = new Tile(index);
+            var textureSize =  Textures.Tiles[index].ToSize();
+            CryBits.Entities.Tile.Tile.List[index] = new Tile(textureSize);
             Write.Tile(index);
             return;
         }
 
         // Lê os dados
         using var stream = file.OpenRead();
-        Entities.Tile.List[index] = (Tile)new BinaryFormatter().Deserialize(stream);
+        CryBits.Entities.Tile.Tile.List[index] = (Tile)new BinaryFormatter().Deserialize(stream);
     }
 }

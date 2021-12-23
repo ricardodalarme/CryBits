@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CryBits.Entities.Slots;
 
 namespace CryBits.Entities;
 
@@ -14,7 +15,7 @@ public class Class : Entity
     public string Description { get; set; }
     public IList<short> TextureMale { get; set; } = new List<short>();
     public IList<short> TextureFemale { get; set; } = new List<short>();
-    public Map SpawnMap { get; set; }
+    public Map.Map SpawnMap { get; set; }
     public byte SpawnDirection { get; set; }
     public byte SpawnX { get; set; }
     public byte SpawnY { get; set; }
@@ -25,7 +26,7 @@ public class Class : Entity
     public Class()
     {
         Name = "New class";
-        SpawnMap = Map.List.ElementAt(0).Value;
+        SpawnMap = Map.Map.List.ElementAt(0).Value;
         TextureMale.Add(1);
         TextureFemale.Add(1);
     }
