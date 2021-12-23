@@ -227,7 +227,7 @@ internal class Buttons : Tools.Structure
     {
         // Lista de texturas
         var @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
-        var texList = CheckBoxes.List["GenderMale"].Checked ? @class.TexMale : @class.TexFemale;
+        var texList = CheckBoxes.List["GenderMale"].Checked ? @class.TextureMale : @class.TextureFemale;
 
         // Altera a classe selecionada pelo jogador
         if (Panels.CreateCharacterTex == texList.Count - 1)
@@ -240,7 +240,7 @@ internal class Buttons : Tools.Structure
     {
         // Lista de texturas
         var @class = Class.List.ElementAt(Panels.CreateCharacterClass).Value;
-        var texList = CheckBoxes.List["GenderMale"].Checked ? @class.TexMale : @class.TexFemale;
+        var texList = CheckBoxes.List["GenderMale"].Checked ? @class.TextureMale : @class.TextureFemale;
 
         // Altera a classe selecionada pelo jogador
         if (Panels.CreateCharacterTex == 0)

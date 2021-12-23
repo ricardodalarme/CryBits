@@ -47,7 +47,7 @@ internal static class Send
         // Envia os dados
         data.Write((byte)ClientPacket.CreateCharacter);
         data.Write(TextBoxes.List["CreateCharacter_Name"].Text);
-        data.Write(Class.List.ElementAt(Panels.CreateCharacterClass).Value.ID.ToString());
+        data.Write(Class.List.ElementAt(Panels.CreateCharacterClass).Value.Id.ToString());
         data.Write(CheckBoxes.List["GenderMale"].Checked);
         data.Write(Panels.CreateCharacterTex);
         Packet(data);

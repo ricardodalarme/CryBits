@@ -67,7 +67,7 @@ internal static class Receive
     private static void Map(NetBuffer data)
     {
         var map = (Map)ByteArrayToObject(data);
-        var id = map.ID;
+        var id = map.Id;
 
         // Obtém o dado
         if (CryBits.Entities.Map.List.ContainsKey(id)) CryBits.Entities.Map.List[id] = map;

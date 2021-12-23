@@ -122,7 +122,7 @@ internal partial class EditorMaps : DarkForm
             if (map.Name.StartsWith(txtFilter.Text))
             {
                 List.Nodes.Add(map.Name);
-                List.Nodes[List.Nodes.Count - 1].Tag = map.ID;
+                List.Nodes[List.Nodes.Count - 1].Tag = map.Id;
             }
             cmbA_Warp_Map.Items.Add(map);
         }
@@ -162,12 +162,12 @@ internal partial class EditorMaps : DarkForm
     {
         // Adiciona uma loja nova
         var map = new Map();
-        Map.List.Add(map.ID, map);
+        Map.List.Add(map.Id, map);
         cmbA_Warp_Map.Items.Add(map);
 
         // Adiciona na lista
         var node = new TreeNode(map.Name);
-        node.Tag = map.ID;
+        node.Tag = map.Id;
         List.Nodes.Add(node);
         List.SelectedNode = node;
     }
@@ -185,7 +185,7 @@ internal partial class EditorMaps : DarkForm
 
             // Remove o mapa selecionado
             cmbA_Warp_Map.Items.Remove(Selected);
-            Map.List.Remove(Selected.ID);
+            Map.List.Remove(Selected.Id);
             List.SelectedNode.Remove();
         }
     }
@@ -193,7 +193,7 @@ internal partial class EditorMaps : DarkForm
     private void Update_Strip()
     {
         // Atualiza as informações da barra
-        Strip.Items[0].Text = "FPS: " + Program.FPS;
+        Strip.Items[0].Text = "FPS: " + Program.Fps;
         Strip.Items[2].Text = "Revision: " + Selected.Revision;
         Strip.Items[4].Text = "Position: {" + _mapMouse.X + ";" + _mapMouse.Y + "}";
     }
@@ -825,7 +825,7 @@ internal partial class EditorMaps : DarkForm
         else if (butMNPCs.Checked)
             // Adiciona o NPC
             if (e.Button == MouseButtons.Left)
-                AddNPC(true, (byte)MapSelection.X, (byte)MapSelection.Y);
+                AddNpc(true, (byte)MapSelection.X, (byte)MapSelection.Y);
     }
 
     private void picMap_MouseUp(object sender, MouseEventArgs e)
@@ -1233,7 +1233,7 @@ internal partial class EditorMaps : DarkForm
     #endregion
 
     #region NPCs
-    private void AddNPC(bool fixedSpawn = false, byte x = 0, byte y = 0)
+    private void AddNpc(bool fixedSpawn = false, byte x = 0, byte y = 0)
     {
         // Define os dados
         var data = new MapNpc
@@ -1269,7 +1269,7 @@ internal partial class EditorMaps : DarkForm
     private void butNPC_Add_Click(object sender, EventArgs e)
     {
         // Adiciona o NPC
-        AddNPC();
+        AddNpc();
     }
     #endregion
 
@@ -1367,7 +1367,7 @@ internal partial class EditorMaps : DarkForm
     {
         // Reseta os valores
         var warpMap = (Map)cmbA_Warp_Map.SelectedItem;
-        _aData1 = warpMap.GetID().ToString();
+        _aData1 = warpMap.GetId().ToString();
     }
 
     private void numA_Warp_X_ValueChanged(object sender, EventArgs e)
@@ -1387,7 +1387,7 @@ internal partial class EditorMaps : DarkForm
 
     private void cmbA_Item_SelectedIndexChanged(object sender, EventArgs e)
     {
-        _aData1 = ((Item)cmbA_Item.SelectedItem).GetID().ToString();
+        _aData1 = ((Item)cmbA_Item.SelectedItem).GetId().ToString();
     }
 
     private void numA_Item_Amount_ValueChanged(object sender, EventArgs e)

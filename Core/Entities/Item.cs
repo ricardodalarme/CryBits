@@ -25,7 +25,7 @@ public class Item : Entity
     public Class ReqClass
     {
         get => Class.List.Get(_reqClass);
-        set => _reqClass = value.GetID();
+        set => _reqClass = value.GetId();
     }
 
     // Poção

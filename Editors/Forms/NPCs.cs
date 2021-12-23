@@ -60,7 +60,7 @@ internal partial class EditorNpcs : DarkForm
             if (npc.Name.StartsWith(txtFilter.Text))
                 List.Nodes.Add(new TreeNode(npc.Name)
                 {
-                    Tag = npc.ID
+                    Tag = npc.Id
                 });
 
         // Seleciona o primeiro
@@ -85,8 +85,8 @@ internal partial class EditorNpcs : DarkForm
         numSpawn.Value = Selected.SpawnTime;
         numRange.Value = Selected.Sight;
         numExperience.Value = Selected.Experience;
-        numHP.Value = Selected.Vital[(byte)Vital.HP];
-        numMP.Value = Selected.Vital[(byte)Vital.MP];
+        numHP.Value = Selected.Vital[(byte)Vital.Hp];
+        numMP.Value = Selected.Vital[(byte)Vital.Mp];
         numStrength.Value = Selected.Attribute[(byte)Attribute.Strength];
         numResistance.Value = Selected.Attribute[(byte)Attribute.Resistance];
         numIntelligence.Value = Selected.Attribute[(byte)Attribute.Intelligence];
@@ -116,11 +116,11 @@ internal partial class EditorNpcs : DarkForm
     {
         // Adiciona uma loja nova
         var npc = new Npc();
-        Npc.List.Add(npc.ID, npc);
+        Npc.List.Add(npc.Id, npc);
 
         // Adiciona na lista
         var node = new TreeNode(npc.Name);
-        node.Tag = npc.ID;
+        node.Tag = npc.Id;
         List.Nodes.Add(node);
         List.SelectedNode = node;
 
@@ -133,7 +133,7 @@ internal partial class EditorNpcs : DarkForm
         // Remove a loja selecionada
         if (List.SelectedNode != null)
         {
-            Npc.List.Remove(Selected.ID);
+            Npc.List.Remove(Selected.Id);
             List.SelectedNode.Remove();
             Groups_Visibility();
         }
@@ -197,12 +197,12 @@ internal partial class EditorNpcs : DarkForm
 
     private void numHP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Vital[(byte)Vital.HP] = (short)numHP.Value;
+        Selected.Vital[(byte)Vital.Hp] = (short)numHP.Value;
     }
 
     private void numMP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Vital[(byte)Vital.MP] = (short)numMP.Value;
+        Selected.Vital[(byte)Vital.Mp] = (short)numMP.Value;
     }
 
     private void numStrength_ValueChanged(object sender, EventArgs e)

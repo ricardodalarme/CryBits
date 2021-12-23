@@ -61,7 +61,7 @@ internal partial class EditorItems : DarkForm
             if (item.Name.StartsWith(txtFilter.Text))
                 List.Nodes.Add(new TreeNode(item.Name)
                 {
-                    Tag = item.ID
+                    Tag = item.Id
                 });
 
         // Seleciona o primeiro
@@ -85,8 +85,8 @@ internal partial class EditorItems : DarkForm
         numReq_Level.Value = Selected.ReqLevel;
         cmbReq_Class.SelectedIndex = Selected.ReqClass != null ? cmbReq_Class.Items.IndexOf(Selected.ReqClass) : 0;
         numPotion_Experience.Value = Selected.PotionExperience;
-        numPotion_HP.Value = Selected.PotionVital[(byte)Vital.HP];
-        numPotion_MP.Value = Selected.PotionVital[(byte)Vital.MP];
+        numPotion_HP.Value = Selected.PotionVital[(byte)Vital.Hp];
+        numPotion_MP.Value = Selected.PotionVital[(byte)Vital.Mp];
         cmbEquipment_Type.SelectedIndex = Selected.EquipType;
         numEquip_Strength.Value = Selected.EquipAttribute[(byte)Attribute.Strength];
         numEquip_Resistance.Value = Selected.EquipAttribute[(byte)Attribute.Resistance];
@@ -105,10 +105,10 @@ internal partial class EditorItems : DarkForm
     {
         // Adiciona uma loja nova
         var item = new Item();
-        Item.List.Add(item.ID, item);
+        Item.List.Add(item.Id, item);
 
         // Adiciona na lista
-        var node = new TreeNode(item.Name) {Tag = item.ID};
+        var node = new TreeNode(item.Name) {Tag = item.Id};
         List.Nodes.Add(node);
         List.SelectedNode = node;
 
@@ -121,7 +121,7 @@ internal partial class EditorItems : DarkForm
         // Remove a loja selecionada
         if (List.SelectedNode != null)
         {
-            Item.List.Remove(Selected.ID);
+            Item.List.Remove(Selected.Id);
             List.SelectedNode.Remove();
             Groups_Visibility();
         }
@@ -177,12 +177,12 @@ internal partial class EditorItems : DarkForm
 
     private void numEquip_HP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.PotionVital[(byte)Vital.HP] = (short)numPotion_HP.Value;
+        Selected.PotionVital[(byte)Vital.Hp] = (short)numPotion_HP.Value;
     }
 
     private void numEquip_MP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.PotionVital[(byte)Vital.MP] = (short)numPotion_MP.Value;
+        Selected.PotionVital[(byte)Vital.Mp] = (short)numPotion_MP.Value;
     }
 
     private void numEquip_Experience_ValueChanged(object sender, EventArgs e)

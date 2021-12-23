@@ -39,7 +39,7 @@ public static class Utils
     }
 
     // Obtém o ID de alguma entidade, caso ela não existir retorna um ID zerado
-    public static Guid GetID(this Entity @object) => @object?.ID ?? Guid.Empty;
+    public static Guid GetId(this Entity @object) => @object?.Id ?? Guid.Empty;
 
     // Obtém o dado, caso ele não existir retorna nulo
     public static TV Get<TGuid, TV>(this Dictionary<TGuid, TV> dict, TGuid key) => dict.ContainsKey(key) ? dict[key] : default;

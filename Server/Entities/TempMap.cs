@@ -111,7 +111,7 @@ internal class TempMap : Entity
 
     public static void CreateTemporary(Map map, bool isOriginal)
     {
-        var id = isOriginal ? map.ID : Guid.NewGuid();
+        var id = isOriginal ? map.Id : Guid.NewGuid();
         var tempMap = new TempMap(id, map);
         List.Add(id, tempMap);
 

@@ -212,9 +212,9 @@ internal static class Receive
         account.Character.Level = 1;
         account.Character.Class = @class = Class.List.Get(new Guid(data.ReadString()));
         account.Character.Genre = data.ReadBoolean();
-        account.Character.TextureNum = account.Character.Genre ? @class.TexMale[data.ReadByte()] : @class.TexFemale[data.ReadByte()];
+        account.Character.TextureNum = account.Character.Genre ? @class.TextureMale[data.ReadByte()] : @class.TextureFemale[data.ReadByte()];
         account.Character.Attribute = @class.Attribute;
-        account.Character.Map = TempMap.List.Get(@class.SpawnMap.ID);
+        account.Character.Map = TempMap.List.Get(@class.SpawnMap.Id);
         account.Character.Direction = (Direction)@class.SpawnDirection;
         account.Character.X = @class.SpawnX;
         account.Character.Y = @class.SpawnY;

@@ -8,7 +8,7 @@ namespace CryBits.Server.Logic;
 internal static class Loop
 {
     // Medida de quantos loops são executados por segundo 
-    public static int CPS;
+    public static int Cps;
 
     // Contagens
     private static int _timer500, _timer1000;
@@ -48,7 +48,7 @@ internal static class Loop
             // Calcula o CPS
             if (_timer1000 < Environment.TickCount)
             {
-                CPS = cps;
+                Cps = cps;
                 cps = 0;
                 _timer1000 = Environment.TickCount + 1000;
             }

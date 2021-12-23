@@ -2,7 +2,7 @@
 
 public enum Vital
 {
-    HP,
-    MP,
+    Hp,
+    Mp,
     Count
 }

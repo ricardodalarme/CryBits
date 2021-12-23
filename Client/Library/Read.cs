@@ -35,7 +35,7 @@ internal static class Read
         Logic.Options.Sounds = data.ReadBoolean();
         Logic.Options.Musics = data.ReadBoolean();
         Logic.Options.Chat = data.ReadBoolean();
-        Logic.Options.FPS = data.ReadBoolean();
+        Logic.Options.Fps = data.ReadBoolean();
         Logic.Options.Latency = data.ReadBoolean();
         Logic.Options.Party = data.ReadBoolean();
         Logic.Options.Trade = data.ReadBoolean();

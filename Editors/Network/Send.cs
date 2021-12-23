@@ -51,7 +51,7 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ClientPacket.RequestMap);
-        data.Write(map.ID.ToString());
+        data.Write(map.Id.ToString());
         Packet(data);
     }
 

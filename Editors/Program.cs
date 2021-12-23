@@ -15,7 +15,7 @@ internal static class Program
     public static bool Working = true;
 
     // Medida de calculo do atraso do jogo
-    public static short FPS;
+    public static short Fps;
 
     [STAThread]
     private static void Main()

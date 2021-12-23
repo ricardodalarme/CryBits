@@ -146,12 +146,12 @@ internal static class Receive
         CheckBoxes.List["Options_Sounds"].Checked = Options.Sounds;
         CheckBoxes.List["Options_Musics"].Checked = Options.Musics;
         CheckBoxes.List["Options_Chat"].Checked = Options.Chat;
-        CheckBoxes.List["Options_FPS"].Checked = Options.FPS;
+        CheckBoxes.List["Options_FPS"].Checked = Options.Fps;
         CheckBoxes.List["Options_Latency"].Checked = Options.Latency;
         CheckBoxes.List["Options_Trade"].Checked = Options.Trade;
         CheckBoxes.List["Options_Party"].Checked = Options.Party;
         Loop.ChatTimer = Loop.ChatTimer = Environment.TickCount + 10000;
-        Panels.InformationID = Guid.Empty;
+        Panels.InformationId = Guid.Empty;
 
         // Reseta a interface
         Panels.List["Menu_Character"].Visible = false;
@@ -361,7 +361,7 @@ internal static class Receive
     private static void Map(NetBuffer data)
     {
         var map = (Map)ByteArrayToObject(data);
-        var id = map.ID;
+        var id = map.Id;
 
         // Obtém o dado
         if (CryBits.Entities.Map.List.ContainsKey(id)) CryBits.Entities.Map.List[id] = map;

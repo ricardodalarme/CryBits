@@ -145,7 +145,7 @@ internal static class Send
         data.Write(player.Name);
         data.Write(player.TextureNum);
         data.Write(player.Level);
-        data.Write(player.Map.GetID());
+        data.Write(player.Map.GetId());
         data.Write(player.X);
         data.Write(player.Y);
         data.Write((byte)player.Direction);
@@ -155,7 +155,7 @@ internal static class Send
             data.Write(player.MaxVital(n));
         }
         for (byte n = 0; n < (byte)Attribute.Count; n++) data.Write(player.Attribute[n]);
-        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(player.Equipment[n].GetID());
+        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(player.Equipment[n].GetId());
 
         return data;
     }
@@ -243,7 +243,7 @@ internal static class Send
         // Envia os dados
         data.Write((byte)ServerPacket.PlayerEquipments);
         data.Write(player.Name);
-        for (byte i = 0; i < (byte)Equipment.Count; i++) data.Write(player.Equipment[i].GetID());
+        for (byte i = 0; i < (byte)Equipment.Count; i++) data.Write(player.Equipment[i].GetId());
         ToMap(player.Map, data);
     }
 
@@ -285,7 +285,7 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ServerPacket.MapRevision);
-        data.Write(map.GetID());
+        data.Write(map.GetId());
         data.Write(map.Revision);
         ToPlayer(player, data);
     }
@@ -404,7 +404,7 @@ internal static class Send
         for (byte i = 0; i < map.Item.Count; i++)
         {
             // Geral
-            data.Write(map.Item[i].Item.GetID());
+            data.Write(map.Item[i].Item.GetId());
             data.Write(map.Item[i].X);
             data.Write(map.Item[i].Y);
         }
@@ -422,7 +422,7 @@ internal static class Send
         data.Write((byte)map.Item.Count);
         for (byte i = 0; i < map.Item.Count; i++)
         {
-            data.Write(map.Item[i].Item.GetID());
+            data.Write(map.Item[i].Item.GetId());
             data.Write(map.Item[i].X);
             data.Write(map.Item[i].Y);
         }
@@ -437,7 +437,7 @@ internal static class Send
         data.Write((byte)ServerPacket.PlayerInventory);
         for (byte i = 0; i < MaxInventory; i++)
         {
-            data.Write(player.Inventory[i].Item.GetID());
+            data.Write(player.Inventory[i].Item.GetId());
             data.Write(player.Inventory[i].Amount);
         }
         ToPlayer(player, data);
@@ -476,7 +476,7 @@ internal static class Send
         data.Write((short)map.Npc.Length);
         for (byte i = 0; i < map.Npc.Length; i++)
         {
-            data.Write(map.Npc[i].Data.GetID());
+            data.Write(map.Npc[i].Data.GetId());
             data.Write(map.Npc[i].X);
             data.Write(map.Npc[i].Y);
             data.Write((byte)map.Npc[i].Direction);
@@ -492,7 +492,7 @@ internal static class Send
         // Envia os dados
         data.Write((byte)ServerPacket.MapNpc);
         data.Write(npc.Index);
-        data.Write(npc.Data.GetID());
+        data.Write(npc.Data.GetId());
         data.Write(npc.X);
         data.Write(npc.Y);
         data.Write((byte)npc.Direction);
@@ -640,7 +640,7 @@ internal static class Send
         data.Write(own);
         for (byte i = 0; i < MaxInventory; i++)
         {
-            data.Write(to.Inventory[to.TradeOffer[i].SlotNum].Item.GetID());
+            data.Write(to.Inventory[to.TradeOffer[i].SlotNum].Item.GetId());
             data.Write(to.TradeOffer[i].Amount);
         }
         ToPlayer(player, data);
@@ -662,7 +662,7 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ServerPacket.ShopOpen);
-        data.Write(shop.GetID());
+        data.Write(shop.GetId());
         ToPlayer(player, data);
     }
 }

@@ -62,7 +62,7 @@ internal partial class EditorClasses : DarkForm
             if (@class.Name.StartsWith(txtFilter.Text))
                 List.Nodes.Add(new TreeNode(@class.Name)
                 {
-                    Tag = @class.ID
+                    Tag = @class.Id
                 });
 
         // Seleciona o primeiro
@@ -78,8 +78,8 @@ internal partial class EditorClasses : DarkForm
         // Lista os dados
         txtName.Text = Selected.Name;
         txtDescription.Text = Selected.Description;
-        numHP.Value = Selected.Vital[(byte)Vital.HP];
-        numMP.Value = Selected.Vital[(byte)Vital.MP];
+        numHP.Value = Selected.Vital[(byte)Vital.Hp];
+        numMP.Value = Selected.Vital[(byte)Vital.Mp];
         numStrength.Value = Selected.Attribute[(byte)Attribute.Strength];
         numResistance.Value = Selected.Attribute[(byte)Attribute.Resistance];
         numIntelligence.Value = Selected.Attribute[(byte)Attribute.Intelligence];
@@ -92,8 +92,8 @@ internal partial class EditorClasses : DarkForm
         grpItem_Add.Visible = false;
 
         // Conecta as listas com os componentes
-        lstMale.Tag = Selected.TexMale;
-        lstFemale.Tag = Selected.TexFemale;
+        lstMale.Tag = Selected.TextureMale;
+        lstFemale.Tag = Selected.TextureFemale;
         lstItems.Tag = Selected.Item;
 
         // Atualiza as listas
@@ -111,11 +111,11 @@ internal partial class EditorClasses : DarkForm
     {
         // Adiciona uma loja nova
         var @new = new Class();
-        Class.List.Add(@new.ID, @new);
+        Class.List.Add(@new.Id, @new);
 
         // Adiciona na lista
         var node = new TreeNode(@new.Name);
-        node.Tag = @new.ID;
+        node.Tag = @new.Id;
         List.Nodes.Add(node);
         List.SelectedNode = node;
     }
@@ -132,7 +132,7 @@ internal partial class EditorClasses : DarkForm
             }
 
             // Remove a classes selecionada
-            Class.List.Remove(Selected.ID);
+            Class.List.Remove(Selected.Id);
             List.SelectedNode.Remove();
         }
     }
@@ -165,12 +165,12 @@ internal partial class EditorClasses : DarkForm
 
     private void numHP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Vital[(byte)Vital.HP] = (short)numHP.Value;
+        Selected.Vital[(byte)Vital.Hp] = (short)numHP.Value;
     }
 
     private void numMP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.Vital[(byte)Vital.MP] = (short)numMP.Value;
+        Selected.Vital[(byte)Vital.Mp] = (short)numMP.Value;
     }
 
     private void numStrength_ValueChanged(object sender, EventArgs e)
@@ -202,9 +202,9 @@ internal partial class EditorClasses : DarkForm
     {
         // Adiciona a textura
         if (grpTexture_Add.Tag == lstMale)
-            Selected.TexMale.Add((short)numTexture.Value);
+            Selected.TextureMale.Add((short)numTexture.Value);
         else
-            Selected.TexFemale.Add((short)numTexture.Value);
+            Selected.TextureFemale.Add((short)numTexture.Value);
         ((ListBox)grpTexture_Add.Tag).UpdateData();
         grpTexture_Add.Visible = false;
     }
@@ -230,7 +230,7 @@ internal partial class EditorClasses : DarkForm
         // Deleta a textura
         if (lstMale.SelectedIndex != -1)
         {
-            Selected.TexMale.RemoveAt(lstMale.SelectedIndex);
+            Selected.TextureMale.RemoveAt(lstMale.SelectedIndex);
             lstMale.UpdateData();
         }
     }
@@ -240,7 +240,7 @@ internal partial class EditorClasses : DarkForm
         // Deleta a textura
         if (lstFemale.SelectedIndex != -1)
         {
-            Selected.TexFemale.RemoveAt(lstFemale.SelectedIndex);
+            Selected.TextureFemale.RemoveAt(lstFemale.SelectedIndex);
             lstFemale.UpdateData();
         }
     }

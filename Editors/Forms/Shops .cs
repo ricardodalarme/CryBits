@@ -56,7 +56,7 @@ internal partial class EditorShops : DarkForm
             if (shop.Name.StartsWith(txtFilter.Text))
                 List.Nodes.Add(new TreeNode(shop.Name)
                 {
-                    Tag = shop.ID
+                    Tag = shop.Id
                 });
 
         // Seleciona o primeiro
@@ -92,11 +92,11 @@ internal partial class EditorShops : DarkForm
     {
         // Adiciona uma loja nova
         var shop = new Shop();
-        Shop.List.Add(shop.ID, shop);
+        Shop.List.Add(shop.Id, shop);
 
         // Adiciona na lista
         var node = new TreeNode(shop.Name);
-        node.Tag = shop.ID;
+        node.Tag = shop.Id;
         List.Nodes.Add(node);
         List.SelectedNode = node;
 
@@ -109,7 +109,7 @@ internal partial class EditorShops : DarkForm
         // Remove a loja selecionada
         if (List.SelectedNode != null)
         {
-            Shop.List.Remove(_selected.ID);
+            Shop.List.Remove(_selected.Id);
             List.SelectedNode.Remove();
             Groups_Visibility();
         }

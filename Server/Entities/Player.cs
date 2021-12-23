@@ -67,8 +67,8 @@ internal class Player : Character
         // Cálcula o máximo de vital que um jogador possui
         switch ((Vital)vital)
         {
-            case Enums.Vital.HP: return (short)(@base[vital] + (Attribute[(byte)Enums.Attribute.Vitality] * 1.50 * (Level * 0.75)) + 1);
-            case Enums.Vital.MP: return (short)(@base[vital] + (Attribute[(byte)Enums.Attribute.Intelligence] * 1.25 * (Level * 0.5)) + 1);
+            case Enums.Vital.Hp: return (short)(@base[vital] + (Attribute[(byte)Enums.Attribute.Vitality] * 1.50 * (Level * 0.75)) + 1);
+            case Enums.Vital.Mp: return (short)(@base[vital] + (Attribute[(byte)Enums.Attribute.Intelligence] * 1.25 * (Level * 0.5)) + 1);
         }
 
         return 1;
@@ -79,8 +79,8 @@ internal class Player : Character
         // Cálcula o máximo de vital que um jogador possui
         switch ((Vital)vital)
         {
-            case Enums.Vital.HP: return (short)((MaxVital(vital) * 0.05) + (Attribute[(byte)Enums.Attribute.Vitality] * 0.3));
-            case Enums.Vital.MP: return (short)((MaxVital(vital) * 0.05) + (Attribute[(byte)Enums.Attribute.Intelligence] * 0.1));
+            case Enums.Vital.Hp: return (short)((MaxVital(vital) * 0.05) + (Attribute[(byte)Enums.Attribute.Vitality] * 0.3));
+            case Enums.Vital.Mp: return (short)((MaxVital(vital) * 0.05) + (Attribute[(byte)Enums.Attribute.Intelligence] * 0.1));
         }
 
         return 1;
@@ -192,7 +192,7 @@ internal class Player : Character
     {
         byte nextX = X, nextY = Y;
         byte oldX = X, oldY = Y;
-        var link = TempMap.List.Get(Map.Data.Link[(byte)Direction].GetID());
+        var link = TempMap.List.Get(Map.Data.Link[(byte)Direction].GetId());
         var secondMovement = false;
 
         // Previne erros
@@ -262,7 +262,7 @@ internal class Player : Character
 
         // Retorna para o ínicio
         Direction = (Direction)Class.SpawnDirection;
-        Warp(TempMap.List.Get(Class.SpawnMap.ID), Class.SpawnX, Class.SpawnY);
+        Warp(TempMap.List.Get(Class.SpawnMap.Id), Class.SpawnX, Class.SpawnY);
     }
 
     public void Attack()
@@ -322,9 +322,9 @@ internal class Player : Character
             // Demonstra o ataque aos outros jogadores
             Send.PlayerAttack(this, victim.Name, Target.Player);
 
-            if (attackDamage < victim.Vital[(byte)Enums.Vital.HP])
+            if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
             {
-                victim.Vital[(byte)Enums.Vital.HP] -= attackDamage;
+                victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
                 Send.PlayerVitals(victim);
             }
             // FATALITY
@@ -369,9 +369,9 @@ internal class Player : Character
             // Demonstra o ataque aos outros jogadores
             Send.PlayerAttack(this, victim.Index.ToString(), Target.Npc);
 
-            if (attackDamage < victim.Vital[(byte)Enums.Vital.HP])
+            if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
             {
-                victim.Vital[(byte)Enums.Vital.HP] -= attackDamage;
+                victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
                 Send.MapNpcVitals(victim);
             }
             // FATALITY
@@ -392,7 +392,7 @@ internal class Player : Character
     public void GiveExperience(int value)
     {
         // Dá a experiência ao jogador, caso ele estiver em um grupo divide a experiência entre os membros
-        if (Party.Count > 0 && value > 0) PartySplitXP(value);
+        if (Party.Count > 0 && value > 0) PartySplitXp(value);
         else Experience += value;
 
         // Verifica se a experiência não ficou negtiva
@@ -565,7 +565,7 @@ internal class Player : Character
             }
 
             // Foi fatal
-            if (Vital[(byte)Enums.Vital.HP] == 0) Died();
+            if (Vital[(byte)Enums.Vital.Hp] == 0) Died();
 
             // Remove o item caso tenha tido algum efeito
             if (item.PotionExperience > 0 || hadEffect) TakeItem(slot, 1);
@@ -595,7 +595,7 @@ internal class Player : Character
         }
     }
 
-    private void PartySplitXP(int value)
+    private void PartySplitXp(int value)
     {
         // Somatório do level de todos os jogadores do grupo
         int experienceSum = 0;

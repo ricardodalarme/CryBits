@@ -12,8 +12,8 @@ public class Class : Entity
 
     // Dados
     public string Description { get; set; }
-    public IList<short> TexMale { get; set; } = new List<short>();
-    public IList<short> TexFemale { get; set; } = new List<short>();
+    public IList<short> TextureMale { get; set; } = new List<short>();
+    public IList<short> TextureFemale { get; set; } = new List<short>();
     public Map SpawnMap { get; set; }
     public byte SpawnDirection { get; set; }
     public byte SpawnX { get; set; }
@@ -26,7 +26,7 @@ public class Class : Entity
     {
         Name = "New class";
         SpawnMap = Map.List.ElementAt(0).Value;
-        TexMale.Add(1);
-        TexFemale.Add(1);
+        TextureMale.Add(1);
+        TextureFemale.Add(1);
     }
 }

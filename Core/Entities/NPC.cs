@@ -29,7 +29,7 @@ public class Npc : Entity
     public Shop Shop
     {
         get => Shop.List.Get(_shop);
-        set => _shop = value.GetID();
+        set => _shop = value.GetId();
     }
 
     public Npc()

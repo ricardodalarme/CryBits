@@ -15,7 +15,7 @@ public class Shop : Entity
     public Item Currency
     {
         get => Item.List.Get(_currency);
-        set => _currency = value.GetID();
+        set => _currency = value.GetId();
     }
     public IList<ShopItem> Bought { get; set; } = new List<ShopItem>();
     public IList<ShopItem> Sold { get; set; } = new List<ShopItem>();

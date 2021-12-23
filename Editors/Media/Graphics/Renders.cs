@@ -127,7 +127,7 @@ internal static class Renders
         EditorTile();
         EditorClass();
         EditorItem();
-        EditorNPC();
+        EditorNpc();
         Interface();
     }
 
@@ -521,7 +521,7 @@ internal static class Renders
     #endregion
 
     #region NPC Editor
-    private static void EditorNPC()
+    private static void EditorNpc()
     {
         // Somente se necessário
         if (WinNpc == null) return;
