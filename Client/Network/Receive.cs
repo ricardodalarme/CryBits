@@ -68,7 +68,7 @@ internal static class Receive
         }
     }
 
-    private static void Alert(NetIncomingMessage data)
+    private static void Alert(NetBuffer data)
     {
         // Mostra a mensagem
         MessageBox.Show(data.ReadString());
@@ -85,7 +85,7 @@ internal static class Receive
         Panels.List["SelectCharacter"].Visible = true;
     }
 
-    private static void Join(NetIncomingMessage data)
+    private static void Join(NetBuffer data)
     {
         // Reseta alguns valores
         Player.List = new List<Player>();
@@ -114,13 +114,13 @@ internal static class Receive
         Panels.List["CreateCharacter"].Visible = true;
     }
 
-    private static void Classes(NetIncomingMessage data)
+    private static void Classes(NetBuffer data)
     {
         // Recebe os dados
         Class.List = (Dictionary<Guid, Class>)ByteArrayToObject(data);
     }
 
-    private static void Characters(NetIncomingMessage data)
+    private static void Characters(NetBuffer data)
     {
         // Redimensiona a lista
         Panels.Characters = new Panels.TempCharacter[data.ReadByte()];
@@ -172,7 +172,7 @@ internal static class Receive
         Windows.Current = Window.Game;
     }
 
-    private static void PlayerData(NetIncomingMessage data)
+    private static void PlayerData(NetBuffer data)
     {
         var name = data.ReadString();
         Player player;
@@ -203,7 +203,7 @@ internal static class Receive
         TempMap.Current = player.Map;
     }
 
-    private static void PlayerPosition(NetIncomingMessage data)
+    private static void PlayerPosition(NetBuffer data)
     {
         var player = Player.Get(data.ReadString());
 
@@ -218,7 +218,7 @@ internal static class Receive
         player.Movement = Movement.Stopped;
     }
 
-    private static void PlayerVitals(NetIncomingMessage data)
+    private static void PlayerVitals(NetBuffer data)
     {
         var player = Player.Get(data.ReadString());
 
@@ -230,7 +230,7 @@ internal static class Receive
         }
     }
 
-    private static void PlayerEquipments(NetIncomingMessage data)
+    private static void PlayerEquipments(NetBuffer data)
     {
         var player = Player.Get(data.ReadString());
 
@@ -238,13 +238,13 @@ internal static class Receive
         for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(new Guid(data.ReadString()));
     }
 
-    private static void PlayerLeave(NetIncomingMessage data)
+    private static void PlayerLeave(NetBuffer data)
     {
         // Limpa os dados do jogador
         Player.List.Remove(Player.Get(data.ReadString()));
     }
 
-    private static void PlayerMove(NetIncomingMessage data)
+    private static void PlayerMove(NetBuffer data)
     {
         var player = Player.Get(data.ReadString());
 
@@ -266,13 +266,13 @@ internal static class Receive
         }
     }
 
-    private static void PlayerDirection(NetIncomingMessage data)
+    private static void PlayerDirection(NetBuffer data)
     {
         // Altera a posição do jogador
         Player.Get(data.ReadString()).Direction = (Direction)data.ReadByte();
     }
 
-    private static void PlayerAttack(NetIncomingMessage data)
+    private static void PlayerAttack(NetBuffer data)
     {
         var player = Player.Get(data.ReadString());
         var victim = data.ReadString();
@@ -297,7 +297,7 @@ internal static class Receive
             }
     }
 
-    private static void PlayerExperience(NetIncomingMessage data)
+    private static void PlayerExperience(NetBuffer data)
     {
         // Define os dados
         Player.Me.Experience = data.ReadInt32();
@@ -312,14 +312,14 @@ internal static class Receive
         Buttons.List["Attributes_Vitality"].Visible = Player.Me.Points > 0;
     }
 
-    private static void PlayerInventory(NetIncomingMessage data)
+    private static void PlayerInventory(NetBuffer data)
     {
         // Define os dados
         for (byte i = 0; i < MaxInventory; i++)
             Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(new Guid(data.ReadString())), data.ReadInt16());
     }
 
-    private static void PlayerHotbar(NetIncomingMessage data)
+    private static void PlayerHotbar(NetBuffer data)
     {
         // Define os dados
         for (byte i = 0; i < MaxHotbar; i++)
@@ -329,7 +329,7 @@ internal static class Receive
         }
     }
 
-    private static void MapRevision(NetIncomingMessage data)
+    private static void MapRevision(NetBuffer data)
     {
         var needed = false;
         var id = new Guid(data.ReadString());
@@ -358,7 +358,7 @@ internal static class Receive
         TempMap.Current.Blood = new List<MapBlood>();
     }
 
-    private static void Map(NetIncomingMessage data)
+    private static void Map(NetBuffer data)
     {
         var map = (Map)ByteArrayToObject(data);
         var id = map.ID;
@@ -396,7 +396,7 @@ internal static class Receive
         Socket.Latency = Environment.TickCount - Socket.LatencySend;
     }
 
-    private static void Message(NetIncomingMessage data)
+    private static void Message(NetBuffer data)
     {
         // Adiciona a mensagem
         var text = data.ReadString();
@@ -404,13 +404,13 @@ internal static class Receive
         Chat.AddText(text, new SFML.Graphics.Color(color.R, color.G, color.B));
     }
 
-    private static void Items(NetIncomingMessage data)
+    private static void Items(NetBuffer data)
     {
         // Recebe os dados
         Item.List = (Dictionary<Guid, Item>)ByteArrayToObject(data);
     }
 
-    private static void MapItems(NetIncomingMessage data)
+    private static void MapItems(NetBuffer data)
     {
         // Quantidade
         TempMap.Current.Item = new MapItems[data.ReadByte()];
@@ -425,14 +425,14 @@ internal static class Receive
             };
     }
 
-    private static void Party(NetIncomingMessage data)
+    private static void Party(NetBuffer data)
     {
         // Lê os dados do grupo
         Player.Me.Party = new Player[data.ReadByte()];
         for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Player.Get(data.ReadString());
     }
 
-    private static void PartyInvitation(NetIncomingMessage data)
+    private static void PartyInvitation(NetBuffer data)
     {
         // Nega o pedido caso o jogador não quiser receber convites
         if (!Options.Party)
@@ -446,7 +446,7 @@ internal static class Receive
         Panels.List["Party_Invitation"].Visible = true;
     }
 
-    private static void Trade(NetIncomingMessage data)
+    private static void Trade(NetBuffer data)
     {
         var state = data.ReadBoolean();
 
@@ -472,7 +472,7 @@ internal static class Receive
         }
     }
 
-    private static void TradeInvitation(NetIncomingMessage data)
+    private static void TradeInvitation(NetBuffer data)
     {
         // Nega o pedido caso o jogador não quiser receber convites
         if (!Options.Trade)
@@ -486,7 +486,7 @@ internal static class Receive
         Panels.List["Trade_Invitation"].Visible = true;
     }
 
-    private static void TradeState(NetIncomingMessage data)
+    private static void TradeState(NetBuffer data)
     {
         switch ((TradeStatus)data.ReadByte())
         {
@@ -504,7 +504,7 @@ internal static class Receive
         }
     }
 
-    private static void TradeOffer(NetIncomingMessage data)
+    private static void TradeOffer(NetBuffer data)
     {
         // Recebe os dados da oferta
         if (data.ReadBoolean())
@@ -521,26 +521,26 @@ internal static class Receive
             }
     }
 
-    private static void Shops(NetIncomingMessage data)
+    private static void Shops(NetBuffer data)
     {
         // Recebe os dados
         Shop.List = (Dictionary<Guid, Shop>)ByteArrayToObject(data);
     }
 
-    private static void ShopOpen(NetIncomingMessage data)
+    private static void ShopOpen(NetBuffer data)
     {
         // Abre a loja
         Panels.ShopOpen = Shop.List.Get(new Guid(data.ReadString()));
         Panels.List["Shop"].Visible = Panels.ShopOpen != null;
     }
 
-    private static void Npcs(NetIncomingMessage data)
+    private static void Npcs(NetBuffer data)
     {
         // Recebe os dados
         Npc.List = (Dictionary<Guid, Npc>)ByteArrayToObject(data);
     }
 
-    private static void MapNpcs(NetIncomingMessage data)
+    private static void MapNpcs(NetBuffer data)
     {
         // Lê os dados
         TempMap.Current.Npc = new TempNpc[data.ReadInt16()];
@@ -560,7 +560,7 @@ internal static class Receive
         }
     }
 
-    private static void MapNpc(NetIncomingMessage data)
+    private static void MapNpc(NetBuffer data)
     {
         // Lê os dados
         var i = data.ReadByte();
@@ -574,7 +574,7 @@ internal static class Receive
         for (byte n = 0; n < (byte)Vital.Count; n++) TempMap.Current.Npc[i].Vital[n] = data.ReadInt16();
     }
 
-    private static void MapNpcMovement(NetIncomingMessage data)
+    private static void MapNpcMovement(NetBuffer data)
     {
         // Lê os dados
         var i = data.ReadByte();
@@ -597,7 +597,7 @@ internal static class Receive
             }
     }
 
-    private static void MapNpcAttack(NetIncomingMessage data)
+    private static void MapNpcAttack(NetBuffer data)
     {
         var index = data.ReadByte();
         var victim = data.ReadString();
@@ -622,7 +622,7 @@ internal static class Receive
             }
     }
 
-    private static void MapNpcDirection(NetIncomingMessage data)
+    private static void MapNpcDirection(NetBuffer data)
     {
         // Define a direção de determinado Npc
         var i = data.ReadByte();
@@ -631,7 +631,7 @@ internal static class Receive
         TempMap.Current.Npc[i].Y2 = 0;
     }
 
-    private static void MapNpcVitals(NetIncomingMessage data)
+    private static void MapNpcVitals(NetBuffer data)
     {
         var index = data.ReadByte();
 
@@ -640,7 +640,7 @@ internal static class Receive
             TempMap.Current.Npc[index].Vital[n] = data.ReadInt16();
     }
 
-    private static void MapNpcDied(NetIncomingMessage data)
+    private static void MapNpcDied(NetBuffer data)
     {
         var i = data.ReadByte();
 

@@ -56,7 +56,7 @@ public static class Utils
         data.Write(stream.ToArray());
     }
 
-    public static object ByteArrayToObject(NetIncomingMessage data)
+    public static object ByteArrayToObject(NetBuffer data)
     {
         var size = data.ReadInt32();
         var array = data.ReadBytes(size);
