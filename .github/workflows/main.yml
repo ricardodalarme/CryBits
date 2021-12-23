@@ -21,9 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
-
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+        
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
 
@@ -31,4 +33,4 @@ jobs:
         run: nuget restore CryBits.sln
 
       - name: Build the Solution
-        run: msbuild CryBits.sln
+        run: dotnet build CryBits.sln --no-restore
