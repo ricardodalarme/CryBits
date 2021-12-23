@@ -441,25 +441,25 @@ internal static class Renders
                     data.Add("Sale price: " + Panels.ShopOpen.FindBought(item).Price);
 
         // Informações específicas dos itens
-        switch (item.Type)
+        switch (item)
         {
             // Poção
-            case ItemType.Potion:
+            case ItemPotion potion:
                 for (byte n = 0; n < (byte)Vital.Count; n++)
-                    if (item.PotionVital[n] != 0)
-                        data.Add((Vital)n + ": " + item.PotionVital[n]);
+                    if (potion.PotionVital[n] != 0)
+                        data.Add((Vital)n + ": " + potion.PotionVital[n]);
 
-                if (item.PotionExperience != 0) data.Add("Experience: " + item.PotionExperience);
+                if (potion.PotionExperience != 0) data.Add("Experience: " + potion.PotionExperience);
                 break;
             // Equipamentos
-            case ItemType.Equipment:
-                if (item.EquipType == (byte)Equipment.Weapon)
-                    if (item.WeaponDamage != 0)
-                        data.Add("Damage: " + item.WeaponDamage);
+            case ItemEquipment equipment:
+                if (equipment.EquipType == (byte)Equipment.Weapon)
+                    if (equipment.WeaponDamage != 0)
+                        data.Add("Damage: " + equipment.WeaponDamage);
 
                 for (byte n = 0; n < (byte)Attribute.Count; n++)
-                    if (item.EquipAttribute[n] != 0)
-                        data.Add((Attribute)n + ": " + item.EquipAttribute[n]);
+                    if (equipment.EquipAttribute[n] != 0)
+                        data.Add((Attribute)n + ": " + equipment.EquipAttribute[n]);
                 break;
         }
 

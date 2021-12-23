@@ -220,8 +220,8 @@ internal static class Receive
         account.Character.Y = @class.SpawnY;
         for (byte i = 0; i < (byte)Vital.Count; i++) account.Character.Vital[i] = account.Character.MaxVital(i);
         for (byte i = 0; i < (byte)@class.Item.Count; i++)
-            if (@class.Item[i].Item.Type == ItemType.Equipment && account.Character.Equipment[@class.Item[i].Item.EquipType] == null)
-                account.Character.Equipment[@class.Item[i].Item.EquipType] = @class.Item[i].Item;
+            if (@class.Item[i].Item is ItemEquipment equipment && account.Character.Equipment[equipment.EquipType] == null)
+                account.Character.Equipment[equipment.EquipType] = (ItemEquipment) @class.Item[i].Item;
             else
                 account.Character.GiveItem(@class.Item[i].Item, @class.Item[i].Amount);
         for (byte i = 0; i < MaxHotbar; i++) account.Character.Hotbar[i] = new HotbarSlot(SlotType.None, 0);

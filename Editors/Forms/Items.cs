@@ -74,26 +74,37 @@ internal partial class EditorItems : DarkForm
         // Atualiza o valor da loja selecionada
         Selected = Item.List[(Guid)List.SelectedNode.Tag];
 
+        // Visibilidade dos paineis
+        grpEquipment.Visible = Selected is ItemEquipment;
+        grpPotion.Visible = Selected is ItemPotion;
+
         // Lista os dados
         txtName.Text = Selected.Name;
         txtDescription.Text = Selected.Description;
         numTexture.Value = Selected.Texture;
-        cmbType.SelectedIndex = (byte)Selected.Type;
         chkStackable.Checked = Selected.Stackable;
         cmbBind.SelectedIndex = (byte)Selected.Bind;
         cmbRarity.SelectedIndex = (byte)Selected.Rarity;
         numReq_Level.Value = Selected.ReqLevel;
         cmbReq_Class.SelectedIndex = Selected.ReqClass != null ? cmbReq_Class.Items.IndexOf(Selected.ReqClass) : 0;
-        numPotion_Experience.Value = Selected.PotionExperience;
-        numPotion_HP.Value = Selected.PotionVital[(byte)Vital.Hp];
-        numPotion_MP.Value = Selected.PotionVital[(byte)Vital.Mp];
-        cmbEquipment_Type.SelectedIndex = Selected.EquipType;
-        numEquip_Strength.Value = Selected.EquipAttribute[(byte)Attribute.Strength];
-        numEquip_Resistance.Value = Selected.EquipAttribute[(byte)Attribute.Resistance];
-        numEquip_Intelligence.Value = Selected.EquipAttribute[(byte)Attribute.Intelligence];
-        numEquip_Agility.Value = Selected.EquipAttribute[(byte)Attribute.Agility];
-        numEquip_Vitality.Value = Selected.EquipAttribute[(byte)Attribute.Vitality];
-        numWeapon_Damage.Value = Selected.WeaponDamage;
+
+        switch (Selected)
+        {
+            case ItemPotion potion:
+                numPotion_Experience.Value = potion.PotionExperience;
+                numPotion_HP.Value = potion.PotionVital[(byte) Vital.Hp];
+                numPotion_MP.Value = potion.PotionVital[(byte) Vital.Mp];
+                break;
+            case ItemEquipment equipment:
+                cmbEquipment_Type.SelectedIndex = equipment.EquipType;
+                numEquip_Strength.Value = equipment.EquipAttribute[(byte) Attribute.Strength];
+                numEquip_Resistance.Value = equipment.EquipAttribute[(byte) Attribute.Resistance];
+                numEquip_Intelligence.Value = equipment.EquipAttribute[(byte) Attribute.Intelligence];
+                numEquip_Agility.Value = equipment.EquipAttribute[(byte) Attribute.Agility];
+                numEquip_Vitality.Value = equipment.EquipAttribute[(byte) Attribute.Vitality];
+                numWeapon_Damage.Value = equipment.WeaponDamage;
+                break;
+        }
     }
 
     private void txtFilter_TextChanged(object sender, EventArgs e)
@@ -103,17 +114,32 @@ internal partial class EditorItems : DarkForm
 
     private void butNew_Click(object sender, EventArgs e)
     {
-        // Adiciona uma loja nova
-        var item = new Item();
-        Item.List.Add(item.Id, item);
+        var selectForm = new EditorItemType();
+        var result = selectForm.ShowDialog();
 
-        // Adiciona na lista
-        var node = new TreeNode(item.Name) {Tag = item.Id};
-        List.Nodes.Add(node);
-        List.SelectedNode = node;
+        if (result == DialogResult.OK)
+        {
+            var type = selectForm.ItemType;
+            Item item;
 
-        // Altera a visiblidade dos grupos caso necessários
-        Groups_Visibility();
+            if (type == typeof(ItemEquipment))
+                item = new ItemEquipment();
+            else if (type == typeof(ItemPotion))
+                item = new ItemPotion();
+            else
+                item = new Item();
+
+            // Cria um item novo
+            Item.List.Add(item.Id, item);
+
+            // Adiciona na lista
+            var node = new TreeNode(item.Name) { Tag = item.Id };
+            List.Nodes.Add(node);
+            List.SelectedNode = node;
+
+            // Altera a visiblidade dos grupos caso necessários
+            Groups_Visibility();
+        }
     }
 
     private void butRemove_Click(object sender, EventArgs e)
@@ -153,15 +179,6 @@ internal partial class EditorItems : DarkForm
         Selected.Texture = (short)numTexture.Value;
     }
 
-    private void cmbType_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        Selected.Type = (ItemType)cmbType.SelectedIndex;
-
-        // Visibilidade dos paineis
-        grpEquipment.Visible = cmbType.SelectedIndex == (byte)ItemType.Equipment;
-        grpPotion.Visible = cmbType.SelectedIndex == (byte)ItemType.Potion;
-    }
-
     private void numReq_Level_ValueChanged(object sender, EventArgs e)
     {
         Selected.ReqLevel = (short)numReq_Level.Value;
@@ -175,44 +192,44 @@ internal partial class EditorItems : DarkForm
             Selected.ReqClass = (Class)cmbReq_Class.SelectedItem;
     }
 
-    private void numEquip_HP_ValueChanged(object sender, EventArgs e)
+    private void numPotion_HP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.PotionVital[(byte)Vital.Hp] = (short)numPotion_HP.Value;
+        ((ItemPotion)Selected).PotionVital[(byte)Vital.Hp] = (short)numPotion_HP.Value;
     }
 
-    private void numEquip_MP_ValueChanged(object sender, EventArgs e)
+    private void numPotion_MP_ValueChanged(object sender, EventArgs e)
     {
-        Selected.PotionVital[(byte)Vital.Mp] = (short)numPotion_MP.Value;
+        ((ItemPotion)Selected).PotionVital[(byte)Vital.Mp] = (short)numPotion_MP.Value;
     }
 
     private void numEquip_Experience_ValueChanged(object sender, EventArgs e)
     {
-        Selected.PotionExperience = (int)numPotion_Experience.Value;
+        ((ItemPotion)Selected).PotionExperience = (int)numPotion_Experience.Value;
     }
 
     private void numEquip_Strength_ValueChanged(object sender, EventArgs e)
     {
-        Selected.EquipAttribute[(byte)Attribute.Strength] = (short)numEquip_Strength.Value;
+        ((ItemEquipment)Selected).EquipAttribute[(byte)Attribute.Strength] = (short)numEquip_Strength.Value;
     }
 
     private void numEquip_Resistance_ValueChanged(object sender, EventArgs e)
     {
-        Selected.EquipAttribute[(byte)Attribute.Resistance] = (short)numEquip_Resistance.Value;
+        ((ItemEquipment)Selected).EquipAttribute[(byte)Attribute.Resistance] = (short)numEquip_Resistance.Value;
     }
 
     private void numEquip_Intelligence_ValueChanged(object sender, EventArgs e)
     {
-        Selected.EquipAttribute[(byte)Attribute.Intelligence] = (short)numEquip_Intelligence.Value;
+        ((ItemEquipment)Selected).EquipAttribute[(byte)Attribute.Intelligence] = (short)numEquip_Intelligence.Value;
     }
 
     private void numEquip_Agility_ValueChanged(object sender, EventArgs e)
     {
-        Selected.EquipAttribute[(byte)Attribute.Agility] = (short)numEquip_Agility.Value;
+        ((ItemEquipment)Selected).EquipAttribute[(byte)Attribute.Agility] = (short)numEquip_Agility.Value;
     }
 
     private void numEquip_Vitality_ValueChanged(object sender, EventArgs e)
     {
-        Selected.EquipAttribute[(byte)Attribute.Vitality] = (short)numEquip_Vitality.Value;
+        ((ItemEquipment)Selected).EquipAttribute[(byte)Attribute.Vitality] = (short)numEquip_Vitality.Value;
     }
 
     private void chkStackable_CheckedChanged(object sender, EventArgs e)
@@ -222,12 +239,12 @@ internal partial class EditorItems : DarkForm
 
     private void numWeapon_Damage_ValueChanged(object sender, EventArgs e)
     {
-        Selected.WeaponDamage = (short)numWeapon_Damage.Value;
+        ((ItemEquipment)Selected).WeaponDamage = (short)numWeapon_Damage.Value;
     }
 
     private void cmbEquipment_Type_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Selected.EquipType = (byte)cmbEquipment_Type.SelectedIndex;
+        ((ItemEquipment)Selected).EquipType = (byte)cmbEquipment_Type.SelectedIndex;
         numWeapon_Damage.Visible = lblWeapon_Damage.Visible = cmbEquipment_Type.SelectedIndex == (byte)Equipment.Weapon;
     }
 

@@ -115,7 +115,7 @@ internal static class Read
             account.Character.Inventory[n].Item = Item.List.Get(new Guid(data.ReadString()));
             account.Character.Inventory[n].Amount = data.ReadInt16();
         }
-        for (byte n = 0; n < (byte)Equipment.Count; n++) account.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
+        for (byte n = 0; n < (byte)Equipment.Count; n++) account.Character.Equipment[n] =(ItemEquipment) Item.List.Get(new Guid(data.ReadString()));
         for (byte n = 0; n < MaxHotbar; n++) account.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
     }
 

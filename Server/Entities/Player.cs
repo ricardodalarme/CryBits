@@ -24,7 +24,7 @@ internal class Player : Character
     public byte Points { get; set; }
     public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
     public ItemSlot[] Inventory { get; } = new ItemSlot[MaxInventory];
-    public Item[] Equipment { get; } = new Item[(byte)Enums.Equipment.Count];
+    public ItemEquipment[] Equipment { get; } = new ItemEquipment[(byte)Enums.Equipment.Count];
     public HotbarSlot[] Hotbar { get; } = new HotbarSlot[MaxHotbar];
 
     // Dados temporários
@@ -528,47 +528,52 @@ internal class Player : Character
                 return;
             }
 
-        if (item.Type == ItemType.Equipment)
+        switch (item)
         {
-            // Retira o item do inventário
-            TakeItem(slot, 1);
-
-            // Caso já estiver com algum equipamento, desequipa ele
-            var currentEquip = Equipment[item.EquipType];
-            if (currentEquip != null) GiveItem(currentEquip, 1);
-
-            // Equipa o item
-            Equipment[item.EquipType] = item;
-            for (byte i = 0; i < (byte)Enums.Attribute.Count; i++) Attribute[i] += item.EquipAttribute[i];
-
-            // Envia os dados
-            Send.PlayerInventory(this);
-            Send.PlayerEquipments(this);
-            Send.PlayerHotbar(this);
-        }
-        else if (item.Type == ItemType.Potion)
-        {
-            // Efeitos
-            var hadEffect = false;
-            GiveExperience(item.PotionExperience);
-            for (byte i = 0; i < (byte)Enums.Vital.Count; i++)
+            case ItemEquipment equipment:
             {
-                // Verifica se o item causou algum efeito 
-                if (Vital[i] < MaxVital(i) && item.PotionVital[i] != 0) hadEffect = true;
+                // Retira o item do inventário
+                TakeItem(slot, 1);
 
-                // Efeito
-                Vital[i] += item.PotionVital[i];
+                // Caso já estiver com algum equipamento, desequipa ele
+                var currentEquip = Equipment[equipment.EquipType];
+                if (currentEquip != null) GiveItem(currentEquip, 1);
 
-                // Impede que passe dos limites
-                if (Vital[i] < 0) Vital[i] = 0;
-                if (Vital[i] > MaxVital(i)) Vital[i] = MaxVital(i);
+                // Equipa o item
+                Equipment[equipment.EquipType] = equipment;
+                for (byte i = 0; i < (byte)Enums.Attribute.Count; i++) Attribute[i] += equipment.EquipAttribute[i];
+
+                // Envia os dados
+                Send.PlayerInventory(this);
+                Send.PlayerEquipments(this);
+                Send.PlayerHotbar(this);
+                break;
             }
+            case ItemPotion potion:
+            {
+                // Efeitos
+                var hadEffect = false;
+                GiveExperience(potion.PotionExperience);
+                for (byte i = 0; i < (byte)Enums.Vital.Count; i++)
+                {
+                    // Verifica se o item causou algum efeito 
+                    if (Vital[i] < MaxVital(i) && potion.PotionVital[i] != 0) hadEffect = true;
 
-            // Foi fatal
-            if (Vital[(byte)Enums.Vital.Hp] == 0) Died();
+                    // Efeito
+                    Vital[i] += potion.PotionVital[i];
 
-            // Remove o item caso tenha tido algum efeito
-            if (item.PotionExperience > 0 || hadEffect) TakeItem(slot, 1);
+                    // Impede que passe dos limites
+                    if (Vital[i] < 0) Vital[i] = 0;
+                    if (Vital[i] > MaxVital(i)) Vital[i] = MaxVital(i);
+                }
+
+                // Foi fatal
+                if (Vital[(byte)Enums.Vital.Hp] == 0) Died();
+
+                // Remove o item caso tenha tido algum efeito
+                if (potion.PotionExperience > 0 || hadEffect) TakeItem(slot, 1);
+                break;
+            }
         }
     }
 

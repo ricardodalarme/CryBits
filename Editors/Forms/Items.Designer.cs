@@ -40,10 +40,8 @@ namespace CryBits.Editors.Forms
             this.txtDescription = new DarkUI.Controls.DarkTextBox();
             this.label15 = new DarkUI.Controls.DarkLabel();
             this.chkStackable = new DarkUI.Controls.DarkCheckBox();
-            this.cmbType = new DarkUI.Controls.DarkComboBox();
             this.numTexture = new DarkUI.Controls.DarkNumericUpDown();
             this.txtName = new DarkUI.Controls.DarkTextBox();
-            this.label2 = new DarkUI.Controls.DarkLabel();
             this.label1 = new DarkUI.Controls.DarkLabel();
             this.label3 = new DarkUI.Controls.DarkLabel();
             this.butSave = new DarkUI.Controls.DarkButton();
@@ -109,10 +107,8 @@ namespace CryBits.Editors.Forms
             this.grpGeneral.Controls.Add(this.txtDescription);
             this.grpGeneral.Controls.Add(this.label15);
             this.grpGeneral.Controls.Add(this.chkStackable);
-            this.grpGeneral.Controls.Add(this.cmbType);
             this.grpGeneral.Controls.Add(this.numTexture);
             this.grpGeneral.Controls.Add(this.txtName);
-            this.grpGeneral.Controls.Add(this.label2);
             this.grpGeneral.Controls.Add(this.label1);
             this.grpGeneral.Controls.Add(this.label3);
             this.grpGeneral.Location = new System.Drawing.Point(255, 8);
@@ -212,27 +208,12 @@ namespace CryBits.Editors.Forms
             this.chkStackable.Text = "Stackable";
             this.chkStackable.CheckedChanged += new System.EventHandler(this.chkStackable_CheckedChanged);
             // 
-            // cmbType
-            // 
-            this.cmbType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cmbType.FormattingEnabled = true;
-            this.cmbType.Items.AddRange(new object[] {
-            "None",
-            "Equipment",
-            "Potion"});
-            this.cmbType.Location = new System.Drawing.Point(12, 185);
-            this.cmbType.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.cmbType.Name = "cmbType";
-            this.cmbType.Size = new System.Drawing.Size(162, 24);
-            this.cmbType.TabIndex = 18;
-            this.cmbType.SelectedIndexChanged += new System.EventHandler(this.cmbType_SelectedIndexChanged);
-            // 
             // numTexture
             // 
-            this.numTexture.Location = new System.Drawing.Point(181, 187);
+            this.numTexture.Location = new System.Drawing.Point(12, 187);
             this.numTexture.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.numTexture.Name = "numTexture";
-            this.numTexture.Size = new System.Drawing.Size(119, 23);
+            this.numTexture.Size = new System.Drawing.Size(288, 23);
             this.numTexture.TabIndex = 12;
             this.numTexture.ValueChanged += new System.EventHandler(this.numTexture_ValueChanged);
             // 
@@ -248,22 +229,11 @@ namespace CryBits.Editors.Forms
             this.txtName.TabIndex = 10;
             this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.label2.Location = new System.Drawing.Point(8, 166);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(34, 15);
-            this.label2.TabIndex = 19;
-            this.label2.Text = "Type:";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.label1.Location = new System.Drawing.Point(177, 168);
+            this.label1.Location = new System.Drawing.Point(8, 169);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(48, 15);
@@ -286,7 +256,7 @@ namespace CryBits.Editors.Forms
             this.butSave.Location = new System.Drawing.Point(253, 553);
             this.butSave.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butSave.Name = "butSave";
-            this.butSave.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butSave.Padding = new System.Windows.Forms.Padding(6);
             this.butSave.Size = new System.Drawing.Size(176, 29);
             this.butSave.TabIndex = 16;
             this.butSave.Text = "Save All";
@@ -297,7 +267,7 @@ namespace CryBits.Editors.Forms
             this.butCancel.Location = new System.Drawing.Point(434, 553);
             this.butCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butCancel.Name = "butCancel";
-            this.butCancel.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butCancel.Padding = new System.Windows.Forms.Padding(6);
             this.butCancel.Size = new System.Drawing.Size(176, 29);
             this.butCancel.TabIndex = 17;
             this.butCancel.Text = "Cancel";
@@ -409,7 +379,7 @@ namespace CryBits.Editors.Forms
             this.numPotion_MP.Name = "numPotion_MP";
             this.numPotion_MP.Size = new System.Drawing.Size(105, 23);
             this.numPotion_MP.TabIndex = 40;
-            this.numPotion_MP.ValueChanged += new System.EventHandler(this.numEquip_MP_ValueChanged);
+            this.numPotion_MP.ValueChanged += new System.EventHandler(this.numPotion_MP_ValueChanged);
             // 
             // numPotion_HP
             // 
@@ -423,7 +393,7 @@ namespace CryBits.Editors.Forms
             this.numPotion_HP.Name = "numPotion_HP";
             this.numPotion_HP.Size = new System.Drawing.Size(105, 23);
             this.numPotion_HP.TabIndex = 39;
-            this.numPotion_HP.ValueChanged += new System.EventHandler(this.numEquip_HP_ValueChanged);
+            this.numPotion_HP.ValueChanged += new System.EventHandler(this.numPotion_HP_ValueChanged);
             // 
             // lblMP
             // 
@@ -691,7 +661,7 @@ namespace CryBits.Editors.Forms
             this.butRemove.Location = new System.Drawing.Point(133, 553);
             this.butRemove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butRemove.Name = "butRemove";
-            this.butRemove.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butRemove.Padding = new System.Windows.Forms.Padding(6);
             this.butRemove.Size = new System.Drawing.Size(114, 29);
             this.butRemove.TabIndex = 43;
             this.butRemove.Text = "Remove";
@@ -702,7 +672,7 @@ namespace CryBits.Editors.Forms
             this.butNew.Location = new System.Drawing.Point(12, 553);
             this.butNew.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.butNew.Name = "butNew";
-            this.butNew.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.butNew.Padding = new System.Windows.Forms.Padding(6);
             this.butNew.Size = new System.Drawing.Size(114, 29);
             this.butNew.TabIndex = 42;
             this.butNew.Text = "New";
@@ -777,8 +747,6 @@ namespace CryBits.Editors.Forms
         private DarkButton butSave;
         private DarkButton butCancel;
         private DarkLabel label1;
-        private DarkLabel label2;
-        private DarkComboBox cmbType;
         private DarkGroupBox grpRequirements;
         private DarkLabel label5;
         private DarkComboBox cmbReq_Class;
