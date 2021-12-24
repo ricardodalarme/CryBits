@@ -3,7 +3,7 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.Entities;
 
-internal class Character
+internal abstract class Character
 {
     // Geral
     public short[] Vital = new short[(byte)Enums.Vital.Count];
@@ -19,8 +19,8 @@ internal class Character
     public int AttackTimer;
 
     // Posição exata em que o personagem está
-    public int PixelX => (X * Grid) + X2;
-    public int PixelY => (Y * Grid) + Y2;
+    public int PixelX => X * Grid + X2;
+    public int PixelY => Y * Grid + Y2;
 
     protected void ProcessMovement()
     {

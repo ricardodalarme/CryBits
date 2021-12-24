@@ -51,7 +51,7 @@ public class MapTileData
         }
 
         // Define a posição do mini azulejo
-        Mini[index].X = (X * Globals.Grid) + position.X;
-        Mini[index].Y = (Y * Globals.Grid) + position.Y;
+        Mini[index].X = X * Globals.Grid + position.X;
+        Mini[index].Y = Y * Globals.Grid + position.Y;
     }
 }

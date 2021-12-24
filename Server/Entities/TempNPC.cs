@@ -26,8 +26,8 @@ internal class TempNpc : Character
         // Cálcula o máximo de vital que o Npc possui
         switch ((Vital)vital)
         {
-            case Enums.Vital.Hp: return (short)((Data.Vital[vital] * 0.05) + (Data.Attribute[(byte)Attribute.Vitality] * 0.3));
-            case Enums.Vital.Mp: return (short)((Data.Vital[vital] * 0.05) + (Data.Attribute[(byte)Attribute.Intelligence] * 0.1));
+            case Enums.Vital.Hp: return (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Vitality] * 0.3);
+            case Enums.Vital.Mp: return (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Intelligence] * 0.1);
         }
 
         return 0;
@@ -51,7 +51,7 @@ internal class TempNpc : Character
         ////////////////
         if (!Alive)
         {
-            if (Environment.TickCount > _spawnTimer + (Data.SpawnTime * 1000)) Spawn();
+            if (Environment.TickCount > _spawnTimer + Data.SpawnTime * 1000) Spawn();
             return;
         }
 
@@ -129,7 +129,7 @@ internal class TempNpc : Character
 
         // Verifica se o alvo ainda está disponível
         if (Target != null)
-            if ((Target is Player player && !player.Account.IsPlaying) || Target.Map != Map)
+            if (Target is Player player && !player.Account.IsPlaying || Target.Map != Map)
                 Target = null;
             else if (Target is TempNpc {Alive: false})
                 Target = null;

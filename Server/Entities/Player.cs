@@ -71,8 +71,8 @@ internal class Player : Character
         // Cálcula o máximo de vital que um jogador possui
         switch ((Vital)vital)
         {
-            case Enums.Vital.Hp: return (short)(@base[vital] + (Attribute[(byte)Enums.Attribute.Vitality] * 1.50 * (Level * 0.75)) + 1);
-            case Enums.Vital.Mp: return (short)(@base[vital] + (Attribute[(byte)Enums.Attribute.Intelligence] * 1.25 * (Level * 0.5)) + 1);
+            case Enums.Vital.Hp: return (short)(@base[vital] + Attribute[(byte)Enums.Attribute.Vitality] * 1.50 * (Level * 0.75) + 1);
+            case Enums.Vital.Mp: return (short)(@base[vital] + Attribute[(byte)Enums.Attribute.Intelligence] * 1.25 * (Level * 0.5) + 1);
         }
 
         return 1;
@@ -83,8 +83,8 @@ internal class Player : Character
         // Cálcula o máximo de vital que um jogador possui
         switch ((Vital)vital)
         {
-            case Enums.Vital.Hp: return (short)((MaxVital(vital) * 0.05) + (Attribute[(byte)Enums.Attribute.Vitality] * 0.3));
-            case Enums.Vital.Mp: return (short)((MaxVital(vital) * 0.05) + (Attribute[(byte)Enums.Attribute.Intelligence] * 0.1));
+            case Enums.Vital.Hp: return (short)(MaxVital(vital) * 0.05 + Attribute[(byte)Enums.Attribute.Vitality] * 0.3);
+            case Enums.Vital.Mp: return (short)(MaxVital(vital) * 0.05 + Attribute[(byte)Enums.Attribute.Intelligence] * 0.1);
         }
 
         return 1;
@@ -97,7 +97,7 @@ internal class Player : Character
         {
             short total = 0;
             for (byte i = 0; i < (byte)Enums.Attribute.Count; i++) total += Attribute[i];
-            return (int)(((Level + 1) * 2.5) + ((total + Points) / 2));
+            return (int)((Level + 1) * 2.5 + (total + Points) / 2);
         }
     }
 
@@ -602,7 +602,7 @@ internal class Player : Character
     private void PartySplitXp(int value)
     {
         // Somatório do level de todos os jogadores do grupo
-        int experienceSum = 0;
+        var experienceSum = 0;
         var diff = new double[Party.Count];
         double diffSum = 0;
 

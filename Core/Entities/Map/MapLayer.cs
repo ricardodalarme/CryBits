@@ -10,8 +10,10 @@ public class MapLayer
     public byte Type { get; set; }
     public MapTileData[,] Tile { get; set; } = new MapTileData[Map.Width, Map.Height];
 
-    public MapLayer()
+    public MapLayer(string name)
     {
+        Name = name;
+
         for (byte x = 0; x < Map.Width; x++)
         for (byte y = 0; y < Map.Height; y++)
             Tile[x, y] = new MapTileData();

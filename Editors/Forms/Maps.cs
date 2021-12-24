@@ -2,25 +2,24 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using CryBits.Client.Framework;
+using CryBits.Client.Framework.Audio;
+using CryBits.Client.Framework.Entities.Tile;
+using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Entities;
-using CryBits.Editors.Library;
+using CryBits.Editors.Graphics;
 using CryBits.Editors.Logic;
-using CryBits.Editors.Media.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
-using CryBits.Entities.Tile;
 using CryBits.Enums;
 using CryBits.Extensions;
 using DarkUI.Forms;
 using SFML.Graphics;
 using static CryBits.Globals;
-using static CryBits.Editors.Logic.Options;
 using static CryBits.Editors.Logic.Utils;
 using Color = System.Drawing.Color;
-using Music = CryBits.Editors.Media.Audio.Music;
-using Sound = CryBits.Editors.Media.Audio.Sound;
 
 namespace CryBits.Editors.Forms;
 
@@ -93,9 +92,9 @@ internal partial class EditorMaps : DarkForm
         grpNPCs.BringToFront();
         cmbTiles.SelectedIndex = 0;
         cmbLayers_Type.SelectedIndex = 0;
-        butGrid.Checked = PreMapGrid;
-        butAudio.Checked = PreMapAudio;
-        if (!PreMapView)
+        butGrid.Checked = Options.PreMapGrid;
+        butAudio.Checked = Options.PreMapAudio;
+        if (!Options.PreMapView)
         {
             butVisualization.Checked = false;
             butEdition.Checked = true;
@@ -126,7 +125,7 @@ internal partial class EditorMaps : DarkForm
             if (map.Name.StartsWith(txtFilter.Text))
             {
                 List.Nodes.Add(map.Name);
-                List.Nodes[List.Nodes.Count - 1].Tag = map.Id;
+                List.Nodes[^1].Tag = map.Id;
             }
             cmbA_Warp_Map.Items.Add(map);
         }
@@ -231,13 +230,12 @@ internal partial class EditorMaps : DarkForm
         // Copia os dados das camadas
         for (byte c = 0; c < _tilesCopy.Data.Length; c++)
         {
-            _tilesCopy.Data[c] = new MapLayer();
-            _tilesCopy.Data[c].Name = Selected.Layer[c].Name;
+            _tilesCopy.Data[c] = new MapLayer(Selected.Layer[c].Name);
 
             // Copia os dados dos azulejos
             for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-                _tilesCopy.Data[c].Tile[x, y] = Selected.Layer[c].Tile[x, y];
+                for (byte y = 0; y < Map.Height; y++)
+                    _tilesCopy.Data[c].Tile[x, y] = Selected.Layer[c].Tile[x, y];
         }
     }
 
@@ -254,9 +252,9 @@ internal partial class EditorMaps : DarkForm
 
         // Remove os azulejos copiados
         for (var x = MapSelection.X; x < MapSelection.X + MapSelection.Width; x++)
-        for (var y = MapSelection.Y; y < MapSelection.Y + MapSelection.Height; y++)
-        for (byte c = 0; c < Selected.Layer.Count; c++)
-            Selected.Layer[c].Tile[x, y] = new MapTileData();
+            for (var y = MapSelection.Y; y < MapSelection.Y + MapSelection.Height; y++)
+                for (byte c = 0; c < Selected.Layer.Count; c++)
+                    Selected.Layer[c].Tile[x, y] = new MapTileData();
 
         // Atualiza os azulejos Autos 
         Selected.Update();
@@ -266,22 +264,22 @@ internal partial class EditorMaps : DarkForm
     {
         // Cola os azulejos
         for (var x = _tilesCopy.Area.X; x < _tilesCopy.Area.X + _tilesCopy.Area.Width; x++)
-        for (var y = _tilesCopy.Area.Y; y < _tilesCopy.Area.Y + _tilesCopy.Area.Height; y++)
-        for (byte c = 0; c < _tilesCopy.Data.Length; c++)
-        {
-            // Dados
-            var layer = Find_Layer(_tilesCopy.Data[c].Name);
-            var x2 = MapSelection.X + x - _tilesCopy.Area.X;
-            var y2 = y + MapSelection.Y - _tilesCopy.Area.Y;
+            for (var y = _tilesCopy.Area.Y; y < _tilesCopy.Area.Y + _tilesCopy.Area.Height; y++)
+                for (byte c = 0; c < _tilesCopy.Data.Length; c++)
+                {
+                    // Dados
+                    var layer = Find_Layer(_tilesCopy.Data[c].Name);
+                    var x2 = MapSelection.X + x - _tilesCopy.Area.X;
+                    var y2 = y + MapSelection.Y - _tilesCopy.Area.Y;
 
-            // Previne erros
-            if (layer < 0) continue;
-            if (x2 >= Map.Width) continue;
-            if (y2 >= Map.Height) continue;
+                    // Previne erros
+                    if (layer < 0) continue;
+                    if (x2 >= Map.Width) continue;
+                    if (y2 >= Map.Height) continue;
 
-            // Cola
-            Selected.Layer[layer].Tile[x2, y2] = _tilesCopy.Data[c].Tile[x, y];
-        }
+                    // Cola
+                    Selected.Layer[layer].Tile[x2, y2] = _tilesCopy.Data[c].Tile[x, y];
+                }
 
         // Atualiza os azulejos Autos 
         Selected.Update();
@@ -358,8 +356,8 @@ internal partial class EditorMaps : DarkForm
 
         // Preenche todos os azulejos iguais ao selecionado com o mesmo azulejo
         for (var x = 0; x < Map.Width; x++)
-        for (var y = 0; y < Map.Height; y++)
-            Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = Set_Tile();
+            for (var y = 0; y < Map.Height; y++)
+                Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = Set_Tile();
 
         // Faz os cálculos da autocriação
         Selected.Update();
@@ -372,8 +370,8 @@ internal partial class EditorMaps : DarkForm
 
         // Reseta todos os azulejos
         for (var x = 0; x < Map.Width; x++)
-        for (var y = 0; y < Map.Height; y++)
-            Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = new MapTileData();
+            for (var y = 0; y < Map.Height; y++)
+                Selected.Layer[lstLayers.SelectedItems[0].Index].Tile[x, y] = new MapTileData();
     }
 
     private void butEdition_Click(object sender, EventArgs e)
@@ -385,8 +383,8 @@ internal partial class EditorMaps : DarkForm
             butEdition.Checked = true;
 
         // Salva a preferência
-        PreMapView = butVisualization.Checked;
-        Write.Options();
+        Options.PreMapView = butVisualization.Checked;
+        Client.Framework.Library.Write.Options();
     }
 
     private void butVisualization_Click(object sender, EventArgs e)
@@ -398,22 +396,22 @@ internal partial class EditorMaps : DarkForm
             butVisualization.Checked = true;
 
         // Salva a preferência
-        PreMapView = butVisualization.Checked;
-        Write.Options();
+        Options.PreMapView = butVisualization.Checked;
+        Client.Framework.Library.Write.Options();
     }
 
     private void butGrids_Click(object sender, EventArgs e)
     {
         // Salva a preferência
-        PreMapGrid = butGrid.Checked;
-        Write.Options();
+        Options.PreMapGrid = butGrid.Checked;
+        Client.Framework.Library.Write.Options();
     }
 
     private void butAudio_Click(object sender, EventArgs e)
     {
         // Salva a preferência
-        PreMapAudio = butAudio.Checked;
-        Write.Options();
+        Options.PreMapAudio = butAudio.Checked;
+        Client.Framework.Library.Write.Options();
 
         // Desativa os áudios
         if (!butAudio.Checked)
@@ -704,7 +702,7 @@ internal partial class EditorMaps : DarkForm
         var textureSize = Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize();
 
         // Define os valores
-        TileMouse = new Point((x * Grid) - scrlTileX.Value, (y * Grid) - scrlTileY.Value);
+        TileMouse = new Point(x * Grid - scrlTileX.Value, y * Grid - scrlTileY.Value);
 
         // Somente se necessário
         if (e.Button != MouseButtons.Left) return;
@@ -712,9 +710,9 @@ internal partial class EditorMaps : DarkForm
 
         // Verifica se não passou do limite
         if (x < 0) x = 0;
-        if (x > (textureSize.Width / Grid) - 1) x = (textureSize.Width / Grid) - 1;
+        if (x > textureSize.Width / Grid - 1) x = textureSize.Width / Grid - 1;
         if (y < 0) y = 0;
-        if (y > (textureSize.Height / Grid) - 1) y = (textureSize.Height / Grid) - 1;
+        if (y > textureSize.Height / Grid - 1) y = textureSize.Height / Grid - 1;
 
         // Tamanho da grade
         _defTilesSelection.Width = x - _defTilesSelection.X + 1;
@@ -758,8 +756,8 @@ internal partial class EditorMaps : DarkForm
     public void Update_Map_Bounds()
     {
         // Tamanho do scroll do mapa
-        scrlMapX.Maximum = Math.Max(0, ((Map.Width / Zoom() * Grid) - picBackground.Width) / Grid);
-        scrlMapY.Maximum = Math.Max(0, ((Map.Height / Zoom() * Grid) - picBackground.Height) / Grid);
+        scrlMapX.Maximum = Math.Max(0, (Map.Width / Zoom() * Grid - picBackground.Width) / Grid);
+        scrlMapY.Maximum = Math.Max(0, (Map.Height / Zoom() * Grid - picBackground.Height) / Grid);
         scrlMapX.Value = 0;
         scrlMapY.Value = 0;
 
@@ -794,7 +792,7 @@ internal partial class EditorMaps : DarkForm
 
     private void picMap_MouseDown(object sender, MouseEventArgs e)
     {
-        var tileDif = new Point(e.X - (e.X / Grid * Grid), e.Y - (e.Y / Grid * Grid));
+        var tileDif = new Point(e.X - e.X / Grid * Grid, e.Y - e.Y / Grid * Grid);
 
         // Previne erros
         if (MapSelection.X >= Map.Width || MapSelection.Y >= Map.Height) return;
@@ -850,11 +848,11 @@ internal partial class EditorMaps : DarkForm
             if (MapSelection.Width > 1 || MapSelection.Height > 1)
                 // Define os azulejos
                 for (var x = MapSelection.X; x < MapSelection.X + MapSelection.Width; x++)
-                for (var y = MapSelection.Y; y < MapSelection.Y + MapSelection.Height; y++)
-                {
-                    Selected.Layer[layer].Tile[x, y] = Set_Tile();
-                    Selected.Layer[layer].Update(x, y);
-                }
+                    for (var y = MapSelection.Y; y < MapSelection.Y + MapSelection.Height; y++)
+                    {
+                        Selected.Layer[layer].Tile[x, y] = Set_Tile();
+                        Selected.Layer[layer].Update(x, y);
+                    }
         }
         // Nenhum
         else
@@ -867,8 +865,8 @@ internal partial class EditorMaps : DarkForm
     private void picMap_MouseMove(object sender, MouseEventArgs e)
     {
         // Mouse
-        _mapMouse.X = (e.X / GridZoom) + scrlMapX.Value;
-        _mapMouse.Y = (e.Y / GridZoom) + scrlMapY.Value;
+        _mapMouse.X = e.X / GridZoom + scrlMapX.Value;
+        _mapMouse.Y = e.Y / GridZoom + scrlMapY.Value;
 
         // Impede que saia do limite da tela
         if (_mapMouse.X < 0) _mapMouse.X = 0;
@@ -928,14 +926,14 @@ internal partial class EditorMaps : DarkForm
 
     private bool Map_Rectangle(MouseEventArgs e)
     {
-        int x = (e.X / GridZoom) + scrlMapX.Value, y = (e.Y / GridZoom) + scrlMapY.Value;
+        int x = e.X / GridZoom + scrlMapX.Value, y = e.Y / GridZoom + scrlMapY.Value;
 
         // Somente se necessário
         if (e.Button != MouseButtons.Left) return false;
         if (butRectangle.Checked && butRectangle.Enabled) goto Continuation;
         if (butArea.Checked && butArea.Enabled) goto Continuation;
         return false;
-        Continuation:
+    Continuation:
 
         // Cria um retângulo
         if (!_mapPressed) _defMapSelection.Size = new Size(1, 1);
@@ -1064,8 +1062,6 @@ internal partial class EditorMaps : DarkForm
 
     private void butLayer_Add_Click(object sender, EventArgs e)
     {
-        var layer = new MapLayer();
-
         // Verifica se o nome é válido
         if (txtLayer_Name.Text.Length < 1 || txtLayer_Name.Text.Length > 12) return;
         if (Find_Layer(txtLayer_Name.Text) >= 0)
@@ -1075,11 +1071,11 @@ internal partial class EditorMaps : DarkForm
         }
 
         // Define os dados
-        layer.Name = txtLayer_Name.Text;
+        var layer = new MapLayer(txtLayer_Name.Text);
         layer.Type = (byte)cmbLayers_Type.SelectedIndex;
         for (byte x = 0; x < Map.Width; x++)
-        for (byte y = 0; y < Map.Height; y++)
-            layer.Tile[x, y] = new MapTileData();
+            for (byte y = 0; y < Map.Height; y++)
+                layer.Tile[x, y] = new MapTileData();
 
         // Adiciona a camada
         Selected.Layer.Add(layer);
@@ -1116,9 +1112,9 @@ internal partial class EditorMaps : DarkForm
 
         // Reordena as camadas
         for (byte n = 0; n < (byte)Layer.Count; n++)
-        for (byte i = 0; i < Selected.Layer.Count; i++)
-            if (Selected.Layer[i].Type == n)
-                temp.Add(Selected.Layer[i]);
+            for (byte i = 0; i < Selected.Layer.Count; i++)
+                if (Selected.Layer[i].Type == n)
+                    temp.Add(Selected.Layer[i]);
 
         // Atualiza os valores
         Selected.Layer = temp;
@@ -1298,32 +1294,32 @@ internal partial class EditorMaps : DarkForm
     {
         // Reseta todas os atributos
         for (byte x = 0; x < Map.Width; x++)
-        for (byte y = 0; y < Map.Height; y++)
-            Selected.Attribute[x, y] = new MapAttribute();
+            for (byte y = 0; y < Map.Height; y++)
+                Selected.Attribute[x, y] = new MapAttribute();
     }
 
     private void butAttributes_Import_Click(object sender, EventArgs e)
     {
         // Importa os dados padrões dos azulejos
         for (byte x = 0; x < Map.Width; x++)
-        for (byte y = 0; y < Map.Height; y++)
-        for (byte c = 0; c < Selected.Layer.Count; c++)
-        {
-            // Dados do azulejo
-            var data = Selected.Layer[c].Tile[x, y];
+            for (byte y = 0; y < Map.Height; y++)
+                for (byte c = 0; c < Selected.Layer.Count; c++)
+                {
+                    // Dados do azulejo
+                    var data = Selected.Layer[c].Tile[x, y];
 
-            if (data.Texture > 0)
-            {
-                // Atributos
-                if (Tile.List[data.Texture].Data[data.X, data.Y].Attribute > 0)
-                    Selected.Attribute[x, y].Type = Tile.List[data.Texture].Data[data.X, data.Y].Attribute;
+                    if (data.Texture > 0)
+                    {
+                        // Atributos
+                        if (Tile.List[data.Texture].Data[data.X, data.Y].Attribute > 0)
+                            Selected.Attribute[x, y].Type = Tile.List[data.Texture].Data[data.X, data.Y].Attribute;
 
-                // Bloqueio direcional
-                for (byte b = 0; b < (byte)Direction.Count; b++)
-                    if (Tile.List[data.Texture].Data[data.X, data.Y].Block[b])
-                        Selected.Attribute[x, y].Block[b] = Tile.List[data.Texture].Data[data.X, data.Y].Block[b];
-            }
-        }
+                        // Bloqueio direcional
+                        for (byte b = 0; b < (byte)Direction.Count; b++)
+                            if (Tile.List[data.Texture].Data[data.X, data.Y].Block[b])
+                                Selected.Attribute[x, y].Block[b] = Tile.List[data.Texture].Data[data.X, data.Y].Block[b];
+                    }
+                }
     }
 
     private TileAttribute Attribute_Selected()
@@ -1405,8 +1401,8 @@ internal partial class EditorMaps : DarkForm
     {
         // Reseta todas as zonas
         for (byte x = 0; x < Map.Width; x++)
-        for (byte y = 0; y < Map.Height; y++)
-            Selected.Attribute[x, y].Zone = 0;
+            for (byte y = 0; y < Map.Height; y++)
+                Selected.Attribute[x, y].Zone = 0;
     }
 
     private void scrlZone_ValueChanged(object sender, EventArgs e)

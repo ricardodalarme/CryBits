@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using CryBits.Client.Framework.Audio;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
-using CryBits.Editors.Media.Audio;
-using CryBits.Editors.Media.Graphics;
+using CryBits.Editors.Graphics;
 using CryBits.Editors.Network;
 
 namespace CryBits.Editors.Logic;
@@ -56,17 +56,14 @@ internal static class Loop
     private static void MapsMusic()
     {
         // Apenas se necessário
-        if (EditorMaps.Form?.Visible != true) goto stop;
-        if (!EditorMaps.Form.butAudio.Checked) goto stop;
-        if (!EditorMaps.Form.butVisualization.Checked) goto stop;
-        if (EditorMaps.Form.Selected.Music == 0) goto stop;
+        if (EditorMaps.Form == null) return;
+        if (EditorMaps.Form?.Visible != true) Music.Stop();
+        if (!EditorMaps.Form.butAudio.Checked) Music.Stop();
+        if (!EditorMaps.Form.butVisualization.Checked) Music.Stop();
+        if (string.IsNullOrEmpty(EditorMaps.Form?.Selected.Music)) Music.Stop();
 
-        // Inicia a música
-        if (Music.Device == null || Music.Current != (Enums.Music)EditorMaps.Form.Selected.Music)
-            Music.Play((Enums.Music)EditorMaps.Form.Selected.Music);
-        return;
-        stop:
-        // Para a música
-        if (Music.Device != null) Music.Stop();
+        // Inicia a música-
+        if (Music.Device == null || Music.Current != EditorMaps.Form?.Selected.Music)
+            Music.Play(EditorMaps.Form.Selected.Music);
     }
 }

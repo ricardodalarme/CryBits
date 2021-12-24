@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using CryBits.Client.Framework.Graphics;
+using CryBits.Editors.Graphics;
 using CryBits.Editors.Logic;
-using CryBits.Editors.Media.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Entities.Map;

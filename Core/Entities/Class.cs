@@ -12,7 +12,7 @@ public class Class : Entity
     public static Dictionary<Guid, Class> List = new();
 
     // Dados
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
     public IList<short> TextureMale { get; set; } = new List<short>();
     public IList<short> TextureFemale { get; set; } = new List<short>();
     public Map.Map SpawnMap { get; set; }

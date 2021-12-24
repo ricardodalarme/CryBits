@@ -30,8 +30,4 @@
  <ItemGroup>
    <PackageReference Include="Lidgren.Network.Core2" Version="1.0.0" />
  </ItemGroup>
-
- <ItemGroup>
-   <Folder Include="Exceptions\" />
- </ItemGroup>
 </Project>

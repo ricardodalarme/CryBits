@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using CryBits.Client.Entities;
-using CryBits.Client.UI;
+using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.UI.Events;
 using CryBits.Entities;
 using CryBits.Enums;
 using Lidgren.Network;
@@ -23,8 +25,8 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ClientPacket.Connect);
-        data.Write(TextBoxes.List["Connect_Username"].Text);
-        data.Write(TextBoxes.List["Connect_Password"].Text);
+        data.Write(TextBoxes.ConnectUsername.Text);
+        data.Write(TextBoxes.ConnectPassword.Text);
         data.Write(false); // Acesso pelo cliente
         Packet(data);
     }
@@ -35,8 +37,8 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ClientPacket.Register);
-        data.Write(TextBoxes.List["Register_Username"].Text);
-        data.Write(TextBoxes.List["Register_Password"].Text);
+        data.Write(TextBoxes.RegisterUsername.Text);
+        data.Write(TextBoxes.RegisterPassword.Text);
         Packet(data);
     }
 
@@ -46,10 +48,10 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ClientPacket.CreateCharacter);
-        data.Write(TextBoxes.List["CreateCharacter_Name"].Text);
-        data.Write(Class.List.ElementAt(Panels.CreateCharacterClass).Value.Id.ToString());
-        data.Write(CheckBoxes.List["GenderMale"].Checked);
-        data.Write(Panels.CreateCharacterTex);
+        data.Write(TextBoxes.CreateCharacterName.Text);
+        data.Write(Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value.Id.ToString());
+        data.Write(CheckBoxes.GenderMale.Checked);
+        data.Write(PanelsEvents.CreateCharacterTex);
         Packet(data);
     }
 
@@ -59,7 +61,7 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ClientPacket.CharacterUse);
-        data.Write(Panels.SelectCharacter);
+        data.Write(PanelsEvents.SelectCharacter);
         Packet(data);
     }
 
@@ -78,7 +80,7 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ClientPacket.CharacterDelete);
-        data.Write(Panels.SelectCharacter);
+        data.Write(PanelsEvents.SelectCharacter);
         Packet(data);
     }
 
@@ -157,7 +159,7 @@ internal static class Send
         Packet(data);
 
         // Fecha o painel de soltar item
-        Panels.List["Drop"].Visible = false;
+        Panels.Drop.Visible = false;
     }
 
     public static void InventoryUse(byte slot)
@@ -170,7 +172,7 @@ internal static class Send
         Packet(data);
 
         // Fecha o painel de soltar item
-        Panels.List["Drop"].Visible = false;
+        Panels.Drop.Visible = false;
     }
 
     public static void EquipmentRemove(byte slot)
@@ -208,7 +210,7 @@ internal static class Send
 
     public static void HotbarUse(byte slot)
     {
-        if (TextBoxes.Focused == null)
+        if (TextBox.Focused == null)
         {
             var data = Socket.Device.CreateMessage();
 
@@ -218,7 +220,7 @@ internal static class Send
             Packet(data);
 
             // Fecha o painel de soltar item
-            Panels.List["Drop"].Visible = false;
+            Panels.Drop.Visible = false;
         }
     }
 

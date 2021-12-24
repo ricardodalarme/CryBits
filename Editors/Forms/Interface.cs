@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
-using CryBits.Editors.Entities.Tools;
+using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Framework.Interfacily.Enums;
+using CryBits.Editors.Graphics;
 using CryBits.Editors.Library;
-using CryBits.Editors.Media.Graphics;
-using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
-using Button = CryBits.Editors.Entities.Tools.Button;
-using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
-using Panel = CryBits.Editors.Entities.Tools.Panel;
-using TextBox = CryBits.Editors.Entities.Tools.TextBox;
+using Button = CryBits.Client.Framework.Interfacily.Components.Button;
+using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
+using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
+using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Editors.Forms;
 
@@ -18,8 +18,8 @@ internal partial class EditorInterface : DarkForm
     // Usado para acessar os dados da janela
     public static EditorInterface Form;
 
-    // Ferramenta selecionada
-    private Tool _selected;
+    // Árvore de componentes
+    public static TreeNode Tree = new();
 
     public EditorInterface()
     {
@@ -33,8 +33,8 @@ internal partial class EditorInterface : DarkForm
         Renders.WinInterface = new RenderWindow(picWindow.Handle);
 
         // Adiciona as janelas à lista
-        for (byte i = 0; i < (byte)Window.Count; i++)
-            cmbWindows.Items.Add((Window)i);
+        for (byte i = 0; i < Tree.Nodes.Count; i++)
+            cmbWindows.Items.Add(Tree.Nodes[i].Text);
         cmbWindows.SelectedIndex = 0;
 
         // Adiciona os tipos de ferramentas à lista
@@ -51,33 +51,22 @@ internal partial class EditorInterface : DarkForm
     {
         // Atualiza a lista de ordem
         treOrder.Nodes.Clear();
-        treOrder.Nodes.Add((TreeNode)Tool.Tree.Nodes[cmbWindows.SelectedIndex].Clone());
+        treOrder.Nodes.Add((TreeNode)Tree.Nodes[cmbWindows.SelectedIndex].Clone());
         treOrder.ExpandAll();
     }
 
     private void treOrder_AfterSelect(object sender, TreeViewEventArgs e)
     {
         // Atualiza as informações
-        _selected = (Tool)treOrder.SelectedNode.Tag;
-        prgProperties.SelectedObject = _selected;
+        prgProperties.SelectedObject = treOrder.SelectedNode.Tag;
     }
 
     private void prgProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
     {
         if (treOrder.SelectedNode != null)
         {
-            var window = (byte)((Tool)treOrder.SelectedNode.Tag).Window;
-
-            // Troca a ferramenta de janela
-            if (e.ChangedItem.Label == "Window")
-            {
-                Tool.Tree.Nodes[window].Nodes.Add((TreeNode)treOrder.SelectedNode.Clone());
-                treOrder.SelectedNode.Remove();
-                cmbWindows.SelectedIndex = window;
-                treOrder.SelectedNode = Tool.Tree.Nodes[window].LastNode;
-            }
             // Troca o nome da ferramenta
-            else if (e.ChangedItem.Label == "Name") treOrder.SelectedNode.Text = treOrder.SelectedNode.Tag.ToString();
+            if (e.ChangedItem.Label == "Name") treOrder.SelectedNode.Text = treOrder.SelectedNode.Tag.ToString();
         }
     }
 
@@ -105,17 +94,17 @@ internal partial class EditorInterface : DarkForm
     private void butConfirm_Click(object sender, EventArgs e)
     {
         // Adiciona uma nova ferramenta
-        var @new = new Tool();
-        Tool.Tree.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
+        Component @new;
         switch ((ToolType)cmbType.SelectedIndex)
         {
             case ToolType.Button: @new = new Button(); break;
             case ToolType.Panel: @new = new Panel(); break;
             case ToolType.CheckBox: @new = new CheckBox(); break;
             case ToolType.TextBox: @new = new TextBox(); break;
+            default: return;
         }
-        Tool.Tree.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
-        @new.Window = (Window)cmbWindows.SelectedIndex;
+        Tree.Nodes[cmbWindows.SelectedIndex].LastNode.Tag = @new;
+        Tree.Nodes[cmbWindows.SelectedIndex].Nodes.Add(@new.ToString());
         grpNew.Visible = false;
     }
 

@@ -1,35 +1,31 @@
 ﻿using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using CryBits.Editors.Entities.Tools;
-using CryBits.Enums;
-using static CryBits.Editors.Logic.Options;
-using Button = CryBits.Editors.Entities.Tools.Button;
-using CheckBox = CryBits.Editors.Entities.Tools.CheckBox;
-using Panel = CryBits.Editors.Entities.Tools.Panel;
-using TextBox = CryBits.Editors.Entities.Tools.TextBox;
+using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Framework.Interfacily.Enums;
+using CryBits.Editors.Forms;
+using Button = CryBits.Client.Framework.Interfacily.Components.Button;
+using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
+using FrameworkWrite = CryBits.Client.Framework.Library.Write;
+using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
+using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
+using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Editors.Library;
 
 internal static class Write
 {
-    public static void Options()
-    {
-        // Escreve as configurações
-        using var data = new BinaryWriter(Directories.Options.OpenWrite());
-        data.Write(PreMapGrid);
-        data.Write(PreMapView);
-        data.Write(PreMapAudio);
-        data.Write(Username);
-    }
-
     public static void Tools()
     {
         // Cria um sistema binário para a manipulação dos dados
-        var file = new FileInfo(Directories.Tools.FullName);
+        var file = new FileInfo(Directories.ToolsData.FullName);
         using var data = new BinaryWriter(file.OpenWrite());
-        for (short n = 0; n < Tool.Tree.Nodes.Count; n++)
-            Tools(Tool.Tree.Nodes[n], data);
+        data.Write((short)EditorInterface.Tree.Nodes.Count);
+        for (short n = 0; n < EditorInterface.Tree.Nodes.Count; n++)
+        {
+            data.Write(((Screen)EditorInterface.Tree.Nodes[n].Tag).Name);
+            Tools(EditorInterface.Tree.Nodes[n], data);
+        }
     }
 
     private static void Tools(TreeNode node, BinaryWriter data)
@@ -39,90 +35,29 @@ internal static class Write
         for (byte i = 0; i < node.Nodes.Count; i++)
         {
             // Salva de acordo com a ferramenta
-            var tool = (Tool)node.Nodes[i].Tag;
-            if (tool is Button)
+            var tool = (Component)node.Nodes[i].Tag;
+            switch (tool)
             {
-                data.Write((byte)ToolType.Button);
-                Button(data, (Button)tool);
-            }
-            else if (tool is TextBox)
-            {
-                data.Write((byte)ToolType.TextBox);
-                TextBox(data, (TextBox)tool);
-            }
-            else if (tool is CheckBox)
-            {
-                data.Write((byte)ToolType.CheckBox);
-                CheckBox(data, (CheckBox)tool);
-            }
-            else if (tool is Panel)
-            {
-                data.Write((byte)ToolType.Panel);
-                Panel(data, (Panel)tool);
+                case Button button:
+                    data.Write((byte)ToolType.Button);
+                    FrameworkWrite.Button(data, button);
+                    break;
+                case TextBox textBox:
+                    data.Write((byte)ToolType.TextBox);
+                    FrameworkWrite.TextBox(data, textBox);
+                    break;
+                case CheckBox checkBox:
+                    data.Write((byte)ToolType.CheckBox);
+                    FrameworkWrite.CheckBox(data, checkBox);
+                    break;
+                case Panel panel:
+                    data.Write((byte)ToolType.Panel);
+                    FrameworkWrite.Panel(data, panel);
+                    break;
             }
 
             // Pula pra próxima ferramenta
             Tools(node.Nodes[i], data);
         }
-    }
-
-    private static void Button(BinaryWriter data, Button tool)
-    {
-        // Escreve os dados
-        data.Write(tool.Name);
-        data.Write(tool.Position.X);
-        data.Write(tool.Position.Y);
-        data.Write(tool.Visible);
-        data.Write((byte)tool.Window);
-        data.Write(tool.TextureNum);
-    }
-
-    private static void TextBox(BinaryWriter data, TextBox tool)
-    {
-        // Escreve os dados
-        data.Write(tool.Name);
-        data.Write(tool.Position.X);
-        data.Write(tool.Position.Y);
-        data.Write(tool.Visible);
-        data.Write((byte)tool.Window);
-        data.Write(tool.MaxCharacters);
-        data.Write(tool.Width);
-        data.Write(tool.Password);
-    }
-
-    private static void Panel(BinaryWriter data, Panel tool)
-    {
-        // Escreve os dados
-        data.Write(tool.Name);
-        data.Write(tool.Position.X);
-        data.Write(tool.Position.Y);
-        data.Write(tool.Visible);
-        data.Write((byte)tool.Window);
-        data.Write(tool.TextureNum);
-    }
-
-    private static void CheckBox(BinaryWriter data, CheckBox tool)
-    {
-        // Escreve os dados
-        data.Write(tool.Name);
-        data.Write(tool.Position.X);
-        data.Write(tool.Position.Y);
-        data.Write(tool.Visible);
-        data.Write((byte)tool.Window);
-        data.Write(tool.Text);
-        data.Write(tool.Checked);
-    }
-
-    public static void Tiles()
-    {
-        // Escreve os dados
-        for (byte i = 1; i < CryBits.Entities.Tile.Tile.List.Length; i++) Tile(i);
-    }
-
-    public static void Tile(byte index)
-    {
-        // Escreve os dados
-        using var stream = new FileInfo(Directories.Tiles.FullName + index + Directories.Format).OpenWrite();
-        new BinaryFormatter().Serialize(stream, CryBits.Entities.Tile.Tile.List[index]);
     }
 }

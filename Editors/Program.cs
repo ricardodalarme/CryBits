@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
+using CryBits.Client.Framework.Audio;
+using CryBits.Client.Framework.Constants;
 using CryBits.Editors.Forms;
-using CryBits.Editors.Library;
 using CryBits.Editors.Logic;
-using CryBits.Editors.Media.Audio;
-using CryBits.Editors.Media.Graphics;
 using CryBits.Editors.Network;
+using Read = CryBits.Editors.Library.Read;
 
 namespace CryBits.Editors;
 
@@ -24,13 +24,12 @@ internal static class Program
         Directories.Create();
 
         // Carrega as preferências
-        Read.Options();
+        Client.Framework.Library.Read.Options();
+        Read.Tools();
 
         // Inicializa todos os dispositivos
         Socket.Init();
-        Sound.LoadAll();
-        Textures.LoadAll();
-        Fonts.LoadAll();
+        Sound.Load();
 
         // Abre a janela
         Application.EnableVisualStyles();

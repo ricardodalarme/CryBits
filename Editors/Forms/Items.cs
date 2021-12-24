@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using CryBits.Editors.Media.Graphics;
+using CryBits.Client.Framework.Graphics;
+using CryBits.Editors.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;

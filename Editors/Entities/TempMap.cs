@@ -1,11 +1,13 @@
 ﻿using System;
+using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Entities.TempMap;
+using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Forms;
-using CryBits.Editors.Media.Graphics;
 using CryBits.Entities.Map;
 using SFML.Audio;
 using static CryBits.Globals;
 using static CryBits.Utils;
-using Sound = CryBits.Editors.Media.Audio.Sound;
+using Sound = CryBits.Client.Framework.Audio.Sound;
 
 namespace CryBits.Editors.Entities;
 
@@ -22,7 +24,7 @@ internal static class TempMap
     public static int FogY;
 
     // Clima
-    public static MapWeatherParticle[] Weather = Array.Empty<MapWeatherParticle>();
+    public static TempMapWeatherParticle[] Weather = Array.Empty<TempMapWeatherParticle>();
     public static byte Lightning;
 
     public static void UpdateWeatherType()
@@ -32,8 +34,8 @@ internal static class TempMap
             switch (EditorMaps.Form.Selected.Weather.Type)
             {
                 case Enums.Weather.Thundering:
-                case Enums.Weather.Raining: Weather = new MapWeatherParticle[MaxRainParticles + 1]; break;
-                case Enums.Weather.Snowing: Weather = new MapWeatherParticle[MaxSnowParticles + 1]; break;
+                case Enums.Weather.Raining: Weather = new TempMapWeatherParticle[MaxRainParticles + 1]; break;
+                case Enums.Weather.Snowing: Weather = new TempMapWeatherParticle[MaxSnowParticles + 1]; break;
             }
     }
 
@@ -108,8 +110,7 @@ internal static class TempMap
         // Somente se necessário
         if (EditorMaps.Form?.Visible != true || EditorMaps.Form.Selected.Weather.Type == 0 || !EditorMaps.Form.butVisualization.Checked)
         {
-            if (Sound.List != null)
-                if (Sound.List[(byte)Enums.Sound.Rain].Status == SoundStatus.Playing) Sound.StopAll();
+            if (Sound.List[Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
             return;
         }
 
@@ -119,11 +120,11 @@ internal static class TempMap
         // Reproduz o som chuva
         if (weather.Type == Enums.Weather.Raining || weather.Type == Enums.Weather.Thundering)
         {
-            if (Sound.List[(byte)Enums.Sound.Rain].Status != SoundStatus.Playing)
-                Sound.Play(Enums.Sound.Rain);
+            if (Sound.List[Sounds.Rain].Status != SoundStatus.Playing)
+                Sound.Play(Sounds.Rain);
         }
         else
-        if (Sound.List[(byte)Enums.Sound.Rain].Status == SoundStatus.Playing) Sound.StopAll();
+        if (Sound.List[Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
 
         // Contagem da neve
         if (_snowTimer < Environment.TickCount)
@@ -157,8 +158,8 @@ internal static class TempMap
                         switch (weather.Type)
                         {
                             case Enums.Weather.Thundering:
-                            case Enums.Weather.Raining: SetRain(i); break;
-                            case Enums.Weather.Snowing: SetSnow(i); break;
+                            case Enums.Weather.Raining: Weather[i].SetRain(); break;
+                            case Enums.Weather.Snowing: Weather[i].SetSnow(); break;
                         }
                     }
                 }
@@ -171,81 +172,32 @@ internal static class TempMap
                 switch (weather.Type)
                 {
                     case Enums.Weather.Thundering:
-                    case Enums.Weather.Raining: MoveRain(i); break;
-                    case Enums.Weather.Snowing: SnowMove(i, move); break;
+                    case Enums.Weather.Raining: Weather[i].MoveRain(); break;
+                    case Enums.Weather.Snowing: Weather[i].MoveSnow(move); break;
                 }
 
                 // Reseta a partícula
                 if (Weather[i].X > Map.Width * Grid || Weather[i].Y > Map.Height * Grid)
-                    Weather[i] = new MapWeatherParticle();
+                    Weather[i] = new TempMapWeatherParticle();
             }
 
         // Trovoadas
         if (weather.Type == Enums.Weather.Thundering)
-            if (MyRandom.Next(0, (MaxWeatherIntensity * 10) - (weather.Intensity * 2)) == 0)
+            if (MyRandom.Next(0, MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
             {
                 // Som do trovão
-                var thunder = MyRandom.Next((byte)Enums.Sound.Thunder1, (byte)Enums.Sound.Thunder4);
-                Sound.Play((Enums.Sound)thunder);
+                var thunderList = new[]
+                {
+                    Sounds.Thunder1,
+                    Sounds.Thunder2,
+                    Sounds.Thunder3,
+                    Sounds.Thunder4
+                };
+                var thunder = MyRandom.Next(0, thunderList.Length);
+                Sound.Play(thunderList[thunder]);
 
                 // Relâmpago
-                if (thunder < 6) Lightning = 190;
+                if (thunder < 3) Lightning = 190;
             }
-    }
-
-    private static void SetRain(int i)
-    {
-        // Define a velocidade e a posição da partícula
-        Weather[i].Speed = MyRandom.Next(8, 13);
-
-        if (MyRandom.Next(2) == 0)
-        {
-            Weather[i].X = -32;
-            Weather[i].Y = MyRandom.Next(-32, EditorMaps.Form.picMap.Height);
-        }
-        else
-        {
-            Weather[i].X = MyRandom.Next(-32, EditorMaps.Form.picMap.Width);
-            Weather[i].Y = -32;
-        }
-    }
-
-    private static void MoveRain(int i)
-    {
-        // Movimenta a partícula
-        Weather[i].X += Weather[i].Speed;
-        Weather[i].Y += Weather[i].Speed;
-    }
-
-    private static void SetSnow(int i)
-    {
-        // Define a velocidade e a posição da partícula
-        Weather[i].Speed = MyRandom.Next(1, 3);
-        Weather[i].Y = -32;
-        Weather[i].X = MyRandom.Next(-32, EditorMaps.Form.picMap.Width);
-        Weather[i].Start = Weather[i].X;
-        Weather[i].Back = MyRandom.Next(2) != 0;
-    }
-
-    private static void SnowMove(int i, bool move = true)
-    {
-        var difference = MyRandom.Next(0, SnowMovement / 3);
-        var x1 = Weather[i].Start + SnowMovement + difference;
-        var x2 = Weather[i].Start - SnowMovement - difference;
-
-        // Faz com que a partícula volte
-        if (x1 <= Weather[i].X)
-            Weather[i].Back = true;
-        else if (x2 >= Weather[i].X)
-            Weather[i].Back = false;
-
-        // Movimenta a partícula
-        Weather[i].Y += Weather[i].Speed;
-
-        if (move)
-            if (Weather[i].Back)
-                Weather[i].X--;
-            else
-                Weather[i].X++;
     }
 }

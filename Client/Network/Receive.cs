@@ -5,9 +5,13 @@ using System.IO;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.Entities.TempMap;
-using CryBits.Client.Library;
+using CryBits.Client.Framework;
+using CryBits.Client.Framework.Audio;
+using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Library;
 using CryBits.Client.Logic;
 using CryBits.Client.UI;
+using CryBits.Client.UI.Events;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
@@ -19,7 +23,7 @@ using Lidgren.Network;
 using static CryBits.Globals;
 using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
-using Music = CryBits.Client.Media.Audio.Music;
+using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 
 namespace CryBits.Client.Network;
 
@@ -83,12 +87,12 @@ internal static class Receive
     private static void Connect()
     {
         // Reseta os valores
-        Panels.SelectCharacter = 0;
+        PanelsEvents.SelectCharacter = 0;
         Class.List = new Dictionary<Guid, Class>();
 
         // Abre o painel de seleção de personagens
-        Panels.MenuClose();
-        Panels.List["SelectCharacter"].Visible = true;
+        PanelsEvents.MenuClose();
+        Panels.SelectCharacter.Visible = true;
     }
 
     private static void Join(NetBuffer data)
@@ -109,15 +113,15 @@ internal static class Receive
     private static void CreateCharacter()
     {
         // Reseta os valores
-        TextBoxes.List["CreateCharacter_Name"].Text = string.Empty;
-        CheckBoxes.List["GenderMale"].Checked = true;
-        CheckBoxes.List["GenderFemale"].Checked = false;
-        Panels.CreateCharacterClass = 0;
-        Panels.CreateCharacterTex = 0;
+        TextBoxes.CreateCharacterName.Text = string.Empty;
+        CheckBoxes.GenderMale.Checked = true;
+        CheckBoxes.GenderFemale.Checked = false;
+        PanelsEvents.CreateCharacterClass = 0;
+        PanelsEvents.CreateCharacterTex = 0;
 
         // Abre o painel de criação de personagem
-        Panels.MenuClose();
-        Panels.List["CreateCharacter"].Visible = true;
+        PanelsEvents.MenuClose();
+        Panels.CreateCharacter.Visible = true;
     }
 
     private static void Classes(NetBuffer data)
@@ -129,12 +133,12 @@ internal static class Receive
     private static void Characters(NetBuffer data)
     {
         // Redimensiona a lista
-        Panels.Characters = new Panels.TempCharacter[data.ReadByte()];
+        PanelsEvents.Characters = new PanelsEvents.TempCharacter[data.ReadByte()];
 
-        for (byte i = 0; i < Panels.Characters.Length; i++)
+        for (byte i = 0; i < PanelsEvents.Characters.Length; i++)
         {
             // Recebe os dados do personagem
-            Panels.Characters[i] = new Panels.TempCharacter
+            PanelsEvents.Characters[i] = new PanelsEvents.TempCharacter
             {
                 Name = data.ReadString(),
                 TextureNum = data.ReadInt16()
@@ -148,34 +152,34 @@ internal static class Receive
         Chat.Order = new List<Chat.Structure>();
         Chat.LinesFirst = 0;
         Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
-        TextBoxes.List["Chat"].Text = string.Empty;
-        CheckBoxes.List["Options_Sounds"].Checked = Options.Sounds;
-        CheckBoxes.List["Options_Musics"].Checked = Options.Musics;
-        CheckBoxes.List["Options_Chat"].Checked = Options.Chat;
-        CheckBoxes.List["Options_FPS"].Checked = Options.Fps;
-        CheckBoxes.List["Options_Latency"].Checked = Options.Latency;
-        CheckBoxes.List["Options_Trade"].Checked = Options.Trade;
-        CheckBoxes.List["Options_Party"].Checked = Options.Party;
+        TextBoxes.Chat.Text = string.Empty;
+        CheckBoxes.OptionsSounds.Checked = Options.Sounds;
+        CheckBoxes.OptionsMusics.Checked = Options.Musics;
+        CheckBoxes.OptionsChat.Checked = Options.Chat;
+        CheckBoxes.OptionsFps.Checked = Options.Fps;
+        CheckBoxes.OptionsLatency.Checked = Options.Latency;
+        CheckBoxes.OptionsTrade.Checked = Options.Trade;
+        CheckBoxes.OptionsParty.Checked = Options.Party;
         Loop.ChatTimer = Loop.ChatTimer = Environment.TickCount + 10000;
-        Panels.InformationId = Guid.Empty;
+        PanelsEvents.InformationId = Guid.Empty;
 
         // Reseta a interface
-        Panels.List["Menu_Character"].Visible = false;
-        Panels.List["Menu_Inventory"].Visible = false;
-        Panels.List["Menu_Options"].Visible = false;
-        Panels.List["Chat"].Visible = false;
-        Panels.List["Drop"].Visible = false;
-        Panels.List["Party_Invitation"].Visible = false;
-        Panels.List["Trade"].Visible = false;
-        Buttons.List["Trade_Offer_Confirm"].Visible = true;
-        Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = false;
-        Panels.List["Trade_Offer_Disable"].Visible = false;
-        Panels.List["Shop"].Visible = false;
-        Panels.List["Shop_Sell"].Visible = false;
+        Panels.MenuCharacter.Visible = false;
+        Panels.MenuInventory.Visible = false;
+        Panels.MenuOptions.Visible = false;
+        Panels.Chat.Visible = false;
+        Panels.Drop.Visible = false;
+        Panels.PartyInvitation.Visible = false;
+        Panels.Trade.Visible = false;
+        Buttons.TradeOfferConfirm.Visible = true;
+        Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
+        Panels.TradeOfferDisable.Visible = false;
+        Panels.Shop.Visible = false;
+        Panels.ShopSell.Visible = false;
 
         // Abre o jogo
         Music.Stop();
-        Windows.Current = Window.Game;
+        Screen.Current = Screens.Game;
     }
 
     private static void PlayerData(NetBuffer data)
@@ -311,11 +315,11 @@ internal static class Receive
         Player.Me.Points = data.ReadByte();
 
         // Manipula a visibilidade dos botões
-        Buttons.List["Attributes_Strength"].Visible = Player.Me.Points > 0;
-        Buttons.List["Attributes_Resistance"].Visible = Player.Me.Points > 0;
-        Buttons.List["Attributes_Intelligence"].Visible = Player.Me.Points > 0;
-        Buttons.List["Attributes_Agility"].Visible = Player.Me.Points > 0;
-        Buttons.List["Attributes_Vitality"].Visible = Player.Me.Points > 0;
+        Buttons.AttributesStrength.Visible = Player.Me.Points > 0;
+        Buttons.AttributesResistance.Visible = Player.Me.Points > 0;
+        Buttons.AttributesIntelligence.Visible = Player.Me.Points > 0;
+        Buttons.AttributesAgility.Visible = Player.Me.Points > 0;
+        Buttons.AttributesVitality.Visible = Player.Me.Points > 0;
     }
 
     private static void PlayerInventory(NetBuffer data)
@@ -349,7 +353,12 @@ internal static class Receive
         // Verifica se é necessário baixar os dados do mapa
         if (File.Exists(Directories.MapsData.FullName + id + Directories.Format) || CryBits.Entities.Map.Map.List.ContainsKey(id))
         {
-            if (!CryBits.Entities.Map.Map.List.ContainsKey(id)) Read.Map(id);
+            if (!CryBits.Entities.Map.Map.List.ContainsKey(id))
+            {
+                Read.Map(id);
+                TempMap.Current.Weather.Update();
+                TempMap.Current.Data.Update();
+            }
 
             if (CryBits.Entities.Map.Map.List[id].Revision != currentRevision)
                 needed = true;
@@ -383,17 +392,17 @@ internal static class Receive
         Write.Map(map);
 
         // Redimensiona as partículas do clima
-        TempMap.Current.UpdateWeatherType();
+        TempMap.Current.Weather.UpdateType();
         TempMap.Current.Data.Update();
     }
 
     private static void JoinMap()
     {
         // Se tiver, reproduz a música de fundo do mapa
-        if (TempMap.Current.Data.Music > 0)
-            Music.Play((Enums.Music)TempMap.Current.Data.Music);
-        else
+        if (string.IsNullOrEmpty(TempMap.Current.Data.Music))
             Music.Stop();
+        else
+            Music.Play(TempMap.Current.Data.Music);
     }
 
     private static void Latency()
@@ -448,8 +457,8 @@ internal static class Receive
         }
 
         // Abre a janela de convite para o grupo
-        Panels.PartyInvitation = data.ReadString();
-        Panels.List["Party_Invitation"].Visible = true;
+        PanelsEvents.PartyInvitation = data.ReadString();
+        Panels.PartyInvitation.Visible = true;
     }
 
     private static void Trade(NetBuffer data)
@@ -457,14 +466,14 @@ internal static class Receive
         var state = data.ReadBoolean();
 
         // Visibilidade do painel
-        Panels.List["Trade"].Visible = data.ReadBoolean();
+        Panels.Trade.Visible = data.ReadBoolean();
 
         if (state)
         {
             // Reseta os botões
-            Buttons.List["Trade_Offer_Confirm"].Visible = true;
-            Panels.List["Trade_Amount"].Visible = Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = false;
-            Panels.List["Trade_Offer_Disable"].Visible = false;
+            Buttons.TradeOfferConfirm.Visible = true;
+            Panels.TradeAmount.Visible = Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
+            Panels.TradeOfferDisable.Visible = false;
 
             // Limpa os dados
             Player.Me.TradeOffer = new ItemSlot[MaxInventory];
@@ -488,8 +497,8 @@ internal static class Receive
         }
 
         // Abre a janela de convite para o grupo
-        Panels.TradeInvitation = data.ReadString();
-        Panels.List["Trade_Invitation"].Visible = true;
+        PanelsEvents.TradeInvitation = data.ReadString();
+        Panels.TradeInvitation.Visible = true;
     }
 
     private static void TradeState(NetBuffer data)
@@ -498,14 +507,14 @@ internal static class Receive
         {
             case TradeStatus.Accepted:
             case TradeStatus.Declined:
-                Buttons.List["Trade_Offer_Confirm"].Visible = true;
-                Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = false;
-                Panels.List["Trade_Offer_Disable"].Visible = false;
+                Buttons.TradeOfferConfirm.Visible = true;
+                Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
+                Panels.TradeOfferDisable.Visible = false;
                 break;
             case TradeStatus.Confirmed:
-                Buttons.List["Trade_Offer_Confirm"].Visible = false;
-                Buttons.List["Trade_Offer_Accept"].Visible = Buttons.List["Trade_Offer_Decline"].Visible = true;
-                Panels.List["Trade_Offer_Disable"].Visible = false;
+                Buttons.TradeOfferConfirm.Visible = false;
+                Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = true;
+                Panels.TradeOfferDisable.Visible = false;
                 break;
         }
     }
@@ -536,8 +545,8 @@ internal static class Receive
     private static void ShopOpen(NetBuffer data)
     {
         // Abre a loja
-        Panels.ShopOpen = Shop.List.Get(new Guid(data.ReadString()));
-        Panels.List["Shop"].Visible = Panels.ShopOpen != null;
+        PanelsEvents.ShopOpen = Shop.List.Get(new Guid(data.ReadString()));
+        Panels.Shop.Visible = PanelsEvents.ShopOpen != null;
     }
 
     private static void Npcs(NetBuffer data)

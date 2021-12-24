@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using CryBits.Editors.Library;
+using CryBits.Client.Framework;
 using CryBits.Editors.Network;
 using DarkUI.Forms;
-using static CryBits.Editors.Logic.Options;
 
 namespace CryBits.Editors.Forms;
 
@@ -15,8 +14,8 @@ internal partial class Login : DarkForm
     public Login()
     {
         InitializeComponent();
-        txtUsername.Text =  Username;
-        chkUsername.Checked =  Username != string.Empty;
+        txtUsername.Text =  Options.Username;
+        chkUsername.Checked = Options.Username != string.Empty;
     }
 
     private void butConnect_Click(object sender, EventArgs e)
@@ -37,8 +36,8 @@ internal partial class Login : DarkForm
         Send.Connect();
 
         // Salva o nome do usuário
-        Username = chkUsername.Checked ? txtUsername.Text : string.Empty;
-        Write.Options();
+        Options.Username = chkUsername.Checked ? txtUsername.Text : string.Empty;
+        Client.Framework.Library.Write.Options();
     }
 
     private void Login_FormClosing(object sender, FormClosingEventArgs e)

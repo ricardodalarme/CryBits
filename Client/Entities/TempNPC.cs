@@ -5,8 +5,7 @@ namespace CryBits.Client.Entities;
 
 internal class TempNpc : Character
 {
-    // Indice
-    public Npc Data;
+    public Npc Data { get; set; }
 
     public void Logic()
     {

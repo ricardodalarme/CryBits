@@ -3,10 +3,11 @@ using System.Threading;
 using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.Entities.TempMap;
-using CryBits.Client.Media.Graphics;
+using CryBits.Client.Framework.Constants;
+using CryBits.Client.Graphics;
 using CryBits.Client.Network;
-using CryBits.Client.UI;
-using CryBits.Enums;
+using CryBits.Client.UI.Events;
+using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 
 namespace CryBits.Client.Logic;
 
@@ -39,7 +40,7 @@ internal static class Loop
             // Eventos
             TextBox();
 
-            if (Windows.Current == Window.Game)
+            if (Screen.Current == Screens.Game)
             {
                 TempMap.Current.Logic();
                 if (timer30 < Environment.TickCount)
@@ -58,7 +59,7 @@ internal static class Loop
                 }
 
                 // Verifica se é necessário mostrar o painel de informações
-                Panels.CheckInformation();
+                PanelsEvents.CheckInformation();
             }
 
             // Faz com que a aplicação se mantenha estável
@@ -87,10 +88,10 @@ internal static class Loop
         if (TextBoxTimer < Environment.TickCount)
         {
             TextBoxTimer = Environment.TickCount + 500;
-            TextBoxes.Signal = !TextBoxes.Signal;
+            TextBoxesEvents.Signal = !TextBoxesEvents.Signal;
 
             // Se necessário foca o digitalizador de novo
-            TextBoxes.Focus();
+            Framework.Interfacily.Components.TextBox.Focus();
         }
     }
 }

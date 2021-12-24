@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Entities;
-using CryBits.Editors.Media.Graphics;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using static CryBits.Globals;
@@ -125,10 +125,10 @@ internal class MapProperties
     }
 
     [Category("Misc")][DefaultValue(0)]
-    public Music Music
+    public string Music
     {
-        get => (Music)Base.Music;
-        set => Base.Music = (byte)value;
+        get => Base.Music;
+        set => Base.Music = value;
     }
 
     [Category("Misc")][DefaultValue(0)]

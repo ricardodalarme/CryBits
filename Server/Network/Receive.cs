@@ -199,7 +199,7 @@ internal static class Receive
             Send.Alert(account, "The character name must contain between " + MinNameLength + " and " + MaxNameLength + " characters.", false);
             return;
         }
-        if (name.Contains(";") || name.Contains(":"))
+        if (name.Contains(';') || name.Contains(':'))
         {
             Send.Alert(account, "Can't contain ';' and ':' in the character name.", false);
             return;

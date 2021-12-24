@@ -54,7 +54,7 @@ internal static class Socket
                     {
                         // Apaga os dados e volta ao menu
                         if (Player.Me != null) Player.Me.Leave();
-                        Windows.OpenMenu();
+                        Window.OpenMenu();
                     }
                     break;
             }

@@ -12,7 +12,7 @@ public class Npc : Entity
     public static Dictionary<Guid, Npc> List = new();
 
     // Dados
-    public string SayMsg { get; set; }
+    public string SayMsg { get; set; } = string.Empty;
     public short Texture { get; set; }
     public Behaviour Behaviour { get; set; }
     public byte SpawnTime { get; set; }

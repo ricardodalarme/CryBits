@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using CryBits.Entities.Tile;
-using CryBits.Editors.Library;
-using CryBits.Editors.Media.Graphics;
+using CryBits.Client.Framework.Entities.Tile;
+using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Library;
+using CryBits.Editors.Graphics;
 using CryBits.Enums;
 using DarkUI.Forms;
 using SFML.Graphics;
@@ -44,8 +45,8 @@ internal partial class EditorTiles : DarkForm
 
     private void Update_Bounds()
     {
-        var x = (Textures.Tiles[scrlTile.Value].ToSize().Width / Grid) - (picTile.Width / Grid);
-        var y = (Textures.Tiles[scrlTile.Value].ToSize().Height / Grid) - (picTile.Height / Grid);
+        var x = Textures.Tiles[scrlTile.Value].ToSize().Width / Grid - picTile.Width / Grid;
+        var y = Textures.Tiles[scrlTile.Value].ToSize().Height / Grid - picTile.Height / Grid;
 
         // Verifica se nada passou do limite minímo
         if (x < 0) x = 0;
@@ -87,8 +88,8 @@ internal partial class EditorTiles : DarkForm
 
     private void picTile_MouseDown(object sender, MouseEventArgs e)
     {
-        var position = new Point((e.X + (scrlTileX.Value * Grid)) / Grid, (e.Y + (scrlTileY.Value * Grid)) / Grid);
-        var tileDif = new Point(e.X - (e.X / Grid * Grid), e.Y - (e.Y / Grid * Grid));
+        var position = new Point((e.X + scrlTileX.Value * Grid) / Grid, (e.Y + scrlTileY.Value * Grid) / Grid);
+        var tileDif = new Point(e.X - e.X / Grid * Grid, e.Y - e.Y / Grid * Grid);
 
         // Previne erros
         if (position.X > Tile.List[scrlTile.Value].Data.GetUpperBound(0)) return;

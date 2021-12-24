@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
-using CryBits.Client.Library;
+using CryBits.Client.Framework.Audio;
+using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Library;
+using CryBits.Client.Graphics;
 using CryBits.Client.Logic;
-using CryBits.Client.Media.Audio;
-using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.UI;
+using CryBits.Client.UI.Events;
 
 namespace CryBits.Client;
 
@@ -21,10 +23,18 @@ internal static class Program
         Directories.Create();
 
         // Carrega todos os dados
-        Read.Data();
+        Read.Tools();
+        Read.Options();
+
+        // Adiciona os eventos aos componentes
+        CheckBoxEvents.Bind();
+        ButtonsEvents.Bind();
+        PanelsEvents.Bind();
+        TextBoxesEvents.Bind();
+        Window.Bind();
 
         // Abre a janela
-        Windows.OpenMenu();
+        Window.OpenMenu();
 
         // Inicializa todos os dispositivos
         Socket.Init();

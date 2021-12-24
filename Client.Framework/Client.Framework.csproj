@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\Build\Client.Framework\</OutputPath>
+    <RootNamespace>CryBits.Client.Framework</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SFML.Audio" Version="2.5.0" />
+    <PackageReference Include="SFML.Graphics" Version="2.5.0" />
+    <PackageReference Include="SFML.Window" Version="2.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Audio\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+  </ItemGroup>
+</Project>

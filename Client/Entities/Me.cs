@@ -1,7 +1,8 @@
 ﻿using System;
-using CryBits.Client.Media.Graphics;
+using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Graphics;
 using CryBits.Client.Network;
-using CryBits.Client.UI;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using SFML.Window;
@@ -91,8 +92,8 @@ internal class Me : Player
         // Somente se estiver pressionando a tecla de ataque e não estiver atacando
         if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Renders.RenderWindow.HasFocus()) return;
         if (AttackTimer > 0) return;
-        if (Panels.List["Trade"].Visible) return;
-        if (Panels.List["Shop"].Visible) return;
+        if (Panels.Trade.Visible) return;
+        if (Panels.Shop.Visible) return;
 
         // Envia os dados para o servidor
         AttackTimer = Environment.TickCount;
@@ -104,7 +105,7 @@ internal class Me : Player
         bool hasItem = false, hasSlot = false;
 
         // Previne erros
-        if (TextBoxes.Focused != null) return;
+        if (TextBox.Focused != null) return;
 
         // Verifica se tem algum item nas coordenadas 
         for (byte i = 0; i < TempMap.TempMap.Current.Item.Length; i++)

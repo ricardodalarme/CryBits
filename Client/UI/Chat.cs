@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Logic;
-using CryBits.Client.Media.Graphics;
 using CryBits.Client.Network;
 using CryBits.Enums;
 using SFML.Graphics;
-using static CryBits.Client.Logic.Utils;
+using static CryBits.Client.Utils.TextUtils;
 
 namespace CryBits.Client.UI;
 
@@ -47,7 +49,7 @@ internal static class Chat
 
     public static void AddText(string message, Color color)
     {
-        int boxWidth = Textures.Panels[Panels.List["Chat"].TextureNum].ToSize().Width - 16;
+        var boxWidth = Textures.Panels[Panels.Chat.TextureNum].ToSize().Width - 16;
 
         // Remove os espaços
         message = message.Trim();
@@ -73,8 +75,8 @@ internal static class Chat
 
     public static void Type()
     {
-        var tool = TextBoxes.List["Chat"];
-        var panel = Panels.List["Chat"];
+        var tool = TextBoxes.Chat;
+        var panel = Panels.Chat;
 
         // Altera a visiblidade da caixa
         panel.Visible = !panel.Visible;
@@ -83,11 +85,11 @@ internal static class Chat
         if (panel.Visible)
         {
             Loop.ChatTimer = Environment.TickCount + SleepTimer;
-            TextBoxes.Focused = Tools.Get(tool);
+            TextBox.Focused = tool;
             return;
         }
 
-        TextBoxes.Focused = null;
+        TextBox.Focused = null;
 
         // Dados
         var message = tool.Text;

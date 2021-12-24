@@ -21,7 +21,7 @@ public class Map : Entity
     public IList<MapLayer> Layer { get; set; } = new List<MapLayer>();
     public MapAttribute[,] Attribute { get; set; } = new MapAttribute[Width, Height];
     public byte Panorama { get; set; }
-    public byte Music { get; set; }
+    public string Music { get; set; }
     public Color Color { get; set; } = Color.FromArgb(-1);
     public MapWeather Weather { get; set; } = new();
     public MapFog Fog { get; set; } = new();
@@ -33,7 +33,7 @@ public class Map : Entity
     public Map()
     {
         Name = "New map";
-        Layer.Add(new MapLayer { Name = "Ground" });
+        Layer.Add(new MapLayer ("Ground"));
 
         for (byte x = 0; x < Width; x++)
         for (byte y = 0; y < Height; y++)
