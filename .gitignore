@@ -332,3 +332,4 @@ ASALocalRun/
 
 # Dev things
 Dev/
+*.cd
