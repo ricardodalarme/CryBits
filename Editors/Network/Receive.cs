@@ -8,8 +8,8 @@ using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
 using Lidgren.Network;
+using static CryBits.Extensions.NetworkExtensions;
 using static CryBits.Globals;
-using static CryBits.Utils;
 
 namespace CryBits.Editors.Network;
 
@@ -64,16 +64,17 @@ internal static class Receive
     private static void Classes(NetBuffer data)
     {
         // Recebe os dados
-        Class.List = (Dictionary<Guid, Class>)ByteArrayToObject(data);
+        Class.List = (Dictionary<Guid, Class>)data.ReadObject();
     }
 
     private static void Map(NetBuffer data)
     {
-        var map = (Map)ByteArrayToObject(data);
+        var map = (Map)data.ReadObject();
         var id = map.Id;
 
         // Obtém o dado
-        if (CryBits.Entities.Map.Map.List.ContainsKey(id)) CryBits.Entities.Map.Map.List[id] = map;
+        if (CryBits.Entities.Map.Map.List.ContainsKey(id)) 
+            CryBits.Entities.Map.Map.List[id] = map;
         else
             CryBits.Entities.Map.Map.List.Add(id, map);
     }
@@ -81,18 +82,18 @@ internal static class Receive
     private static void Npcs(NetBuffer data)
     {
         // Recebe os dados
-        Npc.List = (Dictionary<Guid, Npc>)ByteArrayToObject(data);
+        Npc.List = (Dictionary<Guid, Npc>)data.ReadObject();
     }
 
     private static void Items(NetBuffer data)
     {
         // Recebe os dados
-        Item.List = (Dictionary<Guid, Item>)ByteArrayToObject(data);
+        Item.List = (Dictionary<Guid, Item>)data.ReadObject();
     }
 
     private static void Shops(NetBuffer data)
     {
         // Recebe os dados
-        Shop.List = (Dictionary<Guid, Shop>)ByteArrayToObject(data);
+        Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();
     }
 }

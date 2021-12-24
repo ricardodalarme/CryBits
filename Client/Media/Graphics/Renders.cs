@@ -10,6 +10,7 @@ using CryBits.Client.UI;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Enums;
+using CryBits.Extensions;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;

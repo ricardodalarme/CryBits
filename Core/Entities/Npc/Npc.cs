@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CryBits.Enums;
+using CryBits.Extensions;
 
 namespace CryBits.Entities.Npc;
 

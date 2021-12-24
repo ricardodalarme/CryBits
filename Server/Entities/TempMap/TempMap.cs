@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Enums;
+using CryBits.Extensions;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using static CryBits.Utils;

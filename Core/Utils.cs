@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using CryBits.Entities;
 using CryBits.Enums;
-using Lidgren.Network;
 
 namespace CryBits;
 
@@ -36,32 +31,5 @@ public static class Utils
             case Direction.Right: x++; break;
             case Direction.Left: x--; break;
         }
-    }
-
-    // Obtém o ID de alguma entidade, caso ela não existir retorna um ID zerado
-    public static Guid GetId(this Entity @object) => @object?.Id ?? Guid.Empty;
-
-    // Obtém o dado, caso ele não existir retorna nulo
-    public static TV Get<TGuid, TV>(this Dictionary<TGuid, TV> dict, TGuid key) => dict.ContainsKey(key) ? dict[key] : default;
-
-    public static void Write(this NetBuffer buffer, Guid id) => buffer.Write(id.ToString());
-    public static void Write(this BinaryWriter buffer, Guid id) => buffer.Write(id.ToString());
-
-    public static void ObjectToByteArray(NetOutgoingMessage data, object obj)
-    {
-        var bf = new BinaryFormatter();
-        using var stream = new MemoryStream();
-        bf.Serialize(stream, obj);
-        data.Write(stream.ToArray().Length);
-        data.Write(stream.ToArray());
-    }
-
-    public static object ByteArrayToObject(NetBuffer data)
-    {
-        var size = data.ReadInt32();
-        var array = data.ReadBytes(size);
-
-        using var stream = new MemoryStream(array);
-        return new BinaryFormatter().Deserialize(stream);
     }
 }

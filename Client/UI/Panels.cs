@@ -5,6 +5,7 @@ using CryBits.Client.Entities;
 using CryBits.Client.Network;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
+using CryBits.Extensions;
 using SFML.Window;
 using static CryBits.Client.Logic.Utils;
 

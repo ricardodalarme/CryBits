@@ -4,11 +4,11 @@ using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
+using CryBits.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using Lidgren.Network;
 using static CryBits.Globals;
-using static CryBits.Utils;
 
 namespace CryBits.Server.Network;
 
@@ -127,7 +127,7 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ServerPacket.Classes);
-        ObjectToByteArray(data, Class.List);
+        data.WriteObject(Class.List);
         ToPlayer(account, data);
     }
 
@@ -311,7 +311,7 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ServerPacket.Map);
-        ObjectToByteArray(data, map);
+        data.WriteObject(map);
         ToPlayer(account, data);
     }
 
@@ -393,7 +393,7 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ServerPacket.Items);
-        ObjectToByteArray(data, Item.List);
+        data.WriteObject(Item.List);
         ToPlayer(account, data);
     }
 
@@ -467,7 +467,7 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ServerPacket.Npcs);
-        ObjectToByteArray(data, Npc.List);
+        data.WriteObject(Npc.List);
         ToPlayer(account, data);
     }
 
@@ -656,7 +656,7 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ServerPacket.Shops);
-        ObjectToByteArray(data, Shop.List);
+        data.WriteObject(Shop.List);
         ToPlayer(account, data);
     }
 

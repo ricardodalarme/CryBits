@@ -12,6 +12,7 @@ using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Tile;
 using CryBits.Enums;
+using CryBits.Extensions;
 using DarkUI.Forms;
 using SFML.Graphics;
 using static CryBits.Globals;

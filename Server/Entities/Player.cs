@@ -6,6 +6,7 @@ using CryBits.Entities;
 using CryBits.Entities.Shop;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
+using CryBits.Extensions;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
 using CryBits.Server.Logic;

@@ -8,6 +8,7 @@ using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
+using CryBits.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using static CryBits.Globals;

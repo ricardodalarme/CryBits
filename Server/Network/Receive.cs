@@ -8,12 +8,12 @@ using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
+using CryBits.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
 using Lidgren.Network;
 using static CryBits.Globals;
-using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Server.Network;
@@ -501,7 +501,7 @@ internal static class Receive
         }
 
         // Recebe e salva os novos dados
-        Class.List = (Dictionary<Guid, Class>)ByteArrayToObject(data);
+        Class.List = (Dictionary<Guid, Class>)data.ReadObject();
         Write.Classes();
 
         // Envia os novos dados para todos jogadores conectados
@@ -520,7 +520,7 @@ internal static class Receive
         }
 
         // Recebe e salva os novos dados
-        Map.List = (Dictionary<Guid, Map>)ByteArrayToObject(data);
+        Map.List = (Dictionary<Guid, Map>)data.ReadObject();
         Write.Maps();
 
         // Envia os novos dados para todos jogadores 
@@ -547,7 +547,7 @@ internal static class Receive
         }
 
         // Recebe e salva os novos dados
-        Npc.List = (Dictionary<Guid, Npc>)ByteArrayToObject(data);
+        Npc.List = (Dictionary<Guid, Npc>)data.ReadObject();
         Write.Npcs();
 
         // Envia os novos dados para todos jogadores conectados
@@ -566,7 +566,7 @@ internal static class Receive
         }
 
         // Recebe e salva os novos dados
-        Item.List = (Dictionary<Guid, Item>)ByteArrayToObject(data);
+        Item.List = (Dictionary<Guid, Item>)data.ReadObject();
         Write.Items();
 
         // Envia os novos dados para todos jogadores conectados
@@ -585,7 +585,7 @@ internal static class Receive
         }
 
         // Recebe e salva os novos dados
-        Shop.List = (Dictionary<Guid, Shop>)ByteArrayToObject(data);
+        Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();
         Write.Shops();
 
         // Envia os novos dados para todos jogadores conectados

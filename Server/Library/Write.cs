@@ -5,6 +5,7 @@ using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
+using CryBits.Extensions;
 using CryBits.Server.Entities;
 using static CryBits.Globals;
 
