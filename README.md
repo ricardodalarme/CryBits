@@ -16,8 +16,8 @@ CryBits is a project developed with the aim of helping indie developers to creat
 
 | Name  | Status |
 |:---|--------|
-| [Master (Stable)](https://github.com/ricardodalarme/CryBits) | [![Build Status](https://github.com/ricardodalarme/CryBits/workflows/Master/badge.svg)](https://github.com/ricardodalarme/CryBits/actions) |
-| [Development (Nightly)](https://github.com/ricardodalarme/CryBits/tree/Development) | [![Build Status](https://github.com/ricardodalarme/CryBits/workflows/Development/badge.svg)](https://github.com/ricardodalarme/CryBits/actions) |
+| [Main (Nightly)](https://github.com/ricardodalarme/CryBits) | [![Build Status](https://github.com/ricardodalarme/CryBits/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/ricardodalarme/CryBits/actions/workflows/build.yml) |
+| [Stable](https://github.com/ricardodalarme/CryBits/tree/stable) | [![Build](https://github.com/ricardodalarme/CryBits/actions/workflows/build.yml/badge.svg?branch=stable)](https://github.com/ricardodalarme/CryBits/actions/workflows/build.yml) |
 
 ## Contributing
 Pull requests are very welcome. You can check the project [roadmap page](https://github.com/ricardodalarme/CryBits/projects/) to check the planned resources to try to implement them. For other changes, please open an issue first to discuss what you would like to change. Bug fixes are always welcome too.
