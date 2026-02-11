@@ -38,8 +38,8 @@ public static class Textures
         var tempTex = new List<Texture> { null };
 
         // Carrega todas do diretório e as adiciona a lista
-        while (File.Exists(directory + i + Format))
-            tempTex.Add(new Texture(directory + i++ + Format));
+        while (File.Exists(Path.Combine(directory, i + Format)))
+            tempTex.Add(new Texture(Path.Combine(directory, i++ + Format)));
 
         // Retorna o cache da textura
         return tempTex;

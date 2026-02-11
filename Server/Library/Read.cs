@@ -62,7 +62,7 @@ internal static class Read
 
     public static void Account(Account account, string name)
     {
-        var file = new FileInfo(Directories.Accounts.FullName + name + "\\Data" + Directories.Format);
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, name, "Data") + Directories.Format);
 
         // Carrega os dados da conta
         using var data = new BinaryReader(file.OpenRead());
@@ -73,7 +73,7 @@ internal static class Read
 
     public static void Characters(Account account)
     {
-        var directory = new DirectoryInfo(Directories.Accounts.FullName + account.User + "\\Characters");
+        var directory = new DirectoryInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Characters"));
 
         // Previne erros
         if (!directory.Exists) directory.Create();
@@ -94,7 +94,7 @@ internal static class Read
 
     public static void Character(Account account, string name)
     {
-        var file = new FileInfo(Directories.Accounts.FullName + account.User + "\\Characters\\" + name + Directories.Format);
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", name) + Directories.Format);
 
         // Verifica se o diretório existe
         if (!file.Directory.Exists) return;

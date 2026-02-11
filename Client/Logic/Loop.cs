@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Windows.Forms;
 using CryBits.Client.Entities;
 using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework.Constants;
@@ -63,7 +62,7 @@ internal static class Loop
             }
 
             // Faz com que a aplicação se mantenha estável
-            Application.DoEvents();
+            Thread.Yield();
             Thread.Sleep(1);
 
             // Cálcula o FPS

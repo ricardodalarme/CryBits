@@ -1,15 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup>
     <ProjectGuid>{F0180377-345C-415C-8846-637E6D7D2CBE}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
     <RootNamespace>CryBits.Client</RootNamespace>
     <AssemblyName>Client</AssemblyName>
   </PropertyGroup>
@@ -21,7 +19,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\Build\Client and Editors\</OutputPath>
+    <OutputPath>../Build/Client and Editors/</OutputPath>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <ErrorReport>none</ErrorReport>
     <DebugType>embedded</DebugType>
@@ -35,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client.Framework\Client.Framework.csproj" />
-    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="../Client.Framework/Client.Framework.csproj" />
+    <ProjectReference Include="../Core/Core.csproj" />
   </ItemGroup>
 </Project>

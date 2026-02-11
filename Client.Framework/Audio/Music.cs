@@ -12,7 +12,7 @@ public static class Music
 
     public static void Play(string music, bool loop = false)
     {
-        var directory = Directories.Musics.FullName + music;
+        var directory = Path.Combine(Directories.Musics.FullName, music);
 
         // Apenas se necessário
         if (Device != null) return;

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Windows.Forms;
+using CryBits.Client.Utils;
 using CryBits.Client.Entities;
 using CryBits.Client.UI;
 using Lidgren.Network;
@@ -82,7 +82,7 @@ internal static class Socket
         // Retorna uma mensagem caso não conseguir se conectar
         if (!IsConnected())
         {
-            MessageBox.Show(@"The server is currently unavailable.");
+            Alert.Show("The server is currently unavailable.");
             return false;
         }
 

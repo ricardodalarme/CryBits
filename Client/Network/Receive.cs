@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
+using CryBits.Client.Utils;
 using CryBits.Client.Entities;
 using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework;
@@ -81,7 +81,7 @@ internal static class Receive
     private static void Alert(NetBuffer data)
     {
         // Mostra a mensagem
-        MessageBox.Show(data.ReadString());
+        Utils.Alert.Show(data.ReadString());
     }
 
     private static void Connect()

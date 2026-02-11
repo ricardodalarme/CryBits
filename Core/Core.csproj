@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Build\Core\</OutputPath>
+    <OutputPath>../Build/Core/</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>none</ErrorReport>

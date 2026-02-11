@@ -139,7 +139,7 @@ public static class Read
 
     private static void Tile(byte index)
     {
-        var file = new FileInfo(Directories.Tiles.FullName + index + Directories.Format);
+        var file = new FileInfo(Path.Combine(Directories.Tiles.FullName, index.ToString()) + Directories.Format);
 
         // Evita erros
         if (!file.Exists)
@@ -157,7 +157,7 @@ public static class Read
 
     public static void Map(Guid id)
     {
-        var file = new FileInfo(Directories.MapsData.FullName + id + Directories.Format);
+        var file = new FileInfo(Path.Combine(Directories.MapsData.FullName, id.ToString()) + Directories.Format);
 
         // Lê os dados
         using var stream = file.OpenRead();

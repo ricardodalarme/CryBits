@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using System.Windows.Forms;
+using CryBits.Client.Utils;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Library;
@@ -128,7 +128,7 @@ internal static class ButtonsEvents
         // Regras de segurança
         if (TextBoxes.RegisterPassword.Text != TextBoxes.RegisterPassword2.Text)
         {
-            MessageBox.Show(@"The password don't match.");
+            Alert.Show("The password don't match.");
             return;
         }
 
@@ -297,7 +297,7 @@ internal static class ButtonsEvents
         // Verifica se o valor digitado é válidp
         if (!short.TryParse(TextBoxes.DropAmount.Text, out var amount) || amount <= 0)
         {
-            MessageBox.Show(@"Enter a valid value!");
+            Alert.Show("Enter a valid value!");
             return;
         }
 
@@ -382,7 +382,7 @@ internal static class ButtonsEvents
         // Verifica se o valor digitado é válido
         if (!short.TryParse(TextBoxes.TradeAmount.Text, out var amount) || amount <= 0)
         {
-            MessageBox.Show(@"Enter a valid value!");
+            Alert.Show("Enter a valid value!");
             return;
         }
 
@@ -409,7 +409,7 @@ internal static class ButtonsEvents
         // Verifica se o valor digitado é válido
         if (!short.TryParse(TextBoxes.ShopSellAmount.Text, out var amount) || amount <= 0)
         {
-            MessageBox.Show(@"Enter a valid value!");
+            Alert.Show("Enter a valid value!");
             return;
         }
 

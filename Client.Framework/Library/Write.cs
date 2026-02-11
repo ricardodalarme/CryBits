@@ -77,14 +77,14 @@ public static class Write
     public static void Tile(byte index)
     {
         // Escreve os dados
-        using var stream = new FileInfo(Directories.Tiles.FullName + index + Directories.Format).OpenWrite();
+        using var stream = new FileInfo(Path.Combine(Directories.Tiles.FullName, index.ToString()) + Directories.Format).OpenWrite();
         new BinaryFormatter().Serialize(stream, Entities.Tile.Tile.List[index]);
     }
 
     public static void Map(Map map)
     {
         // Escreve os dados
-        using var stream = new FileInfo(Directories.MapsData.FullName + map.Id + Directories.Format).OpenWrite();
+        using var stream = new FileInfo(Path.Combine(Directories.MapsData.FullName, map.Id.ToString()) + Directories.Format).OpenWrite();
         new BinaryFormatter().Serialize(stream, map);
     }
 }

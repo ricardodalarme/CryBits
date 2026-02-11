@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Threading;
 using CryBits.Entities.Map;
 using CryBits.Enums;
@@ -16,12 +15,6 @@ internal static class Program
     // Usado para manter a aplicação aberta
     public static bool Working = true;
 
-    // Usado pra detectar quando o console é fechado
-    [DllImport("Kernel32")]
-    private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
-    private delegate bool EventHandler();
-    private static EventHandler _handler;
-
     [STAThread]
     private static void Main()
     {
@@ -30,9 +23,9 @@ internal static class Program
         Logo();
         Console.WriteLine("[Starting]");
 
-        // Evento de saída do console
-        _handler += Exit;
-        SetConsoleCtrlHandler(_handler, true);
+        // Eventos de saída do console (cross-platform)
+        Console.CancelKeyPress += OnCancelKeyPress;
+        AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
         // Verifica se todos os diretórios existem, se não existirem então criá-los
         Directories.Create();
@@ -58,17 +51,34 @@ internal static class Program
         Loop.Main();
     }
 
-    private static bool Exit()
+    private static void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e)
+    {
+        // Previne o encerramento imediato para permitir cleanup
+        e.Cancel = true;
+        Working = false;
+        
+        Console.WriteLine("\r\n[Shutting down...]");
+        PerformShutdown();
+        
+        // Força a saída do processo após cleanup
+        Environment.Exit(0);
+    }
+
+    private static void OnProcessExit(object sender, EventArgs e)
+    {
+        // Chamado quando o processo está sendo encerrado
+        PerformShutdown();
+    }
+
+    private static void PerformShutdown()
     {
         // Salva os dados de todos os jogadores
         for (byte i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
                 Write.Character(Account.List[i]);
 
-        // Fecha o servidores
+        // Fecha o servidor
         Socket.Device.Shutdown("Server was shut down.");
-        Thread.Sleep(200);
-        return true;
     }
 
     private static void Logo()

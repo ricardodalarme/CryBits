@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <UseWindowsForms>false</UseWindowsForms>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
@@ -15,7 +14,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\Build\Server\</OutputPath>
+    <OutputPath>../Build/Server/</OutputPath>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <ErrorReport>none</ErrorReport>
     <DebugType>embedded</DebugType>

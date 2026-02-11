@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Library;
@@ -54,9 +53,10 @@ internal static class Program
 
         // Espera até que o jogador seja desconectado
         while (Socket.IsConnected() && Environment.TickCount <= waitTimer + 1000)
-            Application.DoEvents();
+            Socket.HandleData();
 
         // Fecha a aplicação
-        Application.Exit();
+        Working = false;
+        Environment.Exit(0);
     }
 }

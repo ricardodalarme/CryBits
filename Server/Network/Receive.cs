@@ -90,7 +90,7 @@ internal static class Receive
         var editor = data.ReadBoolean();
 
         // Verifica se está tudo certo
-        if (!Directory.Exists(Directories.Accounts.FullName + user))
+        if (!Directory.Exists(Path.Combine(Directories.Accounts.FullName, user)))
         {
             Send.Alert(account, "This username isn't registered.");
             return;
@@ -170,7 +170,7 @@ internal static class Receive
             Send.Alert(account, "The password must contain between " + MinNameLength + " and " + MaxNameLength + " characters.");
             return;
         }
-        if (File.Exists(Directories.Accounts.FullName + user + Directories.Format))
+        if (File.Exists(Path.Combine(Directories.Accounts.FullName, user) + Directories.Format))
         {
             Send.Alert(account, "There is already someone registered with this name.");
             return;
@@ -277,7 +277,7 @@ internal static class Receive
         Send.Alert(account, "The character '" + name + "' has been deleted.", false);
         Write.CharactersName(Read.CharactersName().Replace(":;" + name + ":", ":"));
         account.Characters.RemoveAt(character);
-        File.Delete(Directories.Accounts.FullName + account.User + "\\Characters\\" + name + Directories.Format);
+        File.Delete(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", name) + Directories.Format);
 
         // Salva o personagem
         Send.Characters(account);

@@ -33,7 +33,7 @@ internal static class Write
 
     public static void Account(Account account)
     {
-        var file = new FileInfo(Directories.Accounts.FullName + account.User + "\\Data" + Directories.Format);
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Data") + Directories.Format);
 
         // Evita erros
         if (!file.Directory.Exists) file.Directory.Create();
@@ -47,7 +47,7 @@ internal static class Write
 
     public static void Character(Account account)
     {
-        var file = new FileInfo(Directories.Accounts.FullName + account.User + "\\Characters\\" + account.Character.Name + Directories.Format);
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", account.Character.Name) + Directories.Format);
 
         // Evita erros
         if (!file.Directory.Exists) file.Directory.Create();
@@ -104,7 +104,7 @@ internal static class Write
     public static void Class(Class @class)
     {
         // Escreve os dados
-        using var stream = new FileInfo(Directories.Classes.FullName + @class.Id + Directories.Format).OpenWrite();
+        using var stream = new FileInfo(Path.Combine(Directories.Classes.FullName, @class.Id.ToString()) + Directories.Format).OpenWrite();
         new BinaryFormatter().Serialize(stream, @class);
     }
 
@@ -112,7 +112,7 @@ internal static class Write
     {
         // Escreve os dados
         foreach (var npc in Npc.List.Values)
-            using (var stream = new FileInfo(Directories.Npcs.FullName + npc.Id + Directories.Format).OpenWrite())
+            using (var stream = new FileInfo(Path.Combine(Directories.Npcs.FullName, npc.Id.ToString()) + Directories.Format).OpenWrite())
                 new BinaryFormatter().Serialize(stream, npc);
     }
 
@@ -120,7 +120,7 @@ internal static class Write
     {
         // Escreve os dados
         foreach (var item in Item.List.Values)
-            using (var stream = new FileInfo(Directories.Items.FullName + item.Id + Directories.Format).OpenWrite())
+            using (var stream = new FileInfo(Path.Combine(Directories.Items.FullName, item.Id.ToString()) + Directories.Format).OpenWrite())
                 new BinaryFormatter().Serialize(stream, item);
     }
     public static void Maps()
@@ -133,7 +133,7 @@ internal static class Write
     public static void Map(Map map)
     {
         // Escreve os dados
-        using var stream = new FileInfo(Directories.Maps.FullName + map.Id + Directories.Format).OpenWrite();
+        using var stream = new FileInfo(Path.Combine(Directories.Maps.FullName, map.Id.ToString()) + Directories.Format).OpenWrite();
         new BinaryFormatter().Serialize(stream, map);
     }
 
@@ -141,7 +141,7 @@ internal static class Write
     {
         // Escreve os dados
         foreach (var shop in Shop.List.Values)
-            using (var stream = new FileInfo(Directories.Shops.FullName + shop.Id + Directories.Format).OpenWrite())
+            using (var stream = new FileInfo(Path.Combine(Directories.Shops.FullName, shop.Id.ToString()) + Directories.Format).OpenWrite())
                 new BinaryFormatter().Serialize(stream, shop);
     }
 }
