@@ -845,12 +845,12 @@ internal static class Renders
     private static void MapFog()
     {
         var data = TempMap.Current.Data.Fog;
-        var textureSize = Textures.Fogs[data.Texture].ToSize();
-
+        
         // Previne erros
         if (data.Texture <= 0) return;
 
         // Desenha a fumaça
+        var textureSize = Textures.Fogs[data.Texture].ToSize();
         for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
             for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
                 Render(Textures.Fogs[data.Texture], new Point(x * textureSize.Width + TempMap.Current.Fog.X, y * textureSize.Height + TempMap.Current.Fog.Y), new Color(255, 255, 255, data.Alpha));

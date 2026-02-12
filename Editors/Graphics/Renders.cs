@@ -526,7 +526,7 @@ internal static class Renders
     private static void EditorNpc()
     {
         // Somente se necessário
-        if (WinNpc == null) return;
+        if (WinNpc == null || EditorNpcs.Form.numTexture.Value == 0) return;
 
         // Desenha o NPC
         Character(WinNpc, (short)EditorNpcs.Form.numTexture.Value);

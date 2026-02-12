@@ -334,8 +334,7 @@ internal static class Receive
         // Define os dados
         for (byte i = 0; i < MaxHotbar; i++)
         {
-            Player.Me.Hotbar[i].Type = (SlotType)data.ReadByte();
-            Player.Me.Hotbar[i].Slot = data.ReadByte();
+            Player.Me.Hotbar[i] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
         }
     }
 

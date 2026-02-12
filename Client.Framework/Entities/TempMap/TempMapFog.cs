@@ -19,6 +19,8 @@ public class TempMapFog
 
     public void Update()
     {
+        if (Data.Texture == 0) return;
+        
         // Faz a movimentação
         UpdateX();
         UpdateY();

@@ -42,11 +42,10 @@ internal static class TempMap
     public static void UpdateFog()
     {
         // Faz a movimentação
-        if (EditorMaps.Form?.Visible == true)
-        {
-            UpdateFogX();
-            UpdateFogY();
-        }
+        if (EditorMaps.Form?.Visible != true) return;
+        if (EditorMaps.Form.Selected.Fog.Texture == 0) return;
+        UpdateFogX();
+        UpdateFogY();       
     }
 
     private static void UpdateFogX()
