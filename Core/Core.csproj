@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
@@ -29,5 +30,6 @@
 
  <ItemGroup>
    <PackageReference Include="Lidgren.Network.Core2" Version="1.0.0" />
+   <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.3" />
  </ItemGroup>
 </Project>

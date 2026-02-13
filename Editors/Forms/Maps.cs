@@ -20,6 +20,7 @@ using SFML.Graphics;
 using static CryBits.Globals;
 using static CryBits.Editors.Logic.Utils;
 using Color = System.Drawing.Color;
+using System.ComponentModel;
 
 namespace CryBits.Editors.Forms;
 
@@ -36,6 +37,7 @@ internal partial class EditorMaps : DarkForm
     private bool _mapPressed;
 
     // Posição do mouse
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Point TileMouse { get; set; }
     private Point _mapMouse;
 
