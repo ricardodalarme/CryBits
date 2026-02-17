@@ -9,4 +9,10 @@ internal sealed partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
     }
+
+    public override void OnFrameworkInitializationCompleted()
+    {
+        AvaloniaRuntime.NotifyAppReady();
+        base.OnFrameworkInitializationCompleted();
+    }
 }

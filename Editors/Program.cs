@@ -31,13 +31,12 @@ internal static class Program
         // Inicializa todos os dispositivos
         Socket.Init();
         Sound.Load();
-        AvaloniaDataLauncher.Initialize();
+        AvaloniaRuntime.Initialize();
 
         // Abre a janela
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
-        Login.Form = new Login();
-        Login.Form.Show();
+        AvaloniaLoginLauncher.ShowLogin();
 
         // Inicia o laço
         Loop.Init();

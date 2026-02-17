@@ -43,7 +43,8 @@ internal static class TempMap
     {
         // Faz a movimentação
         if (EditorMaps.Form?.Visible != true) return;
-        if (EditorMaps.Form.Selected.Fog.Texture == 0) return;
+        if (EditorMaps.Form?.Selected == null) return;
+        if (EditorMaps.Form?.Selected.Fog.Texture == 0) return;
         UpdateFogX();
         UpdateFogY();       
     }

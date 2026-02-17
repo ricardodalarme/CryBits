@@ -47,4 +47,8 @@
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AvaloniaResource Include="AvaloniaUI\Assets\**" />
+  </ItemGroup>
+
 </Project>

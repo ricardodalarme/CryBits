@@ -69,7 +69,6 @@ internal partial class EditorMaps : DarkForm
         InitializeComponent();
 
         // Abre a janela
-        Login.Form.Visible = false;
         Show();
     }
 

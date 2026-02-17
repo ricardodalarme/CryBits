@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms;
 using CryBits.Entities;
 using CryBits.Entities.Map;
@@ -40,7 +41,7 @@ internal static class Receive
     private static void Connect()
     {
         // Abre a janela principal
-        Login.Form.Visible = false;
+        AvaloniaLoginLauncher.HideLogin();
         EditorMaps.Form = new EditorMaps();
     }
 

@@ -1,0 +1,34 @@
+<Window
+    x:Class="CryBits.Editors.AvaloniaUI.Forms.LoginWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Login"
+    Width="567"
+    Height="426"
+    CanResize="False"
+    WindowStartupLocation="CenterScreen"
+    ShowInTaskbar="False">
+  <Grid Margin="14" ColumnDefinitions="1.4*,1*" RowDefinitions="Auto,*,Auto">
+    <Border Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,12" BorderThickness="1">
+      <Image Source="avares://Editors/AvaloniaUI/Assets/Logo.webp" Height="141" Stretch="Uniform" />
+    </Border>
+
+    <Border Grid.Row="1" Grid.Column="0" Margin="0,0,16,0" Padding="10" BorderThickness="1">
+      <TextBlock TextWrapping="Wrap"
+                 Text="Getting started?&#10;       1. Start the CryBits Server&#10;       2. Open the CryBits Client and create an account&#10;       3. Login to that account to start creating your game!" />
+    </Border>
+
+    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+      <TextBlock Text="Username:" />
+      <TextBox x:Name="txtUsername" />
+
+      <TextBlock Text="Password:" Margin="0,6,0,0" />
+      <TextBox x:Name="txtPassword" PasswordChar="*" />
+
+      <CheckBox x:Name="chkUsername" Content="Save username" Margin="0,6,0,0" />
+      <Button Content="Connect" Click="butConnect_Click" Margin="0,6,0,0" />
+    </StackPanel>
+
+    <Button Grid.Row="2" Grid.Column="1" IsDefault="True" IsVisible="False" Click="butConnect_Click" />
+  </Grid>
+</Window>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms;
 using Lidgren.Network;
 using static CryBits.Globals;
@@ -79,8 +80,7 @@ internal static class Socket
     {
         // Fecha todas as janelas abertar e abre o menu de login
         for (var i = 0; i < Application.OpenForms.Count; i++)
-            if (Application.OpenForms[i] != Login.Form)
-                Application.OpenForms[i].Close();
-        Login.Form.Visible = true;
+            Application.OpenForms[i].Close();
+        AvaloniaLoginLauncher.ShowLogin();
     }
 }

@@ -1,4 +1,5 @@
-﻿using CryBits.Editors.Forms;
+﻿using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Forms;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
@@ -24,8 +25,8 @@ internal static class Send
 
         // Envia os dados
         data.Write((byte)ClientPacket.Connect);
-        data.Write(Login.Form.txtUsername.Text);
-        data.Write(Login.Form.txtPassword.Text);
+        data.Write(AvaloniaLoginLauncher.Username);
+        data.Write(AvaloniaLoginLauncher.Password);
         data.Write(true); // Acesso pelo editor
         Packet(data);
     }
