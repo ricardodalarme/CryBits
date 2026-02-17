@@ -6,6 +6,7 @@ using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Logic;
@@ -530,7 +531,7 @@ internal partial class EditorMaps : DarkForm
 
     private void butEditors_Data_Click(object sender, EventArgs e)
     {
-        new EditorData();
+        AvaloniaDataLauncher.OpenDataEditor(this);
     }
 
     private void butEditors_Interface_Click(object sender, EventArgs e)

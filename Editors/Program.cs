@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Editors.Forms;
@@ -30,6 +31,7 @@ internal static class Program
         // Inicializa todos os dispositivos
         Socket.Init();
         Sound.Load();
+        AvaloniaDataLauncher.Initialize();
 
         // Abre a janela
         Application.EnableVisualStyles();
