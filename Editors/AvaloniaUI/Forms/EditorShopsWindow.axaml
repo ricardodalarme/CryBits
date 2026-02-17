@@ -1,0 +1,90 @@
+<Window
+    x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorShopsWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Shop Editor"
+    Width="857"
+    Height="515"
+    CanResize="False"
+    WindowStartupLocation="CenterScreen"
+    ShowInTaskbar="False">
+  <Grid Margin="14" ColumnDefinitions="234,*" ColumnSpacing="8" RowDefinitions="Auto,*,Auto">
+    <TextBox x:Name="txtFilter"
+             Grid.Row="0"
+             Grid.Column="0"
+             Watermark="Filter"
+             TextChanged="txtFilter_TextChanged" />
+
+    <ListBox x:Name="lstShops"
+             Grid.Row="1"
+             Grid.Column="0"
+             SelectionChanged="List_SelectionChanged" />
+
+    <Grid Grid.Row="2" Grid.Column="0" ColumnDefinitions="*,*" Margin="0,6,0,0">
+      <Button Grid.Column="0" Content="New" Click="butNew_Click" Margin="0,0,4,0" />
+      <Button Grid.Column="1" Content="Remove" Click="butRemove_Click" Margin="4,0,0,0" />
+    </Grid>
+
+    <Grid Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" RowDefinitions="Auto,*,Auto" RowSpacing="8">
+      <Border x:Name="grpGeneral" Grid.Row="0" BorderThickness="1" Padding="10">
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+          <StackPanel Grid.Column="0" Spacing="4">
+            <TextBlock Text="Name:" />
+            <TextBox x:Name="txtName" TextChanged="txtName_TextChanged" />
+          </StackPanel>
+
+          <StackPanel Grid.Column="1" Spacing="4">
+            <TextBlock Text="Default currency:" />
+            <ComboBox x:Name="cmbCurrency" SelectionChanged="cmbCurrency_SelectedIndexChanged" />
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <Grid Grid.Row="1" x:Name="contentGrid" ColumnDefinitions="*,*" ColumnSpacing="8">
+        <Border x:Name="grpSold" Grid.Column="0" BorderThickness="1" Padding="8">
+          <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
+            <TextBlock Text="Items Sold" FontWeight="Bold" />
+            <ListBox x:Name="lstSold" Grid.Row="1" />
+            <Grid Grid.Row="2" ColumnDefinitions="*,*">
+              <Button Grid.Column="0" Content="Add" Click="butSold_Add_Click" Margin="0,0,4,0" />
+              <Button Grid.Column="1" Content="Remove" Click="butSold_Remove_Click" Margin="4,0,0,0" />
+            </Grid>
+          </Grid>
+        </Border>
+
+        <Border x:Name="grpBought" Grid.Column="1" BorderThickness="1" Padding="8">
+          <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
+            <TextBlock Text="Items Bought" FontWeight="Bold" />
+            <ListBox x:Name="lstBought" Grid.Row="1" />
+            <Grid Grid.Row="2" ColumnDefinitions="*,*">
+              <Button Grid.Column="0" Content="Add" Click="butBought_Add_Click" Margin="0,0,4,0" />
+              <Button Grid.Column="1" Content="Remove" Click="butBought_Remove_Click" Margin="4,0,0,0" />
+            </Grid>
+          </Grid>
+        </Border>
+
+        <Border x:Name="grpAddItem" Grid.ColumnSpan="2" BorderThickness="1" Padding="12" IsVisible="False">
+          <StackPanel Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6">
+            <TextBlock Text="Add Item" FontWeight="Bold" Margin="0,0,0,4" />
+
+            <TextBlock Text="Item:" />
+            <ComboBox x:Name="cmbItems" />
+
+            <TextBlock Text="Amount:" Margin="0,4,0,0" />
+            <NumericUpDown x:Name="numAmount" Minimum="1" Maximum="32767" Value="1" />
+
+            <TextBlock Text="Price:" Margin="0,4,0,0" />
+            <NumericUpDown x:Name="numPrice" Minimum="0" Maximum="32767" Value="0" />
+
+            <Button Content="Confirm" Click="butConfirm_Click" Margin="0,8,0,0" />
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8">
+        <Button x:Name="butSave" Grid.Column="0" Content="Save All" Click="butSave_Click" />
+        <Button x:Name="butCancel" Grid.Column="1" Content="Cancel" Click="butCancel_Click" />
+      </Grid>
+    </Grid>
+  </Grid>
+</Window>

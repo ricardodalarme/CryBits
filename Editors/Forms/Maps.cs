@@ -550,7 +550,7 @@ internal partial class EditorMaps : DarkForm
 
     private void butEditors_Shops_Click(object sender, EventArgs e)
     {
-        new EditorShops();
+        AvaloniaShopsLauncher.OpenShopsEditor(this);
     }
 
     private void butEditors_Tiles_Click(object sender, EventArgs e)
