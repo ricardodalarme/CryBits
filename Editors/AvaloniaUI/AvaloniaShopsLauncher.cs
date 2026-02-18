@@ -1,4 +1,3 @@
-using System.Windows.Forms;
 using Avalonia.Controls;
 using CryBits.Editors.AvaloniaUI.Forms;
 using CryBits.Entities;

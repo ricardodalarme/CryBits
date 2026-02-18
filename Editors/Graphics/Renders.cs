@@ -1,11 +1,9 @@
 ﻿using System.Drawing;
-using System.Windows.Forms;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Editors.Entities;
 using CryBits.Editors.AvaloniaUI.Forms;
-using CryBits.Editors.Forms;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using SFML.Graphics;
@@ -24,13 +22,9 @@ internal static class Renders
 {
     // Locais de renderização
     public static RenderTexture WinInterfaceRT;
-    public static RenderWindow WinTile;
     public static RenderTexture WinTileRT;
     public static RenderTexture? WinMapRT;
     public static RenderTexture? WinMapTileRT;
-    public static RenderWindow WinItem;
-    public static RenderWindow WinClass;
-    public static RenderWindow WinNpc;
     public static RenderTexture WinNpcRT;
 
     #region Engine
@@ -126,10 +120,7 @@ internal static class Renders
 
     public static void Present()
     {
-        // Desenha
-        EditorClass();
-        EditorItem();
-        // Maps, Tile, NPC, and Interface editors render on their Avalonia DispatcherTimers
+        // All editors render on their Avalonia DispatcherTimers
     }
 
     private static void Transparent(RenderTarget window)
@@ -381,87 +372,6 @@ internal static class Renders
     #endregion
 
     #region Tile Editor
-    public static void EditorTile()
-    {
-        var form = EditorTiles.Form;
-
-        // Somente se necessário
-        if (WinTile == null) return;
-
-        // Limpa a tela e desenha um fundo transparente
-        WinTile.Clear();
-        Transparent(WinTile);
-
-        // Desenha o azulejo e as grades
-        var texture = Textures.Tiles[form.scrlTile.Value];
-        var position = new Point(form.scrlTileX.Value * Grid, form.scrlTileY.Value * Grid);
-        Render(WinTile, texture, new Rectangle(position, texture.ToSize()), new Rectangle(new Point(0), texture.ToSize()));
-
-        for (byte x = 0; x <= form.picTile.Width / Grid; x++)
-            for (byte y = 0; y <= form.picTile.Height / Grid; y++)
-            {
-                // Desenha os atributos
-                if (form.optAttributes.Checked)
-                    EditorTileAttributes(x, y);
-                // Bloqueios direcionais
-                else if (form.optDirBlock.Checked)
-                    EditorTileDirBlock(x, y);
-
-                // Grades
-                RenderRectangle(WinTile, x * Grid, y * Grid, Grid, Grid, new Color(25, 25, 25, 70));
-            }
-
-        // Exibe o que foi renderizado
-        WinTile.Display();
-    }
-
-    private static void EditorTileAttributes(byte x, byte y)
-    {
-        var form = EditorTiles.Form;
-        var tile = new Point(form.scrlTileX.Value + x, form.scrlTileY.Value + y);
-        var point = new Point(x * Grid + Grid / 2 - 5, y * Grid + Grid / 2 - 6);
-
-        // Previne erros
-        if (tile.X > Tile.List[form.scrlTile.Value].Data.GetUpperBound(0)) return;
-        if (tile.Y > Tile.List[form.scrlTile.Value].Data.GetUpperBound(1)) return;
-
-        // Desenha uma letra e colore o azulejo referente ao atributo
-        switch ((TileAttribute)Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Attribute)
-        {
-            case TileAttribute.Block:
-                Render(WinTile, Textures.Blank, x * Grid, y * Grid, 0, 0, Grid, Grid, new Color(225, 0, 0, 75));
-                DrawText(WinTile, "B", point.X, point.Y, Color.Red);
-                break;
-        }
-    }
-
-    private static void EditorTileDirBlock(byte x, byte y)
-    {
-        var form = EditorTiles.Form;
-        var tile = new Point(form.scrlTileX.Value + x, form.scrlTileY.Value + y);
-
-        // Previne erros
-        if (tile.X > Tile.List[form.scrlTile.Value].Data.GetUpperBound(0)) return;
-        if (tile.Y > Tile.List[form.scrlTile.Value].Data.GetUpperBound(1)) return;
-
-        // Bloqueio total
-        if (Tile.List[form.scrlTile.Value].Data[x, y].Attribute == (byte)TileAttribute.Block)
-        {
-            EditorTileAttributes(x, y);
-            return;
-        }
-
-        for (byte i = 0; i < (byte)Direction.Count; i++)
-        {
-            // Estado do bloqueio
-            var sourceY = Tile.List[form.scrlTile.Value].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
-
-            // Renderiza
-            Render(WinTile, Textures.Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
-        }
-    }
-
-    // ── Avalonia RenderTexture version (no WinForms Form reference) ──────────
     public static void EditorTileRT()
     {
         if (WinTileRT == null || Textures.Tiles.Count == 0) return;
@@ -533,31 +443,7 @@ internal static class Renders
     }
     #endregion
 
-    #region Item Editor
-    private static void EditorItem()
-    {
-        // Somente se necessário
-        if (WinItem == null) return;
-
-        // Desenha o item
-        var textureNum = EditorItemsWindow.CurrentTextureIndex;
-        WinItem.Clear();
-        Transparent(WinItem);
-        if (textureNum > 0 && textureNum < Textures.Items.Count) Render(WinItem, Textures.Items[textureNum], new Point(0));
-        WinItem.Display();
-    }
-    #endregion
-
     #region NPC Editor
-    private static void EditorNpc()
-    {
-        // Somente se necessário
-        if (WinNpc == null || EditorNpcs.Form.numTexture.Value == 0) return;
-
-        // Desenha o NPC
-        Character(WinNpc, (short)EditorNpcs.Form.numTexture.Value);
-    }
-
     public static void EditorNpcRT()
     {
         if (WinNpcRT == null || EditorNpcsWindow.CurrentTextureIndex <= 0) return;
@@ -565,30 +451,7 @@ internal static class Renders
     }
     #endregion
 
-    #region Class Editors
-    private static void EditorClass()
-    {
-        // Somente se necessário
-        if (WinClass == null) return;
-
-        // Draws the character preview using the index tracked by the Avalonia window
-        Character(WinClass, EditorClassesWindow.CurrentTextureIndex);
-    }
-    #endregion
-
     #region Character
-    private static void Character(RenderWindow window, short textureNum)
-    {
-        var texture = Textures.Characters[textureNum];
-        var size = new Size(texture.ToSize().Width / 4, texture.ToSize().Height / 4);
-
-        // Desenha o item
-        window.Clear();
-        Transparent(window);
-        if (textureNum > 0 && textureNum < Textures.Characters.Count) Render(window, texture, (int)(window.Size.X - size.Width) / 2, (int)(window.Size.Y - size.Height) / 2, 0, 0, size.Width, size.Height);
-        window.Display();
-    }
-
     private static void CharacterRT(RenderTexture target, short textureNum)
     {
         var texture = Textures.Characters[textureNum];
@@ -605,20 +468,20 @@ internal static class Renders
     {
         // Apenas se necessário
         if (WinInterfaceRT == null) return;
-        if (EditorInterface.Tree.Nodes.Count == 0) return;
+        if (InterfaceData.Tree.Nodes.Count == 0) return;
 
         // Desenha as ferramentas
         WinInterfaceRT.Clear();
-        InterfaceOrder(WinInterfaceRT, EditorInterface.Tree.Nodes[EditorInterfaceWindow.SelectedWindowIndex]);
+        InterfaceOrder(WinInterfaceRT, InterfaceData.Tree.Nodes[EditorInterfaceWindow.SelectedWindowIndex]);
         WinInterfaceRT.Display();
     }
 
-    private static void InterfaceOrder(RenderTarget target, TreeNode node)
+    private static void InterfaceOrder(RenderTarget target, InterfaceNode node)
     {
         for (byte i = 0; i < node.Nodes.Count; i++)
         {
             // Desenha a ferramenta
-            var tool = (Component)node.Nodes[i].Tag;
+            var tool = (Component)node.Nodes[i].Tag!;
             if (tool.Visible)
             {
                 if (tool is Panel panel) Panel(target, panel);

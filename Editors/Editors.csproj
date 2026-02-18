@@ -1,16 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
-    <UseWindowsForms>true</UseWindowsForms>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
  <PropertyGroup>
     <ProjectGuid>{8C3BB955-4C28-44D7-9255-17248A425087}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>CryBits.Editors</RootNamespace>
     <AssemblyName>Editors</AssemblyName>
   </PropertyGroup>
@@ -32,10 +31,9 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.7" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.7" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.7" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.7" />
-    <PackageReference Include="DarkModeUI" Version="3.1.0" />
     <PackageReference Include="Lidgren.Network.Core2" Version="1.0.0" />
+    <PackageReference Include="MessageBox.Avalonia" Version="3.1.6" />
     <PackageReference Include="Semi.Avalonia" Version="11.3.7.3" />
     <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.3.7.3" />
     <PackageReference Include="SFML.Audio" Version="2.5.0" />

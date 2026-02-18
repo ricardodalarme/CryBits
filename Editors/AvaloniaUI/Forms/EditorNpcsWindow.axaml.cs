@@ -5,7 +5,6 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Editors.Forms;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;

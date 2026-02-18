@@ -1,9 +1,8 @@
 ﻿using System.IO;
-using System.Windows.Forms;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Interfacily.Enums;
-using CryBits.Editors.Forms;
+using CryBits.Editors.Entities;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using FrameworkWrite = CryBits.Client.Framework.Library.Write;
@@ -20,22 +19,22 @@ internal static class Write
         // Cria um sistema binário para a manipulação dos dados
         var file = new FileInfo(Directories.ToolsData.FullName);
         using var data = new BinaryWriter(file.OpenWrite());
-        data.Write((short)EditorInterface.Tree.Nodes.Count);
-        for (short n = 0; n < EditorInterface.Tree.Nodes.Count; n++)
+        data.Write((short)InterfaceData.Tree.Nodes.Count);
+        for (short n = 0; n < InterfaceData.Tree.Nodes.Count; n++)
         {
-            data.Write(((Screen)EditorInterface.Tree.Nodes[n].Tag).Name);
-            Tools(EditorInterface.Tree.Nodes[n], data);
+            data.Write(((Screen)InterfaceData.Tree.Nodes[n].Tag!).Name);
+            Tools(InterfaceData.Tree.Nodes[n], data);
         }
     }
 
-    private static void Tools(TreeNode node, BinaryWriter data)
+    private static void Tools(InterfaceNode node, BinaryWriter data)
     {
         // Escreve a ferramenta
         data.Write((byte)node.Nodes.Count);
         for (byte i = 0; i < node.Nodes.Count; i++)
         {
             // Salva de acordo com a ferramenta
-            var tool = (Component)node.Nodes[i].Tag;
+            var tool = (Component)node.Nodes[i].Tag!;
             switch (tool)
             {
                 case Button button:

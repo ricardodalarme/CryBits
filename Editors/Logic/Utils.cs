@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Drawing;
-using System.Windows.Forms;
 using CryBits.Enums;
 using static CryBits.Globals;
 
@@ -22,28 +20,6 @@ internal static class Utils
             case Direction.Left: return new Point(0, Grid / 2 - 4);
             case Direction.Right: return new Point(Grid - 9, Grid / 2 - 4);
             default: return new Point(0);
-        }
-    }
-
-    public static void UpdateData(this ListBox list)
-    {
-        var lastSelected = list.SelectedItem;
-        var lastSelectedIndex = list.SelectedIndex;
-
-        // Limpa a lista e adiciona os itens 
-        list.Items.Clear();
-        foreach (var value in (IEnumerable)list.Tag) list.Items.Add(value);
-
-        // Seleciona algum item de forma inteligente
-        if (list.Items.Count > 0)
-        {
-            list.SelectedIndex = 0;
-
-            if (lastSelected != null)
-                if (list.Items.Contains(lastSelected))
-                    list.SelectedItem = lastSelected;
-                else if (lastSelectedIndex <= list.Items.Count)
-                    list.SelectedIndex = Math.Max(0, lastSelectedIndex - 1);
         }
     }
 }

@@ -3,14 +3,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
-using System.Windows.Forms;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Interfacily.Enums;
-using CryBits.Editors.Forms;
+using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Library;
 using SFML.Graphics;
@@ -18,7 +17,6 @@ using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
-using TreeNode = System.Windows.Forms.TreeNode;
 using Point = System.Drawing.Point;
 
 namespace CryBits.Editors.AvaloniaUI.Forms;
@@ -37,7 +35,7 @@ internal sealed class TreeItemVM : INotifyPropertyChanged
     }
 
     public Component? Tag { get; set; }
-    public TreeNode? SourceNode { get; set; }
+    public InterfaceNode? SourceNode { get; set; }
     public TreeItemVM? Parent { get; set; }
     public ObservableCollection<TreeItemVM> Children { get; } = new();
     public override string ToString() => _header;
@@ -62,7 +60,7 @@ internal partial class EditorInterfaceWindow : Window
         InitializeComponent();
 
         // Populate window combo from tree
-        foreach (TreeNode node in EditorInterface.Tree.Nodes)
+        foreach (InterfaceNode node in InterfaceData.Tree.Nodes)
             cmbWindows.Items.Add(node.Text);
 
         if (cmbWindows.Items.Count > 0)
@@ -91,7 +89,7 @@ internal partial class EditorInterfaceWindow : Window
     private void OnRenderTick(object? sender, EventArgs e)
     {
         if (Renders.WinInterfaceRT == null) return;
-        if (EditorInterface.Tree.Nodes.Count == 0) return;
+        if (InterfaceData.Tree.Nodes.Count == 0) return;
 
         Renders.Interface();
         SfmlRenderBlit.Blit(Renders.WinInterfaceRT, ref _previewBitmap, imgPreview);
@@ -114,19 +112,19 @@ internal partial class EditorInterfaceWindow : Window
     // Tree management
     // ──────────────────────────────────────────────────────────────────────────
 
-    private static TreeItemVM BuildVM(TreeNode node, TreeItemVM? parent)
+    private static TreeItemVM BuildVM(InterfaceNode node, TreeItemVM? parent)
     {
         var vm = new TreeItemVM { Header = node.Text, Tag = node.Tag as Component, SourceNode = node, Parent = parent };
-        foreach (TreeNode child in node.Nodes)
+        foreach (InterfaceNode child in node.Nodes)
             vm.Children.Add(BuildVM(child, vm));
         return vm;
     }
 
     private void RebuildTree()
     {
-        if (EditorInterface.Tree.Nodes.Count == 0 || SelectedWindowIndex >= EditorInterface.Tree.Nodes.Count) return;
+        if (InterfaceData.Tree.Nodes.Count == 0 || SelectedWindowIndex >= InterfaceData.Tree.Nodes.Count) return;
 
-        var sourceRoot = EditorInterface.Tree.Nodes[SelectedWindowIndex];
+        var sourceRoot = InterfaceData.Tree.Nodes[SelectedWindowIndex];
         _rootVM = BuildVM(sourceRoot, null);
         treOrder.ItemsSource = _rootVM.Children;
     }
@@ -167,9 +165,9 @@ internal partial class EditorInterfaceWindow : Window
         };
         newComp.Visible = true;
 
-        // Add to canonical WinForms tree
-        var winNode = EditorInterface.Tree.Nodes[SelectedWindowIndex];
-        var newTreeNode = new TreeNode(newComp.ToString()) { Tag = newComp };
+        // Add to canonical InterfaceNode tree
+        var winNode = InterfaceData.Tree.Nodes[SelectedWindowIndex];
+        var newTreeNode = new InterfaceNode(newComp.ToString()) { Tag = newComp };
         winNode.Nodes.Add(newTreeNode);
 
         // Add to VM tree
@@ -184,7 +182,7 @@ internal partial class EditorInterfaceWindow : Window
     {
         if (_selectedNode?.Parent == null) return;
 
-        // Sync to WinForms tree
+        // Sync to InterfaceNode tree
         _selectedNode.SourceNode?.Parent?.Nodes.Remove(_selectedNode.SourceNode);
 
         // Remove from VM

@@ -1,9 +1,8 @@
 ﻿using System.IO;
-using System.Windows.Forms;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Interfacily.Enums;
-using CryBits.Editors.Forms;
+using CryBits.Editors.Entities;
 using FrameworkRead = CryBits.Client.Framework.Library.Read;
 
 namespace CryBits.Editors.Library;
@@ -28,13 +27,13 @@ internal static class Read
         for (byte n = 0; n < windowsCount; n++)
         {
             var temp = new Client.Framework.Interfacily.Components.Screen { Name = data.ReadString() };
-            EditorInterface.Tree.Nodes.Add("[Window] " + temp.Name);
-            EditorInterface.Tree.LastNode.Tag = temp;
-            Tools(EditorInterface.Tree.Nodes[n], data);
+            var node = InterfaceData.Tree.Nodes.Add("[Window] " + temp.Name);
+            node.Tag = temp;
+            Tools(InterfaceData.Tree.Nodes[n], data);
         }
     }
 
-    public static void Tools(TreeNode node, BinaryReader data)
+    public static void Tools(InterfaceNode node, BinaryReader data)
     {
         // Lê todos os filhos
         var size = data.ReadByte();
@@ -54,8 +53,8 @@ internal static class Read
             }
 
             // Adiciona o nó
-            node.Nodes.Add("[" + type + "] " + temp.Name);
-            node.LastNode.Tag = temp;
+            var child = node.Nodes.Add("[" + type + "] " + temp.Name);
+            child.Tag = temp;
 
             // Pula pro próximo
             Tools(node.Nodes[i], data);

@@ -1,5 +1,4 @@
 ﻿using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Forms;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;

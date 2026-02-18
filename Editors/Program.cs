@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Threading;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
-using CryBits.Editors.Forms;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
 using Read = CryBits.Editors.Library.Read;
@@ -34,8 +33,6 @@ internal static class Program
         AvaloniaRuntime.Initialize();
 
         // Abre a janela
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
         AvaloniaLoginLauncher.ShowLogin();
 
         // Inicia o laço
@@ -51,9 +48,9 @@ internal static class Program
 
         // Espera até que o jogador seja desconectado
         while (Socket.IsConnected() && Environment.TickCount <= waitTimer + 1000)
-            Application.DoEvents();
+            Thread.Sleep(10);
 
         // Fecha a aplicação
-        Application.Exit();
+        Working = false;
     }
 }

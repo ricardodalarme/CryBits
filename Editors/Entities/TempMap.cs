@@ -2,7 +2,7 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Entities.TempMap;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Editors.Forms;
+using CryBits.Editors.AvaloniaUI.Forms;
 using CryBits.Entities.Map;
 using SFML.Audio;
 using static CryBits.Globals;
@@ -30,8 +30,9 @@ internal static class TempMap
     public static void UpdateWeatherType()
     {
         // Redimensiona a lista
-        if (EditorMaps.Form != null)
-            switch (EditorMaps.Form.Selected.Weather.Type)
+        var win = EditorMapsWindow.Instance;
+        if (win?.SelectedMap != null)
+            switch (win.SelectedMap.Weather.Type)
             {
                 case Enums.Weather.Thundering:
                 case Enums.Weather.Raining: Weather = new TempMapWeatherParticle[MaxRainParticles + 1]; break;
@@ -42,17 +43,19 @@ internal static class TempMap
     public static void UpdateFog()
     {
         // Faz a movimentação
-        if (EditorMaps.Form?.Visible != true) return;
-        if (EditorMaps.Form?.Selected == null) return;
-        if (EditorMaps.Form?.Selected.Fog.Texture == 0) return;
+        var win = EditorMapsWindow.Instance;
+        if (win == null || !win.IsVisible) return;
+        if (win.SelectedMap == null) return;
+        if (win.SelectedMap.Fog.Texture == 0) return;
         UpdateFogX();
         UpdateFogY();       
     }
 
     private static void UpdateFogX()
     {
-        var textureSize = Textures.Fogs[EditorMaps.Form.Selected.Fog.Texture].ToSize();
-        int speed = EditorMaps.Form.Selected.Fog.SpeedX;
+        var map = EditorMapsWindow.Instance!.SelectedMap!;
+        var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
+        int speed = map.Fog.SpeedX;
 
         // Apenas se necessário
         if (_fogXTimer >= Environment.TickCount) return;
@@ -78,8 +81,9 @@ internal static class TempMap
 
     private static void UpdateFogY()
     {
-        var textureSize = Textures.Fogs[EditorMaps.Form.Selected.Fog.Texture].ToSize();
-        int speed = EditorMaps.Form.Selected.Fog.SpeedY;
+        var map = EditorMapsWindow.Instance!.SelectedMap!;
+        var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
+        int speed = map.Fog.SpeedY;
 
         // Apenas se necessário
         if (_fogYTimer >= Environment.TickCount) return;
@@ -108,15 +112,16 @@ internal static class TempMap
         bool stop = false, move;
 
         // Somente se necessário
-        if (EditorMaps.Form?.Selected == null) return;
-        if (EditorMaps.Form?.Visible != true || EditorMaps.Form.Selected.Weather.Type == 0 || !EditorMaps.Form.butVisualization.Checked)
+        var win = EditorMapsWindow.Instance;
+        if (win?.SelectedMap == null) return;
+        if (!win.IsVisible || win.SelectedMap.Weather.Type == 0 || !win.ShowVisualization)
         {
             if (Sound.List[Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
             return;
         }
 
         // Clima do mapa
-        var weather = EditorMaps.Form.Selected.Weather;
+        var weather = win.SelectedMap.Weather;
 
         // Reproduz o som chuva
         if (weather.Type == Enums.Weather.Raining || weather.Type == Enums.Weather.Thundering)

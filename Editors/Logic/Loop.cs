@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
-using System.Windows.Forms;
 using CryBits.Client.Framework.Audio;
 using CryBits.Editors.Entities;
-using CryBits.Editors.Forms;
+using CryBits.Editors.AvaloniaUI.Forms;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Network;
 
@@ -32,7 +31,6 @@ internal static class Loop
             Renders.Present();
 
             // Faz com que a aplicação se mantenha estável
-            Application.DoEvents();
             while (Environment.TickCount < count + 10) Thread.Sleep(1);
 
             // FPS
@@ -56,15 +54,16 @@ internal static class Loop
     private static void MapsMusic()
     {
         // Apenas se necessário
-        if (EditorMaps.Form == null) return;
-        if (EditorMaps.Form?.Selected == null) return;
-        if (EditorMaps.Form?.Visible != true) Music.Stop();
-        if (!EditorMaps.Form.butAudio.Checked) Music.Stop();
-        if (!EditorMaps.Form.butVisualization.Checked) Music.Stop();
-        if (string.IsNullOrEmpty(EditorMaps.Form?.Selected.Music)) Music.Stop();
+        var win = EditorMapsWindow.Instance;
+        if (win == null) return;
+        if (win.SelectedMap == null) return;
+        if (!win.IsVisible) Music.Stop();
+        if (!win.ShowAudio) Music.Stop();
+        if (!win.ShowVisualization) Music.Stop();
+        if (string.IsNullOrEmpty(win.SelectedMap?.Music)) Music.Stop();
 
-        // Inicia a música-
-        if (Music.Device == null || Music.Current != EditorMaps.Form?.Selected.Music)
-            Music.Play(EditorMaps.Form.Selected.Music);
+        // Inicia a música
+        if (Music.Device == null || Music.Current != win.SelectedMap?.Music)
+            Music.Play(win.SelectedMap!.Music);
     }
 }

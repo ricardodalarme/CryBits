@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Entities;
 using CryBits.Entities.Map;

@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Forms;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -39,6 +38,9 @@ using SystemSize = System.Drawing.Size;
 using SystemRect = System.Drawing.Rectangle;
 
 namespace CryBits.Editors.AvaloniaUI.Forms;
+
+// Cross-platform replacement for System.Windows.Forms.MouseButtons
+internal enum MouseButtons { None, Left, Right }
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Layer view-model for the DataGrid
@@ -80,6 +82,7 @@ internal partial class EditorMapsWindow : Window
     public bool ShowGrid => butGrid.IsChecked == true;
     public bool ShowEdition => butEdition.IsChecked == true;
     public bool ShowVisualization => butVisualization.IsChecked == true;
+    public bool ShowAudio => butAudio.IsChecked == true;
     public bool DirBlockMode => optA_DirBlock.IsChecked == true;
 
     public bool AutoTile => chkAuto.IsChecked == true;
