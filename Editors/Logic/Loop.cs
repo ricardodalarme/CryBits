@@ -57,6 +57,7 @@ internal static class Loop
     {
         // Apenas se necessário
         if (EditorMaps.Form == null) return;
+        if (EditorMaps.Form?.Selected == null) return;
         if (EditorMaps.Form?.Visible != true) Music.Stop();
         if (!EditorMaps.Form.butAudio.Checked) Music.Stop();
         if (!EditorMaps.Form.butVisualization.Checked) Music.Stop();

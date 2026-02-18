@@ -199,7 +199,8 @@ internal partial class EditorMaps : DarkForm
     {
         // Atualiza as informações da barra
         Strip.Items[0].Text = "FPS: " + Program.Fps;
-        Strip.Items[2].Text = "Revision: " + Selected.Revision;
+        if (Form?.Selected != null) 
+            Strip.Items[2].Text = "Revision: " + Selected.Revision;
         Strip.Items[4].Text = "Position: {" + _mapMouse.X + ";" + _mapMouse.Y + "}";
     }
     #endregion

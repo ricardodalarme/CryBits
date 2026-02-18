@@ -108,6 +108,7 @@ internal static class TempMap
         bool stop = false, move;
 
         // Somente se necessário
+        if (EditorMaps.Form?.Selected == null) return;
         if (EditorMaps.Form?.Visible != true || EditorMaps.Form.Selected.Weather.Type == 0 || !EditorMaps.Form.butVisualization.Checked)
         {
             if (Sound.List[Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
