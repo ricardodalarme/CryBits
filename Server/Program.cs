@@ -15,7 +15,6 @@ internal static class Program
     // Usado para manter a aplicação aberta
     public static bool Working = true;
 
-    [STAThread]
     private static void Main()
     {
         // Abre o servidor e define suas configurações

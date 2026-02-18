@@ -57,9 +57,9 @@ internal static class Loop
         var win = EditorMapsWindow.Instance;
         if (win == null) return;
         if (win.SelectedMap == null) return;
-        if (!win.IsVisible) Music.Stop();
-        if (!win.ShowAudio) Music.Stop();
-        if (!win.ShowVisualization) Music.Stop();
+        if (!win.IsOpen) Music.Stop();
+        if (!win.ShowAudioSafe) Music.Stop();
+        if (!win.ShowVisualizationSafe) Music.Stop();
         if (string.IsNullOrEmpty(win.SelectedMap?.Music)) Music.Stop();
 
         // Inicia a música

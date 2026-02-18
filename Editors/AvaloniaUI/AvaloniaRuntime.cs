@@ -31,7 +31,9 @@ internal static class AvaloniaRuntime
                     });
             });
 
-            thread.SetApartmentState(ApartmentState.STA);
+            // STA is only meaningful on Windows (COM/WinForms interop)
+            if (OperatingSystem.IsWindows())
+                thread.SetApartmentState(ApartmentState.STA);
             thread.IsBackground = true;
             thread.Start();
         }

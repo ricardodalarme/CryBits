@@ -17,7 +17,6 @@ internal static class Program
     // Medida de calculo do atraso do jogo
     public static short Fps;
 
-    [STAThread]
     private static void Main()
     {
         // Verifica se todos os diretórios existem, se não existirem então criá-os

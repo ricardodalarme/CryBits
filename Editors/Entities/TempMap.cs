@@ -44,11 +44,11 @@ internal static class TempMap
     {
         // Faz a movimentação
         var win = EditorMapsWindow.Instance;
-        if (win == null || !win.IsVisible) return;
+        if (win == null || !win.IsOpen) return;
         if (win.SelectedMap == null) return;
         if (win.SelectedMap.Fog.Texture == 0) return;
         UpdateFogX();
-        UpdateFogY();       
+        UpdateFogY();
     }
 
     private static void UpdateFogX()
@@ -130,7 +130,7 @@ internal static class TempMap
                 Sound.Play(Sounds.Rain);
         }
         else
-        if (Sound.List[Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
+            if (Sound.List[Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
 
         // Contagem da neve
         if (_snowTimer < Environment.TickCount)

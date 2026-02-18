@@ -24,8 +24,6 @@
 
   <PropertyGroup>
     <StartupObject>CryBits.Editors.Program</StartupObject>
-    <NoWin32Manifest>true</NoWin32Manifest>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

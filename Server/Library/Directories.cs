@@ -9,7 +9,7 @@ internal static class Directories
     public const string Format = ".dat";
 
     // Diretório base
-    private static readonly string BaseDir = Environment.CurrentDirectory;
+    private static readonly string BaseDir = AppContext.BaseDirectory;
 
     // Diretório dos arquivos
     public static readonly FileInfo Defaults = new(Path.Combine(BaseDir, "Data", "Defaults") + Format);

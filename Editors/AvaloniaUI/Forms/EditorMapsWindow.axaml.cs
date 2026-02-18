@@ -68,7 +68,21 @@ internal partial class EditorMapsWindow : Window
     // ── Public static accessors consumed by Renders.cs ────────────────────────
     public static EditorMapsWindow? Instance { get; private set; }
 
-    // Tool states (read by Renders)
+    // ── Thread-safe cached state (readable from the game-loop thread) ─────────
+    // Volatile ensures the game-loop thread always sees the latest value written
+    // by the UI thread without needing a lock.
+    private volatile bool _isOpen;
+    private volatile bool _showAudio;
+    private volatile bool _showVisualization;
+
+    /// <summary>True while the window is open; safe to read from any thread.</summary>
+    public bool IsOpen => _isOpen;
+    /// <summary>Audio toggle state; safe to read from any thread.</summary>
+    public bool ShowAudioSafe => _showAudio;
+    /// <summary>Visualisation toggle state; safe to read from any thread.</summary>
+    public bool ShowVisualizationSafe => _showVisualization;
+
+    // Tool states (read by Renders – UI thread only)
     public bool ModeNormal => butMNormal.IsChecked == true;
     public bool ModeZones => butMZones.IsChecked == true;
     public bool ModeAttributes => butMAttributes.IsChecked == true;
@@ -176,10 +190,16 @@ internal partial class EditorMapsWindow : Window
         _timer.Start();
 
         RefreshMapList();
+
+        // Set initial cached state (window is visible from this point)
+        _isOpen = true;
+        _showAudio = butAudio.IsChecked == true;
+        _showVisualization = butVisualization.IsChecked == true;
     }
 
     protected override void OnClosed(EventArgs e)
     {
+        _isOpen = false;
         _timer?.Stop();
         Renders.WinMapRT = null;
         Renders.WinMapTileRT = null;
@@ -410,6 +430,7 @@ internal partial class EditorMapsWindow : Window
         if (butVisualization.IsChecked == true) butEdition.IsChecked = false;
         else butVisualization.IsChecked = true;
         Options.PreMapView = butVisualization.IsChecked == true;
+        _showVisualization = butVisualization.IsChecked == true;
         Client.Framework.Library.Write.Options();
     }
 
@@ -422,6 +443,7 @@ internal partial class EditorMapsWindow : Window
     private void butAudio_Click(object? sender, RoutedEventArgs e)
     {
         Options.PreMapAudio = butAudio.IsChecked == true;
+        _showAudio = butAudio.IsChecked == true;
         Client.Framework.Library.Write.Options();
         if (!Options.PreMapAudio) { Music.Stop(); Sound.StopAll(); }
     }

@@ -5,8 +5,9 @@ public static class Directories
     // Formato de todos os arquivos de dados
     public const string Format = ".dat";
 
-    // Diretório base
-    private static readonly string BaseDir = Environment.CurrentDirectory;
+    // Diretório base — AppContext.BaseDirectory always resolves to the folder
+    // containing the running assembly, regardless of the process working directory.
+    private static readonly string BaseDir = AppContext.BaseDirectory;
 
     // Diretório dos arquivos
     public static readonly FileInfo EditorOptions = new(Path.Combine(BaseDir, "Data", "Editors", "Options") + Format);

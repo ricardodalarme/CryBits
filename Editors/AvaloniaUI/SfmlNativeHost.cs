@@ -6,9 +6,9 @@ using SFML.Graphics;
 namespace CryBits.Editors.AvaloniaUI;
 
 /// <summary>
-/// An Avalonia NativeControlHost that creates a Win32 child window and
+/// An Avalonia NativeControlHost that creates a native child window and
 /// binds an SFML RenderWindow to it for in-editor sprite previews.
-/// The native HWND (and therefore the RenderWindow) is allocated the first
+/// The native handle (and therefore the RenderWindow) is allocated the first
 /// time this control is laid out / made visible.
 /// </summary>
 public sealed class SfmlNativeHost : NativeControlHost
@@ -21,7 +21,7 @@ public sealed class SfmlNativeHost : NativeControlHost
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
         var handle = base.CreateNativeControlCore(parent);
-        // handle.Handle is the Win32 HWND - SFML accepts it directly
+        // handle.Handle is the native window handle - SFML accepts it directly
         SfmlWindow = new RenderWindow(handle.Handle);
         WindowCreated?.Invoke(SfmlWindow);
         return handle;

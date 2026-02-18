@@ -9,7 +9,7 @@ namespace CryBits.Editors.Entities;
 internal sealed class InterfaceNode
 {
     public string Text { get; set; } = string.Empty;
-    public object? Tag  { get; set; }
+    public object? Tag { get; set; }
     public InterfaceNode? Parent { get; private set; }
 
     private readonly List<InterfaceNode> _nodes = new();
