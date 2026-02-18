@@ -556,7 +556,7 @@ internal partial class EditorMaps : DarkForm
 
     private void butEditors_Tiles_Click(object sender, EventArgs e)
     {
-        EditorTiles.Form = new EditorTiles();
+        AvaloniaTilesLauncher.OpenTilesEditor(this);
     }
 
     private void tmrUpdate_Tick(object sender, EventArgs e)

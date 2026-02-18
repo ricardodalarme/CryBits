@@ -25,6 +25,7 @@ internal static class Renders
     // Locais de renderização
     public static RenderTexture WinInterfaceRT;
     public static RenderWindow WinTile;
+    public static RenderTexture WinTileRT;
     public static RenderWindow WinMap;
     public static RenderWindow WinMapTile;
     public static RenderWindow WinItem;
@@ -128,10 +129,9 @@ internal static class Renders
         // Desenha 
         EditorMapsTile();
         EditorMapsMap();
-        EditorTile();
         EditorClass();
         EditorItem();
-        // NPC and Interface editors render on their Avalonia DispatcherTimers to avoid cross-thread SFML conflicts
+        // Tile, NPC, and Interface editors render on their Avalonia DispatcherTimers to avoid cross-thread SFML conflicts
     }
 
     private static void Transparent(RenderWindow window)
@@ -505,6 +505,77 @@ internal static class Renders
             // Renderiza
             Render(WinTile, Textures.Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
         }
+    }
+
+    // ── Avalonia RenderTexture version (no WinForms Form reference) ──────────
+    public static void EditorTileRT()
+    {
+        if (WinTileRT == null || Textures.Tiles.Count == 0) return;
+        var idx = EditorTilesWindow.ScrollTile;
+        if (idx < 0 || idx >= Textures.Tiles.Count) return;
+
+        WinTileRT.Clear();
+        TransparentRT(WinTileRT);
+
+        var texture = Textures.Tiles[idx];
+        var position = new Point(EditorTilesWindow.ScrollX * Grid, EditorTilesWindow.ScrollY * Grid);
+        Render(WinTileRT, texture, new Rectangle(position, texture.ToSize()), new Rectangle(new Point(0), texture.ToSize()));
+
+        for (byte x = 0; x <= 298 / Grid; x++)
+            for (byte y = 0; y <= 443 / Grid; y++)
+            {
+                if (EditorTilesWindow.ModeAttributes)
+                    EditorTileAttributesRT(idx, x, y);
+                else
+                    EditorTileDirBlockRT(idx, x, y);
+
+                RenderRectangle(WinTileRT, x * Grid, y * Grid, Grid, Grid, new Color(25, 25, 25, 70));
+            }
+
+        WinTileRT.Display();
+    }
+
+    private static void EditorTileAttributesRT(int idx, byte x, byte y)
+    {
+        var tile = new Point(EditorTilesWindow.ScrollX + x, EditorTilesWindow.ScrollY + y);
+        var point = new Point(x * Grid + Grid / 2 - 5, y * Grid + Grid / 2 - 6);
+        if (tile.X > Tile.List[idx].Data.GetUpperBound(0)) return;
+        if (tile.Y > Tile.List[idx].Data.GetUpperBound(1)) return;
+
+        switch ((TileAttribute)Tile.List[idx].Data[tile.X, tile.Y].Attribute)
+        {
+            case TileAttribute.Block:
+                Render(WinTileRT, Textures.Blank, x * Grid, y * Grid, 0, 0, Grid, Grid, new Color(225, 0, 0, 75));
+                DrawText(WinTileRT, "B", point.X, point.Y, Color.Red);
+                break;
+        }
+    }
+
+    private static void EditorTileDirBlockRT(int idx, byte x, byte y)
+    {
+        var tile = new Point(EditorTilesWindow.ScrollX + x, EditorTilesWindow.ScrollY + y);
+        if (tile.X > Tile.List[idx].Data.GetUpperBound(0)) return;
+        if (tile.Y > Tile.List[idx].Data.GetUpperBound(1)) return;
+
+        if (Tile.List[idx].Data[x, y].Attribute == (byte)TileAttribute.Block)
+        {
+            EditorTileAttributesRT(idx, x, y);
+            return;
+        }
+
+        for (byte i = 0; i < (byte)Direction.Count; i++)
+        {
+            var sourceY = Tile.List[idx].Data[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
+            Render(WinTileRT, Textures.Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
+        }
+    }
+
+    private static void TransparentRT(RenderTexture target)
+    {
+        var textureSize = Textures.Transparent.ToSize();
+        for (var x = 0; x <= target.Size.X / textureSize.Width; x++)
+            for (var y = 0; y <= target.Size.Y / textureSize.Height; y++)
+                Render(target, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
     }
     #endregion
 

@@ -1,0 +1,94 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorTilesWindow"
+        Title="Tile Editor"
+        Width="560" Height="620"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="8" RowDefinitions="Auto,*,Auto,Auto">
+
+        <!-- ── Row 0: Tile selector ── -->
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                CornerRadius="4" Padding="8" Margin="0,0,0,6">
+            <StackPanel Spacing="4">
+                <TextBlock x:Name="lblTile" Text="Tile: 1" FontWeight="Bold"/>
+                <ScrollBar x:Name="scrlTile" Orientation="Horizontal" Minimum="1" Maximum="1"
+                           Value="1" SmallChange="1" LargeChange="1"
+                           Scroll="scrlTile_Scroll"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ── Row 1: Canvas + Y-scroll + right-panel ── -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,148">
+
+            <!-- Canvas area: tile image + X-scroll stacked -->
+            <Grid Grid.Column="0" RowDefinitions="*,Auto">
+                <!-- Tile canvas (click to paint) -->
+                <Border Grid.Row="0" BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}">
+                    <Image x:Name="imgCanvas"
+                           Width="298" Height="443"
+                           Stretch="None"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           PointerPressed="imgCanvas_PointerPressed"/>
+                </Border>
+                <!-- X scroll -->
+                <ScrollBar Grid.Row="1" x:Name="scrlTileX" Orientation="Horizontal"
+                           Minimum="0" Maximum="0" Value="0" SmallChange="1" LargeChange="1"
+                           Margin="0,2,0,0" Scroll="scrlXY_Scroll"/>
+            </Grid>
+
+            <!-- Y scroll -->
+            <ScrollBar Grid.Column="1" x:Name="scrlTileY" Orientation="Vertical"
+                       Minimum="0" Maximum="0" Value="0" SmallChange="1" LargeChange="1"
+                       Margin="2,0,2,0" Scroll="scrlXY_Scroll"/>
+
+            <!-- Right panel: Set mode + Attributes -->
+            <StackPanel Grid.Column="2" Spacing="6">
+
+                <!-- Set mode -->
+                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="8">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Set" FontWeight="Bold" Margin="0,0,0,2"/>
+                        <RadioButton x:Name="optAttributes" Content="Attributes"
+                                     IsChecked="True"
+                                     IsCheckedChanged="optMode_Changed"
+                                     GroupName="SetMode"/>
+                        <RadioButton x:Name="optDirBlock" Content="Dir. Block"
+                                     IsCheckedChanged="optMode_Changed"
+                                     GroupName="SetMode"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Attributes (visible when Attributes mode is active) -->
+                <Border x:Name="pnlAttributes" BorderThickness="1"
+                        BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="8">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Attributes" FontWeight="Bold" Margin="0,0,0,2"/>
+                        <RadioButton x:Name="optBlock" Content="Block"
+                                     IsChecked="True"
+                                     GroupName="AttrMode"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </Grid>
+
+        <!-- ── Row 2: spacer ── -->
+        <Border Grid.Row="2" Height="6"/>
+
+        <!-- ── Row 3: Save / Clear / Cancel ── -->
+        <Grid Grid.Row="3" ColumnDefinitions="*,*,*">
+            <Button Grid.Column="0" Content="Save"   Click="butSave_Click"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,4,0"/>
+            <Button Grid.Column="1" Content="Clear"  Click="butClear_Click"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,4,0"/>
+            <Button Grid.Column="2" Content="Cancel" Click="butCancel_Click"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,0,0"/>
+        </Grid>
+
+    </Grid>
+</Window>
