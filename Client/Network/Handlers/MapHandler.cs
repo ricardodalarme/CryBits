@@ -4,7 +4,6 @@ using CryBits.Client.Entities;
 using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Library;
 using CryBits.Client.Framework.Library.Repositories;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities;

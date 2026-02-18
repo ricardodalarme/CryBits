@@ -10,7 +10,6 @@ using Avalonia.Threading;
 using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
-using CryBits.Editors.Library;
 using CryBits.Editors.Library.Repositories;
 using SFML.Graphics;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;

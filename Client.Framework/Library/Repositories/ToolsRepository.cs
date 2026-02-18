@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Drawing;
 using System.Text.Json;
 using CryBits.Client.Framework.Constants;
@@ -12,7 +11,7 @@ public static class ToolsRepository
 
     public static void Read()
     {
-        var file = new System.IO.FileInfo(Directories.ToolsData.FullName);
+        var file = new FileInfo(Directories.ToolsData.FullName);
         if (!file.Exists) return;
 
         // Lê todas as ferramentas a partir de JSON
@@ -64,7 +63,7 @@ public static class ToolsRepository
                     Text = cb.Text,
                     Checked = cb.Checked
                 },
-                _ => throw new System.InvalidOperationException($"Unknown component DTO type: {dto.GetType().Name}")
+                _ => throw new InvalidOperationException($"Unknown component DTO type: {dto.GetType().Name}")
             };
 
             switch (component)

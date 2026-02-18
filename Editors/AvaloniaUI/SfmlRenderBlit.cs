@@ -37,7 +37,7 @@ internal static class SfmlRenderBlit
     }
 
     /// <summary>
-    /// Converts a full SFML <see cref="SFML.Graphics.Texture"/> to a fresh
+    /// Converts a full SFML <see cref="Texture"/> to a fresh
     /// <see cref="WriteableBitmap"/> and assigns it to <paramref name="target"/>.
     /// Use this for textures that are displayed whole (e.g. item icons).
     /// </summary>

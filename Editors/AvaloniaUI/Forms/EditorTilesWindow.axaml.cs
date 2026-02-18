@@ -8,7 +8,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Framework.Library;
 using CryBits.Client.Framework.Library.Repositories;
 using CryBits.Editors.Graphics;
 using CryBits.Enums;
@@ -45,7 +44,7 @@ internal partial class EditorTilesWindow : Window
         UpdateScrollBounds();
 
         // SFML offscreen canvas
-        Renders.WinTileRT = new RenderTexture(new Vector2u((uint)CanvasW, (uint)CanvasH));
+        Renders.WinTileRT = new RenderTexture(new Vector2u(CanvasW, CanvasH));
 
         // 30 fps refresh timer
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };

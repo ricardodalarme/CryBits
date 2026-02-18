@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Client.Framework.Constants;
 using CryBits.Entities.Map;
@@ -15,7 +13,7 @@ public static class MapRepository
         // Lê os dados
         using var stream = file.OpenRead();
 #pragma warning disable SYSLIB0011
-        CryBits.Entities.Map.Map.List.Add(id, (Map)new BinaryFormatter().Deserialize(stream));
+        Map.List.Add(id, (Map)new BinaryFormatter().Deserialize(stream));
 #pragma warning restore SYSLIB0011
     }
 

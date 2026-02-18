@@ -5,7 +5,6 @@ using CryBits.Entities.Map;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Logic;
-using CryBits.Server.Network;
 using CryBits.Server.Network.Senders;
 using static CryBits.Utils;
 

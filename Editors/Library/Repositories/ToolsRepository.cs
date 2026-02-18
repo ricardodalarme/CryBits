@@ -6,7 +6,6 @@ using System.Text.Json;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Library;
-using CryBits.Client.Framework.Library.Repositories;
 using CryBits.Editors.Entities;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
@@ -123,10 +122,10 @@ internal static class ToolsRepository
 
             ComponentDto dto = component switch
             {
-                Button button => ToolsRepository.ButtonDto(button),
-                TextBox textBox => ToolsRepository.TextBoxDto(textBox),
-                CheckBox checkBox => ToolsRepository.CheckBoxDto(checkBox),
-                Panel panel => ToolsRepository.PanelDto(panel),
+                Button button => ButtonDto(button),
+                TextBox textBox => TextBoxDto(textBox),
+                CheckBox checkBox => CheckBoxDto(checkBox),
+                Panel panel => PanelDto(panel),
                 _ => throw new InvalidOperationException($"Unknown component type: {component.GetType().Name}")
             };
 
@@ -137,8 +136,8 @@ internal static class ToolsRepository
     }
 
     // Delegate to Client.Framework ToolsRepository for DTO conversions
-    private static ButtonDto ButtonDto(Button tool) => CryBits.Client.Framework.Library.Repositories.ToolsRepository.ButtonDto(tool);
-    private static TextBoxDto TextBoxDto(TextBox tool) => CryBits.Client.Framework.Library.Repositories.ToolsRepository.TextBoxDto(tool);
-    private static PanelDto PanelDto(Panel tool) => CryBits.Client.Framework.Library.Repositories.ToolsRepository.PanelDto(tool);
-    private static CheckBoxDto CheckBoxDto(CheckBox tool) => CryBits.Client.Framework.Library.Repositories.ToolsRepository.CheckBoxDto(tool);
+    private static ButtonDto ButtonDto(Button tool) => Client.Framework.Library.Repositories.ToolsRepository.ButtonDto(tool);
+    private static TextBoxDto TextBoxDto(TextBox tool) => Client.Framework.Library.Repositories.ToolsRepository.TextBoxDto(tool);
+    private static PanelDto PanelDto(Panel tool) => Client.Framework.Library.Repositories.ToolsRepository.PanelDto(tool);
+    private static CheckBoxDto CheckBoxDto(CheckBox tool) => Client.Framework.Library.Repositories.ToolsRepository.CheckBoxDto(tool);
 }

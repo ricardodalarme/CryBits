@@ -173,7 +173,7 @@ internal static class UIRenderer
 
     private static void Information(Panel tool)
     {
-        var item = CryBits.Entities.Item.List.Get(PanelsEvents.InformationId);
+        var item = Item.List.Get(PanelsEvents.InformationId);
         Color textColor;
         var data = new List<string>();
 
