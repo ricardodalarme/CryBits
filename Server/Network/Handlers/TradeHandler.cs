@@ -4,6 +4,7 @@ using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Systems;
 using LiteNetLib.Utils;
 using static CryBits.Globals;
 
@@ -130,7 +131,7 @@ internal static class TradeHandler
 
     internal static void TradeLeave(Player player)
     {
-        player.TradeLeave();
+        TradeSystem.Leave(player);
     }
 
     internal static void TradeOffer(Player player, NetDataReader data)

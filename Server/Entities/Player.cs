@@ -134,18 +134,16 @@ internal class Player : Character
 
         // Leave party and any active trade
         PartySystem.Leave(this);
-        TradeLeave();
+        TradeSystem.Leave(this);
     }
 
     public void Warp(TempMap.TempMap map, byte x, byte y, bool needUpdate = false)
     {
         var oldMap = Map;
 
-        // Cancela a troca ou a loja
-        if (Trade != null) TradeLeave();
+        // Cancel any active trade or shop session
+        TradeSystem.Leave(this);
         if (Shop != null) ShopLeave();
-
-        // Evita que o jogador seja transportado para fora do limite
         if (map == null) return;
         if (x >= CryBits.Entities.Map.Map.Width) x = CryBits.Entities.Map.Map.Width - 1;
         if (y >= CryBits.Entities.Map.Map.Height) y = CryBits.Entities.Map.Map.Height - 1;
@@ -185,8 +183,8 @@ internal class Player : Character
         if (movement < 1 || movement > 2) return;
         if (GettingMap) return;
 
-        // Cancela a troca ou a loja
-        if (Trade != null) TradeLeave();
+        // Cancel any active trade or shop session
+        TradeSystem.Leave(this);
         if (Shop != null) ShopLeave();
 
         // Próximo azulejo
@@ -543,18 +541,6 @@ internal class Player : Character
     public ItemSlot FindInventory(Item item) => Inventory.First(x => x.Item == item);
 
     public byte TotalInventoryFree => (byte)Inventory.Count(x => x.Item != null);
-
-    public void TradeLeave()
-    {
-        // Cancela a troca
-        if (Trade != null)
-        {
-            Trade.Trade = null;
-            TradeSender.Trade(Trade, false);
-            Trade = null;
-            TradeSender.Trade(this, false);
-        }
-    }
 
     public byte TotalTradeItems => (byte)TradeOffer.Count(x => x.SlotNum != 0);
 
