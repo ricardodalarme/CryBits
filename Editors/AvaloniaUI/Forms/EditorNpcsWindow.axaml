@@ -1,0 +1,260 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorNpcsWindow"
+        Title="NPC Editor"
+        Width="860" Height="760"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- LEFT: NPC list                                          -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <Grid Grid.Column="0" Grid.Row="0" RowDefinitions="Auto,*" Margin="0,0,8,0">
+            <TextBox x:Name="txtFilter" Grid.Row="0" Watermark="Filter…" Margin="0,0,0,4"
+                     TextChanged="txtFilter_TextChanged"/>
+            <ListBox x:Name="lstNpcs" Grid.Row="1"
+                     SelectionMode="Single"
+                     SelectionChanged="lstNpcs_SelectionChanged"/>
+        </Grid>
+
+        <!-- New / Remove (bottom-left) -->
+        <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,*" Margin="0,6,8,0">
+            <Button Grid.Column="0" Content="New"    Click="butNew_Click"
+                    Margin="0,0,3,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+            <Button Grid.Column="1" Content="Remove" Click="butRemove_Click"
+                    Margin="3,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- RIGHT: Editor panels                                    -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                      x:Name="pnlContent" IsVisible="False"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="6">
+
+                <!-- ── General ── -->
+                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,4"/>
+
+                            <Grid ColumnDefinitions="90,*">
+                                <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center"/>
+                                <TextBox x:Name="txtName" Grid.Column="1" TextChanged="txtName_TextChanged"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="90,*">
+                                <TextBlock Grid.Column="0" Text="Say message:" VerticalAlignment="Center"/>
+                                <TextBox x:Name="txtSayMsg" Grid.Column="1" TextChanged="txtSayMsg_TextChanged"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="90,*">
+                                <TextBlock Grid.Column="0" Text="Texture:" VerticalAlignment="Center"/>
+                                <NumericUpDown x:Name="numTexture" Grid.Column="1" Minimum="0" Maximum="255"
+                                               FormatString="0" ValueChanged="numTexture_ValueChanged"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="90,*">
+                                <TextBlock Grid.Column="0" Text="Range (sight):" VerticalAlignment="Center"/>
+                                <NumericUpDown x:Name="numRange" Grid.Column="1" Minimum="0" Maximum="20"
+                                               FormatString="0" ValueChanged="numRange_ValueChanged"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="90,*">
+                                <TextBlock Grid.Column="0" Text="Spawn rate (s):" VerticalAlignment="Center"/>
+                                <NumericUpDown x:Name="numSpawn" Grid.Column="1" Minimum="0" Maximum="255"
+                                               FormatString="0" ValueChanged="numSpawn_ValueChanged"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Texture preview (right side of General card) -->
+                        <Border Grid.Column="1" Margin="8,0,0,0"
+                                Width="80" Height="80"
+                                BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                                CornerRadius="2" VerticalAlignment="Top">
+                            <Image x:Name="imgTexture" Stretch="Uniform"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- ── Attributes ── -->
+                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="8">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Attributes" FontWeight="Bold" Margin="0,0,0,4"/>
+                        <Grid ColumnDefinitions="*,*" >
+                            <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,4,0">
+                                <Grid ColumnDefinitions="90,*">
+                                    <TextBlock Grid.Column="0" Text="HP:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numHP" Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" ValueChanged="numHP_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="90,*">
+                                    <TextBlock Grid.Column="0" Text="MP:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numMP" Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" ValueChanged="numMP_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="90,*">
+                                    <TextBlock Grid.Column="0" Text="Strength:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numStrength" Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" ValueChanged="numStrength_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="90,*">
+                                    <TextBlock Grid.Column="0" Text="Resistance:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numResistance" Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" ValueChanged="numResistance_ValueChanged"/>
+                                </Grid>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Spacing="4" Margin="4,0,0,0">
+                                <Grid ColumnDefinitions="100,*">
+                                    <TextBlock Grid.Column="0" Text="Intelligence:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numIntelligence" Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" ValueChanged="numIntelligence_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="100,*">
+                                    <TextBlock Grid.Column="0" Text="Agility:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numAgility" Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" ValueChanged="numAgility_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="100,*">
+                                    <TextBlock Grid.Column="0" Text="Vitality:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numVitality" Grid.Column="1" Minimum="0" Maximum="32767"
+                                                   FormatString="0" ValueChanged="numVitality_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="100,*">
+                                    <TextBlock Grid.Column="0" Text="Experience:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numExperience" Grid.Column="1" Minimum="0" Maximum="2147483647"
+                                                   FormatString="0" ValueChanged="numExperience_ValueChanged"/>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Behaviour ── -->
+                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="8">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Behaviour" FontWeight="Bold" Margin="0,0,0,4"/>
+                        <Grid ColumnDefinitions="90,*">
+                            <TextBlock Grid.Column="0" Text="Behavior:" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="cmbBehavior" Grid.Column="1" HorizontalAlignment="Stretch"
+                                      SelectionChanged="cmbBehavior_SelectionChanged">
+                                <ComboBoxItem Content="Friendly"/>
+                                <ComboBoxItem Content="Attack On Sight"/>
+                                <ComboBoxItem Content="Attack When Attacked"/>
+                                <ComboBoxItem Content="Shop Keeper"/>
+                            </ComboBox>
+                        </Grid>
+                        <Grid ColumnDefinitions="90,*">
+                            <TextBlock Grid.Column="0" Text="Movement:" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="cmbMovement" Grid.Column="1" HorizontalAlignment="Stretch"
+                                      SelectionChanged="cmbMovement_SelectionChanged"/>
+                        </Grid>
+                        <Grid ColumnDefinitions="90,*">
+                            <TextBlock Grid.Column="0" Text="Flee at HP%:" VerticalAlignment="Center"/>
+                            <NumericUpDown x:Name="numFlee_Health" Grid.Column="1" Minimum="0" Maximum="100"
+                                           FormatString="0" ValueChanged="numFlee_Health_ValueChanged"/>
+                        </Grid>
+                        <Grid x:Name="pnlShop" ColumnDefinitions="90,*" IsVisible="False">
+                            <TextBlock Grid.Column="0" Text="Shop:" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="cmbShop" Grid.Column="1" HorizontalAlignment="Stretch"
+                                      SelectionChanged="cmbShop_SelectionChanged"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Drop ── -->
+                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="8">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Drop" FontWeight="Bold" Margin="0,0,0,4"/>
+                        <ListBox x:Name="lstDrop" Height="90" SelectionMode="Single"/>
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <Button Content="Add"    Click="butDrop_Add_Click"/>
+                            <Button Content="Delete" Click="butDrop_Delete_Click"/>
+                        </StackPanel>
+
+                        <!-- Add-drop inline form -->
+                        <Border x:Name="pnlDrop_Add" IsVisible="False"
+                                BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                                CornerRadius="4" Padding="8">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="Add drop" FontWeight="Bold" Margin="0,0,0,4"/>
+                                <Grid ColumnDefinitions="70,*">
+                                    <TextBlock Grid.Column="0" Text="Item:" VerticalAlignment="Center"/>
+                                    <ComboBox x:Name="cmbDrop_Item" Grid.Column="1" HorizontalAlignment="Stretch"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="70,*">
+                                    <TextBlock Grid.Column="0" Text="Amount:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numDrop_Amount" Grid.Column="1" Minimum="1" Maximum="32767"
+                                                   Value="1" FormatString="0"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="70,*">
+                                    <TextBlock Grid.Column="0" Text="Chance%:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numDrop_Chance" Grid.Column="1" Minimum="1" Maximum="100"
+                                                   Value="100" FormatString="0"/>
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right">
+                                    <Button Content="Cancel" Click="butDrop_Cancel_Click"/>
+                                    <Button Content="OK"     Click="butDrop_Ok_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Allies ── -->
+                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="8">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Allies" FontWeight="Bold" Margin="0,0,0,4"/>
+                        <CheckBox x:Name="chkAttackNpc" Content="Attack other NPCs"
+                                  IsCheckedChanged="chkAttackNpc_IsCheckedChanged"/>
+                        <ListBox x:Name="lstAllies" Height="80" SelectionMode="Single" IsEnabled="False"/>
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <Button Content="Add"    Click="butAllie_Add_Click"/>
+                            <Button Content="Delete" Click="butAllie_Delete_Click"/>
+                        </StackPanel>
+
+                        <!-- Add-ally inline form -->
+                        <Border x:Name="pnlAllie_Add" IsVisible="False"
+                                BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                                CornerRadius="4" Padding="8">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="Add ally" FontWeight="Bold" Margin="0,0,0,4"/>
+                                <Grid ColumnDefinitions="70,*">
+                                    <TextBlock Grid.Column="0" Text="NPC:" VerticalAlignment="Center"/>
+                                    <ComboBox x:Name="cmbAllie_Npc" Grid.Column="1" HorizontalAlignment="Stretch"/>
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right">
+                                    <Button Content="Cancel" Click="butAllie_Cancel_Click"/>
+                                    <Button Content="OK"     Click="butAllie_Ok_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Save / Cancel ── -->
+                <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
+                    <Button Grid.Column="0" Content="Save All" Click="butSave_Click"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,4,0"/>
+                    <Button Grid.Column="1" Content="Cancel"   Click="butCancel_Click"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,0,0"/>
+                </Grid>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Window>

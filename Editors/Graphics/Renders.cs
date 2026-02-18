@@ -30,6 +30,7 @@ internal static class Renders
     public static RenderWindow WinItem;
     public static RenderWindow WinClass;
     public static RenderWindow WinNpc;
+    public static RenderTexture WinNpcRT;
 
     #region Engine
 
@@ -130,8 +131,7 @@ internal static class Renders
         EditorTile();
         EditorClass();
         EditorItem();
-        EditorNpc();
-        // Interface editor renders on its Avalonia DispatcherTimer to avoid cross-thread SFML conflicts
+        // NPC and Interface editors render on their Avalonia DispatcherTimers to avoid cross-thread SFML conflicts
     }
 
     private static void Transparent(RenderWindow window)
@@ -532,6 +532,12 @@ internal static class Renders
         // Desenha o NPC
         Character(WinNpc, (short)EditorNpcs.Form.numTexture.Value);
     }
+
+    public static void EditorNpcRT()
+    {
+        if (WinNpcRT == null || EditorNpcsWindow.CurrentTextureIndex <= 0) return;
+        CharacterRT(WinNpcRT, EditorNpcsWindow.CurrentTextureIndex);
+    }
     #endregion
 
     #region Class Editors
@@ -556,6 +562,16 @@ internal static class Renders
         Transparent(window);
         if (textureNum > 0 && textureNum < Textures.Characters.Count) Render(window, texture, (int)(window.Size.X - size.Width) / 2, (int)(window.Size.Y - size.Height) / 2, 0, 0, size.Width, size.Height);
         window.Display();
+    }
+
+    private static void CharacterRT(RenderTexture target, short textureNum)
+    {
+        var texture = Textures.Characters[textureNum];
+        var size = new Size(texture.ToSize().Width / 4, texture.ToSize().Height / 4);
+
+        target.Clear();
+        if (textureNum > 0 && textureNum < Textures.Characters.Count) Render(target, texture, (int)(target.Size.X - size.Width) / 2, (int)(target.Size.Y - size.Height) / 2, 0, 0, size.Width, size.Height);
+        target.Display();
     }
     #endregion
 

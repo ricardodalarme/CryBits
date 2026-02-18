@@ -546,7 +546,7 @@ internal partial class EditorMaps : DarkForm
 
     private void butEditors_NPCs_Click(object sender, EventArgs e)
     {
-        EditorNpcs.Form = new EditorNpcs();
+        AvaloniaNpcsLauncher.OpenNpcsEditor(this);
     }
 
     private void butEditors_Shops_Click(object sender, EventArgs e)
