@@ -132,8 +132,8 @@ internal class Player : Character
         CharacterRepository.Write(Account);
         PlayerSender.PlayerLeave(this);
 
-        // Sai dos grupos
-        PartyLeave();
+        // Leave party and any active trade
+        PartySystem.Leave(this);
         TradeLeave();
     }
 
@@ -543,21 +543,6 @@ internal class Player : Character
     public ItemSlot FindInventory(Item item) => Inventory.First(x => x.Item == item);
 
     public byte TotalInventoryFree => (byte)Inventory.Count(x => x.Item != null);
-
-    public void PartyLeave()
-    {
-        if (Party.Count > 0)
-        {
-            // Retira o jogador do grupo
-            for (byte i = 0; i < Party.Count; i++)
-                Party[i].Party.Remove(this);
-
-            // Envia o dados para todos os membros do grupo
-            for (byte i = 0; i < Party.Count; i++) PartySender.Party(Party[i]);
-            Party.Clear();
-            PartySender.Party(this);
-        }
-    }
 
     public void TradeLeave()
     {
