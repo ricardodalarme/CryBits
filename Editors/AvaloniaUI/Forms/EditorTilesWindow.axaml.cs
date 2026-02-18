@@ -14,7 +14,6 @@ using CryBits.Enums;
 using SFML.Graphics;
 using static CryBits.Editors.Logic.Utils;
 using Point = System.Drawing.Point;
-using Size = System.Drawing.Size;
 using G = CryBits.Globals;
 
 namespace CryBits.Editors.AvaloniaUI.Forms;

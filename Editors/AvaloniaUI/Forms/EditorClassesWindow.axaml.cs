@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Media.Imaging;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;

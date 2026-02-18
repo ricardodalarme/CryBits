@@ -33,7 +33,7 @@ internal partial class EditorNpcsWindow : Window
         InitializeComponent();
 
         // Populate behaviour/movement combos
-        foreach (MovementStyle ms in Enum.GetValues<MovementStyle>())
+        foreach (var ms in Enum.GetValues<MovementStyle>())
             cmbMovement.Items.Add(ms.ToString());
 
         // Populate drop-item and shop combos from live data

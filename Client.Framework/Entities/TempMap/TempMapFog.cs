@@ -3,14 +3,9 @@ using CryBits.Entities.Map;
 
 namespace CryBits.Client.Framework.Entities.TempMap;
 
-public class TempMapFog
+public class TempMapFog(MapFog map)
 {
-    public TempMapFog(MapFog map)
-    {
-        Data = map;
-    }
-
-    private MapFog Data { get; }
+    private MapFog Data { get; } = map;
     public int X { get; set; }
     public int Y { get; set; }
 

@@ -24,13 +24,12 @@ internal class TempNpc : Character
     private short Regeneration(byte vital)
     {
         // Cálcula o máximo de vital que o Npc possui
-        switch ((Vital)vital)
+        return (Vital)vital switch
         {
-            case Enums.Vital.Hp: return (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Vitality] * 0.3);
-            case Enums.Vital.Mp: return (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Intelligence] * 0.1);
-        }
-
-        return 0;
+            Enums.Vital.Hp => (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Vitality] * 0.3),
+            Enums.Vital.Mp => (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Intelligence] * 0.1),
+            _ => 0
+        };
     }
 
     // Construtor

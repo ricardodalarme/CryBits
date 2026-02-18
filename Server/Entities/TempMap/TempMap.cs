@@ -10,21 +10,17 @@ using static CryBits.Utils;
 
 namespace CryBits.Server.Entities.TempMap;
 
-internal class TempMap : Entity
+internal class TempMap(Guid id, Map map) : Entity(id)
 {
     // Lista de dados
     public static readonly Dictionary<Guid, TempMap> List = new();
 
     // Dados
-    public readonly Map Data;
+    public readonly Map Data = map;
     public TempNpc[] Npc = Array.Empty<TempNpc>();
     public List<TempMapItems> Item = new();
 
     // Construtor
-    public TempMap(Guid id, Map map) : base(id)
-    {
-        Data = map;
-    }
 
     public void Logic()
     {

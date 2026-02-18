@@ -27,13 +27,13 @@ internal static class Socket
         _listener = new EventBasedNetListener();
         Device = new NetManager(_listener);
 
-        _listener.NetworkReceiveEvent += (peer, reader, channel, deliveryMethod) =>
+        _listener.NetworkReceiveEvent += (_, reader, _, _) =>
         {
             Receive.Handle(reader);
             reader.Recycle();
         };
 
-        _listener.PeerDisconnectedEvent += (peer, info) =>
+        _listener.PeerDisconnectedEvent += (_, _) =>
         {
             _serverPeer = null;
             if (Player.Me != null) Player.Me.Leave();

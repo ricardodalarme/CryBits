@@ -9,15 +9,10 @@ using static CryBits.Globals;
 
 namespace CryBits.Editors.Logic;
 
-internal class MapProperties
+internal class MapProperties(Map map)
 {
-    public MapProperties(Map map)
-    {
-        Base = map;
-    }
-
     // Dados do NPC
-    public readonly Map Base;
+    public readonly Map Base = map;
 
     /////////////
     // General //

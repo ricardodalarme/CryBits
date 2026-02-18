@@ -5,7 +5,6 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Entities.Map;
 
 namespace CryBits.Client.Framework.Library;

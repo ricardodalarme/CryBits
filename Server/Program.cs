@@ -39,7 +39,7 @@ internal static class Program
 
         // Cria os dispositivos da rede
         Socket.Init();
-        Console.WriteLine("Network started. Port: " + CryBits.Globals.Port);
+        Console.WriteLine("Network started. Port: " + Globals.Port);
 
         // Calcula quanto tempo demorou para inicializar o servidor
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");

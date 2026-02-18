@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using CryBits.Enums;
 using static CryBits.Globals;
 
@@ -13,13 +12,13 @@ internal static class Utils
     public static Point Block_Position(byte direction)
     {
         // Retorna a posição de cada seta do bloqueio direcional
-        switch ((Direction)direction)
+        return (Direction)direction switch
         {
-            case Direction.Up: return new Point(Grid / 2 - 4, 0);
-            case Direction.Down: return new Point(Grid / 2 - 4, Grid - 9);
-            case Direction.Left: return new Point(0, Grid / 2 - 4);
-            case Direction.Right: return new Point(Grid - 9, Grid / 2 - 4);
-            default: return new Point(0);
-        }
+            Direction.Up => new Point(Grid / 2 - 4, 0),
+            Direction.Down => new Point(Grid / 2 - 4, Grid - 9),
+            Direction.Left => new Point(0, Grid / 2 - 4),
+            Direction.Right => new Point(Grid - 9, Grid / 2 - 4),
+            _ => new Point(0)
+        };
     }
 }

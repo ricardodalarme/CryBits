@@ -2,7 +2,6 @@
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;

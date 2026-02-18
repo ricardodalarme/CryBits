@@ -3,19 +3,13 @@
 namespace CryBits.Entities;
 
 [Serializable]
-public class Entity : IEquatable<Entity>
+public class Entity(Guid id) : IEquatable<Entity>
 {
-    public Guid Id { get; }
+    public Guid Id { get; } = id;
     public string Name { get; set; } = string.Empty;
 
-    public Entity()
+    public Entity() : this(Guid.NewGuid())
     {
-        Id = Guid.NewGuid();
-    }
-
-    public Entity(Guid id)
-    {
-        Id = id;
     }
 
     public override string ToString() => Name;

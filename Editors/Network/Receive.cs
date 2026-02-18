@@ -73,10 +73,7 @@ internal static class Receive
         var id = map.Id;
 
         // Obtém o dado
-        if (CryBits.Entities.Map.Map.List.ContainsKey(id))
-            CryBits.Entities.Map.Map.List[id] = map;
-        else
-            CryBits.Entities.Map.Map.List.Add(id, map);
+        CryBits.Entities.Map.Map.List[id] = map;
     }
 
     private static void Npcs(NetDataReader data)

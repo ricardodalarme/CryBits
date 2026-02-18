@@ -29,7 +29,7 @@ internal static class SfmlRenderBlit
             bitmap = new WriteableBitmap(new PixelSize(w, h), new Vector(96, 96), PixelFormat.Rgba8888, AlphaFormat.Unpremul);
 
         using var fb = bitmap.Lock();
-        for (int y = 0; y < h; y++)
+        for (var y = 0; y < h; y++)
             Marshal.Copy(pixels, y * w * 4, fb.Address + y * fb.RowBytes, w * 4);
 
         target.Source = bitmap;
@@ -41,7 +41,7 @@ internal static class SfmlRenderBlit
     /// <see cref="WriteableBitmap"/> and assigns it to <paramref name="target"/>.
     /// Use this for textures that are displayed whole (e.g. item icons).
     /// </summary>
-    public static void BlitTexture(SFML.Graphics.Texture sfmlTexture, AvaloniaImage target)
+    public static void BlitTexture(Texture sfmlTexture, AvaloniaImage target)
     {
         var img = sfmlTexture.CopyToImage();
         var w = (int)img.Size.X;
@@ -55,7 +55,7 @@ internal static class SfmlRenderBlit
     /// the sheet is divided into <paramref name="cols"/> columns and
     /// <paramref name="rows"/> rows and only the top-left frame is needed.
     /// </summary>
-    public static void BlitTexture(SFML.Graphics.Texture sfmlTexture, AvaloniaImage target, int cols, int rows)
+    public static void BlitTexture(Texture sfmlTexture, AvaloniaImage target, int cols, int rows)
     {
         var img = sfmlTexture.CopyToImage();
         var fullW = (int)img.Size.X;
@@ -74,7 +74,7 @@ internal static class SfmlRenderBlit
             AlphaFormat.Unpremul);
 
         using var fb = bitmap.Lock();
-        for (int y = 0; y < frameH; y++)
+        for (var y = 0; y < frameH; y++)
         {
             var srcOffset = y * fullW * 4;
             var dstPtr = fb.Address + y * fb.RowBytes;

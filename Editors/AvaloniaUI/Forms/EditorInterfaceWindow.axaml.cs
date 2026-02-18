@@ -2,13 +2,11 @@ using System;
 using System.Collections.ObjectModel;
 using SFML.System;
 using System.ComponentModel;
-using System.Drawing;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
@@ -61,7 +59,7 @@ internal partial class EditorInterfaceWindow : Window
         InitializeComponent();
 
         // Populate window combo from tree
-        foreach (InterfaceNode node in InterfaceData.Tree.Nodes)
+        foreach (var node in InterfaceData.Tree.Nodes)
             cmbWindows.Items.Add(node.Text);
 
         if (cmbWindows.Items.Count > 0)
@@ -116,7 +114,7 @@ internal partial class EditorInterfaceWindow : Window
     private static TreeItemVM BuildVM(InterfaceNode node, TreeItemVM? parent)
     {
         var vm = new TreeItemVM { Header = node.Text, Tag = node.Tag as Component, SourceNode = node, Parent = parent };
-        foreach (InterfaceNode child in node.Nodes)
+        foreach (var child in node.Nodes)
             vm.Children.Add(BuildVM(child, vm));
         return vm;
     }

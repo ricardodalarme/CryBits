@@ -27,12 +27,12 @@ internal static class Socket
             Account.List.Add(new Account(peer));
         };
 
-        _listener.PeerDisconnectedEvent += (peer, info) =>
+        _listener.PeerDisconnectedEvent += (peer, _) =>
         {
             Account.List.Find(x => x.Connection == peer)?.Leave();
         };
 
-        _listener.NetworkReceiveEvent += (peer, reader, channel, deliveryMethod) =>
+        _listener.NetworkReceiveEvent += (peer, reader, _, _) =>
         {
             var account = Account.List.Find(x => x.Connection == peer);
             Receive.Handle(account, reader);

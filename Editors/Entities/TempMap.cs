@@ -32,12 +32,12 @@ internal static class TempMap
         // Redimensiona a lista
         var win = EditorMapsWindow.Instance;
         if (win?.SelectedMap != null)
-            switch (win.SelectedMap.Weather.Type)
+            Weather = win.SelectedMap.Weather.Type switch
             {
-                case Enums.Weather.Thundering:
-                case Enums.Weather.Raining: Weather = new TempMapWeatherParticle[MaxRainParticles + 1]; break;
-                case Enums.Weather.Snowing: Weather = new TempMapWeatherParticle[MaxSnowParticles + 1]; break;
-            }
+                Enums.Weather.Thundering or Enums.Weather.Raining => new TempMapWeatherParticle[MaxRainParticles + 1],
+                Enums.Weather.Snowing => new TempMapWeatherParticle[MaxSnowParticles + 1],
+                _ => Weather
+            };
     }
 
     public static void UpdateFog()

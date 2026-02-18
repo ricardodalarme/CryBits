@@ -7,14 +7,9 @@ using static CryBits.Utils;
 
 namespace CryBits.Client.Framework.Entities.TempMap;
 
-public class TempMapWeather
+public class TempMapWeather(MapWeather data)
 {
-    public TempMapWeather(MapWeather data)
-    {
-        Data = data;
-    }
-
-    private MapWeather Data { get; }
+    private MapWeather Data { get; } = data;
     public byte Lightning { get; set; }
     public TempMapWeatherParticle[] Particles { get; private set; } = Array.Empty<TempMapWeatherParticle>();
 

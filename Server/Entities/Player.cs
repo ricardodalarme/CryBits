@@ -69,25 +69,25 @@ internal class Player : Character
         var @base = Class.Vital;
 
         // Cálcula o máximo de vital que um jogador possui
-        switch ((Vital)vital)
+        return (Vital)vital switch
         {
-            case Enums.Vital.Hp: return (short)(@base[vital] + Attribute[(byte)Enums.Attribute.Vitality] * 1.50 * (Level * 0.75) + 1);
-            case Enums.Vital.Mp: return (short)(@base[vital] + Attribute[(byte)Enums.Attribute.Intelligence] * 1.25 * (Level * 0.5) + 1);
-        }
-
-        return 1;
+            Enums.Vital.Hp => (short)(@base[vital] + Attribute[(byte)Enums.Attribute.Vitality] * 1.50 * (Level * 0.75) +
+                                      1),
+            Enums.Vital.Mp => (short)(@base[vital] +
+                                      Attribute[(byte)Enums.Attribute.Intelligence] * 1.25 * (Level * 0.5) + 1),
+            _ => 1
+        };
     }
 
     public short Regeneration(byte vital)
     {
         // Cálcula o máximo de vital que um jogador possui
-        switch ((Vital)vital)
+        return (Vital)vital switch
         {
-            case Enums.Vital.Hp: return (short)(MaxVital(vital) * 0.05 + Attribute[(byte)Enums.Attribute.Vitality] * 0.3);
-            case Enums.Vital.Mp: return (short)(MaxVital(vital) * 0.05 + Attribute[(byte)Enums.Attribute.Intelligence] * 0.1);
-        }
-
-        return 1;
+            Enums.Vital.Hp => (short)(MaxVital(vital) * 0.05 + Attribute[(byte)Enums.Attribute.Vitality] * 0.3),
+            Enums.Vital.Mp => (short)(MaxVital(vital) * 0.05 + Attribute[(byte)Enums.Attribute.Intelligence] * 0.1),
+            _ => 1
+        };
     }
 
     // Quantidade de experiência para passar para o próximo level

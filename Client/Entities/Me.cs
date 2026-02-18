@@ -11,7 +11,7 @@ using static CryBits.Globals;
 namespace CryBits.Client.Entities;
 
 // Dados somente do próprio jogador
-internal class Me : Player
+internal class Me(string name) : Player(name)
 {
     // Dados
     public ItemSlot[] Inventory = new ItemSlot[MaxInventory];
@@ -23,9 +23,6 @@ internal class Me : Player
     public int ExpNeeded;
     public short Points;
     private int _collectTimer;
-
-    // Construtor
-    public Me(string name) : base(name) { }
 
     public override void Logic()
     {

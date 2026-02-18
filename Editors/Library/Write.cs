@@ -21,9 +21,8 @@ internal static class Write
         // Constrói a árvore completa como DTO JSON
         var root = new ToolsJsonRoot();
 
-        for (int n = 0; n < InterfaceData.Tree.Nodes.Count; n++)
+        foreach (var screenNode in InterfaceData.Tree.Nodes)
         {
-            var screenNode = InterfaceData.Tree.Nodes[n];
             var screenDto = new ScreenDto { Name = ((Screen)screenNode.Tag!).Name };
             BuildChildren(screenNode, screenDto.Children);
             root.Screens.Add(screenDto);
@@ -38,9 +37,9 @@ internal static class Write
 
     private static void BuildChildren(InterfaceNode node, List<ComponentDto> dtos)
     {
-        for (int i = 0; i < node.Nodes.Count; i++)
+        foreach (var t in node.Nodes)
         {
-            var component = (Component)node.Nodes[i].Tag!;
+            var component = (Component)t.Tag!;
 
             ComponentDto dto = component switch
             {
@@ -52,7 +51,7 @@ internal static class Write
             };
 
             // Recurse into children
-            BuildChildren(node.Nodes[i], dto.Children);
+            BuildChildren(t, dto.Children);
             dtos.Add(dto);
         }
     }

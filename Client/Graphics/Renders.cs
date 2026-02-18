@@ -128,12 +128,11 @@ internal static class Renders
             for (var i = 0; i < text.Length; i++)
             {
                 // Verifica se o caráctere é um separável 
-                switch (text[i])
+                split = text[i] switch
                 {
-                    case '-':
-                    case '_':
-                    case ' ': split = i; break;
-                }
+                    '-' or '_' or ' ' => i,
+                    _ => split
+                };
 
                 // Desenha a parte do texto que cabe
                 var tempText = text.Substring(0, i);
@@ -249,14 +248,13 @@ internal static class Renders
 
     private static void Button(Button tool)
     {
-        byte alpha = 225;
-
         // Define a transparência do botão pelo seu estado
-        switch (tool.ButtonState)
+        byte alpha = tool.ButtonState switch
         {
-            case ButtonState.Above: alpha = 250; break;
-            case ButtonState.Click: alpha = 200; break;
-        }
+            ButtonState.Above => 250,
+            ButtonState.Click => 200,
+            _ => 225
+        };
 
         // Desenha o botão
         Render(Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
@@ -429,14 +427,14 @@ internal static class Renders
         if (item == null) return;
 
         // Define a cor de acordo com a raridade
-        switch (item.Rarity)
+        textColor = item.Rarity switch
         {
-            case Rarity.Uncommon: textColor = new Color(204, 255, 153); break; // Verde
-            case Rarity.Rare: textColor = new Color(102, 153, 255); break; // Azul
-            case Rarity.Epic: textColor = new Color(153, 0, 204); break; // Roxo
-            case Rarity.Legendary: textColor = new Color(255, 255, 77); break; // Amarelo
-            default: textColor = new Color(); break; // Branco
-        }
+            Rarity.Uncommon => new Color(204, 255, 153),
+            Rarity.Rare => new Color(102, 153, 255),
+            Rarity.Epic => new Color(153, 0, 204),
+            Rarity.Legendary => new Color(255, 255, 77),
+            _ => new Color()
+        };
 
         // Nome, descrição e icone do item
         DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, TextAlign.Center);
@@ -610,16 +608,16 @@ internal static class Renders
         Rectangle recSource = new();
         var size = Textures.Characters[textureNum].ToSize();
         var color = new Color(255, 255, 255);
-        byte line = 0;
 
         // Direção
-        switch (direction)
+        byte line = direction switch
         {
-            case Direction.Up: line = MovementUp; break;
-            case Direction.Down: line = MovementDown; break;
-            case Direction.Left: line = MovementLeft; break;
-            case Direction.Right: line = MovementRight; break;
-        }
+            Direction.Up => MovementUp,
+            Direction.Down => MovementDown,
+            Direction.Left => MovementLeft,
+            Direction.Right => MovementRight,
+            _ => 0
+        };
 
         // Define as propriedades dos retângulos
         recSource.X = column * size.Width / AnimationAmount;
@@ -753,13 +751,13 @@ internal static class Renders
         position.Y = npc.PixelY - texture.ToSize().Height / AnimationAmount / 2;
 
         // Cor do texto
-        switch (npc.Data.Behaviour)
+        color = npc.Data.Behaviour switch
         {
-            case Behaviour.Friendly: color = Color.White; break;
-            case Behaviour.AttackOnSight: color = Color.Red; break;
-            case Behaviour.AttackWhenAttacked: color = new Color(228, 120, 51); break;
-            default: color = Color.White; break;
-        }
+            Behaviour.Friendly => Color.White,
+            Behaviour.AttackOnSight => Color.Red,
+            Behaviour.AttackWhenAttacked => new Color(228, 120, 51),
+            _ => Color.White
+        };
 
         // Desenha o texto
         DrawText(npc.Data.Name, CameraUtils.ConvertX(position.X), CameraUtils.ConvertY(position.Y), color);
@@ -864,10 +862,11 @@ internal static class Renders
         if (TempMap.Current.Data.Weather.Type == 0) return;
 
         // Textura
-        switch (TempMap.Current.Data.Weather.Type)
+        x = TempMap.Current.Data.Weather.Type switch
         {
-            case Weather.Snowing: x = 32; break;
-        }
+            Weather.Snowing => 32,
+            _ => x
+        };
 
         // Desenha as partículas
         foreach (var weather in TempMap.Current.Weather.Particles)
@@ -886,11 +885,11 @@ internal static class Renders
         if (string.IsNullOrEmpty(TempMap.Current.Data.Name)) return;
 
         // A cor do texto vária de acordo com a moral do mapa
-        switch (TempMap.Current.Data.Moral)
+        color = TempMap.Current.Data.Moral switch
         {
-            case Moral.Dangerous: color = Color.Red; break;
-            default: color = Color.White; break;
-        }
+            Moral.Dangerous => Color.Red,
+            _ => Color.White
+        };
 
         // Desenha o nome do mapa
         DrawText(TempMap.Current.Data.Name, 426, 48, color);

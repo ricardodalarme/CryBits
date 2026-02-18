@@ -11,14 +11,14 @@ public static class Utils
     public static Direction ReverseDirection(Direction direction)
     {
         // Retorna a direção inversa
-        switch (direction)
+        return direction switch
         {
-            case Direction.Up: return Direction.Down;
-            case Direction.Down: return Direction.Up;
-            case Direction.Left: return Direction.Right;
-            case Direction.Right: return Direction.Left;
-            default: return Direction.Count;
-        }
+            Direction.Up => Direction.Down,
+            Direction.Down => Direction.Up,
+            Direction.Left => Direction.Right,
+            Direction.Right => Direction.Left,
+            _ => Direction.Count
+        };
     }
 
     public static void NextTile(Direction direction, ref byte x, ref byte y)

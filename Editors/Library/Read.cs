@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
@@ -29,7 +28,7 @@ internal static class Read
 
         foreach (var screenDto in root.Screens)
         {
-            var screen = new Client.Framework.Interfacily.Components.Screen { Name = screenDto.Name };
+            var screen = new Screen { Name = screenDto.Name };
             var node = InterfaceData.Tree.Nodes.Add("[Window] " + screen.Name);
             node.Tag = screen;
             LoadChildren(node, screen.Body, screenDto.Children);

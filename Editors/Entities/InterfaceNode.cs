@@ -61,6 +61,6 @@ internal sealed class InterfaceNode
             node.Parent = null;
         }
 
-        public System.Collections.Generic.IEnumerator<InterfaceNode> GetEnumerator() => _list.GetEnumerator();
+        public IEnumerator<InterfaceNode> GetEnumerator() => _list.GetEnumerator();
     }
 }

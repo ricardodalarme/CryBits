@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
@@ -31,9 +32,8 @@ internal static class Loop
                 foreach (var tempMap in TempMap.List.Values) tempMap.Logic();
 
                 // Lógica dos jogadores
-                foreach (var account in Account.List)
-                    if (account.IsPlaying)
-                        account.Character.Logic();
+                foreach (var account in Account.List.Where(account => account.IsPlaying))
+                    account.Character.Logic();
 
                 // Reinicia a contagem dos 500
                 _timer500 = Environment.TickCount;

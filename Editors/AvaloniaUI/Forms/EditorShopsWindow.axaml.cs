@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -88,7 +87,7 @@ internal partial class EditorShopsWindow : Window
         RefreshSelectedDetails();
     }
 
-    private void txtFilter_TextChanged(object sender, Avalonia.Controls.TextChangedEventArgs e)
+    private void txtFilter_TextChanged(object sender, TextChangedEventArgs e)
     {
         List_Update(_selected?.Id);
     }
@@ -124,7 +123,7 @@ internal partial class EditorShopsWindow : Window
         Close();
     }
 
-    private void txtName_TextChanged(object sender, Avalonia.Controls.TextChangedEventArgs e)
+    private void txtName_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (_selected == null) return;
 

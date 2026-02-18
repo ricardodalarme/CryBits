@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using CryBits.Client.Utils;
 using CryBits.Client.Entities;
 using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework;

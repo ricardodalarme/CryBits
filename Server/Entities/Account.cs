@@ -4,13 +4,13 @@ using LiteNetLib;
 
 namespace CryBits.Server.Entities;
 
-internal class Account
+internal class Account(NetPeer connection)
 {
     // Lista de dados
     public static readonly List<Account> List = new();
 
     // Dados básicos
-    public NetPeer Connection { get; }
+    public NetPeer Connection { get; } = connection;
     public string User { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public Access Access { get; set; }
@@ -24,10 +24,6 @@ internal class Account
     }
 
     // Construtor
-    public Account(NetPeer connection)
-    {
-        Connection = connection;
-    }
 
     // Verifica se o jogador está dentro do jogo
     public bool IsPlaying => Character != null;

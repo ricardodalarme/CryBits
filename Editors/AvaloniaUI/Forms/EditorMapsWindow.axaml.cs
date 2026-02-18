@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using SFML.System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
@@ -15,10 +14,8 @@ using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
-using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Entities.Map;
@@ -31,8 +28,6 @@ using static CryBits.Editors.Logic.Utils;
 using AvaloniaScrollEventArgs = Avalonia.Controls.Primitives.ScrollEventArgs;
 using SelectionChangedEventArgs = Avalonia.Controls.SelectionChangedEventArgs;
 using TextChangedEventArgs = Avalonia.Controls.TextChangedEventArgs;
-using AvaloniaNumericUpDownValueChangedEventArgs = Avalonia.Controls.NumericUpDownValueChangedEventArgs;
-using AvaloniaColor = Avalonia.Media.Color;
 using SystemColor = System.Drawing.Color;
 using SystemPoint = System.Drawing.Point;
 using SystemSize = System.Drawing.Size;
@@ -163,7 +158,7 @@ internal partial class EditorMapsWindow : Window
         Instance = this;
 
         // Layer type combo
-        foreach (Layer l in Enum.GetValues<Layer>())
+        foreach (var l in Enum.GetValues<Layer>())
             cmbLayers_Type.Items.Add(l.ToString());
 
         // Tile sheet combo
@@ -172,9 +167,9 @@ internal partial class EditorMapsWindow : Window
         if (cmbTiles.Items.Count > 0) cmbTiles.SelectedIndex = 0;
 
         // Enums
-        foreach (Moral m in Enum.GetValues<Moral>())
+        foreach (var m in Enum.GetValues<Moral>())
             cmbMoral.Items.Add(m.ToString());
-        foreach (Weather w in Enum.GetValues<Weather>())
+        foreach (var w in Enum.GetValues<Weather>())
             cmbWeather.Items.Add(w.ToString());
 
         // Zone scroll limit
@@ -908,7 +903,7 @@ internal partial class EditorMapsWindow : Window
         {
             if (cmbA_Warp_Map.Items.Count > 0) cmbA_Warp_Map.SelectedIndex = 0;
             if (cmbA_Warp_Direction.Items.Count == 0)
-                foreach (Direction d in Enum.GetValues<Direction>())
+                foreach (var d in Enum.GetValues<Direction>())
                     cmbA_Warp_Direction.Items.Add(d.ToString());
             cmbA_Warp_Direction.SelectedIndex = 0;
             numA_Warp_X.Value = 0;
