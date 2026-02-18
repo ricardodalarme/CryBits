@@ -193,15 +193,16 @@ internal static class TradeHandler
                 var to = player;
                 for (byte j = 0; j < 2; j++, to = to == player ? invited : player)
                 for (byte i = 0; i < MaxInventory; i++)
-                    to.TakeItem(to.Inventory[to.TradeOffer[i].SlotNum], to.TradeOffer[i].Amount);
+                    InventorySystem.TakeItem(to, to.Inventory[to.TradeOffer[i].SlotNum], to.TradeOffer[i].Amount);
 
                 // Dá os itens aos jogadores
                 for (byte i = 0; i < MaxInventory; i++)
                 {
                     if (player.TradeOffer[i].SlotNum > 0)
-                        invited.GiveItem(yourInventory[player.TradeOffer[i].SlotNum].Item, player.TradeOffer[i].Amount);
+                        InventorySystem.GiveItem(invited, yourInventory[player.TradeOffer[i].SlotNum].Item,
+                            player.TradeOffer[i].Amount);
                     if (invited.TradeOffer[i].SlotNum > 0)
-                        player.GiveItem(theirInventory[invited.TradeOffer[i].SlotNum].Item,
+                        InventorySystem.GiveItem(player, theirInventory[invited.TradeOffer[i].SlotNum].Item,
                             invited.TradeOffer[i].Amount);
                 }
 

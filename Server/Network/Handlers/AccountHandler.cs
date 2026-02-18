@@ -9,6 +9,7 @@ using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
 using CryBits.Server.Library.Repositories;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Systems;
 using LiteNetLib.Utils;
 using static CryBits.Globals;
 
@@ -63,7 +64,7 @@ internal static class AccountHandler
           account.Character.Equipment[@class.Item[i].Item.EquipType] == null)
         account.Character.Equipment[@class.Item[i].Item.EquipType] = @class.Item[i].Item;
       else
-        account.Character.GiveItem(@class.Item[i].Item, @class.Item[i].Amount);
+        InventorySystem.GiveItem(account.Character, @class.Item[i].Item, @class.Item[i].Amount);
     for (byte i = 0; i < MaxHotbar; i++) account.Character.Hotbar[i] = new HotbarSlot(SlotType.None, 0);
 
     // Salva a conta

@@ -2,6 +2,7 @@ using CryBits.Enums;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Systems;
 using LiteNetLib.Utils;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
@@ -54,23 +55,14 @@ internal static class PlayerHandler
 
     internal static void CollectItem(Player player)
     {
-        var mapItem = player.Map.HasItem(player.X, player.Y);
-
-        // Somente se necessário
-        if (mapItem == null) return;
-
-        // Dá o item ao jogador
-        if (player.GiveItem(mapItem.Item, mapItem.Amount))
-        {
-            // Retira o item do mapa
-            player.Map.Item.Remove(mapItem);
-            MapSender.MapItems(player.Map);
-        }
+        InventorySystem.CollectItem(player);
     }
 
     internal static void DropItem(Player player, NetDataReader data)
     {
-        player.DropItem(data.GetShort(), data.GetShort());
+        var slot = data.GetShort();
+        var amount = data.GetShort();
+        if (slot != -1) InventorySystem.DropItem(player, player.Inventory[slot], amount);
     }
 
     internal static void InventoryChange(Player player, NetDataReader data)
@@ -97,38 +89,12 @@ internal static class PlayerHandler
 
     internal static void InventoryUse(Player player, NetDataReader data)
     {
-        player.UseItem(player.Inventory[data.GetByte()]);
+        InventorySystem.UseItem(player, player.Inventory[data.GetByte()]);
     }
 
     internal static void EquipmentRemove(Player player, NetDataReader data)
     {
-        var slot = data.GetByte();
-
-        // Apenas se necessário
-        if (player.Equipment[slot] == null) return;
-        if (player.Equipment[slot].Bind == BindOn.Equip) return;
-
-        // Adiciona o equipamento ao inventário
-        if (!player.GiveItem(player.Equipment[slot], 1))
-        {
-            // Somente se necessário
-            if (player.Map.Item.Count == MaxMapItems) return;
-
-            // Solta o item no chão
-            player.Map.Item.Add(new TempMapItems(player.Equipment[slot], 1, player.X, player.Y));
-
-            // Envia os dados
-            MapSender.MapItems(player.Map);
-            PlayerSender.PlayerInventory(player);
-        }
-
-        // Remove o equipamento
-        for (byte i = 0; i < (byte)Attribute.Count; i++)
-            player.Attribute[i] -= player.Equipment[slot].EquipAttribute[i];
-        player.Equipment[slot] = null;
-
-        // Envia os dados
-        PlayerSender.PlayerEquipments(player);
+        InventorySystem.UnequipItem(player, data.GetByte());
     }
 
     internal static void HotbarAdd(Player player, NetDataReader data)
@@ -169,7 +135,8 @@ internal static class PlayerHandler
         // Usa o item
         switch (player.Hotbar[hotbarSlot].Type)
         {
-            case SlotType.Item: player.UseItem(player.Hotbar[hotbarSlot].Slot); break;
+            case SlotType.Item:
+                InventorySystem.UseItem(player, player.Inventory[player.Hotbar[hotbarSlot].Slot]); break;
         }
     }
 }

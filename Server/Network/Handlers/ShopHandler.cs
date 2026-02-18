@@ -29,8 +29,8 @@ internal static class ShopHandler
         }
 
         // Realiza a compra do item
-        player.TakeItem(inventorySlot, shopSold.Price);
-        player.GiveItem(shopSold.Item, shopSold.Amount);
+        InventorySystem.TakeItem(player, inventorySlot, shopSold.Price);
+        InventorySystem.GiveItem(player, shopSold.Item, shopSold.Amount);
         ChatSender.Message(player, "You bought " + shopSold.Price + "x " + shopSold.Item.Name + ".", Color.Green);
     }
 
@@ -57,8 +57,8 @@ internal static class ShopHandler
         // Realiza a venda do item
         ChatSender.Message(player, "You sold " + player.Inventory[inventorySlot].Item.Name + "x " + amount + "for .",
             Color.Green);
-        player.TakeItem(player.Inventory[inventorySlot], amount);
-        player.GiveItem(player.Shop.Currency, (short)(buy.Price * amount));
+        InventorySystem.TakeItem(player, player.Inventory[inventorySlot], amount);
+        InventorySystem.GiveItem(player, player.Shop.Currency, (short)(buy.Price * amount));
     }
 
     internal static void ShopClose(Player player)
