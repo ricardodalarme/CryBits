@@ -114,7 +114,7 @@ internal static class TempMap
         // Somente se necessário
         var win = EditorMapsWindow.Instance;
         if (win?.SelectedMap == null) return;
-        if (!win.IsVisible || win.SelectedMap.Weather.Type == 0 || !win.ShowVisualization)
+        if (!win.IsOpen || win.SelectedMap.Weather.Type == 0 || !win.ShowVisualizationSafe)
         {
             if (Sound.List[Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
             return;

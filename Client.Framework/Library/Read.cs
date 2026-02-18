@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
@@ -11,48 +12,82 @@ namespace CryBits.Client.Framework.Library;
 
 public static class Read
 {
+    // ─── Interface (Tools) ──────────────────────────────────────────────────
 
     public static void Tools()
     {
         var file = new FileInfo(Directories.ToolsData.FullName);
+        if (!file.Exists) return;
 
-        // Lê todas as ferramentas
-        using var data = new BinaryReader(file.OpenRead());
+        // Lê todas as ferramentas a partir de JSON
+        var root = JsonSerializer.Deserialize<ToolsJsonRoot>(file.OpenRead(), JsonConfig.Options)
+                   ?? new ToolsJsonRoot();
 
-        var windowsCount = data.ReadInt16();
-        for (byte n = 0; n < windowsCount; n++)
+        foreach (var screenDto in root.Screens)
         {
-            var temp = new Screen { Name = data.ReadString() };
-            Screens.List.Add(temp.Name, temp);
-            Tools(null, Screens.List[temp.Name].Body, data);
+            var screen = new Screen { Name = screenDto.Name };
+            Screens.List.Add(screen.Name, screen);
+            LoadChildren(null, screen.Body, screenDto.Children);
         }
     }
 
-    private static void Tools(Component? parent, List<Component> node, BinaryReader data)
+    private static void LoadChildren(Component? parent, List<Component> node, List<ComponentDto> dtos)
     {
-        // Lê todos os filhos
-        var size = data.ReadByte();
-
-        for (byte i = 0; i < size; i++)
+        foreach (var dto in dtos)
         {
-            // Lê a ferramenta
-            Component tempTool;
-            switch ((ToolType)data.ReadByte())
+            Component component = dto switch
             {
-                case ToolType.Button: tempTool = Button(data); Buttons.List.Add(tempTool.Name, (Button)tempTool); break;
-                case ToolType.TextBox: tempTool = TextBox(data); TextBoxes.List.Add(tempTool.Name, (TextBox)tempTool); break;
-                case ToolType.Panel: tempTool = Panel(data); Panels.List.Add(tempTool.Name, (Panel)tempTool); break;
-                case ToolType.CheckBox: tempTool = CheckBox(data); CheckBoxes.List.Add(tempTool.Name, (CheckBox)tempTool); break;
-                default: return;
+                ButtonDto b => new Button
+                {
+                    Name = b.Name,
+                    Position = new Point(b.X, b.Y),
+                    Visible = b.Visible,
+                    TextureNum = b.TextureNum
+                },
+                TextBoxDto tb => new TextBox
+                {
+                    Name = tb.Name,
+                    Position = new Point(tb.X, tb.Y),
+                    Visible = tb.Visible,
+                    MaxCharacters = tb.MaxCharacters,
+                    Width = tb.Width,
+                    Password = tb.Password
+                },
+                PanelDto p => new Panel
+                {
+                    Name = p.Name,
+                    Position = new Point(p.X, p.Y),
+                    Visible = p.Visible,
+                    TextureNum = p.TextureNum
+                },
+                CheckBoxDto cb => new CheckBox
+                {
+                    Name = cb.Name,
+                    Position = new Point(cb.X, cb.Y),
+                    Visible = cb.Visible,
+                    Text = cb.Text,
+                    Checked = cb.Checked
+                },
+                _ => throw new InvalidOperationException($"Unknown component DTO type: {dto.GetType().Name}")
+            };
+
+            switch (component)
+            {
+                case Button btn: Buttons.List.TryAdd(btn.Name, btn); break;
+                case TextBox tb: TextBoxes.List.TryAdd(tb.Name, tb); break;
+                case Panel pnl: Panels.List.TryAdd(pnl.Name, pnl); break;
+                case CheckBox chk: CheckBoxes.List.TryAdd(chk.Name, chk); break;
             }
 
-            tempTool.Parent = parent;
-            node.Add(tempTool);
+            component.Parent = parent;
+            node.Add(component);
 
-            // Pula pro próximo
-            Tools(node[i], node[i].Children, data);
+            // Recursion into children
+            LoadChildren(component, component.Children, dto.Children);
         }
     }
+
+    // ─── Options ────────────────────────────────────────────────────────────
 
     public static void Options()
     {
@@ -63,72 +98,24 @@ public static class Read
             return;
         }
 
-        // Carrega as configurações
-        using var data = new BinaryReader(Directories.Options.OpenRead());
-        Framework.Options.SaveUsername = data.ReadBoolean();
-        Framework.Options.Username = data.ReadString();
-        Framework.Options.Sounds = data.ReadBoolean();
-        Framework.Options.Musics = data.ReadBoolean();
-        Framework.Options.Chat = data.ReadBoolean();
-        Framework.Options.Fps = data.ReadBoolean();
-        Framework.Options.Latency = data.ReadBoolean();
-        Framework.Options.Party = data.ReadBoolean();
-        Framework.Options.Trade = data.ReadBoolean();
-        Framework.Options.PreMapGrid = data.ReadBoolean();
-        Framework.Options.PreMapView = data.ReadBoolean();
-        Framework.Options.PreMapAudio = data.ReadBoolean();
+        // Carrega as configurações a partir de JSON
+        using var stream = Directories.Options.OpenRead();
+        var opts = JsonSerializer.Deserialize<OptionsDto>(stream, JsonConfig.Options) ?? new OptionsDto();
+        Framework.Options.SaveUsername = opts.SaveUsername;
+        Framework.Options.Username = opts.Username;
+        Framework.Options.Sounds = opts.Sounds;
+        Framework.Options.Musics = opts.Musics;
+        Framework.Options.Chat = opts.Chat;
+        Framework.Options.Fps = opts.Fps;
+        Framework.Options.Latency = opts.Latency;
+        Framework.Options.Party = opts.Party;
+        Framework.Options.Trade = opts.Trade;
+        Framework.Options.PreMapGrid = opts.PreMapGrid;
+        Framework.Options.PreMapView = opts.PreMapView;
+        Framework.Options.PreMapAudio = opts.PreMapAudio;
     }
 
-    public static Button Button(BinaryReader data)
-    {
-        // Lê os dados
-        return new Button
-        {
-            Name = data.ReadString(),
-            Position = new Point(data.ReadInt32(), data.ReadInt32()),
-            Visible = data.ReadBoolean(),
-            TextureNum = data.ReadByte()
-        };
-    }
-
-    public static TextBox TextBox(BinaryReader data)
-    {
-        // Lê os dados
-        return new TextBox
-        {
-            Name = data.ReadString(),
-            Position = new Point(data.ReadInt32(), data.ReadInt32()),
-            Visible = data.ReadBoolean(),
-            MaxCharacters = data.ReadInt16(),
-            Width = data.ReadInt16(),
-            Password = data.ReadBoolean()
-        };
-    }
-
-    public static Panel Panel(BinaryReader data)
-    {
-        // Carrega os dados
-        return new Panel
-        {
-            Name = data.ReadString(),
-            Position = new Point(data.ReadInt32(), data.ReadInt32()),
-            Visible = data.ReadBoolean(),
-            TextureNum = data.ReadByte()
-        };
-    }
-
-    public static CheckBox CheckBox(BinaryReader data)
-    {
-        // Carrega os dados
-        return new CheckBox
-        {
-            Name = data.ReadString(),
-            Position = new Point(data.ReadInt32(), data.ReadInt32()),
-            Visible = data.ReadBoolean(),
-            Text = data.ReadString(),
-            Checked = data.ReadBoolean()
-        };
-    }
+    // ─── Tiles (keep BinaryFormatter – tile data is internal build output) ──
 
     public static void Tiles()
     {
@@ -152,8 +139,12 @@ public static class Read
 
         // Lê os dados
         using var stream = file.OpenRead();
+#pragma warning disable SYSLIB0011
         Entities.Tile.Tile.List[index] = (Tile)new BinaryFormatter().Deserialize(stream);
+#pragma warning restore SYSLIB0011
     }
+
+    // ─── Maps (keep BinaryFormatter – maps are sent over the network) ───────
 
     public static void Map(Guid id)
     {
@@ -161,6 +152,8 @@ public static class Read
 
         // Lê os dados
         using var stream = file.OpenRead();
+#pragma warning disable SYSLIB0011
         CryBits.Entities.Map.Map.List.Add(id, (Map)new BinaryFormatter().Deserialize(stream));
+#pragma warning restore SYSLIB0011
     }
 }

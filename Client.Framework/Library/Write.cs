@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Entities.Map;
@@ -7,84 +8,95 @@ namespace CryBits.Client.Framework.Library;
 
 public static class Write
 {
+    // ─── Options ─────────────────────────────────────────────────────────────
+
     public static void Options()
     {
-        // Escreve as configurações
-        using var data = new BinaryWriter(Directories.Options.OpenWrite());
-        data.Write(Framework.Options.SaveUsername);
-        data.Write(Framework.Options.Username);
-        data.Write(Framework.Options.Sounds);
-        data.Write(Framework.Options.Musics);
-        data.Write(Framework.Options.Chat);
-        data.Write(Framework.Options.Fps);
-        data.Write(Framework.Options.Latency);
-        data.Write(Framework.Options.Party);
-        data.Write(Framework.Options.Trade);
-        data.Write(Framework.Options.PreMapGrid);
-        data.Write(Framework.Options.PreMapView);
-        data.Write(Framework.Options.PreMapAudio);
+        // Escreve as configurações em JSON
+        Directories.Options.Directory?.Create();
+        var opts = new OptionsDto
+        {
+            SaveUsername = Framework.Options.SaveUsername,
+            Username = Framework.Options.Username,
+            Sounds = Framework.Options.Sounds,
+            Musics = Framework.Options.Musics,
+            Chat = Framework.Options.Chat,
+            Fps = Framework.Options.Fps,
+            Latency = Framework.Options.Latency,
+            Party = Framework.Options.Party,
+            Trade = Framework.Options.Trade,
+            PreMapGrid = Framework.Options.PreMapGrid,
+            PreMapView = Framework.Options.PreMapView,
+            PreMapAudio = Framework.Options.PreMapAudio
+        };
+        using var stream = Directories.Options.Open(FileMode.Create, FileAccess.Write);
+        JsonSerializer.Serialize(stream, opts, JsonConfig.Options);
     }
 
-    public static void Button(BinaryWriter data, Button tool)
-    {
-        // Escreve os dados
-        data.Write(tool.Name);
-        data.Write(tool.Position.X);
-        data.Write(tool.Position.Y);
-        data.Write(tool.Visible);
-        data.Write(tool.TextureNum);
-    }
+    // ─── Interface (Tools) – helpers used by the Editors project ─────────────
 
-    public static void TextBox(BinaryWriter data, TextBox tool)
+    /// <summary>Converts a <see cref="Button"/> to its DTO form.</summary>
+    public static ButtonDto ButtonDto(Button tool) => new()
     {
-        // Escreve os dados
-        data.Write(tool.Name);
-        data.Write(tool.Position.X);
-        data.Write(tool.Position.Y);
-        data.Write(tool.Visible);
-        data.Write(tool.MaxCharacters);
-        data.Write(tool.Width);
-        data.Write(tool.Password);
-    }
+        Name = tool.Name,
+        X = tool.Position.X,
+        Y = tool.Position.Y,
+        Visible = tool.Visible,
+        TextureNum = tool.TextureNum
+    };
 
-    public static void Panel(BinaryWriter data, Panel tool)
+    public static TextBoxDto TextBoxDto(TextBox tool) => new()
     {
-        // Escreve os dados
-        data.Write(tool.Name);
-        data.Write(tool.Position.X);
-        data.Write(tool.Position.Y);
-        data.Write(tool.Visible);
-        data.Write(tool.TextureNum);
-    }
+        Name = tool.Name,
+        X = tool.Position.X,
+        Y = tool.Position.Y,
+        Visible = tool.Visible,
+        MaxCharacters = tool.MaxCharacters,
+        Width = tool.Width,
+        Password = tool.Password
+    };
 
-    public static void CheckBox(BinaryWriter data, CheckBox tool)
+    public static PanelDto PanelDto(Panel tool) => new()
     {
-        // Escreve os dados
-        data.Write(tool.Name);
-        data.Write(tool.Position.X);
-        data.Write(tool.Position.Y);
-        data.Write(tool.Visible);
-        data.Write(tool.Text);
-        data.Write(tool.Checked);
-    }
+        Name = tool.Name,
+        X = tool.Position.X,
+        Y = tool.Position.Y,
+        Visible = tool.Visible,
+        TextureNum = tool.TextureNum
+    };
+
+    public static CheckBoxDto CheckBoxDto(CheckBox tool) => new()
+    {
+        Name = tool.Name,
+        X = tool.Position.X,
+        Y = tool.Position.Y,
+        Visible = tool.Visible,
+        Text = tool.Text,
+        Checked = tool.Checked
+    };
+
+    // ─── Tiles (keep BinaryFormatter – tile data is internal build output) ───
 
     public static void Tiles()
     {
-        // Escreve os dados
         for (byte i = 1; i < Entities.Tile.Tile.List.Length; i++) Tile(i);
     }
 
     public static void Tile(byte index)
     {
-        // Escreve os dados
         using var stream = new FileInfo(Path.Combine(Directories.Tiles.FullName, index.ToString()) + Directories.Format).OpenWrite();
+#pragma warning disable SYSLIB0011
         new BinaryFormatter().Serialize(stream, Entities.Tile.Tile.List[index]);
+#pragma warning restore SYSLIB0011
     }
+
+    // ─── Maps (keep BinaryFormatter – maps are sent over the network) ─────────
 
     public static void Map(Map map)
     {
-        // Escreve os dados
         using var stream = new FileInfo(Path.Combine(Directories.MapsData.FullName, map.Id.ToString()) + Directories.Format).OpenWrite();
+#pragma warning disable SYSLIB0011
         new BinaryFormatter().Serialize(stream, map);
+#pragma warning restore SYSLIB0011
     }
 }

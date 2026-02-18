@@ -57,10 +57,10 @@ internal static class Loop
         var win = EditorMapsWindow.Instance;
         if (win == null) return;
         if (win.SelectedMap == null) return;
-        if (!win.IsOpen) Music.Stop();
-        if (!win.ShowAudioSafe) Music.Stop();
-        if (!win.ShowVisualizationSafe) Music.Stop();
-        if (string.IsNullOrEmpty(win.SelectedMap?.Music)) Music.Stop();
+        if (!win.IsOpen) { Music.Stop(); return; }
+        if (!win.ShowAudioSafe) { Music.Stop(); return; }
+        if (!win.ShowVisualizationSafe) { Music.Stop(); return; }
+        if (string.IsNullOrEmpty(win.SelectedMap?.Music)) { Music.Stop(); return; }
 
         // Inicia a música
         if (Music.Device == null || Music.Current != win.SelectedMap?.Music)

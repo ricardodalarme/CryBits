@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Threading;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
@@ -19,7 +22,7 @@ internal static class Program
 
     private static void Main()
     {
-        // Verifica se todos os diretórios existem, se não existirem então criá-os
+        // Verifica se todos os diretórios existem, se não existirem então criá-los
         Directories.Create();
 
         // Carrega as preferências
@@ -29,13 +32,27 @@ internal static class Program
         // Inicializa todos os dispositivos
         Socket.Init();
         Sound.Load();
-        AvaloniaRuntime.Initialize();
 
-        // Abre a janela
-        AvaloniaLoginLauncher.ShowLogin();
+        // Start the game loop on a background thread.
+        // It will block on AvaloniaRuntime.WaitUntilReady() until Avalonia is up.
+        var loopThread = new Thread(() =>
+        {
+            // Wait until Avalonia is fully initialised on the main thread
+            AvaloniaRuntime.WaitUntilReady();
 
-        // Inicia o laço
-        Loop.Init();
+            // Abre a janela de login e inicia o laço
+            AvaloniaLoginLauncher.ShowLogin();
+            Loop.Init();
+        });
+        loopThread.IsBackground = true;
+        loopThread.Start();
+
+        // Run Avalonia on the main thread (required by macOS/Cocoa and Linux/X11)
+        AvaloniaRuntime.BuildAvaloniaApp()
+            .StartWithClassicDesktopLifetime(Array.Empty<string>(), desktop =>
+            {
+                desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            });
     }
 
     public static void Close()

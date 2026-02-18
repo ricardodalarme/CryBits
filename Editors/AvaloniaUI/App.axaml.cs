@@ -12,7 +12,7 @@ internal sealed partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        AvaloniaRuntime.NotifyAppReady();
         base.OnFrameworkInitializationCompleted();
+        AvaloniaRuntime.NotifyAppReady();
     }
 }

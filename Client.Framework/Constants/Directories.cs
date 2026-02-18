@@ -14,10 +14,11 @@ public static class Directories
     public static readonly DirectoryInfo Sounds = new(Path.Combine(BaseDir, "Audio", "Sounds"));
     public static readonly DirectoryInfo Musics = new(Path.Combine(BaseDir, "Audio", "Musics"));
     public static readonly DirectoryInfo Fonts = new(Path.Combine(BaseDir, "Graphics", "Fonts"));
-    public static readonly FileInfo Options = new(Path.Combine(BaseDir, "Data", "Options") + Format);
+    public static readonly FileInfo Options = new(Path.Combine(BaseDir, "Data", "Options.json"));
+    public static readonly FileInfo ToolsData = new(Path.Combine(BaseDir, "Data", "Tools.json"));
+
     public static readonly DirectoryInfo MapsData = new(Path.Combine(BaseDir, "Data", "Maps"));
     public static readonly DirectoryInfo Tiles = new(Path.Combine(BaseDir, "Data", "Tiles"));
-    public static readonly FileInfo ToolsData = new(Path.Combine(BaseDir, "Data", "Tools") + Format);
     public static readonly FileInfo TexBackground = new(Path.Combine(BaseDir, "Graphics", "Interface", "Background"));
     public static readonly FileInfo TexChat = new(Path.Combine(BaseDir, "Graphics", "Interface", "Chat"));
     public static readonly FileInfo TexEquipments = new(Path.Combine(BaseDir, "Graphics", "Interface", "Equipments"));

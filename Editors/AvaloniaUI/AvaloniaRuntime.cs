@@ -8,47 +8,32 @@ namespace CryBits.Editors.AvaloniaUI;
 
 internal static class AvaloniaRuntime
 {
-    private static readonly object SyncRoot = new();
     private static readonly ManualResetEventSlim AppReady = new(false);
-    private static bool _started;
 
-    public static void Initialize()
-    {
-        lock (SyncRoot)
-        {
-            if (_started) return;
+    /// <summary>
+    /// Builds and returns the AppBuilder. Must be called on the main thread.
+    /// The caller is responsible for invoking StartWithClassicDesktopLifetime.
+    /// </summary>
+    public static AppBuilder BuildAvaloniaApp()
+        => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .LogToTrace();
 
-            _started = true;
-
-            var thread = new Thread(() =>
-            {
-                AppBuilder.Configure<App>()
-                    .UsePlatformDetect()
-                    .LogToTrace()
-                    .StartWithClassicDesktopLifetime(Array.Empty<string>(), desktop =>
-                    {
-                        desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-                    });
-            });
-
-            // STA is only meaningful on Windows (COM/WinForms interop)
-            if (OperatingSystem.IsWindows())
-                thread.SetApartmentState(ApartmentState.STA);
-            thread.IsBackground = true;
-            thread.Start();
-        }
-
-        AppReady.Wait();
-    }
-
-    public static void RunOnUiThread(Action action)
-    {
-        Initialize();
-        Dispatcher.UIThread.Post(action);
-    }
-
+    /// <summary>
+    /// Called from App.OnFrameworkInitializationCompleted to signal the loop thread.
+    /// </summary>
     internal static void NotifyAppReady()
     {
         AppReady.Set();
+    }
+
+    /// <summary>
+    /// Waits until Avalonia is fully initialised (blocks the calling background thread).
+    /// </summary>
+    public static void WaitUntilReady() => AppReady.Wait();
+
+    public static void RunOnUiThread(Action action)
+    {
+        Dispatcher.UIThread.Post(action);
     }
 }

@@ -179,7 +179,7 @@ internal static class Renders
     {
         var win = EditorMapsWindow.Instance!;
 
-        if (win.ShowVisualization && map.Panorama > 0)
+        if (win.ShowVisualizationSafe && map.Panorama > 0)
         {
             var destiny = new Rectangle
             {
@@ -243,7 +243,7 @@ internal static class Renders
     private static void EditorMapsMapFog(Map map)
     {
         var win = EditorMapsWindow.Instance!;
-        if (map.Fog.Texture <= 0 || !win.ShowVisualization) return;
+        if (map.Fog.Texture <= 0 || !win.ShowVisualizationSafe) return;
 
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
         for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
@@ -257,7 +257,7 @@ internal static class Renders
     private static void EditorMapsMapWeather(Map map)
     {
         var win = EditorMapsWindow.Instance!;
-        if (!win.ShowVisualization || map.Weather.Type == Weather.Normal) return;
+        if (!win.ShowVisualizationSafe || map.Weather.Type == Weather.Normal) return;
 
         byte x = 0;
         if (map.Weather.Type == Weather.Snowing) x = 32;
