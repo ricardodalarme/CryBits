@@ -6,6 +6,19 @@ namespace CryBits.Server.Network.Senders;
 
 internal static class AuthSender
 {
+    public static void Alert(Account account, string message, bool disconnect = true)
+    {
+        var data = new NetDataWriter();
+
+        // Envia os dados
+        data.Put((byte)ServerPacket.Alert);
+        data.Put(message);
+        Send.ToPlayer(account, data);
+
+        // Desconecta o jogador
+        if (disconnect) account.Connection.Disconnect();
+    }
+        
     public static void Latency(Account account)
     {
         var data = new NetDataWriter();

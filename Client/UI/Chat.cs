@@ -4,7 +4,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Logic;
-using CryBits.Client.Network;
+using CryBits.Client.Network.Senders;
 using CryBits.Enums;
 using SFML.Graphics;
 using static CryBits.Client.Utils.TextUtils;
@@ -111,18 +111,18 @@ internal static class Chat
         switch (parts[0].ToLower())
         {
             case "/party":
-                if (parts.Length > 1) Send.PartyInvite(parts[1]);
+                if (parts.Length > 1) PartySender.PartyInvite(parts[1]);
                 break;
             case "/partyleave":
-                Send.PartyLeave();
+                PartySender.PartyLeave();
                 break;
             case "/trade":
-                if (parts.Length > 1) Send.TradeInvite(parts[1]);
+                if (parts.Length > 1) TradeSender.TradeInvite(parts[1]);
                 break;
             default:
                 // Mensagem lobal
                 if (message.Substring(0, 1) == "'")
-                    Send.Message(message.Substring(1), Message.Global);
+                    ChatSender.Message(message.Substring(1), Message.Global);
                 // Mensagem particular
                 else if (message.Substring(0, 1) == "!")
                 {
@@ -136,12 +136,13 @@ internal static class Chat
                         message = message.Substring(parts[0].Length + 1);
 
                         // Envia a mensagem
-                        Send.Message(message, Message.Private, destiny);
+                        ChatSender.Message(message, Message.Private, destiny);
                     }
                 }
                 // Mensagem mapa
                 else
-                    Send.Message(message, Message.Map);
+                    ChatSender.Message(message, Message.Map);
+
                 break;
         }
     }

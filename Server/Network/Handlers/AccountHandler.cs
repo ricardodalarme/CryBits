@@ -23,7 +23,7 @@ internal static class AccountHandler
     // Verifica se está tudo certo
     if (name.Length < MinNameLength || name.Length > MaxNameLength)
     {
-      AccountSender.Alert(account,
+      AuthSender.Alert(account,
         "The character name must contain between " + MinNameLength + " and " + MaxNameLength + " characters.",
         false);
       return;
@@ -31,13 +31,13 @@ internal static class AccountHandler
 
     if (name.Contains(';') || name.Contains(':'))
     {
-      AccountSender.Alert(account, "Can't contain ';' and ':' in the character name.", false);
+      AuthSender.Alert(account, "Can't contain ';' and ':' in the character name.", false);
       return;
     }
 
     if (Read.CharactersName().Contains(";" + name + ":"))
     {
-      AccountSender.Alert(account, "A character with this name already exists", false);
+      AuthSender.Alert(account, "A character with this name already exists", false);
       return;
     }
 
@@ -90,7 +90,7 @@ internal static class AccountHandler
     // Verifica se o jogador já criou o máximo de personagens possíveis
     if (account.Characters.Count == MaxCharacters)
     {
-      AccountSender.Alert(account, "You can only have " + MaxCharacters + " characters.", false);
+      AuthSender.Alert(account, "You can only have " + MaxCharacters + " characters.", false);
       return;
     }
 
@@ -108,7 +108,7 @@ internal static class AccountHandler
 
     // Deleta o personagem
     var name = account.Characters[character].Name;
-    AccountSender.Alert(account, "The character '" + name + "' has been deleted.", false);
+    AuthSender.Alert(account, "The character '" + name + "' has been deleted.", false);
     Write.CharactersName(Read.CharactersName().Replace(":;" + name + ":", ":"));
     account.Characters.RemoveAt(character);
     File.Delete(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", name) + Directories.Format);

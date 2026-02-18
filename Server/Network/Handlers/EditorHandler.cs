@@ -22,7 +22,7 @@ internal static class EditorHandler
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
         {
-            AccountSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
@@ -49,7 +49,7 @@ internal static class EditorHandler
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
         {
-            AccountSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
@@ -68,7 +68,7 @@ internal static class EditorHandler
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
         {
-            AccountSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
@@ -95,7 +95,7 @@ internal static class EditorHandler
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
         {
-            AccountSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
@@ -114,7 +114,7 @@ internal static class EditorHandler
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
         {
-            AccountSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
@@ -133,7 +133,7 @@ internal static class EditorHandler
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
         {
-            AccountSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 

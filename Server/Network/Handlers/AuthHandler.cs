@@ -29,13 +29,13 @@ internal static class AuthHandler
         // Verifica se está tudo certo
         if (!Directory.Exists(Path.Combine(Directories.Accounts.FullName, user)))
         {
-            AccountSender.Alert(account, "This username isn't registered.");
+            AuthSender.Alert(account, "This username isn't registered.");
             return;
         }
 
         if (Account.List.Find(x => x.User.Equals(user)) != null)
         {
-            AccountSender.Alert(account, "Someone already signed in to this account.");
+            AuthSender.Alert(account, "Someone already signed in to this account.");
             return;
         }
 
@@ -45,7 +45,7 @@ internal static class AuthHandler
         // Verifica se a senha está correta
         if (!account.Password.Equals(password))
         {
-            AccountSender.Alert(account, "Password is incorrect.");
+            AuthSender.Alert(account, "Password is incorrect.");
             return;
         }
 
@@ -56,7 +56,7 @@ internal static class AuthHandler
             // Verifica se o jogador tem permissão para fazer entrar no modo edição
             if (account.Access < Access.Editor)
             {
-                AccountSender.Alert(account, "You're not allowed to do this.");
+                AuthSender.Alert(account, "You're not allowed to do this.");
                 return;
             }
 
@@ -100,21 +100,21 @@ internal static class AuthHandler
         // Verifica se está tudo certo
         if (user.Length < MinNameLength || user.Length > MaxNameLength)
         {
-            AccountSender.Alert(account,
+            AuthSender.Alert(account,
                 "The username must contain between " + MinNameLength + " and " + MaxNameLength + " characters.");
             return;
         }
 
         if (password.Length < MinNameLength || password.Length > MaxNameLength)
         {
-            AccountSender.Alert(account,
+            AuthSender.Alert(account,
                 "The password must contain between " + MinNameLength + " and " + MaxNameLength + " characters.");
             return;
         }
 
         if (File.Exists(Path.Combine(Directories.Accounts.FullName, user) + Directories.Format))
         {
-            AccountSender.Alert(account, "There is already someone registered with this name.");
+            AuthSender.Alert(account, "There is already someone registered with this name.");
             return;
         }
 

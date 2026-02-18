@@ -7,6 +7,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network;
+using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Events;
 using SFML.Window;
 
@@ -89,16 +90,16 @@ internal static class Window
         {
             case Keyboard.Key.Enter: Chat.Type(); break;
             case Keyboard.Key.Space: Player.Me.CollectItem(); break;
-            case Keyboard.Key.Num1: Send.HotbarUse(1); break;
-            case Keyboard.Key.Num2: Send.HotbarUse(2); break;
-            case Keyboard.Key.Num3: Send.HotbarUse(3); break;
-            case Keyboard.Key.Num4: Send.HotbarUse(4); break;
-            case Keyboard.Key.Num5: Send.HotbarUse(5); break;
-            case Keyboard.Key.Num6: Send.HotbarUse(6); break;
-            case Keyboard.Key.Num7: Send.HotbarUse(7); break;
-            case Keyboard.Key.Num8: Send.HotbarUse(8); break;
-            case Keyboard.Key.Num9: Send.HotbarUse(9); break;
-            case Keyboard.Key.Num0: Send.HotbarUse(0); break;
+            case Keyboard.Key.Num1: PlayerSender.HotbarUse(1); break;
+            case Keyboard.Key.Num2: PlayerSender.HotbarUse(2); break;
+            case Keyboard.Key.Num3: PlayerSender.HotbarUse(3); break;
+            case Keyboard.Key.Num4: PlayerSender.HotbarUse(4); break;
+            case Keyboard.Key.Num5: PlayerSender.HotbarUse(5); break;
+            case Keyboard.Key.Num6: PlayerSender.HotbarUse(6); break;
+            case Keyboard.Key.Num7: PlayerSender.HotbarUse(7); break;
+            case Keyboard.Key.Num8: PlayerSender.HotbarUse(8); break;
+            case Keyboard.Key.Num9: PlayerSender.HotbarUse(9); break;
+            case Keyboard.Key.Num0: PlayerSender.HotbarUse(0); break;
         }
     }
 

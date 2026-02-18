@@ -6,6 +6,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.UI.Events;
+using CryBits.Client.Network.Senders;
 using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 
 namespace CryBits.Client.Logic;
@@ -68,7 +69,7 @@ internal static class Loop
             // Cálcula o FPS
             if (timer1000 < Environment.TickCount)
             {
-                Send.Latency();
+                AuthSender.Latency();
                 Fps = fps;
                 fps = 0;
                 timer1000 = Environment.TickCount + 1000;

@@ -4,6 +4,7 @@ using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Library;
 using CryBits.Client.Network;
+using CryBits.Client.Network.Senders;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
@@ -62,7 +63,8 @@ internal static class ButtonsEvents
     public static bool Characters_Change_Buttons()
     {
         // Altera os botões visíveis
-        var visibility = PanelsEvents.Characters != null && PanelsEvents.SelectCharacter < PanelsEvents.Characters.Length;
+        var visibility = PanelsEvents.Characters != null &&
+                         PanelsEvents.SelectCharacter < PanelsEvents.Characters.Length;
         Buttons.CharacterCreate.Visible = !visibility;
         Buttons.CharacterDelete.Visible = visibility;
         Buttons.CharacterUse.Visible = visibility;
@@ -120,7 +122,7 @@ internal static class ButtonsEvents
         Write.Options();
 
         // Conecta-se ao jogo
-        if (Socket.TryConnect()) Send.Connect();
+        if (Socket.TryConnect()) AuthSender.Connect();
     }
 
     private static void RegisterOk()
@@ -133,13 +135,13 @@ internal static class ButtonsEvents
         }
 
         // Registra o jogador, se estiver tudo certo
-        if (Socket.TryConnect()) Send.Register();
+        if (Socket.TryConnect()) AuthSender.Register();
     }
 
     private static void CreateCharacter()
     {
         // Abre a criação de personagem
-        if (Socket.TryConnect()) Send.CreateCharacter();
+        if (Socket.TryConnect()) AccountSender.CreateCharacter();
     }
 
     private static void CreateCharacterChangeRight()
@@ -196,19 +198,19 @@ internal static class ButtonsEvents
     private static void CharacterUse()
     {
         // Usa o personagem selecionado
-        Send.CharacterUse();
+        AccountSender.CharacterUse();
     }
 
     private static void CharacterDelete()
     {
         // Deleta o personagem selecionado
-        Send.CharacterDelete();
+        AccountSender.CharacterDelete();
     }
 
     private static void CharacterCreate()
     {
         // Abre a criação de personagem
-        Send.CharacterCreate();
+        AccountSender.CharacterCreate();
     }
 
     private static void CharacterChangeRight()
@@ -253,27 +255,27 @@ internal static class ButtonsEvents
 
     private static void AttributeStrength()
     {
-        Send.AddPoint(Attribute.Strength);
+        PlayerSender.AddPoint(Attribute.Strength);
     }
 
     private static void AttributeResistance()
     {
-        Send.AddPoint(Attribute.Resistance);
+        PlayerSender.AddPoint(Attribute.Resistance);
     }
 
     private static void AttributeIntelligence()
     {
-        Send.AddPoint(Attribute.Intelligence);
+        PlayerSender.AddPoint(Attribute.Intelligence);
     }
 
     private static void AttributeAgility()
     {
-        Send.AddPoint(Attribute.Agility);
+        PlayerSender.AddPoint(Attribute.Agility);
     }
 
     private static void AttributeVitality()
     {
-        Send.AddPoint(Attribute.Vitality);
+        PlayerSender.AddPoint(Attribute.Vitality);
     }
 
     private static void MenuInventory()
@@ -302,7 +304,7 @@ internal static class ButtonsEvents
         }
 
         // Solta o item
-        Send.DropItem(PanelsEvents.DropSlot, amount);
+        PlayerSender.DropItem(PanelsEvents.DropSlot, amount);
         Panels.Drop.Visible = false;
     }
 
@@ -315,35 +317,35 @@ internal static class ButtonsEvents
     private static void PartyYes()
     {
         // Aceita o grupo e fecha o painel
-        Send.PartyAccept();
+        PartySender.PartyAccept();
         Panels.PartyInvitation.Visible = false;
     }
 
     private static void PartyNo()
     {
         // Fecha o painel
-        Send.PartyDecline();
+        PartySender.PartyDecline();
         Panels.PartyInvitation.Visible = false;
     }
 
     private static void TradeYes()
     {
         // Aceita o grupo e fecha o painel
-        Send.TradeAccept();
+        TradeSender.TradeAccept();
         Panels.TradeInvitation.Visible = false;
     }
 
     private static void TradeNo()
     {
         // Fecha o painel
-        Send.TradeDecline();
+        TradeSender.TradeDecline();
         Panels.TradeInvitation.Visible = false;
     }
 
     private static void TradeClose()
     {
         // Fecha o painel
-        Send.TradeLeave();
+        TradeSender.TradeLeave();
         Panels.Trade.Visible = false;
     }
 
@@ -353,7 +355,7 @@ internal static class ButtonsEvents
         Buttons.TradeOfferConfirm.Visible = true;
         Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
         Panels.TradeOfferDisable.Visible = false;
-        Send.TradeOfferState(TradeStatus.Accepted);
+        TradeSender.TradeOfferState(TradeStatus.Accepted);
 
         // Limpa os dados da oferta
         Player.Me.TradeOffer = new ItemSlot[MaxInventory];
@@ -366,15 +368,16 @@ internal static class ButtonsEvents
         Buttons.TradeOfferConfirm.Visible = true;
         Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
         Panels.TradeOfferDisable.Visible = false;
-        Send.TradeOfferState(TradeStatus.Declined);
+        TradeSender.TradeOfferState(TradeStatus.Declined);
     }
 
     private static void TradeOfferConfirm()
     {
         // Confirma a oferta
-        Buttons.TradeOfferConfirm.Visible = Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
+        Buttons.TradeOfferConfirm.Visible =
+            Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
         Panels.TradeOfferDisable.Visible = true;
-        Send.TradeOfferState(TradeStatus.Confirmed);
+        TradeSender.TradeOfferState(TradeStatus.Confirmed);
     }
 
     private static void TradeAmountConfirm()
@@ -387,7 +390,8 @@ internal static class ButtonsEvents
         }
 
         // Solta o item
-        Send.TradeOffer(PanelsEvents.TradeSlot, PanelsEvents.TradeInventorySlot, amount);
+        TradeSender.TradeOffer(PanelsEvents.TradeSlot, PanelsEvents.TradeInventorySlot,
+            amount);
         Panels.TradeAmount.Visible = false;
     }
 
@@ -401,7 +405,7 @@ internal static class ButtonsEvents
     {
         // Fecha o painel
         Panels.Shop.Visible = false;
-        Send.ShopClose();
+        ShopSender.ShopClose();
     }
 
     private static void ShopSellConfirm()
@@ -414,7 +418,7 @@ internal static class ButtonsEvents
         }
 
         // Vende o item
-        Send.ShopSell(PanelsEvents.ShopInventorySlot, amount);
+        ShopSender.ShopSell(PanelsEvents.ShopInventorySlot, amount);
         Panels.ShopSell.Visible = false;
     }
 

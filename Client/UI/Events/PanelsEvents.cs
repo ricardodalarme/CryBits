@@ -3,7 +3,7 @@ using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Network;
+using CryBits.Client.Network.Senders;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
 using CryBits.Extensions;
@@ -28,6 +28,7 @@ internal static class PanelsEvents
     public static short HotbarChange;
     public static short InventoryChange;
     public static TempCharacter[] Characters;
+
     public struct TempCharacter
     {
         public string Name;
@@ -102,7 +103,7 @@ internal static class PanelsEvents
                             TextBoxes.ShopSellAmount.Text = string.Empty;
                             Panels.ShopSell.Visible = true;
                         }
-                        else Send.ShopSell(slot, 1);
+                        else ShopSender.ShopSell(slot, 1);
                     }
                     // Solta o item
                     else if (!Panels.Trade.Visible)
@@ -112,7 +113,7 @@ internal static class PanelsEvents
                             TextBoxes.DropAmount.Text = string.Empty;
                             Panels.Drop.Visible = true;
                         }
-                        else Send.DropItem(slot, 1);
+                        else PlayerSender.DropItem(slot, 1);
 
                 break;
             }
@@ -133,7 +134,7 @@ internal static class PanelsEvents
                 if (e.Button == Mouse.Button.Right)
                     if (Player.Me.Equipment[i]?.Bind != BindOn.Equip)
                     {
-                        Send.EquipmentRemove(i);
+                        PlayerSender.EquipmentRemove(i);
                         return;
                     }
     }
@@ -150,7 +151,7 @@ internal static class PanelsEvents
         {
             // Solta item
             case Mouse.Button.Right:
-                Send.HotbarAdd(slot, 0, 0);
+                PlayerSender.HotbarAdd(slot, 0, 0);
                 break;
             // Seleciona o item
             case Mouse.Button.Left:
@@ -169,7 +170,7 @@ internal static class PanelsEvents
         if (Player.Me.TradeOffer[slot].Item == null) return;
 
         // Solta item
-        if (e.Button == Mouse.Button.Right) Send.TradeOffer(slot, 0);
+        if (e.Button == Mouse.Button.Right) TradeSender.TradeOffer(slot, 0);
     }
 
     public static void CheckInformation()
@@ -211,15 +212,15 @@ internal static class PanelsEvents
         if (InventoryChange == 0) return;
 
         // Muda o slot do item
-        Send.InventoryChange(InventoryChange, InventorySlot);
+        PlayerSender.InventoryChange(InventoryChange, InventorySlot);
     }
 
     public static void Hotbar_MouseUp()
     {
         // Muda o slot da hotbar
         if (HotbarSlot < 0) return;
-        if (HotbarChange >= 0) Send.HotbarChange(HotbarChange, HotbarSlot);
-        if (InventoryChange > 0) Send.HotbarAdd(HotbarSlot, (byte)SlotType.Item, InventoryChange);
+        if (HotbarChange >= 0) PlayerSender.HotbarChange(HotbarChange, HotbarSlot);
+        if (InventoryChange > 0) PlayerSender.HotbarAdd(HotbarSlot, (byte)SlotType.Item, InventoryChange);
     }
 
     public static void Trade_MouseUp()
@@ -228,7 +229,7 @@ internal static class PanelsEvents
 
         // Adiciona um item à troca
         if (Player.Me.Inventory[InventoryChange].Amount == 1)
-            Send.TradeOffer(TradeSlot, InventoryChange);
+            TradeSender.TradeOffer(TradeSlot, InventoryChange);
         else
         {
             TradeInventorySlot = InventoryChange;
@@ -244,7 +245,7 @@ internal static class PanelsEvents
         if (Player.Me.Inventory[slot].Item == null) return;
 
         // Usa o item
-        Send.InventoryUse((byte)slot);
+        PlayerSender.InventoryUse((byte)slot);
     }
 
     public static void Hotbar_MouseDoubleClick(MouseButtonEventArgs e)
@@ -254,7 +255,7 @@ internal static class PanelsEvents
         if (Player.Me.Hotbar[slot].Slot <= 0) return;
 
         // Usar o que estiver na hotbar
-        Send.HotbarUse((byte)slot);
+        PlayerSender.HotbarUse((byte)slot);
     }
 
     public static void Trade_MouseDoubleClick(MouseButtonEventArgs e)
@@ -264,6 +265,6 @@ internal static class PanelsEvents
         if (ShopOpen == null) return;
 
         // Compra o item da loja
-        Send.ShopBuy((byte)slot);
+        ShopSender.ShopBuy((byte)slot);
     }
 }

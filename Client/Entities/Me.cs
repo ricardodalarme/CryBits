@@ -2,7 +2,7 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics;
-using CryBits.Client.Network;
+using CryBits.Client.Network.Senders;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using SFML.Window;
@@ -52,7 +52,7 @@ internal class Me(string name) : Player(name)
         if (Direction != direction)
         {
             Direction = direction;
-            Send.PlayerDirection();
+            PlayerSender.PlayerDirection();
         }
 
         // Verifica se o azulejo seguinte está livre
@@ -65,15 +65,27 @@ internal class Me(string name) : Player(name)
             Movement = Movement.Walking;
 
         // Movimento o jogador
-        Send.PlayerMove();
+        PlayerSender.PlayerMove();
 
         // Define a Posição exata do jogador
         switch (direction)
         {
-            case Direction.Up: Y2 = Grid; Y--; break;
-            case Direction.Down: Y2 = Grid * -1; Y++; break;
-            case Direction.Right: X2 = Grid * -1; X++; break;
-            case Direction.Left: X2 = Grid; X--; break;
+            case Direction.Up:
+                Y2 = Grid;
+                Y--;
+                break;
+            case Direction.Down:
+                Y2 = Grid * -1;
+                Y++;
+                break;
+            case Direction.Right:
+                X2 = Grid * -1;
+                X++;
+                break;
+            case Direction.Left:
+                X2 = Grid;
+                X--;
+                break;
         }
     }
 
@@ -94,7 +106,7 @@ internal class Me(string name) : Player(name)
 
         // Envia os dados para o servidor
         AttackTimer = Environment.TickCount;
-        Send.PlayerAttack();
+        PlayerSender.PlayerAttack();
     }
 
     public void CollectItem()
@@ -120,7 +132,7 @@ internal class Me(string name) : Player(name)
         if (Environment.TickCount <= _collectTimer + 250) return;
 
         // Coleta o item
-        Send.CollectItem();
+        PlayerSender.CollectItem();
         _collectTimer = Environment.TickCount;
     }
 
