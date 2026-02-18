@@ -536,7 +536,7 @@ internal partial class EditorMaps : DarkForm
 
     private void butEditors_Interface_Click(object sender, EventArgs e)
     {
-        EditorInterface.Form = new EditorInterface();
+        AvaloniaInterfaceLauncher.OpenInterfaceEditor(this);
     }
 
     private void butEditors_Items_Click(object sender, EventArgs e)

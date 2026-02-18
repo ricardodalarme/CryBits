@@ -1,0 +1,198 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorInterfaceWindow"
+        Title="Interface Editor"
+        Width="1280" Height="800"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="8" RowDefinitions="Auto,*,Auto">
+
+        <!-- Top: window selector -->
+        <ComboBox x:Name="cmbWindows" Grid.Row="0" HorizontalAlignment="Stretch"
+                  Margin="0,0,0,6"
+                  SelectionChanged="cmbWindows_SelectionChanged"/>
+
+        <!-- Middle: SFML preview (left) + right panel -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,8,300">
+
+            <!-- SFML Preview -->
+            <Border Grid.Column="0" Background="Black">
+                <Image x:Name="imgPreview" Stretch="None"
+                       HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Border>
+
+            <!-- Right panel -->
+            <Grid Grid.Column="2" RowDefinitions="*,6,Auto,6,Auto">
+
+                <!-- Order group -->
+                <Border Grid.Row="0" BorderThickness="1"
+                        BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="8">
+                    <Grid RowDefinitions="Auto,Auto,*,Auto">
+                        <TextBlock Grid.Row="0" Text="Order" FontWeight="Bold" Margin="0,0,0,6"/>
+
+                        <Grid Grid.Row="1" ColumnDefinitions="*,4,*" Margin="0,0,0,6">
+                            <Button x:Name="butNew" Grid.Column="0" Content="New"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Click="butNew_Click"/>
+                            <Button x:Name="butRemove" Grid.Column="2" Content="Remove"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Click="butRemove_Click"/>
+                        </Grid>
+
+                        <TreeView x:Name="treOrder" Grid.Row="2"
+                                  SelectionChanged="treOrder_SelectionChanged"
+                                  Margin="0,0,0,6">
+                            <TreeView.ItemTemplate>
+                                <TreeDataTemplate ItemsSource="{Binding Children}">
+                                    <TextBlock Text="{Binding Header}"/>
+                                </TreeDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+
+                        <Grid Grid.Row="3" ColumnDefinitions="*,4,*,4,*,4,*">
+                            <Button x:Name="butOrderPin" Grid.Column="0" Content="Pin"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Click="butOrderPin_Click"/>
+                            <Button x:Name="butOrderUnpin" Grid.Column="2" Content="Unpin"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Click="butOrderUnpin_Click"/>
+                            <Button x:Name="butOrderUp" Grid.Column="4" Content="Up"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Click="butOrderUp_Click"/>
+                            <Button x:Name="butOrderDown" Grid.Column="6" Content="Down"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Click="butOrderDown_Click"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- Properties group -->
+                <Border Grid.Row="2" BorderThickness="1"
+                        BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="8">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Properties" FontWeight="Bold" Margin="0,0,0,4"/>
+
+                        <!-- Shown when nothing is selected -->
+                        <TextBlock x:Name="lblNoSelection" Text="(select a component)"
+                                   Foreground="{DynamicResource SemiSecondaryForeground}"
+                                   FontStyle="Italic" FontSize="11"/>
+
+                        <!-- Base properties (shown when a component is selected) -->
+                        <StackPanel x:Name="pnlPropsBase" IsVisible="False" Spacing="4">
+                            <Grid ColumnDefinitions="80,*">
+                                <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center"/>
+                                <TextBox x:Name="txtPropName" Grid.Column="1"
+                                         TextChanged="txtPropName_TextChanged"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="80,*">
+                                <TextBlock Grid.Column="0" Text="X:" VerticalAlignment="Center"/>
+                                <NumericUpDown x:Name="numPropX" Grid.Column="1"
+                                               Minimum="-9999" Maximum="9999" FormatString="0"
+                                               ValueChanged="numPropX_ValueChanged"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="80,*">
+                                <TextBlock Grid.Column="0" Text="Y:" VerticalAlignment="Center"/>
+                                <NumericUpDown x:Name="numPropY" Grid.Column="1"
+                                               Minimum="-9999" Maximum="9999" FormatString="0"
+                                               ValueChanged="numPropY_ValueChanged"/>
+                            </Grid>
+                            <CheckBox x:Name="chkPropVisible" Content="Visible"
+                                      IsCheckedChanged="chkPropVisible_IsCheckedChanged"/>
+
+                            <!-- TextureNum (Button / Panel) -->
+                            <Grid x:Name="secTextureNum" ColumnDefinitions="80,*" IsVisible="False">
+                                <TextBlock Grid.Column="0" Text="Texture #:" VerticalAlignment="Center"/>
+                                <NumericUpDown x:Name="numPropTexture" Grid.Column="1"
+                                               Minimum="0" FormatString="0"
+                                               ValueChanged="numPropTexture_ValueChanged"/>
+                            </Grid>
+
+                            <!-- CheckBox-specific -->
+                            <StackPanel x:Name="secCheckBoxProps" IsVisible="False" Spacing="4">
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Text:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="txtPropCbText" Grid.Column="1"
+                                             TextChanged="txtPropCbText_TextChanged"/>
+                                </Grid>
+                                <CheckBox x:Name="chkPropCbChecked" Content="Checked"
+                                          IsCheckedChanged="chkPropCbChecked_IsCheckedChanged"/>
+                            </StackPanel>
+
+                            <!-- TextBox-specific -->
+                            <StackPanel x:Name="secTextBoxProps" IsVisible="False" Spacing="4">
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Text:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="txtPropTbText" Grid.Column="1"
+                                             TextChanged="txtPropTbText_TextChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Max Chars:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropMaxChars" Grid.Column="1"
+                                                   Minimum="0" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numPropMaxChars_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Width:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropTbWidth" Grid.Column="1"
+                                                   Minimum="0" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numPropTbWidth_ValueChanged"/>
+                                </Grid>
+                                <CheckBox x:Name="chkPropPassword" Content="Password"
+                                          IsCheckedChanged="chkPropPassword_IsCheckedChanged"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Save / Cancel -->
+                <Grid Grid.Row="4" ColumnDefinitions="*,8,*">
+                    <Button x:Name="butSaveAll" Grid.Column="0" Content="Save All"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Classes="accent" Click="butSaveAll_Click"/>
+                    <Button x:Name="butCancel" Grid.Column="2" Content="Cancel"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Click="butCancel_Click"/>
+                </Grid>
+
+            </Grid>
+
+            <!-- New component overlay (covers right column, initially hidden) -->
+            <Border x:Name="pnlNew" Grid.Column="2"
+                    Background="{DynamicResource SemiBackgroundColor}"
+                    BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="12"
+                    IsVisible="False">
+                <StackPanel VerticalAlignment="Top" Spacing="8" Margin="0,0,0,0">
+                    <TextBlock Text="New Component" FontWeight="Bold" Margin="0,0,0,8"/>
+                    <TextBlock Text="Type:"/>
+                    <ComboBox x:Name="cmbType" HorizontalAlignment="Stretch">
+                        <ComboBoxItem Content="Button"/>
+                        <ComboBoxItem Content="Panel"/>
+                        <ComboBoxItem Content="CheckBox"/>
+                        <ComboBoxItem Content="TextBox"/>
+                    </ComboBox>
+                    <Button x:Name="butConfirm" Content="Confirm"
+                            HorizontalAlignment="Right"
+                            Click="butConfirm_Click"/>
+                    <Button Content="Cancel"
+                            HorizontalAlignment="Right"
+                            Click="butCancelNew_Click"/>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+        <!-- Spacer row -->
+        <TextBlock Grid.Row="2" Margin="0,4,0,0" IsVisible="False"/>
+
+    </Grid>
+</Window>

@@ -23,7 +23,7 @@ namespace CryBits.Editors.Graphics;
 internal static class Renders
 {
     // Locais de renderização
-    public static RenderWindow WinInterface;
+    public static RenderTexture WinInterfaceRT;
     public static RenderWindow WinTile;
     public static RenderWindow WinMap;
     public static RenderWindow WinMapTile;
@@ -33,7 +33,7 @@ internal static class Renders
 
     #region Engine
 
-    private static void Render(RenderWindow window, Texture texture, Rectangle source, Rectangle destiny, object color = null, object mode = null)
+    private static void Render(RenderTarget window, Texture texture, Rectangle source, Rectangle destiny, object color = null, object mode = null)
     {
         // Define os dados
         var tmpImage = new Sprite(texture)
@@ -49,7 +49,7 @@ internal static class Renders
         window.Draw(tmpImage, (RenderStates)mode);
     }
 
-    private static void Render(RenderWindow window, Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight, object color = null, object mode = null)
+    private static void Render(RenderTarget window, Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight, object color = null, object mode = null)
     {
         // Define as propriedades dos retângulos
         var source = new Rectangle(new Point(sourceX, sourceY), new Size(sourceWidth, sourceHeight));
@@ -59,7 +59,7 @@ internal static class Renders
         Render(window, texture, source, destiny, color, mode);
     }
 
-    private static void Render(RenderWindow window, Texture texture, Rectangle destiny, object color = null, object mode = null)
+    private static void Render(RenderTarget window, Texture texture, Rectangle destiny, object color = null, object mode = null)
     {
         // Define as propriedades dos retângulos
         var source = new Rectangle(new Point(0), texture.ToSize());
@@ -68,7 +68,7 @@ internal static class Renders
         Render(window, texture, source, destiny, color, mode);
     }
 
-    private static void Render(RenderWindow window, Texture texture, Point point, object color = null, object mode = null)
+    private static void Render(RenderTarget window, Texture texture, Point point, object color = null, object mode = null)
     {
         // Define as propriedades dos retângulos
         var source = new Rectangle(new Point(0), texture.ToSize());
@@ -78,7 +78,7 @@ internal static class Renders
         Render(window, texture, source, destiny, color, mode);
     }
 
-    private static void RenderRectangle(RenderWindow window, Rectangle rectangle, object color = null)
+    private static void RenderRectangle(RenderTarget window, Rectangle rectangle, object color = null)
     {
         // Desenha a caixa
         Render(window, Textures.Grid, rectangle.X, rectangle.Y, 0, 0, rectangle.Width, 1, color);
@@ -87,13 +87,13 @@ internal static class Renders
         Render(window, Textures.Grid, rectangle.X + rectangle.Width - 1, rectangle.Y, 0, 0, 1, rectangle.Height, color);
     }
 
-    private static void RenderRectangle(RenderWindow window, int x, int y, int width, int height, object color = null)
+    private static void RenderRectangle(RenderTarget window, int x, int y, int width, int height, object color = null)
     {
         // Desenha a caixa
         RenderRectangle(window, new Rectangle(x, y, width, height), color);
     }
 
-    private static void Render_Box(RenderWindow window, Texture texture, byte margin, Point position, Size size)
+    private static void Render_Box(RenderTarget window, Texture texture, byte margin, Point position, Size size)
     {
         var textureWidth = texture.ToSize().Width;
         var textureHeight = texture.ToSize().Height;
@@ -106,7 +106,7 @@ internal static class Renders
         Render(window, texture, new Rectangle(new Point(margin, 0), new Size(margin, textureHeight)), new Rectangle(new Point(position.X + margin, position.Y), new Size(size.Width - margin * 2, textureHeight)));
     }
 
-    private static void DrawText(RenderWindow window, string text, int x, int y, Color color)
+    private static void DrawText(RenderTarget window, string text, int x, int y, Color color)
     {
         var tempText = new Text(text, Fonts.Default);
 
@@ -131,7 +131,7 @@ internal static class Renders
         EditorClass();
         EditorItem();
         EditorNpc();
-        Interface();
+        // Interface editor renders on its Avalonia DispatcherTimer to avoid cross-thread SFML conflicts
     }
 
     private static void Transparent(RenderWindow window)
@@ -563,15 +563,16 @@ internal static class Renders
     public static void Interface()
     {
         // Apenas se necessário
-        if (WinInterface == null) return;
+        if (WinInterfaceRT == null) return;
+        if (EditorInterface.Tree.Nodes.Count == 0) return;
 
         // Desenha as ferramentas
-        WinInterface.Clear();
-        InterfaceOrder(EditorInterface.Tree.Nodes[(byte)EditorInterface.Form.cmbWindows.SelectedIndex]);
-        WinInterface.Display();
+        WinInterfaceRT.Clear();
+        InterfaceOrder(WinInterfaceRT, EditorInterface.Tree.Nodes[EditorInterfaceWindow.SelectedWindowIndex]);
+        WinInterfaceRT.Display();
     }
 
-    private static void InterfaceOrder(TreeNode node)
+    private static void InterfaceOrder(RenderTarget target, TreeNode node)
     {
         for (byte i = 0; i < node.Nodes.Count; i++)
         {
@@ -579,51 +580,51 @@ internal static class Renders
             var tool = (Component)node.Nodes[i].Tag;
             if (tool.Visible)
             {
-                if (tool is Panel panel) Panel(panel);
-                else if (tool is TextBox textBox) TextBox(textBox);
-                else if (tool is Button button) Button(button);
-                else if (tool is CheckBox checkBox) CheckBox(checkBox);
+                if (tool is Panel panel) Panel(target, panel);
+                else if (tool is TextBox textBox) TextBox(target, textBox);
+                else if (tool is Button button) Button(target, button);
+                else if (tool is CheckBox checkBox) CheckBox(target, checkBox);
 
                 // Pula pra próxima
-                InterfaceOrder(node.Nodes[i]);
+                InterfaceOrder(target, node.Nodes[i]);
             }
         }
     }
 
-    private static void Button(Button tool)
+    private static void Button(RenderTarget target, Button tool)
     {
         // Desenha o botão
         if (tool.TextureNum < Textures.Buttons.Count)
-            Render(WinInterface, Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, 225));
+            Render(target, Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, 225));
     }
 
-    private static void Panel(Panel tool)
+    private static void Panel(RenderTarget target, Panel tool)
     {
         // Desenha o painel
         if (tool.TextureNum < Textures.Panels.Count)
-            Render(WinInterface, Textures.Panels[tool.TextureNum], tool.Position);
+            Render(target, Textures.Panels[tool.TextureNum], tool.Position);
     }
 
-    private static void CheckBox(CheckBox tool)
+    private static void CheckBox(RenderTarget target, CheckBox tool)
     {
         // Define as propriedades dos retângulos
         var recSource = new Rectangle(new Point(), new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
         var recDestiny = new Rectangle(tool.Position, recSource.Size);
 
-        // Desenha a textura do marcador pelo seu estado 
+        // Desenha a textura do marcador pelo seu estado
         if (tool.Checked)
             recSource.Location = new Point(Textures.CheckBox.ToSize().Width / 2, 0);
 
-        // Desenha o marcador 
+        // Desenha o marcador
         byte margin = 4;
-        Render(WinInterface, Textures.CheckBox, recSource, recDestiny);
-        DrawText(WinInterface, tool.Text, recDestiny.Location.X + Textures.CheckBox.ToSize().Width / 2 + margin, recDestiny.Location.Y + 1, Color.White);
+        Render(target, Textures.CheckBox, recSource, recDestiny);
+        DrawText(target, tool.Text, recDestiny.Location.X + Textures.CheckBox.ToSize().Width / 2 + margin, recDestiny.Location.Y + 1, Color.White);
     }
 
-    private static void TextBox(TextBox tool)
+    private static void TextBox(RenderTarget target, TextBox tool)
     {
         // Desenha a ferramenta
-        Render_Box(WinInterface, Textures.TextBox, 3, tool.Position, new Size(tool.Width, Textures.TextBox.ToSize().Height));
+        Render_Box(target, Textures.TextBox, 3, tool.Position, new Size(tool.Width, Textures.TextBox.ToSize().Height));
     }
     #endregion
 }

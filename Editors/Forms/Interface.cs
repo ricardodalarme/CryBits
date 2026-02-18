@@ -30,7 +30,7 @@ internal partial class EditorInterface : DarkForm
         Show();
 
         // Inicializa a janela de renderização
-        Renders.WinInterface = new RenderWindow(picWindow.Handle);
+        // (rendering is now handled by the Avalonia editor via Renders.WinInterfaceRT)
 
         // Adiciona as janelas à lista
         for (byte i = 0; i < Tree.Nodes.Count; i++)
@@ -43,7 +43,6 @@ internal partial class EditorInterface : DarkForm
 
     private void Editor_Interface_FormClosed(object sender, FormClosedEventArgs e)
     {
-        Renders.WinInterface = null;
         EditorMaps.Form.Show();
     }
 
