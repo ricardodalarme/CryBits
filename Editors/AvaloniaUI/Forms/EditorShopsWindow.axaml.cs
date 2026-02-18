@@ -27,10 +27,7 @@ internal partial class EditorShopsWindow : Window
 
     private void Groups_Visibility()
     {
-        var hasSelection = _selected != null;
-        grpGeneral.IsVisible = hasSelection;
-        grpBought.IsVisible = hasSelection;
-        grpSold.IsVisible = hasSelection;
+        pnlContent.IsVisible = _selected != null;
         grpAddItem.IsVisible = false;
     }
 
@@ -59,18 +56,13 @@ internal partial class EditorShopsWindow : Window
 
     private void RefreshSelectedDetails()
     {
-        if (_selected == null)
-        {
-            Groups_Visibility();
-            return;
-        }
+        Groups_Visibility();
+        if (_selected == null) return;
 
         txtName.Text = _selected.Name;
         cmbCurrency.SelectedItem = _selected.Currency;
-        grpAddItem.IsVisible = false;
 
         RefreshShopItems();
-        Groups_Visibility();
     }
 
     private void RefreshShopItems()

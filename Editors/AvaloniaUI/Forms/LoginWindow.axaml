@@ -1,34 +1,59 @@
-<Window
-    x:Class="CryBits.Editors.AvaloniaUI.Forms.LoginWindow"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Login"
-    Width="567"
-    Height="426"
-    CanResize="False"
-    WindowStartupLocation="CenterScreen"
-    ShowInTaskbar="False">
-  <Grid Margin="14" ColumnDefinitions="1.4*,1*" RowDefinitions="Auto,*,Auto">
-    <Border Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,12" BorderThickness="1">
-      <Image Source="avares://Editors/AvaloniaUI/Assets/Logo.webp" Height="141" Stretch="Uniform" />
-    </Border>
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:semi="https://irihi.tech/semi"
+        x:Class="CryBits.Editors.AvaloniaUI.Forms.LoginWindow"
+        Title="Login"
+        Width="540" Height="400"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False">
 
-    <Border Grid.Row="1" Grid.Column="0" Margin="0,0,16,0" Padding="10" BorderThickness="1">
-      <TextBlock TextWrapping="Wrap"
-                 Text="Getting started?&#10;       1. Start the CryBits Server&#10;       2. Open the CryBits Client and create an account&#10;       3. Login to that account to start creating your game!" />
-    </Border>
+    <Window.Resources>
+        <ResourceDictionary>
+            <semi:SemiTheme x:Key="SemiTheme" Locale="en-US" />
+        </ResourceDictionary>
+    </Window.Resources>
 
-    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="8" VerticalAlignment="Center">
-      <TextBlock Text="Username:" />
-      <TextBox x:Name="txtUsername" />
+    <StackPanel Margin="14" Spacing="10">
 
-      <TextBlock Text="Password:" Margin="0,6,0,0" />
-      <TextBox x:Name="txtPassword" PasswordChar="*" />
+        <!-- Logo -->
+        <Image Source="avares://Editors/AvaloniaUI/Assets/Logo.webp"
+               Height="141" Stretch="Uniform" />
 
-      <CheckBox x:Name="chkUsername" Content="Save username" Margin="0,6,0,0" />
-      <Button Content="Connect" Click="butConnect_Click" Margin="0,6,0,0" />
+        <!-- Two-column: instructions (left) + login fields (right) -->
+        <Grid ColumnDefinitions="1.4*,1*" ColumnSpacing="16">
+
+            <!-- Getting-started instructions -->
+            <Border Grid.Column="0"
+                    BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="10"
+                    VerticalAlignment="Stretch">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Getting started?" FontWeight="Bold" />
+                    <TextBlock Text="1. Start the CryBits Server" TextWrapping="Wrap" />
+                    <TextBlock Text="2. Open the CryBits Client and create an account" TextWrapping="Wrap" />
+                    <TextBlock Text="3. Login to that account to start creating your game!" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- Login fields -->
+            <StackPanel Grid.Column="1" Spacing="6" VerticalAlignment="Center">
+                <TextBlock Text="Username:" />
+                <TextBox x:Name="txtUsername" />
+
+                <TextBlock Text="Password:" Margin="0,4,0,0" />
+                <TextBox x:Name="txtPassword" PasswordChar="*" />
+
+                <CheckBox x:Name="chkUsername" Content="Save username" Margin="0,4,0,0" />
+                <Button Content="Connect"
+                        Click="butConnect_Click"
+                        IsDefault="True"
+                        Margin="0,4,0,0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center" />
+            </StackPanel>
+
+        </Grid>
     </StackPanel>
 
-    <Button Grid.Row="2" Grid.Column="1" IsDefault="True" IsVisible="False" Click="butConnect_Click" />
-  </Grid>
 </Window>

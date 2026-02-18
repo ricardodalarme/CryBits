@@ -1,84 +1,104 @@
-<Window
-    x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorDataWindow"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Data Editor"
-    Width="361"
-    Height="708"
-    CanResize="False"
-    WindowStartupLocation="CenterScreen"
-    ShowInTaskbar="False">
-    <Grid RowDefinitions="*,Auto" Margin="14">
-        <Border Margin="0,0,0,10" Padding="10" BorderThickness="1">
-            <StackPanel Spacing="8">
-                <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,4" />
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:semi="https://irihi.tech/semi"
+        x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorDataWindow"
+        Title="Data Editor"
+        Width="361" Height="710"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False">
 
-                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Game name:" Margin="0,0,0,4" />
-                    <TextBox x:Name="txtGame_Name" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,10" />
+    <Window.Resources>
+        <ResourceDictionary>
+            <semi:SemiTheme x:Key="SemiTheme" Locale="en-US" />
+        </ResourceDictionary>
+    </Window.Resources>
 
-                    <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="Welcome message:" Margin="0,0,0,4" />
-                    <TextBox x:Name="txtWelcome" Grid.Row="3" Grid.ColumnSpan="2" Margin="0,0,0,10" />
+    <!-- Outer layout: content (scrollable) on top, Save/Cancel pinned to bottom -->
+    <Grid RowDefinitions="*,Auto" Margin="10">
 
-                    <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="Port:" Margin="0,0,0,4" />
-                    <NumericUpDown x:Name="numPort" Grid.Row="5" Grid.ColumnSpan="2" Minimum="0" Maximum="10000"
-                                   Margin="0,0,0,10" />
+        <!-- ─── Scrollable content ─── -->
+        <ScrollViewer Grid.Row="0" Margin="0,0,0,8">
+            <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                    CornerRadius="4" Padding="10">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,2" />
 
-                    <TextBlock Grid.Row="6" Grid.ColumnSpan="2" Text="Maximum players online:" Margin="0,0,0,4" />
-                    <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Spacing="4">
-                        <TextBlock FontStyle="Italic" FontSize="11" Text="(Need to restart the server)"
-                                   HorizontalAlignment="Right" />
-                        <NumericUpDown x:Name="numMax_Players" Minimum="1" Maximum="255" />
+                    <!-- Game name -->
+                    <TextBlock Text="Game name:" />
+                    <TextBox x:Name="txtGame_Name" />
 
-                        <Grid ColumnDefinitions="*,*" Margin="0,6,0,0">
-                            <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,6,0">
-                                <TextBlock Text="Maximum characters:" />
-                                <NumericUpDown x:Name="numMax_Characters" Minimum="1" Maximum="255" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,0,0">
-                                <TextBlock Text="Maximum party members:" />
-                                <NumericUpDown x:Name="numMax_Party_Members" Minimum="0" Maximum="10" />
-                            </StackPanel>
-                        </Grid>
+                    <!-- Welcome message -->
+                    <TextBlock Text="Welcome message:" Margin="0,4,0,0" />
+                    <TextBox x:Name="txtWelcome" />
 
-                        <Grid ColumnDefinitions="*,*" Margin="0,6,0,0">
-                            <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,6,0">
-                                <TextBlock Text="Points earned when levelup:" />
-                                <NumericUpDown x:Name="numPoints" Minimum="0" Maximum="10" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,0,0">
-                                <TextBlock Text="Maximum map items:" />
-                                <NumericUpDown x:Name="numMax_Map_Items" Minimum="0" Maximum="255" />
-                            </StackPanel>
-                        </Grid>
+                    <!-- Port -->
+                    <TextBlock Text="Port:" Margin="0,4,0,0" />
+                    <NumericUpDown x:Name="numPort" Minimum="0" Maximum="65535" />
 
-                        <Grid ColumnDefinitions="*,*" Margin="0,6,0,0">
-                            <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,6,0">
-                                <TextBlock Text="Minimum name length:" />
-                                <NumericUpDown x:Name="numMin_Name" Minimum="1" Maximum="255" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,0,0">
-                                <TextBlock Text="Maximum name length:" />
-                                <NumericUpDown x:Name="numMax_Name" Minimum="1" Maximum="255" />
-                            </StackPanel>
-                        </Grid>
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-        </Border>
+                    <!-- Maximum players online (note) -->
+                    <TextBlock Text="Maximum players online:" Margin="0,4,0,0" />
+                    <TextBlock Text="(Need to restart the server)"
+                               FontStyle="Italic" FontSize="11"
+                               HorizontalAlignment="Right" />
+                    <NumericUpDown x:Name="numMax_Players" Minimum="1" Maximum="255" />
 
-        <Grid Grid.Row="1" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Minimum password length:" Margin="0,0,0,4" />
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="Maximum password length:" Margin="0,0,0,4" />
-            <NumericUpDown x:Name="numMin_Password" Grid.Row="1" Grid.Column="0" Minimum="1" Maximum="255"
-                           Margin="0,0,6,0" />
-            <NumericUpDown x:Name="numMax_Password" Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="255"
-                           Margin="6,0,0,0" />
+                    <!-- Two-per-row numeric fields -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,4,0,0">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Max characters:" />
+                            <NumericUpDown x:Name="numMax_Characters" Minimum="1" Maximum="255" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Max party members:" />
+                            <NumericUpDown x:Name="numMax_Party_Members" Minimum="0" Maximum="10" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,4,0,0">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Points per levelup:" />
+                            <NumericUpDown x:Name="numPoints" Minimum="0" Maximum="10" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Max map items:" />
+                            <NumericUpDown x:Name="numMax_Map_Items" Minimum="0" Maximum="255" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,4,0,0">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Min name length:" />
+                            <NumericUpDown x:Name="numMin_Name" Minimum="1" Maximum="255" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Max name length:" />
+                            <NumericUpDown x:Name="numMax_Name" Minimum="1" Maximum="255" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,4,0,0">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Min password length:" />
+                            <NumericUpDown x:Name="numMin_Password" Minimum="1" Maximum="255" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Max password length:" />
+                            <NumericUpDown x:Name="numMax_Password" Minimum="1" Maximum="255" />
+                        </StackPanel>
+                    </Grid>
+
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+
+        <!-- ─── Save / Cancel ─── -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="8">
+            <Button Grid.Column="0" Content="Save"   Click="butSave_Click"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+            <Button Grid.Column="1" Content="Cancel" Click="butCancel_Click"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
         </Grid>
 
-        <Grid Grid.Row="1" ColumnDefinitions="*,*" VerticalAlignment="Bottom" Margin="0,52,0,0">
-            <Button Grid.Column="0" Content="Save" Click="butSave_Click" Margin="0,0,4,0" />
-            <Button Grid.Column="1" Content="Cancel" Click="butCancel_Click" Margin="4,0,0,0" />
-        </Grid>
     </Grid>
 </Window>

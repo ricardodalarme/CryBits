@@ -1,90 +1,142 @@
-<Window
-    x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorShopsWindow"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Shop Editor"
-    Width="857"
-    Height="515"
-    CanResize="False"
-    WindowStartupLocation="CenterScreen"
-    ShowInTaskbar="False">
-  <Grid Margin="14" ColumnDefinitions="234,*" ColumnSpacing="8" RowDefinitions="Auto,*,Auto">
-    <TextBox x:Name="txtFilter"
-             Grid.Row="0"
-             Grid.Column="0"
-             Watermark="Filter"
-             TextChanged="txtFilter_TextChanged" />
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:semi="https://irihi.tech/semi"
+        x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorShopsWindow"
+        Title="Shop Editor"
+        Width="857" Height="530"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False">
 
-    <ListBox x:Name="lstShops"
-             Grid.Row="1"
-             Grid.Column="0"
-             SelectionChanged="List_SelectionChanged" />
+    <Window.Resources>
+        <ResourceDictionary>
+            <semi:SemiTheme x:Key="SemiTheme" Locale="en-US" />
+        </ResourceDictionary>
+    </Window.Resources>
 
-    <Grid Grid.Row="2" Grid.Column="0" ColumnDefinitions="*,*" Margin="0,6,0,0">
-      <Button Grid.Column="0" Content="New" Click="butNew_Click" Margin="0,0,4,0" />
-      <Button Grid.Column="1" Content="Remove" Click="butRemove_Click" Margin="4,0,0,0" />
-    </Grid>
+    <Grid Margin="10" ColumnDefinitions="234,*" ColumnSpacing="8" RowDefinitions="*,Auto">
 
-    <Grid Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" RowDefinitions="Auto,*,Auto" RowSpacing="8">
-      <Border x:Name="grpGeneral" Grid.Row="0" BorderThickness="1" Padding="10">
-        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-          <StackPanel Grid.Column="0" Spacing="4">
-            <TextBlock Text="Name:" />
-            <TextBox x:Name="txtName" TextChanged="txtName_TextChanged" />
-          </StackPanel>
-
-          <StackPanel Grid.Column="1" Spacing="4">
-            <TextBlock Text="Default currency:" />
-            <ComboBox x:Name="cmbCurrency" SelectionChanged="cmbCurrency_SelectedIndexChanged" />
-          </StackPanel>
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- LEFT: Shop list                                     -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <Grid Grid.Column="0" Grid.Row="0" RowDefinitions="Auto,*" Margin="0,0,0,0">
+            <TextBox x:Name="txtFilter" Grid.Row="0" Watermark="Filter…" Margin="0,0,0,4"
+                     TextChanged="txtFilter_TextChanged" />
+            <ListBox x:Name="lstShops" Grid.Row="1"
+                     SelectionMode="Single"
+                     SelectionChanged="List_SelectionChanged" />
         </Grid>
-      </Border>
 
-      <Grid Grid.Row="1" x:Name="contentGrid" ColumnDefinitions="*,*" ColumnSpacing="8">
-        <Border x:Name="grpSold" Grid.Column="0" BorderThickness="1" Padding="8">
-          <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
-            <TextBlock Text="Items Sold" FontWeight="Bold" />
-            <ListBox x:Name="lstSold" Grid.Row="1" />
-            <Grid Grid.Row="2" ColumnDefinitions="*,*">
-              <Button Grid.Column="0" Content="Add" Click="butSold_Add_Click" Margin="0,0,4,0" />
-              <Button Grid.Column="1" Content="Remove" Click="butSold_Remove_Click" Margin="4,0,0,0" />
-            </Grid>
-          </Grid>
-        </Border>
+        <!-- New / Remove buttons (bottom-left) -->
+        <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,6,0,0">
+            <Button Grid.Column="0" Content="New"    Click="butNew_Click"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+            <Button Grid.Column="1" Content="Remove" Click="butRemove_Click"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+        </Grid>
 
-        <Border x:Name="grpBought" Grid.Column="1" BorderThickness="1" Padding="8">
-          <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
-            <TextBlock Text="Items Bought" FontWeight="Bold" />
-            <ListBox x:Name="lstBought" Grid.Row="1" />
-            <Grid Grid.Row="2" ColumnDefinitions="*,*">
-              <Button Grid.Column="0" Content="Add" Click="butBought_Add_Click" Margin="0,0,4,0" />
-              <Button Grid.Column="1" Content="Remove" Click="butBought_Remove_Click" Margin="4,0,0,0" />
-            </Grid>
-          </Grid>
-        </Border>
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- RIGHT: Editor panels                               -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <ScrollViewer Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+            <StackPanel x:Name="pnlContent" Spacing="8" IsVisible="False">
 
-        <Border x:Name="grpAddItem" Grid.ColumnSpan="2" BorderThickness="1" Padding="12" IsVisible="False">
-          <StackPanel Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6">
-            <TextBlock Text="Add Item" FontWeight="Bold" Margin="0,0,0,4" />
+                <!-- grpGeneral -->
+                <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="10">
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,2" />
+                            <TextBlock Text="Name:" />
+                            <TextBox x:Name="txtName" TextChanged="txtName_TextChanged" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Default currency:" Margin="0,0,0,22" />
+                            <ComboBox x:Name="cmbCurrency"
+                                      HorizontalAlignment="Stretch"
+                                      SelectionChanged="cmbCurrency_SelectedIndexChanged" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
 
-            <TextBlock Text="Item:" />
-            <ComboBox x:Name="cmbItems" />
+                <!-- grpSold + grpBought side-by-side -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Height="220">
 
-            <TextBlock Text="Amount:" Margin="0,4,0,0" />
-            <NumericUpDown x:Name="numAmount" Minimum="1" Maximum="32767" Value="1" />
+                    <!-- Items Sold -->
+                    <Border x:Name="grpSold" Grid.Column="0"
+                            BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                            CornerRadius="4" Padding="8">
+                        <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
+                            <TextBlock Text="Items Sold" FontWeight="Bold" />
+                            <ListBox x:Name="lstSold" Grid.Row="1" />
+                            <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8">
+                                <Button Grid.Column="0" Content="Add"    Click="butSold_Add_Click"
+                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                                <Button Grid.Column="1" Content="Remove" Click="butSold_Remove_Click"
+                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                            </Grid>
+                        </Grid>
+                    </Border>
 
-            <TextBlock Text="Price:" Margin="0,4,0,0" />
-            <NumericUpDown x:Name="numPrice" Minimum="0" Maximum="32767" Value="0" />
+                    <!-- Items Bought -->
+                    <Border x:Name="grpBought" Grid.Column="1"
+                            BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                            CornerRadius="4" Padding="8">
+                        <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
+                            <TextBlock Text="Items Bought" FontWeight="Bold" />
+                            <ListBox x:Name="lstBought" Grid.Row="1" />
+                            <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8">
+                                <Button Grid.Column="0" Content="Add"    Click="butBought_Add_Click"
+                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                                <Button Grid.Column="1" Content="Remove" Click="butBought_Remove_Click"
+                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
 
-            <Button Content="Confirm" Click="butConfirm_Click" Margin="0,8,0,0" />
-          </StackPanel>
-        </Border>
-      </Grid>
+                <!-- Add Item inline panel (hidden until Add is clicked) -->
+                <Border x:Name="grpAddItem"
+                        BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}"
+                        CornerRadius="4" Padding="12"
+                        IsVisible="False">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Add Item" FontWeight="Bold" Margin="0,0,0,2" />
 
-      <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8">
-        <Button x:Name="butSave" Grid.Column="0" Content="Save All" Click="butSave_Click" />
-        <Button x:Name="butCancel" Grid.Column="1" Content="Cancel" Click="butCancel_Click" />
-      </Grid>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <!-- Left: Item + Amount -->
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="Item:" />
+                                <ComboBox x:Name="cmbItems" HorizontalAlignment="Stretch" />
+
+                                <TextBlock Text="Amount:" Margin="0,4,0,0" />
+                                <NumericUpDown x:Name="numAmount" Minimum="1" Maximum="32767" Value="1" />
+                            </StackPanel>
+
+                            <!-- Right: Price + Confirm -->
+                            <StackPanel Grid.Column="1" Spacing="4">
+                                <TextBlock Text="Price:" />
+                                <NumericUpDown x:Name="numPrice" Minimum="0" Maximum="32767" Value="0" />
+
+                                <Button Content="Confirm" Click="butConfirm_Click"
+                                        Margin="0,12,0,0"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Save / Cancel -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Button x:Name="butSave"   Grid.Column="0" Content="Save All" Click="butSave_Click"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                    <Button x:Name="butCancel" Grid.Column="1" Content="Cancel"   Click="butCancel_Click"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                </Grid>
+
+            </StackPanel>
+        </ScrollViewer>
+
     </Grid>
-  </Grid>
 </Window>
