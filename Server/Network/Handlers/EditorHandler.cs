@@ -9,6 +9,7 @@ using CryBits.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
+using CryBits.Server.Library.Repositories;
 using CryBits.Server.Network.Senders;
 using LiteNetLib.Utils;
 using static CryBits.Globals;
@@ -41,7 +42,7 @@ internal static class EditorHandler
         MaxPasswordLength = data.GetByte();
 
         // Salva os dados
-        Write.Defaults();
+        SettingsRepository.Write();
     }
 
     internal static void WriteClasses(Account account, NetDataReader data)
@@ -55,7 +56,7 @@ internal static class EditorHandler
 
         // Recebe e salva os novos dados
         Class.List = (Dictionary<Guid, Class>)data.ReadObject();
-        Write.Classes();
+        ClassRepository.WriteAll();
 
         // Envia os novos dados para todos jogadores conectados
         for (byte i = 0; i < Account.List.Count; i++)
@@ -74,7 +75,7 @@ internal static class EditorHandler
 
         // Recebe e salva os novos dados
         Map.List = (Dictionary<Guid, Map>)data.ReadObject();
-        Write.Maps();
+        MapRepository.WriteAll();
 
         // Envia os novos dados para todos jogadores 
         foreach (var tempMap in TempMap.List.Values)
@@ -101,7 +102,7 @@ internal static class EditorHandler
 
         // Recebe e salva os novos dados
         Npc.List = (Dictionary<Guid, Npc>)data.ReadObject();
-        Write.Npcs();
+        NpcRepository.WriteAll();
 
         // Envia os novos dados para todos jogadores conectados
         for (byte i = 0; i < Account.List.Count; i++)
@@ -120,7 +121,7 @@ internal static class EditorHandler
 
         // Recebe e salva os novos dados
         Item.List = (Dictionary<Guid, Item>)data.ReadObject();
-        Write.Items();
+        ItemRepository.WriteAll();
 
         // Envia os novos dados para todos jogadores conectados
         for (byte i = 0; i < Account.List.Count; i++)
@@ -139,7 +140,7 @@ internal static class EditorHandler
 
         // Recebe e salva os novos dados
         Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();
-        Write.Shops();
+        ShopRepository.WriteAll();
 
         // Envia os novos dados para todos jogadores conectados
         for (byte i = 0; i < Account.List.Count; i++)

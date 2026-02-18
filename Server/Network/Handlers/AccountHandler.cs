@@ -7,6 +7,7 @@ using CryBits.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
+using CryBits.Server.Library.Repositories;
 using CryBits.Server.Network.Senders;
 using LiteNetLib.Utils;
 using static CryBits.Globals;
@@ -35,7 +36,7 @@ internal static class AccountHandler
       return;
     }
 
-    if (Read.CharactersName().Contains(";" + name + ":"))
+    if (CharacterRepository.ReadAllNames().Contains(";" + name + ":"))
     {
       AuthSender.Alert(account, "A character with this name already exists", false);
       return;
@@ -66,8 +67,8 @@ internal static class AccountHandler
     for (byte i = 0; i < MaxHotbar; i++) account.Character.Hotbar[i] = new HotbarSlot(SlotType.None, 0);
 
     // Salva a conta
-    Write.CharacterName(name);
-    Write.Character(account);
+    CharacterRepository.WriteName(name);
+    CharacterRepository.Write(account);
 
     // Entra no jogo
     account.Character.Join();
@@ -81,7 +82,7 @@ internal static class AccountHandler
     if (character < 0 || character >= account.Characters.Count) return;
 
     // Entra no jogo
-    Read.Character(account, account.Characters[character].Name);
+    CharacterRepository.Read(account, account.Characters[character].Name);
     account.Character.Join();
   }
 
@@ -109,12 +110,12 @@ internal static class AccountHandler
     // Deleta o personagem
     var name = account.Characters[character].Name;
     AuthSender.Alert(account, "The character '" + name + "' has been deleted.", false);
-    Write.CharactersName(Read.CharactersName().Replace(":;" + name + ":", ":"));
+    CharacterRepository.WriteAllNames(CharacterRepository.ReadAllNames().Replace(":;" + name + ":", ":"));
     account.Characters.RemoveAt(character);
     File.Delete(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", name) + Directories.Format);
 
     // Salva o personagem
     AccountSender.Characters(account);
-    Write.Account(account);
+    AccountRepository.Write(account);
   }
 }

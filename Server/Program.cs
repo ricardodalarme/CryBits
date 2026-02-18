@@ -5,6 +5,7 @@ using CryBits.Enums;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
+using CryBits.Server.Library.Repositories;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
 
@@ -31,7 +32,7 @@ internal static class Program
         Console.WriteLine("Directories created.");
 
         // Carrega todos os dados necessários
-        Read.All();
+        DataLoader.LoadAll();
 
         // Cria os mapas temporários
         Console.WriteLine("Creating temporary maps.");
@@ -55,10 +56,10 @@ internal static class Program
         // Previne o encerramento imediato para permitir cleanup
         e.Cancel = true;
         Working = false;
-        
+
         Console.WriteLine("\r\n[Shutting down...]");
         PerformShutdown();
-        
+
         // Força a saída do processo após cleanup
         Environment.Exit(0);
     }
@@ -74,7 +75,7 @@ internal static class Program
         // Salva os dados de todos os jogadores
         for (byte i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
-                Write.Character(Account.List[i]);
+                CharacterRepository.Write(Account.List[i]);
 
         // Fecha o servidor
         Socket.Device.Stop();
@@ -113,7 +114,8 @@ internal static class Program
                 break;
             case "defineaccess":
                 // Verifica se o que está digitado corretamente
-                if (parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(parts[1]) || !byte.TryParse(parts[2], out var access))
+                if (parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(parts[1]) ||
+                    !byte.TryParse(parts[2], out var access))
                 {
                     Console.WriteLine("Use: defineaccess 'Player Name' 'Access' ");
                     return;
@@ -132,7 +134,7 @@ internal static class Program
                 account.Access = (Access)access;
 
                 // Salva os dados
-                Write.Account(account);
+                AccountRepository.Write(account);
                 Console.WriteLine((Access)Convert.ToByte(parts[2]) + " access granted to " + parts[1] + ".");
                 break;
             // Se o comando não existir mandar uma mensagem de ajuda

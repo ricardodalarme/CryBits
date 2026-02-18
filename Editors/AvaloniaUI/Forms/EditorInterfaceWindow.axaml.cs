@@ -11,6 +11,7 @@ using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Library;
+using CryBits.Editors.Library.Repositories;
 using SFML.Graphics;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
@@ -30,7 +31,11 @@ internal sealed class TreeItemVM : INotifyPropertyChanged
     public string Header
     {
         get => _header;
-        set { _header = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Header))); }
+        set
+        {
+            _header = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Header)));
+        }
     }
 
     public Component? Tag { get; set; }
@@ -49,7 +54,7 @@ internal partial class EditorInterfaceWindow : Window
     private bool _loadingProps;
     private Component? _selectedComponent;
     private TreeItemVM? _selectedNode;
-    private TreeItemVM _rootVM = new();   // virtual root for the current window
+    private TreeItemVM _rootVM = new(); // virtual root for the current window
 
     private WriteableBitmap? _previewBitmap;
     private DispatcherTimer? _timer;
@@ -170,7 +175,8 @@ internal partial class EditorInterfaceWindow : Window
         winNode.Nodes.Add(newTreeNode);
 
         // Add to VM tree
-        var newVM = new TreeItemVM { Header = newComp.ToString(), Tag = newComp, SourceNode = newTreeNode, Parent = _rootVM };
+        var newVM = new TreeItemVM
+            { Header = newComp.ToString(), Tag = newComp, SourceNode = newTreeNode, Parent = _rootVM };
         _rootVM.Children.Add(newVM);
 
         pnlNew.IsVisible = false;
@@ -360,7 +366,7 @@ internal partial class EditorInterfaceWindow : Window
 
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
-        Write.Tools();
+        ToolsRepository.Write();
         Close();
     }
 

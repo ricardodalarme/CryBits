@@ -2,6 +2,7 @@ using System.IO;
 using CryBits.Enums;
 using CryBits.Server.Entities;
 using CryBits.Server.Library;
+using CryBits.Server.Library.Repositories;
 using CryBits.Server.Network.Senders;
 using LiteNetLib.Utils;
 using static CryBits.Globals;
@@ -40,7 +41,7 @@ internal static class AuthHandler
         }
 
         // Carrega os dados da conta
-        Read.Account(account, user);
+        AccountRepository.Read(account, user);
 
         // Verifica se a senha está correta
         if (!account.Password.Equals(password))
@@ -73,7 +74,7 @@ internal static class AuthHandler
         else
         {
             // Carrega os dados do jogador
-            Read.Characters(account);
+            AccountRepository.ReadCharacters(account);
 
             // Envia os dados das classes e dos personagens ao jogador
             ClassSender.Classes(account);
@@ -123,7 +124,7 @@ internal static class AuthHandler
         account.Password = password;
 
         // Salva a conta
-        Write.Account(account);
+        AccountRepository.Write(account);
 
         // Abre a janela de seleção de personagens
         ClassSender.Classes(account);

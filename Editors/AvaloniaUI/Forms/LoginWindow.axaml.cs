@@ -36,7 +36,7 @@ internal partial class LoginWindow : Window
         Send.Connect();
 
         Options.Username = chkUsername.IsChecked == true ? AvaloniaLoginLauncher.Username : string.Empty;
-        Client.Framework.Library.Write.Options();
+        Client.Framework.Library.Repositories.OptionsRepository.Write();
     }
 
     private void Login_Closed(object sender, EventArgs e)

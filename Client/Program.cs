@@ -2,6 +2,7 @@
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Library;
+using CryBits.Client.Framework.Library.Repositories;
 using CryBits.Client.Graphics;
 using CryBits.Client.Logic;
 using CryBits.Client.Network;
@@ -22,8 +23,8 @@ internal static class Program
         Directories.Create();
 
         // Carrega todos os dados
-        Read.Tools();
-        Read.Options();
+        ToolsRepository.Read();
+        OptionsRepository.Read();
 
         // Adiciona os eventos aos componentes
         CheckBoxEvents.Bind();

@@ -9,6 +9,7 @@ using Avalonia.Threading;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Library;
+using CryBits.Client.Framework.Library.Repositories;
 using CryBits.Editors.Graphics;
 using CryBits.Enums;
 using SFML.Graphics;
@@ -167,7 +168,7 @@ internal partial class EditorTilesWindow : Window
 
     private void butSave_Click(object? sender, RoutedEventArgs e)
     {
-        Write.Tiles();
+        TileRepository.WriteAll();
         Close();
     }
 

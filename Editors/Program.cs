@@ -7,7 +7,8 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
-using Read = CryBits.Editors.Library.Read;
+using CryBits.Client.Framework.Library.Repositories;
+using EditorToolsRepository = CryBits.Editors.Library.Repositories.ToolsRepository;
 
 namespace CryBits.Editors;
 
@@ -25,8 +26,8 @@ internal static class Program
         Directories.Create();
 
         // Carrega as preferências
-        Client.Framework.Library.Read.Options();
-        Read.Tools();
+        OptionsRepository.Read();
+        EditorToolsRepository.Read();
 
         // Inicializa todos os dispositivos
         Socket.Init();

@@ -9,6 +9,7 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
+using CryBits.Server.Library.Repositories;
 using CryBits.Server.Logic;
 using CryBits.Server.Network.Senders;
 using static CryBits.Globals;
@@ -148,7 +149,7 @@ internal class Player : Character
     public void Leave()
     {
         // Salva os dados do jogador e atualiza os demais jogadores da desconexão
-        Write.Character(Account);
+        CharacterRepository.Write(Account);
         PlayerSender.PlayerLeave(this);
 
         // Sai dos grupos

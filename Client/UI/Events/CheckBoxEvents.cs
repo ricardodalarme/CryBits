@@ -5,6 +5,7 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Library;
+using CryBits.Client.Framework.Library.Repositories;
 using CryBits.Client.Logic;
 
 namespace CryBits.Client.UI.Events;
@@ -32,14 +33,14 @@ internal static class CheckBoxEvents
         // Salva os dados
         Options.Sounds = !Options.Sounds;
         if (!Options.Sounds) Sound.StopAll();
-        Write.Options();
+        OptionsRepository.Write();
     }
 
     private static void ToggleMusic()
     {
         // Salva os dados
         Options.Musics = !Options.Musics;
-        Write.Options();
+        OptionsRepository.Write();
 
         // Para ou reproduz a música dependendo do estado do marcador
         if (!Options.Musics)
@@ -54,7 +55,7 @@ internal static class CheckBoxEvents
     {
         // Salva os dados
         Options.SaveUsername = CheckBoxes.ConnectSaveUsername.Checked;
-        Write.Options();
+        OptionsRepository.Write();
     }
 
     private static void GenreName()
@@ -75,7 +76,7 @@ internal static class CheckBoxEvents
     {
         // Salva os dado
         Options.Chat = CheckBoxes.OptionsChat.Checked;
-        Write.Options();
+        OptionsRepository.Write();
         if (Options.Chat) Loop.ChatTimer = Environment.TickCount + UI.Chat.SleepTimer;
     }
 
@@ -83,27 +84,27 @@ internal static class CheckBoxEvents
     {
         // Salva os dado
         Options.Fps = CheckBoxes.OptionsFps.Checked;
-        Write.Options();
+        OptionsRepository.Write();
     }
 
     private static void Latency()
     {
         // Desabilita a prévia do chat
         Options.Latency = CheckBoxes.OptionsLatency.Checked;
-        Write.Options();
+        OptionsRepository.Write();
     }
 
     private static void Party()
     {
         // Salva os dado
         Options.Party = CheckBoxes.OptionsParty.Checked;
-        Write.Options();
+        OptionsRepository.Write();
     }
 
     private static void Trade()
     {
         // Salva os dado
         Options.Trade = CheckBoxes.OptionsTrade.Checked;
-        Write.Options();
+        OptionsRepository.Write();
     }
 }

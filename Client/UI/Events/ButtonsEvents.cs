@@ -3,6 +3,7 @@ using CryBits.Client.Utils;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Library;
+using CryBits.Client.Framework.Library.Repositories;
 using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities;
@@ -119,7 +120,7 @@ internal static class ButtonsEvents
     {
         // Salva o nome do usuário
         Framework.Options.Username = TextBoxes.ConnectUsername.Text;
-        Write.Options();
+        OptionsRepository.Write();
 
         // Conecta-se ao jogo
         if (Socket.TryConnect()) AuthSender.Connect();

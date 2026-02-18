@@ -5,6 +5,7 @@ using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Library;
+using CryBits.Client.Framework.Library.Repositories;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities;
 using CryBits.Entities.Map;
@@ -32,7 +33,7 @@ internal static class MapHandler
         {
             if (!CryBits.Entities.Map.Map.List.ContainsKey(id))
             {
-                Read.Map(id);
+                MapRepository.Read(id);
                 TempMap.Current.Weather.Update();
                 TempMap.Current.Data.Update();
             }
@@ -66,7 +67,7 @@ internal static class MapHandler
         TempMap.Current = TempMap.List[id];
 
         // Salva o mapa
-        Write.Map(map);
+        MapRepository.Write(map);
 
         // Redimensiona as partículas do clima
         TempMap.Current.Weather.UpdateType();
