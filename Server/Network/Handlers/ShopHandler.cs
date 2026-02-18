@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Systems;
 using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Handlers;
@@ -62,6 +63,6 @@ internal static class ShopHandler
 
     internal static void ShopClose(Player player)
     {
-        player.Shop = null;
+        ShopSystem.Leave(player);
     }
 }

@@ -143,7 +143,7 @@ internal class Player : Character
 
         // Cancel any active trade or shop session
         TradeSystem.Leave(this);
-        if (Shop != null) ShopLeave();
+        ShopSystem.Leave(this);
         if (map == null) return;
         if (x >= CryBits.Entities.Map.Map.Width) x = CryBits.Entities.Map.Map.Width - 1;
         if (y >= CryBits.Entities.Map.Map.Height) y = CryBits.Entities.Map.Map.Height - 1;
@@ -185,7 +185,7 @@ internal class Player : Character
 
         // Cancel any active trade or shop session
         TradeSystem.Leave(this);
-        if (Shop != null) ShopLeave();
+        ShopSystem.Leave(this);
 
         // Próximo azulejo
         NextTile(Direction, ref nextX, ref nextY);
@@ -344,7 +344,7 @@ internal class Player : Character
         {
             case Behaviour.Friendly: return;
             case Behaviour.ShopKeeper:
-                ShopOpen(victim.Data.Shop);
+                ShopSystem.Open(this, victim.Data.Shop);
                 return;
         }
 
@@ -543,20 +543,6 @@ internal class Player : Character
     public byte TotalInventoryFree => (byte)Inventory.Count(x => x.Item != null);
 
     public byte TotalTradeItems => (byte)TradeOffer.Count(x => x.SlotNum != 0);
-
-    public void ShopOpen(Shop shop)
-    {
-        // Abre a loja
-        Shop = shop;
-        ShopSender.ShopOpen(this, shop);
-    }
-
-    public void ShopLeave()
-    {
-        // Fecha a loja
-        Shop = null;
-        ShopSender.ShopOpen(this, null);
-    }
 
     public static Player Find(string name) =>
         Account.List.Find(x => x.IsPlaying && x.Character.Name.Equals(name))?.Character;
