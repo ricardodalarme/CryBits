@@ -5,6 +5,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
