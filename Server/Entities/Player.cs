@@ -40,7 +40,7 @@ internal class Player : Character
     public TradeSlot[] TradeOffer;
     public Shop Shop;
     public Account Account;
-    private int _attackTimer;
+    private long _attackTimer;
 
     // Constutor
     public Player(Account account)
@@ -108,7 +108,7 @@ internal class Player : Character
     public void Logic()
     {
         // Reneração 
-        if (Environment.TickCount > Loop.TimerRegeneration + 5000)
+        if (Environment.TickCount64 > Loop.TimerRegeneration + 5000)
             for (byte v = 0; v < (byte)Enums.Vital.Count; v++)
                 if (Vital[v] < MaxVital(v))
                 {
@@ -288,7 +288,7 @@ internal class Player : Character
         // Apenas se necessário
         if (Trade != null) return;
         if (Shop != null) return;
-        if (Environment.TickCount < _attackTimer + AttackSpeed) return;
+        if (Environment.TickCount64 < _attackTimer + AttackSpeed) return;
         if (Map.TileBlocked(X, Y, Direction, false)) goto @continue;
 
         // Ataca um jogador
@@ -310,7 +310,7 @@ internal class Player : Character
         @continue:
         // Demonstra que aos outros jogadores o ataque
         PlayerSender.PlayerAttack(this, null);
-        _attackTimer = Environment.TickCount;
+        _attackTimer = Environment.TickCount64;
     }
 
     private void AttackPlayer(Player victim)
@@ -324,7 +324,7 @@ internal class Player : Character
         }
 
         // Tempo de ataque 
-        _attackTimer = Environment.TickCount;
+        _attackTimer = Environment.TickCount64;
 
         // Cálculo de dano
         var attackDamage = (short)(Damage - victim.PlayerDefense);
@@ -374,7 +374,7 @@ internal class Player : Character
         victim.Target = this;
 
         // Tempo de ataque 
-        _attackTimer = Environment.TickCount;
+        _attackTimer = Environment.TickCount64;
 
         // Cálculo de dano
         var attackDamage = (short)(Damage - victim.Data.Attribute[(byte)Enums.Attribute.Resistance]);

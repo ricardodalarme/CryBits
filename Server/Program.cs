@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using CryBits.Entities.Map;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
@@ -12,19 +13,23 @@ namespace CryBits.Server;
 
 internal static class Program
 {
-    // Usado para manter a aplicação aberta
-    public static bool Working = true;
-
-    private static void Main()
+    private static async Task Main()
     {
         // Abre o servidor e define suas configurações
         Console.Title = "Server";
         Logo();
         Console.WriteLine("[Starting]");
 
+        using var cts = new CancellationTokenSource();
+
         // Eventos de saída do console (cross-platform)
-        Console.CancelKeyPress += OnCancelKeyPress;
-        AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+        Console.CancelKeyPress += (_, e) =>
+        {
+            e.Cancel = true;
+            Console.WriteLine("\r\n[Shutting down...]");
+            cts.Cancel();
+        };
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => cts.Cancel();
 
         // Verifica se todos os diretórios existem, se não existirem então criá-los
         Directories.Create();
@@ -41,31 +46,21 @@ internal static class Program
         Socket.Init();
         Console.WriteLine("Network started. Port: " + Globals.Port);
 
-        // Calcula quanto tempo demorou para inicializar o servidor
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
 
-        // Inicia os laços
-        var consoleLoop = new Thread(Loop.Commands);
-        consoleLoop.Start();
-        Loop.Main();
-    }
+        // Inicia o laço de comandos numa thread separada
+        var consoleThread = new Thread(() => Loop.Commands(cts.Token)) { IsBackground = true };
+        consoleThread.Start();
 
-    private static void OnCancelKeyPress(object sender, ConsoleCancelEventArgs e)
-    {
-        // Previne o encerramento imediato para permitir cleanup
-        e.Cancel = true;
-        Working = false;
+        // Inicia o laço principal e aguarda o cancelamento
+        try
+        {
+            await Loop.MainAsync(cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+        }
 
-        Console.WriteLine("\r\n[Shutting down...]");
-        PerformShutdown();
-
-        // Força a saída do processo após cleanup
-        Environment.Exit(0);
-    }
-
-    private static void OnProcessExit(object sender, EventArgs e)
-    {
-        // Chamado quando o processo está sendo encerrado
         PerformShutdown();
     }
 

@@ -19,8 +19,8 @@ internal class TempNpc : Character
     public readonly Npc Data;
     public bool Alive;
     public Character Target;
-    private int _spawnTimer;
-    private int _attackTimer;
+    private long _spawnTimer;
+    private long _attackTimer;
 
     private short Regeneration(byte vital)
     {
@@ -51,7 +51,7 @@ internal class TempNpc : Character
         ////////////////
         if (!Alive)
         {
-            if (Environment.TickCount > _spawnTimer + Data.SpawnTime * 1000) Spawn();
+            if (Environment.TickCount64 > _spawnTimer + Data.SpawnTime * 1000) Spawn();
             return;
         }
 
@@ -63,7 +63,7 @@ internal class TempNpc : Character
         /////////////////
         // Regeneração //
         /////////////////
-        if (Environment.TickCount > Loop.TimerRegeneration + 5000)
+        if (Environment.TickCount64 > Loop.TimerRegeneration + 5000)
             for (byte v = 0; v < (byte)Enums.Vital.Count; v++)
                 if (Vital[v] < Data.Vital[v])
                 {
@@ -305,7 +305,7 @@ internal class TempNpc : Character
 
         // Apenas se necessário
         if (!Alive) return;
-        if (Environment.TickCount < _attackTimer + AttackSpeed) return;
+        if (Environment.TickCount64 < _attackTimer + AttackSpeed) return;
         if (Map.TileBlocked(X, Y, Direction, false)) return;
 
         // Verifica se o jogador está na frente do Npc
@@ -323,7 +323,7 @@ internal class TempNpc : Character
         if (victim.GettingMap) return;
 
         // Tempo de ataque 
-        _attackTimer = Environment.TickCount;
+        _attackTimer = Environment.TickCount64;
 
         // Cálculo de dano
         var attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] - victim.PlayerDefense);
@@ -361,7 +361,7 @@ internal class TempNpc : Character
         if (!victim.Alive) return;
 
         // Tempo de ataque 
-        _attackTimer = Environment.TickCount;
+        _attackTimer = Environment.TickCount64;
 
         // Define o alvo do Npc
         victim.Target = this;
@@ -409,7 +409,7 @@ internal class TempNpc : Character
         MapSender.MapItems(Map);
 
         // Reseta os dados do Npc 
-        _spawnTimer = Environment.TickCount;
+        _spawnTimer = Environment.TickCount64;
         Target = null;
         Alive = false;
         NpcSender.MapNpcDied(this);

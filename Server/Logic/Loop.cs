@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Commands;
@@ -10,24 +11,30 @@ namespace CryBits.Server.Logic;
 
 internal static class Loop
 {
-    // Medida de quantos loops são executados por segundo 
+    // Target simulation rate: 20 ticks per second (50ms per tick)
+    private const int TicksPerSecond = 20;
+
+    // Medida de quantos loops são executados por segundo
     public static int Cps;
 
     // Contagens
-    private static int _timer500, _timer1000;
-    public static int TimerRegeneration;
-    public static int TimerMapItems;
+    private static long _timer500, _timer1000;
+    public static long TimerRegeneration;
+    public static long TimerMapItems;
 
-    public static void Main()
+    public static async Task MainAsync(CancellationToken ct)
     {
+        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000 / TicksPerSecond));
         var cps = 0;
 
-        while (Program.Working)
+        while (await timer.WaitForNextTickAsync(ct))
         {
             // Manuseia os dados recebidos
             Socket.HandleData();
 
-            if (Environment.TickCount > _timer500 + 500)
+            var now = Environment.TickCount64;
+
+            if (now > _timer500 + 500)
             {
                 // Lógicas do mapa
                 foreach (var tempMap in TempMap.List.Values) tempMap.Logic();
@@ -37,36 +44,33 @@ internal static class Loop
                     account.Character.Logic();
 
                 // Reinicia a contagem dos 500
-                _timer500 = Environment.TickCount;
+                _timer500 = now;
             }
 
             // Reinicia algumas contagens
-            if (Environment.TickCount > TimerRegeneration + 5000) TimerRegeneration = Environment.TickCount;
-            if (Environment.TickCount > TimerMapItems + 300000) TimerMapItems = Environment.TickCount;
-
-            // Faz com que a aplicação se mantenha estável
-            Thread.Sleep(0);
+            if (now > TimerRegeneration + 5000) TimerRegeneration = now;
+            if (now > TimerMapItems + 300000) TimerMapItems = now;
 
             // Calcula o CPS
-            if (_timer1000 < Environment.TickCount)
+            if (_timer1000 < now)
             {
                 Cps = cps;
                 cps = 0;
-                _timer1000 = Environment.TickCount + 1000;
+                _timer1000 = now + 1000;
             }
             else
                 cps++;
         }
     }
 
-    public static void Commands()
+    public static void Commands(CancellationToken ct)
     {
         var dispatcher = new CommandDispatcher()
             .Register<CpsCommand>()
             .Register<DefineAccessCommand>();
 
         // Laço para que seja possível a utilização de comandos pelo console
-        while (Program.Working)
+        while (!ct.IsCancellationRequested)
         {
             Console.Write("Execute: ");
             dispatcher.Dispatch(Console.ReadLine());
