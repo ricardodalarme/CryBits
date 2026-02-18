@@ -199,7 +199,7 @@ internal partial class EditorMaps : DarkForm
     {
         // Atualiza as informações da barra
         Strip.Items[0].Text = "FPS: " + Program.Fps;
-        if (Form?.Selected != null) 
+        if (Form?.Selected != null)
             Strip.Items[2].Text = "Revision: " + Selected.Revision;
         Strip.Items[4].Text = "Position: {" + _mapMouse.X + ";" + _mapMouse.Y + "}";
     }
@@ -541,7 +541,7 @@ internal partial class EditorMaps : DarkForm
 
     private void butEditors_Items_Click(object sender, EventArgs e)
     {
-        EditorItems.Form = new EditorItems();
+        AvaloniaItemsLauncher.OpenItemsEditor(this);
     }
 
     private void butEditors_NPCs_Click(object sender, EventArgs e)

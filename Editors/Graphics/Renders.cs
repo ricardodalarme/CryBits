@@ -140,8 +140,8 @@ internal static class Renders
 
         // Desenha uma textura transparente na janela inteira
         for (var x = 0; x <= window.Size.X / textureSize.Width; x++)
-        for (var y = 0; y <= window.Size.Y / textureSize.Height; y++)
-            Render(window, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
+            for (var y = 0; y <= window.Size.Y / textureSize.Height; y++)
+                Render(window, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
     }
 
     #region Map Editor
@@ -238,20 +238,20 @@ internal static class Renders
 
             // Continua
             for (var x = beginX; x < Map.Width; x++)
-            for (var y = beginY; y < Map.Height; y++)
-                if (map.Layer[c].Tile[x, y].Texture > 0)
-                {
-                    // Dados
-                    var data = map.Layer[c].Tile[x, y];
-                    var source = new Rectangle(new Point(data.X * Grid, data.Y * Grid), GridSize);
-                    var destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), GridSize);
+                for (var y = beginY; y < Map.Height; y++)
+                    if (map.Layer[c].Tile[x, y].Texture > 0)
+                    {
+                        // Dados
+                        var data = map.Layer[c].Tile[x, y];
+                        var source = new Rectangle(new Point(data.X * Grid, data.Y * Grid), GridSize);
+                        var destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), GridSize);
 
-                    // Desenha o azulejo
-                    if (!data.IsAutoTile)
-                        Render(WinMap, Textures.Tiles[data.Texture], source, form.Zoom(destiny), color);
-                    else
-                        EditorMapsAutoTile(destiny.Location, data, color);
-                }
+                        // Desenha o azulejo
+                        if (!data.IsAutoTile)
+                            Render(WinMap, Textures.Tiles[data.Texture], source, form.Zoom(destiny), color);
+                        else
+                            EditorMapsAutoTile(destiny.Location, data, color);
+                    }
         }
     }
 
@@ -279,11 +279,11 @@ internal static class Renders
         // Desenha a fumaça
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
         for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
-        for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
-        {
-            var position = new Point(x * textureSize.Width + TempMap.FogX, y * textureSize.Height + TempMap.FogY);
-            Render(WinMap, Textures.Fogs[map.Fog.Texture], EditorMaps.Form.Zoom(new Rectangle(position, textureSize)), new Color(255, 255, 255, map.Fog.Alpha));
-        }
+            for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
+            {
+                var position = new Point(x * textureSize.Width + TempMap.FogX, y * textureSize.Height + TempMap.FogY);
+                Render(WinMap, Textures.Fogs[map.Fog.Texture], EditorMaps.Form.Zoom(new Rectangle(position, textureSize)), new Color(255, 255, 255, map.Fog.Alpha));
+            }
     }
 
     private static void EditorMapsMapWeather(Map map)
@@ -314,13 +314,13 @@ internal static class Renders
         // Desenha as grades
         if (form.butGrid.Checked || !form.butGrid.Enabled)
             for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-            {
-                RenderRectangle(WinMap, x * form.GridZoom, y * form.GridZoom, form.GridZoom, form.GridZoom, new Color(25, 25, 25, 70));
-                EditorMapsMapZones(map, x, y);
-                EditorMapsMapAttributes(map, x, y);
-                EditorMapsMapDirBlock(map, x, y);
-            }
+                for (byte y = 0; y < Map.Height; y++)
+                {
+                    RenderRectangle(WinMap, x * form.GridZoom, y * form.GridZoom, form.GridZoom, form.GridZoom, new Color(25, 25, 25, 70));
+                    EditorMapsMapZones(map, x, y);
+                    EditorMapsMapAttributes(map, x, y);
+                    EditorMapsMapDirBlock(map, x, y);
+                }
 
         if (!form.chkAuto.Checked && form.butMNormal.Checked)
             // Normal
@@ -329,8 +329,8 @@ internal static class Renders
             // Retângulo
             else if (form.butRectangle.Checked)
                 for (var x = begin.X; x < begin.X + form.MapSelection.Width; x++)
-                for (var y = begin.Y; y < begin.Y + form.MapSelection.Height; y++)
-                    Render(WinMap, Textures.Tiles[form.cmbTiles.SelectedIndex + 1], source, new Rectangle(form.Zoom_Grid(x, y), destiny.Size));
+                    for (var y = begin.Y; y < begin.Y + form.MapSelection.Height; y++)
+                        Render(WinMap, Textures.Tiles[form.cmbTiles.SelectedIndex + 1], source, new Rectangle(form.Zoom_Grid(x, y), destiny.Size));
 
         // Desenha a grade
         if (!form.butMAttributes.Checked || !form.optA_DirBlock.Checked)
@@ -444,18 +444,18 @@ internal static class Renders
         Render(WinTile, texture, new Rectangle(position, texture.ToSize()), new Rectangle(new Point(0), texture.ToSize()));
 
         for (byte x = 0; x <= form.picTile.Width / Grid; x++)
-        for (byte y = 0; y <= form.picTile.Height / Grid; y++)
-        {
-            // Desenha os atributos
-            if (form.optAttributes.Checked)
-                EditorTileAttributes(x, y);
-            // Bloqueios direcionais
-            else if (form.optDirBlock.Checked)
-                EditorTileDirBlock(x, y);
+            for (byte y = 0; y <= form.picTile.Height / Grid; y++)
+            {
+                // Desenha os atributos
+                if (form.optAttributes.Checked)
+                    EditorTileAttributes(x, y);
+                // Bloqueios direcionais
+                else if (form.optDirBlock.Checked)
+                    EditorTileDirBlock(x, y);
 
-            // Grades
-            RenderRectangle(WinTile, x * Grid, y * Grid, Grid, Grid, new Color(25, 25, 25, 70));
-        }
+                // Grades
+                RenderRectangle(WinTile, x * Grid, y * Grid, Grid, Grid, new Color(25, 25, 25, 70));
+            }
 
         // Exibe o que foi renderizado
         WinTile.Display();
@@ -515,7 +515,7 @@ internal static class Renders
         if (WinItem == null) return;
 
         // Desenha o item
-        var textureNum = (short)EditorItems.Form.numTexture.Value;
+        var textureNum = EditorItemsWindow.CurrentTextureIndex;
         WinItem.Clear();
         Transparent(WinItem);
         if (textureNum > 0 && textureNum < Textures.Items.Count) Render(WinItem, Textures.Items[textureNum], new Point(0));

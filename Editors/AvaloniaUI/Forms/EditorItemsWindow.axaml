@@ -1,0 +1,288 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorItemsWindow"
+        Title="Items Editor"
+        Width="648" Height="828"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="244"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- LEFT COLUMN -->
+        <Grid Grid.Column="0" Margin="0,0,8,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBox x:Name="txtFilter" Grid.Row="0" Watermark="Filter..." Margin="0,0,0,4"
+                     TextChanged="txtFilter_TextChanged"/>
+
+            <ListBox x:Name="lstItems" Grid.Row="1" Margin="0,0,0,4"
+                     SelectionChanged="lstItems_SelectionChanged"/>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="butNew" Grid.Column="0" Content="New" Margin="0,0,4,0"
+                        HorizontalAlignment="Stretch" Click="butNew_Click"/>
+                <Button x:Name="butRemove" Grid.Column="1" Content="Remove"
+                        HorizontalAlignment="Stretch" Click="butRemove_Click"/>
+            </Grid>
+        </Grid>
+
+        <!-- RIGHT COLUMN -->
+        <StackPanel x:Name="pnlRight" Grid.Column="1" Spacing="6" IsVisible="False">
+
+            <!-- General -->
+            <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}" CornerRadius="4" Padding="8">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,4"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center" Width="90"/>
+                        <TextBox x:Name="txtName" Grid.Column="1" TextChanged="txtName_TextChanged"/>
+                    </Grid>
+
+                    <TextBlock Text="Description:"/>
+                    <TextBox x:Name="txtDescription" Height="75" AcceptsReturn="True"
+                             TextWrapping="Wrap" TextChanged="txtDescription_TextChanged"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Type:" VerticalAlignment="Center" Width="90"/>
+                        <ComboBox x:Name="cmbType" Grid.Column="1" HorizontalAlignment="Stretch"
+                                  SelectionChanged="cmbType_SelectionChanged">
+                            <ComboBoxItem Content="None"/>
+                            <ComboBoxItem Content="Equipment"/>
+                            <ComboBoxItem Content="Potion"/>
+                        </ComboBox>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Texture:" VerticalAlignment="Center" Width="90"/>
+                        <NumericUpDown x:Name="numTexture" Grid.Column="1" Minimum="0" FormatString="0"
+                                       ValueChanged="numTexture_ValueChanged"/>
+                        <Image x:Name="imgTexturePreview" Grid.Column="2" Width="37" Height="37"
+                               Margin="6,0,0,0" Stretch="Uniform"/>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Rarity:" VerticalAlignment="Center" Width="90"/>
+                        <ComboBox x:Name="cmbRarity" Grid.Column="1" HorizontalAlignment="Stretch"
+                                  SelectionChanged="cmbRarity_SelectionChanged"/>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Bind:" VerticalAlignment="Center" Width="90"/>
+                        <ComboBox x:Name="cmbBind" Grid.Column="1" HorizontalAlignment="Stretch"
+                                  SelectionChanged="cmbBind_SelectionChanged"/>
+                    </Grid>
+
+                    <CheckBox x:Name="chkStackable" Content="Stackable"
+                              IsCheckedChanged="chkStackable_IsCheckedChanged"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Requirements -->
+            <Border BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}" CornerRadius="4" Padding="8">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Requirements" FontWeight="Bold" Margin="0,0,0,4"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Level:" VerticalAlignment="Center" Width="90"/>
+                        <NumericUpDown x:Name="numReq_Level" Grid.Column="1" Minimum="0" FormatString="0"
+                                       ValueChanged="numReq_Level_ValueChanged"/>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Class:" VerticalAlignment="Center" Width="90"/>
+                        <ComboBox x:Name="cmbReq_Class" Grid.Column="1" HorizontalAlignment="Stretch"
+                                  SelectionChanged="cmbReq_Class_SelectionChanged"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Type-specific panels (Potion / Equipment) -->
+            <Panel>
+                <!-- Potion -->
+                <Border x:Name="pnlPotion" IsVisible="False"
+                        BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}" CornerRadius="4" Padding="8">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Potion" FontWeight="Bold" Margin="0,0,0,4"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="HP:" VerticalAlignment="Center" Width="90"/>
+                            <NumericUpDown x:Name="numPotion_HP" Grid.Column="1" Minimum="-100" FormatString="0"
+                                           ValueChanged="numPotion_HP_ValueChanged"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="MP:" VerticalAlignment="Center" Width="90"/>
+                            <NumericUpDown x:Name="numPotion_MP" Grid.Column="1" Minimum="-100" FormatString="0"
+                                           ValueChanged="numPotion_MP_ValueChanged"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Experience:" VerticalAlignment="Center" Width="90"/>
+                            <NumericUpDown x:Name="numPotion_Experience" Grid.Column="1" Minimum="-100" FormatString="0"
+                                           ValueChanged="numPotion_Experience_ValueChanged"/>
+                        </Grid>
+
+                        <TextBlock Text="(Negative values are also valid)" FontStyle="Italic"
+                                   Foreground="{DynamicResource SemiSecondaryForeground}" FontSize="11"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Equipment -->
+                <Border x:Name="pnlEquipment" IsVisible="False"
+                        BorderThickness="1" BorderBrush="{DynamicResource SemiBorderColor}" CornerRadius="4" Padding="8">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Equipment" FontWeight="Bold" Margin="0,0,0,4"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Type:" VerticalAlignment="Center" Width="90"/>
+                            <ComboBox x:Name="cmbEquipment_Type" Grid.Column="1" HorizontalAlignment="Stretch"
+                                      SelectionChanged="cmbEquipment_Type_SelectionChanged">
+                                <ComboBoxItem Content="Weapon"/>
+                                <ComboBoxItem Content="Armor"/>
+                                <ComboBoxItem Content="Helmet"/>
+                                <ComboBoxItem Content="Shield"/>
+                                <ComboBoxItem Content="Amulet"/>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Strength:" VerticalAlignment="Center" Width="90"/>
+                            <NumericUpDown x:Name="numEquip_Strength" Grid.Column="1" Minimum="-100" FormatString="0"
+                                           ValueChanged="numEquip_Strength_ValueChanged"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Resistance:" VerticalAlignment="Center" Width="90"/>
+                            <NumericUpDown x:Name="numEquip_Resistance" Grid.Column="1" Minimum="-100" FormatString="0"
+                                           ValueChanged="numEquip_Resistance_ValueChanged"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Intelligence:" VerticalAlignment="Center" Width="90"/>
+                            <NumericUpDown x:Name="numEquip_Intelligence" Grid.Column="1" Minimum="-100" FormatString="0"
+                                           ValueChanged="numEquip_Intelligence_ValueChanged"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Agility:" VerticalAlignment="Center" Width="90"/>
+                            <NumericUpDown x:Name="numEquip_Agility" Grid.Column="1" Minimum="-100" FormatString="0"
+                                           ValueChanged="numEquip_Agility_ValueChanged"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Vitality:" VerticalAlignment="Center" Width="90"/>
+                            <NumericUpDown x:Name="numEquip_Vitality" Grid.Column="1" Minimum="-100" FormatString="0"
+                                           ValueChanged="numEquip_Vitality_ValueChanged"/>
+                        </Grid>
+
+                        <!-- Weapon damage (only visible when equipment type = Weapon) -->
+                        <Grid x:Name="pnlWeaponDamage" IsVisible="False">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Weapon Damage:" VerticalAlignment="Center" Width="90"/>
+                            <NumericUpDown x:Name="numWeapon_Damage" Grid.Column="1" Minimum="0" FormatString="0"
+                                           ValueChanged="numWeapon_Damage_ValueChanged"/>
+                        </Grid>
+
+                        <TextBlock Text="(Negative values are also valid)" FontStyle="Italic"
+                                   Foreground="{DynamicResource SemiSecondaryForeground}" FontSize="11"/>
+                    </StackPanel>
+                </Border>
+            </Panel>
+
+            <!-- Save / Cancel -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="butSaveAll" Grid.Column="0" Content="Save All" Margin="0,0,4,0"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                        Classes="accent" Click="butSaveAll_Click"/>
+                <Button x:Name="butCancel" Grid.Column="1" Content="Cancel"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                        Click="butCancel_Click"/>
+            </Grid>
+
+        </StackPanel>
+    </Grid>
+</Window>
