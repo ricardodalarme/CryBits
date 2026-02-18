@@ -38,7 +38,11 @@ internal static class Loop
             if (now > _timer500 + 500)
             {
                 // Map logic
-                foreach (var tempMap in TempMap.List.Values) tempMap.Logic();
+                foreach (var tempMap in TempMap.List.Values)
+                {
+                    MapItemSystem.Tick(tempMap);
+                    tempMap.Logic();
+                }
 
                 // Player vital regeneration
                 foreach (var account in Account.List.Where(a => a.IsPlaying))

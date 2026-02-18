@@ -4,7 +4,6 @@ using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using CryBits.Extensions;
-using CryBits.Server.Logic;
 using CryBits.Server.Network.Senders;
 using static CryBits.Utils;
 
@@ -24,19 +23,11 @@ internal class TempMap(Guid id, Map map) : Entity(id)
 
     public void Logic()
     {
-        // Não é necessário fazer todos os cálculos se não houver nenhum jogador no mapa
+        // Skip all calculations if no players are on the map
         if (!HasPlayers()) return;
 
-        // Lógica dos Npcs
+        // NPC logic (will be moved to NpcAiSystem in the next refactor)
         for (byte j = 0; j < Npc.Length; j++) Npc[j].Logic();
-
-        // Faz reaparecer todos os itens do mapa
-        if (Environment.TickCount > Loop.TimerMapItems + 300000)
-        {
-            Item = new List<TempMapItems>();
-            SpawnItems();
-            MapSender.MapItems(this);
-        }
     }
 
     public TempNpc HasNpc(byte x, byte y)
