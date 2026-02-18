@@ -7,7 +7,6 @@ using CryBits.Entities.Shop;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
-using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library.Repositories;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Systems;
@@ -118,8 +117,8 @@ internal class Player : Character
         PlayerSender.PlayerInventory(this);
         PlayerSender.PlayerHotbar(this);
 
-        // Transporta o jogador para a sua determinada Posição
-        Warp(Map, X, Y, true);
+        // Warp to starting position
+        MovementSystem.Warp(this, Map, X, Y, true);
 
         // Entra no jogo
         PlayerSender.JoinGame(this);
@@ -137,111 +136,6 @@ internal class Player : Character
         TradeSystem.Leave(this);
     }
 
-    public void Warp(TempMap.TempMap map, byte x, byte y, bool needUpdate = false)
-    {
-        var oldMap = Map;
-
-        // Cancel any active trade or shop session
-        TradeSystem.Leave(this);
-        ShopSystem.Leave(this);
-        if (map == null) return;
-        if (x >= CryBits.Entities.Map.Map.Width) x = CryBits.Entities.Map.Map.Width - 1;
-        if (y >= CryBits.Entities.Map.Map.Height) y = CryBits.Entities.Map.Map.Height - 1;
-
-        // Define a Posição do jogador
-        Map = map;
-        X = x;
-        Y = y;
-
-        // Altera o mapa
-        if (oldMap != map || needUpdate)
-        {
-            // Sai do mapa antigo
-            PlayerSender.PlayerLeaveMap(this, oldMap);
-
-            // Inviabiliza o jogador de algumas ações até que ele receba os dados necessários
-            GettingMap = true;
-
-            // Envia dados necessários do mapa
-            MapSender.MapRevision(this, map.Data);
-            MapSender.MapItems(this, map);
-            NpcSender.MapNpcs(this, map);
-        }
-        // Apenas atualiza a posição do jogador
-        else
-            PlayerSender.PlayerPosition(this);
-    }
-
-    public void Move(byte movement)
-    {
-        byte nextX = X, nextY = Y;
-        byte oldX = X, oldY = Y;
-        var link = TempMap.TempMap.List.Get(Map.Data.Link[(byte)Direction].GetId());
-        var secondMovement = false;
-
-        // Previne erros
-        if (movement < 1 || movement > 2) return;
-        if (GettingMap) return;
-
-        // Cancel any active trade or shop session
-        TradeSystem.Leave(this);
-        ShopSystem.Leave(this);
-
-        // Próximo azulejo
-        NextTile(Direction, ref nextX, ref nextY);
-
-        // Ponto de ligação
-        if (CryBits.Entities.Map.Map.OutLimit(nextX, nextY))
-        {
-            if (link != null)
-                switch (Direction)
-                {
-                    case Direction.Up:
-                        Warp(link, oldX, CryBits.Entities.Map.Map.Height - 1);
-                        return;
-                    case Direction.Down:
-                        Warp(link, oldX, 0);
-                        return;
-                    case Direction.Right:
-                        Warp(link, 0, oldY);
-                        return;
-                    case Direction.Left:
-                        Warp(link, CryBits.Entities.Map.Map.Width - 1, oldY);
-                        return;
-                }
-            else
-            {
-                PlayerSender.PlayerPosition(this);
-                return;
-            }
-        }
-        // Bloqueio
-        else if (!Map.TileBlocked(oldX, oldY, Direction))
-        {
-            X = nextX;
-            Y = nextY;
-        }
-
-        // Atributos
-        var tile = Map.Data.Attribute[nextX, nextY];
-
-        switch ((TileAttribute)tile.Type)
-        {
-            // Teletransporte
-            case TileAttribute.Warp:
-                if (tile.Data4 > 0) Direction = (Direction)tile.Data4 - 1;
-                Warp(TempMap.TempMap.List.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
-                secondMovement = true;
-                break;
-        }
-
-        // Envia os dados
-        if (!secondMovement && (oldX != X || oldY != Y))
-            PlayerSender.PlayerMove(this, movement);
-        else
-            PlayerSender.PlayerPosition(this);
-    }
-
     public void Died()
     {
         // Recupera os vitais
@@ -252,9 +146,9 @@ internal class Player : Character
         Experience /= 10;
         PlayerSender.PlayerExperience(this);
 
-        // Retorna para o ínicio
+        // Return to spawn
         Direction = (Direction)Class.SpawnDirection;
-        Warp(TempMap.TempMap.List.Get(Class.SpawnMap.Id), Class.SpawnX, Class.SpawnY);
+        MovementSystem.Warp(this, TempMap.TempMap.List.Get(Class.SpawnMap.Id), Class.SpawnX, Class.SpawnY);
     }
 
     public void Attack()

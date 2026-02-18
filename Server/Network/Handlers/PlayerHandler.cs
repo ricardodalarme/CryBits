@@ -13,24 +13,15 @@ internal static class PlayerHandler
 {
     internal static void PlayerDirection(Player player, NetDataReader data)
     {
-        var direction = (Direction)data.GetByte();
-
-        // Previne erros
-        if (direction < Direction.Up || direction > Direction.Right) return;
-        if (player.GettingMap) return;
-
-        // Defini a direção do jogador
-        player.Direction = direction;
-        PlayerSender.PlayerDirection(player);
+        MovementSystem.ChangeDirection(player, (Direction)data.GetByte());
     }
 
     internal static void PlayerMove(Player player, NetDataReader data)
     {
-        // Move o jogador se necessário
         if (player.X != data.GetByte() || player.Y != data.GetByte())
             PlayerSender.PlayerPosition(player);
         else
-            player.Move(data.GetByte());
+            MovementSystem.Move(player, data.GetByte());
     }
 
     internal static void PlayerAttack(Player player)
