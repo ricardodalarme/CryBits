@@ -14,6 +14,7 @@ using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using Color = SFML.Graphics.Color;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
+using RenderTarget = SFML.Graphics.IRenderTarget;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Editors.Graphics;
@@ -34,7 +35,7 @@ internal static class Renders
         // Define os dados
         var tmpImage = new Sprite(texture)
         {
-            TextureRect = new IntRect(source.X, source.Y, source.Width, source.Height),
+            TextureRect = new IntRect(new Vector2i(source.X, source.Y), new Vector2i(source.Width, source.Height)),
             Position = new Vector2f(destiny.X, destiny.Y),
             Scale = new Vector2f(destiny.Width / (float)source.Width, destiny.Height / (float)source.Height)
         };
@@ -104,7 +105,7 @@ internal static class Renders
 
     private static void DrawText(RenderTarget window, string text, int x, int y, Color color)
     {
-        var tempText = new Text(text, Fonts.Default);
+        var tempText = new Text(Fonts.Default, text);
 
         // Define os dados
         tempText.CharacterSize = 10;

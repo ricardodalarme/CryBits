@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using SFML.System;
 using System.ComponentModel;
 using System.Drawing;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
@@ -67,7 +68,7 @@ internal partial class EditorInterfaceWindow : Window
             cmbWindows.SelectedIndex = 0;
 
         // Create offscreen SFML render target (933 × 702 to match the WinForms canvas)
-        Renders.WinInterfaceRT = new RenderTexture(933, 702);
+        Renders.WinInterfaceRT = new RenderTexture(new Vector2u(933, 702));
 
         // Start refresh timer
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };

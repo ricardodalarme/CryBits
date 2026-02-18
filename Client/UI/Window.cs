@@ -57,8 +57,8 @@ internal static class Window
     public static void OnMouseMoved(object sender, MouseMoveEventArgs e)
     {
         // Define a posição do mouse à váriavel
-        Mouse.X = e.X;
-        Mouse.Y = e.Y;
+        Mouse.X = e.Position.X;
+        Mouse.Y = e.Position.Y;
         InterfaceUtils.MyMouse = Mouse;
         Screen.Current?.MouseMoved();
     }

@@ -23,7 +23,7 @@ public static class Sound
 
         // Reproduz o áudio
         List[sound].Volume = 20;
-        List[sound].Loop = loop;
+        List[sound].IsLooping = loop;
         List[sound].Play();
     }
 

@@ -22,7 +22,7 @@ public static class Music
         Device = new SFML.Audio.Music(directory)
         {
             Volume = 20,
-            Loop = loop
+            IsLooping = loop
         };
 
         // Reproduz

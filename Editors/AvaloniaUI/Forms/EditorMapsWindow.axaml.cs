@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SFML.System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -181,8 +182,8 @@ internal partial class EditorMapsWindow : Window
         numNPC_Zone.Maximum = Globals.MaxZones;
 
         // SFML offscreen render textures
-        Renders.WinMapRT = new RenderTexture((uint)MapCanvasWidth, (uint)MapCanvasHeight);
-        Renders.WinMapTileRT = new RenderTexture((uint)TileCanvasWidth, (uint)TileCanvasHeight);
+        Renders.WinMapRT = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
+        Renders.WinMapTileRT = new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
 
         // 30 fps timer
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };

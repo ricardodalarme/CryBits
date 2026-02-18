@@ -37,7 +37,7 @@ internal static class Renders
     public static void Init()
     {
         // Inicia a janela
-        RenderWindow = new RenderWindow(new VideoMode(800, 608), GameName, Styles.Close);
+        RenderWindow = new RenderWindow(new VideoMode(new Vector2u(800, 608)), GameName, Styles.Titlebar | Styles.Close, State.Windowed);
         RenderWindow.Closed += UI.Window.OnClosed;
         RenderWindow.MouseButtonPressed += UI.Window.OnMouseButtonPressed;
         RenderWindow.MouseMoved += UI.Window.OnMouseMoved;
@@ -53,7 +53,7 @@ internal static class Renders
         {
 
             // Define os dados
-            TextureRect = new IntRect(recSource.X, recSource.Y, recSource.Width, recSource.Height),
+            TextureRect = new IntRect(new Vector2i(recSource.X, recSource.Y), new Vector2i(recSource.Width, recSource.Height)),
             Position = new Vector2f(recDestiny.X, recDestiny.Y),
             Scale = new Vector2f(recDestiny.Width / (float)recSource.Width, recDestiny.Height / (float)recSource.Height)
         };
@@ -104,7 +104,7 @@ internal static class Renders
         }
 
         // Define os dados
-        var tempText = new Text(text, Fonts.Default)
+        var tempText = new Text(Fonts.Default, text)
         {
             CharacterSize = 10,
             FillColor = color,

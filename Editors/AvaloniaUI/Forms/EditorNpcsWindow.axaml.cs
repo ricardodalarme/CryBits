@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using SFML.System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -40,7 +41,7 @@ internal partial class EditorNpcsWindow : Window
         cmbShop.ItemsSource = Shop.List.Values.ToList();
 
         // SFML offscreen render for the texture preview
-        Renders.WinNpcRT = new RenderTexture(80, 80);
+        Renders.WinNpcRT = new RenderTexture(new Vector2u(80, 80));
 
         // Timer: ~30 fps preview
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };

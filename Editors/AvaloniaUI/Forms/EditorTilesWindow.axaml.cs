@@ -1,5 +1,6 @@
 using System;
 using Avalonia.Controls;
+using SFML.System;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -44,7 +45,7 @@ internal partial class EditorTilesWindow : Window
         UpdateScrollBounds();
 
         // SFML offscreen canvas
-        Renders.WinTileRT = new RenderTexture((uint)CanvasW, (uint)CanvasH);
+        Renders.WinTileRT = new RenderTexture(new Vector2u((uint)CanvasW, (uint)CanvasH));
 
         // 30 fps refresh timer
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };

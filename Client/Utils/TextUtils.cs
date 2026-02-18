@@ -8,7 +8,7 @@ internal static class TextUtils
     public static short MeasureString(string text)
     {
         // Dados do texto
-        var tempText = new Text(text, Fonts.Default) { CharacterSize = 10 };
+        var tempText = new Text(Fonts.Default, text) { CharacterSize = 10 };
         return (short)tempText.GetLocalBounds().Width;
     }
 
