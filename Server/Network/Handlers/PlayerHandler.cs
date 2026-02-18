@@ -94,7 +94,7 @@ internal static class PlayerHandler
 
     internal static void EquipmentRemove(Player player, NetDataReader data)
     {
-        InventorySystem.UnequipItem(player, data.GetByte());
+        EquipmentSystem.Unequip(player, data.GetByte());
     }
 
     internal static void HotbarAdd(Player player, NetDataReader data)

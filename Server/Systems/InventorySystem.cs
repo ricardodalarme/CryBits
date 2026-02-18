@@ -113,7 +113,7 @@ internal static class InventorySystem
 
         if (item.Type == ItemType.Equipment)
         {
-            EquipItem(player, slot);
+            EquipmentSystem.Equip(player, slot);
         }
         else if (item.Type == ItemType.Potion)
         {
@@ -134,50 +134,6 @@ internal static class InventorySystem
 
             if (item.PotionExperience > 0 || hadEffect) TakeItem(player, slot, 1);
         }
-    }
-
-    /// <summary>
-    /// Equips the item in <paramref name="slot"/>, swapping out any currently worn item of that type.
-    /// </summary>
-    public static void EquipItem(Player player, ItemSlot slot)
-    {
-        var item = slot.Item;
-        TakeItem(player, slot, 1);
-
-        var currentEquip = player.Equipment[item.EquipType];
-        if (currentEquip != null) GiveItem(player, currentEquip, 1);
-
-        player.Equipment[item.EquipType] = item;
-        for (byte i = 0; i < (byte)Enums.Attribute.Count; i++) player.Attribute[i] += item.EquipAttribute[i];
-
-        PlayerSender.PlayerInventory(player);
-        PlayerSender.PlayerEquipments(player);
-        PlayerSender.PlayerHotbar(player);
-    }
-
-    /// <summary>
-    /// Unequips the item in <paramref name="equipSlot"/>, returning it to the inventory or
-    /// dropping it on the ground when the inventory is full. Items bound on equip cannot be removed.
-    /// </summary>
-    public static void UnequipItem(Player player, byte equipSlot)
-    {
-        if (player.Equipment[equipSlot] == null) return;
-        if (player.Equipment[equipSlot].Bind == BindOn.Equip) return;
-
-        if (!GiveItem(player, player.Equipment[equipSlot], 1))
-        {
-            if (player.Map.Item.Count == MaxMapItems) return;
-
-            player.Map.Item.Add(new TempMapItems(player.Equipment[equipSlot], 1, player.X, player.Y));
-            MapSender.MapItems(player.Map);
-            PlayerSender.PlayerInventory(player);
-        }
-
-        for (byte i = 0; i < (byte)Enums.Attribute.Count; i++)
-            player.Attribute[i] -= player.Equipment[equipSlot].EquipAttribute[i];
-        player.Equipment[equipSlot] = null;
-
-        PlayerSender.PlayerEquipments(player);
     }
 
     /// <summary>
