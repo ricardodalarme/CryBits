@@ -7,6 +7,7 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.AvaloniaUI.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Logic;
@@ -74,8 +75,9 @@ internal partial class EditorMaps : DarkForm
 
     private void Editor_Maps_Load(object sender, EventArgs e)
     {
-        Renders.WinMap = new RenderWindow(picMap.Handle);
-        Renders.WinMapTile = new RenderWindow(picTile.Handle);
+        // Map rendering now uses RenderTexture via Avalonia (EditorMapsWindow)
+        // Renders.WinMap = new RenderWindow(picMap.Handle);
+        // Renders.WinMapTile = new RenderWindow(picTile.Handle);
 
         // Lista os dados
         for (byte i = 0; i < (byte)Layer.Count; i++) cmbLayers_Type.Items.Add(((Layer)i).ToString());
@@ -526,37 +528,37 @@ internal partial class EditorMaps : DarkForm
 
     private void butEditors_Classes_Click(object sender, EventArgs e)
     {
-        AvaloniaClassesLauncher.OpenClassesEditor(this);
+        AvaloniaClassesLauncher.OpenClassesEditor(EditorMapsWindow.Instance!);
     }
 
     private void butEditors_Data_Click(object sender, EventArgs e)
     {
-        AvaloniaDataLauncher.OpenDataEditor(this);
+        AvaloniaDataLauncher.OpenDataEditor(EditorMapsWindow.Instance!);
     }
 
     private void butEditors_Interface_Click(object sender, EventArgs e)
     {
-        AvaloniaInterfaceLauncher.OpenInterfaceEditor(this);
+        AvaloniaInterfaceLauncher.OpenInterfaceEditor(EditorMapsWindow.Instance!);
     }
 
     private void butEditors_Items_Click(object sender, EventArgs e)
     {
-        AvaloniaItemsLauncher.OpenItemsEditor(this);
+        AvaloniaItemsLauncher.OpenItemsEditor(EditorMapsWindow.Instance!);
     }
 
     private void butEditors_NPCs_Click(object sender, EventArgs e)
     {
-        AvaloniaNpcsLauncher.OpenNpcsEditor(this);
+        AvaloniaNpcsLauncher.OpenNpcsEditor(EditorMapsWindow.Instance!);
     }
 
     private void butEditors_Shops_Click(object sender, EventArgs e)
     {
-        AvaloniaShopsLauncher.OpenShopsEditor(this);
+        AvaloniaShopsLauncher.OpenShopsEditor(EditorMapsWindow.Instance!);
     }
 
     private void butEditors_Tiles_Click(object sender, EventArgs e)
     {
-        AvaloniaTilesLauncher.OpenTilesEditor(this);
+        AvaloniaTilesLauncher.OpenTilesEditor(EditorMapsWindow.Instance!);
     }
 
     private void tmrUpdate_Tick(object sender, EventArgs e)
@@ -772,9 +774,7 @@ internal partial class EditorMaps : DarkForm
     private void picMap_SizeChanged(object sender, EventArgs e)
     {
         // Recria as janelas de acordo com o novo tamanho
-        if (Renders.WinMap == null) return;
-        Renders.WinMap.Dispose();
-        Renders.WinMap = new RenderWindow(picMap.Handle);
+        // (RenderTexture is recreated via Avalonia window — no WinForms handle needed)
     }
 
     private void picMap_MouseWheel(object sender, MouseEventArgs e)

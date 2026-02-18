@@ -1,18 +1,15 @@
-using System.Windows.Forms;
+using Avalonia.Controls;
 using CryBits.Editors.AvaloniaUI.Forms;
 
 namespace CryBits.Editors.AvaloniaUI;
 
 internal static class AvaloniaNpcsLauncher
 {
-    public static void OpenNpcsEditor(Form owner)
+    public static void OpenNpcsEditor(Window owner)
     {
         owner.Hide();
-        AvaloniaRuntime.RunOnUiThread(() =>
-        {
-            var window = new EditorNpcsWindow();
-            window.Closed += (_, _) => owner.BeginInvoke(owner.Show);
-            window.Show();
-        });
+        var window = new EditorNpcsWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
     }
 }

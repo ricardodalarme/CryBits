@@ -1,14 +1,13 @@
-using System;
 using System.Windows.Forms;
+using Avalonia.Controls;
 using CryBits.Editors.AvaloniaUI.Forms;
-using CryBits.Editors.Forms;
 using CryBits.Entities;
 
 namespace CryBits.Editors.AvaloniaUI;
 
 internal static class AvaloniaShopsLauncher
 {
-    public static void OpenShopsEditor(EditorMaps owner)
+    public static void OpenShopsEditor(Window owner)
     {
         if (Item.List.Count == 0)
         {
@@ -17,15 +16,8 @@ internal static class AvaloniaShopsLauncher
         }
 
         owner.Hide();
-        AvaloniaRuntime.RunOnUiThread(() =>
-        {
-            var window = new EditorShopsWindow();
-            window.Closed += (_, _) =>
-            {
-                if (!owner.IsDisposed && owner.IsHandleCreated)
-                    owner.BeginInvoke(new Action(owner.Show));
-            };
-            window.Show();
-        });
+        var window = new EditorShopsWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
     }
 }

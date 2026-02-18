@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using Avalonia.Controls;
 using CryBits.Editors.AvaloniaUI.Forms;
 using Map = CryBits.Entities.Map.Map;
 
@@ -6,7 +7,7 @@ namespace CryBits.Editors.AvaloniaUI;
 
 internal static class AvaloniaClassesLauncher
 {
-    public static void OpenClassesEditor(Form owner)
+    public static void OpenClassesEditor(Window owner)
     {
         if (Map.List.Count == 0)
         {
@@ -15,11 +16,8 @@ internal static class AvaloniaClassesLauncher
         }
 
         owner.Hide();
-        AvaloniaRuntime.RunOnUiThread(() =>
-        {
-            var window = new EditorClassesWindow();
-            window.Closed += (_, _) => owner.BeginInvoke(owner.Show);
-            window.Show();
-        });
+        var window = new EditorClassesWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
     }
 }

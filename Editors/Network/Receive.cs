@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Forms;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
@@ -42,7 +41,7 @@ internal static class Receive
     {
         // Abre a janela principal
         AvaloniaLoginLauncher.HideLogin();
-        EditorMaps.Form = new EditorMaps();
+        AvaloniaMapsLauncher.OpenMapsEditor();
     }
 
     private static void ServerData(NetBuffer data)
@@ -74,7 +73,7 @@ internal static class Receive
         var id = map.Id;
 
         // Obtém o dado
-        if (CryBits.Entities.Map.Map.List.ContainsKey(id)) 
+        if (CryBits.Entities.Map.Map.List.ContainsKey(id))
             CryBits.Entities.Map.Map.List[id] = map;
         else
             CryBits.Entities.Map.Map.List.Add(id, map);

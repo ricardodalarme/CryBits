@@ -26,8 +26,8 @@ internal static class Renders
     public static RenderTexture WinInterfaceRT;
     public static RenderWindow WinTile;
     public static RenderTexture WinTileRT;
-    public static RenderWindow WinMap;
-    public static RenderWindow WinMapTile;
+    public static RenderTexture? WinMapRT;
+    public static RenderTexture? WinMapTileRT;
     public static RenderWindow WinItem;
     public static RenderWindow WinClass;
     public static RenderWindow WinNpc;
@@ -126,15 +126,13 @@ internal static class Renders
 
     public static void Present()
     {
-        // Desenha 
-        EditorMapsTile();
-        EditorMapsMap();
+        // Desenha
         EditorClass();
         EditorItem();
-        // Tile, NPC, and Interface editors render on their Avalonia DispatcherTimers to avoid cross-thread SFML conflicts
+        // Maps, Tile, NPC, and Interface editors render on their Avalonia DispatcherTimers
     }
 
-    private static void Transparent(RenderWindow window)
+    private static void Transparent(RenderTarget window)
     {
         var textureSize = Textures.Transparent.ToSize();
 
@@ -145,47 +143,36 @@ internal static class Renders
     }
 
     #region Map Editor
-    private static void EditorMapsTile()
+    // Called from EditorMapsWindow DispatcherTimer
+    public static void EditorMapsTileRT()
     {
-        var form = EditorMaps.Form;
+        var win = EditorMapsWindow.Instance;
+        if (WinMapTileRT == null || win == null || !win.ModeNormal) return;
 
-        // Somente se necessário
-        if (WinMap == null || !form.butMNormal.Checked) return;
+        WinMapTileRT.Clear(Color.Black);
 
-        // Reinicia o dispositivo caso haja alguma alteração no tamanho da tela
-        if (new Size((int)WinMapTile.Size.X, (int)WinMapTile.Size.Y) != form.picTile.Size)
-        {
-            WinMapTile.Dispose();
-            WinMapTile = new RenderWindow(EditorMaps.Form.picTile.Handle);
-        }
+        var texture = Textures.Tiles[win.TileSheetIndex + 1];
+        var position = new Point(win.TileScrollX, win.TileScrollY);
 
-        // Limpa a área com um fundo preto
-        WinMapTile.Clear(Color.Black);
+        Transparent(WinMapTileRT);
+        Render(WinMapTileRT, texture, new Rectangle(position, texture.ToSize()), new Rectangle(new Point(0), texture.ToSize()));
+        RenderRectangle(WinMapTileRT, new Rectangle(new Point(win.TileSource.X - position.X, win.TileSource.Y - position.Y), win.TileSource.Size), new Color(165, 42, 42, 250));
+        RenderRectangle(WinMapTileRT, win.TileMouse.X, win.TileMouse.Y, Grid, Grid, new Color(65, 105, 225, 250));
 
-        // Dados
-        var texture = Textures.Tiles[form.cmbTiles.SelectedIndex + 1];
-        var position = new Point(form.scrlTileX.Value, form.scrlTileY.Value);
-
-        // Desenha o azulejo e as grades
-        Transparent(WinMapTile);
-        Render(WinMapTile, texture, new Rectangle(position, texture.ToSize()), new Rectangle(new Point(0), texture.ToSize()));
-        RenderRectangle(WinMapTile, new Rectangle(new Point(form.TileSource.X - position.X, form.TileSource.Y - position.Y), form.TileSource.Size), new Color(165, 42, 42, 250));
-        RenderRectangle(WinMapTile, form.TileMouse.X, form.TileMouse.Y, Grid, Grid, new Color(65, 105, 225, 250));
-
-        // Exibe o que foi renderizado
-        WinMapTile.Display();
+        WinMapTileRT.Display();
     }
 
-    private static void EditorMapsMap()
+    // Called from EditorMapsWindow DispatcherTimer
+    public static void EditorMapsMapRT()
     {
-        // Previne erros
-        if (EditorMaps.Form?.IsDisposed != false || EditorMaps.Form.Selected == null) return;
+        var win = EditorMapsWindow.Instance;
+        if (WinMapRT == null || win == null) return;
 
-        // Limpa a área com um fundo preto
-        WinMap.Clear(Color.Black);
+        var selected = win.SelectedMap;
+        if (selected == null) return;
 
-        // Desenha o mapa
-        var selected = EditorMaps.Form.Selected;
+        WinMapRT.Clear(Color.Black);
+
         EditorMapsMapPanorama(selected);
         EditorMapsMapTiles(selected);
         EditorMapsMapWeather(selected);
@@ -193,62 +180,53 @@ internal static class Renders
         EditorMapsMapGrids(selected);
         EditorMapsMapNpcs(selected);
 
-        // Exibe o que foi renderizado
-        WinMap.Display();
+        WinMapRT.Display();
     }
 
     private static void EditorMapsMapPanorama(Map map)
     {
-        var form = EditorMaps.Form;
+        var win = EditorMapsWindow.Instance!;
 
-        // Desenha o panorama
-        if (form.butVisualization.Checked && map.Panorama > 0)
+        if (win.ShowVisualization && map.Panorama > 0)
         {
             var destiny = new Rectangle
             {
-                X = form.scrlMapX.Value * -form.GridZoom,
-                Y = form.scrlMapY.Value * -form.GridZoom,
+                X = win.MapScrollX * -win.GridZoom,
+                Y = win.MapScrollY * -win.GridZoom,
                 Size = Textures.Panoramas[map.Panorama].ToSize()
             };
-            Render(WinMap, Textures.Panoramas[map.Panorama], EditorMaps.Form.Zoom(destiny));
+            Render(WinMapRT!, Textures.Panoramas[map.Panorama], win.ZoomRect(destiny));
         }
     }
 
     private static void EditorMapsMapTiles(Map map)
     {
-        var form = EditorMaps.Form;
-        int beginX = form.scrlMapX.Value, beginY = form.scrlMapY.Value;
+        var win = EditorMapsWindow.Instance!;
+        int beginX = win.MapScrollX, beginY = win.MapScrollY;
 
-        // Desenha todos os azulejos
         for (byte c = 0; c < map.Layer.Count; c++)
         {
-            // Somente se necessário
-            if (!form.lstLayers.Items[c].Checked) continue;
+            if (!win.IsLayerVisible(c)) continue;
 
-            // Transparência da camada
             var color = new Color();
-            if (form.butEdition.Checked && form.butMNormal.Checked)
+            if (win.ShowEdition && win.ModeNormal)
             {
-                if (EditorMaps.Form.lstLayers.SelectedIndices.Count > 0)
-                    if (c != EditorMaps.Form.lstLayers.SelectedItems[0].Index)
-                        color = new Color(255, 255, 255, 150);
+                if (win.SelectedLayerIndex() >= 0 && c != win.SelectedLayerIndex())
+                    color = new Color(255, 255, 255, 150);
             }
             else
                 color = new Color(map.Color.R, map.Color.G, map.Color.B);
 
-            // Continua
             for (var x = beginX; x < Map.Width; x++)
                 for (var y = beginY; y < Map.Height; y++)
                     if (map.Layer[c].Tile[x, y].Texture > 0)
                     {
-                        // Dados
                         var data = map.Layer[c].Tile[x, y];
                         var source = new Rectangle(new Point(data.X * Grid, data.Y * Grid), GridSize);
                         var destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), GridSize);
 
-                        // Desenha o azulejo
                         if (!data.IsAutoTile)
-                            Render(WinMap, Textures.Tiles[data.Texture], source, form.Zoom(destiny), color);
+                            Render(WinMapRT!, Textures.Tiles[data.Texture], source, win.ZoomRect(destiny), color);
                         else
                             EditorMapsAutoTile(destiny.Location, data, color);
                     }
@@ -257,7 +235,7 @@ internal static class Renders
 
     private static void EditorMapsAutoTile(Point position, MapTileData data, Color color)
     {
-        // Desenha todas as partes do azulejo
+        var win = EditorMapsWindow.Instance!;
         for (byte i = 0; i < 4; i++)
         {
             switch (i)
@@ -266,113 +244,98 @@ internal static class Renders
                 case 2: position.Y += 16; break;
                 case 3: position.X += 16; position.Y += 16; break;
             }
-            Render(WinMap, Textures.Tiles[data.Texture], new Rectangle(data.Mini[i].X, data.Mini[i].Y, 16, 16), EditorMaps.Form.Zoom(new Rectangle(position, new Size(16, 16))), color);
+            Render(WinMapRT!, Textures.Tiles[data.Texture], new Rectangle(data.Mini[i].X, data.Mini[i].Y, 16, 16), win.ZoomRect(new Rectangle(position, new Size(16, 16))), color);
         }
     }
 
     private static void EditorMapsMapFog(Map map)
     {
-        // Somente se necessário
-        if (map.Fog.Texture <= 0) return;
-        if (!EditorMaps.Form.butVisualization.Checked) return;
+        var win = EditorMapsWindow.Instance!;
+        if (map.Fog.Texture <= 0 || !win.ShowVisualization) return;
 
-        // Desenha a fumaça
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
         for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
             for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
             {
                 var position = new Point(x * textureSize.Width + TempMap.FogX, y * textureSize.Height + TempMap.FogY);
-                Render(WinMap, Textures.Fogs[map.Fog.Texture], EditorMaps.Form.Zoom(new Rectangle(position, textureSize)), new Color(255, 255, 255, map.Fog.Alpha));
+                Render(WinMapRT!, Textures.Fogs[map.Fog.Texture], win.ZoomRect(new Rectangle(position, textureSize)), new Color(255, 255, 255, map.Fog.Alpha));
             }
     }
 
     private static void EditorMapsMapWeather(Map map)
     {
-        // Somente se necessário
-        if (!EditorMaps.Form.butVisualization.Checked || map.Weather.Type == Weather.Normal) return;
+        var win = EditorMapsWindow.Instance!;
+        if (!win.ShowVisualization || map.Weather.Type == Weather.Normal) return;
 
-        // Dados
         byte x = 0;
         if (map.Weather.Type == Weather.Snowing) x = 32;
 
-        // Desenha as partículas
         for (var i = 0; i < TempMap.Weather.Length; i++)
             if (TempMap.Weather[i].Visible)
-                Render(WinMap, Textures.Weather, new Rectangle(x, 0, 32, 32), EditorMaps.Form.Zoom(new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32)), new Color(255, 255, 255, 150));
+                Render(WinMapRT!, Textures.Weather, new Rectangle(x, 0, 32, 32), win.ZoomRect(new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32)), new Color(255, 255, 255, 150));
     }
 
     private static void EditorMapsMapGrids(Map map)
     {
-        var form = EditorMaps.Form;
-        Rectangle source = form.TileSource, destiny = new();
-        var begin = new Point(form.MapSelection.X - form.scrlMapX.Value, form.MapSelection.Y - form.scrlMapY.Value);
+        var win = EditorMapsWindow.Instance!;
+        Rectangle source = win.TileSource, destiny = new();
+        var begin = new Point(win.MapSelection.X - win.MapScrollX, win.MapSelection.Y - win.MapScrollY);
 
-        // Dados
-        destiny.Location = form.Zoom_Grid(begin.X, begin.Y);
-        destiny.Size = new Size(source.Width / form.Zoom(), source.Height / form.Zoom());
+        destiny.Location = win.ZoomGrid(begin.X, begin.Y);
+        destiny.Size = new Size(source.Width / win.Zoom(), source.Height / win.Zoom());
 
-        // Desenha as grades
-        if (form.butGrid.Checked || !form.butGrid.Enabled)
+        if (win.ShowGrid)
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
                 {
-                    RenderRectangle(WinMap, x * form.GridZoom, y * form.GridZoom, form.GridZoom, form.GridZoom, new Color(25, 25, 25, 70));
+                    RenderRectangle(WinMapRT!, x * win.GridZoom, y * win.GridZoom, win.GridZoom, win.GridZoom, new Color(25, 25, 25, 70));
                     EditorMapsMapZones(map, x, y);
                     EditorMapsMapAttributes(map, x, y);
                     EditorMapsMapDirBlock(map, x, y);
                 }
 
-        if (!form.chkAuto.Checked && form.butMNormal.Checked)
-            // Normal
-            if (form.butPencil.Checked)
-                Render(WinMap, Textures.Tiles[form.cmbTiles.SelectedIndex + 1], source, destiny);
-            // Retângulo
-            else if (form.butRectangle.Checked)
-                for (var x = begin.X; x < begin.X + form.MapSelection.Width; x++)
-                    for (var y = begin.Y; y < begin.Y + form.MapSelection.Height; y++)
-                        Render(WinMap, Textures.Tiles[form.cmbTiles.SelectedIndex + 1], source, new Rectangle(form.Zoom_Grid(x, y), destiny.Size));
+        if (!win.AutoTile && win.ModeNormal)
+        {
+            if (win.ToolPencil)
+                Render(WinMapRT!, Textures.Tiles[win.TileSheetIndex + 1], source, destiny);
+            else if (win.ToolRectangle)
+                for (var x = begin.X; x < begin.X + win.MapSelection.Width; x++)
+                    for (var y = begin.Y; y < begin.Y + win.MapSelection.Height; y++)
+                        Render(WinMapRT!, Textures.Tiles[win.TileSheetIndex + 1], source, new Rectangle(win.ZoomGrid(x, y), destiny.Size));
+        }
 
-        // Desenha a grade
-        if (!form.butMAttributes.Checked || !form.optA_DirBlock.Checked)
-            RenderRectangle(WinMap, destiny.X, destiny.Y, form.MapSelection.Width * form.GridZoom, form.MapSelection.Height * form.GridZoom);
+        if (!win.ModeAttributes || !win.DirBlockMode)
+            RenderRectangle(WinMapRT!, destiny.X, destiny.Y, win.MapSelection.Width * win.GridZoom, win.MapSelection.Height * win.GridZoom);
     }
 
     private static void EditorMapsMapZones(Map map, byte x, byte y)
     {
-        var form = EditorMaps.Form;
-        var position = new Point((x - form.scrlMapX.Value) * form.GridZoom, (y - form.scrlMapY.Value) * form.GridZoom);
+        var win = EditorMapsWindow.Instance!;
+        var position = new Point((x - win.MapScrollX) * win.GridZoom, (y - win.MapScrollY) * win.GridZoom);
         var zoneNum = map.Attribute[x, y].Zone;
         Color color;
 
-        // Apenas se necessário
-        if (!EditorMaps.Form.butMZones.Checked) return;
-        if (zoneNum == 0) return;
+        if (!win.ModeZones || zoneNum == 0) return;
 
-        // Define a cor
         if (zoneNum % 2 == 0)
             color = new Color((byte)((zoneNum * 42) ^ 3), (byte)(zoneNum * 22), (byte)(zoneNum * 33), 150);
         else
             color = new Color((byte)(zoneNum * 33), (byte)(zoneNum * 22), (byte)(zoneNum * 42), 150 ^ 3);
 
-        // Desenha as zonas
-        Render(WinMap, Textures.Blank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), color);
-        DrawText(WinMap, zoneNum.ToString(), position.X, position.Y, Color.White);
+        Render(WinMapRT!, Textures.Blank, new Rectangle(position, new Size(win.GridZoom, win.GridZoom)), color);
+        DrawText(WinMapRT!, zoneNum.ToString(), position.X, position.Y, Color.White);
     }
 
     private static void EditorMapsMapAttributes(Map map, byte x, byte y)
     {
-        var form = EditorMaps.Form;
-        var position = new Point((x - form.scrlMapX.Value) * form.GridZoom, (y - EditorMaps.Form.scrlMapY.Value) * form.GridZoom);
+        var win = EditorMapsWindow.Instance!;
+        var position = new Point((x - win.MapScrollX) * win.GridZoom, (y - win.MapScrollY) * win.GridZoom);
         var attribute = (TileAttribute)map.Attribute[x, y].Type;
         Color color;
         string letter;
 
-        // Apenas se necessário
-        if (!EditorMaps.Form.butMAttributes.Checked) return;
-        if (EditorMaps.Form.optA_DirBlock.Checked) return;
-        if (attribute == TileAttribute.None) return;
+        if (!win.ModeAttributes || win.DirBlockMode || attribute == TileAttribute.None) return;
 
-        // Define a cor e a letra
         switch (attribute)
         {
             case TileAttribute.Block: letter = "B"; color = Color.Red; break;
@@ -382,47 +345,38 @@ internal static class Renders
         }
         color = new Color(color.R, color.G, color.B, 100);
 
-        // Desenha as Atributos
-        Render(WinMap, Textures.Blank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), color);
-        DrawText(WinMap, letter, position.X, position.Y, Color.White);
+        Render(WinMapRT!, Textures.Blank, new Rectangle(position, new Size(win.GridZoom, win.GridZoom)), color);
+        DrawText(WinMapRT!, letter, position.X, position.Y, Color.White);
     }
 
     private static void EditorMapsMapDirBlock(Map map, byte x, byte y)
     {
-        var tile = new Point(EditorMaps.Form.scrlMapX.Value + x, EditorMaps.Form.scrlMapY.Value + y);
+        var win = EditorMapsWindow.Instance!;
+        var tile = new Point(win.MapScrollX + x, win.MapScrollY + y);
 
-        // Apenas se necessário
-        if (!EditorMaps.Form.butMAttributes.Checked) return;
-        if (!EditorMaps.Form.optA_DirBlock.Checked) return;
-
-        // Previne erros
+        if (!win.ModeAttributes || !win.DirBlockMode) return;
         if (tile.X > map.Attribute.GetUpperBound(0)) return;
         if (tile.Y > map.Attribute.GetUpperBound(1)) return;
 
         for (byte i = 0; i < (byte)Direction.Count; i++)
         {
-            // Estado do bloqueio
             var sourceY = map.Attribute[tile.X, tile.Y].Block[i] ? (byte)8 : (byte)0;
-
-            // Renderiza
-            Render(WinMap, Textures.Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
+            Render(WinMapRT!, Textures.Directions, x * Grid + Block_Position(i).X, y * Grid + Block_Position(i).Y, i * 8, sourceY, 6, 6);
         }
     }
 
     private static void EditorMapsMapNpcs(Map map)
     {
-        var form = EditorMaps.Form;
+        var win = EditorMapsWindow.Instance!;
+        if (!win.ModeNPCs) return;
 
-        if (EditorMaps.Form.butMNPCs.Checked)
-            for (byte i = 0; i < map.Npc.Count; i++)
-                if (map.Npc[i].Spawn)
-                {
-                    var position = new Point((map.Npc[i].X - form.scrlMapX.Value) * form.GridZoom, (map.Npc[i].Y - form.scrlMapY.Value) * form.GridZoom);
-
-                    // Desenha uma sinalização de onde os NPCs estão
-                    Render(WinMap, Textures.Blank, new Rectangle(position, new Size(form.GridZoom, form.GridZoom)), new Color(0, 220, 0, 150));
-                    DrawText(WinMap, (i + 1).ToString(), position.X + 10, position.Y + 10, Color.White);
-                }
+        for (byte i = 0; i < map.Npc.Count; i++)
+            if (map.Npc[i].Spawn)
+            {
+                var position = new Point((map.Npc[i].X - win.MapScrollX) * win.GridZoom, (map.Npc[i].Y - win.MapScrollY) * win.GridZoom);
+                Render(WinMapRT!, Textures.Blank, new Rectangle(position, new Size(win.GridZoom, win.GridZoom)), new Color(0, 220, 0, 150));
+                DrawText(WinMapRT!, (i + 1).ToString(), position.X + 10, position.Y + 10, Color.White);
+            }
     }
     #endregion
 

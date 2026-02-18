@@ -1,18 +1,15 @@
-using System.Windows.Forms;
+using Avalonia.Controls;
 using CryBits.Editors.AvaloniaUI.Forms;
 
 namespace CryBits.Editors.AvaloniaUI;
 
 internal static class AvaloniaTilesLauncher
 {
-    public static void OpenTilesEditor(Form owner)
+    public static void OpenTilesEditor(Window owner)
     {
         owner.Hide();
-        AvaloniaRuntime.RunOnUiThread(() =>
-        {
-            var window = new EditorTilesWindow();
-            window.Closed += (_, _) => owner.BeginInvoke(owner.Show);
-            window.Show();
-        });
+        var window = new EditorTilesWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
     }
 }
