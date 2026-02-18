@@ -526,7 +526,7 @@ internal partial class EditorMaps : DarkForm
 
     private void butEditors_Classes_Click(object sender, EventArgs e)
     {
-        EditorClasses.Form = new EditorClasses();
+        AvaloniaClassesLauncher.OpenClassesEditor(this);
     }
 
     private void butEditors_Data_Click(object sender, EventArgs e)

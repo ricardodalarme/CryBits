@@ -1,0 +1,214 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:semi="https://irihi.tech/semi"
+        x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorClassesWindow"
+        Title="Class Editor"
+        Width="1010" Height="585"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <semi:SemiTheme x:Key="SemiTheme" Locale="en-US" />
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid ColumnDefinitions="260,*" RowDefinitions="*,Auto" Margin="10">
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- LEFT: Class list                                    -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <Grid Grid.Column="0" Grid.Row="0" RowDefinitions="Auto,*" Margin="0,0,8,0">
+            <TextBox x:Name="txtFilter" Grid.Row="0" Watermark="Filter…" Margin="0,0,0,4" />
+            <ListBox x:Name="lstClasses" Grid.Row="1"
+                     SelectionMode="Single"
+                     SelectionChanged="lstClasses_SelectionChanged" />
+        </Grid>
+
+        <!-- New / Remove buttons (bottom-left) -->
+        <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,*" Margin="0,6,8,0">
+            <Button Grid.Column="0" Content="New"    Click="butNew_Click"    Margin="0,0,3,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+            <Button Grid.Column="1" Content="Remove" Click="butRemove_Click" Margin="3,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- RIGHT: Editor panels                               -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+              x:Name="pnlContent"
+              RowDefinitions="Auto,Auto,Auto,Auto"
+              IsVisible="False">
+
+            <!-- ROW 0: General (left) + Texture panels (right) ── -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,*" Margin="0,0,0,6">
+
+                <!-- grpGeneral -->
+                <Border Grid.Column="0" Classes="card" Margin="0,0,3,0" Padding="8">
+                    <StackPanel>
+                        <TextBlock Text="General" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <TextBlock Text="Name:" Margin="0,0,0,2"/>
+                        <TextBox x:Name="txtName" TextChanged="txtName_TextChanged" Margin="0,0,0,6"/>
+                        <TextBlock Text="Description:" Margin="0,0,0,2"/>
+                        <TextBox x:Name="txtDescription" AcceptsReturn="True" Height="80"
+                                 TextWrapping="Wrap"
+                                 TextChanged="txtDescription_TextChanged"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- grpTexture / grpTexture_Add overlay -->
+                <Panel Grid.Column="1" Margin="3,0,0,0">
+
+                    <!-- grpTexture: Male / Female lists -->
+                    <Border x:Name="pnlTexture" Classes="card" Padding="8">
+                        <StackPanel>
+                            <TextBlock Text="Textures" FontWeight="Bold" Margin="0,0,0,6"/>
+                            <Grid ColumnDefinitions="*,*">
+                                <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                                    <TextBlock Text="Male:" Margin="0,0,0,2"/>
+                                    <ListBox x:Name="lstMale" Height="120"
+                                             SelectionMode="Single" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                        <Button Content="Add"    Click="butMTexture_Click"  Margin="0,0,4,0"/>
+                                        <Button Content="Delete" Click="butMDelete_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                                    <TextBlock Text="Female:" Margin="0,0,0,2"/>
+                                    <ListBox x:Name="lstFemale" Height="120"
+                                             SelectionMode="Single" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                        <Button Content="Add"    Click="butFTexture_Click"  Margin="0,0,4,0"/>
+                                        <Button Content="Delete" Click="butFDelete_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- grpTexture_Add overlay -->
+                    <Border x:Name="pnlTextureAdd" Classes="card" Padding="8" IsVisible="False">
+                        <StackPanel>
+                            <TextBlock Text="Add Texture" FontWeight="Bold" Margin="0,0,0,8"/>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Texture index:" Margin="0,0,0,2"/>
+                                    <NumericUpDown x:Name="numTexture" Minimum="1" Value="1"
+                                                   ValueChanged="numTexture_ValueChanged"
+                                                   Margin="0,0,0,8" FormatString="0"/>
+                                    <Button Content="Ok" Click="butTexture_Ok_Click"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Center"/>
+                                </StackPanel>
+                                <!-- Character sprite preview (Avalonia WriteableBitmap) -->
+                                <Border Grid.Column="1" Width="75" Height="74"
+                                        Margin="8,0,0,0" BorderBrush="Gray" BorderThickness="1"
+                                        Background="Black">
+                                    <Image x:Name="imgTexturePreview"
+                                           Width="75" Height="74"
+                                           Stretch="Uniform"/>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                </Panel>
+            </Grid>
+
+            <!-- ROW 1: Attributes (left) + Initial Items panels (right) ── -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,*" Margin="0,0,0,6">
+
+                <!-- grpAttributes -->
+                <Border Grid.Column="0" Classes="card" Margin="0,0,3,0" Padding="8">
+                    <StackPanel>
+                        <TextBlock Text="Base Attributes" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="HP:"  Margin="0,0,0,2"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="MP:"  Margin="0,0,0,2"/>
+                            <NumericUpDown x:Name="numHP" Grid.Row="1" Grid.Column="0" Minimum="0" Maximum="9999"
+                                           FormatString="0" ValueChanged="numHP_ValueChanged" Margin="0,0,4,6"/>
+                            <NumericUpDown x:Name="numMP" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Minimum="0" Maximum="9999"
+                                           FormatString="0" ValueChanged="numMP_ValueChanged" Margin="0,0,0,6"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Strength:"     Margin="0,0,0,2"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="Resistance:"   Margin="0,0,0,2"/>
+                            <TextBlock Grid.Row="2" Grid.Column="2" Text="Intelligence:" Margin="0,0,0,2"/>
+                            <NumericUpDown x:Name="numStrength"     Grid.Row="3" Grid.Column="0" Minimum="0" Maximum="9999" FormatString="0" ValueChanged="numStrength_ValueChanged"     Margin="0,0,4,6"/>
+                            <NumericUpDown x:Name="numResistance"   Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="9999" FormatString="0" ValueChanged="numResistance_ValueChanged"   Margin="0,0,4,6"/>
+                            <NumericUpDown x:Name="numIntelligence" Grid.Row="3" Grid.Column="2" Minimum="0" Maximum="9999" FormatString="0" ValueChanged="numIntelligence_ValueChanged" Margin="0,0,0,6"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Agility:"  Margin="0,0,0,2"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Text="Vitality:" Margin="0,0,0,2"/>
+                            <NumericUpDown x:Name="numAgility"  Grid.Row="5" Grid.Column="0" Minimum="0" Maximum="9999" FormatString="0" ValueChanged="numAgility_ValueChanged"  Margin="0,0,4,0"/>
+                            <NumericUpDown x:Name="numVitality" Grid.Row="5" Grid.Column="1" Minimum="0" Maximum="9999" FormatString="0" ValueChanged="numVitality_ValueChanged" Margin="0,0,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- grpDrop / grpItem_Add overlay -->
+                <Panel Grid.Column="1" Margin="3,0,0,0">
+
+                    <!-- grpDrop -->
+                    <Border x:Name="pnlDrop" Classes="card" Padding="8">
+                        <StackPanel>
+                            <TextBlock Text="Initial Items" FontWeight="Bold" Margin="0,0,0,6"/>
+                            <TextBlock FontStyle="Italic" FontSize="10"
+                                       Text="(Equipments will be automatically equipped)"
+                                       Margin="0,0,0,4"/>
+                            <ListBox x:Name="lstItems" Height="118" SelectionMode="Single" />
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <Button Content="Add"    Click="butItem_Add_Click"    Margin="0,0,4,0"/>
+                                <Button Content="Delete" Click="butItem_Delete_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- grpItem_Add overlay -->
+                    <Border x:Name="pnlItemAdd" Classes="card" Padding="8" IsVisible="False">
+                        <StackPanel>
+                            <TextBlock Text="Add Item" FontWeight="Bold" Margin="0,0,0,8"/>
+                            <TextBlock Text="Item:" Margin="0,0,0,2"/>
+                            <ComboBox x:Name="cmbItems" HorizontalAlignment="Stretch" Margin="0,0,0,6"/>
+                            <TextBlock Text="Amount:" Margin="0,0,0,2"/>
+                            <NumericUpDown x:Name="numItem_Amount" Minimum="1" Value="1" FormatString="0" Margin="0,0,0,8"/>
+                            <Button Content="Ok" Click="butItem_Ok_Click"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                </Panel>
+            </Grid>
+
+            <!-- ROW 2: Spawn ── -->
+            <Border Grid.Row="2" Classes="card" Padding="8" Margin="0,0,0,6">
+                <StackPanel>
+                    <TextBlock Text="Spawn" FontWeight="Bold" Margin="0,0,0,6"/>
+                    <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Map:"       Margin="0,0,0,2"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="Direction:" Margin="0,0,0,2"/>
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="X:"         Margin="0,0,0,2"/>
+                        <TextBlock Grid.Row="0" Grid.Column="3" Text="Y:"         Margin="0,0,0,2"/>
+                        <ComboBox x:Name="cmbSpawn_Map"       Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,4,0" SelectionChanged="cmbSpawn_Map_SelectionChanged"/>
+                        <ComboBox x:Name="cmbSpawn_Direction" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,4,0" SelectionChanged="cmbSpawn_Direction_SelectionChanged">
+                            <ComboBoxItem Content="Up"/>
+                            <ComboBoxItem Content="Down"/>
+                            <ComboBoxItem Content="Left"/>
+                            <ComboBoxItem Content="Right"/>
+                        </ComboBox>
+                        <NumericUpDown x:Name="numSpawn_X" Grid.Row="1" Grid.Column="2" Minimum="0" FormatString="0" ValueChanged="numSpawn_X_ValueChanged" Margin="0,0,4,0"/>
+                        <NumericUpDown x:Name="numSpawn_Y" Grid.Row="1" Grid.Column="3" Minimum="0" FormatString="0" ValueChanged="numSpawn_Y_ValueChanged"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ROW 3: Save All / Cancel ── -->
+            <Grid Grid.Row="3" ColumnDefinitions="*,*">
+                <Button Grid.Column="0" Content="Save All" Click="butSave_Click"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,4,0"/>
+                <Button Grid.Column="1" Content="Cancel"   Click="butCancel_Click"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="4,0,0,0"/>
+            </Grid>
+
+        </Grid>
+        <!-- end pnlContent -->
+
+    </Grid>
+</Window>

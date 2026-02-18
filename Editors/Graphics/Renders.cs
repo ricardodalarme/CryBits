@@ -4,6 +4,7 @@ using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Editors.Entities;
+using CryBits.Editors.AvaloniaUI.Forms;
 using CryBits.Editors.Forms;
 using CryBits.Entities.Map;
 using CryBits.Enums;
@@ -539,8 +540,8 @@ internal static class Renders
         // Somente se necessário
         if (WinClass == null) return;
 
-        // Desenha o NPC
-        Character(WinClass, (short)EditorClasses.Form.numTexture.Value);
+        // Draws the character preview using the index tracked by the Avalonia window
+        Character(WinClass, EditorClassesWindow.CurrentTextureIndex);
     }
     #endregion
 
