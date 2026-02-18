@@ -1,12 +1,9 @@
 using System;
-using System.Runtime.InteropServices;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
@@ -71,21 +68,7 @@ internal partial class EditorTilesWindow : Window
         if (Renders.WinTileRT == null) return;
 
         Renders.EditorTileRT();
-
-        var sfmlImage = Renders.WinTileRT.Texture.CopyToImage();
-        var w = (int)sfmlImage.Size.X;
-        var h = (int)sfmlImage.Size.Y;
-        var pixels = sfmlImage.Pixels;
-
-        if (_bitmap == null || _bitmap.PixelSize.Width != w || _bitmap.PixelSize.Height != h)
-            _bitmap = new WriteableBitmap(new PixelSize(w, h), new Avalonia.Vector(96, 96), PixelFormat.Rgba8888, AlphaFormat.Unpremul);
-
-        using var fb = _bitmap.Lock();
-        for (int y = 0; y < h; y++)
-            Marshal.Copy(pixels, y * w * 4, fb.Address + y * fb.RowBytes, w * 4);
-
-        imgCanvas.Source = _bitmap;
-        imgCanvas.InvalidateVisual();
+        SfmlRenderBlit.Blit(Renders.WinTileRT, ref _bitmap, imgCanvas);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

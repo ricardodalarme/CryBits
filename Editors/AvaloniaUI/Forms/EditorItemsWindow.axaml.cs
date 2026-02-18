@@ -1,11 +1,8 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
@@ -311,28 +308,7 @@ internal partial class EditorItemsWindow : Window
             return;
         }
 
-        var sfmlTexture = Textures.Items[textureIndex];
-        var sfmlImage = sfmlTexture.CopyToImage();
-        var w = (int)sfmlImage.Size.X;
-        var h = (int)sfmlImage.Size.Y;
-
-        var pixelBytes = sfmlImage.Pixels; // full RGBA byte[]
-
-        var bitmap = new WriteableBitmap(
-            new PixelSize(w, h),
-            new Avalonia.Vector(96, 96),
-            PixelFormat.Rgba8888,
-            AlphaFormat.Unpremul);
-
-        using var fb = bitmap.Lock();
-        for (int y = 0; y < h; y++)
-        {
-            var srcOffset = y * w * 4;
-            var dstPtr = fb.Address + y * fb.RowBytes;
-            Marshal.Copy(pixelBytes, srcOffset, dstPtr, w * 4);
-        }
-
-        imgTexturePreview.Source = bitmap;
+        SfmlRenderBlit.BlitTexture(Textures.Items[textureIndex], imgTexturePreview);
     }
 
     // ──────────────────────────────────────────────────────────

@@ -1,11 +1,8 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
@@ -296,32 +293,8 @@ internal partial class EditorClassesWindow : Window
             return;
         }
 
-        var sfmlTexture = Textures.Characters[textureIndex];
-        var sfmlImage = sfmlTexture.CopyToImage();
-        var fullW = (int)sfmlImage.Size.X;
-        var fullH = (int)sfmlImage.Size.Y;
-
         // Spritesheet is 4 cols × 4 rows – preview just the first frame (top-left)
-        var frameW = fullW / 4;
-        var frameH = fullH / 4;
-
-        var pixelBytes = sfmlImage.Pixels; // RGBA byte[] for the entire image
-
-        var bitmap = new WriteableBitmap(
-            new PixelSize(frameW, frameH),
-            new Avalonia.Vector(96, 96),
-            PixelFormat.Rgba8888,
-            AlphaFormat.Unpremul);
-
-        using var fb = bitmap.Lock();
-        for (int y = 0; y < frameH; y++)
-        {
-            var srcOffset = y * fullW * 4;
-            var dstPtr = fb.Address + y * fb.RowBytes;
-            Marshal.Copy(pixelBytes, srcOffset, dstPtr, frameW * 4);
-        }
-
-        imgTexturePreview.Source = bitmap;
+        SfmlRenderBlit.BlitTexture(Textures.Characters[textureIndex], imgTexturePreview, 4, 4);
     }
 
     private void butTexture_Ok_Click(object? sender, RoutedEventArgs e)

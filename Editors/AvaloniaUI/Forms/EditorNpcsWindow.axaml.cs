@@ -1,11 +1,8 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Forms;
@@ -70,21 +67,7 @@ internal partial class EditorNpcsWindow : Window
         if (Renders.WinNpcRT == null || CurrentTextureIndex <= 0) return;
 
         Renders.EditorNpcRT();
-
-        var sfmlImage = Renders.WinNpcRT.Texture.CopyToImage();
-        var w = (int)sfmlImage.Size.X;
-        var h = (int)sfmlImage.Size.Y;
-        var pixels = sfmlImage.Pixels;
-
-        if (_previewBitmap == null || _previewBitmap.PixelSize.Width != w || _previewBitmap.PixelSize.Height != h)
-            _previewBitmap = new WriteableBitmap(new PixelSize(w, h), new Avalonia.Vector(96, 96), PixelFormat.Rgba8888, AlphaFormat.Unpremul);
-
-        using var fb = _previewBitmap.Lock();
-        for (int y = 0; y < h; y++)
-            Marshal.Copy(pixels, y * w * 4, fb.Address + y * fb.RowBytes, w * 4);
-
-        imgTexture.Source = _previewBitmap;
-        imgTexture.InvalidateVisual();
+        SfmlRenderBlit.Blit(Renders.WinNpcRT, ref _previewBitmap, imgTexture);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

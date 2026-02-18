@@ -3,13 +3,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Interfacily.Enums;
@@ -97,24 +94,7 @@ internal partial class EditorInterfaceWindow : Window
         if (EditorInterface.Tree.Nodes.Count == 0) return;
 
         Renders.Interface();
-
-        var sfmlImage = Renders.WinInterfaceRT.Texture.CopyToImage();
-        var w = (int)sfmlImage.Size.X;
-        var h = (int)sfmlImage.Size.Y;
-        var pixels = sfmlImage.Pixels;
-
-        if (_previewBitmap == null || _previewBitmap.PixelSize.Width != w || _previewBitmap.PixelSize.Height != h)
-            _previewBitmap = new WriteableBitmap(new PixelSize(w, h), new Avalonia.Vector(96, 96), PixelFormat.Rgba8888, AlphaFormat.Unpremul);
-
-        using var fb = _previewBitmap.Lock();
-        for (int y = 0; y < h; y++)
-            Marshal.Copy(pixels, y * w * 4, fb.Address + y * fb.RowBytes, w * 4);
-        // fb.Dispose() (end of using block) marks the bitmap dirty, but Avalonia
-        // skips repainting Image when the Source reference hasn't changed.
-        // InvalidateVisual() forces a repaint every tick so live edits are visible.
-
-        imgPreview.Source = _previewBitmap;
-        imgPreview.InvalidateVisual();
+        SfmlRenderBlit.Blit(Renders.WinInterfaceRT, ref _previewBitmap, imgPreview);
     }
 
     // ──────────────────────────────────────────────────────────────────────────
