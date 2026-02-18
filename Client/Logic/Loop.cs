@@ -31,7 +31,7 @@ internal static class Loop
             Socket.HandleData();
 
             // Apresenta os gráficos à tela
-            Renders.Present();
+            RenderPipeline.Present();
 
             // Processa os eventos da janela
             Renders.RenderWindow.DispatchEvents();
