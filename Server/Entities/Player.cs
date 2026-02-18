@@ -9,8 +9,8 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library.Repositories;
-using CryBits.Server.Logic;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Systems;
 using static CryBits.Globals;
 using static CryBits.Utils;
 
@@ -40,7 +40,7 @@ internal class Player : Character
     public TradeSlot[] TradeOffer;
     public Shop Shop;
     public Account Account;
-    private long _attackTimer;
+    public long AttackTimer;
 
     // Constutor
     public Player(Account account)
@@ -100,25 +100,6 @@ internal class Player : Character
             for (byte i = 0; i < (byte)Enums.Attribute.Count; i++) total += Attribute[i];
             return (int)((Level + 1) * 2.5 + (total + Points) / 2);
         }
-    }
-
-    /////////////
-    // Funções //
-    /////////////
-    public void Logic()
-    {
-        // Reneração 
-        if (Environment.TickCount64 > Loop.TimerRegeneration + 5000)
-            for (byte v = 0; v < (byte)Enums.Vital.Count; v++)
-                if (Vital[v] < MaxVital(v))
-                {
-                    // Renera a vida do jogador
-                    Vital[v] += Regeneration(v);
-                    if (Vital[v] > MaxVital(v)) Vital[v] = MaxVital(v);
-
-                    // Env ia os dados aos jogadores
-                    PlayerSender.PlayerVitals(this);
-                }
     }
 
     public void Join()
@@ -288,7 +269,7 @@ internal class Player : Character
         // Apenas se necessário
         if (Trade != null) return;
         if (Shop != null) return;
-        if (Environment.TickCount64 < _attackTimer + AttackSpeed) return;
+        if (Environment.TickCount64 < AttackTimer + AttackSpeed) return;
         if (Map.TileBlocked(X, Y, Direction, false)) goto @continue;
 
         // Ataca um jogador
@@ -308,9 +289,9 @@ internal class Player : Character
         }
 
         @continue:
-        // Demonstra que aos outros jogadores o ataque
+        // Demonstrate the attack to other players
         PlayerSender.PlayerAttack(this, null);
-        _attackTimer = Environment.TickCount64;
+        AttackTimer = Environment.TickCount64;
     }
 
     private void AttackPlayer(Player victim)
@@ -323,10 +304,9 @@ internal class Player : Character
             return;
         }
 
-        // Tempo de ataque 
-        _attackTimer = Environment.TickCount64;
+        AttackTimer = Environment.TickCount64;
 
-        // Cálculo de dano
+        // Damage calculation
         var attackDamage = (short)(Damage - victim.PlayerDefense);
 
         // Dano não fatal
@@ -343,8 +323,8 @@ internal class Player : Character
             // FATALITY
             else
             {
-                // Dá 10% da experiência da vítima ao atacante
-                GiveExperience(victim.Experience / 10);
+                // Award 10% of the victim's XP to the attacker
+                LevelingSystem.GiveExperience(this, victim.Experience / 10);
 
                 // Mata a vítima
                 victim.Died();
@@ -373,10 +353,9 @@ internal class Player : Character
         // Define o alvo do Npc
         victim.Target = this;
 
-        // Tempo de ataque 
-        _attackTimer = Environment.TickCount64;
+        AttackTimer = Environment.TickCount64;
 
-        // Cálculo de dano
+        // Damage calculation
         var attackDamage = (short)(Damage - victim.Data.Attribute[(byte)Enums.Attribute.Resistance]);
 
         // Dano não fatal
@@ -393,8 +372,8 @@ internal class Player : Character
             // FATALITY
             else
             {
-                // Experiência ganhada
-                GiveExperience(victim.Data.Experience);
+                // Award NPC drop experience
+                LevelingSystem.GiveExperience(this, victim.Data.Experience);
 
                 // Reseta os dados do Npc 
                 victim.Died();
@@ -403,39 +382,6 @@ internal class Player : Character
         else
             // Demonstra o ataque aos outros jogadores
             PlayerSender.PlayerAttack(this);
-    }
-
-    public void GiveExperience(int value)
-    {
-        // Dá a experiência ao jogador, caso ele estiver em um grupo divide a experiência entre os membros
-        if (Party.Count > 0 && value > 0) PartySplitXp(value);
-        else Experience += value;
-
-        // Verifica se a experiência não ficou negtiva
-        if (Experience < 0) Experience = 0;
-
-        // Verifica se passou de level
-        CheckLevelUp();
-    }
-
-    private void CheckLevelUp()
-    {
-        byte numLevel = 0;
-
-        while (Experience >= ExpNeeded)
-        {
-            numLevel++;
-            var expRest = Experience - ExpNeeded;
-
-            // Define os dados
-            Level++;
-            Points += NumPoints;
-            Experience = expRest;
-        }
-
-        // Envia os dados
-        PlayerSender.PlayerExperience(this);
-        if (numLevel > 0) MapSender.MapPlayers(this);
     }
 
     public bool GiveItem(Item item, short amount)
@@ -567,7 +513,7 @@ internal class Player : Character
         {
             // Efeitos
             var hadEffect = false;
-            GiveExperience(item.PotionExperience);
+            LevelingSystem.GiveExperience(this, item.PotionExperience);
             for (byte i = 0; i < (byte)Enums.Vital.Count; i++)
             {
                 // Verifica se o item causou algum efeito 
@@ -611,49 +557,6 @@ internal class Player : Character
             Party.Clear();
             PartySender.Party(this);
         }
-    }
-
-    private void PartySplitXp(int value)
-    {
-        // Somatório do level de todos os jogadores do grupo
-        var experienceSum = 0;
-        var diff = new double[Party.Count];
-        double diffSum = 0;
-
-        // Cálcula a diferença dos leveis entre os jogadores
-        for (byte i = 0; i < Party.Count; i++)
-        {
-            var difference = Math.Abs(Level - Party[i].Level);
-
-            // Constante para a diminuir potêncialmente a experiência que diferenças altas ganhariam
-            double k;
-            if (difference < 3) k = 1.15;
-            else if (difference < 6) k = 1.55;
-            else if (difference < 10) k = 1.85;
-            else k = 2.3;
-
-            // Transforma o valor em fração
-            diff[i] = 1 / Math.Pow(k, Math.Min(15, difference));
-            diffSum += diff[i];
-        }
-
-        // Divide a experiência pro grupo com base na diferença dos leveis 
-        for (byte i = 0; i < Party.Count; i++)
-        {
-            // Caso a somatório for maior que um (100%) balanceia os valores
-            if (diffSum > 1) diff[i] *= 1 / diffSum;
-
-            // Divide a experiência
-            var givenExperience = (int)(value / 2 * diff[i]);
-            experienceSum += givenExperience;
-            Party[i].GiveExperience(givenExperience);
-            PlayerSender.PlayerExperience(Party[i]);
-        }
-
-        // Dá ao jogador principal o restante da experiência
-        Experience += value - experienceSum;
-        CheckLevelUp();
-        PlayerSender.PlayerExperience(this);
     }
 
     public void TradeLeave()

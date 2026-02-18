@@ -19,10 +19,10 @@ internal class TempNpc : Character
     public readonly Npc Data;
     public bool Alive;
     public Character Target;
-    private long _spawnTimer;
-    private long _attackTimer;
+    public long SpawnTimer;
+    public long AttackTimer;
 
-    private short Regeneration(byte vital)
+    public short Regeneration(byte vital)
     {
         // Cálcula o máximo de vital que o Npc possui
         return (Vital)vital switch
@@ -51,7 +51,7 @@ internal class TempNpc : Character
         ////////////////
         if (!Alive)
         {
-            if (Environment.TickCount64 > _spawnTimer + Data.SpawnTime * 1000) Spawn();
+            if (Environment.TickCount64 > SpawnTimer + Data.SpawnTime * 1000) Spawn();
             return;
         }
 
@@ -305,7 +305,7 @@ internal class TempNpc : Character
 
         // Apenas se necessário
         if (!Alive) return;
-        if (Environment.TickCount64 < _attackTimer + AttackSpeed) return;
+        if (Environment.TickCount64 < AttackTimer + AttackSpeed) return;
         if (Map.TileBlocked(X, Y, Direction, false)) return;
 
         // Verifica se o jogador está na frente do Npc
@@ -322,8 +322,7 @@ internal class TempNpc : Character
         if (victim == null) return;
         if (victim.GettingMap) return;
 
-        // Tempo de ataque 
-        _attackTimer = Environment.TickCount64;
+        AttackTimer = Environment.TickCount64;
 
         // Cálculo de dano
         var attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] - victim.PlayerDefense);
@@ -360,8 +359,7 @@ internal class TempNpc : Character
         if (victim == null) return;
         if (!victim.Alive) return;
 
-        // Tempo de ataque 
-        _attackTimer = Environment.TickCount64;
+        AttackTimer = Environment.TickCount64;
 
         // Define o alvo do Npc
         victim.Target = this;
@@ -409,7 +407,7 @@ internal class TempNpc : Character
         MapSender.MapItems(Map);
 
         // Reseta os dados do Npc 
-        _spawnTimer = Environment.TickCount64;
+        SpawnTimer = Environment.TickCount64;
         Target = null;
         Alive = false;
         NpcSender.MapNpcDied(this);

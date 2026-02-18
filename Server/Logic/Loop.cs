@@ -6,6 +6,7 @@ using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Commands;
 using CryBits.Server.Network;
+using CryBits.Server.Systems;
 
 namespace CryBits.Server.Logic;
 
@@ -36,12 +37,12 @@ internal static class Loop
 
             if (now > _timer500 + 500)
             {
-                // Lógicas do mapa
+                // Map logic
                 foreach (var tempMap in TempMap.List.Values) tempMap.Logic();
 
-                // Lógica dos jogadores
-                foreach (var account in Account.List.Where(account => account.IsPlaying))
-                    account.Character.Logic();
+                // Player vital regeneration
+                foreach (var account in Account.List.Where(a => a.IsPlaying))
+                    RegenerationSystem.Tick(account.Character);
 
                 // Reinicia a contagem dos 500
                 _timer500 = now;
