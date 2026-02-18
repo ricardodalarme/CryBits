@@ -10,7 +10,7 @@ using CryBits.Extensions;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
 using CryBits.Server.Logic;
-using CryBits.Server.Network;
+using CryBits.Server.Network.Senders;
 using static CryBits.Globals;
 using static CryBits.Utils;
 
@@ -56,7 +56,8 @@ internal class Player : Character
         get
         {
             var value = Attribute[(byte)Enums.Attribute.Strength];
-            if (Equipment[(byte)Enums.Equipment.Weapon] != null) value += Equipment[(byte)Enums.Equipment.Weapon].WeaponDamage;
+            if (Equipment[(byte)Enums.Equipment.Weapon] != null)
+                value += Equipment[(byte)Enums.Equipment.Weapon].WeaponDamage;
             return value;
         }
     }
@@ -116,7 +117,7 @@ internal class Player : Character
                     if (Vital[v] > MaxVital(v)) Vital[v] = MaxVital(v);
 
                     // Env ia os dados aos jogadores
-                    Send.PlayerVitals(this);
+                    PlayerSender.PlayerVitals(this);
                 }
     }
 
@@ -126,29 +127,29 @@ internal class Player : Character
         Account.Characters = null;
 
         // Envia todos os dados necessários
-        Send.Join(this);
-        Send.Items(Account);
-        Send.Npcs(Account);
-        Send.Shops(Account);
-        Send.Map(Account, Map.Data);
-        Send.MapPlayers(this);
-        Send.PlayerExperience(this);
-        Send.PlayerInventory(this);
-        Send.PlayerHotbar(this);
+        PlayerSender.Join(this);
+        ItemSender.Items(Account);
+        NpcSender.Npcs(Account);
+        ShopSender.Shops(Account);
+        MapSender.Map(Account, Map.Data);
+        MapSender.MapPlayers(this);
+        PlayerSender.PlayerExperience(this);
+        PlayerSender.PlayerInventory(this);
+        PlayerSender.PlayerHotbar(this);
 
         // Transporta o jogador para a sua determinada Posição
         Warp(Map, X, Y, true);
 
         // Entra no jogo
-        Send.JoinGame(this);
-        Send.Message(this, WelcomeMessage, Color.Blue);
+        PlayerSender.JoinGame(this);
+        ChatSender.Message(this, WelcomeMessage, Color.Blue);
     }
 
     public void Leave()
     {
         // Salva os dados do jogador e atualiza os demais jogadores da desconexão
         Write.Character(Account);
-        Send.PlayerLeave(this);
+        PlayerSender.PlayerLeave(this);
 
         // Sai dos grupos
         PartyLeave();
@@ -177,19 +178,19 @@ internal class Player : Character
         if (oldMap != map || needUpdate)
         {
             // Sai do mapa antigo
-            Send.PlayerLeaveMap(this, oldMap);
+            PlayerSender.PlayerLeaveMap(this, oldMap);
 
             // Inviabiliza o jogador de algumas ações até que ele receba os dados necessários
             GettingMap = true;
 
             // Envia dados necessários do mapa
-            Send.MapRevision(this, map.Data);
-            Send.MapItems(this, map);
-            Send.MapNpcs(this, map);
+            MapSender.MapRevision(this, map.Data);
+            MapSender.MapItems(this, map);
+            NpcSender.MapNpcs(this, map);
         }
         // Apenas atualiza a posição do jogador
         else
-            Send.PlayerPosition(this);
+            PlayerSender.PlayerPosition(this);
     }
 
     public void Move(byte movement)
@@ -216,14 +217,22 @@ internal class Player : Character
             if (link != null)
                 switch (Direction)
                 {
-                    case Direction.Up: Warp(link, oldX, CryBits.Entities.Map.Map.Height - 1); return;
-                    case Direction.Down: Warp(link, oldX, 0); return;
-                    case Direction.Right: Warp(link, 0, oldY); return;
-                    case Direction.Left: Warp(link, CryBits.Entities.Map.Map.Width - 1, oldY); return;
+                    case Direction.Up:
+                        Warp(link, oldX, CryBits.Entities.Map.Map.Height - 1);
+                        return;
+                    case Direction.Down:
+                        Warp(link, oldX, 0);
+                        return;
+                    case Direction.Right:
+                        Warp(link, 0, oldY);
+                        return;
+                    case Direction.Left:
+                        Warp(link, CryBits.Entities.Map.Map.Width - 1, oldY);
+                        return;
                 }
             else
             {
-                Send.PlayerPosition(this);
+                PlayerSender.PlayerPosition(this);
                 return;
             }
         }
@@ -249,20 +258,20 @@ internal class Player : Character
 
         // Envia os dados
         if (!secondMovement && (oldX != X || oldY != Y))
-            Send.PlayerMove(this, movement);
+            PlayerSender.PlayerMove(this, movement);
         else
-            Send.PlayerPosition(this);
+            PlayerSender.PlayerPosition(this);
     }
 
     public void Died()
     {
         // Recupera os vitais
         for (byte n = 0; n < (byte)Enums.Vital.Count; n++) Vital[n] = MaxVital(n);
-        Send.PlayerVitals(this);
+        PlayerSender.PlayerVitals(this);
 
         // Perde 10% da experiência
         Experience /= 10;
-        Send.PlayerExperience(this);
+        PlayerSender.PlayerExperience(this);
 
         // Retorna para o ínicio
         Direction = (Direction)Class.SpawnDirection;
@@ -300,7 +309,7 @@ internal class Player : Character
 
         @continue:
         // Demonstra que aos outros jogadores o ataque
-        Send.PlayerAttack(this, null);
+        PlayerSender.PlayerAttack(this, null);
         _attackTimer = Environment.TickCount;
     }
 
@@ -310,7 +319,7 @@ internal class Player : Character
         if (victim.GettingMap) return;
         if (Map.Data.Moral == (byte)Moral.Pacific)
         {
-            Send.Message(this, "This is a peaceful area.", Color.White);
+            ChatSender.Message(this, "This is a peaceful area.", Color.White);
             return;
         }
 
@@ -324,12 +333,12 @@ internal class Player : Character
         if (attackDamage > 0)
         {
             // Demonstra o ataque aos outros jogadores
-            Send.PlayerAttack(this, victim.Name, Target.Player);
+            PlayerSender.PlayerAttack(this, victim.Name, Target.Player);
 
             if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
             {
                 victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
-                Send.PlayerVitals(victim);
+                PlayerSender.PlayerVitals(victim);
             }
             // FATALITY
             else
@@ -343,19 +352,22 @@ internal class Player : Character
         }
         else
             // Demonstra o ataque aos outros jogadores
-            Send.PlayerAttack(this);
+            PlayerSender.PlayerAttack(this);
     }
 
     private void AttackNpc(TempNpc victim)
     {
         // Mensagem
-        if (victim.Target != this && !string.IsNullOrEmpty(victim.Data.SayMsg)) Send.Message(this, victim.Data.Name + ": " + victim.Data.SayMsg, Color.White);
+        if (victim.Target != this && !string.IsNullOrEmpty(victim.Data.SayMsg))
+            ChatSender.Message(this, victim.Data.Name + ": " + victim.Data.SayMsg, Color.White);
 
         // Não executa o combate com um Npc amigavel
         switch (victim.Data.Behaviour)
         {
             case Behaviour.Friendly: return;
-            case Behaviour.ShopKeeper: ShopOpen(victim.Data.Shop); return;
+            case Behaviour.ShopKeeper:
+                ShopOpen(victim.Data.Shop);
+                return;
         }
 
         // Define o alvo do Npc
@@ -371,12 +383,12 @@ internal class Player : Character
         if (attackDamage > 0)
         {
             // Demonstra o ataque aos outros jogadores
-            Send.PlayerAttack(this, victim.Index.ToString(), Target.Npc);
+            PlayerSender.PlayerAttack(this, victim.Index.ToString(), Target.Npc);
 
             if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
             {
                 victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
-                Send.MapNpcVitals(victim);
+                NpcSender.MapNpcVitals(victim);
             }
             // FATALITY
             else
@@ -390,7 +402,7 @@ internal class Player : Character
         }
         else
             // Demonstra o ataque aos outros jogadores
-            Send.PlayerAttack(this);
+            PlayerSender.PlayerAttack(this);
     }
 
     public void GiveExperience(int value)
@@ -422,8 +434,8 @@ internal class Player : Character
         }
 
         // Envia os dados
-        Send.PlayerExperience(this);
-        if (numLevel > 0) Send.MapPlayers(this);
+        PlayerSender.PlayerExperience(this);
+        if (numLevel > 0) MapSender.MapPlayers(this);
     }
 
     public bool GiveItem(Item item, short amount)
@@ -447,7 +459,7 @@ internal class Player : Character
         }
 
         // Envia os dados ao jogador
-        Send.PlayerInventory(this);
+        PlayerSender.PlayerInventory(this);
         return true;
     }
 
@@ -469,7 +481,7 @@ internal class Player : Character
             {
                 hotbarSlot.Type = SlotType.None;
                 hotbarSlot.Slot = 0;
-                Send.PlayerHotbar(this);
+                PlayerSender.PlayerHotbar(this);
             }
         }
         // Apenas desconta a quantidade
@@ -477,7 +489,7 @@ internal class Player : Character
             slot.Amount -= amount;
 
         // Atualiza o inventário
-        Send.PlayerInventory(this);
+        PlayerSender.PlayerInventory(this);
     }
 
     public void DropItem(short slot, short amount)
@@ -499,7 +511,7 @@ internal class Player : Character
 
         // Solta o item no chão
         Map.Item.Add(new TempMapItems(slot.Item, amount, X, Y));
-        Send.MapItems(Map);
+        MapSender.MapItems(Map);
 
         // Retira o item do inventário do jogador 
         TakeItem(slot, amount);
@@ -522,13 +534,14 @@ internal class Player : Character
         // Requerimentos
         if (Level < item.ReqLevel)
         {
-            Send.Message(this, "You do not have the level required to use this item.", Color.White);
+            ChatSender.Message(this, "You do not have the level required to use this item.", Color.White);
             return;
         }
+
         if (item.ReqClass != null)
             if (Class != item.ReqClass)
             {
-                Send.Message(this, "You can not use this item.", Color.White);
+                ChatSender.Message(this, "You can not use this item.", Color.White);
                 return;
             }
 
@@ -546,9 +559,9 @@ internal class Player : Character
             for (byte i = 0; i < (byte)Enums.Attribute.Count; i++) Attribute[i] += item.EquipAttribute[i];
 
             // Envia os dados
-            Send.PlayerInventory(this);
-            Send.PlayerEquipments(this);
-            Send.PlayerHotbar(this);
+            PlayerSender.PlayerInventory(this);
+            PlayerSender.PlayerEquipments(this);
+            PlayerSender.PlayerHotbar(this);
         }
         else if (item.Type == ItemType.Potion)
         {
@@ -578,7 +591,8 @@ internal class Player : Character
 
     public HotbarSlot FindHotbar(SlotType type, short slot) => Hotbar.First(x => x.Type == type && x.Slot == slot);
 
-    public HotbarSlot FindHotbar(SlotType type, ItemSlot slot) => Hotbar.First(x => x.Type == type && Inventory[x.Slot] == slot);
+    public HotbarSlot FindHotbar(SlotType type, ItemSlot slot) =>
+        Hotbar.First(x => x.Type == type && Inventory[x.Slot] == slot);
 
     public ItemSlot FindInventory(Item item) => Inventory.First(x => x.Item == item);
 
@@ -593,9 +607,9 @@ internal class Player : Character
                 Party[i].Party.Remove(this);
 
             // Envia o dados para todos os membros do grupo
-            for (byte i = 0; i < Party.Count; i++) Send.Party(Party[i]);
+            for (byte i = 0; i < Party.Count; i++) PartySender.Party(Party[i]);
             Party.Clear();
-            Send.Party(this);
+            PartySender.Party(this);
         }
     }
 
@@ -633,13 +647,13 @@ internal class Player : Character
             var givenExperience = (int)(value / 2 * diff[i]);
             experienceSum += givenExperience;
             Party[i].GiveExperience(givenExperience);
-            Send.PlayerExperience(Party[i]);
+            PlayerSender.PlayerExperience(Party[i]);
         }
 
         // Dá ao jogador principal o restante da experiência
         Experience += value - experienceSum;
         CheckLevelUp();
-        Send.PlayerExperience(this);
+        PlayerSender.PlayerExperience(this);
     }
 
     public void TradeLeave()
@@ -648,9 +662,9 @@ internal class Player : Character
         if (Trade != null)
         {
             Trade.Trade = null;
-            Send.Trade(Trade, false);
+            TradeSender.Trade(Trade, false);
             Trade = null;
-            Send.Trade(this, false);
+            TradeSender.Trade(this, false);
         }
     }
 
@@ -660,15 +674,16 @@ internal class Player : Character
     {
         // Abre a loja
         Shop = shop;
-        Send.ShopOpen(this, shop);
+        ShopSender.ShopOpen(this, shop);
     }
 
     public void ShopLeave()
     {
         // Fecha a loja
         Shop = null;
-        Send.ShopOpen(this, null);
+        ShopSender.ShopOpen(this, null);
     }
 
-    public static Player Find(string name) => Account.List.Find(x => x.IsPlaying && x.Character.Name.Equals(name))?.Character;
+    public static Player Find(string name) =>
+        Account.List.Find(x => x.IsPlaying && x.Character.Name.Equals(name))?.Character;
 }

@@ -6,6 +6,7 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
+using CryBits.Server.Network.Senders;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Entities.TempMap;
@@ -35,7 +36,7 @@ internal class TempMap(Guid id, Map map) : Entity(id)
         {
             Item = new List<TempMapItems>();
             SpawnItems();
-            Send.MapItems(this);
+            MapSender.MapItems(this);
         }
     }
 
@@ -89,7 +90,8 @@ internal class TempMap(Guid id, Map map) : Entity(id)
         for (byte y = 0; y < Map.Height; y++)
             if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
                 // Adiciona o item
-                Item.Add(new TempMapItems(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)), Data.Attribute[x, y].Data2, x, y));
+                Item.Add(new TempMapItems(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)),
+                    Data.Attribute[x, y].Data2, x, y));
     }
 
     public bool TileBlocked(byte x, byte y, Direction direction, bool countEntities = true)

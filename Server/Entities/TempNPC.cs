@@ -5,6 +5,7 @@ using CryBits.Enums;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
+using CryBits.Server.Network.Senders;
 using static CryBits.Globals;
 using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
@@ -73,7 +74,7 @@ internal class TempNpc : Character
                     if (Vital[v] > Data.Vital[v]) Vital[v] = Data.Vital[v];
 
                     // Envia os dados aos jogadores do mapa
-                    Send.MapNpcVitals(this);
+                    NpcSender.MapNpcVitals(this);
                 }
 
         //////////////////
@@ -100,7 +101,7 @@ internal class TempNpc : Character
 
                         // Mensagem
                         if (!string.IsNullOrEmpty(Data.SayMsg))
-                            Send.Message(player.Character, Data.Name + ": " + Data.SayMsg,
+                            ChatSender.Message(player.Character, Data.Name + ": " + Data.SayMsg,
                                 Color.White);
                         break;
                     }
@@ -130,7 +131,7 @@ internal class TempNpc : Character
         if (Target != null)
             if (Target is Player player && !player.Account.IsPlaying || Target.Map != Map)
                 Target = null;
-            else if (Target is TempNpc {Alive: false})
+            else if (Target is TempNpc { Alive: false })
                 Target = null;
 
         // Evita que ele se movimente sem sentido
@@ -204,7 +205,7 @@ internal class TempNpc : Character
                 else if (Data.Movement == MovementStyle.TurnRandomly)
                 {
                     Direction = (Direction)MyRandom.Next(0, 4);
-                    Send.MapNpcDirection(this);
+                    NpcSender.MapNpcDirection(this);
                 }
 
         ////////////
@@ -223,7 +224,7 @@ internal class TempNpc : Character
         for (byte i = 0; i < (byte)Enums.Vital.Count; i++) Vital[i] = Data.Vital[i];
 
         // Envia os dados aos jogadores
-        if (Socket.Device != null) Send.MapNpc(Map.Npc[Index]);
+        if (Socket.Device != null) NpcSender.MapNpc(Map.Npc[Index]);
     }
 
     public void Spawn()
@@ -276,7 +277,7 @@ internal class TempNpc : Character
 
         // Define a direção do Npc
         Direction = direction;
-        Send.MapNpcDirection(this);
+        NpcSender.MapNpcDirection(this);
 
         // Próximo azulejo
         NextTile(direction, ref nextX, ref nextY);
@@ -293,7 +294,7 @@ internal class TempNpc : Character
         // Movimenta o Npc
         X = nextX;
         Y = nextY;
-        Send.MapNpcMovement(this, movement);
+        NpcSender.MapNpcMovement(this, movement);
         return true;
     }
 
@@ -331,12 +332,12 @@ internal class TempNpc : Character
         if (attackDamage > 0)
         {
             // Demonstra o ataque aos outros jogadores
-            Send.MapNpcAttack(this, victim.Name, Enums.Target.Player);
+            NpcSender.MapNpcAttack(this, victim.Name, Enums.Target.Player);
 
             if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
             {
                 victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
-                Send.PlayerVitals(victim);
+                PlayerSender.PlayerVitals(victim);
             }
             // FATALITY
             else
@@ -350,7 +351,7 @@ internal class TempNpc : Character
         }
         // Demonstra o ataque aos outros jogadores
         else
-            Send.MapNpcAttack(this);
+            NpcSender.MapNpcAttack(this);
     }
 
     private void AttackNpc(TempNpc victim)
@@ -366,18 +367,19 @@ internal class TempNpc : Character
         victim.Target = this;
 
         // Cálculo de dano
-        var attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] - victim.Data.Attribute[(byte)Attribute.Resistance]);
+        var attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] -
+                                   victim.Data.Attribute[(byte)Attribute.Resistance]);
 
         // Dano não fatal
         if (attackDamage > 0)
         {
             // Demonstra o ataque aos outros jogadores
-            Send.MapNpcAttack(this, victim.Index.ToString(), Enums.Target.Npc);
+            NpcSender.MapNpcAttack(this, victim.Index.ToString(), Enums.Target.Npc);
 
             if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
             {
                 victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
-                Send.MapNpcVitals(victim);
+                NpcSender.MapNpcVitals(victim);
             }
             // FATALITY
             else
@@ -391,7 +393,7 @@ internal class TempNpc : Character
         }
         // Demonstra o ataque aos outros jogadores
         else
-            Send.MapNpcAttack(this);
+            NpcSender.MapNpcAttack(this);
     }
 
     public void Died()
@@ -404,12 +406,12 @@ internal class TempNpc : Character
                     Map.Item.Add(new TempMapItems(Data.Drop[i].Item, Data.Drop[i].Amount, X, Y));
 
         // Envia os dados dos itens no chão para o mapa
-        Send.MapItems(Map);
+        MapSender.MapItems(Map);
 
         // Reseta os dados do Npc 
         _spawnTimer = Environment.TickCount;
         Target = null;
         Alive = false;
-        Send.MapNpcDied(this);
+        NpcSender.MapNpcDied(this);
     }
 }
