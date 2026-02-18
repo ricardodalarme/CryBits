@@ -45,7 +45,6 @@ internal static class NpcRenderer
     private static void NpcName(TempNpc npc)
     {
         var position = new Point();
-        Color color;
         int nameSize = MeasureString(npc.Data.Name);
         var texture = Textures.Characters[npc.Data.Texture];
 
@@ -54,7 +53,7 @@ internal static class NpcRenderer
         position.Y = npc.PixelY - texture.ToSize().Height / AnimationAmount / 2;
 
         // Cor do texto
-        color = npc.Data.Behaviour switch
+        var color = npc.Data.Behaviour switch
         {
             Behaviour.Friendly => Color.White,
             Behaviour.AttackOnSight => Color.Red,

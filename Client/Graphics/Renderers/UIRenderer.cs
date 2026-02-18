@@ -174,14 +174,13 @@ internal static class UIRenderer
     private static void Information(Panel tool)
     {
         var item = Item.List.Get(PanelsEvents.InformationId);
-        Color textColor;
         var data = new List<string>();
 
         // Apenas se necessário
         if (item == null) return;
 
         // Define a cor de acordo com a raridade
-        textColor = item.Rarity switch
+        var textColor = item.Rarity switch
         {
             Rarity.Uncommon => new Color(204, 255, 153),
             Rarity.Rare => new Color(102, 153, 255),

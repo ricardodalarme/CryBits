@@ -121,13 +121,11 @@ internal static class MapRenderer
 
     public static void MapName()
     {
-        Color color;
-
         // Somente se necessário
         if (string.IsNullOrEmpty(TempMap.Current.Data.Name)) return;
 
         // A cor do texto vária de acordo com a moral do mapa
-        color = TempMap.Current.Data.Moral switch
+        var color = TempMap.Current.Data.Moral switch
         {
             Moral.Dangerous => Color.Red,
             _ => Color.White
