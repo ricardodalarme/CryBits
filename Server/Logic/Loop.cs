@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
+using CryBits.Server.Commands;
 using CryBits.Server.Network;
 
 namespace CryBits.Server.Logic;
@@ -60,11 +61,15 @@ internal static class Loop
 
     public static void Commands()
     {
+        var dispatcher = new CommandDispatcher()
+            .Register<CpsCommand>()
+            .Register<DefineAccessCommand>();
+
         // Laço para que seja possível a utilização de comandos pelo console
         while (Program.Working)
         {
             Console.Write("Execute: ");
-            Program.ExecuteCommand(Console.ReadLine());
+            dispatcher.Dispatch(Console.ReadLine());
         }
     }
 }

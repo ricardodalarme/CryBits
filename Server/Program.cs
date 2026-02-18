@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using CryBits.Entities.Map;
-using CryBits.Enums;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
@@ -90,57 +89,5 @@ internal static class Program
  |  |___ | |    | |  |     \| || |_ \__ \
  |______||_|    |_|  |_____/|_| \__||___/
                           2D orpg engine" + "\r\n");
-    }
-
-    public static void ExecuteCommand(string command)
-    {
-        // Previne sobrecargas
-        if (string.IsNullOrEmpty(command))
-            return;
-
-        // Separa os comandos em partes
-        var parts = command.Split(' ');
-
-        // Executa o determinado comando
-        switch (parts[0].ToLower())
-        {
-            case "help":
-                Console.WriteLine(@"     List of available commands:
-     defineaccess               - sets a level of access for a given player
-     cps                        - shows the current server cps");
-                break;
-            case "cps":
-                Console.WriteLine("CPS: " + Loop.Cps);
-                break;
-            case "defineaccess":
-                // Verifica se o que está digitado corretamente
-                if (parts.GetUpperBound(0) < 2 || string.IsNullOrEmpty(parts[1]) ||
-                    !byte.TryParse(parts[2], out var access))
-                {
-                    Console.WriteLine("Use: defineaccess 'Player Name' 'Access' ");
-                    return;
-                }
-
-                // Encontra o jogador
-                var account = Account.List.Find(x => x.User.Equals(parts[1]));
-
-                if (account == null)
-                {
-                    Console.WriteLine("This player is either offline or doesn't exist.");
-                    return;
-                }
-
-                // Define o acesso do jogador
-                account.Access = (Access)access;
-
-                // Salva os dados
-                AccountRepository.Write(account);
-                Console.WriteLine((Access)Convert.ToByte(parts[2]) + " access granted to " + parts[1] + ".");
-                break;
-            // Se o comando não existir mandar uma mensagem de ajuda
-            default:
-                Console.WriteLine("This command does not exist.");
-                break;
-        }
     }
 }
