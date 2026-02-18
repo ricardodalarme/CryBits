@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using CryBits.Enums;
-using Lidgren.Network;
+using LiteNetLib;
 
 namespace CryBits.Server.Entities;
 
@@ -10,7 +10,7 @@ internal class Account
     public static readonly List<Account> List = new();
 
     // Dados básicos
-    public NetConnection Connection { get; }
+    public NetPeer Connection { get; }
     public string User { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public Access Access { get; set; }
@@ -24,7 +24,7 @@ internal class Account
     }
 
     // Construtor
-    public Account(NetConnection connection)
+    public Account(NetPeer connection)
     {
         Connection = connection;
     }

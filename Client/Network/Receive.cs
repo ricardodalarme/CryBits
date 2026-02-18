@@ -19,7 +19,8 @@ using CryBits.Entities.Shop;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
-using Lidgren.Network;
+using LiteNetLib;
+using LiteNetLib.Utils;
 using static CryBits.Globals;
 using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
@@ -29,10 +30,10 @@ namespace CryBits.Client.Network;
 
 internal static class Receive
 {
-    public static void Handle(NetIncomingMessage data)
+    public static void Handle(NetPacketReader data)
     {
         // Manuseia os dados recebidos
-        switch ((ServerPacket)data.ReadByte())
+        switch ((ServerPacket)data.GetByte())
         {
             case ServerPacket.Alert: Alert(data); break;
             case ServerPacket.Connect: Connect(); break;
@@ -78,10 +79,10 @@ internal static class Receive
         }
     }
 
-    private static void Alert(NetBuffer data)
+    private static void Alert(NetDataReader data)
     {
         // Mostra a mensagem
-        Utils.Alert.Show(data.ReadString());
+        Utils.Alert.Show(data.GetString());
     }
 
     private static void Connect()
@@ -95,7 +96,7 @@ internal static class Receive
         Panels.SelectCharacter.Visible = true;
     }
 
-    private static void Join(NetBuffer data)
+    private static void Join(NetDataReader data)
     {
         // Reseta alguns valores
         Player.List = new List<Player>();
@@ -106,7 +107,7 @@ internal static class Receive
         TempMap.List = new Dictionary<Guid, TempMap>();
 
         // Definir os valores que são enviados do servidor
-        Player.Me = new Me(data.ReadString());
+        Player.Me = new Me(data.GetString());
         Player.List.Add(Player.Me);
     }
 
@@ -124,24 +125,24 @@ internal static class Receive
         Panels.CreateCharacter.Visible = true;
     }
 
-    private static void Classes(NetBuffer data)
+    private static void Classes(NetDataReader data)
     {
         // Recebe os dados
         Class.List = (Dictionary<Guid, Class>)data.ReadObject();
     }
 
-    private static void Characters(NetBuffer data)
+    private static void Characters(NetDataReader data)
     {
         // Redimensiona a lista
-        PanelsEvents.Characters = new PanelsEvents.TempCharacter[data.ReadByte()];
+        PanelsEvents.Characters = new PanelsEvents.TempCharacter[data.GetByte()];
 
         for (byte i = 0; i < PanelsEvents.Characters.Length; i++)
         {
             // Recebe os dados do personagem
             PanelsEvents.Characters[i] = new PanelsEvents.TempCharacter
             {
-                Name = data.ReadString(),
-                TextureNum = data.ReadInt16()
+                Name = data.GetString(),
+                TextureNum = data.GetShort()
             };
         }
     }
@@ -182,9 +183,9 @@ internal static class Receive
         Screen.Current = Screens.Game;
     }
 
-    private static void PlayerData(NetBuffer data)
+    private static void PlayerData(NetDataReader data)
     {
-        var name = data.ReadString();
+        var name = data.GetString();
         Player player;
 
         // Adiciona o jogador à lista
@@ -197,30 +198,30 @@ internal static class Receive
             player = Player.Me;
 
         // Defini os dados do jogador
-        player.TextureNum = data.ReadInt16();
-        player.Level = data.ReadInt16();
-        player.Map = TempMap.List[new Guid(data.ReadString())];
-        player.X = data.ReadByte();
-        player.Y = data.ReadByte();
-        player.Direction = (Direction)data.ReadByte();
+        player.TextureNum = data.GetShort();
+        player.Level = data.GetShort();
+        player.Map = TempMap.List[data.GetGuid()];
+        player.X = data.GetByte();
+        player.Y = data.GetByte();
+        player.Direction = (Direction)data.GetByte();
         for (byte n = 0; n < (byte)Vital.Count; n++)
         {
-            player.Vital[n] = data.ReadInt16();
-            player.MaxVital[n] = data.ReadInt16();
+            player.Vital[n] = data.GetShort();
+            player.MaxVital[n] = data.GetShort();
         }
-        for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = data.ReadInt16();
-        for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
+        for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = data.GetShort();
+        for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(data.GetGuid());
         TempMap.Current = player.Map;
     }
 
-    private static void PlayerPosition(NetBuffer data)
+    private static void PlayerPosition(NetDataReader data)
     {
-        var player = Player.Get(data.ReadString());
+        var player = Player.Get(data.GetString());
 
         // Defini os dados do jogador
-        player.X = data.ReadByte();
-        player.Y = data.ReadByte();
-        player.Direction = (Direction)data.ReadByte();
+        player.X = data.GetByte();
+        player.Y = data.GetByte();
+        player.Direction = (Direction)data.GetByte();
 
         // Para a movimentação
         player.X2 = 0;
@@ -228,41 +229,41 @@ internal static class Receive
         player.Movement = Movement.Stopped;
     }
 
-    private static void PlayerVitals(NetBuffer data)
+    private static void PlayerVitals(NetDataReader data)
     {
-        var player = Player.Get(data.ReadString());
+        var player = Player.Get(data.GetString());
 
         // Define os dados
         for (byte i = 0; i < (byte)Vital.Count; i++)
         {
-            player.Vital[i] = data.ReadInt16();
-            player.MaxVital[i] = data.ReadInt16();
+            player.Vital[i] = data.GetShort();
+            player.MaxVital[i] = data.GetShort();
         }
     }
 
-    private static void PlayerEquipments(NetBuffer data)
+    private static void PlayerEquipments(NetDataReader data)
     {
-        var player = Player.Get(data.ReadString());
+        var player = Player.Get(data.GetString());
 
         // Altera os dados dos equipamentos do jogador
-        for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(new Guid(data.ReadString()));
+        for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(data.GetGuid());
     }
 
-    private static void PlayerLeave(NetBuffer data)
+    private static void PlayerLeave(NetDataReader data)
     {
         // Limpa os dados do jogador
-        Player.List.Remove(Player.Get(data.ReadString()));
+        Player.List.Remove(Player.Get(data.GetString()));
     }
 
-    private static void PlayerMove(NetBuffer data)
+    private static void PlayerMove(NetDataReader data)
     {
-        var player = Player.Get(data.ReadString());
+        var player = Player.Get(data.GetString());
 
         // Move o jogador
-        player.X = data.ReadByte();
-        player.Y = data.ReadByte();
-        player.Direction = (Direction)data.ReadByte();
-        player.Movement = (Movement)data.ReadByte();
+        player.X = data.GetByte();
+        player.Y = data.GetByte();
+        player.Direction = (Direction)data.GetByte();
+        player.Movement = (Movement)data.GetByte();
         player.X2 = 0;
         player.Y2 = 0;
 
@@ -276,17 +277,17 @@ internal static class Receive
         }
     }
 
-    private static void PlayerDirection(NetBuffer data)
+    private static void PlayerDirection(NetDataReader data)
     {
         // Altera a posição do jogador
-        Player.Get(data.ReadString()).Direction = (Direction)data.ReadByte();
+        Player.Get(data.GetString()).Direction = (Direction)data.GetByte();
     }
 
-    private static void PlayerAttack(NetBuffer data)
+    private static void PlayerAttack(NetDataReader data)
     {
-        var player = Player.Get(data.ReadString());
-        var victim = data.ReadString();
-        var victimType = data.ReadByte();
+        var player = Player.Get(data.GetString());
+        var victim = data.GetString();
+        var victimType = data.GetByte();
 
         // Inicia o ataque
         player.Attacking = true;
@@ -307,12 +308,12 @@ internal static class Receive
             }
     }
 
-    private static void PlayerExperience(NetBuffer data)
+    private static void PlayerExperience(NetDataReader data)
     {
         // Define os dados
-        Player.Me.Experience = data.ReadInt32();
-        Player.Me.ExpNeeded = data.ReadInt32();
-        Player.Me.Points = data.ReadByte();
+        Player.Me.Experience = data.GetInt();
+        Player.Me.ExpNeeded = data.GetInt();
+        Player.Me.Points = data.GetByte();
 
         // Manipula a visibilidade dos botões
         Buttons.AttributesStrength.Visible = Player.Me.Points > 0;
@@ -322,27 +323,27 @@ internal static class Receive
         Buttons.AttributesVitality.Visible = Player.Me.Points > 0;
     }
 
-    private static void PlayerInventory(NetBuffer data)
+    private static void PlayerInventory(NetDataReader data)
     {
         // Define os dados
         for (byte i = 0; i < MaxInventory; i++)
-            Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(new Guid(data.ReadString())), data.ReadInt16());
+            Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(data.GetGuid()), data.GetShort());
     }
 
-    private static void PlayerHotbar(NetBuffer data)
+    private static void PlayerHotbar(NetDataReader data)
     {
         // Define os dados
         for (byte i = 0; i < MaxHotbar; i++)
         {
-            Player.Me.Hotbar[i] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
+            Player.Me.Hotbar[i] = new HotbarSlot((SlotType)data.GetByte(), data.GetByte());
         }
     }
 
-    private static void MapRevision(NetBuffer data)
+    private static void MapRevision(NetDataReader data)
     {
         var needed = false;
-        var id = new Guid(data.ReadString());
-        var currentRevision = data.ReadInt16();
+        var id = data.GetGuid();
+        var currentRevision = data.GetShort();
 
         // Limpa todos os outros jogadores
         for (byte i = 0; i < Player.List.Count; i++)
@@ -372,7 +373,7 @@ internal static class Receive
         TempMap.Current.Blood = new List<TempMapBlood>();
     }
 
-    private static void Map(NetBuffer data)
+    private static void Map(NetDataReader data)
     {
         var map = (Map)data.ReadObject();
         var id = map.Id;
@@ -410,43 +411,43 @@ internal static class Receive
         Socket.Latency = Environment.TickCount - Socket.LatencySend;
     }
 
-    private static void Message(NetBuffer data)
+    private static void Message(NetDataReader data)
     {
         // Adiciona a mensagem
-        var text = data.ReadString();
-        var color = Color.FromArgb(data.ReadInt32());
+        var text = data.GetString();
+        var color = Color.FromArgb(data.GetInt());
         Chat.AddText(text, new SFML.Graphics.Color(color.R, color.G, color.B));
     }
 
-    private static void Items(NetBuffer data)
+    private static void Items(NetDataReader data)
     {
         // Recebe os dados
         Item.List = (Dictionary<Guid, Item>)data.ReadObject();
     }
 
-    private static void MapItems(NetBuffer data)
+    private static void MapItems(NetDataReader data)
     {
         // Quantidade
-        TempMap.Current.Item = new TempMapItems[data.ReadByte()];
+        TempMap.Current.Item = new TempMapItems[data.GetByte()];
 
         // Lê os dados de todos
         for (byte i = 0; i < TempMap.Current.Item.Length; i++)
             TempMap.Current.Item[i] = new TempMapItems
             {
-                Item = Item.List.Get(new Guid(data.ReadString())),
-                X = data.ReadByte(),
-                Y = data.ReadByte()
+                Item = Item.List.Get(data.GetGuid()),
+                X = data.GetByte(),
+                Y = data.GetByte()
             };
     }
 
-    private static void Party(NetBuffer data)
+    private static void Party(NetDataReader data)
     {
         // Lê os dados do grupo
-        Player.Me.Party = new Player[data.ReadByte()];
-        for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Player.Get(data.ReadString());
+        Player.Me.Party = new Player[data.GetByte()];
+        for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Player.Get(data.GetString());
     }
 
-    private static void PartyInvitation(NetBuffer data)
+    private static void PartyInvitation(NetDataReader data)
     {
         // Nega o pedido caso o jogador não quiser receber convites
         if (!Options.Party)
@@ -456,16 +457,16 @@ internal static class Receive
         }
 
         // Abre a janela de convite para o grupo
-        PanelsEvents.PartyInvitation = data.ReadString();
+        PanelsEvents.PartyInvitation = data.GetString();
         Panels.PartyInvitation.Visible = true;
     }
 
-    private static void Trade(NetBuffer data)
+    private static void Trade(NetDataReader data)
     {
-        var state = data.ReadBoolean();
+        var state = data.GetBool();
 
         // Visibilidade do painel
-        Panels.Trade.Visible = data.ReadBoolean();
+        Panels.Trade.Visible = data.GetBool();
 
         if (state)
         {
@@ -486,7 +487,7 @@ internal static class Receive
         }
     }
 
-    private static void TradeInvitation(NetBuffer data)
+    private static void TradeInvitation(NetDataReader data)
     {
         // Nega o pedido caso o jogador não quiser receber convites
         if (!Options.Trade)
@@ -496,13 +497,13 @@ internal static class Receive
         }
 
         // Abre a janela de convite para o grupo
-        PanelsEvents.TradeInvitation = data.ReadString();
+        PanelsEvents.TradeInvitation = data.GetString();
         Panels.TradeInvitation.Visible = true;
     }
 
-    private static void TradeState(NetBuffer data)
+    private static void TradeState(NetDataReader data)
     {
-        switch ((TradeStatus)data.ReadByte())
+        switch ((TradeStatus)data.GetByte())
         {
             case TradeStatus.Accepted:
             case TradeStatus.Declined:
@@ -518,87 +519,87 @@ internal static class Receive
         }
     }
 
-    private static void TradeOffer(NetBuffer data)
+    private static void TradeOffer(NetDataReader data)
     {
         // Recebe os dados da oferta
-        if (data.ReadBoolean())
+        if (data.GetBool())
             for (byte i = 0; i < MaxInventory; i++)
             {
-                Player.Me.TradeOffer[i].Item = Item.List.Get(new Guid(data.ReadString()));
-                Player.Me.TradeOffer[i].Amount = data.ReadInt16();
+                Player.Me.TradeOffer[i].Item = Item.List.Get(data.GetGuid());
+                Player.Me.TradeOffer[i].Amount = data.GetShort();
             }
         else
             for (byte i = 0; i < MaxInventory; i++)
             {
-                Player.Me.TradeTheirOffer[i].Item = Item.List.Get(new Guid(data.ReadString()));
-                Player.Me.TradeTheirOffer[i].Amount = data.ReadInt16();
+                Player.Me.TradeTheirOffer[i].Item = Item.List.Get(data.GetGuid());
+                Player.Me.TradeTheirOffer[i].Amount = data.GetShort();
             }
     }
 
-    private static void Shops(NetBuffer data)
+    private static void Shops(NetDataReader data)
     {
         // Recebe os dados
         Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();
     }
 
-    private static void ShopOpen(NetBuffer data)
+    private static void ShopOpen(NetDataReader data)
     {
         // Abre a loja
-        PanelsEvents.ShopOpen = Shop.List.Get(new Guid(data.ReadString()));
+        PanelsEvents.ShopOpen = Shop.List.Get(data.GetGuid());
         Panels.Shop.Visible = PanelsEvents.ShopOpen != null;
     }
 
-    private static void Npcs(NetBuffer data)
+    private static void Npcs(NetDataReader data)
     {
         // Recebe os dados
         Npc.List = (Dictionary<Guid, Npc>)data.ReadObject();
     }
 
-    private static void MapNpcs(NetBuffer data)
+    private static void MapNpcs(NetDataReader data)
     {
         // Lê os dados
-        TempMap.Current.Npc = new TempNpc[data.ReadInt16()];
+        TempMap.Current.Npc = new TempNpc[data.GetShort()];
         for (byte i = 0; i < TempMap.Current.Npc.Length; i++)
         {
             TempMap.Current.Npc[i] = new TempNpc();
             TempMap.Current.Npc[i].X2 = 0;
             TempMap.Current.Npc[i].Y2 = 0;
-            TempMap.Current.Npc[i].Data = Npc.List.Get(new Guid(data.ReadString()));
-            TempMap.Current.Npc[i].X = data.ReadByte();
-            TempMap.Current.Npc[i].Y = data.ReadByte();
-            TempMap.Current.Npc[i].Direction = (Direction)data.ReadByte();
+            TempMap.Current.Npc[i].Data = Npc.List.Get(data.GetGuid());
+            TempMap.Current.Npc[i].X = data.GetByte();
+            TempMap.Current.Npc[i].Y = data.GetByte();
+            TempMap.Current.Npc[i].Direction = (Direction)data.GetByte();
 
             // Vitais
             for (byte n = 0; n < (byte)Vital.Count; n++)
-                TempMap.Current.Npc[i].Vital[n] = data.ReadInt16();
+                TempMap.Current.Npc[i].Vital[n] = data.GetShort();
         }
     }
 
-    private static void MapNpc(NetBuffer data)
+    private static void MapNpc(NetDataReader data)
     {
         // Lê os dados
-        var i = data.ReadByte();
+        var i = data.GetByte();
         TempMap.Current.Npc[i].X2 = 0;
         TempMap.Current.Npc[i].Y2 = 0;
-        TempMap.Current.Npc[i].Data = Npc.List.Get(new Guid(data.ReadString()));
-        TempMap.Current.Npc[i].X = data.ReadByte();
-        TempMap.Current.Npc[i].Y = data.ReadByte();
-        TempMap.Current.Npc[i].Direction = (Direction)data.ReadByte();
+        TempMap.Current.Npc[i].Data = Npc.List.Get(data.GetGuid());
+        TempMap.Current.Npc[i].X = data.GetByte();
+        TempMap.Current.Npc[i].Y = data.GetByte();
+        TempMap.Current.Npc[i].Direction = (Direction)data.GetByte();
         TempMap.Current.Npc[i].Vital = new short[(byte)Vital.Count];
-        for (byte n = 0; n < (byte)Vital.Count; n++) TempMap.Current.Npc[i].Vital[n] = data.ReadInt16();
+        for (byte n = 0; n < (byte)Vital.Count; n++) TempMap.Current.Npc[i].Vital[n] = data.GetShort();
     }
 
-    private static void MapNpcMovement(NetBuffer data)
+    private static void MapNpcMovement(NetDataReader data)
     {
         // Lê os dados
-        var i = data.ReadByte();
+        var i = data.GetByte();
         byte x = TempMap.Current.Npc[i].X, y = TempMap.Current.Npc[i].Y;
         TempMap.Current.Npc[i].X2 = 0;
         TempMap.Current.Npc[i].Y2 = 0;
-        TempMap.Current.Npc[i].X = data.ReadByte();
-        TempMap.Current.Npc[i].Y = data.ReadByte();
-        TempMap.Current.Npc[i].Direction = (Direction)data.ReadByte();
-        TempMap.Current.Npc[i].Movement = (Movement)data.ReadByte();
+        TempMap.Current.Npc[i].X = data.GetByte();
+        TempMap.Current.Npc[i].Y = data.GetByte();
+        TempMap.Current.Npc[i].Direction = (Direction)data.GetByte();
+        TempMap.Current.Npc[i].Movement = (Movement)data.GetByte();
 
         // Posição exata do jogador
         if (x != TempMap.Current.Npc[i].X || y != TempMap.Current.Npc[i].Y)
@@ -611,11 +612,11 @@ internal static class Receive
             }
     }
 
-    private static void MapNpcAttack(NetBuffer data)
+    private static void MapNpcAttack(NetDataReader data)
     {
-        var index = data.ReadByte();
-        var victim = data.ReadString();
-        var victimType = data.ReadByte();
+        var index = data.GetByte();
+        var victim = data.GetString();
+        var victimType = data.GetByte();
 
         // Inicia o ataque
         TempMap.Current.Npc[index].Attacking = true;
@@ -636,27 +637,27 @@ internal static class Receive
             }
     }
 
-    private static void MapNpcDirection(NetBuffer data)
+    private static void MapNpcDirection(NetDataReader data)
     {
         // Define a direção de determinado Npc
-        var i = data.ReadByte();
-        TempMap.Current.Npc[i].Direction = (Direction)data.ReadByte();
+        var i = data.GetByte();
+        TempMap.Current.Npc[i].Direction = (Direction)data.GetByte();
         TempMap.Current.Npc[i].X2 = 0;
         TempMap.Current.Npc[i].Y2 = 0;
     }
 
-    private static void MapNpcVitals(NetBuffer data)
+    private static void MapNpcVitals(NetDataReader data)
     {
-        var index = data.ReadByte();
+        var index = data.GetByte();
 
         // Define os vitais de determinado Npc
         for (byte n = 0; n < (byte)Vital.Count; n++)
-            TempMap.Current.Npc[index].Vital[n] = data.ReadInt16();
+            TempMap.Current.Npc[index].Vital[n] = data.GetShort();
     }
 
-    private static void MapNpcDied(NetBuffer data)
+    private static void MapNpcDied(NetDataReader data)
     {
-        var i = data.ReadByte();
+        var i = data.GetByte();
 
         // Limpa os dados do Npc
         TempMap.Current.Npc[i].X2 = 0;

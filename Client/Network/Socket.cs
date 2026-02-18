@@ -2,84 +2,66 @@
 using CryBits.Client.Utils;
 using CryBits.Client.Entities;
 using CryBits.Client.UI;
-using Lidgren.Network;
+using LiteNetLib;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Network;
 
 internal static class Socket
 {
-    // Protocolo do controle de transmissão
-    public static NetClient Device;
+    public static NetManager Device;
+    private static EventBasedNetListener _listener;
+    private static NetPeer _serverPeer;
 
-    // Manuseamento dos dados
-    private static NetIncomingMessage _data;
-
-    // Dados para a conexão com o servidor
+    // Connection data
     private const string Ip = "localhost";
 
-    // Latência
+    // Latency
     public static int Latency;
     public static int LatencySend;
 
+    public static NetPeer ServerPeer => _serverPeer;
+
     public static void Init()
     {
-        var config = new NetPeerConfiguration(GameName);
+        _listener = new EventBasedNetListener();
+        Device = new NetManager(_listener);
 
-        // Cria o dispositivo com as devidas configurações
-        Device = new NetClient(config);
+        _listener.NetworkReceiveEvent += (peer, reader, channel, deliveryMethod) =>
+        {
+            Receive.Handle(reader);
+            reader.Recycle();
+        };
+
+        _listener.PeerDisconnectedEvent += (peer, info) =>
+        {
+            _serverPeer = null;
+            if (Player.Me != null) Player.Me.Leave();
+            Window.OpenMenu();
+        };
+
         Device.Start();
     }
 
     public static void Disconnect()
     {
-        // Acaba com a conexão
-        Device?.Disconnect(string.Empty);
+        _serverPeer?.Disconnect();
     }
 
-    public static void HandleData()
-    {
-        // Lê e direciona todos os dados recebidos
-        while ((_data = Device.ReadMessage()) != null)
-        {
-            switch (_data.MessageType)
-            {
-                // Recebe e manuseia os dados
-                case NetIncomingMessageType.Data:
-                    Receive.Handle(_data);
-                    break;
-                // Desconectar o jogador caso o servidor seja desligado
-                case NetIncomingMessageType.StatusChanged:
-                    if ((NetConnectionStatus)_data.ReadByte() == NetConnectionStatus.Disconnected)
-                    {
-                        // Apaga os dados e volta ao menu
-                        if (Player.Me != null) Player.Me.Leave();
-                        Window.OpenMenu();
-                    }
-                    break;
-            }
+    public static void HandleData() => Device.PollEvents();
 
-            Device.Recycle(_data);
-        }
-    }
-
-    // Retorna um valor de acordo com o estado da conexão do jogador
-    public static bool IsConnected() => Device.ConnectionStatus == NetConnectionStatus.Connected;
+    public static bool IsConnected() => _serverPeer?.ConnectionState == ConnectionState.Connected;
 
     public static bool TryConnect()
     {
-        // Se o jogador já estiver conectado, então isso não é mais necessário
         if (IsConnected()) return true;
 
-        // Tenta se conectar
-        Device.Connect(Ip, Port);
+        _serverPeer = Device.Connect(Ip, Port, GameName);
 
-        // Espere até que o jogador se conecte
         var waitTimer = Environment.TickCount;
         while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)
             HandleData();
 
-        // Retorna uma mensagem caso não conseguir se conectar
         if (!IsConnected())
         {
             Alert.Show("The server is currently unavailable.");

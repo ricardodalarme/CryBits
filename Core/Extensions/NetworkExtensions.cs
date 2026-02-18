@@ -1,27 +1,36 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Lidgren.Network;
+using LiteNetLib.Utils;
 
 namespace CryBits.Extensions;
 
 public static class NetworkExtensions
 {
-    public static void Write(this NetBuffer buffer, Guid id) => buffer.Write(id.ToString());
+    public static void PutGuid(this NetDataWriter writer, Guid id) => writer.Put(id.ToByteArray());
 
-    public static void WriteObject(this NetOutgoingMessage data, object obj) 
+    public static Guid GetGuid(this NetDataReader reader)
+    {
+        var bytes = new byte[16];
+        reader.GetBytes(bytes, 0, 16);
+        return new Guid(bytes);
+    }
+
+    public static void WriteObject(this NetDataWriter data, object obj)
     {
         var bf = new BinaryFormatter();
         using var stream = new MemoryStream();
         bf.Serialize(stream, obj);
-        data.Write(stream.ToArray().Length);
-        data.Write(stream.ToArray());
+        var bytes = stream.ToArray();
+        data.Put(bytes.Length);
+        data.Put(bytes);
     }
 
-    public static object ReadObject(this NetBuffer data)
+    public static object ReadObject(this NetDataReader data)
     {
-        var size = data.ReadInt32();
-        var array = data.ReadBytes(size);
+        var size = data.GetInt();
+        var array = new byte[size];
+        data.GetBytes(array, 0, size);
 
         using var stream = new MemoryStream(array);
         return new BinaryFormatter().Deserialize(stream);

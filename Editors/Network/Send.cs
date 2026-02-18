@@ -4,7 +4,8 @@ using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
-using Lidgren.Network;
+using LiteNetLib;
+using LiteNetLib.Utils;
 using static CryBits.Globals;
 using static CryBits.Extensions.NetworkExtensions;
 
@@ -12,146 +13,145 @@ namespace CryBits.Editors.Network;
 
 internal static class Send
 {
-    private static void Packet(NetOutgoingMessage data)
+    private static void Packet(NetDataWriter data)
     {
-        // Envia os dados ao servidor
-        Socket.Device.SendMessage(data, NetDeliveryMethod.ReliableOrdered);
+        Socket.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
     public static void Connect()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.Connect);
-        data.Write(AvaloniaLoginLauncher.Username);
-        data.Write(AvaloniaLoginLauncher.Password);
-        data.Write(true); // Acesso pelo editor
+        data.Put((byte)ClientPacket.Connect);
+        data.Put(AvaloniaLoginLauncher.Username);
+        data.Put(AvaloniaLoginLauncher.Password);
+        data.Put(true); // Acesso pelo editor
         Packet(data);
     }
 
     public static void RequestServerData()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.WriteSettings);
+        data.Put((byte)ClientPacket.WriteSettings);
         Packet(data);
     }
 
     public static void RequestClasses()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.RequestClasses);
+        data.Put((byte)ClientPacket.RequestClasses);
         Packet(data);
     }
 
     public static void RequestMap(Map map)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.RequestMap);
-        data.Write(map.Id.ToString());
+        data.Put((byte)ClientPacket.RequestMap);
+        data.Put(map.Id.ToString());
         Packet(data);
     }
 
     public static void RequestNpcs()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.RequestNpcs);
+        data.Put((byte)ClientPacket.RequestNpcs);
         Packet(data);
     }
 
     public static void RequestItems()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.RequestItems);
+        data.Put((byte)ClientPacket.RequestItems);
         Packet(data);
     }
 
     public static void RequestShops()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.RequestShops);
+        data.Put((byte)ClientPacket.RequestShops);
         Packet(data);
     }
 
     public static void WriteServerData()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.WriteSettings);
-        data.Write(GameName);
-        data.Write(WelcomeMessage);
-        data.Write(Port);
-        data.Write(MaxPlayers);
-        data.Write(MaxCharacters);
-        data.Write(MaxPartyMembers);
-        data.Write(MaxMapItems);
-        data.Write(NumPoints);
-        data.Write(MinNameLength);
-        data.Write(MaxNameLength);
-        data.Write(MinPasswordLength);
-        data.Write(MaxPasswordLength);
+        data.Put((byte)ClientPacket.WriteSettings);
+        data.Put(GameName);
+        data.Put(WelcomeMessage);
+        data.Put(Port);
+        data.Put(MaxPlayers);
+        data.Put(MaxCharacters);
+        data.Put(MaxPartyMembers);
+        data.Put(MaxMapItems);
+        data.Put(NumPoints);
+        data.Put(MinNameLength);
+        data.Put(MaxNameLength);
+        data.Put(MinPasswordLength);
+        data.Put(MaxPasswordLength);
         Packet(data);
     }
 
     public static void WriteClasses()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.WriteClasses);
+        data.Put((byte)ClientPacket.WriteClasses);
         data.WriteObject(Class.List);
         Packet(data);
     }
 
     public static void WriteMaps()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.WriteMaps);
+        data.Put((byte)ClientPacket.WriteMaps);
         data.WriteObject(Map.List);
         Packet(data);
     }
 
     public static void WriteNpcs()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.WriteNpcs);
+        data.Put((byte)ClientPacket.WriteNpcs);
         data.WriteObject(Npc.List);
         Packet(data);
     }
 
     public static void WriteItems()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.WriteItems);
+        data.Put((byte)ClientPacket.WriteItems);
         data.WriteObject(Item.List);
         Packet(data);
     }
 
     public static void WriteShops()
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ClientPacket.WriteShops);
+        data.Put((byte)ClientPacket.WriteShops);
         data.WriteObject(Shop.List);
         Packet(data);
     }

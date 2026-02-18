@@ -12,7 +12,8 @@ using CryBits.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
-using Lidgren.Network;
+using LiteNetLib;
+using LiteNetLib.Utils;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
 
@@ -20,12 +21,12 @@ namespace CryBits.Server.Network;
 
 internal static class Receive
 {
-    public static void Handle(Account account, NetIncomingMessage data)
+    public static void Handle(Account account, NetPacketReader data)
     {
         var player = account.Character;
 
         // Manuseia os dados recebidos 
-        switch ((ClientPacket)data.ReadByte())
+        switch ((ClientPacket)data.GetByte())
         {
             case ClientPacket.Connect: Connect(account, data); break;
             case ClientPacket.Latency: Latency(account); break;
@@ -82,12 +83,12 @@ internal static class Receive
         Send.Latency(account);
     }
 
-    private static void Connect(Account account, NetBuffer data)
+    private static void Connect(Account account, NetDataReader data)
     {
         // Lê os dados
-        var user = data.ReadString().Trim();
-        var password = data.ReadString();
-        var editor = data.ReadBoolean();
+        var user = data.GetString().Trim();
+        var password = data.GetString();
+        var editor = data.GetBool();
 
         // Verifica se está tudo certo
         if (!Directory.Exists(Path.Combine(Directories.Accounts.FullName, user)))
@@ -153,11 +154,11 @@ internal static class Receive
         }
     }
 
-    private static void Register(Account account, NetBuffer data)
+    private static void Register(Account account, NetDataReader data)
     {
         // Lê os dados
-        var user = data.ReadString().Trim();
-        var password = data.ReadString();
+        var user = data.GetString().Trim();
+        var password = data.GetString();
 
         // Verifica se está tudo certo
         if (user.Length < MinNameLength || user.Length > MaxNameLength)
@@ -188,10 +189,10 @@ internal static class Receive
         Send.CreateCharacter(account);
     }
 
-    private static void CreateCharacter(Account account, NetBuffer data)
+    private static void CreateCharacter(Account account, NetDataReader data)
     {
         // Lê os dados
-        var name = data.ReadString().Trim();
+        var name = data.GetString().Trim();
 
         // Verifica se está tudo certo
         if (name.Length < MinNameLength || name.Length > MaxNameLength)
@@ -215,9 +216,9 @@ internal static class Receive
         account.Character = new Player(account);
         account.Character.Name = name;
         account.Character.Level = 1;
-        account.Character.Class = @class = Class.List.Get(new Guid(data.ReadString()));
-        account.Character.Genre = data.ReadBoolean();
-        account.Character.TextureNum = account.Character.Genre ? @class.TextureMale[data.ReadByte()] : @class.TextureFemale[data.ReadByte()];
+        account.Character.Class = @class = Class.List.Get(new Guid(data.GetString()));
+        account.Character.Genre = data.GetBool();
+        account.Character.TextureNum = account.Character.Genre ? @class.TextureMale[data.GetByte()] : @class.TextureFemale[data.GetByte()];
         account.Character.Attribute = @class.Attribute;
         account.Character.Map = TempMap.List.Get(@class.SpawnMap.Id);
         account.Character.Direction = (Direction)@class.SpawnDirection;
@@ -239,9 +240,9 @@ internal static class Receive
         account.Character.Join();
     }
 
-    private static void CharacterUse(Account account, NetBuffer data)
+    private static void CharacterUse(Account account, NetDataReader data)
     {
-        var character = data.ReadInt32();
+        var character = data.GetInt();
 
         // Verifica se o personagem existe
         if (character < 0 || character >= account.Characters.Count) return;
@@ -265,9 +266,9 @@ internal static class Receive
         Send.CreateCharacter(account);
     }
 
-    private static void CharacterDelete(Account account, NetBuffer data)
+    private static void CharacterDelete(Account account, NetDataReader data)
     {
-        var character = data.ReadInt32();
+        var character = data.GetInt();
 
         // Verifica se o personagem existe
         if (character < 0 || character >= account.Characters.Count) return;
@@ -284,9 +285,9 @@ internal static class Receive
         Write.Account(account);
     }
 
-    private static void PlayerDirection(Player player, NetBuffer data)
+    private static void PlayerDirection(Player player, NetDataReader data)
     {
-        var direction = (Direction)data.ReadByte();
+        var direction = (Direction)data.GetByte();
 
         // Previne erros
         if (direction < Direction.Up || direction > Direction.Right) return;
@@ -297,18 +298,18 @@ internal static class Receive
         Send.PlayerDirection(player);
     }
 
-    private static void PlayerMove(Player player, NetBuffer data)
+    private static void PlayerMove(Player player, NetDataReader data)
     {
         // Move o jogador se necessário
-        if (player.X != data.ReadByte() || player.Y != data.ReadByte())
+        if (player.X != data.GetByte() || player.Y != data.GetByte())
             Send.PlayerPosition(player);
         else
-            player.Move(data.ReadByte());
+            player.Move(data.GetByte());
     }
 
-    private static void Message(Player player, NetBuffer data)
+    private static void Message(Player player, NetDataReader data)
     {
-        var message = data.ReadString();
+        var message = data.GetString();
 
         // Evita caracteres inválidos
         for (byte i = 0; i >= message.Length; i++)
@@ -316,11 +317,11 @@ internal static class Receive
                 return;
 
         // Envia a mensagem para os outros jogadores
-        switch ((Message)data.ReadByte())
+        switch ((Message)data.GetByte())
         {
             case Enums.Message.Map: Send.MessageMap(player, message); break;
             case Enums.Message.Global: Send.MessageGlobal(player, message); break;
-            case Enums.Message.Private: Send.MessagePrivate(player, data.ReadString(), message); break;
+            case Enums.Message.Private: Send.MessagePrivate(player, data.GetString(), message); break;
         }
     }
 
@@ -330,9 +331,9 @@ internal static class Receive
         player.Attack();
     }
 
-    private static void AddPoint(Player player, NetBuffer data)
+    private static void AddPoint(Player player, NetDataReader data)
     {
-        var attributeNum = data.ReadByte();
+        var attributeNum = data.GetByte();
 
         // Adiciona um ponto a determinado atributo
         if (player.Points > 0)
@@ -360,14 +361,14 @@ internal static class Receive
         }
     }
 
-    private static void DropItem(Player player, NetBuffer data)
+    private static void DropItem(Player player, NetDataReader data)
     {
-        player.DropItem(data.ReadInt16(), data.ReadInt16());
+        player.DropItem(data.GetShort(), data.GetShort());
     }
 
-    private static void InventoryChange(Player player, NetBuffer data)
+    private static void InventoryChange(Player player, NetDataReader data)
     {
-        short slotOld = data.ReadInt16(), slotNew = data.ReadInt16();
+        short slotOld = data.GetShort(), slotNew = data.GetShort();
 
         // Somente se necessário
         if (player.Inventory[slotOld].Item == null) return;
@@ -387,14 +388,14 @@ internal static class Receive
         }
     }
 
-    private static void InventoryUse(Player player, NetBuffer data)
+    private static void InventoryUse(Player player, NetDataReader data)
     {
-        player.UseItem(player.Inventory[data.ReadByte()]);
+        player.UseItem(player.Inventory[data.GetByte()]);
     }
 
-    private static void EquipmentRemove(Player player, NetBuffer data)
+    private static void EquipmentRemove(Player player, NetDataReader data)
     {
-        var slot = data.ReadByte();
+        var slot = data.GetByte();
 
         // Apenas se necessário
         if (player.Equipment[slot] == null) return;
@@ -422,11 +423,11 @@ internal static class Receive
         Send.PlayerEquipments(player);
     }
 
-    private static void HotbarAdd(Player player, NetBuffer data)
+    private static void HotbarAdd(Player player, NetDataReader data)
     {
-        var hotbarSlot = data.ReadInt16();
-        var type = (SlotType)data.ReadByte();
-        var slot = data.ReadInt16();
+        var hotbarSlot = data.GetShort();
+        var type = (SlotType)data.GetByte();
+        var slot = data.GetShort();
 
         // Somente se necessário
         if (slot != 0 && player.FindHotbar(type, slot) != null) return;
@@ -439,9 +440,9 @@ internal static class Receive
         Send.PlayerHotbar(player);
     }
 
-    private static void HotbarChange(Player player, NetBuffer data)
+    private static void HotbarChange(Player player, NetDataReader data)
     {
-        short slotOld = data.ReadInt16(), slotNew = data.ReadInt16();
+        short slotOld = data.GetShort(), slotNew = data.GetShort();
 
         // Somente se necessário
         if (slotOld < 0 || slotNew < 0) return;
@@ -453,9 +454,9 @@ internal static class Receive
         Send.PlayerHotbar(player);
     }
 
-    private static void HotbarUse(Player player, NetBuffer data)
+    private static void HotbarUse(Player player, NetDataReader data)
     {
-        var hotbarSlot = data.ReadInt16();
+        var hotbarSlot = data.GetShort();
 
         // Usa o item
         switch (player.Hotbar[hotbarSlot].Type)
@@ -464,7 +465,7 @@ internal static class Receive
         }
     }
 
-    private static void WriteSettings(Account account, NetBuffer data)
+    private static void WriteSettings(Account account, NetDataReader data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -474,24 +475,24 @@ internal static class Receive
         }
 
         // Altera os dados
-        GameName = data.ReadString();
-        WelcomeMessage = data.ReadString();
-        Port = data.ReadInt16();
-        MaxPlayers = data.ReadByte();
-        MaxCharacters = data.ReadByte();
-        MaxPartyMembers = data.ReadByte();
-        MaxMapItems = data.ReadByte();
-        NumPoints = data.ReadByte();
-        MinNameLength = data.ReadByte();
-        MaxNameLength = data.ReadByte();
-        MinPasswordLength = data.ReadByte();
-        MaxPasswordLength = data.ReadByte();
+        GameName = data.GetString();
+        WelcomeMessage = data.GetString();
+        Port = data.GetShort();
+        MaxPlayers = data.GetByte();
+        MaxCharacters = data.GetByte();
+        MaxPartyMembers = data.GetByte();
+        MaxMapItems = data.GetByte();
+        NumPoints = data.GetByte();
+        MinNameLength = data.GetByte();
+        MaxNameLength = data.GetByte();
+        MinPasswordLength = data.GetByte();
+        MaxPasswordLength = data.GetByte();
 
         // Salva os dados
         Write.Defaults();
     }
 
-    private static void WriteClasses(Account account, NetBuffer data)
+    private static void WriteClasses(Account account, NetDataReader data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -510,7 +511,7 @@ internal static class Receive
                 Send.Classes(Account.List[i]);
     }
 
-    private static void WriteMaps(Account account, NetBuffer data)
+    private static void WriteMaps(Account account, NetDataReader data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -537,7 +538,7 @@ internal static class Receive
         }
     }
 
-    private static void WriteNpcs(Account account, NetBuffer data)
+    private static void WriteNpcs(Account account, NetDataReader data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -556,7 +557,7 @@ internal static class Receive
                 Send.Npcs(Account.List[i]);
     }
 
-    private static void WriteItems(Account account, NetBuffer data)
+    private static void WriteItems(Account account, NetDataReader data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -575,7 +576,7 @@ internal static class Receive
                 Send.Items(Account.List[i]);
     }
 
-    private static void WriteShops(Account account, NetBuffer data)
+    private static void WriteShops(Account account, NetDataReader data)
     {
         // Verifica se o jogador realmente tem permissão 
         if (account.Access < Access.Editor)
@@ -604,16 +605,16 @@ internal static class Receive
         Send.Classes(account);
     }
 
-    private static void RequestMap(Account account, NetBuffer data)
+    private static void RequestMap(Account account, NetDataReader data)
     {
         if (account.InEditor)
-            Send.Map(account, Map.List.Get(new Guid(data.ReadString())));
+            Send.Map(account, Map.List.Get(new Guid(data.GetString())));
         else
         {
             var player = account.Character;
 
             // Se necessário enviar as informações do mapa ao jogador
-            if (data.ReadBoolean()) Send.Map(player.Account, player.Map.Data);
+            if (data.GetBool()) Send.Map(player.Account, player.Map.Data);
 
             // Envia a informação aos outros jogadores
             Send.MapPlayers(player);
@@ -644,9 +645,9 @@ internal static class Receive
         Send.Shops(account);
     }
 
-    private static void PartyInvite(Player player, NetBuffer data)
+    private static void PartyInvite(Player player, NetDataReader data)
     {
-        var name = data.ReadString();
+        var name = data.GetString();
 
         // Encontra o jogador
         var invited = Player.Find(name);
@@ -742,9 +743,9 @@ internal static class Receive
         player.PartyLeave();
     }
 
-    private static void TradeInvite(Player player, NetBuffer data)
+    private static void TradeInvite(Player player, NetDataReader data)
     {
-        var name = data.ReadString();
+        var name = data.GetString();
 
         // Encontra o jogador
         var invited = Player.Find(name);
@@ -855,10 +856,10 @@ internal static class Receive
         player.TradeLeave();
     }
 
-    private static void TradeOffer(Player player, NetBuffer data)
+    private static void TradeOffer(Player player, NetDataReader data)
     {
-        short slot = data.ReadInt16(), inventorySlot = data.ReadInt16();
-        var amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
+        short slot = data.GetShort(), inventorySlot = data.GetShort();
+        var amount = Math.Min(data.GetShort(), player.Inventory[inventorySlot].Amount);
 
         // Adiciona o item à troca
         if (inventorySlot != 0)
@@ -880,9 +881,9 @@ internal static class Receive
         Send.TradeOffer(player.Trade, false);
     }
 
-    private static void TradeOfferState(Player player, NetBuffer data)
+    private static void TradeOfferState(Player player, NetDataReader data)
     {
-        var state = (TradeStatus)data.ReadByte();
+        var state = (TradeStatus)data.GetByte();
         var invited = player.Trade;
 
         switch (state)
@@ -942,9 +943,9 @@ internal static class Receive
         Send.TradeState(invited, state);
     }
 
-    private static void ShopBuy(Player player, NetBuffer data)
+    private static void ShopBuy(Player player, NetDataReader data)
     {
-        var shopSold = player.Shop.Sold[data.ReadInt16()];
+        var shopSold = player.Shop.Sold[data.GetShort()];
         var inventorySlot = player.FindInventory(player.Shop.Currency);
 
         // Verifica se o jogador tem dinheiro
@@ -966,10 +967,10 @@ internal static class Receive
         Send.Message(player, "You bought " + shopSold.Price + "x " + shopSold.Item.Name + ".", Color.Green);
     }
 
-    private static void ShopSell(Player player, NetBuffer data)
+    private static void ShopSell(Player player, NetDataReader data)
     {
-        var inventorySlot = data.ReadByte();
-        var amount = Math.Min(data.ReadInt16(), player.Inventory[inventorySlot].Amount);
+        var inventorySlot = data.GetByte();
+        var amount = Math.Min(data.GetShort(), player.Inventory[inventorySlot].Amount);
         var buy = player.Shop.FindBought(player.Inventory[inventorySlot].Item);
 
         // Verifica se a loja vende o item

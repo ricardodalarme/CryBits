@@ -7,27 +7,25 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Entities.TempMap;
-using Lidgren.Network;
+using LiteNetLib;
+using LiteNetLib.Utils;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network;
 
 internal static class Send
 {
-    private static void ToPlayer(Account account, NetOutgoingMessage data)
+    private static void ToPlayer(Account account, NetDataWriter data)
     {
-        // Recria o pacote e o envia
-        var dataSend = Socket.Device.CreateMessage(data.LengthBytes);
-        dataSend.Write(data);
-        Socket.Device.SendMessage(dataSend, account.Connection, NetDeliveryMethod.ReliableOrdered);
+        account.Connection.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
-    private static void ToPlayer(Player player, NetOutgoingMessage data)
+    private static void ToPlayer(Player player, NetDataWriter data)
     {
         ToPlayer(player.Account, data);
     }
 
-    private static void ToAll(NetOutgoingMessage data)
+    private static void ToAll(NetDataWriter data)
     {
         // Envia os dados para todos conectados
         for (byte i = 0; i < Account.List.Count; i++)
@@ -35,7 +33,7 @@ internal static class Send
                 ToPlayer(Account.List[i].Character, data);
     }
 
-    private static void ToAllBut(Player player, NetOutgoingMessage data)
+    private static void ToAllBut(Player player, NetDataWriter data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 0; i < Account.List.Count; i++)
@@ -44,7 +42,7 @@ internal static class Send
                     ToPlayer(Account.List[i].Character, data);
     }
 
-    private static void ToMap(TempMap map, NetOutgoingMessage data)
+    private static void ToMap(TempMap map, NetDataWriter data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 0; i < Account.List.Count; i++)
@@ -53,7 +51,7 @@ internal static class Send
                     ToPlayer(Account.List[i].Character, data);
     }
 
-    private static void ToMapBut(TempMap map, Player player, NetOutgoingMessage data)
+    private static void ToMapBut(TempMap map, Player player, NetDataWriter data)
     {
         // Envia os dados para todos conectados, com excessão do índice
         for (byte i = 0; i < Account.List.Count; i++)
@@ -65,57 +63,57 @@ internal static class Send
 
     public static void Alert(Account account, string message, bool disconnect = true)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Alert);
-        data.Write(message);
+        data.Put((byte)ServerPacket.Alert);
+        data.Put(message);
         ToPlayer(account, data);
 
         // Desconecta o jogador
-        if (disconnect) account.Connection.Disconnect(string.Empty);
+        if (disconnect) account.Connection.Disconnect();
     }
 
     public static void Connect(Account account)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Connect);
+        data.Put((byte)ServerPacket.Connect);
         ToPlayer(account, data);
     }
 
     public static void CreateCharacter(Account account)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.CreateCharacter);
+        data.Put((byte)ServerPacket.CreateCharacter);
         ToPlayer(account, data);
     }
 
     public static void Join(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Join);
-        data.Write(player.Name);
+        data.Put((byte)ServerPacket.Join);
+        data.Put(player.Name);
         ToPlayer(player, data);
     }
 
     public static void Characters(Account account)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Characters);
-        data.Write((byte)account.Characters.Count);
+        data.Put((byte)ServerPacket.Characters);
+        data.Put((byte)account.Characters.Count);
 
         for (byte i = 0; i < account.Characters.Count; i++)
         {
-            data.Write(account.Characters[i].Name);
-            data.Write(account.Characters[i].TextureNum);
+            data.Put(account.Characters[i].Name);
+            data.Put(account.Characters[i].TextureNum);
         }
 
         ToPlayer(account, data);
@@ -123,71 +121,71 @@ internal static class Send
 
     public static void Classes(Account account)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Classes);
+        data.Put((byte)ServerPacket.Classes);
         data.WriteObject(Class.List);
         ToPlayer(account, data);
     }
 
     public static void JoinGame(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.JoinGame);
+        data.Put((byte)ServerPacket.JoinGame);
         ToPlayer(player, data);
     }
 
-    private static NetOutgoingMessage PlayerDataCache(Player player)
+    private static NetDataWriter PlayerDataCache(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Escreve os dados
-        data.Write((byte)ServerPacket.PlayerData);
-        data.Write(player.Name);
-        data.Write(player.TextureNum);
-        data.Write(player.Level);
-        data.Write(player.Map.GetId());
-        data.Write(player.X);
-        data.Write(player.Y);
-        data.Write((byte)player.Direction);
+        data.Put((byte)ServerPacket.PlayerData);
+        data.Put(player.Name);
+        data.Put(player.TextureNum);
+        data.Put(player.Level);
+        data.PutGuid(player.Map.GetId());
+        data.Put(player.X);
+        data.Put(player.Y);
+        data.Put((byte)player.Direction);
         for (byte n = 0; n < (byte)Vital.Count; n++)
         {
-            data.Write(player.Vital[n]);
-            data.Write(player.MaxVital(n));
+            data.Put(player.Vital[n]);
+            data.Put(player.MaxVital(n));
         }
-        for (byte n = 0; n < (byte)Attribute.Count; n++) data.Write(player.Attribute[n]);
-        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(player.Equipment[n].GetId());
+        for (byte n = 0; n < (byte)Attribute.Count; n++) data.Put(player.Attribute[n]);
+        for (byte n = 0; n < (byte)Equipment.Count; n++) data.PutGuid(player.Equipment[n].GetId());
 
         return data;
     }
 
     public static void PlayerPosition(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerPosition);
-        data.Write(player.Name);
-        data.Write(player.X);
-        data.Write(player.Y);
-        data.Write((byte)player.Direction);
+        data.Put((byte)ServerPacket.PlayerPosition);
+        data.Put(player.Name);
+        data.Put(player.X);
+        data.Put(player.Y);
+        data.Put((byte)player.Direction);
         ToMap(player.Map, data);
     }
 
     public static void PlayerVitals(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerVitals);
-        data.Write(player.Name);
+        data.Put((byte)ServerPacket.PlayerVitals);
+        data.Put(player.Name);
         for (byte i = 0; i < (byte)Vital.Count; i++)
         {
-            data.Write(player.Vital[i]);
-            data.Write(player.MaxVital(i));
+            data.Put(player.Vital[i]);
+            data.Put(player.MaxVital(i));
         }
 
         ToMap(player.Map, data);
@@ -195,59 +193,59 @@ internal static class Send
 
     public static void PlayerLeave(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerLeave);
-        data.Write(player.Name);
+        data.Put((byte)ServerPacket.PlayerLeave);
+        data.Put(player.Name);
         ToAllBut(player, data);
     }
 
     public static void PlayerMove(Player player, byte movement)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerMove);
-        data.Write(player.Name);
-        data.Write(player.X);
-        data.Write(player.Y);
-        data.Write((byte)player.Direction);
-        data.Write(movement);
+        data.Put((byte)ServerPacket.PlayerMove);
+        data.Put(player.Name);
+        data.Put(player.X);
+        data.Put(player.Y);
+        data.Put((byte)player.Direction);
+        data.Put(movement);
         ToMapBut(player.Map, player, data);
     }
 
     public static void PlayerDirection(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerDirection);
-        data.Write(player.Name);
-        data.Write((byte)player.Direction);
+        data.Put((byte)ServerPacket.PlayerDirection);
+        data.Put(player.Name);
+        data.Put((byte)player.Direction);
         ToMapBut(player.Map, player, data);
     }
 
     public static void PlayerExperience(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerExperience);
-        data.Write(player.Experience);
-        data.Write(player.ExpNeeded);
-        data.Write(player.Points);
+        data.Put((byte)ServerPacket.PlayerExperience);
+        data.Put(player.Experience);
+        data.Put(player.ExpNeeded);
+        data.Put(player.Points);
         ToPlayer(player, data);
     }
 
     public static void PlayerEquipments(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerEquipments);
-        data.Write(player.Name);
-        for (byte i = 0; i < (byte)Equipment.Count; i++) data.Write(player.Equipment[i].GetId());
+        data.Put((byte)ServerPacket.PlayerEquipments);
+        data.Put(player.Name);
+        for (byte i = 0; i < (byte)Equipment.Count; i++) data.PutGuid(player.Equipment[i].GetId());
         ToMap(player.Map, data);
     }
 
@@ -266,96 +264,96 @@ internal static class Send
 
     public static void JoinMap(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.JoinMap);
+        data.Put((byte)ServerPacket.JoinMap);
         ToPlayer(player, data);
     }
 
     public static void PlayerLeaveMap(Player player, TempMap map)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerLeave);
-        data.Write(player.Name);
+        data.Put((byte)ServerPacket.PlayerLeave);
+        data.Put(player.Name);
         ToMapBut(map, player, data);
     }
 
     public static void MapRevision(Player player, Map map)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.MapRevision);
-        data.Write(map.GetId());
-        data.Write(map.Revision);
+        data.Put((byte)ServerPacket.MapRevision);
+        data.PutGuid(map.GetId());
+        data.Put(map.Revision);
         ToPlayer(player, data);
     }
 
     public static void Maps(Account account)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Maps);
-        data.Write((short)CryBits.Entities.Map.Map.List.Count);
+        data.Put((byte)ServerPacket.Maps);
+        data.Put((short)CryBits.Entities.Map.Map.List.Count);
         ToPlayer(account, data);
         foreach (var map in CryBits.Entities.Map.Map.List.Values) Map(account, map);
     }
 
     public static void Map(Account account, Map map)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Map);
+        data.Put((byte)ServerPacket.Map);
         data.WriteObject(map);
         ToPlayer(account, data);
     }
 
     public static void Latency(Account account)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Latency);
+        data.Put((byte)ServerPacket.Latency);
         ToPlayer(account, data);
     }
 
     public static void Message(Player player, string text, Color color)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Message);
-        data.Write(text);
-        data.Write(color.ToArgb());
+        data.Put((byte)ServerPacket.Message);
+        data.Put(text);
+        data.Put(color.ToArgb());
         ToPlayer(player, data);
     }
 
     public static void MessageMap(Player player, string text)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
         var message = "[Map] " + player.Name + ": " + text;
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Message);
-        data.Write(message);
-        data.Write(Color.White.ToArgb());
+        data.Put((byte)ServerPacket.Message);
+        data.Put(message);
+        data.Put(Color.White.ToArgb());
         ToMap(player.Map, data);
     }
 
     public static void MessageGlobal(Player player, string text)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
         var message = "[Global] " + player.Name + ": " + text;
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Message);
-        data.Write(message);
-        data.Write(Color.Yellow.ToArgb());
+        data.Put((byte)ServerPacket.Message);
+        data.Put(message);
+        data.Put(Color.Yellow.ToArgb());
         ToAll(data);
     }
 
@@ -377,40 +375,40 @@ internal static class Send
 
     public static void PlayerAttack(Player player, string victim = "", Target victimType = 0)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerAttack);
-        data.Write(player.Name);
-        data.Write(victim);
-        data.Write((byte)victimType);
+        data.Put((byte)ServerPacket.PlayerAttack);
+        data.Put(player.Name);
+        data.Put(victim);
+        data.Put((byte)victimType);
         ToMap(player.Map, data);
     }
 
     public static void Items(Account account)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Items);
+        data.Put((byte)ServerPacket.Items);
         data.WriteObject(Item.List);
         ToPlayer(account, data);
     }
 
     public static void MapItems(Player player, TempMap map)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.MapItems);
-        data.Write((byte)map.Item.Count);
+        data.Put((byte)ServerPacket.MapItems);
+        data.Put((byte)map.Item.Count);
 
         for (byte i = 0; i < map.Item.Count; i++)
         {
             // Geral
-            data.Write(map.Item[i].Item.GetId());
-            data.Write(map.Item[i].X);
-            data.Write(map.Item[i].Y);
+            data.PutGuid(map.Item[i].Item.GetId());
+            data.Put(map.Item[i].X);
+            data.Put(map.Item[i].Y);
         }
 
         // Envia os dados
@@ -419,254 +417,254 @@ internal static class Send
 
     public static void MapItems(TempMap map)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.MapItems);
-        data.Write((byte)map.Item.Count);
+        data.Put((byte)ServerPacket.MapItems);
+        data.Put((byte)map.Item.Count);
         for (byte i = 0; i < map.Item.Count; i++)
         {
-            data.Write(map.Item[i].Item.GetId());
-            data.Write(map.Item[i].X);
-            data.Write(map.Item[i].Y);
+            data.PutGuid(map.Item[i].Item.GetId());
+            data.Put(map.Item[i].X);
+            data.Put(map.Item[i].Y);
         }
         ToMap(map, data);
     }
 
     public static void PlayerInventory(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerInventory);
+        data.Put((byte)ServerPacket.PlayerInventory);
         for (byte i = 0; i < MaxInventory; i++)
         {
-            data.Write(player.Inventory[i].Item.GetId());
-            data.Write(player.Inventory[i].Amount);
+            data.PutGuid(player.Inventory[i].Item.GetId());
+            data.Put(player.Inventory[i].Amount);
         }
         ToPlayer(player, data);
     }
 
     public static void PlayerHotbar(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PlayerHotbar);
+        data.Put((byte)ServerPacket.PlayerHotbar);
         for (byte i = 0; i < MaxHotbar; i++)
         {
-            data.Write((byte)player.Hotbar[i].Type);
-            data.Write(player.Hotbar[i].Slot);
+            data.Put((byte)player.Hotbar[i].Type);
+            data.Put(player.Hotbar[i].Slot);
         }
         ToPlayer(player, data);
     }
 
     public static void Npcs(Account account)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Npcs);
+        data.Put((byte)ServerPacket.Npcs);
         data.WriteObject(Npc.List);
         ToPlayer(account, data);
     }
 
     public static void MapNpcs(Player player, TempMap map)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.MapNpcs);
-        data.Write((short)map.Npc.Length);
+        data.Put((byte)ServerPacket.MapNpcs);
+        data.Put((short)map.Npc.Length);
         for (byte i = 0; i < map.Npc.Length; i++)
         {
-            data.Write(map.Npc[i].Data.GetId());
-            data.Write(map.Npc[i].X);
-            data.Write(map.Npc[i].Y);
-            data.Write((byte)map.Npc[i].Direction);
-            for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(map.Npc[i].Vital[n]);
+            data.PutGuid(map.Npc[i].Data.GetId());
+            data.Put(map.Npc[i].X);
+            data.Put(map.Npc[i].Y);
+            data.Put((byte)map.Npc[i].Direction);
+            for (byte n = 0; n < (byte)Vital.Count; n++) data.Put(map.Npc[i].Vital[n]);
         }
         ToPlayer(player, data);
     }
 
     public static void MapNpc(TempNpc npc)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.MapNpc);
-        data.Write(npc.Index);
-        data.Write(npc.Data.GetId());
-        data.Write(npc.X);
-        data.Write(npc.Y);
-        data.Write((byte)npc.Direction);
-        for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(npc.Vital[n]);
+        data.Put((byte)ServerPacket.MapNpc);
+        data.Put(npc.Index);
+        data.PutGuid(npc.Data.GetId());
+        data.Put(npc.X);
+        data.Put(npc.Y);
+        data.Put((byte)npc.Direction);
+        for (byte n = 0; n < (byte)Vital.Count; n++) data.Put(npc.Vital[n]);
         ToMap(npc.Map, data);
     }
 
     public static void MapNpcMovement(TempNpc npc, byte movement)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.MapNpcMovement);
-        data.Write(npc.Index);
-        data.Write(npc.X);
-        data.Write(npc.Y);
-        data.Write((byte)npc.Direction);
-        data.Write(movement);
+        data.Put((byte)ServerPacket.MapNpcMovement);
+        data.Put(npc.Index);
+        data.Put(npc.X);
+        data.Put(npc.Y);
+        data.Put((byte)npc.Direction);
+        data.Put(movement);
         ToMap(npc.Map, data);
     }
 
     public static void MapNpcDirection(TempNpc npc)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.MapNpcDirection);
-        data.Write(npc.Index);
-        data.Write((byte)npc.Direction);
+        data.Put((byte)ServerPacket.MapNpcDirection);
+        data.Put(npc.Index);
+        data.Put((byte)npc.Direction);
         ToMap(npc.Map, data);
     }
 
     public static void MapNpcVitals(TempNpc npc)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.MapNpcVitals);
-        data.Write(npc.Index);
-        for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(npc.Vital[n]);
+        data.Put((byte)ServerPacket.MapNpcVitals);
+        data.Put(npc.Index);
+        for (byte n = 0; n < (byte)Vital.Count; n++) data.Put(npc.Vital[n]);
         ToMap(npc.Map, data);
     }
 
     public static void MapNpcAttack(TempNpc npc, string victim = "", Target victimType = 0)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.MapNpcAttack);
-        data.Write(npc.Index);
-        data.Write(victim);
-        data.Write((byte)victimType);
+        data.Put((byte)ServerPacket.MapNpcAttack);
+        data.Put(npc.Index);
+        data.Put(victim);
+        data.Put((byte)victimType);
         ToMap(npc.Map, data);
     }
 
     public static void MapNpcDied(TempNpc npc)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.MapNpcDied);
-        data.Write(npc.Index);
+        data.Put((byte)ServerPacket.MapNpcDied);
+        data.Put(npc.Index);
         ToMap(npc.Map, data);
     }
 
     public static void ServerData(Account account)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.ServerData);
-        data.Write(GameName);
-        data.Write(WelcomeMessage);
-        data.Write(Port);
-        data.Write(MaxPlayers);
-        data.Write(MaxCharacters);
-        data.Write(MaxPartyMembers);
-        data.Write(MaxMapItems);
-        data.Write(NumPoints);
-        data.Write(MinNameLength);
-        data.Write(MaxNameLength);
-        data.Write(MinPasswordLength);
-        data.Write(MaxPasswordLength);
+        data.Put((byte)ServerPacket.ServerData);
+        data.Put(GameName);
+        data.Put(WelcomeMessage);
+        data.Put(Port);
+        data.Put(MaxPlayers);
+        data.Put(MaxCharacters);
+        data.Put(MaxPartyMembers);
+        data.Put(MaxMapItems);
+        data.Put(NumPoints);
+        data.Put(MinNameLength);
+        data.Put(MaxNameLength);
+        data.Put(MinPasswordLength);
+        data.Put(MaxPasswordLength);
         ToPlayer(account, data);
     }
 
     public static void Party(Player player)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Party);
-        data.Write((byte)player.Party.Count);
-        for (byte i = 0; i < player.Party.Count; i++) data.Write(player.Party[i].Name);
+        data.Put((byte)ServerPacket.Party);
+        data.Put((byte)player.Party.Count);
+        for (byte i = 0; i < player.Party.Count; i++) data.Put(player.Party[i].Name);
         ToPlayer(player, data);
     }
 
     public static void PartyInvitation(Player player, string playerInvitation)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.PartyInvitation);
-        data.Write(playerInvitation);
+        data.Put((byte)ServerPacket.PartyInvitation);
+        data.Put(playerInvitation);
         ToPlayer(player, data);
     }
 
     public static void Trade(Player player, bool state)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Trade);
-        data.Write(state);
+        data.Put((byte)ServerPacket.Trade);
+        data.Put(state);
         ToPlayer(player, data);
     }
 
     public static void TradeInvitation(Player player, string playerInvitation)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.TradeInvitation);
-        data.Write(playerInvitation);
+        data.Put((byte)ServerPacket.TradeInvitation);
+        data.Put(playerInvitation);
         ToPlayer(player, data);
     }
 
     public static void TradeState(Player player, TradeStatus state)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.TradeState);
-        data.Write((byte)state);
+        data.Put((byte)ServerPacket.TradeState);
+        data.Put((byte)state);
         ToPlayer(player, data);
     }
 
     public static void TradeOffer(Player player, bool own = true)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
         var to = own ? player : player.Trade;
 
         // Envia os dados
-        data.Write((byte)ServerPacket.TradeOffer);
-        data.Write(own);
+        data.Put((byte)ServerPacket.TradeOffer);
+        data.Put(own);
         for (byte i = 0; i < MaxInventory; i++)
         {
-            data.Write(to.Inventory[to.TradeOffer[i].SlotNum].Item.GetId());
-            data.Write(to.TradeOffer[i].Amount);
+            data.PutGuid(to.Inventory[to.TradeOffer[i].SlotNum].Item.GetId());
+            data.Put(to.TradeOffer[i].Amount);
         }
         ToPlayer(player, data);
     }
 
     public static void Shops(Account account)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.Shops);
+        data.Put((byte)ServerPacket.Shops);
         data.WriteObject(Shop.List);
         ToPlayer(account, data);
     }
 
     public static void ShopOpen(Player player, Shop shop)
     {
-        var data = Socket.Device.CreateMessage();
+        var data = new NetDataWriter();
 
         // Envia os dados
-        data.Write((byte)ServerPacket.ShopOpen);
-        data.Write(shop.GetId());
+        data.Put((byte)ServerPacket.ShopOpen);
+        data.PutGuid(shop.GetId());
         ToPlayer(player, data);
     }
 }

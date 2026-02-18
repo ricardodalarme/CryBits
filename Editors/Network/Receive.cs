@@ -6,7 +6,8 @@ using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
-using Lidgren.Network;
+using LiteNetLib;
+using LiteNetLib.Utils;
 using static CryBits.Extensions.NetworkExtensions;
 using static CryBits.Globals;
 
@@ -14,10 +15,10 @@ namespace CryBits.Editors.Network;
 
 internal static class Receive
 {
-    public static void Handle(NetIncomingMessage data)
+    public static void Handle(NetPacketReader data)
     {
         // Manuseia os dados recebidos
-        switch ((ServerPacket)data.ReadByte())
+        switch ((ServerPacket)data.GetByte())
         {
             case ServerPacket.Alert: Alert(data); break;
             case ServerPacket.Connect: Connect(); break;
@@ -30,10 +31,10 @@ internal static class Receive
         }
     }
 
-    private static void Alert(NetBuffer data)
+    private static void Alert(NetDataReader data)
     {
         // Mostra a mensagem
-        MessageBox.Show(data.ReadString());
+        MessageBox.Show(data.GetString());
     }
 
     private static void Connect()
@@ -43,30 +44,30 @@ internal static class Receive
         AvaloniaMapsLauncher.OpenMapsEditor();
     }
 
-    private static void ServerData(NetBuffer data)
+    private static void ServerData(NetDataReader data)
     {
         // Lê os dados
-        GameName = data.ReadString();
-        WelcomeMessage = data.ReadString();
-        Port = data.ReadInt16();
-        MaxPlayers = data.ReadByte();
-        MaxCharacters = data.ReadByte();
-        MaxPartyMembers = data.ReadByte();
-        MaxMapItems = data.ReadByte();
-        NumPoints = data.ReadByte();
-        MinNameLength = data.ReadByte();
-        MaxNameLength = data.ReadByte();
-        MinPasswordLength = data.ReadByte();
-        MaxPasswordLength = data.ReadByte();
+        GameName = data.GetString();
+        WelcomeMessage = data.GetString();
+        Port = data.GetShort();
+        MaxPlayers = data.GetByte();
+        MaxCharacters = data.GetByte();
+        MaxPartyMembers = data.GetByte();
+        MaxMapItems = data.GetByte();
+        NumPoints = data.GetByte();
+        MinNameLength = data.GetByte();
+        MaxNameLength = data.GetByte();
+        MinPasswordLength = data.GetByte();
+        MaxPasswordLength = data.GetByte();
     }
 
-    private static void Classes(NetBuffer data)
+    private static void Classes(NetDataReader data)
     {
         // Recebe os dados
         Class.List = (Dictionary<Guid, Class>)data.ReadObject();
     }
 
-    private static void Map(NetBuffer data)
+    private static void Map(NetDataReader data)
     {
         var map = (Map)data.ReadObject();
         var id = map.Id;
@@ -78,19 +79,19 @@ internal static class Receive
             CryBits.Entities.Map.Map.List.Add(id, map);
     }
 
-    private static void Npcs(NetBuffer data)
+    private static void Npcs(NetDataReader data)
     {
         // Recebe os dados
         Npc.List = (Dictionary<Guid, Npc>)data.ReadObject();
     }
 
-    private static void Items(NetBuffer data)
+    private static void Items(NetDataReader data)
     {
         // Recebe os dados
         Item.List = (Dictionary<Guid, Item>)data.ReadObject();
     }
 
-    private static void Shops(NetBuffer data)
+    private static void Shops(NetDataReader data)
     {
         // Recebe os dados
         Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();

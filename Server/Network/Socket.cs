@@ -1,59 +1,46 @@
 ﻿using CryBits.Server.Entities;
-using Lidgren.Network;
+using LiteNetLib;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network;
 
 internal static class Socket
 {
-    // Protocolo do controle de transmissão
-    public static NetServer Device;
+    public static NetManager Device;
+    private static EventBasedNetListener _listener;
 
     public static void Init()
     {
-        // Define algumas configurações da rede
-        var config = new NetPeerConfiguration(GameName)
+        _listener = new EventBasedNetListener();
+        Device = new NetManager(_listener);
+
+        _listener.ConnectionRequestEvent += request =>
         {
-            Port = Port,
-            AcceptIncomingConnections = true,
-            MaximumConnections = MaxPlayers
+            if (Device.ConnectedPeersCount < MaxPlayers)
+                request.AcceptIfKey(GameName);
+            else
+                request.Reject();
         };
 
-        // Cria o dispositivo com as devidas configurações
-        Device = new NetServer(config);
-        Device.Start();
-    }
-
-    public static void HandleData()
-    {
-        NetIncomingMessage data;
-
-        // Lê e direciona todos os dados recebidos
-        while ((data = Device.ReadMessage()) != null)
+        _listener.PeerConnectedEvent += peer =>
         {
-            // Jogador que está enviando os dados
-            var account = Account.List.Find(x => x.Connection == data.SenderConnection);
+            Account.List.Add(new Account(peer));
+        };
 
-            switch (data.MessageType)
-            {
-                case NetIncomingMessageType.StatusChanged:
-                    var status = (NetConnectionStatus)data.ReadByte();
+        _listener.PeerDisconnectedEvent += (peer, info) =>
+        {
+            Account.List.Find(x => x.Connection == peer)?.Leave();
+        };
 
-                    // Nova conexão - Conecta o jogador ao jogo
-                    if (status == NetConnectionStatus.Connected)
-                        Account.List.Add(new Account(data.SenderConnection));
-                    // Conexão perdida, disconecta o jogador do jogo
-                    else if (status == NetConnectionStatus.Disconnected)
-                        account?.Leave();
+        _listener.NetworkReceiveEvent += (peer, reader, channel, deliveryMethod) =>
+        {
+            var account = Account.List.Find(x => x.Connection == peer);
+            Receive.Handle(account, reader);
+            reader.Recycle();
+        };
 
-                    break;
-                // Recebe e manuseia os dados recebidos
-                case NetIncomingMessageType.Data:
-                    Receive.Handle(account, data);
-                    break;
-            }
-
-            Device.Recycle(data);
-        }
+        Device.Start(Port);
     }
+
+    public static void HandleData() => Device.PollEvents();
 }
