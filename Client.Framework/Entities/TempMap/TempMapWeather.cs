@@ -1,4 +1,4 @@
-﻿using CryBits.Client.Framework.Audio;
+using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Entities.Map;
 using CryBits.Enums;

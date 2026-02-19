@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;

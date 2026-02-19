@@ -1,4 +1,4 @@
-﻿using CryBits.Client.Framework.Interfacily.Interfaces;
+using CryBits.Client.Framework.Interfacily.Interfaces;
 using SFML.Window;
 
 namespace CryBits.Client.Framework.Interfacily.Components;

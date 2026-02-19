@@ -1,8 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
-using SFML.System;
 using System.ComponentModel;
-using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -12,11 +10,13 @@ using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Library.Repositories;
 using SFML.Graphics;
+using SFML.System;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
+using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
-using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 using Point = System.Drawing.Point;
+using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Editors.AvaloniaUI.Forms;
 

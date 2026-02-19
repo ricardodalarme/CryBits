@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CryBits.Extensions;
 using CryBits.Interfaces;
 

@@ -1,4 +1,4 @@
-﻿namespace CryBits.Client.Framework.Interfacily.Enums;
+namespace CryBits.Client.Framework.Interfacily.Enums;
 
 public enum ButtonState
 {

@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using CryBits.Client.Framework.Constants;
 using SFML.Graphics;
 

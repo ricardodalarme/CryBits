@@ -1,4 +1,4 @@
-﻿using CryBits.Entities;
+using CryBits.Entities;
 using CryBits.Entities.Slots;
 
 namespace CryBits.Server.Entities;

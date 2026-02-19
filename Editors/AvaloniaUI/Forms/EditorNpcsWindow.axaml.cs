@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using SFML.System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -13,6 +12,7 @@ using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
 using SFML.Graphics;
+using SFML.System;
 using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Editors.AvaloniaUI.Forms;

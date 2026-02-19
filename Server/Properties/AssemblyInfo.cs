@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 [assembly: AssemblyTitle("Server")]
 [assembly: AssemblyCompany("Ricardo Dalarme")]

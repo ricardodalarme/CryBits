@@ -1,4 +1,4 @@
-﻿namespace CryBits.Client.Framework.Interfacily.Interfaces;
+namespace CryBits.Client.Framework.Interfacily.Interfaces;
 
 public interface IMouseMoved
 {

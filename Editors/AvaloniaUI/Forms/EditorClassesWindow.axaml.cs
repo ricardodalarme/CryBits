@@ -7,8 +7,8 @@ using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
-using Map = CryBits.Entities.Map.Map;
 using Attribute = CryBits.Enums.Attribute;
+using Map = CryBits.Entities.Map.Map;
 
 namespace CryBits.Editors.AvaloniaUI.Forms;
 

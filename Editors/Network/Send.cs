@@ -1,4 +1,4 @@
-﻿using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
@@ -6,8 +6,8 @@ using CryBits.Entities.Shop;
 using CryBits.Enums;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using static CryBits.Globals;
 using static CryBits.Extensions.NetworkExtensions;
+using static CryBits.Globals;
 
 namespace CryBits.Editors.Network;
 

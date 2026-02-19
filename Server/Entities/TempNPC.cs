@@ -1,4 +1,4 @@
-﻿using CryBits.Entities.Npc;
+using CryBits.Entities.Npc;
 using CryBits.Enums;
 using Attribute = CryBits.Enums.Attribute;
 

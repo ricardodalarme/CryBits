@@ -1,4 +1,4 @@
-﻿namespace CryBits.Client.Framework.Constants;
+namespace CryBits.Client.Framework.Constants;
 
 public static class Directories
 {

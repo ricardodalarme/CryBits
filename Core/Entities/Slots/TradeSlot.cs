@@ -1,4 +1,4 @@
-﻿using CryBits.Interfaces;
+using CryBits.Interfaces;
 
 namespace CryBits.Entities.Slots;
 

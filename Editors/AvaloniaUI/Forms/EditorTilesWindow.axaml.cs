@@ -1,6 +1,5 @@
 using System;
 using Avalonia.Controls;
-using SFML.System;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -12,9 +11,10 @@ using CryBits.Client.Framework.Library.Repositories;
 using CryBits.Editors.Graphics;
 using CryBits.Enums;
 using SFML.Graphics;
+using SFML.System;
 using static CryBits.Editors.Logic.Utils;
-using Point = System.Drawing.Point;
 using G = CryBits.Globals;
+using Point = System.Drawing.Point;
 
 namespace CryBits.Editors.AvaloniaUI.Forms;
 

@@ -1,4 +1,4 @@
-﻿namespace CryBits.Enums;
+namespace CryBits.Enums;
 
 /// <summary>Server packets sent to the client.</summary>
 public enum ServerPacket

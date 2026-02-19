@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CryBits.Entities.Npc;
 
 namespace CryBits.Client.Entities;

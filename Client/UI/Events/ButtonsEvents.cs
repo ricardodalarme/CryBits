@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using CryBits.Client.Utils;
+using System.Linq;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Library.Repositories;
 using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Utils;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;

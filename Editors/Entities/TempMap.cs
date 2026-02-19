@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Entities.TempMap;
 using CryBits.Client.Framework.Graphics;

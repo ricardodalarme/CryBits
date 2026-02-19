@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Threading;
 using CryBits.Client.Framework.Audio;
-using CryBits.Editors.Entities;
 using CryBits.Editors.AvaloniaUI.Forms;
+using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Network;
 

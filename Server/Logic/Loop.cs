@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CryBits.Server.Entities;
 using CryBits.Server.Commands;
+using CryBits.Server.Entities;
 using CryBits.Server.Network;
 using CryBits.Server.Systems;
 

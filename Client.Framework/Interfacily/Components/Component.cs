@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 
 namespace CryBits.Client.Framework.Interfacily.Components;
 

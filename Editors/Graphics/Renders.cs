@@ -1,15 +1,15 @@
-﻿using System.Drawing;
+using System.Drawing;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Editors.Entities;
 using CryBits.Editors.AvaloniaUI.Forms;
+using CryBits.Editors.Entities;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
-using static CryBits.Globals;
 using static CryBits.Editors.Logic.Utils;
+using static CryBits.Globals;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using Color = SFML.Graphics.Color;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;

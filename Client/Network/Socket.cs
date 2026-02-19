@@ -1,7 +1,7 @@
-﻿using System;
-using CryBits.Client.Utils;
+using System;
 using CryBits.Client.Entities;
 using CryBits.Client.UI;
+using CryBits.Client.Utils;
 using LiteNetLib;
 using static CryBits.Globals;
 

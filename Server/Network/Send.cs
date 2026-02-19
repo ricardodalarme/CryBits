@@ -1,4 +1,4 @@
-﻿using CryBits.Server.Entities;
+using CryBits.Server.Entities;
 using LiteNetLib;
 using LiteNetLib.Utils;
 

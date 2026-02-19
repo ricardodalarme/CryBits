@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
-using CryBits.Editors.AvaloniaUI;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Library.Repositories;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
-using CryBits.Client.Framework.Library.Repositories;
 using EditorToolsRepository = CryBits.Editors.Library.Repositories.ToolsRepository;
 
 namespace CryBits.Editors;

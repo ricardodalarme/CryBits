@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using CryBits.Entities;
 using CryBits.Entities.Shop;

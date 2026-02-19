@@ -3,12 +3,12 @@ using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Logic;
 using CryBits.Client.Network;
 using CryBits.Enums;
 using static CryBits.Client.Logic.Camera;
 using Color = SFML.Graphics.Color;
-using CryBits.Client.Graphics.Renderers;
 
 namespace CryBits.Client.Graphics;
 

@@ -1,7 +1,7 @@
-﻿using CryBits.Enums;
+using CryBits.Enums;
 using CryBits.Server.Entities;
-using LiteNetLib;
 using CryBits.Server.Network.Handlers;
+using LiteNetLib;
 
 namespace CryBits.Server.Network;
 

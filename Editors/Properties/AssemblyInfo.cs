@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 [assembly: AssemblyTitle("Editors")]
 [assembly: AssemblyCompany("Ricardo Dalarme")]

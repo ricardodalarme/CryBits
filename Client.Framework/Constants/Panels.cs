@@ -1,4 +1,4 @@
-﻿using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Framework.Interfacily.Components;
 
 namespace CryBits.Client.Framework.Constants;
 

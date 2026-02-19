@@ -1,4 +1,4 @@
-﻿namespace CryBits.Client.Framework.Entities.TempMap;
+namespace CryBits.Client.Framework.Entities.TempMap;
 
 public struct TempMapWeatherParticle
 {

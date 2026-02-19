@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Threading;
 using CryBits.Client.Entities;
 using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Graphics;
 using CryBits.Client.Network;
-using CryBits.Client.UI.Events;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.UI.Events;
 using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 
 namespace CryBits.Client.Logic;

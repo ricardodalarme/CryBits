@@ -1,4 +1,4 @@
-﻿namespace CryBits.Interfaces;
+namespace CryBits.Interfaces;
 
 public interface ISlot
 {

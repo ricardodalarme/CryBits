@@ -1,4 +1,4 @@
-﻿using CryBits.Entities;
+using CryBits.Entities;
 
 namespace CryBits.Client.Entities.TempMap;
 

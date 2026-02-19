@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;

@@ -1,4 +1,4 @@
-﻿using CryBits.Entities.Map;
+using CryBits.Entities.Map;
 
 namespace CryBits;
 

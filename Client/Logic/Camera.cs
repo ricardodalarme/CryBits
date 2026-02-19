@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Entities.Map;
 using static CryBits.Globals;

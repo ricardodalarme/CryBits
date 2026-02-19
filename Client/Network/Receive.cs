@@ -1,4 +1,4 @@
-﻿using CryBits.Client.Network.Handlers;
+using CryBits.Client.Network.Handlers;
 using CryBits.Enums;
 using LiteNetLib;
 

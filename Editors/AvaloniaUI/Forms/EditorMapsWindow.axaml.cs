@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using SFML.System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -23,15 +22,16 @@ using CryBits.Entities.Npc;
 using CryBits.Enums;
 using CryBits.Extensions;
 using SFML.Graphics;
+using SFML.System;
 using static CryBits.Editors.Logic.Utils;
 // Note: Globals.Grid (byte) and Avalonia.Controls.Grid (type) differ in kind
 using AvaloniaScrollEventArgs = Avalonia.Controls.Primitives.ScrollEventArgs;
 using SelectionChangedEventArgs = Avalonia.Controls.SelectionChangedEventArgs;
-using TextChangedEventArgs = Avalonia.Controls.TextChangedEventArgs;
 using SystemColor = System.Drawing.Color;
 using SystemPoint = System.Drawing.Point;
-using SystemSize = System.Drawing.Size;
 using SystemRect = System.Drawing.Rectangle;
+using SystemSize = System.Drawing.Size;
+using TextChangedEventArgs = Avalonia.Controls.TextChangedEventArgs;
 
 namespace CryBits.Editors.AvaloniaUI.Forms;
 

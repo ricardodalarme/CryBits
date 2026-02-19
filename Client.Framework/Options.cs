@@ -1,4 +1,4 @@
-﻿namespace CryBits.Client.Framework;
+namespace CryBits.Client.Framework;
 
 public static class Options
 {

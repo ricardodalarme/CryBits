@@ -1,4 +1,4 @@
-﻿using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Constants;
 
 namespace CryBits.Client.Framework.Audio;
 

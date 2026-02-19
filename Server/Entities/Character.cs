@@ -1,4 +1,4 @@
-﻿using CryBits.Enums;
+using CryBits.Enums;
 
 namespace CryBits.Server.Entities;
 
