@@ -11,6 +11,17 @@ namespace CryBits.Server.Systems;
 /// </summary>
 internal static class LevelingSystem
 {
+    /// <summary>Spends one attribute point for <paramref name="player"/> on the given attribute.</summary>
+    internal static void AddPoint(Player player, byte attributeNum)
+    {
+        if (player.Points <= 0) return;
+
+        player.Attribute[attributeNum]++;
+        player.Points--;
+        PlayerSender.PlayerExperience(player);
+        MapSender.MapPlayers(player);
+    }
+
     /// <summary>
     /// Grants <paramref name="value"/> experience to <paramref name="player"/>.
     /// If the player is in a party the XP is split across all members weighted by level

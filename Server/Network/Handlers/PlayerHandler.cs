@@ -31,16 +31,7 @@ internal static class PlayerHandler
 
     internal static void AddPoint(Player player, NetDataReader data)
     {
-        var attributeNum = data.GetByte();
-
-        // Adiciona um ponto a determinado atributo
-        if (player.Points > 0)
-        {
-            player.Attribute[attributeNum]++;
-            player.Points--;
-            PlayerSender.PlayerExperience(player);
-            MapSender.MapPlayers(player);
-        }
+        LevelingSystem.AddPoint(player, data.GetByte());
     }
 
     internal static void CollectItem(Player player)
