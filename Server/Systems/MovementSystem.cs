@@ -2,7 +2,6 @@ using System;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities;
-using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Network.Senders;
 using static CryBits.Utils;
 

@@ -7,7 +7,7 @@ using CryBits.Extensions;
 using CryBits.Server.Systems;
 using static CryBits.Utils;
 
-namespace CryBits.Server.Entities.TempMap;
+namespace CryBits.Server.Entities;
 
 internal class TempMap(Guid id, Map map) : Entity(id)
 {

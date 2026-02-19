@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CryBits.Entities.Map;
 using CryBits.Server.Entities;
-using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Library;
 using CryBits.Server.Library.Repositories;
 using CryBits.Server.Logic;

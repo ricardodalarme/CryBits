@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using CryBits.Server.Entities.TempMap;
+using CryBits.Server.Entities;
 using CryBits.Server.Logic;
 using CryBits.Server.Network.Senders;
 

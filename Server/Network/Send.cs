@@ -1,5 +1,4 @@
 ﻿using CryBits.Server.Entities;
-using CryBits.Server.Entities.TempMap;
 using LiteNetLib;
 using LiteNetLib.Utils;
 

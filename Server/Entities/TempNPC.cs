@@ -26,7 +26,7 @@ internal class TempNpc : Character
     }
 
     // Construtor
-    public TempNpc(byte index, TempMap.TempMap map, Npc data)
+    public TempNpc(byte index, TempMap map, Npc data)
     {
         Index = index;
         Map = map;

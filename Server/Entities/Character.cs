@@ -5,7 +5,7 @@ namespace CryBits.Server.Entities;
 internal abstract class Character
 {
     // Dados básicos de todos personagens
-    public TempMap.TempMap Map { get; set; }
+    public TempMap Map { get; set; }
     public byte X { get; set; }
     public byte Y { get; set; }
     public Direction Direction { get; set; }

@@ -1,7 +1,7 @@
 ﻿using CryBits.Entities;
 using CryBits.Entities.Slots;
 
-namespace CryBits.Server.Entities.TempMap;
+namespace CryBits.Server.Entities;
 
 internal class TempMapItems(Item item, short amount, byte x, byte y)
     : ItemSlot(item, amount)

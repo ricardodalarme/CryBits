@@ -5,7 +5,6 @@ using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities;
-using CryBits.Server.Entities.TempMap;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
 
@@ -15,7 +14,8 @@ internal static class CharacterRepository
 {
     public static void Read(Account account, string name)
     {
-        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", name) + Directories.Format);
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", name) +
+                                Directories.Format);
 
         // Verifica se o diretório existe
         if (!file.Directory.Exists) return;
@@ -42,8 +42,11 @@ internal static class CharacterRepository
             account.Character.Inventory[n].Item = Item.List.Get(new Guid(data.ReadString()));
             account.Character.Inventory[n].Amount = data.ReadInt16();
         }
-        for (byte n = 0; n < (byte)Equipment.Count; n++) account.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
-        for (byte n = 0; n < MaxHotbar; n++) account.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
+
+        for (byte n = 0; n < (byte)Equipment.Count; n++)
+            account.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
+        for (byte n = 0; n < MaxHotbar; n++)
+            account.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
     }
 
     public static string ReadAllNames()
@@ -62,7 +65,9 @@ internal static class CharacterRepository
 
     public static void Write(Account account)
     {
-        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", account.Character.Name) + Directories.Format);
+        var file = new FileInfo(
+            Path.Combine(Directories.Accounts.FullName, account.User, "Characters", account.Character.Name) +
+            Directories.Format);
 
         // Evita erros
         if (!file.Directory.Exists) file.Directory.Create();
@@ -87,6 +92,7 @@ internal static class CharacterRepository
             data.Write(account.Character.Inventory[n].Item.GetId());
             data.Write(account.Character.Inventory[n].Amount);
         }
+
         for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(account.Character.Equipment[n].GetId());
         for (byte n = 0; n < MaxHotbar; n++)
         {
