@@ -8,7 +8,7 @@ namespace CryBits.Server.Commands;
 
 internal sealed class CommandDispatcher
 {
-    private readonly List<Type> _commandTypes = new();
+    private readonly List<Type> _commandTypes = [];
     private readonly Parser _parser;
 
     public CommandDispatcher()

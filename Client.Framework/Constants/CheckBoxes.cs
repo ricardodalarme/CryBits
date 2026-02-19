@@ -4,7 +4,7 @@ namespace CryBits.Client.Framework.Constants;
 
 public static class CheckBoxes
 {
-    public static readonly Dictionary<string, CheckBox> List = new();
+    public static readonly Dictionary<string, CheckBox> List = [];
     public static CheckBox Sounds => List["Sounds"];
     public static CheckBox Musics => List["Musics"];
     public static CheckBox ConnectSaveUsername => List["Connect_Save_Username"];

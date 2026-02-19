@@ -149,7 +149,7 @@ internal partial class EditorMapsWindow : Window
     private DispatcherTimer? _timer;
 
     // Layer view-models
-    private List<LayerVm> _layerVms = new();
+    private List<LayerVm> _layerVms = [];
 
     // ── Constructor ──────────────────────────────────────────────────────────
     public EditorMapsWindow()

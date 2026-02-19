@@ -20,7 +20,7 @@ public static class JsonConfig
 public sealed class ToolsJsonRoot
 {
     [JsonPropertyName("screens")]
-    public List<ScreenDto> Screens { get; set; } = new();
+    public List<ScreenDto> Screens { get; set; } = [];
 }
 
 public sealed class ScreenDto
@@ -29,7 +29,7 @@ public sealed class ScreenDto
     public string Name { get; set; } = string.Empty;
 
     [JsonPropertyName("children")]
-    public List<ComponentDto> Children { get; set; } = new();
+    public List<ComponentDto> Children { get; set; } = [];
 }
 
 /// <summary>
@@ -56,7 +56,7 @@ public abstract class ComponentDto
     public bool Visible { get; set; }
 
     [JsonPropertyName("children")]
-    public List<ComponentDto> Children { get; set; } = new();
+    public List<ComponentDto> Children { get; set; } = [];
 }
 
 public sealed class ButtonDto : ComponentDto

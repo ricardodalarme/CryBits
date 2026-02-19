@@ -4,7 +4,7 @@ namespace CryBits.Client.Framework.Constants;
 
 public static class Buttons
 {
-    public static readonly Dictionary<string, Button> List = new();
+    public static readonly Dictionary<string, Button> List = [];
     public static Button Connect => List["Connect"];
     public static Button Register => List["Register"];
     public static Button Options => List["Options"];

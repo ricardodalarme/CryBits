@@ -25,7 +25,7 @@ internal class Player : Character
 
     // Dados temporários
     public bool GettingMap;
-    public List<Player> Party = new();
+    public List<Player> Party = [];
     public string PartyRequest;
     public Player Trade;
     public string TradeRequest;

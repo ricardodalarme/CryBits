@@ -8,7 +8,7 @@ namespace CryBits.Server.Entities;
 internal class Account(NetPeer connection)
 {
     // Lista de dados
-    public static readonly List<Account> List = new();
+    public static readonly List<Account> List = [];
 
     // Dados básicos
     public NetPeer Connection { get; } = connection;
@@ -17,7 +17,7 @@ internal class Account(NetPeer connection)
     public Access Access { get; set; }
     public bool InEditor { get; set; }
     public Player Character { get; set; }
-    public List<TempCharacter> Characters { get; set; } = new();
+    public List<TempCharacter> Characters { get; set; } = [];
 
     public struct TempCharacter
     {

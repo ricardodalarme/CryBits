@@ -12,7 +12,7 @@ internal sealed class InterfaceNode
     public object? Tag { get; set; }
     public InterfaceNode? Parent { get; private set; }
 
-    private readonly List<InterfaceNode> _nodes = new();
+    private readonly List<InterfaceNode> _nodes = [];
 
     public InterfaceNodeCollection Nodes { get; }
 

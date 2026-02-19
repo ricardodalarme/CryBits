@@ -11,7 +11,7 @@ internal static class NpcRepository
     public static void Read()
     {
         // Lê os dados
-        Npc.List = new Dictionary<Guid, Npc>();
+        Npc.List = [];
         var file = Directories.Npcs.GetFiles();
         for (byte i = 0; i < file.Length; i++)
             using (var stream = file[i].OpenRead())

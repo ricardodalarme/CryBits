@@ -19,7 +19,7 @@ internal class TempMap
     public readonly Map Data;
     public TempNpc[] Npc;
     public TempMapItems[] Item = Array.Empty<TempMapItems>();
-    public List<TempMapBlood> Blood = new();
+    public List<TempMapBlood> Blood = [];
     public TempMapWeather Weather { get; init; }
     public TempMapFog Fog { get; init; }
 

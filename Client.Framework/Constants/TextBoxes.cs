@@ -4,7 +4,7 @@ namespace CryBits.Client.Framework.Constants;
 
 public static class TextBoxes
 {
-    public static readonly Dictionary<string, TextBox> List = new();
+    public static readonly Dictionary<string, TextBox> List = [];
     public static TextBox Chat => List["Chat"];
     public static TextBox ConnectUsername => List["Connect_Username"];
     public static TextBox ConnectPassword => List["Connect_Password"];

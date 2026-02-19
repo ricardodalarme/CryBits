@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities;

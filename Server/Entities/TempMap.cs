@@ -12,12 +12,12 @@ namespace CryBits.Server.Entities;
 internal class TempMap(Guid id, Map map) : Entity(id)
 {
     // Lista de dados
-    public static readonly Dictionary<Guid, TempMap> List = new();
+    public static readonly Dictionary<Guid, TempMap> List = [];
 
     // Dados
     public readonly Map Data = map;
     public TempNpc[] Npc = Array.Empty<TempNpc>();
-    public List<TempMapItems> Item = new();
+    public List<TempMapItems> Item = [];
 
     // Construtor
 

@@ -9,7 +9,7 @@ namespace CryBits.Entities.Npc;
 public class Npc : Entity
 {
     // Lista de dados
-    public static Dictionary<Guid, Npc> List = new();
+    public static Dictionary<Guid, Npc> List = [];
 
     // Dados
     public string SayMsg { get; set; } = string.Empty;
@@ -20,9 +20,9 @@ public class Npc : Entity
     public int Experience { get; set; }
     public short[] Vital { get; set; } = new short[(byte)Enums.Vital.Count];
     public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
-    public IList<NpcDrop> Drop { get; set; } = new List<NpcDrop>();
+    public IList<NpcDrop> Drop { get; set; } = [];
     public bool AttackNpc { get; set; }
-    public IList<Npc> Allie { get; set; } = new List<Npc>();
+    public IList<Npc> Allie { get; set; } = [];
     public MovementStyle Movement { get; set; }
     public byte FleeHealth { get; set; }
     private Guid _shop;

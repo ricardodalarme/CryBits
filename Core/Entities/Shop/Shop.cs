@@ -9,7 +9,7 @@ namespace CryBits.Entities.Shop;
 public class Shop : Entity
 {
     // Lista de dados
-    public static Dictionary<Guid, Shop> List = new();
+    public static Dictionary<Guid, Shop> List = [];
 
     // Dados
     private Guid _currency;
@@ -18,8 +18,8 @@ public class Shop : Entity
         get => Item.List.Get(_currency);
         set => _currency = value.GetId();
     }
-    public IList<ShopItem> Bought { get; set; } = new List<ShopItem>();
-    public IList<ShopItem> Sold { get; set; } = new List<ShopItem>();
+    public IList<ShopItem> Bought { get; set; } = [];
+    public IList<ShopItem> Sold { get; set; } = [];
         
     public Shop()
     {

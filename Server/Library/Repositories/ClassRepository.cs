@@ -10,7 +10,7 @@ internal static class ClassRepository
 {
     public static void Read()
     {
-        Class.List = new Dictionary<Guid, Class>();
+        Class.List = [];
         var file = Directories.Classes.GetFiles();
 
         // Lê os dados

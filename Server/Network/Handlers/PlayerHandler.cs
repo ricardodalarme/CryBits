@@ -3,8 +3,6 @@ using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Systems;
 using LiteNetLib.Utils;
-using static CryBits.Globals;
-using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Server.Network.Handlers;
 

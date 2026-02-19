@@ -43,7 +43,7 @@ internal static class MapSender
     public static void MapPlayers(Player player)
     {
         // Envia os dados dos outros jogadores 
-        for (int i = 0; i < Account.List.Count; i++)
+        for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
                 if (player != Account.List[i].Character)
                     if (Account.List[i].Character.Map == player.Map)

@@ -25,7 +25,7 @@ internal static class AuthHandler
     {
         // Reseta os valores
         PanelsEvents.SelectCharacter = 0;
-        Class.List = new Dictionary<Guid, Class>();
+        Class.List = [];
 
         // Abre o painel de seleção de personagens
         PanelsEvents.MenuClose();

@@ -6,7 +6,7 @@ namespace CryBits.Client.Framework.Interfacily.Components;
 public class Screen : IMouseMoved, IMouseDown, IMouseUp, IMouseDoubleClick, IKeyReleased
 {
     public string Name { get; set; } = string.Empty;
-    public List<Component> Body { get; set; } = new();
+    public List<Component> Body { get; set; } = [];
 
     // Eventos
     public event Action? OnMouseUp;

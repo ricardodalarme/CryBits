@@ -22,7 +22,7 @@ internal static class MapItemSystem
         if (!map.HasPlayers()) return;
         if (Environment.TickCount64 <= Loop.TimerMapItems + 300000) return;
 
-        map.Item = new List<TempMapItems>();
+        map.Item = [];
         map.SpawnItems();
         MapSender.MapItems(map);
     }

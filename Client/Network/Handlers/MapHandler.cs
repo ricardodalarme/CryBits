@@ -47,7 +47,7 @@ internal static class MapHandler
         MapSender.RequestMap(needed);
 
         // Reseta os sangues do mapa
-        TempMap.Current.Blood = new List<TempMapBlood>();
+        TempMap.Current.Blood = [];
     }
 
     internal static void Map(NetDataReader data)

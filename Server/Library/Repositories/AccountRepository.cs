@@ -27,7 +27,7 @@ internal static class AccountRepository
 
         // Lê todos os personagens
         var file = directory.GetFiles();
-        account.Characters = new List<Account.TempCharacter>();
+        account.Characters = [];
         for (byte i = 0; i < file.Length; i++)
             // Cria um arquivo temporário
             using (var data = new BinaryReader(file[i].OpenRead()))

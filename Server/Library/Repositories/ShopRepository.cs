@@ -11,7 +11,7 @@ internal static class ShopRepository
     public static void Read()
     {
         // Lê os dados
-        Shop.List = new Dictionary<Guid, Shop>();
+        Shop.List = [];
         var file = Directories.Shops.GetFiles();
         for (byte i = 0; i < file.Length; i++)
             using (var stream = file[i].OpenRead())

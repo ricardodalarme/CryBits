@@ -66,7 +66,7 @@ internal static class Program
     private static void PerformShutdown()
     {
         // Salva os dados de todos os jogadores
-        for (int i = 0; i < Account.List.Count; i++)
+        for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
                 CharacterRepository.Write(Account.List[i]);
 

@@ -6,7 +6,7 @@ namespace CryBits.Client.Framework.Audio;
 public static class Sound
 {
     // Dispositivo sonoro
-    public static readonly Dictionary<string, SFML.Audio.Sound> List = new();
+    public static readonly Dictionary<string, SFML.Audio.Sound> List = [];
 
     public static void Load()
     {

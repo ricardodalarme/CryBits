@@ -9,19 +9,19 @@ namespace CryBits.Entities;
 public class Class : Entity
 {
     // Lista de dados
-    public static Dictionary<Guid, Class> List = new();
+    public static Dictionary<Guid, Class> List = [];
 
     // Dados
     public string Description { get; set; } = string.Empty;
-    public IList<short> TextureMale { get; set; } = new List<short>();
-    public IList<short> TextureFemale { get; set; } = new List<short>();
+    public IList<short> TextureMale { get; set; } = [];
+    public IList<short> TextureFemale { get; set; } = [];
     public Map.Map SpawnMap { get; set; }
     public byte SpawnDirection { get; set; }
     public byte SpawnX { get; set; }
     public byte SpawnY { get; set; }
     public short[] Vital { get; set; } = new short[(byte)Enums.Vital.Count];
     public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
-    public IList<ItemSlot> Item { get; set; } = new List<ItemSlot>();
+    public IList<ItemSlot> Item { get; set; } = [];
 
     public Class()
     {

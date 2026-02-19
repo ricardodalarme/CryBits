@@ -9,7 +9,7 @@ namespace CryBits.Entities.Map;
 public class Map : Entity
 {
     // Lista de dados
-    public static Dictionary<Guid, Map> List = new();
+    public static Dictionary<Guid, Map> List = [];
 
     // Tamanho dos mapas
     public const byte Width = 25;
@@ -18,14 +18,14 @@ public class Map : Entity
     // Dados
     public short Revision { get; set; }
     public Moral Moral { get; set; }
-    public IList<MapLayer> Layer { get; set; } = new List<MapLayer>();
+    public IList<MapLayer> Layer { get; set; } = [];
     public MapAttribute[,] Attribute { get; set; } = new MapAttribute[Width, Height];
     public byte Panorama { get; set; }
     public string Music { get; set; }
     public Color Color { get; set; } = Color.FromArgb(-1);
     public MapWeather Weather { get; set; } = new();
     public MapFog Fog { get; set; } = new();
-    public IList<MapNpc> Npc { get; set; } = new List<MapNpc>();
+    public IList<MapNpc> Npc { get; set; } = [];
     public byte Lighting { get; set; } = 100;
     public Map[] Link { get; set; } = new Map[(byte)Direction.Count];
 

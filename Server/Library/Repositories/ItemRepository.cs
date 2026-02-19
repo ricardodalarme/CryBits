@@ -11,7 +11,7 @@ internal static class ItemRepository
     public static void Read()
     {
         // Lê os dados
-        Item.List = new Dictionary<Guid, Item>();
+        Item.List = [];
         var file = Directories.Items.GetFiles();
         for (byte i = 0; i < file.Length; i++)
             using (var stream = file[i].OpenRead())

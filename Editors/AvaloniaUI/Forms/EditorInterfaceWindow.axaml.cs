@@ -40,7 +40,7 @@ internal sealed class TreeItemVM : INotifyPropertyChanged
     public Component? Tag { get; set; }
     public InterfaceNode? SourceNode { get; set; }
     public TreeItemVM? Parent { get; set; }
-    public ObservableCollection<TreeItemVM> Children { get; } = new();
+    public ObservableCollection<TreeItemVM> Children { get; } = [];
     public override string ToString() => _header;
 }
 

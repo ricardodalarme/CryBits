@@ -8,5 +8,5 @@ public abstract class Component
     public Point Position { get; set; }
     public bool Visible { get; set; }
     public Component? Parent { get; set; }
-    public List<Component> Children { get; set; } = new ();
+    public List<Component> Children { get; set; } = [];
 }

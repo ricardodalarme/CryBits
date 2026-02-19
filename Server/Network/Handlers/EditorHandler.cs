@@ -46,7 +46,7 @@ internal static class EditorHandler
         ClassRepository.WriteAll();
 
         // Envia os novos dados para todos jogadores conectados
-        for (int i = 0; i < Account.List.Count; i++)
+        for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i] != account)
                 ClassSender.Classes(Account.List[i]);
     }
@@ -71,7 +71,7 @@ internal static class EditorHandler
             tempMap.SpawnItems();
 
             // Envia o mapa para todos os jogadores que estão nele
-            for (int n = 0; n < Account.List.Count; n++)
+            for (var n = 0; n < Account.List.Count; n++)
                 if (Account.List[n] != account)
                     if (Account.List[n].Character.Map == tempMap || Account.List[n].InEditor)
                         MapSender.Map(Account.List[n], tempMap.Data);
@@ -92,7 +92,7 @@ internal static class EditorHandler
         NpcRepository.WriteAll();
 
         // Envia os novos dados para todos jogadores conectados
-        for (int i = 0; i < Account.List.Count; i++)
+        for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i] != account)
                 NpcSender.Npcs(Account.List[i]);
     }
@@ -111,7 +111,7 @@ internal static class EditorHandler
         ItemRepository.WriteAll();
 
         // Envia os novos dados para todos jogadores conectados
-        for (int i = 0; i < Account.List.Count; i++)
+        for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i] != account)
                 ItemSender.Items(Account.List[i]);
     }
@@ -130,7 +130,7 @@ internal static class EditorHandler
         ShopRepository.WriteAll();
 
         // Envia os novos dados para todos jogadores conectados
-        for (int i = 0; i < Account.List.Count; i++)
+        for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i] != account)
                 ShopSender.Shops(Account.List[i]);
     }

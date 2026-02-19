@@ -22,12 +22,12 @@ internal static class AccountHandler
     internal static void Join(NetDataReader data)
     {
         // Reseta alguns valores
-        Player.List = new List<Player>();
-        Item.List = new Dictionary<Guid, Item>();
-        Shop.List = new Dictionary<Guid, Shop>();
-        Npc.List = new Dictionary<Guid, Npc>();
-        Map.List = new Dictionary<Guid, Map>();
-        TempMap.List = new Dictionary<Guid, TempMap>();
+        Player.List = [];
+        Item.List = [];
+        Shop.List = [];
+        Npc.List = [];
+        Map.List = [];
+        TempMap.List = [];
 
         // Definir os valores que são enviados do servidor
         Player.Me = new Me(data.GetString());
@@ -67,7 +67,7 @@ internal static class AccountHandler
     internal static void JoinGame()
     {
         // Reseta os valores
-        Chat.Order = new List<Chat.Structure>();
+        Chat.Order = [];
         Chat.LinesFirst = 0;
         Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
         TextBoxes.Chat.Text = string.Empty;

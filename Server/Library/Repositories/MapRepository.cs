@@ -10,7 +10,7 @@ internal static class MapRepository
     public static void Read()
     {
         // Lê os dados
-        Map.List = new System.Collections.Generic.Dictionary<Guid, Map>();
+        Map.List = [];
         var file = Directories.Maps.GetFiles();
 
         if (file.Length > 0)

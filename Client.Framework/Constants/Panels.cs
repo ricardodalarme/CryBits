@@ -4,7 +4,7 @@ namespace CryBits.Client.Framework.Constants;
 
 public static class Panels
 {
-    public static readonly Dictionary<string, Panel> List = new();
+    public static readonly Dictionary<string, Panel> List = [];
     public static Panel Connect => List["Connect"];
     public static Panel CreateCharacter => List["CreateCharacter"];
     public static Panel Options => List["Options"];
