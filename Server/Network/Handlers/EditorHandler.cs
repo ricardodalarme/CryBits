@@ -18,34 +18,34 @@ internal static class EditorHandler
 {
     internal static void WriteSettings(Account account, NetDataReader data)
     {
-        // Verifica se o jogador realmente tem permissão 
+        // Ensure caller has editor access.
         if (account.Access < Access.Editor)
         {
             AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
-        // Altera os dados
+        // Apply received settings.
         Config = (ServerConfig)data.ReadObject();
 
-        // Salva os dados
+        // Persist settings.
         SettingsRepository.Write();
     }
 
     internal static void WriteClasses(Account account, NetDataReader data)
     {
-        // Verifica se o jogador realmente tem permissão 
+        // Ensure caller has editor access.
         if (account.Access < Access.Editor)
         {
             AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
-        // Recebe e salva os novos dados
+        // Receive and persist new classes.
         Class.List = (Dictionary<Guid, Class>)data.ReadObject();
         ClassRepository.WriteAll();
 
-        // Envia os novos dados para todos jogadores conectados
+        // Broadcast updated classes to other connected accounts.
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i] != account)
                 ClassSender.Classes(Account.List[i]);
@@ -53,24 +53,24 @@ internal static class EditorHandler
 
     internal static void WriteMaps(Account account, NetDataReader data)
     {
-        // Verifica se o jogador realmente tem permissão 
+        // Ensure caller has editor access.
         if (account.Access < Access.Editor)
         {
             AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
-        // Recebe e salva os novos dados
+        // Receive and persist new maps.
         Map.List = (Dictionary<Guid, Map>)data.ReadObject();
         MapRepository.WriteAll();
 
-        // Envia os novos dados para todos jogadores 
+        // Update runtime map state and broadcast maps to players/editors.
         foreach (var tempMap in TempMap.List.Values)
         {
-            // Itens do mapa
+            // Spawn any static map items.
             tempMap.SpawnItems();
 
-            // Envia o mapa para todos os jogadores que estão nele
+            // Broadcast the map to players who are on it (and editors).
             for (var n = 0; n < Account.List.Count; n++)
                 if (Account.List[n] != account)
                     if (Account.List[n].Character.Map == tempMap || Account.List[n].InEditor)
@@ -80,18 +80,18 @@ internal static class EditorHandler
 
     internal static void WriteNpcs(Account account, NetDataReader data)
     {
-        // Verifica se o jogador realmente tem permissão 
+        // Ensure caller has editor access.
         if (account.Access < Access.Editor)
         {
             AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
-        // Recebe e salva os novos dados
+        // Receive and persist new NPCs.
         Npc.List = (Dictionary<Guid, Npc>)data.ReadObject();
         NpcRepository.WriteAll();
 
-        // Envia os novos dados para todos jogadores conectados
+        // Broadcast NPC updates to other connected accounts.
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i] != account)
                 NpcSender.Npcs(Account.List[i]);
@@ -99,18 +99,18 @@ internal static class EditorHandler
 
     internal static void WriteItems(Account account, NetDataReader data)
     {
-        // Verifica se o jogador realmente tem permissão 
+        // Ensure caller has editor access.
         if (account.Access < Access.Editor)
         {
             AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
-        // Recebe e salva os novos dados
+        // Receive and persist new items.
         Item.List = (Dictionary<Guid, Item>)data.ReadObject();
         ItemRepository.WriteAll();
 
-        // Envia os novos dados para todos jogadores conectados
+        // Broadcast item updates to other connected accounts.
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i] != account)
                 ItemSender.Items(Account.List[i]);
@@ -118,18 +118,18 @@ internal static class EditorHandler
 
     internal static void WriteShops(Account account, NetDataReader data)
     {
-        // Verifica se o jogador realmente tem permissão 
+        // Ensure caller has editor access.
         if (account.Access < Access.Editor)
         {
             AuthSender.Alert(account, "You aren't allowed to do this.");
             return;
         }
 
-        // Recebe e salva os novos dados
+        // Receive and persist new shops.
         Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();
         ShopRepository.WriteAll();
 
-        // Envia os novos dados para todos jogadores conectados
+        // Broadcast shop updates to other connected accounts.
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i] != account)
                 ShopSender.Shops(Account.List[i]);
@@ -153,13 +153,13 @@ internal static class EditorHandler
         {
             var player = account.Character;
 
-            // Se necessário enviar as informações do mapa ao jogador
+            // Send map data to the requesting player if requested.
             if (data.GetBool()) MapSender.Map(player.Account, player.Map.Data);
 
-            // Envia a informação aos outros jogadores
+            // Send player list for the map to nearby clients.
             MapSender.MapPlayers(player);
 
-            // Entra no mapa
+            // Finish player map load.
             player.GettingMap = false;
             PlayerSender.JoinMap(player);
         }

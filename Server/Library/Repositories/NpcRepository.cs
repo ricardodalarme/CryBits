@@ -10,7 +10,7 @@ internal static class NpcRepository
 {
     public static void Read()
     {
-        // Lê os dados
+        // Load NPCs from disk.
         Npc.List = [];
         var file = Directories.Npcs.GetFiles();
         for (byte i = 0; i < file.Length; i++)
@@ -20,9 +20,11 @@ internal static class NpcRepository
 
     public static void WriteAll()
     {
-        // Escreve os dados
+        // Write NPCs to disk.
         foreach (var npc in Npc.List.Values)
-            using (var stream = new FileInfo(Path.Combine(Directories.Npcs.FullName, npc.Id.ToString()) + Directories.Format).OpenWrite())
+            using (var stream =
+                   new FileInfo(Path.Combine(Directories.Npcs.FullName, npc.Id.ToString()) + Directories.Format)
+                       .OpenWrite())
 #pragma warning disable SYSLIB0011
                 new BinaryFormatter().Serialize(stream, npc);
 #pragma warning restore SYSLIB0011

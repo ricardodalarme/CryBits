@@ -10,7 +10,7 @@ internal static class PartySender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
+
         data.Put((byte)ServerPacket.Party);
         data.Put((byte)player.Party.Count);
         for (byte i = 0; i < player.Party.Count; i++) data.Put(player.Party[i].Name);
@@ -21,7 +21,6 @@ internal static class PartySender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PartyInvitation);
         data.Put(playerInvitation);
         Send.ToPlayer(player, data);

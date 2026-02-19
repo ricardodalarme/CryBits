@@ -9,7 +9,6 @@ internal static class ChatSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.Message);
         data.Put(message);
         data.Put((byte)type);

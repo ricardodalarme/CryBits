@@ -21,12 +21,12 @@ internal static class MapHandler
         var id = data.GetGuid();
         var currentRevision = data.GetShort();
 
-        // Limpa todos os outros jogadores
+        // Clear other player entries
         for (byte i = 0; i < Player.List.Count; i++)
             if (Player.List[i] != Player.Me)
                 Player.List.RemoveAt(i);
 
-        // Verifica se é necessário baixar os dados do mapa
+        // Check whether the map data needs to be downloaded
         if (File.Exists(Directories.MapsData.FullName + id + Directories.Format) ||
             CryBits.Entities.Map.Map.List.ContainsKey(id))
         {
@@ -43,10 +43,10 @@ internal static class MapHandler
         else
             needed = true;
 
-        // Solicita os dados do mapa
+        // Request map data
         MapSender.RequestMap(needed);
 
-        // Reseta os sangues do mapa
+        // Clear blood splatters
         TempMap.Current.Blood = [];
     }
 
@@ -55,7 +55,7 @@ internal static class MapHandler
         var map = (Map)data.ReadObject();
         var id = map.Id;
 
-        // Obtém o dado
+        // Store map data
         if (CryBits.Entities.Map.Map.List.ContainsKey(id)) CryBits.Entities.Map.Map.List[id] = map;
         else
         {
@@ -65,17 +65,17 @@ internal static class MapHandler
 
         TempMap.Current = TempMap.List[id];
 
-        // Salva o mapa
+        // Persist map to disk
         MapRepository.Write(map);
 
-        // Redimensiona as partículas do clima
+        // Update weather particles and map state
         TempMap.Current.Weather.UpdateType();
         TempMap.Current.Data.Update();
     }
 
     internal static void JoinMap()
     {
-        // Se tiver, reproduz a música de fundo do mapa
+        // Play map background music if present
         if (string.IsNullOrEmpty(TempMap.Current.Data.Music))
             Music.Stop();
         else
@@ -84,10 +84,10 @@ internal static class MapHandler
 
     internal static void MapItems(NetDataReader data)
     {
-        // Quantidade
+        // Item count
         TempMap.Current.Item = new TempMapItems[data.GetByte()];
 
-        // Lê os dados de todos
+        // Read all map items
         for (byte i = 0; i < TempMap.Current.Item.Length; i++)
             TempMap.Current.Item[i] = new TempMapItems
             {

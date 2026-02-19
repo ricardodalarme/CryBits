@@ -12,50 +12,46 @@ namespace CryBits.Client;
 
 internal static class Program
 {
-    // Usado para manter a aplicação aberta
+    /// <summary>
+    /// Indicates whether the application main loop is running.
+    /// </summary>
     public static bool Working = true;
 
     [STAThread]
     private static void Main()
     {
-        // Verifica se todos os diretórios existem, se não existirem então criá-los
         Directories.Create();
 
-        // Carrega todos os dados
         ToolsRepository.Read();
         OptionsRepository.Read();
 
-        // Adiciona os eventos aos componentes
         CheckBoxEvents.Bind();
         ButtonsEvents.Bind();
         PanelsEvents.Bind();
         TextBoxesEvents.Bind();
         Window.Bind();
 
-        // Abre a janela
         Window.OpenMenu();
 
-        // Inicializa todos os dispositivos
         Socket.Init();
         Sound.Load();
         Renders.Init();
 
-        // Inicia a aplicação
         Loop.Init();
     }
 
+    /// <summary>
+    /// Disconnects from the server and exits the application.
+    /// </summary>
     public static void Close()
     {
         var waitTimer = Environment.TickCount;
 
-        // Desconecta da rede
         Socket.Disconnect();
 
-        // Espera até que o jogador seja desconectado
         while (Socket.IsConnected() && Environment.TickCount <= waitTimer + 1000)
             Socket.HandleData();
 
-        // Fecha a aplicação
         Working = false;
         Environment.Exit(0);
     }

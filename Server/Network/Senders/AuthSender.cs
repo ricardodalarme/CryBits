@@ -10,15 +10,14 @@ internal static class AuthSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.Alert);
         data.Put(message);
         Send.ToPlayer(account, data);
 
-        // Desconecta o jogador
+        // Disconnect the account.
         if (disconnect) account.Connection.Disconnect();
     }
-        
+
     public static void Latency(Account account)
     {
         var data = new NetDataWriter();
@@ -30,7 +29,6 @@ internal static class AuthSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.Connect);
         Send.ToPlayer(account, data);
     }

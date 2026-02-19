@@ -6,7 +6,7 @@ namespace CryBits.Client.Framework.Graphics;
 
 public static class Textures
 {
-    // Texturas
+    // Texture caches
     public static readonly List<Texture> Characters = LoadTextures(Directories.TexCharacters.FullName);
     public static readonly List<Texture> Tiles = LoadTextures(Directories.TexTiles.FullName);
     public static readonly List<Texture> Faces = LoadTextures(Directories.TexFaces.FullName);
@@ -29,7 +29,7 @@ public static class Textures
     public static readonly Texture Transparent = new(Directories.TexTransparent.FullName + Format);
     public static readonly Texture Grid = new(Directories.TexGrid.FullName + Format);
 
-    // Formato das texturas
+    // Texture file extension.
     private const string Format = ".png";
 
     private static List<Texture> LoadTextures(string directory)
@@ -37,15 +37,15 @@ public static class Textures
         short i = 1;
         var tempTex = new List<Texture> { null };
 
-        // Carrega todas do diretório e as adiciona a lista
+        // Load sequentially numbered textures from the directory into the cache.
         while (File.Exists(Path.Combine(directory, i + Format)))
             tempTex.Add(new Texture(Path.Combine(directory, i++ + Format)));
 
-        // Retorna o cache da textura
+        // Return loaded textures.
         return tempTex;
     }
 
-    // Retorna com o tamanho da textura
+    /// <summary>Return the texture size as a <see cref="Size"/>.</summary>
 
     public static Size ToSize(this Texture texture) => new ((int)texture.Size.X, (int)texture.Size.Y);
 }

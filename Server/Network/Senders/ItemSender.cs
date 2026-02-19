@@ -12,7 +12,6 @@ internal static class ItemSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.Items);
         data.WriteObject(Item.List);
         Send.ToPlayer(account, data);

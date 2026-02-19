@@ -17,12 +17,11 @@ internal static class CharacterRepository
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", name) +
                                 Directories.Format);
 
-        // Verifica se o diretório existe
+        // Return if the character file directory doesn't exist.
         if (!file.Directory.Exists) return;
 
-        // Cria um arquivo temporário
+        // Read character data and populate Player instance.
         using var data = new BinaryReader(file.OpenRead());
-        // Carrega os dados e os adiciona ao cache
         account.Character = new Player(account);
         account.Character.Name = data.ReadString();
         account.Character.TextureNum = data.ReadInt16();
@@ -51,14 +50,14 @@ internal static class CharacterRepository
 
     public static string ReadAllNames()
     {
-        // Cria o arquivo caso ele não existir
+        // Create the characters names file if it doesn't exist.
         if (!Directories.Characters.Exists)
         {
             WriteAllNames(string.Empty);
             return string.Empty;
         }
 
-        // Retorna o nome de todos os personagens registrados
+        // Return all registered character names.
         using var data = new StreamReader(Directories.Characters.FullName);
         return data.ReadToEnd();
     }
@@ -69,10 +68,10 @@ internal static class CharacterRepository
             Path.Combine(Directories.Accounts.FullName, account.User, "Characters", account.Character.Name) +
             Directories.Format);
 
-        // Evita erros
+        // Ensure character directory exists.
         if (!file.Directory.Exists) file.Directory.Create();
 
-        // Salva os dados do personagem no arquivo
+        // Save character data to file.
         using var data = new BinaryWriter(file.OpenWrite());
         data.Write(account.Character.Name);
         data.Write(account.Character.TextureNum);
@@ -103,14 +102,14 @@ internal static class CharacterRepository
 
     public static void WriteName(string name)
     {
-        // Salva o nome de um personagem no arquivo
+        // Append a character name to names file.
         using var data = new StreamWriter(Directories.Characters.FullName, true);
         data.Write(";" + name + ":");
     }
 
     public static void WriteAllNames(string charactersName)
     {
-        // Salva o nome de todos os personagens no arquivo
+        // Overwrite names file with the provided list.
         using var data = new StreamWriter(Directories.Characters.FullName);
         data.Write(charactersName);
     }

@@ -11,21 +11,21 @@ internal static class PartyHandler
 {
     internal static void Party(NetDataReader data)
     {
-        // Lê os dados do grupo
+        // Read party members
         Player.Me.Party = new Player[data.GetByte()];
         for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Player.Get(data.GetString());
     }
 
     internal static void PartyInvitation(NetDataReader data)
     {
-        // Nega o pedido caso o jogador não quiser receber convites
+        // Decline if player disabled party invites
         if (!Options.Party)
         {
             PartySender.PartyDecline();
             return;
         }
 
-        // Abre a janela de convite para o grupo
+        // Show party invitation panel
         PanelsEvents.PartyInvitation = data.GetString();
         Panels.PartyInvitation.Visible = true;
     }

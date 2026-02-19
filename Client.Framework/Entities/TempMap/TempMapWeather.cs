@@ -20,10 +20,10 @@ public class TempMapWeather(MapWeather data)
     {
         bool stop = false, move;
 
-        // Somente se necessário
+        // Return early if no weather.
         if (Data.Type == 0) return;
 
-        // Contagem da neve
+        // Snow spawn timer check.
         if (_snowTimer < Environment.TickCount)
         {
             move = true;
@@ -32,7 +32,7 @@ public class TempMapWeather(MapWeather data)
         else
             move = false;
 
-        // Contagem dos relâmpagos
+        // Lightning decay timer.
         if (Lightning > 0)
             if (_lightningTimer < Environment.TickCount)
             {
@@ -40,7 +40,7 @@ public class TempMapWeather(MapWeather data)
                 _lightningTimer = Environment.TickCount + 25;
             }
 
-        // Adiciona uma nova partícula
+        // Spawn new particles when available.
         for (short i = 1; i < Particles.Length; i++)
             if (!Particles[i].Visible)
             {
@@ -48,10 +48,10 @@ public class TempMapWeather(MapWeather data)
                 {
                     if (!stop)
                     {
-                        // Cria a partícula
+                        // Activate particle
                         Particles[i].Visible = true;
 
-                        // Cria a partícula de acordo com o seu tipo
+                        // Initialize particle according to weather type
                         switch (Data.Type)
                         {
                             case Weather.Thundering:
@@ -69,7 +69,7 @@ public class TempMapWeather(MapWeather data)
             }
             else
             {
-                // Movimenta a partícula de acordo com o seu tipo
+                // Move particle based on weather type
                 switch (Data.Type)
                 {
                     case Weather.Thundering:
@@ -81,15 +81,15 @@ public class TempMapWeather(MapWeather data)
                         break;
                 }
 
-                // Reseta a partícula
+                // Reset particle when out of bounds
                 if (Particles[i].X > ScreenWidth || Particles[i].Y > ScreenHeight) Particles[i] = new TempMapWeatherParticle();
             }
 
-        // Trovoadas
+        // Thunderstorm logic
         if (Data.Type == Weather.Thundering)
             if (MyRandom.Next(0, MaxWeatherIntensity * 10 - Data.Intensity * 2) == 0)
             {
-                // Som do trovão
+                // Play thunder sound
                 var thunderList = new[]
                 {
                     Sounds.Thunder1,
@@ -100,25 +100,25 @@ public class TempMapWeather(MapWeather data)
                 var thunder = MyRandom.Next(0, thunderList.Length);
                 Sound.Play(thunderList[thunder]);
 
-                // Relâmpago
+                // Flash lightning
                 if (thunder < 3) Lightning = 190;
             }
     }
 
     public void UpdateType()
     {
-        // Para todos os sons
+        // Stop all sounds.
         Sound.StopAll();
 
-        // Redimensiona a lista
+        // Resize particle array for the current weather type.
         switch (Data.Type)
         {
             case Weather.Thundering:
             case Weather.Raining:
-                // Reproduz o som chuva
+                // Play rain loop.
                 Sound.Play(Sounds.Rain, true);
 
-                // Redimensiona a estrutura
+                // Allocate particle array for rain.
                 Particles = new TempMapWeatherParticle[MaxRainParticles + 1];
                 break;
             case Weather.Snowing:

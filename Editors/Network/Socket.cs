@@ -61,7 +61,7 @@ internal static class Socket
 
     private static void Leave()
     {
-        // Fecha todas as janelas abertas e abre o menu de login
+        // Close all open windows and show the login menu.
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
             if (Avalonia.Application.Current?.ApplicationLifetime is
@@ -70,6 +70,7 @@ internal static class Socket
                 foreach (var win in desktop.Windows.ToArray())
                     win.Close();
             }
+
             AvaloniaLoginLauncher.ShowLogin();
         });
     }

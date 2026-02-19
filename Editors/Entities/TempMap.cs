@@ -13,23 +13,22 @@ namespace CryBits.Editors.Entities;
 
 internal static class TempMap
 {
-    // Contadores
     private static int _fogXTimer;
     private static int _fogYTimer;
     private static int _snowTimer;
     private static int _thunderingTimer;
 
-    // Fumaças
     public static int FogX;
     public static int FogY;
 
-    // Clima
     public static TempMapWeatherParticle[] Weather = Array.Empty<TempMapWeatherParticle>();
     public static byte Lightning;
 
+    /// <summary>
+    /// Resize the weather particle array for the current map weather type.
+    /// </summary>
     public static void UpdateWeatherType()
     {
-        // Redimensiona a lista
         var win = EditorMapsWindow.Instance;
         if (win?.SelectedMap != null)
             Weather = win.SelectedMap.Weather.Type switch
@@ -40,9 +39,11 @@ internal static class TempMap
             };
     }
 
+    /// <summary>
+    /// Update fog offsets and related timers for the selected map.
+    /// </summary>
     public static void UpdateFog()
     {
-        // Faz a movimentação
         var win = EditorMapsWindow.Instance;
         if (win == null || !win.IsOpen) return;
         if (win.SelectedMap == null) return;
@@ -57,24 +58,20 @@ internal static class TempMap
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
         int speed = map.Fog.SpeedX;
 
-        // Apenas se necessário
         if (_fogXTimer >= Environment.TickCount) return;
         if (speed == 0) return;
 
-        // Movimento para trás
         if (speed < 0)
         {
             FogX--;
             if (FogX < -textureSize.Width) FogX = 0;
         }
-        // Movimento para frente
         else
         {
             FogX++;
             if (FogX > textureSize.Width) FogX = 0;
         }
 
-        // Contagem
         if (speed < 0) speed *= -1;
         _fogXTimer = Environment.TickCount + 50 - speed;
     }
@@ -85,33 +82,31 @@ internal static class TempMap
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
         int speed = map.Fog.SpeedY;
 
-        // Apenas se necessário
         if (_fogYTimer >= Environment.TickCount) return;
         if (speed == 0) return;
 
-        // Movimento para trás
         if (speed < 0)
         {
             FogY--;
             if (FogY < -textureSize.Height) FogY = 0;
         }
-        // Movimento para frente
         else
         {
             FogY++;
             if (FogY > textureSize.Height) FogY = 0;
         }
 
-        // Contagem
         if (speed < 0) speed *= -1;
         _fogYTimer = Environment.TickCount + 50 - speed;
     }
 
+    /// <summary>
+    /// Update weather particles, sounds and timers for the current map.
+    /// </summary>
     public static void UpdateWeather()
     {
         bool stop = false, move;
 
-        // Somente se necessário
         var win = EditorMapsWindow.Instance;
         if (win?.SelectedMap == null) return;
         if (!win.IsOpen || win.SelectedMap.Weather.Type == 0 || !win.ShowVisualizationSafe)
@@ -120,10 +115,8 @@ internal static class TempMap
             return;
         }
 
-        // Clima do mapa
         var weather = win.SelectedMap.Weather;
 
-        // Reproduz o som chuva
         if (weather.Type == Enums.Weather.Raining || weather.Type == Enums.Weather.Thundering)
         {
             if (Sound.List[Sounds.Rain].Status != SoundStatus.Playing)
@@ -132,7 +125,6 @@ internal static class TempMap
         else
             if (Sound.List[Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
 
-        // Contagem da neve
         if (_snowTimer < Environment.TickCount)
         {
             move = true;
@@ -141,7 +133,6 @@ internal static class TempMap
         else
             move = false;
 
-        // Contagem dos relâmpagos
         if (Lightning > 0)
             if (_thunderingTimer < Environment.TickCount)
             {
@@ -149,7 +140,6 @@ internal static class TempMap
                 _thunderingTimer = Environment.TickCount + 25;
             }
 
-        // Adiciona uma nova partícula
         for (var i = 1; i <= Weather.GetUpperBound(0); i++)
             if (!Weather[i].Visible)
             {
@@ -157,10 +147,8 @@ internal static class TempMap
                 {
                     if (!stop)
                     {
-                        // Cria a partícula
                         Weather[i].Visible = true;
 
-                        // Cria a partícula de acordo com o seu tipo
                         switch (weather.Type)
                         {
                             case Enums.Weather.Thundering:
@@ -174,7 +162,6 @@ internal static class TempMap
             }
             else
             {
-                // Movimenta a partícula de acordo com o seu tipo
                 switch (weather.Type)
                 {
                     case Enums.Weather.Thundering:
@@ -182,16 +169,13 @@ internal static class TempMap
                     case Enums.Weather.Snowing: Weather[i].MoveSnow(move); break;
                 }
 
-                // Reseta a partícula
                 if (Weather[i].X > Map.Width * Grid || Weather[i].Y > Map.Height * Grid)
                     Weather[i] = new TempMapWeatherParticle();
             }
 
-        // Trovoadas
         if (weather.Type == Enums.Weather.Thundering)
             if (MyRandom.Next(0, MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
             {
-                // Som do trovão
                 var thunderList = new[]
                 {
                     Sounds.Thunder1,
@@ -202,7 +186,6 @@ internal static class TempMap
                 var thunder = MyRandom.Next(0, thunderList.Length);
                 Sound.Play(thunderList[thunder]);
 
-                // Relâmpago
                 if (thunder < 3) Lightning = 190;
             }
     }

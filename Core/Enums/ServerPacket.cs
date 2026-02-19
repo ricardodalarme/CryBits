@@ -1,6 +1,6 @@
 ﻿namespace CryBits.Enums;
 
-// Pacotes do servidor para o cliente
+/// <summary>Server packets sent to the client.</summary>
 public enum ServerPacket
 {
     Alert,

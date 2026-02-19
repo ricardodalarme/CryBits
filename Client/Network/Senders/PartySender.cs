@@ -9,7 +9,6 @@ internal static class PartySender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.PartyInvite);
         data.Put(playerName);
         Send.Packet(data);
@@ -19,7 +18,6 @@ internal static class PartySender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.PartyAccept);
         Send.Packet(data);
     }
@@ -28,7 +26,6 @@ internal static class PartySender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.PartyDecline);
         Send.Packet(data);
     }
@@ -37,7 +34,6 @@ internal static class PartySender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.PartyLeave);
         Send.Packet(data);
     }

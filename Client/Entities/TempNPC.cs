@@ -9,10 +9,8 @@ internal class TempNpc : Character
 
     public void Logic()
     {
-        // Dano
         if (Hurt + 325 < Environment.TickCount) Hurt = 0;
 
-        // Movimento
         ProcessMovement();
     }
 }

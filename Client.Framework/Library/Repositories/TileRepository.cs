@@ -7,9 +7,9 @@ namespace CryBits.Client.Framework.Library.Repositories;
 
 public static class TileRepository
 {
+    /// <summary>Read all tile metadata from disk.</summary>
     public static void ReadAll()
     {
-        // Lê os dados
         Tile.List = new Tile[Textures.Tiles.Count];
         for (byte i = 1; i < Tile.List.Length; i++) Read(i);
     }
@@ -18,7 +18,7 @@ public static class TileRepository
     {
         var file = new FileInfo(Path.Combine(Directories.Tiles.FullName, index.ToString()) + Directories.Format);
 
-        // Evita erros
+        // If the tile file is missing, create default data to avoid read errors.
         if (!file.Exists)
         {
             var textureSize = Textures.Tiles[index].ToSize();
@@ -27,7 +27,7 @@ public static class TileRepository
             return;
         }
 
-        // Lê os dados
+        // Read data
         using var stream = file.OpenRead();
 #pragma warning disable SYSLIB0011
         Tile.List[index] = (Tile)new BinaryFormatter().Deserialize(stream);

@@ -11,7 +11,6 @@ internal static class ChatSender
   {
     var data = new NetDataWriter();
 
-    // Envia os dados
     data.Put((byte)ServerPacket.Message);
     data.Put(text);
     data.Put(color.ToArgb());
@@ -23,7 +22,6 @@ internal static class ChatSender
     var data = new NetDataWriter();
     var message = "[Map] " + player.Name + ": " + text;
 
-    // Envia os dados
     data.Put((byte)ServerPacket.Message);
     data.Put(message);
     data.Put(Color.White.ToArgb());
@@ -35,7 +33,6 @@ internal static class ChatSender
     var data = new NetDataWriter();
     var message = "[Global] " + player.Name + ": " + text;
 
-    // Envia os dados
     data.Put((byte)ServerPacket.Message);
     data.Put(message);
     data.Put(Color.Yellow.ToArgb());
@@ -46,14 +43,14 @@ internal static class ChatSender
   {
     var addressee = Player.Find(addresseeName);
 
-    // Verifica se o jogador está conectado
+    // Check if the addressee is connected.
     if (addressee == null)
     {
       Message(player, addresseeName + " is currently offline.", Color.Blue);
       return;
     }
 
-    // Envia as mensagens
+    // Send private messages.
     Message(player, "[To] " + addresseeName + ": " + text, Color.Pink);
     Message(addressee, "[From] " + player.Name + ": " + text, Color.Pink);
   }

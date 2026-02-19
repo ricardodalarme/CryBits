@@ -13,12 +13,12 @@ internal static class ClassRepository
         Class.List = [];
         var file = Directories.Classes.GetFiles();
 
-        // Lê os dados
+        // Load classes from disk.
         if (file.Length > 0)
             for (byte i = 0; i < file.Length; i++)
                 using (var stream = file[i].OpenRead())
                     Class.List.Add(new Guid(file[i].Name.Remove(36)), (Class)new BinaryFormatter().Deserialize(stream));
-        // Cria uma classe caso não houver nenhuma
+        // Create a default class if none exist.
         else
         {
             var @class = new Class();
@@ -29,7 +29,7 @@ internal static class ClassRepository
 
     public static void Write(Class @class)
     {
-        // Escreve os dados
+        // Write class to disk.
         using var stream =
             new FileInfo(Path.Combine(Directories.Classes.FullName, @class.Id.ToString()) + Directories.Format)
                 .OpenWrite();
@@ -40,7 +40,7 @@ internal static class ClassRepository
 
     public static void WriteAll()
     {
-        // Escreve os dados
+        // Write classes to disk.
         foreach (var @class in Class.List.Values)
             Write(@class);
     }

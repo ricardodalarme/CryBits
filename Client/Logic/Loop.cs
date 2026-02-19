@@ -13,13 +13,16 @@ namespace CryBits.Client.Logic;
 
 internal static class Loop
 {
-    // Medida de quantos frames são renderizados por segundo 
+    // Measured frames per second.
     public static short Fps;
 
-    // Contagens
+    // Timing counters
     public static int TextBoxTimer;
     public static int ChatTimer;
 
+    /// <summary>
+    /// Start the client main loop: handle network, update game state and present frames.
+    /// </summary>
     public static void Init()
     {
         var timer1000 = 0;
@@ -28,16 +31,15 @@ internal static class Loop
 
         while (Program.Working)
         {
-            // Manuseia os dados recebidos
+            // Handle incoming network data.
             Socket.HandleData();
 
-            // Apresenta os gráficos à tela
+            // Present the rendered frame.
             RenderPipeline.Present();
 
-            // Processa os eventos da janela
+            // Dispatch window events.
             Renders.RenderWindow.DispatchEvents();
 
-            // Eventos
             TextBox();
 
             if (Screen.Current == Screens.Game)
@@ -45,28 +47,28 @@ internal static class Loop
                 TempMap.Current.Logic();
                 if (timer30 < Environment.TickCount)
                 {
-                    // Lógica dos jogadores
+                    // Player logic.
                     for (byte i = 0; i < Player.List.Count; i++)
                         Player.List[i].Logic();
 
-                    // Lógica dos Npcs
+                    // NPC logic.
                     for (byte i = 0; i < TempMap.Current.Npc.Length; i++)
                         if (TempMap.Current.Npc[i].Data != null)
                             TempMap.Current.Npc[i].Logic();
 
-                    // Reinicia a contagem
+                    // Reset 30 ms timer
                     timer30 = Environment.TickCount + 30;
                 }
 
-                // Verifica se é necessário mostrar o painel de informações
+                // Update information panel visibility
                 PanelsEvents.CheckInformation();
             }
 
-            // Faz com que a aplicação se mantenha estável
+            // Yield briefly to avoid busy-wait.
             Thread.Yield();
             Thread.Sleep(1);
 
-            // Cálcula o FPS
+            // Update FPS counter.
             if (timer1000 < Environment.TickCount)
             {
                 AuthSender.Latency();
@@ -78,19 +80,19 @@ internal static class Loop
                 fps++;
         }
 
-        // Fecha o jogo
+        // Close the client.
         Program.Close();
     }
 
     private static void TextBox()
     {
-        // Contagem para a renderização da referência do último texto
+        // Toggle textbox caret visibility on a timer.
         if (TextBoxTimer < Environment.TickCount)
         {
             TextBoxTimer = Environment.TickCount + 500;
             TextBoxesEvents.Signal = !TextBoxesEvents.Signal;
 
-            // Se necessário foca o digitalizador de novo
+            // Re-evaluate focused textbox if needed.
             Framework.Interfacily.Components.TextBox.Focus();
         }
     }

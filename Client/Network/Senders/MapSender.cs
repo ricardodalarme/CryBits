@@ -9,7 +9,6 @@ internal static class MapSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.RequestMap);
         data.Put(order);
         Send.Packet(data);

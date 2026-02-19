@@ -18,40 +18,32 @@ public class Button : Component, IMouseMoved, IMouseUp, IMouseDown
 
     public void MouseUp()
     {
-        // Somente se necessário
         if (!IsAbove(new Rectangle(Position, Textures.Buttons[TextureNum].ToSize()))) return;
 
-        // Altera o estado do botão
         Sound.Play(Sounds.Click);
         ButtonState = ButtonState.Above;
 
-        // Executa o evento
         OnMouseUp?.Invoke();
     }
 
     public void MouseDown(MouseButtonEventArgs e)
     {
-        // Somente se necessário
         if (e.Button == Mouse.Button.Right) return;
         if (!IsAbove(new Rectangle(Position, Textures.Buttons[TextureNum].ToSize()))) return;
 
-        // Altera o estado do botão
         ButtonState = ButtonState.Click;
     }
 
     public void MouseMoved()
     {
-        // Se o mouse não estiver sobre a ferramenta, então não executar o evento
         if (!IsAbove(new Rectangle(Position, Textures.Buttons[TextureNum].ToSize())))
         {
             ButtonState = ButtonState.Normal;
             return;
         }
 
-        // Se o botão já estiver no estado normal, isso não é necessário
         if (ButtonState != ButtonState.Normal) return;
 
-        // Altera o estado do botão
         ButtonState = ButtonState.Above;
         Sound.Play(Sounds.Above);
     }

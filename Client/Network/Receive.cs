@@ -6,9 +6,9 @@ namespace CryBits.Client.Network;
 
 internal static class Receive
 {
+    /// <summary>Process incoming client packets and dispatch to handlers.</summary>
     public static void Handle(NetPacketReader data)
     {
-        // Manuseia os dados recebidos
         switch ((ServerPacket)data.GetByte())
         {
             case ServerPacket.Latency: AuthHandler.Latency(); break;

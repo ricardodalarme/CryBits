@@ -36,7 +36,12 @@ using SystemRect = System.Drawing.Rectangle;
 namespace CryBits.Editors.AvaloniaUI.Forms;
 
 // Cross-platform replacement for System.Windows.Forms.MouseButtons
-internal enum MouseButtons { None, Left, Right }
+internal enum MouseButtons
+{
+    None,
+    Left,
+    Right
+}
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Layer view-model for the DataGrid
@@ -51,10 +56,15 @@ internal sealed class LayerVm : INotifyPropertyChanged
     public bool Visible
     {
         get => _visible;
-        set { _visible = value; OnPropertyChanged(); }
+        set
+        {
+            _visible = value;
+            OnPropertyChanged();
+        }
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
     private void OnPropertyChanged([CallerMemberName] string? n = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
 }
@@ -73,8 +83,10 @@ internal partial class EditorMapsWindow : Window
 
     /// <summary>True while the window is open; safe to read from any thread.</summary>
     public bool IsOpen => _isOpen;
+
     /// <summary>Audio toggle state; safe to read from any thread.</summary>
     public bool ShowAudioSafe => _showAudio;
+
     /// <summary>Visualisation toggle state; safe to read from any thread.</summary>
     public bool ShowVisualizationSafe => _showVisualization;
 
@@ -145,7 +157,7 @@ internal partial class EditorMapsWindow : Window
     private WriteableBitmap? _mapBitmap;
     private WriteableBitmap? _tileBitmap;
 
-    // Timer
+
     private DispatcherTimer? _timer;
 
     // Layer view-models
@@ -166,7 +178,7 @@ internal partial class EditorMapsWindow : Window
             cmbTiles.Items.Add(i.ToString());
         if (cmbTiles.Items.Count > 0) cmbTiles.SelectedIndex = 0;
 
-        // Enums
+
         foreach (var m in Enum.GetValues<Moral>())
             cmbMoral.Items.Add(m.ToString());
         foreach (var w in Enum.GetValues<Weather>())
@@ -280,10 +292,10 @@ internal partial class EditorMapsWindow : Window
         numLighting.Value = map.Lighting;
         numPanorama.Value = map.Panorama;
 
-        // NPCs
+
         RefreshNpcList();
 
-        // Weather
+
         TempMap.UpdateWeatherType();
 
         // Auto-tile maths
@@ -292,7 +304,7 @@ internal partial class EditorMapsWindow : Window
         // Update canvas bounds
         UpdateMapBounds();
 
-        // Layers
+
         RefreshLayerList();
 
         _loading = false;
@@ -327,6 +339,7 @@ internal partial class EditorMapsWindow : Window
             MessageBox.Show(@"It must have at least one map registered.");
             return;
         }
+
         Map.List.Remove(_selected.Id);
         _selected = null;
         RefreshMapList();
@@ -366,29 +379,53 @@ internal partial class EditorMapsWindow : Window
     // Drawing tools — mutual exclusion
     private void butPencil_Click(object? sender, RoutedEventArgs e)
     {
-        if (butPencil.IsChecked == true) { butRectangle.IsChecked = false; butArea.IsChecked = false; butDiscover.IsChecked = false; }
+        if (butPencil.IsChecked == true)
+        {
+            butRectangle.IsChecked = false;
+            butArea.IsChecked = false;
+            butDiscover.IsChecked = false;
+        }
         else butPencil.IsChecked = true;
+
         ResetMapSelectionSize();
     }
 
     private void butRectangle_Click(object? sender, RoutedEventArgs e)
     {
-        if (butRectangle.IsChecked == true) { butPencil.IsChecked = false; butArea.IsChecked = false; butDiscover.IsChecked = false; }
+        if (butRectangle.IsChecked == true)
+        {
+            butPencil.IsChecked = false;
+            butArea.IsChecked = false;
+            butDiscover.IsChecked = false;
+        }
         else butRectangle.IsChecked = true;
+
         ResetMapSelectionSize();
     }
 
     private void butArea_Click(object? sender, RoutedEventArgs e)
     {
-        if (butArea.IsChecked == true) { butPencil.IsChecked = false; butRectangle.IsChecked = false; butDiscover.IsChecked = false; }
+        if (butArea.IsChecked == true)
+        {
+            butPencil.IsChecked = false;
+            butRectangle.IsChecked = false;
+            butDiscover.IsChecked = false;
+        }
         else butArea.IsChecked = true;
+
         ResetMapSelectionSize();
     }
 
     private void butDiscover_Click(object? sender, RoutedEventArgs e)
     {
-        if (butDiscover.IsChecked == true) { butPencil.IsChecked = false; butRectangle.IsChecked = false; butArea.IsChecked = false; }
+        if (butDiscover.IsChecked == true)
+        {
+            butPencil.IsChecked = false;
+            butRectangle.IsChecked = false;
+            butArea.IsChecked = false;
+        }
         else butDiscover.IsChecked = true;
+
         ResetMapSelectionSize();
     }
 
@@ -398,8 +435,8 @@ internal partial class EditorMapsWindow : Window
         var layer = SelectedLayerIndex();
         if (layer < 0) return;
         for (var x = 0; x < Map.Width; x++)
-            for (var y = 0; y < Map.Height; y++)
-                _selected.Layer[layer].Tile[x, y] = MakeSetTile();
+        for (var y = 0; y < Map.Height; y++)
+            _selected.Layer[layer].Tile[x, y] = MakeSetTile();
         _selected.Update();
     }
 
@@ -409,8 +446,8 @@ internal partial class EditorMapsWindow : Window
         var layer = SelectedLayerIndex();
         if (layer < 0) return;
         for (var x = 0; x < Map.Width; x++)
-            for (var y = 0; y < Map.Height; y++)
-                _selected.Layer[layer].Tile[x, y] = new MapTileData();
+        for (var y = 0; y < Map.Height; y++)
+            _selected.Layer[layer].Tile[x, y] = new MapTileData();
     }
 
     private void butEdition_Click(object? sender, RoutedEventArgs e)
@@ -441,35 +478,67 @@ internal partial class EditorMapsWindow : Window
         Options.PreMapAudio = butAudio.IsChecked == true;
         _showAudio = butAudio.IsChecked == true;
         Client.Framework.Library.Repositories.OptionsRepository.Write();
-        if (!Options.PreMapAudio) { Music.Stop(); Sound.StopAll(); }
+        if (!Options.PreMapAudio)
+        {
+            Music.Stop();
+            Sound.StopAll();
+        }
     }
 
-    // Zoom
+
     private void butZoom_Normal_Click(object? sender, RoutedEventArgs e)
     {
-        if (butZoom_Normal.IsChecked == true) { butZoom_2x.IsChecked = false; butZoom_4x.IsChecked = false; }
+        if (butZoom_Normal.IsChecked == true)
+        {
+            butZoom_2x.IsChecked = false;
+            butZoom_4x.IsChecked = false;
+        }
         else butZoom_Normal.IsChecked = true;
+
         UpdateMapBounds();
     }
 
     private void butZoom_2x_Click(object? sender, RoutedEventArgs e)
     {
-        if (butZoom_2x.IsChecked == true) { butZoom_Normal.IsChecked = false; butZoom_4x.IsChecked = false; }
+        if (butZoom_2x.IsChecked == true)
+        {
+            butZoom_Normal.IsChecked = false;
+            butZoom_4x.IsChecked = false;
+        }
         else butZoom_2x.IsChecked = true;
+
         UpdateMapBounds();
     }
 
     private void butZoom_4x_Click(object? sender, RoutedEventArgs e)
     {
-        if (butZoom_4x.IsChecked == true) { butZoom_Normal.IsChecked = false; butZoom_2x.IsChecked = false; }
+        if (butZoom_4x.IsChecked == true)
+        {
+            butZoom_Normal.IsChecked = false;
+            butZoom_2x.IsChecked = false;
+        }
         else butZoom_4x.IsChecked = true;
+
         UpdateMapBounds();
     }
 
     // Mode toggle
-    private void butMNormal_Click(object? sender, RoutedEventArgs e) { ModesExclusive(butMNormal); ResetMapSelectionSize(); }
-    private void butMZones_Click(object? sender, RoutedEventArgs e) { ModesExclusive(butMZones); }
-    private void butMAttributes_Click(object? sender, RoutedEventArgs e) { ModesExclusive(butMAttributes); }
+    private void butMNormal_Click(object? sender, RoutedEventArgs e)
+    {
+        ModesExclusive(butMNormal);
+        ResetMapSelectionSize();
+    }
+
+    private void butMZones_Click(object? sender, RoutedEventArgs e)
+    {
+        ModesExclusive(butMZones);
+    }
+
+    private void butMAttributes_Click(object? sender, RoutedEventArgs e)
+    {
+        ModesExclusive(butMAttributes);
+    }
+
     private void butMNPCs_Click(object? sender, RoutedEventArgs e)
     {
         ModesExclusive(butMNPCs);
@@ -493,6 +562,7 @@ internal partial class EditorMapsWindow : Window
             butMAttributes.IsChecked = butMAttributes == pressed && pressed.IsChecked == true;
             butMNPCs.IsChecked = butMNPCs == pressed && pressed.IsChecked == true;
         }
+
         // Sync mode-panel visibility
         grpZones.IsVisible = butMZones.IsChecked == true;
         grpAttributes.IsVisible = butMAttributes.IsChecked == true;
@@ -500,26 +570,38 @@ internal partial class EditorMapsWindow : Window
     }
 
     // Other editor launchers
-    private void butEditors_Classes_Click(object? sender, RoutedEventArgs e) => AvaloniaClassesLauncher.OpenClassesEditor(this);
-    private void butEditors_Data_Click(object? sender, RoutedEventArgs e) => AvaloniaDataLauncher.OpenDataEditor(this);
-    private void butEditors_Interface_Click(object? sender, RoutedEventArgs e) => AvaloniaInterfaceLauncher.OpenInterfaceEditor(this);
-    private void butEditors_Items_Click(object? sender, RoutedEventArgs e) => AvaloniaItemsLauncher.OpenItemsEditor(this);
-    private void butEditors_NPCs_Click(object? sender, RoutedEventArgs e) => AvaloniaNpcsLauncher.OpenNpcsEditor(this);
-    private void butEditors_Shops_Click(object? sender, RoutedEventArgs e) => AvaloniaShopsLauncher.OpenShopsEditor(this);
-    private void butEditors_Tiles_Click(object? sender, RoutedEventArgs e) => AvaloniaTilesLauncher.OpenTilesEditor(this);
+    private void butEditors_Classes_Click(object? sender, RoutedEventArgs e) =>
+        AvaloniaClassesLauncher.OpenClassesEditor(this);
 
-    // Clipboard
+    private void butEditors_Data_Click(object? sender, RoutedEventArgs e) => AvaloniaDataLauncher.OpenDataEditor(this);
+
+    private void butEditors_Interface_Click(object? sender, RoutedEventArgs e) =>
+        AvaloniaInterfaceLauncher.OpenInterfaceEditor(this);
+
+    private void butEditors_Items_Click(object? sender, RoutedEventArgs e) =>
+        AvaloniaItemsLauncher.OpenItemsEditor(this);
+
+    private void butEditors_NPCs_Click(object? sender, RoutedEventArgs e) => AvaloniaNpcsLauncher.OpenNpcsEditor(this);
+
+    private void butEditors_Shops_Click(object? sender, RoutedEventArgs e) =>
+        AvaloniaShopsLauncher.OpenShopsEditor(this);
+
+    private void butEditors_Tiles_Click(object? sender, RoutedEventArgs e) =>
+        AvaloniaTilesLauncher.OpenTilesEditor(this);
+
     private void butCopy_Click(object? sender, RoutedEventArgs e) => CopyTiles();
+
     private void butCut_Click(object? sender, RoutedEventArgs e)
     {
         CopyTiles();
         var sel = MapSelection;
         for (var x = sel.X; x < sel.X + sel.Width; x++)
-            for (var y = sel.Y; y < sel.Y + sel.Height; y++)
-                for (byte c = 0; c < _selected!.Layer.Count; c++)
-                    _selected.Layer[c].Tile[x, y] = new MapTileData();
+        for (var y = sel.Y; y < sel.Y + sel.Height; y++)
+        for (byte c = 0; c < _selected!.Layer.Count; c++)
+            _selected.Layer[c].Tile[x, y] = new MapTileData();
         _selected!.Update();
     }
+
     private void butPaste_Click(object? sender, RoutedEventArgs e) => PasteTiles();
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -545,7 +627,8 @@ internal partial class EditorMapsWindow : Window
         }
         else if (ModeAttributes && DirBlockMode)
         {
-            var tileDif = new SystemPoint((int)(pt.X - pt.X / Globals.Grid * Globals.Grid), (int)(pt.Y - pt.Y / Globals.Grid * Globals.Grid));
+            var tileDif = new SystemPoint((int)(pt.X - pt.X / Globals.Grid * Globals.Grid),
+                (int)(pt.Y - pt.Y / Globals.Grid * Globals.Grid));
             for (byte i = 0; i < (byte)Direction.Count; i++)
                 if (tileDif.X >= Block_Position(i).X && tileDif.X <= Block_Position(i).X + 8)
                     if (tileDif.Y >= Block_Position(i).Y && tileDif.Y <= Block_Position(i).Y + 8)
@@ -578,12 +661,13 @@ internal partial class EditorMapsWindow : Window
         if (ToolRectangle && (sel.Width > 1 || sel.Height > 1))
         {
             for (var x = sel.X; x < sel.X + sel.Width; x++)
-                for (var y = sel.Y; y < sel.Y + sel.Height; y++)
-                {
-                    _selected.Layer[layer].Tile[x, y] = MakeSetTile();
-                    _selected.Layer[layer].Update(x, y);
-                }
+            for (var y = sel.Y; y < sel.Y + sel.Height; y++)
+            {
+                _selected.Layer[layer].Tile[x, y] = MakeSetTile();
+                _selected.Layer[layer].Update(x, y);
+            }
         }
+
         ResetMapSelectionSize();
     }
 
@@ -667,13 +751,26 @@ internal partial class EditorMapsWindow : Window
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // SCROLLBARS
+
     // ─────────────────────────────────────────────────────────────────────────
 
-    private void scrlMapX_Scroll(object? sender, AvaloniaScrollEventArgs e) { /* value binding auto */ }
-    private void scrlMapY_Scroll(object? sender, AvaloniaScrollEventArgs e) { /* value binding auto */ }
-    private void scrlTileX_Scroll(object? sender, AvaloniaScrollEventArgs e) { }
-    private void scrlTileY_Scroll(object? sender, AvaloniaScrollEventArgs e) { }
+    private void scrlMapX_Scroll(object? sender, AvaloniaScrollEventArgs e)
+    {
+        /* value binding auto */
+    }
+
+    private void scrlMapY_Scroll(object? sender, AvaloniaScrollEventArgs e)
+    {
+        /* value binding auto */
+    }
+
+    private void scrlTileX_Scroll(object? sender, AvaloniaScrollEventArgs e)
+    {
+    }
+
+    private void scrlTileY_Scroll(object? sender, AvaloniaScrollEventArgs e)
+    {
+    }
 
     private void scrlZone_Scroll(object? sender, AvaloniaScrollEventArgs e)
     {
@@ -685,8 +782,8 @@ internal partial class EditorMapsWindow : Window
     {
         if (_selected == null) return;
         for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-                _selected.Attribute[x, y].Zone = 0;
+        for (byte y = 0; y < Map.Height; y++)
+            _selected.Attribute[x, y].Zone = 0;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -721,7 +818,7 @@ internal partial class EditorMapsWindow : Window
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // LAYERS
+
     // ─────────────────────────────────────────────────────────────────────────
 
     private void RefreshLayerList()
@@ -741,9 +838,13 @@ internal partial class EditorMapsWindow : Window
         if (_layerVms.Count > 0) lstLayers.SelectedIndex = 0;
     }
 
-    private void lstLayers_SelectionChanged(object? sender, SelectionChangedEventArgs e) { }
+    private void lstLayers_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+    }
 
-    private void layerVisible_Changed(object? sender, RoutedEventArgs e) { }
+    private void layerVisible_Changed(object? sender, RoutedEventArgs e)
+    {
+    }
 
     public int SelectedLayerIndex()
     {
@@ -781,11 +882,16 @@ internal partial class EditorMapsWindow : Window
 
         if (_layerEditIsNew)
         {
-            if (FindLayer(name) >= 0) { MessageBox.Show(@"There is already a layer with that name."); return; }
+            if (FindLayer(name) >= 0)
+            {
+                MessageBox.Show(@"There is already a layer with that name.");
+                return;
+            }
+
             var layer = new MapLayer(name) { Type = (byte)cmbLayers_Type.SelectedIndex };
             for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
-                    layer.Tile[x, y] = new MapTileData();
+            for (byte y = 0; y < Map.Height; y++)
+                layer.Tile[x, y] = new MapTileData();
             _selected.Layer.Add(layer);
         }
         else
@@ -793,7 +899,11 @@ internal partial class EditorMapsWindow : Window
             var idx = SelectedLayerIndex();
             if (idx < 0) return;
             if (_selected.Layer[idx].Name != name && FindLayer(name) >= 0)
-            { MessageBox.Show(@"There is already a layer with this name."); return; }
+            {
+                MessageBox.Show(@"There is already a layer with this name.");
+                return;
+            }
+
             _selected.Layer[idx].Name = name;
             _selected.Layer[idx].Type = (byte)cmbLayers_Type.SelectedIndex;
         }
@@ -840,9 +950,9 @@ internal partial class EditorMapsWindow : Window
     {
         var temp = new List<MapLayer>();
         for (byte n = 0; n < (byte)Layer.Count; n++)
-            for (byte i = 0; i < _selected!.Layer.Count; i++)
-                if (_selected.Layer[i].Type == n)
-                    temp.Add(_selected.Layer[i]);
+        for (byte i = 0; i < _selected!.Layer.Count; i++)
+            if (_selected.Layer[i].Type == n)
+                temp.Add(_selected.Layer[i]);
         _selected!.Layer = temp;
         RefreshLayerList();
     }
@@ -850,12 +960,13 @@ internal partial class EditorMapsWindow : Window
     private int FindLayer(string name)
     {
         for (byte i = 0; i < _selected!.Layer.Count; i++)
-            if (_selected.Layer[i].Name == name) return i;
+            if (_selected.Layer[i].Name == name)
+                return i;
         return -1;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // NPCs
+
     // ─────────────────────────────────────────────────────────────────────────
 
     private void RefreshNpcList()
@@ -880,12 +991,14 @@ internal partial class EditorMapsWindow : Window
     }
 
     private void butNPC_Add_Click(object? sender, RoutedEventArgs e) => AddNpc();
+
     private void butNPC_Remove_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null || lstNPC.SelectedIndex < 0) return;
         _selected.Npc.RemoveAt(lstNPC.SelectedIndex);
         RefreshNpcList();
     }
+
     private void butNPC_Clear_Click(object? sender, RoutedEventArgs e)
     {
         _selected?.Npc.Clear();
@@ -893,7 +1006,7 @@ internal partial class EditorMapsWindow : Window
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // ATTRIBUTES
+
     // ─────────────────────────────────────────────────────────────────────────
 
     private void optA_Warp_Changed(object? sender, RoutedEventArgs e)
@@ -921,11 +1034,13 @@ internal partial class EditorMapsWindow : Window
                 optA_Block.IsChecked = true;
                 return;
             }
+
             cmbA_Item.Items.Clear();
             foreach (var item in Item.List.Values) cmbA_Item.Items.Add(item);
             if (cmbA_Item.Items.Count > 0) cmbA_Item.SelectedIndex = 0;
             numA_Item_Amount.Value = _aData2 = 1;
         }
+
         grpA_Item.IsVisible = optA_Item.IsChecked == true;
     }
 
@@ -963,25 +1078,25 @@ internal partial class EditorMapsWindow : Window
     {
         if (_selected == null) return;
         for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-                _selected.Attribute[x, y] = new MapAttribute();
+        for (byte y = 0; y < Map.Height; y++)
+            _selected.Attribute[x, y] = new MapAttribute();
     }
 
     private void butAttributes_Import_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
         for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-                for (byte c = 0; c < _selected.Layer.Count; c++)
-                {
-                    var data = _selected.Layer[c].Tile[x, y];
-                    if (data.Texture <= 0) continue;
-                    if (Tile.List[data.Texture].Data[data.X, data.Y].Attribute > 0)
-                        _selected.Attribute[x, y].Type = Tile.List[data.Texture].Data[data.X, data.Y].Attribute;
-                    for (byte b = 0; b < (byte)Direction.Count; b++)
-                        if (Tile.List[data.Texture].Data[data.X, data.Y].Block[b])
-                            _selected.Attribute[x, y].Block[b] = true;
-                }
+        for (byte y = 0; y < Map.Height; y++)
+        for (byte c = 0; c < _selected.Layer.Count; c++)
+        {
+            var data = _selected.Layer[c].Tile[x, y];
+            if (data.Texture <= 0) continue;
+            if (Tile.List[data.Texture].Data[data.X, data.Y].Attribute > 0)
+                _selected.Attribute[x, y].Type = Tile.List[data.Texture].Data[data.X, data.Y].Attribute;
+            for (byte b = 0; b < (byte)Direction.Count; b++)
+                if (Tile.List[data.Texture].Data[data.X, data.Y].Block[b])
+                    _selected.Attribute[x, y].Block[b] = true;
+        }
     }
 
     private TileAttribute AttributeSelected()
@@ -1102,8 +1217,18 @@ internal partial class EditorMapsWindow : Window
 
     private static SystemRect SelectionRec(SystemRect t)
     {
-        if (t.Width <= 0) { t.X += t.Width - 1; t.Width = (t.Width - 2) * -1; }
-        if (t.Height <= 0) { t.Y += t.Height - 1; t.Height = (t.Height - 2) * -1; }
+        if (t.Width <= 0)
+        {
+            t.X += t.Width - 1;
+            t.Width = (t.Width - 2) * -1;
+        }
+
+        if (t.Height <= 0)
+        {
+            t.Y += t.Height - 1;
+            t.Height = (t.Height - 2) * -1;
+        }
+
         return t;
     }
 
@@ -1120,7 +1245,7 @@ internal partial class EditorMapsWindow : Window
     }
 
     public SystemRect TileSource => new(TilesSelection.X * Globals.Grid, TilesSelection.Y * Globals.Grid,
-                                        TilesSelection.Width * Globals.Grid, TilesSelection.Height * Globals.Grid);
+        TilesSelection.Width * Globals.Grid, TilesSelection.Height * Globals.Grid);
 
     public byte Zoom()
     {
@@ -1237,11 +1362,14 @@ internal partial class EditorMapsWindow : Window
             {
                 if (!Map.OutLimit((short)x, (short)y))
                 {
-                    _selected.Layer[layerNum].Tile[x, y] = MakeSetTile((byte)(TilesSelection.X + x2), (byte)(TilesSelection.Y + y2));
+                    _selected.Layer[layerNum].Tile[x, y] =
+                        MakeSetTile((byte)(TilesSelection.X + x2), (byte)(TilesSelection.Y + y2));
                     _selected.Layer[layerNum].Update(x, y);
                 }
+
                 y2++;
             }
+
             x2++;
         }
     }
@@ -1253,7 +1381,6 @@ internal partial class EditorMapsWindow : Window
         _selected.Layer[layerNum].Update(MapSelection.X, MapSelection.Y);
     }
 
-    // Clipboard
     private void CopyTiles()
     {
         if (_selected == null) return;
@@ -1263,9 +1390,10 @@ internal partial class EditorMapsWindow : Window
         {
             _tilesCopy.Data[c] = new MapLayer(_selected.Layer[c].Name);
             for (byte x = 0; x < Map.Width; x++)
-                for (byte y = 0; y < Map.Height; y++)
-                    _tilesCopy.Data[c].Tile[x, y] = _selected.Layer[c].Tile[x, y];
+            for (byte y = 0; y < Map.Height; y++)
+                _tilesCopy.Data[c].Tile[x, y] = _selected.Layer[c].Tile[x, y];
         }
+
         butPaste.IsEnabled = true;
     }
 
@@ -1273,15 +1401,16 @@ internal partial class EditorMapsWindow : Window
     {
         if (_selected == null || _tilesCopy.Data == null) return;
         for (var x = _tilesCopy.Area.X; x < _tilesCopy.Area.X + _tilesCopy.Area.Width; x++)
-            for (var y = _tilesCopy.Area.Y; y < _tilesCopy.Area.Y + _tilesCopy.Area.Height; y++)
-                for (byte c = 0; c < _tilesCopy.Data.Length; c++)
-                {
-                    var layer = FindLayer(_tilesCopy.Data[c].Name);
-                    var x2 = MapSelection.X + x - _tilesCopy.Area.X;
-                    var y2 = y + MapSelection.Y - _tilesCopy.Area.Y;
-                    if (layer < 0 || x2 >= Map.Width || y2 >= Map.Height) continue;
-                    _selected.Layer[layer].Tile[x2, y2] = _tilesCopy.Data[c].Tile[x, y];
-                }
+        for (var y = _tilesCopy.Area.Y; y < _tilesCopy.Area.Y + _tilesCopy.Area.Height; y++)
+        for (byte c = 0; c < _tilesCopy.Data.Length; c++)
+        {
+            var layer = FindLayer(_tilesCopy.Data[c].Name);
+            var x2 = MapSelection.X + x - _tilesCopy.Area.X;
+            var y2 = y + MapSelection.Y - _tilesCopy.Area.Y;
+            if (layer < 0 || x2 >= Map.Width || y2 >= Map.Height) continue;
+            _selected.Layer[layer].Tile[x2, y2] = _tilesCopy.Data[c].Tile[x, y];
+        }
+
         _selected.Update();
     }
 }

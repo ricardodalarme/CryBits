@@ -14,10 +14,10 @@ internal static class Loop
     // Target simulation rate: 20 ticks per second (50ms per tick)
     private const int TicksPerSecond = 20;
 
-    // Medida de quantos loops são executados por segundo
+    // Measured loops per second.
     public static int Cps;
 
-    // Contagens
+    // Timing counters.
     private static long _timer500, _timer1000;
     public static long TimerRegeneration;
     public static long TimerMapItems;
@@ -29,7 +29,7 @@ internal static class Loop
 
         while (await timer.WaitForNextTickAsync(ct))
         {
-            // Manuseia os dados recebidos
+            // Handle incoming network data.
             Socket.HandleData();
 
             var now = Environment.TickCount64;
@@ -47,15 +47,15 @@ internal static class Loop
                 foreach (var account in Account.List.Where(a => a.IsPlaying))
                     RegenerationSystem.Tick(account.Character);
 
-                // Reinicia a contagem dos 500
+                // Reset 500 ms timer.
                 _timer500 = now;
             }
 
-            // Reinicia algumas contagens
+            // Reset longer-running timers.
             if (now > TimerRegeneration + 5000) TimerRegeneration = now;
             if (now > TimerMapItems + 300000) TimerMapItems = now;
 
-            // Calcula o CPS
+            // Compute CPS.
             if (_timer1000 < now)
             {
                 Cps = cps;
@@ -73,7 +73,7 @@ internal static class Loop
             .Register<CpsCommand>()
             .Register<DefineAccessCommand>();
 
-        // Laço para que seja possível a utilização de comandos pelo console
+        // Console command loop.
         while (!ct.IsCancellationRequested)
         {
             Console.Write("Execute: ");

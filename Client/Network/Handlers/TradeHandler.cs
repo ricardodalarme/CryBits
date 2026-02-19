@@ -18,23 +18,23 @@ internal static class TradeHandler
     {
         var state = data.GetBool();
 
-        // Visibilidade do painel
+        // Set trade panel visibility
         Panels.Trade.Visible = data.GetBool();
 
         if (state)
         {
-            // Reseta os botões
+            // Reset trade buttons
             Buttons.TradeOfferConfirm.Visible = true;
             Panels.TradeAmount.Visible = Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
             Panels.TradeOfferDisable.Visible = false;
 
-            // Limpa os dados
+            // Clear trade offer data
             Player.Me.TradeOffer = new ItemSlot[MaxInventory];
             Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory];
         }
         else
         {
-            // Limpa os dados
+            // Clear trade offer data
             Player.Me.TradeOffer = null;
             Player.Me.TradeTheirOffer = null;
         }
@@ -42,14 +42,14 @@ internal static class TradeHandler
 
     internal static void TradeInvitation(NetDataReader data)
     {
-        // Nega o pedido caso o jogador não quiser receber convites
+        // Decline if player disabled trade invitations
         if (!Options.Trade)
         {
             TradeSender.TradeDecline();
             return;
         }
 
-        // Abre a janela de convite para o grupo
+        // Show trade invitation panel
         PanelsEvents.TradeInvitation = data.GetString();
         Panels.TradeInvitation.Visible = true;
     }
@@ -74,7 +74,7 @@ internal static class TradeHandler
 
     internal static void TradeOffer(NetDataReader data)
     {
-        // Recebe os dados da oferta
+        // Read trade offer data
         if (data.GetBool())
             for (byte i = 0; i < MaxInventory; i++)
             {

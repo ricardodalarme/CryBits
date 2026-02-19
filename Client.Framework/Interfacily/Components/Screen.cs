@@ -3,22 +3,21 @@ using SFML.Window;
 
 namespace CryBits.Client.Framework.Interfacily.Components;
 
+/// <summary>Represents a UI screen that dispatches input events to its component tree.</summary>
 public class Screen : IMouseMoved, IMouseDown, IMouseUp, IMouseDoubleClick, IKeyReleased
 {
     public string Name { get; set; } = string.Empty;
     public List<Component> Body { get; set; } = [];
 
-    // Eventos
     public event Action? OnMouseUp;
     public event Action? OnMouseDown;
     public event Action<KeyEventArgs>? OnKeyReleased;
 
-    // Janela atual
     public static Screen? Current;
 
     public void MouseMoved()
     {
-        // Percorre toda a árvore de ordem para executar o comando
+        // Traverse component tree and invoke MouseMoved on visible components.
         var stack = new Stack<List<Component>>();
         stack.Push(Current.Body);
         while (stack.Count != 0)
@@ -28,7 +27,7 @@ public class Screen : IMouseMoved, IMouseDown, IMouseUp, IMouseDoubleClick, IKey
             for (byte i = 0; i < top.Count; i++)
                 if (top[i].Visible)
                 {
-                    // Executa o comando
+                    // Invoke handler if implemented.
                     if (top[i] is IMouseMoved component) component.MouseMoved();
                     stack.Push(top[i].Children);
                 }
@@ -39,7 +38,7 @@ public class Screen : IMouseMoved, IMouseDown, IMouseUp, IMouseDoubleClick, IKey
 
     public void MouseDown(MouseButtonEventArgs e)
     {
-        // Percorre toda a árvore de ordem para executar o comando
+        // Traverse component tree and execute the command.
         var stack = new Stack<List<Component>>();
         stack.Push(Current.Body);
         while (stack.Count != 0)
@@ -49,7 +48,7 @@ public class Screen : IMouseMoved, IMouseDown, IMouseUp, IMouseDoubleClick, IKey
             for (byte i = 0; i < top.Count; i++)
                 if (top[i].Visible)
                 {
-                    // Executa o comando
+                    // Invoke handler if implemented.
                     if (top[i] is IMouseDown component) component.MouseDown(e);
 
                     stack.Push(top[i].Children);
@@ -61,7 +60,6 @@ public class Screen : IMouseMoved, IMouseDown, IMouseUp, IMouseDoubleClick, IKey
 
     public void MouseUp()
     {
-        // Percorre toda a árvore de ordem para executar o comando
         var stack = new Stack<List<Component>>();
         stack.Push(Current.Body);
         while (stack.Count != 0)
@@ -71,7 +69,6 @@ public class Screen : IMouseMoved, IMouseDown, IMouseUp, IMouseDoubleClick, IKey
             for (byte i = 0; i < top.Count; i++)
                 if (top[i].Visible)
                 {
-                    // Executa o comando
                     if (top[i] is IMouseUp component) component.MouseUp();
                     stack.Push(top[i].Children);
                 }
@@ -80,7 +77,6 @@ public class Screen : IMouseMoved, IMouseDown, IMouseUp, IMouseDoubleClick, IKey
 
     public void MouseDoubleClick(MouseButtonEventArgs e)
     {
-        // Percorre toda a árvore de ordem para executar o comando
         var stack = new Stack<List<Component>>();
         stack.Push(Current.Body);
         while (stack.Count != 0)
@@ -90,7 +86,6 @@ public class Screen : IMouseMoved, IMouseDown, IMouseUp, IMouseDoubleClick, IKey
             for (byte i = 0; i < top.Count; i++)
                 if (top[i].Visible)
                 {
-                    // Executa o comando
                     if (top[i] is IMouseDoubleClick component) component.MouseDoubleClick(e);
                     stack.Push(top[i].Children);
                 }

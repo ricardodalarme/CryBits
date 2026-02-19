@@ -15,9 +15,9 @@ namespace CryBits.Editors.Network;
 
 internal static class Receive
 {
+    /// <summary>Process incoming editor network packets.</summary>
     public static void Handle(NetPacketReader data)
     {
-        // Manuseia os dados recebidos
         switch ((ServerPacket)data.GetByte())
         {
             case ServerPacket.Alert: Alert(data); break;
@@ -33,13 +33,11 @@ internal static class Receive
 
     private static void Alert(NetDataReader data)
     {
-        // Mostra a mensagem
         MessageBox.Show(data.GetString());
     }
 
     private static void Connect()
     {
-        // Abre a janela principal
         AvaloniaLoginLauncher.HideLogin();
         AvaloniaMapsLauncher.OpenMapsEditor();
     }
@@ -51,7 +49,6 @@ internal static class Receive
 
     private static void Classes(NetDataReader data)
     {
-        // Recebe os dados
         Class.List = (Dictionary<Guid, Class>)data.ReadObject();
     }
 
@@ -60,25 +57,21 @@ internal static class Receive
         var map = (Map)data.ReadObject();
         var id = map.Id;
 
-        // Obtém o dado
         CryBits.Entities.Map.Map.List[id] = map;
     }
 
     private static void Npcs(NetDataReader data)
     {
-        // Recebe os dados
         Npc.List = (Dictionary<Guid, Npc>)data.ReadObject();
     }
 
     private static void Items(NetDataReader data)
     {
-        // Recebe os dados
         Item.List = (Dictionary<Guid, Item>)data.ReadObject();
     }
 
     private static void Shops(NetDataReader data)
     {
-        // Recebe os dados
         Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();
     }
 }

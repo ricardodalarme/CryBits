@@ -12,9 +12,12 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal static class PlayerRenderer
 {
+  /// <summary>
+  /// Draw the given player's sprite, name and status bars.
+  /// </summary>
+  /// <param name="player">Player to render.</param>
   public static void PlayerCharacter(Player player)
   {
-    // Desenha o jogador
     PlayerTexture(player);
     PlayerName(player);
     PlayerBars(player);
@@ -25,10 +28,10 @@ internal static class PlayerRenderer
     var column = AnimationStopped;
     var hurt = false;
 
-    // Previne sobrecargas
+    // Return early if texture index is invalid.
     if (player.TextureNum <= 0 || player.TextureNum > Textures.Characters.Count) return;
 
-    // Define a animação
+    // Determine animation column.
     if (player.Attacking && player.AttackTimer + AttackSpeed / 2 > Environment.TickCount)
       column = AnimationAttack;
     else
@@ -39,10 +42,9 @@ internal static class PlayerRenderer
       if (player.Y2 < -8 && player.Y2 > Grid * -1) column = player.Animation;
     }
 
-    // Demonstra que o personagem está sofrendo dano
+    // Apply hurt tint when damaged.
     if (player.Hurt > 0) hurt = true;
 
-    // Desenha o jogador
     CharacterRenderer.Character(player.TextureNum,
       new Point(CameraUtils.ConvertX(player.PixelX), CameraUtils.ConvertY(player.PixelY)), player.Direction,
       column, hurt);
@@ -52,22 +54,21 @@ internal static class PlayerRenderer
   {
     var value = player.Vital[(byte)Vital.Hp];
 
-    // Apenas se necessário
+    // No bar needed when full or dead.
     if (value <= 0 || value >= player.MaxVital[(byte)Vital.Hp]) return;
 
-    // Cálcula a largura da barra
+    // Compute the bar width.
     var characterSize = Textures.Characters[player.TextureNum].ToSize();
     var fullWidth = characterSize.Width / AnimationAmount;
     var width = value * fullWidth / player.MaxVital[(byte)Vital.Hp];
 
-    // Posição das barras
+    // Bar position.
     var position = new Point
     {
       X = CameraUtils.ConvertX(player.PixelX),
       Y = CameraUtils.ConvertY(player.PixelY) + characterSize.Height / AnimationAmount + 4
     };
 
-    // Desenha as barras 
     Renders.Render(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
     Renders.Render(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
   }
@@ -77,17 +78,17 @@ internal static class PlayerRenderer
     var texture = Textures.Characters[player.TextureNum];
     int nameSize = MeasureString(player.Name);
 
-    // Posição do texto
+    // Compute name text position.
     var position = new Point
     {
       X = player.PixelX + texture.ToSize().Width / AnimationAmount / 2 - nameSize / 2,
       Y = player.PixelY - texture.ToSize().Height / AnimationAmount / 2
     };
 
-    // Cor do texto
+    // Choose color (highlight local player).
     var color = player == Player.Me ? Color.Yellow : Color.White;
 
-    // Desenha o texto
+    // Draw the name.
     Renders.DrawText(player.Name, CameraUtils.ConvertX(position.X), CameraUtils.ConvertY(position.Y), color);
   }
 }

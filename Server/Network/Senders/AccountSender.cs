@@ -10,7 +10,6 @@ internal static class AccountSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.Characters);
         data.Put((byte)account.Characters.Count);
 
@@ -27,7 +26,6 @@ internal static class AccountSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.CreateCharacter);
         Send.ToPlayer(account, data);
     }

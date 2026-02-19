@@ -2,14 +2,13 @@
 
 public static class Directories
 {
-    // Formato de todos os arquivos de dados
+    // Data file extension.
     public const string Format = ".dat";
 
-    // Diretório base — AppContext.BaseDirectory always resolves to the folder
-    // containing the running assembly, regardless of the process working directory.
+    // Base directory — AppContext.BaseDirectory resolves to the folder containing the running assembly.
     private static readonly string BaseDir = AppContext.BaseDirectory;
 
-    // Diretório dos arquivos
+    // Paths to assets and data
     public static readonly FileInfo EditorOptions = new(Path.Combine(BaseDir, "Data", "Editors", "Options") + Format);
     public static readonly DirectoryInfo Sounds = new(Path.Combine(BaseDir, "Audio", "Sounds"));
     public static readonly DirectoryInfo Musics = new(Path.Combine(BaseDir, "Audio", "Musics"));
@@ -44,9 +43,9 @@ public static class Directories
     public static readonly FileInfo TexPartyBars = new(Path.Combine(BaseDir, "Graphics", "Misc", "Party_Bars"));
     public static readonly FileInfo TexTransparent = new(Path.Combine(BaseDir, "Graphics", "Misc", "Transparent"));
 
+    /// <summary>Create all required game directories.</summary>
     public static void Create()
     {
-        // Cria todos os diretórios do jogo
         EditorOptions.Directory?.Create();
         Sounds.Create();
         Musics.Create();

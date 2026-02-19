@@ -12,13 +12,13 @@ internal static class ShopHandler
 {
     internal static void Shops(NetDataReader data)
     {
-        // Recebe os dados
+        // Read shops dictionary
         Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();
     }
 
     internal static void ShopOpen(NetDataReader data)
     {
-        // Abre a loja
+        // Open shop panel
         PanelsEvents.ShopOpen = Shop.List.Get(data.GetGuid());
         Panels.Shop.Visible = PanelsEvents.ShopOpen != null;
     }

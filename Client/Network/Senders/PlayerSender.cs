@@ -13,7 +13,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.PlayerDirection);
         data.Put((byte)Player.Me.Direction);
         Send.Packet(data);
@@ -23,7 +22,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.PlayerMove);
         data.Put(Player.Me.X);
         data.Put(Player.Me.Y);
@@ -35,7 +33,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.PlayerAttack);
         Send.Packet(data);
     }
@@ -44,7 +41,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.AddPoint);
         data.Put((byte)attribute);
         Send.Packet(data);
@@ -54,7 +50,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.CollectItem);
         Send.Packet(data);
     }
@@ -63,7 +58,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.DropItem);
         data.Put(slot);
         data.Put(amount);
@@ -74,13 +68,12 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.InventoryChange);
         data.Put(old);
         data.Put(@new);
         Send.Packet(data);
 
-        // Fecha o painel de soltar item
+        // Close drop panel
         Panels.Drop.Visible = false;
     }
 
@@ -88,12 +81,11 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.InventoryUse);
         data.Put(slot);
         Send.Packet(data);
 
-        // Fecha o painel de soltar item
+        // Close drop panel
         Panels.Drop.Visible = false;
     }
 
@@ -101,7 +93,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.EquipmentRemove);
         data.Put(slot);
         Send.Packet(data);
@@ -111,7 +102,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.HotbarAdd);
         data.Put(hotbarSlot);
         data.Put(type);
@@ -123,7 +113,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.HotbarChange);
         data.Put(old);
         data.Put(@new);
@@ -136,12 +125,12 @@ internal static class PlayerSender
         {
             var data = new NetDataWriter();
 
-            // Envia os dados
+            // Send data.
             data.Put((byte)ClientPacket.HotbarUse);
             data.Put(slot);
             Send.Packet(data);
 
-            // Fecha o painel de soltar item
+            // Close drop panel
             Panels.Drop.Visible = false;
         }
     }

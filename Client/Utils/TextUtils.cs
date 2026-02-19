@@ -7,20 +7,20 @@ internal static class TextUtils
 {
     public static short MeasureString(string text)
     {
-        // Dados do texto
+        // Measure string width using SFML Text.
         var tempText = new Text(Fonts.Default, text) { CharacterSize = 10 };
         return (short)tempText.GetLocalBounds().Width;
     }
 
     public static string TextBreak(string text, int width)
     {
-        // Previne sobrecargas
+        // Return early for empty input.
         if (string.IsNullOrEmpty(text)) return text;
 
-        // Usado para fazer alguns calculosk
+        // Measure current text width.
         int textWidth = MeasureString(text);
 
-        // Diminui o tamanho do texto até que ele caiba no digitalizador
+        // Trim leading characters until the text fits.
         while (textWidth - width >= 0)
         {
             text = text.Substring(1);

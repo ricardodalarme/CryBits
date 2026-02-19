@@ -8,13 +8,20 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal static class CharacterRenderer
 {
+    /// <summary>
+    /// Draw a character sprite with shadow and optional hurt tint.
+    /// </summary>
+    /// <param name="textureNum">Character texture index.</param>
+    /// <param name="position">On-screen position in pixels.</param>
+    /// <param name="direction">Facing direction.</param>
+    /// <param name="column">Animation column.</param>
+    /// <param name="hurt">True to apply hurt tint.</param>
     public static void Character(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
     {
         Rectangle recSource = new();
         var size = Textures.Characters[textureNum].ToSize();
         var color = new Color(255, 255, 255);
 
-        // Direção
         byte line = direction switch
         {
             Direction.Up => MovementUp,
@@ -24,17 +31,14 @@ internal static class CharacterRenderer
             _ => 0
         };
 
-        // Define as propriedades dos retângulos
         recSource.X = column * size.Width / AnimationAmount;
         recSource.Y = line * size.Height / AnimationAmount;
         recSource.Width = size.Width / AnimationAmount;
         recSource.Height = size.Height / AnimationAmount;
         var recDestiny = new Rectangle(position, recSource.Size);
 
-        // Demonstra que o personagem está sofrendo dano
         if (hurt) color = new Color(205, 125, 125);
 
-        // Desenha o personagem e sua sombra
         Renders.Render(Textures.Shadow, recDestiny.Location.X,
             recDestiny.Location.Y + size.Height / AnimationAmount - Textures.Shadow.ToSize().Height + 5, 0, 0,
             size.Width / AnimationAmount, Textures.Shadow.ToSize().Height);

@@ -10,10 +10,8 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.Entities;
 
-// Dados somente do próprio jogador
 internal class Me(string name) : Player(name)
 {
-    // Dados
     public ItemSlot[] Inventory = new ItemSlot[MaxInventory];
     public HotbarSlot[] Hotbar = new HotbarSlot[MaxHotbar];
     public ItemSlot[] TradeOffer;
@@ -26,7 +24,6 @@ internal class Me(string name) : Player(name)
 
     public override void Logic()
     {
-        // Verificações
         Me.CheckMovement();
         Me.CheckAttack();
         base.Logic();
@@ -36,7 +33,7 @@ internal class Me(string name) : Player(name)
     {
         if (Movement > 0 || !Renders.RenderWindow.HasFocus()) return;
 
-        // Move o personagem
+        // Handle movement key input.
         if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Direction.Up);
         else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Direction.Down);
         else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Direction.Left);
@@ -45,35 +42,35 @@ internal class Me(string name) : Player(name)
 
     public void Move(Direction direction)
     {
-        // Verifica se o jogador pode se mover
+        // Return if player cannot move.
         if (Movement != Movement.Stopped) return;
 
-        // Define a direção do jogador
+        // Update facing direction and notify server.
         if (Direction != direction)
         {
             Direction = direction;
             PlayerSender.PlayerDirection();
         }
 
-        // Verifica se o azulejo seguinte está livre
+        // Cancel if next tile is blocked.
         if (Map.TileBlocked(X, Y, direction)) return;
 
-        // Define a velocidade que o jogador se move
+        // Choose movement speed (walk/run).
         if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Renders.RenderWindow.HasFocus())
             Movement = Movement.Moving;
         else
             Movement = Movement.Walking;
 
-        // Movimento o jogador
+        // Notify server of movement.
         PlayerSender.PlayerMove();
 
-        // Define a Posição exata do jogador
+        // Set pixel offset for smooth movement.
         switch (direction)
         {
             case Direction.Up:
                 Y2 = Grid;
                 Y--;
-                break;
+                break; 
             case Direction.Down:
                 Y2 = Grid * -1;
                 Y++;
@@ -91,20 +88,19 @@ internal class Me(string name) : Player(name)
 
     public void CheckAttack()
     {
-        // Reseta o ataque
+        // Reset attack state if cooldown expired.
         if (AttackTimer + AttackSpeed < Environment.TickCount)
         {
             AttackTimer = 0;
             Attacking = false;
         }
 
-        // Somente se estiver pressionando a tecla de ataque e não estiver atacando
+        // Only proceed if attack key pressed and player may attack.
         if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Renders.RenderWindow.HasFocus()) return;
         if (AttackTimer > 0) return;
         if (Panels.Trade.Visible) return;
         if (Panels.Shop.Visible) return;
 
-        // Envia os dados para o servidor
         AttackTimer = Environment.TickCount;
         PlayerSender.PlayerAttack();
     }
@@ -113,32 +109,31 @@ internal class Me(string name) : Player(name)
     {
         bool hasItem = false, hasSlot = false;
 
-        // Previne erros
+        // Ignore collect when a textbox is focused.
         if (TextBox.Focused != null) return;
 
-        // Verifica se tem algum item nas coordenadas 
+        // Check for an item at the player's tile.
         for (byte i = 0; i < TempMap.TempMap.Current.Item.Length; i++)
             if (TempMap.TempMap.Current.Item[i].X == X && TempMap.TempMap.Current.Item[i].Y == Y)
                 hasItem = true;
 
-        // Verifica se tem algum espaço vazio no inventário
+        // Check for a free inventory slot.
         for (byte i = 0; i < MaxInventory; i++)
             if (Inventory[i].Item == null)
                 hasSlot = true;
 
-        // Somente se necessário
         if (!hasItem) return;
         if (!hasSlot) return;
         if (Environment.TickCount <= _collectTimer + 250) return;
 
-        // Coleta o item
+        // Request item pickup.
         PlayerSender.CollectItem();
         _collectTimer = Environment.TickCount;
     }
 
     public void Leave()
     {
-        // Reseta os dados
+        // Clear local player state.
         List.Clear();
         Me = null;
     }

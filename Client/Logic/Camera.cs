@@ -7,23 +7,26 @@ namespace CryBits.Client.Logic;
 
 internal static class Camera
 {
-    // Visão do jogador
+    /// <summary>Top-left pixel offset for rendering (camera start).</summary>
     public static Point StartSight;
+    /// <summary>Rectangle of visible tiles.</summary>
     public static Rectangle TileSight;
 
+    /// <summary>
+    /// Update camera position and visible tile rectangle based on the player.
+    /// </summary>
     public static void Update()
     {
         Point end = new(), start = new(), position = new();
 
-        // Centro da tela
+        // screen centre offset
         position.X = Player.Me.X2 + Grid;
         position.Y = Player.Me.Y2 + Grid;
 
-        // Início da tela
+        // initial tile indices for the view
         start.X = Player.Me.X - (Map.Width + 1) / 2 - 1;
         start.Y = Player.Me.Y - (Map.Height + 1) / 2 - 1;
 
-        // Reajusta a posição horizontal da tela
         if (start.X < 0)
         {
             position.X = 0;
@@ -31,7 +34,6 @@ internal static class Camera
             start.X = 0;
         }
 
-        // Reajusta a posição vertical da tela
         if (start.Y < 0)
         {
             position.Y = 0;
@@ -39,11 +41,10 @@ internal static class Camera
             start.Y = 0;
         }
 
-        // Final da tela
+        // end tile indices for the view
         end.X = start.X + Map.Width + 1 + 1;
         end.Y = start.Y + Map.Height + 1 + 1;
 
-        // Reajusta a posição horizontal da tela
         if (end.X > Map.Width)
         {
             position.X = Grid;
@@ -52,7 +53,6 @@ internal static class Camera
             start.X = end.X - Map.Width - 1;
         }
 
-        // Reajusta a posição vertical da tela
         if (end.Y > Map.Height)
         {
             position.Y = Grid;
@@ -61,13 +61,11 @@ internal static class Camera
             start.Y = end.Y - Map.Height - 1;
         }
 
-        // Define a dimensão dos azulejos vistos
         TileSight.Y = start.Y;
         TileSight.Height = end.Y;
         TileSight.X = start.X;
         TileSight.Width = end.X;
 
-        // Define a posição da câmera
         StartSight.Y = position.Y;
         StartSight.X = position.X;
     }

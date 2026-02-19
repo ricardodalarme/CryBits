@@ -14,7 +14,7 @@ namespace CryBits.Client.UI.Events;
 
 internal static class PanelsEvents
 {
-    // Dados temporários
+    // Temporary state
     public static byte CreateCharacterClass = 0;
     public static byte CreateCharacterTex = 0;
     public static int SelectCharacter = 1;
@@ -51,7 +51,6 @@ internal static class PanelsEvents
 
     public static void MenuClose()
     {
-        // Fecha todos os paineis abertos
         Panels.Connect.Visible = false;
         Panels.Register.Visible = false;
         Panels.Options.Visible = false;
@@ -65,16 +64,16 @@ internal static class PanelsEvents
         var start = panel.Position + new Size(offX, offY);
         var slot = new Point((Window.Mouse.X - start.X) / size, (Window.Mouse.Y - start.Y) / size);
 
-        // Verifica se o Window.Mouse está sobre o slot
+        // Check whether the mouse is over the slot
         if (slot.Y < 0 || slot.X < 0 || slot.X >= columns || slot.Y >= lines) return -1;
         if (!IsAbove(new Rectangle(start.X + slot.X * size, start.Y + slot.Y * size, grid, grid))) return -1;
         if (!panel.Visible) return -1;
 
-        // Retorna o slot
+        // Return slot index
         return (short)(slot.Y * columns + slot.X);
     }
 
-    // Retorna em qual slot o mouse está sobrepondo
+    // Slot indices under the mouse cursor
     public static short InventorySlot => Slot(Panels.MenuInventory, 7, 29, 6, 5);
     public static short HotbarSlot => Slot(Panels.Hotbar, 8, 6, 1, 10);
     public static short TradeSlot => Slot(Panels.Trade, 7, 50, 6, 5);
@@ -85,7 +84,6 @@ internal static class PanelsEvents
     {
         var slot = InventorySlot;
 
-        // Somente se necessário
         if (slot == -1) return;
         if (Player.Me.Inventory[slot].Item == null) return;
 
@@ -94,7 +92,7 @@ internal static class PanelsEvents
             case Mouse.Button.Right:
             {
                 if (Player.Me.Inventory[slot].Item.Bind != BindOn.Pickup)
-                    // Vende o item
+                    // Sell the item if shop is open
                     if (Panels.Shop.Visible)
                     {
                         if (Player.Me.Inventory[slot].Amount != 1)
@@ -105,7 +103,7 @@ internal static class PanelsEvents
                         }
                         else ShopSender.ShopSell(slot, 1);
                     }
-                    // Solta o item
+                    // Otherwise drop the item
                     else if (!Panels.Trade.Visible)
                         if (Player.Me.Inventory[slot].Amount != 1)
                         {
@@ -117,7 +115,7 @@ internal static class PanelsEvents
 
                 break;
             }
-            // Seleciona o item
+            // Select the item (start drag)
             case Mouse.Button.Left:
                 InventoryChange = slot;
                 break;
@@ -130,7 +128,7 @@ internal static class PanelsEvents
 
         for (byte i = 0; i < (byte)Equipment.Count; i++)
             if (IsAbove(new Rectangle(panelPosition.X + 7 + i * 36, panelPosition.Y + 247, 32, 32)))
-                // Remove o equipamento
+                // Remove equipment on right-click
                 if (e.Button == Mouse.Button.Right)
                     if (Player.Me.Equipment[i]?.Bind != BindOn.Equip)
                     {
@@ -143,17 +141,16 @@ internal static class PanelsEvents
     {
         var slot = HotbarSlot;
 
-        // Somente se necessário
         if (slot < 0) return;
         if (Player.Me.Hotbar[slot].Slot == 0) return;
 
         switch (e.Button)
         {
-            // Solta item
+            // Drop or use hotbar slot (right-click)
             case Mouse.Button.Right:
                 PlayerSender.HotbarAdd(slot, 0, 0);
                 break;
-            // Seleciona o item
+            // Select the hotbar slot (start drag)
             case Mouse.Button.Left:
                 HotbarChange = slot;
                 break;
@@ -164,12 +161,10 @@ internal static class PanelsEvents
     {
         var slot = TradeSlot;
 
-        // Somente se necessário
         if (!Panels.Trade.Visible) return;
         if (slot == -1) return;
         if (Player.Me.TradeOffer[slot].Item == null) return;
 
-        // Solta item
         if (e.Button == Mouse.Button.Right) TradeSender.TradeOffer(slot, 0);
     }
 
@@ -177,7 +172,7 @@ internal static class PanelsEvents
     {
         var position = new Point();
 
-        // Define as informações do painel com base no que o Window.Mouse está sobrepondo
+        // Set information panel position and id according to the hovered slot
         if (HotbarSlot >= 0)
         {
             position = Panels.Hotbar.Position + new Size(0, 42);
@@ -200,24 +195,23 @@ internal static class PanelsEvents
         }
         else InformationId = Guid.Empty;
 
-        // Define os dados do painel de informações
         Panels.Information.Visible = !position.IsEmpty && InformationId != Guid.Empty;
         Panels.Information.Position = position;
     }
 
     public static void Inventory_MouseUp()
     {
-        // Somente se necessário
+        // Return early when no valid slot or no change pending.
         if (InventorySlot == 0) return;
         if (InventoryChange == 0) return;
 
-        // Muda o slot do item
+        // Send inventory slot change to server.
         PlayerSender.InventoryChange(InventoryChange, InventorySlot);
     }
 
     public static void Hotbar_MouseUp()
     {
-        // Muda o slot da hotbar
+        // Change hotbar slot
         if (HotbarSlot < 0) return;
         if (HotbarChange >= 0) PlayerSender.HotbarChange(HotbarChange, HotbarSlot);
         if (InventoryChange > 0) PlayerSender.HotbarAdd(HotbarSlot, (byte)SlotType.Item, InventoryChange);
@@ -227,7 +221,7 @@ internal static class PanelsEvents
     {
         if (InventoryChange <= 0) return;
 
-        // Adiciona um item à troca
+        // Add item to trade
         if (Player.Me.Inventory[InventoryChange].Amount == 1)
             TradeSender.TradeOffer(TradeSlot, InventoryChange);
         else
@@ -244,7 +238,7 @@ internal static class PanelsEvents
         if (slot <= 0) return;
         if (Player.Me.Inventory[slot].Item == null) return;
 
-        // Usa o item
+        // Use item
         PlayerSender.InventoryUse((byte)slot);
     }
 
@@ -254,7 +248,7 @@ internal static class PanelsEvents
         if (slot <= 0) return;
         if (Player.Me.Hotbar[slot].Slot <= 0) return;
 
-        // Usar o que estiver na hotbar
+        // Use item from hotbar
         PlayerSender.HotbarUse((byte)slot);
     }
 
@@ -264,7 +258,7 @@ internal static class PanelsEvents
         if (slot < 0) return;
         if (ShopOpen == null) return;
 
-        // Compra o item da loja
+        // Purchase shop item.
         ShopSender.ShopBuy((byte)slot);
     }
-}
+} 

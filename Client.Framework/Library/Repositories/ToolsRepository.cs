@@ -9,12 +9,12 @@ public static class ToolsRepository
 {
     // ─── Read ────────────────────────────────────────────────────────────────
 
+    /// <summary>Read tools from the JSON file into memory.</summary>
     public static void Read()
     {
         var file = new FileInfo(Directories.ToolsData.FullName);
         if (!file.Exists) return;
 
-        // Lê todas as ferramentas a partir de JSON
         var root = JsonSerializer.Deserialize<ToolsJsonRoot>(file.OpenRead(), JsonConfig.Options)
                    ?? new ToolsJsonRoot();
 

@@ -8,7 +8,7 @@ internal static class ChatHandler
 {
     internal static void Message(NetDataReader data)
     {
-        // Adiciona a mensagem
+        // Add chat message
         var text = data.GetString();
         var color = Color.FromArgb(data.GetInt());
         Chat.AddText(text, new SFML.Graphics.Color(color.R, color.G, color.B));

@@ -12,7 +12,6 @@ internal static class ShopSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.Shops);
         data.WriteObject(Shop.List);
         Send.ToPlayer(account, data);
@@ -22,7 +21,6 @@ internal static class ShopSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.ShopOpen);
         data.Put(shop.GetId());
         Send.ToPlayer(player, data);

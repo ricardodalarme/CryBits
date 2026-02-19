@@ -6,12 +6,13 @@ namespace CryBits.Editors.Logic;
 
 internal static class Utils
 {
-    // Dimensão das grades 
+    /// <summary>Editor grid size in pixels.</summary>
     public static Size GridSize = new(Grid, Grid);
 
+    /// <summary>Return the pixel offset for the directional block indicator.</summary>
+    /// <param name="direction">Direction value (see <see cref="Direction"/>).</param>
     public static Point Block_Position(byte direction)
     {
-        // Retorna a posição de cada seta do bloqueio direcional
         return (Direction)direction switch
         {
             Direction.Up => new Point(Grid / 2 - 4, 0),

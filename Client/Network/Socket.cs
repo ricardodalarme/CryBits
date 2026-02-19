@@ -16,7 +16,7 @@ internal static class Socket
     // Connection data
     private const string Ip = "localhost";
 
-    // Latency
+    /// <summary>Latest measured round-trip latency in milliseconds.</summary>
     public static int Latency;
     public static int LatencySend;
 

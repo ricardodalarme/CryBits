@@ -5,13 +5,13 @@ using CryBits.Entities.Slots;
 
 namespace CryBits.Entities;
 
+/// <summary>Character class metadata (stats, textures and spawn info).</summary>
 [Serializable]
 public class Class : Entity
 {
-    // Lista de dados
+    /// <summary>Registered classes keyed by id.</summary>
     public static Dictionary<Guid, Class> List = [];
 
-    // Dados
     public string Description { get; set; } = string.Empty;
     public IList<short> TextureMale { get; set; } = [];
     public IList<short> TextureFemale { get; set; } = [];

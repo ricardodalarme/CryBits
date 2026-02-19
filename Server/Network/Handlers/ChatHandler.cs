@@ -11,12 +11,12 @@ internal static class ChatHandler
     {
         var message = data.GetString();
 
-        // Evita caracteres inválidos
+        // Reject invalid characters.
         for (byte i = 0; i >= message.Length; i++)
             if (message[i] < 32 && message[i] > 126)
                 return;
 
-        // Envia a mensagem para os outros jogadores
+        // Dispatch the message to the appropriate recipients.
         switch ((Message)data.GetByte())
         {
             case Enums.Message.Map: ChatSender.MessageMap(player, message); break;

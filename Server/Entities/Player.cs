@@ -10,7 +10,6 @@ namespace CryBits.Server.Entities;
 
 internal class Player : Character
 {
-    // Dados permantes
     public string Name { get; set; } = string.Empty;
     public Class Class { get; set; }
     public short TextureNum { get; set; }
@@ -23,7 +22,6 @@ internal class Player : Character
     public Item[] Equipment { get; } = new Item[(byte)Enums.Equipment.Count];
     public HotbarSlot[] Hotbar { get; } = new HotbarSlot[MaxHotbar];
 
-    // Dados temporários
     public bool GettingMap;
     public List<Player> Party = [];
     public string PartyRequest;
@@ -34,7 +32,6 @@ internal class Player : Character
     public Account Account;
     public long AttackTimer;
 
-    // Constutor
     public Player(Account account)
     {
         Account = account;
@@ -42,7 +39,7 @@ internal class Player : Character
             Inventory[i] = new ItemSlot(null, 0);
     }
 
-    // Cálcula o dano do jogador
+    /// <summary>Gets the player's computed damage (strength plus weapon damage).</summary>
     public short Damage
     {
         get
@@ -54,14 +51,16 @@ internal class Player : Character
         }
     }
 
-    // Cálcula a defesa do jogador
+    /// <summary>Gets the player's defense value (Resistance attribute).</summary>
     public short PlayerDefense => Attribute[(byte)Enums.Attribute.Resistance];
 
+    /// <summary>Returns the player's maximum amount for the specified vital (HP or MP).</summary>
+    /// <param name="vital">Index of the vital to query.</param>
+    /// <returns>Maximum amount for the specified vital.</returns>
     public short MaxVital(byte vital)
     {
         var @base = Class.Vital;
 
-        // Cálcula o máximo de vital que um jogador possui
         return (Vital)vital switch
         {
             Enums.Vital.Hp => (short)(@base[vital] + Attribute[(byte)Enums.Attribute.Vitality] * 1.50 * (Level * 0.75) +
@@ -72,9 +71,11 @@ internal class Player : Character
         };
     }
 
+    /// <summary>Calculates the player's regeneration amount for the specified vital.</summary>
+    /// <param name="vital">Index of the vital to query.</param>
+    /// <returns>Amount the player regenerates for the specified vital.</returns>
     public short Regeneration(byte vital)
     {
-        // Cálcula o máximo de vital que um jogador possui
         return (Vital)vital switch
         {
             Enums.Vital.Hp => (short)(MaxVital(vital) * 0.05 + Attribute[(byte)Enums.Attribute.Vitality] * 0.3),
@@ -83,7 +84,7 @@ internal class Player : Character
         };
     }
 
-    // Quantidade de experiência para passar para o próximo level
+    /// <summary>Gets the experience required to reach the next level.</summary>
     public int ExpNeeded
     {
         get
@@ -102,10 +103,15 @@ internal class Player : Character
 
     public ItemSlot FindInventory(Item item) => Inventory.First(x => x.Item == item);
 
+    /// <summary>Number of occupied inventory slots.</summary>
     public byte TotalInventoryFree => (byte)Inventory.Count(x => x.Item != null);
 
+    /// <summary>Number of items currently offered in the active trade.</summary>
     public byte TotalTradeItems => (byte)TradeOffer.Count(x => x.SlotNum != 0);
 
+    /// <summary>Finds a playing player by name.</summary>
+    /// <param name="name">Player name to search for.</param>
+    /// <returns>The Player instance if found; otherwise null.</returns>
     public static Player Find(string name) =>
         Account.List.Find(x => x.IsPlaying && x.Character.Name.Equals(name))?.Character;
 }

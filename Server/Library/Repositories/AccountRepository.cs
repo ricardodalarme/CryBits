@@ -11,7 +11,7 @@ internal static class AccountRepository
     {
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, name, "Data") + Directories.Format);
 
-        // Carrega os dados da conta
+        // Load account data.
         using var data = new BinaryReader(file.OpenRead());
         account.User = data.ReadString();
         account.Password = data.ReadString();
@@ -22,16 +22,15 @@ internal static class AccountRepository
     {
         var directory = new DirectoryInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Characters"));
 
-        // Previne erros
+        // Ensure characters directory exists.
         if (!directory.Exists) directory.Create();
 
-        // Lê todos os personagens
+        // Read all characters for the account.
         var file = directory.GetFiles();
         account.Characters = [];
         for (byte i = 0; i < file.Length; i++)
-            // Cria um arquivo temporário
             using (var data = new BinaryReader(file[i].OpenRead()))
-                // Carrega os dados e os adiciona à lista
+                // Add character metadata to the list.
                 account.Characters.Add(new Account.TempCharacter
                 {
                     Name = data.ReadString(),
@@ -43,10 +42,10 @@ internal static class AccountRepository
     {
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Data") + Directories.Format);
 
-        // Evita erros
+        // Ensure account directory exists.
         if (!file.Directory.Exists) file.Directory.Create();
 
-        // Escreve os dados da conta no arquivo
+        // Write account data to file.
         using var data = new BinaryWriter(file.OpenWrite());
         data.Write(account.User);
         data.Write(account.Password);

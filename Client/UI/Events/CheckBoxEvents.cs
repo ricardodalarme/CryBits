@@ -29,7 +29,6 @@ internal static class CheckBoxEvents
 
     private static void ToggleSound()
     {
-        // Salva os dados
         Options.Sounds = !Options.Sounds;
         if (!Options.Sounds) Sound.StopAll();
         OptionsRepository.Write();
@@ -37,11 +36,9 @@ internal static class CheckBoxEvents
 
     private static void ToggleMusic()
     {
-        // Salva os dados
         Options.Musics = !Options.Musics;
         OptionsRepository.Write();
 
-        // Para ou reproduz a música dependendo do estado do marcador
         if (!Options.Musics)
             Music.Stop();
         else if (Screen.Current == Screens.Menu)
@@ -52,28 +49,24 @@ internal static class CheckBoxEvents
 
     private static void SaveUsername()
     {
-        // Salva os dados
         Options.SaveUsername = CheckBoxes.ConnectSaveUsername.Checked;
         OptionsRepository.Write();
     }
 
     private static void GenreName()
     {
-        // Altera o estado do marcador de outro gênero
         CheckBoxes.GenderFemale.Checked = !CheckBoxes.GenderMale.Checked;
         PanelsEvents.CreateCharacterTex = 0;
     }
 
     private static void GenreFemale()
     {
-        // Altera o estado do marcador de outro gênero
         CheckBoxes.GenderMale.Checked = !CheckBoxes.GenderFemale.Checked;
         PanelsEvents.CreateCharacterTex = 0;
     }
 
     private static void Chat()
     {
-        // Salva os dado
         Options.Chat = CheckBoxes.OptionsChat.Checked;
         OptionsRepository.Write();
         if (Options.Chat) Loop.ChatTimer = Environment.TickCount + UI.Chat.SleepTimer;
@@ -81,28 +74,24 @@ internal static class CheckBoxEvents
 
     private static void Fps()
     {
-        // Salva os dado
         Options.Fps = CheckBoxes.OptionsFps.Checked;
         OptionsRepository.Write();
     }
 
     private static void Latency()
     {
-        // Desabilita a prévia do chat
         Options.Latency = CheckBoxes.OptionsLatency.Checked;
         OptionsRepository.Write();
     }
 
     private static void Party()
     {
-        // Salva os dado
         Options.Party = CheckBoxes.OptionsParty.Checked;
         OptionsRepository.Write();
     }
 
     private static void Trade()
     {
-        // Salva os dado
         Options.Trade = CheckBoxes.OptionsTrade.Checked;
         OptionsRepository.Write();
     }

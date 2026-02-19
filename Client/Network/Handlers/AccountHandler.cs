@@ -20,7 +20,7 @@ internal static class AccountHandler
 {
     internal static void Join(NetDataReader data)
     {
-        // Reseta alguns valores
+        // Clear entity collections
         Player.List = [];
         Item.List = [];
         Shop.List = [];
@@ -28,33 +28,33 @@ internal static class AccountHandler
         Map.List = [];
         TempMap.List = [];
 
-        // Definir os valores que são enviados do servidor
+        // Initialize local player from server data
         Player.Me = new Me(data.GetString());
         Player.List.Add(Player.Me);
     }
 
     internal static void CreateCharacter()
     {
-        // Reseta os valores
+        // Reset character-creation inputs
         TextBoxes.CreateCharacterName.Text = string.Empty;
         CheckBoxes.GenderMale.Checked = true;
         CheckBoxes.GenderFemale.Checked = false;
         PanelsEvents.CreateCharacterClass = 0;
         PanelsEvents.CreateCharacterTex = 0;
 
-        // Abre o painel de criação de personagem
+        // Show character creation panel
         PanelsEvents.MenuClose();
         Panels.CreateCharacter.Visible = true;
     }
 
     internal static void Characters(NetDataReader data)
     {
-        // Redimensiona a lista
+        // Resize character list
         PanelsEvents.Characters = new PanelsEvents.TempCharacter[data.GetByte()];
 
         for (byte i = 0; i < PanelsEvents.Characters.Length; i++)
         {
-            // Recebe os dados do personagem
+            // Read character data
             PanelsEvents.Characters[i] = new PanelsEvents.TempCharacter
             {
                 Name = data.GetString(),
@@ -65,7 +65,7 @@ internal static class AccountHandler
 
     internal static void JoinGame()
     {
-        // Reseta os valores
+        // Reset UI state and options
         Chat.Order = [];
         Chat.LinesFirst = 0;
         Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
@@ -80,7 +80,7 @@ internal static class AccountHandler
         Loop.ChatTimer = Loop.ChatTimer = Environment.TickCount + 10000;
         PanelsEvents.InformationId = Guid.Empty;
 
-        // Reseta a interface
+        // Reset UI panels
         Panels.MenuCharacter.Visible = false;
         Panels.MenuInventory.Visible = false;
         Panels.MenuOptions.Visible = false;
@@ -94,7 +94,7 @@ internal static class AccountHandler
         Panels.Shop.Visible = false;
         Panels.ShopSell.Visible = false;
 
-        // Abre o jogo
+        // Enter the game
         Music.Stop();
         Screen.Current = Screens.Game;
     }

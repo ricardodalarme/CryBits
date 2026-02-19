@@ -9,13 +9,13 @@ namespace CryBits.Client.Entities.TempMap;
 
 internal class TempMap
 {
-    // Mapa atual
+    // Current temporary map instance
     public static TempMap Current;
 
-    // Lista de dados
+    // Map collection
     public static Dictionary<Guid, TempMap> List;
 
-    // Dados gerais
+    // Map data
     public readonly Map Data;
     public TempNpc[] Npc;
     public TempMapItems[] Item = Array.Empty<TempMapItems>();
@@ -23,7 +23,6 @@ internal class TempMap
     public TempMapWeather Weather { get; init; }
     public TempMapFog Fog { get; init; }
 
-    // Sangue
     private int _bloodTimer;
 
     public TempMap(Map data)
@@ -35,7 +34,7 @@ internal class TempMap
 
     private bool HasNpc(byte x, byte y)
     {
-        // Verifica se há algum Npc na cordenada
+        // Check if an NPC exists at the given tile
         for (byte i = 0; i < Npc.Length; i++)
             if (Npc[i].Data != null)
                 if ((Npc[i].X, Npc[i].Y) == (x, y))
@@ -46,7 +45,7 @@ internal class TempMap
 
     private bool HasPlayer(short x, short y)
     {
-        // Verifica se há algum Jogador na cordenada
+        // Check if a player exists at the given tile
         for (byte i = 0; i < Player.List.Count; i++)
             if ((Player.List[i].X, Player.List[i].Y, Player.List[i].Map) == (x, y, this))
                 return true;
@@ -58,13 +57,13 @@ internal class TempMap
     {
         byte nextX = x, nextY = y;
 
-        // Próximo azulejo
+        // calculate the next tile in the given direction
         NextTile(direction, ref nextX, ref nextY);
 
-        // Verifica se está indo para uma ligação
+        // if leaving map, check for a link
         if (Map.OutLimit(nextX, nextY)) return Data.Link[(byte)direction] == null;
 
-        // Verifica se o azulejo está bloqueado
+        // check blocking attributes and occupants
         if (Data.Attribute[nextX, nextY].Type == (byte)TileAttribute.Block) return true;
         if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
         if (Data.Attribute[x, y].Block[(byte)direction]) return true;
@@ -74,11 +73,10 @@ internal class TempMap
 
     public void Logic()
     {
-        // Toda a lógica do mapa
         Fog.Update();
         Weather.Update();
 
-        // Retira os sangues do chão depois de um determinado tempo
+        // Fade out and remove old blood splatters
         if (_bloodTimer < Environment.TickCount)
             for (byte i = 0; i < Blood.Count; i++)
             {

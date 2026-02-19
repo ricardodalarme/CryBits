@@ -8,14 +8,13 @@ namespace CryBits.Entities.Map;
 [Serializable]
 public class Map : Entity
 {
-    // Lista de dados
+    /// <summary>Loaded maps keyed by id.</summary>
     public static Dictionary<Guid, Map> List = [];
 
-    // Tamanho dos mapas
+    /// <summary>Map dimensions in tiles.</summary>
     public const byte Width = 25;
     public const byte Height = 19;
 
-    // Dados
     public short Revision { get; set; }
     public Moral Moral { get; set; }
     public IList<MapLayer> Layer { get; set; } = [];
@@ -29,11 +28,10 @@ public class Map : Entity
     public byte Lighting { get; set; } = 100;
     public Map[] Link { get; set; } = new Map[(byte)Direction.Count];
 
-    // Construtor
     public Map()
     {
         Name = "New map";
-        Layer.Add(new MapLayer ("Ground"));
+        Layer.Add(new MapLayer("Ground"));
 
         for (byte x = 0; x < Width; x++)
         for (byte y = 0; y < Height; y++)
@@ -43,12 +41,14 @@ public class Map : Entity
         }
     }
 
-    // Verifica se as coordenas estão no limite do mapa
+    /// <summary>
+    /// Returns true when the coordinates are outside the map bounds.
+    /// </summary>
     public static bool OutLimit(short x, short y) => x >= Width || y >= Height || x < 0 || y < 0;
 
     public bool TileBlocked(short x, short y)
     {
-        // Verifica se o azulejo está bloqueado
+        // Check whether the tile is blocking or out of bounds
         if (OutLimit(x, y)) return true;
         if (Attribute[x, y].Type == (byte)TileAttribute.Block) return true;
         return false;
@@ -56,12 +56,12 @@ public class Map : Entity
 
     public void Update()
     {
-        // Atualiza os azulejos necessários
+        // Update necessary tiles.
         for (byte x = 0; x < Width; x++)
         for (byte y = 0; y < Height; y++)
         for (byte c = 0; c < Layer.Count; c++)
             if (Layer[c].Tile[x, y].IsAutoTile)
-                // Faz os cálculos para a autocriação
+                // Recalculate autotile parts.
                 Layer[c].Calculate(x, y);
     }
 }

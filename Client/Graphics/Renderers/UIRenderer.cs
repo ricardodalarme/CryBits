@@ -22,12 +22,15 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal static class UIRenderer
 {
+    /// <summary>
+    /// Recursively render a tree of UI components.
+    /// </summary>
+    /// <param name="node">Top-level component list to render.</param>
     public static void Interface(List<Component> node)
     {
         for (byte i = 0; i < node.Count; i++)
             if (node[i].Visible)
             {
-                // Desenha a ferramenta
                 switch (node[i])
                 {
                     case Panel panel: Panel(panel); break;
@@ -36,17 +39,14 @@ internal static class UIRenderer
                     case CheckBox checkBox: CheckBox(checkBox); break;
                 }
 
-                // Desenha algumas coisas mais específicas da interface
                 InterfaceSpecific(node[i]);
 
-                // Pula pra próxima
                 Interface(node[i].Children);
             }
     }
 
     private static void Button(Button tool)
     {
-        // Define a transparência do botão pelo seu estado
         byte alpha = tool.ButtonState switch
         {
             ButtonState.Above => 250,
@@ -54,27 +54,22 @@ internal static class UIRenderer
             _ => 225
         };
 
-        // Desenha o botão
         Renders.Render(Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
     }
 
     private static void Panel(Panel tool)
     {
-        // Desenha o painel
         Renders.Render(Textures.Panels[tool.TextureNum], tool.Position);
     }
 
     private static void CheckBox(CheckBox tool)
     {
-        // Define as propriedades dos retângulos
         var recSource = new Rectangle(new Point(),
             new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
         var recDestiny = new Rectangle(tool.Position, recSource.Size);
 
-        // Desenha a textura do marcador pelo seu estado 
         if (tool.Checked) recSource.Location = new Point(Textures.CheckBox.ToSize().Width / 2, 0);
 
-        // Desenha o marcador 
         Renders.Render(Textures.CheckBox, recSource, recDestiny);
         Renders.DrawText(tool.Text,
             recDestiny.Location.X + Textures.CheckBox.ToSize().Width / 2 +
@@ -86,16 +81,12 @@ internal static class UIRenderer
         var position = tool.Position;
         var text = tool.Text;
 
-        // Desenha a ferramenta
         Renders.Render_Box(Textures.TextBox, 3, tool.Position, new Size(tool.Width, Textures.TextBox.ToSize().Height));
 
-        // Altera todos os caracteres do texto para um em especifico, se for necessário
         if (tool.Password && !string.IsNullOrEmpty(text)) text = new string('•', text.Length);
 
-        // Quebra o texto para que caiba no digitalizador, se for necessário
         text = TextBreak(text, tool.Width - 10);
 
-        // Desenha o texto do digitalizador
         if (Framework.Interfacily.Components.TextBox.Focused != null &&
             Framework.Interfacily.Components.TextBox.Focused == tool && TextBoxesEvents.Signal) text += "|";
         Renders.DrawText(text, position.X + 4, position.Y + 2, Color.White);
@@ -103,7 +94,6 @@ internal static class UIRenderer
 
     private static void InterfaceSpecific(Component tool)
     {
-        // Interações especificas
         if (tool is Panel panel)
             switch (panel.Name)
             {
@@ -127,7 +117,6 @@ internal static class UIRenderer
         var mpPercentage = Player.Me.Vital[(byte)Vital.Mp] / (decimal)Player.Me.MaxVital[(byte)Vital.Mp];
         var expPercentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
 
-        // Barras
         Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0,
             (int)(Textures.BarsPanel.Size.X * hpPercentage), 17);
         Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 24, 0, 18,
@@ -135,12 +124,10 @@ internal static class UIRenderer
         Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36,
             (int)(Textures.BarsPanel.Size.X * expPercentage), 17);
 
-        // Textos 
         Renders.DrawText("HP", tool.Position.X + 10, tool.Position.Y + 3, Color.White);
         Renders.DrawText("MP", tool.Position.X + 10, tool.Position.Y + 21, Color.White);
         Renders.DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, Color.White);
 
-        // Indicadores
         Renders.DrawText(Player.Me.Vital[(byte)Vital.Hp] + "/" + Player.Me.MaxVital[(byte)Vital.Hp],
             tool.Position.X + 76,
             tool.Position.Y + 7, Color.White, TextAlign.Center);
@@ -151,20 +138,21 @@ internal static class UIRenderer
             Color.White, TextAlign.Center);
     }
 
+    /// <summary>
+    /// Render chat messages and prompt if chat is not focused.
+    /// </summary>
     public static void Chat()
     {
         var tool = Panels.Chat;
         tool.Visible = Framework.Interfacily.Components.TextBox.Focused != null &&
                        Framework.Interfacily.Components.TextBox.Focused.Name.Equals("Chat");
 
-        // Renderiza as mensagens
         if (tool.Visible || Loop.ChatTimer >= Environment.TickCount && Options.Chat)
             for (var i = UI.Chat.LinesFirst; i <= UI.Chat.LinesVisible + UI.Chat.LinesFirst; i++)
                 if (UI.Chat.Order.Count > i)
                     Renders.DrawText(UI.Chat.Order[i].Text, 16, 461 + 11 * (i - UI.Chat.LinesFirst),
                         UI.Chat.Order[i].Color);
 
-        // Dica de como abrir o chat
         if (!tool.Visible)
             Renders.DrawText("Press [Enter] to open chat.", TextBoxes.Chat.Position.X + 5,
                 TextBoxes.Chat.Position.Y + 3,
@@ -176,10 +164,8 @@ internal static class UIRenderer
         var item = Item.List.Get(PanelsEvents.InformationId);
         var data = new List<string>();
 
-        // Apenas se necessário
         if (item == null) return;
 
-        // Define a cor de acordo com a raridade
         var textColor = item.Rarity switch
         {
             Rarity.Uncommon => new Color(204, 255, 153),
@@ -189,12 +175,10 @@ internal static class UIRenderer
             _ => new Color()
         };
 
-        // Nome, descrição e icone do item
         Renders.DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, TextAlign.Center);
         Renders.DrawText(item.Description, tool.Position.X + 82, tool.Position.Y + 20, Color.White, 86);
         Renders.Render(Textures.Items[item.Texture], new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
 
-        // Informações da Loja
         if (Panels.Shop.Visible)
             if (PanelsEvents.ShopSlot >= 0)
                 data.Add("Price: " + PanelsEvents.ShopOpen.Sold[PanelsEvents.ShopSlot].Price);
@@ -202,10 +186,8 @@ internal static class UIRenderer
                 if (PanelsEvents.ShopOpen.FindBought(item) != null)
                     data.Add("Sale price: " + PanelsEvents.ShopOpen.FindBought(item).Price);
 
-        // Informações específicas dos itens
         switch (item.Type)
         {
-            // Poção
             case ItemType.Potion:
                 for (byte n = 0; n < (byte)Vital.Count; n++)
                     if (item.PotionVital[n] != 0)
@@ -213,7 +195,7 @@ internal static class UIRenderer
 
                 if (item.PotionExperience != 0) data.Add("Experience: " + item.PotionExperience);
                 break;
-            // Equipamentos
+
             case ItemType.Equipment:
                 if (item.EquipType == (byte)Equipment.Weapon)
                     if (item.WeaponDamage != 0)
@@ -225,7 +207,6 @@ internal static class UIRenderer
                 break;
         }
 
-        // Desenha todos os dados necessários
         Point[] positions =
         {
             new(tool.Position.X + 10, tool.Position.Y + 90), new(tool.Position.X + 10, tool.Position.Y + 102),
@@ -240,27 +221,23 @@ internal static class UIRenderer
     {
         var indicator = string.Empty;
 
-        // Desenha os objetos da hotbar
         for (byte i = 0; i < MaxHotbar; i++)
         {
             var slot = Player.Me.Hotbar[i].Slot;
             if (slot > 0)
                 switch (Player.Me.Hotbar[i].Type)
                 {
-                    // Itens
                     case SlotType.Item:
                         ItemRenderer.Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6),
                             (byte)(i + 1),
                             10); break;
                 }
 
-            // Desenha os números de cada slot
             if (i < 9) indicator = (i + 1).ToString();
             else if (i == 9) indicator = "0";
             Renders.DrawText(indicator, tool.Position.X + 16 + 36 * i, tool.Position.Y + 22, Color.White);
         }
 
-        // Movendo slot
         if (PanelsEvents.HotbarChange >= 0)
             if (Player.Me.Hotbar[PanelsEvents.HotbarChange].Type == SlotType.Item)
                 Renders.Render(
@@ -270,12 +247,10 @@ internal static class UIRenderer
 
     private static void MenuCharacter(Panel tool)
     {
-        // Dados básicos
         Renders.DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
         Renders.DrawText(Player.Me.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, Color.White);
         Renders.Render(Textures.Faces[Player.Me.TextureNum], new Point(tool.Position.X + 82, tool.Position.Y + 37));
 
-        // Atributos
         Renders.DrawText("Strength: " + Player.Me.Attribute[(byte)Attribute.Strength], tool.Position.X + 32,
             tool.Position.Y + 146, Color.White);
         Renders.DrawText("Resistance: " + Player.Me.Attribute[(byte)Attribute.Resistance], tool.Position.X + 32,
@@ -288,7 +263,6 @@ internal static class UIRenderer
             tool.Position.Y + 210, Color.White);
         Renders.DrawText("Points: " + Player.Me.Points, tool.Position.X + 14, tool.Position.Y + 228, Color.White);
 
-        // Equipamentos 
         for (byte i = 0; i < (byte)Equipment.Count; i++)
             if (Player.Me.Equipment[i] == null)
                 Renders.Render(Textures.Equipments, tool.Position.X + 7 + i * 34, tool.Position.Y + 247, i * 34, 0, 32,
@@ -302,13 +276,11 @@ internal static class UIRenderer
     {
         byte numColumns = 5;
 
-        // Desenha todos os itens do inventário
         for (byte i = 0; i < MaxInventory; i++)
             ItemRenderer.Item(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount,
                 tool.Position + new Size(7, 30), i,
                 numColumns);
 
-        // Movendo item
         if (PanelsEvents.InventoryChange > 0)
             Renders.Render(Textures.Items[Player.Me.Inventory[PanelsEvents.InventoryChange].Item.Texture],
                 new Point(UI.Window.Mouse.X + 6, UI.Window.Mouse.Y + 6));
@@ -320,23 +292,24 @@ internal static class UIRenderer
             tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
     }
 
+    /// <summary>
+    /// Render the party member bars and names.
+    /// </summary>
     public static void Party()
     {
         for (byte i = 0; i < Player.Me.Party.Length; i++)
         {
-            // Barras do membro
-            Renders.Render(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8); // HP Cinza
-            Renders.Render(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8); // MP Cinza
+            Renders.Render(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
+            Renders.Render(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
             if (Player.Me.Party[i].Vital[(byte)Vital.Hp] > 0)
                 Renders.Render(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
                     Player.Me.Party[i].Vital[(byte)Vital.Hp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Hp],
-                    8); // HP 
+                    8);
             if (Player.Me.Party[i].Vital[(byte)Vital.Mp] > 0)
                 Renders.Render(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
                     Player.Me.Party[i].Vital[(byte)Vital.Mp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Mp],
-                    8); // MP 
+                    8);
 
-            // Nome do membro
             Renders.DrawText(Player.Me.Party[i].Name, 10, 79 + 27 * i, Color.White);
         }
     }
@@ -349,7 +322,6 @@ internal static class UIRenderer
 
     private static void Trade(Panel tool)
     {
-        // Desenha os itens das ofertas
         for (byte i = 0; i < MaxInventory; i++)
         {
             ItemRenderer.Item(Player.Me.TradeOffer[i].Item, Player.Me.TradeOffer[i].Amount,
@@ -361,14 +333,12 @@ internal static class UIRenderer
 
     private static void Shop(Panel tool)
     {
-        // Dados da loja
         var name = PanelsEvents.ShopOpen.Name;
         Renders.DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, TextAlign.Center);
         Renders.DrawText("Currency: " + PanelsEvents.ShopOpen.Currency.Name, tool.Position.X + 10,
             tool.Position.Y + 195,
             Color.White);
 
-        // Desenha os itens
         for (byte i = 0; i < PanelsEvents.ShopOpen.Sold.Count; i++)
             ItemRenderer.Item(PanelsEvents.ShopOpen.Sold[i].Item, PanelsEvents.ShopOpen.Sold[i].Amount,
                 tool.Position + new Size(7, 50), (byte)(i + 1), 7);
@@ -380,21 +350,18 @@ internal static class UIRenderer
         var textPosition = new Point(399, 425);
         var text = "(" + (PanelsEvents.SelectCharacter + 1) + ") None";
 
-        // Somente se necessário
         if (!ButtonsEvents.Characters_Change_Buttons())
         {
             Renders.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
             return;
         }
 
-        // Verifica se o personagem existe
         if (PanelsEvents.SelectCharacter >= PanelsEvents.Characters.Length)
         {
             Renders.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
             return;
         }
 
-        // Desenha o personagem
         var textureNum = PanelsEvents.Characters[PanelsEvents.SelectCharacter].TextureNum;
         if (textureNum > 0)
         {
@@ -404,7 +371,6 @@ internal static class UIRenderer
                 Direction.Down, AnimationStopped);
         }
 
-        // Desenha o nome da classe
         text = "(" + (PanelsEvents.SelectCharacter + 1) + ") " +
                PanelsEvents.Characters[PanelsEvents.SelectCharacter].Name;
         Renders.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
@@ -415,24 +381,20 @@ internal static class UIRenderer
         short textureNum = 0;
         var @class = Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value;
 
-        // Textura do personagem
         if (CheckBoxes.GenderMale.Checked && @class.TextureMale.Count > 0)
             textureNum = @class.TextureMale[PanelsEvents.CreateCharacterTex];
         else if (@class.TextureFemale.Count > 0)
             textureNum = @class.TextureFemale[PanelsEvents.CreateCharacterTex];
 
-        // Desenha o personagem
         if (textureNum > 0)
         {
             Renders.Render(Textures.Faces[textureNum], new Point(425, 440));
             CharacterRenderer.Character(textureNum, new Point(433, 501), Direction.Down, AnimationStopped);
         }
 
-        // Desenha o nome da classe
         var text = @class.Name;
         Renders.DrawText(text, 347, 509, Color.White, TextAlign.Center);
 
-        // Descrição
         Renders.DrawText(@class.Description, 282, 526, Color.White, 123);
     }
 }

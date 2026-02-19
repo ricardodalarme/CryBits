@@ -5,16 +5,17 @@ namespace CryBits.Client.Framework.Library.Repositories;
 
 public static class OptionsRepository
 {
+    /// <summary>
+    /// Load application options from JSON into the runtime <see cref="Options"/> object.
+    /// </summary>
     public static void Read()
     {
-        // Cria o arquivo se ele não existir
         if (!Directories.Options.Exists)
         {
             Write();
             return;
         }
 
-        // Carrega as configurações a partir de JSON
         using var stream = Directories.Options.OpenRead();
         var opts = JsonSerializer.Deserialize<OptionsDto>(stream, JsonConfig.Options) ?? new OptionsDto();
         Options.SaveUsername = opts.SaveUsername;
@@ -31,9 +32,11 @@ public static class OptionsRepository
         Options.PreMapAudio = opts.PreMapAudio;
     }
 
+    /// <summary>
+    /// Persist current runtime <see cref="Options"/> to the JSON file.
+    /// </summary>
     public static void Write()
     {
-        // Escreve as configurações em JSON
         Directories.Options.Directory?.Create();
         var opts = new OptionsDto
         {

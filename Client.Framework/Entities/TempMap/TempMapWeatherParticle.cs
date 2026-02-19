@@ -11,14 +11,14 @@ public struct TempMapWeatherParticle
 
     public void MoveRain()
     {
-        // Movimenta a partícula
+        // Move the particle for rain.
         X += Speed;
         Y += Speed;
     }
 
     public void SetRain()
     {
-        // Define a velocidade e a posição da partícula
+        // Initialize rain particle speed and start position.
         Speed = Utils.MyRandom.Next(8, 13);
 
         if (Utils.MyRandom.Next(2) == 0)
@@ -35,7 +35,7 @@ public struct TempMapWeatherParticle
 
     public void SetSnow()
     {
-        // Define a velocidade e a posição da partícula
+        // Initialize snow particle.
         Speed = Utils.MyRandom.Next(1, 3);
         Y = -32;
         X = Utils.MyRandom.Next(-32, Globals.ScreenWidth);
@@ -49,13 +49,13 @@ public struct TempMapWeatherParticle
         var x1 = Start + Globals.SnowMovement + difference;
         var x2 = Start - Globals.SnowMovement - difference;
 
-        // Faz com que a partícula volte
+        // Reverse horizontal direction when limits are reached
         if (x1 <= X)
             Back = true;
         else if (x2 >= X)
             Back = false;
 
-        // Movimenta a partícula
+        // Move particle vertically and optionally horizontally
         Y += Speed;
 
         if (xAxis)

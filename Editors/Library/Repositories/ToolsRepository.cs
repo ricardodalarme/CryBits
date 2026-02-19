@@ -17,20 +17,20 @@ namespace CryBits.Editors.Library.Repositories;
 
 internal static class ToolsRepository
 {
-    // ─── Read ────────────────────────────────────────────────────────────────
+
 
     public static void Read()
     {
         var file = new FileInfo(Directories.ToolsData.FullName);
 
-        // Cria o arquivo caso ele não existir
+        // Create the file if it doesn't exist.
         if (!file.Exists)
         {
             Write();
             return;
         }
 
-        // Lê todas as ferramentas a partir de JSON
+        // Read tools from JSON.
         var root = JsonSerializer.Deserialize<ToolsJsonRoot>(file.OpenRead(), JsonConfig.Options)
                    ?? new ToolsJsonRoot();
 
@@ -88,16 +88,15 @@ internal static class ToolsRepository
             child.Tag = component;
             body.Add(component);
 
-            // Recurse
             LoadChildren(child, component.Children, dto.Children);
         }
     }
 
-    // ─── Write ───────────────────────────────────────────────────────────────
+
 
     public static void Write()
     {
-        // Constrói a árvore completa como DTO JSON
+        // Build DTO tree for serialization.
         var root = new ToolsJsonRoot();
 
         foreach (var screenNode in InterfaceData.Tree.Nodes)
@@ -107,7 +106,7 @@ internal static class ToolsRepository
             root.Screens.Add(screenDto);
         }
 
-        // Serializa para o arquivo
+        // Serialize to file.
         var file = new FileInfo(Directories.ToolsData.FullName);
         file.Directory?.Create();
         using var stream = file.Open(FileMode.Create, FileAccess.Write);
@@ -129,7 +128,6 @@ internal static class ToolsRepository
                 _ => throw new InvalidOperationException($"Unknown component type: {component.GetType().Name}")
             };
 
-            // Recurse into children
             BuildChildren(t, dto.Children);
             dtos.Add(dto);
         }

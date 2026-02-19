@@ -11,7 +11,7 @@ public static class InterfaceUtils
 
     public static bool Viewable(Component? component)
     {
-        // Verifica se a ferramenta está visível
+        // Return true if component and all parents are visible (null is considered visible).
         if (component == null) return true;
         if (!component.Visible) return false;
         return Viewable(component.Parent);
@@ -19,18 +19,18 @@ public static class InterfaceUtils
 
     public static bool IsAbove(Rectangle rectangle)
     {
-        // Verficia se o Window.Mouse está sobre o objeto
+        // Check whether the stored mouse position lies inside the rectangle.
         if (MyMouse.X >= rectangle.X && MyMouse.X <= rectangle.X + rectangle.Width)
             if (MyMouse.Y >= rectangle.Y && MyMouse.Y <= rectangle.Y + rectangle.Height)
                 return true;
 
-        // Se não, retornar um valor nulo
+        // Otherwise return false.
         return false;
     }
 
     public static short MeasureString(string text)
     {
-        // Dados do texto
+        // Measure text width using SFML Text.
         var tempText = new Text(Fonts.Default, text) { CharacterSize = 10 };
         return (short)tempText.GetLocalBounds().Width;
     }

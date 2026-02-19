@@ -138,10 +138,6 @@ internal partial class EditorClassesWindow : Window
         pnlItemAdd.IsVisible = false;
     }
 
-    // ──────────────────────────────────────────────────────────
-    // Filter
-    // ──────────────────────────────────────────────────────────
-
     private void txtFilter_TextChanged(object? sender, TextChangedEventArgs e)
     {
         RefreshClassList();
@@ -176,7 +172,7 @@ internal partial class EditorClassesWindow : Window
     }
 
     // ──────────────────────────────────────────────────────────
-    // General
+
     // ──────────────────────────────────────────────────────────
 
     private void txtName_TextChanged(object? sender, TextChangedEventArgs e)
@@ -193,7 +189,7 @@ internal partial class EditorClassesWindow : Window
     }
 
     // ──────────────────────────────────────────────────────────
-    // Attributes
+
     // ──────────────────────────────────────────────────────────
 
     private void numHP_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -239,7 +235,7 @@ internal partial class EditorClassesWindow : Window
     }
 
     // ──────────────────────────────────────────────────────────
-    // Textures
+
     // ──────────────────────────────────────────────────────────
 
     private void butMTexture_Click(object? sender, RoutedEventArgs e)
@@ -316,7 +312,7 @@ internal partial class EditorClassesWindow : Window
 
     private void butItem_Add_Click(object? sender, RoutedEventArgs e)
     {
-        if (Item.List.Count == 0) return;   // no items registered
+        if (Item.List.Count == 0) return; // no items registered
 
         cmbItems.SelectedIndex = 0;
         numItem_Amount.Value = 1;
@@ -340,7 +336,7 @@ internal partial class EditorClassesWindow : Window
     }
 
     // ──────────────────────────────────────────────────────────
-    // Spawn
+
     // ──────────────────────────────────────────────────────────
 
     private void cmbSpawn_Map_SelectionChanged(object? sender, SelectionChangedEventArgs e)

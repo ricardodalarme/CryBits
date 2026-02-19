@@ -47,12 +47,12 @@ internal static class PlayerHandler
     {
         short slotOld = data.GetShort(), slotNew = data.GetShort();
 
-        // Somente se necessário
+        // Early exits.
         if (player.Inventory[slotOld].Item == null) return;
         if (slotOld == slotNew) return;
         if (player.Trade != null) return;
 
-        // Muda o item de slot
+        // Swap inventory slots.
         (player.Inventory[slotOld], player.Inventory[slotNew]) = (player.Inventory[slotNew], player.Inventory[slotOld]);
         PlayerSender.PlayerInventory(player);
         HotbarSystem.SyncInventorySwap(player, slotOld, slotNew);

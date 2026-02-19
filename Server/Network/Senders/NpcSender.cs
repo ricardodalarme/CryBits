@@ -20,7 +20,6 @@ internal static class NpcSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.MapNpcs);
         data.Put((short)map.Npc.Length);
         for (byte i = 0; i < map.Npc.Length; i++)
@@ -39,7 +38,6 @@ internal static class NpcSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.MapNpc);
         data.Put(npc.Index);
         data.Put(npc.Data.GetId());
@@ -54,7 +52,6 @@ internal static class NpcSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.MapNpcMovement);
         data.Put(npc.Index);
         data.Put(npc.X);
@@ -68,7 +65,6 @@ internal static class NpcSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.MapNpcDirection);
         data.Put(npc.Index);
         data.Put((byte)npc.Direction);
@@ -79,7 +75,6 @@ internal static class NpcSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.MapNpcVitals);
         data.Put(npc.Index);
         for (byte n = 0; n < (byte)Vital.Count; n++) data.Put(npc.Vital[n]);
@@ -90,7 +85,6 @@ internal static class NpcSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.MapNpcAttack);
         data.Put(npc.Index);
         data.Put(victim);
@@ -102,7 +96,6 @@ internal static class NpcSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.MapNpcDied);
         data.Put(npc.Index);
         Send.ToMap(npc.Map, data);

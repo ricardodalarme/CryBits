@@ -20,7 +20,6 @@ internal static class PlayerHandler
         var name = data.GetString();
         Player player;
 
-        // Adiciona o jogador à lista
         if (name != Player.Me.Name)
         {
             player = new Player(name);
@@ -29,7 +28,6 @@ internal static class PlayerHandler
         else
             player = Player.Me;
 
-        // Defini os dados do jogador
         player.TextureNum = data.GetShort();
         player.Level = data.GetShort();
         player.Map = TempMap.List[data.GetGuid()];
@@ -51,12 +49,10 @@ internal static class PlayerHandler
     {
         var player = Player.Get(data.GetString());
 
-        // Defini os dados do jogador
         player.X = data.GetByte();
         player.Y = data.GetByte();
         player.Direction = (Direction)data.GetByte();
 
-        // Para a movimentação
         player.X2 = 0;
         player.Y2 = 0;
         player.Movement = Movement.Stopped;
@@ -66,7 +62,6 @@ internal static class PlayerHandler
     {
         var player = Player.Get(data.GetString());
 
-        // Define os dados
         for (byte i = 0; i < (byte)Vital.Count; i++)
         {
             player.Vital[i] = data.GetShort();
@@ -78,13 +73,13 @@ internal static class PlayerHandler
     {
         var player = Player.Get(data.GetString());
 
-        // Altera os dados dos equipamentos do jogador
+        // Update player's equipped items
         for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(data.GetGuid());
     }
 
     internal static void PlayerLeave(NetDataReader data)
     {
-        // Limpa os dados do jogador
+        // Remove player from list
         Player.List.Remove(Player.Get(data.GetString()));
     }
 
@@ -92,7 +87,6 @@ internal static class PlayerHandler
     {
         var player = Player.Get(data.GetString());
 
-        // Move o jogador
         player.X = data.GetByte();
         player.Y = data.GetByte();
         player.Direction = (Direction)data.GetByte();
@@ -100,7 +94,6 @@ internal static class PlayerHandler
         player.X2 = 0;
         player.Y2 = 0;
 
-        // Posição exata do jogador
         switch (player.Direction)
         {
             case Direction.Up: player.Y2 = Grid; break;
@@ -112,7 +105,7 @@ internal static class PlayerHandler
 
     internal static void PlayerDirection(NetDataReader data)
     {
-        // Altera a posição do jogador
+        // Update player's direction
         Player.Get(data.GetString()).Direction = (Direction)data.GetByte();
     }
 
@@ -122,11 +115,9 @@ internal static class PlayerHandler
         var victim = data.GetString();
         var victimType = data.GetByte();
 
-        // Inicia o ataque
         player.Attacking = true;
         player.AttackTimer = Environment.TickCount;
 
-        // Sofrendo dano
         if (victim != string.Empty)
             if (victimType == (byte)Target.Player)
             {
@@ -144,12 +135,10 @@ internal static class PlayerHandler
 
     internal static void PlayerExperience(NetDataReader data)
     {
-        // Define os dados
         Player.Me.Experience = data.GetInt();
         Player.Me.ExpNeeded = data.GetInt();
         Player.Me.Points = data.GetByte();
 
-        // Manipula a visibilidade dos botões
         Buttons.AttributesStrength.Visible = Player.Me.Points > 0;
         Buttons.AttributesResistance.Visible = Player.Me.Points > 0;
         Buttons.AttributesIntelligence.Visible = Player.Me.Points > 0;
@@ -159,14 +148,12 @@ internal static class PlayerHandler
 
     internal static void PlayerInventory(NetDataReader data)
     {
-        // Define os dados
         for (byte i = 0; i < MaxInventory; i++)
             Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(data.GetGuid()), data.GetShort());
     }
 
     internal static void PlayerHotbar(NetDataReader data)
     {
-        // Define os dados
         for (byte i = 0; i < MaxHotbar; i++)
         {
             Player.Me.Hotbar[i] = new HotbarSlot((SlotType)data.GetByte(), data.GetByte());

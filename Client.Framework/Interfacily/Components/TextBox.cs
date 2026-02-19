@@ -6,25 +6,24 @@ using static CryBits.Client.Framework.Interfacily.InterfaceUtils;
 
 namespace CryBits.Client.Framework.Interfacily.Components;
 
+/// <summary>Single-line text input control used by the UI system.</summary>
 public class TextBox : Component, IMouseUp
 {
-    // Propriedades
     public string Text { get; set; } = string.Empty;
     public short MaxCharacters { get; set; }
     public short Width { get; set; }
     public bool Password { get; set; }
 
-    // Ações
     public event Action? OnMouseUp;
 
+    /// <summary>Currently focused textbox, or null if none.</summary>
     public static TextBox? Focused;
 
     public void MouseUp()
     {
-        // Somente se necessário
         if (!IsAbove(new Rectangle(Position, new Size(Width, Textures.TextBox.ToSize().Height)))) return;
 
-        // Define o foco no digitalizador
+        // Set focus to this textbox
         Focused = this;
 
         OnMouseUp?.Invoke();
@@ -35,30 +34,30 @@ public class TextBox : Component, IMouseUp
         if (!Viewable(this)) return;
         if (!string.IsNullOrEmpty(Text))
         {
-            // Apaga a última letra do texto
+            // Handle backspace
             if (e.Unicode == "\b" && Text.Length > 0)
             {
                 Text = Text.Remove(Text.Length - 1);
                 return;
             }
 
-            // Não adicionar se já estiver no máximo de caracteres
+            // Respect MaxCharacters
             if (MaxCharacters > 0)
                 if (Text.Length >= MaxCharacters)
                     return;
         }
 
-        // Adiciona o caracter à caixa de texto
+        // Append printable character
         var @char = Convert.ToChar(e.Unicode);
         if (@char > 31 && @char < 128) Text += e.Unicode;
     }
 
+    /// <summary>Focus the first visible textbox in the current screen, if any.</summary>
     public static void Focus()
     {
-        // Se o digitalizador não estiver habilitado então isso não é necessário 
         if ((Focused != null) & Viewable(Focused)) return;
 
-        // Percorre toda a árvore de ordem para executar o comando
+        // Traverse component tree to find first focusable textbox
         var stack = new Stack<List<Component>>();
         stack.Push(Screen.Current.Body);
         while (stack.Count != 0)
@@ -68,7 +67,7 @@ public class TextBox : Component, IMouseUp
             for (byte i = 0; i < top.Count; i++)
                 if (top[i].Visible)
                 {
-                    // Altera o digitalizador focado para o primeiro visível
+                    // Set focus to the first visible textbox (skip chat)
                     if (top[i] is TextBox && !Screen.Current.Body[i].Name.Equals("Chat"))
                     {
                         Focused = (TextBox)top[i];
@@ -85,7 +84,7 @@ public class TextBox : Component, IMouseUp
         var parent = Focused.Parent != null ? Focused?.Parent.Children : Screen.Current.Body;
         int index = parent.IndexOf(Focused), temp = index + 1;
 
-        // Altera o digitalizador focado para o próximo
+        // Advance focus to the next focusable TextBox.
         while (temp != index)
         {
             if (temp == parent.Count) temp = 0;

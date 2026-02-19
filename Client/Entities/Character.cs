@@ -5,8 +5,9 @@ namespace CryBits.Client.Entities;
 
 internal abstract class Character
 {
-    // Geral
+    /// <summary>Core character state and position fields.</summary>
     public short[] Vital = new short[(byte)Enums.Vital.Count];
+
     public byte X;
     public byte Y;
     public Direction Direction;
@@ -18,8 +19,10 @@ internal abstract class Character
     public int Hurt;
     public int AttackTimer;
 
-    // Posição exata em que o personagem está
+    /// <summary>Exact X position in pixels.</summary>
     public int PixelX => X * Grid + X2;
+
+    /// <summary>Exact Y position in pixels.</summary>
     public int PixelY => Y * Grid + Y2;
 
     protected void ProcessMovement()
@@ -27,22 +30,22 @@ internal abstract class Character
         byte speed = 0;
         short x = X2, y = Y2;
 
-        // Reseta a animação se necessário
+        // Reset animation if stopped
         if (Animation == AnimationStopped) Animation = AnimationRight;
 
-        // Define a velocidade que o jogador se move
+        // Determine movement speed
         switch (Movement)
         {
             case Movement.Walking: speed = 2; break;
             case Movement.Moving: speed = 3; break;
             case Movement.Stopped:
-                // Reseta os dados
+                // Reset offsets
                 X2 = 0;
                 Y2 = 0;
                 return;
         }
 
-        // Define a Posição exata do jogador
+        // Apply movement to pixel offsets
         switch (Direction)
         {
             case Direction.Up: Y2 -= speed; break;
@@ -51,13 +54,13 @@ internal abstract class Character
             case Direction.Left: X2 -= speed; break;
         }
 
-        // Verifica se não passou do limite
+        // Clamp offsets to avoid overshoot
         if (x > 0 && X2 < 0) X2 = 0;
         if (x < 0 && X2 > 0) X2 = 0;
         if (y > 0 && Y2 < 0) Y2 = 0;
         if (y < 0 && Y2 > 0) Y2 = 0;
 
-        // Alterar as animações somente quando necessário
+        // Only change animation frame when movement finishes and offsets are zero
         if (Direction == Direction.Right || Direction == Direction.Down)
         {
             if (X2 < 0 || Y2 < 0)
@@ -66,7 +69,6 @@ internal abstract class Character
         else if (X2 > 0 || Y2 > 0)
             return;
 
-        // Define as animações
         Movement = Movement.Stopped;
         if (Animation == AnimationLeft)
             Animation = AnimationRight;

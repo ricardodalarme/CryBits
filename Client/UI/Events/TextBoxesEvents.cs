@@ -6,7 +6,9 @@ namespace CryBits.Client.UI.Events;
 
 internal static class TextBoxesEvents
 {
-    // Digitalizador focado
+    /// <summary>
+    /// Blink signal for focused textboxes' caret.
+    /// </summary>
     public static bool Signal;
 
     public static void Bind()
@@ -14,10 +16,9 @@ internal static class TextBoxesEvents
        TextBoxes.Chat.OnMouseUp += Chat_MouseUp;
     }
 
-    // Eventos
     public static void Chat_MouseUp()
     {
-        // Altera o foco do digitalizador
+        // Focus chat textbox and reset timer
         Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
         Panels.Chat.Visible = true;
     }

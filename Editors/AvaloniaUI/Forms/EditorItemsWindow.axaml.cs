@@ -144,7 +144,7 @@ internal partial class EditorItemsWindow : Window
     }
 
     // ──────────────────────────────────────────────────────────
-    // General
+
     // ──────────────────────────────────────────────────────────
 
     private void txtName_TextChanged(object? sender, TextChangedEventArgs e)
@@ -200,7 +200,7 @@ internal partial class EditorItemsWindow : Window
     }
 
     // ──────────────────────────────────────────────────────────
-    // Requirements
+
     // ──────────────────────────────────────────────────────────
 
     private void numReq_Level_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -218,7 +218,7 @@ internal partial class EditorItemsWindow : Window
     }
 
     // ──────────────────────────────────────────────────────────
-    // Potion
+
     // ──────────────────────────────────────────────────────────
 
     private void numPotion_HP_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
@@ -240,7 +240,7 @@ internal partial class EditorItemsWindow : Window
     }
 
     // ──────────────────────────────────────────────────────────
-    // Equipment
+
     // ──────────────────────────────────────────────────────────
 
     private void cmbEquipment_Type_SelectionChanged(object? sender, SelectionChangedEventArgs e)

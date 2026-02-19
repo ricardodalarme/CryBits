@@ -22,7 +22,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.Connect);
         data.Put(AvaloniaLoginLauncher.Username);
         data.Put(AvaloniaLoginLauncher.Password);
@@ -34,7 +33,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.WriteSettings);
         Packet(data);
     }
@@ -43,7 +41,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.RequestClasses);
         Packet(data);
     }
@@ -52,7 +49,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.RequestMap);
         data.Put(map.Id.ToString());
         Packet(data);
@@ -62,7 +58,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.RequestNpcs);
         Packet(data);
     }
@@ -71,7 +66,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.RequestItems);
         Packet(data);
     }
@@ -80,7 +74,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.RequestShops);
         Packet(data);
     }
@@ -89,7 +82,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.WriteSettings);
         data.WriteObject(Config);
         Packet(data);
@@ -99,7 +91,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.WriteClasses);
         data.WriteObject(Class.List);
         Packet(data);
@@ -109,7 +100,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.WriteMaps);
         data.WriteObject(Map.List);
         Packet(data);
@@ -119,7 +109,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.WriteNpcs);
         data.WriteObject(Npc.List);
         Packet(data);
@@ -129,7 +118,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.WriteItems);
         data.WriteObject(Item.List);
         Packet(data);
@@ -139,7 +127,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.WriteShops);
         data.WriteObject(Shop.List);
         Packet(data);

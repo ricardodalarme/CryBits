@@ -16,7 +16,7 @@ public class TempMapFog(MapFog map)
     {
         if (Data.Texture == 0) return;
         
-        // Faz a movimentação
+        // Update fog offsets.
         UpdateX();
         UpdateY();
     }
@@ -26,24 +26,24 @@ public class TempMapFog(MapFog map)
         var size = Textures.Fogs[Data.Texture].ToSize();
         int speedX = Data.SpeedX;
 
-        // Apenas se necessário
+        // Return early if not time or no horizontal speed.
         if (_xTimer >= Environment.TickCount) return;
         if (speedX == 0) return;
 
-        // Movimento para trás
+        // Move left when speed is negative.
         if (speedX < 0)
         {
             X--;
             if (X < -size.Width) X = 0;
         }
-        // Movimento para frente
+        // Move right when speed is positive.
         else
         {
             X++;
             if (X > size.Width) X = 0;
         }
 
-        // Contagem
+        // Reset timer using absolute speed.
         if (speedX < 0) speedX *= -1;
         _xTimer = Environment.TickCount + 50 - speedX;
     }
@@ -53,24 +53,24 @@ public class TempMapFog(MapFog map)
         var size = Textures.Fogs[Data.Texture].ToSize();
         int speedY = Data.SpeedY;
 
-        // Apenas se necessário
+        // Return early if not time or no vertical speed.
         if (_yTimer >= Environment.TickCount) return;
         if (speedY == 0) return;
 
-        // Movimento para trás
+        // Move up when speed is negative.
         if (speedY < 0)
         {
             Y--;
             if (Y < -size.Height) Y = 0;
         }
-        // Movimento para frente
+        // Move down when speed is positive.
         else
         {
             Y++;
             if (Y > size.Height) Y = 0;
         }
 
-        // Contagem
+        // Reset timer using absolute speed.
         if (speedY < 0) speedY *= -1;
         _yTimer = Environment.TickCount + 50 - speedY;
     }

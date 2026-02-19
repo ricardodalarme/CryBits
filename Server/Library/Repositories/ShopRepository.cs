@@ -10,7 +10,7 @@ internal static class ShopRepository
 {
     public static void Read()
     {
-        // Lê os dados
+        // Load shops from disk.
         Shop.List = [];
         var file = Directories.Shops.GetFiles();
         for (byte i = 0; i < file.Length; i++)
@@ -20,7 +20,7 @@ internal static class ShopRepository
 
     public static void WriteAll()
     {
-        // Escreve os dados
+        // Write shops to disk.
         foreach (var shop in Shop.List.Values)
             using (var stream =
                    new FileInfo(Path.Combine(Directories.Shops.FullName, shop.Id.ToString()) + Directories.Format)

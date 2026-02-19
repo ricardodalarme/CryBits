@@ -15,10 +15,11 @@ namespace CryBits.Client.UI;
 
 internal static class Window
 {
-    // Detecção de duplo clique
     private static int _doubleClickTimer;
 
-    // Posição do ponteiro do mouse
+    /// <summary>
+    /// Current mouse pointer position (in screen coordinates).
+    /// </summary>
     public static Point Mouse;
 
     public static void Bind()
@@ -28,7 +29,6 @@ internal static class Window
 
     public static void OnClosed(object sender, EventArgs e)
     {
-        // Fecha o jogo
         if (Screen.Current == Screens.Game)
             Socket.Disconnect();
         else
@@ -37,7 +37,6 @@ internal static class Window
 
     public static void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
     {
-        // Clique
         if (Environment.TickCount < _doubleClickTimer + 142)
             Screen.Current?.MouseDoubleClick(e);
         else
@@ -46,18 +45,17 @@ internal static class Window
 
     public static void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
     {
-        // Contagem do clique duplo
+        // Record double-click timestamp.
         _doubleClickTimer = Environment.TickCount;
         Screen.Current?.MouseUp();
 
-        // Reseta a movimentação
+        // Reset drag/move state
         PanelsEvents.InventoryChange = 0;
         PanelsEvents.HotbarChange = -1;
     }
 
     public static void OnMouseMoved(object sender, MouseMoveEventArgs e)
     {
-        // Define a posição do mouse à váriavel
         Mouse.X = e.Position.X;
         Mouse.Y = e.Position.Y;
         InterfaceUtils.MyMouse = Mouse;
@@ -66,7 +64,7 @@ internal static class Window
 
     public static void OnKeyPressed(object sender, KeyEventArgs e)
     {
-        // Define se um botão está sendo pressionado
+        // Handle key press actions.
         switch (e.Code)
         {
             case Keyboard.Key.Tab: TextBox.ChangeFocus(); return;
@@ -80,7 +78,7 @@ internal static class Window
 
     public static void OnTextEntered(object sender, TextEventArgs e)
     {
-        // Executa os eventos
+        // Dispatch to focused textbox.
         TextBox.Focused?.TextEntered(e);
     }
 
@@ -105,15 +103,15 @@ internal static class Window
 
     public static void OpenMenu()
     {
-        // Reproduz a música de fundo
+        // Play background music.
         Sound.StopAll();
         if (Options.Musics) Music.Play(Musics.Menu);
 
-        // Nome do usuário salvo
+        // Restore saved username option.
         CheckBoxes.ConnectSaveUsername.Checked = Options.SaveUsername;
         if (Options.SaveUsername) TextBoxes.ConnectUsername.Text = Options.Username;
 
-        // Traz o jogador de volta ao menu
+        // Return player to menu.
         PanelsEvents.MenuClose();
         Panels.Connect.Visible = true;
         Screen.Current = Screens.Menu;

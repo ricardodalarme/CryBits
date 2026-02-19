@@ -7,15 +7,14 @@ namespace CryBits.Client.Network.Senders;
 
 internal static class AuthSender
 {
-        public static void Latency()
+    public static void Latency()
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.Latency);
         Send.Packet(data);
 
-        // Define a contaem na hora do envio
+        // Record latency send timestamp
         Socket.LatencySend = Environment.TickCount;
     }
 
@@ -23,11 +22,10 @@ internal static class AuthSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.Connect);
         data.Put(TextBoxes.ConnectUsername.Text);
         data.Put(TextBoxes.ConnectPassword.Text);
-        data.Put(false); // Acesso pelo cliente
+        data.Put(false); // Client access flag
         Send.Packet(data);
     }
 
@@ -35,7 +33,6 @@ internal static class AuthSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.Register);
         data.Put(TextBoxes.RegisterUsername.Text);
         data.Put(TextBoxes.RegisterPassword.Text);

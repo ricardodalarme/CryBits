@@ -5,14 +5,14 @@ namespace CryBits.Client.Framework.Audio;
 
 public static class Sound
 {
-    // Dispositivo sonoro
+    /// <summary>Loaded sound instances keyed by filename.</summary>
     public static readonly Dictionary<string, SFML.Audio.Sound> List = [];
 
     public static void Load()
     {
         var files = Directories.Sounds.GetFiles();
 
-        // Carrega todos os arquivos e os adiciona a lista
+        // Load all files and add them to the list.
         foreach (var file in files)
             List.Add(file.Name, new SFML.Audio.Sound(new SoundBuffer(file.FullName)));
     }
@@ -21,7 +21,7 @@ public static class Sound
     {
         if (!List.ContainsKey(sound)) return;
 
-        // Reproduz o áudio
+        // Play sound.
         List[sound].Volume = 20;
         List[sound].IsLooping = loop;
         List[sound].Play();
@@ -29,7 +29,7 @@ public static class Sound
 
     public static void StopAll()
     {
-        // Para todos os sons
+        // Stop all sounds.
         foreach (var sound in List)
             sound.Value.Stop();
     }

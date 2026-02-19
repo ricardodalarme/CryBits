@@ -12,7 +12,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.Join);
         data.Put(player.Name);
         Send.ToPlayer(player, data);
@@ -22,7 +21,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.JoinGame);
         Send.ToPlayer(player, data);
     }
@@ -31,7 +29,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.JoinMap);
         Send.ToPlayer(player, data);
     }
@@ -40,7 +37,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerLeave);
         data.Put(player.Name);
         Send.ToMapBut(map, player, data);
@@ -50,7 +46,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerPosition);
         data.Put(player.Name);
         data.Put(player.X);
@@ -63,7 +58,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerVitals);
         data.Put(player.Name);
         for (byte i = 0; i < (byte)Vital.Count; i++)
@@ -79,7 +73,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerLeave);
         data.Put(player.Name);
         Send.ToAllBut(player, data);
@@ -89,7 +82,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerMove);
         data.Put(player.Name);
         data.Put(player.X);
@@ -103,7 +95,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerDirection);
         data.Put(player.Name);
         data.Put((byte)player.Direction);
@@ -114,7 +105,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerExperience);
         data.Put(player.Experience);
         data.Put(player.ExpNeeded);
@@ -126,7 +116,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerAttack);
         data.Put(player.Name);
         data.Put(victim);
@@ -138,7 +127,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerEquipments);
         data.Put(player.Name);
         for (byte i = 0; i < (byte)Equipment.Count; i++) data.Put(player.Equipment[i].GetId());
@@ -149,7 +137,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerInventory);
         for (byte i = 0; i < MaxInventory; i++)
         {
@@ -164,7 +151,6 @@ internal static class PlayerSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.PlayerHotbar);
         for (byte i = 0; i < MaxHotbar; i++)
         {

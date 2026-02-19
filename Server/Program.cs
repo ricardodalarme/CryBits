@@ -14,14 +14,13 @@ internal static class Program
 {
     private static async Task Main()
     {
-        // Abre o servidor e define suas configurações
         Console.Title = "Server";
         Logo();
         Console.WriteLine("[Starting]");
 
         using var cts = new CancellationTokenSource();
 
-        // Eventos de saída do console (cross-platform)
+        // Hook console shutdown handlers (cross-platform)
         Console.CancelKeyPress += (_, e) =>
         {
             e.Cancel = true;
@@ -30,28 +29,28 @@ internal static class Program
         };
         AppDomain.CurrentDomain.ProcessExit += (_, _) => cts.Cancel();
 
-        // Verifica se todos os diretórios existem, se não existirem então criá-los
+        // Ensure required directories exist.
         Directories.Create();
         Console.WriteLine("Directories created.");
 
-        // Carrega todos os dados necessários
+        // Load all game data.
         DataLoader.LoadAll();
 
-        // Cria os mapas temporários
+        // Create temporary maps.
         Console.WriteLine("Creating temporary maps.");
         foreach (var map in Map.List.Values) TempMap.CreateTemporary(map, true);
 
-        // Cria os dispositivos da rede
+        // Initialize network sockets.
         Socket.Init();
         Console.WriteLine("Network started. Port: " + Globals.Config.Port);
 
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
 
-        // Inicia o laço de comandos numa thread separada
+        // Start command loop on background thread.
         var consoleThread = new Thread(() => Loop.Commands(cts.Token)) { IsBackground = true };
         consoleThread.Start();
 
-        // Inicia o laço principal e aguarda o cancelamento
+        // Start main loop and wait for cancellation.
         try
         {
             await Loop.MainAsync(cts.Token);
@@ -65,12 +64,12 @@ internal static class Program
 
     private static void PerformShutdown()
     {
-        // Salva os dados de todos os jogadores
+        // Save character data for all connected players.
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
                 CharacterRepository.Write(Account.List[i]);
 
-        // Fecha o servidor
+        // Stop network device.
         Socket.Device.Stop();
     }
 

@@ -11,7 +11,7 @@ internal static class ClassHandler
 {
     internal static void Classes(NetDataReader data)
     {
-        // Recebe os dados
+        // Read classes dictionary
         Class.List = (Dictionary<Guid, Class>)data.ReadObject();
     }
 }

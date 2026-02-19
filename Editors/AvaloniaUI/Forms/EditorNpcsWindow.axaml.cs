@@ -306,10 +306,6 @@ internal partial class EditorNpcsWindow : Window
             _selected.Shop = shop;
     }
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // Drop
-    // ──────────────────────────────────────────────────────────────────────────
-
     private void RefreshDropList()
     {
         lstDrop.ItemsSource = null;
@@ -346,7 +342,7 @@ internal partial class EditorNpcsWindow : Window
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // Allies
+
     // ──────────────────────────────────────────────────────────────────────────
 
     private void RefreshAlliesList()

@@ -14,22 +14,22 @@ namespace CryBits.Editors;
 
 internal static class Program
 {
-    // Usado para manter a aplicação aberta
+    /// <summary>Indicates whether the application main loop is running.</summary>
     public static bool Working = true;
 
-    // Medida de calculo do atraso do jogo
+    // Measured frames per second.
     public static short Fps;
 
     private static void Main()
     {
-        // Verifica se todos os diretórios existem, se não existirem então criá-los
+        // Ensure required directories exist.
         Directories.Create();
 
-        // Carrega as preferências
+        // Load preferences.
         OptionsRepository.Read();
         EditorToolsRepository.Read();
 
-        // Inicializa todos os dispositivos
+        // Initialize subsystems
         Socket.Init();
         Sound.Load();
 
@@ -40,7 +40,7 @@ internal static class Program
             // Wait until Avalonia is fully initialised on the main thread
             AvaloniaRuntime.WaitUntilReady();
 
-            // Abre a janela de login e inicia o laço
+            // Show login window and start the editor loop
             AvaloniaLoginLauncher.ShowLogin();
             Loop.Init();
         });
@@ -49,24 +49,22 @@ internal static class Program
 
         // Run Avalonia on the main thread (required by macOS/Cocoa and Linux/X11)
         AvaloniaRuntime.BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(Array.Empty<string>(), desktop =>
-            {
-                desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            });
+            .StartWithClassicDesktopLifetime(Array.Empty<string>(),
+                desktop => { desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown; });
     }
 
     public static void Close()
     {
         var waitTimer = Environment.TickCount;
 
-        // Desconecta da rede
+        // Disconnect from network
         Socket.Disconnect();
 
-        // Espera até que o jogador seja desconectado
+        // Wait until the player is disconnected
         while (Socket.IsConnected() && Environment.TickCount <= waitTimer + 1000)
             Thread.Sleep(10);
 
-        // Fecha a aplicação
+        // Close the application
         Working = false;
     }
 }

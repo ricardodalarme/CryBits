@@ -8,19 +8,20 @@ namespace CryBits.Entities.Shop;
 [Serializable]
 public class Shop : Entity
 {
-    // Lista de dados
+    /// <summary>Registered shops keyed by id.</summary>
     public static Dictionary<Guid, Shop> List = [];
 
-    // Dados
     private Guid _currency;
+
     public Item Currency
     {
         get => Item.List.Get(_currency);
         set => _currency = value.GetId();
     }
+
     public IList<ShopItem> Bought { get; set; } = [];
     public IList<ShopItem> Sold { get; set; } = [];
-        
+
     public Shop()
     {
         Name = "New shop";

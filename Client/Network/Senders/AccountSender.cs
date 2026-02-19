@@ -13,7 +13,6 @@ internal static class AccountSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.CreateCharacter);
         data.Put(TextBoxes.CreateCharacterName.Text);
         data.Put(Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value.Id.ToString());
@@ -26,7 +25,6 @@ internal static class AccountSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.CharacterUse);
         data.Put(PanelsEvents.SelectCharacter);
         Send.Packet(data);
@@ -36,7 +34,6 @@ internal static class AccountSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.CharacterCreate);
         Send.Packet(data);
     }
@@ -45,7 +42,6 @@ internal static class AccountSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.CharacterDelete);
         data.Put(PanelsEvents.SelectCharacter);
         Send.Packet(data);

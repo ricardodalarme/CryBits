@@ -10,7 +10,7 @@ internal static class ItemHandler
 {
   internal static void Items(NetDataReader data)
   {
-    // Recebe os dados
+    // Read items dictionary
     Item.List = (Dictionary<Guid, Item>)data.ReadObject();
   }
 }

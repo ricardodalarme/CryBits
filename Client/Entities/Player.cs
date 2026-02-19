@@ -6,16 +6,16 @@ namespace CryBits.Client.Entities;
 
 internal class Player(string name) : Character
 {
-    // Lista de dados
+    // Player collection
     public static List<Player> List;
 
-    // Obtém um jogador com determinado nome
+    /// <summary>Find a player by name.</summary>
     public static Player Get(string name) => List.Find(x => x.Name.Equals(name));
 
-    // O próprio jogador
+    // Local player instance
     public static Me Me;
 
-    // Dados gerais dos jogadores
+    // Player data
     public string Name { get; set; } = name;
     public short TextureNum { get; set; }
     public short Level { get; set; }
@@ -26,10 +26,10 @@ internal class Player(string name) : Character
 
     public virtual void Logic()
     {
-        // Dano
+        // Reset hurt flag when damage timer expires.
         if (Hurt + 325 < Environment.TickCount) Hurt = 0;
 
-        // Movimentaçãp
+        // Process movement.
         ProcessMovement();
     }
 }

@@ -18,7 +18,6 @@ internal static class Send
 
     public static void ToAll(NetDataWriter data)
     {
-        // Envia os dados para todos conectados
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
                 ToPlayer(Account.List[i].Character, data);
@@ -26,7 +25,7 @@ internal static class Send
 
     public static void ToAllBut(Player player, NetDataWriter data)
     {
-        // Envia os dados para todos conectados, com excessão do índice
+        // Send to all connected accounts except the player's account.
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
                 if (player != Account.List[i].Character)
@@ -35,7 +34,7 @@ internal static class Send
 
     public static void ToMap(TempMap map, NetDataWriter data)
     {
-        // Envia os dados para todos conectados, com excessão do índice
+        // Send to all players on the specified map.
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
                 if (Account.List[i].Character.Map == map)
@@ -44,7 +43,7 @@ internal static class Send
 
     public static void ToMapBut(TempMap map, Player player, NetDataWriter data)
     {
-        // Envia os dados para todos conectados, com excessão do índice
+        // Send to all players on the map except the specified player.
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
                 if (Account.List[i].Character.Map == map)

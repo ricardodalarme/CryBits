@@ -12,7 +12,6 @@ internal static class MapSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.Map);
         data.WriteObject(map);
         Send.ToPlayer(account, data);
@@ -22,7 +21,6 @@ internal static class MapSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.Maps);
         data.Put((short)CryBits.Entities.Map.Map.List.Count);
         Send.ToPlayer(account, data);
@@ -33,7 +31,6 @@ internal static class MapSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.MapRevision);
         data.Put(map.GetId());
         data.Put(map.Revision);
@@ -42,14 +39,11 @@ internal static class MapSender
 
     public static void MapPlayers(Player player)
     {
-        // Envia os dados dos outros jogadores 
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
                 if (player != Account.List[i].Character)
                     if (Account.List[i].Character.Map == player.Map)
                         Send.ToPlayer(player, PlayerDataCache(Account.List[i].Character));
-
-        // Envia os dados do jogador
         Send.ToMap(player.Map, PlayerDataCache(player));
     }
 
@@ -57,19 +51,17 @@ internal static class MapSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.MapItems);
         data.Put((byte)map.Item.Count);
 
         for (byte i = 0; i < map.Item.Count; i++)
         {
-            // Geral
+            // Item data
             data.Put(map.Item[i].Item.GetId());
             data.Put(map.Item[i].X);
             data.Put(map.Item[i].Y);
         }
 
-        // Envia os dados
         Send.ToPlayer(player, data);
     }
 
@@ -77,7 +69,6 @@ internal static class MapSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.MapItems);
         data.Put((byte)map.Item.Count);
         for (byte i = 0; i < map.Item.Count; i++)
@@ -94,7 +85,7 @@ internal static class MapSender
     {
         var data = new NetDataWriter();
 
-        // Escreve os dados
+        // Write player data into the packet.
         data.Put((byte)ServerPacket.PlayerData);
         data.Put(player.Name);
         data.Put(player.TextureNum);

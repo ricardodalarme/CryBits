@@ -9,7 +9,7 @@ internal static class MapRepository
 {
     public static void Read()
     {
-        // Lê os dados
+        // Load maps from disk.
         Map.List = [];
         var file = Directories.Maps.GetFiles();
 
@@ -17,7 +17,7 @@ internal static class MapRepository
             for (byte i = 0; i < file.Length; i++)
                 using (var stream = file[i].OpenRead())
                     Map.List.Add(new Guid(file[i].Name.Remove(36)), (Map)new BinaryFormatter().Deserialize(stream));
-        // Cria um mapa novo caso não houver nenhuma
+        // Create a default map if none exist.
         else
         {
             var map = new Map();
@@ -28,7 +28,7 @@ internal static class MapRepository
 
     public static void Write(Map map)
     {
-        // Escreve os dados
+        // Write map to disk.
         using var stream = new FileInfo(Path.Combine(Directories.Maps.FullName, map.Id.ToString()) + Directories.Format).OpenWrite();
 #pragma warning disable SYSLIB0011
         new BinaryFormatter().Serialize(stream, map);
@@ -37,7 +37,7 @@ internal static class MapRepository
 
     public static void WriteAll()
     {
-        // Escreve os dados
+        // Write maps to disk.
         foreach (var map in Map.List.Values)
             Write(map);
     }

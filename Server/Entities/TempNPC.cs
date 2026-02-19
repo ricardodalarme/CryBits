@@ -6,7 +6,7 @@ namespace CryBits.Server.Entities;
 
 internal class TempNpc : Character
 {
-    // Dados básicos
+    // Basic NPC runtime fields.
     public readonly byte Index;
     public readonly Npc Data;
     public bool Alive;
@@ -14,9 +14,11 @@ internal class TempNpc : Character
     public long SpawnTimer;
     public long AttackTimer;
 
+    /// <summary>Calculates NPC regeneration for the specified vital.</summary>
+    /// <param name="vital">Index of the vital to query.</param>
+    /// <returns>Regeneration amount for the specified vital.</returns>
     public short Regeneration(byte vital)
     {
-        // Cálcula o máximo de vital que o Npc possui
         return (Vital)vital switch
         {
             Enums.Vital.Hp => (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Vitality] * 0.3),
@@ -25,7 +27,6 @@ internal class TempNpc : Character
         };
     }
 
-    // Construtor
     public TempNpc(byte index, TempMap map, Npc data)
     {
         Index = index;

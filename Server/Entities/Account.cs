@@ -7,10 +7,10 @@ namespace CryBits.Server.Entities;
 
 internal class Account(NetPeer connection)
 {
-    // Lista de dados
+    // Active accounts list.
     public static readonly List<Account> List = [];
 
-    // Dados básicos
+    // Account fields.
     public NetPeer Connection { get; } = connection;
     public string User { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
@@ -25,9 +25,7 @@ internal class Account(NetPeer connection)
         public short TextureNum;
     }
 
-    // Construtor
-
-    // Verifica se o jogador está dentro do jogo
+    // Indicates whether a character is currently playing.
     public bool IsPlaying => Character != null;
 
     public void Leave()

@@ -9,7 +9,6 @@ internal static class TradeSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.TradeInvite);
         data.Put(playerName);
         Send.Packet(data);
@@ -19,7 +18,6 @@ internal static class TradeSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.TradeAccept);
         Send.Packet(data);
     }
@@ -28,7 +26,6 @@ internal static class TradeSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.TradeDecline);
         Send.Packet(data);
     }
@@ -37,7 +34,6 @@ internal static class TradeSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.TradeLeave);
         Send.Packet(data);
     }
@@ -46,7 +42,6 @@ internal static class TradeSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.TradeOffer);
         data.Put(slot);
         data.Put(inventorySlot);
@@ -58,7 +53,6 @@ internal static class TradeSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.TradeOfferState);
         data.Put((byte)state);
         Send.Packet(data);

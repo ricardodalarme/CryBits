@@ -12,7 +12,6 @@ internal static class ClassSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ServerPacket.Classes);
         data.WriteObject(Class.List);
         Send.ToPlayer(account, data);

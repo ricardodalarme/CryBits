@@ -10,6 +10,9 @@ namespace CryBits.Editors.Logic;
 
 internal static class Loop
 {
+    /// <summary>
+    /// Start the editor main loop: process incoming data, update state and present render targets.
+    /// </summary>
     public static void Init()
     {
         var timer1000 = 0;
@@ -19,41 +22,35 @@ internal static class Loop
         {
             var count = Environment.TickCount;
 
-            // Manuseia os dados recebidos
             Socket.HandleData();
 
-            // Eventos
             TempMap.UpdateFog();
             TempMap.UpdateWeather();
             MapsMusic();
 
-            // Desenha os gráficos
             Renders.Present();
 
-            // Faz com que a aplicação se mantenha estável
+            // Throttle loop to ~10ms per iteration.
             while (Environment.TickCount < count + 10) Thread.Sleep(1);
 
-            // FPS
             if (timer1000 < Environment.TickCount)
             {
-                // Cálcula o FPS
                 Program.Fps = fps;
                 fps = 0;
-
-                // Reinicia a contagem
                 timer1000 = Environment.TickCount + 1000;
             }
             else
+            {
                 fps++;
+            }
         }
 
-        // Fecha a aplicação
         Program.Close();
     }
 
     private static void MapsMusic()
     {
-        // Apenas se necessário
+        // Return early when the selected map is unavailable or audio is disabled.
         var win = EditorMapsWindow.Instance;
         if (win == null) return;
         if (win.SelectedMap == null) return;
@@ -62,7 +59,7 @@ internal static class Loop
         if (!win.ShowVisualizationSafe) { Music.Stop(); return; }
         if (string.IsNullOrEmpty(win.SelectedMap?.Music)) { Music.Stop(); return; }
 
-        // Inicia a música
+        // Start the map music if not already playing.
         if (Music.Device == null || Music.Current != win.SelectedMap?.Music)
             Music.Play(win.SelectedMap!.Music);
     }

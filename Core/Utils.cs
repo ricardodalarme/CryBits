@@ -5,12 +5,12 @@ namespace CryBits;
 
 public static class Utils
 {
-    // Números aleatórios
+    /// <summary>Shared <see cref="Random"/> instance used across the project.</summary>
     public static readonly Random MyRandom = new();
 
+    /// <summary>Return the opposite of the specified direction.</summary>
     public static Direction ReverseDirection(Direction direction)
     {
-        // Retorna a direção inversa
         return direction switch
         {
             Direction.Up => Direction.Down,
@@ -21,9 +21,12 @@ public static class Utils
         };
     }
 
+    /// <summary>Advance the (x,y) coordinates by one tile in the given direction.</summary>
+    /// <param name="direction">Direction to move.</param>
+    /// <param name="x">X coordinate to modify.</param>
+    /// <param name="y">Y coordinate to modify.</param>
     public static void NextTile(Direction direction, ref byte x, ref byte y)
     {
-        // Próximo azulejo
         switch (direction)
         {
             case Direction.Up: y--; break;

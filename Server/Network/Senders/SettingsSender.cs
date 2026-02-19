@@ -12,7 +12,7 @@ internal static class SettingsSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
+
         data.Put((byte)ServerPacket.ServerData);
         data.WriteObject(Config);
         Send.ToPlayer(account, data);

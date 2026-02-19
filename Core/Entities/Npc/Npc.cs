@@ -5,13 +5,13 @@ using CryBits.Extensions;
 
 namespace CryBits.Entities.Npc;
 
+/// <summary>NPC metadata definition used by the game.</summary>
 [Serializable]
 public class Npc : Entity
 {
-    // Lista de dados
+    /// <summary>Registered NPCs keyed by id.</summary>
     public static Dictionary<Guid, Npc> List = [];
 
-    // Dados
     public string SayMsg { get; set; } = string.Empty;
     public short Texture { get; set; }
     public Behaviour Behaviour { get; set; }

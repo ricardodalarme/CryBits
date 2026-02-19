@@ -10,7 +10,7 @@ internal static class ItemRepository
 {
     public static void Read()
     {
-        // Lê os dados
+        // Load items from disk.
         Item.List = [];
         var file = Directories.Items.GetFiles();
         for (byte i = 0; i < file.Length; i++)
@@ -20,7 +20,7 @@ internal static class ItemRepository
 
     public static void WriteAll()
     {
-        // Escreve os dados
+        // Write items to disk.
         foreach (var item in Item.List.Values)
             using (var stream =
                    new FileInfo(Path.Combine(Directories.Items.FullName, item.Id.ToString()) + Directories.Format)

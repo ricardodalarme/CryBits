@@ -5,13 +5,13 @@ namespace CryBits.Server.Library;
 
 internal static class Directories
 {
-    // Formato de todos os arquivos de dados
+    // Data file format.
     public const string Format = ".dat";
 
-    // Diretório base
+    // Base directory for server data.
     private static readonly string BaseDir = AppContext.BaseDirectory;
 
-    // Diretório dos arquivos
+    // Data paths.
     public static readonly FileInfo Settings = new(Path.Combine(BaseDir, "Data", "settings.json"));
     public static readonly DirectoryInfo Accounts = new(Path.Combine(BaseDir, "Data", "Accounts"));
     public static readonly FileInfo Characters = new(Path.Combine(BaseDir, "Data", "Characters") + Format);
@@ -23,7 +23,7 @@ internal static class Directories
 
     public static void Create()
     {
-        // Cria todos os diretórios do jogo
+        // Create all required data directories.
         Settings.Directory?.Create();
         Accounts.Create();
         Characters.Directory?.Create();

@@ -11,23 +11,23 @@ internal static class AuthHandler
 {
     internal static void Latency()
     {
-        // Define a latência
+        // Update latency measurement
         Socket.Latency = Environment.TickCount - Socket.LatencySend;
     }
 
     internal static void Alert(NetDataReader data)
     {
-        // Mostra a mensagem
+        // Show alert message
         Utils.Alert.Show(data.GetString());
     }
 
     internal static void Connect()
     {
-        // Reseta os valores
+        // Reset client-side character selection state
         PanelsEvents.SelectCharacter = 0;
         Class.List = [];
 
-        // Abre o painel de seleção de personagens
+        // Open character selection panel
         PanelsEvents.MenuClose();
         Panels.SelectCharacter.Visible = true;
     }

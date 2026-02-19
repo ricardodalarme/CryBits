@@ -9,7 +9,6 @@ internal static class ShopSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.ShopBuy);
         data.Put(slot);
         Send.Packet(data);
@@ -19,7 +18,6 @@ internal static class ShopSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.ShopSell);
         data.Put(slot);
         data.Put(amount);
@@ -30,7 +28,6 @@ internal static class ShopSender
     {
         var data = new NetDataWriter();
 
-        // Envia os dados
         data.Put((byte)ClientPacket.ShopClose);
         Send.Packet(data);
     }
