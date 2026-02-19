@@ -4,7 +4,7 @@ using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using CryBits.Extensions;
-using CryBits.Server.Network.Senders;
+using CryBits.Server.Systems;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Entities.TempMap;
@@ -26,8 +26,7 @@ internal class TempMap(Guid id, Map map) : Entity(id)
         // Skip all calculations if no players are on the map
         if (!HasPlayers()) return;
 
-        // NPC logic (will be moved to NpcAiSystem in the next refactor)
-        for (byte j = 0; j < Npc.Length; j++) Npc[j].Logic();
+        for (byte j = 0; j < Npc.Length; j++) NpcAiSystem.Tick(Npc[j]);
     }
 
     public TempNpc HasNpc(byte x, byte y)
@@ -110,7 +109,7 @@ internal class TempMap(Guid id, Map map) : Entity(id)
         for (byte i = 0; i < tempMap.Npc.Length; i++)
         {
             tempMap.Npc[i] = new TempNpc(i, tempMap, map.Npc[i].Npc);
-            tempMap.Npc[i].Spawn();
+            NpcAiSystem.Spawn(tempMap.Npc[i]);
         }
 
         // Itens do mapa
