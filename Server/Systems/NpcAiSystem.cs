@@ -93,15 +93,15 @@ internal static class NpcAiSystem
         {
             // Return to designated zone
             for (byte x = 0; x < CryBits.Entities.Map.Map.Width; x++)
-            for (byte y = 0; y < CryBits.Entities.Map.Map.Height; y++)
-                if (npc.Map.Data.Attribute[x, y].Zone == npc.Map.Data.Npc[npc.Index].Zone &&
-                    !npc.Map.Data.TileBlocked(x, y))
-                {
-                    targetX = x;
-                    targetY = y;
-                    move = true;
-                    break;
-                }
+                for (byte y = 0; y < CryBits.Entities.Map.Map.Height; y++)
+                    if (npc.Map.Data.Attribute[x, y].Zone == npc.Map.Data.Npc[npc.Index].Zone &&
+                        !npc.Map.Data.TileBlocked(x, y))
+                    {
+                        targetX = x;
+                        targetY = y;
+                        move = true;
+                        break;
+                    }
         }
 
         // Move toward or away from target
@@ -180,16 +180,16 @@ internal static class NpcAiSystem
 
         // Fallback: first walkable tile in zone
         for (byte x = 0; x < CryBits.Entities.Map.Map.Width; x++)
-        for (byte y = 0; y < CryBits.Entities.Map.Map.Height; y++)
-            if (!npc.Map.Data.TileBlocked(x, y))
-            {
-                if (npc.Map.Data.Npc[npc.Index].Zone > 0 &&
-                    npc.Map.Data.Attribute[x, y].Zone != npc.Map.Data.Npc[npc.Index].Zone)
-                    continue;
+            for (byte y = 0; y < CryBits.Entities.Map.Map.Height; y++)
+                if (!npc.Map.Data.TileBlocked(x, y))
+                {
+                    if (npc.Map.Data.Npc[npc.Index].Zone > 0 &&
+                        npc.Map.Data.Attribute[x, y].Zone != npc.Map.Data.Npc[npc.Index].Zone)
+                        continue;
 
-                SpawnAt(npc, x, y);
-                return;
-            }
+                    SpawnAt(npc, x, y);
+                    return;
+                }
     }
 
     private static void SpawnAt(TempNpc npc, byte x, byte y, Direction direction = 0)

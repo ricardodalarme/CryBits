@@ -90,31 +90,31 @@ internal static class PanelsEvents
         switch (e.Button)
         {
             case Mouse.Button.Right:
-            {
-                if (Player.Me.Inventory[slot].Item.Bind != BindOn.Pickup)
-                    // Sell the item if shop is open
-                    if (Panels.Shop.Visible)
-                    {
-                        if (Player.Me.Inventory[slot].Amount != 1)
+                {
+                    if (Player.Me.Inventory[slot].Item.Bind != BindOn.Pickup)
+                        // Sell the item if shop is open
+                        if (Panels.Shop.Visible)
                         {
-                            ShopInventorySlot = slot;
-                            TextBoxes.ShopSellAmount.Text = string.Empty;
-                            Panels.ShopSell.Visible = true;
+                            if (Player.Me.Inventory[slot].Amount != 1)
+                            {
+                                ShopInventorySlot = slot;
+                                TextBoxes.ShopSellAmount.Text = string.Empty;
+                                Panels.ShopSell.Visible = true;
+                            }
+                            else ShopSender.ShopSell(slot, 1);
                         }
-                        else ShopSender.ShopSell(slot, 1);
-                    }
-                    // Otherwise drop the item
-                    else if (!Panels.Trade.Visible)
-                        if (Player.Me.Inventory[slot].Amount != 1)
-                        {
-                            DropSlot = slot;
-                            TextBoxes.DropAmount.Text = string.Empty;
-                            Panels.Drop.Visible = true;
-                        }
-                        else PlayerSender.DropItem(slot, 1);
+                        // Otherwise drop the item
+                        else if (!Panels.Trade.Visible)
+                            if (Player.Me.Inventory[slot].Amount != 1)
+                            {
+                                DropSlot = slot;
+                                TextBoxes.DropAmount.Text = string.Empty;
+                                Panels.Drop.Visible = true;
+                            }
+                            else PlayerSender.DropItem(slot, 1);
 
-                break;
-            }
+                    break;
+                }
             // Select the item (start drag)
             case Mouse.Button.Left:
                 InventoryChange = slot;
@@ -261,4 +261,4 @@ internal static class PanelsEvents
         // Purchase shop item.
         ShopSender.ShopBuy((byte)slot);
     }
-} 
+}

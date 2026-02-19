@@ -6,5 +6,5 @@ namespace CryBits.Client.Framework.Entities.Tile;
 public class TileData
 {
     public byte Attribute { get; set; }
-    public bool[] Block { get; set; } = new bool[(byte) Direction.Count];
+    public bool[] Block { get; set; } = new bool[(byte)Direction.Count];
 }

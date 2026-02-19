@@ -47,5 +47,5 @@ public static class Textures
 
     /// <summary>Return the texture size as a <see cref="Size"/>.</summary>
 
-    public static Size ToSize(this Texture texture) => new ((int)texture.Size.X, (int)texture.Size.Y);
+    public static Size ToSize(this Texture texture) => new((int)texture.Size.X, (int)texture.Size.Y);
 }

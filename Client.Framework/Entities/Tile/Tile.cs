@@ -29,10 +29,10 @@ public class Tile
         Data = new TileData[size.Width + 1, size.Height + 1];
 
         for (byte x = 0; x <= size.Width; x++)
-        for (byte y = 0; y <= size.Height; y++)
-            Data[x, y] = new TileData
-            {
-                Block = new bool[(byte)Direction.Count]
-            };
+            for (byte y = 0; y <= size.Height; y++)
+                Data[x, y] = new TileData
+                {
+                    Block = new bool[(byte)Direction.Count]
+                };
     }
 }

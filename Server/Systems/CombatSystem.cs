@@ -38,7 +38,7 @@ internal static class CombatSystem
             return;
         }
 
-        @continue:
+    @continue:
         PlayerSender.PlayerAttack(player, null);
         player.AttackTimer = Environment.TickCount64;
     }

@@ -6,4 +6,4 @@ internal class TempMapBlood(byte textureNum, short x, short y, byte opacity)
     public short X = x;
     public short Y = y;
     public byte Opacity = opacity;
-} 
+}

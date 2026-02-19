@@ -13,7 +13,7 @@ internal static class TextBoxesEvents
 
     public static void Bind()
     {
-       TextBoxes.Chat.OnMouseUp += Chat_MouseUp;
+        TextBoxes.Chat.OnMouseUp += Chat_MouseUp;
     }
 
     public static void Chat_MouseUp()

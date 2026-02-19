@@ -12,5 +12,5 @@ public class MapAttribute
     public short Data3 { get; set; }
     public short Data4 { get; set; }
     public byte Zone { get; set; }
-    public bool[] Block { get; set; } = new bool[(byte) Direction.Count];
+    public bool[] Block { get; set; } = new bool[(byte)Direction.Count];
 }

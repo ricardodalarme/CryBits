@@ -18,8 +18,8 @@ public class MapLayer
         Name = name;
 
         for (byte x = 0; x < Map.Width; x++)
-        for (byte y = 0; y < Map.Height; y++)
-            Tile[x, y] = new MapTileData();
+            for (byte y = 0; y < Map.Height; y++)
+                Tile[x, y] = new MapTileData();
     }
 
     /// <summary>
@@ -28,9 +28,9 @@ public class MapLayer
     public void Update(int x, int y)
     {
         for (var x2 = x - 2; x2 < x + 2; x2++)
-        for (var y2 = y - 2; y2 < y + 2; y2++)
-            if (x2 >= 0 && x2 < Map.Width && y2 >= 0 && y2 < Map.Height)
-                Calculate((byte)x2, (byte)y2);
+            for (var y2 = y - 2; y2 < y + 2; y2++)
+                if (x2 >= 0 && x2 < Map.Width && y2 >= 0 && y2 < Map.Height)
+                    Calculate((byte)x2, (byte)y2);
     }
 
     private bool Check(int x1, int y1, int x2, int y2)

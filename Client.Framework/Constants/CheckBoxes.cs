@@ -14,7 +14,7 @@ public static class CheckBoxes
     public static CheckBox OptionsMusics => List["Options_Musics"];
     public static CheckBox OptionsChat => List["Options_Chat"];
     public static CheckBox OptionsFps => List["Options_FPS"];
-    public static CheckBox OptionsLatency => List["Options_Latency"]; 
+    public static CheckBox OptionsLatency => List["Options_Latency"];
     public static CheckBox OptionsParty => List["Options_Party"];
     public static CheckBox OptionsTrade => List["Options_Trade"];
 }

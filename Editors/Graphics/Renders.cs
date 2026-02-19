@@ -127,8 +127,8 @@ internal static class Renders
         var textureSize = Textures.Transparent.ToSize();
 
         for (var x = 0; x <= window.Size.X / textureSize.Width; x++)
-        for (var y = 0; y <= window.Size.Y / textureSize.Height; y++)
-            Render(window, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
+            for (var y = 0; y <= window.Size.Y / textureSize.Height; y++)
+                Render(window, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
     }
 
     #region Map Editor
@@ -215,18 +215,18 @@ internal static class Renders
                 color = new Color(map.Color.R, map.Color.G, map.Color.B);
 
             for (var x = beginX; x < Map.Width; x++)
-            for (var y = beginY; y < Map.Height; y++)
-                if (map.Layer[c].Tile[x, y].Texture > 0)
-                {
-                    var data = map.Layer[c].Tile[x, y];
-                    var source = new Rectangle(new Point(data.X * Grid, data.Y * Grid), GridSize);
-                    var destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), GridSize);
+                for (var y = beginY; y < Map.Height; y++)
+                    if (map.Layer[c].Tile[x, y].Texture > 0)
+                    {
+                        var data = map.Layer[c].Tile[x, y];
+                        var source = new Rectangle(new Point(data.X * Grid, data.Y * Grid), GridSize);
+                        var destiny = new Rectangle(new Point((x - beginX) * Grid, (y - beginY) * Grid), GridSize);
 
-                    if (!data.IsAutoTile)
-                        Render(WinMapRT!, Textures.Tiles[data.Texture], source, win.ZoomRect(destiny), color);
-                    else
-                        EditorMapsAutoTile(destiny.Location, data, color);
-                }
+                        if (!data.IsAutoTile)
+                            Render(WinMapRT!, Textures.Tiles[data.Texture], source, win.ZoomRect(destiny), color);
+                        else
+                            EditorMapsAutoTile(destiny.Location, data, color);
+                    }
         }
     }
 
@@ -257,12 +257,12 @@ internal static class Renders
 
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
         for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
-        for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
-        {
-            var position = new Point(x * textureSize.Width + TempMap.FogX, y * textureSize.Height + TempMap.FogY);
-            Render(WinMapRT!, Textures.Fogs[map.Fog.Texture], win.ZoomRect(new Rectangle(position, textureSize)),
-                new Color(255, 255, 255, map.Fog.Alpha));
-        }
+            for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
+            {
+                var position = new Point(x * textureSize.Width + TempMap.FogX, y * textureSize.Height + TempMap.FogY);
+                Render(WinMapRT!, Textures.Fogs[map.Fog.Texture], win.ZoomRect(new Rectangle(position, textureSize)),
+                    new Color(255, 255, 255, map.Fog.Alpha));
+            }
     }
 
     private static void EditorMapsMapWeather(Map map)
@@ -291,14 +291,14 @@ internal static class Renders
 
         if (win.ShowGrid)
             for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-            {
-                RenderRectangle(WinMapRT!, x * win.GridZoom, y * win.GridZoom, win.GridZoom, win.GridZoom,
-                    new Color(25, 25, 25, 70));
-                EditorMapsMapZones(map, x, y);
-                EditorMapsMapAttributes(map, x, y);
-                EditorMapsMapDirBlock(map, x, y);
-            }
+                for (byte y = 0; y < Map.Height; y++)
+                {
+                    RenderRectangle(WinMapRT!, x * win.GridZoom, y * win.GridZoom, win.GridZoom, win.GridZoom,
+                        new Color(25, 25, 25, 70));
+                    EditorMapsMapZones(map, x, y);
+                    EditorMapsMapAttributes(map, x, y);
+                    EditorMapsMapDirBlock(map, x, y);
+                }
 
         if (!win.AutoTile && win.ModeNormal)
         {
@@ -306,9 +306,9 @@ internal static class Renders
                 Render(WinMapRT!, Textures.Tiles[win.TileSheetIndex + 1], source, destiny);
             else if (win.ToolRectangle)
                 for (var x = begin.X; x < begin.X + win.MapSelection.Width; x++)
-                for (var y = begin.Y; y < begin.Y + win.MapSelection.Height; y++)
-                    Render(WinMapRT!, Textures.Tiles[win.TileSheetIndex + 1], source,
-                        new Rectangle(win.ZoomGrid(x, y), destiny.Size));
+                    for (var y = begin.Y; y < begin.Y + win.MapSelection.Height; y++)
+                        Render(WinMapRT!, Textures.Tiles[win.TileSheetIndex + 1], source,
+                            new Rectangle(win.ZoomGrid(x, y), destiny.Size));
         }
 
         if (!win.ModeAttributes || !win.DirBlockMode)
@@ -422,15 +422,15 @@ internal static class Renders
             new Rectangle(new Point(0), texture.ToSize()));
 
         for (byte x = 0; x <= 298 / Grid; x++)
-        for (byte y = 0; y <= 443 / Grid; y++)
-        {
-            if (EditorTilesWindow.ModeAttributes)
-                EditorTileAttributesRT(idx, x, y);
-            else
-                EditorTileDirBlockRT(idx, x, y);
+            for (byte y = 0; y <= 443 / Grid; y++)
+            {
+                if (EditorTilesWindow.ModeAttributes)
+                    EditorTileAttributesRT(idx, x, y);
+                else
+                    EditorTileDirBlockRT(idx, x, y);
 
-            RenderRectangle(WinTileRT, x * Grid, y * Grid, Grid, Grid, new Color(25, 25, 25, 70));
-        }
+                RenderRectangle(WinTileRT, x * Grid, y * Grid, Grid, Grid, new Color(25, 25, 25, 70));
+            }
 
         WinTileRT.Display();
     }
@@ -475,8 +475,8 @@ internal static class Renders
     {
         var textureSize = Textures.Transparent.ToSize();
         for (var x = 0; x <= target.Size.X / textureSize.Width; x++)
-        for (var y = 0; y <= target.Size.Y / textureSize.Height; y++)
-            Render(target, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
+            for (var y = 0; y <= target.Size.Y / textureSize.Height; y++)
+                Render(target, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
     }
 
     #endregion

@@ -175,7 +175,7 @@ internal partial class EditorInterfaceWindow : Window
 
         // Add to VM tree
         var newVM = new TreeItemVM
-            { Header = newComp.ToString(), Tag = newComp, SourceNode = newTreeNode, Parent = _rootVM };
+        { Header = newComp.ToString(), Tag = newComp, SourceNode = newTreeNode, Parent = _rootVM };
         _rootVM.Children.Add(newVM);
 
         pnlNew.IsVisible = false;

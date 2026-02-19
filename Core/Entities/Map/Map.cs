@@ -34,11 +34,11 @@ public class Map : Entity
         Layer.Add(new MapLayer("Ground"));
 
         for (byte x = 0; x < Width; x++)
-        for (byte y = 0; y < Height; y++)
-        {
-            Attribute[x, y] = new MapAttribute();
-            Layer[0].Tile[x, y] = new MapTileData();
-        }
+            for (byte y = 0; y < Height; y++)
+            {
+                Attribute[x, y] = new MapAttribute();
+                Layer[0].Tile[x, y] = new MapTileData();
+            }
     }
 
     /// <summary>
@@ -58,10 +58,10 @@ public class Map : Entity
     {
         // Update necessary tiles.
         for (byte x = 0; x < Width; x++)
-        for (byte y = 0; y < Height; y++)
-        for (byte c = 0; c < Layer.Count; c++)
-            if (Layer[c].Tile[x, y].IsAutoTile)
-                // Recalculate autotile parts.
-                Layer[c].Calculate(x, y);
+            for (byte y = 0; y < Height; y++)
+                for (byte c = 0; c < Layer.Count; c++)
+                    if (Layer[c].Tile[x, y].IsAutoTile)
+                        // Recalculate autotile parts.
+                        Layer[c].Calculate(x, y);
     }
 }

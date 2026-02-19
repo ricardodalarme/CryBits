@@ -14,54 +14,54 @@ namespace CryBits.Client.Graphics;
 
 internal static class RenderPipeline
 {
-  /// <summary>
-  /// Render the current frame: clear, draw game world and UI, then present.
-  /// </summary>
-  public static void Present()
-  {
-    Renders.RenderWindow.Clear(Color.Black);
+    /// <summary>
+    /// Render the current frame: clear, draw game world and UI, then present.
+    /// </summary>
+    public static void Present()
+    {
+        Renders.RenderWindow.Clear(Color.Black);
 
-    InGame();
+        InGame();
 
-    UIRenderer.Interface(Screen.Current?.Body);
+        UIRenderer.Interface(Screen.Current?.Body);
 
-    if (Screen.Current == Screens.Game) UIRenderer.Chat();
+        if (Screen.Current == Screens.Game) UIRenderer.Chat();
 
-    Renders.RenderWindow.Display();
-  }
+        Renders.RenderWindow.Display();
+    }
 
-  private static void InGame()
-  {
-    if (Screen.Current != Screens.Game) return;
+    private static void InGame()
+    {
+        if (Screen.Current != Screens.Game) return;
 
-    Update();
+        Update();
 
-    // Layers and ground objects
-    MapRenderer.MapPanorama();
-    MapRenderer.MapTiles((byte)Layer.Ground);
-    MapRenderer.MapBlood();
-    MapRenderer.MapItems();
+        // Layers and ground objects
+        MapRenderer.MapPanorama();
+        MapRenderer.MapTiles((byte)Layer.Ground);
+        MapRenderer.MapBlood();
+        MapRenderer.MapItems();
 
-    for (byte i = 0; i < TempMap.Current.Npc.Length; i++)
-      if (TempMap.Current.Npc[i].Data != null)
-        NpcRenderer.Npc(TempMap.Current.Npc[i]);
+        for (byte i = 0; i < TempMap.Current.Npc.Length; i++)
+            if (TempMap.Current.Npc[i].Data != null)
+                NpcRenderer.Npc(TempMap.Current.Npc[i]);
 
-    for (byte i = 0; i < Player.List.Count; i++)
-      if (Player.List[i] != Player.Me)
-        if (Player.List[i].Map == Player.Me.Map)
-          PlayerRenderer.PlayerCharacter(Player.List[i]);
+        for (byte i = 0; i < Player.List.Count; i++)
+            if (Player.List[i] != Player.Me)
+                if (Player.List[i].Map == Player.Me.Map)
+                    PlayerRenderer.PlayerCharacter(Player.List[i]);
 
-    PlayerRenderer.PlayerCharacter(Player.Me);
+        PlayerRenderer.PlayerCharacter(Player.Me);
 
-    // Foreground layers and effects
-    MapRenderer.MapTiles((byte)Layer.Fringe);
-    MapRenderer.MapWeather();
-    MapRenderer.MapFog();
-    MapRenderer.MapName();
+        // Foreground layers and effects
+        MapRenderer.MapTiles((byte)Layer.Fringe);
+        MapRenderer.MapWeather();
+        MapRenderer.MapFog();
+        MapRenderer.MapName();
 
-    UIRenderer.Party();
+        UIRenderer.Party();
 
-    if (Options.Fps) Renders.DrawText("FPS: " + Loop.Fps, 176, 7, Color.White);
-    if (Options.Latency) Renders.DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
-  }
+        if (Options.Fps) Renders.DrawText("FPS: " + Loop.Fps, 176, 7, Color.White);
+        if (Options.Latency) Renders.DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
+    }
 }

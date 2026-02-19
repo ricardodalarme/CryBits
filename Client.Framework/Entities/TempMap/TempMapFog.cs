@@ -15,7 +15,7 @@ public class TempMapFog(MapFog map)
     public void Update()
     {
         if (Data.Texture == 0) return;
-        
+
         // Update fog offsets.
         UpdateX();
         UpdateY();

@@ -173,8 +173,8 @@ internal static class TradeSystem
 
                 var to = player;
                 for (byte j = 0; j < 2; j++, to = to == player ? invited : player)
-                for (byte i = 0; i < MaxInventory; i++)
-                    InventorySystem.TakeItem(to, to.Inventory[to.TradeOffer[i].SlotNum], to.TradeOffer[i].Amount);
+                    for (byte i = 0; i < MaxInventory; i++)
+                        InventorySystem.TakeItem(to, to.Inventory[to.TradeOffer[i].SlotNum], to.TradeOffer[i].Amount);
 
                 for (byte i = 0; i < MaxInventory; i++)
                 {

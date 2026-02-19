@@ -74,11 +74,11 @@ internal class TempMap(Guid id, Map map) : Entity(id)
     {
         // Scan map attributes and spawn static map items.
         for (byte x = 0; x < Map.Width; x++)
-        for (byte y = 0; y < Map.Height; y++)
-            if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
-                // Add map item.
-                Item.Add(new TempMapItems(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)),
-                    Data.Attribute[x, y].Data2, x, y));
+            for (byte y = 0; y < Map.Height; y++)
+                if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
+                    // Add map item.
+                    Item.Add(new TempMapItems(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)),
+                        Data.Attribute[x, y].Data2, x, y));
     }
 
     public bool TileBlocked(byte x, byte y, Direction direction, bool countEntities = true)

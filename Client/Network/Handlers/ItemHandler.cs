@@ -8,9 +8,9 @@ namespace CryBits.Client.Network.Handlers;
 
 internal static class ItemHandler
 {
-  internal static void Items(NetDataReader data)
-  {
-    // Read items dictionary
-    Item.List = (Dictionary<Guid, Item>)data.ReadObject();
-  }
+    internal static void Items(NetDataReader data)
+    {
+        // Read items dictionary
+        Item.List = (Dictionary<Guid, Item>)data.ReadObject();
+    }
 }

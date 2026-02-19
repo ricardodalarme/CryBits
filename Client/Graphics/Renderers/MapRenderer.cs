@@ -27,23 +27,23 @@ internal static class MapRenderer
         for (byte c = 0; c < map.Layer.Count; c++)
             if (map.Layer[c].Type == layerType)
                 for (var x = TileSight.X; x <= TileSight.Width; x++)
-                for (var y = TileSight.Y; y <= TileSight.Height; y++)
-                    if (!Map.OutLimit((short)x, (short)y))
-                    {
-                        var data = map.Layer[c].Tile[x, y];
-                        if (data.Texture > 0)
+                    for (var y = TileSight.Y; y <= TileSight.Height; y++)
+                        if (!Map.OutLimit((short)x, (short)y))
                         {
-                            var x2 = data.X * Grid;
-                            var y2 = data.Y * Grid;
+                            var data = map.Layer[c].Tile[x, y];
+                            if (data.Texture > 0)
+                            {
+                                var x2 = data.X * Grid;
+                                var y2 = data.Y * Grid;
 
-                            if (!map.Layer[c].Tile[x, y].IsAutoTile)
-                                Renders.Render(Textures.Tiles[data.Texture], CameraUtils.ConvertX(x * Grid),
-                                    CameraUtils.ConvertY(y * Grid), x2, y2, Grid, Grid, color);
-                            else
-                                MapAutoTile(new Point(CameraUtils.ConvertX(x * Grid), CameraUtils.ConvertY(y * Grid)),
-                                    data, color);
+                                if (!map.Layer[c].Tile[x, y].IsAutoTile)
+                                    Renders.Render(Textures.Tiles[data.Texture], CameraUtils.ConvertX(x * Grid),
+                                        CameraUtils.ConvertY(y * Grid), x2, y2, Grid, Grid, color);
+                                else
+                                    MapAutoTile(new Point(CameraUtils.ConvertX(x * Grid), CameraUtils.ConvertY(y * Grid)),
+                                        data, color);
+                            }
                         }
-                    }
     }
 
     private static void MapAutoTile(Point position, MapTileData data, Color cor)
@@ -85,10 +85,10 @@ internal static class MapRenderer
 
         var textureSize = Textures.Fogs[data.Texture].ToSize();
         for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
-        for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
-            Renders.Render(Textures.Fogs[data.Texture],
-                new Point(x * textureSize.Width + TempMap.Current.Fog.X,
-                    y * textureSize.Height + TempMap.Current.Fog.Y), new Color(255, 255, 255, data.Alpha));
+            for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
+                Renders.Render(Textures.Fogs[data.Texture],
+                    new Point(x * textureSize.Width + TempMap.Current.Fog.X,
+                        y * textureSize.Height + TempMap.Current.Fog.Y), new Color(255, 255, 255, data.Alpha));
     }
 
     /// <summary>Render current map weather (particles and lightning overlay).</summary>

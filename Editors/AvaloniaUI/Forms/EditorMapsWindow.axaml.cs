@@ -435,8 +435,8 @@ internal partial class EditorMapsWindow : Window
         var layer = SelectedLayerIndex();
         if (layer < 0) return;
         for (var x = 0; x < Map.Width; x++)
-        for (var y = 0; y < Map.Height; y++)
-            _selected.Layer[layer].Tile[x, y] = MakeSetTile();
+            for (var y = 0; y < Map.Height; y++)
+                _selected.Layer[layer].Tile[x, y] = MakeSetTile();
         _selected.Update();
     }
 
@@ -446,8 +446,8 @@ internal partial class EditorMapsWindow : Window
         var layer = SelectedLayerIndex();
         if (layer < 0) return;
         for (var x = 0; x < Map.Width; x++)
-        for (var y = 0; y < Map.Height; y++)
-            _selected.Layer[layer].Tile[x, y] = new MapTileData();
+            for (var y = 0; y < Map.Height; y++)
+                _selected.Layer[layer].Tile[x, y] = new MapTileData();
     }
 
     private void butEdition_Click(object? sender, RoutedEventArgs e)
@@ -596,9 +596,9 @@ internal partial class EditorMapsWindow : Window
         CopyTiles();
         var sel = MapSelection;
         for (var x = sel.X; x < sel.X + sel.Width; x++)
-        for (var y = sel.Y; y < sel.Y + sel.Height; y++)
-        for (byte c = 0; c < _selected!.Layer.Count; c++)
-            _selected.Layer[c].Tile[x, y] = new MapTileData();
+            for (var y = sel.Y; y < sel.Y + sel.Height; y++)
+                for (byte c = 0; c < _selected!.Layer.Count; c++)
+                    _selected.Layer[c].Tile[x, y] = new MapTileData();
         _selected!.Update();
     }
 
@@ -661,11 +661,11 @@ internal partial class EditorMapsWindow : Window
         if (ToolRectangle && (sel.Width > 1 || sel.Height > 1))
         {
             for (var x = sel.X; x < sel.X + sel.Width; x++)
-            for (var y = sel.Y; y < sel.Y + sel.Height; y++)
-            {
-                _selected.Layer[layer].Tile[x, y] = MakeSetTile();
-                _selected.Layer[layer].Update(x, y);
-            }
+                for (var y = sel.Y; y < sel.Y + sel.Height; y++)
+                {
+                    _selected.Layer[layer].Tile[x, y] = MakeSetTile();
+                    _selected.Layer[layer].Update(x, y);
+                }
         }
 
         ResetMapSelectionSize();
@@ -782,8 +782,8 @@ internal partial class EditorMapsWindow : Window
     {
         if (_selected == null) return;
         for (byte x = 0; x < Map.Width; x++)
-        for (byte y = 0; y < Map.Height; y++)
-            _selected.Attribute[x, y].Zone = 0;
+            for (byte y = 0; y < Map.Height; y++)
+                _selected.Attribute[x, y].Zone = 0;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -890,8 +890,8 @@ internal partial class EditorMapsWindow : Window
 
             var layer = new MapLayer(name) { Type = (byte)cmbLayers_Type.SelectedIndex };
             for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-                layer.Tile[x, y] = new MapTileData();
+                for (byte y = 0; y < Map.Height; y++)
+                    layer.Tile[x, y] = new MapTileData();
             _selected.Layer.Add(layer);
         }
         else
@@ -950,9 +950,9 @@ internal partial class EditorMapsWindow : Window
     {
         var temp = new List<MapLayer>();
         for (byte n = 0; n < (byte)Layer.Count; n++)
-        for (byte i = 0; i < _selected!.Layer.Count; i++)
-            if (_selected.Layer[i].Type == n)
-                temp.Add(_selected.Layer[i]);
+            for (byte i = 0; i < _selected!.Layer.Count; i++)
+                if (_selected.Layer[i].Type == n)
+                    temp.Add(_selected.Layer[i]);
         _selected!.Layer = temp;
         RefreshLayerList();
     }
@@ -1078,25 +1078,25 @@ internal partial class EditorMapsWindow : Window
     {
         if (_selected == null) return;
         for (byte x = 0; x < Map.Width; x++)
-        for (byte y = 0; y < Map.Height; y++)
-            _selected.Attribute[x, y] = new MapAttribute();
+            for (byte y = 0; y < Map.Height; y++)
+                _selected.Attribute[x, y] = new MapAttribute();
     }
 
     private void butAttributes_Import_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
         for (byte x = 0; x < Map.Width; x++)
-        for (byte y = 0; y < Map.Height; y++)
-        for (byte c = 0; c < _selected.Layer.Count; c++)
-        {
-            var data = _selected.Layer[c].Tile[x, y];
-            if (data.Texture <= 0) continue;
-            if (Tile.List[data.Texture].Data[data.X, data.Y].Attribute > 0)
-                _selected.Attribute[x, y].Type = Tile.List[data.Texture].Data[data.X, data.Y].Attribute;
-            for (byte b = 0; b < (byte)Direction.Count; b++)
-                if (Tile.List[data.Texture].Data[data.X, data.Y].Block[b])
-                    _selected.Attribute[x, y].Block[b] = true;
-        }
+            for (byte y = 0; y < Map.Height; y++)
+                for (byte c = 0; c < _selected.Layer.Count; c++)
+                {
+                    var data = _selected.Layer[c].Tile[x, y];
+                    if (data.Texture <= 0) continue;
+                    if (Tile.List[data.Texture].Data[data.X, data.Y].Attribute > 0)
+                        _selected.Attribute[x, y].Type = Tile.List[data.Texture].Data[data.X, data.Y].Attribute;
+                    for (byte b = 0; b < (byte)Direction.Count; b++)
+                        if (Tile.List[data.Texture].Data[data.X, data.Y].Block[b])
+                            _selected.Attribute[x, y].Block[b] = true;
+                }
     }
 
     private TileAttribute AttributeSelected()
@@ -1390,8 +1390,8 @@ internal partial class EditorMapsWindow : Window
         {
             _tilesCopy.Data[c] = new MapLayer(_selected.Layer[c].Name);
             for (byte x = 0; x < Map.Width; x++)
-            for (byte y = 0; y < Map.Height; y++)
-                _tilesCopy.Data[c].Tile[x, y] = _selected.Layer[c].Tile[x, y];
+                for (byte y = 0; y < Map.Height; y++)
+                    _tilesCopy.Data[c].Tile[x, y] = _selected.Layer[c].Tile[x, y];
         }
 
         butPaste.IsEnabled = true;
@@ -1401,15 +1401,15 @@ internal partial class EditorMapsWindow : Window
     {
         if (_selected == null || _tilesCopy.Data == null) return;
         for (var x = _tilesCopy.Area.X; x < _tilesCopy.Area.X + _tilesCopy.Area.Width; x++)
-        for (var y = _tilesCopy.Area.Y; y < _tilesCopy.Area.Y + _tilesCopy.Area.Height; y++)
-        for (byte c = 0; c < _tilesCopy.Data.Length; c++)
-        {
-            var layer = FindLayer(_tilesCopy.Data[c].Name);
-            var x2 = MapSelection.X + x - _tilesCopy.Area.X;
-            var y2 = y + MapSelection.Y - _tilesCopy.Area.Y;
-            if (layer < 0 || x2 >= Map.Width || y2 >= Map.Height) continue;
-            _selected.Layer[layer].Tile[x2, y2] = _tilesCopy.Data[c].Tile[x, y];
-        }
+            for (var y = _tilesCopy.Area.Y; y < _tilesCopy.Area.Y + _tilesCopy.Area.Height; y++)
+                for (byte c = 0; c < _tilesCopy.Data.Length; c++)
+                {
+                    var layer = FindLayer(_tilesCopy.Data[c].Name);
+                    var x2 = MapSelection.X + x - _tilesCopy.Area.X;
+                    var y2 = y + MapSelection.Y - _tilesCopy.Area.Y;
+                    if (layer < 0 || x2 >= Map.Width || y2 >= Map.Height) continue;
+                    _selected.Layer[layer].Tile[x2, y2] = _tilesCopy.Data[c].Tile[x, y];
+                }
 
         _selected.Update();
     }

@@ -70,7 +70,7 @@ internal class Me(string name) : Player(name)
             case Direction.Up:
                 Y2 = Grid;
                 Y--;
-                break; 
+                break;
             case Direction.Down:
                 Y2 = Grid * -1;
                 Y++;
