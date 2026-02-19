@@ -68,14 +68,7 @@ internal static class PlayerHandler
         // Muda o item de slot
         (player.Inventory[slotOld], player.Inventory[slotNew]) = (player.Inventory[slotNew], player.Inventory[slotOld]);
         PlayerSender.PlayerInventory(player);
-
-        // Altera na hotbar
-        var hotbarSlot = player.FindHotbar(SlotType.Item, player.Inventory[slotOld]);
-        if (hotbarSlot != null)
-        {
-            hotbarSlot.Slot = slotNew;
-            PlayerSender.PlayerHotbar(player);
-        }
+        HotbarSystem.SyncInventorySwap(player, slotOld, slotNew);
     }
 
     internal static void InventoryUse(Player player, NetDataReader data)
@@ -90,44 +83,16 @@ internal static class PlayerHandler
 
     internal static void HotbarAdd(Player player, NetDataReader data)
     {
-        var hotbarSlot = data.GetShort();
-        var type = (SlotType)data.GetByte();
-        var slot = data.GetShort();
-
-        // Somente se necessário
-        if (slot != 0 && player.FindHotbar(type, slot) != null) return;
-
-        // Define os dados
-        player.Hotbar[hotbarSlot].Slot = slot;
-        player.Hotbar[hotbarSlot].Type = type;
-
-        // Envia os dados
-        PlayerSender.PlayerHotbar(player);
+        HotbarSystem.Add(player, data.GetShort(), (SlotType)data.GetByte(), data.GetShort());
     }
 
     internal static void HotbarChange(Player player, NetDataReader data)
     {
-        short slotOld = data.GetShort(), slotNew = data.GetShort();
-
-        // Somente se necessário
-        if (slotOld < 0 || slotNew < 0) return;
-        if (slotOld == slotNew) return;
-        if (player.Hotbar[slotOld].Slot == 0) return;
-
-        // Muda o item de slot
-        (player.Hotbar[slotOld], player.Hotbar[slotNew]) = (player.Hotbar[slotNew], player.Hotbar[slotOld]);
-        PlayerSender.PlayerHotbar(player);
+        HotbarSystem.Change(player, data.GetShort(), data.GetShort());
     }
 
     internal static void HotbarUse(Player player, NetDataReader data)
     {
-        var hotbarSlot = data.GetShort();
-
-        // Usa o item
-        switch (player.Hotbar[hotbarSlot].Type)
-        {
-            case SlotType.Item:
-                InventorySystem.UseItem(player, player.Inventory[player.Hotbar[hotbarSlot].Slot]); break;
-        }
+        HotbarSystem.Use(player, data.GetShort());
     }
 }

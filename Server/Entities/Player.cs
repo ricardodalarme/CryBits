@@ -276,10 +276,11 @@ internal class Player : Character
             PlayerSender.PlayerAttack(this);
     }
 
-    public HotbarSlot FindHotbar(SlotType type, short slot) => Hotbar.First(x => x.Type == type && x.Slot == slot);
+    public HotbarSlot FindHotbar(SlotType type, short slot) =>
+        Hotbar.FirstOrDefault(x => x.Type == type && x.Slot == slot);
 
     public HotbarSlot FindHotbar(SlotType type, ItemSlot slot) =>
-        Hotbar.First(x => x.Type == type && Inventory[x.Slot] == slot);
+        Hotbar.FirstOrDefault(x => x.Type == type && Inventory[x.Slot] == slot);
 
     public ItemSlot FindInventory(Item item) => Inventory.First(x => x.Item == item);
 
