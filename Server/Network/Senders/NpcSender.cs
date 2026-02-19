@@ -25,7 +25,7 @@ internal static class NpcSender
         data.Put((short)map.Npc.Length);
         for (byte i = 0; i < map.Npc.Length; i++)
         {
-            data.PutGuid(map.Npc[i].Data.GetId());
+            data.Put(map.Npc[i].Data.GetId());
             data.Put(map.Npc[i].X);
             data.Put(map.Npc[i].Y);
             data.Put((byte)map.Npc[i].Direction);
@@ -42,7 +42,7 @@ internal static class NpcSender
         // Envia os dados
         data.Put((byte)ServerPacket.MapNpc);
         data.Put(npc.Index);
-        data.PutGuid(npc.Data.GetId());
+        data.Put(npc.Data.GetId());
         data.Put(npc.X);
         data.Put(npc.Y);
         data.Put((byte)npc.Direction);

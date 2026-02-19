@@ -48,7 +48,7 @@ internal static class TradeSender
         data.Put(own);
         for (byte i = 0; i < MaxInventory; i++)
         {
-            data.PutGuid(to.Inventory[to.TradeOffer[i].SlotNum].Item.GetId());
+            data.Put(to.Inventory[to.TradeOffer[i].SlotNum].Item.GetId());
             data.Put(to.TradeOffer[i].Amount);
         }
 

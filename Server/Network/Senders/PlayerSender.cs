@@ -141,7 +141,7 @@ internal static class PlayerSender
         // Envia os dados
         data.Put((byte)ServerPacket.PlayerEquipments);
         data.Put(player.Name);
-        for (byte i = 0; i < (byte)Equipment.Count; i++) data.PutGuid(player.Equipment[i].GetId());
+        for (byte i = 0; i < (byte)Equipment.Count; i++) data.Put(player.Equipment[i].GetId());
         Send.ToMap(player.Map, data);
     }
 
@@ -153,7 +153,7 @@ internal static class PlayerSender
         data.Put((byte)ServerPacket.PlayerInventory);
         for (byte i = 0; i < MaxInventory; i++)
         {
-            data.PutGuid(player.Inventory[i].Item.GetId());
+            data.Put(player.Inventory[i].Item.GetId());
             data.Put(player.Inventory[i].Amount);
         }
 

@@ -24,7 +24,7 @@ internal static class ShopSender
 
         // Envia os dados
         data.Put((byte)ServerPacket.ShopOpen);
-        data.PutGuid(shop.GetId());
+        data.Put(shop.GetId());
         Send.ToPlayer(player, data);
     }
 }

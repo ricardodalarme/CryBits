@@ -35,7 +35,7 @@ internal static class MapSender
 
         // Envia os dados
         data.Put((byte)ServerPacket.MapRevision);
-        data.PutGuid(map.GetId());
+        data.Put(map.GetId());
         data.Put(map.Revision);
         Send.ToPlayer(player, data);
     }
@@ -64,7 +64,7 @@ internal static class MapSender
         for (byte i = 0; i < map.Item.Count; i++)
         {
             // Geral
-            data.PutGuid(map.Item[i].Item.GetId());
+            data.Put(map.Item[i].Item.GetId());
             data.Put(map.Item[i].X);
             data.Put(map.Item[i].Y);
         }
@@ -82,7 +82,7 @@ internal static class MapSender
         data.Put((byte)map.Item.Count);
         for (byte i = 0; i < map.Item.Count; i++)
         {
-            data.PutGuid(map.Item[i].Item.GetId());
+            data.Put(map.Item[i].Item.GetId());
             data.Put(map.Item[i].X);
             data.Put(map.Item[i].Y);
         }
@@ -99,7 +99,7 @@ internal static class MapSender
         data.Put(player.Name);
         data.Put(player.TextureNum);
         data.Put(player.Level);
-        data.PutGuid(player.Map.GetId());
+        data.Put(player.Map.GetId());
         data.Put(player.X);
         data.Put(player.Y);
         data.Put((byte)player.Direction);
@@ -110,7 +110,7 @@ internal static class MapSender
         }
 
         for (byte n = 0; n < (byte)Attribute.Count; n++) data.Put(player.Attribute[n]);
-        for (byte n = 0; n < (byte)Equipment.Count; n++) data.PutGuid(player.Equipment[n].GetId());
+        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Put(player.Equipment[n].GetId());
 
         return data;
     }
