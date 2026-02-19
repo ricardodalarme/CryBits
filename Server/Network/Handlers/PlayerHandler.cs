@@ -26,8 +26,7 @@ internal static class PlayerHandler
 
     internal static void PlayerAttack(Player player)
     {
-        // Ataca
-        player.Attack();
+        CombatSystem.Attack(player);
     }
 
     internal static void AddPoint(Player player, NetDataReader data)

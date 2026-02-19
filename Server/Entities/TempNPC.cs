@@ -5,6 +5,7 @@ using CryBits.Enums;
 using CryBits.Server.Entities.TempMap;
 using CryBits.Server.Logic;
 using CryBits.Server.Network;
+using CryBits.Server.Systems;
 using CryBits.Server.Network.Senders;
 using static CryBits.Globals;
 using static CryBits.Utils;
@@ -211,7 +212,7 @@ internal class TempNpc : Character
         ////////////
         // Ataque //
         ////////////
-        Attack();
+        CombatSystem.Attack(this);
     }
 
     private void Spawn(byte x, byte y, Direction direction = 0)
@@ -296,120 +297,5 @@ internal class TempNpc : Character
         Y = nextY;
         NpcSender.MapNpcMovement(this, movement);
         return true;
-    }
-
-    private void Attack()
-    {
-        byte nextX = X, nextY = Y;
-        NextTile(Direction, ref nextX, ref nextY);
-
-        // Apenas se necessário
-        if (!Alive) return;
-        if (Environment.TickCount64 < AttackTimer + AttackSpeed) return;
-        if (Map.TileBlocked(X, Y, Direction, false)) return;
-
-        // Verifica se o jogador está na frente do Npc
-        if (Target is Player)
-            AttackPlayer(Map.HasPlayer(nextX, nextY));
-        // Verifica se o Npc alvo está na frente do Npc
-        else if (Target is TempNpc)
-            AttackNpc(Map.HasNpc(nextX, nextY));
-    }
-
-    private void AttackPlayer(Player victim)
-    {
-        // Verifica se a vítima pode ser atacada
-        if (victim == null) return;
-        if (victim.GettingMap) return;
-
-        AttackTimer = Environment.TickCount64;
-
-        // Cálculo de dano
-        var attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] - victim.PlayerDefense);
-
-        // Dano não fatal
-        if (attackDamage > 0)
-        {
-            // Demonstra o ataque aos outros jogadores
-            NpcSender.MapNpcAttack(this, victim.Name, Enums.Target.Player);
-
-            if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
-            {
-                victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
-                PlayerSender.PlayerVitals(victim);
-            }
-            // FATALITY
-            else
-            {
-                // Reseta o alvo do Npc
-                Target = null;
-
-                // Mata o jogador
-                victim.Died();
-            }
-        }
-        // Demonstra o ataque aos outros jogadores
-        else
-            NpcSender.MapNpcAttack(this);
-    }
-
-    private void AttackNpc(TempNpc victim)
-    {
-        // Verifica se a vítima pode ser atacada
-        if (victim == null) return;
-        if (!victim.Alive) return;
-
-        AttackTimer = Environment.TickCount64;
-
-        // Define o alvo do Npc
-        victim.Target = this;
-
-        // Cálculo de dano
-        var attackDamage = (short)(Data.Attribute[(byte)Attribute.Strength] -
-                                   victim.Data.Attribute[(byte)Attribute.Resistance]);
-
-        // Dano não fatal
-        if (attackDamage > 0)
-        {
-            // Demonstra o ataque aos outros jogadores
-            NpcSender.MapNpcAttack(this, victim.Index.ToString(), Enums.Target.Npc);
-
-            if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
-            {
-                victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
-                NpcSender.MapNpcVitals(victim);
-            }
-            // FATALITY
-            else
-            {
-                // Reseta o alvo do Npc
-                Target = null;
-
-                // Mata o Npc
-                victim.Died();
-            }
-        }
-        // Demonstra o ataque aos outros jogadores
-        else
-            NpcSender.MapNpcAttack(this);
-    }
-
-    public void Died()
-    {
-        // Solta os itens
-        for (byte i = 0; i < Data.Drop.Count; i++)
-            if (Data.Drop[i].Item != null)
-                if (MyRandom.Next(1, 99) <= Data.Drop[i].Chance)
-                    // Solta o item
-                    Map.Item.Add(new TempMapItems(Data.Drop[i].Item, Data.Drop[i].Amount, X, Y));
-
-        // Envia os dados dos itens no chão para o mapa
-        MapSender.MapItems(Map);
-
-        // Reseta os dados do Npc 
-        SpawnTimer = Environment.TickCount64;
-        Target = null;
-        Alive = false;
-        NpcSender.MapNpcDied(this);
     }
 }

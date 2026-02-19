@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using CryBits.Entities;
 using CryBits.Entities.Shop;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
-using CryBits.Extensions;
 using CryBits.Server.Library.Repositories;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Systems;
 using static CryBits.Globals;
-using static CryBits.Utils;
 
 namespace CryBits.Server.Entities;
 
@@ -134,146 +131,6 @@ internal class Player : Character
         // Leave party and any active trade
         PartySystem.Leave(this);
         TradeSystem.Leave(this);
-    }
-
-    public void Died()
-    {
-        // Recupera os vitais
-        for (byte n = 0; n < (byte)Enums.Vital.Count; n++) Vital[n] = MaxVital(n);
-        PlayerSender.PlayerVitals(this);
-
-        // Perde 10% da experiência
-        Experience /= 10;
-        PlayerSender.PlayerExperience(this);
-
-        // Return to spawn
-        Direction = (Direction)Class.SpawnDirection;
-        MovementSystem.Warp(this, TempMap.TempMap.List.Get(Class.SpawnMap.Id), Class.SpawnX, Class.SpawnY);
-    }
-
-    public void Attack()
-    {
-        byte nextX = X, nextY = Y;
-
-        // Próximo azulejo
-        NextTile(Direction, ref nextX, ref nextY);
-
-        // Apenas se necessário
-        if (Trade != null) return;
-        if (Shop != null) return;
-        if (Environment.TickCount64 < AttackTimer + AttackSpeed) return;
-        if (Map.TileBlocked(X, Y, Direction, false)) goto @continue;
-
-        // Ataca um jogador
-        Character victim = Map.HasPlayer(nextX, nextY);
-        if (victim != null)
-        {
-            AttackPlayer((Player)victim);
-            return;
-        }
-
-        // Ataca um Npc
-        victim = Map.HasNpc(nextX, nextY);
-        if (victim != null)
-        {
-            AttackNpc((TempNpc)victim);
-            return;
-        }
-
-        @continue:
-        // Demonstrate the attack to other players
-        PlayerSender.PlayerAttack(this, null);
-        AttackTimer = Environment.TickCount64;
-    }
-
-    private void AttackPlayer(Player victim)
-    {
-        // Verifica se a vítima pode ser atacada
-        if (victim.GettingMap) return;
-        if (Map.Data.Moral == (byte)Moral.Pacific)
-        {
-            ChatSender.Message(this, "This is a peaceful area.", Color.White);
-            return;
-        }
-
-        AttackTimer = Environment.TickCount64;
-
-        // Damage calculation
-        var attackDamage = (short)(Damage - victim.PlayerDefense);
-
-        // Dano não fatal
-        if (attackDamage > 0)
-        {
-            // Demonstra o ataque aos outros jogadores
-            PlayerSender.PlayerAttack(this, victim.Name, Target.Player);
-
-            if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
-            {
-                victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
-                PlayerSender.PlayerVitals(victim);
-            }
-            // FATALITY
-            else
-            {
-                // Award 10% of the victim's XP to the attacker
-                LevelingSystem.GiveExperience(this, victim.Experience / 10);
-
-                // Mata a vítima
-                victim.Died();
-            }
-        }
-        else
-            // Demonstra o ataque aos outros jogadores
-            PlayerSender.PlayerAttack(this);
-    }
-
-    private void AttackNpc(TempNpc victim)
-    {
-        // Mensagem
-        if (victim.Target != this && !string.IsNullOrEmpty(victim.Data.SayMsg))
-            ChatSender.Message(this, victim.Data.Name + ": " + victim.Data.SayMsg, Color.White);
-
-        // Não executa o combate com um Npc amigavel
-        switch (victim.Data.Behaviour)
-        {
-            case Behaviour.Friendly: return;
-            case Behaviour.ShopKeeper:
-                ShopSystem.Open(this, victim.Data.Shop);
-                return;
-        }
-
-        // Define o alvo do Npc
-        victim.Target = this;
-
-        AttackTimer = Environment.TickCount64;
-
-        // Damage calculation
-        var attackDamage = (short)(Damage - victim.Data.Attribute[(byte)Enums.Attribute.Resistance]);
-
-        // Dano não fatal
-        if (attackDamage > 0)
-        {
-            // Demonstra o ataque aos outros jogadores
-            PlayerSender.PlayerAttack(this, victim.Index.ToString(), Target.Npc);
-
-            if (attackDamage < victim.Vital[(byte)Enums.Vital.Hp])
-            {
-                victim.Vital[(byte)Enums.Vital.Hp] -= attackDamage;
-                NpcSender.MapNpcVitals(victim);
-            }
-            // FATALITY
-            else
-            {
-                // Award NPC drop experience
-                LevelingSystem.GiveExperience(this, victim.Data.Experience);
-
-                // Reseta os dados do Npc 
-                victim.Died();
-            }
-        }
-        else
-            // Demonstra o ataque aos outros jogadores
-            PlayerSender.PlayerAttack(this);
     }
 
     public HotbarSlot FindHotbar(SlotType type, short slot) =>

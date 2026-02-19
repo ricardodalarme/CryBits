@@ -129,8 +129,7 @@ internal static class InventorySystem
                 if (player.Vital[i] > player.MaxVital(i)) player.Vital[i] = player.MaxVital(i);
             }
 
-            // A lethal potion triggers the death flow (will delegate to CombatSystem in the next refactor)
-            if (player.Vital[(byte)Vital.Hp] == 0) player.Died();
+            if (player.Vital[(byte)Vital.Hp] == 0) CombatSystem.Died(player);
 
             if (item.PotionExperience > 0 || hadEffect) TakeItem(player, slot, 1);
         }
