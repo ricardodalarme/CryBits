@@ -91,18 +91,7 @@ internal static class Send
 
         // Envia os dados
         data.Put((byte)ClientPacket.WriteSettings);
-        data.Put(GameName);
-        data.Put(WelcomeMessage);
-        data.Put(Port);
-        data.Put(MaxPlayers);
-        data.Put(MaxCharacters);
-        data.Put(MaxPartyMembers);
-        data.Put(MaxMapItems);
-        data.Put(NumPoints);
-        data.Put(MinNameLength);
-        data.Put(MaxNameLength);
-        data.Put(MinPasswordLength);
-        data.Put(MaxPasswordLength);
+        data.WriteObject(Config);
         Packet(data);
     }
 

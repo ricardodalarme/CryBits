@@ -37,7 +37,7 @@ internal static class PartySystem
             return;
         }
 
-        if (player.Party.Count == MaxPartyMembers - 1)
+        if (player.Party.Count == Config.MaxPartyMembers - 1)
         {
             ChatSender.Message(player, "Your party is full.", Color.White);
             return;
@@ -64,7 +64,7 @@ internal static class PartySystem
             return;
         }
 
-        if (invitation.Party.Count == MaxPartyMembers - 1)
+        if (invitation.Party.Count == Config.MaxPartyMembers - 1)
         {
             ChatSender.Message(player, "The party is full.", Color.White);
             return;

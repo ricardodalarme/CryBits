@@ -18,7 +18,7 @@ internal static class Renders
     public static void Init()
     {
         // Inicia a janela
-        RenderWindow = new RenderWindow(new VideoMode(new Vector2u(800, 608)), GameName, Styles.Titlebar | Styles.Close,
+        RenderWindow = new RenderWindow(new VideoMode(new Vector2u(800, 608)), Config.GameName, Styles.Titlebar | Styles.Close,
             State.Windowed);
         RenderWindow.Closed += UI.Window.OnClosed;
         RenderWindow.MouseButtonPressed += UI.Window.OnMouseButtonPressed;

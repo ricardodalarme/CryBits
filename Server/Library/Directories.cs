@@ -12,7 +12,7 @@ internal static class Directories
     private static readonly string BaseDir = AppContext.BaseDirectory;
 
     // Diretório dos arquivos
-    public static readonly FileInfo Defaults = new(Path.Combine(BaseDir, "Data", "Defaults") + Format);
+    public static readonly FileInfo Settings = new(Path.Combine(BaseDir, "Data", "settings.json"));
     public static readonly DirectoryInfo Accounts = new(Path.Combine(BaseDir, "Data", "Accounts"));
     public static readonly FileInfo Characters = new(Path.Combine(BaseDir, "Data", "Characters") + Format);
     public static readonly DirectoryInfo Classes = new(Path.Combine(BaseDir, "Data", "Classes"));
@@ -24,7 +24,7 @@ internal static class Directories
     public static void Create()
     {
         // Cria todos os diretórios do jogo
-        Defaults.Directory?.Create();
+        Settings.Directory?.Create();
         Accounts.Create();
         Characters.Directory?.Create();
         Classes.Create();

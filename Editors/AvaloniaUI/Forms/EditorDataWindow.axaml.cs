@@ -16,18 +16,18 @@ internal partial class EditorDataWindow : Window
 
     private void LoadValues()
     {
-        txtGame_Name.Text = GameName;
-        txtWelcome.Text = WelcomeMessage;
-        numPort.Value = Port;
-        numMax_Players.Value = MaxPlayers;
-        numMax_Characters.Value = MaxCharacters;
-        numMax_Party_Members.Value = MaxPartyMembers;
-        numMax_Map_Items.Value = MaxMapItems;
-        numPoints.Value = NumPoints;
-        numMin_Name.Value = MinNameLength;
-        numMax_Name.Value = MaxNameLength;
-        numMin_Password.Value = MinPasswordLength;
-        numMax_Password.Value = MaxPasswordLength;
+        txtGame_Name.Text = Config.GameName;
+        txtWelcome.Text = Config.WelcomeMessage;
+        numPort.Value = Config.Port;
+        numMax_Players.Value = Config.MaxPlayers;
+        numMax_Characters.Value = Config.MaxCharacters;
+        numMax_Party_Members.Value = Config.MaxPartyMembers;
+        numMax_Map_Items.Value = Config.MaxMapItems;
+        numPoints.Value = Config.NumPoints;
+        numMin_Name.Value = Config.MinNameLength;
+        numMax_Name.Value = Config.MaxNameLength;
+        numMin_Password.Value = Config.MinPasswordLength;
+        numMax_Password.Value = Config.MaxPasswordLength;
     }
 
     private static byte ToByte(decimal? value)
@@ -42,18 +42,18 @@ internal partial class EditorDataWindow : Window
 
     private void butSave_Click(object sender, RoutedEventArgs e)
     {
-        GameName = txtGame_Name.Text ?? string.Empty;
-        WelcomeMessage = txtWelcome.Text ?? string.Empty;
-        Port = ToShort(numPort.Value);
-        MaxPlayers = ToByte(numMax_Players.Value);
-        MaxCharacters = ToByte(numMax_Characters.Value);
-        MaxPartyMembers = ToByte(numMax_Party_Members.Value);
-        MaxMapItems = ToByte(numMax_Map_Items.Value);
-        NumPoints = ToByte(numPoints.Value);
-        MinNameLength = ToByte(numMin_Name.Value);
-        MaxNameLength = ToByte(numMax_Name.Value);
-        MinPasswordLength = ToByte(numMin_Password.Value);
-        MaxPasswordLength = ToByte(numMax_Password.Value);
+        Config.GameName = txtGame_Name.Text ?? string.Empty;
+        Config.WelcomeMessage = txtWelcome.Text ?? string.Empty;
+        Config.Port = ToShort(numPort.Value);
+        Config.MaxPlayers = ToByte(numMax_Players.Value);
+        Config.MaxCharacters = ToByte(numMax_Characters.Value);
+        Config.MaxPartyMembers = ToByte(numMax_Party_Members.Value);
+        Config.MaxMapItems = ToByte(numMax_Map_Items.Value);
+        Config.NumPoints = ToByte(numPoints.Value);
+        Config.MinNameLength = ToByte(numMin_Name.Value);
+        Config.MaxNameLength = ToByte(numMax_Name.Value);
+        Config.MinPasswordLength = ToByte(numMin_Password.Value);
+        Config.MaxPasswordLength = ToByte(numMax_Password.Value);
         Send.WriteServerData();
 
         Close();

@@ -56,7 +56,7 @@ internal static class Socket
     {
         if (IsConnected()) return true;
 
-        _serverPeer = Device.Connect(Ip, Port, GameName);
+        _serverPeer = Device.Connect(Ip, Config.Port, Config.GameName);
 
         var waitTimer = Environment.TickCount;
         while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)

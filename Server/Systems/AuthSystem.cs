@@ -86,17 +86,17 @@ internal static class AuthSystem
         var user = data.GetString().Trim();
         var password = data.GetString();
 
-        if (user.Length < MinNameLength || user.Length > MaxNameLength)
+        if (user.Length < Config.MinNameLength || user.Length > Config.MaxNameLength)
         {
             AuthSender.Alert(account,
-                "The username must contain between " + MinNameLength + " and " + MaxNameLength + " characters.");
+                "The username must contain between " + Config.MinNameLength + " and " + Config.MaxNameLength + " characters.");
             return;
         }
 
-        if (password.Length < MinNameLength || password.Length > MaxNameLength)
+        if (password.Length < Config.MinPasswordLength || password.Length > Config.MaxPasswordLength)
         {
             AuthSender.Alert(account,
-                "The password must contain between " + MinNameLength + " and " + MaxNameLength + " characters.");
+                "The password must contain between " + Config.MinPasswordLength + " and " + Config.MaxPasswordLength + " characters.");
             return;
         }
 

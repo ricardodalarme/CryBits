@@ -23,10 +23,11 @@ internal static class CharacterSystem
     {
         var name = data.GetString().Trim();
 
-        if (name.Length < MinNameLength || name.Length > MaxNameLength)
+        if (name.Length < Config.MinNameLength || name.Length > Config.MaxNameLength)
         {
             AuthSender.Alert(account,
-                "The character name must contain between " + MinNameLength + " and " + MaxNameLength + " characters.",
+                "The character name must contain between " + Config.MinNameLength + " and " + Config.MaxNameLength +
+                " characters.",
                 false);
             return;
         }
@@ -84,9 +85,9 @@ internal static class CharacterSystem
     /// <summary>Opens the character-creation screen, after verifying the slot limit.</summary>
     internal static void OpenCreation(Account account)
     {
-        if (account.Characters.Count == MaxCharacters)
+        if (account.Characters.Count == Config.MaxCharacters)
         {
-            AuthSender.Alert(account, "You can only have " + MaxCharacters + " characters.", false);
+            AuthSender.Alert(account, "You can only have " + Config.MaxCharacters + " characters.", false);
             return;
         }
 
@@ -127,7 +128,7 @@ internal static class CharacterSystem
         MovementSystem.Warp(player, player.Map, player.X, player.Y, true);
 
         PlayerSender.JoinGame(player);
-        ChatSender.Message(player, WelcomeMessage, Color.Blue);
+        ChatSender.Message(player, Config.WelcomeMessage, Color.Blue);
     }
 
     /// <summary>Saves the character, notifies the map, and cleans up active sessions.</summary>

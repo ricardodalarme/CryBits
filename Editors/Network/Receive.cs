@@ -46,19 +46,7 @@ internal static class Receive
 
     private static void ServerData(NetDataReader data)
     {
-        // Lê os dados
-        GameName = data.GetString();
-        WelcomeMessage = data.GetString();
-        Port = data.GetShort();
-        MaxPlayers = data.GetByte();
-        MaxCharacters = data.GetByte();
-        MaxPartyMembers = data.GetByte();
-        MaxMapItems = data.GetByte();
-        NumPoints = data.GetByte();
-        MinNameLength = data.GetByte();
-        MaxNameLength = data.GetByte();
-        MinPasswordLength = data.GetByte();
-        MaxPasswordLength = data.GetByte();
+        Config = (ServerConfig)data.ReadObject();
     }
 
     private static void Classes(NetDataReader data)

@@ -4,19 +4,8 @@ namespace CryBits;
 
 public static class Globals
 {
-    // Configurações
-    public static string GameName = "CryBits";
-    public static string WelcomeMessage = "Welcome to CryBits.";
-    public static short Port = 7001;
-    public static byte MaxPlayers = 15;
-    public static byte MaxCharacters = 3;
-    public static byte MaxPartyMembers = 3;
-    public static byte MaxMapItems = 100;
-    public static byte NumPoints = 3;
-    public static byte MaxNameLength = 12;
-    public static byte MinNameLength = 3;
-    public static byte MaxPasswordLength = 12;
-    public static byte MinPasswordLength = 3;
+    /// <summary>Runtime server configuration loaded from <c>settings.json</c>.</summary>
+    public static ServerConfig Config { get; set; } = new();
 
     // Tamanho da grade do jogo
     public const byte Grid = 32;

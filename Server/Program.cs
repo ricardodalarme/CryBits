@@ -44,7 +44,7 @@ internal static class Program
 
         // Cria os dispositivos da rede
         Socket.Init();
-        Console.WriteLine("Network started. Port: " + Globals.Port);
+        Console.WriteLine("Network started. Port: " + Globals.Config.Port);
 
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
 

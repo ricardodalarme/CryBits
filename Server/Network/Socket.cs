@@ -16,8 +16,8 @@ internal static class Socket
 
         _listener.ConnectionRequestEvent += request =>
         {
-            if (Device.ConnectedPeersCount < MaxPlayers)
-                request.AcceptIfKey(GameName);
+            if (Device.ConnectedPeersCount < Config.MaxPlayers)
+                request.AcceptIfKey(Config.GameName);
             else
                 request.Reject();
         };
@@ -39,7 +39,7 @@ internal static class Socket
             reader.Recycle();
         };
 
-        Device.Start(Port);
+        Device.Start(Config.Port);
     }
 
     public static void HandleData() => Device.PollEvents();

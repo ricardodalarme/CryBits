@@ -77,7 +77,7 @@ internal static class InventorySystem
     /// </summary>
     public static void DropItem(Player player, ItemSlot slot, short amount)
     {
-        if (player.Map.Item.Count == MaxMapItems) return;
+        if (player.Map.Item.Count == Config.MaxMapItems) return;
         if (slot.Item == null) return;
         if (slot.Item.Bind == BindOn.Pickup) return;
         if (player.Trade != null) return;

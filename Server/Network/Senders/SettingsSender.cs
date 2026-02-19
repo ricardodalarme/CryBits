@@ -1,4 +1,5 @@
 using CryBits.Enums;
+using CryBits.Extensions;
 using CryBits.Server.Entities;
 using LiteNetLib.Utils;
 using static CryBits.Globals;
@@ -13,18 +14,7 @@ internal static class SettingsSender
 
         // Envia os dados
         data.Put((byte)ServerPacket.ServerData);
-        data.Put(GameName);
-        data.Put(WelcomeMessage);
-        data.Put(Port);
-        data.Put(MaxPlayers);
-        data.Put(MaxCharacters);
-        data.Put(MaxPartyMembers);
-        data.Put(MaxMapItems);
-        data.Put(NumPoints);
-        data.Put(MinNameLength);
-        data.Put(MaxNameLength);
-        data.Put(MinPasswordLength);
-        data.Put(MaxPasswordLength);
+        data.WriteObject(Config);
         Send.ToPlayer(account, data);
     }
 }

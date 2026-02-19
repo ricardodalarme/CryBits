@@ -53,7 +53,7 @@ internal static class LevelingSystem
             var expRest = player.Experience - player.ExpNeeded;
 
             player.Level++;
-            player.Points += NumPoints;
+            player.Points += Config.NumPoints;
             player.Experience = expRest;
         }
 
