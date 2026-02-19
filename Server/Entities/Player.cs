@@ -1,13 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using CryBits.Entities;
 using CryBits.Entities.Shop;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
-using CryBits.Server.Library.Repositories;
-using CryBits.Server.Network.Senders;
-using CryBits.Server.Systems;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Entities;
@@ -96,41 +92,6 @@ internal class Player : Character
             for (byte i = 0; i < (byte)Enums.Attribute.Count; i++) total += Attribute[i];
             return (int)((Level + 1) * 2.5 + (total + Points) / 2);
         }
-    }
-
-    public void Join()
-    {
-        // Limpa os dados dos outros personagens
-        Account.Characters = null;
-
-        // Envia todos os dados necessários
-        PlayerSender.Join(this);
-        ItemSender.Items(Account);
-        NpcSender.Npcs(Account);
-        ShopSender.Shops(Account);
-        MapSender.Map(Account, Map.Data);
-        MapSender.MapPlayers(this);
-        PlayerSender.PlayerExperience(this);
-        PlayerSender.PlayerInventory(this);
-        PlayerSender.PlayerHotbar(this);
-
-        // Warp to starting position
-        MovementSystem.Warp(this, Map, X, Y, true);
-
-        // Entra no jogo
-        PlayerSender.JoinGame(this);
-        ChatSender.Message(this, WelcomeMessage, Color.Blue);
-    }
-
-    public void Leave()
-    {
-        // Salva os dados do jogador e atualiza os demais jogadores da desconexão
-        CharacterRepository.Write(Account);
-        PlayerSender.PlayerLeave(this);
-
-        // Leave party and any active trade
-        PartySystem.Leave(this);
-        TradeSystem.Leave(this);
     }
 
     public HotbarSlot FindHotbar(SlotType type, short slot) =>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CryBits.Enums;
+using CryBits.Server.Systems;
 using LiteNetLib;
 
 namespace CryBits.Server.Entities;
@@ -17,6 +18,7 @@ internal class Account(NetPeer connection)
     public bool InEditor { get; set; }
     public Player Character { get; set; }
     public List<TempCharacter> Characters { get; set; } = new();
+
     public struct TempCharacter
     {
         public string Name;
@@ -30,8 +32,7 @@ internal class Account(NetPeer connection)
 
     public void Leave()
     {
-        // Limpa os dados do jogador
-        Character?.Leave();
+        if (Character != null) CharacterSystem.Leave(Character);
         List.Remove(this);
     }
 }
