@@ -6,6 +6,7 @@ using CryBits.Server.Library.Repositories;
 using CryBits.Server.Network.Senders;
 using LiteNetLib.Utils;
 using static CryBits.Globals;
+using BcryptNet = BCrypt.Net.BCrypt;
 
 namespace CryBits.Server.Systems;
 
@@ -36,7 +37,7 @@ internal static class AuthSystem
 
         AccountRepository.Read(account, user);
 
-        if (!account.Password.Equals(password))
+        if (!BcryptNet.Verify(password, account.PasswordHash))
         {
             AuthSender.Alert(account, "Password is incorrect.");
             return;
@@ -107,7 +108,7 @@ internal static class AuthSystem
         }
 
         account.User = user;
-        account.Password = password;
+        account.PasswordHash = BcryptNet.HashPassword(password);
 
         AccountRepository.Write(account);
 

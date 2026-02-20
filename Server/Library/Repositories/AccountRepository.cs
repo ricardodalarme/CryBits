@@ -14,7 +14,7 @@ internal static class AccountRepository
         // Load account data.
         using var data = new BinaryReader(file.OpenRead());
         account.User = data.ReadString();
-        account.Password = data.ReadString();
+        account.PasswordHash = data.ReadString();
         account.Access = (Access)data.ReadByte();
     }
 
@@ -48,7 +48,7 @@ internal static class AccountRepository
         // Write account data to file.
         using var data = new BinaryWriter(file.OpenWrite());
         data.Write(account.User);
-        data.Write(account.Password);
+        data.Write(account.PasswordHash);
         data.Write((byte)account.Access);
     }
 }

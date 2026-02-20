@@ -13,7 +13,7 @@ internal class Account(NetPeer connection)
     // Account fields.
     public NetPeer Connection { get; } = connection;
     public string User { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
+    public string PasswordHash { get; set; } = string.Empty;
     public Access Access { get; set; }
     public bool InEditor { get; set; }
     public Player Character { get; set; }
