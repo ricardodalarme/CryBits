@@ -2,7 +2,7 @@ using System.IO;
 using System.Text.Json;
 using static CryBits.Globals;
 
-namespace CryBits.Server.Library.Repositories;
+namespace CryBits.Server.Persistence.Repositories;
 
 internal static class SettingsRepository
 {

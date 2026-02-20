@@ -3,7 +3,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 
-namespace CryBits.Client.Framework.Library.Repositories;
+namespace CryBits.Client.Framework.Persistence.Repositories;
 
 public static class TileRepository
 {

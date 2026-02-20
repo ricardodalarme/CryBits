@@ -2,7 +2,7 @@ using System;
 using CommandLine;
 using CryBits.Enums;
 using CryBits.Server.Entities;
-using CryBits.Server.Library.Repositories;
+using CryBits.Server.Persistence.Repositories;
 
 namespace CryBits.Server.Commands;
 
@@ -12,7 +12,8 @@ internal sealed class DefineAccessCommand : IConsoleCommand
     [Value(0, Required = true, MetaName = "playerName", HelpText = "The online player's username.")]
     public string PlayerName { get; set; }
 
-    [Value(1, Required = true, MetaName = "accessLevel", HelpText = "Numeric access level (0 = Player, 1 = Editor, 2 = Admin).")]
+    [Value(1, Required = true, MetaName = "accessLevel",
+        HelpText = "Numeric access level (0 = Player, 1 = Editor, 2 = Admin).")]
     public byte Access { get; set; }
 
     public void Execute()

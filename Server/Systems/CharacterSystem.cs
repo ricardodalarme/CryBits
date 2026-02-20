@@ -6,9 +6,10 @@ using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities;
-using CryBits.Server.Library;
-using CryBits.Server.Library.Repositories;
+using CryBits.Server.Persistence;
+using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Persistence.Repositories;
 using LiteNetLib.Utils;
 using static CryBits.Globals;
 

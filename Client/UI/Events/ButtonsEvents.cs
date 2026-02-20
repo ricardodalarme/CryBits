@@ -1,7 +1,7 @@
 using System.Linq;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Library.Repositories;
+using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Utils;

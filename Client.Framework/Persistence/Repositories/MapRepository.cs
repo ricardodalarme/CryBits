@@ -2,7 +2,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Client.Framework.Constants;
 using CryBits.Entities.Map;
 
-namespace CryBits.Client.Framework.Library.Repositories;
+namespace CryBits.Client.Framework.Persistence.Repositories;
 
 public static class MapRepository
 {

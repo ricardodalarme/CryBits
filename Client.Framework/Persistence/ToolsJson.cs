@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using CryBits.Client.Framework.Interfacily.Enums;
 
-namespace CryBits.Client.Framework.Library;
+namespace CryBits.Client.Framework.Persistence;
 
 /// <summary>Shared JSON serializer options used by all read/write operations.</summary>
 public static class JsonConfig

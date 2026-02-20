@@ -5,7 +5,7 @@ using System.IO;
 using System.Text.Json;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Framework.Library;
+using CryBits.Client.Framework.Persistence;
 using CryBits.Editors.Entities;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
@@ -17,8 +17,6 @@ namespace CryBits.Editors.Library.Repositories;
 
 internal static class ToolsRepository
 {
-
-
     public static void Read()
     {
         var file = new FileInfo(Directories.ToolsData.FullName);
@@ -93,7 +91,6 @@ internal static class ToolsRepository
     }
 
 
-
     public static void Write()
     {
         // Build DTO tree for serialization.
@@ -134,8 +131,15 @@ internal static class ToolsRepository
     }
 
     // Delegate to Client.Framework ToolsRepository for DTO conversions
-    private static ButtonDto ButtonDto(Button tool) => Client.Framework.Library.Repositories.ToolsRepository.ButtonDto(tool);
-    private static TextBoxDto TextBoxDto(TextBox tool) => Client.Framework.Library.Repositories.ToolsRepository.TextBoxDto(tool);
-    private static PanelDto PanelDto(Panel tool) => Client.Framework.Library.Repositories.ToolsRepository.PanelDto(tool);
-    private static CheckBoxDto CheckBoxDto(CheckBox tool) => Client.Framework.Library.Repositories.ToolsRepository.CheckBoxDto(tool);
+    private static ButtonDto ButtonDto(Button tool) =>
+        Client.Framework.Library.Repositories.ToolsRepository.ButtonDto(tool);
+
+    private static TextBoxDto TextBoxDto(TextBox tool) =>
+        Client.Framework.Library.Repositories.ToolsRepository.TextBoxDto(tool);
+
+    private static PanelDto PanelDto(Panel tool) =>
+        Client.Framework.Library.Repositories.ToolsRepository.PanelDto(tool);
+
+    private static CheckBoxDto CheckBoxDto(CheckBox tool) =>
+        Client.Framework.Library.Repositories.ToolsRepository.CheckBoxDto(tool);
 }

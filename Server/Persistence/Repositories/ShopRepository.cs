@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities.Shop;
 
-namespace CryBits.Server.Library.Repositories;
+namespace CryBits.Server.Persistence.Repositories;
 
 internal static class ShopRepository
 {

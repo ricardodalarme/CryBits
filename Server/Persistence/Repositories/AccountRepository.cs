@@ -3,7 +3,7 @@ using System.IO;
 using CryBits.Enums;
 using CryBits.Server.Entities;
 
-namespace CryBits.Server.Library.Repositories;
+namespace CryBits.Server.Persistence.Repositories;
 
 internal static class AccountRepository
 {

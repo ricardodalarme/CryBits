@@ -3,7 +3,7 @@ using System.Text.Json;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 
-namespace CryBits.Client.Framework.Library.Repositories;
+namespace CryBits.Client.Framework.Persistence.Repositories;
 
 public static class ToolsRepository
 {

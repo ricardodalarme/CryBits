@@ -7,7 +7,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Framework.Library.Repositories;
+using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.Graphics;
 using CryBits.Enums;
 using SFML.Graphics;

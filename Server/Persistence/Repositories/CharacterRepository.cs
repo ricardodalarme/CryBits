@@ -5,10 +5,11 @@ using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities;
+using CryBits.Server.Persistence;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
 
-namespace CryBits.Server.Library.Repositories;
+namespace CryBits.Server.Persistence.Repositories;
 
 internal static class CharacterRepository
 {

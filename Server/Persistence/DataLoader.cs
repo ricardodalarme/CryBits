@@ -1,7 +1,7 @@
 using System;
-using CryBits.Server.Library.Repositories;
+using CryBits.Server.Persistence.Repositories;
 
-namespace CryBits.Server.Library;
+namespace CryBits.Server.Persistence;
 
 /// <summary>Orchestrates loading all game data from disk on server startup.</summary>
 internal static class DataLoader

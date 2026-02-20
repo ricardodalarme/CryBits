@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace CryBits.Server.Library;
+namespace CryBits.Server.Persistence;
 
 internal static class Directories
 {

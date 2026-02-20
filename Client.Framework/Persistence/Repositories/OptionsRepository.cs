@@ -1,7 +1,7 @@
 using System.Text.Json;
 using CryBits.Client.Framework.Constants;
 
-namespace CryBits.Client.Framework.Library.Repositories;
+namespace CryBits.Client.Framework.Persistence.Repositories;
 
 public static class OptionsRepository
 {

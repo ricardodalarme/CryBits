@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities.Map;
 
-namespace CryBits.Server.Library.Repositories;
+namespace CryBits.Server.Persistence.Repositories;
 
 internal static class MapRepository
 {
@@ -29,7 +29,8 @@ internal static class MapRepository
     public static void Write(Map map)
     {
         // Write map to disk.
-        using var stream = new FileInfo(Path.Combine(Directories.Maps.FullName, map.Id.ToString()) + Directories.Format).OpenWrite();
+        using var stream = new FileInfo(Path.Combine(Directories.Maps.FullName, map.Id.ToString()) + Directories.Format)
+            .OpenWrite();
 #pragma warning disable SYSLIB0011
         new BinaryFormatter().Serialize(stream, map);
 #pragma warning restore SYSLIB0011
