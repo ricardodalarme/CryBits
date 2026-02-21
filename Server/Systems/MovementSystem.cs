@@ -36,7 +36,7 @@ internal static class MovementSystem
     {
         byte nextX = player.X, nextY = player.Y;
         byte oldX = player.X, oldY = player.Y;
-        var link = GameWorld.Current.Maps.Get(player.Map.Data.Link[(byte)player.Direction].GetId());
+        var link = GameWorld.Current.Maps.Get(player.MapInstance.Data.Link[(byte)player.Direction].GetId());
         var secondMovement = false;
 
         if (movement < 1 || movement > 2) return;
@@ -72,14 +72,14 @@ internal static class MovementSystem
                 return;
             }
         }
-        else if (!player.Map.TileBlocked(oldX, oldY, player.Direction))
+        else if (!player.MapInstance.TileBlocked(oldX, oldY, player.Direction))
         {
             player.X = nextX;
             player.Y = nextY;
         }
 
         // Tile attributes
-        var tile = player.Map.Data.Attribute[nextX, nextY];
+        var tile = player.MapInstance.Data.Attribute[nextX, nextY];
         switch ((TileAttribute)tile.Type)
         {
             case TileAttribute.Warp:
@@ -96,33 +96,33 @@ internal static class MovementSystem
     }
 
     /// <summary>
-    /// Teleports <paramref name="player"/> to the specified position on <paramref name="map"/>.
+    /// Teleports <paramref name="player"/> to the specified position on <paramref name="mapInstance"/>.
     /// Cancels any active trade or shop, clamps coordinates to map bounds, and sends a full
     /// map data refresh when the destination map differs from the current one or
     /// <paramref name="needUpdate"/> is true.
     /// </summary>
-    public static void Warp(Player player, TempMap map, byte x, byte y, bool needUpdate = false)
+    public static void Warp(Player player, MapInstance mapInstance, byte x, byte y, bool needUpdate = false)
     {
-        var oldMap = player.Map;
+        var oldMap = player.MapInstance;
 
         TradeSystem.Leave(player);
         ShopSystem.Leave(player);
 
-        if (map == null) return;
+        if (mapInstance == null) return;
         if (x >= CryBits.Entities.Map.Map.Width) x = CryBits.Entities.Map.Map.Width - 1;
         if (y >= CryBits.Entities.Map.Map.Height) y = CryBits.Entities.Map.Map.Height - 1;
 
-        player.Map = map;
+        player.MapInstance = mapInstance;
         player.X = x;
         player.Y = y;
 
-        if (oldMap != map || needUpdate)
+        if (oldMap != mapInstance || needUpdate)
         {
             PlayerSender.PlayerLeaveMap(player, oldMap);
             player.GettingMap = true;
-            MapSender.MapRevision(player, map.Data);
-            MapSender.MapItems(player, map);
-            NpcSender.MapNpcs(player, map);
+            MapSender.MapRevision(player, mapInstance.Data);
+            MapSender.MapItems(player, mapInstance);
+            NpcSender.MapNpcs(player, mapInstance);
         }
         else
             PlayerSender.PlayerPosition(player);

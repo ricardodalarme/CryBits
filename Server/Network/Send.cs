@@ -37,22 +37,22 @@ internal static class Send
             ToPlayer(t, packet);
     }
 
-    public static void ToMap(TempMap map, IServerPacket packet)
+    public static void ToMap(MapInstance mapInstance, IServerPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in Account.List.Where(t => t.IsPlaying).Where(t => t.Character.Map == map))
+        foreach (var t in Account.List.Where(t => t.IsPlaying).Where(t => t.Character.MapInstance == mapInstance))
             ToPlayer(t, packet);
     }
 
-    public static void ToMapBut(TempMap map, Player player, IServerPacket packet)
+    public static void ToMapBut(MapInstance mapInstance, Player player, IServerPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
         foreach (var t in Account.List.Where(t => t.IsPlaying)
-                     .Where(t => t.Character.Map == map)
+                     .Where(t => t.Character.MapInstance == mapInstance)
                      .Where(t => player != t.Character))
             ToPlayer(t, packet);
     }

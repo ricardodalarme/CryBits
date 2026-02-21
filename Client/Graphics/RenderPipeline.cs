@@ -1,5 +1,4 @@
 using CryBits.Client.Entities;
-using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
@@ -42,13 +41,13 @@ internal static class RenderPipeline
         MapRenderer.MapBlood();
         MapRenderer.MapItems();
 
-        for (byte i = 0; i < TempMap.Current.Npc.Length; i++)
-            if (TempMap.Current.Npc[i].Data != null)
-                NpcRenderer.Npc(TempMap.Current.Npc[i]);
+        for (byte i = 0; i < MapInstance.Current.Npc.Length; i++)
+            if (MapInstance.Current.Npc[i].Data != null)
+                NpcRenderer.Npc(MapInstance.Current.Npc[i]);
 
         for (byte i = 0; i < Player.List.Count; i++)
             if (Player.List[i] != Player.Me)
-                if (Player.List[i].Map == Player.Me.Map)
+                if (Player.List[i].MapInstance == Player.Me.MapInstance)
                     PlayerRenderer.PlayerCharacter(Player.List[i]);
 
         PlayerRenderer.PlayerCharacter(Player.Me);

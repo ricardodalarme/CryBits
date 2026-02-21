@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using CryBits.Client.Entities;
-using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Graphics;
 using CryBits.Client.Network;
@@ -44,7 +43,7 @@ internal static class Loop
 
             if (Screen.Current == Screens.Game)
             {
-                TempMap.Current.Logic();
+                MapInstance.Current.Logic();
                 if (timer30 < Environment.TickCount)
                 {
                     // Player logic.
@@ -52,9 +51,9 @@ internal static class Loop
                         Player.List[i].Logic();
 
                     // NPC logic.
-                    for (byte i = 0; i < TempMap.Current.Npc.Length; i++)
-                        if (TempMap.Current.Npc[i].Data != null)
-                            TempMap.Current.Npc[i].Logic();
+                    for (byte i = 0; i < MapInstance.Current.Npc.Length; i++)
+                        if (MapInstance.Current.Npc[i].Data != null)
+                            MapInstance.Current.Npc[i].Logic();
 
                     // Reset 30 ms timer
                     timer30 = Environment.TickCount + 30;

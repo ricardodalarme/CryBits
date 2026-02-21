@@ -75,7 +75,7 @@ internal static class EditorHandler
             // Broadcast the map to players who are on it (and editors).
             for (var n = 0; n < Account.List.Count; n++)
                 if (Account.List[n] != account)
-                    if (Account.List[n].Character.Map == tempMap || Account.List[n].InEditor)
+                    if (Account.List[n].Character.MapInstance == tempMap || Account.List[n].InEditor)
                         MapSender.Map(Account.List[n], tempMap.Data);
         }
     }
@@ -162,7 +162,7 @@ internal static class EditorHandler
             var player = account.Character;
 
             // Send map data to the requesting player if requested.
-            if (packet.SendMap) MapSender.Map(player.Account, player.Map.Data);
+            if (packet.SendMap) MapSender.Map(player.Account, player.MapInstance.Data);
 
             // Send player list for the map to nearby clients.
             MapSender.MapPlayers(player);

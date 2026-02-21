@@ -35,19 +35,19 @@ internal static class RegenerationSystem
     /// Regenerates vitals for an NPC. Sends updated vitals to the map when any vital changes.
     /// Only runs when the NPC is alive.
     /// </summary>
-    public static void Tick(TempNpc npc)
+    public static void Tick(NpcInstance npcInstance)
     {
-        if (!npc.Alive) return;
+        if (!npcInstance.Alive) return;
         if (Environment.TickCount64 <= Loop.TimerRegeneration + 5000) return;
 
         for (byte v = 0; v < (byte)Vital.Count; v++)
         {
-            if (npc.Vital[v] >= npc.Data.Vital[v]) continue;
+            if (npcInstance.Vital[v] >= npcInstance.Data.Vital[v]) continue;
 
-            npc.Vital[v] += npc.Regeneration(v);
-            if (npc.Vital[v] > npc.Data.Vital[v]) npc.Vital[v] = npc.Data.Vital[v];
+            npcInstance.Vital[v] += npcInstance.Regeneration(v);
+            if (npcInstance.Vital[v] > npcInstance.Data.Vital[v]) npcInstance.Vital[v] = npcInstance.Data.Vital[v];
 
-            NpcSender.MapNpcVitals(npc);
+            NpcSender.MapNpcVitals(npcInstance);
         }
     }
 }

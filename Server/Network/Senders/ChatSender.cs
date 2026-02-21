@@ -14,7 +14,7 @@ internal static class ChatSender
     public static void MessageMap(Player player, string text)
     {
         var message = "[Map] " + player.Name + ": " + text;
-        Send.ToMap(player.Map, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
+        Send.ToMap(player.MapInstance, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
     }
 
     public static void MessageGlobal(Player player, string text)

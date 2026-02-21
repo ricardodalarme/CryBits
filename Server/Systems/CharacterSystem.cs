@@ -54,7 +54,7 @@ internal static class CharacterSystem
             ? @class.TextureMale[packet.TextureNum]
             : @class.TextureFemale[packet.TextureNum];
         account.Character.Attribute = @class.Attribute;
-        account.Character.Map = GameWorld.Current.Maps.Get(@class.SpawnMap.Id);
+        account.Character.MapInstance = GameWorld.Current.Maps.Get(@class.SpawnMap.Id);
         account.Character.Direction = (Direction)@class.SpawnDirection;
         account.Character.X = @class.SpawnX;
         account.Character.Y = @class.SpawnY;
@@ -119,13 +119,13 @@ internal static class CharacterSystem
         ItemSender.Items(player.Account);
         NpcSender.Npcs(player.Account);
         ShopSender.Shops(player.Account);
-        MapSender.Map(player.Account, player.Map.Data);
+        MapSender.Map(player.Account, player.MapInstance.Data);
         MapSender.MapPlayers(player);
         PlayerSender.PlayerExperience(player);
         PlayerSender.PlayerInventory(player);
         PlayerSender.PlayerHotbar(player);
 
-        MovementSystem.Warp(player, player.Map, player.X, player.Y, true);
+        MovementSystem.Warp(player, player.MapInstance, player.X, player.Y, true);
 
         PlayerSender.JoinGame(player);
         ChatSender.Message(player, Config.WelcomeMessage, Color.Blue);

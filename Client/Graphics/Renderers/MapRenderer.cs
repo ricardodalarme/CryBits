@@ -1,5 +1,5 @@
 using System.Drawing;
-using CryBits.Client.Entities.TempMap;
+using CryBits.Client.Entities;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Utils;
 using CryBits.Entities.Map;
@@ -18,11 +18,11 @@ internal static class MapRenderer
     /// <param name="layerType">Layer type to render.</param>
     public static void MapTiles(byte layerType)
     {
-        if (TempMap.Current.Data.Name == null) return;
+        if (MapInstance.Current.Data.Name == null) return;
 
-        var tempColor = TempMap.Current.Data.Color;
+        var tempColor = MapInstance.Current.Data.Color;
         var color = new Color(tempColor.R, tempColor.G, tempColor.B);
-        var map = TempMap.Current.Data;
+        var map = MapInstance.Current.Data;
 
         for (byte c = 0; c < map.Layer.Count; c++)
             if (map.Layer[c].Type == layerType)
@@ -73,22 +73,22 @@ internal static class MapRenderer
     /// <summary>Render the map's panorama background.</summary>
     public static void MapPanorama()
     {
-        if (TempMap.Current.Data.Panorama > 0)
-            Renders.Render(Textures.Panoramas[TempMap.Current.Data.Panorama], new Point(0));
+        if (MapInstance.Current.Data.Panorama > 0)
+            Renders.Render(Textures.Panoramas[MapInstance.Current.Data.Panorama], new Point(0));
     }
 
     /// <summary>Render map fog overlay.</summary>
     public static void MapFog()
     {
-        var data = TempMap.Current.Data.Fog;
+        var data = MapInstance.Current.Data.Fog;
         if (data.Texture <= 0) return;
 
         var textureSize = Textures.Fogs[data.Texture].ToSize();
         for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
             for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
                 Renders.Render(Textures.Fogs[data.Texture],
-                    new Point(x * textureSize.Width + TempMap.Current.Fog.X,
-                        y * textureSize.Height + TempMap.Current.Fog.Y), new Color(255, 255, 255, data.Alpha));
+                    new Point(x * textureSize.Width + MapInstance.Current.Fog.X,
+                        y * textureSize.Height + MapInstance.Current.Fog.Y), new Color(255, 255, 255, data.Alpha));
     }
 
     /// <summary>Render current map weather (particles and lightning overlay).</summary>
@@ -96,44 +96,44 @@ internal static class MapRenderer
     {
         byte x = 0;
 
-        if (TempMap.Current.Data.Weather.Type == 0) return;
+        if (MapInstance.Current.Data.Weather.Type == 0) return;
 
-        x = TempMap.Current.Data.Weather.Type switch
+        x = MapInstance.Current.Data.Weather.Type switch
         {
             Weather.Snowing => 32,
             _ => x
         };
 
-        foreach (var weather in TempMap.Current.Weather.Particles)
+        foreach (var weather in MapInstance.Current.Weather.Particles)
             if (weather.Visible)
                 Renders.Render(Textures.Weather, new Rectangle(x, 0, 32, 32),
                     new Rectangle(weather.X, weather.Y, 32, 32),
                     new Color(255, 255, 255, 150));
 
         Renders.Render(Textures.Blank, 0, 0, 0, 0, ScreenWidth, ScreenHeight,
-            new Color(255, 255, 255, TempMap.Current.Weather.Lightning));
+            new Color(255, 255, 255, MapInstance.Current.Weather.Lightning));
     }
 
     /// <summary>Render the current map name (color varies by map moral).</summary>
     public static void MapName()
     {
-        if (string.IsNullOrEmpty(TempMap.Current.Data.Name)) return;
+        if (string.IsNullOrEmpty(MapInstance.Current.Data.Name)) return;
 
-        var color = TempMap.Current.Data.Moral switch
+        var color = MapInstance.Current.Data.Moral switch
         {
             Moral.Dangerous => Color.Red,
             _ => Color.White
         };
 
-        Renders.DrawText(TempMap.Current.Data.Name, 426, 48, color);
+        Renders.DrawText(MapInstance.Current.Data.Name, 426, 48, color);
     }
 
     /// <summary>Render all ground items on the current map.</summary>
     public static void MapItems()
     {
-        for (byte i = 0; i < TempMap.Current.Item.Length; i++)
+        for (byte i = 0; i < MapInstance.Current.Item.Length; i++)
         {
-            var data = TempMap.Current.Item[i];
+            var data = MapInstance.Current.Item[i];
             if (data.Item == null) continue;
 
             var position = new Point(CameraUtils.ConvertX(data.X * Grid), CameraUtils.ConvertY(data.Y * Grid));
@@ -144,9 +144,9 @@ internal static class MapRenderer
     /// <summary>Render blood splatters on the map.</summary>
     public static void MapBlood()
     {
-        for (byte i = 0; i < TempMap.Current.Blood.Count; i++)
+        for (byte i = 0; i < MapInstance.Current.Blood.Count; i++)
         {
-            var data = TempMap.Current.Blood[i];
+            var data = MapInstance.Current.Blood[i];
             Renders.Render(Textures.Blood, CameraUtils.ConvertX(data.X * Grid), CameraUtils.ConvertY(data.Y * Grid),
                 data.TextureNum * 32, 0, 32, 32, new Color(255, 255, 255, data.Opacity));
         }

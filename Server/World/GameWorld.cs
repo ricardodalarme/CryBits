@@ -17,7 +17,7 @@ internal sealed class GameWorld
     /// <summary>
     /// Live map instances keyed by map ID.
     /// </summary>
-    public Dictionary<Guid, TempMap> Maps { get; } = [];
+    public Dictionary<Guid, MapInstance> Maps { get; } = [];
 
     public GameWorld() => Current = this;
 }

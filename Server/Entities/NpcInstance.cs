@@ -5,7 +5,7 @@ using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Server.Entities;
 
-internal class TempNpc : Character
+internal class NpcInstance : Character
 {
     // Basic NPC runtime fields.
     public readonly byte Index;
@@ -24,10 +24,10 @@ internal class TempNpc : Character
         Data.Attribute[(byte)Attribute.Vitality],
         Data.Attribute[(byte)Attribute.Intelligence]);
 
-    public TempNpc(byte index, TempMap map, Npc data)
+    public NpcInstance(byte index, MapInstance mapInstance, Npc data)
     {
         Index = index;
-        Map = map;
+        MapInstance = mapInstance;
         Data = data;
     }
 }

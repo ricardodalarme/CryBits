@@ -29,41 +29,41 @@ internal static class MapSender
         for (var i = 0; i < Account.List.Count; i++)
             if (Account.List[i].IsPlaying)
                 if (player != Account.List[i].Character)
-                    if (Account.List[i].Character.Map == player.Map)
+                    if (Account.List[i].Character.MapInstance == player.MapInstance)
                         Send.ToPlayer(player, PlayerDataCache(Account.List[i].Character));
-        Send.ToMap(player.Map, PlayerDataCache(player));
+        Send.ToMap(player.MapInstance, PlayerDataCache(player));
     }
 
-    public static void MapItems(Player player, TempMap map)
+    public static void MapItems(Player player, MapInstance mapInstance)
     {
-        var packet = new MapItemsPacket { Items = new PacketsMapItem[map.Item.Count] };
-        for (byte i = 0; i < map.Item.Count; i++)
+        var packet = new MapItemsPacket { Items = new PacketsMapItem[mapInstance.Item.Count] };
+        for (byte i = 0; i < mapInstance.Item.Count; i++)
         {
             packet.Items[i] = new PacketsMapItem
             {
-                ItemId = map.Item[i].Item.GetId(),
-                X = map.Item[i].X,
-                Y = map.Item[i].Y
+                ItemId = mapInstance.Item[i].Item.GetId(),
+                X = mapInstance.Item[i].X,
+                Y = mapInstance.Item[i].Y
             };
         }
 
         Send.ToPlayer(player, packet);
     }
 
-    public static void MapItems(TempMap map)
+    public static void MapItems(MapInstance mapInstance)
     {
-        var packet = new MapItemsPacket { Items = new PacketsMapItem[map.Item.Count] };
-        for (byte i = 0; i < map.Item.Count; i++)
+        var packet = new MapItemsPacket { Items = new PacketsMapItem[mapInstance.Item.Count] };
+        for (byte i = 0; i < mapInstance.Item.Count; i++)
         {
             packet.Items[i] = new PacketsMapItem
             {
-                ItemId = map.Item[i].Item.GetId(),
-                X = map.Item[i].X,
-                Y = map.Item[i].Y
+                ItemId = mapInstance.Item[i].Item.GetId(),
+                X = mapInstance.Item[i].X,
+                Y = mapInstance.Item[i].Y
             };
         }
 
-        Send.ToMap(map, packet);
+        Send.ToMap(mapInstance, packet);
     }
 
     private static PlayerDataPacket PlayerDataCache(Player player)
@@ -73,7 +73,7 @@ internal static class MapSender
             Name = player.Name,
             TextureNum = player.TextureNum,
             Level = player.Level,
-            MapId = player.Map.GetId(),
+            MapId = player.MapInstance.GetId(),
             X = player.X,
             Y = player.Y,
             Direction = (byte)player.Direction,

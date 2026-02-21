@@ -43,10 +43,10 @@ internal static class EquipmentSystem
 
         if (!InventorySystem.GiveItem(player, player.Equipment[equipSlot], 1))
         {
-            if (player.Map.Item.Count == Config.MaxMapItems) return;
+            if (player.MapInstance.Item.Count == Config.MaxMapItems) return;
 
-            player.Map.Item.Add(new TempMapItems(player.Equipment[equipSlot], 1, player.X, player.Y));
-            MapSender.MapItems(player.Map);
+            player.MapInstance.Item.Add(new MapItemInstance(player.Equipment[equipSlot], 1, player.X, player.Y));
+            MapSender.MapItems(player.MapInstance);
             PlayerSender.PlayerInventory(player);
         }
 

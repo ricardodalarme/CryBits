@@ -16,13 +16,13 @@ internal static class MapItemSystem
     /// Clears and respawns all static map items when the 300-second timer has elapsed.
     /// No-ops if the map has no players or the timer has not fired yet.
     /// </summary>
-    public static void Tick(TempMap map)
+    public static void Tick(MapInstance mapInstance)
     {
-        if (!map.HasPlayers()) return;
+        if (!mapInstance.HasPlayers()) return;
         if (Environment.TickCount64 <= Loop.TimerMapItems + 300000) return;
 
-        map.Item = [];
-        map.SpawnItems();
-        MapSender.MapItems(map);
+        mapInstance.Item = [];
+        mapInstance.SpawnItems();
+        MapSender.MapItems(mapInstance);
     }
 }

@@ -13,68 +13,68 @@ internal static class NpcSender
         Send.ToPlayer(account, new NpcsPacket { List = Npc.List });
     }
 
-    public static void MapNpcs(Player player, TempMap map)
+    public static void MapNpcs(Player player, MapInstance mapInstance)
     {
-        var packet = new MapNpcsPacket { Npcs = new PacketsMapNpc[map.Npc.Length] };
-        for (byte i = 0; i < map.Npc.Length; i++)
+        var packet = new MapNpcsPacket { Npcs = new PacketsMapNpc[mapInstance.Npc.Length] };
+        for (byte i = 0; i < mapInstance.Npc.Length; i++)
         {
             packet.Npcs[i] = new PacketsMapNpc
             {
-                NpcId = map.Npc[i].Data.GetId(),
-                X = map.Npc[i].X,
-                Y = map.Npc[i].Y,
-                Direction = (byte)map.Npc[i].Direction,
+                NpcId = mapInstance.Npc[i].Data.GetId(),
+                X = mapInstance.Npc[i].X,
+                Y = mapInstance.Npc[i].Y,
+                Direction = (byte)mapInstance.Npc[i].Direction,
                 Vital = new short[(byte)Vital.Count]
             };
-            for (byte n = 0; n < (byte)Vital.Count; n++) packet.Npcs[i].Vital[n] = map.Npc[i].Vital[n];
+            for (byte n = 0; n < (byte)Vital.Count; n++) packet.Npcs[i].Vital[n] = mapInstance.Npc[i].Vital[n];
         }
 
         Send.ToPlayer(player, packet);
     }
 
-    public static void MapNpc(TempNpc npc)
+    public static void MapNpc(NpcInstance npcInstance)
     {
         var packet = new MapNpcPacket
         {
-            Index = npc.Index,
-            NpcId = npc.Data.GetId(),
-            X = npc.X,
-            Y = npc.Y,
-            Direction = (byte)npc.Direction,
+            Index = npcInstance.Index,
+            NpcId = npcInstance.Data.GetId(),
+            X = npcInstance.X,
+            Y = npcInstance.Y,
+            Direction = (byte)npcInstance.Direction,
             Vital = new short[(byte)Vital.Count]
         };
-        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npc.Vital[n];
-        Send.ToMap(npc.Map, packet);
+        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
+        Send.ToMap(npcInstance.MapInstance, packet);
     }
 
-    public static void MapNpcMovement(TempNpc npc, byte movement)
+    public static void MapNpcMovement(NpcInstance npcInstance, byte movement)
     {
-        Send.ToMap(npc.Map,
+        Send.ToMap(npcInstance.MapInstance,
             new MapNpcMovementPacket
-            { Index = npc.Index, X = npc.X, Y = npc.Y, Direction = (byte)npc.Direction, Movement = movement });
+            { Index = npcInstance.Index, X = npcInstance.X, Y = npcInstance.Y, Direction = (byte)npcInstance.Direction, Movement = movement });
     }
 
-    public static void MapNpcDirection(TempNpc npc)
+    public static void MapNpcDirection(NpcInstance npcInstance)
     {
-        Send.ToMap(npc.Map,
-            new MapNpcDirectionPacket { Index = npc.Index, Direction = (byte)npc.Direction });
+        Send.ToMap(npcInstance.MapInstance,
+            new MapNpcDirectionPacket { Index = npcInstance.Index, Direction = (byte)npcInstance.Direction });
     }
 
-    public static void MapNpcVitals(TempNpc npc)
+    public static void MapNpcVitals(NpcInstance npcInstance)
     {
-        var packet = new MapNpcVitalsPacket { Index = npc.Index, Vital = new short[(byte)Vital.Count] };
-        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npc.Vital[n];
-        Send.ToMap(npc.Map, packet);
+        var packet = new MapNpcVitalsPacket { Index = npcInstance.Index, Vital = new short[(byte)Vital.Count] };
+        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
+        Send.ToMap(npcInstance.MapInstance, packet);
     }
 
-    public static void MapNpcAttack(TempNpc npc, string victim = "", Target victimType = 0)
+    public static void MapNpcAttack(NpcInstance npcInstance, string victim = "", Target victimType = 0)
     {
-        Send.ToMap(npc.Map,
-            new MapNpcAttackPacket { Index = npc.Index, Victim = victim, VictimType = (byte)victimType });
+        Send.ToMap(npcInstance.MapInstance,
+            new MapNpcAttackPacket { Index = npcInstance.Index, Victim = victim, VictimType = (byte)victimType });
     }
 
-    public static void MapNpcDied(TempNpc npc)
+    public static void MapNpcDied(NpcInstance npcInstance)
     {
-        Send.ToMap(npc.Map, new MapNpcDiedPacket { Index = npc.Index });
+        Send.ToMap(npcInstance.MapInstance, new MapNpcDiedPacket { Index = npcInstance.Index });
     }
 }

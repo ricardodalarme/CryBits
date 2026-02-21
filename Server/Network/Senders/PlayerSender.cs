@@ -23,14 +23,14 @@ internal static class PlayerSender
         Send.ToPlayer(player, new JoinMapPacket());
     }
 
-    public static void PlayerLeaveMap(Player player, TempMap map)
+    public static void PlayerLeaveMap(Player player, MapInstance mapInstance)
     {
-        Send.ToMapBut(map, player, new PlayerLeavePacket { Name = player.Name });
+        Send.ToMapBut(mapInstance, player, new PlayerLeavePacket { Name = player.Name });
     }
 
     public static void PlayerPosition(Player player)
     {
-        Send.ToMap(player.Map,
+        Send.ToMap(player.MapInstance,
             new PlayerPositionPacket
             { Name = player.Name, X = player.X, Y = player.Y, Direction = (byte)player.Direction });
     }
@@ -45,7 +45,7 @@ internal static class PlayerSender
             packet.MaxVital[i] = player.MaxVital(i);
         }
 
-        Send.ToMap(player.Map, packet);
+        Send.ToMap(player.MapInstance, packet);
     }
 
     public static void PlayerLeave(Player player)
@@ -55,7 +55,7 @@ internal static class PlayerSender
 
     public static void PlayerMove(Player player, byte movement)
     {
-        Send.ToMapBut(player.Map, player,
+        Send.ToMapBut(player.MapInstance, player,
             new PlayerMovePacket
             {
                 Name = player.Name,
@@ -68,7 +68,7 @@ internal static class PlayerSender
 
     public static void PlayerDirection(Player player)
     {
-        Send.ToMapBut(player.Map, player,
+        Send.ToMapBut(player.MapInstance, player,
             new PlayerDirectionPacket { Name = player.Name, Direction = (byte)player.Direction });
     }
 
@@ -81,7 +81,7 @@ internal static class PlayerSender
 
     public static void PlayerAttack(Player player, string victim = "", Target victimType = 0)
     {
-        Send.ToMap(player.Map,
+        Send.ToMap(player.MapInstance,
             new PlayerAttackPacket { Name = player.Name, Victim = victim, VictimType = (byte)victimType });
     }
 
@@ -90,7 +90,7 @@ internal static class PlayerSender
         var packet = new PlayerEquipmentsPacket
         { Name = player.Name, Equipments = new System.Guid[(byte)Equipment.Count] };
         for (byte i = 0; i < (byte)Equipment.Count; i++) packet.Equipments[i] = player.Equipment[i].GetId();
-        Send.ToMap(player.Map, packet);
+        Send.ToMap(player.MapInstance, packet);
     }
 
     public static void PlayerInventory(Player player)

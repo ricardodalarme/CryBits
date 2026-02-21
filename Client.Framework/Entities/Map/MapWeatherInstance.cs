@@ -5,13 +5,13 @@ using CryBits.Enums;
 using static CryBits.Globals;
 using static CryBits.Utils;
 
-namespace CryBits.Client.Framework.Entities.TempMap;
+namespace CryBits.Client.Framework.Entities.Map;
 
-public class TempMapWeather(MapWeather data)
+public class MapWeatherInstance(MapWeather data)
 {
     private MapWeather Data { get; } = data;
     public byte Lightning { get; set; }
-    public TempMapWeatherParticle[] Particles { get; private set; } = Array.Empty<TempMapWeatherParticle>();
+    public MapWeatherParticleInstance[] Particles { get; private set; } = Array.Empty<MapWeatherParticleInstance>();
 
     private int _snowTimer;
     private int _lightningTimer;
@@ -82,7 +82,7 @@ public class TempMapWeather(MapWeather data)
                 }
 
                 // Reset particle when out of bounds
-                if (Particles[i].X > ScreenWidth || Particles[i].Y > ScreenHeight) Particles[i] = new TempMapWeatherParticle();
+                if (Particles[i].X > ScreenWidth || Particles[i].Y > ScreenHeight) Particles[i] = new MapWeatherParticleInstance();
             }
 
         // Thunderstorm logic
@@ -119,10 +119,10 @@ public class TempMapWeather(MapWeather data)
                 Sound.Play(Sounds.Rain, true);
 
                 // Allocate particle array for rain.
-                Particles = new TempMapWeatherParticle[MaxRainParticles + 1];
+                Particles = new MapWeatherParticleInstance[MaxRainParticles + 1];
                 break;
             case Weather.Snowing:
-                Particles = new TempMapWeatherParticle[MaxSnowParticles + 1];
+                Particles = new MapWeatherParticleInstance[MaxSnowParticles + 1];
                 break;
         }
     }

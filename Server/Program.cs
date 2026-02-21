@@ -42,8 +42,8 @@ internal static class Program
         _ = new GameWorld();
 
         // Create temporary maps.
-        Console.WriteLine("Creating temporary maps.");
-        foreach (var map in Map.List.Values) MapInstance.CreateTemporary(map, true);
+        Console.WriteLine("Creating map instances.");
+        foreach (var map in Map.List.Values) MapInstance.Create(map, true);
 
         // Initialize network sockets.
         Socket.Init();

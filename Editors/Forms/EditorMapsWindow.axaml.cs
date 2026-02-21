@@ -319,7 +319,7 @@ internal partial class EditorMapsWindow : Window
         RefreshNpcList();
 
 
-        TempMap.UpdateWeatherType();
+        MapInstance.UpdateWeatherType();
 
         // Auto-tile maths
         map.Update();
@@ -1192,7 +1192,7 @@ internal partial class EditorMapsWindow : Window
     {
         if (_loading || _selected == null) return;
         _selected.Weather.Type = (Weather)cmbWeather.SelectedIndex;
-        TempMap.UpdateWeatherType();
+        MapInstance.UpdateWeatherType();
     }
 
     private void numWeatherIntensity_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)

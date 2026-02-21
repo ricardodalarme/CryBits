@@ -1,9 +1,9 @@
 using CryBits.Client.Framework.Graphics;
 using CryBits.Entities.Map;
 
-namespace CryBits.Client.Framework.Entities.TempMap;
+namespace CryBits.Client.Framework.Entities.Map;
 
-public class TempMapFog(MapFog map)
+public class MapFogInstance(MapFog map)
 {
     private MapFog Data { get; } = map;
     public int X { get; set; }

@@ -1,8 +1,8 @@
 using CryBits.Entities;
 
-namespace CryBits.Client.Entities.TempMap;
+namespace CryBits.Client.Entities;
 
-internal class TempMapItems
+internal class MapItemInstance
 {
     public Item Item;
     public byte X;

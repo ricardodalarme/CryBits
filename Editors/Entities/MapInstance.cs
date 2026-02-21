@@ -1,6 +1,6 @@
 using System;
 using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Entities.TempMap;
+using CryBits.Client.Framework.Entities.Map;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Forms;
 using CryBits.Entities.Map;
@@ -11,7 +11,7 @@ using Sound = CryBits.Client.Framework.Audio.Sound;
 
 namespace CryBits.Editors.Entities;
 
-internal static class TempMap
+internal static class MapInstance
 {
     private static int _fogXTimer;
     private static int _fogYTimer;
@@ -21,7 +21,7 @@ internal static class TempMap
     public static int FogX;
     public static int FogY;
 
-    public static TempMapWeatherParticle[] Weather = Array.Empty<TempMapWeatherParticle>();
+    public static MapWeatherParticleInstance[] Weather = Array.Empty<MapWeatherParticleInstance>();
     public static byte Lightning;
 
     /// <summary>
@@ -33,8 +33,8 @@ internal static class TempMap
         if (win?.SelectedMap != null)
             Weather = win.SelectedMap.Weather.Type switch
             {
-                Enums.Weather.Thundering or Enums.Weather.Raining => new TempMapWeatherParticle[MaxRainParticles + 1],
-                Enums.Weather.Snowing => new TempMapWeatherParticle[MaxSnowParticles + 1],
+                Enums.Weather.Thundering or Enums.Weather.Raining => new MapWeatherParticleInstance[MaxRainParticles + 1],
+                Enums.Weather.Snowing => new MapWeatherParticleInstance[MaxSnowParticles + 1],
                 _ => Weather
             };
     }
@@ -170,7 +170,7 @@ internal static class TempMap
                 }
 
                 if (Weather[i].X > Map.Width * Grid || Weather[i].Y > Map.Height * Grid)
-                    Weather[i] = new TempMapWeatherParticle();
+                    Weather[i] = new MapWeatherParticleInstance();
             }
 
         if (weather.Type == Enums.Weather.Thundering)

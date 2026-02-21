@@ -76,15 +76,15 @@ internal static class InventorySystem
     /// </summary>
     public static void DropItem(Player player, ItemSlot slot, short amount)
     {
-        if (player.Map.Item.Count == Config.MaxMapItems) return;
+        if (player.MapInstance.Item.Count == Config.MaxMapItems) return;
         if (slot.Item == null) return;
         if (slot.Item.Bind == BindOn.Pickup) return;
         if (player.Trade != null) return;
 
         if (amount > slot.Amount) amount = slot.Amount;
 
-        player.Map.Item.Add(new TempMapItems(slot.Item, amount, player.X, player.Y));
-        MapSender.MapItems(player.Map);
+        player.MapInstance.Item.Add(new MapItemInstance(slot.Item, amount, player.X, player.Y));
+        MapSender.MapItems(player.MapInstance);
         TakeItem(player, slot, amount);
     }
 
@@ -140,13 +140,13 @@ internal static class InventorySystem
     /// </summary>
     public static void CollectItem(Player player)
     {
-        var mapItem = player.Map.HasItem(player.X, player.Y);
+        var mapItem = player.MapInstance.HasItem(player.X, player.Y);
         if (mapItem == null) return;
 
         if (GiveItem(player, mapItem.Item, mapItem.Amount))
         {
-            player.Map.Item.Remove(mapItem);
-            MapSender.MapItems(player.Map);
+            player.MapInstance.Item.Remove(mapItem);
+            MapSender.MapItems(player.MapInstance);
         }
     }
 }

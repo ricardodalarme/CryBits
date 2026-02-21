@@ -24,19 +24,19 @@ internal static class CombatSystem
         if (player.Trade != null) return;
         if (player.Shop != null) return;
         if (Environment.TickCount64 < player.AttackTimer + AttackSpeed) return;
-        if (player.Map.TileBlocked(player.X, player.Y, player.Direction, false)) goto @continue;
+        if (player.MapInstance.TileBlocked(player.X, player.Y, player.Direction, false)) goto @continue;
 
-        Character victim = player.Map.HasPlayer(nextX, nextY);
+        Character victim = player.MapInstance.HasPlayer(nextX, nextY);
         if (victim != null)
         {
             PlayerAttackPlayer(player, (Player)victim);
             return;
         }
 
-        victim = player.Map.HasNpc(nextX, nextY);
+        victim = player.MapInstance.HasNpc(nextX, nextY);
         if (victim != null)
         {
-            PlayerAttackNpc(player, (TempNpc)victim);
+            PlayerAttackNpc(player, (NpcInstance)victim);
             return;
         }
 
@@ -48,7 +48,7 @@ internal static class CombatSystem
     private static void PlayerAttackPlayer(Player attacker, Player victim)
     {
         if (victim.GettingMap) return;
-        if (attacker.Map.Data.Moral == (byte)Moral.Pacific)
+        if (attacker.MapInstance.Data.Moral == (byte)Moral.Pacific)
         {
             ChatSender.Message(attacker, "This is a peaceful area.", Color.White);
             return;
@@ -76,7 +76,7 @@ internal static class CombatSystem
             PlayerSender.PlayerAttack(attacker);
     }
 
-    private static void PlayerAttackNpc(Player attacker, TempNpc victim)
+    private static void PlayerAttackNpc(Player attacker, NpcInstance victim)
     {
         if (victim.Target != attacker && !string.IsNullOrEmpty(victim.Data.SayMsg))
             ChatSender.Message(attacker, victim.Data.Name + ": " + victim.Data.SayMsg, Color.White);
@@ -126,23 +126,23 @@ internal static class CombatSystem
             player.Class.SpawnY);
     }
 
-    /// <summary>Initiates an attack for <paramref name="npc"/> against its current target.</summary>
-    internal static void Attack(TempNpc npc)
+    /// <summary>Initiates an attack for <paramref name="npcInstance"/> against its current target.</summary>
+    internal static void Attack(NpcInstance npcInstance)
     {
-        byte nextX = npc.X, nextY = npc.Y;
-        NextTile(npc.Direction, ref nextX, ref nextY);
+        byte nextX = npcInstance.X, nextY = npcInstance.Y;
+        NextTile(npcInstance.Direction, ref nextX, ref nextY);
 
-        if (!npc.Alive) return;
-        if (Environment.TickCount64 < npc.AttackTimer + AttackSpeed) return;
-        if (npc.Map.TileBlocked(npc.X, npc.Y, npc.Direction, false)) return;
+        if (!npcInstance.Alive) return;
+        if (Environment.TickCount64 < npcInstance.AttackTimer + AttackSpeed) return;
+        if (npcInstance.MapInstance.TileBlocked(npcInstance.X, npcInstance.Y, npcInstance.Direction, false)) return;
 
-        if (npc.Target is Player)
-            NpcAttackPlayer(npc, npc.Map.HasPlayer(nextX, nextY));
-        else if (npc.Target is TempNpc)
-            NpcAttackNpc(npc, npc.Map.HasNpc(nextX, nextY));
+        if (npcInstance.Target is Player)
+            NpcAttackPlayer(npcInstance, npcInstance.MapInstance.HasPlayer(nextX, nextY));
+        else if (npcInstance.Target is NpcInstance)
+            NpcAttackNpc(npcInstance, npcInstance.MapInstance.HasNpc(nextX, nextY));
     }
 
-    private static void NpcAttackPlayer(TempNpc attacker, Player victim)
+    private static void NpcAttackPlayer(NpcInstance attacker, Player victim)
     {
         if (victim == null) return;
         if (victim.GettingMap) return;
@@ -169,7 +169,7 @@ internal static class CombatSystem
             NpcSender.MapNpcAttack(attacker);
     }
 
-    private static void NpcAttackNpc(TempNpc attacker, TempNpc victim)
+    private static void NpcAttackNpc(NpcInstance attacker, NpcInstance victim)
     {
         if (victim == null) return;
         if (!victim.Alive) return;
@@ -199,19 +199,19 @@ internal static class CombatSystem
             NpcSender.MapNpcAttack(attacker);
     }
 
-    /// <summary>Kills <paramref name="npc"/>: drops items, resets spawn state, notifies the map.</summary>
-    internal static void Died(TempNpc npc)
+    /// <summary>Kills <paramref name="npcInstance"/>: drops items, resets spawn state, notifies the map.</summary>
+    internal static void Died(NpcInstance npcInstance)
     {
-        for (byte i = 0; i < npc.Data.Drop.Count; i++)
-            if (npc.Data.Drop[i].Item != null)
-                if (MyRandom.Next(1, 99) <= npc.Data.Drop[i].Chance)
-                    npc.Map.Item.Add(new TempMapItems(npc.Data.Drop[i].Item, npc.Data.Drop[i].Amount, npc.X, npc.Y));
+        for (byte i = 0; i < npcInstance.Data.Drop.Count; i++)
+            if (npcInstance.Data.Drop[i].Item != null)
+                if (MyRandom.Next(1, 99) <= npcInstance.Data.Drop[i].Chance)
+                    npcInstance.MapInstance.Item.Add(new MapItemInstance(npcInstance.Data.Drop[i].Item, npcInstance.Data.Drop[i].Amount, npcInstance.X, npcInstance.Y));
 
-        MapSender.MapItems(npc.Map);
+        MapSender.MapItems(npcInstance.MapInstance);
 
-        npc.SpawnTimer = Environment.TickCount64;
-        npc.Target = null;
-        npc.Alive = false;
-        NpcSender.MapNpcDied(npc);
+        npcInstance.SpawnTimer = Environment.TickCount64;
+        npcInstance.Target = null;
+        npcInstance.Alive = false;
+        NpcSender.MapNpcDied(npcInstance);
     }
 }

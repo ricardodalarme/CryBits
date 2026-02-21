@@ -1,12 +1,10 @@
 using System.IO;
 using CryBits.Client.Entities;
-using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities;
-using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 
@@ -33,8 +31,8 @@ internal static class MapHandler
             if (!CryBits.Entities.Map.Map.List.ContainsKey(id))
             {
                 MapRepository.Read(id);
-                TempMap.Current.Weather.Update();
-                TempMap.Current.Data.Update();
+                MapInstance.Current.Weather.Update();
+                MapInstance.Current.Data.Update();
             }
 
             if (CryBits.Entities.Map.Map.List[id].Revision != currentRevision)
@@ -47,7 +45,7 @@ internal static class MapHandler
         MapSender.RequestMap(needed);
 
         // Clear blood splatters
-        TempMap.Current.Blood = [];
+        MapInstance.Current.Blood = [];
     }
 
     [PacketHandler]
@@ -61,38 +59,38 @@ internal static class MapHandler
         else
         {
             CryBits.Entities.Map.Map.List.Add(id, map);
-            TempMap.List.Add(id, new TempMap(map));
+            MapInstance.List.Add(id, new MapInstance(map));
         }
 
-        TempMap.Current = TempMap.List[id];
+        MapInstance.Current = MapInstance.List[id];
 
         // Persist map to disk
         MapRepository.Write(map);
 
         // Update weather particles and map state
-        TempMap.Current.Weather.UpdateType();
-        TempMap.Current.Data.Update();
+        MapInstance.Current.Weather.UpdateType();
+        MapInstance.Current.Data.Update();
     }
 
     [PacketHandler]
     internal static void JoinMap(JoinMapPacket _)
     {
         // Play map background music if present
-        if (string.IsNullOrEmpty(TempMap.Current.Data.Music))
+        if (string.IsNullOrEmpty(MapInstance.Current.Data.Music))
             Music.Stop();
         else
-            Music.Play(TempMap.Current.Data.Music);
+            Music.Play(MapInstance.Current.Data.Music);
     }
 
     [PacketHandler]
     internal static void MapItems(MapItemsPacket packet)
     {
         // Item count
-        TempMap.Current.Item = new TempMapItems[packet.Items.Length];
+        MapInstance.Current.Item = new MapItemInstance[packet.Items.Length];
 
         // Read all map items
-        for (byte i = 0; i < TempMap.Current.Item.Length; i++)
-            TempMap.Current.Item[i] = new TempMapItems
+        for (byte i = 0; i < MapInstance.Current.Item.Length; i++)
+            MapInstance.Current.Item[i] = new MapItemInstance
             {
                 Item = Item.List.Get(packet.Items[i].ItemId),
                 X = packet.Items[i].X,

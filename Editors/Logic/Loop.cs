@@ -24,8 +24,8 @@ internal static class Loop
 
             Socket.HandleData();
 
-            TempMap.UpdateFog();
-            TempMap.UpdateWeather();
+            MapInstance.UpdateFog();
+            MapInstance.UpdateWeather();
             MapsMusic();
 
             Renders.Present();

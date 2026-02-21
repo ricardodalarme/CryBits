@@ -1,6 +1,5 @@
 using System;
 using CryBits.Client.Entities;
-using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework.Constants;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
@@ -31,7 +30,7 @@ internal static class PlayerHandler
 
         player.TextureNum = packet.TextureNum;
         player.Level = packet.Level;
-        player.Map = TempMap.List[packet.MapId];
+        player.MapInstance = MapInstance.List[packet.MapId];
         player.X = packet.X;
         player.Y = packet.Y;
         player.Direction = (Direction)packet.Direction;
@@ -43,7 +42,7 @@ internal static class PlayerHandler
 
         for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = packet.Attribute[n];
         for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(packet.Equipment[n]);
-        TempMap.Current = player.Map;
+        MapInstance.Current = player.MapInstance;
     }
 
     [PacketHandler]
@@ -131,13 +130,13 @@ internal static class PlayerHandler
             {
                 var victimData = Player.Get(victim);
                 victimData.Hurt = Environment.TickCount;
-                TempMap.Current.Blood.Add(new TempMapBlood((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
+                MapInstance.Current.Blood.Add(new MapBloodInstance((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
             }
             else if (victimType == (byte)Target.Npc)
             {
-                TempMap.Current.Npc[byte.Parse(victim)].Hurt = Environment.TickCount;
-                TempMap.Current.Blood.Add(new TempMapBlood((byte)MyRandom.Next(0, 3),
-                    TempMap.Current.Npc[byte.Parse(victim)].X, TempMap.Current.Npc[byte.Parse(victim)].Y, 255));
+                MapInstance.Current.Npc[byte.Parse(victim)].Hurt = Environment.TickCount;
+                MapInstance.Current.Blood.Add(new MapBloodInstance((byte)MyRandom.Next(0, 3),
+                    MapInstance.Current.Npc[byte.Parse(victim)].X, MapInstance.Current.Npc[byte.Parse(victim)].Y, 255));
             }
     }
 

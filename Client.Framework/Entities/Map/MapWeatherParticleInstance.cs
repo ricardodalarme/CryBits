@@ -1,6 +1,6 @@
-namespace CryBits.Client.Framework.Entities.TempMap;
+namespace CryBits.Client.Framework.Entities.Map;
 
-public struct TempMapWeatherParticle
+public struct MapWeatherParticleInstance
 {
     public bool Visible { get; set; }
     public int X { get; set; }

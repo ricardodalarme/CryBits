@@ -1,6 +1,5 @@
 using System;
 using CryBits.Client.Entities;
-using CryBits.Client.Entities.TempMap;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
@@ -27,7 +26,7 @@ internal static class AccountHandler
         Shop.List = [];
         Npc.List = [];
         Map.List = [];
-        TempMap.List = [];
+        MapInstance.List = [];
 
         // Initialize local player from server data
         Player.Me = new Me(packet.Name);

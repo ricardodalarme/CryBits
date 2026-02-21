@@ -259,7 +259,7 @@ internal static class Renders
         for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
             for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
             {
-                var position = new Point(x * textureSize.Width + TempMap.FogX, y * textureSize.Height + TempMap.FogY);
+                var position = new Point(x * textureSize.Width + MapInstance.FogX, y * textureSize.Height + MapInstance.FogY);
                 Render(WinMapRT!, Textures.Fogs[map.Fog.Texture], win.ZoomRect(new Rectangle(position, textureSize)),
                     new Color(255, 255, 255, map.Fog.Alpha));
             }
@@ -273,10 +273,10 @@ internal static class Renders
         byte x = 0;
         if (map.Weather.Type == Weather.Snowing) x = 32;
 
-        for (var i = 0; i < TempMap.Weather.Length; i++)
-            if (TempMap.Weather[i].Visible)
+        for (var i = 0; i < MapInstance.Weather.Length; i++)
+            if (MapInstance.Weather[i].Visible)
                 Render(WinMapRT!, Textures.Weather, new Rectangle(x, 0, 32, 32),
-                    win.ZoomRect(new Rectangle(TempMap.Weather[i].X, TempMap.Weather[i].Y, 32, 32)),
+                    win.ZoomRect(new Rectangle(MapInstance.Weather[i].X, MapInstance.Weather[i].Y, 32, 32)),
                     new Color(255, 255, 255, 150));
     }
 

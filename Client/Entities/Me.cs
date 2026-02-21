@@ -53,7 +53,7 @@ internal class Me(string name) : Player(name)
         }
 
         // Cancel if next tile is blocked.
-        if (Map.TileBlocked(X, Y, direction)) return;
+        if (MapInstance.TileBlocked(X, Y, direction)) return;
 
         // Choose movement speed (walk/run).
         if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Renders.RenderWindow.HasFocus())
@@ -113,8 +113,8 @@ internal class Me(string name) : Player(name)
         if (TextBox.Focused != null) return;
 
         // Check for an item at the player's tile.
-        for (byte i = 0; i < TempMap.TempMap.Current.Item.Length; i++)
-            if (TempMap.TempMap.Current.Item[i].X == X && TempMap.TempMap.Current.Item[i].Y == Y)
+        for (byte i = 0; i < MapInstance.Current.Item.Length; i++)
+            if (MapInstance.Current.Item[i].X == X && MapInstance.Current.Item[i].Y == Y)
                 hasItem = true;
 
         // Check for a free inventory slot.

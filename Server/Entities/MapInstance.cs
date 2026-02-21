@@ -10,12 +10,12 @@ using static CryBits.Utils;
 
 namespace CryBits.Server.Entities;
 
-internal class TempMap(Guid id, Map map) : Entity(id)
+internal class MapInstance(Guid id, Map map) : Entity(id)
 {
     // Map data and runtime caches.
     public readonly Map Data = map;
-    public TempNpc[] Npc = Array.Empty<TempNpc>();
-    public List<TempMapItems> Item = [];
+    public NpcInstance[] Npc = Array.Empty<NpcInstance>();
+    public List<MapItemInstance> Item = [];
 
     public void Logic()
     {
@@ -25,7 +25,7 @@ internal class TempMap(Guid id, Map map) : Entity(id)
         for (byte j = 0; j < Npc.Length; j++) NpcAiSystem.Tick(Npc[j]);
     }
 
-    public TempNpc HasNpc(byte x, byte y)
+    public NpcInstance HasNpc(byte x, byte y)
     {
         // Return NPC at the given coordinates if present
         for (byte i = 0; i < Npc.Length; i++)
@@ -41,7 +41,7 @@ internal class TempMap(Guid id, Map map) : Entity(id)
         // Return player at the given coordinates if present
         foreach (var account in Account.List)
             if (account.IsPlaying)
-                if ((account.Character.X, account.Character.Y, account.Character.Map) == (x, y, this))
+                if ((account.Character.X, account.Character.Y, Map: account.Character.MapInstance) == (x, y, this))
                     return account.Character;
 
         return null;
@@ -52,13 +52,13 @@ internal class TempMap(Guid id, Map map) : Entity(id)
         // Return true if any player is on this map.
         foreach (var account in Account.List)
             if (account.IsPlaying)
-                if (account.Character.Map == this)
+                if (account.Character.MapInstance == this)
                     return true;
 
         return false;
     }
 
-    public TempMapItems HasItem(byte x, byte y)
+    public MapItemInstance HasItem(byte x, byte y)
     {
         // Return item at the given coordinates if present.
         for (var i = Item.Count - 1; i >= 0; i--)
@@ -75,7 +75,7 @@ internal class TempMap(Guid id, Map map) : Entity(id)
             for (byte y = 0; y < Map.Height; y++)
                 if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
                     // Add map item.
-                    Item.Add(new TempMapItems(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)),
+                    Item.Add(new MapItemInstance(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)),
                         Data.Attribute[x, y].Data2, x, y));
     }
 
@@ -94,17 +94,17 @@ internal class TempMap(Guid id, Map map) : Entity(id)
         return false;
     }
 
-    public static void CreateTemporary(Map map, bool isOriginal)
+    public static void Create(Map map, bool isOriginal)
     {
         var id = isOriginal ? map.Id : Guid.NewGuid();
-        var tempMap = new TempMap(id, map);
+        var tempMap = new MapInstance(id, map);
         GameWorld.Current.Maps.Add(id, tempMap);
 
         // Initialize NPCs for the map.
-        tempMap.Npc = new TempNpc[map.Npc.Count];
+        tempMap.Npc = new NpcInstance[map.Npc.Count];
         for (byte i = 0; i < tempMap.Npc.Length; i++)
         {
-            tempMap.Npc[i] = new TempNpc(i, tempMap, map.Npc[i].Npc);
+            tempMap.Npc[i] = new NpcInstance(i, tempMap, map.Npc[i].Npc);
             NpcAiSystem.Spawn(tempMap.Npc[i]);
         }
 

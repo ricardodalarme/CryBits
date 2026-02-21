@@ -3,7 +3,7 @@ using CryBits.Entities.Npc;
 
 namespace CryBits.Client.Entities;
 
-internal class TempNpc : Character
+internal class NpcInstance : Character
 {
     public Npc Data { get; set; }
 

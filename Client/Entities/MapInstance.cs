@@ -1,35 +1,35 @@
 using System;
 using System.Collections.Generic;
-using CryBits.Client.Framework.Entities.TempMap;
+using CryBits.Client.Framework.Entities.Map;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using static CryBits.Utils;
 
-namespace CryBits.Client.Entities.TempMap;
+namespace CryBits.Client.Entities;
 
-internal class TempMap
+internal class MapInstance
 {
     // Current temporary map instance
-    public static TempMap Current;
+    public static MapInstance Current;
 
     // Map collection
-    public static Dictionary<Guid, TempMap> List;
+    public static Dictionary<Guid, MapInstance> List;
 
     // Map data
     public readonly Map Data;
-    public TempNpc[] Npc;
-    public TempMapItems[] Item = Array.Empty<TempMapItems>();
-    public List<TempMapBlood> Blood = [];
-    public TempMapWeather Weather { get; init; }
-    public TempMapFog Fog { get; init; }
+    public NpcInstance[] Npc;
+    public MapItemInstance[] Item = Array.Empty<MapItemInstance>();
+    public List<MapBloodInstance> Blood = [];
+    public MapWeatherInstance Weather { get; init; }
+    public MapFogInstance Fog { get; init; }
 
     private int _bloodTimer;
 
-    public TempMap(Map data)
+    public MapInstance(Map data)
     {
         Data = data;
-        Weather = new TempMapWeather(data.Weather);
-        Fog = new TempMapFog(Data.Fog);
+        Weather = new MapWeatherInstance(data.Weather);
+        Fog = new MapFogInstance(Data.Fog);
     }
 
     private bool HasNpc(byte x, byte y)
@@ -47,7 +47,7 @@ internal class TempMap
     {
         // Check if a player exists at the given tile
         for (byte i = 0; i < Player.List.Count; i++)
-            if ((Player.List[i].X, Player.List[i].Y, Player.List[i].Map) == (x, y, this))
+            if ((Player.List[i].X, Player.List[i].Y, Map: Player.List[i].MapInstance) == (x, y, this))
                 return true;
 
         return false;

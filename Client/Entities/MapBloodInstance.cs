@@ -1,6 +1,6 @@
-namespace CryBits.Client.Entities.TempMap;
+namespace CryBits.Client.Entities;
 
-internal class TempMapBlood(byte textureNum, short x, short y, byte opacity)
+internal class MapBloodInstance(byte textureNum, short x, short y, byte opacity)
 {
     public byte TextureNum = textureNum;
     public short X = x;

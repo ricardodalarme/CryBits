@@ -31,7 +31,7 @@ internal static class CharacterRepository
         account.Character.Genre = data.ReadBoolean();
         account.Character.Experience = data.ReadInt32();
         account.Character.Points = data.ReadByte();
-        account.Character.Map = GameWorld.Current.Maps.Get(new Guid(data.ReadString()));
+        account.Character.MapInstance = GameWorld.Current.Maps.Get(new Guid(data.ReadString()));
         account.Character.X = data.ReadByte();
         account.Character.Y = data.ReadByte();
         account.Character.Direction = (Direction)data.ReadByte();
@@ -81,7 +81,7 @@ internal static class CharacterRepository
         data.Write(account.Character.Genre);
         data.Write(account.Character.Experience);
         data.Write(account.Character.Points);
-        data.Write(account.Character.Map.GetId());
+        data.Write(account.Character.MapInstance.GetId());
         data.Write(account.Character.X);
         data.Write(account.Character.Y);
         data.Write((byte)account.Character.Direction);
