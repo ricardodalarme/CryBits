@@ -14,7 +14,7 @@ namespace CryBits.Client.Network.Handlers;
 
 internal static class MapHandler
 {
-    [PacketHandler(ServerPacket.MapRevision)]
+    [PacketHandler]
     internal static void MapRevision(MapRevisionPacket packet)
     {
         var needed = false;
@@ -50,7 +50,7 @@ internal static class MapHandler
         TempMap.Current.Blood = [];
     }
 
-    [PacketHandler(ServerPacket.Map)]
+    [PacketHandler]
     internal static void Map(MapPacket packet)
     {
         var map = packet.Map;
@@ -74,8 +74,8 @@ internal static class MapHandler
         TempMap.Current.Data.Update();
     }
 
-    [PacketHandler(ServerPacket.JoinMap)]
-    internal static void JoinMap()
+    [PacketHandler]
+    internal static void JoinMap(JoinMapPacket _)
     {
         // Play map background music if present
         if (string.IsNullOrEmpty(TempMap.Current.Data.Music))
@@ -84,7 +84,7 @@ internal static class MapHandler
             Music.Play(TempMap.Current.Data.Music);
     }
 
-    [PacketHandler(ServerPacket.MapItems)]
+    [PacketHandler]
     internal static void MapItems(MapItemsPacket packet)
     {
         // Item count

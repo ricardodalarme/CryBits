@@ -1,4 +1,3 @@
-using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Client;
 using LiteNetLib;
@@ -8,10 +7,9 @@ namespace CryBits.Client.Network;
 
 internal static class Send
 {
-    public static void Packet(ClientPacket packetId, IClientPacket packet)
+    public static void Packet(IClientPacket packet)
     {
         var data = new NetDataWriter();
-        data.Put((byte)packetId);
         data.WriteObject(packet);
         Socket.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
     }

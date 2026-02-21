@@ -1,4 +1,3 @@
-using CryBits.Enums;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 
@@ -22,11 +21,11 @@ internal static class AccountSender
             };
         }
 
-        Send.ToPlayer(account, ServerPacket.Characters, packet);
+        Send.ToPlayer(account, packet);
     }
 
     public static void CreateCharacter(Account account)
     {
-        Send.ToPlayer(account, ServerPacket.CreateCharacter, new CreateCharacterPacket());
+        Send.ToPlayer(account, new CreateCharacterPacket());
     }
 }

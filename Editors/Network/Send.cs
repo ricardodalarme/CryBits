@@ -3,48 +3,34 @@ using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
-using CryBits.Enums;
+using CryBits.Extensions;
 using CryBits.Packets.Client;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using static CryBits.Extensions.NetworkExtensions;
 using static CryBits.Globals;
 
 namespace CryBits.Editors.Network;
 
 internal static class Send
 {
-    public static void Packet(ClientPacket packetId, IClientPacket packet)
+    public static void Packet(IClientPacket packet)
     {
         var data = new NetDataWriter();
-        data.Put((byte)packetId);
         data.WriteObject(packet);
         Socket.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
-    public static void Connect() => Packet(ClientPacket.Connect, new ConnectPacket { Username = AvaloniaLoginLauncher.Username, Password = AvaloniaLoginLauncher.Password, IsClientAccess = true });
-
-    public static void RequestServerData() => Packet(ClientPacket.WriteSettings, new WriteSettingsPacket());
-
-    public static void RequestClasses() => Packet(ClientPacket.RequestClasses, new RequestClassesPacket());
-
-    public static void RequestMap(Map map) => Packet(ClientPacket.RequestMap, new RequestMapPacket { Id = map.Id });
-
-    public static void RequestNpcs() => Packet(ClientPacket.RequestNpcs, new RequestNpcsPacket());
-
-    public static void RequestItems() => Packet(ClientPacket.RequestItems, new RequestItemsPacket());
-
-    public static void RequestShops() => Packet(ClientPacket.RequestShops, new RequestShopsPacket());
-
-    public static void WriteServerData() => Packet(ClientPacket.WriteSettings, new WriteSettingsPacket { Config = Config });
-
-    public static void WriteClasses() => Packet(ClientPacket.WriteClasses, new WriteClassesPacket { Classes = Class.List });
-
-    public static void WriteMaps() => Packet(ClientPacket.WriteMaps, new WriteMapsPacket { Maps = Map.List });
-
-    public static void WriteNpcs() => Packet(ClientPacket.WriteNpcs, new WriteNpcsPacket { Npcs = Npc.List });
-
-    public static void WriteItems() => Packet(ClientPacket.WriteItems, new WriteItemsPacket { Items = Item.List });
-
-    public static void WriteShops() => Packet(ClientPacket.WriteShops, new WriteShopsPacket { Shops = Shop.List });
+    public static void Connect() => Packet(new ConnectPacket { Username = AvaloniaLoginLauncher.Username, Password = AvaloniaLoginLauncher.Password, IsClientAccess = true });
+    public static void RequestServerData() => Packet(new WriteSettingsPacket());
+    public static void RequestClasses() => Packet(new RequestClassesPacket());
+    public static void RequestMap(Map map) => Packet(new RequestMapPacket { Id = map.Id });
+    public static void RequestNpcs() => Packet(new RequestNpcsPacket());
+    public static void RequestItems() => Packet(new RequestItemsPacket());
+    public static void RequestShops() => Packet(new RequestShopsPacket());
+    public static void WriteServerData() => Packet(new WriteSettingsPacket { Config = Config });
+    public static void WriteClasses() => Packet(new WriteClassesPacket { Classes = Class.List });
+    public static void WriteMaps() => Packet(new WriteMapsPacket { Maps = Map.List });
+    public static void WriteNpcs() => Packet(new WriteNpcsPacket { Npcs = Npc.List });
+    public static void WriteItems() => Packet(new WriteItemsPacket { Items = Item.List });
+    public static void WriteShops() => Packet(new WriteShopsPacket { Shops = Shop.List });
 }

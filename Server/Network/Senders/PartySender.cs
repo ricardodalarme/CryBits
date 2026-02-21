@@ -1,4 +1,3 @@
-using CryBits.Enums;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 
@@ -10,11 +9,11 @@ internal static class PartySender
     {
         var packet = new PartyPacket { Members = new string[player.Party.Count] };
         for (int i = 0; i < player.Party.Count; i++) packet.Members[i] = player.Party[i].Name;
-        Send.ToPlayer(player, ServerPacket.Party, packet);
+        Send.ToPlayer(player, packet);
     }
 
     public static void PartyInvitation(Player player, string playerInvitation)
     {
-        Send.ToPlayer(player, ServerPacket.PartyInvitation, new PartyInvitationPacket { PlayerInvitation = playerInvitation });
+        Send.ToPlayer(player, new PartyInvitationPacket { PlayerInvitation = playerInvitation });
     }
 }

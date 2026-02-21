@@ -11,24 +11,20 @@ using LiteNetLib;
 namespace CryBits.Server.Network;
 
 /// <summary>
-/// Builds a compile-time dispatch table from methods decorated with
-/// <see cref="PacketHandlerAttribute"/>, eliminating the switch statement in
-/// <see cref="Receive"/>.
+/// Builds a type-keyed dispatch table from methods decorated with
+/// <see cref="PacketHandlerAttribute"/>.
 ///
-/// Handler signatures supported (discovered via reflection at startup):
-///   void Method(Account account)
+/// The packet type is inferred from the IClientPacket parameter of each handler:
 ///   void Method(Account account, TPacket packet)
-///   void Method(Player  player)
 ///   void Method(Player  player,  TPacket packet)
 ///
-/// Compiled Expression-tree delegates mean zero reflection overhead per packet
-/// after <see cref="Register"/> has been called.
+/// On receive, BinaryFormatter already embeds full type info, so
+/// packet.GetType() is used as the lookup key — no byte prefix needed.
 /// </summary>
 internal static class PacketDispatcher
 {
-    private static readonly Dictionary<int, Action<Account, IClientPacket>> _handlers = new();
+    private static readonly Dictionary<Type, Action<Account, IClientPacket>> _handlers = new();
 
-    /// <summary>Call once at server startup to scan and compile all handlers.</summary>
     internal static void Register()
     {
         var methods = Assembly.GetExecutingAssembly()
@@ -38,34 +34,32 @@ internal static class PacketDispatcher
 
         foreach (var method in methods)
         {
-            var attr = method.GetCustomAttribute<PacketHandlerAttribute>()!;
+            var packetParam = method.GetParameters()
+                .FirstOrDefault(p => typeof(IClientPacket).IsAssignableFrom(p.ParameterType))
+                ?? throw new InvalidOperationException(
+                    $"[PacketHandler] on '{method.DeclaringType?.Name}.{method.Name}' " +
+                    $"requires a parameter implementing IClientPacket.");
 
-            if (_handlers.ContainsKey(attr.PacketId))
+            var packetType = packetParam.ParameterType;
+
+            if (_handlers.ContainsKey(packetType))
                 throw new InvalidOperationException(
-                    $"Duplicate [PacketHandler({attr.PacketId})] on '{method.DeclaringType?.Name}.{method.Name}'.");
+                    $"Duplicate [PacketHandler] for '{packetType.Name}' " +
+                    $"on '{method.DeclaringType?.Name}.{method.Name}'.");
 
-            _handlers[attr.PacketId] = BuildHandler(method);
+            _handlers[packetType] = BuildHandler(method);
         }
 
         Console.WriteLine($"PacketDispatcher: {_handlers.Count} handlers registered.");
     }
 
-    /// <summary>
-    /// Reads the packet id and payload from <paramref name="data"/> then invokes
-    /// the registered handler, if any.
-    /// </summary>
     internal static void Dispatch(Account account, NetPacketReader data)
     {
-        var id = data.GetByte();
         var packet = (IClientPacket)data.ReadObject();
 
-        if (_handlers.TryGetValue(id, out var handler))
+        if (_handlers.TryGetValue(packet.GetType(), out var handler))
             handler(account, packet);
     }
-
-    // ---------------------------------------------------------------------------
-    // Expression-tree builder
-    // ---------------------------------------------------------------------------
 
     private static Action<Account, IClientPacket> BuildHandler(MethodInfo method)
     {
@@ -75,30 +69,24 @@ internal static class PacketDispatcher
         var methodParams = method.GetParameters();
         var firstParamType = methodParams[0].ParameterType;
 
-        // ── Account-based handler ───────────────────────────────────────────────
+        // Account-based handler
         if (firstParamType == typeof(Account))
         {
-            Expression call = methodParams.Length == 1
-                ? Expression.Call(method, accountParam)
-                : Expression.Call(method, accountParam,
-                    Expression.Convert(packetParam, methodParams[1].ParameterType));
+            var call = Expression.Call(method, accountParam,
+                Expression.Convert(packetParam, methodParams[1].ParameterType));
 
             return Expression.Lambda<Action<Account, IClientPacket>>(
                 call, accountParam, packetParam).Compile();
         }
 
-        // ── Player-based handler (null-guarded) ─────────────────────────────────
-        // Player player = account.Character;
-        // if (player != null) Method(player [, (TPacket)packet]);
+        // Player-based handler (null-guarded)
         var playerVar = Expression.Variable(typeof(Player), "player");
         var assign = Expression.Assign(
             playerVar,
             Expression.Property(accountParam, nameof(Account.Character)));
 
-        Expression callExpr = methodParams.Length == 1
-            ? Expression.Call(method, playerVar)
-            : Expression.Call(method, playerVar,
-                Expression.Convert(packetParam, methodParams[1].ParameterType));
+        var callExpr = Expression.Call(method, playerVar,
+            Expression.Convert(packetParam, methodParams[1].ParameterType));
 
         var body = Expression.Block(
             variables: new[] { playerVar },

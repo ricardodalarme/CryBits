@@ -10,18 +10,18 @@ internal static class MapSender
 {
     public static void Map(Account account, Map map)
     {
-        Send.ToPlayer(account, ServerPacket.Map, new MapPacket { Map = map });
+        Send.ToPlayer(account, new MapPacket { Map = map });
     }
 
     public static void Maps(Account account)
     {
-        Send.ToPlayer(account, ServerPacket.Maps, new MapsPacket { List = CryBits.Entities.Map.Map.List });
+        Send.ToPlayer(account, new MapsPacket { List = CryBits.Entities.Map.Map.List });
         foreach (var map in CryBits.Entities.Map.Map.List.Values) Map(account, map);
     }
 
     public static void MapRevision(Player player, Map map)
     {
-        Send.ToPlayer(player, ServerPacket.MapRevision, new MapRevisionPacket { MapId = map.GetId(), Revision = map.Revision });
+        Send.ToPlayer(player, new MapRevisionPacket { MapId = map.GetId(), Revision = map.Revision });
     }
 
     public static void MapPlayers(Player player)
@@ -30,8 +30,8 @@ internal static class MapSender
             if (Account.List[i].IsPlaying)
                 if (player != Account.List[i].Character)
                     if (Account.List[i].Character.Map == player.Map)
-                        Send.ToPlayer(player, ServerPacket.PlayerData, PlayerDataCache(Account.List[i].Character));
-        Send.ToMap(player.Map, ServerPacket.PlayerData, PlayerDataCache(player));
+                        Send.ToPlayer(player, PlayerDataCache(Account.List[i].Character));
+        Send.ToMap(player.Map, PlayerDataCache(player));
     }
 
     public static void MapItems(Player player, TempMap map)
@@ -47,7 +47,7 @@ internal static class MapSender
             };
         }
 
-        Send.ToPlayer(player, ServerPacket.MapItems, packet);
+        Send.ToPlayer(player, packet);
     }
 
     public static void MapItems(TempMap map)
@@ -63,7 +63,7 @@ internal static class MapSender
             };
         }
 
-        Send.ToMap(map, ServerPacket.MapItems, packet);
+        Send.ToMap(map, packet);
     }
 
     private static PlayerDataPacket PlayerDataCache(Player player)
