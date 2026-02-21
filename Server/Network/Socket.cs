@@ -35,7 +35,7 @@ internal static class Socket
         _listener.NetworkReceiveEvent += (peer, reader, _, _) =>
         {
             var account = Account.List.Find(x => x.Connection == peer);
-            Receive.Handle(account, reader);
+            PacketDispatcher.Dispatch(account, reader);
             reader.Recycle();
         };
 

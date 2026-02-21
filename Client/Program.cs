@@ -34,6 +34,7 @@ internal static class Program
         Window.OpenMenu();
 
         Socket.Init();
+        PacketDispatcher.Register();
         Sound.Load();
         Renders.Init();
 

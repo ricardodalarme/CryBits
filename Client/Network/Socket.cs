@@ -29,7 +29,7 @@ internal static class Socket
 
         _listener.NetworkReceiveEvent += (_, reader, _, _) =>
         {
-            Receive.Handle(reader);
+            PacketDispatcher.Dispatch(reader);
             reader.Recycle();
         };
 

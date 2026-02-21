@@ -12,12 +12,14 @@ namespace CryBits.Client.Network.Handlers;
 
 internal static class NpcHandler
 {
+    [PacketHandler(ServerPacket.Npcs)]
     internal static void Npcs(NpcsPacket packet)
     {
         // Read NPCs dictionary
         Npc.List = packet.List;
     }
 
+    [PacketHandler(ServerPacket.MapNpcs)]
     internal static void MapNpcs(MapNpcsPacket packet)
     {
         // Read temporary NPCs for the current map
@@ -37,6 +39,7 @@ internal static class NpcHandler
         }
     }
 
+    [PacketHandler(ServerPacket.MapNpc)]
     internal static void MapNpc(MapNpcPacket packet)
     {
         // Read temporary NPC data
@@ -51,6 +54,7 @@ internal static class NpcHandler
         for (byte n = 0; n < (byte)Vital.Count; n++) TempMap.Current.Npc[i].Vital[n] = packet.Vital[n];
     }
 
+    [PacketHandler(ServerPacket.MapNpcMovement)]
     internal static void MapNpcMovement(MapNpcMovementPacket packet)
     {
         // Read NPC movement
@@ -74,6 +78,7 @@ internal static class NpcHandler
             }
     }
 
+    [PacketHandler(ServerPacket.MapNpcAttack)]
     internal static void MapNpcAttack(MapNpcAttackPacket packet)
     {
         var index = packet.Index;
@@ -100,6 +105,7 @@ internal static class NpcHandler
             }
     }
 
+    [PacketHandler(ServerPacket.MapNpcDirection)]
     internal static void MapNpcDirection(MapNpcDirectionPacket packet)
     {
         // Set NPC direction
@@ -109,6 +115,7 @@ internal static class NpcHandler
         TempMap.Current.Npc[i].Y2 = 0;
     }
 
+    [PacketHandler(ServerPacket.MapNpcVitals)]
     internal static void MapNpcVitals(MapNpcVitalsPacket packet)
     {
         var index = packet.Index;
@@ -118,6 +125,7 @@ internal static class NpcHandler
             TempMap.Current.Npc[index].Vital[n] = packet.Vital[n];
     }
 
+    [PacketHandler(ServerPacket.MapNpcDied)]
     internal static void MapNpcDied(MapNpcDiedPacket packet)
     {
         var i = packet.Index;

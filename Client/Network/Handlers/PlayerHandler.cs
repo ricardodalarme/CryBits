@@ -15,6 +15,7 @@ namespace CryBits.Client.Network.Handlers;
 
 internal static class PlayerHandler
 {
+    [PacketHandler(ServerPacket.PlayerData)]
     internal static void PlayerData(PlayerDataPacket packet)
     {
         var name = packet.Name;
@@ -45,6 +46,7 @@ internal static class PlayerHandler
         TempMap.Current = player.Map;
     }
 
+    [PacketHandler(ServerPacket.PlayerPosition)]
     internal static void PlayerPosition(PlayerPositionPacket packet)
     {
         var player = Player.Get(packet.Name);
@@ -58,6 +60,7 @@ internal static class PlayerHandler
         player.Movement = Movement.Stopped;
     }
 
+    [PacketHandler(ServerPacket.PlayerVitals)]
     internal static void PlayerVitals(PlayerVitalsPacket packet)
     {
         var player = Player.Get(packet.Name);
@@ -69,6 +72,7 @@ internal static class PlayerHandler
         }
     }
 
+    [PacketHandler(ServerPacket.PlayerEquipments)]
     internal static void PlayerEquipments(PlayerEquipmentsPacket packet)
     {
         var player = Player.Get(packet.Name);
@@ -77,12 +81,14 @@ internal static class PlayerHandler
         for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(packet.Equipments[i]);
     }
 
+    [PacketHandler(ServerPacket.PlayerLeave)]
     internal static void PlayerLeave(PlayerLeavePacket packet)
     {
         // Remove player from list
         Player.List.Remove(Player.Get(packet.Name));
     }
 
+    [PacketHandler(ServerPacket.PlayerMove)]
     internal static void PlayerMove(PlayerMovePacket packet)
     {
         var player = Player.Get(packet.Name);
@@ -103,12 +109,14 @@ internal static class PlayerHandler
         }
     }
 
+    [PacketHandler(ServerPacket.PlayerDirection)]
     internal static void PlayerDirection(PlayerDirectionPacket packet)
     {
         // Update player's direction
         Player.Get(packet.Name).Direction = (Direction)packet.Direction;
     }
 
+    [PacketHandler(ServerPacket.PlayerAttack)]
     internal static void PlayerAttack(PlayerAttackPacket packet)
     {
         var player = Player.Get(packet.Name);
@@ -133,6 +141,7 @@ internal static class PlayerHandler
             }
     }
 
+    [PacketHandler(ServerPacket.PlayerExperience)]
     internal static void PlayerExperience(PlayerExperiencePacket packet)
     {
         Player.Me.Experience = packet.Experience;
@@ -146,12 +155,14 @@ internal static class PlayerHandler
         Buttons.AttributesVitality.Visible = Player.Me.Points > 0;
     }
 
+    [PacketHandler(ServerPacket.PlayerInventory)]
     internal static void PlayerInventory(PlayerInventoryPacket packet)
     {
         for (byte i = 0; i < MaxInventory; i++)
             Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(packet.ItemIds[i]), packet.Amounts[i]);
     }
 
+    [PacketHandler(ServerPacket.PlayerHotbar)]
     internal static void PlayerHotbar(PlayerHotbarPacket packet)
     {
         for (byte i = 0; i < MaxHotbar; i++)

@@ -7,6 +7,7 @@ namespace CryBits.Server.Network.Handlers;
 
 internal static class ChatHandler
 {
+    [PacketHandler(ClientPacket.Message)]
     internal static void Message(Player player, MessagePacket packet)
     {
         var message = packet.Text;

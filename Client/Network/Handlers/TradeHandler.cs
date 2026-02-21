@@ -14,6 +14,7 @@ namespace CryBits.Client.Network.Handlers;
 
 internal static class TradeHandler
 {
+    [PacketHandler(ServerPacket.Trade)]
     internal static void Trade(TradePacket packet)
     {
         var state = packet.State;
@@ -40,6 +41,7 @@ internal static class TradeHandler
         }
     }
 
+    [PacketHandler(ServerPacket.TradeInvitation)]
     internal static void TradeInvitation(TradeInvitationPacket packet)
     {
         // Decline if player disabled trade invitations
@@ -54,6 +56,7 @@ internal static class TradeHandler
         Panels.TradeInvitation.Visible = true;
     }
 
+    [PacketHandler(ServerPacket.TradeState)]
     internal static void TradeState(TradeStatePacket packet)
     {
         switch ((TradeStatus)packet.State)
@@ -72,6 +75,7 @@ internal static class TradeHandler
         }
     }
 
+    [PacketHandler(ServerPacket.TradeOffer)]
     internal static void TradeOffer(TradeOfferPacket packet)
     {
         // Read trade offer data

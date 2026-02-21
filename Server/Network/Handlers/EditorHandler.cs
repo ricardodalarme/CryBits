@@ -14,6 +14,7 @@ namespace CryBits.Server.Network.Handlers;
 
 internal static class EditorHandler
 {
+    [PacketHandler(ClientPacket.WriteSettings)]
     internal static void WriteSettings(Account account, WriteSettingsPacket packet)
     {
         // Ensure caller has editor access.
@@ -30,6 +31,7 @@ internal static class EditorHandler
         SettingsRepository.Write();
     }
 
+    [PacketHandler(ClientPacket.WriteClasses)]
     internal static void WriteClasses(Account account, WriteClassesPacket packet)
     {
         // Ensure caller has editor access.
@@ -49,6 +51,7 @@ internal static class EditorHandler
                 ClassSender.Classes(Account.List[i]);
     }
 
+    [PacketHandler(ClientPacket.WriteMaps)]
     internal static void WriteMaps(Account account, WriteMapsPacket packet)
     {
         // Ensure caller has editor access.
@@ -76,6 +79,7 @@ internal static class EditorHandler
         }
     }
 
+    [PacketHandler(ClientPacket.WriteNpcs)]
     internal static void WriteNpcs(Account account, WriteNpcsPacket packet)
     {
         // Ensure caller has editor access.
@@ -95,6 +99,7 @@ internal static class EditorHandler
                 NpcSender.Npcs(Account.List[i]);
     }
 
+    [PacketHandler(ClientPacket.WriteItems)]
     internal static void WriteItems(Account account, WriteItemsPacket packet)
     {
         // Ensure caller has editor access.
@@ -114,6 +119,7 @@ internal static class EditorHandler
                 ItemSender.Items(Account.List[i]);
     }
 
+    [PacketHandler(ClientPacket.WriteShops)]
     internal static void WriteShops(Account account, WriteShopsPacket packet)
     {
         // Ensure caller has editor access.
@@ -133,16 +139,19 @@ internal static class EditorHandler
                 ShopSender.Shops(Account.List[i]);
     }
 
+    [PacketHandler(ClientPacket.RequestSetting)]
     internal static void RequestSetting(Account account)
     {
         SettingsSender.ServerData(account);
     }
 
+    [PacketHandler(ClientPacket.RequestClasses)]
     internal static void RequestClasses(Account account)
     {
         ClassSender.Classes(account);
     }
 
+    [PacketHandler(ClientPacket.RequestMap)]
     internal static void RequestMap(Account account, RequestMapPacket packet)
     {
         if (account.InEditor)
@@ -163,21 +172,25 @@ internal static class EditorHandler
         }
     }
 
+    [PacketHandler(ClientPacket.RequestMaps)]
     internal static void RequestMaps(Account account)
     {
         MapSender.Maps(account);
     }
 
+    [PacketHandler(ClientPacket.RequestNpcs)]
     internal static void RequestNpcs(Account account)
     {
         NpcSender.Npcs(account);
     }
 
+    [PacketHandler(ClientPacket.RequestItems)]
     internal static void RequestItems(Account account)
     {
         ItemSender.Items(account);
     }
 
+    [PacketHandler(ClientPacket.RequestShops)]
     internal static void RequestShops(Account account)
     {
         ShopSender.Shops(account);

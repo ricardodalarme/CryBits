@@ -12,12 +12,14 @@ using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
+using CryBits.Enums;
 using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
 internal static class AccountHandler
 {
+    [PacketHandler(ServerPacket.Join)]
     internal static void Join(JoinPacket packet)
     {
         // Clear entity collections
@@ -33,6 +35,7 @@ internal static class AccountHandler
         Player.List.Add(Player.Me);
     }
 
+    [PacketHandler(ServerPacket.CreateCharacter)]
     internal static void CreateCharacter()
     {
         // Reset character-creation inputs
@@ -47,6 +50,7 @@ internal static class AccountHandler
         Panels.CreateCharacter.Visible = true;
     }
 
+    [PacketHandler(ServerPacket.Characters)]
     internal static void Characters(CharactersPacket packet)
     {
         // Resize character list
@@ -63,6 +67,7 @@ internal static class AccountHandler
         }
     }
 
+    [PacketHandler(ServerPacket.JoinGame)]
     internal static void JoinGame()
     {
         // Reset UI state and options

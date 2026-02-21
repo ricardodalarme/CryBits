@@ -31,6 +31,7 @@ internal static class Program
 
         // Initialize subsystems
         Socket.Init();
+        PacketDispatcher.Register();
         Sound.Load();
 
         // Start the game loop on a background thread.

@@ -44,6 +44,9 @@ internal static class Program
         Socket.Init();
         Console.WriteLine("Network started. Port: " + Globals.Config.Port);
 
+        // Register all [PacketHandler] methods before accepting connections.
+        PacketDispatcher.Register();
+
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
 
         // Start command loop on background thread.
