@@ -1,10 +1,10 @@
 using System.IO;
 using CryBits.Enums;
+using CryBits.Packets.Client;
 using CryBits.Server.Entities;
+using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
-using CryBits.Server.Network.Senders;
-using LiteNetLib.Utils;
 using static CryBits.Globals;
 using BcryptNet = BCrypt.Net.BCrypt;
 
@@ -17,11 +17,11 @@ internal static class AuthSystem
     /// Authenticates <paramref name="account"/> with the credentials read from <paramref name="data"/>.
     /// On success, sends the editor or character-selection payload and opens the appropriate screen.
     /// </summary>
-    internal static void Connect(Account account, NetDataReader data)
+    internal static void Connect(Account account, ConnectPacket packet)
     {
-        var user = data.GetString().Trim();
-        var password = data.GetString();
-        var editor = data.GetBool();
+        var user = packet.Username.Trim();
+        var password = packet.Password;
+        var editor = packet.IsClientAccess;
 
         if (!Directory.Exists(Path.Combine(Directories.Accounts.FullName, user)))
         {
@@ -82,10 +82,10 @@ internal static class AuthSystem
     /// Registers a new account using the credentials read from <paramref name="data"/>,
     /// saves it to disk, and opens the character-creation screen.
     /// </summary>
-    internal static void Register(Account account, NetDataReader data)
+    internal static void Register(Account account, RegisterPacket packet)
     {
-        var user = data.GetString().Trim();
-        var password = data.GetString();
+        var user = packet.Username.Trim();
+        var password = packet.Password;
 
         if (user.Length < Config.MinNameLength || user.Length > Config.MaxNameLength)
         {

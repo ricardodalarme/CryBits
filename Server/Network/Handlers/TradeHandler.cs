@@ -1,15 +1,15 @@
 using CryBits.Enums;
+using CryBits.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Systems;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Handlers;
 
 internal static class TradeHandler
 {
-    internal static void TradeInvite(Player player, NetDataReader data)
+    internal static void TradeInvite(Player player, TradeInvitePacket packet)
     {
-        TradeSystem.Invite(player, data.GetString());
+        TradeSystem.Invite(player, packet.PlayerName);
     }
 
     internal static void TradeAccept(Player player)
@@ -27,13 +27,13 @@ internal static class TradeHandler
         TradeSystem.Leave(player);
     }
 
-    internal static void TradeOffer(Player player, NetDataReader data)
+    internal static void TradeOffer(Player player, TradeOfferPacket packet)
     {
-        TradeSystem.Offer(player, data.GetShort(), data.GetShort(), data.GetShort());
+        TradeSystem.Offer(player, packet.Slot, packet.InventorySlot, packet.Amount);
     }
 
-    internal static void TradeOfferState(Player player, NetDataReader data)
+    internal static void TradeOfferState(Player player, TradeOfferStatePacket packet)
     {
-        TradeSystem.OfferState(player, (TradeStatus)data.GetByte());
+        TradeSystem.OfferState(player, (TradeStatus)packet.State);
     }
 }

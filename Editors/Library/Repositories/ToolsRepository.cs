@@ -132,14 +132,14 @@ internal static class ToolsRepository
 
     // Delegate to Client.Framework ToolsRepository for DTO conversions
     private static ButtonDto ButtonDto(Button tool) =>
-        Client.Framework.Library.Repositories.ToolsRepository.ButtonDto(tool);
+        CryBits.Client.Framework.Persistence.Repositories.ToolsRepository.ButtonDto(tool);
 
     private static TextBoxDto TextBoxDto(TextBox tool) =>
-        Client.Framework.Library.Repositories.ToolsRepository.TextBoxDto(tool);
+        CryBits.Client.Framework.Persistence.Repositories.ToolsRepository.TextBoxDto(tool);
 
     private static PanelDto PanelDto(Panel tool) =>
-        Client.Framework.Library.Repositories.ToolsRepository.PanelDto(tool);
+        CryBits.Client.Framework.Persistence.Repositories.ToolsRepository.PanelDto(tool);
 
     private static CheckBoxDto CheckBoxDto(CheckBox tool) =>
-        Client.Framework.Library.Repositories.ToolsRepository.CheckBoxDto(tool);
+        CryBits.Client.Framework.Persistence.Repositories.ToolsRepository.CheckBoxDto(tool);
 }

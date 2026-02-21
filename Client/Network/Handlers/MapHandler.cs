@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using CryBits.Client.Entities;
 using CryBits.Client.Entities.TempMap;
@@ -7,19 +6,18 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities;
-using CryBits.Entities.Map;
 using CryBits.Extensions;
-using LiteNetLib.Utils;
+using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
 internal static class MapHandler
 {
-    internal static void MapRevision(NetDataReader data)
+    internal static void MapRevision(MapRevisionPacket packet)
     {
         var needed = false;
-        var id = data.GetGuid();
-        var currentRevision = data.GetShort();
+        var id = packet.MapId;
+        var currentRevision = packet.Revision;
 
         // Clear other player entries
         for (byte i = 0; i < Player.List.Count; i++)
@@ -50,9 +48,9 @@ internal static class MapHandler
         TempMap.Current.Blood = [];
     }
 
-    internal static void Map(NetDataReader data)
+    internal static void Map(MapPacket packet)
     {
-        var map = (Map)data.ReadObject();
+        var map = packet.Map;
         var id = map.Id;
 
         // Store map data
@@ -82,18 +80,18 @@ internal static class MapHandler
             Music.Play(TempMap.Current.Data.Music);
     }
 
-    internal static void MapItems(NetDataReader data)
+    internal static void MapItems(MapItemsPacket packet)
     {
         // Item count
-        TempMap.Current.Item = new TempMapItems[data.GetByte()];
+        TempMap.Current.Item = new TempMapItems[packet.Items.Length];
 
         // Read all map items
         for (byte i = 0; i < TempMap.Current.Item.Length; i++)
             TempMap.Current.Item[i] = new TempMapItems
             {
-                Item = Item.List.Get(data.GetGuid()),
-                X = data.GetByte(),
-                Y = data.GetByte()
+                Item = Item.List.Get(packet.Items[i].ItemId),
+                X = packet.Items[i].X,
+                Y = packet.Items[i].Y
             };
     }
 }

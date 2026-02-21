@@ -1,6 +1,6 @@
 using CryBits.Enums;
+using CryBits.Packets.Server;
 using CryBits.Server.Entities;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Senders;
 
@@ -8,25 +8,25 @@ internal static class AccountSender
 {
     public static void Characters(Account account)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.Characters);
-        data.Put((byte)account.Characters.Count);
+        var packet = new CharactersPacket
+        {
+            Characters = new PacketsTempCharacter[account.Characters.Count]
+        };
 
         for (byte i = 0; i < account.Characters.Count; i++)
         {
-            data.Put(account.Characters[i].Name);
-            data.Put(account.Characters[i].TextureNum);
+            packet.Characters[i] = new PacketsTempCharacter
+            {
+                Name = account.Characters[i].Name,
+                TextureNum = account.Characters[i].TextureNum
+            };
         }
 
-        Send.ToPlayer(account, data);
+        Send.ToPlayer(account, ServerPacket.Characters, packet);
     }
 
     public static void CreateCharacter(Account account)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.CreateCharacter);
-        Send.ToPlayer(account, data);
+        Send.ToPlayer(account, ServerPacket.CreateCharacter, new CreateCharacterPacket());
     }
 }

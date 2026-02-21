@@ -1,7 +1,7 @@
 using System;
 using CryBits.Client.Framework.Constants;
 using CryBits.Enums;
-using LiteNetLib.Utils;
+using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
@@ -9,33 +9,22 @@ internal static class AuthSender
 {
     public static void Latency()
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ClientPacket.Latency);
-        Send.Packet(data);
+        Send.Packet(ClientPacket.Latency, new LatencyPacket());
 
         // Record latency send timestamp
         Socket.LatencySend = Environment.TickCount;
     }
 
-    public static void Connect()
+    public static void Connect() => Send.Packet(ClientPacket.Connect, new ConnectPacket
     {
-        var data = new NetDataWriter();
+        Username = TextBoxes.ConnectUsername.Text,
+        Password = TextBoxes.ConnectPassword.Text,
+        IsClientAccess = false
+    });
 
-        data.Put((byte)ClientPacket.Connect);
-        data.Put(TextBoxes.ConnectUsername.Text);
-        data.Put(TextBoxes.ConnectPassword.Text);
-        data.Put(false); // Client access flag
-        Send.Packet(data);
-    }
-
-    public static void Register()
+    public static void Register() => Send.Packet(ClientPacket.Register, new RegisterPacket
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ClientPacket.Register);
-        data.Put(TextBoxes.RegisterUsername.Text);
-        data.Put(TextBoxes.RegisterPassword.Text);
-        Send.Packet(data);
-    }
+        Username = TextBoxes.RegisterUsername.Text,
+        Password = TextBoxes.RegisterPassword.Text
+    });
 }

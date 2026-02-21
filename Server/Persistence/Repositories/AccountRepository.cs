@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using CryBits.Enums;
 using CryBits.Server.Entities;

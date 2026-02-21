@@ -1,6 +1,6 @@
 using CryBits.Enums;
+using CryBits.Packets.Server;
 using CryBits.Server.Entities;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Senders;
 
@@ -8,21 +8,13 @@ internal static class PartySender
 {
     public static void Party(Player player)
     {
-        var data = new NetDataWriter();
-
-
-        data.Put((byte)ServerPacket.Party);
-        data.Put((byte)player.Party.Count);
-        for (byte i = 0; i < player.Party.Count; i++) data.Put(player.Party[i].Name);
-        Send.ToPlayer(player, data);
+        var packet = new PartyPacket { Members = new string[player.Party.Count] };
+        for (int i = 0; i < player.Party.Count; i++) packet.Members[i] = player.Party[i].Name;
+        Send.ToPlayer(player, ServerPacket.Party, packet);
     }
 
     public static void PartyInvitation(Player player, string playerInvitation)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.PartyInvitation);
-        data.Put(playerInvitation);
-        Send.ToPlayer(player, data);
+        Send.ToPlayer(player, ServerPacket.PartyInvitation, new PartyInvitationPacket { PlayerInvitation = playerInvitation });
     }
 }

@@ -12,13 +12,13 @@ using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
-using LiteNetLib.Utils;
+using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
 internal static class AccountHandler
 {
-    internal static void Join(NetDataReader data)
+    internal static void Join(JoinPacket packet)
     {
         // Clear entity collections
         Player.List = [];
@@ -29,7 +29,7 @@ internal static class AccountHandler
         TempMap.List = [];
 
         // Initialize local player from server data
-        Player.Me = new Me(data.GetString());
+        Player.Me = new Me(packet.Name);
         Player.List.Add(Player.Me);
     }
 
@@ -47,18 +47,18 @@ internal static class AccountHandler
         Panels.CreateCharacter.Visible = true;
     }
 
-    internal static void Characters(NetDataReader data)
+    internal static void Characters(CharactersPacket packet)
     {
         // Resize character list
-        PanelsEvents.Characters = new PanelsEvents.TempCharacter[data.GetByte()];
+        PanelsEvents.Characters = new PanelsEvents.TempCharacter[packet.Characters.Length];
 
         for (byte i = 0; i < PanelsEvents.Characters.Length; i++)
         {
             // Read character data
             PanelsEvents.Characters[i] = new PanelsEvents.TempCharacter
             {
-                Name = data.GetString(),
-                TextureNum = data.GetShort()
+                Name = packet.Characters[i].Name,
+                TextureNum = packet.Characters[i].TextureNum
             };
         }
     }

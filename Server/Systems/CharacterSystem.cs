@@ -5,12 +5,11 @@ using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
+using CryBits.Packets.Client;
 using CryBits.Server.Entities;
+using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
-using CryBits.Server.Network.Senders;
-using CryBits.Server.Persistence.Repositories;
-using LiteNetLib.Utils;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Systems;
@@ -19,9 +18,9 @@ namespace CryBits.Server.Systems;
 internal static class CharacterSystem
 {
     /// <summary>Validates and creates a new character for <paramref name="account"/>, then joins the game.</summary>
-    internal static void Create(Account account, NetDataReader data)
+    internal static void Create(Account account, CreateCharacterPacket packet)
     {
-        var name = data.GetString().Trim();
+        var name = packet.Name.Trim();
 
         if (name.Length < Config.MinNameLength || name.Length > Config.MaxNameLength)
         {
@@ -48,11 +47,11 @@ internal static class CharacterSystem
         account.Character = new Player(account);
         account.Character.Name = name;
         account.Character.Level = 1;
-        account.Character.Class = @class = Class.List.Get(new Guid(data.GetString()));
-        account.Character.Genre = data.GetBool();
+        account.Character.Class = @class = Class.List.Get(new Guid(packet.ClassId));
+        account.Character.Genre = packet.GenderMale;
         account.Character.TextureNum = account.Character.Genre
-            ? @class.TextureMale[data.GetByte()]
-            : @class.TextureFemale[data.GetByte()];
+            ? @class.TextureMale[packet.TextureNum]
+            : @class.TextureFemale[packet.TextureNum];
         account.Character.Attribute = @class.Attribute;
         account.Character.Map = TempMap.List.Get(@class.SpawnMap.Id);
         account.Character.Direction = (Direction)@class.SpawnDirection;

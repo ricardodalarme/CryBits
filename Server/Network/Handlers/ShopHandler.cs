@@ -1,19 +1,19 @@
+using CryBits.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Systems;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Handlers;
 
 internal static class ShopHandler
 {
-    internal static void ShopBuy(Player player, NetDataReader data)
+    internal static void ShopBuy(Player player, ShopBuyPacket packet)
     {
-        ShopSystem.Buy(player, data.GetShort());
+        ShopSystem.Buy(player, packet.Slot);
     }
 
-    internal static void ShopSell(Player player, NetDataReader data)
+    internal static void ShopSell(Player player, ShopSellPacket packet)
     {
-        ShopSystem.Sell(player, data.GetByte(), data.GetShort());
+        ShopSystem.Sell(player, (byte)packet.Slot, packet.Amount);
     }
 
     internal static void ShopClose(Player player)

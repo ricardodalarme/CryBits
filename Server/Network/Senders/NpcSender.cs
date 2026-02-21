@@ -1,8 +1,8 @@
 using CryBits.Entities.Npc;
 using CryBits.Enums;
 using CryBits.Extensions;
+using CryBits.Packets.Server;
 using CryBits.Server.Entities;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Senders;
 
@@ -10,94 +10,71 @@ internal static class NpcSender
 {
     public static void Npcs(Account account)
     {
-        var data = new NetDataWriter();
-        data.Put((byte)ServerPacket.Npcs);
-        data.WriteObject(Npc.List);
-        Send.ToPlayer(account, data);
+        Send.ToPlayer(account, ServerPacket.Npcs, new NpcsPacket { List = Npc.List });
     }
 
     public static void MapNpcs(Player player, TempMap map)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.MapNpcs);
-        data.Put((short)map.Npc.Length);
+        var packet = new MapNpcsPacket { Npcs = new PacketsMapNpc[map.Npc.Length] };
         for (byte i = 0; i < map.Npc.Length; i++)
         {
-            data.Put(map.Npc[i].Data.GetId());
-            data.Put(map.Npc[i].X);
-            data.Put(map.Npc[i].Y);
-            data.Put((byte)map.Npc[i].Direction);
-            for (byte n = 0; n < (byte)Vital.Count; n++) data.Put(map.Npc[i].Vital[n]);
+            packet.Npcs[i] = new PacketsMapNpc
+            {
+                NpcId = map.Npc[i].Data.GetId(),
+                X = map.Npc[i].X,
+                Y = map.Npc[i].Y,
+                Direction = (byte)map.Npc[i].Direction,
+                Vital = new short[(byte)Vital.Count]
+            };
+            for (byte n = 0; n < (byte)Vital.Count; n++) packet.Npcs[i].Vital[n] = map.Npc[i].Vital[n];
         }
 
-        Send.ToPlayer(player, data);
+        Send.ToPlayer(player, ServerPacket.MapNpcs, packet);
     }
 
     public static void MapNpc(TempNpc npc)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.MapNpc);
-        data.Put(npc.Index);
-        data.Put(npc.Data.GetId());
-        data.Put(npc.X);
-        data.Put(npc.Y);
-        data.Put((byte)npc.Direction);
-        for (byte n = 0; n < (byte)Vital.Count; n++) data.Put(npc.Vital[n]);
-        Send.ToMap(npc.Map, data);
+        var packet = new MapNpcPacket
+        {
+            Index = npc.Index,
+            NpcId = npc.Data.GetId(),
+            X = npc.X,
+            Y = npc.Y,
+            Direction = (byte)npc.Direction,
+            Vital = new short[(byte)Vital.Count]
+        };
+        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npc.Vital[n];
+        Send.ToMap(npc.Map, ServerPacket.MapNpc, packet);
     }
 
     public static void MapNpcMovement(TempNpc npc, byte movement)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.MapNpcMovement);
-        data.Put(npc.Index);
-        data.Put(npc.X);
-        data.Put(npc.Y);
-        data.Put((byte)npc.Direction);
-        data.Put(movement);
-        Send.ToMap(npc.Map, data);
+        Send.ToMap(npc.Map, ServerPacket.MapNpcMovement,
+            new MapNpcMovementPacket
+            { Index = npc.Index, X = npc.X, Y = npc.Y, Direction = (byte)npc.Direction, Movement = movement });
     }
 
     public static void MapNpcDirection(TempNpc npc)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.MapNpcDirection);
-        data.Put(npc.Index);
-        data.Put((byte)npc.Direction);
-        Send.ToMap(npc.Map, data);
+        Send.ToMap(npc.Map, ServerPacket.MapNpcDirection,
+            new MapNpcDirectionPacket { Index = npc.Index, Direction = (byte)npc.Direction });
     }
 
     public static void MapNpcVitals(TempNpc npc)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.MapNpcVitals);
-        data.Put(npc.Index);
-        for (byte n = 0; n < (byte)Vital.Count; n++) data.Put(npc.Vital[n]);
-        Send.ToMap(npc.Map, data);
+        var packet = new MapNpcVitalsPacket { Index = npc.Index, Vital = new short[(byte)Vital.Count] };
+        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npc.Vital[n];
+        Send.ToMap(npc.Map, ServerPacket.MapNpcVitals, packet);
     }
 
     public static void MapNpcAttack(TempNpc npc, string victim = "", Target victimType = 0)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.MapNpcAttack);
-        data.Put(npc.Index);
-        data.Put(victim);
-        data.Put((byte)victimType);
-        Send.ToMap(npc.Map, data);
+        Send.ToMap(npc.Map, ServerPacket.MapNpcAttack,
+            new MapNpcAttackPacket { Index = npc.Index, Victim = victim, VictimType = (byte)victimType });
     }
 
     public static void MapNpcDied(TempNpc npc)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.MapNpcDied);
-        data.Put(npc.Index);
-        Send.ToMap(npc.Map, data);
+        Send.ToMap(npc.Map, ServerPacket.MapNpcDied, new MapNpcDiedPacket { Index = npc.Index });
     }
 }

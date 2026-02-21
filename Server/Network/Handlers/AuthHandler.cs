@@ -1,24 +1,24 @@
+using CryBits.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Systems;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Handlers;
 
 internal static class AuthHandler
 {
-    internal static void Latency(Account account)
+    internal static void Latency(Account account, LatencyPacket packet)
     {
         AuthSender.Latency(account);
     }
 
-    internal static void Connect(Account account, NetDataReader data)
+    internal static void Connect(Account account, ConnectPacket packet)
     {
-        AuthSystem.Connect(account, data);
+        AuthSystem.Connect(account, packet);
     }
 
-    internal static void Register(Account account, NetDataReader data)
+    internal static void Register(Account account, RegisterPacket packet)
     {
-        AuthSystem.Register(account, data);
+        AuthSystem.Register(account, packet);
     }
 }

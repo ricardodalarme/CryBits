@@ -1,16 +1,10 @@
 using CryBits.Enums;
-using LiteNetLib.Utils;
+using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
 internal static class MapSender
 {
-    public static void RequestMap(bool order)
-    {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ClientPacket.RequestMap);
-        data.Put(order);
-        Send.Packet(data);
-    }
+    public static void RequestMap(bool order) =>
+        Send.Packet(ClientPacket.RequestMap, new RequestMapPacket { SendMap = order });
 }

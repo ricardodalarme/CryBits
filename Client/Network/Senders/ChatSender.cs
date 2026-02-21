@@ -1,18 +1,10 @@
 using CryBits.Enums;
-using LiteNetLib.Utils;
+using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
 internal static class ChatSender
 {
-    public static void Message(string message, Message type, string addressee = "")
-    {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ClientPacket.Message);
-        data.Put(message);
-        data.Put((byte)type);
-        data.Put(addressee);
-        Send.Packet(data);
-    }
+    public static void Message(string message, Message type, string addressee = "") =>
+        Send.Packet(ClientPacket.Message, new MessagePacket { Text = message, Type = (byte)type, Addressee = addressee });
 }

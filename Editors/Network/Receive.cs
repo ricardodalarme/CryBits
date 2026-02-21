@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Entities;
-using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
+using CryBits.Packets.Server;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using static CryBits.Extensions.NetworkExtensions;
@@ -22,12 +20,12 @@ internal static class Receive
         {
             case ServerPacket.Alert: Alert(data); break;
             case ServerPacket.Connect: Connect(); break;
-            case ServerPacket.ServerData: ServerData(data); break;
-            case ServerPacket.Classes: Classes(data); break;
-            case ServerPacket.Map: Map(data); break;
-            case ServerPacket.Npcs: Npcs(data); break;
-            case ServerPacket.Items: Items(data); break;
-            case ServerPacket.Shops: Shops(data); break;
+            case ServerPacket.ServerData: ServerData((ServerDataPacket)data.ReadObject()); break;
+            case ServerPacket.Classes: Classes((ClassesPacket)data.ReadObject()); break;
+            case ServerPacket.Map: Map((MapPacket)data.ReadObject()); break;
+            case ServerPacket.Npcs: Npcs((NpcsPacket)data.ReadObject()); break;
+            case ServerPacket.Items: Items((ItemsPacket)data.ReadObject()); break;
+            case ServerPacket.Shops: Shops((ShopsPacket)data.ReadObject()); break;
         }
     }
 
@@ -42,36 +40,36 @@ internal static class Receive
         AvaloniaMapsLauncher.OpenMapsEditor();
     }
 
-    private static void ServerData(NetDataReader data)
+    private static void ServerData(ServerDataPacket packet)
     {
-        Config = (ServerConfig)data.ReadObject();
+        Config = packet.Config;
     }
 
-    private static void Classes(NetDataReader data)
+    private static void Classes(ClassesPacket packet)
     {
-        Class.List = (Dictionary<Guid, Class>)data.ReadObject();
+        Class.List = packet.List;
     }
 
-    private static void Map(NetDataReader data)
+    private static void Map(MapPacket packet)
     {
-        var map = (Map)data.ReadObject();
+        var map = packet.Map;
         var id = map.Id;
 
         CryBits.Entities.Map.Map.List[id] = map;
     }
 
-    private static void Npcs(NetDataReader data)
+    private static void Npcs(NpcsPacket packet)
     {
-        Npc.List = (Dictionary<Guid, Npc>)data.ReadObject();
+        Npc.List = packet.List;
     }
 
-    private static void Items(NetDataReader data)
+    private static void Items(ItemsPacket packet)
     {
-        Item.List = (Dictionary<Guid, Item>)data.ReadObject();
+        Item.List = packet.List;
     }
 
-    private static void Shops(NetDataReader data)
+    private static void Shops(ShopsPacket packet)
     {
-        Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();
+        Shop.List = packet.List;
     }
 }

@@ -1,22 +1,20 @@
-using System;
-using System.Collections.Generic;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
 using CryBits.Extensions;
+using CryBits.Packets.Client;
 using CryBits.Server.Entities;
-using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.Network.Senders;
-using LiteNetLib.Utils;
+using CryBits.Server.Persistence.Repositories;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Handlers;
 
 internal static class EditorHandler
 {
-    internal static void WriteSettings(Account account, NetDataReader data)
+    internal static void WriteSettings(Account account, WriteSettingsPacket packet)
     {
         // Ensure caller has editor access.
         if (account.Access < Access.Editor)
@@ -26,13 +24,13 @@ internal static class EditorHandler
         }
 
         // Apply received settings.
-        Config = (ServerConfig)data.ReadObject();
+        Config = packet.Config;
 
         // Persist settings.
         SettingsRepository.Write();
     }
 
-    internal static void WriteClasses(Account account, NetDataReader data)
+    internal static void WriteClasses(Account account, WriteClassesPacket packet)
     {
         // Ensure caller has editor access.
         if (account.Access < Access.Editor)
@@ -42,7 +40,7 @@ internal static class EditorHandler
         }
 
         // Receive and persist new classes.
-        Class.List = (Dictionary<Guid, Class>)data.ReadObject();
+        Class.List = packet.Classes;
         ClassRepository.WriteAll();
 
         // Broadcast updated classes to other connected accounts.
@@ -51,7 +49,7 @@ internal static class EditorHandler
                 ClassSender.Classes(Account.List[i]);
     }
 
-    internal static void WriteMaps(Account account, NetDataReader data)
+    internal static void WriteMaps(Account account, WriteMapsPacket packet)
     {
         // Ensure caller has editor access.
         if (account.Access < Access.Editor)
@@ -61,7 +59,7 @@ internal static class EditorHandler
         }
 
         // Receive and persist new maps.
-        Map.List = (Dictionary<Guid, Map>)data.ReadObject();
+        Map.List = packet.Maps;
         MapRepository.WriteAll();
 
         // Update runtime map state and broadcast maps to players/editors.
@@ -78,7 +76,7 @@ internal static class EditorHandler
         }
     }
 
-    internal static void WriteNpcs(Account account, NetDataReader data)
+    internal static void WriteNpcs(Account account, WriteNpcsPacket packet)
     {
         // Ensure caller has editor access.
         if (account.Access < Access.Editor)
@@ -88,7 +86,7 @@ internal static class EditorHandler
         }
 
         // Receive and persist new NPCs.
-        Npc.List = (Dictionary<Guid, Npc>)data.ReadObject();
+        Npc.List = packet.Npcs;
         NpcRepository.WriteAll();
 
         // Broadcast NPC updates to other connected accounts.
@@ -97,7 +95,7 @@ internal static class EditorHandler
                 NpcSender.Npcs(Account.List[i]);
     }
 
-    internal static void WriteItems(Account account, NetDataReader data)
+    internal static void WriteItems(Account account, WriteItemsPacket packet)
     {
         // Ensure caller has editor access.
         if (account.Access < Access.Editor)
@@ -107,7 +105,7 @@ internal static class EditorHandler
         }
 
         // Receive and persist new items.
-        Item.List = (Dictionary<Guid, Item>)data.ReadObject();
+        Item.List = packet.Items;
         ItemRepository.WriteAll();
 
         // Broadcast item updates to other connected accounts.
@@ -116,7 +114,7 @@ internal static class EditorHandler
                 ItemSender.Items(Account.List[i]);
     }
 
-    internal static void WriteShops(Account account, NetDataReader data)
+    internal static void WriteShops(Account account, WriteShopsPacket packet)
     {
         // Ensure caller has editor access.
         if (account.Access < Access.Editor)
@@ -126,7 +124,7 @@ internal static class EditorHandler
         }
 
         // Receive and persist new shops.
-        Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();
+        Shop.List = packet.Shops;
         ShopRepository.WriteAll();
 
         // Broadcast shop updates to other connected accounts.
@@ -145,16 +143,16 @@ internal static class EditorHandler
         ClassSender.Classes(account);
     }
 
-    internal static void RequestMap(Account account, NetDataReader data)
+    internal static void RequestMap(Account account, RequestMapPacket packet)
     {
         if (account.InEditor)
-            MapSender.Map(account, Map.List.Get(new Guid(data.GetString())));
+            MapSender.Map(account, Map.List.Get(packet.Id));
         else
         {
             var player = account.Character;
 
             // Send map data to the requesting player if requested.
-            if (data.GetBool()) MapSender.Map(player.Account, player.Map.Data);
+            if (packet.SendMap) MapSender.Map(player.Account, player.Map.Data);
 
             // Send player list for the map to nearby clients.
             MapSender.MapPlayers(player);

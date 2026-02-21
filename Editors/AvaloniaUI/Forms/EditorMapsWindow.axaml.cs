@@ -455,7 +455,7 @@ internal partial class EditorMapsWindow : Window
         if (butEdition.IsChecked == true) butVisualization.IsChecked = false;
         else butEdition.IsChecked = true;
         Options.PreMapView = butVisualization.IsChecked == true;
-        Client.Framework.Library.Repositories.OptionsRepository.Write();
+        Client.Framework.Persistence.Repositories.OptionsRepository.Write();
     }
 
     private void butVisualization_Click(object? sender, RoutedEventArgs e)
@@ -464,20 +464,20 @@ internal partial class EditorMapsWindow : Window
         else butVisualization.IsChecked = true;
         Options.PreMapView = butVisualization.IsChecked == true;
         _showVisualization = butVisualization.IsChecked == true;
-        Client.Framework.Library.Repositories.OptionsRepository.Write();
+        Client.Framework.Persistence.Repositories.OptionsRepository.Write();
     }
 
     private void butGrid_Click(object? sender, RoutedEventArgs e)
     {
         Options.PreMapGrid = butGrid.IsChecked == true;
-        Client.Framework.Library.Repositories.OptionsRepository.Write();
+        Client.Framework.Persistence.Repositories.OptionsRepository.Write();
     }
 
     private void butAudio_Click(object? sender, RoutedEventArgs e)
     {
         Options.PreMapAudio = butAudio.IsChecked == true;
         _showAudio = butAudio.IsChecked == true;
-        Client.Framework.Library.Repositories.OptionsRepository.Write();
+        Client.Framework.Persistence.Repositories.OptionsRepository.Write();
         if (!Options.PreMapAudio)
         {
             Music.Stop();

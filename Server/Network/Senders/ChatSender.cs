@@ -1,7 +1,7 @@
 using System.Drawing;
 using CryBits.Enums;
+using CryBits.Packets.Server;
 using CryBits.Server.Entities;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Senders;
 
@@ -9,34 +9,19 @@ internal static class ChatSender
 {
     public static void Message(Player player, string text, Color color)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.Message);
-        data.Put(text);
-        data.Put(color.ToArgb());
-        Send.ToPlayer(player, data);
+        Send.ToPlayer(player, ServerPacket.Message, new MessagePacket { Text = text, ColorArgb = color.ToArgb() });
     }
 
     public static void MessageMap(Player player, string text)
     {
-        var data = new NetDataWriter();
         var message = "[Map] " + player.Name + ": " + text;
-
-        data.Put((byte)ServerPacket.Message);
-        data.Put(message);
-        data.Put(Color.White.ToArgb());
-        Send.ToMap(player.Map, data);
+        Send.ToMap(player.Map, ServerPacket.Message, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
     }
 
     public static void MessageGlobal(Player player, string text)
     {
-        var data = new NetDataWriter();
         var message = "[Global] " + player.Name + ": " + text;
-
-        data.Put((byte)ServerPacket.Message);
-        data.Put(message);
-        data.Put(Color.Yellow.ToArgb());
-        Send.ToAll(data);
+        Send.ToAll(ServerPacket.Message, new MessagePacket { Text = message, ColorArgb = Color.Yellow.ToArgb() });
     }
 
     public static void MessagePrivate(Player player, string addresseeName, string text)

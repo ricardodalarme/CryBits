@@ -6,7 +6,7 @@ using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
-using LiteNetLib.Utils;
+using CryBits.Packets.Server;
 using static CryBits.Globals;
 using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
@@ -15,9 +15,9 @@ namespace CryBits.Client.Network.Handlers;
 
 internal static class PlayerHandler
 {
-    internal static void PlayerData(NetDataReader data)
+    internal static void PlayerData(PlayerDataPacket packet)
     {
-        var name = data.GetString();
+        var name = packet.Name;
         Player player;
 
         if (name != Player.Me.Name)
@@ -28,69 +28,69 @@ internal static class PlayerHandler
         else
             player = Player.Me;
 
-        player.TextureNum = data.GetShort();
-        player.Level = data.GetShort();
-        player.Map = TempMap.List[data.GetGuid()];
-        player.X = data.GetByte();
-        player.Y = data.GetByte();
-        player.Direction = (Direction)data.GetByte();
+        player.TextureNum = packet.TextureNum;
+        player.Level = packet.Level;
+        player.Map = TempMap.List[packet.MapId];
+        player.X = packet.X;
+        player.Y = packet.Y;
+        player.Direction = (Direction)packet.Direction;
         for (byte n = 0; n < (byte)Vital.Count; n++)
         {
-            player.Vital[n] = data.GetShort();
-            player.MaxVital[n] = data.GetShort();
+            player.Vital[n] = packet.Vital[n];
+            player.MaxVital[n] = packet.MaxVital[n];
         }
 
-        for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = data.GetShort();
-        for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(data.GetGuid());
+        for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = packet.Attribute[n];
+        for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(packet.Equipment[n]);
         TempMap.Current = player.Map;
     }
 
-    internal static void PlayerPosition(NetDataReader data)
+    internal static void PlayerPosition(PlayerPositionPacket packet)
     {
-        var player = Player.Get(data.GetString());
+        var player = Player.Get(packet.Name);
 
-        player.X = data.GetByte();
-        player.Y = data.GetByte();
-        player.Direction = (Direction)data.GetByte();
+        player.X = packet.X;
+        player.Y = packet.Y;
+        player.Direction = (Direction)packet.Direction;
 
         player.X2 = 0;
         player.Y2 = 0;
         player.Movement = Movement.Stopped;
     }
 
-    internal static void PlayerVitals(NetDataReader data)
+    internal static void PlayerVitals(PlayerVitalsPacket packet)
     {
-        var player = Player.Get(data.GetString());
+        var player = Player.Get(packet.Name);
 
         for (byte i = 0; i < (byte)Vital.Count; i++)
         {
-            player.Vital[i] = data.GetShort();
-            player.MaxVital[i] = data.GetShort();
+            player.Vital[i] = packet.Vital[i];
+            player.MaxVital[i] = packet.MaxVital[i];
         }
     }
 
-    internal static void PlayerEquipments(NetDataReader data)
+    internal static void PlayerEquipments(PlayerEquipmentsPacket packet)
     {
-        var player = Player.Get(data.GetString());
+        var player = Player.Get(packet.Name);
 
         // Update player's equipped items
-        for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(data.GetGuid());
+        for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(packet.Equipments[i]);
     }
 
-    internal static void PlayerLeave(NetDataReader data)
+    internal static void PlayerLeave(PlayerLeavePacket packet)
     {
         // Remove player from list
-        Player.List.Remove(Player.Get(data.GetString()));
+        Player.List.Remove(Player.Get(packet.Name));
     }
 
-    internal static void PlayerMove(NetDataReader data)
+    internal static void PlayerMove(PlayerMovePacket packet)
     {
-        var player = Player.Get(data.GetString());
+        var player = Player.Get(packet.Name);
 
-        player.X = data.GetByte();
-        player.Y = data.GetByte();
-        player.Direction = (Direction)data.GetByte();
-        player.Movement = (Movement)data.GetByte();
+        player.X = packet.X;
+        player.Y = packet.Y;
+        player.Direction = (Direction)packet.Direction;
+        player.Movement = (Movement)packet.Movement;
         player.X2 = 0;
         player.Y2 = 0;
 
@@ -103,17 +103,17 @@ internal static class PlayerHandler
         }
     }
 
-    internal static void PlayerDirection(NetDataReader data)
+    internal static void PlayerDirection(PlayerDirectionPacket packet)
     {
         // Update player's direction
-        Player.Get(data.GetString()).Direction = (Direction)data.GetByte();
+        Player.Get(packet.Name).Direction = (Direction)packet.Direction;
     }
 
-    internal static void PlayerAttack(NetDataReader data)
+    internal static void PlayerAttack(PlayerAttackPacket packet)
     {
-        var player = Player.Get(data.GetString());
-        var victim = data.GetString();
-        var victimType = data.GetByte();
+        var player = Player.Get(packet.Name);
+        var victim = packet.Victim;
+        var victimType = packet.VictimType;
 
         player.Attacking = true;
         player.AttackTimer = Environment.TickCount;
@@ -133,11 +133,11 @@ internal static class PlayerHandler
             }
     }
 
-    internal static void PlayerExperience(NetDataReader data)
+    internal static void PlayerExperience(PlayerExperiencePacket packet)
     {
-        Player.Me.Experience = data.GetInt();
-        Player.Me.ExpNeeded = data.GetInt();
-        Player.Me.Points = data.GetByte();
+        Player.Me.Experience = packet.Experience;
+        Player.Me.ExpNeeded = packet.ExpNeeded;
+        Player.Me.Points = packet.Points;
 
         Buttons.AttributesStrength.Visible = Player.Me.Points > 0;
         Buttons.AttributesResistance.Visible = Player.Me.Points > 0;
@@ -146,17 +146,17 @@ internal static class PlayerHandler
         Buttons.AttributesVitality.Visible = Player.Me.Points > 0;
     }
 
-    internal static void PlayerInventory(NetDataReader data)
+    internal static void PlayerInventory(PlayerInventoryPacket packet)
     {
         for (byte i = 0; i < MaxInventory; i++)
-            Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(data.GetGuid()), data.GetShort());
+            Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(packet.ItemIds[i]), packet.Amounts[i]);
     }
 
-    internal static void PlayerHotbar(NetDataReader data)
+    internal static void PlayerHotbar(PlayerHotbarPacket packet)
     {
         for (byte i = 0; i < MaxHotbar; i++)
         {
-            Player.Me.Hotbar[i] = new HotbarSlot((SlotType)data.GetByte(), data.GetByte());
+            Player.Me.Hotbar[i] = new HotbarSlot((SlotType)packet.Types[i], packet.Slots[i]);
         }
     }
 }

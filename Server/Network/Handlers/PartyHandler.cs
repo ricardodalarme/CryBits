@@ -1,14 +1,14 @@
+using CryBits.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Systems;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Handlers;
 
 internal static class PartyHandler
 {
-    internal static void PartyInvite(Player player, NetDataReader data)
+    internal static void PartyInvite(Player player, PartyInvitePacket packet)
     {
-        PartySystem.Invite(player, data.GetString());
+        PartySystem.Invite(player, packet.PlayerName);
     }
 
     internal static void PartyAccept(Player player)

@@ -1,6 +1,6 @@
 using CryBits.Enums;
+using CryBits.Packets.Server;
 using CryBits.Server.Entities;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Senders;
 
@@ -8,11 +8,7 @@ internal static class AuthSender
 {
     public static void Alert(Account account, string message, bool disconnect = true)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.Alert);
-        data.Put(message);
-        Send.ToPlayer(account, data);
+        Send.ToPlayer(account, ServerPacket.Alert, new AlertPacket { Message = message });
 
         // Disconnect the account.
         if (disconnect) account.Connection.Disconnect();
@@ -20,16 +16,11 @@ internal static class AuthSender
 
     public static void Latency(Account account)
     {
-        var data = new NetDataWriter();
-        data.Put((byte)ServerPacket.Latency);
-        Send.ToPlayer(account, data);
+        Send.ToPlayer(account, ServerPacket.Latency, new LatencyPacket());
     }
 
     public static void Connect(Account account)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.Connect);
-        Send.ToPlayer(account, data);
+        Send.ToPlayer(account, ServerPacket.Connect, new ConnectPacket());
     }
 }

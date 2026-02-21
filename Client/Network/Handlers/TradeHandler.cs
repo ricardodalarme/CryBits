@@ -7,19 +7,19 @@ using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
-using LiteNetLib.Utils;
+using CryBits.Packets.Server;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Network.Handlers;
 
 internal static class TradeHandler
 {
-    internal static void Trade(NetDataReader data)
+    internal static void Trade(TradePacket packet)
     {
-        var state = data.GetBool();
+        var state = packet.State;
 
         // Set trade panel visibility
-        Panels.Trade.Visible = data.GetBool();
+        Panels.Trade.Visible = packet.State;
 
         if (state)
         {
@@ -40,7 +40,7 @@ internal static class TradeHandler
         }
     }
 
-    internal static void TradeInvitation(NetDataReader data)
+    internal static void TradeInvitation(TradeInvitationPacket packet)
     {
         // Decline if player disabled trade invitations
         if (!Options.Trade)
@@ -50,13 +50,13 @@ internal static class TradeHandler
         }
 
         // Show trade invitation panel
-        PanelsEvents.TradeInvitation = data.GetString();
+        PanelsEvents.TradeInvitation = packet.PlayerInvitation;
         Panels.TradeInvitation.Visible = true;
     }
 
-    internal static void TradeState(NetDataReader data)
+    internal static void TradeState(TradeStatePacket packet)
     {
-        switch ((TradeStatus)data.GetByte())
+        switch ((TradeStatus)packet.State)
         {
             case TradeStatus.Accepted:
             case TradeStatus.Declined:
@@ -72,20 +72,20 @@ internal static class TradeHandler
         }
     }
 
-    internal static void TradeOffer(NetDataReader data)
+    internal static void TradeOffer(TradeOfferPacket packet)
     {
         // Read trade offer data
-        if (data.GetBool())
+        if (packet.Own)
             for (byte i = 0; i < MaxInventory; i++)
             {
-                Player.Me.TradeOffer[i].Item = Item.List.Get(data.GetGuid());
-                Player.Me.TradeOffer[i].Amount = data.GetShort();
+                Player.Me.TradeOffer[i].Item = Item.List.Get(packet.Items[i].ItemId);
+                Player.Me.TradeOffer[i].Amount = packet.Items[i].Amount;
             }
         else
             for (byte i = 0; i < MaxInventory; i++)
             {
-                Player.Me.TradeTheirOffer[i].Item = Item.List.Get(data.GetGuid());
-                Player.Me.TradeTheirOffer[i].Amount = data.GetShort();
+                Player.Me.TradeTheirOffer[i].Item = Item.List.Get(packet.Items[i].ItemId);
+                Player.Me.TradeTheirOffer[i].Amount = packet.Items[i].Amount;
             }
     }
 }

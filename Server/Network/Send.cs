@@ -1,3 +1,7 @@
+using System.Linq;
+using CryBits.Enums;
+using CryBits.Extensions;
+using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -6,48 +10,59 @@ namespace CryBits.Server.Network;
 
 internal static class Send
 {
-    public static void ToPlayer(Account account, NetDataWriter data)
+    public static void ToPlayer(Account account, ServerPacket packetId, IServerPacket packet)
     {
+        var data = new NetDataWriter();
+        data.Put((byte)packetId);
+        data.WriteObject(packet);
         account.Connection.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
-    public static void ToPlayer(Player player, NetDataWriter data)
+    public static void ToPlayer(Player player, ServerPacket packetId, IServerPacket packet) =>
+        ToPlayer(player.Account, packetId, packet);
+
+    public static void ToAll(ServerPacket packetId, IServerPacket packet)
     {
-        ToPlayer(player.Account, data);
+        var data = new NetDataWriter();
+        data.Put((byte)packetId);
+        data.WriteObject(packet);
+
+        foreach (var t in Account.List.Where(t => t.IsPlaying))
+            t.Connection.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
-    public static void ToAll(NetDataWriter data)
+    public static void ToAllBut(Player player, ServerPacket packetId, IServerPacket packet)
     {
-        for (var i = 0; i < Account.List.Count; i++)
-            if (Account.List[i].IsPlaying)
-                ToPlayer(Account.List[i].Character, data);
-    }
+        var data = new NetDataWriter();
+        data.Put((byte)packetId);
+        data.WriteObject(packet);
 
-    public static void ToAllBut(Player player, NetDataWriter data)
-    {
         // Send to all connected accounts except the player's account.
-        for (var i = 0; i < Account.List.Count; i++)
-            if (Account.List[i].IsPlaying)
-                if (player != Account.List[i].Character)
-                    ToPlayer(Account.List[i].Character, data);
+        foreach (var t in Account.List.Where(t => t.IsPlaying).Where(t => player != t.Character))
+            ToPlayer(t, packetId, packet);
     }
 
-    public static void ToMap(TempMap map, NetDataWriter data)
+    public static void ToMap(TempMap map, ServerPacket packetId, IServerPacket packet)
     {
+        var data = new NetDataWriter();
+        data.Put((byte)packetId);
+        data.WriteObject(packet);
+
         // Send to all players on the specified map.
-        for (var i = 0; i < Account.List.Count; i++)
-            if (Account.List[i].IsPlaying)
-                if (Account.List[i].Character.Map == map)
-                    ToPlayer(Account.List[i].Character, data);
+        foreach (var t in Account.List.Where(t => t.IsPlaying).Where(t => t.Character.Map == map))
+            ToPlayer(t, packetId, packet);
     }
 
-    public static void ToMapBut(TempMap map, Player player, NetDataWriter data)
+    public static void ToMapBut(TempMap map, Player player, ServerPacket packetId, IServerPacket packet)
     {
+        var data = new NetDataWriter();
+        data.Put((byte)packetId);
+        data.WriteObject(packet);
+
         // Send to all players on the map except the specified player.
-        for (var i = 0; i < Account.List.Count; i++)
-            if (Account.List[i].IsPlaying)
-                if (Account.List[i].Character.Map == map)
-                    if (player != Account.List[i].Character)
-                        ToPlayer(Account.List[i].Character, data);
+        foreach (var t in Account.List.Where(t => t.IsPlaying)
+                     .Where(t => t.Character.Map == map)
+                     .Where(t => player != t.Character))
+            ToPlayer(t, packetId, packet);
     }
 }

@@ -1,25 +1,23 @@
-using System;
-using System.Collections.Generic;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.UI.Events;
 using CryBits.Entities.Shop;
 using CryBits.Extensions;
-using LiteNetLib.Utils;
+using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
 internal static class ShopHandler
 {
-    internal static void Shops(NetDataReader data)
+    internal static void Shops(ShopsPacket packet)
     {
         // Read shops dictionary
-        Shop.List = (Dictionary<Guid, Shop>)data.ReadObject();
+        Shop.List = packet.List;
     }
 
-    internal static void ShopOpen(NetDataReader data)
+    internal static void ShopOpen(ShopOpenPacket packet)
     {
         // Open shop panel
-        PanelsEvents.ShopOpen = Shop.List.Get(data.GetGuid());
+        PanelsEvents.ShopOpen = Shop.List.Get(packet.Id);
         Panels.Shop.Visible = PanelsEvents.ShopOpen != null;
     }
 }

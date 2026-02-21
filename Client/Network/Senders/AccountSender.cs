@@ -3,47 +3,32 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.UI.Events;
 using CryBits.Entities;
 using CryBits.Enums;
-using LiteNetLib.Utils;
+using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
 internal static class AccountSender
 {
-    public static void CreateCharacter()
-    {
-        var data = new NetDataWriter();
+    public static void CreateCharacter() =>
+        Send.Packet(ClientPacket.CreateCharacter, new CreateCharacterPacket
+        {
+            Name = TextBoxes.CreateCharacterName.Text,
+            ClassId = Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value.Id.ToString(),
+            GenderMale = CheckBoxes.GenderMale.Checked,
+            TextureNum = PanelsEvents.CreateCharacterTex
+        });
 
-        data.Put((byte)ClientPacket.CreateCharacter);
-        data.Put(TextBoxes.CreateCharacterName.Text);
-        data.Put(Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value.Id.ToString());
-        data.Put(CheckBoxes.GenderMale.Checked);
-        data.Put(PanelsEvents.CreateCharacterTex);
-        Send.Packet(data);
-    }
+    public static void CharacterUse() =>
+        Send.Packet(ClientPacket.CharacterUse, new CharacterUsePacket
+        {
+            CharacterIndex = PanelsEvents.SelectCharacter
+        });
 
-    public static void CharacterUse()
-    {
-        var data = new NetDataWriter();
+    public static void CharacterCreate() => Send.Packet(ClientPacket.CharacterCreate, new CharacterCreatePacket());
 
-        data.Put((byte)ClientPacket.CharacterUse);
-        data.Put(PanelsEvents.SelectCharacter);
-        Send.Packet(data);
-    }
-
-    public static void CharacterCreate()
-    {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ClientPacket.CharacterCreate);
-        Send.Packet(data);
-    }
-
-    public static void CharacterDelete()
-    {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ClientPacket.CharacterDelete);
-        data.Put(PanelsEvents.SelectCharacter);
-        Send.Packet(data);
-    }
+    public static void CharacterDelete() =>
+        Send.Packet(ClientPacket.CharacterDelete, new CharacterDeletePacket
+        {
+            CharacterIndex = PanelsEvents.SelectCharacter
+        });
 }

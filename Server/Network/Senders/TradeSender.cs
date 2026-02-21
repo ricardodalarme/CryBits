@@ -1,7 +1,7 @@
 using CryBits.Enums;
 using CryBits.Extensions;
+using CryBits.Packets.Server;
 using CryBits.Server.Entities;
-using LiteNetLib.Utils;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Senders;
@@ -10,44 +10,35 @@ internal static class TradeSender
 {
     public static void Trade(Player player, bool state)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.Trade);
-        data.Put(state);
-        Send.ToPlayer(player, data);
+        Send.ToPlayer(player, ServerPacket.Trade, new TradePacket { State = state });
     }
 
     public static void TradeInvitation(Player player, string playerInvitation)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.TradeInvitation);
-        data.Put(playerInvitation);
-        Send.ToPlayer(player, data);
+        Send.ToPlayer(player, ServerPacket.TradeInvitation, new TradeInvitationPacket { PlayerInvitation = playerInvitation });
     }
 
     public static void TradeState(Player player, TradeStatus state)
     {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ServerPacket.TradeState);
-        data.Put((byte)state);
-        Send.ToPlayer(player, data);
+        Send.ToPlayer(player, ServerPacket.TradeState, new TradeStatePacket { State = (byte)state });
     }
 
     public static void TradeOffer(Player player, bool own = true)
     {
-        var data = new NetDataWriter();
         var to = own ? player : player.Trade;
-
-        data.Put((byte)ServerPacket.TradeOffer);
-        data.Put(own);
-        for (byte i = 0; i < MaxInventory; i++)
+        var packet = new TradeOfferPacket
         {
-            data.Put(to.Inventory[to.TradeOffer[i].SlotNum].Item.GetId());
-            data.Put(to.TradeOffer[i].Amount);
+            Own = own,
+            Items = new PacketsTradeOfferItem[MaxInventory]
+        };
+        for (short i = 0; i < MaxInventory; i++)
+        {
+            packet.Items[i] = new PacketsTradeOfferItem
+            {
+                ItemId = to.Inventory[to.TradeOffer[i].SlotNum].Item.GetId(),
+                Amount = to.TradeOffer[i].Amount
+            };
         }
-
-        Send.ToPlayer(player, data);
+        Send.ToPlayer(player, ServerPacket.TradeOffer, packet);
     }
 }

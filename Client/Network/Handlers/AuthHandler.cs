@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.UI.Events;
 using CryBits.Entities;
-using LiteNetLib.Utils;
+using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -15,10 +14,10 @@ internal static class AuthHandler
         Socket.Latency = Environment.TickCount - Socket.LatencySend;
     }
 
-    internal static void Alert(NetDataReader data)
+    internal static void Alert(AlertPacket packet)
     {
         // Show alert message
-        Utils.Alert.Show(data.GetString());
+        Utils.Alert.Show(packet.Message);
     }
 
     internal static void Connect()

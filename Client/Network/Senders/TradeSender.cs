@@ -1,60 +1,23 @@
 using CryBits.Enums;
-using LiteNetLib.Utils;
+using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
 internal static class TradeSender
 {
-    public static void TradeInvite(string playerName)
-    {
-        var data = new NetDataWriter();
+    public static void TradeInvite(string playerName) =>
+        Send.Packet(ClientPacket.TradeInvite, new TradeInvitePacket { PlayerName = playerName });
 
-        data.Put((byte)ClientPacket.TradeInvite);
-        data.Put(playerName);
-        Send.Packet(data);
-    }
+    public static void TradeAccept() => Send.Packet(ClientPacket.TradeAccept, new TradeAcceptPacket());
 
-    public static void TradeAccept()
-    {
-        var data = new NetDataWriter();
+    public static void TradeDecline() => Send.Packet(ClientPacket.TradeDecline, new TradeDeclinePacket());
 
-        data.Put((byte)ClientPacket.TradeAccept);
-        Send.Packet(data);
-    }
+    public static void TradeLeave() => Send.Packet(ClientPacket.TradeLeave, new TradeLeavePacket());
 
-    public static void TradeDecline()
-    {
-        var data = new NetDataWriter();
+    public static void TradeOffer(short slot, short inventorySlot, short amount = 1) =>
+        Send.Packet(ClientPacket.TradeOffer,
+            new TradeOfferPacket { Slot = slot, InventorySlot = inventorySlot, Amount = amount });
 
-        data.Put((byte)ClientPacket.TradeDecline);
-        Send.Packet(data);
-    }
-
-    public static void TradeLeave()
-    {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ClientPacket.TradeLeave);
-        Send.Packet(data);
-    }
-
-    public static void TradeOffer(short slot, short inventorySlot, short amount = 1)
-    {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ClientPacket.TradeOffer);
-        data.Put(slot);
-        data.Put(inventorySlot);
-        data.Put(amount);
-        Send.Packet(data);
-    }
-
-    public static void TradeOfferState(TradeStatus state)
-    {
-        var data = new NetDataWriter();
-
-        data.Put((byte)ClientPacket.TradeOfferState);
-        data.Put((byte)state);
-        Send.Packet(data);
-    }
+    public static void TradeOfferState(TradeStatus state) => Send.Packet(ClientPacket.TradeOfferState,
+        new TradeOfferStatePacket { State = (byte)state });
 }

@@ -1,24 +1,24 @@
 using CryBits.Enums;
+using CryBits.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Systems;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Handlers;
 
 internal static class PlayerHandler
 {
-    internal static void PlayerDirection(Player player, NetDataReader data)
+    internal static void PlayerDirection(Player player, PlayerDirectionPacket packet)
     {
-        MovementSystem.ChangeDirection(player, (Direction)data.GetByte());
+        MovementSystem.ChangeDirection(player, (Direction)packet.Direction);
     }
 
-    internal static void PlayerMove(Player player, NetDataReader data)
+    internal static void PlayerMove(Player player, PlayerMovePacket packet)
     {
-        if (player.X != data.GetByte() || player.Y != data.GetByte())
+        if (player.X != packet.X || player.Y != packet.Y)
             PlayerSender.PlayerPosition(player);
         else
-            MovementSystem.Move(player, data.GetByte());
+            MovementSystem.Move(player, packet.Movement);
     }
 
     internal static void PlayerAttack(Player player)
@@ -26,9 +26,9 @@ internal static class PlayerHandler
         CombatSystem.Attack(player);
     }
 
-    internal static void AddPoint(Player player, NetDataReader data)
+    internal static void AddPoint(Player player, AddPointPacket packet)
     {
-        LevelingSystem.AddPoint(player, data.GetByte());
+        LevelingSystem.AddPoint(player, packet.Attribute);
     }
 
     internal static void CollectItem(Player player)
@@ -36,16 +36,16 @@ internal static class PlayerHandler
         InventorySystem.CollectItem(player);
     }
 
-    internal static void DropItem(Player player, NetDataReader data)
+    internal static void DropItem(Player player, DropItemPacket packet)
     {
-        var slot = data.GetShort();
-        var amount = data.GetShort();
+        var slot = packet.Slot;
+        var amount = packet.Amount;
         if (slot != -1) InventorySystem.DropItem(player, player.Inventory[slot], amount);
     }
 
-    internal static void InventoryChange(Player player, NetDataReader data)
+    internal static void InventoryChange(Player player, InventoryChangePacket packet)
     {
-        short slotOld = data.GetShort(), slotNew = data.GetShort();
+        short slotOld = packet.OldSlot, slotNew = packet.NewSlot;
 
         // Early exits.
         if (player.Inventory[slotOld].Item == null) return;
@@ -58,28 +58,28 @@ internal static class PlayerHandler
         HotbarSystem.SyncInventorySwap(player, slotOld, slotNew);
     }
 
-    internal static void InventoryUse(Player player, NetDataReader data)
+    internal static void InventoryUse(Player player, InventoryUsePacket packet)
     {
-        InventorySystem.UseItem(player, player.Inventory[data.GetByte()]);
+        InventorySystem.UseItem(player, player.Inventory[packet.Slot]);
     }
 
-    internal static void EquipmentRemove(Player player, NetDataReader data)
+    internal static void EquipmentRemove(Player player, EquipmentRemovePacket packet)
     {
-        EquipmentSystem.Unequip(player, data.GetByte());
+        EquipmentSystem.Unequip(player, packet.Slot);
     }
 
-    internal static void HotbarAdd(Player player, NetDataReader data)
+    internal static void HotbarAdd(Player player, HotbarAddPacket packet)
     {
-        HotbarSystem.Add(player, data.GetShort(), (SlotType)data.GetByte(), data.GetShort());
+        HotbarSystem.Add(player, packet.HotbarSlot, (SlotType)packet.Type, packet.Slot);
     }
 
-    internal static void HotbarChange(Player player, NetDataReader data)
+    internal static void HotbarChange(Player player, HotbarChangePacket packet)
     {
-        HotbarSystem.Change(player, data.GetShort(), data.GetShort());
+        HotbarSystem.Change(player, packet.OldSlot, packet.NewSlot);
     }
 
-    internal static void HotbarUse(Player player, NetDataReader data)
+    internal static void HotbarUse(Player player, HotbarUsePacket packet)
     {
-        HotbarSystem.Use(player, data.GetShort());
+        HotbarSystem.Use(player, packet.Slot);
     }
 }

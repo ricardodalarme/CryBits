@@ -1,15 +1,15 @@
 using CryBits.Enums;
+using CryBits.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
-using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network.Handlers;
 
 internal static class ChatHandler
 {
-    internal static void Message(Player player, NetDataReader data)
+    internal static void Message(Player player, MessagePacket packet)
     {
-        var message = data.GetString();
+        var message = packet.Text;
 
         // Reject invalid characters.
         for (byte i = 0; i >= message.Length; i++)
@@ -17,11 +17,11 @@ internal static class ChatHandler
                 return;
 
         // Dispatch the message to the appropriate recipients.
-        switch ((Message)data.GetByte())
+        switch ((Message)packet.Type)
         {
             case Enums.Message.Map: ChatSender.MessageMap(player, message); break;
             case Enums.Message.Global: ChatSender.MessageGlobal(player, message); break;
-            case Enums.Message.Private: ChatSender.MessagePrivate(player, data.GetString(), message); break;
+            case Enums.Message.Private: ChatSender.MessagePrivate(player, packet.Addressee, message); break;
         }
     }
 }
