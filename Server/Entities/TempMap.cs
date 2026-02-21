@@ -5,15 +5,13 @@ using CryBits.Entities.Map;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Systems;
+using CryBits.Server.World;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Entities;
 
 internal class TempMap(Guid id, Map map) : Entity(id)
 {
-    // Active temporary map instances.
-    public static readonly Dictionary<Guid, TempMap> List = [];
-
     // Map data and runtime caches.
     public readonly Map Data = map;
     public TempNpc[] Npc = Array.Empty<TempNpc>();
@@ -100,7 +98,7 @@ internal class TempMap(Guid id, Map map) : Entity(id)
     {
         var id = isOriginal ? map.Id : Guid.NewGuid();
         var tempMap = new TempMap(id, map);
-        List.Add(id, tempMap);
+        GameWorld.Current.Maps.Add(id, tempMap);
 
         // Initialize NPCs for the map.
         tempMap.Npc = new TempNpc[map.Npc.Count];

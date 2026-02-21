@@ -3,6 +3,7 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.World;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Systems;
@@ -35,7 +36,7 @@ internal static class MovementSystem
     {
         byte nextX = player.X, nextY = player.Y;
         byte oldX = player.X, oldY = player.Y;
-        var link = TempMap.List.Get(player.Map.Data.Link[(byte)player.Direction].GetId());
+        var link = GameWorld.Current.Maps.Get(player.Map.Data.Link[(byte)player.Direction].GetId());
         var secondMovement = false;
 
         if (movement < 1 || movement > 2) return;
@@ -83,7 +84,7 @@ internal static class MovementSystem
         {
             case TileAttribute.Warp:
                 if (tile.Data4 > 0) player.Direction = (Direction)tile.Data4 - 1;
-                Warp(player, TempMap.List.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
+                Warp(player, GameWorld.Current.Maps.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
                 secondMovement = true;
                 break;
         }

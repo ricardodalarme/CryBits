@@ -6,6 +6,7 @@ using CryBits.Server.Commands;
 using CryBits.Server.Entities;
 using CryBits.Server.Network;
 using CryBits.Server.Systems;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Logic;
 
@@ -37,7 +38,7 @@ internal static class Loop
             if (now > _timer500 + 500)
             {
                 // Map logic
-                foreach (var tempMap in TempMap.List.Values)
+                foreach (var tempMap in GameWorld.Current.Maps.Values)
                 {
                     MapItemSystem.Tick(tempMap);
                     tempMap.Logic();

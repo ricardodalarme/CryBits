@@ -8,6 +8,7 @@ using CryBits.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence.Repositories;
+using CryBits.Server.World;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Handlers;
@@ -66,7 +67,7 @@ internal static class EditorHandler
         MapRepository.WriteAll();
 
         // Update runtime map state and broadcast maps to players/editors.
-        foreach (var tempMap in TempMap.List.Values)
+        foreach (var tempMap in GameWorld.Current.Maps.Values)
         {
             // Spawn any static map items.
             tempMap.SpawnItems();

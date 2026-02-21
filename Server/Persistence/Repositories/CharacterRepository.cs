@@ -5,6 +5,7 @@ using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities;
+using CryBits.Server.World;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
 
@@ -30,7 +31,7 @@ internal static class CharacterRepository
         account.Character.Genre = data.ReadBoolean();
         account.Character.Experience = data.ReadInt32();
         account.Character.Points = data.ReadByte();
-        account.Character.Map = TempMap.List.Get(new Guid(data.ReadString()));
+        account.Character.Map = GameWorld.Current.Maps.Get(new Guid(data.ReadString()));
         account.Character.X = data.ReadByte();
         account.Character.Y = data.ReadByte();
         account.Character.Direction = (Direction)data.ReadByte();

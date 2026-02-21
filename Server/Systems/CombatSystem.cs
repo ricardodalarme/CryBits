@@ -4,6 +4,7 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.World;
 using static CryBits.Globals;
 using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
@@ -120,7 +121,7 @@ internal static class CombatSystem
         PlayerSender.PlayerExperience(player);
 
         player.Direction = (Direction)player.Class.SpawnDirection;
-        MovementSystem.Warp(player, TempMap.List.Get(player.Class.SpawnMap.Id), player.Class.SpawnX,
+        MovementSystem.Warp(player, GameWorld.Current.Maps.Get(player.Class.SpawnMap.Id), player.Class.SpawnX,
             player.Class.SpawnY);
     }
 

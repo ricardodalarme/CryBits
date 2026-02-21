@@ -7,6 +7,7 @@ using CryBits.Server.Logic;
 using CryBits.Server.Network;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
+using CryBits.Server.World;
 
 namespace CryBits.Server;
 
@@ -36,9 +37,13 @@ internal static class Program
         // Load all game data.
         DataLoader.LoadAll();
 
+        // Create world
+        Console.WriteLine("Creating world.");
+        _ = new GameWorld();
+
         // Create temporary maps.
         Console.WriteLine("Creating temporary maps.");
-        foreach (var map in Map.List.Values) TempMap.CreateTemporary(map, true);
+        foreach (var map in Map.List.Values) MapInstance.CreateTemporary(map, true);
 
         // Initialize network sockets.
         Socket.Init();

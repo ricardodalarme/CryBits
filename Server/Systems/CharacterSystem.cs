@@ -10,6 +10,7 @@ using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
+using CryBits.Server.World;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Systems;
@@ -53,7 +54,7 @@ internal static class CharacterSystem
             ? @class.TextureMale[packet.TextureNum]
             : @class.TextureFemale[packet.TextureNum];
         account.Character.Attribute = @class.Attribute;
-        account.Character.Map = TempMap.List.Get(@class.SpawnMap.Id);
+        account.Character.Map = GameWorld.Current.Maps.Get(@class.SpawnMap.Id);
         account.Character.Direction = (Direction)@class.SpawnDirection;
         account.Character.X = @class.SpawnX;
         account.Character.Y = @class.SpawnY;
