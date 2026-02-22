@@ -2,9 +2,10 @@ name: Build
 
 on:
   push:
-    branches: 
+    branches:
       - main
       - stable
+
   pull_request:
     types:
       - opened
@@ -14,20 +15,15 @@ on:
 
 jobs:
   build:
-    runs-on: [windows-latest]
+    runs-on: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 6.0.x
-        
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1
-
-      - name: Restore NuGet Packages
-        run: nuget restore CryBits.sln
+          dotnet-version: 10.0.x
+          cache: true
 
       - name: Build the Solution
-        run: dotnet build CryBits.sln --no-restore
+        run: dotnet build CryBits.sln
