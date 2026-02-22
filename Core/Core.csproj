@@ -5,6 +5,7 @@
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>default</LangVersion>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
  <PropertyGroup>
