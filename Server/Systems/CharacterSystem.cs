@@ -19,13 +19,13 @@ namespace CryBits.Server.Systems;
 internal static class CharacterSystem
 {
     /// <summary>Validates and creates a new character for <paramref name="account"/>, then joins the game.</summary>
-    internal static void Create(Account account, CreateCharacterPacket packet)
+    internal static void Create(GameSession session, CreateCharacterPacket packet)
     {
         var name = packet.Name.Trim();
 
         if (name.Length < Config.MinNameLength || name.Length > Config.MaxNameLength)
         {
-            AuthSender.Alert(account,
+            AuthSender.Alert(session,
                 "The character name must contain between " + Config.MinNameLength + " and " + Config.MaxNameLength +
                 " characters.",
                 false);
@@ -34,92 +34,90 @@ internal static class CharacterSystem
 
         if (name.Contains(';') || name.Contains(':'))
         {
-            AuthSender.Alert(account, "Can't contain ';' and ':' in the character name.", false);
+            AuthSender.Alert(session, "Can't contain ';' and ':' in the character name.", false);
             return;
         }
 
         if (CharacterRepository.ReadAllNames().Contains(";" + name + ":"))
         {
-            AuthSender.Alert(account, "A character with this name already exists", false);
+            AuthSender.Alert(session, "A character with this name already exists", false);
             return;
         }
 
         Class @class;
-        account.Character = new Player(account);
-        account.Character.Name = name;
-        account.Character.Level = 1;
-        account.Character.Class = @class = Class.List.Get(new Guid(packet.ClassId));
-        account.Character.Genre = packet.GenderMale;
-        account.Character.TextureNum = account.Character.Genre
+        session.Character = new Player(session);
+        session.Character.Name = name;
+        session.Character.Level = 1;
+        session.Character.Class = @class = Class.List.Get(new Guid(packet.ClassId));
+        session.Character.Genre = packet.GenderMale;
+        session.Character.TextureNum = session.Character.Genre
             ? @class.TextureMale[packet.TextureNum]
             : @class.TextureFemale[packet.TextureNum];
-        account.Character.Attribute = @class.Attribute;
-        account.Character.MapInstance = GameWorld.Current.Maps.Get(@class.SpawnMap.Id);
-        account.Character.Direction = (Direction)@class.SpawnDirection;
-        account.Character.X = @class.SpawnX;
-        account.Character.Y = @class.SpawnY;
-        for (byte i = 0; i < (byte)Vital.Count; i++) account.Character.Vital[i] = account.Character.MaxVital(i);
+        session.Character.Attribute = @class.Attribute;
+        session.Character.MapInstance = GameWorld.Current.Maps.Get(@class.SpawnMap.Id);
+        session.Character.Direction = (Direction)@class.SpawnDirection;
+        session.Character.X = @class.SpawnX;
+        session.Character.Y = @class.SpawnY;
+        for (byte i = 0; i < (byte)Vital.Count; i++) session.Character.Vital[i] = session.Character.MaxVital(i);
         for (byte i = 0; i < (byte)@class.Item.Count; i++)
             if (@class.Item[i].Item.Type == ItemType.Equipment &&
-                account.Character.Equipment[@class.Item[i].Item.EquipType] == null)
-                account.Character.Equipment[@class.Item[i].Item.EquipType] = @class.Item[i].Item;
+                session.Character.Equipment[@class.Item[i].Item.EquipType] == null)
+                session.Character.Equipment[@class.Item[i].Item.EquipType] = @class.Item[i].Item;
             else
-                InventorySystem.GiveItem(account.Character, @class.Item[i].Item, @class.Item[i].Amount);
-        for (byte i = 0; i < MaxHotbar; i++) account.Character.Hotbar[i] = new HotbarSlot(SlotType.None, 0);
+                InventorySystem.GiveItem(session.Character, @class.Item[i].Item, @class.Item[i].Amount);
+        for (byte i = 0; i < MaxHotbar; i++) session.Character.Hotbar[i] = new HotbarSlot(SlotType.None, 0);
 
         CharacterRepository.WriteName(name);
-        CharacterRepository.Write(account);
+        CharacterRepository.Write(session);
 
-        Join(account.Character);
+        Join(session.Character);
     }
 
     /// <summary>Loads the selected character for <paramref name="account"/> and joins the game.</summary>
-    internal static void Use(Account account, int index)
+    internal static void Use(GameSession session, int index)
     {
-        if (index < 0 || index >= account.Characters.Count) return;
+        if (index < 0 || index >= session.Characters.Count) return;
 
-        CharacterRepository.Read(account, account.Characters[index].Name);
-        Join(account.Character);
+        CharacterRepository.Read(session, session.Characters[index].Name);
+        Join(session.Character);
     }
 
-    /// <summary>Opens the character-creation screen, after verifying the slot limit.</summary>
-    internal static void OpenCreation(Account account)
+    internal static void OpenCreation(GameSession session)
     {
-        if (account.Characters.Count == Config.MaxCharacters)
+        if (session.Characters.Count == Config.MaxCharacters)
         {
-            AuthSender.Alert(account, "You can only have " + Config.MaxCharacters + " characters.", false);
+            AuthSender.Alert(session, "You can only have " + Config.MaxCharacters + " characters.", false);
             return;
         }
 
-        ClassSender.Classes(account);
-        AccountSender.CreateCharacter(account);
+        ClassSender.Classes(session);
+        AccountSender.CreateCharacter(session);
     }
 
-    /// <summary>Deletes the character at <paramref name="index"/> from <paramref name="account"/>.</summary>
-    internal static void Delete(Account account, int index)
+    internal static void Delete(GameSession session, int index)
     {
-        if (index < 0 || index >= account.Characters.Count) return;
+        if (index < 0 || index >= session.Characters.Count) return;
 
-        var name = account.Characters[index].Name;
-        AuthSender.Alert(account, "The character '" + name + "' has been deleted.", false);
+        var name = session.Characters[index].Name;
+        AuthSender.Alert(session, "The character '" + name + "' has been deleted.", false);
         CharacterRepository.WriteAllNames(CharacterRepository.ReadAllNames().Replace(":;" + name + ":", ":"));
-        account.Characters.RemoveAt(index);
-        File.Delete(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", name) + Directories.Format);
+        session.Characters.RemoveAt(index);
+        File.Delete(Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", name) + Directories.Format);
 
-        AccountSender.Characters(account);
-        AccountRepository.Write(account);
+        AccountSender.Characters(session);
+        AccountRepository.Write(session);
     }
 
     /// <summary>Sends all required game data and places <paramref name="player"/> into the world.</summary>
     internal static void Join(Player player)
     {
-        player.Account.Characters = null;
+        player.Session.Characters = [];
 
         PlayerSender.Join(player);
-        ItemSender.Items(player.Account);
-        NpcSender.Npcs(player.Account);
-        ShopSender.Shops(player.Account);
-        MapSender.Map(player.Account, player.MapInstance.Data);
+        ItemSender.Items(player.Session);
+        NpcSender.Npcs(player.Session);
+        ShopSender.Shops(player.Session);
+        MapSender.Map(player.Session, player.MapInstance.Data);
         MapSender.MapPlayers(player);
         PlayerSender.PlayerExperience(player);
         PlayerSender.PlayerInventory(player);
@@ -134,7 +132,7 @@ internal static class CharacterSystem
     /// <summary>Saves the character, notifies the map, and cleans up active sessions.</summary>
     internal static void Leave(Player player)
     {
-        CharacterRepository.Write(player.Account);
+        CharacterRepository.Write(player.Session);
         PlayerSender.PlayerLeave(player);
 
         PartySystem.Leave(player);

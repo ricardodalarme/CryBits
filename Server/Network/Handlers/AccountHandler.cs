@@ -1,32 +1,32 @@
 using CryBits.Packets.Client;
-using CryBits.Server.Entities;
 using CryBits.Server.Systems;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Handlers;
 
 internal static class AccountHandler
 {
     [PacketHandler]
-    internal static void CreateCharacter(Account account, CreateCharacterPacket packet)
+    internal static void CreateCharacter(GameSession session, CreateCharacterPacket packet)
     {
-        CharacterSystem.Create(account, packet);
+        CharacterSystem.Create(session, packet);
     }
 
     [PacketHandler]
-    internal static void CharacterUse(Account account, CharacterUsePacket packet)
+    internal static void CharacterUse(GameSession session, CharacterUsePacket packet)
     {
-        CharacterSystem.Use(account, packet.CharacterIndex);
+        CharacterSystem.Use(session, packet.CharacterIndex);
     }
 
     [PacketHandler]
-    internal static void CharacterCreate(Account account, CharacterCreatePacket packet)
+    internal static void CharacterCreate(GameSession session, CharacterCreatePacket packet)
     {
-        CharacterSystem.OpenCreation(account);
+        CharacterSystem.OpenCreation(session);
     }
 
     [PacketHandler]
-    internal static void CharacterDelete(Account account, CharacterDeletePacket packet)
+    internal static void CharacterDelete(GameSession session, CharacterDeletePacket packet)
     {
-        CharacterSystem.Delete(account, packet.CharacterIndex);
+        CharacterSystem.Delete(session, packet.CharacterIndex);
     }
 }

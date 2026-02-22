@@ -2,14 +2,15 @@ using CryBits.Entities.Shop;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
 internal static class ShopSender
 {
-    public static void Shops(Account account)
+    public static void Shops(GameSession session)
     {
-        Send.ToPlayer(account, new ShopsPacket { List = Shop.List });
+        Send.ToPlayer(session, new ShopsPacket { List = Shop.List });
     }
 
     public static void ShopOpen(Player player, Shop shop)

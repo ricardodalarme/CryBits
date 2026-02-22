@@ -44,8 +44,8 @@ internal static class Loop
                 }
 
                 // Player vital regeneration
-                foreach (var account in GameWorld.Current.Accounts.Where(a => a.IsPlaying))
-                    RegenerationSystem.Tick(account.Character);
+                foreach (var session in GameWorld.Current.Sessions.Where(a => a.IsPlaying))
+                    RegenerationSystem.Tick(session.Character!);
 
                 // Reset 500 ms timer.
                 _timer500 = now;

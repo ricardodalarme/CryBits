@@ -1,25 +1,24 @@
 using CryBits.Packets.Server;
-using CryBits.Server.Entities;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
 internal static class AuthSender
 {
-    public static void Alert(Account account, string message, bool disconnect = true)
+    public static void Alert(GameSession session, string message, bool disconnect = true)
     {
-        Send.ToPlayer(account, new AlertPacket { Message = message });
+        Send.ToPlayer(session, new AlertPacket { Message = message });
 
-        // Disconnect the account.
-        if (disconnect) account.Connection.Disconnect();
+        if (disconnect) session.Connection.Disconnect();
     }
 
-    public static void Latency(Account account)
+    public static void Latency(GameSession session)
     {
-        Send.ToPlayer(account, new LatencyPacket());
+        Send.ToPlayer(session, new LatencyPacket());
     }
 
-    public static void Connect(Account account)
+    public static void Connect(GameSession session)
     {
-        Send.ToPlayer(account, new ConnectPacket());
+        Send.ToPlayer(session, new ConnectPacket());
     }
 }

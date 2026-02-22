@@ -1,4 +1,4 @@
-using CryBits.Server.Entities;
+using CryBits.Server.Systems;
 using CryBits.Server.World;
 using LiteNetLib;
 using static CryBits.Globals;
@@ -23,20 +23,20 @@ internal static class Socket
                 request.Reject();
         };
 
-        _listener.PeerConnectedEvent += peer =>
-        {
-            GameWorld.Current.Accounts.Add(new Account(peer));
-        };
+        _listener.PeerConnectedEvent += peer => { GameWorld.Current.Sessions.Add(new GameSession(peer)); };
 
         _listener.PeerDisconnectedEvent += (peer, _) =>
         {
-            GameWorld.Current.Accounts.Find(x => x.Connection == peer)?.Leave();
+            var session = GameWorld.Current.Sessions.Find(x => x.Connection == peer);
+            if (session == null) return;
+            if (session.Character != null) CharacterSystem.Leave(session.Character);
+            GameWorld.Current.Sessions.Remove(session);
         };
 
         _listener.NetworkReceiveEvent += (peer, reader, _, _) =>
         {
-            var account = GameWorld.Current.Accounts.Find(x => x.Connection == peer);
-            PacketDispatcher.Dispatch(account, reader);
+            var session = GameWorld.Current.Sessions.Find(x => x.Connection == peer);
+            PacketDispatcher.Dispatch(session, reader);
             reader.Recycle();
         };
 

@@ -39,10 +39,10 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
     public Player HasPlayer(byte x, byte y)
     {
         // Return player at the given coordinates if present
-        foreach (var account in GameWorld.Current.Accounts)
-            if (account.IsPlaying)
-                if ((account.Character.X, account.Character.Y, Map: account.Character.MapInstance) == (x, y, this))
-                    return account.Character;
+        foreach (var session in GameWorld.Current.Sessions)
+            if (session.IsPlaying)
+                if ((session.Character!.X, session.Character.Y, Map: session.Character.MapInstance) == (x, y, this))
+                    return session.Character;
 
         return null;
     }
@@ -50,9 +50,9 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
     public bool HasPlayers()
     {
         // Return true if any player is on this map.
-        foreach (var account in GameWorld.Current.Accounts)
-            if (account.IsPlaying)
-                if (account.Character.MapInstance == this)
+        foreach (var session in GameWorld.Current.Sessions)
+            if (session.IsPlaying)
+                if (session.Character!.MapInstance == this)
                     return true;
 
         return false;

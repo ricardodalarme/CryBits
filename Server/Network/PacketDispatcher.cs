@@ -6,6 +6,7 @@ using System.Reflection;
 using CryBits.Extensions;
 using CryBits.Packets.Client;
 using CryBits.Server.Entities;
+using CryBits.Server.World;
 using LiteNetLib;
 
 namespace CryBits.Server.Network;
@@ -23,7 +24,7 @@ namespace CryBits.Server.Network;
 /// </summary>
 internal static class PacketDispatcher
 {
-    private static readonly Dictionary<Type, Action<Account, IClientPacket>> _handlers = new();
+    private static readonly Dictionary<Type, Action<GameSession, IClientPacket>> _handlers = new();
 
     internal static void Register()
     {
@@ -53,29 +54,29 @@ internal static class PacketDispatcher
         Console.WriteLine($"PacketDispatcher: {_handlers.Count} handlers registered.");
     }
 
-    internal static void Dispatch(Account account, NetPacketReader data)
+    internal static void Dispatch(GameSession session, NetPacketReader data)
     {
         var packet = (IClientPacket)data.ReadObject();
 
         if (_handlers.TryGetValue(packet.GetType(), out var handler))
-            handler(account, packet);
+            handler(session, packet);
     }
 
-    private static Action<Account, IClientPacket> BuildHandler(MethodInfo method)
+    private static Action<GameSession, IClientPacket> BuildHandler(MethodInfo method)
     {
-        var accountParam = Expression.Parameter(typeof(Account), "account");
+        var accountParam = Expression.Parameter(typeof(GameSession), "session");
         var packetParam = Expression.Parameter(typeof(IClientPacket), "packet");
 
         var methodParams = method.GetParameters();
         var firstParamType = methodParams[0].ParameterType;
 
-        // Account-based handler
-        if (firstParamType == typeof(Account))
+        // GameSession-based handler
+        if (firstParamType == typeof(GameSession))
         {
             var call = Expression.Call(method, accountParam,
                 Expression.Convert(packetParam, methodParams[1].ParameterType));
 
-            return Expression.Lambda<Action<Account, IClientPacket>>(
+            return Expression.Lambda<Action<GameSession, IClientPacket>>(
                 call, accountParam, packetParam).Compile();
         }
 
@@ -83,7 +84,7 @@ internal static class PacketDispatcher
         var playerVar = Expression.Variable(typeof(Player), "player");
         var assign = Expression.Assign(
             playerVar,
-            Expression.Property(accountParam, nameof(Account.Character)));
+            Expression.Property(accountParam, nameof(GameSession.Character)));
 
         var callExpr = Expression.Call(method, playerVar,
             Expression.Convert(packetParam, methodParams[1].ParameterType));
@@ -95,7 +96,7 @@ internal static class PacketDispatcher
                 Expression.NotEqual(playerVar, Expression.Constant(null, typeof(Player))),
                 callExpr));
 
-        return Expression.Lambda<Action<Account, IClientPacket>>(
+        return Expression.Lambda<Action<GameSession, IClientPacket>>(
             body, accountParam, packetParam).Compile();
     }
 }

@@ -18,7 +18,7 @@ internal static class AuthSystem
     /// Authenticates <paramref name="account"/> with the credentials read from <paramref name="data"/>.
     /// On success, sends the editor or character-selection payload and opens the appropriate screen.
     /// </summary>
-    internal static void Connect(Account account, ConnectPacket packet)
+    internal static void Connect(GameSession session, ConnectPacket packet)
     {
         var user = packet.Username.Trim();
         var password = packet.Password;
@@ -26,56 +26,56 @@ internal static class AuthSystem
 
         if (!Directory.Exists(Path.Combine(Directories.Accounts.FullName, user)))
         {
-            AuthSender.Alert(account, "This username isn't registered.");
+            AuthSender.Alert(session, "This username isn't registered.");
             return;
         }
 
-        if (GameWorld.Current.Accounts.Find(x => x.User.Equals(user)) != null)
+        if (GameWorld.Current.Sessions.Find(x => x.Username.Equals(user)) != null)
         {
-            AuthSender.Alert(account, "Someone already signed in to this account.");
+            AuthSender.Alert(session, "Someone already signed in to this account.");
             return;
         }
 
-        AccountRepository.Read(account, user);
+        AccountRepository.Read(session, user);
 
-        if (!BcryptNet.Verify(password, account.PasswordHash))
+        if (!BcryptNet.Verify(password, session.PasswordHash))
         {
-            AuthSender.Alert(account, "Password is incorrect.");
+            AuthSender.Alert(session, "Password is incorrect.");
             return;
         }
 
-        account.Access = Access.Administrator;
+        session.AccessLevel = Access.Administrator;
 
         if (editor)
         {
-            if (account.Access < Access.Editor)
+            if (session.AccessLevel < Access.Editor)
             {
-                AuthSender.Alert(account, "You're not allowed to do this.");
+                AuthSender.Alert(session, "You're not allowed to do this.");
                 return;
             }
 
-            account.InEditor = true;
-            SettingsSender.ServerData(account);
-            MapSender.Maps(account);
-            ItemSender.Items(account);
-            ShopSender.Shops(account);
-            ClassSender.Classes(account);
-            NpcSender.Npcs(account);
-            AuthSender.Connect(account);
+            session.InEditor = true;
+            SettingsSender.ServerData(session);
+            MapSender.Maps(session);
+            ItemSender.Items(session);
+            ShopSender.Shops(session);
+            ClassSender.Classes(session);
+            NpcSender.Npcs(session);
+            AuthSender.Connect(session);
         }
         else
         {
-            AccountRepository.ReadCharacters(account);
-            ClassSender.Classes(account);
-            AccountSender.Characters(account);
+            AccountRepository.ReadCharacters(session);
+            ClassSender.Classes(session);
+            AccountSender.Characters(session);
 
-            if (account.Characters.Count == 0)
+            if (session.Characters.Count == 0)
             {
-                AccountSender.CreateCharacter(account);
+                AccountSender.CreateCharacter(session);
                 return;
             }
 
-            AuthSender.Connect(account);
+            AuthSender.Connect(session);
         }
     }
 
@@ -83,37 +83,37 @@ internal static class AuthSystem
     /// Registers a new account using the credentials read from <paramref name="data"/>,
     /// saves it to disk, and opens the character-creation screen.
     /// </summary>
-    internal static void Register(Account account, RegisterPacket packet)
+    internal static void Register(GameSession session, RegisterPacket packet)
     {
         var user = packet.Username.Trim();
         var password = packet.Password;
 
         if (user.Length < Config.MinNameLength || user.Length > Config.MaxNameLength)
         {
-            AuthSender.Alert(account,
+            AuthSender.Alert(session,
                 "The username must contain between " + Config.MinNameLength + " and " + Config.MaxNameLength + " characters.");
             return;
         }
 
         if (password.Length < Config.MinPasswordLength || password.Length > Config.MaxPasswordLength)
         {
-            AuthSender.Alert(account,
+            AuthSender.Alert(session,
                 "The password must contain between " + Config.MinPasswordLength + " and " + Config.MaxPasswordLength + " characters.");
             return;
         }
 
         if (File.Exists(Path.Combine(Directories.Accounts.FullName, user) + Directories.Format))
         {
-            AuthSender.Alert(account, "There is already someone registered with this name.");
+            AuthSender.Alert(session, "There is already someone registered with this name.");
             return;
         }
 
-        account.User = user;
-        account.PasswordHash = BcryptNet.HashPassword(password);
+        session.Username = user;
+        session.PasswordHash = BcryptNet.HashPassword(password);
 
-        AccountRepository.Write(account);
+        AccountRepository.Write(session);
 
-        ClassSender.Classes(account);
-        AccountSender.CreateCharacter(account);
+        ClassSender.Classes(session);
+        AccountSender.CreateCharacter(session);
     }
 }

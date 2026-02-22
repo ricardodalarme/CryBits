@@ -3,14 +3,15 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
 internal static class NpcSender
 {
-    public static void Npcs(Account account)
+    public static void Npcs(GameSession session)
     {
-        Send.ToPlayer(account, new NpcsPacket { List = Npc.List });
+        Send.ToPlayer(session, new NpcsPacket { List = Npc.List });
     }
 
     public static void MapNpcs(Player player, MapInstance mapInstance)

@@ -10,22 +10,22 @@ namespace CryBits.Server.Network;
 
 internal static class Send
 {
-    public static void ToPlayer(Account account, IServerPacket packet)
+    public static void ToPlayer(GameSession session, IServerPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
-        account.Connection.Send(data, DeliveryMethod.ReliableOrdered);
+        session.Connection.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
     public static void ToPlayer(Player player, IServerPacket packet) =>
-        ToPlayer(player.Account, packet);
+        ToPlayer(player.Session, packet);
 
     public static void ToAll(IServerPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in GameWorld.Current.Accounts.Where(t => t.IsPlaying))
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying))
             t.Connection.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
@@ -34,7 +34,7 @@ internal static class Send
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in GameWorld.Current.Accounts.Where(t => t.IsPlaying).Where(t => player != t.Character))
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying).Where(t => player != t.Character))
             ToPlayer(t, packet);
     }
 
@@ -43,7 +43,8 @@ internal static class Send
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in GameWorld.Current.Accounts.Where(t => t.IsPlaying).Where(t => t.Character.MapInstance == mapInstance))
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying)
+                     .Where(t => t.Character!.MapInstance == mapInstance))
             ToPlayer(t, packet);
     }
 
@@ -52,8 +53,8 @@ internal static class Send
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in GameWorld.Current.Accounts.Where(t => t.IsPlaying)
-                     .Where(t => t.Character.MapInstance == mapInstance)
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying)
+                     .Where(t => t.Character!.MapInstance == mapInstance)
                      .Where(t => player != t.Character))
             ToPlayer(t, packet);
     }

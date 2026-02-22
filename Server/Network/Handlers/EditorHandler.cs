@@ -16,12 +16,11 @@ namespace CryBits.Server.Network.Handlers;
 internal static class EditorHandler
 {
     [PacketHandler]
-    internal static void WriteSettings(Account account, WriteSettingsPacket packet)
+    internal static void WriteSettings(GameSession session, WriteSettingsPacket packet)
     {
-        // Ensure caller has editor access.
-        if (account.Access < Access.Editor)
+        if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
@@ -33,167 +32,147 @@ internal static class EditorHandler
     }
 
     [PacketHandler]
-    internal static void WriteClasses(Account account, WriteClassesPacket packet)
+    internal static void WriteClasses(GameSession session, WriteClassesPacket packet)
     {
-        // Ensure caller has editor access.
-        if (account.Access < Access.Editor)
+        if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
-        // Receive and persist new classes.
         Class.List = packet.Classes;
         ClassRepository.WriteAll();
 
-        // Broadcast updated classes to other connected accounts.
-        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
-            if (GameWorld.Current.Accounts[i] != account)
-                ClassSender.Classes(GameWorld.Current.Accounts[i]);
+        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
+            if (GameWorld.Current.Sessions[i] != session)
+                ClassSender.Classes(GameWorld.Current.Sessions[i]);
     }
 
     [PacketHandler]
-    internal static void WriteMaps(Account account, WriteMapsPacket packet)
+    internal static void WriteMaps(GameSession session, WriteMapsPacket packet)
     {
-        // Ensure caller has editor access.
-        if (account.Access < Access.Editor)
+        if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
-        // Receive and persist new maps.
         Map.List = packet.Maps;
         MapRepository.WriteAll();
 
-        // Update runtime map state and broadcast maps to players/editors.
         foreach (var tempMap in GameWorld.Current.Maps.Values)
         {
-            // Spawn any static map items.
             tempMap.SpawnItems();
 
-            // Broadcast the map to players who are on it (and editors).
-            for (var n = 0; n < GameWorld.Current.Accounts.Count; n++)
-                if (GameWorld.Current.Accounts[n] != account)
-                    if (GameWorld.Current.Accounts[n].Character.MapInstance == tempMap || GameWorld.Current.Accounts[n].InEditor)
-                        MapSender.Map(GameWorld.Current.Accounts[n], tempMap.Data);
+            for (var n = 0; n < GameWorld.Current.Sessions.Count; n++)
+                if (GameWorld.Current.Sessions[n] != session)
+                    if (GameWorld.Current.Sessions[n].Character?.MapInstance == tempMap || GameWorld.Current.Sessions[n].InEditor)
+                        MapSender.Map(GameWorld.Current.Sessions[n], tempMap.Data);
         }
     }
 
     [PacketHandler]
-    internal static void WriteNpcs(Account account, WriteNpcsPacket packet)
+    internal static void WriteNpcs(GameSession session, WriteNpcsPacket packet)
     {
-        // Ensure caller has editor access.
-        if (account.Access < Access.Editor)
+        if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
-        // Receive and persist new NPCs.
         Npc.List = packet.Npcs;
         NpcRepository.WriteAll();
 
-        // Broadcast NPC updates to other connected accounts.
-        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
-            if (GameWorld.Current.Accounts[i] != account)
-                NpcSender.Npcs(GameWorld.Current.Accounts[i]);
+        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
+            if (GameWorld.Current.Sessions[i] != session)
+                NpcSender.Npcs(GameWorld.Current.Sessions[i]);
     }
 
     [PacketHandler]
-    internal static void WriteItems(Account account, WriteItemsPacket packet)
+    internal static void WriteItems(GameSession session, WriteItemsPacket packet)
     {
-        // Ensure caller has editor access.
-        if (account.Access < Access.Editor)
+        if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
-        // Receive and persist new items.
         Item.List = packet.Items;
         ItemRepository.WriteAll();
 
-        // Broadcast item updates to other connected accounts.
-        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
-            if (GameWorld.Current.Accounts[i] != account)
-                ItemSender.Items(GameWorld.Current.Accounts[i]);
+        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
+            if (GameWorld.Current.Sessions[i] != session)
+                ItemSender.Items(GameWorld.Current.Sessions[i]);
     }
 
     [PacketHandler]
-    internal static void WriteShops(Account account, WriteShopsPacket packet)
+    internal static void WriteShops(GameSession session, WriteShopsPacket packet)
     {
-        // Ensure caller has editor access.
-        if (account.Access < Access.Editor)
+        if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(account, "You aren't allowed to do this.");
+            AuthSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
-        // Receive and persist new shops.
         Shop.List = packet.Shops;
         ShopRepository.WriteAll();
 
-        // Broadcast shop updates to other connected accounts.
-        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
-            if (GameWorld.Current.Accounts[i] != account)
-                ShopSender.Shops(GameWorld.Current.Accounts[i]);
+        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
+            if (GameWorld.Current.Sessions[i] != session)
+                ShopSender.Shops(GameWorld.Current.Sessions[i]);
     }
 
     [PacketHandler]
-    internal static void RequestSetting(Account account, RequestSettingPacket _)
+    internal static void RequestSetting(GameSession session, RequestSettingPacket _)
     {
-        SettingsSender.ServerData(account);
+        SettingsSender.ServerData(session);
     }
 
     [PacketHandler]
-    internal static void RequestClasses(Account account, RequestClassesPacket _)
+    internal static void RequestClasses(GameSession session, RequestClassesPacket _)
     {
-        ClassSender.Classes(account);
+        ClassSender.Classes(session);
     }
 
     [PacketHandler]
-    internal static void RequestMap(Account account, RequestMapPacket packet)
+    internal static void RequestMap(GameSession session, RequestMapPacket packet)
     {
-        if (account.InEditor)
-            MapSender.Map(account, Map.List.Get(packet.Id));
+        if (session.InEditor)
+            MapSender.Map(session, Map.List.Get(packet.Id));
         else
         {
-            var player = account.Character;
+            var player = session.Character;
 
-            // Send map data to the requesting player if requested.
-            if (packet.SendMap) MapSender.Map(player.Account, player.MapInstance.Data);
+            if (packet.SendMap) MapSender.Map(player.Session, player.MapInstance.Data);
 
-            // Send player list for the map to nearby clients.
             MapSender.MapPlayers(player);
 
-            // Finish player map load.
             player.GettingMap = false;
             PlayerSender.JoinMap(player);
         }
     }
 
     [PacketHandler]
-    internal static void RequestMaps(Account account, RequestMapsPacket _)
+    internal static void RequestMaps(GameSession session, RequestMapsPacket _)
     {
-        MapSender.Maps(account);
+        MapSender.Maps(session);
     }
 
     [PacketHandler]
-    internal static void RequestNpcs(Account account, RequestNpcsPacket _)
+    internal static void RequestNpcs(GameSession session, RequestNpcsPacket _)
     {
-        NpcSender.Npcs(account);
+        NpcSender.Npcs(session);
     }
 
     [PacketHandler]
-    internal static void RequestItems(Account account, RequestItemsPacket _)
+    internal static void RequestItems(GameSession session, RequestItemsPacket _)
     {
-        ItemSender.Items(account);
+        ItemSender.Items(session);
     }
 
     [PacketHandler]
-    internal static void RequestShops(Account account, RequestShopsPacket _)
+    internal static void RequestShops(GameSession session, RequestShopsPacket _)
     {
-        ShopSender.Shops(account);
+        ShopSender.Shops(session);
     }
 }

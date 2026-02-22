@@ -18,15 +18,15 @@ internal sealed class DefineAccessCommand : IConsoleCommand
 
     public void Execute()
     {
-        var account = GameWorld.Current.Accounts.Find(x => x.User.Equals(PlayerName, StringComparison.OrdinalIgnoreCase));
-        if (account == null)
+        var session = GameWorld.Current.Sessions.Find(x => x.Username.Equals(PlayerName, StringComparison.OrdinalIgnoreCase));
+        if (session == null)
         {
             Console.WriteLine("This player is either offline or doesn't exist.");
             return;
         }
 
-        account.Access = (Access)Access;
-        AccountRepository.Write(account);
+        session.AccessLevel = (Access)Access;
+        AccountRepository.Write(session);
         Console.WriteLine($"{(Access)Access} access granted to {PlayerName}.");
     }
 }

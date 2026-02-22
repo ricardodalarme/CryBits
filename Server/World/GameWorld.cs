@@ -20,9 +20,9 @@ internal sealed class GameWorld
     public Dictionary<Guid, MapInstance> Maps { get; } = [];
 
     /// <summary>
-    /// List of all active accounts on the server.
+    /// List of all active sessions on the server.
     /// </summary>
-    public List<Account> Accounts { get; } = [];
+    public List<GameSession> Sessions { get; } = [];
 
     public GameWorld() => Current = this;
 }

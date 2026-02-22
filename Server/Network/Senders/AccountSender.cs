@@ -1,31 +1,31 @@
 using CryBits.Packets.Server;
-using CryBits.Server.Entities;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
 internal static class AccountSender
 {
-    public static void Characters(Account account)
+    public static void Characters(GameSession session)
     {
         var packet = new CharactersPacket
         {
-            Characters = new PacketsTempCharacter[account.Characters.Count]
+            Characters = new PacketsTempCharacter[session.Characters.Count]
         };
 
-        for (byte i = 0; i < account.Characters.Count; i++)
+        for (byte i = 0; i < session.Characters.Count; i++)
         {
             packet.Characters[i] = new PacketsTempCharacter
             {
-                Name = account.Characters[i].Name,
-                TextureNum = account.Characters[i].TextureNum
+                Name = session.Characters[i].Name,
+                TextureNum = session.Characters[i].TextureNum
             };
         }
 
-        Send.ToPlayer(account, packet);
+        Send.ToPlayer(session, packet);
     }
 
-    public static void CreateCharacter(Account account)
+    public static void CreateCharacter(GameSession session)
     {
-        Send.ToPlayer(account, new CreateCharacterPacket());
+        Send.ToPlayer(session, new CreateCharacterPacket());
     }
 }

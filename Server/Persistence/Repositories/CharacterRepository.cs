@@ -13,9 +13,9 @@ namespace CryBits.Server.Persistence.Repositories;
 
 internal static class CharacterRepository
 {
-    public static void Read(Account account, string name)
+    public static void Read(GameSession session, string name)
     {
-        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Characters", name) +
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", name) +
                                 Directories.Format);
 
         // Return if the character file directory doesn't exist.
@@ -23,30 +23,30 @@ internal static class CharacterRepository
 
         // Read character data and populate Player instance.
         using var data = new BinaryReader(file.OpenRead());
-        account.Character = new Player(account);
-        account.Character.Name = data.ReadString();
-        account.Character.TextureNum = data.ReadInt16();
-        account.Character.Level = data.ReadInt16();
-        account.Character.Class = Class.List.Get(new Guid(data.ReadString()));
-        account.Character.Genre = data.ReadBoolean();
-        account.Character.Experience = data.ReadInt32();
-        account.Character.Points = data.ReadByte();
-        account.Character.MapInstance = GameWorld.Current.Maps.Get(new Guid(data.ReadString()));
-        account.Character.X = data.ReadByte();
-        account.Character.Y = data.ReadByte();
-        account.Character.Direction = (Direction)data.ReadByte();
-        for (byte n = 0; n < (byte)Vital.Count; n++) account.Character.Vital[n] = data.ReadInt16();
-        for (byte n = 0; n < (byte)Attribute.Count; n++) account.Character.Attribute[n] = data.ReadInt16();
+        session.Character = new Player(session);
+        session.Character.Name = data.ReadString();
+        session.Character.TextureNum = data.ReadInt16();
+        session.Character.Level = data.ReadInt16();
+        session.Character.Class = Class.List.Get(new Guid(data.ReadString()));
+        session.Character.Genre = data.ReadBoolean();
+        session.Character.Experience = data.ReadInt32();
+        session.Character.Points = data.ReadByte();
+        session.Character.MapInstance = GameWorld.Current.Maps.Get(new Guid(data.ReadString()));
+        session.Character.X = data.ReadByte();
+        session.Character.Y = data.ReadByte();
+        session.Character.Direction = (Direction)data.ReadByte();
+        for (byte n = 0; n < (byte)Vital.Count; n++) session.Character.Vital[n] = data.ReadInt16();
+        for (byte n = 0; n < (byte)Attribute.Count; n++) session.Character.Attribute[n] = data.ReadInt16();
         for (byte n = 0; n < MaxInventory; n++)
         {
-            account.Character.Inventory[n].Item = Item.List.Get(new Guid(data.ReadString()));
-            account.Character.Inventory[n].Amount = data.ReadInt16();
+            session.Character.Inventory[n].Item = Item.List.Get(new Guid(data.ReadString()));
+            session.Character.Inventory[n].Amount = data.ReadInt16();
         }
 
         for (byte n = 0; n < (byte)Equipment.Count; n++)
-            account.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
+            session.Character.Equipment[n] = Item.List.Get(new Guid(data.ReadString()));
         for (byte n = 0; n < MaxHotbar; n++)
-            account.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
+            session.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
     }
 
     public static string ReadAllNames()
@@ -63,10 +63,10 @@ internal static class CharacterRepository
         return data.ReadToEnd();
     }
 
-    public static void Write(Account account)
+    public static void Write(GameSession session)
     {
         var file = new FileInfo(
-            Path.Combine(Directories.Accounts.FullName, account.User, "Characters", account.Character.Name) +
+            Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", session.Character!.Name) +
             Directories.Format);
 
         // Ensure character directory exists.
@@ -74,30 +74,30 @@ internal static class CharacterRepository
 
         // Save character data to file.
         using var data = new BinaryWriter(file.OpenWrite());
-        data.Write(account.Character.Name);
-        data.Write(account.Character.TextureNum);
-        data.Write(account.Character.Level);
-        data.Write(account.Character.Class.GetId());
-        data.Write(account.Character.Genre);
-        data.Write(account.Character.Experience);
-        data.Write(account.Character.Points);
-        data.Write(account.Character.MapInstance.GetId());
-        data.Write(account.Character.X);
-        data.Write(account.Character.Y);
-        data.Write((byte)account.Character.Direction);
-        for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(account.Character.Vital[n]);
-        for (byte n = 0; n < (byte)Attribute.Count; n++) data.Write(account.Character.Attribute[n]);
+        data.Write(session.Character!.Name);
+        data.Write(session.Character.TextureNum);
+        data.Write(session.Character.Level);
+        data.Write(session.Character.Class.GetId());
+        data.Write(session.Character.Genre);
+        data.Write(session.Character.Experience);
+        data.Write(session.Character.Points);
+        data.Write(session.Character.MapInstance.GetId());
+        data.Write(session.Character.X);
+        data.Write(session.Character.Y);
+        data.Write((byte)session.Character.Direction);
+        for (byte n = 0; n < (byte)Vital.Count; n++) data.Write(session.Character.Vital[n]);
+        for (byte n = 0; n < (byte)Attribute.Count; n++) data.Write(session.Character.Attribute[n]);
         for (byte n = 0; n < MaxInventory; n++)
         {
-            data.Write(account.Character.Inventory[n].Item.GetId());
-            data.Write(account.Character.Inventory[n].Amount);
+            data.Write(session.Character.Inventory[n].Item.GetId());
+            data.Write(session.Character.Inventory[n].Amount);
         }
 
-        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(account.Character.Equipment[n].GetId());
+        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(session.Character.Equipment[n].GetId());
         for (byte n = 0; n < MaxHotbar; n++)
         {
-            data.Write((byte)account.Character.Hotbar[n].Type);
-            data.Write(account.Character.Hotbar[n].Slot);
+            data.Write((byte)session.Character.Hotbar[n].Type);
+            data.Write(session.Character.Hotbar[n].Slot);
         }
     }
 

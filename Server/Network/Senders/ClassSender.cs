@@ -1,13 +1,13 @@
 using CryBits.Entities;
 using CryBits.Packets.Server;
-using CryBits.Server.Entities;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
 internal static class ClassSender
 {
-    public static void Classes(Account account)
+    public static void Classes(GameSession session)
     {
-        Send.ToPlayer(account, new ClassesPacket { List = Class.List });
+        Send.ToPlayer(session, new ClassesPacket { List = Class.List });
     }
 }

@@ -4,20 +4,19 @@ using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Server.World;
-
 namespace CryBits.Server.Network.Senders;
 
 internal static class MapSender
 {
-    public static void Map(Account account, Map map)
+    public static void Map(GameSession session, Map map)
     {
-        Send.ToPlayer(account, new MapPacket { Map = map });
+        Send.ToPlayer(session, new MapPacket { Map = map });
     }
 
-    public static void Maps(Account account)
+    public static void Maps(GameSession session)
     {
-        Send.ToPlayer(account, new MapsPacket { List = CryBits.Entities.Map.Map.List });
-        foreach (var map in CryBits.Entities.Map.Map.List.Values) Map(account, map);
+        Send.ToPlayer(session, new MapsPacket { List = CryBits.Entities.Map.Map.List });
+        foreach (var map in CryBits.Entities.Map.Map.List.Values) Map(session, map);
     }
 
     public static void MapRevision(Player player, Map map)
@@ -27,11 +26,11 @@ internal static class MapSender
 
     public static void MapPlayers(Player player)
     {
-        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
-            if (GameWorld.Current.Accounts[i].IsPlaying)
-                if (player != GameWorld.Current.Accounts[i].Character)
-                    if (GameWorld.Current.Accounts[i].Character.MapInstance == player.MapInstance)
-                        Send.ToPlayer(player, PlayerDataCache(GameWorld.Current.Accounts[i].Character));
+        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
+            if (GameWorld.Current.Sessions[i].IsPlaying)
+                if (player != GameWorld.Current.Sessions[i].Character)
+                    if (GameWorld.Current.Sessions[i].Character!.MapInstance == player.MapInstance)
+                        Send.ToPlayer(player, PlayerDataCache(GameWorld.Current.Sessions[i].Character!));
         Send.ToMap(player.MapInstance, PlayerDataCache(player));
     }
 

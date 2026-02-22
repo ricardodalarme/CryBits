@@ -35,18 +35,18 @@ internal static class NpcAiSystem
 
             // Scan for a player in range
             if (npcInstance.Target == null)
-                foreach (var account in GameWorld.Current.Accounts)
+                foreach (var session in GameWorld.Current.Sessions)
                 {
-                    if (!account.IsPlaying) continue;
-                    if (account.Character.MapInstance != npcInstance.MapInstance) continue;
+                    if (!session.IsPlaying) continue;
+                    if (session.Character!.MapInstance != npcInstance.MapInstance) continue;
 
-                    distance = (short)Math.Sqrt(Math.Pow(npcInstance.X - account.Character.X, 2) +
-                                                Math.Pow(npcInstance.Y - account.Character.Y, 2));
+                    distance = (short)Math.Sqrt(Math.Pow(npcInstance.X - session.Character.X, 2) +
+                                                Math.Pow(npcInstance.Y - session.Character.Y, 2));
                     if (distance <= npcInstance.Data.Sight)
                     {
-                        npcInstance.Target = account.Character;
+                        npcInstance.Target = session.Character;
                         if (!string.IsNullOrEmpty(npcInstance.Data.SayMsg))
-                            ChatSender.Message(account.Character, npcInstance.Data.Name + ": " + npcInstance.Data.SayMsg, Color.White);
+                            ChatSender.Message(session.Character, npcInstance.Data.Name + ": " + npcInstance.Data.SayMsg, Color.White);
                         break;
                     }
                 }
@@ -72,7 +72,7 @@ internal static class NpcAiSystem
         // Validate existing target
         if (npcInstance.Target != null)
         {
-            if (npcInstance.Target is Player p && !p.Account.IsPlaying || npcInstance.Target.MapInstance != npcInstance.MapInstance)
+            if (npcInstance.Target is Player p && !p.Session.IsPlaying || npcInstance.Target.MapInstance != npcInstance.MapInstance)
                 npcInstance.Target = null;
             else if (npcInstance.Target is NpcInstance { Alive: false })
                 npcInstance.Target = null;

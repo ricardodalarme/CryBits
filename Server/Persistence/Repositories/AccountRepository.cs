@@ -1,53 +1,47 @@
 using System.IO;
 using CryBits.Enums;
-using CryBits.Server.Entities;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Persistence.Repositories;
 
 internal static class AccountRepository
 {
-    public static void Read(Account account, string name)
+    public static void Read(GameSession session, string name)
     {
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, name, "Data") + Directories.Format);
 
-        // Load account data.
         using var data = new BinaryReader(file.OpenRead());
-        account.User = data.ReadString();
-        account.PasswordHash = data.ReadString();
-        account.Access = (Access)data.ReadByte();
+        session.Username = data.ReadString();
+        session.PasswordHash = data.ReadString();
+        session.AccessLevel = (Access)data.ReadByte();
     }
 
-    public static void ReadCharacters(Account account)
+    public static void ReadCharacters(GameSession session)
     {
-        var directory = new DirectoryInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Characters"));
+        var directory = new DirectoryInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Characters"));
 
-        // Ensure characters directory exists.
         if (!directory.Exists) directory.Create();
 
-        // Read all characters for the account.
         var file = directory.GetFiles();
-        account.Characters = [];
+        session.Characters = [];
         for (byte i = 0; i < file.Length; i++)
             using (var data = new BinaryReader(file[i].OpenRead()))
-                // Add character metadata to the list.
-                account.Characters.Add(new Account.TempCharacter
+                session.Characters.Add(new GameSession.CharacterSlot
                 {
                     Name = data.ReadString(),
                     TextureNum = data.ReadInt16()
                 });
     }
 
-    public static void Write(Account account)
+    public static void Write(GameSession session)
     {
-        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, account.User, "Data") + Directories.Format);
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Data") + Directories.Format);
 
-        // Ensure account directory exists.
-        if (!file.Directory.Exists) file.Directory.Create();
+        if (!file.Directory!.Exists) file.Directory.Create();
 
-        // Write account data to file.
         using var data = new BinaryWriter(file.OpenWrite());
-        data.Write(account.User);
-        data.Write(account.PasswordHash);
-        data.Write((byte)account.Access);
+        data.Write(session.Username);
+        data.Write(session.PasswordHash);
+        data.Write((byte)session.AccessLevel);
     }
 }

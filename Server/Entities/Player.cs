@@ -31,12 +31,12 @@ internal class Player : Character
     public string TradeRequest;
     public TradeSlot[] TradeOffer;
     public Shop Shop;
-    public Account Account;
+    public GameSession Session;
     public long AttackTimer;
 
-    public Player(Account account)
+    public Player(GameSession session)
     {
-        Account = account;
+        Session = session;
         for (byte i = 0; i < Inventory.Length; i++)
             Inventory[i] = new ItemSlot(null, 0);
     }
@@ -97,5 +97,5 @@ internal class Player : Character
     /// <param name="name">Player name to search for.</param>
     /// <returns>The Player instance if found; otherwise null.</returns>
     public static Player Find(string name) =>
-        GameWorld.Current.Accounts.Find(x => x.IsPlaying && x.Character.Name.Equals(name))?.Character;
+        GameWorld.Current.Sessions.Find(x => x.IsPlaying && x.Character!.Name.Equals(name))?.Character;
 }
