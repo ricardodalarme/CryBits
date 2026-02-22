@@ -47,7 +47,7 @@ internal class MapInstance
     {
         // Check if a player exists at the given tile
         for (byte i = 0; i < Player.List.Count; i++)
-            if ((Player.List[i].X, Player.List[i].Y, Map: Player.List[i].MapInstance) == (x, y, this))
+            if ((Player.List[i].X, Player.List[i].Y, Player.List[i].MapInstance) == (x, y, this))
                 return true;
 
         return false;

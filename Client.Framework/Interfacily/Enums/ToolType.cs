@@ -5,6 +5,5 @@ public enum ToolType
     Button,
     Panel,
     CheckBox,
-    TextBox,
-    Count
+    TextBox
 }

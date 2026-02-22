@@ -26,7 +26,7 @@ internal static class MessageBox
     public static async Task ShowAsync(string message)
     {
         var box = MessageBoxManager.GetMessageBoxStandard(
-            "CryBits Editor", message, ButtonEnum.Ok);
+            "CryBits Editor", message);
         await box.ShowAsync();
     }
 }

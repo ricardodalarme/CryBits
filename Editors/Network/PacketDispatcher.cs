@@ -58,7 +58,7 @@ internal static class PacketDispatcher
         var packetParamIndex = Array.FindIndex(methodParams,
             p => typeof(IServerPacket).IsAssignableFrom(p.ParameterType));
 
-        var callExpr = (Expression)Expression.Call(method,
+        Expression callExpr = Expression.Call(method,
             methodParams.Select((p, i) =>
                 i == packetParamIndex
                     ? (Expression)Expression.Convert(packetParam, p.ParameterType)

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CryBits.Entities.Map;
@@ -73,9 +74,8 @@ internal static class Program
     private static void PerformShutdown()
     {
         // Save character data for all connected players.
-        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
-            if (GameWorld.Current.Sessions[i].IsPlaying)
-                CharacterRepository.Write(GameWorld.Current.Sessions[i]);
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying))
+            CharacterRepository.Write(t);
 
         // Stop network device.
         Socket.Device.Stop();

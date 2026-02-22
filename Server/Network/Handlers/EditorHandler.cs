@@ -1,3 +1,4 @@
+using System.Linq;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
@@ -5,7 +6,6 @@ using CryBits.Entities.Shop;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Client;
-using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
@@ -43,9 +43,8 @@ internal static class EditorHandler
         Class.List = packet.Classes;
         ClassRepository.WriteAll();
 
-        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
-            if (GameWorld.Current.Sessions[i] != session)
-                ClassSender.Classes(GameWorld.Current.Sessions[i]);
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
+            ClassSender.Classes(t);
     }
 
     [PacketHandler]
@@ -64,10 +63,8 @@ internal static class EditorHandler
         {
             tempMap.SpawnItems();
 
-            for (var n = 0; n < GameWorld.Current.Sessions.Count; n++)
-                if (GameWorld.Current.Sessions[n] != session)
-                    if (GameWorld.Current.Sessions[n].Character?.MapInstance == tempMap || GameWorld.Current.Sessions[n].InEditor)
-                        MapSender.Map(GameWorld.Current.Sessions[n], tempMap.Data);
+            foreach (var t in GameWorld.Current.Sessions.Where(t => t != session).Where(t => t.Character?.MapInstance == tempMap || t.InEditor))
+                MapSender.Map(t, tempMap.Data);
         }
     }
 
@@ -83,9 +80,8 @@ internal static class EditorHandler
         Npc.List = packet.Npcs;
         NpcRepository.WriteAll();
 
-        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
-            if (GameWorld.Current.Sessions[i] != session)
-                NpcSender.Npcs(GameWorld.Current.Sessions[i]);
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
+            NpcSender.Npcs(t);
     }
 
     [PacketHandler]
@@ -100,9 +96,8 @@ internal static class EditorHandler
         Item.List = packet.Items;
         ItemRepository.WriteAll();
 
-        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
-            if (GameWorld.Current.Sessions[i] != session)
-                ItemSender.Items(GameWorld.Current.Sessions[i]);
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
+            ItemSender.Items(t);
     }
 
     [PacketHandler]
@@ -117,9 +112,8 @@ internal static class EditorHandler
         Shop.List = packet.Shops;
         ShopRepository.WriteAll();
 
-        for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
-            if (GameWorld.Current.Sessions[i] != session)
-                ShopSender.Shops(GameWorld.Current.Sessions[i]);
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
+            ShopSender.Shops(t);
     }
 
     [PacketHandler]
