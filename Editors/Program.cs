@@ -50,12 +50,16 @@ internal static class Program
         loopThread.Start();
 
         // Run Avalonia on the main thread (required by macOS/Cocoa and Linux/X11)
-        AppBuilder.Configure<App>()
-            .UsePlatformDetect()
-            .LogToTrace()
+        BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(Array.Empty<string>(),
                 desktop => { desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown; });
     }
+
+    // Required by the Avalonia XAML previewer.
+    public static AppBuilder BuildAvaloniaApp() =>
+        AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .LogToTrace();
 
     public static void Close()
     {
