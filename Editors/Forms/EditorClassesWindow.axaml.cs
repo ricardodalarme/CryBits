@@ -3,6 +3,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
@@ -14,6 +15,21 @@ namespace CryBits.Editors.Forms;
 
 internal partial class EditorClassesWindow : Window
 {
+    /// <summary>Opens the Classes editor, hiding the owner window while open.</summary>
+    public static void Open(Window owner)
+    {
+        if (Map.List.Count == 0)
+        {
+            MessageBox.Show("It must have at least one map registered before editing classes.");
+            return;
+        }
+
+        owner.Hide();
+        var window = new EditorClassesWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
+    }
+
     // Consumed by Renders.cs EditorClass() instead of EditorClasses.Form.numTexture.Value
     public static short CurrentTextureIndex { get; private set; } = 1;
 

@@ -6,6 +6,7 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Forms;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
 using EditorToolsRepository = CryBits.Editors.Library.Repositories.ToolsRepository;
@@ -42,7 +43,7 @@ internal static class Program
             AvaloniaRuntime.WaitUntilReady();
 
             // Show login window and start the editor loop
-            AvaloniaLoginLauncher.ShowLogin();
+            LoginWindow.Open();
             Loop.Init();
         });
         loopThread.IsBackground = true;

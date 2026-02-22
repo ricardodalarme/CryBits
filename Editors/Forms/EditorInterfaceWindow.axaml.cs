@@ -6,6 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Interfacily.Enums;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Library.Repositories;
@@ -47,6 +48,15 @@ internal sealed class TreeItemVM : INotifyPropertyChanged
 // ─── Editor window ───────────────────────────────────────────────────────────
 internal partial class EditorInterfaceWindow : Window
 {
+    /// <summary>Opens the Interface editor, hiding the owner window while open.</summary>
+    public static void Open(Window owner)
+    {
+        owner.Hide();
+        var window = new EditorInterfaceWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
+    }
+
     // Consumed by Renders.Interface()
     public static byte SelectedWindowIndex { get; private set; }
 

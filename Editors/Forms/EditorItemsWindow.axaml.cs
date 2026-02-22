@@ -3,6 +3,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Enums;

@@ -7,6 +7,15 @@ namespace CryBits.Editors.Forms;
 
 internal partial class EditorDataWindow : Window
 {
+    /// <summary>Opens the Data editor, hiding the owner window while open.</summary>
+    public static void Open(Window owner)
+    {
+        owner.Hide();
+        var window = new EditorDataWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
+    }
+
     public EditorDataWindow()
     {
         InitializeComponent();

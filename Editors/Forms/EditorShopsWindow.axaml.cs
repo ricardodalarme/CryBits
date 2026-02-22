@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Entities.Shop;
@@ -10,6 +11,21 @@ namespace CryBits.Editors.Forms;
 
 internal partial class EditorShopsWindow : Window
 {
+    /// <summary>Opens the Shops editor, hiding the owner window while open.</summary>
+    public static void Open(Window owner)
+    {
+        if (Item.List.Count == 0)
+        {
+            MessageBox.Show("It must have at least one item registered to open the store editor.");
+            return;
+        }
+
+        owner.Hide();
+        var window = new EditorShopsWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
+    }
+
     private Shop _selected;
     private bool _addingToSold;
 

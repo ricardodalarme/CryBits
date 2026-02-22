@@ -1,4 +1,5 @@
 using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Forms;
 using CryBits.Entities;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
@@ -18,8 +19,8 @@ internal static class EditorHandler
     [PacketHandler]
     internal static void Connect(ConnectPacket _)
     {
-        AvaloniaLoginLauncher.HideLogin();
-        AvaloniaMapsLauncher.OpenMapsEditor();
+        LoginWindow.HideWindow();
+        EditorMapsWindow.Open();
     }
 
     [PacketHandler]

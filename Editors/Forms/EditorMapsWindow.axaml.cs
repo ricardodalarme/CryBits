@@ -13,6 +13,7 @@ using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Network;
@@ -71,6 +72,28 @@ internal sealed class LayerVm : INotifyPropertyChanged
 
 internal partial class EditorMapsWindow : Window
 {
+    /// <summary>Opens the Maps editor as the primary window (no parent).</summary>
+    public static void Open()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            var window = new EditorMapsWindow();
+            window.Show();
+        });
+    }
+
+    /// <summary>Opens the Maps editor from another parent window, hiding the parent while open.</summary>
+    public static void Open(Window parent)
+    {
+        Dispatcher.UIThread.Post(async () =>
+        {
+            parent.Hide();
+            var window = new EditorMapsWindow();
+            await window.ShowDialog(parent);
+            parent.Show();
+        });
+    }
+
     // ── Public static accessors consumed by Renders.cs ────────────────────────
     public static EditorMapsWindow? Instance { get; private set; }
 
@@ -571,23 +594,23 @@ internal partial class EditorMapsWindow : Window
 
     // Other editor launchers
     private void butEditors_Classes_Click(object? sender, RoutedEventArgs e) =>
-        AvaloniaClassesLauncher.OpenClassesEditor(this);
+        EditorClassesWindow.Open(this);
 
-    private void butEditors_Data_Click(object? sender, RoutedEventArgs e) => AvaloniaDataLauncher.OpenDataEditor(this);
+    private void butEditors_Data_Click(object? sender, RoutedEventArgs e) => EditorDataWindow.Open(this);
 
     private void butEditors_Interface_Click(object? sender, RoutedEventArgs e) =>
-        AvaloniaInterfaceLauncher.OpenInterfaceEditor(this);
+        EditorInterfaceWindow.Open(this);
 
     private void butEditors_Items_Click(object? sender, RoutedEventArgs e) =>
-        AvaloniaItemsLauncher.OpenItemsEditor(this);
+        EditorItemsWindow.Open(this);
 
-    private void butEditors_NPCs_Click(object? sender, RoutedEventArgs e) => AvaloniaNpcsLauncher.OpenNpcsEditor(this);
+    private void butEditors_NPCs_Click(object? sender, RoutedEventArgs e) => EditorNpcsWindow.Open(this);
 
     private void butEditors_Shops_Click(object? sender, RoutedEventArgs e) =>
-        AvaloniaShopsLauncher.OpenShopsEditor(this);
+        EditorShopsWindow.Open(this);
 
     private void butEditors_Tiles_Click(object? sender, RoutedEventArgs e) =>
-        AvaloniaTilesLauncher.OpenTilesEditor(this);
+        EditorTilesWindow.Open(this);
 
     private void butCopy_Click(object? sender, RoutedEventArgs e) => CopyTiles();
 

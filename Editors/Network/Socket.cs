@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Forms;
 using LiteNetLib;
 using static CryBits.Globals;
 
@@ -71,7 +71,7 @@ internal static class Socket
                     win.Close();
             }
 
-            AvaloniaLoginLauncher.ShowLogin();
+            LoginWindow.Open();
         });
     }
 }

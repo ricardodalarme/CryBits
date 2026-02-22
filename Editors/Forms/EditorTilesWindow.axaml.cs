@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Persistence.Repositories;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Graphics;
 using CryBits.Enums;
 using SFML.Graphics;
@@ -20,6 +21,15 @@ namespace CryBits.Editors.Forms;
 
 internal partial class EditorTilesWindow : Window
 {
+    /// <summary>Opens the Tiles editor, hiding the owner window while open.</summary>
+    public static void Open(Window owner)
+    {
+        owner.Hide();
+        var window = new EditorTilesWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
+    }
+
     // Canvas dimensions (matching the WinForms picTile size)
     private const int CanvasW = 298;
     private const int CanvasH = 443;

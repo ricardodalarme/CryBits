@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Network;
 using CryBits.Entities;
@@ -19,6 +20,15 @@ namespace CryBits.Editors.Forms;
 
 internal partial class EditorNpcsWindow : Window
 {
+    /// <summary>Opens the NPCs editor, hiding the owner window while open.</summary>
+    public static void Open(Window owner)
+    {
+        owner.Hide();
+        var window = new EditorNpcsWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
+    }
+
     // Consumed by Renders.EditorNpc() instead of EditorNpcs.Form.numTexture.Value
     public static short CurrentTextureIndex { get; private set; }
 
