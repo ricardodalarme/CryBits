@@ -43,9 +43,9 @@
       },
       "MessageBox.Avalonia": {
         "type": "Direct",
-        "requested": "[3.3.1, )",
-        "resolved": "3.3.1",
-        "contentHash": "qDj/+G8ZXg2XKI2sMon5LWJk1ZOV4Y8t4a/+rIl/nmgXLq5HG532Mvxb2dpkSeBmdWZaq7ZpAgUiZJNcyu6kBA==",
+        "requested": "[3.3.1.1, )",
+        "resolved": "3.3.1.1",
+        "contentHash": "a0NocLvE0ipg0REevrMtilNI+ud+tFTJW7YrPtploeM93ew8S3Y6hEybqZ7W9q5Yqa9u+xOrOjAlG1lTihWhnQ==",
         "dependencies": {
           "Avalonia": "11.1.5",
           "DialogHost.Avalonia": "0.8.1"

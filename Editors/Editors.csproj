@@ -32,7 +32,7 @@
     <PackageReference Include="Avalonia.Desktop" Version="11.3.12" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.12" />
     <PackageReference Include="LiteNetLib" Version="2.0.2" />
-    <PackageReference Include="MessageBox.Avalonia" Version="3.3.1" />
+    <PackageReference Include="MessageBox.Avalonia" Version="3.3.1.1" />
     <PackageReference Include="Semi.Avalonia" Version="11.3.7.3" />
     <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.3.7.3" />
     <PackageReference Include="SFML.Audio" Version="3.0.0" />
