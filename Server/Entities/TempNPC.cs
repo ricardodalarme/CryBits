@@ -1,5 +1,6 @@
 using CryBits.Entities.Npc;
 using CryBits.Enums;
+using CryBits.Server.Formulas;
 using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Server.Entities;
@@ -17,15 +18,11 @@ internal class TempNpc : Character
     /// <summary>Calculates NPC regeneration for the specified vital.</summary>
     /// <param name="vital">Index of the vital to query.</param>
     /// <returns>Regeneration amount for the specified vital.</returns>
-    public short Regeneration(byte vital)
-    {
-        return (Vital)vital switch
-        {
-            Enums.Vital.Hp => (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Vitality] * 0.3),
-            Enums.Vital.Mp => (short)(Data.Vital[vital] * 0.05 + Data.Attribute[(byte)Attribute.Intelligence] * 0.1),
-            _ => 0
-        };
-    }
+    public short Regeneration(byte vital) => VitalFormulas.NpcRegeneration(
+        (Vital)vital,
+        Data.Vital[vital],
+        Data.Attribute[(byte)Attribute.Vitality],
+        Data.Attribute[(byte)Attribute.Intelligence]);
 
     public TempNpc(byte index, TempMap map, Npc data)
     {

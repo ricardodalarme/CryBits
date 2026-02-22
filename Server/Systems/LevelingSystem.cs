@@ -1,5 +1,6 @@
 using System;
 using CryBits.Server.Entities;
+using CryBits.Server.Formulas;
 using CryBits.Server.Network.Senders;
 using static CryBits.Globals;
 
@@ -75,15 +76,7 @@ internal static class LevelingSystem
         for (byte i = 0; i < player.Party.Count; i++)
         {
             var difference = Math.Abs(player.Level - player.Party[i].Level);
-
-            // Scaling constant: larger gaps reduce the weight exponentially.
-            double k;
-            if (difference < 3) k = 1.15;
-            else if (difference < 6) k = 1.55;
-            else if (difference < 10) k = 1.85;
-            else k = 2.3;
-
-            diff[i] = 1 / Math.Pow(k, Math.Min(15, difference));
+            diff[i] = LevelingFormulas.PartyXpWeight(difference);
             diffSum += diff[i];
         }
 

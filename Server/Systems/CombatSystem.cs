@@ -3,6 +3,7 @@ using System.Drawing;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Entities;
+using CryBits.Server.Formulas;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.World;
 using static CryBits.Globals;
@@ -55,7 +56,7 @@ internal static class CombatSystem
 
         attacker.AttackTimer = Environment.TickCount64;
 
-        var attackDamage = (short)(attacker.Damage - victim.PlayerDefense);
+        var attackDamage = CombatFormulas.NetDamage(attacker.Damage, victim.PlayerDefense);
         if (attackDamage > 0)
         {
             PlayerSender.PlayerAttack(attacker, victim.Name, Target.Player);
@@ -91,7 +92,7 @@ internal static class CombatSystem
         victim.Target = attacker;
         attacker.AttackTimer = Environment.TickCount64;
 
-        var attackDamage = (short)(attacker.Damage - victim.Data.Attribute[(byte)Attribute.Resistance]);
+        var attackDamage = CombatFormulas.NetDamage(attacker.Damage, (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
             PlayerSender.PlayerAttack(attacker, victim.Index.ToString(), Target.Npc);
@@ -148,7 +149,7 @@ internal static class CombatSystem
 
         attacker.AttackTimer = Environment.TickCount64;
 
-        var attackDamage = (short)(attacker.Data.Attribute[(byte)Attribute.Strength] - victim.PlayerDefense);
+        var attackDamage = CombatFormulas.NetDamage((short)attacker.Data.Attribute[(byte)Attribute.Strength], victim.PlayerDefense);
         if (attackDamage > 0)
         {
             NpcSender.MapNpcAttack(attacker, victim.Name, Target.Player);
@@ -176,8 +177,9 @@ internal static class CombatSystem
         attacker.AttackTimer = Environment.TickCount64;
         victim.Target = attacker;
 
-        var attackDamage = (short)(attacker.Data.Attribute[(byte)Attribute.Strength] -
-                                   victim.Data.Attribute[(byte)Attribute.Resistance]);
+        var attackDamage = CombatFormulas.NetDamage(
+            (short)attacker.Data.Attribute[(byte)Attribute.Strength],
+            (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
             NpcSender.MapNpcAttack(attacker, victim.Index.ToString(), Target.Npc);
