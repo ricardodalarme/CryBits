@@ -1,6 +1,6 @@
-using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using CryBits.Client.Framework;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
@@ -20,7 +20,7 @@ internal partial class LoginWindow : Window
     /// <summary>Shows the login window (singleton), creating it if necessary.</summary>
     public static void Open()
     {
-        AvaloniaRuntime.RunOnUiThread(() =>
+        Dispatcher.UIThread.Post(() =>
         {
             if (_instance == null)
             {
@@ -42,7 +42,7 @@ internal partial class LoginWindow : Window
     /// <summary>Hides the login window if visible.</summary>
     public static void HideWindow()
     {
-        AvaloniaRuntime.RunOnUiThread(() =>
+        Dispatcher.UIThread.Post(() =>
         {
             if (_instance != null && _instance.IsVisible)
                 _instance.Hide();

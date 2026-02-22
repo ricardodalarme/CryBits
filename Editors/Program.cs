@@ -36,11 +36,11 @@ internal static class Program
         Sound.Load();
 
         // Start the game loop on a background thread.
-        // It will block on AvaloniaRuntime.WaitUntilReady() until Avalonia is up.
+        // It will block until Avalonia is ready before creating windows.
         var loopThread = new Thread(() =>
         {
             // Wait until Avalonia is fully initialised on the main thread
-            AvaloniaRuntime.WaitUntilReady();
+            App.WaitUntilReady();
 
             // Show login window and start the editor loop
             LoginWindow.Open();
@@ -50,7 +50,9 @@ internal static class Program
         loopThread.Start();
 
         // Run Avalonia on the main thread (required by macOS/Cocoa and Linux/X11)
-        AvaloniaRuntime.BuildAvaloniaApp()
+        AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .LogToTrace()
             .StartWithClassicDesktopLifetime(Array.Empty<string>(),
                 desktop => { desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown; });
     }
