@@ -5,6 +5,7 @@ using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
+using CryBits.Server.World;
 using static CryBits.Globals;
 using BcryptNet = BCrypt.Net.BCrypt;
 
@@ -29,7 +30,7 @@ internal static class AuthSystem
             return;
         }
 
-        if (Account.List.Find(x => x.User.Equals(user)) != null)
+        if (GameWorld.Current.Accounts.Find(x => x.User.Equals(user)) != null)
         {
             AuthSender.Alert(account, "Someone already signed in to this account.");
             return;

@@ -2,6 +2,7 @@ using System.Linq;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.World;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
@@ -24,7 +25,7 @@ internal static class Send
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in Account.List.Where(t => t.IsPlaying))
+        foreach (var t in GameWorld.Current.Accounts.Where(t => t.IsPlaying))
             t.Connection.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
@@ -33,7 +34,7 @@ internal static class Send
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in Account.List.Where(t => t.IsPlaying).Where(t => player != t.Character))
+        foreach (var t in GameWorld.Current.Accounts.Where(t => t.IsPlaying).Where(t => player != t.Character))
             ToPlayer(t, packet);
     }
 
@@ -42,7 +43,7 @@ internal static class Send
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in Account.List.Where(t => t.IsPlaying).Where(t => t.Character.MapInstance == mapInstance))
+        foreach (var t in GameWorld.Current.Accounts.Where(t => t.IsPlaying).Where(t => t.Character.MapInstance == mapInstance))
             ToPlayer(t, packet);
     }
 
@@ -51,7 +52,7 @@ internal static class Send
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in Account.List.Where(t => t.IsPlaying)
+        foreach (var t in GameWorld.Current.Accounts.Where(t => t.IsPlaying)
                      .Where(t => t.Character.MapInstance == mapInstance)
                      .Where(t => player != t.Character))
             ToPlayer(t, packet);

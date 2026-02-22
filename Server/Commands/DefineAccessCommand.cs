@@ -1,8 +1,8 @@
 using System;
 using CommandLine;
 using CryBits.Enums;
-using CryBits.Server.Entities;
 using CryBits.Server.Persistence.Repositories;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Commands;
 
@@ -18,7 +18,7 @@ internal sealed class DefineAccessCommand : IConsoleCommand
 
     public void Execute()
     {
-        var account = Account.List.Find(x => x.User.Equals(PlayerName, StringComparison.OrdinalIgnoreCase));
+        var account = GameWorld.Current.Accounts.Find(x => x.User.Equals(PlayerName, StringComparison.OrdinalIgnoreCase));
         if (account == null)
         {
             Console.WriteLine("This player is either offline or doesn't exist.");

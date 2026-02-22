@@ -3,6 +3,7 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
@@ -26,11 +27,11 @@ internal static class MapSender
 
     public static void MapPlayers(Player player)
     {
-        for (var i = 0; i < Account.List.Count; i++)
-            if (Account.List[i].IsPlaying)
-                if (player != Account.List[i].Character)
-                    if (Account.List[i].Character.MapInstance == player.MapInstance)
-                        Send.ToPlayer(player, PlayerDataCache(Account.List[i].Character));
+        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
+            if (GameWorld.Current.Accounts[i].IsPlaying)
+                if (player != GameWorld.Current.Accounts[i].Character)
+                    if (GameWorld.Current.Accounts[i].Character.MapInstance == player.MapInstance)
+                        Send.ToPlayer(player, PlayerDataCache(GameWorld.Current.Accounts[i].Character));
         Send.ToMap(player.MapInstance, PlayerDataCache(player));
     }
 

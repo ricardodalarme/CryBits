@@ -73,9 +73,9 @@ internal static class Program
     private static void PerformShutdown()
     {
         // Save character data for all connected players.
-        for (var i = 0; i < Account.List.Count; i++)
-            if (Account.List[i].IsPlaying)
-                CharacterRepository.Write(Account.List[i]);
+        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
+            if (GameWorld.Current.Accounts[i].IsPlaying)
+                CharacterRepository.Write(GameWorld.Current.Accounts[i]);
 
         // Stop network device.
         Socket.Device.Stop();

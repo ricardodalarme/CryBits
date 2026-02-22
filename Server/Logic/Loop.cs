@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CryBits.Server.Commands;
-using CryBits.Server.Entities;
 using CryBits.Server.Network;
 using CryBits.Server.Systems;
 using CryBits.Server.World;
@@ -45,7 +44,7 @@ internal static class Loop
                 }
 
                 // Player vital regeneration
-                foreach (var account in Account.List.Where(a => a.IsPlaying))
+                foreach (var account in GameWorld.Current.Accounts.Where(a => a.IsPlaying))
                     RegenerationSystem.Tick(account.Character);
 
                 // Reset 500 ms timer.

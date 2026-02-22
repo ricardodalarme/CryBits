@@ -5,6 +5,7 @@ using CryBits.Entities.Shop;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Server.Formulas;
+using CryBits.Server.World;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Entities;
@@ -96,5 +97,5 @@ internal class Player : Character
     /// <param name="name">Player name to search for.</param>
     /// <returns>The Player instance if found; otherwise null.</returns>
     public static Player Find(string name) =>
-        Account.List.Find(x => x.IsPlaying && x.Character.Name.Equals(name))?.Character;
+        GameWorld.Current.Accounts.Find(x => x.IsPlaying && x.Character.Name.Equals(name))?.Character;
 }

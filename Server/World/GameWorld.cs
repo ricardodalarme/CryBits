@@ -19,5 +19,10 @@ internal sealed class GameWorld
     /// </summary>
     public Dictionary<Guid, MapInstance> Maps { get; } = [];
 
+    /// <summary>
+    /// List of all active accounts on the server.
+    /// </summary>
+    public List<Account> Accounts { get; } = [];
+
     public GameWorld() => Current = this;
 }

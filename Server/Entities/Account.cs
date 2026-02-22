@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using CryBits.Enums;
 using CryBits.Server.Systems;
+using CryBits.Server.World;
 using LiteNetLib;
 
 namespace CryBits.Server.Entities;
 
 internal class Account(NetPeer connection)
 {
-    // Active accounts list.
-    public static readonly List<Account> List = [];
-
-    // Account fields.
     public NetPeer Connection { get; } = connection;
     public string User { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
@@ -31,6 +28,6 @@ internal class Account(NetPeer connection)
     public void Leave()
     {
         if (Character != null) CharacterSystem.Leave(Character);
-        List.Remove(this);
+        GameWorld.Current.Accounts.Remove(this);
     }
 }

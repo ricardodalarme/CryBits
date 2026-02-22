@@ -47,9 +47,9 @@ internal static class EditorHandler
         ClassRepository.WriteAll();
 
         // Broadcast updated classes to other connected accounts.
-        for (var i = 0; i < Account.List.Count; i++)
-            if (Account.List[i] != account)
-                ClassSender.Classes(Account.List[i]);
+        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
+            if (GameWorld.Current.Accounts[i] != account)
+                ClassSender.Classes(GameWorld.Current.Accounts[i]);
     }
 
     [PacketHandler]
@@ -73,10 +73,10 @@ internal static class EditorHandler
             tempMap.SpawnItems();
 
             // Broadcast the map to players who are on it (and editors).
-            for (var n = 0; n < Account.List.Count; n++)
-                if (Account.List[n] != account)
-                    if (Account.List[n].Character.MapInstance == tempMap || Account.List[n].InEditor)
-                        MapSender.Map(Account.List[n], tempMap.Data);
+            for (var n = 0; n < GameWorld.Current.Accounts.Count; n++)
+                if (GameWorld.Current.Accounts[n] != account)
+                    if (GameWorld.Current.Accounts[n].Character.MapInstance == tempMap || GameWorld.Current.Accounts[n].InEditor)
+                        MapSender.Map(GameWorld.Current.Accounts[n], tempMap.Data);
         }
     }
 
@@ -95,9 +95,9 @@ internal static class EditorHandler
         NpcRepository.WriteAll();
 
         // Broadcast NPC updates to other connected accounts.
-        for (var i = 0; i < Account.List.Count; i++)
-            if (Account.List[i] != account)
-                NpcSender.Npcs(Account.List[i]);
+        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
+            if (GameWorld.Current.Accounts[i] != account)
+                NpcSender.Npcs(GameWorld.Current.Accounts[i]);
     }
 
     [PacketHandler]
@@ -115,9 +115,9 @@ internal static class EditorHandler
         ItemRepository.WriteAll();
 
         // Broadcast item updates to other connected accounts.
-        for (var i = 0; i < Account.List.Count; i++)
-            if (Account.List[i] != account)
-                ItemSender.Items(Account.List[i]);
+        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
+            if (GameWorld.Current.Accounts[i] != account)
+                ItemSender.Items(GameWorld.Current.Accounts[i]);
     }
 
     [PacketHandler]
@@ -135,9 +135,9 @@ internal static class EditorHandler
         ShopRepository.WriteAll();
 
         // Broadcast shop updates to other connected accounts.
-        for (var i = 0; i < Account.List.Count; i++)
-            if (Account.List[i] != account)
-                ShopSender.Shops(Account.List[i]);
+        for (var i = 0; i < GameWorld.Current.Accounts.Count; i++)
+            if (GameWorld.Current.Accounts[i] != account)
+                ShopSender.Shops(GameWorld.Current.Accounts[i]);
     }
 
     [PacketHandler]

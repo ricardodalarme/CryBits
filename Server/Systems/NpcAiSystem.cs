@@ -4,6 +4,7 @@ using CryBits.Enums;
 using CryBits.Server.Entities;
 using CryBits.Server.Network;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.World;
 using static CryBits.Utils;
 
 namespace CryBits.Server.Systems;
@@ -34,7 +35,7 @@ internal static class NpcAiSystem
 
             // Scan for a player in range
             if (npcInstance.Target == null)
-                foreach (var account in Account.List)
+                foreach (var account in GameWorld.Current.Accounts)
                 {
                     if (!account.IsPlaying) continue;
                     if (account.Character.MapInstance != npcInstance.MapInstance) continue;
