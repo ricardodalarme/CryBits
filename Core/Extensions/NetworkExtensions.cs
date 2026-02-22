@@ -8,7 +8,9 @@ public static class NetworkExtensions
 {
     public static void WriteObject(this NetDataWriter data, object obj)
     {
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
         var bf = new BinaryFormatter();
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
         using var stream = new MemoryStream();
         bf.Serialize(stream, obj);
         var bytes = stream.ToArray();
@@ -23,6 +25,8 @@ public static class NetworkExtensions
         data.GetBytes(array, 0, size);
 
         using var stream = new MemoryStream(array);
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
         return new BinaryFormatter().Deserialize(stream);
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
     }
 }
