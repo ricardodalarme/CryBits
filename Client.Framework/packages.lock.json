@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "SFML.Audio": {
+        "type": "Direct",
+        "requested": "[3.0.0, )",
+        "resolved": "3.0.0",
+        "contentHash": "Dy+aRvajHurJXqAXHS2obXbxTE0dYy8dW5HS1qwjP2MgipZFjwT9cEWRfPUix/RbgE1euxg04J8gsV99iUhc+g==",
+        "dependencies": {
+          "CSFML": "[3.0.0, 3.1.0)",
+          "SFML.System": "3.0.0"
+        }
+      },
+      "SFML.Graphics": {
+        "type": "Direct",
+        "requested": "[3.0.0, )",
+        "resolved": "3.0.0",
+        "contentHash": "2dcdwHCrgVwkVa52V2T2ZaiORMXgznwdMCsNXBMn/oPnxFa7AWWuxNVftv6kvjER56SIw0f1asYs1npTyEFXxg==",
+        "dependencies": {
+          "CSFML": "[3.0.0, 3.1.0)",
+          "SFML.System": "3.0.0",
+          "SFML.Window": "3.0.0"
+        }
+      },
+      "SFML.Window": {
+        "type": "Direct",
+        "requested": "[3.0.0, )",
+        "resolved": "3.0.0",
+        "contentHash": "Yu+QJVQ4dRbfOgnN+xSl3rqetseNKD711k9gsdYqic9f9QDBK2raIUJTYx+JsH/NXo3rVt1NGkCm5ucSj5OzdQ==",
+        "dependencies": {
+          "CSFML": "[3.0.0, 3.1.0)",
+          "SFML.System": "3.0.0"
+        }
+      },
+      "System.Runtime.Serialization.Formatters": {
+        "type": "Direct",
+        "requested": "[10.0.3, )",
+        "resolved": "10.0.3",
+        "contentHash": "q38b0Wj67miA+2Rcc6excf72Xh+LuVCxr0nJuhZaO3LwUVATdrm0x7TQuNr5lRNC0TH4UR6jkg/TA4C7Luyujw=="
+      },
+      "CSFML": {
+        "type": "Transitive",
+        "resolved": "3.0.0",
+        "contentHash": "iwzebpEjtHMmrBWrIZf7lo20PlzGCe4ifh5y/x0RwNE3pcUh4rdLkcnKwuxE+k6gHFbUehQ2/4GuiUB3i6v3Ww=="
+      },
+      "LiteNetLib": {
+        "type": "Transitive",
+        "resolved": "2.0.2",
+        "contentHash": "TOxT3aT1rnzICpdiPaFHqLf03aEaj79ouJwu6YLqsPGNuPKEfHC8PmfX4G9wsSvXXE+Hp66ijD9EKs6W/Cc8FA=="
+      },
+      "SFML.System": {
+        "type": "Transitive",
+        "resolved": "3.0.0",
+        "contentHash": "k6s8BB53Xrugmx25rmlZRoezAkSyjpxNPeIrFT5hUoDJ32XSj0bvJdTWomB6Aiph7nNaJrCnA/K0o1x0ZCPUYQ==",
+        "dependencies": {
+          "CSFML": "[3.0.0, 3.1.0)"
+        }
+      },
+      "CryBits.Core": {
+        "type": "Project",
+        "dependencies": {
+          "LiteNetLib": "[2.0.2, )",
+          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+        }
+      }
+    }
+  }
+}
