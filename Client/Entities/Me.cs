@@ -12,10 +12,10 @@ namespace CryBits.Client.Entities;
 
 internal class Me(string name) : Player(name)
 {
-    public ItemSlot[] Inventory = new ItemSlot[MaxInventory];
+    public ItemSlot?[] Inventory = new ItemSlot[MaxInventory];
     public HotbarSlot[] Hotbar = new HotbarSlot[MaxHotbar];
-    public ItemSlot[] TradeOffer;
-    public ItemSlot[] TradeTheirOffer;
+    public ItemSlot?[] TradeOffer;
+    public ItemSlot?[] TradeTheirOffer;
     public Player[] Party = Array.Empty<Player>();
     public int Experience;
     public int ExpNeeded;

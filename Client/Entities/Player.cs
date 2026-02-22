@@ -21,7 +21,7 @@ internal class Player(string name) : Character
     public short Level { get; set; }
     public short[] MaxVital { get; set; } = new short[(byte)Enums.Vital.Count];
     public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
-    public Item[] Equipment { get; set; } = new Item[(byte)Enums.Equipment.Count];
+    public Item?[] Equipment { get; set; } = new Item[(byte)Enums.Equipment.Count];
     public MapInstance MapInstance;
 
     public virtual void Logic()

@@ -20,17 +20,17 @@ internal class Player : Character
     public int Experience { get; set; }
     public byte Points { get; set; }
     public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
-    public ItemSlot[] Inventory { get; } = new ItemSlot[MaxInventory];
-    public Item[] Equipment { get; } = new Item[(byte)Enums.Equipment.Count];
-    public HotbarSlot[] Hotbar { get; } = new HotbarSlot[MaxHotbar];
+    public ItemSlot?[] Inventory { get; } = new ItemSlot[MaxInventory];
+    public Item?[] Equipment { get; } = new Item?[(byte)Enums.Equipment.Count];
+    public HotbarSlot?[] Hotbar { get; } = new HotbarSlot[MaxHotbar];
 
     public bool GettingMap;
     public List<Player> Party = [];
-    public string PartyRequest;
-    public Player Trade;
-    public string TradeRequest;
-    public TradeSlot[] TradeOffer;
-    public Shop Shop;
+    public string? PartyRequest;
+    public Player? Trade;
+    public string? TradeRequest;
+    public TradeSlot[]? TradeOffer;
+    public Shop? Shop;
     public GameSession Session;
     public long AttackTimer;
 

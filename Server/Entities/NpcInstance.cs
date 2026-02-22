@@ -11,7 +11,7 @@ internal class NpcInstance : Character
     public readonly byte Index;
     public readonly Npc Data;
     public bool Alive;
-    public Character Target;
+    public Character? Target;
     public long SpawnTimer;
     public long AttackTimer;
 
