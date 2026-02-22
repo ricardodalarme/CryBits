@@ -16,7 +16,7 @@ using static CryBits.Editors.Logic.Utils;
 using G = CryBits.Globals;
 using Point = System.Drawing.Point;
 
-namespace CryBits.Editors.AvaloniaUI.Forms;
+namespace CryBits.Editors.Forms;
 
 internal partial class EditorTilesWindow : Window
 {

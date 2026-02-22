@@ -8,10 +8,19 @@ using CryBits.Entities;
 using CryBits.Enums;
 using Attribute = CryBits.Enums.Attribute;
 
-namespace CryBits.Editors.AvaloniaUI.Forms;
+namespace CryBits.Editors.Forms;
 
 internal partial class EditorItemsWindow : Window
 {
+    /// <summary>Opens the Items editor, hiding the owner window while open.</summary>
+    public static void Open(Window owner)
+    {
+        owner.Hide();
+        var window = new EditorItemsWindow();
+        window.Closed += (_, _) => owner.Show();
+        window.Show();
+    }
+
     // Consumed by Renders.cs EditorItem() instead of EditorItems.Form.numTexture.Value
     public static short CurrentTextureIndex { get; private set; } = 0;
 

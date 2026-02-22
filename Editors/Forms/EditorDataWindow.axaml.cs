@@ -3,7 +3,7 @@ using Avalonia.Interactivity;
 using CryBits.Editors.Network;
 using static CryBits.Globals;
 
-namespace CryBits.Editors.AvaloniaUI.Forms;
+namespace CryBits.Editors.Forms;
 
 internal partial class EditorDataWindow : Window
 {

@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using CryBits.Editors.AvaloniaUI.Forms;
+using CryBits.Editors.Forms;
 using Map = CryBits.Entities.Map.Map;
 
 namespace CryBits.Editors.AvaloniaUI;

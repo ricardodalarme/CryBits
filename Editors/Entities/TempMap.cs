@@ -2,7 +2,7 @@ using System;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Entities.TempMap;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Editors.AvaloniaUI.Forms;
+using CryBits.Editors.Forms;
 using CryBits.Entities.Map;
 using SFML.Audio;
 using static CryBits.Globals;

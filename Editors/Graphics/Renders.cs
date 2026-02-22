@@ -2,7 +2,7 @@ using System.Drawing;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Editors.AvaloniaUI.Forms;
+using CryBits.Editors.Forms;
 using CryBits.Editors.Entities;
 using CryBits.Entities.Map;
 using CryBits.Enums;

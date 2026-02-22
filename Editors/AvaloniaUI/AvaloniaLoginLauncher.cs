@@ -1,4 +1,4 @@
-using CryBits.Editors.AvaloniaUI.Forms;
+using CryBits.Editors.Forms;
 
 namespace CryBits.Editors.AvaloniaUI;
 

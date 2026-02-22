@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:semi="https://irihi.tech/semi"
-        x:Class="CryBits.Editors.AvaloniaUI.Forms.LoginWindow"
+        x:Class="CryBits.Editors.Forms.LoginWindow"
         Title="Login"
         Width="540" Height="400"
         CanResize="False"

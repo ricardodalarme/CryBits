@@ -18,7 +18,7 @@ using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
 using Point = System.Drawing.Point;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
-namespace CryBits.Editors.AvaloniaUI.Forms;
+namespace CryBits.Editors.Forms;
 
 // ─── ViewModel for the order tree ───────────────────────────────────────────
 internal sealed class TreeItemVM : INotifyPropertyChanged

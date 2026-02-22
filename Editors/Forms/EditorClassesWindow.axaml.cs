@@ -10,7 +10,7 @@ using CryBits.Enums;
 using Attribute = CryBits.Enums.Attribute;
 using Map = CryBits.Entities.Map.Map;
 
-namespace CryBits.Editors.AvaloniaUI.Forms;
+namespace CryBits.Editors.Forms;
 
 internal partial class EditorClassesWindow : Window
 {

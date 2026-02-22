@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:semi="https://irihi.tech/semi"
-        x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorMapsWindow"
+        x:Class="CryBits.Editors.Forms.EditorMapsWindow"
         Title="CryBits Editor"
         Width="1449" Height="735"
         MinWidth="931" MinHeight="686"

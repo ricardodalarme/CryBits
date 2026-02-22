@@ -33,7 +33,7 @@ using SystemRect = System.Drawing.Rectangle;
 using SystemSize = System.Drawing.Size;
 using TextChangedEventArgs = Avalonia.Controls.TextChangedEventArgs;
 
-namespace CryBits.Editors.AvaloniaUI.Forms;
+namespace CryBits.Editors.Forms;
 
 // Cross-platform replacement for System.Windows.Forms.MouseButtons
 internal enum MouseButtons

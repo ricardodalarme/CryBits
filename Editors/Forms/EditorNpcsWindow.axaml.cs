@@ -15,7 +15,7 @@ using SFML.Graphics;
 using SFML.System;
 using Attribute = CryBits.Enums.Attribute;
 
-namespace CryBits.Editors.AvaloniaUI.Forms;
+namespace CryBits.Editors.Forms;
 
 internal partial class EditorNpcsWindow : Window
 {

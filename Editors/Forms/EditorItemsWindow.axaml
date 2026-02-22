@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="CryBits.Editors.AvaloniaUI.Forms.EditorItemsWindow"
+        x:Class="CryBits.Editors.Forms.EditorItemsWindow"
         Title="Items Editor"
         Width="648" Height="828"
         CanResize="False"
