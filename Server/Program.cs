@@ -31,6 +31,17 @@ internal static class Program
         };
         AppDomain.CurrentDomain.ProcessExit += (_, _) => cts.Cancel();
 
+        // Global exception handlers to prevent crashing
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+        {
+            Console.WriteLine($"[Global Error] Unhandled exception: {e.ExceptionObject}");
+        };
+        TaskScheduler.UnobservedTaskException += (_, e) =>
+        {
+            Console.WriteLine($"[Global Error] Unobserved task exception: {e.Exception}");
+            e.SetObserved();
+        };
+
         // Ensure required directories exist.
         Directories.Create();
         Console.WriteLine("Directories created.");

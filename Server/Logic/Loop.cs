@@ -29,41 +29,48 @@ internal static class Loop
 
         while (await timer.WaitForNextTickAsync(ct))
         {
-            // Handle incoming network data.
-            Socket.HandleData();
-
-            var now = Environment.TickCount64;
-
-            if (now > _timer500 + 500)
+            try
             {
-                // Map logic
-                foreach (var tempMap in GameWorld.Current.Maps.Values)
+                // Handle incoming network data.
+                Socket.HandleData();
+
+                var now = Environment.TickCount64;
+
+                if (now > _timer500 + 500)
                 {
-                    MapItemSystem.Tick(tempMap);
-                    tempMap.Logic();
+                    // Map logic
+                    foreach (var tempMap in GameWorld.Current.Maps.Values)
+                    {
+                        MapItemSystem.Tick(tempMap);
+                        tempMap.Logic();
+                    }
+
+                    // Player vital regeneration
+                    foreach (var session in GameWorld.Current.Sessions.Where(a => a.IsPlaying))
+                        RegenerationSystem.Tick(session.Character!);
+
+                    // Reset 500 ms timer.
+                    _timer500 = now;
                 }
 
-                // Player vital regeneration
-                foreach (var session in GameWorld.Current.Sessions.Where(a => a.IsPlaying))
-                    RegenerationSystem.Tick(session.Character!);
+                // Reset longer-running timers.
+                if (now > TimerRegeneration + 5000) TimerRegeneration = now;
+                if (now > TimerMapItems + 300000) TimerMapItems = now;
 
-                // Reset 500 ms timer.
-                _timer500 = now;
+                // Compute CPS.
+                if (_timer1000 < now)
+                {
+                    Cps = cps;
+                    cps = 0;
+                    _timer1000 = now + 1000;
+                }
+                else
+                    cps++;
             }
-
-            // Reset longer-running timers.
-            if (now > TimerRegeneration + 5000) TimerRegeneration = now;
-            if (now > TimerMapItems + 300000) TimerMapItems = now;
-
-            // Compute CPS.
-            if (_timer1000 < now)
+            catch (Exception ex)
             {
-                Cps = cps;
-                cps = 0;
-                _timer1000 = now + 1000;
+                Console.WriteLine($"[Error] Main loop threw an exception: {ex}");
             }
-            else
-                cps++;
         }
     }
 
@@ -76,8 +83,15 @@ internal static class Loop
         // Console command loop.
         while (!ct.IsCancellationRequested)
         {
-            Console.Write("Execute: ");
-            dispatcher.Dispatch(Console.ReadLine());
+            try
+            {
+                Console.Write("Execute: ");
+                dispatcher.Dispatch(Console.ReadLine());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error] Command loop threw an exception: {ex}");
+            }
         }
     }
 }
