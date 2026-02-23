@@ -36,7 +36,7 @@ internal sealed class Player
 
     // ─── ECS access ─────────────────────────────────────────────────────────
 
-    private static World World => ServerContext.Instance.World;
+    private static Server.ECS.World World => ServerContext.Instance.World;
 
     /// <summary>Retrieves a component from this player's entity. Throws if absent.</summary>
     public T Get<T>() where T : class, IComponent => World.Get<T>(EntityId);
@@ -128,3 +128,4 @@ internal sealed class Player
         GameWorld.Current.Sessions.Find(x => x.IsPlaying &&
                                              World.TryGet<PlayerDataComponent>(x.Character!.EntityId, out var d) &&
                                              d.Name.Equals(name))?.Character;
+}

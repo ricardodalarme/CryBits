@@ -6,11 +6,12 @@ using CryBits.Server.ECS;
 using CryBits.Server.ECS.Components;
 using CryBits.Server.Entities;
 using CryBits.Server.World;
+
 namespace CryBits.Server.Network.Senders;
 
 internal static class MapSender
 {
-    private static CryBits.Server.ECS.Core.World World => ServerContext.Instance.World;
+    private static CryBits.Server.ECS.World World => ServerContext.Instance.World;
 
     public static void Map(GameSession session, Map map)
     {
@@ -39,12 +40,13 @@ internal static class MapSender
             if (otherPos.MapId == playerPos.MapId)
                 Send.ToPlayer(player, PlayerDataCache(other));
         }
+
         Send.ToMap(player.MapInstance, PlayerDataCache(player));
     }
 
     public static void MapItems(Player player, MapInstance mapInstance)
     {
-        var items  = ServerContext.Instance.GetMapItems(mapInstance.Data.Id);
+        var items = ServerContext.Instance.GetMapItems(mapInstance.Data.Id);
         var packet = new MapItemsPacket { Items = new PacketsMapItem[items.Count] };
         for (int i = 0; i < items.Count; i++)
         {
@@ -52,8 +54,8 @@ internal static class MapSender
             packet.Items[i] = new PacketsMapItem
             {
                 ItemId = mi.Item.GetId(),
-                X      = mi.X,
-                Y      = mi.Y
+                X = mi.X,
+                Y = mi.Y
             };
         }
 
@@ -62,7 +64,7 @@ internal static class MapSender
 
     public static void MapItems(MapInstance mapInstance)
     {
-        var items  = ServerContext.Instance.GetMapItems(mapInstance.Data.Id);
+        var items = ServerContext.Instance.GetMapItems(mapInstance.Data.Id);
         var packet = new MapItemsPacket { Items = new PacketsMapItem[items.Count] };
         for (int i = 0; i < items.Count; i++)
         {
@@ -70,8 +72,8 @@ internal static class MapSender
             packet.Items[i] = new PacketsMapItem
             {
                 ItemId = mi.Item.GetId(),
-                X      = mi.X,
-                Y      = mi.Y
+                X = mi.X,
+                Y = mi.Y
             };
         }
 
@@ -80,35 +82,35 @@ internal static class MapSender
 
     private static PlayerDataPacket PlayerDataCache(Player player)
     {
-        var pd     = player.Get<PlayerDataComponent>();
-        var pos    = player.Get<PositionComponent>();
-        var dir    = player.Get<DirectionComponent>();
+        var pd = player.Get<PlayerDataComponent>();
+        var pos = player.Get<PositionComponent>();
+        var dir = player.Get<DirectionComponent>();
         var vitals = player.Get<VitalsComponent>();
-        var attr   = player.Get<AttributeComponent>();
-        var equip  = player.Get<EquipmentComponent>();
+        var attr = player.Get<AttributeComponent>();
+        var equip = player.Get<EquipmentComponent>();
 
         var packet = new PlayerDataPacket
         {
-            Name       = pd.Name,
+            Name = pd.Name,
             TextureNum = pd.TextureNum,
-            Level      = pd.Level,
-            MapId      = player.MapInstance.GetId(),
-            X          = pos.X,
-            Y          = pos.Y,
-            Direction  = (byte)dir.Value,
-            Vital      = new short[(byte)Vital.Count],
-            MaxVital   = new short[(byte)Vital.Count],
-            Attribute  = new short[(byte)Attribute.Count],
-            Equipment  = new System.Guid[(byte)Equipment.Count]
+            Level = pd.Level,
+            MapId = player.MapInstance.GetId(),
+            X = pos.X,
+            Y = pos.Y,
+            Direction = (byte)dir.Value,
+            Vital = new short[(byte)Vital.Count],
+            MaxVital = new short[(byte)Vital.Count],
+            Attribute = new short[(byte)Attribute.Count],
+            Equipment = new System.Guid[(byte)Equipment.Count]
         };
         for (byte n = 0; n < (byte)Vital.Count; n++)
         {
-            packet.Vital[n]    = vitals.Values[n];
+            packet.Vital[n] = vitals.Values[n];
             packet.MaxVital[n] = player.MaxVital(n);
         }
 
         for (byte n = 0; n < (byte)Attribute.Count; n++) packet.Attribute[n] = attr.Values[n];
-        for (byte n = 0; n < (byte)Equipment.Count; n++) packet.Equipment[n]  = equip.Slots[n].GetId();
+        for (byte n = 0; n < (byte)Equipment.Count; n++) packet.Equipment[n] = equip.Slots[n].GetId();
 
         return packet;
     }

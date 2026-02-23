@@ -17,11 +17,11 @@ internal static class NpcAiSystem
     /// <summary>Runs one AI tick for the NPC entity identified by <paramref name="entityId"/>.</summary>
     internal static void Tick(int entityId)
     {
-        var world  = ServerContext.Instance.World;
-        var npcData  = world.Get<NpcDataComponent>(entityId);
+        var world = ServerContext.Instance.World;
+        var npcData = world.Get<NpcDataComponent>(entityId);
         var npcState = world.Get<NpcStateComponent>(entityId);
-        var pos    = world.Get<PositionComponent>(entityId);
-        var dir    = world.Get<DirectionComponent>(entityId);
+        var pos = world.Get<PositionComponent>(entityId);
+        var dir = world.Get<DirectionComponent>(entityId);
         var target = world.Get<NpcTargetComponent>(entityId);
 
         var map = GameWorld.Current.Maps[npcData.MapId];
@@ -59,7 +59,8 @@ internal static class NpcAiSystem
                     {
                         target.TargetEntityId = session.Character.EntityId;
                         if (!string.IsNullOrEmpty(npcData.Data.SayMsg))
-                            ChatSender.Message(session.Character, npcData.Data.Name + ": " + npcData.Data.SayMsg, Color.White);
+                            ChatSender.Message(session.Character, npcData.Data.Name + ": " + npcData.Data.SayMsg,
+                                Color.White);
                         break;
                     }
                 }
@@ -132,15 +133,15 @@ internal static class NpcAiSystem
         {
             // Return to designated zone
             for (byte x = 0; x < CryBits.Entities.Map.Map.Width; x++)
-                for (byte y = 0; y < CryBits.Entities.Map.Map.Height; y++)
-                    if (map.Data.Attribute[x, y].Zone == map.Data.Npc[npcData.Index].Zone &&
-                        !map.Data.TileBlocked(x, y))
-                    {
-                        targetX = x;
-                        targetY = y;
-                        move = true;
-                        break;
-                    }
+            for (byte y = 0; y < CryBits.Entities.Map.Map.Height; y++)
+                if (map.Data.Attribute[x, y].Zone == map.Data.Npc[npcData.Index].Zone &&
+                    !map.Data.TileBlocked(x, y))
+                {
+                    targetX = x;
+                    targetY = y;
+                    move = true;
+                    break;
+                }
         }
 
         // Move toward or away from target
@@ -149,16 +150,16 @@ internal static class NpcAiSystem
             var vitals = world.Get<VitalsComponent>(entityId);
             if (vitals.Values[(byte)Vital.Hp] > npcData.Data.Vital[(byte)Vital.Hp] * (npcData.Data.FleeHealth / 100.0))
             {
-                canMove[(byte)Direction.Up]    = pos.Y > targetY;
-                canMove[(byte)Direction.Down]  = pos.Y < targetY;
-                canMove[(byte)Direction.Left]  = pos.X > targetX;
+                canMove[(byte)Direction.Up] = pos.Y > targetY;
+                canMove[(byte)Direction.Down] = pos.Y < targetY;
+                canMove[(byte)Direction.Left] = pos.X > targetX;
                 canMove[(byte)Direction.Right] = pos.X < targetX;
             }
             else
             {
-                canMove[(byte)Direction.Up]    = pos.Y < targetY;
-                canMove[(byte)Direction.Down]  = pos.Y > targetY;
-                canMove[(byte)Direction.Left]  = pos.X < targetX;
+                canMove[(byte)Direction.Up] = pos.Y < targetY;
+                canMove[(byte)Direction.Down] = pos.Y > targetY;
+                canMove[(byte)Direction.Left] = pos.X < targetX;
                 canMove[(byte)Direction.Right] = pos.X > targetX;
             }
 
@@ -195,10 +196,10 @@ internal static class NpcAiSystem
     /// <summary>Attempts to spawn the NPC entity at its configured or a random location.</summary>
     internal static void Spawn(int entityId)
     {
-        var world   = ServerContext.Instance.World;
+        var world = ServerContext.Instance.World;
         var npcData = world.Get<NpcDataComponent>(entityId);
-        var map     = GameWorld.Current.Maps[npcData.MapId];
-        var slot    = map.Data.Npc[npcData.Index];
+        var map = GameWorld.Current.Maps[npcData.MapId];
+        var slot = map.Data.Npc[npcData.Index];
 
         if (slot.Spawn)
         {
@@ -222,30 +223,30 @@ internal static class NpcAiSystem
 
         // Fallback: first walkable tile in zone
         for (byte x = 0; x < CryBits.Entities.Map.Map.Width; x++)
-            for (byte y = 0; y < CryBits.Entities.Map.Map.Height; y++)
+        for (byte y = 0; y < CryBits.Entities.Map.Map.Height; y++)
+        {
+            if (slot.Zone > 0 && map.Data.Attribute[x, y].Zone != slot.Zone) continue;
+            if (!map.Data.TileBlocked(x, y))
             {
-                if (slot.Zone > 0 && map.Data.Attribute[x, y].Zone != slot.Zone) continue;
-                if (!map.Data.TileBlocked(x, y))
-                {
-                    SpawnAt(entityId, x, y);
-                    return;
-                }
+                SpawnAt(entityId, x, y);
+                return;
             }
+        }
     }
 
     private static void SpawnAt(int entityId, byte x, byte y, Direction direction = 0)
     {
-        var world    = ServerContext.Instance.World;
-        var npcData  = world.Get<NpcDataComponent>(entityId);
+        var world = ServerContext.Instance.World;
+        var npcData = world.Get<NpcDataComponent>(entityId);
         var npcState = world.Get<NpcStateComponent>(entityId);
-        var pos      = world.Get<PositionComponent>(entityId);
-        var dir      = world.Get<DirectionComponent>(entityId);
-        var vitals   = world.Get<VitalsComponent>(entityId);
+        var pos = world.Get<PositionComponent>(entityId);
+        var dir = world.Get<DirectionComponent>(entityId);
+        var vitals = world.Get<VitalsComponent>(entityId);
 
         npcState.Alive = true;
-        pos.X          = x;
-        pos.Y          = y;
-        dir.Value      = direction;
+        pos.X = x;
+        pos.Y = y;
+        dir.Value = direction;
 
         for (byte i = 0; i < (byte)Vital.Count; i++)
             vitals.Values[i] = npcData.Data.Vital[i];
@@ -256,11 +257,11 @@ internal static class NpcAiSystem
 
     private static bool Move(int entityId, Direction direction, byte movement = 1, bool checkZone = false)
     {
-        var world   = ServerContext.Instance.World;
+        var world = ServerContext.Instance.World;
         var npcData = world.Get<NpcDataComponent>(entityId);
-        var pos     = world.Get<PositionComponent>(entityId);
-        var dir     = world.Get<DirectionComponent>(entityId);
-        var map     = GameWorld.Current.Maps[npcData.MapId];
+        var pos = world.Get<PositionComponent>(entityId);
+        var dir = world.Get<DirectionComponent>(entityId);
+        var map = GameWorld.Current.Maps[npcData.MapId];
 
         dir.Value = direction;
         NpcSender.MapNpcDirection(entityId);

@@ -47,7 +47,7 @@ internal static class PlayerHandler
     [PacketHandler]
     internal static void DropItem(Player player, DropItemPacket packet)
     {
-        var slot   = packet.Slot;
+        var slot = packet.Slot;
         var amount = packet.Amount;
         if (slot < 0) return;
 
@@ -61,7 +61,7 @@ internal static class PlayerHandler
         short slotOld = packet.OldSlot, slotNew = packet.NewSlot;
 
         var world = ServerContext.Instance.World;
-        var inv   = world.Get<InventoryComponent>(player.EntityId);
+        var inv = world.Get<InventoryComponent>(player.EntityId);
         var trade = world.Get<TradeComponent>(player.EntityId);
 
         if (inv.Slots[slotOld].Item == null) return;

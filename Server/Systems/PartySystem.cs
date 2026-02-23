@@ -11,7 +11,7 @@ namespace CryBits.Server.Systems;
 /// <summary>Owns all party lifecycle logic.</summary>
 internal static class PartySystem
 {
-    private static CryBits.Server.ECS.Core.World World => ServerContext.Instance.World;
+    private static CryBits.Server.ECS.World World => ServerContext.Instance.World;
 
     private static Player? PlayerFromEntityId(int entityId)
     {

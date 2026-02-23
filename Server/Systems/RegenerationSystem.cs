@@ -63,4 +63,3 @@ internal static class RegenerationSystem
         }
     }
 }
-

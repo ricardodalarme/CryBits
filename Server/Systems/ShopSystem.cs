@@ -11,7 +11,7 @@ namespace CryBits.Server.Systems;
 /// <summary>System that owns all shop lifecycle logic.</summary>
 internal static class ShopSystem
 {
-    private static CryBits.Server.ECS.Core.World World => ServerContext.Instance.World;
+    private static CryBits.Server.ECS.World World => ServerContext.Instance.World;
 
     /// <summary>Opens <paramref name="shop"/> for <paramref name="player"/> and notifies the client.</summary>
     public static void Open(Player player, Shop shop)

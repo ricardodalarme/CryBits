@@ -8,7 +8,7 @@ namespace CryBits.Server.Network.Senders;
 
 internal static class PartySender
 {
-    private static CryBits.Server.ECS.Core.World World => ServerContext.Instance.World;
+    private static CryBits.Server.ECS.World World => ServerContext.Instance.World;
 
     public static void Party(Player player)
     {
