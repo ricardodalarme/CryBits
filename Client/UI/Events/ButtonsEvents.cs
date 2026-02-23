@@ -1,5 +1,6 @@
 using System.Linq;
-using CryBits.Client.Entities;
+using CryBits.Client.ECS;
+using CryBits.Client.ECS.Components;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Network;
@@ -327,8 +328,12 @@ internal static class ButtonsEvents
         Panels.TradeOfferDisable.Visible = false;
         TradeSender.TradeOfferState(TradeStatus.Accepted);
 
-        Player.Me.TradeOffer = new ItemSlot[MaxInventory];
-        Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory];
+        var localId = GameContext.Instance.GetLocalPlayer();
+        if (localId >= 0 && GameContext.Instance.World.TryGet<TradeComponent>(localId, out var trade))
+        {
+            trade.Offer = new ItemSlot[MaxInventory];
+            trade.TheirOffer = new ItemSlot[MaxInventory];
+        }
     }
 
     private static void TradeOfferDecline()

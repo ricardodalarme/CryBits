@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
-using CryBits.Client.Entities;
+using CryBits.Client.ECS;
+using CryBits.Client.ECS.Systems;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Graphics;
 using CryBits.Client.Network;
@@ -18,6 +19,19 @@ internal static class Loop
     // Timing counters
     public static int TextBoxTimer;
     public static int ChatTimer;
+
+    // Update systems — instantiated once and reused each tick.
+    private static readonly IUpdateSystem[] _updateSystems =
+    [
+        new MovementSystem(),
+        new PlayerInputSystem(),
+        new AttackSystem(),
+        new HurtSystem(),
+        new BloodFadeSystem(),
+        new ItemCollectSystem(),
+        new WeatherSystem(),
+        new FogSystem(),
+    ];
 
     /// <summary>
     /// Start the client main loop: handle network, update game state and present frames.
@@ -43,17 +57,11 @@ internal static class Loop
 
             if (Screen.Current == Screens.Game)
             {
-                MapInstance.Current.Logic();
                 if (timer30 < Environment.TickCount)
                 {
-                    // Player logic.
-                    for (byte i = 0; i < Player.List.Count; i++)
-                        Player.List[i].Logic();
-
-                    // NPC logic.
-                    for (byte i = 0; i < MapInstance.Current.Npc.Length; i++)
-                        if (MapInstance.Current.Npc[i].Data != null)
-                            MapInstance.Current.Npc[i].Logic();
+                    var ctx = GameContext.Instance;
+                    foreach (var sys in _updateSystems)
+                        sys.Update(ctx);
 
                     // Reset 30 ms timer
                     timer30 = Environment.TickCount + 30;

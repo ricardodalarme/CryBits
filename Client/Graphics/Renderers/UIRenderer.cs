@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using CryBits.Client.Entities;
+using CryBits.Client.ECS;
+using CryBits.Client.ECS.Components;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
@@ -22,6 +23,18 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal static class UIRenderer
 {
+    private static GameContext Ctx => GameContext.Instance;
+
+    // ─── Local-player component helpers ──────────────────────────────────────
+
+    private static int LocalId => Ctx.GetLocalPlayer();
+
+    private static T? Local<T>() where T : class, IComponent
+    {
+        var id = LocalId;
+        return id > 0 && Ctx.World.TryGet<T>(id, out var c) ? c : null;
+    }
+
     /// <summary>
     /// Recursively render a tree of UI components.
     /// </summary>
@@ -113,29 +126,30 @@ internal static class UIRenderer
 
     private static void Bars(Panel tool)
     {
-        var hpPercentage = Player.Me.Vital[(byte)Vital.Hp] / (decimal)Player.Me.MaxVital[(byte)Vital.Hp];
-        var mpPercentage = Player.Me.Vital[(byte)Vital.Mp] / (decimal)Player.Me.MaxVital[(byte)Vital.Mp];
-        var expPercentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
+        var vitals = Local<VitalsComponent>();
+        var xp = Local<ExperienceComponent>();
+        if (vitals == null) return;
 
-        Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0,
-            (int)(Textures.BarsPanel.Size.X * hpPercentage), 17);
-        Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 24, 0, 18,
-            (int)(Textures.BarsPanel.Size.X * mpPercentage), 17);
-        Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36,
-            (int)(Textures.BarsPanel.Size.X * expPercentage), 17);
+        var hp = vitals.Current[(byte)Vital.Hp];
+        var mp = vitals.Current[(byte)Vital.Mp];
+        var mhp = vitals.Max[(byte)Vital.Hp];
+        var mmp = vitals.Max[(byte)Vital.Mp];
+
+        var hpPercentage = mhp > 0 ? hp / (decimal)mhp : 0m;
+        var mpPercentage = mmp > 0 ? mp / (decimal)mmp : 0m;
+        var expPercentage = xp?.Needed > 0 ? xp.Current / (decimal)xp.Needed : 0m;
+
+        Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0, (int)(Textures.BarsPanel.Size.X * hpPercentage), 17);
+        Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 24, 0, 18, (int)(Textures.BarsPanel.Size.X * mpPercentage), 17);
+        Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36, (int)(Textures.BarsPanel.Size.X * expPercentage), 17);
 
         Renders.DrawText("HP", tool.Position.X + 10, tool.Position.Y + 3, Color.White);
         Renders.DrawText("MP", tool.Position.X + 10, tool.Position.Y + 21, Color.White);
         Renders.DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, Color.White);
 
-        Renders.DrawText(Player.Me.Vital[(byte)Vital.Hp] + "/" + Player.Me.MaxVital[(byte)Vital.Hp],
-            tool.Position.X + 76,
-            tool.Position.Y + 7, Color.White, TextAlign.Center);
-        Renders.DrawText(Player.Me.Vital[(byte)Vital.Mp] + "/" + Player.Me.MaxVital[(byte)Vital.Mp],
-            tool.Position.X + 76,
-            tool.Position.Y + 25, Color.White, TextAlign.Center);
-        Renders.DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76, tool.Position.Y + 43,
-            Color.White, TextAlign.Center);
+        Renders.DrawText(hp + "/" + mhp, tool.Position.X + 76, tool.Position.Y + 7, Color.White, TextAlign.Center);
+        Renders.DrawText(mp + "/" + mmp, tool.Position.X + 76, tool.Position.Y + 25, Color.White, TextAlign.Center);
+        Renders.DrawText((xp?.Current ?? 0) + "/" + (xp?.Needed ?? 0), tool.Position.X + 76, tool.Position.Y + 43, Color.White, TextAlign.Center);
     }
 
     /// <summary>
@@ -208,29 +222,32 @@ internal static class UIRenderer
         }
 
         Point[] positions =
-        {
+        [
             new(tool.Position.X + 10, tool.Position.Y + 90), new(tool.Position.X + 10, tool.Position.Y + 102),
             new(tool.Position.X + 10, tool.Position.Y + 114), new(tool.Position.X + 96, tool.Position.Y + 90),
             new(tool.Position.X + 96, tool.Position.Y + 102), new(tool.Position.X + 96, tool.Position.Y + 114),
             new(tool.Position.X + 96, tool.Position.Y + 126)
-        };
+        ];
         for (byte i = 0; i < data.Count; i++) Renders.DrawText(data[i], positions[i].X, positions[i].Y, Color.White);
     }
 
     private static void Hotbar(Panel tool)
     {
+        var hotbar = Local<HotbarComponent>();
+        var inv = Local<InventoryComponent>();
+        if (hotbar == null || inv == null) return;
+
         var indicator = string.Empty;
 
         for (byte i = 0; i < MaxHotbar; i++)
         {
-            var slot = Player.Me.Hotbar[i].Slot;
+            var slot = hotbar.Slots[i].Slot;
             if (slot > 0)
-                switch (Player.Me.Hotbar[i].Type)
+                switch (hotbar.Slots[i].Type)
                 {
                     case SlotType.Item:
-                        ItemRenderer.Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6),
-                            (byte)(i + 1),
-                            10); break;
+                        ItemRenderer.Item(inv.Slots[slot]?.Item, 1, tool.Position + new Size(8, 6), (byte)(i + 1), 10);
+                        break;
                 }
 
             if (i < 9) indicator = (i + 1).ToString();
@@ -238,52 +255,58 @@ internal static class UIRenderer
             Renders.DrawText(indicator, tool.Position.X + 16 + 36 * i, tool.Position.Y + 22, Color.White);
         }
 
-        if (PanelsEvents.HotbarChange >= 0)
-            if (Player.Me.Hotbar[PanelsEvents.HotbarChange].Type == SlotType.Item)
-                Renders.Render(
-                    Textures.Items[Player.Me.Inventory[Player.Me.Hotbar[PanelsEvents.HotbarChange].Slot].Item.Texture],
-                    new Point(UI.Window.Mouse.X + 6, UI.Window.Mouse.Y + 6));
+        if (PanelsEvents.HotbarChange >= 0 && hotbar.Slots[PanelsEvents.HotbarChange].Type == SlotType.Item)
+        {
+            var dragSlot = hotbar.Slots[PanelsEvents.HotbarChange].Slot;
+            var dragItem = inv.Slots[dragSlot]?.Item;
+            if (dragItem != null)
+                Renders.Render(Textures.Items[dragItem.Texture], new Point(UI.Window.Mouse.X + 6, UI.Window.Mouse.Y + 6));
+        }
     }
 
     private static void MenuCharacter(Panel tool)
     {
-        Renders.DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
-        Renders.DrawText(Player.Me.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, Color.White);
-        Renders.Render(Textures.Faces[Player.Me.TextureNum], new Point(tool.Position.X + 82, tool.Position.Y + 37));
+        var player = Local<PlayerDataComponent>();
+        var sprite = Local<CharacterSpriteComponent>();
+        var xp = Local<ExperienceComponent>();
+        if (player == null) return;
 
-        Renders.DrawText("Strength: " + Player.Me.Attribute[(byte)Attribute.Strength], tool.Position.X + 32,
-            tool.Position.Y + 146, Color.White);
-        Renders.DrawText("Resistance: " + Player.Me.Attribute[(byte)Attribute.Resistance], tool.Position.X + 32,
-            tool.Position.Y + 162, Color.White);
-        Renders.DrawText("Intelligence: " + Player.Me.Attribute[(byte)Attribute.Intelligence], tool.Position.X + 32,
-            tool.Position.Y + 178, Color.White);
-        Renders.DrawText("Agility: " + Player.Me.Attribute[(byte)Attribute.Agility], tool.Position.X + 32,
-            tool.Position.Y + 194, Color.White);
-        Renders.DrawText("Vitality: " + Player.Me.Attribute[(byte)Attribute.Vitality], tool.Position.X + 32,
-            tool.Position.Y + 210, Color.White);
-        Renders.DrawText("Points: " + Player.Me.Points, tool.Position.X + 14, tool.Position.Y + 228, Color.White);
+        Renders.DrawText(player.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
+        Renders.DrawText(player.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, Color.White);
+        if (sprite != null && sprite.TextureNum > 0)
+            Renders.Render(Textures.Faces[sprite.TextureNum], new Point(tool.Position.X + 82, tool.Position.Y + 37));
+
+        Renders.DrawText("Strength: " + player.Attributes[(byte)Attribute.Strength], tool.Position.X + 32, tool.Position.Y + 146, Color.White);
+        Renders.DrawText("Resistance: " + player.Attributes[(byte)Attribute.Resistance], tool.Position.X + 32, tool.Position.Y + 162, Color.White);
+        Renders.DrawText("Intelligence: " + player.Attributes[(byte)Attribute.Intelligence], tool.Position.X + 32, tool.Position.Y + 178, Color.White);
+        Renders.DrawText("Agility: " + player.Attributes[(byte)Attribute.Agility], tool.Position.X + 32, tool.Position.Y + 194, Color.White);
+        Renders.DrawText("Vitality: " + player.Attributes[(byte)Attribute.Vitality], tool.Position.X + 32, tool.Position.Y + 210, Color.White);
+        Renders.DrawText("Points: " + (xp?.Points ?? 0), tool.Position.X + 14, tool.Position.Y + 228, Color.White);
 
         for (byte i = 0; i < (byte)Equipment.Count; i++)
-            if (Player.Me.Equipment[i] == null)
-                Renders.Render(Textures.Equipments, tool.Position.X + 7 + i * 34, tool.Position.Y + 247, i * 34, 0, 32,
-                    32);
+            if (player.EquippedItems[i] == null)
+                Renders.Render(Textures.Equipments, tool.Position.X + 7 + i * 34, tool.Position.Y + 247, i * 34, 0, 32, 32);
             else
-                Renders.Render(Textures.Items[Player.Me.Equipment[i].Texture], tool.Position.X + 8 + i * 35,
-                    tool.Position.Y + 247, 0, 0, 34, 34);
+                Renders.Render(Textures.Items[player.EquippedItems[i]!.Texture], tool.Position.X + 8 + i * 35, tool.Position.Y + 247, 0, 0, 34, 34);
     }
 
     private static void MenuInventory(Panel tool)
     {
-        byte numColumns = 5;
+        var inv = Local<InventoryComponent>();
+        if (inv == null) return;
+
+        const byte numColumns = 5;
 
         for (byte i = 0; i < MaxInventory; i++)
-            ItemRenderer.Item(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount,
-                tool.Position + new Size(7, 30), i,
-                numColumns);
+            ItemRenderer.Item(inv.Slots[i]?.Item, inv.Slots[i]?.Amount ?? 0,
+                tool.Position + new Size(7, 30), i, numColumns);
 
         if (PanelsEvents.InventoryChange > 0)
-            Renders.Render(Textures.Items[Player.Me.Inventory[PanelsEvents.InventoryChange].Item.Texture],
-                new Point(UI.Window.Mouse.X + 6, UI.Window.Mouse.Y + 6));
+        {
+            var dragItem = inv.Slots[PanelsEvents.InventoryChange]?.Item;
+            if (dragItem != null)
+                Renders.Render(Textures.Items[dragItem.Texture], new Point(UI.Window.Mouse.X + 6, UI.Window.Mouse.Y + 6));
+        }
     }
 
     private static void PartyInvitation(Panel tool)
@@ -297,20 +320,33 @@ internal static class UIRenderer
     /// </summary>
     public static void Party()
     {
-        for (byte i = 0; i < Player.Me.Party.Length; i++)
+        var party = Local<PartyComponent>();
+        if (party == null) return;
+
+        for (byte i = 0; i < party.MemberEntityIds.Length; i++)
         {
+            var memberId = party.MemberEntityIds[i];
+            Ctx.World.TryGet<VitalsComponent>(memberId, out var mv);
+            Ctx.World.TryGet<PlayerDataComponent>(memberId, out var mp);
+
             Renders.Render(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
             Renders.Render(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
-            if (Player.Me.Party[i].Vital[(byte)Vital.Hp] > 0)
-                Renders.Render(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
-                    Player.Me.Party[i].Vital[(byte)Vital.Hp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Hp],
-                    8);
-            if (Player.Me.Party[i].Vital[(byte)Vital.Mp] > 0)
-                Renders.Render(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
-                    Player.Me.Party[i].Vital[(byte)Vital.Mp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Mp],
-                    8);
 
-            Renders.DrawText(Player.Me.Party[i].Name, 10, 79 + 27 * i, Color.White);
+            if (mv != null)
+            {
+                var hp = mv.Current[(byte)Vital.Hp];
+                var mhp = mv.Max[(byte)Vital.Hp];
+                var mp2 = mv.Current[(byte)Vital.Mp];
+                var mmp = mv.Max[(byte)Vital.Mp];
+
+                if (hp > 0 && mhp > 0)
+                    Renders.Render(Textures.PartyBars, 10, 92 + 27 * i, 0, 8, hp * 82 / mhp, 8);
+                if (mp2 > 0 && mmp > 0)
+                    Renders.Render(Textures.PartyBars, 10, 99 + 27 * i, 0, 16, mp2 * 82 / mmp, 8);
+            }
+
+            if (mp != null)
+                Renders.DrawText(mp.Name, 10, 79 + 27 * i, Color.White);
         }
     }
 
@@ -322,12 +358,13 @@ internal static class UIRenderer
 
     private static void Trade(Panel tool)
     {
+        var trade = Local<TradeComponent>();
+        if (trade?.Offer == null || trade.TheirOffer == null) return;
+
         for (byte i = 0; i < MaxInventory; i++)
         {
-            ItemRenderer.Item(Player.Me.TradeOffer[i].Item, Player.Me.TradeOffer[i].Amount,
-                tool.Position + new Size(7, 50), i, 5);
-            ItemRenderer.Item(Player.Me.TradeTheirOffer[i].Item, Player.Me.TradeTheirOffer[i].Amount,
-                tool.Position + new Size(192, 50), i, 5);
+            ItemRenderer.Item(trade.Offer[i]?.Item, trade.Offer[i]?.Amount ?? 0, tool.Position + new Size(7, 50), i, 5);
+            ItemRenderer.Item(trade.TheirOffer[i]?.Item, trade.TheirOffer[i]?.Amount ?? 0, tool.Position + new Size(192, 50), i, 5);
         }
     }
 

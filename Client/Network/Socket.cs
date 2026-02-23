@@ -1,5 +1,5 @@
 using System;
-using CryBits.Client.Entities;
+using CryBits.Client.ECS;
 using CryBits.Client.UI;
 using CryBits.Client.Utils;
 using LiteNetLib;
@@ -36,7 +36,7 @@ internal static class Socket
         _listener.PeerDisconnectedEvent += (_, _) =>
         {
             _serverPeer = null;
-            if (Player.Me != null) Player.Me.Leave();
+            GameContext.Instance.Reset();
             Window.OpenMenu();
         };
 

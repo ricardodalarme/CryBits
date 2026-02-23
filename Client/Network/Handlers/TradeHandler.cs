@@ -1,4 +1,6 @@
-using CryBits.Client.Entities;
+using System.Collections.Generic;
+using CryBits.Client.ECS;
+using CryBits.Client.ECS.Components;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Network.Senders;
@@ -6,7 +8,6 @@ using CryBits.Client.UI.Events;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
-using CryBits.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
 
@@ -14,44 +15,46 @@ namespace CryBits.Client.Network.Handlers;
 
 internal static class TradeHandler
 {
+    private static GameContext Ctx => GameContext.Instance;
+
     [PacketHandler]
     internal static void Trade(TradePacket packet)
     {
         var state = packet.State;
+        var localId = Ctx.GetLocalPlayer();
 
-        // Set trade panel visibility
-        Panels.Trade.Visible = packet.State;
+        Panels.Trade.Visible = state;
+
+        if (localId < 0) return;
 
         if (state)
         {
-            // Reset trade buttons
             Buttons.TradeOfferConfirm.Visible = true;
             Panels.TradeAmount.Visible = Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
             Panels.TradeOfferDisable.Visible = false;
 
-            // Clear trade offer data
-            Player.Me.TradeOffer = new ItemSlot[MaxInventory];
-            Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory];
+            // Attach trade component with empty offer slots.
+            Ctx.World.Add(localId, new TradeComponent
+            {
+                Offer = new ItemSlot[MaxInventory],
+                TheirOffer = new ItemSlot[MaxInventory]
+            });
         }
         else
         {
-            // Clear trade offer data
-            Player.Me.TradeOffer = null;
-            Player.Me.TradeTheirOffer = null;
+            Ctx.World.Remove<TradeComponent>(localId);
         }
     }
 
     [PacketHandler]
     internal static void TradeInvitation(TradeInvitationPacket packet)
     {
-        // Decline if player disabled trade invitations
         if (!Options.Trade)
         {
             TradeSender.TradeDecline();
             return;
         }
 
-        // Show trade invitation panel
         PanelsEvents.TradeInvitation = packet.PlayerInvitation;
         Panels.TradeInvitation.Visible = true;
     }
@@ -78,18 +81,17 @@ internal static class TradeHandler
     [PacketHandler]
     internal static void TradeOffer(TradeOfferPacket packet)
     {
-        // Read trade offer data
-        if (packet.Own)
-            for (byte i = 0; i < MaxInventory; i++)
-            {
-                Player.Me.TradeOffer[i].Item = Item.List.Get(packet.Items[i].ItemId);
-                Player.Me.TradeOffer[i].Amount = packet.Items[i].Amount;
-            }
-        else
-            for (byte i = 0; i < MaxInventory; i++)
-            {
-                Player.Me.TradeTheirOffer[i].Item = Item.List.Get(packet.Items[i].ItemId);
-                Player.Me.TradeTheirOffer[i].Amount = packet.Items[i].Amount;
-            }
+        var localId = Ctx.GetLocalPlayer();
+        if (localId < 0) return;
+        if (!Ctx.World.TryGet<TradeComponent>(localId, out var trade)) return;
+
+        var target = packet.Own ? trade.Offer : trade.TheirOffer;
+        if (target == null) return;
+
+        for (byte i = 0; i < MaxInventory; i++)
+        {
+            target[i].Item = Item.List.GetValueOrDefault(packet.Items[i].ItemId);
+            target[i].Amount = packet.Items[i].Amount;
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
-using CryBits.Client.Entities;
+using CryBits.Client.ECS;
+using CryBits.Client.ECS.Components;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
@@ -80,22 +81,29 @@ internal static class PanelsEvents
     public static short ShopSlot => Slot(Panels.Shop, 7, 50, 4, 7);
     public static short EquipmentSlot => Slot(Panels.MenuCharacter, 7, 248, 1, 5);
 
+    // ECS helpers — safe accessors for local player components.
+    private static GameContext Ctx => GameContext.Instance;
+    private static int LocalId => Ctx.GetLocalPlayer();
+    private static T? Local<T>() where T : class, IComponent =>
+        LocalId >= 0 && Ctx.World.TryGet<T>(LocalId, out var c) ? c : null;
+
     public static void Inventory_MouseDown(MouseButtonEventArgs e)
     {
         var slot = InventorySlot;
 
+        var inv = Local<InventoryComponent>();
         if (slot == -1) return;
-        if (Player.Me.Inventory[slot].Item == null) return;
+        if (inv?.Slots[slot]?.Item == null) return;
 
         switch (e.Button)
         {
             case Mouse.Button.Right:
                 {
-                    if (Player.Me.Inventory[slot].Item.Bind != BindOn.Pickup)
+                    if (inv.Slots[slot]!.Item!.Bind != BindOn.Pickup)
                         // Sell the item if shop is open
                         if (Panels.Shop.Visible)
                         {
-                            if (Player.Me.Inventory[slot].Amount != 1)
+                            if (inv.Slots[slot]!.Amount != 1)
                             {
                                 ShopInventorySlot = slot;
                                 TextBoxes.ShopSellAmount.Text = string.Empty;
@@ -105,7 +113,7 @@ internal static class PanelsEvents
                         }
                         // Otherwise drop the item
                         else if (!Panels.Trade.Visible)
-                            if (Player.Me.Inventory[slot].Amount != 1)
+                            if (inv.Slots[slot]!.Amount != 1)
                             {
                                 DropSlot = slot;
                                 TextBoxes.DropAmount.Text = string.Empty;
@@ -126,11 +134,12 @@ internal static class PanelsEvents
     {
         var panelPosition = Panels.MenuCharacter.Position;
 
+        var pd = Local<PlayerDataComponent>();
         for (byte i = 0; i < (byte)Equipment.Count; i++)
             if (IsAbove(new Rectangle(panelPosition.X + 7 + i * 36, panelPosition.Y + 247, 32, 32)))
                 // Remove equipment on right-click
                 if (e.Button == Mouse.Button.Right)
-                    if (Player.Me.Equipment[i]?.Bind != BindOn.Equip)
+                    if (pd?.EquippedItems[i]?.Bind != BindOn.Equip)
                     {
                         PlayerSender.EquipmentRemove(i);
                         return;
@@ -142,7 +151,7 @@ internal static class PanelsEvents
         var slot = HotbarSlot;
 
         if (slot < 0) return;
-        if (Player.Me.Hotbar[slot].Slot == 0) return;
+        if ((Local<HotbarComponent>()?.Slots[slot].Slot ?? 0) == 0) return;
 
         switch (e.Button)
         {
@@ -163,7 +172,7 @@ internal static class PanelsEvents
 
         if (!Panels.Trade.Visible) return;
         if (slot == -1) return;
-        if (Player.Me.TradeOffer[slot].Item == null) return;
+        if (Local<TradeComponent>()?.Offer?[slot]?.Item == null) return;
 
         if (e.Button == Mouse.Button.Right) TradeSender.TradeOffer(slot, 0);
     }
@@ -176,17 +185,20 @@ internal static class PanelsEvents
         if (HotbarSlot >= 0)
         {
             position = Panels.Hotbar.Position + new Size(0, 42);
-            InformationId = Player.Me.Inventory[Player.Me.Hotbar[HotbarSlot].Slot].Item.GetId();
+            var hotbar = Local<HotbarComponent>();
+            var inv = Local<InventoryComponent>();
+            var invSlot = hotbar?.Slots[HotbarSlot].Slot ?? 0;
+            InformationId = inv?.Slots[invSlot]?.Item?.GetId() ?? Guid.Empty;
         }
         else if (InventorySlot > 0)
         {
             position = Panels.MenuInventory.Position + new Size(-186, 3);
-            InformationId = Player.Me.Inventory[InventorySlot].Item.GetId();
+            InformationId = Local<InventoryComponent>()?.Slots[InventorySlot]?.Item?.GetId() ?? Guid.Empty;
         }
         else if (EquipmentSlot >= 0)
         {
             position = Panels.MenuCharacter.Position + new Size(-186, 5);
-            InformationId = Player.Me.Equipment[EquipmentSlot].GetId();
+            InformationId = Local<PlayerDataComponent>()?.EquippedItems[EquipmentSlot]?.GetId() ?? Guid.Empty;
         }
         else if (ShopSlot >= 0 && ShopSlot < ShopOpen.Sold.Count)
         {
@@ -222,7 +234,7 @@ internal static class PanelsEvents
         if (InventoryChange <= 0) return;
 
         // Add item to trade
-        if (Player.Me.Inventory[InventoryChange].Amount == 1)
+        if (Local<InventoryComponent>()?.Slots[InventoryChange]?.Amount == 1)
             TradeSender.TradeOffer(TradeSlot, InventoryChange);
         else
         {
@@ -236,7 +248,7 @@ internal static class PanelsEvents
     {
         var slot = InventorySlot;
         if (slot <= 0) return;
-        if (Player.Me.Inventory[slot].Item == null) return;
+        if (Local<InventoryComponent>()?.Slots[slot]?.Item == null) return;
 
         // Use item
         PlayerSender.InventoryUse((byte)slot);
@@ -246,7 +258,7 @@ internal static class PanelsEvents
     {
         var slot = HotbarSlot;
         if (slot <= 0) return;
-        if (Player.Me.Hotbar[slot].Slot <= 0) return;
+        if ((Local<HotbarComponent>()?.Slots[slot].Slot ?? 0) <= 0) return;
 
         // Use item from hotbar
         PlayerSender.HotbarUse((byte)slot);

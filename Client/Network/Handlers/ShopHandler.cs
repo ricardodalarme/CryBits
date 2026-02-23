@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.UI.Events;
 using CryBits.Entities.Shop;
@@ -19,7 +20,7 @@ internal static class ShopHandler
     internal static void ShopOpen(ShopOpenPacket packet)
     {
         // Open shop panel
-        PanelsEvents.ShopOpen = Shop.List.Get(packet.Id);
+        PanelsEvents.ShopOpen = Shop.List.GetValueOrDefault(packet.Id);
         Panels.Shop.Visible = PanelsEvents.ShopOpen != null;
     }
 }

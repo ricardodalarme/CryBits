@@ -1,5 +1,5 @@
 using System;
-using CryBits.Client.Entities;
+using CryBits.Client.ECS;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
@@ -44,7 +44,7 @@ internal static class CheckBoxEvents
         else if (Screen.Current == Screens.Menu)
             Music.Play(Musics.Menu);
         else if (Screen.Current == Screens.Game)
-            Music.Play(MapInstance.Current.Data.Music);
+            Music.Play(GameContext.Instance.CurrentMap!.Data.Music);
     }
 
     private static void SaveUsername()

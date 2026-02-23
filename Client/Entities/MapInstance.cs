@@ -1,5 +1,5 @@
-using System;
-using System.Collections.Generic;
+using CryBits.Client.ECS;
+using CryBits.Client.ECS.Components;
 using CryBits.Client.Framework.Entities.Map;
 using CryBits.Entities.Map;
 using CryBits.Enums;
@@ -7,82 +7,77 @@ using static CryBits.Utils;
 
 namespace CryBits.Client.Entities;
 
-internal class MapInstance
+/// <summary>
+/// Runtime instance of a loaded map.
+///
+/// Holds the static map definition (<see cref="Data"/>) and the two
+/// map-level simulations (<see cref="Weather"/>, <see cref="Fog"/>) that are
+/// not entity-driven.
+///
+/// Previously, this class also owned <c>NpcInstance[]</c>, <c>MapItemInstance[]</c>
+/// and a blood-splatter list.  Those collections have been replaced by ECS entities
+/// managed by <see cref="GameContext"/> — query the <see cref="GameContext.World"/>
+/// for <see cref="NpcDataComponent"/>, <see cref="MapItemComponent"/> and
+/// <see cref="BloodSplatComponent"/> instead.
+/// </summary>
+internal sealed class MapInstance
 {
-    // Current temporary map instance
-    public static MapInstance Current;
-
-    // Map collection
-    public static Dictionary<Guid, MapInstance> List;
-
-    // Map data
     public readonly Map Data;
-    public NpcInstance[] Npc;
-    public MapItemInstance[] Item = Array.Empty<MapItemInstance>();
-    public List<MapBloodInstance> Blood = [];
-    public MapWeatherInstance Weather { get; init; }
-    public MapFogInstance Fog { get; init; }
-
-    private int _bloodTimer;
+    public MapWeatherInstance Weather { get; }
+    public MapFogInstance Fog { get; }
 
     public MapInstance(Map data)
     {
         Data = data;
         Weather = new MapWeatherInstance(data.Weather);
-        Fog = new MapFogInstance(Data.Fog);
+        Fog = new MapFogInstance(data.Fog);
     }
 
-    private bool HasNpc(byte x, byte y)
-    {
-        // Check if an NPC exists at the given tile
-        for (byte i = 0; i < Npc.Length; i++)
-            if (Npc[i].Data != null)
-                if ((Npc[i].X, Npc[i].Y) == (x, y))
-                    return true;
-
-        return false;
-    }
-
-    private bool HasPlayer(short x, short y)
-    {
-        // Check if a player exists at the given tile
-        for (byte i = 0; i < Player.List.Count; i++)
-            if ((Player.List[i].X, Player.List[i].Y, Player.List[i].MapInstance) == (x, y, this))
-                return true;
-
-        return false;
-    }
-
-    public bool TileBlocked(byte x, byte y, Direction direction)
+    /// <summary>
+    /// Returns true when the tile in the given direction from (x, y) cannot be entered.
+    /// Collision checks against players and NPCs are done via the ECS world.
+    /// </summary>
+    public bool TileBlocked(GameContext ctx, byte x, byte y, Direction direction)
     {
         byte nextX = x, nextY = y;
-
-        // calculate the next tile in the given direction
         NextTile(direction, ref nextX, ref nextY);
 
-        // if leaving map, check for a link
+        // Leaving the map — only passable when a link exists.
         if (Map.OutLimit(nextX, nextY)) return Data.Link[(byte)direction] == null;
 
-        // check blocking attributes and occupants
+        // Tile attribute blocks.
         if (Data.Attribute[nextX, nextY].Type == (byte)TileAttribute.Block) return true;
         if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
         if (Data.Attribute[x, y].Block[(byte)direction]) return true;
-        if (HasPlayer(nextX, nextY) || HasNpc(nextX, nextY)) return true;
+
+        // Occupancy checks via ECS.
+        if (HasPlayer(ctx, nextX, nextY)) return true;
+        if (HasNpc(ctx, nextX, nextY)) return true;
+
         return false;
     }
 
-    public void Logic()
-    {
-        Fog.Update();
-        Weather.Update();
+    // ─── Private occupancy checks ────────────────────────────────────────────
 
-        // Fade out and remove old blood splatters
-        if (_bloodTimer < Environment.TickCount)
-            for (byte i = 0; i < Blood.Count; i++)
-            {
-                Blood[i].Opacity--;
-                if (Blood[i].Opacity == 0) Blood.RemoveAt(i);
-                _bloodTimer = Environment.TickCount + 100;
-            }
+    private bool HasPlayer(GameContext ctx, byte x, byte y)
+    {
+        foreach (var (id, transform) in ctx.World.Query<TransformComponent>())
+        {
+            if (!ctx.World.Has<PlayerDataComponent>(id)) continue;
+            if (!ctx.World.TryGet<MapContextComponent>(id, out var mc)) continue;
+            if (mc.MapId != Data.Id) continue;
+            if (transform.TileX == x && transform.TileY == y) return true;
+        }
+        return false;
+    }
+
+    private bool HasNpc(GameContext ctx, byte x, byte y)
+    {
+        foreach (var (_, npc, transform) in ctx.World.Query<NpcDataComponent, TransformComponent>())
+        {
+            if (npc.Data == null) continue;
+            if (transform.TileX == x && transform.TileY == y) return true;
+        }
+        return false;
     }
 }

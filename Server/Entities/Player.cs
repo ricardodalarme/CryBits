@@ -85,7 +85,7 @@ internal class Player : Character
     public HotbarSlot FindHotbar(SlotType type, ItemSlot slot) =>
         Hotbar.FirstOrDefault(x => x.Type == type && Inventory[x.Slot] == slot);
 
-    public ItemSlot FindInventory(Item item) => Inventory.First(x => x.Item == item);
+    public ItemSlot FindInventory(Item item) => Inventory.FirstOrDefault(x => x.Item == item);
 
     /// <summary>Number of occupied inventory slots.</summary>
     public byte TotalInventoryFree => (byte)Inventory.Count(x => x.Item != null);

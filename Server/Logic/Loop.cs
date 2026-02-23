@@ -71,7 +71,8 @@ internal static class Loop
     {
         var dispatcher = new CommandDispatcher()
             .Register<CpsCommand>()
-            .Register<DefineAccessCommand>();
+            .Register<DefineAccessCommand>()
+            .Register<SeedCommand>();
 
         // Console command loop.
         while (!ct.IsCancellationRequested)

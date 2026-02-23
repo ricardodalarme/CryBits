@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
@@ -87,7 +86,7 @@ internal static class Window
         switch (e.Code)
         {
             case Keyboard.Key.Enter: Chat.Type(); break;
-            case Keyboard.Key.Space: Player.Me.CollectItem(); break;
+            case Keyboard.Key.Space: PlayerSender.CollectItem(); break;
             case Keyboard.Key.Num1: PlayerSender.HotbarUse(1); break;
             case Keyboard.Key.Num2: PlayerSender.HotbarUse(2); break;
             case Keyboard.Key.Num3: PlayerSender.HotbarUse(3); break;

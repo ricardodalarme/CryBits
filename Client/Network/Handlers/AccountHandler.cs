@@ -1,5 +1,5 @@
 using System;
-using CryBits.Client.Entities;
+using CryBits.Client.ECS;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
@@ -8,7 +8,6 @@ using CryBits.Client.Logic;
 using CryBits.Client.UI;
 using CryBits.Client.UI.Events;
 using CryBits.Entities;
-using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Packets.Server;
@@ -20,17 +19,17 @@ internal static class AccountHandler
     [PacketHandler]
     internal static void Join(JoinPacket packet)
     {
-        // Clear entity collections
-        Player.List = [];
+        // Clear static game-data collections
         Item.List = [];
         Shop.List = [];
         Npc.List = [];
-        Map.List = [];
-        MapInstance.List = [];
+        CryBits.Entities.Map.Map.List = [];
 
-        // Initialize local player from server data
-        Player.Me = new Me(packet.Name);
-        Player.List.Add(Player.Me);
+        // Reset ECS world state and create local player entity
+        var ctx = GameContext.Instance;
+        ctx.Maps.Clear();
+        var localId = ctx.FindOrCreatePlayer(packet.Name);
+        ctx.MakeLocalPlayer(localId);
     }
 
     [PacketHandler]

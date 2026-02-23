@@ -92,7 +92,7 @@ internal static class CombatSystem
         victim.Target = attacker;
         attacker.AttackTimer = Environment.TickCount64;
 
-        var attackDamage = CombatFormulas.NetDamage(attacker.Damage, (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
+        var attackDamage = CombatFormulas.NetDamage(attacker.Damage, victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
             PlayerSender.PlayerAttack(attacker, victim.Index.ToString(), Target.Npc);
@@ -149,7 +149,7 @@ internal static class CombatSystem
 
         attacker.AttackTimer = Environment.TickCount64;
 
-        var attackDamage = CombatFormulas.NetDamage((short)attacker.Data.Attribute[(byte)Attribute.Strength], victim.PlayerDefense);
+        var attackDamage = CombatFormulas.NetDamage(attacker.Data.Attribute[(byte)Attribute.Strength], victim.PlayerDefense);
         if (attackDamage > 0)
         {
             NpcSender.MapNpcAttack(attacker, victim.Name, Target.Player);
@@ -178,8 +178,8 @@ internal static class CombatSystem
         victim.Target = attacker;
 
         var attackDamage = CombatFormulas.NetDamage(
-            (short)attacker.Data.Attribute[(byte)Attribute.Strength],
-            (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
+            attacker.Data.Attribute[(byte)Attribute.Strength],
+            victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
             NpcSender.MapNpcAttack(attacker, victim.Index.ToString(), Target.Npc);

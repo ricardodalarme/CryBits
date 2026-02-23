@@ -1,10 +1,11 @@
 using System;
-using CryBits.Client.Entities;
+using System.Collections.Generic;
+using CryBits.Client.ECS;
+using CryBits.Client.ECS.Components;
 using CryBits.Client.Framework.Constants;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
-using CryBits.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
 using static CryBits.Utils;
@@ -14,159 +15,235 @@ namespace CryBits.Client.Network.Handlers;
 
 internal static class PlayerHandler
 {
+    private static GameContext Ctx => GameContext.Instance;
+
     [PacketHandler]
     internal static void PlayerData(PlayerDataPacket packet)
     {
         var name = packet.Name;
-        Player player;
+        var localId = Ctx.GetLocalPlayer();
 
-        if (name != Player.Me.Name)
-        {
-            player = new Player(name);
-            Player.List.Add(player);
-        }
-        else
-            player = Player.Me;
+        // Determine whether this packet describes the local player.
+        bool isLocal = localId > 0 &&
+                       Ctx.World.TryGet<PlayerDataComponent>(localId, out var lpd) &&
+                       lpd.Name == name;
 
-        player.TextureNum = packet.TextureNum;
-        player.Level = packet.Level;
-        player.MapInstance = MapInstance.List[packet.MapId];
-        player.X = packet.X;
-        player.Y = packet.Y;
-        player.Direction = (Direction)packet.Direction;
+        var id = isLocal ? localId : Ctx.FindOrCreatePlayer(name);
+
+        // Mark as local player on first receive (name matches what we logged in as).
+        if (isLocal) Ctx.MakeLocalPlayer(id);
+
+        Ctx.World.Get<PlayerDataComponent>(id).Level = packet.Level;
+        Ctx.World.Get<CharacterSpriteComponent>(id).TextureNum = packet.TextureNum;
+
+        var transform = Ctx.World.Get<TransformComponent>(id);
+        transform.TileX = packet.X;
+        transform.TileY = packet.Y;
+        transform.Direction = (Direction)packet.Direction;
+        transform.PixelOffsetX = 0;
+        transform.PixelOffsetY = 0;
+
+        Ctx.World.Get<MovementComponent>(id).Current = Movement.Stopped;
+
+        var vitals = Ctx.World.Get<VitalsComponent>(id);
         for (byte n = 0; n < (byte)Vital.Count; n++)
         {
-            player.Vital[n] = packet.Vital[n];
-            player.MaxVital[n] = packet.MaxVital[n];
+            vitals.Current[n] = packet.Vital[n];
+            vitals.Max[n] = packet.MaxVital[n];
         }
 
-        for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = packet.Attribute[n];
-        for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(packet.Equipment[n]);
-        MapInstance.Current = player.MapInstance;
+        var playerData = Ctx.World.Get<PlayerDataComponent>(id);
+        for (byte n = 0; n < (byte)Attribute.Count; n++) playerData.Attributes[n] = packet.Attribute[n];
+        for (byte n = 0; n < (byte)Equipment.Count; n++)
+            playerData.EquippedItems[n] = Item.List.GetValueOrDefault(packet.Equipment[n]);
+
+        playerData.MapId = packet.MapId;
+
+        if (Ctx.World.TryGet<MapContextComponent>(id, out var mc)) mc.MapId = packet.MapId;
+
+        if (Ctx.Maps.TryGetValue(packet.MapId, out var mapInstance))
+            Ctx.CurrentMap = mapInstance;
     }
 
     [PacketHandler]
     internal static void PlayerPosition(PlayerPositionPacket packet)
     {
-        var player = Player.Get(packet.Name);
+        var id = Ctx.FindPlayer(packet.Name);
+        if (id < 0) return;
 
-        player.X = packet.X;
-        player.Y = packet.Y;
-        player.Direction = (Direction)packet.Direction;
+        var transform = Ctx.World.Get<TransformComponent>(id);
+        transform.TileX = packet.X;
+        transform.TileY = packet.Y;
+        transform.Direction = (Direction)packet.Direction;
+        transform.PixelOffsetX = 0;
+        transform.PixelOffsetY = 0;
 
-        player.X2 = 0;
-        player.Y2 = 0;
-        player.Movement = Movement.Stopped;
+        Ctx.World.Get<MovementComponent>(id).Current = Movement.Stopped;
     }
 
     [PacketHandler]
     internal static void PlayerVitals(PlayerVitalsPacket packet)
     {
-        var player = Player.Get(packet.Name);
+        var id = Ctx.FindPlayer(packet.Name);
+        if (id < 0) return;
 
+        var vitals = Ctx.World.Get<VitalsComponent>(id);
         for (byte i = 0; i < (byte)Vital.Count; i++)
         {
-            player.Vital[i] = packet.Vital[i];
-            player.MaxVital[i] = packet.MaxVital[i];
+            vitals.Current[i] = packet.Vital[i];
+            vitals.Max[i] = packet.MaxVital[i];
         }
     }
 
     [PacketHandler]
     internal static void PlayerEquipments(PlayerEquipmentsPacket packet)
     {
-        var player = Player.Get(packet.Name);
+        var id = Ctx.FindPlayer(packet.Name);
+        if (id < 0) return;
 
-        // Update player's equipped items
-        for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(packet.Equipments[i]);
+        var playerData = Ctx.World.Get<PlayerDataComponent>(id);
+        for (byte i = 0; i < (byte)Equipment.Count; i++)
+            playerData.EquippedItems[i] = Item.List.GetValueOrDefault(packet.Equipments[i]);
     }
 
     [PacketHandler]
     internal static void PlayerLeave(PlayerLeavePacket packet)
     {
-        // Remove player from list
-        Player.List.Remove(Player.Get(packet.Name));
+        Ctx.RemovePlayer(packet.Name);
     }
 
     [PacketHandler]
     internal static void PlayerMove(PlayerMovePacket packet)
     {
-        var player = Player.Get(packet.Name);
+        var id = Ctx.FindPlayer(packet.Name);
+        if (id < 0) return;
 
-        player.X = packet.X;
-        player.Y = packet.Y;
-        player.Direction = (Direction)packet.Direction;
-        player.Movement = (Movement)packet.Movement;
-        player.X2 = 0;
-        player.Y2 = 0;
+        // Skip the local player — PlayerInputSystem already applied the move
+        // client-side for smooth prediction. Applying it again from the server
+        // echo would zero the pixel offset mid-slide and snap the character back.
+        if (id == Ctx.GetLocalPlayer()) return;
 
-        switch (player.Direction)
-        {
-            case Direction.Up: player.Y2 = Grid; break;
-            case Direction.Down: player.Y2 = Grid * -1; break;
-            case Direction.Right: player.X2 = Grid * -1; break;
-            case Direction.Left: player.X2 = Grid; break;
-        }
+        var transform = Ctx.World.Get<TransformComponent>(id);
+        var movement = Ctx.World.Get<MovementComponent>(id);
+
+        var prevX = transform.TileX;
+        var prevY = transform.TileY;
+
+        transform.TileX = packet.X;
+        transform.TileY = packet.Y;
+        transform.Direction = (Direction)packet.Direction;
+        transform.PixelOffsetX = 0;
+        transform.PixelOffsetY = 0;
+
+        movement.Current = (Movement)packet.Movement;
+
+        // Set leading-edge pixel offset for smooth interpolation.
+        if (prevX != transform.TileX || prevY != transform.TileY)
+            switch (transform.Direction)
+            {
+                case Direction.Up: transform.PixelOffsetY = Grid; break;
+                case Direction.Down: transform.PixelOffsetY = Grid * -1; break;
+                case Direction.Right: transform.PixelOffsetX = Grid * -1; break;
+                case Direction.Left: transform.PixelOffsetX = Grid; break;
+            }
     }
 
     [PacketHandler]
     internal static void PlayerDirection(PlayerDirectionPacket packet)
     {
-        // Update player's direction
-        Player.Get(packet.Name).Direction = (Direction)packet.Direction;
+        var id = Ctx.FindPlayer(packet.Name);
+        if (id < 0) return;
+        if (id == Ctx.GetLocalPlayer()) return;
+
+        Ctx.World.Get<TransformComponent>(id).Direction = (Direction)packet.Direction;
     }
 
     [PacketHandler]
     internal static void PlayerAttack(PlayerAttackPacket packet)
     {
-        var player = Player.Get(packet.Name);
-        var victim = packet.Victim;
-        var victimType = packet.VictimType;
+        var id = Ctx.FindPlayer(packet.Name);
+        if (id < 0) return;
 
-        player.Attacking = true;
-        player.AttackTimer = Environment.TickCount;
+        var animation = Ctx.World.Get<AnimationComponent>(id);
+        animation.IsAttacking = true;
+        animation.AttackTimer = Environment.TickCount;
 
-        if (victim != string.Empty)
-            if (victimType == (byte)Target.Player)
-            {
-                var victimData = Player.Get(victim);
-                victimData.Hurt = Environment.TickCount;
-                MapInstance.Current.Blood.Add(new MapBloodInstance((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
-            }
-            else if (victimType == (byte)Target.Npc)
-            {
-                MapInstance.Current.Npc[byte.Parse(victim)].Hurt = Environment.TickCount;
-                MapInstance.Current.Blood.Add(new MapBloodInstance((byte)MyRandom.Next(0, 3),
-                    MapInstance.Current.Npc[byte.Parse(victim)].X, MapInstance.Current.Npc[byte.Parse(victim)].Y, 255));
-            }
+        if (packet.Victim == string.Empty) return;
+
+        if (packet.VictimType == (byte)Target.Player)
+        {
+            var victimId = Ctx.FindPlayer(packet.Victim);
+            if (victimId < 0) return;
+
+            if (Ctx.World.TryGet<CharacterSpriteComponent>(victimId, out var vs)) vs.HurtTimer = Environment.TickCount;
+            if (Ctx.World.TryGet<TransformComponent>(victimId, out var vt))
+                SpawnBlood(vt.TileX, vt.TileY);
+        }
+        else if (packet.VictimType == (byte)Target.Npc)
+        {
+            var npcIndex = byte.Parse(packet.Victim);
+            var npcId = npcIndex < Ctx.NpcSlots.Length ? Ctx.NpcSlots[npcIndex] : -1;
+            if (npcId < 0) return;
+
+            if (Ctx.World.TryGet<CharacterSpriteComponent>(npcId, out var ns)) ns.HurtTimer = Environment.TickCount;
+            if (Ctx.World.TryGet<TransformComponent>(npcId, out var nt))
+                SpawnBlood(nt.TileX, nt.TileY);
+        }
     }
 
     [PacketHandler]
     internal static void PlayerExperience(PlayerExperiencePacket packet)
     {
-        Player.Me.Experience = packet.Experience;
-        Player.Me.ExpNeeded = packet.ExpNeeded;
-        Player.Me.Points = packet.Points;
+        var localId = Ctx.GetLocalPlayer();
+        if (localId < 0) return;
 
-        Buttons.AttributesStrength.Visible = Player.Me.Points > 0;
-        Buttons.AttributesResistance.Visible = Player.Me.Points > 0;
-        Buttons.AttributesIntelligence.Visible = Player.Me.Points > 0;
-        Buttons.AttributesAgility.Visible = Player.Me.Points > 0;
-        Buttons.AttributesVitality.Visible = Player.Me.Points > 0;
+        var xp = Ctx.World.Get<ExperienceComponent>(localId);
+        xp.Current = packet.Experience;
+        xp.Needed = packet.ExpNeeded;
+        xp.Points = packet.Points;
+
+        var hasPoints = xp.Points > 0;
+        Buttons.AttributesStrength.Visible = hasPoints;
+        Buttons.AttributesResistance.Visible = hasPoints;
+        Buttons.AttributesIntelligence.Visible = hasPoints;
+        Buttons.AttributesAgility.Visible = hasPoints;
+        Buttons.AttributesVitality.Visible = hasPoints;
     }
 
     [PacketHandler]
     internal static void PlayerInventory(PlayerInventoryPacket packet)
     {
+        var localId = Ctx.GetLocalPlayer();
+        if (localId < 0) return;
+
+        var inv = Ctx.World.Get<InventoryComponent>(localId);
         for (byte i = 0; i < MaxInventory; i++)
-            Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(packet.ItemIds[i]), packet.Amounts[i]);
+            inv.Slots[i] = new ItemSlot(Item.List.GetValueOrDefault(packet.ItemIds[i]), packet.Amounts[i]);
     }
 
     [PacketHandler]
     internal static void PlayerHotbar(PlayerHotbarPacket packet)
     {
+        var localId = Ctx.GetLocalPlayer();
+        if (localId < 0) return;
+
+        var hotbar = Ctx.World.Get<HotbarComponent>(localId);
         for (byte i = 0; i < MaxHotbar; i++)
+            hotbar.Slots[i] = new HotbarSlot((SlotType)packet.Types[i], packet.Slots[i]);
+    }
+
+    // ─── Helpers ─────────────────────────────────────────────────────────────
+
+    private static void SpawnBlood(byte tileX, byte tileY)
+    {
+        var bloodId = Ctx.World.Create();
+        Ctx.World.Add(bloodId, new BloodSplatComponent
         {
-            Player.Me.Hotbar[i] = new HotbarSlot((SlotType)packet.Types[i], packet.Slots[i]);
-        }
+            TextureNum = (byte)MyRandom.Next(0, 3),
+            TileX = tileX,
+            TileY = tileY,
+            Opacity = 255,
+            NextFadeAt = Environment.TickCount + 100
+        });
     }
 }

@@ -1,8 +1,9 @@
 using System;
-using CryBits.Client.Entities;
+using System.Collections.Generic;
+using CryBits.Client.ECS;
+using CryBits.Client.ECS.Components;
 using CryBits.Entities.Npc;
 using CryBits.Enums;
-using CryBits.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
 using static CryBits.Utils;
@@ -11,130 +12,168 @@ namespace CryBits.Client.Network.Handlers;
 
 internal static class NpcHandler
 {
+    private static GameContext Ctx => GameContext.Instance;
+
     [PacketHandler]
     internal static void Npcs(NpcsPacket packet)
     {
-        // Read NPCs dictionary
         Npc.List = packet.List;
     }
 
     [PacketHandler]
     internal static void MapNpcs(MapNpcsPacket packet)
     {
-        // Read temporary NPCs for the current map
-        MapInstance.Current.Npc = new NpcInstance[packet.Npcs.Length];
-        for (byte i = 0; i < MapInstance.Current.Npc.Length; i++)
-        {
-            MapInstance.Current.Npc[i] = new NpcInstance();
-            MapInstance.Current.Npc[i].X2 = 0;
-            MapInstance.Current.Npc[i].Y2 = 0;
-            MapInstance.Current.Npc[i].Data = Npc.List.Get(packet.Npcs[i].NpcId);
-            MapInstance.Current.Npc[i].X = packet.Npcs[i].X;
-            MapInstance.Current.Npc[i].Y = packet.Npcs[i].Y;
-            MapInstance.Current.Npc[i].Direction = (Direction)packet.Npcs[i].Direction;
+        Ctx.ResetNpcSlots(packet.Npcs.Length);
 
-            for (byte n = 0; n < (byte)Vital.Count; n++)
-                MapInstance.Current.Npc[i].Vital[n] = packet.Npcs[i].Vital[n];
+        for (byte i = 0; i < packet.Npcs.Length; i++)
+        {
+            var id = Ctx.GetOrCreateNpcEntity(i);
+            ApplyNpcState(id, i, packet.Npcs[i].NpcId, packet.Npcs[i].X, packet.Npcs[i].Y,
+                (Direction)packet.Npcs[i].Direction, packet.Npcs[i].Vital);
         }
     }
 
     [PacketHandler]
     internal static void MapNpc(MapNpcPacket packet)
     {
-        // Read temporary NPC data
         var i = packet.Index;
-        MapInstance.Current.Npc[i].X2 = 0;
-        MapInstance.Current.Npc[i].Y2 = 0;
-        MapInstance.Current.Npc[i].Data = Npc.List.Get(packet.NpcId);
-        MapInstance.Current.Npc[i].X = packet.X;
-        MapInstance.Current.Npc[i].Y = packet.Y;
-        MapInstance.Current.Npc[i].Direction = (Direction)packet.Direction;
-        MapInstance.Current.Npc[i].Vital = new short[(byte)Vital.Count];
-        for (byte n = 0; n < (byte)Vital.Count; n++) MapInstance.Current.Npc[i].Vital[n] = packet.Vital[n];
+        var id = Ctx.GetOrCreateNpcEntity(i);
+        ApplyNpcState(id, i, packet.NpcId, packet.X, packet.Y,
+            (Direction)packet.Direction, packet.Vital);
     }
 
     [PacketHandler]
     internal static void MapNpcMovement(MapNpcMovementPacket packet)
     {
-        // Read NPC movement
         var i = packet.Index;
-        byte x = MapInstance.Current.Npc[i].X, y = MapInstance.Current.Npc[i].Y;
-        MapInstance.Current.Npc[i].X2 = 0;
-        MapInstance.Current.Npc[i].Y2 = 0;
-        MapInstance.Current.Npc[i].X = packet.X;
-        MapInstance.Current.Npc[i].Y = packet.Y;
-        MapInstance.Current.Npc[i].Direction = (Direction)packet.Direction;
-        MapInstance.Current.Npc[i].Movement = (Movement)packet.Movement;
+        if (i >= Ctx.NpcSlots.Length) return;
+        var id = Ctx.NpcSlots[i];
+        if (id < 0) return;
 
-        // Set exact NPC screen offset if position changed
-        if (x != MapInstance.Current.Npc[i].X || y != MapInstance.Current.Npc[i].Y)
-            switch (MapInstance.Current.Npc[i].Direction)
+        var transform = Ctx.World.Get<TransformComponent>(id);
+        var movement = Ctx.World.Get<MovementComponent>(id);
+
+        var prevX = transform.TileX;
+        var prevY = transform.TileY;
+
+        transform.TileX = packet.X;
+        transform.TileY = packet.Y;
+        transform.Direction = (Direction)packet.Direction;
+        transform.PixelOffsetX = 0;
+        transform.PixelOffsetY = 0;
+
+        movement.Current = (Movement)packet.Movement;
+
+        if (prevX != transform.TileX || prevY != transform.TileY)
+            switch (transform.Direction)
             {
-                case Direction.Up: MapInstance.Current.Npc[i].Y2 = Grid; break;
-                case Direction.Down: MapInstance.Current.Npc[i].Y2 = Grid * -1; break;
-                case Direction.Right: MapInstance.Current.Npc[i].X2 = Grid * -1; break;
-                case Direction.Left: MapInstance.Current.Npc[i].X2 = Grid; break;
+                case Direction.Up: transform.PixelOffsetY = Grid; break;
+                case Direction.Down: transform.PixelOffsetY = Grid * -1; break;
+                case Direction.Right: transform.PixelOffsetX = Grid * -1; break;
+                case Direction.Left: transform.PixelOffsetX = Grid; break;
             }
     }
 
     [PacketHandler]
     internal static void MapNpcAttack(MapNpcAttackPacket packet)
     {
-        var index = packet.Index;
-        var victim = packet.Victim;
-        var victimType = packet.VictimType;
+        var i = packet.Index;
+        if (i >= Ctx.NpcSlots.Length) return;
+        var id = Ctx.NpcSlots[i];
+        if (id < 0) return;
 
-        // Start NPC attack
-        MapInstance.Current.Npc[index].Attacking = true;
-        MapInstance.Current.Npc[index].AttackTimer = Environment.TickCount;
+        var animation = Ctx.World.Get<AnimationComponent>(id);
+        animation.IsAttacking = true;
+        animation.AttackTimer = Environment.TickCount;
 
-        // Apply damage to victim
-        if (victim != string.Empty)
-            if (victimType == (byte)Target.Player)
-            {
-                var victimData = Player.Get(victim);
-                victimData.Hurt = Environment.TickCount;
-                MapInstance.Current.Blood.Add(new MapBloodInstance((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
-            }
-            else if (victimType == (byte)Target.Npc)
-            {
-                MapInstance.Current.Npc[byte.Parse(victim)].Hurt = Environment.TickCount;
-                MapInstance.Current.Blood.Add(new MapBloodInstance((byte)MyRandom.Next(0, 3),
-                  MapInstance.Current.Npc[byte.Parse(victim)].X, MapInstance.Current.Npc[byte.Parse(victim)].Y, 255));
-            }
+        if (packet.Victim == string.Empty) return;
+
+        if (packet.VictimType == (byte)Target.Player)
+        {
+            var victimId = Ctx.FindPlayer(packet.Victim);
+            if (victimId < 0) return;
+
+            if (Ctx.World.TryGet<CharacterSpriteComponent>(victimId, out var vs)) vs.HurtTimer = Environment.TickCount;
+            if (Ctx.World.TryGet<TransformComponent>(victimId, out var vt))
+                SpawnBlood(vt.TileX, vt.TileY);
+        }
+        else if (packet.VictimType == (byte)Target.Npc)
+        {
+            var npcVictimIndex = byte.Parse(packet.Victim);
+            var npcVictimId = npcVictimIndex < Ctx.NpcSlots.Length ? Ctx.NpcSlots[npcVictimIndex] : -1;
+            if (npcVictimId < 0) return;
+
+            if (Ctx.World.TryGet<CharacterSpriteComponent>(npcVictimId, out var ns)) ns.HurtTimer = Environment.TickCount;
+            if (Ctx.World.TryGet<TransformComponent>(npcVictimId, out var nt))
+                SpawnBlood(nt.TileX, nt.TileY);
+        }
     }
 
     [PacketHandler]
     internal static void MapNpcDirection(MapNpcDirectionPacket packet)
     {
-        // Set NPC direction
         var i = packet.Index;
-        MapInstance.Current.Npc[i].Direction = (Direction)packet.Direction;
-        MapInstance.Current.Npc[i].X2 = 0;
-        MapInstance.Current.Npc[i].Y2 = 0;
+        if (i >= Ctx.NpcSlots.Length) return;
+        var id = Ctx.NpcSlots[i];
+        if (id < 0) return;
+
+        var transform = Ctx.World.Get<TransformComponent>(id);
+        transform.Direction = (Direction)packet.Direction;
+        transform.PixelOffsetX = 0;
+        transform.PixelOffsetY = 0;
     }
 
     [PacketHandler]
     internal static void MapNpcVitals(MapNpcVitalsPacket packet)
     {
-        var index = packet.Index;
+        var i = packet.Index;
+        if (i >= Ctx.NpcSlots.Length) return;
+        var id = Ctx.NpcSlots[i];
+        if (id < 0) return;
 
-        // Set NPC vitals
+        var vitals = Ctx.World.Get<VitalsComponent>(id);
         for (byte n = 0; n < (byte)Vital.Count; n++)
-            MapInstance.Current.Npc[index].Vital[n] = packet.Vital[n];
+            vitals.Current[n] = packet.Vital[n];
     }
 
     [PacketHandler]
     internal static void MapNpcDied(MapNpcDiedPacket packet)
     {
-        var i = packet.Index;
+        Ctx.ClearNpcSlot(packet.Index);
+    }
 
-        // Clear NPC data on death
-        MapInstance.Current.Npc[i].X2 = 0;
-        MapInstance.Current.Npc[i].Y2 = 0;
-        MapInstance.Current.Npc[i].Data = null;
-        MapInstance.Current.Npc[i].X = 0;
-        MapInstance.Current.Npc[i].Y = 0;
-        MapInstance.Current.Npc[i].Vital = new short[(byte)Vital.Count];
+    // ─── Helpers ─────────────────────────────────────────────────────────────
+
+    private static void ApplyNpcState(int entityId, byte slotIndex, Guid npcId,
+        byte x, byte y, Direction direction, short[] vital)
+    {
+        var npc = Ctx.World.Get<NpcDataComponent>(entityId);
+        var transform = Ctx.World.Get<TransformComponent>(entityId);
+        var vitals = Ctx.World.Get<VitalsComponent>(entityId);
+
+        npc.Data = Npc.List.GetValueOrDefault(npcId);
+        transform.TileX = x;
+        transform.TileY = y;
+        transform.Direction = direction;
+        transform.PixelOffsetX = 0;
+        transform.PixelOffsetY = 0;
+
+        Ctx.World.Get<MovementComponent>(entityId).Current = Movement.Stopped;
+
+        for (byte n = 0; n < (byte)Vital.Count; n++)
+            vitals.Current[n] = vital[n];
+    }
+
+    private static void SpawnBlood(byte tileX, byte tileY)
+    {
+        var bloodId = Ctx.World.Create();
+        Ctx.World.Add(bloodId, new BloodSplatComponent
+        {
+            TextureNum = (byte)MyRandom.Next(0, 3),
+            TileX = tileX,
+            TileY = tileY,
+            Opacity = 255,
+            NextFadeAt = Environment.TickCount + 100
+        });
     }
 }
