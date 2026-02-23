@@ -6,6 +6,8 @@ using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Client;
+using CryBits.Server.ECS;
+using CryBits.Server.ECS.Components;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence;
@@ -18,7 +20,7 @@ namespace CryBits.Server.Systems;
 /// <summary>Owns character creation, selection, deletion, and session enter/exit.</summary>
 internal static class CharacterSystem
 {
-    /// <summary>Validates and creates a new character for <paramref name="account"/>, then joins the game.</summary>
+    /// <summary>Validates and creates a new character for the session, then joins the game.</summary>
     internal static void Create(GameSession session, CreateCharacterPacket packet)
     {
         var name = packet.Name.Trim();
@@ -44,28 +46,73 @@ internal static class CharacterSystem
             return;
         }
 
-        Class @class;
-        session.Character = new Player(session);
-        session.Character.Name = name;
-        session.Character.Level = 1;
-        session.Character.Class = @class = Class.List.Get(new Guid(packet.ClassId));
-        session.Character.Genre = packet.GenderMale;
-        session.Character.TextureNum = session.Character.Genre
-            ? @class.TextureMale[packet.TextureNum]
-            : @class.TextureFemale[packet.TextureNum];
-        session.Character.Attribute = @class.Attribute;
-        session.Character.MapInstance = GameWorld.Current.Maps.Get(@class.SpawnMap.Id);
-        session.Character.Direction = (Direction)@class.SpawnDirection;
-        session.Character.X = @class.SpawnX;
-        session.Character.Y = @class.SpawnY;
-        for (byte i = 0; i < (byte)Vital.Count; i++) session.Character.Vital[i] = session.Character.MaxVital(i);
-        for (byte i = 0; i < (byte)@class.Item.Count; i++)
-            if (@class.Item[i].Item.Type == ItemType.Equipment &&
-                session.Character.Equipment[@class.Item[i].Item.EquipType] == null)
-                session.Character.Equipment[@class.Item[i].Item.EquipType] = @class.Item[i].Item;
+        var @class = Class.List.Get(new Guid(packet.ClassId));
+        if (@class == null)
+        {
+            AuthSender.Alert(session, "Invalid class selection.", false);
+            return;
+        }
+
+        // Create the ECS entity and attach all player components.
+        var world = ServerContext.Instance.World;
+        var entityId = world.Create();
+        session.Character = new Player(entityId, session);
+
+        var pd = new PlayerDataComponent
+        {
+            Name      = name,
+            Level     = 1,
+            Class     = @class,
+            Genre     = packet.GenderMale,
+            TextureNum = (short)(packet.GenderMale
+                ? @class.TextureMale[packet.TextureNum]
+                : @class.TextureFemale[packet.TextureNum])
+        };
+
+        var attr = new AttributeComponent();
+        Array.Copy(@class.Attribute, attr.Values, @class.Attribute.Length);
+
+        var pos = new PositionComponent
+        {
+            MapId = @class.SpawnMap.Id,
+            X     = @class.SpawnX,
+            Y     = @class.SpawnY
+        };
+
+        var dir = new DirectionComponent { Value = (Direction)@class.SpawnDirection };
+
+        var vitals = new VitalsComponent();
+        for (byte i = 0; i < (byte)Vital.Count; i++)
+            vitals.Values[i] = session.Character.MaxVital(i);
+
+        var equip  = new EquipmentComponent();
+        var inv    = new InventoryComponent();
+        var hotbar = new HotbarComponent();
+
+        // Distribute starting class items.
+        // Temporarily attach components so the helpers work during init.
+        world.Add(entityId, pd);
+        world.Add(entityId, attr);
+        world.Add(entityId, pos);
+        world.Add(entityId, dir);
+        world.Add(entityId, vitals);
+        world.Add(entityId, equip);
+        world.Add(entityId, inv);
+        world.Add(entityId, hotbar);
+        world.Add(entityId, new TradeComponent());
+        world.Add(entityId, new PartyComponent());
+        world.Add(entityId, new TimerComponent());
+        world.Add(entityId, new SessionComponent(session));
+
+        for (byte i = 0; i < @class.Item.Count; i++)
+        {
+            var classItem = @class.Item[i];
+            if (classItem.Item.Type == ItemType.Equipment &&
+                equip.Slots[classItem.Item.EquipType] == null)
+                equip.Slots[classItem.Item.EquipType] = classItem.Item;
             else
-                InventorySystem.GiveItem(session.Character, @class.Item[i].Item, @class.Item[i].Amount);
-        for (byte i = 0; i < MaxHotbar; i++) session.Character.Hotbar[i] = new HotbarSlot(SlotType.None, 0);
+                InventorySystem.GiveItem(session.Character, classItem.Item, classItem.Amount);
+        }
 
         CharacterRepository.WriteName(name);
         CharacterRepository.Write(session);
@@ -73,13 +120,13 @@ internal static class CharacterSystem
         Join(session.Character);
     }
 
-    /// <summary>Loads the selected character for <paramref name="account"/> and joins the game.</summary>
+    /// <summary>Loads the selected character and joins the game.</summary>
     internal static void Use(GameSession session, int index)
     {
         if (index < 0 || index >= session.Characters.Count) return;
 
         CharacterRepository.Read(session, session.Characters[index].Name);
-        Join(session.Character);
+        Join(session.Character!);
     }
 
     internal static void OpenCreation(GameSession session)
@@ -108,7 +155,7 @@ internal static class CharacterSystem
         AccountRepository.Write(session);
     }
 
-    /// <summary>Sends all required game data and places <paramref name="player"/> into the world.</summary>
+    /// <summary>Sends all required game data and places the player into the world.</summary>
     internal static void Join(Player player)
     {
         player.Session.Characters = [];
@@ -123,7 +170,7 @@ internal static class CharacterSystem
         PlayerSender.PlayerInventory(player);
         PlayerSender.PlayerHotbar(player);
 
-        MovementSystem.Warp(player, player.MapInstance, player.X, player.Y, true);
+        MovementSystem.Warp(player, player.MapInstance, player.Get<PositionComponent>().X, player.Get<PositionComponent>().Y, true);
 
         PlayerSender.JoinGame(player);
         ChatSender.Message(player, Config.WelcomeMessage, Color.Blue);
@@ -137,5 +184,9 @@ internal static class CharacterSystem
 
         PartySystem.Leave(player);
         TradeSystem.Leave(player);
+
+        // Destroy the ECS entity so resources are freed.
+        ServerContext.Instance.World.Destroy(player.EntityId);
+        player.Session.Character = null;
     }
 }

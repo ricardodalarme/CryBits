@@ -1,4 +1,5 @@
 using System;
+using CryBits.Server.ECS;
 using CryBits.Server.Entities;
 using CryBits.Server.Logic;
 using CryBits.Server.Network.Senders;
@@ -21,7 +22,7 @@ internal static class MapItemSystem
         if (!mapInstance.HasPlayers()) return;
         if (Environment.TickCount64 <= Loop.TimerMapItems + 300000) return;
 
-        mapInstance.Item = [];
+        ServerContext.Instance.ClearMapItems(mapInstance.Data.Id);
         mapInstance.SpawnItems();
         MapSender.MapItems(mapInstance);
     }

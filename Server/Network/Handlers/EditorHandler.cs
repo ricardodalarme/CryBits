@@ -141,7 +141,7 @@ internal static class EditorHandler
 
             MapSender.MapPlayers(player);
 
-            player.GettingMap = false;
+            CryBits.Server.ECS.ServerContext.Instance.World.Remove<CryBits.Server.ECS.Components.LoadingMapTag>(player.EntityId);
             PlayerSender.JoinMap(player);
         }
     }

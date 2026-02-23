@@ -1,5 +1,7 @@
 using CryBits.Enums;
 using CryBits.Packets.Client;
+using CryBits.Server.ECS;
+using CryBits.Server.ECS.Components;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Systems;
@@ -17,7 +19,8 @@ internal static class PlayerHandler
     [PacketHandler]
     internal static void PlayerMove(Player player, PlayerMovePacket packet)
     {
-        if (player.X != packet.X || player.Y != packet.Y)
+        var pos = ServerContext.Instance.World.Get<PositionComponent>(player.EntityId);
+        if (pos.X != packet.X || pos.Y != packet.Y)
             PlayerSender.PlayerPosition(player);
         else
             MovementSystem.Move(player, packet.Movement);
@@ -44,9 +47,12 @@ internal static class PlayerHandler
     [PacketHandler]
     internal static void DropItem(Player player, DropItemPacket packet)
     {
-        var slot = packet.Slot;
+        var slot   = packet.Slot;
         var amount = packet.Amount;
-        if (slot != -1) InventorySystem.DropItem(player, player.Inventory[slot], amount);
+        if (slot < 0) return;
+
+        var inv = ServerContext.Instance.World.Get<InventoryComponent>(player.EntityId);
+        InventorySystem.DropItem(player, inv.Slots[slot], amount);
     }
 
     [PacketHandler]
@@ -54,13 +60,15 @@ internal static class PlayerHandler
     {
         short slotOld = packet.OldSlot, slotNew = packet.NewSlot;
 
-        // Early exits.
-        if (player.Inventory[slotOld].Item == null) return;
-        if (slotOld == slotNew) return;
-        if (player.Trade != null) return;
+        var world = ServerContext.Instance.World;
+        var inv   = world.Get<InventoryComponent>(player.EntityId);
+        var trade = world.Get<TradeComponent>(player.EntityId);
 
-        // Swap inventory slots.
-        (player.Inventory[slotOld], player.Inventory[slotNew]) = (player.Inventory[slotNew], player.Inventory[slotOld]);
+        if (inv.Slots[slotOld].Item == null) return;
+        if (slotOld == slotNew) return;
+        if (trade.PartnerId != null) return;
+
+        (inv.Slots[slotOld], inv.Slots[slotNew]) = (inv.Slots[slotNew], inv.Slots[slotOld]);
         PlayerSender.PlayerInventory(player);
         HotbarSystem.SyncInventorySwap(player, slotOld, slotNew);
     }
@@ -68,7 +76,8 @@ internal static class PlayerHandler
     [PacketHandler]
     internal static void InventoryUse(Player player, InventoryUsePacket packet)
     {
-        InventorySystem.UseItem(player, player.Inventory[packet.Slot]);
+        var inv = ServerContext.Instance.World.Get<InventoryComponent>(player.EntityId);
+        InventorySystem.UseItem(player, inv.Slots[packet.Slot]);
     }
 
     [PacketHandler]

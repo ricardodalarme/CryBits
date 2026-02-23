@@ -1,6 +1,8 @@
 using System.Linq;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
+using CryBits.Server.ECS;
+using CryBits.Server.ECS.Components;
 using CryBits.Server.Entities;
 using CryBits.Server.World;
 using LiteNetLib;
@@ -34,7 +36,7 @@ internal static class Send
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying).Where(t => player != t.Character))
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying && t.Character != player))
             ToPlayer(t, packet);
     }
 
@@ -43,9 +45,13 @@ internal static class Send
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying)
-                     .Where(t => t.Character!.MapInstance == mapInstance))
-            ToPlayer(t, packet);
+        var world = ServerContext.Instance.World;
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying))
+        {
+            var pos = world.Get<PositionComponent>(t.Character!.EntityId);
+            if (pos.MapId == mapInstance.Data.Id)
+                t.Connection.Send(data, DeliveryMethod.ReliableOrdered);
+        }
     }
 
     public static void ToMapBut(MapInstance mapInstance, Player player, IServerPacket packet)
@@ -53,9 +59,12 @@ internal static class Send
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
-        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying)
-                     .Where(t => t.Character!.MapInstance == mapInstance)
-                     .Where(t => player != t.Character))
-            ToPlayer(t, packet);
+        var world = ServerContext.Instance.World;
+        foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying && t.Character != player))
+        {
+            var pos = world.Get<PositionComponent>(t.Character!.EntityId);
+            if (pos.MapId == mapInstance.Data.Id)
+                t.Connection.Send(data, DeliveryMethod.ReliableOrdered);
+        }
     }
 }

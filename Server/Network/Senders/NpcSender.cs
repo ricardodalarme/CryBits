@@ -2,6 +2,8 @@ using CryBits.Entities.Npc;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
+using CryBits.Server.ECS;
+using CryBits.Server.ECS.Components;
 using CryBits.Server.Entities;
 using CryBits.Server.World;
 
@@ -9,6 +11,8 @@ namespace CryBits.Server.Network.Senders;
 
 internal static class NpcSender
 {
+    private static CryBits.Server.ECS.Core.World World => ServerContext.Instance.World;
+
     public static void Npcs(GameSession session)
     {
         Send.ToPlayer(session, new NpcsPacket { List = Npc.List });
@@ -16,66 +20,103 @@ internal static class NpcSender
 
     public static void MapNpcs(Player player, MapInstance mapInstance)
     {
-        var packet = new MapNpcsPacket { Npcs = new PacketsMapNpc[mapInstance.Npc.Length] };
-        for (byte i = 0; i < mapInstance.Npc.Length; i++)
+        // Gather all NPC entities on this map
+        var npcsOnMap = new System.Collections.Generic.List<PacketsMapNpc>();
+        foreach (var (entityId, npcData) in World.Query<NpcDataComponent>())
         {
-            packet.Npcs[i] = new PacketsMapNpc
+            if (npcData.MapId != mapInstance.Data.Id) continue;
+            var pos   = World.Get<PositionComponent>(entityId);
+            var dir   = World.Get<DirectionComponent>(entityId);
+            var vital = World.Get<VitalsComponent>(entityId);
+            var entry = new PacketsMapNpc
             {
-                NpcId = mapInstance.Npc[i].Data.GetId(),
-                X = mapInstance.Npc[i].X,
-                Y = mapInstance.Npc[i].Y,
-                Direction = (byte)mapInstance.Npc[i].Direction,
-                Vital = new short[(byte)Vital.Count]
+                NpcId     = npcData.Data.GetId(),
+                X         = pos.X,
+                Y         = pos.Y,
+                Direction = (byte)dir.Value,
+                Vital     = new short[(byte)Vital.Count]
             };
-            for (byte n = 0; n < (byte)Vital.Count; n++) packet.Npcs[i].Vital[n] = mapInstance.Npc[i].Vital[n];
+            for (byte n = 0; n < (byte)Vital.Count; n++) entry.Vital[n] = vital.Values[n];
+            npcsOnMap.Add(entry);
         }
 
-        Send.ToPlayer(player, packet);
+        Send.ToPlayer(player, new MapNpcsPacket { Npcs = npcsOnMap.ToArray() });
     }
 
-    public static void MapNpc(NpcInstance npcInstance)
+    public static void MapNpc(int npcEntityId)
     {
+        var npcData = World.Get<NpcDataComponent>(npcEntityId);
+        var pos     = World.Get<PositionComponent>(npcEntityId);
+        var dir     = World.Get<DirectionComponent>(npcEntityId);
+        var vital   = World.Get<VitalsComponent>(npcEntityId);
+        var mapInst = GameWorld.Current.Maps.Get(npcData.MapId);
+        if (mapInst == null) return;
+
         var packet = new MapNpcPacket
         {
-            Index = npcInstance.Index,
-            NpcId = npcInstance.Data.GetId(),
-            X = npcInstance.X,
-            Y = npcInstance.Y,
-            Direction = (byte)npcInstance.Direction,
-            Vital = new short[(byte)Vital.Count]
+            Index     = npcData.Index,
+            NpcId     = npcData.Data.GetId(),
+            X         = pos.X,
+            Y         = pos.Y,
+            Direction = (byte)dir.Value,
+            Vital     = new short[(byte)Vital.Count]
         };
-        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
-        Send.ToMap(npcInstance.MapInstance, packet);
+        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = vital.Values[n];
+        Send.ToMap(mapInst, packet);
     }
 
-    public static void MapNpcMovement(NpcInstance npcInstance, byte movement)
+    public static void MapNpcMovement(int npcEntityId, byte movement)
     {
-        Send.ToMap(npcInstance.MapInstance,
+        var npcData = World.Get<NpcDataComponent>(npcEntityId);
+        var pos     = World.Get<PositionComponent>(npcEntityId);
+        var dir     = World.Get<DirectionComponent>(npcEntityId);
+        var mapInst = GameWorld.Current.Maps.Get(npcData.MapId);
+        if (mapInst == null) return;
+
+        Send.ToMap(mapInst,
             new MapNpcMovementPacket
-            { Index = npcInstance.Index, X = npcInstance.X, Y = npcInstance.Y, Direction = (byte)npcInstance.Direction, Movement = movement });
+            { Index = npcData.Index, X = pos.X, Y = pos.Y, Direction = (byte)dir.Value, Movement = movement });
     }
 
-    public static void MapNpcDirection(NpcInstance npcInstance)
+    public static void MapNpcDirection(int npcEntityId)
     {
-        Send.ToMap(npcInstance.MapInstance,
-            new MapNpcDirectionPacket { Index = npcInstance.Index, Direction = (byte)npcInstance.Direction });
+        var npcData = World.Get<NpcDataComponent>(npcEntityId);
+        var dir     = World.Get<DirectionComponent>(npcEntityId);
+        var mapInst = GameWorld.Current.Maps.Get(npcData.MapId);
+        if (mapInst == null) return;
+
+        Send.ToMap(mapInst,
+            new MapNpcDirectionPacket { Index = npcData.Index, Direction = (byte)dir.Value });
     }
 
-    public static void MapNpcVitals(NpcInstance npcInstance)
+    public static void MapNpcVitals(int npcEntityId)
     {
-        var packet = new MapNpcVitalsPacket { Index = npcInstance.Index, Vital = new short[(byte)Vital.Count] };
-        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
-        Send.ToMap(npcInstance.MapInstance, packet);
+        var npcData = World.Get<NpcDataComponent>(npcEntityId);
+        var vital   = World.Get<VitalsComponent>(npcEntityId);
+        var mapInst = GameWorld.Current.Maps.Get(npcData.MapId);
+        if (mapInst == null) return;
+
+        var packet = new MapNpcVitalsPacket { Index = npcData.Index, Vital = new short[(byte)Vital.Count] };
+        for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = vital.Values[n];
+        Send.ToMap(mapInst, packet);
     }
 
-    public static void MapNpcAttack(NpcInstance npcInstance, string victim = "", Target victimType = 0)
+    public static void MapNpcAttack(int npcEntityId, string victim = "", Target victimType = 0)
     {
-        Send.ToMap(npcInstance.MapInstance,
-            new MapNpcAttackPacket { Index = npcInstance.Index, Victim = victim, VictimType = (byte)victimType });
+        var npcData = World.Get<NpcDataComponent>(npcEntityId);
+        var mapInst = GameWorld.Current.Maps.Get(npcData.MapId);
+        if (mapInst == null) return;
+
+        Send.ToMap(mapInst,
+            new MapNpcAttackPacket { Index = npcData.Index, Victim = victim, VictimType = (byte)victimType });
     }
 
-    public static void MapNpcDied(NpcInstance npcInstance)
+    public static void MapNpcDied(int npcEntityId)
     {
-        Send.ToMap(npcInstance.MapInstance, new MapNpcDiedPacket { Index = npcInstance.Index });
+        var npcData = World.Get<NpcDataComponent>(npcEntityId);
+        var mapInst = GameWorld.Current.Maps.Get(npcData.MapId);
+        if (mapInst == null) return;
+
+        Send.ToMap(mapInst, new MapNpcDiedPacket { Index = npcData.Index });
     }
 }

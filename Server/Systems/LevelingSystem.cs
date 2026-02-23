@@ -1,4 +1,5 @@
 using System;
+using CryBits.Server.ECS.Components;
 using CryBits.Server.Entities;
 using CryBits.Server.Formulas;
 using CryBits.Server.Network.Senders;
@@ -8,93 +9,94 @@ namespace CryBits.Server.Systems;
 
 /// <summary>
 /// Request-driven system that manages player experience, leveling, and party XP distribution.
-/// Also owns party-leave logic, keeping Player.cs free of party network calls.
 /// </summary>
 internal static class LevelingSystem
 {
     /// <summary>Spends one attribute point for <paramref name="player"/> on the given attribute.</summary>
     internal static void AddPoint(Player player, byte attributeNum)
     {
-        if (player.Points <= 0) return;
+        var pd   = player.Get<PlayerDataComponent>();
+        var attr = player.Get<AttributeComponent>();
 
-        player.Attribute[attributeNum]++;
-        player.Points--;
+        if (pd.Points <= 0) return;
+
+        attr.Values[attributeNum]++;
+        pd.Points--;
         PlayerSender.PlayerExperience(player);
         MapSender.MapPlayers(player);
     }
 
     /// <summary>
     /// Grants <paramref name="value"/> experience to <paramref name="player"/>.
-    /// If the player is in a party the XP is split across all members weighted by level
-    /// difference; otherwise it is awarded directly.
+    /// Splits XP across party members when the player is in a party.
     /// </summary>
     public static void GiveExperience(Player player, int value)
     {
-        if (player.Party.Count > 0 && value > 0)
+        var party = player.Get<PartyComponent>();
+
+        if (party.MemberEntityIds.Count > 0 && value > 0)
             PartySplitXp(player, value);
         else
-            player.Experience += value;
+            player.Get<PlayerDataComponent>().Experience += value;
 
-        if (player.Experience < 0) player.Experience = 0;
+        var pd = player.Get<PlayerDataComponent>();
+        if (pd.Experience < 0) pd.Experience = 0;
 
         CheckLevelUp(player);
     }
 
-    /// <summary>
-    /// Checks whether the player has enough XP to level up (loops to handle multiple levels at once).
-    /// Sends updated experience and, on level-up, refreshes the map player list.
-    /// </summary>
     private static void CheckLevelUp(Player player)
     {
+        var pd = player.Get<PlayerDataComponent>();
         byte numLevel = 0;
 
-        while (player.Experience >= player.ExpNeeded)
+        while (pd.Experience >= player.ExpNeeded)
         {
             numLevel++;
-            var expRest = player.Experience - player.ExpNeeded;
-
-            player.Level++;
-            player.Points += Config.NumPoints;
-            player.Experience = expRest;
+            var expRest = pd.Experience - player.ExpNeeded;
+            pd.Level++;
+            pd.Points += Config.NumPoints;
+            pd.Experience = expRest;
         }
 
         PlayerSender.PlayerExperience(player);
         if (numLevel > 0) MapSender.MapPlayers(player);
     }
 
-    /// <summary>
-    /// Splits <paramref name="value"/> XP across the player's party using a level-difference
-    /// weight so that large level gaps reduce the share a member receives. The remaining XP
-    /// after distributing to members is awarded to <paramref name="player"/> directly.
-    /// </summary>
     private static void PartySplitXp(Player player, int value)
     {
-        var diff = new double[player.Party.Count];
+        var party = player.Get<PartyComponent>();
+        var world = ECS.ServerContext.Instance.World;
+        var diff  = new double[party.MemberEntityIds.Count];
         double diffSum = 0;
 
-        // Compute a weight for each party member based on their level difference.
-        for (byte i = 0; i < player.Party.Count; i++)
+        var pd = player.Get<PlayerDataComponent>();
+
+        for (byte i = 0; i < party.MemberEntityIds.Count; i++)
         {
-            var difference = Math.Abs(player.Level - player.Party[i].Level);
+            var memberPd = world.Get<PlayerDataComponent>(party.MemberEntityIds[i]);
+            var difference = Math.Abs(pd.Level - memberPd.Level);
             diff[i] = LevelingFormulas.PartyXpWeight(difference);
             diffSum += diff[i];
         }
 
-        // Distribute XP to party members; balance weights when their sum exceeds 100 %.
         var experienceSum = 0;
-        for (byte i = 0; i < player.Party.Count; i++)
+        for (byte i = 0; i < party.MemberEntityIds.Count; i++)
         {
             if (diffSum > 1) diff[i] *= 1 / diffSum;
 
             var givenExperience = (int)(value / 2 * diff[i]);
             experienceSum += givenExperience;
 
-            GiveExperience(player.Party[i], givenExperience);
-            PlayerSender.PlayerExperience(player.Party[i]);
+            var memberSession = world.Get<ECS.Components.SessionComponent>(party.MemberEntityIds[i]).Session;
+            if (memberSession.IsPlaying)
+            {
+                GiveExperience(memberSession.Character!, givenExperience);
+                PlayerSender.PlayerExperience(memberSession.Character!);
+            }
         }
 
-        // Award the remainder to the triggering player.
-        player.Experience += value - experienceSum;
+        pd.Experience += value - experienceSum;
         CheckLevelUp(player);
         PlayerSender.PlayerExperience(player);
     }

@@ -1,7 +1,8 @@
 using System;
 using System.Drawing;
 using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Server.ECS;
+using CryBits.Server.ECS.Components;
 using CryBits.Server.Entities;
 using CryBits.Server.Formulas;
 using CryBits.Server.Network.Senders;
@@ -18,57 +19,68 @@ internal static class CombatSystem
     /// <summary>Initiates an attack for <paramref name="player"/> against whatever is in front of them.</summary>
     internal static void Attack(Player player)
     {
-        byte nextX = player.X, nextY = player.Y;
-        NextTile(player.Direction, ref nextX, ref nextY);
+        var world = ServerContext.Instance.World;
+        var pos   = world.Get<PositionComponent>(player.EntityId);
+        var dir   = world.Get<DirectionComponent>(player.EntityId);
+        var timer = world.Get<TimerComponent>(player.EntityId);
+        var trade = world.Get<TradeComponent>(player.EntityId);
+        var map   = player.MapInstance;
 
-        if (player.Trade != null) return;
-        if (player.Shop != null) return;
-        if (Environment.TickCount64 < player.AttackTimer + AttackSpeed) return;
-        if (player.MapInstance.TileBlocked(player.X, player.Y, player.Direction, false)) goto @continue;
+        byte nextX = pos.X, nextY = pos.Y;
+        NextTile(dir.Value, ref nextX, ref nextY);
 
-        Character victim = player.MapInstance.HasPlayer(nextX, nextY);
-        if (victim != null)
+        if (trade.PartnerId != null) return;
+        if (world.Has<ShopComponent>(player.EntityId)) return;
+        if (Environment.TickCount64 < timer.AttackTimer + AttackSpeed) return;
+        if (map.TileBlocked(pos.X, pos.Y, dir.Value, false)) goto @continue;
+
+        var victimPlayer = map.HasPlayer(nextX, nextY);
+        if (victimPlayer != null)
         {
-            PlayerAttackPlayer(player, (Player)victim);
+            PlayerAttackPlayer(player, victimPlayer);
             return;
         }
 
-        victim = player.MapInstance.HasNpc(nextX, nextY);
-        if (victim != null)
+        var victimNpcId = map.HasNpc(nextX, nextY);
+        if (victimNpcId >= 0)
         {
-            PlayerAttackNpc(player, (NpcInstance)victim);
+            PlayerAttackNpc(player, victimNpcId);
             return;
         }
 
     @continue:
         PlayerSender.PlayerAttack(player, null);
-        player.AttackTimer = Environment.TickCount64;
+        timer.AttackTimer = Environment.TickCount64;
     }
 
     private static void PlayerAttackPlayer(Player attacker, Player victim)
     {
-        if (victim.GettingMap) return;
+        var world = ServerContext.Instance.World;
+        if (world.Has<LoadingMapTag>(victim.EntityId)) return;
         if (attacker.MapInstance.Data.Moral == (byte)Moral.Pacific)
         {
             ChatSender.Message(attacker, "This is a peaceful area.", Color.White);
             return;
         }
 
-        attacker.AttackTimer = Environment.TickCount64;
+        world.Get<TimerComponent>(attacker.EntityId).AttackTimer = Environment.TickCount64;
 
         var attackDamage = CombatFormulas.NetDamage(attacker.Damage, victim.PlayerDefense);
         if (attackDamage > 0)
         {
-            PlayerSender.PlayerAttack(attacker, victim.Name, Target.Player);
+            var victimData = world.Get<PlayerDataComponent>(victim.EntityId);
+            PlayerSender.PlayerAttack(attacker, victimData.Name, Target.Player);
 
-            if (attackDamage < victim.Vital[(byte)Vital.Hp])
+            var victimVitals = world.Get<VitalsComponent>(victim.EntityId);
+            if (attackDamage < victimVitals.Values[(byte)Vital.Hp])
             {
-                victim.Vital[(byte)Vital.Hp] -= attackDamage;
+                victimVitals.Values[(byte)Vital.Hp] -= attackDamage;
                 PlayerSender.PlayerVitals(victim);
             }
             else
             {
-                LevelingSystem.GiveExperience(attacker, victim.Experience / 10);
+                var attackerData = world.Get<PlayerDataComponent>(attacker.EntityId);
+                LevelingSystem.GiveExperience(attacker, world.Get<PlayerDataComponent>(victim.EntityId).Experience / 10);
                 Died(victim);
             }
         }
@@ -76,36 +88,41 @@ internal static class CombatSystem
             PlayerSender.PlayerAttack(attacker);
     }
 
-    private static void PlayerAttackNpc(Player attacker, NpcInstance victim)
+    private static void PlayerAttackNpc(Player attacker, int npcEntityId)
     {
-        if (victim.Target != attacker && !string.IsNullOrEmpty(victim.Data.SayMsg))
-            ChatSender.Message(attacker, victim.Data.Name + ": " + victim.Data.SayMsg, Color.White);
+        var world   = ServerContext.Instance.World;
+        var npcData = world.Get<NpcDataComponent>(npcEntityId);
+        var npcTgt  = world.Get<NpcTargetComponent>(npcEntityId);
 
-        switch (victim.Data.Behaviour)
+        if (npcTgt.TargetEntityId != attacker.EntityId && !string.IsNullOrEmpty(npcData.Data.SayMsg))
+            ChatSender.Message(attacker, npcData.Data.Name + ": " + npcData.Data.SayMsg, Color.White);
+
+        switch (npcData.Data.Behaviour)
         {
             case Behaviour.Friendly: return;
             case Behaviour.ShopKeeper:
-                ShopSystem.Open(attacker, victim.Data.Shop);
+                ShopSystem.Open(attacker, npcData.Data.Shop);
                 return;
         }
 
-        victim.Target = attacker;
-        attacker.AttackTimer = Environment.TickCount64;
+        npcTgt.TargetEntityId = attacker.EntityId;
+        world.Get<TimerComponent>(attacker.EntityId).AttackTimer = Environment.TickCount64;
 
-        var attackDamage = CombatFormulas.NetDamage(attacker.Damage, victim.Data.Attribute[(byte)Attribute.Resistance]);
+        var attackDamage = CombatFormulas.NetDamage(attacker.Damage, npcData.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
-            PlayerSender.PlayerAttack(attacker, victim.Index.ToString(), Target.Npc);
+            PlayerSender.PlayerAttack(attacker, npcData.Index.ToString(), Target.Npc);
 
-            if (attackDamage < victim.Vital[(byte)Vital.Hp])
+            var npcVitals = world.Get<VitalsComponent>(npcEntityId);
+            if (attackDamage < npcVitals.Values[(byte)Vital.Hp])
             {
-                victim.Vital[(byte)Vital.Hp] -= attackDamage;
-                NpcSender.MapNpcVitals(victim);
+                npcVitals.Values[(byte)Vital.Hp] -= attackDamage;
+                NpcSender.MapNpcVitals(npcEntityId);
             }
             else
             {
-                LevelingSystem.GiveExperience(attacker, victim.Data.Experience);
-                Died(victim);
+                LevelingSystem.GiveExperience(attacker, npcData.Data.Experience);
+                Died(npcEntityId);
             }
         }
         else
@@ -115,103 +132,166 @@ internal static class CombatSystem
     /// <summary>Kills <paramref name="player"/>: restores vitals, penalises XP, warps to spawn.</summary>
     internal static void Died(Player player)
     {
-        for (byte n = 0; n < (byte)Vital.Count; n++) player.Vital[n] = player.MaxVital(n);
+        var world  = ServerContext.Instance.World;
+        var vitals = world.Get<VitalsComponent>(player.EntityId);
+        var pd     = world.Get<PlayerDataComponent>(player.EntityId);
+        var dir    = world.Get<DirectionComponent>(player.EntityId);
+
+        for (byte n = 0; n < (byte)Vital.Count; n++)
+            vitals.Values[n] = player.MaxVital(n);
         PlayerSender.PlayerVitals(player);
 
-        player.Experience /= 10;
+        pd.Experience /= 10;
         PlayerSender.PlayerExperience(player);
 
-        player.Direction = (Direction)player.Class.SpawnDirection;
-        MovementSystem.Warp(player, GameWorld.Current.Maps.Get(player.Class.SpawnMap.Id), player.Class.SpawnX,
-            player.Class.SpawnY);
+        dir.Value = (Direction)pd.Class!.SpawnDirection;
+        MovementSystem.Warp(player,
+            GameWorld.Current.Maps.Get(pd.Class.SpawnMap.Id)!,
+            pd.Class.SpawnX,
+            pd.Class.SpawnY);
     }
 
-    /// <summary>Initiates an attack for <paramref name="npcInstance"/> against its current target.</summary>
-    internal static void Attack(NpcInstance npcInstance)
+    /// <summary>Initiates an attack for the NPC entity against its current target.</summary>
+    internal static void Attack(int npcEntityId)
     {
-        byte nextX = npcInstance.X, nextY = npcInstance.Y;
-        NextTile(npcInstance.Direction, ref nextX, ref nextY);
+        var world    = ServerContext.Instance.World;
+        var npcData  = world.Get<NpcDataComponent>(npcEntityId);
+        var npcState = world.Get<NpcStateComponent>(npcEntityId);
+        var npcTgt   = world.Get<NpcTargetComponent>(npcEntityId);
+        var npcTimer = world.Get<NpcTimerComponent>(npcEntityId);
+        var pos      = world.Get<PositionComponent>(npcEntityId);
+        var dir      = world.Get<DirectionComponent>(npcEntityId);
+        var map      = GameWorld.Current.Maps[npcData.MapId];
 
-        if (!npcInstance.Alive) return;
-        if (Environment.TickCount64 < npcInstance.AttackTimer + AttackSpeed) return;
-        if (npcInstance.MapInstance.TileBlocked(npcInstance.X, npcInstance.Y, npcInstance.Direction, false)) return;
+        if (!npcState.Alive) return;
+        if (Environment.TickCount64 < npcTimer.AttackTimer + AttackSpeed) return;
+        if (map.TileBlocked(pos.X, pos.Y, dir.Value, false)) return;
 
-        if (npcInstance.Target is Player)
-            NpcAttackPlayer(npcInstance, npcInstance.MapInstance.HasPlayer(nextX, nextY));
-        else if (npcInstance.Target is NpcInstance)
-            NpcAttackNpc(npcInstance, npcInstance.MapInstance.HasNpc(nextX, nextY));
+        byte nextX = pos.X, nextY = pos.Y;
+        NextTile(dir.Value, ref nextX, ref nextY);
+
+        if (npcTgt.TargetEntityId != null)
+        {
+            var tid = npcTgt.TargetEntityId.Value;
+            if (world.Has<PlayerDataComponent>(tid))
+                NpcAttackPlayer(npcEntityId, map.HasPlayer(nextX, nextY));
+            else if (world.Has<NpcDataComponent>(tid))
+            {
+                var otherNpcId = map.HasNpc(nextX, nextY);
+                if (otherNpcId >= 0) NpcAttackNpc(npcEntityId, otherNpcId);
+            }
+        }
     }
 
-    private static void NpcAttackPlayer(NpcInstance attacker, Player victim)
+    private static void NpcAttackPlayer(int npcEntityId, Player? victim)
     {
         if (victim == null) return;
-        if (victim.GettingMap) return;
 
-        attacker.AttackTimer = Environment.TickCount64;
+        var world    = ServerContext.Instance.World;
+        var npcData  = world.Get<NpcDataComponent>(npcEntityId);
+        var npcTimer = world.Get<NpcTimerComponent>(npcEntityId);
+        var npcTgt   = world.Get<NpcTargetComponent>(npcEntityId);
 
-        var attackDamage = CombatFormulas.NetDamage(attacker.Data.Attribute[(byte)Attribute.Strength], victim.PlayerDefense);
+        if (world.Has<LoadingMapTag>(victim.EntityId)) return;
+
+        npcTimer.AttackTimer = Environment.TickCount64;
+
+        var attackDamage = CombatFormulas.NetDamage(
+            npcData.Data.Attribute[(byte)Attribute.Strength],
+            victim.PlayerDefense);
+
         if (attackDamage > 0)
         {
-            NpcSender.MapNpcAttack(attacker, victim.Name, Target.Player);
+            var victimData = world.Get<PlayerDataComponent>(victim.EntityId);
+            NpcSender.MapNpcAttack(npcEntityId, victimData.Name, Target.Player);
 
-            if (attackDamage < victim.Vital[(byte)Vital.Hp])
+            var victimVitals = world.Get<VitalsComponent>(victim.EntityId);
+            if (attackDamage < victimVitals.Values[(byte)Vital.Hp])
             {
-                victim.Vital[(byte)Vital.Hp] -= attackDamage;
+                victimVitals.Values[(byte)Vital.Hp] -= attackDamage;
                 PlayerSender.PlayerVitals(victim);
             }
             else
             {
-                attacker.Target = null;
+                npcTgt.TargetEntityId = null;
                 Died(victim);
             }
         }
         else
-            NpcSender.MapNpcAttack(attacker);
+            NpcSender.MapNpcAttack(npcEntityId);
     }
 
-    private static void NpcAttackNpc(NpcInstance attacker, NpcInstance victim)
+    private static void NpcAttackNpc(int attackerEntityId, int victimEntityId)
     {
-        if (victim == null) return;
-        if (!victim.Alive) return;
+        var world        = ServerContext.Instance.World;
+        var attackerData = world.Get<NpcDataComponent>(attackerEntityId);
+        var victimData   = world.Get<NpcDataComponent>(victimEntityId);
+        var victimState  = world.Get<NpcStateComponent>(victimEntityId);
+        var victimVitals = world.Get<VitalsComponent>(victimEntityId);
+        var victimTgt    = world.Get<NpcTargetComponent>(victimEntityId);
+        var atkTimer     = world.Get<NpcTimerComponent>(attackerEntityId);
+        var atkTgt       = world.Get<NpcTargetComponent>(attackerEntityId);
 
-        attacker.AttackTimer = Environment.TickCount64;
-        victim.Target = attacker;
+        if (!victimState.Alive) return;
+
+        atkTimer.AttackTimer = Environment.TickCount64;
+        victimTgt.TargetEntityId = attackerEntityId;
 
         var attackDamage = CombatFormulas.NetDamage(
-            attacker.Data.Attribute[(byte)Attribute.Strength],
-            victim.Data.Attribute[(byte)Attribute.Resistance]);
+            attackerData.Data.Attribute[(byte)Attribute.Strength],
+            victimData.Data.Attribute[(byte)Attribute.Resistance]);
+
         if (attackDamage > 0)
         {
-            NpcSender.MapNpcAttack(attacker, victim.Index.ToString(), Target.Npc);
+            NpcSender.MapNpcAttack(attackerEntityId, victimData.Index.ToString(), Target.Npc);
 
-            if (attackDamage < victim.Vital[(byte)Vital.Hp])
+            if (attackDamage < victimVitals.Values[(byte)Vital.Hp])
             {
-                victim.Vital[(byte)Vital.Hp] -= attackDamage;
-                NpcSender.MapNpcVitals(victim);
+                victimVitals.Values[(byte)Vital.Hp] -= attackDamage;
+                NpcSender.MapNpcVitals(victimEntityId);
             }
             else
             {
-                attacker.Target = null;
-                Died(victim);
+                atkTgt.TargetEntityId = null;
+                Died(victimEntityId);
             }
         }
         else
-            NpcSender.MapNpcAttack(attacker);
+            NpcSender.MapNpcAttack(attackerEntityId);
     }
 
-    /// <summary>Kills <paramref name="npcInstance"/>: drops items, resets spawn state, notifies the map.</summary>
-    internal static void Died(NpcInstance npcInstance)
+    /// <summary>Kills an NPC entity: drops items, resets spawn state, notifies the map.</summary>
+    internal static void Died(int npcEntityId)
     {
-        for (byte i = 0; i < npcInstance.Data.Drop.Count; i++)
-            if (npcInstance.Data.Drop[i].Item != null)
-                if (MyRandom.Next(1, 99) <= npcInstance.Data.Drop[i].Chance)
-                    npcInstance.MapInstance.Item.Add(new MapItemInstance(npcInstance.Data.Drop[i].Item, npcInstance.Data.Drop[i].Amount, npcInstance.X, npcInstance.Y));
+        var world    = ServerContext.Instance.World;
+        var npcData  = world.Get<NpcDataComponent>(npcEntityId);
+        var npcState = world.Get<NpcStateComponent>(npcEntityId);
+        var npcTgt   = world.Get<NpcTargetComponent>(npcEntityId);
+        var pos      = world.Get<PositionComponent>(npcEntityId);
+        var map      = GameWorld.Current.Maps[npcData.MapId];
 
-        MapSender.MapItems(npcInstance.MapInstance);
+        for (byte i = 0; i < npcData.Data.Drop.Count; i++)
+        {
+            var drop = npcData.Data.Drop[i];
+            if (drop.Item == null) continue;
+            if (MyRandom.Next(1, 99) > drop.Chance) continue;
 
-        npcInstance.SpawnTimer = Environment.TickCount64;
-        npcInstance.Target = null;
-        npcInstance.Alive = false;
-        NpcSender.MapNpcDied(npcInstance);
+            var itemEntity = world.Create();
+            world.Add(itemEntity, new MapItemComponent
+            {
+                Item   = drop.Item,
+                Amount = (short)drop.Amount,
+                X      = pos.X,
+                Y      = pos.Y,
+                MapId  = npcData.MapId
+            });
+        }
+
+        MapSender.MapItems(map);
+
+        npcState.SpawnTimer          = Environment.TickCount64;
+        npcTgt.TargetEntityId        = null;
+        npcState.Alive               = false;
+        NpcSender.MapNpcDied(npcEntityId);
     }
 }

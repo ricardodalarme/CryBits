@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CryBits.Server.Commands;
+using CryBits.Server.ECS;
+using CryBits.Server.ECS.Components;
 using CryBits.Server.Network;
 using CryBits.Server.Systems;
 using CryBits.Server.World;
@@ -40,12 +42,20 @@ internal static class Loop
                 foreach (var tempMap in GameWorld.Current.Maps.Values)
                 {
                     MapItemSystem.Tick(tempMap);
-                    tempMap.Logic();
+
+                    // Tick all NPC entities that belong to this map
+                    foreach (var (entityId, npcData) in ServerContext.Instance.World.Query<NpcDataComponent>())
+                        if (npcData.MapId == tempMap.Data.Id)
+                            NpcAiSystem.Tick(entityId);
                 }
 
                 // Player vital regeneration
                 foreach (var session in GameWorld.Current.Sessions.Where(a => a.IsPlaying))
                     RegenerationSystem.Tick(session.Character!);
+
+                // NPC vital regeneration
+                foreach (var (entityId, _) in ServerContext.Instance.World.Query<NpcDataComponent>())
+                    RegenerationSystem.Tick(entityId);
 
                 // Reset 500 ms timer.
                 _timer500 = now;

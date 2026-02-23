@@ -1,6 +1,9 @@
 using System.Drawing;
+using CryBits.Server.ECS;
+using CryBits.Server.ECS.Components;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.World;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Systems;
@@ -8,6 +11,15 @@ namespace CryBits.Server.Systems;
 /// <summary>Owns all party lifecycle logic.</summary>
 internal static class PartySystem
 {
+    private static CryBits.Server.ECS.Core.World World => ServerContext.Instance.World;
+
+    private static Player? PlayerFromEntityId(int entityId)
+    {
+        var session = GameWorld.Current.Sessions
+            .Find(s => s.IsPlaying && s.Character?.EntityId == entityId);
+        return session?.Character;
+    }
+
     /// <summary>Sends a party invitation from <paramref name="player"/> to the named target.</summary>
     internal static void Invite(Player player, string targetName)
     {
@@ -25,34 +37,37 @@ internal static class PartySystem
             return;
         }
 
-        if (invited.Party.Count != 0)
+        var invitedParty = World.Get<PartyComponent>(invited.EntityId);
+        if (invitedParty.MemberEntityIds.Count != 0)
         {
             ChatSender.Message(player, "The player is already part of a party.", Color.White);
             return;
         }
 
-        if (!string.IsNullOrEmpty(invited.PartyRequest))
+        if (!string.IsNullOrEmpty(invitedParty.PendingRequest))
         {
             ChatSender.Message(player, "The player is analyzing an invitation to another party.", Color.White);
             return;
         }
 
-        if (player.Party.Count == Config.MaxPartyMembers - 1)
+        var playerParty = World.Get<PartyComponent>(player.EntityId);
+        if (playerParty.MemberEntityIds.Count == Config.MaxPartyMembers - 1)
         {
             ChatSender.Message(player, "Your party is full.", Color.White);
             return;
         }
 
-        invited.PartyRequest = player.Name;
-        PartySender.PartyInvitation(invited, player.Name);
+        invitedParty.PendingRequest = player.Get<PlayerDataComponent>().Name;
+        PartySender.PartyInvitation(invited, player.Get<PlayerDataComponent>().Name);
     }
 
     /// <summary>Accepts the pending party invitation for <paramref name="player"/>.</summary>
     internal static void Accept(Player player)
     {
-        var invitation = Player.Find(player.PartyRequest);
+        var party      = World.Get<PartyComponent>(player.EntityId);
+        var invitation = Player.Find(party.PendingRequest);
 
-        if (player.Party.Count != 0)
+        if (party.MemberEntityIds.Count != 0)
         {
             ChatSender.Message(player, "You are already part of a party.", Color.White);
             return;
@@ -64,50 +79,66 @@ internal static class PartySystem
             return;
         }
 
-        if (invitation.Party.Count == Config.MaxPartyMembers - 1)
+        var invitationParty = World.Get<PartyComponent>(invitation.EntityId);
+        if (invitationParty.MemberEntityIds.Count == Config.MaxPartyMembers - 1)
         {
             ChatSender.Message(player, "The party is full.", Color.White);
             return;
         }
 
-        for (byte i = 0; i < invitation.Party.Count; i++)
+        // Add the new player to every existing member's list, and add each member to player's list
+        foreach (var memberId in invitationParty.MemberEntityIds)
         {
-            invitation.Party[i].Party.Add(player);
-            player.Party.Add(invitation.Party[i]);
+            var memberParty = World.Get<PartyComponent>(memberId);
+            memberParty.MemberEntityIds.Add(player.EntityId);
+            party.MemberEntityIds.Add(memberId);
         }
 
-        player.Party.Insert(0, invitation);
-        invitation.Party.Add(player);
-        player.PartyRequest = string.Empty;
-        ChatSender.Message(invitation, player.Name + " joined the party.", Color.White);
+        party.MemberEntityIds.Insert(0, invitation.EntityId);
+        invitationParty.MemberEntityIds.Add(player.EntityId);
+        party.PendingRequest = string.Empty;
+
+        ChatSender.Message(invitation, player.Get<PlayerDataComponent>().Name + " joined the party.", Color.White);
 
         PartySender.Party(player);
-        for (byte i = 0; i < player.Party.Count; i++) PartySender.Party(player.Party[i]);
+        foreach (var memberId in party.MemberEntityIds)
+        {
+            var member = PlayerFromEntityId(memberId);
+            if (member != null) PartySender.Party(member);
+        }
     }
 
     /// <summary>Declines the pending party invitation for <paramref name="player"/>.</summary>
     internal static void Decline(Player player)
     {
-        var invitation = Player.Find(player.PartyRequest);
-        if (invitation != null) ChatSender.Message(invitation, player.Name + " decline the party.", Color.White);
-        player.PartyRequest = string.Empty;
+        var party      = World.Get<PartyComponent>(player.EntityId);
+        var invitation = Player.Find(party.PendingRequest);
+        if (invitation != null)
+            ChatSender.Message(invitation, player.Get<PlayerDataComponent>().Name + " decline the party.", Color.White);
+        party.PendingRequest = string.Empty;
     }
 
     /// <summary>
-    /// Removes <paramref name="player"/> from their party, notifies all remaining members,
-    /// and clears the player's own party list.
+    /// Removes <paramref name="player"/> from their party, notifies all remaining members.
     /// </summary>
     public static void Leave(Player player)
     {
-        if (player.Party.Count == 0) return;
+        var party = World.Get<PartyComponent>(player.EntityId);
+        if (party.MemberEntityIds.Count == 0) return;
 
-        for (byte i = 0; i < player.Party.Count; i++)
-            player.Party[i].Party.Remove(player);
+        foreach (var memberId in party.MemberEntityIds)
+        {
+            var memberParty = World.Get<PartyComponent>(memberId);
+            memberParty.MemberEntityIds.Remove(player.EntityId);
+        }
 
-        for (byte i = 0; i < player.Party.Count; i++)
-            PartySender.Party(player.Party[i]);
+        foreach (var memberId in party.MemberEntityIds)
+        {
+            var member = PlayerFromEntityId(memberId);
+            if (member != null) PartySender.Party(member);
+        }
 
-        player.Party.Clear();
+        party.MemberEntityIds.Clear();
         PartySender.Party(player);
     }
 }
