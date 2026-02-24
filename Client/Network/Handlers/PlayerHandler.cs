@@ -1,6 +1,8 @@
 using System;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
+using CryBits.Client.Spawners;
+using CryBits.Client.Worlds;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
@@ -125,19 +127,20 @@ internal static class PlayerHandler
         player.Attacking = true;
         player.AttackTimer = Environment.TickCount;
 
-        if (victim != string.Empty)
-            if (victimType == (byte)Target.Player)
-            {
-                var victimData = Player.Get(victim);
-                victimData.Hurt = Environment.TickCount;
-                MapInstance.Current.Blood.Add(new MapBloodInstance((byte)MyRandom.Next(0, 3), victimData.X, victimData.Y, 255));
-            }
-            else if (victimType == (byte)Target.Npc)
-            {
-                MapInstance.Current.Npc[byte.Parse(victim)].Hurt = Environment.TickCount;
-                MapInstance.Current.Blood.Add(new MapBloodInstance((byte)MyRandom.Next(0, 3),
-                    MapInstance.Current.Npc[byte.Parse(victim)].X, MapInstance.Current.Npc[byte.Parse(victim)].Y, 255));
-            }
+        if (victim == string.Empty) return;
+
+        var world = GameContext.Instance.World;
+
+        if (victimType == (byte)Target.Player)
+        {
+            var victimData = Player.Get(victim);
+            BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
+        }
+        else if (victimType == (byte)Target.Npc)
+        {
+            var victimData = MapInstance.Current.Npc[byte.Parse(victim)];
+            BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
+        }
     }
 
     [PacketHandler]
