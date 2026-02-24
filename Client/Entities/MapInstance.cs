@@ -19,13 +19,11 @@ internal class MapInstance
     public readonly Map Data;
     public NpcInstance[] Npc;
     public MapWeatherInstance Weather { get; init; }
-    public MapFogInstance Fog { get; init; }
 
     public MapInstance(Map data)
     {
         Data = data;
         Weather = new MapWeatherInstance(data.Weather);
-        Fog = new MapFogInstance(Data.Fog);
     }
 
     private bool HasNpc(byte x, byte y)
@@ -69,7 +67,6 @@ internal class MapInstance
 
     public void Logic()
     {
-        Fog.Update();
         Weather.Update();
     }
 }
