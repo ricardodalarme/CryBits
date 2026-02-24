@@ -2,6 +2,25 @@
   "version": 1,
   "dependencies": {
     "net10.0": {
+      "Arch": {
+        "type": "Direct",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "Z9zxQztEvD/c2tsdW+LDm5E3Rd04JKeWRa6S0JOBfEFE7800+JLa7pgMAL6I/hvOY6q93QXvQ6Y+5E/TPc5Tfw==",
+        "dependencies": {
+          "Arch.LowLevel": "1.1.5",
+          "Collections.Pooled": "2.0.0-preview.27",
+          "CommunityToolkit.HighPerformance": "8.2.2",
+          "Microsoft.Extensions.ObjectPool": "7.0.0",
+          "ZeroAllocJobScheduler": "1.1.2"
+        }
+      },
+      "Arch.System": {
+        "type": "Direct",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "T2DupuBvUiOvtwEm5OCb/jm1zAMl6qUZDCqsNx0wXC9jc3dV3CYZBnccuCT0kO+bFh4mgIF965J/QlTnYirKnQ=="
+      },
       "LiteNetLib": {
         "type": "Direct",
         "requested": "[2.0.2, )",
@@ -45,10 +64,33 @@
         "resolved": "10.0.3",
         "contentHash": "q38b0Wj67miA+2Rcc6excf72Xh+LuVCxr0nJuhZaO3LwUVATdrm0x7TQuNr5lRNC0TH4UR6jkg/TA4C7Luyujw=="
       },
+      "Arch.LowLevel": {
+        "type": "Transitive",
+        "resolved": "1.1.5",
+        "contentHash": "kc6T2qAsgzdb5RV+RIqVQ33LROhgXmA5fZRUhXRK+AJ1J58NML1i2M6XTKIj1ISirCwuqgYnM4qYkhqGcngG1g==",
+        "dependencies": {
+          "CommunityToolkit.HighPerformance": "8.2.2"
+        }
+      },
+      "Collections.Pooled": {
+        "type": "Transitive",
+        "resolved": "2.0.0-preview.27",
+        "contentHash": "VS3uHc1GNamanS1i1hQ3PoZUddIagCswVMWvucAgqWwY2KVwgL2Q7raGu0hTqP/CWuROoq0RiNbIvu4ST1bMzg=="
+      },
+      "CommunityToolkit.HighPerformance": {
+        "type": "Transitive",
+        "resolved": "8.2.2",
+        "contentHash": "+zIp8d3sbtYaRbM6hqDs4Ui/z34j7DcUmleruZlYLE4CVxXq+MO8XJyIs42vzeTYFX+k0Iq1dEbBUnQ4z/Gnrw=="
+      },
       "CSFML": {
         "type": "Transitive",
         "resolved": "3.0.0",
         "contentHash": "iwzebpEjtHMmrBWrIZf7lo20PlzGCe4ifh5y/x0RwNE3pcUh4rdLkcnKwuxE+k6gHFbUehQ2/4GuiUB3i6v3Ww=="
+      },
+      "Microsoft.Extensions.ObjectPool": {
+        "type": "Transitive",
+        "resolved": "7.0.0",
+        "contentHash": "udvKco0sAVgYGTBnHUb0tY9JQzJ/nPDiv/8PIyz69wl1AibeCDZOLVVI+6156dPfHmJH7ws5oUJRiW4ZmAvuuA=="
       },
       "SFML.System": {
         "type": "Transitive",
@@ -57,6 +99,11 @@
         "dependencies": {
           "CSFML": "[3.0.0, 3.1.0)"
         }
+      },
+      "ZeroAllocJobScheduler": {
+        "type": "Transitive",
+        "resolved": "1.1.2",
+        "contentHash": "PKu/zSvwV1fWxt8+CEW15O9OlQ2zB9UoeAaor/aJJ0QeTKxxSjigczYLoVPKjYLAQu3ddZQd7Z3zplVTtUgigQ=="
       },
       "client.framework": {
         "type": "Project",
@@ -71,6 +118,7 @@
       "CryBits.Core": {
         "type": "Project",
         "dependencies": {
+          "Arch.System": "[1.1.0, )",
           "LiteNetLib": "[2.0.2, )",
           "System.Runtime.Serialization.Formatters": "[10.0.3, )"
         }
