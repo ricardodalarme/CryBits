@@ -1,11 +1,15 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
+using Arch.System;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Systems;
 using CryBits.Client.UI.Events;
+using CryBits.Client.Worlds;
 using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 
 namespace CryBits.Client.Logic;
@@ -18,6 +22,16 @@ internal static class Loop
     // Timing counters
     public static int TextBoxTimer;
     public static int ChatTimer;
+
+
+    // Delta-time systems — receive seconds elapsed since last frame.
+    private static readonly Group<float> _deltaTimeSystems = new(
+        "DeltaTimeSystems",
+        new FadeSystem(GameContext.Instance.World)
+    );
+
+    // High-resolution stopwatch for delta time
+    private static readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
     /// <summary>
     /// Start the client main loop: handle network, update game state and present frames.
@@ -62,6 +76,11 @@ internal static class Loop
                 // Update information panel visibility
                 PanelsEvents.CheckInformation();
             }
+
+            // Use high-resolution stopwatch for delta time
+            var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
+            _stopwatch.Restart();
+            _deltaTimeSystems.Update(deltaTime);
 
             // Yield briefly to avoid busy-wait.
             Thread.Yield();

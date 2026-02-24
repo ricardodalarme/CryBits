@@ -43,9 +43,6 @@ internal static class MapHandler
 
         // Request map data
         MapSender.RequestMap(needed);
-
-        // Clear blood splatters
-        MapInstance.Current.Blood = [];
     }
 
     [PacketHandler]
