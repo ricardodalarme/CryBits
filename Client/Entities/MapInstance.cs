@@ -18,7 +18,6 @@ internal class MapInstance
     // Map data
     public readonly Map Data;
     public NpcInstance[] Npc;
-    public MapItemInstance[] Item = Array.Empty<MapItemInstance>();
     public MapWeatherInstance Weather { get; init; }
     public MapFogInstance Fog { get; init; }
 

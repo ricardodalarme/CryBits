@@ -12,8 +12,6 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal static class MapRenderer
 {
-
-
     /// <summary>
     /// Render the tiles for the specified layer type (ground, fringe, etc.).
     /// </summary>
@@ -129,18 +127,4 @@ internal static class MapRenderer
 
         Renders.DrawText(MapInstance.Current.Data.Name, 426, 48, color);
     }
-
-    /// <summary>Render all ground items on the current map.</summary>
-    public static void MapItems()
-    {
-        for (byte i = 0; i < MapInstance.Current.Item.Length; i++)
-        {
-            var data = MapInstance.Current.Item[i];
-            if (data.Item == null) continue;
-
-            var position = new Point(CameraUtils.ConvertX(data.X * Grid), CameraUtils.ConvertY(data.Y * Grid));
-            Renders.Render(Textures.Items[data.Item.Texture], position);
-        }
-    }
-
 }

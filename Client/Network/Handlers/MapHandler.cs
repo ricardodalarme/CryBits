@@ -1,9 +1,14 @@
 using System.IO;
+using Arch.Buffer;
+using Arch.Core;
+using CryBits.Client.Components;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Spawners;
+using CryBits.Client.Worlds;
 using CryBits.Entities;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
@@ -82,16 +87,14 @@ internal static class MapHandler
     [PacketHandler]
     internal static void MapItems(MapItemsPacket packet)
     {
-        // Item count
-        MapInstance.Current.Item = new MapItemInstance[packet.Items.Length];
+        var world = GameContext.Instance.World;
 
-        // Read all map items
-        for (byte i = 0; i < MapInstance.Current.Item.Length; i++)
-            MapInstance.Current.Item[i] = new MapItemInstance
-            {
-                Item = Item.List.Get(packet.Items[i].ItemId),
-                X = packet.Items[i].X,
-                Y = packet.Items[i].Y
-            };
+        // Destroy all stale map-item entities instantly (no CommandBuffer needed)
+        var query = new QueryDescription().WithAll<GroundItemComponent>();
+        world.Destroy(in query);
+
+        // Spawn an ECS entity for every item the server reported.
+        foreach (var itemData in packet.Items)
+            GroundItemSpawner.Spawn(world, Item.List.Get(itemData.ItemId), itemData.X, itemData.Y);
     }
 }
