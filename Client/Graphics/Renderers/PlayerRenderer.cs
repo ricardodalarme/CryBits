@@ -4,9 +4,7 @@ using CryBits.Client.Entities;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Utils;
 using CryBits.Enums;
-using static CryBits.Client.Utils.TextUtils;
 using static CryBits.Globals;
-using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics.Renderers;
 
@@ -19,7 +17,6 @@ internal static class PlayerRenderer
     public static void PlayerCharacter(Player player)
     {
         PlayerTexture(player);
-        PlayerName(player);
         PlayerBars(player);
     }
 
@@ -71,24 +68,5 @@ internal static class PlayerRenderer
 
         Renders.Render(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
         Renders.Render(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
-    }
-
-    private static void PlayerName(Player player)
-    {
-        var texture = Textures.Characters[player.TextureNum];
-        int nameSize = MeasureString(player.Name);
-
-        // Compute name text position.
-        var position = new Point
-        {
-            X = player.PixelX + texture.ToSize().Width / AnimationAmount / 2 - nameSize / 2,
-            Y = player.PixelY - texture.ToSize().Height / AnimationAmount / 2
-        };
-
-        // Choose color (highlight local player).
-        var color = player == Player.Me ? Color.Yellow : Color.White;
-
-        // Draw the name.
-        Renders.DrawText(player.Name, CameraUtils.ConvertX(position.X), CameraUtils.ConvertY(position.Y), color);
     }
 }

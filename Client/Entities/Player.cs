@@ -1,5 +1,6 @@
-using System;
 using System.Collections.Generic;
+using CryBits.Client.Spawners;
+using CryBits.Client.Worlds;
 using CryBits.Entities;
 
 namespace CryBits.Client.Entities;
@@ -26,10 +27,8 @@ internal class Player(string name) : Character
 
     public virtual void Logic()
     {
-        // Reset hurt flag when damage timer expires.
-        if (Hurt + 325 < Environment.TickCount) Hurt = 0;
+        if (Entity == Arch.Core.Entity.Null) Entity = PlayerSpawner.Spawn(GameContext.Instance.World, this);
 
-        // Process movement.
-        ProcessMovement();
+        Update();
     }
 }

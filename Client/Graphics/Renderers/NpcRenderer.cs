@@ -4,9 +4,7 @@ using CryBits.Client.Entities;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Utils;
 using CryBits.Enums;
-using static CryBits.Client.Utils.TextUtils;
 using static CryBits.Globals;
-using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics.Renderers;
 
@@ -38,31 +36,7 @@ internal static class NpcRenderer
         CharacterRenderer.Character(npcInstance.Data.Texture,
             new Point(CameraUtils.ConvertX(npcInstance.PixelX), CameraUtils.ConvertY(npcInstance.PixelY)),
             npcInstance.Direction, column, hurt);
-        NpcName(npcInstance);
         NpcBars(npcInstance);
-    }
-
-    private static void NpcName(NpcInstance npcInstance)
-    {
-        var position = new Point();
-        int nameSize = MeasureString(npcInstance.Data.Name);
-        var texture = Textures.Characters[npcInstance.Data.Texture];
-
-        // Position the name text above the sprite.
-        position.X = npcInstance.PixelX + texture.ToSize().Width / AnimationAmount / 2 - nameSize / 2;
-        position.Y = npcInstance.PixelY - texture.ToSize().Height / AnimationAmount / 2;
-
-        // Choose color according to behaviour.
-        var color = npcInstance.Data.Behaviour switch
-        {
-            Behaviour.Friendly => Color.White,
-            Behaviour.AttackOnSight => Color.Red,
-            Behaviour.AttackWhenAttacked => new Color(228, 120, 51),
-            _ => Color.White
-        };
-
-        // Draw the name.
-        Renders.DrawText(npcInstance.Data.Name, CameraUtils.ConvertX(position.X), CameraUtils.ConvertY(position.Y), color);
     }
 
     private static void NpcBars(NpcInstance npcInstance)
