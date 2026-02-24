@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using CryBits.Client.Components;
+using CryBits.Client.Spawners;
+using CryBits.Client.Worlds;
 using CryBits.Entities;
 
 namespace CryBits.Client.Entities;
@@ -14,6 +17,9 @@ internal class Player(string name) : Character
 
     // Local player instance
     public static Me Me;
+
+    // ECS Entity
+    public Arch.Core.Entity Entity = Arch.Core.Entity.Null;
 
     // Player data
     public string Name { get; set; } = name;
@@ -31,5 +37,19 @@ internal class Player(string name) : Character
 
         // Process movement.
         ProcessMovement();
+
+        SyncEntity();
+    }
+
+    private void SyncEntity()
+    {
+        var world = GameContext.Instance.World;
+
+        if (Entity == Arch.Core.Entity.Null) Entity = PlayerSpawner.Spawn(world, this);
+
+        // Sync Transform
+        ref var transform = ref world.Get<TransformComponent>(Entity);
+        transform.X = PixelX;
+        transform.Y = PixelY;
     }
 }
