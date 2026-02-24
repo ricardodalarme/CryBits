@@ -13,7 +13,7 @@ public static class Textures
     public static readonly List<Texture> Panels = LoadTextures(Directories.TexPanels.FullName);
     public static readonly List<Texture> Buttons = LoadTextures(Directories.TexButtons.FullName);
     public static readonly List<Texture> Panoramas = LoadTextures(Directories.TexPanoramas.FullName);
-    public static readonly List<Texture> Fogs = LoadTextures(Directories.TexFogs.FullName);
+    public static readonly List<Texture> Fogs = LoadTextures(Directories.TexFogs.FullName, true);
     public static readonly List<Texture> Items = LoadTextures(Directories.TexItems.FullName);
     public static readonly Texture CheckBox = new(Directories.TexCheckBox.FullName + Format);
     public static readonly Texture TextBox = new(Directories.TexTextBox.FullName + Format);
@@ -32,20 +32,22 @@ public static class Textures
     // Texture file extension.
     private const string Format = ".png";
 
-    private static List<Texture> LoadTextures(string directory)
+    private static List<Texture> LoadTextures(string directory, bool repeatable = false)
     {
         short i = 1;
         var tempTex = new List<Texture> { null };
 
         // Load sequentially numbered textures from the directory into the cache.
         while (File.Exists(Path.Combine(directory, i + Format)))
-            tempTex.Add(new Texture(Path.Combine(directory, i++ + Format)));
+            tempTex.Add(new Texture(Path.Combine(directory, i++ + Format))
+            {
+                Repeated = repeatable
+            });
 
         // Return loaded textures.
         return tempTex;
     }
 
     /// <summary>Return the texture size as a <see cref="Size"/>.</summary>
-
     public static Size ToSize(this Texture texture) => new((int)texture.Size.X, (int)texture.Size.Y);
 }
