@@ -54,7 +54,6 @@ internal static class RenderPipeline
         MapRenderer.MapPanorama();
         MapRenderer.MapTiles((byte)Layer.Ground);
         _groundRenderSystems.Update(0);
-        MapRenderer.MapItems();
 
         for (byte i = 0; i < MapInstance.Current.Npc.Length; i++)
             if (MapInstance.Current.Npc[i].Data != null)
