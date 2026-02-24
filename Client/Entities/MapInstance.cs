@@ -19,11 +19,8 @@ internal class MapInstance
     public readonly Map Data;
     public NpcInstance[] Npc;
     public MapItemInstance[] Item = Array.Empty<MapItemInstance>();
-    public List<MapBloodInstance> Blood = [];
     public MapWeatherInstance Weather { get; init; }
     public MapFogInstance Fog { get; init; }
-
-    private int _bloodTimer;
 
     public MapInstance(Map data)
     {
@@ -75,14 +72,5 @@ internal class MapInstance
     {
         Fog.Update();
         Weather.Update();
-
-        // Fade out and remove old blood splatters
-        if (_bloodTimer < Environment.TickCount)
-            for (byte i = 0; i < Blood.Count; i++)
-            {
-                Blood[i].Opacity--;
-                if (Blood[i].Opacity == 0) Blood.RemoveAt(i);
-                _bloodTimer = Environment.TickCount + 100;
-            }
     }
 }

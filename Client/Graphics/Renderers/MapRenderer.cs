@@ -12,6 +12,8 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal static class MapRenderer
 {
+
+
     /// <summary>
     /// Render the tiles for the specified layer type (ground, fringe, etc.).
     /// </summary>
@@ -141,14 +143,4 @@ internal static class MapRenderer
         }
     }
 
-    /// <summary>Render blood splatters on the map.</summary>
-    public static void MapBlood()
-    {
-        for (byte i = 0; i < MapInstance.Current.Blood.Count; i++)
-        {
-            var data = MapInstance.Current.Blood[i];
-            Renders.Render(Textures.Blood, CameraUtils.ConvertX(data.X * Grid), CameraUtils.ConvertY(data.Y * Grid),
-                data.TextureNum * 32, 0, 32, 32, new Color(255, 255, 255, data.Opacity));
-        }
-    }
 }
