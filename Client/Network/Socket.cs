@@ -2,6 +2,7 @@ using System;
 using CryBits.Client.Entities;
 using CryBits.Client.UI;
 using CryBits.Client.Utils;
+using CryBits.Client.Worlds;
 using LiteNetLib;
 using static CryBits.Globals;
 
@@ -18,6 +19,7 @@ internal static class Socket
 
     /// <summary>Latest measured round-trip latency in milliseconds.</summary>
     public static int Latency;
+
     public static int LatencySend;
 
     public static NetPeer ServerPeer => _serverPeer;
@@ -37,6 +39,7 @@ internal static class Socket
         {
             _serverPeer = null;
             if (Player.Me != null) Player.Me.Leave();
+            GameContext.Instance.Reset();
             Window.OpenMenu();
         };
 
