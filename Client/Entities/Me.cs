@@ -1,8 +1,11 @@
 using System;
+using Arch.Core;
+using CryBits.Client.Components;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Worlds;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using SFML.Window;
@@ -113,9 +116,13 @@ internal class Me(string name) : Player(name)
         if (TextBox.Focused != null) return;
 
         // Check for an item at the player's tile.
-        for (byte i = 0; i < MapInstance.Current.Item.Length; i++)
-            if (MapInstance.Current.Item[i].X == X && MapInstance.Current.Item[i].Y == Y)
+        var world = GameContext.Instance.World;
+        var itemQuery = new QueryDescription().WithAll<GroundItemComponent, TransformComponent>();
+        world.Query(in itemQuery, (ref GroundItemComponent _, ref TransformComponent transform) =>
+        {
+            if (transform.X / Grid == X && transform.Y / Grid == Y)
                 hasItem = true;
+        });
 
         // Check for a free inventory slot.
         for (byte i = 0; i < MaxInventory; i++)
