@@ -71,6 +71,7 @@ internal static class MapHandler
 
         // Update weather particles and map state
         MapInstance.Current.Weather.UpdateType();
+        FogSpawner.Spawn(GameContext.Instance.World, MapInstance.Current.Data.Fog);
         MapInstance.Current.Data.Update();
     }
 

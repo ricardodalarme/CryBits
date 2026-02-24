@@ -25,7 +25,8 @@ internal static class RenderPipeline
     // Fringe-layer render systems: effects drawn after the fringe tile pass.
     private static readonly Group<int> _fringeRenderSystems = new(
         "FringeRenderSystems",
-        new TextRenderSystem(GameContext.Instance.World)
+        new TextRenderSystem(GameContext.Instance.World),
+        new ScrollingOverlayRenderSystem(GameContext.Instance.World)
     );
 
     /// <summary>

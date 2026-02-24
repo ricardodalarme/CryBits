@@ -27,7 +27,8 @@ internal static class Loop
     // Delta-time systems — receive seconds elapsed since last frame.
     private static readonly Group<float> _deltaTimeSystems = new(
         "DeltaTimeSystems",
-        new FadeSystem(GameContext.Instance.World)
+        new FadeSystem(GameContext.Instance.World),
+        new ScrollingSpriteSystem(GameContext.Instance.World)
     );
 
     // High-resolution stopwatch for delta time

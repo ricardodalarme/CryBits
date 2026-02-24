@@ -77,20 +77,6 @@ internal static class MapRenderer
             Renders.Render(Textures.Panoramas[MapInstance.Current.Data.Panorama], new Point(0));
     }
 
-    /// <summary>Render map fog overlay.</summary>
-    public static void MapFog()
-    {
-        var data = MapInstance.Current.Data.Fog;
-        if (data.Texture <= 0) return;
-
-        var textureSize = Textures.Fogs[data.Texture].ToSize();
-        for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
-            for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
-                Renders.Render(Textures.Fogs[data.Texture],
-                    new Point(x * textureSize.Width + MapInstance.Current.Fog.X,
-                        y * textureSize.Height + MapInstance.Current.Fog.Y), new Color(255, 255, 255, data.Alpha));
-    }
-
     /// <summary>Render current map weather (particles and lightning overlay).</summary>
     public static void MapWeather()
     {
