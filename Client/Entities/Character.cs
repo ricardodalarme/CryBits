@@ -1,3 +1,7 @@
+using System;
+using Arch.Core;
+using CryBits.Client.Components;
+using CryBits.Client.Worlds;
 using CryBits.Enums;
 using static CryBits.Globals;
 
@@ -7,6 +11,9 @@ internal abstract class Character
 {
     /// <summary>Core character state and position fields.</summary>
     public short[] Vital = new short[(byte)Enums.Vital.Count];
+
+    // ECS Entity
+    public Entity Entity = Entity.Null;
 
     public byte X;
     public byte Y;
@@ -25,7 +32,20 @@ internal abstract class Character
     /// <summary>Exact Y position in pixels.</summary>
     public int PixelY => Y * Grid + Y2;
 
-    protected void ProcessMovement()
+    protected void Update()
+    {
+        if (Hurt + 325 < Environment.TickCount) Hurt = 0;
+        ProcessMovement();
+
+        var world = GameContext.Instance.World;
+
+        // Sync Transform
+        ref var transform = ref world.Get<TransformComponent>(Entity);
+        transform.X = PixelX;
+        transform.Y = PixelY;
+    }
+
+    private void ProcessMovement()
     {
         byte speed = 0;
         short x = X2, y = Y2;
