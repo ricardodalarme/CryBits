@@ -15,15 +15,18 @@ internal sealed class AnimatedSpriteSystem(World world) : BaseSystem<World, floa
         var dt = deltaTime;
         World.Query(in _query, (ref AnimatedSpriteComponent anim, ref SpriteComponent sprite) =>
         {
-            anim.Timer += dt;
-            if (anim.Timer >= anim.TimePerFrame)
+            if (anim.Playing)
             {
-                anim.Timer -= anim.TimePerFrame;
-                anim.CurrentFrameX++;
+                anim.Timer += dt;
+                if (anim.Timer >= anim.TimePerFrame)
+                {
+                    anim.Timer -= anim.TimePerFrame;
+                    anim.CurrentFrameX++;
 
-                // Loop back to the start of the row
-                if (anim.CurrentFrameX >= anim.FrameCount)
-                    anim.CurrentFrameX = 0;
+                    // Loop back to the start of the row
+                    if (anim.CurrentFrameX >= anim.FrameCount)
+                        anim.CurrentFrameX = 0;
+                }
             }
 
             sprite.SourceRect = new Rectangle(

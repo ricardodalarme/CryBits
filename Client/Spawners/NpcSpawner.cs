@@ -16,8 +16,8 @@ internal static class NpcSpawner
     {
         var texture = Textures.Characters[npc.Data.Texture];
         var size = texture.ToSize();
-        var frameWidth = size.Width / Globals.AnimationAmount;
-        var frameHeight = size.Height / Globals.AnimationAmount;
+        var frameWidth = size.Width / Globals.AnimationAmountX;
+        var frameHeight = size.Height / Globals.AnimationAmountY;
 
         var textColor = npc.Data.Behaviour switch
         {
@@ -29,6 +29,10 @@ internal static class NpcSpawner
 
         return world.Create(
             new TransformComponent(npc.PixelX, npc.PixelY),
+            new SpriteComponent(texture),
+            new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
+            new CharacterStateComponent { Direction = npc.Direction },
+            new DamageTintComponent(),
             new TextComponent(npc.Data.Name, textColor, frameWidth / 2, -frameHeight / 2)
         );
     }

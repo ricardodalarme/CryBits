@@ -14,4 +14,6 @@ internal struct AnimatedSpriteComponent(int frameWidth, int frameHeight, float t
 
     public int CurrentFrameX = 0;
     public int CurrentFrameY = 0;
+
+    public bool Playing = false;
 }

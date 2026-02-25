@@ -28,7 +28,10 @@ internal static class Loop
     private static readonly Group<float> _deltaTimeSystems = new(
         "DeltaTimeSystems",
         new FadeSystem(GameContext.Instance.World),
-        new ScrollingSpriteSystem(GameContext.Instance.World)
+        new ScrollingSpriteSystem(GameContext.Instance.World),
+        new CharacterAnimationControllerSystem(GameContext.Instance.World),
+        new AnimatedSpriteSystem(GameContext.Instance.World),
+        new DamageTintSystem(GameContext.Instance.World)
     );
 
     // High-resolution stopwatch for delta time

@@ -43,6 +43,17 @@ internal abstract class Character
         ref var transform = ref world.Get<TransformComponent>(Entity);
         transform.X = PixelX;
         transform.Y = PixelY;
+
+        // Sync Character State
+        ref var state = ref world.Get<CharacterStateComponent>(Entity);
+        state.Direction = Direction;
+        state.IsMoving = (X2 != 0 || Y2 != 0); // True if there are pixel offsets
+        state.IsAttacking = Attacking;
+        state.AttackTimer = AttackTimer;
+
+        // Sync Hurt State
+        ref var tint = ref world.Get<DamageTintComponent>(Entity);
+        tint.IsHurt = Hurt > 0;
     }
 
     private void ProcessMovement()

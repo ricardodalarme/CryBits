@@ -9,7 +9,6 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
-using static CryBits.Utils;
 using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Client.Network.Handlers;
@@ -122,25 +121,24 @@ internal static class PlayerHandler
     {
         var player = Player.Get(packet.Name);
         var victim = packet.Victim;
-        var victimType = packet.VictimType;
+        var victimType = (Target)packet.VictimType;
 
         player.Attacking = true;
         player.AttackTimer = Environment.TickCount;
 
         if (victim == string.Empty) return;
 
-        var world = GameContext.Instance.World;
+        Character victimData = victimType switch
+        {
+            Target.Player => Player.Get(victim),
+            Target.Npc => MapInstance.Current.Npc[byte.Parse(victim)],
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
-        if (victimType == (byte)Target.Player)
-        {
-            var victimData = Player.Get(victim);
-            BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
-        }
-        else if (victimType == (byte)Target.Npc)
-        {
-            var victimData = MapInstance.Current.Npc[byte.Parse(victim)];
-            BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
-        }
+        // Apply damage to victim
+        var world = GameContext.Instance.World;
+        BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
+        victimData.Hurt = Environment.TickCount;
     }
 
     [PacketHandler]

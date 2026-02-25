@@ -5,7 +5,6 @@ using CryBits.Client.Components;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
 using CryBits.Client.Utils;
-using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Systems;
 
@@ -27,15 +26,14 @@ internal sealed class SpriteRenderSystem(World world) : BaseSystem<World, int>(w
             var source = sprite.SourceRect ?? new Rectangle(Point.Empty, sprite.Texture.ToSize());
 
             if (screenX + source.Width < 0 || screenX > Globals.ScreenWidth ||
-            screenY + source.Height < 0 || screenY > Globals.ScreenHeight)
+                screenY + source.Height < 0 || screenY > Globals.ScreenHeight)
             {
                 return;
             }
 
             var dest = source with { X = screenX, Y = screenY };
-            var color = new Color(255, 255, 255, sprite.Opacity);
 
-            Renders.Render(sprite.Texture, source, dest, color);
+            Renders.Render(sprite.Texture, source, dest, sprite.Tint);
         });
     }
 }
