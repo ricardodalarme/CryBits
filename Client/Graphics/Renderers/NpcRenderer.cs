@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Graphics;
@@ -16,27 +15,11 @@ internal static class NpcRenderer
     /// <param name="npcInstance">NPC instance to render.</param>
     public static void Npc(NpcInstance npcInstance)
     {
-        byte column = 0;
-        var hurt = false;
-
         if (npcInstance.Data.Texture <= 0 || npcInstance.Data.Texture > Textures.Characters.Count) return;
 
-        if (npcInstance.Attacking && npcInstance.AttackTimer + AttackSpeed / 2 > Environment.TickCount)
-            column = AnimationAttack;
-        else
-        {
-            if (npcInstance.X2 > 8 && npcInstance.X2 < Grid) column = npcInstance.Animation;
-            else if (npcInstance.X2 < -8 && npcInstance.X2 > Grid * -1) column = npcInstance.Animation;
-            else if (npcInstance.Y2 > 8 && npcInstance.Y2 < Grid) column = npcInstance.Animation;
-            else if (npcInstance.Y2 < -8 && npcInstance.Y2 > Grid * -1) column = npcInstance.Animation;
-        }
-
-        if (npcInstance.Hurt > 0) hurt = true;
-
-        CharacterRenderer.Character(npcInstance.Data.Texture,
-            new Point(CameraUtils.ConvertX(npcInstance.PixelX), CameraUtils.ConvertY(npcInstance.PixelY)),
-            npcInstance.Direction, column, hurt);
         NpcBars(npcInstance);
+        CharacterRenderer.CharacterShadow(npcInstance.Data.Texture,
+            new Point(CameraUtils.ConvertX(npcInstance.PixelX), CameraUtils.ConvertY(npcInstance.PixelY)));
     }
 
     private static void NpcBars(NpcInstance npcInstance)
@@ -49,8 +32,8 @@ internal static class NpcRenderer
 
         // Compute bar position.
         var position = new Point(CameraUtils.ConvertX(npcInstance.PixelX),
-            CameraUtils.ConvertY(npcInstance.PixelY) + texture.ToSize().Height / AnimationAmount + 4);
-        var fullWidth = texture.ToSize().Width / AnimationAmount;
+            CameraUtils.ConvertY(npcInstance.PixelY) + texture.ToSize().Height / AnimationAmountY + 4);
+        var fullWidth = texture.ToSize().Width / AnimationAmountX;
         var width = value * fullWidth / npcInstance.Data.Vital[(byte)Vital.Hp];
 
         // Draw the health bar.

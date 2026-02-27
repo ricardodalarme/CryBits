@@ -31,17 +31,29 @@ internal static class CharacterRenderer
             _ => 0
         };
 
-        recSource.X = column * size.Width / AnimationAmount;
-        recSource.Y = line * size.Height / AnimationAmount;
-        recSource.Width = size.Width / AnimationAmount;
-        recSource.Height = size.Height / AnimationAmount;
+        recSource.X = column * size.Width / AnimationAmountX;
+        recSource.Y = line * size.Height / AnimationAmountY;
+        recSource.Width = size.Width / AnimationAmountX;
+        recSource.Height = size.Height / AnimationAmountY;
         var recDestiny = new Rectangle(position, recSource.Size);
 
         if (hurt) color = new Color(205, 125, 125);
 
-        Renders.Render(Textures.Shadow, recDestiny.Location.X,
-            recDestiny.Location.Y + size.Height / AnimationAmount - Textures.Shadow.ToSize().Height + 5, 0, 0,
-            size.Width / AnimationAmount, Textures.Shadow.ToSize().Height);
+        CharacterShadow(textureNum, position);
         Renders.Render(Textures.Characters[textureNum], recSource, recDestiny, color);
+    }
+
+    public static void CharacterShadow(short textureNum, Point position)
+    {
+        Rectangle recSource = new();
+        var size = Textures.Characters[textureNum].ToSize();
+
+        recSource.Width = size.Width / AnimationAmountX;
+        recSource.Height = size.Height / AnimationAmountY;
+        var recDestiny = new Rectangle(position, recSource.Size);
+
+        Renders.Render(Textures.Shadow, recDestiny.Location.X,
+            recDestiny.Location.Y + size.Height / AnimationAmountY - Textures.Shadow.ToSize().Height + 5, 0, 0,
+            size.Width / AnimationAmountX, Textures.Shadow.ToSize().Height);
     }
 }

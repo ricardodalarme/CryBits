@@ -7,7 +7,6 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
-using static CryBits.Utils;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -43,7 +42,6 @@ internal static class NpcHandler
     [PacketHandler]
     internal static void MapNpc(MapNpcPacket packet)
     {
-        // Read temporary NPC data
         var i = packet.Index;
         MapInstance.Current.Npc[i].X2 = 0;
         MapInstance.Current.Npc[i].Y2 = 0;
@@ -84,27 +82,25 @@ internal static class NpcHandler
     {
         var index = packet.Index;
         var victim = packet.Victim;
-        var victimType = packet.VictimType;
+        var victimType = (Target)packet.VictimType;
 
         // Start NPC attack
         MapInstance.Current.Npc[index].Attacking = true;
         MapInstance.Current.Npc[index].AttackTimer = Environment.TickCount;
 
+        if (victim == string.Empty || victimType == Target.None) return;
+
+        Character victimData = victimType switch
+        {
+            Target.Player => Player.Get(victim),
+            Target.Npc => MapInstance.Current.Npc[byte.Parse(victim)],
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
         // Apply damage to victim
-        if (victim == string.Empty) return;
-
         var world = GameContext.Instance.World;
-
-        if (victimType == (byte)Target.Player)
-        {
-            var victimData = Player.Get(victim);
-            BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
-        }
-        else if (victimType == (byte)Target.Npc)
-        {
-            var victimData = MapInstance.Current.Npc[byte.Parse(victim)];
-            BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
-        }
+        BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
+        victimData.Hurt = Environment.TickCount;
     }
 
     [PacketHandler]
@@ -132,6 +128,9 @@ internal static class NpcHandler
     {
         var i = packet.Index;
 
+        // Destroy entity
+        GameContext.Instance.World.Destroy(MapInstance.Current.Npc[i].Entity);
+
         // Clear NPC data on death
         MapInstance.Current.Npc[i].X2 = 0;
         MapInstance.Current.Npc[i].Y2 = 0;
@@ -139,5 +138,6 @@ internal static class NpcHandler
         MapInstance.Current.Npc[i].X = 0;
         MapInstance.Current.Npc[i].Y = 0;
         MapInstance.Current.Npc[i].Vital = new short[(byte)Vital.Count];
+        MapInstance.Current.Npc[i].Entity = Arch.Core.Entity.Null;
     }
 }

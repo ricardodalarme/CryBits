@@ -27,7 +27,8 @@ public static class Globals
     /// <summary>Animation row index used for attack frame.</summary>
     public const byte AnimationAttack = 2;
     /// <summary>Number of animation frames per axis.</summary>
-    public const byte AnimationAmount = 4;
+    public const byte AnimationAmountX = 3;
+    public const byte AnimationAmountY = 4;
 
     /// <summary>Movement direction constants (tile offsets).</summary>
     public const byte MovementUp = 3;
