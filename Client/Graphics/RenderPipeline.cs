@@ -9,7 +9,6 @@ using CryBits.Client.Network;
 using CryBits.Client.Systems;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
-using static CryBits.Client.Logic.Camera;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics;
@@ -38,6 +37,9 @@ internal static class RenderPipeline
 
         InGame();
 
+        // Restore the default view before drawing UI so it renders at fixed screen positions.
+        CameraManager.Instance.BeginUIDraw();
+
         UIRenderer.Interface(Screen.Current?.Body);
 
         if (Screen.Current == Screens.Game) UIRenderer.Chat();
@@ -49,9 +51,12 @@ internal static class RenderPipeline
     {
         if (Screen.Current != Screens.Game) return;
 
-        Update();
+        // Update camera logic and apply the SFML view.
+        // All subsequent draws happen in world-space coordinates.
+        CameraManager.Instance.Update();
+        CameraManager.Instance.BeginWorldDraw();
 
-        // Layers and ground objects
+        // Ground layer
         MapRenderer.MapPanorama();
         MapRenderer.MapTiles((byte)Layer.Ground);
         _groundRenderSystems.Update(0);
@@ -75,6 +80,7 @@ internal static class RenderPipeline
 
         UIRenderer.Party();
 
+        // FPS/Latency overlays — these are world-space but near-origin so they work fine here.
         if (Options.Fps) Renders.DrawText("FPS: " + Loop.Fps, 176, 7, Color.White);
         if (Options.Latency) Renders.DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
     }

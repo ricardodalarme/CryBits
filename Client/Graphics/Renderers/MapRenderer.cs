@@ -1,10 +1,9 @@
 using System.Drawing;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Utils;
+using CryBits.Client.Logic;
 using CryBits.Client.Worlds;
 using CryBits.Entities.Map;
 using CryBits.Enums;
-using static CryBits.Client.Logic.Camera;
 using static CryBits.Globals;
 using Color = SFML.Graphics.Color;
 
@@ -14,8 +13,9 @@ internal static class MapRenderer
 {
     /// <summary>
     /// Render the tiles for the specified layer type (ground, fringe, etc.).
+    /// Tiles are drawn in world space — the SFML view handles panning and culling
+    /// beyond <see cref="CameraManager.TileSight"/> is done manually for performance.
     /// </summary>
-    /// <param name="layerType">Layer type to render.</param>
     public static void MapTiles(byte layerType)
     {
         if (GameContext.Instance.CurrentMap.Data.Name == null) return;
@@ -23,61 +23,60 @@ internal static class MapRenderer
         var tempColor = GameContext.Instance.CurrentMap.Data.Color;
         var color = new Color(tempColor.R, tempColor.G, tempColor.B);
         var map = GameContext.Instance.CurrentMap.Data;
+        var sight = CameraManager.Instance.TileSight;
 
         for (byte c = 0; c < map.Layer.Count; c++)
             if (map.Layer[c].Type == layerType)
-                for (var x = TileSight.X; x <= TileSight.Width; x++)
-                for (var y = TileSight.Y; y <= TileSight.Height; y++)
+                for (var x = sight.X; x <= sight.Width; x++)
+                for (var y = sight.Y; y <= sight.Height; y++)
                     if (!Map.OutLimit((short)x, (short)y))
                     {
                         var data = map.Layer[c].Tile[x, y];
                         if (data.Texture > 0)
                         {
-                            var x2 = data.X * Grid;
-                            var y2 = data.Y * Grid;
+                            var srcX = data.X * Grid;
+                            var srcY = data.Y * Grid;
 
+                            // Draw at world-pixel position — SFML view handles translation.
                             if (!map.Layer[c].Tile[x, y].IsAutoTile)
-                                Renders.Render(Textures.Tiles[data.Texture], CameraUtils.ConvertX(x * Grid),
-                                    CameraUtils.ConvertY(y * Grid), x2, y2, Grid, Grid, color);
+                                Renders.Render(Textures.Tiles[data.Texture],
+                                    x * Grid, y * Grid, srcX, srcY, Grid, Grid, color);
                             else
-                                MapAutoTile(new Point(CameraUtils.ConvertX(x * Grid), CameraUtils.ConvertY(y * Grid)),
-                                    data, color);
+                                MapAutoTile(new Point(x * Grid, y * Grid), data, color);
                         }
                     }
     }
 
-    private static void MapAutoTile(Point position, MapTileData data, Color cor)
+    private static void MapAutoTile(Point position, MapTileData data, Color color)
     {
-        // Render the four 16x16 sub-tiles
         for (byte i = 0; i < 4; i++)
         {
-            Point destiny = position, source = data.Mini[i];
+            Point dest = position, source = data.Mini[i];
 
-            // Tile sub-parts: position the sub-tile destination.
             switch (i)
             {
-                case 1: destiny.X += 16; break;
-                case 2: destiny.Y += 16; break;
+                case 1: dest.X += 16; break;
+                case 2: dest.Y += 16; break;
                 case 3:
-                    destiny.X += 16;
-                    destiny.Y += 16;
+                    dest.X += 16;
+                    dest.Y += 16;
                     break;
             }
 
-            // Render the sub-tile.
-            Renders.Render(Textures.Tiles[data.Texture], new Rectangle(source.X, source.Y, 16, 16),
-                new Rectangle(destiny, new Size(16, 16)), cor);
+            Renders.Render(Textures.Tiles[data.Texture],
+                new Rectangle(source.X, source.Y, 16, 16),
+                new Rectangle(dest, new Size(16, 16)), color);
         }
     }
 
-    /// <summary>Render the map's panorama background.</summary>
+    /// <summary>Render the map's panorama background at world origin.</summary>
     public static void MapPanorama()
     {
         if (GameContext.Instance.CurrentMap.Data.Panorama > 0)
             Renders.Render(Textures.Panoramas[GameContext.Instance.CurrentMap.Data.Panorama], new Point(0));
     }
 
-    /// <summary>Render current map weather (particles and lightning overlay).</summary>
+    /// <summary>Render current map weather particles and lightning overlay in world space.</summary>
     public static void MapWeather()
     {
         byte x = 0;

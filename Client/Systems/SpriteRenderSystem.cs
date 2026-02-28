@@ -4,13 +4,13 @@ using Arch.System;
 using CryBits.Client.Components;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
-using CryBits.Client.Utils;
 
 namespace CryBits.Client.Systems;
 
 /// <summary>
 /// Renders all entities that have a <see cref="TransformComponent"/> and a
 /// <see cref="SpriteComponent"/>.
+/// Draws in world space — the SFML view (set by CameraManager) handles panning.
 /// </summary>
 internal sealed class SpriteRenderSystem(World world) : BaseSystem<World, int>(world)
 {
@@ -21,17 +21,8 @@ internal sealed class SpriteRenderSystem(World world) : BaseSystem<World, int>(w
     {
         World.Query(in _query, (ref TransformComponent transform, ref SpriteComponent sprite) =>
         {
-            var screenX = CameraUtils.ConvertX(transform.X);
-            var screenY = CameraUtils.ConvertY(transform.Y);
             var source = sprite.SourceRect ?? new Rectangle(Point.Empty, sprite.Texture.ToSize());
-
-            if (screenX + source.Width < 0 || screenX > Globals.ScreenWidth ||
-                screenY + source.Height < 0 || screenY > Globals.ScreenHeight)
-            {
-                return;
-            }
-
-            var dest = source with { X = screenX, Y = screenY };
+            var dest = source with { X = transform.X, Y = transform.Y };
 
             Renders.Render(sprite.Texture, source, dest, sprite.Tint);
         });
