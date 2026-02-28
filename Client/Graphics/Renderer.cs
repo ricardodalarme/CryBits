@@ -22,6 +22,15 @@ internal sealed class Renderer
     /// <summary>The SFML render window.</summary>
     public RenderWindow RenderWindow { get; private set; } = null!;
 
+    // Reused across every Draw() call — avoids per-frame heap allocations.
+    // SFML Sprite is a reference type whose state is fully overwritten before each draw.
+    // Initialized lazily on the first Draw() call (Sprite requires a Texture argument).
+    private Sprite? _spriteCache;
+
+    // Reused across every DrawText() call for the same reason.
+    // Initialized in Init() once the font is available.
+    private Text _textCache = null!;
+
     /// <summary>
     /// Create the render window and wire up input / focus events.
     /// </summary>
@@ -36,6 +45,14 @@ internal sealed class Renderer
 
         // VSync — prevents tearing and GPU spin.
         RenderWindow.SetVerticalSyncEnabled(true);
+
+        // Pre-allocate the text cache now that the font is accessible.
+        _textCache = new Text(Fonts.Default, string.Empty)
+        {
+            CharacterSize = 10,
+            OutlineColor = new Color(0, 0, 0, 70),
+            OutlineThickness = 1
+        };
 
         RenderWindow.Closed += UI.Window.OnClosed;
         RenderWindow.LostFocus += (_, _) => InputManager.Instance.IsFocused = false;
@@ -55,17 +72,22 @@ internal sealed class Renderer
     public void Draw(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null,
         object mode = null)
     {
-        var tmpImage = new Sprite(texture)
-        {
-            TextureRect = new IntRect(new Vector2i(recSource.X, recSource.Y),
-                new Vector2i(recSource.Width, recSource.Height)),
-            Position = new Vector2f(recDestiny.X, recDestiny.Y),
-            Scale = new Vector2f(recDestiny.Width / (float)recSource.Width, recDestiny.Height / (float)recSource.Height)
-        };
-        if (color != null) tmpImage.Color = (Color)color;
+        // Lazy-initialize: Sprite ctor requires a Texture in SFML.Net 3+.
+        _spriteCache ??= new Sprite(texture);
+        _spriteCache.Texture = texture;
+        _spriteCache.TextureRect = new IntRect(
+            new Vector2i(recSource.X, recSource.Y),
+            new Vector2i(recSource.Width, recSource.Height));
+        _spriteCache.Position = new Vector2f(recDestiny.X, recDestiny.Y);
+        _spriteCache.Scale = new Vector2f(
+            recDestiny.Width / (float)recSource.Width,
+            recDestiny.Height / (float)recSource.Height);
+
+        // Always reset colour — the cache is shared, so a previous tint would bleed through.
+        _spriteCache.Color = color is Color c ? c : Color.White;
 
         mode ??= RenderStates.Default;
-        RenderWindow.Draw(tmpImage, (RenderStates)mode);
+        RenderWindow.Draw(_spriteCache, (RenderStates)mode);
     }
 
     public void Draw(Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth,
@@ -106,16 +128,11 @@ internal sealed class Renderer
             case TextAlign.Right: x -= MeasureString(text); break;
         }
 
-        var tempText = new Text(Fonts.Default, text)
-        {
-            CharacterSize = 10,
-            FillColor = color,
-            Position = new Vector2f(x, y),
-            OutlineColor = new Color(0, 0, 0, 70),
-            OutlineThickness = 1
-        };
+        _textCache.DisplayedString = text;
+        _textCache.FillColor = color;
+        _textCache.Position = new Vector2f(x, y);
 
-        RenderWindow.Draw(tempText);
+        RenderWindow.Draw(_textCache);
     }
 
     /// <summary>
@@ -160,11 +177,14 @@ internal sealed class Renderer
         var textureWidth = texture.ToSize().Width;
         var textureHeight = texture.ToSize().Height;
 
-        Draw(texture, new Rectangle(new Point(0), new Size(margin, textureWidth)),
+        // Left cap
+        Draw(texture, new Rectangle(new Point(0), new Size(margin, textureHeight)),
             new Rectangle(position, new Size(margin, textureHeight)));
+        // Right cap
         Draw(texture, new Rectangle(new Point(textureWidth - margin, 0), new Size(margin, textureHeight)),
             new Rectangle(new Point(position.X + size.Width - margin, position.Y), new Size(margin, textureHeight)));
-        Draw(texture, new Rectangle(new Point(margin, 0), new Size(margin, textureHeight)),
+        // Horizontal stretch (middle)
+        Draw(texture, new Rectangle(new Point(margin, 0), new Size(textureWidth - margin * 2, textureHeight)),
             new Rectangle(new Point(position.X + margin, position.Y),
                 new Size(size.Width - margin * 2, textureHeight)));
     }
