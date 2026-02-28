@@ -34,7 +34,7 @@ internal static class NpcRenderer
         var fullWidth = texture.ToSize().Width / AnimationAmountX;
         var width = value * fullWidth / npcInstance.Data.Vital[(byte)Vital.Hp];
 
-        Renderer.Draw(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
-        Renderer.Draw(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
+        Renderer.Instance.Draw(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
+        Renderer.Instance.Draw(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
     }
 }

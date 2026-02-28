@@ -24,7 +24,7 @@ internal sealed class SpriteRenderSystem(World world) : BaseSystem<World, int>(w
             var source = sprite.SourceRect ?? new Rectangle(Point.Empty, sprite.Texture.ToSize());
             var dest = source with { X = transform.X, Y = transform.Y };
 
-            Renderer.Draw(sprite.Texture, source, dest, sprite.Tint);
+            Renderer.Instance.Draw(sprite.Texture, source, dest, sprite.Tint);
         });
     }
 }

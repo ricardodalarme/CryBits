@@ -35,7 +35,7 @@ internal static class PlayerRenderer
             Y = player.PixelY + characterSize.Height / AnimationAmountY + 4
         };
 
-        Renderer.Draw(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
-        Renderer.Draw(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
+        Renderer.Instance.Draw(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
+        Renderer.Instance.Draw(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
     }
 }

@@ -11,30 +11,36 @@ using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics;
 
-internal static class Renderer
+/// <summary>
+/// Central rendering service. Owns the <see cref="RenderWindow"/> and exposes
+/// a thin API for drawing sprites and text.
+/// </summary>
+internal sealed class Renderer
 {
-    /// <summary>
-    /// SFML render window used for drawing game and UI.
-    /// </summary>
-    public static RenderWindow RenderWindow;
+    public static Renderer Instance { get; } = new();
+
+    /// <summary>The SFML render window.</summary>
+    public RenderWindow RenderWindow { get; private set; } = null!;
 
     /// <summary>
-    /// Initialize the render window and attach input event handlers.
+    /// Create the render window and wire up input / focus events.
     /// </summary>
-    public static void Init()
+    public void Init()
     {
-        RenderWindow = new RenderWindow(new VideoMode(new Vector2u(800, 608)), Config.GameName,
+        RenderWindow = new RenderWindow(
+            new VideoMode(new Vector2u((uint)ScreenWidth, (uint)ScreenHeight)),
+            Config.GameName,
             Styles.Titlebar | Styles.Close,
-            State.Windowed);
+            State.Windowed
+        );
 
-        // Sync rendering to the monitor refresh rate to prevent tearing and GPU spin.
+        // VSync — prevents tearing and GPU spin.
         RenderWindow.SetVerticalSyncEnabled(true);
 
         RenderWindow.Closed += UI.Window.OnClosed;
         RenderWindow.LostFocus += (_, _) => InputManager.Instance.IsFocused = false;
         RenderWindow.GainedFocus += (_, _) => InputManager.Instance.IsFocused = true;
 
-        // Pass the window directly — no global lookup needed.
         InputManager.Instance.BindEvents(RenderWindow);
     }
 
@@ -46,7 +52,7 @@ internal static class Renderer
     /// <param name="recDestiny">Destination rectangle on screen.</param>
     /// <param name="color">Optional tint color.</param>
     /// <param name="mode">Optional render state.</param>
-    public static void Draw(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null,
+    public void Draw(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null,
         object mode = null)
     {
         var tmpImage = new Sprite(texture)
@@ -62,7 +68,7 @@ internal static class Renderer
         RenderWindow.Draw(tmpImage, (RenderStates)mode);
     }
 
-    public static void Draw(Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth,
+    public void Draw(Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth,
         int sourceHeight, object color = null)
     {
         var source = new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
@@ -71,13 +77,13 @@ internal static class Renderer
         Draw(texture, source, destiny, color);
     }
 
-    public static void Draw(Texture texture, Rectangle destiny, object color = null)
+    public void Draw(Texture texture, Rectangle destiny, object color = null)
     {
         var source = new Rectangle(new Point(0), texture.ToSize());
         Draw(texture, source, destiny, color);
     }
 
-    public static void Draw(Texture texture, Point position, object color = null)
+    public void Draw(Texture texture, Point position, object color = null)
     {
         var source = new Rectangle(new Point(0), texture.ToSize());
         var destiny = new Rectangle(position, texture.ToSize());
@@ -92,7 +98,7 @@ internal static class Renderer
     /// <param name="y">Y position in pixels.</param>
     /// <param name="color">Text color.</param>
     /// <param name="alignment">Horizontal alignment.</param>
-    public static void DrawText(string text, int x, int y, Color color, TextAlign alignment = TextAlign.Left)
+    public void DrawText(string text, int x, int y, Color color, TextAlign alignment = TextAlign.Left)
     {
         switch (alignment)
         {
@@ -115,7 +121,7 @@ internal static class Renderer
     /// <summary>
     /// Draw text and wrap it to a maximum width. Optionally cuts at word boundaries.
     /// </summary>
-    public static void DrawText(string text, int x, int y, Color color, int maxWidth, bool cut = true)
+    public void DrawText(string text, int x, int y, Color color, int maxWidth, bool cut = true)
     {
         int messageWidth = MeasureString(text), split = -1;
 
@@ -149,7 +155,7 @@ internal static class Renderer
     /// <param name="margin">Inner margin in pixels.</param>
     /// <param name="position">Top-left position.</param>
     /// <param name="size">Box size.</param>
-    public static void DrawBox(Texture texture, byte margin, Point position, Size size)
+    public void DrawBox(Texture texture, byte margin, Point position, Size size)
     {
         var textureWidth = texture.ToSize().Width;
         var textureHeight = texture.ToSize().Height;

@@ -33,7 +33,7 @@ internal static class RenderPipeline
     /// </summary>
     public static void Present()
     {
-        Renderer.RenderWindow.Clear(Color.Black);
+        Renderer.Instance.RenderWindow.Clear(Color.Black);
 
         InGame();
 
@@ -44,7 +44,7 @@ internal static class RenderPipeline
 
         if (Screen.Current == Screens.Game) UIRenderer.Chat();
 
-        Renderer.RenderWindow.Display();
+        Renderer.Instance.RenderWindow.Display();
     }
 
     private static void InGame()
@@ -81,7 +81,7 @@ internal static class RenderPipeline
         UIRenderer.Party();
 
         // FPS/Latency overlays — these are world-space but near-origin so they work fine here.
-        if (Options.Fps) Renderer.DrawText("FPS: " + Loop.Fps, 176, 7, Color.White);
-        if (Options.Latency) Renderer.DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
+        if (Options.Fps) Renderer.Instance.DrawText("FPS: " + Loop.Fps, 176, 7, Color.White);
+        if (Options.Latency) Renderer.Instance.DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
     }
 }

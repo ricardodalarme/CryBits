@@ -25,7 +25,7 @@ internal sealed class TextRenderSystem(World world) : BaseSystem<World, int>(wor
             if (text.Centered)
                 x -= MeasureString(text.Text) / 2;
 
-            Renderer.DrawText(text.Text, x, y, text.Color);
+            Renderer.Instance.DrawText(text.Text, x, y, text.Color);
         });
     }
 }

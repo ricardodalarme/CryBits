@@ -26,7 +26,7 @@ internal static class Program
         OptionsRepository.Read();
 
         // Window must be created before any event bindings that require it.
-        Renderer.Init();
+        Renderer.Instance.Init();
 
         // Register all input and UI event handlers.
         CheckBoxEvents.Bind();
@@ -39,7 +39,6 @@ internal static class Program
         Socket.Init();
         PacketDispatcher.Register();
         AudioManager.Instance.LoadSounds();
-        Renderer.Init();
 
         Window.OpenMenu();
 

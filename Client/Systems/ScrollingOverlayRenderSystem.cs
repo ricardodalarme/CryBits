@@ -29,7 +29,7 @@ internal sealed class ScrollingOverlayRenderSystem(World world) : BaseSystem<Wor
                 (int)scroll.ExactY,
                 ScreenWidth,
                 ScreenHeight);
-            Renderer.Draw(sprite.Texture, source, _screenDest, sprite.Tint);
+            Renderer.Instance.Draw(sprite.Texture, source, _screenDest, sprite.Tint);
         });
     }
 }

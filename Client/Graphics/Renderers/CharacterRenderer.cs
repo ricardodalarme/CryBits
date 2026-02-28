@@ -40,7 +40,7 @@ internal static class CharacterRenderer
         if (hurt) color = new Color(205, 125, 125);
 
         CharacterShadow(textureNum, position);
-        Renderer.Draw(Textures.Characters[textureNum], recSource, recDestiny, color);
+        Renderer.Instance.Draw(Textures.Characters[textureNum], recSource, recDestiny, color);
     }
 
     public static void CharacterShadow(short textureNum, Point position)
@@ -52,7 +52,7 @@ internal static class CharacterRenderer
         recSource.Height = size.Height / AnimationAmountY;
         var recDestiny = new Rectangle(position, recSource.Size);
 
-        Renderer.Draw(Textures.Shadow, recDestiny.Location.X,
+        Renderer.Instance.Draw(Textures.Shadow, recDestiny.Location.X,
             recDestiny.Location.Y + size.Height / AnimationAmountY - Textures.Shadow.ToSize().Height + 5, 0, 0,
             size.Width / AnimationAmountX, Textures.Shadow.ToSize().Height);
     }

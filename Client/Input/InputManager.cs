@@ -12,7 +12,7 @@ public class InputManager
     public static InputManager Instance { get; } = new();
 
     /// <summary>
-    /// Tracks window focus state. Set by LostFocus/GainedFocus events in Renders.Init().
+    /// Tracks window focus state. Set by LostFocus/GainedFocus events in Renderer.Init().
     /// More efficient than polling HasFocus() on every frame.
     /// </summary>
     public bool IsFocused { get; set; } = true;
@@ -80,8 +80,8 @@ public class InputManager
     {
         get
         {
-            if (Graphics.Renderer.RenderWindow == null) return new Vector2i();
-            return Mouse.GetPosition(Graphics.Renderer.RenderWindow);
+            if (Graphics.Renderer.Instance.RenderWindow == null) return new Vector2i();
+            return Mouse.GetPosition(Graphics.Renderer.Instance.RenderWindow);
         }
     }
 
