@@ -39,7 +39,7 @@ internal static class MapRenderer
 
                             // Draw at world-pixel position — SFML view handles translation.
                             if (!map.Layer[c].Tile[x, y].IsAutoTile)
-                                Renders.Draw(Textures.Tiles[data.Texture],
+                                Renderer.Draw(Textures.Tiles[data.Texture],
                                     x * Grid, y * Grid, srcX, srcY, Grid, Grid, color);
                             else
                                 MapAutoTile(new Point(x * Grid, y * Grid), data, color);
@@ -63,7 +63,7 @@ internal static class MapRenderer
                     break;
             }
 
-            Renders.Draw(Textures.Tiles[data.Texture],
+            Renderer.Draw(Textures.Tiles[data.Texture],
                 new Rectangle(source.X, source.Y, 16, 16),
                 new Rectangle(dest, new Size(16, 16)), color);
         }
@@ -73,7 +73,7 @@ internal static class MapRenderer
     public static void MapPanorama()
     {
         if (GameContext.Instance.CurrentMap.Data.Panorama > 0)
-            Renders.Draw(Textures.Panoramas[GameContext.Instance.CurrentMap.Data.Panorama], new Point(0));
+            Renderer.Draw(Textures.Panoramas[GameContext.Instance.CurrentMap.Data.Panorama], new Point(0));
     }
 
     /// <summary>Render current map weather particles and lightning overlay in world space.</summary>
@@ -91,11 +91,11 @@ internal static class MapRenderer
 
         foreach (var weather in GameContext.Instance.CurrentMap.Weather.Particles)
             if (weather.Visible)
-                Renders.Draw(Textures.Weather, new Rectangle(x, 0, 32, 32),
+                Renderer.Draw(Textures.Weather, new Rectangle(x, 0, 32, 32),
                     new Rectangle(weather.X, weather.Y, 32, 32),
                     new Color(255, 255, 255, 150));
 
-        Renders.Draw(Textures.Blank, 0, 0, 0, 0, ScreenWidth, ScreenHeight,
+        Renderer.Draw(Textures.Blank, 0, 0, 0, 0, ScreenWidth, ScreenHeight,
             new Color(255, 255, 255, GameContext.Instance.CurrentMap.Weather.Lightning));
     }
 
@@ -110,6 +110,6 @@ internal static class MapRenderer
             _ => Color.White
         };
 
-        Renders.DrawText(GameContext.Instance.CurrentMap.Data.Name, 426, 48, color);
+        Renderer.DrawText(GameContext.Instance.CurrentMap.Data.Name, 426, 48, color);
     }
 }

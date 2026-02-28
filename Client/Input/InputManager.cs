@@ -80,8 +80,8 @@ public class InputManager
     {
         get
         {
-            if (Graphics.Renders.RenderWindow == null) return new Vector2i();
-            return Mouse.GetPosition(Graphics.Renders.RenderWindow);
+            if (Graphics.Renderer.RenderWindow == null) return new Vector2i();
+            return Mouse.GetPosition(Graphics.Renderer.RenderWindow);
         }
     }
 

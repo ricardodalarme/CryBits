@@ -34,7 +34,7 @@ namespace CryBits.Client.Logic;
 /// </summary>
 internal class CameraManager(RenderWindow renderWindow)
 {
-    public static CameraManager Instance { get; } = new(Renders.RenderWindow);
+    public static CameraManager Instance { get; } = new(Renderer.RenderWindow);
 
     /// <summary>
     /// The entity the camera follows. Set to <see cref="Entity.Null"/> to

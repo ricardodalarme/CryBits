@@ -55,7 +55,7 @@ internal static class Loop
             RenderPipeline.Present();
 
             // Dispatch window events.
-            Renders.RenderWindow.DispatchEvents();
+            Renderer.RenderWindow.DispatchEvents();
 
             TextBox();
 

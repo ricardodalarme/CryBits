@@ -19,7 +19,7 @@ internal static class ItemRenderer
     var column = slot - line * 5 - 1;
     var position = start + new Size(column * (grid + gap), line * (grid + gap));
 
-    Renders.Draw(Textures.Items[item.Texture], position);
-    if (amount > 1) Renders.DrawText(amount.ToString(), position.X + 2, position.Y + 17, Color.White);
+    Renderer.Draw(Textures.Items[item.Texture], position);
+    if (amount > 1) Renderer.DrawText(amount.ToString(), position.X + 2, position.Y + 17, Color.White);
   }
 }

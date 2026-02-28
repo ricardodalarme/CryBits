@@ -11,7 +11,7 @@ using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics;
 
-internal static class Renders
+internal static class Renderer
 {
     /// <summary>
     /// SFML render window used for drawing game and UI.
