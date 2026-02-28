@@ -23,19 +23,19 @@ internal static class NpcHandler
     internal static void MapNpcs(MapNpcsPacket packet)
     {
         // Read temporary NPCs for the current map
-        MapInstance.Current.Npc = new NpcInstance[packet.Npcs.Length];
-        for (byte i = 0; i < MapInstance.Current.Npc.Length; i++)
+        GameContext.Instance.CurrentMap.Npc = new NpcInstance[packet.Npcs.Length];
+        for (byte i = 0; i < GameContext.Instance.CurrentMap.Npc.Length; i++)
         {
-            MapInstance.Current.Npc[i] = new NpcInstance();
-            MapInstance.Current.Npc[i].X2 = 0;
-            MapInstance.Current.Npc[i].Y2 = 0;
-            MapInstance.Current.Npc[i].Data = Npc.List.Get(packet.Npcs[i].NpcId);
-            MapInstance.Current.Npc[i].X = packet.Npcs[i].X;
-            MapInstance.Current.Npc[i].Y = packet.Npcs[i].Y;
-            MapInstance.Current.Npc[i].Direction = (Direction)packet.Npcs[i].Direction;
+            GameContext.Instance.CurrentMap.Npc[i] = new NpcInstance();
+            GameContext.Instance.CurrentMap.Npc[i].X2 = 0;
+            GameContext.Instance.CurrentMap.Npc[i].Y2 = 0;
+            GameContext.Instance.CurrentMap.Npc[i].Data = Npc.List.Get(packet.Npcs[i].NpcId);
+            GameContext.Instance.CurrentMap.Npc[i].X = packet.Npcs[i].X;
+            GameContext.Instance.CurrentMap.Npc[i].Y = packet.Npcs[i].Y;
+            GameContext.Instance.CurrentMap.Npc[i].Direction = (Direction)packet.Npcs[i].Direction;
 
             for (byte n = 0; n < (byte)Vital.Count; n++)
-                MapInstance.Current.Npc[i].Vital[n] = packet.Npcs[i].Vital[n];
+                GameContext.Instance.CurrentMap.Npc[i].Vital[n] = packet.Npcs[i].Vital[n];
         }
     }
 
@@ -43,14 +43,14 @@ internal static class NpcHandler
     internal static void MapNpc(MapNpcPacket packet)
     {
         var i = packet.Index;
-        MapInstance.Current.Npc[i].X2 = 0;
-        MapInstance.Current.Npc[i].Y2 = 0;
-        MapInstance.Current.Npc[i].Data = Npc.List.Get(packet.NpcId);
-        MapInstance.Current.Npc[i].X = packet.X;
-        MapInstance.Current.Npc[i].Y = packet.Y;
-        MapInstance.Current.Npc[i].Direction = (Direction)packet.Direction;
-        MapInstance.Current.Npc[i].Vital = new short[(byte)Vital.Count];
-        for (byte n = 0; n < (byte)Vital.Count; n++) MapInstance.Current.Npc[i].Vital[n] = packet.Vital[n];
+        GameContext.Instance.CurrentMap.Npc[i].X2 = 0;
+        GameContext.Instance.CurrentMap.Npc[i].Y2 = 0;
+        GameContext.Instance.CurrentMap.Npc[i].Data = Npc.List.Get(packet.NpcId);
+        GameContext.Instance.CurrentMap.Npc[i].X = packet.X;
+        GameContext.Instance.CurrentMap.Npc[i].Y = packet.Y;
+        GameContext.Instance.CurrentMap.Npc[i].Direction = (Direction)packet.Direction;
+        GameContext.Instance.CurrentMap.Npc[i].Vital = new short[(byte)Vital.Count];
+        for (byte n = 0; n < (byte)Vital.Count; n++) GameContext.Instance.CurrentMap.Npc[i].Vital[n] = packet.Vital[n];
     }
 
     [PacketHandler]
@@ -58,22 +58,22 @@ internal static class NpcHandler
     {
         // Read NPC movement
         var i = packet.Index;
-        byte x = MapInstance.Current.Npc[i].X, y = MapInstance.Current.Npc[i].Y;
-        MapInstance.Current.Npc[i].X2 = 0;
-        MapInstance.Current.Npc[i].Y2 = 0;
-        MapInstance.Current.Npc[i].X = packet.X;
-        MapInstance.Current.Npc[i].Y = packet.Y;
-        MapInstance.Current.Npc[i].Direction = (Direction)packet.Direction;
-        MapInstance.Current.Npc[i].Movement = (Movement)packet.Movement;
+        byte x = GameContext.Instance.CurrentMap.Npc[i].X, y = GameContext.Instance.CurrentMap.Npc[i].Y;
+        GameContext.Instance.CurrentMap.Npc[i].X2 = 0;
+        GameContext.Instance.CurrentMap.Npc[i].Y2 = 0;
+        GameContext.Instance.CurrentMap.Npc[i].X = packet.X;
+        GameContext.Instance.CurrentMap.Npc[i].Y = packet.Y;
+        GameContext.Instance.CurrentMap.Npc[i].Direction = (Direction)packet.Direction;
+        GameContext.Instance.CurrentMap.Npc[i].Movement = (Movement)packet.Movement;
 
         // Set exact NPC screen offset if position changed
-        if (x != MapInstance.Current.Npc[i].X || y != MapInstance.Current.Npc[i].Y)
-            switch (MapInstance.Current.Npc[i].Direction)
+        if (x != GameContext.Instance.CurrentMap.Npc[i].X || y != GameContext.Instance.CurrentMap.Npc[i].Y)
+            switch (GameContext.Instance.CurrentMap.Npc[i].Direction)
             {
-                case Direction.Up: MapInstance.Current.Npc[i].Y2 = Grid; break;
-                case Direction.Down: MapInstance.Current.Npc[i].Y2 = Grid * -1; break;
-                case Direction.Right: MapInstance.Current.Npc[i].X2 = Grid * -1; break;
-                case Direction.Left: MapInstance.Current.Npc[i].X2 = Grid; break;
+                case Direction.Up: GameContext.Instance.CurrentMap.Npc[i].Y2 = Grid; break;
+                case Direction.Down: GameContext.Instance.CurrentMap.Npc[i].Y2 = Grid * -1; break;
+                case Direction.Right: GameContext.Instance.CurrentMap.Npc[i].X2 = Grid * -1; break;
+                case Direction.Left: GameContext.Instance.CurrentMap.Npc[i].X2 = Grid; break;
             }
     }
 
@@ -85,15 +85,15 @@ internal static class NpcHandler
         var victimType = (Target)packet.VictimType;
 
         // Start NPC attack
-        MapInstance.Current.Npc[index].Attacking = true;
-        MapInstance.Current.Npc[index].AttackTimer = Environment.TickCount;
+        GameContext.Instance.CurrentMap.Npc[index].Attacking = true;
+        GameContext.Instance.CurrentMap.Npc[index].AttackTimer = Environment.TickCount;
 
         if (victim == string.Empty || victimType == Target.None) return;
 
         Character victimData = victimType switch
         {
             Target.Player => Player.Get(victim),
-            Target.Npc => MapInstance.Current.Npc[byte.Parse(victim)],
+            Target.Npc => GameContext.Instance.CurrentMap.Npc[byte.Parse(victim)],
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -108,9 +108,9 @@ internal static class NpcHandler
     {
         // Set NPC direction
         var i = packet.Index;
-        MapInstance.Current.Npc[i].Direction = (Direction)packet.Direction;
-        MapInstance.Current.Npc[i].X2 = 0;
-        MapInstance.Current.Npc[i].Y2 = 0;
+        GameContext.Instance.CurrentMap.Npc[i].Direction = (Direction)packet.Direction;
+        GameContext.Instance.CurrentMap.Npc[i].X2 = 0;
+        GameContext.Instance.CurrentMap.Npc[i].Y2 = 0;
     }
 
     [PacketHandler]
@@ -120,7 +120,7 @@ internal static class NpcHandler
 
         // Set NPC vitals
         for (byte n = 0; n < (byte)Vital.Count; n++)
-            MapInstance.Current.Npc[index].Vital[n] = packet.Vital[n];
+            GameContext.Instance.CurrentMap.Npc[index].Vital[n] = packet.Vital[n];
     }
 
     [PacketHandler]
@@ -129,15 +129,15 @@ internal static class NpcHandler
         var i = packet.Index;
 
         // Destroy entity
-        GameContext.Instance.World.Destroy(MapInstance.Current.Npc[i].Entity);
+        GameContext.Instance.World.Destroy(GameContext.Instance.CurrentMap.Npc[i].Entity);
 
         // Clear NPC data on death
-        MapInstance.Current.Npc[i].X2 = 0;
-        MapInstance.Current.Npc[i].Y2 = 0;
-        MapInstance.Current.Npc[i].Data = null;
-        MapInstance.Current.Npc[i].X = 0;
-        MapInstance.Current.Npc[i].Y = 0;
-        MapInstance.Current.Npc[i].Vital = new short[(byte)Vital.Count];
-        MapInstance.Current.Npc[i].Entity = Arch.Core.Entity.Null;
+        GameContext.Instance.CurrentMap.Npc[i].X2 = 0;
+        GameContext.Instance.CurrentMap.Npc[i].Y2 = 0;
+        GameContext.Instance.CurrentMap.Npc[i].Data = null;
+        GameContext.Instance.CurrentMap.Npc[i].X = 0;
+        GameContext.Instance.CurrentMap.Npc[i].Y = 0;
+        GameContext.Instance.CurrentMap.Npc[i].Vital = new short[(byte)Vital.Count];
+        GameContext.Instance.CurrentMap.Npc[i].Entity = Arch.Core.Entity.Null;
     }
 }

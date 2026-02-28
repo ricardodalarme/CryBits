@@ -43,7 +43,7 @@ internal static class PlayerHandler
 
         for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = packet.Attribute[n];
         for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(packet.Equipment[n]);
-        MapInstance.Current = player.MapInstance;
+        GameContext.Instance.CurrentMap = player.MapInstance;
     }
 
     [PacketHandler]
@@ -131,7 +131,7 @@ internal static class PlayerHandler
         Character victimData = victimType switch
         {
             Target.Player => Player.Get(victim),
-            Target.Npc => MapInstance.Current.Npc[byte.Parse(victim)],
+            Target.Npc => GameContext.Instance.CurrentMap.Npc[byte.Parse(victim)],
             _ => throw new ArgumentOutOfRangeException()
         };
 

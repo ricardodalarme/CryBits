@@ -1,5 +1,4 @@
 using System.IO;
-using Arch.Buffer;
 using Arch.Core;
 using CryBits.Client.Components;
 using CryBits.Client.Entities;
@@ -36,8 +35,8 @@ internal static class MapHandler
             if (!CryBits.Entities.Map.Map.List.ContainsKey(id))
             {
                 MapRepository.Read(id);
-                MapInstance.Current.Weather.Update();
-                MapInstance.Current.Data.Update();
+                GameContext.Instance.CurrentMap.Weather.Update();
+                GameContext.Instance.CurrentMap.Data.Update();
             }
 
             if (CryBits.Entities.Map.Map.List[id].Revision != currentRevision)
@@ -64,25 +63,25 @@ internal static class MapHandler
             MapInstance.List.Add(id, new MapInstance(map));
         }
 
-        MapInstance.Current = MapInstance.List[id];
+        GameContext.Instance.CurrentMap = MapInstance.List[id];
 
         // Persist map to disk
         MapRepository.Write(map);
 
         // Update weather particles and map state
-        MapInstance.Current.Weather.UpdateType();
-        FogSpawner.Spawn(GameContext.Instance.World, MapInstance.Current.Data.Fog);
-        MapInstance.Current.Data.Update();
+        GameContext.Instance.CurrentMap.Weather.UpdateType();
+        FogSpawner.Spawn(GameContext.Instance.World, GameContext.Instance.CurrentMap.Data.Fog);
+        GameContext.Instance.CurrentMap.Data.Update();
     }
 
     [PacketHandler]
     internal static void JoinMap(JoinMapPacket _)
     {
         // Play map background music if present
-        if (string.IsNullOrEmpty(MapInstance.Current.Data.Music))
+        if (string.IsNullOrEmpty(GameContext.Instance.CurrentMap.Data.Music))
             Music.Stop();
         else
-            Music.Play(MapInstance.Current.Data.Music);
+            Music.Play(GameContext.Instance.CurrentMap.Data.Music);
     }
 
     [PacketHandler]

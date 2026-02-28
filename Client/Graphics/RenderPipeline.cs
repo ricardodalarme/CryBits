@@ -56,9 +56,9 @@ internal static class RenderPipeline
         MapRenderer.MapTiles((byte)Layer.Ground);
         _groundRenderSystems.Update(0);
 
-        for (byte i = 0; i < MapInstance.Current.Npc.Length; i++)
-            if (MapInstance.Current.Npc[i].Data != null)
-                NpcRenderer.Npc(MapInstance.Current.Npc[i]);
+        for (byte i = 0; i < GameContext.Instance.CurrentMap.Npc.Length; i++)
+            if (GameContext.Instance.CurrentMap.Npc[i].Data != null)
+                NpcRenderer.Npc(GameContext.Instance.CurrentMap.Npc[i]);
 
         for (byte i = 0; i < Player.List.Count; i++)
             if (Player.List[i] != Player.Me)

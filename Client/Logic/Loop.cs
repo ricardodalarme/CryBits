@@ -61,7 +61,7 @@ internal static class Loop
 
             if (Screen.Current == Screens.Game)
             {
-                MapInstance.Current.Logic();
+                GameContext.Instance.CurrentMap.Logic();
                 if (timer30 < Environment.TickCount)
                 {
                     // Player logic.
@@ -69,9 +69,9 @@ internal static class Loop
                         Player.List[i].Logic();
 
                     // NPC logic.
-                    for (byte i = 0; i < MapInstance.Current.Npc.Length; i++)
-                        if (MapInstance.Current.Npc[i].Data != null)
-                            MapInstance.Current.Npc[i].Logic();
+                    for (byte i = 0; i < GameContext.Instance.CurrentMap.Npc.Length; i++)
+                        if (GameContext.Instance.CurrentMap.Npc[i].Data != null)
+                            GameContext.Instance.CurrentMap.Npc[i].Logic();
 
                     // Reset 30 ms timer
                     timer30 = Environment.TickCount + 30;

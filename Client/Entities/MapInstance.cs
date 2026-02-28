@@ -9,9 +9,6 @@ namespace CryBits.Client.Entities;
 
 internal class MapInstance
 {
-    // Current temporary map instance
-    public static MapInstance Current;
-
     // Map collection
     public static Dictionary<Guid, MapInstance> List;
 

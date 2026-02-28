@@ -1,3 +1,5 @@
+using CryBits.Client.Entities;
+
 namespace CryBits.Client.Worlds;
 
 /// <summary>
@@ -10,6 +12,9 @@ internal sealed class GameContext
 
     /// <summary>All live game entities and their components.</summary>
     public Arch.Core.World World { get; } = Arch.Core.World.Create();
+
+    /// <summary>Current map instance.</summary>
+    public MapInstance CurrentMap;
 
     /// <summary>
     /// Fully reset world state on disconnect: destroys all entities,
