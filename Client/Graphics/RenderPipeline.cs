@@ -57,8 +57,8 @@ internal static class RenderPipeline
         CameraManager.Instance.BeginWorldDraw();
 
         // Ground layer
-        MapRenderer.MapPanorama();
-        MapRenderer.MapTiles((byte)Layer.Ground);
+        MapRenderer.DrawPanorama();
+        MapRenderer.DrawLayer((byte)Layer.Ground);
         _groundRenderSystems.Update(0);
 
         for (byte i = 0; i < GameContext.Instance.CurrentMap.Npc.Length; i++)
@@ -73,10 +73,10 @@ internal static class RenderPipeline
         PlayerRenderer.PlayerCharacter(Player.Me);
 
         // Foreground layers and effects
-        MapRenderer.MapTiles((byte)Layer.Fringe);
-        MapRenderer.MapWeather();
+        MapRenderer.DrawLayer((byte)Layer.Fringe);
+        MapRenderer.DrawWeather();
         _fringeRenderSystems.Update(0);
-        MapRenderer.MapName();
+        MapRenderer.DrawMapName();
 
         UIRenderer.Party();
 

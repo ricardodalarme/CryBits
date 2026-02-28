@@ -1,108 +1,118 @@
-using System.Drawing;
+using System.Collections.Generic;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Logic;
 using CryBits.Client.Worlds;
 using CryBits.Entities.Map;
 using CryBits.Enums;
+using SFML.Graphics;
+using SFML.System;
 using static CryBits.Globals;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics.Renderers;
 
+/// <summary>
+/// Renders map tiles using SFML <see cref="VertexArray"/> batching.
+/// </summary>
 internal static class MapRenderer
 {
-    /// <summary>
-    /// Render the tiles for the specified layer type (ground, fringe, etc.).
-    /// Tiles are drawn in world space — the SFML view handles panning and culling
-    /// beyond <see cref="CameraManager.TileSight"/> is done manually for performance.
-    /// </summary>
-    public static void MapTiles(byte layerType)
-    {
-        if (GameContext.Instance.CurrentMap.Data.Name == null) return;
+    // One VertexArray per tileset texture index — reused across frames.
+    // Key = texture index from Textures.Tiles, Value = accumulated geometry for that texture.
+    private static readonly Dictionary<int, VertexArray> _batches = [];
 
-        var tempColor = GameContext.Instance.CurrentMap.Data.Color;
-        var color = new Color(tempColor.R, tempColor.G, tempColor.B);
+    // Single VertexArray for all weather particles — one draw call per frame.
+    private static readonly VertexArray _weatherBatch = new(PrimitiveType.Triangles);
+
+    /// <summary>
+    /// Build and submit all tile geometry for the given layer type.
+    /// Regular and auto-tiles are handled automatically.
+    /// </summary>
+    public static void DrawLayer(byte layerType)
+    {
+        if (GameContext.Instance.CurrentMap.Data.Name is null) return;
+
         var map = GameContext.Instance.CurrentMap.Data;
         var sight = CameraManager.Instance.TileSight;
+        var tc = map.Color;
+        var tint = new Color(tc.R, tc.G, tc.B);
 
+        // --- Reset all batches for this frame ---------------------------------
+        foreach (var va in _batches.Values)
+            va.Clear();
+
+        // --- Accumulate geometry per tile ------------------------------------
         for (byte c = 0; c < map.Layer.Count; c++)
-            if (map.Layer[c].Type == layerType)
-                for (var x = sight.X; x <= sight.Width; x++)
-                for (var y = sight.Y; y <= sight.Height; y++)
-                    if (!Map.OutLimit((short)x, (short)y))
-                    {
-                        var data = map.Layer[c].Tile[x, y];
-                        if (data.Texture > 0)
-                        {
-                            var srcX = data.X * Grid;
-                            var srcY = data.Y * Grid;
-
-                            // Draw at world-pixel position — SFML view handles translation.
-                            if (!map.Layer[c].Tile[x, y].IsAutoTile)
-                                Renderer.Instance.Draw(Textures.Tiles[data.Texture],
-                                    x * Grid, y * Grid, srcX, srcY, Grid, Grid, color);
-                            else
-                                MapAutoTile(new Point(x * Grid, y * Grid), data, color);
-                        }
-                    }
-    }
-
-    private static void MapAutoTile(Point position, MapTileData data, Color color)
-    {
-        for (byte i = 0; i < 4; i++)
         {
-            Point dest = position, source = data.Mini[i];
+            if (map.Layer[c].Type != layerType) continue;
 
-            switch (i)
-            {
-                case 1: dest.X += 16; break;
-                case 2: dest.Y += 16; break;
-                case 3:
-                    dest.X += 16;
-                    dest.Y += 16;
-                    break;
-            }
+            for (var x = sight.X; x <= sight.Width; x++)
+                for (var y = sight.Y; y <= sight.Height; y++)
+                {
+                    if (Map.OutLimit((short)x, (short)y)) continue;
 
-            Renderer.Instance.Draw(Textures.Tiles[data.Texture],
-                new Rectangle(source.X, source.Y, 16, 16),
-                new Rectangle(dest, new Size(16, 16)), color);
+                    var data = map.Layer[c].Tile[x, y];
+                    if (data.Texture <= 0) continue;
+
+                    var va = GetBatch(data.Texture);
+
+                    if (!data.IsAutoTile)
+                        AppendTile(va, x, y, data.X * Grid, data.Y * Grid, Grid, Grid, tint);
+                    else
+                        AppendAutoTile(va, x, y, data, tint);
+                }
+        }
+
+        // --- Submit one draw call per tileset --------------------------------
+        var renderer = Renderer.Instance;
+        foreach (var (texIndex, va) in _batches)
+        {
+            if (va.VertexCount == 0) continue;
+            renderer.RenderWindow.Draw(va, new RenderStates(Textures.Tiles[texIndex]));
         }
     }
 
-    /// <summary>Render the map's panorama background at world origin.</summary>
-    public static void MapPanorama()
+    /// <summary>Render the panorama background as a single sprite (already 1 draw call).</summary>
+    public static void DrawPanorama()
     {
-        if (GameContext.Instance.CurrentMap.Data.Panorama > 0)
-            Renderer.Instance.Draw(Textures.Panoramas[GameContext.Instance.CurrentMap.Data.Panorama], new Point(0));
+        var panorama = GameContext.Instance.CurrentMap.Data.Panorama;
+        if (panorama > 0)
+            Renderer.Instance.Draw(Textures.Panoramas[panorama], new System.Drawing.Point(0));
     }
 
-    /// <summary>Render current map weather particles and lightning overlay in world space.</summary>
-    public static void MapWeather()
+    /// <summary>Render weather particles and lightning overlay.</summary>
+    public static void DrawWeather()
     {
-        byte x = 0;
+        var data = GameContext.Instance.CurrentMap.Data.Weather;
+        if (data.Type == 0) return;
 
-        if (GameContext.Instance.CurrentMap.Data.Weather.Type == 0) return;
-
-        x = GameContext.Instance.CurrentMap.Data.Weather.Type switch
+        var srcX = data.Type switch
         {
             Weather.Snowing => 32,
-            _ => x
+            _ => 0
         };
 
-        foreach (var weather in GameContext.Instance.CurrentMap.Weather.Particles)
-            if (weather.Visible)
-                Renderer.Instance.Draw(Textures.Weather, new Rectangle(x, 0, 32, 32),
-                    new Rectangle(weather.X, weather.Y, 32, 32),
-                    new Color(255, 255, 255, 150));
+        // Batch all visible particles into one draw call.
+        _weatherBatch.Clear();
+        var tint = new Color(255, 255, 255, 150);
+        foreach (var p in GameContext.Instance.CurrentMap.Weather.Particles)
+            if (p.Visible)
+                AppendQuad(_weatherBatch, p.X, p.Y, srcX, 0, 32, 32, tint);
 
-        Renderer.Instance.Draw(Textures.Blank, 0, 0, 0, 0, ScreenWidth, ScreenHeight,
-            new Color(255, 255, 255, GameContext.Instance.CurrentMap.Weather.Lightning));
+        if (_weatherBatch.VertexCount > 0)
+            Renderer.Instance.RenderWindow.Draw(_weatherBatch, new RenderStates(Textures.Weather));
+
+        // Lightning full-screen flash overlay — single draw, kept as-is.
+        if (GameContext.Instance.CurrentMap.Weather.Lightning > 0)
+            Renderer.Instance.Draw(Textures.Blank,
+                0, 0, 0, 0, ScreenWidth, ScreenHeight,
+                new Color(255, 255, 255, GameContext.Instance.CurrentMap.Weather.Lightning));
     }
 
-    /// <summary>Render the current map name (color varies by map moral).</summary>
-    public static void MapName()
+    /// <summary>Render the map name label (drawn in world space near the top-right).</summary>
+    public static void DrawMapName()
     {
-        if (string.IsNullOrEmpty(GameContext.Instance.CurrentMap.Data.Name)) return;
+        var name = GameContext.Instance.CurrentMap.Data.Name;
+        if (string.IsNullOrEmpty(name)) return;
 
         var color = GameContext.Instance.CurrentMap.Data.Moral switch
         {
@@ -110,6 +120,66 @@ internal static class MapRenderer
             _ => Color.White
         };
 
-        Renderer.Instance.DrawText(GameContext.Instance.CurrentMap.Data.Name, 426, 48, color);
+        Renderer.Instance.DrawText(name, 426, 48, color);
+    }
+
+    // -------------------------------------------------------------------------
+    // Internal helpers
+    // -------------------------------------------------------------------------
+
+    private static VertexArray GetBatch(int textureIndex)
+    {
+        if (_batches.TryGetValue(textureIndex, out var va)) return va;
+
+        va = new VertexArray(PrimitiveType.Triangles);
+        _batches[textureIndex] = va;
+
+        return va;
+    }
+
+    /// <summary>
+    /// Append two triangles (= one quad) for a standard tile to the array.
+    /// Tile coordinates are converted to pixel coordinates by multiplying by <see cref="Grid"/>.
+    /// </summary>
+    private static void AppendTile(VertexArray va, int tileX, int tileY, float srcX, float srcY, float w, float h,
+        Color tint) =>
+        AppendQuad(va, tileX * Grid, tileY * Grid, srcX, srcY, w, h, tint);
+
+    /// <summary>
+    /// Core quad-append helper that works in pixel coordinates.
+    /// Emits two CCW triangles (TriangleList) covering the rectangle
+    /// from (<paramref name="px"/>, <paramref name="py"/>) with size <paramref name="w"/> × <paramref name="h"/>.
+    /// </summary>
+    private static void AppendQuad(VertexArray va, float px, float py, float srcX, float srcY, float w, float h,
+        Color tint)
+    {
+        // Triangle 1
+        va.Append(new Vertex(new Vector2f(px, py), tint, new Vector2f(srcX, srcY)));
+        va.Append(new Vertex(new Vector2f(px + w, py), tint, new Vector2f(srcX + w, srcY)));
+        va.Append(new Vertex(new Vector2f(px, py + h), tint, new Vector2f(srcX, srcY + h)));
+
+        // Triangle 2
+        va.Append(new Vertex(new Vector2f(px, py + h), tint, new Vector2f(srcX, srcY + h)));
+        va.Append(new Vertex(new Vector2f(px + w, py), tint, new Vector2f(srcX + w, srcY)));
+        va.Append(new Vertex(new Vector2f(px + w, py + h), tint, new Vector2f(srcX + w, srcY + h)));
+    }
+
+    /// <summary>
+    /// Append 4 × 2 triangles for an auto-tile (4 sub-tiles, each 16×16).
+    /// </summary>
+    private static void AppendAutoTile(VertexArray va, int tileX, int tileY,
+        MapTileData data, Color tint)
+    {
+        float baseX = tileX * Grid;
+        float baseY = tileY * Grid;
+
+        for (byte i = 0; i < 4; i++)
+        {
+            var srcPt = data.Mini[i];
+            var dx = baseX + (i is 1 or 3 ? 16 : 0);
+            var dy = baseY + (i is 2 or 3 ? 16 : 0);
+
+            AppendQuad(va, dx, dy, srcPt.X, srcPt.Y, 16f, 16f, tint);
+        }
     }
 }
