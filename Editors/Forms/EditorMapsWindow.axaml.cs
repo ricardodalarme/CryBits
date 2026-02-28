@@ -503,8 +503,8 @@ internal partial class EditorMapsWindow : Window
         Client.Framework.Persistence.Repositories.OptionsRepository.Write();
         if (!Options.PreMapAudio)
         {
-            Music.Stop();
-            Sound.StopAll();
+            AudioManager.Instance.StopMusic();
+            AudioManager.Instance.StopAllSounds();
         }
     }
 

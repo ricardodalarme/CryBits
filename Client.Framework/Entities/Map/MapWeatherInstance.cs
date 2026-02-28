@@ -82,7 +82,8 @@ public class MapWeatherInstance(MapWeather data)
                 }
 
                 // Reset particle when out of bounds
-                if (Particles[i].X > ScreenWidth || Particles[i].Y > ScreenHeight) Particles[i] = new MapWeatherParticleInstance();
+                if (Particles[i].X > ScreenWidth || Particles[i].Y > ScreenHeight)
+                    Particles[i] = new MapWeatherParticleInstance();
             }
 
         // Thunderstorm logic
@@ -98,7 +99,7 @@ public class MapWeatherInstance(MapWeather data)
                     Sounds.Thunder4
                 };
                 var thunder = MyRandom.Next(0, thunderList.Length);
-                Sound.Play(thunderList[thunder]);
+                AudioManager.Instance.PlaySound(thunderList[thunder]);
 
                 // Flash lightning
                 if (thunder < 3) Lightning = 190;
@@ -108,7 +109,7 @@ public class MapWeatherInstance(MapWeather data)
     public void UpdateType()
     {
         // Stop all sounds.
-        Sound.StopAll();
+        AudioManager.Instance.StopAllSounds();
 
         // Resize particle array for the current weather type.
         switch (Data.Type)
@@ -116,7 +117,7 @@ public class MapWeatherInstance(MapWeather data)
             case Weather.Thundering:
             case Weather.Raining:
                 // Play rain loop.
-                Sound.Play(Sounds.Rain, true);
+                AudioManager.Instance.PlaySound(Sounds.Rain, true);
 
                 // Allocate particle array for rain.
                 Particles = new MapWeatherParticleInstance[MaxRainParticles + 1];

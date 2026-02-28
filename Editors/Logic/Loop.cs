@@ -54,13 +54,33 @@ internal static class Loop
         var win = EditorMapsWindow.Instance;
         if (win == null) return;
         if (win.SelectedMap == null) return;
-        if (!win.IsOpen) { Music.Stop(); return; }
-        if (!win.ShowAudioSafe) { Music.Stop(); return; }
-        if (!win.ShowVisualizationSafe) { Music.Stop(); return; }
-        if (string.IsNullOrEmpty(win.SelectedMap?.Music)) { Music.Stop(); return; }
+        if (!win.IsOpen)
+        {
+            AudioManager.Instance.StopMusic();
+            return;
+        }
+
+        if (!win.ShowAudioSafe)
+        {
+            AudioManager.Instance.StopMusic();
+            return;
+        }
+
+        if (!win.ShowVisualizationSafe)
+        {
+            AudioManager.Instance.StopMusic();
+            return;
+        }
+
+        if (string.IsNullOrEmpty(win.SelectedMap?.Music))
+        {
+            AudioManager.Instance.StopMusic();
+            return;
+        }
 
         // Start the map music if not already playing.
-        if (Music.Device == null || Music.Current != win.SelectedMap?.Music)
-            Music.Play(win.SelectedMap!.Music);
+        if (AudioManager.Instance.CurrentMusicDevice == null ||
+            AudioManager.Instance.CurrentMusicName != win.SelectedMap?.Music)
+            AudioManager.Instance.PlayMusic(win.SelectedMap!.Music);
     }
 }

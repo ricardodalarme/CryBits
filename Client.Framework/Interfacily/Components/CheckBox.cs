@@ -27,7 +27,7 @@ public class CheckBox : Component, IMouseUp
         Checked = !Checked;
 
         OnMouseUp?.Invoke();
-        Sound.Play(Sounds.Click);
+        AudioManager.Instance.PlaySound(Sounds.Click);
     }
 
     public override string ToString() => "[CheckBox] " + Name;

@@ -33,7 +33,7 @@ internal static class Program
         // Initialize subsystems
         Socket.Init();
         PacketDispatcher.Register();
-        Sound.Load();
+        AudioManager.Instance.LoadSounds();
 
         // Start the game loop on a background thread.
         // It will block until Avalonia is ready before creating windows.

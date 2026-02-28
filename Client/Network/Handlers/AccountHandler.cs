@@ -98,7 +98,7 @@ internal static class AccountHandler
         Panels.ShopSell.Visible = false;
 
         // Enter the game
-        Music.Stop();
+        AudioManager.Instance.StopMusic();
         Screen.Current = Screens.Game;
     }
 }

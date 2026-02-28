@@ -38,7 +38,7 @@ internal static class Program
 
         Socket.Init();
         PacketDispatcher.Register();
-        Sound.Load();
+        AudioManager.Instance.LoadSounds();
         Renders.Init();
 
         Window.OpenMenu();

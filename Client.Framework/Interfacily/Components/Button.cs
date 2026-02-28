@@ -20,7 +20,7 @@ public class Button : Component, IMouseMoved, IMouseUp, IMouseDown
     {
         if (!IsAbove(new Rectangle(Position, Textures.Buttons[TextureNum].ToSize()))) return;
 
-        Sound.Play(Sounds.Click);
+        AudioManager.Instance.PlaySound(Sounds.Click);
         ButtonState = ButtonState.Above;
 
         OnMouseUp?.Invoke();
@@ -45,7 +45,7 @@ public class Button : Component, IMouseMoved, IMouseUp, IMouseDown
         if (ButtonState != ButtonState.Normal) return;
 
         ButtonState = ButtonState.Above;
-        Sound.Play(Sounds.Above);
+        AudioManager.Instance.PlaySound(Sounds.Above);
     }
 
     public override string ToString() => "[Button] " + Name;

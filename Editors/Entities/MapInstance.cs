@@ -1,13 +1,12 @@
 using System;
+using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Entities.Map;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Forms;
 using CryBits.Entities.Map;
-using SFML.Audio;
 using static CryBits.Globals;
 using static CryBits.Utils;
-using Sound = CryBits.Client.Framework.Audio.Sound;
 
 namespace CryBits.Editors.Entities;
 
@@ -33,7 +32,8 @@ internal static class MapInstance
         if (win?.SelectedMap != null)
             Weather = win.SelectedMap.Weather.Type switch
             {
-                Enums.Weather.Thundering or Enums.Weather.Raining => new MapWeatherParticleInstance[MaxRainParticles + 1],
+                Enums.Weather.Thundering or Enums.Weather.Raining =>
+                    new MapWeatherParticleInstance[MaxRainParticles + 1],
                 Enums.Weather.Snowing => new MapWeatherParticleInstance[MaxSnowParticles + 1],
                 _ => Weather
             };
@@ -111,7 +111,8 @@ internal static class MapInstance
         if (win?.SelectedMap == null) return;
         if (!win.IsOpen || win.SelectedMap.Weather.Type == 0 || !win.ShowVisualizationSafe)
         {
-            if (Sound.List[Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
+            if (AudioManager.Instance.IsPlaying(Sounds.Rain))
+                AudioManager.Instance.StopAllSounds();
             return;
         }
 
@@ -119,11 +120,11 @@ internal static class MapInstance
 
         if (weather.Type == Enums.Weather.Raining || weather.Type == Enums.Weather.Thundering)
         {
-            if (Sound.List[Sounds.Rain].Status != SoundStatus.Playing)
-                Sound.Play(Sounds.Rain);
+            if (!AudioManager.Instance.IsPlaying(Sounds.Rain))
+                AudioManager.Instance.PlaySound(Sounds.Rain, true);
         }
-        else
-            if (Sound.List[Sounds.Rain].Status == SoundStatus.Playing) Sound.StopAll();
+        else if (AudioManager.Instance.IsPlaying(Sounds.Rain))
+            AudioManager.Instance.StopAllSounds();
 
         if (_snowTimer < Environment.TickCount)
         {
@@ -184,7 +185,7 @@ internal static class MapInstance
                     Sounds.Thunder4
                 };
                 var thunder = MyRandom.Next(0, thunderList.Length);
-                Sound.Play(thunderList[thunder]);
+                AudioManager.Instance.PlaySound(thunderList[thunder]);
 
                 if (thunder < 3) Lightning = 190;
             }

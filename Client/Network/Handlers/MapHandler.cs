@@ -79,9 +79,9 @@ internal static class MapHandler
     {
         // Play map background music if present
         if (string.IsNullOrEmpty(GameContext.Instance.CurrentMap.Data.Music))
-            Music.Stop();
+            AudioManager.Instance.StopMusic();
         else
-            Music.Play(GameContext.Instance.CurrentMap.Data.Music);
+            AudioManager.Instance.PlayMusic(GameContext.Instance.CurrentMap.Data.Music);
     }
 
     [PacketHandler]

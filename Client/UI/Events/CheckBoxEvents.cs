@@ -30,7 +30,7 @@ internal static class CheckBoxEvents
     private static void ToggleSound()
     {
         Options.Sounds = !Options.Sounds;
-        if (!Options.Sounds) Sound.StopAll();
+        if (!Options.Sounds) AudioManager.Instance.StopAllSounds();
         OptionsRepository.Write();
     }
 
@@ -40,11 +40,11 @@ internal static class CheckBoxEvents
         OptionsRepository.Write();
 
         if (!Options.Musics)
-            Music.Stop();
+            AudioManager.Instance.StopMusic();
         else if (Screen.Current == Screens.Menu)
-            Music.Play(Musics.Menu);
+            AudioManager.Instance.PlayMusic(Musics.Menu);
         else if (Screen.Current == Screens.Game)
-            Music.Play(GameContext.Instance.CurrentMap.Data.Music);
+            AudioManager.Instance.PlayMusic(GameContext.Instance.CurrentMap.Data.Music);
     }
 
     private static void SaveUsername()

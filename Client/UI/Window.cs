@@ -90,8 +90,8 @@ internal static class Window
     public static void OpenMenu()
     {
         // Play background music.
-        Sound.StopAll();
-        if (Options.Musics) Music.Play(Musics.Menu);
+        AudioManager.Instance.StopAllSounds();
+        if (Options.Musics) AudioManager.Instance.PlayMusic(Musics.Menu);
 
         CheckBoxes.ConnectSaveUsername.Checked = Options.SaveUsername;
         if (Options.SaveUsername) TextBoxes.ConnectUsername.Text = Options.Username;
