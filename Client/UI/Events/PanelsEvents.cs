@@ -62,7 +62,8 @@ internal static class PanelsEvents
     {
         var size = grid + gap;
         var start = panel.Position + new Size(offX, offY);
-        var slot = new Point((Window.Mouse.X - start.X) / size, (Window.Mouse.Y - start.Y) / size);
+        var slot = new Point((Input.InputManager.Instance.MousePosition.X - start.X) / size,
+            (Input.InputManager.Instance.MousePosition.Y - start.Y) / size);
 
         // Check whether the mouse is over the slot
         if (slot.Y < 0 || slot.X < 0 || slot.X >= columns || slot.Y >= lines) return -1;

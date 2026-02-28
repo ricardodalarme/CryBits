@@ -13,18 +13,28 @@ using SFML.Window;
 
 namespace CryBits.Client.UI;
 
+/// <summary>
+/// Handles window-level and UI-level input events.
+/// Game-screen key bindings live in <see cref="Logic.GameInput"/>.
+/// </summary>
 internal static class Window
 {
+    /// <summary>Interval in milliseconds within which two clicks count as a double-click.</summary>
+    private const int DoubleClickIntervalMs = 142;
+
     private static int _doubleClickTimer;
 
-    /// <summary>
-    /// Current mouse pointer position (in screen coordinates).
-    /// </summary>
+    /// <summary>Current mouse pointer position in screen coordinates.</summary>
     public static Point Mouse;
 
     public static void Bind()
     {
-        Screens.Game.OnKeyReleased += OnKeyReleased_Game;
+        Input.InputManager.Instance.MouseButtonPressed += OnMouseButtonPressed;
+        Input.InputManager.Instance.MouseButtonReleased += OnMouseButtonReleased;
+        Input.InputManager.Instance.MouseMoved += OnMouseMoved;
+        Input.InputManager.Instance.KeyPressed += OnKeyPressed;
+        Input.InputManager.Instance.KeyReleased += OnKeyReleased;
+        Input.InputManager.Instance.TextEntered += OnTextEntered;
     }
 
     public static void OnClosed(object sender, EventArgs e)
@@ -35,26 +45,25 @@ internal static class Window
             Program.Working = false;
     }
 
-    public static void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
+    private static void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
     {
-        if (Environment.TickCount < _doubleClickTimer + 142)
+        if (Environment.TickCount < _doubleClickTimer + DoubleClickIntervalMs)
             Screen.Current?.MouseDoubleClick(e);
         else
             Screen.Current?.MouseDown(e);
     }
 
-    public static void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
+    private static void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
     {
-        // Record double-click timestamp.
         _doubleClickTimer = Environment.TickCount;
         Screen.Current?.MouseUp();
 
-        // Reset drag/move state
+        // Reset drag/move state.
         PanelsEvents.InventoryChange = 0;
         PanelsEvents.HotbarChange = -1;
     }
 
-    public static void OnMouseMoved(object sender, MouseMoveEventArgs e)
+    private static void OnMouseMoved(object sender, MouseMoveEventArgs e)
     {
         Mouse.X = e.Position.X;
         Mouse.Y = e.Position.Y;
@@ -62,44 +71,21 @@ internal static class Window
         Screen.Current?.MouseMoved();
     }
 
-    public static void OnKeyPressed(object sender, KeyEventArgs e)
+    private static void OnKeyPressed(object sender, KeyEventArgs e)
     {
-        // Handle key press actions.
         switch (e.Code)
         {
-            case Keyboard.Key.Tab: TextBox.ChangeFocus(); return;
+            case Keyboard.Key.Tab:
+                TextBox.ChangeFocus();
+                return;
         }
     }
 
-    public static void OnKeyReleased(object sender, KeyEventArgs e)
-    {
+    private static void OnKeyReleased(object sender, KeyEventArgs e) =>
         Screen.Current?.KeyReleased(e);
-    }
 
-    public static void OnTextEntered(object sender, TextEventArgs e)
-    {
-        // Dispatch to focused textbox.
+    private static void OnTextEntered(object sender, TextEventArgs e) =>
         TextBox.Focused?.TextEntered(e);
-    }
-
-    public static void OnKeyReleased_Game(KeyEventArgs e)
-    {
-        switch (e.Code)
-        {
-            case Keyboard.Key.Enter: Chat.Type(); break;
-            case Keyboard.Key.Space: Player.Me.CollectItem(); break;
-            case Keyboard.Key.Num1: PlayerSender.HotbarUse(1); break;
-            case Keyboard.Key.Num2: PlayerSender.HotbarUse(2); break;
-            case Keyboard.Key.Num3: PlayerSender.HotbarUse(3); break;
-            case Keyboard.Key.Num4: PlayerSender.HotbarUse(4); break;
-            case Keyboard.Key.Num5: PlayerSender.HotbarUse(5); break;
-            case Keyboard.Key.Num6: PlayerSender.HotbarUse(6); break;
-            case Keyboard.Key.Num7: PlayerSender.HotbarUse(7); break;
-            case Keyboard.Key.Num8: PlayerSender.HotbarUse(8); break;
-            case Keyboard.Key.Num9: PlayerSender.HotbarUse(9); break;
-            case Keyboard.Key.Num0: PlayerSender.HotbarUse(0); break;
-        }
-    }
 
     public static void OpenMenu()
     {
@@ -107,11 +93,9 @@ internal static class Window
         Sound.StopAll();
         if (Options.Musics) Music.Play(Musics.Menu);
 
-        // Restore saved username option.
         CheckBoxes.ConnectSaveUsername.Checked = Options.SaveUsername;
         if (Options.SaveUsername) TextBoxes.ConnectUsername.Text = Options.Username;
 
-        // Return player to menu.
         PanelsEvents.MenuClose();
         Panels.Connect.Visible = true;
         Screen.Current = Screens.Menu;

@@ -242,7 +242,8 @@ internal static class UIRenderer
             if (Player.Me.Hotbar[PanelsEvents.HotbarChange].Type == SlotType.Item)
                 Renders.Render(
                     Textures.Items[Player.Me.Inventory[Player.Me.Hotbar[PanelsEvents.HotbarChange].Slot].Item.Texture],
-                    new Point(UI.Window.Mouse.X + 6, UI.Window.Mouse.Y + 6));
+                    new Point(Input.InputManager.Instance.MousePosition.X + 6,
+                        Input.InputManager.Instance.MousePosition.Y + 6));
     }
 
     private static void MenuCharacter(Panel tool)
@@ -283,7 +284,8 @@ internal static class UIRenderer
 
         if (PanelsEvents.InventoryChange > 0)
             Renders.Render(Textures.Items[Player.Me.Inventory[PanelsEvents.InventoryChange].Item.Texture],
-                new Point(UI.Window.Mouse.X + 6, UI.Window.Mouse.Y + 6));
+                new Point(Input.InputManager.Instance.MousePosition.X + 6,
+                    Input.InputManager.Instance.MousePosition.Y + 6));
     }
 
     private static void PartyInvitation(Panel tool)

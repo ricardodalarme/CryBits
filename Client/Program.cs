@@ -25,18 +25,23 @@ internal static class Program
         ToolsRepository.Read();
         OptionsRepository.Read();
 
+        // Window must be created before any event bindings that require it.
+        Renders.Init();
+
+        // Register all input and UI event handlers.
         CheckBoxEvents.Bind();
         ButtonsEvents.Bind();
         PanelsEvents.Bind();
         TextBoxesEvents.Bind();
         Window.Bind();
-
-        Window.OpenMenu();
+        GameInput.Bind();
 
         Socket.Init();
         PacketDispatcher.Register();
         Sound.Load();
         Renders.Init();
+
+        Window.OpenMenu();
 
         Loop.Init();
     }

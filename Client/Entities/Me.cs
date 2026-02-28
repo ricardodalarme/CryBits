@@ -3,7 +3,7 @@ using Arch.Core;
 using CryBits.Client.Components;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Graphics;
+using CryBits.Client.Input;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Entities.Slots;
@@ -34,13 +34,13 @@ internal class Me(string name) : Player(name)
 
     public void CheckMovement()
     {
-        if (Movement > 0 || !Renders.RenderWindow.HasFocus()) return;
+        if (Movement > 0) return;
 
-        // Handle movement key input.
-        if (Keyboard.IsKeyPressed(Keyboard.Key.Up)) Move(Direction.Up);
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.Down)) Move(Direction.Down);
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.Left)) Move(Direction.Left);
-        else if (Keyboard.IsKeyPressed(Keyboard.Key.Right)) Move(Direction.Right);
+        // Handle movement key input
+        if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Up)) Move(Direction.Up);
+        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Down)) Move(Direction.Down);
+        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Left)) Move(Direction.Left);
+        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Right)) Move(Direction.Right);
     }
 
     public void Move(Direction direction)
@@ -59,7 +59,7 @@ internal class Me(string name) : Player(name)
         if (MapInstance.TileBlocked(X, Y, direction)) return;
 
         // Choose movement speed (walk/run).
-        if (Keyboard.IsKeyPressed(Keyboard.Key.LShift) && Renders.RenderWindow.HasFocus())
+        if (InputManager.Instance.IsKeyPressed(Keyboard.Key.LShift))
             Movement = Movement.Moving;
         else
             Movement = Movement.Walking;
@@ -99,7 +99,7 @@ internal class Me(string name) : Player(name)
         }
 
         // Only proceed if attack key pressed and player may attack.
-        if (!Keyboard.IsKeyPressed(Keyboard.Key.LControl) || !Renders.RenderWindow.HasFocus()) return;
+        if (!InputManager.Instance.IsKeyPressed(Keyboard.Key.LControl)) return;
         if (AttackTimer > 0) return;
         if (Panels.Trade.Visible) return;
         if (Panels.Shop.Visible) return;

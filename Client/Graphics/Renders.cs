@@ -1,5 +1,6 @@
 using System.Drawing;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Input;
 using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
@@ -22,15 +23,15 @@ internal static class Renders
     /// </summary>
     public static void Init()
     {
-        RenderWindow = new RenderWindow(new VideoMode(new Vector2u(800, 608)), Config.GameName, Styles.Titlebar | Styles.Close,
+        RenderWindow = new RenderWindow(new VideoMode(new Vector2u(800, 608)), Config.GameName,
+            Styles.Titlebar | Styles.Close,
             State.Windowed);
         RenderWindow.Closed += UI.Window.OnClosed;
-        RenderWindow.MouseButtonPressed += UI.Window.OnMouseButtonPressed;
-        RenderWindow.MouseMoved += UI.Window.OnMouseMoved;
-        RenderWindow.MouseButtonReleased += UI.Window.OnMouseButtonReleased;
-        RenderWindow.KeyPressed += UI.Window.OnKeyPressed;
-        RenderWindow.KeyReleased += UI.Window.OnKeyReleased;
-        RenderWindow.TextEntered += UI.Window.OnTextEntered;
+        RenderWindow.LostFocus += (_, _) => InputManager.Instance.IsFocused = false;
+        RenderWindow.GainedFocus += (_, _) => InputManager.Instance.IsFocused = true;
+
+        // Pass the window directly — no global lookup needed.
+        InputManager.Instance.BindEvents(RenderWindow);
     }
 
     /// <summary>
