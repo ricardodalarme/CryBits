@@ -12,12 +12,12 @@ internal sealed class PlayerRenderer(Renderer renderer, CharacterRenderer charac
 
     public void PlayerCharacter(Player player)
     {
-        PlayerBars(player);
-        characterRenderer.CharacterShadow(player.TextureNum,
+        DrawBars(player);
+        characterRenderer.DrawShadow(player.TextureNum,
             new Point(player.PixelX, player.PixelY));
     }
 
-    private void PlayerBars(Player player)
+    private void DrawBars(Player player)
     {
         var value = player.Vital[(byte)Vital.Hp];
 

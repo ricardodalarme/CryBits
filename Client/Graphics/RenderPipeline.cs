@@ -50,9 +50,9 @@ internal sealed class RenderPipeline
         // Restore the default view before drawing UI so it renders at fixed screen positions.
         _cameraManager.BeginUIDraw();
 
-        _uiRenderer.Interface(Screen.Current?.Body);
+        _uiRenderer.DrawInterface(Screen.Current?.Body);
 
-        if (Screen.Current == Screens.Game) _uiRenderer.Chat();
+        if (Screen.Current == Screens.Game) _uiRenderer.DrawChat();
 
         _renderer.RenderWindow.Display();
     }
@@ -73,7 +73,7 @@ internal sealed class RenderPipeline
 
         for (byte i = 0; i < _context.CurrentMap.Npc.Length; i++)
             if (_context.CurrentMap.Npc[i].Data != null)
-                _npcRenderer.Npc(_context.CurrentMap.Npc[i]);
+                _npcRenderer.DrawNpc(_context.CurrentMap.Npc[i]);
 
         for (byte i = 0; i < Player.List.Count; i++)
             if (Player.List[i] != Player.Me)
@@ -88,7 +88,7 @@ internal sealed class RenderPipeline
         _fringeRenderSystems.Update(0);
         _mapRenderer.DrawMapName();
 
-        _uiRenderer.Party();
+        _uiRenderer.DrawParty();
 
         // FPS/Latency overlays — these are world-space but near-origin so they work fine here.
         if (Options.Fps) _renderer.DrawText("FPS: " + Loop.Fps, 176, 7, Color.White);

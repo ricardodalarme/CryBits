@@ -12,7 +12,7 @@ internal sealed class ItemRenderer(Renderer renderer)
     /// <summary>
     /// Render an item icon and its amount at the specified slot position.
     /// </summary>
-    public void Item(Item item, short amount, Point start, byte slot, byte columns, byte grid = 32, byte gap = 4)
+    public void DrawItem(Item item, short amount, Point start, byte slot, byte columns, byte grid = 32, byte gap = 4)
     {
         if (item == null) return;
 

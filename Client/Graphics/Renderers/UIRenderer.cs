@@ -32,26 +32,26 @@ internal sealed class UIRenderer(
     /// Recursively render a tree of UI components.
     /// </summary>
     /// <param name="node">Top-level component list to render.</param>
-    public void Interface(List<Component> node)
+    public void DrawInterface(List<Component> node)
     {
         for (byte i = 0; i < node.Count; i++)
             if (node[i].Visible)
             {
                 switch (node[i])
                 {
-                    case Panel panel: Panel(panel); break;
-                    case TextBox textBox: TextBox(textBox); break;
-                    case Button button: Button(button); break;
-                    case CheckBox checkBox: CheckBox(checkBox); break;
+                    case Panel panel: DrawPanel(panel); break;
+                    case TextBox textBox: DrawTextBox(textBox); break;
+                    case Button button: DrawButton(button); break;
+                    case CheckBox checkBox: DrawCheckBox(checkBox); break;
                 }
 
-                InterfaceSpecific(node[i]);
+                DrawInterfaceSpecific(node[i]);
 
-                Interface(node[i].Children);
+                DrawInterface(node[i].Children);
             }
     }
 
-    private void Button(Button tool)
+    private void DrawButton(Button tool)
     {
         byte alpha = tool.ButtonState switch
         {
@@ -63,12 +63,12 @@ internal sealed class UIRenderer(
         renderer.Draw(Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
     }
 
-    private void Panel(Panel tool)
+    private void DrawPanel(Panel tool)
     {
         renderer.Draw(Textures.Panels[tool.TextureNum], tool.Position);
     }
 
-    private void CheckBox(CheckBox tool)
+    private void DrawCheckBox(CheckBox tool)
     {
         var recSource = new Rectangle(new Point(),
             new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
@@ -79,10 +79,10 @@ internal sealed class UIRenderer(
         renderer.Draw(Textures.CheckBox, recSource, recDestiny);
         renderer.DrawText(tool.Text,
             recDestiny.Location.X + Textures.CheckBox.ToSize().Width / 2 +
-            Framework.Interfacily.Components.CheckBox.Margin, recDestiny.Location.Y + 1, Color.White);
+            CheckBox.Margin, recDestiny.Location.Y + 1, Color.White);
     }
 
-    private void TextBox(TextBox tool)
+    private void DrawTextBox(TextBox tool)
     {
         var position = tool.Position;
         var text = tool.Text;
@@ -94,31 +94,31 @@ internal sealed class UIRenderer(
 
         text = TextBreak(text, tool.Width - 10);
 
-        if (Framework.Interfacily.Components.TextBox.Focused != null &&
-            Framework.Interfacily.Components.TextBox.Focused == tool && TextBoxesEvents.Signal) text += "|";
+        if (TextBox.Focused != null &&
+            TextBox.Focused == tool && TextBoxesEvents.Signal) text += "|";
         renderer.DrawText(text, position.X + 4, position.Y + 2, Color.White);
     }
 
-    private void InterfaceSpecific(Component tool)
+    private void DrawInterfaceSpecific(Component tool)
     {
         if (tool is Panel panel)
             switch (panel.Name)
             {
-                case "SelectCharacter": SelectCharacterClass(); break;
-                case "CreateCharacter": CreateCharacterClass(); break;
-                case "Hotbar": Hotbar(panel); break;
-                case "Menu_Character": MenuCharacter(panel); break;
+                case "SelectCharacter": DrawSelectCharacterClass(); break;
+                case "CreateCharacter": DrawCreateCharacterClass(); break;
+                case "Hotbar": DrawHotbar(panel); break;
+                case "Menu_Character": DrawMenuCharacter(panel); break;
                 case "Menu_Inventory": MenuInventory(panel); break;
-                case "Bars": Bars(panel); break;
-                case "Information": Information(panel); break;
-                case "Party_Invitation": PartyInvitation(panel); break;
-                case "Trade_Invitation": Trade_Invitation(panel); break;
-                case "Trade": Trade(panel); break;
-                case "Shop": Shop(panel); break;
+                case "Bars": DrawBars(panel); break;
+                case "Information": DrawInformation(panel); break;
+                case "Party_Invitation": DrawPartyInvitation(panel); break;
+                case "Trade_Invitation": DrawTradeInvitation(panel); break;
+                case "Trade": DrawTrade(panel); break;
+                case "Shop": DrawShop(panel); break;
             }
     }
 
-    private void Bars(Panel tool)
+    private void DrawBars(Panel tool)
     {
         var hpPercentage = Player.Me.Vital[(byte)Vital.Hp] / (decimal)Player.Me.MaxVital[(byte)Vital.Hp];
         var mpPercentage = Player.Me.Vital[(byte)Vital.Mp] / (decimal)Player.Me.MaxVital[(byte)Vital.Mp];
@@ -149,11 +149,11 @@ internal sealed class UIRenderer(
     /// <summary>
     /// Render chat messages and prompt if chat is not focused.
     /// </summary>
-    public void Chat()
+    public void DrawChat()
     {
         var tool = Panels.Chat;
-        tool.Visible = Framework.Interfacily.Components.TextBox.Focused != null &&
-                       Framework.Interfacily.Components.TextBox.Focused.Name.Equals("Chat");
+        tool.Visible = TextBox.Focused != null &&
+                       TextBox.Focused.Name.Equals("Chat");
 
         if (tool.Visible || Loop.ChatTimer >= Environment.TickCount && Options.Chat)
             for (var i = UI.Chat.LinesFirst; i <= UI.Chat.LinesVisible + UI.Chat.LinesFirst; i++)
@@ -167,7 +167,7 @@ internal sealed class UIRenderer(
                 Color.White);
     }
 
-    private void Information(Panel tool)
+    private void DrawInformation(Panel tool)
     {
         var item = Item.List.Get(PanelsEvents.InformationId);
         var data = new List<string>();
@@ -227,7 +227,7 @@ internal sealed class UIRenderer(
             renderer.DrawText(data[i], positions[i].X, positions[i].Y, Color.White);
     }
 
-    private void Hotbar(Panel tool)
+    private void DrawHotbar(Panel tool)
     {
         var indicator = string.Empty;
 
@@ -238,7 +238,7 @@ internal sealed class UIRenderer(
                 switch (Player.Me.Hotbar[i].Type)
                 {
                     case SlotType.Item:
-                        itemRenderer.Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6),
+                        itemRenderer.DrawItem(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6),
                             (byte)(i + 1),
                             10); break;
                 }
@@ -256,7 +256,7 @@ internal sealed class UIRenderer(
                         Input.InputManager.Instance.MousePosition.Y + 6));
     }
 
-    private void MenuCharacter(Panel tool)
+    private void DrawMenuCharacter(Panel tool)
     {
         renderer.DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
         renderer.DrawText(Player.Me.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, Color.White);
@@ -293,7 +293,7 @@ internal sealed class UIRenderer(
         byte numColumns = 5;
 
         for (byte i = 0; i < MaxInventory; i++)
-            itemRenderer.Item(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount,
+            itemRenderer.DrawItem(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount,
                 tool.Position + new Size(7, 30), i,
                 numColumns);
 
@@ -303,7 +303,7 @@ internal sealed class UIRenderer(
                     Input.InputManager.Instance.MousePosition.Y + 6));
     }
 
-    private void PartyInvitation(Panel tool)
+    private void DrawPartyInvitation(Panel tool)
     {
         renderer.DrawText(PanelsEvents.PartyInvitation + " has invite you to a party. Would you like to join?",
             tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
@@ -312,7 +312,7 @@ internal sealed class UIRenderer(
     /// <summary>
     /// Render the party member bars and names.
     /// </summary>
-    public void Party()
+    public void DrawParty()
     {
         for (byte i = 0; i < Player.Me.Party.Length; i++)
         {
@@ -331,24 +331,24 @@ internal sealed class UIRenderer(
         }
     }
 
-    private void Trade_Invitation(Panel tool)
+    private void DrawTradeInvitation(Panel tool)
     {
         renderer.DrawText(PanelsEvents.TradeInvitation + " has invite you to a trade. Would you like to join?",
             tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
     }
 
-    private void Trade(Panel tool)
+    private void DrawTrade(Panel tool)
     {
         for (byte i = 0; i < MaxInventory; i++)
         {
-            itemRenderer.Item(Player.Me.TradeOffer[i].Item, Player.Me.TradeOffer[i].Amount,
+            itemRenderer.DrawItem(Player.Me.TradeOffer[i].Item, Player.Me.TradeOffer[i].Amount,
                 tool.Position + new Size(7, 50), i, 5);
-            itemRenderer.Item(Player.Me.TradeTheirOffer[i].Item, Player.Me.TradeTheirOffer[i].Amount,
+            itemRenderer.DrawItem(Player.Me.TradeTheirOffer[i].Item, Player.Me.TradeTheirOffer[i].Amount,
                 tool.Position + new Size(192, 50), i, 5);
         }
     }
 
-    private void Shop(Panel tool)
+    private void DrawShop(Panel tool)
     {
         var name = PanelsEvents.ShopOpen.Name;
         renderer.DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, TextAlign.Center);
@@ -357,12 +357,12 @@ internal sealed class UIRenderer(
             Color.White);
 
         for (byte i = 0; i < PanelsEvents.ShopOpen.Sold.Count; i++)
-            itemRenderer.Item(PanelsEvents.ShopOpen.Sold[i].Item, PanelsEvents.ShopOpen.Sold[i].Amount,
+            itemRenderer.DrawItem(PanelsEvents.ShopOpen.Sold[i].Item, PanelsEvents.ShopOpen.Sold[i].Amount,
                 tool.Position + new Size(7, 50), (byte)(i + 1), 7);
     }
 
 
-    private void SelectCharacterClass()
+    private void DrawSelectCharacterClass()
     {
         var textPosition = new Point(399, 425);
         var text = "(" + (PanelsEvents.SelectCharacter + 1) + ") None";
@@ -383,7 +383,7 @@ internal sealed class UIRenderer(
         if (textureNum > 0)
         {
             renderer.Draw(Textures.Faces[textureNum], new Point(353, 442));
-            characterRenderer.Character(textureNum,
+            characterRenderer.DrawCharacter(textureNum,
                 new Point(356, 534 - Textures.Characters[textureNum].ToSize().Height / 4),
                 Direction.Down, AnimationStopped);
         }
@@ -393,7 +393,7 @@ internal sealed class UIRenderer(
         renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
     }
 
-    private void CreateCharacterClass()
+    private void DrawCreateCharacterClass()
     {
         short textureNum = 0;
         var @class = Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value;
@@ -406,7 +406,7 @@ internal sealed class UIRenderer(
         if (textureNum > 0)
         {
             renderer.Draw(Textures.Faces[textureNum], new Point(425, 440));
-            characterRenderer.Character(textureNum, new Point(433, 501), Direction.Down, AnimationStopped);
+            characterRenderer.DrawCharacter(textureNum, new Point(433, 501), Direction.Down, AnimationStopped);
         }
 
         var text = @class.Name;

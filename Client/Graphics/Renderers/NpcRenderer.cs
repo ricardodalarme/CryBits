@@ -10,16 +10,16 @@ internal sealed class NpcRenderer(Renderer renderer, CharacterRenderer character
 {
     public static NpcRenderer Instance { get; } = new(Renderer.Instance, CharacterRenderer.Instance);
 
-    public void Npc(NpcInstance npcInstance)
+    public void DrawNpc(NpcInstance npcInstance)
     {
         if (npcInstance.Data.Texture <= 0 || npcInstance.Data.Texture > Textures.Characters.Count) return;
 
-        NpcBars(npcInstance);
-        characterRenderer.CharacterShadow(npcInstance.Data.Texture,
+        DrawBars(npcInstance);
+        characterRenderer.DrawShadow(npcInstance.Data.Texture,
             new Point(npcInstance.PixelX, npcInstance.PixelY));
     }
 
-    private void NpcBars(NpcInstance npcInstance)
+    private void DrawBars(NpcInstance npcInstance)
     {
         var texture = Textures.Characters[npcInstance.Data.Texture];
         var value = npcInstance.Vital[(byte)Vital.Hp];

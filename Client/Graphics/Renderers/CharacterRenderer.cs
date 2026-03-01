@@ -10,7 +10,7 @@ internal sealed class CharacterRenderer(Renderer renderer)
 {
     public static CharacterRenderer Instance { get; } = new(Renderer.Instance);
 
-    public void Character(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
+    public void DrawCharacter(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
     {
         Rectangle recSource = new();
         var size = Textures.Characters[textureNum].ToSize();
@@ -33,11 +33,11 @@ internal sealed class CharacterRenderer(Renderer renderer)
 
         if (hurt) color = new Color(205, 125, 125);
 
-        CharacterShadow(textureNum, position);
+        DrawShadow(textureNum, position);
         renderer.Draw(Textures.Characters[textureNum], recSource, recDestiny, color);
     }
 
-    public void CharacterShadow(short textureNum, Point position)
+    public void DrawShadow(short textureNum, Point position)
     {
         Rectangle recSource = new();
         var size = Textures.Characters[textureNum].ToSize();
