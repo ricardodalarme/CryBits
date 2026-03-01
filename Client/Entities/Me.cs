@@ -52,7 +52,7 @@ internal class Me(string name) : Player(name)
         if (Direction != direction)
         {
             Direction = direction;
-            PlayerSender.PlayerDirection();
+            PlayerSender.Instance.PlayerDirection();
         }
 
         // Cancel if next tile is blocked.
@@ -65,7 +65,7 @@ internal class Me(string name) : Player(name)
             Movement = Movement.Walking;
 
         // Notify server of movement.
-        PlayerSender.PlayerMove();
+        PlayerSender.Instance.PlayerMove();
 
         // Set pixel offset for smooth movement.
         switch (direction)
@@ -105,7 +105,7 @@ internal class Me(string name) : Player(name)
         if (Panels.Shop.Visible) return;
 
         AttackTimer = Environment.TickCount;
-        PlayerSender.PlayerAttack();
+        PlayerSender.Instance.PlayerAttack();
     }
 
     public void CollectItem()
@@ -134,7 +134,7 @@ internal class Me(string name) : Player(name)
         if (Environment.TickCount <= _collectTimer + 250) return;
 
         // Request item pickup.
-        PlayerSender.CollectItem();
+        PlayerSender.Instance.CollectItem();
         _collectTimer = Environment.TickCount;
     }
 

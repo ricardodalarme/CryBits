@@ -46,7 +46,7 @@ internal static class MapHandler
             needed = true;
 
         // Request map data
-        MapSender.RequestMap(needed);
+        MapSender.Instance.RequestMap(needed);
     }
 
     [PacketHandler]

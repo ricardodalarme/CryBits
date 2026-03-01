@@ -2,8 +2,10 @@ using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
-internal static class MapSender
+internal class MapSender(PacketSender packetSender)
 {
-    public static void RequestMap(bool order) =>
-        PacketSender.Packet(new RequestMapPacket { SendMap = order });
+    public static MapSender Instance { get; } = new(PacketSender.Instance);
+
+    public void RequestMap(bool order) =>
+        packetSender.Packet(new RequestMapPacket { SendMap = order });
 }

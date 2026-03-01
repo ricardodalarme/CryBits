@@ -2,12 +2,14 @@ using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
-internal static class ShopSender
+internal class ShopSender(PacketSender packetSender)
 {
-    public static void ShopBuy(short slot) => PacketSender.Packet(new ShopBuyPacket { Slot = slot });
+    public static ShopSender Instance { get; } = new(PacketSender.Instance);
 
-    public static void ShopSell(short slot, short amount) =>
-        PacketSender.Packet(new ShopSellPacket { Slot = slot, Amount = amount });
+    public void ShopBuy(short slot) => packetSender.Packet(new ShopBuyPacket { Slot = slot });
 
-    public static void ShopClose() => PacketSender.Packet(new ShopClosePacket());
+    public void ShopSell(short slot, short amount) =>
+        packetSender.Packet(new ShopSellPacket { Slot = slot, Amount = amount });
+
+    public void ShopClose() => packetSender.Packet(new ShopClosePacket());
 }

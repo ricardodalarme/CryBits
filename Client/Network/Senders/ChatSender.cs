@@ -3,8 +3,10 @@ using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
-internal static class ChatSender
+internal class ChatSender(PacketSender packetSender)
 {
-    public static void Message(string message, Message type, string addressee = "") =>
-        PacketSender.Packet(new MessagePacket { Text = message, Type = (byte)type, Addressee = addressee });
+    public static ChatSender Instance { get; } = new(PacketSender.Instance);
+
+    public void Message(string message, Message type, string addressee = "") =>
+        packetSender.Packet(new MessagePacket { Text = message, Type = (byte)type, Addressee = addressee });
 }

@@ -6,47 +6,49 @@ using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Client.Network.Senders;
 
-internal static class PlayerSender
+internal class PlayerSender(PacketSender packetSender)
 {
-    public static void PlayerDirection() => PacketSender.Packet(new PlayerDirectionPacket { Direction = (byte)Player.Me.Direction });
+    public static PlayerSender Instance { get; } = new(PacketSender.Instance);
 
-    public static void PlayerMove() => PacketSender.Packet(new PlayerMovePacket { X = Player.Me.X, Y = Player.Me.Y, Movement = (byte)Player.Me.Movement });
+    public void PlayerDirection() => packetSender.Packet(new PlayerDirectionPacket { Direction = (byte)Player.Me.Direction });
 
-    public static void PlayerAttack() => PacketSender.Packet(new PlayerAttackPacket());
+    public void PlayerMove() => packetSender.Packet(new PlayerMovePacket { X = Player.Me.X, Y = Player.Me.Y, Movement = (byte)Player.Me.Movement });
 
-    public static void AddPoint(Attribute attribute) => PacketSender.Packet(new AddPointPacket { Attribute = (byte)attribute });
+    public void PlayerAttack() => packetSender.Packet(new PlayerAttackPacket());
 
-    public static void CollectItem() => PacketSender.Packet(new CollectItemPacket());
+    public void AddPoint(Attribute attribute) => packetSender.Packet(new AddPointPacket { Attribute = (byte)attribute });
 
-    public static void DropItem(short slot, short amount) => PacketSender.Packet(new DropItemPacket { Slot = slot, Amount = amount });
+    public void CollectItem() => packetSender.Packet(new CollectItemPacket());
 
-    public static void InventoryChange(short old, short @new)
+    public void DropItem(short slot, short amount) => packetSender.Packet(new DropItemPacket { Slot = slot, Amount = amount });
+
+    public void InventoryChange(short old, short @new)
     {
-        PacketSender.Packet(new InventoryChangePacket { OldSlot = old, NewSlot = @new });
+        packetSender.Packet(new InventoryChangePacket { OldSlot = old, NewSlot = @new });
 
         // Close drop panel
         Panels.Drop.Visible = false;
     }
 
-    public static void InventoryUse(byte slot)
+    public void InventoryUse(byte slot)
     {
-        PacketSender.Packet(new InventoryUsePacket { Slot = slot });
+        packetSender.Packet(new InventoryUsePacket { Slot = slot });
 
         // Close drop panel
         Panels.Drop.Visible = false;
     }
 
-    public static void EquipmentRemove(byte slot) => PacketSender.Packet(new EquipmentRemovePacket { Slot = slot });
+    public void EquipmentRemove(byte slot) => packetSender.Packet(new EquipmentRemovePacket { Slot = slot });
 
-    public static void HotbarAdd(short hotbarSlot, byte type, short slot) => PacketSender.Packet(new HotbarAddPacket { HotbarSlot = hotbarSlot, Type = type, Slot = slot });
+    public void HotbarAdd(short hotbarSlot, byte type, short slot) => packetSender.Packet(new HotbarAddPacket { HotbarSlot = hotbarSlot, Type = type, Slot = slot });
 
-    public static void HotbarChange(short old, short @new) => PacketSender.Packet(new HotbarChangePacket { OldSlot = old, NewSlot = @new });
+    public void HotbarChange(short old, short @new) => packetSender.Packet(new HotbarChangePacket { OldSlot = old, NewSlot = @new });
 
-    public static void HotbarUse(byte slot)
+    public void HotbarUse(byte slot)
     {
         if (TextBox.Focused == null)
         {
-            PacketSender.Packet(new HotbarUsePacket { Slot = slot });
+            packetSender.Packet(new HotbarUsePacket { Slot = slot });
 
             // Close drop panel
             Panels.Drop.Visible = false;

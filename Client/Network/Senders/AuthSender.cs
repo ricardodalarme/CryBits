@@ -4,24 +4,26 @@ using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
-internal static class AuthSender
+internal class AuthSender(PacketSender packetSender)
 {
-    public static void Latency()
+    public static AuthSender Instance { get; } = new(PacketSender.Instance);
+
+    public void Latency()
     {
-        PacketSender.Packet(new LatencyPacket());
+        packetSender.Packet(new LatencyPacket());
 
         // Record latency send timestamp
         NetworkClient.LatencySend = Environment.TickCount;
     }
 
-    public static void Connect() => PacketSender.Packet(new ConnectPacket
+    public void Connect() => packetSender.Packet(new ConnectPacket
     {
         Username = TextBoxes.ConnectUsername.Text,
         Password = TextBoxes.ConnectPassword.Text,
         IsClientAccess = false
     });
 
-    public static void Register() => PacketSender.Packet(new RegisterPacket
+    public void Register() => packetSender.Packet(new RegisterPacket
     {
         Username = TextBoxes.RegisterUsername.Text,
         Password = TextBoxes.RegisterPassword.Text

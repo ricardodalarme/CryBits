@@ -5,9 +5,11 @@ using LiteNetLib.Utils;
 
 namespace CryBits.Client.Network;
 
-internal static class PacketSender
+internal class PacketSender
 {
-    public static void Packet(IClientPacket packet)
+    public static PacketSender Instance { get; } = new();
+
+    public void Packet(IClientPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);

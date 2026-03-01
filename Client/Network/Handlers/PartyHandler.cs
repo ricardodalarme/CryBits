@@ -23,7 +23,7 @@ internal static class PartyHandler
         // Decline if player disabled party invites
         if (!Options.Party)
         {
-            PartySender.PartyDecline();
+            PartySender.Instance.PartyDecline();
             return;
         }
 

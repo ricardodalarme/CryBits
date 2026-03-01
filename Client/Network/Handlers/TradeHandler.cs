@@ -47,7 +47,7 @@ internal static class TradeHandler
         // Decline if player disabled trade invitations
         if (!Options.Trade)
         {
-            TradeSender.TradeDecline();
+            TradeSender.Instance.TradeDecline();
             return;
         }
 

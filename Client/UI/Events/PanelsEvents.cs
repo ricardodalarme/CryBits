@@ -102,7 +102,7 @@ internal static class PanelsEvents
                                 TextBoxes.ShopSellAmount.Text = string.Empty;
                                 Panels.ShopSell.Visible = true;
                             }
-                            else ShopSender.ShopSell(slot, 1);
+                            else ShopSender.Instance.ShopSell(slot, 1);
                         }
                         // Otherwise drop the item
                         else if (!Panels.Trade.Visible)
@@ -112,7 +112,7 @@ internal static class PanelsEvents
                                 TextBoxes.DropAmount.Text = string.Empty;
                                 Panels.Drop.Visible = true;
                             }
-                            else PlayerSender.DropItem(slot, 1);
+                            else PlayerSender.Instance.DropItem(slot, 1);
 
                     break;
                 }
@@ -133,7 +133,7 @@ internal static class PanelsEvents
                 if (e.Button == Mouse.Button.Right)
                     if (Player.Me.Equipment[i]?.Bind != BindOn.Equip)
                     {
-                        PlayerSender.EquipmentRemove(i);
+                        PlayerSender.Instance.EquipmentRemove(i);
                         return;
                     }
     }
@@ -149,7 +149,7 @@ internal static class PanelsEvents
         {
             // Drop or use hotbar slot (right-click)
             case Mouse.Button.Right:
-                PlayerSender.HotbarAdd(slot, 0, 0);
+                PlayerSender.Instance.HotbarAdd(slot, 0, 0);
                 break;
             // Select the hotbar slot (start drag)
             case Mouse.Button.Left:
@@ -166,7 +166,7 @@ internal static class PanelsEvents
         if (slot == -1) return;
         if (Player.Me.TradeOffer[slot].Item == null) return;
 
-        if (e.Button == Mouse.Button.Right) TradeSender.TradeOffer(slot, 0);
+        if (e.Button == Mouse.Button.Right) TradeSender.Instance.TradeOffer(slot, 0);
     }
 
     public static void CheckInformation()
@@ -207,15 +207,15 @@ internal static class PanelsEvents
         if (InventoryChange == 0) return;
 
         // Send inventory slot change to server.
-        PlayerSender.InventoryChange(InventoryChange, InventorySlot);
+        PlayerSender.Instance.InventoryChange(InventoryChange, InventorySlot);
     }
 
     public static void Hotbar_MouseUp()
     {
         // Change hotbar slot
         if (HotbarSlot < 0) return;
-        if (HotbarChange >= 0) PlayerSender.HotbarChange(HotbarChange, HotbarSlot);
-        if (InventoryChange > 0) PlayerSender.HotbarAdd(HotbarSlot, (byte)SlotType.Item, InventoryChange);
+        if (HotbarChange >= 0) PlayerSender.Instance.HotbarChange(HotbarChange, HotbarSlot);
+        if (InventoryChange > 0) PlayerSender.Instance.HotbarAdd(HotbarSlot, (byte)SlotType.Item, InventoryChange);
     }
 
     public static void Trade_MouseUp()
@@ -224,7 +224,7 @@ internal static class PanelsEvents
 
         // Add item to trade
         if (Player.Me.Inventory[InventoryChange].Amount == 1)
-            TradeSender.TradeOffer(TradeSlot, InventoryChange);
+            TradeSender.Instance.TradeOffer(TradeSlot, InventoryChange);
         else
         {
             TradeInventorySlot = InventoryChange;
@@ -240,7 +240,7 @@ internal static class PanelsEvents
         if (Player.Me.Inventory[slot].Item == null) return;
 
         // Use item
-        PlayerSender.InventoryUse((byte)slot);
+        PlayerSender.Instance.InventoryUse((byte)slot);
     }
 
     public static void Hotbar_MouseDoubleClick(MouseButtonEventArgs e)
@@ -250,7 +250,7 @@ internal static class PanelsEvents
         if (Player.Me.Hotbar[slot].Slot <= 0) return;
 
         // Use item from hotbar
-        PlayerSender.HotbarUse((byte)slot);
+        PlayerSender.Instance.HotbarUse((byte)slot);
     }
 
     public static void Trade_MouseDoubleClick(MouseButtonEventArgs e)
@@ -260,6 +260,6 @@ internal static class PanelsEvents
         if (ShopOpen == null) return;
 
         // Purchase shop item.
-        ShopSender.ShopBuy((byte)slot);
+        ShopSender.Instance.ShopBuy((byte)slot);
     }
 }

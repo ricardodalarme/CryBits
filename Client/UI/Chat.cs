@@ -99,17 +99,17 @@ internal static class Chat
         switch (parts[0].ToLower())
         {
             case "/party":
-                if (parts.Length > 1) PartySender.PartyInvite(parts[1]);
+                if (parts.Length > 1) PartySender.Instance.PartyInvite(parts[1]);
                 break;
             case "/partyleave":
-                PartySender.PartyLeave();
+                PartySender.Instance.PartyLeave();
                 break;
             case "/trade":
-                if (parts.Length > 1) TradeSender.TradeInvite(parts[1]);
+                if (parts.Length > 1) TradeSender.Instance.TradeInvite(parts[1]);
                 break;
             default:
                 if (message.Substring(0, 1) == "'")
-                    ChatSender.Message(message.Substring(1), Message.Global);
+                    ChatSender.Instance.Message(message.Substring(1), Message.Global);
                 else if (message.Substring(0, 1) == "!")
                 {
                     if (parts.GetUpperBound(0) < 1)
@@ -119,12 +119,12 @@ internal static class Chat
                         var destiny = message.Substring(1, parts[0].Length - 1);
                         message = message.Substring(parts[0].Length + 1);
 
-                        ChatSender.Message(message, Message.Private, destiny);
+                        ChatSender.Instance.Message(message, Message.Private, destiny);
                     }
                 }
                 // Map message
                 else
-                    ChatSender.Message(message, Message.Map);
+                    ChatSender.Instance.Message(message, Message.Map);
 
                 break;
         }

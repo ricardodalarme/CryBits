@@ -94,7 +94,7 @@ internal static class Loop
             // Update FPS counter.
             if (timer1000 < Environment.TickCount)
             {
-                AuthSender.Latency();
+                AuthSender.Instance.Latency();
                 Fps = fps;
                 fps = 0;
                 timer1000 = Environment.TickCount + 1000;

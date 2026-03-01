@@ -6,10 +6,12 @@ using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
-internal static class AccountSender
+internal class AccountSender(PacketSender packetSender)
 {
-    public static void CreateCharacter() =>
-        PacketSender.Packet(new CreateCharacterPacket
+    public static AccountSender Instance { get; } = new(PacketSender.Instance);
+
+    public void CreateCharacter() =>
+        packetSender.Packet(new CreateCharacterPacket
         {
             Name = TextBoxes.CreateCharacterName.Text,
             ClassId = Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value.Id.ToString(),
@@ -17,16 +19,16 @@ internal static class AccountSender
             TextureNum = PanelsEvents.CreateCharacterTex
         });
 
-    public static void CharacterUse() =>
-        PacketSender.Packet(new CharacterUsePacket
+    public void CharacterUse() =>
+        packetSender.Packet(new CharacterUsePacket
         {
             CharacterIndex = PanelsEvents.SelectCharacter
         });
 
-    public static void CharacterCreate() => PacketSender.Packet(new CharacterCreatePacket());
+    public void CharacterCreate() => packetSender.Packet(new CharacterCreatePacket());
 
-    public static void CharacterDelete() =>
-        PacketSender.Packet(new CharacterDeletePacket
+    public void CharacterDelete() =>
+        packetSender.Packet(new CharacterDeletePacket
         {
             CharacterIndex = PanelsEvents.SelectCharacter
         });

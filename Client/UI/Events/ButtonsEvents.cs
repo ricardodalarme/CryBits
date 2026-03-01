@@ -115,7 +115,7 @@ internal static class ButtonsEvents
         OptionsRepository.Write();
 
         // Connect to game
-        if (NetworkClient.TryConnect()) AuthSender.Connect();
+        if (NetworkClient.TryConnect()) AuthSender.Instance.Connect();
     }
 
     private static void RegisterOk()
@@ -127,13 +127,13 @@ internal static class ButtonsEvents
             return;
         }
 
-        if (NetworkClient.TryConnect()) AuthSender.Register();
+        if (NetworkClient.TryConnect()) AuthSender.Instance.Register();
     }
 
     private static void CreateCharacter()
     {
         // Open character creation
-        if (NetworkClient.TryConnect()) AccountSender.CreateCharacter();
+        if (NetworkClient.TryConnect()) AccountSender.Instance.CreateCharacter();
     }
 
     private static void CreateCharacterChangeRight()
@@ -185,17 +185,17 @@ internal static class ButtonsEvents
 
     private static void CharacterUse()
     {
-        AccountSender.CharacterUse();
+        AccountSender.Instance.CharacterUse();
     }
 
     private static void CharacterDelete()
     {
-        AccountSender.CharacterDelete();
+        AccountSender.Instance.CharacterDelete();
     }
 
     private static void CharacterCreate()
     {
-        AccountSender.CharacterCreate();
+        AccountSender.Instance.CharacterCreate();
     }
 
     private static void CharacterChangeRight()
@@ -235,27 +235,27 @@ internal static class ButtonsEvents
 
     private static void AttributeStrength()
     {
-        PlayerSender.AddPoint(Attribute.Strength);
+        PlayerSender.Instance.AddPoint(Attribute.Strength);
     }
 
     private static void AttributeResistance()
     {
-        PlayerSender.AddPoint(Attribute.Resistance);
+        PlayerSender.Instance.AddPoint(Attribute.Resistance);
     }
 
     private static void AttributeIntelligence()
     {
-        PlayerSender.AddPoint(Attribute.Intelligence);
+        PlayerSender.Instance.AddPoint(Attribute.Intelligence);
     }
 
     private static void AttributeAgility()
     {
-        PlayerSender.AddPoint(Attribute.Agility);
+        PlayerSender.Instance.AddPoint(Attribute.Agility);
     }
 
     private static void AttributeVitality()
     {
-        PlayerSender.AddPoint(Attribute.Vitality);
+        PlayerSender.Instance.AddPoint(Attribute.Vitality);
     }
 
     private static void MenuInventory()
@@ -281,7 +281,7 @@ internal static class ButtonsEvents
             return;
         }
 
-        PlayerSender.DropItem(PanelsEvents.DropSlot, amount);
+        PlayerSender.Instance.DropItem(PanelsEvents.DropSlot, amount);
         Panels.Drop.Visible = false;
     }
 
@@ -292,31 +292,31 @@ internal static class ButtonsEvents
 
     private static void PartyYes()
     {
-        PartySender.PartyAccept();
+        PartySender.Instance.PartyAccept();
         Panels.PartyInvitation.Visible = false;
     }
 
     private static void PartyNo()
     {
-        PartySender.PartyDecline();
+        PartySender.Instance.PartyDecline();
         Panels.PartyInvitation.Visible = false;
     }
 
     private static void TradeYes()
     {
-        TradeSender.TradeAccept();
+        TradeSender.Instance.TradeAccept();
         Panels.TradeInvitation.Visible = false;
     }
 
     private static void TradeNo()
     {
-        TradeSender.TradeDecline();
+        TradeSender.Instance.TradeDecline();
         Panels.TradeInvitation.Visible = false;
     }
 
     private static void TradeClose()
     {
-        TradeSender.TradeLeave();
+        TradeSender.Instance.TradeLeave();
         Panels.Trade.Visible = false;
     }
 
@@ -325,7 +325,7 @@ internal static class ButtonsEvents
         Buttons.TradeOfferConfirm.Visible = true;
         Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
         Panels.TradeOfferDisable.Visible = false;
-        TradeSender.TradeOfferState(TradeStatus.Accepted);
+        TradeSender.Instance.TradeOfferState(TradeStatus.Accepted);
 
         Player.Me.TradeOffer = new ItemSlot[MaxInventory];
         Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory];
@@ -336,7 +336,7 @@ internal static class ButtonsEvents
         Buttons.TradeOfferConfirm.Visible = true;
         Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
         Panels.TradeOfferDisable.Visible = false;
-        TradeSender.TradeOfferState(TradeStatus.Declined);
+        TradeSender.Instance.TradeOfferState(TradeStatus.Declined);
     }
 
     private static void TradeOfferConfirm()
@@ -344,7 +344,7 @@ internal static class ButtonsEvents
         Buttons.TradeOfferConfirm.Visible =
             Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
         Panels.TradeOfferDisable.Visible = true;
-        TradeSender.TradeOfferState(TradeStatus.Confirmed);
+        TradeSender.Instance.TradeOfferState(TradeStatus.Confirmed);
     }
 
     private static void TradeAmountConfirm()
@@ -356,7 +356,7 @@ internal static class ButtonsEvents
             return;
         }
 
-        TradeSender.TradeOffer(PanelsEvents.TradeSlot, PanelsEvents.TradeInventorySlot,
+        TradeSender.Instance.TradeOffer(PanelsEvents.TradeSlot, PanelsEvents.TradeInventorySlot,
             amount);
         Panels.TradeAmount.Visible = false;
     }
@@ -369,7 +369,7 @@ internal static class ButtonsEvents
     private static void ShopClose()
     {
         Panels.Shop.Visible = false;
-        ShopSender.ShopClose();
+        ShopSender.Instance.ShopClose();
     }
 
     private static void ShopSellConfirm()
@@ -381,7 +381,7 @@ internal static class ButtonsEvents
             return;
         }
 
-        ShopSender.ShopSell(PanelsEvents.ShopInventorySlot, amount);
+        ShopSender.Instance.ShopSell(PanelsEvents.ShopInventorySlot, amount);
         Panels.ShopSell.Visible = false;
     }
 

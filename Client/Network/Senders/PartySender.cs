@@ -2,14 +2,16 @@ using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
 
-internal static class PartySender
+internal class PartySender(PacketSender packetSender)
 {
-    public static void PartyInvite(string playerName) =>
-        PacketSender.Packet(new PartyInvitePacket { PlayerName = playerName });
+    public static PartySender Instance { get; } = new(PacketSender.Instance);
 
-    public static void PartyAccept() => PacketSender.Packet(new PartyAcceptPacket());
+    public void PartyInvite(string playerName) =>
+        packetSender.Packet(new PartyInvitePacket { PlayerName = playerName });
 
-    public static void PartyDecline() => PacketSender.Packet(new PartyDeclinePacket());
+    public void PartyAccept() => packetSender.Packet(new PartyAcceptPacket());
 
-    public static void PartyLeave() => PacketSender.Packet(new PartyLeavePacket());
+    public void PartyDecline() => packetSender.Packet(new PartyDeclinePacket());
+
+    public void PartyLeave() => packetSender.Packet(new PartyLeavePacket());
 }
