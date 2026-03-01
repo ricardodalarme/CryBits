@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using Arch.Core;
-using CryBits.Client.Components;
+using CryBits.Client.Components.Core;
 using CryBits.Client.Entities;
 using CryBits.Client.Graphics;
 using CryBits.Client.Worlds;

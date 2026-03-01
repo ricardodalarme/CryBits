@@ -1,6 +1,8 @@
 using Arch.Core;
-using CryBits.Client.Components;
+using CryBits.Client.Components.Core;
+using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Client.Systems.Core;
 using CryBits.Entities;
 using static CryBits.Globals;
 
@@ -10,7 +12,7 @@ namespace CryBits.Client.Spawners;
 /// Spawns ground-item entities into the ECS world.
 /// Each entity receives a <see cref="GroundItemComponent"/> (for game-logic interactions),
 /// a <see cref="TransformComponent"/> (tile position) and a
-/// <see cref="SpriteComponent"/> (full-texture rendering by <see cref="CryBits.Client.Systems.SpriteRenderSystem"/>).
+/// <see cref="SpriteComponent"/> (full-texture rendering by <see cref="SpriteRenderSystem"/>).
 /// </summary>
 internal static class GroundItemSpawner
 {

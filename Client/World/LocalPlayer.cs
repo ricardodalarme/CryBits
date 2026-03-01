@@ -1,5 +1,10 @@
 using Arch.Core;
-using CryBits.Client.Components;
+using CryBits.Client.Components.Combat;
+using CryBits.Client.Components.Equipment;
+using CryBits.Client.Components.Hotbar;
+using CryBits.Client.Components.Inventory;
+using CryBits.Client.Components.Player;
+using CryBits.Client.Components.Trade;
 
 namespace CryBits.Client.Worlds;
 

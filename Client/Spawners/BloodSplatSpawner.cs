@@ -1,5 +1,5 @@
 using System.Drawing;
-using CryBits.Client.Components;
+using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using static CryBits.Globals;
 using static CryBits.Utils;

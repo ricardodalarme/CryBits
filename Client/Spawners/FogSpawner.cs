@@ -1,5 +1,5 @@
 using Arch.Core;
-using CryBits.Client.Components;
+using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Entities.Map;
 using SFML.Graphics;

@@ -1,13 +1,11 @@
 using System;
 using System.Drawing;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network;
-using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Events;
 using SFML.Window;
 

@@ -1,6 +1,7 @@
 using System;
 using Arch.Core;
-using CryBits.Client.Components;
+using CryBits.Client.Components.Core;
+using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Input;

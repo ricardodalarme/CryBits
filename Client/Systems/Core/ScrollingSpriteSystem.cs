@@ -1,0 +1,24 @@
+using Arch.Core;
+using Arch.System;
+using CryBits.Client.Components.Core;
+
+namespace CryBits.Client.Systems.Core;
+
+/// <summary>
+/// System that updates the position of scrolling sprites (e.g., fog) based on their speed and the elapsed time.
+/// </summary>
+internal sealed class ScrollingSpriteSystem(Arch.Core.World world) : BaseSystem<Arch.Core.World, float>(world)
+{
+    private readonly QueryDescription _query = new QueryDescription()
+        .WithAll<ScrollingSpriteComponent>();
+
+    public override void Update(in float deltaTime)
+    {
+        var dt = deltaTime;
+        World.Query(in _query, (ref ScrollingSpriteComponent scroll) =>
+        {
+            scroll.ExactX += scroll.SpeedX * dt;
+            scroll.ExactY += scroll.SpeedY * dt;
+        });
+    }
+}

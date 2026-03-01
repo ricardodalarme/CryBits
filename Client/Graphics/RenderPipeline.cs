@@ -6,7 +6,7 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Logic;
 using CryBits.Client.Network;
-using CryBits.Client.Systems;
+using CryBits.Client.Systems.Core;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
 using Color = SFML.Graphics.Color;

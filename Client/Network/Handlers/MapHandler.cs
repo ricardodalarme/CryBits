@@ -1,6 +1,6 @@
 using System.IO;
 using Arch.Core;
-using CryBits.Client.Components;
+using CryBits.Client.Components.Map;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;

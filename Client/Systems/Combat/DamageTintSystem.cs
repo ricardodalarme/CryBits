@@ -1,0 +1,21 @@
+using Arch.Core;
+using Arch.System;
+using CryBits.Client.Components.Combat;
+using CryBits.Client.Components.Core;
+using SFML.Graphics;
+
+namespace CryBits.Client.Systems.Combat;
+
+internal sealed class DamageTintSystem(Arch.Core.World world) : BaseSystem<Arch.Core.World, float>(world)
+{
+    private readonly QueryDescription _query = new QueryDescription()
+        .WithAll<SpriteComponent, DamageTintComponent>();
+
+    public override void Update(in float dt)
+    {
+        World.Query(in _query, (ref SpriteComponent sprite, ref DamageTintComponent damage) =>
+        {
+            sprite.Tint = damage.IsHurt ? new Color(205, 125, 125) : Color.White;
+        });
+    }
+}

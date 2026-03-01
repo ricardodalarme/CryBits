@@ -12,7 +12,7 @@ internal sealed class GameContext
     public static GameContext Instance { get; } = new();
 
     /// <summary>All live game entities and their components.</summary>
-    public World World { get; } = World.Create();
+    public Arch.Core.World World { get; } = Arch.Core.World.Create();
 
     /// <summary>Current map instance.</summary>
     public MapInstance CurrentMap;

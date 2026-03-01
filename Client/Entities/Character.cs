@@ -1,6 +1,8 @@
 using System;
 using Arch.Core;
-using CryBits.Client.Components;
+using CryBits.Client.Components.Combat;
+using CryBits.Client.Components.Core;
+using CryBits.Client.Components.Movement;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
 using static CryBits.Globals;

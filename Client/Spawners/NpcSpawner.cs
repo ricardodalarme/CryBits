@@ -1,5 +1,7 @@
 using Arch.Core;
-using CryBits.Client.Components;
+using CryBits.Client.Components.Combat;
+using CryBits.Client.Components.Core;
+using CryBits.Client.Components.Movement;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Enums;
