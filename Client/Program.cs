@@ -58,7 +58,7 @@ internal static class Program
 
         Window.OpenMenu();
 
-        GameLoop.Init();
+        GameLoop.Instance.Init();
     }
 
     /// <summary>

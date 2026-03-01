@@ -16,9 +16,9 @@ using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 
 namespace CryBits.Client.Logic;
 
-internal static class GameLoop
+internal class GameLoop(RenderPipeline renderPipeline)
 {
-    private static readonly RenderPipeline _renderPipeline = RenderPipeline.Instance;
+    public static GameLoop Instance { get; } = new(RenderPipeline.Instance);
 
     // Measured frames per second.
     public static short Fps;
@@ -43,7 +43,7 @@ internal static class GameLoop
     /// <summary>
     /// Start the client main loop: handle network, update game state and present frames.
     /// </summary>
-    public static void Init()
+    public void Init()
     {
         var timer1000 = 0;
         var timer30 = 0;
@@ -55,7 +55,7 @@ internal static class GameLoop
             NetworkClient.Instance.HandleData();
 
             // Present the rendered frame.
-            _renderPipeline.Present();
+            renderPipeline.Present();
 
             // Dispatch window events.
             Renderer.Instance.RenderWindow.DispatchEvents();
@@ -109,7 +109,7 @@ internal static class GameLoop
         Program.Close();
     }
 
-    private static void TextBox()
+    private void TextBox()
     {
         // Toggle textbox caret visibility on a timer.
         if (TextBoxTimer < Environment.TickCount)
