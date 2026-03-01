@@ -9,7 +9,7 @@ namespace CryBits.Client.Network.Senders;
 internal static class AccountSender
 {
     public static void CreateCharacter() =>
-        Send.Packet(new CreateCharacterPacket
+        PacketSender.Packet(new CreateCharacterPacket
         {
             Name = TextBoxes.CreateCharacterName.Text,
             ClassId = Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value.Id.ToString(),
@@ -18,15 +18,15 @@ internal static class AccountSender
         });
 
     public static void CharacterUse() =>
-        Send.Packet(new CharacterUsePacket
+        PacketSender.Packet(new CharacterUsePacket
         {
             CharacterIndex = PanelsEvents.SelectCharacter
         });
 
-    public static void CharacterCreate() => Send.Packet(new CharacterCreatePacket());
+    public static void CharacterCreate() => PacketSender.Packet(new CharacterCreatePacket());
 
     public static void CharacterDelete() =>
-        Send.Packet(new CharacterDeletePacket
+        PacketSender.Packet(new CharacterDeletePacket
         {
             CharacterIndex = PanelsEvents.SelectCharacter
         });

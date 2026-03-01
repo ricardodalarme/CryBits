@@ -5,7 +5,7 @@ using LiteNetLib.Utils;
 
 namespace CryBits.Client.Network;
 
-internal static class Send
+internal static class PacketSender
 {
     public static void Packet(IClientPacket packet)
     {

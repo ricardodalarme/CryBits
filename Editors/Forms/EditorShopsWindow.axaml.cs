@@ -129,13 +129,13 @@ internal partial class EditorShopsWindow : Window
 
     private void butSave_Click(object sender, RoutedEventArgs e)
     {
-        Send.WriteShops();
+        PackageSender.WriteShops();
         Close();
     }
 
     private void butCancel_Click(object sender, RoutedEventArgs e)
     {
-        Send.RequestShops();
+        PackageSender.RequestShops();
         Close();
     }
 

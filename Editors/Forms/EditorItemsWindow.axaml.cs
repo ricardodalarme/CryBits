@@ -326,13 +326,13 @@ internal partial class EditorItemsWindow : Window
 
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
-        Send.WriteItems();
+        PackageSender.WriteItems();
         Close();
     }
 
     private void butCancel_Click(object? sender, RoutedEventArgs e)
     {
-        Send.RequestItems();
+        PackageSender.RequestItems();
         Close();
     }
 }

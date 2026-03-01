@@ -408,13 +408,13 @@ internal partial class EditorNpcsWindow : Window
 
     private void butSave_Click(object? sender, RoutedEventArgs e)
     {
-        Send.WriteNpcs();
+        PackageSender.WriteNpcs();
         Close();
     }
 
     private void butCancel_Click(object? sender, RoutedEventArgs e)
     {
-        Send.RequestNpcs();
+        PackageSender.RequestNpcs();
         Close();
     }
 }

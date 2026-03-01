@@ -8,19 +8,19 @@ internal static class ChatSender
 {
     public static void Message(Player player, string text, Color color)
     {
-        Send.ToPlayer(player, new MessagePacket { Text = text, ColorArgb = color.ToArgb() });
+        PackageSender.ToPlayer(player, new MessagePacket { Text = text, ColorArgb = color.ToArgb() });
     }
 
     public static void MessageMap(Player player, string text)
     {
         var message = "[Map] " + player.Name + ": " + text;
-        Send.ToMap(player.MapInstance, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
+        PackageSender.ToMap(player.MapInstance, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
     }
 
     public static void MessageGlobal(Player player, string text)
     {
         var message = "[Global] " + player.Name + ": " + text;
-        Send.ToAll(new MessagePacket { Text = message, ColorArgb = Color.Yellow.ToArgb() });
+        PackageSender.ToAll(new MessagePacket { Text = message, ColorArgb = Color.Yellow.ToArgb() });
     }
 
     public static void MessagePrivate(Player player, string addresseeName, string text)

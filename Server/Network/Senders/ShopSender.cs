@@ -10,11 +10,11 @@ internal static class ShopSender
 {
     public static void Shops(GameSession session)
     {
-        Send.ToPlayer(session, new ShopsPacket { List = Shop.List });
+        PackageSender.ToPlayer(session, new ShopsPacket { List = Shop.List });
     }
 
     public static void ShopOpen(Player player, Shop shop)
     {
-        Send.ToPlayer(player, new ShopOpenPacket { Id = shop.GetId() });
+        PackageSender.ToPlayer(player, new ShopOpenPacket { Id = shop.GetId() });
     }
 }

@@ -8,6 +8,6 @@ internal static class SettingsSender
 {
     public static void ServerData(GameSession session)
     {
-        Send.ToPlayer(session, new ServerDataPacket { Config = Config });
+        PackageSender.ToPlayer(session, new ServerDataPacket { Config = Config });
     }
 }

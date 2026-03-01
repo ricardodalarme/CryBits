@@ -10,27 +10,27 @@ internal static class PlayerSender
 {
     public static void Join(Player player)
     {
-        Send.ToPlayer(player, new JoinPacket { Name = player.Name });
+        PackageSender.ToPlayer(player, new JoinPacket { Name = player.Name });
     }
 
     public static void JoinGame(Player player)
     {
-        Send.ToPlayer(player, new JoinGamePacket());
+        PackageSender.ToPlayer(player, new JoinGamePacket());
     }
 
     public static void JoinMap(Player player)
     {
-        Send.ToPlayer(player, new JoinMapPacket());
+        PackageSender.ToPlayer(player, new JoinMapPacket());
     }
 
     public static void PlayerLeaveMap(Player player, MapInstance mapInstance)
     {
-        Send.ToMapBut(mapInstance, player, new PlayerLeavePacket { Name = player.Name });
+        PackageSender.ToMapBut(mapInstance, player, new PlayerLeavePacket { Name = player.Name });
     }
 
     public static void PlayerPosition(Player player)
     {
-        Send.ToMap(player.MapInstance,
+        PackageSender.ToMap(player.MapInstance,
             new PlayerPositionPacket
             { Name = player.Name, X = player.X, Y = player.Y, Direction = (byte)player.Direction });
     }
@@ -45,17 +45,17 @@ internal static class PlayerSender
             packet.MaxVital[i] = player.MaxVital(i);
         }
 
-        Send.ToMap(player.MapInstance, packet);
+        PackageSender.ToMap(player.MapInstance, packet);
     }
 
     public static void PlayerLeave(Player player)
     {
-        Send.ToAllBut(player, new PlayerLeavePacket { Name = player.Name });
+        PackageSender.ToAllBut(player, new PlayerLeavePacket { Name = player.Name });
     }
 
     public static void PlayerMove(Player player, byte movement)
     {
-        Send.ToMapBut(player.MapInstance, player,
+        PackageSender.ToMapBut(player.MapInstance, player,
             new PlayerMovePacket
             {
                 Name = player.Name,
@@ -68,20 +68,20 @@ internal static class PlayerSender
 
     public static void PlayerDirection(Player player)
     {
-        Send.ToMapBut(player.MapInstance, player,
+        PackageSender.ToMapBut(player.MapInstance, player,
             new PlayerDirectionPacket { Name = player.Name, Direction = (byte)player.Direction });
     }
 
     public static void PlayerExperience(Player player)
     {
-        Send.ToPlayer(player,
+        PackageSender.ToPlayer(player,
             new PlayerExperiencePacket
             { Experience = player.Experience, ExpNeeded = player.ExpNeeded, Points = player.Points });
     }
 
     public static void PlayerAttack(Player player, string victim = "", Target victimType = 0)
     {
-        Send.ToMap(player.MapInstance,
+        PackageSender.ToMap(player.MapInstance,
             new PlayerAttackPacket { Name = player.Name, Victim = victim, VictimType = (byte)victimType });
     }
 
@@ -90,7 +90,7 @@ internal static class PlayerSender
         var packet = new PlayerEquipmentsPacket
         { Name = player.Name, Equipments = new System.Guid[(byte)Equipment.Count] };
         for (byte i = 0; i < (byte)Equipment.Count; i++) packet.Equipments[i] = player.Equipment[i].GetId();
-        Send.ToMap(player.MapInstance, packet);
+        PackageSender.ToMap(player.MapInstance, packet);
     }
 
     public static void PlayerInventory(Player player)
@@ -103,7 +103,7 @@ internal static class PlayerSender
             packet.Amounts[i] = player.Inventory[i].Amount;
         }
 
-        Send.ToPlayer(player, packet);
+        PackageSender.ToPlayer(player, packet);
     }
 
     public static void PlayerHotbar(Player player)
@@ -115,6 +115,6 @@ internal static class PlayerSender
             packet.Slots[i] = (byte)player.Hotbar[i].Slot;
         }
 
-        Send.ToPlayer(player, packet);
+        PackageSender.ToPlayer(player, packet);
     }
 }

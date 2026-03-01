@@ -10,18 +10,18 @@ internal static class MapSender
 {
     public static void Map(GameSession session, Map map)
     {
-        Send.ToPlayer(session, new MapPacket { Map = map });
+        PackageSender.ToPlayer(session, new MapPacket { Map = map });
     }
 
     public static void Maps(GameSession session)
     {
-        Send.ToPlayer(session, new MapsPacket { List = CryBits.Entities.Map.Map.List });
+        PackageSender.ToPlayer(session, new MapsPacket { List = CryBits.Entities.Map.Map.List });
         foreach (var map in CryBits.Entities.Map.Map.List.Values) Map(session, map);
     }
 
     public static void MapRevision(Player player, Map map)
     {
-        Send.ToPlayer(player, new MapRevisionPacket { MapId = map.GetId(), Revision = map.Revision });
+        PackageSender.ToPlayer(player, new MapRevisionPacket { MapId = map.GetId(), Revision = map.Revision });
     }
 
     public static void MapPlayers(Player player)
@@ -30,8 +30,8 @@ internal static class MapSender
             if (GameWorld.Current.Sessions[i].IsPlaying)
                 if (player != GameWorld.Current.Sessions[i].Character)
                     if (GameWorld.Current.Sessions[i].Character!.MapInstance == player.MapInstance)
-                        Send.ToPlayer(player, PlayerDataCache(GameWorld.Current.Sessions[i].Character!));
-        Send.ToMap(player.MapInstance, PlayerDataCache(player));
+                        PackageSender.ToPlayer(player, PlayerDataCache(GameWorld.Current.Sessions[i].Character!));
+        PackageSender.ToMap(player.MapInstance, PlayerDataCache(player));
     }
 
     public static void MapItems(Player player, MapInstance mapInstance)
@@ -47,7 +47,7 @@ internal static class MapSender
             };
         }
 
-        Send.ToPlayer(player, packet);
+        PackageSender.ToPlayer(player, packet);
     }
 
     public static void MapItems(MapInstance mapInstance)
@@ -63,7 +63,7 @@ internal static class MapSender
             };
         }
 
-        Send.ToMap(mapInstance, packet);
+        PackageSender.ToMap(mapInstance, packet);
     }
 
     private static PlayerDataPacket PlayerDataCache(Player player)

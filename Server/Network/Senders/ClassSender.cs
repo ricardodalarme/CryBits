@@ -8,6 +8,6 @@ internal static class ClassSender
 {
     public static void Classes(GameSession session)
     {
-        Send.ToPlayer(session, new ClassesPacket { List = Class.List });
+        PackageSender.ToPlayer(session, new ClassesPacket { List = Class.List });
     }
 }

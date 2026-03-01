@@ -5,11 +5,11 @@ namespace CryBits.Client.Network.Senders;
 internal static class PartySender
 {
     public static void PartyInvite(string playerName) =>
-        Send.Packet(new PartyInvitePacket { PlayerName = playerName });
+        PacketSender.Packet(new PartyInvitePacket { PlayerName = playerName });
 
-    public static void PartyAccept() => Send.Packet(new PartyAcceptPacket());
+    public static void PartyAccept() => PacketSender.Packet(new PartyAcceptPacket());
 
-    public static void PartyDecline() => Send.Packet(new PartyDeclinePacket());
+    public static void PartyDecline() => PacketSender.Packet(new PartyDeclinePacket());
 
-    public static void PartyLeave() => Send.Packet(new PartyLeavePacket());
+    public static void PartyLeave() => PacketSender.Packet(new PartyLeavePacket());
 }

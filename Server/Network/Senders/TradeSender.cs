@@ -10,17 +10,17 @@ internal static class TradeSender
 {
     public static void Trade(Player player, bool state)
     {
-        Send.ToPlayer(player, new TradePacket { State = state });
+        PackageSender.ToPlayer(player, new TradePacket { State = state });
     }
 
     public static void TradeInvitation(Player player, string playerInvitation)
     {
-        Send.ToPlayer(player, new TradeInvitationPacket { PlayerInvitation = playerInvitation });
+        PackageSender.ToPlayer(player, new TradeInvitationPacket { PlayerInvitation = playerInvitation });
     }
 
     public static void TradeState(Player player, TradeStatus state)
     {
-        Send.ToPlayer(player, new TradeStatePacket { State = (byte)state });
+        PackageSender.ToPlayer(player, new TradeStatePacket { State = (byte)state });
     }
 
     public static void TradeOffer(Player player, bool own = true)
@@ -39,6 +39,6 @@ internal static class TradeSender
                 Amount = to.TradeOffer[i].Amount
             };
         }
-        Send.ToPlayer(player, packet);
+        PackageSender.ToPlayer(player, packet);
     }
 }

@@ -21,11 +21,11 @@ internal static class AccountSender
             };
         }
 
-        Send.ToPlayer(session, packet);
+        PackageSender.ToPlayer(session, packet);
     }
 
     public static void CreateCharacter(GameSession session)
     {
-        Send.ToPlayer(session, new CreateCharacterPacket());
+        PackageSender.ToPlayer(session, new CreateCharacterPacket());
     }
 }

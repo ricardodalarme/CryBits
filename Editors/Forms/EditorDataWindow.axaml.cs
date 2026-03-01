@@ -63,14 +63,14 @@ internal partial class EditorDataWindow : Window
         Config.MaxNameLength = ToByte(numMax_Name.Value);
         Config.MinPasswordLength = ToByte(numMin_Password.Value);
         Config.MaxPasswordLength = ToByte(numMax_Password.Value);
-        Send.WriteServerData();
+        PackageSender.WriteServerData();
 
         Close();
     }
 
     private void butCancel_Click(object sender, RoutedEventArgs e)
     {
-        Send.RequestServerData();
+        PackageSender.RequestServerData();
         Close();
     }
 

@@ -387,14 +387,14 @@ internal partial class EditorMapsWindow : Window
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
         foreach (var map in Map.List.Values) ++map.Revision;
-        Send.WriteMaps();
+        PackageSender.WriteMaps();
         MessageBox.Show(@"All maps has been saved");
     }
 
     private void butReload_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        Send.RequestMap(_selected);
+        PackageSender.RequestMap(_selected);
         RefreshLayerList();
         _selected.Update();
     }

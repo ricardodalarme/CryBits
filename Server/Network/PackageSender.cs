@@ -8,7 +8,7 @@ using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network;
 
-internal static class Send
+internal static class PackageSender
 {
     public static void ToPlayer(GameSession session, IServerPacket packet)
     {

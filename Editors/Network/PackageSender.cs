@@ -11,7 +11,7 @@ using static CryBits.Globals;
 
 namespace CryBits.Editors.Network;
 
-internal static class Send
+internal static class PackageSender
 {
     public static void Packet(IClientPacket packet)
     {

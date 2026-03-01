@@ -73,7 +73,7 @@ internal partial class LoginWindow : Window
             return;
         }
 
-        Send.Connect();
+        PackageSender.Connect();
 
         Options.Username = chkUsername.IsChecked == true ? Username : string.Empty;
         Client.Framework.Persistence.Repositories.OptionsRepository.Write();
