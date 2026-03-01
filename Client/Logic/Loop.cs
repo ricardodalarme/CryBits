@@ -16,13 +16,14 @@ namespace CryBits.Client.Logic;
 
 internal static class Loop
 {
+    private static readonly RenderPipeline _renderPipeline = RenderPipeline.Instance;
+
     // Measured frames per second.
     public static short Fps;
 
     // Timing counters
     public static int TextBoxTimer;
     public static int ChatTimer;
-
 
     // Delta-time systems — receive seconds elapsed since last frame.
     private static readonly Group<float> _deltaTimeSystems = new(
@@ -52,7 +53,7 @@ internal static class Loop
             Socket.HandleData();
 
             // Present the rendered frame.
-            RenderPipeline.Present();
+            _renderPipeline.Present();
 
             // Dispatch window events.
             Renderer.Instance.RenderWindow.DispatchEvents();

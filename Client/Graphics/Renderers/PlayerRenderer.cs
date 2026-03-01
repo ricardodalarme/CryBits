@@ -6,20 +6,18 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.Graphics.Renderers;
 
-internal static class PlayerRenderer
+internal sealed class PlayerRenderer(Renderer renderer, CharacterRenderer characterRenderer)
 {
-    /// <summary>
-    /// Draw the given player's shadow and health bar at their world position.
-    /// Draws in world space — the SFML view handles panning.
-    /// </summary>
-    public static void PlayerCharacter(Player player)
+    public static PlayerRenderer Instance { get; } = new(Renderer.Instance, CharacterRenderer.Instance);
+
+    public void PlayerCharacter(Player player)
     {
         PlayerBars(player);
-        CharacterRenderer.CharacterShadow(player.TextureNum,
+        characterRenderer.CharacterShadow(player.TextureNum,
             new Point(player.PixelX, player.PixelY));
     }
 
-    private static void PlayerBars(Player player)
+    private void PlayerBars(Player player)
     {
         var value = player.Vital[(byte)Vital.Hp];
 
@@ -35,7 +33,7 @@ internal static class PlayerRenderer
             Y = player.PixelY + characterSize.Height / AnimationAmountY + 4
         };
 
-        Renderer.Instance.Draw(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
-        Renderer.Instance.Draw(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
+        renderer.Draw(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
+        renderer.Draw(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
     }
 }

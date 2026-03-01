@@ -20,13 +20,19 @@ using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics.Renderers;
 
-internal static class UIRenderer
+internal sealed class UIRenderer(
+    Renderer renderer,
+    CharacterRenderer characterRenderer,
+    ItemRenderer itemRenderer
+)
 {
+    public static UIRenderer Instance { get; } = new(Renderer.Instance, CharacterRenderer.Instance, ItemRenderer.Instance);
+
     /// <summary>
     /// Recursively render a tree of UI components.
     /// </summary>
     /// <param name="node">Top-level component list to render.</param>
-    public static void Interface(List<Component> node)
+    public void Interface(List<Component> node)
     {
         for (byte i = 0; i < node.Count; i++)
             if (node[i].Visible)
@@ -45,7 +51,7 @@ internal static class UIRenderer
             }
     }
 
-    private static void Button(Button tool)
+    private void Button(Button tool)
     {
         byte alpha = tool.ButtonState switch
         {
@@ -54,15 +60,15 @@ internal static class UIRenderer
             _ => 225
         };
 
-        Renderer.Instance.Draw(Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
+        renderer.Draw(Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
     }
 
-    private static void Panel(Panel tool)
+    private void Panel(Panel tool)
     {
-        Renderer.Instance.Draw(Textures.Panels[tool.TextureNum], tool.Position);
+        renderer.Draw(Textures.Panels[tool.TextureNum], tool.Position);
     }
 
-    private static void CheckBox(CheckBox tool)
+    private void CheckBox(CheckBox tool)
     {
         var recSource = new Rectangle(new Point(),
             new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
@@ -70,18 +76,18 @@ internal static class UIRenderer
 
         if (tool.Checked) recSource.Location = new Point(Textures.CheckBox.ToSize().Width / 2, 0);
 
-        Renderer.Instance.Draw(Textures.CheckBox, recSource, recDestiny);
-        Renderer.Instance.DrawText(tool.Text,
+        renderer.Draw(Textures.CheckBox, recSource, recDestiny);
+        renderer.DrawText(tool.Text,
             recDestiny.Location.X + Textures.CheckBox.ToSize().Width / 2 +
             Framework.Interfacily.Components.CheckBox.Margin, recDestiny.Location.Y + 1, Color.White);
     }
 
-    private static void TextBox(TextBox tool)
+    private void TextBox(TextBox tool)
     {
         var position = tool.Position;
         var text = tool.Text;
 
-        Renderer.Instance.DrawBox(Textures.TextBox, 3, tool.Position,
+        renderer.DrawBox(Textures.TextBox, 3, tool.Position,
             new Size(tool.Width, Textures.TextBox.ToSize().Height));
 
         if (tool.Password && !string.IsNullOrEmpty(text)) text = new string('•', text.Length);
@@ -90,10 +96,10 @@ internal static class UIRenderer
 
         if (Framework.Interfacily.Components.TextBox.Focused != null &&
             Framework.Interfacily.Components.TextBox.Focused == tool && TextBoxesEvents.Signal) text += "|";
-        Renderer.Instance.DrawText(text, position.X + 4, position.Y + 2, Color.White);
+        renderer.DrawText(text, position.X + 4, position.Y + 2, Color.White);
     }
 
-    private static void InterfaceSpecific(Component tool)
+    private void InterfaceSpecific(Component tool)
     {
         if (tool is Panel panel)
             switch (panel.Name)
@@ -112,30 +118,30 @@ internal static class UIRenderer
             }
     }
 
-    private static void Bars(Panel tool)
+    private void Bars(Panel tool)
     {
         var hpPercentage = Player.Me.Vital[(byte)Vital.Hp] / (decimal)Player.Me.MaxVital[(byte)Vital.Hp];
         var mpPercentage = Player.Me.Vital[(byte)Vital.Mp] / (decimal)Player.Me.MaxVital[(byte)Vital.Mp];
         var expPercentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
 
-        Renderer.Instance.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0,
+        renderer.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0,
             (int)(Textures.BarsPanel.Size.X * hpPercentage), 17);
-        Renderer.Instance.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 24, 0, 18,
+        renderer.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 24, 0, 18,
             (int)(Textures.BarsPanel.Size.X * mpPercentage), 17);
-        Renderer.Instance.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36,
+        renderer.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36,
             (int)(Textures.BarsPanel.Size.X * expPercentage), 17);
 
-        Renderer.Instance.DrawText("HP", tool.Position.X + 10, tool.Position.Y + 3, Color.White);
-        Renderer.Instance.DrawText("MP", tool.Position.X + 10, tool.Position.Y + 21, Color.White);
-        Renderer.Instance.DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, Color.White);
+        renderer.DrawText("HP", tool.Position.X + 10, tool.Position.Y + 3, Color.White);
+        renderer.DrawText("MP", tool.Position.X + 10, tool.Position.Y + 21, Color.White);
+        renderer.DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, Color.White);
 
-        Renderer.Instance.DrawText(Player.Me.Vital[(byte)Vital.Hp] + "/" + Player.Me.MaxVital[(byte)Vital.Hp],
+        renderer.DrawText(Player.Me.Vital[(byte)Vital.Hp] + "/" + Player.Me.MaxVital[(byte)Vital.Hp],
             tool.Position.X + 76,
             tool.Position.Y + 7, Color.White, TextAlign.Center);
-        Renderer.Instance.DrawText(Player.Me.Vital[(byte)Vital.Mp] + "/" + Player.Me.MaxVital[(byte)Vital.Mp],
+        renderer.DrawText(Player.Me.Vital[(byte)Vital.Mp] + "/" + Player.Me.MaxVital[(byte)Vital.Mp],
             tool.Position.X + 76,
             tool.Position.Y + 25, Color.White, TextAlign.Center);
-        Renderer.Instance.DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76,
+        renderer.DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76,
             tool.Position.Y + 43,
             Color.White, TextAlign.Center);
     }
@@ -143,7 +149,7 @@ internal static class UIRenderer
     /// <summary>
     /// Render chat messages and prompt if chat is not focused.
     /// </summary>
-    public static void Chat()
+    public void Chat()
     {
         var tool = Panels.Chat;
         tool.Visible = Framework.Interfacily.Components.TextBox.Focused != null &&
@@ -152,16 +158,16 @@ internal static class UIRenderer
         if (tool.Visible || Loop.ChatTimer >= Environment.TickCount && Options.Chat)
             for (var i = UI.Chat.LinesFirst; i <= UI.Chat.LinesVisible + UI.Chat.LinesFirst; i++)
                 if (UI.Chat.Order.Count > i)
-                    Renderer.Instance.DrawText(UI.Chat.Order[i].Text, 16, 461 + 11 * (i - UI.Chat.LinesFirst),
+                    renderer.DrawText(UI.Chat.Order[i].Text, 16, 461 + 11 * (i - UI.Chat.LinesFirst),
                         UI.Chat.Order[i].Color);
 
         if (!tool.Visible)
-            Renderer.Instance.DrawText("Press [Enter] to open chat.", TextBoxes.Chat.Position.X + 5,
+            renderer.DrawText("Press [Enter] to open chat.", TextBoxes.Chat.Position.X + 5,
                 TextBoxes.Chat.Position.Y + 3,
                 Color.White);
     }
 
-    private static void Information(Panel tool)
+    private void Information(Panel tool)
     {
         var item = Item.List.Get(PanelsEvents.InformationId);
         var data = new List<string>();
@@ -177,9 +183,9 @@ internal static class UIRenderer
             _ => new Color()
         };
 
-        Renderer.Instance.DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, TextAlign.Center);
-        Renderer.Instance.DrawText(item.Description, tool.Position.X + 82, tool.Position.Y + 20, Color.White, 86);
-        Renderer.Instance.Draw(Textures.Items[item.Texture],
+        renderer.DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, TextAlign.Center);
+        renderer.DrawText(item.Description, tool.Position.X + 82, tool.Position.Y + 20, Color.White, 86);
+        renderer.Draw(Textures.Items[item.Texture],
             new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
 
         if (Panels.Shop.Visible)
@@ -218,10 +224,10 @@ internal static class UIRenderer
             new(tool.Position.X + 96, tool.Position.Y + 126)
         };
         for (byte i = 0; i < data.Count; i++)
-            Renderer.Instance.DrawText(data[i], positions[i].X, positions[i].Y, Color.White);
+            renderer.DrawText(data[i], positions[i].X, positions[i].Y, Color.White);
     }
 
-    private static void Hotbar(Panel tool)
+    private void Hotbar(Panel tool)
     {
         var indicator = string.Empty;
 
@@ -232,162 +238,162 @@ internal static class UIRenderer
                 switch (Player.Me.Hotbar[i].Type)
                 {
                     case SlotType.Item:
-                        ItemRenderer.Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6),
+                        itemRenderer.Item(Player.Me.Inventory[slot].Item, 1, tool.Position + new Size(8, 6),
                             (byte)(i + 1),
                             10); break;
                 }
 
             if (i < 9) indicator = (i + 1).ToString();
             else if (i == 9) indicator = "0";
-            Renderer.Instance.DrawText(indicator, tool.Position.X + 16 + 36 * i, tool.Position.Y + 22, Color.White);
+            renderer.DrawText(indicator, tool.Position.X + 16 + 36 * i, tool.Position.Y + 22, Color.White);
         }
 
         if (PanelsEvents.HotbarChange >= 0)
             if (Player.Me.Hotbar[PanelsEvents.HotbarChange].Type == SlotType.Item)
-                Renderer.Instance.Draw(
+                renderer.Draw(
                     Textures.Items[Player.Me.Inventory[Player.Me.Hotbar[PanelsEvents.HotbarChange].Slot].Item.Texture],
                     new Point(Input.InputManager.Instance.MousePosition.X + 6,
                         Input.InputManager.Instance.MousePosition.Y + 6));
     }
 
-    private static void MenuCharacter(Panel tool)
+    private void MenuCharacter(Panel tool)
     {
-        Renderer.Instance.DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
-        Renderer.Instance.DrawText(Player.Me.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, Color.White);
-        Renderer.Instance.Draw(Textures.Faces[Player.Me.TextureNum],
+        renderer.DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
+        renderer.DrawText(Player.Me.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, Color.White);
+        renderer.Draw(Textures.Faces[Player.Me.TextureNum],
             new Point(tool.Position.X + 82, tool.Position.Y + 37));
 
-        Renderer.Instance.DrawText("Strength: " + Player.Me.Attribute[(byte)Attribute.Strength], tool.Position.X + 32,
+        renderer.DrawText("Strength: " + Player.Me.Attribute[(byte)Attribute.Strength], tool.Position.X + 32,
             tool.Position.Y + 146, Color.White);
-        Renderer.Instance.DrawText("Resistance: " + Player.Me.Attribute[(byte)Attribute.Resistance],
+        renderer.DrawText("Resistance: " + Player.Me.Attribute[(byte)Attribute.Resistance],
             tool.Position.X + 32,
             tool.Position.Y + 162, Color.White);
-        Renderer.Instance.DrawText("Intelligence: " + Player.Me.Attribute[(byte)Attribute.Intelligence],
+        renderer.DrawText("Intelligence: " + Player.Me.Attribute[(byte)Attribute.Intelligence],
             tool.Position.X + 32,
             tool.Position.Y + 178, Color.White);
-        Renderer.Instance.DrawText("Agility: " + Player.Me.Attribute[(byte)Attribute.Agility], tool.Position.X + 32,
+        renderer.DrawText("Agility: " + Player.Me.Attribute[(byte)Attribute.Agility], tool.Position.X + 32,
             tool.Position.Y + 194, Color.White);
-        Renderer.Instance.DrawText("Vitality: " + Player.Me.Attribute[(byte)Attribute.Vitality], tool.Position.X + 32,
+        renderer.DrawText("Vitality: " + Player.Me.Attribute[(byte)Attribute.Vitality], tool.Position.X + 32,
             tool.Position.Y + 210, Color.White);
-        Renderer.Instance.DrawText("Points: " + Player.Me.Points, tool.Position.X + 14, tool.Position.Y + 228,
+        renderer.DrawText("Points: " + Player.Me.Points, tool.Position.X + 14, tool.Position.Y + 228,
             Color.White);
 
         for (byte i = 0; i < (byte)Equipment.Count; i++)
             if (Player.Me.Equipment[i] == null)
-                Renderer.Instance.Draw(Textures.Equipments, tool.Position.X + 7 + i * 34, tool.Position.Y + 247, i * 34,
+                renderer.Draw(Textures.Equipments, tool.Position.X + 7 + i * 34, tool.Position.Y + 247, i * 34,
                     0, 32,
                     32);
             else
-                Renderer.Instance.Draw(Textures.Items[Player.Me.Equipment[i].Texture], tool.Position.X + 8 + i * 35,
+                renderer.Draw(Textures.Items[Player.Me.Equipment[i].Texture], tool.Position.X + 8 + i * 35,
                     tool.Position.Y + 247, 0, 0, 34, 34);
     }
 
-    private static void MenuInventory(Panel tool)
+    private void MenuInventory(Panel tool)
     {
         byte numColumns = 5;
 
         for (byte i = 0; i < MaxInventory; i++)
-            ItemRenderer.Item(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount,
+            itemRenderer.Item(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount,
                 tool.Position + new Size(7, 30), i,
                 numColumns);
 
         if (PanelsEvents.InventoryChange > 0)
-            Renderer.Instance.Draw(Textures.Items[Player.Me.Inventory[PanelsEvents.InventoryChange].Item.Texture],
+            renderer.Draw(Textures.Items[Player.Me.Inventory[PanelsEvents.InventoryChange].Item.Texture],
                 new Point(Input.InputManager.Instance.MousePosition.X + 6,
                     Input.InputManager.Instance.MousePosition.Y + 6));
     }
 
-    private static void PartyInvitation(Panel tool)
+    private void PartyInvitation(Panel tool)
     {
-        Renderer.Instance.DrawText(PanelsEvents.PartyInvitation + " has invite you to a party. Would you like to join?",
+        renderer.DrawText(PanelsEvents.PartyInvitation + " has invite you to a party. Would you like to join?",
             tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
     }
 
     /// <summary>
     /// Render the party member bars and names.
     /// </summary>
-    public static void Party()
+    public void Party()
     {
         for (byte i = 0; i < Player.Me.Party.Length; i++)
         {
-            Renderer.Instance.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
-            Renderer.Instance.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
+            renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
+            renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
             if (Player.Me.Party[i].Vital[(byte)Vital.Hp] > 0)
-                Renderer.Instance.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
+                renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
                     Player.Me.Party[i].Vital[(byte)Vital.Hp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Hp],
                     8);
             if (Player.Me.Party[i].Vital[(byte)Vital.Mp] > 0)
-                Renderer.Instance.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
+                renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
                     Player.Me.Party[i].Vital[(byte)Vital.Mp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Mp],
                     8);
 
-            Renderer.Instance.DrawText(Player.Me.Party[i].Name, 10, 79 + 27 * i, Color.White);
+            renderer.DrawText(Player.Me.Party[i].Name, 10, 79 + 27 * i, Color.White);
         }
     }
 
-    private static void Trade_Invitation(Panel tool)
+    private void Trade_Invitation(Panel tool)
     {
-        Renderer.Instance.DrawText(PanelsEvents.TradeInvitation + " has invite you to a trade. Would you like to join?",
+        renderer.DrawText(PanelsEvents.TradeInvitation + " has invite you to a trade. Would you like to join?",
             tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
     }
 
-    private static void Trade(Panel tool)
+    private void Trade(Panel tool)
     {
         for (byte i = 0; i < MaxInventory; i++)
         {
-            ItemRenderer.Item(Player.Me.TradeOffer[i].Item, Player.Me.TradeOffer[i].Amount,
+            itemRenderer.Item(Player.Me.TradeOffer[i].Item, Player.Me.TradeOffer[i].Amount,
                 tool.Position + new Size(7, 50), i, 5);
-            ItemRenderer.Item(Player.Me.TradeTheirOffer[i].Item, Player.Me.TradeTheirOffer[i].Amount,
+            itemRenderer.Item(Player.Me.TradeTheirOffer[i].Item, Player.Me.TradeTheirOffer[i].Amount,
                 tool.Position + new Size(192, 50), i, 5);
         }
     }
 
-    private static void Shop(Panel tool)
+    private void Shop(Panel tool)
     {
         var name = PanelsEvents.ShopOpen.Name;
-        Renderer.Instance.DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, TextAlign.Center);
-        Renderer.Instance.DrawText("Currency: " + PanelsEvents.ShopOpen.Currency.Name, tool.Position.X + 10,
+        renderer.DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, TextAlign.Center);
+        renderer.DrawText("Currency: " + PanelsEvents.ShopOpen.Currency.Name, tool.Position.X + 10,
             tool.Position.Y + 195,
             Color.White);
 
         for (byte i = 0; i < PanelsEvents.ShopOpen.Sold.Count; i++)
-            ItemRenderer.Item(PanelsEvents.ShopOpen.Sold[i].Item, PanelsEvents.ShopOpen.Sold[i].Amount,
+            itemRenderer.Item(PanelsEvents.ShopOpen.Sold[i].Item, PanelsEvents.ShopOpen.Sold[i].Amount,
                 tool.Position + new Size(7, 50), (byte)(i + 1), 7);
     }
 
 
-    private static void SelectCharacterClass()
+    private void SelectCharacterClass()
     {
         var textPosition = new Point(399, 425);
         var text = "(" + (PanelsEvents.SelectCharacter + 1) + ") None";
 
         if (!ButtonsEvents.Characters_Change_Buttons())
         {
-            Renderer.Instance.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
+            renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
             return;
         }
 
         if (PanelsEvents.SelectCharacter >= PanelsEvents.Characters.Length)
         {
-            Renderer.Instance.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
+            renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
             return;
         }
 
         var textureNum = PanelsEvents.Characters[PanelsEvents.SelectCharacter].TextureNum;
         if (textureNum > 0)
         {
-            Renderer.Instance.Draw(Textures.Faces[textureNum], new Point(353, 442));
-            CharacterRenderer.Character(textureNum,
+            renderer.Draw(Textures.Faces[textureNum], new Point(353, 442));
+            characterRenderer.Character(textureNum,
                 new Point(356, 534 - Textures.Characters[textureNum].ToSize().Height / 4),
                 Direction.Down, AnimationStopped);
         }
 
         text = "(" + (PanelsEvents.SelectCharacter + 1) + ") " +
                PanelsEvents.Characters[PanelsEvents.SelectCharacter].Name;
-        Renderer.Instance.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
+        renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
     }
 
-    private static void CreateCharacterClass()
+    private void CreateCharacterClass()
     {
         short textureNum = 0;
         var @class = Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value;
@@ -399,13 +405,13 @@ internal static class UIRenderer
 
         if (textureNum > 0)
         {
-            Renderer.Instance.Draw(Textures.Faces[textureNum], new Point(425, 440));
-            CharacterRenderer.Character(textureNum, new Point(433, 501), Direction.Down, AnimationStopped);
+            renderer.Draw(Textures.Faces[textureNum], new Point(425, 440));
+            characterRenderer.Character(textureNum, new Point(433, 501), Direction.Down, AnimationStopped);
         }
 
         var text = @class.Name;
-        Renderer.Instance.DrawText(text, 347, 509, Color.White, TextAlign.Center);
+        renderer.DrawText(text, 347, 509, Color.White, TextAlign.Center);
 
-        Renderer.Instance.DrawText(@class.Description, 282, 526, Color.White, 123);
+        renderer.DrawText(@class.Description, 282, 526, Color.White, 123);
     }
 }

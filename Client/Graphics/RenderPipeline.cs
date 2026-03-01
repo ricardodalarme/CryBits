@@ -13,8 +13,18 @@ using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics;
 
-internal static class RenderPipeline
+internal sealed class RenderPipeline
 {
+    public static RenderPipeline Instance { get; } = new();
+
+    private readonly Renderer _renderer = Renderer.Instance;
+    private readonly GameContext _context = GameContext.Instance;
+    private readonly CameraManager _cameraManager = CameraManager.Instance;
+    private readonly MapRenderer _mapRenderer = MapRenderer.Instance;
+    private readonly PlayerRenderer _playerRenderer = PlayerRenderer.Instance;
+    private readonly NpcRenderer _npcRenderer = NpcRenderer.Instance;
+    private readonly UIRenderer _uiRenderer = UIRenderer.Instance;
+
     // Ground-layer render systems: sprites drawn after the ground tile pass.
     private static readonly Group<int> _groundRenderSystems = new(
         "GroundRenderSystems",
@@ -31,57 +41,57 @@ internal static class RenderPipeline
     /// <summary>
     /// Render the current frame: clear, draw game world and UI, then present.
     /// </summary>
-    public static void Present()
+    public void Present()
     {
-        Renderer.Instance.RenderWindow.Clear(Color.Black);
+        _renderer.RenderWindow.Clear(Color.Black);
 
         InGame();
 
         // Restore the default view before drawing UI so it renders at fixed screen positions.
-        CameraManager.Instance.BeginUIDraw();
+        _cameraManager.BeginUIDraw();
 
-        UIRenderer.Interface(Screen.Current?.Body);
+        _uiRenderer.Interface(Screen.Current?.Body);
 
-        if (Screen.Current == Screens.Game) UIRenderer.Chat();
+        if (Screen.Current == Screens.Game) _uiRenderer.Chat();
 
-        Renderer.Instance.RenderWindow.Display();
+        _renderer.RenderWindow.Display();
     }
 
-    private static void InGame()
+    private void InGame()
     {
         if (Screen.Current != Screens.Game) return;
 
         // Update camera logic and apply the SFML view.
         // All subsequent draws happen in world-space coordinates.
-        CameraManager.Instance.Update();
-        CameraManager.Instance.BeginWorldDraw();
+        _cameraManager.Update();
+        _cameraManager.BeginWorldDraw();
 
         // Ground layer
-        MapRenderer.DrawPanorama();
-        MapRenderer.DrawLayer((byte)Layer.Ground);
+        _mapRenderer.DrawPanorama();
+        _mapRenderer.DrawLayer((byte)Layer.Ground);
         _groundRenderSystems.Update(0);
 
-        for (byte i = 0; i < GameContext.Instance.CurrentMap.Npc.Length; i++)
-            if (GameContext.Instance.CurrentMap.Npc[i].Data != null)
-                NpcRenderer.Npc(GameContext.Instance.CurrentMap.Npc[i]);
+        for (byte i = 0; i < _context.CurrentMap.Npc.Length; i++)
+            if (_context.CurrentMap.Npc[i].Data != null)
+                _npcRenderer.Npc(_context.CurrentMap.Npc[i]);
 
         for (byte i = 0; i < Player.List.Count; i++)
             if (Player.List[i] != Player.Me)
                 if (Player.List[i].MapInstance == Player.Me.MapInstance)
-                    PlayerRenderer.PlayerCharacter(Player.List[i]);
+                    _playerRenderer.PlayerCharacter(Player.List[i]);
 
-        PlayerRenderer.PlayerCharacter(Player.Me);
+        _playerRenderer.PlayerCharacter(Player.Me);
 
         // Foreground layers and effects
-        MapRenderer.DrawLayer((byte)Layer.Fringe);
-        MapRenderer.DrawWeather();
+        _mapRenderer.DrawLayer((byte)Layer.Fringe);
+        _mapRenderer.DrawWeather();
         _fringeRenderSystems.Update(0);
-        MapRenderer.DrawMapName();
+        _mapRenderer.DrawMapName();
 
-        UIRenderer.Party();
+        _uiRenderer.Party();
 
         // FPS/Latency overlays — these are world-space but near-origin so they work fine here.
-        if (Options.Fps) Renderer.Instance.DrawText("FPS: " + Loop.Fps, 176, 7, Color.White);
-        if (Options.Latency) Renderer.Instance.DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
+        if (Options.Fps) _renderer.DrawText("FPS: " + Loop.Fps, 176, 7, Color.White);
+        if (Options.Latency) _renderer.DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
     }
 }

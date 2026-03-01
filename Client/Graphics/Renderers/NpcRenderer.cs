@@ -6,22 +6,20 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.Graphics.Renderers;
 
-internal static class NpcRenderer
+internal sealed class NpcRenderer(Renderer renderer, CharacterRenderer characterRenderer)
 {
-    /// <summary>
-    /// Render an NPC's shadow and health bar at its world position.
-    /// Draws in world space — the SFML view handles panning.
-    /// </summary>
-    public static void Npc(NpcInstance npcInstance)
+    public static NpcRenderer Instance { get; } = new(Renderer.Instance, CharacterRenderer.Instance);
+
+    public void Npc(NpcInstance npcInstance)
     {
         if (npcInstance.Data.Texture <= 0 || npcInstance.Data.Texture > Textures.Characters.Count) return;
 
         NpcBars(npcInstance);
-        CharacterRenderer.CharacterShadow(npcInstance.Data.Texture,
+        characterRenderer.CharacterShadow(npcInstance.Data.Texture,
             new Point(npcInstance.PixelX, npcInstance.PixelY));
     }
 
-    private static void NpcBars(NpcInstance npcInstance)
+    private void NpcBars(NpcInstance npcInstance)
     {
         var texture = Textures.Characters[npcInstance.Data.Texture];
         var value = npcInstance.Vital[(byte)Vital.Hp];
@@ -34,7 +32,7 @@ internal static class NpcRenderer
         var fullWidth = texture.ToSize().Width / AnimationAmountX;
         var width = value * fullWidth / npcInstance.Data.Vital[(byte)Vital.Hp];
 
-        Renderer.Instance.Draw(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
-        Renderer.Instance.Draw(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
+        renderer.Draw(Textures.Bars, position.X, position.Y, 0, 4, fullWidth, 4);
+        renderer.Draw(Textures.Bars, position.X, position.Y, 0, 0, width, 4);
     }
 }
