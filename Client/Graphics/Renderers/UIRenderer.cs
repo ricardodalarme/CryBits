@@ -54,12 +54,12 @@ internal static class UIRenderer
             _ => 225
         };
 
-        Renders.Render(Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
+        Renders.Draw(Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
     }
 
     private static void Panel(Panel tool)
     {
-        Renders.Render(Textures.Panels[tool.TextureNum], tool.Position);
+        Renders.Draw(Textures.Panels[tool.TextureNum], tool.Position);
     }
 
     private static void CheckBox(CheckBox tool)
@@ -70,7 +70,7 @@ internal static class UIRenderer
 
         if (tool.Checked) recSource.Location = new Point(Textures.CheckBox.ToSize().Width / 2, 0);
 
-        Renders.Render(Textures.CheckBox, recSource, recDestiny);
+        Renders.Draw(Textures.CheckBox, recSource, recDestiny);
         Renders.DrawText(tool.Text,
             recDestiny.Location.X + Textures.CheckBox.ToSize().Width / 2 +
             Framework.Interfacily.Components.CheckBox.Margin, recDestiny.Location.Y + 1, Color.White);
@@ -81,7 +81,7 @@ internal static class UIRenderer
         var position = tool.Position;
         var text = tool.Text;
 
-        Renders.Render_Box(Textures.TextBox, 3, tool.Position, new Size(tool.Width, Textures.TextBox.ToSize().Height));
+        Renders.DrawBox(Textures.TextBox, 3, tool.Position, new Size(tool.Width, Textures.TextBox.ToSize().Height));
 
         if (tool.Password && !string.IsNullOrEmpty(text)) text = new string('•', text.Length);
 
@@ -117,11 +117,11 @@ internal static class UIRenderer
         var mpPercentage = Player.Me.Vital[(byte)Vital.Mp] / (decimal)Player.Me.MaxVital[(byte)Vital.Mp];
         var expPercentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
 
-        Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0,
+        Renders.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0,
             (int)(Textures.BarsPanel.Size.X * hpPercentage), 17);
-        Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 24, 0, 18,
+        Renders.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 24, 0, 18,
             (int)(Textures.BarsPanel.Size.X * mpPercentage), 17);
-        Renders.Render(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36,
+        Renders.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36,
             (int)(Textures.BarsPanel.Size.X * expPercentage), 17);
 
         Renders.DrawText("HP", tool.Position.X + 10, tool.Position.Y + 3, Color.White);
@@ -177,7 +177,7 @@ internal static class UIRenderer
 
         Renders.DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, TextAlign.Center);
         Renders.DrawText(item.Description, tool.Position.X + 82, tool.Position.Y + 20, Color.White, 86);
-        Renders.Render(Textures.Items[item.Texture], new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
+        Renders.Draw(Textures.Items[item.Texture], new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
 
         if (Panels.Shop.Visible)
             if (PanelsEvents.ShopSlot >= 0)
@@ -240,7 +240,7 @@ internal static class UIRenderer
 
         if (PanelsEvents.HotbarChange >= 0)
             if (Player.Me.Hotbar[PanelsEvents.HotbarChange].Type == SlotType.Item)
-                Renders.Render(
+                Renders.Draw(
                     Textures.Items[Player.Me.Inventory[Player.Me.Hotbar[PanelsEvents.HotbarChange].Slot].Item.Texture],
                     new Point(Input.InputManager.Instance.MousePosition.X + 6,
                         Input.InputManager.Instance.MousePosition.Y + 6));
@@ -250,7 +250,7 @@ internal static class UIRenderer
     {
         Renders.DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
         Renders.DrawText(Player.Me.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, Color.White);
-        Renders.Render(Textures.Faces[Player.Me.TextureNum], new Point(tool.Position.X + 82, tool.Position.Y + 37));
+        Renders.Draw(Textures.Faces[Player.Me.TextureNum], new Point(tool.Position.X + 82, tool.Position.Y + 37));
 
         Renders.DrawText("Strength: " + Player.Me.Attribute[(byte)Attribute.Strength], tool.Position.X + 32,
             tool.Position.Y + 146, Color.White);
@@ -266,10 +266,10 @@ internal static class UIRenderer
 
         for (byte i = 0; i < (byte)Equipment.Count; i++)
             if (Player.Me.Equipment[i] == null)
-                Renders.Render(Textures.Equipments, tool.Position.X + 7 + i * 34, tool.Position.Y + 247, i * 34, 0, 32,
+                Renders.Draw(Textures.Equipments, tool.Position.X + 7 + i * 34, tool.Position.Y + 247, i * 34, 0, 32,
                     32);
             else
-                Renders.Render(Textures.Items[Player.Me.Equipment[i].Texture], tool.Position.X + 8 + i * 35,
+                Renders.Draw(Textures.Items[Player.Me.Equipment[i].Texture], tool.Position.X + 8 + i * 35,
                     tool.Position.Y + 247, 0, 0, 34, 34);
     }
 
@@ -283,7 +283,7 @@ internal static class UIRenderer
                 numColumns);
 
         if (PanelsEvents.InventoryChange > 0)
-            Renders.Render(Textures.Items[Player.Me.Inventory[PanelsEvents.InventoryChange].Item.Texture],
+            Renders.Draw(Textures.Items[Player.Me.Inventory[PanelsEvents.InventoryChange].Item.Texture],
                 new Point(Input.InputManager.Instance.MousePosition.X + 6,
                     Input.InputManager.Instance.MousePosition.Y + 6));
     }
@@ -301,14 +301,14 @@ internal static class UIRenderer
     {
         for (byte i = 0; i < Player.Me.Party.Length; i++)
         {
-            Renders.Render(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
-            Renders.Render(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
+            Renders.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
+            Renders.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
             if (Player.Me.Party[i].Vital[(byte)Vital.Hp] > 0)
-                Renders.Render(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
+                Renders.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
                     Player.Me.Party[i].Vital[(byte)Vital.Hp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Hp],
                     8);
             if (Player.Me.Party[i].Vital[(byte)Vital.Mp] > 0)
-                Renders.Render(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
+                Renders.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
                     Player.Me.Party[i].Vital[(byte)Vital.Mp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Mp],
                     8);
 
@@ -367,7 +367,7 @@ internal static class UIRenderer
         var textureNum = PanelsEvents.Characters[PanelsEvents.SelectCharacter].TextureNum;
         if (textureNum > 0)
         {
-            Renders.Render(Textures.Faces[textureNum], new Point(353, 442));
+            Renders.Draw(Textures.Faces[textureNum], new Point(353, 442));
             CharacterRenderer.Character(textureNum,
                 new Point(356, 534 - Textures.Characters[textureNum].ToSize().Height / 4),
                 Direction.Down, AnimationStopped);
@@ -390,7 +390,7 @@ internal static class UIRenderer
 
         if (textureNum > 0)
         {
-            Renders.Render(Textures.Faces[textureNum], new Point(425, 440));
+            Renders.Draw(Textures.Faces[textureNum], new Point(425, 440));
             CharacterRenderer.Character(textureNum, new Point(433, 501), Direction.Down, AnimationStopped);
         }
 

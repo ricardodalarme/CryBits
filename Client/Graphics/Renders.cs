@@ -46,7 +46,7 @@ internal static class Renders
     /// <param name="recDestiny">Destination rectangle on screen.</param>
     /// <param name="color">Optional tint color.</param>
     /// <param name="mode">Optional render state.</param>
-    public static void Render(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null,
+    public static void Draw(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null,
         object mode = null)
     {
         var tmpImage = new Sprite(texture)
@@ -62,26 +62,26 @@ internal static class Renders
         RenderWindow.Draw(tmpImage, (RenderStates)mode);
     }
 
-    public static void Render(Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth,
+    public static void Draw(Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth,
         int sourceHeight, object color = null)
     {
         var source = new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
         var destiny = new Rectangle(x, y, sourceWidth, sourceHeight);
 
-        Render(texture, source, destiny, color);
+        Draw(texture, source, destiny, color);
     }
 
-    public static void Render(Texture texture, Rectangle destiny, object color = null)
+    public static void Draw(Texture texture, Rectangle destiny, object color = null)
     {
         var source = new Rectangle(new Point(0), texture.ToSize());
-        Render(texture, source, destiny, color);
+        Draw(texture, source, destiny, color);
     }
 
-    public static void Render(Texture texture, Point position, object color = null)
+    public static void Draw(Texture texture, Point position, object color = null)
     {
         var source = new Rectangle(new Point(0), texture.ToSize());
         var destiny = new Rectangle(position, texture.ToSize());
-        Render(texture, source, destiny, color);
+        Draw(texture, source, destiny, color);
     }
 
     /// <summary>
@@ -149,16 +149,16 @@ internal static class Renders
     /// <param name="margin">Inner margin in pixels.</param>
     /// <param name="position">Top-left position.</param>
     /// <param name="size">Box size.</param>
-    public static void Render_Box(Texture texture, byte margin, Point position, Size size)
+    public static void DrawBox(Texture texture, byte margin, Point position, Size size)
     {
         var textureWidth = texture.ToSize().Width;
         var textureHeight = texture.ToSize().Height;
 
-        Render(texture, new Rectangle(new Point(0), new Size(margin, textureWidth)),
+        Draw(texture, new Rectangle(new Point(0), new Size(margin, textureWidth)),
             new Rectangle(position, new Size(margin, textureHeight)));
-        Render(texture, new Rectangle(new Point(textureWidth - margin, 0), new Size(margin, textureHeight)),
+        Draw(texture, new Rectangle(new Point(textureWidth - margin, 0), new Size(margin, textureHeight)),
             new Rectangle(new Point(position.X + size.Width - margin, position.Y), new Size(margin, textureHeight)));
-        Render(texture, new Rectangle(new Point(margin, 0), new Size(margin, textureHeight)),
+        Draw(texture, new Rectangle(new Point(margin, 0), new Size(margin, textureHeight)),
             new Rectangle(new Point(position.X + margin, position.Y),
                 new Size(size.Width - margin * 2, textureHeight)));
     }
