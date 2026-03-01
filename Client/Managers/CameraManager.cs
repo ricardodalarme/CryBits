@@ -10,7 +10,7 @@ using SFML.Graphics;
 using SFML.System;
 using static CryBits.Globals;
 
-namespace CryBits.Client.Logic;
+namespace CryBits.Client.Managers;
 
 /// <summary>
 /// Manages the game's 2D camera using an SFML <see cref="View"/>.

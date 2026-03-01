@@ -5,6 +5,7 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily;
 using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Managers;
 using CryBits.Client.Network;
 using CryBits.Client.UI.Events;
 using SFML.Window;
@@ -27,12 +28,12 @@ internal static class Window
 
     public static void Bind()
     {
-        Input.InputManager.Instance.MouseButtonPressed += OnMouseButtonPressed;
-        Input.InputManager.Instance.MouseButtonReleased += OnMouseButtonReleased;
-        Input.InputManager.Instance.MouseMoved += OnMouseMoved;
-        Input.InputManager.Instance.KeyPressed += OnKeyPressed;
-        Input.InputManager.Instance.KeyReleased += OnKeyReleased;
-        Input.InputManager.Instance.TextEntered += OnTextEntered;
+        InputManager.Instance.MouseButtonPressed += OnMouseButtonPressed;
+        InputManager.Instance.MouseButtonReleased += OnMouseButtonReleased;
+        InputManager.Instance.MouseMoved += OnMouseMoved;
+        InputManager.Instance.KeyPressed += OnKeyPressed;
+        InputManager.Instance.KeyReleased += OnKeyReleased;
+        InputManager.Instance.TextEntered += OnTextEntered;
     }
 
     public static void OnClosed(object sender, EventArgs e)

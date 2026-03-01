@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Logic;
+using CryBits.Client.Managers;
 using CryBits.Client.Worlds;
 using CryBits.Entities.Map;
 using CryBits.Enums;

@@ -3,6 +3,7 @@ using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities.Shop;
 using CryBits.Enums;
@@ -62,8 +63,8 @@ internal static class PanelsEvents
     {
         var size = grid + gap;
         var start = panel.Position + new Size(offX, offY);
-        var slot = new Point((Input.InputManager.Instance.MousePosition.X - start.X) / size,
-            (Input.InputManager.Instance.MousePosition.Y - start.Y) / size);
+        var slot = new Point((InputManager.Instance.MousePosition.X - start.X) / size,
+            (InputManager.Instance.MousePosition.Y - start.Y) / size);
 
         // Check whether the mouse is over the slot
         if (slot.Y < 0 || slot.X < 0 || slot.X >= columns || slot.Y >= lines) return -1;

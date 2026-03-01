@@ -9,6 +9,7 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Client.Logic;
+using CryBits.Client.Managers;
 using CryBits.Client.UI.Events;
 using CryBits.Entities;
 using CryBits.Enums;
@@ -252,8 +253,8 @@ internal sealed class UIRenderer(
             if (Player.Me.Hotbar[PanelsEvents.HotbarChange].Type == SlotType.Item)
                 renderer.Draw(
                     Textures.Items[Player.Me.Inventory[Player.Me.Hotbar[PanelsEvents.HotbarChange].Slot].Item.Texture],
-                    new Point(Input.InputManager.Instance.MousePosition.X + 6,
-                        Input.InputManager.Instance.MousePosition.Y + 6));
+                    new Point(InputManager.Instance.MousePosition.X + 6,
+                        InputManager.Instance.MousePosition.Y + 6));
     }
 
     private void DrawMenuCharacter(Panel tool)
@@ -299,8 +300,8 @@ internal sealed class UIRenderer(
 
         if (PanelsEvents.InventoryChange > 0)
             renderer.Draw(Textures.Items[Player.Me.Inventory[PanelsEvents.InventoryChange].Item.Texture],
-                new Point(Input.InputManager.Instance.MousePosition.X + 6,
-                    Input.InputManager.Instance.MousePosition.Y + 6));
+                new Point(InputManager.Instance.MousePosition.X + 6,
+                    InputManager.Instance.MousePosition.Y + 6));
     }
 
     private void DrawPartyInvitation(Panel tool)

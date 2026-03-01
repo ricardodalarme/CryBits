@@ -1,11 +1,10 @@
 using System;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Logic;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-namespace CryBits.Client.Input;
+namespace CryBits.Client.Managers;
 
 public class InputManager
 {
@@ -84,11 +83,4 @@ public class InputManager
             return Mouse.GetPosition(Graphics.Renderer.Instance.RenderWindow);
         }
     }
-
-    /// <summary>
-    /// Current mouse position converted to world coordinates (accounts for camera pan).
-    /// Use this for world-space click detection.
-    /// </summary>
-    public Vector2f MouseWorldPosition =>
-        CameraManager.Instance.ScreenToWorld(MousePosition.X, MousePosition.Y);
 }

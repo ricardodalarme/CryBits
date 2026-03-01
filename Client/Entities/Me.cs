@@ -4,7 +4,7 @@ using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Input;
+using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Entities.Slots;

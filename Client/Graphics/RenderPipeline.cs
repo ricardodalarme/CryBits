@@ -5,6 +5,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Logic;
+using CryBits.Client.Managers;
 using CryBits.Client.Network;
 using CryBits.Client.Systems.Core;
 using CryBits.Client.Worlds;
