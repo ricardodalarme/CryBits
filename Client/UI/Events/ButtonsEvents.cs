@@ -75,7 +75,7 @@ internal static class ButtonsEvents
 
     private static void Connect()
     {
-        NetworkClient.Disconnect();
+        NetworkClient.Instance.Disconnect();
 
         PanelsEvents.MenuClose();
         Panels.Connect.Visible = true;
@@ -83,7 +83,7 @@ internal static class ButtonsEvents
 
     private static void Register()
     {
-        NetworkClient.Disconnect();
+        NetworkClient.Instance.Disconnect();
 
         PanelsEvents.MenuClose();
         Panels.Register.Visible = true;
@@ -91,7 +91,7 @@ internal static class ButtonsEvents
 
     private static void Options()
     {
-        NetworkClient.Disconnect();
+        NetworkClient.Instance.Disconnect();
 
         CheckBoxes.Sounds.Checked = Framework.Options.Sounds;
         CheckBoxes.Musics.Checked = Framework.Options.Musics;
@@ -102,7 +102,7 @@ internal static class ButtonsEvents
 
     private static void MenuReturn()
     {
-        NetworkClient.Disconnect();
+        NetworkClient.Instance.Disconnect();
 
         PanelsEvents.MenuClose();
         Panels.Connect.Visible = true;
@@ -115,7 +115,7 @@ internal static class ButtonsEvents
         OptionsRepository.Write();
 
         // Connect to game
-        if (NetworkClient.TryConnect()) AuthSender.Instance.Connect();
+        if (NetworkClient.Instance.TryConnect()) AuthSender.Instance.Connect();
     }
 
     private static void RegisterOk()
@@ -127,13 +127,13 @@ internal static class ButtonsEvents
             return;
         }
 
-        if (NetworkClient.TryConnect()) AuthSender.Instance.Register();
+        if (NetworkClient.Instance.TryConnect()) AuthSender.Instance.Register();
     }
 
     private static void CreateCharacter()
     {
         // Open character creation
-        if (NetworkClient.TryConnect()) AccountSender.Instance.CreateCharacter();
+        if (NetworkClient.Instance.TryConnect()) AccountSender.Instance.CreateCharacter();
     }
 
     private static void CreateCharacterChangeRight()

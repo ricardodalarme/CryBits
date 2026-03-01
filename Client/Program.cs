@@ -39,7 +39,7 @@ internal static class Program
         Window.Bind();
         GameInput.Bind();
 
-        NetworkClient.Init();
+        NetworkClient.Instance.Init();
         var context = GameContext.Instance;
         var audioManager = AudioManager.Instance;
 
@@ -68,10 +68,10 @@ internal static class Program
     {
         var waitTimer = Environment.TickCount;
 
-        NetworkClient.Disconnect();
+        NetworkClient.Instance.Disconnect();
 
-        while (NetworkClient.IsConnected() && Environment.TickCount <= waitTimer + 1000)
-            NetworkClient.HandleData();
+        while (NetworkClient.Instance.IsConnected() && Environment.TickCount <= waitTimer + 1000)
+            NetworkClient.Instance.HandleData();
 
         Working = false;
         Environment.Exit(0);

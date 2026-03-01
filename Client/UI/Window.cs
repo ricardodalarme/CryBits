@@ -38,7 +38,7 @@ internal static class Window
     public static void OnClosed(object sender, EventArgs e)
     {
         if (Screen.Current == Screens.Game)
-            NetworkClient.Disconnect();
+            NetworkClient.Instance.Disconnect();
         else
             Program.Working = false;
     }

@@ -8,27 +8,29 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.Network;
 
-internal static class NetworkClient
+internal class NetworkClient
 {
-    public static NetManager Device;
-    private static EventBasedNetListener _listener;
-    private static NetPeer _serverPeer;
+    public static NetworkClient Instance { get; } = new();
+
+    private readonly NetManager _device;
+    private readonly EventBasedNetListener _listener;
+    public NetPeer? ServerPeer { get; private set; }
 
     // Connection data
     private const string Ip = "localhost";
 
     /// <summary>Latest measured round-trip latency in milliseconds.</summary>
     public static int Latency;
-
     public static int LatencySend;
 
-    public static NetPeer ServerPeer => _serverPeer;
-
-    public static void Init()
+    public NetworkClient()
     {
         _listener = new EventBasedNetListener();
-        Device = new NetManager(_listener);
+        _device = new NetManager(_listener);
+    }
 
+    public void Init()
+    {
         _listener.NetworkReceiveEvent += (_, reader, _, _) =>
         {
             PacketDispatcher.Dispatch(reader);
@@ -37,29 +39,29 @@ internal static class NetworkClient
 
         _listener.PeerDisconnectedEvent += (_, _) =>
         {
-            _serverPeer = null;
+            ServerPeer = null;
             if (Player.Me != null) Player.Me.Leave();
             GameContext.Instance.Reset();
             Window.OpenMenu();
         };
 
-        Device.Start();
+        _device.Start();
     }
 
-    public static void Disconnect()
+    public void Disconnect()
     {
-        _serverPeer?.Disconnect();
+        ServerPeer?.Disconnect();
     }
 
-    public static void HandleData() => Device.PollEvents();
+    public void HandleData() => _device.PollEvents();
 
-    public static bool IsConnected() => _serverPeer?.ConnectionState == ConnectionState.Connected;
+    public bool IsConnected() => ServerPeer?.ConnectionState == ConnectionState.Connected;
 
-    public static bool TryConnect()
+    public bool TryConnect()
     {
         if (IsConnected()) return true;
 
-        _serverPeer = Device.Connect(Ip, Config.Port, Config.GameName);
+        ServerPeer = _device.Connect(Ip, Config.Port, Config.GameName);
 
         var waitTimer = Environment.TickCount;
         while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)

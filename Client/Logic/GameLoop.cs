@@ -52,7 +52,7 @@ internal static class GameLoop
         while (Program.Working)
         {
             // Handle incoming network data.
-            NetworkClient.HandleData();
+            NetworkClient.Instance.HandleData();
 
             // Present the rendered frame.
             _renderPipeline.Present();
