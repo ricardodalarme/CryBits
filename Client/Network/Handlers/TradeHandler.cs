@@ -12,10 +12,10 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal static class TradeHandler
+internal class TradeHandler(TradeSender tradeSender)
 {
     [PacketHandler]
-    internal static void Trade(TradePacket packet)
+    internal void Trade(TradePacket packet)
     {
         var state = packet.State;
 
@@ -42,12 +42,12 @@ internal static class TradeHandler
     }
 
     [PacketHandler]
-    internal static void TradeInvitation(TradeInvitationPacket packet)
+    internal void TradeInvitation(TradeInvitationPacket packet)
     {
         // Decline if player disabled trade invitations
         if (!Options.Trade)
         {
-            TradeSender.Instance.TradeDecline();
+            tradeSender.TradeDecline();
             return;
         }
 
@@ -57,7 +57,7 @@ internal static class TradeHandler
     }
 
     [PacketHandler]
-    internal static void TradeState(TradeStatePacket packet)
+    internal void TradeState(TradeStatePacket packet)
     {
         switch ((TradeStatus)packet.State)
         {
@@ -76,7 +76,7 @@ internal static class TradeHandler
     }
 
     [PacketHandler]
-    internal static void TradeOffer(TradeOfferPacket packet)
+    internal void TradeOffer(TradeOfferPacket packet)
     {
         // Read trade offer data
         if (packet.Own)

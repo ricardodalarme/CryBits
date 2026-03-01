@@ -5,8 +5,11 @@ using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Graphics;
 using CryBits.Client.Logic;
 using CryBits.Client.Network;
+using CryBits.Client.Network.Handlers;
+using CryBits.Client.Network.Senders;
 using CryBits.Client.UI;
 using CryBits.Client.UI.Events;
+using CryBits.Client.Worlds;
 
 namespace CryBits.Client;
 
@@ -37,7 +40,20 @@ internal static class Program
         GameInput.Bind();
 
         NetworkClient.Init();
-        PacketDispatcher.Register();
+        var context = GameContext.Instance;
+        var audioManager = AudioManager.Instance;
+
+        PacketDispatcher.Register(new AuthHandler());
+        PacketDispatcher.Register(new AccountHandler(audioManager));
+        PacketDispatcher.Register(new PlayerHandler(context));
+        PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager));
+        PacketDispatcher.Register(new NpcHandler(context));
+        PacketDispatcher.Register(new ChatHandler());
+        PacketDispatcher.Register(new PartyHandler(PartySender.Instance));
+        PacketDispatcher.Register(new TradeHandler(TradeSender.Instance));
+        PacketDispatcher.Register(new ShopHandler());
+        PacketDispatcher.Register(new ClassHandler());
+        PacketDispatcher.Register(new ItemHandler());
         AudioManager.Instance.LoadSounds();
 
         Window.OpenMenu();

@@ -13,10 +13,10 @@ using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal static class PlayerHandler
+internal class PlayerHandler(GameContext context)
 {
     [PacketHandler]
-    internal static void PlayerData(PlayerDataPacket packet)
+    internal void PlayerData(PlayerDataPacket packet)
     {
         var name = packet.Name;
         Player player;
@@ -43,11 +43,11 @@ internal static class PlayerHandler
 
         for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = packet.Attribute[n];
         for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(packet.Equipment[n]);
-        GameContext.Instance.CurrentMap = player.MapInstance;
+        context.CurrentMap = player.MapInstance;
     }
 
     [PacketHandler]
-    internal static void PlayerPosition(PlayerPositionPacket packet)
+    internal void PlayerPosition(PlayerPositionPacket packet)
     {
         var player = Player.Get(packet.Name);
 
@@ -61,7 +61,7 @@ internal static class PlayerHandler
     }
 
     [PacketHandler]
-    internal static void PlayerVitals(PlayerVitalsPacket packet)
+    internal void PlayerVitals(PlayerVitalsPacket packet)
     {
         var player = Player.Get(packet.Name);
 
@@ -73,7 +73,7 @@ internal static class PlayerHandler
     }
 
     [PacketHandler]
-    internal static void PlayerEquipments(PlayerEquipmentsPacket packet)
+    internal void PlayerEquipments(PlayerEquipmentsPacket packet)
     {
         var player = Player.Get(packet.Name);
 
@@ -82,14 +82,14 @@ internal static class PlayerHandler
     }
 
     [PacketHandler]
-    internal static void PlayerLeave(PlayerLeavePacket packet)
+    internal void PlayerLeave(PlayerLeavePacket packet)
     {
         // Remove player from list
         Player.List.Remove(Player.Get(packet.Name));
     }
 
     [PacketHandler]
-    internal static void PlayerMove(PlayerMovePacket packet)
+    internal void PlayerMove(PlayerMovePacket packet)
     {
         var player = Player.Get(packet.Name);
 
@@ -110,14 +110,14 @@ internal static class PlayerHandler
     }
 
     [PacketHandler]
-    internal static void PlayerDirection(PlayerDirectionPacket packet)
+    internal void PlayerDirection(PlayerDirectionPacket packet)
     {
         // Update player's direction
         Player.Get(packet.Name).Direction = (Direction)packet.Direction;
     }
 
     [PacketHandler]
-    internal static void PlayerAttack(PlayerAttackPacket packet)
+    internal void PlayerAttack(PlayerAttackPacket packet)
     {
         var player = Player.Get(packet.Name);
         var victim = packet.Victim;
@@ -131,18 +131,18 @@ internal static class PlayerHandler
         Character victimData = victimType switch
         {
             Target.Player => Player.Get(victim),
-            Target.Npc => GameContext.Instance.CurrentMap.Npc[byte.Parse(victim)],
+            Target.Npc => context.CurrentMap.Npc[byte.Parse(victim)],
             _ => throw new ArgumentOutOfRangeException()
         };
 
         // Apply damage to victim
-        var world = GameContext.Instance.World;
+        var world = context.World;
         BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
         victimData.Hurt = Environment.TickCount;
     }
 
     [PacketHandler]
-    internal static void PlayerExperience(PlayerExperiencePacket packet)
+    internal void PlayerExperience(PlayerExperiencePacket packet)
     {
         Player.Me.Experience = packet.Experience;
         Player.Me.ExpNeeded = packet.ExpNeeded;
@@ -156,14 +156,14 @@ internal static class PlayerHandler
     }
 
     [PacketHandler]
-    internal static void PlayerInventory(PlayerInventoryPacket packet)
+    internal void PlayerInventory(PlayerInventoryPacket packet)
     {
         for (byte i = 0; i < MaxInventory; i++)
             Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(packet.ItemIds[i]), packet.Amounts[i]);
     }
 
     [PacketHandler]
-    internal static void PlayerHotbar(PlayerHotbarPacket packet)
+    internal void PlayerHotbar(PlayerHotbarPacket packet)
     {
         for (byte i = 0; i < MaxHotbar; i++)
         {

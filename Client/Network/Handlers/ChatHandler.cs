@@ -4,10 +4,10 @@ using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal static class ChatHandler
+internal class ChatHandler
 {
     [PacketHandler]
-    internal static void Message(MessagePacket packet)
+    internal void Message(MessagePacket packet)
     {
         // Add chat message
         var text = packet.Text;

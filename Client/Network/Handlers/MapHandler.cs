@@ -14,10 +14,10 @@ using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal static class MapHandler
+internal class MapHandler(GameContext context, MapSender mapSender, AudioManager audioManager)
 {
     [PacketHandler]
-    internal static void MapRevision(MapRevisionPacket packet)
+    internal void MapRevision(MapRevisionPacket packet)
     {
         var needed = false;
         var id = packet.MapId;
@@ -35,8 +35,8 @@ internal static class MapHandler
             if (!CryBits.Entities.Map.Map.List.ContainsKey(id))
             {
                 MapRepository.Read(id);
-                GameContext.Instance.CurrentMap.Weather.Update();
-                GameContext.Instance.CurrentMap.Data.Update();
+                context.CurrentMap.Weather.Update();
+                context.CurrentMap.Data.Update();
             }
 
             if (CryBits.Entities.Map.Map.List[id].Revision != currentRevision)
@@ -46,11 +46,11 @@ internal static class MapHandler
             needed = true;
 
         // Request map data
-        MapSender.Instance.RequestMap(needed);
+        mapSender.RequestMap(needed);
     }
 
     [PacketHandler]
-    internal static void Map(MapPacket packet)
+    internal void Map(MapPacket packet)
     {
         var map = packet.Map;
         var id = map.Id;
@@ -63,31 +63,31 @@ internal static class MapHandler
             MapInstance.List.Add(id, new MapInstance(map));
         }
 
-        GameContext.Instance.CurrentMap = MapInstance.List[id];
+        context.CurrentMap = MapInstance.List[id];
 
         // Persist map to disk
         MapRepository.Write(map);
 
         // Update weather particles and map state
-        GameContext.Instance.CurrentMap.Weather.UpdateType();
-        FogSpawner.Spawn(GameContext.Instance.World, GameContext.Instance.CurrentMap.Data.Fog);
-        GameContext.Instance.CurrentMap.Data.Update();
+        context.CurrentMap.Weather.UpdateType();
+        FogSpawner.Spawn(context.World, context.CurrentMap.Data.Fog);
+        context.CurrentMap.Data.Update();
     }
 
     [PacketHandler]
-    internal static void JoinMap(JoinMapPacket _)
+    internal void JoinMap(JoinMapPacket _)
     {
         // Play map background music if present
-        if (string.IsNullOrEmpty(GameContext.Instance.CurrentMap.Data.Music))
-            AudioManager.Instance.StopMusic();
+        if (string.IsNullOrEmpty(context.CurrentMap.Data.Music))
+            audioManager.StopMusic();
         else
-            AudioManager.Instance.PlayMusic(GameContext.Instance.CurrentMap.Data.Music);
+            audioManager.PlayMusic(context.CurrentMap.Data.Music);
     }
 
     [PacketHandler]
-    internal static void MapItems(MapItemsPacket packet)
+    internal void MapItems(MapItemsPacket packet)
     {
-        var world = GameContext.Instance.World;
+        var world = context.World;
 
         // Destroy all stale map-item entities instantly (no CommandBuffer needed)
         var query = new QueryDescription().WithAll<GroundItemComponent>();

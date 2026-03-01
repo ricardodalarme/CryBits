@@ -6,17 +6,17 @@ using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal static class ShopHandler
+internal class ShopHandler
 {
     [PacketHandler]
-    internal static void Shops(ShopsPacket packet)
+    internal void Shops(ShopsPacket packet)
     {
         // Read shops dictionary
         Shop.List = packet.List;
     }
 
     [PacketHandler]
-    internal static void ShopOpen(ShopOpenPacket packet)
+    internal void ShopOpen(ShopOpenPacket packet)
     {
         // Open shop panel
         PanelsEvents.ShopOpen = Shop.List.Get(packet.Id);

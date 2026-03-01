@@ -15,10 +15,10 @@ using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal static class AccountHandler
+internal class AccountHandler(AudioManager audioManager)
 {
     [PacketHandler]
-    internal static void Join(JoinPacket packet)
+    internal void Join(JoinPacket packet)
     {
         // Clear entity collections
         Player.List = [];
@@ -34,7 +34,7 @@ internal static class AccountHandler
     }
 
     [PacketHandler]
-    internal static void CreateCharacter(CreateCharacterPacket _)
+    internal void CreateCharacter(CreateCharacterPacket _)
     {
         // Reset character-creation inputs
         TextBoxes.CreateCharacterName.Text = string.Empty;
@@ -49,7 +49,7 @@ internal static class AccountHandler
     }
 
     [PacketHandler]
-    internal static void Characters(CharactersPacket packet)
+    internal void Characters(CharactersPacket packet)
     {
         // Resize character list
         PanelsEvents.Characters = new PanelsEvents.TempCharacter[packet.Characters.Length];
@@ -66,7 +66,7 @@ internal static class AccountHandler
     }
 
     [PacketHandler]
-    internal static void JoinGame(JoinGamePacket _)
+    internal void JoinGame(JoinGamePacket _)
     {
         // Reset UI state and options
         Chat.Order = [];
@@ -98,7 +98,7 @@ internal static class AccountHandler
         Panels.ShopSell.Visible = false;
 
         // Enter the game
-        AudioManager.Instance.StopMusic();
+        audioManager.StopMusic();
         Screen.Current = Screens.Game;
     }
 }

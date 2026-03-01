@@ -18,11 +18,15 @@ internal static class PacketDispatcher
 {
     private static readonly Dictionary<Type, Action<IServerPacket>> _handlers = new();
 
-    internal static void Register()
+    /// <summary>
+    /// Discovers all instance <see cref="PacketHandlerAttribute"/> methods on <paramref name="handler"/>
+    /// and registers a bound delegate for each.  The instance is captured so that dependencies
+    /// injected via the constructor are available when the handler is invoked.
+    /// </summary>
+    internal static void Register(object handler)
     {
-        var methods = Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
+        var methods = handler.GetType()
+            .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
             .Where(m => m.GetCustomAttribute<PacketHandlerAttribute>() is not null);
 
         foreach (var method in methods)
@@ -40,7 +44,7 @@ internal static class PacketDispatcher
                     $"Duplicate [PacketHandler] for '{packetType.Name}' " +
                     $"on '{method.DeclaringType?.Name}.{method.Name}'.");
 
-            _handlers[packetType] = BuildHandler(method);
+            _handlers[packetType] = BuildInstanceHandler(method, handler);
         }
     }
 
@@ -52,16 +56,16 @@ internal static class PacketDispatcher
             handler(packet);
     }
 
-    private static Action<IServerPacket> BuildHandler(MethodInfo method)
+    private static Action<IServerPacket> BuildInstanceHandler(MethodInfo method, object instance)
     {
         var packetParam = Expression.Parameter(typeof(IServerPacket), "packet");
+        var instanceExpr = Expression.Constant(instance);
         var methodParams = method.GetParameters();
 
-        // Find the IServerPacket-typed parameter index
         var packetParamIndex = Array.FindIndex(methodParams,
             p => typeof(IServerPacket).IsAssignableFrom(p.ParameterType));
 
-        Expression callExpr = Expression.Call(method,
+        Expression callExpr = Expression.Call(instanceExpr, method,
             methodParams.Select((p, i) =>
                 i == packetParamIndex
                     ? (Expression)Expression.Convert(packetParam, p.ParameterType)

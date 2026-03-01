@@ -6,24 +6,24 @@ using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal static class AuthHandler
+internal class AuthHandler
 {
     [PacketHandler]
-    internal static void Latency(LatencyPacket _)
+    internal void Latency(LatencyPacket _)
     {
         // Update latency measurement
         NetworkClient.Latency = Environment.TickCount - NetworkClient.LatencySend;
     }
 
     [PacketHandler]
-    internal static void Alert(AlertPacket packet)
+    internal void Alert(AlertPacket packet)
     {
         // Show alert message
         Utils.Alert.Show(packet.Message);
     }
 
     [PacketHandler]
-    internal static void Connect(ConnectPacket _)
+    internal void Connect(ConnectPacket _)
     {
         // Reset client-side character selection state
         PanelsEvents.SelectCharacter = 0;

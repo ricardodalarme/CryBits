@@ -7,10 +7,10 @@ using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal static class PartyHandler
+internal class PartyHandler(PartySender partySender)
 {
     [PacketHandler]
-    internal static void Party(PartyPacket packet)
+    internal void Party(PartyPacket packet)
     {
         // Read party members
         Player.Me.Party = new Player[packet.Members.Length];
@@ -18,12 +18,12 @@ internal static class PartyHandler
     }
 
     [PacketHandler]
-    internal static void PartyInvitation(PartyInvitationPacket packet)
+    internal void PartyInvitation(PartyInvitationPacket packet)
     {
         // Decline if player disabled party invites
         if (!Options.Party)
         {
-            PartySender.Instance.PartyDecline();
+            partySender.PartyDecline();
             return;
         }
 
