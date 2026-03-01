@@ -155,7 +155,7 @@ internal sealed class UIRenderer(
         tool.Visible = TextBox.Focused != null &&
                        TextBox.Focused.Name.Equals("Chat");
 
-        if (tool.Visible || Loop.ChatTimer >= Environment.TickCount && Options.Chat)
+        if (tool.Visible || GameLoop.ChatTimer >= Environment.TickCount && Options.Chat)
             for (var i = UI.Chat.LinesFirst; i <= UI.Chat.LinesVisible + UI.Chat.LinesFirst; i++)
                 if (UI.Chat.Order.Count > i)
                     renderer.DrawText(UI.Chat.Order[i].Text, 16, 461 + 11 * (i - UI.Chat.LinesFirst),

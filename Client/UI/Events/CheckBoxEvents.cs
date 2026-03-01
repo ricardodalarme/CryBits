@@ -69,7 +69,7 @@ internal static class CheckBoxEvents
     {
         Options.Chat = CheckBoxes.OptionsChat.Checked;
         OptionsRepository.Write();
-        if (Options.Chat) Loop.ChatTimer = Environment.TickCount + UI.Chat.SleepTimer;
+        if (Options.Chat) GameLoop.ChatTimer = Environment.TickCount + UI.Chat.SleepTimer;
     }
 
     private static void Fps()

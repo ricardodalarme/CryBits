@@ -14,7 +14,7 @@ using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 
 namespace CryBits.Client.Logic;
 
-internal static class Loop
+internal static class GameLoop
 {
     private static readonly RenderPipeline _renderPipeline = RenderPipeline.Instance;
 

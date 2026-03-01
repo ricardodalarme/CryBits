@@ -42,7 +42,7 @@ internal static class Program
 
         Window.OpenMenu();
 
-        Loop.Init();
+        GameLoop.Init();
     }
 
     /// <summary>

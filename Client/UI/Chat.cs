@@ -41,7 +41,7 @@ internal static class Chat
             LinesFirst = (byte)(i - LinesVisible);
 
         // Reset chat visibility timer
-        Loop.ChatTimer = Environment.TickCount + 10000;
+        GameLoop.ChatTimer = Environment.TickCount + 10000;
     }
 
     public static void AddText(string message, Color color)
@@ -77,7 +77,7 @@ internal static class Chat
 
         if (panel.Visible)
         {
-            Loop.ChatTimer = Environment.TickCount + SleepTimer;
+            GameLoop.ChatTimer = Environment.TickCount + SleepTimer;
             TextBox.Focused = tool;
             return;
         }

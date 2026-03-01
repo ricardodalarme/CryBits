@@ -19,7 +19,7 @@ internal static class TextBoxesEvents
     public static void Chat_MouseUp()
     {
         // Focus chat textbox and reset timer
-        Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
+        GameLoop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
         Panels.Chat.Visible = true;
     }
 }

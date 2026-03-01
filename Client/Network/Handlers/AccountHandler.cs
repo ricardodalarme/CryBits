@@ -71,7 +71,7 @@ internal static class AccountHandler
         // Reset UI state and options
         Chat.Order = [];
         Chat.LinesFirst = 0;
-        Loop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
+        GameLoop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
         TextBoxes.Chat.Text = string.Empty;
         CheckBoxes.OptionsSounds.Checked = Options.Sounds;
         CheckBoxes.OptionsMusics.Checked = Options.Musics;
@@ -80,7 +80,7 @@ internal static class AccountHandler
         CheckBoxes.OptionsLatency.Checked = Options.Latency;
         CheckBoxes.OptionsTrade.Checked = Options.Trade;
         CheckBoxes.OptionsParty.Checked = Options.Party;
-        Loop.ChatTimer = Loop.ChatTimer = Environment.TickCount + 10000;
+        GameLoop.ChatTimer = GameLoop.ChatTimer = Environment.TickCount + 10000;
         PanelsEvents.InformationId = Guid.Empty;
 
         // Reset UI panels
