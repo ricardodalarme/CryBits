@@ -12,7 +12,7 @@ internal static class AuthHandler
     internal static void Latency(LatencyPacket _)
     {
         // Update latency measurement
-        Socket.Latency = Environment.TickCount - Socket.LatencySend;
+        NetworkClient.Latency = Environment.TickCount - NetworkClient.LatencySend;
     }
 
     [PacketHandler]

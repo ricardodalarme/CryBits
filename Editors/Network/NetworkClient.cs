@@ -1,14 +1,12 @@
 using System;
-using CryBits.Client.Entities;
-using CryBits.Client.UI;
-using CryBits.Client.Utils;
-using CryBits.Client.Worlds;
+using System.Linq;
+using CryBits.Editors.Forms;
 using LiteNetLib;
 using static CryBits.Globals;
 
-namespace CryBits.Client.Network;
+namespace CryBits.Editors.Network;
 
-internal static class Socket
+internal static class NetworkClient
 {
     public static NetManager Device;
     private static EventBasedNetListener _listener;
@@ -16,11 +14,6 @@ internal static class Socket
 
     // Connection data
     private const string Ip = "localhost";
-
-    /// <summary>Latest measured round-trip latency in milliseconds.</summary>
-    public static int Latency;
-
-    public static int LatencySend;
 
     public static NetPeer ServerPeer => _serverPeer;
 
@@ -38,9 +31,7 @@ internal static class Socket
         _listener.PeerDisconnectedEvent += (_, _) =>
         {
             _serverPeer = null;
-            if (Player.Me != null) Player.Me.Leave();
-            GameContext.Instance.Reset();
-            Window.OpenMenu();
+            Leave();
         };
 
         Device.Start();
@@ -65,12 +56,22 @@ internal static class Socket
         while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)
             HandleData();
 
-        if (!IsConnected())
-        {
-            Alert.Show("The server is currently unavailable.");
-            return false;
-        }
+        return IsConnected();
+    }
 
-        return true;
+    private static void Leave()
+    {
+        // Close all open windows and show the login menu.
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (Avalonia.Application.Current?.ApplicationLifetime is
+                Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                foreach (var win in desktop.Windows.ToArray())
+                    win.Close();
+            }
+
+            LoginWindow.Open();
+        });
     }
 }

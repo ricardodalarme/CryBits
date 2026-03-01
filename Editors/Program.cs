@@ -31,7 +31,7 @@ internal static class Program
         EditorToolsRepository.Read();
 
         // Initialize subsystems
-        Socket.Init();
+        NetworkClient.Init();
         PacketDispatcher.Register();
         AudioManager.Instance.LoadSounds();
 
@@ -66,10 +66,10 @@ internal static class Program
         var waitTimer = Environment.TickCount;
 
         // Disconnect from network
-        Socket.Disconnect();
+        NetworkClient.Disconnect();
 
         // Wait until the player is disconnected
-        while (Socket.IsConnected() && Environment.TickCount <= waitTimer + 1000)
+        while (NetworkClient.IsConnected() && Environment.TickCount <= waitTimer + 1000)
             Thread.Sleep(10);
 
         // Close the application

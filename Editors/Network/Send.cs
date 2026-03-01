@@ -17,7 +17,7 @@ internal static class Send
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
-        Socket.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
+        NetworkClient.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
     public static void Connect() => Packet(new ConnectPacket { Username = LoginWindow.Username, Password = LoginWindow.Password, IsClientAccess = true });

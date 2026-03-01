@@ -50,7 +50,7 @@ internal static class Loop
         while (Program.Working)
         {
             // Handle incoming network data.
-            Socket.HandleData();
+            NetworkClient.HandleData();
 
             // Present the rendered frame.
             _renderPipeline.Present();

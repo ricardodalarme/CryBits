@@ -1,12 +1,14 @@
 using System;
-using System.Linq;
-using CryBits.Editors.Forms;
+using CryBits.Client.Entities;
+using CryBits.Client.UI;
+using CryBits.Client.Utils;
+using CryBits.Client.Worlds;
 using LiteNetLib;
 using static CryBits.Globals;
 
-namespace CryBits.Editors.Network;
+namespace CryBits.Client.Network;
 
-internal static class Socket
+internal static class NetworkClient
 {
     public static NetManager Device;
     private static EventBasedNetListener _listener;
@@ -14,6 +16,11 @@ internal static class Socket
 
     // Connection data
     private const string Ip = "localhost";
+
+    /// <summary>Latest measured round-trip latency in milliseconds.</summary>
+    public static int Latency;
+
+    public static int LatencySend;
 
     public static NetPeer ServerPeer => _serverPeer;
 
@@ -31,7 +38,9 @@ internal static class Socket
         _listener.PeerDisconnectedEvent += (_, _) =>
         {
             _serverPeer = null;
-            Leave();
+            if (Player.Me != null) Player.Me.Leave();
+            GameContext.Instance.Reset();
+            Window.OpenMenu();
         };
 
         Device.Start();
@@ -56,22 +65,12 @@ internal static class Socket
         while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)
             HandleData();
 
-        return IsConnected();
-    }
-
-    private static void Leave()
-    {
-        // Close all open windows and show the login menu.
-        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        if (!IsConnected())
         {
-            if (Avalonia.Application.Current?.ApplicationLifetime is
-                Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                foreach (var win in desktop.Windows.ToArray())
-                    win.Close();
-            }
+            Alert.Show("The server is currently unavailable.");
+            return false;
+        }
 
-            LoginWindow.Open();
-        });
+        return true;
     }
 }

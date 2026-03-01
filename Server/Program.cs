@@ -58,7 +58,7 @@ internal static class Program
         foreach (var map in Map.List.Values) MapInstance.Create(map, true);
 
         // Initialize network sockets.
-        Socket.Init();
+        NetworkServer.Init();
         Console.WriteLine("Network started. Port: " + Globals.Config.Port);
 
         // Register all [PacketHandler] methods before accepting connections.
@@ -89,7 +89,7 @@ internal static class Program
             CharacterRepository.Write(t);
 
         // Stop network device.
-        Socket.Device.Stop();
+        NetworkServer.Device.Stop();
     }
 
     private static void Logo()

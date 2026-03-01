@@ -36,7 +36,7 @@ internal static class Program
         Window.Bind();
         GameInput.Bind();
 
-        Socket.Init();
+        NetworkClient.Init();
         PacketDispatcher.Register();
         AudioManager.Instance.LoadSounds();
 
@@ -52,10 +52,10 @@ internal static class Program
     {
         var waitTimer = Environment.TickCount;
 
-        Socket.Disconnect();
+        NetworkClient.Disconnect();
 
-        while (Socket.IsConnected() && Environment.TickCount <= waitTimer + 1000)
-            Socket.HandleData();
+        while (NetworkClient.IsConnected() && Environment.TickCount <= waitTimer + 1000)
+            NetworkClient.HandleData();
 
         Working = false;
         Environment.Exit(0);

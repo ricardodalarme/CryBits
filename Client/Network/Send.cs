@@ -11,6 +11,6 @@ internal static class Send
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
-        Socket.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
+        NetworkClient.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
     }
 }

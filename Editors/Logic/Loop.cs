@@ -22,7 +22,7 @@ internal static class Loop
         {
             var count = Environment.TickCount;
 
-            Socket.HandleData();
+            NetworkClient.HandleData();
 
             MapInstance.UpdateFog();
             MapInstance.UpdateWeather();

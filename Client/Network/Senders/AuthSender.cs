@@ -11,7 +11,7 @@ internal static class AuthSender
         Send.Packet(new LatencyPacket());
 
         // Record latency send timestamp
-        Socket.LatencySend = Environment.TickCount;
+        NetworkClient.LatencySend = Environment.TickCount;
     }
 
     public static void Connect() => Send.Packet(new ConnectPacket

@@ -5,7 +5,7 @@ using static CryBits.Globals;
 
 namespace CryBits.Server.Network;
 
-internal static class Socket
+internal static class NetworkServer
 {
     public static NetManager Device;
     private static EventBasedNetListener _listener;

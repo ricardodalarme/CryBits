@@ -32,7 +32,7 @@ internal static class Loop
             try
             {
                 // Handle incoming network data.
-                Socket.HandleData();
+                NetworkServer.HandleData();
 
                 var now = Environment.TickCount64;
 

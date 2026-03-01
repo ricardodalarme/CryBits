@@ -61,7 +61,7 @@ internal partial class LoginWindow : Window
         Username = txtUsername.Text ?? string.Empty;
         Password = txtPassword.Text ?? string.Empty;
 
-        if (!Socket.TryConnect())
+        if (!NetworkClient.TryConnect())
         {
             MessageBox.Show(@"The server is currently unavailable.");
             return;

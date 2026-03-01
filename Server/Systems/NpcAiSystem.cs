@@ -200,7 +200,7 @@ internal static class NpcAiSystem
         npcInstance.Y = y;
         npcInstance.Direction = direction;
         for (byte i = 0; i < (byte)Vital.Count; i++) npcInstance.Vital[i] = npcInstance.Data.Vital[i];
-        if (Socket.Device != null) NpcSender.MapNpc(npcInstance.MapInstance.Npc[npcInstance.Index]);
+        if (NetworkServer.Device != null) NpcSender.MapNpc(npcInstance.MapInstance.Npc[npcInstance.Index]);
     }
 
     private static bool Move(NpcInstance npcInstance, Direction direction, byte movement = 1, bool checkZone = false)

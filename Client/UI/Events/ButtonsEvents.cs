@@ -75,7 +75,7 @@ internal static class ButtonsEvents
 
     private static void Connect()
     {
-        Socket.Disconnect();
+        NetworkClient.Disconnect();
 
         PanelsEvents.MenuClose();
         Panels.Connect.Visible = true;
@@ -83,7 +83,7 @@ internal static class ButtonsEvents
 
     private static void Register()
     {
-        Socket.Disconnect();
+        NetworkClient.Disconnect();
 
         PanelsEvents.MenuClose();
         Panels.Register.Visible = true;
@@ -91,7 +91,7 @@ internal static class ButtonsEvents
 
     private static void Options()
     {
-        Socket.Disconnect();
+        NetworkClient.Disconnect();
 
         CheckBoxes.Sounds.Checked = Framework.Options.Sounds;
         CheckBoxes.Musics.Checked = Framework.Options.Musics;
@@ -102,7 +102,7 @@ internal static class ButtonsEvents
 
     private static void MenuReturn()
     {
-        Socket.Disconnect();
+        NetworkClient.Disconnect();
 
         PanelsEvents.MenuClose();
         Panels.Connect.Visible = true;
@@ -115,7 +115,7 @@ internal static class ButtonsEvents
         OptionsRepository.Write();
 
         // Connect to game
-        if (Socket.TryConnect()) AuthSender.Connect();
+        if (NetworkClient.TryConnect()) AuthSender.Connect();
     }
 
     private static void RegisterOk()
@@ -127,13 +127,13 @@ internal static class ButtonsEvents
             return;
         }
 
-        if (Socket.TryConnect()) AuthSender.Register();
+        if (NetworkClient.TryConnect()) AuthSender.Register();
     }
 
     private static void CreateCharacter()
     {
         // Open character creation
-        if (Socket.TryConnect()) AccountSender.CreateCharacter();
+        if (NetworkClient.TryConnect()) AccountSender.CreateCharacter();
     }
 
     private static void CreateCharacterChangeRight()

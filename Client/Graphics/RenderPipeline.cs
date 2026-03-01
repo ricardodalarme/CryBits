@@ -92,6 +92,6 @@ internal sealed class RenderPipeline
 
         // FPS/Latency overlays — these are world-space but near-origin so they work fine here.
         if (Options.Fps) _renderer.DrawText("FPS: " + Loop.Fps, 176, 7, Color.White);
-        if (Options.Latency) _renderer.DrawText("Latency: " + Socket.Latency, 176, 19, Color.White);
+        if (Options.Latency) _renderer.DrawText("Latency: " + NetworkClient.Latency, 176, 19, Color.White);
     }
 }
