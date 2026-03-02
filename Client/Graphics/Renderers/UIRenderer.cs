@@ -7,7 +7,6 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Logic;
-using CryBits.Client.Managers;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Entities;
@@ -53,13 +52,8 @@ internal sealed class UIRenderer(
 
     private void DrawInterfaceSpecific(Component tool)
     {
-        if (tool is Panel panel)
-            switch (panel.Name)
-            {
-                case "Hotbar": DrawHotbar(panel); break;
-                case "Menu_Inventory": MenuInventory(panel); break;
-                case "Information": DrawInformation(panel); break;
-            }
+        if (tool is Panel panel && panel.Name == "Information")
+            DrawInformation(panel);
     }
 
     /// <summary>
@@ -144,24 +138,6 @@ internal sealed class UIRenderer(
         };
         for (byte i = 0; i < data.Count; i++)
             renderer.DrawText(data[i], positions[i].X, positions[i].Y, Color.White);
-    }
-
-    private void DrawHotbar(Panel tool)
-    {
-        if (GameScreen.HotbarChange >= 0)
-            if (Player.Me.Hotbar[GameScreen.HotbarChange].Type == SlotType.Item)
-                renderer.Draw(
-                    Textures.Items[Player.Me.Inventory[Player.Me.Hotbar[GameScreen.HotbarChange].Slot].Item.Texture],
-                    new Point(InputManager.Instance.MousePosition.X + 6,
-                        InputManager.Instance.MousePosition.Y + 6));
-    }
-
-    private void MenuInventory(Panel tool)
-    {
-        if (GameScreen.InventoryChange > 0)
-            renderer.Draw(Textures.Items[Player.Me.Inventory[GameScreen.InventoryChange].Item.Texture],
-                new Point(InputManager.Instance.MousePosition.X + 6,
-                    InputManager.Instance.MousePosition.Y + 6));
     }
 
     /// <summary>

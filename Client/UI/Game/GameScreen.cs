@@ -10,6 +10,7 @@ internal class GameScreen
 {
     private static CharacterView CharacterView = new(PlayerSender.Instance, EquipmentRenderer.Instance, CharacterRenderer.Instance);
     private static ChatView ChatView = new();
+    private static DraggableSlotView DraggableSlotView = new(ItemRenderer.Instance);
     private static DropItemView DropItemView = new(PlayerSender.Instance);
     private static HotbarView HotbarView = new(PlayerSender.Instance, ItemRenderer.Instance);
     private static InventoryView InventoryView = new(PlayerSender.Instance, ShopSender.Instance, ItemRenderer.Instance);
@@ -26,6 +27,7 @@ internal class GameScreen
     [
         CharacterView,
         ChatView,
+        DraggableSlotView,
         DropItemView,
         HotbarView,
         InventoryView,
