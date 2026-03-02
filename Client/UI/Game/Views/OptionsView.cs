@@ -15,8 +15,7 @@ internal class OptionsView(AudioManager audioManager) : IView
     internal static CheckBox SoundsCheckBox => Tools.CheckBoxes["Options_Sounds"];
     internal static CheckBox MusicsCheckBox => Tools.CheckBoxes["Options_Musics"];
     internal static CheckBox ChatCheckBox => Tools.CheckBoxes["Options_Chat"];
-    internal static CheckBox FpsCheckBox => Tools.CheckBoxes["Options_FPS"];
-    internal static CheckBox LatencyCheckBox => Tools.CheckBoxes["Options_Latency"];
+    internal static CheckBox MetricsCheckBox => Tools.CheckBoxes["Options_Metrics"];
     internal static CheckBox PartyCheckBox => Tools.CheckBoxes["Options_Party"];
     internal static CheckBox TradeCheckBox => Tools.CheckBoxes["Options_Trade"];
 
@@ -25,8 +24,7 @@ internal class OptionsView(AudioManager audioManager) : IView
         SoundsCheckBox.OnMouseUp += OnSoundsChanged;
         MusicsCheckBox.OnMouseUp += OnMusicsChanged;
         ChatCheckBox.OnMouseUp += OnChatChanged;
-        FpsCheckBox.OnMouseUp += OnFpsChanged;
-        LatencyCheckBox.OnMouseUp += OnLatencyChanged;
+        MetricsCheckBox.OnMouseUp += OnMetricsChanged;
         PartyCheckBox.OnMouseUp += OnPartyInvitationsChanged;
         TradeCheckBox.OnMouseUp += OnTradeInvitationsChanged;
     }
@@ -36,8 +34,7 @@ internal class OptionsView(AudioManager audioManager) : IView
         SoundsCheckBox.OnMouseUp -= OnSoundsChanged;
         MusicsCheckBox.OnMouseUp -= OnMusicsChanged;
         ChatCheckBox.OnMouseUp -= OnChatChanged;
-        FpsCheckBox.OnMouseUp -= OnFpsChanged;
-        LatencyCheckBox.OnMouseUp -= OnLatencyChanged;
+        MetricsCheckBox.OnMouseUp -= OnMetricsChanged;
         PartyCheckBox.OnMouseUp -= OnPartyInvitationsChanged;
         TradeCheckBox.OnMouseUp -= OnTradeInvitationsChanged;
     }
@@ -69,15 +66,9 @@ internal class OptionsView(AudioManager audioManager) : IView
         if (Options.Chat) GameLoop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
     }
 
-    private void OnFpsChanged()
+    private void OnMetricsChanged()
     {
-        Options.Fps = FpsCheckBox.Checked;
-        OptionsRepository.Write();
-    }
-
-    private void OnLatencyChanged()
-    {
-        Options.Latency = LatencyCheckBox.Checked;
+        Options.ShowMetrics = MetricsCheckBox.Checked;
         OptionsRepository.Write();
     }
 

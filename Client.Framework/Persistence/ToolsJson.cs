@@ -156,8 +156,7 @@ public sealed class OptionsDto
     [JsonPropertyName("sounds")] public bool Sounds { get; set; } = true;
     [JsonPropertyName("musics")] public bool Musics { get; set; } = true;
     [JsonPropertyName("chat")] public bool Chat { get; set; } = true;
-    [JsonPropertyName("fps")] public bool Fps { get; set; }
-    [JsonPropertyName("latency")] public bool Latency { get; set; }
+    [JsonPropertyName("showMetrics")] public bool ShowMetrics { get; set; }
     [JsonPropertyName("party")] public bool Party { get; set; } = true;
     [JsonPropertyName("trade")] public bool Trade { get; set; } = true;
     [JsonPropertyName("preMapGrid")] public bool PreMapGrid { get; set; }

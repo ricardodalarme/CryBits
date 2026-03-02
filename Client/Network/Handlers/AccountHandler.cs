@@ -82,8 +82,7 @@ internal class AccountHandler(AudioManager audioManager)
         OptionsView.SoundsCheckBox.Checked = Options.Sounds;
         OptionsView.MusicsCheckBox.Checked = Options.Musics;
         OptionsView.ChatCheckBox.Checked = Options.Chat;
-        OptionsView.FpsCheckBox.Checked = Options.Fps;
-        OptionsView.LatencyCheckBox.Checked = Options.Latency;
+        OptionsView.MetricsCheckBox.Checked = Options.ShowMetrics;
         OptionsView.TradeCheckBox.Checked = Options.Trade;
         OptionsView.PartyCheckBox.Checked = Options.Party;
         GameLoop.ChatTimer = GameLoop.ChatTimer = Environment.TickCount + 10000;

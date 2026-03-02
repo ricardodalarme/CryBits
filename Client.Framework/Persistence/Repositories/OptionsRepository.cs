@@ -23,8 +23,7 @@ public static class OptionsRepository
         Options.Sounds = opts.Sounds;
         Options.Musics = opts.Musics;
         Options.Chat = opts.Chat;
-        Options.Fps = opts.Fps;
-        Options.Latency = opts.Latency;
+        Options.ShowMetrics = opts.ShowMetrics;
         Options.Party = opts.Party;
         Options.Trade = opts.Trade;
         Options.PreMapGrid = opts.PreMapGrid;
@@ -45,8 +44,7 @@ public static class OptionsRepository
             Sounds = Options.Sounds,
             Musics = Options.Musics,
             Chat = Options.Chat,
-            Fps = Options.Fps,
-            Latency = Options.Latency,
+            ShowMetrics = Options.ShowMetrics,
             Party = Options.Party,
             Trade = Options.Trade,
             PreMapGrid = Options.PreMapGrid,
