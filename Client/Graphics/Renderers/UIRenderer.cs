@@ -295,7 +295,7 @@ internal sealed class UIRenderer(
 
         for (byte i = 0; i < MaxInventory; i++)
             itemRenderer.DrawItem(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount,
-                tool.Position + new Size(7, 30), i,
+                tool.Position + new Size(7, 30), (byte)(i + 1),
                 numColumns);
 
         if (PanelsEvents.InventoryChange > 0)
