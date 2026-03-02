@@ -333,3 +333,6 @@ ASALocalRun/
 # Dev things
 Dev/
 *.cd
+
+# MacOS
+.DS_Store
