@@ -18,8 +18,8 @@ internal class Me(string name) : Player(name)
 {
     public ItemSlot[] Inventory = new ItemSlot[MaxInventory];
     public HotbarSlot[] Hotbar = new HotbarSlot[MaxHotbar];
-    public ItemSlot[] TradeOffer;
-    public ItemSlot[] TradeTheirOffer;
+    public ItemSlot[]? TradeOffer;
+    public ItemSlot[]? TradeTheirOffer;
     public Player[] Party = [];
     public int Experience;
     public int ExpNeeded;

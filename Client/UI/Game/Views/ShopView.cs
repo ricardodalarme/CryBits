@@ -16,7 +16,7 @@ internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer) : IVie
     private static Label CurrencyLabel => Tools.Labels["Shop_Currency"];
     private static SlotGrid Grid => Tools.SlotGrids["Shop_Grid"];
 
-    public static Shop OpenedShop;
+    public static Shop? OpenedShop;
 
     public void Bind()
     {

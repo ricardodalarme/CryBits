@@ -24,7 +24,7 @@ internal static class Chat
     /// <summary>Chat line record containing the displayed text and color.</summary>
     public class Structure
     {
-        public string Text;
+        public string Text = string.Empty;
         public Color Color;
     }
 

@@ -62,7 +62,7 @@ public class TextBox : Component, IMouseUp
 
         // Traverse component tree to find first focusable textbox
         var stack = new Stack<List<Component>>();
-        stack.Push(Screen.Current.Body);
+        stack.Push(Screen.Current?.Body);
         while (stack.Count != 0)
         {
             var top = stack.Pop();
@@ -71,9 +71,9 @@ public class TextBox : Component, IMouseUp
                 if (top[i].Visible)
                 {
                     // Set focus to the first visible textbox (skip chat)
-                    if (top[i] is TextBox && !Screen.Current.Body[i].Name.Equals("Chat"))
+                    if (top[i] is TextBox box && !Screen.Current?.Body[i].Name.Equals("Chat") == true)
                     {
-                        Focused = (TextBox)top[i];
+                        Focused = box;
                         return;
                     }
                     stack.Push(top[i].Children);
@@ -84,10 +84,12 @@ public class TextBox : Component, IMouseUp
 
     public static void ChangeFocus()
     {
-        var parent = Focused.Parent != null ? Focused?.Parent.Children : Screen.Current.Body;
-        int index = parent.IndexOf(Focused), temp = index + 1;
+        var parent = Focused?.Parent != null ? Focused?.Parent.Children : Screen.Current?.Body;
+
+        if (parent == null || parent.Count == 0) return;
 
         // Advance focus to the next focusable TextBox.
+        int index = parent.IndexOf(Focused), temp = index + 1;
         while (temp != index)
         {
             if (temp == parent.Count) temp = 0;

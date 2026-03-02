@@ -30,46 +30,43 @@ internal static class Renders
     #region Engine
 
     private static void Render(RenderTarget window, Texture texture, Rectangle source, Rectangle destiny,
-        object color = null, object mode = null)
+        Color? color = null)
     {
         var tmpImage = new Sprite(texture)
         {
             TextureRect = new IntRect(new Vector2i(source.X, source.Y), new Vector2i(source.Width, source.Height)),
             Position = new Vector2f(destiny.X, destiny.Y),
-            Scale = new Vector2f(destiny.Width / (float)source.Width, destiny.Height / (float)source.Height)
+            Scale = new Vector2f(destiny.Width / (float)source.Width, destiny.Height / (float)source.Height),
+            Color = color ?? Color.White
         };
-        if (color != null) tmpImage.Color = (Color)color;
 
-        mode ??= RenderStates.Default;
-        window.Draw(tmpImage, (RenderStates)mode);
+        window.Draw(tmpImage, RenderStates.Default);
     }
 
     private static void Render(RenderTarget window, Texture texture, int x, int y, int sourceX, int sourceY,
-        int sourceWidth, int sourceHeight, object color = null, object mode = null)
+        int sourceWidth, int sourceHeight, Color? color = null)
     {
         var source = new Rectangle(new Point(sourceX, sourceY), new Size(sourceWidth, sourceHeight));
         var destiny = new Rectangle(new Point(x, y), new Size(sourceWidth, sourceHeight));
 
-        Render(window, texture, source, destiny, color, mode);
+        Render(window, texture, source, destiny, color);
     }
 
-    private static void Render(RenderTarget window, Texture texture, Rectangle destiny, object color = null,
-        object mode = null)
+    private static void Render(RenderTarget window, Texture texture, Rectangle destiny, Color? color = null)
     {
         var source = new Rectangle(new Point(0), texture.ToSize());
-        Render(window, texture, source, destiny, color, mode);
+        Render(window, texture, source, destiny, color);
     }
 
-    private static void Render(RenderTarget window, Texture texture, Point point, object color = null,
-        object mode = null)
+    private static void Render(RenderTarget window, Texture texture, Point point, Color? color = null)
     {
         var source = new Rectangle(new Point(0), texture.ToSize());
         var destiny = new Rectangle(point, texture.ToSize());
 
-        Render(window, texture, source, destiny, color, mode);
+        Render(window, texture, source, destiny, color);
     }
 
-    private static void RenderRectangle(RenderTarget window, Rectangle rectangle, object color = null)
+    private static void RenderRectangle(RenderTarget window, Rectangle rectangle, Color? color = null)
     {
         Render(window, Textures.Grid, rectangle.X, rectangle.Y, 0, 0, rectangle.Width, 1, color);
         Render(window, Textures.Grid, rectangle.X, rectangle.Y, 0, 0, 1, rectangle.Height, color);
@@ -77,7 +74,7 @@ internal static class Renders
         Render(window, Textures.Grid, rectangle.X + rectangle.Width - 1, rectangle.Y, 0, 0, 1, rectangle.Height, color);
     }
 
-    private static void RenderRectangle(RenderTarget window, int x, int y, int width, int height, object color = null)
+    private static void RenderRectangle(RenderTarget window, int x, int y, int width, int height, Color? color = null)
     {
         RenderRectangle(window, new Rectangle(x, y, width, height), color);
     }

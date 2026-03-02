@@ -68,9 +68,7 @@ internal sealed class Renderer
     /// <param name="recSource">Region of the texture to draw.</param>
     /// <param name="recDestiny">Destination rectangle on screen.</param>
     /// <param name="color">Optional tint color.</param>
-    /// <param name="mode">Optional render state.</param>
-    public void Draw(Texture texture, Rectangle recSource, Rectangle recDestiny, object color = null,
-        object mode = null)
+    public void Draw(Texture texture, Rectangle recSource, Rectangle recDestiny, Color? color = null)
     {
         // Lazy-initialize: Sprite ctor requires a Texture in SFML.Net 3+.
         _spriteCache ??= new Sprite(texture);
@@ -84,14 +82,12 @@ internal sealed class Renderer
             recDestiny.Height / (float)recSource.Height);
 
         // Always reset colour — the cache is shared, so a previous tint would bleed through.
-        _spriteCache.Color = color is Color c ? c : Color.White;
-
-        mode ??= RenderStates.Default;
-        RenderWindow.Draw(_spriteCache, (RenderStates)mode);
+        _spriteCache.Color = color ?? Color.White;
+        RenderWindow.Draw(_spriteCache);
     }
 
     public void Draw(Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth,
-        int sourceHeight, object color = null)
+        int sourceHeight, Color? color = null)
     {
         var source = new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
         var destiny = new Rectangle(x, y, sourceWidth, sourceHeight);
@@ -99,13 +95,13 @@ internal sealed class Renderer
         Draw(texture, source, destiny, color);
     }
 
-    public void Draw(Texture texture, Rectangle destiny, object color = null)
+    public void Draw(Texture texture, Rectangle destiny, Color? color = null)
     {
         var source = new Rectangle(new Point(0), texture.ToSize());
         Draw(texture, source, destiny, color);
     }
 
-    public void Draw(Texture texture, Point position, object color = null)
+    public void Draw(Texture texture, Point position, Color? color = null)
     {
         var source = new Rectangle(new Point(0), texture.ToSize());
         var destiny = new Rectangle(position, texture.ToSize());
