@@ -13,6 +13,7 @@ internal class GameScreen
     private static DraggableSlotView DraggableSlotView = new(ItemRenderer.Instance);
     private static DropItemView DropItemView = new(PlayerSender.Instance);
     private static HotbarView HotbarView = new(PlayerSender.Instance, ItemRenderer.Instance);
+    private static InformationView InformationView = new(ItemRenderer.Instance);
     private static InventoryView InventoryView = new(PlayerSender.Instance, ShopSender.Instance, ItemRenderer.Instance);
     private static MenusView MenusView = new();
     private static OptionsView OptionsView = new(AudioManager.Instance);
@@ -30,6 +31,7 @@ internal class GameScreen
         DraggableSlotView,
         DropItemView,
         HotbarView,
+        InformationView,
         InventoryView,
         MenusView,
         OptionsView,

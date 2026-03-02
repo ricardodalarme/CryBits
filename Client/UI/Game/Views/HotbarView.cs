@@ -20,6 +20,8 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer) 
         Grid.OnMouseDown += OnGridMouseDown;
         Grid.OnMouseUp += OnGridMouseUp;
         Grid.OnMouseDoubleClick += OnGridMouseDoubleClick;
+        Grid.OnSlotHover += OnGridSlotHover;
+        Grid.OnSlotLeave += OnGridSlotLeave;
     }
 
     public void Unbind()
@@ -28,6 +30,8 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer) 
         Grid.OnMouseDown -= OnGridMouseDown;
         Grid.OnMouseUp -= OnGridMouseUp;
         Grid.OnMouseDoubleClick -= OnGridMouseDoubleClick;
+        Grid.OnSlotHover -= OnGridSlotHover;
+        Grid.OnSlotLeave -= OnGridSlotLeave;
     }
 
     private void OnRenderSlot(int slot, Point pos)
@@ -67,4 +71,15 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer) 
         // Use item from hotbar
         playerSender.HotbarUse((byte)slot);
     }
+
+    private static void OnGridSlotHover(short slot)
+    {
+        var hotbarSlot = Player.Me.Hotbar[slot];
+        if (hotbarSlot.Slot <= 0 || hotbarSlot.Type != SlotType.Item) return;
+        var item = Player.Me.Inventory[hotbarSlot.Slot].Item;
+        if (item == null) return;
+        InformationView.Show(item.Id, Panel.Position + new Size(0, 42));
+    }
+
+    private static void OnGridSlotLeave(short slot) => InformationView.Hide();
 }

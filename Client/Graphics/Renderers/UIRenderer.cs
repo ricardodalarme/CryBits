@@ -1,18 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework;
-using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Logic;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
-using CryBits.Entities;
 using CryBits.Enums;
-using CryBits.Extensions;
-using Attribute = CryBits.Enums.Attribute;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics.Renderers;
@@ -45,15 +40,8 @@ internal sealed class UIRenderer(
                     case Picture picture: toolsRenderer.DrawPicture(picture); break;
                 }
 
-                DrawInterfaceSpecific(tool);
                 DrawInterface(tool.Children);
             }
-    }
-
-    private void DrawInterfaceSpecific(Component tool)
-    {
-        if (tool is Panel panel && panel.Name == "Information")
-            DrawInformation(panel);
     }
 
     /// <summary>
@@ -74,70 +62,6 @@ internal sealed class UIRenderer(
             renderer.DrawText("Press [Enter] to open chat.", ChatView.MessageTextBox.Position.X + 5,
                 ChatView.MessageTextBox.Position.Y + 3,
                 Color.White);
-    }
-
-    private void DrawInformation(Panel tool)
-    {
-        var item = Item.List.Get(InformationView.CurrentId);
-        var data = new List<string>();
-
-        if (item == null) return;
-
-        var textColor = item.Rarity switch
-        {
-            Rarity.Uncommon => new Color(204, 255, 153),
-            Rarity.Rare => new Color(102, 153, 255),
-            Rarity.Epic => new Color(153, 0, 204),
-            Rarity.Legendary => new Color(255, 255, 77),
-            _ => new Color()
-        };
-
-        renderer.DrawText(item.Name, tool.Position.X + 41, tool.Position.Y + 6, textColor, TextAlign.Center);
-        renderer.DrawText(item.Description, tool.Position.X + 82, tool.Position.Y + 20, Color.White, 86);
-        renderer.Draw(Textures.Items[item.Texture],
-            new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
-
-        if (ShopView.Panel.Visible)
-        {
-            var shopSlot = Tools.SlotGrids["Shop_Grid"].GetSlotIndex();
-            var inventorySlot = Tools.SlotGrids["Inventory_Grid"].GetSlotIndex();
-            if (shopSlot >= 0)
-                data.Add("Price: " + ShopView.OpenedShop.Sold[shopSlot].Price);
-            else if (inventorySlot > 0)
-                if (ShopView.OpenedShop.FindBought(item) != null)
-                    data.Add("Sale price: " + ShopView.OpenedShop.FindBought(item).Price);
-        }
-
-        switch (item.Type)
-        {
-            case ItemType.Potion:
-                for (byte n = 0; n < (byte)Vital.Count; n++)
-                    if (item.PotionVital[n] != 0)
-                        data.Add((Vital)n + ": " + item.PotionVital[n]);
-
-                if (item.PotionExperience != 0) data.Add("Experience: " + item.PotionExperience);
-                break;
-
-            case ItemType.Equipment:
-                if (item.EquipType == (byte)Equipment.Weapon)
-                    if (item.WeaponDamage != 0)
-                        data.Add("Damage: " + item.WeaponDamage);
-
-                for (byte n = 0; n < (byte)Attribute.Count; n++)
-                    if (item.EquipAttribute[n] != 0)
-                        data.Add((Attribute)n + ": " + item.EquipAttribute[n]);
-                break;
-        }
-
-        Point[] positions =
-        {
-            new(tool.Position.X + 10, tool.Position.Y + 90), new(tool.Position.X + 10, tool.Position.Y + 102),
-            new(tool.Position.X + 10, tool.Position.Y + 114), new(tool.Position.X + 96, tool.Position.Y + 90),
-            new(tool.Position.X + 96, tool.Position.Y + 102), new(tool.Position.X + 96, tool.Position.Y + 114),
-            new(tool.Position.X + 96, tool.Position.Y + 126)
-        };
-        for (byte i = 0; i < data.Count; i++)
-            renderer.DrawText(data[i], positions[i].X, positions[i].Y, Color.White);
     }
 
     /// <summary>

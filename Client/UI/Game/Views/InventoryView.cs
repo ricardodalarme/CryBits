@@ -20,6 +20,8 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
         Grid.OnMouseDown += OnGridMouseDown;
         Grid.OnMouseUp += OnGridMouseUp;
         Grid.OnMouseDoubleClick += OnGridMouseDoubleClick;
+        Grid.OnSlotHover += OnGridSlotHover;
+        Grid.OnSlotLeave += OnGridSlotLeave;
     }
 
     public void Unbind()
@@ -28,6 +30,8 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
         Grid.OnMouseDown -= OnGridMouseDown;
         Grid.OnMouseUp -= OnGridMouseUp;
         Grid.OnMouseDoubleClick -= OnGridMouseDoubleClick;
+        Grid.OnSlotHover -= OnGridSlotHover;
+        Grid.OnSlotLeave -= OnGridSlotLeave;
     }
 
     private void OnRenderSlot(int slot, Point pos) => itemRenderer.DrawItem(Player.Me.Inventory[slot].Item, Player.Me.Inventory[slot].Amount, pos);
@@ -85,4 +89,16 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
         // Use item
         playerSender.InventoryUse((byte)slot);
     }
+
+    private static void OnGridSlotHover(short slot)
+    {
+        var item = Player.Me.Inventory[slot].Item;
+        if (item == null) return;
+        string? context = null;
+        if (ShopView.Panel.Visible && ShopView.OpenedShop?.FindBought(item) != null)
+            context = "Sale price: " + ShopView.OpenedShop.FindBought(item).Price;
+        InformationView.Show(item.Id, Panel.Position + new Size(-186, 3), context);
+    }
+
+    private static void OnGridSlotLeave(short slot) => InformationView.Hide();
 }

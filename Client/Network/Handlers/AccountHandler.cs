@@ -87,7 +87,7 @@ internal class AccountHandler(AudioManager audioManager)
         OptionsView.TradeCheckBox.Checked = Options.Trade;
         OptionsView.PartyCheckBox.Checked = Options.Party;
         GameLoop.ChatTimer = GameLoop.ChatTimer = Environment.TickCount + 10000;
-        InformationView.CurrentId = Guid.Empty;
+        InformationView.Hide();
 
         // Reset UI panels
         CharacterView.Panel.Visible = false;

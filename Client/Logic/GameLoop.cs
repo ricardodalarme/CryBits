@@ -10,7 +10,6 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.Systems.Combat;
 using CryBits.Client.Systems.Core;
 using CryBits.Client.Systems.Movement;
-using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
@@ -80,9 +79,6 @@ internal class GameLoop(RenderPipeline renderPipeline)
                     // Reset 30 ms timer
                     timer30 = Environment.TickCount + 30;
                 }
-
-                // Update information panel visibility
-                InformationView.CheckInformation();
             }
 
             // Use high-resolution stopwatch for delta time

@@ -33,6 +33,8 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
         FacePicture.OnRender += OnRenderFace;
         Grid.OnRenderSlot += equipmentRenderer.DrawSlot;
         Grid.OnMouseDown += OnGridMouseDown;
+        Grid.OnSlotHover += OnGridSlotHover;
+        Grid.OnSlotLeave += OnGridSlotLeave;
         AddStrengthButton.OnMouseUp += OnAddStrengthPressed;
         AddResistanceButton.OnMouseUp += OnAddResistancePressed;
         AddIntelligenceButton.OnMouseUp += OnAddIntelligencePressed;
@@ -45,6 +47,8 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
         FacePicture.OnRender -= OnRenderFace;
         Grid.OnRenderSlot -= equipmentRenderer.DrawSlot;
         Grid.OnMouseDown -= OnGridMouseDown;
+        Grid.OnSlotHover -= OnGridSlotHover;
+        Grid.OnSlotLeave -= OnGridSlotLeave;
         AddStrengthButton.OnMouseUp -= OnAddStrengthPressed;
         AddResistanceButton.OnMouseUp -= OnAddResistancePressed;
         AddIntelligenceButton.OnMouseUp -= OnAddIntelligencePressed;
@@ -63,6 +67,15 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
             if (Player.Me.Equipment[slot].Bind != BindOn.Equip)
                 playerSender.EquipmentRemove((byte)slot);
     }
+
+    private static void OnGridSlotHover(short slot)
+    {
+        var item = Player.Me.Equipment[slot];
+        if (item == null) return;
+        InformationView.Show(item.Id, Panel.Position + new Size(-186, 5));
+    }
+
+    private static void OnGridSlotLeave(short slot) => InformationView.Hide();
 
     private void OnAddStrengthPressed()
     {
