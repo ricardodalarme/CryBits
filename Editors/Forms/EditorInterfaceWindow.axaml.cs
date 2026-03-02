@@ -20,6 +20,7 @@ using Label = CryBits.Client.Framework.Interfacily.Components.Label;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
 using ProgressBar = CryBits.Client.Framework.Interfacily.Components.ProgressBar;
 using SlotGrid = CryBits.Client.Framework.Interfacily.Components.SlotGrid;
+using Picture = CryBits.Client.Framework.Interfacily.Components.Picture;
 using Point = System.Drawing.Point;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
@@ -181,6 +182,7 @@ internal partial class EditorInterfaceWindow : Window
             (int)ToolType.TextBox => new TextBox(),
             (int)ToolType.ProgressBar => new ProgressBar(),
             (int)ToolType.SlotGrid => new SlotGrid(),
+            (int)ToolType.Picture => new Picture(),
             _ => new Button()
         };
         newComp.Visible = true;
@@ -286,6 +288,7 @@ internal partial class EditorInterfaceWindow : Window
         secTextBoxProps.IsVisible = c is TextBox;
         secProgressBarProps.IsVisible = c is ProgressBar;
         secSlotGridProps.IsVisible = c is SlotGrid;
+        secPictureProps.IsVisible = c is Picture;
 
         switch (c)
         {
@@ -318,6 +321,10 @@ internal partial class EditorInterfaceWindow : Window
                 numPropSgSlotSize.Value = sg.SlotSize;
                 numPropSgPadding.Value = sg.Padding;
                 txtSgSlotCount.Text = sg.SlotCount.ToString();
+                break;
+            case Picture pic:
+                numPropPicWidth.Value = pic.Width;
+                numPropPicHeight.Value = pic.Height;
                 break;
         }
 
@@ -464,6 +471,18 @@ internal partial class EditorInterfaceWindow : Window
     {
         if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
         sg.Padding = (byte)(e.NewValue ?? 4);
+    }
+
+    private void numPropPicWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not Picture pic) return;
+        pic.Width = (int)(e.NewValue ?? 0);
+    }
+
+    private void numPropPicHeight_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not Picture pic) return;
+        pic.Height = (int)(e.NewValue ?? 0);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

@@ -59,6 +59,8 @@ internal sealed class ToolsRenderer(Renderer renderer)
 
     public void DrawSlotGrid(SlotGrid tool) => tool.RenderSlots();
 
+    public void DrawPicture(Picture tool) => tool.Render();
+
     public void DrawTextBox(TextBox tool)
     {
         var position = tool.Position;

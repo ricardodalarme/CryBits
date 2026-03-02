@@ -234,6 +234,22 @@
                                     <TextBlock x:Name="txtSgSlotCount" Grid.Column="1" VerticalAlignment="Center" Opacity="0.6"/>
                                 </Grid>
                             </StackPanel>
+
+                            <!-- Picture-specific -->
+                            <StackPanel x:Name="secPictureProps" IsVisible="False" Spacing="4">
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Width:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropPicWidth" Grid.Column="1"
+                                                   Minimum="0" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numPropPicWidth_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Height:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropPicHeight" Grid.Column="1"
+                                                   Minimum="0" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numPropPicHeight_ValueChanged"/>
+                                </Grid>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -267,6 +283,7 @@
                         <ComboBoxItem Content="TextBox"/>
                         <ComboBoxItem Content="ProgressBar"/>
                         <ComboBoxItem Content="SlotGrid"/>
+                        <ComboBoxItem Content="Picture"/>
                     </ComboBox>
                     <Button x:Name="butConfirm" Content="Confirm"
                             HorizontalAlignment="Right"

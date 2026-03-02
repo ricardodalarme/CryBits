@@ -92,6 +92,14 @@ public static class ToolsRepository
                     Padding = sg.Padding,
                     Rows = sg.Rows
                 },
+                PictureDto pic => new Picture
+                {
+                    Name = pic.Name,
+                    Position = new Point(pic.X, pic.Y),
+                    Visible = pic.Visible,
+                    Width = pic.Width,
+                    Height = pic.Height
+                },
                 _ => throw new InvalidOperationException($"Unknown component DTO type: {dto.GetType().Name}")
             };
 
@@ -104,6 +112,7 @@ public static class ToolsRepository
                 case CheckBox chk: Tools.CheckBoxes.TryAdd(chk.Name, chk); break;
                 case ProgressBar bar: Tools.ProgressBars.TryAdd(bar.Name, bar); break;
                 case SlotGrid sg: Tools.SlotGrids.TryAdd(sg.Name, sg); break;
+                case Picture pic: Tools.Pictures.TryAdd(pic.Name, pic); break;
             }
 
             component.Parent = parent;
@@ -187,5 +196,15 @@ public static class ToolsRepository
         SlotSize = tool.SlotSize,
         Padding = tool.Padding,
         Rows = tool.Rows
+    };
+
+    public static PictureDto PictureDto(Picture tool) => new()
+    {
+        Name = tool.Name,
+        X = tool.Position.X,
+        Y = tool.Position.Y,
+        Visible = tool.Visible,
+        Width = tool.Width,
+        Height = tool.Height
     };
 }

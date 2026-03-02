@@ -47,6 +47,7 @@ internal sealed class UIRenderer(
                     case CheckBox checkBox: toolsRenderer.DrawCheckBox(checkBox); break;
                     case ProgressBar progressBar: toolsRenderer.DrawProgressBar(progressBar); break;
                     case SlotGrid slotGrid: toolsRenderer.DrawSlotGrid(slotGrid); break;
+                    case Picture picture: toolsRenderer.DrawPicture(picture); break;
                 }
 
                 DrawInterfaceSpecific(tool);

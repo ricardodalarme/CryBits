@@ -541,6 +541,7 @@ internal static class Renders
                 if (tool is Label label) Label(target, label);
                 else if (tool is ProgressBar progressBar) ProgressBar(target, progressBar);
                 else if (tool is SlotGrid slotGrid) SlotGrid(target, slotGrid);
+                else if (tool is Picture picture) Picture(target, picture);
                 else if (tool is Panel panel) Panel(target, panel);
                 else if (tool is TextBox textBox) TextBox(target, textBox);
                 else if (tool is Button button) Button(target, button);
@@ -574,6 +575,12 @@ internal static class Renders
             var pos = tool.GetSlotPosition(i);
             RenderRectangle(target, pos.X, pos.Y, tool.SlotSize, tool.SlotSize, Color.White);
         }
+    }
+
+    private static void Picture(RenderTarget target, Picture tool)
+    {
+        if (tool.Width <= 0 || tool.Height <= 0) return;
+        RenderRectangle(target, tool.Position.X, tool.Position.Y, tool.Width, tool.Height, new Color(150, 150, 255, 180));
     }
 
     private static void Button(RenderTarget target, Button tool)

@@ -45,6 +45,7 @@ public sealed class ScreenDto
 [JsonDerivedType(typeof(CheckBoxDto), "CheckBox")]
 [JsonDerivedType(typeof(ProgressBarDto), "ProgressBar")]
 [JsonDerivedType(typeof(SlotGridDto), "SlotGrid")]
+[JsonDerivedType(typeof(PictureDto), "Picture")]
 public abstract class ComponentDto
 {
     [JsonPropertyName("name")]
@@ -138,7 +139,14 @@ public sealed class SlotGridDto : ComponentDto
     [JsonPropertyName("rows")]
     public byte Rows { get; set; } = 1;
 }
+public sealed class PictureDto : ComponentDto
+{
+    [JsonPropertyName("width")]
+    public int Width { get; set; }
 
+    [JsonPropertyName("height")]
+    public int Height { get; set; }
+}
 // ─── Options DTO ─────────────────────────────────────────────────────────────
 
 public sealed class OptionsDto

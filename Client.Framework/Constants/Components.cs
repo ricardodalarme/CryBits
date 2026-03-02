@@ -11,4 +11,5 @@ public static class Tools
     public static readonly Dictionary<string, TextBox> TextBoxes = [];
     public static readonly Dictionary<string, ProgressBar> ProgressBars = [];
     public static readonly Dictionary<string, SlotGrid> SlotGrids = [];
+    public static readonly Dictionary<string, Picture> Pictures = [];
 }

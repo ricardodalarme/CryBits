@@ -8,5 +8,6 @@ public enum ToolType
     CheckBox,
     TextBox,
     ProgressBar,
-    SlotGrid
+    SlotGrid,
+    Picture
 }

@@ -102,6 +102,14 @@ internal static class ToolsRepository
                     Padding = sg.Padding,
                     Rows = sg.Rows
                 },
+                PictureDto pic => new Picture
+                {
+                    Name = pic.Name,
+                    Position = new Point(pic.X, pic.Y),
+                    Visible = pic.Visible,
+                    Width = pic.Width,
+                    Height = pic.Height
+                },
                 _ => throw new InvalidDataException($"Unknown component DTO: {dto.GetType().Name}")
             };
 
@@ -149,6 +157,7 @@ internal static class ToolsRepository
                 Panel panel => PanelDto(panel),
                 ProgressBar bar => ProgressBarDto(bar),
                 SlotGrid sg => SlotGridDto(sg),
+                Picture pic => PictureDto(pic),
                 _ => throw new InvalidOperationException($"Unknown component type: {component.GetType().Name}")
             };
 
@@ -178,4 +187,7 @@ internal static class ToolsRepository
 
     private static SlotGridDto SlotGridDto(SlotGrid tool) =>
         Client.Framework.Persistence.Repositories.ToolsRepository.SlotGridDto(tool);
+
+    private static PictureDto PictureDto(Picture tool) =>
+        Client.Framework.Persistence.Repositories.ToolsRepository.PictureDto(tool);
 }
