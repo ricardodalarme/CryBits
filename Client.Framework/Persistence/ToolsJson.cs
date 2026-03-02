@@ -43,6 +43,7 @@ public sealed class ScreenDto
 [JsonDerivedType(typeof(TextBoxDto), "TextBox")]
 [JsonDerivedType(typeof(PanelDto), "Panel")]
 [JsonDerivedType(typeof(CheckBoxDto), "CheckBox")]
+[JsonDerivedType(typeof(ProgressBarDto), "ProgressBar")]
 public abstract class ComponentDto
 {
     [JsonPropertyName("name")]
@@ -108,6 +109,18 @@ public sealed class CheckBoxDto : ComponentDto
 
     [JsonPropertyName("checked")]
     public bool Checked { get; set; }
+}
+
+public sealed class ProgressBarDto : ComponentDto
+{
+    [JsonPropertyName("sourceY")]
+    public int SourceY { get; set; }
+
+    [JsonPropertyName("width")]
+    public int Width { get; set; }
+
+    [JsonPropertyName("height")]
+    public int Height { get; set; }
 }
 
 // ─── Options DTO ─────────────────────────────────────────────────────────────

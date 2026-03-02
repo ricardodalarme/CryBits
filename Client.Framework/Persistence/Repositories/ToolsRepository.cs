@@ -73,6 +73,15 @@ public static class ToolsRepository
                     Text = cb.Text,
                     Checked = cb.Checked
                 },
+                ProgressBarDto pb => new ProgressBar
+                {
+                    Name = pb.Name,
+                    Position = new Point(pb.X, pb.Y),
+                    Visible = pb.Visible,
+                    SourceY = pb.SourceY,
+                    Width = pb.Width,
+                    Height = pb.Height
+                },
                 _ => throw new InvalidOperationException($"Unknown component DTO type: {dto.GetType().Name}")
             };
 
@@ -83,6 +92,7 @@ public static class ToolsRepository
                 case TextBox tb: Tools.TextBoxes.TryAdd(tb.Name, tb); break;
                 case Panel pnl: Tools.Panels.TryAdd(pnl.Name, pnl); break;
                 case CheckBox chk: Tools.CheckBoxes.TryAdd(chk.Name, chk); break;
+                case ProgressBar bar: Tools.ProgressBars.TryAdd(bar.Name, bar); break;
             }
 
             component.Parent = parent;
@@ -143,5 +153,16 @@ public static class ToolsRepository
         Visible = tool.Visible,
         Text = tool.Text,
         Checked = tool.Checked
+    };
+
+    public static ProgressBarDto ProgressBarDto(ProgressBar tool) => new()
+    {
+        Name = tool.Name,
+        X = tool.Position.X,
+        Y = tool.Position.Y,
+        Visible = tool.Visible,
+        SourceY = tool.SourceY,
+        Width = tool.Width,
+        Height = tool.Height
     };
 }

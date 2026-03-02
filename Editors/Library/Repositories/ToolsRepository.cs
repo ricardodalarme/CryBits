@@ -83,6 +83,15 @@ internal static class ToolsRepository
                     Text = cb.Text,
                     Checked = cb.Checked
                 },
+                ProgressBarDto pb => new ProgressBar
+                {
+                    Name = pb.Name,
+                    Position = new Point(pb.X, pb.Y),
+                    Visible = pb.Visible,
+                    SourceY = pb.SourceY,
+                    Width = pb.Width,
+                    Height = pb.Height
+                },
                 _ => throw new InvalidDataException($"Unknown component DTO: {dto.GetType().Name}")
             };
 
@@ -128,6 +137,7 @@ internal static class ToolsRepository
                 TextBox textBox => TextBoxDto(textBox),
                 CheckBox checkBox => CheckBoxDto(checkBox),
                 Panel panel => PanelDto(panel),
+                ProgressBar bar => ProgressBarDto(bar),
                 _ => throw new InvalidOperationException($"Unknown component type: {component.GetType().Name}")
             };
 
@@ -151,4 +161,7 @@ internal static class ToolsRepository
 
     private static CheckBoxDto CheckBoxDto(CheckBox tool) =>
         Client.Framework.Persistence.Repositories.ToolsRepository.CheckBoxDto(tool);
+
+    private static ProgressBarDto ProgressBarDto(ProgressBar tool) =>
+        Client.Framework.Persistence.Repositories.ToolsRepository.ProgressBarDto(tool);
 }

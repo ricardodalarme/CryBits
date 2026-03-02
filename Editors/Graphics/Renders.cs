@@ -539,6 +539,7 @@ internal static class Renders
             if (tool.Visible)
             {
                 if (tool is Label label) Label(target, label);
+                else if (tool is ProgressBar progressBar) ProgressBar(target, progressBar);
                 else if (tool is Panel panel) Panel(target, panel);
                 else if (tool is TextBox textBox) TextBox(target, textBox);
                 else if (tool is Button button) Button(target, button);
@@ -553,6 +554,15 @@ internal static class Renders
     {
         var color = new Color((byte)(tool.Color >> 16), (byte)(tool.Color >> 8), (byte)tool.Color);
         DrawText(target, tool.Text, tool.Position.X + 1, tool.Position.Y + 1, color, tool.Alignment);
+    }
+
+    private static void ProgressBar(RenderTarget target, ProgressBar tool)
+    {
+        if (tool.Width <= 0 || tool.Height <= 0) return;
+        // Show the full bar in the editor as a layout preview.
+        Render(target, Textures.BarsPanel,
+            new Rectangle(0, tool.SourceY, tool.Width, tool.Height),
+            new Rectangle(tool.Position.X, tool.Position.Y, tool.Width, tool.Height));
     }
 
     private static void Button(RenderTarget target, Button tool)

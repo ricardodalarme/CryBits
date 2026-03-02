@@ -46,6 +46,7 @@ internal sealed class UIRenderer(
                     case TextBox textBox: DrawTextBox(textBox); break;
                     case Button button: DrawButton(button); break;
                     case CheckBox checkBox: DrawCheckBox(checkBox); break;
+                    case ProgressBar progressBar: DrawProgressBar(progressBar); break;
                 }
 
                 DrawInterfaceSpecific(node[i]);
@@ -61,6 +62,12 @@ internal sealed class UIRenderer(
             renderer.DrawText(tool.FormattedText(), tool.Position.X, tool.Position.Y, color, tool.MaxWidth);
         else
             renderer.DrawText(tool.FormattedText(), tool.Position.X, tool.Position.Y, color, tool.Alignment);
+    }
+
+    private void DrawProgressBar(ProgressBar tool)
+    {
+        if (tool.FillWidth <= 0) return;
+        renderer.Draw(Textures.BarsPanel, tool.Position.X, tool.Position.Y, 0, tool.SourceY, tool.FillWidth, tool.Height);
     }
 
     private void DrawButton(Button tool)
@@ -121,25 +128,10 @@ internal sealed class UIRenderer(
                 case "Hotbar": DrawHotbar(panel); break;
                 case "Menu_Character": DrawMenuCharacter(panel); break;
                 case "Menu_Inventory": MenuInventory(panel); break;
-                case "Bars": DrawBars(panel); break;
                 case "Information": DrawInformation(panel); break;
                 case "Trade": DrawTrade(panel); break;
                 case "Shop": DrawShop(panel); break;
             }
-    }
-
-    private void DrawBars(Panel tool)
-    {
-        var hpPercentage = Player.Me.Vital[(byte)Vital.Hp] / (decimal)Player.Me.MaxVital[(byte)Vital.Hp];
-        var mpPercentage = Player.Me.Vital[(byte)Vital.Mp] / (decimal)Player.Me.MaxVital[(byte)Vital.Mp];
-        var expPercentage = Player.Me.Experience / (decimal)Player.Me.ExpNeeded;
-
-        renderer.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 6, 0, 0,
-            (int)(Textures.BarsPanel.Size.X * hpPercentage), 17);
-        renderer.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 24, 0, 18,
-            (int)(Textures.BarsPanel.Size.X * mpPercentage), 17);
-        renderer.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36,
-            (int)(Textures.BarsPanel.Size.X * expPercentage), 17);
     }
 
     /// <summary>

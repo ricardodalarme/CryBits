@@ -6,5 +6,6 @@ public enum ToolType
     Button,
     Panel,
     CheckBox,
-    TextBox
+    TextBox,
+    ProgressBar
 }

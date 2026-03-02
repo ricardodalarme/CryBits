@@ -18,6 +18,7 @@ using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Label = CryBits.Client.Framework.Interfacily.Components.Label;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
+using ProgressBar = CryBits.Client.Framework.Interfacily.Components.ProgressBar;
 using Point = System.Drawing.Point;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
@@ -177,6 +178,7 @@ internal partial class EditorInterfaceWindow : Window
             (int)ToolType.Panel => new Panel(),
             (int)ToolType.CheckBox => new CheckBox(),
             (int)ToolType.TextBox => new TextBox(),
+            (int)ToolType.ProgressBar => new ProgressBar(),
             _ => new Button()
         };
         newComp.Visible = true;
@@ -280,6 +282,7 @@ internal partial class EditorInterfaceWindow : Window
         secLabelProps.IsVisible = c is Label;
         secCheckBoxProps.IsVisible = c is CheckBox;
         secTextBoxProps.IsVisible = c is TextBox;
+        secProgressBarProps.IsVisible = c is ProgressBar;
 
         switch (c)
         {
@@ -300,6 +303,11 @@ internal partial class EditorInterfaceWindow : Window
                 numPropMaxChars.Value = tb.MaxCharacters;
                 numPropTbWidth.Value = tb.Width;
                 chkPropPassword.IsChecked = tb.Password;
+                break;
+            case ProgressBar pb:
+                numPropPbSourceY.Value = pb.SourceY;
+                numPropPbWidth.Value = pb.Width;
+                numPropPbHeight.Value = pb.Height;
                 break;
         }
 
@@ -402,6 +410,24 @@ internal partial class EditorInterfaceWindow : Window
     {
         if (_loadingProps || _selectedComponent is not TextBox tb) return;
         tb.Password = chkPropPassword.IsChecked ?? false;
+    }
+
+    private void numPropPbSourceY_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not ProgressBar pb) return;
+        pb.SourceY = (int)(e.NewValue ?? 0);
+    }
+
+    private void numPropPbWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not ProgressBar pb) return;
+        pb.Width = (int)(e.NewValue ?? 0);
+    }
+
+    private void numPropPbHeight_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not ProgressBar pb) return;
+        pb.Height = (int)(e.NewValue ?? 0);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

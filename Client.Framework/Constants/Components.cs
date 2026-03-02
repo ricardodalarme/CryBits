@@ -9,4 +9,5 @@ public static class Tools
     public static readonly Dictionary<string, CheckBox> CheckBoxes = [];
     public static readonly Dictionary<string, Panel> Panels = [];
     public static readonly Dictionary<string, TextBox> TextBoxes = [];
+    public static readonly Dictionary<string, ProgressBar> ProgressBars = [];
 }

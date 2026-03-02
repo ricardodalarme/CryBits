@@ -180,6 +180,28 @@
                                 <CheckBox x:Name="chkPropPassword" Content="Password"
                                           IsCheckedChanged="chkPropPassword_IsCheckedChanged"/>
                             </StackPanel>
+
+                            <!-- ProgressBar-specific -->
+                            <StackPanel x:Name="secProgressBarProps" IsVisible="False" Spacing="4">
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Source Y:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropPbSourceY" Grid.Column="1"
+                                                   Minimum="0" FormatString="0"
+                                                   ValueChanged="numPropPbSourceY_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Width:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropPbWidth" Grid.Column="1"
+                                                   Minimum="0" FormatString="0"
+                                                   ValueChanged="numPropPbWidth_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Height:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropPbHeight" Grid.Column="1"
+                                                   Minimum="0" FormatString="0"
+                                                   ValueChanged="numPropPbHeight_ValueChanged"/>
+                                </Grid>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -211,6 +233,7 @@
                         <ComboBoxItem Content="Panel"/>
                         <ComboBoxItem Content="CheckBox"/>
                         <ComboBoxItem Content="TextBox"/>
+                        <ComboBoxItem Content="ProgressBar"/>
                     </ComboBox>
                     <Button x:Name="butConfirm" Content="Confirm"
                             HorizontalAlignment="Right"
