@@ -1,3 +1,4 @@
+using CryBits.Client.UI.Menu.Views;
 using CryBits.Entities;
 using CryBits.Packets.Server;
 
@@ -10,5 +11,6 @@ internal class ClassHandler
     {
         // Read classes dictionary
         Class.List = packet.List;
+        CreateCharacterView.UpdateClassLabels();
     }
 }

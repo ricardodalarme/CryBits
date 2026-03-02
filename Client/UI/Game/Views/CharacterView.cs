@@ -1,3 +1,4 @@
+using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
@@ -8,10 +9,11 @@ using SFML.Window;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipmentRenderer) : IView
+internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipmentRenderer, CharacterRenderer characterRenderer) : IView
 {
     internal static Panel Panel => Tools.Panels["Menu_Character"];
     private static SlotGrid Grid => Tools.SlotGrids["Equipment_Grid"];
+    private static Picture FacePicture => Tools.Pictures["Character_Face"];
     internal static Button AddStrengthButton => Tools.Buttons["Attributes_Strength"];
     internal static Button AddResistanceButton => Tools.Buttons["Attributes_Resistance"];
     internal static Button AddIntelligenceButton => Tools.Buttons["Attributes_Intelligence"];
@@ -28,6 +30,7 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
 
     public void Bind()
     {
+        FacePicture.OnRender += OnRenderFace;
         Grid.OnRenderSlot += equipmentRenderer.DrawSlot;
         Grid.OnMouseDown += OnGridMouseDown;
         AddStrengthButton.OnMouseUp += OnAddStrengthPressed;
@@ -39,6 +42,7 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
 
     public void Unbind()
     {
+        FacePicture.OnRender -= OnRenderFace;
         Grid.OnRenderSlot -= equipmentRenderer.DrawSlot;
         Grid.OnMouseDown -= OnGridMouseDown;
         AddStrengthButton.OnMouseUp -= OnAddStrengthPressed;
@@ -47,6 +51,9 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
         AddAgilityButton.OnMouseUp -= OnAddAgilityPressed;
         AddVitalityButton.OnMouseUp -= OnAddVitalityPressed;
     }
+
+    private void OnRenderFace(Point pos) =>
+        characterRenderer.DrawFace(Player.Me.TextureNum, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {

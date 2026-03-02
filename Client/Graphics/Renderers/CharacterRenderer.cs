@@ -10,6 +10,9 @@ internal sealed class CharacterRenderer(Renderer renderer)
 {
     public static CharacterRenderer Instance { get; } = new(Renderer.Instance);
 
+    public void DrawFace(short textureNum, Point position) =>
+        renderer.Draw(Textures.Faces[textureNum], position);
+
     public void DrawCharacter(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
     {
         Rectangle recSource = new();

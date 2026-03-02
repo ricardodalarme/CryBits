@@ -8,7 +8,7 @@ namespace CryBits.Client.UI.Game;
 
 internal class GameScreen
 {
-    private static CharacterView CharacterView = new(PlayerSender.Instance, EquipmentRenderer.Instance);
+    private static CharacterView CharacterView = new(PlayerSender.Instance, EquipmentRenderer.Instance, CharacterRenderer.Instance);
     private static ChatView ChatView = new();
     private static DropItemView DropItemView = new(PlayerSender.Instance);
     private static HotbarView HotbarView = new(PlayerSender.Instance, ItemRenderer.Instance);

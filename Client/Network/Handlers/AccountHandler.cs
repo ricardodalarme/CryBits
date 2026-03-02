@@ -67,6 +67,8 @@ internal class AccountHandler(AudioManager audioManager)
                 TextureNum = packet.Characters[i].TextureNum
             };
         }
+
+        SelectCharacterView.UpdateButtonVisibility();
     }
 
     [PacketHandler]

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Constants;
@@ -11,11 +10,9 @@ using CryBits.Client.Logic;
 using CryBits.Client.Managers;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
-using CryBits.Client.UI.Menu.Views;
 using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Extensions;
-using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
 using Color = SFML.Graphics.Color;
 
@@ -23,11 +20,10 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal sealed class UIRenderer(
     Renderer renderer,
-    ToolsRenderer toolsRenderer,
-    CharacterRenderer characterRenderer
+    ToolsRenderer toolsRenderer
 )
 {
-    public static UIRenderer Instance { get; } = new(Renderer.Instance, ToolsRenderer.Instance, CharacterRenderer.Instance);
+    public static UIRenderer Instance { get; } = new(Renderer.Instance, ToolsRenderer.Instance);
 
     /// <summary>
     /// Recursively render a tree of UI components.
@@ -60,10 +56,7 @@ internal sealed class UIRenderer(
         if (tool is Panel panel)
             switch (panel.Name)
             {
-                case "SelectCharacter": DrawSelectCharacterClass(); break;
-                case "CreateCharacter": DrawCreateCharacterClass(); break;
                 case "Hotbar": DrawHotbar(panel); break;
-                case "Menu_Character": DrawMenuCharacter(panel); break;
                 case "Menu_Inventory": MenuInventory(panel); break;
                 case "Information": DrawInformation(panel); break;
             }
@@ -163,12 +156,6 @@ internal sealed class UIRenderer(
                         InputManager.Instance.MousePosition.Y + 6));
     }
 
-    private void DrawMenuCharacter(Panel tool)
-    {
-        renderer.Draw(Textures.Faces[Player.Me.TextureNum],
-            new Point(tool.Position.X + 82, tool.Position.Y + 37));
-    }
-
     private void MenuInventory(Panel tool)
     {
         if (GameScreen.InventoryChange > 0)
@@ -197,58 +184,5 @@ internal sealed class UIRenderer(
 
             renderer.DrawText(Player.Me.Party[i].Name, 10, 79 + 27 * i, Color.White);
         }
-    }
-
-    private void DrawSelectCharacterClass()
-    {
-        var textPosition = new Point(399, 425);
-        var index = SelectCharacterView.CurrentCharacter + 1;
-        var text = $"({index}) None";
-
-        if (!SelectCharacterView.UpdateButtonVisibility())
-        {
-            renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
-            return;
-        }
-
-        if (SelectCharacterView.CurrentCharacter >= SelectCharacterView.Characters.Length)
-        {
-            renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
-            return;
-        }
-
-        var textureNum = SelectCharacterView.Characters[SelectCharacterView.CurrentCharacter].TextureNum;
-        if (textureNum > 0)
-        {
-            renderer.Draw(Textures.Faces[textureNum], new Point(353, 442));
-            characterRenderer.DrawCharacter(textureNum,
-                new Point(356, 534 - Textures.Characters[textureNum].ToSize().Height / 4),
-                Direction.Down, AnimationStopped);
-        }
-
-        text = $"({index}) {SelectCharacterView.Characters[SelectCharacterView.CurrentCharacter].Name}";
-        renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
-    }
-
-    private void DrawCreateCharacterClass()
-    {
-        short textureNum = 0;
-        var @class = Class.List.ElementAt(CreateCharacterView.CurrentClass).Value;
-
-        if (CreateCharacterView.GenderMaleCheckBox.Checked && @class.TextureMale.Count > 0)
-            textureNum = @class.TextureMale[CreateCharacterView.CurrentTexture];
-        else if (@class.TextureFemale.Count > 0)
-            textureNum = @class.TextureFemale[CreateCharacterView.CurrentTexture];
-
-        if (textureNum > 0)
-        {
-            renderer.Draw(Textures.Faces[textureNum], new Point(425, 440));
-            characterRenderer.DrawCharacter(textureNum, new Point(433, 501), Direction.Down, AnimationStopped);
-        }
-
-        var text = @class.Name;
-        renderer.DrawText(text, 347, 509, Color.White, TextAlign.Center);
-
-        renderer.DrawText(@class.Description, 282, 526, Color.White, 123);
     }
 }
