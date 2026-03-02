@@ -24,11 +24,10 @@ namespace CryBits.Client.Graphics.Renderers;
 internal sealed class UIRenderer(
     Renderer renderer,
     ToolsRenderer toolsRenderer,
-    CharacterRenderer characterRenderer,
-    ItemRenderer itemRenderer
+    CharacterRenderer characterRenderer
 )
 {
-    public static UIRenderer Instance { get; } = new(Renderer.Instance, ToolsRenderer.Instance, CharacterRenderer.Instance, ItemRenderer.Instance);
+    public static UIRenderer Instance { get; } = new(Renderer.Instance, ToolsRenderer.Instance, CharacterRenderer.Instance);
 
     /// <summary>
     /// Recursively render a tree of UI components.
@@ -47,6 +46,7 @@ internal sealed class UIRenderer(
                     case Button button: toolsRenderer.DrawButton(button); break;
                     case CheckBox checkBox: toolsRenderer.DrawCheckBox(checkBox); break;
                     case ProgressBar progressBar: toolsRenderer.DrawProgressBar(progressBar); break;
+                    case SlotGrid slotGrid: toolsRenderer.DrawSlotGrid(slotGrid); break;
                 }
 
                 DrawInterfaceSpecific(tool);
@@ -65,8 +65,6 @@ internal sealed class UIRenderer(
                 case "Menu_Character": DrawMenuCharacter(panel); break;
                 case "Menu_Inventory": MenuInventory(panel); break;
                 case "Information": DrawInformation(panel); break;
-                case "Trade": DrawTrade(panel); break;
-                case "Shop": DrawShop(panel); break;
             }
     }
 
@@ -156,18 +154,6 @@ internal sealed class UIRenderer(
 
     private void DrawHotbar(Panel tool)
     {
-        var grid = Tools.SlotGrids["Hotbar_Grid"];
-
-        for (byte i = 0; i < grid.SlotCount; i++)
-        {
-            var slot = Player.Me.Hotbar[i].Slot;
-            if (slot > 0 && Player.Me.Hotbar[i].Type == SlotType.Item)
-                itemRenderer.DrawItem(Player.Me.Inventory[slot].Item, 1, grid.GetSlotPosition(i));
-
-            var indicator = i < 9 ? (i + 1).ToString() : "0";
-            renderer.DrawText(indicator, tool.Position.X + 16 + 36 * i, tool.Position.Y + 22, Color.White);
-        }
-
         if (GameScreen.HotbarChange >= 0)
             if (Player.Me.Hotbar[GameScreen.HotbarChange].Type == SlotType.Item)
                 renderer.Draw(
@@ -180,24 +166,10 @@ internal sealed class UIRenderer(
     {
         renderer.Draw(Textures.Faces[Player.Me.TextureNum],
             new Point(tool.Position.X + 82, tool.Position.Y + 37));
-
-        var grid = Tools.SlotGrids["Equipment_Grid"];
-        for (byte i = 0; i < grid.SlotCount; i++)
-        {
-            var pos = grid.GetSlotPosition(i);
-            if (Player.Me.Equipment[i] == null)
-                renderer.Draw(Textures.Equipments, pos.X, pos.Y, i * 34, 0, 32, 32);
-            else
-                renderer.Draw(Textures.Items[Player.Me.Equipment[i].Texture], pos);
-        }
     }
 
     private void MenuInventory(Panel tool)
     {
-        var grid = Tools.SlotGrids["Inventory_Grid"];
-        for (byte i = 0; i < grid.SlotCount; i++)
-            itemRenderer.DrawItem(Player.Me.Inventory[i].Item, Player.Me.Inventory[i].Amount, grid.GetSlotPosition(i));
-
         if (GameScreen.InventoryChange > 0)
             renderer.Draw(Textures.Items[Player.Me.Inventory[GameScreen.InventoryChange].Item.Texture],
                 new Point(InputManager.Instance.MousePosition.X + 6,
@@ -224,24 +196,6 @@ internal sealed class UIRenderer(
 
             renderer.DrawText(Player.Me.Party[i].Name, 10, 79 + 27 * i, Color.White);
         }
-    }
-
-    private void DrawTrade(Panel tool)
-    {
-        var own = Tools.SlotGrids["Trade_Grid_Own"];
-        var their = Tools.SlotGrids["Trade_Grid_Their"];
-        for (byte i = 0; i < own.SlotCount; i++)
-        {
-            itemRenderer.DrawItem(Player.Me.TradeOffer[i].Item, Player.Me.TradeOffer[i].Amount, own.GetSlotPosition(i));
-            itemRenderer.DrawItem(Player.Me.TradeTheirOffer[i].Item, Player.Me.TradeTheirOffer[i].Amount, their.GetSlotPosition(i));
-        }
-    }
-
-    private void DrawShop(Panel tool)
-    {
-        var grid = Tools.SlotGrids["Shop_Grid"];
-        for (var i = 0; i < Math.Min(grid.SlotCount, ShopView.OpenedShop.Sold.Count); i++)
-            itemRenderer.DrawItem(ShopView.OpenedShop.Sold[i].Item, ShopView.OpenedShop.Sold[i].Amount, grid.GetSlotPosition(i));
     }
 
     private void DrawSelectCharacterClass()

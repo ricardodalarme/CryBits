@@ -1,19 +1,22 @@
+using System.Drawing;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Enums;
 using SFML.Window;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class InventoryView(PlayerSender playerSender, ShopSender shopSender) : IView
+internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, ItemRenderer itemRenderer) : IView
 {
     internal static Panel Panel => Tools.Panels["Menu_Inventory"];
     private static SlotGrid Grid => Tools.SlotGrids["Inventory_Grid"];
 
     public void Bind()
     {
+        Grid.OnRenderSlot += OnRenderSlot;
         Grid.OnMouseDown += OnGridMouseDown;
         Grid.OnMouseUp += OnGridMouseUp;
         Grid.OnMouseDoubleClick += OnGridMouseDoubleClick;
@@ -21,10 +24,13 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender) :
 
     public void Unbind()
     {
+        Grid.OnRenderSlot -= OnRenderSlot;
         Grid.OnMouseDown -= OnGridMouseDown;
         Grid.OnMouseUp -= OnGridMouseUp;
         Grid.OnMouseDoubleClick -= OnGridMouseDoubleClick;
     }
+
+    private void OnRenderSlot(int slot, Point pos) => itemRenderer.DrawItem(Player.Me.Inventory[slot].Item, Player.Me.Inventory[slot].Amount, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {

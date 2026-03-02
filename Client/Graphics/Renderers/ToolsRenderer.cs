@@ -57,6 +57,8 @@ internal sealed class ToolsRenderer(Renderer renderer)
             CheckBox.Margin, recDestiny.Location.Y + 1, Color.White);
     }
 
+    public void DrawSlotGrid(SlotGrid tool) => tool.RenderSlots();
+
     public void DrawTextBox(TextBox tool)
     {
         var position = tool.Position;

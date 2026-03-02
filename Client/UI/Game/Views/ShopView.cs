@@ -1,12 +1,14 @@
+using System.Drawing;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities.Shop;
 using SFML.Window;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ShopView(ShopSender shopSender) : IView
+internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer) : IView
 {
     internal static Panel Panel => Tools.Panels["Shop"];
     private static Button CloseButton => Tools.Buttons["Shop_Close"];
@@ -18,14 +20,22 @@ internal class ShopView(ShopSender shopSender) : IView
 
     public void Bind()
     {
+        Grid.OnRenderSlot += OnRenderSlot;
         Grid.OnMouseDoubleClick += OnGridMouseDoubleClick;
         CloseButton.OnMouseUp += OnClosePressed;
     }
 
     public void Unbind()
     {
+        Grid.OnRenderSlot -= OnRenderSlot;
         Grid.OnMouseDoubleClick -= OnGridMouseDoubleClick;
         CloseButton.OnMouseUp -= OnClosePressed;
+    }
+
+    private void OnRenderSlot(int slot, Point pos)
+    {
+        if (OpenedShop == null || slot >= OpenedShop.Sold.Count) return;
+        itemRenderer.DrawItem(OpenedShop.Sold[slot].Item, OpenedShop.Sold[slot].Amount, pos);
     }
 
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)

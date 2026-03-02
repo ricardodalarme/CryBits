@@ -1,13 +1,14 @@
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Enums;
 using SFML.Window;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class CharacterView(PlayerSender playerSender) : IView
+internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipmentRenderer) : IView
 {
     internal static Panel Panel => Tools.Panels["Menu_Character"];
     private static SlotGrid Grid => Tools.SlotGrids["Equipment_Grid"];
@@ -27,6 +28,7 @@ internal class CharacterView(PlayerSender playerSender) : IView
 
     public void Bind()
     {
+        Grid.OnRenderSlot += equipmentRenderer.DrawSlot;
         Grid.OnMouseDown += OnGridMouseDown;
         AddStrengthButton.OnMouseUp += OnAddStrengthPressed;
         AddResistanceButton.OnMouseUp += OnAddResistancePressed;
@@ -37,6 +39,7 @@ internal class CharacterView(PlayerSender playerSender) : IView
 
     public void Unbind()
     {
+        Grid.OnRenderSlot -= equipmentRenderer.DrawSlot;
         Grid.OnMouseDown -= OnGridMouseDown;
         AddStrengthButton.OnMouseUp -= OnAddStrengthPressed;
         AddResistanceButton.OnMouseUp -= OnAddResistancePressed;
