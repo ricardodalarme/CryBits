@@ -56,10 +56,9 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         var id = map.Id;
 
         // Store map data
-        if (CryBits.Entities.Map.Map.List.ContainsKey(id)) CryBits.Entities.Map.Map.List[id] = map;
+        if (!CryBits.Entities.Map.Map.List.TryAdd(id, map)) CryBits.Entities.Map.Map.List[id] = map;
         else
         {
-            CryBits.Entities.Map.Map.List.Add(id, map);
             MapInstance.List.Add(id, new MapInstance(map));
         }
 

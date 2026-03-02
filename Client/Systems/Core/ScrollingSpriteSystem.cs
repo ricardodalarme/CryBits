@@ -7,7 +7,7 @@ namespace CryBits.Client.Systems.Core;
 /// <summary>
 /// System that updates the position of scrolling sprites (e.g., fog) based on their speed and the elapsed time.
 /// </summary>
-internal sealed class ScrollingSpriteSystem(Arch.Core.World world) : BaseSystem<Arch.Core.World, float>(world)
+internal sealed class ScrollingSpriteSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<ScrollingSpriteComponent>();

@@ -6,7 +6,7 @@ using SFML.Graphics;
 
 namespace CryBits.Client.Systems.Combat;
 
-internal sealed class DamageTintSystem(Arch.Core.World world) : BaseSystem<Arch.Core.World, float>(world)
+internal sealed class DamageTintSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<SpriteComponent, DamageTintComponent>();

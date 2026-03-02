@@ -24,7 +24,7 @@ internal class GameLoop(RenderPipeline renderPipeline)
     public static short Fps;
 
     // Timing counters
-    public static int TextBoxTimer;
+    private static int TextBoxTimer;
     public static int ChatTimer;
 
     // Delta-time systems — receive seconds elapsed since last frame.
@@ -115,7 +115,7 @@ internal class GameLoop(RenderPipeline renderPipeline)
             TextBox.BlinkSignal = !TextBox.BlinkSignal;
 
             // Re-evaluate focused textbox if needed.
-            Framework.Interfacily.Components.TextBox.Focus();
+            TextBox.Focus();
         }
     }
 }

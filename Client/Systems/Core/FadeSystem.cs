@@ -11,7 +11,7 @@ namespace CryBits.Client.Systems.Core;
 /// destroys them when fully transparent (Opacity reaches 0).
 /// Decrements <see cref="SpriteComponent.Tint"/> alpha by <see cref="FadeComponent.AmountPerTick"/> every <see cref="FadeComponent.IntervalSeconds"/> seconds.
 /// </summary>
-internal sealed class FadeSystem(Arch.Core.World world) : BaseSystem<Arch.Core.World, float>(world)
+internal sealed class FadeSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<SpriteComponent, FadeComponent>();

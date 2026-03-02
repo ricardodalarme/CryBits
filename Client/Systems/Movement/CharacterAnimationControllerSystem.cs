@@ -12,7 +12,7 @@ namespace CryBits.Client.Systems.Movement;
 /// Translates high-level RPG character states into raw animation frames.
 /// Acts as the "Brain" controlling the "Muscles" (AnimatedSpriteComponent).
 /// </summary>
-internal sealed class CharacterAnimationControllerSystem(Arch.Core.World world) : BaseSystem<Arch.Core.World, float>(world)
+internal sealed class CharacterAnimationControllerSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<CharacterStateComponent, AnimatedSpriteComponent>();

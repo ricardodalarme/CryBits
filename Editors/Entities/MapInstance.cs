@@ -20,7 +20,7 @@ internal static class MapInstance
     public static int FogX;
     public static int FogY;
 
-    public static MapWeatherParticleInstance[] Weather = Array.Empty<MapWeatherParticleInstance>();
+    public static MapWeatherParticleInstance[] Weather = [];
     public static byte Lightning;
 
     /// <summary>
@@ -118,7 +118,7 @@ internal static class MapInstance
 
         var weather = win.SelectedMap.Weather;
 
-        if (weather.Type == Enums.Weather.Raining || weather.Type == Enums.Weather.Thundering)
+        if (weather.Type is Enums.Weather.Raining or Enums.Weather.Thundering)
         {
             if (!AudioManager.Instance.IsPlaying(Sounds.Rain))
                 AudioManager.Instance.PlaySound(Sounds.Rain, true);

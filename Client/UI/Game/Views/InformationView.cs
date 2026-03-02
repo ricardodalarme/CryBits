@@ -57,7 +57,7 @@ internal class InformationView(ItemRenderer itemRenderer) : IView
             Rarity.Rare => 0x6699FF,
             Rarity.Epic => 0x9900CC,
             Rarity.Legendary => 0xFFFF4D,
-            _ => 0xFFFFFF,
+            _ => 0xFFFFFF
         };
 
         DescriptionLabel.Text = item.Description;

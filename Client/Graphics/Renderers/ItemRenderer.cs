@@ -10,21 +10,6 @@ internal sealed class ItemRenderer(Renderer renderer)
     public static ItemRenderer Instance { get; } = new(Renderer.Instance);
 
     /// <summary>
-    /// Render an item icon and its amount at the specified slot position.
-    /// </summary>
-    public void DrawItem(Item item, short amount, Point start, byte slot, byte columns, byte grid = 32, byte gap = 4)
-    {
-        if (item == null) return;
-
-        var line = (slot - 1) / columns;
-        var column = (slot - 1) % columns;
-        var position = start + new Size(column * (grid + gap), line * (grid + gap));
-
-        renderer.Draw(Textures.Items[item.Texture], position);
-        if (amount > 1) renderer.DrawText(amount.ToString(), position.X + 2, position.Y + 17, Color.White);
-    }
-
-    /// <summary>
     /// Render an item icon and its amount at an already-computed screen position.
     /// </summary>
     public void DrawItem(Item item, short amount, Point position)

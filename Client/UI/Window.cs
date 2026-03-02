@@ -26,7 +26,7 @@ internal static class Window
     private static int _doubleClickTimer;
 
     /// <summary>Current mouse pointer position in screen coordinates.</summary>
-    public static Point Mouse;
+    private static Point Mouse;
 
     public static void Bind()
     {

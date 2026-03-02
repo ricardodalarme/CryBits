@@ -49,7 +49,7 @@ internal abstract class Character
         // Sync Character State
         ref var state = ref world.Get<CharacterStateComponent>(Entity);
         state.Direction = Direction;
-        state.IsMoving = (X2 != 0 || Y2 != 0); // True if there are pixel offsets
+        state.IsMoving = X2 != 0 || Y2 != 0; // True if there are pixel offsets
         state.IsAttacking = Attacking;
         state.AttackTimer = AttackTimer;
 
@@ -94,7 +94,7 @@ internal abstract class Character
         if (y < 0 && Y2 > 0) Y2 = 0;
 
         // Only change animation frame when movement finishes and offsets are zero
-        if (Direction == Direction.Right || Direction == Direction.Down)
+        if (Direction is Direction.Right or Direction.Down)
         {
             if (X2 < 0 || Y2 < 0)
                 return;

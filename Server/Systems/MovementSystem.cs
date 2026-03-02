@@ -20,7 +20,7 @@ internal static class MovementSystem
     /// </summary>
     public static void ChangeDirection(Player player, Direction direction)
     {
-        if (direction < Direction.Up || direction > Direction.Right) return;
+        if (direction is < Direction.Up or > Direction.Right) return;
         if (player.GettingMap) return;
 
         player.Direction = direction;
@@ -39,7 +39,7 @@ internal static class MovementSystem
         var link = GameWorld.Current.Maps.Get(player.MapInstance.Data.Link[(byte)player.Direction].GetId());
         var secondMovement = false;
 
-        if (movement < 1 || movement > 2) return;
+        if (movement is < 1 or > 2) return;
         if (player.GettingMap) return;
 
         TradeSystem.Leave(player);

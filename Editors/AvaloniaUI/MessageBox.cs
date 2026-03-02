@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 
 namespace CryBits.Editors.AvaloniaUI;
 

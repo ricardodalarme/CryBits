@@ -5,7 +5,7 @@ using CryBits.Client.Components.Core;
 
 namespace CryBits.Client.Systems.Core;
 
-internal sealed class AnimatedSpriteSystem(Arch.Core.World world) : BaseSystem<Arch.Core.World, float>(world)
+internal sealed class AnimatedSpriteSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<AnimatedSpriteComponent, SpriteComponent>();

@@ -40,7 +40,7 @@ internal static class Renders
         };
         if (color != null) tmpImage.Color = (Color)color;
 
-        if (mode == null) mode = RenderStates.Default;
+        mode ??= RenderStates.Default;
         window.Draw(tmpImage, (RenderStates)mode);
     }
 

@@ -25,7 +25,7 @@ internal sealed class UIRenderer(
     /// <param name="node">Top-level component list to render.</param>
     public void DrawInterface(List<Component> node)
     {
-        foreach (Component tool in node)
+        foreach (var tool in node)
             if (tool.Visible)
             {
                 switch (tool)

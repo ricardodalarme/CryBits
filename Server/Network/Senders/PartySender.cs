@@ -8,7 +8,7 @@ internal static class PartySender
     public static void Party(Player player)
     {
         var packet = new PartyPacket { Members = new string[player.Party.Count] };
-        for (int i = 0; i < player.Party.Count; i++) packet.Members[i] = player.Party[i].Name;
+        for (var i = 0; i < player.Party.Count; i++) packet.Members[i] = player.Party[i].Name;
         PackageSender.ToPlayer(player, packet);
     }
 

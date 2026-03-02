@@ -11,7 +11,7 @@ public class MapWeatherInstance(MapWeather data)
 {
     private MapWeather Data { get; } = data;
     public byte Lightning { get; set; }
-    public MapWeatherParticleInstance[] Particles { get; private set; } = Array.Empty<MapWeatherParticleInstance>();
+    public MapWeatherParticleInstance[] Particles { get; private set; } = [];
 
     private int _snowTimer;
     private int _lightningTimer;

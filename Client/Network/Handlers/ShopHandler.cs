@@ -1,4 +1,3 @@
-using CryBits.Client.UI;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Entities.Shop;
 using CryBits.Extensions;

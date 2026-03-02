@@ -14,7 +14,7 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
 {
     // Map data and runtime caches.
     public readonly Map Data = map;
-    public NpcInstance[] Npc = Array.Empty<NpcInstance>();
+    public NpcInstance[] Npc = [];
     public List<MapItemInstance> Item = [];
 
     public void Logic()

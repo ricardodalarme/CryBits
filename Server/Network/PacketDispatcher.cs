@@ -90,7 +90,7 @@ internal static class PacketDispatcher
             Expression.Convert(packetParam, methodParams[1].ParameterType));
 
         var body = Expression.Block(
-            variables: new[] { playerVar },
+            variables: [playerVar],
             assign,
             Expression.IfThen(
                 Expression.NotEqual(playerVar, Expression.Constant(null, typeof(Player))),

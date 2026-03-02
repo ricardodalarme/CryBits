@@ -20,7 +20,7 @@ internal class Me(string name) : Player(name)
     public HotbarSlot[] Hotbar = new HotbarSlot[MaxHotbar];
     public ItemSlot[] TradeOffer;
     public ItemSlot[] TradeTheirOffer;
-    public Player[] Party = Array.Empty<Player>();
+    public Player[] Party = [];
     public int Experience;
     public int ExpNeeded;
     public short Points;

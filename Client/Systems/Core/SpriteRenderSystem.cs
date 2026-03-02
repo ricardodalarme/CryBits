@@ -12,7 +12,7 @@ namespace CryBits.Client.Systems.Core;
 /// <see cref="SpriteComponent"/>.
 /// Draws in world space — the SFML view (set by CameraManager) handles panning.
 /// </summary>
-internal sealed class SpriteRenderSystem(Arch.Core.World world) : BaseSystem<Arch.Core.World, int>(world)
+internal sealed class SpriteRenderSystem(World world) : BaseSystem<World, int>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<TransformComponent, SpriteComponent>();

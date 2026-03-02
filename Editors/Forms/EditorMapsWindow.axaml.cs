@@ -141,12 +141,12 @@ internal partial class EditorMapsWindow : Window
     public SystemPoint TileMouse { get; private set; }
 
     // Map canvas size (used by Renders to size WinMapRT)
-    public int MapCanvasWidth { get; private set; } = 800;
-    public int MapCanvasHeight { get; private set; } = 600;
+    public int MapCanvasWidth { get; } = 800;
+    public int MapCanvasHeight { get; } = 600;
 
     // Tile canvas size
-    public int TileCanvasWidth { get; private set; } = 282;
-    public int TileCanvasHeight { get; private set; } = 420;
+    public int TileCanvasWidth { get; } = 282;
+    public int TileCanvasHeight { get; } = 420;
 
     // Convenience accessor for Renders.cs
     public Map? SelectedMap => _selected;
@@ -577,7 +577,7 @@ internal partial class EditorMapsWindow : Window
     private void ModesExclusive(ToggleButton pressed)
     {
         foreach (var btn in new[] { butMNormal, butMZones, butMAttributes, butMNPCs })
-            btn.IsChecked = btn == pressed ? (pressed.IsChecked != true || btn == butMNormal) : false;
+            btn.IsChecked = btn == pressed ? pressed.IsChecked != true || btn == butMNormal : false;
         if (butMNormal.IsChecked != true)
         {
             butMNormal.IsChecked = false;
@@ -637,7 +637,7 @@ internal partial class EditorMapsWindow : Window
         var pt = e.GetPosition(imgMap);
         var left = e.GetCurrentPoint(imgMap).Properties.IsLeftButtonPressed;
         var right = e.GetCurrentPoint(imgMap).Properties.IsRightButtonPressed;
-        var btn = left ? MouseButtons.Left : (right ? MouseButtons.Right : MouseButtons.None);
+        var btn = left ? MouseButtons.Left : right ? MouseButtons.Right : MouseButtons.None;
 
         UpdateMapMouse(pt.X, pt.Y);
         var sel = MapSelection;
@@ -700,7 +700,7 @@ internal partial class EditorMapsWindow : Window
         var pt = e.GetPosition(imgMap);
         var left = e.GetCurrentPoint(imgMap).Properties.IsLeftButtonPressed;
         var right = e.GetCurrentPoint(imgMap).Properties.IsRightButtonPressed;
-        var btn = left ? MouseButtons.Left : (right ? MouseButtons.Right : MouseButtons.None);
+        var btn = left ? MouseButtons.Left : right ? MouseButtons.Right : MouseButtons.None;
 
         UpdateMapMouse(pt.X, pt.Y);
 
@@ -901,7 +901,7 @@ internal partial class EditorMapsWindow : Window
     {
         if (_selected == null) return;
         var name = txtLayer_Name.Text ?? string.Empty;
-        if (name.Length < 1 || name.Length > 12) return;
+        if (name.Length is < 1 or > 12) return;
 
         if (_layerEditIsNew)
         {

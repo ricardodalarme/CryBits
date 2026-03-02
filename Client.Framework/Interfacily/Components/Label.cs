@@ -9,7 +9,7 @@ public class Label : Component
     public TextAlign Alignment { get; set; } = TextAlign.Left;
     public int MaxWidth { get; set; } = 0;
 
-    private object[] _args = Array.Empty<object>();
+    private object[] _args = [];
 
     /// <summary>Stores live values to be interpolated into <see cref="Text"/> at render time.</summary>
     public void SetArguments(params object[] args) => _args = args;

@@ -51,7 +51,7 @@ internal static class Program
 
         // Run Avalonia on the main thread (required by macOS/Cocoa and Linux/X11)
         BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(Array.Empty<string>(),
+            .StartWithClassicDesktopLifetime([],
                 desktop => { desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown; });
     }
 

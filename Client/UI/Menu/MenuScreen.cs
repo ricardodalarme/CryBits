@@ -22,7 +22,7 @@ internal class MenuScreen
         RegisterView,
         OptionsPanel,
         SelectCharacterView,
-        CreateCharacterView,
+        CreateCharacterView
     ];
 
     public void Bind()

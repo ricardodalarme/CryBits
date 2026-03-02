@@ -1,7 +1,6 @@
 using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.UI;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Entities;
 using CryBits.Entities.Slots;

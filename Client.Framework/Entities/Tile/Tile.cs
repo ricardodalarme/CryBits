@@ -8,7 +8,7 @@ namespace CryBits.Client.Framework.Entities.Tile;
 public class Tile
 {
     /// <summary>Cached tile metadata arrays, indexed by tileset.</summary>
-    public static Tile[] List = Array.Empty<Tile>();
+    public static Tile[] List = [];
 
     /// <summary>Number of tiles horizontally.</summary>
     public byte Width { get; set; }
