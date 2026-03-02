@@ -40,6 +40,7 @@ internal sealed class ToolsRenderer(Renderer renderer)
 
     public void DrawPanel(Panel tool)
     {
+        if (tool.TextureNum <= 0 || tool.TextureNum > Textures.Panels.Count) return;
         renderer.Draw(Textures.Panels[tool.TextureNum], tool.Position);
     }
 

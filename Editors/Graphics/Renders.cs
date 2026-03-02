@@ -591,8 +591,8 @@ internal static class Renders
 
     private static void Panel(RenderTarget target, Panel tool)
     {
-        if (tool.TextureNum < Textures.Panels.Count)
-            Render(target, Textures.Panels[tool.TextureNum], tool.Position);
+        if (tool.TextureNum <= 0 || tool.TextureNum > Textures.Panels.Count) return;
+        Render(target, Textures.Panels[tool.TextureNum], tool.Position);
     }
 
     private static void CheckBox(RenderTarget target, CheckBox tool)
