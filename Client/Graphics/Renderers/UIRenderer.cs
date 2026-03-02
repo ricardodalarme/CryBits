@@ -7,7 +7,6 @@ using CryBits.Client.Framework;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Client.Logic;
 using CryBits.Client.Managers;
 using CryBits.Client.UI.Game;
@@ -16,7 +15,6 @@ using CryBits.Client.UI.Menu.Views;
 using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Extensions;
-using static CryBits.Client.Utils.TextUtils;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
 using Color = SFML.Graphics.Color;
@@ -25,11 +23,12 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal sealed class UIRenderer(
     Renderer renderer,
+    ToolsRenderer toolsRenderer,
     CharacterRenderer characterRenderer,
     ItemRenderer itemRenderer
 )
 {
-    public static UIRenderer Instance { get; } = new(Renderer.Instance, CharacterRenderer.Instance, ItemRenderer.Instance);
+    public static UIRenderer Instance { get; } = new(Renderer.Instance, ToolsRenderer.Instance, CharacterRenderer.Instance, ItemRenderer.Instance);
 
     /// <summary>
     /// Recursively render a tree of UI components.
@@ -37,86 +36,22 @@ internal sealed class UIRenderer(
     /// <param name="node">Top-level component list to render.</param>
     public void DrawInterface(List<Component> node)
     {
-        for (byte i = 0; i < node.Count; i++)
-            if (node[i].Visible)
+        foreach (Component tool in node)
+            if (tool.Visible)
             {
-                switch (node[i])
+                switch (tool)
                 {
-                    case Label label: DrawLabel(label); break;
-                    case Panel panel: DrawPanel(panel); break;
-                    case TextBox textBox: DrawTextBox(textBox); break;
-                    case Button button: DrawButton(button); break;
-                    case CheckBox checkBox: DrawCheckBox(checkBox); break;
-                    case ProgressBar progressBar: DrawProgressBar(progressBar); break;
+                    case Label label: toolsRenderer.DrawLabel(label); break;
+                    case Panel panel: toolsRenderer.DrawPanel(panel); break;
+                    case TextBox textBox: toolsRenderer.DrawTextBox(textBox); break;
+                    case Button button: toolsRenderer.DrawButton(button); break;
+                    case CheckBox checkBox: toolsRenderer.DrawCheckBox(checkBox); break;
+                    case ProgressBar progressBar: toolsRenderer.DrawProgressBar(progressBar); break;
                 }
 
-                DrawInterfaceSpecific(node[i]);
-
-                DrawInterface(node[i].Children);
+                DrawInterfaceSpecific(tool);
+                DrawInterface(tool.Children);
             }
-    }
-
-    public void DrawLabel(Label tool)
-    {
-        var color = new Color((byte)(tool.Color >> 16), (byte)(tool.Color >> 8), (byte)tool.Color);
-        if (tool.MaxWidth > 0)
-            renderer.DrawText(tool.FormattedText(), tool.Position.X, tool.Position.Y, color, tool.MaxWidth);
-        else
-            renderer.DrawText(tool.FormattedText(), tool.Position.X, tool.Position.Y, color, tool.Alignment);
-    }
-
-    private void DrawProgressBar(ProgressBar tool)
-    {
-        if (tool.FillWidth <= 0) return;
-        renderer.Draw(Textures.BarsPanel, tool.Position.X, tool.Position.Y, 0, tool.SourceY, tool.FillWidth, tool.Height);
-    }
-
-    private void DrawButton(Button tool)
-    {
-        byte alpha = tool.ButtonState switch
-        {
-            ButtonState.Above => 250,
-            ButtonState.Click => 200,
-            _ => 225
-        };
-
-        renderer.Draw(Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
-    }
-
-    private void DrawPanel(Panel tool)
-    {
-        renderer.Draw(Textures.Panels[tool.TextureNum], tool.Position);
-    }
-
-    private void DrawCheckBox(CheckBox tool)
-    {
-        var recSource = new Rectangle(new Point(),
-            new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
-        var recDestiny = new Rectangle(tool.Position, recSource.Size);
-
-        if (tool.Checked) recSource.Location = new Point(Textures.CheckBox.ToSize().Width / 2, 0);
-
-        renderer.Draw(Textures.CheckBox, recSource, recDestiny);
-        renderer.DrawText(tool.Text,
-            recDestiny.Location.X + Textures.CheckBox.ToSize().Width / 2 +
-            CheckBox.Margin, recDestiny.Location.Y + 1, Color.White);
-    }
-
-    private void DrawTextBox(TextBox tool)
-    {
-        var position = tool.Position;
-        var text = tool.Text;
-
-        renderer.DrawBox(Textures.TextBox, 3, tool.Position,
-            new Size(tool.Width, Textures.TextBox.ToSize().Height));
-
-        if (tool.Password && !string.IsNullOrEmpty(text)) text = new string('•', text.Length);
-
-        text = TextBreak(text, tool.Width - 10);
-
-        if (TextBox.Focused != null &&
-            TextBox.Focused == tool && TextBox.BlinkSignal) text += "|";
-        renderer.DrawText(text, position.X + 4, position.Y + 2, Color.White);
     }
 
     private void DrawInterfaceSpecific(Component tool)
@@ -141,8 +76,7 @@ internal sealed class UIRenderer(
     public void DrawChat()
     {
         var tool = ChatView.Panel;
-        tool.Visible = TextBox.Focused != null &&
-                       TextBox.Focused.Name.Equals("Chat");
+        tool.Visible = TextBox.Focused != null && TextBox.Focused.Name.Equals("Chat");
 
         if (tool.Visible || GameLoop.ChatTimer >= Environment.TickCount && Options.Chat)
             for (var i = Chat.LinesFirst; i <= Chat.LinesVisible + Chat.LinesFirst; i++)
@@ -309,7 +243,6 @@ internal sealed class UIRenderer(
         for (var i = 0; i < Math.Min(grid.SlotCount, ShopView.OpenedShop.Sold.Count); i++)
             itemRenderer.DrawItem(ShopView.OpenedShop.Sold[i].Item, ShopView.OpenedShop.Sold[i].Amount, grid.GetSlotPosition(i));
     }
-
 
     private void DrawSelectCharacterClass()
     {
