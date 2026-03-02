@@ -9,88 +9,32 @@ public class Screen : IMouseMoved, IMouseDown, IMouseUp, IMouseDoubleClick, IKey
     public string Name { get; set; } = string.Empty;
     public List<Component> Body { get; set; } = [];
 
-    public event Action? OnMouseUp;
-    public event Action? OnMouseDown;
     public event Action<KeyEventArgs>? OnKeyReleased;
 
     public static Screen? Current;
 
-    public void MouseMoved()
-    {
-        // Traverse component tree and invoke MouseMoved on visible components.
-        var stack = new Stack<List<Component>>();
-        stack.Push(Current.Body);
-        while (stack.Count != 0)
-        {
-            var top = stack.Pop();
-
-            for (byte i = 0; i < top.Count; i++)
-                if (top[i].Visible)
-                {
-                    // Invoke handler if implemented.
-                    if (top[i] is IMouseMoved component) component.MouseMoved();
-                    stack.Push(top[i].Children);
-                }
-        }
-
-        OnMouseUp?.Invoke();
-    }
-
-    public void MouseDown(MouseButtonEventArgs e)
-    {
-        // Traverse component tree and execute the command.
-        var stack = new Stack<List<Component>>();
-        stack.Push(Current.Body);
-        while (stack.Count != 0)
-        {
-            var top = stack.Pop();
-
-            for (byte i = 0; i < top.Count; i++)
-                if (top[i].Visible)
-                {
-                    // Invoke handler if implemented.
-                    if (top[i] is IMouseDown component) component.MouseDown(e);
-
-                    stack.Push(top[i].Children);
-                }
-        }
-
-        OnMouseDown?.Invoke();
-    }
-
-    public void MouseUp()
+    private void Traverse<T>(Action<T> invoke) where T : class
     {
         var stack = new Stack<List<Component>>();
-        stack.Push(Current.Body);
+        stack.Push(Body);
         while (stack.Count != 0)
         {
-            var top = stack.Pop();
-
-            for (byte i = 0; i < top.Count; i++)
-                if (top[i].Visible)
+            foreach (var child in stack.Pop())
+                if (child.Visible)
                 {
-                    if (top[i] is IMouseUp component) component.MouseUp();
-                    stack.Push(top[i].Children);
+                    if (child is T t) invoke(t);
+                    stack.Push(child.Children);
                 }
         }
     }
 
-    public void MouseDoubleClick(MouseButtonEventArgs e)
-    {
-        var stack = new Stack<List<Component>>();
-        stack.Push(Current.Body);
-        while (stack.Count != 0)
-        {
-            var top = stack.Pop();
+    public void MouseMoved() => Traverse<IMouseMoved>(c => c.MouseMoved());
 
-            for (byte i = 0; i < top.Count; i++)
-                if (top[i].Visible)
-                {
-                    if (top[i] is IMouseDoubleClick component) component.MouseDoubleClick(e);
-                    stack.Push(top[i].Children);
-                }
-        }
-    }
+    public void MouseDown(MouseButtonEventArgs e) => Traverse<IMouseDown>(c => c.MouseDown(e));
+
+    public void MouseUp() => Traverse<IMouseUp>(c => c.MouseUp());
+
+    public void MouseDoubleClick(MouseButtonEventArgs e) => Traverse<IMouseDoubleClick>(c => c.MouseDoubleClick(e));
 
     public void KeyReleased(KeyEventArgs e)
     {
