@@ -5,6 +5,7 @@
     xmlns:semi="https://irihi.tech/semi">
     <Application.Styles>
         <semi:SemiTheme Locale="en-US" />
+        <semi:ColorPickerSemiTheme />
         <StyleInclude Source="avares://Semi.Avalonia.DataGrid/Index.axaml" />
     </Application.Styles>
 </Application>

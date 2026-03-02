@@ -32,6 +32,16 @@ public static class ToolsRepository
         {
             Component component = dto switch
             {
+                LabelDto l => new Label
+                {
+                    Name = l.Name,
+                    Position = new Point(l.X, l.Y),
+                    Visible = l.Visible,
+                    Text = l.Text,
+                    Color = l.Color,
+                    Alignment = l.Alignment,
+                    MaxWidth = l.MaxWidth
+                },
                 ButtonDto b => new Button
                 {
                     Name = b.Name,
@@ -68,6 +78,7 @@ public static class ToolsRepository
 
             switch (component)
             {
+                case Label lbl: Tools.Labels.TryAdd(lbl.Name, lbl); break;
                 case Button btn: Tools.Buttons.TryAdd(btn.Name, btn); break;
                 case TextBox tb: Tools.TextBoxes.TryAdd(tb.Name, tb); break;
                 case Panel pnl: Tools.Panels.TryAdd(pnl.Name, pnl); break;
@@ -83,6 +94,17 @@ public static class ToolsRepository
     }
 
     // ─── DTO conversion helpers (used by Editors to build the JSON tree) ─────
+    public static LabelDto LabelDto(Label tool) => new()
+    {
+        Name = tool.Name,
+        X = tool.Position.X,
+        Y = tool.Position.Y,
+        Visible = tool.Visible,
+        Text = tool.Text,
+        Color = tool.Color,
+        Alignment = tool.Alignment,
+        MaxWidth = tool.MaxWidth
+    };
 
     public static ButtonDto ButtonDto(Button tool) => new()
     {

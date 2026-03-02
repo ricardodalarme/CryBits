@@ -4,6 +4,7 @@ namespace CryBits.Client.Framework.Constants;
 
 public static class Tools
 {
+    public static readonly Dictionary<string, Label> Labels = [];
     public static readonly Dictionary<string, Button> Buttons = [];
     public static readonly Dictionary<string, CheckBox> CheckBoxes = [];
     public static readonly Dictionary<string, Panel> Panels = [];

@@ -60,6 +60,15 @@
           "Avalonia": "11.3.7"
         }
       },
+      "Semi.Avalonia.ColorPicker": {
+        "type": "Direct",
+        "requested": "[11.3.7.3, )",
+        "resolved": "11.3.7.3",
+        "contentHash": "UguPgz5PliwAz5CGXUHLy1WxiiLWpBiPtC+EBfxmVNRDnmZ9p2JoKy26pf+SipdzGIzSqZVVOXcc8On/tMT3Dg==",
+        "dependencies": {
+          "Avalonia.Controls.ColorPicker": "11.3.7"
+        }
+      },
       "Semi.Avalonia.DataGrid": {
         "type": "Direct",
         "requested": "[11.3.7.3, )",
@@ -105,6 +114,15 @@
         "type": "Transitive",
         "resolved": "11.3.2",
         "contentHash": "qHDToxto1e3hci5YqbG9n0Ty8mlp3zBUN5wT66wKqaDVzXyQ0do3EnRILd4Ke9jpvsktaPpgE0YjEk7hornryQ=="
+      },
+      "Avalonia.Controls.ColorPicker": {
+        "type": "Transitive",
+        "resolved": "11.3.7",
+        "contentHash": "qXAw5uUCkG+9NV2YzOEm/kF7u1hUHAJ7kOWWID2mbK2UU5D81sBzyLzEJeHK+yEY9qk37kL6YaHxc5k5qLWQDg==",
+        "dependencies": {
+          "Avalonia": "11.3.7",
+          "Avalonia.Remote.Protocol": "11.3.7"
+        }
       },
       "Avalonia.Controls.DataGrid": {
         "type": "Transitive",

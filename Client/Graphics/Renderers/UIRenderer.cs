@@ -41,6 +41,7 @@ internal sealed class UIRenderer(
             {
                 switch (node[i])
                 {
+                    case Label label: DrawLabel(label); break;
                     case Panel panel: DrawPanel(panel); break;
                     case TextBox textBox: DrawTextBox(textBox); break;
                     case Button button: DrawButton(button); break;
@@ -51,6 +52,15 @@ internal sealed class UIRenderer(
 
                 DrawInterface(node[i].Children);
             }
+    }
+
+    public void DrawLabel(Label tool)
+    {
+        var color = new Color((byte)(tool.Color >> 16), (byte)(tool.Color >> 8), (byte)tool.Color);
+        if (tool.MaxWidth > 0)
+            renderer.DrawText(tool.FormattedText(), tool.Position.X, tool.Position.Y, color, tool.MaxWidth);
+        else
+            renderer.DrawText(tool.FormattedText(), tool.Position.X, tool.Position.Y, color, tool.Alignment);
     }
 
     private void DrawButton(Button tool)

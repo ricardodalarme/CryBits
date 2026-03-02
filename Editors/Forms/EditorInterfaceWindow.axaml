@@ -116,6 +116,37 @@
                                                ValueChanged="numPropTexture_ValueChanged"/>
                             </Grid>
 
+                            <!-- Label-specific -->
+                            <StackPanel x:Name="secLabelProps" IsVisible="False" Spacing="4">
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Text:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="txtPropLblText" Grid.Column="1"
+                                             TextChanged="txtPropLblText_TextChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Alignment:" VerticalAlignment="Center"/>
+                                    <ComboBox x:Name="cmbPropLblAlignment" Grid.Column="1"
+                                              HorizontalAlignment="Stretch"
+                                              SelectionChanged="cmbPropLblAlignment_SelectionChanged">
+                                        <ComboBoxItem Content="Left"/>
+                                        <ComboBoxItem Content="Center"/>
+                                        <ComboBoxItem Content="Right"/>
+                                    </ComboBox>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Color:" VerticalAlignment="Center"/>
+                                    <ColorPicker x:Name="clrPropLabel" Grid.Column="1"
+                                                 HorizontalAlignment="Stretch"
+                                                 ColorChanged="clrPropLabel_ColorChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Max Width:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropLblMaxWidth" Grid.Column="1"
+                                                   Minimum="0" Maximum="9999" FormatString="0"
+                                                   ValueChanged="numPropLblMaxWidth_ValueChanged"/>
+                                </Grid>
+                            </StackPanel>
+
                             <!-- CheckBox-specific -->
                             <StackPanel x:Name="secCheckBoxProps" IsVisible="False" Spacing="4">
                                 <Grid ColumnDefinitions="80,*">
@@ -175,6 +206,7 @@
                     <TextBlock Text="New Component" FontWeight="Bold" Margin="0,0,0,8"/>
                     <TextBlock Text="Type:"/>
                     <ComboBox x:Name="cmbType" HorizontalAlignment="Stretch">
+                        <ComboBoxItem Content="Label"/>
                         <ComboBoxItem Content="Button"/>
                         <ComboBoxItem Content="Panel"/>
                         <ComboBoxItem Content="CheckBox"/>

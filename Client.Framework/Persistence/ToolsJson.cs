@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CryBits.Client.Framework.Interfacily.Enums;
+using CryBits.Enums;
 
 namespace CryBits.Client.Framework.Persistence;
 
@@ -37,6 +38,7 @@ public sealed class ScreenDto
 /// The "type" discriminator matches <see cref="ToolType"/> names.
 /// </summary>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(LabelDto), "Label")]
 [JsonDerivedType(typeof(ButtonDto), "Button")]
 [JsonDerivedType(typeof(TextBoxDto), "TextBox")]
 [JsonDerivedType(typeof(PanelDto), "Panel")]
@@ -57,6 +59,22 @@ public abstract class ComponentDto
 
     [JsonPropertyName("children")]
     public List<ComponentDto> Children { get; set; } = [];
+}
+
+public sealed class LabelDto : ComponentDto
+{
+    [JsonPropertyName("text")]
+    public string Text { get; set; } = string.Empty;
+
+    [JsonPropertyName("color")]
+    public int Color { get; set; } = 0xFFFFFF;
+
+    [JsonPropertyName("alignment")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public TextAlign Alignment { get; set; } = TextAlign.Left;
+
+    [JsonPropertyName("maxWidth")]
+    public int MaxWidth { get; set; } = 0;
 }
 
 public sealed class ButtonDto : ComponentDto

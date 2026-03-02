@@ -7,11 +7,6 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Persistence;
 using CryBits.Editors.Entities;
-using Button = CryBits.Client.Framework.Interfacily.Components.Button;
-using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
-using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
-using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
-using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Editors.Library.Repositories;
 
@@ -47,6 +42,16 @@ internal static class ToolsRepository
         {
             Component component = dto switch
             {
+                LabelDto l => new Label
+                {
+                    Name = l.Name,
+                    Position = new Point(l.X, l.Y),
+                    Visible = l.Visible,
+                    Text = l.Text,
+                    Color = l.Color,
+                    Alignment = l.Alignment,
+                    MaxWidth = l.MaxWidth
+                },
                 ButtonDto b => new Button
                 {
                     Name = b.Name,
@@ -118,6 +123,7 @@ internal static class ToolsRepository
 
             ComponentDto dto = component switch
             {
+                Label label => LabelDto(label),
                 Button button => ButtonDto(button),
                 TextBox textBox => TextBoxDto(textBox),
                 CheckBox checkBox => CheckBoxDto(checkBox),
@@ -131,15 +137,18 @@ internal static class ToolsRepository
     }
 
     // Delegate to Client.Framework ToolsRepository for DTO conversions
+    private static LabelDto LabelDto(Label tool) =>
+        Client.Framework.Persistence.Repositories.ToolsRepository.LabelDto(tool);
+
     private static ButtonDto ButtonDto(Button tool) =>
-        CryBits.Client.Framework.Persistence.Repositories.ToolsRepository.ButtonDto(tool);
+        Client.Framework.Persistence.Repositories.ToolsRepository.ButtonDto(tool);
 
     private static TextBoxDto TextBoxDto(TextBox tool) =>
-        CryBits.Client.Framework.Persistence.Repositories.ToolsRepository.TextBoxDto(tool);
+        Client.Framework.Persistence.Repositories.ToolsRepository.TextBoxDto(tool);
 
     private static PanelDto PanelDto(Panel tool) =>
-        CryBits.Client.Framework.Persistence.Repositories.ToolsRepository.PanelDto(tool);
+        Client.Framework.Persistence.Repositories.ToolsRepository.PanelDto(tool);
 
     private static CheckBoxDto CheckBoxDto(CheckBox tool) =>
-        CryBits.Client.Framework.Persistence.Repositories.ToolsRepository.CheckBoxDto(tool);
+        Client.Framework.Persistence.Repositories.ToolsRepository.CheckBoxDto(tool);
 }

@@ -6,6 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Interfacily.Enums;
+using CryBits.Enums;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
@@ -15,6 +16,7 @@ using SFML.System;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
+using Label = CryBits.Client.Framework.Interfacily.Components.Label;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
 using Point = System.Drawing.Point;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
@@ -170,6 +172,7 @@ internal partial class EditorInterfaceWindow : Window
     {
         Component newComp = cmbType.SelectedIndex switch
         {
+            (int)ToolType.Label => new Label(),
             (int)ToolType.Button => new Button(),
             (int)ToolType.Panel => new Panel(),
             (int)ToolType.CheckBox => new CheckBox(),
@@ -274,6 +277,7 @@ internal partial class EditorInterfaceWindow : Window
         chkPropVisible.IsChecked = c.Visible;
 
         secTextureNum.IsVisible = c is Button or Panel;
+        secLabelProps.IsVisible = c is Label;
         secCheckBoxProps.IsVisible = c is CheckBox;
         secTextBoxProps.IsVisible = c is TextBox;
 
@@ -281,6 +285,12 @@ internal partial class EditorInterfaceWindow : Window
         {
             case Button btn: numPropTexture.Value = btn.TextureNum; break;
             case Panel pnl: numPropTexture.Value = pnl.TextureNum; break;
+            case Label lbl:
+                txtPropLblText.Text = lbl.Text;
+                cmbPropLblAlignment.SelectedIndex = (int)lbl.Alignment;
+                clrPropLabel.Color = Avalonia.Media.Color.FromRgb((byte)(lbl.Color >> 16), (byte)(lbl.Color >> 8), (byte)lbl.Color);
+                numPropLblMaxWidth.Value = lbl.MaxWidth;
+                break;
             case CheckBox cb:
                 txtPropCbText.Text = cb.Text;
                 chkPropCbChecked.IsChecked = cb.Checked;
@@ -331,6 +341,31 @@ internal partial class EditorInterfaceWindow : Window
         var v = (byte)(e.NewValue ?? 0);
         if (_selectedComponent is Button btn) btn.TextureNum = v;
         else if (_selectedComponent is Panel pnl) pnl.TextureNum = v;
+    }
+
+    private void txtPropLblText_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not Label lbl) return;
+        lbl.Text = txtPropLblText.Text ?? string.Empty;
+    }
+
+    private void cmbPropLblAlignment_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not Label lbl) return;
+        lbl.Alignment = (TextAlign)(cmbPropLblAlignment.SelectedIndex >= 0 ? cmbPropLblAlignment.SelectedIndex : 0);
+    }
+
+    private void clrPropLabel_ColorChanged(object? sender, Avalonia.Controls.ColorChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not Label lbl) return;
+        var c = e.NewColor;
+        lbl.Color = (c.R << 16) | (c.G << 8) | c.B;
+    }
+
+    private void numPropLblMaxWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not Label lbl) return;
+        lbl.MaxWidth = (int)(e.NewValue ?? 0);
     }
 
     private void txtPropCbText_TextChanged(object? sender, TextChangedEventArgs e)

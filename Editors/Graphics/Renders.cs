@@ -10,12 +10,8 @@ using SFML.Graphics;
 using SFML.System;
 using static CryBits.Editors.Logic.Utils;
 using static CryBits.Globals;
-using Button = CryBits.Client.Framework.Interfacily.Components.Button;
-using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using Color = SFML.Graphics.Color;
-using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
 using RenderTarget = SFML.Graphics.IRenderTarget;
-using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Editors.Graphics;
 
@@ -100,16 +96,26 @@ internal static class Renders
                 new Size(size.Width - margin * 2, textureHeight)));
     }
 
-    private static void DrawText(RenderTarget window, string text, int x, int y, Color color)
+    private static void DrawText(RenderTarget window, string text, int x, int y, Color color,
+        TextAlign alignment = TextAlign.Left)
     {
-        var tempText = new Text(Fonts.Default, text);
+        var tempText = new Text(Fonts.Default, text)
+        {
+            CharacterSize = 10,
+            FillColor = color,
+            OutlineColor = new Color(0, 0, 0, 70),
+            OutlineThickness = 1
+        };
 
-        tempText.CharacterSize = 10;
-        tempText.FillColor = color;
-        tempText.Position = new Vector2f(x, y);
-        tempText.OutlineColor = new Color(0, 0, 0, 70);
-        tempText.OutlineThickness = 1;
+        var width = (int)tempText.GetLocalBounds().Width;
+        var drawX = alignment switch
+        {
+            TextAlign.Center => x - width / 2,
+            TextAlign.Right => x - width,
+            _ => x
+        };
 
+        tempText.Position = new Vector2f(drawX, y);
         window.Draw(tempText);
     }
 
@@ -532,7 +538,8 @@ internal static class Renders
             var tool = (Component)node.Nodes[i].Tag!;
             if (tool.Visible)
             {
-                if (tool is Panel panel) Panel(target, panel);
+                if (tool is Label label) Label(target, label);
+                else if (tool is Panel panel) Panel(target, panel);
                 else if (tool is TextBox textBox) TextBox(target, textBox);
                 else if (tool is Button button) Button(target, button);
                 else if (tool is CheckBox checkBox) CheckBox(target, checkBox);
@@ -540,6 +547,12 @@ internal static class Renders
                 InterfaceOrder(target, node.Nodes[i]);
             }
         }
+    }
+
+    private static void Label(RenderTarget target, Label tool)
+    {
+        var color = new Color((byte)(tool.Color >> 16), (byte)(tool.Color >> 8), (byte)tool.Color);
+        DrawText(target, tool.Text, tool.Position.X + 1, tool.Position.Y + 1, color, tool.Alignment);
     }
 
     private static void Button(RenderTarget target, Button tool)
