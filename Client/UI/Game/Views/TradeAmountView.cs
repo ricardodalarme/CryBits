@@ -33,7 +33,7 @@ internal class TradeAmountView(TradeSender tradeSender) : IView
             return;
         }
 
-        tradeSender.TradeOffer(TradeView.CurrentSlot, TradeView.InventorySlot, amount);
+        tradeSender.TradeOffer(TradeView.OwnSlot, TradeView.InventorySlot, amount);
         Panel.Visible = false;
     }
 

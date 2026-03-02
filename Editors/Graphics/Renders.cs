@@ -540,6 +540,7 @@ internal static class Renders
             {
                 if (tool is Label label) Label(target, label);
                 else if (tool is ProgressBar progressBar) ProgressBar(target, progressBar);
+                else if (tool is SlotGrid slotGrid) SlotGrid(target, slotGrid);
                 else if (tool is Panel panel) Panel(target, panel);
                 else if (tool is TextBox textBox) TextBox(target, textBox);
                 else if (tool is Button button) Button(target, button);
@@ -563,6 +564,16 @@ internal static class Renders
         Render(target, Textures.BarsPanel,
             new Rectangle(0, tool.SourceY, tool.Width, tool.Height),
             new Rectangle(tool.Position.X, tool.Position.Y, tool.Width, tool.Height));
+    }
+
+    private static void SlotGrid(RenderTarget target, SlotGrid tool)
+    {
+        if (tool.SlotSize <= 0) return;
+        for (var i = 0; i < tool.SlotCount; i++)
+        {
+            var pos = tool.GetSlotPosition(i);
+            RenderRectangle(target, pos.X, pos.Y, tool.SlotSize, tool.SlotSize, Color.White);
+        }
     }
 
     private static void Button(RenderTarget target, Button tool)

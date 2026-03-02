@@ -202,6 +202,38 @@
                                                    ValueChanged="numPropPbHeight_ValueChanged"/>
                                 </Grid>
                             </StackPanel>
+
+                            <!-- SlotGrid-specific -->
+                            <StackPanel x:Name="secSlotGridProps" IsVisible="False" Spacing="4">
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Rows:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropSgRows" Grid.Column="1"
+                                                   Minimum="1" Maximum="255" FormatString="0"
+                                                   ValueChanged="numPropSgRows_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Columns:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropSgColumns" Grid.Column="1"
+                                                   Minimum="1" Maximum="255" FormatString="0"
+                                                   ValueChanged="numPropSgColumns_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Slot Size:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropSgSlotSize" Grid.Column="1"
+                                                   Minimum="1" Maximum="255" FormatString="0"
+                                                   ValueChanged="numPropSgSlotSize_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Padding:" VerticalAlignment="Center"/>
+                                    <NumericUpDown x:Name="numPropSgPadding" Grid.Column="1"
+                                                   Minimum="0" Maximum="255" FormatString="0"
+                                                   ValueChanged="numPropSgPadding_ValueChanged"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="80,*">
+                                    <TextBlock Grid.Column="0" Text="Slots:" VerticalAlignment="Center" Opacity="0.6"/>
+                                    <TextBlock x:Name="txtSgSlotCount" Grid.Column="1" VerticalAlignment="Center" Opacity="0.6"/>
+                                </Grid>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -234,6 +266,7 @@
                         <ComboBoxItem Content="CheckBox"/>
                         <ComboBoxItem Content="TextBox"/>
                         <ComboBoxItem Content="ProgressBar"/>
+                        <ComboBoxItem Content="SlotGrid"/>
                     </ComboBox>
                     <Button x:Name="butConfirm" Content="Confirm"
                             HorizontalAlignment="Right"

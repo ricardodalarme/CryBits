@@ -19,6 +19,7 @@ using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Label = CryBits.Client.Framework.Interfacily.Components.Label;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
 using ProgressBar = CryBits.Client.Framework.Interfacily.Components.ProgressBar;
+using SlotGrid = CryBits.Client.Framework.Interfacily.Components.SlotGrid;
 using Point = System.Drawing.Point;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
@@ -179,6 +180,7 @@ internal partial class EditorInterfaceWindow : Window
             (int)ToolType.CheckBox => new CheckBox(),
             (int)ToolType.TextBox => new TextBox(),
             (int)ToolType.ProgressBar => new ProgressBar(),
+            (int)ToolType.SlotGrid => new SlotGrid(),
             _ => new Button()
         };
         newComp.Visible = true;
@@ -283,6 +285,7 @@ internal partial class EditorInterfaceWindow : Window
         secCheckBoxProps.IsVisible = c is CheckBox;
         secTextBoxProps.IsVisible = c is TextBox;
         secProgressBarProps.IsVisible = c is ProgressBar;
+        secSlotGridProps.IsVisible = c is SlotGrid;
 
         switch (c)
         {
@@ -308,6 +311,13 @@ internal partial class EditorInterfaceWindow : Window
                 numPropPbSourceY.Value = pb.SourceY;
                 numPropPbWidth.Value = pb.Width;
                 numPropPbHeight.Value = pb.Height;
+                break;
+            case SlotGrid sg:
+                numPropSgRows.Value = sg.Rows;
+                numPropSgColumns.Value = sg.Columns;
+                numPropSgSlotSize.Value = sg.SlotSize;
+                numPropSgPadding.Value = sg.Padding;
+                txtSgSlotCount.Text = sg.SlotCount.ToString();
                 break;
         }
 
@@ -428,6 +438,32 @@ internal partial class EditorInterfaceWindow : Window
     {
         if (_loadingProps || _selectedComponent is not ProgressBar pb) return;
         pb.Height = (int)(e.NewValue ?? 0);
+    }
+
+    private void numPropSgRows_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
+        sg.Rows = (byte)(e.NewValue ?? 1);
+        txtSgSlotCount.Text = sg.SlotCount.ToString();
+    }
+
+    private void numPropSgColumns_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
+        sg.Columns = (byte)(e.NewValue ?? 1);
+        txtSgSlotCount.Text = sg.SlotCount.ToString();
+    }
+
+    private void numPropSgSlotSize_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
+        sg.SlotSize = (byte)(e.NewValue ?? 32);
+    }
+
+    private void numPropSgPadding_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
+    {
+        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
+        sg.Padding = (byte)(e.NewValue ?? 4);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

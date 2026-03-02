@@ -44,6 +44,7 @@ public sealed class ScreenDto
 [JsonDerivedType(typeof(PanelDto), "Panel")]
 [JsonDerivedType(typeof(CheckBoxDto), "CheckBox")]
 [JsonDerivedType(typeof(ProgressBarDto), "ProgressBar")]
+[JsonDerivedType(typeof(SlotGridDto), "SlotGrid")]
 public abstract class ComponentDto
 {
     [JsonPropertyName("name")]
@@ -121,6 +122,21 @@ public sealed class ProgressBarDto : ComponentDto
 
     [JsonPropertyName("height")]
     public int Height { get; set; }
+}
+
+public sealed class SlotGridDto : ComponentDto
+{
+    [JsonPropertyName("columns")]
+    public byte Columns { get; set; } = 1;
+
+    [JsonPropertyName("slotSize")]
+    public byte SlotSize { get; set; } = 32;
+
+    [JsonPropertyName("padding")]
+    public byte Padding { get; set; } = 4;
+
+    [JsonPropertyName("rows")]
+    public byte Rows { get; set; } = 1;
 }
 
 // ─── Options DTO ─────────────────────────────────────────────────────────────

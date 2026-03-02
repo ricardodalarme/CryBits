@@ -4,13 +4,13 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Enums;
 using SFML.Window;
-using static CryBits.Client.Utils.UIUtils;
 
 namespace CryBits.Client.UI.Game.Views;
 
 internal class CharacterView(PlayerSender playerSender) : IView
 {
     internal static Panel Panel => Tools.Panels["Menu_Character"];
+    private static SlotGrid Grid => Tools.SlotGrids["Equipment_Grid"];
     internal static Button AddStrengthButton => Tools.Buttons["Attributes_Strength"];
     internal static Button AddResistanceButton => Tools.Buttons["Attributes_Resistance"];
     internal static Button AddIntelligenceButton => Tools.Buttons["Attributes_Intelligence"];
@@ -25,11 +25,9 @@ internal class CharacterView(PlayerSender playerSender) : IView
     private static Label VitalityLabel => Tools.Labels["Character_Vitality"];
     private static Label PointsLabel => Tools.Labels["Character_Points"];
 
-    public static short CurrentSlot => GetSlotAtMousePosition(Panel, 7, 248, 1, 5);
-
     public void Bind()
     {
-        Panel.OnMouseDown += OnPanelMouseDown;
+        Grid.OnMouseDown += OnGridMouseDown;
         AddStrengthButton.OnMouseUp += OnAddStrengthPressed;
         AddResistanceButton.OnMouseUp += OnAddResistancePressed;
         AddIntelligenceButton.OnMouseUp += OnAddIntelligencePressed;
@@ -39,7 +37,7 @@ internal class CharacterView(PlayerSender playerSender) : IView
 
     public void Unbind()
     {
-        Panel.OnMouseDown -= OnPanelMouseDown;
+        Grid.OnMouseDown -= OnGridMouseDown;
         AddStrengthButton.OnMouseUp -= OnAddStrengthPressed;
         AddResistanceButton.OnMouseUp -= OnAddResistancePressed;
         AddIntelligenceButton.OnMouseUp -= OnAddIntelligencePressed;
@@ -47,11 +45,8 @@ internal class CharacterView(PlayerSender playerSender) : IView
         AddVitalityButton.OnMouseUp -= OnAddVitalityPressed;
     }
 
-    private void OnPanelMouseDown(MouseButtonEventArgs e)
+    private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        var slot = CurrentSlot;
-
-        if (slot < 0) return;
         if (Player.Me.Equipment[slot] == null) return;
 
         if (e.Button == Mouse.Button.Right)

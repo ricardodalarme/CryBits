@@ -5,7 +5,6 @@ using CryBits.Client.Network.Senders;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using SFML.Window;
-using static CryBits.Client.Utils.UIUtils;
 using static CryBits.Globals;
 
 namespace CryBits.Client.UI.Game.Views;
@@ -18,14 +17,15 @@ internal class TradeView(TradeSender tradeSender) : IView
     internal static Button AcceptOfferButton => Tools.Buttons["Trade_Offer_Accept"];
     internal static Button DeclineOfferButton => Tools.Buttons["Trade_Offer_Decline"];
     internal static Button ConfirmOfferButton => Tools.Buttons["Trade_Offer_Confirm"];
+    private static SlotGrid OwnGrid => Tools.SlotGrids["Trade_Grid_Own"];
 
-    public static short CurrentSlot => GetSlotAtMousePosition(Panel, 7, 50, 6, 5);
+    public static short OwnSlot;
     public static short InventorySlot;
 
     public void Bind()
     {
-        Panel.OnMouseDown += OnPanelMouseDown;
-        Panel.OnMouseUp += OnPanelMouseUp;
+        OwnGrid.OnMouseDown += OnGridMouseDown;
+        OwnGrid.OnMouseUp += OnGridMouseUp;
         CloseButton.OnMouseUp += OnClosePressed;
         AcceptOfferButton.OnMouseUp += OnAcceptOfferPressed;
         DeclineOfferButton.OnMouseUp += OnDeclineOfferPressed;
@@ -34,34 +34,32 @@ internal class TradeView(TradeSender tradeSender) : IView
 
     public void Unbind()
     {
-        Panel.OnMouseDown -= OnPanelMouseDown;
-        Panel.OnMouseUp -= OnPanelMouseUp;
+        OwnGrid.OnMouseDown -= OnGridMouseDown;
+        OwnGrid.OnMouseUp -= OnGridMouseUp;
         CloseButton.OnMouseUp -= OnClosePressed;
         AcceptOfferButton.OnMouseUp -= OnAcceptOfferPressed;
         DeclineOfferButton.OnMouseUp -= OnDeclineOfferPressed;
         ConfirmOfferButton.OnMouseUp -= OnConfirmOfferPressed;
     }
 
-    private void OnPanelMouseDown(MouseButtonEventArgs e)
+    private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        var slot = CurrentSlot;
-
         if (!Panel.Visible) return;
-        if (slot == -1) return;
         if (Player.Me.TradeOffer[slot].Item == null) return;
 
         if (e.Button == Mouse.Button.Right) tradeSender.TradeOffer(slot, 0);
     }
 
-    private void OnPanelMouseUp()
+    private void OnGridMouseUp(short slot)
     {
         if (GameScreen.InventoryChange <= 0) return;
 
         // Add item to trade
         if (Player.Me.Inventory[GameScreen.InventoryChange].Amount == 1)
-            tradeSender.TradeOffer(CurrentSlot, GameScreen.InventoryChange);
+            tradeSender.TradeOffer(slot, GameScreen.InventoryChange);
         else
         {
+            OwnSlot = slot;
             InventorySlot = GameScreen.InventoryChange;
             TradeAmountView.AmountTextBox.Text = string.Empty;
             TradeAmountView.Panel.Visible = true;

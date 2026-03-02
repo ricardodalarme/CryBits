@@ -4,35 +4,30 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Enums;
 using SFML.Window;
-using static CryBits.Client.Utils.UIUtils;
 
 namespace CryBits.Client.UI.Game.Views;
 
 internal class InventoryView(PlayerSender playerSender, ShopSender shopSender) : IView
 {
     internal static Panel Panel => Tools.Panels["Menu_Inventory"];
-
-    public static short CurrentSlot => GetSlotAtMousePosition(Panel, 7, 29, 6, 5);
+    private static SlotGrid Grid => Tools.SlotGrids["Inventory_Grid"];
 
     public void Bind()
     {
-        Panel.OnMouseDown += OnPanelMouseDown;
-        Panel.OnMouseUp += OnPanelMouseUp;
-        Panel.OnMouseDoubleClick += OnPanelMouseDoubleClick;
+        Grid.OnMouseDown += OnGridMouseDown;
+        Grid.OnMouseUp += OnGridMouseUp;
+        Grid.OnMouseDoubleClick += OnGridMouseDoubleClick;
     }
 
     public void Unbind()
     {
-        Panel.OnMouseDown -= OnPanelMouseDown;
-        Panel.OnMouseUp -= OnPanelMouseUp;
-        Panel.OnMouseDoubleClick -= OnPanelMouseDoubleClick;
+        Grid.OnMouseDown -= OnGridMouseDown;
+        Grid.OnMouseUp -= OnGridMouseUp;
+        Grid.OnMouseDoubleClick -= OnGridMouseDoubleClick;
     }
 
-    private void OnPanelMouseDown(MouseButtonEventArgs e)
+    private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        var slot = CurrentSlot;
-
-        if (slot == -1) return;
         if (Player.Me.Inventory[slot].Item == null) return;
 
         switch (e.Button)
@@ -68,19 +63,16 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender) :
         }
     }
 
-    private void OnPanelMouseUp()
+    private void OnGridMouseUp(short slot)
     {
-        // Return early when no valid slot or no change pending.
-        if (CurrentSlot == -1) return;
         if (GameScreen.InventoryChange == -1) return;
 
         // Send inventory slot change to server.
-        playerSender.InventoryChange(GameScreen.InventoryChange, CurrentSlot);
+        playerSender.InventoryChange(GameScreen.InventoryChange, slot);
     }
 
-    private void OnPanelMouseDoubleClick(MouseButtonEventArgs e)
+    private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
     {
-        var slot = CurrentSlot;
         if (slot <= 0) return;
         if (Player.Me.Inventory[slot].Item == null) return;
 

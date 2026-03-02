@@ -17,26 +17,31 @@ internal class InformationView
     {
         var position = new Point();
 
+        var hotbarSlot = Tools.SlotGrids["Hotbar_Grid"].GetSlotIndex();
+        var inventorySlot = Tools.SlotGrids["Inventory_Grid"].GetSlotIndex();
+        var equipmentSlot = Tools.SlotGrids["Equipment_Grid"].GetSlotIndex();
+        var shopSlot = Tools.SlotGrids["Shop_Grid"].GetSlotIndex();
+
         // Set information panel position and id according to the hovered slot
-        if (HotbarView.CurrentSlot >= 0)
+        if (hotbarSlot >= 0)
         {
             position = HotbarView.Panel.Position + new Size(0, 42);
-            CurrentId = Player.Me.Inventory[Player.Me.Hotbar[HotbarView.CurrentSlot].Slot].Item.GetId();
+            CurrentId = Player.Me.Inventory[Player.Me.Hotbar[hotbarSlot].Slot].Item.GetId();
         }
-        else if (InventoryView.CurrentSlot > 0)
+        else if (inventorySlot > 0)
         {
             position = InventoryView.Panel.Position + new Size(-186, 3);
-            CurrentId = Player.Me.Inventory[InventoryView.CurrentSlot].Item.GetId();
+            CurrentId = Player.Me.Inventory[inventorySlot].Item.GetId();
         }
-        else if (CharacterView.CurrentSlot >= 0)
+        else if (equipmentSlot >= 0)
         {
             position = CharacterView.Panel.Position + new Size(-186, 5);
-            CurrentId = Player.Me.Equipment[CharacterView.CurrentSlot].GetId();
+            CurrentId = Player.Me.Equipment[equipmentSlot].GetId();
         }
-        else if (ShopView.CurrentSlot >= 0 && ShopView.CurrentSlot < ShopView.OpenedShop.Sold.Count)
+        else if (shopSlot >= 0 && shopSlot < ShopView.OpenedShop.Sold.Count)
         {
             position = new Point(ShopView.Panel.Position.X - 186, ShopView.Panel.Position.Y + 5);
-            CurrentId = ShopView.OpenedShop.Sold[ShopView.CurrentSlot].Item.GetId();
+            CurrentId = ShopView.OpenedShop.Sold[shopSlot].Item.GetId();
         }
         else CurrentId = Guid.Empty;
 

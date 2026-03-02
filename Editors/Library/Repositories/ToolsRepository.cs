@@ -92,6 +92,16 @@ internal static class ToolsRepository
                     Width = pb.Width,
                     Height = pb.Height
                 },
+                SlotGridDto sg => new SlotGrid
+                {
+                    Name = sg.Name,
+                    Position = new Point(sg.X, sg.Y),
+                    Visible = sg.Visible,
+                    Columns = sg.Columns,
+                    SlotSize = sg.SlotSize,
+                    Padding = sg.Padding,
+                    Rows = sg.Rows
+                },
                 _ => throw new InvalidDataException($"Unknown component DTO: {dto.GetType().Name}")
             };
 
@@ -138,6 +148,7 @@ internal static class ToolsRepository
                 CheckBox checkBox => CheckBoxDto(checkBox),
                 Panel panel => PanelDto(panel),
                 ProgressBar bar => ProgressBarDto(bar),
+                SlotGrid sg => SlotGridDto(sg),
                 _ => throw new InvalidOperationException($"Unknown component type: {component.GetType().Name}")
             };
 
@@ -164,4 +175,7 @@ internal static class ToolsRepository
 
     private static ProgressBarDto ProgressBarDto(ProgressBar tool) =>
         Client.Framework.Persistence.Repositories.ToolsRepository.ProgressBarDto(tool);
+
+    private static SlotGridDto SlotGridDto(SlotGrid tool) =>
+        Client.Framework.Persistence.Repositories.ToolsRepository.SlotGridDto(tool);
 }

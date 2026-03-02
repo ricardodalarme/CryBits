@@ -3,7 +3,6 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities.Shop;
 using SFML.Window;
-using static CryBits.Client.Utils.UIUtils;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -13,26 +12,24 @@ internal class ShopView(ShopSender shopSender) : IView
     private static Button CloseButton => Tools.Buttons["Shop_Close"];
     private static Label NameLabel => Tools.Labels["Shop_Name"];
     private static Label CurrencyLabel => Tools.Labels["Shop_Currency"];
+    private static SlotGrid Grid => Tools.SlotGrids["Shop_Grid"];
 
-    public static short CurrentSlot => GetSlotAtMousePosition(Panel, 7, 50, 4, 7);
     public static Shop OpenedShop;
 
     public void Bind()
     {
-        Panel.OnMouseDoubleClick += OnPanelMouseDoubleClick;
+        Grid.OnMouseDoubleClick += OnGridMouseDoubleClick;
         CloseButton.OnMouseUp += OnClosePressed;
     }
 
     public void Unbind()
     {
-        Panel.OnMouseDoubleClick -= OnPanelMouseDoubleClick;
+        Grid.OnMouseDoubleClick -= OnGridMouseDoubleClick;
         CloseButton.OnMouseUp -= OnClosePressed;
     }
 
-    private void OnPanelMouseDoubleClick(MouseButtonEventArgs e)
+    private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
     {
-        var slot = CurrentSlot;
-        if (slot < 0) return;
         if (OpenedShop == null) return;
 
         // Purchase shop item.

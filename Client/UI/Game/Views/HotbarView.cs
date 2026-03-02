@@ -4,35 +4,30 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Enums;
 using SFML.Window;
-using static CryBits.Client.Utils.UIUtils;
 
 namespace CryBits.Client.UI.Game.Views;
 
 internal class HotbarView(PlayerSender playerSender) : IView
 {
     internal static Panel Panel => Tools.Panels["Hotbar"];
-
-    public static short CurrentSlot => GetSlotAtMousePosition(Panel, 8, 6, 1, 10);
+    private static SlotGrid Grid => Tools.SlotGrids["Hotbar_Grid"];
 
     public void Bind()
     {
-        Panel.OnMouseDown += OnPanelMouseDown;
-        Panel.OnMouseUp += OnPanelMouseUp;
-        Panel.OnMouseDoubleClick += OnPanelMouseDoubleClick;
+        Grid.OnMouseDown += OnGridMouseDown;
+        Grid.OnMouseUp += OnGridMouseUp;
+        Grid.OnMouseDoubleClick += OnGridMouseDoubleClick;
     }
 
     public void Unbind()
     {
-        Panel.OnMouseDown -= OnPanelMouseDown;
-        Panel.OnMouseUp -= OnPanelMouseUp;
-        Panel.OnMouseDoubleClick -= OnPanelMouseDoubleClick;
+        Grid.OnMouseDown -= OnGridMouseDown;
+        Grid.OnMouseUp -= OnGridMouseUp;
+        Grid.OnMouseDoubleClick -= OnGridMouseDoubleClick;
     }
 
-    private void OnPanelMouseDown(MouseButtonEventArgs e)
+    private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        var slot = CurrentSlot;
-
-        if (slot < 0) return;
         if (Player.Me.Hotbar[slot].Slot == 0) return;
 
         switch (e.Button)
@@ -48,18 +43,14 @@ internal class HotbarView(PlayerSender playerSender) : IView
         }
     }
 
-    private void OnPanelMouseUp()
+    private void OnGridMouseUp(short slot)
     {
-        // Change hotbar slot
-        if (CurrentSlot < 0) return;
-        if (GameScreen.HotbarChange >= 0) playerSender.HotbarChange(GameScreen.HotbarChange, CurrentSlot);
-        if (GameScreen.InventoryChange > 0) playerSender.HotbarAdd(CurrentSlot, (byte)SlotType.Item, GameScreen.InventoryChange);
+        if (GameScreen.HotbarChange >= 0) playerSender.HotbarChange(GameScreen.HotbarChange, slot);
+        if (GameScreen.InventoryChange > 0) playerSender.HotbarAdd(slot, (byte)SlotType.Item, GameScreen.InventoryChange);
     }
 
-    private void OnPanelMouseDoubleClick(MouseButtonEventArgs e)
+    private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
     {
-        var slot = CurrentSlot;
-        if (slot <= 0) return;
         if (Player.Me.Hotbar[slot].Slot <= 0) return;
 
         // Use item from hotbar

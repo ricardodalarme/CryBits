@@ -82,6 +82,16 @@ public static class ToolsRepository
                     Width = pb.Width,
                     Height = pb.Height
                 },
+                SlotGridDto sg => new SlotGrid
+                {
+                    Name = sg.Name,
+                    Position = new Point(sg.X, sg.Y),
+                    Visible = sg.Visible,
+                    Columns = sg.Columns,
+                    SlotSize = sg.SlotSize,
+                    Padding = sg.Padding,
+                    Rows = sg.Rows
+                },
                 _ => throw new InvalidOperationException($"Unknown component DTO type: {dto.GetType().Name}")
             };
 
@@ -93,6 +103,7 @@ public static class ToolsRepository
                 case Panel pnl: Tools.Panels.TryAdd(pnl.Name, pnl); break;
                 case CheckBox chk: Tools.CheckBoxes.TryAdd(chk.Name, chk); break;
                 case ProgressBar bar: Tools.ProgressBars.TryAdd(bar.Name, bar); break;
+                case SlotGrid sg: Tools.SlotGrids.TryAdd(sg.Name, sg); break;
             }
 
             component.Parent = parent;
@@ -164,5 +175,17 @@ public static class ToolsRepository
         SourceY = tool.SourceY,
         Width = tool.Width,
         Height = tool.Height
+    };
+
+    public static SlotGridDto SlotGridDto(SlotGrid tool) => new()
+    {
+        Name = tool.Name,
+        X = tool.Position.X,
+        Y = tool.Position.Y,
+        Visible = tool.Visible,
+        Columns = tool.Columns,
+        SlotSize = tool.SlotSize,
+        Padding = tool.Padding,
+        Rows = tool.Rows
     };
 }
