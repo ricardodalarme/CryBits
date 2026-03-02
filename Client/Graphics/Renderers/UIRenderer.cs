@@ -123,8 +123,6 @@ internal sealed class UIRenderer(
                 case "Menu_Inventory": MenuInventory(panel); break;
                 case "Bars": DrawBars(panel); break;
                 case "Information": DrawInformation(panel); break;
-                case "Party_Invitation": DrawPartyInvitation(panel); break;
-                case "Trade_Invitation": DrawTradeInvitation(panel); break;
                 case "Trade": DrawTrade(panel); break;
                 case "Shop": DrawShop(panel); break;
             }
@@ -142,20 +140,6 @@ internal sealed class UIRenderer(
             (int)(Textures.BarsPanel.Size.X * mpPercentage), 17);
         renderer.Draw(Textures.BarsPanel, tool.Position.X + 6, tool.Position.Y + 42, 0, 36,
             (int)(Textures.BarsPanel.Size.X * expPercentage), 17);
-
-        renderer.DrawText("HP", tool.Position.X + 10, tool.Position.Y + 3, Color.White);
-        renderer.DrawText("MP", tool.Position.X + 10, tool.Position.Y + 21, Color.White);
-        renderer.DrawText("Exp", tool.Position.X + 10, tool.Position.Y + 39, Color.White);
-
-        renderer.DrawText(Player.Me.Vital[(byte)Vital.Hp] + "/" + Player.Me.MaxVital[(byte)Vital.Hp],
-            tool.Position.X + 76,
-            tool.Position.Y + 7, Color.White, TextAlign.Center);
-        renderer.DrawText(Player.Me.Vital[(byte)Vital.Mp] + "/" + Player.Me.MaxVital[(byte)Vital.Mp],
-            tool.Position.X + 76,
-            tool.Position.Y + 25, Color.White, TextAlign.Center);
-        renderer.DrawText(Player.Me.Experience + "/" + Player.Me.ExpNeeded, tool.Position.X + 76,
-            tool.Position.Y + 43,
-            Color.White, TextAlign.Center);
     }
 
     /// <summary>
@@ -270,25 +254,8 @@ internal sealed class UIRenderer(
 
     private void DrawMenuCharacter(Panel tool)
     {
-        renderer.DrawText(Player.Me.Name, tool.Position.X + 18, tool.Position.Y + 52, Color.White);
-        renderer.DrawText(Player.Me.Level.ToString(), tool.Position.X + 18, tool.Position.Y + 79, Color.White);
         renderer.Draw(Textures.Faces[Player.Me.TextureNum],
             new Point(tool.Position.X + 82, tool.Position.Y + 37));
-
-        renderer.DrawText("Strength: " + Player.Me.Attribute[(byte)Attribute.Strength], tool.Position.X + 32,
-            tool.Position.Y + 146, Color.White);
-        renderer.DrawText("Resistance: " + Player.Me.Attribute[(byte)Attribute.Resistance],
-            tool.Position.X + 32,
-            tool.Position.Y + 162, Color.White);
-        renderer.DrawText("Intelligence: " + Player.Me.Attribute[(byte)Attribute.Intelligence],
-            tool.Position.X + 32,
-            tool.Position.Y + 178, Color.White);
-        renderer.DrawText("Agility: " + Player.Me.Attribute[(byte)Attribute.Agility], tool.Position.X + 32,
-            tool.Position.Y + 194, Color.White);
-        renderer.DrawText("Vitality: " + Player.Me.Attribute[(byte)Attribute.Vitality], tool.Position.X + 32,
-            tool.Position.Y + 210, Color.White);
-        renderer.DrawText("Points: " + Player.Me.Points, tool.Position.X + 14, tool.Position.Y + 228,
-            Color.White);
 
         for (byte i = 0; i < (byte)Equipment.Count; i++)
             if (Player.Me.Equipment[i] == null)
@@ -315,12 +282,6 @@ internal sealed class UIRenderer(
                     InputManager.Instance.MousePosition.Y + 6));
     }
 
-    private void DrawPartyInvitation(Panel tool)
-    {
-        renderer.DrawText(PartyInvitationView.InviterName + " has invite you to a party. Would you like to join?",
-            tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
-    }
-
     /// <summary>
     /// Render the party member bars and names.
     /// </summary>
@@ -343,12 +304,6 @@ internal sealed class UIRenderer(
         }
     }
 
-    private void DrawTradeInvitation(Panel tool)
-    {
-        renderer.DrawText(TradeInvitationView.InviterName + " has invite you to a trade. Would you like to join?",
-            tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
-    }
-
     private void DrawTrade(Panel tool)
     {
         for (byte i = 0; i < MaxInventory; i++)
@@ -362,12 +317,6 @@ internal sealed class UIRenderer(
 
     private void DrawShop(Panel tool)
     {
-        var name = ShopView.OpenedShop.Name;
-        renderer.DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, TextAlign.Center);
-        renderer.DrawText("Currency: " + ShopView.OpenedShop.Currency.Name, tool.Position.X + 10,
-            tool.Position.Y + 195,
-            Color.White);
-
         for (byte i = 0; i < ShopView.OpenedShop.Sold.Count; i++)
             itemRenderer.DrawItem(ShopView.OpenedShop.Sold[i].Item, ShopView.OpenedShop.Sold[i].Amount,
                 tool.Position + new Size(7, 50), (byte)(i + 1), 7);
@@ -377,7 +326,8 @@ internal sealed class UIRenderer(
     private void DrawSelectCharacterClass()
     {
         var textPosition = new Point(399, 425);
-        var text = "(" + (SelectCharacterView.CurrentCharacter + 1) + ") None";
+        var index = SelectCharacterView.CurrentCharacter + 1;
+        var text = $"({index}) None";
 
         if (!SelectCharacterView.UpdateButtonVisibility())
         {
@@ -400,8 +350,7 @@ internal sealed class UIRenderer(
                 Direction.Down, AnimationStopped);
         }
 
-        text = "(" + (SelectCharacterView.CurrentCharacter + 1) + ") " +
-               SelectCharacterView.Characters[SelectCharacterView.CurrentCharacter].Name;
+        text = $"({index}) {SelectCharacterView.Characters[SelectCharacterView.CurrentCharacter].Name}";
         renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
     }
 

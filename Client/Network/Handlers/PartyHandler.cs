@@ -28,7 +28,6 @@ internal class PartyHandler(PartySender partySender)
         }
 
         // Show party invitation panel
-        PartyInvitationView.InviterName = packet.PlayerInvitation;
-        PartyInvitationView.Panel.Visible = true;
+        PartyInvitationView.Show(packet.PlayerInvitation);
     }
 }

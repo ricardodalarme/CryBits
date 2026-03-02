@@ -11,6 +11,8 @@ internal class ShopView(ShopSender shopSender) : IView
 {
     internal static Panel Panel => Tools.Panels["Shop"];
     private static Button CloseButton => Tools.Buttons["Shop_Close"];
+    private static Label NameLabel => Tools.Labels["Shop_Name"];
+    private static Label CurrencyLabel => Tools.Labels["Shop_Currency"];
 
     public static short CurrentSlot => GetSlotAtMousePosition(Panel, 7, 50, 4, 7);
     public static Shop OpenedShop;
@@ -41,5 +43,13 @@ internal class ShopView(ShopSender shopSender) : IView
     {
         Panel.Visible = false;
         shopSender.ShopClose();
+    }
+
+    public static void Open(Shop shop)
+    {
+        OpenedShop = shop;
+        NameLabel.SetArguments(shop.Name);
+        CurrencyLabel.SetArguments(shop.Currency.Name);
+        Panel.Visible = true;
     }
 }

@@ -44,6 +44,12 @@ internal class PlayerHandler(GameContext context)
         for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = packet.Attribute[n];
         for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(packet.Equipment[n]);
         context.CurrentMap = player.MapInstance;
+
+        if (player == Player.Me)
+        {
+            BarsView.Update();
+            CharacterView.Update();
+        }
     }
 
     [PacketHandler]
@@ -70,6 +76,8 @@ internal class PlayerHandler(GameContext context)
             player.Vital[i] = packet.Vital[i];
             player.MaxVital[i] = packet.MaxVital[i];
         }
+
+        if (player == Player.Me) BarsView.Update();
     }
 
     [PacketHandler]
@@ -153,6 +161,9 @@ internal class PlayerHandler(GameContext context)
         CharacterView.AddIntelligenceButton.Visible = Player.Me.Points > 0;
         CharacterView.AddAgilityButton.Visible = Player.Me.Points > 0;
         CharacterView.AddVitalityButton.Visible = Player.Me.Points > 0;
+
+        BarsView.Update();
+        CharacterView.Update();
     }
 
     [PacketHandler]

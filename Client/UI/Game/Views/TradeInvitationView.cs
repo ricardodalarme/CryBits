@@ -9,8 +9,7 @@ internal class TradeInvitationView(TradeSender tradeSender) : IView
     internal static Panel Panel => Tools.Panels["Trade_Invitation"];
     private static Button AcceptButton => Tools.Buttons["Trade_Yes"];
     private static Button DeclineButton => Tools.Buttons["Trade_No"];
-
-    public static string InviterName;
+    private static Label InviterNameLabel => Tools.Labels["Trade_Invitation_Text"];
 
     public void Bind()
     {
@@ -34,5 +33,11 @@ internal class TradeInvitationView(TradeSender tradeSender) : IView
     {
         tradeSender.TradeDecline();
         Panel.Visible = false;
+    }
+
+    public static void Show(string inviterName)
+    {
+        InviterNameLabel.SetArguments(inviterName);
+        Panel.Visible = true;
     }
 }

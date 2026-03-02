@@ -9,8 +9,7 @@ internal class PartyInvitationView(PartySender partySender) : IView
     internal static Panel Panel => Tools.Panels["Party_Invitation"];
     private static Button AcceptButton => Tools.Buttons["Party_Yes"];
     private static Button DeclineButton => Tools.Buttons["Party_No"];
-
-    public static string InviterName;
+    private static Label InviterNameLabel => Tools.Labels["Party_Invitation_Text"];
 
     public void Bind()
     {
@@ -34,5 +33,11 @@ internal class PartyInvitationView(PartySender partySender) : IView
     {
         partySender.PartyDecline();
         Panel.Visible = false;
+    }
+
+    public static void Show(string inviterName)
+    {
+        InviterNameLabel.SetArguments(inviterName);
+        Panel.Visible = true;
     }
 }

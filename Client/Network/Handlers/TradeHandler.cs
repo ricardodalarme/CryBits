@@ -52,8 +52,7 @@ internal class TradeHandler(TradeSender tradeSender)
         }
 
         // Show trade invitation panel
-        TradeInvitationView.InviterName = packet.PlayerInvitation;
-        TradeInvitationView.Panel.Visible = true;
+        TradeInvitationView.Show(packet.PlayerInvitation);
     }
 
     [PacketHandler]

@@ -19,7 +19,8 @@ internal class ShopHandler
     internal void ShopOpen(ShopOpenPacket packet)
     {
         // Open shop panel
-        ShopView.OpenedShop = Shop.List.Get(packet.Id);
-        ShopView.Panel.Visible = ShopView.OpenedShop != null;
+        var shop = Shop.List.Get(packet.Id);
+        if (shop != null) ShopView.Open(shop);
+        else ShopView.Panel.Visible = false;
     }
 }
