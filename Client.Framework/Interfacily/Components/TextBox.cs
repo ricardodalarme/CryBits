@@ -19,6 +19,9 @@ public class TextBox : Component, IMouseUp
     /// <summary>Currently focused textbox, or null if none.</summary>
     public static TextBox? Focused;
 
+    /// <summary>Blink signal for the caret of the focused textbox.</summary>
+    public static bool BlinkSignal;
+
     public void MouseUp()
     {
         if (!IsAbove(new Rectangle(Position, new Size(Width, Textures.TextBox.ToSize().Height)))) return;

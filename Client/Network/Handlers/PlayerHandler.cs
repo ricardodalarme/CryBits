@@ -1,7 +1,7 @@
 using System;
 using CryBits.Client.Entities;
-using CryBits.Client.Framework.Constants;
 using CryBits.Client.Spawners;
+using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
@@ -148,11 +148,11 @@ internal class PlayerHandler(GameContext context)
         Player.Me.ExpNeeded = packet.ExpNeeded;
         Player.Me.Points = packet.Points;
 
-        Buttons.AttributesStrength.Visible = Player.Me.Points > 0;
-        Buttons.AttributesResistance.Visible = Player.Me.Points > 0;
-        Buttons.AttributesIntelligence.Visible = Player.Me.Points > 0;
-        Buttons.AttributesAgility.Visible = Player.Me.Points > 0;
-        Buttons.AttributesVitality.Visible = Player.Me.Points > 0;
+        CharacterView.AddStrengthButton.Visible = Player.Me.Points > 0;
+        CharacterView.AddResistanceButton.Visible = Player.Me.Points > 0;
+        CharacterView.AddIntelligenceButton.Visible = Player.Me.Points > 0;
+        CharacterView.AddAgilityButton.Visible = Player.Me.Points > 0;
+        CharacterView.AddVitalityButton.Visible = Player.Me.Points > 0;
     }
 
     [PacketHandler]

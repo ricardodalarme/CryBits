@@ -68,10 +68,10 @@ public static class ToolsRepository
 
             switch (component)
             {
-                case Button btn: Buttons.List.TryAdd(btn.Name, btn); break;
-                case TextBox tb: TextBoxes.List.TryAdd(tb.Name, tb); break;
-                case Panel pnl: Panels.List.TryAdd(pnl.Name, pnl); break;
-                case CheckBox chk: CheckBoxes.List.TryAdd(chk.Name, chk); break;
+                case Button btn: Tools.Buttons.TryAdd(btn.Name, btn); break;
+                case TextBox tb: Tools.TextBoxes.TryAdd(tb.Name, tb); break;
+                case Panel pnl: Tools.Panels.TryAdd(pnl.Name, pnl); break;
+                case CheckBox chk: Tools.CheckBoxes.TryAdd(chk.Name, chk); break;
             }
 
             component.Parent = parent;

@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Logic;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.UI.Game.Views;
 using CryBits.Enums;
 using SFML.Graphics;
 using static CryBits.Client.Utils.TextUtils;
 
-namespace CryBits.Client.UI;
+namespace CryBits.Client.UI.Game;
 
 internal static class Chat
 {
@@ -46,7 +46,7 @@ internal static class Chat
 
     public static void AddText(string message, Color color)
     {
-        var boxWidth = Textures.Panels[Panels.Chat.TextureNum].ToSize().Width - 16;
+        var boxWidth = Textures.Panels[ChatView.Panel.TextureNum].ToSize().Width - 16;
 
         // Trim whitespace and measure
         message = message.Trim();
@@ -70,8 +70,8 @@ internal static class Chat
 
     public static void Type()
     {
-        var tool = TextBoxes.Chat;
-        var panel = Panels.Chat;
+        var tool = ChatView.MessageTextBox;
+        var panel = ChatView.Panel;
 
         panel.Visible = !panel.Visible;
 

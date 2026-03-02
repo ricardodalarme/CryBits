@@ -1,5 +1,5 @@
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.UI.Events;
+using CryBits.Client.UI;
+using CryBits.Client.UI.Game.Views;
 using CryBits.Entities.Shop;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
@@ -19,7 +19,7 @@ internal class ShopHandler
     internal void ShopOpen(ShopOpenPacket packet)
     {
         // Open shop panel
-        PanelsEvents.ShopOpen = Shop.List.Get(packet.Id);
-        Panels.Shop.Visible = PanelsEvents.ShopOpen != null;
+        ShopView.OpenedShop = Shop.List.Get(packet.Id);
+        ShopView.Panel.Visible = ShopView.OpenedShop != null;
     }
 }

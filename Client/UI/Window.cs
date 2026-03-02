@@ -7,7 +7,9 @@ using CryBits.Client.Framework.Interfacily;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Managers;
 using CryBits.Client.Network;
-using CryBits.Client.UI.Events;
+using CryBits.Client.UI.Game;
+using CryBits.Client.UI.Menu;
+using CryBits.Client.UI.Menu.Views;
 using SFML.Window;
 
 namespace CryBits.Client.UI;
@@ -58,8 +60,8 @@ internal static class Window
         Screen.Current?.MouseUp();
 
         // Reset drag/move state.
-        PanelsEvents.InventoryChange = 0;
-        PanelsEvents.HotbarChange = -1;
+        GameScreen.InventoryChange = 0;
+        GameScreen.HotbarChange = -1;
     }
 
     private static void OnMouseMoved(object sender, MouseMoveEventArgs e)
@@ -92,11 +94,11 @@ internal static class Window
         AudioManager.Instance.StopAllSounds();
         if (Options.Musics) AudioManager.Instance.PlayMusic(Musics.Menu);
 
-        CheckBoxes.ConnectSaveUsername.Checked = Options.SaveUsername;
-        if (Options.SaveUsername) TextBoxes.ConnectUsername.Text = Options.Username;
+        LoginView.SaveUsernameCheckBox.Checked = Options.SaveUsername;
+        if (Options.SaveUsername) LoginView.UsernameTextBox.Text = Options.Username;
 
-        PanelsEvents.MenuClose();
-        Panels.Connect.Visible = true;
+        MenuScreen.CloseMenus();
+        LoginView.LoginPanel.Visible = true;
         Screen.Current = Screens.Menu;
     }
 }

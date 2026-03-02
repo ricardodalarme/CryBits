@@ -8,7 +8,8 @@ using CryBits.Client.Network;
 using CryBits.Client.Network.Handlers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI;
-using CryBits.Client.UI.Events;
+using CryBits.Client.UI.Game;
+using CryBits.Client.UI.Menu;
 using CryBits.Client.Worlds;
 
 namespace CryBits.Client;
@@ -32,10 +33,8 @@ internal static class Program
         Renderer.Instance.Init();
 
         // Register all input and UI event handlers.
-        CheckBoxEvents.Bind();
-        ButtonsEvents.Bind();
-        PanelsEvents.Bind();
-        TextBoxesEvents.Bind();
+        new MenuScreen().Bind();
+        new GameScreen().Bind();
         Window.Bind();
         GameInput.Bind();
 

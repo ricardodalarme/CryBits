@@ -1,5 +1,4 @@
 using System;
-using CryBits.Client.Framework.Constants;
 using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
@@ -16,16 +15,16 @@ internal class AuthSender(PacketSender packetSender)
         NetworkClient.LatencySend = Environment.TickCount;
     }
 
-    public void Connect() => packetSender.Packet(new ConnectPacket
+    public void Connect(string username, string password) => packetSender.Packet(new ConnectPacket
     {
-        Username = TextBoxes.ConnectUsername.Text,
-        Password = TextBoxes.ConnectPassword.Text,
+        Username = username,
+        Password = password,
         IsClientAccess = false
     });
 
-    public void Register() => packetSender.Packet(new RegisterPacket
+    public void Register(string username, string password) => packetSender.Packet(new RegisterPacket
     {
-        Username = TextBoxes.RegisterUsername.Text,
-        Password = TextBoxes.RegisterPassword.Text
+        Username = username,
+        Password = password
     });
 }

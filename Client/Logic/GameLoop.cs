@@ -10,9 +10,10 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.Systems.Combat;
 using CryBits.Client.Systems.Core;
 using CryBits.Client.Systems.Movement;
-using CryBits.Client.UI.Events;
+using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
+using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Client.Logic;
 
@@ -60,7 +61,7 @@ internal class GameLoop(RenderPipeline renderPipeline)
             // Dispatch window events.
             Renderer.Instance.RenderWindow.DispatchEvents();
 
-            TextBox();
+            UpdateTextBox();
 
             if (Screen.Current == Screens.Game)
             {
@@ -81,7 +82,7 @@ internal class GameLoop(RenderPipeline renderPipeline)
                 }
 
                 // Update information panel visibility
-                PanelsEvents.CheckInformation();
+                InformationView.CheckInformation();
             }
 
             // Use high-resolution stopwatch for delta time
@@ -109,13 +110,13 @@ internal class GameLoop(RenderPipeline renderPipeline)
         Program.Close();
     }
 
-    private void TextBox()
+    private void UpdateTextBox()
     {
         // Toggle textbox caret visibility on a timer.
         if (TextBoxTimer < Environment.TickCount)
         {
             TextBoxTimer = Environment.TickCount + 500;
-            TextBoxesEvents.Signal = !TextBoxesEvents.Signal;
+            TextBox.BlinkSignal = !TextBox.BlinkSignal;
 
             // Re-evaluate focused textbox if needed.
             Framework.Interfacily.Components.TextBox.Focus();

@@ -2,10 +2,10 @@ using System;
 using Arch.Core;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
-using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
@@ -102,8 +102,8 @@ internal class Me(string name) : Player(name)
         // Only proceed if attack key pressed and player may attack.
         if (!InputManager.Instance.IsKeyPressed(Keyboard.Key.LControl)) return;
         if (AttackTimer > 0) return;
-        if (Panels.Trade.Visible) return;
-        if (Panels.Shop.Visible) return;
+        if (TradeView.Panel.Visible) return;
+        if (ShopView.Panel.Visible) return;
 
         AttackTimer = Environment.TickCount;
         PlayerSender.Instance.PlayerAttack();

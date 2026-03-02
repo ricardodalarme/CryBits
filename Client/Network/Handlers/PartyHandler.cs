@@ -1,8 +1,8 @@
 using CryBits.Client.Entities;
 using CryBits.Client.Framework;
-using CryBits.Client.Framework.Constants;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.UI.Events;
+using CryBits.Client.UI;
+using CryBits.Client.UI.Game.Views;
 using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
@@ -28,7 +28,7 @@ internal class PartyHandler(PartySender partySender)
         }
 
         // Show party invitation panel
-        PanelsEvents.PartyInvitation = packet.PlayerInvitation;
-        Panels.PartyInvitation.Visible = true;
+        PartyInvitationView.InviterName = packet.PlayerInvitation;
+        PartyInvitationView.Panel.Visible = true;
     }
 }

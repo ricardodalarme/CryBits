@@ -1,8 +1,8 @@
 using CryBits.Client.Entities;
 using CryBits.Client.Framework;
-using CryBits.Client.Framework.Constants;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.UI.Events;
+using CryBits.Client.UI;
+using CryBits.Client.UI.Game.Views;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
@@ -20,14 +20,14 @@ internal class TradeHandler(TradeSender tradeSender)
         var state = packet.State;
 
         // Set trade panel visibility
-        Panels.Trade.Visible = packet.State;
+        TradeView.Panel.Visible = packet.State;
 
         if (state)
         {
             // Reset trade buttons
-            Buttons.TradeOfferConfirm.Visible = true;
-            Panels.TradeAmount.Visible = Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
-            Panels.TradeOfferDisable.Visible = false;
+            TradeView.ConfirmOfferButton.Visible = true;
+            TradeAmountView.Panel.Visible = TradeView.AcceptOfferButton.Visible = TradeView.DeclineOfferButton.Visible = false;
+            TradeView.OfferDisabledPanel.Visible = false;
 
             // Clear trade offer data
             Player.Me.TradeOffer = new ItemSlot[MaxInventory];
@@ -52,8 +52,8 @@ internal class TradeHandler(TradeSender tradeSender)
         }
 
         // Show trade invitation panel
-        PanelsEvents.TradeInvitation = packet.PlayerInvitation;
-        Panels.TradeInvitation.Visible = true;
+        TradeInvitationView.InviterName = packet.PlayerInvitation;
+        TradeInvitationView.Panel.Visible = true;
     }
 
     [PacketHandler]
@@ -63,14 +63,14 @@ internal class TradeHandler(TradeSender tradeSender)
         {
             case TradeStatus.Accepted:
             case TradeStatus.Declined:
-                Buttons.TradeOfferConfirm.Visible = true;
-                Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = false;
-                Panels.TradeOfferDisable.Visible = false;
+                TradeView.ConfirmOfferButton.Visible = true;
+                TradeView.AcceptOfferButton.Visible = TradeView.DeclineOfferButton.Visible = false;
+                TradeView.OfferDisabledPanel.Visible = false;
                 break;
             case TradeStatus.Confirmed:
-                Buttons.TradeOfferConfirm.Visible = false;
-                Buttons.TradeOfferAccept.Visible = Buttons.TradeOfferDecline.Visible = true;
-                Panels.TradeOfferDisable.Visible = false;
+                TradeView.ConfirmOfferButton.Visible = false;
+                TradeView.AcceptOfferButton.Visible = TradeView.DeclineOfferButton.Visible = true;
+                TradeView.OfferDisabledPanel.Visible = false;
                 break;
         }
     }

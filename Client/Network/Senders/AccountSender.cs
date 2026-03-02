@@ -1,6 +1,4 @@
 using System.Linq;
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.UI.Events;
 using CryBits.Entities;
 using CryBits.Packets.Client;
 
@@ -10,26 +8,26 @@ internal class AccountSender(PacketSender packetSender)
 {
     public static AccountSender Instance { get; } = new(PacketSender.Instance);
 
-    public void CreateCharacter() =>
+    public void CreateCharacter(string name, bool isMale, short @class, short textureNum) =>
         packetSender.Packet(new CreateCharacterPacket
         {
-            Name = TextBoxes.CreateCharacterName.Text,
-            ClassId = Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value.Id.ToString(),
-            GenderMale = CheckBoxes.GenderMale.Checked,
-            TextureNum = PanelsEvents.CreateCharacterTex
+            Name = name,
+            ClassId = Class.List.ElementAt(@class).Value.Id.ToString(),
+            GenderMale = isMale,
+            TextureNum = textureNum
         });
 
-    public void CharacterUse() =>
+    public void CharacterUse(int characterIndex) =>
         packetSender.Packet(new CharacterUsePacket
         {
-            CharacterIndex = PanelsEvents.SelectCharacter
+            CharacterIndex = characterIndex
         });
 
     public void CharacterCreate() => packetSender.Packet(new CharacterCreatePacket());
 
-    public void CharacterDelete() =>
+    public void CharacterDelete(int characterIndex) =>
         packetSender.Packet(new CharacterDeletePacket
         {
-            CharacterIndex = PanelsEvents.SelectCharacter
+            CharacterIndex = characterIndex
         });
 }

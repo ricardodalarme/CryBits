@@ -1,6 +1,6 @@
 using System;
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.UI.Events;
+using CryBits.Client.UI.Menu;
+using CryBits.Client.UI.Menu.Views;
 using CryBits.Entities;
 using CryBits.Packets.Server;
 
@@ -26,11 +26,11 @@ internal class AuthHandler
     internal void Connect(ConnectPacket _)
     {
         // Reset client-side character selection state
-        PanelsEvents.SelectCharacter = 0;
+        SelectCharacterView.CurrentCharacter = 0;
         Class.List = [];
 
         // Open character selection panel
-        PanelsEvents.MenuClose();
-        Panels.SelectCharacter.Visible = true;
+        MenuScreen.CloseMenus();
+        SelectCharacterView.SelectCharacterPanel.Visible = true;
     }
 }

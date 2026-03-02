@@ -4,13 +4,14 @@ using System.Drawing;
 using System.Linq;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework;
-using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Client.Logic;
 using CryBits.Client.Managers;
-using CryBits.Client.UI.Events;
+using CryBits.Client.UI.Game;
+using CryBits.Client.UI.Game.Views;
+using CryBits.Client.UI.Menu.Views;
 using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Extensions;
@@ -96,7 +97,7 @@ internal sealed class UIRenderer(
         text = TextBreak(text, tool.Width - 10);
 
         if (TextBox.Focused != null &&
-            TextBox.Focused == tool && TextBoxesEvents.Signal) text += "|";
+            TextBox.Focused == tool && TextBox.BlinkSignal) text += "|";
         renderer.DrawText(text, position.X + 4, position.Y + 2, Color.White);
     }
 
@@ -152,25 +153,25 @@ internal sealed class UIRenderer(
     /// </summary>
     public void DrawChat()
     {
-        var tool = Panels.Chat;
+        var tool = ChatView.Panel;
         tool.Visible = TextBox.Focused != null &&
                        TextBox.Focused.Name.Equals("Chat");
 
         if (tool.Visible || GameLoop.ChatTimer >= Environment.TickCount && Options.Chat)
-            for (var i = UI.Chat.LinesFirst; i <= UI.Chat.LinesVisible + UI.Chat.LinesFirst; i++)
-                if (UI.Chat.Order.Count > i)
-                    renderer.DrawText(UI.Chat.Order[i].Text, 16, 461 + 11 * (i - UI.Chat.LinesFirst),
-                        UI.Chat.Order[i].Color);
+            for (var i = Chat.LinesFirst; i <= Chat.LinesVisible + Chat.LinesFirst; i++)
+                if (Chat.Order.Count > i)
+                    renderer.DrawText(Chat.Order[i].Text, 16, 461 + 11 * (i - Chat.LinesFirst),
+                        Chat.Order[i].Color);
 
         if (!tool.Visible)
-            renderer.DrawText("Press [Enter] to open chat.", TextBoxes.Chat.Position.X + 5,
-                TextBoxes.Chat.Position.Y + 3,
+            renderer.DrawText("Press [Enter] to open chat.", ChatView.MessageTextBox.Position.X + 5,
+                ChatView.MessageTextBox.Position.Y + 3,
                 Color.White);
     }
 
     private void DrawInformation(Panel tool)
     {
-        var item = Item.List.Get(PanelsEvents.InformationId);
+        var item = Item.List.Get(InformationView.CurrentId);
         var data = new List<string>();
 
         if (item == null) return;
@@ -189,12 +190,12 @@ internal sealed class UIRenderer(
         renderer.Draw(Textures.Items[item.Texture],
             new Rectangle(tool.Position.X + 9, tool.Position.Y + 21, 64, 64));
 
-        if (Panels.Shop.Visible)
-            if (PanelsEvents.ShopSlot >= 0)
-                data.Add("Price: " + PanelsEvents.ShopOpen.Sold[PanelsEvents.ShopSlot].Price);
-            else if (PanelsEvents.InventorySlot > 0)
-                if (PanelsEvents.ShopOpen.FindBought(item) != null)
-                    data.Add("Sale price: " + PanelsEvents.ShopOpen.FindBought(item).Price);
+        if (ShopView.Panel.Visible)
+            if (ShopView.CurrentSlot >= 0)
+                data.Add("Price: " + ShopView.OpenedShop.Sold[ShopView.CurrentSlot].Price);
+            else if (InventoryView.CurrentSlot > 0)
+                if (ShopView.OpenedShop.FindBought(item) != null)
+                    data.Add("Sale price: " + ShopView.OpenedShop.FindBought(item).Price);
 
         switch (item.Type)
         {
@@ -249,10 +250,10 @@ internal sealed class UIRenderer(
             renderer.DrawText(indicator, tool.Position.X + 16 + 36 * i, tool.Position.Y + 22, Color.White);
         }
 
-        if (PanelsEvents.HotbarChange >= 0)
-            if (Player.Me.Hotbar[PanelsEvents.HotbarChange].Type == SlotType.Item)
+        if (GameScreen.HotbarChange >= 0)
+            if (Player.Me.Hotbar[GameScreen.HotbarChange].Type == SlotType.Item)
                 renderer.Draw(
-                    Textures.Items[Player.Me.Inventory[Player.Me.Hotbar[PanelsEvents.HotbarChange].Slot].Item.Texture],
+                    Textures.Items[Player.Me.Inventory[Player.Me.Hotbar[GameScreen.HotbarChange].Slot].Item.Texture],
                     new Point(InputManager.Instance.MousePosition.X + 6,
                         InputManager.Instance.MousePosition.Y + 6));
     }
@@ -298,15 +299,15 @@ internal sealed class UIRenderer(
                 tool.Position + new Size(7, 30), (byte)(i + 1),
                 numColumns);
 
-        if (PanelsEvents.InventoryChange > 0)
-            renderer.Draw(Textures.Items[Player.Me.Inventory[PanelsEvents.InventoryChange].Item.Texture],
+        if (GameScreen.InventoryChange > 0)
+            renderer.Draw(Textures.Items[Player.Me.Inventory[GameScreen.InventoryChange].Item.Texture],
                 new Point(InputManager.Instance.MousePosition.X + 6,
                     InputManager.Instance.MousePosition.Y + 6));
     }
 
     private void DrawPartyInvitation(Panel tool)
     {
-        renderer.DrawText(PanelsEvents.PartyInvitation + " has invite you to a party. Would you like to join?",
+        renderer.DrawText(PartyInvitationView.InviterName + " has invite you to a party. Would you like to join?",
             tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
     }
 
@@ -334,7 +335,7 @@ internal sealed class UIRenderer(
 
     private void DrawTradeInvitation(Panel tool)
     {
-        renderer.DrawText(PanelsEvents.TradeInvitation + " has invite you to a trade. Would you like to join?",
+        renderer.DrawText(TradeInvitationView.InviterName + " has invite you to a trade. Would you like to join?",
             tool.Position.X + 14, tool.Position.Y + 33, Color.White, 160);
     }
 
@@ -351,14 +352,14 @@ internal sealed class UIRenderer(
 
     private void DrawShop(Panel tool)
     {
-        var name = PanelsEvents.ShopOpen.Name;
+        var name = ShopView.OpenedShop.Name;
         renderer.DrawText(name, tool.Position.X + 131, tool.Position.Y + 28, Color.White, TextAlign.Center);
-        renderer.DrawText("Currency: " + PanelsEvents.ShopOpen.Currency.Name, tool.Position.X + 10,
+        renderer.DrawText("Currency: " + ShopView.OpenedShop.Currency.Name, tool.Position.X + 10,
             tool.Position.Y + 195,
             Color.White);
 
-        for (byte i = 0; i < PanelsEvents.ShopOpen.Sold.Count; i++)
-            itemRenderer.DrawItem(PanelsEvents.ShopOpen.Sold[i].Item, PanelsEvents.ShopOpen.Sold[i].Amount,
+        for (byte i = 0; i < ShopView.OpenedShop.Sold.Count; i++)
+            itemRenderer.DrawItem(ShopView.OpenedShop.Sold[i].Item, ShopView.OpenedShop.Sold[i].Amount,
                 tool.Position + new Size(7, 50), (byte)(i + 1), 7);
     }
 
@@ -366,21 +367,21 @@ internal sealed class UIRenderer(
     private void DrawSelectCharacterClass()
     {
         var textPosition = new Point(399, 425);
-        var text = "(" + (PanelsEvents.SelectCharacter + 1) + ") None";
+        var text = "(" + (SelectCharacterView.CurrentCharacter + 1) + ") None";
 
-        if (!ButtonsEvents.Characters_Change_Buttons())
+        if (!SelectCharacterView.UpdateButtonVisibility())
         {
             renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
             return;
         }
 
-        if (PanelsEvents.SelectCharacter >= PanelsEvents.Characters.Length)
+        if (SelectCharacterView.CurrentCharacter >= SelectCharacterView.Characters.Length)
         {
             renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
             return;
         }
 
-        var textureNum = PanelsEvents.Characters[PanelsEvents.SelectCharacter].TextureNum;
+        var textureNum = SelectCharacterView.Characters[SelectCharacterView.CurrentCharacter].TextureNum;
         if (textureNum > 0)
         {
             renderer.Draw(Textures.Faces[textureNum], new Point(353, 442));
@@ -389,20 +390,20 @@ internal sealed class UIRenderer(
                 Direction.Down, AnimationStopped);
         }
 
-        text = "(" + (PanelsEvents.SelectCharacter + 1) + ") " +
-               PanelsEvents.Characters[PanelsEvents.SelectCharacter].Name;
+        text = "(" + (SelectCharacterView.CurrentCharacter + 1) + ") " +
+               SelectCharacterView.Characters[SelectCharacterView.CurrentCharacter].Name;
         renderer.DrawText(text, textPosition.X, textPosition.Y, Color.White, TextAlign.Center);
     }
 
     private void DrawCreateCharacterClass()
     {
         short textureNum = 0;
-        var @class = Class.List.ElementAt(PanelsEvents.CreateCharacterClass).Value;
+        var @class = Class.List.ElementAt(CreateCharacterView.CurrentClass).Value;
 
-        if (CheckBoxes.GenderMale.Checked && @class.TextureMale.Count > 0)
-            textureNum = @class.TextureMale[PanelsEvents.CreateCharacterTex];
+        if (CreateCharacterView.GenderMaleCheckBox.Checked && @class.TextureMale.Count > 0)
+            textureNum = @class.TextureMale[CreateCharacterView.CurrentTexture];
         else if (@class.TextureFemale.Count > 0)
-            textureNum = @class.TextureFemale[PanelsEvents.CreateCharacterTex];
+            textureNum = @class.TextureFemale[CreateCharacterView.CurrentTexture];
 
         if (textureNum > 0)
         {

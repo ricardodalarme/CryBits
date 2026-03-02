@@ -1,7 +1,7 @@
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.UI;
+using CryBits.Client.UI.Game;
 using SFML.Window;
 
 namespace CryBits.Client.Logic;
