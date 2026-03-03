@@ -22,9 +22,6 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
     // Key = texture index from Textures.Tiles, Value = accumulated geometry for that texture.
     private readonly Dictionary<int, VertexArray> _batches = [];
 
-    // Single VertexArray for all weather particles — one draw call per frame.
-    private readonly VertexArray _weatherBatch = new(PrimitiveType.Triangles);
-
     /// <summary>
     /// Build and submit all tile geometry for the given layer type.
     /// Regular and auto-tiles are handled automatically.
@@ -78,35 +75,6 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
         var panorama = context.CurrentMap.Data.Panorama;
         if (panorama > 0)
             renderer.Draw(Textures.Panoramas[panorama], new System.Drawing.Point(0));
-    }
-
-    /// <summary>Render weather particles and lightning overlay.</summary>
-    public void DrawWeather()
-    {
-        var data = context.CurrentMap.Data.Weather;
-        if (data.Type == 0) return;
-
-        var srcX = data.Type switch
-        {
-            Weather.Snowing => 32,
-            _ => 0
-        };
-
-        // Batch all visible particles into one draw call.
-        _weatherBatch.Clear();
-        var tint = new Color(255, 255, 255, 150);
-        foreach (var p in context.CurrentMap.Weather.Particles)
-            if (p.Visible)
-                AppendQuad(_weatherBatch, p.X, p.Y, srcX, 0, 32, 32, tint);
-
-        if (_weatherBatch.VertexCount > 0)
-            renderer.RenderWindow.Draw(_weatherBatch, new RenderStates(Textures.Weather));
-
-        // Lightning full-screen flash overlay — single draw, kept as-is.
-        if (context.CurrentMap.Weather.Lightning > 0)
-            renderer.Draw(Textures.Blank,
-                0, 0, 0, 0, ScreenWidth, ScreenHeight,
-                new Color(255, 255, 255, context.CurrentMap.Weather.Lightning));
     }
 
     /// <summary>Render the map name label (drawn in world space near the top-right).</summary>

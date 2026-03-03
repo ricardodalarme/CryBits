@@ -35,7 +35,6 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
             if (!CryBits.Entities.Map.Map.List.ContainsKey(id))
             {
                 MapRepository.Read(id);
-                context.CurrentMap.Weather.Update();
                 context.CurrentMap.Data.Update();
             }
 
@@ -67,8 +66,8 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         // Persist map to disk
         MapRepository.Write(map);
 
-        // Update weather particles and map state
-        context.CurrentMap.Weather.UpdateType();
+        // Reset weather ECS state for the new map and spawn the fog entity.
+        WeatherSpawner.Reset(context.World, context.CurrentMap.Data.Weather.Type);
         FogSpawner.Spawn(context.World, context.CurrentMap.Data.Fog);
         context.CurrentMap.Data.Update();
     }

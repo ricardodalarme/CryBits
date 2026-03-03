@@ -9,6 +9,7 @@ using CryBits.Client.Managers;
 using CryBits.Client.Network;
 using CryBits.Client.Systems.Character;
 using CryBits.Client.Systems.Core;
+using CryBits.Client.Systems.Map;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
 using Color = SFML.Graphics.Color;
@@ -45,6 +46,12 @@ internal sealed class RenderPipeline
         "FringeRenderSystems",
         new TextRenderSystem(GameContext.Instance.World),
         new ScrollingOverlayRenderSystem(GameContext.Instance.World)
+    );
+
+    // Weather render systems: particle batch + lightning overlay, drawn after fringe tiles.
+    private static readonly Group<int> _weatherRenderSystems = new(
+        "WeatherRenderSystems",
+        new WeatherRenderSystem(GameContext.Instance.World)
     );
 
     // HUD-layer render systems: vital bars drawn above names but below fixed-position UI.
@@ -91,7 +98,7 @@ internal sealed class RenderPipeline
 
         // Foreground tile layer and atmospheric effects.
         _mapRenderer.DrawLayer((byte)Layer.Fringe);
-        _mapRenderer.DrawWeather();
+        _weatherRenderSystems.Update(0);
 
         // Fringe systems — floating names, fog overlay.
         _fringeRenderSystems.Update(0);
