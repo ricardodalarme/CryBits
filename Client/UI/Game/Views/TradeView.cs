@@ -1,9 +1,9 @@
 using System.Drawing;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Worlds;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
 using SFML.Window;
@@ -50,15 +50,15 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer) : I
     }
 
     private void OnRenderOwnSlot(int slot, Point pos) =>
-        itemRenderer.DrawItem(Player.Me.TradeOffer[slot].Item, Player.Me.TradeOffer[slot].Amount, pos);
+        itemRenderer.DrawItem(GameContext.Instance.LocalPlayer.GetTrade().Offer[slot].Item, GameContext.Instance.LocalPlayer.GetTrade().Offer[slot].Amount, pos);
 
     private void OnRenderTheirSlot(int slot, Point pos) =>
-        itemRenderer.DrawItem(Player.Me.TradeTheirOffer[slot].Item, Player.Me.TradeTheirOffer[slot].Amount, pos);
+        itemRenderer.DrawItem(GameContext.Instance.LocalPlayer.GetTrade().TheirOffer[slot].Item, GameContext.Instance.LocalPlayer.GetTrade().TheirOffer[slot].Amount, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
         if (!Panel.Visible) return;
-        if (Player.Me.TradeOffer[slot].Item == null) return;
+        if (GameContext.Instance.LocalPlayer.GetTrade().Offer[slot].Item == null) return;
 
         if (e.Button == Mouse.Button.Right) tradeSender.TradeOffer(slot, 0);
     }
@@ -68,7 +68,7 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer) : I
         if (GameScreen.InventoryChange <= 0) return;
 
         // Add item to trade
-        if (Player.Me.Inventory[GameScreen.InventoryChange].Amount == 1)
+        if (GameContext.Instance.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange]?.Amount == 1)
             tradeSender.TradeOffer(slot, GameScreen.InventoryChange);
         else
         {
@@ -92,8 +92,9 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer) : I
         OfferDisabledPanel.Visible = false;
         tradeSender.TradeOfferState(TradeStatus.Accepted);
 
-        Player.Me.TradeOffer = new ItemSlot[MaxInventory];
-        Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory];
+        ref var trade = ref GameContext.Instance.LocalPlayer.GetTrade();
+        trade.Offer = new ItemSlot[MaxInventory];
+        trade.TheirOffer = new ItemSlot[MaxInventory];
     }
 
     private void OnDeclineOfferPressed()

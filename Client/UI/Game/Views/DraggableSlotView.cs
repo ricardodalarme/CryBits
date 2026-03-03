@@ -1,9 +1,9 @@
 using System.Drawing;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Managers;
+using CryBits.Client.Worlds;
 using CryBits.Enums;
 
 namespace CryBits.Client.UI.Game.Views;
@@ -25,12 +25,13 @@ internal class DraggableSlotView(ItemRenderer itemRenderer) : IView
 
         if (GameScreen.HotbarChange >= 0)
         {
-            if (Player.Me.Hotbar[GameScreen.HotbarChange].Type == SlotType.Item)
-                itemRenderer.DrawItem(Player.Me.Inventory[Player.Me.Hotbar[GameScreen.HotbarChange].Slot].Item, 1, pos);
+            var hotbarSlot = GameContext.Instance.LocalPlayer.GetHotbar().Slots[GameScreen.HotbarChange];
+            if (hotbarSlot?.Type == SlotType.Item)
+                itemRenderer.DrawItem(GameContext.Instance.LocalPlayer.GetInventory().Slots[hotbarSlot.Slot]?.Item, 1, pos);
         }
         else if (GameScreen.InventoryChange > 0)
         {
-            itemRenderer.DrawItem(Player.Me.Inventory[GameScreen.InventoryChange].Item, 1, pos);
+            itemRenderer.DrawItem(GameContext.Instance.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange]?.Item, 1, pos);
         }
     }
 }

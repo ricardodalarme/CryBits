@@ -3,8 +3,8 @@ using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Entities.Npc;
 using CryBits.Enums;
 using SFML.Graphics;
 
@@ -15,14 +15,14 @@ namespace CryBits.Client.Spawners;
 /// </summary>
 internal static class NpcSpawner
 {
-    public static Entity Spawn(World world, NpcInstance npc)
+    public static Entity Spawn(World world, Npc data, byte x, byte y, Direction direction, short[] currentVitals)
     {
-        var texture = Textures.Characters[npc.Data.Texture];
+        var texture = Textures.Characters[data.Texture];
         var size = texture.ToSize();
         var frameWidth = size.Width / Globals.AnimationAmountX;
         var frameHeight = size.Height / Globals.AnimationAmountY;
 
-        var textColor = npc.Data.Behaviour switch
+        var textColor = data.Behaviour switch
         {
             Behaviour.Friendly => Color.White,
             Behaviour.AttackOnSight => Color.Red,
@@ -30,22 +30,21 @@ internal static class NpcSpawner
             _ => Color.White
         };
 
-        // NPC current vitals come from the instance; max vitals come from the NPC template.
         var vitalsComponent = new VitalsComponent();
-        npc.Vital.CopyTo(vitalsComponent.Current, 0);
-        npc.Data.Vital.CopyTo(vitalsComponent.Max, 0);
+        currentVitals.CopyTo(vitalsComponent.Current, 0);
+        data.Vital.CopyTo(vitalsComponent.Max, 0);
 
         return world.Create(
-            new TransformComponent(npc.X * Globals.Grid, npc.Y * Globals.Grid),
+            new TransformComponent(x * Globals.Grid, y * Globals.Grid),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
-            new MovementComponent { TileX = npc.X, TileY = npc.Y, Direction = npc.Direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
-            new CharacterStateComponent { Direction = npc.Direction },
+            new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
+            new CharacterStateComponent { Direction = direction },
             new DamageTintComponent(),
             new ShadowComponent(Textures.Shadow),
             new NpcTagComponent(),
             vitalsComponent,
-            new TextComponent(npc.Data.Name, textColor, frameWidth / 2, -frameHeight / 2)
+            new TextComponent(data.Name, textColor, frameWidth / 2, -frameHeight / 2)
         );
     }
 }
