@@ -1,10 +1,11 @@
 namespace CryBits.Client.Components.Player;
 
 /// <summary>
-/// Current experience, experience needed for next level, and unspent points.
+/// Level, experience, and unspent points for a player character.
 /// </summary>
 internal struct LevelComponent
 {
+    public short Level;
     public int Experience;
     public int ExpNeeded;
     public short Points;

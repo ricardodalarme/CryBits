@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using CryBits.Entities;
 
 namespace CryBits.Client.Entities;
 
@@ -16,11 +15,5 @@ internal class Player(string name) : Character
 
     // Player data
     public string Name { get; set; } = name;
-    public short TextureNum { get; set; }
-    public short Level { get; set; }
-    public short[] Vital { get; set; } = new short[(byte)Enums.Vital.Count];
-    public short[] MaxVital { get; set; } = new short[(byte)Enums.Vital.Count];
-    public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
-    public Item?[] Equipment { get; set; } = new Item[(byte)Enums.Equipment.Count];
     public MapInstance MapInstance;
 }

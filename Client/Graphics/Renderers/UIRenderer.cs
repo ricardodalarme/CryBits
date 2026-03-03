@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using CryBits.Client.Components.Combat;
+using CryBits.Client.Components.Core;
+using CryBits.Client.Components.Party;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Graphics;
@@ -7,8 +10,10 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Logic;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
+using CryBits.Client.Worlds;
 using CryBits.Enums;
 using Color = SFML.Graphics.Color;
+using ArchEntity = Arch.Core.Entity;
 
 namespace CryBits.Client.Graphics.Renderers;
 
@@ -69,20 +74,25 @@ internal sealed class UIRenderer(
     /// </summary>
     public void DrawParty()
     {
-        for (byte i = 0; i < Player.Me.Party.Length; i++)
+        var world = GameContext.Instance.World;
+        var members = GameContext.Instance.LocalPlayer.GetParty().Members;
+        for (byte i = 0; i < members.Length; i++)
         {
+            var entity = members[i];
             renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
             renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
-            if (Player.Me.Party[i].Vital[(byte)Vital.Hp] > 0)
-                renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
-                    Player.Me.Party[i].Vital[(byte)Vital.Hp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Hp],
-                    8);
-            if (Player.Me.Party[i].Vital[(byte)Vital.Mp] > 0)
-                renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
-                    Player.Me.Party[i].Vital[(byte)Vital.Mp] * 82 / Player.Me.Party[i].MaxVital[(byte)Vital.Mp],
-                    8);
-
-            renderer.DrawText(Player.Me.Party[i].Name, 10, 79 + 27 * i, Color.White);
+            if (entity != ArchEntity.Null)
+            {
+                var vitals = world.Get<VitalsComponent>(entity);
+                if (vitals.Current[(byte)Vital.Hp] > 0)
+                    renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 8,
+                        vitals.Current[(byte)Vital.Hp] * 82 / vitals.Max[(byte)Vital.Hp], 8);
+                if (vitals.Current[(byte)Vital.Mp] > 0)
+                    renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
+                        vitals.Current[(byte)Vital.Mp] * 82 / vitals.Max[(byte)Vital.Mp], 8);
+            }
+            var name = world.Get<TextComponent>(entity).Text;
+            renderer.DrawText(name, 10, 79 + 27 * i, Color.White);
         }
     }
 }

@@ -1,19 +1,22 @@
+using CryBits.Client.Components.Party;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
+using CryBits.Client.Worlds;
 using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class PartyHandler(PartySender partySender)
+internal class PartyHandler(PartySender partySender, GameContext context)
 {
     [PacketHandler]
     internal void Party(PartyPacket packet)
     {
-        // Read party members
-        Player.Me.Party = new Player[packet.Members.Length];
-        for (byte i = 0; i < Player.Me.Party.Length; i++) Player.Me.Party[i] = Player.Get(packet.Members[i]);
+        ref var party = ref context.LocalPlayer.GetParty();
+        party.Members = new Arch.Core.Entity[packet.Members.Length];
+        for (byte i = 0; i < party.Members.Length; i++)
+            party.Members[i] = Player.Get(packet.Members[i]).Entity;
     }
 
     [PacketHandler]
