@@ -69,14 +69,7 @@ internal class GameLoop(RenderPipeline renderPipeline)
             {
                 if (timer30 < Environment.TickCount)
                 {
-                    // Player logic.
-                    for (byte i = 0; i < Player.List.Count; i++)
-                        Player.List[i].Logic();
-
-                    // NPC logic.
-                    for (byte i = 0; i < GameContext.Instance.CurrentMap.Npc.Length; i++)
-                        if (GameContext.Instance.CurrentMap.Npc[i].Data != null)
-                            GameContext.Instance.CurrentMap.Npc[i].Logic();
+                    Player.Me.Logic();
 
                     // Reset 30 ms timer
                     timer30 = Environment.TickCount + 30;
