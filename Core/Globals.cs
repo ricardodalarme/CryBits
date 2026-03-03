@@ -18,6 +18,16 @@ public static class Globals
     /// <summary>Attack cooldown (milliseconds).</summary>
     public const short AttackSpeed = 750;
 
+    /// <summary>
+    /// Walk speed in world-pixels per second.
+    /// </summary>
+    public const float WalkSpeedPixelsPerSecond = 60f;
+
+    /// <summary>
+    /// Run speed in world-pixels per second.
+    /// </summary>
+    public const float RunSpeedPixelsPerSecond = 90f;
+
     /// <summary>Animation row index for right-facing frames.</summary>
     public const byte AnimationRight = 0;
     /// <summary>Animation row index for stopped frame.</summary>

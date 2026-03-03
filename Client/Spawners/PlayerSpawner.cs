@@ -31,7 +31,7 @@ internal static class PlayerSpawner
             new TransformComponent(player.X * Globals.Grid, player.Y * Globals.Grid),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
-            new CharacterMovementComponent { TileX = player.X, TileY = player.Y, Direction = player.Direction },
+            new MovementComponent { TileX = player.X, TileY = player.Y, Direction = player.Direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
             new CharacterStateComponent { Direction = player.Direction },
             new DamageTintComponent(),
             new ShadowComponent(Textures.Shadow),

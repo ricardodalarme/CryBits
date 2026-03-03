@@ -46,6 +46,7 @@ public struct MapNpcMovementPacket : IServerPacket
     public byte X, Y;
     public byte Direction;
     public byte Movement;
+    public float Speed;
 }
 
 [Serializable]

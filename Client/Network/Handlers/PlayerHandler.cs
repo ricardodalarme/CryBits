@@ -66,12 +66,12 @@ internal class PlayerHandler(GameContext context)
 
         if (player.Entity == ArchEntity.Null) return;
 
-        ref var movement = ref context.World.Get<CharacterMovementComponent>(player.Entity);
+        ref var movement = ref context.World.Get<MovementComponent>(player.Entity);
         movement.TileX = packet.X;
         movement.TileY = packet.Y;
         movement.Direction = (Direction)packet.Direction;
-        movement.OffsetX = 0;
-        movement.OffsetY = 0;
+        movement.OffsetX = 0f;
+        movement.OffsetY = 0f;
         movement.MovementState = Movement.Stopped;
     }
 
@@ -116,19 +116,20 @@ internal class PlayerHandler(GameContext context)
 
         if (player.Entity == ArchEntity.Null) return;
 
-        ref var movement = ref context.World.Get<CharacterMovementComponent>(player.Entity);
+        ref var movement = ref context.World.Get<MovementComponent>(player.Entity);
         movement.TileX = packet.X;
         movement.TileY = packet.Y;
         movement.Direction = (Direction)packet.Direction;
         movement.MovementState = (Movement)packet.Movement;
-        movement.OffsetX = 0;
-        movement.OffsetY = 0;
+        movement.SpeedPixelsPerSecond = packet.Speed;
+        movement.OffsetX = 0f;
+        movement.OffsetY = 0f;
 
         switch (movement.Direction)
         {
             case Direction.Up: movement.OffsetY = Grid; break;
-            case Direction.Down: movement.OffsetY = (short)(Grid * -1); break;
-            case Direction.Right: movement.OffsetX = (short)(Grid * -1); break;
+            case Direction.Down: movement.OffsetY = -Grid; break;
+            case Direction.Right: movement.OffsetX = -Grid; break;
             case Direction.Left: movement.OffsetX = Grid; break;
         }
     }
@@ -140,7 +141,7 @@ internal class PlayerHandler(GameContext context)
         player.Direction = (Direction)packet.Direction;
 
         if (player.Entity == ArchEntity.Null) return;
-        context.World.Get<CharacterMovementComponent>(player.Entity).Direction = (Direction)packet.Direction;
+        context.World.Get<MovementComponent>(player.Entity).Direction = (Direction)packet.Direction;
     }
 
     [PacketHandler]

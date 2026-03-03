@@ -23,9 +23,6 @@ internal abstract class Character
 
     /// <summary>
     /// Pushes server-authoritative state into ECS components every game tick.
-    /// Called from <see cref="Player.Logic"/> / <see cref="NpcInstance.Logic"/>.
-    /// Movement interpolation (offset, transform) is handled entirely by
-    /// <see cref="CharacterMovementSystem"/>.
     /// </summary>
     protected void Update()
     {
@@ -34,7 +31,7 @@ internal abstract class Character
         var world = GameContext.Instance.World;
 
         // Tile coords + direction — read by CharacterMovementSystem to compute Transform.
-        ref var movement = ref world.Get<CharacterMovementComponent>(Entity);
+        ref var movement = ref world.Get<MovementComponent>(Entity);
         movement.TileX = X;
         movement.TileY = Y;
         movement.Direction = Direction;

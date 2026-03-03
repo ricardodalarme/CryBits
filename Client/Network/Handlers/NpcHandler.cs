@@ -64,22 +64,23 @@ internal class NpcHandler(GameContext context)
 
         if (npc.Entity == Entity.Null) return;
 
-        ref var movement = ref context.World.Get<CharacterMovementComponent>(npc.Entity);
+        ref var movement = ref context.World.Get<MovementComponent>(npc.Entity);
         movement.TileX = packet.X;
         movement.TileY = packet.Y;
         movement.Direction = (Direction)packet.Direction;
         movement.MovementState = (Movement)packet.Movement;
-        movement.OffsetX = 0;
-        movement.OffsetY = 0;
+        movement.SpeedPixelsPerSecond = packet.Speed;
+        movement.OffsetX = 0f;
+        movement.OffsetY = 0f;
 
-        // Set the starting pixel offset when the tile actually changed so the
+        // Prime the starting pixel offset when the tile actually changed so the
         // movement system can interpolate back to zero.
         if (prevX != npc.X || prevY != npc.Y)
             switch (npc.Direction)
             {
                 case Direction.Up: movement.OffsetY = Grid; break;
-                case Direction.Down: movement.OffsetY = (short)(Grid * -1); break;
-                case Direction.Right: movement.OffsetX = (short)(Grid * -1); break;
+                case Direction.Down: movement.OffsetY = -Grid; break;
+                case Direction.Right: movement.OffsetX = -Grid; break;
                 case Direction.Left: movement.OffsetX = Grid; break;
             }
     }
@@ -119,10 +120,10 @@ internal class NpcHandler(GameContext context)
 
         if (npc.Entity == Entity.Null) return;
 
-        ref var movement = ref context.World.Get<CharacterMovementComponent>(npc.Entity);
+        ref var movement = ref context.World.Get<MovementComponent>(npc.Entity);
         movement.Direction = (Direction)packet.Direction;
-        movement.OffsetX = 0;
-        movement.OffsetY = 0;
+        movement.OffsetX = 0f;
+        movement.OffsetY = 0f;
     }
 
     [PacketHandler]

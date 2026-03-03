@@ -39,7 +39,7 @@ internal class Me(string name) : Player(name)
         // Entity is spawned on the first Logic() call; input cannot arrive before that.
         if (Entity == Entity.Null) return;
 
-        ref var movement = ref GameContext.Instance.World.Get<CharacterMovementComponent>(Entity);
+        ref var movement = ref GameContext.Instance.World.Get<MovementComponent>(Entity);
         if (movement.MovementState != Movement.Stopped) return;
 
         // Handle movement key input
@@ -49,29 +49,31 @@ internal class Me(string name) : Player(name)
         else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Right)) Move(Direction.Right, ref movement);
     }
 
-    private void Move(Direction direction, ref CharacterMovementComponent movement)
+    private void Move(Direction direction, ref MovementComponent movement)
     {
-        // Update facing direction and notify server.
-        if (Direction != direction)
-        {
-            Direction = direction;
-            movement.Direction = direction;
-            PlayerSender.Instance.PlayerDirection();
-        }
+        // Always sync facing direction (also updates server via the combined packet below).
+        Direction = direction;
+        movement.Direction = direction;
 
-        // Cancel if next tile is blocked.
-        if (MapInstance.TileBlocked(X, Y, direction)) return;
-
-        // Choose movement speed (walk/run).
-        movement.MovementState = InputManager.Instance.IsKeyPressed(Keyboard.Key.LShift)
+        // Determine locomotion mode before blocking check so the server knows intent.
+        var desired = InputManager.Instance.IsKeyPressed(Keyboard.Key.LShift)
             ? Movement.Moving
             : Movement.Walking;
 
-        // Notify server of movement.
-        PlayerSender.Instance.PlayerMove(movement.MovementState);
+        // Notify server with a single intent-only packet (no X/Y — server is authoritative).
+        PlayerSender.Instance.PlayerMove(direction, desired);
 
-        // Step to the target tile and set the starting pixel offset so the
-        // movement system can interpolate back to zero.
+        // Cancel if next tile is blocked (client does not step, server will agree).
+        if (MapInstance.TileBlocked(X, Y, direction)) return;
+
+        // Apply speed for local interpolation immediately (no network round-trip needed).
+        movement.MovementState = desired;
+        movement.SpeedPixelsPerSecond = desired == Movement.Moving
+            ? RunSpeedPixelsPerSecond
+            : WalkSpeedPixelsPerSecond;
+
+        // Step to the target tile and prime the starting pixel offset so the
+        // movement system interpolates it back to zero every rendered frame.
         switch (direction)
         {
             case Direction.Up:
@@ -80,12 +82,12 @@ internal class Me(string name) : Player(name)
                 movement.TileY = Y;
                 break;
             case Direction.Down:
-                movement.OffsetY = (short)(Grid * -1);
+                movement.OffsetY = -Grid;
                 Y++;
                 movement.TileY = Y;
                 break;
             case Direction.Right:
-                movement.OffsetX = (short)(Grid * -1);
+                movement.OffsetX = -Grid;
                 X++;
                 movement.TileX = X;
                 break;

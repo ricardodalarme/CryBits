@@ -13,7 +13,7 @@ public struct PlayerDataPacket : IServerPacket
 [Serializable] public struct PlayerVitalsPacket : IServerPacket { public string Name; public short[] Vital, MaxVital; }
 [Serializable] public struct PlayerLeavePacket : IServerPacket { public string Name; }
 [Serializable] public struct PlayerAttackPacket : IServerPacket { public string Name; public string Victim; public byte VictimType; }
-[Serializable] public struct PlayerMovePacket : IServerPacket { public string Name; public byte X, Y, Direction, Movement; }
+[Serializable] public struct PlayerMovePacket : IServerPacket { public string Name; public byte X, Y, Direction, Movement; public float Speed; }
 [Serializable] public struct PlayerDirectionPacket : IServerPacket { public string Name; public byte Direction; }
 [Serializable] public struct PlayerExperiencePacket : IServerPacket { public int Experience, ExpNeeded; public byte Points; }
 [Serializable] public struct PlayerInventoryPacket : IServerPacket { public Guid[] ItemIds; public short[] Amounts; }

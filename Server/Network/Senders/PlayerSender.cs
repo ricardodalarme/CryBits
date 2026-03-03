@@ -55,6 +55,10 @@ internal static class PlayerSender
 
     public static void PlayerMove(Player player, byte movement)
     {
+        var speed = movement == (byte)Movement.Moving
+            ? RunSpeedPixelsPerSecond
+            : WalkSpeedPixelsPerSecond;
+
         PackageSender.ToMapBut(player.MapInstance, player,
             new PlayerMovePacket
             {
@@ -62,7 +66,8 @@ internal static class PlayerSender
                 X = player.X,
                 Y = player.Y,
                 Direction = (byte)player.Direction,
-                Movement = movement
+                Movement = movement,
+                Speed = speed
             });
     }
 

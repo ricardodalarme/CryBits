@@ -2,8 +2,7 @@ using System;
 
 namespace CryBits.Packets.Client;
 
-[Serializable] public struct PlayerDirectionPacket : IClientPacket { public byte Direction; }
-[Serializable] public struct PlayerMovePacket : IClientPacket { public byte X, Y, Movement; }
+[Serializable] public struct PlayerMovePacket : IClientPacket { public byte Direction, Movement; }
 [Serializable] public struct PlayerAttackPacket : IClientPacket;
 [Serializable] public struct AddPointPacket : IClientPacket { public byte Attribute; }
 [Serializable] public struct CollectItemPacket : IClientPacket;

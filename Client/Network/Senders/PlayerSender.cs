@@ -11,9 +11,8 @@ internal class PlayerSender(PacketSender packetSender)
 {
     public static PlayerSender Instance { get; } = new(PacketSender.Instance);
 
-    public void PlayerDirection() => packetSender.Packet(new PlayerDirectionPacket { Direction = (byte)Player.Me.Direction });
-
-    public void PlayerMove(Movement movement) => packetSender.Packet(new PlayerMovePacket { X = Player.Me.X, Y = Player.Me.Y, Movement = (byte)movement });
+    public void PlayerMove(Direction direction, Movement movement) =>
+        packetSender.Packet(new PlayerMovePacket { Direction = (byte)direction, Movement = (byte)movement });
 
     public void PlayerAttack() => packetSender.Packet(new PlayerAttackPacket());
 

@@ -50,9 +50,20 @@ internal static class NpcSender
 
     public static void MapNpcMovement(NpcInstance npcInstance, byte movement)
     {
+        var speed = movement == (byte)Movement.Moving
+            ? Globals.RunSpeedPixelsPerSecond
+            : Globals.WalkSpeedPixelsPerSecond;
+
         PackageSender.ToMap(npcInstance.MapInstance,
             new MapNpcMovementPacket
-            { Index = npcInstance.Index, X = npcInstance.X, Y = npcInstance.Y, Direction = (byte)npcInstance.Direction, Movement = movement });
+            {
+                Index = npcInstance.Index,
+                X = npcInstance.X,
+                Y = npcInstance.Y,
+                Direction = (byte)npcInstance.Direction,
+                Movement = movement,
+                Speed = speed
+            });
     }
 
     public static void MapNpcDirection(NpcInstance npcInstance)

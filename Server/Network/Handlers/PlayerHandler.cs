@@ -9,18 +9,10 @@ namespace CryBits.Server.Network.Handlers;
 internal static class PlayerHandler
 {
     [PacketHandler]
-    internal static void PlayerDirection(Player player, PlayerDirectionPacket packet)
-    {
-        MovementSystem.ChangeDirection(player, (Direction)packet.Direction);
-    }
-
-    [PacketHandler]
     internal static void PlayerMove(Player player, PlayerMovePacket packet)
     {
-        if (player.X != packet.X || player.Y != packet.Y)
-            PlayerSender.PlayerPosition(player);
-        else
-            MovementSystem.Move(player, packet.Movement);
+        MovementSystem.ChangeDirection(player, (Direction)packet.Direction);
+        MovementSystem.Move(player, packet.Movement);
     }
 
     [PacketHandler]
