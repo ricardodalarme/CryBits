@@ -2,6 +2,7 @@ using System;
 using Arch.Core;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
+using CryBits.Client.Components.Movement;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
@@ -35,24 +36,26 @@ internal class Me(string name) : Player(name)
 
     public void CheckMovement()
     {
-        if (Movement > 0) return;
+        // Entity is spawned on the first Logic() call; input cannot arrive before that.
+        if (Entity == Entity.Null) return;
+
+        ref var movement = ref GameContext.Instance.World.Get<CharacterMovementComponent>(Entity);
+        if (movement.MovementState != Movement.Stopped) return;
 
         // Handle movement key input
-        if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Up)) Move(Direction.Up);
-        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Down)) Move(Direction.Down);
-        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Left)) Move(Direction.Left);
-        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Right)) Move(Direction.Right);
+        if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Up)) Move(Direction.Up, ref movement);
+        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Down)) Move(Direction.Down, ref movement);
+        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Left)) Move(Direction.Left, ref movement);
+        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Right)) Move(Direction.Right, ref movement);
     }
 
-    public void Move(Direction direction)
+    private void Move(Direction direction, ref CharacterMovementComponent movement)
     {
-        // Return if player cannot move.
-        if (Movement != Movement.Stopped) return;
-
         // Update facing direction and notify server.
         if (Direction != direction)
         {
             Direction = direction;
+            movement.Direction = direction;
             PlayerSender.Instance.PlayerDirection();
         }
 
@@ -60,32 +63,36 @@ internal class Me(string name) : Player(name)
         if (MapInstance.TileBlocked(X, Y, direction)) return;
 
         // Choose movement speed (walk/run).
-        if (InputManager.Instance.IsKeyPressed(Keyboard.Key.LShift))
-            Movement = Movement.Moving;
-        else
-            Movement = Movement.Walking;
+        movement.MovementState = InputManager.Instance.IsKeyPressed(Keyboard.Key.LShift)
+            ? Movement.Moving
+            : Movement.Walking;
 
         // Notify server of movement.
-        PlayerSender.Instance.PlayerMove();
+        PlayerSender.Instance.PlayerMove(movement.MovementState);
 
-        // Set pixel offset for smooth movement.
+        // Step to the target tile and set the starting pixel offset so the
+        // movement system can interpolate back to zero.
         switch (direction)
         {
             case Direction.Up:
-                Y2 = Grid;
+                movement.OffsetY = Grid;
                 Y--;
+                movement.TileY = Y;
                 break;
             case Direction.Down:
-                Y2 = Grid * -1;
+                movement.OffsetY = (short)(Grid * -1);
                 Y++;
+                movement.TileY = Y;
                 break;
             case Direction.Right:
-                X2 = Grid * -1;
+                movement.OffsetX = (short)(Grid * -1);
                 X++;
+                movement.TileX = X;
                 break;
             case Direction.Left:
-                X2 = Grid;
+                movement.OffsetX = Grid;
                 X--;
+                movement.TileX = X;
                 break;
         }
     }

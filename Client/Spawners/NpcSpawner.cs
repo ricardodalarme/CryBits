@@ -36,9 +36,10 @@ internal static class NpcSpawner
         npc.Data.Vital.CopyTo(vitalsComponent.Max, 0);
 
         return world.Create(
-            new TransformComponent(npc.PixelX, npc.PixelY),
+            new TransformComponent(npc.X * Globals.Grid, npc.Y * Globals.Grid),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
+            new CharacterMovementComponent { TileX = npc.X, TileY = npc.Y, Direction = npc.Direction },
             new CharacterStateComponent { Direction = npc.Direction },
             new DamageTintComponent(),
             new ShadowComponent(Textures.Shadow),

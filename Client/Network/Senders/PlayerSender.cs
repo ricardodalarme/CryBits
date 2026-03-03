@@ -1,6 +1,7 @@
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.UI.Game.Views;
+using CryBits.Enums;
 using CryBits.Packets.Client;
 using Attribute = CryBits.Enums.Attribute;
 
@@ -12,7 +13,7 @@ internal class PlayerSender(PacketSender packetSender)
 
     public void PlayerDirection() => packetSender.Packet(new PlayerDirectionPacket { Direction = (byte)Player.Me.Direction });
 
-    public void PlayerMove() => packetSender.Packet(new PlayerMovePacket { X = Player.Me.X, Y = Player.Me.Y, Movement = (byte)Player.Me.Movement });
+    public void PlayerMove(Movement movement) => packetSender.Packet(new PlayerMovePacket { X = Player.Me.X, Y = Player.Me.Y, Movement = (byte)movement });
 
     public void PlayerAttack() => packetSender.Packet(new PlayerAttackPacket());
 

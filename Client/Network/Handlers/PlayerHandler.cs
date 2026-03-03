@@ -1,4 +1,6 @@
 using System;
+using Arch.Core;
+using CryBits.Client.Components.Movement;
 using CryBits.Client.Entities;
 using CryBits.Client.Spawners;
 using CryBits.Client.UI.Game.Views;
@@ -10,6 +12,7 @@ using CryBits.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
+using ArchEntity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -61,9 +64,15 @@ internal class PlayerHandler(GameContext context)
         player.Y = packet.Y;
         player.Direction = (Direction)packet.Direction;
 
-        player.X2 = 0;
-        player.Y2 = 0;
-        player.Movement = Movement.Stopped;
+        if (player.Entity == ArchEntity.Null) return;
+
+        ref var movement = ref context.World.Get<CharacterMovementComponent>(player.Entity);
+        movement.TileX = packet.X;
+        movement.TileY = packet.Y;
+        movement.Direction = (Direction)packet.Direction;
+        movement.OffsetX = 0;
+        movement.OffsetY = 0;
+        movement.MovementState = Movement.Stopped;
     }
 
     [PacketHandler]
@@ -104,24 +113,34 @@ internal class PlayerHandler(GameContext context)
         player.X = packet.X;
         player.Y = packet.Y;
         player.Direction = (Direction)packet.Direction;
-        player.Movement = (Movement)packet.Movement;
-        player.X2 = 0;
-        player.Y2 = 0;
 
-        switch (player.Direction)
+        if (player.Entity == ArchEntity.Null) return;
+
+        ref var movement = ref context.World.Get<CharacterMovementComponent>(player.Entity);
+        movement.TileX = packet.X;
+        movement.TileY = packet.Y;
+        movement.Direction = (Direction)packet.Direction;
+        movement.MovementState = (Movement)packet.Movement;
+        movement.OffsetX = 0;
+        movement.OffsetY = 0;
+
+        switch (movement.Direction)
         {
-            case Direction.Up: player.Y2 = Grid; break;
-            case Direction.Down: player.Y2 = Grid * -1; break;
-            case Direction.Right: player.X2 = Grid * -1; break;
-            case Direction.Left: player.X2 = Grid; break;
+            case Direction.Up: movement.OffsetY = Grid; break;
+            case Direction.Down: movement.OffsetY = (short)(Grid * -1); break;
+            case Direction.Right: movement.OffsetX = (short)(Grid * -1); break;
+            case Direction.Left: movement.OffsetX = Grid; break;
         }
     }
 
     [PacketHandler]
     internal void PlayerDirection(PlayerDirectionPacket packet)
     {
-        // Update player's direction
-        Player.Get(packet.Name).Direction = (Direction)packet.Direction;
+        var player = Player.Get(packet.Name);
+        player.Direction = (Direction)packet.Direction;
+
+        if (player.Entity == ArchEntity.Null) return;
+        context.World.Get<CharacterMovementComponent>(player.Entity).Direction = (Direction)packet.Direction;
     }
 
     [PacketHandler]

@@ -1,118 +1,56 @@
 using System;
 using Arch.Core;
 using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
-using static CryBits.Globals;
 
 namespace CryBits.Client.Entities;
 
 internal abstract class Character
 {
-    /// <summary>Core character state and position fields.</summary>
-    public short[] Vital = new short[(byte)Enums.Vital.Count];
-
-    // ECS Entity
+    // ECS Entity handle — Entity.Null until the first Logic() call spawns it.
     public Entity Entity = Entity.Null;
 
+    // Server-authoritative fields. Written by network packet handlers.
     public byte X;
     public byte Y;
     public Direction Direction;
-    public Movement Movement;
-    public short X2;
-    public short Y2;
-    public byte Animation;
     public bool Attacking;
     public int Hurt;
     public int AttackTimer;
+    public short[] Vital = new short[(byte)Enums.Vital.Count];
 
-    /// <summary>Exact X position in pixels.</summary>
-    public int PixelX => X * Grid + X2;
-
-    /// <summary>Exact Y position in pixels.</summary>
-    public int PixelY => Y * Grid + Y2;
-
+    /// <summary>
+    /// Pushes server-authoritative state into ECS components every game tick.
+    /// Called from <see cref="Player.Logic"/> / <see cref="NpcInstance.Logic"/>.
+    /// Movement interpolation (offset, transform) is handled entirely by
+    /// <see cref="CharacterMovementSystem"/>.
+    /// </summary>
     protected void Update()
     {
         if (Hurt + 325 < Environment.TickCount) Hurt = 0;
-        ProcessMovement();
 
         var world = GameContext.Instance.World;
 
-        // Sync Transform
-        ref var transform = ref world.Get<TransformComponent>(Entity);
-        transform.X = PixelX;
-        transform.Y = PixelY;
+        // Tile coords + direction — read by CharacterMovementSystem to compute Transform.
+        ref var movement = ref world.Get<CharacterMovementComponent>(Entity);
+        movement.TileX = X;
+        movement.TileY = Y;
+        movement.Direction = Direction;
 
-        // Sync Character State
+        // Combat state — read by CharacterAnimationControllerSystem for the attack frame.
         ref var state = ref world.Get<CharacterStateComponent>(Entity);
-        state.Direction = Direction;
-        state.IsMoving = X2 != 0 || Y2 != 0; // True if there are pixel offsets
         state.IsAttacking = Attacking;
         state.AttackTimer = AttackTimer;
 
-        // Sync Hurt State
+        // Hurt state drives the damage-tint flash on the sprite.
         ref var tint = ref world.Get<DamageTintComponent>(Entity);
         tint.IsHurt = Hurt > 0;
 
-        // Sync current vitals — the NPC handler can replace the array reference entirely
-        // (new short[...]), so we always copy element-by-element rather than sharing the ref.
-        // Max vitals are set once at spawn; update them via the ECS component in packet
-        // handlers whenever a stat-change packet arrives.
+        // Current vitals — NPC handlers can replace the array ref entirely so we always
+        // copy element-by-element rather than sharing a reference.
         ref var vitals = ref world.Get<VitalsComponent>(Entity);
         Array.Copy(Vital, vitals.Current, Vital.Length);
-    }
-
-    private void ProcessMovement()
-    {
-        byte speed = 0;
-        short x = X2, y = Y2;
-
-        // Reset animation if stopped
-        if (Animation == AnimationStopped) Animation = AnimationRight;
-
-        // Determine movement speed
-        switch (Movement)
-        {
-            case Movement.Walking: speed = 2; break;
-            case Movement.Moving: speed = 3; break;
-            case Movement.Stopped:
-                // Reset offsets
-                X2 = 0;
-                Y2 = 0;
-                return;
-        }
-
-        // Apply movement to pixel offsets
-        switch (Direction)
-        {
-            case Direction.Up: Y2 -= speed; break;
-            case Direction.Down: Y2 += speed; break;
-            case Direction.Right: X2 += speed; break;
-            case Direction.Left: X2 -= speed; break;
-        }
-
-        // Clamp offsets to avoid overshoot
-        if (x > 0 && X2 < 0) X2 = 0;
-        if (x < 0 && X2 > 0) X2 = 0;
-        if (y > 0 && Y2 < 0) Y2 = 0;
-        if (y < 0 && Y2 > 0) Y2 = 0;
-
-        // Only change animation frame when movement finishes and offsets are zero
-        if (Direction is Direction.Right or Direction.Down)
-        {
-            if (X2 < 0 || Y2 < 0)
-                return;
-        }
-        else if (X2 > 0 || Y2 > 0)
-            return;
-
-        Movement = Movement.Stopped;
-        if (Animation == AnimationLeft)
-            Animation = AnimationRight;
-        else
-            Animation = AnimationLeft;
     }
 }

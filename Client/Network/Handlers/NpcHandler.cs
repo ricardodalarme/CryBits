@@ -1,4 +1,6 @@
 using System;
+using Arch.Core;
+using CryBits.Client.Components.Movement;
 using CryBits.Client.Entities;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
@@ -27,8 +29,6 @@ internal class NpcHandler(GameContext context)
         for (byte i = 0; i < context.CurrentMap.Npc.Length; i++)
         {
             context.CurrentMap.Npc[i] = new NpcInstance();
-            context.CurrentMap.Npc[i].X2 = 0;
-            context.CurrentMap.Npc[i].Y2 = 0;
             context.CurrentMap.Npc[i].Data = Npc.List.Get(packet.Npcs[i].NpcId);
             context.CurrentMap.Npc[i].X = packet.Npcs[i].X;
             context.CurrentMap.Npc[i].Y = packet.Npcs[i].Y;
@@ -43,8 +43,6 @@ internal class NpcHandler(GameContext context)
     internal void MapNpc(MapNpcPacket packet)
     {
         var i = packet.Index;
-        context.CurrentMap.Npc[i].X2 = 0;
-        context.CurrentMap.Npc[i].Y2 = 0;
         context.CurrentMap.Npc[i].Data = Npc.List.Get(packet.NpcId);
         context.CurrentMap.Npc[i].X = packet.X;
         context.CurrentMap.Npc[i].Y = packet.Y;
@@ -56,24 +54,33 @@ internal class NpcHandler(GameContext context)
     [PacketHandler]
     internal void MapNpcMovement(MapNpcMovementPacket packet)
     {
-        // Read NPC movement
         var i = packet.Index;
-        byte x = context.CurrentMap.Npc[i].X, y = context.CurrentMap.Npc[i].Y;
-        context.CurrentMap.Npc[i].X2 = 0;
-        context.CurrentMap.Npc[i].Y2 = 0;
-        context.CurrentMap.Npc[i].X = packet.X;
-        context.CurrentMap.Npc[i].Y = packet.Y;
-        context.CurrentMap.Npc[i].Direction = (Direction)packet.Direction;
-        context.CurrentMap.Npc[i].Movement = (Movement)packet.Movement;
+        var npc = context.CurrentMap.Npc[i];
 
-        // Set exact NPC screen offset if position changed
-        if (x != context.CurrentMap.Npc[i].X || y != context.CurrentMap.Npc[i].Y)
-            switch (context.CurrentMap.Npc[i].Direction)
+        byte prevX = npc.X, prevY = npc.Y;
+        npc.X = packet.X;
+        npc.Y = packet.Y;
+        npc.Direction = (Direction)packet.Direction;
+
+        if (npc.Entity == Entity.Null) return;
+
+        ref var movement = ref context.World.Get<CharacterMovementComponent>(npc.Entity);
+        movement.TileX = packet.X;
+        movement.TileY = packet.Y;
+        movement.Direction = (Direction)packet.Direction;
+        movement.MovementState = (Movement)packet.Movement;
+        movement.OffsetX = 0;
+        movement.OffsetY = 0;
+
+        // Set the starting pixel offset when the tile actually changed so the
+        // movement system can interpolate back to zero.
+        if (prevX != npc.X || prevY != npc.Y)
+            switch (npc.Direction)
             {
-                case Direction.Up: context.CurrentMap.Npc[i].Y2 = Grid; break;
-                case Direction.Down: context.CurrentMap.Npc[i].Y2 = Grid * -1; break;
-                case Direction.Right: context.CurrentMap.Npc[i].X2 = Grid * -1; break;
-                case Direction.Left: context.CurrentMap.Npc[i].X2 = Grid; break;
+                case Direction.Up: movement.OffsetY = Grid; break;
+                case Direction.Down: movement.OffsetY = (short)(Grid * -1); break;
+                case Direction.Right: movement.OffsetX = (short)(Grid * -1); break;
+                case Direction.Left: movement.OffsetX = Grid; break;
             }
     }
 
@@ -106,11 +113,16 @@ internal class NpcHandler(GameContext context)
     [PacketHandler]
     internal void MapNpcDirection(MapNpcDirectionPacket packet)
     {
-        // Set NPC direction
         var i = packet.Index;
-        context.CurrentMap.Npc[i].Direction = (Direction)packet.Direction;
-        context.CurrentMap.Npc[i].X2 = 0;
-        context.CurrentMap.Npc[i].Y2 = 0;
+        var npc = context.CurrentMap.Npc[i];
+        npc.Direction = (Direction)packet.Direction;
+
+        if (npc.Entity == Entity.Null) return;
+
+        ref var movement = ref context.World.Get<CharacterMovementComponent>(npc.Entity);
+        movement.Direction = (Direction)packet.Direction;
+        movement.OffsetX = 0;
+        movement.OffsetY = 0;
     }
 
     [PacketHandler]
@@ -132,12 +144,10 @@ internal class NpcHandler(GameContext context)
         context.World.Destroy(context.CurrentMap.Npc[i].Entity);
 
         // Clear NPC data on death
-        context.CurrentMap.Npc[i].X2 = 0;
-        context.CurrentMap.Npc[i].Y2 = 0;
         context.CurrentMap.Npc[i].Data = null;
         context.CurrentMap.Npc[i].X = 0;
         context.CurrentMap.Npc[i].Y = 0;
         context.CurrentMap.Npc[i].Vital = new short[(byte)Vital.Count];
-        context.CurrentMap.Npc[i].Entity = Arch.Core.Entity.Null;
+        context.CurrentMap.Npc[i].Entity = Entity.Null;
     }
 }

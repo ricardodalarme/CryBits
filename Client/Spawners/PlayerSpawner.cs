@@ -28,9 +28,10 @@ internal static class PlayerSpawner
         player.MaxVital.CopyTo(vitalsComponent.Max, 0);
 
         return world.Create(
-            new TransformComponent(player.PixelX, player.PixelY),
+            new TransformComponent(player.X * Globals.Grid, player.Y * Globals.Grid),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
+            new CharacterMovementComponent { TileX = player.X, TileY = player.Y, Direction = player.Direction },
             new CharacterStateComponent { Direction = player.Direction },
             new DamageTintComponent(),
             new ShadowComponent(Textures.Shadow),

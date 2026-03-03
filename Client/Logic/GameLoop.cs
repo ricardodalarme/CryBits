@@ -37,6 +37,14 @@ internal class GameLoop(RenderPipeline renderPipeline)
         new DamageTintSystem(GameContext.Instance.World)
     );
 
+    // Game-tick systems — run at the same 30 ms cadence as Logic() calls.
+    // CharacterMovementSystem uses fixed-speed pixel steps (2 px/tick walk, 3 px/tick run)
+    // that were designed around this tick rate, so it must NOT run at uncapped frame rate.
+    private static readonly Group<int> _gameTickSystems = new(
+        "GameTickSystems",
+        new CharacterMovementSystem(GameContext.Instance.World)
+    );
+
     // High-resolution stopwatch for delta time
     private static readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
@@ -75,6 +83,9 @@ internal class GameLoop(RenderPipeline renderPipeline)
                     for (byte i = 0; i < GameContext.Instance.CurrentMap.Npc.Length; i++)
                         if (GameContext.Instance.CurrentMap.Npc[i].Data != null)
                             GameContext.Instance.CurrentMap.Npc[i].Logic();
+
+                    // Advance character movement interpolation at the fixed tick rate.
+                    _gameTickSystems.Update(0);
 
                     // Reset 30 ms timer
                     timer30 = Environment.TickCount + 30;
