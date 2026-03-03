@@ -7,6 +7,7 @@ using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Logic;
 using CryBits.Client.Managers;
 using CryBits.Client.Network;
+using CryBits.Client.Systems.Character;
 using CryBits.Client.Systems.Core;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
@@ -22,21 +23,34 @@ internal sealed class RenderPipeline
     private readonly GameContext _context = GameContext.Instance;
     private readonly CameraManager _cameraManager = CameraManager.Instance;
     private readonly MapRenderer _mapRenderer = MapRenderer.Instance;
-    private readonly PlayerRenderer _playerRenderer = PlayerRenderer.Instance;
-    private readonly NpcRenderer _npcRenderer = NpcRenderer.Instance;
     private readonly UIRenderer _uiRenderer = UIRenderer.Instance;
 
-    // Ground-layer render systems: sprites drawn after the ground tile pass.
+    // Ground-layer render systems: non-character sprites (ground items, blood splats).
     private static readonly Group<int> _groundRenderSystems = new(
         "GroundRenderSystems",
         new SpriteRenderSystem(GameContext.Instance.World)
     );
 
-    // Fringe-layer render systems: effects drawn after the fringe tile pass.
+    // Character render systems: Y-sorted shadow + animated sprite for all characters.
+    // Runs after ground items, before the fringe tile layer, so characters appear on top
+    // of the ground but behind foreground props.
+    private static readonly Group<int> _characterRenderSystems = new(
+        "CharacterRenderSystems",
+        new CharacterRenderSystem(GameContext.Instance.World)
+    );
+
+    // Fringe-layer render systems: floating names and scrolling fog drawn after the
+    // foreground tile pass so they sit above all world geometry.
     private static readonly Group<int> _fringeRenderSystems = new(
         "FringeRenderSystems",
         new TextRenderSystem(GameContext.Instance.World),
         new ScrollingOverlayRenderSystem(GameContext.Instance.World)
+    );
+
+    // HUD-layer render systems: vital bars drawn above names but below fixed-position UI.
+    private static readonly Group<int> _hudRenderSystems = new(
+        "HudRenderSystems",
+        new VitalBarRenderSystem(GameContext.Instance.World)
     );
 
     /// <summary>
@@ -67,31 +81,28 @@ internal sealed class RenderPipeline
         _cameraManager.Update();
         _cameraManager.BeginWorldDraw();
 
-        // Ground layer
+        // Ground layer — panorama, tiles, then non-character world objects.
         _mapRenderer.DrawPanorama();
         _mapRenderer.DrawLayer((byte)Layer.Ground);
         _groundRenderSystems.Update(0);
 
-        for (byte i = 0; i < _context.CurrentMap.Npc.Length; i++)
-            if (_context.CurrentMap.Npc[i].Data != null)
-                _npcRenderer.DrawNpc(_context.CurrentMap.Npc[i]);
+        // Character layer — Y-sorted shadow + animated sprite for players and NPCs.
+        _characterRenderSystems.Update(0);
 
-        for (byte i = 0; i < Player.List.Count; i++)
-            if (Player.List[i] != Player.Me)
-                if (Player.List[i].MapInstance == Player.Me.MapInstance)
-                    _playerRenderer.PlayerCharacter(Player.List[i]);
-
-        _playerRenderer.PlayerCharacter(Player.Me);
-
-        // Foreground layers and effects
+        // Foreground tile layer and atmospheric effects.
         _mapRenderer.DrawLayer((byte)Layer.Fringe);
         _mapRenderer.DrawWeather();
-        _fringeRenderSystems.Update(0);
-        _mapRenderer.DrawMapName();
 
+        // Fringe systems — floating names, fog overlay.
+        _fringeRenderSystems.Update(0);
+
+        // HUD layer — vital bars drawn above names.
+        _hudRenderSystems.Update(0);
+
+        _mapRenderer.DrawMapName();
         _uiRenderer.DrawParty();
 
-        // FPS/Latency overlays — these are world-space but near-origin so they work fine here.
+        // FPS/Latency overlays.
         if (Options.ShowMetrics) _renderer.DrawText("FPS: " + GameLoop.Fps, 176, 7, Color.White);
         if (Options.ShowMetrics) _renderer.DrawText("Latency: " + NetworkClient.Latency, 176, 19, Color.White);
     }

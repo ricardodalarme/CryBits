@@ -1,4 +1,5 @@
 using Arch.Core;
+using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
@@ -22,12 +23,19 @@ internal static class PlayerSpawner
 
         var textColor = player == Player.Me ? Color.Yellow : Color.White;
 
+        var vitalsComponent = new VitalsComponent();
+        player.Vital.CopyTo(vitalsComponent.Current, 0);
+        player.MaxVital.CopyTo(vitalsComponent.Max, 0);
+
         return world.Create(
             new TransformComponent(player.PixelX, player.PixelY),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
             new CharacterStateComponent { Direction = player.Direction },
             new DamageTintComponent(),
+            new ShadowComponent(Textures.Shadow),
+            new PlayerTagComponent(),
+            vitalsComponent,
             new TextComponent(player.Name, textColor, frameWidth / 2, -frameHeight / 2)
         );
     }

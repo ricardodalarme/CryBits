@@ -1,4 +1,5 @@
 using Arch.Core;
+using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
@@ -29,12 +30,20 @@ internal static class NpcSpawner
             _ => Color.White
         };
 
+        // NPC current vitals come from the instance; max vitals come from the NPC template.
+        var vitalsComponent = new VitalsComponent();
+        npc.Vital.CopyTo(vitalsComponent.Current, 0);
+        npc.Data.Vital.CopyTo(vitalsComponent.Max, 0);
+
         return world.Create(
             new TransformComponent(npc.PixelX, npc.PixelY),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
             new CharacterStateComponent { Direction = npc.Direction },
             new DamageTintComponent(),
+            new ShadowComponent(Textures.Shadow),
+            new NpcTagComponent(),
+            vitalsComponent,
             new TextComponent(npc.Data.Name, textColor, frameWidth / 2, -frameHeight / 2)
         );
     }

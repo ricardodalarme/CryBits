@@ -56,6 +56,13 @@ internal abstract class Character
         // Sync Hurt State
         ref var tint = ref world.Get<DamageTintComponent>(Entity);
         tint.IsHurt = Hurt > 0;
+
+        // Sync current vitals — the NPC handler can replace the array reference entirely
+        // (new short[...]), so we always copy element-by-element rather than sharing the ref.
+        // Max vitals are set once at spawn; update them via the ECS component in packet
+        // handlers whenever a stat-change packet arrives.
+        ref var vitals = ref world.Get<VitalsComponent>(Entity);
+        Array.Copy(Vital, vitals.Current, Vital.Length);
     }
 
     private void ProcessMovement()
