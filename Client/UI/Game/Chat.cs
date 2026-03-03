@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CryBits.Client.Commands;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Logic;
@@ -13,6 +14,12 @@ namespace CryBits.Client.UI.Game;
 
 internal static class Chat
 {
+    private static readonly ChatCommandDispatcher _dispatcher =
+        new ChatCommandDispatcher(AddText)
+            .Register(new PartyInviteCommand(PartySender.Instance, AddText))
+            .Register(new PartyLeaveCommand(PartySender.Instance))
+            .Register(new TradeInviteCommand(TradeSender.Instance, AddText));
+
     // Rendering order for chat lines
     public static List<Structure> Order = [];
 
@@ -94,38 +101,32 @@ internal static class Chat
 
         tool.Text = string.Empty;
 
-        var parts = message.Split(' ');
+        if (!_dispatcher.TryDispatch(message))
+            SendMessage(message);
+    }
 
-        switch (parts[0].ToLower())
+    private static void SendMessage(string message)
+    {
+        switch (message[0])
         {
-            case "/party":
-                if (parts.Length > 1) PartySender.Instance.PartyInvite(parts[1]);
-                break;
-            case "/partyleave":
-                PartySender.Instance.PartyLeave();
-                break;
-            case "/trade":
-                if (parts.Length > 1) TradeSender.Instance.TradeInvite(parts[1]);
-                break;
-            default:
-                if (message.Substring(0, 1) == "'")
-                    ChatSender.Instance.Message(message.Substring(1), Message.Global);
-                else if (message.Substring(0, 1) == "!")
+            case '\'':
+                ChatSender.Instance.Message(message[1..], Message.Global);
+                return;
+            case '!':
+                var parts = message.Split(' ');
+                if (parts.GetUpperBound(0) < 1)
                 {
-                    if (parts.GetUpperBound(0) < 1)
-                        AddText("Use: '!' + Addressee + 'Message'", Color.White);
-                    else
-                    {
-                        var destiny = message.Substring(1, parts[0].Length - 1);
-                        message = message.Substring(parts[0].Length + 1);
-
-                        ChatSender.Instance.Message(message, Message.Private, destiny);
-                    }
+                    AddText("Use: '!' + Addressee + ' Message'", Color.White);
+                    return;
                 }
-                // Map message
-                else
-                    ChatSender.Instance.Message(message, Message.Map);
 
+                var addressee = message.Substring(1, parts[0].Length - 1);
+                var content = message.Substring(parts[0].Length + 1);
+                ChatSender.Instance.Message(content, Message.Private, addressee);
+                return;
+            default:
+                // Default: map message
+                ChatSender.Instance.Message(message, Message.Map);
                 break;
         }
     }
