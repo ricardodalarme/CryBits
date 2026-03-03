@@ -27,32 +27,43 @@ internal class PlayerHandler(GameContext context)
 
         context.CurrentMap = context.Maps[packet.MapId];
 
-        var equipmentItems = new Item?[(byte)Equipment.Count];
-        for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = Item.List.Get(packet.Equipment[n]);
-
         // Destroy old entity if present (re-spawn on map transition).
         var old = context.GetPlayerEntity(name);
         if (old != ArchEntity.Null) context.World.Destroy(old);
 
-        var entity = PlayerSpawner.Spawn(
-            context.World,
-            name,
-            packet.TextureNum,
-            packet.Level,
-            packet.Vital,
-            packet.MaxVital,
-            packet.Attribute,
-            equipmentItems,
-            packet.X, packet.Y,
-            (Direction)packet.Direction,
-            isLocal,
-            packet.MapId);
-
         if (isLocal)
         {
+            var equipmentItems = new Item?[(byte)Equipment.Count];
+            for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = Item.List.Get(packet.Equipment[n]);
+
+            var entity = PlayerSpawner.SpawnLocal(
+                context.World,
+                name,
+                packet.TextureNum,
+                packet.Level,
+                packet.Vital,
+                packet.MaxVital,
+                packet.Attribute,
+                equipmentItems,
+                packet.X, packet.Y,
+                (Direction)packet.Direction,
+                packet.MapId);
+
             context.LocalPlayer = new LocalPlayer(entity);
             BarsView.Update();
             CharacterView.Update();
+        }
+        else
+        {
+            PlayerSpawner.Spawn(
+                context.World,
+                name,
+                packet.TextureNum,
+                packet.Vital,
+                packet.MaxVital,
+                packet.X, packet.Y,
+                (Direction)packet.Direction,
+                packet.MapId);
         }
     }
 
@@ -88,10 +99,8 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerEquipments(PlayerEquipmentsPacket packet)
     {
-        var entity = context.GetPlayerEntity(packet.Name);
+        ref var equipment = ref context.LocalPlayer.GetEquipment();
 
-        // Update player's equipped items
-        ref var equipment = ref context.World.Get<EquipmentComponent>(entity);
         for (byte i = 0; i < (byte)Equipment.Count; i++) equipment.Slots[i] = Item.List.Get(packet.Equipments[i]);
     }
 

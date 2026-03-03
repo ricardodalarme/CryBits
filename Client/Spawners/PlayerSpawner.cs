@@ -19,11 +19,57 @@ using Entity = Arch.Core.Entity;
 namespace CryBits.Client.Spawners;
 
 /// <summary>
-/// Creates a new player entity.
+/// Creates player entities in one of two archetypes:
+///
+/// <b>RemotePlayerArchetype</b> — shared visual/simulation state visible for every player on screen.
+///   Name · Transform · Sprite · AnimatedSprite · Movement · CharacterState · DamageTint
+///   · Shadow · PlayerTag · Vitals · Text · MapId
+///
+/// <b>LocalPlayerArchetype</b> — extends the remote archetype with data that is meaningful
+///   only for the locally controlled character.
+///   … + Inventory · Hotbar · Trade · Party · Level · Attributes · Equipment · Appearance
+///       · LocalPlayerTag
 /// </summary>
 internal static class PlayerSpawner
 {
+    /// <summary>Creates a remote player entity (minimal archetype).</summary>
     public static Entity Spawn(
+        World world,
+        string name,
+        short textureNum,
+        short[] vitals,
+        short[] maxVitals,
+        byte x, byte y,
+        Direction direction,
+        Guid mapId)
+    {
+        var texture = Textures.Characters[textureNum];
+        var size = texture.ToSize();
+        var frameWidth = size.Width / Globals.AnimationAmountX;
+        var frameHeight = size.Height / Globals.AnimationAmountY;
+
+        var vitalsComponent = new VitalsComponent();
+        vitals.CopyTo(vitalsComponent.Current, 0);
+        maxVitals.CopyTo(vitalsComponent.Max, 0);
+
+        return world.Create(
+            new NameComponent { Value = name },
+            new TransformComponent(x * Globals.Grid, y * Globals.Grid),
+            new SpriteComponent(texture),
+            new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
+            new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
+            new CharacterStateComponent(),
+            new DamageTintComponent(),
+            new ShadowComponent(),
+            new PlayerTagComponent(),
+            vitalsComponent,
+            new TextComponent(name, Color.White, frameWidth / 2, -frameHeight / 2),
+            new MapIdComponent { Value = mapId }
+        );
+    }
+
+    /// <summary>Creates the local player entity (full archetype).</summary>
+    public static Entity SpawnLocal(
         World world,
         string name,
         short textureNum,
@@ -34,15 +80,12 @@ internal static class PlayerSpawner
         Item?[] equipment,
         byte x, byte y,
         Direction direction,
-        bool isLocalPlayer,
         Guid mapId)
     {
         var texture = Textures.Characters[textureNum];
         var size = texture.ToSize();
         var frameWidth = size.Width / Globals.AnimationAmountX;
         var frameHeight = size.Height / Globals.AnimationAmountY;
-
-        var textColor = isLocalPlayer ? Color.Yellow : Color.White;
 
         var vitalsComponent = new VitalsComponent();
         vitals.CopyTo(vitalsComponent.Current, 0);
@@ -54,7 +97,7 @@ internal static class PlayerSpawner
         var equipmentComponent = new EquipmentComponent();
         equipment.CopyTo(equipmentComponent.Slots, 0);
 
-        var entity = world.Create(
+        return world.Create(
             new NameComponent { Value = name },
             new TransformComponent(x * Globals.Grid, y * Globals.Grid),
             new SpriteComponent(texture),
@@ -72,12 +115,10 @@ internal static class PlayerSpawner
             new AppearanceComponent { TextureNum = textureNum },
             new LevelComponent { Level = level },
             new TradeComponent(),
-            new TextComponent(name, textColor, frameWidth / 2, -frameHeight / 2)
+            new PartyComponent(),
+            new LocalPlayerTagComponent(),
+            new TextComponent(name, Color.Yellow, frameWidth / 2, -frameHeight / 2),
+            new MapIdComponent { Value = mapId }
         );
-
-        if (isLocalPlayer) world.Add(entity, new PartyComponent(), new LocalPlayerTagComponent());
-        world.Add(entity, new MapIdComponent { Value = mapId });
-
-        return entity;
     }
 }
