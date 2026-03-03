@@ -52,9 +52,8 @@ internal sealed class CharacterRenderSystem(World world) : BaseSystem<World, int
             ref var transform = ref World.Get<TransformComponent>(entity);
             ref var sprite = ref World.Get<SpriteComponent>(entity);
             ref var anim = ref World.Get<AnimatedSpriteComponent>(entity);
-            ref var shadow = ref World.Get<ShadowComponent>(entity);
 
-            DrawShadow(ref transform, ref anim, ref shadow);
+            DrawShadow(ref transform, ref anim);
             DrawSprite(ref transform, ref sprite, ref anim);
         }
     }
@@ -65,10 +64,10 @@ internal sealed class CharacterRenderSystem(World world) : BaseSystem<World, int
     /// </summary>
     private static void DrawShadow(
         ref TransformComponent transform,
-        ref AnimatedSpriteComponent anim,
-        ref ShadowComponent shadow)
+        ref AnimatedSpriteComponent anim)
     {
-        var shadowSize = shadow.Texture.ToSize();
+        var texture = Textures.Shadow;
+        var shadowSize = texture.ToSize();
         var source = new Rectangle(0, 0, shadowSize.Width, shadowSize.Height);
 
         // Align shadow to the bottom of the sprite frame, shifted up by the shadow height.
@@ -79,7 +78,7 @@ internal sealed class CharacterRenderSystem(World world) : BaseSystem<World, int
             anim.FrameWidth,
             shadowSize.Height);
 
-        Renderer.Instance.Draw(shadow.Texture, source, dest);
+        Renderer.Instance.Draw(texture, source, dest);
     }
 
     /// <summary>
