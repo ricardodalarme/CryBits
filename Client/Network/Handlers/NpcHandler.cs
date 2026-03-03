@@ -2,7 +2,6 @@ using System;
 using Arch.Core;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Movement;
-using CryBits.Client.Entities;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
 using CryBits.Entities.Npc;
@@ -104,7 +103,7 @@ internal class NpcHandler(GameContext context)
 
         var victimEntity = victimType switch
         {
-            Target.Player => Player.Get(victim).Entity,
+            Target.Player => context.GetPlayerEntity(victim),
             Target.Npc => context.CurrentMap.Npcs[byte.Parse(victim)],
             _ => throw new ArgumentOutOfRangeException()
         };

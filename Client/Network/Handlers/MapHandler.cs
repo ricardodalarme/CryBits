@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using System.IO;
 using Arch.Core;
+using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Map;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Repositories;
@@ -10,6 +11,7 @@ using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
 using CryBits.Entities;
 using CryBits.Extensions;
+using Entity = Arch.Core.Entity;
 using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
@@ -23,10 +25,15 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         var id = packet.MapId;
         var currentRevision = packet.Revision;
 
-        // Clear other player entries
-        for (byte i = 0; i < Player.List.Count; i++)
-            if (Player.List[i] != Player.Me)
-                Player.List.RemoveAt(i);
+        // Destroy entities for other players leaving this map (they'll re-spawn on PlayerData)
+        var myEntity = context.LocalPlayer.Entity;
+        var toDestroy = new List<Entity>();
+        var playerQuery = new QueryDescription().WithAll<PlayerTagComponent>();
+        context.World.Query(in playerQuery, (Entity e) =>
+        {
+            if (e != myEntity) toDestroy.Add(e);
+        });
+        foreach (var e in toDestroy) context.World.Destroy(e);
 
         // Check whether the map data needs to be downloaded
         if (File.Exists(Directories.MapsData.FullName + id + Directories.Format) ||
@@ -56,12 +63,9 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
 
         // Store map data
         if (!CryBits.Entities.Map.Map.List.TryAdd(id, map)) CryBits.Entities.Map.Map.List[id] = map;
-        else
-        {
-            MapInstance.List.Add(id, new MapInstance(map));
-        }
+        else context.Maps.TryAdd(id, new ClientMap(map));
 
-        context.CurrentMap = MapInstance.List[id];
+        context.CurrentMap = context.Maps[id];
 
         // Persist map to disk
         MapRepository.Write(map);

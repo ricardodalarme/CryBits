@@ -1,4 +1,3 @@
-using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;

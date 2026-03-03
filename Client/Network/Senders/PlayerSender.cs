@@ -1,4 +1,3 @@
-using CryBits.Client.Entities;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Enums;

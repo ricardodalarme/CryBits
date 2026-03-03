@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using Arch.Core;
 using CryBits.Client.Components.Core;
-using CryBits.Client.Entities;
 using CryBits.Client.Graphics;
 using CryBits.Client.Worlds;
 using CryBits.Entities.Map;
@@ -63,7 +62,7 @@ internal class CameraManager(RenderWindow renderWindow)
         var world = GameContext.Instance.World;
 
         // Resolve target — fall back to local player.
-        var target = Target != Entity.Null ? Target : Player.Me.Entity;
+        var target = Target != Entity.Null ? Target : GameContext.Instance.LocalPlayer.Entity;
 
         if (target == Entity.Null || !world.IsAlive(target)) return;
 

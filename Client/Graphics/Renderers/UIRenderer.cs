@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Party;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;

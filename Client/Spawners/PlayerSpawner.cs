@@ -1,3 +1,4 @@
+using System;
 using Arch.Core;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
@@ -9,7 +10,6 @@ using CryBits.Client.Components.Movement;
 using CryBits.Client.Components.Player;
 using CryBits.Client.Components.Party;
 using CryBits.Client.Components.Trade;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Entities;
 using CryBits.Enums;
@@ -34,7 +34,8 @@ internal static class PlayerSpawner
         Item?[] equipment,
         byte x, byte y,
         Direction direction,
-        bool isLocalPlayer)
+        bool isLocalPlayer,
+        Guid mapId)
     {
         var texture = Textures.Characters[textureNum];
         var size = texture.ToSize();
@@ -54,6 +55,7 @@ internal static class PlayerSpawner
         equipment.CopyTo(equipmentComponent.Slots, 0);
 
         var entity = world.Create(
+            new NameComponent { Value = name },
             new TransformComponent(x * Globals.Grid, y * Globals.Grid),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
@@ -74,6 +76,7 @@ internal static class PlayerSpawner
         );
 
         if (isLocalPlayer) world.Add(entity, new PartyComponent());
+        world.Add(entity, new MapIdComponent { Value = mapId });
 
         return entity;
     }
