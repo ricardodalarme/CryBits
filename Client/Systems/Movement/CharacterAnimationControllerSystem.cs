@@ -15,16 +15,16 @@ namespace CryBits.Client.Systems.Movement;
 internal sealed class CharacterAnimationControllerSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<CharacterStateComponent, AnimatedSpriteComponent>();
+        .WithAll<MovementComponent, CharacterStateComponent, AnimatedSpriteComponent>();
 
     public override void Update(in float dt)
     {
         var now = Environment.TickCount;
 
-        World.Query(in _query, (ref CharacterStateComponent state, ref AnimatedSpriteComponent anim) =>
+        World.Query(in _query, (ref MovementComponent movement, ref CharacterStateComponent state, ref AnimatedSpriteComponent anim) =>
         {
-            // 1. Set the Row based on Direction
-            anim.CurrentFrameY = state.Direction switch
+            // 1. Set the Row based on Direction (source of truth: MovementComponent)
+            anim.CurrentFrameY = movement.Direction switch
             {
                 Direction.Up => MovementUp,
                 Direction.Down => MovementDown,
@@ -34,12 +34,13 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
             };
 
             // 2. Set the Column and Playback based on State
+            var isMoving = movement.OffsetX != 0f || movement.OffsetY != 0f;
             if (state.IsAttacking && state.AttackTimer + AttackSpeed / 2 > now)
             {
                 anim.Playing = false; // Stop walking animation
                 anim.CurrentFrameX = AnimationAttack; // Force the attack frame
             }
-            else if (state.IsMoving)
+            else if (isMoving)
             {
                 anim.Playing = true; // Let the AnimatedSpriteSystem tick the walking frames
             }
