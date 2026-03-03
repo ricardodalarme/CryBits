@@ -36,9 +36,6 @@ internal class PlayerHandler(GameContext context)
         player.TextureNum = packet.TextureNum;
         player.Level = packet.Level;
         player.MapInstance = MapInstance.List[packet.MapId];
-        player.X = packet.X;
-        player.Y = packet.Y;
-        player.Direction = (Direction)packet.Direction;
         for (byte n = 0; n < (byte)Vital.Count; n++)
         {
             player.Vital[n] = packet.Vital[n];
@@ -52,7 +49,7 @@ internal class PlayerHandler(GameContext context)
         // Eager spawn: (re)create the ECS entity right here so every subsequent
         // handler and the input loop can always reference a valid entity.
         if (player.Entity != ArchEntity.Null) context.World.Destroy(player.Entity);
-        player.Entity = PlayerSpawner.Spawn(context.World, player);
+        player.Entity = PlayerSpawner.Spawn(context.World, player, packet.X, packet.Y, (Direction)packet.Direction);
 
         if (player == Player.Me)
         {
@@ -66,10 +63,6 @@ internal class PlayerHandler(GameContext context)
     internal void PlayerPosition(PlayerPositionPacket packet)
     {
         var player = Player.Get(packet.Name);
-
-        player.X = packet.X;
-        player.Y = packet.Y;
-        player.Direction = (Direction)packet.Direction;
 
         ref var movement = ref context.World.Get<MovementComponent>(player.Entity);
         movement.TileX = packet.X;
@@ -123,10 +116,6 @@ internal class PlayerHandler(GameContext context)
     {
         var player = Player.Get(packet.Name);
 
-        player.X = packet.X;
-        player.Y = packet.Y;
-        player.Direction = (Direction)packet.Direction;
-
         ref var movement = ref context.World.Get<MovementComponent>(player.Entity);
         movement.TileX = packet.X;
         movement.TileY = packet.Y;
@@ -149,7 +138,6 @@ internal class PlayerHandler(GameContext context)
     internal void PlayerDirection(PlayerDirectionPacket packet)
     {
         var player = Player.Get(packet.Name);
-        player.Direction = (Direction)packet.Direction;
         context.World.Get<MovementComponent>(player.Entity).Direction = (Direction)packet.Direction;
     }
 
@@ -166,17 +154,17 @@ internal class PlayerHandler(GameContext context)
 
         if (victim == string.Empty || victimType == Target.None) return;
 
-        Character victimData = victimType switch
+        var victimEntity = victimType switch
         {
-            Target.Player => Player.Get(victim),
-            Target.Npc => context.CurrentMap.Npc[byte.Parse(victim)],
+            Target.Player => Player.Get(victim).Entity,
+            Target.Npc => context.CurrentMap.Npcs[byte.Parse(victim)],
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        // Apply damage to victim
         var world = context.World;
-        BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
-        ref var tint = ref context.World.Get<DamageTintComponent>(victimData.Entity);
+        ref var victimMovement = ref world.Get<MovementComponent>(victimEntity);
+        BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);
+        ref var tint = ref context.World.Get<DamageTintComponent>(victimEntity);
         tint.IsHurt = true;
         tint.HurtTimestamp = Environment.TickCount;
     }
@@ -184,15 +172,16 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerExperience(PlayerExperiencePacket packet)
     {
-        Player.Me.Experience = packet.Experience;
-        Player.Me.ExpNeeded = packet.ExpNeeded;
-        Player.Me.Points = packet.Points;
+        ref var level = ref context.LocalPlayer.GetLevel();
+        level.Experience = packet.Experience;
+        level.ExpNeeded = packet.ExpNeeded;
+        level.Points = packet.Points;
 
-        CharacterView.AddStrengthButton.Visible = Player.Me.Points > 0;
-        CharacterView.AddResistanceButton.Visible = Player.Me.Points > 0;
-        CharacterView.AddIntelligenceButton.Visible = Player.Me.Points > 0;
-        CharacterView.AddAgilityButton.Visible = Player.Me.Points > 0;
-        CharacterView.AddVitalityButton.Visible = Player.Me.Points > 0;
+        CharacterView.AddStrengthButton.Visible = level.Points > 0;
+        CharacterView.AddResistanceButton.Visible = level.Points > 0;
+        CharacterView.AddIntelligenceButton.Visible = level.Points > 0;
+        CharacterView.AddAgilityButton.Visible = level.Points > 0;
+        CharacterView.AddVitalityButton.Visible = level.Points > 0;
 
         BarsView.Update();
         CharacterView.Update();
@@ -201,16 +190,16 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerInventory(PlayerInventoryPacket packet)
     {
+        ref var inventory = ref context.LocalPlayer.GetInventory();
         for (byte i = 0; i < MaxInventory; i++)
-            Player.Me.Inventory[i] = new ItemSlot(Item.List.Get(packet.ItemIds[i]), packet.Amounts[i]);
+            inventory.Slots[i] = new ItemSlot(Item.List.Get(packet.ItemIds[i]), packet.Amounts[i]);
     }
 
     [PacketHandler]
     internal void PlayerHotbar(PlayerHotbarPacket packet)
     {
+        ref var hotbar = ref context.LocalPlayer.GetHotbar();
         for (byte i = 0; i < MaxHotbar; i++)
-        {
-            Player.Me.Hotbar[i] = new HotbarSlot((SlotType)packet.Types[i], packet.Slots[i]);
-        }
+            hotbar.Slots[i] = new HotbarSlot((SlotType)packet.Types[i], packet.Slots[i]);
     }
 }

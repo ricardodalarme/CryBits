@@ -8,7 +8,6 @@ using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
-using CryBits.Entities.Slots;
 using CryBits.Enums;
 using SFML.Window;
 using static CryBits.Globals;
@@ -17,14 +16,7 @@ namespace CryBits.Client.Entities;
 
 internal class Me(string name) : Player(name)
 {
-    public ItemSlot[] Inventory = new ItemSlot[MaxInventory];
-    public HotbarSlot[] Hotbar = new HotbarSlot[MaxHotbar];
-    public ItemSlot[]? TradeOffer;
-    public ItemSlot[]? TradeTheirOffer;
     public Player[] Party = [];
-    public int Experience;
-    public int ExpNeeded;
-    public short Points;
     private int _collectTimer;
 
     public void Logic()
@@ -48,8 +40,7 @@ internal class Me(string name) : Player(name)
 
     private void Move(Direction direction, ref MovementComponent movement)
     {
-        // Always sync facing direction (also updates server via the combined packet below).
-        Direction = direction;
+        // Always sync facing direction to ECS.
         movement.Direction = direction;
 
         // Determine locomotion mode before blocking check so the server knows intent.
@@ -61,7 +52,7 @@ internal class Me(string name) : Player(name)
         PlayerSender.Instance.PlayerMove(direction, desired);
 
         // Cancel if next tile is blocked (client does not step, server will agree).
-        if (MapInstance.TileBlocked(X, Y, direction)) return;
+        if (MapInstance.TileBlocked(movement.TileX, movement.TileY, direction)) return;
 
         // Apply speed for local interpolation immediately (no network round-trip needed).
         movement.MovementState = desired;
@@ -75,23 +66,19 @@ internal class Me(string name) : Player(name)
         {
             case Direction.Up:
                 movement.OffsetY = Grid;
-                Y--;
-                movement.TileY = Y;
+                movement.TileY--;
                 break;
             case Direction.Down:
                 movement.OffsetY = -Grid;
-                Y++;
-                movement.TileY = Y;
+                movement.TileY++;
                 break;
             case Direction.Right:
                 movement.OffsetX = -Grid;
-                X++;
-                movement.TileX = X;
+                movement.TileX++;
                 break;
             case Direction.Left:
                 movement.OffsetX = Grid;
-                X--;
-                movement.TileX = X;
+                movement.TileX--;
                 break;
         }
     }
@@ -127,16 +114,19 @@ internal class Me(string name) : Player(name)
 
         // Check for an item at the player's tile.
         var world = GameContext.Instance.World;
+        // Value copy — captures tile coords for use inside the lambda.
+        var myTile = world.Get<MovementComponent>(Entity);
         var itemQuery = new QueryDescription().WithAll<GroundItemComponent, TransformComponent>();
         world.Query(in itemQuery, (ref GroundItemComponent _, ref TransformComponent transform) =>
         {
-            if (transform.X / Grid == X && transform.Y / Grid == Y)
+            if (transform.X / Grid == myTile.TileX && transform.Y / Grid == myTile.TileY)
                 hasItem = true;
         });
 
         // Check for a free inventory slot.
+        ref var inv = ref GameContext.Instance.LocalPlayer.GetInventory();
         for (byte i = 0; i < MaxInventory; i++)
-            if (Inventory[i].Item == null)
+            if (inv.Slots[i]?.Item == null)
                 hasSlot = true;
 
         if (!hasItem) return;

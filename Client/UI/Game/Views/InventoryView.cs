@@ -1,9 +1,9 @@
 using System.Drawing;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Worlds;
 using CryBits.Enums;
 using SFML.Window;
 
@@ -34,20 +34,25 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
         Grid.OnSlotLeave -= OnGridSlotLeave;
     }
 
-    private void OnRenderSlot(int slot, Point pos) => itemRenderer.DrawItem(Player.Me.Inventory[slot].Item, Player.Me.Inventory[slot].Amount, pos);
+    private void OnRenderSlot(int slot, Point pos)
+    {
+        ref var inv = ref GameContext.Instance.LocalPlayer.GetInventory();
+        itemRenderer.DrawItem(inv.Slots[slot]?.Item, inv.Slots[slot]?.Amount ?? 0, pos);
+    }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        if (Player.Me.Inventory[slot].Item == null) return;
+        ref var inv = ref GameContext.Instance.LocalPlayer.GetInventory();
+        if (inv.Slots[slot]?.Item == null) return;
 
         switch (e.Button)
         {
             case Mouse.Button.Right:
-                if (Player.Me.Inventory[slot].Item.Bind != BindOn.Pickup)
+                if (inv.Slots[slot].Item.Bind != BindOn.Pickup)
                     // Sell the item if shop is open
                     if (ShopView.Panel.Visible)
                     {
-                        if (Player.Me.Inventory[slot].Amount != 1)
+                        if (inv.Slots[slot].Amount != 1)
                         {
                             ShopSellView.InventorySlot = slot;
                             ShopSellView.AmountTextBox.Text = string.Empty;
@@ -57,7 +62,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
                     }
                     // Otherwise drop the item
                     else if (!TradeView.Panel.Visible)
-                        if (Player.Me.Inventory[slot].Amount != 1)
+                        if (inv.Slots[slot].Amount != 1)
                         {
                             DropItemView.InventorySlot = slot;
                             DropItemView.AmountTextBox.Text = string.Empty;
@@ -84,7 +89,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
     {
         if (slot <= 0) return;
-        if (Player.Me.Inventory[slot].Item == null) return;
+        if (GameContext.Instance.LocalPlayer.GetInventory().Slots[slot]?.Item == null) return;
 
         // Use item
         playerSender.InventoryUse((byte)slot);
@@ -92,7 +97,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
 
     private static void OnGridSlotHover(short slot)
     {
-        var item = Player.Me.Inventory[slot].Item;
+        var item = GameContext.Instance.LocalPlayer.GetInventory().Slots[slot]?.Item;
         if (item == null) return;
         string? context = null;
         if (ShopView.Panel.Visible && ShopView.OpenedShop?.FindBought(item) != null)

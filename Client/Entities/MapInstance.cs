@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Arch.Core;
+using CryBits.Client.Components.Movement;
+using CryBits.Client.Worlds;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using static CryBits.Utils;
@@ -13,7 +16,7 @@ internal class MapInstance
 
     // Map data
     public readonly Map Data;
-    public NpcInstance[] Npc;
+    public Entity[] Npcs;
 
     public MapInstance(Map data)
     {
@@ -22,21 +25,27 @@ internal class MapInstance
 
     private bool HasNpc(byte x, byte y)
     {
-        // Check if an NPC exists at the given tile
-        for (byte i = 0; i < Npc.Length; i++)
-            if (Npc[i].Data != null)
-                if ((Npc[i].X, Npc[i].Y) == (x, y))
-                    return true;
+        var world = GameContext.Instance.World;
+        for (byte i = 0; i < Npcs.Length; i++)
+            if (Npcs[i] != Entity.Null)
+            {
+                ref var m = ref world.Get<MovementComponent>(Npcs[i]);
+                if (m.TileX == x && m.TileY == y) return true;
+            }
 
         return false;
     }
 
     private bool HasPlayer(short x, short y)
     {
-        // Check if a player exists at the given tile
+        var world = GameContext.Instance.World;
         for (byte i = 0; i < Player.List.Count; i++)
-            if ((Player.List[i].X, Player.List[i].Y, Player.List[i].MapInstance) == (x, y, this))
-                return true;
+        {
+            var p = Player.List[i];
+            if (p.MapInstance != this) continue;
+            ref var m = ref world.Get<MovementComponent>(p.Entity);
+            if (m.TileX == x && m.TileY == y) return true;
+        }
 
         return false;
     }

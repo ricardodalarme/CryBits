@@ -2,6 +2,7 @@ using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
+using CryBits.Client.Worlds;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
@@ -29,14 +30,16 @@ internal class TradeHandler(TradeSender tradeSender)
             TradeView.OfferDisabledPanel.Visible = false;
 
             // Clear trade offer data
-            Player.Me.TradeOffer = new ItemSlot[MaxInventory];
-            Player.Me.TradeTheirOffer = new ItemSlot[MaxInventory];
+            ref var trade = ref GameContext.Instance.LocalPlayer.GetTrade();
+            trade.Offer = new ItemSlot[MaxInventory];
+            trade.TheirOffer = new ItemSlot[MaxInventory];
         }
         else
         {
             // Clear trade offer data
-            Player.Me.TradeOffer = null;
-            Player.Me.TradeTheirOffer = null;
+            ref var trade = ref GameContext.Instance.LocalPlayer.GetTrade();
+            trade.Offer = [];
+            trade.TheirOffer = [];
         }
     }
 
@@ -77,17 +80,18 @@ internal class TradeHandler(TradeSender tradeSender)
     internal void TradeOffer(TradeOfferPacket packet)
     {
         // Read trade offer data
+        ref var trade = ref GameContext.Instance.LocalPlayer.GetTrade();
         if (packet.Own)
             for (byte i = 0; i < MaxInventory; i++)
             {
-                Player.Me.TradeOffer[i].Item = Item.List.Get(packet.Items[i].ItemId);
-                Player.Me.TradeOffer[i].Amount = packet.Items[i].Amount;
+                trade.Offer[i].Item = Item.List.Get(packet.Items[i].ItemId);
+                trade.Offer[i].Amount = packet.Items[i].Amount;
             }
         else
             for (byte i = 0; i < MaxInventory; i++)
             {
-                Player.Me.TradeTheirOffer[i].Item = Item.List.Get(packet.Items[i].ItemId);
-                Player.Me.TradeTheirOffer[i].Amount = packet.Items[i].Amount;
+                trade.TheirOffer[i].Item = Item.List.Get(packet.Items[i].ItemId);
+                trade.TheirOffer[i].Amount = packet.Items[i].Amount;
             }
     }
 }

@@ -2,9 +2,14 @@ using Arch.Core;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
+using CryBits.Client.Components.Hotbar;
+using CryBits.Client.Components.Inventory;
 using CryBits.Client.Components.Movement;
+using CryBits.Client.Components.Player;
+using CryBits.Client.Components.Trade;
 using CryBits.Client.Entities;
 using CryBits.Client.Framework.Graphics;
+using CryBits.Enums;
 using SFML.Graphics;
 
 namespace CryBits.Client.Spawners;
@@ -14,7 +19,7 @@ namespace CryBits.Client.Spawners;
 /// </summary>
 internal static class PlayerSpawner
 {
-    public static Entity Spawn(World world, Player player)
+    public static Entity Spawn(World world, Player player, byte x, byte y, Direction direction)
     {
         var texture = Textures.Characters[player.TextureNum];
         var size = texture.ToSize();
@@ -28,15 +33,19 @@ internal static class PlayerSpawner
         player.MaxVital.CopyTo(vitalsComponent.Max, 0);
 
         return world.Create(
-            new TransformComponent(player.X * Globals.Grid, player.Y * Globals.Grid),
+            new TransformComponent(x * Globals.Grid, y * Globals.Grid),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
-            new MovementComponent { TileX = player.X, TileY = player.Y, Direction = player.Direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
-            new CharacterStateComponent { Direction = player.Direction },
+            new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
+            new CharacterStateComponent { Direction = direction },
             new DamageTintComponent(),
             new ShadowComponent(Textures.Shadow),
             new PlayerTagComponent(),
             vitalsComponent,
+            new InventoryComponent(),
+            new HotbarComponent(),
+            new LevelComponent(),
+            new TradeComponent(),
             new TextComponent(player.Name, textColor, frameWidth / 2, -frameHeight / 2)
         );
     }

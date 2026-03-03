@@ -4,6 +4,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Worlds;
 using CryBits.Enums;
 using SFML.Window;
 
@@ -111,6 +112,6 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
         IntelligenceLabel.SetArguments(Player.Me.Attribute[(byte)Attribute.Intelligence]);
         AgilityLabel.SetArguments(Player.Me.Attribute[(byte)Attribute.Agility]);
         VitalityLabel.SetArguments(Player.Me.Attribute[(byte)Attribute.Vitality]);
-        PointsLabel.SetArguments(Player.Me.Points);
+        PointsLabel.SetArguments(GameContext.Instance.LocalPlayer.GetLevel().Points);
     }
 }
