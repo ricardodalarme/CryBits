@@ -32,6 +32,7 @@ internal class GameLoop(RenderPipeline renderPipeline)
         new FadeSystem(GameContext.Instance.World),
         new ScrollingSpriteSystem(GameContext.Instance.World),
         new WeatherSimulationSystem(GameContext.Instance.World, GameContext.Instance),
+        new MapCollisionSystem(GameContext.Instance.World, GameContext.Instance),
         new LocalPlayerInputSystem(GameContext.Instance.World, GameContext.Instance),
         new MovementSystem(GameContext.Instance.World),
         new CharacterAnimationControllerSystem(GameContext.Instance.World),
