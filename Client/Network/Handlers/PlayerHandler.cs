@@ -3,7 +3,6 @@ using Arch.Core;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Equipment;
 using CryBits.Client.Components.Movement;
-using CryBits.Client.Entities;
 using CryBits.Client.Spawners;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
@@ -24,26 +23,18 @@ internal class PlayerHandler(GameContext context)
     internal void PlayerData(PlayerDataPacket packet)
     {
         var name = packet.Name;
-        Player player;
+        var isLocal = name == context.LocalPlayerName;
 
-        if (name != Player.Me.Name)
-        {
-            player = new Player(name);
-            Player.List.Add(player);
-        }
-        else
-            player = Player.Me;
-
-        player.MapInstance = MapInstance.List[packet.MapId];
-        context.CurrentMap = player.MapInstance;
+        context.CurrentMap = context.Maps[packet.MapId];
 
         var equipmentItems = new Item?[(byte)Equipment.Count];
         for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = Item.List.Get(packet.Equipment[n]);
 
-        // Eager spawn: (re)create the ECS entity right here so every subsequent
-        // handler and the input loop can always reference a valid entity.
-        if (player.Entity != ArchEntity.Null) context.World.Destroy(player.Entity);
-        player.Entity = PlayerSpawner.Spawn(
+        // Destroy old entity if present (re-spawn on map transition).
+        var old = context.GetPlayerEntity(name);
+        if (old != ArchEntity.Null) context.World.Destroy(old);
+
+        var entity = PlayerSpawner.Spawn(
             context.World,
             name,
             packet.TextureNum,
@@ -54,11 +45,12 @@ internal class PlayerHandler(GameContext context)
             equipmentItems,
             packet.X, packet.Y,
             (Direction)packet.Direction,
-            player == Player.Me);
+            isLocal,
+            packet.MapId);
 
-        if (player == Player.Me)
+        if (isLocal)
         {
-            context.LocalPlayer = new LocalPlayer(player.Entity);
+            context.LocalPlayer = new LocalPlayer(entity);
             BarsView.Update();
             CharacterView.Update();
         }
@@ -67,9 +59,9 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerPosition(PlayerPositionPacket packet)
     {
-        var player = Player.Get(packet.Name);
+        var entity = context.GetPlayerEntity(packet.Name);
 
-        ref var movement = ref context.World.Get<MovementComponent>(player.Entity);
+        ref var movement = ref context.World.Get<MovementComponent>(entity);
         movement.TileX = packet.X;
         movement.TileY = packet.Y;
         movement.Direction = (Direction)packet.Direction;
@@ -81,42 +73,41 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerVitals(PlayerVitalsPacket packet)
     {
-        var player = Player.Get(packet.Name);
+        var entity = context.GetPlayerEntity(packet.Name);
 
-        ref var vitals = ref context.World.Get<VitalsComponent>(player.Entity);
+        ref var vitals = ref context.World.Get<VitalsComponent>(entity);
         for (byte i = 0; i < (byte)Vital.Count; i++)
         {
             vitals.Current[i] = packet.Vital[i];
             vitals.Max[i] = packet.MaxVital[i];
         }
 
-        if (player == Player.Me) BarsView.Update();
+        if (packet.Name == context.LocalPlayerName) BarsView.Update();
     }
 
     [PacketHandler]
     internal void PlayerEquipments(PlayerEquipmentsPacket packet)
     {
-        var player = Player.Get(packet.Name);
+        var entity = context.GetPlayerEntity(packet.Name);
 
         // Update player's equipped items
-        ref var equipment = ref context.World.Get<EquipmentComponent>(player.Entity);
+        ref var equipment = ref context.World.Get<EquipmentComponent>(entity);
         for (byte i = 0; i < (byte)Equipment.Count; i++) equipment.Slots[i] = Item.List.Get(packet.Equipments[i]);
     }
 
     [PacketHandler]
     internal void PlayerLeave(PlayerLeavePacket packet)
     {
-        var player = Player.Get(packet.Name);
-        if (player.Entity != ArchEntity.Null) context.World.Destroy(player.Entity);
-        Player.List.Remove(player);
+        var entity = context.GetPlayerEntity(packet.Name);
+        if (entity != ArchEntity.Null) context.World.Destroy(entity);
     }
 
     [PacketHandler]
     internal void PlayerMove(PlayerMovePacket packet)
     {
-        var player = Player.Get(packet.Name);
+        var entity = context.GetPlayerEntity(packet.Name);
 
-        ref var movement = ref context.World.Get<MovementComponent>(player.Entity);
+        ref var movement = ref context.World.Get<MovementComponent>(entity);
         movement.TileX = packet.X;
         movement.TileY = packet.Y;
         movement.Direction = (Direction)packet.Direction;
@@ -137,18 +128,18 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerDirection(PlayerDirectionPacket packet)
     {
-        var player = Player.Get(packet.Name);
-        context.World.Get<MovementComponent>(player.Entity).Direction = (Direction)packet.Direction;
+        var entity = context.GetPlayerEntity(packet.Name);
+        context.World.Get<MovementComponent>(entity).Direction = (Direction)packet.Direction;
     }
 
     [PacketHandler]
     internal void PlayerAttack(PlayerAttackPacket packet)
     {
-        var player = Player.Get(packet.Name);
+        var entity = context.GetPlayerEntity(packet.Name);
         var victim = packet.Victim;
         var victimType = (Target)packet.VictimType;
 
-        ref var state = ref context.World.Get<CharacterStateComponent>(player.Entity);
+        ref var state = ref context.World.Get<CharacterStateComponent>(entity);
         state.IsAttacking = true;
         state.AttackTimer = Environment.TickCount;
 
@@ -156,7 +147,7 @@ internal class PlayerHandler(GameContext context)
 
         var victimEntity = victimType switch
         {
-            Target.Player => Player.Get(victim).Entity,
+            Target.Player => context.GetPlayerEntity(victim),
             Target.Npc => context.CurrentMap.Npcs[byte.Parse(victim)],
             _ => throw new ArgumentOutOfRangeException()
         };

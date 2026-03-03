@@ -2,8 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using Arch.System;
-using CryBits.Client.Entities;
-using CryBits.Client.Framework.Constants;
 using CryBits.Client.Graphics;
 using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
@@ -34,6 +32,7 @@ internal class GameLoop(RenderPipeline renderPipeline)
         new FadeSystem(GameContext.Instance.World),
         new ScrollingSpriteSystem(GameContext.Instance.World),
         new WeatherSimulationSystem(GameContext.Instance.World, GameContext.Instance),
+        new LocalPlayerInputSystem(GameContext.Instance.World, GameContext.Instance),
         new MovementSystem(GameContext.Instance.World),
         new CharacterAnimationControllerSystem(GameContext.Instance.World),
         new AnimatedSpriteSystem(GameContext.Instance.World),
@@ -49,7 +48,6 @@ internal class GameLoop(RenderPipeline renderPipeline)
     public void Init()
     {
         var timer1000 = 0;
-        var timer30 = 0;
         short fps = 0;
 
         while (Program.Working)
@@ -64,17 +62,6 @@ internal class GameLoop(RenderPipeline renderPipeline)
             Renderer.Instance.RenderWindow.DispatchEvents();
 
             UpdateTextBox();
-
-            if (Screen.Current == Screens.Game)
-            {
-                if (timer30 < Environment.TickCount)
-                {
-                    Player.Me.Logic();
-
-                    // Reset 30 ms timer
-                    timer30 = Environment.TickCount + 30;
-                }
-            }
 
             // Use high-resolution stopwatch for delta time
             var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;

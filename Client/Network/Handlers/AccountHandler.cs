@@ -1,5 +1,4 @@
 using System;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
@@ -9,6 +8,7 @@ using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
+using CryBits.Client.Worlds;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
@@ -25,16 +25,14 @@ internal class AccountHandler(AudioManager audioManager)
     internal void Join(JoinPacket packet)
     {
         // Clear entity collections
-        Player.List = [];
+        var ctx = GameContext.Instance;
+        ctx.Maps.Clear();
         Item.List = [];
         Shop.List = [];
         Npc.List = [];
         Map.List = [];
-        MapInstance.List = [];
 
-        // Initialize local player from server data
-        Player.Me = new Me(packet.Name);
-        Player.List.Add(Player.Me);
+        ctx.LocalPlayerName = packet.Name;
     }
 
     [PacketHandler]

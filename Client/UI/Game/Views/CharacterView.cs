@@ -1,5 +1,4 @@
 using System.Drawing;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
@@ -105,7 +104,7 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
 
     public static void Update()
     {
-        NameLabel.SetArguments(Player.Me.Name);
+        NameLabel.SetArguments(GameContext.Instance.LocalPlayer.GetName());
         LevelLabel.SetArguments(GameContext.Instance.LocalPlayer.GetLevel().Level);
         StrengthLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Strength]);
         ResistanceLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Resistance]);

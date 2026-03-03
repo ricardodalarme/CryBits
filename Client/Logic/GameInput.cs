@@ -1,6 +1,6 @@
-using CryBits.Client.Entities;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Worlds;
 using CryBits.Client.UI.Game;
 using SFML.Window;
 
@@ -24,7 +24,7 @@ internal static class GameInput
         switch (e.Code)
         {
             case Keyboard.Key.Enter: Chat.Type(); break;
-            case Keyboard.Key.Space: Player.Me.CollectItem(); break;
+            case Keyboard.Key.Space: GameContext.Instance.LocalPlayer.CollectItem(); break;
             case Keyboard.Key.Num1: PlayerSender.Instance.HotbarUse(1); break;
             case Keyboard.Key.Num2: PlayerSender.Instance.HotbarUse(2); break;
             case Keyboard.Key.Num3: PlayerSender.Instance.HotbarUse(3); break;

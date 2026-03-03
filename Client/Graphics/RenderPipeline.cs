@@ -1,5 +1,4 @@
 using Arch.System;
-using CryBits.Client.Entities;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
