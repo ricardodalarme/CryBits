@@ -49,11 +49,11 @@ internal sealed class WeatherRenderSystem(World world) : BaseSystem<World, int>(
         // ── 2. Full-screen lightning overlay ─────────────────────────────────
         World.Query(in _lightningQuery, (ref LightningComponent lightning) =>
         {
-            if (lightning.Intensity > 0)
+            if (lightning.Intensity > 0f)
                 Renderer.Instance.Draw(
                     Textures.Blank,
                     0, 0, 0, 0, ScreenWidth, ScreenHeight,
-                    new Color(255, 255, 255, lightning.Intensity));
+                    new Color(255, 255, 255, (byte)lightning.Intensity));
         });
     }
 

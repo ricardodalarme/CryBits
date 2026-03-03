@@ -19,11 +19,19 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
 
     public override void Update(in float dt)
     {
-        var now = Environment.TickCount;
+        var deltaTime = dt;
 
         World.Query(in _query, (ref MovementComponent movement, ref CharacterStateComponent state, ref AnimatedSpriteComponent anim) =>
         {
-            // 1. Set the Row based on Direction (source of truth: MovementComponent)
+            // 1. Tick down attack cooldown
+            if (state.AttackTimer > 0f)
+            {
+                state.AttackTimer = MathF.Max(0f, state.AttackTimer - deltaTime);
+                if (state.AttackTimer <= 0f)
+                    state.IsAttacking = false;
+            }
+
+            // 2. Set the Row based on Direction (source of truth: MovementComponent)
             anim.CurrentFrameY = movement.Direction switch
             {
                 Direction.Up => MovementUp,
@@ -33,9 +41,10 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
                 _ => 0
             };
 
-            // 2. Set the Column and Playback based on State
+            // 3. Set the Column and Playback based on State
             var isMoving = movement.OffsetX != 0f || movement.OffsetY != 0f;
-            if (state.IsAttacking && state.AttackTimer + AttackSpeed / 2 > now)
+            // Show attack frame during the first half of the cooldown window.
+            if (state.IsAttacking && state.AttackTimer > AttackSpeed / 2000f)
             {
                 anim.Playing = false; // Stop walking animation
                 anim.CurrentFrameX = AnimationAttack; // Force the attack frame

@@ -28,8 +28,8 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context) 
     // Reused each frame to avoid heap allocation while collecting off-screen entities.
     private readonly List<ArchEntity> _toDestroy = [];
 
-    // Environment.TickCount-based timer for snow horizontal drift cadence (35 ms).
-    private int _snowMoveTimer;
+    // Accumulator for snow horizontal drift cadence (fires every 35 ms).
+    private float _snowAccumulator;
 
     private static readonly string[] _thunderList = [Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4];
 
@@ -39,19 +39,18 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context) 
         if (weatherData == null || weatherData.Type == Weather.Normal) return;
 
         var type = weatherData.Type;
+        var deltaTime = dt;
 
         // ── 1. Snow movement timer ───────────────────────────────────────────
-        bool snowMove = _snowMoveTimer < Environment.TickCount;
-        if (snowMove) _snowMoveTimer = Environment.TickCount + 35;
+        _snowAccumulator += deltaTime;
+        bool snowMove = _snowAccumulator >= 0.035f;
+        if (snowMove) _snowAccumulator = 0f;
 
         // ── 2. Lightning decay ───────────────────────────────────────────────
         World.Query(in _lightningQuery, (ref LightningComponent lightning) =>
         {
-            if (lightning.Intensity > 0 && lightning.DecayTimer < Environment.TickCount)
-            {
-                lightning.Intensity -= 10;
-                lightning.DecayTimer = Environment.TickCount + 25;
-            }
+            if (lightning.Intensity > 0f)
+                lightning.Intensity = MathF.Max(0f, lightning.Intensity - 400f * deltaTime);
         });
 
         // ── 3. Move particles; collect those that left the screen ────────────
@@ -173,8 +172,7 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context) 
         {
             World.Query(in _lightningQuery, (ref LightningComponent lightning) =>
             {
-                lightning.Intensity = 190;
-                lightning.DecayTimer = Environment.TickCount + 25;
+                lightning.Intensity = 190f;
             });
         }
     }

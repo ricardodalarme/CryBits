@@ -63,7 +63,7 @@ internal class OptionsView(AudioManager audioManager) : IView
     {
         Options.Chat = ChatCheckBox.Checked;
         OptionsRepository.Write();
-        if (Options.Chat) GameLoop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
+        if (Options.Chat) GameLoop.ChatTimer = Environment.TickCount64 + Chat.SleepTimer;
     }
 
     private void OnMetricsChanged()

@@ -29,7 +29,7 @@ internal class ChatView : IView
     private void OnMessagePressed()
     {
         // Focus chat textbox and reset timer
-        GameLoop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
+        GameLoop.ChatTimer = Environment.TickCount64 + Chat.SleepTimer;
         Panel.Visible = true;
     }
 

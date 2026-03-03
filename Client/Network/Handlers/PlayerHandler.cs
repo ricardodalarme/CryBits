@@ -141,7 +141,7 @@ internal class PlayerHandler(GameContext context)
 
         ref var state = ref context.World.Get<CharacterStateComponent>(entity);
         state.IsAttacking = true;
-        state.AttackTimer = Environment.TickCount;
+        state.AttackTimer = AttackSpeed / 1000f;
 
         if (victim == string.Empty || victimType == Target.None) return;
 
@@ -157,7 +157,7 @@ internal class PlayerHandler(GameContext context)
         BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);
         ref var tint = ref context.World.Get<DamageTintComponent>(victimEntity);
         tint.IsHurt = true;
-        tint.HurtTimestamp = Environment.TickCount;
+        tint.TimeRemaining = 0.325f;
     }
 
     [PacketHandler]

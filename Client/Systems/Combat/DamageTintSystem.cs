@@ -1,4 +1,3 @@
-using System;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Combat;
@@ -14,13 +13,16 @@ internal sealed class DamageTintSystem(World world) : BaseSystem<World, float>(w
 
     public override void Update(in float dt)
     {
-        var now = Environment.TickCount;
+        var deltaTime = dt;
 
         World.Query(in _query, (ref SpriteComponent sprite, ref DamageTintComponent damage) =>
         {
-            // Auto-clear the hurt flag 325 ms after the hit was received.
-            if (damage.IsHurt && damage.HurtTimestamp + 325 < now)
-                damage.IsHurt = false;
+            if (damage.IsHurt)
+            {
+                damage.TimeRemaining -= deltaTime;
+                if (damage.TimeRemaining <= 0f)
+                    damage.IsHurt = false;
+            }
 
             sprite.Tint = damage.IsHurt ? new Color(205, 125, 125) : Color.White;
         });

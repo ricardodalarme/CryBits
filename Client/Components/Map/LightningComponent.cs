@@ -11,11 +11,9 @@ namespace CryBits.Client.Components.Map;
 /// </summary>
 internal struct LightningComponent
 {
-    /// <summary>Current flash alpha in the 0–255 range. 0 = no overlay.</summary>
-    public byte Intensity;
-
     /// <summary>
-    /// <see cref="System.Environment.TickCount"/> deadline for the next 10-unit decay step.
+    /// Current flash alpha in the 0–255 range. 0 = no overlay.
+    /// Decayed continuously at 400 units/second by <c>WeatherSimulationSystem</c>.
     /// </summary>
-    public int DecayTimer;
+    public float Intensity;
 }

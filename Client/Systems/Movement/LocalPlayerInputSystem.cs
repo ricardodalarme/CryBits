@@ -22,7 +22,7 @@ namespace CryBits.Client.Systems.Movement;
 /// </summary>
 internal class LocalPlayerInputSystem(World world, GameContext context) : BaseSystem<World, float>(world)
 {
-    private int _nextInputMs;
+    private float _inputAccumulator;
 
     public override void Update(in float t)
     {
@@ -30,8 +30,9 @@ internal class LocalPlayerInputSystem(World world, GameContext context) : BaseSy
         if (entity == Entity.Null || !World.IsAlive(entity)) return;
 
         // Throttle movement + attack to ~33 Hz (matches legacy Me.Logic timer)
-        if (Environment.TickCount < _nextInputMs) return;
-        _nextInputMs = Environment.TickCount + 30;
+        _inputAccumulator += t;
+        if (_inputAccumulator < 0.030f) return;
+        _inputAccumulator = 0f;
 
         CheckMovement(entity);
         CheckAttack(entity);
@@ -76,20 +77,14 @@ internal class LocalPlayerInputSystem(World world, GameContext context) : BaseSy
 
     private void CheckAttack(Entity entity)
     {
-        ref var state = ref World.Get<CharacterStateComponent>(entity);
-
-        if (state.AttackTimer + AttackSpeed < Environment.TickCount)
-        {
-            state.AttackTimer = 0;
-            state.IsAttacking = false;
-        }
-
         if (!InputManager.Instance.IsKeyPressed(Keyboard.Key.LControl)) return;
-        if (state.AttackTimer > 0) return;
+
+        ref var state = ref World.Get<CharacterStateComponent>(entity);
+        if (state.IsAttacking) return;  // cooldown still running
         if (TradeView.Panel.Visible) return;
         if (ShopView.Panel.Visible) return;
 
-        state.AttackTimer = Environment.TickCount;
+        state.AttackTimer = AttackSpeed / 1000f;
         state.IsAttacking = true;
         PlayerSender.Instance.PlayerAttack();
     }
