@@ -75,7 +75,7 @@ internal static class PlayerSpawner
             new TextComponent(name, textColor, frameWidth / 2, -frameHeight / 2)
         );
 
-        if (isLocalPlayer) world.Add(entity, new PartyComponent());
+        if (isLocalPlayer) world.Add(entity, new PartyComponent(), new LocalPlayerTagComponent());
         world.Add(entity, new MapIdComponent { Value = mapId });
 
         return entity;
