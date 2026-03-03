@@ -19,7 +19,7 @@ internal class AuthHandler
     internal void Alert(AlertPacket packet)
     {
         // Show alert message
-        Utils.Alert.Show(packet.Message);
+        UI.Alert.Show(packet.Message);
     }
 
     [PacketHandler]

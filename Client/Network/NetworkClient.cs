@@ -1,6 +1,5 @@
 using System;
 using CryBits.Client.UI;
-using CryBits.Client.Utils;
 using CryBits.Client.Worlds;
 using LiteNetLib;
 using static CryBits.Globals;
