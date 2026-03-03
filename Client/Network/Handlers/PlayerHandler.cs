@@ -1,6 +1,7 @@
 using System;
 using Arch.Core;
 using CryBits.Client.Components.Combat;
+using CryBits.Client.Components.Equipment;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Entities;
 using CryBits.Client.Spawners;
@@ -33,23 +34,27 @@ internal class PlayerHandler(GameContext context)
         else
             player = Player.Me;
 
-        player.TextureNum = packet.TextureNum;
-        player.Level = packet.Level;
         player.MapInstance = MapInstance.List[packet.MapId];
-        for (byte n = 0; n < (byte)Vital.Count; n++)
-        {
-            player.Vital[n] = packet.Vital[n];
-            player.MaxVital[n] = packet.MaxVital[n];
-        }
-
-        for (byte n = 0; n < (byte)Attribute.Count; n++) player.Attribute[n] = packet.Attribute[n];
-        for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(packet.Equipment[n]);
         context.CurrentMap = player.MapInstance;
+
+        var equipmentItems = new Item?[(byte)Equipment.Count];
+        for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = Item.List.Get(packet.Equipment[n]);
 
         // Eager spawn: (re)create the ECS entity right here so every subsequent
         // handler and the input loop can always reference a valid entity.
         if (player.Entity != ArchEntity.Null) context.World.Destroy(player.Entity);
-        player.Entity = PlayerSpawner.Spawn(context.World, player, packet.X, packet.Y, (Direction)packet.Direction);
+        player.Entity = PlayerSpawner.Spawn(
+            context.World,
+            name,
+            packet.TextureNum,
+            packet.Level,
+            packet.Vital,
+            packet.MaxVital,
+            packet.Attribute,
+            equipmentItems,
+            packet.X, packet.Y,
+            (Direction)packet.Direction,
+            player == Player.Me);
 
         if (player == Player.Me)
         {
@@ -78,12 +83,6 @@ internal class PlayerHandler(GameContext context)
     {
         var player = Player.Get(packet.Name);
 
-        for (byte i = 0; i < (byte)Vital.Count; i++)
-        {
-            player.Vital[i] = packet.Vital[i];
-            player.MaxVital[i] = packet.MaxVital[i];
-        }
-
         ref var vitals = ref context.World.Get<VitalsComponent>(player.Entity);
         for (byte i = 0; i < (byte)Vital.Count; i++)
         {
@@ -100,7 +99,8 @@ internal class PlayerHandler(GameContext context)
         var player = Player.Get(packet.Name);
 
         // Update player's equipped items
-        for (byte i = 0; i < (byte)Equipment.Count; i++) player.Equipment[i] = Item.List.Get(packet.Equipments[i]);
+        ref var equipment = ref context.World.Get<EquipmentComponent>(player.Entity);
+        for (byte i = 0; i < (byte)Equipment.Count; i++) equipment.Slots[i] = Item.List.Get(packet.Equipments[i]);
     }
 
     [PacketHandler]

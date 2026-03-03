@@ -5,6 +5,7 @@ using CryBits.Client.Components.Hotbar;
 using CryBits.Client.Components.Inventory;
 using CryBits.Client.Components.Player;
 using CryBits.Client.Components.Trade;
+using CryBits.Client.Components.Party;
 
 namespace CryBits.Client.Worlds;
 
@@ -37,4 +38,10 @@ internal class LocalPlayer(Entity entity)
 
     /// <summary>Convenient accessor for EquipmentComponent.</summary>
     public ref EquipmentComponent GetEquipment() => ref GameContext.Instance.World.Get<EquipmentComponent>(Entity);
+
+    /// <summary>Convenient accessor for AppearanceComponent.</summary>
+    public ref AppearanceComponent GetAppearance() => ref GameContext.Instance.World.Get<AppearanceComponent>(Entity);
+
+    /// <summary>Convenient accessor for PartyComponent.</summary>
+    public ref PartyComponent GetParty() => ref GameContext.Instance.World.Get<PartyComponent>(Entity);
 }

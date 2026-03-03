@@ -58,20 +58,20 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
     }
 
     private void OnRenderFace(Point pos) =>
-        characterRenderer.DrawFace(Player.Me.TextureNum, pos);
+        characterRenderer.DrawFace(GameContext.Instance.LocalPlayer.GetAppearance().TextureNum, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        if (Player.Me.Equipment[slot] == null) return;
+        if (GameContext.Instance.LocalPlayer.GetEquipment().Slots[slot] == null) return;
 
         if (e.Button == Mouse.Button.Right)
-            if (Player.Me.Equipment[slot].Bind != BindOn.Equip)
+            if (GameContext.Instance.LocalPlayer.GetEquipment().Slots[slot].Bind != BindOn.Equip)
                 playerSender.EquipmentRemove((byte)slot);
     }
 
     private static void OnGridSlotHover(short slot)
     {
-        var item = Player.Me.Equipment[slot];
+        var item = GameContext.Instance.LocalPlayer.GetEquipment().Slots[slot];
         if (item == null) return;
         InformationView.Show(item.Id, Panel.Position + new Size(-186, 5));
     }
@@ -106,12 +106,12 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
     public static void Update()
     {
         NameLabel.SetArguments(Player.Me.Name);
-        LevelLabel.SetArguments(Player.Me.Level);
-        StrengthLabel.SetArguments(Player.Me.Attribute[(byte)Attribute.Strength]);
-        ResistanceLabel.SetArguments(Player.Me.Attribute[(byte)Attribute.Resistance]);
-        IntelligenceLabel.SetArguments(Player.Me.Attribute[(byte)Attribute.Intelligence]);
-        AgilityLabel.SetArguments(Player.Me.Attribute[(byte)Attribute.Agility]);
-        VitalityLabel.SetArguments(Player.Me.Attribute[(byte)Attribute.Vitality]);
+        LevelLabel.SetArguments(GameContext.Instance.LocalPlayer.GetLevel().Level);
+        StrengthLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Strength]);
+        ResistanceLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Resistance]);
+        IntelligenceLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Intelligence]);
+        AgilityLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Agility]);
+        VitalityLabel.SetArguments(GameContext.Instance.LocalPlayer.GetAttributes().Values[(byte)Attribute.Vitality]);
         PointsLabel.SetArguments(GameContext.Instance.LocalPlayer.GetLevel().Points);
     }
 }

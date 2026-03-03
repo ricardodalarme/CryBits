@@ -16,7 +16,6 @@ namespace CryBits.Client.Entities;
 
 internal class Me(string name) : Player(name)
 {
-    public Player[] Party = [];
     private int _collectTimer;
 
     public void Logic()
