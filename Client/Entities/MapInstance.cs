@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using CryBits.Client.Framework.Entities.Map;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using static CryBits.Utils;
@@ -15,12 +14,10 @@ internal class MapInstance
     // Map data
     public readonly Map Data;
     public NpcInstance[] Npc;
-    public MapWeatherInstance Weather { get; init; }
 
     public MapInstance(Map data)
     {
         Data = data;
-        Weather = new MapWeatherInstance(data.Weather);
     }
 
     private bool HasNpc(byte x, byte y)
@@ -60,10 +57,5 @@ internal class MapInstance
         if (Data.Attribute[x, y].Block[(byte)direction]) return true;
         if (HasPlayer(nextX, nextY) || HasNpc(nextX, nextY)) return true;
         return false;
-    }
-
-    public void Logic()
-    {
-        Weather.Update();
     }
 }

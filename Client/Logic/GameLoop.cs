@@ -9,6 +9,7 @@ using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Systems.Combat;
 using CryBits.Client.Systems.Core;
+using CryBits.Client.Systems.Map;
 using CryBits.Client.Systems.Movement;
 using CryBits.Client.Worlds;
 using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
@@ -32,6 +33,7 @@ internal class GameLoop(RenderPipeline renderPipeline)
         "DeltaTimeSystems",
         new FadeSystem(GameContext.Instance.World),
         new ScrollingSpriteSystem(GameContext.Instance.World),
+        new WeatherSimulationSystem(GameContext.Instance.World, GameContext.Instance),
         new MovementSystem(GameContext.Instance.World),
         new CharacterAnimationControllerSystem(GameContext.Instance.World),
         new AnimatedSpriteSystem(GameContext.Instance.World),
@@ -65,7 +67,6 @@ internal class GameLoop(RenderPipeline renderPipeline)
 
             if (Screen.Current == Screens.Game)
             {
-                GameContext.Instance.CurrentMap.Logic();
                 if (timer30 < Environment.TickCount)
                 {
                     // Player logic.
