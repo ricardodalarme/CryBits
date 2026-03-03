@@ -2,7 +2,6 @@ using Arch.Core;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Systems.Core;
 using CryBits.Entities;
 using static CryBits.Globals;
 

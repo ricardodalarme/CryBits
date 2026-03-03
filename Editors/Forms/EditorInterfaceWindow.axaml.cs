@@ -6,11 +6,11 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Interfacily.Enums;
-using CryBits.Enums;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
 using CryBits.Editors.Library.Repositories;
+using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
@@ -18,10 +18,10 @@ using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Label = CryBits.Client.Framework.Interfacily.Components.Label;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
-using ProgressBar = CryBits.Client.Framework.Interfacily.Components.ProgressBar;
-using SlotGrid = CryBits.Client.Framework.Interfacily.Components.SlotGrid;
 using Picture = CryBits.Client.Framework.Interfacily.Components.Picture;
 using Point = System.Drawing.Point;
+using ProgressBar = CryBits.Client.Framework.Interfacily.Components.ProgressBar;
+using SlotGrid = CryBits.Client.Framework.Interfacily.Components.SlotGrid;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Editors.Forms;
@@ -380,7 +380,7 @@ internal partial class EditorInterfaceWindow : Window
         lbl.Alignment = (TextAlign)(cmbPropLblAlignment.SelectedIndex >= 0 ? cmbPropLblAlignment.SelectedIndex : 0);
     }
 
-    private void clrPropLabel_ColorChanged(object? sender, Avalonia.Controls.ColorChangedEventArgs e)
+    private void clrPropLabel_ColorChanged(object? sender, ColorChangedEventArgs e)
     {
         if (_loadingProps || _selectedComponent is not Label lbl) return;
         var c = e.NewColor;

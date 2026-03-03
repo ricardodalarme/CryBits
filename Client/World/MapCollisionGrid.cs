@@ -9,7 +9,7 @@ namespace CryBits.Client.Worlds;
 ///
 /// Each cell stores the <see cref="Entity"/> currently standing on that tile
 /// (or <see cref="Entity.Null"/> when empty). The grid is rebuilt every frame
-/// by <see cref="CryBits.Client.Systems.Map.MapCollisionSystem"/> so
+/// by <see cref="Systems.Map.MapCollisionSystem"/> so
 /// <see cref="TileBlocked"/> lookups are always a single array read with no ECS
 /// queries involved.
 ///
@@ -21,7 +21,7 @@ internal sealed class MapCollisionGrid
 
     /// <summary>
     /// Resets every cell to <see cref="Entity.Null"/>.
-    /// Called once per frame by <see cref="CryBits.Client.Systems.Map.MapCollisionSystem"/>
+    /// Called once per frame by <see cref="Systems.Map.MapCollisionSystem"/>
     /// before the grid is repopulated.
     /// </summary>
     public void Clear() => Array.Fill(_cells, Entity.Null);

@@ -1,7 +1,5 @@
 using System;
-using Arch.Core;
 using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Equipment;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Spawners;
 using CryBits.Client.UI.Game.Views;
@@ -12,7 +10,6 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
-using Attribute = CryBits.Enums.Attribute;
 using ArchEntity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;

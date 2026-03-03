@@ -10,7 +10,6 @@ using CryBits.Client.Systems.Core;
 using CryBits.Client.Systems.Map;
 using CryBits.Client.Systems.Movement;
 using CryBits.Client.Worlds;
-using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Client.Logic;

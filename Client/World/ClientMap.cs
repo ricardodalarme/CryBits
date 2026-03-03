@@ -9,7 +9,7 @@ namespace CryBits.Client.Worlds;
 /// Runtime state for the current map: the static tile/link data received from
 /// the server, an index-keyed NPC entity array (used by server-protocol packet
 /// handlers to look up NPCs by slot), and an O(1) spatial collision grid
-/// maintained each frame by <see cref="CryBits.Client.Systems.Map.MapCollisionSystem"/>.
+/// maintained each frame by <see cref="Systems.Map.MapCollisionSystem"/>.
 /// </summary>
 internal class ClientMap(Map data)
 {
@@ -23,7 +23,7 @@ internal class ClientMap(Map data)
 
     /// <summary>
     /// O(1) spatial occupancy grid rebuilt every frame by
-    /// <see cref="CryBits.Client.Systems.Map.MapCollisionSystem"/>.
+    /// <see cref="Systems.Map.MapCollisionSystem"/>.
     /// Covers all players and NPCs currently on this map.
     /// </summary>
     public readonly MapCollisionGrid CollisionGrid = new();
