@@ -41,7 +41,7 @@ internal static class NpcSpawner
             new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
             new CharacterStateComponent { Direction = direction },
             new DamageTintComponent(),
-            new ShadowComponent(Textures.Shadow),
+            new ShadowComponent(),
             new NpcTagComponent(),
             vitalsComponent,
             new TextComponent(data.Name, textColor, frameWidth / 2, -frameHeight / 2)
