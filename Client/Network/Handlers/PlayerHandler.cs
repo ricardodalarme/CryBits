@@ -1,5 +1,6 @@
 using System;
 using Arch.Core;
+using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Entities;
 using CryBits.Client.Spawners;
@@ -48,8 +49,14 @@ internal class PlayerHandler(GameContext context)
         for (byte n = 0; n < (byte)Equipment.Count; n++) player.Equipment[n] = Item.List.Get(packet.Equipment[n]);
         context.CurrentMap = player.MapInstance;
 
+        // Eager spawn: (re)create the ECS entity right here so every subsequent
+        // handler and the input loop can always reference a valid entity.
+        if (player.Entity != ArchEntity.Null) context.World.Destroy(player.Entity);
+        player.Entity = PlayerSpawner.Spawn(context.World, player);
+
         if (player == Player.Me)
         {
+            context.LocalPlayer = new LocalPlayer(player.Entity);
             BarsView.Update();
             CharacterView.Update();
         }
@@ -63,8 +70,6 @@ internal class PlayerHandler(GameContext context)
         player.X = packet.X;
         player.Y = packet.Y;
         player.Direction = (Direction)packet.Direction;
-
-        if (player.Entity == ArchEntity.Null) return;
 
         ref var movement = ref context.World.Get<MovementComponent>(player.Entity);
         movement.TileX = packet.X;
@@ -86,6 +91,13 @@ internal class PlayerHandler(GameContext context)
             player.MaxVital[i] = packet.MaxVital[i];
         }
 
+        ref var vitals = ref context.World.Get<VitalsComponent>(player.Entity);
+        for (byte i = 0; i < (byte)Vital.Count; i++)
+        {
+            vitals.Current[i] = packet.Vital[i];
+            vitals.Max[i] = packet.MaxVital[i];
+        }
+
         if (player == Player.Me) BarsView.Update();
     }
 
@@ -101,8 +113,9 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerLeave(PlayerLeavePacket packet)
     {
-        // Remove player from list
-        Player.List.Remove(Player.Get(packet.Name));
+        var player = Player.Get(packet.Name);
+        if (player.Entity != ArchEntity.Null) context.World.Destroy(player.Entity);
+        Player.List.Remove(player);
     }
 
     [PacketHandler]
@@ -113,8 +126,6 @@ internal class PlayerHandler(GameContext context)
         player.X = packet.X;
         player.Y = packet.Y;
         player.Direction = (Direction)packet.Direction;
-
-        if (player.Entity == ArchEntity.Null) return;
 
         ref var movement = ref context.World.Get<MovementComponent>(player.Entity);
         movement.TileX = packet.X;
@@ -139,8 +150,6 @@ internal class PlayerHandler(GameContext context)
     {
         var player = Player.Get(packet.Name);
         player.Direction = (Direction)packet.Direction;
-
-        if (player.Entity == ArchEntity.Null) return;
         context.World.Get<MovementComponent>(player.Entity).Direction = (Direction)packet.Direction;
     }
 
@@ -151,8 +160,9 @@ internal class PlayerHandler(GameContext context)
         var victim = packet.Victim;
         var victimType = (Target)packet.VictimType;
 
-        player.Attacking = true;
-        player.AttackTimer = Environment.TickCount;
+        ref var state = ref context.World.Get<CharacterStateComponent>(player.Entity);
+        state.IsAttacking = true;
+        state.AttackTimer = Environment.TickCount;
 
         if (victim == string.Empty || victimType == Target.None) return;
 
@@ -166,7 +176,9 @@ internal class PlayerHandler(GameContext context)
         // Apply damage to victim
         var world = context.World;
         BloodSplatSpawner.Spawn(world, victimData.X, victimData.Y);
-        victimData.Hurt = Environment.TickCount;
+        ref var tint = ref context.World.Get<DamageTintComponent>(victimData.Entity);
+        tint.IsHurt = true;
+        tint.HurtTimestamp = Environment.TickCount;
     }
 
     [PacketHandler]

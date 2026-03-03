@@ -27,18 +27,15 @@ internal class Me(string name) : Player(name)
     public short Points;
     private int _collectTimer;
 
-    public override void Logic()
+    public void Logic()
     {
-        Me.CheckMovement();
-        Me.CheckAttack();
-        base.Logic();
+        if (Entity == Entity.Null) return;
+        CheckMovement();
+        CheckAttack();
     }
 
     public void CheckMovement()
     {
-        // Entity is spawned on the first Logic() call; input cannot arrive before that.
-        if (Entity == Entity.Null) return;
-
         ref var movement = ref GameContext.Instance.World.Get<MovementComponent>(Entity);
         if (movement.MovementState != Movement.Stopped) return;
 
@@ -101,20 +98,23 @@ internal class Me(string name) : Player(name)
 
     public void CheckAttack()
     {
+        ref var state = ref GameContext.Instance.World.Get<CharacterStateComponent>(Entity);
+
         // Reset attack state if cooldown expired.
-        if (AttackTimer + AttackSpeed < Environment.TickCount)
+        if (state.AttackTimer + AttackSpeed < Environment.TickCount)
         {
-            AttackTimer = 0;
-            Attacking = false;
+            state.AttackTimer = 0;
+            state.IsAttacking = false;
         }
 
         // Only proceed if attack key pressed and player may attack.
         if (!InputManager.Instance.IsKeyPressed(Keyboard.Key.LControl)) return;
-        if (AttackTimer > 0) return;
+        if (state.AttackTimer > 0) return;
         if (TradeView.Panel.Visible) return;
         if (ShopView.Panel.Visible) return;
 
-        AttackTimer = Environment.TickCount;
+        state.AttackTimer = Environment.TickCount;
+        state.IsAttacking = true;
         PlayerSender.Instance.PlayerAttack();
     }
 
