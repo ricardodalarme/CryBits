@@ -28,6 +28,7 @@ internal static class Program
 
         ToolsRepository.Read();
         OptionsRepository.Read();
+        KeyBindingsRepository.Read();
 
         // Window must be created before any event bindings that require it.
         Renderer.Instance.Init();

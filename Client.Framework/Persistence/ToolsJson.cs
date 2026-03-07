@@ -147,6 +147,40 @@ public sealed class PictureDto : ComponentDto
     [JsonPropertyName("height")]
     public int Height { get; set; }
 }
+// ─── Keybindings DTO ─────────────────────────────────────────────────────────
+
+/// <summary>
+/// On-disk representation of <see cref="KeyBindings"/>.
+/// Movement actions are stored as <see cref="SFML.Window.Keyboard.Scancode"/> names;
+/// all other actions as <see cref="SFML.Window.Keyboard.Key"/> names.
+/// </summary>
+public sealed class KeyBindingsDto
+{
+    // Movement
+    [JsonPropertyName("moveUp")]    public string MoveUp    { get; set; } = "Up";
+    [JsonPropertyName("moveDown")]  public string MoveDown  { get; set; } = "Down";
+    [JsonPropertyName("moveLeft")]  public string MoveLeft  { get; set; } = "Left";
+    [JsonPropertyName("moveRight")] public string MoveRight { get; set; } = "Right";
+
+    // Held actions
+    [JsonPropertyName("run")]    public string Run    { get; set; } = "LShift";
+    [JsonPropertyName("attack")] public string Attack { get; set; } = "LControl";
+
+    // Discrete actions
+    [JsonPropertyName("chat")]    public string Chat    { get; set; } = "Enter";
+    [JsonPropertyName("collect")] public string Collect { get; set; } = "Space";
+    [JsonPropertyName("hotbar1")] public string Hotbar1 { get; set; } = "Num1";
+    [JsonPropertyName("hotbar2")] public string Hotbar2 { get; set; } = "Num2";
+    [JsonPropertyName("hotbar3")] public string Hotbar3 { get; set; } = "Num3";
+    [JsonPropertyName("hotbar4")] public string Hotbar4 { get; set; } = "Num4";
+    [JsonPropertyName("hotbar5")] public string Hotbar5 { get; set; } = "Num5";
+    [JsonPropertyName("hotbar6")] public string Hotbar6 { get; set; } = "Num6";
+    [JsonPropertyName("hotbar7")] public string Hotbar7 { get; set; } = "Num7";
+    [JsonPropertyName("hotbar8")] public string Hotbar8 { get; set; } = "Num8";
+    [JsonPropertyName("hotbar9")] public string Hotbar9 { get; set; } = "Num9";
+    [JsonPropertyName("hotbar0")] public string Hotbar0 { get; set; } = "Num0";
+}
+
 // ─── Options DTO ─────────────────────────────────────────────────────────────
 
 public sealed class OptionsDto

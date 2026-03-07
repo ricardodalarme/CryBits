@@ -5,12 +5,12 @@ using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Components.Movement;
+using CryBits.Client.Framework;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
-using SFML.Window;
 using static CryBits.Globals;
 using MovementState = CryBits.Enums.Movement;
 
@@ -42,17 +42,17 @@ internal class LocalPlayerInputSystem(World world, GameContext context) : BaseSy
         ref var movement = ref World.Get<MovementComponent>(entity);
         if (movement.MovementState != MovementState.Stopped) return;
 
-        if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Up)) Move(Direction.Up, ref movement);
-        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Down)) Move(Direction.Down, ref movement);
-        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Left)) Move(Direction.Left, ref movement);
-        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Right)) Move(Direction.Right, ref movement);
+        if (InputManager.Instance.IsScancodePressed(KeyBindings.MoveUp)) Move(Direction.Up, ref movement);
+        else if (InputManager.Instance.IsScancodePressed(KeyBindings.MoveDown)) Move(Direction.Down, ref movement);
+        else if (InputManager.Instance.IsScancodePressed(KeyBindings.MoveLeft)) Move(Direction.Left, ref movement);
+        else if (InputManager.Instance.IsScancodePressed(KeyBindings.MoveRight)) Move(Direction.Right, ref movement);
     }
 
     private void Move(Direction direction, ref MovementComponent movement)
     {
         movement.Direction = direction;
 
-        var desired = InputManager.Instance.IsKeyPressed(Keyboard.Key.LShift)
+        var desired = InputManager.Instance.IsKeyPressed(KeyBindings.Run)
             ? MovementState.Moving
             : MovementState.Walking;
 
@@ -84,7 +84,7 @@ internal class LocalPlayerInputSystem(World world, GameContext context) : BaseSy
             state.IsAttacking = false;
         }
 
-        if (!InputManager.Instance.IsKeyPressed(Keyboard.Key.LControl)) return;
+        if (!InputManager.Instance.IsKeyPressed(KeyBindings.Attack)) return;
         if (state.AttackTimer > 0) return;
         if (TradeView.Panel.Visible) return;
         if (ShopView.Panel.Visible) return;
