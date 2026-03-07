@@ -41,7 +41,7 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         {
             if (!CryBits.Entities.Map.Map.List.ContainsKey(id))
             {
-                MapRepository.Read(id);
+                CryBits.Entities.Map.Map.List.Add(id, MapRepository.Read(id));
                 context.CurrentMap.Data.Update();
             }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
@@ -7,14 +8,19 @@ namespace CryBits.Server.Persistence.Repositories;
 
 internal static class ItemRepository
 {
-    public static void Read()
+    public static Dictionary<Guid, Item> Read()
     {
         // Load items from disk.
-        Item.List = [];
+        var list = new Dictionary<Guid, Item>();
         var file = Directories.Items.GetFiles();
         for (byte i = 0; i < file.Length; i++)
             using (var stream = file[i].OpenRead())
-                Item.List.Add(new Guid(file[i].Name.Remove(36)), (Item)new BinaryFormatter().Deserialize(stream));
+            {
+#pragma warning disable SYSLIB0011
+                list.Add(new Guid(file[i].Name.Remove(36)), (Item)new BinaryFormatter().Deserialize(stream));
+#pragma warning restore SYSLIB0011
+            }
+        return list;
     }
 
     public static void WriteAll()

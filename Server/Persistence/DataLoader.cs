@@ -1,4 +1,8 @@
 using System;
+using CryBits.Entities;
+using CryBits.Entities.Map;
+using CryBits.Entities.Npc;
+using CryBits.Entities.Shop;
 using CryBits.Server.Persistence.Repositories;
 
 namespace CryBits.Server.Persistence;
@@ -11,14 +15,14 @@ internal static class DataLoader
         Console.WriteLine("Loading settings.");
         SettingsRepository.Read();
         Console.WriteLine("Loading maps.");
-        MapRepository.Read();
+        Map.List = MapRepository.Read();
         Console.WriteLine("Loading classes.");
-        ClassRepository.Read();
+        Class.List = ClassRepository.Read();
         Console.WriteLine("Loading npcs.");
-        NpcRepository.Read();
+        Npc.List = NpcRepository.Read();
         Console.WriteLine("Loading items.");
-        ItemRepository.Read();
+        Item.List = ItemRepository.Read();
         Console.WriteLine("Loading shops.");
-        ShopRepository.Read();
+        Shop.List = ShopRepository.Read();
     }
 }
