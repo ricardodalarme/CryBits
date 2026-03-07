@@ -1,3 +1,4 @@
+using CryBits.Client.Framework;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
@@ -21,20 +22,21 @@ internal static class GameInput
 
     private static void OnKeyReleased(KeyEventArgs e)
     {
-        switch (e.Code)
-        {
-            case Keyboard.Key.Enter: Chat.Type(); break;
-            case Keyboard.Key.Space: GameContext.Instance.LocalPlayer.CollectItem(); break;
-            case Keyboard.Key.Num1: PlayerSender.Instance.HotbarUse(1); break;
-            case Keyboard.Key.Num2: PlayerSender.Instance.HotbarUse(2); break;
-            case Keyboard.Key.Num3: PlayerSender.Instance.HotbarUse(3); break;
-            case Keyboard.Key.Num4: PlayerSender.Instance.HotbarUse(4); break;
-            case Keyboard.Key.Num5: PlayerSender.Instance.HotbarUse(5); break;
-            case Keyboard.Key.Num6: PlayerSender.Instance.HotbarUse(6); break;
-            case Keyboard.Key.Num7: PlayerSender.Instance.HotbarUse(7); break;
-            case Keyboard.Key.Num8: PlayerSender.Instance.HotbarUse(8); break;
-            case Keyboard.Key.Num9: PlayerSender.Instance.HotbarUse(9); break;
-            case Keyboard.Key.Num0: PlayerSender.Instance.HotbarUse(0); break;
-        }
+        // Each condition is checked in order; if multiple actions share the same key
+        // the first match wins.  Duplicate bindings can be avoided by editing Keybinds.json.
+        var key = e.Code;
+
+        if (key == KeyBindings.Chat)         { Chat.Type();                                   return; }
+        if (key == KeyBindings.Collect)      { GameContext.Instance.LocalPlayer.CollectItem(); return; }
+        if (key == KeyBindings.Hotbar1)      { PlayerSender.Instance.HotbarUse(1);            return; }
+        if (key == KeyBindings.Hotbar2)      { PlayerSender.Instance.HotbarUse(2);            return; }
+        if (key == KeyBindings.Hotbar3)      { PlayerSender.Instance.HotbarUse(3);            return; }
+        if (key == KeyBindings.Hotbar4)      { PlayerSender.Instance.HotbarUse(4);            return; }
+        if (key == KeyBindings.Hotbar5)      { PlayerSender.Instance.HotbarUse(5);            return; }
+        if (key == KeyBindings.Hotbar6)      { PlayerSender.Instance.HotbarUse(6);            return; }
+        if (key == KeyBindings.Hotbar7)      { PlayerSender.Instance.HotbarUse(7);            return; }
+        if (key == KeyBindings.Hotbar8)      { PlayerSender.Instance.HotbarUse(8);            return; }
+        if (key == KeyBindings.Hotbar9)      { PlayerSender.Instance.HotbarUse(9);            return; }
+        if (key == KeyBindings.Hotbar0)      { PlayerSender.Instance.HotbarUse(0);            return; }
     }
 }
