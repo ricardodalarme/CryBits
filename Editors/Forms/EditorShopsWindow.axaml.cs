@@ -3,7 +3,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Network;
+using CryBits.Editors.ViewModels;
 using CryBits.Entities;
 using CryBits.Entities.Shop;
 
@@ -14,7 +14,7 @@ internal partial class EditorShopsWindow : Window
     /// <summary>Opens the Shops editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
-        if (Item.List.Count == 0)
+        if (!EditorShopsViewModel.CanOpen())
         {
             MessageBox.Show("It must have at least one item registered to open the store editor.");
             return;
@@ -26,11 +26,12 @@ internal partial class EditorShopsWindow : Window
         window.Show();
     }
 
-    private Shop _selected;
+    private readonly EditorShopsViewModel _vm = new();
     private bool _addingToSold;
 
     public EditorShopsWindow()
     {
+        DataContext = _vm;
         InitializeComponent();
 
         var items = Item.List.Values.ToList();
@@ -42,16 +43,13 @@ internal partial class EditorShopsWindow : Window
 
     private void Groups_Visibility()
     {
-        pnlContent.IsVisible = _selected != null;
+        pnlContent.IsVisible = _vm.HasSelection;
         grpAddItem.IsVisible = false;
     }
 
     private void List_Update(Guid? keepSelectionId = null)
     {
-        var filtered = Shop.List.Values
-            .Where(shop => shop.Name.StartsWith(txtFilter.Text ?? string.Empty))
-            .ToList();
-
+        var filtered = _vm.FilteredShops.ToList();
         lstShops.ItemsSource = filtered;
 
         if (filtered.Count > 0)
@@ -64,7 +62,7 @@ internal partial class EditorShopsWindow : Window
         }
         else
         {
-            _selected = null;
+            _vm.Selected = null;
             Groups_Visibility();
         }
     }
@@ -72,23 +70,23 @@ internal partial class EditorShopsWindow : Window
     private void RefreshSelectedDetails()
     {
         Groups_Visibility();
-        if (_selected == null) return;
+        if (_vm.Selected == null) return;
 
-        txtName.Text = _selected.Name;
-        cmbCurrency.SelectedItem = _selected.Currency;
+        txtName.Text = _vm.Selected.Name;
+        cmbCurrency.SelectedItem = _vm.Selected.Currency;
 
         RefreshShopItems();
     }
 
     private void RefreshShopItems()
     {
-        if (_selected == null) return;
+        if (_vm.Selected == null) return;
 
         var lastSoldIndex = lstSold.SelectedIndex;
         var lastBoughtIndex = lstBought.SelectedIndex;
 
-        lstSold.ItemsSource = _selected.Sold.ToList();
-        lstBought.ItemsSource = _selected.Bought.ToList();
+        lstSold.ItemsSource = _vm.Selected.Sold.ToList();
+        lstBought.ItemsSource = _vm.Selected.Bought.ToList();
 
         if (lstSold.ItemCount > 0)
             lstSold.SelectedIndex = Math.Clamp(lastSoldIndex, 0, lstSold.ItemCount - 1);
@@ -99,59 +97,56 @@ internal partial class EditorShopsWindow : Window
 
     private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        _selected = lstShops.SelectedItem as Shop;
+        _vm.Selected = lstShops.SelectedItem as Shop;
         RefreshSelectedDetails();
     }
 
     private void txtFilter_TextChanged(object sender, TextChangedEventArgs e)
     {
-        List_Update(_selected?.Id);
+        _vm.Filter = txtFilter.Text ?? string.Empty;
+        List_Update(_vm.Selected?.Id);
     }
 
     private void butNew_Click(object sender, RoutedEventArgs e)
     {
-        var shop = new Shop();
-        Shop.List.Add(shop.Id, shop);
+        var shop = _vm.Add();
         List_Update(shop.Id);
         Groups_Visibility();
     }
 
     private void butRemove_Click(object sender, RoutedEventArgs e)
     {
-        if (_selected == null) return;
-
-        var removeId = _selected.Id;
-        Shop.List.Remove(removeId);
-        _selected = null;
+        var removeId = _vm.Selected?.Id;
+        _vm.Remove();
         List_Update();
         Groups_Visibility();
     }
 
     private void butSave_Click(object sender, RoutedEventArgs e)
     {
-        PackageSender.WriteShops();
+        _vm.SaveAll();
         Close();
     }
 
     private void butCancel_Click(object sender, RoutedEventArgs e)
     {
-        PackageSender.RequestShops();
+        _vm.Cancel();
         Close();
     }
 
     private void txtName_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (_selected == null) return;
+        if (_vm.Selected == null) return;
 
-        _selected.Name = txtName.Text ?? string.Empty;
-        List_Update(_selected.Id);
+        _vm.Selected.Name = txtName.Text ?? string.Empty;
+        List_Update(_vm.Selected.Id);
     }
 
     private void cmbCurrency_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_selected == null) return;
+        if (_vm.Selected == null) return;
         if (cmbCurrency.SelectedItem is Item item)
-            _selected.Currency = item;
+            _vm.Selected.Currency = item;
     }
 
     private void butSold_Add_Click(object sender, RoutedEventArgs e)
@@ -161,9 +156,9 @@ internal partial class EditorShopsWindow : Window
 
     private void butSold_Remove_Click(object sender, RoutedEventArgs e)
     {
-        if (_selected == null || lstSold.SelectedIndex < 0) return;
+        if (_vm.Selected == null || lstSold.SelectedIndex < 0) return;
 
-        _selected.Sold.RemoveAt(lstSold.SelectedIndex);
+        _vm.Selected.Sold.RemoveAt(lstSold.SelectedIndex);
         RefreshShopItems();
     }
 
@@ -174,15 +169,15 @@ internal partial class EditorShopsWindow : Window
 
     private void butBought_Remove_Click(object sender, RoutedEventArgs e)
     {
-        if (_selected == null || lstBought.SelectedIndex < 0) return;
+        if (_vm.Selected == null || lstBought.SelectedIndex < 0) return;
 
-        _selected.Bought.RemoveAt(lstBought.SelectedIndex);
+        _vm.Selected.Bought.RemoveAt(lstBought.SelectedIndex);
         RefreshShopItems();
     }
 
     private void OpenAddItemPanel(bool toSold)
     {
-        if (_selected == null) return;
+        if (_vm.Selected == null) return;
 
         _addingToSold = toSold;
         cmbItems.SelectedIndex = 0;
@@ -193,7 +188,7 @@ internal partial class EditorShopsWindow : Window
 
     private void butConfirm_Click(object sender, RoutedEventArgs e)
     {
-        if (_selected == null) return;
+        if (_vm.Selected == null) return;
         if (cmbItems.SelectedItem is not Item item) return;
 
         var amount = (short)(numAmount.Value ?? 1m);
@@ -201,9 +196,9 @@ internal partial class EditorShopsWindow : Window
         var data = new ShopItem(item, amount, price);
 
         if (_addingToSold)
-            _selected.Sold.Add(data);
+            _vm.Selected.Sold.Add(data);
         else
-            _selected.Bought.Add(data);
+            _vm.Selected.Bought.Add(data);
 
         RefreshShopItems();
         grpAddItem.IsVisible = false;

@@ -1,4 +1,3 @@
-using CryBits.Editors.Forms;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
@@ -20,7 +19,7 @@ internal static class PackageSender
         NetworkClient.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
-    public static void Connect() => Packet(new ConnectPacket { Username = LoginWindow.Username, Password = LoginWindow.Password, IsClientAccess = true });
+    public static void Connect(string username, string password) => Packet(new ConnectPacket { Username = username, Password = password, IsClientAccess = true });
     public static void RequestServerData() => Packet(new WriteSettingsPacket());
     public static void RequestClasses() => Packet(new RequestClassesPacket());
     public static void RequestMap(Map map) => Packet(new RequestMapPacket { Id = map.Id });

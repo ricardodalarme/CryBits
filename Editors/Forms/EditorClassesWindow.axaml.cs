@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Network;
+using CryBits.Editors.ViewModels;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
@@ -18,7 +18,7 @@ internal partial class EditorClassesWindow : Window
     /// <summary>Opens the Classes editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
-        if (Map.List.Count == 0)
+        if (!EditorClassesViewModel.CanOpen())
         {
             MessageBox.Show("It must have at least one map registered before editing classes.");
             return;
@@ -30,28 +30,20 @@ internal partial class EditorClassesWindow : Window
         window.Show();
     }
 
-    // Consumed by Renders.cs EditorClass() instead of EditorClasses.Form.numTexture.Value
-    public static short CurrentTextureIndex { get; private set; } = 1;
-
-    private Class? _selected;
-    private bool _loading;
+    private readonly EditorClassesViewModel _vm = new();
     private bool _addingToMale;
 
     public EditorClassesWindow()
     {
+        DataContext = _vm;
         InitializeComponent();
 
         // Populate comboboxes from live data
         cmbItems.ItemsSource = Item.List.Values.ToList();
         cmbSpawn_Map.ItemsSource = Map.List.Values.ToList();
 
-        // Wire SFML window: fires first time sfmlHost becomes part of the layout tree
-        // (replaced with WriteableBitmap rendering - no native host needed)
-
-        // Filter textbox change
         txtFilter.TextChanged += txtFilter_TextChanged;
 
-        // Initial list population
         RefreshClassList();
     }
 
@@ -66,11 +58,7 @@ internal partial class EditorClassesWindow : Window
 
     private void RefreshClassList()
     {
-        var filter = txtFilter.Text ?? string.Empty;
-        var filtered = Class.List.Values
-            .Where(c => c.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
-            .ToList();
-
+        var filtered = _vm.FilteredClasses.ToList();
         lstClasses.ItemsSource = filtered;
 
         if (filtered.Count > 0 && lstClasses.SelectedItem == null)
@@ -81,21 +69,17 @@ internal partial class EditorClassesWindow : Window
 
     private void RefreshClassListKeepSelection()
     {
-        var savedSelected = _selected;
-        _loading = true;
+        var savedSelected = _vm.Selected;
+        _vm.BeginLoad();
 
-        var filter = txtFilter.Text ?? string.Empty;
-        lstClasses.ItemsSource = Class.List.Values
-            .Where(c => c.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
-            .ToList();
-
+        lstClasses.ItemsSource = _vm.FilteredClasses.ToList();
         lstClasses.SelectedItem = savedSelected;
-        _loading = false;
+        _vm.EndLoad();
     }
 
     private void lstClasses_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading) return;
+        if (_vm.IsLoading) return;
         if (lstClasses.SelectedItem is not Class cls) return;
         LoadClass(cls);
         pnlContent.IsVisible = true;
@@ -103,8 +87,8 @@ internal partial class EditorClassesWindow : Window
 
     private void LoadClass(Class cls)
     {
-        _loading = true;
-        _selected = cls;
+        _vm.BeginLoad();
+        _vm.Selected = cls;
 
         txtName.Text = cls.Name;
         txtDescription.Text = cls.Description;
@@ -132,18 +116,18 @@ internal partial class EditorClassesWindow : Window
         RefreshItemList();
         HideOverlays();
 
-        _loading = false;
+        _vm.EndLoad();
     }
 
     private void RefreshTextureLists()
     {
-        lstMale.ItemsSource = _selected?.TextureMale?.ToList();
-        lstFemale.ItemsSource = _selected?.TextureFemale?.ToList();
+        lstMale.ItemsSource = _vm.Selected?.TextureMale?.ToList();
+        lstFemale.ItemsSource = _vm.Selected?.TextureFemale?.ToList();
     }
 
     private void RefreshItemList()
     {
-        lstItems.ItemsSource = _selected?.Item?.ToList();
+        lstItems.ItemsSource = _vm.Selected?.Item?.ToList();
     }
 
     private void HideOverlays()
@@ -156,6 +140,7 @@ internal partial class EditorClassesWindow : Window
 
     private void txtFilter_TextChanged(object? sender, TextChangedEventArgs e)
     {
+        _vm.Filter = txtFilter.Text ?? string.Empty;
         RefreshClassList();
     }
 
@@ -165,24 +150,14 @@ internal partial class EditorClassesWindow : Window
 
     private void butNew_Click(object? sender, RoutedEventArgs e)
     {
-        var cls = new Class();
-        Class.List.Add(cls.Id, cls);
+        var cls = _vm.Add();
         RefreshClassList();
         lstClasses.SelectedItem = Class.List.Values.FirstOrDefault(c => c.Id == cls.Id);
     }
 
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selected == null) return;
-
-        if (Class.List.Count == 1)
-        {
-            // Must have at least one class – silently ignore (or show a dialog)
-            return;
-        }
-
-        Class.List.Remove(_selected.Id);
-        _selected = null;
+        if (!_vm.Remove()) return;
         RefreshClassList();
         pnlContent.IsVisible = lstClasses.SelectedItem != null;
     }
@@ -193,15 +168,15 @@ internal partial class EditorClassesWindow : Window
 
     private void txtName_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.Name = txtName.Text ?? string.Empty;
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.Name = txtName.Text ?? string.Empty;
         RefreshClassListKeepSelection();
     }
 
     private void txtDescription_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.Description = txtDescription.Text ?? string.Empty;
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.Description = txtDescription.Text ?? string.Empty;
     }
 
     // ──────────────────────────────────────────────────────────
@@ -210,44 +185,44 @@ internal partial class EditorClassesWindow : Window
 
     private void numHP_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.Vital[(byte)Vital.Hp] = (short)(e.NewValue ?? 0);
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.Vital[(byte)Vital.Hp] = (short)(e.NewValue ?? 0);
     }
 
     private void numMP_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.Vital[(byte)Vital.Mp] = (short)(e.NewValue ?? 0);
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.Vital[(byte)Vital.Mp] = (short)(e.NewValue ?? 0);
     }
 
     private void numStrength_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Strength] = (short)(e.NewValue ?? 0);
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.Attribute[(byte)Attribute.Strength] = (short)(e.NewValue ?? 0);
     }
 
     private void numResistance_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Resistance] = (short)(e.NewValue ?? 0);
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.Attribute[(byte)Attribute.Resistance] = (short)(e.NewValue ?? 0);
     }
 
     private void numIntelligence_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Intelligence] = (short)(e.NewValue ?? 0);
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.Attribute[(byte)Attribute.Intelligence] = (short)(e.NewValue ?? 0);
     }
 
     private void numAgility_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Agility] = (short)(e.NewValue ?? 0);
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.Attribute[(byte)Attribute.Agility] = (short)(e.NewValue ?? 0);
     }
 
     private void numVitality_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.Attribute[(byte)Attribute.Vitality] = (short)(e.NewValue ?? 0);
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.Attribute[(byte)Attribute.Vitality] = (short)(e.NewValue ?? 0);
     }
 
     // ──────────────────────────────────────────────────────────
@@ -274,22 +249,22 @@ internal partial class EditorClassesWindow : Window
 
     private void butMDelete_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selected == null || lstMale.SelectedIndex < 0) return;
-        _selected.TextureMale.RemoveAt(lstMale.SelectedIndex);
+        if (_vm.Selected == null || lstMale.SelectedIndex < 0) return;
+        _vm.Selected.TextureMale.RemoveAt(lstMale.SelectedIndex);
         RefreshTextureLists();
     }
 
     private void butFDelete_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selected == null || lstFemale.SelectedIndex < 0) return;
-        _selected.TextureFemale.RemoveAt(lstFemale.SelectedIndex);
+        if (_vm.Selected == null || lstFemale.SelectedIndex < 0) return;
+        _vm.Selected.TextureFemale.RemoveAt(lstFemale.SelectedIndex);
         RefreshTextureLists();
     }
 
     private void numTexture_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        CurrentTextureIndex = (short)(e.NewValue ?? 1);
-        UpdateTexturePreview(CurrentTextureIndex);
+        _vm.CurrentTextureIndex = (short)(e.NewValue ?? 1);
+        UpdateTexturePreview(_vm.CurrentTextureIndex);
     }
 
     /// <summary>
@@ -310,13 +285,13 @@ internal partial class EditorClassesWindow : Window
 
     private void butTexture_Ok_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selected == null) return;
+        if (_vm.Selected == null) return;
         var idx = (short)(numTexture.Value ?? 1);
 
         if (_addingToMale)
-            _selected.TextureMale.Add(idx);
+            _vm.Selected.TextureMale.Add(idx);
         else
-            _selected.TextureFemale.Add(idx);
+            _vm.Selected.TextureFemale.Add(idx);
 
         RefreshTextureLists();
         HideOverlays();
@@ -328,7 +303,7 @@ internal partial class EditorClassesWindow : Window
 
     private void butItem_Add_Click(object? sender, RoutedEventArgs e)
     {
-        if (Item.List.Count == 0) return; // no items registered
+        if (Item.List.Count == 0) return;
 
         cmbItems.SelectedIndex = 0;
         numItem_Amount.Value = 1;
@@ -338,16 +313,16 @@ internal partial class EditorClassesWindow : Window
 
     private void butItem_Ok_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selected == null || cmbItems.SelectedItem is not Item item) return;
-        _selected.Item.Add(new ItemSlot(item, (short)(numItem_Amount.Value ?? 1)));
+        if (_vm.Selected == null || cmbItems.SelectedItem is not Item item) return;
+        _vm.Selected.Item.Add(new ItemSlot(item, (short)(numItem_Amount.Value ?? 1)));
         RefreshItemList();
         HideOverlays();
     }
 
     private void butItem_Delete_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selected == null || lstItems.SelectedIndex < 0) return;
-        _selected.Item.RemoveAt(lstItems.SelectedIndex);
+        if (_vm.Selected == null || lstItems.SelectedIndex < 0) return;
+        _vm.Selected.Item.RemoveAt(lstItems.SelectedIndex);
         RefreshItemList();
     }
 
@@ -357,26 +332,26 @@ internal partial class EditorClassesWindow : Window
 
     private void cmbSpawn_Map_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        if (cmbSpawn_Map.SelectedItem is Map map) _selected.SpawnMap = map;
+        if (!_vm.CanEdit) return;
+        if (cmbSpawn_Map.SelectedItem is Map map) _vm.Selected!.SpawnMap = map;
     }
 
     private void cmbSpawn_Direction_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.SpawnDirection = (byte)cmbSpawn_Direction.SelectedIndex;
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.SpawnDirection = (byte)cmbSpawn_Direction.SelectedIndex;
     }
 
     private void numSpawn_X_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.SpawnX = (byte)(e.NewValue ?? 0);
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.SpawnX = (byte)(e.NewValue ?? 0);
     }
 
     private void numSpawn_Y_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loading || _selected == null) return;
-        _selected.SpawnY = (byte)(e.NewValue ?? 0);
+        if (!_vm.CanEdit) return;
+        _vm.Selected!.SpawnY = (byte)(e.NewValue ?? 0);
     }
 
     // ──────────────────────────────────────────────────────────
@@ -385,13 +360,13 @@ internal partial class EditorClassesWindow : Window
 
     private void butSave_Click(object? sender, RoutedEventArgs e)
     {
-        PackageSender.WriteClasses();
+        _vm.SaveAll();
         Close();
     }
 
     private void butCancel_Click(object? sender, RoutedEventArgs e)
     {
-        PackageSender.RequestClasses();
+        _vm.Cancel();
         Close();
     }
 }
