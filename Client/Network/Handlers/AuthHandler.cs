@@ -1,4 +1,3 @@
-using System;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Entities;
@@ -8,13 +7,6 @@ namespace CryBits.Client.Network.Handlers;
 
 internal class AuthHandler
 {
-    [PacketHandler]
-    internal void Latency(LatencyPacket _)
-    {
-        // Update latency measurement
-        NetworkClient.Latency = Environment.TickCount - NetworkClient.LatencySend;
-    }
-
     [PacketHandler]
     internal void Alert(AlertPacket packet)
     {

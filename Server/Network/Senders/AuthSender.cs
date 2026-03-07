@@ -12,11 +12,6 @@ internal static class AuthSender
         if (disconnect) session.Connection.Disconnect();
     }
 
-    public static void Latency(GameSession session)
-    {
-        PackageSender.ToPlayer(session, new LatencyPacket());
-    }
-
     public static void Connect(GameSession session)
     {
         PackageSender.ToPlayer(session, new ConnectPacket());
