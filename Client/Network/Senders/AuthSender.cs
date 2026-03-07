@@ -1,4 +1,3 @@
-using System;
 using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;
@@ -6,14 +5,6 @@ namespace CryBits.Client.Network.Senders;
 internal class AuthSender(PacketSender packetSender)
 {
     public static AuthSender Instance { get; } = new(PacketSender.Instance);
-
-    public void Latency()
-    {
-        packetSender.Packet(new LatencyPacket());
-
-        // Record latency send timestamp
-        NetworkClient.LatencySend = Environment.TickCount;
-    }
 
     public void Connect(string username, string password) => packetSender.Packet(new ConnectPacket
     {
