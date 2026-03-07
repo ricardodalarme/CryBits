@@ -4,6 +4,7 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
+using CryBits.Editors.ViewModels;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using SFML.Graphics;
@@ -413,21 +414,21 @@ internal static class Renders
     public static void EditorTileRT()
     {
         if (WinTileRT == null || Textures.Tiles.Count == 0) return;
-        var idx = EditorTilesWindow.ScrollTile;
+        var idx = EditorTilesViewModel.ScrollTile;
         if (idx < 0 || idx >= Textures.Tiles.Count) return;
 
         WinTileRT.Clear();
         TransparentRT(WinTileRT);
 
         var texture = Textures.Tiles[idx];
-        var position = new Point(EditorTilesWindow.ScrollX * Grid, EditorTilesWindow.ScrollY * Grid);
+        var position = new Point(EditorTilesViewModel.ScrollX * Grid, EditorTilesViewModel.ScrollY * Grid);
         Render(WinTileRT, texture, new Rectangle(position, texture.ToSize()),
             new Rectangle(new Point(0), texture.ToSize()));
 
         for (byte x = 0; x <= 298 / Grid; x++)
             for (byte y = 0; y <= 443 / Grid; y++)
             {
-                if (EditorTilesWindow.ModeAttributes)
+                if (EditorTilesViewModel.ModeAttributes)
                     EditorTileAttributesRT(idx, x, y);
                 else
                     EditorTileDirBlockRT(idx, x, y);
@@ -440,7 +441,7 @@ internal static class Renders
 
     private static void EditorTileAttributesRT(int idx, byte x, byte y)
     {
-        var tile = new Point(EditorTilesWindow.ScrollX + x, EditorTilesWindow.ScrollY + y);
+        var tile = new Point(EditorTilesViewModel.ScrollX + x, EditorTilesViewModel.ScrollY + y);
         var point = new Point(x * Grid + Grid / 2 - 5, y * Grid + Grid / 2 - 6);
         if (tile.X > Tile.List[idx].Data.GetUpperBound(0)) return;
         if (tile.Y > Tile.List[idx].Data.GetUpperBound(1)) return;
@@ -456,7 +457,7 @@ internal static class Renders
 
     private static void EditorTileDirBlockRT(int idx, byte x, byte y)
     {
-        var tile = new Point(EditorTilesWindow.ScrollX + x, EditorTilesWindow.ScrollY + y);
+        var tile = new Point(EditorTilesViewModel.ScrollX + x, EditorTilesViewModel.ScrollY + y);
         if (tile.X > Tile.List[idx].Data.GetUpperBound(0)) return;
         if (tile.Y > Tile.List[idx].Data.GetUpperBound(1)) return;
 
@@ -491,8 +492,8 @@ internal static class Renders
     /// </summary>
     public static void EditorNpcRT()
     {
-        if (WinNpcRT == null || EditorNpcsWindow.CurrentTextureIndex <= 0) return;
-        CharacterRT(WinNpcRT, EditorNpcsWindow.CurrentTextureIndex);
+        if (WinNpcRT == null || EditorNpcsViewModel.CurrentTextureIndex <= 0) return;
+        CharacterRT(WinNpcRT, EditorNpcsViewModel.CurrentTextureIndex);
     }
 
     #endregion
@@ -524,7 +525,7 @@ internal static class Renders
         if (InterfaceData.Tree.Nodes.Count == 0) return;
 
         WinInterfaceRT.Clear();
-        InterfaceOrder(WinInterfaceRT, InterfaceData.Tree.Nodes[EditorInterfaceWindow.SelectedWindowIndex]);
+        InterfaceOrder(WinInterfaceRT, InterfaceData.Tree.Nodes[EditorInterfaceViewModel.SelectedWindowIndex]);
         WinInterfaceRT.Display();
     }
 

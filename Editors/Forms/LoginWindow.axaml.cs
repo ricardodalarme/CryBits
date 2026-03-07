@@ -1,21 +1,15 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using CryBits.Client.Framework;
 using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Network;
+using CryBits.Editors.ViewModels;
 
 namespace CryBits.Editors.Forms;
 
 internal partial class LoginWindow : Window
 {
     private static LoginWindow? _instance;
-
-    /// <summary>The entered username (persisted across connection attempts).</summary>
-    public static string Username { get; set; } = string.Empty;
-
-    /// <summary>The entered password (persisted across connection attempts).</summary>
-    public static string Password { get; set; } = string.Empty;
+    private readonly LoginViewModel _vm;
 
     /// <summary>Shows the login window (singleton), creating it if necessary.</summary>
     public static void Open()
@@ -51,31 +45,21 @@ internal partial class LoginWindow : Window
 
     public LoginWindow()
     {
+        _vm = new LoginViewModel();
+        DataContext = _vm;
         InitializeComponent();
-        txtUsername.Text = Options.Username;
-        chkUsername.IsChecked = Options.Username != string.Empty;
+        txtUsername.Text = _vm.Username;
+        chkUsername.IsChecked = _vm.SaveUsername;
     }
 
     private void butConnect_Click(object sender, RoutedEventArgs e)
     {
-        Username = txtUsername.Text ?? string.Empty;
-        Password = txtPassword.Text ?? string.Empty;
+        _vm.Username = txtUsername.Text ?? string.Empty;
+        _vm.Password = txtPassword.Text ?? string.Empty;
+        _vm.SaveUsername = chkUsername.IsChecked == true;
 
-        if (!NetworkClient.TryConnect())
-        {
-            MessageBox.Show(@"The server is currently unavailable.");
-            return;
-        }
-
-        if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
-        {
-            MessageBox.Show(@"Some field is empty.");
-            return;
-        }
-
-        PackageSender.Connect();
-
-        Options.Username = chkUsername.IsChecked == true ? Username : string.Empty;
-        Client.Framework.Persistence.Repositories.OptionsRepository.Write();
+        var error = _vm.TryConnect();
+        if (error != null)
+            MessageBox.Show(error);
     }
 }

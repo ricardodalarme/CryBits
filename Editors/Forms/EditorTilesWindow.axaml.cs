@@ -7,9 +7,9 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Graphics;
+using CryBits.Editors.ViewModels;
 using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
@@ -34,23 +34,20 @@ internal partial class EditorTilesWindow : Window
     private const int CanvasW = 298;
     private const int CanvasH = 443;
 
-    // How the render is read back by Renders.EditorTileRT()
-    public static int ScrollTile { get; private set; } = 1;
-    public static int ScrollX { get; private set; }
-    public static int ScrollY { get; private set; }
-    public static bool ModeAttributes { get; private set; } = true;
+    private readonly EditorTilesViewModel _vm = new();
 
     private WriteableBitmap? _bitmap;
     private DispatcherTimer? _timer;
 
     public EditorTilesWindow()
     {
+        DataContext = _vm;
         InitializeComponent();
 
         // Set tile scroll limits
         scrlTile.Maximum = Math.Max(1, Textures.Tiles.Count - 1);
         scrlTile.Value = 1;
-        ScrollTile = 1;
+        EditorTilesViewModel.ScrollTile = 1;
         UpdateScrollBounds();
 
         // SFML offscreen canvas
@@ -87,20 +84,20 @@ internal partial class EditorTilesWindow : Window
 
     private void scrlTile_Scroll(object? sender, ScrollEventArgs e)
     {
-        ScrollTile = (int)scrlTile.Value;
-        lblTile.Text = "Tile: " + ScrollTile;
+        EditorTilesViewModel.ScrollTile = (int)scrlTile.Value;
+        lblTile.Text = "Tile: " + EditorTilesViewModel.ScrollTile;
         scrlTileX.Value = 0;
         scrlTileY.Value = 0;
-        ScrollX = 0;
-        ScrollY = 0;
+        EditorTilesViewModel.ScrollX = 0;
+        EditorTilesViewModel.ScrollY = 0;
         UpdateScrollBounds();
     }
 
     private void UpdateScrollBounds()
     {
-        if (Textures.Tiles.Count == 0 || ScrollTile >= Textures.Tiles.Count) return;
+        if (Textures.Tiles.Count == 0 || EditorTilesViewModel.ScrollTile >= Textures.Tiles.Count) return;
 
-        var tex = Textures.Tiles[ScrollTile];
+        var tex = Textures.Tiles[EditorTilesViewModel.ScrollTile];
         var maxX = tex.ToSize().Width / G.Grid - CanvasW / G.Grid;
         var maxY = tex.ToSize().Height / G.Grid - CanvasH / G.Grid;
 
@@ -114,8 +111,8 @@ internal partial class EditorTilesWindow : Window
 
     private void scrlXY_Scroll(object? sender, ScrollEventArgs e)
     {
-        ScrollX = (int)scrlTileX.Value;
-        ScrollY = (int)scrlTileY.Value;
+        EditorTilesViewModel.ScrollX = (int)scrlTileX.Value;
+        EditorTilesViewModel.ScrollY = (int)scrlTileY.Value;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -124,8 +121,8 @@ internal partial class EditorTilesWindow : Window
 
     private void optMode_Changed(object? sender, RoutedEventArgs e)
     {
-        ModeAttributes = optAttributes.IsChecked ?? true;
-        pnlAttributes.IsVisible = ModeAttributes;
+        EditorTilesViewModel.ModeAttributes = optAttributes.IsChecked ?? true;
+        pnlAttributes.IsVisible = EditorTilesViewModel.ModeAttributes;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -134,22 +131,22 @@ internal partial class EditorTilesWindow : Window
 
     private void imgCanvas_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (Textures.Tiles.Count == 0 || ScrollTile >= Textures.Tiles.Count) return;
+        if (Textures.Tiles.Count == 0 || EditorTilesViewModel.ScrollTile >= Textures.Tiles.Count) return;
 
         var pt = e.GetPosition(imgCanvas);
         var ex = (int)pt.X;
         var ey = (int)pt.Y;
 
-        var position = new Point((ex + ScrollX * G.Grid) / G.Grid, (ey + ScrollY * G.Grid) / G.Grid);
+        var position = new Point((ex + EditorTilesViewModel.ScrollX * G.Grid) / G.Grid, (ey + EditorTilesViewModel.ScrollY * G.Grid) / G.Grid);
         var tileDif = new Point(ex - ex / G.Grid * G.Grid, ey - ey / G.Grid * G.Grid);
 
-        var tileRef = Tile.List[ScrollTile];
+        var tileRef = Tile.List[EditorTilesViewModel.ScrollTile];
         if (position.X > tileRef.Data.GetUpperBound(0)) return;
         if (position.Y > tileRef.Data.GetUpperBound(1)) return;
 
         var isLeft = e.GetCurrentPoint(imgCanvas).Properties.IsLeftButtonPressed;
 
-        if (ModeAttributes)
+        if (EditorTilesViewModel.ModeAttributes)
         {
             // Only Block attribute exists currently
             if (isLeft)
@@ -177,15 +174,15 @@ internal partial class EditorTilesWindow : Window
 
     private void butSave_Click(object? sender, RoutedEventArgs e)
     {
-        TileRepository.WriteAll();
+        _vm.Save();
         Close();
     }
 
     private void butClear_Click(object? sender, RoutedEventArgs e)
     {
-        if (Textures.Tiles.Count == 0 || ScrollTile >= Textures.Tiles.Count) return;
-        var tileSize = Textures.Tiles[ScrollTile].ToSize();
-        Tile.List[ScrollTile] = new Tile(tileSize);
+        if (Textures.Tiles.Count == 0 || EditorTilesViewModel.ScrollTile >= Textures.Tiles.Count) return;
+        var tileSize = Textures.Tiles[EditorTilesViewModel.ScrollTile].ToSize();
+        Tile.List[EditorTilesViewModel.ScrollTile] = new Tile(tileSize);
     }
 
     private void butCancel_Click(object? sender, RoutedEventArgs e)

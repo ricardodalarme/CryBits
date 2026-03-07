@@ -1,16 +1,13 @@
 using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using CryBits.Client.Framework.Interfacily.Enums;
-using CryBits.Enums;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics;
-using CryBits.Editors.Library.Repositories;
+using CryBits.Editors.ViewModels;
+using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
@@ -18,37 +15,13 @@ using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Label = CryBits.Client.Framework.Interfacily.Components.Label;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
-using ProgressBar = CryBits.Client.Framework.Interfacily.Components.ProgressBar;
-using SlotGrid = CryBits.Client.Framework.Interfacily.Components.SlotGrid;
 using Picture = CryBits.Client.Framework.Interfacily.Components.Picture;
 using Point = System.Drawing.Point;
+using ProgressBar = CryBits.Client.Framework.Interfacily.Components.ProgressBar;
+using SlotGrid = CryBits.Client.Framework.Interfacily.Components.SlotGrid;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Editors.Forms;
-
-// ─── ViewModel for the order tree ───────────────────────────────────────────
-internal sealed class TreeItemVM : INotifyPropertyChanged
-{
-    private string _header = string.Empty;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public string Header
-    {
-        get => _header;
-        set
-        {
-            _header = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Header)));
-        }
-    }
-
-    public Component? Tag { get; set; }
-    public InterfaceNode? SourceNode { get; set; }
-    public TreeItemVM? Parent { get; set; }
-    public ObservableCollection<TreeItemVM> Children { get; } = [];
-    public override string ToString() => _header;
-}
 
 // ─── Editor window ───────────────────────────────────────────────────────────
 internal partial class EditorInterfaceWindow : Window
@@ -62,19 +35,14 @@ internal partial class EditorInterfaceWindow : Window
         window.Show();
     }
 
-    // Consumed by Renders.Interface()
-    public static byte SelectedWindowIndex { get; private set; }
-
-    private bool _loadingProps;
-    private Component? _selectedComponent;
-    private TreeItemVM? _selectedNode;
-    private TreeItemVM _rootVM = new(); // virtual root for the current window
+    private readonly EditorInterfaceViewModel _vm = new();
 
     private WriteableBitmap? _previewBitmap;
     private DispatcherTimer? _timer;
 
     public EditorInterfaceWindow()
     {
+        DataContext = _vm;
         InitializeComponent();
 
         // Populate window combo from tree
@@ -119,10 +87,8 @@ internal partial class EditorInterfaceWindow : Window
 
     private void cmbWindows_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        SelectedWindowIndex = (byte)Math.Max(0, cmbWindows.SelectedIndex);
-        _selectedNode = null;
-        _selectedComponent = null;
-        RebuildTree();
+        _vm.SetSelectedWindowIndex(cmbWindows.SelectedIndex);
+        treOrder.ItemsSource = _vm.RootChildren;
         UpdatePropertiesPanel();
     }
 
@@ -130,29 +96,11 @@ internal partial class EditorInterfaceWindow : Window
     // Tree management
     // ──────────────────────────────────────────────────────────────────────────
 
-    private static TreeItemVM BuildVM(InterfaceNode node, TreeItemVM? parent)
-    {
-        var vm = new TreeItemVM { Header = node.Text, Tag = node.Tag as Component, SourceNode = node, Parent = parent };
-        foreach (var child in node.Nodes)
-            vm.Children.Add(BuildVM(child, vm));
-        return vm;
-    }
-
-    private void RebuildTree()
-    {
-        if (InterfaceData.Tree.Nodes.Count == 0 || SelectedWindowIndex >= InterfaceData.Tree.Nodes.Count) return;
-
-        var sourceRoot = InterfaceData.Tree.Nodes[SelectedWindowIndex];
-        _rootVM = BuildVM(sourceRoot, null);
-        treOrder.ItemsSource = _rootVM.Children;
-    }
-
     private void treOrder_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         // Use e.AddedItems — treOrder.SelectedItem may still be null at event time
-        if (e.AddedItems.Count > 0)
-            _selectedNode = e.AddedItems[0] as TreeItemVM;
-        _selectedComponent = _selectedNode?.Tag;
+        var node = e.AddedItems.Count > 0 ? e.AddedItems[0] as TreeItemVM : null;
+        _vm.SelectNode(node);
         UpdatePropertiesPanel();
     }
 
@@ -173,90 +121,36 @@ internal partial class EditorInterfaceWindow : Window
 
     private void butConfirm_Click(object? sender, RoutedEventArgs e)
     {
-        Component newComp = cmbType.SelectedIndex switch
-        {
-            (int)ToolType.Label => new Label(),
-            (int)ToolType.Button => new Button(),
-            (int)ToolType.Panel => new Panel(),
-            (int)ToolType.CheckBox => new CheckBox(),
-            (int)ToolType.TextBox => new TextBox(),
-            (int)ToolType.ProgressBar => new ProgressBar(),
-            (int)ToolType.SlotGrid => new SlotGrid(),
-            (int)ToolType.Picture => new Picture(),
-            _ => new Button()
-        };
-        newComp.Visible = true;
-
-        // Add to canonical InterfaceNode tree
-        var winNode = InterfaceData.Tree.Nodes[SelectedWindowIndex];
-        var newTreeNode = new InterfaceNode(newComp.ToString()) { Tag = newComp };
-        winNode.Nodes.Add(newTreeNode);
-
-        // Add to VM tree
-        var newVM = new TreeItemVM
-        { Header = newComp.ToString(), Tag = newComp, SourceNode = newTreeNode, Parent = _rootVM };
-        _rootVM.Children.Add(newVM);
-
+        var newVM = _vm.AddComponent(cmbType.SelectedIndex);
         pnlNew.IsVisible = false;
-        treOrder.SelectedItem = newVM;
+        if (newVM != null)
+            treOrder.SelectedItem = newVM;
     }
 
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selectedNode?.Parent == null) return;
-
-        // Sync to InterfaceNode tree
-        _selectedNode.SourceNode?.Parent?.Nodes.Remove(_selectedNode.SourceNode);
-
-        // Remove from VM
-        _selectedNode.Parent.Children.Remove(_selectedNode);
-        _selectedNode = null;
-        _selectedComponent = null;
+        _vm.RemoveSelected();
         UpdatePropertiesPanel();
     }
 
     private void butOrderPin_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selectedNode?.Parent == null) return;
-        var parent = _selectedNode.Parent;
-        var idx = parent.Children.IndexOf(_selectedNode);
-        if (idx <= 0) return;
-
-        var prevSibling = parent.Children[idx - 1];
-        parent.Children.RemoveAt(idx);
-        _selectedNode.Parent = prevSibling;
-        prevSibling.Children.Add(_selectedNode);
+        _vm.PinSelected();
     }
 
     private void butOrderUnpin_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selectedNode?.Parent == null) return;
-        var parent = _selectedNode.Parent;
-        var grandparent = parent.Parent;
-        if (grandparent == null) return;
-
-        var parentIdx = grandparent.Children.IndexOf(parent);
-        parent.Children.Remove(_selectedNode);
-        _selectedNode.Parent = grandparent;
-        grandparent.Children.Insert(parentIdx + 1, _selectedNode);
+        _vm.UnpinSelected();
     }
 
     private void butOrderUp_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selectedNode?.Parent == null) return;
-        var parent = _selectedNode.Parent;
-        var idx = parent.Children.IndexOf(_selectedNode);
-        if (idx <= 0) return;
-        parent.Children.Move(idx, idx - 1);
+        _vm.MoveSelectedUp();
     }
 
     private void butOrderDown_Click(object? sender, RoutedEventArgs e)
     {
-        if (_selectedNode?.Parent == null) return;
-        var parent = _selectedNode.Parent;
-        var idx = parent.Children.IndexOf(_selectedNode);
-        if (idx >= parent.Children.Count - 1) return;
-        parent.Children.Move(idx, idx + 1);
+        _vm.MoveSelectedDown();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -265,7 +159,7 @@ internal partial class EditorInterfaceWindow : Window
 
     private void UpdatePropertiesPanel()
     {
-        var c = _selectedComponent;
+        var c = _vm.SelectedComponent;
         if (c == null)
         {
             pnlPropsBase.IsVisible = false;
@@ -273,7 +167,7 @@ internal partial class EditorInterfaceWindow : Window
             return;
         }
 
-        _loadingProps = true;
+        _vm.BeginLoadProps();
         pnlPropsBase.IsVisible = true;
         lblNoSelection.IsVisible = false;
 
@@ -328,160 +222,159 @@ internal partial class EditorInterfaceWindow : Window
                 break;
         }
 
-        _loadingProps = false;
+        _vm.EndLoadProps();
     }
 
     // ─── Property write-back ──────────────────────────────────────────────────
 
     private void txtPropName_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent == null) return;
-        _selectedComponent.Name = txtPropName.Text ?? string.Empty;
+        if (!_vm.CanEditProps) return;
+        _vm.SelectedComponent!.Name = txtPropName.Text ?? string.Empty;
         // INotifyPropertyChanged on TreeItemVM.Header propagates the change to the TreeView automatically
-        if (_selectedNode != null)
-            _selectedNode.Header = _selectedComponent.ToString() ?? string.Empty;
+        _vm.UpdateSelectedNodeHeader();
     }
 
     private void numPropX_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent == null) return;
-        _selectedComponent.Position = new Point((int)(e.NewValue ?? 0), _selectedComponent.Position.Y);
+        if (!_vm.CanEditProps) return;
+        _vm.SelectedComponent!.Position = new Point((int)(e.NewValue ?? 0), _vm.SelectedComponent.Position.Y);
     }
 
     private void numPropY_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent == null) return;
-        _selectedComponent.Position = new Point(_selectedComponent.Position.X, (int)(e.NewValue ?? 0));
+        if (!_vm.CanEditProps) return;
+        _vm.SelectedComponent!.Position = new Point(_vm.SelectedComponent.Position.X, (int)(e.NewValue ?? 0));
     }
 
     private void chkPropVisible_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent == null) return;
-        _selectedComponent.Visible = chkPropVisible.IsChecked ?? false;
+        if (!_vm.CanEditProps) return;
+        _vm.SelectedComponent!.Visible = chkPropVisible.IsChecked ?? false;
     }
 
     private void numPropTexture_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent == null) return;
+        if (!_vm.CanEditProps) return;
         var v = (byte)(e.NewValue ?? 0);
-        if (_selectedComponent is Button btn) btn.TextureNum = v;
-        else if (_selectedComponent is Panel pnl) pnl.TextureNum = v;
+        if (_vm.SelectedComponent is Button btn) btn.TextureNum = v;
+        else if (_vm.SelectedComponent is Panel pnl) pnl.TextureNum = v;
     }
 
     private void txtPropLblText_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not Label lbl) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not Label lbl) return;
         lbl.Text = txtPropLblText.Text ?? string.Empty;
     }
 
     private void cmbPropLblAlignment_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not Label lbl) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not Label lbl) return;
         lbl.Alignment = (TextAlign)(cmbPropLblAlignment.SelectedIndex >= 0 ? cmbPropLblAlignment.SelectedIndex : 0);
     }
 
     private void clrPropLabel_ColorChanged(object? sender, Avalonia.Controls.ColorChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not Label lbl) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not Label lbl) return;
         var c = e.NewColor;
         lbl.Color = (c.R << 16) | (c.G << 8) | c.B;
     }
 
     private void numPropLblMaxWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not Label lbl) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not Label lbl) return;
         lbl.MaxWidth = (int)(e.NewValue ?? 0);
     }
 
     private void txtPropCbText_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not CheckBox cb) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not CheckBox cb) return;
         cb.Text = txtPropCbText.Text ?? string.Empty;
     }
 
     private void chkPropCbChecked_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not CheckBox cb) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not CheckBox cb) return;
         cb.Checked = chkPropCbChecked.IsChecked ?? false;
     }
 
     private void txtPropTbText_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not TextBox tb) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not TextBox tb) return;
         tb.Text = txtPropTbText.Text ?? string.Empty;
     }
 
     private void numPropMaxChars_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not TextBox tb) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not TextBox tb) return;
         tb.MaxCharacters = (short)(e.NewValue ?? 0);
     }
 
     private void numPropTbWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not TextBox tb) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not TextBox tb) return;
         tb.Width = (short)(e.NewValue ?? 0);
     }
 
     private void chkPropPassword_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not TextBox tb) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not TextBox tb) return;
         tb.Password = chkPropPassword.IsChecked ?? false;
     }
 
     private void numPropPbSourceY_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not ProgressBar pb) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not ProgressBar pb) return;
         pb.SourceY = (int)(e.NewValue ?? 0);
     }
 
     private void numPropPbWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not ProgressBar pb) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not ProgressBar pb) return;
         pb.Width = (int)(e.NewValue ?? 0);
     }
 
     private void numPropPbHeight_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not ProgressBar pb) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not ProgressBar pb) return;
         pb.Height = (int)(e.NewValue ?? 0);
     }
 
     private void numPropSgRows_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not SlotGrid sg) return;
         sg.Rows = (byte)(e.NewValue ?? 1);
         txtSgSlotCount.Text = sg.SlotCount.ToString();
     }
 
     private void numPropSgColumns_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not SlotGrid sg) return;
         sg.Columns = (byte)(e.NewValue ?? 1);
         txtSgSlotCount.Text = sg.SlotCount.ToString();
     }
 
     private void numPropSgSlotSize_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not SlotGrid sg) return;
         sg.SlotSize = (byte)(e.NewValue ?? 32);
     }
 
     private void numPropSgPadding_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not SlotGrid sg) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not SlotGrid sg) return;
         sg.Padding = (byte)(e.NewValue ?? 4);
     }
 
     private void numPropPicWidth_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not Picture pic) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not Picture pic) return;
         pic.Width = (int)(e.NewValue ?? 0);
     }
 
     private void numPropPicHeight_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        if (_loadingProps || _selectedComponent is not Picture pic) return;
+        if (!_vm.CanEditProps || _vm.SelectedComponent is not Picture pic) return;
         pic.Height = (int)(e.NewValue ?? 0);
     }
 
@@ -491,7 +384,7 @@ internal partial class EditorInterfaceWindow : Window
 
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
-        ToolsRepository.Write();
+        EditorInterfaceViewModel.Save();
         Close();
     }
 
