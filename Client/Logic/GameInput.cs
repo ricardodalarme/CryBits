@@ -23,7 +23,7 @@ internal static class GameInput
     {
         switch (e.Code)
         {
-            case Keyboard.Key.Enter: Chat.Type(); break;
+            case Keyboard.Key.Enter: Chat.Instance.Type(); break;
             case Keyboard.Key.Space: GameContext.Instance.LocalPlayer.CollectItem(); break;
             case Keyboard.Key.Num1: PlayerSender.Instance.HotbarUse(1); break;
             case Keyboard.Key.Num2: PlayerSender.Instance.HotbarUse(2); break;

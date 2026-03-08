@@ -57,10 +57,10 @@ internal sealed class UIRenderer(
         tool.Visible = TextBox.Focused != null && TextBox.Focused.Name.Equals("Chat");
 
         if (tool.Visible || GameLoop.ChatTimer >= Environment.TickCount && Options.Chat)
-            for (var i = Chat.LinesFirst; i <= Chat.LinesVisible + Chat.LinesFirst; i++)
-                if (Chat.Order.Count > i)
-                    renderer.DrawText(Chat.Order[i].Text, 16, 461 + 11 * (i - Chat.LinesFirst),
-                        Chat.Order[i].Color);
+            for (var i = Chat.Instance.LinesFirst; i <= Chat.LinesVisible + Chat.Instance.LinesFirst; i++)
+                if (Chat.Instance.Order.Count > i)
+                    renderer.DrawText(Chat.Instance.Order[i].Text, 16, 461 + 11 * (i - Chat.Instance.LinesFirst),
+                        Chat.Instance.Order[i].Color);
 
         if (!tool.Visible)
             renderer.DrawText("Press [Enter] to open chat.", ChatView.MessageTextBox.Position.X + 5,

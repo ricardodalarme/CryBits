@@ -35,13 +35,11 @@ internal class ChatView : IView
 
     private void OnScrollUpPressed()
     {
-        if (Chat.LinesFirst > 0)
-            Chat.LinesFirst--;
+        Chat.Instance.ScrollUp();
     }
 
     private void OnScrollDownPressed()
     {
-        if (Chat.Order.Count - 1 - Chat.LinesFirst - Chat.LinesVisible > 0)
-            Chat.LinesFirst++;
+        Chat.Instance.ScrollDown();
     }
 }

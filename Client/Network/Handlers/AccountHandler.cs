@@ -73,8 +73,7 @@ internal class AccountHandler(AudioManager audioManager)
     internal void JoinGame(JoinGamePacket _)
     {
         // Reset UI state and options
-        Chat.Order = [];
-        Chat.LinesFirst = 0;
+        Chat.Instance.Reset();
         GameLoop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
         ChatView.MessageTextBox.Text = string.Empty;
         OptionsView.SoundsCheckBox.Checked = Options.Sounds;

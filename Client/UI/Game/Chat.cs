@@ -12,21 +12,48 @@ using static CryBits.Client.Utils.TextUtils;
 
 namespace CryBits.Client.UI.Game;
 
-internal static class Chat
+internal class Chat
 {
-    private static readonly ChatCommandDispatcher _dispatcher =
-        new ChatCommandDispatcher(AddText)
+    public static Chat Instance { get; } = new();
+
+    private readonly ChatCommandDispatcher _dispatcher;
+
+    public Chat()
+    {
+        _dispatcher = new ChatCommandDispatcher(AddText)
             .Register(new PartyInviteCommand(PartySender.Instance, AddText))
             .Register(new PartyLeaveCommand(PartySender.Instance))
             .Register(new TradeInviteCommand(TradeSender.Instance, AddText));
+    }
 
     // Rendering order for chat lines
-    public static List<Structure> Order = [];
+    public List<Structure> Order { get; private set; } = [];
 
     public const byte LinesVisible = 9;
-    public static byte LinesFirst;
+    public byte LinesFirst { get; private set; }
     private const byte MaxLines = 50;
     public const short SleepTimer = 10000;
+
+    /// <summary>Resets the chat history and scroll position.</summary>
+    public void Reset()
+    {
+        Order = [];
+        LinesFirst = 0;
+    }
+
+    /// <summary>Scrolls the chat view up by one line.</summary>
+    public void ScrollUp()
+    {
+        if (LinesFirst > 0)
+            LinesFirst--;
+    }
+
+    /// <summary>Scrolls the chat view down by one line.</summary>
+    public void ScrollDown()
+    {
+        if (Order.Count - 1 - LinesFirst - LinesVisible > 0)
+            LinesFirst++;
+    }
 
     /// <summary>Chat line record containing the displayed text and color.</summary>
     public class Structure
@@ -35,7 +62,7 @@ internal static class Chat
         public Color Color;
     }
 
-    private static void AddLine(string text, Color color)
+    private void AddLine(string text, Color color)
     {
         Order.Add(new Structure());
         var i = Order.Count - 1;
@@ -51,7 +78,7 @@ internal static class Chat
         GameLoop.ChatTimer = Environment.TickCount + 10000;
     }
 
-    public static void AddText(string message, Color color)
+    public void AddText(string message, Color color)
     {
         var boxWidth = Textures.Panels[ChatView.Panel.TextureNum].ToSize().Width - 16;
 
@@ -75,7 +102,7 @@ internal static class Chat
             }
     }
 
-    public static void Type()
+    public void Type()
     {
         var tool = ChatView.MessageTextBox;
         var panel = ChatView.Panel;
@@ -105,7 +132,7 @@ internal static class Chat
             SendMessage(message);
     }
 
-    private static void SendMessage(string message)
+    private void SendMessage(string message)
     {
         switch (message[0])
         {
