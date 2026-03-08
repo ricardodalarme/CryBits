@@ -5,9 +5,11 @@ using CryBits.Entities.Npc;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal static class NpcRepository
+internal sealed class NpcRepository
 {
-    public static void Read()
+    public static NpcRepository Instance { get; } = new();
+
+    public void Read()
     {
         // Load NPCs from disk.
         Npc.List = [];
@@ -17,7 +19,7 @@ internal static class NpcRepository
                 Npc.List.Add(new Guid(file[i].Name.Remove(36)), (Npc)new BinaryFormatter().Deserialize(stream));
     }
 
-    public static void WriteAll()
+    public void WriteAll()
     {
         // Write NPCs to disk.
         foreach (var npc in Npc.List.Values)

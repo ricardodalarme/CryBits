@@ -2,28 +2,33 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.Network;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class TradeSender
+internal sealed class TradeSender(PackageSender packageSender)
 {
-    public static void Trade(Player player, bool state)
+    public static TradeSender Instance { get; } = new(PackageSender.Instance);
+
+    private readonly PackageSender _packageSender = packageSender;
+
+    public void Trade(Player player, bool state)
     {
-        PackageSender.ToPlayer(player, new TradePacket { State = state });
+        _packageSender.ToPlayer(player, new TradePacket { State = state });
     }
 
-    public static void TradeInvitation(Player player, string playerInvitation)
+    public void TradeInvitation(Player player, string playerInvitation)
     {
-        PackageSender.ToPlayer(player, new TradeInvitationPacket { PlayerInvitation = playerInvitation });
+        _packageSender.ToPlayer(player, new TradeInvitationPacket { PlayerInvitation = playerInvitation });
     }
 
-    public static void TradeState(Player player, TradeStatus state)
+    public void TradeState(Player player, TradeStatus state)
     {
-        PackageSender.ToPlayer(player, new TradeStatePacket { State = (byte)state });
+        _packageSender.ToPlayer(player, new TradeStatePacket { State = (byte)state });
     }
 
-    public static void TradeOffer(Player player, bool own = true)
+    public void TradeOffer(Player player, bool own = true)
     {
         var to = own ? player : player.Trade;
         var packet = new TradeOfferPacket
@@ -39,6 +44,6 @@ internal static class TradeSender
                 Amount = to.TradeOffer[i].Amount
             };
         }
-        PackageSender.ToPlayer(player, packet);
+        _packageSender.ToPlayer(player, packet);
     }
 }

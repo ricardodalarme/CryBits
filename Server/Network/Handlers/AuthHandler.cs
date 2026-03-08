@@ -5,23 +5,28 @@ using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Handlers;
 
-internal static class AuthHandler
+internal sealed class AuthHandler(AuthSender authSender, AuthSystem authSystem)
 {
+    public static AuthHandler Instance { get; } = new(AuthSender.Instance, AuthSystem.Instance);
+
+    private readonly AuthSender _authSender = authSender;
+    private readonly AuthSystem _authSystem = authSystem;
+
     [PacketHandler]
-    internal static void Latency(GameSession session, LatencyPacket packet)
+    internal void Latency(GameSession session, LatencyPacket packet)
     {
-        AuthSender.Latency(session);
+        _authSender.Latency(session);
     }
 
     [PacketHandler]
-    internal static void Connect(GameSession session, ConnectPacket packet)
+    internal void Connect(GameSession session, ConnectPacket packet)
     {
-        AuthSystem.Connect(session, packet);
+        _authSystem.Connect(session, packet);
     }
 
     [PacketHandler]
-    internal static void Register(GameSession session, RegisterPacket packet)
+    internal void Register(GameSession session, RegisterPacket packet)
     {
-        AuthSystem.Register(session, packet);
+        _authSystem.Register(session, packet);
     }
 }

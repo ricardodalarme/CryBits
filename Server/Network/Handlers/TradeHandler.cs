@@ -5,41 +5,45 @@ using CryBits.Server.Systems;
 
 namespace CryBits.Server.Network.Handlers;
 
-internal static class TradeHandler
+internal sealed class TradeHandler(TradeSystem tradeSystem)
 {
+    public static TradeHandler Instance { get; } = new(TradeSystem.Instance);
+
+    private readonly TradeSystem _tradeSystem = tradeSystem;
+
     [PacketHandler]
-    internal static void TradeInvite(Player player, TradeInvitePacket packet)
+    internal void TradeInvite(Player player, TradeInvitePacket packet)
     {
-        TradeSystem.Invite(player, packet.PlayerName);
+        _tradeSystem.Invite(player, packet.PlayerName);
     }
 
     [PacketHandler]
-    internal static void TradeAccept(Player player, TradeAcceptPacket _)
+    internal void TradeAccept(Player player, TradeAcceptPacket _)
     {
-        TradeSystem.Accept(player);
+        _tradeSystem.Accept(player);
     }
 
     [PacketHandler]
-    internal static void TradeDecline(Player player, TradeDeclinePacket _)
+    internal void TradeDecline(Player player, TradeDeclinePacket _)
     {
-        TradeSystem.Decline(player);
+        _tradeSystem.Decline(player);
     }
 
     [PacketHandler]
-    internal static void TradeLeave(Player player, TradeLeavePacket _)
+    internal void TradeLeave(Player player, TradeLeavePacket _)
     {
-        TradeSystem.Leave(player);
+        _tradeSystem.Leave(player);
     }
 
     [PacketHandler]
-    internal static void TradeOffer(Player player, TradeOfferPacket packet)
+    internal void TradeOffer(Player player, TradeOfferPacket packet)
     {
-        TradeSystem.Offer(player, packet.Slot, packet.InventorySlot, packet.Amount);
+        _tradeSystem.Offer(player, packet.Slot, packet.InventorySlot, packet.Amount);
     }
 
     [PacketHandler]
-    internal static void TradeOfferState(Player player, TradeOfferStatePacket packet)
+    internal void TradeOfferState(Player player, TradeOfferStatePacket packet)
     {
-        TradeSystem.OfferState(player, (TradeStatus)packet.State);
+        _tradeSystem.OfferState(player, (TradeStatus)packet.State);
     }
 }

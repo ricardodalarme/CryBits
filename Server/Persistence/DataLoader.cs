@@ -4,21 +4,42 @@ using CryBits.Server.Persistence.Repositories;
 namespace CryBits.Server.Persistence;
 
 /// <summary>Orchestrates loading all game data from disk on server startup.</summary>
-internal static class DataLoader
+internal sealed class DataLoader(
+    SettingsRepository settingsRepository,
+    MapRepository mapRepository,
+    ClassRepository classRepository,
+    NpcRepository npcRepository,
+    ItemRepository itemRepository,
+    ShopRepository shopRepository)
 {
-    public static void LoadAll()
+    public static DataLoader Instance { get; } = new(
+        SettingsRepository.Instance,
+        MapRepository.Instance,
+        ClassRepository.Instance,
+        NpcRepository.Instance,
+        ItemRepository.Instance,
+        ShopRepository.Instance);
+
+    private readonly SettingsRepository _settingsRepository = settingsRepository;
+    private readonly MapRepository _mapRepository = mapRepository;
+    private readonly ClassRepository _classRepository = classRepository;
+    private readonly NpcRepository _npcRepository = npcRepository;
+    private readonly ItemRepository _itemRepository = itemRepository;
+    private readonly ShopRepository _shopRepository = shopRepository;
+
+    public void LoadAll()
     {
         Console.WriteLine("Loading settings.");
-        SettingsRepository.Read();
+        _settingsRepository.Read();
         Console.WriteLine("Loading maps.");
-        MapRepository.Read();
+        _mapRepository.Read();
         Console.WriteLine("Loading classes.");
-        ClassRepository.Read();
+        _classRepository.Read();
         Console.WriteLine("Loading npcs.");
-        NpcRepository.Read();
+        _npcRepository.Read();
         Console.WriteLine("Loading items.");
-        ItemRepository.Read();
+        _itemRepository.Read();
         Console.WriteLine("Loading shops.");
-        ShopRepository.Read();
+        _shopRepository.Read();
     }
 }

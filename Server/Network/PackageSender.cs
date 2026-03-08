@@ -8,19 +8,21 @@ using LiteNetLib.Utils;
 
 namespace CryBits.Server.Network;
 
-internal static class PackageSender
+internal sealed class PackageSender
 {
-    public static void ToPlayer(GameSession session, IServerPacket packet)
+    public static PackageSender Instance { get; } = new();
+
+    public void ToPlayer(GameSession session, IServerPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
         session.Connection.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
-    public static void ToPlayer(Player player, IServerPacket packet) =>
+    public void ToPlayer(Player player, IServerPacket packet) =>
         ToPlayer(player.Session, packet);
 
-    public static void ToAll(IServerPacket packet)
+    public void ToAll(IServerPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
@@ -29,7 +31,7 @@ internal static class PackageSender
             t.Connection.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
-    public static void ToAllBut(Player player, IServerPacket packet)
+    public void ToAllBut(Player player, IServerPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
@@ -38,7 +40,7 @@ internal static class PackageSender
             ToPlayer(t, packet);
     }
 
-    public static void ToMap(MapInstance mapInstance, IServerPacket packet)
+    public void ToMap(MapInstance mapInstance, IServerPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
@@ -48,7 +50,7 @@ internal static class PackageSender
             ToPlayer(t, packet);
     }
 
-    public static void ToMapBut(MapInstance mapInstance, Player player, IServerPacket packet)
+    public void ToMapBut(MapInstance mapInstance, Player player, IServerPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);

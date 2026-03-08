@@ -2,19 +2,24 @@ using CryBits.Entities.Shop;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.Network;
 using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class ShopSender
+internal sealed class ShopSender(PackageSender packageSender)
 {
-    public static void Shops(GameSession session)
+    public static ShopSender Instance { get; } = new(PackageSender.Instance);
+
+    private readonly PackageSender _packageSender = packageSender;
+
+    public void Shops(GameSession session)
     {
-        PackageSender.ToPlayer(session, new ShopsPacket { List = Shop.List });
+        _packageSender.ToPlayer(session, new ShopsPacket { List = Shop.List });
     }
 
-    public static void ShopOpen(Player player, Shop shop)
+    public void ShopOpen(Player player, Shop shop)
     {
-        PackageSender.ToPlayer(player, new ShopOpenPacket { Id = shop.GetId() });
+        _packageSender.ToPlayer(player, new ShopOpenPacket { Id = shop.GetId() });
     }
 }

@@ -12,14 +12,35 @@ namespace CryBits.Server.Systems;
 /// Request-driven system that owns all player inventory operations:
 /// giving, taking, dropping, using, equipping, unequipping, and collecting ground items.
 /// </summary>
-internal static class InventorySystem
+internal sealed class InventorySystem(
+    PlayerSender playerSender,
+    MapSender mapSender,
+    EquipmentSystem equipmentSystem,
+    LevelingSystem levelingSystem,
+    CombatSystem combatSystem,
+    ChatSender chatSender)
 {
+    public static InventorySystem Instance { get; } = new(
+        PlayerSender.Instance,
+        MapSender.Instance,
+        EquipmentSystem.Instance,
+        LevelingSystem.Instance,
+        CombatSystem.Instance,
+        ChatSender.Instance);
+
+    private readonly PlayerSender _playerSender = playerSender;
+    private readonly MapSender _mapSender = mapSender;
+    private readonly EquipmentSystem _equipmentSystem = equipmentSystem;
+    private readonly LevelingSystem _levelingSystem = levelingSystem;
+    private readonly CombatSystem _combatSystem = combatSystem;
+    private readonly ChatSender _chatSender = chatSender;
+
     /// <summary>
     /// Adds <paramref name="amount"/> of <paramref name="item"/> to <paramref name="player"/>'s inventory.
     /// Stacks onto an existing slot when the item is stackable; otherwise fills an empty slot.
     /// Returns false when the inventory is full or the item is null.
     /// </summary>
-    public static bool GiveItem(Player player, Item item, short amount)
+    public bool GiveItem(Player player, Item item, short amount)
     {
         if (item == null) return false;
 
@@ -37,7 +58,7 @@ internal static class InventorySystem
             slotEmpty.Amount = item.Stackable ? amount : (byte)1;
         }
 
-        PlayerSender.PlayerInventory(player);
+        _playerSender.PlayerInventory(player);
         return true;
     }
 
@@ -46,7 +67,7 @@ internal static class InventorySystem
     /// <paramref name="player"/>'s inventory. Also clears the matching hotbar entry when
     /// the slot is fully emptied.
     /// </summary>
-    public static void TakeItem(Player player, ItemSlot slot, short amount)
+    public void TakeItem(Player player, ItemSlot slot, short amount)
     {
         if (slot == null) return;
         if (amount <= 0) amount = 1;
@@ -61,20 +82,20 @@ internal static class InventorySystem
             {
                 hotbarSlot.Type = SlotType.None;
                 hotbarSlot.Slot = 0;
-                PlayerSender.PlayerHotbar(player);
+                _playerSender.PlayerHotbar(player);
             }
         }
         else
             slot.Amount -= amount;
 
-        PlayerSender.PlayerInventory(player);
+        _playerSender.PlayerInventory(player);
     }
 
     /// <summary>
     /// Drops <paramref name="amount"/> of the item in <paramref name="slot"/> onto the map tile
     /// the player is standing on, then removes it from the inventory.
     /// </summary>
-    public static void DropItem(Player player, ItemSlot slot, short amount)
+    public void DropItem(Player player, ItemSlot slot, short amount)
     {
         if (player.MapInstance.Item.Count == Config.MaxMapItems) return;
         if (slot.Item == null) return;
@@ -84,7 +105,7 @@ internal static class InventorySystem
         if (amount > slot.Amount) amount = slot.Amount;
 
         player.MapInstance.Item.Add(new MapItemInstance(slot.Item, amount, player.X, player.Y));
-        MapSender.MapItems(player.MapInstance);
+        _mapSender.MapItems(player.MapInstance);
         TakeItem(player, slot, amount);
     }
 
@@ -92,7 +113,7 @@ internal static class InventorySystem
     /// Uses the item in <paramref name="slot"/>. Equipment items are equipped; potions apply
     /// their vital and experience effects. No-ops if the player has an active trade.
     /// </summary>
-    public static void UseItem(Player player, ItemSlot slot)
+    public void UseItem(Player player, ItemSlot slot)
     {
         var item = slot.Item;
         if (item == null) return;
@@ -100,24 +121,24 @@ internal static class InventorySystem
 
         if (player.Level < item.ReqLevel)
         {
-            ChatSender.Message(player, "You do not have the level required to use this item.", Color.White);
+            _chatSender.Message(player, "You do not have the level required to use this item.", Color.White);
             return;
         }
 
         if (item.ReqClass != null && player.Class != item.ReqClass)
         {
-            ChatSender.Message(player, "You can not use this item.", Color.White);
+            _chatSender.Message(player, "You can not use this item.", Color.White);
             return;
         }
 
         if (item.Type == ItemType.Equipment)
         {
-            EquipmentSystem.Equip(player, slot);
+            _equipmentSystem.Equip(player, slot);
         }
         else if (item.Type == ItemType.Potion)
         {
             var hadEffect = false;
-            LevelingSystem.GiveExperience(player, item.PotionExperience);
+            _levelingSystem.GiveExperience(player, item.PotionExperience);
 
             for (byte i = 0; i < (byte)Vital.Count; i++)
             {
@@ -128,7 +149,7 @@ internal static class InventorySystem
                 if (player.Vital[i] > player.MaxVital(i)) player.Vital[i] = player.MaxVital(i);
             }
 
-            if (player.Vital[(byte)Vital.Hp] == 0) CombatSystem.Died(player);
+            if (player.Vital[(byte)Vital.Hp] == 0) _combatSystem.Died(player);
 
             if (item.PotionExperience > 0 || hadEffect) TakeItem(player, slot, 1);
         }
@@ -138,7 +159,7 @@ internal static class InventorySystem
     /// Picks up the item on the player's current map tile and adds it to the inventory.
     /// Removes the item from the map and notifies all players when successful.
     /// </summary>
-    public static void CollectItem(Player player)
+    public void CollectItem(Player player)
     {
         var mapItem = player.MapInstance.HasItem(player.X, player.Y);
         if (mapItem == null) return;
@@ -146,7 +167,7 @@ internal static class InventorySystem
         if (GiveItem(player, mapItem.Item, mapItem.Amount))
         {
             player.MapInstance.Item.Remove(mapItem);
-            MapSender.MapItems(player.MapInstance);
+            _mapSender.MapItems(player.MapInstance);
         }
     }
 }

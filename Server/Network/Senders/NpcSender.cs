@@ -3,18 +3,23 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.Network;
 using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class NpcSender
+internal sealed class NpcSender(PackageSender packageSender)
 {
-    public static void Npcs(GameSession session)
+    public static NpcSender Instance { get; } = new(PackageSender.Instance);
+
+    private readonly PackageSender _packageSender = packageSender;
+
+    public void Npcs(GameSession session)
     {
-        PackageSender.ToPlayer(session, new NpcsPacket { List = Npc.List });
+        _packageSender.ToPlayer(session, new NpcsPacket { List = Npc.List });
     }
 
-    public static void MapNpcs(Player player, MapInstance mapInstance)
+    public void MapNpcs(Player player, MapInstance mapInstance)
     {
         var packet = new MapNpcsPacket { Npcs = new PacketsMapNpc[mapInstance.Npc.Length] };
         for (byte i = 0; i < mapInstance.Npc.Length; i++)
@@ -30,10 +35,10 @@ internal static class NpcSender
             for (byte n = 0; n < (byte)Vital.Count; n++) packet.Npcs[i].Vital[n] = mapInstance.Npc[i].Vital[n];
         }
 
-        PackageSender.ToPlayer(player, packet);
+        _packageSender.ToPlayer(player, packet);
     }
 
-    public static void MapNpc(NpcInstance npcInstance)
+    public void MapNpc(NpcInstance npcInstance)
     {
         var packet = new MapNpcPacket
         {
@@ -45,16 +50,16 @@ internal static class NpcSender
             Vital = new short[(byte)Vital.Count]
         };
         for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
-        PackageSender.ToMap(npcInstance.MapInstance, packet);
+        _packageSender.ToMap(npcInstance.MapInstance, packet);
     }
 
-    public static void MapNpcMovement(NpcInstance npcInstance, byte movement)
+    public void MapNpcMovement(NpcInstance npcInstance, byte movement)
     {
         var speed = movement == (byte)Movement.Moving
             ? Globals.RunSpeedPixelsPerSecond
             : Globals.WalkSpeedPixelsPerSecond;
 
-        PackageSender.ToMap(npcInstance.MapInstance,
+        _packageSender.ToMap(npcInstance.MapInstance,
             new MapNpcMovementPacket
             {
                 Index = npcInstance.Index,
@@ -66,27 +71,27 @@ internal static class NpcSender
             });
     }
 
-    public static void MapNpcDirection(NpcInstance npcInstance)
+    public void MapNpcDirection(NpcInstance npcInstance)
     {
-        PackageSender.ToMap(npcInstance.MapInstance,
+        _packageSender.ToMap(npcInstance.MapInstance,
             new MapNpcDirectionPacket { Index = npcInstance.Index, Direction = (byte)npcInstance.Direction });
     }
 
-    public static void MapNpcVitals(NpcInstance npcInstance)
+    public void MapNpcVitals(NpcInstance npcInstance)
     {
         var packet = new MapNpcVitalsPacket { Index = npcInstance.Index, Vital = new short[(byte)Vital.Count] };
         for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
-        PackageSender.ToMap(npcInstance.MapInstance, packet);
+        _packageSender.ToMap(npcInstance.MapInstance, packet);
     }
 
-    public static void MapNpcAttack(NpcInstance npcInstance, string victim = "", Target victimType = 0)
+    public void MapNpcAttack(NpcInstance npcInstance, string victim = "", Target victimType = 0)
     {
-        PackageSender.ToMap(npcInstance.MapInstance,
+        _packageSender.ToMap(npcInstance.MapInstance,
             new MapNpcAttackPacket { Index = npcInstance.Index, Victim = victim, VictimType = (byte)victimType });
     }
 
-    public static void MapNpcDied(NpcInstance npcInstance)
+    public void MapNpcDied(NpcInstance npcInstance)
     {
-        PackageSender.ToMap(npcInstance.MapInstance, new MapNpcDiedPacket { Index = npcInstance.Index });
+        _packageSender.ToMap(npcInstance.MapInstance, new MapNpcDiedPacket { Index = npcInstance.Index });
     }
 }

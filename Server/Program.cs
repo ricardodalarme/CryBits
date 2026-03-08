@@ -47,7 +47,7 @@ internal static class Program
         Console.WriteLine("Directories created.");
 
         // Load all game data.
-        DataLoader.LoadAll();
+        DataLoader.Instance.LoadAll();
 
         // Create world
         Console.WriteLine("Creating world.");
@@ -58,22 +58,22 @@ internal static class Program
         foreach (var map in Map.List.Values) MapInstance.Create(map, true);
 
         // Initialize network sockets.
-        NetworkServer.Init();
+        NetworkServer.Instance.Init();
         Console.WriteLine("Network started. Port: " + Globals.Config.Port);
 
         // Register all [PacketHandler] methods before accepting connections.
-        PacketDispatcher.Register();
+        PacketDispatcher.Instance.Register();
 
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
 
         // Start command loop on background thread.
-        var consoleThread = new Thread(() => Loop.Commands(cts.Token)) { IsBackground = true };
+        var consoleThread = new Thread(() => Loop.Instance.Commands(cts.Token)) { IsBackground = true };
         consoleThread.Start();
 
         // Start main loop and wait for cancellation.
         try
         {
-            await Loop.MainAsync(cts.Token);
+            await Loop.Instance.MainAsync(cts.Token);
         }
         catch (OperationCanceledException)
         {
@@ -86,10 +86,10 @@ internal static class Program
     {
         // Save character data for all connected players.
         foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying))
-            CharacterRepository.Write(t);
+            CharacterRepository.Instance.Write(t);
 
         // Stop network device.
-        NetworkServer.Device.Stop();
+        NetworkServer.Instance.Device.Stop();
     }
 
     private static void Logo()
@@ -100,6 +100,6 @@ internal static class Program
  |  |    | '__/\\ // |   \_ | || __|/ __|
  |  |___ | |    | |  |     \| || |_ \__ \
  |______||_|    |_|  |_____/|_| \__||___/
-                          2D orpg engine" + "\r\n");
+                        2D orpg engine" + "\r\n");
     }
 }

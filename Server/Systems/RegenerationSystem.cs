@@ -11,12 +11,17 @@ namespace CryBits.Server.Systems;
 /// Called every 500ms from the main loop; regeneration itself fires every 5 seconds
 /// controlled by <see cref="Loop.TimerRegeneration"/>.
 /// </summary>
-internal static class RegenerationSystem
+internal sealed class RegenerationSystem(PlayerSender playerSender, NpcSender npcSender)
 {
+    public static RegenerationSystem Instance { get; } = new(PlayerSender.Instance, NpcSender.Instance);
+
+    private readonly PlayerSender _playerSender = playerSender;
+    private readonly NpcSender _npcSender = npcSender;
+
     /// <summary>
     /// Regenerates vitals for a player. Sends updated vitals to the map when any vital changes.
     /// </summary>
-    public static void Tick(Player player)
+    public void Tick(Player player)
     {
         if (Environment.TickCount64 <= Loop.TimerRegeneration + 5000) return;
 
@@ -27,7 +32,7 @@ internal static class RegenerationSystem
             player.Vital[v] += player.Regeneration(v);
             if (player.Vital[v] > player.MaxVital(v)) player.Vital[v] = player.MaxVital(v);
 
-            PlayerSender.PlayerVitals(player);
+            _playerSender.PlayerVitals(player);
         }
     }
 
@@ -35,7 +40,7 @@ internal static class RegenerationSystem
     /// Regenerates vitals for an NPC. Sends updated vitals to the map when any vital changes.
     /// Only runs when the NPC is alive.
     /// </summary>
-    public static void Tick(NpcInstance npcInstance)
+    public void Tick(NpcInstance npcInstance)
     {
         if (!npcInstance.Alive) return;
         if (Environment.TickCount64 <= Loop.TimerRegeneration + 5000) return;
@@ -47,7 +52,7 @@ internal static class RegenerationSystem
             npcInstance.Vital[v] += npcInstance.Regeneration(v);
             if (npcInstance.Vital[v] > npcInstance.Data.Vital[v]) npcInstance.Vital[v] = npcInstance.Data.Vital[v];
 
-            NpcSender.MapNpcVitals(npcInstance);
+            _npcSender.MapNpcVitals(npcInstance);
         }
     }
 }

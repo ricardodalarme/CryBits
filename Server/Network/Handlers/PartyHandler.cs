@@ -4,29 +4,33 @@ using CryBits.Server.Systems;
 
 namespace CryBits.Server.Network.Handlers;
 
-internal static class PartyHandler
+internal sealed class PartyHandler(PartySystem partySystem)
 {
+    public static PartyHandler Instance { get; } = new(PartySystem.Instance);
+
+    private readonly PartySystem _partySystem = partySystem;
+
     [PacketHandler]
-    internal static void PartyInvite(Player player, PartyInvitePacket packet)
+    internal void PartyInvite(Player player, PartyInvitePacket packet)
     {
-        PartySystem.Invite(player, packet.PlayerName);
+        _partySystem.Invite(player, packet.PlayerName);
     }
 
     [PacketHandler]
-    internal static void PartyAccept(Player player, PartyAcceptPacket _)
+    internal void PartyAccept(Player player, PartyAcceptPacket _)
     {
-        PartySystem.Accept(player);
+        _partySystem.Accept(player);
     }
 
     [PacketHandler]
-    internal static void PartyDecline(Player player, PartyDeclinePacket _)
+    internal void PartyDecline(Player player, PartyDeclinePacket _)
     {
-        PartySystem.Decline(player);
+        _partySystem.Decline(player);
     }
 
     [PacketHandler]
-    internal static void PartyLeave(Player player, PartyLeavePacket _)
+    internal void PartyLeave(Player player, PartyLeavePacket _)
     {
-        PartySystem.Leave(player);
+        _partySystem.Leave(player);
     }
 }

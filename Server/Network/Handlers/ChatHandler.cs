@@ -5,10 +5,14 @@ using CryBits.Server.Network.Senders;
 
 namespace CryBits.Server.Network.Handlers;
 
-internal static class ChatHandler
+internal sealed class ChatHandler(ChatSender chatSender)
 {
+    public static ChatHandler Instance { get; } = new(ChatSender.Instance);
+
+    private readonly ChatSender _chatSender = chatSender;
+
     [PacketHandler]
-    internal static void Message(Player player, MessagePacket packet)
+    internal void Message(Player player, MessagePacket packet)
     {
         var message = packet.Text;
 
@@ -20,9 +24,9 @@ internal static class ChatHandler
         // Dispatch the message to the appropriate recipients.
         switch ((Message)packet.Type)
         {
-            case Enums.Message.Map: ChatSender.MessageMap(player, message); break;
-            case Enums.Message.Global: ChatSender.MessageGlobal(player, message); break;
-            case Enums.Message.Private: ChatSender.MessagePrivate(player, packet.Addressee, message); break;
+            case Enums.Message.Map: _chatSender.MessageMap(player, message); break;
+            case Enums.Message.Global: _chatSender.MessageGlobal(player, message); break;
+            case Enums.Message.Private: _chatSender.MessagePrivate(player, packet.Addressee, message); break;
         }
     }
 }

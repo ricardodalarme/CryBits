@@ -11,9 +11,11 @@ using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal static class CharacterRepository
+internal sealed class CharacterRepository
 {
-    public static void Read(GameSession session, string name)
+    public static CharacterRepository Instance { get; } = new();
+
+    public void Read(GameSession session, string name)
     {
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", name) +
                                 Directories.Format);
@@ -49,7 +51,7 @@ internal static class CharacterRepository
             session.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
     }
 
-    public static string ReadAllNames()
+    public string ReadAllNames()
     {
         // Create the characters names file if it doesn't exist.
         if (!Directories.Characters.Exists)
@@ -63,7 +65,7 @@ internal static class CharacterRepository
         return data.ReadToEnd();
     }
 
-    public static void Write(GameSession session)
+    public void Write(GameSession session)
     {
         var file = new FileInfo(
             Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", session.Character!.Name) +
@@ -101,14 +103,14 @@ internal static class CharacterRepository
         }
     }
 
-    public static void WriteName(string name)
+    public void WriteName(string name)
     {
         // Append a character name to names file.
         using var data = new StreamWriter(Directories.Characters.FullName, true);
         data.Write(";" + name + ":");
     }
 
-    public static void WriteAllNames(string charactersName)
+    public void WriteAllNames(string charactersName)
     {
         // Overwrite names file with the provided list.
         using var data = new StreamWriter(Directories.Characters.FullName);

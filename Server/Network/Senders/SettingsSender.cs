@@ -1,13 +1,18 @@
 using CryBits.Packets.Server;
+using CryBits.Server.Network;
 using CryBits.Server.World;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class SettingsSender
+internal sealed class SettingsSender(PackageSender packageSender)
 {
-    public static void ServerData(GameSession session)
+    public static SettingsSender Instance { get; } = new(PackageSender.Instance);
+
+    private readonly PackageSender _packageSender = packageSender;
+
+    public void ServerData(GameSession session)
     {
-        PackageSender.ToPlayer(session, new ServerDataPacket { Config = Config });
+        _packageSender.ToPlayer(session, new ServerDataPacket { Config = Config });
     }
 }

@@ -6,43 +6,67 @@ using CryBits.Server.Systems;
 
 namespace CryBits.Server.Network.Handlers;
 
-internal static class PlayerHandler
+internal sealed class PlayerHandler(
+    MovementSystem movementSystem,
+    CombatSystem combatSystem,
+    LevelingSystem levelingSystem,
+    InventorySystem inventorySystem,
+    EquipmentSystem equipmentSystem,
+    HotbarSystem hotbarSystem,
+    PlayerSender playerSender)
 {
+    public static PlayerHandler Instance { get; } = new(
+        MovementSystem.Instance,
+        CombatSystem.Instance,
+        LevelingSystem.Instance,
+        InventorySystem.Instance,
+        EquipmentSystem.Instance,
+        HotbarSystem.Instance,
+        PlayerSender.Instance);
+
+    private readonly MovementSystem _movementSystem = movementSystem;
+    private readonly CombatSystem _combatSystem = combatSystem;
+    private readonly LevelingSystem _levelingSystem = levelingSystem;
+    private readonly InventorySystem _inventorySystem = inventorySystem;
+    private readonly EquipmentSystem _equipmentSystem = equipmentSystem;
+    private readonly HotbarSystem _hotbarSystem = hotbarSystem;
+    private readonly PlayerSender _playerSender = playerSender;
+
     [PacketHandler]
-    internal static void PlayerMove(Player player, PlayerMovePacket packet)
+    internal void PlayerMove(Player player, PlayerMovePacket packet)
     {
-        MovementSystem.ChangeDirection(player, (Direction)packet.Direction);
-        MovementSystem.Move(player, packet.Movement);
+        _movementSystem.ChangeDirection(player, (Direction)packet.Direction);
+        _movementSystem.Move(player, packet.Movement);
     }
 
     [PacketHandler]
-    internal static void PlayerAttack(Player player, PlayerAttackPacket _)
+    internal void PlayerAttack(Player player, PlayerAttackPacket _)
     {
-        CombatSystem.Attack(player);
+        _combatSystem.Attack(player);
     }
 
     [PacketHandler]
-    internal static void AddPoint(Player player, AddPointPacket packet)
+    internal void AddPoint(Player player, AddPointPacket packet)
     {
-        LevelingSystem.AddPoint(player, packet.Attribute);
+        _levelingSystem.AddPoint(player, packet.Attribute);
     }
 
     [PacketHandler]
-    internal static void CollectItem(Player player, CollectItemPacket _)
+    internal void CollectItem(Player player, CollectItemPacket _)
     {
-        InventorySystem.CollectItem(player);
+        _inventorySystem.CollectItem(player);
     }
 
     [PacketHandler]
-    internal static void DropItem(Player player, DropItemPacket packet)
+    internal void DropItem(Player player, DropItemPacket packet)
     {
         var slot = packet.Slot;
         var amount = packet.Amount;
-        if (slot != -1) InventorySystem.DropItem(player, player.Inventory[slot], amount);
+        if (slot != -1) _inventorySystem.DropItem(player, player.Inventory[slot], amount);
     }
 
     [PacketHandler]
-    internal static void InventoryChange(Player player, InventoryChangePacket packet)
+    internal void InventoryChange(Player player, InventoryChangePacket packet)
     {
         short slotOld = packet.OldSlot, slotNew = packet.NewSlot;
 
@@ -53,37 +77,37 @@ internal static class PlayerHandler
 
         // Swap inventory slots.
         (player.Inventory[slotOld], player.Inventory[slotNew]) = (player.Inventory[slotNew], player.Inventory[slotOld]);
-        PlayerSender.PlayerInventory(player);
-        HotbarSystem.SyncInventorySwap(player, slotOld, slotNew);
+        _playerSender.PlayerInventory(player);
+        _hotbarSystem.SyncInventorySwap(player, slotOld, slotNew);
     }
 
     [PacketHandler]
-    internal static void InventoryUse(Player player, InventoryUsePacket packet)
+    internal void InventoryUse(Player player, InventoryUsePacket packet)
     {
-        InventorySystem.UseItem(player, player.Inventory[packet.Slot]);
+        _inventorySystem.UseItem(player, player.Inventory[packet.Slot]);
     }
 
     [PacketHandler]
-    internal static void EquipmentRemove(Player player, EquipmentRemovePacket packet)
+    internal void EquipmentRemove(Player player, EquipmentRemovePacket packet)
     {
-        EquipmentSystem.Unequip(player, packet.Slot);
+        _equipmentSystem.Unequip(player, packet.Slot);
     }
 
     [PacketHandler]
-    internal static void HotbarAdd(Player player, HotbarAddPacket packet)
+    internal void HotbarAdd(Player player, HotbarAddPacket packet)
     {
-        HotbarSystem.Add(player, packet.HotbarSlot, (SlotType)packet.Type, packet.Slot);
+        _hotbarSystem.Add(player, packet.HotbarSlot, (SlotType)packet.Type, packet.Slot);
     }
 
     [PacketHandler]
-    internal static void HotbarChange(Player player, HotbarChangePacket packet)
+    internal void HotbarChange(Player player, HotbarChangePacket packet)
     {
-        HotbarSystem.Change(player, packet.OldSlot, packet.NewSlot);
+        _hotbarSystem.Change(player, packet.OldSlot, packet.NewSlot);
     }
 
     [PacketHandler]
-    internal static void HotbarUse(Player player, HotbarUsePacket packet)
+    internal void HotbarUse(Player player, HotbarUsePacket packet)
     {
-        HotbarSystem.Use(player, packet.Slot);
+        _hotbarSystem.Use(player, packet.Slot);
     }
 }

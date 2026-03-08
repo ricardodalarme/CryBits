@@ -5,9 +5,11 @@ using CryBits.Entities;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal static class ItemRepository
+internal sealed class ItemRepository
 {
-    public static void Read()
+    public static ItemRepository Instance { get; } = new();
+
+    public void Read()
     {
         // Load items from disk.
         Item.List = [];
@@ -17,7 +19,7 @@ internal static class ItemRepository
                 Item.List.Add(new Guid(file[i].Name.Remove(36)), (Item)new BinaryFormatter().Deserialize(stream));
     }
 
-    public static void WriteAll()
+    public void WriteAll()
     {
         // Write items to disk.
         foreach (var item in Item.List.Values)

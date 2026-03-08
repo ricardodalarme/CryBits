@@ -4,9 +4,11 @@ using static CryBits.Globals;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal static class SettingsRepository
+internal sealed class SettingsRepository
 {
-    public static void Read()
+    public static SettingsRepository Instance { get; } = new();
+
+    public void Read()
     {
         if (!Directories.Settings.Exists)
         {
@@ -18,7 +20,7 @@ internal static class SettingsRepository
         Config = JsonSerializer.Deserialize<ServerConfig>(json) ?? new ServerConfig();
     }
 
-    public static void Write()
+    public void Write()
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
         File.WriteAllText(Directories.Settings.FullName, JsonSerializer.Serialize(Config, options));

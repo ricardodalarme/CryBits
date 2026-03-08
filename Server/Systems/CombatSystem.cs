@@ -12,11 +12,29 @@ using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Server.Systems;
 
-/// <summary>Owns all combat resolution logic for players and NPCs.</summary>
-internal static class CombatSystem
+/// <summary>
+/// Owns all combat resolution logic for players and NPCs.
+/// MovementSystem and ShopSystem are accessed via their Instances to avoid circular constructor dependencies.
+/// </summary>
+internal sealed class CombatSystem(
+    PlayerSender playerSender,
+    NpcSender npcSender,
+    LevelingSystem levelingSystem,
+    ChatSender chatSender)
 {
+    public static CombatSystem Instance { get; } = new(
+        PlayerSender.Instance,
+        NpcSender.Instance,
+        LevelingSystem.Instance,
+        ChatSender.Instance);
+
+    private readonly PlayerSender _playerSender = playerSender;
+    private readonly NpcSender _npcSender = npcSender;
+    private readonly LevelingSystem _levelingSystem = levelingSystem;
+    private readonly ChatSender _chatSender = chatSender;
+
     /// <summary>Initiates an attack for <paramref name="player"/> against whatever is in front of them.</summary>
-    internal static void Attack(Player player)
+    internal void Attack(Player player)
     {
         byte nextX = player.X, nextY = player.Y;
         NextTile(player.Direction, ref nextX, ref nextY);
@@ -41,16 +59,16 @@ internal static class CombatSystem
         }
 
     @continue:
-        PlayerSender.PlayerAttack(player, null);
+        _playerSender.PlayerAttack(player, null);
         player.AttackTimer = Environment.TickCount64;
     }
 
-    private static void PlayerAttackPlayer(Player attacker, Player victim)
+    private void PlayerAttackPlayer(Player attacker, Player victim)
     {
         if (victim.GettingMap) return;
         if (attacker.MapInstance.Data.Moral == (byte)Moral.Pacific)
         {
-            ChatSender.Message(attacker, "This is a peaceful area.", Color.White);
+            _chatSender.Message(attacker, "This is a peaceful area.", Color.White);
             return;
         }
 
@@ -59,33 +77,33 @@ internal static class CombatSystem
         var attackDamage = CombatFormulas.NetDamage(attacker.Damage, victim.PlayerDefense);
         if (attackDamage > 0)
         {
-            PlayerSender.PlayerAttack(attacker, victim.Name, Target.Player);
+            _playerSender.PlayerAttack(attacker, victim.Name, Target.Player);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
                 victim.Vital[(byte)Vital.Hp] -= attackDamage;
-                PlayerSender.PlayerVitals(victim);
+                _playerSender.PlayerVitals(victim);
             }
             else
             {
-                LevelingSystem.GiveExperience(attacker, victim.Experience / 10);
+                _levelingSystem.GiveExperience(attacker, victim.Experience / 10);
                 Died(victim);
             }
         }
         else
-            PlayerSender.PlayerAttack(attacker);
+            _playerSender.PlayerAttack(attacker);
     }
 
-    private static void PlayerAttackNpc(Player attacker, NpcInstance victim)
+    private void PlayerAttackNpc(Player attacker, NpcInstance victim)
     {
         if (victim.Target != attacker && !string.IsNullOrEmpty(victim.Data.SayMsg))
-            ChatSender.Message(attacker, victim.Data.Name + ": " + victim.Data.SayMsg, Color.White);
+            _chatSender.Message(attacker, victim.Data.Name + ": " + victim.Data.SayMsg, Color.White);
 
         switch (victim.Data.Behaviour)
         {
             case Behaviour.Friendly: return;
             case Behaviour.ShopKeeper:
-                ShopSystem.Open(attacker, victim.Data.Shop);
+                ShopSystem.Instance.Open(attacker, victim.Data.Shop);
                 return;
         }
 
@@ -95,39 +113,39 @@ internal static class CombatSystem
         var attackDamage = CombatFormulas.NetDamage(attacker.Damage, (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
-            PlayerSender.PlayerAttack(attacker, victim.Index.ToString(), Target.Npc);
+            _playerSender.PlayerAttack(attacker, victim.Index.ToString(), Target.Npc);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
                 victim.Vital[(byte)Vital.Hp] -= attackDamage;
-                NpcSender.MapNpcVitals(victim);
+                _npcSender.MapNpcVitals(victim);
             }
             else
             {
-                LevelingSystem.GiveExperience(attacker, victim.Data.Experience);
+                _levelingSystem.GiveExperience(attacker, victim.Data.Experience);
                 Died(victim);
             }
         }
         else
-            PlayerSender.PlayerAttack(attacker);
+            _playerSender.PlayerAttack(attacker);
     }
 
     /// <summary>Kills <paramref name="player"/>: restores vitals, penalises XP, warps to spawn.</summary>
-    internal static void Died(Player player)
+    internal void Died(Player player)
     {
         for (byte n = 0; n < (byte)Vital.Count; n++) player.Vital[n] = player.MaxVital(n);
-        PlayerSender.PlayerVitals(player);
+        _playerSender.PlayerVitals(player);
 
         player.Experience /= 10;
-        PlayerSender.PlayerExperience(player);
+        _playerSender.PlayerExperience(player);
 
         player.Direction = (Direction)player.Class.SpawnDirection;
-        MovementSystem.Warp(player, GameWorld.Current.Maps.Get(player.Class.SpawnMap.Id), player.Class.SpawnX,
+        MovementSystem.Instance.Warp(player, GameWorld.Current.Maps.Get(player.Class.SpawnMap.Id), player.Class.SpawnX,
             player.Class.SpawnY);
     }
 
     /// <summary>Initiates an attack for <paramref name="npcInstance"/> against its current target.</summary>
-    internal static void Attack(NpcInstance npcInstance)
+    internal void Attack(NpcInstance npcInstance)
     {
         byte nextX = npcInstance.X, nextY = npcInstance.Y;
         NextTile(npcInstance.Direction, ref nextX, ref nextY);
@@ -142,7 +160,7 @@ internal static class CombatSystem
             NpcAttackNpc(npcInstance, npcInstance.MapInstance.HasNpc(nextX, nextY));
     }
 
-    private static void NpcAttackPlayer(NpcInstance attacker, Player victim)
+    private void NpcAttackPlayer(NpcInstance attacker, Player victim)
     {
         if (victim == null) return;
         if (victim.GettingMap) return;
@@ -152,12 +170,12 @@ internal static class CombatSystem
         var attackDamage = CombatFormulas.NetDamage((short)attacker.Data.Attribute[(byte)Attribute.Strength], victim.PlayerDefense);
         if (attackDamage > 0)
         {
-            NpcSender.MapNpcAttack(attacker, victim.Name, Target.Player);
+            _npcSender.MapNpcAttack(attacker, victim.Name, Target.Player);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
                 victim.Vital[(byte)Vital.Hp] -= attackDamage;
-                PlayerSender.PlayerVitals(victim);
+                _playerSender.PlayerVitals(victim);
             }
             else
             {
@@ -166,10 +184,10 @@ internal static class CombatSystem
             }
         }
         else
-            NpcSender.MapNpcAttack(attacker);
+            _npcSender.MapNpcAttack(attacker);
     }
 
-    private static void NpcAttackNpc(NpcInstance attacker, NpcInstance victim)
+    private void NpcAttackNpc(NpcInstance attacker, NpcInstance victim)
     {
         if (victim == null) return;
         if (!victim.Alive) return;
@@ -182,12 +200,12 @@ internal static class CombatSystem
             (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
-            NpcSender.MapNpcAttack(attacker, victim.Index.ToString(), Target.Npc);
+            _npcSender.MapNpcAttack(attacker, victim.Index.ToString(), Target.Npc);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
                 victim.Vital[(byte)Vital.Hp] -= attackDamage;
-                NpcSender.MapNpcVitals(victim);
+                _npcSender.MapNpcVitals(victim);
             }
             else
             {
@@ -196,22 +214,22 @@ internal static class CombatSystem
             }
         }
         else
-            NpcSender.MapNpcAttack(attacker);
+            _npcSender.MapNpcAttack(attacker);
     }
 
     /// <summary>Kills <paramref name="npcInstance"/>: drops items, resets spawn state, notifies the map.</summary>
-    internal static void Died(NpcInstance npcInstance)
+    internal void Died(NpcInstance npcInstance)
     {
         for (byte i = 0; i < npcInstance.Data.Drop.Count; i++)
             if (npcInstance.Data.Drop[i].Item != null)
                 if (MyRandom.Next(1, 99) <= npcInstance.Data.Drop[i].Chance)
                     npcInstance.MapInstance.Item.Add(new MapItemInstance(npcInstance.Data.Drop[i].Item, npcInstance.Data.Drop[i].Amount, npcInstance.X, npcInstance.Y));
 
-        MapSender.MapItems(npcInstance.MapInstance);
+        MapSender.Instance.MapItems(npcInstance.MapInstance);
 
-        npcInstance.SpawnTimer = Environment.TickCount64;
-        npcInstance.Target = null;
         npcInstance.Alive = false;
-        NpcSender.MapNpcDied(npcInstance);
+        npcInstance.Target = null;
+        npcInstance.SpawnTimer = Environment.TickCount64;
+        _npcSender.MapNpcDied(npcInstance);
     }
 }

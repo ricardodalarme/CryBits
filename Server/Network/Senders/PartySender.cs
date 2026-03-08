@@ -1,19 +1,24 @@
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using CryBits.Server.Network;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class PartySender
+internal sealed class PartySender(PackageSender packageSender)
 {
-    public static void Party(Player player)
+    public static PartySender Instance { get; } = new(PackageSender.Instance);
+
+    private readonly PackageSender _packageSender = packageSender;
+
+    public void Party(Player player)
     {
         var packet = new PartyPacket { Members = new string[player.Party.Count] };
         for (var i = 0; i < player.Party.Count; i++) packet.Members[i] = player.Party[i].Name;
-        PackageSender.ToPlayer(player, packet);
+        _packageSender.ToPlayer(player, packet);
     }
 
-    public static void PartyInvitation(Player player, string playerInvitation)
+    public void PartyInvitation(Player player, string playerInvitation)
     {
-        PackageSender.ToPlayer(player, new PartyInvitationPacket { PlayerInvitation = playerInvitation });
+        _packageSender.ToPlayer(player, new PartyInvitationPacket { PlayerInvitation = playerInvitation });
     }
 }

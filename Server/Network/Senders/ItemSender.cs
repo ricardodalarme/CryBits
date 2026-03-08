@@ -1,13 +1,18 @@
 using CryBits.Entities;
 using CryBits.Packets.Server;
+using CryBits.Server.Network;
 using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class ItemSender
+internal sealed class ItemSender(PackageSender packageSender)
 {
-    public static void Items(GameSession session)
+    public static ItemSender Instance { get; } = new(PackageSender.Instance);
+
+    private readonly PackageSender _packageSender = packageSender;
+
+    public void Items(GameSession session)
     {
-        PackageSender.ToPlayer(session, new ItemsPacket { List = Item.List });
+        _packageSender.ToPlayer(session, new ItemsPacket { List = Item.List });
     }
 }

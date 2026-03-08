@@ -13,14 +13,56 @@ using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Handlers;
 
-internal static class EditorHandler
+internal sealed class EditorHandler(
+    AuthSender authSender,
+    ClassSender classSender,
+    MapSender mapSender,
+    ItemSender itemSender,
+    NpcSender npcSender,
+    ShopSender shopSender,
+    SettingsSender settingsSender,
+    SettingsRepository settingsRepository,
+    ClassRepository classRepository,
+    MapRepository mapRepository,
+    NpcRepository npcRepository,
+    ItemRepository itemRepository,
+    ShopRepository shopRepository)
 {
+    public static EditorHandler Instance { get; } = new(
+        AuthSender.Instance,
+        ClassSender.Instance,
+        MapSender.Instance,
+        ItemSender.Instance,
+        NpcSender.Instance,
+        ShopSender.Instance,
+        SettingsSender.Instance,
+        SettingsRepository.Instance,
+        ClassRepository.Instance,
+        MapRepository.Instance,
+        NpcRepository.Instance,
+        ItemRepository.Instance,
+        ShopRepository.Instance);
+
+    private readonly AuthSender _authSender = authSender;
+    private readonly ClassSender _classSender = classSender;
+    private readonly MapSender _mapSender = mapSender;
+    private readonly ItemSender _itemSender = itemSender;
+    private readonly NpcSender _npcSender = npcSender;
+    private readonly ShopSender _shopSender = shopSender;
+    private readonly SettingsSender _settingsSender = settingsSender;
+    private readonly SettingsRepository _settingsRepository = settingsRepository;
+    private readonly ClassRepository _classRepository = classRepository;
+    private readonly MapRepository _mapRepository = mapRepository;
+    private readonly NpcRepository _npcRepository = npcRepository;
+    private readonly ItemRepository _itemRepository = itemRepository;
+    private readonly ShopRepository _shopRepository = shopRepository;
+
     [PacketHandler]
-    internal static void WriteSettings(GameSession session, WriteSettingsPacket packet)
+    internal void WriteSettings(GameSession session, WriteSettingsPacket packet)
     {
         if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(session, "You aren't allowed to do this.");
+            _authSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
@@ -28,145 +70,145 @@ internal static class EditorHandler
         Config = packet.Config;
 
         // Persist settings.
-        SettingsRepository.Write();
+        _settingsRepository.Write();
     }
 
     [PacketHandler]
-    internal static void WriteClasses(GameSession session, WriteClassesPacket packet)
+    internal void WriteClasses(GameSession session, WriteClassesPacket packet)
     {
         if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(session, "You aren't allowed to do this.");
+            _authSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
         Class.List = packet.Classes;
-        ClassRepository.WriteAll();
+        _classRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
-            ClassSender.Classes(t);
+            _classSender.Classes(t);
     }
 
     [PacketHandler]
-    internal static void WriteMaps(GameSession session, WriteMapsPacket packet)
+    internal void WriteMaps(GameSession session, WriteMapsPacket packet)
     {
         if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(session, "You aren't allowed to do this.");
+            _authSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
         Map.List = packet.Maps;
-        MapRepository.WriteAll();
+        _mapRepository.WriteAll();
 
         foreach (var tempMap in GameWorld.Current.Maps.Values)
         {
             tempMap.SpawnItems();
 
             foreach (var t in GameWorld.Current.Sessions.Where(t => t != session).Where(t => t.Character?.MapInstance == tempMap || t.InEditor))
-                MapSender.Map(t, tempMap.Data);
+                _mapSender.Map(t, tempMap.Data);
         }
     }
 
     [PacketHandler]
-    internal static void WriteNpcs(GameSession session, WriteNpcsPacket packet)
+    internal void WriteNpcs(GameSession session, WriteNpcsPacket packet)
     {
         if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(session, "You aren't allowed to do this.");
+            _authSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
         Npc.List = packet.Npcs;
-        NpcRepository.WriteAll();
+        _npcRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
-            NpcSender.Npcs(t);
+            _npcSender.Npcs(t);
     }
 
     [PacketHandler]
-    internal static void WriteItems(GameSession session, WriteItemsPacket packet)
+    internal void WriteItems(GameSession session, WriteItemsPacket packet)
     {
         if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(session, "You aren't allowed to do this.");
+            _authSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
         Item.List = packet.Items;
-        ItemRepository.WriteAll();
+        _itemRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
-            ItemSender.Items(t);
+            _itemSender.Items(t);
     }
 
     [PacketHandler]
-    internal static void WriteShops(GameSession session, WriteShopsPacket packet)
+    internal void WriteShops(GameSession session, WriteShopsPacket packet)
     {
         if (session.AccessLevel < Access.Editor)
         {
-            AuthSender.Alert(session, "You aren't allowed to do this.");
+            _authSender.Alert(session, "You aren't allowed to do this.");
             return;
         }
 
         Shop.List = packet.Shops;
-        ShopRepository.WriteAll();
+        _shopRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
-            ShopSender.Shops(t);
+            _shopSender.Shops(t);
     }
 
     [PacketHandler]
-    internal static void RequestSetting(GameSession session, RequestSettingPacket _)
+    internal void RequestSetting(GameSession session, RequestSettingPacket _)
     {
-        SettingsSender.ServerData(session);
+        _settingsSender.ServerData(session);
     }
 
     [PacketHandler]
-    internal static void RequestClasses(GameSession session, RequestClassesPacket _)
+    internal void RequestClasses(GameSession session, RequestClassesPacket _)
     {
-        ClassSender.Classes(session);
+        _classSender.Classes(session);
     }
 
     [PacketHandler]
-    internal static void RequestMap(GameSession session, RequestMapPacket packet)
+    internal void RequestMap(GameSession session, RequestMapPacket packet)
     {
         if (session.InEditor)
-            MapSender.Map(session, Map.List.Get(packet.Id));
+            _mapSender.Map(session, Map.List.Get(packet.Id));
         else
         {
             var player = session.Character;
 
-            if (packet.SendMap) MapSender.Map(player.Session, player.MapInstance.Data);
+            if (packet.SendMap) _mapSender.Map(player.Session, player.MapInstance.Data);
 
-            MapSender.MapPlayers(player);
+            _mapSender.MapPlayers(player);
 
             player.GettingMap = false;
-            PlayerSender.JoinMap(player);
+            PlayerSender.Instance.JoinMap(player);
         }
     }
 
     [PacketHandler]
-    internal static void RequestMaps(GameSession session, RequestMapsPacket _)
+    internal void RequestMaps(GameSession session, RequestMapsPacket _)
     {
-        MapSender.Maps(session);
+        _mapSender.Maps(session);
     }
 
     [PacketHandler]
-    internal static void RequestNpcs(GameSession session, RequestNpcsPacket _)
+    internal void RequestNpcs(GameSession session, RequestNpcsPacket _)
     {
-        NpcSender.Npcs(session);
+        _npcSender.Npcs(session);
     }
 
     [PacketHandler]
-    internal static void RequestItems(GameSession session, RequestItemsPacket _)
+    internal void RequestItems(GameSession session, RequestItemsPacket _)
     {
-        ItemSender.Items(session);
+        _itemSender.Items(session);
     }
 
     [PacketHandler]
-    internal static void RequestShops(GameSession session, RequestShopsPacket _)
+    internal void RequestShops(GameSession session, RequestShopsPacket _)
     {
-        ShopSender.Shops(session);
+        _shopSender.Shops(session);
     }
 }

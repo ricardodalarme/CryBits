@@ -1,11 +1,16 @@
 using CryBits.Packets.Server;
+using CryBits.Server.Network;
 using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class AccountSender
+internal sealed class AccountSender(PackageSender packageSender)
 {
-    public static void Characters(GameSession session)
+    public static AccountSender Instance { get; } = new(PackageSender.Instance);
+
+    private readonly PackageSender _packageSender = packageSender;
+
+    public void Characters(GameSession session)
     {
         var packet = new CharactersPacket
         {
@@ -21,11 +26,11 @@ internal static class AccountSender
             };
         }
 
-        PackageSender.ToPlayer(session, packet);
+        _packageSender.ToPlayer(session, packet);
     }
 
-    public static void CreateCharacter(GameSession session)
+    public void CreateCharacter(GameSession session)
     {
-        PackageSender.ToPlayer(session, new CreateCharacterPacket());
+        _packageSender.ToPlayer(session, new CreateCharacterPacket());
     }
 }

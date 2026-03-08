@@ -22,15 +22,17 @@ namespace CryBits.Server.Network;
 /// On receive, BinaryFormatter already embeds full type info, so
 /// packet.GetType() is used as the lookup key — no byte prefix needed.
 /// </summary>
-internal static class PacketDispatcher
+internal sealed class PacketDispatcher
 {
-    private static readonly Dictionary<Type, Action<GameSession, IClientPacket>> _handlers = new();
+    public static PacketDispatcher Instance { get; } = new();
 
-    internal static void Register()
+    private readonly Dictionary<Type, Action<GameSession, IClientPacket>> _handlers = new();
+
+    internal void Register()
     {
         var methods = Assembly.GetExecutingAssembly()
             .GetTypes()
-            .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
+            .SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
             .Where(m => m.GetCustomAttribute<PacketHandlerAttribute>() is not null);
 
         foreach (var method in methods)
@@ -54,7 +56,7 @@ internal static class PacketDispatcher
         Console.WriteLine($"PacketDispatcher: {_handlers.Count} handlers registered.");
     }
 
-    internal static void Dispatch(GameSession session, NetPacketReader data)
+    internal void Dispatch(GameSession session, NetPacketReader data)
     {
         var packet = (IClientPacket)data.ReadObject();
 
@@ -64,30 +66,48 @@ internal static class PacketDispatcher
 
     private static Action<GameSession, IClientPacket> BuildHandler(MethodInfo method)
     {
-        var accountParam = Expression.Parameter(typeof(GameSession), "session");
+        var sessionParam = Expression.Parameter(typeof(GameSession), "session");
         var packetParam = Expression.Parameter(typeof(IClientPacket), "packet");
 
         var methodParams = method.GetParameters();
         var firstParamType = methodParams[0].ParameterType;
 
+        // For instance methods, resolve the handler instance via the declaring type's Instance property.
+        Expression target = null;
+        if (!method.IsStatic)
+        {
+            var instanceProp = method.DeclaringType!.GetProperty("Instance",
+                BindingFlags.Public | BindingFlags.Static)
+                ?? throw new InvalidOperationException(
+                    $"Instance handler '{method.DeclaringType.Name}.{method.Name}' requires " +
+                    $"a public static 'Instance' property on '{method.DeclaringType.Name}'.");
+            target = Expression.Constant(instanceProp.GetValue(null), method.DeclaringType);
+        }
+
         // GameSession-based handler
         if (firstParamType == typeof(GameSession))
         {
-            var call = Expression.Call(method, accountParam,
-                Expression.Convert(packetParam, methodParams[1].ParameterType));
+            var call = method.IsStatic
+                ? Expression.Call(method, sessionParam,
+                    Expression.Convert(packetParam, methodParams[1].ParameterType))
+                : Expression.Call(target, method, sessionParam,
+                    Expression.Convert(packetParam, methodParams[1].ParameterType));
 
             return Expression.Lambda<Action<GameSession, IClientPacket>>(
-                call, accountParam, packetParam).Compile();
+                call, sessionParam, packetParam).Compile();
         }
 
         // Player-based handler (null-guarded)
         var playerVar = Expression.Variable(typeof(Player), "player");
         var assign = Expression.Assign(
             playerVar,
-            Expression.Property(accountParam, nameof(GameSession.Character)));
+            Expression.Property(sessionParam, nameof(GameSession.Character)));
 
-        var callExpr = Expression.Call(method, playerVar,
-            Expression.Convert(packetParam, methodParams[1].ParameterType));
+        var callExpr = method.IsStatic
+            ? Expression.Call(method, playerVar,
+                Expression.Convert(packetParam, methodParams[1].ParameterType))
+            : Expression.Call(target, method, playerVar,
+                Expression.Convert(packetParam, methodParams[1].ParameterType));
 
         var body = Expression.Block(
             variables: [playerVar],
@@ -97,6 +117,6 @@ internal static class PacketDispatcher
                 callExpr));
 
         return Expression.Lambda<Action<GameSession, IClientPacket>>(
-            body, accountParam, packetParam).Compile();
+            body, sessionParam, packetParam).Compile();
     }
 }
