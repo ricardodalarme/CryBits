@@ -1,5 +1,4 @@
 using Arch.Core;
-using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Movement;
 using CryBits.Entities.Map;
 using CryBits.Enums;
@@ -15,23 +14,11 @@ internal class ClientMap(Map data)
     public readonly Map Data = data;
     public Entity[] Npcs = [];
 
-    private bool HasNpc(byte x, byte y)
-    {
-        var world = GameContext.Instance.World;
-        for (byte i = 0; i < Npcs.Length; i++)
-            if (Npcs[i] != Entity.Null)
-            {
-                ref var m = ref world.Get<MovementComponent>(Npcs[i]);
-                if (m.TileX == x && m.TileY == y) return true;
-            }
-        return false;
-    }
-
-    private bool HasPlayer(short x, short y)
+    private bool HasCollidable(byte x, byte y)
     {
         var world = GameContext.Instance.World;
         var found = false;
-        var query = new QueryDescription().WithAll<MovementComponent, MapIdComponent, PlayerTagComponent>();
+        var query = new QueryDescription().WithAll<CollisionComponent, MovementComponent, MapIdComponent>();
         world.Query(in query, (ref MovementComponent m, ref MapIdComponent mapId) =>
         {
             if (mapId.Value == Data.Id && m.TileX == x && m.TileY == y)
@@ -50,7 +37,7 @@ internal class ClientMap(Map data)
         if (Data.Attribute[nextX, nextY].Type == (byte)TileAttribute.Block) return true;
         if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
         if (Data.Attribute[x, y].Block[(byte)direction]) return true;
-        if (HasPlayer(nextX, nextY) || HasNpc(nextX, nextY)) return true;
+        if (HasCollidable(nextX, nextY)) return true;
         return false;
     }
 }

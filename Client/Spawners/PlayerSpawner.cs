@@ -64,6 +64,7 @@ internal static class PlayerSpawner
             new DamageTintComponent(),
             new ShadowComponent(),
             new PlayerTagComponent(),
+            new CollisionComponent(),
             vitalsComponent,
             attributesComponent,
             equipmentComponent,

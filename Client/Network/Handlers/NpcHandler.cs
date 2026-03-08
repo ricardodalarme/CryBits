@@ -39,7 +39,7 @@ internal class NpcHandler(GameContext context)
             for (byte n = 0; n < (byte)Vital.Count; n++)
                 vitals[n] = packet.Npcs[i].Vital[n];
 
-            context.CurrentMap.Npcs[i] = NpcSpawner.Spawn(context.World, data, packet.Npcs[i].X, packet.Npcs[i].Y, direction, vitals);
+            context.CurrentMap.Npcs[i] = NpcSpawner.Spawn(context.World, data, packet.Npcs[i].X, packet.Npcs[i].Y, direction, vitals, context.CurrentMap.Data.Id);
         }
     }
 
@@ -56,7 +56,7 @@ internal class NpcHandler(GameContext context)
         var vitals = new short[(byte)Vital.Count];
         for (byte n = 0; n < (byte)Vital.Count; n++) vitals[n] = packet.Vital[n];
 
-        npc = NpcSpawner.Spawn(context.World, data, packet.X, packet.Y, direction, vitals);
+        npc = NpcSpawner.Spawn(context.World, data, packet.X, packet.Y, direction, vitals, context.CurrentMap.Data.Id);
     }
 
     [PacketHandler]
