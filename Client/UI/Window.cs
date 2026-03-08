@@ -20,6 +20,10 @@ namespace CryBits.Client.UI;
 /// </summary>
 internal static class Window
 {
+    private static readonly InputManager _inputManager = InputManager.Instance;
+    private static readonly NetworkClient _networkClient = NetworkClient.Instance;
+    private static readonly AudioManager _audioManager = AudioManager.Instance;
+
     /// <summary>Interval in milliseconds within which two clicks count as a double-click.</summary>
     private const int DoubleClickIntervalMs = 142;
 
@@ -30,18 +34,18 @@ internal static class Window
 
     public static void Bind()
     {
-        InputManager.Instance.MouseButtonPressed += OnMouseButtonPressed;
-        InputManager.Instance.MouseButtonReleased += OnMouseButtonReleased;
-        InputManager.Instance.MouseMoved += OnMouseMoved;
-        InputManager.Instance.KeyPressed += OnKeyPressed;
-        InputManager.Instance.KeyReleased += OnKeyReleased;
-        InputManager.Instance.TextEntered += OnTextEntered;
+        _inputManager.MouseButtonPressed += OnMouseButtonPressed;
+        _inputManager.MouseButtonReleased += OnMouseButtonReleased;
+        _inputManager.MouseMoved += OnMouseMoved;
+        _inputManager.KeyPressed += OnKeyPressed;
+        _inputManager.KeyReleased += OnKeyReleased;
+        _inputManager.TextEntered += OnTextEntered;
     }
 
     public static void OnClosed(object sender, EventArgs e)
     {
         if (Screen.Current == Screens.Game)
-            NetworkClient.Instance.Disconnect();
+            _networkClient.Disconnect();
         else
             Program.Working = false;
     }
@@ -91,8 +95,8 @@ internal static class Window
     public static void OpenMenu()
     {
         // Play background music.
-        AudioManager.Instance.StopAllSounds();
-        if (Options.Musics) AudioManager.Instance.PlayMusic(Musics.Menu);
+        _audioManager.StopAllSounds();
+        if (Options.Musics) _audioManager.PlayMusic(Musics.Menu);
 
         LoginView.SaveUsernameCheckBox.Checked = Options.SaveUsername;
         if (Options.SaveUsername) LoginView.UsernameTextBox.Text = Options.Username;

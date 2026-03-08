@@ -22,7 +22,7 @@ namespace CryBits.Client.Systems.Character;
 /// <c>SpriteRenderSystem</c> (which is updated to exclude entities with
 /// <see cref="ShadowComponent"/>).
 /// </summary>
-internal sealed class CharacterRenderSystem(World world) : BaseSystem<World, int>(world)
+internal sealed class CharacterRenderSystem(World world, Renderer renderer) : BaseSystem<World, int>(world)
 {
     /// <summary>
     /// Targets only character entities: must have all of the spatial/visual components
@@ -62,7 +62,7 @@ internal sealed class CharacterRenderSystem(World world) : BaseSystem<World, int
     /// Draws the shadow texture stretched to the sprite frame width and positioned at the
     /// character's feet, preserving the same visual offset as the legacy renderer.
     /// </summary>
-    private static void DrawShadow(
+    private void DrawShadow(
         ref TransformComponent transform,
         ref AnimatedSpriteComponent anim)
     {
@@ -78,14 +78,14 @@ internal sealed class CharacterRenderSystem(World world) : BaseSystem<World, int
             anim.FrameWidth,
             shadowSize.Height);
 
-        Renderer.Instance.Draw(texture, source, dest);
+        renderer.Draw(texture, source, dest);
     }
 
     /// <summary>
     /// Draws the animated sprite frame using the source rect already computed by
     /// <c>AnimatedSpriteSystem</c> and the tint set by <c>DamageTintSystem</c>.
     /// </summary>
-    private static void DrawSprite(
+    private void DrawSprite(
         ref TransformComponent transform,
         ref SpriteComponent sprite,
         ref AnimatedSpriteComponent anim)
@@ -97,6 +97,6 @@ internal sealed class CharacterRenderSystem(World world) : BaseSystem<World, int
             anim.FrameHeight);
 
         var dest = source with { X = transform.X, Y = transform.Y };
-        Renderer.Instance.Draw(sprite.Texture, source, dest, sprite.Tint);
+        renderer.Draw(sprite.Texture, source, dest, sprite.Tint);
     }
 }

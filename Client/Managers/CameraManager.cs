@@ -31,9 +31,9 @@ namespace CryBits.Client.Managers;
 /// </list>
 /// </para>
 /// </summary>
-internal class CameraManager(RenderWindow renderWindow)
+internal class CameraManager(RenderWindow renderWindow, GameContext context)
 {
-    public static CameraManager Instance { get; } = new(Renderer.Instance.RenderWindow);
+    public static CameraManager Instance { get; } = new(Renderer.Instance.RenderWindow, GameContext.Instance);
 
     /// <summary>
     /// The entity the camera follows. Set to <see cref="Entity.Null"/> to
@@ -59,10 +59,10 @@ internal class CameraManager(RenderWindow renderWindow)
     /// </summary>
     public void Update()
     {
-        var world = GameContext.Instance.World;
+        var world = context.World;
 
         // Resolve target — fall back to local player.
-        var target = Target != Entity.Null ? Target : GameContext.Instance.LocalPlayer.Entity;
+        var target = Target != Entity.Null ? Target : context.LocalPlayer.Entity;
 
         if (target == Entity.Null || !world.IsAlive(target)) return;
 

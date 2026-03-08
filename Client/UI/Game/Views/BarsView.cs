@@ -7,6 +7,8 @@ namespace CryBits.Client.UI.Game.Views;
 
 internal static class BarsView
 {
+    private static readonly GameContext _context = GameContext.Instance;
+
     private static Label HpValueLabel => Tools.Labels["Bars_HP_Value"];
     private static Label MpValueLabel => Tools.Labels["Bars_MP_Value"];
     private static Label ExpValueLabel => Tools.Labels["Bars_Exp_Value"];
@@ -16,10 +18,10 @@ internal static class BarsView
 
     public static void Update()
     {
-        ref var vitals = ref GameContext.Instance.LocalPlayer.GetVitals();
+        ref var vitals = ref _context.LocalPlayer.GetVitals();
         var current = vitals.Current;
         var max = vitals.Max;
-        ref var level = ref GameContext.Instance.LocalPlayer.GetLevel();
+        ref var level = ref _context.LocalPlayer.GetLevel();
 
         var maxHp = max[(byte)Vital.Hp];
         var maxMp = max[(byte)Vital.Mp];

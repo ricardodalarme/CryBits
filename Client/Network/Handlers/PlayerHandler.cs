@@ -50,9 +50,9 @@ internal class PlayerHandler(GameContext context)
 
         if (isLocal)
         {
-            context.LocalPlayer = new LocalPlayer(entity);
+            context.LocalPlayer = context.CreateLocalPlayer(entity);
             BarsView.Update();
-            CharacterView.Update();
+            CharacterView.Update(context);
         }
     }
 
@@ -175,7 +175,7 @@ internal class PlayerHandler(GameContext context)
         CharacterView.AddVitalityButton.Visible = level.Points > 0;
 
         BarsView.Update();
-        CharacterView.Update();
+        CharacterView.Update(context);
     }
 
     [PacketHandler]

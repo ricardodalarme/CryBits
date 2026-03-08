@@ -10,7 +10,7 @@ namespace CryBits.Client.Systems.Core;
 /// Draws text labels attached to ECS entities at their world position.
 /// Draws in world space — the SFML view handles panning.
 /// </summary>
-internal sealed class TextRenderSystem(World world) : BaseSystem<World, int>(world)
+internal sealed class TextRenderSystem(World world, Renderer renderer) : BaseSystem<World, int>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<TransformComponent, TextComponent>();
@@ -25,7 +25,7 @@ internal sealed class TextRenderSystem(World world) : BaseSystem<World, int>(wor
             if (text.Centered)
                 x -= MeasureString(text.Text) / 2;
 
-            Renderer.Instance.DrawText(text.Text, x, y, text.Color);
+            renderer.DrawText(text.Text, x, y, text.Color);
         });
     }
 }

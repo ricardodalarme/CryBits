@@ -1,30 +1,42 @@
 using System.Collections.Generic;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Graphics.Renderers;
+using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
+using CryBits.Client.Worlds;
 
 namespace CryBits.Client.UI.Game;
 
-internal class GameScreen
+internal class GameScreen(
+    PlayerSender playerSender,
+    EquipmentRenderer equipmentRenderer,
+    CharacterRenderer characterRenderer,
+    ItemRenderer itemRenderer,
+    ShopSender shopSender,
+    TradeSender tradeSender,
+    PartySender partySender,
+    AudioManager audioManager,
+    InputManager inputManager,
+    GameContext context)
 {
-    private static CharacterView CharacterView = new(PlayerSender.Instance, EquipmentRenderer.Instance, CharacterRenderer.Instance);
-    private static ChatView ChatView = new();
-    private static DraggableSlotView DraggableSlotView = new(ItemRenderer.Instance);
-    private static DropItemView DropItemView = new(PlayerSender.Instance);
-    private static HotbarView HotbarView = new(PlayerSender.Instance, ItemRenderer.Instance);
-    private static InformationView InformationView = new(ItemRenderer.Instance);
-    private static InventoryView InventoryView = new(PlayerSender.Instance, ShopSender.Instance, ItemRenderer.Instance);
-    private static MenusView MenusView = new();
-    private static OptionsView OptionsView = new(AudioManager.Instance);
-    private static PartyInvitationView PartyInvitationView = new(PartySender.Instance);
-    private static ShopSellView ShopSellView = new(ShopSender.Instance);
-    private static ShopView ShopView = new(ShopSender.Instance, ItemRenderer.Instance);
-    private static TradeAmountView TradeAmountView = new(TradeSender.Instance);
-    private static TradeInvitationView TradeInvitationView = new(TradeSender.Instance);
-    private static TradeView TradeView = new(TradeSender.Instance, ItemRenderer.Instance);
+    private readonly CharacterView CharacterView = new(playerSender, equipmentRenderer, characterRenderer, context);
+    private readonly ChatView ChatView = new();
+    private readonly DraggableSlotView DraggableSlotView = new(itemRenderer, inputManager, context);
+    private readonly DropItemView DropItemView = new(playerSender);
+    private readonly HotbarView HotbarView = new(playerSender, itemRenderer, context);
+    private readonly InformationView InformationView = new(itemRenderer);
+    private readonly InventoryView InventoryView = new(playerSender, shopSender, itemRenderer, context);
+    private readonly MenusView MenusView = new();
+    private readonly OptionsView OptionsView = new(audioManager, context);
+    private readonly PartyInvitationView PartyInvitationView = new(partySender);
+    private readonly ShopSellView ShopSellView = new(shopSender);
+    private readonly ShopView ShopView = new(shopSender, itemRenderer);
+    private readonly TradeAmountView TradeAmountView = new(tradeSender);
+    private readonly TradeInvitationView TradeInvitationView = new(tradeSender);
+    private readonly TradeView TradeView = new(tradeSender, itemRenderer, context);
 
-    private static List<IView> Views =
+    private List<IView> Views =>
     [
         CharacterView,
         ChatView,

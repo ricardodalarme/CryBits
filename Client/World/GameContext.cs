@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Arch.Core;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Player;
+using CryBits.Client.Network.Senders;
 
 namespace CryBits.Client.Worlds;
 
@@ -27,10 +28,21 @@ internal sealed class GameContext
     public Dictionary<Guid, ClientMap> Maps = [];
 
     /// <summary>Tracks the local player entity and components.</summary>
-    public LocalPlayer LocalPlayer { get; set; } = new(Entity.Null);
+    public LocalPlayer LocalPlayer { get; set; }
+
+    private readonly PlayerSender _playerSender = PlayerSender.Instance;
 
     private static readonly QueryDescription _playerNameQuery =
         new QueryDescription().WithAll<NameComponent, PlayerTagComponent>();
+
+    public GameContext()
+    {
+        LocalPlayer = CreateLocalPlayer(Entity.Null);
+    }
+
+    /// <summary>Creates a new <see cref="LocalPlayer"/> wired to this context's world and player sender.</summary>
+    public LocalPlayer CreateLocalPlayer(Entity entity) =>
+        new LocalPlayer(entity, World, _playerSender);
 
     /// <summary>Returns the ECS entity whose NameComponent matches <paramref name="name"/>, or Entity.Null.</summary>
     public Entity GetPlayerEntity(string name)
@@ -50,7 +62,7 @@ internal sealed class GameContext
     public void Reset()
     {
         World.Clear();
-        LocalPlayer = new LocalPlayer(Entity.Null);
+        LocalPlayer = CreateLocalPlayer(Entity.Null);
         Maps.Clear();
         LocalPlayerName = null;
     }

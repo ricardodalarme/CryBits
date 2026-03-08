@@ -20,7 +20,7 @@ namespace CryBits.Client.Systems.Movement;
 /// Polls keyboard state to drive local-player movement and attacks.
 /// Runs every frame; uses an internal 30 ms throttle to match the original tick rate.
 /// </summary>
-internal class LocalPlayerInputSystem(World world, GameContext context) : BaseSystem<World, float>(world)
+internal class LocalPlayerInputSystem(World world, GameContext context, InputManager inputManager, PlayerSender playerSender) : BaseSystem<World, float>(world)
 {
     private int _nextInputMs;
 
@@ -42,21 +42,21 @@ internal class LocalPlayerInputSystem(World world, GameContext context) : BaseSy
         ref var movement = ref World.Get<MovementComponent>(entity);
         if (movement.MovementState != MovementState.Stopped) return;
 
-        if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Up)) Move(Direction.Up, ref movement);
-        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Down)) Move(Direction.Down, ref movement);
-        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Left)) Move(Direction.Left, ref movement);
-        else if (InputManager.Instance.IsScancodePressed(Keyboard.Scancode.Right)) Move(Direction.Right, ref movement);
+        if (inputManager.IsScancodePressed(Keyboard.Scancode.Up)) Move(Direction.Up, ref movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Down)) Move(Direction.Down, ref movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Left)) Move(Direction.Left, ref movement);
+        else if (inputManager.IsScancodePressed(Keyboard.Scancode.Right)) Move(Direction.Right, ref movement);
     }
 
     private void Move(Direction direction, ref MovementComponent movement)
     {
         movement.Direction = direction;
 
-        var desired = InputManager.Instance.IsKeyPressed(Keyboard.Key.LShift)
+        var desired = inputManager.IsKeyPressed(Keyboard.Key.LShift)
             ? MovementState.Moving
             : MovementState.Walking;
 
-        PlayerSender.Instance.PlayerMove(direction, desired);
+        playerSender.PlayerMove(direction, desired);
 
         if (context.CurrentMap.TileBlocked(movement.TileX, movement.TileY, direction)) return;
 
@@ -84,13 +84,13 @@ internal class LocalPlayerInputSystem(World world, GameContext context) : BaseSy
             state.IsAttacking = false;
         }
 
-        if (!InputManager.Instance.IsKeyPressed(Keyboard.Key.LControl)) return;
+        if (!inputManager.IsKeyPressed(Keyboard.Key.LControl)) return;
         if (state.AttackTimer > 0) return;
         if (TradeView.Panel.Visible) return;
         if (ShopView.Panel.Visible) return;
 
         state.AttackTimer = Environment.TickCount;
         state.IsAttacking = true;
-        PlayerSender.Instance.PlayerAttack();
+        playerSender.PlayerAttack();
     }
 }

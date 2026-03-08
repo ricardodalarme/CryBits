@@ -14,6 +14,8 @@ namespace CryBits.Client.UI.Game;
 
 internal static class Chat
 {
+    private static readonly ChatSender _chatSender = ChatSender.Instance;
+
     private static readonly ChatCommandDispatcher _dispatcher =
         new ChatCommandDispatcher(AddText)
             .Register(new PartyInviteCommand(PartySender.Instance, AddText))
@@ -110,7 +112,7 @@ internal static class Chat
         switch (message[0])
         {
             case '\'':
-                ChatSender.Instance.Message(message[1..], Message.Global);
+                _chatSender.Message(message[1..], Message.Global);
                 return;
             case '!':
                 var parts = message.Split(' ');
@@ -122,11 +124,11 @@ internal static class Chat
 
                 var addressee = message.Substring(1, parts[0].Length - 1);
                 var content = message.Substring(parts[0].Length + 1);
-                ChatSender.Instance.Message(content, Message.Private, addressee);
+                _chatSender.Message(content, Message.Private, addressee);
                 return;
             default:
                 // Default: map message
-                ChatSender.Instance.Message(message, Message.Map);
+                _chatSender.Message(message, Message.Map);
                 break;
         }
     }

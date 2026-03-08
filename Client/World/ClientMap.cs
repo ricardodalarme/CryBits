@@ -10,14 +10,13 @@ namespace CryBits.Client.Worlds;
 /// <summary>
 /// Runtime state for the current map: the static data from the server plus the live NPC entity array.
 /// </summary>
-internal class ClientMap(Map data)
+internal class ClientMap(Map data, World world)
 {
     public readonly Map Data = data;
     public Entity[] Npcs = [];
 
     private bool HasNpc(byte x, byte y)
     {
-        var world = GameContext.Instance.World;
         for (byte i = 0; i < Npcs.Length; i++)
             if (Npcs[i] != Entity.Null)
             {
@@ -29,7 +28,6 @@ internal class ClientMap(Map data)
 
     private bool HasPlayer(short x, short y)
     {
-        var world = GameContext.Instance.World;
         var found = false;
         var query = new QueryDescription().WithAll<MovementComponent, MapIdComponent, PlayerTagComponent>();
         world.Query(in query, (ref MovementComponent m, ref MapIdComponent mapId) =>

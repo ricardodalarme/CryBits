@@ -28,7 +28,7 @@ internal class NetworkClient
         _device = new NetManager(_listener);
     }
 
-    public void Init()
+    public void Init(GameContext context)
     {
         _listener.NetworkReceiveEvent += (_, reader, _, _) =>
         {
@@ -39,7 +39,7 @@ internal class NetworkClient
         _listener.PeerDisconnectedEvent += (_, _) =>
         {
             ServerPeer = null;
-            GameContext.Instance.Reset();
+            context.Reset();
             Window.OpenMenu();
         };
 

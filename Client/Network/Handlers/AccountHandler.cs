@@ -19,20 +19,19 @@ using OptionsView = CryBits.Client.UI.Game.Views.OptionsView;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class AccountHandler(AudioManager audioManager)
+internal class AccountHandler(AudioManager audioManager, GameContext context)
 {
     [PacketHandler]
     internal void Join(JoinPacket packet)
     {
         // Clear entity collections
-        var ctx = GameContext.Instance;
-        ctx.Maps.Clear();
+        context.Maps.Clear();
         Item.List = [];
         Shop.List = [];
         Npc.List = [];
         Map.List = [];
 
-        ctx.LocalPlayerName = packet.Name;
+        context.LocalPlayerName = packet.Name;
     }
 
     [PacketHandler]

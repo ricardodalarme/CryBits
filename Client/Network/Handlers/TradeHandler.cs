@@ -11,7 +11,7 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class TradeHandler(TradeSender tradeSender)
+internal class TradeHandler(TradeSender tradeSender, GameContext context)
 {
     [PacketHandler]
     internal void Trade(TradePacket packet)
@@ -29,14 +29,14 @@ internal class TradeHandler(TradeSender tradeSender)
             TradeView.OfferDisabledPanel.Visible = false;
 
             // Clear trade offer data
-            ref var trade = ref GameContext.Instance.LocalPlayer.GetTrade();
+            ref var trade = ref context.LocalPlayer.GetTrade();
             trade.Offer = new ItemSlot[MaxInventory];
             trade.TheirOffer = new ItemSlot[MaxInventory];
         }
         else
         {
             // Clear trade offer data
-            ref var trade = ref GameContext.Instance.LocalPlayer.GetTrade();
+            ref var trade = ref context.LocalPlayer.GetTrade();
             trade.Offer = [];
             trade.TheirOffer = [];
         }
@@ -79,7 +79,7 @@ internal class TradeHandler(TradeSender tradeSender)
     internal void TradeOffer(TradeOfferPacket packet)
     {
         // Read trade offer data
-        ref var trade = ref GameContext.Instance.LocalPlayer.GetTrade();
+        ref var trade = ref context.LocalPlayer.GetTrade();
         if (packet.Own)
             for (byte i = 0; i < MaxInventory; i++)
             {

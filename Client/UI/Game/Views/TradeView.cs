@@ -11,7 +11,7 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer) : IView
+internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, GameContext context) : IView
 {
     internal static Panel Panel => Tools.Panels["Trade"];
     internal static Panel OfferDisabledPanel => Tools.Panels["Trade_Offer_Disable"]; // TODO: add disable state to button instead
@@ -50,15 +50,15 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer) : I
     }
 
     private void OnRenderOwnSlot(int slot, Point pos) =>
-        itemRenderer.DrawItem(GameContext.Instance.LocalPlayer.GetTrade().Offer[slot].Item, GameContext.Instance.LocalPlayer.GetTrade().Offer[slot].Amount, pos);
+        itemRenderer.DrawItem(context.LocalPlayer.GetTrade().Offer[slot].Item, context.LocalPlayer.GetTrade().Offer[slot].Amount, pos);
 
     private void OnRenderTheirSlot(int slot, Point pos) =>
-        itemRenderer.DrawItem(GameContext.Instance.LocalPlayer.GetTrade().TheirOffer[slot].Item, GameContext.Instance.LocalPlayer.GetTrade().TheirOffer[slot].Amount, pos);
+        itemRenderer.DrawItem(context.LocalPlayer.GetTrade().TheirOffer[slot].Item, context.LocalPlayer.GetTrade().TheirOffer[slot].Amount, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
         if (!Panel.Visible) return;
-        if (GameContext.Instance.LocalPlayer.GetTrade().Offer[slot].Item == null) return;
+        if (context.LocalPlayer.GetTrade().Offer[slot].Item == null) return;
 
         if (e.Button == Mouse.Button.Right) tradeSender.TradeOffer(slot, 0);
     }
@@ -68,7 +68,7 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer) : I
         if (GameScreen.InventoryChange <= 0) return;
 
         // Add item to trade
-        if (GameContext.Instance.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange]?.Amount == 1)
+        if (context.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange]?.Amount == 1)
             tradeSender.TradeOffer(slot, GameScreen.InventoryChange);
         else
         {
@@ -92,7 +92,7 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer) : I
         OfferDisabledPanel.Visible = false;
         tradeSender.TradeOfferState(TradeStatus.Accepted);
 
-        ref var trade = ref GameContext.Instance.LocalPlayer.GetTrade();
+        ref var trade = ref context.LocalPlayer.GetTrade();
         trade.Offer = new ItemSlot[MaxInventory];
         trade.TheirOffer = new ItemSlot[MaxInventory];
     }

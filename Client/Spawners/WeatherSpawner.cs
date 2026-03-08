@@ -28,6 +28,8 @@ internal static class WeatherSpawner
     private static readonly QueryDescription _lightningQuery =
         new QueryDescription().WithAll<LightningComponent>();
 
+    private static readonly AudioManager _audioManager = AudioManager.Instance;
+
     public static void Reset(World world, Weather weatherType)
     {
         // Tear down all existing weather entities.
@@ -35,17 +37,17 @@ internal static class WeatherSpawner
         world.Destroy(in _lightningQuery);
 
         // Always stop ambient weather sounds before potentially starting new ones.
-        AudioManager.Instance.StopAllSounds();
+        _audioManager.StopAllSounds();
 
         switch (weatherType)
         {
             case Weather.Thundering:
-                AudioManager.Instance.PlaySound(Sounds.Rain, true);
+                _audioManager.PlaySound(Sounds.Rain, true);
                 world.Create(new LightningComponent());
                 break;
 
             case Weather.Raining:
-                AudioManager.Instance.PlaySound(Sounds.Rain, true);
+                _audioManager.PlaySound(Sounds.Rain, true);
                 break;
         }
     }

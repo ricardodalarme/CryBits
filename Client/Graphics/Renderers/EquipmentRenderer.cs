@@ -4,13 +4,13 @@ using CryBits.Client.Worlds;
 
 namespace CryBits.Client.Graphics.Renderers;
 
-internal sealed class EquipmentRenderer(Renderer renderer)
+internal sealed class EquipmentRenderer(Renderer renderer, GameContext context)
 {
-    public static EquipmentRenderer Instance { get; } = new(Renderer.Instance);
+    public static EquipmentRenderer Instance { get; } = new(Renderer.Instance, GameContext.Instance);
 
     public void DrawSlot(int slot, Point pos)
     {
-        var item = GameContext.Instance.LocalPlayer.GetEquipment().Slots[slot];
+        var item = context.LocalPlayer.GetEquipment().Slots[slot];
         if (item == null)
             renderer.Draw(Textures.Equipments, pos.X, pos.Y, slot * 32, 0, 32, 32);
         else

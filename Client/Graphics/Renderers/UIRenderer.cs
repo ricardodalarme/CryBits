@@ -18,10 +18,11 @@ namespace CryBits.Client.Graphics.Renderers;
 
 internal sealed class UIRenderer(
     Renderer renderer,
-    ToolsRenderer toolsRenderer
+    ToolsRenderer toolsRenderer,
+    GameContext context
 )
 {
-    public static UIRenderer Instance { get; } = new(Renderer.Instance, ToolsRenderer.Instance);
+    public static UIRenderer Instance { get; } = new(Renderer.Instance, ToolsRenderer.Instance, GameContext.Instance);
 
     /// <summary>
     /// Recursively render a tree of UI components.
@@ -73,8 +74,8 @@ internal sealed class UIRenderer(
     /// </summary>
     public void DrawParty()
     {
-        var world = GameContext.Instance.World;
-        var members = GameContext.Instance.LocalPlayer.GetParty().Members;
+        var world = context.World;
+        var members = context.LocalPlayer.GetParty().Members;
         for (byte i = 0; i < members.Length; i++)
         {
             var entity = members[i];

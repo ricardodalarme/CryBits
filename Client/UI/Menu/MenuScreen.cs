@@ -3,19 +3,26 @@ using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Menu.Views;
+using CryBits.Client.Worlds;
 
 namespace CryBits.Client.UI.Menu;
 
-internal class MenuScreen
+internal class MenuScreen(
+    NetworkClient networkClient,
+    AuthSender authSender,
+    AudioManager audioManager,
+    AccountSender accountSender,
+    CharacterRenderer characterRenderer,
+    GameContext context)
 {
-    private static BackgroundView BackgroundView = new();
-    private static LoginView LoginView = new(NetworkClient.Instance, AuthSender.Instance);
-    private static RegisterView RegisterView = new(NetworkClient.Instance, AuthSender.Instance);
-    private static OptionsView OptionsPanel = new(AudioManager.Instance, NetworkClient.Instance);
-    private static SelectCharacterView SelectCharacterView = new(AccountSender.Instance, CharacterRenderer.Instance);
-    private static CreateCharacterView CreateCharacterView = new(NetworkClient.Instance, AccountSender.Instance, CharacterRenderer.Instance);
+    private readonly BackgroundView BackgroundView = new(networkClient);
+    private readonly LoginView LoginView = new(networkClient, authSender);
+    private readonly RegisterView RegisterView = new(networkClient, authSender);
+    private readonly OptionsView OptionsPanel = new(audioManager, networkClient, context);
+    private readonly SelectCharacterView SelectCharacterView = new(accountSender, characterRenderer);
+    private readonly CreateCharacterView CreateCharacterView = new(networkClient, accountSender, characterRenderer);
 
-    private static IView[] Views =
+    private IView[] Views =>
     [
         BackgroundView,
         LoginView,

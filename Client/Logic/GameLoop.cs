@@ -2,7 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using Arch.System;
+using CryBits.Client.Framework.Audio;
 using CryBits.Client.Graphics;
+using CryBits.Client.Managers;
 using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Systems.Combat;
@@ -15,9 +17,17 @@ using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Client.Logic;
 
-internal class GameLoop(RenderPipeline renderPipeline)
+internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClient, Renderer renderer, AuthSender authSender, GameContext context, InputManager inputManager, PlayerSender playerSender, AudioManager audioManager)
 {
-    public static GameLoop Instance { get; } = new(RenderPipeline.Instance);
+    public static GameLoop Instance { get; } = new(
+        RenderPipeline.Instance,
+        NetworkClient.Instance,
+        Renderer.Instance,
+        AuthSender.Instance,
+        GameContext.Instance,
+        InputManager.Instance,
+        PlayerSender.Instance,
+        AudioManager.Instance);
 
     // Measured frames per second.
     public static short Fps;
@@ -27,16 +37,16 @@ internal class GameLoop(RenderPipeline renderPipeline)
     public static int ChatTimer;
 
     // Delta-time systems — receive seconds elapsed since last frame.
-    private static readonly Group<float> _deltaTimeSystems = new(
+    private readonly Group<float> _deltaTimeSystems = new(
         "DeltaTimeSystems",
-        new FadeSystem(GameContext.Instance.World),
-        new ScrollingSpriteSystem(GameContext.Instance.World),
-        new WeatherSimulationSystem(GameContext.Instance.World, GameContext.Instance),
-        new LocalPlayerInputSystem(GameContext.Instance.World, GameContext.Instance),
-        new MovementSystem(GameContext.Instance.World),
-        new CharacterAnimationControllerSystem(GameContext.Instance.World),
-        new AnimatedSpriteSystem(GameContext.Instance.World),
-        new DamageTintSystem(GameContext.Instance.World)
+        new FadeSystem(context.World),
+        new ScrollingSpriteSystem(context.World),
+        new WeatherSimulationSystem(context.World, context, audioManager),
+        new LocalPlayerInputSystem(context.World, context, inputManager, playerSender),
+        new MovementSystem(context.World),
+        new CharacterAnimationControllerSystem(context.World),
+        new AnimatedSpriteSystem(context.World),
+        new DamageTintSystem(context.World)
     );
 
     // High-resolution stopwatch for delta time
@@ -53,13 +63,13 @@ internal class GameLoop(RenderPipeline renderPipeline)
         while (Program.Working)
         {
             // Handle incoming network data.
-            NetworkClient.Instance.HandleData();
+            networkClient.HandleData();
 
             // Present the rendered frame.
             renderPipeline.Present();
 
             // Dispatch window events.
-            Renderer.Instance.RenderWindow.DispatchEvents();
+            renderer.RenderWindow.DispatchEvents();
 
             UpdateTextBox();
 
@@ -75,7 +85,7 @@ internal class GameLoop(RenderPipeline renderPipeline)
             // Update FPS counter.
             if (timer1000 < Environment.TickCount)
             {
-                AuthSender.Instance.Latency();
+                authSender.Latency();
                 Fps = fps;
                 fps = 0;
                 timer1000 = Environment.TickCount + 1000;

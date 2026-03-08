@@ -16,7 +16,7 @@ namespace CryBits.Client.Systems.Map;
 /// <summary>
 /// Batched renderer for weather particles and the lightning full-screen flash.
 /// </summary>
-internal sealed class WeatherRenderSystem(World world) : BaseSystem<World, int>(world)
+internal sealed class WeatherRenderSystem(World world, GameContext context, Renderer renderer) : BaseSystem<World, int>(world)
 {
     private readonly QueryDescription _particleQuery =
         new QueryDescription().WithAll<WeatherParticleComponent, TransformComponent>();
@@ -29,7 +29,7 @@ internal sealed class WeatherRenderSystem(World world) : BaseSystem<World, int>(
 
     public override void Update(in int t)
     {
-        var weatherData = GameContext.Instance.CurrentMap?.Data.Weather;
+        var weatherData = context.CurrentMap?.Data.Weather;
         if (weatherData == null || weatherData.Type == Weather.Normal) return;
 
         // Snow uses a different horizontal source strip on the weather sprite sheet.
@@ -44,13 +44,13 @@ internal sealed class WeatherRenderSystem(World world) : BaseSystem<World, int>(
         });
 
         if (_batch.VertexCount > 0)
-            Renderer.Instance.RenderWindow.Draw(_batch, new RenderStates(Textures.Weather));
+            renderer.RenderWindow.Draw(_batch, new RenderStates(Textures.Weather));
 
         // ── 2. Full-screen lightning overlay ─────────────────────────────────
         World.Query(in _lightningQuery, (ref LightningComponent lightning) =>
         {
             if (lightning.Intensity > 0)
-                Renderer.Instance.Draw(
+                renderer.Draw(
                     Textures.Blank,
                     0, 0, 0, 0, ScreenWidth, ScreenHeight,
                     new Color(255, 255, 255, lightning.Intensity));

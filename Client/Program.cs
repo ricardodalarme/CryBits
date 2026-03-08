@@ -4,6 +4,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Graphics;
 using CryBits.Client.Logic;
+using CryBits.Client.Managers;
 using CryBits.Client.Network;
 using CryBits.Client.Network.Handlers;
 using CryBits.Client.Network.Senders;
@@ -33,27 +34,39 @@ internal static class Program
         Renderer.Instance.Init();
 
         // Register all input and UI event handlers.
-        new MenuScreen().Bind();
-        new GameScreen().Bind();
+        var renderer = Renderer.Instance;
+        var inputManager = InputManager.Instance;
+        var networkClient = NetworkClient.Instance;
+        var context = GameContext.Instance;
+        var audioManager = AudioManager.Instance;
+        var playerSender = PlayerSender.Instance;
+        var partySender = PartySender.Instance;
+        var tradeSender = TradeSender.Instance;
+        var authSender = AuthSender.Instance;
+        var accountSender = AccountSender.Instance;
+        var shopSender = ShopSender.Instance;
+        var mapSender = MapSender.Instance;
+        var chatSender = ChatSender.Instance;
+
+        new MenuScreen(networkClient, authSender, audioManager, accountSender, Graphics.Renderers.CharacterRenderer.Instance, context).Bind();
+        new GameScreen(playerSender, Graphics.Renderers.EquipmentRenderer.Instance, Graphics.Renderers.CharacterRenderer.Instance, Graphics.Renderers.ItemRenderer.Instance, shopSender, tradeSender, partySender, audioManager, inputManager, context).Bind();
         Window.Bind();
         GameInput.Bind();
 
-        NetworkClient.Instance.Init();
-        var context = GameContext.Instance;
-        var audioManager = AudioManager.Instance;
+        networkClient.Init(context);
 
         PacketDispatcher.Register(new AuthHandler());
-        PacketDispatcher.Register(new AccountHandler(audioManager));
+        PacketDispatcher.Register(new AccountHandler(audioManager, context));
         PacketDispatcher.Register(new PlayerHandler(context));
-        PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager));
+        PacketDispatcher.Register(new MapHandler(context, mapSender, audioManager));
         PacketDispatcher.Register(new NpcHandler(context));
         PacketDispatcher.Register(new ChatHandler());
-        PacketDispatcher.Register(new PartyHandler(PartySender.Instance, GameContext.Instance));
-        PacketDispatcher.Register(new TradeHandler(TradeSender.Instance));
+        PacketDispatcher.Register(new PartyHandler(partySender, context));
+        PacketDispatcher.Register(new TradeHandler(tradeSender, context));
         PacketDispatcher.Register(new ShopHandler());
         PacketDispatcher.Register(new ClassHandler());
         PacketDispatcher.Register(new ItemHandler());
-        AudioManager.Instance.LoadSounds();
+        audioManager.LoadSounds();
 
         Window.OpenMenu();
 

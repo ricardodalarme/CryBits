@@ -25,6 +25,7 @@ public class InputManager
 
     public void BindEvents(RenderWindow window)
     {
+        _renderWindow = window;
         window.MouseButtonPressed += (s, e) => MouseButtonPressed?.Invoke(s, e);
         window.MouseButtonReleased += (s, e) => MouseButtonReleased?.Invoke(s, e);
         window.MouseMoved += (s, e) => MouseMoved?.Invoke(s, e);
@@ -71,6 +72,8 @@ public class InputManager
         return Mouse.IsButtonPressed(button);
     }
 
+    private RenderWindow? _renderWindow;
+
     /// <summary>
     /// Current mouse position relative to the game window in screen pixels.
     /// Use this for UI hit-testing.
@@ -79,8 +82,8 @@ public class InputManager
     {
         get
         {
-            if (Graphics.Renderer.Instance.RenderWindow == null) return new Vector2i();
-            return Mouse.GetPosition(Graphics.Renderer.Instance.RenderWindow);
+            if (_renderWindow == null) return new Vector2i();
+            return Mouse.GetPosition(_renderWindow);
         }
     }
 }

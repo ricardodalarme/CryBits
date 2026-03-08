@@ -16,7 +16,7 @@ namespace CryBits.Client.Systems.Core;
 /// shadow rendering on top of the basic sprite draw.
 /// Draws in world space — the SFML view (set by CameraManager) handles panning.
 /// </summary>
-internal sealed class SpriteRenderSystem(World world) : BaseSystem<World, int>(world)
+internal sealed class SpriteRenderSystem(World world, Renderer renderer) : BaseSystem<World, int>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<TransformComponent, SpriteComponent>()
@@ -29,7 +29,7 @@ internal sealed class SpriteRenderSystem(World world) : BaseSystem<World, int>(w
             var source = sprite.SourceRect ?? new Rectangle(Point.Empty, sprite.Texture.ToSize());
             var dest = source with { X = transform.X, Y = transform.Y };
 
-            Renderer.Instance.Draw(sprite.Texture, source, dest, sprite.Tint);
+            renderer.Draw(sprite.Texture, source, dest, sprite.Tint);
         });
     }
 }

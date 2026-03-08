@@ -20,7 +20,7 @@ namespace CryBits.Client.Systems.Character;
 /// Positioned directly beneath the sprite frame (frameHeight + 4 px gap),
 /// which places it just outside the character's feet.
 /// </summary>
-internal sealed class VitalBarRenderSystem(World world) : BaseSystem<World, int>(world)
+internal sealed class VitalBarRenderSystem(World world, Renderer renderer) : BaseSystem<World, int>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<TransformComponent, VitalsComponent, AnimatedSpriteComponent>();
@@ -40,8 +40,6 @@ internal sealed class VitalBarRenderSystem(World world) : BaseSystem<World, int>
                 var barY = transform.Y + anim.FrameHeight + 4;
                 var fullWidth = anim.FrameWidth;
                 var fillWidth = hp * fullWidth / maxHp;
-
-                var renderer = Renderer.Instance;
 
                 // Background track (source row 1, offset y=4).
                 renderer.Draw(Textures.Bars, barX, barY, 0, 4, fullWidth, 4);
