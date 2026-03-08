@@ -1,8 +1,11 @@
 using System;
+using System.IO;
 using Arch.Core;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Equipment;
 using CryBits.Client.Components.Movement;
+using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Spawners;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
@@ -24,6 +27,13 @@ internal class PlayerHandler(GameContext context)
     {
         var name = packet.Name;
         var isLocal = name == context.LocalPlayerName;
+
+        if (context.CurrentMap is null || context.CurrentMap.Data.Id != packet.MapId)
+            if (File.Exists(Directories.MapsData.FullName + packet.MapId + Directories.Format))
+            {
+                context.CurrentMap = new ClientMap(MapRepository.Read(packet.MapId));
+                context.CurrentMap.Data.Update();
+            }
 
         var equipmentItems = new Item?[(byte)Equipment.Count];
         for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = Item.List.Get(packet.Equipment[n]);
