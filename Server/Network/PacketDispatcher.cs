@@ -16,8 +16,8 @@ namespace CryBits.Server.Network;
 /// <see cref="PacketHandlerAttribute"/>.
 ///
 /// The packet type is inferred from the IClientPacket parameter of each handler:
-///   void Method(Account account, TPacket packet)
-///   void Method(Player  player,  TPacket packet)
+///   void Method(GameSession session, TPacket packet)
+///   void Method(Player      player,  TPacket packet)
 ///
 /// On receive, BinaryFormatter already embeds full type info, so
 /// packet.GetType() is used as the lookup key — no byte prefix needed.

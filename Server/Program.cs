@@ -100,6 +100,6 @@ internal static class Program
  |  |    | '__/\\ // |   \_ | || __|/ __|
  |  |___ | |    | |  |     \| || |_ \__ \
  |______||_|    |_|  |_____/|_| \__||___/
-                        2D orpg engine" + "\r\n");
+                          2D orpg engine" + "\r\n");
     }
 }

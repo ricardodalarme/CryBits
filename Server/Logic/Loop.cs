@@ -29,8 +29,11 @@ internal sealed class Loop(
     // Measured loops per second (static so CpsCommand can access without Instance).
     public static int Cps;
 
-    // Timing counters (static so RegenerationSystem/MapItemSystem can access without Instance).
+    // Timing counters for 500ms and 1000ms ticks (instance state).
     private long _timer500, _timer1000;
+
+    // Regeneration and map item timers accessed by RegenerationSystem and MapItemSystem
+    // (kept static to avoid circular constructor dependencies).
     public static long TimerRegeneration;
     public static long TimerMapItems;
 

@@ -2,7 +2,6 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
-using CryBits.Server.Network;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Senders;

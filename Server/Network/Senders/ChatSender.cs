@@ -1,7 +1,6 @@
 using System.Drawing;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
-using CryBits.Server.Network;
 
 namespace CryBits.Server.Network.Senders;
 
