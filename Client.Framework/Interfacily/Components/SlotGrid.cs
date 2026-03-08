@@ -1,5 +1,6 @@
 using System.Drawing;
 using CryBits.Client.Framework.Interfacily.Interfaces;
+using SFML.System;
 using SFML.Window;
 using static CryBits.Client.Framework.Interfacily.InterfaceUtils;
 
@@ -45,7 +46,7 @@ public class SlotGrid : Component, IMouseDown, IMouseUp, IMouseDoubleClick, IMou
     public event Action<short>? OnSlotLeave;
 
     /// <summary>Fires each render frame with the component's top-left position so the subscriber can draw content.</summary>
-    public event Action<int, Point>? OnRenderSlot;
+    public event Action<int, Vector2i>? OnRenderSlot;
 
     private short _hoveredSlot = -1;
 
@@ -102,11 +103,11 @@ public class SlotGrid : Component, IMouseDown, IMouseUp, IMouseDoubleClick, IMou
     /// Returns the top-left screen position for the slot at
     /// <paramref name="zeroBasedIndex"/>.
     /// </summary>
-    public Point GetSlotPosition(int zeroBasedIndex)
+    public Vector2i GetSlotPosition(int zeroBasedIndex)
     {
         var row = zeroBasedIndex / Columns;
         var col = zeroBasedIndex % Columns;
-        return new Point(
+        return new Vector2i(
             Position.X + col * (SlotSize + Padding),
             Position.Y + row * (SlotSize + Padding));
     }

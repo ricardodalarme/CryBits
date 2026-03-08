@@ -7,6 +7,7 @@ using CryBits.Client.Graphics.Renderers;
 using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Extensions;
+using SFML.System;
 using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Client.UI.Game.Views;
@@ -96,7 +97,7 @@ internal class InformationView(ItemRenderer itemRenderer) : IView
         _currentItem = null;
     }
 
-    private void OnRenderItem(Point pos)
+    private void OnRenderItem(Vector2i pos)
     {
         if (_currentItem != null)
             itemRenderer.DrawItem(_currentItem, 1, pos);

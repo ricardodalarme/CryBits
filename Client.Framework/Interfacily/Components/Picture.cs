@@ -1,4 +1,4 @@
-using System.Drawing;
+using SFML.System;
 
 namespace CryBits.Client.Framework.Interfacily.Components;
 
@@ -18,13 +18,13 @@ public class Picture : Component
     public int Height { get; set; }
 
     /// <summary>Fires each render frame with the component's top-left position so the subscriber can draw content.</summary>
-    public event Action<Point>? OnRender;
+    public event Action<Vector2i>? OnRender;
 
     /// <summary>Invokes <see cref="OnRender"/> if the component is visible.</summary>
     public void Render()
     {
         if (!Visible) return;
-        OnRender?.Invoke(Position);
+        OnRender?.Invoke(new Vector2i(Position.X, Position.Y));
     }
 
     public override string ToString() => "[Picture] " + Name;

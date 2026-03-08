@@ -1,10 +1,11 @@
-using System.Drawing;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
+using SFML.Graphics;
+using SFML.System;
 
 namespace CryBits.Client.Systems.Core;
 
@@ -26,8 +27,8 @@ internal sealed class SpriteRenderSystem(World world) : BaseSystem<World, int>(w
     {
         World.Query(in _query, (ref TransformComponent transform, ref SpriteComponent sprite) =>
         {
-            var source = sprite.SourceRect ?? new Rectangle(Point.Empty, sprite.Texture.ToSize());
-            var dest = source with { X = transform.X, Y = transform.Y };
+            var source = sprite.SourceRect ?? new IntRect(new Vector2i(0, 0), sprite.Texture.ToSize());
+            var dest = new IntRect(new Vector2i(transform.X, transform.Y), source.Size);
 
             Renderer.Instance.Draw(sprite.Texture, source, dest, sprite.Tint);
         });

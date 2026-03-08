@@ -7,6 +7,7 @@ using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities;
 using CryBits.Enums;
+using SFML.System;
 using static CryBits.Globals;
 
 namespace CryBits.Client.UI.Menu.Views;
@@ -155,13 +156,13 @@ internal class CreateCharacterView(NetworkClient networkClient, AccountSender ac
         ClassDescLabel.Text = @class.Description;
     }
 
-    private void OnRenderFace(Point pos)
+    private void OnRenderFace(Vector2i pos)
     {
         var textureNum = GetCurrentTextureNum();
         if (textureNum > 0) characterRenderer.DrawFace(textureNum, pos);
     }
 
-    private void OnRenderSprite(Point pos)
+    private void OnRenderSprite(Vector2i pos)
     {
         var textureNum = GetCurrentTextureNum();
         if (textureNum > 0)

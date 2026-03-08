@@ -5,6 +5,7 @@ using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
+using SFML.System;
 using SFML.Window;
 
 namespace CryBits.Client.UI.Game.Views;
@@ -56,7 +57,7 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
         AddVitalityButton.OnMouseUp -= OnAddVitalityPressed;
     }
 
-    private void OnRenderFace(Point pos) =>
+    private void OnRenderFace(Vector2i pos) =>
         characterRenderer.DrawFace(GameContext.Instance.LocalPlayer.GetAppearance().TextureNum, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)

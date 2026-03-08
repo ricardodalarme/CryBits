@@ -1,6 +1,6 @@
-using System.Drawing;
 using CryBits.Client.Framework.Constants;
 using SFML.Graphics;
+using SFML.System;
 
 namespace CryBits.Client.Framework.Graphics;
 
@@ -48,6 +48,6 @@ public static class Textures
         return tempTex;
     }
 
-    /// <summary>Return the texture size as a <see cref="Size"/>.</summary>
-    public static Size ToSize(this Texture texture) => new((int)texture.Size.X, (int)texture.Size.Y);
+    /// <summary>Return the texture size as a <see cref="Vector2i"/>.</summary>
+    public static Vector2i ToSize(this Texture texture) => new((int)texture.Size.X, (int)texture.Size.Y);
 }

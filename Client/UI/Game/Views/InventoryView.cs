@@ -5,6 +5,7 @@ using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
+using SFML.System;
 using SFML.Window;
 
 namespace CryBits.Client.UI.Game.Views;
@@ -34,7 +35,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
         Grid.OnSlotLeave -= OnGridSlotLeave;
     }
 
-    private void OnRenderSlot(int slot, Point pos)
+    private void OnRenderSlot(int slot, Vector2i pos)
     {
         ref var inv = ref GameContext.Instance.LocalPlayer.GetInventory();
         itemRenderer.DrawItem(inv.Slots[slot]?.Item, inv.Slots[slot]?.Amount ?? 0, pos);

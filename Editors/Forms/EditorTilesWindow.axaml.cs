@@ -101,8 +101,8 @@ internal partial class EditorTilesWindow : Window
         if (Textures.Tiles.Count == 0 || ScrollTile >= Textures.Tiles.Count) return;
 
         var tex = Textures.Tiles[ScrollTile];
-        var maxX = tex.ToSize().Width / G.Grid - CanvasW / G.Grid;
-        var maxY = tex.ToSize().Height / G.Grid - CanvasH / G.Grid;
+        var maxX = tex.ToSize().X / G.Grid - CanvasW / G.Grid;
+        var maxY = tex.ToSize().Y / G.Grid - CanvasH / G.Grid;
 
         scrlTileX.Maximum = Math.Max(0, maxX);
         scrlTileY.Maximum = Math.Max(0, maxY);

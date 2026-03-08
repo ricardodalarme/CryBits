@@ -1,4 +1,3 @@
-using System.Drawing;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Managers;
 using CryBits.Enums;
@@ -68,18 +67,16 @@ internal sealed class Renderer
     /// <param name="recSource">Region of the texture to draw.</param>
     /// <param name="recDestiny">Destination rectangle on screen.</param>
     /// <param name="color">Optional tint color.</param>
-    public void Draw(Texture texture, Rectangle recSource, Rectangle recDestiny, Color? color = null)
+    public void Draw(Texture texture, IntRect recSource, IntRect recDestiny, Color? color = null)
     {
         // Lazy-initialize: Sprite ctor requires a Texture in SFML.Net 3+.
         _spriteCache ??= new Sprite(texture);
         _spriteCache.Texture = texture;
-        _spriteCache.TextureRect = new IntRect(
-            new Vector2i(recSource.X, recSource.Y),
-            new Vector2i(recSource.Width, recSource.Height));
-        _spriteCache.Position = new Vector2f(recDestiny.X, recDestiny.Y);
+        _spriteCache.TextureRect = new IntRect(recSource.Position, recSource.Size);
+        _spriteCache.Position = new Vector2f(recDestiny.Position.X, recDestiny.Position.Y);
         _spriteCache.Scale = new Vector2f(
-            recDestiny.Width / (float)recSource.Width,
-            recDestiny.Height / (float)recSource.Height);
+            recDestiny.Size.X / (float)recSource.Size.X,
+            recDestiny.Size.Y / (float)recSource.Size.Y);
 
         // Always reset colour — the cache is shared, so a previous tint would bleed through.
         _spriteCache.Color = color ?? Color.White;
@@ -89,22 +86,23 @@ internal sealed class Renderer
     public void Draw(Texture texture, int x, int y, int sourceX, int sourceY, int sourceWidth,
         int sourceHeight, Color? color = null)
     {
-        var source = new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight);
-        var destiny = new Rectangle(x, y, sourceWidth, sourceHeight);
+        var source = new IntRect(new Vector2i(sourceX, sourceY), new Vector2i(sourceWidth, sourceHeight));
+        var destiny = new IntRect(new Vector2i(x, y), new Vector2i(sourceWidth, sourceHeight));
 
         Draw(texture, source, destiny, color);
     }
 
-    public void Draw(Texture texture, Rectangle destiny, Color? color = null)
+    public void Draw(Texture texture, IntRect destiny, Color? color = null)
     {
-        var source = new Rectangle(new Point(0), texture.ToSize());
+        var source = new IntRect(new Vector2i(0, 0), texture.ToSize());
         Draw(texture, source, destiny, color);
     }
 
-    public void Draw(Texture texture, Point position, Color? color = null)
+    public void Draw(Texture texture, Vector2i position, Color? color = null)
     {
-        var source = new Rectangle(new Point(0), texture.ToSize());
-        var destiny = new Rectangle(position, texture.ToSize());
+        var size = texture.ToSize();
+        var source = new IntRect(new Vector2i(0, 0), size);
+        var destiny = new IntRect(position, size);
         Draw(texture, source, destiny, color);
     }
 
@@ -168,20 +166,19 @@ internal sealed class Renderer
     /// <param name="margin">Inner margin in pixels.</param>
     /// <param name="position">Top-left position.</param>
     /// <param name="size">Box size.</param>
-    public void DrawBox(Texture texture, byte margin, Point position, Size size)
+    public void DrawBox(Texture texture, byte margin, Vector2i position, Vector2i size)
     {
-        var textureWidth = texture.ToSize().Width;
-        var textureHeight = texture.ToSize().Height;
+        var texSize = texture.ToSize();
 
         // Left cap
-        Draw(texture, new Rectangle(new Point(0), new Size(margin, textureHeight)),
-            new Rectangle(position, new Size(margin, textureHeight)));
+        Draw(texture, new IntRect(new Vector2i(0, 0), new Vector2i(margin, texSize.Y)),
+            new IntRect(position, new Vector2i(margin, texSize.Y)));
         // Right cap
-        Draw(texture, new Rectangle(new Point(textureWidth - margin, 0), new Size(margin, textureHeight)),
-            new Rectangle(new Point(position.X + size.Width - margin, position.Y), new Size(margin, textureHeight)));
+        Draw(texture, new IntRect(new Vector2i(texSize.X - margin, 0), new Vector2i(margin, texSize.Y)),
+            new IntRect(new Vector2i(position.X + size.X - margin, position.Y), new Vector2i(margin, texSize.Y)));
         // Horizontal stretch (middle)
-        Draw(texture, new Rectangle(new Point(margin, 0), new Size(textureWidth - margin * 2, textureHeight)),
-            new Rectangle(new Point(position.X + margin, position.Y),
-                new Size(size.Width - margin * 2, textureHeight)));
+        Draw(texture, new IntRect(new Vector2i(margin, 0), new Vector2i(texSize.X - margin * 2, texSize.Y)),
+            new IntRect(new Vector2i(position.X + margin, position.Y),
+                new Vector2i(size.X - margin * 2, texSize.Y)));
     }
 }

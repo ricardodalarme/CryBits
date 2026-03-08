@@ -20,9 +20,9 @@ public class CheckBox : Component, IMouseUp
     public void MouseUp()
     {
         var textureSize = Textures.CheckBox.ToSize();
-        var box = new Size(textureSize.Width / 2 + MeasureString(Text) + Margin, textureSize.Height);
+        var boxWidth = textureSize.X / 2 + MeasureString(Text) + Margin;
 
-        if (!IsAbove(new Rectangle(Position, box))) return;
+        if (!IsAbove(new Rectangle(Position.X, Position.Y, boxWidth, textureSize.Y))) return;
 
         Checked = !Checked;
 

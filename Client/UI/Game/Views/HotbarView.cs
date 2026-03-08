@@ -5,6 +5,7 @@ using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
+using SFML.System;
 using SFML.Window;
 
 namespace CryBits.Client.UI.Game.Views;
@@ -34,7 +35,7 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer) 
         Grid.OnSlotLeave -= OnGridSlotLeave;
     }
 
-    private void OnRenderSlot(int slot, Point pos)
+    private void OnRenderSlot(int slot, Vector2i pos)
     {
         var hotbarSlot = GameContext.Instance.LocalPlayer.GetHotbar().Slots[slot];
         if (hotbarSlot?.Slot > 0 && hotbarSlot.Type == SlotType.Item)

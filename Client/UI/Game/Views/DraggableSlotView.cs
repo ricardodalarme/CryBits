@@ -1,10 +1,10 @@
-using System.Drawing;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Managers;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
+using SFML.System;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -16,9 +16,9 @@ internal class DraggableSlotView(ItemRenderer itemRenderer) : IView
 
     public void Unbind() => DraggableSlotPicture.OnRender -= OnRender;
 
-    private void OnRender(Point _)
+    private void OnRender(Vector2i _)
     {
-        var pos = new Point(
+        var pos = new Vector2i(
             InputManager.Instance.MousePosition.X + 6,
             InputManager.Instance.MousePosition.Y + 6
         );

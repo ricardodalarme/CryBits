@@ -24,7 +24,8 @@ public class TextBox : Component, IMouseUp
 
     public void MouseUp()
     {
-        if (!IsAbove(new Rectangle(Position, new Size(Width, Textures.TextBox.ToSize().Height)))) return;
+        var texHeight = Textures.TextBox.ToSize().Y;
+        if (!IsAbove(new Rectangle(Position.X, Position.Y, Width, texHeight))) return;
 
         // Set focus to this textbox
         Focused = this;

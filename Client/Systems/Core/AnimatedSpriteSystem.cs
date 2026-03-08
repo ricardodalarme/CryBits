@@ -1,7 +1,8 @@
-using System.Drawing;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Core;
+using SFML.Graphics;
+using SFML.System;
 
 namespace CryBits.Client.Systems.Core;
 
@@ -29,11 +30,9 @@ internal sealed class AnimatedSpriteSystem(World world) : BaseSystem<World, floa
                 }
             }
 
-            sprite.SourceRect = new Rectangle(
-                anim.CurrentFrameX * anim.FrameWidth,
-                anim.CurrentFrameY * anim.FrameHeight,
-                anim.FrameWidth,
-                anim.FrameHeight
+            sprite.SourceRect = new IntRect(
+                new Vector2i(anim.CurrentFrameX * anim.FrameWidth, anim.CurrentFrameY * anim.FrameHeight),
+                new Vector2i(anim.FrameWidth, anim.FrameHeight)
             );
         });
     }

@@ -44,8 +44,8 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
         {
             if (map.Layer[c].Type != layerType) continue;
 
-            for (var x = sight.X; x <= sight.Width; x++)
-                for (var y = sight.Y; y <= sight.Height; y++)
+            for (var x = sight.Position.X; x <= sight.Size.X; x++)
+                for (var y = sight.Position.Y; y <= sight.Size.Y; y++)
                 {
                     if (Map.OutLimit((short)x, (short)y)) continue;
 
@@ -74,7 +74,7 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
     {
         var panorama = context.CurrentMap.Data.Panorama;
         if (panorama > 0)
-            renderer.Draw(Textures.Panoramas[panorama], new System.Drawing.Point(0));
+            renderer.Draw(Textures.Panoramas[panorama], new Vector2i(0, 0));
     }
 
     /// <summary>Render the map name label (drawn in world space near the top-right).</summary>

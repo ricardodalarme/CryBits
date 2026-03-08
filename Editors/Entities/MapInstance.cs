@@ -64,12 +64,12 @@ internal static class MapInstance
         if (speed < 0)
         {
             FogX--;
-            if (FogX < -textureSize.Width) FogX = 0;
+            if (FogX < -textureSize.X) FogX = 0;
         }
         else
         {
             FogX++;
-            if (FogX > textureSize.Width) FogX = 0;
+            if (FogX > textureSize.X) FogX = 0;
         }
 
         if (speed < 0) speed *= -1;
@@ -88,12 +88,12 @@ internal static class MapInstance
         if (speed < 0)
         {
             FogY--;
-            if (FogY < -textureSize.Height) FogY = 0;
+            if (FogY < -textureSize.Y) FogY = 0;
         }
         else
         {
             FogY++;
-            if (FogY > textureSize.Height) FogY = 0;
+            if (FogY > textureSize.Y) FogY = 0;
         }
 
         if (speed < 0) speed *= -1;

@@ -1,8 +1,9 @@
-using System.Drawing;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Graphics;
+using SFML.Graphics;
+using SFML.System;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Systems.Core;
@@ -18,17 +19,15 @@ internal sealed class ScrollingOverlayRenderSystem(World world) : BaseSystem<Wor
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<SpriteComponent, ScrollingSpriteComponent>();
 
-    private readonly Rectangle _screenDest = new(0, 0, ScreenWidth, ScreenHeight);
+    private readonly IntRect _screenDest = new(new Vector2i(0, 0), new Vector2i(ScreenWidth, ScreenHeight));
 
     public override void Update(in int t)
     {
         World.Query(in _query, (ref SpriteComponent sprite, ref ScrollingSpriteComponent scroll) =>
         {
-            var source = new Rectangle(
-                (int)scroll.ExactX,
-                (int)scroll.ExactY,
-                ScreenWidth,
-                ScreenHeight);
+            var source = new IntRect(
+                new Vector2i((int)scroll.ExactX, (int)scroll.ExactY),
+                new Vector2i(ScreenWidth, ScreenHeight));
             Renderer.Instance.Draw(sprite.Texture, source, _screenDest, sprite.Tint);
         });
     }

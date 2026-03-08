@@ -54,14 +54,16 @@ internal static class Renders
 
     private static void Render(RenderTarget window, Texture texture, Rectangle destiny, Color? color = null)
     {
-        var source = new Rectangle(new Point(0), texture.ToSize());
+        var texSize = texture.ToSize();
+        var source = new Rectangle(0, 0, texSize.X, texSize.Y);
         Render(window, texture, source, destiny, color);
     }
 
     private static void Render(RenderTarget window, Texture texture, Point point, Color? color = null)
     {
-        var source = new Rectangle(new Point(0), texture.ToSize());
-        var destiny = new Rectangle(point, texture.ToSize());
+        var texSize = texture.ToSize();
+        var source = new Rectangle(0, 0, texSize.X, texSize.Y);
+        var destiny = new Rectangle(point.X, point.Y, texSize.X, texSize.Y);
 
         Render(window, texture, source, destiny, color);
     }
@@ -81,16 +83,16 @@ internal static class Renders
 
     private static void Render_Box(RenderTarget window, Texture texture, byte margin, Point position, Size size)
     {
-        var textureWidth = texture.ToSize().Width;
-        var textureHeight = texture.ToSize().Height;
+        var texSize = texture.ToSize();
+        var textureWidth = texSize.X;
+        var textureHeight = texSize.Y;
 
-        Render(window, texture, new Rectangle(new Point(0), new Size(margin, textureWidth)),
-            new Rectangle(position, new Size(margin, textureHeight)));
-        Render(window, texture, new Rectangle(new Point(textureWidth - margin, 0), new Size(margin, textureHeight)),
-            new Rectangle(new Point(position.X + size.Width - margin, position.Y), new Size(margin, textureHeight)));
-        Render(window, texture, new Rectangle(new Point(margin, 0), new Size(margin, textureHeight)),
-            new Rectangle(new Point(position.X + margin, position.Y),
-                new Size(size.Width - margin * 2, textureHeight)));
+        Render(window, texture, new Rectangle(0, 0, margin, textureWidth),
+            new Rectangle(position.X, position.Y, margin, textureHeight));
+        Render(window, texture, new Rectangle(textureWidth - margin, 0, margin, textureHeight),
+            new Rectangle(position.X + size.Width - margin, position.Y, margin, textureHeight));
+        Render(window, texture, new Rectangle(margin, 0, margin, textureHeight),
+            new Rectangle(position.X + margin, position.Y, size.Width - margin * 2, textureHeight));
     }
 
     private static void DrawText(RenderTarget window, string text, int x, int y, Color color,
@@ -129,9 +131,9 @@ internal static class Renders
     {
         var textureSize = Textures.Transparent.ToSize();
 
-        for (var x = 0; x <= window.Size.X / textureSize.Width; x++)
-            for (var y = 0; y <= window.Size.Y / textureSize.Height; y++)
-                Render(window, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
+        for (var x = 0; x <= window.Size.X / textureSize.X; x++)
+            for (var y = 0; y <= window.Size.Y / textureSize.Y; y++)
+                Render(window, Textures.Transparent, new Point(textureSize.X * x, textureSize.Y * y));
     }
 
     #region Map Editor
@@ -150,8 +152,9 @@ internal static class Renders
         var position = new Point(win.TileScrollX, win.TileScrollY);
 
         Transparent(WinMapTileRT);
-        Render(WinMapTileRT, texture, new Rectangle(position, texture.ToSize()),
-            new Rectangle(new Point(0), texture.ToSize()));
+        var texSize = texture.ToSize();
+        Render(WinMapTileRT, texture, new Rectangle(position.X, position.Y, texSize.X, texSize.Y),
+            new Rectangle(0, 0, texSize.X, texSize.Y));
         RenderRectangle(WinMapTileRT,
             new Rectangle(new Point(win.TileSource.X - position.X, win.TileSource.Y - position.Y), win.TileSource.Size),
             new Color(165, 42, 42, 250));
@@ -189,11 +192,12 @@ internal static class Renders
 
         if (win.ShowVisualizationSafe && map.Panorama > 0)
         {
+            var panSize = Textures.Panoramas[map.Panorama].ToSize();
             var destiny = new Rectangle
             {
                 X = win.MapScrollX * -win.GridZoom,
                 Y = win.MapScrollY * -win.GridZoom,
-                Size = Textures.Panoramas[map.Panorama].ToSize()
+                Size = new Size(panSize.X, panSize.Y)
             };
             Render(WinMapRT!, Textures.Panoramas[map.Panorama], win.ZoomRect(destiny));
         }
@@ -259,11 +263,12 @@ internal static class Renders
         if (map.Fog.Texture <= 0 || !win.ShowVisualizationSafe) return;
 
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
-        for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
-            for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
+        for (var x = -1; x <= Map.Width * Grid / textureSize.X; x++)
+            for (var y = -1; y <= Map.Height * Grid / textureSize.Y; y++)
             {
-                var position = new Point(x * textureSize.Width + MapInstance.FogX, y * textureSize.Height + MapInstance.FogY);
-                Render(WinMapRT!, Textures.Fogs[map.Fog.Texture], win.ZoomRect(new Rectangle(position, textureSize)),
+                var position = new Point(x * textureSize.X + MapInstance.FogX, y * textureSize.Y + MapInstance.FogY);
+                Render(WinMapRT!, Textures.Fogs[map.Fog.Texture],
+                    win.ZoomRect(new Rectangle(position.X, position.Y, textureSize.X, textureSize.Y)),
                     new Color(255, 255, 255, map.Fog.Alpha));
             }
     }
@@ -421,8 +426,9 @@ internal static class Renders
 
         var texture = Textures.Tiles[idx];
         var position = new Point(EditorTilesWindow.ScrollX * Grid, EditorTilesWindow.ScrollY * Grid);
-        Render(WinTileRT, texture, new Rectangle(position, texture.ToSize()),
-            new Rectangle(new Point(0), texture.ToSize()));
+        var texSize = texture.ToSize();
+        Render(WinTileRT, texture, new Rectangle(position.X, position.Y, texSize.X, texSize.Y),
+            new Rectangle(0, 0, texSize.X, texSize.Y));
 
         for (byte x = 0; x <= 298 / Grid; x++)
             for (byte y = 0; y <= 443 / Grid; y++)
@@ -477,9 +483,9 @@ internal static class Renders
     private static void TransparentRT(RenderTexture target)
     {
         var textureSize = Textures.Transparent.ToSize();
-        for (var x = 0; x <= target.Size.X / textureSize.Width; x++)
-            for (var y = 0; y <= target.Size.Y / textureSize.Height; y++)
-                Render(target, Textures.Transparent, new Point(textureSize.Width * x, textureSize.Height * y));
+        for (var x = 0; x <= target.Size.X / textureSize.X; x++)
+            for (var y = 0; y <= target.Size.Y / textureSize.Y; y++)
+                Render(target, Textures.Transparent, new Point(textureSize.X * x, textureSize.Y * y));
     }
 
     #endregion
@@ -502,7 +508,8 @@ internal static class Renders
     private static void CharacterRT(RenderTexture target, short textureNum)
     {
         var texture = Textures.Characters[textureNum];
-        var size = new Size(texture.ToSize().Width / 4, texture.ToSize().Height / 4);
+        var texSize = texture.ToSize();
+        var size = new Size(texSize.X / 4, texSize.Y / 4);
 
         target.Clear();
         if (textureNum > 0 && textureNum < Textures.Characters.Count)
@@ -595,23 +602,24 @@ internal static class Renders
     private static void CheckBox(RenderTarget target, CheckBox tool)
     {
         // Configure source/destination rectangles.
-        var recSource = new Rectangle(new Point(),
-            new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
+        var cbSize = Textures.CheckBox.ToSize();
+        var halfW = cbSize.X / 2;
+        var recSource = new Rectangle(0, 0, halfW, cbSize.Y);
         var recDestiny = new Rectangle(tool.Position, recSource.Size);
 
         // Use checked state to select marker sprite.
         if (tool.Checked)
-            recSource.Location = new Point(Textures.CheckBox.ToSize().Width / 2, 0);
+            recSource.Location = new Point(halfW, 0);
 
         byte margin = 4;
         Render(target, Textures.CheckBox, recSource, recDestiny);
-        DrawText(target, tool.Text, recDestiny.Location.X + Textures.CheckBox.ToSize().Width / 2 + margin,
+        DrawText(target, tool.Text, recDestiny.Location.X + halfW + margin,
             recDestiny.Location.Y + 1, Color.White);
     }
 
     private static void TextBox(RenderTarget target, TextBox tool)
     {
-        Render_Box(target, Textures.TextBox, 3, tool.Position, new Size(tool.Width, Textures.TextBox.ToSize().Height));
+        Render_Box(target, Textures.TextBox, 3, tool.Position, new Size(tool.Width, Textures.TextBox.ToSize().Y));
     }
 
     #endregion

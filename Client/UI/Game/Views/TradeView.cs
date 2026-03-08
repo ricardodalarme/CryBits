@@ -6,6 +6,7 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
+using SFML.System;
 using SFML.Window;
 using static CryBits.Globals;
 
@@ -49,10 +50,10 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer) : I
         ConfirmOfferButton.OnMouseUp -= OnConfirmOfferPressed;
     }
 
-    private void OnRenderOwnSlot(int slot, Point pos) =>
+    private void OnRenderOwnSlot(int slot, Vector2i pos) =>
         itemRenderer.DrawItem(GameContext.Instance.LocalPlayer.GetTrade().Offer[slot].Item, GameContext.Instance.LocalPlayer.GetTrade().Offer[slot].Amount, pos);
 
-    private void OnRenderTheirSlot(int slot, Point pos) =>
+    private void OnRenderTheirSlot(int slot, Vector2i pos) =>
         itemRenderer.DrawItem(GameContext.Instance.LocalPlayer.GetTrade().TheirOffer[slot].Item, GameContext.Instance.LocalPlayer.GetTrade().TheirOffer[slot].Amount, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
