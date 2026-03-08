@@ -3,9 +3,15 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>default</LangVersion>
     <Nullable>annotations</Nullable>
+    <Title>Core</Title>
+    <Company>Ricardo Dalarme</Company>
+    <Product>CryBits</Product>
+    <Copyright>Copyright (c) 2021 Ricardo Dalarme</Copyright>
+    <Description>ORPG Game Engine</Description>
+    <AssemblyVersion>0.8.0</AssemblyVersion>
+    <ComVisible>false</ComVisible>
   </PropertyGroup>
 
  <PropertyGroup>
