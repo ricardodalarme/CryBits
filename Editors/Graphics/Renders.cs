@@ -87,7 +87,7 @@ internal static class Renders
         var textureWidth = texSize.X;
         var textureHeight = texSize.Y;
 
-        Render(window, texture, new Rectangle(0, 0, margin, textureWidth),
+        Render(window, texture, new Rectangle(0, 0, margin, textureHeight),
             new Rectangle(position.X, position.Y, margin, textureHeight));
         Render(window, texture, new Rectangle(textureWidth - margin, 0, margin, textureHeight),
             new Rectangle(position.X + size.Width - margin, position.Y, margin, textureHeight));

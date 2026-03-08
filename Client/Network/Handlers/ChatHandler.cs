@@ -1,4 +1,3 @@
-using System.Drawing;
 using CryBits.Client.UI.Game;
 using CryBits.Packets.Server;
 
@@ -11,7 +10,10 @@ internal class ChatHandler
     {
         // Add chat message
         var text = packet.Text;
-        var color = Color.FromArgb(packet.ColorArgb);
-        Chat.AddText(text, new SFML.Graphics.Color(color.R, color.G, color.B));
+        var argb = packet.ColorArgb;
+        Chat.AddText(text, new SFML.Graphics.Color(
+            (byte)(argb >> 16),
+            (byte)(argb >> 8),
+            (byte)argb));
     }
 }

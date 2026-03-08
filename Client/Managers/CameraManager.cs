@@ -87,7 +87,7 @@ internal class CameraManager(RenderWindow renderWindow)
 
         TileSight = new IntRect(
             new Vector2i(left, top),
-            new Vector2i(right, bottom));
+            new Vector2i(right - left, bottom - top));
     }
 
     /// <summary>

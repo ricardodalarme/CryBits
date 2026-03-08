@@ -44,8 +44,8 @@ internal sealed class MapRenderer(Renderer renderer, GameContext context, Camera
         {
             if (map.Layer[c].Type != layerType) continue;
 
-            for (var x = sight.Position.X; x <= sight.Size.X; x++)
-                for (var y = sight.Position.Y; y <= sight.Size.Y; y++)
+            for (var x = sight.Position.X; x <= sight.Position.X + sight.Size.X; x++)
+                for (var y = sight.Position.Y; y <= sight.Position.Y + sight.Size.Y; y++)
                 {
                     if (Map.OutLimit((short)x, (short)y)) continue;
 

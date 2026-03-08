@@ -1,4 +1,3 @@
-using System.Drawing;
 using System.Linq;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
