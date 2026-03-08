@@ -25,8 +25,6 @@ internal class PlayerHandler(GameContext context)
         var name = packet.Name;
         var isLocal = name == context.LocalPlayerName;
 
-        context.CurrentMap = context.Maps[packet.MapId];
-
         var equipmentItems = new Item?[(byte)Equipment.Count];
         for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = Item.List.Get(packet.Equipment[n]);
 

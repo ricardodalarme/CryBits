@@ -26,11 +26,10 @@ internal class AccountHandler(AudioManager audioManager)
     {
         // Clear entity collections
         var ctx = GameContext.Instance;
-        ctx.Maps.Clear();
+        ctx.CurrentMap = null!;
         Item.List = [];
         Shop.List = [];
         Npc.List = [];
-        Map.List = [];
 
         ctx.LocalPlayerName = packet.Name;
     }

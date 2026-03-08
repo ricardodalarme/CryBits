@@ -36,17 +36,13 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         foreach (var e in toDestroy) context.World.Destroy(e);
 
         // Check whether the map data needs to be downloaded
-        if (File.Exists(Directories.MapsData.FullName + id + Directories.Format) ||
-            CryBits.Entities.Map.Map.List.ContainsKey(id))
+        if (File.Exists(Directories.MapsData.FullName + id + Directories.Format))
         {
-            if (!CryBits.Entities.Map.Map.List.ContainsKey(id))
-            {
-                MapRepository.Read(id);
-                context.CurrentMap.Data.Update();
-            }
+            var map = MapRepository.Read(id);
+            needed = map.Revision != currentRevision;
 
-            if (CryBits.Entities.Map.Map.List[id].Revision != currentRevision)
-                needed = true;
+            context.CurrentMap = new ClientMap(map);
+            context.CurrentMap.Data.Update();
         }
         else
             needed = true;
@@ -59,13 +55,7 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
     internal void Map(MapPacket packet)
     {
         var map = packet.Map;
-        var id = map.Id;
-
-        // Store map data
-        if (!CryBits.Entities.Map.Map.List.TryAdd(id, map)) CryBits.Entities.Map.Map.List[id] = map;
-        else context.Maps.TryAdd(id, new ClientMap(map));
-
-        context.CurrentMap = context.Maps[id];
+        context.CurrentMap = new ClientMap(map);
 
         // Persist map to disk
         MapRepository.Write(map);
