@@ -148,11 +148,12 @@ internal class PlayerHandler(GameContext context)
         var victimEntity = victimType switch
         {
             Target.Player => context.GetPlayerEntity(victim),
-            Target.Npc => context.CurrentMap.Npcs[byte.Parse(victim)],
+            Target.Npc => context.GetNpcEntity(byte.Parse(victim)),
             _ => throw new ArgumentOutOfRangeException()
         };
 
         var world = context.World;
+        if (victimEntity == ArchEntity.Null || !world.IsAlive(victimEntity)) return;
         ref var victimMovement = ref world.Get<MovementComponent>(victimEntity);
         BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);
         ref var tint = ref context.World.Get<DamageTintComponent>(victimEntity);

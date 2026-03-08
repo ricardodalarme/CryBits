@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Arch.Core;
 using CryBits.Client.Components.Character;
+using CryBits.Client.Components.Movement;
 using CryBits.Client.Components.Player;
 
 namespace CryBits.Client.Worlds;
@@ -31,6 +32,8 @@ internal sealed class GameContext
 
     private static readonly QueryDescription _playerNameQuery =
         new QueryDescription().WithAll<NameComponent, PlayerTagComponent>();
+    private static readonly QueryDescription _npcIndexQuery =
+        new QueryDescription().WithAll<NpcTagComponent, NpcIndexComponent, MapIdComponent>();
 
     /// <summary>Returns the ECS entity whose NameComponent matches <paramref name="name"/>, or Entity.Null.</summary>
     public Entity GetPlayerEntity(string name)
@@ -39,6 +42,20 @@ internal sealed class GameContext
         World.Query(in _playerNameQuery, (Entity e, ref NameComponent n) =>
         {
             if (n.Value == name) found = e;
+        });
+        return found;
+    }
+
+    /// <summary>Returns the current-map NPC entity for the given server index, or Entity.Null.</summary>
+    public Entity GetNpcEntity(byte index)
+    {
+        if (CurrentMap == null) return Entity.Null;
+
+        var found = Entity.Null;
+        var mapId = CurrentMap.Data.Id;
+        World.Query(in _npcIndexQuery, (Entity e, ref NpcIndexComponent npcIndex, ref MapIdComponent entityMapId) =>
+        {
+            if (entityMapId.Value == mapId && npcIndex.Value == index) found = e;
         });
         return found;
     }

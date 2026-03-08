@@ -1,3 +1,4 @@
+using System;
 using Arch.Core;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
@@ -15,7 +16,7 @@ namespace CryBits.Client.Spawners;
 /// </summary>
 internal static class NpcSpawner
 {
-    public static Entity Spawn(World world, Npc data, byte x, byte y, Direction direction, short[] currentVitals)
+    public static Entity Spawn(World world, Npc data, byte index, byte x, byte y, Direction direction, short[] currentVitals, Guid mapId)
     {
         var texture = Textures.Characters[data.Texture];
         var size = texture.ToSize();
@@ -34,7 +35,7 @@ internal static class NpcSpawner
         currentVitals.CopyTo(vitalsComponent.Current, 0);
         data.Vital.CopyTo(vitalsComponent.Max, 0);
 
-        return world.Create(
+        var entity = world.Create(
             new TransformComponent(x * Globals.Grid, y * Globals.Grid),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
@@ -43,8 +44,12 @@ internal static class NpcSpawner
             new DamageTintComponent(),
             new ShadowComponent(),
             new NpcTagComponent(),
+            new NpcIndexComponent { Value = index },
             vitalsComponent,
             new TextComponent(data.Name, textColor, frameWidth / 2, -frameHeight / 2)
         );
+
+        world.Add(entity, new MapIdComponent { Value = mapId });
+        return entity;
     }
 }

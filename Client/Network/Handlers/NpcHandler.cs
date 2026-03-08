@@ -1,5 +1,6 @@
 using System;
 using Arch.Core;
+using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Spawners;
@@ -24,14 +25,12 @@ internal class NpcHandler(GameContext context)
     [PacketHandler]
     internal void MapNpcs(MapNpcsPacket packet)
     {
-        // Destroy any existing NPC entities before replacing the array (map transition).
-        if (context.CurrentMap.Npcs != null)
-            foreach (var existing in context.CurrentMap.Npcs)
-                if (existing != Entity.Null) context.World.Destroy(existing);
+        // Destroy any existing NPC entities before replacing the snapshot (map transition).
+        var query = new QueryDescription().WithAll<NpcTagComponent>();
+        context.World.Destroy(in query);
 
         // Read temporary NPCs for the current map and immediately spawn their entities.
-        context.CurrentMap.Npcs = new Entity[packet.Npcs.Length];
-        for (byte i = 0; i < context.CurrentMap.Npcs.Length; i++)
+        for (byte i = 0; i < packet.Npcs.Length; i++)
         {
             var data = Npc.List.Get(packet.Npcs[i].NpcId);
             var direction = (Direction)packet.Npcs[i].Direction;
@@ -39,31 +38,29 @@ internal class NpcHandler(GameContext context)
             for (byte n = 0; n < (byte)Vital.Count; n++)
                 vitals[n] = packet.Npcs[i].Vital[n];
 
-            context.CurrentMap.Npcs[i] = NpcSpawner.Spawn(context.World, data, packet.Npcs[i].X, packet.Npcs[i].Y, direction, vitals);
+            NpcSpawner.Spawn(context.World, data, i, packet.Npcs[i].X, packet.Npcs[i].Y, direction, vitals, context.CurrentMap.Data.Id);
         }
     }
 
     [PacketHandler]
     internal void MapNpc(MapNpcPacket packet)
     {
-        var i = packet.Index;
-        ref var npc = ref context.CurrentMap.Npcs[i];
-
-        if (npc != Entity.Null) context.World.Destroy(npc);
+        var npc = context.GetNpcEntity(packet.Index);
+        if (npc != Entity.Null && context.World.IsAlive(npc)) context.World.Destroy(npc);
 
         var data = Npc.List.Get(packet.NpcId);
         var direction = (Direction)packet.Direction;
         var vitals = new short[(byte)Vital.Count];
         for (byte n = 0; n < (byte)Vital.Count; n++) vitals[n] = packet.Vital[n];
 
-        npc = NpcSpawner.Spawn(context.World, data, packet.X, packet.Y, direction, vitals);
+        NpcSpawner.Spawn(context.World, data, packet.Index, packet.X, packet.Y, direction, vitals, context.CurrentMap.Data.Id);
     }
 
     [PacketHandler]
     internal void MapNpcMovement(MapNpcMovementPacket packet)
     {
-        var i = packet.Index;
-        var npc = context.CurrentMap.Npcs[i];
+        var npc = context.GetNpcEntity(packet.Index);
+        if (npc == Entity.Null || !context.World.IsAlive(npc)) return;
 
         ref var movement = ref context.World.Get<MovementComponent>(npc);
         byte prevX = movement.TileX, prevY = movement.TileY;
@@ -93,7 +90,8 @@ internal class NpcHandler(GameContext context)
         var index = packet.Index;
         var victim = packet.Victim;
         var victimType = (Target)packet.VictimType;
-        var npc = context.CurrentMap.Npcs[index];
+        var npc = context.GetNpcEntity(index);
+        if (npc == Entity.Null || !context.World.IsAlive(npc)) return;
 
         ref var state = ref context.World.Get<CharacterStateComponent>(npc);
         state.IsAttacking = true;
@@ -104,11 +102,11 @@ internal class NpcHandler(GameContext context)
         var victimEntity = victimType switch
         {
             Target.Player => context.GetPlayerEntity(victim),
-            Target.Npc => context.CurrentMap.Npcs[byte.Parse(victim)],
+            Target.Npc => context.GetNpcEntity(byte.Parse(victim)),
             _ => throw new ArgumentOutOfRangeException()
         };
-
         var world = context.World;
+        if (victimEntity == Entity.Null || !world.IsAlive(victimEntity)) return;
         ref var victimMovement = ref world.Get<MovementComponent>(victimEntity);
         BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);
         ref var tint = ref context.World.Get<DamageTintComponent>(victimEntity);
@@ -119,8 +117,8 @@ internal class NpcHandler(GameContext context)
     [PacketHandler]
     internal void MapNpcDirection(MapNpcDirectionPacket packet)
     {
-        var i = packet.Index;
-        var npc = context.CurrentMap.Npcs[i];
+        var npc = context.GetNpcEntity(packet.Index);
+        if (npc == Entity.Null || !context.World.IsAlive(npc)) return;
 
         ref var movement = ref context.World.Get<MovementComponent>(npc);
         movement.Direction = (Direction)packet.Direction;
@@ -131,8 +129,8 @@ internal class NpcHandler(GameContext context)
     [PacketHandler]
     internal void MapNpcVitals(MapNpcVitalsPacket packet)
     {
-        var index = packet.Index;
-        var npc = context.CurrentMap.Npcs[index];
+        var npc = context.GetNpcEntity(packet.Index);
+        if (npc == Entity.Null || !context.World.IsAlive(npc)) return;
 
         // Write vital changes directly to ECS.
         ref var vitals = ref context.World.Get<VitalsComponent>(npc);
@@ -143,12 +141,8 @@ internal class NpcHandler(GameContext context)
     [PacketHandler]
     internal void MapNpcDied(MapNpcDiedPacket packet)
     {
-        var i = packet.Index;
-
-        // Destroy entity
-        context.World.Destroy(context.CurrentMap.Npcs[i]);
-
-        // Clear NPC data on death
-        context.CurrentMap.Npcs[i] = Entity.Null;
+        var npc = context.GetNpcEntity(packet.Index);
+        if (npc == Entity.Null || !context.World.IsAlive(npc)) return;
+        context.World.Destroy(npc);
     }
 }
