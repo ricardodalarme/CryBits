@@ -72,6 +72,7 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer) 
 
         // Use item from hotbar
         playerSender.HotbarUse((byte)slot);
+        DropItemView.Panel.Visible = false;
     }
 
     private static void OnGridSlotHover(short slot)

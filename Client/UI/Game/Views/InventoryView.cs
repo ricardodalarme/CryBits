@@ -84,6 +84,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
 
         // Send inventory slot change to server.
         playerSender.InventoryChange(GameScreen.InventoryChange, slot);
+        DropItemView.Panel.Visible = false;
     }
 
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
@@ -93,6 +94,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
 
         // Use item
         playerSender.InventoryUse((byte)slot);
+        DropItemView.Panel.Visible = false;
     }
 
     private static void OnGridSlotHover(short slot)
