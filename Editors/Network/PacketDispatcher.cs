@@ -12,11 +12,13 @@ namespace CryBits.Editors.Network;
 /// <summary>
 /// Type-keyed dispatch table for server-to-editor packets.
 /// </summary>
-internal static class PacketDispatcher
+internal class PacketDispatcher
 {
-    private static readonly Dictionary<Type, Action<IServerPacket>> _handlers = new();
+    public static PacketDispatcher Instance { get; } = new();
 
-    internal static void Register()
+    private readonly Dictionary<Type, Action<IServerPacket>> _handlers = new();
+
+    internal void Register()
     {
         var methods = Assembly.GetExecutingAssembly()
             .GetTypes()
@@ -42,7 +44,7 @@ internal static class PacketDispatcher
         }
     }
 
-    internal static void Dispatch(NetPacketReader data)
+    internal void Dispatch(NetPacketReader data)
     {
         var packet = (IServerPacket)data.ReadObject();
 

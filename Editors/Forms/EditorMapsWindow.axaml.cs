@@ -212,8 +212,8 @@ internal partial class EditorMapsWindow : Window
         numNPC_Zone.Maximum = Globals.MaxZones;
 
         // SFML offscreen render textures
-        Renders.WinMapRT = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
-        Renders.WinMapTileRT = new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
+        Renders.Instance.WinMapRT = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
+        Renders.Instance.WinMapTileRT = new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
 
         // 30 fps timer
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -232,8 +232,8 @@ internal partial class EditorMapsWindow : Window
     {
         _isOpen = false;
         _timer?.Stop();
-        Renders.WinMapRT = null;
-        Renders.WinMapTileRT = null;
+        Renders.Instance.WinMapRT = null;
+        Renders.Instance.WinMapTileRT = null;
         Instance = null;
         base.OnClosed(e);
     }
@@ -245,17 +245,17 @@ internal partial class EditorMapsWindow : Window
     private void OnRenderTick(object? sender, EventArgs e)
     {
         // Map canvas
-        if (Renders.WinMapRT != null && _selected != null)
+        if (Renders.Instance.WinMapRT != null && _selected != null)
         {
-            Renders.EditorMapsMapRT();
-            SfmlRenderBlit.Blit(Renders.WinMapRT, ref _mapBitmap, imgMap);
+            Renders.Instance.EditorMapsMapRT();
+            SfmlRenderBlit.Blit(Renders.Instance.WinMapRT, ref _mapBitmap, imgMap);
         }
 
         // Tile canvas (only in Normal mode)
-        if (Renders.WinMapTileRT != null && ModeNormal)
+        if (Renders.Instance.WinMapTileRT != null && ModeNormal)
         {
-            Renders.EditorMapsTileRT();
-            SfmlRenderBlit.Blit(Renders.WinMapTileRT, ref _tileBitmap, imgTile);
+            Renders.Instance.EditorMapsTileRT();
+            SfmlRenderBlit.Blit(Renders.Instance.WinMapTileRT, ref _tileBitmap, imgTile);
         }
 
         UpdateStatusBar();
@@ -319,7 +319,7 @@ internal partial class EditorMapsWindow : Window
         RefreshNpcList();
 
 
-        MapInstance.UpdateWeatherType();
+        MapInstance.Instance.UpdateWeatherType();
 
         // Auto-tile maths
         map.Update();
@@ -387,14 +387,14 @@ internal partial class EditorMapsWindow : Window
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
         foreach (var map in Map.List.Values) ++map.Revision;
-        PackageSender.WriteMaps();
+        PackageSender.Instance.WriteMaps();
         MessageBox.Show(@"All maps has been saved");
     }
 
     private void butReload_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        PackageSender.RequestMap(_selected);
+        PackageSender.Instance.RequestMap(_selected);
         RefreshLayerList();
         _selected.Update();
     }
@@ -1192,7 +1192,7 @@ internal partial class EditorMapsWindow : Window
     {
         if (_loading || _selected == null) return;
         _selected.Weather.Type = (Weather)cmbWeather.SelectedIndex;
-        MapInstance.UpdateWeatherType();
+        MapInstance.Instance.UpdateWeatherType();
     }
 
     private void numWeatherIntensity_ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)

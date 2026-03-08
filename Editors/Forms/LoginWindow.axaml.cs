@@ -61,7 +61,7 @@ internal partial class LoginWindow : Window
         Username = txtUsername.Text ?? string.Empty;
         Password = txtPassword.Text ?? string.Empty;
 
-        if (!NetworkClient.TryConnect())
+        if (!NetworkClient.Instance.TryConnect())
         {
             MessageBox.Show(@"The server is currently unavailable.");
             return;
@@ -73,7 +73,7 @@ internal partial class LoginWindow : Window
             return;
         }
 
-        PackageSender.Connect();
+        PackageSender.Instance.Connect();
 
         Options.Username = chkUsername.IsChecked == true ? Username : string.Empty;
         Client.Framework.Persistence.Repositories.OptionsRepository.Write();

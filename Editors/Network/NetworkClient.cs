@@ -6,25 +6,33 @@ using static CryBits.Globals;
 
 namespace CryBits.Editors.Network;
 
-internal static class NetworkClient
+internal class NetworkClient
 {
-    public static NetManager Device;
-    private static EventBasedNetListener _listener;
-    private static NetPeer _serverPeer;
+    public static NetworkClient Instance { get; } = new(PacketDispatcher.Instance);
+
+    private readonly PacketDispatcher _dispatcher;
+    private NetManager _device;
+    private EventBasedNetListener _listener;
+    private NetPeer _serverPeer;
 
     // Connection data
     private const string Ip = "localhost";
 
-    public static NetPeer ServerPeer => _serverPeer;
+    public NetPeer ServerPeer => _serverPeer;
 
-    public static void Init()
+    public NetworkClient(PacketDispatcher dispatcher)
+    {
+        _dispatcher = dispatcher;
+    }
+
+    public void Init()
     {
         _listener = new EventBasedNetListener();
-        Device = new NetManager(_listener);
+        _device = new NetManager(_listener);
 
         _listener.NetworkReceiveEvent += (_, reader, _, _) =>
         {
-            PacketDispatcher.Dispatch(reader);
+            _dispatcher.Dispatch(reader);
             reader.Recycle();
         };
 
@@ -34,23 +42,23 @@ internal static class NetworkClient
             Leave();
         };
 
-        Device.Start();
+        _device.Start();
     }
 
-    public static void Disconnect()
+    public void Disconnect()
     {
         _serverPeer?.Disconnect();
     }
 
-    public static void HandleData() => Device.PollEvents();
+    public void HandleData() => _device.PollEvents();
 
-    public static bool IsConnected() => _serverPeer?.ConnectionState == ConnectionState.Connected;
+    public bool IsConnected() => _serverPeer?.ConnectionState == ConnectionState.Connected;
 
-    public static bool TryConnect()
+    public bool TryConnect()
     {
         if (IsConnected()) return true;
 
-        _serverPeer = Device.Connect(Ip, Config.Port, Config.GameName);
+        _serverPeer = _device.Connect(Ip, Config.Port, Config.GameName);
 
         var waitTimer = Environment.TickCount;
         while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)

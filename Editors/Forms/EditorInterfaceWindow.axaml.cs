@@ -62,7 +62,7 @@ internal partial class EditorInterfaceWindow : Window
         window.Show();
     }
 
-    // Consumed by Renders.Interface()
+    // Consumed by Renders.Instance.Interface()
     public static byte SelectedWindowIndex { get; private set; }
 
     private bool _loadingProps;
@@ -78,14 +78,14 @@ internal partial class EditorInterfaceWindow : Window
         InitializeComponent();
 
         // Populate window combo from tree
-        foreach (var node in InterfaceData.Tree.Nodes)
+        foreach (var node in InterfaceData.Instance.Tree.Nodes)
             cmbWindows.Items.Add(node.Text);
 
         if (cmbWindows.Items.Count > 0)
             cmbWindows.SelectedIndex = 0;
 
         // Create offscreen SFML render target (933 × 702 to match the WinForms canvas)
-        Renders.WinInterfaceRT = new RenderTexture(new Vector2u(933, 702));
+        Renders.Instance.WinInterfaceRT = new RenderTexture(new Vector2u(933, 702));
 
         // Start refresh timer
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -96,7 +96,7 @@ internal partial class EditorInterfaceWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
-        Renders.WinInterfaceRT = null;
+        Renders.Instance.WinInterfaceRT = null;
         base.OnClosed(e);
     }
 
@@ -106,11 +106,11 @@ internal partial class EditorInterfaceWindow : Window
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
-        if (Renders.WinInterfaceRT == null) return;
-        if (InterfaceData.Tree.Nodes.Count == 0) return;
+        if (Renders.Instance.WinInterfaceRT == null) return;
+        if (InterfaceData.Instance.Tree.Nodes.Count == 0) return;
 
-        Renders.Interface();
-        SfmlRenderBlit.Blit(Renders.WinInterfaceRT, ref _previewBitmap, imgPreview);
+        Renders.Instance.Interface();
+        SfmlRenderBlit.Blit(Renders.Instance.WinInterfaceRT, ref _previewBitmap, imgPreview);
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -140,9 +140,9 @@ internal partial class EditorInterfaceWindow : Window
 
     private void RebuildTree()
     {
-        if (InterfaceData.Tree.Nodes.Count == 0 || SelectedWindowIndex >= InterfaceData.Tree.Nodes.Count) return;
+        if (InterfaceData.Instance.Tree.Nodes.Count == 0 || SelectedWindowIndex >= InterfaceData.Instance.Tree.Nodes.Count) return;
 
-        var sourceRoot = InterfaceData.Tree.Nodes[SelectedWindowIndex];
+        var sourceRoot = InterfaceData.Instance.Tree.Nodes[SelectedWindowIndex];
         _rootVM = BuildVM(sourceRoot, null);
         treOrder.ItemsSource = _rootVM.Children;
     }
@@ -188,7 +188,7 @@ internal partial class EditorInterfaceWindow : Window
         newComp.Visible = true;
 
         // Add to canonical InterfaceNode tree
-        var winNode = InterfaceData.Tree.Nodes[SelectedWindowIndex];
+        var winNode = InterfaceData.Instance.Tree.Nodes[SelectedWindowIndex];
         var newTreeNode = new InterfaceNode(newComp.ToString()) { Tag = newComp };
         winNode.Nodes.Add(newTreeNode);
 
@@ -491,7 +491,7 @@ internal partial class EditorInterfaceWindow : Window
 
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
-        ToolsRepository.Write();
+        ToolsRepository.Instance.Write();
         Close();
     }
 

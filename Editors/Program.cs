@@ -28,11 +28,11 @@ internal static class Program
 
         // Load preferences.
         OptionsRepository.Read();
-        EditorToolsRepository.Read();
+        EditorToolsRepository.Instance.Read();
 
         // Initialize subsystems
-        NetworkClient.Init();
-        PacketDispatcher.Register();
+        NetworkClient.Instance.Init();
+        PacketDispatcher.Instance.Register();
         AudioManager.Instance.LoadSounds();
 
         // Start the game loop on a background thread.
@@ -44,7 +44,7 @@ internal static class Program
 
             // Show login window and start the editor loop
             LoginWindow.Open();
-            Loop.Init();
+            Loop.Instance.Init();
         });
         loopThread.IsBackground = true;
         loopThread.Start();
@@ -66,10 +66,10 @@ internal static class Program
         var waitTimer = Environment.TickCount;
 
         // Disconnect from network
-        NetworkClient.Disconnect();
+        NetworkClient.Instance.Disconnect();
 
         // Wait until the player is disconnected
-        while (NetworkClient.IsConnected() && Environment.TickCount <= waitTimer + 1000)
+        while (NetworkClient.Instance.IsConnected() && Environment.TickCount <= waitTimer + 1000)
             Thread.Sleep(10);
 
         // Close the application

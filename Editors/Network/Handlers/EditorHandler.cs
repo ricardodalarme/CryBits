@@ -8,8 +8,10 @@ using static CryBits.Globals;
 
 namespace CryBits.Editors.Network.Handlers;
 
-internal static class EditorHandler
+internal class EditorHandler
 {
+    public static EditorHandler Instance { get; } = new();
+
     [PacketHandler]
     internal static void Alert(AlertPacket packet)
     {

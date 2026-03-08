@@ -385,13 +385,13 @@ internal partial class EditorClassesWindow : Window
 
     private void butSave_Click(object? sender, RoutedEventArgs e)
     {
-        PackageSender.WriteClasses();
+        PackageSender.Instance.WriteClasses();
         Close();
     }
 
     private void butCancel_Click(object? sender, RoutedEventArgs e)
     {
-        PackageSender.RequestClasses();
+        PackageSender.Instance.RequestClasses();
         Close();
     }
 }

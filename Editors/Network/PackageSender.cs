@@ -11,26 +11,35 @@ using static CryBits.Globals;
 
 namespace CryBits.Editors.Network;
 
-internal static class PackageSender
+internal class PackageSender
 {
-    public static void Packet(IClientPacket packet)
+    public static PackageSender Instance { get; } = new(NetworkClient.Instance);
+
+    private readonly NetworkClient _client;
+
+    public PackageSender(NetworkClient client)
+    {
+        _client = client;
+    }
+
+    public void Packet(IClientPacket packet)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
-        NetworkClient.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
+        _client.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
-    public static void Connect() => Packet(new ConnectPacket { Username = LoginWindow.Username, Password = LoginWindow.Password, IsClientAccess = true });
-    public static void RequestServerData() => Packet(new WriteSettingsPacket());
-    public static void RequestClasses() => Packet(new RequestClassesPacket());
-    public static void RequestMap(Map map) => Packet(new RequestMapPacket { Id = map.Id });
-    public static void RequestNpcs() => Packet(new RequestNpcsPacket());
-    public static void RequestItems() => Packet(new RequestItemsPacket());
-    public static void RequestShops() => Packet(new RequestShopsPacket());
-    public static void WriteServerData() => Packet(new WriteSettingsPacket { Config = Config });
-    public static void WriteClasses() => Packet(new WriteClassesPacket { Classes = Class.List });
-    public static void WriteMaps() => Packet(new WriteMapsPacket { Maps = Map.List });
-    public static void WriteNpcs() => Packet(new WriteNpcsPacket { Npcs = Npc.List });
-    public static void WriteItems() => Packet(new WriteItemsPacket { Items = Item.List });
-    public static void WriteShops() => Packet(new WriteShopsPacket { Shops = Shop.List });
+    public void Connect() => Packet(new ConnectPacket { Username = LoginWindow.Username, Password = LoginWindow.Password, IsClientAccess = true });
+    public void RequestServerData() => Packet(new WriteSettingsPacket());
+    public void RequestClasses() => Packet(new RequestClassesPacket());
+    public void RequestMap(Map map) => Packet(new RequestMapPacket { Id = map.Id });
+    public void RequestNpcs() => Packet(new RequestNpcsPacket());
+    public void RequestItems() => Packet(new RequestItemsPacket());
+    public void RequestShops() => Packet(new RequestShopsPacket());
+    public void WriteServerData() => Packet(new WriteSettingsPacket { Config = Config });
+    public void WriteClasses() => Packet(new WriteClassesPacket { Classes = Class.List });
+    public void WriteMaps() => Packet(new WriteMapsPacket { Maps = Map.List });
+    public void WriteNpcs() => Packet(new WriteNpcsPacket { Npcs = Npc.List });
+    public void WriteItems() => Packet(new WriteItemsPacket { Items = Item.List });
+    public void WriteShops() => Packet(new WriteShopsPacket { Shops = Shop.List });
 }

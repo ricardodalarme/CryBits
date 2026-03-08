@@ -15,17 +15,28 @@ using RenderTarget = SFML.Graphics.IRenderTarget;
 
 namespace CryBits.Editors.Graphics;
 
-internal static class Renders
+internal class Renders
 {
+    public static Renders Instance { get; } = new(MapInstance.Instance, InterfaceData.Instance);
+
+    private readonly MapInstance _mapInstance;
+    private readonly InterfaceData _interfaceData;
+
+    public Renders(MapInstance mapInstance, InterfaceData interfaceData)
+    {
+        _mapInstance = mapInstance;
+        _interfaceData = interfaceData;
+    }
+
     /// <summary>
     /// Render targets used by the editor windows.
     /// </summary>
-    public static RenderTexture WinInterfaceRT;
+    public RenderTexture WinInterfaceRT;
 
-    public static RenderTexture WinTileRT;
-    public static RenderTexture? WinMapRT;
-    public static RenderTexture? WinMapTileRT;
-    public static RenderTexture WinNpcRT;
+    public RenderTexture WinTileRT;
+    public RenderTexture? WinMapRT;
+    public RenderTexture? WinMapTileRT;
+    public RenderTexture WinNpcRT;
 
     #region Engine
 
@@ -121,7 +132,7 @@ internal static class Renders
     /// <summary>
     /// No-op presentation hook; editors render on Avalonia timers.
     /// </summary>
-    public static void Present()
+    public void Present()
     {
     }
 
@@ -139,7 +150,7 @@ internal static class Renders
     /// <summary>
     /// Render the tile-sheet preview for the Maps editor.
     /// </summary>
-    public static void EditorMapsTileRT()
+    public void EditorMapsTileRT()
     {
         var win = EditorMapsWindow.Instance;
         if (WinMapTileRT == null || win == null || !win.ModeNormal) return;
@@ -163,7 +174,7 @@ internal static class Renders
     /// <summary>
     /// Render the map view for the Maps editor.
     /// </summary>
-    public static void EditorMapsMapRT()
+    public void EditorMapsMapRT()
     {
         var win = EditorMapsWindow.Instance;
         if (WinMapRT == null || win == null) return;
@@ -183,7 +194,7 @@ internal static class Renders
         WinMapRT.Display();
     }
 
-    private static void EditorMapsMapPanorama(Map map)
+    private void EditorMapsMapPanorama(Map map)
     {
         var win = EditorMapsWindow.Instance!;
 
@@ -199,7 +210,7 @@ internal static class Renders
         }
     }
 
-    private static void EditorMapsMapTiles(Map map)
+    private void EditorMapsMapTiles(Map map)
     {
         var win = EditorMapsWindow.Instance!;
         int beginX = win.MapScrollX, beginY = win.MapScrollY;
@@ -233,7 +244,7 @@ internal static class Renders
         }
     }
 
-    private static void EditorMapsAutoTile(Point position, MapTileData data, Color color)
+    private void EditorMapsAutoTile(Point position, MapTileData data, Color color)
     {
         var win = EditorMapsWindow.Instance!;
         for (byte i = 0; i < 4; i++)
@@ -253,7 +264,7 @@ internal static class Renders
         }
     }
 
-    private static void EditorMapsMapFog(Map map)
+    private void EditorMapsMapFog(Map map)
     {
         var win = EditorMapsWindow.Instance!;
         if (map.Fog.Texture <= 0 || !win.ShowVisualizationSafe) return;
@@ -262,13 +273,13 @@ internal static class Renders
         for (var x = -1; x <= Map.Width * Grid / textureSize.Width; x++)
             for (var y = -1; y <= Map.Height * Grid / textureSize.Height; y++)
             {
-                var position = new Point(x * textureSize.Width + MapInstance.FogX, y * textureSize.Height + MapInstance.FogY);
+                var position = new Point(x * textureSize.Width + _mapInstance.FogX, y * textureSize.Height + _mapInstance.FogY);
                 Render(WinMapRT!, Textures.Fogs[map.Fog.Texture], win.ZoomRect(new Rectangle(position, textureSize)),
                     new Color(255, 255, 255, map.Fog.Alpha));
             }
     }
 
-    private static void EditorMapsMapWeather(Map map)
+    private void EditorMapsMapWeather(Map map)
     {
         var win = EditorMapsWindow.Instance!;
         if (!win.ShowVisualizationSafe || map.Weather.Type == Weather.Normal) return;
@@ -276,14 +287,14 @@ internal static class Renders
         byte x = 0;
         if (map.Weather.Type == Weather.Snowing) x = 32;
 
-        for (var i = 0; i < MapInstance.Weather.Length; i++)
-            if (MapInstance.Weather[i].Visible)
+        for (var i = 0; i < _mapInstance.Weather.Length; i++)
+            if (_mapInstance.Weather[i].Visible)
                 Render(WinMapRT!, Textures.Weather, new Rectangle(x, 0, 32, 32),
-                    win.ZoomRect(new Rectangle(MapInstance.Weather[i].X, MapInstance.Weather[i].Y, 32, 32)),
+                    win.ZoomRect(new Rectangle(_mapInstance.Weather[i].X, _mapInstance.Weather[i].Y, 32, 32)),
                     new Color(255, 255, 255, 150));
     }
 
-    private static void EditorMapsMapGrids(Map map)
+    private void EditorMapsMapGrids(Map map)
     {
         var win = EditorMapsWindow.Instance!;
         Rectangle source = win.TileSource, destiny = new();
@@ -319,7 +330,7 @@ internal static class Renders
                 win.MapSelection.Height * win.GridZoom);
     }
 
-    private static void EditorMapsMapZones(Map map, byte x, byte y)
+    private void EditorMapsMapZones(Map map, byte x, byte y)
     {
         var win = EditorMapsWindow.Instance!;
         var position = new Point((x - win.MapScrollX) * win.GridZoom, (y - win.MapScrollY) * win.GridZoom);
@@ -337,7 +348,7 @@ internal static class Renders
         DrawText(WinMapRT!, zoneNum.ToString(), position.X, position.Y, Color.White);
     }
 
-    private static void EditorMapsMapAttributes(Map map, byte x, byte y)
+    private void EditorMapsMapAttributes(Map map, byte x, byte y)
     {
         var win = EditorMapsWindow.Instance!;
         var position = new Point((x - win.MapScrollX) * win.GridZoom, (y - win.MapScrollY) * win.GridZoom);
@@ -370,7 +381,7 @@ internal static class Renders
         DrawText(WinMapRT!, letter, position.X, position.Y, Color.White);
     }
 
-    private static void EditorMapsMapDirBlock(Map map, byte x, byte y)
+    private void EditorMapsMapDirBlock(Map map, byte x, byte y)
     {
         var win = EditorMapsWindow.Instance!;
         var tile = new Point(win.MapScrollX + x, win.MapScrollY + y);
@@ -387,7 +398,7 @@ internal static class Renders
         }
     }
 
-    private static void EditorMapsMapNpcs(Map map)
+    private void EditorMapsMapNpcs(Map map)
     {
         var win = EditorMapsWindow.Instance!;
         if (!win.ModeNPCs) return;
@@ -410,7 +421,7 @@ internal static class Renders
     /// <summary>
     /// Render the Tile editor preview.
     /// </summary>
-    public static void EditorTileRT()
+    public void EditorTileRT()
     {
         if (WinTileRT == null || Textures.Tiles.Count == 0) return;
         var idx = EditorTilesWindow.ScrollTile;
@@ -438,7 +449,7 @@ internal static class Renders
         WinTileRT.Display();
     }
 
-    private static void EditorTileAttributesRT(int idx, byte x, byte y)
+    private void EditorTileAttributesRT(int idx, byte x, byte y)
     {
         var tile = new Point(EditorTilesWindow.ScrollX + x, EditorTilesWindow.ScrollY + y);
         var point = new Point(x * Grid + Grid / 2 - 5, y * Grid + Grid / 2 - 6);
@@ -454,7 +465,7 @@ internal static class Renders
         }
     }
 
-    private static void EditorTileDirBlockRT(int idx, byte x, byte y)
+    private void EditorTileDirBlockRT(int idx, byte x, byte y)
     {
         var tile = new Point(EditorTilesWindow.ScrollX + x, EditorTilesWindow.ScrollY + y);
         if (tile.X > Tile.List[idx].Data.GetUpperBound(0)) return;
@@ -489,7 +500,7 @@ internal static class Renders
     /// <summary>
     /// Render the NPC preview in the NPC editor.
     /// </summary>
-    public static void EditorNpcRT()
+    public void EditorNpcRT()
     {
         if (WinNpcRT == null || EditorNpcsWindow.CurrentTextureIndex <= 0) return;
         CharacterRT(WinNpcRT, EditorNpcsWindow.CurrentTextureIndex);
@@ -518,13 +529,13 @@ internal static class Renders
     /// <summary>
     /// Render the editor interface tree to the interface render target.
     /// </summary>
-    public static void Interface()
+    public void Interface()
     {
         if (WinInterfaceRT == null) return;
-        if (InterfaceData.Tree.Nodes.Count == 0) return;
+        if (_interfaceData.Tree.Nodes.Count == 0) return;
 
         WinInterfaceRT.Clear();
-        InterfaceOrder(WinInterfaceRT, InterfaceData.Tree.Nodes[EditorInterfaceWindow.SelectedWindowIndex]);
+        InterfaceOrder(WinInterfaceRT, _interfaceData.Tree.Nodes[EditorInterfaceWindow.SelectedWindowIndex]);
         WinInterfaceRT.Display();
     }
 
