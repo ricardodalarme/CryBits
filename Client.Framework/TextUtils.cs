@@ -1,9 +1,9 @@
 using CryBits.Client.Framework.Graphics;
 using SFML.Graphics;
 
-namespace CryBits.Client.Utils;
+namespace CryBits.Client.Framework;
 
-internal static class TextUtils
+public static class TextUtils
 {
     public static short MeasureString(string text)
     {
@@ -23,7 +23,7 @@ internal static class TextUtils
         // Trim leading characters until the text fits.
         while (textWidth - width >= 0)
         {
-            text = text.Substring(1);
+            text = text[1..];
             textWidth = MeasureString(text);
         }
 

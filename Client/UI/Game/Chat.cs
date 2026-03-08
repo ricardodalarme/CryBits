@@ -8,7 +8,7 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Enums;
 using SFML.Graphics;
-using static CryBits.Client.Utils.TextUtils;
+using static CryBits.Client.Framework.TextUtils;
 
 namespace CryBits.Client.UI.Game;
 

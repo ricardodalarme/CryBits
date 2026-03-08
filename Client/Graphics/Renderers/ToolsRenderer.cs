@@ -2,7 +2,7 @@ using System.Drawing;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Interfacily.Enums;
-using static CryBits.Client.Utils.TextUtils;
+using static CryBits.Client.Framework.TextUtils;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics.Renderers;
