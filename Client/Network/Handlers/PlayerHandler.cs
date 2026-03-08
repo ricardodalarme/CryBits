@@ -13,7 +13,7 @@ using CryBits.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
 using Attribute = CryBits.Enums.Attribute;
-using ArchEntity = Arch.Core.Entity;
+using Entity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -32,7 +32,7 @@ internal class PlayerHandler(GameContext context)
 
         // Destroy old entity if present (re-spawn on map transition).
         var old = context.GetPlayerEntity(name);
-        if (old != ArchEntity.Null) context.World.Destroy(old);
+        if (old != Entity.Null) context.World.Destroy(old);
 
         var entity = PlayerSpawner.Spawn(
             context.World,
@@ -99,7 +99,7 @@ internal class PlayerHandler(GameContext context)
     internal void PlayerLeave(PlayerLeavePacket packet)
     {
         var entity = context.GetPlayerEntity(packet.Name);
-        if (entity != ArchEntity.Null) context.World.Destroy(entity);
+        if (entity != Entity.Null) context.World.Destroy(entity);
     }
 
     [PacketHandler]
@@ -153,7 +153,7 @@ internal class PlayerHandler(GameContext context)
         };
 
         var world = context.World;
-        if (victimEntity == ArchEntity.Null || !world.IsAlive(victimEntity)) return;
+        if (victimEntity == Entity.Null || !world.IsAlive(victimEntity)) return;
         ref var victimMovement = ref world.Get<MovementComponent>(victimEntity);
         BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);
         ref var tint = ref context.World.Get<DamageTintComponent>(victimEntity);

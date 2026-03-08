@@ -12,14 +12,16 @@ namespace CryBits.Client.Worlds;
 /// </summary>
 internal class ClientMap(Map data)
 {
+    private static readonly QueryDescription _npcQuery =
+        new QueryDescription().WithAll<MovementComponent, MapIdComponent, NpcTagComponent>();
+
     public readonly Map Data = data;
 
     private bool HasNpc(byte x, byte y)
     {
         var world = GameContext.Instance.World;
         var found = false;
-        var query = new QueryDescription().WithAll<MovementComponent, MapIdComponent, NpcTagComponent>();
-        world.Query(in query, (ref MovementComponent m, ref MapIdComponent mapId) =>
+        world.Query(in _npcQuery, (ref MovementComponent m, ref MapIdComponent mapId) =>
         {
             if (mapId.Value == Data.Id && m.TileX == x && m.TileY == y)
                 found = true;

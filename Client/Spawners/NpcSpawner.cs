@@ -40,6 +40,7 @@ internal static class NpcSpawner
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
             new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
+            new MapIdComponent { Value = mapId },
             new CharacterStateComponent { Direction = direction },
             new DamageTintComponent(),
             new ShadowComponent(),
@@ -48,8 +49,6 @@ internal static class NpcSpawner
             vitalsComponent,
             new TextComponent(data.Name, textColor, frameWidth / 2, -frameHeight / 2)
         );
-
-        world.Add(entity, new MapIdComponent { Value = mapId });
         return entity;
     }
 }
