@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using Arch.Core;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Graphics;
@@ -51,7 +50,7 @@ internal class CameraManager(RenderWindow renderWindow)
     /// The range of tile indices currently visible, used for culling.
     /// (X/Y = first tile column/row, Width/Height = last tile column/row inclusive)
     /// </summary>
-    public Rectangle TileSight { get; private set; }
+    public IntRect TileSight { get; private set; }
 
     /// <summary>
     /// Update the SFML view to track the target entity.
@@ -86,7 +85,9 @@ internal class CameraManager(RenderWindow renderWindow)
         var right = (int)Math.Min(Map.Width - 1, (cx + halfW) / Grid);
         var bottom = (int)Math.Min(Map.Height - 1, (cy + halfH) / Grid);
 
-        TileSight = new Rectangle(left, top, right, bottom);
+        TileSight = new IntRect(
+            new Vector2i(left, top),
+            new Vector2i(right - left, bottom - top));
     }
 
     /// <summary>

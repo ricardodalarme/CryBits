@@ -1,6 +1,7 @@
-using System.Drawing;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Enums;
+using SFML.Graphics;
+using SFML.System;
 using static CryBits.Globals;
 using Color = SFML.Graphics.Color;
 
@@ -10,12 +11,11 @@ internal sealed class CharacterRenderer(Renderer renderer)
 {
     public static CharacterRenderer Instance { get; } = new(Renderer.Instance);
 
-    public void DrawFace(short textureNum, Point position) =>
+    public void DrawFace(short textureNum, Vector2i position) =>
         renderer.Draw(Textures.Faces[textureNum], position);
 
-    public void DrawCharacter(short textureNum, Point position, Direction direction, byte column, bool hurt = false)
+    public void DrawCharacter(short textureNum, Vector2i position, Direction direction, byte column, bool hurt = false)
     {
-        Rectangle recSource = new();
         var size = Textures.Characters[textureNum].ToSize();
         var color = new Color(255, 255, 255);
 
@@ -28,11 +28,12 @@ internal sealed class CharacterRenderer(Renderer renderer)
             _ => 0
         };
 
-        recSource.X = column * size.Width / AnimationAmountX;
-        recSource.Y = line * size.Height / AnimationAmountY;
-        recSource.Width = size.Width / AnimationAmountX;
-        recSource.Height = size.Height / AnimationAmountY;
-        var recDestiny = new Rectangle(position, recSource.Size);
+        var srcW = size.X / AnimationAmountX;
+        var srcH = size.Y / AnimationAmountY;
+        var recSource = new IntRect(
+            new Vector2i(column * srcW, line * srcH),
+            new Vector2i(srcW, srcH));
+        var recDestiny = new IntRect(position, recSource.Size);
 
         if (hurt) color = new Color(205, 125, 125);
 
@@ -40,17 +41,15 @@ internal sealed class CharacterRenderer(Renderer renderer)
         renderer.Draw(Textures.Characters[textureNum], recSource, recDestiny, color);
     }
 
-    public void DrawShadow(short textureNum, Point position)
+    public void DrawShadow(short textureNum, Vector2i position)
     {
-        Rectangle recSource = new();
         var size = Textures.Characters[textureNum].ToSize();
+        var frameW = size.X / AnimationAmountX;
+        var frameH = size.Y / AnimationAmountY;
+        var shadowH = Textures.Shadow.ToSize().Y;
 
-        recSource.Width = size.Width / AnimationAmountX;
-        recSource.Height = size.Height / AnimationAmountY;
-        var recDestiny = new Rectangle(position, recSource.Size);
-
-        renderer.Draw(Textures.Shadow, recDestiny.Location.X,
-            recDestiny.Location.Y + size.Height / AnimationAmountY - Textures.Shadow.ToSize().Height + 5, 0, 0,
-            size.Width / AnimationAmountX, Textures.Shadow.ToSize().Height);
+        renderer.Draw(Textures.Shadow, position.X,
+            position.Y + frameH - shadowH + 5, 0, 0,
+            frameW, shadowH);
     }
 }

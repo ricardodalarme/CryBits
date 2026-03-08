@@ -1,11 +1,12 @@
 using System.Collections.Generic;
-using System.Drawing;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
+using SFML.Graphics;
+using SFML.System;
 
 namespace CryBits.Client.Systems.Character;
 
@@ -68,15 +69,13 @@ internal sealed class CharacterRenderSystem(World world) : BaseSystem<World, int
     {
         var texture = Textures.Shadow;
         var shadowSize = texture.ToSize();
-        var source = new Rectangle(0, 0, shadowSize.Width, shadowSize.Height);
+        var source = new IntRect(new Vector2i(0, 0), shadowSize);
 
         // Align shadow to the bottom of the sprite frame, shifted up by the shadow height.
         // The +5 keeps it visually inside the character's feet rather than floating below.
-        var dest = new Rectangle(
-            transform.X,
-            transform.Y + anim.FrameHeight - shadowSize.Height + 5,
-            anim.FrameWidth,
-            shadowSize.Height);
+        var dest = new IntRect(
+            new Vector2i(transform.X, transform.Y + anim.FrameHeight - shadowSize.Y + 5),
+            new Vector2i(anim.FrameWidth, shadowSize.Y));
 
         Renderer.Instance.Draw(texture, source, dest);
     }
@@ -90,13 +89,11 @@ internal sealed class CharacterRenderSystem(World world) : BaseSystem<World, int
         ref SpriteComponent sprite,
         ref AnimatedSpriteComponent anim)
     {
-        var source = new Rectangle(
-            anim.CurrentFrameX * anim.FrameWidth,
-            anim.CurrentFrameY * anim.FrameHeight,
-            anim.FrameWidth,
-            anim.FrameHeight);
+        var source = new IntRect(
+            new Vector2i(anim.CurrentFrameX * anim.FrameWidth, anim.CurrentFrameY * anim.FrameHeight),
+            new Vector2i(anim.FrameWidth, anim.FrameHeight));
 
-        var dest = source with { X = transform.X, Y = transform.Y };
+        var dest = new IntRect(new Vector2i(transform.X, transform.Y), source.Size);
         Renderer.Instance.Draw(sprite.Texture, source, dest, sprite.Tint);
     }
 }

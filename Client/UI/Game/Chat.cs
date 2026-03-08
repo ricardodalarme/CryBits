@@ -53,7 +53,7 @@ internal static class Chat
 
     public static void AddText(string message, Color color)
     {
-        var boxWidth = Textures.Panels[ChatView.Panel.TextureNum].ToSize().Width - 16;
+        var boxWidth = Textures.Panels[ChatView.Panel.TextureNum].ToSize().X - 16;
 
         // Trim whitespace and measure
         message = message.Trim();

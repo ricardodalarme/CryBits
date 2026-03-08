@@ -18,7 +18,8 @@ public class Button : Component, IMouseMoved, IMouseUp, IMouseDown
 
     public void MouseUp()
     {
-        if (!IsAbove(new Rectangle(Position, Textures.Buttons[TextureNum].ToSize()))) return;
+        var size = Textures.Buttons[TextureNum].ToSize();
+        if (!IsAbove(new Rectangle(Position.X, Position.Y, size.X, size.Y))) return;
 
         AudioManager.Instance.PlaySound(Sounds.Click);
         ButtonState = ButtonState.Above;
@@ -29,14 +30,16 @@ public class Button : Component, IMouseMoved, IMouseUp, IMouseDown
     public void MouseDown(MouseButtonEventArgs e)
     {
         if (e.Button == Mouse.Button.Right) return;
-        if (!IsAbove(new Rectangle(Position, Textures.Buttons[TextureNum].ToSize()))) return;
+        var size = Textures.Buttons[TextureNum].ToSize();
+        if (!IsAbove(new Rectangle(Position.X, Position.Y, size.X, size.Y))) return;
 
         ButtonState = ButtonState.Click;
     }
 
     public void MouseMoved()
     {
-        if (!IsAbove(new Rectangle(Position, Textures.Buttons[TextureNum].ToSize())))
+        var size = Textures.Buttons[TextureNum].ToSize();
+        if (!IsAbove(new Rectangle(Position.X, Position.Y, size.X, size.Y)))
         {
             ButtonState = ButtonState.Normal;
             return;

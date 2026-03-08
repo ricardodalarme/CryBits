@@ -4,6 +4,7 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities.Shop;
+using SFML.System;
 using SFML.Window;
 
 namespace CryBits.Client.UI.Game.Views;
@@ -36,7 +37,7 @@ internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer) : IVie
         CloseButton.OnMouseUp -= OnClosePressed;
     }
 
-    private void OnRenderSlot(int slot, Point pos)
+    private void OnRenderSlot(int slot, Vector2i pos)
     {
         if (OpenedShop == null || slot >= OpenedShop.Sold.Count) return;
         itemRenderer.DrawItem(OpenedShop.Sold[slot].Item, OpenedShop.Sold[slot].Amount, pos);

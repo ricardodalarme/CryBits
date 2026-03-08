@@ -1,5 +1,5 @@
-using System.Drawing;
 using CryBits.Enums;
+using SFML.System;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Framework.Entities.Tile;
@@ -19,17 +19,18 @@ public class Tile
     /// <summary>Tile metadata grid for this tileset.</summary>
     public TileData[,] Data { get; set; }
 
-    public Tile(Size textureSize)
+    public Tile(Vector2i textureSize)
     {
-        var size = new Size(textureSize.Width / Grid - 1, textureSize.Height / Grid - 1);
+        var width = textureSize.X / Grid - 1;
+        var height = textureSize.Y / Grid - 1;
 
         // Resize fields
-        Width = (byte)size.Width;
-        Height = (byte)size.Height;
-        Data = new TileData[size.Width + 1, size.Height + 1];
+        Width = (byte)width;
+        Height = (byte)height;
+        Data = new TileData[width + 1, height + 1];
 
-        for (byte x = 0; x <= size.Width; x++)
-            for (byte y = 0; y <= size.Height; y++)
+        for (byte x = 0; x <= width; x++)
+            for (byte y = 0; y <= height; y++)
                 Data[x, y] = new TileData
                 {
                     Block = new bool[(byte)Direction.Count]

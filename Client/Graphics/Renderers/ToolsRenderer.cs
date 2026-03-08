@@ -1,7 +1,8 @@
-using System.Drawing;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Interfacily.Enums;
+using SFML.Graphics;
+using SFML.System;
 using static CryBits.Client.Utils.TextUtils;
 using Color = SFML.Graphics.Color;
 
@@ -35,27 +36,29 @@ internal sealed class ToolsRenderer(Renderer renderer)
             _ => 225
         };
 
-        renderer.Draw(Textures.Buttons[tool.TextureNum], tool.Position, new Color(255, 255, 225, alpha));
+        renderer.Draw(Textures.Buttons[tool.TextureNum], new Vector2i(tool.Position.X, tool.Position.Y), new Color(255, 255, 225, alpha));
     }
 
     public void DrawPanel(Panel tool)
     {
         if (tool.TextureNum <= 0 || tool.TextureNum > Textures.Panels.Count) return;
-        renderer.Draw(Textures.Panels[tool.TextureNum], tool.Position);
+        renderer.Draw(Textures.Panels[tool.TextureNum], new Vector2i(tool.Position.X, tool.Position.Y));
     }
 
     public void DrawCheckBox(CheckBox tool)
     {
-        var recSource = new Rectangle(new Point(),
-            new Size(Textures.CheckBox.ToSize().Width / 2, Textures.CheckBox.ToSize().Height));
-        var recDestiny = new Rectangle(tool.Position, recSource.Size);
+        var texSize = Textures.CheckBox.ToSize();
+        var halfW = texSize.X / 2;
+        var recSource = new IntRect(new Vector2i(0, 0), new Vector2i(halfW, texSize.Y));
+        var recDestiny = new IntRect(new Vector2i(tool.Position.X, tool.Position.Y), recSource.Size);
 
-        if (tool.Checked) recSource.Location = new Point(Textures.CheckBox.ToSize().Width / 2, 0);
+        if (tool.Checked) recSource = new IntRect(new Vector2i(halfW, 0), recSource.Size);
 
         renderer.Draw(Textures.CheckBox, recSource, recDestiny);
         renderer.DrawText(tool.Text,
-            recDestiny.Location.X + Textures.CheckBox.ToSize().Width / 2 +
-            CheckBox.Margin, recDestiny.Location.Y + 1, Color.White);
+            recDestiny.Position.X + halfW + CheckBox.Margin,
+            recDestiny.Position.Y + 1,
+            Color.White);
     }
 
     public void DrawSlotGrid(SlotGrid tool) => tool.RenderSlots();
@@ -64,11 +67,11 @@ internal sealed class ToolsRenderer(Renderer renderer)
 
     public void DrawTextBox(TextBox tool)
     {
-        var position = tool.Position;
+        var pos = new Vector2i(tool.Position.X, tool.Position.Y);
         var text = tool.Text;
 
-        renderer.DrawBox(Textures.TextBox, 3, tool.Position,
-            new Size(tool.Width, Textures.TextBox.ToSize().Height));
+        renderer.DrawBox(Textures.TextBox, 3, pos,
+            new Vector2i(tool.Width, Textures.TextBox.ToSize().Y));
 
         if (tool.Password && !string.IsNullOrEmpty(text)) text = new string('•', text.Length);
 
@@ -76,6 +79,6 @@ internal sealed class ToolsRenderer(Renderer renderer)
 
         if (TextBox.Focused != null &&
             TextBox.Focused == tool && TextBox.BlinkSignal) text += "|";
-        renderer.DrawText(text, position.X + 4, position.Y + 2, Color.White);
+        renderer.DrawText(text, pos.X + 4, pos.Y + 2, Color.White);
     }
 }

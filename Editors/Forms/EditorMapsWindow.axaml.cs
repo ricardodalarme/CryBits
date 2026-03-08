@@ -745,8 +745,8 @@ internal partial class EditorMapsWindow : Window
 
         if (cmbTiles.SelectedIndex < 0) return;
         var tex = Textures.Tiles[cmbTiles.SelectedIndex + 1];
-        if ((int)(pt.X + scrlTileX.Value) > tex.ToSize().Width) return;
-        if ((int)(pt.Y + scrlTileY.Value) > tex.ToSize().Height) return;
+        if ((int)(pt.X + scrlTileX.Value) > tex.ToSize().X) return;
+        if ((int)(pt.Y + scrlTileY.Value) > tex.ToSize().Y) return;
 
         _defTilesSelection.Location = new SystemPoint(x, y);
         UpdateTileSelected();
@@ -766,8 +766,8 @@ internal partial class EditorMapsWindow : Window
         if (!e.GetCurrentPoint(imgTile).Properties.IsLeftButtonPressed) return;
         if (AutoTile) return;
 
-        x = Math.Clamp(x, 0, size.Width / Globals.Grid - 1);
-        y = Math.Clamp(y, 0, size.Height / Globals.Grid - 1);
+        x = Math.Clamp(x, 0, size.X / Globals.Grid - 1);
+        y = Math.Clamp(y, 0, size.Y / Globals.Grid - 1);
 
         _defTilesSelection.Width = x - _defTilesSelection.X + 1;
         _defTilesSelection.Height = y - _defTilesSelection.Y + 1;
@@ -836,8 +836,8 @@ internal partial class EditorMapsWindow : Window
     {
         if (cmbTiles.SelectedIndex < 0) return;
         var size = Textures.Tiles[cmbTiles.SelectedIndex + 1].ToSize();
-        scrlTileX.Maximum = Math.Max(0, size.Width - TileCanvasWidth);
-        scrlTileY.Maximum = Math.Max(0, size.Height - TileCanvasHeight);
+        scrlTileX.Maximum = Math.Max(0, size.X - TileCanvasWidth);
+        scrlTileY.Maximum = Math.Max(0, size.Y - TileCanvasHeight);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

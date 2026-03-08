@@ -19,8 +19,8 @@ internal static class NpcSpawner
     {
         var texture = Textures.Characters[data.Texture];
         var size = texture.ToSize();
-        var frameWidth = size.Width / Globals.AnimationAmountX;
-        var frameHeight = size.Height / Globals.AnimationAmountY;
+        var frameWidth = size.X / Globals.AnimationAmountX;
+        var frameHeight = size.Y / Globals.AnimationAmountY;
 
         var textColor = data.Behaviour switch
         {

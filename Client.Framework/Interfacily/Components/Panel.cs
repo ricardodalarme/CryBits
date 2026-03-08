@@ -17,7 +17,8 @@ public class Panel : Component, IMouseUp, IMouseDown, IMouseDoubleClick
     public void MouseUp()
     {
         if (TextureNum <= 0 || TextureNum > Textures.Panels.Count) return;
-        if (!IsAbove(new Rectangle(Position, Textures.Panels[TextureNum].ToSize()))) return;
+        var size = Textures.Panels[TextureNum].ToSize();
+        if (!IsAbove(new Rectangle(Position.X, Position.Y, size.X, size.Y))) return;
 
         OnMouseUp?.Invoke();
     }
@@ -25,7 +26,8 @@ public class Panel : Component, IMouseUp, IMouseDown, IMouseDoubleClick
     public void MouseDown(MouseButtonEventArgs e)
     {
         if (TextureNum <= 0 || TextureNum > Textures.Panels.Count) return;
-        if (!IsAbove(new Rectangle(Position, Textures.Panels[TextureNum].ToSize()))) return;
+        var size = Textures.Panels[TextureNum].ToSize();
+        if (!IsAbove(new Rectangle(Position.X, Position.Y, size.X, size.Y))) return;
 
         OnMouseDown?.Invoke(e);
     }
@@ -33,7 +35,8 @@ public class Panel : Component, IMouseUp, IMouseDown, IMouseDoubleClick
     public void MouseDoubleClick(MouseButtonEventArgs e)
     {
         if (TextureNum <= 0 || TextureNum > Textures.Panels.Count) return;
-        if (!IsAbove(new Rectangle(Position, Textures.Panels[TextureNum].ToSize()))) return;
+        var size = Textures.Panels[TextureNum].ToSize();
+        if (!IsAbove(new Rectangle(Position.X, Position.Y, size.X, size.Y))) return;
 
         OnMouseDoubleClick?.Invoke(e);
     }
