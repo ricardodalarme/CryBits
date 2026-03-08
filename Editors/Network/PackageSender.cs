@@ -1,3 +1,4 @@
+using CryBits.Client.Framework.Network;
 using CryBits.Editors.Forms;
 using CryBits.Entities;
 using CryBits.Entities.Map;
@@ -17,7 +18,7 @@ internal static class PackageSender
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
-        NetworkClient.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
+        NetworkClient.Instance.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
     public static void Connect() => Packet(new ConnectPacket { Username = LoginWindow.Username, Password = LoginWindow.Password, IsClientAccess = true });

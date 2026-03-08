@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.Audio;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Graphics.Renderers;
-using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Menu.Views;
 

@@ -1,6 +1,7 @@
 using System;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Graphics;
 using CryBits.Client.Logic;
@@ -38,7 +39,11 @@ internal static class Program
         Window.Bind();
         GameInput.Bind();
 
-        NetworkClient.Instance.Init();
+        NetworkClient.Instance.Init(PacketDispatcher.Dispatch, () =>
+        {
+            GameContext.Instance.Reset();
+            Window.OpenMenu();
+        });
         var context = GameContext.Instance;
         var audioManager = AudioManager.Instance;
 

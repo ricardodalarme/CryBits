@@ -1,3 +1,4 @@
+using CryBits.Client.Framework.Network;
 using CryBits.Extensions;
 using CryBits.Packets.Client;
 using LiteNetLib;

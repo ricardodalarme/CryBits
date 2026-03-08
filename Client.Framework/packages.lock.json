@@ -2,6 +2,12 @@
   "version": 1,
   "dependencies": {
     "net10.0": {
+      "LiteNetLib": {
+        "type": "Direct",
+        "requested": "[2.0.2, )",
+        "resolved": "2.0.2",
+        "contentHash": "TOxT3aT1rnzICpdiPaFHqLf03aEaj79ouJwu6YLqsPGNuPKEfHC8PmfX4G9wsSvXXE+Hp66ijD9EKs6W/Cc8FA=="
+      },
       "SFML.Audio": {
         "type": "Direct",
         "requested": "[3.0.0, )",
@@ -43,11 +49,6 @@
         "type": "Transitive",
         "resolved": "3.0.0",
         "contentHash": "iwzebpEjtHMmrBWrIZf7lo20PlzGCe4ifh5y/x0RwNE3pcUh4rdLkcnKwuxE+k6gHFbUehQ2/4GuiUB3i6v3Ww=="
-      },
-      "LiteNetLib": {
-        "type": "Transitive",
-        "resolved": "2.0.2",
-        "contentHash": "TOxT3aT1rnzICpdiPaFHqLf03aEaj79ouJwu6YLqsPGNuPKEfHC8PmfX4G9wsSvXXE+Hp66ijD9EKs6W/Cc8FA=="
       },
       "SFML.System": {
         "type": "Transitive",

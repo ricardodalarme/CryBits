@@ -1,10 +1,10 @@
 using System;
 using System.Threading;
 using CryBits.Client.Framework.Audio;
+using CryBits.Client.Framework.Network;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Graphics;
-using CryBits.Editors.Network;
 
 namespace CryBits.Editors.Logic;
 
@@ -22,7 +22,7 @@ internal static class Loop
         {
             var count = Environment.TickCount;
 
-            NetworkClient.HandleData();
+            NetworkClient.Instance.HandleData();
 
             MapInstance.UpdateFog();
             MapInstance.UpdateWeather();

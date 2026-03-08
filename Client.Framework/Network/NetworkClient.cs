@@ -1,13 +1,14 @@
 using System;
-using CryBits.Client.UI;
-using CryBits.Client.Utils;
-using CryBits.Client.Worlds;
 using LiteNetLib;
+using LiteNetLib.Utils;
 using static CryBits.Globals;
 
-namespace CryBits.Client.Network;
+namespace CryBits.Client.Framework.Network;
 
-internal class NetworkClient
+/// <summary>
+/// Shared network client used by both the game client and the editor.
+/// </summary>
+public class NetworkClient
 {
     public static NetworkClient Instance { get; } = new();
 
@@ -20,6 +21,7 @@ internal class NetworkClient
 
     /// <summary>Latest measured round-trip latency in milliseconds.</summary>
     public static int Latency;
+    /// <summary>Timestamp (in milliseconds) at which the most recent latency packet was sent.</summary>
     public static int LatencySend;
 
     public NetworkClient()
@@ -28,19 +30,18 @@ internal class NetworkClient
         _device = new NetManager(_listener);
     }
 
-    public void Init()
+    public void Init(Action<NetPacketReader> onPacketReceived, Action onDisconnected)
     {
         _listener.NetworkReceiveEvent += (_, reader, _, _) =>
         {
-            PacketDispatcher.Dispatch(reader);
+            onPacketReceived(reader);
             reader.Recycle();
         };
 
         _listener.PeerDisconnectedEvent += (_, _) =>
         {
             ServerPeer = null;
-            GameContext.Instance.Reset();
-            Window.OpenMenu();
+            onDisconnected();
         };
 
         _device.Start();
@@ -65,12 +66,6 @@ internal class NetworkClient
         while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)
             HandleData();
 
-        if (!IsConnected())
-        {
-            Alert.Show("The server is currently unavailable.");
-            return false;
-        }
-
-        return true;
+        return IsConnected();
     }
 }

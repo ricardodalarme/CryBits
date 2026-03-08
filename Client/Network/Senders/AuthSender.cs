@@ -1,4 +1,5 @@
 using System;
+using CryBits.Client.Framework.Network;
 using CryBits.Packets.Client;
 
 namespace CryBits.Client.Network.Senders;

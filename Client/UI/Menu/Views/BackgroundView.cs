@@ -1,7 +1,7 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Network;
+using CryBits.Client.Framework.Network;
 
 namespace CryBits.Client.UI.Menu.Views;
 

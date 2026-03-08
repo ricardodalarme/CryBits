@@ -292,6 +292,7 @@
         "type": "Project",
         "dependencies": {
           "CryBits.Core": "[1.0.0, )",
+          "LiteNetLib": "[2.0.2, )",
           "SFML.Audio": "[3.0.0, )",
           "SFML.Graphics": "[3.0.0, )",
           "SFML.Window": "[3.0.0, )",

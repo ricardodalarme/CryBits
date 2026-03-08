@@ -1,4 +1,5 @@
 using System;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Entities;

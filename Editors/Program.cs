@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms;
@@ -31,7 +33,7 @@ internal static class Program
         EditorToolsRepository.Read();
 
         // Initialize subsystems
-        NetworkClient.Init();
+        NetworkClient.Instance.Init(PacketDispatcher.Dispatch, Leave);
         PacketDispatcher.Register();
         AudioManager.Instance.LoadSounds();
 
@@ -66,13 +68,29 @@ internal static class Program
         var waitTimer = Environment.TickCount;
 
         // Disconnect from network
-        NetworkClient.Disconnect();
+        NetworkClient.Instance.Disconnect();
 
         // Wait until the player is disconnected
-        while (NetworkClient.IsConnected() && Environment.TickCount <= waitTimer + 1000)
+        while (NetworkClient.Instance.IsConnected() && Environment.TickCount <= waitTimer + 1000)
             Thread.Sleep(10);
 
         // Close the application
         Working = false;
+    }
+
+    private static void Leave()
+    {
+        // Close all open windows and show the login menu.
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (Avalonia.Application.Current?.ApplicationLifetime is
+                Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                foreach (var win in desktop.Windows.ToArray())
+                    win.Close();
+            }
+
+            LoginWindow.Open();
+        });
     }
 }

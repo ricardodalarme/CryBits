@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Network;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Utils;
 
