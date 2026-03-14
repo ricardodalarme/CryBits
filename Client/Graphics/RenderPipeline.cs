@@ -53,7 +53,7 @@ internal sealed class RenderPipeline(
     // Weather render systems: particle batch + lightning overlay, drawn after fringe tiles.
     private readonly Group<int> _weatherRenderSystems = new(
         "WeatherRenderSystems",
-        new WeatherRenderSystem(context.World, context, renderer)
+        new WeatherRenderSystem(context.World, renderer)
     );
 
     // HUD-layer render systems: vital bars drawn above names but below fixed-position UI.
