@@ -1,8 +1,8 @@
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
-using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 
 namespace CryBits.Client.UI.Menu.Views;
@@ -42,8 +42,13 @@ internal class LoginView(NetworkClient networkClient, AuthSender authSender) : I
         Options.Instance.Username = UsernameTextBox.Text;
         OptionsRepository.Write();
 
-        // Connect to game
-        if (networkClient.TryConnect()) authSender.Connect(UsernameTextBox.Text, PasswordTextBox.Text);
+        if (!networkClient.TryConnect())
+        {
+            Alert.Show("The server is currently unavailable.");
+            return;
+        }
+
+        authSender.Connect(UsernameTextBox.Text, PasswordTextBox.Text);
     }
 
     private void OnRegisterPressed()

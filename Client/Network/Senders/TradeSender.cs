@@ -1,3 +1,4 @@
+using CryBits.Client.Framework.Network;
 using CryBits.Enums;
 using CryBits.Packets.Client;
 

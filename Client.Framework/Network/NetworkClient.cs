@@ -1,17 +1,16 @@
-using CryBits.Client.Framework.Network;
-using CryBits.Client.UI;
-using CryBits.Client.Worlds;
 using LiteNetLib;
-using System;
 using static CryBits.Globals;
 
-namespace CryBits.Client.Network;
+namespace CryBits.Client.Framework.Network;
 
-internal class NetworkClient
+/// <summary>
+/// Shared network client used by both the game client and the editor.
+/// </summary>
+public class NetworkClient
 {
     public static NetworkClient Instance { get; } = new();
 
-    private readonly NetManager _device;
+    private readonly NetManager _netManager;
     private readonly EventBasedNetListener _listener;
     public NetPeer? ServerPeer { get; private set; }
 
@@ -24,10 +23,10 @@ internal class NetworkClient
     public NetworkClient()
     {
         _listener = new EventBasedNetListener();
-        _device = new NetManager(_listener);
+        _netManager = new NetManager(_listener);
     }
 
-    public void Init()
+    public void Start(Action onDisconnected)
     {
         _listener.NetworkReceiveEvent += (_, reader, _, _) =>
         {
@@ -38,13 +37,12 @@ internal class NetworkClient
         _listener.PeerDisconnectedEvent += (_, _) =>
         {
             ServerPeer = null;
-            GameContext.Instance.Reset();
-            Window.Instance.OpenMenu();
+            onDisconnected();
         };
 
         _listener.NetworkLatencyUpdateEvent += (_, latency) => Latency = latency;
 
-        _device.Start();
+        _netManager.Start();
     }
 
     public void Disconnect()
@@ -52,7 +50,7 @@ internal class NetworkClient
         ServerPeer?.Disconnect();
     }
 
-    public void HandleData() => _device.PollEvents();
+    public void HandleData() => _netManager.PollEvents();
 
     public bool IsConnected() => ServerPeer?.ConnectionState == ConnectionState.Connected;
 
@@ -60,18 +58,12 @@ internal class NetworkClient
     {
         if (IsConnected()) return true;
 
-        ServerPeer = _device.Connect(Ip, Config.Port, Config.GameName);
+        ServerPeer = _netManager.Connect(Ip, Config.Port, Config.GameName);
 
         var waitTimer = Environment.TickCount;
         while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)
             HandleData();
 
-        if (!IsConnected())
-        {
-            Alert.Show("The server is currently unavailable.");
-            return false;
-        }
-
-        return true;
+        return IsConnected();
     }
 }

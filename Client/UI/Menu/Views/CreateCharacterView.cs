@@ -1,7 +1,6 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
-using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities;
 using CryBits.Enums;
@@ -11,7 +10,7 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class CreateCharacterView(NetworkClient networkClient, AccountSender accountSender, CharacterRenderer characterRenderer) : IView
+internal class CreateCharacterView(AccountSender accountSender, CharacterRenderer characterRenderer) : IView
 {
     internal static Panel CreateCharacterPanel => Tools.Panels["CreateCharacter"];
     internal static TextBox NameTextBox => Tools.TextBoxes["CreateCharacter_Name"];
@@ -64,13 +63,12 @@ internal class CreateCharacterView(NetworkClient networkClient, AccountSender ac
     private void OnCreatePressed()
     {
         // Open character creation
-        if (networkClient.TryConnect())
-            accountSender.CreateCharacter(
-                name: NameTextBox.Text,
-                isMale: GenderMaleCheckBox.Checked,
-                @class: CurrentClass,
-                textureNum: CurrentTexture
-            );
+        accountSender.CreateCharacter(
+            name: NameTextBox.Text,
+            isMale: GenderMaleCheckBox.Checked,
+            @class: CurrentClass,
+            textureNum: CurrentTexture
+        );
     }
 
     private void OnChangeClassRightPressed()

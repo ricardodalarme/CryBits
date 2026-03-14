@@ -3,9 +3,9 @@ using CryBits.Packets.Client;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-namespace CryBits.Client.Network;
+namespace CryBits.Client.Framework.Network;
 
-internal class PacketSender(NetworkClient networkClient)
+public class PacketSender(NetworkClient networkClient)
 {
     public static PacketSender Instance { get; } = new(NetworkClient.Instance);
 

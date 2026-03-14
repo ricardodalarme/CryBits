@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using CryBits.Client.Framework;
+using CryBits.Client.Framework.Network;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
 
@@ -61,15 +62,15 @@ internal partial class LoginWindow : Window
         Username = txtUsername.Text ?? string.Empty;
         Password = txtPassword.Text ?? string.Empty;
 
-        if (!NetworkClient.Instance.TryConnect())
-        {
-            MessageBox.Show("The server is currently unavailable.");
-            return;
-        }
-
         if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
         {
             MessageBox.Show("Some field is empty.");
+            return;
+        }
+
+        if (!NetworkClient.Instance.TryConnect())
+        {
+            MessageBox.Show("The server is currently unavailable.");
             return;
         }
 

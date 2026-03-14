@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Network;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Network.Senders;
 
 namespace CryBits.Client.UI.Menu.Views;
@@ -35,7 +35,13 @@ internal class RegisterView(NetworkClient networkClient, AuthSender authSender) 
             return;
         }
 
-        if (networkClient.TryConnect()) authSender.Register(UsernameTextBox.Text, PasswordTextBox.Text);
+        if (!networkClient.TryConnect())
+        {
+            Alert.Show("The server is currently unavailable.");
+            return;
+        }
+
+        authSender.Register(UsernameTextBox.Text, PasswordTextBox.Text);
     }
 
     private void OnLoginPressed()

@@ -4,7 +4,6 @@ using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Graphics;
 using CryBits.Client.Logic;
-using CryBits.Client.Network;
 using CryBits.Client.Network.Handlers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI;
@@ -39,7 +38,7 @@ internal static class Program
         Window.Instance.Bind();
         GameInput.Instance.Bind();
 
-        NetworkClient.Instance.Init();
+        NetworkClient.Instance.Start(onDisconnected: Leave);
         var context = GameContext.Instance;
         var audioManager = AudioManager.Instance;
 
@@ -60,6 +59,12 @@ internal static class Program
         Window.Instance.OpenMenu();
 
         GameLoop.Instance.Init();
+    }
+
+    private static void Leave()
+    {
+        GameContext.Instance.Reset();
+        Window.Instance.OpenMenu();
     }
 
     /// <summary>

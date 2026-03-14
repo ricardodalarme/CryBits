@@ -8,9 +8,9 @@ using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Logic;
-using CryBits.Editors.Network;
 using CryBits.Editors.Network.Handlers;
 using System;
+using System.Linq;
 using System.Threading;
 
 namespace CryBits.Editors;
@@ -34,7 +34,7 @@ internal static class Program
         InterfaceData.Instance.BuildFromScreens();
 
         // Initialize subsystems
-        NetworkClient.Instance.Init();
+        NetworkClient.Instance.Start(onDisconnected: Leave);
         PacketDispatcher.Register(new EditorHandler());
         AudioManager.Instance.LoadSounds();
 
@@ -63,6 +63,22 @@ internal static class Program
         AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .LogToTrace();
+
+    private static void Leave()
+    {
+        // Close all open windows and show the login menu.
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (Application.Current?.ApplicationLifetime is
+                Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                foreach (var win in desktop.Windows.ToArray())
+                    win.Close();
+            }
+
+            LoginWindow.Open();
+        });
+    }
 
     public static void Close()
     {

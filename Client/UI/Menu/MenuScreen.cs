@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.Audio;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Graphics.Renderers;
-using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Client.Worlds;
@@ -14,7 +14,7 @@ internal class MenuScreen
     private readonly RegisterView RegisterView = new(NetworkClient.Instance, AuthSender.Instance);
     private readonly OptionsView OptionsPanel = new(AudioManager.Instance, NetworkClient.Instance, GameContext.Instance);
     private readonly SelectCharacterView SelectCharacterView = new(AccountSender.Instance, CharacterRenderer.Instance);
-    private readonly CreateCharacterView CreateCharacterView = new(NetworkClient.Instance, AccountSender.Instance, CharacterRenderer.Instance);
+    private readonly CreateCharacterView CreateCharacterView = new(AccountSender.Instance, CharacterRenderer.Instance);
 
     private IView[] Views =>
     [
