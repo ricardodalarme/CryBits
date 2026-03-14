@@ -38,7 +38,7 @@
     <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.3.7.3" />
     <PackageReference Include="SFML.Audio" Version="3.0.0" />
     <PackageReference Include="SFML.Graphics" Version="3.0.0" />
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.3" />
+    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.4" />
   </ItemGroup>
 
   <ItemGroup>
