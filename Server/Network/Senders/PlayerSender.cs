@@ -2,6 +2,7 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using LiteNetLib;
 using System;
 using static CryBits.Globals;
 
@@ -28,14 +29,16 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerLeaveMap(Player player, Guid mapId)
     {
-        packageSender.ToMapBut(mapId, player, new PlayerLeavePacket { NetworkId = player.Id });
+        packageSender.ToMapBut(mapId, player, new PlayerLeavePacket { NetworkId = player.Id },
+            DeliveryMethod.ReliableUnordered);
     }
 
     public void PlayerPosition(Player player)
     {
         packageSender.ToMap(player.MapInstance.Id,
             new PlayerPositionPacket
-            { NetworkId = player.Id, X = player.X, Y = player.Y, Direction = (byte)player.Direction });
+            { NetworkId = player.Id, X = player.X, Y = player.Y, Direction = (byte)player.Direction },
+            DeliveryMethod.Sequenced);
     }
 
     public void PlayerVitals(Player player)
@@ -48,12 +51,13 @@ internal sealed class PlayerSender(PackageSender packageSender)
             packet.MaxVital[i] = player.MaxVital(i);
         }
 
-        packageSender.ToMap(player.MapInstance.Id, packet);
+        packageSender.ToMap(player.MapInstance.Id, packet, DeliveryMethod.ReliableSequenced);
     }
 
     public void PlayerLeave(Player player)
     {
-        packageSender.ToAllBut(player, new PlayerLeavePacket { NetworkId = player.Id });
+        packageSender.ToAllBut(player, new PlayerLeavePacket { NetworkId = player.Id },
+            DeliveryMethod.ReliableUnordered);
     }
 
     public void PlayerMove(Player player, byte movement)
@@ -71,13 +75,14 @@ internal sealed class PlayerSender(PackageSender packageSender)
                 Direction = (byte)player.Direction,
                 Movement = movement,
                 Speed = speed
-            });
+            }, DeliveryMethod.Sequenced);
     }
 
     public void PlayerDirection(Player player)
     {
         packageSender.ToMapBut(player.MapInstance.Id, player,
-            new PlayerDirectionPacket { NetworkId = player.Id, Direction = (byte)player.Direction });
+            new PlayerDirectionPacket { NetworkId = player.Id, Direction = (byte)player.Direction },
+            DeliveryMethod.Sequenced);
     }
 
     public void PlayerExperience(Player player)
@@ -92,7 +97,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
         var packet = new PlayerEquipmentsPacket
         { NetworkId = player.Id, Equipments = new Guid[(byte)Equipment.Count] };
         for (byte i = 0; i < (byte)Equipment.Count; i++) packet.Equipments[i] = player.Equipment[i].GetId();
-        packageSender.ToMap(player.MapInstance.Id, packet);
+        packageSender.ToMap(player.MapInstance.Id, packet, DeliveryMethod.ReliableUnordered);
     }
 
     public void PlayerInventory(Player player)

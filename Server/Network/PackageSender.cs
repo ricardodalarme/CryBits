@@ -13,45 +13,45 @@ internal sealed class PackageSender
 {
     public static PackageSender Instance { get; } = new();
 
-    public void ToPlayer(GameSession session, IServerPacket packet)
+    public void ToPlayer(GameSession session, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
-        session.Connection.Send(data, DeliveryMethod.ReliableOrdered);
+        session.Connection.Send(data, delivery);
     }
 
-    public void ToPlayer(Player player, IServerPacket packet) =>
-        ToPlayer(player.Session, packet);
+    public void ToPlayer(Player player, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered) =>
+        ToPlayer(player.Session, packet, delivery);
 
-    public void ToAll(IServerPacket packet)
+    public void ToAll(IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying))
-            t.Connection.Send(data, DeliveryMethod.ReliableOrdered);
+            t.Connection.Send(data, delivery);
     }
 
-    public void ToAllBut(Player player, IServerPacket packet)
+    public void ToAllBut(Player player, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying).Where(t => player != t.Character))
-            ToPlayer(t, packet);
+            t.Connection.Send(data, delivery);
     }
 
-    public void ToMap(Guid mapId, IServerPacket packet)
+    public void ToMap(Guid mapId, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying)
                      .Where(t => t.Character!.MapInstance.Id == mapId))
-            ToPlayer(t, packet);
+            t.Connection.Send(data, delivery);
     }
 
-    public void ToMapBut(Guid mapId, Player player, IServerPacket packet)
+    public void ToMapBut(Guid mapId, Player player, IServerPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
@@ -59,6 +59,6 @@ internal sealed class PackageSender
         foreach (var t in GameWorld.Current.Sessions.Where(t => t.IsPlaying)
                      .Where(t => t.Character!.MapInstance.Id == mapId)
                      .Where(t => player != t.Character))
-            ToPlayer(t, packet);
+            t.Connection.Send(data, delivery);
     }
 }

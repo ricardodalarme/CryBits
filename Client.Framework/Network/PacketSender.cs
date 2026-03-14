@@ -9,10 +9,10 @@ public class PacketSender(NetworkClient networkClient)
 {
     public static PacketSender Instance { get; } = new(NetworkClient.Instance);
 
-    public void Packet(IClientPacket packet)
+    public void Packet(IClientPacket packet, DeliveryMethod delivery = DeliveryMethod.ReliableOrdered)
     {
         var data = new NetDataWriter();
         data.WriteObject(packet);
-        networkClient.ServerPeer?.Send(data, DeliveryMethod.ReliableOrdered);
+        networkClient.ServerPeer?.Send(data, delivery);
     }
 }
