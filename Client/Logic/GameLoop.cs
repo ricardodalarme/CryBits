@@ -4,6 +4,7 @@ using CryBits.Client.Framework.Network;
 using CryBits.Client.Graphics;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
+using CryBits.Client.Systems.Combat;
 using CryBits.Client.Systems.Core;
 using CryBits.Client.Systems.Map;
 using CryBits.Client.Systems.Movement;
@@ -43,7 +44,8 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
         new ItemPickupSystem(context, inputManager, playerSender),
         new MovementSystem(context.World),
         new CharacterAnimationControllerSystem(context.World),
-        new AnimatedSpriteSystem(context.World)
+        new AnimatedSpriteSystem(context.World),
+        new AttackSystem(context, inputManager, playerSender)
     );
 
     // High-resolution stopwatch for delta time
