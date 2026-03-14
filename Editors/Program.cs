@@ -7,11 +7,11 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
 using CryBits.Editors.Network.Handlers;
-using EditorToolsRepository = CryBits.Editors.Library.Repositories.ToolsRepository;
 
 namespace CryBits.Editors;
 
@@ -30,7 +30,8 @@ internal static class Program
 
         // Load preferences.
         OptionsRepository.Read();
-        EditorToolsRepository.Instance.Read();
+        ToolsRepository.Instance.Read();
+        InterfaceData.Instance.BuildFromScreens();
 
         // Initialize subsystems
         NetworkClient.Instance.Init();

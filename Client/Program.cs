@@ -27,7 +27,7 @@ internal static class Program
     {
         Directories.Create();
 
-        ToolsRepository.Read();
+        ToolsRepository.Instance.Read();
         OptionsRepository.Read();
 
         // Window must be created before any event bindings that require it.

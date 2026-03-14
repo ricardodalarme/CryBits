@@ -1,16 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Enums;
+using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics.Renderers;
-using CryBits.Editors.Library.Repositories;
 using SFML.Graphics;
 using SFML.System;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
@@ -19,6 +21,7 @@ using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 using Label = CryBits.Client.Framework.Interfacily.Components.Label;
 using Panel = CryBits.Client.Framework.Interfacily.Components.Panel;
 using ProgressBar = CryBits.Client.Framework.Interfacily.Components.ProgressBar;
+using Screen = CryBits.Client.Framework.Interfacily.Components.Screen;
 using SlotGrid = CryBits.Client.Framework.Interfacily.Components.SlotGrid;
 using Picture = CryBits.Client.Framework.Interfacily.Components.Picture;
 using Point = System.Drawing.Point;
@@ -491,8 +494,28 @@ internal partial class EditorInterfaceWindow : Window
 
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
+        // Rebuild Screen.Body / component.Children from the authoritative InterfaceNode tree
+        // before serializing, since editor operations mutate the InterfaceNode tree directly.
+        foreach (var screenNode in InterfaceData.Instance.Tree.Nodes)
+        {
+            var screen = (Screen)screenNode.Tag!;
+            screen.Body.Clear();
+            SyncBodyFromNode(screenNode, screen.Body);
+        }
+
         ToolsRepository.Instance.Write();
         Close();
+    }
+
+    private static void SyncBodyFromNode(InterfaceNode node, List<Component> body)
+    {
+        foreach (var childNode in node.Nodes)
+        {
+            var comp = (Component)childNode.Tag!;
+            comp.Children.Clear();
+            SyncBodyFromNode(childNode, comp.Children);
+            body.Add(comp);
+        }
     }
 
     private void butCancel_Click(object? sender, RoutedEventArgs e)
