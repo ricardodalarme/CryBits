@@ -43,6 +43,7 @@ internal static class NpcSpawner
             new DamageTintComponent(),
             new ShadowComponent(),
             new NpcTagComponent(),
+            new CollidableComponent(),
             vitalsComponent,
             new TextComponent(data.Name, textColor, frameWidth / 2, -frameHeight / 2)
         );

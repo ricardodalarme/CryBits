@@ -1,4 +1,3 @@
-using System;
 using Arch.Core;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
@@ -34,8 +33,7 @@ internal static class PlayerSpawner
         Item?[] equipment,
         byte x, byte y,
         Direction direction,
-        bool isLocalPlayer,
-        Guid mapId)
+        bool isLocalPlayer)
     {
         var texture = Textures.Characters[textureNum];
         var size = texture.ToSize();
@@ -64,6 +62,7 @@ internal static class PlayerSpawner
             new DamageTintComponent(),
             new ShadowComponent(),
             new PlayerTagComponent(),
+            new CollidableComponent(),
             vitalsComponent,
             attributesComponent,
             equipmentComponent,
@@ -76,8 +75,6 @@ internal static class PlayerSpawner
         );
 
         if (isLocalPlayer) world.Add(entity, new PartyComponent());
-        world.Add(entity, new MapIdComponent { Value = mapId });
-
         return entity;
     }
 }

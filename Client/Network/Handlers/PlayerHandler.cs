@@ -45,8 +45,7 @@ internal class PlayerHandler(GameContext context)
             equipmentItems,
             packet.X, packet.Y,
             (Direction)packet.Direction,
-            isLocal,
-            packet.MapId);
+            isLocal);
 
         if (isLocal)
         {
