@@ -26,6 +26,8 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context, 
     // Defers entity destruction and creation so world structure is never mutated mid-query.
     private readonly CommandBuffer _commandBuffer = new();
 
+    private static readonly string[] _thunderSounds = [Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4];
+    
     /// <summary>Seconds between snow horizontal drift steps (35 ms).</summary>
     private const float SnowDriftInterval = 0.035f;
     /// <summary>Seconds between each 10-unit lightning intensity decay step (25 ms).</summary>
@@ -170,9 +172,8 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context, 
     {
         if (MyRandom.Next(0, MaxWeatherIntensity * 10 - intensity * 2) != 0) return;
 
-        var thunderList = new[] { Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4 };
-        var thunder = MyRandom.Next(0, thunderList.Length);
-        audioManager.PlaySound(thunderList[thunder]);
+        var thunder = MyRandom.Next(0, _thunderSounds.Length);
+        audioManager.PlaySound(_thunderSounds[thunder]);
 
         if (thunder < 3)
         {
