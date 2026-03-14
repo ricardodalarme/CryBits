@@ -48,6 +48,7 @@ internal static class Program
         PacketDispatcher.Register(new PlayerHandler(context));
         PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager));
         PacketDispatcher.Register(new NpcHandler(context));
+        PacketDispatcher.Register(new CombatHandler(context));
         PacketDispatcher.Register(new ChatHandler(Chat.Instance));
         PacketDispatcher.Register(new PartyHandler(PartySender.Instance, context));
         PacketDispatcher.Register(new TradeHandler(TradeSender.Instance, context));

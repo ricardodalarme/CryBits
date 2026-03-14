@@ -86,12 +86,6 @@ internal sealed class PlayerSender(PackageSender packageSender)
             { Experience = player.Experience, ExpNeeded = player.ExpNeeded, Points = player.Points });
     }
 
-    public void PlayerAttack(Player player, System.Guid victimId = default)
-    {
-        packageSender.ToMap(player.MapInstance,
-            new PlayerAttackPacket { NetworkId = player.Id, VictimId = victimId });
-    }
-
     public void PlayerEquipments(Player player)
     {
         var packet = new PlayerEquipmentsPacket

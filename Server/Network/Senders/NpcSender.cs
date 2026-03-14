@@ -82,12 +82,6 @@ internal sealed class NpcSender(PackageSender packageSender)
         packageSender.ToMap(npcInstance.MapInstance, packet);
     }
 
-    public void MapNpcAttack(NpcInstance npcInstance, System.Guid victimId = default)
-    {
-        packageSender.ToMap(npcInstance.MapInstance,
-            new MapNpcAttackPacket { AttackerId = npcInstance.Id, VictimId = victimId });
-    }
-
     public void MapNpcDied(NpcInstance npcInstance)
     {
         packageSender.ToMap(npcInstance.MapInstance, new MapNpcDiedPacket { InstanceId = npcInstance.Id });

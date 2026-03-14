@@ -65,13 +65,6 @@ public struct MapNpcVitalsPacket : IServerPacket
 }
 
 [Serializable]
-public struct MapNpcAttackPacket : IServerPacket
-{
-    public Guid AttackerId;
-    public Guid VictimId;
-}
-
-[Serializable]
 public struct MapNpcDiedPacket : IServerPacket
 {
     public Guid InstanceId;

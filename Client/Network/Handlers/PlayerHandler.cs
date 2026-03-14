@@ -9,7 +9,6 @@ using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
-using System;
 using static CryBits.Globals;
 using Entity = Arch.Core.Entity;
 
@@ -151,24 +150,6 @@ internal class PlayerHandler(GameContext context)
     {
         var entity = context.GetNetworkEntity(packet.NetworkId);
         context.World.Get<MovementComponent>(entity).Direction = (Direction)packet.Direction;
-    }
-
-    [PacketHandler]
-    internal void PlayerAttack(PlayerAttackPacket packet)
-    {
-        var entity = context.GetNetworkEntity(packet.NetworkId);
-
-        ref var state = ref context.World.Get<AttackComponent>(entity);
-        state.AttackCountdown = AttackSpeed / 1000f;
-
-        if (packet.VictimId == Guid.Empty) return;
-
-        var victimEntity = context.GetNetworkEntity(packet.VictimId);
-        var world = context.World;
-        ref var victimMovement = ref world.Get<MovementComponent>(victimEntity);
-        BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);
-        ref var tint = ref context.World.Get<DamageComponent>(victimEntity);
-        tint.HurtCountdown = DamageComponent.Duration;
     }
 
     [PacketHandler]
