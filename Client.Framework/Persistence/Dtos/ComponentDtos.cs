@@ -2,9 +2,7 @@ using System.Text.Json.Serialization;
 using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Enums;
 
-namespace CryBits.Client.Framework.Persistence;
-
-// ─── DTOs that represent the on-disk JSON layout ────────────────────────────
+namespace CryBits.Client.Framework.Persistence.Dtos;
 
 /// <summary>Root DTO – one per Tools.json file.</summary>
 public sealed class ToolsJsonRoot
@@ -128,6 +126,7 @@ public sealed class SlotGridDto : ComponentDto
     [JsonPropertyName("rows")]
     public byte Rows { get; set; } = 1;
 }
+
 public sealed class PictureDto : ComponentDto
 {
     [JsonPropertyName("width")]
@@ -135,20 +134,4 @@ public sealed class PictureDto : ComponentDto
 
     [JsonPropertyName("height")]
     public int Height { get; set; }
-}
-// ─── Options DTO ─────────────────────────────────────────────────────────────
-
-public sealed class OptionsDto
-{
-    [JsonPropertyName("saveUsername")] public bool SaveUsername { get; set; }
-    [JsonPropertyName("username")] public string Username { get; set; } = string.Empty;
-    [JsonPropertyName("sounds")] public bool Sounds { get; set; } = true;
-    [JsonPropertyName("musics")] public bool Musics { get; set; } = true;
-    [JsonPropertyName("chat")] public bool Chat { get; set; } = true;
-    [JsonPropertyName("showMetrics")] public bool ShowMetrics { get; set; }
-    [JsonPropertyName("party")] public bool Party { get; set; } = true;
-    [JsonPropertyName("trade")] public bool Trade { get; set; } = true;
-    [JsonPropertyName("preMapGrid")] public bool PreMapGrid { get; set; }
-    [JsonPropertyName("preMapView")] public bool PreMapView { get; set; }
-    [JsonPropertyName("preMapAudio")] public bool PreMapAudio { get; set; }
 }

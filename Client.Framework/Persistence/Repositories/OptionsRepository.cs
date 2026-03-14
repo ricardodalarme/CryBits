@@ -1,5 +1,6 @@
 using System.Text.Json;
 using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Persistence.Dtos;
 using CryBits.Utils;
 
 namespace CryBits.Client.Framework.Persistence.Repositories;
