@@ -22,7 +22,7 @@ internal class PartyHandler(PartySender partySender, GameContext context)
     internal void PartyInvitation(PartyInvitationPacket packet)
     {
         // Decline if player disabled party invites
-        if (!Options.Party)
+        if (!Options.Instance.Party)
         {
             partySender.PartyDecline();
             return;

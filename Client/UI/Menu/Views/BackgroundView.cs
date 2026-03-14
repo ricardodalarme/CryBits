@@ -23,8 +23,8 @@ internal class BackgroundView(NetworkClient networkClient) : IView
     {
         networkClient.Disconnect();
 
-        OptionsView.SoundsCheckBox.Checked = Options.Sounds;
-        OptionsView.MusicsCheckBox.Checked = Options.Musics;
+        OptionsView.SoundsCheckBox.Checked = Options.Instance.Sounds;
+        OptionsView.MusicsCheckBox.Checked = Options.Instance.Musics;
 
         MenuScreen.CloseMenus();
         OptionsView.OptionsPanel.Visible = true;

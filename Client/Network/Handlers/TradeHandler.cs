@@ -46,7 +46,7 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context)
     internal void TradeInvitation(TradeInvitationPacket packet)
     {
         // Decline if player disabled trade invitations
-        if (!Options.Trade)
+        if (!Options.Instance.Trade)
         {
             tradeSender.TradeDecline();
             return;

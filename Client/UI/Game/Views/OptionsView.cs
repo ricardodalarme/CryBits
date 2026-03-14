@@ -41,17 +41,17 @@ internal class OptionsView(AudioManager audioManager, GameContext context) : IVi
 
     private void OnSoundsChanged()
     {
-        Options.Sounds = !Options.Sounds;
-        if (!Options.Sounds) audioManager.StopAllSounds();
+        Options.Instance.Sounds = !Options.Instance.Sounds;
+        if (!Options.Instance.Sounds) audioManager.StopAllSounds();
         OptionsRepository.Write();
     }
 
     private void OnMusicsChanged()
     {
-        Options.Musics = !Options.Musics;
+        Options.Instance.Musics = !Options.Instance.Musics;
         OptionsRepository.Write();
 
-        if (!Options.Musics)
+        if (!Options.Instance.Musics)
             audioManager.StopMusic();
         else if (Screen.Current == Screens.Menu)
             audioManager.PlayMusic(Musics.Menu);
@@ -61,26 +61,26 @@ internal class OptionsView(AudioManager audioManager, GameContext context) : IVi
 
     private void OnChatChanged()
     {
-        Options.Chat = ChatCheckBox.Checked;
+        Options.Instance.Chat = ChatCheckBox.Checked;
         OptionsRepository.Write();
-        if (Options.Chat) GameLoop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
+        if (Options.Instance.Chat) GameLoop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
     }
 
     private void OnMetricsChanged()
     {
-        Options.ShowMetrics = MetricsCheckBox.Checked;
+        Options.Instance.ShowMetrics = MetricsCheckBox.Checked;
         OptionsRepository.Write();
     }
 
     private void OnPartyInvitationsChanged()
     {
-        Options.Party = PartyCheckBox.Checked;
+        Options.Instance.Party = PartyCheckBox.Checked;
         OptionsRepository.Write();
     }
 
     private void OnTradeInvitationsChanged()
     {
-        Options.Trade = TradeCheckBox.Checked;
+        Options.Instance.Trade = TradeCheckBox.Checked;
         OptionsRepository.Write();
     }
 }

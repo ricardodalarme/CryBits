@@ -32,14 +32,14 @@ internal class LoginView(NetworkClient networkClient, AuthSender authSender) : I
 
     private void OnSaveUsernameChanged()
     {
-        Options.SaveUsername = SaveUsernameCheckBox.Checked;
+        Options.Instance.SaveUsername = SaveUsernameCheckBox.Checked;
         OptionsRepository.Write();
     }
 
     private void OnConfirmPressed()
     {
         // Save username
-        Options.Username = UsernameTextBox.Text;
+        Options.Instance.Username = UsernameTextBox.Text;
         OptionsRepository.Write();
 
         // Connect to game

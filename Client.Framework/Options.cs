@@ -1,16 +1,18 @@
 namespace CryBits.Client.Framework;
 
-public static class Options
+public sealed class Options
 {
-    public static bool SaveUsername = true;
-    public static string Username = string.Empty;
-    public static bool Sounds = true;
-    public static bool Musics = true;
-    public static bool Chat = true;
-    public static bool ShowMetrics = false;
-    public static bool Party = true;
-    public static bool Trade = true;
-    public static bool PreMapGrid = false;
-    public static bool PreMapView = false;
-    public static bool PreMapAudio = false;
+    public static Options Instance { get; set; } = new();
+
+    public bool SaveUsername { get; set; } = true;
+    public string Username { get; set; } = string.Empty;
+    public bool Sounds { get; set; } = true;
+    public bool Musics { get; set; } = true;
+    public bool Chat { get; set; } = true;
+    public bool ShowMetrics { get; set; } = false;
+    public bool Party { get; set; } = true;
+    public bool Trade { get; set; } = true;
+    public bool PreMapGrid { get; set; } = false;
+    public bool PreMapView { get; set; } = false;
+    public bool PreMapAudio { get; set; } = false;
 }

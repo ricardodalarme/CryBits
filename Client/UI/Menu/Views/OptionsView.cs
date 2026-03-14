@@ -31,17 +31,17 @@ internal class OptionsView(AudioManager audioManager, NetworkClient networkClien
 
     private void OnSoundsChanged()
     {
-        Options.Sounds = !Options.Sounds;
-        if (!Options.Sounds) audioManager.StopAllSounds();
+        Options.Instance.Sounds = !Options.Instance.Sounds;
+        if (!Options.Instance.Sounds) audioManager.StopAllSounds();
         OptionsRepository.Write();
     }
 
     private void OnMusicsChanged()
     {
-        Options.Musics = !Options.Musics;
+        Options.Instance.Musics = !Options.Instance.Musics;
         OptionsRepository.Write();
 
-        if (!Options.Musics)
+        if (!Options.Instance.Musics)
             audioManager.StopMusic();
         else if (Screen.Current == Screens.Menu)
             audioManager.PlayMusic(Musics.Menu);

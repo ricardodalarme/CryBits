@@ -113,7 +113,7 @@ internal sealed class RenderPipeline(
         uiRenderer.DrawParty();
 
         // FPS/Latency overlays.
-        if (Options.ShowMetrics) renderer.DrawText("FPS: " + GameLoop.Fps, 176, 7, Color.White);
-        if (Options.ShowMetrics) renderer.DrawText("Latency: " + NetworkClient.Latency, 176, 19, Color.White);
+        if (Options.Instance.ShowMetrics) renderer.DrawText("FPS: " + GameLoop.Fps, 176, 7, Color.White);
+        if (Options.Instance.ShowMetrics) renderer.DrawText("Latency: " + NetworkClient.Latency, 176, 19, Color.White);
     }
 }

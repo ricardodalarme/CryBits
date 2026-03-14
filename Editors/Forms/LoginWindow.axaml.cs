@@ -52,8 +52,8 @@ internal partial class LoginWindow : Window
     public LoginWindow()
     {
         InitializeComponent();
-        txtUsername.Text = Options.Username;
-        chkUsername.IsChecked = Options.Username != string.Empty;
+        txtUsername.Text = Options.Instance.Username;
+        chkUsername.IsChecked = Options.Instance.Username != string.Empty;
     }
 
     private void butConnect_Click(object sender, RoutedEventArgs e)
@@ -75,7 +75,7 @@ internal partial class LoginWindow : Window
 
         PackageSender.Instance.Connect();
 
-        Options.Username = chkUsername.IsChecked == true ? Username : string.Empty;
+        Options.Instance.Username = chkUsername.IsChecked == true ? Username : string.Empty;
         Client.Framework.Persistence.Repositories.OptionsRepository.Write();
     }
 }

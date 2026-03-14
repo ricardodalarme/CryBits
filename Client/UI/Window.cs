@@ -94,10 +94,10 @@ internal class Window(InputManager inputManager, NetworkClient networkClient, Au
     {
         // Play background music.
         audioManager.StopAllSounds();
-        if (Options.Musics) audioManager.PlayMusic(Musics.Menu);
+        if (Options.Instance.Musics) audioManager.PlayMusic(Musics.Menu);
 
-        LoginView.SaveUsernameCheckBox.Checked = Options.SaveUsername;
-        if (Options.SaveUsername) LoginView.UsernameTextBox.Text = Options.Username;
+        LoginView.SaveUsernameCheckBox.Checked = Options.Instance.SaveUsername;
+        if (Options.Instance.SaveUsername) LoginView.UsernameTextBox.Text = Options.Instance.Username;
 
         MenuScreen.CloseMenus();
         LoginView.LoginPanel.Visible = true;

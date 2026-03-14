@@ -1,15 +1,12 @@
 using System.Text.Json;
 using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Persistence.Dtos;
 using CryBits.Utils;
 
 namespace CryBits.Client.Framework.Persistence.Repositories;
 
 public static class OptionsRepository
 {
-    /// <summary>
-    /// Load application options from JSON into the runtime <see cref="Options"/> object.
-    /// </summary>
+    /// <summary>Load application options from JSON into <see cref="Options.Instance"/>.</summary>
     public static void Read()
     {
         if (!Directories.Options.Exists)
@@ -19,41 +16,14 @@ public static class OptionsRepository
         }
 
         using var stream = Directories.Options.OpenRead();
-        var opts = JsonSerializer.Deserialize<OptionsDto>(stream, JsonConfig.Options) ?? new OptionsDto();
-        Options.SaveUsername = opts.SaveUsername;
-        Options.Username = opts.Username;
-        Options.Sounds = opts.Sounds;
-        Options.Musics = opts.Musics;
-        Options.Chat = opts.Chat;
-        Options.ShowMetrics = opts.ShowMetrics;
-        Options.Party = opts.Party;
-        Options.Trade = opts.Trade;
-        Options.PreMapGrid = opts.PreMapGrid;
-        Options.PreMapView = opts.PreMapView;
-        Options.PreMapAudio = opts.PreMapAudio;
+        Options.Instance = JsonSerializer.Deserialize<Options>(stream, JsonConfig.Options) ?? new Options();
     }
 
-    /// <summary>
-    /// Persist current runtime <see cref="Options"/> to the JSON file.
-    /// </summary>
+    /// <summary>Persist <see cref="Options.Instance"/> to JSON.</summary>
     public static void Write()
     {
         Directories.Options.Directory?.Create();
-        var opts = new OptionsDto
-        {
-            SaveUsername = Options.SaveUsername,
-            Username = Options.Username,
-            Sounds = Options.Sounds,
-            Musics = Options.Musics,
-            Chat = Options.Chat,
-            ShowMetrics = Options.ShowMetrics,
-            Party = Options.Party,
-            Trade = Options.Trade,
-            PreMapGrid = Options.PreMapGrid,
-            PreMapView = Options.PreMapView,
-            PreMapAudio = Options.PreMapAudio
-        };
         using var stream = Directories.Options.Open(FileMode.Create, FileAccess.Write);
-        JsonSerializer.Serialize(stream, opts, JsonConfig.Options);
+        JsonSerializer.Serialize(stream, Options.Instance, JsonConfig.Options);
     }
 }

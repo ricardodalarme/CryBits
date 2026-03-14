@@ -27,7 +27,7 @@ public class AudioManager
 
     public void PlaySound(string soundName, bool loop = false)
     {
-        if (!Options.Sounds) return;
+        if (!Options.Instance.Sounds) return;
         if (!Sounds.TryGetValue(soundName, out var sound)) return;
 
         // Play sound.
@@ -52,7 +52,7 @@ public class AudioManager
 
     public void PlayMusic(string musicName, bool loop = false)
     {
-        if (!Options.Musics) return;
+        if (!Options.Instance.Musics) return;
         var directory = Path.Combine(Directories.Musics.FullName, musicName);
 
         // Return early if a music device already exists or file missing.
