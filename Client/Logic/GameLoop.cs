@@ -7,6 +7,7 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.Systems.Core;
 using CryBits.Client.Systems.Map;
 using CryBits.Client.Systems.Movement;
+using CryBits.Client.Systems.Player;
 using CryBits.Client.Worlds;
 using System;
 using System.Diagnostics;
@@ -39,6 +40,7 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
         new FogSystem(context.World),
         new WeatherSimulationSystem(context.World, context, audioManager),
         new LocalPlayerInputSystem(context.World, context, inputManager, playerSender),
+        new ItemPickupSystem(context, inputManager, playerSender),
         new MovementSystem(context.World),
         new CharacterAnimationControllerSystem(context.World),
         new AnimatedSpriteSystem(context.World)

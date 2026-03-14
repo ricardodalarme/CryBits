@@ -3,7 +3,6 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
-using CryBits.Client.Worlds;
 using SFML.Window;
 
 namespace CryBits.Client.Logic;
@@ -28,7 +27,6 @@ internal class GameInput(PlayerSender playerSender, Chat chat)
         switch (e.Code)
         {
             case Keyboard.Key.Enter: chat.Type(); break;
-            case Keyboard.Key.Space: GameContext.Instance.LocalPlayer.CollectItem(); break;
             case Keyboard.Key.Num1: UseHotbar(1); break;
             case Keyboard.Key.Num2: UseHotbar(2); break;
             case Keyboard.Key.Num3: UseHotbar(3); break;
