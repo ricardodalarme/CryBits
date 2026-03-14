@@ -15,12 +15,12 @@ namespace CryBits.Client.Systems.Movement;
 internal sealed class CharacterAnimationControllerSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<CharacterStateComponent, AnimatedSpriteComponent, DamageComponent, MovementComponent>();
+        .WithAll<AttackComponent, AnimatedSpriteComponent, DamageComponent, MovementComponent>();
 
     public override void Update(in float dt)
     {
         var delta = dt;
-        World.Query(in _query, (ref CharacterStateComponent state, ref AnimatedSpriteComponent anim, ref DamageComponent damage, ref MovementComponent movement) =>
+        World.Query(in _query, (ref AttackComponent state, ref AnimatedSpriteComponent anim, ref DamageComponent damage, ref MovementComponent movement) =>
         {
             // 1. Tick down hurt cooldown
             if (damage.IsHurt)
@@ -58,7 +58,7 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
                 anim.Playing = false; // Stop walking animation
                 anim.CurrentFrameX = AnimationAttack; // Force the attack frame
             }
-            else if (state.IsMoving)
+            else if (movement.IsMoving)
             {
                 anim.Playing = true; // Let the AnimatedSpriteSystem tick the walking frames
             }

@@ -95,7 +95,7 @@ internal class NpcHandler(GameContext context)
         var victimType = (Target)packet.VictimType;
         var npc = context.CurrentMap.Npcs[index];
 
-        ref var state = ref context.World.Get<CharacterStateComponent>(npc);
+        ref var state = ref context.World.Get<AttackComponent>(npc);
         state.AttackCountdown = AttackSpeed / 1000f;
 
         if (victim == string.Empty || victimType == Target.None) return;

@@ -23,12 +23,11 @@ namespace CryBits.Client.Systems.Movement;
 ///   2. Clamp the offset at zero to prevent overshooting.
 ///   3. Detect tile arrival and set <c>MovementState = Stopped</c>.
 ///   4. Write the final world-pixel position into <c>TransformComponent</c>.
-///   5. Update <c>CharacterStateComponent.IsMoving / Direction</c> for the animation controller.
 /// </summary>
 internal sealed class MovementSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<MovementComponent, TransformComponent, CharacterStateComponent>();
+        .WithAll<MovementComponent, TransformComponent>();
 
     public override void Update(in float dt)
     {
@@ -36,16 +35,13 @@ internal sealed class MovementSystem(World world) : BaseSystem<World, float>(wor
 
         World.Query(in _query,
             (ref MovementComponent movement,
-             ref TransformComponent transform,
-             ref CharacterStateComponent state) =>
+             ref TransformComponent transform) =>
             {
                 Step(ref movement, deltaTime);
 
                 // Round to integer pixels for crisp rendering; no sub-pixel texture sampling.
                 transform.X = (int)(movement.TileX * Grid + movement.OffsetX);
                 transform.Y = (int)(movement.TileY * Grid + movement.OffsetY);
-
-                state.IsMoving = movement.OffsetX != 0f || movement.OffsetY != 0f;
             });
     }
 

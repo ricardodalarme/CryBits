@@ -1,5 +1,6 @@
 using Arch.Core;
 using Arch.System;
+using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
@@ -78,7 +79,7 @@ internal class LocalPlayerInputSystem(World world, GameContext context, InputMan
     {
         if (!inputManager.IsKeyPressed(Keyboard.Key.LControl)) return;
 
-        ref var state = ref World.Get<CharacterStateComponent>(entity);
+        ref var state = ref World.Get<AttackComponent>(entity);
         if (state.AttackCountdown > 0f) return;
         if (TradeView.Panel.Visible) return;
         if (ShopView.Panel.Visible) return;
