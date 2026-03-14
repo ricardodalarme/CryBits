@@ -6,7 +6,6 @@ using CryBits.Client.Components.Equipment;
 using CryBits.Client.Components.Hotbar;
 using CryBits.Client.Components.Inventory;
 using CryBits.Client.Components.Movement;
-using CryBits.Client.Components.Party;
 using CryBits.Client.Components.Player;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Entities;
@@ -91,8 +90,7 @@ internal static class PlayerSpawner
             new HotbarComponent(),
             new AppearanceComponent { TextureNum = textureNum },
             new LevelComponent { Level = level },
-            new LocalPlayerTagComponent(),
-            new PartyComponent()
+            new LocalPlayerTagComponent()
         );
 
         return entity;

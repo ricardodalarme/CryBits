@@ -1,5 +1,6 @@
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
+using CryBits.Client.Components.Party;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
@@ -74,6 +75,7 @@ internal sealed class UIRenderer(
     public void DrawParty()
     {
         var world = context.World;
+        if (!world.Has<PartyComponent>(context.LocalPlayer.Entity)) return;
         var members = context.LocalPlayer.GetParty().Members;
         for (byte i = 0; i < members.Length; i++)
         {

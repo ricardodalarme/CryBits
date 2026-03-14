@@ -1,3 +1,4 @@
+using CryBits.Client.Components.Party;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
@@ -11,6 +12,21 @@ internal class PartyHandler(PartySender partySender, GameContext context)
     [PacketHandler]
     internal void Party(PartyPacket packet)
     {
+        var entity = context.LocalPlayer.Entity;
+        var world = context.World;
+
+        if (packet.Members.Length == 0)
+        {
+            // No members — party disbanded or player left; drop the component.
+            if (world.Has<PartyComponent>(entity))
+                world.Remove<PartyComponent>(entity);
+            return;
+        }
+
+        // Ensure the component exists before writing into it.
+        if (!world.Has<PartyComponent>(entity))
+            world.Add(entity, new PartyComponent());
+
         ref var party = ref context.LocalPlayer.GetParty();
         party.Members = new Arch.Core.Entity[packet.Members.Length];
         for (byte i = 0; i < party.Members.Length; i++)
