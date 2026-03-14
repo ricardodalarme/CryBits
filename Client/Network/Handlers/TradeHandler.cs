@@ -1,9 +1,9 @@
+using CryBits.Client.Components.Trade;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Entities;
-using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
@@ -28,17 +28,13 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context)
             TradeAmountView.Panel.Visible = TradeView.AcceptOfferButton.Visible = TradeView.DeclineOfferButton.Visible = false;
             TradeView.OfferDisabledPanel.Visible = false;
 
-            // Clear trade offer data
-            ref var trade = ref context.LocalPlayer.GetTrade();
-            trade.Offer = new ItemSlot[MaxInventory];
-            trade.TheirOffer = new ItemSlot[MaxInventory];
+            // Attach fresh trade state to the local player entity for the duration of this session.
+            context.World.Add(context.LocalPlayer.Entity, new TradeComponent());
         }
         else
         {
-            // Clear trade offer data
-            ref var trade = ref context.LocalPlayer.GetTrade();
-            trade.Offer = [];
-            trade.TheirOffer = [];
+            // Detach trade state — removal is the reset; no leftover data.
+            context.World.Remove<TradeComponent>(context.LocalPlayer.Entity);
         }
     }
 

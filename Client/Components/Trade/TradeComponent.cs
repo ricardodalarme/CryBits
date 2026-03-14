@@ -8,6 +8,6 @@ namespace CryBits.Client.Components.Trade;
 /// </summary>
 internal struct TradeComponent()
 {
-    public ItemSlot?[] Offer = [];
-    public ItemSlot?[] TheirOffer = [];
+    public ItemSlot?[] Offer = new ItemSlot?[Globals.MaxInventory];
+    public ItemSlot?[] TheirOffer = new ItemSlot?[Globals.MaxInventory];
 }
