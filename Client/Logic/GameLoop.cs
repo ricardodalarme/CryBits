@@ -55,6 +55,8 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
         long timer1000 = 0;
         short fps = 0;
 
+        _deltaTimeSystems.Initialize();
+
         while (Program.Working)
         {
             // Handle incoming network data.
@@ -71,7 +73,10 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
             // Use high-resolution stopwatch for delta time
             var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
             _stopwatch.Restart();
-            _deltaTimeSystems.Update(deltaTime);
+
+            _deltaTimeSystems.BeforeUpdate(in deltaTime);
+            _deltaTimeSystems.Update(in deltaTime);
+            _deltaTimeSystems.AfterUpdate(in deltaTime);
 
             // Update FPS counter.
             if (timer1000 < Environment.TickCount64)
@@ -85,6 +90,7 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
         }
 
         // Close the client.
+        _deltaTimeSystems.Dispose();
         Program.Close();
     }
 
