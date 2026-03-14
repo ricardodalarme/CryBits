@@ -76,10 +76,10 @@ internal sealed class UIRenderer(
     {
         var world = context.World;
         if (!world.Has<PartyComponent>(context.LocalPlayer.Entity)) return;
-        var members = context.LocalPlayer.GetParty().Members;
+        var members = context.LocalPlayer.GetParty().MemberIds;
         for (byte i = 0; i < members.Length; i++)
         {
-            var entity = members[i];
+            var entity = context.GetNetworkEntity(members[i]);
             renderer.Draw(Textures.PartyBars, 10, 92 + 27 * i, 0, 0, 82, 8);
             renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 0, 82, 8);
             if (entity != ArchEntity.Null)
