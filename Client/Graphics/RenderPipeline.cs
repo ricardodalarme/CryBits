@@ -85,9 +85,8 @@ internal sealed class RenderPipeline(
     {
         if (Screen.Current != Screens.Game) return;
 
-        // Update camera logic and apply the SFML view.
+        // Apply the SFML view
         // All subsequent draws happen in world-space coordinates.
-        cameraManager.Update();
         cameraManager.BeginWorldDraw();
 
         // Ground layer — panorama, tiles, then non-character world objects.
