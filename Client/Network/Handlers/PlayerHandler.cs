@@ -149,7 +149,6 @@ internal class PlayerHandler(GameContext context)
         var victimType = (Target)packet.VictimType;
 
         ref var state = ref context.World.Get<CharacterStateComponent>(entity);
-        state.IsAttacking = true;
         state.AttackCountdown = AttackSpeed / 1000f;
 
         if (victim == string.Empty || victimType == Target.None) return;

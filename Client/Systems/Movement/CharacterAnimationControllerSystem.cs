@@ -39,7 +39,6 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
                 if (state.AttackCountdown <= 0f)
                 {
                     state.AttackCountdown = 0f;
-                    state.IsAttacking = false;
                 }
             }
 

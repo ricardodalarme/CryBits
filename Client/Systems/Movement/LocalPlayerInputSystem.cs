@@ -84,7 +84,6 @@ internal class LocalPlayerInputSystem(World world, GameContext context, InputMan
         if (ShopView.Panel.Visible) return;
 
         state.AttackCountdown = AttackSpeed / 1000f;
-        state.IsAttacking = true;
         playerSender.PlayerAttack();
     }
 }
