@@ -10,23 +10,25 @@ using static CryBits.Utils;
 
 namespace CryBits.Editors.Entities;
 
-internal static class MapInstance
+internal class MapInstance
 {
-    private static int _fogXTimer;
-    private static int _fogYTimer;
-    private static int _snowTimer;
-    private static int _thunderingTimer;
+    public static MapInstance Instance { get; } = new();
 
-    public static int FogX;
-    public static int FogY;
+    private int _fogXTimer;
+    private int _fogYTimer;
+    private int _snowTimer;
+    private int _thunderingTimer;
 
-    public static MapWeatherParticleInstance[] Weather = [];
-    public static byte Lightning;
+    public int FogX;
+    public int FogY;
+
+    public MapWeatherParticleInstance[] Weather = [];
+    public byte Lightning;
 
     /// <summary>
     /// Resize the weather particle array for the current map weather type.
     /// </summary>
-    public static void UpdateWeatherType()
+    public void UpdateWeatherType()
     {
         var win = EditorMapsWindow.Instance;
         if (win?.SelectedMap != null)
@@ -42,7 +44,7 @@ internal static class MapInstance
     /// <summary>
     /// Update fog offsets and related timers for the selected map.
     /// </summary>
-    public static void UpdateFog()
+    public void UpdateFog()
     {
         var win = EditorMapsWindow.Instance;
         if (win == null || !win.IsOpen) return;
@@ -52,7 +54,7 @@ internal static class MapInstance
         UpdateFogY();
     }
 
-    private static void UpdateFogX()
+    private void UpdateFogX()
     {
         var map = EditorMapsWindow.Instance!.SelectedMap!;
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
@@ -76,7 +78,7 @@ internal static class MapInstance
         _fogXTimer = Environment.TickCount + 50 - speed;
     }
 
-    private static void UpdateFogY()
+    private void UpdateFogY()
     {
         var map = EditorMapsWindow.Instance!.SelectedMap!;
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
@@ -103,7 +105,7 @@ internal static class MapInstance
     /// <summary>
     /// Update weather particles, sounds and timers for the current map.
     /// </summary>
-    public static void UpdateWeather()
+    public void UpdateWeather()
     {
         bool stop = false, move;
 

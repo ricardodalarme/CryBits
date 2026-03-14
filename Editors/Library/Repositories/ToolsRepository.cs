@@ -10,9 +10,11 @@ using CryBits.Editors.Entities;
 
 namespace CryBits.Editors.Library.Repositories;
 
-internal static class ToolsRepository
+internal class ToolsRepository(InterfaceData interfaceData)
 {
-    public static void Read()
+    public static ToolsRepository Instance { get; } = new(InterfaceData.Instance);
+
+    public void Read()
     {
         var file = new FileInfo(Directories.ToolsData.FullName);
 
@@ -30,7 +32,7 @@ internal static class ToolsRepository
         foreach (var screenDto in root.Screens)
         {
             var screen = new Screen { Name = screenDto.Name };
-            var node = InterfaceData.Tree.Nodes.Add("[Window] " + screen.Name);
+            var node = interfaceData.Tree.Nodes.Add("[Window] " + screen.Name);
             node.Tag = screen;
             LoadChildren(node, screen.Body, screenDto.Children);
         }
@@ -123,12 +125,12 @@ internal static class ToolsRepository
     }
 
 
-    public static void Write()
+    public void Write()
     {
         // Build DTO tree for serialization.
         var root = new ToolsJsonRoot();
 
-        foreach (var screenNode in InterfaceData.Tree.Nodes)
+        foreach (var screenNode in interfaceData.Tree.Nodes)
         {
             var screenDto = new ScreenDto { Name = ((Screen)screenNode.Tag!).Name };
             BuildChildren(screenNode, screenDto.Children);

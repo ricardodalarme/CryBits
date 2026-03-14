@@ -4,8 +4,10 @@ namespace CryBits.Editors.Entities;
 /// Cross-platform replacement for the static EditorInterface.Tree field
 /// that used to live in the WinForms EditorInterface form.
 /// </summary>
-internal static class InterfaceData
+internal class InterfaceData
 {
+    public static InterfaceData Instance { get; } = new();
+
     /// <summary>Root node whose children are the top-level Screen windows.</summary>
-    public static readonly InterfaceNode Tree = new();
+    public readonly InterfaceNode Tree = new();
 }

@@ -51,7 +51,7 @@ internal partial class EditorNpcsWindow : Window
         cmbShop.ItemsSource = Shop.List.Values.ToList();
 
         // SFML offscreen render for the texture preview
-        Renders.WinNpcRT = new RenderTexture(new Vector2u(80, 80));
+        Renders.Instance.WinNpcRT = new RenderTexture(new Vector2u(80, 80));
 
         // Timer: ~30 fps preview
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -64,7 +64,7 @@ internal partial class EditorNpcsWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
-        Renders.WinNpcRT = null;
+        Renders.Instance.WinNpcRT = null;
         base.OnClosed(e);
     }
 
@@ -74,10 +74,10 @@ internal partial class EditorNpcsWindow : Window
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
-        if (Renders.WinNpcRT == null || CurrentTextureIndex <= 0) return;
+        if (Renders.Instance.WinNpcRT == null || CurrentTextureIndex <= 0) return;
 
-        Renders.EditorNpcRT();
-        SfmlRenderBlit.Blit(Renders.WinNpcRT, ref _previewBitmap, imgTexture);
+        Renders.Instance.EditorNpcRT();
+        SfmlRenderBlit.Blit(Renders.Instance.WinNpcRT, ref _previewBitmap, imgTexture);
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -408,13 +408,13 @@ internal partial class EditorNpcsWindow : Window
 
     private void butSave_Click(object? sender, RoutedEventArgs e)
     {
-        PackageSender.WriteNpcs();
+        PackageSender.Instance.WriteNpcs();
         Close();
     }
 
     private void butCancel_Click(object? sender, RoutedEventArgs e)
     {
-        PackageSender.RequestNpcs();
+        PackageSender.Instance.RequestNpcs();
         Close();
     }
 }

@@ -93,7 +93,7 @@ internal class MapProperties(Map map)
         set
         {
             Base.Weather.Type = value;
-            MapInstance.UpdateWeatherType();
+            MapInstance.Instance.UpdateWeatherType();
         }
     }
 

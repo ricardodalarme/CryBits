@@ -34,7 +34,7 @@ internal partial class EditorTilesWindow : Window
     private const int CanvasW = 298;
     private const int CanvasH = 443;
 
-    // How the render is read back by Renders.EditorTileRT()
+    // How the render is read back by Renders.Instance.EditorTileRT()
     public static int ScrollTile { get; private set; } = 1;
     public static int ScrollX { get; private set; }
     public static int ScrollY { get; private set; }
@@ -54,7 +54,7 @@ internal partial class EditorTilesWindow : Window
         UpdateScrollBounds();
 
         // SFML offscreen canvas
-        Renders.WinTileRT = new RenderTexture(new Vector2u(CanvasW, CanvasH));
+        Renders.Instance.WinTileRT = new RenderTexture(new Vector2u(CanvasW, CanvasH));
 
         // 30 fps refresh timer
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -65,7 +65,7 @@ internal partial class EditorTilesWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
-        Renders.WinTileRT = null;
+        Renders.Instance.WinTileRT = null;
         base.OnClosed(e);
     }
 
@@ -75,10 +75,10 @@ internal partial class EditorTilesWindow : Window
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
-        if (Renders.WinTileRT == null) return;
+        if (Renders.Instance.WinTileRT == null) return;
 
-        Renders.EditorTileRT();
-        SfmlRenderBlit.Blit(Renders.WinTileRT, ref _bitmap, imgCanvas);
+        Renders.Instance.EditorTileRT();
+        SfmlRenderBlit.Blit(Renders.Instance.WinTileRT, ref _bitmap, imgCanvas);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

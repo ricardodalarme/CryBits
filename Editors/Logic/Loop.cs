@@ -8,12 +8,14 @@ using CryBits.Editors.Network;
 
 namespace CryBits.Editors.Logic;
 
-internal static class Loop
+internal class Loop(NetworkClient network, MapInstance mapInstance, Renders renders)
 {
+    public static Loop Instance { get; } = new(NetworkClient.Instance, MapInstance.Instance, Renders.Instance);
+
     /// <summary>
     /// Start the editor main loop: process incoming data, update state and present render targets.
     /// </summary>
-    public static void Init()
+    public void Init()
     {
         var timer1000 = 0;
         short fps = 0;
@@ -22,13 +24,13 @@ internal static class Loop
         {
             var count = Environment.TickCount;
 
-            NetworkClient.HandleData();
+            network.HandleData();
 
-            MapInstance.UpdateFog();
-            MapInstance.UpdateWeather();
+            mapInstance.UpdateFog();
+            mapInstance.UpdateWeather();
             MapsMusic();
 
-            Renders.Present();
+            renders.Present();
 
             // Throttle loop to ~10ms per iteration.
             while (Environment.TickCount < count + 10) Thread.Sleep(1);
