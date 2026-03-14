@@ -16,7 +16,7 @@ using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Client.Logic;
 
-internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClient, Renderer renderer, GameContext context, InputManager inputManager, PlayerSender playerSender, AudioManager audioManager)
+internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClient, Renderer renderer, GameContext context, InputManager inputManager, PlayerSender playerSender, AudioManager audioManager, CameraManager cameraManager)
 {
     public static GameLoop Instance { get; } = new(
         RenderPipeline.Instance,
@@ -25,7 +25,8 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
         GameContext.Instance,
         InputManager.Instance,
         PlayerSender.Instance,
-        AudioManager.Instance);
+        AudioManager.Instance,
+        CameraManager.Instance);
 
     // Measured frames per second.
     public static short Fps;
@@ -43,6 +44,7 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
         new MovementInputSystem(context.World, context, inputManager, playerSender),
         new ItemPickupSystem(context, inputManager, playerSender),
         new MovementSystem(context.World),
+        new CameraSystem(context.World, context, cameraManager),
         new CharacterAnimationControllerSystem(context.World),
         new AnimatedSpriteSystem(context.World),
         new AttackSystem(context, inputManager, playerSender)
