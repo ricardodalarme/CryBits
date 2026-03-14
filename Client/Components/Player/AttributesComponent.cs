@@ -1,4 +1,4 @@
-namespace CryBits.Client.Components.Combat;
+namespace CryBits.Client.Components.Player;
 
 /// <summary>
 /// Character attributes (Strength, Resistance, Intelligence, Agility, Vitality).
