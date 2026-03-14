@@ -4,6 +4,7 @@ using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Server.World;
+using LiteNetLib;
 
 namespace CryBits.Server.Network.Senders;
 
@@ -48,7 +49,7 @@ internal sealed class NpcSender(PackageSender packageSender)
             Vital = new short[(byte)Vital.Count]
         };
         for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
-        packageSender.ToMap(npcInstance.MapInstance.Id, packet);
+        packageSender.ToMap(npcInstance.MapInstance.Id, packet, DeliveryMethod.ReliableUnordered);
     }
 
     public void MapNpcMovement(NpcInstance npcInstance, byte movement)
@@ -66,24 +67,26 @@ internal sealed class NpcSender(PackageSender packageSender)
                 Direction = (byte)npcInstance.Direction,
                 Movement = movement,
                 Speed = speed
-            });
+            }, DeliveryMethod.Sequenced);
     }
 
     public void MapNpcDirection(NpcInstance npcInstance)
     {
         packageSender.ToMap(npcInstance.MapInstance.Id,
-            new MapNpcDirectionPacket { InstanceId = npcInstance.Id, Direction = (byte)npcInstance.Direction });
+            new MapNpcDirectionPacket { InstanceId = npcInstance.Id, Direction = (byte)npcInstance.Direction },
+            DeliveryMethod.Sequenced);
     }
 
     public void MapNpcVitals(NpcInstance npcInstance)
     {
         var packet = new MapNpcVitalsPacket { InstanceId = npcInstance.Id, Vital = new short[(byte)Vital.Count] };
         for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
-        packageSender.ToMap(npcInstance.MapInstance.Id, packet);
+        packageSender.ToMap(npcInstance.MapInstance.Id, packet, DeliveryMethod.ReliableSequenced);
     }
 
     public void MapNpcDied(NpcInstance npcInstance)
     {
-        packageSender.ToMap(npcInstance.MapInstance.Id, new MapNpcDiedPacket { InstanceId = npcInstance.Id });
+        packageSender.ToMap(npcInstance.MapInstance.Id, new MapNpcDiedPacket { InstanceId = npcInstance.Id },
+            DeliveryMethod.ReliableUnordered);
     }
 }
