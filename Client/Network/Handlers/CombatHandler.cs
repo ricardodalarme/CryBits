@@ -25,7 +25,7 @@ internal class CombatHandler(GameContext context)
         var world = context.World;
         ref var victimMovement = ref world.Get<MovementComponent>(victim);
         BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);
-        ref var damage = ref context.World.AddOrGet<DamageComponent>(victim);
-        damage.HurtCountdown = DamageComponent.Duration;
+        ref var damage = ref context.World.AddOrGet<HurtComponent>(victim);
+        damage.HurtCountdown = HurtComponent.Duration;
     }
 }
