@@ -7,7 +7,8 @@ using CryBits.Server.Formulas;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.World;
 using static CryBits.Globals;
-using static CryBits.Utils;
+using static CryBits.Utils.DirectionUtils;
+using static CryBits.Utils.RandomUtils;
 using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Server.Systems;

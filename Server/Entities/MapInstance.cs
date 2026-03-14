@@ -6,7 +6,7 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Server.Systems;
 using CryBits.Server.World;
-using static CryBits.Utils;
+using static CryBits.Utils.DirectionUtils;
 
 namespace CryBits.Server.Entities;
 

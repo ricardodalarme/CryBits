@@ -1,13 +1,9 @@
-using System;
 using CryBits.Enums;
 
-namespace CryBits;
+namespace CryBits.Utils;
 
-public static class Utils
+public static class DirectionUtils
 {
-    /// <summary>Shared <see cref="Random"/> instance used across the project.</summary>
-    public static readonly Random MyRandom = new();
-
     /// <summary>Return the opposite of the specified direction.</summary>
     public static Direction ReverseDirection(Direction direction)
     {

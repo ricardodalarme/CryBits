@@ -9,7 +9,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
 using static CryBits.Globals;
-using static CryBits.Utils;
+using static CryBits.Utils.RandomUtils;
 using ArchEntity = Arch.Core.Entity;
 
 namespace CryBits.Client.Systems.Map;

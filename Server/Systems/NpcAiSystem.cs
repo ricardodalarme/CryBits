@@ -5,7 +5,8 @@ using CryBits.Server.Entities;
 using CryBits.Server.Network;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.World;
-using static CryBits.Utils;
+using static CryBits.Utils.DirectionUtils;
+using static CryBits.Utils.RandomUtils;
 
 namespace CryBits.Server.Systems;
 

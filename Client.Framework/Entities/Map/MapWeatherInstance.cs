@@ -3,7 +3,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using static CryBits.Globals;
-using static CryBits.Utils;
+using static CryBits.Utils.RandomUtils;
 
 namespace CryBits.Client.Framework.Entities.Map;
 

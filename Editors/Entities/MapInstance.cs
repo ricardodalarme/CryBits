@@ -6,7 +6,7 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Forms;
 using CryBits.Entities.Map;
 using static CryBits.Globals;
-using static CryBits.Utils;
+using static CryBits.Utils.RandomUtils;
 
 namespace CryBits.Editors.Entities;
 

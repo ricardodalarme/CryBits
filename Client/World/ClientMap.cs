@@ -3,7 +3,7 @@ using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Movement;
 using CryBits.Entities.Map;
 using CryBits.Enums;
-using static CryBits.Utils;
+using static CryBits.Utils.DirectionUtils;
 
 namespace CryBits.Client.Worlds;
 

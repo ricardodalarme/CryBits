@@ -4,7 +4,7 @@ using CryBits.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.World;
-using static CryBits.Utils;
+using static CryBits.Utils.DirectionUtils;
 
 namespace CryBits.Server.Systems;
 
