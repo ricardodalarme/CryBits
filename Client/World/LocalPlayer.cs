@@ -1,19 +1,13 @@
 using Arch.Core;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Equipment;
 using CryBits.Client.Components.Hotbar;
 using CryBits.Client.Components.Inventory;
-using CryBits.Client.Components.Map;
-using CryBits.Client.Components.Movement;
 using CryBits.Client.Components.Party;
 using CryBits.Client.Components.Player;
 using CryBits.Client.Components.Trade;
-using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Network.Senders;
 using System;
-using static CryBits.Globals;
 
 namespace CryBits.Client.Worlds;
 
@@ -28,8 +22,6 @@ internal class LocalPlayer(World world, Entity entity)
 
     /// <summary>Network ID of the local player.
     public Guid Id;
-
-    private long _collectTimer;
 
     /// <summary>Convenient accessor for the local player's name.</summary>
     public string GetName() =>
@@ -61,35 +53,4 @@ internal class LocalPlayer(World world, Entity entity)
 
     /// <summary>Convenient accessor for PartyComponent.</summary>
     public ref PartyComponent GetParty() => ref world.Get<PartyComponent>(Entity);
-
-    /// <summary>
-    /// Collects the item at the local player's current tile, if any free inventory slot exists.
-    /// Debounced to 250 ms to prevent server spam.
-    /// </summary>
-    public void CollectItem()
-    {
-        if (TextBox.Focused != null) return;
-        if (Entity == Entity.Null) return;
-
-        bool hasItem = false, hasSlot = false;
-
-        var myTile = world.Get<MovementComponent>(Entity);
-        var itemQuery = new QueryDescription().WithAll<GroundItemComponent, TransformComponent>();
-        world.Query(in itemQuery, (ref GroundItemComponent _, ref TransformComponent transform) =>
-        {
-            if (transform.X / Grid == myTile.TileX && transform.Y / Grid == myTile.TileY)
-                hasItem = true;
-        });
-
-        ref var inv = ref GetInventory();
-        for (byte i = 0; i < MaxInventory; i++)
-            if (inv.Slots[i]?.Item == null)
-                hasSlot = true;
-
-        if (!hasItem || !hasSlot) return;
-        if (Environment.TickCount64 <= _collectTimer + 250) return;
-
-        PlayerSender.Instance.CollectItem();
-        _collectTimer = Environment.TickCount64;
-    }
 }
