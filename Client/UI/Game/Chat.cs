@@ -23,6 +23,7 @@ internal class Chat
     // Rendering order for chat lines
     public static List<Structure> Order = [];
 
+    public static long VisibilityTimer;
     public const byte LinesVisible = 9;
     public static byte LinesFirst;
     private const byte MaxLines = 50;
@@ -57,7 +58,7 @@ internal class Chat
             LinesFirst = (byte)(i - LinesVisible);
 
         // Reset chat visibility timer
-        GameLoop.ChatTimer = Environment.TickCount64 + 10000;
+        VisibilityTimer = Environment.TickCount64 + 10000;
     }
 
     public void AddText(string message, Color color)
@@ -93,7 +94,7 @@ internal class Chat
 
         if (panel.Visible)
         {
-            GameLoop.ChatTimer = Environment.TickCount64 + SleepTimer;
+            VisibilityTimer = Environment.TickCount64 + SleepTimer;
             TextBox.Focused = tool;
             return;
         }
