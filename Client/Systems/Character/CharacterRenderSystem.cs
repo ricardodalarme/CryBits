@@ -1,6 +1,5 @@
 using Arch.Core;
 using Arch.System;
-using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
@@ -16,11 +15,6 @@ namespace CryBits.Client.Systems.Character;
 /// Draw order per character (back-to-front):
 ///   1. Shadow — an oval beneath the sprite, aligned to the character's feet.
 ///   2. Animated sprite — the current animation frame with damage tint applied.
-///
-/// This system replaces the legacy <c>PlayerRenderer</c> and <c>NpcRenderer</c> shadow
-/// calls, and takes over character sprite rendering from the generic
-/// <c>SpriteRenderSystem</c> (which is updated to exclude entities with
-/// <see cref="ShadowComponent"/>).
 /// </summary>
 internal sealed class CharacterRenderSystem(World world, Renderer renderer) : BaseSystem<World, int>(world)
 {
@@ -29,7 +23,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
     /// plus the shadow marker that distinguishes them from other sprite entities.
     /// </summary>
     private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent, ShadowComponent>();
+        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent>();
 
     // Reused every frame — avoids per-frame heap allocation from Y-sort.
     private readonly List<(int Y, Entity Entity)> _drawList = [];

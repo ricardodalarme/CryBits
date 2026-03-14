@@ -1,6 +1,5 @@
 using Arch.Core;
 using Arch.System;
-using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
@@ -11,7 +10,7 @@ namespace CryBits.Client.Systems.Core;
 /// <summary>
 /// Renders all entities that have a <see cref="TransformComponent"/> and a
 /// <see cref="SpriteComponent"/>, excluding character entities.
-/// Character entities (players, NPCs) carry a <see cref="ShadowComponent"/> and are
+/// Character entities (players, NPCs) carry a <see cref="AnimatedSpriteComponent"/> and are
 /// handled instead by <c>CharacterRenderSystem</c>, which adds Y-depth sorting and
 /// shadow rendering on top of the basic sprite draw.
 /// Draws in world space — the SFML view (set by CameraManager) handles panning.
@@ -20,7 +19,7 @@ internal sealed class SpriteRenderSystem(World world, Renderer renderer) : BaseS
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<TransformComponent, SpriteComponent>()
-        .WithNone<ShadowComponent>();
+        .WithNone<AnimatedSpriteComponent>();
 
     public override void Update(in int t)
     {

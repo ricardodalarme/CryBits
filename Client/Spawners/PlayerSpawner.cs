@@ -60,7 +60,6 @@ internal static class PlayerSpawner
             new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
             new CharacterStateComponent { Direction = direction },
             new DamageTintComponent(),
-            new ShadowComponent(),
             new PlayerTagComponent(),
             new CollidableComponent(),
             vitalsComponent,
