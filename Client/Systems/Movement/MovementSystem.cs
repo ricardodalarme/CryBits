@@ -85,9 +85,14 @@ internal sealed class MovementSystem(World world) : BaseSystem<World, float>(wor
         if (MathF.Abs(m.OffsetY) < 0.1f) m.OffsetY = 0f;
 
         // Arrival: offset consumed in the travel direction.
-        bool arrived = m.Direction is Direction.Right or Direction.Down
-            ? m.OffsetX >= 0f && m.OffsetY >= 0f
-            : m.OffsetX <= 0f && m.OffsetY <= 0f;
+        var arrived = m.Direction switch
+        {
+            Direction.Right => m.OffsetX >= 0f,
+            Direction.Left => m.OffsetX <= 0f,
+            Direction.Down => m.OffsetY >= 0f,
+            Direction.Up => m.OffsetY <= 0f,
+            _ => true
+        };
 
         if (arrived)
             m.MovementState = MovementState.Stopped;
