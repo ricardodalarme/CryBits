@@ -6,7 +6,6 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
-using System;
 using System.Collections.Generic;
 using static CryBits.Globals;
 using static CryBits.Utils.RandomUtils;
@@ -28,8 +27,13 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context, 
     // Reused each frame to avoid heap allocation while collecting off-screen entities.
     private readonly List<ArchEntity> _toDestroy = [];
 
-    // Environment.TickCount-based timer for snow horizontal drift cadence (35 ms).
-    private int _snowMoveTimer;
+    /// <summary>Seconds between snow horizontal drift steps (35 ms).</summary>
+    private const float SnowDriftInterval = 0.035f;
+    /// <summary>Seconds between each 10-unit lightning intensity decay step (25 ms).</summary>
+    private const float LightningDecayInterval = 0.025f;
+
+    // Accumulates dt to drive the snow horizontal drift cadence.
+    private float _snowMoveAccumulator;
 
     public override void Update(in float dt)
     {
@@ -39,16 +43,22 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context, 
         var type = weatherData.Type;
 
         // ── 1. Snow movement timer ───────────────────────────────────────────
-        bool snowMove = _snowMoveTimer < Environment.TickCount;
-        if (snowMove) _snowMoveTimer = Environment.TickCount + 35;
+        _snowMoveAccumulator += dt;
+        bool snowMove = _snowMoveAccumulator >= SnowDriftInterval;
+        if (snowMove) _snowMoveAccumulator = 0f;
 
         // ── 2. Lightning decay ───────────────────────────────────────────────
+        var delta = dt;
         World.Query(in _lightningQuery, (ref LightningComponent lightning) =>
         {
-            if (lightning.Intensity > 0 && lightning.DecayTimer < Environment.TickCount)
+            if (lightning.Intensity > 0)
             {
-                lightning.Intensity -= 10;
-                lightning.DecayTimer = Environment.TickCount + 25;
+                lightning.DecayAccumulator += delta;
+                while (lightning.DecayAccumulator >= LightningDecayInterval)
+                {
+                    lightning.DecayAccumulator -= LightningDecayInterval;
+                    lightning.Intensity = lightning.Intensity > 10 ? (byte)(lightning.Intensity - 10) : (byte)0;
+                }
             }
         });
 
@@ -173,7 +183,7 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context, 
             World.Query(in _lightningQuery, (ref LightningComponent lightning) =>
             {
                 lightning.Intensity = 190;
-                lightning.DecayTimer = Environment.TickCount + 25;
+                lightning.DecayAccumulator = 0f;
             });
         }
     }

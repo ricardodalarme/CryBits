@@ -2,11 +2,9 @@ namespace CryBits.Client.Components.Combat;
 
 internal struct DamageTintComponent
 {
+    /// <summary>Duration of the hurt tint in seconds.</summary>
+    public const float Duration = 0.325f;
+
     public bool IsHurt;
-    /// <summary>
-    /// <see cref="System.Environment.TickCount"/> when the last hit was received.
-    /// Used by <see cref="Systems.Combat.DamageTintSystem"/> to auto-clear
-    /// <see cref="IsHurt"/> after 325 ms without any per-entity legacy field.
-    /// </summary>
-    public int HurtTimestamp;
+    public float HurtCountdown;
 }

@@ -15,7 +15,8 @@ internal struct LightningComponent
     public byte Intensity;
 
     /// <summary>
-    /// <see cref="System.Environment.TickCount"/> deadline for the next 10-unit decay step.
+    /// Accumulated dt since the last 10-unit decay step.
+    /// Each time this reaches 0.025 s, <see cref="Intensity"/> decreases by 10.
     /// </summary>
-    public int DecayTimer;
+    public float DecayAccumulator;
 }

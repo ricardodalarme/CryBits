@@ -7,7 +7,6 @@ using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
 using SFML.Window;
-using System;
 using static CryBits.Globals;
 using MovementState = CryBits.Enums.Movement;
 
@@ -19,7 +18,10 @@ namespace CryBits.Client.Systems.Movement;
 /// </summary>
 internal class LocalPlayerInputSystem(World world, GameContext context, InputManager inputManager, PlayerSender playerSender) : BaseSystem<World, float>(world)
 {
-    private int _nextInputMs;
+    /// <summary>Minimum seconds between input polls — ~33 Hz.</summary>
+    private const float ThrottleInterval = 0.030f;
+
+    private float _inputThrottle;
 
     public override void Update(in float t)
     {
@@ -27,8 +29,9 @@ internal class LocalPlayerInputSystem(World world, GameContext context, InputMan
         if (entity == Entity.Null || !World.IsAlive(entity)) return;
 
         // Throttle movement + attack to ~33 Hz (matches legacy Me.Logic timer)
-        if (Environment.TickCount < _nextInputMs) return;
-        _nextInputMs = Environment.TickCount + 30;
+        _inputThrottle += t;
+        if (_inputThrottle < ThrottleInterval) return;
+        _inputThrottle = 0f;
 
         CheckMovement(entity);
         CheckAttack(entity);
@@ -73,20 +76,14 @@ internal class LocalPlayerInputSystem(World world, GameContext context, InputMan
 
     private void CheckAttack(Entity entity)
     {
-        ref var state = ref World.Get<CharacterStateComponent>(entity);
-
-        if (state.AttackTimer + AttackSpeed < Environment.TickCount)
-        {
-            state.AttackTimer = 0;
-            state.IsAttacking = false;
-        }
-
         if (!inputManager.IsKeyPressed(Keyboard.Key.LControl)) return;
-        if (state.AttackTimer > 0) return;
+
+        ref var state = ref World.Get<CharacterStateComponent>(entity);
+        if (state.AttackCountdown > 0f) return;
         if (TradeView.Panel.Visible) return;
         if (ShopView.Panel.Visible) return;
 
-        state.AttackTimer = Environment.TickCount;
+        state.AttackCountdown = AttackSpeed / 1000f;
         state.IsAttacking = true;
         playerSender.PlayerAttack();
     }

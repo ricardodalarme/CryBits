@@ -3,7 +3,6 @@ using Arch.System;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using SFML.Graphics;
-using System;
 
 namespace CryBits.Client.Systems.Combat;
 
@@ -14,13 +13,19 @@ internal sealed class DamageTintSystem(World world) : BaseSystem<World, float>(w
 
     public override void Update(in float dt)
     {
-        var now = Environment.TickCount;
-
+        var delta = dt;
         World.Query(in _query, (ref SpriteComponent sprite, ref DamageTintComponent damage) =>
         {
-            // Auto-clear the hurt flag 325 ms after the hit was received.
-            if (damage.IsHurt && damage.HurtTimestamp + 325 < now)
-                damage.IsHurt = false;
+            // Count down the hurt tint duration.
+            if (damage.IsHurt)
+            {
+                damage.HurtCountdown -= delta;
+                if (damage.HurtCountdown <= 0f)
+                {
+                    damage.HurtCountdown = 0f;
+                    damage.IsHurt = false;
+                }
+            }
 
             sprite.Tint = damage.IsHurt ? new Color(205, 125, 125) : Color.White;
         });

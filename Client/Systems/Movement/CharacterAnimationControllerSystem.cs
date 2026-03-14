@@ -3,7 +3,6 @@ using Arch.System;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
 using CryBits.Enums;
-using System;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Systems.Movement;
@@ -19,11 +18,21 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
 
     public override void Update(in float dt)
     {
-        var now = Environment.TickCount;
-
+        var delta = dt;
         World.Query(in _query, (ref CharacterStateComponent state, ref AnimatedSpriteComponent anim) =>
         {
-            // 1. Set the Row based on Direction
+            // 1. Tick down attack cooldown
+            if (state.AttackCountdown > 0f)
+            {
+                state.AttackCountdown -= delta;
+                if (state.AttackCountdown <= 0f)
+                {
+                    state.AttackCountdown = 0f;
+                    state.IsAttacking = false;
+                }
+            }
+
+            // 2. Set the Row based on Direction
             anim.CurrentFrameY = state.Direction switch
             {
                 Direction.Up => MovementUp,
@@ -33,8 +42,8 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
                 _ => 0
             };
 
-            // 2. Set the Column and Playback based on State
-            if (state.IsAttacking && state.AttackTimer + AttackSpeed / 2 > now)
+            // 3. Set the Column and Playback based on State
+            if (state.IsAttacking && state.AttackCountdown > AttackSpeed / 2000f)
             {
                 anim.Playing = false; // Stop walking animation
                 anim.CurrentFrameX = AnimationAttack; // Force the attack frame
