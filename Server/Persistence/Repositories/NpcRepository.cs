@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities.Npc;
@@ -7,14 +8,18 @@ namespace CryBits.Server.Persistence.Repositories;
 
 internal static class NpcRepository
 {
-    public static void Read()
+    public static Dictionary<Guid, Npc> Read()
     {
         // Load NPCs from disk.
-        Npc.List = [];
-        var file = Directories.Npcs.GetFiles();
-        for (byte i = 0; i < file.Length; i++)
-            using (var stream = file[i].OpenRead())
-                Npc.List.Add(new Guid(file[i].Name.Remove(36)), (Npc)new BinaryFormatter().Deserialize(stream));
+        var list = new Dictionary<Guid, Npc>();
+        var files = Directories.Npcs.GetFiles();
+        foreach (var file in files)
+            using (var stream = file.OpenRead())
+#pragma warning disable SYSLIB0011
+                list.Add(new Guid(file.Name.Remove(36)), (Npc)new BinaryFormatter().Deserialize(stream));
+#pragma warning restore SYSLIB0011
+
+        return list;
     }
 
     public static void WriteAll()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities;
@@ -7,23 +8,27 @@ namespace CryBits.Server.Persistence.Repositories;
 
 internal static class ClassRepository
 {
-    public static void Read()
+    public static Dictionary<Guid, Class> Read()
     {
-        Class.List = [];
-        var file = Directories.Classes.GetFiles();
+        var files = Directories.Classes.GetFiles();
 
-        // Load classes from disk.
-        if (file.Length > 0)
-            for (byte i = 0; i < file.Length; i++)
-                using (var stream = file[i].OpenRead())
-                    Class.List.Add(new Guid(file[i].Name.Remove(36)), (Class)new BinaryFormatter().Deserialize(stream));
         // Create a default class if none exist.
-        else
+        if (files.Length == 0)
         {
             var @class = new Class();
-            Class.List.Add(@class.Id, @class);
             Write(@class);
+            return new Dictionary<Guid, Class> { { @class.Id, @class } };
         }
+
+        // Load classes from disk.
+        var list = new Dictionary<Guid, Class>();
+        foreach (var file in files)
+            using (var stream = file.OpenRead())
+#pragma warning disable SYSLIB0011
+                list.Add(new Guid(file.Name.Remove(36)), (Class)new BinaryFormatter().Deserialize(stream));
+#pragma warning restore SYSLIB0011
+
+        return list;
     }
 
     public static void Write(Class @class)

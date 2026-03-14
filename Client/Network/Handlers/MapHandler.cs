@@ -37,15 +37,15 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
 
         // Check whether the map data needs to be downloaded
         if (File.Exists(Directories.MapsData.FullName + id + Directories.Format) ||
-            CryBits.Entities.Map.Map.List.ContainsKey(id))
+            Entities.Map.Map.List.ContainsKey(id))
         {
-            if (!CryBits.Entities.Map.Map.List.ContainsKey(id))
+            if (!Entities.Map.Map.List.ContainsKey(id))
             {
-                MapRepository.Read(id);
+                Entities.Map.Map.List.Add(id, MapRepository.Read(id));
                 context.CurrentMap.Data.Update();
             }
 
-            if (CryBits.Entities.Map.Map.List[id].Revision != currentRevision)
+            if (Entities.Map.Map.List[id].Revision != currentRevision)
                 needed = true;
         }
         else

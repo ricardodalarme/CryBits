@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Entities.Map;
@@ -7,23 +8,27 @@ namespace CryBits.Server.Persistence.Repositories;
 
 internal static class MapRepository
 {
-    public static void Read()
+    public static Dictionary<Guid, Map> Read()
     {
         // Load maps from disk.
-        Map.List = [];
-        var file = Directories.Maps.GetFiles();
+        var files = Directories.Maps.GetFiles();
 
-        if (file.Length > 0)
-            for (byte i = 0; i < file.Length; i++)
-                using (var stream = file[i].OpenRead())
-                    Map.List.Add(new Guid(file[i].Name.Remove(36)), (Map)new BinaryFormatter().Deserialize(stream));
         // Create a default map if none exist.
-        else
+        if (files.Length == 0)
         {
             var map = new Map();
-            Map.List.Add(map.Id, map);
             Write(map);
+            return new Dictionary<Guid, Map> { { map.Id, map } };
         }
+
+        var list = new Dictionary<Guid, Map>();
+        foreach (var file in files)
+            using (var stream = file.OpenRead())
+#pragma warning disable SYSLIB0011
+                list.Add(new Guid(file.Name.Remove(36)), (Map)new BinaryFormatter().Deserialize(stream));
+#pragma warning restore SYSLIB0011
+
+        return list;
     }
 
     public static void Write(Map map)

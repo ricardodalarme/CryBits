@@ -8,13 +8,14 @@ namespace CryBits.Client.Framework.Persistence.Repositories;
 public static class TileRepository
 {
     /// <summary>Read all tile metadata from disk.</summary>
-    public static void ReadAll()
+    public static Tile[] ReadAll()
     {
-        Tile.List = new Tile[Textures.Tiles.Count];
-        for (byte i = 1; i < Tile.List.Length; i++) Read(i);
+        var list = new Tile[Textures.Tiles.Count];
+        for (byte i = 1; i < list.Length; i++) list[i] = Read(i);
+        return list;
     }
 
-    private static void Read(byte index)
+    private static Tile Read(byte index)
     {
         var file = new FileInfo(Path.Combine(Directories.Tiles.FullName, index.ToString()) + Directories.Format);
 
@@ -22,29 +23,34 @@ public static class TileRepository
         if (!file.Exists)
         {
             var textureSize = Textures.Tiles[index].ToSize();
-            Tile.List[index] = new Tile(textureSize);
-            Write(index);
-            return;
+            var tile = new Tile(textureSize);
+            Write(index, tile);
+            return tile;
         }
 
         // Read data
         using var stream = file.OpenRead();
 #pragma warning disable SYSLIB0011
-        Tile.List[index] = (Tile)new BinaryFormatter().Deserialize(stream);
+        return (Tile)new BinaryFormatter().Deserialize(stream);
 #pragma warning restore SYSLIB0011
     }
 
     public static void WriteAll()
     {
-        for (byte i = 1; i < Tile.List.Length; i++) Write(i);
+        for (byte i = 1; i < Tile.List.Length; i++) Write(i, Tile.List[i]);
     }
 
     public static void Write(byte index)
     {
+        Write(index, Tile.List[index]);
+    }
+
+    private static void Write(byte index, Tile tile)
+    {
         using var stream = new FileInfo(Path.Combine(Directories.Tiles.FullName, index.ToString()) + Directories.Format)
             .OpenWrite();
 #pragma warning disable SYSLIB0011
-        new BinaryFormatter().Serialize(stream, Tile.List[index]);
+        new BinaryFormatter().Serialize(stream, tile);
 #pragma warning restore SYSLIB0011
     }
 }
