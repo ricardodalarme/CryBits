@@ -1,4 +1,3 @@
-using System;
 using Arch.Core;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Player;

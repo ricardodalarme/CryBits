@@ -11,8 +11,8 @@ using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
 using CryBits.Entities;
 using CryBits.Extensions;
-using Entity = Arch.Core.Entity;
 using CryBits.Packets.Server;
+using Entity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;
 

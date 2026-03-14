@@ -359,7 +359,7 @@ internal partial class EditorMapsWindow : Window
         if (_selected == null) return;
         if (Map.List.Count == 1)
         {
-            MessageBox.Show(@"It must have at least one map registered.");
+            MessageBox.Show("It must have at least one map registered.");
             return;
         }
 
@@ -388,7 +388,7 @@ internal partial class EditorMapsWindow : Window
     {
         foreach (var map in Map.List.Values) ++map.Revision;
         PackageSender.Instance.WriteMaps();
-        MessageBox.Show(@"All maps has been saved");
+        MessageBox.Show("All maps has been saved");
     }
 
     private void butReload_Click(object? sender, RoutedEventArgs e)
@@ -907,7 +907,7 @@ internal partial class EditorMapsWindow : Window
         {
             if (FindLayer(name) >= 0)
             {
-                MessageBox.Show(@"There is already a layer with that name.");
+                MessageBox.Show("There is already a layer with that name.");
                 return;
             }
 
@@ -923,7 +923,7 @@ internal partial class EditorMapsWindow : Window
             if (idx < 0) return;
             if (_selected.Layer[idx].Name != name && FindLayer(name) >= 0)
             {
-                MessageBox.Show(@"There is already a layer with this name.");
+                MessageBox.Show("There is already a layer with this name.");
                 return;
             }
 
@@ -1053,7 +1053,7 @@ internal partial class EditorMapsWindow : Window
         {
             if (Item.List.Count == 0)
             {
-                MessageBox.Show(@"It must have at least one item registered to use this attribute.");
+                MessageBox.Show("It must have at least one item registered to use this attribute.");
                 optA_Block.IsChecked = true;
                 return;
             }

@@ -24,7 +24,7 @@ namespace CryBits.Server.Network;
 /// </summary>
 internal static class PacketDispatcher
 {
-    private static readonly Dictionary<Type, Action<GameSession, IClientPacket>> _handlers = new();
+    private static readonly Dictionary<Type, Action<GameSession, IClientPacket>> _handlers = [];
 
     internal static int Count => _handlers.Count;
 

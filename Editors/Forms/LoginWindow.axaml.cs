@@ -63,13 +63,13 @@ internal partial class LoginWindow : Window
 
         if (!NetworkClient.Instance.TryConnect())
         {
-            MessageBox.Show(@"The server is currently unavailable.");
+            MessageBox.Show("The server is currently unavailable.");
             return;
         }
 
         if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
         {
-            MessageBox.Show(@"Some field is empty.");
+            MessageBox.Show("Some field is empty.");
             return;
         }
 

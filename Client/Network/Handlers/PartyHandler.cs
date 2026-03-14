@@ -1,4 +1,3 @@
-using CryBits.Client.Components.Party;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;

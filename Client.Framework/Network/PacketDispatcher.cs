@@ -13,7 +13,7 @@ namespace CryBits.Client.Framework.Network;
 /// </summary>
 public static class PacketDispatcher
 {
-    private static readonly Dictionary<Type, Action<IServerPacket>> _handlers = new();
+    private static readonly Dictionary<Type, Action<IServerPacket>> _handlers = [];
 
     /// <summary>
     /// Discovers all instance <see cref="PacketHandlerAttribute"/> methods on <paramref name="handler"/>

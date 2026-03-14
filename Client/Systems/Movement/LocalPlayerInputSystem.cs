@@ -1,9 +1,6 @@
 using System;
 using Arch.Core;
 using Arch.System;
-using CryBits.Client.Components.Character;
-using CryBits.Client.Components.Core;
-using CryBits.Client.Components.Map;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;

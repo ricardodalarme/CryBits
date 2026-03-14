@@ -32,7 +32,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
         .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent, ShadowComponent>();
 
     // Reused every frame — avoids per-frame heap allocation from Y-sort.
-    private readonly List<(int Y, Entity Entity)> _drawList = new();
+    private readonly List<(int Y, Entity Entity)> _drawList = [];
 
     public override void Update(in int t)
     {
