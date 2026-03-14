@@ -1,7 +1,5 @@
 using System.Drawing;
-using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
-using SFML.Graphics;
 
 namespace CryBits.Client.Framework.Interfacily;
 
@@ -26,12 +24,5 @@ public static class InterfaceUtils
 
         // Otherwise return false.
         return false;
-    }
-
-    public static short MeasureString(string text)
-    {
-        // Measure text width using SFML Text.
-        var tempText = new Text(Fonts.Default, text) { CharacterSize = 10 };
-        return (short)tempText.GetLocalBounds().Width;
     }
 }

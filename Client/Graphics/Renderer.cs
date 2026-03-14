@@ -5,7 +5,7 @@ using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-using static CryBits.Client.Utils.TextUtils;
+using static CryBits.Client.Framework.Utils.TextUtils;
 using static CryBits.Globals;
 using Color = SFML.Graphics.Color;
 

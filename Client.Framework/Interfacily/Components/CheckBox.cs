@@ -4,6 +4,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Interfaces;
 using static CryBits.Client.Framework.Interfacily.InterfaceUtils;
+using static CryBits.Client.Framework.Utils.TextUtils;
 
 namespace CryBits.Client.Framework.Interfacily.Components;
 

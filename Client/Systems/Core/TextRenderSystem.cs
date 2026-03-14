@@ -2,7 +2,7 @@ using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Graphics;
-using static CryBits.Client.Utils.TextUtils;
+using static CryBits.Client.Framework.Utils.TextUtils;
 
 namespace CryBits.Client.Systems.Core;
 

@@ -1,9 +1,9 @@
 using CryBits.Client.Framework.Graphics;
 using SFML.Graphics;
 
-namespace CryBits.Client.Utils;
+namespace CryBits.Client.Framework.Utils;
 
-internal static class TextUtils
+public static class TextUtils
 {
     public static short MeasureString(string text)
     {
