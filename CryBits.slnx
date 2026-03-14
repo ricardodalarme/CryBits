@@ -1,0 +1,15 @@
+<Solution>
+  <Project Path="Client.Framework/Client.Framework.csproj" />
+  <Project Path="Client/Client.csproj">
+    <BuildDependency Project="Client.Framework/Client.Framework.csproj" />
+    <BuildDependency Project="Core/Core.csproj" />
+  </Project>
+  <Project Path="Core/Core.csproj" />
+  <Project Path="Editors/Editors.csproj">
+    <BuildDependency Project="Client.Framework/Client.Framework.csproj" />
+    <BuildDependency Project="Core/Core.csproj" />
+  </Project>
+  <Project Path="Server/Server.csproj">
+    <BuildDependency Project="Core/Core.csproj" />
+  </Project>
+</Solution>
