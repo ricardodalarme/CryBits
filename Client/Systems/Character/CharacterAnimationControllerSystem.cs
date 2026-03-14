@@ -6,7 +6,7 @@ using CryBits.Client.Components.Movement;
 using CryBits.Enums;
 using static CryBits.Globals;
 
-namespace CryBits.Client.Systems.Movement;
+namespace CryBits.Client.Systems.Character;
 
 /// <summary>
 /// Translates high-level RPG character states into raw animation frames.
@@ -17,18 +17,9 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<AttackComponent, AnimatedSpriteComponent, MovementComponent>();
 
-    private readonly QueryDescription _damageQuery = new QueryDescription().WithAll<DamageComponent>();
-
     public override void Update(in float dt)
     {
         var delta = dt;
-
-        // Tick down hurt cooldown
-        World.Query(in _damageQuery, (Entity entity, ref DamageComponent damage) =>
-        {
-            damage.HurtCountdown -= delta;
-            if (damage.HurtCountdown <= 0f) World.Remove<DamageComponent>(entity);
-        });
 
         World.Query(in _query, (ref AttackComponent state, ref AnimatedSpriteComponent anim, ref MovementComponent movement) =>
         {
