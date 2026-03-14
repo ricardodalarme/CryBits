@@ -1,6 +1,6 @@
 using System;
 
-namespace CryBits.Client.Utils;
+namespace CryBits.Client.UI;
 
 /// <summary>
 /// Cross-platform alert utility to replace System.Windows.Forms.MessageBox.
