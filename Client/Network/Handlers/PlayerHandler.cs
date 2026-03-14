@@ -11,7 +11,7 @@ using CryBits.Extensions;
 using CryBits.Packets.Server;
 using System;
 using static CryBits.Globals;
-using ArchEntity = Arch.Core.Entity;
+using Entity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;
 
@@ -23,25 +23,39 @@ internal class PlayerHandler(GameContext context)
         var name = packet.Name;
         var isLocal = name == context.LocalPlayerName;
 
-        var equipmentItems = new Item?[(byte)Equipment.Count];
-        for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = Item.List.Get(packet.Equipment[n]);
-
         // Destroy old entity if present (re-spawn on map transition).
         var old = context.GetPlayerEntity(name);
-        if (old != ArchEntity.Null) context.World.Destroy(old);
+        if (old != Entity.Null) context.World.Destroy(old);
 
-        var entity = PlayerSpawner.Spawn(
-            context.World,
-            name,
-            packet.TextureNum,
-            packet.Level,
-            packet.Vital,
-            packet.MaxVital,
-            packet.Attribute,
-            equipmentItems,
-            packet.X, packet.Y,
-            (Direction)packet.Direction,
-            isLocal);
+        Entity entity;
+        if (isLocal)
+        {
+            var equipmentItems = new Item?[(byte)Equipment.Count];
+            for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = Item.List.Get(packet.Equipment[n]);
+
+            entity = PlayerSpawner.SpawnLocal(
+                context.World,
+                name,
+                packet.TextureNum,
+                packet.Level,
+                packet.Vital,
+                packet.MaxVital,
+                packet.Attribute,
+                equipmentItems,
+                packet.X, packet.Y,
+                (Direction)packet.Direction);
+        }
+        else
+        {
+            entity = PlayerSpawner.Spawn(
+                context.World,
+                name,
+                packet.TextureNum,
+                packet.Vital,
+                packet.MaxVital,
+                packet.X, packet.Y,
+                (Direction)packet.Direction);
+        }
 
         if (isLocal)
         {
@@ -94,7 +108,7 @@ internal class PlayerHandler(GameContext context)
     internal void PlayerLeave(PlayerLeavePacket packet)
     {
         var entity = context.GetPlayerEntity(packet.Name);
-        if (entity != ArchEntity.Null) context.World.Destroy(entity);
+        if (entity != Entity.Null) context.World.Destroy(entity);
     }
 
     [PacketHandler]

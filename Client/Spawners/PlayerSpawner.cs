@@ -22,7 +22,45 @@ namespace CryBits.Client.Spawners;
 /// </summary>
 internal static class PlayerSpawner
 {
+    /// <summary>
+    /// Spawns a remote player with the components shared by all players.
+    /// </summary>
     public static Entity Spawn(
+        World world,
+        string name,
+        short textureNum,
+        short[] vitals,
+        short[] maxVitals,
+        byte x, byte y,
+        Direction direction)
+    {
+        var texture = Textures.Characters[textureNum];
+        var size = texture.ToSize();
+        var frameWidth = size.Width / Globals.AnimationAmountX;
+        var frameHeight = size.Height / Globals.AnimationAmountY;
+
+        var vitalsComponent = new VitalsComponent();
+        vitals.CopyTo(vitalsComponent.Current, 0);
+        maxVitals.CopyTo(vitalsComponent.Max, 0);
+
+        return world.Create(
+            new NameComponent { Value = name, NameColor = Color.White },
+            new TransformComponent(x * Globals.Grid, y * Globals.Grid),
+            new SpriteComponent(texture),
+            new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
+            new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
+            new CharacterStateComponent { Direction = direction },
+            new DamageTintComponent(),
+            new PlayerTagComponent(),
+            new CollidableComponent(),
+            vitalsComponent
+        );
+    }
+
+    /// <summary>
+    /// Spawns the local player: calls <see cref="Spawn"/> then attaches local-only components.
+    /// </summary>
+    public static Entity SpawnLocal(
         World world,
         string name,
         short textureNum,
@@ -32,19 +70,13 @@ internal static class PlayerSpawner
         short[] attributes,
         Item?[] equipment,
         byte x, byte y,
-        Direction direction,
-        bool isLocalPlayer)
+        Direction direction)
     {
-        var texture = Textures.Characters[textureNum];
-        var size = texture.ToSize();
-        var frameWidth = size.Width / Globals.AnimationAmountX;
-        var frameHeight = size.Height / Globals.AnimationAmountY;
+        var entity = Spawn(world, name, textureNum, vitals, maxVitals, x, y, direction);
 
-        var textColor = isLocalPlayer ? Color.Yellow : Color.White;
-
-        var vitalsComponent = new VitalsComponent();
-        vitals.CopyTo(vitalsComponent.Current, 0);
-        maxVitals.CopyTo(vitalsComponent.Max, 0);
+        // Override name colour for the local player.
+        ref var nameComponent = ref world.Get<NameComponent>(entity);
+        nameComponent.NameColor = Color.Yellow;
 
         var attributesComponent = new AttributesComponent();
         attributes.CopyTo(attributesComponent.Values, 0);
@@ -52,27 +84,19 @@ internal static class PlayerSpawner
         var equipmentComponent = new EquipmentComponent();
         equipment.CopyTo(equipmentComponent.Slots, 0);
 
-        var entity = world.Create(
-            new NameComponent { Value = name, NameColor = textColor },
-            new TransformComponent(x * Globals.Grid, y * Globals.Grid),
-            new SpriteComponent(texture),
-            new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
-            new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
-            new CharacterStateComponent { Direction = direction },
-            new DamageTintComponent(),
-            new PlayerTagComponent(),
-            new CollidableComponent(),
-            vitalsComponent,
+        world.Add(
+            entity,
             attributesComponent,
             equipmentComponent,
             new InventoryComponent(),
             new HotbarComponent(),
             new AppearanceComponent { TextureNum = textureNum },
             new LevelComponent { Level = level },
-            new TradeComponent()
+            new TradeComponent(),
+            new LocalPlayerTagComponent(),
+            new PartyComponent()
         );
 
-        if (isLocalPlayer) world.Add(entity, new LocalPlayerTagComponent(), new PartyComponent());
         return entity;
     }
 }
