@@ -136,29 +136,31 @@ internal sealed class Renderer(InputManager inputManager)
     /// </summary>
     public void DrawText(string text, int x, int y, Color color, int maxWidth, bool cut = true)
     {
-        int messageWidth = MeasureString(text), split = -1;
-
-        if (messageWidth < maxWidth)
+        if (MeasureString(text) < maxWidth)
+        {
             DrawText(text, x, y, color);
-        else
-            for (var i = 0; i < text.Length; i++)
-            {
-                split = text[i] switch
-                {
-                    '-' or '_' or ' ' => i,
-                    _ => split
-                };
+            return;
+        }
 
-                var tempText = text.Substring(0, i);
-                if (MeasureString(tempText) > maxWidth)
-                {
-                    if (cut && split != -1) tempText = text.Substring(0, split + 1);
+        var breakAt = FindBreakIndex(text, maxWidth);
+        if (breakAt <= 0)
+        {
+            DrawText(text, x, y, color);
+            return;
+        }
 
-                    DrawText(tempText, x, y, color);
-                    DrawText(text.Substring(tempText.Length), x, y + 12, color, maxWidth);
-                    return;
+        // Walk back to the last word-boundary so we cut at a natural split point.
+        var cutIndex = breakAt;
+        if (cut)
+            for (var i = breakAt - 1; i > 0; i--)
+                if (text[i] is '-' or '_' or ' ')
+                {
+                    cutIndex = i + 1;
+                    break;
                 }
-            }
+
+        DrawText(text[..cutIndex], x, y, color);
+        DrawText(text[cutIndex..], x, y + 12, color, maxWidth);
     }
 
     /// <summary>
