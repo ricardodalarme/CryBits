@@ -15,24 +15,24 @@ namespace CryBits.Client.Systems.Movement;
 internal sealed class CharacterAnimationControllerSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<AttackComponent, AnimatedSpriteComponent, DamageComponent, MovementComponent>();
+        .WithAll<AttackComponent, AnimatedSpriteComponent, MovementComponent>();
+
+    private readonly QueryDescription _damageQuery = new QueryDescription().WithAll<DamageComponent>();
 
     public override void Update(in float dt)
     {
         var delta = dt;
-        World.Query(in _query, (ref AttackComponent state, ref AnimatedSpriteComponent anim, ref DamageComponent damage, ref MovementComponent movement) =>
-        {
-            // 1. Tick down hurt cooldown
-            if (damage.IsHurt)
-            {
-                damage.HurtCountdown -= delta;
-                if (damage.HurtCountdown <= 0f)
-                {
-                    damage.HurtCountdown = 0f;
-                }
-            }
 
-            // 2. Tick down attack cooldown
+        // Tick down hurt cooldown
+        World.Query(in _damageQuery, (Entity entity, ref DamageComponent damage) =>
+        {
+            damage.HurtCountdown -= delta;
+            if (damage.HurtCountdown <= 0f) World.Remove<DamageComponent>(entity);
+        });
+
+        World.Query(in _query, (ref AttackComponent state, ref AnimatedSpriteComponent anim, ref MovementComponent movement) =>
+        {
+            // Tick down attack cooldown
             if (state.AttackCountdown > 0f)
             {
                 state.AttackCountdown -= delta;
@@ -42,7 +42,7 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
                 }
             }
 
-            // 3. Set the Row based on Direction
+            // Set the Row based on Direction
             anim.CurrentFrameY = movement.Direction switch
             {
                 Direction.Up => MovementUp,
@@ -52,7 +52,7 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
                 _ => 0
             };
 
-            // 4. Set the Column and Playback based on State
+            // Set the Column and Playback based on State
             if (state.IsAttacking && state.AttackCountdown > AttackSpeed / 2000f)
             {
                 anim.Playing = false; // Stop walking animation

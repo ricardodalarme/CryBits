@@ -51,7 +51,6 @@ internal static class PlayerSpawner
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
             new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
             new AttackComponent(),
-            new DamageComponent(),
             new PlayerTagComponent(),
             new CollidableComponent(),
             vitalsComponent

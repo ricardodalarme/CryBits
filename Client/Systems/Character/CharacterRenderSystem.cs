@@ -27,7 +27,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
     /// plus the shadow marker that distinguishes them from other sprite entities.
     /// </summary>
     private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent, DamageComponent, NameComponent>();
+        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent, NameComponent>();
 
     // Reused every frame — avoids per-frame heap allocation from Y-sort.
     private readonly List<(int Y, Entity Entity)> _drawList = [];
@@ -47,11 +47,12 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
             ref var transform = ref World.Get<TransformComponent>(entity);
             ref var sprite = ref World.Get<SpriteComponent>(entity);
             ref var anim = ref World.Get<AnimatedSpriteComponent>(entity);
-            ref var damage = ref World.Get<DamageComponent>(entity);
             ref var name = ref World.Get<NameComponent>(entity);
 
+            var isHurt = World.Has<DamageComponent>(entity);
+
             DrawShadow(ref transform, ref anim);
-            DrawSprite(ref transform, ref sprite, ref anim, ref damage);
+            DrawSprite(ref transform, ref sprite, ref anim, isHurt);
             DrawName(ref transform, ref anim, ref name);
         }
     }
@@ -88,7 +89,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
         ref TransformComponent transform,
         ref SpriteComponent sprite,
         ref AnimatedSpriteComponent anim,
-        ref DamageComponent damage)
+        bool isHurt)
     {
         var source = new Rectangle(
             anim.CurrentFrameX * anim.FrameWidth,
@@ -99,7 +100,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
         var dest = source with { X = transform.X, Y = transform.Y };
 
         // Preserve FadeSystem-driven alpha when applying the damage colour.
-        var tint = damage.IsHurt
+        var tint = isHurt
             ? new Color(205, 125, 125, sprite.Tint.A)
             : sprite.Tint;
 
