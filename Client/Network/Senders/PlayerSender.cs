@@ -1,5 +1,3 @@
-using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.UI.Game.Views;
 using CryBits.Enums;
 using CryBits.Packets.Client;
 using Attribute = CryBits.Enums.Attribute;
@@ -21,21 +19,11 @@ internal class PlayerSender(PacketSender packetSender)
 
     public void DropItem(short slot, short amount) => packetSender.Packet(new DropItemPacket { Slot = slot, Amount = amount });
 
-    public void InventoryChange(short old, short @new)
-    {
+    public void InventoryChange(short old, short @new) =>
         packetSender.Packet(new InventoryChangePacket { OldSlot = old, NewSlot = @new });
 
-        // Close drop panel
-        DropItemView.Panel.Visible = false;
-    }
-
-    public void InventoryUse(byte slot)
-    {
+    public void InventoryUse(byte slot) =>
         packetSender.Packet(new InventoryUsePacket { Slot = slot });
-
-        // Close drop panel
-        DropItemView.Panel.Visible = false;
-    }
 
     public void EquipmentRemove(byte slot) => packetSender.Packet(new EquipmentRemovePacket { Slot = slot });
 
@@ -43,14 +31,5 @@ internal class PlayerSender(PacketSender packetSender)
 
     public void HotbarChange(short old, short @new) => packetSender.Packet(new HotbarChangePacket { OldSlot = old, NewSlot = @new });
 
-    public void HotbarUse(byte slot)
-    {
-        if (TextBox.Focused == null)
-        {
-            packetSender.Packet(new HotbarUsePacket { Slot = slot });
-
-            // Close drop panel
-            DropItemView.Panel.Visible = false;
-        }
-    }
+    public void HotbarUse(byte slot) => packetSender.Packet(new HotbarUsePacket { Slot = slot });
 }
