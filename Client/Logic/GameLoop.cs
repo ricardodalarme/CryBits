@@ -69,7 +69,8 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
             // Present the rendered frame.
             renderPipeline.Present();
 
-            // Dispatch window events.
+            // Clear previous frame's edge state, then dispatch window events to fill it.
+            inputManager.BeginFrame();
             renderer.RenderWindow.DispatchEvents();
 
             UpdateTextBox();

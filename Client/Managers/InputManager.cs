@@ -3,6 +3,7 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using System;
+using System.Collections.Generic;
 
 namespace CryBits.Client.Managers;
 
@@ -23,13 +24,34 @@ public class InputManager
     public event EventHandler<KeyEventArgs>? KeyReleased;
     public event EventHandler<TextEventArgs>? TextEntered;
 
+    // Edge-detection: keys pressed or released during the current frame.
+    private readonly HashSet<Keyboard.Key> _pressedThisFrame = [];
+    private readonly HashSet<Keyboard.Key> _releasedThisFrame = [];
+
+    /// <summary>
+    /// Clears per-frame edge state. Must be called once per frame, before DispatchEvents.
+    /// </summary>
+    public void BeginFrame()
+    {
+        _pressedThisFrame.Clear();
+        _releasedThisFrame.Clear();
+    }
+
     public void BindEvents(RenderWindow window)
     {
         window.MouseButtonPressed += (s, e) => MouseButtonPressed?.Invoke(s, e);
         window.MouseButtonReleased += (s, e) => MouseButtonReleased?.Invoke(s, e);
         window.MouseMoved += (s, e) => MouseMoved?.Invoke(s, e);
-        window.KeyPressed += (s, e) => KeyPressed?.Invoke(s, e);
-        window.KeyReleased += (s, e) => KeyReleased?.Invoke(s, e);
+        window.KeyPressed += (s, e) =>
+        {
+            _pressedThisFrame.Add(e.Code);
+            KeyPressed?.Invoke(s, e);
+        };
+        window.KeyReleased += (s, e) =>
+        {
+            _releasedThisFrame.Add(e.Code);
+            KeyReleased?.Invoke(s, e);
+        };
         window.TextEntered += (s, e) => TextEntered?.Invoke(s, e);
     }
 
@@ -69,6 +91,30 @@ public class InputManager
         if (!IsFocused) return false;
 
         return Mouse.IsButtonPressed(button);
+    }
+
+    /// <summary>
+    /// Returns true if the key was pressed (went down) during the current frame.
+    /// Use for one-shot actions triggered on key press.
+    /// </summary>
+    public bool WasKeyPressed(Keyboard.Key key)
+    {
+        if (!IsFocused) return false;
+        if (TextBox.Focused != null) return false;
+
+        return _pressedThisFrame.Contains(key);
+    }
+
+    /// <summary>
+    /// Returns true if the key was released (went up) during the current frame.
+    /// Use for one-shot actions triggered on key release.
+    /// </summary>
+    public bool WasKeyReleased(Keyboard.Key key)
+    {
+        if (!IsFocused) return false;
+        if (TextBox.Focused != null) return false;
+
+        return _releasedThisFrame.Contains(key);
     }
 
     /// <summary>
