@@ -164,9 +164,8 @@ internal class PlayerHandler(GameContext context)
         var world = context.World;
         ref var victimMovement = ref world.Get<MovementComponent>(victimEntity);
         BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);
-        ref var tint = ref context.World.Get<DamageTintComponent>(victimEntity);
-        tint.IsHurt = true;
-        tint.HurtCountdown = DamageTintComponent.Duration;
+        ref var tint = ref context.World.Get<DamageComponent>(victimEntity);
+        tint.HurtCountdown = DamageComponent.Duration;
     }
 
     [PacketHandler]

@@ -27,7 +27,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
     /// plus the shadow marker that distinguishes them from other sprite entities.
     /// </summary>
     private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent, DamageTintComponent, NameComponent>();
+        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent, DamageComponent, NameComponent>();
 
     // Reused every frame — avoids per-frame heap allocation from Y-sort.
     private readonly List<(int Y, Entity Entity)> _drawList = [];
@@ -47,7 +47,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
             ref var transform = ref World.Get<TransformComponent>(entity);
             ref var sprite = ref World.Get<SpriteComponent>(entity);
             ref var anim = ref World.Get<AnimatedSpriteComponent>(entity);
-            ref var damage = ref World.Get<DamageTintComponent>(entity);
+            ref var damage = ref World.Get<DamageComponent>(entity);
             ref var name = ref World.Get<NameComponent>(entity);
 
             DrawShadow(ref transform, ref anim);
@@ -88,7 +88,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
         ref TransformComponent transform,
         ref SpriteComponent sprite,
         ref AnimatedSpriteComponent anim,
-        ref DamageTintComponent damage)
+        ref DamageComponent damage)
     {
         var source = new Rectangle(
             anim.CurrentFrameX * anim.FrameWidth,

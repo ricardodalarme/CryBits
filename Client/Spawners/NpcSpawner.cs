@@ -41,7 +41,7 @@ internal static class NpcSpawner
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
             new MovementComponent { TileX = x, TileY = y, Direction = direction, SpeedPixelsPerSecond = Globals.WalkSpeedPixelsPerSecond },
             new CharacterStateComponent { Direction = direction },
-            new DamageTintComponent(),
+            new DamageComponent(),
             new NpcTagComponent(),
             new CollidableComponent(),
             vitalsComponent
