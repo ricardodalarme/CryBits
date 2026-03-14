@@ -1,10 +1,8 @@
 using Arch.Core;
 using Arch.System;
-using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
-using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
 using SFML.Window;
@@ -14,7 +12,7 @@ using MovementState = CryBits.Enums.Movement;
 namespace CryBits.Client.Systems.Movement;
 
 /// <summary>
-/// Polls keyboard state to drive local-player movement and attacks.
+/// Polls keyboard state to drive local-player movement.
 /// Runs every frame; uses an internal 30 ms throttle to match the original tick rate.
 /// </summary>
 internal class LocalPlayerInputSystem(World world, GameContext context, InputManager inputManager, PlayerSender playerSender) : BaseSystem<World, float>(world)
@@ -35,7 +33,6 @@ internal class LocalPlayerInputSystem(World world, GameContext context, InputMan
         _inputThrottle = 0f;
 
         CheckMovement(entity);
-        CheckAttack(entity);
     }
 
     private void CheckMovement(Entity entity)
@@ -73,18 +70,5 @@ internal class LocalPlayerInputSystem(World world, GameContext context, InputMan
             case Direction.Right: movement.OffsetX = -Grid; movement.TileX++; break;
             case Direction.Left: movement.OffsetX = Grid; movement.TileX--; break;
         }
-    }
-
-    private void CheckAttack(Entity entity)
-    {
-        if (!inputManager.IsKeyPressed(Keyboard.Key.LControl)) return;
-
-        ref var state = ref World.Get<AttackComponent>(entity);
-        if (state.AttackCountdown > 0f) return;
-        if (TradeView.Panel.Visible) return;
-        if (ShopView.Panel.Visible) return;
-
-        state.AttackCountdown = AttackSpeed / 1000f;
-        playerSender.PlayerAttack();
     }
 }
