@@ -7,6 +7,6 @@ namespace CryBits.Client.Components.Combat;
 /// </summary>
 internal struct VitalsComponent()
 {
-    public short[] Current { get; set; } = new short[(byte)Vital.Count];
-    public short[] Max { get; set; } = new short[(byte)Vital.Count];
+    public short[] Current = new short[(byte)Vital.Count];
+    public short[] Max = new short[(byte)Vital.Count];
 }
