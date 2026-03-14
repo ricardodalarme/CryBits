@@ -10,8 +10,6 @@ public struct ConnectPacket : IClientPacket
     public bool IsClientAccess;
 }
 
-[Serializable] public struct LatencyPacket : IClientPacket;
-
 [Serializable]
 public struct RegisterPacket : IClientPacket
 {

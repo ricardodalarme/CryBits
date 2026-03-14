@@ -20,7 +20,6 @@ internal class NetworkClient
 
     /// <summary>Latest measured round-trip latency in milliseconds.</summary>
     public static int Latency;
-    public static int LatencySend;
 
     public NetworkClient()
     {
@@ -42,6 +41,8 @@ internal class NetworkClient
             GameContext.Instance.Reset();
             Window.OpenMenu();
         };
+
+        _listener.NetworkLatencyUpdateEvent += (_, latency) => Latency = latency;
 
         _device.Start();
     }

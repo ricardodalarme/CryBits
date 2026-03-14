@@ -4,7 +4,6 @@ using System.Threading;
 using Arch.System;
 using CryBits.Client.Graphics;
 using CryBits.Client.Network;
-using CryBits.Client.Network.Senders;
 using CryBits.Client.Systems.Combat;
 using CryBits.Client.Systems.Core;
 using CryBits.Client.Systems.Map;
@@ -75,7 +74,6 @@ internal class GameLoop(RenderPipeline renderPipeline)
             // Update FPS counter.
             if (timer1000 < Environment.TickCount)
             {
-                AuthSender.Instance.Latency();
                 Fps = fps;
                 fps = 0;
                 timer1000 = Environment.TickCount + 1000;
