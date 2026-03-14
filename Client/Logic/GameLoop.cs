@@ -10,7 +10,6 @@ using CryBits.Client.Systems.Movement;
 using CryBits.Client.Worlds;
 using System;
 using System.Diagnostics;
-using System.Threading;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Client.Logic;
@@ -73,10 +72,6 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
             var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
             _stopwatch.Restart();
             _deltaTimeSystems.Update(deltaTime);
-
-            // Yield briefly to avoid busy-wait.
-            Thread.Yield();
-            Thread.Sleep(1);
 
             // Update FPS counter.
             if (timer1000 < Environment.TickCount)
