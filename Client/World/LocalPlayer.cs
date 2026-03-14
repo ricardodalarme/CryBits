@@ -48,8 +48,8 @@ internal class LocalPlayer(World world, Entity entity)
     /// <summary>Convenient accessor for EquipmentComponent.</summary>
     public ref EquipmentComponent GetEquipment() => ref world.Get<EquipmentComponent>(Entity);
 
-    /// <summary>Convenient accessor for AppearanceComponent.</summary>
-    public ref AppearanceComponent GetAppearance() => ref world.Get<AppearanceComponent>(Entity);
+    /// <summary>Convenient accessor for FaceComponent.</summary>
+    public ref FaceComponent GetFaceComponent() => ref world.Get<FaceComponent>(Entity);
 
     /// <summary>Convenient accessor for PartyComponent.</summary>
     public ref PartyComponent GetParty() => ref world.Get<PartyComponent>(Entity);

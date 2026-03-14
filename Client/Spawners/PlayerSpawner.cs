@@ -91,7 +91,7 @@ internal static class PlayerSpawner
             equipmentComponent,
             new InventoryComponent(),
             new HotbarComponent(),
-            new AppearanceComponent { TextureNum = textureNum },
+            new FaceComponent { TextureNum = textureNum },
             new LevelComponent { Level = level },
             new LocalPlayerTagComponent()
         );

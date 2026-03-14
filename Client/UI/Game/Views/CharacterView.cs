@@ -57,7 +57,7 @@ internal class CharacterView(GameContext context, PlayerSender playerSender, Equ
     }
 
     private void OnRenderFace(Point pos) =>
-        characterRenderer.DrawFace(context.LocalPlayer.GetAppearance().TextureNum, pos);
+        characterRenderer.DrawFace(context.LocalPlayer.GetFaceComponent().TextureNum, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
