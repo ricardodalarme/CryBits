@@ -4,7 +4,6 @@ using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Inventory;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Components.Movement;
-using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
@@ -25,32 +24,15 @@ internal sealed class ItemPickupSystem(GameContext context, InputManager inputMa
     private readonly GameContext _context = context;
     private readonly PlayerSender _playerSender = playerSender;
 
-    /// <summary>Set by the key-release event; consumed and cleared in <see cref="Update"/>.</summary>
-    private bool _pickupRequested;
-
     /// <summary>Remaining cooldown in seconds before the next pickup can be sent.</summary>
     private float _cooldown;
-
-    public override void Initialize()
-    {
-        inputManager.KeyReleased += OnKeyReleased;
-    }
-
-    private void OnKeyReleased(object? sender, KeyEventArgs e)
-    {
-        if (e.Code != Keyboard.Key.Space) return;
-        if (TextBox.Focused != null) return;
-
-        _pickupRequested = true;
-    }
 
     public override void Update(in float dt)
     {
         if (_cooldown > 0f)
             _cooldown -= dt;
 
-        if (!_pickupRequested) return;
-        _pickupRequested = false;
+        if (!inputManager.WasKeyReleased(Keyboard.Key.Space)) return;
 
         var entity = _context.LocalPlayer.Entity;
         if (entity == Entity.Null || !World.IsAlive(entity)) return;
@@ -78,10 +60,5 @@ internal sealed class ItemPickupSystem(GameContext context, InputManager inputMa
             _cooldown = ThrottleSecs;
             return;
         }
-    }
-
-    public override void Dispose()
-    {
-        inputManager.KeyReleased -= OnKeyReleased;
     }
 }
