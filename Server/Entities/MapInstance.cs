@@ -22,7 +22,7 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
         // Skip all calculations if no players are on the map
         if (!HasPlayers()) return;
 
-        for (byte j = 0; j < Npc.Length; j++) NpcAiSystem.Tick(Npc[j]);
+        for (byte j = 0; j < Npc.Length; j++) NpcAiSystem.Instance.Tick(Npc[j]);
     }
 
     public NpcInstance HasNpc(byte x, byte y)
@@ -41,7 +41,7 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
         // Return player at the given coordinates if present
         foreach (var session in GameWorld.Current.Sessions)
             if (session.IsPlaying)
-                if ((session.Character!.X, session.Character.Y, Map: session.Character.MapInstance) == (x, y, this))
+                if ((session.Character!.X, session.Character.Y, session.Character.MapInstance) == (x, y, this))
                     return session.Character;
 
         return null;
@@ -105,7 +105,7 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
         for (byte i = 0; i < tempMap.Npc.Length; i++)
         {
             tempMap.Npc[i] = new NpcInstance(i, tempMap, map.Npc[i].Npc);
-            NpcAiSystem.Spawn(tempMap.Npc[i]);
+            NpcAiSystem.Instance.Spawn(tempMap.Npc[i]);
         }
 
         // Spawn map items.

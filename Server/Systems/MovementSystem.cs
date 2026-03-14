@@ -12,19 +12,31 @@ namespace CryBits.Server.Systems;
 /// Request-driven system that owns all player movement: direction changes, tile-by-tile
 /// movement, and map-transition warps.
 /// </summary>
-internal static class MovementSystem
+internal sealed class MovementSystem(
+    PlayerSender playerSender,
+    TradeSystem tradeSystem,
+    ShopSystem shopSystem,
+    NpcSender npcSender,
+    MapSender mapSender)
 {
+    public static MovementSystem Instance { get; } = new(
+        PlayerSender.Instance,
+        TradeSystem.Instance,
+        ShopSystem.Instance,
+        NpcSender.Instance,
+        MapSender.Instance);
+
     /// <summary>
     /// Validates and applies a direction change for <paramref name="player"/>,
     /// broadcasting it to the map. No-ops while the player is loading a new map.
     /// </summary>
-    public static void ChangeDirection(Player player, Direction direction)
+    public void ChangeDirection(Player player, Direction direction)
     {
         if (direction is < Direction.Up or > Direction.Right) return;
         if (player.GettingMap) return;
 
         player.Direction = direction;
-        PlayerSender.PlayerDirection(player);
+        playerSender.PlayerDirection(player);
     }
 
     /// <summary>
@@ -32,7 +44,7 @@ internal static class MovementSystem
     /// Handles map link boundaries, tile blocking, warp tile attributes, and
     /// cancels any active trade or shop session before moving.
     /// </summary>
-    public static void Move(Player player, byte movement)
+    public void Move(Player player, byte movement)
     {
         byte nextX = player.X, nextY = player.Y;
         byte oldX = player.X, oldY = player.Y;
@@ -42,8 +54,8 @@ internal static class MovementSystem
         if (movement is < 1 or > 2) return;
         if (player.GettingMap) return;
 
-        TradeSystem.Leave(player);
-        ShopSystem.Leave(player);
+        tradeSystem.Leave(player);
+        shopSystem.Leave(player);
 
         NextTile(player.Direction, ref nextX, ref nextY);
 
@@ -68,7 +80,7 @@ internal static class MovementSystem
                 }
             else
             {
-                PlayerSender.PlayerPosition(player);
+                playerSender.PlayerPosition(player);
                 return;
             }
         }
@@ -90,9 +102,9 @@ internal static class MovementSystem
         }
 
         if (!secondMovement && (oldX != player.X || oldY != player.Y))
-            PlayerSender.PlayerMove(player, movement);
+            playerSender.PlayerMove(player, movement);
         else
-            PlayerSender.PlayerPosition(player);
+            playerSender.PlayerPosition(player);
     }
 
     /// <summary>
@@ -101,12 +113,12 @@ internal static class MovementSystem
     /// map data refresh when the destination map differs from the current one or
     /// <paramref name="needUpdate"/> is true.
     /// </summary>
-    public static void Warp(Player player, MapInstance mapInstance, byte x, byte y, bool needUpdate = false)
+    public void Warp(Player player, MapInstance mapInstance, byte x, byte y, bool needUpdate = false)
     {
         var oldMap = player.MapInstance;
 
-        TradeSystem.Leave(player);
-        ShopSystem.Leave(player);
+        tradeSystem.Leave(player);
+        shopSystem.Leave(player);
 
         if (mapInstance == null) return;
         if (x >= CryBits.Entities.Map.Map.Width) x = CryBits.Entities.Map.Map.Width - 1;
@@ -118,13 +130,13 @@ internal static class MovementSystem
 
         if (oldMap != mapInstance || needUpdate)
         {
-            PlayerSender.PlayerLeaveMap(player, oldMap);
+            playerSender.PlayerLeaveMap(player, oldMap);
             player.GettingMap = true;
-            MapSender.MapRevision(player, mapInstance.Data);
-            MapSender.MapItems(player, mapInstance);
-            NpcSender.MapNpcs(player, mapInstance);
+            mapSender.MapRevision(player, mapInstance.Data);
+            mapSender.MapItems(player, mapInstance);
+            npcSender.MapNpcs(player, mapInstance);
         }
         else
-            PlayerSender.PlayerPosition(player);
+            playerSender.PlayerPosition(player);
     }
 }

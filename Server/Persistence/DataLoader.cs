@@ -8,21 +8,35 @@ using CryBits.Server.Persistence.Repositories;
 namespace CryBits.Server.Persistence;
 
 /// <summary>Orchestrates loading all game data from disk on server startup.</summary>
-internal static class DataLoader
+internal sealed class DataLoader(
+    SettingsRepository settingsRepository,
+    MapRepository mapRepository,
+    ClassRepository classRepository,
+    NpcRepository npcRepository,
+    ItemRepository itemRepository,
+    ShopRepository shopRepository)
 {
-    public static void LoadAll()
+    public static DataLoader Instance { get; } = new(
+        SettingsRepository.Instance,
+        MapRepository.Instance,
+        ClassRepository.Instance,
+        NpcRepository.Instance,
+        ItemRepository.Instance,
+        ShopRepository.Instance);
+
+    public void LoadAll()
     {
         Console.WriteLine("Loading settings.");
-        SettingsRepository.Read();
+        settingsRepository.Read();
         Console.WriteLine("Loading maps.");
-        Map.List = MapRepository.Read();
+        Map.List = mapRepository.Read();
         Console.WriteLine("Loading classes.");
-        Class.List = ClassRepository.Read();
+        Class.List = classRepository.Read();
         Console.WriteLine("Loading npcs.");
-        Npc.List = NpcRepository.Read();
+        Npc.List = npcRepository.Read();
         Console.WriteLine("Loading items.");
-        Item.List = ItemRepository.Read();
+        Item.List = itemRepository.Read();
         Console.WriteLine("Loading shops.");
-        Shop.List = ShopRepository.Read();
+        Shop.List = shopRepository.Read();
     }
 }

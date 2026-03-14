@@ -4,37 +4,40 @@ using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Server.World;
+
 namespace CryBits.Server.Network.Senders;
 
-internal static class MapSender
+internal sealed class MapSender(PackageSender packageSender)
 {
-    public static void Map(GameSession session, Map map)
+    public static MapSender Instance { get; } = new(PackageSender.Instance);
+
+    public void Map(GameSession session, Map map)
     {
-        PackageSender.ToPlayer(session, new MapPacket { Map = map });
+        packageSender.ToPlayer(session, new MapPacket { Map = map });
     }
 
-    public static void Maps(GameSession session)
+    public void Maps(GameSession session)
     {
-        PackageSender.ToPlayer(session, new MapsPacket { List = CryBits.Entities.Map.Map.List });
+        packageSender.ToPlayer(session, new MapsPacket { List = CryBits.Entities.Map.Map.List });
         foreach (var map in CryBits.Entities.Map.Map.List.Values) Map(session, map);
     }
 
-    public static void MapRevision(Player player, Map map)
+    public void MapRevision(Player player, Map map)
     {
-        PackageSender.ToPlayer(player, new MapRevisionPacket { MapId = map.GetId(), Revision = map.Revision });
+        packageSender.ToPlayer(player, new MapRevisionPacket { MapId = map.GetId(), Revision = map.Revision });
     }
 
-    public static void MapPlayers(Player player)
+    public void MapPlayers(Player player)
     {
         for (var i = 0; i < GameWorld.Current.Sessions.Count; i++)
             if (GameWorld.Current.Sessions[i].IsPlaying)
                 if (player != GameWorld.Current.Sessions[i].Character)
                     if (GameWorld.Current.Sessions[i].Character!.MapInstance == player.MapInstance)
-                        PackageSender.ToPlayer(player, PlayerDataCache(GameWorld.Current.Sessions[i].Character!));
-        PackageSender.ToMap(player.MapInstance, PlayerDataCache(player));
+                        packageSender.ToPlayer(player, PlayerDataCache(GameWorld.Current.Sessions[i].Character!));
+        packageSender.ToMap(player.MapInstance, PlayerDataCache(player));
     }
 
-    public static void MapItems(Player player, MapInstance mapInstance)
+    public void MapItems(Player player, MapInstance mapInstance)
     {
         var packet = new MapItemsPacket { Items = new PacketsMapItem[mapInstance.Item.Count] };
         for (byte i = 0; i < mapInstance.Item.Count; i++)
@@ -47,10 +50,10 @@ internal static class MapSender
             };
         }
 
-        PackageSender.ToPlayer(player, packet);
+        packageSender.ToPlayer(player, packet);
     }
 
-    public static void MapItems(MapInstance mapInstance)
+    public void MapItems(MapInstance mapInstance)
     {
         var packet = new MapItemsPacket { Items = new PacketsMapItem[mapInstance.Item.Count] };
         for (byte i = 0; i < mapInstance.Item.Count; i++)
@@ -63,7 +66,7 @@ internal static class MapSender
             };
         }
 
-        PackageSender.ToMap(mapInstance, packet);
+        packageSender.ToMap(mapInstance, packet);
     }
 
     private static PlayerDataPacket PlayerDataCache(Player player)

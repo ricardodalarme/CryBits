@@ -6,9 +6,11 @@ using CryBits.Entities;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal static class ClassRepository
+internal sealed class ClassRepository
 {
-    public static Dictionary<Guid, Class> Read()
+    public static ClassRepository Instance { get; } = new();
+
+    public Dictionary<Guid, Class> Read()
     {
         var files = Directories.Classes.GetFiles();
 
@@ -31,7 +33,7 @@ internal static class ClassRepository
         return list;
     }
 
-    public static void Write(Class @class)
+    public void Write(Class @class)
     {
         // Write class to disk.
         using var stream =
@@ -42,7 +44,7 @@ internal static class ClassRepository
 #pragma warning restore SYSLIB0011
     }
 
-    public static void WriteAll()
+    public void WriteAll()
     {
         // Write classes to disk.
         foreach (var @class in Class.List.Values)

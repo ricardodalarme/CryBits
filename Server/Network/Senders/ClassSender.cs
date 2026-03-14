@@ -4,10 +4,12 @@ using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class ClassSender
+internal sealed class ClassSender(PackageSender packageSender)
 {
-    public static void Classes(GameSession session)
+    public static ClassSender Instance { get; } = new(PackageSender.Instance);
+
+    public void Classes(GameSession session)
     {
-        PackageSender.ToPlayer(session, new ClassesPacket { List = Class.List });
+        packageSender.ToPlayer(session, new ClassesPacket { List = Class.List });
     }
 }

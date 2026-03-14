@@ -4,10 +4,12 @@ using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class SettingsSender
+internal sealed class SettingsSender(PackageSender packageSender)
 {
-    public static void ServerData(GameSession session)
+    public static SettingsSender Instance { get; } = new(PackageSender.Instance);
+
+    public void ServerData(GameSession session)
     {
-        PackageSender.ToPlayer(session, new ServerDataPacket { Config = Config });
+        packageSender.ToPlayer(session, new ServerDataPacket { Config = Config });
     }
 }

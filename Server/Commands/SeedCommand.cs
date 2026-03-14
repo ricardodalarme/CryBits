@@ -332,11 +332,11 @@ internal sealed class SeedCommand : IConsoleCommand
 
         // ── Persist ──────────────────────────────────────────────────────────
 
-        ItemRepository.WriteAll();
-        NpcRepository.WriteAll();
-        ShopRepository.WriteAll();
-        MapRepository.WriteAll();
-        ClassRepository.WriteAll();
+        ItemRepository.Instance.WriteAll();
+        NpcRepository.Instance.WriteAll();
+        ShopRepository.Instance.WriteAll();
+        MapRepository.Instance.WriteAll();
+        ClassRepository.Instance.WriteAll();
 
         // Rebuild live GameWorld.Maps so the running server uses the new map IDs.
         GameWorld.Current.Maps.Clear();

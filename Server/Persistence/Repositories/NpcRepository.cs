@@ -6,9 +6,11 @@ using CryBits.Entities.Npc;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal static class NpcRepository
+internal sealed class NpcRepository
 {
-    public static Dictionary<Guid, Npc> Read()
+    public static NpcRepository Instance { get; } = new();
+
+    public Dictionary<Guid, Npc> Read()
     {
         // Load NPCs from disk.
         var list = new Dictionary<Guid, Npc>();
@@ -22,7 +24,7 @@ internal static class NpcRepository
         return list;
     }
 
-    public static void WriteAll()
+    public void WriteAll()
     {
         // Write NPCs to disk.
         foreach (var npc in Npc.List.Values)

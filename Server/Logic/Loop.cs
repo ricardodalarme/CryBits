@@ -9,20 +9,28 @@ using CryBits.Server.World;
 
 namespace CryBits.Server.Logic;
 
-internal static class Loop
+internal sealed class Loop(
+    NetworkServer networkServer,
+    MapItemSystem mapItemSystem,
+    RegenerationSystem regenerationSystem)
 {
+    public static Loop Instance { get; } = new(
+        NetworkServer.Instance,
+        MapItemSystem.Instance,
+        RegenerationSystem.Instance);
+
     // Target simulation rate: 20 ticks per second (50ms per tick)
     private const int TicksPerSecond = 20;
 
-    // Measured loops per second.
+    // Measured loops per second (static so CpsCommand can access without Instance).
     public static int Cps;
 
-    // Timing counters.
-    private static long _timer500, _timer1000;
+    // Timing counters (static so RegenerationSystem/MapItemSystem can access without Instance).
+    private long _timer500, _timer1000;
     public static long TimerRegeneration;
     public static long TimerMapItems;
 
-    public static async Task MainAsync(CancellationToken ct)
+    public async Task MainAsync(CancellationToken ct)
     {
         using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(1000 / TicksPerSecond));
         var cps = 0;
@@ -32,7 +40,7 @@ internal static class Loop
             try
             {
                 // Handle incoming network data.
-                NetworkServer.HandleData();
+                networkServer.HandleData();
 
                 var now = Environment.TickCount64;
 
@@ -41,13 +49,13 @@ internal static class Loop
                     // Map logic
                     foreach (var tempMap in GameWorld.Current.Maps.Values)
                     {
-                        MapItemSystem.Tick(tempMap);
+                        mapItemSystem.Tick(tempMap);
                         tempMap.Logic();
                     }
 
                     // Player vital regeneration
                     foreach (var session in GameWorld.Current.Sessions.Where(a => a.IsPlaying))
-                        RegenerationSystem.Tick(session.Character!);
+                        regenerationSystem.Tick(session.Character!);
 
                     // Reset 500 ms timer.
                     _timer500 = now;
@@ -74,7 +82,7 @@ internal static class Loop
         }
     }
 
-    public static void Commands(CancellationToken ct)
+    public void Commands(CancellationToken ct)
     {
         var dispatcher = new CommandDispatcher()
             .Register<CpsCommand>()

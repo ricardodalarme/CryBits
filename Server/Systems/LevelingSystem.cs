@@ -10,17 +10,19 @@ namespace CryBits.Server.Systems;
 /// Request-driven system that manages player experience, leveling, and party XP distribution.
 /// Also owns party-leave logic, keeping Player.cs free of party network calls.
 /// </summary>
-internal static class LevelingSystem
+internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSender)
 {
+    public static LevelingSystem Instance { get; } = new(PlayerSender.Instance, MapSender.Instance);
+
     /// <summary>Spends one attribute point for <paramref name="player"/> on the given attribute.</summary>
-    internal static void AddPoint(Player player, byte attributeNum)
+    internal void AddPoint(Player player, byte attributeNum)
     {
         if (player.Points <= 0) return;
 
         player.Attribute[attributeNum]++;
         player.Points--;
-        PlayerSender.PlayerExperience(player);
-        MapSender.MapPlayers(player);
+        playerSender.PlayerExperience(player);
+        mapSender.MapPlayers(player);
     }
 
     /// <summary>
@@ -28,7 +30,7 @@ internal static class LevelingSystem
     /// If the player is in a party the XP is split across all members weighted by level
     /// difference; otherwise it is awarded directly.
     /// </summary>
-    public static void GiveExperience(Player player, int value)
+    public void GiveExperience(Player player, int value)
     {
         if (player.Party.Count > 0 && value > 0)
             PartySplitXp(player, value);
@@ -44,7 +46,7 @@ internal static class LevelingSystem
     /// Checks whether the player has enough XP to level up (loops to handle multiple levels at once).
     /// Sends updated experience and, on level-up, refreshes the map player list.
     /// </summary>
-    private static void CheckLevelUp(Player player)
+    private void CheckLevelUp(Player player)
     {
         byte numLevel = 0;
 
@@ -58,8 +60,8 @@ internal static class LevelingSystem
             player.Experience = expRest;
         }
 
-        PlayerSender.PlayerExperience(player);
-        if (numLevel > 0) MapSender.MapPlayers(player);
+        playerSender.PlayerExperience(player);
+        if (numLevel > 0) mapSender.MapPlayers(player);
     }
 
     /// <summary>
@@ -67,7 +69,7 @@ internal static class LevelingSystem
     /// weight so that large level gaps reduce the share a member receives. The remaining XP
     /// after distributing to members is awarded to <paramref name="player"/> directly.
     /// </summary>
-    private static void PartySplitXp(Player player, int value)
+    private void PartySplitXp(Player player, int value)
     {
         var diff = new double[player.Party.Count];
         double diffSum = 0;
@@ -90,12 +92,12 @@ internal static class LevelingSystem
             experienceSum += givenExperience;
 
             GiveExperience(player.Party[i], givenExperience);
-            PlayerSender.PlayerExperience(player.Party[i]);
+            playerSender.PlayerExperience(player.Party[i]);
         }
 
         // Award the remainder to the triggering player.
         player.Experience += value - experienceSum;
         CheckLevelUp(player);
-        PlayerSender.PlayerExperience(player);
+        playerSender.PlayerExperience(player);
     }
 }

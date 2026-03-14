@@ -4,9 +4,11 @@ using CryBits.Server.World;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal static class AccountRepository
+internal sealed class AccountRepository
 {
-    public static void Read(GameSession session, string name)
+    public static AccountRepository Instance { get; } = new();
+
+    public void Read(GameSession session, string name)
     {
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, name, "Data") + Directories.Format);
 
@@ -16,7 +18,7 @@ internal static class AccountRepository
         session.AccessLevel = (Access)data.ReadByte();
     }
 
-    public static void ReadCharacters(GameSession session)
+    public void ReadCharacters(GameSession session)
     {
         var directory = new DirectoryInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Characters"));
 
@@ -33,7 +35,7 @@ internal static class AccountRepository
                 });
     }
 
-    public static void Write(GameSession session)
+    public void Write(GameSession session)
     {
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Data") + Directories.Format);
 

@@ -6,9 +6,11 @@ using CryBits.Entities;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal static class ItemRepository
+internal sealed class ItemRepository
 {
-    public static Dictionary<Guid, Item> Read()
+    public static ItemRepository Instance { get; } = new();
+
+    public Dictionary<Guid, Item> Read()
     {
         // Load items from disk.
         var list = new Dictionary<Guid, Item>();
@@ -23,7 +25,7 @@ internal static class ItemRepository
         return list;
     }
 
-    public static void WriteAll()
+    public void WriteAll()
     {
         // Write items to disk.
         foreach (var item in Item.List.Values)

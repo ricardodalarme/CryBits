@@ -6,15 +6,17 @@ using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class ShopSender
+internal sealed class ShopSender(PackageSender packageSender)
 {
-    public static void Shops(GameSession session)
+    public static ShopSender Instance { get; } = new(PackageSender.Instance);
+
+    public void Shops(GameSession session)
     {
-        PackageSender.ToPlayer(session, new ShopsPacket { List = Shop.List });
+        packageSender.ToPlayer(session, new ShopsPacket { List = Shop.List });
     }
 
-    public static void ShopOpen(Player player, Shop shop)
+    public void ShopOpen(Player player, Shop shop)
     {
-        PackageSender.ToPlayer(player, new ShopOpenPacket { Id = shop.GetId() });
+        packageSender.ToPlayer(player, new ShopOpenPacket { Id = shop.GetId() });
     }
 }

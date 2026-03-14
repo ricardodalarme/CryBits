@@ -11,10 +11,22 @@ using static CryBits.Utils.RandomUtils;
 namespace CryBits.Server.Systems;
 
 /// <summary>Tick-driven system that runs NPC spawn, targeting, movement and delegates combat.</summary>
-internal static class NpcAiSystem
+internal sealed class NpcAiSystem(
+    CombatSystem combatSystem,
+    NpcSender npcSender,
+    ChatSender chatSender,
+    RegenerationSystem regenerationSystem,
+    NetworkServer networkServer)
 {
+    public static NpcAiSystem Instance { get; } = new(
+        CombatSystem.Instance,
+        NpcSender.Instance,
+        ChatSender.Instance,
+        RegenerationSystem.Instance,
+        NetworkServer.Instance);
+
     /// <summary>Runs one AI tick for <paramref name="npcInstance"/>: spawn check, regen, targeting, movement, attack.</summary>
-    internal static void Tick(NpcInstance npcInstance)
+    internal void Tick(NpcInstance npcInstance)
     {
         if (!npcInstance.Alive)
         {
@@ -22,7 +34,7 @@ internal static class NpcAiSystem
             return;
         }
 
-        RegenerationSystem.Tick(npcInstance);
+        regenerationSystem.Tick(npcInstance);
 
         byte targetX = 0, targetY = 0;
         var canMove = new bool[(byte)Direction.Count];
@@ -47,7 +59,7 @@ internal static class NpcAiSystem
                     {
                         npcInstance.Target = session.Character;
                         if (!string.IsNullOrEmpty(npcInstance.Data.SayMsg))
-                            ChatSender.Message(session.Character, npcInstance.Data.Name + ": " + npcInstance.Data.SayMsg, Color.White);
+                            chatSender.Message(session.Character, npcInstance.Data.Name + ": " + npcInstance.Data.SayMsg, Color.White);
                         break;
                     }
                 }
@@ -147,15 +159,15 @@ internal static class NpcAiSystem
                 else if (npcInstance.Data.Movement == MovementStyle.TurnRandomly)
                 {
                     npcInstance.Direction = (Direction)MyRandom.Next(0, 4);
-                    NpcSender.MapNpcDirection(npcInstance);
+                    npcSender.MapNpcDirection(npcInstance);
                 }
             }
 
-        CombatSystem.Attack(npcInstance);
+        combatSystem.Attack(npcInstance);
     }
 
     /// <summary>Attempts to spawn <paramref name="npcInstance"/> at its configured or a random location.</summary>
-    internal static void Spawn(NpcInstance npcInstance)
+    internal void Spawn(NpcInstance npcInstance)
     {
         if (npcInstance.MapInstance.Data.Npc[npcInstance.Index].Spawn)
         {
@@ -194,22 +206,22 @@ internal static class NpcAiSystem
                 }
     }
 
-    private static void SpawnAt(NpcInstance npcInstance, byte x, byte y, Direction direction = 0)
+    private void SpawnAt(NpcInstance npcInstance, byte x, byte y, Direction direction = 0)
     {
         npcInstance.Alive = true;
         npcInstance.X = x;
         npcInstance.Y = y;
         npcInstance.Direction = direction;
         for (byte i = 0; i < (byte)Vital.Count; i++) npcInstance.Vital[i] = npcInstance.Data.Vital[i];
-        if (NetworkServer.Device != null) NpcSender.MapNpc(npcInstance.MapInstance.Npc[npcInstance.Index]);
+        if (networkServer.Device != null) npcSender.MapNpc(npcInstance.MapInstance.Npc[npcInstance.Index]);
     }
 
-    private static bool Move(NpcInstance npcInstance, Direction direction, byte movement = 1, bool checkZone = false)
+    private bool Move(NpcInstance npcInstance, Direction direction, byte movement = 1, bool checkZone = false)
     {
         byte nextX = npcInstance.X, nextY = npcInstance.Y;
 
         npcInstance.Direction = direction;
-        NpcSender.MapNpcDirection(npcInstance);
+        npcSender.MapNpcDirection(npcInstance);
         NextTile(direction, ref nextX, ref nextY);
 
         if (CryBits.Entities.Map.Map.OutLimit(nextX, nextY)) return false;
@@ -218,7 +230,7 @@ internal static class NpcAiSystem
 
         npcInstance.X = nextX;
         npcInstance.Y = nextY;
-        NpcSender.MapNpcMovement(npcInstance, movement);
+        npcSender.MapNpcMovement(npcInstance, movement);
         return true;
     }
 }

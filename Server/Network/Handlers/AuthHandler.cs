@@ -4,17 +4,19 @@ using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Handlers;
 
-internal static class AuthHandler
+internal sealed class AuthHandler(AuthSystem authSystem)
 {
+    public static AuthHandler Instance { get; } = new(AuthSystem.Instance);
+
     [PacketHandler]
-    internal static void Connect(GameSession session, ConnectPacket packet)
+    internal void Connect(GameSession session, ConnectPacket packet)
     {
-        AuthSystem.Connect(session, packet);
+        authSystem.Connect(session, packet);
     }
 
     [PacketHandler]
-    internal static void Register(GameSession session, RegisterPacket packet)
+    internal void Register(GameSession session, RegisterPacket packet)
     {
-        AuthSystem.Register(session, packet);
+        authSystem.Register(session, packet);
     }
 }

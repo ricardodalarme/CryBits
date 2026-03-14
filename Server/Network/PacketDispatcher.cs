@@ -16,8 +16,8 @@ namespace CryBits.Server.Network;
 /// <see cref="PacketHandlerAttribute"/>.
 ///
 /// The packet type is inferred from the IClientPacket parameter of each handler:
-///   void Method(Account account, TPacket packet)
-///   void Method(Player  player,  TPacket packet)
+///   void Method(GameSession session, TPacket packet)
+///   void Method(Player      player,  TPacket packet)
 ///
 /// On receive, BinaryFormatter already embeds full type info, so
 /// packet.GetType() is used as the lookup key — no byte prefix needed.
@@ -26,11 +26,17 @@ internal static class PacketDispatcher
 {
     private static readonly Dictionary<Type, Action<GameSession, IClientPacket>> _handlers = new();
 
-    internal static void Register()
+    internal static int Count => _handlers.Count;
+
+    /// <summary>
+    /// Discovers all instance <see cref="PacketHandlerAttribute"/> methods on <paramref name="handler"/>
+    /// and registers a bound delegate for each.  The instance is captured so that dependencies
+    /// injected via the constructor are available when the handler is invoked.
+    /// </summary>
+    internal static void Register(object handler)
     {
-        var methods = Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
+        var methods = handler.GetType()
+            .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
             .Where(m => m.GetCustomAttribute<PacketHandlerAttribute>() is not null);
 
         foreach (var method in methods)
@@ -48,10 +54,8 @@ internal static class PacketDispatcher
                     $"Duplicate [PacketHandler] for '{packetType.Name}' " +
                     $"on '{method.DeclaringType?.Name}.{method.Name}'.");
 
-            _handlers[packetType] = BuildHandler(method);
+            _handlers[packetType] = BuildInstanceHandler(method, handler);
         }
-
-        Console.WriteLine($"PacketDispatcher: {_handlers.Count} handlers registered.");
     }
 
     internal static void Dispatch(GameSession session, NetPacketReader data)
@@ -62,10 +66,11 @@ internal static class PacketDispatcher
             handler(session, packet);
     }
 
-    private static Action<GameSession, IClientPacket> BuildHandler(MethodInfo method)
+    private static Action<GameSession, IClientPacket> BuildInstanceHandler(MethodInfo method, object instance)
     {
-        var accountParam = Expression.Parameter(typeof(GameSession), "session");
+        var sessionParam = Expression.Parameter(typeof(GameSession), "session");
         var packetParam = Expression.Parameter(typeof(IClientPacket), "packet");
+        var instanceExpr = Expression.Constant(instance);
 
         var methodParams = method.GetParameters();
         var firstParamType = methodParams[0].ParameterType;
@@ -73,20 +78,20 @@ internal static class PacketDispatcher
         // GameSession-based handler
         if (firstParamType == typeof(GameSession))
         {
-            var call = Expression.Call(method, accountParam,
+            var call = Expression.Call(instanceExpr, method, sessionParam,
                 Expression.Convert(packetParam, methodParams[1].ParameterType));
 
             return Expression.Lambda<Action<GameSession, IClientPacket>>(
-                call, accountParam, packetParam).Compile();
+                call, sessionParam, packetParam).Compile();
         }
 
         // Player-based handler (null-guarded)
         var playerVar = Expression.Variable(typeof(Player), "player");
         var assign = Expression.Assign(
             playerVar,
-            Expression.Property(accountParam, nameof(GameSession.Character)));
+            Expression.Property(sessionParam, nameof(GameSession.Character)));
 
-        var callExpr = Expression.Call(method, playerVar,
+        var callExpr = Expression.Call(instanceExpr, method, playerVar,
             Expression.Convert(packetParam, methodParams[1].ParameterType));
 
         var body = Expression.Block(
@@ -97,6 +102,6 @@ internal static class PacketDispatcher
                 callExpr));
 
         return Expression.Lambda<Action<GameSession, IClientPacket>>(
-            body, accountParam, packetParam).Compile();
+            body, sessionParam, packetParam).Compile();
     }
 }

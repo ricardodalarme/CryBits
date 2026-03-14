@@ -4,26 +4,28 @@ using CryBits.Server.Entities;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class ChatSender
+internal sealed class ChatSender(PackageSender packageSender)
 {
-    public static void Message(Player player, string text, Color color)
+    public static ChatSender Instance { get; } = new(PackageSender.Instance);
+
+    public void Message(Player player, string text, Color color)
     {
-        PackageSender.ToPlayer(player, new MessagePacket { Text = text, ColorArgb = color.ToArgb() });
+        packageSender.ToPlayer(player, new MessagePacket { Text = text, ColorArgb = color.ToArgb() });
     }
 
-    public static void MessageMap(Player player, string text)
+    public void MessageMap(Player player, string text)
     {
         var message = "[Map] " + player.Name + ": " + text;
-        PackageSender.ToMap(player.MapInstance, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
+        packageSender.ToMap(player.MapInstance, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
     }
 
-    public static void MessageGlobal(Player player, string text)
+    public void MessageGlobal(Player player, string text)
     {
         var message = "[Global] " + player.Name + ": " + text;
-        PackageSender.ToAll(new MessagePacket { Text = message, ColorArgb = Color.Yellow.ToArgb() });
+        packageSender.ToAll(new MessagePacket { Text = message, ColorArgb = Color.Yellow.ToArgb() });
     }
 
-    public static void MessagePrivate(Player player, string addresseeName, string text)
+    public void MessagePrivate(Player player, string addresseeName, string text)
     {
         var addressee = Player.Find(addresseeName);
 

@@ -3,9 +3,11 @@ using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class AccountSender
+internal sealed class AccountSender(PackageSender packageSender)
 {
-    public static void Characters(GameSession session)
+    public static AccountSender Instance { get; } = new(PackageSender.Instance);
+
+    public void Characters(GameSession session)
     {
         var packet = new CharactersPacket
         {
@@ -21,11 +23,11 @@ internal static class AccountSender
             };
         }
 
-        PackageSender.ToPlayer(session, packet);
+        packageSender.ToPlayer(session, packet);
     }
 
-    public static void CreateCharacter(GameSession session)
+    public void CreateCharacter(GameSession session)
     {
-        PackageSender.ToPlayer(session, new CreateCharacterPacket());
+        packageSender.ToPlayer(session, new CreateCharacterPacket());
     }
 }

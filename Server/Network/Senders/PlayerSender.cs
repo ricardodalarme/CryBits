@@ -6,36 +6,38 @@ using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Senders;
 
-internal static class PlayerSender
+internal sealed class PlayerSender(PackageSender packageSender)
 {
-    public static void Join(Player player)
+    public static PlayerSender Instance { get; } = new(PackageSender.Instance);
+
+    public void Join(Player player)
     {
-        PackageSender.ToPlayer(player, new JoinPacket { Name = player.Name });
+        packageSender.ToPlayer(player, new JoinPacket { Name = player.Name });
     }
 
-    public static void JoinGame(Player player)
+    public void JoinGame(Player player)
     {
-        PackageSender.ToPlayer(player, new JoinGamePacket());
+        packageSender.ToPlayer(player, new JoinGamePacket());
     }
 
-    public static void JoinMap(Player player)
+    public void JoinMap(Player player)
     {
-        PackageSender.ToPlayer(player, new JoinMapPacket());
+        packageSender.ToPlayer(player, new JoinMapPacket());
     }
 
-    public static void PlayerLeaveMap(Player player, MapInstance mapInstance)
+    public void PlayerLeaveMap(Player player, MapInstance mapInstance)
     {
-        PackageSender.ToMapBut(mapInstance, player, new PlayerLeavePacket { Name = player.Name });
+        packageSender.ToMapBut(mapInstance, player, new PlayerLeavePacket { Name = player.Name });
     }
 
-    public static void PlayerPosition(Player player)
+    public void PlayerPosition(Player player)
     {
-        PackageSender.ToMap(player.MapInstance,
+        packageSender.ToMap(player.MapInstance,
             new PlayerPositionPacket
             { Name = player.Name, X = player.X, Y = player.Y, Direction = (byte)player.Direction });
     }
 
-    public static void PlayerVitals(Player player)
+    public void PlayerVitals(Player player)
     {
         var packet = new PlayerVitalsPacket
         { Name = player.Name, Vital = new short[(byte)Vital.Count], MaxVital = new short[(byte)Vital.Count] };
@@ -45,21 +47,21 @@ internal static class PlayerSender
             packet.MaxVital[i] = player.MaxVital(i);
         }
 
-        PackageSender.ToMap(player.MapInstance, packet);
+        packageSender.ToMap(player.MapInstance, packet);
     }
 
-    public static void PlayerLeave(Player player)
+    public void PlayerLeave(Player player)
     {
-        PackageSender.ToAllBut(player, new PlayerLeavePacket { Name = player.Name });
+        packageSender.ToAllBut(player, new PlayerLeavePacket { Name = player.Name });
     }
 
-    public static void PlayerMove(Player player, byte movement)
+    public void PlayerMove(Player player, byte movement)
     {
         var speed = movement == (byte)Movement.Moving
             ? RunSpeedPixelsPerSecond
             : WalkSpeedPixelsPerSecond;
 
-        PackageSender.ToMapBut(player.MapInstance, player,
+        packageSender.ToMapBut(player.MapInstance, player,
             new PlayerMovePacket
             {
                 Name = player.Name,
@@ -71,34 +73,34 @@ internal static class PlayerSender
             });
     }
 
-    public static void PlayerDirection(Player player)
+    public void PlayerDirection(Player player)
     {
-        PackageSender.ToMapBut(player.MapInstance, player,
+        packageSender.ToMapBut(player.MapInstance, player,
             new PlayerDirectionPacket { Name = player.Name, Direction = (byte)player.Direction });
     }
 
-    public static void PlayerExperience(Player player)
+    public void PlayerExperience(Player player)
     {
-        PackageSender.ToPlayer(player,
+        packageSender.ToPlayer(player,
             new PlayerExperiencePacket
             { Experience = player.Experience, ExpNeeded = player.ExpNeeded, Points = player.Points });
     }
 
-    public static void PlayerAttack(Player player, string victim = "", Target victimType = 0)
+    public void PlayerAttack(Player player, string victim = "", Target victimType = 0)
     {
-        PackageSender.ToMap(player.MapInstance,
+        packageSender.ToMap(player.MapInstance,
             new PlayerAttackPacket { Name = player.Name, Victim = victim, VictimType = (byte)victimType });
     }
 
-    public static void PlayerEquipments(Player player)
+    public void PlayerEquipments(Player player)
     {
         var packet = new PlayerEquipmentsPacket
         { Name = player.Name, Equipments = new System.Guid[(byte)Equipment.Count] };
         for (byte i = 0; i < (byte)Equipment.Count; i++) packet.Equipments[i] = player.Equipment[i].GetId();
-        PackageSender.ToMap(player.MapInstance, packet);
+        packageSender.ToMap(player.MapInstance, packet);
     }
 
-    public static void PlayerInventory(Player player)
+    public void PlayerInventory(Player player)
     {
         var packet = new PlayerInventoryPacket
         { ItemIds = new System.Guid[MaxInventory], Amounts = new short[MaxInventory] };
@@ -108,10 +110,10 @@ internal static class PlayerSender
             packet.Amounts[i] = player.Inventory[i].Amount;
         }
 
-        PackageSender.ToPlayer(player, packet);
+        packageSender.ToPlayer(player, packet);
     }
 
-    public static void PlayerHotbar(Player player)
+    public void PlayerHotbar(Player player)
     {
         var packet = new PlayerHotbarPacket { Types = new byte[MaxHotbar], Slots = new byte[MaxHotbar] };
         for (byte i = 0; i < MaxHotbar; i++)
@@ -120,6 +122,6 @@ internal static class PlayerSender
             packet.Slots[i] = (byte)player.Hotbar[i].Slot;
         }
 
-        PackageSender.ToPlayer(player, packet);
+        packageSender.ToPlayer(player, packet);
     }
 }

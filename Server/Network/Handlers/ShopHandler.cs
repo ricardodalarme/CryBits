@@ -4,23 +4,25 @@ using CryBits.Server.Systems;
 
 namespace CryBits.Server.Network.Handlers;
 
-internal static class ShopHandler
+internal sealed class ShopHandler(ShopSystem shopSystem)
 {
+    public static ShopHandler Instance { get; } = new(ShopSystem.Instance);
+
     [PacketHandler]
-    internal static void ShopBuy(Player player, ShopBuyPacket packet)
+    internal void ShopBuy(Player player, ShopBuyPacket packet)
     {
-        ShopSystem.Buy(player, packet.Slot);
+        shopSystem.Buy(player, packet.Slot);
     }
 
     [PacketHandler]
-    internal static void ShopSell(Player player, ShopSellPacket packet)
+    internal void ShopSell(Player player, ShopSellPacket packet)
     {
-        ShopSystem.Sell(player, (byte)packet.Slot, packet.Amount);
+        shopSystem.Sell(player, (byte)packet.Slot, packet.Amount);
     }
 
     [PacketHandler]
-    internal static void ShopClose(Player player, ShopClosePacket _)
+    internal void ShopClose(Player player, ShopClosePacket _)
     {
-        ShopSystem.Leave(player);
+        shopSystem.Leave(player);
     }
 }

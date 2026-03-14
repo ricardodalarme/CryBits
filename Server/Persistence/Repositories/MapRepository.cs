@@ -6,9 +6,11 @@ using CryBits.Entities.Map;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal static class MapRepository
+internal sealed class MapRepository
 {
-    public static Dictionary<Guid, Map> Read()
+    public static MapRepository Instance { get; } = new();
+
+    public Dictionary<Guid, Map> Read()
     {
         // Load maps from disk.
         var files = Directories.Maps.GetFiles();
@@ -31,7 +33,7 @@ internal static class MapRepository
         return list;
     }
 
-    public static void Write(Map map)
+    public void Write(Map map)
     {
         // Write map to disk.
         using var stream = new FileInfo(Path.Combine(Directories.Maps.FullName, map.Id.ToString()) + Directories.Format)
@@ -41,7 +43,7 @@ internal static class MapRepository
 #pragma warning restore SYSLIB0011
     }
 
-    public static void WriteAll()
+    public void WriteAll()
     {
         // Write maps to disk.
         foreach (var map in Map.List.Values)

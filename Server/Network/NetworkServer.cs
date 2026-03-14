@@ -5,17 +5,18 @@ using static CryBits.Globals;
 
 namespace CryBits.Server.Network;
 
-internal static class NetworkServer
+internal sealed class NetworkServer(CharacterSystem characterSystem)
 {
-    public static NetManager Device;
-    private static EventBasedNetListener _listener;
+    public static NetworkServer Instance { get; } = new(CharacterSystem.Instance);
 
-    public static void Init()
+    public NetManager Device { get; private set; }
+
+    public void Init()
     {
-        _listener = new EventBasedNetListener();
-        Device = new NetManager(_listener);
+        var listener = new EventBasedNetListener();
+        Device = new NetManager(listener);
 
-        _listener.ConnectionRequestEvent += request =>
+        listener.ConnectionRequestEvent += request =>
         {
             if (Device.ConnectedPeersCount < Config.MaxPlayers)
                 request.AcceptIfKey(Config.GameName);
@@ -23,17 +24,17 @@ internal static class NetworkServer
                 request.Reject();
         };
 
-        _listener.PeerConnectedEvent += peer => { GameWorld.Current.Sessions.Add(new GameSession(peer)); };
+        listener.PeerConnectedEvent += peer => { GameWorld.Current.Sessions.Add(new GameSession(peer)); };
 
-        _listener.PeerDisconnectedEvent += (peer, _) =>
+        listener.PeerDisconnectedEvent += (peer, _) =>
         {
             var session = GameWorld.Current.Sessions.Find(x => x.Connection == peer);
             if (session == null) return;
-            if (session.Character != null) CharacterSystem.Leave(session.Character);
+            if (session.Character != null) characterSystem.Leave(session.Character);
             GameWorld.Current.Sessions.Remove(session);
         };
 
-        _listener.NetworkReceiveEvent += (peer, reader, _, _) =>
+        listener.NetworkReceiveEvent += (peer, reader, _, _) =>
         {
             var session = GameWorld.Current.Sessions.Find(x => x.Connection == peer);
             PacketDispatcher.Dispatch(session, reader);
@@ -43,5 +44,5 @@ internal static class NetworkServer
         Device.Start(Config.Port);
     }
 
-    public static void HandleData() => Device.PollEvents();
+    public void HandleData() => Device.PollEvents();
 }
