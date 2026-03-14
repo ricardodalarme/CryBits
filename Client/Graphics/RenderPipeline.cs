@@ -43,11 +43,11 @@ internal sealed class RenderPipeline(
         new CharacterRenderSystem(context.World, renderer)
     );
 
-    // Fringe-layer render systems: scrolling fog drawn after the
-    // foreground tile pass so they sit above all world geometry.
+    // Fringe-layer render systems: fog overlay drawn after the
+    // foreground tile pass so it sits above all world geometry.
     private readonly Group<int> _fringeRenderSystems = new(
         "FringeRenderSystems",
-        new ScrollingOverlayRenderSystem(context.World, renderer)
+        new FogRenderSystem(context.World, renderer)
     );
 
     // Weather render systems: particle batch + lightning overlay, drawn after fringe tiles.

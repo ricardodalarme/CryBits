@@ -36,7 +36,7 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
     private readonly Group<float> _deltaTimeSystems = new(
         "DeltaTimeSystems",
         new FadeSystem(context.World),
-        new ScrollingSpriteSystem(context.World),
+        new FogSystem(context.World),
         new WeatherSimulationSystem(context.World, context, audioManager),
         new LocalPlayerInputSystem(context.World, context, inputManager, playerSender),
         new MovementSystem(context.World),
