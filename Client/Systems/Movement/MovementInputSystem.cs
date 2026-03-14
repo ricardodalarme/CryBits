@@ -15,7 +15,7 @@ namespace CryBits.Client.Systems.Movement;
 /// Polls keyboard state to drive local-player movement.
 /// Runs every frame; uses an internal 30 ms throttle to match the original tick rate.
 /// </summary>
-internal class LocalPlayerInputSystem(World world, GameContext context, InputManager inputManager, PlayerSender playerSender) : BaseSystem<World, float>(world)
+internal class MovementInputSystem(World world, GameContext context, InputManager inputManager, PlayerSender playerSender) : BaseSystem<World, float>(world)
 {
     /// <summary>Minimum seconds between input polls — ~33 Hz.</summary>
     private const float ThrottleInterval = 0.030f;
@@ -24,13 +24,17 @@ internal class LocalPlayerInputSystem(World world, GameContext context, InputMan
 
     public override void Update(in float t)
     {
-        var entity = context.LocalPlayer.Entity;
+        var localPlayer = context.LocalPlayer;
+        if (localPlayer is null) return;
+
+        var entity = localPlayer.Entity;
         if (entity == Entity.Null || !World.IsAlive(entity)) return;
 
-        // Throttle movement + attack to ~33 Hz (matches legacy Me.Logic timer)
+        // Throttle movement to ~33 Hz (matches legacy Me.Logic timer).
+        // Subtract instead of reset to preserve any accumulated overflow.
         _inputThrottle += t;
         if (_inputThrottle < ThrottleInterval) return;
-        _inputThrottle = 0f;
+        _inputThrottle -= ThrottleInterval;
 
         CheckMovement(entity);
     }

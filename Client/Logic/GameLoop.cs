@@ -40,7 +40,7 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
         new FadeSystem(context.World),
         new FogSystem(context.World),
         new WeatherSimulationSystem(context.World, context, audioManager),
-        new LocalPlayerInputSystem(context.World, context, inputManager, playerSender),
+        new MovementInputSystem(context.World, context, inputManager, playerSender),
         new ItemPickupSystem(context, inputManager, playerSender),
         new MovementSystem(context.World),
         new CharacterAnimationControllerSystem(context.World),
