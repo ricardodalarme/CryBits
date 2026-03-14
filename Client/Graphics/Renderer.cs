@@ -15,9 +15,9 @@ namespace CryBits.Client.Graphics;
 /// Central rendering service. Owns the <see cref="RenderWindow"/> and exposes
 /// a thin API for drawing sprites and text.
 /// </summary>
-internal sealed class Renderer
+internal sealed class Renderer(InputManager inputManager)
 {
-    public static Renderer Instance { get; } = new();
+    public static Renderer Instance { get; } = new(InputManager.Instance);
 
     /// <summary>The SFML render window.</summary>
     public RenderWindow RenderWindow { get; private set; } = null!;
@@ -54,11 +54,11 @@ internal sealed class Renderer
             OutlineThickness = 1
         };
 
-        RenderWindow.Closed += UI.Window.OnClosed;
-        RenderWindow.LostFocus += (_, _) => InputManager.Instance.IsFocused = false;
-        RenderWindow.GainedFocus += (_, _) => InputManager.Instance.IsFocused = true;
+        RenderWindow.Closed += UI.Window.Instance.OnClosed;
+        RenderWindow.LostFocus += (_, _) => inputManager.IsFocused = false;
+        RenderWindow.GainedFocus += (_, _) => inputManager.IsFocused = true;
 
-        InputManager.Instance.BindEvents(RenderWindow);
+        inputManager.BindEvents(RenderWindow);
     }
 
     /// <summary>

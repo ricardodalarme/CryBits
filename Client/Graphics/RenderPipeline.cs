@@ -15,48 +15,52 @@ using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics;
 
-internal sealed class RenderPipeline
+internal sealed class RenderPipeline(
+    Renderer renderer,
+    GameContext context,
+    CameraManager cameraManager,
+    MapRenderer mapRenderer,
+    UIRenderer uiRenderer)
 {
-    public static RenderPipeline Instance { get; } = new();
-
-    private readonly Renderer _renderer = Renderer.Instance;
-    private readonly GameContext _context = GameContext.Instance;
-    private readonly CameraManager _cameraManager = CameraManager.Instance;
-    private readonly MapRenderer _mapRenderer = MapRenderer.Instance;
-    private readonly UIRenderer _uiRenderer = UIRenderer.Instance;
+    public static RenderPipeline Instance { get; } = new(
+        Renderer.Instance,
+        GameContext.Instance,
+        CameraManager.Instance,
+        MapRenderer.Instance,
+        UIRenderer.Instance);
 
     // Ground-layer render systems: non-character sprites (ground items, blood splats).
-    private static readonly Group<int> _groundRenderSystems = new(
+    private readonly Group<int> _groundRenderSystems = new(
         "GroundRenderSystems",
-        new SpriteRenderSystem(GameContext.Instance.World)
+        new SpriteRenderSystem(context.World, renderer)
     );
 
     // Character render systems: Y-sorted shadow + animated sprite for all characters.
     // Runs after ground items, before the fringe tile layer, so characters appear on top
     // of the ground but behind foreground props.
-    private static readonly Group<int> _characterRenderSystems = new(
+    private readonly Group<int> _characterRenderSystems = new(
         "CharacterRenderSystems",
-        new CharacterRenderSystem(GameContext.Instance.World)
+        new CharacterRenderSystem(context.World, renderer)
     );
 
     // Fringe-layer render systems: floating names and scrolling fog drawn after the
     // foreground tile pass so they sit above all world geometry.
-    private static readonly Group<int> _fringeRenderSystems = new(
+    private readonly Group<int> _fringeRenderSystems = new(
         "FringeRenderSystems",
-        new TextRenderSystem(GameContext.Instance.World),
-        new ScrollingOverlayRenderSystem(GameContext.Instance.World)
+        new TextRenderSystem(context.World, renderer),
+        new ScrollingOverlayRenderSystem(context.World, renderer)
     );
 
     // Weather render systems: particle batch + lightning overlay, drawn after fringe tiles.
-    private static readonly Group<int> _weatherRenderSystems = new(
+    private readonly Group<int> _weatherRenderSystems = new(
         "WeatherRenderSystems",
-        new WeatherRenderSystem(GameContext.Instance.World)
+        new WeatherRenderSystem(context.World, context, renderer)
     );
 
     // HUD-layer render systems: vital bars drawn above names but below fixed-position UI.
-    private static readonly Group<int> _hudRenderSystems = new(
+    private readonly Group<int> _hudRenderSystems = new(
         "HudRenderSystems",
-        new VitalBarRenderSystem(GameContext.Instance.World)
+        new VitalBarRenderSystem(context.World, renderer)
     );
 
     /// <summary>
@@ -64,18 +68,18 @@ internal sealed class RenderPipeline
     /// </summary>
     public void Present()
     {
-        _renderer.RenderWindow.Clear(Color.Black);
+        renderer.RenderWindow.Clear(Color.Black);
 
         InGame();
 
         // Restore the default view before drawing UI so it renders at fixed screen positions.
-        _cameraManager.BeginUIDraw();
+        cameraManager.BeginUIDraw();
 
-        _uiRenderer.DrawInterface(Screen.Current?.Body);
+        uiRenderer.DrawInterface(Screen.Current?.Body);
 
-        if (Screen.Current == Screens.Game) _uiRenderer.DrawChat();
+        if (Screen.Current == Screens.Game) uiRenderer.DrawChat();
 
-        _renderer.RenderWindow.Display();
+        renderer.RenderWindow.Display();
     }
 
     private void InGame()
@@ -84,19 +88,19 @@ internal sealed class RenderPipeline
 
         // Update camera logic and apply the SFML view.
         // All subsequent draws happen in world-space coordinates.
-        _cameraManager.Update();
-        _cameraManager.BeginWorldDraw();
+        cameraManager.Update();
+        cameraManager.BeginWorldDraw();
 
         // Ground layer — panorama, tiles, then non-character world objects.
-        _mapRenderer.DrawPanorama();
-        _mapRenderer.DrawLayer((byte)Layer.Ground);
+        mapRenderer.DrawPanorama();
+        mapRenderer.DrawLayer((byte)Layer.Ground);
         _groundRenderSystems.Update(0);
 
         // Character layer — Y-sorted shadow + animated sprite for players and NPCs.
         _characterRenderSystems.Update(0);
 
         // Foreground tile layer and atmospheric effects.
-        _mapRenderer.DrawLayer((byte)Layer.Fringe);
+        mapRenderer.DrawLayer((byte)Layer.Fringe);
         _weatherRenderSystems.Update(0);
 
         // Fringe systems — floating names, fog overlay.
@@ -105,11 +109,11 @@ internal sealed class RenderPipeline
         // HUD layer — vital bars drawn above names.
         _hudRenderSystems.Update(0);
 
-        _mapRenderer.DrawMapName();
-        _uiRenderer.DrawParty();
+        mapRenderer.DrawMapName();
+        uiRenderer.DrawParty();
 
         // FPS/Latency overlays.
-        if (Options.ShowMetrics) _renderer.DrawText("FPS: " + GameLoop.Fps, 176, 7, Color.White);
-        if (Options.ShowMetrics) _renderer.DrawText("Latency: " + NetworkClient.Latency, 176, 19, Color.White);
+        if (Options.ShowMetrics) renderer.DrawText("FPS: " + GameLoop.Fps, 176, 7, Color.White);
+        if (Options.ShowMetrics) renderer.DrawText("Latency: " + NetworkClient.Latency, 176, 19, Color.White);
     }
 }

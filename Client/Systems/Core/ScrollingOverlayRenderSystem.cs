@@ -13,7 +13,7 @@ namespace CryBits.Client.Systems.Core;
 /// <see cref="ScrollingSpriteComponent"/> and draws them at screen (0, 0)
 /// with no camera transform — they follow the viewport by definition.
 /// </summary>
-internal sealed class ScrollingOverlayRenderSystem(World world) : BaseSystem<World, int>(world)
+internal sealed class ScrollingOverlayRenderSystem(World world, Renderer renderer) : BaseSystem<World, int>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
         .WithAll<SpriteComponent, ScrollingSpriteComponent>();
@@ -29,7 +29,7 @@ internal sealed class ScrollingOverlayRenderSystem(World world) : BaseSystem<Wor
                 (int)scroll.ExactY,
                 ScreenWidth,
                 ScreenHeight);
-            Renderer.Instance.Draw(sprite.Texture, source, _screenDest, sprite.Tint);
+            renderer.Draw(sprite.Texture, source, _screenDest, sprite.Tint);
         });
     }
 }

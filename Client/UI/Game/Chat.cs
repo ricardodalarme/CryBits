@@ -12,13 +12,13 @@ using static CryBits.Client.Framework.Utils.TextUtils;
 
 namespace CryBits.Client.UI.Game;
 
-internal static class Chat
+internal class Chat
 {
-    private static readonly ChatCommandDispatcher _dispatcher =
-        new ChatCommandDispatcher(AddText)
-            .Register(new PartyInviteCommand(PartySender.Instance, AddText))
-            .Register(new PartyLeaveCommand(PartySender.Instance))
-            .Register(new TradeInviteCommand(TradeSender.Instance, AddText));
+    public static Chat Instance { get; } = new Chat(ChatSender.Instance);
+
+    private readonly ChatCommandDispatcher _dispatcher;
+
+    private readonly ChatSender chatSender;
 
     // Rendering order for chat lines
     public static List<Structure> Order = [];
@@ -28,6 +28,15 @@ internal static class Chat
     private const byte MaxLines = 50;
     public const short SleepTimer = 10000;
 
+    public Chat(ChatSender chatSender)
+    {
+        this.chatSender = chatSender;
+        _dispatcher = new ChatCommandDispatcher(AddText)
+            .Register(new PartyInviteCommand(PartySender.Instance, AddText))
+            .Register(new PartyLeaveCommand(PartySender.Instance))
+            .Register(new TradeInviteCommand(TradeSender.Instance, AddText));
+    }
+
     /// <summary>Chat line record containing the displayed text and color.</summary>
     public class Structure
     {
@@ -35,7 +44,7 @@ internal static class Chat
         public Color Color;
     }
 
-    private static void AddLine(string text, Color color)
+    private void AddLine(string text, Color color)
     {
         Order.Add(new Structure());
         var i = Order.Count - 1;
@@ -51,7 +60,7 @@ internal static class Chat
         GameLoop.ChatTimer = Environment.TickCount + 10000;
     }
 
-    public static void AddText(string message, Color color)
+    public void AddText(string message, Color color)
     {
         var boxWidth = Textures.Panels[ChatView.Panel.TextureNum].ToSize().Width - 16;
 
@@ -75,7 +84,7 @@ internal static class Chat
             }
     }
 
-    public static void Type()
+    public void Type()
     {
         var tool = ChatView.MessageTextBox;
         var panel = ChatView.Panel;
@@ -105,12 +114,12 @@ internal static class Chat
             SendMessage(message);
     }
 
-    private static void SendMessage(string message)
+    private void SendMessage(string message)
     {
         switch (message[0])
         {
             case '\'':
-                ChatSender.Instance.Message(message[1..], Message.Global);
+                chatSender.Message(message[1..], Message.Global);
                 return;
             case '!':
                 var parts = message.Split(' ');
@@ -122,11 +131,11 @@ internal static class Chat
 
                 var addressee = message.Substring(1, parts[0].Length - 1);
                 var content = message.Substring(parts[0].Length + 1);
-                ChatSender.Instance.Message(content, Message.Private, addressee);
+                chatSender.Message(content, Message.Private, addressee);
                 return;
             default:
                 // Default: map message
-                ChatSender.Instance.Message(message, Message.Map);
+                chatSender.Message(message, Message.Map);
                 break;
         }
     }

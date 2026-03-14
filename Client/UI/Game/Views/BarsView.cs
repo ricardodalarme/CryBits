@@ -5,7 +5,7 @@ using CryBits.Enums;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal static class BarsView
+internal class BarsView
 {
     private static Label HpValueLabel => Tools.Labels["Bars_HP_Value"];
     private static Label MpValueLabel => Tools.Labels["Bars_MP_Value"];

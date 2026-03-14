@@ -12,20 +12,22 @@ namespace CryBits.Client.Logic;
 /// Registers and handles keyboard shortcuts that are active during gameplay.
 /// Separated from UI Window handling so game-logic bindings live in the logic layer.
 /// </summary>
-internal static class GameInput
+internal class GameInput(PlayerSender playerSender, Chat chat)
 {
+    public static GameInput Instance { get; } = new(PlayerSender.Instance, Chat.Instance);
+
     /// <summary>
     /// Subscribe to the game screen's key-released event.
     /// Call once at startup alongside other Bind() calls.
     /// </summary>
-    public static void Bind() =>
+    public void Bind() =>
         Screens.Game.OnKeyReleased += OnKeyReleased;
 
-    private static void OnKeyReleased(KeyEventArgs e)
+    private void OnKeyReleased(KeyEventArgs e)
     {
         switch (e.Code)
         {
-            case Keyboard.Key.Enter: Chat.Type(); break;
+            case Keyboard.Key.Enter: chat.Type(); break;
             case Keyboard.Key.Space: GameContext.Instance.LocalPlayer.CollectItem(); break;
             case Keyboard.Key.Num1: UseHotbar(1); break;
             case Keyboard.Key.Num2: UseHotbar(2); break;
@@ -40,11 +42,11 @@ internal static class GameInput
         }
     }
 
-    private static void UseHotbar(byte slot)
+    private void UseHotbar(byte slot)
     {
         if (TextBox.Focused != null) return;
 
-        PlayerSender.Instance.HotbarUse(slot);
+        playerSender.HotbarUse(slot);
         DropItemView.Panel.Visible = false;
     }
 }

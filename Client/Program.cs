@@ -36,27 +36,27 @@ internal static class Program
         // Register all input and UI event handlers.
         new MenuScreen().Bind();
         new GameScreen().Bind();
-        Window.Bind();
-        GameInput.Bind();
+        Window.Instance.Bind();
+        GameInput.Instance.Bind();
 
         NetworkClient.Instance.Init();
         var context = GameContext.Instance;
         var audioManager = AudioManager.Instance;
 
         PacketDispatcher.Register(new AuthHandler());
-        PacketDispatcher.Register(new AccountHandler(audioManager));
+        PacketDispatcher.Register(new AccountHandler(audioManager, context));
         PacketDispatcher.Register(new PlayerHandler(context));
         PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager));
         PacketDispatcher.Register(new NpcHandler(context));
-        PacketDispatcher.Register(new ChatHandler());
-        PacketDispatcher.Register(new PartyHandler(PartySender.Instance, GameContext.Instance));
-        PacketDispatcher.Register(new TradeHandler(TradeSender.Instance));
+        PacketDispatcher.Register(new ChatHandler(Chat.Instance));
+        PacketDispatcher.Register(new PartyHandler(PartySender.Instance, context));
+        PacketDispatcher.Register(new TradeHandler(TradeSender.Instance, context));
         PacketDispatcher.Register(new ShopHandler());
         PacketDispatcher.Register(new ClassHandler());
         PacketDispatcher.Register(new ItemHandler());
         AudioManager.Instance.LoadSounds();
 
-        Window.OpenMenu();
+        Window.Instance.OpenMenu();
 
         GameLoop.Instance.Init();
     }

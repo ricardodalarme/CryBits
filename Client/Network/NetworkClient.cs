@@ -39,7 +39,7 @@ internal class NetworkClient
         {
             ServerPeer = null;
             GameContext.Instance.Reset();
-            Window.OpenMenu();
+            Window.Instance.OpenMenu();
         };
 
         _listener.NetworkLatencyUpdateEvent += (_, latency) => Latency = latency;

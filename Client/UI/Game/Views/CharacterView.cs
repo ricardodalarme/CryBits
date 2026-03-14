@@ -9,7 +9,7 @@ using SFML.Window;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipmentRenderer, CharacterRenderer characterRenderer) : IView
+internal class CharacterView(GameContext context, PlayerSender playerSender, EquipmentRenderer equipmentRenderer, CharacterRenderer characterRenderer) : IView
 {
     internal static Panel Panel => Tools.Panels["Menu_Character"];
     private static SlotGrid Grid => Tools.SlotGrids["Equipment_Grid"];
@@ -57,25 +57,25 @@ internal class CharacterView(PlayerSender playerSender, EquipmentRenderer equipm
     }
 
     private void OnRenderFace(Point pos) =>
-        characterRenderer.DrawFace(GameContext.Instance.LocalPlayer.GetAppearance().TextureNum, pos);
+        characterRenderer.DrawFace(context.LocalPlayer.GetAppearance().TextureNum, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
-        if (GameContext.Instance.LocalPlayer.GetEquipment().Slots[slot] == null) return;
+        if (context.LocalPlayer.GetEquipment().Slots[slot] == null) return;
 
         if (e.Button == Mouse.Button.Right)
-            if (GameContext.Instance.LocalPlayer.GetEquipment().Slots[slot].Bind != BindOn.Equip)
+            if (context.LocalPlayer.GetEquipment().Slots[slot].Bind != BindOn.Equip)
                 playerSender.EquipmentRemove((byte)slot);
     }
 
-    private static void OnGridSlotHover(short slot)
+    private void OnGridSlotHover(short slot)
     {
-        var item = GameContext.Instance.LocalPlayer.GetEquipment().Slots[slot];
+        var item = context.LocalPlayer.GetEquipment().Slots[slot];
         if (item == null) return;
         InformationView.Show(item.Id, Panel.Position + new Size(-186, 5));
     }
 
-    private static void OnGridSlotLeave(short slot) => InformationView.Hide();
+    private void OnGridSlotLeave(short slot) => InformationView.Hide();
 
     private void OnAddStrengthPressed()
     {

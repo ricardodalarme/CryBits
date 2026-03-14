@@ -18,35 +18,37 @@ namespace CryBits.Client.UI;
 /// Handles window-level and UI-level input events.
 /// Game-screen key bindings live in <see cref="Logic.GameInput"/>.
 /// </summary>
-internal static class Window
+internal class Window(InputManager inputManager, NetworkClient networkClient, AudioManager audioManager)
 {
+    public static Window Instance { get; } = new(InputManager.Instance, NetworkClient.Instance, AudioManager.Instance);
+
     /// <summary>Interval in milliseconds within which two clicks count as a double-click.</summary>
     private const int DoubleClickIntervalMs = 142;
 
-    private static int _doubleClickTimer;
+    private int _doubleClickTimer;
 
     /// <summary>Current mouse pointer position in screen coordinates.</summary>
-    private static Point Mouse;
+    private Point Mouse;
 
-    public static void Bind()
+    public void Bind()
     {
-        InputManager.Instance.MouseButtonPressed += OnMouseButtonPressed;
-        InputManager.Instance.MouseButtonReleased += OnMouseButtonReleased;
-        InputManager.Instance.MouseMoved += OnMouseMoved;
-        InputManager.Instance.KeyPressed += OnKeyPressed;
-        InputManager.Instance.KeyReleased += OnKeyReleased;
-        InputManager.Instance.TextEntered += OnTextEntered;
+        inputManager.MouseButtonPressed += OnMouseButtonPressed;
+        inputManager.MouseButtonReleased += OnMouseButtonReleased;
+        inputManager.MouseMoved += OnMouseMoved;
+        inputManager.KeyPressed += OnKeyPressed;
+        inputManager.KeyReleased += OnKeyReleased;
+        inputManager.TextEntered += OnTextEntered;
     }
 
-    public static void OnClosed(object sender, EventArgs e)
+    public void OnClosed(object sender, EventArgs e)
     {
         if (Screen.Current == Screens.Game)
-            NetworkClient.Instance.Disconnect();
+            networkClient.Disconnect();
         else
             Program.Working = false;
     }
 
-    private static void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
+    private void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
     {
         if (Environment.TickCount < _doubleClickTimer + DoubleClickIntervalMs)
             Screen.Current?.MouseDoubleClick(e);
@@ -54,7 +56,7 @@ internal static class Window
             Screen.Current?.MouseDown(e);
     }
 
-    private static void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
+    private void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
     {
         _doubleClickTimer = Environment.TickCount;
         Screen.Current?.MouseUp();
@@ -64,7 +66,7 @@ internal static class Window
         GameScreen.HotbarChange = -1;
     }
 
-    private static void OnMouseMoved(object sender, MouseMoveEventArgs e)
+    private void OnMouseMoved(object sender, MouseMoveEventArgs e)
     {
         Mouse.X = e.Position.X;
         Mouse.Y = e.Position.Y;
@@ -72,7 +74,7 @@ internal static class Window
         Screen.Current?.MouseMoved();
     }
 
-    private static void OnKeyPressed(object sender, KeyEventArgs e)
+    private void OnKeyPressed(object sender, KeyEventArgs e)
     {
         switch (e.Code)
         {
@@ -82,17 +84,17 @@ internal static class Window
         }
     }
 
-    private static void OnKeyReleased(object sender, KeyEventArgs e) =>
+    private void OnKeyReleased(object sender, KeyEventArgs e) =>
         Screen.Current?.KeyReleased(e);
 
-    private static void OnTextEntered(object sender, TextEventArgs e) =>
+    private void OnTextEntered(object sender, TextEventArgs e) =>
         TextBox.Focused?.TextEntered(e);
 
-    public static void OpenMenu()
+    public void OpenMenu()
     {
         // Play background music.
-        AudioManager.Instance.StopAllSounds();
-        if (Options.Musics) AudioManager.Instance.PlayMusic(Musics.Menu);
+        audioManager.StopAllSounds();
+        if (Options.Musics) audioManager.PlayMusic(Musics.Menu);
 
         LoginView.SaveUsernameCheckBox.Checked = Options.SaveUsername;
         if (Options.SaveUsername) LoginView.UsernameTextBox.Text = Options.Username;

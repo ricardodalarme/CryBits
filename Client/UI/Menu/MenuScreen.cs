@@ -3,19 +3,20 @@ using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Menu.Views;
+using CryBits.Client.Worlds;
 
 namespace CryBits.Client.UI.Menu;
 
 internal class MenuScreen
 {
-    private static BackgroundView BackgroundView = new();
-    private static LoginView LoginView = new(NetworkClient.Instance, AuthSender.Instance);
-    private static RegisterView RegisterView = new(NetworkClient.Instance, AuthSender.Instance);
-    private static OptionsView OptionsPanel = new(AudioManager.Instance, NetworkClient.Instance);
-    private static SelectCharacterView SelectCharacterView = new(AccountSender.Instance, CharacterRenderer.Instance);
-    private static CreateCharacterView CreateCharacterView = new(NetworkClient.Instance, AccountSender.Instance, CharacterRenderer.Instance);
+    private readonly BackgroundView BackgroundView = new(NetworkClient.Instance);
+    private readonly LoginView LoginView = new(NetworkClient.Instance, AuthSender.Instance);
+    private readonly RegisterView RegisterView = new(NetworkClient.Instance, AuthSender.Instance);
+    private readonly OptionsView OptionsPanel = new(AudioManager.Instance, NetworkClient.Instance, GameContext.Instance);
+    private readonly SelectCharacterView SelectCharacterView = new(AccountSender.Instance, CharacterRenderer.Instance);
+    private readonly CreateCharacterView CreateCharacterView = new(NetworkClient.Instance, AccountSender.Instance, CharacterRenderer.Instance);
 
-    private static IView[] Views =
+    private IView[] Views =>
     [
         BackgroundView,
         LoginView,

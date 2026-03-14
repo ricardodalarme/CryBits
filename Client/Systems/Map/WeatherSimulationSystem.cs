@@ -17,7 +17,7 @@ namespace CryBits.Client.Systems.Map;
 /// <summary>
 /// Advances all weather particle simulations and manages the lightning flash each frame.
 /// </summary>
-internal sealed class WeatherSimulationSystem(World world, GameContext context) : BaseSystem<World, float>(world)
+internal sealed class WeatherSimulationSystem(World world, GameContext context, AudioManager audioManager) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _particleQuery =
         new QueryDescription().WithAll<WeatherParticleComponent, TransformComponent>();
@@ -166,7 +166,7 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context) 
 
         var thunderList = new[] { Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4 };
         var thunder = MyRandom.Next(0, thunderList.Length);
-        AudioManager.Instance.PlaySound(thunderList[thunder]);
+        audioManager.PlaySound(thunderList[thunder]);
 
         if (thunder < 3)
         {
