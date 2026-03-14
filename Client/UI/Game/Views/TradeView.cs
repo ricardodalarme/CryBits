@@ -65,15 +65,15 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
 
     private void OnGridMouseUp(short slot)
     {
-        if (GameScreen.InventoryChange <= 0) return;
+        if (GameScreen.InventoryChange == null) return;
 
         // Add item to trade
-        if (context.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange]?.Amount == 1)
-            tradeSender.TradeOffer(slot, GameScreen.InventoryChange);
+        if (context.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange.Value]?.Amount == 1)
+            tradeSender.TradeOffer(slot, GameScreen.InventoryChange.Value);
         else
         {
             OwnSlot = slot;
-            InventorySlot = GameScreen.InventoryChange;
+            InventorySlot = GameScreen.InventoryChange.Value;
             TradeAmountView.AmountTextBox.Text = string.Empty;
             TradeAmountView.Panel.Visible = true;
         }

@@ -45,8 +45,8 @@ internal class GameScreen
         TradeView
     ];
 
-    public static short HotbarChange;
-    public static short InventoryChange;
+    public static short? HotbarChange;
+    public static short? InventoryChange;
 
     public void Bind()
     {

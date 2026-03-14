@@ -62,8 +62,8 @@ internal class Window(InputManager inputManager, NetworkClient networkClient, Au
         Screen.Current?.MouseUp();
 
         // Reset drag/move state.
-        GameScreen.InventoryChange = 0;
-        GameScreen.HotbarChange = -1;
+        GameScreen.InventoryChange = null;
+        GameScreen.HotbarChange = null;
     }
 
     private void OnMouseMoved(object sender, MouseMoveEventArgs e)

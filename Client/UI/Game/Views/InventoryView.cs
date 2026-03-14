@@ -80,10 +80,10 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
 
     private void OnGridMouseUp(short slot)
     {
-        if (GameScreen.InventoryChange == -1) return;
+        if (GameScreen.InventoryChange == null) return;
 
         // Send inventory slot change to server.
-        playerSender.InventoryChange(GameScreen.InventoryChange, slot);
+        playerSender.InventoryChange(GameScreen.InventoryChange.Value, slot);
         DropItemView.Panel.Visible = false;
     }
 

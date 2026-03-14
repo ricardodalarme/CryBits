@@ -61,8 +61,8 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
 
     private void OnGridMouseUp(short slot)
     {
-        if (GameScreen.HotbarChange >= 0) playerSender.HotbarChange(GameScreen.HotbarChange, slot);
-        if (GameScreen.InventoryChange > 0) playerSender.HotbarAdd(slot, (byte)SlotType.Item, GameScreen.InventoryChange);
+        if (GameScreen.HotbarChange != null) playerSender.HotbarChange(GameScreen.HotbarChange.Value, slot);
+        if (GameScreen.InventoryChange != null) playerSender.HotbarAdd(slot, (byte)SlotType.Item, GameScreen.InventoryChange.Value);
     }
 
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)

@@ -23,15 +23,15 @@ internal class DraggableSlotView(ItemRenderer itemRenderer, InputManager inputMa
             inputManager.MousePosition.Y + 6
         );
 
-        if (GameScreen.HotbarChange >= 0)
+        if (GameScreen.HotbarChange != null)
         {
-            var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[GameScreen.HotbarChange];
+            var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[GameScreen.HotbarChange.Value];
             if (hotbarSlot?.Type == SlotType.Item)
                 itemRenderer.DrawItem(context.LocalPlayer.GetInventory().Slots[hotbarSlot.Slot]?.Item, 1, pos);
         }
-        else if (GameScreen.InventoryChange > 0)
+        else if (GameScreen.InventoryChange != null)
         {
-            itemRenderer.DrawItem(context.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange]?.Item, 1, pos);
+            itemRenderer.DrawItem(context.LocalPlayer.GetInventory().Slots[GameScreen.InventoryChange.Value]?.Item, 1, pos);
         }
     }
 }
