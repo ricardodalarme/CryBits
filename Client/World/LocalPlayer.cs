@@ -20,7 +20,7 @@ namespace CryBits.Client.Worlds;
 /// Tracks the local player entity (the "Me" character).
 /// Provides convenient access to the local player's entity and components.
 /// </summary>
-internal class LocalPlayer(Entity entity)
+internal class LocalPlayer(World world, Entity entity)
 {
     /// <summary>The local player entity. Entity.Null if not logged in.</summary>
     public Entity Entity = entity;
@@ -29,34 +29,34 @@ internal class LocalPlayer(Entity entity)
 
     /// <summary>Convenient accessor for the local player's name.</summary>
     public string GetName() =>
-        Entity != Entity.Null ? GameContext.Instance.World.Get<NameComponent>(Entity).Value : string.Empty;
+        Entity != Entity.Null ? world.Get<NameComponent>(Entity).Value : string.Empty;
 
     /// <summary>Convenient accessor for VitalsComponent.</summary>
-    public ref VitalsComponent GetVitals() => ref GameContext.Instance.World.Get<VitalsComponent>(Entity);
+    public ref VitalsComponent GetVitals() => ref world.Get<VitalsComponent>(Entity);
 
     /// <summary>Convenient accessor for InventoryComponent.</summary>
-    public ref InventoryComponent GetInventory() => ref GameContext.Instance.World.Get<InventoryComponent>(Entity);
+    public ref InventoryComponent GetInventory() => ref world.Get<InventoryComponent>(Entity);
 
     /// <summary>Convenient accessor for HotbarComponent.</summary>
-    public ref HotbarComponent GetHotbar() => ref GameContext.Instance.World.Get<HotbarComponent>(Entity);
+    public ref HotbarComponent GetHotbar() => ref world.Get<HotbarComponent>(Entity);
 
     /// <summary>Convenient accessor for LevelComponent.</summary>
-    public ref LevelComponent GetLevel() => ref GameContext.Instance.World.Get<LevelComponent>(Entity);
+    public ref LevelComponent GetLevel() => ref world.Get<LevelComponent>(Entity);
 
     /// <summary>Convenient accessor for TradeComponent.</summary>
-    public ref TradeComponent GetTrade() => ref GameContext.Instance.World.Get<TradeComponent>(Entity);
+    public ref TradeComponent GetTrade() => ref world.Get<TradeComponent>(Entity);
 
     /// <summary>Convenient accessor for AttributesComponent.</summary>
-    public ref AttributesComponent GetAttributes() => ref GameContext.Instance.World.Get<AttributesComponent>(Entity);
+    public ref AttributesComponent GetAttributes() => ref world.Get<AttributesComponent>(Entity);
 
     /// <summary>Convenient accessor for EquipmentComponent.</summary>
-    public ref EquipmentComponent GetEquipment() => ref GameContext.Instance.World.Get<EquipmentComponent>(Entity);
+    public ref EquipmentComponent GetEquipment() => ref world.Get<EquipmentComponent>(Entity);
 
     /// <summary>Convenient accessor for AppearanceComponent.</summary>
-    public ref AppearanceComponent GetAppearance() => ref GameContext.Instance.World.Get<AppearanceComponent>(Entity);
+    public ref AppearanceComponent GetAppearance() => ref world.Get<AppearanceComponent>(Entity);
 
     /// <summary>Convenient accessor for PartyComponent.</summary>
-    public ref PartyComponent GetParty() => ref GameContext.Instance.World.Get<PartyComponent>(Entity);
+    public ref PartyComponent GetParty() => ref world.Get<PartyComponent>(Entity);
 
     /// <summary>
     /// Collects the item at the local player's current tile, if any free inventory slot exists.
@@ -69,7 +69,6 @@ internal class LocalPlayer(Entity entity)
 
         bool hasItem = false, hasSlot = false;
 
-        var world = GameContext.Instance.World;
         var myTile = world.Get<MovementComponent>(Entity);
         var itemQuery = new QueryDescription().WithAll<GroundItemComponent, TransformComponent>();
         world.Query(in itemQuery, (ref GroundItemComponent _, ref TransformComponent transform) =>

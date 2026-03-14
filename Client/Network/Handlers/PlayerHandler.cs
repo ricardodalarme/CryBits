@@ -45,7 +45,7 @@ internal class PlayerHandler(GameContext context)
 
         if (isLocal)
         {
-            context.LocalPlayer = new LocalPlayer(entity);
+            context.LocalPlayer = new LocalPlayer(context.World, entity);
             BarsView.Update();
             CharacterView.Update();
         }

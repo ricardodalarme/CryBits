@@ -16,16 +16,21 @@ internal sealed class GameContext
     public World World { get; } = World.Create();
 
     /// <summary>Current map instance.</summary>
-    public ClientMap CurrentMap;
+    public ClientMap CurrentMap = null!;
 
     /// <summary>Name of the local player. Set on Join, cleared on Reset.</summary>
     public string? LocalPlayerName;
 
     /// <summary>Tracks the local player entity and components.</summary>
-    public LocalPlayer LocalPlayer { get; set; } = new(Entity.Null);
+    public LocalPlayer LocalPlayer { get; set; }
 
     private static readonly QueryDescription _playerNameQuery =
         new QueryDescription().WithAll<NameComponent, PlayerTagComponent>();
+
+    internal GameContext()
+    {
+        LocalPlayer = new LocalPlayer(World, Entity.Null);
+    }
 
     /// <summary>Returns the ECS entity whose NameComponent matches <paramref name="name"/>, or Entity.Null.</summary>
     public Entity GetPlayerEntity(string name)
@@ -46,7 +51,7 @@ internal sealed class GameContext
     {
         World.Clear();
         CurrentMap = null!;
-        LocalPlayer = new LocalPlayer(Entity.Null);
+        LocalPlayer = new LocalPlayer(World, Entity.Null);
         LocalPlayerName = null;
     }
 }
