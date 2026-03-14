@@ -35,6 +35,7 @@ internal static class NpcSpawner
         data.Vital.CopyTo(vitalsComponent.Max, 0);
 
         return world.Create(
+            new NameComponent { Value = data.Name, NameColor = textColor },
             new TransformComponent(x * Globals.Grid, y * Globals.Grid),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
@@ -43,8 +44,7 @@ internal static class NpcSpawner
             new DamageTintComponent(),
             new NpcTagComponent(),
             new CollidableComponent(),
-            vitalsComponent,
-            new TextComponent(data.Name, textColor, frameWidth / 2, -frameHeight / 2)
+            vitalsComponent
         );
     }
 }

@@ -53,7 +53,7 @@ internal static class PlayerSpawner
         equipment.CopyTo(equipmentComponent.Slots, 0);
 
         var entity = world.Create(
-            new NameComponent { Value = name },
+            new NameComponent { Value = name, NameColor = textColor },
             new TransformComponent(x * Globals.Grid, y * Globals.Grid),
             new SpriteComponent(texture),
             new AnimatedSpriteComponent(frameWidth, frameHeight, 0.25f, Globals.AnimationAmountX),
@@ -69,8 +69,7 @@ internal static class PlayerSpawner
             new HotbarComponent(),
             new AppearanceComponent { TextureNum = textureNum },
             new LevelComponent { Level = level },
-            new TradeComponent(),
-            new TextComponent(name, textColor, frameWidth / 2, -frameHeight / 2)
+            new TradeComponent()
         );
 
         if (isLocalPlayer) world.Add(entity, new LocalPlayerTagComponent(), new PartyComponent());

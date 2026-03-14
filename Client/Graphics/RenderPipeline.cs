@@ -43,11 +43,10 @@ internal sealed class RenderPipeline(
         new CharacterRenderSystem(context.World, renderer)
     );
 
-    // Fringe-layer render systems: floating names and scrolling fog drawn after the
+    // Fringe-layer render systems: scrolling fog drawn after the
     // foreground tile pass so they sit above all world geometry.
     private readonly Group<int> _fringeRenderSystems = new(
         "FringeRenderSystems",
-        new TextRenderSystem(context.World, renderer),
         new ScrollingOverlayRenderSystem(context.World, renderer)
     );
 

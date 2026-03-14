@@ -1,5 +1,5 @@
+using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
-using CryBits.Client.Components.Core;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
@@ -90,7 +90,7 @@ internal sealed class UIRenderer(
                     renderer.Draw(Textures.PartyBars, 10, 99 + 27 * i, 0, 16,
                         vitals.Current[(byte)Vital.Mp] * 82 / vitals.Max[(byte)Vital.Mp], 8);
             }
-            var name = world.Get<TextComponent>(entity).Text;
+            var name = world.Get<NameComponent>(entity).Value;
             renderer.DrawText(name, 10, 79 + 27 * i, Color.White);
         }
     }

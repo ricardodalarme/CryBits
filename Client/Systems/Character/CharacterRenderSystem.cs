@@ -1,5 +1,6 @@
 using Arch.Core;
 using Arch.System;
+using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
@@ -7,6 +8,7 @@ using CryBits.Client.Graphics;
 using System.Collections.Generic;
 using System.Drawing;
 using Color = SFML.Graphics.Color;
+using CryBits.Enums;
 
 namespace CryBits.Client.Systems.Character;
 
@@ -25,7 +27,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
     /// plus the shadow marker that distinguishes them from other sprite entities.
     /// </summary>
     private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent, DamageTintComponent>();
+        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent, DamageTintComponent, NameComponent>();
 
     // Reused every frame — avoids per-frame heap allocation from Y-sort.
     private readonly List<(int Y, Entity Entity)> _drawList = [];
@@ -46,9 +48,11 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
             ref var sprite = ref World.Get<SpriteComponent>(entity);
             ref var anim = ref World.Get<AnimatedSpriteComponent>(entity);
             ref var damage = ref World.Get<DamageTintComponent>(entity);
+            ref var name = ref World.Get<NameComponent>(entity);
 
             DrawShadow(ref transform, ref anim);
             DrawSprite(ref transform, ref sprite, ref anim, ref damage);
+            DrawName(ref transform, ref anim, ref name);
         }
     }
 
@@ -100,5 +104,20 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
             : sprite.Tint;
 
         renderer.Draw(sprite.Texture, source, dest, tint);
+    }
+
+    /// <summary>
+    /// Draws the character's name label centred above the sprite frame.
+    /// Position is derived from <see cref="AnimatedSpriteComponent"/> frame size
+    /// so no offset metadata needs to be stored on the entity.
+    /// </summary>
+    private void DrawName(
+        ref TransformComponent transform,
+        ref AnimatedSpriteComponent anim,
+        ref NameComponent name)
+    {
+        var x = transform.X + anim.FrameWidth / 2;
+        var y = transform.Y - anim.FrameHeight / 2;
+        renderer.DrawText(name.Value, x, y, name.NameColor, TextAlign.Center);
     }
 }

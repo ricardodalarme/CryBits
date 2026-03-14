@@ -1,4 +1,5 @@
 using Arch.Core;
+using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Equipment;
