@@ -18,8 +18,8 @@ namespace CryBits.Client.Systems.Core;
 /// and visible-tile culling rect, then writes the result into <see cref="CameraManager"/>
 /// via <see cref="CameraManager.ApplyFrame"/>.
 /// </summary>
-internal sealed class CameraSystem(World world, GameContext context, CameraManager cameraManager)
-    : BaseSystem<World, float>(world)
+internal sealed class CameraSystem(GameContext context, CameraManager cameraManager)
+    : BaseSystem<World, float>(context.World)
 {
     private readonly QueryDescription _targetQuery =
         new QueryDescription().WithAll<CameraTargetTag, TransformComponent>();

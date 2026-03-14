@@ -15,7 +15,7 @@ namespace CryBits.Client.Systems.Map;
 /// <summary>
 /// Advances all weather particle simulations and manages the lightning flash each frame.
 /// </summary>
-internal sealed class WeatherSimulationSystem(World world, GameContext context, AudioManager audioManager) : BaseSystem<World, float>(world)
+internal sealed class WeatherSimulationSystem(GameContext context, AudioManager audioManager) : BaseSystem<World, float>(context.World)
 {
     private readonly QueryDescription _particleQuery =
         new QueryDescription().WithAll<WeatherParticleComponent, TransformComponent>();
@@ -27,7 +27,7 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context, 
     private readonly CommandBuffer _commandBuffer = new();
 
     private static readonly string[] _thunderSounds = [Sounds.Thunder1, Sounds.Thunder2, Sounds.Thunder3, Sounds.Thunder4];
-    
+
     /// <summary>Seconds between snow horizontal drift steps (35 ms).</summary>
     private const float SnowDriftInterval = 0.035f;
     /// <summary>Seconds between each 10-unit lightning intensity decay step (25 ms).</summary>
