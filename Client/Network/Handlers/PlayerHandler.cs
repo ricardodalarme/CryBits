@@ -173,6 +173,7 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerInventory(PlayerInventoryPacket packet)
     {
+        if (context.LocalPlayer.Entity == Entity.Null) return;
         ref var inventory = ref context.LocalPlayer.GetInventory();
         for (byte i = 0; i < MaxInventory; i++)
             inventory.Slots[i] = new ItemSlot(Item.List.Get(packet.ItemIds[i]), packet.Amounts[i]);
