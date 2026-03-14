@@ -4,6 +4,7 @@ using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Server.Formulas;
 using CryBits.Server.World;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static CryBits.Globals;
@@ -12,6 +13,7 @@ namespace CryBits.Server.Entities;
 
 internal class Player : Character
 {
+    public readonly Guid Id = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public Class Class { get; set; }
     public short TextureNum { get; set; }

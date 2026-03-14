@@ -1,6 +1,6 @@
 using Arch.Core;
-using CryBits.Client.Components.Character;
-using CryBits.Client.Components.Player;
+using System;
+using System.Collections.Generic;
 
 namespace CryBits.Client.Worlds;
 
@@ -18,30 +18,24 @@ internal sealed class GameContext
     /// <summary>Current map instance.</summary>
     public ClientMap CurrentMap = null!;
 
-    /// <summary>Name of the local player. Set on Join, cleared on Reset.</summary>
-    public string? LocalPlayerName;
-
     /// <summary>Tracks the local player entity and components.</summary>
     public LocalPlayer LocalPlayer { get; set; }
 
-    private static readonly QueryDescription _playerNameQuery =
-        new QueryDescription().WithAll<NameComponent, PlayerTagComponent>();
+    private readonly Dictionary<Guid, Entity> _entityById = [];
 
     internal GameContext()
     {
         LocalPlayer = new LocalPlayer(World, Entity.Null);
     }
 
-    /// <summary>Returns the ECS entity whose NameComponent matches <paramref name="name"/>, or Entity.Null.</summary>
-    public Entity GetPlayerEntity(string name)
-    {
-        var found = Entity.Null;
-        World.Query(in _playerNameQuery, (Entity e, ref NameComponent n) =>
-        {
-            if (n.Value == name) found = e;
-        });
-        return found;
-    }
+    /// <summary>Registers a network entity so it can be found by ID in O(1).</summary>
+    public void RegisterNetworkEntity(Guid id, Entity entity) => _entityById[id] = entity;
+
+    /// <summary>Removes a network entity registration (call before World.Destroy).</summary>
+    public void UnregisterNetworkEntity(Guid id) => _entityById.Remove(id);
+
+    /// <summary>Returns the ECS entity with the given network ID, or Entity.Null if not found.</summary>
+    public Entity GetNetworkEntity(Guid id) => _entityById.TryGetValue(id, out var e) ? e : Entity.Null;
 
     /// <summary>
     /// Fully reset world state on disconnect: destroys all entities,
@@ -50,8 +44,8 @@ internal sealed class GameContext
     public void Reset()
     {
         World.Clear();
+        _entityById.Clear();
         CurrentMap = null!;
         LocalPlayer = new LocalPlayer(World, Entity.Null);
-        LocalPlayerName = null;
     }
 }

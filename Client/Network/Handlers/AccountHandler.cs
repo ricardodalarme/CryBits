@@ -28,7 +28,7 @@ internal class AccountHandler(AudioManager audioManager, GameContext context)
         Shop.List = [];
         Npc.List = [];
 
-        context.LocalPlayerName = packet.Name;
+        context.LocalPlayer.Id = packet.PlayerId;
     }
 
     [PacketHandler]

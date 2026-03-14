@@ -26,6 +26,9 @@ internal class LocalPlayer(World world, Entity entity)
     /// <summary>The local player entity. Entity.Null if not logged in.</summary>
     public Entity Entity = entity;
 
+    /// <summary>Network ID of the local player.
+    public Guid Id;
+
     private int _collectTimer;
 
     /// <summary>Convenient accessor for the local player's name.</summary>

@@ -12,7 +12,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void Join(Player player)
     {
-        packageSender.ToPlayer(player, new JoinPacket { Name = player.Name });
+        packageSender.ToPlayer(player, new JoinPacket { PlayerId = player.Id });
     }
 
     public void JoinGame(Player player)
@@ -27,20 +27,20 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerLeaveMap(Player player, MapInstance mapInstance)
     {
-        packageSender.ToMapBut(mapInstance, player, new PlayerLeavePacket { Name = player.Name });
+        packageSender.ToMapBut(mapInstance, player, new PlayerLeavePacket { NetworkId = player.Id });
     }
 
     public void PlayerPosition(Player player)
     {
         packageSender.ToMap(player.MapInstance,
             new PlayerPositionPacket
-            { Name = player.Name, X = player.X, Y = player.Y, Direction = (byte)player.Direction });
+            { NetworkId = player.Id, X = player.X, Y = player.Y, Direction = (byte)player.Direction });
     }
 
     public void PlayerVitals(Player player)
     {
         var packet = new PlayerVitalsPacket
-        { Name = player.Name, Vital = new short[(byte)Vital.Count], MaxVital = new short[(byte)Vital.Count] };
+        { NetworkId = player.Id, Vital = new short[(byte)Vital.Count], MaxVital = new short[(byte)Vital.Count] };
         for (byte i = 0; i < (byte)Vital.Count; i++)
         {
             packet.Vital[i] = player.Vital[i];
@@ -52,7 +52,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerLeave(Player player)
     {
-        packageSender.ToAllBut(player, new PlayerLeavePacket { Name = player.Name });
+        packageSender.ToAllBut(player, new PlayerLeavePacket { NetworkId = player.Id });
     }
 
     public void PlayerMove(Player player, byte movement)
@@ -64,7 +64,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
         packageSender.ToMapBut(player.MapInstance, player,
             new PlayerMovePacket
             {
-                Name = player.Name,
+                NetworkId = player.Id,
                 X = player.X,
                 Y = player.Y,
                 Direction = (byte)player.Direction,
@@ -76,7 +76,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
     public void PlayerDirection(Player player)
     {
         packageSender.ToMapBut(player.MapInstance, player,
-            new PlayerDirectionPacket { Name = player.Name, Direction = (byte)player.Direction });
+            new PlayerDirectionPacket { NetworkId = player.Id, Direction = (byte)player.Direction });
     }
 
     public void PlayerExperience(Player player)
@@ -86,16 +86,16 @@ internal sealed class PlayerSender(PackageSender packageSender)
             { Experience = player.Experience, ExpNeeded = player.ExpNeeded, Points = player.Points });
     }
 
-    public void PlayerAttack(Player player, string victim = "", Target victimType = 0)
+    public void PlayerAttack(Player player, System.Guid victimId = default)
     {
         packageSender.ToMap(player.MapInstance,
-            new PlayerAttackPacket { Name = player.Name, Victim = victim, VictimType = (byte)victimType });
+            new PlayerAttackPacket { NetworkId = player.Id, VictimId = victimId });
     }
 
     public void PlayerEquipments(Player player)
     {
         var packet = new PlayerEquipmentsPacket
-        { Name = player.Name, Equipments = new System.Guid[(byte)Equipment.Count] };
+        { NetworkId = player.Id, Equipments = new System.Guid[(byte)Equipment.Count] };
         for (byte i = 0; i < (byte)Equipment.Count; i++) packet.Equipments[i] = player.Equipment[i].GetId();
         packageSender.ToMap(player.MapInstance, packet);
     }

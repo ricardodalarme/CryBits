@@ -1,5 +1,6 @@
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using System;
 
 namespace CryBits.Server.Network.Senders;
 
@@ -9,8 +10,8 @@ internal sealed class PartySender(PackageSender packageSender)
 
     public void Party(Player player)
     {
-        var packet = new PartyPacket { Members = new string[player.Party.Count] };
-        for (var i = 0; i < player.Party.Count; i++) packet.Members[i] = player.Party[i].Name;
+        var packet = new PartyPacket { MemberIds = new Guid[player.Party.Count] };
+        for (var i = 0; i < player.Party.Count; i++) packet.MemberIds[i] = player.Party[i].Id;
         packageSender.ToPlayer(player, packet);
     }
 

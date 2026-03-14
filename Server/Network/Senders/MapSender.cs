@@ -73,6 +73,7 @@ internal sealed class MapSender(PackageSender packageSender)
     {
         var packet = new PlayerDataPacket
         {
+            NetworkId = player.Id,
             Name = player.Name,
             TextureNum = player.TextureNum,
             Level = player.Level,

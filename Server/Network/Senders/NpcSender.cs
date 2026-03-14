@@ -23,6 +23,7 @@ internal sealed class NpcSender(PackageSender packageSender)
         {
             packet.Npcs[i] = new PacketsMapNpc
             {
+                InstanceId = mapInstance.Npc[i].Id,
                 NpcId = mapInstance.Npc[i].Data.GetId(),
                 X = mapInstance.Npc[i].X,
                 Y = mapInstance.Npc[i].Y,
@@ -39,7 +40,7 @@ internal sealed class NpcSender(PackageSender packageSender)
     {
         var packet = new MapNpcPacket
         {
-            Index = npcInstance.Index,
+            InstanceId = npcInstance.Id,
             NpcId = npcInstance.Data.GetId(),
             X = npcInstance.X,
             Y = npcInstance.Y,
@@ -59,7 +60,7 @@ internal sealed class NpcSender(PackageSender packageSender)
         packageSender.ToMap(npcInstance.MapInstance,
             new MapNpcMovementPacket
             {
-                Index = npcInstance.Index,
+                InstanceId = npcInstance.Id,
                 X = npcInstance.X,
                 Y = npcInstance.Y,
                 Direction = (byte)npcInstance.Direction,
@@ -71,24 +72,24 @@ internal sealed class NpcSender(PackageSender packageSender)
     public void MapNpcDirection(NpcInstance npcInstance)
     {
         packageSender.ToMap(npcInstance.MapInstance,
-            new MapNpcDirectionPacket { Index = npcInstance.Index, Direction = (byte)npcInstance.Direction });
+            new MapNpcDirectionPacket { InstanceId = npcInstance.Id, Direction = (byte)npcInstance.Direction });
     }
 
     public void MapNpcVitals(NpcInstance npcInstance)
     {
-        var packet = new MapNpcVitalsPacket { Index = npcInstance.Index, Vital = new short[(byte)Vital.Count] };
+        var packet = new MapNpcVitalsPacket { InstanceId = npcInstance.Id, Vital = new short[(byte)Vital.Count] };
         for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
         packageSender.ToMap(npcInstance.MapInstance, packet);
     }
 
-    public void MapNpcAttack(NpcInstance npcInstance, string victim = "", Target victimType = 0)
+    public void MapNpcAttack(NpcInstance npcInstance, System.Guid victimId = default)
     {
         packageSender.ToMap(npcInstance.MapInstance,
-            new MapNpcAttackPacket { Index = npcInstance.Index, Victim = victim, VictimType = (byte)victimType });
+            new MapNpcAttackPacket { AttackerId = npcInstance.Id, VictimId = victimId });
     }
 
     public void MapNpcDied(NpcInstance npcInstance)
     {
-        packageSender.ToMap(npcInstance.MapInstance, new MapNpcDiedPacket { Index = npcInstance.Index });
+        packageSender.ToMap(npcInstance.MapInstance, new MapNpcDiedPacket { InstanceId = npcInstance.Id });
     }
 }

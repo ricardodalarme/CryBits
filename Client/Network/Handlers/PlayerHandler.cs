@@ -21,11 +21,15 @@ internal class PlayerHandler(GameContext context)
     internal void PlayerData(PlayerDataPacket packet)
     {
         var name = packet.Name;
-        var isLocal = name == context.LocalPlayerName;
+        var isLocal = packet.NetworkId == context.LocalPlayer.Id;
 
         // Destroy old entity if present (re-spawn on map transition).
-        var old = context.GetPlayerEntity(name);
-        if (old != Entity.Null) context.World.Destroy(old);
+        var old = context.GetNetworkEntity(packet.NetworkId);
+        if (old != Entity.Null)
+        {
+            context.UnregisterNetworkEntity(packet.NetworkId);
+            context.World.Destroy(old);
+        }
 
         Entity entity;
         if (isLocal)
@@ -35,6 +39,7 @@ internal class PlayerHandler(GameContext context)
 
             entity = PlayerSpawner.SpawnLocal(
                 context.World,
+                packet.NetworkId,
                 name,
                 packet.TextureNum,
                 packet.Level,
@@ -49,6 +54,7 @@ internal class PlayerHandler(GameContext context)
         {
             entity = PlayerSpawner.Spawn(
                 context.World,
+                packet.NetworkId,
                 name,
                 packet.TextureNum,
                 packet.Vital,
@@ -56,6 +62,8 @@ internal class PlayerHandler(GameContext context)
                 packet.X, packet.Y,
                 (Direction)packet.Direction);
         }
+
+        context.RegisterNetworkEntity(packet.NetworkId, entity);
 
         if (isLocal)
         {
@@ -68,7 +76,7 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerPosition(PlayerPositionPacket packet)
     {
-        var entity = context.GetPlayerEntity(packet.Name);
+        var entity = context.GetNetworkEntity(packet.NetworkId);
 
         ref var movement = ref context.World.Get<MovementComponent>(entity);
         movement.TileX = packet.X;
@@ -82,7 +90,7 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerVitals(PlayerVitalsPacket packet)
     {
-        var entity = context.GetPlayerEntity(packet.Name);
+        var entity = context.GetNetworkEntity(packet.NetworkId);
 
         ref var vitals = ref context.World.Get<VitalsComponent>(entity);
         for (byte i = 0; i < (byte)Vital.Count; i++)
@@ -91,13 +99,13 @@ internal class PlayerHandler(GameContext context)
             vitals.Max[i] = packet.MaxVital[i];
         }
 
-        if (packet.Name == context.LocalPlayerName) BarsView.Update();
+        if (packet.NetworkId == context.LocalPlayer.Id) BarsView.Update();
     }
 
     [PacketHandler]
     internal void PlayerEquipments(PlayerEquipmentsPacket packet)
     {
-        var entity = context.GetPlayerEntity(packet.Name);
+        var entity = context.GetNetworkEntity(packet.NetworkId);
 
         // Update player's equipped items
         ref var equipment = ref context.World.Get<EquipmentComponent>(entity);
@@ -107,14 +115,18 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerLeave(PlayerLeavePacket packet)
     {
-        var entity = context.GetPlayerEntity(packet.Name);
-        if (entity != Entity.Null) context.World.Destroy(entity);
+        var entity = context.GetNetworkEntity(packet.NetworkId);
+        if (entity != Entity.Null)
+        {
+            context.UnregisterNetworkEntity(packet.NetworkId);
+            context.World.Destroy(entity);
+        }
     }
 
     [PacketHandler]
     internal void PlayerMove(PlayerMovePacket packet)
     {
-        var entity = context.GetPlayerEntity(packet.Name);
+        var entity = context.GetNetworkEntity(packet.NetworkId);
 
         ref var movement = ref context.World.Get<MovementComponent>(entity);
         movement.TileX = packet.X;
@@ -137,29 +149,21 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerDirection(PlayerDirectionPacket packet)
     {
-        var entity = context.GetPlayerEntity(packet.Name);
+        var entity = context.GetNetworkEntity(packet.NetworkId);
         context.World.Get<MovementComponent>(entity).Direction = (Direction)packet.Direction;
     }
 
     [PacketHandler]
     internal void PlayerAttack(PlayerAttackPacket packet)
     {
-        var entity = context.GetPlayerEntity(packet.Name);
-        var victim = packet.Victim;
-        var victimType = (Target)packet.VictimType;
+        var entity = context.GetNetworkEntity(packet.NetworkId);
 
         ref var state = ref context.World.Get<AttackComponent>(entity);
         state.AttackCountdown = AttackSpeed / 1000f;
 
-        if (victim == string.Empty || victimType == Target.None) return;
+        if (packet.VictimId == Guid.Empty) return;
 
-        var victimEntity = victimType switch
-        {
-            Target.Player => context.GetPlayerEntity(victim),
-            Target.Npc => context.CurrentMap.Npcs[byte.Parse(victim)],
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
+        var victimEntity = context.GetNetworkEntity(packet.VictimId);
         var world = context.World;
         ref var victimMovement = ref world.Get<MovementComponent>(victimEntity);
         BloodSplatSpawner.Spawn(world, victimMovement.TileX, victimMovement.TileY);

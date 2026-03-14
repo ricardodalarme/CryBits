@@ -15,7 +15,7 @@ internal class PartyHandler(PartySender partySender, GameContext context)
         var entity = context.LocalPlayer.Entity;
         var world = context.World;
 
-        if (packet.Members.Length == 0)
+        if (packet.MemberIds.Length == 0)
         {
             // No members — party disbanded or player left; drop the component.
             if (world.Has<PartyComponent>(entity))
@@ -28,9 +28,9 @@ internal class PartyHandler(PartySender partySender, GameContext context)
             world.Add(entity, new PartyComponent());
 
         ref var party = ref context.LocalPlayer.GetParty();
-        party.Members = new Arch.Core.Entity[packet.Members.Length];
+        party.Members = new Arch.Core.Entity[packet.MemberIds.Length];
         for (byte i = 0; i < party.Members.Length; i++)
-            party.Members[i] = context.GetPlayerEntity(packet.Members[i]);
+            party.Members[i] = context.GetNetworkEntity(packet.MemberIds[i]);
     }
 
     [PacketHandler]

@@ -55,7 +55,7 @@ internal sealed class CombatSystem(
         }
 
     @continue:
-        playerSender.PlayerAttack(player, null);
+        playerSender.PlayerAttack(player);
         player.AttackTimer = Environment.TickCount64;
     }
 
@@ -73,7 +73,7 @@ internal sealed class CombatSystem(
         var attackDamage = CombatFormulas.NetDamage(attacker.Damage, victim.PlayerDefense);
         if (attackDamage > 0)
         {
-            playerSender.PlayerAttack(attacker, victim.Name, Target.Player);
+            playerSender.PlayerAttack(attacker, victim.Id);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
@@ -109,7 +109,7 @@ internal sealed class CombatSystem(
         var attackDamage = CombatFormulas.NetDamage(attacker.Damage, (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
-            playerSender.PlayerAttack(attacker, victim.Index.ToString(), Target.Npc);
+            playerSender.PlayerAttack(attacker, victim.Id);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
@@ -166,7 +166,7 @@ internal sealed class CombatSystem(
         var attackDamage = CombatFormulas.NetDamage((short)attacker.Data.Attribute[(byte)Attribute.Strength], victim.PlayerDefense);
         if (attackDamage > 0)
         {
-            npcSender.MapNpcAttack(attacker, victim.Name, Target.Player);
+            npcSender.MapNpcAttack(attacker, victim.Id);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
@@ -196,7 +196,7 @@ internal sealed class CombatSystem(
             (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
-            npcSender.MapNpcAttack(attacker, victim.Index.ToString(), Target.Npc);
+            npcSender.MapNpcAttack(attacker, victim.Id);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {

@@ -1,6 +1,7 @@
 using CryBits.Entities.Npc;
 using CryBits.Enums;
 using CryBits.Server.Formulas;
+using System;
 using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Server.Entities;
@@ -8,6 +9,7 @@ namespace CryBits.Server.Entities;
 internal class NpcInstance : Character
 {
     // Basic NPC runtime fields.
+    public readonly Guid Id = Guid.NewGuid();
     public readonly byte Index;
     public readonly Npc Data;
     public bool Alive;

@@ -11,6 +11,7 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Entities;
 using CryBits.Enums;
 using SFML.Graphics;
+using System;
 using Entity = Arch.Core.Entity;
 
 namespace CryBits.Client.Spawners;
@@ -25,6 +26,7 @@ internal static class PlayerSpawner
     /// </summary>
     public static Entity Spawn(
         World world,
+        Guid networkId,
         string name,
         short textureNum,
         short[] vitals,
@@ -42,6 +44,7 @@ internal static class PlayerSpawner
         maxVitals.CopyTo(vitalsComponent.Max, 0);
 
         return world.Create(
+            new NetworkIdComponent(networkId),
             new NameComponent { Value = name, NameColor = Color.White },
             new TransformComponent(x * Globals.Grid, y * Globals.Grid),
             new SpriteComponent(texture),
@@ -60,6 +63,7 @@ internal static class PlayerSpawner
     /// </summary>
     public static Entity SpawnLocal(
         World world,
+        Guid networkId,
         string name,
         short textureNum,
         short level,
@@ -70,7 +74,7 @@ internal static class PlayerSpawner
         byte x, byte y,
         Direction direction)
     {
-        var entity = Spawn(world, name, textureNum, vitals, maxVitals, x, y, direction);
+        var entity = Spawn(world, networkId, name, textureNum, vitals, maxVitals, x, y, direction);
 
         // Override name colour for the local player.
         ref var nameComponent = ref world.Get<NameComponent>(entity);

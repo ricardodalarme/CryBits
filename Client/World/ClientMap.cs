@@ -14,7 +14,6 @@ internal class ClientMap(Map data, World world)
     private readonly QueryDescription _collidableQuery = new QueryDescription().WithAll<CollidableComponent, MovementComponent>();
 
     public readonly Map Data = data;
-    public Entity[] Npcs = [];
 
     private bool HasCollidable(byte x, byte y)
     {

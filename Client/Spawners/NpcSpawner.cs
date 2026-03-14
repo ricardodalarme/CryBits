@@ -7,6 +7,7 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Entities.Npc;
 using CryBits.Enums;
 using SFML.Graphics;
+using System;
 
 namespace CryBits.Client.Spawners;
 
@@ -15,7 +16,7 @@ namespace CryBits.Client.Spawners;
 /// </summary>
 internal static class NpcSpawner
 {
-    public static Entity Spawn(World world, Npc data, byte x, byte y, Direction direction, short[] currentVitals)
+    public static Entity Spawn(World world, Guid npcId, Npc data, byte x, byte y, Direction direction, short[] currentVitals)
     {
         var texture = Textures.Characters[data.Texture];
         var size = texture.ToSize();
@@ -35,6 +36,7 @@ internal static class NpcSpawner
         data.Vital.CopyTo(vitalsComponent.Max, 0);
 
         return world.Create(
+            new NetworkIdComponent(npcId),
             new NameComponent { Value = data.Name, NameColor = textColor },
             new TransformComponent(x * Globals.Grid, y * Globals.Grid),
             new SpriteComponent(texture),
