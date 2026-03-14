@@ -57,7 +57,7 @@ internal sealed class CombatSystem(
         }
 
     @continue:
-        combatSender.Attack(player.MapInstance, player.Id);
+        combatSender.Attack(player.MapInstance.Id, player.Id);
         player.AttackTimer = Environment.TickCount64;
     }
 
@@ -75,7 +75,7 @@ internal sealed class CombatSystem(
         var attackDamage = CombatFormulas.NetDamage(attacker.Damage, victim.PlayerDefense);
         if (attackDamage > 0)
         {
-            combatSender.Attack(attacker.MapInstance, attacker.Id, victim.Id);
+            combatSender.Attack(attacker.MapInstance.Id, attacker.Id, victim.Id);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
@@ -89,7 +89,7 @@ internal sealed class CombatSystem(
             }
         }
         else
-            combatSender.Attack(attacker.MapInstance, attacker.Id);
+            combatSender.Attack(attacker.MapInstance.Id, attacker.Id);
     }
 
     private void PlayerAttackNpc(Player attacker, NpcInstance victim)
@@ -111,7 +111,7 @@ internal sealed class CombatSystem(
         var attackDamage = CombatFormulas.NetDamage(attacker.Damage, (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
-            combatSender.Attack(attacker.MapInstance, attacker.Id, victim.Id);
+            combatSender.Attack(attacker.MapInstance.Id, attacker.Id, victim.Id);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
@@ -125,7 +125,7 @@ internal sealed class CombatSystem(
             }
         }
         else
-            combatSender.Attack(attacker.MapInstance, attacker.Id);
+            combatSender.Attack(attacker.MapInstance.Id, attacker.Id);
     }
 
     /// <summary>Kills <paramref name="player"/>: restores vitals, penalises XP, warps to spawn.</summary>
@@ -168,7 +168,7 @@ internal sealed class CombatSystem(
         var attackDamage = CombatFormulas.NetDamage((short)attacker.Data.Attribute[(byte)Attribute.Strength], victim.PlayerDefense);
         if (attackDamage > 0)
         {
-            combatSender.Attack(attacker.MapInstance, attacker.Id, victim.Id);
+            combatSender.Attack(attacker.MapInstance.Id, attacker.Id, victim.Id);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
@@ -182,7 +182,7 @@ internal sealed class CombatSystem(
             }
         }
         else
-            combatSender.Attack(attacker.MapInstance, attacker.Id);
+            combatSender.Attack(attacker.MapInstance.Id, attacker.Id);
     }
 
     private void NpcAttackNpc(NpcInstance attacker, NpcInstance victim)
@@ -198,7 +198,7 @@ internal sealed class CombatSystem(
             (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
-            combatSender.Attack(attacker.MapInstance, attacker.Id, victim.Id);
+            combatSender.Attack(attacker.MapInstance.Id, attacker.Id, victim.Id);
 
             if (attackDamage < victim.Vital[(byte)Vital.Hp])
             {
@@ -212,7 +212,7 @@ internal sealed class CombatSystem(
             }
         }
         else
-            combatSender.Attack(attacker.MapInstance, attacker.Id);
+            combatSender.Attack(attacker.MapInstance.Id, attacker.Id);
     }
 
     /// <summary>Kills <paramref name="npcInstance"/>: drops items, resets spawn state, notifies the map.</summary>

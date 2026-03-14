@@ -16,7 +16,7 @@ internal sealed class ChatSender(PackageSender packageSender)
     public void MessageMap(Player player, string text)
     {
         var message = "[Map] " + player.Name + ": " + text;
-        packageSender.ToMap(player.MapInstance, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
+        packageSender.ToMap(player.MapInstance.Id, new MessagePacket { Text = message, ColorArgb = Color.White.ToArgb() });
     }
 
     public void MessageGlobal(Player player, string text)

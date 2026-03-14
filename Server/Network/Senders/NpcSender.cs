@@ -48,7 +48,7 @@ internal sealed class NpcSender(PackageSender packageSender)
             Vital = new short[(byte)Vital.Count]
         };
         for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
-        packageSender.ToMap(npcInstance.MapInstance, packet);
+        packageSender.ToMap(npcInstance.MapInstance.Id, packet);
     }
 
     public void MapNpcMovement(NpcInstance npcInstance, byte movement)
@@ -57,7 +57,7 @@ internal sealed class NpcSender(PackageSender packageSender)
             ? Globals.RunSpeedPixelsPerSecond
             : Globals.WalkSpeedPixelsPerSecond;
 
-        packageSender.ToMap(npcInstance.MapInstance,
+        packageSender.ToMap(npcInstance.MapInstance.Id,
             new MapNpcMovementPacket
             {
                 InstanceId = npcInstance.Id,
@@ -71,7 +71,7 @@ internal sealed class NpcSender(PackageSender packageSender)
 
     public void MapNpcDirection(NpcInstance npcInstance)
     {
-        packageSender.ToMap(npcInstance.MapInstance,
+        packageSender.ToMap(npcInstance.MapInstance.Id,
             new MapNpcDirectionPacket { InstanceId = npcInstance.Id, Direction = (byte)npcInstance.Direction });
     }
 
@@ -79,11 +79,11 @@ internal sealed class NpcSender(PackageSender packageSender)
     {
         var packet = new MapNpcVitalsPacket { InstanceId = npcInstance.Id, Vital = new short[(byte)Vital.Count] };
         for (byte n = 0; n < (byte)Vital.Count; n++) packet.Vital[n] = npcInstance.Vital[n];
-        packageSender.ToMap(npcInstance.MapInstance, packet);
+        packageSender.ToMap(npcInstance.MapInstance.Id, packet);
     }
 
     public void MapNpcDied(NpcInstance npcInstance)
     {
-        packageSender.ToMap(npcInstance.MapInstance, new MapNpcDiedPacket { InstanceId = npcInstance.Id });
+        packageSender.ToMap(npcInstance.MapInstance.Id, new MapNpcDiedPacket { InstanceId = npcInstance.Id });
     }
 }

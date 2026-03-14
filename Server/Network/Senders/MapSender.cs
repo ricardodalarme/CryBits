@@ -34,7 +34,7 @@ internal sealed class MapSender(PackageSender packageSender)
                 if (player != GameWorld.Current.Sessions[i].Character)
                     if (GameWorld.Current.Sessions[i].Character!.MapInstance == player.MapInstance)
                         packageSender.ToPlayer(player, PlayerDataCache(GameWorld.Current.Sessions[i].Character!));
-        packageSender.ToMap(player.MapInstance, PlayerDataCache(player));
+        packageSender.ToMap(player.MapInstance.Id, PlayerDataCache(player));
     }
 
     public void MapItems(Player player, MapInstance mapInstance)
@@ -66,7 +66,7 @@ internal sealed class MapSender(PackageSender packageSender)
             };
         }
 
-        packageSender.ToMap(mapInstance, packet);
+        packageSender.ToMap(mapInstance.Id, packet);
     }
 
     private static PlayerDataPacket PlayerDataCache(Player player)

@@ -130,7 +130,7 @@ internal sealed class MovementSystem(
 
         if (oldMap != mapInstance || needUpdate)
         {
-            playerSender.PlayerLeaveMap(player, oldMap);
+            playerSender.PlayerLeaveMap(player, oldMap.Id);
             player.GettingMap = true;
             mapSender.MapRevision(player, mapInstance.Data);
             mapSender.MapItems(player, mapInstance);

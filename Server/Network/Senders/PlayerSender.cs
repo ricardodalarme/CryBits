@@ -2,6 +2,7 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
+using System;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Senders;
@@ -25,14 +26,14 @@ internal sealed class PlayerSender(PackageSender packageSender)
         packageSender.ToPlayer(player, new JoinMapPacket());
     }
 
-    public void PlayerLeaveMap(Player player, MapInstance mapInstance)
+    public void PlayerLeaveMap(Player player, Guid mapId)
     {
-        packageSender.ToMapBut(mapInstance, player, new PlayerLeavePacket { NetworkId = player.Id });
+        packageSender.ToMapBut(mapId, player, new PlayerLeavePacket { NetworkId = player.Id });
     }
 
     public void PlayerPosition(Player player)
     {
-        packageSender.ToMap(player.MapInstance,
+        packageSender.ToMap(player.MapInstance.Id,
             new PlayerPositionPacket
             { NetworkId = player.Id, X = player.X, Y = player.Y, Direction = (byte)player.Direction });
     }
@@ -47,7 +48,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
             packet.MaxVital[i] = player.MaxVital(i);
         }
 
-        packageSender.ToMap(player.MapInstance, packet);
+        packageSender.ToMap(player.MapInstance.Id, packet);
     }
 
     public void PlayerLeave(Player player)
@@ -61,7 +62,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
             ? RunSpeedPixelsPerSecond
             : WalkSpeedPixelsPerSecond;
 
-        packageSender.ToMapBut(player.MapInstance, player,
+        packageSender.ToMapBut(player.MapInstance.Id, player,
             new PlayerMovePacket
             {
                 NetworkId = player.Id,
@@ -75,7 +76,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
 
     public void PlayerDirection(Player player)
     {
-        packageSender.ToMapBut(player.MapInstance, player,
+        packageSender.ToMapBut(player.MapInstance.Id, player,
             new PlayerDirectionPacket { NetworkId = player.Id, Direction = (byte)player.Direction });
     }
 
@@ -89,15 +90,15 @@ internal sealed class PlayerSender(PackageSender packageSender)
     public void PlayerEquipments(Player player)
     {
         var packet = new PlayerEquipmentsPacket
-        { NetworkId = player.Id, Equipments = new System.Guid[(byte)Equipment.Count] };
+        { NetworkId = player.Id, Equipments = new Guid[(byte)Equipment.Count] };
         for (byte i = 0; i < (byte)Equipment.Count; i++) packet.Equipments[i] = player.Equipment[i].GetId();
-        packageSender.ToMap(player.MapInstance, packet);
+        packageSender.ToMap(player.MapInstance.Id, packet);
     }
 
     public void PlayerInventory(Player player)
     {
         var packet = new PlayerInventoryPacket
-        { ItemIds = new System.Guid[MaxInventory], Amounts = new short[MaxInventory] };
+        { ItemIds = new Guid[MaxInventory], Amounts = new short[MaxInventory] };
         for (byte i = 0; i < MaxInventory; i++)
         {
             packet.ItemIds[i] = player.Inventory[i].Item.GetId();
