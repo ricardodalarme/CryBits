@@ -55,7 +55,8 @@ internal sealed class SystemScheduler(
         new CameraSystem(context, cameraManager),
         new CharacterAnimationControllerSystem(context.World),
         new AnimatedSpriteSystem(context.World),
-        new AttackSystem(context, inputManager, playerSender)
+        new AttackSystem(context, inputManager, playerSender),
+        new DamageDecaySystem(context.World)
     );
 
     // ── Render phases ─────────────────────────────────────────────────────────
