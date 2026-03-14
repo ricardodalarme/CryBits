@@ -49,7 +49,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
             ref var anim = ref World.Get<AnimatedSpriteComponent>(entity);
             ref var name = ref World.Get<NameComponent>(entity);
 
-            var isHurt = World.Has<DamageComponent>(entity);
+            var isHurt = World.Has<HurtComponent>(entity);
 
             DrawShadow(ref transform, ref anim);
             DrawSprite(ref transform, ref sprite, ref anim, isHurt);
