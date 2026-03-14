@@ -3,14 +3,13 @@ using System.Threading;
 using CryBits.Client.Framework.Audio;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
-using CryBits.Editors.Graphics;
 using CryBits.Editors.Network;
 
 namespace CryBits.Editors.Logic;
 
-internal class Loop(NetworkClient network, MapInstance mapInstance, Renders renders)
+internal class Loop(NetworkClient network, MapInstance mapInstance)
 {
-    public static Loop Instance { get; } = new(NetworkClient.Instance, MapInstance.Instance, Renders.Instance);
+    public static Loop Instance { get; } = new(NetworkClient.Instance, MapInstance.Instance);
 
     /// <summary>
     /// Start the editor main loop: process incoming data, update state and present render targets.
@@ -29,8 +28,6 @@ internal class Loop(NetworkClient network, MapInstance mapInstance, Renders rend
             mapInstance.UpdateFog();
             mapInstance.UpdateWeather();
             MapsMusic();
-
-            renders.Present();
 
             // Throttle loop to ~10ms per iteration.
             while (Environment.TickCount < count + 10) Thread.Sleep(1);

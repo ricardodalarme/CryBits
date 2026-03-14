@@ -15,7 +15,7 @@ using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
-using CryBits.Editors.Graphics;
+using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Entities.Map;
@@ -212,8 +212,8 @@ internal partial class EditorMapsWindow : Window
         numNPC_Zone.Maximum = Globals.MaxZones;
 
         // SFML offscreen render textures
-        Renders.Instance.WinMapRT = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
-        Renders.Instance.WinMapTileRT = new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
+        MapRenderer.Instance.WinMap = new RenderTexture(new Vector2u((uint)MapCanvasWidth, (uint)MapCanvasHeight));
+        MapRenderer.Instance.WinMapTile = new RenderTexture(new Vector2u((uint)TileCanvasWidth, (uint)TileCanvasHeight));
 
         // 30 fps timer
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -232,8 +232,8 @@ internal partial class EditorMapsWindow : Window
     {
         _isOpen = false;
         _timer?.Stop();
-        Renders.Instance.WinMapRT = null;
-        Renders.Instance.WinMapTileRT = null;
+        MapRenderer.Instance.WinMap = null;
+        MapRenderer.Instance.WinMapTile = null;
         Instance = null;
         base.OnClosed(e);
     }
@@ -245,17 +245,17 @@ internal partial class EditorMapsWindow : Window
     private void OnRenderTick(object? sender, EventArgs e)
     {
         // Map canvas
-        if (Renders.Instance.WinMapRT != null && _selected != null)
+        if (MapRenderer.Instance.WinMap != null && _selected != null)
         {
-            Renders.Instance.EditorMapsMapRT();
-            SfmlRenderBlit.Blit(Renders.Instance.WinMapRT, ref _mapBitmap, imgMap);
+            MapRenderer.Instance.EditorMapsMap();
+            SfmlRenderBlit.Blit(MapRenderer.Instance.WinMap, ref _mapBitmap, imgMap);
         }
 
         // Tile canvas (only in Normal mode)
-        if (Renders.Instance.WinMapTileRT != null && ModeNormal)
+        if (MapRenderer.Instance.WinMapTile != null && ModeNormal)
         {
-            Renders.Instance.EditorMapsTileRT();
-            SfmlRenderBlit.Blit(Renders.Instance.WinMapTileRT, ref _tileBitmap, imgTile);
+            MapRenderer.Instance.EditorMapsTile();
+            SfmlRenderBlit.Blit(MapRenderer.Instance.WinMapTile, ref _tileBitmap, imgTile);
         }
 
         UpdateStatusBar();

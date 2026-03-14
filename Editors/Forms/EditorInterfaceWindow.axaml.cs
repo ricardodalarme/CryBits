@@ -9,7 +9,7 @@ using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Enums;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
-using CryBits.Editors.Graphics;
+using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Library.Repositories;
 using SFML.Graphics;
 using SFML.System;
@@ -85,7 +85,7 @@ internal partial class EditorInterfaceWindow : Window
             cmbWindows.SelectedIndex = 0;
 
         // Create offscreen SFML render target (933 × 702 to match the WinForms canvas)
-        Renders.Instance.WinInterfaceRT = new RenderTexture(new Vector2u(933, 702));
+        InterfaceRenderer.Instance.WinInterface = new RenderTexture(new Vector2u(933, 702));
 
         // Start refresh timer
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -96,7 +96,7 @@ internal partial class EditorInterfaceWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
-        Renders.Instance.WinInterfaceRT = null;
+        InterfaceRenderer.Instance.WinInterface = null;
         base.OnClosed(e);
     }
 
@@ -106,11 +106,11 @@ internal partial class EditorInterfaceWindow : Window
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
-        if (Renders.Instance.WinInterfaceRT == null) return;
+        if (InterfaceRenderer.Instance.WinInterface == null) return;
         if (InterfaceData.Instance.Tree.Nodes.Count == 0) return;
 
-        Renders.Instance.Interface();
-        SfmlRenderBlit.Blit(Renders.Instance.WinInterfaceRT, ref _previewBitmap, imgPreview);
+        InterfaceRenderer.Instance.Interface(InterfaceData.Instance.Tree.Nodes[SelectedWindowIndex]);
+        SfmlRenderBlit.Blit(InterfaceRenderer.Instance.WinInterface, ref _previewBitmap, imgPreview);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

@@ -6,7 +6,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Graphics;
+using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Entities.Npc;
@@ -51,7 +51,7 @@ internal partial class EditorNpcsWindow : Window
         cmbShop.ItemsSource = Shop.List.Values.ToList();
 
         // SFML offscreen render for the texture preview
-        Renders.Instance.WinNpcRT = new RenderTexture(new Vector2u(80, 80));
+        CharacterRenderer.Instance.WinCharacter = new RenderTexture(new Vector2u(80, 80));
 
         // Timer: ~30 fps preview
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -64,7 +64,7 @@ internal partial class EditorNpcsWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
-        Renders.Instance.WinNpcRT = null;
+        CharacterRenderer.Instance.WinCharacter = null;
         base.OnClosed(e);
     }
 
@@ -74,10 +74,10 @@ internal partial class EditorNpcsWindow : Window
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
-        if (Renders.Instance.WinNpcRT == null || CurrentTextureIndex <= 0) return;
+        if (CharacterRenderer.Instance.WinCharacter == null || CurrentTextureIndex <= 0) return;
 
-        Renders.Instance.EditorNpcRT();
-        SfmlRenderBlit.Blit(Renders.Instance.WinNpcRT, ref _previewBitmap, imgTexture);
+        CharacterRenderer.Instance.Character();
+        SfmlRenderBlit.Blit(CharacterRenderer.Instance.WinCharacter, ref _previewBitmap, imgTexture);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

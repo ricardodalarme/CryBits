@@ -9,7 +9,7 @@ using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Graphics;
+using CryBits.Editors.Graphics.Renderers;
 using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
@@ -34,7 +34,7 @@ internal partial class EditorTilesWindow : Window
     private const int CanvasW = 298;
     private const int CanvasH = 443;
 
-    // How the render is read back by Renders.Instance.EditorTileRT()
+    // How the render is read back by TileRenderer.Instance.EditorTileRT()
     public static int ScrollTile { get; private set; } = 1;
     public static int ScrollX { get; private set; }
     public static int ScrollY { get; private set; }
@@ -54,7 +54,7 @@ internal partial class EditorTilesWindow : Window
         UpdateScrollBounds();
 
         // SFML offscreen canvas
-        Renders.Instance.WinTileRT = new RenderTexture(new Vector2u(CanvasW, CanvasH));
+        TileRenderer.Instance.WinTile = new RenderTexture(new Vector2u(CanvasW, CanvasH));
 
         // 30 fps refresh timer
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -65,7 +65,7 @@ internal partial class EditorTilesWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _timer?.Stop();
-        Renders.Instance.WinTileRT = null;
+        TileRenderer.Instance.WinTile = null;
         base.OnClosed(e);
     }
 
@@ -75,10 +75,10 @@ internal partial class EditorTilesWindow : Window
 
     private void OnRenderTick(object? sender, EventArgs e)
     {
-        if (Renders.Instance.WinTileRT == null) return;
+        if (TileRenderer.Instance.WinTile == null) return;
 
-        Renders.Instance.EditorTileRT();
-        SfmlRenderBlit.Blit(Renders.Instance.WinTileRT, ref _bitmap, imgCanvas);
+        TileRenderer.Instance.Tile(ScrollTile, ScrollX, ScrollY, ModeAttributes);
+        SfmlRenderBlit.Blit(TileRenderer.Instance.WinTile, ref _bitmap, imgCanvas);
     }
 
     // ──────────────────────────────────────────────────────────────────────────
