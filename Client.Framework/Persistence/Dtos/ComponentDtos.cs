@@ -7,16 +7,12 @@ namespace CryBits.Client.Framework.Persistence.Dtos;
 /// <summary>Root DTO – one per Tools.json file.</summary>
 public sealed class ToolsJsonRoot
 {
-    [JsonPropertyName("screens")]
     public List<ScreenDto> Screens { get; set; } = [];
 }
 
 public sealed class ScreenDto
 {
-    [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-
-    [JsonPropertyName("children")]
     public List<ComponentDto> Children { get; set; } = [];
 }
 
@@ -35,103 +31,62 @@ public sealed class ScreenDto
 [JsonDerivedType(typeof(PictureDto), "Picture")]
 public abstract class ComponentDto
 {
-    [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-
-    [JsonPropertyName("x")]
     public int X { get; set; }
-
-    [JsonPropertyName("y")]
     public int Y { get; set; }
-
-    [JsonPropertyName("visible")]
     public bool Visible { get; set; }
-
-    [JsonPropertyName("children")]
     public List<ComponentDto> Children { get; set; } = [];
 }
 
 public sealed class LabelDto : ComponentDto
 {
-    [JsonPropertyName("text")]
     public string Text { get; set; } = string.Empty;
-
-    [JsonPropertyName("color")]
     public int Color { get; set; } = 0xFFFFFF;
-
-    [JsonPropertyName("alignment")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public TextAlign Alignment { get; set; } = TextAlign.Left;
-
-    [JsonPropertyName("maxWidth")]
     public int MaxWidth { get; set; } = 0;
 }
 
 public sealed class ButtonDto : ComponentDto
 {
-    [JsonPropertyName("textureNum")]
     public byte TextureNum { get; set; }
 }
 
 public sealed class TextBoxDto : ComponentDto
 {
-    [JsonPropertyName("maxCharacters")]
     public short MaxCharacters { get; set; }
-
-    [JsonPropertyName("width")]
     public short Width { get; set; }
-
-    [JsonPropertyName("password")]
     public bool Password { get; set; }
 }
 
 public sealed class PanelDto : ComponentDto
 {
-    [JsonPropertyName("textureNum")]
     public byte TextureNum { get; set; }
 }
 
 public sealed class CheckBoxDto : ComponentDto
 {
-    [JsonPropertyName("text")]
     public string Text { get; set; } = string.Empty;
-
-    [JsonPropertyName("checked")]
     public bool Checked { get; set; }
 }
 
 public sealed class ProgressBarDto : ComponentDto
 {
-    [JsonPropertyName("sourceY")]
     public int SourceY { get; set; }
-
-    [JsonPropertyName("width")]
     public int Width { get; set; }
-
-    [JsonPropertyName("height")]
     public int Height { get; set; }
 }
 
 public sealed class SlotGridDto : ComponentDto
 {
-    [JsonPropertyName("columns")]
     public byte Columns { get; set; } = 1;
-
-    [JsonPropertyName("slotSize")]
     public byte SlotSize { get; set; } = 32;
-
-    [JsonPropertyName("padding")]
     public byte Padding { get; set; } = 4;
-
-    [JsonPropertyName("rows")]
     public byte Rows { get; set; } = 1;
 }
 
 public sealed class PictureDto : ComponentDto
 {
-    [JsonPropertyName("width")]
     public int Width { get; set; }
-
-    [JsonPropertyName("height")]
     public int Height { get; set; }
 }
