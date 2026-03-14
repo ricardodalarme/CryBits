@@ -13,10 +13,10 @@ internal class MapInstance
 {
     public static MapInstance Instance { get; } = new();
 
-    private int _fogXTimer;
-    private int _fogYTimer;
-    private int _snowTimer;
-    private int _thunderingTimer;
+    private long _fogXTimer;
+    private long _fogYTimer;
+    private long _snowTimer;
+    private long _thunderingTimer;
 
     public int FogX;
     public int FogY;
@@ -59,7 +59,7 @@ internal class MapInstance
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
         int speed = map.Fog.SpeedX;
 
-        if (_fogXTimer >= Environment.TickCount) return;
+        if (_fogXTimer >= Environment.TickCount64) return;
         if (speed == 0) return;
 
         if (speed < 0)
@@ -74,7 +74,7 @@ internal class MapInstance
         }
 
         if (speed < 0) speed *= -1;
-        _fogXTimer = Environment.TickCount + 50 - speed;
+        _fogXTimer = Environment.TickCount64 + 50 - speed;
     }
 
     private void UpdateFogY()
@@ -83,7 +83,7 @@ internal class MapInstance
         var textureSize = Textures.Fogs[map.Fog.Texture].ToSize();
         int speed = map.Fog.SpeedY;
 
-        if (_fogYTimer >= Environment.TickCount) return;
+        if (_fogYTimer >= Environment.TickCount64) return;
         if (speed == 0) return;
 
         if (speed < 0)
@@ -98,7 +98,7 @@ internal class MapInstance
         }
 
         if (speed < 0) speed *= -1;
-        _fogYTimer = Environment.TickCount + 50 - speed;
+        _fogYTimer = Environment.TickCount64 + 50 - speed;
     }
 
     /// <summary>
@@ -127,19 +127,19 @@ internal class MapInstance
         else if (AudioManager.Instance.IsPlaying(Sounds.Rain))
             AudioManager.Instance.StopAllSounds();
 
-        if (_snowTimer < Environment.TickCount)
+        if (_snowTimer < Environment.TickCount64)
         {
             move = true;
-            _snowTimer = Environment.TickCount + 35;
+            _snowTimer = Environment.TickCount64 + 35;
         }
         else
             move = false;
 
         if (Lightning > 0)
-            if (_thunderingTimer < Environment.TickCount)
+            if (_thunderingTimer < Environment.TickCount64)
             {
                 Lightning -= 10;
-                _thunderingTimer = Environment.TickCount + 25;
+                _thunderingTimer = Environment.TickCount64 + 25;
             }
 
         for (var i = 1; i <= Weather.GetUpperBound(0); i++)

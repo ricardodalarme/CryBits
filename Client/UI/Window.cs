@@ -25,7 +25,7 @@ internal class Window(InputManager inputManager, NetworkClient networkClient, Au
     /// <summary>Interval in milliseconds within which two clicks count as a double-click.</summary>
     private const int DoubleClickIntervalMs = 142;
 
-    private int _doubleClickTimer;
+    private long _doubleClickTimer;
 
     /// <summary>Current mouse pointer position in screen coordinates.</summary>
     private Point Mouse;
@@ -50,7 +50,7 @@ internal class Window(InputManager inputManager, NetworkClient networkClient, Au
 
     private void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
     {
-        if (Environment.TickCount < _doubleClickTimer + DoubleClickIntervalMs)
+        if (Environment.TickCount64 < _doubleClickTimer + DoubleClickIntervalMs)
             Screen.Current?.MouseDoubleClick(e);
         else
             Screen.Current?.MouseDown(e);
@@ -58,7 +58,7 @@ internal class Window(InputManager inputManager, NetworkClient networkClient, Au
 
     private void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
     {
-        _doubleClickTimer = Environment.TickCount;
+        _doubleClickTimer = Environment.TickCount64;
         Screen.Current?.MouseUp();
 
         // Reset drag/move state.

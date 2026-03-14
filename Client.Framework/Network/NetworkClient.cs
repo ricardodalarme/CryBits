@@ -60,8 +60,8 @@ public class NetworkClient
 
         ServerPeer = _netManager.Connect(Ip, Config.Port, Config.GameName);
 
-        var waitTimer = Environment.TickCount;
-        while (!IsConnected() && Environment.TickCount <= waitTimer + 1000)
+        var waitTimer = Environment.TickCount64;
+        while (!IsConnected() && Environment.TickCount64 <= waitTimer + 1000)
             HandleData();
 
         return IsConnected();

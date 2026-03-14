@@ -29,7 +29,7 @@ internal class LocalPlayer(World world, Entity entity)
     /// <summary>Network ID of the local player.
     public Guid Id;
 
-    private int _collectTimer;
+    private long _collectTimer;
 
     /// <summary>Convenient accessor for the local player's name.</summary>
     public string GetName() =>
@@ -87,9 +87,9 @@ internal class LocalPlayer(World world, Entity entity)
                 hasSlot = true;
 
         if (!hasItem || !hasSlot) return;
-        if (Environment.TickCount <= _collectTimer + 250) return;
+        if (Environment.TickCount64 <= _collectTimer + 250) return;
 
         PlayerSender.Instance.CollectItem();
-        _collectTimer = Environment.TickCount;
+        _collectTimer = Environment.TickCount64;
     }
 }

@@ -29,8 +29,8 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
     public static short Fps;
 
     // Timing counters
-    private int TextBoxTimer;
-    public static int ChatTimer;
+    private long TextBoxTimer;
+    public static long ChatTimer;
 
     // Delta-time systems — receive seconds elapsed since last frame.
     private readonly Group<float> _deltaTimeSystems = new(
@@ -52,7 +52,7 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
     /// </summary>
     public void Init()
     {
-        var timer1000 = 0;
+        long timer1000 = 0;
         short fps = 0;
 
         while (Program.Working)
@@ -74,11 +74,11 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
             _deltaTimeSystems.Update(deltaTime);
 
             // Update FPS counter.
-            if (timer1000 < Environment.TickCount)
+            if (timer1000 < Environment.TickCount64)
             {
                 Fps = fps;
                 fps = 0;
-                timer1000 = Environment.TickCount + 1000;
+                timer1000 = Environment.TickCount64 + 1000;
             }
             else
                 fps++;
@@ -91,9 +91,9 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
     private void UpdateTextBox()
     {
         // Toggle textbox caret visibility on a timer.
-        if (TextBoxTimer < Environment.TickCount)
+        if (TextBoxTimer < Environment.TickCount64)
         {
-            TextBoxTimer = Environment.TickCount + 500;
+            TextBoxTimer = Environment.TickCount64 + 500;
             TextBox.BlinkSignal = !TextBox.BlinkSignal;
 
             // Re-evaluate focused textbox if needed.

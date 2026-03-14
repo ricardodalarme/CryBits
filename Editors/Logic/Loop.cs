@@ -16,12 +16,12 @@ internal class Loop(NetworkClient network, MapInstance mapInstance)
     /// </summary>
     public void Init()
     {
-        var timer1000 = 0;
+        long timer1000 = 0;
         short fps = 0;
 
         while (Program.Working)
         {
-            var count = Environment.TickCount;
+            var count = Environment.TickCount64;
 
             network.HandleData();
 
@@ -30,13 +30,13 @@ internal class Loop(NetworkClient network, MapInstance mapInstance)
             MapsMusic();
 
             // Throttle loop to ~10ms per iteration.
-            while (Environment.TickCount < count + 10) Thread.Sleep(1);
+            while (Environment.TickCount64 < count + 10) Thread.Sleep(1);
 
-            if (timer1000 < Environment.TickCount)
+            if (timer1000 < Environment.TickCount64)
             {
                 Program.Fps = fps;
                 fps = 0;
-                timer1000 = Environment.TickCount + 1000;
+                timer1000 = Environment.TickCount64 + 1000;
             }
             else
             {

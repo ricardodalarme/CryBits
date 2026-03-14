@@ -71,7 +71,7 @@ internal class AccountHandler(AudioManager audioManager, GameContext context)
         // Reset UI state and options
         Chat.Order = [];
         Chat.LinesFirst = 0;
-        GameLoop.ChatTimer = Environment.TickCount + Chat.SleepTimer;
+        GameLoop.ChatTimer = Environment.TickCount64 + Chat.SleepTimer;
         ChatView.MessageTextBox.Text = string.Empty;
         OptionsView.SoundsCheckBox.Checked = Options.Instance.Sounds;
         OptionsView.MusicsCheckBox.Checked = Options.Instance.Musics;
@@ -79,7 +79,7 @@ internal class AccountHandler(AudioManager audioManager, GameContext context)
         OptionsView.MetricsCheckBox.Checked = Options.Instance.ShowMetrics;
         OptionsView.TradeCheckBox.Checked = Options.Instance.Trade;
         OptionsView.PartyCheckBox.Checked = Options.Instance.Party;
-        GameLoop.ChatTimer = GameLoop.ChatTimer = Environment.TickCount + 10000;
+        GameLoop.ChatTimer = GameLoop.ChatTimer = Environment.TickCount64 + 10000;
         InformationView.Hide();
 
         // Reset UI panels

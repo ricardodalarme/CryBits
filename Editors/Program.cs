@@ -82,13 +82,13 @@ internal static class Program
 
     public static void Close()
     {
-        var waitTimer = Environment.TickCount;
+        var waitTimer = Environment.TickCount64;
 
         // Disconnect from network
         NetworkClient.Instance.Disconnect();
 
         // Wait until the player is disconnected
-        while (NetworkClient.Instance.IsConnected() && Environment.TickCount <= waitTimer + 1000)
+        while (NetworkClient.Instance.IsConnected() && Environment.TickCount64 <= waitTimer + 1000)
             Thread.Sleep(10);
 
         // Close the application

@@ -72,11 +72,11 @@ internal static class Program
     /// </summary>
     public static void Close()
     {
-        var waitTimer = Environment.TickCount;
+        var waitTimer = Environment.TickCount64;
 
         NetworkClient.Instance.Disconnect();
 
-        while (NetworkClient.Instance.IsConnected() && Environment.TickCount <= waitTimer + 1000)
+        while (NetworkClient.Instance.IsConnected() && Environment.TickCount64 <= waitTimer + 1000)
             NetworkClient.Instance.HandleData();
 
         Working = false;
