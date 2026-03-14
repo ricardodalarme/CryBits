@@ -1,5 +1,6 @@
 using Arch.Core;
 using Arch.System;
+using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
 using CryBits.Enums;
@@ -14,14 +15,25 @@ namespace CryBits.Client.Systems.Movement;
 internal sealed class CharacterAnimationControllerSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<CharacterStateComponent, AnimatedSpriteComponent>();
+        .WithAll<CharacterStateComponent, AnimatedSpriteComponent, DamageTintComponent>();
 
     public override void Update(in float dt)
     {
         var delta = dt;
-        World.Query(in _query, (ref CharacterStateComponent state, ref AnimatedSpriteComponent anim) =>
+        World.Query(in _query, (ref CharacterStateComponent state, ref AnimatedSpriteComponent anim, ref DamageTintComponent damage) =>
         {
-            // 1. Tick down attack cooldown
+            // 1. Tick down hurt cooldown
+            if (damage.IsHurt)
+            {
+                damage.HurtCountdown -= delta;
+                if (damage.HurtCountdown <= 0f)
+                {
+                    damage.HurtCountdown = 0f;
+                    damage.IsHurt = false;
+                }
+            }
+
+            // 2. Tick down attack cooldown
             if (state.AttackCountdown > 0f)
             {
                 state.AttackCountdown -= delta;
@@ -32,7 +44,7 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
                 }
             }
 
-            // 2. Set the Row based on Direction
+            // 3. Set the Row based on Direction
             anim.CurrentFrameY = state.Direction switch
             {
                 Direction.Up => MovementUp,
@@ -42,7 +54,7 @@ internal sealed class CharacterAnimationControllerSystem(World world) : BaseSyst
                 _ => 0
             };
 
-            // 3. Set the Column and Playback based on State
+            // 4. Set the Column and Playback based on State
             if (state.IsAttacking && state.AttackCountdown > AttackSpeed / 2000f)
             {
                 anim.Playing = false; // Stop walking animation

@@ -1,10 +1,12 @@
 using Arch.Core;
 using Arch.System;
+using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
 using System.Collections.Generic;
 using System.Drawing;
+using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Systems.Character;
 
@@ -23,7 +25,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
     /// plus the shadow marker that distinguishes them from other sprite entities.
     /// </summary>
     private readonly QueryDescription _query = new QueryDescription()
-        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent>();
+        .WithAll<TransformComponent, SpriteComponent, AnimatedSpriteComponent, DamageTintComponent>();
 
     // Reused every frame — avoids per-frame heap allocation from Y-sort.
     private readonly List<(int Y, Entity Entity)> _drawList = [];
@@ -43,9 +45,10 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
             ref var transform = ref World.Get<TransformComponent>(entity);
             ref var sprite = ref World.Get<SpriteComponent>(entity);
             ref var anim = ref World.Get<AnimatedSpriteComponent>(entity);
+            ref var damage = ref World.Get<DamageTintComponent>(entity);
 
             DrawShadow(ref transform, ref anim);
-            DrawSprite(ref transform, ref sprite, ref anim);
+            DrawSprite(ref transform, ref sprite, ref anim, ref damage);
         }
     }
 
@@ -73,13 +76,15 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
     }
 
     /// <summary>
-    /// Draws the animated sprite frame using the source rect already computed by
-    /// <c>AnimatedSpriteSystem</c> and the tint set by <c>DamageTintSystem</c>.
+    /// Draws the animated sprite frame, deriving the final tint at render time:
+    /// uses the damage colour when hurt while preserving <see cref="SpriteComponent.Tint"/>'s
+    /// alpha so <c>FadeSystem</c> dissolves and damage tint can coexist without conflict.
     /// </summary>
     private void DrawSprite(
         ref TransformComponent transform,
         ref SpriteComponent sprite,
-        ref AnimatedSpriteComponent anim)
+        ref AnimatedSpriteComponent anim,
+        ref DamageTintComponent damage)
     {
         var source = new Rectangle(
             anim.CurrentFrameX * anim.FrameWidth,
@@ -88,6 +93,12 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
             anim.FrameHeight);
 
         var dest = source with { X = transform.X, Y = transform.Y };
-        renderer.Draw(sprite.Texture, source, dest, sprite.Tint);
+
+        // Preserve FadeSystem-driven alpha when applying the damage colour.
+        var tint = damage.IsHurt
+            ? new Color(205, 125, 125, sprite.Tint.A)
+            : sprite.Tint;
+
+        renderer.Draw(sprite.Texture, source, dest, tint);
     }
 }
