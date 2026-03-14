@@ -43,36 +43,44 @@ internal class GameLoop(
 
         while (Program.Working)
         {
-            // Handle incoming network data.
-            networkClient.HandleData();
-
-            // Present the rendered frame.
-            renderPipeline.Present();
-
-            // Clear previous frame's edge state, then dispatch window events to fill it.
-            inputManager.BeginFrame();
-            renderer.RenderWindow.DispatchEvents();
-
-            UpdateTextBox();
-
-            // Use high-resolution stopwatch for delta time.
-            var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
-            _stopwatch.Restart();
-
-            scheduler.Update.BeforeUpdate(in deltaTime);
-            scheduler.Update.Update(in deltaTime);
-            scheduler.Update.AfterUpdate(in deltaTime);
-
-            // Update FPS counter.
-            if (timer1000 < Environment.TickCount64)
+            try
             {
-                Fps = fps;
-                fps = 0;
-                timer1000 = Environment.TickCount64 + 1000;
+                // Handle incoming network data.
+                networkClient.HandleData();
+
+                // Present the rendered frame.
+                renderPipeline.Present();
+
+                // Clear previous frame's edge state, then dispatch window events to fill it.
+                inputManager.BeginFrame();
+                renderer.RenderWindow.DispatchEvents();
+
+                UpdateTextBox();
+
+                // Use high-resolution stopwatch for delta time.
+                var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
+                _stopwatch.Restart();
+
+                scheduler.Update.BeforeUpdate(in deltaTime);
+                scheduler.Update.Update(in deltaTime);
+                scheduler.Update.AfterUpdate(in deltaTime);
+
+                // Update FPS counter.
+                if (timer1000 < Environment.TickCount64)
+                {
+                    Fps = fps;
+                    fps = 0;
+                    timer1000 = Environment.TickCount64 + 1000;
+                }
+                else
+                    fps++;
             }
-            else
-                fps++;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error] Main loop threw an exception: {ex}");
+            }
         }
+
 
         // Close the client.
         scheduler.Dispose();
