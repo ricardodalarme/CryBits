@@ -1,19 +1,8 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Enums;
 
 namespace CryBits.Client.Framework.Persistence;
-
-/// <summary>Shared JSON serializer options used by all read/write operations.</summary>
-public static class JsonConfig
-{
-    public static readonly JsonSerializerOptions Options = new()
-    {
-        WriteIndented = true,
-        PropertyNameCaseInsensitive = true
-    };
-}
 
 // ─── DTOs that represent the on-disk JSON layout ────────────────────────────
 

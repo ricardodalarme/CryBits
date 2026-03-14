@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text.Json;
+using CryBits.Utils;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Persistence.Repositories;
@@ -22,7 +23,6 @@ internal sealed class SettingsRepository
 
     public void Write()
     {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        File.WriteAllText(Directories.Settings.FullName, JsonSerializer.Serialize(Config, options));
+        File.WriteAllText(Directories.Settings.FullName, JsonSerializer.Serialize(Config, JsonConfig.Options));
     }
 }
