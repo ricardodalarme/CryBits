@@ -33,7 +33,6 @@ internal class GameLoop(RenderPipeline renderPipeline, NetworkClient networkClie
 
     // Timing counters
     private long TextBoxTimer;
-    public static long ChatTimer;
 
     // Delta-time systems — receive seconds elapsed since last frame.
     private readonly Group<float> _deltaTimeSystems = new(
