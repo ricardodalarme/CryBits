@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
+using System.Collections.Generic;
 
 namespace CryBits.Editors.Entities;
 

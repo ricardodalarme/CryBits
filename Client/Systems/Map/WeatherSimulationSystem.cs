@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Core;
@@ -8,6 +6,8 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
+using System;
+using System.Collections.Generic;
 using static CryBits.Globals;
 using static CryBits.Utils.RandomUtils;
 using ArchEntity = Arch.Core.Entity;

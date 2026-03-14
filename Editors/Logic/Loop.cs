@@ -1,9 +1,9 @@
-using System;
-using System.Threading;
 using CryBits.Client.Framework.Audio;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Network;
+using System;
+using System.Threading;
 
 namespace CryBits.Editors.Logic;
 

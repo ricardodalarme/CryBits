@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -14,6 +10,10 @@ using CryBits.Editors.Graphics.Renderers;
 using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Button = CryBits.Client.Framework.Interfacily.Components.Button;
 using CheckBox = CryBits.Client.Framework.Interfacily.Components.CheckBox;
 using Component = CryBits.Client.Framework.Interfacily.Components.Component;
@@ -73,7 +73,7 @@ internal partial class EditorInterfaceWindow : Window
     private TreeItemVM _rootVM = new(); // virtual root for the current window
 
     private WriteableBitmap? _previewBitmap;
-    private DispatcherTimer? _timer;
+    private readonly DispatcherTimer? _timer;
 
     public EditorInterfaceWindow()
     {

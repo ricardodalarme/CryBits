@@ -1,10 +1,10 @@
-using System.Drawing;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
 using CryBits.Entities.Map;
 using CryBits.Enums;
 using SFML.Graphics;
+using System.Drawing;
 using static CryBits.Editors.Logic.Utils;
 using static CryBits.Globals;
 using Color = SFML.Graphics.Color;

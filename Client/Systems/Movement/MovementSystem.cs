@@ -1,9 +1,9 @@
-using System;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
 using CryBits.Enums;
+using System;
 using static CryBits.Globals;
 using MovementState = CryBits.Enums.Movement;
 

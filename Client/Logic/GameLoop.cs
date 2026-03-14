@@ -1,6 +1,3 @@
-using System;
-using System.Diagnostics;
-using System.Threading;
 using Arch.System;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Graphics;
@@ -12,6 +9,9 @@ using CryBits.Client.Systems.Core;
 using CryBits.Client.Systems.Map;
 using CryBits.Client.Systems.Movement;
 using CryBits.Client.Worlds;
+using System;
+using System.Diagnostics;
+using System.Threading;
 using TextBox = CryBits.Client.Framework.Interfacily.Components.TextBox;
 
 namespace CryBits.Client.Logic;

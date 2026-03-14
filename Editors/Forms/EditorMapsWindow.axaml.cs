@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -24,6 +19,11 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using SFML.Graphics;
 using SFML.System;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using static CryBits.Editors.Logic.Utils;
 // Note: Globals.Grid (byte) and Avalonia.Controls.Grid (type) differ in kind
 using AvaloniaScrollEventArgs = Avalonia.Controls.Primitives.ScrollEventArgs;
@@ -181,7 +181,7 @@ internal partial class EditorMapsWindow : Window
     private WriteableBitmap? _tileBitmap;
 
 
-    private DispatcherTimer? _timer;
+    private readonly DispatcherTimer? _timer;
 
     // Layer view-models
     private List<LayerVm> _layerVms = [];

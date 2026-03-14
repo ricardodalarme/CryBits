@@ -1,4 +1,3 @@
-using System;
 using Arch.Core;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Movement;
@@ -8,6 +7,7 @@ using CryBits.Entities.Npc;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
+using System;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Network.Handlers;

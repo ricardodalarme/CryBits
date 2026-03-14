@@ -1,7 +1,7 @@
+using CryBits.Entities.Slots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CryBits.Entities.Slots;
 
 namespace CryBits.Entities;
 

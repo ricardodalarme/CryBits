@@ -1,7 +1,7 @@
-using System;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Logic;
+using System;
 
 namespace CryBits.Client.UI.Game.Views;
 

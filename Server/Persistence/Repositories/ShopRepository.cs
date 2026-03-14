@@ -1,8 +1,8 @@
+using CryBits.Entities.Shop;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using CryBits.Entities.Shop;
 
 namespace CryBits.Server.Persistence.Repositories;
 

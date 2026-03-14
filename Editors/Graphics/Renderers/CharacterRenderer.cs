@@ -1,7 +1,7 @@
-using System.Drawing;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Forms;
 using SFML.Graphics;
+using System.Drawing;
 
 namespace CryBits.Editors.Graphics.Renderers;
 

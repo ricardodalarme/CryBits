@@ -1,11 +1,11 @@
-using System;
-using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Entities.Shop;
+using System;
+using System.Linq;
 
 namespace CryBits.Editors.Forms;
 

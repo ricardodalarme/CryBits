@@ -24,7 +24,7 @@ internal sealed class NetworkServer(CharacterSystem characterSystem)
                 request.Reject();
         };
 
-        listener.PeerConnectedEvent += peer => { GameWorld.Current.Sessions.Add(new GameSession(peer)); };
+        listener.PeerConnectedEvent += peer => GameWorld.Current.Sessions.Add(new GameSession(peer));
 
         listener.PeerDisconnectedEvent += (peer, _) =>
         {

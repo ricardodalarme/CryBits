@@ -1,5 +1,3 @@
-using System;
-using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using CryBits.Client.Framework.Audio;
@@ -12,6 +10,8 @@ using CryBits.Editors.Forms;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
 using CryBits.Editors.Network.Handlers;
+using System;
+using System.Threading;
 
 namespace CryBits.Editors;
 
@@ -55,7 +55,7 @@ internal static class Program
         // Run Avalonia on the main thread (required by macOS/Cocoa and Linux/X11)
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime([],
-                desktop => { desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown; });
+                desktop => desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown);
     }
 
     // Required by the Avalonia XAML previewer.

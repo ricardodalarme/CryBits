@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CryBits.Packets.Server;
 
@@ -6,19 +7,19 @@ namespace CryBits.Packets.Server;
 [Serializable]
 public struct ClassesPacket : IServerPacket
 {
-    public System.Collections.Generic.Dictionary<Guid, Entities.Class> List;
+    public Dictionary<Guid, Entities.Class> List;
 }
 
 [Serializable]
 public struct NpcsPacket : IServerPacket
 {
-    public System.Collections.Generic.Dictionary<Guid, Entities.Npc.Npc> List;
+    public Dictionary<Guid, Entities.Npc.Npc> List;
 }
 
 [Serializable]
 public struct ItemsPacket : IServerPacket
 {
-    public System.Collections.Generic.Dictionary<Guid, Entities.Item> List;
+    public Dictionary<Guid, Entities.Item> List;
 }
 [Serializable]
 public struct JoinPacket : IServerPacket

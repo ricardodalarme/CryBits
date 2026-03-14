@@ -1,8 +1,8 @@
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using SFML.Graphics;
+using System.Runtime.InteropServices;
 using AvaloniaImage = Avalonia.Controls.Image;
 
 namespace CryBits.Editors.AvaloniaUI;

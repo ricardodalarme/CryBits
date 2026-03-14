@@ -1,5 +1,3 @@
-using System;
-using System.Drawing;
 using Arch.Core;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Graphics;
@@ -7,6 +5,8 @@ using CryBits.Client.Worlds;
 using CryBits.Entities.Map;
 using SFML.Graphics;
 using SFML.System;
+using System;
+using System.Drawing;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Managers;
@@ -45,7 +45,7 @@ internal class CameraManager(RenderWindow renderWindow, GameContext context)
     private View GameView { get; } = new(new FloatRect(new Vector2f(0, 0), new Vector2f(ScreenWidth, ScreenHeight)));
 
     /// <summary> The render window used for rendering.</summary>
-    private RenderWindow RenderWindow = renderWindow;
+    private readonly RenderWindow RenderWindow = renderWindow;
 
     /// <summary>
     /// The range of tile indices currently visible, used for culling.

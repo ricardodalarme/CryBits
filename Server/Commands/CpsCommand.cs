@@ -1,6 +1,6 @@
-using System;
 using CommandLine;
 using CryBits.Server.Logic;
+using System;
 
 namespace CryBits.Server.Commands;
 

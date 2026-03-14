@@ -1,4 +1,3 @@
-using System;
 using Arch.Core;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
@@ -12,6 +11,7 @@ using CryBits.Client.Components.Player;
 using CryBits.Client.Components.Trade;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Network.Senders;
+using System;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Worlds;

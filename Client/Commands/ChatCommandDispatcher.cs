@@ -1,6 +1,6 @@
+using SFML.Graphics;
 using System;
 using System.Collections.Generic;
-using SFML.Graphics;
 
 namespace CryBits.Client.Commands;
 

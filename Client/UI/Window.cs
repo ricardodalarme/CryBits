@@ -1,5 +1,3 @@
-using System;
-using System.Drawing;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
@@ -11,6 +9,8 @@ using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using SFML.Window;
+using System;
+using System.Drawing;
 
 namespace CryBits.Client.UI;
 

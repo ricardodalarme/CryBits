@@ -1,6 +1,6 @@
-using System.Drawing;
 using CryBits.Client.Framework.Constants;
 using SFML.Graphics;
+using System.Drawing;
 
 namespace CryBits.Client.Framework.Graphics;
 

@@ -1,8 +1,8 @@
-using System;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.UI;
 using CryBits.Client.Worlds;
 using LiteNetLib;
+using System;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Network;

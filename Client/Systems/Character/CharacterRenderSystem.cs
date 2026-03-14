@@ -1,11 +1,11 @@
-using System.Collections.Generic;
-using System.Drawing;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace CryBits.Client.Systems.Character;
 
@@ -39,10 +39,7 @@ internal sealed class CharacterRenderSystem(World world, Renderer renderer) : Ba
         _drawList.Clear();
 
         // Collect all character entities with their Y coordinate for sorting.
-        World.Query(in _query, (Entity entity, ref TransformComponent transform) =>
-        {
-            _drawList.Add((transform.Y, entity));
-        });
+        World.Query(in _query, (Entity entity, ref TransformComponent transform) => _drawList.Add((transform.Y, entity)));
 
         // Sort ascending by Y so characters lower on screen (higher Y) appear in front.
         _drawList.Sort(static (a, b) => a.Y.CompareTo(b.Y));

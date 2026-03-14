@@ -1,4 +1,3 @@
-using System;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
@@ -6,6 +5,7 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Logic;
 using CryBits.Client.Worlds;
+using System;
 
 namespace CryBits.Client.UI.Game.Views;
 

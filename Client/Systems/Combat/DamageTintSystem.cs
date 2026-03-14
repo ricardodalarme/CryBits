@@ -1,9 +1,9 @@
-using System;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using SFML.Graphics;
+using System;
 
 namespace CryBits.Client.Systems.Combat;
 

@@ -1,6 +1,6 @@
-using System.Drawing;
 using CryBits.Client.UI.Game;
 using CryBits.Packets.Server;
+using System.Drawing;
 
 namespace CryBits.Client.Network.Handlers;
 

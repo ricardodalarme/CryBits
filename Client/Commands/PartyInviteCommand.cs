@@ -1,6 +1,6 @@
-using System;
 using CryBits.Client.Network.Senders;
 using SFML.Graphics;
+using System;
 
 namespace CryBits.Client.Commands;
 

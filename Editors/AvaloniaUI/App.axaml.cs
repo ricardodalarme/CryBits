@@ -1,10 +1,10 @@
-using System.Threading;
 using Avalonia;
 using Avalonia.Markup.Xaml;
+using System.Threading;
 
 namespace CryBits.Editors.AvaloniaUI;
 
-internal sealed partial class App : Application
+internal sealed class App : Application
 {
     private static readonly ManualResetEventSlim AppReady = new(false);
 

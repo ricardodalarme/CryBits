@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -14,6 +12,8 @@ using CryBits.Entities.Shop;
 using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
+using System;
+using System.Linq;
 using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Editors.Forms;
@@ -36,7 +36,7 @@ internal partial class EditorNpcsWindow : Window
     private bool _loading;
 
     private WriteableBitmap? _previewBitmap;
-    private DispatcherTimer? _timer;
+    private readonly DispatcherTimer? _timer;
 
     public EditorNpcsWindow()
     {

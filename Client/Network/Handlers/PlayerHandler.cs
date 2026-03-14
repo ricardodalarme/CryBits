@@ -1,4 +1,3 @@
-using System;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Equipment;
 using CryBits.Client.Components.Movement;
@@ -10,6 +9,7 @@ using CryBits.Entities.Slots;
 using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
+using System;
 using static CryBits.Globals;
 using ArchEntity = Arch.Core.Entity;
 

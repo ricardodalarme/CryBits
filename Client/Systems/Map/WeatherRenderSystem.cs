@@ -38,10 +38,7 @@ internal sealed class WeatherRenderSystem(World world, GameContext context, Rend
 
         // ── 1. Batch all visible particles ───────────────────────────────────
         _batch.Clear();
-        World.Query(in _particleQuery, (ref WeatherParticleComponent _, ref TransformComponent transform) =>
-        {
-            AppendQuad(_batch, transform.X, transform.Y, srcX, 0f, 32f, 32f, tint);
-        });
+        World.Query(in _particleQuery, (ref WeatherParticleComponent _, ref TransformComponent transform) => AppendQuad(_batch, transform.X, transform.Y, srcX, 0f, 32f, 32f, tint));
 
         if (_batch.VertexCount > 0)
             renderer.RenderWindow.Draw(_batch, new RenderStates(Textures.Weather));

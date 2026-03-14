@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Managers;
 using CryBits.Client.Worlds;
@@ -6,6 +5,7 @@ using CryBits.Entities.Map;
 using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
+using System.Collections.Generic;
 using static CryBits.Globals;
 using Color = SFML.Graphics.Color;
 

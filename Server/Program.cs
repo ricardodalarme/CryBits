@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using CryBits.Entities.Map;
 using CryBits.Server.Entities;
 using CryBits.Server.Logic;
@@ -10,6 +6,10 @@ using CryBits.Server.Network.Handlers;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CryBits.Server;
 
@@ -33,10 +33,7 @@ internal static class Program
         AppDomain.CurrentDomain.ProcessExit += (_, _) => cts.Cancel();
 
         // Global exception handlers to prevent crashing
-        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
-        {
-            Console.WriteLine($"[Global Error] Unhandled exception: {e.ExceptionObject}");
-        };
+        AppDomain.CurrentDomain.UnhandledException += (_, e) => Console.WriteLine($"[Global Error] Unhandled exception: {e.ExceptionObject}");
         TaskScheduler.UnobservedTaskException += (_, e) =>
         {
             Console.WriteLine($"[Global Error] Unobserved task exception: {e.Exception}");

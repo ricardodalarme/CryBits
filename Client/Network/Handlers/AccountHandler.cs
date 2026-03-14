@@ -1,4 +1,3 @@
-using System;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
@@ -13,7 +12,7 @@ using CryBits.Entities;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Packets.Server;
-
+using System;
 using OptionsView = CryBits.Client.UI.Game.Views.OptionsView;
 
 namespace CryBits.Client.Network.Handlers;

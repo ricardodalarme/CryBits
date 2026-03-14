@@ -1,4 +1,3 @@
-using System;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
@@ -12,6 +11,7 @@ using CryBits.Client.UI;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.Worlds;
+using System;
 
 namespace CryBits.Client;
 

@@ -1,8 +1,8 @@
-using System.Drawing;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Editors.Entities;
 using SFML.Graphics;
+using System.Drawing;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Editors.Graphics.Renderers;

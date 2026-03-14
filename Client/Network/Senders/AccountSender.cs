@@ -1,6 +1,6 @@
-using System.Linq;
 using CryBits.Entities;
 using CryBits.Packets.Client;
+using System.Linq;
 
 namespace CryBits.Client.Network.Senders;
 

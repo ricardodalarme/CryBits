@@ -1,6 +1,6 @@
+using LiteNetLib.Utils;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using LiteNetLib.Utils;
 
 namespace CryBits.Extensions;
 

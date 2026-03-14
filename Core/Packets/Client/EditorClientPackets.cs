@@ -1,13 +1,14 @@
 using System;
+using System.Collections.Generic;
 
 namespace CryBits.Packets.Client;
 
 [Serializable] public struct WriteSettingsPacket : IClientPacket { public ServerConfig Config; }
-[Serializable] public struct WriteClassesPacket : IClientPacket { public System.Collections.Generic.Dictionary<Guid, Entities.Class> Classes; }
-[Serializable] public struct WriteMapsPacket : IClientPacket { public System.Collections.Generic.Dictionary<Guid, Entities.Map.Map> Maps; }
-[Serializable] public struct WriteNpcsPacket : IClientPacket { public System.Collections.Generic.Dictionary<Guid, Entities.Npc.Npc> Npcs; }
-[Serializable] public struct WriteItemsPacket : IClientPacket { public System.Collections.Generic.Dictionary<Guid, Entities.Item> Items; }
-[Serializable] public struct WriteShopsPacket : IClientPacket { public System.Collections.Generic.Dictionary<Guid, Entities.Shop.Shop> Shops; }
+[Serializable] public struct WriteClassesPacket : IClientPacket { public Dictionary<Guid, Entities.Class> Classes; }
+[Serializable] public struct WriteMapsPacket : IClientPacket { public Dictionary<Guid, Entities.Map.Map> Maps; }
+[Serializable] public struct WriteNpcsPacket : IClientPacket { public Dictionary<Guid, Entities.Npc.Npc> Npcs; }
+[Serializable] public struct WriteItemsPacket : IClientPacket { public Dictionary<Guid, Entities.Item> Items; }
+[Serializable] public struct WriteShopsPacket : IClientPacket { public Dictionary<Guid, Entities.Shop.Shop> Shops; }
 [Serializable] public struct RequestSettingPacket : IClientPacket;
 [Serializable] public struct RequestClassesPacket : IClientPacket;
 [Serializable] public struct RequestMapPacket : IClientPacket { public Guid Id; public bool SendMap; }

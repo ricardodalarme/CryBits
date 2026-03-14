@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Framework;
@@ -10,6 +8,8 @@ using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
+using System;
+using System.Collections.Generic;
 using ArchEntity = Arch.Core.Entity;
 using Color = SFML.Graphics.Color;
 

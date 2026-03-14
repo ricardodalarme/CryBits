@@ -1,6 +1,6 @@
-using System.Text.Json.Serialization;
 using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Enums;
+using System.Text.Json.Serialization;
 
 namespace CryBits.Client.Framework.Persistence.Dtos;
 

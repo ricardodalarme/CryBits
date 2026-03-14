@@ -1,6 +1,3 @@
-using System;
-using System.Drawing;
-using System.IO;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
@@ -11,6 +8,9 @@ using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
+using System;
+using System.Drawing;
+using System.IO;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Systems;

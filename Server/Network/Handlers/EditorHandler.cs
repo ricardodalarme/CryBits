@@ -1,4 +1,3 @@
-using System.Linq;
 using CryBits.Entities;
 using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
@@ -9,6 +8,7 @@ using CryBits.Packets.Client;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
+using System.Linq;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Network.Handlers;

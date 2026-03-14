@@ -1,10 +1,10 @@
-using System.Drawing;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Enums;
 using CryBits.Client.Framework.Interfacily.Interfaces;
 using SFML.Window;
+using System.Drawing;
 using static CryBits.Client.Framework.Interfacily.InterfaceUtils;
 
 namespace CryBits.Client.Framework.Interfacily.Components;

@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Entities;
 using CryBits.Enums;
 using CryBits.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using Attribute = CryBits.Enums.Attribute;
 
 namespace CryBits.Client.UI.Game.Views;

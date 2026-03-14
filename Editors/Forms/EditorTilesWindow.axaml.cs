@@ -1,4 +1,3 @@
-using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -13,6 +12,7 @@ using CryBits.Editors.Graphics.Renderers;
 using CryBits.Enums;
 using SFML.Graphics;
 using SFML.System;
+using System;
 using static CryBits.Editors.Logic.Utils;
 using G = CryBits.Globals;
 using Point = System.Drawing.Point;
@@ -41,7 +41,7 @@ internal partial class EditorTilesWindow : Window
     public static bool ModeAttributes { get; private set; } = true;
 
     private WriteableBitmap? _bitmap;
-    private DispatcherTimer? _timer;
+    private readonly DispatcherTimer? _timer;
 
     public EditorTilesWindow()
     {

@@ -1,4 +1,3 @@
-using System;
 using CommandLine;
 using CryBits.Entities;
 using CryBits.Entities.Map;
@@ -7,6 +6,7 @@ using CryBits.Enums;
 using CryBits.Server.Entities;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
+using System;
 using Attribute = CryBits.Enums.Attribute;
 using NpcDef = CryBits.Entities.Npc.Npc;
 using NpcDropDef = CryBits.Entities.Npc.NpcDrop;

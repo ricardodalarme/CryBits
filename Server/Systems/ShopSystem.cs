@@ -1,8 +1,8 @@
-using System;
-using System.Drawing;
 using CryBits.Entities.Shop;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using System;
+using System.Drawing;
 
 namespace CryBits.Server.Systems;
 

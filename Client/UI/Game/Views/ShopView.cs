@@ -1,10 +1,10 @@
-using System.Drawing;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Entities.Shop;
 using SFML.Window;
+using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 

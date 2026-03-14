@@ -1,6 +1,6 @@
-using System.Drawing;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Enums;
+using System.Drawing;
 using static CryBits.Globals;
 using Color = SFML.Graphics.Color;
 

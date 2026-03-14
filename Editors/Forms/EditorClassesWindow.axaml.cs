@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CryBits.Client.Framework.Graphics;
@@ -8,6 +6,8 @@ using CryBits.Editors.Network;
 using CryBits.Entities;
 using CryBits.Entities.Slots;
 using CryBits.Enums;
+using System;
+using System.Linq;
 using Attribute = CryBits.Enums.Attribute;
 using Map = CryBits.Entities.Map.Map;
 

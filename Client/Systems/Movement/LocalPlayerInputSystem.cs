@@ -1,4 +1,3 @@
-using System;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Movement;
@@ -8,6 +7,7 @@ using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
 using SFML.Window;
+using System;
 using static CryBits.Globals;
 using MovementState = CryBits.Enums.Movement;
 

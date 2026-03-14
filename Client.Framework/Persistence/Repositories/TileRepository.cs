@@ -1,7 +1,7 @@
-using System.Runtime.Serialization.Formatters.Binary;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Entities.Tile;
 using CryBits.Client.Framework.Graphics;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CryBits.Client.Framework.Persistence.Repositories;
 

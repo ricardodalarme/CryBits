@@ -1,7 +1,7 @@
-using System.Drawing;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Interfaces;
 using SFML.Window;
+using System.Drawing;
 using static CryBits.Client.Framework.Interfacily.InterfaceUtils;
 
 namespace CryBits.Client.Framework.Interfacily.Components;
