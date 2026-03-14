@@ -4,7 +4,6 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
-    <LangVersion>default</LangVersion>
     <Nullable>annotations</Nullable>
     <Title>CryBits.Server</Title>
     <Company>Ricardo Dalarme</Company>
@@ -15,18 +14,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ProjectGuid>{AB392C7C-BCB0-4924-BBE4-FA7D2280BE11}</ProjectGuid>
-    <OutputType>Exe</OutputType>
     <RootNamespace>CryBits.Server</RootNamespace>
     <AssemblyName>Server</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>../Build/Server/</OutputPath>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <ErrorReport>none</ErrorReport>
     <DebugType>embedded</DebugType>
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup>

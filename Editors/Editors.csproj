@@ -4,7 +4,6 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
-    <LangVersion>default</LangVersion>
     <Nullable>annotations</Nullable>
     <Title>CryBits.Editors</Title>
     <Company>Ricardo Dalarme</Company>
@@ -15,18 +14,13 @@
   </PropertyGroup>
 
  <PropertyGroup>
-    <ProjectGuid>{8C3BB955-4C28-44D7-9255-17248A425087}</ProjectGuid>
-    <OutputType>Exe</OutputType>
     <RootNamespace>CryBits.Editors</RootNamespace>
     <AssemblyName>Editors</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\Build\Client and Editors\</OutputPath>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <ErrorReport>none</ErrorReport>
+    <OutputPath>../Build/Client and Editors/</OutputPath>
     <DebugType>embedded</DebugType>
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -48,12 +42,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client.Framework\Client.Framework.csproj" />
-    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="../Client.Framework/Client.Framework.csproj" />
+    <ProjectReference Include="../Core/Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaResource Include="AvaloniaUI\Assets\**" />
+    <AvaloniaResource Include="AvaloniaUI/Assets/**" />
   </ItemGroup>
 
 </Project>

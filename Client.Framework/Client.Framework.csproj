@@ -5,12 +5,11 @@
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>annotations</Nullable>
-    <LangVersion>default</LangVersion>
+    <RootNamespace>CryBits.Client.Framework</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>../Build/Client.Framework/</OutputPath>
-    <RootNamespace>CryBits.Client.Framework</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,10 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Audio\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="../Core/Core.csproj" />
   </ItemGroup>
 </Project>
