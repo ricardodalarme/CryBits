@@ -1,3 +1,4 @@
+using Arch.Buffer;
 using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Core;
@@ -6,10 +7,8 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Worlds;
 using CryBits.Enums;
-using System.Collections.Generic;
 using static CryBits.Globals;
 using static CryBits.Utils.RandomUtils;
-using ArchEntity = Arch.Core.Entity;
 
 namespace CryBits.Client.Systems.Map;
 
@@ -24,8 +23,8 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context, 
     private readonly QueryDescription _lightningQuery =
         new QueryDescription().WithAll<LightningComponent>();
 
-    // Reused each frame to avoid heap allocation while collecting off-screen entities.
-    private readonly List<ArchEntity> _toDestroy = [];
+    // Defers entity destruction and creation so world structure is never mutated mid-query.
+    private readonly CommandBuffer _commandBuffer = new();
 
     /// <summary>Seconds between snow horizontal drift steps (35 ms).</summary>
     private const float SnowDriftInterval = 0.035f;
@@ -63,11 +62,10 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context, 
         });
 
         // ── 3. Move particles; collect those that left the screen ────────────
-        _toDestroy.Clear();
         int activeCount = 0;
 
         World.Query(in _particleQuery,
-            (ArchEntity entity, ref WeatherParticleComponent particle, ref TransformComponent transform) =>
+            (Entity entity, ref WeatherParticleComponent particle, ref TransformComponent transform) =>
             {
                 switch (type)
                 {
@@ -82,24 +80,22 @@ internal sealed class WeatherSimulationSystem(World world, GameContext context, 
                 }
 
                 if (transform.X > ScreenWidth || transform.Y > ScreenHeight)
-                    _toDestroy.Add(entity);
+                    _commandBuffer.Destroy(in entity);
                 else
                     activeCount++;
             });
 
-        // ── 4. Destroy off-screen particles ──────────────────────────────────
-        foreach (var e in _toDestroy)
-            World.Destroy(e);
-
-        // ── 5. Spawn one new particle if under the limit and random check passes
+        // ── 4. Spawn one new particle if under the limit and random check passes
         int maxParticles = type == Weather.Snowing ? MaxSnowParticles : MaxRainParticles;
         if (activeCount < maxParticles &&
             MyRandom.Next(0, MaxWeatherIntensity - weatherData.Intensity) == 0)
             SpawnParticle(type);
 
-        // ── 6. Thunderstorm: random thunder sound and lightning trigger ───────
+        // ── 5. Thunderstorm: random thunder sound and lightning trigger ───────
         if (type == Weather.Thundering)
             TryThunder(weatherData.Intensity);
+
+        _commandBuffer.Playback(World);
     }
 
     // ────────────────────────────────────────────────────────────────────────────
