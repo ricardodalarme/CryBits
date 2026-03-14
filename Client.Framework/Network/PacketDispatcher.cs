@@ -1,20 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using LiteNetLib;
 
-namespace CryBits.Client.Network;
+namespace CryBits.Client.Framework.Network;
 
 /// <summary>
 /// Type-keyed dispatch table for server-to-client packets.
 /// BinaryFormatter embeds the concrete type, so packet.GetType() is the key —
 /// no byte prefix in the wire format.
 /// </summary>
-internal static class PacketDispatcher
+public static class PacketDispatcher
 {
     private static readonly Dictionary<Type, Action<IServerPacket>> _handlers = new();
 
@@ -23,7 +20,7 @@ internal static class PacketDispatcher
     /// and registers a bound delegate for each.  The instance is captured so that dependencies
     /// injected via the constructor are available when the handler is invoked.
     /// </summary>
-    internal static void Register(object handler)
+    public static void Register(object handler)
     {
         var methods = handler.GetType()
             .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
@@ -48,7 +45,7 @@ internal static class PacketDispatcher
         }
     }
 
-    internal static void Dispatch(NetPacketReader data)
+    public static void Dispatch(NetPacketReader data)
     {
         var packet = (IServerPacket)data.ReadObject();
 

@@ -1,6 +1,7 @@
 using System;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Graphics;
 using CryBits.Client.Logic;

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using CryBits.Client.Framework.Network;
 using CryBits.Editors.Forms;
 using LiteNetLib;
 using static CryBits.Globals;

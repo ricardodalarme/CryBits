@@ -4,11 +4,13 @@ using Avalonia;
 using Avalonia.Controls;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
+using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms;
 using CryBits.Editors.Logic;
 using CryBits.Editors.Network;
+using CryBits.Editors.Network.Handlers;
 using EditorToolsRepository = CryBits.Editors.Library.Repositories.ToolsRepository;
 
 namespace CryBits.Editors;
@@ -32,7 +34,7 @@ internal static class Program
 
         // Initialize subsystems
         NetworkClient.Init();
-        PacketDispatcher.Register();
+        PacketDispatcher.Register(new EditorHandler());
         AudioManager.Instance.LoadSounds();
 
         // Start the game loop on a background thread.
