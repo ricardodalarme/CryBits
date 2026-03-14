@@ -1,6 +1,6 @@
 using static CryBits.Utils.RandomUtils;
 
-namespace CryBits.Client.Framework.Entities.Map;
+namespace CryBits.Editors.Entities;
 
 public struct MapWeatherParticleInstance
 {

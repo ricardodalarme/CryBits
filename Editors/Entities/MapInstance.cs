@@ -1,6 +1,5 @@
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Entities.Map;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Forms;
 using CryBits.Entities.Map;
