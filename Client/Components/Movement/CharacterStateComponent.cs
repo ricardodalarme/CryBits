@@ -4,7 +4,6 @@ namespace CryBits.Client.Components.Movement;
 
 internal struct CharacterStateComponent
 {
-    public Direction Direction;
     public bool IsMoving;
     public float AttackCountdown;
 

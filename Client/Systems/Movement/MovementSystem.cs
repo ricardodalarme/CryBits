@@ -45,7 +45,6 @@ internal sealed class MovementSystem(World world) : BaseSystem<World, float>(wor
                 transform.X = (int)(movement.TileX * Grid + movement.OffsetX);
                 transform.Y = (int)(movement.TileY * Grid + movement.OffsetY);
 
-                state.Direction = movement.Direction;
                 state.IsMoving = movement.OffsetX != 0f || movement.OffsetY != 0f;
             });
     }
