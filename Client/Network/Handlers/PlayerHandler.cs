@@ -26,8 +26,7 @@ internal class PlayerHandler(GameContext context)
         var old = context.GetNetworkEntity(packet.NetworkId);
         if (old != Entity.Null)
         {
-            context.UnregisterNetworkEntity(packet.NetworkId);
-            context.World.Destroy(old);
+            return;
         }
 
         Entity entity;
@@ -64,9 +63,9 @@ internal class PlayerHandler(GameContext context)
 
         context.RegisterNetworkEntity(packet.NetworkId, entity);
 
-        if (isLocal)
+        if (isLocal && context.LocalPlayer.Entity == Entity.Null)
         {
-            context.LocalPlayer = new LocalPlayer(context.World, entity);
+            context.LocalPlayer.Entity = entity;
             BarsView.Update();
             CharacterView.Update();
         }
@@ -155,6 +154,7 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerExperience(PlayerExperiencePacket packet)
     {
+        if (context.LocalPlayer.Entity == Entity.Null) return;
         ref var level = ref context.LocalPlayer.GetLevel();
         level.Experience = packet.Experience;
         level.ExpNeeded = packet.ExpNeeded;
@@ -182,6 +182,7 @@ internal class PlayerHandler(GameContext context)
     [PacketHandler]
     internal void PlayerHotbar(PlayerHotbarPacket packet)
     {
+        if (context.LocalPlayer.Entity == Entity.Null) return;
         ref var hotbar = ref context.LocalPlayer.GetHotbar();
         for (byte i = 0; i < MaxHotbar; i++)
             hotbar.Slots[i] = new HotbarSlot((SlotType)packet.Types[i], packet.Slots[i]);

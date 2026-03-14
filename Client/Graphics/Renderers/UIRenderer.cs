@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using ArchEntity = Arch.Core.Entity;
 using Color = SFML.Graphics.Color;
+using Component = CryBits.Client.Framework.Interfacily.Components.Component;
 
 namespace CryBits.Client.Graphics.Renderers;
 
@@ -74,6 +75,8 @@ internal sealed class UIRenderer(
     /// </summary>
     public void DrawParty()
     {
+        if (context.LocalPlayer.Entity == ArchEntity.Null) return;
+
         var world = context.World;
         if (!world.Has<PartyComponent>(context.LocalPlayer.Entity)) return;
         var members = context.LocalPlayer.GetParty().MemberIds;

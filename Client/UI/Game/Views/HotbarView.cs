@@ -1,3 +1,5 @@
+using Arch.Core;
+using CryBits.Client.Components.Hotbar;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
@@ -36,7 +38,10 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
 
     private void OnRenderSlot(int slot, Point pos)
     {
-        var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[slot];
+        if (context.LocalPlayer.Entity == Entity.Null) return;
+        if (!context.World.TryGet<HotbarComponent>(context.LocalPlayer.Entity, out var hotbar)) return;
+        
+        var hotbarSlot = hotbar.Slots[slot];
         if (hotbarSlot?.Slot > 0 && hotbarSlot.Type == SlotType.Item)
             itemRenderer.DrawItem(context.LocalPlayer.GetInventory().Slots[hotbarSlot.Slot]?.Item, 1, pos);
     }

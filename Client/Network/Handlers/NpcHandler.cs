@@ -74,6 +74,7 @@ internal class NpcHandler(GameContext context)
     internal void MapNpcMovement(MapNpcMovementPacket packet)
     {
         var npc = context.GetNetworkEntity(packet.InstanceId);
+        if (npc == Entity.Null) return;
 
         ref var movement = ref context.World.Get<MovementComponent>(npc);
         byte prevX = movement.TileX, prevY = movement.TileY;
@@ -101,6 +102,8 @@ internal class NpcHandler(GameContext context)
     internal void MapNpcDirection(MapNpcDirectionPacket packet)
     {
         var npc = context.GetNetworkEntity(packet.InstanceId);
+        
+        if (npc == Entity.Null) return;
 
         ref var movement = ref context.World.Get<MovementComponent>(npc);
         movement.Direction = (Direction)packet.Direction;
