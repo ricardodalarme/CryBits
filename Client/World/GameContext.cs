@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Arch.Core;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Player;
@@ -22,9 +21,6 @@ internal sealed class GameContext
 
     /// <summary>Name of the local player. Set on Join, cleared on Reset.</summary>
     public string? LocalPlayerName;
-
-    /// <summary>All received maps keyed by their Guid.</summary>
-    public Dictionary<Guid, ClientMap> Maps = [];
 
     /// <summary>Tracks the local player entity and components.</summary>
     public LocalPlayer LocalPlayer { get; set; } = new(Entity.Null);
@@ -50,8 +46,8 @@ internal sealed class GameContext
     public void Reset()
     {
         World.Clear();
+        CurrentMap = null!;
         LocalPlayer = new LocalPlayer(Entity.Null);
-        Maps.Clear();
         LocalPlayerName = null;
     }
 }

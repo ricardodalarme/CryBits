@@ -10,7 +10,6 @@ using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Client.Worlds;
 using CryBits.Entities;
-using CryBits.Entities.Map;
 using CryBits.Entities.Npc;
 using CryBits.Entities.Shop;
 using CryBits.Packets.Server;
@@ -25,11 +24,10 @@ internal class AccountHandler(AudioManager audioManager, GameContext context)
     internal void Join(JoinPacket packet)
     {
         // Clear entity collections
-        context.Maps.Clear();
+        context.CurrentMap = null!;
         Item.List = [];
         Shop.List = [];
         Npc.List = [];
-        Map.List = [];
 
         context.LocalPlayerName = packet.Name;
     }

@@ -1,5 +1,4 @@
 using System;
-using Arch.Core;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Equipment;
 using CryBits.Client.Components.Movement;
@@ -12,7 +11,6 @@ using CryBits.Enums;
 using CryBits.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
-using Attribute = CryBits.Enums.Attribute;
 using ArchEntity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;
@@ -24,8 +22,6 @@ internal class PlayerHandler(GameContext context)
     {
         var name = packet.Name;
         var isLocal = name == context.LocalPlayerName;
-
-        context.CurrentMap = context.Maps[packet.MapId];
 
         var equipmentItems = new Item?[(byte)Equipment.Count];
         for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = Item.List.Get(packet.Equipment[n]);

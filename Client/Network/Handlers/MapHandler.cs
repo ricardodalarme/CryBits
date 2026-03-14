@@ -21,7 +21,6 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
     [PacketHandler]
     internal void MapRevision(MapRevisionPacket packet)
     {
-        var needed = false;
         var id = packet.MapId;
         var currentRevision = packet.Revision;
 
@@ -29,24 +28,21 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         var myEntity = context.LocalPlayer.Entity;
         var toDestroy = new List<Entity>();
         var playerQuery = new QueryDescription().WithAll<PlayerTagComponent>();
-        context.World.Query(in playerQuery, (Entity e) =>
+        context.World.Query(in playerQuery, e =>
         {
             if (e != myEntity) toDestroy.Add(e);
         });
         foreach (var e in toDestroy) context.World.Destroy(e);
 
         // Check whether the map data needs to be downloaded
-        if (File.Exists(Directories.MapsData.FullName + id + Directories.Format) ||
-            Entities.Map.Map.List.ContainsKey(id))
+        bool needed;
+        if (File.Exists(Directories.MapsData.FullName + id + Directories.Format))
         {
-            if (!Entities.Map.Map.List.ContainsKey(id))
-            {
-                Entities.Map.Map.List.Add(id, MapRepository.Read(id));
-                context.CurrentMap.Data.Update();
-            }
+            var map = MapRepository.Read(id);
+            needed = map.Revision != currentRevision;
 
-            if (Entities.Map.Map.List[id].Revision != currentRevision)
-                needed = true;
+            context.CurrentMap = new ClientMap(map, context.World);
+            context.CurrentMap.Data.Update();
         }
         else
             needed = true;
@@ -59,13 +55,7 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
     internal void Map(MapPacket packet)
     {
         var map = packet.Map;
-        var id = map.Id;
-
-        // Store map data
-        if (!Entities.Map.Map.List.TryAdd(id, map)) Entities.Map.Map.List[id] = map;
-        else context.Maps.TryAdd(id, new ClientMap(map, context.World));
-
-        context.CurrentMap = context.Maps[id];
+        context.CurrentMap = new ClientMap(map, context.World);
 
         // Persist map to disk
         MapRepository.Write(map);
