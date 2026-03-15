@@ -101,9 +101,9 @@
       },
       "System.Runtime.Serialization.Formatters": {
         "type": "Direct",
-        "requested": "[10.0.3, )",
-        "resolved": "10.0.3",
-        "contentHash": "q38b0Wj67miA+2Rcc6excf72Xh+LuVCxr0nJuhZaO3LwUVATdrm0x7TQuNr5lRNC0TH4UR6jkg/TA4C7Luyujw=="
+        "requested": "[10.0.4, )",
+        "resolved": "10.0.4",
+        "contentHash": "1xnAnT+gn0dnf9gxpQSjz5ngt2yYUqIg3DstwQTUUFRovnmOgGNIINkVEohN+0PC9mbGKpcEjegY+0KmTIW1IQ=="
       },
       "Avalonia.Angle.Windows.Natives": {
         "type": "Transitive",
@@ -295,14 +295,14 @@
           "SFML.Audio": "[3.0.0, )",
           "SFML.Graphics": "[3.0.0, )",
           "SFML.Window": "[3.0.0, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+          "System.Runtime.Serialization.Formatters": "[10.0.4, )"
         }
       },
       "CryBits.Core": {
         "type": "Project",
         "dependencies": {
           "LiteNetLib": "[2.0.2, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+          "System.Runtime.Serialization.Formatters": "[10.0.4, )"
         }
       }
     }
