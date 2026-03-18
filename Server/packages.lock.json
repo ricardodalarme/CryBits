@@ -22,15 +22,15 @@
       },
       "System.Runtime.Serialization.Formatters": {
         "type": "Direct",
-        "requested": "[10.0.4, )",
-        "resolved": "10.0.4",
-        "contentHash": "1xnAnT+gn0dnf9gxpQSjz5ngt2yYUqIg3DstwQTUUFRovnmOgGNIINkVEohN+0PC9mbGKpcEjegY+0KmTIW1IQ=="
+        "requested": "[10.0.5, )",
+        "resolved": "10.0.5",
+        "contentHash": "1HoVvRL4Od/40m/G/9gZZ28Aj6tGHny8V7qFHynJCrM2KrQgz0988sMUO+JMjCwN6+BVwnSrE9ppj2OO4+YmYQ=="
       },
       "CryBits.Core": {
         "type": "Project",
         "dependencies": {
           "LiteNetLib": "[2.0.2, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.4, )"
+          "System.Runtime.Serialization.Formatters": "[10.0.5, )"
         }
       }
     }
