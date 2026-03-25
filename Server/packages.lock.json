@@ -16,9 +16,9 @@
       },
       "LiteNetLib": {
         "type": "Direct",
-        "requested": "[2.0.2, )",
-        "resolved": "2.0.2",
-        "contentHash": "TOxT3aT1rnzICpdiPaFHqLf03aEaj79ouJwu6YLqsPGNuPKEfHC8PmfX4G9wsSvXXE+Hp66ijD9EKs6W/Cc8FA=="
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "cwHRPfU/BvnjAJdYNBwXASGPxqkJO+Wa9La8xodLBBQISNQ2ZMBIveV+q7adnWHvEu+K9D7ZMrAlbWWGg+bdZg=="
       },
       "System.Runtime.Serialization.Formatters": {
         "type": "Direct",
@@ -29,7 +29,7 @@
       "CryBits.Core": {
         "type": "Project",
         "dependencies": {
-          "LiteNetLib": "[2.0.2, )",
+          "LiteNetLib": "[2.1.0, )",
           "System.Runtime.Serialization.Formatters": "[10.0.4, )"
         }
       }
