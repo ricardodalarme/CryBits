@@ -46,8 +46,8 @@
       },
       "LiteNetLib": {
         "type": "Transitive",
-        "resolved": "2.1.2",
-        "contentHash": "+bmu7Vj+ik3xGX+qubsFuGSR8Pdri4Og7D9YAer83vHotkSHNLYL5bkZNgpvsK8GrcdNOUabZhqbYtmHu8as7A=="
+        "resolved": "2.1.3",
+        "contentHash": "QWZ2/ODTsEHfRltgU1LVYvXzMYC5LhsE+UKz2Sd1f59CWYKo0a6oJ+8FGG+y664UbjzltoI5z2byfpI6LTvd2Q=="
       },
       "SFML.System": {
         "type": "Transitive",
@@ -60,7 +60,7 @@
       "CryBits.Core": {
         "type": "Project",
         "dependencies": {
-          "LiteNetLib": "[2.1.2, )",
+          "LiteNetLib": "[2.1.3, )",
           "System.Runtime.Serialization.Formatters": "[10.0.4, )"
         }
       }
