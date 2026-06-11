@@ -5,40 +5,36 @@
     <TargetFramework>net10.0</TargetFramework>
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     <Nullable>annotations</Nullable>
-    <Title>Client</Title>
+    <Title>CryBits.Server</Title>
     <Company>Ricardo Dalarme</Company>
-    <Product>CryBits.Client</Product>
+    <Product>CryBits</Product>
     <Copyright>Copyright (c) 2026 Ricardo Dalarme</Copyright>
     <Description>ORPG Game Engine</Description>
     <AssemblyVersion>0.8.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup>
-    <RootNamespace>CryBits.Client</RootNamespace>
-    <AssemblyName>Client</AssemblyName>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <StartupObject>CryBits.Client.Program</StartupObject>
+    <RootNamespace>CryBits.Server</RootNamespace>
+    <AssemblyName>CryBits.Server</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>../Build/Client and Editors/</OutputPath>
+    <OutputPath>../../Build/Server/</OutputPath>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <StartupObject>CryBits.Server.Program</StartupObject>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Arch" Version="2.1.0" />
-    <PackageReference Include="Arch.System" Version="1.1.0" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="LiteNetLib" Version="2.0.2" />
-    <PackageReference Include="SFML.Audio" Version="3.0.0" />
-    <PackageReference Include="SFML.Graphics" Version="3.0.0" />
-    <PackageReference Include="SFML.Window" Version="3.0.0" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Client.Framework/Client.Framework.csproj" />
-    <ProjectReference Include="../Core/Core.csproj" />
+    <ProjectReference Include="../CryBits.Core/CryBits.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -288,7 +288,7 @@
         "resolved": "0.21.2",
         "contentHash": "ScSMrUrrw8px4kK1Glh0fZv/HQUlg1078bNXNPfRPKQ3WbRzV9HpsydYEOgSoMK5LWICMf2bMwIFH0pGjxjcMA=="
       },
-      "client.framework": {
+      "crybits.client.framework": {
         "type": "Project",
         "dependencies": {
           "CryBits.Core": "[1.0.0, )",
@@ -298,7 +298,7 @@
           "System.Runtime.Serialization.Formatters": "[10.0.3, )"
         }
       },
-      "CryBits.Core": {
+      "crybits.core": {
         "type": "Project",
         "dependencies": {
           "LiteNetLib": "[2.0.2, )",

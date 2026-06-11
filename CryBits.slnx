@@ -1,15 +1,15 @@
 <Solution>
-  <Project Path="Client.Framework/Client.Framework.csproj" />
-  <Project Path="Client/Client.csproj">
-    <BuildDependency Project="Client.Framework/Client.Framework.csproj" />
-    <BuildDependency Project="Core/Core.csproj" />
+  <Project Path="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
+  <Project Path="src/CryBits.Client/CryBits.Client.csproj">
+    <BuildDependency Project="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
+    <BuildDependency Project="src/CryBits.Core/CryBits.Core.csproj" />
   </Project>
-  <Project Path="Core/Core.csproj" />
-  <Project Path="Editors/Editors.csproj">
-    <BuildDependency Project="Client.Framework/Client.Framework.csproj" />
-    <BuildDependency Project="Core/Core.csproj" />
+  <Project Path="src/CryBits.Core/CryBits.Core.csproj" />
+  <Project Path="src/CryBits.Editors/CryBits.Editors.csproj">
+    <BuildDependency Project="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
+    <BuildDependency Project="src/CryBits.Core/CryBits.Core.csproj" />
   </Project>
-  <Project Path="Server/Server.csproj">
-    <BuildDependency Project="Core/Core.csproj" />
+  <Project Path="src/CryBits.Server/CryBits.Server.csproj">
+    <BuildDependency Project="src/CryBits.Core/CryBits.Core.csproj" />
   </Project>
 </Solution>

@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>../Build/Client.Framework/</OutputPath>
+    <OutputPath>../../Build/Client.Framework/</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Core/Core.csproj" />
+    <ProjectReference Include="../CryBits.Core/CryBits.Core.csproj" />
   </ItemGroup>
 </Project>

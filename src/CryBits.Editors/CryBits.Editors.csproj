@@ -15,11 +15,11 @@
 
  <PropertyGroup>
     <RootNamespace>CryBits.Editors</RootNamespace>
-    <AssemblyName>Editors</AssemblyName>
+    <AssemblyName>CryBits.Editors</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>../Build/Client and Editors/</OutputPath>
+    <OutputPath>../../Build/Client and Editors/</OutputPath>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
 
@@ -42,8 +42,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Client.Framework/Client.Framework.csproj" />
-    <ProjectReference Include="../Core/Core.csproj" />
+    <ProjectReference Include="../CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
+    <ProjectReference Include="../CryBits.Core/CryBits.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

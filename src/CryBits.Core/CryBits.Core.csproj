@@ -15,7 +15,7 @@
 
  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>embedded</DebugType>
-    <OutputPath>../Build/Core/</OutputPath>
+    <OutputPath>../../Build/Core/</OutputPath>
   </PropertyGroup>
 
  <ItemGroup>

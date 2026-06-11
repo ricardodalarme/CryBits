@@ -25,4 +25,4 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Build the Solution
-        run: dotnet build CryBits.sln
+        run: dotnet build CryBits.slnx
