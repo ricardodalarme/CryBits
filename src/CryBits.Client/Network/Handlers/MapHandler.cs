@@ -4,20 +4,20 @@ using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Audio;
-using CryBits.Client.Framework.Constants;
-using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Network.Senders;
+using CryBits.Persistence;
+using CryBits.Persistence.Stores;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Definitions.Maps;
 using CryBits.Network.Packets.Server;
 using System.Collections.Generic;
-using System.IO;
 using Entity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class MapHandler(GameContext context, MapSender mapSender, AudioManager audioManager, DefinitionCatalog catalog)
+internal class MapHandler(GameContext context, MapSender mapSender, AudioManager audioManager, DefinitionCatalog catalog, FileContentStore contentStore)
 {
     private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
@@ -37,10 +37,10 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         foreach (var e in toDestroy) context.World.Destroy(e);
 
         // Check whether the map data needs to be downloaded
+        var map = contentStore.Load<Map>(id);
         bool needed;
-        if (File.Exists(Directories.MapsData.FullName + id + Directories.Format))
+        if (map is not null)
         {
-            var map = MapRepository.Read(id);
             needed = map.Revision != currentRevision;
 
             context.CurrentMap = new ClientMap(map, context.World);
@@ -60,7 +60,7 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
         context.CurrentMap = new ClientMap(map, context.World);
 
         // Persist map to disk
-        MapRepository.Write(map);
+        contentStore.Save(map);
 
         // Reset weather ECS state for the new map and spawn the fog entity.
         WeatherSpawner.Reset(context.World, context.CurrentMap.Data.Weather.Type);

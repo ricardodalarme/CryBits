@@ -6,8 +6,11 @@ using CryBits.Network.Packets.Client;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
+using System;
+using System.IO;
 using System.Linq;
 using static CryBits.Globals;
+using CryBits.Persistence.Stores;
 
 namespace CryBits.Server.Network.Handlers;
 
@@ -20,11 +23,7 @@ internal sealed class EditorHandler(
     ShopSender shopSender,
     SettingsSender settingsSender,
     SettingsRepository settingsRepository,
-    ClassRepository classRepository,
-    MapRepository mapRepository,
-    NpcRepository npcRepository,
-    ItemRepository itemRepository,
-    ShopRepository shopRepository,
+    FileContentStore contentStore,
     DefinitionCatalog catalog)
 {
     private readonly DefinitionCatalog _catalog = catalog;
@@ -37,11 +36,7 @@ internal sealed class EditorHandler(
         ShopSender.Instance,
         SettingsSender.Instance,
         SettingsRepository.Instance,
-        ClassRepository.Instance,
-        MapRepository.Instance,
-        NpcRepository.Instance,
-        ItemRepository.Instance,
-        ShopRepository.Instance,
+        new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data"))),
         DefinitionCatalog.Instance);
 
     [PacketHandler]
@@ -70,7 +65,7 @@ internal sealed class EditorHandler(
         }
 
         _catalog.Classes = packet.Classes;
-        classRepository.WriteAll();
+        contentStore.SaveAll(_catalog.Classes.Values);
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
             classSender.Classes(t);
@@ -86,7 +81,7 @@ internal sealed class EditorHandler(
         }
 
         _catalog.Maps = packet.Maps;
-        mapRepository.WriteAll();
+        contentStore.SaveAll(_catalog.Maps.Values);
 
         foreach (var tempMap in GameWorld.Current.Maps.Values)
         {
@@ -107,7 +102,7 @@ internal sealed class EditorHandler(
         }
 
         _catalog.Npcs = packet.Npcs;
-        npcRepository.WriteAll();
+        contentStore.SaveAll(_catalog.Npcs.Values);
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
             npcSender.Npcs(t);
@@ -123,7 +118,7 @@ internal sealed class EditorHandler(
         }
 
         _catalog.Items = packet.Items;
-        itemRepository.WriteAll();
+        contentStore.SaveAll(_catalog.Items.Values);
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
             itemSender.Items(t);
@@ -139,7 +134,7 @@ internal sealed class EditorHandler(
         }
 
         _catalog.Shops = packet.Shops;
-        shopRepository.WriteAll();
+        contentStore.SaveAll(_catalog.Shops.Values);
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
             shopSender.Shops(t);

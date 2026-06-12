@@ -1,7 +1,7 @@
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Framework.Persistence.Dtos;
-using CryBits.Utils;
+using CryBits.Persistence.Serialization;
 using System.Drawing;
 using System.Text.Json;
 

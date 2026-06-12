@@ -4,6 +4,8 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Graphics;
+using CryBits.Persistence.Stores;
+using System.IO;
 using CryBits.Client.Logic;
 using CryBits.Client.Network.Handlers;
 using CryBits.Client.Network.Senders;
@@ -42,11 +44,12 @@ internal static class Program
         NetworkClient.Instance.Start(onDisconnected: Leave);
         var context = GameContext.Instance;
         var audioManager = AudioManager.Instance;
+        var contentStore = new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data")));
 
         PacketDispatcher.Register(new AuthHandler(DefinitionCatalog.Instance));
         PacketDispatcher.Register(new AccountHandler(audioManager, context, DefinitionCatalog.Instance));
         PacketDispatcher.Register(new PlayerHandler(context, DefinitionCatalog.Instance));
-        PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager, DefinitionCatalog.Instance));
+        PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager, DefinitionCatalog.Instance, contentStore));
         PacketDispatcher.Register(new NpcHandler(context, DefinitionCatalog.Instance));
         PacketDispatcher.Register(new CombatHandler(context));
         PacketDispatcher.Register(new ChatHandler(Chat.Instance));

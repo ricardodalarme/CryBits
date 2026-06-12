@@ -15,11 +15,6 @@ internal static class Directories
     public static readonly FileInfo Settings = new(Path.Combine(BaseDir, "Data", "settings.json"));
     public static readonly DirectoryInfo Accounts = new(Path.Combine(BaseDir, "Data", "Accounts"));
     public static readonly FileInfo Characters = new(Path.Combine(BaseDir, "Data", "Characters") + Format);
-    public static readonly DirectoryInfo Classes = new(Path.Combine(BaseDir, "Data", "Classes"));
-    public static readonly DirectoryInfo Maps = new(Path.Combine(BaseDir, "Data", "Maps"));
-    public static readonly DirectoryInfo Npcs = new(Path.Combine(BaseDir, "Data", "Npcs"));
-    public static readonly DirectoryInfo Items = new(Path.Combine(BaseDir, "Data", "Items"));
-    public static readonly DirectoryInfo Shops = new(Path.Combine(BaseDir, "Data", "Shops"));
 
     public static void Create()
     {
@@ -27,10 +22,5 @@ internal static class Directories
         Settings.Directory?.Create();
         Accounts.Create();
         Characters.Directory?.Create();
-        Classes.Create();
-        Maps.Create();
-        Npcs.Create();
-        Items.Create();
-        Shops.Create();
     }
 }

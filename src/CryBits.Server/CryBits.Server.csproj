@@ -31,5 +31,6 @@
     <ProjectReference Include="../CryBits.Network/CryBits.Network.csproj" />
     <ProjectReference Include="../CryBits.Core/CryBits.Core.csproj" />
     <ProjectReference Include="../CryBits.Simulation/CryBits.Simulation.csproj" />
+    <ProjectReference Include="../CryBits.Persistence/CryBits.Persistence.csproj" />
   </ItemGroup>
 </Project>

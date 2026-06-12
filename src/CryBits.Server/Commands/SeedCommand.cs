@@ -7,7 +7,7 @@ using CryBits.Definitions.Slots;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Npcs;
 using CryBits.Server.Entities;
-using CryBits.Server.Persistence.Repositories;
+using System.IO;
 using CryBits.Server.World;
 using System;
 using Attribute = CryBits.Definitions.Characters.Attribute;
@@ -15,6 +15,7 @@ using NpcDef = CryBits.Definitions.Npcs.Npc;
 using NpcDropDef = CryBits.Definitions.Npcs.NpcDrop;
 using ShopDef = CryBits.Definitions.Shops.Shop;
 using ShopItemDef = CryBits.Definitions.Shops.ShopItem;
+using CryBits.Persistence.Stores;
 
 namespace CryBits.Server.Commands;
 
@@ -340,11 +341,12 @@ internal sealed class SeedCommand : IConsoleCommand
 
         // ── Persist ──────────────────────────────────────────────────────────
 
-        ItemRepository.Instance.WriteAll();
-        NpcRepository.Instance.WriteAll();
-        ShopRepository.Instance.WriteAll();
-        MapRepository.Instance.WriteAll();
-        ClassRepository.Instance.WriteAll();
+        var store = new FileContentStore(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Data")));
+        store.SaveAll(_catalog.Items.Values);
+        store.SaveAll(_catalog.Npcs.Values);
+        store.SaveAll(_catalog.Shops.Values);
+        store.SaveAll(_catalog.Maps.Values);
+        store.SaveAll(_catalog.Classes.Values);
 
         // Rebuild live GameWorld.Maps so the running server uses the new map IDs.
         GameWorld.Current.Maps.Clear();

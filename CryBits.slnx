@@ -8,6 +8,7 @@
       <BuildDependency Project="src/CryBits.Network/CryBits.Network.csproj" />
       <BuildDependency Project="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
       <BuildDependency Project="src/CryBits.Core/CryBits.Core.csproj" />
+      <BuildDependency Project="src/CryBits.Persistence/CryBits.Persistence.csproj" />
     </Project>
     <Project Path="src/CryBits.Core/CryBits.Core.csproj" />
     <Project Path="src/CryBits.Editors/CryBits.Editors.csproj">
@@ -16,11 +17,13 @@
       <BuildDependency Project="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
       <BuildDependency Project="src/CryBits.Core/CryBits.Core.csproj" />
     </Project>
+    <Project Path="src/CryBits.Persistence/CryBits.Persistence.csproj" />
     <Project Path="src/CryBits.Simulation/CryBits.Simulation.csproj" />
     <Project Path="src/CryBits.Server/CryBits.Server.csproj">
       <BuildDependency Project="src/CryBits.Definitions/CryBits.Definitions.csproj" />
       <BuildDependency Project="src/CryBits.Network/CryBits.Network.csproj" />
       <BuildDependency Project="src/CryBits.Core/CryBits.Core.csproj" />
+      <BuildDependency Project="src/CryBits.Persistence/CryBits.Persistence.csproj" />
       <BuildDependency Project="src/CryBits.Simulation/CryBits.Simulation.csproj" />
     </Project>
   </Folder>
