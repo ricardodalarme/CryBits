@@ -7,8 +7,6 @@ using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.Events;
 using CryBits.Server.World;
 using System;
-using static CryBits.Utils.DirectionUtils;
-
 namespace CryBits.Server.Systems.Movement;
 
 internal sealed class MovementSystem(
@@ -42,7 +40,7 @@ internal sealed class MovementSystem(
 
         GameWorld.Current.CurrentTick?.Events.Emit(new PlayerStartedMovingEvent { Player = player });
 
-        NextTile(player.Direction, ref nextX, ref nextY);
+        player.Direction.NextTile(ref nextX, ref nextY);
 
         if (Map.OutLimit(nextX, nextY))
         {

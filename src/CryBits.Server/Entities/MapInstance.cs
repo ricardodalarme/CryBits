@@ -6,8 +6,6 @@ using CryBits.Server.Systems.Npc;
 using CryBits.Server.World;
 using System;
 using System.Collections.Generic;
-using static CryBits.Utils.DirectionUtils;
-
 namespace CryBits.Server.Entities;
 
 internal class MapInstance(Guid id, Map map, DefinitionCatalog catalog) : Entity(id)
@@ -78,11 +76,11 @@ internal class MapInstance(Guid id, Map map, DefinitionCatalog catalog) : Entity
         byte nextX = x, nextY = y;
 
         // Compute next tile coordinates.
-        NextTile(direction, ref nextX, ref nextY);
+        direction.NextTile(ref nextX, ref nextY);
 
         // Check if the next tile is blocked by map data, attributes or entities.
         if (Data.TileBlocked(nextX, nextY)) return true;
-        if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
+        if (Data.Attribute[nextX, nextY].Block[(byte)direction.Reverse()]) return true;
         if (Data.Attribute[x, y].Block[(byte)direction]) return true;
         if (countEntities && (HasPlayer(nextX, nextY) != null || HasNpc(nextX, nextY) != null)) return true;
         return false;

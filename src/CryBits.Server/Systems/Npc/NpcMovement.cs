@@ -4,7 +4,6 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Npcs;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
-using static CryBits.Utils.DirectionUtils;
 using static CryBits.Utils.RandomUtils;
 
 namespace CryBits.Server.Systems.Npc;
@@ -89,7 +88,7 @@ internal static class NpcMovement
 
         npc.Direction = direction;
         npcSender.MapNpcDirection(npc);
-        NextTile(direction, ref nextX, ref nextY);
+        direction.NextTile(ref nextX, ref nextY);
 
         if (Map.OutLimit(nextX, nextY)) return false;
         if (npc.MapInstance.TileBlocked(npc.X, npc.Y, direction)) return false;

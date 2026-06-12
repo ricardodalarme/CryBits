@@ -2,8 +2,6 @@ using Arch.Core;
 using CryBits.Client.Components.Movement;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Common;
-using static CryBits.Utils.DirectionUtils;
-
 namespace CryBits.Client.Worlds;
 
 /// <summary>
@@ -29,12 +27,12 @@ internal class ClientMap(Map data, World world)
     public bool TileBlocked(byte x, byte y, Direction direction)
     {
         byte nextX = x, nextY = y;
-        NextTile(direction, ref nextX, ref nextY);
+        direction.NextTile(ref nextX, ref nextY);
 
         if (Map.OutLimit(nextX, nextY)) return Data.Link[(byte)direction] == null;
 
         if (Data.Attribute[nextX, nextY].Type == (byte)TileAttribute.Block) return true;
-        if (Data.Attribute[nextX, nextY].Block[(byte)ReverseDirection(direction)]) return true;
+        if (Data.Attribute[nextX, nextY].Block[(byte)direction.Reverse()]) return true;
         if (Data.Attribute[x, y].Block[(byte)direction]) return true;
         if (HasCollidable(nextX, nextY)) return true;
         return false;

@@ -13,7 +13,6 @@ using CryBits.Server.World;
 using System;
 using System.Drawing;
 using static CryBits.Globals;
-using static CryBits.Utils.DirectionUtils;
 using static CryBits.Utils.RandomUtils;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
@@ -34,7 +33,7 @@ internal sealed class CombatSystem(
     internal void Attack(Player player)
     {
         byte nextX = player.X, nextY = player.Y;
-        NextTile(player.Direction, ref nextX, ref nextY);
+        player.Direction.NextTile(ref nextX, ref nextY);
 
         if (player.Trade != null) return;
         if (player.Shop != null) return;
@@ -129,7 +128,7 @@ internal sealed class CombatSystem(
     internal void Attack(NpcInstance npcInstance)
     {
         byte nextX = npcInstance.X, nextY = npcInstance.Y;
-        NextTile(npcInstance.Direction, ref nextX, ref nextY);
+        npcInstance.Direction.NextTile(ref nextX, ref nextY);
 
         if (!npcInstance.Alive) return;
         if (Environment.TickCount64 < npcInstance.AttackTimer + AttackSpeed) return;
