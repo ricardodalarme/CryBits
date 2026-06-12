@@ -1,10 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>annotations</Nullable>
     <RootNamespace>CryBits.Client.Framework</RootNamespace>
   </PropertyGroup>
 
@@ -16,7 +13,6 @@
     <PackageReference Include="SFML.Audio" Version="3.0.0" />
     <PackageReference Include="SFML.Graphics" Version="3.0.0" />
     <PackageReference Include="SFML.Window" Version="3.0.0" />
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>

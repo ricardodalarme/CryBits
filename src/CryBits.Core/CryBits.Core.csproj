@@ -1,10 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
  <PropertyGroup>
@@ -13,13 +10,12 @@
     <AssemblyName>CryBits.Core</AssemblyName>
   </PropertyGroup>
 
- <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>embedded</DebugType>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>../../Build/Core/</OutputPath>
   </PropertyGroup>
 
  <ItemGroup>
    <PackageReference Include="LiteNetLib" Version="2.0.2" />
-   <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.3" />
+
  </ItemGroup>
 </Project>

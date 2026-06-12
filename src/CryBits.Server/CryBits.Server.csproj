@@ -2,14 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
-    <Nullable>annotations</Nullable>
     <Title>CryBits.Server</Title>
-    <Company>Ricardo Dalarme</Company>
     <Product>CryBits</Product>
-    <Copyright>Copyright (c) 2026 Ricardo Dalarme</Copyright>
-    <Description>ORPG Game Engine</Description>
     <AssemblyVersion>0.8.0</AssemblyVersion>
   </PropertyGroup>
 
@@ -20,7 +14,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>../../Build/Server/</OutputPath>
-    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -31,7 +24,6 @@
     <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="LiteNetLib" Version="2.0.2" />
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
