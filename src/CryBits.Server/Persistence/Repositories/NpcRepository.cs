@@ -7,9 +7,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal sealed class NpcRepository
+internal sealed class NpcRepository(DefinitionCatalog catalog)
 {
-    public static NpcRepository Instance { get; } = new();
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static NpcRepository Instance { get; } = new(DefinitionCatalog.Instance);
 
     public Dictionary<Guid, Npc> Read()
     {
@@ -28,7 +29,7 @@ internal sealed class NpcRepository
     public void WriteAll()
     {
         // Write NPCs to disk.
-        foreach (var npc in DefinitionCatalog.Npcs.Values)
+        foreach (var npc in _catalog.Npcs.Values)
             using (var stream =
                    new FileInfo(Path.Combine(Directories.Npcs.FullName, npc.Id.ToString()) + Directories.Format)
                        .OpenWrite())

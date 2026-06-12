@@ -11,8 +11,9 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class TradeHandler(TradeSender tradeSender, GameContext context)
+internal class TradeHandler(TradeSender tradeSender, GameContext context, DefinitionCatalog catalog)
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
     internal void Trade(TradePacket packet)
     {
@@ -79,13 +80,13 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context)
         if (packet.Own)
             for (byte i = 0; i < MaxInventory; i++)
             {
-                trade.Offer[i].Item = DefinitionCatalog.Items.Get(packet.Items[i].ItemId);
+                trade.Offer[i].Item = _catalog.Items.Get(packet.Items[i].ItemId);
                 trade.Offer[i].Amount = packet.Items[i].Amount;
             }
         else
             for (byte i = 0; i < MaxInventory; i++)
             {
-                trade.TheirOffer[i].Item = DefinitionCatalog.Items.Get(packet.Items[i].ItemId);
+                trade.TheirOffer[i].Item = _catalog.Items.Get(packet.Items[i].ItemId);
                 trade.TheirOffer[i].Amount = packet.Items[i].Amount;
             }
     }

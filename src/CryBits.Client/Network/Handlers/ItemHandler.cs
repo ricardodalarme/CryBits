@@ -5,10 +5,12 @@ namespace CryBits.Client.Network.Handlers;
 
 internal class ItemHandler
 {
+    private readonly DefinitionCatalog _catalog;
+    public ItemHandler(DefinitionCatalog catalog) => _catalog = catalog;
     [PacketHandler]
     internal void Items(ItemsPacket packet)
     {
         // Read items dictionary
-        DefinitionCatalog.Items = packet.List;
+        _catalog.Items = packet.List;
     }
 }

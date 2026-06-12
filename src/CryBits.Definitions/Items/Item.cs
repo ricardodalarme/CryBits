@@ -24,7 +24,7 @@ public class Item : Entity
 
     public Class ReqClass
     {
-        get => DefinitionCatalog.Classes.Get(_reqClass);
+        get => DefinitionCatalog.Instance.Classes.Get(_reqClass);
         set => _reqClass = value.GetId();
     }
 

@@ -53,7 +53,7 @@ internal static class Program
 
         // Create temporary maps.
         Console.WriteLine("Creating map instances.");
-        foreach (var map in DefinitionCatalog.Maps.Values) MapInstance.Create(map, true);
+        foreach (var map in DefinitionCatalog.Instance.Maps.Values) MapInstance.Create(map, true);
 
         // Initialize network sockets.
         NetworkServer.Instance.Init();

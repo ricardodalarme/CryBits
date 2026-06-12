@@ -1,3 +1,4 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
@@ -42,18 +43,18 @@ internal static class Program
         var context = GameContext.Instance;
         var audioManager = AudioManager.Instance;
 
-        PacketDispatcher.Register(new AuthHandler());
-        PacketDispatcher.Register(new AccountHandler(audioManager, context));
-        PacketDispatcher.Register(new PlayerHandler(context));
-        PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager));
-        PacketDispatcher.Register(new NpcHandler(context));
+        PacketDispatcher.Register(new AuthHandler(DefinitionCatalog.Instance));
+        PacketDispatcher.Register(new AccountHandler(audioManager, context, DefinitionCatalog.Instance));
+        PacketDispatcher.Register(new PlayerHandler(context, DefinitionCatalog.Instance));
+        PacketDispatcher.Register(new MapHandler(context, MapSender.Instance, audioManager, DefinitionCatalog.Instance));
+        PacketDispatcher.Register(new NpcHandler(context, DefinitionCatalog.Instance));
         PacketDispatcher.Register(new CombatHandler(context));
         PacketDispatcher.Register(new ChatHandler(Chat.Instance));
         PacketDispatcher.Register(new PartyHandler(PartySender.Instance, context));
-        PacketDispatcher.Register(new TradeHandler(TradeSender.Instance, context));
-        PacketDispatcher.Register(new ShopHandler());
-        PacketDispatcher.Register(new ClassHandler());
-        PacketDispatcher.Register(new ItemHandler());
+        PacketDispatcher.Register(new TradeHandler(TradeSender.Instance, context, DefinitionCatalog.Instance));
+        PacketDispatcher.Register(new ShopHandler(DefinitionCatalog.Instance));
+        PacketDispatcher.Register(new ClassHandler(DefinitionCatalog.Instance));
+        PacketDispatcher.Register(new ItemHandler(DefinitionCatalog.Instance));
         AudioManager.Instance.LoadSounds();
 
         Window.Instance.OpenMenu();

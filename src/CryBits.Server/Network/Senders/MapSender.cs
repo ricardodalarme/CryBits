@@ -9,9 +9,10 @@ using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
-internal sealed class MapSender(PackageSender packageSender)
+internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog catalog)
 {
-    public static MapSender Instance { get; } = new(PackageSender.Instance);
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static MapSender Instance { get; } = new(PackageSender.Instance, DefinitionCatalog.Instance);
 
     public void Map(GameSession session, Map map)
     {
@@ -20,8 +21,8 @@ internal sealed class MapSender(PackageSender packageSender)
 
     public void Maps(GameSession session)
     {
-        packageSender.ToPlayer(session, new MapsPacket { List = DefinitionCatalog.Maps });
-        foreach (var map in DefinitionCatalog.Maps.Values) Map(session, map);
+        packageSender.ToPlayer(session, new MapsPacket { List = _catalog.Maps });
+        foreach (var map in _catalog.Maps.Values) Map(session, map);
     }
 
     public void MapRevision(Player player, Map map)

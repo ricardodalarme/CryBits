@@ -7,9 +7,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal sealed class MapRepository
+internal sealed class MapRepository(DefinitionCatalog catalog)
 {
-    public static MapRepository Instance { get; } = new();
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static MapRepository Instance { get; } = new(DefinitionCatalog.Instance);
 
     public Dictionary<Guid, Map> Read()
     {
@@ -47,7 +48,7 @@ internal sealed class MapRepository
     public void WriteAll()
     {
         // Write maps to disk.
-        foreach (var map in DefinitionCatalog.Maps.Values)
+        foreach (var map in _catalog.Maps.Values)
             Write(map);
     }
 }

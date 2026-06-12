@@ -11,29 +11,32 @@ internal sealed class DataLoader(
     ClassRepository classRepository,
     NpcRepository npcRepository,
     ItemRepository itemRepository,
-    ShopRepository shopRepository)
+    ShopRepository shopRepository,
+    DefinitionCatalog catalog)
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     public static DataLoader Instance { get; } = new(
         SettingsRepository.Instance,
         MapRepository.Instance,
         ClassRepository.Instance,
         NpcRepository.Instance,
         ItemRepository.Instance,
-        ShopRepository.Instance);
+        ShopRepository.Instance,
+        DefinitionCatalog.Instance);
 
     public void LoadAll()
     {
         Console.WriteLine("Loading settings.");
         settingsRepository.Read();
         Console.WriteLine("Loading maps.");
-        DefinitionCatalog.Maps = mapRepository.Read();
+        _catalog.Maps = mapRepository.Read();
         Console.WriteLine("Loading classes.");
-        DefinitionCatalog.Classes = classRepository.Read();
+        _catalog.Classes = classRepository.Read();
         Console.WriteLine("Loading npcs.");
-        DefinitionCatalog.Npcs = npcRepository.Read();
+        _catalog.Npcs = npcRepository.Read();
         Console.WriteLine("Loading items.");
-        DefinitionCatalog.Items = itemRepository.Read();
+        _catalog.Items = itemRepository.Read();
         Console.WriteLine("Loading shops.");
-        DefinitionCatalog.Shops = shopRepository.Read();
+        _catalog.Shops = shopRepository.Read();
     }
 }

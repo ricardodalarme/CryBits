@@ -17,17 +17,19 @@ namespace CryBits.Editors.Forms;
 
 internal partial class EditorClassesWindow : Window
 {
+    private readonly DefinitionCatalog _catalog;
+
     /// <summary>Opens the Classes editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
-        if (DefinitionCatalog.Maps.Count == 0)
+        if (DefinitionCatalog.Instance.Maps.Count == 0)
         {
             MessageBox.Show("It must have at least one map registered before editing classes.");
             return;
         }
 
         owner.Hide();
-        var window = new EditorClassesWindow();
+        var window = new EditorClassesWindow(DefinitionCatalog.Instance);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }
@@ -39,13 +41,14 @@ internal partial class EditorClassesWindow : Window
     private bool _loading;
     private bool _addingToMale;
 
-    public EditorClassesWindow()
+    public EditorClassesWindow(DefinitionCatalog catalog)
     {
+        _catalog = catalog;
         InitializeComponent();
 
         // Populate comboboxes from live data
-        cmbItems.ItemsSource = DefinitionCatalog.Items.Values.ToList();
-        cmbSpawn_Map.ItemsSource = DefinitionCatalog.Maps.Values.ToList();
+        cmbItems.ItemsSource = _catalog.Items.Values.ToList();
+        cmbSpawn_Map.ItemsSource = _catalog.Maps.Values.ToList();
 
         // Wire SFML window: fires first time sfmlHost becomes part of the layout tree
         // (replaced with WriteableBitmap rendering - no native host needed)
@@ -69,7 +72,7 @@ internal partial class EditorClassesWindow : Window
     private void RefreshClassList()
     {
         var filter = txtFilter.Text ?? string.Empty;
-        var filtered = DefinitionCatalog.Classes.Values
+        var filtered = _catalog.Classes.Values
             .Where(c => c.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -87,7 +90,7 @@ internal partial class EditorClassesWindow : Window
         _loading = true;
 
         var filter = txtFilter.Text ?? string.Empty;
-        lstClasses.ItemsSource = DefinitionCatalog.Classes.Values
+        lstClasses.ItemsSource = _catalog.Classes.Values
             .Where(c => c.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -125,7 +128,7 @@ internal partial class EditorClassesWindow : Window
         numSpawn_X.Value = cls.SpawnX;
         numSpawn_Y.Value = cls.SpawnY;
 
-        cmbSpawn_Map.SelectedItem = DefinitionCatalog.Maps.Values.FirstOrDefault(m => m == cls.SpawnMap);
+        cmbSpawn_Map.SelectedItem = _catalog.Maps.Values.FirstOrDefault(m => m == cls.SpawnMap);
         cmbSpawn_Direction.SelectedIndex = cls.SpawnDirection;
 
         numTexture.Maximum = Textures.Characters.Count - 1;
@@ -168,22 +171,22 @@ internal partial class EditorClassesWindow : Window
     private void butNew_Click(object? sender, RoutedEventArgs e)
     {
         var cls = new Class();
-        DefinitionCatalog.Classes.Add(cls.Id, cls);
+        _catalog.Classes.Add(cls.Id, cls);
         RefreshClassList();
-        lstClasses.SelectedItem = DefinitionCatalog.Classes.Values.FirstOrDefault(c => c.Id == cls.Id);
+        lstClasses.SelectedItem = _catalog.Classes.Values.FirstOrDefault(c => c.Id == cls.Id);
     }
 
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
 
-        if (DefinitionCatalog.Classes.Count == 1)
+        if (_catalog.Classes.Count == 1)
         {
             // Must have at least one class – silently ignore (or show a dialog)
             return;
         }
 
-        DefinitionCatalog.Classes.Remove(_selected.Id);
+        _catalog.Classes.Remove(_selected.Id);
         _selected = null;
         RefreshClassList();
         pnlContent.IsVisible = lstClasses.SelectedItem != null;
@@ -330,7 +333,7 @@ internal partial class EditorClassesWindow : Window
 
     private void butItem_Add_Click(object? sender, RoutedEventArgs e)
     {
-        if (DefinitionCatalog.Items.Count == 0) return; // no items registered
+        if (_catalog.Items.Count == 0) return; // no items registered
 
         cmbItems.SelectedIndex = 0;
         numItem_Amount.Value = 1;

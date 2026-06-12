@@ -14,9 +14,10 @@ using CryBits.Extensions;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal sealed class CharacterRepository
+internal sealed class CharacterRepository(DefinitionCatalog catalog)
 {
-    public static CharacterRepository Instance { get; } = new();
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static CharacterRepository Instance { get; } = new(DefinitionCatalog.Instance);
 
     public void Read(GameSession session, string name)
     {
@@ -32,7 +33,7 @@ internal sealed class CharacterRepository
         session.Character.Name = data.ReadString();
         session.Character.TextureNum = data.ReadInt16();
         session.Character.Level = data.ReadInt16();
-        session.Character.Class = DefinitionCatalog.Classes.Get(new Guid(data.ReadString()));
+        session.Character.Class = _catalog.Classes.Get(new Guid(data.ReadString()));
         session.Character.Genre = data.ReadBoolean();
         session.Character.Experience = data.ReadInt32();
         session.Character.Points = data.ReadByte();
@@ -44,12 +45,12 @@ internal sealed class CharacterRepository
         for (byte n = 0; n < (byte)Attribute.Count; n++) session.Character.Attribute[n] = data.ReadInt16();
         for (byte n = 0; n < MaxInventory; n++)
         {
-            session.Character.Inventory[n].Item = DefinitionCatalog.Items.Get(new Guid(data.ReadString()));
+            session.Character.Inventory[n].Item = _catalog.Items.Get(new Guid(data.ReadString()));
             session.Character.Inventory[n].Amount = data.ReadInt16();
         }
 
         for (byte n = 0; n < (byte)Equipment.Count; n++)
-            session.Character.Equipment[n] = DefinitionCatalog.Items.Get(new Guid(data.ReadString()));
+            session.Character.Equipment[n] = _catalog.Items.Get(new Guid(data.ReadString()));
         for (byte n = 0; n < MaxHotbar; n++)
             session.Character.Hotbar[n] = new HotbarSlot((SlotType)data.ReadByte(), data.ReadByte());
     }

@@ -16,8 +16,9 @@ using Entity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class MapHandler(GameContext context, MapSender mapSender, AudioManager audioManager)
+internal class MapHandler(GameContext context, MapSender mapSender, AudioManager audioManager, DefinitionCatalog catalog)
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
     internal void MapRevision(MapRevisionPacket packet)
     {
@@ -87,6 +88,6 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
 
         // Spawn an ECS entity for every item the server reported.
         foreach (var itemData in packet.Items)
-            GroundItemSpawner.Spawn(world, DefinitionCatalog.Items.Get(itemData.ItemId), itemData.X, itemData.Y);
+            GroundItemSpawner.Spawn(world, _catalog.Items.Get(itemData.ItemId), itemData.X, itemData.Y);
     }
 }

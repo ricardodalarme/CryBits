@@ -7,9 +7,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal sealed class ClassRepository
+internal sealed class ClassRepository(DefinitionCatalog catalog)
 {
-    public static ClassRepository Instance { get; } = new();
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static ClassRepository Instance { get; } = new(DefinitionCatalog.Instance);
 
     public Dictionary<Guid, Class> Read()
     {
@@ -48,7 +49,7 @@ internal sealed class ClassRepository
     public void WriteAll()
     {
         // Write classes to disk.
-        foreach (var @class in DefinitionCatalog.Classes.Values)
+        foreach (var @class in _catalog.Classes.Values)
             Write(@class);
     }
 }

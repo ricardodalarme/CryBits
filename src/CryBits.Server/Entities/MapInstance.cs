@@ -10,8 +10,10 @@ using static CryBits.Utils.DirectionUtils;
 
 namespace CryBits.Server.Entities;
 
-internal class MapInstance(Guid id, Map map) : Entity(id)
+internal class MapInstance(Guid id, Map map, DefinitionCatalog catalog) : Entity(id)
 {
+    private readonly DefinitionCatalog _catalog = catalog;
+
     // Map data and runtime caches.
     public readonly Map Data = map;
     public NpcInstance[] Npc = [];
@@ -75,7 +77,7 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
             for (byte y = 0; y < Map.Height; y++)
                 if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
                     // Add map item.
-                    Item.Add(new MapItemInstance(DefinitionCatalog.Items.Get(new Guid(Data.Attribute[x, y].Data1)),
+                    Item.Add(new MapItemInstance(_catalog.Items.Get(new Guid(Data.Attribute[x, y].Data1)),
                         Data.Attribute[x, y].Data2, x, y));
     }
 
@@ -97,7 +99,7 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
     public static void Create(Map map, bool isOriginal)
     {
         var id = isOriginal ? map.Id : Guid.NewGuid();
-        var tempMap = new MapInstance(id, map);
+        var tempMap = new MapInstance(id, map, DefinitionCatalog.Instance);
         GameWorld.Current.Maps.Add(id, tempMap);
 
         // Initialize NPCs for the map.

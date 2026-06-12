@@ -23,14 +23,19 @@ namespace CryBits.Server.Commands;
         "Seeds the server with starter items, NPCs, shops and a map. Skips if data already exists (use -f to overwrite).")]
 internal sealed class SeedCommand : IConsoleCommand
 {
+    private readonly DefinitionCatalog _catalog;
+
+    public SeedCommand() : this(DefinitionCatalog.Instance) { }
+    public SeedCommand(DefinitionCatalog catalog) => _catalog = catalog;
+
     [Option('f', "force", HelpText = "Overwrite existing data even if it is already present.")]
     public bool Force { get; set; }
 
     public void Execute()
     {
         // Guard: abort if data already exists and force flag not set.
-        if (!Force && (DefinitionCatalog.Items.Count > 0 || DefinitionCatalog.Npcs.Count > 0 || DefinitionCatalog.Shops.Count > 0 || DefinitionCatalog.Maps.Count > 0 ||
-                       DefinitionCatalog.Classes.Count > 0))
+        if (!Force && (_catalog.Items.Count > 0 || _catalog.Npcs.Count > 0 || _catalog.Shops.Count > 0 || _catalog.Maps.Count > 0 ||
+                       _catalog.Classes.Count > 0))
         {
             Console.WriteLine("[Seed] Data already exists. Run with -f / --force to overwrite.");
             return;
@@ -39,11 +44,11 @@ internal sealed class SeedCommand : IConsoleCommand
         Console.WriteLine("[Seed] Seeding data...");
 
         // Clear any in-memory data so we start fresh.
-        DefinitionCatalog.Items.Clear();
-        DefinitionCatalog.Npcs.Clear();
-        DefinitionCatalog.Shops.Clear();
-        DefinitionCatalog.Maps.Clear();
-        DefinitionCatalog.Classes.Clear();
+        _catalog.Items.Clear();
+        _catalog.Npcs.Clear();
+        _catalog.Shops.Clear();
+        _catalog.Maps.Clear();
+        _catalog.Classes.Clear();
 
         // ── Items ────────────────────────────────────────────────────────────
 
@@ -150,9 +155,9 @@ internal sealed class SeedCommand : IConsoleCommand
         };
 
         foreach (var item in new[] { gold, sword, armor, helmet, shield, amulet, healthPotion, manaPotion })
-            DefinitionCatalog.Items[item.Id] = item;
+            _catalog.Items[item.Id] = item;
 
-        Console.WriteLine($"[Seed] Created {DefinitionCatalog.Items.Count} items.");
+        Console.WriteLine($"[Seed] Created {_catalog.Items.Count} items.");
 
         // ── Shop ─────────────────────────────────────────────────────────────
 
@@ -163,9 +168,9 @@ internal sealed class SeedCommand : IConsoleCommand
         generalStore.Sold.Add(new ShopItemDef(shield, 1, 25));
         generalStore.Sold.Add(new ShopItemDef(amulet, 1, 50));
         generalStore.Bought.Add(new ShopItemDef(sword, 1, 5));
-        DefinitionCatalog.Shops[generalStore.Id] = generalStore;
+        _catalog.Shops[generalStore.Id] = generalStore;
 
-        Console.WriteLine($"[Seed] Created {DefinitionCatalog.Shops.Count} shops.");
+        Console.WriteLine($"[Seed] Created {_catalog.Shops.Count} shops.");
 
         // ── NPCs ─────────────────────────────────────────────────────────────
 
@@ -229,9 +234,9 @@ internal sealed class SeedCommand : IConsoleCommand
         snake.Drop.Add(new NpcDropDef(gold, 2, 60));
 
         foreach (var npc in new[] { merchant, goblin, snake })
-            DefinitionCatalog.Npcs[npc.Id] = npc;
+            _catalog.Npcs[npc.Id] = npc;
 
-        Console.WriteLine($"[Seed] Created {DefinitionCatalog.Npcs.Count} NPCs.");
+        Console.WriteLine($"[Seed] Created {_catalog.Npcs.Count} NPCs.");
 
         // ── Map ──────────────────────────────────────────────────────────────
 
@@ -262,9 +267,9 @@ internal sealed class SeedCommand : IConsoleCommand
         map.Npc.Add(new MapNpc { Npc = merchant, Spawn = true, X = 12, Y = 9 });
         map.Npc.Add(new MapNpc { Npc = goblin, Spawn = true, X = 20, Y = 15 });
         map.Npc.Add(new MapNpc { Npc = snake, Spawn = true, X = 18, Y = 12 });
-        DefinitionCatalog.Maps[map.Id] = map;
+        _catalog.Maps[map.Id] = map;
 
-        Console.WriteLine($"[Seed] Created {DefinitionCatalog.Maps.Count} maps.");
+        Console.WriteLine($"[Seed] Created {_catalog.Maps.Count} maps.");
 
         // ── Warrior Class (powerful starter class) ───────────────────────────
 
@@ -297,7 +302,7 @@ internal sealed class SeedCommand : IConsoleCommand
         warrior.Item.Add(new ItemSlot(helmet, 1));
         warrior.Item.Add(new ItemSlot(healthPotion, 3));
 
-        DefinitionCatalog.Classes[warrior.Id] = warrior;
+        _catalog.Classes[warrior.Id] = warrior;
         Console.WriteLine($"[Seed] Created class '{warrior.Name}'.");
 
         // ── Mage Class ───────────────────────────────────────────────────────
@@ -330,7 +335,7 @@ internal sealed class SeedCommand : IConsoleCommand
         mage.Item.Add(new ItemSlot(manaPotion, 3));
         mage.Item.Add(new ItemSlot(healthPotion, 1));
 
-        DefinitionCatalog.Classes[mage.Id] = mage;
+        _catalog.Classes[mage.Id] = mage;
         Console.WriteLine($"[Seed] Created class '{mage.Name}'.");
 
         // ── Persist ──────────────────────────────────────────────────────────
@@ -343,7 +348,7 @@ internal sealed class SeedCommand : IConsoleCommand
 
         // Rebuild live GameWorld.Maps so the running server uses the new map IDs.
         GameWorld.Current.Maps.Clear();
-        foreach (var mapDef in DefinitionCatalog.Maps.Values)
+        foreach (var mapDef in _catalog.Maps.Values)
             MapInstance.Create(mapDef, true);
 
         Console.WriteLine("[Seed] All data written to disk. Done.");

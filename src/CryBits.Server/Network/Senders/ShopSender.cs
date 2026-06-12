@@ -7,13 +7,14 @@ using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;
 
-internal sealed class ShopSender(PackageSender packageSender)
+internal sealed class ShopSender(PackageSender packageSender, DefinitionCatalog catalog)
 {
-    public static ShopSender Instance { get; } = new(PackageSender.Instance);
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static ShopSender Instance { get; } = new(PackageSender.Instance, DefinitionCatalog.Instance);
 
     public void Shops(GameSession session)
     {
-        packageSender.ToPlayer(session, new ShopsPacket { List = DefinitionCatalog.Shops });
+        packageSender.ToPlayer(session, new ShopsPacket { List = _catalog.Shops });
     }
 
     public void ShopOpen(Player player, Shop shop)

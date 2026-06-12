@@ -9,13 +9,14 @@ using LiteNetLib;
 
 namespace CryBits.Server.Network.Senders;
 
-internal sealed class NpcSender(PackageSender packageSender)
+internal sealed class NpcSender(PackageSender packageSender, DefinitionCatalog catalog)
 {
-    public static NpcSender Instance { get; } = new(PackageSender.Instance);
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static NpcSender Instance { get; } = new(PackageSender.Instance, DefinitionCatalog.Instance);
 
     public void Npcs(GameSession session)
     {
-        packageSender.ToPlayer(session, new NpcsPacket { List = DefinitionCatalog.Npcs });
+        packageSender.ToPlayer(session, new NpcsPacket { List = _catalog.Npcs });
     }
 
     public void MapNpcs(Player player, MapInstance mapInstance)

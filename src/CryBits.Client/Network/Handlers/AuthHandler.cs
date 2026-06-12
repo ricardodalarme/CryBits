@@ -7,6 +7,8 @@ namespace CryBits.Client.Network.Handlers;
 
 internal class AuthHandler
 {
+    private readonly DefinitionCatalog _catalog;
+    public AuthHandler(DefinitionCatalog catalog) => _catalog = catalog;
     [PacketHandler]
     internal void Alert(AlertPacket packet)
     {
@@ -19,7 +21,7 @@ internal class AuthHandler
     {
         // Reset client-side character selection state
         SelectCharacterView.CurrentCharacter = 0;
-        DefinitionCatalog.Classes = [];
+        _catalog.Classes = [];
 
         // Open character selection panel
         MenuScreen.CloseMenus();

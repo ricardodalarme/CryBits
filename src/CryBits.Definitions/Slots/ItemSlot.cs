@@ -11,7 +11,7 @@ public class ItemSlot : ISlot
     private Guid _item;
     public Item Item
     {
-        get => DefinitionCatalog.Items.Get(_item);
+        get => DefinitionCatalog.Instance.Items.Get(_item);
         set => _item = value.GetId();
     }
     public short Amount { get; set; }

@@ -27,7 +27,7 @@ public class Npc : Entity
 
     public Shops.Shop Shop
     {
-        get => DefinitionCatalog.Shops.Get(_shop);
+        get => DefinitionCatalog.Instance.Shops.Get(_shop);
         set => _shop = value.GetId();
     }
 

@@ -23,8 +23,10 @@ internal sealed class EditorHandler(
     MapRepository mapRepository,
     NpcRepository npcRepository,
     ItemRepository itemRepository,
-    ShopRepository shopRepository)
+    ShopRepository shopRepository,
+    DefinitionCatalog catalog)
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     public static EditorHandler Instance { get; } = new(
         AuthSender.Instance,
         ClassSender.Instance,
@@ -38,7 +40,8 @@ internal sealed class EditorHandler(
         MapRepository.Instance,
         NpcRepository.Instance,
         ItemRepository.Instance,
-        ShopRepository.Instance);
+        ShopRepository.Instance,
+        DefinitionCatalog.Instance);
 
     [PacketHandler]
     internal void WriteSettings(GameSession session, WriteSettingsPacket packet)
@@ -65,7 +68,7 @@ internal sealed class EditorHandler(
             return;
         }
 
-        DefinitionCatalog.Classes = packet.Classes;
+        _catalog.Classes = packet.Classes;
         classRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
@@ -81,7 +84,7 @@ internal sealed class EditorHandler(
             return;
         }
 
-        DefinitionCatalog.Maps = packet.Maps;
+        _catalog.Maps = packet.Maps;
         mapRepository.WriteAll();
 
         foreach (var tempMap in GameWorld.Current.Maps.Values)
@@ -102,7 +105,7 @@ internal sealed class EditorHandler(
             return;
         }
 
-        DefinitionCatalog.Npcs = packet.Npcs;
+        _catalog.Npcs = packet.Npcs;
         npcRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
@@ -118,7 +121,7 @@ internal sealed class EditorHandler(
             return;
         }
 
-        DefinitionCatalog.Items = packet.Items;
+        _catalog.Items = packet.Items;
         itemRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
@@ -134,7 +137,7 @@ internal sealed class EditorHandler(
             return;
         }
 
-        DefinitionCatalog.Shops = packet.Shops;
+        _catalog.Shops = packet.Shops;
         shopRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
@@ -157,7 +160,7 @@ internal sealed class EditorHandler(
     internal void RequestMap(GameSession session, RequestMapPacket packet)
     {
         if (session.InEditor)
-            mapSender.Map(session, DefinitionCatalog.Maps.Get(packet.Id));
+            mapSender.Map(session, _catalog.Maps.Get(packet.Id));
         else
         {
             var player = session.Character;

@@ -5,15 +5,16 @@ using System.Linq;
 
 namespace CryBits.Client.Network.Senders;
 
-internal class AccountSender(PacketSender packetSender)
+internal class AccountSender(PacketSender packetSender, DefinitionCatalog catalog)
 {
-    public static AccountSender Instance { get; } = new(PacketSender.Instance);
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static AccountSender Instance { get; } = new(PacketSender.Instance, DefinitionCatalog.Instance);
 
     public void CreateCharacter(string name, bool isMale, short @class, short textureNum) =>
         packetSender.Packet(new CreateCharacterPacket
         {
             Name = name,
-            ClassId = DefinitionCatalog.Classes.ElementAt(@class).Value.Id.ToString(),
+            ClassId = _catalog.Classes.ElementAt(@class).Value.Id.ToString(),
             GenderMale = isMale,
             TextureNum = textureNum
         });

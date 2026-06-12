@@ -10,8 +10,9 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.UI.Menu.Views;
 
-internal class CreateCharacterView(AccountSender accountSender, CharacterRenderer characterRenderer) : IView
+internal class CreateCharacterView(AccountSender accountSender, CharacterRenderer characterRenderer, DefinitionCatalog catalog) : IView
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     internal static Panel CreateCharacterPanel => Tools.Panels["CreateCharacter"];
     internal static TextBox NameTextBox => Tools.TextBoxes["CreateCharacter_Name"];
     private static Button CreateButton => Tools.Buttons["CreateCharacter"];
@@ -43,7 +44,7 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
         GenderMaleCheckBox.OnMouseUp += OnGenderMaleChanged;
         GenderFemaleCheckBox.OnMouseUp += OnGenderFemaleChanged;
         BackButton.OnMouseUp += OnBackPressed;
-        UpdateClassLabels();
+        UpdateClassLabels(_catalog);
     }
 
     public void Unbind()
@@ -74,26 +75,26 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
     private void OnChangeClassRightPressed()
     {
         // Cycle selected class to the right
-        if (CurrentClass == DefinitionCatalog.Classes.Count - 1)
+        if (CurrentClass == _catalog.Classes.Count - 1)
             CurrentClass = 0;
         else
             CurrentClass++;
-        UpdateClassLabels();
+        UpdateClassLabels(_catalog);
     }
 
     private void OnChangeClassLeftPressed()
     {
         // Cycle selected class to the left
         if (CurrentClass == 0)
-            CurrentClass = (byte)DefinitionCatalog.Classes.Count;
+            CurrentClass = (byte)_catalog.Classes.Count;
         else
             CurrentClass--;
-        UpdateClassLabels();
+        UpdateClassLabels(_catalog);
     }
 
     private void OnChangeTextureRight()
     {
-        var @class = DefinitionCatalog.Classes.ElementAt(CurrentClass).Value;
+        var @class = _catalog.Classes.ElementAt(CurrentClass).Value;
         var texList = GenderMaleCheckBox.Checked ? @class.TextureMale : @class.TextureFemale;
 
         if (CurrentTexture == texList.Count - 1)
@@ -104,7 +105,7 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
 
     private void OnChangeTextureLeftPressed()
     {
-        var @class = DefinitionCatalog.Classes.ElementAt(CurrentClass).Value;
+        var @class = _catalog.Classes.ElementAt(CurrentClass).Value;
         var texList = GenderMaleCheckBox.Checked ? @class.TextureMale : @class.TextureFemale;
 
         if (CurrentTexture == 0)
@@ -117,14 +118,14 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
     {
         GenderFemaleCheckBox.Checked = !GenderMaleCheckBox.Checked;
         CurrentTexture = 0;
-        UpdateClassLabels();
+        UpdateClassLabels(_catalog);
     }
 
     private void OnGenderFemaleChanged()
     {
         GenderMaleCheckBox.Checked = !GenderFemaleCheckBox.Checked;
         CurrentTexture = 0;
-        UpdateClassLabels();
+        UpdateClassLabels(_catalog);
     }
 
     private void OnBackPressed()
@@ -136,8 +137,8 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
 
     private short GetCurrentTextureNum()
     {
-        if (DefinitionCatalog.Classes.Count == 0) return 0;
-        var @class = DefinitionCatalog.Classes.ElementAt(CurrentClass).Value;
+        if (_catalog.Classes.Count == 0) return 0;
+        var @class = _catalog.Classes.ElementAt(CurrentClass).Value;
         if (GenderMaleCheckBox.Checked && @class.TextureMale.Count > 0)
             return @class.TextureMale[CurrentTexture];
         if (@class.TextureFemale.Count > 0)
@@ -145,10 +146,10 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
         return 0;
     }
 
-    internal static void UpdateClassLabels()
+    internal static void UpdateClassLabels(DefinitionCatalog catalog)
     {
-        if (DefinitionCatalog.Classes.Count == 0) return;
-        var @class = DefinitionCatalog.Classes.ElementAt(CurrentClass).Value;
+        if (catalog.Classes.Count == 0) return;
+        var @class = catalog.Classes.ElementAt(CurrentClass).Value;
         ClassNameLabel.Text = @class.Name;
         ClassDescLabel.Text = @class.Description;
     }

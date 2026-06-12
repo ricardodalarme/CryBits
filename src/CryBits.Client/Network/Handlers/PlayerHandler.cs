@@ -16,8 +16,9 @@ using Entity = Arch.Core.Entity;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class PlayerHandler(GameContext context)
+internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
     internal void PlayerData(PlayerDataPacket packet)
     {
@@ -35,7 +36,7 @@ internal class PlayerHandler(GameContext context)
         if (isLocal)
         {
             var equipmentItems = new Item?[(byte)Equipment.Count];
-            for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = DefinitionCatalog.Items.Get(packet.Equipment[n]);
+            for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = _catalog.Items.Get(packet.Equipment[n]);
 
             entity = PlayerSpawner.SpawnLocal(
                 context.World,
@@ -109,7 +110,7 @@ internal class PlayerHandler(GameContext context)
 
         // Update player's equipped items
         ref var equipment = ref context.World.Get<EquipmentComponent>(entity);
-        for (byte i = 0; i < (byte)Equipment.Count; i++) equipment.Slots[i] = DefinitionCatalog.Items.Get(packet.Equipments[i]);
+        for (byte i = 0; i < (byte)Equipment.Count; i++) equipment.Slots[i] = _catalog.Items.Get(packet.Equipments[i]);
     }
 
     [PacketHandler]
@@ -178,7 +179,7 @@ internal class PlayerHandler(GameContext context)
         if (context.LocalPlayer.Entity == Entity.Null) return;
         ref var inventory = ref context.LocalPlayer.GetInventory();
         for (byte i = 0; i < MaxInventory; i++)
-            inventory.Slots[i] = new ItemSlot(DefinitionCatalog.Items.Get(packet.ItemIds[i]), packet.Amounts[i]);
+            inventory.Slots[i] = new ItemSlot(_catalog.Items.Get(packet.ItemIds[i]), packet.Amounts[i]);
     }
 
     [PacketHandler]

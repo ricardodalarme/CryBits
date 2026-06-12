@@ -4,6 +4,7 @@ using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
+using CryBits.Definitions.Catalog;
 using System.Collections.Generic;
 
 namespace CryBits.Client.UI.Game;
@@ -15,7 +16,7 @@ internal class GameScreen
     private readonly DraggableSlotView DraggableSlotView = new(ItemRenderer.Instance, InputManager.Instance, GameContext.Instance);
     private readonly DropItemView DropItemView = new(PlayerSender.Instance);
     private readonly HotbarView HotbarView = new(PlayerSender.Instance, ItemRenderer.Instance, GameContext.Instance);
-    private readonly InformationView InformationView = new(ItemRenderer.Instance);
+    private readonly InformationView InformationView = new(ItemRenderer.Instance, DefinitionCatalog.Instance);
     private readonly InventoryView InventoryView = new(PlayerSender.Instance, ShopSender.Instance, ItemRenderer.Instance, GameContext.Instance);
     private readonly MenusView MenusView = new();
     private readonly OptionsView OptionsView = new(AudioManager.Instance, GameContext.Instance);

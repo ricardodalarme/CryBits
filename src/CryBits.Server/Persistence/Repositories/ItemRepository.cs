@@ -7,9 +7,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CryBits.Server.Persistence.Repositories;
 
-internal sealed class ItemRepository
+internal sealed class ItemRepository(DefinitionCatalog catalog)
 {
-    public static ItemRepository Instance { get; } = new();
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static ItemRepository Instance { get; } = new(DefinitionCatalog.Instance);
 
     public Dictionary<Guid, Item> Read()
     {
@@ -29,7 +30,7 @@ internal sealed class ItemRepository
     public void WriteAll()
     {
         // Write items to disk.
-        foreach (var item in DefinitionCatalog.Items.Values)
+        foreach (var item in _catalog.Items.Values)
             using (var stream =
                    new FileInfo(Path.Combine(Directories.Items.FullName, item.Id.ToString()) + Directories.Format)
                        .OpenWrite())

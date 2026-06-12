@@ -15,11 +15,13 @@ namespace CryBits.Editors.Forms;
 
 internal partial class EditorItemsWindow : Window
 {
+    private readonly DefinitionCatalog _catalog;
+
     /// <summary>Opens the Items editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
         owner.Hide();
-        var window = new EditorItemsWindow();
+        var window = new EditorItemsWindow(DefinitionCatalog.Instance);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }
@@ -30,8 +32,9 @@ internal partial class EditorItemsWindow : Window
     private Item? _selected;
     private bool _loading;
 
-    public EditorItemsWindow()
+    public EditorItemsWindow(DefinitionCatalog catalog)
     {
+        _catalog = catalog;
         InitializeComponent();
 
         // Set texture upper bound
@@ -47,7 +50,7 @@ internal partial class EditorItemsWindow : Window
 
         // Populate class requirement combo
         cmbReq_Class.Items.Add("None");
-        foreach (var cls in DefinitionCatalog.Classes.Values)
+        foreach (var cls in _catalog.Classes.Values)
             cmbReq_Class.Items.Add(cls);
 
         RefreshItemList();
@@ -60,7 +63,7 @@ internal partial class EditorItemsWindow : Window
     private void RefreshItemList()
     {
         var filter = txtFilter.Text ?? string.Empty;
-        var filtered = DefinitionCatalog.Items.Values
+        var filtered = _catalog.Items.Values
             .Where(i => i.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -78,7 +81,7 @@ internal partial class EditorItemsWindow : Window
         _loading = true;
 
         var filter = txtFilter.Text ?? string.Empty;
-        lstItems.ItemsSource = DefinitionCatalog.Items.Values
+        lstItems.ItemsSource = _catalog.Items.Values
             .Where(i => i.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -140,16 +143,16 @@ internal partial class EditorItemsWindow : Window
     private void butNew_Click(object? sender, RoutedEventArgs e)
     {
         var item = new Item();
-        DefinitionCatalog.Items.Add(item.Id, item);
+        _catalog.Items.Add(item.Id, item);
 
         RefreshItemList();
-        lstItems.SelectedItem = DefinitionCatalog.Items.Values.FirstOrDefault(i => i.Id == item.Id);
+        lstItems.SelectedItem = _catalog.Items.Values.FirstOrDefault(i => i.Id == item.Id);
     }
 
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        DefinitionCatalog.Items.Remove(_selected.Id);
+        _catalog.Items.Remove(_selected.Id);
         _selected = null;
         RefreshItemList();
         pnlRight.IsVisible = lstItems.SelectedItem != null;

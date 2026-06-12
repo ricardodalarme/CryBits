@@ -6,11 +6,13 @@ namespace CryBits.Client.Network.Handlers;
 
 internal class ClassHandler
 {
+    private readonly DefinitionCatalog _catalog;
+    public ClassHandler(DefinitionCatalog catalog) => _catalog = catalog;
     [PacketHandler]
     internal void Classes(ClassesPacket packet)
     {
         // Read classes dictionary
-        DefinitionCatalog.Classes = packet.List;
-        CreateCharacterView.UpdateClassLabels();
+        _catalog.Classes = packet.List;
+        CreateCharacterView.UpdateClassLabels(_catalog);
     }
 }

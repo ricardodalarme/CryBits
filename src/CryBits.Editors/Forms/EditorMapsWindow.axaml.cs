@@ -73,12 +73,14 @@ internal sealed class LayerVm : INotifyPropertyChanged
 
 internal partial class EditorMapsWindow : Window
 {
+    private readonly DefinitionCatalog _catalog;
+
     /// <summary>Opens the Maps editor as the primary window (no parent).</summary>
     public static void Open()
     {
         Dispatcher.UIThread.Post(() =>
         {
-            var window = new EditorMapsWindow();
+            var window = new EditorMapsWindow(DefinitionCatalog.Instance);
             window.Show();
         });
     }
@@ -89,7 +91,7 @@ internal partial class EditorMapsWindow : Window
         Dispatcher.UIThread.Post(async () =>
         {
             parent.Hide();
-            var window = new EditorMapsWindow();
+            var window = new EditorMapsWindow(DefinitionCatalog.Instance);
             await window.ShowDialog(parent);
             parent.Show();
         });
@@ -188,8 +190,9 @@ internal partial class EditorMapsWindow : Window
     private List<LayerVm> _layerVms = [];
 
     // ── Constructor ──────────────────────────────────────────────────────────
-    public EditorMapsWindow()
+    public EditorMapsWindow(DefinitionCatalog catalog)
     {
+        _catalog = catalog;
         InitializeComponent();
         Instance = this;
 
@@ -269,7 +272,7 @@ internal partial class EditorMapsWindow : Window
     private void RefreshMapList(Guid? keepId = null)
     {
         var filter = txtFilter.Text ?? string.Empty;
-        var filtered = DefinitionCatalog.Maps.Values
+        var filtered = _catalog.Maps.Values
             .Where(m => m.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -337,7 +340,7 @@ internal partial class EditorMapsWindow : Window
     private void RefreshWarpMapCombo()
     {
         cmbA_Warp_Map.Items.Clear();
-        foreach (var m in DefinitionCatalog.Maps.Values) cmbA_Warp_Map.Items.Add(m);
+        foreach (var m in _catalog.Maps.Values) cmbA_Warp_Map.Items.Add(m);
         if (cmbA_Warp_Map.Items.Count > 0) cmbA_Warp_Map.SelectedIndex = 0;
         numA_Warp_X.Maximum = Map.Width - 1;
         numA_Warp_Y.Maximum = Map.Height - 1;
@@ -351,20 +354,20 @@ internal partial class EditorMapsWindow : Window
     private void butNew_Click(object? sender, RoutedEventArgs e)
     {
         var map = new Map();
-        DefinitionCatalog.Maps.Add(map.Id, map);
+        _catalog.Maps.Add(map.Id, map);
         RefreshMapList(map.Id);
     }
 
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        if (DefinitionCatalog.Maps.Count == 1)
+        if (_catalog.Maps.Count == 1)
         {
             MessageBox.Show("It must have at least one map registered.");
             return;
         }
 
-        DefinitionCatalog.Maps.Remove(_selected.Id);
+        _catalog.Maps.Remove(_selected.Id);
         _selected = null;
         RefreshMapList();
     }
@@ -387,7 +390,7 @@ internal partial class EditorMapsWindow : Window
 
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
-        foreach (var map in DefinitionCatalog.Maps.Values) ++map.Revision;
+        foreach (var map in _catalog.Maps.Values) ++map.Revision;
         PackageSender.Instance.WriteMaps();
         MessageBox.Show("All maps has been saved");
     }
@@ -569,7 +572,7 @@ internal partial class EditorMapsWindow : Window
         if (butMNPCs.IsChecked == true)
         {
             cmbNPC.Items.Clear();
-            foreach (var npc in DefinitionCatalog.Npcs.Values) cmbNPC.Items.Add(npc);
+            foreach (var npc in _catalog.Npcs.Values) cmbNPC.Items.Add(npc);
             if (cmbNPC.Items.Count > 0) cmbNPC.SelectedIndex = 0;
             numNPC_Zone.Value = 0;
         }
@@ -1052,7 +1055,7 @@ internal partial class EditorMapsWindow : Window
     {
         if (optA_Item.IsChecked == true)
         {
-            if (DefinitionCatalog.Items.Count == 0)
+            if (_catalog.Items.Count == 0)
             {
                 MessageBox.Show("It must have at least one item registered to use this attribute.");
                 optA_Block.IsChecked = true;
@@ -1060,7 +1063,7 @@ internal partial class EditorMapsWindow : Window
             }
 
             cmbA_Item.Items.Clear();
-            foreach (var item in DefinitionCatalog.Items.Values) cmbA_Item.Items.Add(item);
+            foreach (var item in _catalog.Items.Values) cmbA_Item.Items.Add(item);
             if (cmbA_Item.Items.Count > 0) cmbA_Item.SelectedIndex = 0;
             numA_Item_Amount.Value = _aData2 = 1;
         }

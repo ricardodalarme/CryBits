@@ -16,13 +16,14 @@ using static CryBits.Globals;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class NpcHandler(GameContext context)
+internal class NpcHandler(GameContext context, DefinitionCatalog catalog)
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
     internal void Npcs(NpcsPacket packet)
     {
         // Read NPCs dictionary
-        DefinitionCatalog.Npcs = packet.List;
+        _catalog.Npcs = packet.List;
     }
 
     [PacketHandler]
@@ -43,7 +44,7 @@ internal class NpcHandler(GameContext context)
         for (byte i = 0; i < packet.Npcs.Length; i++)
         {
             var npc = packet.Npcs[i];
-            var data = DefinitionCatalog.Npcs.Get(npc.NpcId);
+            var data = _catalog.Npcs.Get(npc.NpcId);
             var direction = (Direction)npc.Direction;
             var vitals = new short[(byte)Vital.Count];
             for (byte n = 0; n < (byte)Vital.Count; n++) vitals[n] = npc.Vital[n];
@@ -63,7 +64,7 @@ internal class NpcHandler(GameContext context)
             context.World.Destroy(old);
         }
 
-        var data = DefinitionCatalog.Npcs.Get(packet.NpcId);
+        var data = _catalog.Npcs.Get(packet.NpcId);
         var direction = (Direction)packet.Direction;
         var vitals = new short[(byte)Vital.Count];
         for (byte n = 0; n < (byte)Vital.Count; n++) vitals[n] = packet.Vital[n];

@@ -25,7 +25,7 @@ public class Class : Entity
     public Class()
     {
         Name = "New class";
-        SpawnMap = DefinitionCatalog.Maps.ElementAt(0).Value;
+        SpawnMap = DefinitionCatalog.Instance.Maps.ElementAt(0).Value;
         TextureMale.Add(1);
         TextureFemale.Add(1);
     }

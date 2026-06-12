@@ -8,9 +8,10 @@ using static CryBits.Globals;
 
 namespace CryBits.Editors.Network;
 
-internal class PackageSender(PacketSender packetSender)
+internal class PackageSender(PacketSender packetSender, DefinitionCatalog catalog)
 {
-    public static PackageSender Instance { get; } = new(PacketSender.Instance);
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static PackageSender Instance { get; } = new(PacketSender.Instance, DefinitionCatalog.Instance);
 
     public void Connect() => packetSender.Packet(new ConnectPacket { Username = LoginWindow.Username, Password = LoginWindow.Password, IsClientAccess = true });
     public void RequestServerData() => packetSender.Packet(new RequestSettingPacket(), DeliveryMethod.ReliableUnordered);
@@ -20,9 +21,9 @@ internal class PackageSender(PacketSender packetSender)
     public void RequestItems() => packetSender.Packet(new RequestItemsPacket(), DeliveryMethod.ReliableUnordered);
     public void RequestShops() => packetSender.Packet(new RequestShopsPacket(), DeliveryMethod.ReliableUnordered);
     public void WriteServerData() => packetSender.Packet(new WriteSettingsPacket { Config = Config });
-    public void WriteClasses() => packetSender.Packet(new WriteClassesPacket { Classes = DefinitionCatalog.Classes });
-    public void WriteMaps() => packetSender.Packet(new WriteMapsPacket { Maps = DefinitionCatalog.Maps });
-    public void WriteNpcs() => packetSender.Packet(new WriteNpcsPacket { Npcs = DefinitionCatalog.Npcs });
-    public void WriteItems() => packetSender.Packet(new WriteItemsPacket { Items = DefinitionCatalog.Items });
-    public void WriteShops() => packetSender.Packet(new WriteShopsPacket { Shops = DefinitionCatalog.Shops });
+    public void WriteClasses() => packetSender.Packet(new WriteClassesPacket { Classes = _catalog.Classes });
+    public void WriteMaps() => packetSender.Packet(new WriteMapsPacket { Maps = _catalog.Maps });
+    public void WriteNpcs() => packetSender.Packet(new WriteNpcsPacket { Npcs = _catalog.Npcs });
+    public void WriteItems() => packetSender.Packet(new WriteItemsPacket { Items = _catalog.Items });
+    public void WriteShops() => packetSender.Packet(new WriteShopsPacket { Shops = _catalog.Shops });
 }

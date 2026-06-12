@@ -12,17 +12,19 @@ namespace CryBits.Editors.Forms;
 
 internal partial class EditorShopsWindow : Window
 {
+    private readonly DefinitionCatalog _catalog;
+
     /// <summary>Opens the Shops editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
-        if (DefinitionCatalog.Items.Count == 0)
+        if (DefinitionCatalog.Instance.Items.Count == 0)
         {
             MessageBox.Show("It must have at least one item registered to open the store editor.");
             return;
         }
 
         owner.Hide();
-        var window = new EditorShopsWindow();
+        var window = new EditorShopsWindow(DefinitionCatalog.Instance);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }
@@ -30,11 +32,12 @@ internal partial class EditorShopsWindow : Window
     private Shop _selected;
     private bool _addingToSold;
 
-    public EditorShopsWindow()
+    public EditorShopsWindow(DefinitionCatalog catalog)
     {
+        _catalog = catalog;
         InitializeComponent();
 
-        var items = DefinitionCatalog.Items.Values.ToList();
+        var items = _catalog.Items.Values.ToList();
         cmbItems.ItemsSource = items;
         cmbCurrency.ItemsSource = items;
 
@@ -49,7 +52,7 @@ internal partial class EditorShopsWindow : Window
 
     private void List_Update(Guid? keepSelectionId = null)
     {
-        var filtered = DefinitionCatalog.Shops.Values
+        var filtered = _catalog.Shops.Values
             .Where(shop => shop.Name.StartsWith(txtFilter.Text ?? string.Empty))
             .ToList();
 
@@ -112,7 +115,7 @@ internal partial class EditorShopsWindow : Window
     private void butNew_Click(object sender, RoutedEventArgs e)
     {
         var shop = new Shop();
-        DefinitionCatalog.Shops.Add(shop.Id, shop);
+        _catalog.Shops.Add(shop.Id, shop);
         List_Update(shop.Id);
         Groups_Visibility();
     }
@@ -122,7 +125,7 @@ internal partial class EditorShopsWindow : Window
         if (_selected == null) return;
 
         var removeId = _selected.Id;
-        DefinitionCatalog.Shops.Remove(removeId);
+        _catalog.Shops.Remove(removeId);
         _selected = null;
         List_Update();
         Groups_Visibility();

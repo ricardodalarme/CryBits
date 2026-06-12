@@ -30,31 +30,31 @@ internal class EditorHandler
     [PacketHandler]
     internal static void Classes(ClassesPacket packet)
     {
-        DefinitionCatalog.Classes = packet.List;
+        DefinitionCatalog.Instance.Classes = packet.List;
     }
 
     [PacketHandler]
     internal static void Map(MapPacket packet)
     {
         var map = packet.Map;
-        DefinitionCatalog.Maps[map.Id] = map;
+        DefinitionCatalog.Instance.Maps[map.Id] = map;
     }
 
     [PacketHandler]
     internal static void Npcs(NpcsPacket packet)
     {
-        DefinitionCatalog.Npcs = packet.List;
+        DefinitionCatalog.Instance.Npcs = packet.List;
     }
 
     [PacketHandler]
     internal static void Items(ItemsPacket packet)
     {
-        DefinitionCatalog.Items = packet.List;
+        DefinitionCatalog.Instance.Items = packet.List;
     }
 
     [PacketHandler]
     internal static void Shops(ShopsPacket packet)
     {
-        DefinitionCatalog.Shops = packet.List;
+        DefinitionCatalog.Instance.Shops = packet.List;
     }
 }

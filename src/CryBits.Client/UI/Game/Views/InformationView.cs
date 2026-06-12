@@ -12,8 +12,9 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class InformationView(ItemRenderer itemRenderer) : IView
+internal class InformationView(ItemRenderer itemRenderer, DefinitionCatalog catalog) : IView
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     private static Panel Panel => Tools.Panels["Information"];
     private static Label TitleLabel => Tools.Labels["Information_Title"];
     private static Label DescriptionLabel => Tools.Labels["Information_Description"];
@@ -38,7 +39,7 @@ internal class InformationView(ItemRenderer itemRenderer) : IView
     /// <param name="contextLine">Optional extra line (e.g. shop price) prepended to additional context.</param>
     public static void Show(Guid itemId, Point position, string? contextLine = null)
     {
-        var item = DefinitionCatalog.Items.Get(itemId);
+        var item = DefinitionCatalog.Instance.Items.Get(itemId);
         if (item == null) { Hide(); return; }
 
         _currentItem = item;

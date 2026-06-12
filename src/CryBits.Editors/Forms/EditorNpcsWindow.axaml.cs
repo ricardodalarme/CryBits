@@ -21,11 +21,13 @@ namespace CryBits.Editors.Forms;
 
 internal partial class EditorNpcsWindow : Window
 {
+    private readonly DefinitionCatalog _catalog;
+
     /// <summary>Opens the NPCs editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
         owner.Hide();
-        var window = new EditorNpcsWindow();
+        var window = new EditorNpcsWindow(DefinitionCatalog.Instance);
         window.Closed += (_, _) => owner.Show();
         window.Show();
     }
@@ -39,8 +41,9 @@ internal partial class EditorNpcsWindow : Window
     private WriteableBitmap? _previewBitmap;
     private readonly DispatcherTimer? _timer;
 
-    public EditorNpcsWindow()
+    public EditorNpcsWindow(DefinitionCatalog catalog)
     {
+        _catalog = catalog;
         InitializeComponent();
 
         // Populate behaviour/movement combos
@@ -48,8 +51,8 @@ internal partial class EditorNpcsWindow : Window
             cmbMovement.Items.Add(ms.ToString());
 
         // Populate drop-item and shop combos from live data
-        cmbDrop_Item.ItemsSource = DefinitionCatalog.Items.Values.ToList();
-        cmbShop.ItemsSource = DefinitionCatalog.Shops.Values.ToList();
+        cmbDrop_Item.ItemsSource = _catalog.Items.Values.ToList();
+        cmbShop.ItemsSource = _catalog.Shops.Values.ToList();
 
         // SFML offscreen render for the texture preview
         CharacterRenderer.Instance.WinCharacter = new RenderTexture(new Vector2u(80, 80));
@@ -88,7 +91,7 @@ internal partial class EditorNpcsWindow : Window
     private void RefreshNpcList()
     {
         var filter = txtFilter.Text ?? string.Empty;
-        lstNpcs.ItemsSource = DefinitionCatalog.Npcs.Values
+        lstNpcs.ItemsSource = _catalog.Npcs.Values
             .Where(n => n.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -103,7 +106,7 @@ internal partial class EditorNpcsWindow : Window
         var saved = _selected;
         _loading = true;
         var filter = txtFilter.Text ?? string.Empty;
-        lstNpcs.ItemsSource = DefinitionCatalog.Npcs.Values
+        lstNpcs.ItemsSource = _catalog.Npcs.Values
             .Where(n => n.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
         lstNpcs.SelectedItem = saved;
@@ -174,7 +177,7 @@ internal partial class EditorNpcsWindow : Window
     private void butNew_Click(object? sender, RoutedEventArgs e)
     {
         var npc = new Npc();
-        DefinitionCatalog.Npcs.Add(npc.Id, npc);
+        _catalog.Npcs.Add(npc.Id, npc);
         RefreshNpcList();
         lstNpcs.SelectedItem = npc;
         pnlContent.IsVisible = true;
@@ -183,7 +186,7 @@ internal partial class EditorNpcsWindow : Window
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        DefinitionCatalog.Npcs.Remove(_selected.Id);
+        _catalog.Npcs.Remove(_selected.Id);
         _selected = null;
         RefreshNpcList();
         pnlContent.IsVisible = lstNpcs.SelectedItem != null;
@@ -279,7 +282,7 @@ internal partial class EditorNpcsWindow : Window
         var behaviour = (Behaviour)cmbBehavior.SelectedIndex;
 
         // Validate: ShopKeeper needs at least one shop
-        if (behaviour == Behaviour.ShopKeeper && DefinitionCatalog.Shops.Count == 0)
+        if (behaviour == Behaviour.ShopKeeper && _catalog.Shops.Count == 0)
         {
             cmbBehavior.SelectedIndex = (int)_selected.Behaviour;
             return;
@@ -325,7 +328,7 @@ internal partial class EditorNpcsWindow : Window
 
     private void butDrop_Add_Click(object? sender, RoutedEventArgs e)
     {
-        if (DefinitionCatalog.Items.Count == 0) return;
+        if (_catalog.Items.Count == 0) return;
         numDrop_Amount.Value = 1;
         numDrop_Chance.Value = 100;
         if (cmbDrop_Item.Items.Count > 0) cmbDrop_Item.SelectedIndex = 0;
@@ -377,7 +380,7 @@ internal partial class EditorNpcsWindow : Window
     private void butAllie_Add_Click(object? sender, RoutedEventArgs e)
     {
         if (!(_selected?.AttackNpc ?? false)) return;
-        cmbAllie_Npc.ItemsSource = DefinitionCatalog.Npcs.Values.ToList();
+        cmbAllie_Npc.ItemsSource = _catalog.Npcs.Values.ToList();
         if (cmbAllie_Npc.Items.Count > 0) cmbAllie_Npc.SelectedIndex = 0;
         pnlAllie_Add.IsVisible = true;
     }

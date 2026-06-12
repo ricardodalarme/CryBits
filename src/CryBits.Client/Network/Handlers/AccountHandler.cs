@@ -14,16 +14,17 @@ using OptionsView = CryBits.Client.UI.Game.Views.OptionsView;
 
 namespace CryBits.Client.Network.Handlers;
 
-internal class AccountHandler(AudioManager audioManager, GameContext context)
+internal class AccountHandler(AudioManager audioManager, GameContext context, DefinitionCatalog catalog)
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     [PacketHandler]
     internal void Join(JoinPacket packet)
     {
         // Clear entity collections
         context.CurrentMap = null!;
-        DefinitionCatalog.Items = [];
-        DefinitionCatalog.Shops = [];
-        DefinitionCatalog.Npcs = [];
+        _catalog.Items = [];
+        _catalog.Shops = [];
+        _catalog.Npcs = [];
 
         context.LocalPlayer.Id = packet.PlayerId;
     }

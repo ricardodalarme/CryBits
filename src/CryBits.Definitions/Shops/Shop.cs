@@ -15,7 +15,7 @@ public class Shop : Entity
 
     public Item Currency
     {
-        get => DefinitionCatalog.Items.Get(_currency);
+        get => DefinitionCatalog.Instance.Items.Get(_currency);
         set => _currency = value.GetId();
     }
 
@@ -25,7 +25,7 @@ public class Shop : Entity
     public Shop()
     {
         Name = "New shop";
-        Currency = DefinitionCatalog.Items.ElementAt(0).Value;
+        Currency = DefinitionCatalog.Instance.Items.ElementAt(0).Value;
     }
 
     public ShopItem FindBought(Item item) => Bought.First(x => x.Item == item);

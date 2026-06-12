@@ -33,8 +33,10 @@ internal sealed class CharacterSystem(
     MovementSystem movementSystem,
     InventorySystem inventorySystem,
     PartySystem partySystem,
-    TradeSystem tradeSystem)
+    TradeSystem tradeSystem,
+    DefinitionCatalog catalog)
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     public static CharacterSystem Instance { get; } = new(
         CharacterRepository.Instance,
         AuthSender.Instance,
@@ -49,7 +51,8 @@ internal sealed class CharacterSystem(
         MovementSystem.Instance,
         InventorySystem.Instance,
         PartySystem.Instance,
-        TradeSystem.Instance);
+        TradeSystem.Instance,
+        DefinitionCatalog.Instance);
 
     /// <summary>Validates and creates a new character for <paramref name="session"/>, then joins the game.</summary>
     internal void Create(GameSession session, CreateCharacterPacket packet)
@@ -81,7 +84,7 @@ internal sealed class CharacterSystem(
         session.Character = new Player(session);
         session.Character.Name = name;
         session.Character.Level = 1;
-        session.Character.Class = @class = DefinitionCatalog.Classes.Get(new Guid(packet.ClassId));
+        session.Character.Class = @class = _catalog.Classes.Get(new Guid(packet.ClassId));
         session.Character.Genre = packet.GenderMale;
         session.Character.TextureNum = session.Character.Genre
             ? @class.TextureMale[packet.TextureNum]
