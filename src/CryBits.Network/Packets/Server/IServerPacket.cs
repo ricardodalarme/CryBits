@@ -1,3 +1,3 @@
-namespace CryBits.Packets.Server;
+namespace CryBits.Network.Packets.Server;
 
 public interface IServerPacket : IPacket;

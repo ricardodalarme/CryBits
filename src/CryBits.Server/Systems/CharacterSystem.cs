@@ -5,7 +5,7 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Packets.Client;
+using CryBits.Network.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence;

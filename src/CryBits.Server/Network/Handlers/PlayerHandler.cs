@@ -1,6 +1,7 @@
+using CryBits.Network;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Items;
-using CryBits.Packets.Client;
+using CryBits.Network.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Systems;

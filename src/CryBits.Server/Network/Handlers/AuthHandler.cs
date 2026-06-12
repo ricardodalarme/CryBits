@@ -1,4 +1,5 @@
-using CryBits.Packets.Client;
+using CryBits.Network;
+using CryBits.Network.Packets.Client;
 using CryBits.Server.Systems;
 using CryBits.Server.World;
 

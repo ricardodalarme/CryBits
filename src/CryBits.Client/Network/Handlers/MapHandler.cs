@@ -1,3 +1,4 @@
+using CryBits.Network;
 using Arch.Core;
 using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Character;
@@ -9,7 +10,7 @@ using CryBits.Client.Network.Senders;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Packets.Server;
+using CryBits.Network.Packets.Server;
 using System.Collections.Generic;
 using System.IO;
 using Entity = Arch.Core.Entity;

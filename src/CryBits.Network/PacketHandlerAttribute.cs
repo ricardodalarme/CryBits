@@ -1,4 +1,4 @@
-namespace CryBits;
+namespace CryBits.Network;
 
 /// <summary>
 /// Marks a static handler method as the dispatch target for the packet type

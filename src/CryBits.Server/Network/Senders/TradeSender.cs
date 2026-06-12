@@ -1,6 +1,6 @@
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Packets.Server;
+using CryBits.Network.Packets.Server;
 using CryBits.Server.Entities;
 using static CryBits.Globals;
 

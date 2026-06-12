@@ -1,7 +1,8 @@
+using CryBits.Network;
 using CryBits.Definitions.Catalog;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms;
-using CryBits.Packets.Server;
+using CryBits.Network.Packets.Server;
 using static CryBits.Globals;
 
 namespace CryBits.Editors.Network.Handlers;

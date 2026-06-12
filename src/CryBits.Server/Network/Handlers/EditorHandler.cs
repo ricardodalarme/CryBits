@@ -1,7 +1,8 @@
+using CryBits.Network;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Packets.Client;
+using CryBits.Network.Packets.Client;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;

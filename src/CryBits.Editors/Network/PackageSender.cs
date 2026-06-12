@@ -2,7 +2,7 @@ using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Network;
 using CryBits.Editors.Forms;
 using CryBits.Definitions.Maps;
-using CryBits.Packets.Client;
+using CryBits.Network.Packets.Client;
 using LiteNetLib;
 using static CryBits.Globals;
 

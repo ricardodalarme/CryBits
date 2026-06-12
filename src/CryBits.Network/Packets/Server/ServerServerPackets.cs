@@ -4,7 +4,7 @@ using CryBits.Definitions.Npcs;
 using System;
 using System.Collections.Generic;
 
-namespace CryBits.Packets.Server;
+namespace CryBits.Network.Packets.Server;
 
 [Serializable] public struct ServerDataPacket : IServerPacket { public ServerConfig Config; }
 [Serializable]

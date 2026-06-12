@@ -1,8 +1,9 @@
+using CryBits.Network;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
-using CryBits.Packets.Server;
+using CryBits.Network.Packets.Server;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Network.Handlers;

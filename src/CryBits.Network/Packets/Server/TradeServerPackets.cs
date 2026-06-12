@@ -1,6 +1,6 @@
 using System;
 
-namespace CryBits.Packets.Server;
+namespace CryBits.Network.Packets.Server;
 
 [Serializable]
 public struct TradePacket : IServerPacket

@@ -1,9 +1,10 @@
+using CryBits.Network;
 using CryBits.Client.Components.Party;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
-using CryBits.Packets.Server;
+using CryBits.Network.Packets.Server;
 using System;
 
 namespace CryBits.Client.Network.Handlers;

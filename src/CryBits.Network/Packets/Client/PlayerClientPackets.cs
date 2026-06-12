@@ -1,6 +1,6 @@
 using System;
 
-namespace CryBits.Packets.Client;
+namespace CryBits.Network.Packets.Client;
 
 [Serializable] public struct PlayerMovePacket : IClientPacket { public byte Direction, Movement; }
 [Serializable] public struct PlayerAttackPacket : IClientPacket;

@@ -1,3 +1,4 @@
+using CryBits.Network;
 using Arch.Core;
 using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Character;
@@ -9,7 +10,7 @@ using Direction = CryBits.Definitions.Common.Direction;
 using Movement = CryBits.Definitions.Common.Movement;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Packets.Server;
+using CryBits.Network.Packets.Server;
 using System;
 using System.Collections.Generic;
 using static CryBits.Globals;

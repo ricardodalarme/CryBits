@@ -1,4 +1,4 @@
-using CryBits.Packets.Server;
+using CryBits.Network.Packets.Server;
 using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Senders;

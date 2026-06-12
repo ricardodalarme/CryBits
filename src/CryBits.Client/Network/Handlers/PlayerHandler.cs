@@ -1,3 +1,4 @@
+using CryBits.Network;
 using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Equipment;
@@ -10,7 +11,7 @@ using CryBits.Definitions.Slots;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Packets.Server;
+using CryBits.Network.Packets.Server;
 using static CryBits.Globals;
 using Entity = Arch.Core.Entity;
 

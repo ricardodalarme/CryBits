@@ -2,7 +2,7 @@ using CryBits.Definitions.Maps;
 using System;
 using System.Collections.Generic;
 
-namespace CryBits.Packets.Server;
+namespace CryBits.Network.Packets.Server;
 
 [Serializable]
 public struct MapsPacket : IServerPacket
