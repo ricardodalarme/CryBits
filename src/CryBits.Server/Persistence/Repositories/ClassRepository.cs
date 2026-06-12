@@ -1,9 +1,10 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Classes;
+using CryBits.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 
 namespace CryBits.Server.Persistence.Repositories;
 
@@ -14,9 +15,8 @@ internal sealed class ClassRepository(DefinitionCatalog catalog)
 
     public Dictionary<Guid, Class> Read()
     {
-        var files = Directories.Classes.GetFiles();
+        var files = Directories.Classes.GetFiles("*" + Directories.Format);
 
-        // Create a default class if none exist.
         if (files.Length == 0)
         {
             var @class = new Class();
@@ -24,31 +24,25 @@ internal sealed class ClassRepository(DefinitionCatalog catalog)
             return new Dictionary<Guid, Class> { { @class.Id, @class } };
         }
 
-        // Load classes from disk.
         var list = new Dictionary<Guid, Class>();
         foreach (var file in files)
-            using (var stream = file.OpenRead())
-#pragma warning disable SYSLIB0011
-                list.Add(new Guid(file.Name.Remove(36)), (Class)new BinaryFormatter().Deserialize(stream));
-#pragma warning restore SYSLIB0011
+        {
+            var json = File.ReadAllText(file.FullName);
+            list.Add(new Guid(Path.GetFileNameWithoutExtension(file.Name)), JsonSerializer.Deserialize<Class>(json, JsonConfig.Options)!);
+        }
 
         return list;
     }
 
     public void Write(Class @class)
     {
-        // Write class to disk.
-        using var stream =
-            new FileInfo(Path.Combine(Directories.Classes.FullName, @class.Id.ToString()) + Directories.Format)
-                .OpenWrite();
-#pragma warning disable SYSLIB0011
-        new BinaryFormatter().Serialize(stream, @class);
-#pragma warning restore SYSLIB0011
+        var path = Path.Combine(Directories.Classes.FullName, @class.Id.ToString()) + Directories.Format;
+        var json = JsonSerializer.Serialize(@class, JsonConfig.Options);
+        File.WriteAllText(path, json);
     }
 
     public void WriteAll()
     {
-        // Write classes to disk.
         foreach (var @class in _catalog.Classes.Values)
             Write(@class);
     }

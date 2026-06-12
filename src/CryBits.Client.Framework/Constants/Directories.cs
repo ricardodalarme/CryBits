@@ -3,7 +3,7 @@ namespace CryBits.Client.Framework.Constants;
 public static class Directories
 {
     // Data file extension.
-    public const string Format = ".dat";
+    public const string Format = ".json";
 
     // Base directory — AppContext.BaseDirectory resolves to the folder containing the running assembly.
     private static readonly string BaseDir = AppContext.BaseDirectory;

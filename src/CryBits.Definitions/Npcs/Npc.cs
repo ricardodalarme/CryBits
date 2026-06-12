@@ -3,6 +3,8 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace CryBits.Definitions.Npcs;
 
@@ -20,16 +22,30 @@ public class Npc : Entity
     public short[] Attribute { get; set; } = new short[(byte)CryBits.Definitions.Characters.Attribute.Count];
     public IList<NpcDrop> Drop { get; set; } = [];
     public bool AttackNpc { get; set; }
+
+    [JsonIgnore]
     public IList<Npc> Allie { get; set; } = [];
+
+    [JsonInclude]
+    private List<Guid> AllieIds
+    {
+        get => Allie.Select(n => n.GetId()).ToList();
+        set => Allie = value.Select(id => DefinitionCatalog.Instance.Npcs.Get(id)).ToList();
+    }
+
     public MovementStyle Movement { get; set; }
     public byte FleeHealth { get; set; }
     private Guid _shop;
 
+    [JsonIgnore]
     public Shops.Shop Shop
     {
         get => DefinitionCatalog.Instance.Shops.Get(_shop);
         set => _shop = value.GetId();
     }
+
+    [JsonInclude]
+    private Guid ShopId { get => _shop; set => _shop = value; }
 
     public Npc()
     {

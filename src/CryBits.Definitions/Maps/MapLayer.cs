@@ -1,5 +1,7 @@
 using CryBits.Definitions.Items;
+using CryBits.Definitions.Utils;
 using System;
+using System.Text.Json.Serialization;
 
 namespace CryBits.Definitions.Maps;
 
@@ -11,6 +13,8 @@ public class MapLayer
 {
     public string Name { get; set; }
     public byte Type { get; set; }
+
+    [JsonConverter(typeof(Array2DConverter<MapTileData>))]
     public MapTileData[,] Tile { get; set; } = new MapTileData[Map.Width, Map.Height];
 
     public MapLayer(string name)

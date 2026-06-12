@@ -1,9 +1,10 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Items;
+using CryBits.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 
 namespace CryBits.Server.Persistence.Repositories;
 
@@ -14,28 +15,25 @@ internal sealed class ItemRepository(DefinitionCatalog catalog)
 
     public Dictionary<Guid, Item> Read()
     {
-        // Load items from disk.
         var list = new Dictionary<Guid, Item>();
-        var files = Directories.Items.GetFiles();
+        var files = Directories.Items.GetFiles("*" + Directories.Format);
 
         foreach (var file in files)
-            using (var stream = file.OpenRead())
-#pragma warning disable SYSLIB0011
-                list.Add(new Guid(file.Name.Remove(36)), (Item)new BinaryFormatter().Deserialize(stream));
-#pragma warning restore SYSLIB0011
+        {
+            var json = File.ReadAllText(file.FullName);
+            list.Add(new Guid(Path.GetFileNameWithoutExtension(file.Name)), JsonSerializer.Deserialize<Item>(json, JsonConfig.Options)!);
+        }
 
         return list;
     }
 
     public void WriteAll()
     {
-        // Write items to disk.
         foreach (var item in _catalog.Items.Values)
-            using (var stream =
-                   new FileInfo(Path.Combine(Directories.Items.FullName, item.Id.ToString()) + Directories.Format)
-                       .OpenWrite())
-#pragma warning disable SYSLIB0011
-                new BinaryFormatter().Serialize(stream, item);
-#pragma warning restore SYSLIB0011
+        {
+            var path = Path.Combine(Directories.Items.FullName, item.Id.ToString()) + Directories.Format;
+            var json = JsonSerializer.Serialize(item, JsonConfig.Options);
+            File.WriteAllText(path, json);
+        }
     }
 }

@@ -10,7 +10,7 @@ internal sealed class AccountRepository
 
     public void Read(GameSession session, string name)
     {
-        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, name, "Data") + Directories.Format);
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, name, "Data") + ".dat");
 
         using var data = new BinaryReader(file.OpenRead());
         session.Username = data.ReadString();
@@ -37,7 +37,7 @@ internal sealed class AccountRepository
 
     public void Write(GameSession session)
     {
-        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Data") + Directories.Format);
+        var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Data") + ".dat");
 
         if (!file.Directory!.Exists) file.Directory.Create();
 

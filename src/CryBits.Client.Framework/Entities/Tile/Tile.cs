@@ -1,5 +1,7 @@
 using CryBits.Definitions.Common;
+using CryBits.Definitions.Utils;
 using System.Drawing;
+using System.Text.Json.Serialization;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Framework.Entities.Tile;
@@ -17,6 +19,7 @@ public class Tile
     public byte Height { get; set; }
 
     /// <summary>Tile metadata grid for this tileset.</summary>
+    [JsonConverter(typeof(Array2DConverter<TileData>))]
     public TileData[,] Data { get; set; }
 
     public Tile(Size textureSize)

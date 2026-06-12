@@ -1,9 +1,10 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Maps;
+using CryBits.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 
 namespace CryBits.Server.Persistence.Repositories;
 
@@ -14,10 +15,8 @@ internal sealed class MapRepository(DefinitionCatalog catalog)
 
     public Dictionary<Guid, Map> Read()
     {
-        // Load maps from disk.
-        var files = Directories.Maps.GetFiles();
+        var files = Directories.Maps.GetFiles("*" + Directories.Format);
 
-        // Create a default map if none exist.
         if (files.Length == 0)
         {
             var map = new Map();
@@ -27,27 +26,23 @@ internal sealed class MapRepository(DefinitionCatalog catalog)
 
         var list = new Dictionary<Guid, Map>();
         foreach (var file in files)
-            using (var stream = file.OpenRead())
-#pragma warning disable SYSLIB0011
-                list.Add(new Guid(file.Name.Remove(36)), (Map)new BinaryFormatter().Deserialize(stream));
-#pragma warning restore SYSLIB0011
+        {
+            var json = File.ReadAllText(file.FullName);
+            list.Add(new Guid(Path.GetFileNameWithoutExtension(file.Name)), JsonSerializer.Deserialize<Map>(json, JsonConfig.Options)!);
+        }
 
         return list;
     }
 
     public void Write(Map map)
     {
-        // Write map to disk.
-        using var stream = new FileInfo(Path.Combine(Directories.Maps.FullName, map.Id.ToString()) + Directories.Format)
-            .OpenWrite();
-#pragma warning disable SYSLIB0011
-        new BinaryFormatter().Serialize(stream, map);
-#pragma warning restore SYSLIB0011
+        var path = Path.Combine(Directories.Maps.FullName, map.Id.ToString()) + Directories.Format;
+        var json = JsonSerializer.Serialize(map, JsonConfig.Options);
+        File.WriteAllText(path, json);
     }
 
     public void WriteAll()
     {
-        // Write maps to disk.
         foreach (var map in _catalog.Maps.Values)
             Write(map);
     }

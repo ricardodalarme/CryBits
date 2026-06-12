@@ -6,7 +6,7 @@ namespace CryBits.Server.Persistence;
 internal static class Directories
 {
     // Data file format.
-    public const string Format = ".dat";
+    public const string Format = ".json";
 
     // Base directory for server data.
     private static readonly string BaseDir = AppContext.BaseDirectory;

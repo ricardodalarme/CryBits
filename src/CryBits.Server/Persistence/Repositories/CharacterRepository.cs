@@ -22,7 +22,7 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
     public void Read(GameSession session, string name)
     {
         var file = new FileInfo(Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", name) +
-                                Directories.Format);
+                                ".dat");
 
         // Return if the character file directory doesn't exist.
         if (!file.Directory.Exists) return;
@@ -73,7 +73,7 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
     {
         var file = new FileInfo(
             Path.Combine(Directories.Accounts.FullName, session.Username, "Characters", session.Character!.Name) +
-            Directories.Format);
+            ".dat");
 
         // Ensure character directory exists.
         if (!file.Directory.Exists) file.Directory.Create();

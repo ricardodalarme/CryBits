@@ -1,9 +1,10 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Npcs;
+using CryBits.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 
 namespace CryBits.Server.Persistence.Repositories;
 
@@ -14,27 +15,25 @@ internal sealed class NpcRepository(DefinitionCatalog catalog)
 
     public Dictionary<Guid, Npc> Read()
     {
-        // Load NPCs from disk.
         var list = new Dictionary<Guid, Npc>();
-        var files = Directories.Npcs.GetFiles();
+        var files = Directories.Npcs.GetFiles("*" + Directories.Format);
+
         foreach (var file in files)
-            using (var stream = file.OpenRead())
-#pragma warning disable SYSLIB0011
-                list.Add(new Guid(file.Name.Remove(36)), (Npc)new BinaryFormatter().Deserialize(stream));
-#pragma warning restore SYSLIB0011
+        {
+            var json = File.ReadAllText(file.FullName);
+            list.Add(new Guid(Path.GetFileNameWithoutExtension(file.Name)), JsonSerializer.Deserialize<Npc>(json, JsonConfig.Options)!);
+        }
 
         return list;
     }
 
     public void WriteAll()
     {
-        // Write NPCs to disk.
         foreach (var npc in _catalog.Npcs.Values)
-            using (var stream =
-                   new FileInfo(Path.Combine(Directories.Npcs.FullName, npc.Id.ToString()) + Directories.Format)
-                       .OpenWrite())
-#pragma warning disable SYSLIB0011
-                new BinaryFormatter().Serialize(stream, npc);
-#pragma warning restore SYSLIB0011
+        {
+            var path = Path.Combine(Directories.Npcs.FullName, npc.Id.ToString()) + Directories.Format;
+            var json = JsonSerializer.Serialize(npc, JsonConfig.Options);
+            File.WriteAllText(path, json);
+        }
     }
 }

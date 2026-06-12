@@ -1,7 +1,12 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Definitions.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace CryBits.Definitions.Maps;
 
@@ -15,15 +20,30 @@ public class Map : Entity
     public short Revision { get; set; }
     public Moral Moral { get; set; }
     public IList<MapLayer> Layer { get; set; } = [];
+
+    [JsonConverter(typeof(Array2DConverter<MapAttribute>))]
     public MapAttribute[,] Attribute { get; set; } = new MapAttribute[Width, Height];
     public byte Panorama { get; set; }
     public string Music { get; set; }
+
     public Color Color { get; set; } = Color.FromArgb(-1);
+
     public MapWeather Weather { get; set; } = new();
     public MapFog Fog { get; set; } = new();
     public IList<MapNpc> Npc { get; set; } = [];
     public byte Lighting { get; set; } = 100;
-    public Map[] Link { get; set; } = new Map[(byte)Direction.Count];
+
+    private Guid[] _link = new Guid[(byte)Direction.Count];
+
+    [JsonIgnore]
+    public Map[] Link
+    {
+        get => _link.Select(id => DefinitionCatalog.Instance.Maps.Get(id)).ToArray();
+        set => _link = value.Select(m => m.GetId()).ToArray();
+    }
+
+    [JsonInclude]
+    private Guid[] LinkIds { get => _link; set => _link = value; }
 
     public Map()
     {

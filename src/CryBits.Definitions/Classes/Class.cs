@@ -1,9 +1,11 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Slots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace CryBits.Definitions.Classes;
 
@@ -14,7 +16,18 @@ public class Class : Entity
     public string Description { get; set; } = string.Empty;
     public IList<short> TextureMale { get; set; } = [];
     public IList<short> TextureFemale { get; set; } = [];
-    public Maps.Map SpawnMap { get; set; }
+    private Guid _spawnMap;
+
+    [JsonIgnore]
+    public Maps.Map SpawnMap
+    {
+        get => DefinitionCatalog.Instance.Maps.Get(_spawnMap);
+        set => _spawnMap = value.GetId();
+    }
+
+    [JsonInclude]
+    private Guid SpawnMapId { get => _spawnMap; set => _spawnMap = value; }
+
     public byte SpawnDirection { get; set; }
     public byte SpawnX { get; set; }
     public byte SpawnY { get; set; }
