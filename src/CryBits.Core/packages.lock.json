@@ -4,21 +4,21 @@
     "net10.0": {
       "System.Runtime.Serialization.Formatters": {
         "type": "Direct",
-        "requested": "[10.0.3, )",
-        "resolved": "10.0.3",
-        "contentHash": "q38b0Wj67miA+2Rcc6excf72Xh+LuVCxr0nJuhZaO3LwUVATdrm0x7TQuNr5lRNC0TH4UR6jkg/TA4C7Luyujw=="
+        "requested": "[10.0.9, )",
+        "resolved": "10.0.9",
+        "contentHash": "PFO/7nkB3nTtYGye6rQ/thoMffpst3t0CIj5vgE4xbVc0hPzOSK/NmxMJniICtWq1BNvQsuQnMLrT72/WyantQ=="
       },
       "crybits.definitions": {
         "type": "Project",
         "dependencies": {
-          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
       "crybits.simulation": {
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       }
     }

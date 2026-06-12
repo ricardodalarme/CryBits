@@ -19,7 +19,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBox x:Name="txtFilter" Grid.Row="0" Watermark="Filter..." Margin="0,0,0,4"
+            <TextBox x:Name="txtFilter" Grid.Row="0" PlaceholderText="Filter..." Margin="0,0,0,4"
                      TextChanged="txtFilter_TextChanged"/>
 
             <ListBox x:Name="lstItems" Grid.Row="1" Margin="0,0,0,4"

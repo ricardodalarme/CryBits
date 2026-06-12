@@ -23,9 +23,9 @@
       },
       "LiteNetLib": {
         "type": "Direct",
-        "requested": "[2.0.2, )",
-        "resolved": "2.0.2",
-        "contentHash": "TOxT3aT1rnzICpdiPaFHqLf03aEaj79ouJwu6YLqsPGNuPKEfHC8PmfX4G9wsSvXXE+Hp66ijD9EKs6W/Cc8FA=="
+        "requested": "[2.1.4, )",
+        "resolved": "2.1.4",
+        "contentHash": "KWlxvMw3Urpqj9joD96LRiK+LC62pQNs/zkXRJc+rHnxgkGp+vV703xzDrxRmv+V1YhCFfIGzs5nrVWtREIlyA=="
       },
       "SFML.Audio": {
         "type": "Direct",
@@ -60,9 +60,9 @@
       },
       "System.Runtime.Serialization.Formatters": {
         "type": "Direct",
-        "requested": "[10.0.3, )",
-        "resolved": "10.0.3",
-        "contentHash": "q38b0Wj67miA+2Rcc6excf72Xh+LuVCxr0nJuhZaO3LwUVATdrm0x7TQuNr5lRNC0TH4UR6jkg/TA4C7Luyujw=="
+        "requested": "[10.0.9, )",
+        "resolved": "10.0.9",
+        "contentHash": "PFO/7nkB3nTtYGye6rQ/thoMffpst3t0CIj5vgE4xbVc0hPzOSK/NmxMJniICtWq1BNvQsuQnMLrT72/WyantQ=="
       },
       "Arch.LowLevel": {
         "type": "Transitive",
@@ -115,7 +115,7 @@
           "SFML.Audio": "[3.0.0, )",
           "SFML.Graphics": "[3.0.0, )",
           "SFML.Window": "[3.0.0, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
       "crybits.core": {
@@ -123,36 +123,35 @@
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
           "CryBits.Simulation": "[1.0.0, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
       "crybits.definitions": {
         "type": "Project",
         "dependencies": {
-          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
       "crybits.network": {
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
-          "LiteNetLib": "[2.0.2, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+          "LiteNetLib": "[2.1.4, )",
+          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
       "crybits.persistence": {
         "type": "Project",
         "dependencies": {
-          "CryBits.Core": "[1.0.0, )",
           "CryBits.Definitions": "[1.0.0, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },
       "crybits.simulation": {
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
-          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       }
     }

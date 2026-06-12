@@ -20,7 +20,7 @@
         <!-- LEFT: Shop list                                     -->
         <!-- ═══════════════════════════════════════════════════ -->
         <Grid Grid.Column="0" Grid.Row="0" RowDefinitions="Auto,*" Margin="0,0,0,0">
-            <TextBox x:Name="txtFilter" Grid.Row="0" Watermark="Filter…" Margin="0,0,0,4"
+            <TextBox x:Name="txtFilter" Grid.Row="0" PlaceholderText="Filter…" Margin="0,0,0,4"
                      TextChanged="txtFilter_TextChanged" />
             <ListBox x:Name="lstShops" Grid.Row="1"
                      SelectionMode="Single"

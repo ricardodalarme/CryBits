@@ -17,7 +17,7 @@
     <StackPanel Margin="14" Spacing="10">
 
         <!-- Logo -->
-        <Image Source="avares://Editors/AvaloniaUI/Assets/Logo.webp"
+        <Image Source="avares://CryBits.Editors/AvaloniaUI/Assets/Logo.webp"
                Height="141" Stretch="Uniform" />
 
         <!-- Two-column: instructions (left) + login fields (right) -->

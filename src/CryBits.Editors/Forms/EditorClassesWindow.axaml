@@ -19,7 +19,7 @@
         <!-- LEFT: Class list                                    -->
         <!-- ═══════════════════════════════════════════════════ -->
         <Grid Grid.Column="0" Grid.Row="0" RowDefinitions="Auto,*" Margin="0,0,8,0">
-            <TextBox x:Name="txtFilter" Grid.Row="0" Watermark="Filter…" Margin="0,0,0,4" />
+            <TextBox x:Name="txtFilter" Grid.Row="0" PlaceholderText="Filter…" Margin="0,0,0,4" />
             <ListBox x:Name="lstClasses" Grid.Row="1"
                      SelectionMode="Single"
                      SelectionChanged="lstClasses_SelectionChanged" />
