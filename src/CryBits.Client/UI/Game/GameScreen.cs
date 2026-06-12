@@ -13,19 +13,19 @@ internal class GameScreen
 {
     private readonly CharacterView CharacterView = new(GameContext.Instance, PlayerSender.Instance, EquipmentRenderer.Instance, CharacterRenderer.Instance);
     private readonly ChatView ChatView = new();
-    private readonly DraggableSlotView DraggableSlotView = new(ItemRenderer.Instance, InputManager.Instance, GameContext.Instance);
+    private readonly DraggableSlotView DraggableSlotView = new(ItemRenderer.Instance, InputManager.Instance, GameContext.Instance, DefinitionCatalog.Instance);
     private readonly DropItemView DropItemView = new(PlayerSender.Instance);
-    private readonly HotbarView HotbarView = new(PlayerSender.Instance, ItemRenderer.Instance, GameContext.Instance);
+    private readonly HotbarView HotbarView = new(PlayerSender.Instance, ItemRenderer.Instance, GameContext.Instance, DefinitionCatalog.Instance);
     private readonly InformationView InformationView = new(ItemRenderer.Instance, DefinitionCatalog.Instance);
-    private readonly InventoryView InventoryView = new(PlayerSender.Instance, ShopSender.Instance, ItemRenderer.Instance, GameContext.Instance);
+    private readonly InventoryView InventoryView = new(PlayerSender.Instance, ShopSender.Instance, ItemRenderer.Instance, GameContext.Instance, DefinitionCatalog.Instance);
     private readonly MenusView MenusView = new();
     private readonly OptionsView OptionsView = new(AudioManager.Instance, GameContext.Instance);
     private readonly PartyInvitationView PartyInvitationView = new(PartySender.Instance);
     private readonly ShopSellView ShopSellView = new(ShopSender.Instance);
-    private readonly ShopView ShopView = new(ShopSender.Instance, ItemRenderer.Instance);
+    private readonly ShopView ShopView = new(ShopSender.Instance, ItemRenderer.Instance, DefinitionCatalog.Instance);
     private readonly TradeAmountView TradeAmountView = new(TradeSender.Instance);
     private readonly TradeInvitationView TradeInvitationView = new(TradeSender.Instance);
-    private readonly TradeView TradeView = new(TradeSender.Instance, ItemRenderer.Instance, GameContext.Instance);
+    private readonly TradeView TradeView = new(TradeSender.Instance, ItemRenderer.Instance, GameContext.Instance, DefinitionCatalog.Instance);
 
     private List<IView> Views =>
     [

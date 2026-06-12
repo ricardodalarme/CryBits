@@ -8,6 +8,7 @@ using CryBits.Server.Systems.Combat;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.Systems.Movement;
 using CryBits.Server.Systems.Progression;
+using System;
 
 namespace CryBits.Server.Network.Handlers;
 
@@ -68,7 +69,7 @@ internal sealed class PlayerHandler(
         short slotOld = packet.OldSlot, slotNew = packet.NewSlot;
 
         // Early exits.
-        if (player.Inventory[slotOld].Item == null) return;
+        if (player.Inventory[slotOld].ItemId == Guid.Empty) return;
         if (slotOld == slotNew) return;
         if (player.Trade != null) return;
 

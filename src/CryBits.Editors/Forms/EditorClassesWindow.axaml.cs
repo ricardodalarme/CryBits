@@ -128,7 +128,7 @@ internal partial class EditorClassesWindow : Window
         numSpawn_X.Value = cls.SpawnX;
         numSpawn_Y.Value = cls.SpawnY;
 
-        cmbSpawn_Map.SelectedItem = _catalog.Maps.Values.FirstOrDefault(m => m == cls.SpawnMap);
+        cmbSpawn_Map.SelectedItem = _catalog.Maps.Values.FirstOrDefault(m => m.Id == cls.SpawnMapId);
         cmbSpawn_Direction.SelectedIndex = cls.SpawnDirection;
 
         numTexture.Maximum = Textures.Characters.Count - 1;
@@ -344,7 +344,7 @@ internal partial class EditorClassesWindow : Window
     private void butItem_Ok_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null || cmbItems.SelectedItem is not Item item) return;
-        _selected.Item.Add(new ItemSlot(item, (short)(numItem_Amount.Value ?? 1)));
+        _selected.Item.Add(new ItemSlot(item.Id, (short)(numItem_Amount.Value ?? 1)));
         RefreshItemList();
         HideOverlays();
     }
@@ -363,7 +363,7 @@ internal partial class EditorClassesWindow : Window
     private void cmbSpawn_Map_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_loading || _selected == null) return;
-        if (cmbSpawn_Map.SelectedItem is Map map) _selected.SpawnMap = map;
+        if (cmbSpawn_Map.SelectedItem is Map map) _selected.SpawnMapId = map.Id;
     }
 
     private void cmbSpawn_Direction_SelectionChanged(object? sender, SelectionChangedEventArgs e)

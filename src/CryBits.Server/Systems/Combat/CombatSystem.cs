@@ -2,7 +2,6 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.Events;
@@ -201,9 +200,9 @@ internal sealed class CombatSystem(
     internal void Died(NpcInstance npcInstance)
     {
         for (byte i = 0; i < npcInstance.Data.Drop.Count; i++)
-            if (npcInstance.Data.Drop[i].Item != null)
+            if (npcInstance.Data.Drop[i].ItemId != Guid.Empty)
                 if (Random.Shared.Next(1, 99) <= npcInstance.Data.Drop[i].Chance)
-                    npcInstance.MapInstance.Item.Add(new MapItemInstance(npcInstance.Data.Drop[i].Item, npcInstance.Data.Drop[i].Amount, npcInstance.X, npcInstance.Y));
+                    npcInstance.MapInstance.Item.Add(new MapItemInstance(npcInstance.Data.Drop[i].ItemId, npcInstance.Data.Drop[i].Amount, npcInstance.X, npcInstance.Y));
 
         MapSender.Instance.MapItems(npcInstance.MapInstance);
 

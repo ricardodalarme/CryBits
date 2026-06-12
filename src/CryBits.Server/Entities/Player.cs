@@ -41,7 +41,7 @@ internal class Player : Character
     {
         Session = session;
         for (byte i = 0; i < Inventory.Length; i++)
-            Inventory[i] = new ItemSlot(null, 0);
+            Inventory[i] = new ItemSlot(Guid.Empty, 0);
     }
 
     /// <summary>Gets the player's computed damage (strength plus weapon damage).</summary>
@@ -88,10 +88,10 @@ internal class Player : Character
     public HotbarSlot FindHotbar(SlotType type, ItemSlot slot) =>
         Hotbar.FirstOrDefault(x => x.Type == type && Inventory[x.Slot] == slot);
 
-    public ItemSlot FindInventory(Item item) => Inventory.FirstOrDefault(x => x.Item == item);
+    public ItemSlot FindInventory(Guid itemId) => Inventory.FirstOrDefault(x => x.ItemId == itemId);
 
     /// <summary>Number of occupied inventory slots.</summary>
-    public byte TotalInventoryFree => (byte)Inventory.Count(x => x.Item != null);
+    public byte TotalInventoryFree => (byte)Inventory.Count(x => x.ItemId != Guid.Empty);
 
     /// <summary>Number of items currently offered in the active trade.</summary>
     public byte TotalTradeItems => (byte)TradeOffer.Count(x => x.SlotNum != 0);

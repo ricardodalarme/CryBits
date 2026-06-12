@@ -1,10 +1,6 @@
-using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Classes;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Characters;
-using CryBits.Definitions.Helpers.Extensions;
 using System;
-using System.Text.Json.Serialization;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Definitions.Items;
@@ -21,17 +17,7 @@ public class Item : Entity
     public Rarity Rarity { get; set; }
 
     public short ReqLevel { get; set; }
-    private Guid _reqClass;
-
-    [JsonIgnore]
-    public Class ReqClass
-    {
-        get => DefinitionCatalog.Instance.Classes.Get(_reqClass);
-        set => _reqClass = value.GetId();
-    }
-
-    [JsonInclude]
-    private Guid ReqClassId { get => _reqClass; set => _reqClass = value; }
+    public Guid? ReqClassId { get; set; }
 
     public int PotionExperience { get; set; }
     public short[] PotionVital { get; set; } = new short[(byte)Vital.Count];

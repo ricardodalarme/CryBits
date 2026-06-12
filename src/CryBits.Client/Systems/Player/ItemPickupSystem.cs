@@ -8,6 +8,7 @@ using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
 using SFML.Window;
+using System;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Systems.Player;
@@ -53,7 +54,7 @@ internal sealed class ItemPickupSystem(GameContext context, InputManager inputMa
         ref var inventory = ref World.Get<InventoryComponent>(entity);
         for (byte i = 0; i < MaxInventory; i++)
         {
-            if (inventory.Slots[i]?.Item != null) continue;
+            if (inventory.Slots[i]?.ItemId != Guid.Empty) continue;
 
             // Free slot found — send the packet and start the cooldown.
             _playerSender.CollectItem();

@@ -1,18 +1,22 @@
 using Arch.Core;
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Hotbar;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using SFML.Window;
+using System;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, GameContext context) : IView
+internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : IView
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     internal static Panel Panel => Tools.Panels["Hotbar"];
     private static SlotGrid Grid => Tools.SlotGrids["Hotbar_Grid"];
 
@@ -40,10 +44,10 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
     {
         if (context.LocalPlayer.Entity == Entity.Null) return;
         if (!context.World.TryGet<HotbarComponent>(context.LocalPlayer.Entity, out var hotbar)) return;
-        
+
         var hotbarSlot = hotbar.Slots[slot];
         if (hotbarSlot?.Slot > 0 && hotbarSlot.Type == SlotType.Item)
-            itemRenderer.DrawItem(context.LocalPlayer.GetInventory().Slots[hotbarSlot.Slot]?.Item, 1, pos);
+            itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[hotbarSlot.Slot]?.ItemId ?? Guid.Empty), 1, pos);
     }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
@@ -84,7 +88,7 @@ internal class HotbarView(PlayerSender playerSender, ItemRenderer itemRenderer, 
     {
         var hotbarSlot = context.LocalPlayer.GetHotbar().Slots[slot];
         if (hotbarSlot == null || hotbarSlot.Slot <= 0 || hotbarSlot.Type != SlotType.Item) return;
-        var item = context.LocalPlayer.GetInventory().Slots[hotbarSlot.Slot]?.Item;
+        var item = _catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[hotbarSlot.Slot]?.ItemId ?? Guid.Empty);
         if (item == null) return;
         InformationView.Show(item.Id, Panel.Position + new Size(0, 42));
     }

@@ -5,6 +5,7 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
 using CryBits.Definitions.Classes;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Characters;
 using System;
@@ -115,7 +116,7 @@ internal partial class EditorItemsWindow : Window
         cmbBind.SelectedIndex = (byte)item.Bind;
         cmbRarity.SelectedIndex = (byte)item.Rarity;
         numReq_Level.Value = item.ReqLevel;
-        cmbReq_Class.SelectedIndex = item.ReqClass != null ? cmbReq_Class.Items.IndexOf(item.ReqClass) : 0;
+        cmbReq_Class.SelectedIndex = item.ReqClassId.HasValue ? cmbReq_Class.Items.IndexOf(_catalog.Classes.Get(item.ReqClassId.Value)) : 0;
         numPotion_Experience.Value = item.PotionExperience;
         numPotion_HP.Value = item.PotionVital[(byte)Vital.Hp];
         numPotion_MP.Value = item.PotionVital[(byte)Vital.Mp];
@@ -227,9 +228,9 @@ internal partial class EditorItemsWindow : Window
     private void cmbReq_Class_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_loading || _selected == null) return;
-        _selected.ReqClass = cmbReq_Class.SelectedIndex == 0
+        _selected.ReqClassId = cmbReq_Class.SelectedIndex == 0
             ? null
-            : cmbReq_Class.SelectedItem as Class;
+            : (cmbReq_Class.SelectedItem as Class)?.Id;
     }
 
     // ──────────────────────────────────────────────────────────

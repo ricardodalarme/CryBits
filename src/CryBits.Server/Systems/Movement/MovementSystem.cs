@@ -32,7 +32,7 @@ internal sealed class MovementSystem(
     {
         byte nextX = player.X, nextY = player.Y;
         byte oldX = player.X, oldY = player.Y;
-        var link = GameWorld.Current.Maps.Get(player.MapInstance.Data.Link[(byte)player.Direction].GetId());
+        var link = GameWorld.Current.Maps.Get(player.MapInstance.Data.LinkIds[(byte)player.Direction]);
         var secondMovement = false;
 
         if (movement is < 1 or > 2) return;

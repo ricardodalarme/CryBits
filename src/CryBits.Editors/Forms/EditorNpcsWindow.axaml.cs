@@ -7,6 +7,7 @@ using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Network;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
@@ -158,7 +159,9 @@ internal partial class EditorNpcsWindow : Window
 
         // Shop visibility
         pnlShop.IsVisible = npc.Behaviour == Behaviour.ShopKeeper;
-        cmbShop.SelectedItem = npc.Shop;
+        cmbShop.SelectedItem = _catalog.Shops.Get(npc.ShopId);
+        if (npc.Behaviour == Behaviour.ShopKeeper && cmbShop.SelectedItem == null && cmbShop.Items.Count > 0)
+            cmbShop.SelectedIndex = 0;
 
         // Drop / Allies lists
         RefreshDropList();
@@ -295,7 +298,7 @@ internal partial class EditorNpcsWindow : Window
         {
             cmbShop.SelectedIndex = -1;
         }
-        else if (_selected.Shop == null && cmbShop.Items.Count > 0)
+        else if (_selected.ShopId == Guid.Empty && cmbShop.Items.Count > 0)
         {
             cmbShop.SelectedIndex = 0;
         }
@@ -317,7 +320,7 @@ internal partial class EditorNpcsWindow : Window
     {
         if (_loading || _selected == null) return;
         if (cmbShop.SelectedItem is Shop shop)
-            _selected.Shop = shop;
+            _selected.ShopId = shop.Id;
     }
 
     private void RefreshDropList()
@@ -343,7 +346,7 @@ internal partial class EditorNpcsWindow : Window
     private void butDrop_Ok_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null || cmbDrop_Item.SelectedItem is not Item item) return;
-        _selected.Drop.Add(new NpcDrop(item, (short)(numDrop_Amount.Value ?? 1), (byte)(numDrop_Chance.Value ?? 100)));
+        _selected.Drop.Add(new NpcDrop(item.Id, (short)(numDrop_Amount.Value ?? 1), (byte)(numDrop_Chance.Value ?? 100)));
         pnlDrop_Add.IsVisible = false;
         RefreshDropList();
     }
@@ -362,7 +365,7 @@ internal partial class EditorNpcsWindow : Window
     private void RefreshAlliesList()
     {
         lstAllies.ItemsSource = null;
-        lstAllies.ItemsSource = _selected?.Allie;
+        lstAllies.ItemsSource = _selected?.AllieIds.Select(id => _catalog.Npcs.Get(id)).Where(n => n != null).ToList();
     }
 
     private void chkAttackNpc_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -372,7 +375,7 @@ internal partial class EditorNpcsWindow : Window
         lstAllies.IsEnabled = _selected.AttackNpc;
         if (!_selected.AttackNpc)
         {
-            _selected.Allie.Clear();
+            _selected.AllieIds.Clear();
             RefreshAlliesList();
         }
     }
@@ -393,8 +396,8 @@ internal partial class EditorNpcsWindow : Window
     private void butAllie_Ok_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null || cmbAllie_Npc.SelectedItem is not Npc allie) return;
-        if (!_selected.Allie.Contains(allie))
-            _selected.Allie.Add(allie);
+        if (!_selected.AllieIds.Contains(allie.Id))
+            _selected.AllieIds.Add(allie.Id);
         pnlAllie_Add.IsVisible = false;
         RefreshAlliesList();
     }
@@ -402,7 +405,7 @@ internal partial class EditorNpcsWindow : Window
     private void butAllie_Delete_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null || lstAllies.SelectedItem is not Npc allie) return;
-        _selected.Allie.Remove(allie);
+        _selected.AllieIds.Remove(allie.Id);
         RefreshAlliesList();
     }
 

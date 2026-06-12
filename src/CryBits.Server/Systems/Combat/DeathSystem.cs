@@ -33,7 +33,7 @@ internal sealed class DeathSystem(PlayerSender playerSender) : ISimulationSystem
 
             player.Direction = (Direction)player.Class.SpawnDirection;
             MovementSystem.Instance.Warp(player,
-                world.Maps.Get(player.Class.SpawnMap.Id),
+                world.Maps.Get(player.Class.SpawnMapId),
                 player.Class.SpawnX,
                 player.Class.SpawnY);
         }

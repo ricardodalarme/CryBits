@@ -1,15 +1,19 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Shops;
 using SFML.Window;
+using System;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer) : IView
+internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer, DefinitionCatalog catalog) : IView
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     internal static Panel Panel => Tools.Panels["Shop"];
     private static Button CloseButton => Tools.Buttons["Shop_Close"];
     private static Label NameLabel => Tools.Labels["Shop_Name"];
@@ -39,7 +43,8 @@ internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer) : IVie
     private void OnRenderSlot(int slot, Point pos)
     {
         if (OpenedShop == null || slot >= OpenedShop.Sold.Count) return;
-        itemRenderer.DrawItem(OpenedShop.Sold[slot].Item, OpenedShop.Sold[slot].Amount, pos);
+        var item = _catalog.Items.Get(OpenedShop.Sold[slot].ItemId);
+        itemRenderer.DrawItem(item, OpenedShop.Sold[slot].Amount, pos);
     }
 
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
@@ -58,10 +63,10 @@ internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer) : IVie
         shopSender.ShopClose();
     }
 
-    private static void OnGridSlotHover(short slot)
+    private void OnGridSlotHover(short slot)
     {
         if (OpenedShop == null || slot >= OpenedShop.Sold.Count) return;
-        var item = OpenedShop.Sold[slot].Item;
+        var item = _catalog.Items.Get(OpenedShop.Sold[slot].ItemId);
         if (item == null) return;
         InformationView.Show(item.Id,
             new Point(Panel.Position.X - 186, Panel.Position.Y + 5),
@@ -72,9 +77,10 @@ internal class ShopView(ShopSender shopSender, ItemRenderer itemRenderer) : IVie
 
     public static void Open(Shop shop)
     {
+        if (shop == null) return;
         OpenedShop = shop;
         NameLabel.SetArguments(shop.Name);
-        CurrencyLabel.SetArguments(shop.Currency.Name);
+        CurrencyLabel.SetArguments(DefinitionCatalog.Instance.Items.Get(shop.CurrencyId)?.Name ?? "Unknown");
         Panel.Visible = true;
     }
 }

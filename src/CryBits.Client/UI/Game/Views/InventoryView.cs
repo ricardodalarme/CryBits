@@ -1,16 +1,20 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using SFML.Window;
+using System;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, ItemRenderer itemRenderer, GameContext context) : IView
+internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : IView
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     internal static Panel Panel => Tools.Panels["Menu_Inventory"];
     private static SlotGrid Grid => Tools.SlotGrids["Inventory_Grid"];
 
@@ -37,18 +41,20 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
     private void OnRenderSlot(int slot, Point pos)
     {
         ref var inv = ref context.LocalPlayer.GetInventory();
-        itemRenderer.DrawItem(inv.Slots[slot]?.Item, inv.Slots[slot]?.Amount ?? 0, pos);
+        var item = _catalog.Items.Get(inv.Slots[slot]?.ItemId ?? Guid.Empty);
+        itemRenderer.DrawItem(item, inv.Slots[slot]?.Amount ?? 0, pos);
     }
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
         ref var inv = ref context.LocalPlayer.GetInventory();
-        if (inv.Slots[slot]?.Item == null) return;
+        if (inv.Slots[slot]?.ItemId == Guid.Empty) return;
 
         switch (e.Button)
         {
             case Mouse.Button.Right:
-                if (inv.Slots[slot].Item.Bind != BindOn.Pickup)
+                var item = _catalog.Items.Get(inv.Slots[slot].ItemId);
+                if (item?.Bind != BindOn.Pickup)
                     // Sell the item if shop is open
                     if (ShopView.Panel.Visible)
                     {
@@ -90,7 +96,7 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
     private void OnGridMouseDoubleClick(MouseButtonEventArgs e, short slot)
     {
         if (slot <= 0) return;
-        if (context.LocalPlayer.GetInventory().Slots[slot]?.Item == null) return;
+        if (context.LocalPlayer.GetInventory().Slots[slot]?.ItemId == Guid.Empty) return;
 
         // Use item
         playerSender.InventoryUse((byte)slot);
@@ -99,11 +105,11 @@ internal class InventoryView(PlayerSender playerSender, ShopSender shopSender, I
 
     private void OnGridSlotHover(short slot)
     {
-        var item = context.LocalPlayer.GetInventory().Slots[slot]?.Item;
+        var item = _catalog.Items.Get(context.LocalPlayer.GetInventory().Slots[slot]?.ItemId ?? Guid.Empty);
         if (item == null) return;
         string? additionalInfo = null;
-        if (ShopView.Panel.Visible && ShopView.OpenedShop?.FindBought(item) != null)
-            additionalInfo = "Sale price: " + ShopView.OpenedShop.FindBought(item).Price;
+        if (ShopView.Panel.Visible && ShopView.OpenedShop?.FindBought(item.Id) != null)
+            additionalInfo = "Sale price: " + ShopView.OpenedShop.FindBought(item.Id).Price;
         InformationView.Show(item.Id, Panel.Position + new Size(-186, 3), additionalInfo);
     }
 

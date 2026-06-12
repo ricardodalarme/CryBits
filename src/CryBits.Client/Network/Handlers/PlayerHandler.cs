@@ -180,7 +180,7 @@ internal class PlayerHandler(GameContext context, DefinitionCatalog catalog)
         if (context.LocalPlayer.Entity == Entity.Null) return;
         ref var inventory = ref context.LocalPlayer.GetInventory();
         for (byte i = 0; i < MaxInventory; i++)
-            inventory.Slots[i] = new ItemSlot(_catalog.Items.Get(packet.ItemIds[i]), packet.Amounts[i]);
+            inventory.Slots[i] = new ItemSlot(packet.ItemIds[i], packet.Amounts[i]);
     }
 
     [PacketHandler]

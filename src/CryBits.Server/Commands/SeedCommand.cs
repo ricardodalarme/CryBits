@@ -5,6 +5,7 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Slots;
 using CryBits.Definitions.Characters;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Npcs;
 using CryBits.Server.Entities;
 using System.IO;
@@ -162,13 +163,13 @@ internal sealed class SeedCommand : IConsoleCommand
 
         // ── Shop ─────────────────────────────────────────────────────────────
 
-        var generalStore = new ShopDef { Name = "General Store", Currency = gold };
-        generalStore.Sold.Add(new ShopItemDef(healthPotion, 1, 10));
-        generalStore.Sold.Add(new ShopItemDef(manaPotion, 1, 8));
-        generalStore.Sold.Add(new ShopItemDef(helmet, 1, 30));
-        generalStore.Sold.Add(new ShopItemDef(shield, 1, 25));
-        generalStore.Sold.Add(new ShopItemDef(amulet, 1, 50));
-        generalStore.Bought.Add(new ShopItemDef(sword, 1, 5));
+        var generalStore = new ShopDef { Name = "General Store", CurrencyId = gold.Id };
+        generalStore.Sold.Add(new ShopItemDef(healthPotion.Id, 1, 10));
+        generalStore.Sold.Add(new ShopItemDef(manaPotion.Id, 1, 8));
+        generalStore.Sold.Add(new ShopItemDef(helmet.Id, 1, 30));
+        generalStore.Sold.Add(new ShopItemDef(shield.Id, 1, 25));
+        generalStore.Sold.Add(new ShopItemDef(amulet.Id, 1, 50));
+        generalStore.Bought.Add(new ShopItemDef(sword.Id, 1, 5));
         _catalog.Shops[generalStore.Id] = generalStore;
 
         Console.WriteLine($"[Seed] Created {_catalog.Shops.Count} shops.");
@@ -184,7 +185,7 @@ internal sealed class SeedCommand : IConsoleCommand
             Movement = MovementStyle.TurnRandomly,
             SpawnTime = 10,
             Sight = 5,
-            Shop = generalStore,
+            ShopId = generalStore.Id,
             Vital =
             {
                 [(byte)Vital.Hp] = 100
@@ -210,8 +211,8 @@ internal sealed class SeedCommand : IConsoleCommand
                 [(byte)Attribute.Strength] = 5
             }
         };
-        goblin.Drop.Add(new NpcDropDef(gold, 5, 80));
-        goblin.Drop.Add(new NpcDropDef(healthPotion, 1, 25));
+        goblin.Drop.Add(new NpcDropDef(gold.Id, 5, 80));
+        goblin.Drop.Add(new NpcDropDef(healthPotion.Id, 1, 25));
 
         var snake = new NpcDef
         {
@@ -232,7 +233,7 @@ internal sealed class SeedCommand : IConsoleCommand
                 [(byte)Attribute.Agility] = 8
             }
         };
-        snake.Drop.Add(new NpcDropDef(gold, 2, 60));
+        snake.Drop.Add(new NpcDropDef(gold.Id, 2, 60));
 
         foreach (var npc in new[] { merchant, goblin, snake })
             _catalog.Npcs[npc.Id] = npc;
@@ -265,9 +266,9 @@ internal sealed class SeedCommand : IConsoleCommand
                 groundLayer.Tile[x, y].Y = 0;
             }
 
-        map.Npc.Add(new MapNpc { Npc = merchant, Spawn = true, X = 12, Y = 9 });
-        map.Npc.Add(new MapNpc { Npc = goblin, Spawn = true, X = 20, Y = 15 });
-        map.Npc.Add(new MapNpc { Npc = snake, Spawn = true, X = 18, Y = 12 });
+        map.Npc.Add(new MapNpc { NpcId = merchant.Id, Spawn = true, X = 12, Y = 9 });
+        map.Npc.Add(new MapNpc { NpcId = goblin.Id, Spawn = true, X = 20, Y = 15 });
+        map.Npc.Add(new MapNpc { NpcId = snake.Id, Spawn = true, X = 18, Y = 12 });
         _catalog.Maps[map.Id] = map;
 
         Console.WriteLine($"[Seed] Created {_catalog.Maps.Count} maps.");
@@ -278,7 +279,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Warrior",
             Description = "A battle-hardened warrior with immense strength and vitality.",
-            SpawnMap = map,
+            SpawnMapId = map.Id,
             SpawnX = 12,
             SpawnY = 9,
             SpawnDirection = 1
@@ -298,10 +299,10 @@ internal sealed class SeedCommand : IConsoleCommand
         warrior.Attribute[(byte)Attribute.Intelligence] = 3;
 
         // Starting equipment.
-        warrior.Item.Add(new ItemSlot(sword, 1));
-        warrior.Item.Add(new ItemSlot(armor, 1));
-        warrior.Item.Add(new ItemSlot(helmet, 1));
-        warrior.Item.Add(new ItemSlot(healthPotion, 3));
+        warrior.Item.Add(new ItemSlot(sword.Id, 1));
+        warrior.Item.Add(new ItemSlot(armor.Id, 1));
+        warrior.Item.Add(new ItemSlot(helmet.Id, 1));
+        warrior.Item.Add(new ItemSlot(healthPotion.Id, 3));
 
         _catalog.Classes[warrior.Id] = warrior;
         Console.WriteLine($"[Seed] Created class '{warrior.Name}'.");
@@ -312,7 +313,7 @@ internal sealed class SeedCommand : IConsoleCommand
         {
             Name = "Mage",
             Description = "A scholarly mage whose mastery of the arcane makes them devastatingly powerful.",
-            SpawnMap = map,
+            SpawnMapId = map.Id,
             SpawnX = 12,
             SpawnY = 9,
             SpawnDirection = 1
@@ -332,9 +333,9 @@ internal sealed class SeedCommand : IConsoleCommand
         mage.Attribute[(byte)Attribute.Strength] = 2;
 
         // Starting equipment.
-        mage.Item.Add(new ItemSlot(amulet, 1));
-        mage.Item.Add(new ItemSlot(manaPotion, 3));
-        mage.Item.Add(new ItemSlot(healthPotion, 1));
+        mage.Item.Add(new ItemSlot(amulet.Id, 1));
+        mage.Item.Add(new ItemSlot(manaPotion.Id, 3));
+        mage.Item.Add(new ItemSlot(healthPotion.Id, 1));
 
         _catalog.Classes[mage.Id] = mage;
         Console.WriteLine($"[Seed] Created class '{mage.Name}'.");

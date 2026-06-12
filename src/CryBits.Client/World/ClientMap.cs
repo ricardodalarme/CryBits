@@ -2,6 +2,7 @@ using Arch.Core;
 using CryBits.Client.Components.Movement;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Common;
+using System;
 namespace CryBits.Client.Worlds;
 
 /// <summary>
@@ -29,7 +30,7 @@ internal class ClientMap(Map data, World world)
         byte nextX = x, nextY = y;
         direction.NextTile(ref nextX, ref nextY);
 
-        if (Map.OutLimit(nextX, nextY)) return Data.Link[(byte)direction] == null;
+        if (Map.OutLimit(nextX, nextY)) return Data.LinkIds[(byte)direction] == Guid.Empty;
 
         if (Data.Attribute[nextX, nextY].Type == (byte)TileAttribute.Block) return true;
         if (Data.Attribute[nextX, nextY].Block[(byte)direction.Reverse()]) return true;

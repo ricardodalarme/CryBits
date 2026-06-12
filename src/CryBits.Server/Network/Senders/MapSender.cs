@@ -47,7 +47,7 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
         {
             packet.Items[i] = new PacketsMapItem
             {
-                ItemId = mapInstance.Item[i].Item.GetId(),
+                ItemId = mapInstance.Item[i].ItemId,
                 X = mapInstance.Item[i].X,
                 Y = mapInstance.Item[i].Y
             };
@@ -63,7 +63,7 @@ internal sealed class MapSender(PackageSender packageSender, DefinitionCatalog c
         {
             packet.Items[i] = new PacketsMapItem
             {
-                ItemId = mapInstance.Item[i].Item.GetId(),
+                ItemId = mapInstance.Item[i].ItemId,
                 X = mapInstance.Item[i].X,
                 Y = mapInstance.Item[i].Y
             };

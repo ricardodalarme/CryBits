@@ -1,12 +1,15 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Definitions.Characters;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.Events;
 using CryBits.Server.Systems.Progression;
 using CryBits.Server.World;
+using System;
 using System.Drawing;
 using static CryBits.Globals;
 
@@ -16,20 +19,23 @@ internal sealed class InventorySystem(
     PlayerSender playerSender,
     MapSender mapSender,
     LevelingSystem levelingSystem,
-    ChatSender chatSender) : ISimulationSystem
+    ChatSender chatSender,
+    DefinitionCatalog catalog) : ISimulationSystem
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     public static InventorySystem Instance { get; } = new(
         PlayerSender.Instance,
         MapSender.Instance,
         LevelingSystem.Instance,
-        ChatSender.Instance);
+        ChatSender.Instance,
+        DefinitionCatalog.Instance);
 
     public bool GiveItem(Player player, Item item, short amount)
     {
         if (item == null) return false;
 
-        var slotItem = player.FindInventory(item);
-        var slotEmpty = player.FindInventory(null);
+        var slotItem = player.FindInventory(item.Id);
+        var slotEmpty = player.FindInventory(Guid.Empty);
 
         if (slotEmpty == null) return false;
         if (amount == 0) amount = 1;
@@ -38,7 +44,7 @@ internal sealed class InventorySystem(
             slotItem.Amount += amount;
         else
         {
-            slotEmpty.Item = item;
+            slotEmpty.ItemId = item.Id;
             slotEmpty.Amount = item.Stackable ? amount : (byte)1;
         }
 
@@ -53,7 +59,7 @@ internal sealed class InventorySystem(
 
         if (amount == slot.Amount)
         {
-            slot.Item = null;
+            slot.ItemId = Guid.Empty;
             slot.Amount = 0;
 
             var hotbarSlot = player.FindHotbar(SlotType.Item, slot);
@@ -73,20 +79,21 @@ internal sealed class InventorySystem(
     public void DropItem(Player player, ItemSlot slot, short amount)
     {
         if (player.MapInstance.Item.Count == Config.MaxMapItems) return;
-        if (slot.Item == null) return;
-        if (slot.Item.Bind == BindOn.Pickup) return;
+        if (slot.ItemId == Guid.Empty) return;
+        var item = _catalog.Items.Get(slot.ItemId);
+        if (item == null || item.Bind == BindOn.Pickup) return;
         if (player.Trade != null) return;
 
         if (amount > slot.Amount) amount = slot.Amount;
 
-        player.MapInstance.Item.Add(new MapItemInstance(slot.Item, amount, player.X, player.Y));
+        player.MapInstance.Item.Add(new MapItemInstance(slot.ItemId, amount, player.X, player.Y));
         mapSender.MapItems(player.MapInstance);
         TakeItem(player, slot, amount);
     }
 
     public void UseItem(Player player, int slotIndex, ItemSlot slot)
     {
-        var item = slot.Item;
+        var item = _catalog.Items.Get(slot.ItemId);
         if (item == null) return;
         if (player.Trade != null) return;
 
@@ -96,7 +103,7 @@ internal sealed class InventorySystem(
             return;
         }
 
-        if (item.ReqClass != null && player.Class != item.ReqClass)
+        if (item.ReqClassId.HasValue && player.Class.Id != item.ReqClassId.Value)
         {
             chatSender.Message(player, "You can not use this item.", Color.White);
             return;
@@ -137,7 +144,10 @@ internal sealed class InventorySystem(
         var mapItem = player.MapInstance.HasItem(player.X, player.Y);
         if (mapItem == null) return;
 
-        if (GiveItem(player, mapItem.Item, mapItem.Amount))
+        var item = _catalog.Items.Get(mapItem.ItemId);
+        if (item == null) return;
+
+        if (GiveItem(player, item, mapItem.Amount))
         {
             player.MapInstance.Item.Remove(mapItem);
             mapSender.MapItems(player.MapInstance);
@@ -153,7 +163,7 @@ internal sealed class InventorySystem(
                 case ItemUsedEvent use when use.Item.Type == ItemType.Equipment:
                 {
                     var slot = use.Player.Inventory[use.SlotIndex];
-                    if (slot.Item == null || slot.Item != use.Item) continue;
+                    if (slot.ItemId == Guid.Empty || slot.ItemId != use.Item.Id) continue;
                     TakeItem(use.Player, slot, 1);
                     break;
                 }
@@ -162,7 +172,7 @@ internal sealed class InventorySystem(
                     if (!GiveItem(equip.Player, equip.OldItem, 1))
                     {
                         if (equip.Player.MapInstance.Item.Count == Config.MaxMapItems) continue;
-                        equip.Player.MapInstance.Item.Add(new MapItemInstance(equip.OldItem, 1,
+                        equip.Player.MapInstance.Item.Add(new MapItemInstance(equip.OldItem.Id, 1,
                             equip.Player.X, equip.Player.Y));
                         mapSender.MapItems(equip.Player.MapInstance);
                         playerSender.PlayerInventory(equip.Player);

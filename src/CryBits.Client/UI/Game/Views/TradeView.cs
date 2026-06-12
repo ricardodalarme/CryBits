@@ -1,20 +1,24 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Slots;
 using CryBits.Definitions.Common;
 using SFML.Window;
+using System;
 using System.Drawing;
 using static CryBits.Globals;
 
 namespace CryBits.Client.UI.Game.Views;
 
-internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, GameContext context) : IView
+internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, GameContext context, DefinitionCatalog catalog) : IView
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     internal static Panel Panel => Tools.Panels["Trade"];
-    internal static Panel OfferDisabledPanel => Tools.Panels["Trade_Offer_Disable"]; // TODO: add disable state to button instead
+    internal static Panel OfferDisabledPanel => Tools.Panels["Trade_Offer_Disable"];
     private static Button CloseButton => Tools.Buttons["Trade_Close"];
     internal static Button AcceptOfferButton => Tools.Buttons["Trade_Offer_Accept"];
     internal static Button DeclineOfferButton => Tools.Buttons["Trade_Offer_Decline"];
@@ -50,15 +54,15 @@ internal class TradeView(TradeSender tradeSender, ItemRenderer itemRenderer, Gam
     }
 
     private void OnRenderOwnSlot(int slot, Point pos) =>
-        itemRenderer.DrawItem(context.LocalPlayer.GetTrade().Offer[slot].Item, context.LocalPlayer.GetTrade().Offer[slot].Amount, pos);
+        itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetTrade().Offer[slot].ItemId), context.LocalPlayer.GetTrade().Offer[slot].Amount, pos);
 
     private void OnRenderTheirSlot(int slot, Point pos) =>
-        itemRenderer.DrawItem(context.LocalPlayer.GetTrade().TheirOffer[slot].Item, context.LocalPlayer.GetTrade().TheirOffer[slot].Amount, pos);
+        itemRenderer.DrawItem(_catalog.Items.Get(context.LocalPlayer.GetTrade().TheirOffer[slot].ItemId), context.LocalPlayer.GetTrade().TheirOffer[slot].Amount, pos);
 
     private void OnGridMouseDown(MouseButtonEventArgs e, short slot)
     {
         if (!Panel.Visible) return;
-        if (context.LocalPlayer.GetTrade().Offer[slot].Item == null) return;
+        if (context.LocalPlayer.GetTrade().Offer[slot].ItemId == Guid.Empty) return;
 
         if (e.Button == Mouse.Button.Right) tradeSender.TradeOffer(slot, 0);
     }

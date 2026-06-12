@@ -1,5 +1,7 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Slots;
 using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
@@ -16,13 +18,16 @@ internal sealed class TradeSystem(
     TradeSender tradeSender,
     ChatSender chatSender,
     InventorySystem inventorySystem,
-    PlayerSender playerSender) : ISimulationSystem
+    PlayerSender playerSender,
+    DefinitionCatalog catalog) : ISimulationSystem
 {
+    private readonly DefinitionCatalog _catalog = catalog;
     public static TradeSystem Instance { get; } = new(
         TradeSender.Instance,
         ChatSender.Instance,
         InventorySystem.Instance,
-        PlayerSender.Instance);
+        PlayerSender.Instance,
+        DefinitionCatalog.Instance);
 
     internal void Invite(Player player, string targetName)
     {
@@ -186,10 +191,10 @@ internal sealed class TradeSystem(
                 for (byte i = 0; i < MaxInventory; i++)
                 {
                     if (player.TradeOffer[i].SlotNum > 0)
-                        inventorySystem.GiveItem(invited, yourInventory[player.TradeOffer[i].SlotNum].Item,
+                        inventorySystem.GiveItem(invited, _catalog.Items.Get(yourInventory[player.TradeOffer[i].SlotNum].ItemId),
                             player.TradeOffer[i].Amount);
                     if (invited.TradeOffer[i].SlotNum > 0)
-                        inventorySystem.GiveItem(player, theirInventory[invited.TradeOffer[i].SlotNum].Item,
+                        inventorySystem.GiveItem(player, _catalog.Items.Get(theirInventory[invited.TradeOffer[i].SlotNum].ItemId),
                             invited.TradeOffer[i].Amount);
                 }
 

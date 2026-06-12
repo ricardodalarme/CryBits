@@ -89,17 +89,21 @@ internal sealed class CharacterSystem(
             ? @class.TextureMale[packet.TextureNum]
             : @class.TextureFemale[packet.TextureNum];
         session.Character.Attribute = @class.Attribute;
-        session.Character.MapInstance = GameWorld.Current.Maps.Get(@class.SpawnMap.Id);
+        session.Character.MapInstance = GameWorld.Current.Maps.Get(@class.SpawnMapId);
         session.Character.Direction = (Direction)@class.SpawnDirection;
         session.Character.X = @class.SpawnX;
         session.Character.Y = @class.SpawnY;
         for (byte i = 0; i < (byte)Vital.Count; i++) session.Character.Vital[i] = session.Character.MaxVital(i);
         for (byte i = 0; i < (byte)@class.Item.Count; i++)
-            if (@class.Item[i].Item.Type == ItemType.Equipment &&
-                session.Character.Equipment[@class.Item[i].Item.EquipType] == null)
-                session.Character.Equipment[@class.Item[i].Item.EquipType] = @class.Item[i].Item;
+        {
+            var item = _catalog.Items.Get(@class.Item[i].ItemId);
+            if (item == null) continue;
+            if (item.Type == ItemType.Equipment &&
+                session.Character.Equipment[item.EquipType] == null)
+                session.Character.Equipment[item.EquipType] = item;
             else
-                inventorySystem.GiveItem(session.Character, @class.Item[i].Item, @class.Item[i].Amount);
+                inventorySystem.GiveItem(session.Character, item, @class.Item[i].Amount);
+        }
         for (byte i = 0; i < MaxHotbar; i++) session.Character.Hotbar[i] = new HotbarSlot(SlotType.None, 0);
 
         characterRepository.WriteName(name);

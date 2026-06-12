@@ -37,7 +37,7 @@ internal sealed class TradeSender(PackageSender packageSender)
         {
             packet.Items[i] = new PacketsTradeOfferItem
             {
-                ItemId = to.Inventory[to.TradeOffer[i].SlotNum].Item.GetId(),
+                ItemId = to.Inventory[to.TradeOffer[i].SlotNum].ItemId,
                 Amount = to.TradeOffer[i].Amount
             };
         }

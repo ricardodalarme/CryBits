@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using CryBits.Definitions.Catalog;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Shops;
 using System;
@@ -79,7 +80,7 @@ internal partial class EditorShopsWindow : Window
         if (_selected == null) return;
 
         txtName.Text = _selected.Name;
-        cmbCurrency.SelectedItem = _selected.Currency;
+        cmbCurrency.SelectedItem = _catalog.Items.Get(_selected.CurrencyId);
 
         RefreshShopItems();
     }
@@ -118,6 +119,8 @@ internal partial class EditorShopsWindow : Window
         _catalog.Shops.Add(shop.Id, shop);
         List_Update(shop.Id);
         Groups_Visibility();
+        if (cmbCurrency.Items.Count > 0)
+            cmbCurrency.SelectedIndex = 0;
     }
 
     private void butRemove_Click(object sender, RoutedEventArgs e)
@@ -155,7 +158,7 @@ internal partial class EditorShopsWindow : Window
     {
         if (_selected == null) return;
         if (cmbCurrency.SelectedItem is Item item)
-            _selected.Currency = item;
+            _selected.CurrencyId = item.Id;
     }
 
     private void butSold_Add_Click(object sender, RoutedEventArgs e)
@@ -202,7 +205,7 @@ internal partial class EditorShopsWindow : Window
 
         var amount = (short)(numAmount.Value ?? 1m);
         var price = (short)(numPrice.Value ?? 0m);
-        var data = new ShopItem(item, amount, price);
+        var data = new ShopItem(item.Id, amount, price);
 
         if (_addingToSold)
             _selected.Sold.Add(data);

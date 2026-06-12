@@ -1008,7 +1008,7 @@ internal partial class EditorMapsWindow : Window
         if (_selected == null || cmbNPC.SelectedItem is not Npc npc) return;
         _selected.Npc.Add(new MapNpc
         {
-            Npc = npc,
+            NpcId = npc.Id,
             Zone = (byte)(numNPC_Zone.Value ?? 0),
             Spawn = fixedSpawn,
             X = x,

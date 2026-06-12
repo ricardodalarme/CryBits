@@ -108,7 +108,7 @@ internal sealed class PlayerSender(PackageSender packageSender)
         { ItemIds = new Guid[MaxInventory], Amounts = new short[MaxInventory] };
         for (byte i = 0; i < MaxInventory; i++)
         {
-            packet.ItemIds[i] = player.Inventory[i].Item.GetId();
+            packet.ItemIds[i] = player.Inventory[i].ItemId;
             packet.Amounts[i] = player.Inventory[i].Amount;
         }
 

@@ -1,11 +1,8 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace CryBits.Definitions.Maps;
@@ -33,17 +30,7 @@ public class Map : Entity
     public IList<MapNpc> Npc { get; set; } = [];
     public byte Lighting { get; set; } = 100;
 
-    private Guid[] _link = new Guid[(byte)Direction.Count];
-
-    [JsonIgnore]
-    public Map[] Link
-    {
-        get => _link.Select(id => DefinitionCatalog.Instance.Maps.Get(id)).ToArray();
-        set => _link = value.Select(m => m.GetId()).ToArray();
-    }
-
-    [JsonInclude]
-    private Guid[] LinkIds { get => _link; set => _link = value; }
+    public Guid[] LinkIds { get; set; } = new Guid[(byte)Direction.Count];
 
     public Map()
     {

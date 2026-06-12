@@ -67,7 +67,7 @@ internal class MapInstance(Guid id, Map map, DefinitionCatalog catalog) : Entity
             for (byte y = 0; y < Map.Height; y++)
                 if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
                     // Add map item.
-                    Item.Add(new MapItemInstance(_catalog.Items.Get(new Guid(Data.Attribute[x, y].Data1)),
+                    Item.Add(new MapItemInstance(new Guid(Data.Attribute[x, y].Data1),
                         Data.Attribute[x, y].Data2, x, y));
     }
 
@@ -96,7 +96,7 @@ internal class MapInstance(Guid id, Map map, DefinitionCatalog catalog) : Entity
         tempMap.Npc = new NpcInstance[map.Npc.Count];
         for (byte i = 0; i < tempMap.Npc.Length; i++)
         {
-            tempMap.Npc[i] = new NpcInstance(i, tempMap, map.Npc[i].Npc);
+            tempMap.Npc[i] = new NpcInstance(i, tempMap, DefinitionCatalog.Instance.Npcs.Get(map.Npc[i].NpcId));
             NpcBrainSystem.Instance.Spawn(tempMap.Npc[i]);
         }
 

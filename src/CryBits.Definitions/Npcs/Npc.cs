@@ -1,10 +1,6 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
-using CryBits.Definitions.Helpers.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
 
 namespace CryBits.Definitions.Npcs;
 
@@ -23,34 +19,16 @@ public class Npc : Entity
     public IList<NpcDrop> Drop { get; set; } = [];
     public bool AttackNpc { get; set; }
 
-    [JsonIgnore]
-    public IList<Npc> Allie { get; set; } = [];
-
-    [JsonInclude]
-    private List<Guid> AllieIds
-    {
-        get => Allie.Select(n => n.GetId()).ToList();
-        set => Allie = value.Select(id => DefinitionCatalog.Instance.Npcs.Get(id)).ToList();
-    }
+    public List<Guid> AllieIds { get; set; } = [];
 
     public MovementStyle Movement { get; set; }
     public byte FleeHealth { get; set; }
-    private Guid _shop;
-
-    [JsonIgnore]
-    public Shops.Shop Shop
-    {
-        get => DefinitionCatalog.Instance.Shops.Get(_shop);
-        set => _shop = value.GetId();
-    }
-
-    [JsonInclude]
-    private Guid ShopId { get => _shop; set => _shop = value; }
+    public Guid ShopId { get; set; }
 
     public Npc()
     {
         Name = "New Npc";
     }
 
-    public bool IsAllied(Npc npc) => Allie.Contains(npc);
+    public bool IsAllied(Guid npcId) => AllieIds.Contains(npcId);
 }

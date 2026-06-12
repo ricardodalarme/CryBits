@@ -58,7 +58,7 @@ internal static class NpcTargeting
         {
             if (i == npc.Index) continue;
             if (!npc.MapInstance.Npc[i].Alive) continue;
-            if (npc.Data.IsAllied(npc.MapInstance.Npc[i].Data)) continue;
+            if (npc.Data.IsAllied(npc.MapInstance.Npc[i].Data.Id)) continue;
 
             distance = (short)Math.Sqrt(Math.Pow(npc.X - npc.MapInstance.Npc[i].X, 2) +
                                         Math.Pow(npc.Y - npc.MapInstance.Npc[i].Y, 2));

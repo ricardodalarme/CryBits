@@ -10,7 +10,6 @@ using System;
 using System.IO;
 using static CryBits.Globals;
 using Attribute = CryBits.Definitions.Characters.Attribute;
-using CryBits.Extensions;
 
 namespace CryBits.Server.Persistence.Repositories;
 
@@ -45,7 +44,7 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
         for (byte n = 0; n < (byte)Attribute.Count; n++) session.Character.Attribute[n] = data.ReadInt16();
         for (byte n = 0; n < MaxInventory; n++)
         {
-            session.Character.Inventory[n].Item = _catalog.Items.Get(new Guid(data.ReadString()));
+            session.Character.Inventory[n].ItemId = new Guid(data.ReadString());
             session.Character.Inventory[n].Amount = data.ReadInt16();
         }
 
@@ -83,11 +82,11 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
         data.Write(session.Character!.Name);
         data.Write(session.Character.TextureNum);
         data.Write(session.Character.Level);
-        data.Write(session.Character.Class.GetId());
+        data.Write(session.Character.Class.GetId().ToString());
         data.Write(session.Character.Genre);
         data.Write(session.Character.Experience);
         data.Write(session.Character.Points);
-        data.Write(session.Character.MapInstance.GetId());
+        data.Write(session.Character.MapInstance.GetId().ToString());
         data.Write(session.Character.X);
         data.Write(session.Character.Y);
         data.Write((byte)session.Character.Direction);
@@ -95,11 +94,11 @@ internal sealed class CharacterRepository(DefinitionCatalog catalog)
         for (byte n = 0; n < (byte)Attribute.Count; n++) data.Write(session.Character.Attribute[n]);
         for (byte n = 0; n < MaxInventory; n++)
         {
-            data.Write(session.Character.Inventory[n].Item.GetId());
+            data.Write(session.Character.Inventory[n].ItemId.ToString());
             data.Write(session.Character.Inventory[n].Amount);
         }
 
-        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(session.Character.Equipment[n].GetId());
+        for (byte n = 0; n < (byte)Equipment.Count; n++) data.Write(session.Character.Equipment[n].GetId().ToString());
         for (byte n = 0; n < MaxHotbar; n++)
         {
             data.Write((byte)session.Character.Hotbar[n].Type);
