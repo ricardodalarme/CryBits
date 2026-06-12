@@ -1,5 +1,5 @@
 using CryBits.Server.Entities;
-using CryBits.Server.Formulas;
+using CryBits.Simulation.Formulas;
 using CryBits.Server.Network.Senders;
 using System;
 using static CryBits.Globals;

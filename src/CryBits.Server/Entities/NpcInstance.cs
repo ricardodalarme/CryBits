@@ -1,6 +1,6 @@
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Characters;
-using CryBits.Server.Formulas;
+using CryBits.Simulation.Formulas;
 using System;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 

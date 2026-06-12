@@ -30,6 +30,7 @@
         "type": "Project",
         "dependencies": {
           "CryBits.Definitions": "[1.0.0, )",
+          "CryBits.Simulation": "[1.0.0, )",
           "LiteNetLib": "[2.0.2, )",
           "System.Runtime.Serialization.Formatters": "[10.0.3, )"
         }
@@ -37,6 +38,13 @@
       "crybits.definitions": {
         "type": "Project",
         "dependencies": {
+          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+        }
+      },
+      "crybits.simulation": {
+        "type": "Project",
+        "dependencies": {
+          "CryBits.Definitions": "[1.0.0, )",
           "System.Runtime.Serialization.Formatters": "[10.0.3, )"
         }
       }

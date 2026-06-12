@@ -3,7 +3,7 @@ using CryBits.Definitions.Items;
 using CryBits.Definitions.Shops;
 using CryBits.Definitions.Slots;
 using CryBits.Definitions.Characters;
-using CryBits.Server.Formulas;
+using CryBits.Simulation.Formulas;
 using CryBits.Server.World;
 using System;
 using System.Collections.Generic;

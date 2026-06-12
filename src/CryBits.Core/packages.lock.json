@@ -19,6 +19,13 @@
         "dependencies": {
           "System.Runtime.Serialization.Formatters": "[10.0.3, )"
         }
+      },
+      "crybits.simulation": {
+        "type": "Project",
+        "dependencies": {
+          "CryBits.Definitions": "[1.0.0, )",
+          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+        }
       }
     }
   }

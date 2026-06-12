@@ -1,12 +1,12 @@
 using System;
 
-namespace CryBits.Server.Formulas;
+namespace CryBits.Simulation.Formulas;
 
 /// <summary>
 /// Pure, stateless leveling calculations. Every method is a static pure function
 /// with no side effects — takes data in, returns a result.
 /// </summary>
-internal static class LevelingFormulas
+public static class LevelingFormulas
 {
     /// <summary>
     /// Computes the experience required for the player to reach the next level.

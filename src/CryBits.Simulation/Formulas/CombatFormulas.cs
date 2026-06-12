@@ -1,12 +1,12 @@
 using System;
 
-namespace CryBits.Server.Formulas;
+namespace CryBits.Simulation.Formulas;
 
 /// <summary>
 /// Pure, stateless combat calculations. Every method is a static pure function
 /// with no side effects — takes data in, returns a result.
 /// </summary>
-internal static class CombatFormulas
+public static class CombatFormulas
 {
     /// <summary>Computes a player's total damage output (strength + weapon bonus).</summary>
     /// <param name="strength">The player's Strength attribute value.</param>

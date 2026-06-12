@@ -4,7 +4,7 @@ using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
-using CryBits.Server.Formulas;
+using CryBits.Simulation.Formulas;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.World;
 using System;

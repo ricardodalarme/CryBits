@@ -1,12 +1,12 @@
 using CryBits.Definitions.Characters;
 
-namespace CryBits.Server.Formulas;
+namespace CryBits.Simulation.Formulas;
 
 /// <summary>
 /// Pure, stateless vital (HP/MP) calculations. Every method is a static pure function
 /// with no side effects — takes data in, returns a result.
 /// </summary>
-internal static class VitalFormulas
+public static class VitalFormulas
 {
     /// <summary>Computes the maximum value of a vital for a player.</summary>
     /// <param name="vital">Which vital to compute (HP or MP).</param>
