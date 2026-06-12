@@ -3,61 +3,68 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Items;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.Events;
+using CryBits.Server.World;
+using System.Linq;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Systems;
 
-/// <summary>
-/// Request-driven system that owns equipping and unequipping items for a player.
-/// InventorySystem is accessed via its Instance to avoid a circular constructor dependency.
-/// </summary>
-internal sealed class EquipmentSystem(PlayerSender playerSender, MapSender mapSender)
+internal sealed class EquipmentSystem(PlayerSender playerSender) : ISimulationSystem
 {
-    public static EquipmentSystem Instance { get; } = new(PlayerSender.Instance, MapSender.Instance);
+    public static EquipmentSystem Instance { get; } = new(PlayerSender.Instance);
 
-    /// <summary>
-    /// Equips the item in <paramref name="slot"/>, swapping out any currently worn item of that type.
-    /// Removes the item from the inventory slot before placing it in the equipment slot.
-    /// </summary>
-    public void Equip(Player player, ItemSlot slot)
+    public void Equip(Player player, Item item)
     {
-        var item = slot.Item;
-        InventorySystem.Instance.TakeItem(player, slot, 1);
-
-        var currentEquip = player.Equipment[item.EquipType];
-        if (currentEquip != null) InventorySystem.Instance.GiveItem(player, currentEquip, 1);
+        var oldItem = player.Equipment[item.EquipType];
 
         player.Equipment[item.EquipType] = item;
-        for (byte i = 0; i < (byte)Attribute.Count; i++) player.Attribute[i] += item.EquipAttribute[i];
+        for (byte i = 0; i < (byte)Attribute.Count; i++)
+            player.Attribute[i] += item.EquipAttribute[i];
+        if (oldItem != null)
+            for (byte i = 0; i < (byte)Attribute.Count; i++)
+                player.Attribute[i] -= oldItem.EquipAttribute[i];
 
-        playerSender.PlayerInventory(player);
+        GameWorld.Current.CurrentTick?.Events.Emit(new ItemEquippedEvent
+        {
+            Player = player,
+            EquipSlot = item.EquipType,
+            Item = item,
+            OldItem = oldItem
+        });
+
         playerSender.PlayerEquipments(player);
-        playerSender.PlayerHotbar(player);
     }
 
-    /// <summary>
-    /// Unequips the item in <paramref name="equipSlot"/>, returning it to the inventory or
-    /// dropping it on the ground when the inventory is full.
-    /// Items bound on equip cannot be removed.
-    /// </summary>
     public void Unequip(Player player, byte equipSlot)
     {
         if (player.Equipment[equipSlot] == null) return;
         if (player.Equipment[equipSlot].Bind == BindOn.Equip) return;
 
-        if (!InventorySystem.Instance.GiveItem(player, player.Equipment[equipSlot], 1))
-        {
-            if (player.MapInstance.Item.Count == Config.MaxMapItems) return;
-
-            player.MapInstance.Item.Add(new MapItemInstance(player.Equipment[equipSlot], 1, player.X, player.Y));
-            mapSender.MapItems(player.MapInstance);
-            playerSender.PlayerInventory(player);
-        }
+        var oldItem = player.Equipment[equipSlot];
 
         for (byte i = 0; i < (byte)Attribute.Count; i++)
-            player.Attribute[i] -= player.Equipment[equipSlot].EquipAttribute[i];
+            player.Attribute[i] -= oldItem.EquipAttribute[i];
         player.Equipment[equipSlot] = null;
 
+        GameWorld.Current.CurrentTick?.Events.Emit(new ItemEquippedEvent
+        {
+            Player = player,
+            EquipSlot = equipSlot,
+            Item = null,
+            OldItem = oldItem
+        });
+
         playerSender.PlayerEquipments(player);
+    }
+
+    public void Execute(GameWorld world, Tick tick)
+    {
+        foreach (var ev in tick.Events.Events.ToArray())
+        {
+            if (ev is ItemUsedEvent use && use.Item.Type == ItemType.Equipment)
+                Equip(use.Player, use.Item);
+        }
     }
 }

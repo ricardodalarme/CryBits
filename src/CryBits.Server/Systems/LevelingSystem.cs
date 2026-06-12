@@ -1,20 +1,18 @@
 using CryBits.Server.Entities;
+using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.Events;
 using CryBits.Simulation.Formulas;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.World;
 using System;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Systems;
 
-/// <summary>
-/// Request-driven system that manages player experience, leveling, and party XP distribution.
-/// Also owns party-leave logic, keeping Player.cs free of party network calls.
-/// </summary>
-internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSender)
+internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSender) : ISimulationSystem
 {
     public static LevelingSystem Instance { get; } = new(PlayerSender.Instance, MapSender.Instance);
 
-    /// <summary>Spends one attribute point for <paramref name="player"/> on the given attribute.</summary>
     internal void AddPoint(Player player, byte attributeNum)
     {
         if (player.Points <= 0) return;
@@ -25,11 +23,6 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
         mapSender.MapPlayers(player);
     }
 
-    /// <summary>
-    /// Grants <paramref name="value"/> experience to <paramref name="player"/>.
-    /// If the player is in a party the XP is split across all members weighted by level
-    /// difference; otherwise it is awarded directly.
-    /// </summary>
     public void GiveExperience(Player player, int value)
     {
         if (player.Party.Count > 0 && value > 0)
@@ -42,10 +35,6 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
         CheckLevelUp(player);
     }
 
-    /// <summary>
-    /// Checks whether the player has enough XP to level up (loops to handle multiple levels at once).
-    /// Sends updated experience and, on level-up, refreshes the map player list.
-    /// </summary>
     private void CheckLevelUp(Player player)
     {
         byte numLevel = 0;
@@ -64,17 +53,11 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
         if (numLevel > 0) mapSender.MapPlayers(player);
     }
 
-    /// <summary>
-    /// Splits <paramref name="value"/> XP across the player's party using a level-difference
-    /// weight so that large level gaps reduce the share a member receives. The remaining XP
-    /// after distributing to members is awarded to <paramref name="player"/> directly.
-    /// </summary>
     private void PartySplitXp(Player player, int value)
     {
         var diff = new double[player.Party.Count];
         double diffSum = 0;
 
-        // Compute a weight for each party member based on their level difference.
         for (byte i = 0; i < player.Party.Count; i++)
         {
             var difference = Math.Abs(player.Level - player.Party[i].Level);
@@ -82,7 +65,6 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
             diffSum += diff[i];
         }
 
-        // Distribute XP to party members; balance weights when their sum exceeds 100 %.
         var experienceSum = 0;
         for (byte i = 0; i < player.Party.Count; i++)
         {
@@ -95,9 +77,27 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
             playerSender.PlayerExperience(player.Party[i]);
         }
 
-        // Award the remainder to the triggering player.
         player.Experience += value - experienceSum;
         CheckLevelUp(player);
         playerSender.PlayerExperience(player);
+    }
+
+    public void Execute(GameWorld world, Tick tick)
+    {
+        foreach (var ev in tick.Events.Events)
+        {
+            if (ev is EntityDiedEvent died && died.Source is Player killer)
+            {
+                var xp = died.Entity switch
+                {
+                    Player victim => victim.Experience / 10,
+                    NpcInstance npc => npc.Data.Experience,
+                    _ => 0
+                };
+
+                if (xp > 0)
+                    GiveExperience(killer, xp);
+            }
+        }
     }
 }

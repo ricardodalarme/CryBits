@@ -3,36 +3,26 @@ using CryBits.Definitions.Slots;
 using CryBits.Definitions.Characters;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.Events;
+using CryBits.Server.World;
 using System.Drawing;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Systems;
 
-/// <summary>
-/// Request-driven system that owns all player inventory operations:
-/// giving, taking, dropping, using, equipping, unequipping, and collecting ground items.
-/// </summary>
 internal sealed class InventorySystem(
     PlayerSender playerSender,
     MapSender mapSender,
-    EquipmentSystem equipmentSystem,
     LevelingSystem levelingSystem,
-    CombatSystem combatSystem,
-    ChatSender chatSender)
+    ChatSender chatSender) : ISimulationSystem
 {
     public static InventorySystem Instance { get; } = new(
         PlayerSender.Instance,
         MapSender.Instance,
-        EquipmentSystem.Instance,
         LevelingSystem.Instance,
-        CombatSystem.Instance,
         ChatSender.Instance);
 
-    /// <summary>
-    /// Adds <paramref name="amount"/> of <paramref name="item"/> to <paramref name="player"/>'s inventory.
-    /// Stacks onto an existing slot when the item is stackable; otherwise fills an empty slot.
-    /// Returns false when the inventory is full or the item is null.
-    /// </summary>
     public bool GiveItem(Player player, Item item, short amount)
     {
         if (item == null) return false;
@@ -55,11 +45,6 @@ internal sealed class InventorySystem(
         return true;
     }
 
-    /// <summary>
-    /// Removes <paramref name="amount"/> of the item in <paramref name="slot"/> from
-    /// <paramref name="player"/>'s inventory. Also clears the matching hotbar entry when
-    /// the slot is fully emptied.
-    /// </summary>
     public void TakeItem(Player player, ItemSlot slot, short amount)
     {
         if (slot == null) return;
@@ -84,10 +69,6 @@ internal sealed class InventorySystem(
         playerSender.PlayerInventory(player);
     }
 
-    /// <summary>
-    /// Drops <paramref name="amount"/> of the item in <paramref name="slot"/> onto the map tile
-    /// the player is standing on, then removes it from the inventory.
-    /// </summary>
     public void DropItem(Player player, ItemSlot slot, short amount)
     {
         if (player.MapInstance.Item.Count == Config.MaxMapItems) return;
@@ -102,11 +83,7 @@ internal sealed class InventorySystem(
         TakeItem(player, slot, amount);
     }
 
-    /// <summary>
-    /// Uses the item in <paramref name="slot"/>. Equipment items are equipped; potions apply
-    /// their vital and experience effects. No-ops if the player has an active trade.
-    /// </summary>
-    public void UseItem(Player player, ItemSlot slot)
+    public void UseItem(Player player, int slotIndex, ItemSlot slot)
     {
         var item = slot.Item;
         if (item == null) return;
@@ -126,7 +103,12 @@ internal sealed class InventorySystem(
 
         if (item.Type == ItemType.Equipment)
         {
-            equipmentSystem.Equip(player, slot);
+            GameWorld.Current.CurrentTick?.Events.Emit(new ItemUsedEvent
+            {
+                Player = player,
+                SlotIndex = slotIndex,
+                Item = item
+            });
         }
         else if (item.Type == ItemType.Potion)
         {
@@ -142,16 +124,13 @@ internal sealed class InventorySystem(
                 if (player.Vital[i] > player.MaxVital(i)) player.Vital[i] = player.MaxVital(i);
             }
 
-            if (player.Vital[(byte)Vital.Hp] == 0) combatSystem.Died(player);
+            if (player.Vital[(byte)Vital.Hp] == 0)
+                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { Entity = player, Source = null });
 
             if (item.PotionExperience > 0 || hadEffect) TakeItem(player, slot, 1);
         }
     }
 
-    /// <summary>
-    /// Picks up the item on the player's current map tile and adds it to the inventory.
-    /// Removes the item from the map and notifies all players when successful.
-    /// </summary>
     public void CollectItem(Player player)
     {
         var mapItem = player.MapInstance.HasItem(player.X, player.Y);
@@ -161,6 +140,35 @@ internal sealed class InventorySystem(
         {
             player.MapInstance.Item.Remove(mapItem);
             mapSender.MapItems(player.MapInstance);
+        }
+    }
+
+    public void Execute(GameWorld world, Tick tick)
+    {
+        foreach (var ev in tick.Events.Events)
+        {
+            switch (ev)
+            {
+                case ItemUsedEvent use when use.Item.Type == ItemType.Equipment:
+                {
+                    var slot = use.Player.Inventory[use.SlotIndex];
+                    if (slot.Item == null || slot.Item != use.Item) continue;
+                    TakeItem(use.Player, slot, 1);
+                    break;
+                }
+                case ItemEquippedEvent equip when equip.OldItem != null:
+                {
+                    if (!GiveItem(equip.Player, equip.OldItem, 1))
+                    {
+                        if (equip.Player.MapInstance.Item.Count == Config.MaxMapItems) continue;
+                        equip.Player.MapInstance.Item.Add(new MapItemInstance(equip.OldItem, 1,
+                            equip.Player.X, equip.Player.Y));
+                        mapSender.MapItems(equip.Player.MapInstance);
+                        playerSender.PlayerInventory(equip.Player);
+                    }
+                    break;
+                }
+            }
         }
     }
 }

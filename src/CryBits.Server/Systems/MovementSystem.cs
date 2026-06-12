@@ -3,34 +3,24 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.Events;
 using CryBits.Server.World;
 using System;
 using static CryBits.Utils.DirectionUtils;
 
 namespace CryBits.Server.Systems;
 
-/// <summary>
-/// Request-driven system that owns all player movement: direction changes, tile-by-tile
-/// movement, and map-transition warps.
-/// </summary>
 internal sealed class MovementSystem(
     PlayerSender playerSender,
-    TradeSystem tradeSystem,
-    ShopSystem shopSystem,
     NpcSender npcSender,
-    MapSender mapSender)
+    MapSender mapSender) : ISimulationSystem
 {
     public static MovementSystem Instance { get; } = new(
         PlayerSender.Instance,
-        TradeSystem.Instance,
-        ShopSystem.Instance,
         NpcSender.Instance,
         MapSender.Instance);
 
-    /// <summary>
-    /// Validates and applies a direction change for <paramref name="player"/>,
-    /// broadcasting it to the map. No-ops while the player is loading a new map.
-    /// </summary>
     public void ChangeDirection(Player player, Direction direction)
     {
         if (direction is < Direction.Up or > Direction.Right) return;
@@ -40,11 +30,6 @@ internal sealed class MovementSystem(
         playerSender.PlayerDirection(player);
     }
 
-    /// <summary>
-    /// Attempts to move <paramref name="player"/> one tile in their current direction.
-    /// Handles map link boundaries, tile blocking, warp tile attributes, and
-    /// cancels any active trade or shop session before moving.
-    /// </summary>
     public void Move(Player player, byte movement)
     {
         byte nextX = player.X, nextY = player.Y;
@@ -55,12 +40,10 @@ internal sealed class MovementSystem(
         if (movement is < 1 or > 2) return;
         if (player.GettingMap) return;
 
-        tradeSystem.Leave(player);
-        shopSystem.Leave(player);
+        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerStartedMovingEvent { Player = player });
 
         NextTile(player.Direction, ref nextX, ref nextY);
 
-        // Map link boundary
         if (Map.OutLimit(nextX, nextY))
         {
             if (link != null)
@@ -91,7 +74,6 @@ internal sealed class MovementSystem(
             player.Y = nextY;
         }
 
-        // Tile attributes
         var tile = player.MapInstance.Data.Attribute[nextX, nextY];
         switch ((TileAttribute)tile.Type)
         {
@@ -108,18 +90,9 @@ internal sealed class MovementSystem(
             playerSender.PlayerPosition(player);
     }
 
-    /// <summary>
-    /// Teleports <paramref name="player"/> to the specified position on <paramref name="mapInstance"/>.
-    /// Cancels any active trade or shop, clamps coordinates to map bounds, and sends a full
-    /// map data refresh when the destination map differs from the current one or
-    /// <paramref name="needUpdate"/> is true.
-    /// </summary>
     public void Warp(Player player, MapInstance mapInstance, byte x, byte y, bool needUpdate = false)
     {
         var oldMap = player.MapInstance;
-
-        tradeSystem.Leave(player);
-        shopSystem.Leave(player);
 
         if (mapInstance == null) return;
         if (x >= Map.Width) x = Map.Width - 1;
@@ -128,6 +101,8 @@ internal sealed class MovementSystem(
         player.MapInstance = mapInstance;
         player.X = x;
         player.Y = y;
+
+        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerWarpedEvent { Player = player, OldMap = oldMap, NewMap = mapInstance });
 
         if (oldMap != mapInstance || needUpdate)
         {
@@ -140,4 +115,6 @@ internal sealed class MovementSystem(
         else
             playerSender.PlayerPosition(player);
     }
+
+    public void Execute(GameWorld world, Tick tick) { }
 }

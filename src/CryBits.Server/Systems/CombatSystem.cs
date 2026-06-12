@@ -4,6 +4,8 @@ using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
+using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.Events;
 using CryBits.Simulation.Formulas;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.World;
@@ -16,25 +18,18 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Server.Systems;
 
-/// <summary>
-/// Owns all combat resolution logic for players and NPCs.
-/// MovementSystem and ShopSystem are accessed via their Instances to avoid circular constructor dependencies.
-/// </summary>
 internal sealed class CombatSystem(
     CombatSender combatSender,
     PlayerSender playerSender,
     NpcSender npcSender,
-    LevelingSystem levelingSystem,
-    ChatSender chatSender)
+    ChatSender chatSender) : ISimulationSystem
 {
     public static CombatSystem Instance { get; } = new(
         CombatSender.Instance,
         PlayerSender.Instance,
         NpcSender.Instance,
-        LevelingSystem.Instance,
         ChatSender.Instance);
 
-    /// <summary>Initiates an attack for <paramref name="player"/> against whatever is in front of them.</summary>
     internal void Attack(Player player)
     {
         byte nextX = player.X, nextY = player.Y;
@@ -87,8 +82,7 @@ internal sealed class CombatSystem(
             }
             else
             {
-                levelingSystem.GiveExperience(attacker, victim.Experience / 10);
-                Died(victim);
+                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { Entity = victim, Source = attacker });
             }
         }
         else
@@ -104,7 +98,7 @@ internal sealed class CombatSystem(
         {
             case Behaviour.Friendly: return;
             case Behaviour.ShopKeeper:
-                ShopSystem.Instance.Open(attacker, victim.Data.Shop);
+                GameWorld.Current.CurrentTick?.Events.Emit(new NpcAttackedEvent { Attacker = attacker, Npc = victim });
                 return;
         }
 
@@ -123,29 +117,14 @@ internal sealed class CombatSystem(
             }
             else
             {
-                levelingSystem.GiveExperience(attacker, victim.Data.Experience);
                 Died(victim);
+                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { Entity = victim, Source = attacker });
             }
         }
         else
             combatSender.Attack(attacker.MapInstance.Id, attacker.Id);
     }
 
-    /// <summary>Kills <paramref name="player"/>: restores vitals, penalises XP, warps to spawn.</summary>
-    internal void Died(Player player)
-    {
-        for (byte n = 0; n < (byte)Vital.Count; n++) player.Vital[n] = player.MaxVital(n);
-        playerSender.PlayerVitals(player);
-
-        player.Experience /= 10;
-        playerSender.PlayerExperience(player);
-
-        player.Direction = (Direction)player.Class.SpawnDirection;
-        MovementSystem.Instance.Warp(player, GameWorld.Current.Maps.Get(player.Class.SpawnMap.Id), player.Class.SpawnX,
-            player.Class.SpawnY);
-    }
-
-    /// <summary>Initiates an attack for <paramref name="npcInstance"/> against its current target.</summary>
     internal void Attack(NpcInstance npcInstance)
     {
         byte nextX = npcInstance.X, nextY = npcInstance.Y;
@@ -181,7 +160,7 @@ internal sealed class CombatSystem(
             else
             {
                 attacker.Target = null;
-                Died(victim);
+                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { Entity = victim, Source = attacker });
             }
         }
         else
@@ -212,13 +191,13 @@ internal sealed class CombatSystem(
             {
                 attacker.Target = null;
                 Died(victim);
+                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { Entity = victim, Source = attacker });
             }
         }
         else
             combatSender.Attack(attacker.MapInstance.Id, attacker.Id);
     }
 
-    /// <summary>Kills <paramref name="npcInstance"/>: drops items, resets spawn state, notifies the map.</summary>
     internal void Died(NpcInstance npcInstance)
     {
         for (byte i = 0; i < npcInstance.Data.Drop.Count; i++)
@@ -232,5 +211,20 @@ internal sealed class CombatSystem(
         npcInstance.Target = null;
         npcInstance.SpawnTimer = Environment.TickCount64;
         npcSender.MapNpcDied(npcInstance);
+    }
+
+    public void Execute(GameWorld world, Tick tick)
+    {
+        foreach (var map in world.Maps.Values)
+        {
+            if (!map.HasPlayers()) continue;
+
+            foreach (var npc in map.Npc)
+            {
+                if (!npc.Alive) continue;
+                if (npc.Target == null) continue;
+                Attack(npc);
+            }
+        }
     }
 }

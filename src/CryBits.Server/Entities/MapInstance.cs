@@ -19,14 +19,6 @@ internal class MapInstance(Guid id, Map map, DefinitionCatalog catalog) : Entity
     public NpcInstance[] Npc = [];
     public List<MapItemInstance> Item = [];
 
-    public void Logic()
-    {
-        // Skip all calculations if no players are on the map
-        if (!HasPlayers()) return;
-
-        for (byte j = 0; j < Npc.Length; j++) NpcAiSystem.Instance.Tick(Npc[j]);
-    }
-
     public NpcInstance HasNpc(byte x, byte y)
     {
         // Return NPC at the given coordinates if present
@@ -107,7 +99,7 @@ internal class MapInstance(Guid id, Map map, DefinitionCatalog catalog) : Entity
         for (byte i = 0; i < tempMap.Npc.Length; i++)
         {
             tempMap.Npc[i] = new NpcInstance(i, tempMap, map.Npc[i].Npc);
-            NpcAiSystem.Instance.Spawn(tempMap.Npc[i]);
+            NpcBrainSystem.Instance.Spawn(tempMap.Npc[i]);
         }
 
         // Spawn map items.

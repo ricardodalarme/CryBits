@@ -78,7 +78,7 @@ internal sealed class PlayerHandler(
     [PacketHandler]
     internal void InventoryUse(Player player, InventoryUsePacket packet)
     {
-        inventorySystem.UseItem(player, player.Inventory[packet.Slot]);
+        inventorySystem.UseItem(player, packet.Slot, player.Inventory[packet.Slot]);
     }
 
     [PacketHandler]

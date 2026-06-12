@@ -1,34 +1,27 @@
 using CryBits.Server.Commands;
 using CryBits.Server.Network;
+using CryBits.Server.Simulation.Core;
 using CryBits.Server.Systems;
 using CryBits.Server.World;
+using CryBits.Simulation.Events;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CryBits.Server.Logic;
 
-internal sealed class Loop(
-    NetworkServer networkServer,
-    MapItemSystem mapItemSystem,
-    RegenerationSystem regenerationSystem)
+internal sealed class Loop(NetworkServer networkServer, TickPipeline pipeline)
 {
     public static Loop Instance { get; } = new(
         NetworkServer.Instance,
-        MapItemSystem.Instance,
-        RegenerationSystem.Instance);
+        TickPipeline.CreateDefault());
 
     // Target simulation rate: 20 ticks per second (50ms per tick)
     private const int TicksPerSecond = 20;
 
     // Measured loops per second (static so CpsCommand can access without Instance).
     public static int Cps;
-
-    // Timing counters (static so RegenerationSystem/MapItemSystem can access without Instance).
-    private long _timer500, _timer1000;
-    public static long TimerRegeneration;
-    public static long TimerMapItems;
+    private long _cpsTimer;
 
     public async Task MainAsync(CancellationToken ct)
     {
@@ -39,38 +32,23 @@ internal sealed class Loop(
         {
             try
             {
-                // Handle incoming network data.
+                var tick = new Tick(Environment.TickCount64, new EventBuffer());
+                GameWorld.Current.CurrentTick = tick;
+
+                // Handle incoming network data — handlers call systems which emit events.
                 networkServer.HandleData();
 
-                var now = Environment.TickCount64;
+                // Run pipeline — systems react to events emitted during handler processing.
+                pipeline.Execute(GameWorld.Current, tick);
 
-                if (now > _timer500 + 500)
-                {
-                    // Map logic
-                    foreach (var tempMap in GameWorld.Current.Maps.Values)
-                    {
-                        mapItemSystem.Tick(tempMap);
-                        tempMap.Logic();
-                    }
-
-                    // Player vital regeneration
-                    foreach (var session in GameWorld.Current.Sessions.Where(a => a.IsPlaying))
-                        regenerationSystem.Tick(session.Character!);
-
-                    // Reset 500 ms timer.
-                    _timer500 = now;
-                }
-
-                // Reset longer-running timers.
-                if (now > TimerRegeneration + 5000) TimerRegeneration = now;
-                if (now > TimerMapItems + 300000) TimerMapItems = now;
+                GameWorld.Current.CurrentTick = null;
 
                 // Compute CPS.
-                if (_timer1000 < now)
+                if (_cpsTimer < Environment.TickCount64)
                 {
                     Cps = cps;
-                    cps = 0;
-                    _timer1000 = now + 1000;
+                    cps = 1;
+                    _cpsTimer = Environment.TickCount64 + 1000;
                 }
                 else
                     cps++;

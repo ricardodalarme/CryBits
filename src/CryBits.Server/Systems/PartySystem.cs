@@ -1,16 +1,17 @@
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.Events;
+using CryBits.Server.World;
 using System.Drawing;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Systems;
 
-/// <summary>Owns all party lifecycle logic.</summary>
-internal sealed class PartySystem(ChatSender chatSender, PartySender partySender)
+internal sealed class PartySystem(ChatSender chatSender, PartySender partySender) : ISimulationSystem
 {
     public static PartySystem Instance { get; } = new(ChatSender.Instance, PartySender.Instance);
 
-    /// <summary>Sends a party invitation from <paramref name="player"/> to the named target.</summary>
     internal void Invite(Player player, string targetName)
     {
         var invited = Player.Find(targetName);
@@ -49,7 +50,6 @@ internal sealed class PartySystem(ChatSender chatSender, PartySender partySender
         partySender.PartyInvitation(invited, player.Name);
     }
 
-    /// <summary>Accepts the pending party invitation for <paramref name="player"/>.</summary>
     internal void Accept(Player player)
     {
         var invitation = Player.Find(player.PartyRequest);
@@ -87,7 +87,6 @@ internal sealed class PartySystem(ChatSender chatSender, PartySender partySender
         for (byte i = 0; i < player.Party.Count; i++) partySender.Party(player.Party[i]);
     }
 
-    /// <summary>Declines the pending party invitation for <paramref name="player"/>.</summary>
     internal void Decline(Player player)
     {
         var invitation = Player.Find(player.PartyRequest);
@@ -95,10 +94,6 @@ internal sealed class PartySystem(ChatSender chatSender, PartySender partySender
         player.PartyRequest = string.Empty;
     }
 
-    /// <summary>
-    /// Removes <paramref name="player"/> from their party, notifies all remaining members,
-    /// and clears the player's own party list.
-    /// </summary>
     public void Leave(Player player)
     {
         if (player.Party.Count == 0) return;
@@ -111,5 +106,14 @@ internal sealed class PartySystem(ChatSender chatSender, PartySender partySender
 
         player.Party.Clear();
         partySender.Party(player);
+    }
+
+    public void Execute(GameWorld world, Tick tick)
+    {
+        foreach (var ev in tick.Events.Events)
+        {
+            if (ev is PlayerDisconnectedEvent e)
+                Leave(e.Player);
+        }
     }
 }

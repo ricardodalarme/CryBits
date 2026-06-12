@@ -5,6 +5,7 @@ using CryBits.Definitions.Npcs;
 using CryBits.Server.Entities;
 using CryBits.Server.Network;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.Core;
 using CryBits.Server.World;
 using System;
 using System.Drawing;
@@ -13,43 +14,47 @@ using static CryBits.Utils.RandomUtils;
 
 namespace CryBits.Server.Systems;
 
-/// <summary>Tick-driven system that runs NPC spawn, targeting, movement and delegates combat.</summary>
-internal sealed class NpcAiSystem(
-    CombatSystem combatSystem,
+internal sealed class NpcBrainSystem(
     NpcSender npcSender,
     ChatSender chatSender,
-    RegenerationSystem regenerationSystem,
-    NetworkServer networkServer)
+    NetworkServer networkServer) : ISimulationSystem
 {
-    public static NpcAiSystem Instance { get; } = new(
-        CombatSystem.Instance,
+    public static NpcBrainSystem Instance { get; } = new(
         NpcSender.Instance,
         ChatSender.Instance,
-        RegenerationSystem.Instance,
         NetworkServer.Instance);
 
-    /// <summary>Runs one AI tick for <paramref name="npcInstance"/>: spawn check, regen, targeting, movement, attack.</summary>
-    internal void Tick(NpcInstance npcInstance)
+    private long _lastTick;
+
+    public void Execute(GameWorld world, Tick tick)
     {
-        if (!npcInstance.Alive)
+        if (Environment.TickCount64 <= _lastTick + 500) return;
+        _lastTick = Environment.TickCount64;
+
+        foreach (var map in world.Maps.Values)
         {
-            if (Environment.TickCount64 > npcInstance.SpawnTimer + npcInstance.Data.SpawnTime * 1000) Spawn(npcInstance);
-            return;
+            if (!map.HasPlayers()) continue;
+
+            foreach (var npc in map.Npc)
+            {
+                if (!npc.Alive) continue;
+
+                TickAlive(npc);
+            }
         }
+    }
 
-        regenerationSystem.Tick(npcInstance);
-
+    private void TickAlive(NpcInstance npcInstance)
+    {
         byte targetX = 0, targetY = 0;
         var canMove = new bool[(byte)Direction.Count];
         var moved = false;
         var move = false;
 
-        // Target acquisition — attack on sight
         if (npcInstance.Data.Behaviour == Behaviour.AttackOnSight)
         {
             short distance;
 
-            // Scan for a player in range
             if (npcInstance.Target == null)
                 foreach (var session in GameWorld.Current.Sessions)
                 {
@@ -67,7 +72,6 @@ internal sealed class NpcAiSystem(
                     }
                 }
 
-            // Scan for a hostile NPC in range
             if (npcInstance.Data.AttackNpc && npcInstance.Target == null)
                 for (byte i = 0; i < npcInstance.MapInstance.Npc.Length; i++)
                 {
@@ -85,7 +89,6 @@ internal sealed class NpcAiSystem(
                 }
         }
 
-        // Validate existing target
         if (npcInstance.Target != null)
         {
             if (npcInstance.Target is Player p && !p.Session.IsPlaying || npcInstance.Target.MapInstance != npcInstance.MapInstance)
@@ -94,7 +97,6 @@ internal sealed class NpcAiSystem(
                 npcInstance.Target = null;
         }
 
-        // Determine movement destination
         if (npcInstance.Target != null)
         {
             targetX = npcInstance.Target.X;
@@ -108,7 +110,6 @@ internal sealed class NpcAiSystem(
         else if (npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone > 0 &&
                  npcInstance.MapInstance.Data.Attribute[npcInstance.X, npcInstance.Y].Zone != npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone)
         {
-            // Return to designated zone
             for (byte x = 0; x < Map.Width; x++)
                 for (byte y = 0; y < Map.Height; y++)
                     if (npcInstance.MapInstance.Data.Attribute[x, y].Zone == npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone &&
@@ -121,7 +122,6 @@ internal sealed class NpcAiSystem(
                     }
         }
 
-        // Move toward or away from target
         if (move)
         {
             if (npcInstance.Vital[(byte)Vital.Hp] > npcInstance.Data.Vital[(byte)Vital.Hp] * (npcInstance.Data.FleeHealth / 100.0))
@@ -153,7 +153,6 @@ internal sealed class NpcAiSystem(
             }
         }
 
-        // Random idle movement
         if (npcInstance.Data.Behaviour == (byte)Behaviour.Friendly || npcInstance.Target == null)
             if (MyRandom.Next(0, 3) == 0 && !moved)
             {
@@ -165,11 +164,8 @@ internal sealed class NpcAiSystem(
                     npcSender.MapNpcDirection(npcInstance);
                 }
             }
-
-        combatSystem.Attack(npcInstance);
     }
 
-    /// <summary>Attempts to spawn <paramref name="npcInstance"/> at its configured or a random location.</summary>
     internal void Spawn(NpcInstance npcInstance)
     {
         if (npcInstance.MapInstance.Data.Npc[npcInstance.Index].Spawn)
@@ -178,7 +174,6 @@ internal sealed class NpcAiSystem(
             return;
         }
 
-        // Try up to 50 random positions
         for (byte i = 0; i < 50; i++)
         {
             var x = (byte)MyRandom.Next(0, Map.Width - 1);
@@ -195,7 +190,6 @@ internal sealed class NpcAiSystem(
             }
         }
 
-        // Fallback: first walkable tile in zone
         for (byte x = 0; x < Map.Width; x++)
             for (byte y = 0; y < Map.Height; y++)
                 if (!npcInstance.MapInstance.Data.TileBlocked(x, y))

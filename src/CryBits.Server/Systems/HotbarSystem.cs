@@ -35,7 +35,8 @@ internal sealed class HotbarSystem(PlayerSender playerSender, InventorySystem in
         switch (player.Hotbar[hotbarSlot].Type)
         {
             case SlotType.Item:
-                inventorySystem.UseItem(player, player.Inventory[player.Hotbar[hotbarSlot].Slot]);
+                var invSlot = player.Hotbar[hotbarSlot].Slot;
+                inventorySystem.UseItem(player, invSlot, player.Inventory[invSlot]);
                 break;
         }
     }

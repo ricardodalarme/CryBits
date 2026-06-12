@@ -2,18 +2,20 @@ using CryBits.Definitions.Slots;
 using CryBits.Definitions.Common;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.Events;
+using CryBits.Server.World;
 using System;
 using System.Drawing;
 using static CryBits.Globals;
 
 namespace CryBits.Server.Systems;
 
-/// <summary>System that owns all trade lifecycle logic.</summary>
 internal sealed class TradeSystem(
     TradeSender tradeSender,
     ChatSender chatSender,
     InventorySystem inventorySystem,
-    PlayerSender playerSender)
+    PlayerSender playerSender) : ISimulationSystem
 {
     public static TradeSystem Instance { get; } = new(
         TradeSender.Instance,
@@ -21,7 +23,6 @@ internal sealed class TradeSystem(
         InventorySystem.Instance,
         PlayerSender.Instance);
 
-    /// <summary>Sends a trade invitation from <paramref name="player"/> to the named target.</summary>
     internal void Invite(Player player, string targetName)
     {
         var invited = Player.Find(targetName);
@@ -72,7 +73,6 @@ internal sealed class TradeSystem(
         tradeSender.TradeInvitation(invited, player.Name);
     }
 
-    /// <summary>Accepts the pending trade invitation for <paramref name="player"/>.</summary>
     internal void Accept(Player player)
     {
         var invited = Player.Find(player.TradeRequest);
@@ -114,7 +114,6 @@ internal sealed class TradeSystem(
         tradeSender.Trade(invited, true);
     }
 
-    /// <summary>Declines the pending trade invitation for <paramref name="player"/>.</summary>
     internal void Decline(Player player)
     {
         var invited = Player.Find(player.TradeRequest);
@@ -122,7 +121,6 @@ internal sealed class TradeSystem(
         player.TradeRequest = string.Empty;
     }
 
-    /// <summary>Cancels the active trade for <paramref name="player"/>, notifying both sides.</summary>
     public void Leave(Player player)
     {
         if (player.Trade == null) return;
@@ -133,7 +131,6 @@ internal sealed class TradeSystem(
         tradeSender.Trade(player, false);
     }
 
-    /// <summary>Adds or removes an item from <paramref name="player"/>'s trade offer.</summary>
     internal void Offer(Player player, short slot, short inventorySlot, short amount)
     {
         amount = Math.Min(amount, player.Inventory[inventorySlot].Amount);
@@ -154,7 +151,6 @@ internal sealed class TradeSystem(
         tradeSender.TradeOffer(player.Trade, false);
     }
 
-    /// <summary>Updates the trade offer state (accept / decline / waiting) for <paramref name="player"/>.</summary>
     internal void OfferState(Player player, TradeStatus state)
     {
         var invited = player.Trade;
@@ -215,5 +211,24 @@ internal sealed class TradeSystem(
         }
 
         tradeSender.TradeState(invited, state);
+    }
+
+    public void Execute(GameWorld world, Tick tick)
+    {
+        foreach (var ev in tick.Events.Events)
+        {
+            switch (ev)
+            {
+                case PlayerStartedMovingEvent e:
+                    Leave(e.Player);
+                    break;
+                case PlayerWarpedEvent e:
+                    Leave(e.Player);
+                    break;
+                case PlayerDisconnectedEvent e:
+                    Leave(e.Player);
+                    break;
+            }
+        }
     }
 }

@@ -1,5 +1,8 @@
-using System.Collections.Generic;
+using CryBits.Server.Network;
+using CryBits.Server.Network.Senders;
+using CryBits.Server.Systems;
 using CryBits.Server.World;
+using System.Collections.Generic;
 
 namespace CryBits.Server.Simulation.Core;
 
@@ -22,5 +25,24 @@ internal sealed class TickPipeline
     {
         foreach (var system in _systems)
             system.Execute(world, tick);
+    }
+
+    public static TickPipeline CreateDefault()
+    {
+        var pipeline = new TickPipeline();
+        pipeline.AddSystem(new VitalsRegenSystem(PlayerSender.Instance, NpcSender.Instance));
+        pipeline.AddSystem(MovementSystem.Instance);
+        pipeline.AddSystem(NpcBrainSystem.Instance);
+        pipeline.AddSystem(CombatSystem.Instance);
+        pipeline.AddSystem(LevelingSystem.Instance);
+        pipeline.AddSystem(DeathSystem.Instance);
+        pipeline.AddSystem(MapItemSystem.Instance);
+        pipeline.AddSystem(EquipmentSystem.Instance);
+        pipeline.AddSystem(InventorySystem.Instance);
+        pipeline.AddSystem(TradeSystem.Instance);
+        pipeline.AddSystem(ShopSystem.Instance);
+        pipeline.AddSystem(PartySystem.Instance);
+        pipeline.AddSystem(SpawnSystem.Instance);
+        return pipeline;
     }
 }

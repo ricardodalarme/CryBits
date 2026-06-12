@@ -1,30 +1,31 @@
+using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.Core;
+using CryBits.Server.Simulation.Events;
+using CryBits.Server.World;
 using System;
 using System.Drawing;
 
 namespace CryBits.Server.Systems;
 
-/// <summary>System that owns all shop lifecycle logic.</summary>
 internal sealed class ShopSystem(
     InventorySystem inventorySystem,
     ShopSender shopSender,
-    ChatSender chatSender)
+    ChatSender chatSender) : ISimulationSystem
 {
     public static ShopSystem Instance { get; } = new(
         InventorySystem.Instance,
         ShopSender.Instance,
         ChatSender.Instance);
 
-    /// <summary>Opens <paramref name="shop"/> for <paramref name="player"/> and notifies the client.</summary>
     public void Open(Player player, Shop shop)
     {
         player.Shop = shop;
         shopSender.ShopOpen(player, shop);
     }
 
-    /// <summary>Closes the active shop session for <paramref name="player"/> and notifies the client.</summary>
     public void Leave(Player player)
     {
         if (player.Shop == null) return;
@@ -33,7 +34,6 @@ internal sealed class ShopSystem(
         shopSender.ShopOpen(player, null);
     }
 
-    /// <summary>Purchases a shop item for <paramref name="player"/>.</summary>
     internal void Buy(Player player, short shopSoldIndex)
     {
         var shopSold = player.Shop.Sold[shopSoldIndex];
@@ -56,7 +56,6 @@ internal sealed class ShopSystem(
         chatSender.Message(player, "You bought " + shopSold.Price + "x " + shopSold.Item.Name + ".", Color.Green);
     }
 
-    /// <summary>Sells an inventory item back to the shop for <paramref name="player"/>.</summary>
     internal void Sell(Player player, byte inventorySlotIndex, short amount)
     {
         amount = Math.Min(amount, player.Inventory[inventorySlotIndex].Amount);
@@ -78,5 +77,25 @@ internal sealed class ShopSystem(
             "You sold " + player.Inventory[inventorySlotIndex].Item.Name + "x " + amount + " for .", Color.Green);
         inventorySystem.TakeItem(player, player.Inventory[inventorySlotIndex], amount);
         inventorySystem.GiveItem(player, player.Shop.Currency, (short)(buy.Price * amount));
+    }
+
+    public void Execute(GameWorld world, Tick tick)
+    {
+        foreach (var ev in tick.Events.Events)
+        {
+            switch (ev)
+            {
+                case PlayerStartedMovingEvent e:
+                    Leave(e.Player);
+                    break;
+                case PlayerWarpedEvent e:
+                    Leave(e.Player);
+                    break;
+                case NpcAttackedEvent e:
+                    if (e.Npc.Data.Behaviour == Behaviour.ShopKeeper)
+                        Open(e.Attacker, e.Npc.Data.Shop);
+                    break;
+            }
+        }
     }
 }

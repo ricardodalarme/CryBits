@@ -1,4 +1,5 @@
 using CryBits.Server.Entities;
+using CryBits.Server.Simulation.Core;
 using System;
 using System.Collections.Generic;
 
@@ -23,6 +24,12 @@ internal sealed class GameWorld
     /// List of all active sessions on the server.
     /// </summary>
     public List<GameSession> Sessions { get; } = [];
+
+    /// <summary>
+    /// The tick currently being processed. Set before HandleData and cleared after
+    /// the pipeline executes, so any system can emit events via CurrentTick.Events.Emit().
+    /// </summary>
+    public Tick? CurrentTick { get; set; }
 
     public GameWorld() => Current = this;
 }

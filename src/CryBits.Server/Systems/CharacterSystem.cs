@@ -8,6 +8,7 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Network.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
+using CryBits.Server.Simulation.Events;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
@@ -32,8 +33,6 @@ internal sealed class CharacterSystem(
     ChatSender chatSender,
     MovementSystem movementSystem,
     InventorySystem inventorySystem,
-    PartySystem partySystem,
-    TradeSystem tradeSystem,
     DefinitionCatalog catalog)
 {
     private readonly DefinitionCatalog _catalog = catalog;
@@ -50,8 +49,6 @@ internal sealed class CharacterSystem(
         ChatSender.Instance,
         MovementSystem.Instance,
         InventorySystem.Instance,
-        PartySystem.Instance,
-        TradeSystem.Instance,
         DefinitionCatalog.Instance);
 
     /// <summary>Validates and creates a new character for <paramref name="session"/>, then joins the game.</summary>
@@ -171,7 +168,6 @@ internal sealed class CharacterSystem(
         characterRepository.Write(player.Session);
         playerSender.PlayerLeave(player);
 
-        partySystem.Leave(player);
-        tradeSystem.Leave(player);
+        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent { Player = player });
     }
 }
