@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <RootNamespace>CryBits</RootNamespace>
+    <RootNamespace>CryBits.Network</RootNamespace>
     <AssemblyName>CryBits.Network</AssemblyName>
   </PropertyGroup>
 

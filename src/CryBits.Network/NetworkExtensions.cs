@@ -2,7 +2,7 @@ using LiteNetLib.Utils;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace CryBits.Definitions.Helpers.Extensions;
+namespace CryBits.Network;
 
 public static class NetworkExtensions
 {

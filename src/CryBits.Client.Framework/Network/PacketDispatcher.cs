@@ -1,5 +1,4 @@
 using CryBits.Network;
-using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Network.Packets.Server;
 using LiteNetLib;
 using System.Linq.Expressions;
