@@ -6,7 +6,7 @@ using CryBits.Client.Components.Map;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
 using static CryBits.Globals;
-using static CryBits.Utils.RandomUtils;
+using System;
 
 namespace CryBits.Client.Systems.Map;
 
@@ -78,7 +78,7 @@ internal sealed class WeatherSimulationSystem(GameContext context) : BaseSystem<
     /// </summary>
     private static void MoveSnow(ref WeatherParticleComponent p, ref TransformComponent t, bool xAxis)
     {
-        var difference = MyRandom.Next(0, SnowMovement / 3);
+        var difference = Random.Shared.Next(0, SnowMovement / 3);
         var x1 = p.Start + SnowMovement + difference;
         var x2 = p.Start - SnowMovement - difference;
 

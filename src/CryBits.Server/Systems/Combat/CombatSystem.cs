@@ -13,7 +13,7 @@ using CryBits.Server.World;
 using System;
 using System.Drawing;
 using static CryBits.Globals;
-using static CryBits.Utils.RandomUtils;
+
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Server.Systems.Combat;
@@ -202,7 +202,7 @@ internal sealed class CombatSystem(
     {
         for (byte i = 0; i < npcInstance.Data.Drop.Count; i++)
             if (npcInstance.Data.Drop[i].Item != null)
-                if (MyRandom.Next(1, 99) <= npcInstance.Data.Drop[i].Chance)
+                if (Random.Shared.Next(1, 99) <= npcInstance.Data.Drop[i].Chance)
                     npcInstance.MapInstance.Item.Add(new MapItemInstance(npcInstance.Data.Drop[i].Item, npcInstance.Data.Drop[i].Amount, npcInstance.X, npcInstance.Y));
 
         MapSender.Instance.MapItems(npcInstance.MapInstance);

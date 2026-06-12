@@ -1,4 +1,4 @@
-using static CryBits.Utils.RandomUtils;
+using System;
 
 namespace CryBits.Editors.Entities;
 
@@ -21,16 +21,16 @@ public struct MapWeatherParticleInstance
     public void SetRain()
     {
         // Initialize rain particle speed and start position.
-        Speed = MyRandom.Next(8, 13);
+        Speed = Random.Shared.Next(8, 13);
 
-        if (MyRandom.Next(2) == 0)
+        if (Random.Shared.Next(2) == 0)
         {
             X = -32;
-            Y = MyRandom.Next(-32, Globals.ScreenHeight);
+            Y = Random.Shared.Next(-32, Globals.ScreenHeight);
         }
         else
         {
-            X = MyRandom.Next(-32, Globals.ScreenWidth);
+            X = Random.Shared.Next(-32, Globals.ScreenWidth);
             Y = -32;
         }
     }
@@ -38,16 +38,16 @@ public struct MapWeatherParticleInstance
     public void SetSnow()
     {
         // Initialize snow particle.
-        Speed = MyRandom.Next(1, 3);
+        Speed = Random.Shared.Next(1, 3);
         Y = -32;
-        X = MyRandom.Next(-32, Globals.ScreenWidth);
+        X = Random.Shared.Next(-32, Globals.ScreenWidth);
         Start = X;
-        Back = MyRandom.Next(2) != 0;
+        Back = Random.Shared.Next(2) != 0;
     }
 
     public void MoveSnow(bool xAxis = true)
     {
-        var difference = MyRandom.Next(0, Globals.SnowMovement / 3);
+        var difference = Random.Shared.Next(0, Globals.SnowMovement / 3);
         var x1 = Start + Globals.SnowMovement + difference;
         var x2 = Start - Globals.SnowMovement - difference;
 

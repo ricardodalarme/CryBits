@@ -2,7 +2,7 @@ using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using System.Drawing;
 using static CryBits.Globals;
-using static CryBits.Utils.RandomUtils;
+using System;
 
 namespace CryBits.Client.Spawners;
 
@@ -17,7 +17,7 @@ internal static class BloodSplatSpawner
 
     public static void Spawn(Arch.Core.World world, short tileX, short tileY)
     {
-        var frame = MyRandom.Next(0, 3);
+        var frame = Random.Shared.Next(0, 3);
         var sourceRect = new Rectangle(frame * FrameSize, 0, FrameSize, FrameSize);
 
         world.Create(

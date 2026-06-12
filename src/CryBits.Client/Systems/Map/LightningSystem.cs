@@ -6,7 +6,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
 using static CryBits.Globals;
-using static CryBits.Utils.RandomUtils;
+using System;
 
 namespace CryBits.Client.Systems.Map;
 
@@ -48,9 +48,9 @@ internal sealed class LightningSystem(GameContext context, AudioManager audioMan
 
     private void TryThunder(byte intensity)
     {
-        if (MyRandom.Next(0, MaxWeatherIntensity * 10 - intensity * 2) != 0) return;
+        if (Random.Shared.Next(0, MaxWeatherIntensity * 10 - intensity * 2) != 0) return;
 
-        var thunder = MyRandom.Next(0, _thunderSounds.Length);
+        var thunder = Random.Shared.Next(0, _thunderSounds.Length);
         audioManager.PlaySound(_thunderSounds[thunder]);
 
         if (thunder < 3)

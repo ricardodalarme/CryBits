@@ -7,7 +7,7 @@ using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.World;
 using System;
-using static CryBits.Utils.RandomUtils;
+
 
 namespace CryBits.Server.Systems.Npc;
 
@@ -56,8 +56,8 @@ internal sealed class NpcBrainSystem(
 
         for (byte i = 0; i < 50; i++)
         {
-            var x = (byte)MyRandom.Next(0, Map.Width - 1);
-            var y = (byte)MyRandom.Next(0, Map.Height - 1);
+            var x = (byte)Random.Shared.Next(0, Map.Width - 1);
+            var y = (byte)Random.Shared.Next(0, Map.Height - 1);
 
             if (npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone > 0 &&
                 npcInstance.MapInstance.Data.Attribute[x, y].Zone != npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone)

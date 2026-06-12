@@ -5,7 +5,7 @@ using CryBits.Client.Components.Map;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
 using static CryBits.Globals;
-using static CryBits.Utils.RandomUtils;
+using System;
 
 namespace CryBits.Client.Systems.Map;
 
@@ -32,7 +32,7 @@ internal sealed class WeatherSpawnSystem(GameContext context) : BaseSystem<World
 
         var maxParticles = type == Weather.Snowing ? MaxSnowParticles : MaxRainParticles;
         if (activeCount >= maxParticles) return;
-        if (MyRandom.Next(0, MaxWeatherIntensity - weatherData.Intensity) != 0) return;
+        if (Random.Shared.Next(0, MaxWeatherIntensity - weatherData.Intensity) != 0) return;
 
         SpawnParticle(type);
     }
@@ -46,23 +46,23 @@ internal sealed class WeatherSpawnSystem(GameContext context) : BaseSystem<World
         switch (type)
         {
             case Weather.Raining or Weather.Thundering:
-                particle.Speed = MyRandom.Next(8, 13);
-                if (MyRandom.Next(2) == 0)
+                particle.Speed = Random.Shared.Next(8, 13);
+                if (Random.Shared.Next(2) == 0)
                 {
                     x = -32;
-                    y = MyRandom.Next(-32, ScreenHeight);
+                    y = Random.Shared.Next(-32, ScreenHeight);
                 }
                 else
                 {
-                    x = MyRandom.Next(-32, ScreenWidth);
+                    x = Random.Shared.Next(-32, ScreenWidth);
                     y = -32;
                 }
                 break;
 
             case Weather.Snowing:
-                particle.Speed = MyRandom.Next(1, 3);
-                particle.Start = MyRandom.Next(-32, ScreenWidth);
-                particle.Back = MyRandom.Next(2) != 0;
+                particle.Speed = Random.Shared.Next(1, 3);
+                particle.Start = Random.Shared.Next(-32, ScreenWidth);
+                particle.Back = Random.Shared.Next(2) != 0;
                 x = particle.Start;
                 y = -32;
                 break;

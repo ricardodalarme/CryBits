@@ -5,7 +5,7 @@ using CryBits.Editors.Forms;
 using CryBits.Definitions.Maps;
 using System;
 using static CryBits.Globals;
-using static CryBits.Utils.RandomUtils;
+
 
 namespace CryBits.Editors.Entities;
 
@@ -145,7 +145,7 @@ internal class MapInstance
         for (var i = 1; i <= Weather.GetUpperBound(0); i++)
             if (!Weather[i].Visible)
             {
-                if (MyRandom.Next(0, MaxWeatherIntensity - weather.Intensity) == 0)
+                if (Random.Shared.Next(0, MaxWeatherIntensity - weather.Intensity) == 0)
                 {
                     if (!stop)
                     {
@@ -176,7 +176,7 @@ internal class MapInstance
             }
 
         if (weather.Type == CryBits.Definitions.Maps.Weather.Thundering)
-            if (MyRandom.Next(0, MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
+            if (Random.Shared.Next(0, MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
             {
                 var thunderList = new[]
                 {
@@ -185,7 +185,7 @@ internal class MapInstance
                     Sounds.Thunder3,
                     Sounds.Thunder4
                 };
-                var thunder = MyRandom.Next(0, thunderList.Length);
+                var thunder = Random.Shared.Next(0, thunderList.Length);
                 AudioManager.Instance.PlaySound(thunderList[thunder]);
 
                 if (thunder < 3) Lightning = 190;

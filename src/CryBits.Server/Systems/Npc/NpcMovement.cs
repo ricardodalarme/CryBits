@@ -4,7 +4,7 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Npcs;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
-using static CryBits.Utils.RandomUtils;
+using System;
 
 namespace CryBits.Server.Systems.Npc;
 
@@ -55,7 +55,7 @@ internal static class NpcMovement
                 canMove[(byte)Direction.Right] = npc.X > targetX;
             }
 
-            if (MyRandom.Next(0, 2) == 0)
+            if (Random.Shared.Next(0, 2) == 0)
             {
                 for (byte d = 0; d < (byte)Direction.Count; d++)
                     if (!moved && canMove[d] && Move(npc, npcSender, (Direction)d))
@@ -70,13 +70,13 @@ internal static class NpcMovement
         }
 
         if (npc.Data.Behaviour == (byte)Behaviour.Friendly || npc.Target == null)
-            if (MyRandom.Next(0, 3) == 0 && !moved)
+            if (Random.Shared.Next(0, 3) == 0 && !moved)
             {
                 if (npc.Data.Movement == MovementStyle.MoveRandomly)
-                    Move(npc, npcSender, (Direction)MyRandom.Next(0, 4), 1, true);
+                    Move(npc, npcSender, (Direction)Random.Shared.Next(0, 4), 1, true);
                 else if (npc.Data.Movement == MovementStyle.TurnRandomly)
                 {
-                    npc.Direction = (Direction)MyRandom.Next(0, 4);
+                    npc.Direction = (Direction)Random.Shared.Next(0, 4);
                     npcSender.MapNpcDirection(npc);
                 }
             }
