@@ -57,10 +57,17 @@
           "CSFML": "[3.0.0, 3.1.0)"
         }
       },
-      "CryBits.Core": {
+      "crybits.core": {
         "type": "Project",
         "dependencies": {
+          "CryBits.Definitions": "[1.0.0, )",
           "LiteNetLib": "[2.0.2, )",
+          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+        }
+      },
+      "crybits.definitions": {
+        "type": "Project",
+        "dependencies": {
           "System.Runtime.Serialization.Formatters": "[10.0.3, )"
         }
       }

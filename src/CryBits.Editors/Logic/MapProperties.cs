@@ -1,7 +1,6 @@
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Entities;
-using CryBits.Entities.Map;
-using CryBits.Enums;
+using CryBits.Definitions.Maps;
 using System;
 using System.ComponentModel;
 using System.Drawing;

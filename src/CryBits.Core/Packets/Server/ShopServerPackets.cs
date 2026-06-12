@@ -1,3 +1,4 @@
+using CryBits.Definitions.Shops;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +7,7 @@ namespace CryBits.Packets.Server;
 [Serializable]
 public struct ShopsPacket : IServerPacket
 {
-    public Dictionary<Guid, Entities.Shop.Shop> List;
+    public Dictionary<Guid, Shop> List;
 }
 
 [Serializable]

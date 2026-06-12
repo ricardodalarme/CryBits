@@ -1,5 +1,5 @@
-using CryBits.Entities;
-using CryBits.Entities.Slots;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Slots;
 
 namespace CryBits.Server.Entities;
 

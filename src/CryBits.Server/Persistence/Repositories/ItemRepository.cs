@@ -1,4 +1,5 @@
-using CryBits.Entities;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Items;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +29,7 @@ internal sealed class ItemRepository
     public void WriteAll()
     {
         // Write items to disk.
-        foreach (var item in Item.List.Values)
+        foreach (var item in DefinitionCatalog.Items.Values)
             using (var stream =
                    new FileInfo(Path.Combine(Directories.Items.FullName, item.Id.ToString()) + Directories.Format)
                        .OpenWrite())

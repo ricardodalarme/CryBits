@@ -3,7 +3,7 @@ using Arch.System;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Systems.Character;

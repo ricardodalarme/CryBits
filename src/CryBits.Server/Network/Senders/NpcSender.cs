@@ -1,6 +1,7 @@
-using CryBits.Entities.Npc;
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Characters;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Server.World;
@@ -14,7 +15,7 @@ internal sealed class NpcSender(PackageSender packageSender)
 
     public void Npcs(GameSession session)
     {
-        packageSender.ToPlayer(session, new NpcsPacket { List = Npc.List });
+        packageSender.ToPlayer(session, new NpcsPacket { List = DefinitionCatalog.Npcs });
     }
 
     public void MapNpcs(Player player, MapInstance mapInstance)

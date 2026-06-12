@@ -109,6 +109,7 @@
         "type": "Project",
         "dependencies": {
           "CryBits.Core": "[1.0.0, )",
+          "CryBits.Definitions": "[1.0.0, )",
           "SFML.Audio": "[3.0.0, )",
           "SFML.Graphics": "[3.0.0, )",
           "SFML.Window": "[3.0.0, )",
@@ -118,7 +119,14 @@
       "crybits.core": {
         "type": "Project",
         "dependencies": {
+          "CryBits.Definitions": "[1.0.0, )",
           "LiteNetLib": "[2.0.2, )",
+          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+        }
+      },
+      "crybits.definitions": {
+        "type": "Project",
+        "dependencies": {
           "System.Runtime.Serialization.Formatters": "[10.0.3, )"
         }
       }

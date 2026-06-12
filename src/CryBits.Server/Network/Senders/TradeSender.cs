@@ -1,5 +1,5 @@
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 using static CryBits.Globals;

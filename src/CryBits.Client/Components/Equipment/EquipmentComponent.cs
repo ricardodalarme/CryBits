@@ -1,4 +1,4 @@
-using CryBits.Entities;
+using CryBits.Definitions.Items;
 
 namespace CryBits.Client.Components.Equipment;
 
@@ -7,6 +7,6 @@ namespace CryBits.Client.Components.Equipment;
 /// </summary>
 internal struct EquipmentComponent()
 {
-    /// <summary>Equipped items indexed by Enums.Equipment.</summary>
-    public Item?[] Slots = new Item?[(byte)Enums.Equipment.Count];
+    /// <summary>Equipped items indexed by CryBits.Definitions.Items.Equipment.</summary>
+    public Item?[] Slots = new Item?[(byte)CryBits.Definitions.Items.Equipment.Count];
 }

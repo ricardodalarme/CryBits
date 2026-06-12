@@ -13,6 +13,12 @@
         "requested": "[10.0.3, )",
         "resolved": "10.0.3",
         "contentHash": "q38b0Wj67miA+2Rcc6excf72Xh+LuVCxr0nJuhZaO3LwUVATdrm0x7TQuNr5lRNC0TH4UR6jkg/TA4C7Luyujw=="
+      },
+      "crybits.definitions": {
+        "type": "Project",
+        "dependencies": {
+          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+        }
       }
     }
   }

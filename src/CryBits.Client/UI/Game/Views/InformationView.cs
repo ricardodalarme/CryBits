@@ -1,13 +1,14 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
-using CryBits.Entities;
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Characters;
+using CryBits.Definitions.Helpers.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Attribute = CryBits.Enums.Attribute;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Client.UI.Game.Views;
 
@@ -37,7 +38,7 @@ internal class InformationView(ItemRenderer itemRenderer) : IView
     /// <param name="contextLine">Optional extra line (e.g. shop price) prepended to additional context.</param>
     public static void Show(Guid itemId, Point position, string? contextLine = null)
     {
-        var item = Item.List.Get(itemId);
+        var item = DefinitionCatalog.Items.Get(itemId);
         if (item == null) { Hide(); return; }
 
         _currentItem = item;

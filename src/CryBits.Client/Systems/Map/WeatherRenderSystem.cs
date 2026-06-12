@@ -4,7 +4,7 @@ using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
-using CryBits.Enums;
+using CryBits.Definitions.Maps;
 using SFML.Graphics;
 using SFML.System;
 using static CryBits.Globals;

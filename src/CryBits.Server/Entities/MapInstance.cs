@@ -1,7 +1,7 @@
-using CryBits.Entities;
-using CryBits.Entities.Map;
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Maps;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Systems;
 using CryBits.Server.World;
 using System;
@@ -75,7 +75,7 @@ internal class MapInstance(Guid id, Map map) : Entity(id)
             for (byte y = 0; y < Map.Height; y++)
                 if (Data.Attribute[x, y].Type == (byte)TileAttribute.Item)
                     // Add map item.
-                    Item.Add(new MapItemInstance(CryBits.Entities.Item.List.Get(new Guid(Data.Attribute[x, y].Data1)),
+                    Item.Add(new MapItemInstance(DefinitionCatalog.Items.Get(new Guid(Data.Attribute[x, y].Data1)),
                         Data.Attribute[x, y].Data2, x, y));
     }
 

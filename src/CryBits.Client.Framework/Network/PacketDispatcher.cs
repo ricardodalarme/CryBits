@@ -1,4 +1,4 @@
-using CryBits.Extensions;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using LiteNetLib;
 using System.Linq.Expressions;

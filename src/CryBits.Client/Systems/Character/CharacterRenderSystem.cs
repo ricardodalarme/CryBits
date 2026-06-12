@@ -8,7 +8,7 @@ using CryBits.Client.Graphics;
 using System.Collections.Generic;
 using System.Drawing;
 using Color = SFML.Graphics.Color;
-using CryBits.Enums;
+using TextAlign = CryBits.Definitions.Common.TextAlign;
 
 namespace CryBits.Client.Systems.Character;
 

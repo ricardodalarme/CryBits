@@ -1,16 +1,20 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/CryBits.Definitions/CryBits.Definitions.csproj" />
     <Project Path="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
     <Project Path="src/CryBits.Client/CryBits.Client.csproj">
+      <BuildDependency Project="src/CryBits.Definitions/CryBits.Definitions.csproj" />
       <BuildDependency Project="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
       <BuildDependency Project="src/CryBits.Core/CryBits.Core.csproj" />
     </Project>
     <Project Path="src/CryBits.Core/CryBits.Core.csproj" />
     <Project Path="src/CryBits.Editors/CryBits.Editors.csproj">
+      <BuildDependency Project="src/CryBits.Definitions/CryBits.Definitions.csproj" />
       <BuildDependency Project="src/CryBits.Client.Framework/CryBits.Client.Framework.csproj" />
       <BuildDependency Project="src/CryBits.Core/CryBits.Core.csproj" />
     </Project>
     <Project Path="src/CryBits.Server/CryBits.Server.csproj">
+      <BuildDependency Project="src/CryBits.Definitions/CryBits.Definitions.csproj" />
       <BuildDependency Project="src/CryBits.Core/CryBits.Core.csproj" />
     </Project>
   </Folder>

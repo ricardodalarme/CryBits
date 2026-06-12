@@ -1,13 +1,15 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Equipment;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Spawners;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
-using CryBits.Entities;
-using CryBits.Entities.Slots;
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Slots;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Characters;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
 using Entity = Arch.Core.Entity;
@@ -33,7 +35,7 @@ internal class PlayerHandler(GameContext context)
         if (isLocal)
         {
             var equipmentItems = new Item?[(byte)Equipment.Count];
-            for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = Item.List.Get(packet.Equipment[n]);
+            for (byte n = 0; n < (byte)Equipment.Count; n++) equipmentItems[n] = DefinitionCatalog.Items.Get(packet.Equipment[n]);
 
             entity = PlayerSpawner.SpawnLocal(
                 context.World,
@@ -107,7 +109,7 @@ internal class PlayerHandler(GameContext context)
 
         // Update player's equipped items
         ref var equipment = ref context.World.Get<EquipmentComponent>(entity);
-        for (byte i = 0; i < (byte)Equipment.Count; i++) equipment.Slots[i] = Item.List.Get(packet.Equipments[i]);
+        for (byte i = 0; i < (byte)Equipment.Count; i++) equipment.Slots[i] = DefinitionCatalog.Items.Get(packet.Equipments[i]);
     }
 
     [PacketHandler]
@@ -176,7 +178,7 @@ internal class PlayerHandler(GameContext context)
         if (context.LocalPlayer.Entity == Entity.Null) return;
         ref var inventory = ref context.LocalPlayer.GetInventory();
         for (byte i = 0; i < MaxInventory; i++)
-            inventory.Slots[i] = new ItemSlot(Item.List.Get(packet.ItemIds[i]), packet.Amounts[i]);
+            inventory.Slots[i] = new ItemSlot(DefinitionCatalog.Items.Get(packet.ItemIds[i]), packet.Amounts[i]);
     }
 
     [PacketHandler]

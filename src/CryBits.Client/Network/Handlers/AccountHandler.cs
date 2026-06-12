@@ -1,16 +1,13 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Logic;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
 using CryBits.Client.Worlds;
-using CryBits.Entities;
-using CryBits.Entities.Npc;
-using CryBits.Entities.Shop;
 using CryBits.Packets.Server;
 using System;
 using OptionsView = CryBits.Client.UI.Game.Views.OptionsView;
@@ -24,9 +21,9 @@ internal class AccountHandler(AudioManager audioManager, GameContext context)
     {
         // Clear entity collections
         context.CurrentMap = null!;
-        Item.List = [];
-        Shop.List = [];
-        Npc.List = [];
+        DefinitionCatalog.Items = [];
+        DefinitionCatalog.Shops = [];
+        DefinitionCatalog.Npcs = [];
 
         context.LocalPlayer.Id = packet.PlayerId;
     }

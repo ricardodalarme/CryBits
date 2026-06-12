@@ -1,6 +1,6 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.UI.Menu.Views;
-using CryBits.Entities;
 using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
@@ -19,7 +19,7 @@ internal class AuthHandler
     {
         // Reset client-side character selection state
         SelectCharacterView.CurrentCharacter = 0;
-        Class.List = [];
+        DefinitionCatalog.Classes = [];
 
         // Open character selection panel
         MenuScreen.CloseMenus();

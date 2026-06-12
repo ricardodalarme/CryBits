@@ -3,7 +3,7 @@ using Arch.System;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Worlds;
-using CryBits.Enums;
+using CryBits.Definitions.Maps;
 using static CryBits.Globals;
 using static CryBits.Utils.RandomUtils;
 

@@ -7,7 +7,7 @@ using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics.Renderers;
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using SFML.Graphics;
 using SFML.System;
 using System;

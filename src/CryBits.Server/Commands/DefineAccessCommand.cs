@@ -1,5 +1,5 @@
 using CommandLine;
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
 using System;

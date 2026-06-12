@@ -1,7 +1,10 @@
-using CryBits.Entities;
-using CryBits.Entities.Slots;
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Classes;
+using CryBits.Definitions.Slots;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Characters;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
@@ -78,7 +81,7 @@ internal sealed class CharacterSystem(
         session.Character = new Player(session);
         session.Character.Name = name;
         session.Character.Level = 1;
-        session.Character.Class = @class = Class.List.Get(new Guid(packet.ClassId));
+        session.Character.Class = @class = DefinitionCatalog.Classes.Get(new Guid(packet.ClassId));
         session.Character.Genre = packet.GenderMale;
         session.Character.TextureNum = session.Character.Genre
             ? @class.TextureMale[packet.TextureNum]

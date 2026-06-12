@@ -1,8 +1,6 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Forms;
-using CryBits.Entities;
-using CryBits.Entities.Npc;
-using CryBits.Entities.Shop;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
 
@@ -32,31 +30,31 @@ internal class EditorHandler
     [PacketHandler]
     internal static void Classes(ClassesPacket packet)
     {
-        Class.List = packet.List;
+        DefinitionCatalog.Classes = packet.List;
     }
 
     [PacketHandler]
     internal static void Map(MapPacket packet)
     {
         var map = packet.Map;
-        CryBits.Entities.Map.Map.List[map.Id] = map;
+        DefinitionCatalog.Maps[map.Id] = map;
     }
 
     [PacketHandler]
     internal static void Npcs(NpcsPacket packet)
     {
-        Npc.List = packet.List;
+        DefinitionCatalog.Npcs = packet.List;
     }
 
     [PacketHandler]
     internal static void Items(ItemsPacket packet)
     {
-        Item.List = packet.List;
+        DefinitionCatalog.Items = packet.List;
     }
 
     [PacketHandler]
     internal static void Shops(ShopsPacket packet)
     {
-        Shop.List = packet.List;
+        DefinitionCatalog.Shops = packet.List;
     }
 }

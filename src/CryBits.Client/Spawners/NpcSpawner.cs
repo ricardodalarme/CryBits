@@ -4,8 +4,8 @@ using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Entities.Npc;
-using CryBits.Enums;
+using CryBits.Definitions.Npcs;
+using Direction = CryBits.Definitions.Common.Direction;
 using SFML.Graphics;
 using System;
 

@@ -1,10 +1,9 @@
 using CryBits.Client.Commands;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Framework.Interfacily.Components;
-using CryBits.Client.Logic;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using SFML.Graphics;
 using System;
 using System.Collections.Generic;

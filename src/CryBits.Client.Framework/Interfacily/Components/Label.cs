@@ -1,4 +1,4 @@
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 
 namespace CryBits.Client.Framework.Interfacily.Components;
 

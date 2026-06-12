@@ -1,4 +1,4 @@
-using CryBits.Extensions;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Server.World;

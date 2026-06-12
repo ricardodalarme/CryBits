@@ -1,8 +1,8 @@
 using CryBits.Client.Framework.Network;
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using CryBits.Packets.Client;
 using LiteNetLib;
-using Attribute = CryBits.Enums.Attribute;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Client.Network.Senders;
 

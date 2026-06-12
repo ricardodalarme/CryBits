@@ -1,5 +1,8 @@
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Characters;
+using CryBits.Definitions.Maps;
+using CryBits.Definitions.Npcs;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Formulas;
 using CryBits.Server.Network.Senders;
@@ -9,7 +12,7 @@ using System.Drawing;
 using static CryBits.Globals;
 using static CryBits.Utils.DirectionUtils;
 using static CryBits.Utils.RandomUtils;
-using Attribute = CryBits.Enums.Attribute;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Server.Systems;
 

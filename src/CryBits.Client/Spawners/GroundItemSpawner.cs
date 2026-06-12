@@ -3,7 +3,7 @@ using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Systems.Core;
-using CryBits.Entities;
+using CryBits.Definitions.Items;
 using static CryBits.Globals;
 
 namespace CryBits.Client.Spawners;

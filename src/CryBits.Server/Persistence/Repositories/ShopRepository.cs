@@ -1,4 +1,5 @@
-using CryBits.Entities.Shop;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Shops;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +28,7 @@ internal sealed class ShopRepository
     public void WriteAll()
     {
         // Write shops to disk.
-        foreach (var shop in Shop.List.Values)
+        foreach (var shop in DefinitionCatalog.Shops.Values)
             using (var stream =
                    new FileInfo(Path.Combine(Directories.Shops.FullName, shop.Id.ToString()) + Directories.Format)
                        .OpenWrite())

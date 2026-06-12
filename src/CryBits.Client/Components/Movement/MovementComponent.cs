@@ -1,4 +1,4 @@
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 
 namespace CryBits.Client.Components.Movement;
 
@@ -21,7 +21,7 @@ internal struct MovementComponent
     public float SpeedPixelsPerSecond;
 
     /// <summary>Current locomotion state. Walking/Moving drives the offset; Stopped freezes it.</summary>
-    public Enums.Movement MovementState;
+    public CryBits.Definitions.Common.Movement MovementState;
 
     /// <summary>Facing direction. Written by server packets and local player input.</summary>
     public Direction Direction;

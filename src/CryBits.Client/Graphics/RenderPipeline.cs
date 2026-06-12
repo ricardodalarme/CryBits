@@ -6,7 +6,7 @@ using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Logic;
 using CryBits.Client.Managers;
 using CryBits.Client.Systems;
-using CryBits.Enums;
+using CryBits.Definitions.Maps;
 using Color = SFML.Graphics.Color;
 
 namespace CryBits.Client.Graphics;

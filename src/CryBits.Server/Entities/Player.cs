@@ -1,7 +1,8 @@
-using CryBits.Entities;
-using CryBits.Entities.Shop;
-using CryBits.Entities.Slots;
-using CryBits.Enums;
+using CryBits.Definitions.Classes;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Shops;
+using CryBits.Definitions.Slots;
+using CryBits.Definitions.Characters;
 using CryBits.Server.Formulas;
 using CryBits.Server.World;
 using System;
@@ -21,9 +22,9 @@ internal class Player : Character
     public short Level { get; set; }
     public int Experience { get; set; }
     public byte Points { get; set; }
-    public short[] Attribute { get; set; } = new short[(byte)Enums.Attribute.Count];
+    public short[] Attribute { get; set; } = new short[(byte)CryBits.Definitions.Characters.Attribute.Count];
     public ItemSlot[] Inventory { get; } = new ItemSlot[MaxInventory];
-    public Item[] Equipment { get; } = new Item[(byte)Enums.Equipment.Count];
+    public Item[] Equipment { get; } = new Item[(byte)CryBits.Definitions.Items.Equipment.Count];
     public HotbarSlot[] Hotbar { get; } = new HotbarSlot[MaxHotbar];
 
     public bool GettingMap;
@@ -45,11 +46,11 @@ internal class Player : Character
 
     /// <summary>Gets the player's computed damage (strength plus weapon damage).</summary>
     public short Damage => CombatFormulas.PlayerDamage(
-        Attribute[(byte)Enums.Attribute.Strength],
-        Equipment[(byte)Enums.Equipment.Weapon]?.WeaponDamage ?? 0);
+        Attribute[(byte)CryBits.Definitions.Characters.Attribute.Strength],
+        Equipment[(byte)CryBits.Definitions.Items.Equipment.Weapon]?.WeaponDamage ?? 0);
 
     /// <summary>Gets the player's defense value (Resistance attribute).</summary>
-    public short PlayerDefense => CombatFormulas.PlayerDefense(Attribute[(byte)Enums.Attribute.Resistance]);
+    public short PlayerDefense => CombatFormulas.PlayerDefense(Attribute[(byte)CryBits.Definitions.Characters.Attribute.Resistance]);
 
     /// <summary>Returns the player's maximum amount for the specified vital (HP or MP).</summary>
     /// <param name="vital">Index of the vital to query.</param>
@@ -57,8 +58,8 @@ internal class Player : Character
     public short MaxVital(byte vital) => VitalFormulas.MaxVital(
         (Vital)vital,
         Class.Vital[vital],
-        Attribute[(byte)Enums.Attribute.Vitality],
-        Attribute[(byte)Enums.Attribute.Intelligence],
+        Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality],
+        Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence],
         Level);
 
     /// <summary>Calculates the player's regeneration amount for the specified vital.</summary>
@@ -67,8 +68,8 @@ internal class Player : Character
     public short Regeneration(byte vital) => VitalFormulas.PlayerRegeneration(
         (Vital)vital,
         MaxVital(vital),
-        Attribute[(byte)Enums.Attribute.Vitality],
-        Attribute[(byte)Enums.Attribute.Intelligence]);
+        Attribute[(byte)CryBits.Definitions.Characters.Attribute.Vitality],
+        Attribute[(byte)CryBits.Definitions.Characters.Attribute.Intelligence]);
 
     /// <summary>Gets the experience required to reach the next level.</summary>
     public int ExpNeeded
@@ -76,7 +77,7 @@ internal class Player : Character
         get
         {
             short total = 0;
-            for (byte i = 0; i < (byte)Enums.Attribute.Count; i++) total += Attribute[i];
+            for (byte i = 0; i < (byte)CryBits.Definitions.Characters.Attribute.Count; i++) total += Attribute[i];
             return LevelingFormulas.ExperienceNeeded(Level, total, Points);
         }
     }

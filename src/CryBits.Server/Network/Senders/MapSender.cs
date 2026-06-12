@@ -1,6 +1,8 @@
-using CryBits.Entities.Map;
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Maps;
+using CryBits.Definitions.Characters;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Server.World;
@@ -18,8 +20,8 @@ internal sealed class MapSender(PackageSender packageSender)
 
     public void Maps(GameSession session)
     {
-        packageSender.ToPlayer(session, new MapsPacket { List = CryBits.Entities.Map.Map.List });
-        foreach (var map in CryBits.Entities.Map.Map.List.Values) Map(session, map);
+        packageSender.ToPlayer(session, new MapsPacket { List = DefinitionCatalog.Maps });
+        foreach (var map in DefinitionCatalog.Maps.Values) Map(session, map);
     }
 
     public void MapRevision(Player player, Map map)

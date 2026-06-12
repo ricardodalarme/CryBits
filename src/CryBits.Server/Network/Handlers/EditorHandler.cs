@@ -1,9 +1,6 @@
-using CryBits.Entities;
-using CryBits.Entities.Map;
-using CryBits.Entities.Npc;
-using CryBits.Entities.Shop;
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Client;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence.Repositories;
@@ -68,7 +65,7 @@ internal sealed class EditorHandler(
             return;
         }
 
-        Class.List = packet.Classes;
+        DefinitionCatalog.Classes = packet.Classes;
         classRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
@@ -84,7 +81,7 @@ internal sealed class EditorHandler(
             return;
         }
 
-        Map.List = packet.Maps;
+        DefinitionCatalog.Maps = packet.Maps;
         mapRepository.WriteAll();
 
         foreach (var tempMap in GameWorld.Current.Maps.Values)
@@ -105,7 +102,7 @@ internal sealed class EditorHandler(
             return;
         }
 
-        Npc.List = packet.Npcs;
+        DefinitionCatalog.Npcs = packet.Npcs;
         npcRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
@@ -121,7 +118,7 @@ internal sealed class EditorHandler(
             return;
         }
 
-        Item.List = packet.Items;
+        DefinitionCatalog.Items = packet.Items;
         itemRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
@@ -137,7 +134,7 @@ internal sealed class EditorHandler(
             return;
         }
 
-        Shop.List = packet.Shops;
+        DefinitionCatalog.Shops = packet.Shops;
         shopRepository.WriteAll();
 
         foreach (var t in GameWorld.Current.Sessions.Where(t => t != session))
@@ -160,7 +157,7 @@ internal sealed class EditorHandler(
     internal void RequestMap(GameSession session, RequestMapPacket packet)
     {
         if (session.InEditor)
-            mapSender.Map(session, Map.List.Get(packet.Id));
+            mapSender.Map(session, DefinitionCatalog.Maps.Get(packet.Id));
         else
         {
             var player = session.Character;

@@ -4,7 +4,7 @@ using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Worlds;
-using CryBits.Enums;
+using CryBits.Definitions.Maps;
 using static CryBits.Globals;
 using static CryBits.Utils.RandomUtils;
 

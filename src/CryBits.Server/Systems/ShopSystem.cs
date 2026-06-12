@@ -1,4 +1,4 @@
-using CryBits.Entities.Shop;
+using CryBits.Definitions.Shops;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using System;

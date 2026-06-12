@@ -1,4 +1,4 @@
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using CryBits.Server.Entities;
 using LiteNetLib;
 using System.Collections.Generic;

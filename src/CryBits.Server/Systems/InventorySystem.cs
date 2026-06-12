@@ -1,6 +1,6 @@
-using CryBits.Entities;
-using CryBits.Entities.Slots;
-using CryBits.Enums;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Slots;
+using CryBits.Definitions.Characters;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using System.Drawing;

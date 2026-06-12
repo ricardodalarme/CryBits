@@ -1,4 +1,5 @@
 using Arch.Core;
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Audio;
@@ -7,8 +8,7 @@ using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
-using CryBits.Entities;
-using CryBits.Extensions;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using System.Collections.Generic;
 using System.IO;
@@ -87,6 +87,6 @@ internal class MapHandler(GameContext context, MapSender mapSender, AudioManager
 
         // Spawn an ECS entity for every item the server reported.
         foreach (var itemData in packet.Items)
-            GroundItemSpawner.Spawn(world, Item.List.Get(itemData.ItemId), itemData.X, itemData.Y);
+            GroundItemSpawner.Spawn(world, DefinitionCatalog.Items.Get(itemData.ItemId), itemData.X, itemData.Y);
     }
 }

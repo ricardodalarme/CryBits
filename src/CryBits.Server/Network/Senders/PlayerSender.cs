@@ -1,5 +1,7 @@
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Characters;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 using LiteNetLib;

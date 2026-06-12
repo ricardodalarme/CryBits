@@ -1,4 +1,4 @@
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using System.Drawing;
 using static CryBits.Globals;
 

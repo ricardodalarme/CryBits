@@ -1,4 +1,4 @@
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using CryBits.Server.World;
 using System.IO;
 

@@ -1,9 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using CryBits.Definitions.Catalog;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
-using CryBits.Entities;
-using CryBits.Entities.Shop;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Shops;
 using System;
 using System.Linq;
 
@@ -14,7 +15,7 @@ internal partial class EditorShopsWindow : Window
     /// <summary>Opens the Shops editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
-        if (Item.List.Count == 0)
+        if (DefinitionCatalog.Items.Count == 0)
         {
             MessageBox.Show("It must have at least one item registered to open the store editor.");
             return;
@@ -33,7 +34,7 @@ internal partial class EditorShopsWindow : Window
     {
         InitializeComponent();
 
-        var items = Item.List.Values.ToList();
+        var items = DefinitionCatalog.Items.Values.ToList();
         cmbItems.ItemsSource = items;
         cmbCurrency.ItemsSource = items;
 
@@ -48,7 +49,7 @@ internal partial class EditorShopsWindow : Window
 
     private void List_Update(Guid? keepSelectionId = null)
     {
-        var filtered = Shop.List.Values
+        var filtered = DefinitionCatalog.Shops.Values
             .Where(shop => shop.Name.StartsWith(txtFilter.Text ?? string.Empty))
             .ToList();
 
@@ -111,7 +112,7 @@ internal partial class EditorShopsWindow : Window
     private void butNew_Click(object sender, RoutedEventArgs e)
     {
         var shop = new Shop();
-        Shop.List.Add(shop.Id, shop);
+        DefinitionCatalog.Shops.Add(shop.Id, shop);
         List_Update(shop.Id);
         Groups_Visibility();
     }
@@ -121,7 +122,7 @@ internal partial class EditorShopsWindow : Window
         if (_selected == null) return;
 
         var removeId = _selected.Id;
-        Shop.List.Remove(removeId);
+        DefinitionCatalog.Shops.Remove(removeId);
         _selected = null;
         List_Update();
         Groups_Visibility();

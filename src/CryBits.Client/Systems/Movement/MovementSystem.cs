@@ -2,10 +2,10 @@ using Arch.Core;
 using Arch.System;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Movement;
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using System;
 using static CryBits.Globals;
-using MovementState = CryBits.Enums.Movement;
+using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Systems.Movement;
 

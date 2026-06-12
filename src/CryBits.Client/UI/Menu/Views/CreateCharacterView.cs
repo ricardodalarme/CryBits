@@ -1,9 +1,9 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
-using CryBits.Entities;
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using System.Drawing;
 using System.Linq;
 using static CryBits.Globals;
@@ -74,7 +74,7 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
     private void OnChangeClassRightPressed()
     {
         // Cycle selected class to the right
-        if (CurrentClass == Class.List.Count - 1)
+        if (CurrentClass == DefinitionCatalog.Classes.Count - 1)
             CurrentClass = 0;
         else
             CurrentClass++;
@@ -85,7 +85,7 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
     {
         // Cycle selected class to the left
         if (CurrentClass == 0)
-            CurrentClass = (byte)Class.List.Count;
+            CurrentClass = (byte)DefinitionCatalog.Classes.Count;
         else
             CurrentClass--;
         UpdateClassLabels();
@@ -93,7 +93,7 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
 
     private void OnChangeTextureRight()
     {
-        var @class = Class.List.ElementAt(CurrentClass).Value;
+        var @class = DefinitionCatalog.Classes.ElementAt(CurrentClass).Value;
         var texList = GenderMaleCheckBox.Checked ? @class.TextureMale : @class.TextureFemale;
 
         if (CurrentTexture == texList.Count - 1)
@@ -104,7 +104,7 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
 
     private void OnChangeTextureLeftPressed()
     {
-        var @class = Class.List.ElementAt(CurrentClass).Value;
+        var @class = DefinitionCatalog.Classes.ElementAt(CurrentClass).Value;
         var texList = GenderMaleCheckBox.Checked ? @class.TextureMale : @class.TextureFemale;
 
         if (CurrentTexture == 0)
@@ -136,8 +136,8 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
 
     private short GetCurrentTextureNum()
     {
-        if (Class.List.Count == 0) return 0;
-        var @class = Class.List.ElementAt(CurrentClass).Value;
+        if (DefinitionCatalog.Classes.Count == 0) return 0;
+        var @class = DefinitionCatalog.Classes.ElementAt(CurrentClass).Value;
         if (GenderMaleCheckBox.Checked && @class.TextureMale.Count > 0)
             return @class.TextureMale[CurrentTexture];
         if (@class.TextureFemale.Count > 0)
@@ -147,8 +147,8 @@ internal class CreateCharacterView(AccountSender accountSender, CharacterRendere
 
     internal static void UpdateClassLabels()
     {
-        if (Class.List.Count == 0) return;
-        var @class = Class.List.ElementAt(CurrentClass).Value;
+        if (DefinitionCatalog.Classes.Count == 0) return;
+        var @class = DefinitionCatalog.Classes.ElementAt(CurrentClass).Value;
         ClassNameLabel.Text = @class.Name;
         ClassDescLabel.Text = @class.Description;
     }

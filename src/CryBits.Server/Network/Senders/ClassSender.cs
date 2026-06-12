@@ -1,4 +1,4 @@
-using CryBits.Entities;
+using CryBits.Definitions.Catalog;
 using CryBits.Packets.Server;
 using CryBits.Server.World;
 
@@ -10,6 +10,6 @@ internal sealed class ClassSender(PackageSender packageSender)
 
     public void Classes(GameSession session)
     {
-        packageSender.ToPlayer(session, new ClassesPacket { List = Class.List });
+        packageSender.ToPlayer(session, new ClassesPacket { List = DefinitionCatalog.Classes });
     }
 }

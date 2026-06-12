@@ -2,7 +2,7 @@ using Arch.Core;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Graphics;
-using CryBits.Entities.Map;
+using CryBits.Definitions.Maps;
 using SFML.Graphics;
 
 namespace CryBits.Client.Spawners;

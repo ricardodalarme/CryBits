@@ -1,4 +1,4 @@
-using CryBits.Entities.Slots;
+using CryBits.Definitions.Slots;
 
 namespace CryBits.Client.Components.Hotbar;
 

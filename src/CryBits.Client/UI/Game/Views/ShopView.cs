@@ -2,7 +2,7 @@ using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
-using CryBits.Entities.Shop;
+using CryBits.Definitions.Shops;
 using SFML.Window;
 using System.Drawing;
 

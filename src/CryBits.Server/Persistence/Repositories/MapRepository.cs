@@ -1,4 +1,5 @@
-using CryBits.Entities.Map;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Maps;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,7 +47,7 @@ internal sealed class MapRepository
     public void WriteAll()
     {
         // Write maps to disk.
-        foreach (var map in Map.List.Values)
+        foreach (var map in DefinitionCatalog.Maps.Values)
             Write(map);
     }
 }

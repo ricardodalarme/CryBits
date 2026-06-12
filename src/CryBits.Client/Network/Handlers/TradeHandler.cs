@@ -1,11 +1,11 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Trade;
 using CryBits.Client.Framework;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.UI.Game.Views;
 using CryBits.Client.Worlds;
-using CryBits.Entities;
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using static CryBits.Globals;
 
@@ -79,13 +79,13 @@ internal class TradeHandler(TradeSender tradeSender, GameContext context)
         if (packet.Own)
             for (byte i = 0; i < MaxInventory; i++)
             {
-                trade.Offer[i].Item = Item.List.Get(packet.Items[i].ItemId);
+                trade.Offer[i].Item = DefinitionCatalog.Items.Get(packet.Items[i].ItemId);
                 trade.Offer[i].Amount = packet.Items[i].Amount;
             }
         else
             for (byte i = 0; i < MaxInventory; i++)
             {
-                trade.TheirOffer[i].Item = Item.List.Get(packet.Items[i].ItemId);
+                trade.TheirOffer[i].Item = DefinitionCatalog.Items.Get(packet.Items[i].ItemId);
                 trade.TheirOffer[i].Amount = packet.Items[i].Amount;
             }
     }

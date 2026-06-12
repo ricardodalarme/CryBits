@@ -1,5 +1,5 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.UI.Menu.Views;
-using CryBits.Entities;
 using CryBits.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;
@@ -10,7 +10,7 @@ internal class ClassHandler
     internal void Classes(ClassesPacket packet)
     {
         // Read classes dictionary
-        Class.List = packet.List;
+        DefinitionCatalog.Classes = packet.List;
         CreateCharacterView.UpdateClassLabels();
     }
 }

@@ -5,6 +5,6 @@ namespace CryBits.Client.Components.Player;
 /// </summary>
 internal struct AttributesComponent()
 {
-    /// <summary>Attribute values indexed by Enums.Attribute.</summary>
-    public short[] Values = new short[(byte)Enums.Attribute.Count];
+    /// <summary>Attribute values indexed by CryBits.Definitions.Characters.Attribute.</summary>
+    public short[] Values = new short[(byte)CryBits.Definitions.Characters.Attribute.Count];
 }

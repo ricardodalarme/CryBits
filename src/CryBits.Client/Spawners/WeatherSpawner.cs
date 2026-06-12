@@ -2,7 +2,7 @@ using Arch.Core;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
-using CryBits.Enums;
+using CryBits.Definitions.Maps;
 
 namespace CryBits.Client.Spawners;
 

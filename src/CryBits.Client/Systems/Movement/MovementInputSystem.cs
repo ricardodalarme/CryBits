@@ -4,10 +4,10 @@ using CryBits.Client.Components.Movement;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
-using CryBits.Enums;
+using Direction = CryBits.Definitions.Common.Direction;
 using SFML.Window;
 using static CryBits.Globals;
-using MovementState = CryBits.Enums.Movement;
+using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Systems.Movement;
 

@@ -1,8 +1,8 @@
-using CryBits.Entities.Npc;
-using CryBits.Enums;
+using CryBits.Definitions.Npcs;
+using CryBits.Definitions.Characters;
 using CryBits.Server.Formulas;
 using System;
-using Attribute = CryBits.Enums.Attribute;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Server.Entities;
 

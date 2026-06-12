@@ -1,6 +1,6 @@
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Managers;
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;

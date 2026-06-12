@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Entities.Tile;
@@ -12,11 +13,11 @@ using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Graphics.Renderers;
 using CryBits.Editors.Network;
-using CryBits.Entities;
-using CryBits.Entities.Map;
-using CryBits.Entities.Npc;
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Maps;
+using CryBits.Definitions.Npcs;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -268,7 +269,7 @@ internal partial class EditorMapsWindow : Window
     private void RefreshMapList(Guid? keepId = null)
     {
         var filter = txtFilter.Text ?? string.Empty;
-        var filtered = Map.List.Values
+        var filtered = DefinitionCatalog.Maps.Values
             .Where(m => m.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -336,7 +337,7 @@ internal partial class EditorMapsWindow : Window
     private void RefreshWarpMapCombo()
     {
         cmbA_Warp_Map.Items.Clear();
-        foreach (var m in Map.List.Values) cmbA_Warp_Map.Items.Add(m);
+        foreach (var m in DefinitionCatalog.Maps.Values) cmbA_Warp_Map.Items.Add(m);
         if (cmbA_Warp_Map.Items.Count > 0) cmbA_Warp_Map.SelectedIndex = 0;
         numA_Warp_X.Maximum = Map.Width - 1;
         numA_Warp_Y.Maximum = Map.Height - 1;
@@ -350,20 +351,20 @@ internal partial class EditorMapsWindow : Window
     private void butNew_Click(object? sender, RoutedEventArgs e)
     {
         var map = new Map();
-        Map.List.Add(map.Id, map);
+        DefinitionCatalog.Maps.Add(map.Id, map);
         RefreshMapList(map.Id);
     }
 
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        if (Map.List.Count == 1)
+        if (DefinitionCatalog.Maps.Count == 1)
         {
             MessageBox.Show("It must have at least one map registered.");
             return;
         }
 
-        Map.List.Remove(_selected.Id);
+        DefinitionCatalog.Maps.Remove(_selected.Id);
         _selected = null;
         RefreshMapList();
     }
@@ -386,7 +387,7 @@ internal partial class EditorMapsWindow : Window
 
     private void butSaveAll_Click(object? sender, RoutedEventArgs e)
     {
-        foreach (var map in Map.List.Values) ++map.Revision;
+        foreach (var map in DefinitionCatalog.Maps.Values) ++map.Revision;
         PackageSender.Instance.WriteMaps();
         MessageBox.Show("All maps has been saved");
     }
@@ -568,7 +569,7 @@ internal partial class EditorMapsWindow : Window
         if (butMNPCs.IsChecked == true)
         {
             cmbNPC.Items.Clear();
-            foreach (var npc in Npc.List.Values) cmbNPC.Items.Add(npc);
+            foreach (var npc in DefinitionCatalog.Npcs.Values) cmbNPC.Items.Add(npc);
             if (cmbNPC.Items.Count > 0) cmbNPC.SelectedIndex = 0;
             numNPC_Zone.Value = 0;
         }
@@ -1051,7 +1052,7 @@ internal partial class EditorMapsWindow : Window
     {
         if (optA_Item.IsChecked == true)
         {
-            if (Item.List.Count == 0)
+            if (DefinitionCatalog.Items.Count == 0)
             {
                 MessageBox.Show("It must have at least one item registered to use this attribute.");
                 optA_Block.IsChecked = true;
@@ -1059,7 +1060,7 @@ internal partial class EditorMapsWindow : Window
             }
 
             cmbA_Item.Items.Clear();
-            foreach (var item in Item.List.Values) cmbA_Item.Items.Add(item);
+            foreach (var item in DefinitionCatalog.Items.Values) cmbA_Item.Items.Add(item);
             if (cmbA_Item.Items.Count > 0) cmbA_Item.SelectedIndex = 0;
             numA_Item_Amount.Value = _aData2 = 1;
         }

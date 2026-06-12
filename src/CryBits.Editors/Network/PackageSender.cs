@@ -1,9 +1,7 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Network;
 using CryBits.Editors.Forms;
-using CryBits.Entities;
-using CryBits.Entities.Map;
-using CryBits.Entities.Npc;
-using CryBits.Entities.Shop;
+using CryBits.Definitions.Maps;
 using CryBits.Packets.Client;
 using LiteNetLib;
 using static CryBits.Globals;
@@ -22,9 +20,9 @@ internal class PackageSender(PacketSender packetSender)
     public void RequestItems() => packetSender.Packet(new RequestItemsPacket(), DeliveryMethod.ReliableUnordered);
     public void RequestShops() => packetSender.Packet(new RequestShopsPacket(), DeliveryMethod.ReliableUnordered);
     public void WriteServerData() => packetSender.Packet(new WriteSettingsPacket { Config = Config });
-    public void WriteClasses() => packetSender.Packet(new WriteClassesPacket { Classes = Class.List });
-    public void WriteMaps() => packetSender.Packet(new WriteMapsPacket { Maps = Map.List });
-    public void WriteNpcs() => packetSender.Packet(new WriteNpcsPacket { Npcs = Npc.List });
-    public void WriteItems() => packetSender.Packet(new WriteItemsPacket { Items = Item.List });
-    public void WriteShops() => packetSender.Packet(new WriteShopsPacket { Shops = Shop.List });
+    public void WriteClasses() => packetSender.Packet(new WriteClassesPacket { Classes = DefinitionCatalog.Classes });
+    public void WriteMaps() => packetSender.Packet(new WriteMapsPacket { Maps = DefinitionCatalog.Maps });
+    public void WriteNpcs() => packetSender.Packet(new WriteNpcsPacket { Npcs = DefinitionCatalog.Npcs });
+    public void WriteItems() => packetSender.Packet(new WriteItemsPacket { Items = DefinitionCatalog.Items });
+    public void WriteShops() => packetSender.Packet(new WriteShopsPacket { Shops = DefinitionCatalog.Shops });
 }

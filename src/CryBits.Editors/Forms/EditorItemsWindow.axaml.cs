@@ -1,13 +1,15 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
-using CryBits.Entities;
-using CryBits.Enums;
+using CryBits.Definitions.Classes;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Characters;
 using System;
 using System.Linq;
-using Attribute = CryBits.Enums.Attribute;
+using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Editors.Forms;
 
@@ -45,7 +47,7 @@ internal partial class EditorItemsWindow : Window
 
         // Populate class requirement combo
         cmbReq_Class.Items.Add("None");
-        foreach (var cls in Class.List.Values)
+        foreach (var cls in DefinitionCatalog.Classes.Values)
             cmbReq_Class.Items.Add(cls);
 
         RefreshItemList();
@@ -58,7 +60,7 @@ internal partial class EditorItemsWindow : Window
     private void RefreshItemList()
     {
         var filter = txtFilter.Text ?? string.Empty;
-        var filtered = Item.List.Values
+        var filtered = DefinitionCatalog.Items.Values
             .Where(i => i.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -76,7 +78,7 @@ internal partial class EditorItemsWindow : Window
         _loading = true;
 
         var filter = txtFilter.Text ?? string.Empty;
-        lstItems.ItemsSource = Item.List.Values
+        lstItems.ItemsSource = DefinitionCatalog.Items.Values
             .Where(i => i.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -138,16 +140,16 @@ internal partial class EditorItemsWindow : Window
     private void butNew_Click(object? sender, RoutedEventArgs e)
     {
         var item = new Item();
-        Item.List.Add(item.Id, item);
+        DefinitionCatalog.Items.Add(item.Id, item);
 
         RefreshItemList();
-        lstItems.SelectedItem = Item.List.Values.FirstOrDefault(i => i.Id == item.Id);
+        lstItems.SelectedItem = DefinitionCatalog.Items.Values.FirstOrDefault(i => i.Id == item.Id);
     }
 
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
-        Item.List.Remove(_selected.Id);
+        DefinitionCatalog.Items.Remove(_selected.Id);
         _selected = null;
         RefreshItemList();
         pnlRight.IsVisible = lstItems.SelectedItem != null;

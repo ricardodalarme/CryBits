@@ -1,8 +1,7 @@
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Managers;
 using CryBits.Client.Worlds;
-using CryBits.Entities.Map;
-using CryBits.Enums;
+using CryBits.Definitions.Maps;
 using SFML.Graphics;
 using SFML.System;
 using System.Collections.Generic;

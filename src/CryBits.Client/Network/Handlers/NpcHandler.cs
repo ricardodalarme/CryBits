@@ -1,12 +1,14 @@
 using Arch.Core;
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
-using CryBits.Entities.Npc;
-using CryBits.Enums;
-using CryBits.Extensions;
+using Direction = CryBits.Definitions.Common.Direction;
+using Movement = CryBits.Definitions.Common.Movement;
+using CryBits.Definitions.Characters;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using System;
 using System.Collections.Generic;
@@ -20,7 +22,7 @@ internal class NpcHandler(GameContext context)
     internal void Npcs(NpcsPacket packet)
     {
         // Read NPCs dictionary
-        Npc.List = packet.List;
+        DefinitionCatalog.Npcs = packet.List;
     }
 
     [PacketHandler]
@@ -41,7 +43,7 @@ internal class NpcHandler(GameContext context)
         for (byte i = 0; i < packet.Npcs.Length; i++)
         {
             var npc = packet.Npcs[i];
-            var data = Npc.List.Get(npc.NpcId);
+            var data = DefinitionCatalog.Npcs.Get(npc.NpcId);
             var direction = (Direction)npc.Direction;
             var vitals = new short[(byte)Vital.Count];
             for (byte n = 0; n < (byte)Vital.Count; n++) vitals[n] = npc.Vital[n];
@@ -61,7 +63,7 @@ internal class NpcHandler(GameContext context)
             context.World.Destroy(old);
         }
 
-        var data = Npc.List.Get(packet.NpcId);
+        var data = DefinitionCatalog.Npcs.Get(packet.NpcId);
         var direction = (Direction)packet.Direction;
         var vitals = new short[(byte)Vital.Count];
         for (byte n = 0; n < (byte)Vital.Count; n++) vitals[n] = packet.Vital[n];
@@ -102,7 +104,7 @@ internal class NpcHandler(GameContext context)
     internal void MapNpcDirection(MapNpcDirectionPacket packet)
     {
         var npc = context.GetNetworkEntity(packet.InstanceId);
-        
+
         if (npc == Entity.Null) return;
 
         ref var movement = ref context.World.Get<MovementComponent>(npc);

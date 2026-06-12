@@ -1,5 +1,5 @@
 using CryBits.Client.Framework.Graphics;
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using SFML.Graphics;
 using SFML.System;
 using System.Drawing;

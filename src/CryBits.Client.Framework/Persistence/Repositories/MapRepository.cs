@@ -1,5 +1,5 @@
 using CryBits.Client.Framework.Constants;
-using CryBits.Entities.Map;
+using CryBits.Definitions.Maps;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CryBits.Client.Framework.Persistence.Repositories;

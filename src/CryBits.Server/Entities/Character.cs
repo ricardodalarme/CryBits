@@ -1,4 +1,4 @@
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 
 namespace CryBits.Server.Entities;
 
@@ -9,5 +9,5 @@ internal abstract class Character
     public byte X { get; set; }
     public byte Y { get; set; }
     public Direction Direction { get; set; }
-    public short[] Vital { get; } = new short[(byte)Enums.Vital.Count];
+    public short[] Vital { get; } = new short[(byte)CryBits.Definitions.Characters.Vital.Count];
 }

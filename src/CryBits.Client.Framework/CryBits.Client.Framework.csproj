@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../CryBits.Definitions/CryBits.Definitions.csproj" />
     <ProjectReference Include="../CryBits.Core/CryBits.Core.csproj" />
   </ItemGroup>
 </Project>

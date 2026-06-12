@@ -2,7 +2,7 @@ using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.Forms;
-using CryBits.Entities.Map;
+using CryBits.Definitions.Maps;
 using System;
 using static CryBits.Globals;
 using static CryBits.Utils.RandomUtils;
@@ -33,9 +33,9 @@ internal class MapInstance
         if (win?.SelectedMap != null)
             Weather = win.SelectedMap.Weather.Type switch
             {
-                Enums.Weather.Thundering or Enums.Weather.Raining =>
+                CryBits.Definitions.Maps.Weather.Thundering or CryBits.Definitions.Maps.Weather.Raining =>
                     new MapWeatherParticleInstance[MaxRainParticles + 1],
-                Enums.Weather.Snowing => new MapWeatherParticleInstance[MaxSnowParticles + 1],
+                CryBits.Definitions.Maps.Weather.Snowing => new MapWeatherParticleInstance[MaxSnowParticles + 1],
                 _ => Weather
             };
     }
@@ -119,7 +119,7 @@ internal class MapInstance
 
         var weather = win.SelectedMap.Weather;
 
-        if (weather.Type is Enums.Weather.Raining or Enums.Weather.Thundering)
+        if (weather.Type is CryBits.Definitions.Maps.Weather.Raining or CryBits.Definitions.Maps.Weather.Thundering)
         {
             if (!AudioManager.Instance.IsPlaying(Sounds.Rain))
                 AudioManager.Instance.PlaySound(Sounds.Rain, true);
@@ -153,9 +153,9 @@ internal class MapInstance
 
                         switch (weather.Type)
                         {
-                            case Enums.Weather.Thundering:
-                            case Enums.Weather.Raining: Weather[i].SetRain(); break;
-                            case Enums.Weather.Snowing: Weather[i].SetSnow(); break;
+                            case CryBits.Definitions.Maps.Weather.Thundering:
+                            case CryBits.Definitions.Maps.Weather.Raining: Weather[i].SetRain(); break;
+                            case CryBits.Definitions.Maps.Weather.Snowing: Weather[i].SetSnow(); break;
                         }
                     }
                 }
@@ -166,16 +166,16 @@ internal class MapInstance
             {
                 switch (weather.Type)
                 {
-                    case Enums.Weather.Thundering:
-                    case Enums.Weather.Raining: Weather[i].MoveRain(); break;
-                    case Enums.Weather.Snowing: Weather[i].MoveSnow(move); break;
+                    case CryBits.Definitions.Maps.Weather.Thundering:
+                    case CryBits.Definitions.Maps.Weather.Raining: Weather[i].MoveRain(); break;
+                    case CryBits.Definitions.Maps.Weather.Snowing: Weather[i].MoveSnow(move); break;
                 }
 
                 if (Weather[i].X > Map.Width * Grid || Weather[i].Y > Map.Height * Grid)
                     Weather[i] = new MapWeatherParticleInstance();
             }
 
-        if (weather.Type == Enums.Weather.Thundering)
+        if (weather.Type == CryBits.Definitions.Maps.Weather.Thundering)
             if (MyRandom.Next(0, MaxWeatherIntensity * 10 - weather.Intensity * 2) == 0)
             {
                 var thunderList = new[]

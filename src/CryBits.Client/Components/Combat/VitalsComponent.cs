@@ -1,4 +1,4 @@
-using CryBits.Enums;
+using CryBits.Definitions.Characters;
 
 namespace CryBits.Client.Components.Combat;
 

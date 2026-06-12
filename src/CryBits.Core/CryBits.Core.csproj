@@ -14,8 +14,11 @@
     <OutputPath>../../Build/Core/</OutputPath>
   </PropertyGroup>
 
- <ItemGroup>
-   <PackageReference Include="LiteNetLib" Version="2.0.2" />
+  <ItemGroup>
+    <PackageReference Include="LiteNetLib" Version="2.0.2" />
+  </ItemGroup>
 
- </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../CryBits.Definitions/CryBits.Definitions.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,3 +1,4 @@
+using CryBits.Definitions.Maps;
 using System;
 using System.Collections.Generic;
 
@@ -6,13 +7,13 @@ namespace CryBits.Packets.Server;
 [Serializable]
 public struct MapsPacket : IServerPacket
 {
-    public Dictionary<Guid, Entities.Map.Map> List;
+    public Dictionary<Guid, Map> List;
 }
 
 [Serializable]
 public struct MapPacket : IServerPacket
 {
-    public Entities.Map.Map Map;
+    public Map Map;
 }
 
 [Serializable] public struct JoinMapPacket : IServerPacket;

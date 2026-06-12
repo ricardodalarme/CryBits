@@ -1,4 +1,5 @@
-using CryBits.Entities;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,7 +48,7 @@ internal sealed class ClassRepository
     public void WriteAll()
     {
         // Write classes to disk.
-        foreach (var @class in Class.List.Values)
+        foreach (var @class in DefinitionCatalog.Classes.Values)
             Write(@class);
     }
 }

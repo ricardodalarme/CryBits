@@ -1,4 +1,5 @@
-using CryBits.Entities.Npc;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Npcs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +28,7 @@ internal sealed class NpcRepository
     public void WriteAll()
     {
         // Write NPCs to disk.
-        foreach (var npc in Npc.List.Values)
+        foreach (var npc in DefinitionCatalog.Npcs.Values)
             using (var stream =
                    new FileInfo(Path.Combine(Directories.Npcs.FullName, npc.Id.ToString()) + Directories.Format)
                        .OpenWrite())

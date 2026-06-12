@@ -3,7 +3,7 @@ using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Managers;
 using CryBits.Client.Worlds;
-using CryBits.Enums;
+using CryBits.Definitions.Items;
 using System.Drawing;
 
 namespace CryBits.Client.UI.Game.Views;

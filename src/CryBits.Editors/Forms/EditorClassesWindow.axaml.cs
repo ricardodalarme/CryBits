@@ -1,15 +1,17 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Editors.AvaloniaUI;
 using CryBits.Editors.Network;
-using CryBits.Entities;
-using CryBits.Entities.Slots;
-using CryBits.Enums;
+using CryBits.Definitions.Classes;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Slots;
+using CryBits.Definitions.Characters;
 using System;
 using System.Linq;
-using Attribute = CryBits.Enums.Attribute;
-using Map = CryBits.Entities.Map.Map;
+using Attribute = CryBits.Definitions.Characters.Attribute;
+using Map = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Editors.Forms;
 
@@ -18,7 +20,7 @@ internal partial class EditorClassesWindow : Window
     /// <summary>Opens the Classes editor, hiding the owner window while open.</summary>
     public static void Open(Window owner)
     {
-        if (Map.List.Count == 0)
+        if (DefinitionCatalog.Maps.Count == 0)
         {
             MessageBox.Show("It must have at least one map registered before editing classes.");
             return;
@@ -42,8 +44,8 @@ internal partial class EditorClassesWindow : Window
         InitializeComponent();
 
         // Populate comboboxes from live data
-        cmbItems.ItemsSource = Item.List.Values.ToList();
-        cmbSpawn_Map.ItemsSource = Map.List.Values.ToList();
+        cmbItems.ItemsSource = DefinitionCatalog.Items.Values.ToList();
+        cmbSpawn_Map.ItemsSource = DefinitionCatalog.Maps.Values.ToList();
 
         // Wire SFML window: fires first time sfmlHost becomes part of the layout tree
         // (replaced with WriteableBitmap rendering - no native host needed)
@@ -67,7 +69,7 @@ internal partial class EditorClassesWindow : Window
     private void RefreshClassList()
     {
         var filter = txtFilter.Text ?? string.Empty;
-        var filtered = Class.List.Values
+        var filtered = DefinitionCatalog.Classes.Values
             .Where(c => c.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -85,7 +87,7 @@ internal partial class EditorClassesWindow : Window
         _loading = true;
 
         var filter = txtFilter.Text ?? string.Empty;
-        lstClasses.ItemsSource = Class.List.Values
+        lstClasses.ItemsSource = DefinitionCatalog.Classes.Values
             .Where(c => c.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
@@ -123,7 +125,7 @@ internal partial class EditorClassesWindow : Window
         numSpawn_X.Value = cls.SpawnX;
         numSpawn_Y.Value = cls.SpawnY;
 
-        cmbSpawn_Map.SelectedItem = Map.List.Values.FirstOrDefault(m => m == cls.SpawnMap);
+        cmbSpawn_Map.SelectedItem = DefinitionCatalog.Maps.Values.FirstOrDefault(m => m == cls.SpawnMap);
         cmbSpawn_Direction.SelectedIndex = cls.SpawnDirection;
 
         numTexture.Maximum = Textures.Characters.Count - 1;
@@ -166,22 +168,22 @@ internal partial class EditorClassesWindow : Window
     private void butNew_Click(object? sender, RoutedEventArgs e)
     {
         var cls = new Class();
-        Class.List.Add(cls.Id, cls);
+        DefinitionCatalog.Classes.Add(cls.Id, cls);
         RefreshClassList();
-        lstClasses.SelectedItem = Class.List.Values.FirstOrDefault(c => c.Id == cls.Id);
+        lstClasses.SelectedItem = DefinitionCatalog.Classes.Values.FirstOrDefault(c => c.Id == cls.Id);
     }
 
     private void butRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (_selected == null) return;
 
-        if (Class.List.Count == 1)
+        if (DefinitionCatalog.Classes.Count == 1)
         {
             // Must have at least one class – silently ignore (or show a dialog)
             return;
         }
 
-        Class.List.Remove(_selected.Id);
+        DefinitionCatalog.Classes.Remove(_selected.Id);
         _selected = null;
         RefreshClassList();
         pnlContent.IsVisible = lstClasses.SelectedItem != null;
@@ -328,7 +330,7 @@ internal partial class EditorClassesWindow : Window
 
     private void butItem_Add_Click(object? sender, RoutedEventArgs e)
     {
-        if (Item.List.Count == 0) return; // no items registered
+        if (DefinitionCatalog.Items.Count == 0) return; // no items registered
 
         cmbItems.SelectedIndex = 0;
         numItem_Amount.Value = 1;

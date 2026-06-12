@@ -1,5 +1,6 @@
-using CryBits.Entities.Shop;
-using CryBits.Extensions;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Shops;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Server.World;
@@ -12,7 +13,7 @@ internal sealed class ShopSender(PackageSender packageSender)
 
     public void Shops(GameSession session)
     {
-        packageSender.ToPlayer(session, new ShopsPacket { List = Shop.List });
+        packageSender.ToPlayer(session, new ShopsPacket { List = DefinitionCatalog.Shops });
     }
 
     public void ShopOpen(Player player, Shop shop)

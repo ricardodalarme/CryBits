@@ -1,5 +1,6 @@
-using CryBits.Enums;
-using CryBits.Extensions;
+using CryBits.Definitions.Maps;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.World;
@@ -60,13 +61,13 @@ internal sealed class MovementSystem(
         NextTile(player.Direction, ref nextX, ref nextY);
 
         // Map link boundary
-        if (CryBits.Entities.Map.Map.OutLimit(nextX, nextY))
+        if (Map.OutLimit(nextX, nextY))
         {
             if (link != null)
                 switch (player.Direction)
                 {
                     case Direction.Up:
-                        Warp(player, link, oldX, CryBits.Entities.Map.Map.Height - 1);
+                        Warp(player, link, oldX, Map.Height - 1);
                         return;
                     case Direction.Down:
                         Warp(player, link, oldX, 0);
@@ -75,7 +76,7 @@ internal sealed class MovementSystem(
                         Warp(player, link, 0, oldY);
                         return;
                     case Direction.Left:
-                        Warp(player, link, CryBits.Entities.Map.Map.Width - 1, oldY);
+                        Warp(player, link, Map.Width - 1, oldY);
                         return;
                 }
             else
@@ -121,8 +122,8 @@ internal sealed class MovementSystem(
         shopSystem.Leave(player);
 
         if (mapInstance == null) return;
-        if (x >= CryBits.Entities.Map.Map.Width) x = CryBits.Entities.Map.Map.Width - 1;
-        if (y >= CryBits.Entities.Map.Map.Height) y = CryBits.Entities.Map.Map.Height - 1;
+        if (x >= Map.Width) x = Map.Width - 1;
+        if (y >= Map.Height) y = Map.Height - 1;
 
         player.MapInstance = mapInstance;
         player.X = x;

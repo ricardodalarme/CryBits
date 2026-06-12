@@ -1,4 +1,4 @@
-using CryBits.Enums;
+using CryBits.Definitions.Common;
 using CryBits.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
@@ -22,9 +22,9 @@ internal sealed class ChatHandler(ChatSender chatSender)
         // Dispatch the message to the appropriate recipients.
         switch ((Message)packet.Type)
         {
-            case Enums.Message.Map: chatSender.MessageMap(player, message); break;
-            case Enums.Message.Global: chatSender.MessageGlobal(player, message); break;
-            case Enums.Message.Private: chatSender.MessagePrivate(player, packet.Addressee, message); break;
+            case CryBits.Definitions.Common.Message.Map: chatSender.MessageMap(player, message); break;
+            case CryBits.Definitions.Common.Message.Global: chatSender.MessageGlobal(player, message); break;
+            case CryBits.Definitions.Common.Message.Private: chatSender.MessagePrivate(player, packet.Addressee, message); break;
         }
     }
 }

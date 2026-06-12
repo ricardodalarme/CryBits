@@ -4,7 +4,7 @@ using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Core;
 using CryBits.Client.Framework.Graphics;
 using CryBits.Client.Graphics;
-using CryBits.Enums;
+using CryBits.Definitions.Characters;
 
 namespace CryBits.Client.Systems.Character;
 

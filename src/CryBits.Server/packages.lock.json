@@ -26,10 +26,17 @@
         "resolved": "10.0.3",
         "contentHash": "q38b0Wj67miA+2Rcc6excf72Xh+LuVCxr0nJuhZaO3LwUVATdrm0x7TQuNr5lRNC0TH4UR6jkg/TA4C7Luyujw=="
       },
-      "CryBits.Core": {
+      "crybits.core": {
         "type": "Project",
         "dependencies": {
+          "CryBits.Definitions": "[1.0.0, )",
           "LiteNetLib": "[2.0.2, )",
+          "System.Runtime.Serialization.Formatters": "[10.0.3, )"
+        }
+      },
+      "crybits.definitions": {
+        "type": "Project",
+        "dependencies": {
           "System.Runtime.Serialization.Formatters": "[10.0.3, )"
         }
       }

@@ -1,4 +1,7 @@
-using CryBits.Enums;
+using CryBits.Definitions.Maps;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Characters;
+using CryBits.Definitions.Npcs;
 using CryBits.Server.Entities;
 using CryBits.Server.Network;
 using CryBits.Server.Network.Senders;
@@ -106,8 +109,8 @@ internal sealed class NpcAiSystem(
                  npcInstance.MapInstance.Data.Attribute[npcInstance.X, npcInstance.Y].Zone != npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone)
         {
             // Return to designated zone
-            for (byte x = 0; x < CryBits.Entities.Map.Map.Width; x++)
-                for (byte y = 0; y < CryBits.Entities.Map.Map.Height; y++)
+            for (byte x = 0; x < Map.Width; x++)
+                for (byte y = 0; y < Map.Height; y++)
                     if (npcInstance.MapInstance.Data.Attribute[x, y].Zone == npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone &&
                         !npcInstance.MapInstance.Data.TileBlocked(x, y))
                     {
@@ -178,8 +181,8 @@ internal sealed class NpcAiSystem(
         // Try up to 50 random positions
         for (byte i = 0; i < 50; i++)
         {
-            var x = (byte)MyRandom.Next(0, CryBits.Entities.Map.Map.Width - 1);
-            var y = (byte)MyRandom.Next(0, CryBits.Entities.Map.Map.Height - 1);
+            var x = (byte)MyRandom.Next(0, Map.Width - 1);
+            var y = (byte)MyRandom.Next(0, Map.Height - 1);
 
             if (npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone > 0 &&
                 npcInstance.MapInstance.Data.Attribute[x, y].Zone != npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone)
@@ -193,8 +196,8 @@ internal sealed class NpcAiSystem(
         }
 
         // Fallback: first walkable tile in zone
-        for (byte x = 0; x < CryBits.Entities.Map.Map.Width; x++)
-            for (byte y = 0; y < CryBits.Entities.Map.Map.Height; y++)
+        for (byte x = 0; x < Map.Width; x++)
+            for (byte y = 0; y < Map.Height; y++)
                 if (!npcInstance.MapInstance.Data.TileBlocked(x, y))
                 {
                     if (npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone > 0 &&
@@ -224,7 +227,7 @@ internal sealed class NpcAiSystem(
         npcSender.MapNpcDirection(npcInstance);
         NextTile(direction, ref nextX, ref nextY);
 
-        if (CryBits.Entities.Map.Map.OutLimit(nextX, nextY)) return false;
+        if (Map.OutLimit(nextX, nextY)) return false;
         if (npcInstance.MapInstance.TileBlocked(npcInstance.X, npcInstance.Y, direction)) return false;
         if (checkZone && npcInstance.MapInstance.Data.Attribute[nextX, nextY].Zone != npcInstance.MapInstance.Data.Npc[npcInstance.Index].Zone) return false;
 
