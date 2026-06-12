@@ -1,6 +1,6 @@
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
-using CryBits.Server.Systems;
+using CryBits.Server.Systems.Characters;
 using CryBits.Server.World;
 
 namespace CryBits.Server.Network.Handlers;

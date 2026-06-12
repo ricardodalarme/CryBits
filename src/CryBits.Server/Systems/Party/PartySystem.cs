@@ -6,7 +6,7 @@ using CryBits.Server.World;
 using System.Drawing;
 using static CryBits.Globals;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Party;
 
 internal sealed class PartySystem(ChatSender chatSender, PartySender partySender) : ISimulationSystem
 {

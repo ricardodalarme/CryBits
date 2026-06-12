@@ -7,7 +7,7 @@ using CryBits.Server.World;
 using System;
 using static CryBits.Globals;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Progression;
 
 internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSender) : ISimulationSystem
 {

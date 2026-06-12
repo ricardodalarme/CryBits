@@ -5,11 +5,12 @@ using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.Events;
+using CryBits.Server.Systems.Progression;
 using CryBits.Server.World;
 using System.Drawing;
 using static CryBits.Globals;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Inventory;
 
 internal sealed class InventorySystem(
     PlayerSender playerSender,

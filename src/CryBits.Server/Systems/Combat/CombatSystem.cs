@@ -6,6 +6,7 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.Events;
+using CryBits.Server.Systems.Shops;
 using CryBits.Simulation.Formulas;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.World;
@@ -16,7 +17,7 @@ using static CryBits.Utils.DirectionUtils;
 using static CryBits.Utils.RandomUtils;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Combat;
 
 internal sealed class CombatSystem(
     CombatSender combatSender,

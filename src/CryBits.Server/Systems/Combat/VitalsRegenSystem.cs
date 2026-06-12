@@ -6,7 +6,7 @@ using CryBits.Server.World;
 using System;
 using System.Linq;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Combat;
 
 internal sealed class VitalsRegenSystem(PlayerSender playerSender, NpcSender npcSender) : ISimulationSystem
 {

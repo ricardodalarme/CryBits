@@ -1,6 +1,15 @@
 using CryBits.Server.Network;
 using CryBits.Server.Network.Senders;
-using CryBits.Server.Systems;
+using CryBits.Server.Systems.Characters;
+using CryBits.Server.Systems.Combat;
+using CryBits.Server.Systems.Inventory;
+using CryBits.Server.Systems.Movement;
+using CryBits.Server.Systems.Npc;
+using CryBits.Server.Systems.Party;
+using CryBits.Server.Systems.Progression;
+using CryBits.Server.Systems.Shops;
+using CryBits.Server.Systems.Spawning;
+using CryBits.Server.Systems.Trade;
 using CryBits.Server.World;
 using System.Collections.Generic;
 
@@ -36,7 +45,7 @@ internal sealed class TickPipeline
         pipeline.AddSystem(CombatSystem.Instance);
         pipeline.AddSystem(LevelingSystem.Instance);
         pipeline.AddSystem(DeathSystem.Instance);
-        pipeline.AddSystem(MapItemSystem.Instance);
+        pipeline.AddSystem(GroundItemSystem.Instance);
         pipeline.AddSystem(EquipmentSystem.Instance);
         pipeline.AddSystem(InventorySystem.Instance);
         pipeline.AddSystem(TradeSystem.Instance);

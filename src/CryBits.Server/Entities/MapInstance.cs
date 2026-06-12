@@ -2,7 +2,7 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Server.Systems;
+using CryBits.Server.Systems.Npc;
 using CryBits.Server.World;
 using System;
 using System.Collections.Generic;

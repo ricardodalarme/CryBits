@@ -1,7 +1,7 @@
 using CryBits.Network;
 using CryBits.Network.Packets.Client;
 using CryBits.Server.Entities;
-using CryBits.Server.Systems;
+using CryBits.Server.Systems.Party;
 
 namespace CryBits.Server.Network.Handlers;
 

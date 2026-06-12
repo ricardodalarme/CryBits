@@ -4,11 +4,12 @@ using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.Events;
+using CryBits.Server.Systems.Inventory;
 using CryBits.Server.World;
 using System;
 using System.Drawing;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Shops;
 
 internal sealed class ShopSystem(
     InventorySystem inventorySystem,

@@ -9,7 +9,7 @@ using CryBits.Server.World;
 using System.Linq;
 using static CryBits.Globals;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Inventory;
 
 internal sealed class EquipmentSystem(PlayerSender playerSender) : ISimulationSystem
 {

@@ -9,6 +9,8 @@ using CryBits.Network.Packets.Client;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Events;
+using CryBits.Server.Systems.Inventory;
+using CryBits.Server.Systems.Movement;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
@@ -17,7 +19,7 @@ using System.Drawing;
 using System.IO;
 using static CryBits.Globals;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Characters;
 
 /// <summary>Owns character creation, selection, deletion, and session enter/exit.</summary>
 internal sealed class CharacterSystem(

@@ -4,11 +4,11 @@ using CryBits.Server.Simulation.Core;
 using CryBits.Server.World;
 using System;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Inventory;
 
-internal sealed class MapItemSystem(MapSender mapSender) : ISimulationSystem
+internal sealed class GroundItemSystem(MapSender mapSender) : ISimulationSystem
 {
-    public static MapItemSystem Instance { get; } = new(MapSender.Instance);
+    public static GroundItemSystem Instance { get; } = new(MapSender.Instance);
 
     private long _timer;
 

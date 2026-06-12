@@ -2,7 +2,7 @@ using CryBits.Definitions.Items;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Inventory;
 
 internal sealed class HotbarSystem(PlayerSender playerSender, InventorySystem inventorySystem)
 {

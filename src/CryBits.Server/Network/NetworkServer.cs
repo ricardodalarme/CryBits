@@ -1,4 +1,4 @@
-using CryBits.Server.Systems;
+using CryBits.Server.Systems.Characters;
 using CryBits.Server.World;
 using LiteNetLib;
 using static CryBits.Globals;

@@ -1,7 +1,6 @@
 using CryBits.Server.Commands;
 using CryBits.Server.Network;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Systems;
 using CryBits.Server.World;
 using CryBits.Simulation.Events;
 using System;

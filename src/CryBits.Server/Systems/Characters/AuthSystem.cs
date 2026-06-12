@@ -8,7 +8,7 @@ using System.IO;
 using static CryBits.Globals;
 using BcryptNet = BCrypt.Net.BCrypt;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Characters;
 
 /// <summary>Owns account authentication and registration.</summary>
 internal sealed class AuthSystem(

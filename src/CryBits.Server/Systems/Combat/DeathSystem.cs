@@ -5,11 +5,12 @@ using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.Events;
+using CryBits.Server.Systems.Movement;
 using CryBits.Server.World;
 using System;
 using System.Linq;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Combat;
 
 internal sealed class DeathSystem(PlayerSender playerSender) : ISimulationSystem
 {

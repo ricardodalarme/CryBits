@@ -1,8 +1,9 @@
 using CryBits.Server.Simulation.Core;
+using CryBits.Server.Systems.Npc;
 using CryBits.Server.World;
 using System;
 
-namespace CryBits.Server.Systems;
+namespace CryBits.Server.Systems.Spawning;
 
 /// <summary>
 /// Tick-driven system that handles NPC respawning.
