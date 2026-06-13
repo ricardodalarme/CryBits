@@ -17,7 +17,7 @@ internal sealed class ChatService()
         var message = packet.Text;
 
         // Reject invalid characters.
-        for (byte i = 0; i >= message.Length; i++)
+        for (byte i = 0; i < message.Length; i++)
             if (message[i] < 32 && message[i] > 126)
                 return;
 
