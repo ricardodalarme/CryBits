@@ -9,7 +9,7 @@ namespace CryBits.Server.Entities;
 internal class NpcInstance : Character
 {
     // Basic NPC runtime fields.
-    public readonly Guid Id = Guid.NewGuid();
+    public override Guid Id { get; } = Guid.NewGuid();
     public readonly byte Index;
     public readonly Npc Data;
     public bool Alive;

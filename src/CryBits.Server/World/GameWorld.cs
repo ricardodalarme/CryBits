@@ -2,6 +2,7 @@ using CryBits.Server.Entities;
 using CryBits.Server.Simulation.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CryBits.Server.World;
 
@@ -30,6 +31,21 @@ internal sealed class GameWorld
     /// the pipeline executes, so any system can emit events via CurrentTick.Events.Emit().
     /// </summary>
     public Tick? CurrentTick { get; set; }
+
+    /// <summary>Finds a live player by their unique identifier.</summary>
+    public Player? FindPlayer(Guid id) =>
+        Sessions.Find(s => s.IsPlaying && s.Character!.Id == id)?.Character;
+
+    /// <summary>Finds a live NPC instance by its unique identifier across all maps.</summary>
+    public NpcInstance? FindNpcInstance(Guid id)
+    {
+        foreach (var map in Maps.Values)
+        {
+            var npc = Array.Find(map.Npc, n => n.Id == id);
+            if (npc != null) return npc;
+        }
+        return null;
+    }
 
     public GameWorld() => Current = this;
 }

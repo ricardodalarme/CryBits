@@ -6,7 +6,7 @@ using CryBits.Definitions.Slots;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.Events;
+using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Progression;
 using CryBits.Server.World;
 using System;
@@ -113,9 +113,9 @@ internal sealed class InventorySystem(
         {
             GameWorld.Current.CurrentTick?.Events.Emit(new ItemUsedEvent
             {
-                Player = player,
+                PlayerId = player.Id,
                 SlotIndex = slotIndex,
-                Item = item
+                ItemId = item.Id
             });
         }
         else if (item.Type == ItemType.Potion)
@@ -133,7 +133,7 @@ internal sealed class InventorySystem(
             }
 
             if (player.Vital[(byte)Vital.Hp] == 0)
-                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { Entity = player, Source = null });
+                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = player.Id, EntityIsPlayer = true, SourceId = null, SourceIsPlayer = null });
 
             if (item.PotionExperience > 0 || hadEffect) TakeItem(player, slot, 1);
         }
@@ -160,22 +160,30 @@ internal sealed class InventorySystem(
         {
             switch (ev)
             {
-                case ItemUsedEvent use when use.Item.Type == ItemType.Equipment:
+                case ItemUsedEvent use:
                 {
-                    var slot = use.Player.Inventory[use.SlotIndex];
-                    if (slot.ItemId == Guid.Empty || slot.ItemId != use.Item.Id) continue;
-                    TakeItem(use.Player, slot, 1);
+                    var player = world.FindPlayer(use.PlayerId);
+                    if (player == null) continue;
+                    var item = _catalog.Items.Get(use.ItemId);
+                    if (item == null || item.Type != ItemType.Equipment) continue;
+                    var slot = player.Inventory[use.SlotIndex];
+                    if (slot.ItemId == Guid.Empty || slot.ItemId != use.ItemId) continue;
+                    TakeItem(player, slot, 1);
                     break;
                 }
-                case ItemEquippedEvent equip when equip.OldItem != null:
+                case ItemEquippedEvent equip when equip.OldItemId.HasValue:
                 {
-                    if (!GiveItem(equip.Player, equip.OldItem, 1))
+                    var player = world.FindPlayer(equip.PlayerId);
+                    if (player == null) continue;
+                    var oldItem = _catalog.Items.Get(equip.OldItemId.Value);
+                    if (oldItem == null) continue;
+                    if (!GiveItem(player, oldItem, 1))
                     {
-                        if (equip.Player.MapInstance.Item.Count == Config.MaxMapItems) continue;
-                        equip.Player.MapInstance.Item.Add(new MapItemInstance(equip.OldItem.Id, 1,
-                            equip.Player.X, equip.Player.Y));
-                        mapSender.MapItems(equip.Player.MapInstance);
-                        playerSender.PlayerInventory(equip.Player);
+                        if (player.MapInstance.Item.Count == Config.MaxMapItems) continue;
+                        player.MapInstance.Item.Add(new MapItemInstance(equip.OldItemId.Value, 1,
+                            player.X, player.Y));
+                        mapSender.MapItems(player.MapInstance);
+                        playerSender.PlayerInventory(player);
                     }
                     break;
                 }

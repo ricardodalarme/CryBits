@@ -5,7 +5,7 @@ using CryBits.Definitions.Slots;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.Events;
+using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.World;
 using System;
@@ -226,14 +226,23 @@ internal sealed class TradeSystem(
             switch (ev)
             {
                 case PlayerStartedMovingEvent e:
-                    Leave(e.Player);
+                {
+                    var player = world.FindPlayer(e.PlayerId);
+                    if (player != null) Leave(player);
                     break;
+                }
                 case PlayerWarpedEvent e:
-                    Leave(e.Player);
+                {
+                    var player = world.FindPlayer(e.PlayerId);
+                    if (player != null) Leave(player);
                     break;
+                }
                 case PlayerDisconnectedEvent e:
-                    Leave(e.Player);
+                {
+                    var player = world.FindPlayer(e.PlayerId);
+                    if (player != null) Leave(player);
                     break;
+                }
             }
         }
     }

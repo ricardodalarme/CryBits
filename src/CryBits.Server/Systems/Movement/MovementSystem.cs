@@ -4,7 +4,7 @@ using CryBits.Definitions.Maps;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.Events;
+using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using System;
 namespace CryBits.Server.Systems.Movement;
@@ -38,7 +38,7 @@ internal sealed class MovementSystem(
         if (movement is < 1 or > 2) return;
         if (player.GettingMap) return;
 
-        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerStartedMovingEvent { Player = player });
+        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerStartedMovingEvent { PlayerId = player.Id });
 
         player.Direction.NextTile(ref nextX, ref nextY);
 
@@ -100,7 +100,7 @@ internal sealed class MovementSystem(
         player.X = x;
         player.Y = y;
 
-        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerWarpedEvent { Player = player, OldMap = oldMap, NewMap = mapInstance });
+        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerWarpedEvent { PlayerId = player.Id, OldMapId = oldMap.Id, NewMapId = mapInstance.Id });
 
         if (oldMap != mapInstance || needUpdate)
         {

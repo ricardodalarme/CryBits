@@ -1,6 +1,4 @@
-using CryBits.Simulation.Events;
-
-namespace CryBits.Server.Simulation.Events;
+namespace CryBits.Simulation.Events;
 
 /// <summary>
 /// Dispatches buffered simulation events to network senders.

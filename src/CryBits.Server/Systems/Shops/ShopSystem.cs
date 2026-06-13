@@ -5,7 +5,7 @@ using CryBits.Definitions.Shops;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.Events;
+using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.World;
 using System;
@@ -100,18 +100,29 @@ internal sealed class ShopSystem(
             switch (ev)
             {
                 case PlayerStartedMovingEvent e:
-                    Leave(e.Player);
+                {
+                    var player = world.FindPlayer(e.PlayerId);
+                    if (player != null) Leave(player);
                     break;
+                }
                 case PlayerWarpedEvent e:
-                    Leave(e.Player);
+                {
+                    var player = world.FindPlayer(e.PlayerId);
+                    if (player != null) Leave(player);
                     break;
+                }
                 case NpcAttackedEvent e:
-                    if (e.Npc.Data.Behaviour == Behaviour.ShopKeeper)
+                {
+                    var attacker = world.FindPlayer(e.AttackerId);
+                    var npc = world.FindNpcInstance(e.NpcInstanceId);
+                    if (attacker == null || npc == null) break;
+                    if (npc.Data.Behaviour == Behaviour.ShopKeeper)
                     {
-                        var shop = _catalog.Shops.Get(e.Npc.Data.ShopId);
-                        if (shop != null) Open(e.Attacker, shop);
+                        var shop = _catalog.Shops.Get(npc.Data.ShopId);
+                        if (shop != null) Open(attacker, shop);
                     }
                     break;
+                }
             }
         }
     }

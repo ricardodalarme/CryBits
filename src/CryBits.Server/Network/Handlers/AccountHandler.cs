@@ -11,7 +11,7 @@ using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence;
 using CryBits.Server.Persistence.Repositories;
-using CryBits.Server.Simulation.Events;
+using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Inventory;
 using CryBits.Server.Systems.Movement;
 using CryBits.Server.World;
@@ -153,7 +153,7 @@ internal sealed class AccountHandler(
         characterRepository.Write(player.Session);
         playerSender.PlayerLeave(player);
 
-        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent { Player = player });
+        GameWorld.Current.CurrentTick?.Events.Emit(new PlayerDisconnectedEvent { PlayerId = player.Id });
     }
 
     private void Join(Player player)

@@ -5,7 +5,7 @@ using CryBits.Definitions.Npcs;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.Events;
+using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using CryBits.Simulation.Formulas;
 using System;
@@ -79,7 +79,7 @@ internal sealed class CombatSystem(
             }
             else
             {
-                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { Entity = victim, Source = attacker });
+                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victim.Id, EntityIsPlayer = true, SourceId = attacker.Id, SourceIsPlayer = true });
             }
         }
         else
@@ -95,7 +95,7 @@ internal sealed class CombatSystem(
         {
             case Behaviour.Friendly: return;
             case Behaviour.ShopKeeper:
-                GameWorld.Current.CurrentTick?.Events.Emit(new NpcAttackedEvent { Attacker = attacker, Npc = victim });
+                GameWorld.Current.CurrentTick?.Events.Emit(new NpcAttackedEvent { AttackerId = attacker.Id, NpcInstanceId = victim.Id });
                 return;
         }
 
@@ -115,7 +115,7 @@ internal sealed class CombatSystem(
             else
             {
                 Died(victim);
-                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { Entity = victim, Source = attacker });
+                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victim.Id, EntityIsPlayer = false, SourceId = attacker.Id, SourceIsPlayer = true });
             }
         }
         else
@@ -157,7 +157,7 @@ internal sealed class CombatSystem(
             else
             {
                 attacker.Target = null;
-                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { Entity = victim, Source = attacker });
+                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victim.Id, EntityIsPlayer = true, SourceId = attacker.Id, SourceIsPlayer = false });
             }
         }
         else
@@ -188,7 +188,7 @@ internal sealed class CombatSystem(
             {
                 attacker.Target = null;
                 Died(victim);
-                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { Entity = victim, Source = attacker });
+                GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victim.Id, EntityIsPlayer = false, SourceId = attacker.Id, SourceIsPlayer = false });
             }
         }
         else

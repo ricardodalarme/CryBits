@@ -1,17 +1,20 @@
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
+using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.Events;
+using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using System.Linq;
 
 namespace CryBits.Server.Systems.Inventory;
 
-internal sealed class EquipmentSystem(PlayerSender playerSender) : ISimulationSystem
+internal sealed class EquipmentSystem(PlayerSender playerSender, DefinitionCatalog catalog) : ISimulationSystem
 {
-    public static EquipmentSystem Instance { get; } = new(PlayerSender.Instance);
+    private readonly DefinitionCatalog _catalog = catalog;
+    public static EquipmentSystem Instance { get; } = new(PlayerSender.Instance, DefinitionCatalog.Instance);
 
     public void Equip(Player player, Item item)
     {
@@ -26,10 +29,10 @@ internal sealed class EquipmentSystem(PlayerSender playerSender) : ISimulationSy
 
         GameWorld.Current.CurrentTick?.Events.Emit(new ItemEquippedEvent
         {
-            Player = player,
+            PlayerId = player.Id,
             EquipSlot = item.EquipType,
-            Item = item,
-            OldItem = oldItem
+            ItemId = item.Id,
+            OldItemId = oldItem?.Id
         });
 
         playerSender.PlayerEquipments(player);
@@ -48,10 +51,10 @@ internal sealed class EquipmentSystem(PlayerSender playerSender) : ISimulationSy
 
         GameWorld.Current.CurrentTick?.Events.Emit(new ItemEquippedEvent
         {
-            Player = player,
+            PlayerId = player.Id,
             EquipSlot = equipSlot,
-            Item = null,
-            OldItem = oldItem
+            ItemId = null,
+            OldItemId = oldItem.Id
         });
 
         playerSender.PlayerEquipments(player);
@@ -61,8 +64,12 @@ internal sealed class EquipmentSystem(PlayerSender playerSender) : ISimulationSy
     {
         foreach (var ev in tick.Events.Events.ToArray())
         {
-            if (ev is ItemUsedEvent use && use.Item.Type == ItemType.Equipment)
-                Equip(use.Player, use.Item);
+            if (ev is not ItemUsedEvent use) continue;
+            var player = world.FindPlayer(use.PlayerId);
+            if (player == null) continue;
+            var item = _catalog.Items.Get(use.ItemId);
+            if (item == null || item.Type != ItemType.Equipment) continue;
+            Equip(player, item);
         }
     }
 }

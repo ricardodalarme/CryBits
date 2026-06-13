@@ -4,7 +4,7 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.Events;
+using CryBits.Simulation.Events;
 using CryBits.Server.Systems.Movement;
 using CryBits.Server.World;
 using System.Linq;
@@ -20,7 +20,9 @@ internal sealed class DeathSystem(PlayerSender playerSender) : ISimulationSystem
         foreach (var ev in tick.Events.Events.ToArray())
         {
             if (ev is not EntityDiedEvent died) continue;
-            if (died.Entity is not Player player) continue;
+            if (!died.EntityIsPlayer) continue;
+            var player = world.FindPlayer(died.EntityId);
+            if (player == null) continue;
 
             for (byte n = 0; n < (byte)Vital.Count; n++)
                 player.Vital[n] = player.MaxVital(n);

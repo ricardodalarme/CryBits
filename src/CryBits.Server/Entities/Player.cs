@@ -14,7 +14,7 @@ namespace CryBits.Server.Entities;
 
 internal class Player : Character
 {
-    public readonly Guid Id = Guid.NewGuid();
+    public override Guid Id { get; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public Class Class { get; set; }
     public short TextureNum { get; set; }

@@ -1,7 +1,7 @@
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.Events;
+using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using CryBits.Simulation.Formulas;
 using System;
@@ -86,18 +86,18 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
     {
         foreach (var ev in tick.Events.Events)
         {
-            if (ev is EntityDiedEvent died && died.Source is Player killer)
-            {
-                var xp = died.Entity switch
-                {
-                    Player victim => victim.Experience / 10,
-                    NpcInstance npc => npc.Data.Experience,
-                    _ => 0
-                };
+            if (ev is not EntityDiedEvent died) continue;
+            if (!died.SourceId.HasValue || died.SourceIsPlayer != true) continue;
 
-                if (xp > 0)
-                    GiveExperience(killer, xp);
-            }
+            var killer = world.FindPlayer(died.SourceId.Value);
+            if (killer == null) continue;
+
+            var xp = died.EntityIsPlayer
+                ? world.FindPlayer(died.EntityId)?.Experience / 10 ?? 0
+                : world.FindNpcInstance(died.EntityId)?.Data.Experience ?? 0;
+
+            if (xp > 0)
+                GiveExperience(killer, xp);
         }
     }
 }

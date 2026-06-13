@@ -1,7 +1,7 @@
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
-using CryBits.Server.Simulation.Events;
+using CryBits.Simulation.Events;
 using CryBits.Server.World;
 using System.Drawing;
 using static CryBits.Globals;
@@ -112,8 +112,9 @@ internal sealed class PartySystem(ChatSender chatSender, PartySender partySender
     {
         foreach (var ev in tick.Events.Events)
         {
-            if (ev is PlayerDisconnectedEvent e)
-                Leave(e.Player);
+            if (ev is not PlayerDisconnectedEvent e) continue;
+            var player = world.FindPlayer(e.PlayerId);
+            if (player != null) Leave(player);
         }
     }
 }
