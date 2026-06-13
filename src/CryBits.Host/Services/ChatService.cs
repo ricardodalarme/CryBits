@@ -5,11 +5,11 @@ using CryBits.Host.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
-namespace CryBits.Host.Network.Handlers;
+namespace CryBits.Host.Services;
 
-internal sealed class ChatHandler()
+internal sealed class ChatService()
 {
-    public static ChatHandler Instance { get; } = new();
+    public static ChatService Instance { get; } = new();
 
     [PacketHandler]
     internal void Message(EntityId entityId, MessagePacket packet)

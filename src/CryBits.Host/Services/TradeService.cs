@@ -5,11 +5,11 @@ using CryBits.Host.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
-namespace CryBits.Host.Network.Handlers;
+namespace CryBits.Host.Services;
 
-internal sealed class TradeHandler()
+internal sealed class TradeService()
 {
-    public static TradeHandler Instance { get; } = new();
+    public static TradeService Instance { get; } = new();
 
     [PacketHandler]
     internal void TradeInvite(EntityId entityId, TradeInvitePacket packet)

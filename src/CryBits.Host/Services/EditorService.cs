@@ -11,9 +11,9 @@ using System.IO;
 using System.Linq;
 using CryBits.Host.Core;
 
-namespace CryBits.Host.Network.Handlers;
+namespace CryBits.Host.Services;
 
-internal sealed class EditorHandler(
+internal sealed class EditorService(
     AuthSender authSender,
     ClassSender classSender,
     MapSender mapSender,
@@ -24,7 +24,7 @@ internal sealed class EditorHandler(
     DefinitionCatalog catalog)
 {
     private readonly DefinitionCatalog _catalog = catalog;
-    public static EditorHandler Instance { get; } = new(
+    public static EditorService Instance { get; } = new(
         AuthSender.Instance,
         ClassSender.Instance,
         MapSender.Instance,

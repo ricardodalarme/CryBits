@@ -4,11 +4,11 @@ using CryBits.Host.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
-namespace CryBits.Host.Network.Handlers;
+namespace CryBits.Host.Services;
 
-internal sealed class PartyHandler()
+internal sealed class PartyService()
 {
-    public static PartyHandler Instance { get; } = new();
+    public static PartyService Instance { get; } = new();
 
     [PacketHandler]
     internal void PartyInvite(EntityId entityId, PartyInvitePacket packet)

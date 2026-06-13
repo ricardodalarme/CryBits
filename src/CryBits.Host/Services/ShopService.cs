@@ -4,11 +4,11 @@ using CryBits.Host.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
-namespace CryBits.Host.Network.Handlers;
+namespace CryBits.Host.Services;
 
-internal sealed class ShopHandler()
+internal sealed class ShopService()
 {
-    public static ShopHandler Instance { get; } = new();
+    public static ShopService Instance { get; } = new();
 
     [PacketHandler]
     internal void ShopBuy(EntityId entityId, ShopBuyPacket packet)

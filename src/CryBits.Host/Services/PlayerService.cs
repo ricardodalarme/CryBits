@@ -6,11 +6,11 @@ using CryBits.Host.Core;
 using CryBits.Simulation.Intents;
 using CryBits.Simulation.State;
 
-namespace CryBits.Host.Network.Handlers;
+namespace CryBits.Host.Services;
 
-internal sealed class PlayerHandler()
+internal sealed class PlayerService()
 {
-    public static PlayerHandler Instance { get; } = new();
+    public static PlayerService Instance { get; } = new();
 
     [PacketHandler]
     internal void PlayerMove(EntityId entityId, PlayerMovePacket packet)

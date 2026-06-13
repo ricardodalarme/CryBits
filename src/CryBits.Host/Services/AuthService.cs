@@ -9,9 +9,9 @@ using System.IO;
 using static CryBits.Definitions.Globals;
 using BcryptNet = BCrypt.Net.BCrypt;
 
-namespace CryBits.Host.Network.Handlers;
+namespace CryBits.Host.Services;
 
-internal sealed class AuthHandler(
+internal sealed class AuthService(
     AuthSender authSender,
     MapSender mapSender,
     ItemSender itemSender,
@@ -21,7 +21,7 @@ internal sealed class AuthHandler(
     AccountSender accountSender,
     AccountRepository accountRepository)
 {
-    public static AuthHandler Instance { get; } = new(
+    public static AuthService Instance { get; } = new(
         AuthSender.Instance,
         MapSender.Instance,
         ItemSender.Instance,

@@ -21,9 +21,9 @@ using static CryBits.Definitions.Globals;
 using CryBits.Simulation.State;
 using CryBits.Host.Core;
 
-namespace CryBits.Host.Network.Handlers;
+namespace CryBits.Host.Services;
 
-internal sealed class AccountHandler(
+internal sealed class CharacterService(
     CharacterRepository characterRepository,
     AuthSender authSender,
     PlayerSender playerSender,
@@ -38,7 +38,7 @@ internal sealed class AccountHandler(
     InventorySystem inventorySystem,
     DefinitionCatalog catalog)
 {
-    public static AccountHandler Instance { get; } = new(
+    public static CharacterService Instance { get; } = new(
         CharacterRepository.Instance,
         AuthSender.Instance,
         PlayerSender.Instance,

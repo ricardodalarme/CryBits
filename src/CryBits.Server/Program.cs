@@ -5,8 +5,8 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Host.Core;
 using CryBits.Host.Network;
-using CryBits.Host.Network.Handlers;
 using CryBits.Host.Persistence;
+using CryBits.Host.Services;
 using CryBits.Host.Persistence.Repositories;
 using CryBits.Host.Scheduling;
 using CryBits.Server.Commands;
@@ -114,15 +114,15 @@ internal static class Program
         Console.WriteLine("Network started. Port: " + Globals.Config.Port);
 
         // Register all [PacketHandler] methods before accepting connections.
-        PacketDispatcher.Register(AuthHandler.Instance);
-        PacketDispatcher.Register(AccountHandler.Instance);
-        PacketDispatcher.Register(PlayerHandler.Instance);
-        PacketDispatcher.Register(ChatHandler.Instance);
-        PacketDispatcher.Register(PartyHandler.Instance);
-        PacketDispatcher.Register(TradeHandler.Instance);
-        PacketDispatcher.Register(ShopHandler.Instance);
-        PacketDispatcher.Register(EditorHandler.Instance);
-        Console.WriteLine($"PacketDispatcher: {PacketDispatcher.Count} handlers registered.");
+        PacketDispatcher.Register(AuthService.Instance);
+        PacketDispatcher.Register(CharacterService.Instance);
+        PacketDispatcher.Register(PlayerService.Instance);
+        PacketDispatcher.Register(ChatService.Instance);
+        PacketDispatcher.Register(PartyService.Instance);
+        PacketDispatcher.Register(TradeService.Instance);
+        PacketDispatcher.Register(ShopService.Instance);
+        PacketDispatcher.Register(EditorService.Instance);
+        Console.WriteLine($"PacketDispatcher: {PacketDispatcher.Count} services registered.");
 
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
 
