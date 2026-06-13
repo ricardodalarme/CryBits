@@ -1,5 +1,5 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Network;
+using CryBits.Definitions.Catalog;
 using CryBits.Network.Packets.Client;
 using System.Linq;
 

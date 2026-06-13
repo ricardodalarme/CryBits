@@ -1,5 +1,4 @@
 using CryBits.Definitions.Characters;
-using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.World;

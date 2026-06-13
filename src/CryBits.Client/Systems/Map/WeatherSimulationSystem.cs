@@ -5,8 +5,8 @@ using CryBits.Client.Components.Core;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Worlds;
 using CryBits.Definitions.Maps;
-using static CryBits.Globals;
 using System;
+using static CryBits.Globals;
 
 namespace CryBits.Client.Systems.Map;
 

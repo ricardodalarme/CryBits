@@ -1,17 +1,15 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
-using CryBits.Definitions.Maps;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Definitions.Maps;
 using CryBits.Server.Systems.Npc;
 using CryBits.Server.World;
 using System;
 using System.Collections.Generic;
 namespace CryBits.Server.Entities;
 
-internal class MapInstance(Guid id, Map map, DefinitionCatalog catalog) : Entity(id)
+internal class MapInstance(Guid id, Map map) : Entity(id)
 {
-    private readonly DefinitionCatalog _catalog = catalog;
-
     // Map data and runtime caches.
     public readonly Map Data = map;
     public NpcInstance[] Npc = [];
@@ -89,7 +87,7 @@ internal class MapInstance(Guid id, Map map, DefinitionCatalog catalog) : Entity
     public static void Create(Map map, bool isOriginal)
     {
         var id = isOriginal ? map.Id : Guid.NewGuid();
-        var tempMap = new MapInstance(id, map, DefinitionCatalog.Instance);
+        var tempMap = new MapInstance(id, map);
         GameWorld.Current.Maps.Add(id, tempMap);
 
         // Initialize NPCs for the map.

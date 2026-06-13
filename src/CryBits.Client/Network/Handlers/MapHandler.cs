@@ -1,17 +1,16 @@
-using CryBits.Network;
 using Arch.Core;
-using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Map;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Network.Senders;
-using CryBits.Persistence;
-using CryBits.Persistence.Stores;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
+using CryBits.Network;
 using CryBits.Network.Packets.Server;
+using CryBits.Persistence.Stores;
 using System.Collections.Generic;
 using Entity = Arch.Core.Entity;
 

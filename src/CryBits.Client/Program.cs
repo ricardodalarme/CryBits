@@ -1,11 +1,8 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Audio;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Network;
 using CryBits.Client.Framework.Persistence.Repositories;
 using CryBits.Client.Graphics;
-using CryBits.Persistence.Stores;
-using System.IO;
 using CryBits.Client.Logic;
 using CryBits.Client.Network.Handlers;
 using CryBits.Client.Network.Senders;
@@ -13,7 +10,10 @@ using CryBits.Client.UI;
 using CryBits.Client.UI.Game;
 using CryBits.Client.UI.Menu;
 using CryBits.Client.Worlds;
+using CryBits.Definitions.Catalog;
+using CryBits.Persistence.Stores;
 using System;
+using System.IO;
 
 namespace CryBits.Client;
 

@@ -4,9 +4,9 @@ using CryBits.Client.Components.Movement;
 using CryBits.Client.Managers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
-using Direction = CryBits.Definitions.Common.Direction;
 using SFML.Window;
 using static CryBits.Globals;
+using Direction = CryBits.Definitions.Common.Direction;
 using MovementState = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Systems.Movement;

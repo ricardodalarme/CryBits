@@ -1,5 +1,3 @@
-using CryBits.Definitions.Maps;
-using CryBits.Definitions.Common;
 using CryBits.Definitions.Npcs;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;

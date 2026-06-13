@@ -1,19 +1,19 @@
-using CryBits.Network;
 using Arch.Core;
-using CryBits.Definitions.Catalog;
 using CryBits.Client.Components.Character;
 using CryBits.Client.Components.Combat;
 using CryBits.Client.Components.Movement;
 using CryBits.Client.Spawners;
 using CryBits.Client.Worlds;
-using Direction = CryBits.Definitions.Common.Direction;
-using Movement = CryBits.Definitions.Common.Movement;
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Network;
 using CryBits.Network.Packets.Server;
 using System;
 using System.Collections.Generic;
 using static CryBits.Globals;
+using Direction = CryBits.Definitions.Common.Direction;
+using Movement = CryBits.Definitions.Common.Movement;
 
 namespace CryBits.Client.Network.Handlers;
 

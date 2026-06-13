@@ -1,11 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CryBits.Definitions.Catalog;
-using CryBits.Editors.AvaloniaUI;
-using CryBits.Editors.Network;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Shops;
+using CryBits.Editors.AvaloniaUI;
+using CryBits.Editors.Network;
 using System;
 using System.Linq;
 

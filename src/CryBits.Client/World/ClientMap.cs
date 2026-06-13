@@ -1,7 +1,7 @@
 using Arch.Core;
 using CryBits.Client.Components.Movement;
-using CryBits.Definitions.Maps;
 using CryBits.Definitions.Common;
+using CryBits.Definitions.Maps;
 using System;
 namespace CryBits.Client.Worlds;
 

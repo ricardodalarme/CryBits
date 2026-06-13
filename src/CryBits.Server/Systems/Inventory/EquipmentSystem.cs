@@ -1,4 +1,3 @@
-using CryBits.Definitions.Slots;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Items;
 using CryBits.Server.Entities;
@@ -7,7 +6,6 @@ using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.Events;
 using CryBits.Server.World;
 using System.Linq;
-using static CryBits.Globals;
 
 namespace CryBits.Server.Systems.Inventory;
 

@@ -4,10 +4,10 @@ using CryBits.Client.Components.Core;
 using CryBits.Client.Managers;
 using CryBits.Client.Worlds;
 using SFML.System;
-using MapData = CryBits.Definitions.Maps.Map;
 using System;
 using System.Drawing;
 using static CryBits.Globals;
+using MapData = CryBits.Definitions.Maps.Map;
 
 namespace CryBits.Client.Systems.Core;
 

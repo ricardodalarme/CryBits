@@ -1,10 +1,10 @@
+using CryBits.Definitions.Characters;
 using CryBits.Definitions.Classes;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Shops;
 using CryBits.Definitions.Slots;
-using CryBits.Definitions.Characters;
-using CryBits.Simulation.Formulas;
 using CryBits.Server.World;
+using CryBits.Simulation.Formulas;
 using System;
 using System.Collections.Generic;
 using System.Linq;

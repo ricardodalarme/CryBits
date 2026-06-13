@@ -1,7 +1,7 @@
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Slots;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Definitions.Slots;
 using CryBits.Server.Entities;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;

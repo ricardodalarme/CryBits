@@ -1,9 +1,9 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Managers;
 using CryBits.Client.Worlds;
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using System;

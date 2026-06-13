@@ -1,6 +1,6 @@
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Shops;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Definitions.Shops;
 using CryBits.Network.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Server.World;

@@ -1,7 +1,7 @@
-using CryBits.Network;
-using CryBits.Definitions.Catalog;
 using CryBits.Client.UI.Game.Views;
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Network;
 using CryBits.Network.Packets.Server;
 
 namespace CryBits.Client.Network.Handlers;

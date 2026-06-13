@@ -1,8 +1,8 @@
 using CryBits.Client.Framework.Graphics;
+using CryBits.Definitions.Common;
+using CryBits.Definitions.Maps;
 using CryBits.Editors.Entities;
 using CryBits.Editors.Forms;
-using CryBits.Definitions.Maps;
-using CryBits.Definitions.Common;
 using SFML.Graphics;
 using System.Drawing;
 using static CryBits.Editors.Logic.Utils;

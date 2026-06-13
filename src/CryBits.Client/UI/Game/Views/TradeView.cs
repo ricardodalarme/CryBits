@@ -1,12 +1,12 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
 using CryBits.Client.Network.Senders;
 using CryBits.Client.Worlds;
+using CryBits.Definitions.Catalog;
+using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Slots;
-using CryBits.Definitions.Common;
 using SFML.Window;
 using System;
 using System.Drawing;

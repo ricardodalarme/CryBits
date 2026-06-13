@@ -1,8 +1,8 @@
 using CryBits.Definitions.Catalog;
-using CryBits.Definitions.Maps;
 using CryBits.Definitions.Characters;
-using CryBits.Definitions.Items;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Definitions.Items;
+using CryBits.Definitions.Maps;
 using CryBits.Network.Packets.Server;
 using CryBits.Server.Entities;
 using CryBits.Server.World;

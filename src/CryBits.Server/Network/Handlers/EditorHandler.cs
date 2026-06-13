@@ -1,8 +1,9 @@
-using CryBits.Network;
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Network;
 using CryBits.Network.Packets.Client;
+using CryBits.Persistence.Stores;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Persistence.Repositories;
 using CryBits.Server.World;
@@ -10,7 +11,6 @@ using System;
 using System.IO;
 using System.Linq;
 using static CryBits.Globals;
-using CryBits.Persistence.Stores;
 
 namespace CryBits.Server.Network.Handlers;
 

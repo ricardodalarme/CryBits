@@ -1,10 +1,10 @@
-using CryBits.Definitions.Catalog;
 using CryBits.Client.Framework.Constants;
 using CryBits.Client.Framework.Interfacily.Components;
 using CryBits.Client.Graphics.Renderers;
-using CryBits.Definitions.Items;
+using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
+using CryBits.Definitions.Items;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

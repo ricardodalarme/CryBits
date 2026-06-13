@@ -1,4 +1,3 @@
-using CryBits.Server.Network;
 using CryBits.Server.Network.Senders;
 using CryBits.Server.Systems.Combat;
 using CryBits.Server.Systems.Inventory;

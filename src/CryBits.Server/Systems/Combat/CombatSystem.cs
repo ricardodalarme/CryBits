@@ -1,18 +1,16 @@
-using CryBits.Definitions.Common;
 using CryBits.Definitions.Characters;
+using CryBits.Definitions.Common;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
 using CryBits.Server.Entities;
+using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.Events;
-using CryBits.Server.Systems.Shops;
-using CryBits.Simulation.Formulas;
-using CryBits.Server.Network.Senders;
 using CryBits.Server.World;
+using CryBits.Simulation.Formulas;
 using System;
 using System.Drawing;
 using static CryBits.Globals;
-
 using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Server.Systems.Combat;
@@ -104,7 +102,7 @@ internal sealed class CombatSystem(
         victim.Target = attacker;
         attacker.AttackTimer = Environment.TickCount64;
 
-        var attackDamage = CombatFormulas.NetDamage(attacker.Damage, (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
+        var attackDamage = CombatFormulas.NetDamage(attacker.Damage, victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
             combatSender.Attack(attacker.MapInstance.Id, attacker.Id, victim.Id);
@@ -146,7 +144,7 @@ internal sealed class CombatSystem(
 
         attacker.AttackTimer = Environment.TickCount64;
 
-        var attackDamage = CombatFormulas.NetDamage((short)attacker.Data.Attribute[(byte)Attribute.Strength], victim.PlayerDefense);
+        var attackDamage = CombatFormulas.NetDamage(attacker.Data.Attribute[(byte)Attribute.Strength], victim.PlayerDefense);
         if (attackDamage > 0)
         {
             combatSender.Attack(attacker.MapInstance.Id, attacker.Id, victim.Id);
@@ -175,8 +173,8 @@ internal sealed class CombatSystem(
         victim.Target = attacker;
 
         var attackDamage = CombatFormulas.NetDamage(
-            (short)attacker.Data.Attribute[(byte)Attribute.Strength],
-            (short)victim.Data.Attribute[(byte)Attribute.Resistance]);
+            attacker.Data.Attribute[(byte)Attribute.Strength],
+            victim.Data.Attribute[(byte)Attribute.Resistance]);
         if (attackDamage > 0)
         {
             combatSender.Attack(attacker.MapInstance.Id, attacker.Id, victim.Id);
