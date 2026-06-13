@@ -1,0 +1,27 @@
+using CryBits.Host.Network.Senders;
+using CryBits.Simulation.Core;
+using System;
+
+namespace CryBits.Host.Systems.Inventory;
+
+internal sealed class GroundItemSystem(MapSender mapSender) : ISimulationSystem
+{
+    public static GroundItemSystem Instance { get; } = new(MapSender.Instance);
+
+    private long _timer;
+
+    public void Execute(World world, Tick tick)
+    {
+        if (Environment.TickCount64 <= _timer + 300000) return;
+        _timer = Environment.TickCount64;
+
+        foreach (var map in world.Maps.Values)
+        {
+            if (!map.HasPlayers(world.Entities)) continue;
+
+            map.GroundItems.Clear();
+            map.SpawnItems();
+            mapSender.MapItems(map);
+        }
+    }
+}

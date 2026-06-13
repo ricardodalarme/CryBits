@@ -2,23 +2,11 @@
   "version": 1,
   "dependencies": {
     "net10.0": {
-      "BCrypt.Net-Next": {
-        "type": "Direct",
-        "requested": "[4.2.0, )",
-        "resolved": "4.2.0",
-        "contentHash": "gwLD2KfCuwQesP17aVh4h6lpiMPEVt5Lbpndo0ej903hNUUTtyxt3ARdDjmuydBRTAUICc7OVKVbaOvc6SQYXA=="
-      },
       "CommandLineParser": {
         "type": "Direct",
         "requested": "[2.9.1, )",
         "resolved": "2.9.1",
         "contentHash": "OE0sl1/sQ37bjVsPKKtwQlWDgqaxWgtme3xZz7JssWUzg5JpMIyHgCTY9MVMxOg48fJ1AgGT3tgdH5m/kQ5xhA=="
-      },
-      "LiteNetLib": {
-        "type": "Direct",
-        "requested": "[2.1.4, )",
-        "resolved": "2.1.4",
-        "contentHash": "KWlxvMw3Urpqj9joD96LRiK+LC62pQNs/zkXRJc+rHnxgkGp+vV703xzDrxRmv+V1YhCFfIGzs5nrVWtREIlyA=="
       },
       "System.Runtime.Serialization.Formatters": {
         "type": "Direct",
@@ -26,9 +14,31 @@
         "resolved": "10.0.9",
         "contentHash": "PFO/7nkB3nTtYGye6rQ/thoMffpst3t0CIj5vgE4xbVc0hPzOSK/NmxMJniICtWq1BNvQsuQnMLrT72/WyantQ=="
       },
+      "BCrypt.Net-Next": {
+        "type": "Transitive",
+        "resolved": "4.2.0",
+        "contentHash": "gwLD2KfCuwQesP17aVh4h6lpiMPEVt5Lbpndo0ej903hNUUTtyxt3ARdDjmuydBRTAUICc7OVKVbaOvc6SQYXA=="
+      },
+      "LiteNetLib": {
+        "type": "Transitive",
+        "resolved": "2.1.4",
+        "contentHash": "KWlxvMw3Urpqj9joD96LRiK+LC62pQNs/zkXRJc+rHnxgkGp+vV703xzDrxRmv+V1YhCFfIGzs5nrVWtREIlyA=="
+      },
       "crybits.definitions": {
         "type": "Project",
         "dependencies": {
+          "System.Runtime.Serialization.Formatters": "[10.0.9, )"
+        }
+      },
+      "crybits.host": {
+        "type": "Project",
+        "dependencies": {
+          "BCrypt.Net-Next": "[4.2.0, )",
+          "CryBits.Definitions": "[1.0.0, )",
+          "CryBits.Network": "[1.0.0, )",
+          "CryBits.Persistence": "[1.0.0, )",
+          "CryBits.Simulation": "[1.0.0, )",
+          "LiteNetLib": "[2.1.4, )",
           "System.Runtime.Serialization.Formatters": "[10.0.9, )"
         }
       },

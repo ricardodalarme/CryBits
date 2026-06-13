@@ -1,7 +1,7 @@
 using CommandLine;
 using CryBits.Definitions.Common;
-using CryBits.Server.Core;
-using CryBits.Server.Persistence.Repositories;
+using CryBits.Host.Core;
+using CryBits.Host.Persistence.Repositories;
 using System;
 
 namespace CryBits.Server.Commands;

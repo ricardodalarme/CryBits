@@ -16,11 +16,15 @@
     </Project>
     <Project Path="src/CryBits.Persistence/CryBits.Persistence.csproj" />
     <Project Path="src/CryBits.Simulation/CryBits.Simulation.csproj" />
-    <Project Path="src/CryBits.Server/CryBits.Server.csproj">
+    <Project Path="src/CryBits.Host/CryBits.Host.csproj">
       <BuildDependency Project="src/CryBits.Definitions/CryBits.Definitions.csproj" />
       <BuildDependency Project="src/CryBits.Network/CryBits.Network.csproj" />
       <BuildDependency Project="src/CryBits.Persistence/CryBits.Persistence.csproj" />
       <BuildDependency Project="src/CryBits.Simulation/CryBits.Simulation.csproj" />
+    </Project>
+    <Project Path="src/CryBits.Server/CryBits.Server.csproj">
+      <BuildDependency Project="src/CryBits.Host/CryBits.Host.csproj" />
+      <BuildDependency Project="src/CryBits.Definitions/CryBits.Definitions.csproj" />
     </Project>
   </Folder>
 </Solution>

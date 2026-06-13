@@ -1,5 +1,5 @@
 using CommandLine;
-using CryBits.Server.Logic;
+using CryBits.Host.Logic;
 using System;
 
 namespace CryBits.Server.Commands;

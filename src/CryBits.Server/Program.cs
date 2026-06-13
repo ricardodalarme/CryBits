@@ -3,15 +3,16 @@ using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Server.Core;
-using CryBits.Server.Logic;
-using CryBits.Server.Network;
-using CryBits.Server.Network.Handlers;
-using CryBits.Server.Persistence;
-using CryBits.Server.Persistence.Repositories;
+using CryBits.Host.Core;
+using CryBits.Host.Logic;
+using CryBits.Host.Network;
+using CryBits.Host.Network.Handlers;
+using CryBits.Host.Persistence;
+using CryBits.Host.Persistence.Repositories;
+using CryBits.Server.Commands;
 using CryBits.Simulation.Components;
 using CryBits.Simulation.Core;
-using CryBits.Server.Systems.Npc;
+using CryBits.Host.Systems.Npc;
 using System;
 using System.Linq;
 using System.Threading;
@@ -126,7 +127,11 @@ internal static class Program
         Console.WriteLine("\r\n" + "Server started. Type 'help' to see the commands." + "\r\n");
 
         // Start command loop on background thread.
-        var consoleThread = new Thread(() => Loop.Instance.Commands(cts.Token)) { IsBackground = true };
+        var dispatcher = new CommandDispatcher()
+            .Register<CpsCommand>()
+            .Register<DefineAccessCommand>()
+            .Register<SeedCommand>();
+        var consoleThread = new Thread(() => Loop.Instance.Commands(dispatcher.Dispatch, cts.Token)) { IsBackground = true };
         consoleThread.Start();
 
         // Start main loop and wait for cancellation.
