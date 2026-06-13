@@ -109,7 +109,57 @@ internal static class Program
     {
         // Save character data for all connected players.
         foreach (var t in WorldHost.Current.Sessions.Where(t => t.IsPlaying))
-            CharacterRepository.Instance.Write(t.Account!, t.Character!.Value);
+        {
+            var entityId = t.Character!.Value;
+            var entity = WorldHost.Current.Entities.Get(entityId);
+            if (entity == null) continue;
+            var pos = entity.Get<CryBits.Simulation.Components.Position>();
+            var appearance = entity.Get<CryBits.Simulation.Components.PlayerAppearance>();
+            var stats = entity.Get<CryBits.Simulation.Components.StatBlock>();
+            var vitals = entity.Get<CryBits.Simulation.Components.Vitals>();
+            var inv = entity.Get<Simulation.Components.InventoryState>();
+            var equip = entity.Get<CryBits.Simulation.Components.EquipmentState>();
+            var hotbar = entity.Get<CryBits.Simulation.Components.HotbarState>();
+            if (pos == null || appearance == null || stats == null || vitals == null ||
+                inv == null || equip == null || hotbar == null) continue;
+
+            var data = new CryBits.Definitions.Characters.Character
+            {
+                Name = appearance.Name,
+                ClassId = appearance.ClassId,
+                Gender = appearance.Gender,
+                TextureNum = appearance.TextureNum,
+                Level = stats.Level,
+                Experience = stats.Experience,
+                Points = stats.Points,
+                Attributes = (short[])stats.Attribute.Clone(),
+                MapId = pos.MapId,
+                X = pos.X,
+                Y = pos.Y,
+                Direction = (byte)pos.Direction,
+                Hp = vitals.Hp,
+                Mp = vitals.Mp,
+                InventoryIds = new Guid[CryBits.Definitions.Globals.MaxInventory],
+                InventoryAmounts = new short[CryBits.Definitions.Globals.MaxInventory],
+                Equipment = new Guid[(byte)CryBits.Definitions.Items.Equipment.Count],
+                HotbarTypes = new byte[CryBits.Definitions.Globals.MaxHotbar],
+                HotbarSlots = new byte[CryBits.Definitions.Globals.MaxHotbar],
+            };
+            for (byte i = 0; i < CryBits.Definitions.Globals.MaxInventory; i++)
+            {
+                data.InventoryIds[i] = inv.Slots[i].ItemId;
+                data.InventoryAmounts[i] = inv.Slots[i].Amount;
+            }
+            for (byte i = 0; i < (byte)CryBits.Definitions.Items.Equipment.Count; i++)
+                data.Equipment[i] = equip.Slots[i];
+            for (byte i = 0; i < CryBits.Definitions.Globals.MaxHotbar; i++)
+            {
+                data.HotbarTypes[i] = (byte)hotbar.Slots[i].Type;
+                data.HotbarSlots[i] = (byte)hotbar.Slots[i].Slot;
+            }
+
+            CharacterRepository.Instance.Write(t.Account!, data);
+        }
 
         // Stop network device.
         NetworkServer.Instance.Device.Stop();
