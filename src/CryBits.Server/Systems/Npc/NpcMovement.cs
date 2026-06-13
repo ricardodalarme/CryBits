@@ -4,17 +4,17 @@ using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Maps;
 using CryBits.Definitions.Npcs;
-using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.State;
 using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.World;
+using CryBits.Simulation.Core;
 using System;
 
 namespace CryBits.Server.Systems.Npc;
 
 internal static class NpcMovement
 {
-    internal static void TickMovement(EntityId npcId, NpcSender npcSender, ChatSender chatSender)
+    internal static void TickMovement(EntityId npcId, Tick tick)
     {
         var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
@@ -76,13 +76,13 @@ internal static class NpcMovement
             if (Random.Shared.Next(0, 2) == 0)
             {
                 for (byte d = 0; d < (byte)Direction.Count; d++)
-                    if (!moved && canMove[d] && Move(npcId, npcSender, (Direction)d))
+                    if (!moved && canMove[d] && Move(npcId, (Direction)d))
                         moved = true;
             }
             else
             {
                 for (short d = (byte)Direction.Count - 1; d >= 0; d--)
-                    if (!moved && canMove[d] && Move(npcId, npcSender, (Direction)d))
+                    if (!moved && canMove[d] && Move(npcId, (Direction)d))
                         moved = true;
             }
         }
@@ -91,16 +91,16 @@ internal static class NpcMovement
             if (Random.Shared.Next(0, 3) == 0 && !moved)
             {
                 if (npcData.Movement == MovementStyle.MoveRandomly)
-                    Move(npcId, npcSender, (Direction)Random.Shared.Next(0, 4), 1, true);
+                    Move(npcId, (Direction)Random.Shared.Next(0, 4), 1, true);
                 else if (npcData.Movement == MovementStyle.TurnRandomly)
                 {
                     pos.Direction = (Direction)Random.Shared.Next(0, 4);
-                    npcSender.MapNpcDirection(npcId);
+                    world.Dirty.Mark<Position>(npcId);
                 }
             }
     }
 
-    internal static bool Move(EntityId npcId, NpcSender npcSender, Direction direction, byte movement = 1, bool checkZone = false)
+    internal static bool Move(EntityId npcId, Direction direction, byte movement = 1, bool checkZone = false)
     {
         var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
@@ -111,7 +111,6 @@ internal static class NpcMovement
         byte nextX = pos.X, nextY = pos.Y;
 
         pos.Direction = direction;
-        npcSender.MapNpcDirection(npcId);
         direction.NextTile(ref nextX, ref nextY);
 
         if (Map.OutLimit(nextX, nextY)) return false;
@@ -120,7 +119,7 @@ internal static class NpcMovement
 
         pos.X = nextX;
         pos.Y = nextY;
-        npcSender.MapNpcMovement(npcId, movement);
+        world.Dirty.Mark<Position>(npcId);
         return true;
     }
 }

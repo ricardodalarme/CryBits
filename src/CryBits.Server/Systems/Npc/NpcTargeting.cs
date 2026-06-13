@@ -1,10 +1,11 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Npcs;
-using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.State;
 using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.World;
+using CryBits.Simulation.Core;
+using CryBits.Simulation.Events;
 using System;
 using System.Drawing;
 
@@ -12,7 +13,7 @@ namespace CryBits.Server.Systems.Npc;
 
 internal static class NpcTargeting
 {
-    internal static void UpdateTarget(EntityId npcId, ChatSender chatSender)
+    internal static void UpdateTarget(EntityId npcId, Tick tick)
     {
         var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
@@ -21,7 +22,7 @@ internal static class NpcTargeting
         var npcData = DefinitionCatalog.Instance.Npcs.Get(npcState.NpcDefId);
 
         if (npcData.Behaviour == Behaviour.AttackOnSight && !npcState.TargetId.HasValue)
-            ScanForTarget(npcId, chatSender);
+            ScanForTarget(npcId, tick);
 
         if (npcState.TargetId.HasValue)
         {
@@ -45,6 +46,8 @@ internal static class NpcTargeting
             }
             else
                 npcState.TargetId = null;
+
+            world.Dirty.Mark<NpcState>(npcId);
         }
 
         if (npcState.TargetId.HasValue)
@@ -53,11 +56,14 @@ internal static class NpcTargeting
             var targetPos = targetE.Get<Position>()!;
             var distance = Math.Sqrt(Math.Pow(pos.X - targetPos.X, 2) + Math.Pow(pos.Y - targetPos.Y, 2));
             if (npcData.Sight < distance)
+            {
                 npcState.TargetId = null;
+                world.Dirty.Mark<NpcState>(npcId);
+            }
         }
     }
 
-    private static void ScanForTarget(EntityId npcId, ChatSender chatSender)
+    private static void ScanForTarget(EntityId npcId, Tick tick)
     {
         var world = GameWorld.Current;
         var e = world.Entities.Get(npcId)!;
@@ -82,8 +88,14 @@ internal static class NpcTargeting
             if (distance <= npcData.Sight)
             {
                 npcState.TargetId = targetPlayerId;
+                world.Dirty.Mark<NpcState>(npcId);
                 if (!string.IsNullOrEmpty(npcData.SayMsg))
-                    chatSender.Message(targetPlayerId, npcData.Name + ": " + npcData.SayMsg, Color.White);
+                    tick.Events.Emit(new ChatMessageEvent
+                    {
+                        RecipientId = targetPlayerId.Value,
+                        Text = npcData.Name + ": " + npcData.SayMsg,
+                        ColorArgb = Color.White.ToArgb()
+                    });
                 return;
             }
         }
@@ -107,6 +119,7 @@ internal static class NpcTargeting
             if (distance <= npcData.Sight)
             {
                 npcState.TargetId = otherNpcId;
+                world.Dirty.Mark<NpcState>(npcId);
                 return;
             }
         }

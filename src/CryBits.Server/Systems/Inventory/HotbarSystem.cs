@@ -1,16 +1,15 @@
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Server.Entities;
-using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.State;
 using CryBits.Server.Simulation.State.Components;
 using CryBits.Server.World;
 
 namespace CryBits.Server.Systems.Inventory;
 
-internal sealed class HotbarSystem(PlayerSender playerSender, InventorySystem inventorySystem)
+internal sealed class HotbarSystem(InventorySystem inventorySystem)
 {
-    public static HotbarSystem Instance { get; } = new(PlayerSender.Instance, InventorySystem.Instance);
+    public static HotbarSystem Instance { get; } = new(InventorySystem.Instance);
 
     internal void Add(EntityId entityId, short hotbarSlot, SlotType type, short slot)
     {
@@ -22,7 +21,7 @@ internal sealed class HotbarSystem(PlayerSender playerSender, InventorySystem in
 
         hotbar.Slots[hotbarSlot].Slot = slot;
         hotbar.Slots[hotbarSlot].Type = type;
-        playerSender.PlayerHotbar(entityId);
+        GameWorld.Current.Dirty.Mark<HotbarState>(entityId);
     }
 
     internal void Change(EntityId entityId, short slotOld, short slotNew)
@@ -35,7 +34,7 @@ internal sealed class HotbarSystem(PlayerSender playerSender, InventorySystem in
         if (hotbar.Slots[slotOld].Slot == 0) return;
 
         (hotbar.Slots[slotOld], hotbar.Slots[slotNew]) = (hotbar.Slots[slotNew], hotbar.Slots[slotOld]);
-        playerSender.PlayerHotbar(entityId);
+        GameWorld.Current.Dirty.Mark<HotbarState>(entityId);
     }
 
     internal void Use(EntityId entityId, short hotbarSlot)
@@ -62,6 +61,6 @@ internal sealed class HotbarSystem(PlayerSender playerSender, InventorySystem in
         if (hotbarSlot == null) return;
 
         hotbarSlot.Slot = slotNew;
-        playerSender.PlayerHotbar(entityId);
+        GameWorld.Current.Dirty.Mark<HotbarState>(entityId);
     }
 }

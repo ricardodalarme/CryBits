@@ -22,16 +22,10 @@ using CryBits.Simulation.Entities;
 namespace CryBits.Server.Systems.Combat;
 
 internal sealed class CombatSystem(
-    CombatSender combatSender,
-    PlayerSender playerSender,
-    NpcSender npcSender,
-    ChatSender chatSender) : ISimulationSystem
+    CombatSender combatSender) : ISimulationSystem
 {
     public static CombatSystem Instance { get; } = new(
-        CombatSender.Instance,
-        PlayerSender.Instance,
-        NpcSender.Instance,
-        ChatSender.Instance);
+        CombatSender.Instance);
 
     internal void Attack(EntityId entityId)
     {
@@ -68,6 +62,7 @@ internal sealed class CombatSystem(
     @continue:
         combatSender.Attack(pos.MapId, entityId.Value);
         combat.AttackTimer = Environment.TickCount64;
+        world.Dirty.Mark<Position>(entityId);
     }
 
     private void PlayerAttackPlayer(EntityId attackerId, EntityId victimId)
@@ -89,11 +84,12 @@ internal sealed class CombatSystem(
         if (victimCombat.GettingMap) return;
         if (map.Data.Moral == (byte)Moral.Pacific)
         {
-            chatSender.Message(attackerId, "This is a peaceful area.", Color.White);
+            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = attackerId.Value, Text = "This is a peaceful area.", ColorArgb = Color.White.ToArgb() });
             return;
         }
 
         attackerCombat.AttackTimer = Environment.TickCount64;
+        world.Dirty.Mark<Position>(attackerId);
 
         var weaponDamage = attackerEquip.Slots[(byte)Equipment.Weapon] != Guid.Empty
             ? catalog.Items.Get(attackerEquip.Slots[(byte)Equipment.Weapon])?.WeaponDamage ?? 0
@@ -108,7 +104,7 @@ internal sealed class CombatSystem(
             if (attackDamage < victimVitals.Hp)
             {
                 victimVitals.Hp -= attackDamage;
-                playerSender.PlayerVitals(victimId);
+                world.Dirty.Mark<Vitals>(victimId);
             }
             else
             {
@@ -135,7 +131,7 @@ internal sealed class CombatSystem(
         var map = world.Maps.Get(attackerPos.MapId)!;
 
         if (victimNpcState.TargetId != attackerId && !string.IsNullOrEmpty(npcData.SayMsg))
-            chatSender.Message(attackerId, npcData.Name + ": " + npcData.SayMsg, Color.White);
+            world.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = attackerId.Value, Text = npcData.Name + ": " + npcData.SayMsg, ColorArgb = Color.White.ToArgb() });
 
         switch (npcData.Behaviour)
         {
@@ -146,7 +142,9 @@ internal sealed class CombatSystem(
         }
 
         victimNpcState.TargetId = attackerId;
+        world.Dirty.Mark<NpcState>(victimId);
         attackerCombat.AttackTimer = Environment.TickCount64;
+        world.Dirty.Mark<Position>(attackerId);
 
         var weaponDamage = attackerEquip.Slots[(byte)Equipment.Weapon] != Guid.Empty
             ? catalog.Items.Get(attackerEquip.Slots[(byte)Equipment.Weapon])?.WeaponDamage ?? 0
@@ -160,7 +158,7 @@ internal sealed class CombatSystem(
             if (attackDamage < victimVitals.Hp)
             {
                 victimVitals.Hp -= attackDamage;
-                npcSender.MapNpcVitals(victimId);
+                world.Dirty.Mark<Vitals>(victimId);
             }
             else
             {
@@ -217,6 +215,7 @@ internal sealed class CombatSystem(
         if (victimCombat.GettingMap) return;
 
         attackerNpcState.AttackTimer = Environment.TickCount64;
+        world.Dirty.Mark<Position>(attackerId);
 
         var attackDamage = CombatFormulas.NetDamage(npcData.Attribute[(byte)Attribute.Strength], CombatFormulas.PlayerDefense(victimStats.Attribute[(byte)Attribute.Resistance]));
         if (attackDamage > 0)
@@ -226,11 +225,12 @@ internal sealed class CombatSystem(
             if (attackDamage < victimVitals.Hp)
             {
                 victimVitals.Hp -= attackDamage;
-                playerSender.PlayerVitals(victimId);
+                world.Dirty.Mark<Vitals>(victimId);
             }
             else
             {
                 attackerNpcState.TargetId = null;
+                world.Dirty.Mark<NpcState>(attackerId);
                 world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = true, SourceId = attackerId.Value, SourceIsPlayer = false });
             }
         }
@@ -255,7 +255,9 @@ internal sealed class CombatSystem(
         if (!victimNpcState.Alive) return;
 
         attackerNpcState.AttackTimer = Environment.TickCount64;
+        world.Dirty.Mark<Position>(attackerId);
         victimNpcState.TargetId = attackerId;
+        world.Dirty.Mark<NpcState>(victimId);
 
         var attackDamage = CombatFormulas.NetDamage(
             attackerData.Attribute[(byte)Attribute.Strength],
@@ -267,11 +269,12 @@ internal sealed class CombatSystem(
             if (attackDamage < victimVitals.Hp)
             {
                 victimVitals.Hp -= attackDamage;
-                npcSender.MapNpcVitals(victimId);
+                world.Dirty.Mark<Vitals>(victimId);
             }
             else
             {
                 attackerNpcState.TargetId = null;
+                world.Dirty.Mark<NpcState>(attackerId);
                 Died(victimId);
                 world.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = victimId.Value, EntityIsPlayer = false, SourceId = attackerId.Value, SourceIsPlayer = false });
             }
@@ -299,7 +302,7 @@ internal sealed class CombatSystem(
         npcState.Alive = false;
         npcState.TargetId = null;
         npcState.SpawnTimer = Environment.TickCount64;
-        npcSender.MapNpcDied(npcId);
+        world.Dirty.Mark<NpcState>(npcId);
     }
 
     public void Execute(GameWorld world, Tick tick)

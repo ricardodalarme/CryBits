@@ -4,7 +4,6 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Definitions.Slots;
 using CryBits.Server.Entities;
-using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.State;
 using CryBits.Server.Simulation.State.Components;
@@ -20,18 +19,12 @@ using CryBits.Simulation.Entities;
 namespace CryBits.Server.Systems.Inventory;
 
 internal sealed class InventorySystem(
-    PlayerSender playerSender,
-    MapSender mapSender,
     LevelingSystem levelingSystem,
-    ChatSender chatSender,
     DefinitionCatalog catalog) : ISimulationSystem
 {
     private readonly DefinitionCatalog _catalog = catalog;
     public static InventorySystem Instance { get; } = new(
-        PlayerSender.Instance,
-        MapSender.Instance,
         LevelingSystem.Instance,
-        ChatSender.Instance,
         DefinitionCatalog.Instance);
 
     public bool GiveItem(EntityId entityId, Item item, short amount)
@@ -57,7 +50,7 @@ internal sealed class InventorySystem(
             emptySlot.Amount = item.Stackable ? amount : (byte)1;
         }
 
-        playerSender.PlayerInventory(entityId);
+        GameWorld.Current.Dirty.Mark<InventoryState>(entityId);
         return true;
     }
 
@@ -83,14 +76,14 @@ internal sealed class InventorySystem(
                 {
                     hotbarSlot.Type = SlotType.None;
                     hotbarSlot.Slot = 0;
-                    playerSender.PlayerHotbar(entityId);
+                    GameWorld.Current.Dirty.Mark<HotbarState>(entityId);
                 }
             }
         }
         else
             slot.Amount -= amount;
 
-        playerSender.PlayerInventory(entityId);
+        GameWorld.Current.Dirty.Mark<InventoryState>(entityId);
     }
 
     public void DropItem(EntityId entityId, ItemSlot slot, short amount)
@@ -110,7 +103,6 @@ internal sealed class InventorySystem(
         if (amount > slot.Amount) amount = slot.Amount;
 
         map.Item.Add(new GroundItem(slot.ItemId, amount, pos.X, pos.Y));
-        mapSender.MapItems(map);
         TakeItem(entityId, slot, amount);
     }
 
@@ -129,13 +121,13 @@ internal sealed class InventorySystem(
 
         if (stats.Level < item.ReqLevel)
         {
-            chatSender.Message(entityId, "You do not have the level required to use this item.", Color.White);
+            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You do not have the level required to use this item.", ColorArgb = Color.White.ToArgb() });
             return;
         }
 
         if (item.ReqClassId.HasValue && appearance.ClassId != item.ReqClassId.Value)
         {
-            chatSender.Message(entityId, "You can not use this item.", Color.White);
+            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You can not use this item.", ColorArgb = Color.White.ToArgb() });
             return;
         }
 
@@ -166,6 +158,8 @@ internal sealed class InventorySystem(
                 if (i == 0) vitals.Hp = current; else vitals.Mp = current;
             }
 
+            GameWorld.Current.Dirty.Mark<Vitals>(entityId);
+
             if (vitals.Hp == 0)
                 GameWorld.Current.CurrentTick?.Events.Emit(new EntityDiedEvent { EntityId = entityId.Value, EntityIsPlayer = true, SourceId = null, SourceIsPlayer = null });
 
@@ -188,7 +182,6 @@ internal sealed class InventorySystem(
         if (GiveItem(entityId, item, mapItem.Amount))
         {
             map.Item.Remove(mapItem);
-            mapSender.MapItems(map);
         }
     }
 
@@ -227,8 +220,6 @@ internal sealed class InventorySystem(
                             if (map.Item.Count == Config.MaxMapItems) continue;
                             map.Item.Add(new GroundItem(equip.OldItemId.Value, 1,
                                 pos.X, pos.Y));
-                            mapSender.MapItems(map);
-                            playerSender.PlayerInventory(playerId.Value);
                         }
                         break;
                     }

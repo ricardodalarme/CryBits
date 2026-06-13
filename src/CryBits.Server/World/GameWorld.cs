@@ -41,6 +41,11 @@ internal sealed class GameWorld
     public SessionMap SessionMap { get; } = new();
 
     /// <summary>
+    /// Tracks which (EntityId, ComponentType) pairs were mutated each tick.
+    /// </summary>
+    public DirtyTracking Dirty { get; } = new();
+
+    /// <summary>
     /// The tick currently being processed. Set before HandleData and cleared after
     /// the pipeline executes, so any system can emit events via CurrentTick.Events.Emit().
     /// </summary>

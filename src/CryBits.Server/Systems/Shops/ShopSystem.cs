@@ -3,7 +3,6 @@ using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Npcs;
 using CryBits.Definitions.Shops;
 using CryBits.Server.Entities;
-using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.State;
 using CryBits.Server.Simulation.State.Components;
@@ -18,15 +17,11 @@ namespace CryBits.Server.Systems.Shops;
 
 internal sealed class ShopSystem(
     InventorySystem inventorySystem,
-    ShopSender shopSender,
-    ChatSender chatSender,
     DefinitionCatalog catalog) : ISimulationSystem
 {
     private readonly DefinitionCatalog _catalog = catalog;
     public static ShopSystem Instance { get; } = new(
         InventorySystem.Instance,
-        ShopSender.Instance,
-        ChatSender.Instance,
         DefinitionCatalog.Instance);
 
     public void Open(EntityId entityId, Shop shop)
@@ -35,7 +30,7 @@ internal sealed class ShopSystem(
         var shopState = e.Get<ShopState>()!;
 
         shopState.ShopId = shop.Id;
-        shopSender.ShopOpen(entityId, shop);
+        GameWorld.Current.Dirty.Mark<ShopState>(entityId);
     }
 
     public void Leave(EntityId entityId)
@@ -46,7 +41,7 @@ internal sealed class ShopSystem(
         if (shopState.ShopId == null) return;
 
         shopState.ShopId = null;
-        shopSender.ShopOpen(entityId, null);
+        GameWorld.Current.Dirty.Mark<ShopState>(entityId);
     }
 
     internal void Buy(EntityId entityId, short shopSoldIndex)
@@ -65,13 +60,13 @@ internal sealed class ShopSystem(
 
         if (inventorySlot == null || inventorySlot.Amount < shopSold.Price)
         {
-            chatSender.Message(entityId, "You don't have enough money to buy the item.", Color.Red);
+            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have enough money to buy the item.", ColorArgb = Color.Red.ToArgb() });
             return;
         }
 
         if (inv.TotalFree == 0 && inventorySlot.Amount > shopSold.Price)
         {
-            chatSender.Message(entityId, "You don't have space in your bag.", Color.Red);
+            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have space in your bag.", ColorArgb = Color.Red.ToArgb() });
             return;
         }
 
@@ -79,7 +74,7 @@ internal sealed class ShopSystem(
         var soldItemName = soldItem?.Name ?? "Unknown";
         inventorySystem.TakeItem(entityId, inventorySlot, shopSold.Price);
         inventorySystem.GiveItem(entityId, soldItem, shopSold.Amount);
-        chatSender.Message(entityId, "You bought " + shopSold.Price + "x " + soldItemName + ".", Color.Green);
+        GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You bought " + shopSold.Price + "x " + soldItemName + ".", ColorArgb = Color.Green.ToArgb() });
     }
 
     internal void Sell(EntityId entityId, byte inventorySlotIndex, short amount)
@@ -95,21 +90,20 @@ internal sealed class ShopSystem(
 
         if (buy == null)
         {
-            chatSender.Message(entityId, "The store doesn't sell this item", Color.Red);
+            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "The store doesn't sell this item", ColorArgb = Color.Red.ToArgb() });
             return;
         }
 
         if (inv.TotalFree == 0 && inv.Slots[inventorySlotIndex].Amount > amount)
         {
-            chatSender.Message(entityId, "You don't have space in your bag.", Color.Red);
+            GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You don't have space in your bag.", ColorArgb = Color.Red.ToArgb() });
             return;
         }
 
         var soldItem = _catalog.Items.Get(inv.Slots[inventorySlotIndex].ItemId);
         var soldItemName = soldItem?.Name ?? "Unknown";
         var currencyItem = _catalog.Items.Get(shop.CurrencyId);
-        chatSender.Message(entityId,
-            "You sold " + soldItemName + "x " + amount + " for .", Color.Green);
+        GameWorld.Current.CurrentTick?.Events.Emit(new ChatMessageEvent { RecipientId = entityId.Value, Text = "You sold " + soldItemName + "x " + amount + " for .", ColorArgb = Color.Green.ToArgb() });
         inventorySystem.TakeItem(entityId, inv.Slots[inventorySlotIndex], amount);
         inventorySystem.GiveItem(entityId, currencyItem, (short)(buy.Price * amount));
     }

@@ -3,7 +3,6 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Common;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
-using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.State;
 using CryBits.Server.Simulation.State.Components;
@@ -15,10 +14,10 @@ using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Combat;
 
-internal sealed class DeathSystem(PlayerSender playerSender, DefinitionCatalog catalog) : ISimulationSystem
+internal sealed class DeathSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
     private readonly DefinitionCatalog _catalog = catalog;
-    public static DeathSystem Instance { get; } = new(PlayerSender.Instance, DefinitionCatalog.Instance);
+    public static DeathSystem Instance { get; } = new(DefinitionCatalog.Instance);
 
     public void Execute(GameWorld world, Tick tick)
     {
@@ -41,10 +40,10 @@ internal sealed class DeathSystem(PlayerSender playerSender, DefinitionCatalog c
                 if (n == 0) vitals.Hp = vitals.MaxHp; else vitals.Mp = vitals.MaxMp;
             }
 
-            playerSender.PlayerVitals(playerId.Value);
+            world.Dirty.Mark<Vitals>(playerId.Value);
 
             stats.Experience /= 10;
-            playerSender.PlayerExperience(playerId.Value);
+            world.Dirty.Mark<StatBlock>(playerId.Value);
 
             pos.Direction = (Direction)playerClass.SpawnDirection;
             MovementSystem.Instance.Warp(playerId.Value,

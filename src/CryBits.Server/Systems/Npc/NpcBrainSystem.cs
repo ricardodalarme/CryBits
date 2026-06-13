@@ -16,12 +16,10 @@ namespace CryBits.Server.Systems.Npc;
 
 internal sealed class NpcBrainSystem(
     NpcSender npcSender,
-    ChatSender chatSender,
     NetworkServer networkServer) : ISimulationSystem
 {
     public static NpcBrainSystem Instance { get; } = new(
         NpcSender.Instance,
-        ChatSender.Instance,
         NetworkServer.Instance);
 
     private long _lastTick;
@@ -41,15 +39,15 @@ internal sealed class NpcBrainSystem(
                 if (e == null) continue;
                 var npcState = e.Get<NpcState>();
                 if (npcState == null || !npcState.Alive) continue;
-                TickAlive(npcId);
+                TickAlive(npcId, tick);
             }
         }
     }
 
-    private void TickAlive(EntityId npcId)
+    private void TickAlive(EntityId npcId, Tick tick)
     {
-        NpcTargeting.UpdateTarget(npcId, chatSender);
-        NpcMovement.TickMovement(npcId, npcSender, chatSender);
+        NpcTargeting.UpdateTarget(npcId, tick);
+        NpcMovement.TickMovement(npcId, tick);
     }
 
     internal void Spawn(EntityId npcId)
@@ -111,6 +109,10 @@ internal sealed class NpcBrainSystem(
         pos.Direction = direction;
         vitals.Hp = npcData.Vital[(byte)Vital.Hp];
         vitals.Mp = npcData.Vital[(byte)Vital.Mp];
+
+        world.Dirty.Mark<NpcState>(npcId);
+        world.Dirty.Mark<Position>(npcId);
+        world.Dirty.Mark<Vitals>(npcId);
 
         if (networkServer.Device != null) npcSender.MapNpc(npcId);
     }

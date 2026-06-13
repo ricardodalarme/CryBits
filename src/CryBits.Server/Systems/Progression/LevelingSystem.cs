@@ -1,7 +1,6 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Server.Entities;
-using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.State;
 using CryBits.Server.Simulation.State.Components;
@@ -15,9 +14,9 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Server.Systems.Progression;
 
-internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSender) : ISimulationSystem
+internal sealed class LevelingSystem : ISimulationSystem
 {
-    public static LevelingSystem Instance { get; } = new(PlayerSender.Instance, MapSender.Instance);
+    public static LevelingSystem Instance { get; } = new();
 
     internal void AddPoint(EntityId entityId, byte attributeNum)
     {
@@ -28,8 +27,7 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
 
         stats.Attribute[attributeNum]++;
         stats.Points--;
-        playerSender.PlayerExperience(entityId);
-        mapSender.MapPlayers(entityId);
+        GameWorld.Current.Dirty.Mark<StatBlock>(entityId);
     }
 
     public void GiveExperience(EntityId entityId, int value)
@@ -73,8 +71,7 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
             expNeeded = LevelingFormulas.ExperienceNeeded(stats.Level, totalAttr, stats.Points);
         }
 
-        playerSender.PlayerExperience(entityId);
-        if (numLevel > 0) mapSender.MapPlayers(entityId);
+        GameWorld.Current.Dirty.Mark<StatBlock>(entityId);
     }
 
     private void PartySplitXp(EntityId entityId, int value)
@@ -105,12 +102,12 @@ internal sealed class LevelingSystem(PlayerSender playerSender, MapSender mapSen
             experienceSum += givenExperience;
 
             GiveExperience(party.Members[i], givenExperience);
-            playerSender.PlayerExperience(party.Members[i]);
+            GameWorld.Current.Dirty.Mark<StatBlock>(party.Members[i]);
         }
 
         stats.Experience += value - experienceSum;
         CheckLevelUp(entityId);
-        playerSender.PlayerExperience(entityId);
+        GameWorld.Current.Dirty.Mark<StatBlock>(entityId);
     }
 
     public void Execute(GameWorld world, Tick tick)

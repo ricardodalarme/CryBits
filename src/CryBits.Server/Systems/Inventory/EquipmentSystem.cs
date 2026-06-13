@@ -3,7 +3,6 @@ using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
 using CryBits.Definitions.Items;
 using CryBits.Server.Entities;
-using CryBits.Server.Network.Senders;
 using Attribute = CryBits.Definitions.Characters.Attribute;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.State;
@@ -16,10 +15,10 @@ using CryBits.Simulation.Core;
 
 namespace CryBits.Server.Systems.Inventory;
 
-internal sealed class EquipmentSystem(PlayerSender playerSender, DefinitionCatalog catalog) : ISimulationSystem
+internal sealed class EquipmentSystem(DefinitionCatalog catalog) : ISimulationSystem
 {
     private readonly DefinitionCatalog _catalog = catalog;
-    public static EquipmentSystem Instance { get; } = new(PlayerSender.Instance, DefinitionCatalog.Instance);
+    public static EquipmentSystem Instance { get; } = new(DefinitionCatalog.Instance);
 
     public void Equip(EntityId entityId, Item item)
     {
@@ -45,7 +44,8 @@ internal sealed class EquipmentSystem(PlayerSender playerSender, DefinitionCatal
             OldItemId = oldItem?.Id
         });
 
-        playerSender.PlayerEquipments(entityId);
+        GameWorld.Current.Dirty.Mark<EquipmentState>(entityId);
+        GameWorld.Current.Dirty.Mark<StatBlock>(entityId);
     }
 
     public void Unequip(EntityId entityId, byte equipSlot)
@@ -71,7 +71,8 @@ internal sealed class EquipmentSystem(PlayerSender playerSender, DefinitionCatal
             OldItemId = oldItem.Id
         });
 
-        playerSender.PlayerEquipments(entityId);
+        GameWorld.Current.Dirty.Mark<EquipmentState>(entityId);
+        GameWorld.Current.Dirty.Mark<StatBlock>(entityId);
     }
 
     public void Execute(GameWorld world, Tick tick)

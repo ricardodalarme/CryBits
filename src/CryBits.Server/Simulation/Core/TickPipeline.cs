@@ -38,7 +38,7 @@ internal sealed class TickPipeline
     public static TickPipeline CreateDefault()
     {
         var pipeline = new TickPipeline();
-        pipeline.AddSystem(new VitalsRegenSystem(PlayerSender.Instance, NpcSender.Instance));
+        pipeline.AddSystem(VitalsRegenSystem.Instance);
         pipeline.AddSystem(MovementSystem.Instance);
         pipeline.AddSystem(NpcBrainSystem.Instance);
         pipeline.AddSystem(CombatSystem.Instance);
@@ -51,6 +51,9 @@ internal sealed class TickPipeline
         pipeline.AddSystem(ShopSystem.Instance);
         pipeline.AddSystem(PartySystem.Instance);
         pipeline.AddSystem(SpawnSystem.Instance);
+        pipeline.AddSystem(new ReplicationSystem(
+            PlayerSender.Instance, NpcSender.Instance,
+            MapSender.Instance, ChatSender.Instance));
         return pipeline;
     }
 }

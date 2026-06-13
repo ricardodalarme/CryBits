@@ -15,6 +15,11 @@ internal sealed class ChatSender(PackageSender packageSender)
         packageSender.ToPlayer(entityId, new MessagePacket { Text = text, ColorArgb = color.ToArgb() });
     }
 
+    public void SendMessage(GameSession session, string text, int colorArgb)
+    {
+        packageSender.ToPlayer(session, new MessagePacket { Text = text, ColorArgb = colorArgb });
+    }
+
     public void MessageMap(EntityId entityId, string text)
     {
         var appearance = GameWorld.Current.Entities.Get(entityId)!.Get<PlayerAppearance>()!;

@@ -14,14 +14,12 @@ using CryBits.Simulation.Core;
 namespace CryBits.Server.Systems.Movement;
 
 internal sealed class MovementSystem(
-    PlayerSender playerSender,
-    NpcSender npcSender,
-    MapSender mapSender) : ISimulationSystem
+    MapSender mapSender,
+    NpcSender npcSender) : ISimulationSystem
 {
     public static MovementSystem Instance { get; } = new(
-        PlayerSender.Instance,
-        NpcSender.Instance,
-        MapSender.Instance);
+        MapSender.Instance,
+        NpcSender.Instance);
 
     public void ChangeDirection(EntityId entityId, Direction direction)
     {
@@ -34,7 +32,7 @@ internal sealed class MovementSystem(
         if (combat.GettingMap) return;
 
         pos.Direction = direction;
-        playerSender.PlayerDirection(entityId);
+        world.Dirty.Mark<Position>(entityId);
     }
 
     public void Move(EntityId entityId, byte movement)
@@ -48,7 +46,6 @@ internal sealed class MovementSystem(
         byte nextX = pos.X, nextY = pos.Y;
         byte oldX = pos.X, oldY = pos.Y;
         var link = world.Maps.Get(map.Data.LinkIds[(byte)pos.Direction]);
-        var secondMovement = false;
 
         if (movement is < 1 or > 2) return;
         if (combat.GettingMap) return;
@@ -77,7 +74,7 @@ internal sealed class MovementSystem(
                 }
             else
             {
-                playerSender.PlayerPosition(entityId);
+                world.Dirty.Mark<Position>(entityId);
                 return;
             }
         }
@@ -88,19 +85,13 @@ internal sealed class MovementSystem(
         }
 
         var tile = map.Data.Attribute[nextX, nextY];
-        switch ((TileAttribute)tile.Type)
+        if ((TileAttribute)tile.Type == TileAttribute.Warp)
         {
-            case TileAttribute.Warp:
-                if (tile.Data4 > 0) pos.Direction = (Direction)tile.Data4 - 1;
-                Warp(entityId, world.Maps.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
-                secondMovement = true;
-                break;
+            if (tile.Data4 > 0) pos.Direction = (Direction)tile.Data4 - 1;
+            Warp(entityId, world.Maps.Get(new Guid(tile.Data1)), (byte)tile.Data2, (byte)tile.Data3);
         }
-
-        if (!secondMovement && (oldX != pos.X || oldY != pos.Y))
-            playerSender.PlayerMove(entityId, movement);
-        else
-            playerSender.PlayerPosition(entityId);
+        else if (oldX != pos.X || oldY != pos.Y)
+            world.Dirty.Mark<Position>(entityId);
     }
 
     public void Warp(EntityId entityId, MapInstance mapInstance, byte x, byte y, bool needUpdate = false)
@@ -124,14 +115,13 @@ internal sealed class MovementSystem(
 
         if (oldMapId != mapInstance.Id || needUpdate)
         {
-            playerSender.PlayerLeaveMap(entityId, oldMapId);
             combat.GettingMap = true;
             mapSender.MapRevision(entityId, mapInstance.Data);
             mapSender.MapItems(entityId, mapInstance);
             npcSender.MapNpcs(entityId, mapInstance);
         }
-        else
-            playerSender.PlayerPosition(entityId);
+
+        world.Dirty.Mark<Position>(entityId);
     }
 
     public void Execute(GameWorld world, Tick tick) { }

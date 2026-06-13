@@ -1,7 +1,6 @@
 using CryBits.Definitions.Catalog;
 using CryBits.Definitions.Characters;
 using CryBits.Definitions.Helpers.Extensions;
-using CryBits.Server.Network.Senders;
 using CryBits.Server.Simulation.Core;
 using CryBits.Server.Simulation.State;
 using CryBits.Server.Simulation.State.Components;
@@ -14,9 +13,9 @@ using Attribute = CryBits.Definitions.Characters.Attribute;
 
 namespace CryBits.Server.Systems.Combat;
 
-internal sealed class VitalsRegenSystem(PlayerSender playerSender, NpcSender npcSender) : ISimulationSystem
+internal sealed class VitalsRegenSystem : ISimulationSystem
 {
-    public static VitalsRegenSystem Instance { get; } = new(PlayerSender.Instance, NpcSender.Instance);
+    public static VitalsRegenSystem Instance { get; } = new();
 
     private long _lastRegenTick;
 
@@ -47,7 +46,7 @@ internal sealed class VitalsRegenSystem(PlayerSender playerSender, NpcSender npc
                 if (current > max) current = max;
                 if (v == 0) vitals.Hp = current; else vitals.Mp = current;
 
-                playerSender.PlayerVitals(playerId);
+                world.Dirty.Mark<Vitals>(playerId);
             }
         }
 
@@ -77,7 +76,7 @@ internal sealed class VitalsRegenSystem(PlayerSender playerSender, NpcSender npc
                     if (current > max) current = max;
                     if (v == 0) vitals.Hp = current; else vitals.Mp = current;
 
-                    npcSender.MapNpcVitals(npcId);
+                    world.Dirty.Mark<Vitals>(npcId);
                 }
             }
         }
